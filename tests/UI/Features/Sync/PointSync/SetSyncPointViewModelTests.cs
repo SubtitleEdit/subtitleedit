@@ -21,7 +21,7 @@ public class SetSyncPointViewModelTests
     }
 
     private static SetSyncPointViewModel MakeViewModel()
-        => new(new WindowService(new NullServiceProvider()), new FileHelper());
+        => new(new WindowService(new NullServiceProvider()), new FileHelper(), new VideoPreviewSubtitle(new MpvReloader(), new VlcReloader()));
 
     private static List<SubtitleLineViewModel> ThreeLines()
         => new()
@@ -37,7 +37,7 @@ public class SetSyncPointViewModelTests
         var lines = ThreeLines();
         var vm = MakeViewModel();
 
-        vm.Initialize(lines, lines[1], videoFileName: null, subtitleFileName: null, audioVisualizer: null);
+        vm.Initialize(lines, lines[1], videoFileName: null, subtitleFileName: null, previewContext: VideoPreviewSubtitleContext.Default, audioVisualizer: null);
 
         Assert.Equal(TimeSpan.FromSeconds(30), vm.SyncPointTimeCode);
     }
@@ -48,7 +48,7 @@ public class SetSyncPointViewModelTests
         var lines = ThreeLines();
         var vm = MakeViewModel();
 
-        vm.Initialize(lines, null, videoFileName: null, subtitleFileName: null, audioVisualizer: null);
+        vm.Initialize(lines, null, videoFileName: null, subtitleFileName: null, previewContext: VideoPreviewSubtitleContext.Default, audioVisualizer: null);
 
         Assert.Equal(TimeSpan.FromSeconds(10), vm.SyncPointTimeCode);
     }
@@ -60,7 +60,7 @@ public class SetSyncPointViewModelTests
         // taking the result off the (empty) player instead gave a sync point of zero.
         var lines = ThreeLines();
         var vm = MakeViewModel();
-        vm.Initialize(lines, lines[1], videoFileName: null, subtitleFileName: null, audioVisualizer: null);
+        vm.Initialize(lines, lines[1], videoFileName: null, subtitleFileName: null, previewContext: VideoPreviewSubtitleContext.Default, audioVisualizer: null);
 
         vm.SyncPointTimeCode = TimeSpan.FromSeconds(42.5);
         vm.OkCommand.Execute(null);
@@ -74,7 +74,7 @@ public class SetSyncPointViewModelTests
     {
         var lines = ThreeLines();
         var vm = MakeViewModel();
-        vm.Initialize(lines, lines[1], videoFileName: null, subtitleFileName: null, audioVisualizer: null);
+        vm.Initialize(lines, lines[1], videoFileName: null, subtitleFileName: null, previewContext: VideoPreviewSubtitleContext.Default, audioVisualizer: null);
 
         vm.LeftOneSecondForwardCommand.Execute(null);
         vm.LeftHalfSecondForwardCommand.Execute(null);
@@ -92,7 +92,7 @@ public class SetSyncPointViewModelTests
     {
         var lines = ThreeLines();
         var vm = MakeViewModel();
-        vm.Initialize(lines, lines[0], videoFileName: null, subtitleFileName: null, audioVisualizer: null);
+        vm.Initialize(lines, lines[0], videoFileName: null, subtitleFileName: null, previewContext: VideoPreviewSubtitleContext.Default, audioVisualizer: null);
 
         for (var i = 0; i < 20; i++)
         {
@@ -107,7 +107,7 @@ public class SetSyncPointViewModelTests
     {
         var lines = ThreeLines();
         var vm = MakeViewModel();
-        vm.Initialize(lines, lines[0], videoFileName: null, subtitleFileName: null, audioVisualizer: null);
+        vm.Initialize(lines, lines[0], videoFileName: null, subtitleFileName: null, previewContext: VideoPreviewSubtitleContext.Default, audioVisualizer: null);
 
         vm.SelectedParagraphIndex = 2;
         vm.GoToLeftSubtitleCommand.Execute(null);

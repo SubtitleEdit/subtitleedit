@@ -10361,6 +10361,16 @@ public partial class MainViewModel :
         });
     }
 
+    /// <summary>
+    /// What the sync dialogs need to draw the subtitle on their own video the way it is drawn on
+    /// the main one (discussion #13767) - they only get line view models, which carry neither the
+    /// header nor the timing mode.
+    /// </summary>
+    private VideoPreviewSubtitleContext MakeVideoPreviewSubtitleContext()
+    {
+        return new VideoPreviewSubtitleContext(SelectedSubtitleFormat, _subtitle.Header, IsSmpteTimingEnabled);
+    }
+
     [RelayCommand]
     private async Task ShowVisualSync()
     {
@@ -10378,7 +10388,7 @@ public partial class MainViewModel :
         var result = await ShowDialogAsync<VisualSyncWindow, VisualSyncViewModel>(vm =>
         {
             var paragraphs = Subtitles.Select(p => new SubtitleLineViewModel(p)).ToList();
-            vm.Initialize(paragraphs, _videoFileName, _subtitleFileName, AudioVisualizer, _audioTrack?.Id ?? -1);
+            vm.Initialize(paragraphs, _videoFileName, _subtitleFileName, MakeVideoPreviewSubtitleContext(), AudioVisualizer, _audioTrack?.Id ?? -1);
         });
 
         if (result.OkPressed)
@@ -10414,7 +10424,7 @@ public partial class MainViewModel :
         var result = await ShowDialogAsync<VisualSyncWindow, VisualSyncViewModel>(vm =>
         {
             var paragraphs = selectedLines.Select(p => new SubtitleLineViewModel(p)).ToList();
-            vm.Initialize(paragraphs, _videoFileName, _subtitleFileName, AudioVisualizer, _audioTrack?.Id ?? -1);
+            vm.Initialize(paragraphs, _videoFileName, _subtitleFileName, MakeVideoPreviewSubtitleContext(), AudioVisualizer, _audioTrack?.Id ?? -1);
         });
 
         if (!result.OkPressed)
@@ -10510,7 +10520,7 @@ public partial class MainViewModel :
         {
             var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
             var paragraphs = Subtitles.Select(p => new SubtitleLineViewModel(p)).ToList();
-            vm.Initialize(paragraphs, selectedItems, _videoFileName ?? string.Empty, _subtitleFileName ?? string.Empty, AudioVisualizer);
+            vm.Initialize(paragraphs, selectedItems, _videoFileName ?? string.Empty, _subtitleFileName ?? string.Empty, MakeVideoPreviewSubtitleContext(), AudioVisualizer);
         });
 
         if (result.OkPressed)
@@ -10544,7 +10554,7 @@ public partial class MainViewModel :
         var result = await ShowDialogAsync<PointSyncViaOtherWindow, PointSyncViaOtherViewModel>(vm =>
         {
             var paragraphs = Subtitles.Select(p => new SubtitleLineViewModel(p)).ToList();
-            vm.Initialize(paragraphs, _videoFileName ?? string.Empty, _subtitleFileName ?? string.Empty);
+            vm.Initialize(paragraphs, _videoFileName ?? string.Empty, _subtitleFileName ?? string.Empty, MakeVideoPreviewSubtitleContext());
         });
 
         if (result.OkPressed)

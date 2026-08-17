@@ -81,7 +81,7 @@ public class PointSyncWindowTests : IDisposable
     {
         var vm = new PointSyncViewModel(new FileHelper(), new WindowService(new NullServiceProvider()));
         var lines = TwoLines();
-        vm.Initialize(lines, new List<SubtitleLineViewModel>(), string.Empty, string.Empty, null);
+        vm.Initialize(lines, new List<SubtitleLineViewModel>(), string.Empty, string.Empty, VideoPreviewSubtitleContext.Default, null);
 
         var window = Track(new PointSyncWindow(vm));
 
@@ -93,9 +93,9 @@ public class PointSyncWindowTests : IDisposable
     {
         // The videoless dialog is just the line picker and the sync point time code - the player,
         // the waveform and "Play 2 secs & back" have nothing to show or do (issue #13341).
-        var vm = new SetSyncPointViewModel(new WindowService(new NullServiceProvider()), new FileHelper());
+        var vm = new SetSyncPointViewModel(new WindowService(new NullServiceProvider()), new FileHelper(), new VideoPreviewSubtitle(new MpvReloader(), new VlcReloader()));
         var lines = TwoLines();
-        vm.Initialize(lines, lines[0], videoFileName: null, subtitleFileName: null, audioVisualizer: null);
+        vm.Initialize(lines, lines[0], videoFileName: null, subtitleFileName: null, previewContext: VideoPreviewSubtitleContext.Default, audioVisualizer: null);
 
         var window = Track(new SetSyncPointWindow(vm));
 
@@ -112,12 +112,12 @@ public class PointSyncWindowTests : IDisposable
     [AvaloniaFact]
     public void SetSyncPointWindow_WithVideo_KeepsThePlayerAndPlaybackButton()
     {
-        var vm = new SetSyncPointViewModel(new WindowService(new NullServiceProvider()), new FileHelper());
+        var vm = new SetSyncPointViewModel(new WindowService(new NullServiceProvider()), new FileHelper(), new VideoPreviewSubtitle(new MpvReloader(), new VlcReloader()));
         var lines = TwoLines();
 
         // A path is enough for the layout decision; nothing opens it here (the open is posted to
         // the dispatcher and this test never pumps it).
-        vm.Initialize(lines, lines[0], videoFileName: "/does/not/exist.mp4", subtitleFileName: null, audioVisualizer: null);
+        vm.Initialize(lines, lines[0], videoFileName: "/does/not/exist.mp4", subtitleFileName: null, previewContext: VideoPreviewSubtitleContext.Default, audioVisualizer: null);
 
         var window = Track(new SetSyncPointWindow(vm));
 
@@ -139,9 +139,9 @@ public class PointSyncWindowTests : IDisposable
             Se.Settings.General.WindowPositions.Add(
                 new SeWindowPosition(nameof(SetSyncPointWindow), false, false, 50, 50, 1100, 900));
 
-            var vm = new SetSyncPointViewModel(new WindowService(new NullServiceProvider()), new FileHelper());
+            var vm = new SetSyncPointViewModel(new WindowService(new NullServiceProvider()), new FileHelper(), new VideoPreviewSubtitle(new MpvReloader(), new VlcReloader()));
             var lines = TwoLines();
-            vm.Initialize(lines, lines[0], videoFileName: null, subtitleFileName: null, audioVisualizer: null);
+            vm.Initialize(lines, lines[0], videoFileName: null, subtitleFileName: null, previewContext: VideoPreviewSubtitleContext.Default, audioVisualizer: null);
 
             var window = Track(new SetSyncPointWindow(vm));
             window.Show();
@@ -165,7 +165,7 @@ public class PointSyncWindowTests : IDisposable
         // The other subtitle stays the usual source, and the video is the fallback for lines it
         // does not cover - so both buttons have to be there.
         var vm = new PointSyncViaOtherViewModel(new FileHelper(), new WindowService(new NullServiceProvider()));
-        vm.Initialize(TwoLines(), string.Empty, string.Empty);
+        vm.Initialize(TwoLines(), string.Empty, string.Empty, VideoPreviewSubtitleContext.Default);
 
         var window = Track(new PointSyncViaOtherWindow(vm));
 
