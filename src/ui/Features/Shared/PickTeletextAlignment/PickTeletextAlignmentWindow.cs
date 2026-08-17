@@ -69,9 +69,36 @@ alignmentCheckBox.Bind(
             {
                 Mode = BindingMode.TwoWay
             });
+          var shiftCheckBox = new CheckBox
+{
+    Content = "Shift line by:",
+    VerticalAlignment = VerticalAlignment.Center,
+};
+
+shiftCheckBox.Bind(
+    CheckBox.IsCheckedProperty,
+    new Binding(nameof(vm.ApplyLineShift))
+    {
+        Mode = BindingMode.TwoWay
+    });
+
+var shiftBox = new NumericUpDown
+{
+    Minimum = -22,
+    Maximum = 22,
+    Increment = 1,
+    Width = 100,
+};
+
+shiftBox.Bind(
+    NumericUpDown.ValueProperty,
+    new Binding(nameof(vm.LineShift))
+    {
+        Mode = BindingMode.TwoWay
+    });  
 var previewCheckBox = new CheckBox
 {
-    Content = "Vorschau",
+    Content = "Preview",
 };
 
 previewCheckBox.Bind(
@@ -109,7 +136,10 @@ previewCheckBox.Bind(
         grid.Add(alignmentCheckBox, 1, 0);
         grid.Add(alignmentBox, 1, 1);
 
-        grid.Add(previewCheckBox, 2, 1);
+        grid.Add(shiftCheckBox, 2, 0);
+grid.Add(shiftBox, 2, 1);
+
+        grid.Add(previewCheckBox, 3, 0);
 
         var buttonPanel = new StackPanel
         {
@@ -121,7 +151,7 @@ previewCheckBox.Bind(
         buttonPanel.Children.Add(okButton);
         buttonPanel.Children.Add(cancelButton);
 
-        grid.Add(buttonPanel, 3, 1);
+        grid.Add(buttonPanel, 4, 1);
 
         Content = grid;
 

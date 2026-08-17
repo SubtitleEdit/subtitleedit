@@ -12926,7 +12926,29 @@ private async Task ShowTeletextAlignmentPicker()
             item.MarginV = marginV;
         }
     }
+// Teletext lines are shifted relatively when explicitly selected.
+if (result.ApplyLineShift && result.LineShift != 0)
+{
+    foreach (var item in selectedItems)
+    {
+        if (int.TryParse(item.MarginV, out var ebuLine))
+        {
+            var teletextLine = ebuLine + 1;
+            var shiftedLine = teletextLine + result.LineShift;
 
+            if (shiftedLine < 1)
+            {
+                shiftedLine = 1;
+            }
+            else if (shiftedLine > 23)
+            {
+                shiftedLine = 23;
+            }
+
+            item.MarginV = (shiftedLine - 1).ToString();
+        }
+    }
+}
     // Horizontal alignment is only changed when explicitly selected.
     if (result.ApplyHorizontalAlignment)
     {
