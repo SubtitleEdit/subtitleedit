@@ -187,7 +187,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
             // Trim inside the builder instead of "sb.ToString().Trim() + newline", which
             // allocated the whole output twice more (same fix as [V4+ Styles]).
-            TrimBuilder(sb);
+            sb.Trim();
             return sb.Append(Environment.NewLine).ToString();
         }
 
