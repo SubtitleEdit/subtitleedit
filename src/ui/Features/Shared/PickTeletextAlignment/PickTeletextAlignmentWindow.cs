@@ -15,6 +15,7 @@ public class PickTeletextAlignmentWindow : Window
         Title = Se.Language.General.TeletextAlignment;
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
+        MinWidth = 520;
         vm.Window = this;
         DataContext = vm;
 
@@ -37,6 +38,7 @@ lineCheckBox.Bind(
             Maximum = 23,
             Increment = 1,
             Width = 100,
+            HorizontalAlignment = HorizontalAlignment.Right,
         };
         lineBox.Bind(
             NumericUpDown.ValueProperty,
@@ -67,6 +69,7 @@ alignmentCheckBox.Bind(
     Se.Language.General.Right
 },
             Width = 150,
+            HorizontalAlignment = HorizontalAlignment.Right,
         };
         alignmentBox.Bind(
             ComboBox.SelectedItemProperty,
@@ -93,6 +96,7 @@ var shiftBox = new NumericUpDown
     Maximum = 22,
     Increment = 1,
     Width = 100,
+    HorizontalAlignment = HorizontalAlignment.Right,
 };
 
 shiftBox.Bind(
@@ -101,6 +105,74 @@ shiftBox.Bind(
     {
         Mode = BindingMode.TwoWay
     });  
+
+var replaceLineCheckBox = new CheckBox
+{
+    Content = Se.Language.General.ReplaceLine + ":",
+    VerticalAlignment = VerticalAlignment.Center,
+};
+
+replaceLineCheckBox.Bind(
+    CheckBox.IsCheckedProperty,
+    new Binding(nameof(vm.ApplyLineReplace))
+    {
+        Mode = BindingMode.TwoWay
+    });
+
+var replaceLinePanel = new StackPanel
+{
+    Orientation = Orientation.Horizontal,
+    Spacing = 8,
+    HorizontalAlignment = HorizontalAlignment.Right,
+};
+
+var fromLabel = new Label
+{
+    Content = Se.Language.General.From + ":",
+    VerticalAlignment = VerticalAlignment.Center,
+};
+
+var replaceFromBox = new NumericUpDown
+{
+    Minimum = 1,
+    Maximum = 23,
+    Increment = 1,
+    Width = 100,
+};
+
+replaceFromBox.Bind(
+    NumericUpDown.ValueProperty,
+    new Binding(nameof(vm.ReplaceFromLine))
+    {
+        Mode = BindingMode.TwoWay
+    });
+
+var toLabel = new Label
+{
+    Content = Se.Language.General.To + ":",
+    VerticalAlignment = VerticalAlignment.Center,
+};
+
+var replaceToBox = new NumericUpDown
+{
+    Minimum = 1,
+    Maximum = 23,
+    Increment = 1,
+    Width = 100,
+};
+
+replaceToBox.Bind(
+    NumericUpDown.ValueProperty,
+    new Binding(nameof(vm.ReplaceToLine))
+    {
+        Mode = BindingMode.TwoWay
+    });
+
+replaceLinePanel.Children.Add(fromLabel);
+replaceLinePanel.Children.Add(replaceFromBox);
+replaceLinePanel.Children.Add(toLabel);
+replaceLinePanel.Children.Add(replaceToBox);
+
 var previewCheckBox = new CheckBox
 {
     Content = Se.Language.General.Preview,
@@ -123,6 +195,8 @@ var cancelButton = UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelComman
                 new RowDefinition(GridLength.Auto),
                 new RowDefinition(GridLength.Auto),
                 new RowDefinition(GridLength.Auto),
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(GridLength.Auto),
             },
             ColumnDefinitions =
             {
@@ -141,9 +215,12 @@ var cancelButton = UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelComman
         grid.Add(alignmentBox, 1, 1);
 
         grid.Add(shiftCheckBox, 2, 0);
-grid.Add(shiftBox, 2, 1);
+        grid.Add(shiftBox, 2, 1);
 
-        grid.Add(previewCheckBox, 3, 0);
+        grid.Add(replaceLineCheckBox, 3, 0);
+        grid.Add(replaceLinePanel, 3, 1);
+
+        grid.Add(previewCheckBox, 4, 0);
 
         var buttonPanel = new StackPanel
         {
@@ -155,7 +232,7 @@ grid.Add(shiftBox, 2, 1);
         buttonPanel.Children.Add(okButton);
         buttonPanel.Children.Add(cancelButton);
 
-        grid.Add(buttonPanel, 4, 1);
+        grid.Add(buttonPanel, 5, 1);
 
         Content = grid;
 

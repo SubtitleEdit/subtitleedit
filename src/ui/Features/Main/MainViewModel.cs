@@ -11241,7 +11241,6 @@ private bool _teletextAlignmentPreview;
         var viewModel = await ShowDialogAsync<SettingsWindow, SettingsViewModel>(
     vm => { vm.Initialize(this); });
 
-
         if (!viewModel.OkPressed)
         {
             return;
@@ -12950,6 +12949,25 @@ if (result.ApplyLineShift && result.LineShift != 0)
         }
     }
 }
+
+// Replace one specific teletext line with another.
+if (result.ApplyLineReplace &&
+    result.ReplaceFromLine != result.ReplaceToLine)
+{
+    foreach (var item in selectedItems)
+    {
+        if (int.TryParse(item.MarginV, out var ebuLine))
+        {
+            var teletextLine = ebuLine + 1;
+
+            if (teletextLine == result.ReplaceFromLine)
+            {
+                item.MarginV = (result.ReplaceToLine - 1).ToString();
+            }
+        }
+    }
+}
+
     // Horizontal alignment is only changed when explicitly selected.
     if (result.ApplyHorizontalAlignment)
     {

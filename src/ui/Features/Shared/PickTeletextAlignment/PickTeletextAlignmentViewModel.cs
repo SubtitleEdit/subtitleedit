@@ -33,6 +33,15 @@ private bool applyLineShift = false;
 [ObservableProperty]
 private int lineShift = 1;
 
+[ObservableProperty]
+private bool applyLineReplace = false;
+
+[ObservableProperty]
+private int replaceFromLine = 23;
+
+[ObservableProperty]
+private int replaceToLine = 23;
+
     [RelayCommand]
     private void Ok()
     {

@@ -457,6 +457,7 @@
     "removeUnderline": "Remove underline",
     "rename": "Rename",
     "replace": "Replace",
+    "replaceLine": "Replace line",
     "replaceWith": "Replace with",
     "requiresRestart": "Requires restart",
     "reset": "Reset",

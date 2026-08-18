@@ -457,6 +457,7 @@
     "removeUnderline": "Retirer le souligné",
     "rename": "Renommer",
     "replace": "Remplacer",
+    "replaceLine": "Remplacer ligne",
     "replaceWith": "Remplacer par…",
     "requiresRestart": "Nécessite un redémarrage",
     "reset": "Réinitialiser",
