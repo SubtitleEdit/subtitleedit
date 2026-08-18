@@ -1478,6 +1478,7 @@ public partial class BurnInViewModel : ObservableObject
 
         var isAssa = _subtitleFormat is { Name: AdvancedSubStationAlpha.NameOfFormat };
         ShowAssaOnlyBox = isAssa;
+        UpdateNonAssaPreview();
     }
 
     [RelayCommand]
@@ -1486,6 +1487,7 @@ public partial class BurnInViewModel : ObservableObject
         IsBatchMode = true;
         IsSingleModeVisible = !string.IsNullOrEmpty(_inputVideoFileName);
         ShowAssaOnlyBox = false;
+        UpdateNonAssaPreview();
     }
 
     [RelayCommand]
