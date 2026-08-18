@@ -54,8 +54,10 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
         {
             ErrorMessage = string.Empty;
             _replaceListXmlFileName = replaceListXmlFileName;
-            _isGreekReplaceList = replaceListXmlFileName != null &&
-                                  replaceListXmlFileName.Contains("\\ell" + ReplaceListFileNamePostFix);
+            // Compared on the file name, not the path: the old check looked for a hard-coded
+            // "\\ell..." and so never matched on macOS or Linux, where the separator is "/".
+            _isGreekReplaceList = !string.IsNullOrEmpty(replaceListXmlFileName) &&
+                                  Path.GetFileName(replaceListXmlFileName).StartsWith("ell_", StringComparison.OrdinalIgnoreCase);
             WordReplaceList = new Dictionary<string, string>();
             PartialLineWordBoundaryReplaceList = new Dictionary<string, string>();
             _partialLineAlwaysReplaceList = new Dictionary<string, string>();
@@ -216,6 +218,14 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
         public static OcrFixReplaceList2 FromLanguageId(string languageId)
         {
             return new OcrFixReplaceList2(Path.Combine(SpellCheckConfig.DictionariesFolder(), languageId + ReplaceListFileNamePostFix));
+        }
+
+        /// <summary>The "_User" sibling of a replace-list file name.</summary>
+        public static string GetUserFileName(string replaceListXmlFileName)
+        {
+            return Path.Combine(
+                Path.GetDirectoryName(replaceListXmlFileName) ?? string.Empty,
+                Path.GetFileNameWithoutExtension(replaceListXmlFileName) + "_User" + Path.GetExtension(replaceListXmlFileName));
         }
 
         private static Dictionary<string, string> LoadReplaceList(XmlDocument doc, string name)
@@ -1230,7 +1240,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
             return doc;
         }
 
-        private string ReplaceListXmlFileNameUser => Path.Combine(Path.GetDirectoryName(_replaceListXmlFileName) ?? throw new InvalidOperationException(), Path.GetFileNameWithoutExtension(_replaceListXmlFileName) + "_User" + Path.GetExtension(_replaceListXmlFileName));
+        private string ReplaceListXmlFileNameUser => GetUserFileName(_replaceListXmlFileName);
 
         private XmlDocument LoadXmlReplaceListUserDocument()
         {
