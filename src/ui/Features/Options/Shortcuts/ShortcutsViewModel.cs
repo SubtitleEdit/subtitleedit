@@ -1,3 +1,4 @@
+﻿using System.Text;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -381,6 +382,40 @@ public partial class ShortcutsViewModel : ObservableObject
         }
     }
 
+    /// <summary>How many shortcuts came over, and - by name - which ones did not.
+    /// "16 skipped" on its own left the user no way to find out what they had lost (#13818).</summary>
+    private static string MakeSe4ImportSummary(Se4ShortcutsImporter.ImportResult result, string fileName)
+    {
+        var summary = string.Format(Se.Language.Options.Shortcuts.ImportFromSe4XImportedYSkipped,
+            result.Shortcuts.Count, fileName, result.SkippedNoMapping);
+
+        if (result.SkippedNoMappingActions.Count == 0)
+        {
+            return summary;
+        }
+
+        var sb = new StringBuilder(summary);
+        sb.AppendLine();
+        sb.AppendLine();
+        sb.AppendLine(Se.Language.Options.Shortcuts.ImportFromSe4SkippedActions);
+
+        // A message box is not a list view: name the first few and count the rest, rather than
+        // growing the dialog past the screen on a full SE 4 settings file.
+        const int maxListed = 12;
+        foreach (var skipped in result.SkippedNoMappingActions.Take(maxListed))
+        {
+            sb.AppendLine("  " + skipped);
+        }
+
+        var remaining = result.SkippedNoMappingActions.Count - maxListed;
+        if (remaining > 0)
+        {
+            sb.AppendLine(string.Format(Se.Language.Options.Shortcuts.ImportFromSe4AndXMore, remaining));
+        }
+
+        return sb.ToString().TrimEnd();
+    }
+
     [RelayCommand]
     private async Task ImportFromSe4()
     {
@@ -435,10 +470,7 @@ public partial class ShortcutsViewModel : ObservableObject
             }
 
             await MessageBox.Show(Window, Se.Language.General.Information,
-                string.Format(Se.Language.Options.Shortcuts.ImportFromSe4XImportedYSkipped,
-                    importResult.Shortcuts.Count,
-                    System.IO.Path.GetFileName(fileName),
-                    importResult.SkippedNoMapping),
+                MakeSe4ImportSummary(importResult, System.IO.Path.GetFileName(fileName)),
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         catch (Exception ex)

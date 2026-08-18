@@ -3026,6 +3026,8 @@
       "importShortcutsTitle": "Import shortcuts",
       "exportShortcutsTitle": "Export shortcuts",
       "xShortcutsImportedFromY": "{0} shortcuts imported from {1}",
+      "importFromSe4SkippedActions": "Skipped:",
+      "importFromSe4AndXMore": "  ...and {0} more",
       "xShortcutsExportedToY": "{0} shortcuts exported to {1}",
       "importFromSe4": "Import from SE 4...",
       "importFromSe4Title": "Import shortcuts from Subtitle Edit 4",

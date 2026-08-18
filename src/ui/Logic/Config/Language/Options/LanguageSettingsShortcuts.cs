@@ -188,6 +188,8 @@ public class LanguageSettingsShortcuts
     public string ImportShortcutsTitle { get; set; }
     public string ExportShortcutsTitle { get; set; }
     public string XShortcutsImportedFromY { get; set; }
+    public string ImportFromSe4SkippedActions { get; set; }
+    public string ImportFromSe4AndXMore { get; set; }
     public string XShortcutsExportedToY { get; set; }
     public string ImportFromSe4 { get; set; }
     public string ImportFromSe4Title { get; set; }
@@ -451,6 +453,8 @@ public class LanguageSettingsShortcuts
         ImportFromSe4 = "Import from SE 4...";
         ImportFromSe4Title = "Import shortcuts from Subtitle Edit 4";
         ImportFromSe4XImportedYSkipped = "{0} shortcuts imported from {1} ({2} skipped — no matching SE 5 action)";
+        ImportFromSe4SkippedActions = "Skipped:";
+        ImportFromSe4AndXMore = "  ...and {0} more";
         ImportImageSubtitleForEdit = "Import image-based subtitle for edit";
         ShowPointSyncViaOther = "Show point sync via other subtitle";
         ShowPointSync = "Show point sync";

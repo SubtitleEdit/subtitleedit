@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Features.Main;
+﻿using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
@@ -21,6 +21,49 @@ public static class Se4ShortcutsImporter
         public List<SeShortCut> Shortcuts { get; } = new();
         public int SkippedNoMapping { get; set; }
         public int SkippedEmpty { get; set; }
+
+        /// <summary>
+        /// What the skipped entries were: the SE 4 action, readably, and the keys it was bound to.
+        /// A bare count left the user with no way to find out what they had lost (issue #13818).
+        /// </summary>
+        public List<SkippedShortcut> SkippedNoMappingActions { get; } = new();
+    }
+
+    /// <summary>An SE 4 shortcut with no SE 5 counterpart.</summary>
+    public sealed record SkippedShortcut(string Se4Name, string Keys)
+    {
+        /// <summary>
+        /// The SE 4 setting name as a phrase: "MainAdjustSetStartAndOffsetTheRest" reads as
+        /// "Adjust set start and offset the rest". SE 4's own labels for these actions are not in
+        /// SE 5, and the raw names are still what the user finds in SE 4's Settings.xml.
+        /// </summary>
+        public string DisplayName => SplitCamelCase(Se4Name);
+
+        public override string ToString() => string.IsNullOrEmpty(Keys) ? DisplayName : $"{DisplayName} [{Keys}]";
+
+        private static string SplitCamelCase(string name)
+        {
+            var trimmed = name.StartsWith("Main", StringComparison.Ordinal) && name.Length > 4
+                ? name.Substring(4)
+                : name;
+
+            var sb = new System.Text.StringBuilder(trimmed.Length + 8);
+            for (var i = 0; i < trimmed.Length; i++)
+            {
+                var c = trimmed[i];
+                if (i > 0 && char.IsUpper(c) && !char.IsUpper(trimmed[i - 1]))
+                {
+                    sb.Append(' ');
+                    sb.Append(char.ToLowerInvariant(c));
+                }
+                else
+                {
+                    sb.Append(c);
+                }
+            }
+
+            return sb.ToString();
+        }
     }
 
     // Exposed for tests: every mapped SE 5 command must stay registered in the shortcut
@@ -415,6 +458,7 @@ public static class Se4ShortcutsImporter
             if (!Map.TryGetValue(se4Name, out var se5Name))
             {
                 result.SkippedNoMapping++;
+                result.SkippedNoMappingActions.Add(new SkippedShortcut(se4Name, value.Trim()));
                 continue;
             }
 
