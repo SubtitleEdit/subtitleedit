@@ -22302,75 +22302,137 @@ public partial class MainViewModel :
 
     private void ExtractShotChanges(string videoFileName, int audioTrackNumber)
     {
-        if (Se.Settings.Waveform.ShotChangesAutoGenerate)
-        {
-            WaveformGeneratingText = Se.Language.Main.ExtractingShotChanges;
-
-            var threshold = Se.Settings.Waveform.ShotChangesSensitivity.ToString(CultureInfo.InvariantCulture);
-            var argumentsFormat = Se.Settings.Video.ShowChangesFFmpegArguments;
-            var arguments = string.Format(argumentsFormat, videoFileName, threshold);
-
-            var ffmpegProcess = FfmpegGenerator.GetProcess(arguments, OutputHandler);
-#pragma warning disable CA1416 // Validate platform compatibility
-            ffmpegProcess.Start();
-#pragma warning restore CA1416 // Validate platform compatibility
-            ffmpegProcess.BeginOutputReadLine();
-            ffmpegProcess.BeginErrorReadLine();
-
-            _ = Task.Run(async () =>
-            {
-                while (!ffmpegProcess.HasExited)
-                {
-                    if (_videoOpenTokenSource.IsCancellationRequested)
-                    {
-                        try
-                        {
-                            ffmpegProcess.Kill(true);
-                        }
-                        catch
-                        {
-                            // ignore
-                        }
-
-                        break;
-                    }
-
-                    // Deliberately NOT the cancellation token: cancel almost always lands
-                    // while this delay is pending, and a token here would throw us out of
-                    // the loop before the Kill above ever runs, orphaning ffmpeg.
-                    await Task.Delay(100, CancellationToken.None).ConfigureAwait(false);
-                }
-
-                if (!_videoOpenTokenSource.IsCancellationRequested && AudioVisualizer != null && AudioVisualizer.ShotChanges != null)
-                {
-                    ShotChangesHelper.SaveShotChanges(videoFileName, AudioVisualizer.ShotChanges, audioTrackNumber);
-                    Dispatcher.UIThread.Post(UpdateShotChangesListMenuItem);
-                }
-            });
-        }
-    }
-
-    private Lock _addShotChangeLock = new Lock();
-
-    private void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
-    {
-        if (string.IsNullOrWhiteSpace(outLine.Data))
+        if (!Se.Settings.Waveform.ShotChangesAutoGenerate)
         {
             return;
         }
 
-        var match = ShotChangesViewModel.TimeRegex.Match(outLine.Data);
-        if (match.Success)
+        WaveformGeneratingText = Se.Language.Main.ExtractingShotChanges;
+
+        var threshold = Se.Settings.Waveform.ShotChangesSensitivity.ToString(CultureInfo.InvariantCulture);
+        var argumentsFormat = Se.Settings.Video.ShowChangesFFmpegArguments;
+        var arguments = string.Format(argumentsFormat, videoFileName, threshold);
+
+        // Filled on ffmpeg's stderr callback thread; the UI only ever gets snapshots of it
+        // (see PublishShotChanges). The waveform render loop binary-searches ShotChanges at
+        // ~60 fps, so handing it a list a background thread keeps Add'ing to could tear a
+        // render mid-grow. Per run: a late callback from a superseded extraction lands in
+        // its own dead list, not in the next video's.
+        var collected = new List<double>();
+        DataReceivedEventHandler onFfmpegOutput = (_, outLine) =>
         {
-            var timeCode = match.Value.Replace("pts_time:", string.Empty).Replace(",", ".").Replace("٫", ".").Replace("⠨", ".");
-            if (double.TryParse(timeCode, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var seconds) && seconds > 0.2)
+            if (string.IsNullOrWhiteSpace(outLine.Data))
             {
-                lock (_addShotChangeLock)
+                return;
+            }
+
+            var match = ShotChangesViewModel.TimeRegex.Match(outLine.Data);
+            if (match.Success)
+            {
+                var timeCode = match.Value.Replace("pts_time:", string.Empty).Replace(",", ".").Replace("٫", ".").Replace("⠨", ".");
+                if (double.TryParse(timeCode, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var seconds) && seconds > 0.2)
                 {
-                    AudioVisualizer?.ShotChanges.Add(seconds);
+                    lock (collected)
+                    {
+                        collected.Add(seconds);
+                    }
                 }
             }
+        };
+
+        var ffmpegProcess = FfmpegGenerator.GetProcess(arguments, onFfmpegOutput);
+#pragma warning disable CA1416 // Validate platform compatibility
+        ffmpegProcess.Start();
+        try
+        {
+            // Scene detection decodes every frame of the whole video with all cores. At
+            // normal priority that competes with the UI thread, the waveform render and
+            // mpv for minutes on a long file - this auto-extraction runs silently right
+            // after a video opens, exactly when the user starts editing. Below normal
+            // still gets the idle cores but yields the moment the user does anything.
+            ffmpegProcess.PriorityClass = ProcessPriorityClass.BelowNormal;
         }
+        catch
+        {
+            // Best effort - the process may already have exited.
+        }
+#pragma warning restore CA1416 // Validate platform compatibility
+        ffmpegProcess.BeginOutputReadLine();
+        ffmpegProcess.BeginErrorReadLine();
+
+        _ = Task.Run(async () =>
+        {
+            var publishedCount = 0;
+            while (!ffmpegProcess.HasExited)
+            {
+                if (_videoOpenTokenSource.IsCancellationRequested)
+                {
+                    try
+                    {
+                        ffmpegProcess.Kill(true);
+                    }
+                    catch
+                    {
+                        // ignore
+                    }
+
+                    break;
+                }
+
+                publishedCount = PublishShotChanges(collected, publishedCount);
+
+                // Deliberately NOT the cancellation token: cancel almost always lands
+                // while this delay is pending, and a token here would throw us out of
+                // the loop before the Kill above ever runs, orphaning ffmpeg.
+                await Task.Delay(100, CancellationToken.None).ConfigureAwait(false);
+            }
+
+            if (!_videoOpenTokenSource.IsCancellationRequested)
+            {
+                PublishShotChanges(collected, publishedCount);
+
+                List<double> finalList;
+                lock (collected)
+                {
+                    finalList = new List<double>(collected);
+                }
+
+                ShotChangesHelper.SaveShotChanges(videoFileName, finalList, audioTrackNumber);
+            }
+        });
+    }
+
+    /// <summary>
+    /// Hand the shot changes collected so far to the waveform as a fresh copy, so the marks
+    /// appear while the extraction is still running without the UI ever reading the list the
+    /// callback thread writes to. No-op (returns <paramref name="publishedCount"/>) when
+    /// nothing new arrived since the last publish.
+    /// </summary>
+    private int PublishShotChanges(List<double> collected, int publishedCount)
+    {
+        List<double> snapshot;
+        lock (collected)
+        {
+            if (collected.Count == publishedCount)
+            {
+                return publishedCount;
+            }
+
+            snapshot = new List<double>(collected);
+        }
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (AudioVisualizer != null)
+            {
+                AudioVisualizer.ShotChanges = snapshot;
+                _updateAudioVisualizer = true;
+            }
+
+            UpdateShotChangesListMenuItem();
+        });
+
+        return snapshot.Count;
     }
 
     private static void DeleteTempFile(string tempWaveFileName)
