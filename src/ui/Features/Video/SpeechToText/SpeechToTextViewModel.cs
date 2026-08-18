@@ -2160,7 +2160,48 @@ public partial class SpeechToTextViewModel : ObservableObject
             candidates.Insert(0, pathFromOutput);
         }
 
+        // Purfview XXL announces where it wrote its result ("Subtitles are written to '<dir>'
+        // directory."). When the user's own parameters carry an "--output_dir" (e.g. "-o source"),
+        // SE does not pass its per-run folder, so the result can land somewhere none of the fixed
+        // candidates cover - e.g. next to the user's video (issue #13505). The announced folder is
+        // authoritative, so probe it first; the file is named after the engine's input.
+        var dirFromOutput = TryFindOutputDirInOutput(outputText);
+        if (!string.IsNullOrEmpty(dirFromOutput))
+        {
+            candidates.Insert(0, Path.Combine(dirFromOutput, Path.GetFileNameWithoutExtension(waveFileName) + ext));
+            if (!string.IsNullOrEmpty(videoFileName))
+            {
+                candidates.Insert(0, Path.Combine(dirFromOutput, Path.GetFileNameWithoutExtension(videoFileName) + ext));
+            }
+        }
+
         return candidates;
+    }
+
+    private static string? TryFindOutputDirInOutput(ConcurrentQueue<string> outputText)
+    {
+        const string findText = "Subtitles are written to '";
+        foreach (var line in outputText)
+        {
+            var idx = line.IndexOf(findText, StringComparison.OrdinalIgnoreCase);
+            if (idx < 0)
+            {
+                continue;
+            }
+
+            var start = idx + findText.Length;
+            var end = line.LastIndexOf('\'');
+            if (end > start)
+            {
+                var dir = line.Substring(start, end - start).Trim();
+                if (Directory.Exists(dir))
+                {
+                    return dir;
+                }
+            }
+        }
+
+        return null;
     }
 
     private static string? TryFindFilePathInOutput(string format, ConcurrentQueue<string> outputText)
