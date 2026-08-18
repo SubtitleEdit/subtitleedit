@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -3556,7 +3556,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     private static void AddEngineFolderToLibrarySearchPath(ProcessStartInfo startInfo, string engineFolder)
     {
         var variable = OperatingSystem.IsMacOS() ? "DYLD_LIBRARY_PATH" : "LD_LIBRARY_PATH";
-        var existing = startInfo.EnvironmentVariables[variable];
+        var existing = ProcessEnvironmentHelper.GetOrNull(startInfo, variable);
 
         startInfo.EnvironmentVariables[variable] = string.IsNullOrEmpty(existing)
             ? engineFolder
@@ -3816,7 +3816,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             }
         }
 
-        if (OperatingSystem.IsWindows() && process.StartInfo.EnvironmentVariables["Path"] != null)
+        if (OperatingSystem.IsWindows() && ProcessEnvironmentHelper.GetOrNull(process.StartInfo, "Path") != null)
         {
             if (!string.IsNullOrEmpty(Se.Settings.General.FfmpegPath))
             {
