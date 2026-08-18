@@ -1269,6 +1269,7 @@ public class LanguageGeneral
         Shadow = "Shadow";
         ShadowColor = "Shadow color";
         ShadowWidth = "Shadow width";
+        ShiftLineBy = "Shift line by";
         Shortcut = "Shortcut";
         Shortcuts = "Shortcuts";
         Show = "Show";
@@ -1336,6 +1337,8 @@ public class LanguageGeneral
         System = "System";
         TargetEncoding = "Target encoding";
         TargetFormat = "Target format";
+        TeletextAlignment = "Teletext alignment";
+        TeletextLine = "Teletext line";
         TenHours = "10 hours";
         Text = "Text";
         TextColor = "Text color";
