@@ -3,6 +3,35 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-beta17 (18th of August 2026)
+
+* Trim embedded ASSA fonts to the characters actually used (attachments, font collector, batch convert) - thx hisui3393
+* Add show/hide settings for the format specific toolbar icons - thx GrampaWildWilly
+* Add a "Select none" button to the AI review window - thx fraternl
+* Add the CosyVoice3 RL talker models in both quantizations - thx subof
+* Show the subtitle on the video in "Visual sync" and "Set sync point" - thx gabiacas-ops
+* Make the toolbar frame rate usable like the SE 4 one - thx smt-joen
+* Use an index-mapped scrollbar for the subtitle list in the OCR window
+* Update ffmpeg to 9.0.1 (Windows) / 9.0 (macOS arm), Tesseract to 5.5.3, whisper.cpp to v1.9.2, libmpv to shinchiro 20260814, and Paddle OCR standalone to v1.4.0
+* Fix Shift+Delete still not cutting in a text box - thx GrampaWildWilly
+* Fix per-line voice cloning hanging on Windows - thx invio-a11y
+* Fix capitalization after "EE.UU." and other doubled Spanish abbreviations - thx fraternl
+* Fix the Spanish OCR replace rule for "clón" breaking words like "ciclón" - thx fraternl
+* Fix audio clip extraction progress jumping after Subtitle Edit regains focus - thx Davanix
+* Fix speech to text failing on videos where the audio is not the first stream - thx emsb8888-prog
+* Fix speech to text transcribing a different audio track than the engine picks on multi-track files
+* Fix the main window being stuck on screen when a modal dialog is minimized - thx emsb8888-prog
+* Fix text to speech losing the whole run when a local engine crashes mid-generation - thx subof
+* Fix the waveform cursor running ahead of the audio when playback resumes - thx hisui3393
+* Fix ASSA styles from the style storage changing values after OCR - thx FunkyKnilch
+* Update Bulgarian translation - thx jekovcar
+* Update German translation - thx Need74
+* Update Italian translation - thx bovirus, GitGianluc
+* Update Japanese translation - thx hisui3393
+* Update Russian translation - thx jekovcar
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-beta16 (17th of August 2026)
 
 * Add a chapter editor with Matroska/MP4/OGM chapter formats (Video > More > Chapters) - thx alex64-pb
