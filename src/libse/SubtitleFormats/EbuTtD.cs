@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return false;
             }
 
-            if (text.Contains("bouten-", StringComparison.Ordinal))
+            if (text.Contains("lang=\"ja\"", StringComparison.Ordinal) && NetflixImsc11Japanese.ContainsJapaneseProfileStyling(text))
             {
                 return false; // Netflix IMSC 1.1 Japanese
             }

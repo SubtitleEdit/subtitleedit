@@ -68,6 +68,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 ".Replace('\'', '"');
         }
 
+        /// <summary>
+        /// Bouten (emphasis) styles are optional, so also accept the ruby/furigana styling
+        /// attributes from the IMSC 1.1 Japanese profile - these never occur in EBU-TT-D.
+        /// </summary>
+        internal static bool ContainsJapaneseProfileStyling(string text)
+        {
+            return text.Contains("bouten-", StringComparison.Ordinal) ||
+                   text.Contains("tts:ruby=", StringComparison.Ordinal) ||
+                   text.Contains("tts:rubyReserve=", StringComparison.Ordinal);
+        }
+
         public override bool IsMine(List<string> lines, string fileName)
         {
             if (fileName != null && !(fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase)))
@@ -78,7 +89,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             var text = sb.ToString();
-            if (!text.Contains("lang=\"ja\"", StringComparison.Ordinal) || !text.Contains("bouten-", StringComparison.Ordinal))
+            if (!text.Contains("lang=\"ja\"", StringComparison.Ordinal) || !ContainsJapaneseProfileStyling(text))
             {
                 return false;
             }
