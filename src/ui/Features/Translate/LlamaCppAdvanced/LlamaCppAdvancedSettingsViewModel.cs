@@ -29,6 +29,7 @@ public partial class LlamaCppAdvancedSettingsViewModel : ObservableObject
     [ObservableProperty] private double? _repeatPenalty;
     [ObservableProperty] private int _maxTokens;
     [ObservableProperty] private int _contextSize;
+    [ObservableProperty] private string _serverArguments = string.Empty;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
@@ -57,6 +58,7 @@ public partial class LlamaCppAdvancedSettingsViewModel : ObservableObject
         RepeatPenalty = settings.RepeatPenalty;
         MaxTokens = settings.MaxTokens;
         ContextSize = settings.ContextSize;
+        ServerArguments = settings.ServerArguments;
     }
 
     [RelayCommand]
@@ -76,6 +78,7 @@ public partial class LlamaCppAdvancedSettingsViewModel : ObservableObject
         settings.RepeatPenalty = RepeatPenalty ?? -1;
         settings.MaxTokens = MaxTokens;
         settings.ContextSize = Math.Clamp(ContextSize, 2048, 262144);
+        settings.ServerArguments = ServerArguments?.Trim() ?? string.Empty;
         Se.SaveSettings();
 
         OkPressed = true;

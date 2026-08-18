@@ -235,6 +235,11 @@ public class AutoTranslateWindow : Window
         var buttonLlamaCppServer = UiUtil.MakeButton(string.Empty, vm.ToggleLlamaCppServerCommand).WithMarginLeft(5);
         buttonLlamaCppServer.Bind(Button.ContentProperty, new Binding(nameof(vm.LlamaCppServerButtonText)));
         buttonLlamaCppServer.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.LlamaCppButtonsAreVisible)));
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            // The local server's live endpoint (random port) - see LlamaCppServerUrlInfo.
+            buttonLlamaCppServer.Bind(ToolTip.TipProperty, new Binding(nameof(vm.LlamaCppServerUrlInfo)));
+        }
 
         var buttonLlamaCppOpenFolder = UiUtil.MakeButton(vm.OpenLlamaCppModelsFolderCommand, IconNames.FolderOpen, Se.Language.General.OpenContainingFolder)
             .WithMarginLeft(5);

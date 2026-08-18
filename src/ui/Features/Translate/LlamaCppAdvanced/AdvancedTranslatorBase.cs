@@ -123,12 +123,23 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
         var userContent = LlamaCppAdvancedProtocol.BuildUserContent(history, lines);
         var responseFormat = LlamaCppAdvancedProtocol.BuildResponseFormatJson(lines);
 
+        // Generous output budget for the batch (a translation is roughly source-sized; the JSON
+        // wrapper adds a little per line). Only a fallback: the user's MaxTokens setting wins in
+        // the client. Without any cap a grammar-cornered model generates until the server context
+        // fills (#13830) - with it, the runaway becomes an incomplete reply that the normal
+        // retry/bisection path handles.
+        var defaultMaxTokens = 200;
+        foreach (var line in lines)
+        {
+            defaultMaxTokens += 32 + 2 * line.Text.Length;
+        }
+
         var map = new Dictionary<int, string>();
         for (var attempt = 0; attempt < 2 && !cancellationToken.IsCancellationRequested; attempt++)
         {
             try
             {
-                var reply = await client.ChatAsync(url, systemPrompt, userContent, responseFormat, cancellationToken, GetModel());
+                var reply = await client.ChatAsync(url, systemPrompt, userContent, responseFormat, cancellationToken, GetModel(), defaultMaxTokens);
                 map = LlamaCppAdvancedProtocol.ParseTranslations(reply);
                 if (IsComplete(map, lines))
                 {

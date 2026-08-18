@@ -105,6 +105,7 @@ public partial class AutoTranslateViewModel : ObservableObject
     [ObservableProperty] private bool _llamaCppRemoteToggleIsVisible;
     [ObservableProperty] private bool _llamaCppUseRemoteServer;
     [ObservableProperty] private string _llamaCppServerButtonText = Se.Language.General.StartServer;
+    [ObservableProperty] private string? _llamaCppServerUrlInfo;
     [ObservableProperty] private string _llamaCppDownloadButtonText = string.Empty;
     [ObservableProperty] private string _crispAsrDownloadButtonText = string.Empty;
 
@@ -745,7 +746,31 @@ public partial class AutoTranslateViewModel : ObservableObject
         if (wasTranslating)
         {
             StatusText = Se.Language.Translate.TranslationCancelled;
+            StopLocalLlamaCppServerAfterCancel();
         }
+    }
+
+    /// <summary>
+    /// Cancelling a local llama.cpp translation also stops the SE-managed server, so the model's
+    /// RAM/VRAM is released right away instead of after the app closes (#13830). Only mid-run: a
+    /// server left idle by a completed translation stays warm (Stop server button / app exit).
+    /// The next translate run auto-restarts it.
+    /// </summary>
+    private void StopLocalLlamaCppServerAfterCancel()
+    {
+        if (SelectedAutoTranslator is not (LlamaCppTranslate or LlamaCppAdvancedTranslate) ||
+            LlamaCppUseRemoteServer ||
+            !LlamaCppServerManager.IsServerRunning)
+        {
+            return;
+        }
+
+        // Off the UI thread - StopServer kills the process and waits up to 2 s for it to exit.
+        _ = Task.Run(() =>
+        {
+            LlamaCppServerManager.StopServer();
+            Dispatcher.UIThread.Post(UpdateLlamaCppServerButtonText);
+        });
     }
 
     [RelayCommand]
@@ -961,6 +986,12 @@ public partial class AutoTranslateViewModel : ObservableObject
     private void UpdateLlamaCppServerButtonText()
     {
         LlamaCppServerButtonText = LlamaCppServerManager.IsServerRunning ? Se.Language.General.StopServer : Se.Language.General.StartServer;
+
+        // The SE-managed server runs on a random free port, not the URL from remote-server mode -
+        // surface the live endpoint so the two are not mistaken for each other (#13830).
+        LlamaCppServerUrlInfo = LlamaCppServerManager.IsServerRunning
+            ? string.Format(Se.Language.Translate.ServerRunningAtX, LlamaCppServerManager.ApiUrl)
+            : null;
     }
 
     [RelayCommand]
@@ -1126,10 +1157,12 @@ public partial class AutoTranslateViewModel : ObservableObject
         {
             // The advanced engine stuffs history/synopsis/glossary into every request, so it gets
             // a user-configurable (default larger) server context; everything else keeps the default.
-            var contextSize = SelectedAutoTranslator is LlamaCppAdvancedTranslate
+            var isAdvanced = SelectedAutoTranslator is LlamaCppAdvancedTranslate;
+            var contextSize = isAdvanced
                 ? Math.Clamp(Se.Settings.AutoTranslate.LlamaCppAdvanced.ContextSize, 2048, 262144)
                 : LlamaCppServerManager.DefaultContextSize;
-            await LlamaCppServerManager.EnsureServerRunningAsync(model, _cancellationTokenSource.Token, contextSize);
+            var extraArguments = isAdvanced ? Se.Settings.AutoTranslate.LlamaCppAdvanced.ServerArguments : null;
+            await LlamaCppServerManager.EnsureServerRunningAsync(model, _cancellationTokenSource.Token, contextSize, extraArguments);
         }
         catch (Exception ex)
         {
@@ -2453,8 +2486,13 @@ public partial class AutoTranslateViewModel : ObservableObject
     {
         // The OS close button bypasses the Cancel command - stop a running translation
         // loop so it does not keep calling the translation API against a closed window.
+        var wasTranslating = !IsTranslateEnabled;
         _abort = true;
         _cancellationTokenSource.Cancel();
+        if (wasTranslating)
+        {
+            StopLocalLlamaCppServerAfterCancel();
+        }
     }
 
     internal void OnLoaded()
