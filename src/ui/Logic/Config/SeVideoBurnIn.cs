@@ -35,6 +35,7 @@ public class SeVideoBurnIn
     public string NonAssaOutlineColor { get; set; }
     public string NonAssaAlignment { get; set; }
     public bool NonAssaFixRtlUnicode { get; set; }
+    public decimal NonAssaSpacing { get; set; }
     public decimal NonAssaMarginVertical { get; set; }
     public decimal NonAssaMarginHorizontal { get; set; }
     public string EmbedOutputExt { get; set; }

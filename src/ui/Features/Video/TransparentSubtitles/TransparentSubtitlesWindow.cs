@@ -241,6 +241,10 @@ public class TransparentSubtitlesWindow : Window
             }
         };
 
+        var labelSpacing = UiUtil.MakeLabel(Se.Language.General.Spacing);
+        var textBoxSpacing = UiUtil.MakeNumericUpDownOneDecimal(-20, 100, 130, vm, nameof(vm.SelectedFontSpacing));
+        textBoxSpacing.ValueChanged += vm.NumericUpDownChanged;
+
         var labelBoxType = UiUtil.MakeLabel(Se.Language.Video.BurnIn.BoxType);
         var comboBoxBoxType = UiUtil.MakeComboBox(vm.FontBoxTypes, vm, nameof(vm.SelectedFontBoxType));
         comboBoxBoxType.SelectionChanged += vm.BoxTypeChanged;
@@ -299,6 +303,7 @@ public class TransparentSubtitlesWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -331,14 +336,17 @@ public class TransparentSubtitlesWindow : Window
         grid.Add(labelShadow, 6, 0);
         grid.Add(panelShadow, 6, 1);
 
-        grid.Add(labelAlignment, 7, 0);
-        grid.Add(comboBoxAlignment, 7, 1);
+        grid.Add(labelSpacing, 7, 0);
+        grid.Add(textBoxSpacing, 7, 1);
 
-        grid.Add(labelMargin, 8, 0);
-        grid.Add(panelMargin, 8, 1);
+        grid.Add(labelAlignment, 8, 0);
+        grid.Add(comboBoxAlignment, 8, 1);
 
-        grid.Add(labelEffect, 9, 0);
-        grid.Add(panelEffect, 9, 1);
+        grid.Add(labelMargin, 9, 0);
+        grid.Add(panelMargin, 9, 1);
+
+        grid.Add(labelEffect, 10, 0);
+        grid.Add(panelEffect, 10, 1);
 
         return UiUtil.MakeBorderForControl(grid).WithMarginBottom(5).WithMarginRight(5);
     }
