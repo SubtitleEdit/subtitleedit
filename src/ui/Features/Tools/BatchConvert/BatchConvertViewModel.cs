@@ -1404,7 +1404,10 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         // Auto-start the local server - this points Configuration.Settings.Tools.LlamaCppApiUrl at it.
         try
         {
-            await LlamaCppServerManager.EnsureServerRunningAsync(model, _cancellationToken, contextSize);
+            var extraArguments = config.AutoTranslate.Translator is LlamaCppAdvancedTranslate
+                ? Se.Settings.AutoTranslate.LlamaCppAdvanced.ServerArguments
+                : null;
+            await LlamaCppServerManager.EnsureServerRunningAsync(model, _cancellationToken, contextSize, extraArguments);
         }
         catch (Exception ex)
         {

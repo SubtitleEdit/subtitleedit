@@ -302,6 +302,7 @@ public static class LlamaCppServerManager
     private static int _serverPort;
     private static string? _serverModelPath;
     private static int _serverContextSize;
+    private static string _serverExtraArguments = string.Empty;
     private static bool _processExitHooked;
     private static readonly StringBuilder _serverLog = new();
 
@@ -554,10 +555,11 @@ public static class LlamaCppServerManager
     /// </summary>
     public const int DefaultContextSize = 8192;
 
-    public static async Task EnsureServerRunningAsync(LlamaCppModel model, CancellationToken cancellationToken, int contextSize = DefaultContextSize)
+    public static async Task EnsureServerRunningAsync(LlamaCppModel model, CancellationToken cancellationToken, int contextSize = DefaultContextSize, string? extraArguments = null)
     {
+        var extraArgs = extraArguments?.Trim() ?? string.Empty;
         var modelPath = GetModelPath(model.FileName);
-        if (IsServerRunning && _serverModelPath == modelPath && _serverContextSize == contextSize)
+        if (IsServerRunning && _serverModelPath == modelPath && _serverContextSize == contextSize && _serverExtraArguments == extraArgs)
         {
             Configuration.Settings.Tools.LlamaCppApiUrl = ApiUrl;
             return;
@@ -566,7 +568,7 @@ public static class LlamaCppServerManager
         await ServerLock.WaitAsync(cancellationToken);
         try
         {
-            if (IsServerRunning && _serverModelPath == modelPath && _serverContextSize == contextSize)
+            if (IsServerRunning && _serverModelPath == modelPath && _serverContextSize == contextSize && _serverExtraArguments == extraArgs)
             {
                 Configuration.Settings.Tools.LlamaCppApiUrl = ApiUrl;
                 return;
@@ -653,6 +655,13 @@ public static class LlamaCppServerManager
                 psi.ArgumentList.Add(model.ChatTemplate);
             }
 
+            // User-supplied llama-server arguments last, so a repeated flag (e.g. -ngl, -c)
+            // overrides SE's value - llama-server applies later arguments over earlier ones.
+            foreach (var arg in SplitCommandLineArguments(extraArgs))
+            {
+                psi.ArgumentList.Add(arg);
+            }
+
             var process = Process.Start(psi)
                 ?? throw new InvalidOperationException("Failed to start llama-server");
 
@@ -684,6 +693,7 @@ public static class LlamaCppServerManager
             _serverPort = port;
             _serverModelPath = modelPath;
             _serverContextSize = contextSize;
+            _serverExtraArguments = extraArgs;
             HookProcessExitOnce();
 
             var deadline = DateTime.UtcNow.AddMinutes(5);
@@ -784,6 +794,59 @@ public static class LlamaCppServerManager
         {
             return false;
         }
+    }
+
+    /// <summary>
+    /// Splits a user-entered argument string on whitespace, honoring single/double quotes so
+    /// values with spaces survive (e.g. <c>--override-kv "key=str:some value"</c>).
+    /// </summary>
+    internal static List<string> SplitCommandLineArguments(string arguments)
+    {
+        var result = new List<string>();
+        if (string.IsNullOrWhiteSpace(arguments))
+        {
+            return result;
+        }
+
+        var current = new StringBuilder();
+        var quote = '\0';
+        foreach (var ch in arguments)
+        {
+            if (quote != '\0')
+            {
+                if (ch == quote)
+                {
+                    quote = '\0';
+                }
+                else
+                {
+                    current.Append(ch);
+                }
+            }
+            else if (ch == '"' || ch == '\'')
+            {
+                quote = ch;
+            }
+            else if (char.IsWhiteSpace(ch))
+            {
+                if (current.Length > 0)
+                {
+                    result.Add(current.ToString());
+                    current.Clear();
+                }
+            }
+            else
+            {
+                current.Append(ch);
+            }
+        }
+
+        if (current.Length > 0)
+        {
+            result.Add(current.ToString());
+        }
+
+        return result;
     }
 
     private static int FindFreeLoopbackPort()

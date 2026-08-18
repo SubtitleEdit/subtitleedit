@@ -146,7 +146,7 @@ public class LlamaCppAdvancedSettingsWindow : Window
             ColumnSpacing = 12,
             RowSpacing = 10,
         };
-        for (var i = 0; i < 5; i++)
+        for (var i = 0; i < 6; i++)
         {
             grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
         }
@@ -180,6 +180,15 @@ public class LlamaCppAdvancedSettingsWindow : Window
         grid.Add(MakeSmallLabel(Se.Language.Translate.ServerContextSizeTokens), 4, 0);
         grid.Add(contextSize, 4, 1);
         Grid.SetColumnSpan(contextSize, 3);
+
+        // Free-form llama-server arguments for the SE-managed local server (#13830) - lets users
+        // tune flags SE does not curate (e.g. partial GPU offload on a too-small card).
+        var serverArguments = UiUtil.MakeTextBox(280, vm, nameof(vm.ServerArguments))
+            .WithAccessibleName(Se.Language.Translate.ExtraServerParameters);
+        SetHint(serverArguments, Se.Language.Translate.ExtraServerParametersHint);
+        grid.Add(MakeSmallLabel(Se.Language.Translate.ExtraServerParameters), 5, 0);
+        grid.Add(serverArguments, 5, 1);
+        Grid.SetColumnSpan(serverArguments, 3);
 
         return grid;
     }
