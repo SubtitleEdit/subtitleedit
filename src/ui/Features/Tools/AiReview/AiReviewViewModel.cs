@@ -57,15 +57,12 @@ public partial class AiReviewViewModel : ObservableObject
     [ObservableProperty] private bool _isPlayVisible;
 
     /// <summary>
-    /// True for callers without a live target: Apply writes the fixes, sets <see cref="OkPressed"/>
-    /// and closes, and the second button is a plain Cancel. With a target, Apply keeps the window
-    /// open and that button reads "Done" - nothing is left pending to cancel (issue #13807).
+    /// True for callers with a live target (both main-window entry points): an "Apply" button is
+    /// shown next to Ok, so the checked fixes can be handed over without closing and a long review
+    /// can be worked through in passes (issue #13807). Callers without a target have nowhere to
+    /// push a pass, so they get the plain Ok/Cancel pair.
     /// </summary>
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(CloseButtonText))]
-    private bool _isApplyAndClose = true;
-
-    public string CloseButtonText => IsApplyAndClose ? Se.Language.General.Cancel : Se.Language.General.Done;
+    [ObservableProperty] private bool _isApplyVisible;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
@@ -155,7 +152,7 @@ public partial class AiReviewViewModel : ObservableObject
         _playLine = playLine;
         _stopPlayback = stopPlayback;
         _applyCallback = applyCallback;
-        IsApplyAndClose = applyCallback == null;
+        IsApplyVisible = applyCallback != null;
         IsPlayVisible = playLine != null;
         _languageCode = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
         LanguageDisplay = GetLanguageDisplayName(_languageCode);
@@ -653,6 +650,7 @@ public partial class AiReviewViewModel : ObservableObject
         var selected = SelectedCount;
         SummaryText = string.Format(l.XSuggestionsYSelected, _allSuggestions.Count, selected);
         ApplyButtonText = string.Format(l.ApplyXFixes, selected);
+        ApplyCommand.NotifyCanExecuteChanged();
     }
 
     [RelayCommand]
@@ -782,6 +780,10 @@ public partial class AiReviewViewModel : ObservableObject
         await _windowService.ShowDialogAsync<AiReviewPromptWindow, AiReviewPromptViewModel>(Window, vm => vm.Initialize());
     }
 
+    /// <summary>
+    /// Writes the checked fixes and closes - the Ok half of the Ok/Apply pair, so finishing on the
+    /// last pass is one click rather than Apply followed by a separate close.
+    /// </summary>
     [RelayCommand]
     private void Ok()
     {
@@ -792,12 +794,37 @@ public partial class AiReviewViewModel : ObservableObject
 
         if (_applyCallback == null)
         {
+            // No live target: the caller picks the result up from FixedSubtitle after the dialog.
             OkPressed = true;
-            _cancellationTokenSource.Cancel();
-            Window?.Close();
+        }
+        else
+        {
+            // The callback already delivered the fixes, so OkPressed stays false - a caller that
+            // passes a callback and also reads FixedSubtitle would otherwise apply the pass twice.
+            _applyCallback(applied);
+        }
+
+        _cancellationTokenSource.Cancel();
+        Window?.Close();
+    }
+
+    /// <summary>
+    /// Hands the checked fixes to the caller and leaves the window open: the applied rows drop out
+    /// of the grid, the rest stay reviewable, and the next pass builds on the result - so a review
+    /// that took minutes does not have to be run again to apply a second batch (issue #13807).
+    /// </summary>
+    [RelayCommand(CanExecute = nameof(CanApply))]
+    private void Apply()
+    {
+        if (_applyCallback == null)
+        {
             return;
         }
 
+        SaveSettings();
+
+        var applied = ApplySelectedSuggestions();
+        FixedSubtitle = applied;
         _applyCallback(applied);
 
         // Keep working against what the caller now holds, and drop the suggestions that are in it -
@@ -806,6 +833,10 @@ public partial class AiReviewViewModel : ObservableObject
         RemoveAppliedSuggestions();
         StatusText = string.Format(Se.Language.Main.FixedXLines, _appliedCount);
     }
+
+    // Nothing checked means Apply would hand the caller an unchanged subtitle - an undo step and a
+    // "fixed 0 lines" status for no change at all.
+    private bool CanApply() => SelectedCount > 0;
 
     /// <summary>
     /// A copy of the working subtitle with every checked suggestion written into it.

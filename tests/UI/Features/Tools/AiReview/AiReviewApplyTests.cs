@@ -1,19 +1,22 @@
+using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
+using Avalonia.LogicalTree;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Tools.AiReview;
 using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Input;
 
 namespace UITests.Features.Tools.AiReview;
 
 /// <summary>
-/// "Apply" used to work like OK: it wrote the checked fixes and closed the window, so applying a
-/// second batch meant running the whole review again - minutes of model time for a subtitle that
-/// needs suggestion-by-suggestion judgement (issue #13807). With a live target the window now stays
-/// open, hands each pass to the caller and drops the rows it applied.
+/// The single button used to work like OK: it wrote the checked fixes and closed the window, so
+/// applying a second batch meant running the whole review again - minutes of model time for a
+/// subtitle that needs suggestion-by-suggestion judgement (issue #13807). The window now offers the
+/// standard Apply/Ok pair: Apply hands a pass to the caller and stays open, dropping the rows it
+/// applied; Ok writes the checked fixes and closes.
 /// </summary>
 public class AiReviewApplyTests
 {
@@ -72,7 +75,7 @@ public class AiReviewApplyTests
             MakeSuggestion(0, "Their going home.", "They're going home."),
             MakeSuggestion(1, "Its to late.", "It's too late."));
 
-        vm.OkCommand.Execute(null);
+        vm.ApplyCommand.Execute(null);
 
         Assert.Single(applied);
         Assert.Equal("They're going home.", applied[0].Paragraphs[0].Text);
@@ -92,7 +95,7 @@ public class AiReviewApplyTests
         second.IsSelected = false;
         AddSuggestions(vm, first, second);
 
-        vm.OkCommand.Execute(null);
+        vm.ApplyCommand.Execute(null);
 
         Assert.Equal(new[] { second }, vm.Suggestions.ToArray());
         Assert.False(second.IsSelected); // the remaining row keeps its own checkbox state
@@ -110,9 +113,9 @@ public class AiReviewApplyTests
         second.IsSelected = false;
         AddSuggestions(vm, first, second);
 
-        vm.OkCommand.Execute(null);
+        vm.ApplyCommand.Execute(null);
         second.IsSelected = true;
-        vm.OkCommand.Execute(null);
+        vm.ApplyCommand.Execute(null);
 
         Assert.Equal(2, applied.Count);
         // The second pass carries the first pass's fix - it is applied to the updated subtitle.
@@ -122,7 +125,7 @@ public class AiReviewApplyTests
     }
 
     [AvaloniaFact]
-    public void Apply_WithoutCallback_KeepsTheApplyAndCloseContract()
+    public void Ok_WithoutCallback_KeepsTheApplyAndCloseContract()
     {
         var vm = MakeViewModel();
         vm.Initialize(MakeSubtitle(), null);
@@ -135,15 +138,86 @@ public class AiReviewApplyTests
         Assert.Single(vm.Suggestions); // nothing pruned - the window is closing
     }
 
+    /// <summary>
+    /// Ok is the other half of the pair: it applies the checked fixes through the same callback and
+    /// closes, so the last pass does not need Apply plus a separate close.
+    /// </summary>
     [AvaloniaFact]
-    public void CloseButtonText_FollowsTheApplyMode()
+    public void Ok_WithCallback_AppliesThroughTheCallbackAndCloses()
     {
-        var closing = MakeViewModel();
-        closing.Initialize(MakeSubtitle(), null);
-        Assert.Equal(Se.Language.General.Cancel, closing.CloseButtonText);
+        var applied = new List<Subtitle>();
+        var vm = MakeViewModel();
+        vm.Initialize(MakeSubtitle(), null, null, null, applied.Add);
+        AddSuggestions(vm, MakeSuggestion(1, "Its to late.", "It's too late."));
 
-        var staying = MakeViewModel();
-        staying.Initialize(MakeSubtitle(), null, null, null, _ => { });
-        Assert.Equal(Se.Language.General.Done, staying.CloseButtonText);
+        vm.OkCommand.Execute(null);
+
+        Assert.Single(applied);
+        Assert.Equal("It's too late.", applied[0].Paragraphs[1].Text);
+        // The callback delivered the pass, so the pull-based contract stays off - a caller reading
+        // both would apply the same fixes twice.
+        Assert.False(vm.OkPressed);
+    }
+
+    /// <summary>
+    /// Applying nothing would cost the caller an undo step and a "fixed 0 lines" status for an
+    /// unchanged subtitle, so Apply is disabled until something is checked. Ok stays enabled: with
+    /// no fixes checked it is simply a close.
+    /// </summary>
+    [AvaloniaFact]
+    public void Apply_IsDisabledWhenNothingIsChecked()
+    {
+        var vm = MakeViewModel();
+        vm.Initialize(MakeSubtitle(), null, null, null, _ => { });
+        var suggestion = MakeSuggestion(0, "Their going home.", "They're going home.");
+        AddSuggestions(vm, suggestion);
+        Assert.True(vm.ApplyCommand.CanExecute(null));
+
+        vm.SelectNoneCommand.Execute(null);
+
+        Assert.False(vm.ApplyCommand.CanExecute(null));
+        Assert.True(vm.OkCommand.CanExecute(null));
+    }
+
+    /// <summary>
+    /// Apply only makes sense with somewhere to push a pass to, so callers without a live target
+    /// keep the plain Ok/Cancel pair - and the button bar must follow, not just the view model.
+    /// </summary>
+    [AvaloniaFact]
+    public void ApplyButton_IsShownOnlyForCallersWithALiveTarget()
+    {
+        var inPasses = MakeViewModel();
+        inPasses.Initialize(MakeSubtitle(), null, null, null, _ => { });
+        var windowInPasses = new AiReviewWindow(inPasses);
+        try
+        {
+            Assert.True(inPasses.IsApplyVisible);
+            Assert.True(FindButton(windowInPasses, inPasses.ApplyCommand)?.IsVisible);
+            Assert.NotNull(FindButton(windowInPasses, inPasses.OkCommand));
+            Assert.NotNull(FindButton(windowInPasses, inPasses.CancelCommand));
+        }
+        finally
+        {
+            windowInPasses.Close();
+        }
+
+        var applyAndClose = MakeViewModel();
+        applyAndClose.Initialize(MakeSubtitle(), null);
+        var windowApplyAndClose = new AiReviewWindow(applyAndClose);
+        try
+        {
+            Assert.False(applyAndClose.IsApplyVisible);
+            Assert.False(FindButton(windowApplyAndClose, applyAndClose.ApplyCommand)?.IsVisible);
+            Assert.NotNull(FindButton(windowApplyAndClose, applyAndClose.OkCommand));
+        }
+        finally
+        {
+            windowApplyAndClose.Close();
+        }
+    }
+
+    private static Button? FindButton(Control root, ICommand command)
+    {
+        return root.GetLogicalDescendants().OfType<Button>().FirstOrDefault(b => b.Command == command);
     }
 }

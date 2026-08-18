@@ -7063,9 +7063,10 @@ public partial class MainViewModel :
         // Same filter as GetUpdateSubtitle() below, so index N of the reviewed subtitle is line N
         // here - that mapping is what lets the review window play the line of a suggestion.
         var reviewedLines = Subtitles.Where(s => !s.IsReferenceOnly).ToList();
-        // Apply + Done: each Apply pushes the checked fixes into the grid and the review window stays
+        // Apply/Ok: each Apply pushes the checked fixes into the grid and the review window stays
         // open with the rest of the suggestions, so a review that took minutes is not spent on one
-        // batch (issue #13807). AI review only rewrites text, so the line count never changes.
+        // batch (issue #13807); Ok does the same and closes. AI review only rewrites text, so the
+        // line count never changes.
         void ApplyToGrid(Subtitle applied)
         {
             // Count the lines this pass actually changed - the status used to report the subtitle's
@@ -11119,8 +11120,9 @@ public partial class MainViewModel :
             sub.Paragraphs.Add(line.ToParagraph(SelectedSubtitleFormat));
         }
 
-        // Apply + Done, like the whole-file path (issue #13807): AI review only rewrites text, so the
-        // fixed subtitle stays 1:1 with the block sent in and every pass can be written straight back.
+        // Apply/Ok in passes, like the whole-file path (issue #13807): AI review only rewrites text,
+        // so the fixed subtitle stays 1:1 with the block sent in and every pass can be written
+        // straight back.
         void ApplyToSelectedLines(Subtitle applied)
         {
             var fixedCount = 0;

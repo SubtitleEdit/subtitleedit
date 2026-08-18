@@ -47,7 +47,9 @@ Each suggestion shows:
 
 Filter the grid with the category chips above it. Press **Apply N fixes** to apply the checked suggestions - this is a single undo step (Ctrl+Z reverts everything).
 
-**Apply does not close the window.** The applied rows disappear from the grid and everything else stays, so a review can be worked through in passes - press *Select none*, tick the suggestions you agree with, apply, then carry on with the rest. Each pass is its own undo step. **Done** closes the window; nothing is pending at that point, since every fix reached the subtitle when you applied it.
+**Apply does not close the window.** The applied rows disappear from the grid and everything else stays, so a review can be worked through in passes - press *Select none*, tick the suggestions you agree with, apply, then carry on with the rest. Each pass is its own undo step.
+
+The buttons next to it are the usual pair: **OK** applies the checked suggestions and closes, so the last pass is a single click, and **Cancel** closes without applying what is still checked. Passes you already applied stay applied - use Ctrl+Z to undo them.
 
 ### Listening to a line
 
