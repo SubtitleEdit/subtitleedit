@@ -19,6 +19,19 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
 {
     private ISpellCheckManager? _spellCheckManager;
 
+    /// <summary>Characters of a line's own text a grid cell ever shows - the rest is an ellipsis.</summary>
+    private const int MaxVisibleLength = 200;
+
+    /// <summary>
+    /// How much of a line is parsed at all in "show formatting" mode. Tags cost nothing on screen
+    /// but still have to be walked, so this only bounds the pathological case; a line of a few
+    /// hundred characters of override tags is ordinary in karaoke and effect files.
+    /// </summary>
+    private const int MaxRawLength = 5000;
+
+    /// <summary>Longest override-tag block whose contents are still parsed into formatting state.</summary>
+    private const int MaxParsedTagLength = 2000;
+
     // Pre-compiled <font> attribute patterns (reused across every grid-row render)
     private static readonly TimeSpan RegexTimeout = TimeSpan.FromMilliseconds(100);
     private static readonly Regex FontColorRegex = new(@"color\s*=\s*[""']?([^""'\s>]+)[""']?", RegexOptions.IgnoreCase | RegexOptions.Compiled, RegexTimeout);
@@ -116,17 +129,29 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             return new InlineCollection();
         }
 
-        // Truncate long strings for performance
-        if (str.Length > 200)
-        {
-            str = str.Substring(0, 197).TrimEnd() + "...";
-        }
-
         var formattingType = Se.Settings.Appearance.SubtitleGridFormattingType;
+
+        // "Show formatting" hides the ASSA/HTML tags and renders what they mean, so the length that
+        // matters is the dialogue, not the markup around it. Truncating the raw string first threw
+        // away the text of exactly the lines this mode is for: a karaoke or effect line carrying a
+        // few hundred characters of {\t(...)} became 197 characters of tag and no words at all
+        // (issue #13824). Only pathological lines are cut here, and the visible text is capped
+        // inside MakeShowFormatting instead.
         if (formattingType == (int)SubtitleGridFormattingTypes.ShowFormatting)
         {
+            if (str.Length > MaxRawLength)
+            {
+                str = str.Substring(0, MaxRawLength);
+            }
+
             var lines = MakeShowFormatting(str);
             return SpellCheckLines(lines);
+        }
+
+        // Truncate long strings for performance
+        if (str.Length > MaxVisibleLength)
+        {
+            str = str.Substring(0, MaxVisibleLength - 3).TrimEnd() + "...";
         }
 
         if (formattingType == (int)SubtitleGridFormattingTypes.ShowTags)
@@ -632,6 +657,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         // Track current formatting state
         var state = new FormattingState();
         var inlines = new InlineCollection();
+        var visibleLength = 0;
 
         // Limit iterations to prevent infinite loops (should never exceed string length)
         var maxIterations = str.Length * 2; // Safety margin
@@ -648,9 +674,17 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             if (c == '{' && c2 == '\\')
             {
                 var tagEnd = str.IndexOf('}', i + 2);
-                if (tagEnd != -1 && tagEnd - i < 500) // Limit tag length to prevent malicious input
+                if (tagEnd != -1)
                 {
-                    ParseAssaTags(str, i + 1, tagEnd, state); // Content between { and }
+                    // A single block of override tags can be long - the animated karaoke lines in
+                    // issue #13824 run past 300 characters - so length decides how much of it is
+                    // interpreted, never whether it counts as a tag. Printing the braces as text
+                    // is the one outcome nobody wants from a mode whose job is hiding them.
+                    if (tagEnd - i < MaxParsedTagLength)
+                    {
+                        ParseAssaTags(str, i + 1, tagEnd, state); // Content between { and }
+                    }
+
                     i = tagEnd + 1;
                     continue;
                 }
@@ -803,9 +837,18 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
 
             if (textLength > 0)
             {
+                // The cap is on what is shown, not on what was read: hidden tags do not eat into
+                // the line's visible characters (issue #13824).
                 var text = str.Substring(textStart, textLength);
-                var run = CreateFormattedRun(text, state);
-                inlines.Add(run);
+                if (visibleLength + text.Length > MaxVisibleLength)
+                {
+                    var keep = Math.Max(0, MaxVisibleLength - visibleLength - 3);
+                    inlines.Add(CreateFormattedRun(text.Substring(0, keep).TrimEnd() + "...", state));
+                    break;
+                }
+
+                visibleLength += text.Length;
+                inlines.Add(CreateFormattedRun(text, state));
             }
         }
 
