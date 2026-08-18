@@ -616,7 +616,8 @@ public partial class MainViewModel :
     // The waveform position that was right-clicked when the waveform context menu opened -
     // used to anchor "Insert subtitle file at video position..." at the clicked spot.
     private double? _waveformContextMenuSeconds;
-    private const double PlayheadMaxCorrectionFraction = 0.2; // cap catch-up to ~1.2x speed (vs the forward step)
+    private const double PlayheadMaxCorrectionFraction = 0.2; // cap catch-up to ~1.2x speed (vs real elapsed time, so starved ticks still repay their full share)
+    private const double PlayheadLagSnapSeconds = 0.15; // behind mpv's live clock by this much = audibly late -> snap forward instead of crawling
     private const double PlayheadMaxForwardStepSeconds = 0.05; // cap one tick's advance so a starved tick can't lurch
     private const double PlayheadFreezeHoldSeconds = 0.12; // if mpv's clock hasn't moved this long, it's frozen: hold
     private long _playheadLastRawChangeTs; // when mpv's reported position last changed
@@ -25493,7 +25494,15 @@ public partial class MainViewModel :
             {
                 elapsedSeconds = 0; // clock glitch
             }
-            else if (elapsedSeconds > PlayheadMaxForwardStepSeconds)
+
+            // Real time since the last tick, before the per-tick step cap below. The catch-up cap is
+            // sized against this: a starved tick (late timer under UI load) advances the cursor by at
+            // most the capped step, so it *creates* lag debt proportional to how late it was - and if
+            // repayment were sized against the capped step too, the slower the ticks, the less debt
+            // could be repaid per second, exactly when the most debt is being created. That standing
+            // lag is heard as the audio running ahead of the cursor (discussion #10824).
+            var actualElapsedSeconds = elapsedSeconds;
+            if (elapsedSeconds > PlayheadMaxForwardStepSeconds)
             {
                 // The cursor timer was starved (e.g. the mpv decode burst right after pressing play) or
                 // the app was suspended. Advancing by the whole missed span would make the cursor visibly
@@ -25556,13 +25565,26 @@ public partial class MainViewModel :
             {
                 _playheadEstimateSeconds = rawPosition;
             }
-            else if (rawChanged && drift > 0)
+            else if (drift > PlayheadLagSnapSeconds && rawFrozenSeconds < PlayheadFreezeHoldSeconds)
+            {
+                // The cursor has fallen audibly behind mpv's live clock - lag debt from starved ticks
+                // (late timer under UI load) accumulates faster than the gentle crawl below can repay
+                // it, and waiting for the 0.5 s resync threshold leaves the audio running ahead of the
+                // cursor for seconds at a time (discussion #10824). mpv's clock is advancing, so it IS
+                // the truth: a one-off forward hop is far less objectionable than a sustained audible
+                // desync. Gated on a live raw clock so a paused-seek re-prime freeze can't trigger it.
+                _playheadEstimateSeconds = rawPosition;
+            }
+            else if (drift > 0)
             {
                 // Only ever nudge forward to close a lag (e.g. after a starved tick); never pull the
                 // cursor backward, which is what showed up as the sub-1x "slow" after the rush. Cap the
-                // per-tick correction so the catch-up tops out around ~1.2x.
+                // per-tick correction against real elapsed time so the catch-up tops out around ~1.2x
+                // wall clock even when the timer is running slow - sizing it against the capped step
+                // (or only correcting on ticks where raw moved) throttled repayment to ~1.05x exactly
+                // when starved ticks were creating the most debt.
                 var correction = drift * PlayheadDriftCorrection;
-                var maxCorrection = elapsedSeconds * speed * PlayheadMaxCorrectionFraction;
+                var maxCorrection = actualElapsedSeconds * speed * PlayheadMaxCorrectionFraction;
                 if (correction > maxCorrection)
                 {
                     correction = maxCorrection;
