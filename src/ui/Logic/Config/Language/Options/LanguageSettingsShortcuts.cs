@@ -199,6 +199,7 @@ public class LanguageSettingsShortcuts
     public string ChooseSubtitleFormat { get; set; }
     public string TrimWhitespaceSelectedLines { get; set; }
     public string WaveformInsertNewSelection { get; set; }
+    public string WaveformNewSelectionPasteFromClipboard { get; set; }
     public string WaveformHorizontalZoomInCommand { get; set; }
     public string WaveformHorizontalZoomOutCommand { get; set; }
     public string WaveformVerticalZoomInCommand { get; set; }
@@ -458,6 +459,7 @@ public class LanguageSettingsShortcuts
         ChooseSubtitleFormat = "Choose subtitle format";
         TrimWhitespaceSelectedLines = "Trim whitespace (selected lines)";
         WaveformInsertNewSelection = "Waveform insert new selection";
+        WaveformNewSelectionPasteFromClipboard = "Waveform paste clipboard text to new selection";
         WaveformHorizontalZoomInCommand = "Waveform horizontal zoom in";
         WaveformHorizontalZoomOutCommand = "Waveform horizontal zoom out";
         WaveformVerticalZoomInCommand = "Waveform vertical zoom in";
