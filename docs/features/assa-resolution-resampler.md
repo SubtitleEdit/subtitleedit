@@ -37,3 +37,9 @@ Resample ASSA subtitle styles and positions from one video resolution to another
 |----------|--------|
 | F1 | Show help |
 | Escape | Close dialog |
+
+## Resolution set automatically from the video
+
+With *Options → Settings → ASSA* set to update the resolution automatically, loading a video (or converting to ASS/SSA) writes the video's dimensions into PlayResX / PlayResY, and the styles are resampled to match.
+
+That resampling only applies to a subtitle whose header already named a resolution - a file authored for another picture size. A header without PlayResX / PlayResY is the built-in one, or your default style storage written into it (an OCR result takes that route): there, only the small built-in font sizes (25 and below) are lifted to the video height, and your font size, margins, outline and shadow are kept exactly as configured.

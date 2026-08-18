@@ -21772,30 +21772,45 @@ public partial class MainViewModel :
         var oldHeader = _subtitle.Header;
         _subtitle.Header = AdvancedSubStationAlpha.SetResolution(_subtitle.Header, _mediaInfo.Dimension.Width, _mediaInfo.Dimension.Height);
 
-        if (Se.Settings.Assa.AutoSetResolutionConvert && oldHeader != _subtitle.Header)
+        if (!Se.Settings.Assa.AutoSetResolutionConvert || oldHeader == _subtitle.Header)
         {
-            if (string.IsNullOrEmpty(oldHeader) || !oldHeader.Contains("[V4+ Styles]", StringComparison.OrdinalIgnoreCase))
-            {
-                oldHeader = AdvancedSubStationAlpha.DefaultHeader;
-            }
-
-            var oldWidth = AdvancedSubStationAlpha.DefaultWidth;
-            var oldHeight = AdvancedSubStationAlpha.DefaultHeight;
-
-            var playResX = AdvancedSubStationAlpha.GetTagValueFromHeader("PlayResX", "[Script Info]", oldHeader);
-            if (int.TryParse(playResX, out var width) && width >= 125 && width <= 4096)
-            {
-                oldWidth = width;
-            }
-
-            var playResY = AdvancedSubStationAlpha.GetTagValueFromHeader("PlayResY", "[Script Info]", oldHeader);
-            if (int.TryParse(playResY, out var height) && height >= 125 && height <= 4096)
-            {
-                oldHeight = height;
-            }
-
-            AssaResamplerHelper.ApplyResampling(_subtitle, oldWidth, oldHeight, _mediaInfo.Dimension.Width, _mediaInfo.Dimension.Height, true, true, true, true);
+            return;
         }
+
+        if (string.IsNullOrEmpty(oldHeader) || !oldHeader.Contains("[V4+ Styles]", StringComparison.OrdinalIgnoreCase))
+        {
+            oldHeader = AdvancedSubStationAlpha.DefaultHeader;
+        }
+
+        // A header that names no resolution is not a file authored for another picture size - it is
+        // the built-in header, or the user's default style storage written into it (an OCR result
+        // takes that route). Resampling it scaled every value the user had configured: font size,
+        // margins, outline and shadow all grew by the ratio to the video height (issue #13799).
+        // SE 4 only lifted the small built-in font sizes here, and that is all we do now.
+        if (!TryGetPlayRes(oldHeader, "PlayResX", out var oldWidth) ||
+            !TryGetPlayRes(oldHeader, "PlayResY", out var oldHeight))
+        {
+            AssaResamplerHelper.ScaleDefaultFontSizes(_subtitle, _mediaInfo.Dimension.Height);
+            return;
+        }
+
+        AssaResamplerHelper.ApplyResampling(_subtitle, oldWidth, oldHeight, _mediaInfo.Dimension.Width, _mediaInfo.Dimension.Height, true, true, true, true);
+    }
+
+    /// <summary>
+    /// Reads a PlayResX/PlayResY tag from an ASSA header, ignoring values outside what a picture
+    /// size can be (some files carry a leftover "PlayResX: 0").
+    /// </summary>
+    private static bool TryGetPlayRes(string header, string tag, out int value)
+    {
+        var raw = AdvancedSubStationAlpha.GetTagValueFromHeader(tag, "[Script Info]", header);
+        if (int.TryParse(raw, out value) && value >= 125 && value <= 4096)
+        {
+            return true;
+        }
+
+        value = 0;
+        return false;
     }
 
     internal void ComboBoxFrameRateSelectionChanged(object? sender, SelectionChangedEventArgs e)
