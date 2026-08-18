@@ -66,6 +66,32 @@ needs about 20 GB of VRAM to run fully on the GPU — a 24 GB card in practice. 
 put the 12B ahead of the Gemma 3 27B baseline, so the 12B in the download list is already a strong
 choice and the jump to 27B buys less than the size difference suggests.
 
+## Prompts: chat models and completion models
+
+Every local-LLM engine (LM Studio, Ollama, KoboldCpp, llama.cpp, OpenAI Compatible API) has a
+**prompt** you can edit. `{0}` is replaced with the source language and `{1}` with the target
+language, both as English names.
+
+By default the prompt is an instruction and Subtitle Edit appends the subtitle text after it — what
+a chat-tuned model expects.
+
+Some translation models are trained on a *completion* format instead: the text has to sit inside the
+prompt, followed by a cue for the target language. Write `{2}` where the text belongs and Subtitle
+Edit sends the filled-in template as one block instead of appending anything. For example
+[MiLMMT-46](https://huggingface.co/xiaomi-research/MiLMMT-46-12B-v1.0) (Xiaomi's 46-language
+translation model) is trained on:
+
+```
+Translate this from {0} to {1}:
+{0}: {2}
+{1}:
+```
+
+The trailing `{1}:` cue is what makes such a model translate at all — without it, it tends to echo
+the source. Set the model's temperature to 0 where the engine offers it. Curated MiLMMT models in
+the llama.cpp engine's download list carry this prompt already; for LM Studio, KoboldCpp, Ollama or
+your own OpenAI-compatible server, paste it into the engine's prompt field.
+
 ## Engine Configuration
 
 Depending on the selected engine, you may need to provide:
