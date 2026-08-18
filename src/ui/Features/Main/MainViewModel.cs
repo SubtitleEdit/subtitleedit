@@ -14071,16 +14071,21 @@ public partial class MainViewModel :
                 // "Apply" applies the replacements live without closing, so several rounds can be run (#12029).
                 vm.OnApply = (fixedSubtitle, count) =>
                 {
+                    // Replacements are 1:1 with the lines they came from, so stay on the line the
+                    // user was on - jumping to the top on every Apply lost their place, and Apply
+                    // is meant to be used several times in a row (issue #13822).
+                    var selectedIndex = SelectedSubtitleIndex ?? 0;
                     SetSubtitles(fixedSubtitle);
-                    SelectAndScrollToRow(0);
+                    SelectAndScrollToRow(Math.Min(selectedIndex, Subtitles.Count - 1));
                     ShowStatus(string.Format(Se.Language.Main.ReplacedXOccurrences, count));
                 };
             });
 
         if (result.OkPressed)
         {
+            var selectedIndex = SelectedSubtitleIndex ?? 0;
             SetSubtitles(result.FixedSubtitle);
-            SelectAndScrollToRow(0);
+            SelectAndScrollToRow(Math.Min(selectedIndex, Subtitles.Count - 1));
             ShowStatus(string.Format(Se.Language.Main.ReplacedXOccurrences, result.TotalReplaced));
         }
     }
@@ -14932,13 +14937,20 @@ public partial class MainViewModel :
     /// </summary>
     private int RemoveBlankLinesFromGrid()
     {
-        var blankLines = Subtitles.Where(s => s.Text.IsOnlyControlCharactersOrWhiteSpace()).ToList();
-        var count = blankLines.Count;
+        var blank = Subtitles.Select(s => s.Text.IsOnlyControlCharactersOrWhiteSpace()).ToList();
+        var count = blank.Count(b => b);
         if (count == 0)
         {
             return 0;
         }
 
+        // Decide where the selection lands before removing anything: an AlwaysSelected grid picks
+        // a replacement row by itself as rows disappear, and the view follows it to the end of the
+        // list (issue #13822).
+        var survivorIndex = GridSelectionAnchor.PickSurvivorIndex(blank, SelectedSubtitleIndex ?? 0);
+        var survivor = survivorIndex >= 0 ? Subtitles[survivorIndex] : null;
+
+        var blankLines = Subtitles.Where(s => s.Text.IsOnlyControlCharactersOrWhiteSpace()).ToList();
         foreach (var line in blankLines)
         {
             Subtitles.Remove(line);
@@ -14946,6 +14958,11 @@ public partial class MainViewModel :
 
         Renumber();
         _updateAudioVisualizer = true;
+
+        if (survivor != null)
+        {
+            SelectAndScrollToRow(Subtitles.IndexOf(survivor));
+        }
 
         return count;
     }
