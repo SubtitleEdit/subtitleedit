@@ -45,6 +45,7 @@ public partial class BurnInViewModel : ObservableObject
     [ObservableProperty] private decimal? _selectedFontOutline;
     [ObservableProperty] private string _fontOutlineText;
     [ObservableProperty] private decimal? _selectedFontShadowWidth;
+    [ObservableProperty] private decimal? _selectedFontSpacing;
     [ObservableProperty] private string _fontShadowText;
     [ObservableProperty] private ObservableCollection<FontBoxItem> _fontBoxTypes;
     [ObservableProperty] private FontBoxItem _selectedFontBoxType;
@@ -940,6 +941,7 @@ public partial class BurnInViewModel : ObservableObject
         style.Outline = FontOutlineColor.ToSKColor();
         style.OutlineWidth = SelectedFontOutline ?? 0;
         style.ShadowWidth = SelectedFontShadowWidth ?? 0;
+        style.Spacing = SelectedFontSpacing ?? 0;
         style.Alignment = SelectedFontAlignment.Code;
         style.MarginLeft = FontMarginHorizontal ?? 0;
         style.MarginRight = FontMarginHorizontal ?? 0;
@@ -1376,6 +1378,7 @@ public partial class BurnInViewModel : ObservableObject
         FontIsBold = settings.FontBold;
         SelectedFontOutline = settings.OutlineWidth;
         SelectedFontShadowWidth = settings.ShadowWidth;
+        SelectedFontSpacing = settings.NonAssaSpacing;
         SelectedFontName = settings.FontName;
         FontTextColor = settings.NonAssaTextColor.FromHexToColor();
         FontOutlineColor = settings.NonAssaOutlineColor.FromHexToColor();
@@ -1432,6 +1435,7 @@ public partial class BurnInViewModel : ObservableObject
         settings.FontBold = FontIsBold;
         settings.OutlineWidth = SelectedFontOutline ?? 0;
         settings.ShadowWidth = SelectedFontShadowWidth ?? 0;
+        settings.NonAssaSpacing = SelectedFontSpacing ?? 0;
         settings.FontName = SelectedFontName;
         settings.NonAssaTextColor = FontTextColor.FromColorToHex();
         settings.NonAssaOutlineColor = FontOutlineColor.FromColorToHex();
@@ -1990,6 +1994,8 @@ public partial class BurnInViewModel : ObservableObject
         UpdateNonAssaPreview();
     }
 
+    private int _previewRequestId;
+
     private void UpdateNonAssaPreview()
     {
         if (_loading || !string.IsNullOrEmpty(GetValidationError()))
@@ -1997,13 +2003,75 @@ public partial class BurnInViewModel : ObservableObject
             return;
         }
 
-        var text = "This is a test";
-
         if (_subtitleFormat is { Name: AdvancedSubStationAlpha.NameOfFormat } && !IsBatchMode)
         {
             ImagePreview = new SKBitmap(1, 1, true).ToAvaloniaBitmap();
             return;
         }
+
+        // Render the preview with ffmpeg/libass (same engine as the generated video), debounced
+        // as the numeric up/downs fire on every tick. Falls back to the Skia approximation if
+        // ffmpeg is unavailable.
+        var requestId = System.Threading.Interlocked.Increment(ref _previewRequestId);
+        var width = VideoWidth ?? 0;
+        var height = VideoHeight ?? 0;
+        if (width < 16 || height < 16)
+        {
+            width = 1920;
+            height = 1080;
+        }
+
+        Task.Run(async () =>
+        {
+            await Task.Delay(150);
+            if (requestId != _previewRequestId)
+            {
+                return;
+            }
+
+            var previewSubtitle = new Subtitle();
+            previewSubtitle.Paragraphs.Add(new Paragraph("This is a test", 0, 2000));
+            SetStyleForNonAssa(previewSubtitle, width, height);
+
+            SKBitmap? bitmap = null;
+            try
+            {
+                bitmap = NonAssaPreviewRenderer.Render(previewSubtitle, width, height);
+            }
+            catch
+            {
+                // Fall back to the Skia preview below
+            }
+
+            if (requestId != _previewRequestId)
+            {
+                bitmap?.Dispose();
+                return;
+            }
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                if (requestId != _previewRequestId)
+                {
+                    bitmap?.Dispose();
+                    return;
+                }
+
+                if (bitmap != null)
+                {
+                    ImagePreview = bitmap.CropTransparentColors().ToAvaloniaBitmap();
+                }
+                else
+                {
+                    UpdateNonAssaPreviewSkia();
+                }
+            });
+        });
+    }
+
+    private void UpdateNonAssaPreviewSkia()
+    {
+        var text = "This is a test";
 
 
         var fontSize = (float)CalculateFontSize(VideoWidth ?? 0, VideoHeight ?? 0, FontFactor ?? 0);
