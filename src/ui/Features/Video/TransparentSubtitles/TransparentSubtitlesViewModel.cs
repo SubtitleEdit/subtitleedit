@@ -1043,6 +1043,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
     {
         IsBatchMode = false;
         IsSingleModeVisible = false;
+        UpdateNonAssaPreview();
     }
 
     [RelayCommand]
@@ -1050,6 +1051,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
     {
         IsBatchMode = true;
         IsSingleModeVisible = !string.IsNullOrEmpty(_inputVideoFileName);
+        UpdateNonAssaPreview();
     }
 
     [RelayCommand]
