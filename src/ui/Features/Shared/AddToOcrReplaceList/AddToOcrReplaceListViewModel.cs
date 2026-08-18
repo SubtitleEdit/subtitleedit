@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -78,7 +78,7 @@ public partial class AddToOcrReplaceListViewModel : ObservableObject
 
 
         var threeLetterCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(fiveLetterLanguageName.Substring(0, 2));
-        var list = new OcrFixReplaceList2(OcrFixReplaceList2.GetReplaceListFileName(Se.DictionariesFolder, threeLetterCode));
+        var list = new OcrFixReplaceList2(Path.Combine(Se.DictionariesFolder, threeLetterCode + "_OCRFixReplaceList.xml"));
         list.WordReplaceList.TryGetValue(From, out var existing);
 
         if (existing != null)

@@ -1,8 +1,4 @@
-﻿using System.IO;
-using System.Globalization;
-using System.Collections.Generic;
-using System;
-using System.Buffers;
+﻿using System.Buffers;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -52,26 +48,6 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
         private static readonly char[] Digits1To9 = { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
         private readonly bool _isGreekReplaceList;
 
-        /// <summary>True when the replace list belongs to one of <paramref name="languageIds"/>.</summary>
-        private static bool IsLanguage(string replaceListXmlFileName, params string[] languageIds)
-        {
-            if (string.IsNullOrEmpty(replaceListXmlFileName))
-            {
-                return false;
-            }
-
-            var fileName = Path.GetFileName(replaceListXmlFileName);
-            foreach (var languageId in languageIds)
-            {
-                if (fileName.StartsWith(languageId + "_", StringComparison.OrdinalIgnoreCase))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
         public string ErrorMessage { get; set; }
 
         public OcrFixReplaceList2(string replaceListXmlFileName)
@@ -79,9 +55,9 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
             ErrorMessage = string.Empty;
             _replaceListXmlFileName = replaceListXmlFileName;
             // Compared on the file name, not the path: the old check looked for a hard-coded
-            // "\\ell..." and so never matched on macOS or Linux, where the separator is "/" - and it
-            // has to accept the two-letter spelling too now that such a list is loadable.
-            _isGreekReplaceList = IsLanguage(replaceListXmlFileName, "ell", "el");
+            // "\\ell..." and so never matched on macOS or Linux, where the separator is "/".
+            _isGreekReplaceList = !string.IsNullOrEmpty(replaceListXmlFileName) &&
+                                  Path.GetFileName(replaceListXmlFileName).StartsWith("ell_", StringComparison.OrdinalIgnoreCase);
             WordReplaceList = new Dictionary<string, string>();
             PartialLineWordBoundaryReplaceList = new Dictionary<string, string>();
             _partialLineAlwaysReplaceList = new Dictionary<string, string>();
@@ -241,98 +217,15 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
 
         public static OcrFixReplaceList2 FromLanguageId(string languageId)
         {
-            return new OcrFixReplaceList2(GetReplaceListFileName(SpellCheckConfig.DictionariesFolder(), languageId));
-        }
-
-        /// <summary>
-        /// The replace-list file to use for a language, existing or not.
-        /// <para>
-        /// Subtitle Edit names these files after the three-letter ISO code ("ell_OCRFixReplaceList.xml"),
-        /// and that spelling always wins. A hand-written list is just as likely to be named after the
-        /// two-letter code the rest of the world uses for a language ("el_OCRFixReplaceList_User.xml"),
-        /// which was silently ignored - by the OCR run and by the word-list editor alike (issue #13814).
-        /// Such a file is now used when no file under the canonical name exists. New lists are still
-        /// written under the three-letter name.
-        /// </para>
-        /// </summary>
-        public static string GetReplaceListFileName(string dictionariesFolder, string languageId)
-        {
-            var canonical = Path.Combine(dictionariesFolder, languageId + ReplaceListFileNamePostFix);
-            if (HasReplaceList(canonical))
-            {
-                return canonical;
-            }
-
-            foreach (var alias in GetLanguageIdAliases(languageId))
-            {
-                var candidate = Path.Combine(dictionariesFolder, alias + ReplaceListFileNamePostFix);
-                if (HasReplaceList(candidate))
-                {
-                    return candidate;
-                }
-            }
-
-            return canonical;
-        }
-
-        /// <summary>True when either half of a replace list - the shipped one or the user's - is there.</summary>
-        private static bool HasReplaceList(string fileName)
-        {
-            return File.Exists(fileName) || File.Exists(GetUserFileName(fileName));
+            return new OcrFixReplaceList2(Path.Combine(SpellCheckConfig.DictionariesFolder(), languageId + ReplaceListFileNamePostFix));
         }
 
         /// <summary>The "_User" sibling of a replace-list file name.</summary>
-        private static string GetUserFileName(string replaceListXmlFileName)
+        public static string GetUserFileName(string replaceListXmlFileName)
         {
             return Path.Combine(
                 Path.GetDirectoryName(replaceListXmlFileName) ?? string.Empty,
                 Path.GetFileNameWithoutExtension(replaceListXmlFileName) + "_User" + Path.GetExtension(replaceListXmlFileName));
-        }
-
-        /// <summary>The other spellings of a language id: two-letter for a three-letter code and back.</summary>
-        private static IEnumerable<string> GetLanguageIdAliases(string languageId)
-        {
-            if (string.IsNullOrEmpty(languageId))
-            {
-                yield break;
-            }
-
-            CultureInfo? culture = null;
-            try
-            {
-                culture = CultureInfo.GetCultureInfo(languageId);
-            }
-            catch (CultureNotFoundException)
-            {
-                // A three-letter id (or something unknown): fall through to the neutral-culture scan.
-            }
-
-            if (culture != null)
-            {
-                var threeLetter = culture.GetThreeLetterIsoLanguageName();
-                if (!string.IsNullOrEmpty(threeLetter) && !threeLetter.Equals(languageId, StringComparison.OrdinalIgnoreCase))
-                {
-                    yield return threeLetter;
-                }
-
-                var twoLetter = culture.TwoLetterISOLanguageName;
-                if (!string.IsNullOrEmpty(twoLetter) && !twoLetter.Equals(languageId, StringComparison.OrdinalIgnoreCase))
-                {
-                    yield return twoLetter;
-                }
-
-                yield break;
-            }
-
-            foreach (var neutral in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
-            {
-                if (neutral.GetThreeLetterIsoLanguageName().Equals(languageId, StringComparison.OrdinalIgnoreCase) &&
-                    !neutral.TwoLetterISOLanguageName.Equals(languageId, StringComparison.OrdinalIgnoreCase))
-                {
-                    yield return neutral.TwoLetterISOLanguageName;
-                    yield break;
-                }
-            }
         }
 
         private static Dictionary<string, string> LoadReplaceList(XmlDocument doc, string name)

@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -82,21 +82,14 @@ public partial class WordListsViewModel : ObservableObject
                 }
             }
 
-            // Every language an OCR replace list exists for, whatever the file is named after: the
-            // three-letter code Subtitle Edit writes ("ell_OCRFixReplaceList.xml") or the two-letter
-            // one a hand-written list is just as likely to use ("el_OCRFixReplaceList_User.xml").
-            // Only the codes SE itself produces were recognized before, so a list a user dropped in
-            // never showed up here (issue #13814).
-            var ocrFixLanguageIds = GetOcrFixReplaceListLanguageIds(dir);
-
             // Neutral culture e.g: "en" for all (en-US, en-GB, en-JM...)
             foreach (var culture in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
             {
-                var hasOcrFixList = ocrFixLanguageIds.Contains(culture.GetThreeLetterIsoLanguageName()) ||
-                                    ocrFixLanguageIds.Contains(culture.TwoLetterISOLanguageName);
+                var ocrFixGeneralFile = Path.Combine(dir, culture.GetThreeLetterIsoLanguageName() + "_OCRFixReplaceList.xml");
+                var ocrFixUserFile = Path.Combine(dir, culture.GetThreeLetterIsoLanguageName() + "_OCRFixReplaceList_User.xml");
                 var namesFile = Path.Combine(dir, culture.TwoLetterISOLanguageName + "_names.xml");
                 var seFile = Path.Combine(dir, culture.Name.Replace('-', '_') + "_se.xml");
-                if (hasOcrFixList || File.Exists(namesFile) || File.Exists(seFile))
+                if (File.Exists(ocrFixGeneralFile) || File.Exists(ocrFixUserFile) || File.Exists(namesFile) || File.Exists(seFile))
                 {
                     var alreadyInList = false;
                     foreach (var ci in cultures)
@@ -131,26 +124,6 @@ public partial class WordListsViewModel : ObservableObject
                 Languages.Add(item);
             }
         }
-    }
-
-    /// <summary>
-    /// The language ids of every "*_OCRFixReplaceList.xml" / "*_OCRFixReplaceList_User.xml" in the
-    /// dictionaries folder - the part before the first underscore, exactly as written on disk.
-    /// </summary>
-    private static HashSet<string> GetOcrFixReplaceListLanguageIds(string dir)
-    {
-        var ids = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        foreach (var fileName in Directory.EnumerateFiles(dir, "*_OCRFixReplaceList*.xml"))
-        {
-            var name = Path.GetFileName(fileName);
-            var underscore = name.IndexOf('_');
-            if (underscore > 0)
-            {
-                ids.Add(name.Substring(0, underscore));
-            }
-        }
-
-        return ids;
     }
 
     [RelayCommand]
@@ -385,7 +358,7 @@ public partial class WordListsViewModel : ObservableObject
     private bool SaveOcrFix(LanguageItem lang, string find, string replace)
     {
         var threeLetterCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(lang.TwoLetterISOLanguageName);
-        var list = new OcrFixReplaceList2(OcrFixReplaceList2.GetReplaceListFileName(Se.DictionariesFolder, threeLetterCode));
+        var list = new OcrFixReplaceList2(Path.Combine(Se.DictionariesFolder, threeLetterCode + "_OCRFixReplaceList.xml"));
 
         return list.AddWordOrPartial(find, replace);
     }
@@ -393,7 +366,7 @@ public partial class WordListsViewModel : ObservableObject
     private bool RemoveOcrFix(LanguageItem lang, string find, string replace)
     {
         var threeLetterCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(lang.TwoLetterISOLanguageName);
-        var list = new OcrFixReplaceList2(OcrFixReplaceList2.GetReplaceListFileName(Se.DictionariesFolder, threeLetterCode));
+        var list = new OcrFixReplaceList2(Path.Combine(Se.DictionariesFolder, threeLetterCode + "_OCRFixReplaceList.xml"));
 
         return list.RemoveWordOrPartial(find);
     }
@@ -448,7 +421,7 @@ public partial class WordListsViewModel : ObservableObject
     private List<OcrFixItem> LoadOcrFixList(LanguageItem lang)
     {
         var threeLetterCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(lang.TwoLetterISOLanguageName);
-        var list = new OcrFixReplaceList2(OcrFixReplaceList2.GetReplaceListFileName(Se.DictionariesFolder, threeLetterCode));
+        var list = new OcrFixReplaceList2(Path.Combine(Se.DictionariesFolder, threeLetterCode + "_OCRFixReplaceList.xml"));
 
         var result = new List<OcrFixItem>();
         foreach (var item in list.WordReplaceList)

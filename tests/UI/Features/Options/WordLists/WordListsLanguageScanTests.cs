@@ -1,6 +1,5 @@
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
-using Avalonia.Platform.Storage;
 using Nikse.SubtitleEdit.Features.Options.WordLists;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
@@ -12,10 +11,10 @@ using System.Threading.Tasks;
 namespace UITests.Features.Options.WordLists;
 
 /// <summary>
-/// The word-list editor's language dropdown lists whatever the dictionaries folder holds. It used to
-/// build the list by walking every known culture and probing for the three-letter file name Subtitle
-/// Edit writes, so an OCR replace list a user dropped in under the two-letter code was invisible -
-/// no way to select the language, no way to edit the list (issue #13814).
+/// The word-list editor's language dropdown lists whatever the dictionaries folder holds. OCR
+/// replace lists are named after the three-letter ISO code, and a language must show up whether the
+/// shipped list ("ell_OCRFixReplaceList.xml"), the user's own ("ell_OCRFixReplaceList_User.xml"),
+/// or both are on disk (issue #13814).
 /// </summary>
 public class WordListsLanguageScanTests : IDisposable
 {
@@ -54,17 +53,7 @@ public class WordListsLanguageScanTests : IDisposable
     private static WordListsViewModel MakeViewModel() => new(new StubFolderHelper());
 
     [AvaloniaFact]
-    public void TwoLetterOcrFixList_PutsTheLanguageInTheDropdown()
-    {
-        Touch("el_OCRFixReplaceList_User.xml");
-
-        var vm = MakeViewModel();
-
-        Assert.Contains(vm.Languages, l => l.TwoLetterISOLanguageName == "el");
-    }
-
-    [AvaloniaFact]
-    public void ThreeLetterOcrFixList_StillPutsTheLanguageInTheDropdown()
+    public void OcrFixList_PutsTheLanguageInTheDropdown()
     {
         Touch("ell_OCRFixReplaceList.xml");
 
@@ -74,10 +63,20 @@ public class WordListsLanguageScanTests : IDisposable
     }
 
     [AvaloniaFact]
-    public void OneLanguageUnderBothSpellings_IsListedOnce()
+    public void UserOcrFixListAlone_PutsTheLanguageInTheDropdown()
+    {
+        Touch("ell_OCRFixReplaceList_User.xml");
+
+        var vm = MakeViewModel();
+
+        Assert.Contains(vm.Languages, l => l.TwoLetterISOLanguageName == "el");
+    }
+
+    [AvaloniaFact]
+    public void ShippedAndUserList_IsListedOnce()
     {
         Touch("ell_OCRFixReplaceList.xml");
-        Touch("el_OCRFixReplaceList_User.xml");
+        Touch("ell_OCRFixReplaceList_User.xml");
 
         var vm = MakeViewModel();
 
