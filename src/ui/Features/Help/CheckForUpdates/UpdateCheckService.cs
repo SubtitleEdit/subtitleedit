@@ -24,9 +24,14 @@ public class UpdateCheckService : IUpdateCheckService
     public const string ChannelStable = "Stable";
     public const string ChannelBeta = "Beta";
 
-    private const string ChangeLogUrl1 = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/refs/heads/main/change-log.txt";
-    private const string ChangeLogUrl2 = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/refs/heads/main/Changelog.txt";
-    private const string ChangeLogUrl3 = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/refs/heads/main/ChangeLog.txt";
+    private static readonly string[] ChangeLogUrls =
+    {
+        "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/refs/heads/main/change-log.txt",
+        // SE 4 changelog file names, kept as fallbacks for compatibility.
+        "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/refs/heads/main/Changelog.txt",
+        "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/refs/heads/main/ChangeLog.txt",
+    };
+
     private static readonly Regex UnreleasedChangeLogRegex = new(@"(x(th|st) \w+ \d+|TBD)", RegexOptions.Compiled);
 
     private readonly HttpClient _httpClient;
@@ -78,24 +83,12 @@ public class UpdateCheckService : IUpdateCheckService
         }
     }
 
+    /// <summary>Pause between retry rounds; tests set this to zero.</summary>
+    internal TimeSpan RetryDelay { get; set; } = TimeSpan.FromSeconds(2);
+
     public async Task<UpdateCheckResult> CheckForUpdates()
     {
-        string content;
-        try
-        {
-            content = await _httpClient.GetStringAsync(ChangeLogUrl1);
-        }
-        catch
-        {
-            try
-            {
-                content = await _httpClient.GetStringAsync(ChangeLogUrl2);
-            }
-            catch
-            {
-                content = await _httpClient.GetStringAsync(ChangeLogUrl3);
-            }
-        }
+        var content = await DownloadChangeLogAsync();
 
         var includePrereleases = IncludePrereleases();
         var changeLogText = ParseLatestChangeLog(content, includePrereleases);
@@ -109,6 +102,42 @@ public class UpdateCheckService : IUpdateCheckService
                                     IsNewerThanCurrent(latestVersion) &&
                                     (includePrereleases || !IsPrerelease(latestVersion)),
         };
+    }
+
+    /// <summary>
+    /// Downloads the changelog, retrying once more after a short pause. File downloads
+    /// (DownloadHelper) retry transient failures, which is what keeps them working behind
+    /// flaky corporate proxies - the update check gets the same second chance instead of
+    /// giving up on the first dropped connection. The definitive failure is logged so
+    /// proxy users find the actual exception in error-log.txt.
+    /// </summary>
+    private async Task<string> DownloadChangeLogAsync()
+    {
+        const int maxAttempts = 2;
+        Exception lastException = new HttpRequestException("Update check failed");
+
+        for (var attempt = 1; attempt <= maxAttempts; attempt++)
+        {
+            foreach (var url in ChangeLogUrls)
+            {
+                try
+                {
+                    return await _httpClient.GetStringAsync(url);
+                }
+                catch (Exception exception)
+                {
+                    lastException = exception;
+                }
+            }
+
+            if (attempt < maxAttempts)
+            {
+                await Task.Delay(RetryDelay);
+            }
+        }
+
+        Se.LogError(lastException, "Update check could not download the changelog");
+        throw lastException;
     }
 
     public static bool IsNewerThanCurrent(string latestVersion)
