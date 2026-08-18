@@ -3429,5 +3429,11 @@
 
 		<!-- word-initial ii to ll (iiegar to llegar) -->
 		<RegEx find="\bii([a-z]+)\b" spellCheck="ll$1" replaceWith="ll$1" />
+
+		<!-- Lowercase l misread as uppercase I (#13660): replace every I in the word, -->
+		<!-- so words with more than one are repaired too (deIectabIe -> delectable,   -->
+		<!-- ExceIIencies -> Excellencies). Words of two letters (AI) are never        -->
+		<!-- touched, and real words (MacIntosh) are kept by the spell check gate.     -->
+		<RegEx find="\b([A-Za-z](?=[a-zI]*I)[a-zI]{2,})\b" replaceAllFrom="I" replaceAllTo="l" spellCheck="$1" replaceWith="$1" />
 	</RegularExpressionsIfSpelledCorrectly>
 </OCRFixReplaceList>
