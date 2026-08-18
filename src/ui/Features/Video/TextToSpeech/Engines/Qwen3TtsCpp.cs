@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -382,7 +382,7 @@ public class Qwen3TtsCpp : ITtsEngine
                 {
                     vulkanPath = Logic.VulkanHelper.TryFindBinFolder();
                 }
-                if (!string.IsNullOrEmpty(vulkanPath) && psi.EnvironmentVariables["Path"] != null)
+                if (!string.IsNullOrEmpty(vulkanPath) && ProcessEnvironmentHelper.GetOrNull(psi, "Path") != null)
                 {
                     psi.EnvironmentVariables["Path"] =
                         psi.EnvironmentVariables["Path"]?.TrimEnd(';') + ";" + vulkanPath;
