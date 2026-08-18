@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.UiLogic.Export;
+﻿using Nikse.SubtitleEdit.UiLogic.Export;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -7063,16 +7063,36 @@ public partial class MainViewModel :
         // Same filter as GetUpdateSubtitle() below, so index N of the reviewed subtitle is line N
         // here - that mapping is what lets the review window play the line of a suggestion.
         var reviewedLines = Subtitles.Where(s => !s.IsReferenceOnly).ToList();
-        var viewModel = await ShowDialogAsync<AiReviewWindow, AiReviewViewModel>(vm =>
+        // Apply + Done: each Apply pushes the checked fixes into the grid and the review window stays
+        // open with the rest of the suggestions, so a review that took minutes is not spent on one
+        // batch (issue #13807). AI review only rewrites text, so the line count never changes.
+        void ApplyToGrid(Subtitle applied)
         {
-            vm.Initialize(GetUpdateSubtitle(), SelectedSubtitleFormat, MakeReviewLinePlayer(reviewedLines), StopReviewLinePlayback);
-        });
+            // Count the lines this pass actually changed - the status used to report the subtitle's
+            // whole line count, which read as "fixed 1713 lines" for a two-line fix.
+            var changed = 0;
+            for (var i = 0; i < applied.Paragraphs.Count && i < reviewedLines.Count; i++)
+            {
+                if (reviewedLines[i].Text != applied.Paragraphs[i].Text)
+                {
+                    changed++;
+                }
+            }
 
-        if (viewModel.OkPressed)
-        {
-            ApplyFixedSubtitle(viewModel.FixedSubtitle, idx, SelectedSubtitleFormat);
-            ShowStatus(string.Format(Se.Language.Main.FixedXLines, viewModel.FixedSubtitle.Paragraphs.Count));
+            ApplyFixedSubtitle(applied, idx, SelectedSubtitleFormat);
+            ShowStatus(string.Format(Se.Language.Main.FixedXLines, changed));
+
+            // Re-fill the same list instance the play hook closed over: with reference-only rows in
+            // the grid, ApplyFixedSubtitle rebuilds it and the rows captured before are detached.
+            var current = Subtitles.Where(s => !s.IsReferenceOnly).ToList();
+            reviewedLines.Clear();
+            reviewedLines.AddRange(current);
         }
+
+        await ShowDialogAsync<AiReviewWindow, AiReviewViewModel>(vm =>
+        {
+            vm.Initialize(GetUpdateSubtitle(), SelectedSubtitleFormat, MakeReviewLinePlayer(reviewedLines), StopReviewLinePlayback, ApplyToGrid);
+        });
     }
 
     [RelayCommand]
@@ -11099,28 +11119,28 @@ public partial class MainViewModel :
             sub.Paragraphs.Add(line.ToParagraph(SelectedSubtitleFormat));
         }
 
-        var result = await ShowDialogAsync<AiReviewWindow, AiReviewViewModel>(vm =>
-            vm.Initialize(sub, SelectedSubtitleFormat, MakeReviewLinePlayer(ordered), StopReviewLinePlayback));
-        if (!result.OkPressed)
+        // Apply + Done, like the whole-file path (issue #13807): AI review only rewrites text, so the
+        // fixed subtitle stays 1:1 with the block sent in and every pass can be written straight back.
+        void ApplyToSelectedLines(Subtitle applied)
         {
-            _shortcutManager.ClearKeys();
-            return;
-        }
-
-        // AI review only rewrites text, so the fixed subtitle is 1:1 with the block sent in.
-        var fixedCount = 0;
-        for (var i = 0; i < result.FixedSubtitle.Paragraphs.Count && i < ordered.Count; i++)
-        {
-            var text = result.FixedSubtitle.Paragraphs[i].Text;
-            if (ordered[i].Text != text)
+            var fixedCount = 0;
+            for (var i = 0; i < applied.Paragraphs.Count && i < ordered.Count; i++)
             {
-                ordered[i].Text = text;
-                fixedCount++;
+                var text = applied.Paragraphs[i].Text;
+                if (ordered[i].Text != text)
+                {
+                    ordered[i].Text = text;
+                    fixedCount++;
+                }
             }
+
+            _updateAudioVisualizer = true;
+            ShowStatus(string.Format(Se.Language.Main.FixedXLines, fixedCount));
         }
 
-        _updateAudioVisualizer = true;
-        ShowStatus(string.Format(Se.Language.Main.FixedXLines, fixedCount));
+        await ShowDialogAsync<AiReviewWindow, AiReviewViewModel>(vm =>
+            vm.Initialize(sub, SelectedSubtitleFormat, MakeReviewLinePlayer(ordered), StopReviewLinePlayback, ApplyToSelectedLines));
+        _shortcutManager.ClearKeys();
     }
 
     [RelayCommand]

@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -460,7 +460,10 @@ public class AiReviewWindow : Window
         buttonApply.Bind(ContentControl.ContentProperty, new Binding(nameof(vm.ApplyButtonText)));
         buttonApply.WithIconLeft("fa-solid fa-check");
 
+        // "Cancel" only makes sense when Apply is what closes the window; with a live target the
+        // fixes are already in the main grid, so the button reads "Done" (issue #13807).
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+        buttonCancel.Bind(ContentControl.ContentProperty, new Binding(nameof(vm.CloseButtonText)));
 
         var bottomBar = new Grid
         {
