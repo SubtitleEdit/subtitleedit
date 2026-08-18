@@ -217,8 +217,10 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject, I
         _applyCallback?.Invoke(applied);
 
         // Keep iterating against the applied result: re-base the working subtitle and refresh the
-        // preview so already-removed text isn't offered again (#11948).
-        _subtitle = new Subtitle(applied);
+        // preview so already-removed text isn't offered again (#11948). Paragraph ids must survive
+        // the re-base - GeneratePreview carries the checkbox states over by id, and removing whole
+        // lines shifts the indexes (#13839).
+        _subtitle = new Subtitle(applied, generateNewId: false);
         _removeTextForHiLib = new RemoveTextForHI(GetSettings(_subtitle));
         GeneratePreview();
     }
@@ -373,8 +375,10 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject, I
             var newText = _removeTextForHiLib.RemoveTextFromHearImpaired(p.Text, _subtitle, index, twoLetterIsoLanguageName);
             if (IsVisibleChange(p.Text, newText))
             {
+                // Carry the checkbox state over by paragraph id, not by index: applying fixes that
+                // remove whole lines shifts every later index, which re-checked unchecked items (#13839).
                 var apply = true;
-                var oldItem = Fixes.FirstOrDefault(f => f.Index == index);
+                var oldItem = Fixes.FirstOrDefault(f => f.Paragraph.Id == p.Id);
                 if (oldItem != null)
                 {
                     apply = oldItem.Apply;
