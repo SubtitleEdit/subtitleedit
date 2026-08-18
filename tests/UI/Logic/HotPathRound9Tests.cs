@@ -7,6 +7,7 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using NikseBitmap = Nikse.SubtitleEdit.Core.Common.NikseBitmap;
 
@@ -101,15 +102,41 @@ public class HotPathRound9Tests
     }
 
     [Theory]
+    [InlineData(0)]
     [InlineData(2)]
     [InlineData(380)]
     [InlineData(762)]
-    public void ConvertPeakChunk16BitStereo_MatchesOldLoop(int sampleCount)
+    [InlineData(763)] // odd: trailing sample ignored
+    public void CalculatePeak16BitStereo_MatchesOldTwoStepPipeline(int sampleCount)
     {
         var samples = MakeShorts(sampleCount, seed: sampleCount);
         const float scale = 0.5f / short.MaxValue;
 
-        var expected = new float[sampleCount];
+        var expected = OldTwoStepStereoPeak(samples, scale);
+        var actual = WavePeakGenerator2.CalculatePeak16BitStereo(samples, scale);
+
+        Assert.Equal(expected.Max, actual.Max);
+        Assert.Equal(expected.Min, actual.Min);
+    }
+
+    [Fact]
+    public void CalculatePeak16BitStereo_ShortMinValueDoesNotOverflow()
+    {
+        // Negating short.MinValue at short width overflows; the SIMD path must widen first.
+        var samples = Enumerable.Repeat(short.MinValue, 64).ToArray();
+        const float scale = 0.5f / short.MaxValue;
+
+        var expected = OldTwoStepStereoPeak(samples, scale);
+        var actual = WavePeakGenerator2.CalculatePeak16BitStereo(samples, scale);
+
+        Assert.Equal(expected.Max, actual.Max);
+        Assert.Equal(expected.Min, actual.Min);
+    }
+
+    /// <summary>The old pipeline: scalar convert to per-frame neg/pos floats, then CalculatePeak.</summary>
+    private static WavePeak2 OldTwoStepStereoPeak(short[] samples, float scale)
+    {
+        var chunkSamples = new float[samples.Length + 1];
         var chunkSampleOffset = 0;
         for (var sIdx = 0; sIdx + 1 < samples.Length; sIdx += 2)
         {
@@ -118,14 +145,11 @@ public class HotPathRound9Tests
             float pos = 0, neg = 0;
             if (v1 < 0) { neg += v1; } else { pos += v1; }
             if (v2 < 0) { neg += v2; } else { pos += v2; }
-            expected[chunkSampleOffset++] = neg * scale;
-            expected[chunkSampleOffset++] = pos * scale;
+            chunkSamples[chunkSampleOffset++] = neg * scale;
+            chunkSamples[chunkSampleOffset++] = pos * scale;
         }
 
-        var actual = new float[sampleCount];
-        WavePeakGenerator2.ConvertPeakChunk16BitStereo(samples, actual, scale);
-
-        Assert.Equal(expected, actual);
+        return WavePeakGenerator2.CalculatePeak(chunkSamples, chunkSampleOffset);
     }
 
     [Fact]
