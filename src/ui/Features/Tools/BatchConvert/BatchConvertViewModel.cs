@@ -1056,6 +1056,11 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
         var config = MakeBatchConvertConfig();
 
+        if (!await EnsureTranslateApiKeyPresent(config))
+        {
+            return;
+        }
+
         if (!await EnsurePaddleOcrAvailable(config))
         {
             return;
@@ -1347,6 +1352,33 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     // reuse it, otherwise auto-download the engine + model (prompting) and auto-start the server, so
     // batch translation works without opening the interactive Auto-translate window first. Remote mode
     // (a user-supplied URL) is left untouched.
+    private async Task<bool> EnsureTranslateApiKeyPresent(BatchConvertConfig config)
+    {
+        if (Window == null || !config.AutoTranslate.IsActive || config.AutoTranslate.Translator == null)
+        {
+            return true;
+        }
+
+        // Same guard as the interactive Auto-translate window: an engine whose API key box is
+        // shown (except LibreTranslate, where the key is optional) cannot run with an empty key -
+        // the engine's Initialize() skips creating its HTTP client, and every file would fail
+        // with a NullReferenceException instead of a readable message (#12288).
+        if (AutoTranslateApiKeyIsVisible &&
+            string.IsNullOrWhiteSpace(AutoTranslateApiKey) &&
+            config.AutoTranslate.Translator is not LibreTranslate)
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Error,
+                string.Format(Se.Language.General.XRequiresAnApiKey, config.AutoTranslate.Translator.Name),
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return false;
+        }
+
+        return true;
+    }
+
     private async Task<bool> EnsureLlamaCppAvailable(BatchConvertConfig config)
     {
         if (Window == null)
