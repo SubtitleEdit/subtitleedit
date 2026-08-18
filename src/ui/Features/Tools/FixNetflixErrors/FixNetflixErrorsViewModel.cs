@@ -275,6 +275,7 @@ public partial class FixNetflixErrorsViewModel : ObservableObject, IClosingClean
     {
         // Build selected checks list
         var selectedChecks = Checks.Where(c => c.IsSelected).Select(c => c.Checker).ToList();
+        var oldFixes = Fixes.ToList();
         Fixes.Clear();
         FixesSummaryText = string.Empty;
 
@@ -327,7 +328,10 @@ public partial class FixNetflixErrorsViewModel : ObservableObject, IClosingClean
         {
             var index = kvp.Key;
             var (before, after, p, r) = kvp.Value;
-            var item = new FixNetflixErrorsItem(r.CanBeFixed, index, before, after, p, r);
+            // Keep a manually (un)ticked checkbox across preview refreshes (e.g. toggling a
+            // check); key by paragraph id so it survives regardless of list position (#13839).
+            var apply = oldFixes.FirstOrDefault(f => f.Paragraph.Id == p.Id)?.Apply ?? r.CanBeFixed;
+            var item = new FixNetflixErrorsItem(apply, index, before, after, p, r);
             item.PropertyChanged += (_, e) =>
             {
                 if (e.PropertyName == nameof(FixNetflixErrorsItem.Apply))
