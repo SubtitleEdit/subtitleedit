@@ -555,4 +555,44 @@ public class ValueConverterTests
             Se.Language.General.ErrorX = previous;
         }
     }
+
+    // A karaoke/effect line carries a few hundred characters of override tags before its first
+    // word. The 200-character cut used to be applied to the raw string, so "show formatting" -
+    // the mode whose whole job is hiding tags - showed nothing but a truncated tag (issue #13824).
+    [Fact]
+    public void ShowFormatting_LongTagBlockBeforeTheText_StillShowsTheText()
+    {
+        var tag = "{\\an8\\fnCourier New\\b1\\bord5\\fs40\\t(\\fs28)\\shad0\\c&H1CFEFC&\\3c&H8B04E0&" +
+                  "\\t(2275,2276,\\alpha&HFF&)\\t(2850,2851,\\alpha&H00&)\\t(4280,4281,\\alpha&HFF&)" +
+                  "\\t(5144,5145,\\alpha&H00&)\\t(9481,9482,\\c&HE8FEDF&\\3c&HF171F4&)" +
+                  "\\t(9650,9651,\\c&H1CFEFC&\\3c&H8B04E0&)\\t(9900,9901,\\c&HE8FEDF&\\3c&HF171F4&)}";
+        Assert.True(tag.Length > 200, "the fixture must be longer than the old raw cut");
+
+        var inlines = Highlight(tag + "YOUNG LADIES DON'T PLAY", SubtitleGridFormattingTypes.ShowFormatting);
+
+        Assert.Equal("YOUNG LADIES DON'T PLAY", FlatText(inlines));
+    }
+
+    // Hiding the tags must not hide the braces' contents as text either, however long the block is.
+    [Fact]
+    public void ShowFormatting_VeryLongTagBlock_IsStillHidden()
+    {
+        var tag = "{\\t(" + new string('9', 3000) + ")}";
+
+        var inlines = Highlight(tag + "text", SubtitleGridFormattingTypes.ShowFormatting);
+
+        Assert.DoesNotContain("{", FlatText(inlines));
+    }
+
+    // The cap moved onto the visible text, so a genuinely long line still stops at an ellipsis.
+    [Fact]
+    public void ShowFormatting_LongDialogue_IsStillTruncated()
+    {
+        var text = new string('a', 500);
+
+        var flat = FlatText(Highlight(text, SubtitleGridFormattingTypes.ShowFormatting));
+
+        Assert.EndsWith("...", flat);
+        Assert.True(flat.Length <= 200, $"visible length was {flat.Length}");
+    }
 }
