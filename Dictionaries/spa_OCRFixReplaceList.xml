@@ -370,6 +370,7 @@
   <PartialWordsAlways />
   <PartialWords>
     <WordPart from="i" to="l" />
+    <WordPart from="I" to="l" />
   </PartialWords>
   <WholeLines>
     <!-- Todas las líneas -->
@@ -973,5 +974,11 @@
     <!-- Terminación «clón» por «ción»: estaclón to estación, canclón to canción (#13701).
          Palabras reales como «ciclón», «anticiclón» o «choclón» las protege el corrector. -->
     <RegEx find="\b([A-ZÁÉÍÓÚÑÜa-záéíóúñü]+)clón\b" spellCheck="$1ción" replaceWith="$1ción" />
+
+    <!-- Lowercase l misread as uppercase I (#13660): replace every I in the word, -->
+    <!-- so words with more than one are repaired too (deIectabIe -> delectable,   -->
+    <!-- ExceIIencies -> Excellencies). Words of two letters (AI) are never        -->
+    <!-- touched, and real words (MacIntosh) are kept by the spell check gate.     -->
+    <RegEx find="\b([A-ZÁÉÍÓÚÑÜa-záéíóúñü](?=[a-záéíóúñüI]*I)[a-záéíóúñüI]{2,})\b" replaceAllFrom="I" replaceAllTo="l" spellCheck="$1" replaceWith="$1" />
   </RegularExpressionsIfSpelledCorrectly>
 </OCRFixReplaceList>
