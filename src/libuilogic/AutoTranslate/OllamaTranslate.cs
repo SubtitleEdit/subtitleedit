@@ -65,11 +65,12 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             {
                 Configuration.Settings.Tools.OllamaPrompt = new ToolsSettings().OllamaPrompt;
             }
-            var prompt = string.Format(Configuration.Settings.Tools.OllamaPrompt, sourceLanguageCode, targetLanguageCode);
-            var input = "{ " + modelJson + " \"prompt\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\", \"stream\": false }";
+            var encodedUserMessage = LlmTranslatePrompt.BuildEncodedUserMessage(
+                Configuration.Settings.Tools.OllamaPrompt, sourceLanguageCode, targetLanguageCode, text);
+            var input = "{ " + modelJson + " \"prompt\": \"" + encodedUserMessage + "\", \"stream\": false }";
             if (Configuration.Settings.Tools.OllamaApiUrl.TrimEnd('/').EndsWith("v1/chat/completions"))
             {
-                input = "{ " + modelJson + " \"messages\": [{ \"role\": \"user\", \"content\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
+                input = "{ " + modelJson + " \"messages\": [{ \"role\": \"user\", \"content\": \"" + encodedUserMessage + "\" }]}";
             }
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
