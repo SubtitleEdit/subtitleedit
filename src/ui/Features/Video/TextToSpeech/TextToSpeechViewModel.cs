@@ -1899,6 +1899,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             // Forward the imported cast so a subsequent Export round-trips the mappings instead
             // of writing ActorVoiceMappings = [] back to SubtitleEditTts.json.
             vm.ActorVoiceMappings.AddRange(_actorVoiceMappings);
+            vm.SubtitleFileName = GetLoadedSubtitleFileName();
 
             if (peaksForReview == null || peaksForReview.Peaks.Count == 0)
             {
@@ -2522,9 +2523,8 @@ public partial class TextToSpeechViewModel : ObservableObject
     /// </summary>
     private string GetSuggestedMergedAudioFileName()
     {
-        // A new, never-saved subtitle has the literal FileName "Untitled" (no path/extension).
-        var subtitleFileName = _subtitle.FileName;
-        var sourceFileName = !string.IsNullOrEmpty(subtitleFileName) && subtitleFileName != "Untitled"
+        var subtitleFileName = GetLoadedSubtitleFileName();
+        var sourceFileName = !string.IsNullOrEmpty(subtitleFileName)
             ? subtitleFileName
             : _videoFileName;
         if (string.IsNullOrEmpty(sourceFileName))
@@ -2535,6 +2535,18 @@ public partial class TextToSpeechViewModel : ObservableObject
         var folder = Path.GetDirectoryName(sourceFileName);
         var name = Path.GetFileNameWithoutExtension(sourceFileName) + ".wav";
         return string.IsNullOrEmpty(folder) ? name : Path.Combine(folder, name);
+    }
+
+    /// <summary>
+    /// Full path of the loaded subtitle file, or empty for a never-saved subtitle (whose
+    /// literal FileName is "Untitled" - no path/extension).
+    /// </summary>
+    private string GetLoadedSubtitleFileName()
+    {
+        var subtitleFileName = _subtitle.FileName;
+        return !string.IsNullOrEmpty(subtitleFileName) && subtitleFileName != "Untitled"
+            ? subtitleFileName
+            : string.Empty;
     }
 
     private async Task<TtsStepResult[]?> GenerateSpeech(CancellationToken cancellationToken)
@@ -3482,6 +3494,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 _waveFolder,
                 _wavePeakData);
             vm.ActorVoiceMappings.AddRange(_actorVoiceMappings);
+            vm.SubtitleFileName = GetLoadedSubtitleFileName();
         });
 
         if (result.OkPressed)
