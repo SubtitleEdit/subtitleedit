@@ -5,4 +5,5 @@ public enum SubtitleGridFormattingTypes
     NoFormatting = 0,
     ShowFormatting = 1,
     ShowTags = 2,
+    HideTags = 3,
 }

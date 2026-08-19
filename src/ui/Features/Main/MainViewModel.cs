@@ -12218,9 +12218,10 @@ public partial class MainViewModel :
     }
 
     // Cycle the grid's Text/Original text formatting mode (issue #12321): "show formatting"
-    // (tags hidden, styling rendered) -> "show tags" -> "no formatting". Handy for heavy ASS
-    // karaoke tags where the full tag text makes the grid hard to read. The grid cell
-    // converter reads the setting live, so re-notifying Text/OriginalText re-renders the rows.
+    // (tags hidden, styling rendered) -> "show tags" -> "no formatting" -> "hide tags"
+    // (tags stripped, plain text - issue #13824). Handy for heavy ASS karaoke tags where the
+    // full tag text makes the grid hard to read. The grid cell converter reads the setting
+    // live, so re-notifying Text/OriginalText re-renders the rows.
     [RelayCommand]
     private void ToggleSubtitleGridFormatting()
     {
@@ -12235,6 +12236,11 @@ public partial class MainViewModel :
         {
             newMode = (int)SubtitleGridFormattingTypes.NoFormatting;
             newModeName = Se.Language.Options.Settings.SubtitleGridFormattingNone;
+        }
+        else if (Se.Settings.Appearance.SubtitleGridFormattingType == (int)SubtitleGridFormattingTypes.NoFormatting)
+        {
+            newMode = (int)SubtitleGridFormattingTypes.HideTags;
+            newModeName = Se.Language.Options.Settings.SubtitleGridFormattingHideTags;
         }
         else
         {
