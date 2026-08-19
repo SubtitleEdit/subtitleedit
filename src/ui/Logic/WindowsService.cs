@@ -564,6 +564,7 @@ namespace Nikse.SubtitleEdit.Logic
             // synchronously, which must not bounce back as a user action. Other frames of a nested
             // chain have their own flag and do react - that is what makes the cascade work.
             var syncing = false;
+            var disposed = false;
 
             // Restore targets. A window is never restored to Minimized; if a state was somehow
             // captured as such, fall back to Normal.
@@ -579,9 +580,27 @@ namespace Nikse.SubtitleEdit.Logic
             // ordinary Normal <-> Maximized change and repair the foreground exactly once.
             var pairMinimized = false;
 
-            void OnDialogStateChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+            // Bounds SyncDialogToOwner's wait for the shell to re-show the owned dialog; after
+            // ~2 s the write proceeds anyway (worst case is the pre-fix behavior).
+            var dialogShowRetries = 0;
+
+            // The counterpart writes below are POSTED, never made from inside the other window's
+            // state-change dispatch. Win32 hides a minimized owner's owned windows and re-shows
+            // them on restore, and Avalonia's Win32 backend records a programmatic WindowState
+            // write on a hidden window WITHOUT performing it (WindowImpl.WindowState skips
+            // ShowWindow when !IsWindowVisible but still sets _lastWindowState). A synchronous
+            // "restore the dialog" write from inside the owner's restore dispatch can therefore
+            // land while the shell has not yet re-shown the dialog - the write is swallowed, and
+            // when the dialog is then actually restored its WM_SIZE reports no state change, so
+            // Avalonia never invokes WindowStateChanged and never calls StartRendering: the
+            // window is alive for input but permanently stops painting and laying out, frozen at
+            // its pre-minimize content (#13865, ~70% of restores). Posting runs the write after
+            // the OS has finished the whole restore sequence, when the owned windows are visible
+            // again. The posted body re-reads live state instead of replaying the transition it
+            // was queued for, so a stale post (state changed again before it ran) is a no-op.
+            void SyncOwnerToDialog()
             {
-                if (e.Property != Window.WindowStateProperty || syncing)
+                if (disposed)
                 {
                     return;
                 }
@@ -591,7 +610,6 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (dialog.WindowState == WindowState.Minimized)
                     {
-                        pairMinimized = true;
                         if (owner.WindowState != WindowState.Minimized)
                         {
                             ownerRestoreState = owner.WindowState;
@@ -601,17 +619,56 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                     else
                     {
-                        dialogRestoreState = dialog.WindowState;
                         if (owner.WindowState == WindowState.Minimized)
                         {
                             owner.WindowState = ownerRestoreState;
                         }
 
                         ownerMinimizedByMirror = false;
-                        if (pairMinimized)
+                    }
+                }
+                finally
+                {
+                    syncing = false;
+                }
+            }
+
+            void SyncDialogToOwner()
+            {
+                if (disposed)
+                {
+                    return;
+                }
+
+                if (owner.WindowState != WindowState.Minimized &&
+                    dialog.WindowState == WindowState.Minimized &&
+                    !IsOsVisible(dialog) &&
+                    dialogShowRetries++ < 40)
+                {
+                    // The shell has not re-shown the owned dialog yet - writing now would be
+                    // swallowed and poison the platform's state tracking (see above). Retry
+                    // shortly; the shell shows owned windows as part of the owner's restore,
+                    // so one round is normally enough.
+                    DispatcherTimer.RunOnce(SyncDialogToOwner, TimeSpan.FromMilliseconds(50));
+                    return;
+                }
+
+                syncing = true;
+                try
+                {
+                    if (owner.WindowState == WindowState.Minimized)
+                    {
+                        if (dialog.WindowState != WindowState.Minimized)
                         {
-                            pairMinimized = false;
-                            RepairModalForegroundAfterRestore(dialog);
+                            dialogRestoreState = dialog.WindowState;
+                            dialog.WindowState = WindowState.Minimized;
+                        }
+                    }
+                    else
+                    {
+                        if (dialog.WindowState == WindowState.Minimized)
+                        {
+                            dialog.WindowState = dialogRestoreState;
                         }
                     }
                 }
@@ -619,6 +676,30 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     syncing = false;
                 }
+            }
+
+            void OnDialogStateChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+            {
+                if (e.Property != Window.WindowStateProperty || syncing)
+                {
+                    return;
+                }
+
+                if (dialog.WindowState == WindowState.Minimized)
+                {
+                    pairMinimized = true;
+                }
+                else
+                {
+                    dialogRestoreState = dialog.WindowState;
+                    if (pairMinimized)
+                    {
+                        pairMinimized = false;
+                        RepairModalForegroundAfterRestore(dialog);
+                    }
+                }
+
+                Dispatcher.UIThread.Post(SyncOwnerToDialog);
             }
 
             void OnOwnerStateChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
@@ -628,38 +709,23 @@ namespace Nikse.SubtitleEdit.Logic
                     return;
                 }
 
-                syncing = true;
-                try
+                if (owner.WindowState == WindowState.Minimized)
                 {
-                    if (owner.WindowState == WindowState.Minimized)
+                    pairMinimized = true;
+                }
+                else
+                {
+                    ownerRestoreState = owner.WindowState;
+                    ownerMinimizedByMirror = false;
+                    if (pairMinimized)
                     {
-                        pairMinimized = true;
-                        if (dialog.WindowState != WindowState.Minimized)
-                        {
-                            dialogRestoreState = dialog.WindowState;
-                            dialog.WindowState = WindowState.Minimized;
-                        }
+                        pairMinimized = false;
+                        RepairModalForegroundAfterRestore(dialog);
                     }
-                    else
-                    {
-                        ownerRestoreState = owner.WindowState;
-                        ownerMinimizedByMirror = false;
-                        if (dialog.WindowState == WindowState.Minimized)
-                        {
-                            dialog.WindowState = dialogRestoreState;
-                        }
+                }
 
-                        if (pairMinimized)
-                        {
-                            pairMinimized = false;
-                            RepairModalForegroundAfterRestore(dialog);
-                        }
-                    }
-                }
-                finally
-                {
-                    syncing = false;
-                }
+                dialogShowRetries = 0;
+                Dispatcher.UIThread.Post(SyncDialogToOwner);
             }
 
             dialog.PropertyChanged += OnDialogStateChanged;
@@ -667,6 +733,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             return new ActionDisposable(() =>
             {
+                disposed = true;
                 dialog.PropertyChanged -= OnDialogStateChanged;
                 owner.PropertyChanged -= OnOwnerStateChanged;
 
@@ -674,13 +741,35 @@ namespace Nikse.SubtitleEdit.Logic
                 // bring the owner back when this mirror minimized it, so the app does not end up
                 // as a minimized main window the user never asked for (and whose -32000 minimized
                 // position would otherwise be persisted on exit). When the user minimized the
-                // owner itself, their choice is left alone.
+                // owner itself, their choice is left alone. (The owner has no owner of its own,
+                // so it is never OS-hidden and this synchronous write cannot be swallowed.)
                 if (ownerMinimizedByMirror && owner.WindowState == WindowState.Minimized)
                 {
                     owner.WindowState = ownerRestoreState;
                 }
             });
         }
+
+        /// <summary>
+        /// Whether the window is visible at the OS level. Avalonia's IsVisible only tracks its
+        /// own Show/Hide calls - it stays true when Windows hides an owned window because its
+        /// owner was minimized, which is exactly the state the minimize mirror must not write
+        /// WindowState into (#13865). Non-Windows platforms have no owned-window auto-hide, so
+        /// the Avalonia flag is the truth there.
+        /// </summary>
+        private static bool IsOsVisible(Window window)
+        {
+            if (!OperatingSystem.IsWindows())
+            {
+                return window.IsVisible;
+            }
+
+            var handle = window.TryGetPlatformHandle()?.Handle ?? IntPtr.Zero;
+            return handle == IntPtr.Zero ? window.IsVisible : IsWindowVisible(handle);
+        }
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern bool IsWindowVisible(IntPtr hWnd);
 
         /// <summary>
         /// Hands the foreground and the keyboard back to <paramref name="dialog"/> after the
