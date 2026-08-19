@@ -46,7 +46,7 @@ public class MatroskaUsfTrackTest
     [InlineData("<text><karaoke>sung</karaoke></text>", "sung")] // unknown markup: keep the text
     [InlineData("plain, no markup", "plain, no markup")]
     [InlineData("<text>unclosed", null)] // not parsable as XML - caller keeps the raw block
-    public void GetTextFromMatroskaBlock_ReadsUsfMarkup(string block, string expected)
+    public void GetTextFromMatroskaBlock_ReadsUsfMarkup(string block, string? expected)
     {
         var actual = UniversalSubtitleFormat.GetTextFromMatroskaBlock(block);
         Assert.Equal(expected?.Replace("\n", Environment.NewLine), actual);

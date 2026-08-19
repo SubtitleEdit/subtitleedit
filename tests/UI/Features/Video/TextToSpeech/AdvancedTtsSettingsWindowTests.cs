@@ -57,8 +57,8 @@ public class AdvancedTtsSettingsWindowTests : IDisposable
             t => t.Text == Se.Settings.Video.TextToSpeech.GenerationFolder);
 
         var sweepCheckBox = Assert.Single(
-            window.GetLogicalDescendants().OfType<CheckBox>()
-                .Where(c => Equals(c.Content, Se.Language.Video.TextToSpeech.DeleteTempFiles)));
+            window.GetLogicalDescendants().OfType<CheckBox>(),
+            c => Equals(c.Content, Se.Language.Video.TextToSpeech.DeleteTempFiles));
         Assert.False(sweepCheckBox.IsChecked);
     }
 }
