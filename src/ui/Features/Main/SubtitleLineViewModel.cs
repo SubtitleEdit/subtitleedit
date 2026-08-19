@@ -64,6 +64,7 @@ public partial class SubtitleLineViewModel : ObservableObject
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(TeletextDisplay))]
     [NotifyPropertyChangedFor(nameof(TeletextTextAlignment))]
+    [NotifyPropertyChangedFor(nameof(TeletextBackgroundBrush))]
     private string _text;
 
     [ObservableProperty]
@@ -143,15 +144,29 @@ public partial class SubtitleLineViewModel : ObservableObject
                 alignment = "R";
             }
 
-            var hasColor = text.Contains("<font color=", StringComparison.OrdinalIgnoreCase);
-            var maxCharacters = hasColor ? TeletextMaxCharactersWithColor : TeletextMaxCharacters;
-
-            var cleanText = HtmlUtil.RemoveHtmlTags(text, true);
-            var tooLong = cleanText.SplitToLines().Any(textLine => textLine.Length > maxCharacters);
-            var warning = tooLong ? "⚠ " : string.Empty;
-
-            return $"{warning}{line} {alignment}";
+            return $"{line} {alignment}";
         }
+    }
+
+    /// <summary>
+    /// Tints the "TT" cell when a row is wider than a teletext page can show, the same way the
+    /// duration and CPS cells flag their own limits.
+    /// </summary>
+    public IBrush TeletextBackgroundBrush => IsTeletextLineTooLong() ? _errorBrush : _transparentBrush;
+
+    private bool IsTeletextLineTooLong()
+    {
+        var text = Text;
+        if (string.IsNullOrEmpty(text))
+        {
+            return false;
+        }
+
+        var maxCharacters = text.Contains("<font color=", StringComparison.OrdinalIgnoreCase)
+            ? TeletextMaxCharactersWithColor
+            : TeletextMaxCharacters;
+
+        return HtmlUtil.RemoveHtmlTags(text, true).SplitToLines().Any(line => line.Length > maxCharacters);
     }
 
     // A teletext row holds 40 characters, of which the box and double-height control codes take
