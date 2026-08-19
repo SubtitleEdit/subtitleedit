@@ -192,19 +192,27 @@ public class AutoTranslateRunnerTest : IDisposable
     }
 
     [Theory]
-    [InlineData("translategemma-4b_Q5_K_M.gguf", "gemma", true)]   // curated: exact match
-    [InlineData("translategemma-27b-it.Q4_K_M.gguf", "gemma", true)] // uncurated: inferred
-    [InlineData("google_gemma-3-27b-it-Q4_K_M.gguf", "gemma", true)]
-    [InlineData("Qwen_Qwen3.5-32B-Q4_K_M.gguf", "chatml", true)]
-    [InlineData("aya-expanse-8b-Q4_K_M.gguf", null, false)]        // curated: embedded template
-    [InlineData("Meta-Llama-3.1-70B-Instruct-Q4_K_M.gguf", null, false)]
-    [InlineData("some-unknown-model.gguf", null, false)]
-    public void InferChatTemplate_PicksFlagsByFamily(string fileName, string? expectedTemplate, bool expectedNoJinja)
+    [InlineData("translategemma-4b_Q5_K_M.gguf", "gemma", true, false)]   // curated: exact match
+    [InlineData("translategemma-27b-it.Q4_K_M.gguf", "gemma", true, false)] // uncurated: inferred
+    [InlineData("google_gemma-3-27b-it-Q4_K_M.gguf", "gemma", true, false)]
+    [InlineData("Qwen_Qwen3.5-32B-Q4_K_M.gguf", "chatml", true, false)]
+    [InlineData("aya-expanse-8b-Q4_K_M.gguf", null, false, false)]        // curated: embedded template
+    [InlineData("Meta-Llama-3.1-70B-Instruct-Q4_K_M.gguf", null, false, false)]
+    [InlineData("some-unknown-model.gguf", null, false, false)]
+    // Gemma 4 keeps its embedded template but must not think - both spellings of the family, and
+    // both the curated entry and a self-supplied quant (e.g. a fine-tune) we do not list.
+    [InlineData("google_gemma-4-E4B-it-Q4_K_M.gguf", null, false, true)]  // curated
+    [InlineData("gemma-4-27B-it-Q4_K_M.gguf", null, false, true)]         // uncurated size
+    [InlineData("translate_gemma4_sub-E4B-Q4_K_XL.gguf", null, false, true)]
+    // "translategemma-4b" is TranslateGemma at 4B, not Gemma 4 - it still needs the gemma template.
+    [InlineData("translategemma-4b_Q6_K.gguf", "gemma", true, false)]
+    public void InferChatTemplate_PicksFlagsByFamily(string fileName, string? expectedTemplate, bool expectedNoJinja, bool expectedNoThinking)
     {
-        var (chatTemplate, noJinja) = LlamaCppServerManager.InferChatTemplate(fileName);
+        var (chatTemplate, noJinja, noThinking) = LlamaCppServerManager.InferChatTemplate(fileName);
 
         Assert.Equal(expectedTemplate, chatTemplate);
         Assert.Equal(expectedNoJinja, noJinja);
+        Assert.Equal(expectedNoThinking, noThinking);
     }
 
     [Fact]

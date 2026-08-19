@@ -38,7 +38,14 @@ public sealed record LlamaCppModel(
     // continue its trained PromptTemplate. Excluded from the advanced engine's model list -
     // its JSON batch protocol gets back well-formed JSON whose values are the untranslated
     // source lines, which would be written to the grid as a "successful" batch.
-    bool CompletionOnly = false);
+    bool CompletionOnly = false,
+    // Launches the server with "--reasoning off" for models that think by default (Gemma 4).
+    // Thinking is not just slow here, it loses the answer: the thoughts go to
+    // "message.reasoning_content" and "message.content" - the only field the engines read -
+    // stays empty until the token budget runs out, so the line comes back untranslated. The
+    // Qwen families avoid this through their chat-template override instead (chatml +
+    // --no-jinja bypasses the embedded template's thinking logic).
+    bool NoThinking = false);
 
 /// <summary>
 /// Manages the local <c>llama-server</c> process used by the llama.cpp auto-translate and OCR
@@ -102,14 +109,21 @@ public static class LlamaCppServerManager
         // into non-English targets. NOTE: unlike Gemma 2/3 this must use its own embedded Jinja
         // template - Gemma 4 replaced the <start_of_turn> scheme with <|turn>role ... <turn|>, so
         // llama.cpp's built-in "gemma" template does NOT apply and forcing it produces garbage.
-        // Its template defaults enable_thinking to false, so output is clean translation.
+        // That template turns thinking ON by default, which for subtitle-sized requests means no
+        // translation at all: 7 of 16 English->Danish lines and 11 of 16 English->German lines came
+        // back empty at ~10-12 s/line, each burning the whole max_tokens budget inside
+        // reasoning_content. Hence NoThinking on every Gemma 4 entry - with it, 0 of 16 empty at
+        // ~1 s/line.
         new LlamaCppModel("Gemma 4 E4B it (Q4_K_M)", "google_gemma-4-E4B-it-Q4_K_M.gguf", "5.4 GB",
-            "https://huggingface.co/bartowski/google_gemma-4-E4B-it-GGUF/resolve/main/google_gemma-4-E4B-it-Q4_K_M.gguf"),
+            "https://huggingface.co/bartowski/google_gemma-4-E4B-it-GGUF/resolve/main/google_gemma-4-E4B-it-Q4_K_M.gguf",
+            NoThinking: true),
         new LlamaCppModel("Gemma 4 E4B it (Q8_0)", "google_gemma-4-E4B-it-Q8_0.gguf", "8.0 GB",
-            "https://huggingface.co/bartowski/google_gemma-4-E4B-it-GGUF/resolve/main/google_gemma-4-E4B-it-Q8_0.gguf"),
+            "https://huggingface.co/bartowski/google_gemma-4-E4B-it-GGUF/resolve/main/google_gemma-4-E4B-it-Q8_0.gguf",
+            NoThinking: true),
         // The 12B repo (and its file names) drop the "google_" prefix the E4B repo uses.
         new LlamaCppModel("Gemma 4 12B it (Q4_K_M)", "gemma-4-12B-it-Q4_K_M.gguf", "7.6 GB",
-            "https://huggingface.co/bartowski/gemma-4-12B-it-GGUF/resolve/main/gemma-4-12B-it-Q4_K_M.gguf"),
+            "https://huggingface.co/bartowski/gemma-4-12B-it-GGUF/resolve/main/gemma-4-12B-it-Q4_K_M.gguf",
+            NoThinking: true),
 
         // Alternative model family. Qwen 3 is the strongest open model for CJK
         // (Chinese/Japanese/Korean) and competitive elsewhere — useful fallback
@@ -208,16 +222,22 @@ public static class LlamaCppServerManager
             ChatTemplate: "gemma", NoJinja: true),
         // Gemma 4 uses its own embedded Jinja template - see the note in TranslateModels; the
         // built-in "gemma" template above is the Gemma 2/3 format and must not be forced here.
+        // NoThinking for the same reason as there: the review client reads message.content too,
+        // so a model that answers in reasoning_content returns an empty review.
         // E2B is the smallest option in this list - for laptops/iGPUs where even the 4B models
         // are a stretch.
         new LlamaCppModel("Gemma 4 E2B it (Q4_K_M)", "google_gemma-4-E2B-it-Q4_K_M.gguf", "3.5 GB",
-            "https://huggingface.co/bartowski/google_gemma-4-E2B-it-GGUF/resolve/main/google_gemma-4-E2B-it-Q4_K_M.gguf"),
+            "https://huggingface.co/bartowski/google_gemma-4-E2B-it-GGUF/resolve/main/google_gemma-4-E2B-it-Q4_K_M.gguf",
+            NoThinking: true),
         new LlamaCppModel("Gemma 4 E4B it (Q4_K_M)", "google_gemma-4-E4B-it-Q4_K_M.gguf", "5.4 GB",
-            "https://huggingface.co/bartowski/google_gemma-4-E4B-it-GGUF/resolve/main/google_gemma-4-E4B-it-Q4_K_M.gguf"),
+            "https://huggingface.co/bartowski/google_gemma-4-E4B-it-GGUF/resolve/main/google_gemma-4-E4B-it-Q4_K_M.gguf",
+            NoThinking: true),
         new LlamaCppModel("Gemma 4 E4B it (Q8_0)", "google_gemma-4-E4B-it-Q8_0.gguf", "8.0 GB",
-            "https://huggingface.co/bartowski/google_gemma-4-E4B-it-GGUF/resolve/main/google_gemma-4-E4B-it-Q8_0.gguf"),
+            "https://huggingface.co/bartowski/google_gemma-4-E4B-it-GGUF/resolve/main/google_gemma-4-E4B-it-Q8_0.gguf",
+            NoThinking: true),
         new LlamaCppModel("Gemma 4 12B it (Q4_K_M)", "gemma-4-12B-it-Q4_K_M.gguf", "7.6 GB",
-            "https://huggingface.co/bartowski/gemma-4-12B-it-GGUF/resolve/main/gemma-4-12B-it-Q4_K_M.gguf"),
+            "https://huggingface.co/bartowski/gemma-4-12B-it-GGUF/resolve/main/gemma-4-12B-it-Q4_K_M.gguf",
+            NoThinking: true),
 
         // Different families for second opinions. Llama 3.1 is the strongest English
         // proofreader of its size; Phi-4 mini is the small/fast option.
@@ -380,34 +400,67 @@ public static class LlamaCppServerManager
     /// embedded Jinja template is non-standard) and every Qwen needs <c>chatml</c> + <c>--no-jinja</c> (to
     /// bypass the embedded template's thinking mode, which otherwise emits &lt;think&gt; blocks instead of a
     /// translation). Families with a usable embedded template (Aya, Llama, EuroLLM, Phi) fall through to
-    /// the default of no override.
+    /// the default of no override. Gemma 4 keeps its embedded template but needs
+    /// <c>--reasoning off</c> instead (<c>NoThinking</c>), for the reason documented on
+    /// <see cref="LlamaCppModel.NoThinking"/>.
     /// </summary>
-    public static (string? ChatTemplate, bool NoJinja) InferChatTemplate(string fileName)
+    public static (string? ChatTemplate, bool NoJinja, bool NoThinking) InferChatTemplate(string fileName)
     {
         var curated = TranslateModels.Concat(ReviewModels).Concat(OcrModels)
             .FirstOrDefault(m => m.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase));
         if (curated != null)
         {
-            return (curated.ChatTemplate, curated.NoJinja);
+            return (curated.ChatTemplate, curated.NoJinja, curated.NoThinking);
         }
 
         // Gemma 4 dropped the <start_of_turn> scheme for <|turn>role ... <turn|>, so the built-in
-        // "gemma" template does not apply - fall through and let its embedded Jinja template win.
-        var isGemma4 = fileName.Contains("gemma-4", StringComparison.OrdinalIgnoreCase) ||
-                       fileName.Contains("gemma4", StringComparison.OrdinalIgnoreCase);
+        // "gemma" template does not apply - fall through and let its embedded Jinja template win,
+        // with thinking turned off so the translation lands in message.content.
+        if (IsGemma4FileName(fileName))
+        {
+            return (null, false, true);
+        }
 
         // Matches "translategemma-27b-it.Q4_K_M.gguf", "google_gemma-3-27b-it-Q4_K_M.gguf", etc.
-        if (!isGemma4 && fileName.Contains("gemma", StringComparison.OrdinalIgnoreCase))
+        if (fileName.Contains("gemma", StringComparison.OrdinalIgnoreCase))
         {
-            return ("gemma", true);
+            return ("gemma", true, false);
         }
 
         if (fileName.Contains("qwen", StringComparison.OrdinalIgnoreCase))
         {
-            return ("chatml", true);
+            return ("chatml", true, false);
         }
 
-        return (null, false);
+        return (null, false, false);
+    }
+
+    /// <summary>
+    /// True when the file name names the Gemma <b>4</b> family, as opposed to a <b>4B</b> model of
+    /// another Gemma family. Plain "contains gemma-4" is not enough: "translategemma-4b-it-q8_0.gguf"
+    /// contains it too, and treating that TranslateGemma 4B quant as a Gemma 4 would drop the
+    /// <c>gemma</c> chat template it needs. The version digit is therefore only accepted when the
+    /// next character is not a letter - "gemma-4-12B", "gemma-4-E4B" and "gemma4_sub" are the family,
+    /// "gemma-4b" is a size.
+    /// </summary>
+    internal static bool IsGemma4FileName(string fileName)
+    {
+        foreach (var marker in new[] { "gemma-4", "gemma4" })
+        {
+            var i = fileName.IndexOf(marker, StringComparison.OrdinalIgnoreCase);
+            while (i >= 0)
+            {
+                var after = i + marker.Length;
+                if (after >= fileName.Length || !char.IsLetter(fileName[after]))
+                {
+                    return true;
+                }
+
+                i = fileName.IndexOf(marker, after, StringComparison.OrdinalIgnoreCase);
+            }
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -421,13 +474,14 @@ public static class LlamaCppServerManager
     public static LlamaCppModel CreateCustomModel(string displayName, string fileNameOrPath, string size)
     {
         var name = Path.GetFileName(fileNameOrPath);
-        var (chatTemplate, noJinja) = InferChatTemplate(name);
+        var (chatTemplate, noJinja, noThinking) = InferChatTemplate(name);
         var isMiLmMt = name.Contains("milmmt", StringComparison.OrdinalIgnoreCase);
         return new LlamaCppModel(displayName, fileNameOrPath, size, Url: string.Empty,
             ChatTemplate: chatTemplate, NoJinja: noJinja,
             PromptTemplate: isMiLmMt ? MiLmMt46PromptTemplate : null,
             Temperature: isMiLmMt ? 0 : -1,
-            CompletionOnly: isMiLmMt);
+            CompletionOnly: isMiLmMt,
+            NoThinking: noThinking);
     }
 
     /// <summary>
@@ -746,6 +800,12 @@ public static class LlamaCppServerManager
                 // vision chunks cannot be shifted.
                 args.Add("--cache-reuse");
                 args.Add("256");
+            }
+
+            if (model.NoThinking)
+            {
+                args.Add("--reasoning");
+                args.Add("off");
             }
 
             if (model.NoJinja)
