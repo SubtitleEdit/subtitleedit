@@ -9,7 +9,8 @@ namespace Nikse.SubtitleEdit.Logic.ValueConverters;
 
 /// <summary>
 /// Colors the batch convert status column as a badge: green for converted, red for errors,
-/// gray for cancelled. In-progress and idle statuses ("-", "OCR 42%", ...) stay unstyled -
+/// gray for cancelled. In-progress and idle statuses ("-", "OCR 42%", ...) get the plain theme
+/// text color and no badge fill -
 /// bind with ConverterParameter "background" for the badge fill, anything else for the text color.
 /// Mid-saturation tones picked to stay readable on both the dark and light theme.
 /// </summary>
@@ -29,7 +30,7 @@ public class BatchConvertStatusColorConverter : IValueConverter
 
         if (string.IsNullOrEmpty(status) || status == "-")
         {
-            return AvaloniaProperty.UnsetValue;
+            return DefaultBrush(isBackground);
         }
 
         if (status == Se.Language.General.Converted)
@@ -57,7 +58,15 @@ public class BatchConvertStatusColorConverter : IValueConverter
         }
 
         // In-progress statuses (OCR percentages etc.) keep the default text color, no badge.
-        return AvaloniaProperty.UnsetValue;
+        return DefaultBrush(isBackground);
+    }
+
+    // An explicit theme text brush, not UnsetValue: a binding that yields UnsetValue falls
+    // back to the property default (black for TextBlock.Foreground), not the inherited
+    // foreground, so in-progress statuses rendered black on the dark theme.
+    private static object DefaultBrush(bool isBackground)
+    {
+        return isBackground ? AvaloniaProperty.UnsetValue : UiUtil.GetTextColor();
     }
 
     // Formatting + trimming "Error: {0}" per status cell showed up as the converter's only
