@@ -875,6 +875,15 @@ public partial class BurnInViewModel : ObservableObject
         var subtitle = Subtitle.Parse(subtitleFileName);
         subtitle = GetSubtitleBasedOnCut(subtitle);
 
+        if (subtitle.OriginalFormat is NetflixImsc11Japanese)
+        {
+            // Furigana, bouten and vertical writing become extra positioned render lines - burning
+            // in the raw tags would put them on screen as literal text (issue #13861).
+            var japaneseAssaFileName = Path.Combine(Path.GetTempFileName() + ".ass");
+            File.WriteAllText(japaneseAssaFileName, NetflixImsc11JapaneseToAss.Convert(subtitle, jobItem.Width, jobItem.Height));
+            return japaneseAssaFileName;
+        }
+
         if (!isAssa)
         {
             foreach (var s in subtitle.Paragraphs)
@@ -2310,6 +2319,11 @@ public partial class BurnInViewModel : ObservableObject
         var height = VideoHeight ?? _mediaInfo?.Dimension.Height ?? 1080;
 
         var subtitle = new Subtitle(_subtitle, false);
+        if (_subtitleFormat is NetflixImsc11Japanese)
+        {
+            return NetflixImsc11JapaneseToAss.Convert(subtitle, width, height);
+        }
+
         var isAssa = _subtitleFormat is { Name: AdvancedSubStationAlpha.NameOfFormat };
         if (!isAssa)
         {

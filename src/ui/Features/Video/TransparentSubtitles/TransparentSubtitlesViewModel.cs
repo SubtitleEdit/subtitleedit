@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
@@ -645,6 +645,16 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         }
 
         subtitle = GetSubtitleBasedOnCut(subtitle);
+
+        if (subtitle.OriginalFormat is NetflixImsc11Japanese)
+        {
+            // Furigana, bouten and vertical writing become extra positioned render lines - the raw
+            // tags would otherwise be rendered as literal text (issue #13861).
+            var japaneseJobItem = JobItems[_jobItemIndex];
+            var japaneseAssaFileName = Path.Combine(Path.GetTempFileName() + ".ass");
+            File.WriteAllText(japaneseAssaFileName, NetflixImsc11JapaneseToAss.Convert(subtitle, japaneseJobItem.Width, japaneseJobItem.Height));
+            return japaneseAssaFileName;
+        }
 
         if (!isAssa)
         {
@@ -1349,6 +1359,11 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         var height = VideoHeight ?? 1080;
 
         var subtitle = new Subtitle(_subtitle, false);
+        if (_subtitleFormat is NetflixImsc11Japanese)
+        {
+            return NetflixImsc11JapaneseToAss.Convert(subtitle, width, height);
+        }
+
         var isAssa = _subtitleFormat is { Name: AdvancedSubStationAlpha.NameOfFormat };
         if (!isAssa)
         {

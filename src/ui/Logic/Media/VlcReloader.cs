@@ -48,7 +48,15 @@ public class VlcReloader : IVlcReloader
 
             SubtitleFormat format = _assFormat;
             string text;
-            if (uiFormatType == typeof(WebVTT) || uiFormatType == typeof(WebVTTFileWithLineNumber))
+            if (uiFormatType == typeof(NetflixImsc11Japanese))
+            {
+                // See MpvReloader - the furigana/bouten/vertical markup has to become positioned
+                // render lines before libass sees it (issue #13861).
+                subtitle = NetflixImsc11JapaneseToAss.ConvertToSubtitle(subtitle, VideoWidth, VideoHeight);
+                SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary);
+                text = subtitle.ToText(_assFormat);
+            }
+            else if (uiFormatType == typeof(WebVTT) || uiFormatType == typeof(WebVTTFileWithLineNumber))
             {
                 var defaultStyle = GetMpvPreviewStyle(Se.Settings.Video);
                 defaultStyle.BorderStyle = "3";

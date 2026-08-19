@@ -181,6 +181,16 @@ public class MpvReloader : IMpvReloader
             }
         }
 
+        if (uiFormatType == typeof(NetflixImsc11Japanese))
+        {
+            // Furigana, bouten and vertical writing have no libass equivalent - they have to be
+            // exploded into separately positioned render lines, or the tags show up as literal
+            // text on the video (issue #13861).
+            subtitle = NetflixImsc11JapaneseToAss.ConvertToSubtitle(subtitle, VideoWidth, VideoHeight);
+            SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary);
+            return (subtitle, subtitle.ToText(_assFormat), 0, false);
+        }
+
         if (uiFormatType == typeof(WebVTT) || uiFormatType == typeof(WebVTTFileWithLineNumber))
         {
             var defaultStyle = GetMpvPreviewStyle(Se.Settings.Video);
