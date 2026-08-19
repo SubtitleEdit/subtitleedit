@@ -1396,7 +1396,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return false;
             }
 
-            if (subtitle.Header != null && subtitle.Header.Length == 1024 && (subtitle.Header.Contains("STL24") || subtitle.Header.Contains("STL25") || subtitle.Header.Contains("STL29") || subtitle.Header.Contains("STL30")))
+            // Paragraph.MarginV only holds a teletext row when the subtitle was read from an EBU
+            // STL file (see LoadSubtitle). Every other format writes its own meaning into it -
+            // ASSA dialogue lines always carry one - so the vertical position below may only be
+            // taken from MarginV when this is true.
+            var isEbuSource = subtitle.Header != null && subtitle.Header.Length == 1024 && (subtitle.Header.Contains("STL24") || subtitle.Header.Contains("STL25") || subtitle.Header.Contains("STL29") || subtitle.Header.Contains("STL30"));
+            if (isEbuSource)
             {
                 header = ReadHeader(GetEncoding(subtitle.Header.Substring(0, 3)).GetBytes(subtitle.Header));
                 EbuUiHelper.Initialize(header, EbuUiHelper.JustificationCode, null, subtitle);
@@ -1458,7 +1463,29 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
 
                 var text = p.Text.Trim(Utilities.NewLineChars);
-                if (text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an8}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal))
+
+                var teletextPosition = 0;
+                var isTeletext = header.DisplayStandardCode == "1" || header.DisplayStandardCode == "2";
+                var hasTeletextPosition =
+                    isEbuSource &&
+                    isTeletext &&
+                    int.TryParse(p.MarginV, out teletextPosition) &&
+                    teletextPosition >= 1 &&
+                    teletextPosition <= rows;
+
+                if (hasTeletextPosition)
+                {
+                    // The text may have been re-wrapped since it was read, so a position that no
+                    // longer leaves room for every row would push the tail off the page.
+                    var extraRows = Math.Max(0, Utilities.GetNumberOfLines(text) - 1) * Configuration.Settings.SubtitleSettings.EbuStlNewLineRows;
+                    if (teletextPosition + extraRows > rows)
+                    {
+                        teletextPosition = Math.Max(1, rows - extraRows);
+                    }
+
+                    tti.VerticalPosition = (byte)teletextPosition;
+                }
+                else if (text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an8}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal))
                 {
                     tti.VerticalPosition = (byte)Configuration.Settings.SubtitleSettings.EbuStlMarginTop; // top (vertical)
                     if (header.DisplayStandardCode == "1" || header.DisplayStandardCode == "2") // teletext

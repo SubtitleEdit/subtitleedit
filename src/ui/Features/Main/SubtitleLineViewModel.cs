@@ -62,6 +62,8 @@ public partial class SubtitleLineViewModel : ObservableObject
     private TimeSpan _duration;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(TeletextDisplay))]
+    [NotifyPropertyChangedFor(nameof(TeletextTextAlignment))]
     private string _text;
 
     [ObservableProperty]
@@ -103,7 +105,85 @@ public partial class SubtitleLineViewModel : ObservableObject
     public bool IsComment { get; set; }
     public string MarginL { get; set; }
     public string MarginR { get; set; }
-    public string MarginV { get; set; }
+    /// <summary>
+    /// For EBU STL this is the teletext row the subtitle starts on (1..23, matching the format's
+    /// VerticalPosition field). Observable so the "TT" column follows undo and reload, which
+    /// assign it without going through the teletext dialog.
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(TeletextDisplay))]
+    private string _marginV;
+
+    public string TeletextDisplay
+    {
+        get
+        {
+            var line = 23;
+
+            if (int.TryParse(MarginV, out var ebuLine) &&
+                ebuLine >= 1 &&
+                ebuLine <= 23)
+            {
+                line = ebuLine;
+            }
+
+            var text = Text ?? string.Empty;
+            var alignment = "C";
+
+            if (text.StartsWith("{\\an1}") ||
+                text.StartsWith("{\\an4}") ||
+                text.StartsWith("{\\an7}"))
+            {
+                alignment = "L";
+            }
+            else if (text.StartsWith("{\\an3}") ||
+                     text.StartsWith("{\\an6}") ||
+                     text.StartsWith("{\\an9}"))
+            {
+                alignment = "R";
+            }
+
+            return $"{line} {alignment}";
+        }
+    }
+
+    /// <summary>
+    /// True while an EBU STL subtitle is open, so a row wider than a teletext page counts as a
+    /// "text too long" error. Set from MainViewModel when the format changes.
+    /// </summary>
+    public static bool UseTeletextLineLength { get; set; }
+
+    // A teletext row holds 40 characters, of which the box and double-height control codes take
+    // the first few; a colour change costs one more. These are the safe widths rather than the
+    // header's MaximumNumberOfDisplayableCharactersInAnyTextRow, which is not reachable from a
+    // per-line view model.
+    private const int TeletextMaxCharacters = 37;
+    private const int TeletextMaxCharactersWithColor = 36;
+
+    public TextAlignment TeletextTextAlignment
+    {
+        get
+        {
+            var text = Text ?? string.Empty;
+
+            if (text.StartsWith("{\\an1}") ||
+                text.StartsWith("{\\an4}") ||
+                text.StartsWith("{\\an7}"))
+            {
+                return TextAlignment.Left;
+            }
+
+            if (text.StartsWith("{\\an3}") ||
+                text.StartsWith("{\\an6}") ||
+                text.StartsWith("{\\an9}"))
+            {
+                return TextAlignment.Right;
+            }
+
+            return TextAlignment.Center;
+        }
+    }
+
     public bool NewSection { get; set; }
     public bool Forced { get; set; }
     public Guid Id { get; set; }
@@ -485,7 +565,8 @@ public partial class SubtitleLineViewModel : ObservableObject
         int FontSize,
         bool ColorTextTooManyLines,
         int MaxNumberOfLines,
-        string? LengthStrategy)
+        string? LengthStrategy,
+        bool UseTeletextLineLength)
     {
         public static TextErrorSettings Current()
         {
@@ -500,7 +581,8 @@ public partial class SubtitleLineViewModel : ObservableObject
                 general.ColorTextTooManyLines,
                 general.MaxNumberOfLines,
                 // GetLineLength counts through this strategy, so it belongs in the key too.
-                Configuration.Settings.General.CpsLineLengthStrategy);
+                Configuration.Settings.General.CpsLineLengthStrategy,
+                SubtitleLineViewModel.UseTeletextLineLength);
         }
     }
 
@@ -560,6 +642,23 @@ public partial class SubtitleLineViewModel : ObservableObject
             if (GetStrippedLines().Count > settings.MaxNumberOfLines)
             {
                 return true;
+            }
+        }
+
+        // A teletext page is narrower than the general maximum, and every character takes a cell,
+        // so this counts raw length rather than going through the CPS length strategy.
+        if (settings.UseTeletextLineLength)
+        {
+            var maxCharacters = Text.Contains("<font color=", StringComparison.OrdinalIgnoreCase)
+                ? TeletextMaxCharactersWithColor
+                : TeletextMaxCharacters;
+
+            foreach (var line in GetStrippedLines())
+            {
+                if (line.Length > maxCharacters)
+                {
+                    return true;
+                }
             }
         }
 
@@ -748,7 +847,7 @@ public partial class SubtitleLineViewModel : ObservableObject
             // Memoized by (Text, settings) - the same verdict the Text cell tint uses.
             if (HasTextRuleError())
             {
-                Add("text too long or wide");
+                Add(UseTeletextLineLength ? "text too long or wide for teletext" : "text too long or wide");
             }
 
             return errors?.ToString() ?? string.Empty;

@@ -337,6 +337,30 @@ public static partial class InitListViewAndEditBox
             Mode = BindingMode.OneWay,
             Source = vm,
         });
+        var teletextColumn = new SeTableViewColumn
+        {
+            Header = "TT",
+            Tag = SubtitleGridColumnKeys.Teletext,
+            Width = new GridLength(70),
+            MinWidth = 60,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((value, nameScope) => new TextBlock
+            {
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                [!TextBlock.TextProperty] = new Binding(nameof(SubtitleLineViewModel.TeletextDisplay))
+                {
+                    Mode = BindingMode.OneWay,
+                },
+            }),
+        };
+        columnManager.Add(teletextColumn);
+        teletextColumn.Bind(SeTableViewColumn.IsVisibleProperty, new Binding(nameof(vm.IsTeletextColumnVisible))
+        {
+            Mode = BindingMode.OneWay,
+            Source = vm,
+        });
 
         columnManager.Add(new SeTableViewColumn
         {
@@ -357,7 +381,16 @@ public static partial class InitListViewAndEditBox
                 var textBlock = new TextBlock
                 {
                     VerticalAlignment = VerticalAlignment.Center,
-
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    [!TextBlock.TextAlignmentProperty] = new MultiBinding
+                    {
+                        Converter = TeletextAlignmentPreviewConverter.Instance,
+                        Bindings =
+                        {
+                            new Binding(nameof(vm.IsTeletextPreviewActive)) { Source = vm, Mode = BindingMode.OneWay },
+                            new Binding(nameof(SubtitleLineViewModel.TeletextTextAlignment)) { Mode = BindingMode.OneWay },
+                        },
+                    },
                     // Lets the subtitle grid context menu find the word under the pointer (live spell check)
                     Tag = SubtitleGridColumnKeys.Text,
                     [!TextBlock.InlinesProperty] = new Binding(nameof(SubtitleLineViewModel.Text)) { Converter = syntaxHighlightingConverter, Mode = BindingMode.OneWay },
@@ -1881,6 +1914,7 @@ public static partial class InitListViewAndEditBox
         public const string Start = "Start";
         public const string End = "End";
         public const string Duration = "Duration";
+        public const string Teletext = "Teletext";
         public const string Text = "Text";
         public const string OriginalText = "OriginalText";
         public const string Style = "Style";

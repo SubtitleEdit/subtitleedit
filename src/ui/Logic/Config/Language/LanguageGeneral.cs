@@ -457,6 +457,7 @@ public class LanguageGeneral
     public string RemoveUnderline { get; set; }
     public string Rename { get; set; }
     public string Replace { get; set; }
+    public string ReplaceLine { get; set; } = string.Empty;
     public string ReplaceWith { get; set; }
     public string RequiresRestart { get; set; }
     public string Reset { get; set; }
@@ -521,6 +522,7 @@ public class LanguageGeneral
     public string Shadow { get; set; }
     public string ShadowColor { get; set; }
     public string ShadowWidth { get; set; }
+    public string ShiftLineBy { get; set; } = string.Empty;
     public string Shortcut { get; set; }
     public string Shortcuts { get; set; }
     public string Show { get; set; }
@@ -535,6 +537,7 @@ public class LanguageGeneral
     public string ShowPreview { get; set; }
     public string ShowShotChangesList { get; set; }
     public string ShowStyleColumn { get; set; }
+    public string ShowTeletext { get; set; } = string.Empty;
     public string ShowTimeCodes { get; set; }
     public string ShowWpmColumn { get; set; }
     public string ShowPixelWidthColumn { get; set; }
@@ -588,6 +591,8 @@ public class LanguageGeneral
     public string System { get; set; }
     public string TargetEncoding { get; set; }
     public string TargetFormat { get; set; }
+    public string TeletextAlignment { get; set; } = string.Empty;
+    public string TeletextLine { get; set; } = string.Empty;
     public string TenHours { get; set; }
     public string Text { get; set; }
     public string TextColor { get; set; }
@@ -1202,6 +1207,7 @@ public class LanguageGeneral
         RemoveUnderline = "Remove underline";
         Rename = "Rename";
         Replace = "Replace";
+        ReplaceLine = "Replace line";
         ReplaceWith = "Replace with";
         RequiresRestart = "Requires restart";
         Reset = "Reset";
@@ -1266,6 +1272,7 @@ public class LanguageGeneral
         Shadow = "Shadow";
         ShadowColor = "Shadow color";
         ShadowWidth = "Shadow width";
+        ShiftLineBy = "Shift line by";
         Shortcut = "Shortcut";
         Shortcuts = "Shortcuts";
         Show = "Show";
@@ -1280,6 +1287,7 @@ public class LanguageGeneral
         ShowPreview = "Show preview";
         ShowShotChangesList = "Show shot changes list";
         ShowStyleColumn = "Show \"Style\" column";
+        ShowTeletext = "Show TT";
         ShowTimeCodes = "Show time codes";
         ShowWpmColumn = "Show \"Words/min\" column";
         ShowPixelWidthColumn = "Show \"Pixel width\" column";
@@ -1333,6 +1341,8 @@ public class LanguageGeneral
         System = "System";
         TargetEncoding = "Target encoding";
         TargetFormat = "Target format";
+        TeletextAlignment = "Teletext alignment";
+        TeletextLine = "Teletext line";
         TenHours = "10 hours";
         Text = "Text";
         TextColor = "Text color";
