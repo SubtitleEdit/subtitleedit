@@ -218,7 +218,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return "bottom-left-justified";
         }
 
-        private static string GetAssStyleFromRegion(string region)
+        private static string GetAssStyleFromRegionName(string region)
         {
             switch (region)
             {
@@ -226,13 +226,176 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 case "force-narrative-example-region": return @"{\an5}";
                 case "left": return @"{\an7}";
                 case "right": return @"{\an9}";
-                default: return string.Empty;
+                default: return null;
             }
         }
 
-        private static List<string> GetStyles()
+        /// <summary>
+        /// Real Netflix documents name their regions "region0", "region1"... - only files authored by
+        /// Subtitle Edit itself use the names above. Fall back to the region attributes so vertical
+        /// (tbrl/tblr) and top/middle placement survive documents written by anything else (issue #13861).
+        /// </summary>
+        private static string GetAssStyleFromRegion(string regionId, XmlDocument xml)
         {
-            return TimedText10.GetStylesFromHeader(GetXmlStructure());
+            var byName = GetAssStyleFromRegionName(regionId);
+            if (byName != null)
+            {
+                return byName;
+            }
+
+            var regionNode = FindNodeById(xml, "region", regionId);
+            if (regionNode == null)
+            {
+                return string.Empty;
+            }
+
+            var displayAlign = GetTtmlStyleValue(xml, regionNode, "tts:displayAlign", includeInitial: true) ?? "after";
+            var writingMode = GetTtmlStyleValue(xml, regionNode, "tts:writingMode", includeInitial: true) ?? "lrtb";
+
+            if (writingMode.StartsWith("tb", StringComparison.Ordinal))
+            {
+                // Vertical writing: the block direction runs sideways, so "displayAlign" picks a
+                // side, not a height. tbrl stacks columns right-to-left, so "before" is the right
+                // edge; tblr is the mirror image. Subtitle Edit's vertical layout only knows the
+                // two corners (see NetflixImsc11JapaneseToAss), so "center" snaps to the start side.
+                var rightToLeft = !writingMode.StartsWith("tblr", StringComparison.Ordinal);
+                var atStart = displayAlign != "after";
+                return rightToLeft == atStart ? @"{\an9}" : @"{\an7}";
+            }
+
+            var originY = ParseRegionPercentY(GetTtmlStyleValue(xml, regionNode, "tts:origin", includeInitial: true)) ?? 10.0;
+            var extentY = ParseRegionPercentY(GetTtmlStyleValue(xml, regionNode, "tts:extent", includeInitial: true)) ?? 80.0;
+            double anchorY;
+            switch (displayAlign)
+            {
+                case "before":
+                    anchorY = originY;
+                    break;
+                case "center":
+                    anchorY = originY + extentY / 2.0;
+                    break;
+                default: // after
+                    anchorY = originY + extentY;
+                    break;
+            }
+
+            if (anchorY <= 33)
+            {
+                return @"{\an8}";
+            }
+
+            if (anchorY < 66)
+            {
+                return @"{\an5}";
+            }
+
+            return string.Empty; // bottom is the default region
+        }
+
+        private static double? ParseRegionPercentY(string originOrExtent)
+        {
+            if (string.IsNullOrEmpty(originOrExtent))
+            {
+                return null;
+            }
+
+            var parts = originOrExtent.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length != 2 || !parts[1].EndsWith("%", StringComparison.Ordinal))
+            {
+                return null;
+            }
+
+            return double.TryParse(parts[1].TrimEnd('%'), NumberStyles.Float, CultureInfo.InvariantCulture, out var value)
+                ? value
+                : (double?)null;
+        }
+
+        private static XmlNode FindNodeById(XmlDocument xml, string localName, string id)
+        {
+            if (string.IsNullOrEmpty(id) || xml.DocumentElement == null)
+            {
+                return null;
+            }
+
+            try
+            {
+                var nsmgr = new XmlNamespaceManager(xml.NameTable);
+                nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
+                foreach (XmlNode node in xml.DocumentElement.SelectNodes("//ttml:" + localName, nsmgr))
+                {
+                    var nodeId = node.Attributes?["xml:id"]?.Value ?? node.Attributes?["id"]?.Value;
+                    if (nodeId == id)
+                    {
+                        return node;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Reads a tts: attribute off an element, following TTML referential styling: the element's own
+        /// attribute wins, then any style it references (a space separated list, later ids win), and -
+        /// only when <paramref name="includeInitial"/> is set - the document's "initial" values.
+        /// Layout attributes want the initial fallback; presentation attributes must not have it, or
+        /// the document-wide default color and font would end up on a &lt;font&gt; tag around every span.
+        /// </summary>
+        private static string GetTtmlStyleValue(XmlDocument xml, XmlNode node, string attributeName, bool includeInitial = false, int depth = 0)
+        {
+            if (node == null || depth > 5)
+            {
+                return null;
+            }
+
+            var own = node.Attributes?[attributeName]?.Value;
+            if (!string.IsNullOrEmpty(own))
+            {
+                return own;
+            }
+
+            var styleRef = node.Attributes?["style"]?.Value;
+            if (!string.IsNullOrEmpty(styleRef))
+            {
+                var ids = styleRef.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                for (var i = ids.Length - 1; i >= 0; i--)
+                {
+                    var value = GetTtmlStyleValue(xml, FindNodeById(xml, "style", ids[i]), attributeName, includeInitial, depth + 1);
+                    if (!string.IsNullOrEmpty(value))
+                    {
+                        return value;
+                    }
+                }
+            }
+
+            if (!includeInitial || depth > 0)
+            {
+                return null;
+            }
+
+            try
+            {
+                var nsmgr = new XmlNamespaceManager(xml.NameTable);
+                nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
+                foreach (XmlNode initial in xml.DocumentElement.SelectNodes("//ttml:initial", nsmgr))
+                {
+                    var value = initial.Attributes?[attributeName]?.Value;
+                    if (!string.IsNullOrEmpty(value))
+                    {
+                        return value;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e);
+            }
+
+            return null;
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -306,10 +469,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var region = node.Attributes?["region"];
                 if (region != null)
                 {
-                    assStyle = GetAssStyleFromRegion(region.InnerText);
+                    assStyle = GetAssStyleFromRegion(region.InnerText, xml);
                 }
 
-                var text = assStyle + ReadParagraph(node, xml);
+                // Netflix puts the shear (their italic) for a whole cue on the <p> itself, not on a
+                // span, so a paragraph-level style has to be read too - see issue #13861. It is
+                // inherited by the content instead of wrapping it, so it survives the line breaks.
+                var paragraphStyle = ReadSpanStyle(node, xml);
+                var text = assStyle + ReadParagraph(node, xml, paragraphStyle.IsItalic);
                 var p = new Paragraph(begin, end, text);
                 subtitle.Paragraphs.Add(p);
             }
@@ -317,15 +484,194 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        private static string ReadParagraph(XmlNode node, XmlDocument xml)
+        private sealed class JapaneseSpanStyle
+        {
+            public bool IsItalic { get; set; }
+            public bool IsBold { get; set; }
+            public bool IsUnderlined { get; set; }
+            public string FontFamily { get; set; }
+            public string Color { get; set; }
+            public string Bouten { get; set; }
+            public bool HorizontalDigit { get; set; }
+            public bool RubyContainer { get; set; }
+            public bool RubyBase { get; set; }
+            public bool RubyText { get; set; }
+            public bool RubyTextAfter { get; set; }
+        }
+
+        private static readonly HashSet<string> BoutenStyleNames = new HashSet<string>
+        {
+            "bouten-dot-before",
+            "bouten-dot-after",
+            "bouten-dot-outside",
+            "bouten-filled-circle-outside",
+            "bouten-open-circle-outside",
+            "bouten-open-dot-outside",
+            "bouten-filled-sesame-outside",
+            "bouten-open-sesame-outside",
+            "bouten-auto-outside",
+            "bouten-auto",
+        };
+
+        /// <summary>
+        /// "dot before" -> "bouten-dot-before". Anything outside the profile's vocabulary still gets
+        /// an emphasis mark rather than being dropped silently.
+        /// </summary>
+        private static string BoutenStyleNameFromTextEmphasis(string textEmphasis)
+        {
+            if (string.IsNullOrWhiteSpace(textEmphasis) || textEmphasis == "none")
+            {
+                return null;
+            }
+
+            var name = "bouten-" + string.Join("-", textEmphasis.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+            return BoutenStyleNames.Contains(name) ? name : "bouten-auto";
+        }
+
+        private static bool IsShearSet(string shear)
+        {
+            if (string.IsNullOrWhiteSpace(shear))
+            {
+                return false;
+            }
+
+            var value = shear.Trim().TrimEnd('%');
+            return double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out var percent)
+                ? Math.Abs(percent) > 0.001
+                : true;
+        }
+
+        /// <summary>
+        /// Style ids are only meaningful in documents Subtitle Edit wrote itself - Netflix generates
+        /// "style0", "style1"... - so the real styling has to come off the attributes of the referenced
+        /// style nodes. The named ids are still honored first so our own files keep round-tripping
+        /// even when their style definitions are missing (issue #13861).
+        /// </summary>
+        private static JapaneseSpanStyle ReadSpanStyle(XmlNode node, XmlDocument xml)
+        {
+            var style = new JapaneseSpanStyle();
+
+            var styleRef = node.Attributes?["style"]?.Value;
+            if (!string.IsNullOrEmpty(styleRef))
+            {
+                foreach (var styleName in styleRef.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    ApplyKnownStyleName(styleName, style);
+                }
+            }
+
+            var ruby = GetTtmlStyleValue(xml, node, "tts:ruby");
+            if (ruby == "container")
+            {
+                style.RubyContainer = true;
+            }
+            else if (ruby == "base")
+            {
+                style.RubyBase = true;
+            }
+            else if (ruby == "text")
+            {
+                style.RubyText = true;
+                if (GetTtmlStyleValue(xml, node, "tts:rubyPosition") == "after")
+                {
+                    style.RubyTextAfter = true;
+                }
+            }
+            else if (ruby == "textContainer" || ruby == "baseContainer")
+            {
+                // Grouping wrappers with no text of their own - nothing to mark up.
+            }
+
+            var textEmphasis = BoutenStyleNameFromTextEmphasis(GetTtmlStyleValue(xml, node, "tts:textEmphasis"));
+            if (textEmphasis != null)
+            {
+                style.Bouten = textEmphasis;
+            }
+
+            if (GetTtmlStyleValue(xml, node, "tts:textCombine") == "all")
+            {
+                style.HorizontalDigit = true;
+            }
+
+            // Netflix's Japanese profile has no tts:fontStyle - a slanted cue is expressed as a shear.
+            if (GetTtmlStyleValue(xml, node, "tts:fontStyle") == "italic" || IsShearSet(GetTtmlStyleValue(xml, node, "tts:shear")))
+            {
+                style.IsItalic = true;
+            }
+
+            if (GetTtmlStyleValue(xml, node, "tts:fontWeight") == "bold")
+            {
+                style.IsBold = true;
+            }
+
+            if (GetTtmlStyleValue(xml, node, "tts:textDecoration") == "underline")
+            {
+                style.IsUnderlined = true;
+            }
+
+            var fontFamily = GetTtmlStyleValue(xml, node, "tts:fontFamily");
+            if (!string.IsNullOrEmpty(fontFamily))
+            {
+                style.FontFamily = fontFamily;
+            }
+
+            var color = GetTtmlStyleValue(xml, node, "tts:color");
+            if (!string.IsNullOrEmpty(color))
+            {
+                style.Color = color;
+            }
+
+            return style;
+        }
+
+        private static void ApplyKnownStyleName(string styleName, JapaneseSpanStyle style)
+        {
+            if (BoutenStyleNames.Contains(styleName))
+            {
+                style.Bouten = styleName;
+                return;
+            }
+
+            switch (styleName)
+            {
+                case "italic":
+                    style.IsItalic = true;
+                    break;
+                case "horizontalDigit":
+                    style.HorizontalDigit = true;
+                    break;
+                case "ruby-container":
+                    style.RubyContainer = true;
+                    break;
+                case "ruby-base":
+                    style.RubyBase = true;
+                    break;
+                case "ruby-base-italic":
+                    style.RubyBase = true;
+                    style.IsItalic = true;
+                    break;
+                case "ruby-text":
+                    style.RubyText = true;
+                    break;
+                case "ruby-text-italic":
+                    style.RubyText = true;
+                    style.IsItalic = true;
+                    break;
+                case "ruby-text-after":
+                    style.RubyText = true;
+                    style.RubyTextAfter = true;
+                    break;
+            }
+        }
+
+        private static string ReadParagraph(XmlNode node, XmlDocument xml, bool inheritedItalic)
         {
             var pText = new StringBuilder();
-            var styles = GetStyles();
             foreach (XmlNode child in node.ChildNodes)
             {
                 if (child.NodeType == XmlNodeType.Text)
                 {
-                    pText.Append(child.Value);
+                    AppendMaybeItalic(pText, child.Value, inheritedItalic);
                 }
                 else if (child.Name == "br" || child.Name == "tt:br")
                 {
@@ -333,422 +679,116 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (child.Name == "#significant-whitespace" || child.Name == "tt:#significant-whitespace")
                 {
-                    pText.Append(child.InnerText);
+                    AppendMaybeItalic(pText, child.InnerText, inheritedItalic);
                 }
                 else if (child.Name == "span" || child.Name == "tt:span")
                 {
-                    bool isItalic = false;
-                    bool isBold = false;
-                    bool isUnderlined = false;
-                    string fontFamily = null;
-                    string color = null;
-                    bool boutenDotBefore = false;
-                    bool boutenDotAfter = false;
-                    bool boutenDotOutside = false;
-                    bool boutenFilledCircleOutside = false;
-                    bool boutenOpenCircleOutside = false;
-                    bool boutenOpenDotOutside = false;
-                    bool boutenFilledSesameOutside = false;
-                    bool boutenOpenSesameOutside = false;
-                    bool boutenAutoOutside = false;
-                    bool boutenAuto = false;
-                    bool horizontalDigit = false;
-                    bool rubyContainer = false;
-                    bool rubyBase = false;
-                    bool rubyBaseItalic = false;
-                    bool rubyText = false;
-                    bool rubyTextAfter = false;
-                    bool rubyTextItalic = false;
-
-                    // Composing styles
-
-                    if (child.Attributes["style"] != null)
+                    var style = ReadSpanStyle(child, xml);
+                    if (inheritedItalic)
                     {
-                        string styleName = child.Attributes["style"].Value;
-                        if (styleName == "bouten-dot-before")
-                        {
-                            boutenDotBefore = true;
-                        }
-                        else if (styleName == "bouten-dot-after")
-                        {
-                            boutenDotAfter = true;
-                        }
-                        else if (styleName == "bouten-dot-outside")
-                        {
-                            boutenDotOutside = true;
-                        }
-                        else if (styleName == "bouten-filled-circle-outside")
-                        {
-                            boutenFilledCircleOutside = true;
-                        }
-                        else if (styleName == "bouten-open-circle-outside")
-                        {
-                            boutenOpenCircleOutside = true;
-                        }
-                        else if (styleName == "bouten-open-dot-outside")
-                        {
-                            boutenOpenDotOutside = true;
-                        }
-                        else if (styleName == "bouten-filled-sesame-outside")
-                        {
-                            boutenFilledSesameOutside = true;
-                        }
-                        else if (styleName == "bouten-open-sesame-outside")
-                        {
-                            boutenOpenSesameOutside = true;
-                        }
-                        else if (styleName == "bouten-auto-outside")
-                        {
-                            boutenAutoOutside = true;
-                        }
-                        else if (styleName == "bouten-auto")
-                        {
-                            boutenAuto = true;
-                        }
-                        else if (styleName == "horizontalDigit")
-                        {
-                            horizontalDigit = true;
-                        }
-                        else if (styleName == "ruby-container")
-                        {
-                            rubyContainer = true;
-                        }
-                        else if (styleName == "ruby-base")
-                        {
-                            rubyBase = true;
-                        }
-                        else if (styleName == "ruby-base-italic")
-                        {
-                            rubyBaseItalic = true;
-                        }
-                        else if (styleName == "ruby-text")
-                        {
-                            rubyText = true;
-                        }
-                        else if (styleName == "ruby-text-after")
-                        {
-                            rubyTextAfter = true;
-                        }
-                        else if (styleName == "ruby-text-italic")
-                        {
-                            rubyTextItalic = true;
-                        }
-                        else if (styles.Contains(styleName))
-                        {
-                            try
-                            {
-                                var nsmgr = new XmlNamespaceManager(xml.NameTable);
-                                nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
-                                XmlNode head = xml.DocumentElement.SelectSingleNode("ttml:head", nsmgr);
-                                foreach (XmlNode styleNode in head.SelectNodes("//ttml:style", nsmgr))
-                                {
-                                    string currentStyle = null;
-                                    if (styleNode.Attributes["xml:id"] != null)
-                                    {
-                                        currentStyle = styleNode.Attributes["xml:id"].Value;
-                                    }
-                                    else if (styleNode.Attributes["id"] != null)
-                                    {
-                                        currentStyle = styleNode.Attributes["id"].Value;
-                                    }
-
-                                    if (currentStyle == styleName)
-                                    {
-                                        if (styleNode.Attributes["tts:fontStyle"] != null && styleNode.Attributes["tts:fontStyle"].Value == "italic")
-                                        {
-                                            isItalic = true;
-                                        }
-
-                                        if (styleNode.Attributes["tts:fontWeight"] != null && styleNode.Attributes["tts:fontWeight"].Value == "bold")
-                                        {
-                                            isBold = true;
-                                        }
-
-                                        if (styleNode.Attributes["tts:textDecoration"] != null && styleNode.Attributes["tts:textDecoration"].Value == "underline")
-                                        {
-                                            isUnderlined = true;
-                                        }
-
-                                        if (styleNode.Attributes["tts:fontFamily"] != null)
-                                        {
-                                            fontFamily = styleNode.Attributes["tts:fontFamily"].Value;
-                                        }
-
-                                        if (styleNode.Attributes["tts:color"] != null)
-                                        {
-                                            color = styleNode.Attributes["tts:color"].Value;
-                                        }
-                                    }
-                                }
-                            }
-                            catch (Exception e)
-                            {
-                                System.Diagnostics.Debug.WriteLine(e);
-                            }
-                        }
+                        style.IsItalic = true;
                     }
 
-                    if (child.Attributes["tts:fontStyle"] != null && child.Attributes["tts:fontStyle"].Value == "italic")
-                    {
-                        isItalic = true;
-                    }
-                    else if (child.Attributes["style"] != null && child.Attributes["style"].Value == "italic")
-                    {
-                        isItalic = true;
-                    }
-
-
-                    if (child.Attributes["tts:fontWeight"] != null && child.Attributes["tts:fontWeight"].Value == "bold")
-                    {
-                        isBold = true;
-                    }
-
-                    if (child.Attributes["tts:textDecoration"] != null && child.Attributes["tts:textDecoration"].Value == "underline")
-                    {
-                        isUnderlined = true;
-                    }
-
-                    if (child.Attributes["tts:fontFamily"] != null)
-                    {
-                        fontFamily = child.Attributes["tts:fontFamily"].Value;
-                    }
-
-                    if (child.Attributes["tts:color"] != null)
-                    {
-                        color = child.Attributes["tts:color"].Value;
-                    }
-
-
-                    // Applying styles
-                    if (isItalic)
-                    {
-                        pText.Append("<i>");
-                    }
-
-                    if (isBold)
-                    {
-                        pText.Append("<b>");
-                    }
-
-                    if (isUnderlined)
-                    {
-                        pText.Append("<u>");
-                    }
-
-
-
-                    if (!string.IsNullOrEmpty(fontFamily) || !string.IsNullOrEmpty(color))
-                    {
-                        pText.Append("<font");
-
-                        if (!string.IsNullOrEmpty(fontFamily))
-                        {
-                            pText.Append($" face=\"{fontFamily}\"");
-                        }
-
-                        if (!string.IsNullOrEmpty(color))
-                        {
-                            pText.Append($" color=\"{color}\"");
-                        }
-
-                        pText.Append(">");
-                    }
-
-                    if (boutenDotBefore)
-                    {
-                        pText.Append("<bouten-dot-before>");
-                    }
-
-                    if (boutenDotAfter)
-                    {
-                        pText.Append("<bouten-dot-after>");
-                    }
-
-                    if (boutenDotOutside)
-                    {
-                        pText.Append("<bouten-dot-outside>");
-                    }
-
-                    if (boutenFilledCircleOutside)
-                    {
-                        pText.Append("<bouten-filled-circle-outside>");
-                    }
-
-                    if (boutenOpenCircleOutside)
-                    {
-                        pText.Append("<bouten-open-circle-outside>");
-                    }
-
-                    if (boutenOpenDotOutside)
-                    {
-                        pText.Append("<bouten-open-dot-outside>");
-                    }
-
-                    if (boutenFilledSesameOutside)
-                    {
-                        pText.Append("<bouten-filled-sesame-outside>");
-                    }
-
-                    if (boutenOpenSesameOutside)
-                    {
-                        pText.Append("<bouten-open-sesame-outside>");
-                    }
-
-                    if (boutenAutoOutside)
-                    {
-                        pText.Append("<bouten-auto-outside>");
-                    }
-
-                    if (boutenAuto)
-                    {
-                        pText.Append("<bouten-auto>");
-                    }
-
-                    if (horizontalDigit)
-                    {
-                        pText.Append("<horizontalDigit>");
-                    }
-
-                    if (rubyContainer)
-                    {
-                        pText.Append("<ruby-container>");
-                    }
-
-                    if (rubyBase)
-                    {
-                        pText.Append("<ruby-base>");
-                    }
-
-                    if (rubyBaseItalic)
-                    {
-                        pText.Append("<ruby-base-italic>");
-                    }
-
-                    if (rubyText)
-                    {
-                        pText.Append("<ruby-text>");
-                    }
-
-                    if (rubyTextAfter)
-                    {
-                        pText.Append("<ruby-text-after>");
-                    }
-
-                    if (rubyTextItalic)
-                    {
-                        pText.Append("<ruby-text-italic>");
-                    }
-
-                    pText.Append(ReadParagraph(child, xml));
-
-                    if (!string.IsNullOrEmpty(fontFamily) || !string.IsNullOrEmpty(color))
-                    {
-                        pText.Append("</font>");
-                    }
-
-                    if (isUnderlined)
-                    {
-                        pText.Append("</u>");
-                    }
-
-                    if (isBold)
-                    {
-                        pText.Append("</b>");
-                    }
-
-                    if (isItalic)
-                    {
-                        pText.Append("</i>");
-                    }
-
-                    if (boutenDotBefore)
-                    {
-                        pText.Append("</bouten-dot-before>");
-                    }
-
-                    if (boutenDotAfter)
-                    {
-                        pText.Append("</bouten-dot-after>");
-                    }
-
-                    if (boutenDotOutside)
-                    {
-                        pText.Append("</bouten-dot-outside>");
-                    }
-
-                    if (boutenFilledCircleOutside)
-                    {
-                        pText.Append("</bouten-filled-circle-outside>");
-                    }
-
-                    if (boutenOpenCircleOutside)
-                    {
-                        pText.Append("</bouten-open-circle-outside>");
-                    }
-
-                    if (boutenOpenDotOutside)
-                    {
-                        pText.Append("</bouten-open-dot-outside>");
-                    }
-
-                    if (boutenFilledSesameOutside)
-                    {
-                        pText.Append("</bouten-filled-sesame-outside>");
-                    }
-
-                    if (boutenOpenSesameOutside)
-                    {
-                        pText.Append("</bouten-open-sesame-outside>");
-                    }
-
-                    if (boutenAutoOutside)
-                    {
-                        pText.Append("</bouten-auto-outside>");
-                    }
-
-                    if (boutenAuto)
-                    {
-                        pText.Append("</bouten-auto>");
-                    }
-
-                    if (horizontalDigit)
-                    {
-                        pText.Append("</horizontalDigit>");
-                    }
-
-                    if (rubyBase)
-                    {
-                        pText.Append("</ruby-base>");
-                    }
-
-                    if (rubyBaseItalic)
-                    {
-                        pText.Append("</ruby-base-italic>");
-                    }
-
-                    if (rubyText)
-                    {
-                        pText.Append("</ruby-text>");
-                    }
-
-                    if (rubyTextAfter)
-                    {
-                        pText.Append("</ruby-text-after>");
-                    }
-
-                    if (rubyTextItalic)
-                    {
-                        pText.Append("</ruby-text-italic>");
-                    }
-
-                    if (rubyContainer)
-                    {
-                        pText.Append("</ruby-container>");
-                    }
+                    AppendSpan(pText, child, xml, style);
                 }
             }
 
             return pText.ToString().TrimEnd();
+        }
+
+        private static void AppendMaybeItalic(StringBuilder pText, string text, bool italic)
+        {
+            if (italic && !string.IsNullOrWhiteSpace(text))
+            {
+                pText.Append("<i>").Append(text).Append("</i>");
+                return;
+            }
+
+            pText.Append(text);
+        }
+
+        private static void AppendSpan(StringBuilder pText, XmlNode child, XmlDocument xml, JapaneseSpanStyle style)
+        {
+            // A sheared ruby base/text has its own style name, so it must not also get an <i> around it.
+            var italicViaRubyTag = style.IsItalic && (style.RubyBase || style.RubyText);
+            var italicTag = style.IsItalic && !italicViaRubyTag;
+            var hasFont = !string.IsNullOrEmpty(style.FontFamily) || !string.IsNullOrEmpty(style.Color);
+
+            var openTags = new List<string>();
+            if (italicTag)
+            {
+                openTags.Add("i");
+            }
+
+            if (style.IsBold)
+            {
+                openTags.Add("b");
+            }
+
+            if (style.IsUnderlined)
+            {
+                openTags.Add("u");
+            }
+
+            if (!string.IsNullOrEmpty(style.Bouten))
+            {
+                openTags.Add(style.Bouten);
+            }
+
+            if (style.HorizontalDigit)
+            {
+                openTags.Add("horizontalDigit");
+            }
+
+            if (style.RubyContainer)
+            {
+                openTags.Add("ruby-container");
+            }
+
+            if (style.RubyBase)
+            {
+                openTags.Add(italicViaRubyTag ? "ruby-base-italic" : "ruby-base");
+            }
+
+            if (style.RubyText)
+            {
+                openTags.Add(style.RubyTextAfter ? "ruby-text-after" : italicViaRubyTag ? "ruby-text-italic" : "ruby-text");
+            }
+
+            foreach (var tag in openTags)
+            {
+                pText.Append('<').Append(tag).Append('>');
+            }
+
+            if (hasFont)
+            {
+                pText.Append("<font");
+                if (!string.IsNullOrEmpty(style.FontFamily))
+                {
+                    pText.Append($" face=\"{style.FontFamily}\"");
+                }
+
+                if (!string.IsNullOrEmpty(style.Color))
+                {
+                    pText.Append($" color=\"{style.Color}\"");
+                }
+
+                pText.Append('>');
+            }
+
+            // Italic already emitted here must not be repeated by the children; a sheared ruby
+            // *container* has no tag of its own, so that one does keep inheriting.
+            pText.Append(ReadParagraph(child, xml, style.IsItalic && !italicTag && !italicViaRubyTag));
+
+            if (hasFont)
+            {
+                pText.Append("</font>");
+            }
+
+            for (var i = openTags.Count - 1; i >= 0; i--)
+            {
+                pText.Append("</").Append(openTags[i]).Append('>');
+            }
         }
 
         public static string RemoveTags(string text)

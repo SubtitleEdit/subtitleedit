@@ -17511,6 +17511,22 @@ public partial class MainViewModel :
         }
     }
 
+    /// <summary>
+    /// Rewrites the current subtitle as the ASSA the Japanese profile markup renders to - one cue can
+    /// become several absolutely positioned lines, so the paragraph list is replaced wholesale.
+    /// </summary>
+    private void ConvertNetflixImsc11JapaneseToAssa()
+    {
+        var width = _mediaInfo?.Dimension.Width ?? 1280;
+        var height = _mediaInfo?.Dimension.Height ?? 720;
+        var converted = NetflixImsc11JapaneseToAss.ConvertToSubtitle(_subtitle, width, height);
+        _subtitle.Paragraphs.Clear();
+        _subtitle.Paragraphs.AddRange(converted.Paragraphs);
+        _subtitle.Header = converted.Header;
+        _subtitle.Footer = converted.Footer;
+        _subtitle.Renumber();
+    }
+
     [RelayCommand]
     private async Task SetNewStyleForSelectedLines(string styleName)
     {
@@ -27504,9 +27520,19 @@ public partial class MainViewModel :
                     _subtitleOriginal = GetUpdateSubtitleOriginal();
                 }
 
-                oldFormat.RemoveNativeFormatting(_subtitle, format);
+                if (format is AdvancedSubStationAlpha && oldFormat is NetflixImsc11Japanese)
+                {
+                    // Converting to ASSA is the only way to keep furigana/bouten/vertical writing -
+                    // they become extra positioned lines. RemoveNativeFormatting would just drop the
+                    // tags, so it must not run here (issue #13861).
+                    ConvertNetflixImsc11JapaneseToAssa();
+                }
+                else
+                {
+                    oldFormat.RemoveNativeFormatting(_subtitle, format);
+                }
 
-                if (format is AdvancedSubStationAlpha)
+                if (format is AdvancedSubStationAlpha && oldFormat is not NetflixImsc11Japanese)
                 {
                     if (oldFormat is WebVTT || oldFormat is WebVTTFileWithLineNumber)
                     {
