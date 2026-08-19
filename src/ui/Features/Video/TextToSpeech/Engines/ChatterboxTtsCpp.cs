@@ -86,6 +86,9 @@ public class ChatterboxTtsCpp : ITtsEngine
     private static Process? _serverProcess;
     private static int _serverPort;
     private static string? _serverModelKey;
+    // The `voice` the running server last served, i.e. whose clone conditionals are installed in
+    // it (bare file name, empty for the model's baked default voice). See NeedsRestartForVoice.
+    private static string _serverVoiceKey = string.Empty;
     private static string? _serverLaunchCommand;
     private static bool _processExitHooked;
     // Rolling buffer of the server's stdout+stderr — used to attach context to
@@ -347,7 +350,7 @@ public class ChatterboxTtsCpp : ITtsEngine
         }
 
         var modelKey = ResolveModelKey(model);
-        await EnsureServerRunningAsync(modelKey, cancellationToken);
+        await EnsureServerRunningAsync(modelKey, ResolveVoiceKey(chatterboxVoice.FilePath), cancellationToken);
 
         // Off the calling thread because the repair shells out to ffmpeg. Deliberately not a hard
         // failure either: the check is stricter than the backend's (which still has a partial
@@ -424,19 +427,18 @@ public class ChatterboxTtsCpp : ITtsEngine
             string prefix;
             if (LooksLikeCudaBackendCrash(serverLog))
             {
-                prefix = "Chatterbox TTS hit a CrispASR bug in the CUDA backend during synthesis "
-                         + "(CUDA error in ggml_cuda_cpy). Switch CrispASR to the Vulkan build - "
-                         + "Video → Audio to text → engine settings → re-download - which does not run "
-                         + "this code path, or generate one voice per run: the reported crashes all land "
-                         + "on the first step after the cloned voice changes between lines. "
-                         + "Please also report it at https://github.com/CrispStrobe/CrispASR/issues with the server log below.";
+                prefix = "Chatterbox TTS hit a CrispASR bug during synthesis (CUDA error in ggml_cuda_cpy). "
+                         + "This is not specific to the CUDA build - the Vulkan build crashes at the identical "
+                         + "point, so re-downloading a different build does not help. The known trigger is the "
+                         + "first step after the cloned voice changes; Subtitle Edit restarts the server on a "
+                         + "voice change to avoid it, so please report this at "
+                         + "https://github.com/CrispStrobe/CrispASR/issues with the server log below.";
             }
             else if (LooksLikeUpstreamChatterboxCrash(serverLog))
             {
                 prefix = "Chatterbox TTS hit a CrispASR runtime bug during synthesis (ggml tensor read out of bounds). "
                          + "This is an upstream issue — please file it at https://github.com/CrispStrobe/CrispASR/issues with the server log below. "
-                         + "The crash reproduces on the CPU and Vulkan builds (chatterbox's T3 step runs on CPU regardless of the build); "
-                         + "the CUDA build does not hit this one, but has a crash of its own (#13572).";
+                         + "The crash reproduces on the CPU and Vulkan builds (chatterbox's T3 step runs on CPU regardless of the build).";
             }
             else
             {
@@ -530,13 +532,24 @@ public class ChatterboxTtsCpp : ITtsEngine
             payload["source_lang"] = sourceLanguageCode;
         }
 
-        if (!string.IsNullOrEmpty(voiceFilePath))
+        var voiceKey = ResolveVoiceKey(voiceFilePath);
+        if (!string.IsNullOrEmpty(voiceKey))
         {
-            payload["voice"] = Path.GetFileName(voiceFilePath);
+            payload["voice"] = voiceKey;
             CrispAsrTtsProvenance.AddSpeechAttestations(payload);
         }
 
         return payload;
+    }
+
+    /// <summary>
+    /// The <c>voice</c> field for a reference WAV path — the bare file name, empty for the model's
+    /// baked default voice. Also identifies which clone the running server has conditionals
+    /// installed for (see <see cref="EnsureServerRunningAsync"/>).
+    /// </summary>
+    internal static string ResolveVoiceKey(string? voiceFilePath)
+    {
+        return string.IsNullOrEmpty(voiceFilePath) ? string.Empty : Path.GetFileName(voiceFilePath);
     }
 
     /// <summary>
@@ -606,24 +619,76 @@ public class ChatterboxTtsCpp : ITtsEngine
         }
     }
 
-    private static async Task EnsureServerRunningAsync(string modelKey, CancellationToken ct)
+    /// <summary>
+    /// True when the running server has already served a cloned voice and a different one is now
+    /// asked for.
+    /// </summary>
+    /// <remarks>
+    /// Installing a second voice's conditionals into a live chatterbox server crashes it at the
+    /// first autoregressive step of that request (#13572). Both reported crashes have the same
+    /// shape - previous line fine with voice A, <c>atomic native WAV clone (B.wav ...) - all 5 conds
+    /// installed</c>, then death at <c>chatterbox[ar]: step=0</c> - and the CUDA and Vulkan builds
+    /// die at the identical token, so this is the shared voice-load path and not a GPU backend bug.
+    /// A server that loads the voice at startup is fine, so the fix is to make every voice the first
+    /// one its server sees. Costs a model reload per voice change, which an actor-voice cast pays on
+    /// every actor change; that is still cheaper than the crash it replaces, since #13795's retry
+    /// already restarts the server after throwing away the line's synthesis.
+    /// <para>
+    /// Switching to the baked default voice restarts too: that swaps the conditionals back through
+    /// the same upstream code. Going the other way - default → clone - does not, because the clone
+    /// is then the first one this server installs. Narrow this once upstream fixes it.
+    /// </para>
+    /// </remarks>
+    private static bool NeedsRestartForVoice(string voiceKey) => NeedsRestartForVoice(_serverVoiceKey, voiceKey);
+
+    /// <inheritdoc cref="NeedsRestartForVoice(string)"/>
+    internal static bool NeedsRestartForVoice(string loadedVoiceKey, string requestedVoiceKey)
     {
-        if (_serverProcess is { HasExited: false } && _serverPort != 0 && _serverModelKey == modelKey)
+        return !string.IsNullOrEmpty(loadedVoiceKey)
+               && !string.Equals(loadedVoiceKey, requestedVoiceKey, StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// Starts the crispasr server for <paramref name="modelKey"/>, or reuses the running one.
+    /// Restarts it when <paramref name="voiceKey"/> differs from the voice it last served — see
+    /// <see cref="NeedsRestartForVoice"/>.
+    /// </summary>
+    private static async Task EnsureServerRunningAsync(string modelKey, string voiceKey, CancellationToken ct)
+    {
+        if (_serverProcess is { HasExited: false }
+            && _serverPort != 0
+            && _serverModelKey == modelKey
+            && !NeedsRestartForVoice(voiceKey))
         {
+            _serverVoiceKey = voiceKey;
             return;
         }
 
         await ServerLock.WaitAsync(ct);
         try
         {
-            if (_serverProcess is { HasExited: false } && _serverPort != 0 && _serverModelKey == modelKey)
+            if (_serverProcess is { HasExited: false }
+                && _serverPort != 0
+                && _serverModelKey == modelKey
+                && !NeedsRestartForVoice(voiceKey))
             {
+                _serverVoiceKey = voiceKey;
                 return;
             }
 
-            // Server not running — or running with a different model variant. (Re)start.
+            // Server not running — or running with a different model variant, or with another
+            // voice's clone conditionals installed. (Re)start.
             if (_serverProcess != null)
             {
+                if (_serverProcess is { HasExited: false } && NeedsRestartForVoice(voiceKey))
+                {
+                    Se.WriteToolsLog(
+                        "Chatterbox TTS: restarting the crispasr server before switching cloned voice "
+                        + $"'{_serverVoiceKey}' -> '{(string.IsNullOrEmpty(voiceKey) ? "(default)" : voiceKey)}' "
+                        + "- installing a second voice's conditionals into a live server crashes the "
+                        + "chatterbox backend at the first autoregressive step (#13572).");
+                }
+
                 StopServerInternal();
             }
 
@@ -706,6 +771,7 @@ public class ChatterboxTtsCpp : ITtsEngine
             _serverProcess = process;
             _serverPort = port;
             _serverModelKey = modelKey;
+            _serverVoiceKey = voiceKey;
             HookProcessExitOnce();
 
             // First-run model auto-download (~880 MB) needs a generous timeout.
@@ -721,6 +787,7 @@ public class ChatterboxTtsCpp : ITtsEngine
                     _serverProcess = null;
                     _serverPort = 0;
                     _serverModelKey = null;
+                    _serverVoiceKey = string.Empty;
                     _serverLaunchCommand = null;
                     if (LooksLikeOutdatedCrispAsr(tail))
                     {
@@ -804,18 +871,21 @@ public class ChatterboxTtsCpp : ITtsEngine
     }
 
     /// <summary>
-    /// The CUDA build's own chatterbox synth crash (#13572), distinct from the CPU/Vulkan assert
-    /// above:
+    /// A CUDA-backend fault during chatterbox synth (#13572):
     /// <code>
     /// chatterbox[ar]: step=0 tok=3704
     /// CUDA error: invalid argument
     ///   current device: 0, in function ggml_cuda_cpy at ggml/src/ggml-cuda/cpy.cu:474
     ///   cudaMemcpyAsync(src1_ddc, src0_ddc, ggml_nbytes(src0), cudaMemcpyDeviceToDevice, main_stream)
     /// </code>
-    /// Both reports on that issue crash at the first autoregressive step of the request that
-    /// switches to a different cloned voice, right after the new conditionals are installed - and
-    /// a device-to-device copy failing with "invalid argument" is what a buffer that is not device
-    /// memory looks like. Matched on the ggml function name plus the generic "CUDA error" banner so
+    /// Every report on that issue crashes at the first autoregressive step of the request that
+    /// switches to a different cloned voice, right after the new conditionals are installed.
+    /// <b>This is not a CUDA-specific bug</b>: the Vulkan build dies at the identical point - same
+    /// voice, same conditionals, same <c>prefill 163</c>, same <c>step=0 tok=3704</c> - so the fault
+    /// is in the shared voice-load path and only its symptom is backend-shaped (a device-to-device
+    /// copy failing with "invalid argument" is what a buffer that is not device memory looks like).
+    /// <see cref="EnsureServerRunningAsync"/> now restarts the server on a clone-voice change to
+    /// stay off that path. Matched on the ggml function name plus the generic "CUDA error" banner so
     /// a fault in another op is still recognised as a CUDA one.
     /// </summary>
     internal static bool LooksLikeCudaBackendCrash(string output)
@@ -993,6 +1063,7 @@ public class ChatterboxTtsCpp : ITtsEngine
         _serverProcess = null;
         _serverPort = 0;
         _serverModelKey = null;
+        _serverVoiceKey = string.Empty;
         _serverLaunchCommand = null;
         if (p == null)
         {

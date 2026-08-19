@@ -2740,7 +2740,8 @@ public partial class TextToSpeechViewModel : ObservableObject
     /// </summary>
     /// <remarks>
     /// A local-server engine can die in the middle of a batch: CrispASR's chatterbox backend
-    /// crashes on the CUDA build at the first autoregressive step after a voice change (#13572).
+    /// crashes at the first autoregressive step after a cloned-voice change - on the CUDA and the
+    /// Vulkan build alike (#13572).
     /// That arrived here as an exception, escaped the generate loop into its catch-all, and
     /// returned null - so every segment already synthesised (five to ten minutes of work in that
     /// report) was discarded because of one bad line. Now the line is recorded as failed and the
