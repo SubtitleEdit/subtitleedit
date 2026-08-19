@@ -966,7 +966,12 @@ public partial class TextToSpeechViewModel : ObservableObject
         IsModelDownloadVisible = false;
         ProgressText = string.Empty;
         ProgressValue = 0.0;
-        _waveFolder = waveFolder;
+
+        // Own folder per run rather than writing loose into the caller's scratch location: every
+        // pipeline step emits a file per subtitle line, and nothing used to remove any of them
+        // (#13332). OnClosing sweeps this folder in one go. The caller's folder is only the
+        // fallback base - a configured generation folder wins.
+        _waveFolder = TtsRunFolder.Create(waveFolder);
 
         _castKind = ActorVoiceDetector.Detect(subtitle, format);
         // Only surface the cast button when there's actually more than one actor/voice to assign
@@ -1887,8 +1892,9 @@ public partial class TextToSpeechViewModel : ObservableObject
                 videoFileNameForReview,
                 // Scratch folder for regenerate intermediates - NOT the imported JSON's folder:
                 // using that folder filled the user's own export folder with GUID-named temp
-                // wavs on every regenerate (#12093). Same location the fresh Generate flow uses.
-                Path.GetTempPath(),
+                // wavs on every regenerate (#12093). The run folder the fresh Generate flow uses,
+                // so these intermediates get swept on close like the rest (#13332).
+                _waveFolder,
                 peaksForReview);
             // Forward the imported cast so a subsequent Export round-trips the mappings instead
             // of writing ActorVoiceMappings = [] back to SubtitleEditTts.json.
@@ -3955,12 +3961,30 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
 
         // Release VRAM held by any still-running crispasr.exe servers so models don't stay
-        // pinned for the rest of the SE session. Fire-and-forget on the threadpool — each
-        // StopServer is Kill + WaitForExit(2000), so doing this on the UI thread could block
-        // the close by up to 4 × 2 s if all four engines were used. AppDomain.ProcessExit
-        // performs the same teardown if SE exits before the task completes, so nothing is
-        // left running.
-        _ = Task.Run(StopAllCrispAsrServers);
+        // pinned for the rest of the SE session, then sweep the run's generation folder. Both
+        // fire-and-forget on the threadpool — each StopServer is Kill + WaitForExit(2000), so
+        // doing this on the UI thread could block the close by up to 4 × 2 s if all four engines
+        // were used. AppDomain.ProcessExit performs the same teardown if SE exits before the task
+        // completes, so nothing is left running.
+        //
+        // The sweep runs after the engines are stopped: a live server can still hold its last
+        // clip open, which fails the recursive delete on Windows. Nothing the user asked to keep
+        // lives in there — the merged wav is moved to the picked path before this point, and
+        // Export copies the clips it writes (#13332).
+        var runFolder = _waveFolder;
+        var deleteTempFiles = Se.Settings.Video.TextToSpeech.DeleteTempFiles;
+        _ = Task.Run(async () =>
+        {
+            StopAllCrispAsrServers();
+            if (deleteTempFiles)
+            {
+                await TtsRunFolder.DeleteAsync(runFolder);
+            }
+            else
+            {
+                TtsRunFolder.DeleteIfEmpty(runFolder);
+            }
+        });
 
         try
         {

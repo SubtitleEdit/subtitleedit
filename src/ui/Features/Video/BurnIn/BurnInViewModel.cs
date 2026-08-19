@@ -113,6 +113,7 @@ public partial class BurnInViewModel : ObservableObject
     private Subtitle _subtitle = new();
     private bool _loading = true;
     private readonly StringBuilder _log;
+    private readonly TempSubtitleFiles _tempSubtitleFiles = new();
     private long _startTicks;
     private long _processedFrames;
     private Process? _ffmpegProcess;
@@ -828,18 +829,12 @@ public partial class BurnInViewModel : ObservableObject
     {
         var subtitle = new Subtitle(_subtitle);
 
-        var srt = new SubRip();
-        var subtitleFileName = Path.Combine(Path.GetTempFileName() + srt.Extension);
-        if (_subtitleFormat is { Name: AdvancedSubStationAlpha.NameOfFormat })
-        {
-            var assa = new AdvancedSubStationAlpha();
-            subtitleFileName = Path.Combine(Path.GetTempFileName() + assa.Extension);
-            File.WriteAllText(subtitleFileName, assa.ToText(subtitle, string.Empty));
-        }
-        else
-        {
-            File.WriteAllText(subtitleFileName, srt.ToText(subtitle, string.Empty));
-        }
+        // Tracked so the file is swept when the window closes - and not GetTempFileName() plus an
+        // extension, which leaked the empty tmpXXXX.tmp it creates on top of the file written
+        // (#13332).
+        var subtitleFileName = _subtitleFormat is { Name: AdvancedSubStationAlpha.NameOfFormat }
+            ? _tempSubtitleFiles.Write(subtitle, new AdvancedSubStationAlpha())
+            : _tempSubtitleFiles.Write(subtitle, new SubRip());
 
         _mediaInfo = FfmpegMediaInfo2.Parse(VideoFileName);
         if (_mediaInfo.Dimension.Width > 0 && _mediaInfo.Dimension.Height > 0)
@@ -879,8 +874,7 @@ public partial class BurnInViewModel : ObservableObject
         {
             // Furigana, bouten and vertical writing become extra positioned render lines - burning
             // in the raw tags would put them on screen as literal text (issue #13861).
-            // Not GetTempFileName() - that creates (and would leak) an empty file whose name is never used.
-            var japaneseAssaFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".ass");
+            var japaneseAssaFileName = _tempSubtitleFiles.GetFileName(".ass");
             File.WriteAllText(japaneseAssaFileName, NetflixImsc11JapaneseToAss.Convert(subtitle, jobItem.Width, jobItem.Height));
             return japaneseAssaFileName;
         }
@@ -900,10 +894,7 @@ public partial class BurnInViewModel : ObservableObject
             SetStyleForNonAssa(subtitle, jobItem.Width, jobItem.Height);
         }
 
-        var assa = new AdvancedSubStationAlpha();
-        var assaFileName = Path.Combine(Path.GetTempFileName() + assa.Extension);
-        File.WriteAllText(assaFileName, assa.ToText(subtitle, string.Empty));
-        return assaFileName;
+        return _tempSubtitleFiles.Write(subtitle, new AdvancedSubStationAlpha());
     }
 
     // The "-ss" input seek makes ffmpeg restart timestamps at zero, so the burned-in
@@ -2481,6 +2472,10 @@ public partial class BurnInViewModel : ObservableObject
 
     public void CleanupPreview()
     {
+        // The subtitle files handed to ffmpeg live as long as the window does - nothing else
+        // removes them, and they used to pile up in the temp folder run after run (#13332).
+        _tempSubtitleFiles.Delete();
+
         _previewTimer?.Stop();
         _previewTimer = null;
         _mpvPreviewPlayer = null;
