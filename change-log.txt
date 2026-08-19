@@ -3,6 +3,41 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-beta18 (19th of August 2026)
+
+* Add a "Hide tags" mode for formatting in the subtitle grid - thx MrGoraj
+* Add letter spacing to "Generate video with burned-in subtitles" and "Generate transparent subtitle"
+* Add a shortcut for pasting clipboard text to a new waveform selection - thx Xenos71
+* Add custom server parameters, a stall watchdog, and a token cap to llama.cpp translate - thx emsb8888-prog
+* Add completion-format translate prompts to LM Studio, KoboldCpp, Ollama and the other local engines - thx subof
+* Add a way to switch VAD off in Crisp ASR (use --chunk-seconds) - thx AmineI
+* Apply AI review suggestions in passes instead of applying and closing - thx fraternl
+* Make Shift+Delete cut in every text box, not only the main edit boxes - thx GrampaWildWilly
+* Import 22 more SE 4 shortcuts, and fix the four "keep gap" frame moves always being skipped
+* Render the style previews with libass in the burn-in, transparent video, and ASSA styles dialogs
+* Show the text of tag-heavy lines in the grid's "show formatting" mode - thx MrGoraj
+* Extend to shot change: stop at the first cut, and never shorten a line - thx m0ck69
+* Find OCR replace lists that only have a "_User" file, and use them everywhere - thx Lentzeris
+* Retry the update check like downloads do, and log why it failed
+* Keep the waveform responsive while shot changes are auto-extracted
+* Speed up waveform generation for 16-bit stereo audio
+* Update the audio.cpp IndexTTS 2.5 engine to the 2026-08-18 build
+* Fix speech to text doing nothing at all when ffmpeg cannot be started - thx GrampaWildWilly
+* Fix "key 'DYLD_LIBRARY_PATH' was not present" starting whisper.cpp on macOS - thx GitGianluc
+* Fix speech to text not finding the Purfview XXL output when using own --output_dir - thx GrampaWildWilly
+* Fix crash in batch auto-translate when the API key is missing - thx wjcarpenter
+* Fix "Remove text for HI" check boxes changing state after a partial Apply - thx Davanix
+* Fix Netflix IMSC 1.1 Japanese files without bouten being read as EBU-TT-D - thx w72k24
+* Fix the subtitle list jumping to the top/bottom after replace or "delete empty lines" - thx St0rmXtr00per
+* Fix the waveform cursor falling behind the audio during long playback - thx hisui3393
+* Fix OCR reading words with more than one "l" as uppercase "I" - thx Miggu82
+* Update Chinese (traditional) translation - thx love80312
+* Update German translation - thx Need74
+* Update Korean translation - thx 12si27
+* Update Polish translation - thx potplayer-fanpack
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-beta17 (18th of August 2026)
 
 * Trim embedded ASSA fonts to the characters actually used (attachments, font collector, batch convert) - thx hisui3393
