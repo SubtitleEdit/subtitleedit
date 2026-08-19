@@ -484,7 +484,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         text = alignmentTag + text;
                     }
                     
-                    var p = new Paragraph(begin, end, text);
+                    // Region name kept for the video preview - see TimedTextImsc11.
+                    var p = new Paragraph(begin, end, text) { Region = regionId };
                     subtitle.Paragraphs.Add(p);
                 }
             }

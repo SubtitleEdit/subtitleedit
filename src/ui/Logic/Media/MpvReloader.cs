@@ -275,6 +275,11 @@ public class MpvReloader : IMpvReloader
                     }
                 }
             }
+
+            // TTML regions, PAC vertical alignment and EBU STL teletext rows say where the line
+            // belongs on the video - without this every line lands at the one fixed preview
+            // alignment from the settings (discussion #13857).
+            SubtitlePositionToAssa.ApplyPositions(subtitle, oldHeader, Se.Settings.Video.MpvPreviewUsePositionFromFile);
         }
 
         SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary);
