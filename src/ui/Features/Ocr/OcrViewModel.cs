@@ -708,14 +708,14 @@ public partial class OcrViewModel : ObservableObject
     {
         if (totalItems <= 0)
         {
-            ProgressValue = 0;
-            ProgressText = Se.Language.Ocr.RunningOcrDotDotDot;
+            EnqueueOcrUiProgress(0, Se.Language.Ocr.RunningOcrDotDotDot);
             return;
         }
 
         var clampedItemNumber = Math.Clamp(currentItemNumber, 0, totalItems);
-        ProgressValue = clampedItemNumber * 100.0 / totalItems;
-        ProgressText = string.Format(Se.Language.Ocr.RunningOcrDotDotDotXY, clampedItemNumber, totalItems);
+        EnqueueOcrUiProgress(
+            clampedItemNumber * 100.0 / totalItems,
+            string.Format(Se.Language.Ocr.RunningOcrDotDotDotXY, clampedItemNumber, totalItems));
     }
 
     [RelayCommand]
@@ -2161,6 +2161,9 @@ public partial class OcrViewModel : ObservableObject
     [RelayCommand]
     private void Ok()
     {
+        // A just-finished OCR run may still have line texts in the coalesced UI queue.
+        FlushOcrUiUpdates();
+
         OkPressed = true;
 
         // Remember the image source so spell check can show the original images (#11719)
@@ -3051,7 +3054,7 @@ public partial class OcrViewModel : ObservableObject
             var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, SelectedNOcrPixelsAreSpace,
                 false, true, _lineHeightTracker.GetMinLineHeight(), true, _lineHeightTracker.GetAverageLineHeight());
             _lineHeightTracker.Update(letters);
-            SelectedOcrSubtitleItem = item;
+            EnqueueOcrUiSelect(i);
             var index = 0;
             var matches = new List<NOcrChar>();
             while (index < letters.Count)
@@ -3113,6 +3116,8 @@ public partial class OcrViewModel : ObservableObject
 
                         Dispatcher.UIThread.Post(async void () =>
                         {
+                            FlushOcrUiUpdates();
+
                             var result =
                                 await _windowService.ShowDialogAsync<NOcrCharacterAddWindow, NOcr.NOcrCharacterAddViewModel>(
                                     Window!,
@@ -3318,7 +3323,7 @@ public partial class OcrViewModel : ObservableObject
             parentBitmap.CropTop(0, new SKColor(0, 0, 0, 0));
             var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, SelectedBinaryOcrPixelsAreSpace, false, true, _lineHeightTracker.GetMinLineHeight(), true, _lineHeightTracker.GetAverageLineHeight());
             _lineHeightTracker.Update(letters);
-            SelectedOcrSubtitleItem = item;
+            EnqueueOcrUiSelect(i);
             var index = 0;
             var matches = new List<BinaryOcrMatcher.CompareMatch>();
             while (index < letters.Count)
@@ -3376,6 +3381,8 @@ public partial class OcrViewModel : ObservableObject
 
                         Dispatcher.UIThread.Post(async void () =>
                         {
+                            FlushOcrUiUpdates();
+
                             var result =
                                 await _windowService.ShowDialogAsync<BinaryOcrCharacterAddWindow, BinaryOcrCharacterAddViewModel>(
                                     Window!,
@@ -3581,6 +3588,10 @@ public partial class OcrViewModel : ObservableObject
         {
             try
             {
+                // GetNextUnknownWord below reads item.Text, which may still sit in the
+                // coalesced OCR UI queue - apply it before prompting.
+                FlushOcrUiUpdates();
+
                 var skipOnceWords = new HashSet<string>();
                 var skipAllWords = new HashSet<string>(StringComparer.Ordinal);
 
@@ -3783,50 +3794,49 @@ public partial class OcrViewModel : ObservableObject
 
     private void SetText(int i, OcrSubtitleItem item, OcrFixLineResultTemp resultTemp)
     {
+        string text;
+        OcrFixLineResult fixResult;
         if (SelectedDictionary != null &&
             SelectedDictionary.Name != GetDictionaryNameNone() &&
             _ocrFixEngine.IsLoaded() && DoFixOcrErrors)
         {
-            var text = resultTemp.ResultText;
-
-            Dispatcher.UIThread.Post(() =>
-            {
-                CurrentText = text;
-                item.Text = text;
-                item.FixResult = resultTemp.OcrFixLineResult;
-            });
+            text = resultTemp.ResultText;
+            fixResult = resultTemp.OcrFixLineResult;
         }
         else
         {
             var alignment = GetAlignment(item);
-            var text = alignment.Text;
-
-            Dispatcher.UIThread.Post(() =>
+            text = alignment.Text;
+            fixResult = new OcrFixLineResult
             {
-                item.Text = text;
-                CurrentText = text;
-                item.FixResult = new OcrFixLineResult
-                {
-                    LineIndex = i,
-                    Words = new List<OcrFixLinePartResult> { new() { Word = item.Text, IsSpellCheckedOk = null } },
-                };
-            });
+                LineIndex = i,
+                Words = new List<OcrFixLinePartResult> { new() { Word = alignment.Text, IsSpellCheckedOk = null } },
+            };
         }
 
-        SelectAndScrollToRow(i);
+        // The bound collections (UnknownWords/AllGuesses/AllFixes) must only be touched on the
+        // UI thread, so the adds ride in the same coalesced update as the text.
+        EnqueueOcrUiUpdate(() =>
+        {
+            CurrentText = text;
+            item.Text = text;
+            item.FixResult = fixResult;
 
-        foreach (var unknownWord in resultTemp.UnknownWords)
-        {
-            UnknownWords.Add(unknownWord);
-        }
-        foreach (var guess in resultTemp.Guesses)
-        {
-            AllGuesses.Add(guess);
-        }
-        foreach (var fix in resultTemp.Fixes)
-        {
-            AllFixes.Add(fix);
-        }
+            foreach (var unknownWord in resultTemp.UnknownWords)
+            {
+                UnknownWords.Add(unknownWord);
+            }
+            foreach (var guess in resultTemp.Guesses)
+            {
+                AllGuesses.Add(guess);
+            }
+            foreach (var fix in resultTemp.Fixes)
+            {
+                AllFixes.Add(fix);
+            }
+        });
+
+        EnqueueOcrUiSelect(i);
     }
 
     private List<UnknownWordItem> OcrFixLineAndSetText(int i, OcrSubtitleItem item)
@@ -3847,54 +3857,67 @@ public partial class OcrViewModel : ObservableObject
             var alignment = GetAlignment(item, correctedText);
             var resultText = alignment.AlignmentAdded ? alignment.Text : correctedText;
 
-            Dispatcher.UIThread.Post(() =>
-            {
-                CurrentText = resultText;
-                item.Text = resultText;
-                item.FixResult = result;
-            });
-
+            var fixes = new List<ReplacementUsedItem>();
             if (!string.IsNullOrEmpty(result.ReplacementUsed.From))
             {
-                AllFixes.Add(result.ReplacementUsed);
+                fixes.Add(result.ReplacementUsed);
             }
 
+            var guesses = new List<GuessUsedItem>();
             foreach (var word in result.Words)
             {
                 if (!string.IsNullOrEmpty(word.ReplacementUsed.From))
                 {
-                    AllFixes.Add(word.ReplacementUsed);
+                    fixes.Add(word.ReplacementUsed);
                 }
 
                 if (word.GuessUsed)
                 {
-                    AllGuesses.Add(new GuessUsedItem(word.Word, word.FixedWord, i));
+                    guesses.Add(new GuessUsedItem(word.Word, word.FixedWord, i));
                 }
-
             }
 
-            foreach (var unknownWordItem in GetUnknownWordItems(item, result))
+            unknownWords.AddRange(GetUnknownWordItems(item, result));
+
+            // The bound collections (UnknownWords/AllGuesses/AllFixes) must only be touched on
+            // the UI thread, so the adds ride in the same coalesced update as the text.
+            EnqueueOcrUiUpdate(() =>
             {
-                UnknownWords.Add(unknownWordItem);
-                unknownWords.Add(unknownWordItem);
-            }
+                CurrentText = resultText;
+                item.Text = resultText;
+                item.FixResult = result;
+
+                foreach (var fix in fixes)
+                {
+                    AllFixes.Add(fix);
+                }
+                foreach (var guess in guesses)
+                {
+                    AllGuesses.Add(guess);
+                }
+                foreach (var unknownWordItem in unknownWords)
+                {
+                    UnknownWords.Add(unknownWordItem);
+                }
+            });
         }
         else
         {
             var alignment = GetAlignment(item);
-            Dispatcher.UIThread.Post(() =>
+            var text = alignment.Text;
+            EnqueueOcrUiUpdate(() =>
             {
-                item.Text = alignment.Text;
-                CurrentText = item.Text;
+                item.Text = text;
+                CurrentText = text;
                 item.FixResult = new OcrFixLineResult
                 {
                     LineIndex = i,
-                    Words = new List<OcrFixLinePartResult> { new() { Word = item.Text, IsSpellCheckedOk = null } },
+                    Words = new List<OcrFixLinePartResult> { new() { Word = text, IsSpellCheckedOk = null } },
                 };
             });
         }
 
-        SelectAndScrollToRow(i);
+        EnqueueOcrUiSelect(i);
         return unknownWords;
     }
 
@@ -4047,7 +4070,7 @@ public partial class OcrViewModel : ObservableObject
                     var item = OcrSubtitleItems[i];
                     var bitmap = item.GetSkBitmap();
 
-                    SelectAndScrollToRow(i);
+                    EnqueueOcrUiSelect(i);
 
                     var text = await ollamaOcr.Ocr(bitmap, url, model, SelectedOllamaLanguage ?? "English", cancellationToken);
 
@@ -4152,7 +4175,7 @@ public partial class OcrViewModel : ObservableObject
                     var item = OcrSubtitleItems[i];
                     var bitmap = item.GetSkBitmap();
 
-                    SelectAndScrollToRow(i);
+                    EnqueueOcrUiSelect(i);
 
                     var text = await engine.Ocr(bitmap, url, modelName, SelectedOllamaLanguage ?? "English", prompt, cancellationToken);
 
@@ -4261,7 +4284,7 @@ public partial class OcrViewModel : ObservableObject
                     var item = OcrSubtitleItems[i];
                     var bitmap = item.GetSkBitmap();
 
-                    SelectAndScrollToRow(i);
+                    EnqueueOcrUiSelect(i);
 
                     var text = await engine.Ocr(bitmap, cancellationToken);
                     item.Text = text;
@@ -4301,7 +4324,7 @@ public partial class OcrViewModel : ObservableObject
                     var item = OcrSubtitleItems[i];
                     var bitmap = item.GetSkBitmap();
 
-                    SelectAndScrollToRow(i);
+                    EnqueueOcrUiSelect(i);
 
                     var text = await mistralOcr.Ocr(bitmap, SelectedOllamaLanguage ?? "English", cancellationToken);
                     item.Text = text;
@@ -4340,7 +4363,7 @@ public partial class OcrViewModel : ObservableObject
                     var item = OcrSubtitleItems[i];
                     var bitmap = item.GetSkBitmap();
 
-                    SelectAndScrollToRow(i);
+                    EnqueueOcrUiSelect(i);
 
                     var text = await engine.Ocr(bitmap, GoogleVisionApiKey, SelectedGoogleVisionLanguage?.Code ?? "en", cancellationToken);
                     item.Text = text;
@@ -4620,6 +4643,115 @@ public partial class OcrViewModel : ObservableObject
         using var stream = new MemoryStream(data.ToArray());
 
         return new Bitmap(stream);
+    }
+
+    // Coalesced UI updates during OCR (#13885). Fast engines finish a line in milliseconds, and
+    // per-line selection/scroll/text posts at Normal dispatcher priority outrank input processing,
+    // so Pause/Cancel clicks and even the window's minimize are starved until the run completes.
+    // Per-line UI feedback is queued here instead and applied in one Background-priority dispatcher
+    // job at most every OcrUiFlushIntervalMs. Data updates (line text, fix results, unknown-word
+    // rows) are all applied in order; selection and progress are latest-wins - a newly OCR'ed
+    // line replaces any still-pending selection.
+    private const int OcrUiFlushIntervalMs = 200;
+    private readonly Lock _ocrUiUpdateLock = new Lock();
+    private List<Action> _ocrUiPendingUpdates = new List<Action>();
+    private int _ocrUiPendingSelectIndex = -1;
+    private double _ocrUiPendingProgressValue;
+    private string? _ocrUiPendingProgressText;
+    private bool _ocrUiFlushScheduled;
+
+    private void EnqueueOcrUiUpdate(Action update)
+    {
+        lock (_ocrUiUpdateLock)
+        {
+            _ocrUiPendingUpdates.Add(update);
+        }
+
+        ScheduleOcrUiFlush();
+    }
+
+    private void EnqueueOcrUiSelect(int index)
+    {
+        lock (_ocrUiUpdateLock)
+        {
+            _ocrUiPendingSelectIndex = index;
+        }
+
+        ScheduleOcrUiFlush();
+    }
+
+    private void EnqueueOcrUiProgress(double value, string text)
+    {
+        lock (_ocrUiUpdateLock)
+        {
+            _ocrUiPendingProgressValue = value;
+            _ocrUiPendingProgressText = text;
+        }
+
+        ScheduleOcrUiFlush();
+    }
+
+    private void ScheduleOcrUiFlush()
+    {
+        lock (_ocrUiUpdateLock)
+        {
+            if (_ocrUiFlushScheduled)
+            {
+                return;
+            }
+
+            _ocrUiFlushScheduled = true;
+        }
+
+        // DispatcherTimer may only be touched from the UI thread, and the enqueue often happens
+        // on an OCR worker thread. Background priority keeps both the scheduling hop and the
+        // flush itself below input processing.
+        Dispatcher.UIThread.Post(
+            () => DispatcherTimer.RunOnce(FlushOcrUiUpdates, TimeSpan.FromMilliseconds(OcrUiFlushIntervalMs), DispatcherPriority.Background),
+            DispatcherPriority.Background);
+    }
+
+    /// <summary>
+    /// Applies all pending OCR UI updates. Normally fired by the flush timer on the UI thread;
+    /// also called directly before opening a modal (unknown-word prompt, add-character window)
+    /// and from OK, so dialogs and the final subtitle see fully applied line texts instead of a
+    /// half-flushed queue.
+    /// </summary>
+    private void FlushOcrUiUpdates()
+    {
+        List<Action> updates;
+        int selectIndex;
+        double progressValue;
+        string? progressText;
+        lock (_ocrUiUpdateLock)
+        {
+            _ocrUiFlushScheduled = false;
+            updates = _ocrUiPendingUpdates;
+            _ocrUiPendingUpdates = new List<Action>();
+            selectIndex = _ocrUiPendingSelectIndex;
+            _ocrUiPendingSelectIndex = -1;
+            progressValue = _ocrUiPendingProgressValue;
+            progressText = _ocrUiPendingProgressText;
+            _ocrUiPendingProgressText = null;
+        }
+
+        foreach (var update in updates)
+        {
+            update();
+        }
+
+        if (progressText != null)
+        {
+            ProgressValue = progressValue;
+            ProgressText = progressText;
+        }
+
+        if (selectIndex >= 0 && selectIndex < OcrSubtitleItems.Count)
+        {
+            SelectedOcrSubtitleItem = OcrSubtitleItems[selectIndex];
+            SubtitleGrid.SelectedIndex = selectIndex;
+            Dispatcher.UIThread.Post(() => SubtitleGrid.ScrollIntoView(selectIndex), DispatcherPriority.Background);
+        }
     }
 
     internal async void SelectAndScrollToRow(int index)
