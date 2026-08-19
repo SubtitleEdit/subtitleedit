@@ -27623,6 +27623,18 @@ public partial class MainViewModel :
         IsFormatAssaOrSsa = SelectedSubtitleFormat is AdvancedSubStationAlpha or SubStationAlpha;
         IsFormatWebVtt = SelectedSubtitleFormat is WebVTT or WebVTTFileWithLineNumber;
         IsFormatEbu = SelectedSubtitleFormat is Ebu;
+
+        // A teletext page is narrower than the general line-length limit, so for EBU STL an
+        // over-wide row counts as a text error (red Text cell, error list, next-error).
+        if (SubtitleLineViewModel.UseTeletextLineLength != IsFormatEbu)
+        {
+            SubtitleLineViewModel.UseTeletextLineLength = IsFormatEbu;
+            foreach (var row in Subtitles)
+            {
+                row.RefreshAfterSettingsChanged();
+            }
+        }
+
         HasFormatStyle = IsFormatAssaOrSsa || IsFormatWebVtt;
         ShowActorColumnMenuHeader = IsFormatWebVtt
             ? Se.Language.File.WebVtt.ShowVoiceColumn

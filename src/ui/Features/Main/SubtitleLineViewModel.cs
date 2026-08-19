@@ -64,7 +64,6 @@ public partial class SubtitleLineViewModel : ObservableObject
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(TeletextDisplay))]
     [NotifyPropertyChangedFor(nameof(TeletextTextAlignment))]
-    [NotifyPropertyChangedFor(nameof(TeletextBackgroundBrush))]
     private string _text;
 
     [ObservableProperty]
@@ -149,25 +148,10 @@ public partial class SubtitleLineViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Tints the "TT" cell when a row is wider than a teletext page can show, the same way the
-    /// duration and CPS cells flag their own limits.
+    /// True while an EBU STL subtitle is open, so a row wider than a teletext page counts as a
+    /// "text too long" error. Set from MainViewModel when the format changes.
     /// </summary>
-    public IBrush TeletextBackgroundBrush => IsTeletextLineTooLong() ? _errorBrush : _transparentBrush;
-
-    private bool IsTeletextLineTooLong()
-    {
-        var text = Text;
-        if (string.IsNullOrEmpty(text))
-        {
-            return false;
-        }
-
-        var maxCharacters = text.Contains("<font color=", StringComparison.OrdinalIgnoreCase)
-            ? TeletextMaxCharactersWithColor
-            : TeletextMaxCharacters;
-
-        return HtmlUtil.RemoveHtmlTags(text, true).SplitToLines().Any(line => line.Length > maxCharacters);
-    }
+    public static bool UseTeletextLineLength { get; set; }
 
     // A teletext row holds 40 characters, of which the box and double-height control codes take
     // the first few; a colour change costs one more. These are the safe widths rather than the
@@ -581,7 +565,8 @@ public partial class SubtitleLineViewModel : ObservableObject
         int FontSize,
         bool ColorTextTooManyLines,
         int MaxNumberOfLines,
-        string? LengthStrategy)
+        string? LengthStrategy,
+        bool UseTeletextLineLength)
     {
         public static TextErrorSettings Current()
         {
@@ -596,7 +581,8 @@ public partial class SubtitleLineViewModel : ObservableObject
                 general.ColorTextTooManyLines,
                 general.MaxNumberOfLines,
                 // GetLineLength counts through this strategy, so it belongs in the key too.
-                Configuration.Settings.General.CpsLineLengthStrategy);
+                Configuration.Settings.General.CpsLineLengthStrategy,
+                SubtitleLineViewModel.UseTeletextLineLength);
         }
     }
 
@@ -656,6 +642,23 @@ public partial class SubtitleLineViewModel : ObservableObject
             if (GetStrippedLines().Count > settings.MaxNumberOfLines)
             {
                 return true;
+            }
+        }
+
+        // A teletext page is narrower than the general maximum, and every character takes a cell,
+        // so this counts raw length rather than going through the CPS length strategy.
+        if (settings.UseTeletextLineLength)
+        {
+            var maxCharacters = Text.Contains("<font color=", StringComparison.OrdinalIgnoreCase)
+                ? TeletextMaxCharactersWithColor
+                : TeletextMaxCharacters;
+
+            foreach (var line in GetStrippedLines())
+            {
+                if (line.Length > maxCharacters)
+                {
+                    return true;
+                }
             }
         }
 
@@ -844,7 +847,7 @@ public partial class SubtitleLineViewModel : ObservableObject
             // Memoized by (Text, settings) - the same verdict the Text cell tint uses.
             if (HasTextRuleError())
             {
-                Add("text too long or wide");
+                Add(UseTeletextLineLength ? "text too long or wide for teletext" : "text too long or wide");
             }
 
             return errors?.ToString() ?? string.Empty;

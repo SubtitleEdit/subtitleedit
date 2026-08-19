@@ -345,22 +345,14 @@ public static partial class InitListViewAndEditBox
             MinWidth = 60,
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((value, nameScope) =>
+            CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((value, nameScope) => new TextBlock
             {
-                var border = new Border
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                [!TextBlock.TextProperty] = new Binding(nameof(SubtitleLineViewModel.TeletextDisplay))
                 {
-                    Padding = new Thickness(4, 2),
-                    [!Border.BackgroundProperty] = new Binding(nameof(SubtitleLineViewModel.TeletextBackgroundBrush)) { Mode = BindingMode.OneWay },
-                };
-
-                border.Child = new TextBlock
-                {
-                    VerticalAlignment = VerticalAlignment.Center,
-                    HorizontalAlignment = HorizontalAlignment.Center,
-                    [!TextBlock.TextProperty] = new Binding(nameof(SubtitleLineViewModel.TeletextDisplay)) { Mode = BindingMode.OneWay },
-                };
-
-                return border;
+                    Mode = BindingMode.OneWay,
+                },
             }),
         };
         columnManager.Add(teletextColumn);
