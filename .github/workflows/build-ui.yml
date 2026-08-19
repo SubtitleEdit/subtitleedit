@@ -903,6 +903,17 @@ jobs:
           echo "Release assets:"
           ls -la ./release-assets/
 
+      - name: Download Logitech Options+ plugin
+        # Best-effort: pulls the latest release from the plugin's own repo so it
+        # ships alongside Subtitle Edit without needing a copy vendored here.
+        # continue-on-error so a hiccup fetching this optional asset never blocks
+        # the main release.
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release download --repo muaz978/subtitleedit-logi-plugin --pattern '*.lplug4' --output ./release-assets/SubtitleEdit-LogiOptionsPlus-Plugin.lplug4
+
       - name: Get current date
         id: date
         run: echo "date=$(date +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_OUTPUT
@@ -928,7 +939,8 @@ jobs:
             - **Linux x64 (tarball):** [SubtitleEdit-Linux-x64.tar.gz](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-Linux-x64.tar.gz)
             - **Linux ARM64 (tarball, aarch64):** [SubtitleEdit-Linux-ARM64.tar.gz](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-Linux-ARM64.tar.gz)
             - **Linux x64 (Flatpak):** [SubtitleEdit-linux-x64.flatpak](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-linux-x64.flatpak)
-      
+            - **Logitech Options+ plugin (optional):** [SubtitleEdit-LogiOptionsPlus-Plugin.lplug4](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-LogiOptionsPlus-Plugin.lplug4) - control playback, timing and text actions from an MX Master, MX Keys or MX Creative Console. Also on the [Logi Marketplace](https://marketplace.logi.com/plugin/SubtitleEdit/en)
+
             ### Installation
             1. Read and fix requirements, please see [System Requirements](https://github.com/SubtitleEdit/subtitleedit#-system-requirements)
             2. Download the appropriate package for your platform
@@ -950,6 +962,7 @@ jobs:
             ./release-assets/SubtitleEdit-Linux-x64.tar.gz
             ./release-assets/SubtitleEdit-Linux-ARM64.tar.gz
             ./release-assets/SubtitleEdit-linux-x64.flatpak
+            ./release-assets/*.lplug4
 
   call-seconv:
     needs: [create-release]
