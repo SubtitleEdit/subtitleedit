@@ -38,6 +38,12 @@ public class ModalMinimizeMirroringTests : IDisposable
         return (owner, dialog, dialogTask);
     }
 
+    private static void SimulateOsForegroundMove(Window from, Window to)
+    {
+        RaisePlatformEvent(from, "Deactivated");
+        RaisePlatformEvent(to, "Activated");
+    }
+
     // Raises the platform activation callback the OS raises when it moves foreground - the
     // accessors are internal to Avalonia, so go through reflection (same technique as
     // ModalForegroundEnforcementTests).
@@ -174,6 +180,115 @@ public class ModalMinimizeMirroringTests : IDisposable
 
         Assert.False(dialog.IsActive);
         Assert.Equal(WindowState.Minimized, dialog.WindowState);
+    }
+
+    // The hole the restore repair closes (#13865). Minimizing the dialog hands the OS foreground
+    // to the owner, and it keeps it across the restore - Avalonia's Win32 backend ends every
+    // non-minimizing WindowState write with SetFocus + SetForegroundWindow, so the mirror
+    // restoring the owner re-asserts foreground on a window the modal has input-disabled. The
+    // owner has been active since the minimize, so no activation event fires and the lifetime
+    // enforcement (which keys on owner.Activated, and stands down while the dialog is minimized)
+    // never sees the restore: the dialog comes back drawn on top but without foreground or
+    // keyboard, and the dialogs it opens come up behind it.
+    [AvaloniaFact]
+    public void RestoringTheDialog_HandsTheForegroundBackWithoutAnyActivationEvent()
+    {
+        var (owner, dialog, _) = OpenModal();
+
+        dialog.WindowState = WindowState.Minimized;
+        SimulateOsForegroundMove(from: dialog, to: owner);
+        Dispatcher.UIThread.RunJobs();
+        Assert.False(dialog.IsActive);
+
+        // No further activation event: the owner has been active since the minimize.
+        dialog.WindowState = WindowState.Normal;
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.True(dialog.IsActive);
+    }
+
+    [AvaloniaFact]
+    public void RestoringTheOwner_HandsTheForegroundBackWithoutAnyActivationEvent()
+    {
+        var (owner, dialog, _) = OpenModal();
+
+        owner.WindowState = WindowState.Minimized;
+        SimulateOsForegroundMove(from: dialog, to: owner);
+        Dispatcher.UIThread.RunJobs();
+        Assert.False(dialog.IsActive);
+
+        owner.WindowState = WindowState.Normal;
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal(WindowState.Normal, dialog.WindowState);
+        Assert.True(dialog.IsActive);
+    }
+
+    [AvaloniaFact]
+    public void RestoringThePair_PutsTheKeyboardBackInTheDialog()
+    {
+        var (owner, dialog, _) = OpenModal();
+
+        var dialogBox = new TextBox();
+        dialog.Content = dialogBox;
+        var ownerBox = new TextBox();
+        owner.Content = ownerBox;
+        Dispatcher.UIThread.RunJobs();
+        dialogBox.Focus();
+        Dispatcher.UIThread.RunJobs();
+
+        dialog.WindowState = WindowState.Minimized;
+        Dispatcher.UIThread.RunJobs();
+
+        // The restore's SetFocus lands in the input-disabled owner.
+        ownerBox.Focus();
+        dialog.WindowState = WindowState.Normal;
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal(dialogBox, dialog.FocusManager?.GetFocusedElement());
+    }
+
+    // Normal <-> Maximized is not a restore - it must not fight the user over the foreground.
+    [AvaloniaFact]
+    public void MaximizingTheDialog_DoesNotTouchTheForeground()
+    {
+        var (owner, dialog, _) = OpenModal();
+
+        SimulateOsForegroundMove(from: dialog, to: owner);
+        RaisePlatformEvent(owner, "Deactivated");
+        Dispatcher.UIThread.RunJobs();
+        Assert.False(dialog.IsActive);
+
+        dialog.WindowState = WindowState.Maximized;
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.False(dialog.IsActive);
+    }
+
+    // A modal opened over the batch window owns the foreground; the lower frame's mirror must
+    // not steal it back when the cascade restores.
+    [AvaloniaFact]
+    public void RestoringANestedChain_LeavesTheForegroundOnTheTopDialog()
+    {
+        var (owner, dialog, _) = OpenModal();
+
+        var topDialog = new Window();
+        _ = WindowService.ShowModalAsync(dialog, topDialog);
+        Dispatcher.UIThread.RunJobs();
+
+        topDialog.WindowState = WindowState.Minimized;
+        RaisePlatformEvent(dialog, "Deactivated");
+        SimulateOsForegroundMove(from: topDialog, to: owner);
+        Dispatcher.UIThread.RunJobs();
+        Assert.False(dialog.IsActive);
+        Assert.False(topDialog.IsActive);
+
+        // The cascade restores all three; only the top dialog may end up with the foreground.
+        topDialog.WindowState = WindowState.Normal;
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.True(topDialog.IsActive);
+        Assert.False(dialog.IsActive);
     }
 
     [AvaloniaFact]
