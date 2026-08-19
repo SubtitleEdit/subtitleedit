@@ -610,13 +610,18 @@ public class ValueConverterTests : IDisposable
         try
         {
             Se.Language.General.ErrorX = "Error: {0}";
-            var first = converter.Convert("Error: nope", typeof(object), null, Culture);
-            Assert.NotNull(first);
+            var errorBrush = converter.Convert("Error: nope", typeof(object), null, Culture);
+
+            // Non-error statuses get the plain theme text brush, not UnsetValue - a binding that
+            // yields UnsetValue falls back to black instead of the inherited foreground (#13884).
+            var defaultBrush = converter.Convert("OCR 42 %", typeof(object), null, Culture);
+            Assert.NotNull(errorBrush);
+            Assert.NotSame(defaultBrush, errorBrush);
 
             // A loaded translation swaps the string - the cached prefix has to follow.
             Se.Language.General.ErrorX = "Fejl: {0}";
-            Assert.Null(converter.Convert("Error: nope", typeof(object), null, Culture) as ISolidColorBrush);
-            Assert.NotNull(converter.Convert("Fejl: nix", typeof(object), null, Culture) as ISolidColorBrush);
+            Assert.Same(defaultBrush, converter.Convert("Error: nope", typeof(object), null, Culture));
+            Assert.Same(errorBrush, converter.Convert("Fejl: nix", typeof(object), null, Culture));
         }
         finally
         {
