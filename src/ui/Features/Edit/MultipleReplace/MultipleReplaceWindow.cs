@@ -7,6 +7,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Styling;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Files.Compare;
 using Nikse.SubtitleEdit.Logic;
@@ -107,6 +108,19 @@ public class MultipleReplaceWindow : Window
             SelectionMode = SelectionMode.Single,
             DataContext = vm,
             MinWidth = 300,
+
+            // Expanded/collapsed lives on the node, not on the container: the containers only
+            // exist while they are realized, so reading the expansion state back off them at save
+            // time would record any category the tree had not realized as collapsed.
+            ItemContainerTheme = new ControlTheme(typeof(TreeViewItem))
+            {
+                BasedOn = Application.Current?.FindResource(typeof(TreeViewItem)) as ControlTheme,
+                Setters =
+                {
+                    new Setter(TreeViewItem.IsExpandedProperty,
+                        new Binding(nameof(RuleTreeNode.IsExpanded)) { Mode = BindingMode.TwoWay }),
+                },
+            },
         };
 
         treeView[!ItemsControl.ItemsSourceProperty] = new Binding(nameof(vm.Nodes));
