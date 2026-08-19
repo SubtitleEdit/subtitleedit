@@ -29,7 +29,7 @@ Subtitle Edit stores these components in its **Data Folder**.
 | Component | File(s) | Destination Path |
 |-----------|---------|------------------|
 | **FFmpeg** | `ffmpeg.exe`, `ffprobe.exe` (optional) | `[Data Folder]/ffmpeg` |
-| **MPV** | `libmpv-2.dll` | `[Data Folder]` (root) |
+| **MPV** | `libmpv-2.dll` (+ `vulkan-1.dll`) | `[Data Folder]` (root) |
 | **yt-dlp** | `yt-dlp.exe` | `[Data Folder]` (root) |
 | **Tesseract** | `tesseract.exe`, `tessdata/` folder | `[Data Folder]/Tesseract` |
 | **Whisper CPP** | `whisper-cli.exe`, `Models/` folder | `[Data Folder]/SpeechToText/Cpp` |
@@ -69,6 +69,9 @@ Used as a video player engine.
     *   **Note:** Builds with "v3" in the filename (e.g., `mpv-dev-x86_64-v3-...`) may offer better performance but require a newer CPU with AVX2 support. Use the standard builds (without "v3") for broader compatibility.
 *   **Destination:** `[Data Folder]` (The root data folder)
 *   **Files:** Extract `libmpv-2.dll` to the **root** of the Data Folder.
+*   **Also needed: `vulkan-1.dll`** — builds from August 2026 onwards link the Vulkan loader dynamically, so `libmpv-2.dll` will not load at all without it (the symptom is a black video with no sound, while the waveform still works). It is normally installed by your graphics driver, but drivers for GPUs older than Vulkan — and the generic Microsoft Basic Display driver — do not provide it.
+    *   Subtitle Edit's own "Download libmpv" button already includes it, so this only applies when you install libmpv manually.
+    *   To get it: download the **Vulkan Runtime** components zip from [vulkan.lunarg.com](https://vulkan.lunarg.com/sdk/home#windows) and place `vulkan-1.dll` (the `x64` one, or the ARM64 build on ARM devices) next to `libmpv-2.dll` in the root of the Data Folder.
 
 ### yt-dlp (Online Video Playback)
 Used to enable mpv to stream online videos (e.g., YouTube, Vimeo, and [many other sites](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md)) via **Video > Open from URL**.
