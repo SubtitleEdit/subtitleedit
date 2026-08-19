@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -185,17 +184,9 @@ public partial class MultipleReplaceViewModel : ObservableObject
         _subtitle = subtitle;
         _dirty = true;
 
-        Dispatcher.UIThread.Post(() =>
-        {
-            var allTreeViewItems = FindAllTreeViewItems(RulesTreeView);
-            foreach (var item in allTreeViewItems)
-            {
-                if (item.DataContext is RuleTreeNode node && node.IsCategory)
-                {
-                    item.IsExpanded = node.IsExpanded;
-                }
-            }
-        });
+        // Expanded/collapsed is restored by the tree item container theme binding to
+        // RuleTreeNode.IsExpanded - pushing it onto the containers from here could not work, as
+        // the view model is configured before the window is even constructed (#13526).
     }
 
     private static List<RuleTreeNode> GetNodes()
@@ -226,15 +217,6 @@ public partial class MultipleReplaceViewModel : ObservableObject
 
     private void SaveSettings()
     {
-        var expandedCategories = new List<RuleTreeNode>();
-        foreach (var item in FindAllTreeViewItems(RulesTreeView))
-        {
-            if (item.DataContext is RuleTreeNode node && node.IsCategory && item.IsExpanded)
-            {
-                expandedCategories.Add(node);
-            }
-        }
-
         Se.Settings.Edit.MultipleReplace.Categories.Clear();
         foreach (var category in Nodes)
         {
@@ -242,7 +224,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
             {
                 Name = category.CategoryName,
                 IsActive = category.IsActive,
-                IsExpanded = expandedCategories.Contains(category),
+                IsExpanded = category.IsExpanded,
             };
             Se.Settings.Edit.MultipleReplace.Categories.Add(c);
 
@@ -576,19 +558,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
                     MultipleReplaceType.CaseInsensitive,
             });
             node.SubNodes?.Add(rule);
-
-            Dispatcher.UIThread.Post(() =>
-            {
-                var allTreeViewItems = FindAllTreeViewItems(RulesTreeView);
-                foreach (var item in allTreeViewItems)
-                {
-                    if (item.DataContext == node)
-                    {
-                        item.IsExpanded = true;
-                        break;
-                    }
-                }
-            }, DispatcherPriority.Background);
+            node.IsExpanded = true;
 
             SelectedNode = rule;
             _dirty = true;
@@ -1158,31 +1128,23 @@ public partial class MultipleReplaceViewModel : ObservableObject
             return;
         }
 
-        var parent = rule.Parent;
+        if (rule.Parent != null)
+        {
+            rule.Parent.IsExpanded = true;
+        }
 
+        // The rule's own container only exists once the category above it has expanded, so
+        // selecting and scrolling to it has to wait for that layout pass.
         Dispatcher.UIThread.Post(() =>
         {
-            var allTreeViewItems = FindAllTreeViewItems(RulesTreeView);
-            foreach (var item in allTreeViewItems)
+            SelectedNode = rule;
+            var container = RulesTreeView.ContainerFromItem(rule) as TreeViewItem;
+            if (container != null)
             {
-                if (item.DataContext == parent)
-                {
-                    item.IsExpanded = true;
-                    break;
-                }
+                container.BringIntoView();
+                container.Focus(NavigationMethod.Directional);
             }
-
-            Dispatcher.UIThread.Post(() =>
-            {
-                SelectedNode = rule;
-                var container = RulesTreeView.ContainerFromItem(rule) as TreeViewItem;
-                if (container != null)
-                {
-                    container.BringIntoView();
-                    container.Focus(NavigationMethod.Directional);
-                }
-            }, DispatcherPriority.Input);
-        }, DispatcherPriority.Background);
+        }, DispatcherPriority.Input);
     }
 
     /// <summary>
@@ -1288,46 +1250,21 @@ public partial class MultipleReplaceViewModel : ObservableObject
     [RelayCommand]
     public void ExpandAll()
     {
-        Dispatcher.UIThread.Post(() =>
-        {
-            var allTreeViewItems = FindAllTreeViewItems(RulesTreeView);
-            foreach (var item in allTreeViewItems)
-            {
-                item.IsExpanded = true;
-            }
-        }, DispatcherPriority.Background);
+        SetAllExpanded(true);
     }
 
     [RelayCommand]
     public void CollapseAll()
     {
-        Dispatcher.UIThread.Post(() =>
-        {
-            var allTreeViewItems = FindAllTreeViewItems(RulesTreeView);
-            foreach (var item in allTreeViewItems)
-            {
-                item.IsExpanded = false;
-            }
-        }, DispatcherPriority.Background);
+        SetAllExpanded(false);
     }
 
-    private static IEnumerable<TreeViewItem> FindAllTreeViewItems(Control parent)
+    private void SetAllExpanded(bool isExpanded)
     {
-        var result = new List<TreeViewItem>();
-        if (parent is TreeViewItem tvi)
+        foreach (var node in Nodes.Where(p => p.IsCategory))
         {
-            result.Add(tvi);
+            node.IsExpanded = isExpanded;
         }
-
-        foreach (var child in parent.GetLogicalDescendants())
-        {
-            if (child is TreeViewItem treeViewItem)
-            {
-                result.Add(treeViewItem);
-            }
-        }
-
-        return result;
     }
 
     private static RuleTreeNode MakeRuleTreeNode(RuleTreeNode node, EditRuleViewModel result)
