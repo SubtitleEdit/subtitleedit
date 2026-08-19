@@ -120,6 +120,7 @@ public class LanguageMain
     public string SortedByActor { get; set; }
     public string SortedByStyle { get; set; }
     public string VideoBrightnessSetTo { get; set; }
+    public string VideoContrastSetTo { get; set; }
     public string ColorHint { get; set; }
     public string RemoveFormattingHint { get; set; }
     public string AssaResolutionResamplerDone { get; set; }
@@ -263,6 +264,7 @@ public class LanguageMain
         SortedByActor = "Sorted by actor";
         SortedByStyle = "Sorted by style";
         VideoBrightnessSetTo = "Brightness: {0}";
+        VideoContrastSetTo = "Contrast: {0}";
         ColorHint = "Color selected lines";
         RemoveFormattingHint = "Remove formatting from selected lines";
         AssaResolutionResamplerDone = "ASSA resolution changed.";

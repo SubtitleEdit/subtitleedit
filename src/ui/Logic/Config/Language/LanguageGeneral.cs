@@ -665,6 +665,8 @@ public class LanguageGeneral
     public string VideoOffset { get; set; }
     public string VideoOneFrameBack { get; set; }
     public string VideoOneFrameForward { get; set; }
+    public string VideoOneFrameBackWithPlay { get; set; }
+    public string VideoOneFrameForwardWithPlay { get; set; }
     public string VideoOneSecondBack { get; set; }
     public string VideoOneSecondForward { get; set; }
     public string VideoPlayer { get; set; }
@@ -1408,6 +1410,8 @@ public class LanguageGeneral
         VideoOffset = "Video offset";
         VideoOneFrameBack = "Video, one frame back";
         VideoOneFrameForward = "Video, one frame forward";
+        VideoOneFrameBackWithPlay = "Video, one frame back with play";
+        VideoOneFrameForwardWithPlay = "Video, one frame forward with play";
         VideoOneSecondBack = "Video, one second back";
         VideoOneSecondForward = "Video, one second forward";
         VideoPlayer = "Video player";

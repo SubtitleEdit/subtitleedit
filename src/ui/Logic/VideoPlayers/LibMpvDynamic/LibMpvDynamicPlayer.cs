@@ -551,6 +551,20 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         return _brightness;
     }
 
+    private int _contrast;
+
+    public int ToggleContrast()
+    {
+        _contrast += 25;
+        if (_contrast > 100)
+        {
+            _contrast = -100;
+        }
+
+        SetOptionString("contrast", _contrast.ToString(CultureInfo.InvariantCulture));
+        return _contrast;
+    }
+
     public static IntPtr AllocateUtf8IntPtrArrayWithSentinel(string[] arr, out IntPtr[] byteArrayPointers)
     {
         var numberOfStrings = arr.Length + 1;

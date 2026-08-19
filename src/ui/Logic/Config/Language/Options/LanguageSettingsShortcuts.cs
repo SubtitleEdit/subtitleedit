@@ -221,6 +221,7 @@ public class LanguageSettingsShortcuts
     public string SortByActor { get; set; }
     public string SortByStyle { get; set; }
     public string VideoToggleBrightness { get; set; }
+    public string VideoToggleContrast { get; set; }
     public string DuplicatesFound { get; set; }
     public string CopyTextToClipboard { get; set; }
     public string CopyTextFromOriginalToClipboard { get; set; }
@@ -481,6 +482,7 @@ public class LanguageSettingsShortcuts
         SortByActor = "Sort by actor";
         SortByStyle = "Sort by style";
         VideoToggleBrightness = "Video: toggle brightness (mpv only)";
+        VideoToggleContrast = "Video: toggle contrast (mpv only)";
         DuplicatesFound = "The following duplicate shortcuts were found:";
         CopyTextToClipboard = "Copy text to clipboard (selected lines)";
         CopyTextFromOriginalToClipboard = "Copy text from original to clipboard (selected lines)";
