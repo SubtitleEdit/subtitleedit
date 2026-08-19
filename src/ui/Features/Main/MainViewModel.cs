@@ -305,7 +305,9 @@ public partial class MainViewModel :
     [ObservableProperty] private bool _showColumnEndTime;
     [ObservableProperty] private bool _showColumnGap;
     [ObservableProperty] private bool _showColumnDuration;
-    [ObservableProperty] private bool _showColumnTeletext;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsTeletextColumnVisible))]
+    private bool _showColumnTeletext;
     [ObservableProperty] private bool _showColumnActor;
     [ObservableProperty] private bool _showColumnStyle;
     [ObservableProperty] private bool _showColumnCps;
@@ -356,7 +358,21 @@ public partial class MainViewModel :
     /// True for EBU STL. Teletext line/alignment editing only makes sense there, so the
     /// teletext dialog, the "TT" column and the alignment preview are all gated on this.
     /// </summary>
-    [ObservableProperty] private bool _isFormatEbu;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsTeletextColumnVisible))]
+    [NotifyPropertyChangedFor(nameof(IsTeletextPreviewActive))]
+    private bool _isFormatEbu;
+
+    /// <summary>
+    /// The "TT" column and the alignment preview only mean anything for EBU STL, but the user's
+    /// choice has to survive switching to another format and back - unlike ShowColumnLayer, which
+    /// is cleared outright, these gate the view while <see cref="ShowColumnTeletext"/> and
+    /// <see cref="TeletextAlignmentPreview"/> keep the remembered setting.
+    /// </summary>
+    public bool IsTeletextColumnVisible => ShowColumnTeletext && IsFormatEbu;
+
+    /// <inheritdoc cref="IsTeletextColumnVisible"/>
+    public bool IsTeletextPreviewActive => TeletextAlignmentPreview && IsFormatEbu;
 
     /// <summary>
     /// Header of the grid's actor/voice toggle in the column context menu - the column itself is
@@ -383,7 +399,8 @@ public partial class MainViewModel :
     [ObservableProperty] private string _selectedVideoSeekAmount;
     [ObservableProperty] private bool _showWaveformDisplayModeSeparator;
     [ObservableProperty]
-private bool _teletextAlignmentPreview;
+    [NotifyPropertyChangedFor(nameof(IsTeletextPreviewActive))]
+    private bool _teletextAlignmentPreview;
     [ObservableProperty] private bool _showWaveformOnlyWaveform;
     [ObservableProperty] private bool _showWaveformOnlySpectrogram;
     [ObservableProperty] private bool _showWaveformWaveformAndSpectrogram;
@@ -27591,12 +27608,6 @@ private bool _teletextAlignmentPreview;
         {
             ShowColumnLayer = false;
             ShowColumnLayerFlyoutMenuItem = false;
-        }
-
-        if (!IsFormatEbu)
-        {
-            ShowColumnTeletext = false;
-            TeletextAlignmentPreview = false;
         }
 
         AutoFitColumns();

@@ -365,7 +365,7 @@ columnManager.Add(teletextColumn);
 
 teletextColumn.Bind(
     SeTableViewColumn.IsVisibleProperty,
-    new Binding(nameof(vm.ShowColumnTeletext))
+    new Binding(nameof(vm.IsTeletextColumnVisible))
     {
         Mode = BindingMode.OneWay,
         Source = vm,
@@ -396,7 +396,7 @@ teletextColumn.Bind(
     Converter = TeletextAlignmentPreviewConverter.Instance,
     Bindings =
     {
-        new Binding(nameof(vm.TeletextAlignmentPreview))
+        new Binding(nameof(vm.IsTeletextPreviewActive))
         {
             Source = vm,
             Mode = BindingMode.OneWay
