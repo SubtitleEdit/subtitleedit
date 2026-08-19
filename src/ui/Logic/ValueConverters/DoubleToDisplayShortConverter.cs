@@ -10,8 +10,14 @@ public class DoubleToDisplayShortConverter : IValueConverter
 {
     public static readonly DoubleToDisplayShortConverter Instance = new();
 
+    // Reused to avoid per-call TimeCode allocations (expected to be used from the UI thread only).
+    private readonly TimeCode _formattingTimeCode = new();
+    private const string ZeroFrameMode = "00.00";
+    private const string ZeroTime = "00,000";
+
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
+        var useFrameMode = Se.Settings.General.UseFrameMode;
         if (value is double ms)
         {
             if (ms == double.MaxValue || double.IsNaN(ms))
@@ -21,20 +27,13 @@ public class DoubleToDisplayShortConverter : IValueConverter
                 return string.Empty;
             }
 
-            if (Se.Settings.General.UseFrameMode)
-            {
-                return new TimeCode(ms).ToShortStringHHMMSSFF();
-            }
-
-            return new TimeCode(ms).ToShortString();
+            _formattingTimeCode.TotalMilliseconds = ms;
+            return useFrameMode
+                ? _formattingTimeCode.ToShortStringHHMMSSFF()
+                : _formattingTimeCode.ToShortString();
         }
 
-        if (Se.Settings.General.UseFrameMode)
-        {
-            return "00.00";
-        }
-
-        return "00,000";
+        return useFrameMode ? ZeroFrameMode : ZeroTime;
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

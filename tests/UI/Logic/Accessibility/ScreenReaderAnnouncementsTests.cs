@@ -16,8 +16,22 @@ namespace UITests.Logic.Accessibility;
 /// NVDA silent while Up/Down stepped through combo box values. SE patches the map via reflection
 /// at startup and raises the missing Value change itself.
 /// </summary>
-public class ScreenReaderAnnouncementsTests
+public class ScreenReaderAnnouncementsTests : IDisposable
 {
+    // Every window opened by a test is closed again in Dispose: if a test stops early, an
+    // unclosed window would outlive the test and race with the headless session teardown.
+    private readonly List<Window> _windows = new();
+
+    public void Dispose()
+    {
+        foreach (var window in _windows)
+        {
+            window.Close();
+        }
+
+        _windows.Clear();
+    }
+
     /// <summary>
     /// Also the upgrade canary: the startup patch is deliberately fail-soft, so this test is what
     /// actually breaks the build when an Avalonia upgrade renames AutomationNode.s_propertyMap or
@@ -46,6 +60,7 @@ public class ScreenReaderAnnouncementsTests
 
         var comboBox = new ComboBox { ItemsSource = new[] { "First", "Second" }, SelectedIndex = 0 };
         var window = new Window { Content = comboBox };
+        _windows.Add(window);
         window.Show();
         Dispatcher.UIThread.RunJobs();
 
@@ -77,6 +92,7 @@ public class ScreenReaderAnnouncementsTests
         var comboBox = new ComboBox { ItemsSource = new[] { "First", "Second" }, SelectedIndex = 0 };
         var textBox = new TextBox();
         var window = new Window { Content = new StackPanel { Children = { comboBox, textBox } } };
+        _windows.Add(window);
         window.Show();
         Dispatcher.UIThread.RunJobs();
 

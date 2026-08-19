@@ -4,6 +4,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Ocr;
+using Nikse.SubtitleEdit.Features.Ocr.Download;
+using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
@@ -27,6 +29,7 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
     [ObservableProperty] private bool _useOutputFolder;
     [ObservableProperty] private string _outputFolder;
     [ObservableProperty] private bool _overwrite;
+    [ObservableProperty] private bool _scanFolderRecursive;
     [ObservableProperty] private ObservableCollection<string> _targetEncodings;
     [ObservableProperty] private string? _selectedTargetEncoding;
 
@@ -63,6 +66,11 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<LlamaCppModelDisplay> _llamaCppOcrModels;
     [ObservableProperty] private LlamaCppModelDisplay? _selectedLlamaCppOcrModel;
 
+    [ObservableProperty] private ObservableCollection<CrispEmbedBackend> _crispEmbedBackends;
+    [ObservableProperty] private CrispEmbedBackend? _selectedCrispEmbedBackend;
+    [ObservableProperty] private ObservableCollection<CrispEmbedModelDisplay> _crispEmbedModels;
+    [ObservableProperty] private CrispEmbedModelDisplay? _selectedCrispEmbedModel;
+
     [ObservableProperty] bool _isOcrLanguageVisible;
     [ObservableProperty] bool _isTesseractOcrVisible;
     [ObservableProperty] bool _isPaddleOCrVisible;
@@ -70,8 +78,10 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
     [ObservableProperty] bool _isNOcrVisible;
     [ObservableProperty] bool _isOllamaVisible;
     [ObservableProperty] bool _isLlamaCppVisible;
+    [ObservableProperty] bool _isCrispEmbedVisible;
 
     public Window? Window { get; set; }
+    public Action? RefreshCrispEmbedModelCombo { get; set; }
 
     public bool OkPressed { get; private set; }
 
@@ -85,6 +95,11 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
         TargetEncodings = new ObservableCollection<string>(encodings);
 
         OcrEngines = new ObservableCollection<string> { "nOcr", "BinaryOcr", "Tesseract", "Ollama", "llama.cpp" };
+        if (CrispEmbedEngine.CanBeDownloaded())
+        {
+            OcrEngines.Add(CrispEmbedEngine.StaticName);
+        }
+
         if (!OperatingSystem.IsMacOS())
         {
             OcrEngines.Add("PaddleOCR");
@@ -127,6 +142,11 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
         LlamaCppOcrModels = new ObservableCollection<LlamaCppModelDisplay>();
         SelectedLlamaCppOcrModel = LlamaCppDownloadHelper.PopulateModels(
             LlamaCppOcrModels, LlamaCppServerManager.OcrModels, Se.Settings.Ocr.LlamaCppOcrModel);
+
+        CrispEmbedBackends = new ObservableCollection<CrispEmbedBackend>(CrispEmbedEngine.GetBackends());
+        CrispEmbedModels = new ObservableCollection<CrispEmbedModelDisplay>();
+        SelectedCrispEmbedBackend = CrispEmbedBackends.FirstOrDefault(p => p.Name == Se.Settings.Ocr.CrispEmbedBackend)
+                                    ?? CrispEmbedBackends.FirstOrDefault();
 
         _folderHelper = folderHelper;
         _windowService = windowService;
@@ -182,6 +202,7 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
             ?? TargetEncodings.First();
         SelectedOcrEngine = OcrEngines.FirstOrDefault(p => p == Se.Settings.Tools.BatchConvert.OcrEngine) ?? OcrEngines.First();
         VobSubIsolateColors = Se.Settings.Tools.BatchConvert.VobSubIsolateColors;
+        ScanFolderRecursive = Se.Settings.Tools.BatchConvert.ScanFolderRecursive;
     }
 
     private void SaveSettings()
@@ -193,6 +214,7 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
         Se.Settings.Tools.BatchConvert.LanguagePostFix = SelectedLanguagePostFix ?? Se.Language.General.TwoLetterLanguageCode;
         Se.Settings.Tools.BatchConvert.OcrEngine = SelectedOcrEngine ?? "nOcr";
         Se.Settings.Tools.BatchConvert.VobSubIsolateColors = VobSubIsolateColors;
+        Se.Settings.Tools.BatchConvert.ScanFolderRecursive = ScanFolderRecursive;
 
         var ocrEngine = SelectedOcrEngine;
         if (ocrEngine == "Tesseract")
@@ -241,7 +263,32 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
             Se.Settings.Ocr.LlamaCppOcrModel = SelectedLlamaCppOcrModel.Model.FileName;
         }
 
+        if (ocrEngine == CrispEmbedEngine.StaticName)
+        {
+            Se.Settings.Ocr.CrispEmbedBackend = SelectedCrispEmbedBackend?.Name ?? Se.Settings.Ocr.CrispEmbedBackend;
+            Se.Settings.Ocr.CrispEmbedModel = SelectedCrispEmbedModel?.Model.Name ?? Se.Settings.Ocr.CrispEmbedModel;
+        }
+
         Se.SaveSettings();
+    }
+
+    partial void OnSelectedCrispEmbedBackendChanged(CrispEmbedBackend? value)
+    {
+        CrispEmbedModels.Clear();
+        if (value == null)
+        {
+            SelectedCrispEmbedModel = null;
+            return;
+        }
+
+        foreach (var model in value.Models)
+        {
+            CrispEmbedModels.Add(new CrispEmbedModelDisplay { Backend = value, Model = model });
+        }
+
+        SelectedCrispEmbedModel = CrispEmbedModels.FirstOrDefault(p => p.Model.Name == Se.Settings.Ocr.CrispEmbedModel)
+                                  ?? CrispEmbedModels.FirstOrDefault(p => value.IsModelInstalled(p.Model))
+                                  ?? CrispEmbedModels.FirstOrDefault();
     }
 
     partial void OnSelectedNOcrDatabaseChanged(string? value)
@@ -291,8 +338,8 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
     {
         if (UseOutputFolder && string.IsNullOrWhiteSpace(OutputFolder))
         {
-            await MessageBox.Show(Window!, "Error",
-                "Please select output folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            await MessageBox.Show(Window!, Se.Language.General.Error,
+                Se.Language.General.PleaseSelectOutputFolder, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
@@ -308,6 +355,22 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
             }
         }
 
+        // Same for CrispEmbed: engine binaries plus the selected backend's model.
+        if (SelectedOcrEngine == CrispEmbedEngine.StaticName)
+        {
+            if (SelectedCrispEmbedBackend is not { } backend || SelectedCrispEmbedModel is not { } model)
+            {
+                return;
+            }
+
+            var ready = await CrispEmbedDownloadHelper.EnsureReadyAsync(Window!, _windowService, backend, model.Model,
+                onModelDownloadClosed: () => RefreshCrispEmbedModelCombo?.Invoke());
+            if (!ready)
+            {
+                return;
+            }
+        }
+
         SaveSettings();
         OkPressed = true;
         Window?.Close();
@@ -316,7 +379,7 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
     [RelayCommand]
     private async Task BrowseOutputFolder()
     {
-        var folder = await _folderHelper.PickFolderAsync(Window!, "Select output folder");
+        var folder = await _folderHelper.PickFolderAsync(Window!, Se.Language.General.PickOutputFolder);
         if (!string.IsNullOrEmpty(folder))
         {
             OutputFolder = folder;
@@ -351,13 +414,14 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
             return;
         }
 
-        IsOcrLanguageVisible = ocrEngine != "nOcr" && ocrEngine != "BinaryOcr" && ocrEngine != "Ollama" && ocrEngine != "llama.cpp";
+        IsOcrLanguageVisible = ocrEngine != "nOcr" && ocrEngine != "BinaryOcr" && ocrEngine != "Ollama" && ocrEngine != "llama.cpp" && ocrEngine != CrispEmbedEngine.StaticName;
         IsTesseractOcrVisible = ocrEngine == "Tesseract";
         IsPaddleOCrVisible = ocrEngine == "PaddleOCR";
         IsBinaryOcrVisible = ocrEngine == "BinaryOcr";
         IsNOcrVisible = ocrEngine == "nOcr";
         IsOllamaVisible = ocrEngine == "Ollama";
         IsLlamaCppVisible = ocrEngine == "llama.cpp";
+        IsCrispEmbedVisible = ocrEngine == CrispEmbedEngine.StaticName;
 
         if (ocrEngine == "Tesseract")
         {
@@ -367,8 +431,10 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
 
         if (ocrEngine == "PaddleOCR")
         {
-            SelectedPaddleOcrLanguage = PaddleOcrLanguages
-                .FirstOrDefault(p => p.Code == Se.Settings.Tools.BatchConvert.PaddleLanguage) ?? PaddleOcrLanguages.FirstOrDefault();
+            var paddleLanguage = PaddleOcr.NormalizeLanguageCode(Se.Settings.Tools.BatchConvert.PaddleLanguage);
+            SelectedPaddleOcrLanguage = PaddleOcrLanguages.FirstOrDefault(p => p.Code == paddleLanguage) ??
+                                        PaddleOcrLanguages.FirstOrDefault(p => p.Code == "en") ??
+                                        PaddleOcrLanguages.FirstOrDefault();
         }
 
         if (ocrEngine == "BinaryOcr")

@@ -184,4 +184,22 @@ public class AssaStylesViewModelTests
             Se.Settings.Assa.StoredStyles.RemoveAll(s => s.Name == "ProjectA-Title");
         }
     }
+
+    /// <summary>
+    /// The storage styles table shows the category column via CategoryDisplay - a style with no
+    /// category belongs to the built-in "Default" category and must say so instead of being blank.
+    /// </summary>
+    [AvaloniaFact]
+    public void StyleDisplay_ShowsDefaultCategoryName()
+    {
+        var style = new StyleDisplay { Category = string.Empty };
+        Assert.Equal(Se.Language.General.Default, style.CategoryDisplay);
+
+        var changed = new List<string?>();
+        style.PropertyChanged += (_, e) => changed.Add(e.PropertyName);
+
+        style.Category = "Project A";
+        Assert.Equal("Project A", style.CategoryDisplay);
+        Assert.Contains(nameof(StyleDisplay.CategoryDisplay), changed);
+    }
 }

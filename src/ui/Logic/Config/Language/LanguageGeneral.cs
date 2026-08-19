@@ -49,6 +49,7 @@ public class LanguageGeneral
     public string Backward { get; set; }
     public string BatchMode { get; set; }
     public string BdnXml { get; set; }
+    public string BdnXml8Bit { get; set; }
     public string Before { get; set; }
     public string Beginning { get; set; }
     public string BluRaySup { get; set; }
@@ -395,6 +396,7 @@ public class LanguageGeneral
     public string StartServer { get; set; }
     public string StopServer { get; set; }
     public string PickOutputFolder { get; set; }
+    public string PleaseSelectOutputFolder { get; set; }
     public string PickResolutionFromCurrentVideo { get; set; }
     public string PickResolutionFromVideoDotDotDot { get; set; }
     public string PickSubtitleFile { get; set; }
@@ -610,6 +612,7 @@ public class LanguageGeneral
     public string Top { get; set; }
     public string TotalAdjustmentX { get; set; }
     public string Translate { get; set; }
+    public string TranslatePercentX { get; set; }
     public string TranslateRow { get; set; }
     public string Translation { get; set; }
     public string TwoLetterLanguageCode { get; set; }
@@ -628,6 +631,7 @@ public class LanguageGeneral
     public string UpdateAndClose { get; set; }
     public string UpdateAvailable { get; set; }
     public string UpdateDetails { get; set; }
+    public string UpdateX { get; set; }
     public string UpdatedBy { get; set; }
     public string UpToDate { get; set; }
     public string Url { get; set; }
@@ -661,6 +665,8 @@ public class LanguageGeneral
     public string VideoOffset { get; set; }
     public string VideoOneFrameBack { get; set; }
     public string VideoOneFrameForward { get; set; }
+    public string VideoOneFrameBackWithPlay { get; set; }
+    public string VideoOneFrameForwardWithPlay { get; set; }
     public string VideoOneSecondBack { get; set; }
     public string VideoOneSecondForward { get; set; }
     public string VideoPlayer { get; set; }
@@ -679,6 +685,7 @@ public class LanguageGeneral
     public string PixelWidth { get; set; }
     public string Wpm { get; set; }
     public string XFiles { get; set; }
+    public string XOfYFiles { get; set; }
     public string XFilesConvertedInY { get; set; }
     public string XNoLinesUpdated { get; set; }
     public string XNotFound { get; set; }
@@ -787,6 +794,7 @@ public class LanguageGeneral
         Backward = "Backward";
         BatchMode = "Batch mode";
         BdnXml = "BDN/xml";
+        BdnXml8Bit = "BDN/xml 8-bit";
         Before = "Before";
         Beginning = "Beginning";
         BluRaySup = "Blu-ray (sup)";
@@ -1016,7 +1024,7 @@ public class LanguageGeneral
         KeepExistingTimeCodes = "Keep existing time codes (do not add video offset)";
         KeyFile = "Key file";
         Language = "Language";
-        LanguagePostFix = "Language post-fix (mkv/mp4)";
+        LanguagePostFix = "Language post-fix (mkv/mp4/auto-translate)";
         Layer = "Layer";
         LayerFilterOn = "Layer filter on";
         Left = "Left";
@@ -1133,6 +1141,7 @@ public class LanguageGeneral
         StartServer = "Start server";
         StopServer = "Stop server";
         PickOutputFolder = "Pick output folder";
+        PleaseSelectOutputFolder = "Please select an output folder";
         PickResolutionFromCurrentVideo = "Pick resolution from current video";
         PickResolutionFromVideoDotDotDot = "Pick resolution from video...";
         PickSubtitleFile = "Pick subtitle file...";
@@ -1348,6 +1357,7 @@ public class LanguageGeneral
         Top = "Top";
         TotalAdjustmentX = "Total adjustment: {0}";
         Translate = "Translate";
+        TranslatePercentX = "Translating: {0}%";
         TranslateRow = "Translate row";
         Translation = "Translation";
         TwoLetterLanguageCode = "Two-letter language code";
@@ -1366,6 +1376,7 @@ public class LanguageGeneral
         UpdateAndClose = "Update and close";
         UpdateAvailable = "Update available";
         UpdateDetails = "Update details";
+        UpdateX = "Update {0}";
         UpdatedBy = "Updated by";
         UpToDate = "Up to date";
         Url = "URL";
@@ -1399,6 +1410,8 @@ public class LanguageGeneral
         VideoOffset = "Video offset";
         VideoOneFrameBack = "Video, one frame back";
         VideoOneFrameForward = "Video, one frame forward";
+        VideoOneFrameBackWithPlay = "Video, one frame back with play";
+        VideoOneFrameForwardWithPlay = "Video, one frame forward with play";
         VideoOneSecondBack = "Video, one second back";
         VideoOneSecondForward = "Video, one second forward";
         VideoPlayer = "Video player";
@@ -1417,6 +1430,7 @@ public class LanguageGeneral
         PixelWidth = "Pixel width";
         Wpm = "Words/min";
         XFiles = "{0:#,###,##0} files";
+        XOfYFiles = "{0:#,###,##0} of {1:#,###,##0} files";
         XFilesConvertedInY = "{0:#,###,##0} files converted in {1}";
         XNoLinesUpdated = "{0}: no line(s) updated";
         XNotFound = "\"{0}\" not found";

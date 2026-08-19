@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using System;
 using SkiaSharp;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
@@ -34,6 +35,7 @@ public class SeVideoBurnIn
     public string NonAssaOutlineColor { get; set; }
     public string NonAssaAlignment { get; set; }
     public bool NonAssaFixRtlUnicode { get; set; }
+    public decimal NonAssaSpacing { get; set; }
     public decimal NonAssaMarginVertical { get; set; }
     public decimal NonAssaMarginHorizontal { get; set; }
     public string EmbedOutputExt { get; set; }
@@ -47,6 +49,9 @@ public class SeVideoBurnIn
     public string OutputExtension { get; set; }
     public string Effects { get; set; }
 
+    // On macOS the hardware encoder is always present, so default to it there.
+    public static string DefaultEncoding => Configuration.IsRunningOnMac ? "h264_videotoolbox" : "libx264";
+
     public SeVideoBurnIn()
     {
         FontName = "Arial";
@@ -54,9 +59,12 @@ public class SeVideoBurnIn
         EmbedOutputExt = ".mkv";
         OutputFolder = string.Empty;
         FontFactor = 0.52;
-        Encoding = "libx264";
+        Encoding = DefaultEncoding;
         Preset = "medium";
-        Crf = "23";
+        // 23 is the right default for libx264 CRF (0-51, lower is better), but the macOS default
+        // encoder is VideoToolbox, whose quality scale is 1-100 with higher being better - and on
+        // Intel Macs "-q:v" fails outright. Its quality stays unset so ffmpeg picks a bitrate.
+        Crf = DefaultEncoding == "libx264" ? "23" : string.Empty;
         Tune = "film";
         AudioEncoding = "copy";
         AudioForceStereo = true;

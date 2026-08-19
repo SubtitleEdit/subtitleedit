@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -29,6 +29,10 @@ public class OmniVoiceTtsCpp : ITtsEngine
     public bool HasRegion => false;
     public bool HasModel => false;
     public bool HasKeyFile => false;
+    public bool SupportsVoiceCloning => true;
+    // Each line is a fresh omnivoice-tts run taking --ref-wav/--ref-text, so a per-line
+    // reference costs nothing beyond cutting the clip.
+    public bool SupportsPerLineVoiceCloning => true;
 
     // Voice-design attribute keywords accepted by omnivoice-tts' --instruct flag (English set).
     // The CLI rejects free text - only these values, comma+space separated, are valid. Grouped
@@ -235,7 +239,7 @@ public class OmniVoiceTtsCpp : ITtsEngine
                 $"OmniVoice TTS models not found in {GetSetModelsFolder()}. Download them via the TTS download dialog.");
         }
 
-        var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
+        var outputFileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetFolder), Guid.NewGuid() + ".wav");
         var inputText = text;
 
         var psi = new ProcessStartInfo
@@ -246,6 +250,11 @@ public class OmniVoiceTtsCpp : ITtsEngine
             CreateNoWindow = true,
             RedirectStandardInput = true,
             RedirectStandardOutput = true,
+            // The server writes UTF-8. Without these the reader decodes it in the OS default
+            // codepage, and non-ASCII text in the captured log - the line being synthesised,
+            // upstream's em dashes - reaches bug reports as mojibake (#13572).
+            StandardOutputEncoding = Encoding.UTF8,
+            StandardErrorEncoding = Encoding.UTF8,
             RedirectStandardError = true,
             StandardInputEncoding = Encoding.UTF8,
         };
@@ -260,7 +269,7 @@ public class OmniVoiceTtsCpp : ITtsEngine
             {
                 vulkanPath = Logic.VulkanHelper.TryFindBinFolder();
             }
-            if (!string.IsNullOrEmpty(vulkanPath) && psi.EnvironmentVariables["Path"] != null)
+            if (!string.IsNullOrEmpty(vulkanPath) && ProcessEnvironmentHelper.GetOrNull(psi, "Path") != null)
             {
                 psi.EnvironmentVariables["Path"] =
                     psi.EnvironmentVariables["Path"]?.TrimEnd(';') + ";" + vulkanPath;

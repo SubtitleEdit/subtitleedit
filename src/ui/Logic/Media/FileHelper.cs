@@ -208,45 +208,56 @@ namespace Nikse.SubtitleEdit.Logic.Media
 
         private static List<string> MakeOpenSubtitlePatterns(bool includeVideoFiles)
         {
+            return GetOpenSubtitleExtensions(includeVideoFiles).Select(p => "*" + p).ToList();
+        }
+
+        /// <summary>
+        /// The file extensions the "open subtitle" file picker offers, including the leading dot.
+        /// Also used when scanning a folder for files to add, so the picker and the folder scan can
+        /// never disagree about what counts as a subtitle file. Casing follows the formats' own
+        /// (a few use upper case), so compare these case-insensitively.
+        /// </summary>
+        public static List<string> GetOpenSubtitleExtensions(bool includeVideoFiles)
+        {
             var existingTypes = new HashSet<string>();
-            var patterns = new List<string>();
+            var extensions = new List<string>();
             foreach (var format in SubtitleFormat.AllSubtitleFormats)
             {
                 if (format.IsTextBased)
                 {
-                    AddExt(existingTypes, patterns, format.Extension);
+                    AddExt(existingTypes, extensions, format.Extension);
                     if (format.AlternateExtensions != null)
                     {
                         foreach (var ext in format.AlternateExtensions)
                         {
-                            AddExt(existingTypes, patterns, ext);
+                            AddExt(existingTypes, extensions, ext);
                         }
                     }
                 }
             }
 
-            AddExt(existingTypes, patterns, ".mks");
-            AddExt(existingTypes, patterns, ".pac");
-            AddExt(existingTypes, patterns, ".890");
-            AddExt(existingTypes, patterns, ".fpc");
+            AddExt(existingTypes, extensions, ".mks");
+            AddExt(existingTypes, extensions, ".pac");
+            AddExt(existingTypes, extensions, ".890");
+            AddExt(existingTypes, extensions, ".fpc");
 
             if (includeVideoFiles)
             {
-                AddExt(existingTypes, patterns, ".mkv");
-                AddExt(existingTypes, patterns, ".mp4");
-                AddExt(existingTypes, patterns, ".ts");
-                AddExt(existingTypes, patterns, ".sup");
+                AddExt(existingTypes, extensions, ".mkv");
+                AddExt(existingTypes, extensions, ".mp4");
+                AddExt(existingTypes, extensions, ".ts");
+                AddExt(existingTypes, extensions, ".sup");
             }
 
-            return patterns;
+            return extensions;
         }
 
-        private static void AddExt(HashSet<string> existingTypes, List<string> patterns, string ext)
+        private static void AddExt(HashSet<string> existingTypes, List<string> extensions, string ext)
         {
             if (!existingTypes.Contains(ext))
             {
                 existingTypes.Add(ext);
-                patterns.Add("*" + ext);
+                extensions.Add(ext);
             }
         }
 
@@ -260,23 +271,30 @@ namespace Nikse.SubtitleEdit.Logic.Media
             var options = new FilePickerSaveOptions
             {
                 Title = title,
-                SuggestedFileName = Path.GetFileName(suggestedFileName),
+                SuggestedFileName = MakePortalSafeSuggestedFileName(suggestedFileName, currentFormat.Extension),
                 FileTypeChoices = MakeSaveFilePickerFileTypes(currentFormat),
                 DefaultExtension = currentFormat.Extension.TrimStart('.')
             };
 
             await SetSuggestedStartLocation(topLevel, options, suggestedFileName);
 
-            var file = await NativePickers.SaveFilePickerAsync(topLevel, options);
-
-            if (file != null)
+            for (var attempt = 0; ; attempt++)
             {
-                return file.Path.LocalPath;
-            }
+                var file = await NativePickers.SaveFilePickerAsync(topLevel, options);
+                if (file == null)
+                {
+                    return string.Empty;
+                }
 
-            return string.Empty;
+                var fileName = file.Path.LocalPath;
+                if (attempt >= MaxPortalNameRetries ||
+                    !NeedsPortalGrantedName(fileName, options, AddDefaultExtension(Path.GetFileName(fileName), currentFormat.Extension)))
+                {
+                    return fileName;
+                }
+            }
         }
-        
+
         public async Task<FileHelperSubtitleSavePickerResult?> PickSaveSubtitleFileAs(
             Visual sender,
             SubtitleFormat currentFormat,
@@ -290,29 +308,105 @@ namespace Nikse.SubtitleEdit.Logic.Media
             var options = new FilePickerSaveOptions
             {
                 Title = title,
-                SuggestedFileName = Path.GetFileName(suggestedFileName),
+                // Pre-fill with the same extension rule the result goes through below
+                // (AddMissingExtension), so under the document portal the granted name is
+                // final-safe when the user keeps the suggestion (see NeedsPortalGrantedName).
+                SuggestedFileName = DocumentPortal.IsSandboxed
+                    ? AddMissingExtension(Path.GetFileName(suggestedFileName), currentFormat.Extension)
+                    : Path.GetFileName(suggestedFileName),
                 FileTypeChoices = filePickerFileTypes,
                 SuggestedFileType = defaultChoice,
             };
 
             await SetSuggestedStartLocation(topLevel, options, suggestedFileName);
 
-            // Use SaveFilePickerWithResultAsync instead of SaveFilePickerAsync
-            var result = await topLevel.StorageProvider.SaveFilePickerWithResultAsync(options);
-
-            if (result.File == null)
+            for (var attempt = 0; ; attempt++)
             {
-                return null;
+                // Use SaveFilePickerWithResultAsync instead of SaveFilePickerAsync
+                var result = await topLevel.StorageProvider.SaveFilePickerWithResultAsync(options);
+
+                if (result.File == null)
+                {
+                    return null;
+                }
+
+                var subtitleFormat = SubtitleFormat.AllSubtitleFormats
+                    .FirstOrDefault(f => result.SelectedFileType?.Name == f.Name) ?? currentFormat;
+
+                var fileName = AddMissingExtension(result.File.Path.LocalPath, subtitleFormat.Extension);
+                if (attempt < MaxPortalNameRetries &&
+                    NeedsPortalGrantedName(result.File.Path.LocalPath, options, Path.GetFileName(fileName)))
+                {
+                    if (result.SelectedFileType != null)
+                    {
+                        options.SuggestedFileType = result.SelectedFileType;
+                    }
+
+                    continue;
+                }
+
+                return new FileHelperSubtitleSavePickerResult
+                {
+                    FileName = fileName,
+                    SubtitleFormat = subtitleFormat,
+                };
+            }
+        }
+
+        private const int MaxPortalNameRetries = 2;
+
+        /// <summary>
+        /// Under the Flatpak document portal only the exact file name granted in the save
+        /// dialog can be written - a different name in the granted folder is stranded as a
+        /// hidden ".xdp-&lt;name&gt;-&lt;random&gt;" temp file, so an extension appended after the
+        /// dialog has closed never materializes (issue #13308). When the picked name differs
+        /// from the dialog's pre-filled name (meaning the granted name may lack the extension
+        /// that was appended afterwards), put the fully-extensioned name into
+        /// <paramref name="options"/> and return true so the caller re-opens the dialog and
+        /// the portal grants the final name.
+        /// </summary>
+        private static bool NeedsPortalGrantedName(string pickedFileName, FilePickerSaveOptions options, string wantedFileName)
+        {
+            if (!DocumentPortal.IsPortalPath(pickedFileName))
+            {
+                return false;
             }
 
-            var subtitleFormat = SubtitleFormat.AllSubtitleFormats
-                .FirstOrDefault(f => result.SelectedFileType?.Name == f.Name) ?? currentFormat;
-            
-            return new FileHelperSubtitleSavePickerResult
+            var pickedName = Path.GetFileName(pickedFileName);
+            if (pickedName == wantedFileName && pickedName == options.SuggestedFileName)
             {
-                FileName = AddMissingExtension(result.File.Path.LocalPath, subtitleFormat.Extension),
-                SubtitleFormat = subtitleFormat,
-            };
+                // No extension is pending and the user kept the pre-filled name, so the
+                // granted name is already the final one.
+                return false;
+            }
+
+            options.SuggestedFileName = wantedFileName;
+            return true;
+        }
+
+        /// <summary>
+        /// The portal save dialog grants exactly the file name shown in its name box, so under
+        /// Flatpak the suggestion must already carry the extension (see NeedsPortalGrantedName).
+        /// Elsewhere the suggestion is passed through unchanged.
+        /// </summary>
+        private static string MakePortalSafeSuggestedFileName(string suggestedFileName, string extension)
+        {
+            var name = Path.GetFileName(suggestedFileName);
+            return DocumentPortal.IsSandboxed ? AddDefaultExtension(name, extension) : name;
+        }
+
+        /// <summary>
+        /// Mirrors Avalonia's post-dialog DefaultExtension handling: the extension is only
+        /// added when the file name has none at all.
+        /// </summary>
+        private static string AddDefaultExtension(string fileName, string extension)
+        {
+            if (string.IsNullOrEmpty(fileName) || string.IsNullOrEmpty(extension) || Path.HasExtension(fileName))
+            {
+                return fileName;
+            }
+
+            return fileName + (extension.StartsWith('.') ? extension : "." + extension);
         }
 
         /// <summary>
@@ -395,21 +489,28 @@ namespace Nikse.SubtitleEdit.Logic.Media
             var options = new FilePickerSaveOptions
             {
                 Title = title,
-                SuggestedFileName = Path.GetFileName(suggestedFileName),
+                SuggestedFileName = MakePortalSafeSuggestedFileName(suggestedFileName, extension),
                 FileTypeChoices = MakeSaveFilePickerFileTypes(extension, extension),
                 DefaultExtension = extension.TrimStart('.')
             };
 
             await SetSuggestedStartLocation(topLevel, options, suggestedFileName);
 
-            var file = await NativePickers.SaveFilePickerAsync(topLevel, options);
-
-            if (file != null)
+            for (var attempt = 0; ; attempt++)
             {
-                return file.Path.LocalPath;
-            }
+                var file = await NativePickers.SaveFilePickerAsync(topLevel, options);
+                if (file == null)
+                {
+                    return string.Empty;
+                }
 
-            return string.Empty;
+                var fileName = file.Path.LocalPath;
+                if (attempt >= MaxPortalNameRetries ||
+                    !NeedsPortalGrantedName(fileName, options, AddDefaultExtension(Path.GetFileName(fileName), extension)))
+                {
+                    return fileName;
+                }
+            }
         }
 
         public Task<string> PickSaveFile(
@@ -432,21 +533,28 @@ namespace Nikse.SubtitleEdit.Logic.Media
             var options = new FilePickerSaveOptions
             {
                 Title = title,
-                SuggestedFileName = Path.GetFileName(suggestedFileName),
+                SuggestedFileName = MakePortalSafeSuggestedFileName(suggestedFileName, defaultExtension),
                 FileTypeChoices = MakeSaveFilePickerFileTypes(fileTypes),
                 DefaultExtension = defaultExtension.TrimStart('.'),
             };
 
             await SetSuggestedStartLocation(topLevel, options, suggestedFileName);
 
-            var file = await NativePickers.SaveFilePickerAsync(topLevel, options);
-
-            if (file != null)
+            for (var attempt = 0; ; attempt++)
             {
-                return file.Path.LocalPath;
-            }
+                var file = await NativePickers.SaveFilePickerAsync(topLevel, options);
+                if (file == null)
+                {
+                    return string.Empty;
+                }
 
-            return string.Empty;
+                var fileName = file.Path.LocalPath;
+                if (attempt >= MaxPortalNameRetries ||
+                    !NeedsPortalGrantedName(fileName, options, AddDefaultExtension(Path.GetFileName(fileName), defaultExtension)))
+                {
+                    return fileName;
+                }
+            }
         }
 
         private static List<FilePickerFileType> MakeSaveFilePickerFileTypes(IReadOnlyList<(string Name, string Extension)> fileTypes)

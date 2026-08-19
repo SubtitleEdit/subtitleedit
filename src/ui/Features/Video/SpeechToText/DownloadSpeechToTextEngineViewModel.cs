@@ -68,7 +68,6 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
     public bool Qwen3AsrUseVulkan { get; set; }
 
     private readonly IWhisperDownloadService _whisperDownloadService;
-    private readonly IChatLlmDownloadService _chatLlmDownloadService;
     private readonly IQwen3AsrCppDownloadService _qwen3AsrCppDownloadService;
     private readonly ICrispAsrDownloadService _crispAsrDownloadService;
     private Task? _downloadTask;
@@ -84,13 +83,11 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
     public DownloadSpeechToTextEngineViewModel(
         IWhisperDownloadService whisperDownloadService,
         IZipUnpacker zipUnpacker,
-        IChatLlmDownloadService chatLlmDownloadService,
         IQwen3AsrCppDownloadService qwen3AsrCppDownloadService,
         ICrispAsrDownloadService crispAsrDownloadService)
     {
         _whisperDownloadService = whisperDownloadService;
         _zipUnpacker = zipUnpacker;
-        _chatLlmDownloadService = chatLlmDownloadService;
         _qwen3AsrCppDownloadService = qwen3AsrCppDownloadService;
         _crispAsrDownloadService = crispAsrDownloadService;
 
@@ -270,7 +267,7 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
                 TitleText = Se.Language.Video.AudioToText.UnpackingSpeechToTextEngine;
                 Unpack(folder, skipFolder);
 
-                if (Engine is not (ChatLlmCppEngine or Qwen3AsrCppEngine))
+                if (Engine is not Qwen3AsrCppEngine)
                 {
                     DownloadAndUnpackSileroVad(folder);
                 }
@@ -541,11 +538,6 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
             var dir = Engine.GetAndCreateWhisperFolder();
             var tempFileName = Path.Combine(dir, Engine.Name + ".7z");
             _downloadTask = _whisperDownloadService.DownloadWhisperPurfviewFasterWhisperXxl(tempFileName, downloadProgress, _cancellationTokenSource.Token);
-        }
-        else if (Engine is ChatLlmCppEngine)
-        {
-            var dir = Engine.GetAndCreateWhisperFolder();
-            _downloadTask = _chatLlmDownloadService.DownloadEngine(_downloadStream, downloadProgress, _cancellationTokenSource.Token);
         }
         else if (Engine is Qwen3AsrCppEngine)
         {

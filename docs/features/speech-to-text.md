@@ -90,6 +90,14 @@ Click the **Advanced** button to configure custom command-line arguments for the
 
 Advanced settings are stored per engine, so you can keep separate parameters for Whisper CPP, Qwen3 ASR, Crisp ASR, and other engines.
 
+### Voice activity detection with Crisp ASR Cohere and Mega
+
+For the **Cohere** and **Mega** backends, Subtitle Edit adds `--vad` and the bundled Silero VAD model to the command line by default. Crisp ASR turns VAD on for these models by itself on longer audio, so passing the bundled model mainly keeps Crisp ASR from downloading its own copy in the middle of a transcription.
+
+VAD usually gives tighter timings, but on some material it drops quiet speech and clips the first word of a line. Crisp ASR has no `--no-vad` switch, so VAD is turned off by asking for fixed chunking instead: add `--chunk-seconds 30` (or `-ck 30`) to the advanced parameters, and Subtitle Edit leaves `--vad` out of the command line entirely. Expect the trade-off that comes with it - with VAD off, long stretches of silence or music can produce invented lines.
+
+To keep VAD and only change how it behaves, put `--vad` in the advanced parameters yourself (the **Enable VAD** button fills in the flag and the model path). An explicit `--vad` wins over `--chunk-seconds`, so the two can be combined.
+
 ## Post-Processing Settings
 
 Click the **Post-processing** button to configure:

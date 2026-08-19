@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryAdjustAlpha;
 
-public partial class BinaryAdjustAlphaViewModel : ObservableObject, IDisposable
+public partial class BinaryAdjustAlphaViewModel : ObservableObject, IDisposable, IClosingCleanup
 {
     [ObservableProperty] private double _alphaAdjustment;
     [ObservableProperty] private double _transparencyThreshold;
@@ -186,6 +186,16 @@ public partial class BinaryAdjustAlphaViewModel : ObservableObject, IDisposable
             e.Handled = true;
             Window?.Close();
         }
+    }
+
+    /// <summary>
+    /// Nothing called <see cref="Dispose"/>: the central close hook in
+    /// <see cref="UiUtil.InitializeWindow"/> only honors <see cref="IClosingCleanup"/>, so the
+    /// preview bitmap was leaked on every visit to this dialog.
+    /// </summary>
+    public void OnClosingCleanup()
+    {
+        Dispose();
     }
 
     public void Dispose()

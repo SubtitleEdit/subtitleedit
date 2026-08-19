@@ -10,7 +10,7 @@ public class CrispEmbedEngineTests
     {
         var backends = CrispEmbedEngine.GetBackends();
 
-        Assert.Equal(new[] { "PP-OCRv6", "GLM-OCR", "GOT-OCR2", "Qwen3-VL-2B" }, backends.Select(p => p.Name));
+        Assert.Equal(new[] { "PP-OCRv6", "GLM-OCR", "GOT-OCR2", "Qwen3-VL-2B", "DeepSeek-OCR-2" }, backends.Select(p => p.Name));
     }
 
     [Fact]
@@ -86,9 +86,14 @@ public class CrispEmbedEngineTests
             return;
         }
 
-        // The cause of SubtitleEdit issue #13205: the Linux builds link against OpenBLAS but do
-        // not ship it, so the loader aborts before the server can say anything itself.
-        Assert.Contains("OpenBLAS", CrispEmbedOcr.GetExitCodeHint(127));
+        // 127 = the loader could not resolve a dependency before the server could report
+        // anything itself. The OpenBLAS cause behind #13205 was fixed upstream in v0.17.5, so
+        // the hint must not send users off to install it; glibc is the remaining cause.
+        var hint127 = CrispEmbedOcr.GetExitCodeHint(127);
+        Assert.Contains("shared library", hint127);
+        Assert.Contains("glibc", hint127);
+        Assert.DoesNotContain("OpenBLAS", hint127);
+        Assert.DoesNotContain("libopenblas", hint127);
         Assert.Contains("executed", CrispEmbedOcr.GetExitCodeHint(126));
     }
 
@@ -99,6 +104,16 @@ public class CrispEmbedEngineTests
     public void GetExitCodeHint_IsEmptyForCodesWithNothingToAdd(int exitCode)
     {
         Assert.Equal(string.Empty, CrispEmbedOcr.GetExitCodeHint(exitCode));
+    }
+
+    [Theory]
+    [InlineData("Line one\n    Line two indented", "Line one\nLine two indented")]
+    [InlineData("  padded  ", "padded")]
+    [InlineData("One\r\nTwo", "One\nTwo")]
+    [InlineData("", "")]
+    public void NormalizeServerText_TrimsEachLine(string input, string expected)
+    {
+        Assert.Equal(expected.Replace("\n", Environment.NewLine), CrispEmbedOcr.NormalizeServerText(input));
     }
 
     [Fact]

@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
+using SkiaSharp;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
@@ -26,6 +27,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         public List<Paragraph> Paragraphs;
         public List<Paragraph> GetParagraphs() => Paragraphs;
 
+        /// <summary>
+        /// Color lookup table for <see cref="SubPictures"/>, when the VobSub sample entry
+        /// carries one - null means the four default colors are used.
+        /// </summary>
+        public List<SKColor> VobSubPalette { get; private set; }
+
         private List<Cea608.CcData> _cea608CcData = new List<Cea608.CcData>();
         private Dictionary<uint, SampleToChunkMap> _stscLookup;
 
@@ -33,6 +40,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         // 0xFFFFFFFF) must not expand into an OOM-sized list. Far above any real sample
         // count (5M samples is ~23 hours at 60 fps).
         private const int MaxRunLengthEntries = 5_000_000;
+
+        // Text subtitle samples are small; a larger declared size is malformed
+        private const uint MaxTextSampleSize = 10_000_000;
 
         public Stbl(Stream fs, ulong maximumLength, ulong timeScale, string handlerType, Mdia mdia)
         {
@@ -124,6 +134,42 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                         }
                     }
                 }
+                else if (Name == "stz2") // compact sample sizes
+                {
+                    // ISO/IEC 14496-12 8.7.3.3: same information as "stsz", with the entries
+                    // packed into 4, 8 or 16 bits each instead of a full word. Bento4's
+                    // mp4compact rewrites a file this way, and without this the track came out
+                    // with no sample sizes at all, i.e. no subtitles.
+                    Buffer = new byte[Size - 4];
+                    fs.ReadFully(Buffer, 0, Buffer.Length);
+                    var fieldSize = Buffer[7]; // 3 bytes reserved, then the field size
+                    var sampleCount = GetUInt(8);
+                    StszSampleCount = sampleCount;
+
+                    if (fieldSize == 4 || fieldSize == 8 || fieldSize == 16)
+                    {
+                        var available = Buffer.Length - 12;
+                        var maxEntries = fieldSize == 4 ? available * 2 : available / (fieldSize / 8);
+                        var entries = (int)Math.Min(Math.Min(sampleCount, (uint)maxEntries), MaxRunLengthEntries);
+                        SampleSizes.Capacity = entries;
+                        for (var i = 0; i < entries; i++)
+                        {
+                            switch (fieldSize)
+                            {
+                                case 4:
+                                    var b = Buffer[12 + i / 2];
+                                    SampleSizes.Add((uint)(i % 2 == 0 ? b >> 4 : b & 0x0F));
+                                    break;
+                                case 8:
+                                    SampleSizes.Add(Buffer[12 + i]);
+                                    break;
+                                default:
+                                    SampleSizes.Add((uint)GetWord(12 + i * 2));
+                                    break;
+                            }
+                        }
+                    }
+                }
                 else if (Name == "stts") // sample table time to sample map
                 {
                     //https://developer.apple.com/library/mac/#documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-SW1
@@ -195,6 +241,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 }
 
                 fs.Seek((long)Position, SeekOrigin.Begin);
+            }
+
+            if (handlerType == "subp" && Stsd?.Name == "mp4s")
+            {
+                VobSubPalette = Mp4VobSubPalette.FromMp4sSampleEntry(Stsd.SampleEntryPayload);
             }
 
             if (handlerType != "soun")
@@ -359,13 +410,29 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                         }
                         else if (stsdCodec == "stpp") // TTML/IMSC1 in MP4 (ISO 14496-30)
                         {
-                            if (sampleSize <= 10_000_000)
+                            if (sampleSize <= MaxTextSampleSize)
                             {
                                 var sampleData = new byte[sampleSize];
                                 fs.Seek((long)sampleOffset, SeekOrigin.Begin);
                                 if (fs.Read(sampleData, 0, sampleData.Length) == sampleData.Length)
                                 {
                                     AddTtmlSample(sampleData, before * 1000.0, (totalTime - before) * 1000.0, paragraphs);
+                                }
+                            }
+                        }
+                        else if (Mp4TextSampleHelper.IsSimpleTextCodec(stsdCodec)) // text stream in MP4 (ISO 14496-30)
+                        {
+                            if (sampleSize <= MaxTextSampleSize)
+                            {
+                                var sampleData = new byte[sampleSize];
+                                fs.Seek((long)sampleOffset, SeekOrigin.Begin);
+                                if (fs.Read(sampleData, 0, sampleData.Length) == sampleData.Length)
+                                {
+                                    var text = Mp4TextSampleHelper.ReadSimpleTextSample(sampleData);
+                                    if (!string.IsNullOrEmpty(text))
+                                    {
+                                        paragraphs.Add(new Paragraph(text, before * 1000.0, totalTime * 1000.0));
+                                    }
                                 }
                             }
                         }
@@ -389,24 +456,33 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                                         buffer = new byte[textSize + 2];
                                         fs.Seek((long)sampleOffset, SeekOrigin.Begin);
                                         fs.ReadFully(buffer, 0, buffer.Length);
-                                        SubPictures.Add(new SubPicture(buffer)); // TODO: Where is palette?
+                                        SubPictures.Add(new SubPicture(buffer));
                                         paragraphs.Add(p);
                                     }
                                 }
-                                else
+                                else if (_mdia.IsClosedCaption)
                                 {
                                     buffer = new byte[textSize];
                                     fs.ReadFully(buffer, 0, buffer.Length);
-                                    p.Text = GetString(buffer, 0, (int)textSize).TrimEnd();
-
-                                    if (_mdia.IsClosedCaption)
-                                    {
-                                        p.Text = MakeScenaristText(buffer);
-                                    }
+                                    p.Text = MakeScenaristText(buffer);
 
                                     if (!string.IsNullOrEmpty(p.Text))
                                     {
                                         paragraphs.Add(p);
+                                    }
+                                }
+                                else if (sampleSize <= MaxTextSampleSize)
+                                {
+                                    // the whole sample, so the tx3g modifier boxes after the text can be read too
+                                    var sampleData = new byte[sampleSize];
+                                    fs.Seek((long)sampleOffset, SeekOrigin.Begin);
+                                    if (fs.Read(sampleData, 0, sampleData.Length) == sampleData.Length)
+                                    {
+                                        p.Text = Mp4TextSampleHelper.ReadTx3gSampleText(sampleData);
+                                        if (!string.IsNullOrEmpty(p.Text))
+                                        {
+                                            paragraphs.Add(p);
+                                        }
                                     }
                                 }
                             }

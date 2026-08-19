@@ -29,4 +29,7 @@ public enum BatchConvertFunctionType
     AutoBalanceLines,
     SortBy,
     AdjustImageColors,
+    BeautifyTimeCodes,
+    SnapTimeCodesToFrames,
+    ConvertColorsToDialog,
 }

@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (string line in lines)
             {
                 string s = line.Trim();
-                if (s.IndexOf(':') > 0 && RegexTimeCodes.Match(s).Success && !UnknownSubtitle59.RegexTimeCodes.IsMatch(s))
+                if (s.IndexOf(':') > 0 && RegexTimeCodes.IsMatch(s) && !UnknownSubtitle59.RegexTimeCodes.IsMatch(s))
                 {
                     if (p != null && !string.IsNullOrEmpty(p.Text))
                     {

@@ -122,6 +122,23 @@ public class LanguageOcr
     public string LlamaCppDownloadEngineAndModelPrompt { get; set; }
     public string LlamaCppDownloadEnginePrompt { get; set; }
     public string LlamaCppDownloadModelPrompt { get; set; }
+    public string CrispEmbedNotDownloaded { get; set; }
+    public string CrispEmbedReturnedNoText { get; set; }
+    public string CrispEmbedSettingsTitle { get; set; }
+    public string CrispEmbedDescription { get; set; }
+    public string TrainNOcrDatabase { get; set; }
+    public string StartTraining { get; set; }
+    public string AbortTraining { get; set; }
+    public string TrainingOptions { get; set; }
+    public string CharactersToTrain { get; set; }
+    public string LetterCombinationsToTrain { get; set; }
+    public string ImportCharactersFromSubtitleFile { get; set; }
+    public string NumberOfLineSegments { get; set; }
+    public string AlsoTrainBold { get; set; }
+    public string AlsoTrainItalic { get; set; }
+    public string TrainingXLearnedYSkipped { get; set; }
+    public string TrainingDoneXLearned { get; set; }
+    public string SelectAtLeastOneFont { get; set; }
 
     public LanguageOcr()
     {
@@ -246,5 +263,23 @@ public class LanguageOcr
         LlamaCppDownloadEngineAndModelPrompt = "llama.cpp requires the llama-server engine and the selected OCR model to be downloaded. Download now?";
         LlamaCppDownloadEnginePrompt = "llama.cpp requires the llama-server engine to be downloaded. Download now?";
         LlamaCppDownloadModelPrompt = "llama.cpp requires the selected OCR model to be downloaded. Download now?";
+        CrispEmbedNotDownloaded = "CrispEmbed engine/model not downloaded - download via batch convert settings";
+        CrispEmbedReturnedNoText = "CrispEmbed returned no text - check the model";
+        CrispEmbedSettingsTitle = "CrispEmbed settings";
+        CrispEmbedDescription = "Local OCR engine with multiple model backends - download the engine and the models here.";
+
+        TrainNOcrDatabase = "Train nOCR database...";
+        StartTraining = "Start training";
+        AbortTraining = "Abort training";
+        TrainingOptions = "Training options";
+        CharactersToTrain = "Characters to train";
+        LetterCombinationsToTrain = "Letter combinations that might be split to one image";
+        ImportCharactersFromSubtitleFile = "Import characters from subtitle file...";
+        NumberOfLineSegments = "Number of line segments";
+        AlsoTrainBold = "Also train bold";
+        AlsoTrainItalic = "Also train italic";
+        TrainingXLearnedYSkipped = "Training \"{0}\" - {1:#,##0} characters learned, {2:#,##0} skipped";
+        TrainingDoneXLearned = "Training done - {0:#,##0} characters learned";
+        SelectAtLeastOneFont = "Please select at least one font";
     }
 }

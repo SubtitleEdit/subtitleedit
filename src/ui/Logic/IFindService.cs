@@ -17,13 +17,20 @@ public interface IFindService
 
     bool WholeWord { get; set; }
     FindMode CurrentFindMode { get; set; }
+
+    /// <summary>
+    /// Which columns the next find/replace covers. Sticky, so a find-next after the replace window
+    /// set it keeps the same scope; the find window resets it to <see cref="FindScope.TextAndOriginal"/>.
+    /// </summary>
+    FindScope CurrentScope { get; set; }
+
     IReadOnlyList<string> SearchHistory { get; }
 
     void Initialize(List<string> textLines, int currentLineIndex, bool wholeWord, FindMode findMode, List<string>? originalTextLines = null);
     int FindNext(string searchText, List<string> textLines, int currentLineIndex, int startTextIndex, List<string>? originalTextLines = null, bool startInOriginal = false);
     int FindPrevious(string searchText, List<string> textLines, int currentLineIndex, int startTextIndex, List<string>? originalTextLines = null, bool startInOriginal = false);
     int ReplaceAll(string searchText, string replaceText);
-    int Count(string searchText, IReadOnlyList<string> textLines, bool wholeWord, FindMode findMode, IReadOnlyList<string>? originalTextLines = null);
+    int Count(string searchText, IReadOnlyList<string> textLines, bool wholeWord, FindMode findMode, IReadOnlyList<string>? originalTextLines = null, FindScope scope = FindScope.TextAndOriginal);
     List<(int LineIndex, int TextIndex, string FoundText)> FindAll(string searchText);
     void Reset();
     void RemoveFromSearchHistory(string searchText);

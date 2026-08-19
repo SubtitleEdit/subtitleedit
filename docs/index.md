@@ -98,6 +98,9 @@ Subtitle Edit is a free, open-source editor for video subtitles. This is the doc
 - [ASSA Apply Advanced Effects](features/assa-apply-advanced-effects.md) — Apply cinematic and creative animation effects
 - [ASSA Apply Custom Override Tags](features/assa-override-tags.md) — Apply custom tags
 
+### WebVTT
+- [WebVTT Styles and Voices](features/webvtt-styles.md) — Manage cue classes, voices and browser preview
+
 ### Options
 - [Settings](features/settings.md) — Application settings
 - [Shortcuts](features/shortcuts.md) — Keyboard shortcuts

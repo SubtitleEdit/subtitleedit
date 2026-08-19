@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Features.Ocr.Engines;
+﻿using Nikse.SubtitleEdit.Features.Ocr.Download;
+using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using Nikse.SubtitleEdit.Logic.Config;
 using SkiaSharp;
 using System;
@@ -31,64 +32,110 @@ public partial class PaddleOcr
     private readonly StringBuilder _errorOutput = new();
     private readonly Lock _errorLock = new();
 
-    public static List<string> UrlsWindowsCpu =
-        ["https://github.com/timminator/PaddleOCR-Standalone/releases/download/v1.4.0/PaddleOCR-CPU-v1.4.0.7z"];
+    // The pinned PaddleOCR-Standalone release. Bumping it means updating this one line and
+    // the file names below - and Se.PaddleOcrFolder when the underlying PaddleOCR version
+    // changes, so engine and models never mix across releases.
+    private const string StandaloneRelease = "https://github.com/timminator/PaddleOCR-Standalone/releases/download/v1.4.0/";
 
-    public static List<string> UrlsLinuxCpu =
-        ["https://github.com/timminator/PaddleOCR-Standalone/releases/download/v1.4.0/PaddleOCR-CPU-v1.4.0-Linux.7z"];
+    /// <summary>
+    /// One downloadable Paddle OCR archive: the file(s) to fetch, and the folder level inside
+    /// the archive that the extractor has to strip. Keeping the two together is what stops a
+    /// version bump from updating the URL but leaving the unpack looking for the old folder.
+    /// </summary>
+    public sealed record PaddleOcrArchive(IReadOnlyList<string> Urls, string RootFolderInArchive);
 
-    public static List<string> UrlsWindowsGpuCuda11 =
-    [
-        "https://github.com/timminator/PaddleOCR-Standalone/releases/download/v1.4.0/PaddleOCR-GPU-v1.4.0-CUDA-11.8.7z"
-    ];
+    public static PaddleOcrArchive GetArchive(PaddleOcrDownloadType downloadType)
+    {
+        return downloadType switch
+        {
+            PaddleOcrDownloadType.Models => Archive("PaddleOCR.PP-OCRv5.support.files.VideOCR.7z", "PaddleOCR.PP-OCRv5.support.files"),
+            PaddleOcrDownloadType.EngineCpu => Archive("PaddleOCR-CPU-v1.4.0.7z"),
+            PaddleOcrDownloadType.EngineGpu11 => Archive("PaddleOCR-GPU-v1.4.0-CUDA-11.8.7z"),
+            PaddleOcrDownloadType.EngineGpu12 => Archive("PaddleOCR-GPU-v1.4.0-CUDA-12.9.7z"),
+            PaddleOcrDownloadType.EngineCpuLinux => Archive("PaddleOCR-CPU-v1.4.0-Linux.7z"),
+            PaddleOcrDownloadType.EngineGpu11Linux => Archive("PaddleOCR-GPU-v1.4.0-CUDA-11.8-Linux.7z"),
 
-    public static List<string> UrlsWindowsGpuCuda12 =
-    [
-        "https://github.com/timminator/PaddleOCR-Standalone/releases/download/v1.4.0/PaddleOCR-GPU-v1.4.0-CUDA-12.9.7z"
-    ];
+            // Split into two volumes upstream. Both have to land in the same folder before the
+            // .001 is handed to the extractor - the download queue takes care of that.
+            PaddleOcrDownloadType.EngineGpu12Linux => Archive(
+                "PaddleOCR-GPU-v1.4.0-CUDA-12.9-Linux.7z.001",
+                "PaddleOCR-GPU-v1.4.0-CUDA-12.9-Linux",
+                "PaddleOCR-GPU-v1.4.0-CUDA-12.9-Linux.7z.002"),
 
-    public static List<string> UrlsLinuxGpu =
-    [
-        "https://github.com/timminator/PaddleOCR-Standalone/releases/download/v1.4.0/PaddleOCR-GPU-v1.4.0-CUDA-12.9-Linux.7z.001",
-        "https://github.com/timminator/PaddleOCR-Standalone/releases/download/v1.4.0/PaddleOCR-GPU-v1.4.0-CUDA-12.9-Linux.7z.002"
-    ];
+            _ => throw new ArgumentOutOfRangeException(nameof(downloadType), downloadType, "Unknown Paddle OCR download type"),
+        };
+    }
 
-    public static List<string> UrlsSupportFiles =
-    [
-        "https://github.com/timminator/PaddleOCR-Standalone/releases/download/v1.4.0/PaddleOCR.PP-OCRv5.support.files.VideOCR.7z"
-    ];
+    // The engine archives all wrap their content in a folder named after the archive itself,
+    // so the root folder is derived rather than repeated; the models archive is the one that
+    // does not follow that rule (".VideOCR" is in the file name only) and passes it in.
+    private static PaddleOcrArchive Archive(string fileName, string? rootFolderInArchive = null, params string[] extraFileNames)
+    {
+        var urls = new List<string>(1 + extraFileNames.Length) { StandaloneRelease + fileName };
+        foreach (var extraFileName in extraFileNames)
+        {
+            urls.Add(StandaloneRelease + extraFileName);
+        }
+
+        return new PaddleOcrArchive(urls, rootFolderInArchive ?? fileName[..fileName.IndexOf(".7z", StringComparison.Ordinal)]);
+    }
 
     private const string TextlineOrientationModelName = "PP-LCNet_x1_0_textline_ori";
 
-    private readonly List<string> LatinLanguageCodes = new List<string>
+    // The script groups below mirror LATIN_LANGS/ARABIC_LANGS/ESLAV_LANGS/CYRILLIC_LANGS/
+    // DEVANAGARI_LANGS in PaddleOCR 3.4 (paddleocr/_pipelines/ocr.py) - the version the
+    // bundled standalone engine is built from. Keep them in sync with GetLanguages(); a
+    // code offered in the dropdown but missing from every group here silently falls
+    // through to the Latin recognition model and OCRs to garbage.
+    private static readonly HashSet<string> LatinLanguageCodes = new HashSet<string>
     {
-        "af", "az", "bs", "cs", "cy", "da", "de", "es", "et", "fr", "ga",
-        "hr", "hu", "id", "is", "it", "ku", "la", "lt", "lv", "mi", "ms",
-        "mt", "nl", "no", "oc", "pi", "pl", "pt", "ro", "rs_latin", "sk",
-        "sl", "sq", "sv", "sw", "tl", "tr", "uz", "vi", "french", "german"
+        "af", "az", "bs", "ca", "cs", "cy", "da", "de", "es", "et", "eu",
+        "fi", "fr", "ga", "gl", "hr", "hu", "id", "is", "it", "ku", "la",
+        "lb", "lt", "lv", "mi", "ms", "mt", "nl", "no", "oc", "pi", "pl",
+        "pt", "qu", "rm", "ro", "rs_latin", "sk", "sl", "sq", "sv", "sw",
+        "tl", "tr", "uz", "vi", "french", "german"
     };
 
-    private readonly List<string> ArabicLanguageCodes = new List<string>
+    private static readonly HashSet<string> ArabicLanguageCodes = new HashSet<string>
     {
-        "ar", "fa", "ug", "ur"
+        "ar", "bal", "fa", "ps", "sd", "ug", "ur"
     };
 
-    private readonly List<string> EslavLanguageCodes = new List<string>
+    private static readonly HashSet<string> EslavLanguageCodes = new HashSet<string>
     {
         "ru", "be", "uk"
     };
 
-    private readonly List<string> CyrillicLanguageCodes = new List<string>
+    private static readonly HashSet<string> CyrillicLanguageCodes = new HashSet<string>
     {
         "rs_cyrillic", "bg", "mn", "abq", "ady", "kbd", "ava", "dar",
-        "inh", "che", "lbe", "lez", "tab"
+        "inh", "che", "lbe", "lez", "tab", "ba", "bua", "cv", "kaa",
+        "kk", "kv", "ky", "mhr", "mk", "mo", "os", "sah", "tg", "tt",
+        "tyv", "udm", "xal"
     };
 
-    private readonly List<string> DevanagariLanguageCodes = new List<string>
+    private static readonly HashSet<string> DevanagariLanguageCodes = new HashSet<string>
     {
         "hi", "mr", "ne", "bh", "mai", "ang", "bho", "mah",
         "sck", "new", "gom", "bgc", "sa"
     };
+
+    // The languages with their own single-language PP-OCRv5 recognition model.
+    private static readonly HashSet<string> OwnModelLanguageCodes = new HashSet<string>
+    {
+        "el", "ta", "te", "th"
+    };
+
+    internal static IReadOnlyCollection<string> GetLatinLanguageCodesForTest() => LatinLanguageCodes;
+
+    internal static IEnumerable<string> GetAllScriptGroupCodesForTest() =>
+        LatinLanguageCodes
+            .Concat(ArabicLanguageCodes)
+            .Concat(EslavLanguageCodes)
+            .Concat(CyrillicLanguageCodes)
+            .Concat(DevanagariLanguageCodes)
+            .Concat(OwnModelLanguageCodes)
+            .Distinct();
 
     public PaddleOcr()
     {
@@ -101,7 +148,11 @@ public partial class PaddleOcr
         _cancellationToken = new CancellationToken();
     }
 
-    private string GetRecName(string language, string mode)
+    // Only the recognition models shipped in "PaddleOCR.PP-OCRv5.support.files" are on
+    // disk - nothing is fetched per language. Returning a name that is not in that bundle
+    // points at a folder that does not exist, and the run then fails when PaddleX tries to
+    // read the model's inference.yml.
+    internal static string GetRecName(string language, string mode)
     {
         string recName;
         if (language == "ch" ||
@@ -113,7 +164,7 @@ public partial class PaddleOcr
         }
         else if (ArabicLanguageCodes.Contains(language))
         {
-            recName = "arabic_PP-OCRv3_mobile_rec";
+            recName = "arabic_PP-OCRv5_mobile_rec";
         }
         else if (EslavLanguageCodes.Contains(language))
         {
@@ -121,15 +172,24 @@ public partial class PaddleOcr
         }
         else if (CyrillicLanguageCodes.Contains(language))
         {
-            recName = "cyrillic_PP-OCRv3_mobile_rec";
+            recName = "cyrillic_PP-OCRv5_mobile_rec";
         }
         else if (DevanagariLanguageCodes.Contains(language))
         {
-            recName = "devanagari_PP-OCRv3_mobile_rec";
+            recName = "devanagari_PP-OCRv5_mobile_rec";
         }
         else if (language == "korean")
         {
             recName = "korean_PP-OCRv5_mobile_rec";
+        }
+        else if (OwnModelLanguageCodes.Contains(language))
+        {
+            recName = $"{language}_PP-OCRv5_mobile_rec";
+        }
+        else if (language == "ka")
+        {
+            // Georgian has no PP-OCRv5 recognition model yet.
+            recName = "ka_PP-OCRv3_mobile_rec";
         }
         else
         {
@@ -139,25 +199,16 @@ public partial class PaddleOcr
         return recName;
     }
 
-    private string GetDetectionName(string language, string mode)
+    internal static string GetDetectionName(string language, string mode)
     {
-        if (language == "ch" ||
-            language == "chinese_cht" ||
-            language == "en" ||
-            language == "japan" ||
-            language == "korean" ||
-            LatinLanguageCodes.Contains(language) ||
-            EslavLanguageCodes.Contains(language))
-        {
-            return $"PP-OCRv5_{mode}_det";
-        }
-        else
-        {
-            return "PP-OCRv3_mobile_det";
-        }
+        // Georgian is the one remaining PP-OCRv3 language; everything else recognizes
+        // with a PP-OCRv5 model and detects with the matching PP-OCRv5 detector.
+        return language == "ka"
+            ? "PP-OCRv3_mobile_det"
+            : $"PP-OCRv5_{mode}_det";
     }
 
-    private static SKBitmap MakeTransparentBlack(SKBitmap bitmap)
+    internal static SKBitmap MakeTransparentBlack(SKBitmap bitmap)
     {
         if (bitmap == null)
         {
@@ -174,7 +225,37 @@ public partial class PaddleOcr
             canvas.DrawBitmap(bitmap, 0, 0);
         }
 
-        // Get all pixels at once
+        // Runs per subtitle image inside the batch-OCR parallel loop. The old
+        // `workingBitmap.Pixels` get/set pair allocated an SKColor[Width*Height] (8 MB for a
+        // full-HD frame) and copied the whole image twice; for the 32-bit color types this is
+        // an in-place pass over the raw pixel words instead (alpha is the top byte in both
+        // Rgba8888 and Bgra8888, and opaque black is 0xFF000000 in both).
+        if (workingBitmap.ColorType is SKColorType.Rgba8888 or SKColorType.Bgra8888 &&
+            workingBitmap.GetPixels() != IntPtr.Zero)
+        {
+            unsafe
+            {
+                var basePtr = (byte*)workingBitmap.GetPixels();
+                var stride = workingBitmap.RowBytes;
+                var width = workingBitmap.Width;
+                for (var y = 0; y < workingBitmap.Height; y++)
+                {
+                    var row = (uint*)(basePtr + y * stride);
+                    for (var x = 0; x < width; x++)
+                    {
+                        if (row[x] >> 24 < 100)
+                        {
+                            row[x] = 0xFF000000;
+                        }
+                    }
+                }
+            }
+
+            workingBitmap.NotifyPixelsChanged();
+            return workingBitmap;
+        }
+
+        // Fallback for exotic color types: the original Pixels-based version.
         var colors = workingBitmap.Pixels;
         var blackOpaque = new SKColor(0, 0, 0, 255);
 
@@ -196,8 +277,6 @@ public partial class PaddleOcr
     public async Task OcrBatch(OcrEngineType engineType, List<PaddleOcrBatchInput> bitmaps, string language,
         string mode, IProgress<PaddleOcrBatchProgress> progress, CancellationToken cancellationToken)
     {
-        string detFilePrefix = MakeDetPrefix(language);
-        string recFilePrefix = MakeRecPrefix(language);
         var detName = GetDetectionName(language, mode);
         var recName = GetRecName(language, mode);
         _batchProgress = progress;
@@ -877,56 +956,6 @@ public partial class PaddleOcr
         return result;
     }
 
-    private string MakeRecPrefix(string language)
-    {
-        var recFilePrefix = language;
-        if (LatinLanguageCodes.Contains(language))
-        {
-            recFilePrefix = $"latin{Path.DirectorySeparatorChar}latin_PP-OCRv3_rec_infer";
-        }
-        else if (ArabicLanguageCodes.Contains(language))
-        {
-            recFilePrefix = $"arabic{Path.DirectorySeparatorChar}arabic_PP-OCRv4_rec_infer";
-        }
-        else if (CyrillicLanguageCodes.Contains(language))
-        {
-            recFilePrefix = $"cyrillic{Path.DirectorySeparatorChar}cyrillic_PP-OCRv3_rec_infer";
-        }
-        else if (DevanagariLanguageCodes.Contains(language))
-        {
-            recFilePrefix = $"devanagari{Path.DirectorySeparatorChar}devanagari_PP-OCRv4_rec_infer";
-        }
-        else if (language == "chinese_cht")
-        {
-            recFilePrefix = $"{language}{Path.DirectorySeparatorChar}{language}_PP-OCRv3_rec_infer";
-        }
-        else
-        {
-            recFilePrefix = $"{language}{Path.DirectorySeparatorChar}{language}_PP-OCRv4_rec_infer";
-        }
-
-        return recFilePrefix;
-    }
-
-    private static string MakeDetPrefix(string language)
-    {
-        var detFilePrefix = language;
-        if (language != "en" && language != "ch")
-        {
-            detFilePrefix = $"ml{Path.DirectorySeparatorChar}Multilingual_PP-OCRv3_det_infer";
-        }
-        else if (language == "ch")
-        {
-            detFilePrefix = $"{language}{Path.DirectorySeparatorChar}{language}_PP-OCRv4_det_infer";
-        }
-        else
-        {
-            detFilePrefix = $"{language}{Path.DirectorySeparatorChar}{language}_PP-OCRv3_det_infer";
-        }
-
-        return detFilePrefix;
-    }
-
     public static SKBitmap AddBorder(SKBitmap originalBitmap, int borderWidth, SKColor color)
     {
         // Calculate new dimensions
@@ -1093,11 +1122,15 @@ public partial class PaddleOcr
     }
 
 
+    // Every language PaddleOCR 3.4 supports with a recognition model that ships in the
+    // bundled support files. Adding a code here is enough to offer it - as long as the
+    // code is also listed in the matching script group above, so GetRecName picks the
+    // right model (PaddleOcrLanguageMappingTests guards that).
     public static List<OcrLanguage2> GetLanguages()
     {
         return new List<OcrLanguage2>
         {
-            new("abq", "Abkhazian"),
+            new("abq", "Abaza"),
             new("ady", "Adyghe"),
             new("af", "Afrikaans"),
             new("sq", "Albanian"),
@@ -1105,13 +1138,20 @@ public partial class PaddleOcr
             new("ar", "Arabic"),
             new("ava", "Avar"),
             new("az", "Azerbaijani"),
+            new("bal", "Balochi"),
+            new("ba", "Bashkir"),
+            new("eu", "Basque"),
             new("be", "Belarusian"),
             new("bho", "Bhojpuri"),
             new("bh", "Bihari"),
             new("bs", "Bosnian"),
             new("bg", "Bulgarian"),
+            new("bua", "Buriat"),
+            new("ca", "Catalan"),
+            new("che", "Chechen"),
             new("ch", "Chinese and English"),
             new("chinese_cht", "Chinese traditional"),
+            new("cv", "Chuvash"),
             new("hr", "Croatian"),
             new("cs", "Czech"),
             new("da", "Danish"),
@@ -1119,36 +1159,66 @@ public partial class PaddleOcr
             new("nl", "Dutch"),
             new("en", "English"),
             new("et", "Estonian"),
+            new("fi", "Finnish"),
             new("fr", "French"),
-            new("german", "German"),
+            new("gl", "Galician"),
+            new("ka", "Georgian"),
+            new("de", "German"),
+            new("el", "Greek"),
+            new("bgc", "Haryanvi"),
+            new("hi", "Hindi"),
+            new("hu", "Hungarian"),
+            new("is", "Icelandic"),
+            new("id", "Indonesian"),
+            new("inh", "Ingush"),
+            new("ga", "Irish"),
+            new("it", "Italian"),
             new("japan", "Japanese"),
             new("kbd", "Kabardian"),
+            new("xal", "Kalmyk"),
+            new("kaa", "Karakalpak"),
+            new("kk", "Kazakh"),
+            new("kv", "Komi"),
+            new("gom", "Konkani"),
             new("korean", "Korean"),
             new("ku", "Kurdish"),
+            new("ky", "Kyrgyz"),
             new("lbe", "Lak"),
+            new("la", "Latin"),
             new("lv", "Latvian"),
             new("lez", "Lezghian"),
             new("lt", "Lithuanian"),
+            new("lb", "Luxembourgish"),
+            new("mk", "Macedonian"),
             new("mah", "Magahi"),
             new("mai", "Maithili"),
             new("ms", "Malay"),
             new("mt", "Maltese"),
             new("mi", "Maori"),
+            new("mhr", "Mari"),
             new("mr", "Marathi"),
+            new("mo", "Moldovan"),
             new("mn", "Mongolian"),
             new("sck", "Nagpur"),
             new("ne", "Nepali"),
             new("new", "Newari"),
             new("no", "Norwegian"),
             new("oc", "Occitan"),
+            new("os", "Ossetian"),
+            new("pi", "Pali"),
+            new("ps", "Pashto"),
             new("fa", "Persian"),
             new("pl", "Polish"),
             new("pt", "Portuguese"),
+            new("qu", "Quechua"),
             new("ro", "Romanian"),
+            new("rm", "Romansh"),
             new("ru", "Russian"),
+            new("sah", "Sakha"),
             new("sa", "Sanskrit"),
             new("rs_cyrillic", "Serbian (cyrillic)"),
             new("rs_latin", "Serbian (latin)"),
+            new("sd", "Sindhi"),
             new("sk", "Slovak"),
             new("sl", "Slovenian"),
             new("es", "Spanish"),
@@ -1156,9 +1226,14 @@ public partial class PaddleOcr
             new("sv", "Swedish"),
             new("tab", "Tabassaran"),
             new("tl", "Tagalog"),
+            new("tg", "Tajik"),
             new("ta", "Tamil"),
+            new("tt", "Tatar"),
             new("te", "Telugu"),
+            new("th", "Thai"),
             new("tr", "Turkish"),
+            new("tyv", "Tuvinian"),
+            new("udm", "Udmurt"),
             new("uk", "Ukrainian"),
             new("ur", "Urdu"),
             new("ug", "Uyghur"),
@@ -1167,4 +1242,17 @@ public partial class PaddleOcr
             new("cy", "Welsh"),
         }.OrderBy(p => p.Name).ToList();
     }
+
+    /// <summary>
+    /// Maps the legacy language codes the dropdown used to offer onto the ISO codes it
+    /// offers now, so an already saved setting still selects the same language. PaddleOCR
+    /// accepts both spellings, so only the stored value needs translating.
+    /// </summary>
+    public static string NormalizeLanguageCode(string? code) => code switch
+    {
+        "german" => "de",
+        "french" => "fr",
+        null => string.Empty,
+        _ => code,
+    };
 }

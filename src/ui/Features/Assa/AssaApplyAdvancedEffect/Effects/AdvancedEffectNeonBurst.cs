@@ -32,26 +32,27 @@ public class AdvancedEffectNeonBurst : IAdvancedEffectDisplay
             string[] neonColors = { "&H00FF00&", "&HFFFF00&", "&HFF00FF&", "&H00FFFF&" };
             string chosenColor = neonColors[rng.Next(neonColors.Length)];
 
+            // The two events overlap in time at the same (style-derived) position, so they
+            // must sit on different ASSA layers: same-layer unpositioned events trigger
+            // libass collision avoidance, which would stack them vertically instead of
+            // rendering the glow behind the core. Cloning from the source line keeps its
+            // style, actor and margins.
+            var cleanText = HtmlUtil.RemoveHtmlTags(sub.Text, true);
+
             // 2. CREATE THE GLOW LAYER (The 'Bloom')
-            // We create a duplicate line that sits behind the text with a heavy blur
-            var glowLayer = new SubtitleLineViewModel()
-            {
-                StartTime = sub.StartTime,
-                EndTime = sub.EndTime,
-                // Deep neon glow: High blur, matching color, slightly transparent
-                Text = "{\\bord5\\blur8\\shad0\\1c" + chosenColor + "\\3c" + chosenColor + "\\alpha&H60&" +
-                       GetPopTags(0, 150) + "}" + HtmlUtil.RemoveHtmlTags(sub.Text, true) // CleanText removes existing tags
-            };
+            // A duplicate line that sits behind the text with a heavy blur
+            var glowLayer = new SubtitleLineViewModel(sub, generateNewId: true);
+            glowLayer.Layer = sub.Layer;
+            // Deep neon glow: High blur, matching color, slightly transparent
+            glowLayer.Text = "{\\bord5\\blur8\\shad0\\1c" + chosenColor + "\\3c" + chosenColor + "\\alpha&H60&" +
+                             GetPopTags(0, 150) + "}" + cleanText;
 
             // 3. CREATE THE SHARP TOP LAYER (The 'Core')
-            var coreLayer = new SubtitleLineViewModel()
-            {
-                StartTime = sub.StartTime,
-                EndTime = sub.EndTime,
-                // Sharp white core with a thin neon border
-                Text = "{\\bord2\\blur0.5\\shad0\\1c&HFFFFFF&\\3c" + chosenColor +
-                       GetPopTags(0, 150) + "}" + HtmlUtil.RemoveHtmlTags(sub.Text, true)
-            };
+            var coreLayer = new SubtitleLineViewModel(sub, generateNewId: true);
+            coreLayer.Layer = sub.Layer + 1;
+            // Sharp white core with a thin neon border
+            coreLayer.Text = "{\\bord2\\blur0.5\\shad0\\1c&HFFFFFF&\\3c" + chosenColor +
+                             GetPopTags(0, 150) + "}" + cleanText;
 
             result.Add(glowLayer);
             result.Add(coreLayer);

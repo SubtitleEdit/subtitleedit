@@ -1,0 +1,6 @@
+🗣️ Voxtral Mini 3B (Mistral)
+
+Type: Whisper-style audio encoder + Ministral 3B LLM decoder
+Focus: 🌍 English, French, German, Spanish, Italian, Portuguese, Dutch, Hindi
+Extras: no native timestamps - a CTC forced aligner supplies them
+

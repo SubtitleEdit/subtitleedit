@@ -1,9 +1,10 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Features.Translate.LlamaCppEngineSettings;
@@ -40,7 +41,9 @@ public partial class AiReviewViewModel : ObservableObject
     [ObservableProperty] private string _languageDisplay;
     [ObservableProperty] private ObservableCollection<ReviewFilterChip> _filterChips;
     [ObservableProperty] private ObservableCollection<ReviewSuggestionItem> _suggestions;
-    [ObservableProperty] private ReviewSuggestionItem? _selectedSuggestion;
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(PlayCurrentLineCommand))]
+    private ReviewSuggestionItem? _selectedSuggestion;
     [ObservableProperty] private bool _isReviewing;
     [ObservableProperty] private bool _isNotReviewing = true;
     [ObservableProperty] private double _progressValue;
@@ -51,6 +54,15 @@ public partial class AiReviewViewModel : ObservableObject
     [ObservableProperty] private string _applyButtonText;
     [ObservableProperty] private string _warningNoteText;
     [ObservableProperty] private bool _hasWarningNote;
+    [ObservableProperty] private bool _isPlayVisible;
+
+    /// <summary>
+    /// True for callers with a live target (both main-window entry points): an "Apply" button is
+    /// shown next to Ok, so the checked fixes can be handed over without closing and a long review
+    /// can be worked through in passes (issue #13807). Callers without a target have nowhere to
+    /// push a pass, so they get the plain Ok/Cancel pair.
+    /// </summary>
+    [ObservableProperty] private bool _isApplyVisible;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
@@ -63,6 +75,18 @@ public partial class AiReviewViewModel : ObservableObject
     private string _languageCode = "en";
     private CancellationTokenSource _cancellationTokenSource = new();
     private bool _syncingSelection;
+    private int _appliedCount;
+
+    // Set by callers with a live target (both main-window entry points): "Apply" pushes the checked
+    // fixes to them and the window stays open, so a long review can be worked through in passes
+    // instead of ending at the first Apply (issue #13807).
+    private Action<Subtitle>? _applyCallback;
+
+    // Video preview hooks handed in by the caller - they drive the main window's video player.
+    // Null when no video is loaded; the play button is then hidden.
+    private Action<int>? _playLine;
+    private Action? _stopPlayback;
+    private bool _hasPlayed;
 
     public AiReviewViewModel(IWindowService windowService)
     {
@@ -104,9 +128,32 @@ public partial class AiReviewViewModel : ObservableObject
         UpdateEngineVisibility();
     }
 
-    public void Initialize(Subtitle subtitle, SubtitleFormat? subtitleFormat)
+    /// <summary>
+    /// Sets up the review. <paramref name="playLine"/> plays the line at a paragraph index of
+    /// <paramref name="subtitle"/> in the main video player and pauses at its end, so a suggested
+    /// fix can be checked against the audio before it is applied; pass null (no video loaded) to
+    /// hide the play button. <paramref name="stopPlayback"/> stops such a preview when the window
+    /// closes - only ever called when this window actually started playback.
+    /// </summary>
+    /// <param name="applyCallback">
+    /// When set, the Apply button hands the fixed subtitle to the caller and leaves the window open
+    /// - the applied suggestions drop out of the list and the rest stay reviewable, so a review that
+    /// took minutes to produce does not have to be run again to apply a second batch (issue #13807).
+    /// Callers without a live target pass null and get the old apply-and-close behavior.
+    /// </param>
+    public void Initialize(
+        Subtitle subtitle,
+        SubtitleFormat? subtitleFormat,
+        Action<int>? playLine = null,
+        Action? stopPlayback = null,
+        Action<Subtitle>? applyCallback = null)
     {
         _subtitle = subtitle;
+        _playLine = playLine;
+        _stopPlayback = stopPlayback;
+        _applyCallback = applyCallback;
+        IsApplyVisible = applyCallback != null;
+        IsPlayVisible = playLine != null;
         _languageCode = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
         LanguageDisplay = GetLanguageDisplayName(_languageCode);
     }
@@ -374,18 +421,27 @@ public partial class AiReviewViewModel : ObservableObject
                 StatusText = string.Format(l.ReviewingLineXOfY, chunk.Lines[0].Number, _subtitle.Paragraphs.Count);
 
                 var userContent = AiReviewProtocol.BuildUserContent(chunk);
-                var editableNumbers = new HashSet<int>(chunk.Lines.Select(x => x.Number));
+                var editableLines = chunk.Lines.ToDictionary(x => x.Number, x => x.Text);
+
+                // Guard decisions (remaps/drops) are always written - they are rare, small and
+                // the key evidence when a review pairs a correction with the wrong line. The
+                // full request/reply per chunk respects the tools-log setting.
+                var logGuard = (Action<string>)(s => Se.WriteToolsLog(s, true));
 
                 List<AiReviewChange>? changes = null;
                 try
                 {
+                    Se.WriteToolsLog($"AI review request (lines {chunk.Lines[0].Number}-{chunk.Lines[^1].Number}): {userContent}");
                     var reply = await ChatWithDelayAsync(userContent);
-                    changes = AiReviewProtocol.ParseChanges(reply, editableNumbers);
+                    Se.WriteToolsLog($"AI review reply (lines {chunk.Lines[0].Number}-{chunk.Lines[^1].Number}): {reply}");
+                    changes = AiReviewProtocol.ParseChanges(reply, editableLines, logGuard);
                     if (changes.Count == 0 && AiReviewProtocol.ExtractJsonObject(reply) == null)
                     {
                         // invalid reply - one retry for this chunk
+                        Se.WriteToolsLog($"AI review: no JSON in reply for lines {chunk.Lines[0].Number}-{chunk.Lines[^1].Number} - retrying once", true);
                         reply = await ChatWithDelayAsync(userContent);
-                        changes = AiReviewProtocol.ParseChanges(reply, editableNumbers);
+                        Se.WriteToolsLog($"AI review retry reply (lines {chunk.Lines[0].Number}-{chunk.Lines[^1].Number}): {reply}");
+                        changes = AiReviewProtocol.ParseChanges(reply, editableLines, logGuard);
                     }
 
                     consecutiveErrors = 0;
@@ -459,14 +515,43 @@ public partial class AiReviewViewModel : ObservableObject
 
         if (!AiReviewProtocol.TagsMatch(before, after))
         {
+            Se.WriteToolsLog($"AI review: dropped change for line {change.Number} - formatting tags were altered (\"{before}\" -> \"{after}\")", true);
             return; // the model touched formatting tags - not trustworthy, skip
+        }
+
+        // A shifted model can copy from anywhere in its batch (a clean 3-line shift across a
+        // whole batch has been seen in the wild), so the copy-source window must cover the
+        // largest batch plus its read-only context lines - not just the closest neighbors.
+        var window = Math.Max(2, Se.Settings.Tools.AiReview.MaxLinesPerBatch) + 6;
+        var neighbors = new List<string>();
+        for (var i = Math.Max(0, paragraphIndex - window); i <= Math.Min(_subtitle.Paragraphs.Count - 1, paragraphIndex + window); i++)
+        {
+            if (i != paragraphIndex && !string.IsNullOrWhiteSpace(_subtitle.Paragraphs[i].Text))
+            {
+                neighbors.Add(_subtitle.Paragraphs[i].Text);
+            }
+        }
+
+        if (AiReviewProtocol.LooksMisaligned(before, after, neighbors))
+        {
+            Se.WriteToolsLog($"AI review: dropped change for line {change.Number} - the \"correction\" is a copy of a nearby line (\"{before}\" -> \"{after}\")", true);
+            return; // the "correction" is really a copy of a nearby line - misnumbered by the model
         }
 
         var l = Se.Language.Tools.AiReview;
         var ratio = after.Length / (double)Math.Max(1, before.Length);
-        var isWarning = ratio > 1.4 || ratio < 0.6;
+        var isMismatch = AiReviewProtocol.GetSimilarityPercent(before, after) < 50;
+        var isWarning = ratio > 1.4 || ratio < 0.6 || isMismatch;
         var reason = change.Reason;
-        if (isWarning)
+        if (isMismatch)
+        {
+            // A correction keeps most of its line - a "fix" that barely resembles the line is
+            // usually a misnumbered reply whose copy-source we could not pin down. Never
+            // pre-check those; applying one replaces the line with unrelated text.
+            reason = string.IsNullOrEmpty(reason) ? l.MismatchWarning : $"{l.MismatchWarning} - {reason}";
+            Se.WriteToolsLog($"AI review: flagged change for line {change.Number} - barely resembles the original (\"{before}\" -> \"{after}\")", true);
+        }
+        else if (isWarning)
         {
             reason = string.IsNullOrEmpty(reason) ? l.LargeChangeWarning : $"{l.LargeChangeWarning} - {reason}";
         }
@@ -483,6 +568,17 @@ public partial class AiReviewViewModel : ObservableObject
             IsWarning = isWarning,
             IsSelected = !isWarning,
         };
+        AddSuggestionItem(item);
+    }
+
+    /// <summary>
+    /// Puts a built suggestion into the full list and, when it passes the active category filter,
+    /// into the grid. Review() runs on the UI thread (its awaits resume on the captured context),
+    /// so this is synchronous - posting via the dispatcher made the end-of-review status read a
+    /// stale (possibly empty) suggestion count while the last chunk's items were still queued.
+    /// </summary>
+    internal void AddSuggestionItem(ReviewSuggestionItem item)
+    {
         item.PropertyChanged += (_, e) =>
         {
             if (e.PropertyName == nameof(ReviewSuggestionItem.IsSelected))
@@ -491,9 +587,6 @@ public partial class AiReviewViewModel : ObservableObject
             }
         };
 
-        // Review() runs on the UI thread (its awaits resume on the captured context), so add
-        // synchronously - posting via the dispatcher made the end-of-review status read a stale
-        // (possibly empty) suggestion count while the last chunk's items were still queued.
         _allSuggestions.Add(item);
         if (PassesFilter(item))
         {
@@ -557,6 +650,7 @@ public partial class AiReviewViewModel : ObservableObject
         var selected = SelectedCount;
         SummaryText = string.Format(l.XSuggestionsYSelected, _allSuggestions.Count, selected);
         ApplyButtonText = string.Format(l.ApplyXFixes, selected);
+        ApplyCommand.NotifyCanExecuteChanged();
     }
 
     [RelayCommand]
@@ -583,10 +677,40 @@ public partial class AiReviewViewModel : ObservableObject
         _cancellationTokenSource.Cancel();
     }
 
+    /// <summary>
+    /// Plays the subtitle line the selected suggestion belongs to in the main video player and
+    /// pauses at its end - the fastest way to judge whether a suggested fix is right.
+    /// </summary>
+    [RelayCommand(CanExecute = nameof(CanPlayCurrentLine))]
+    private void PlayCurrentLine()
+    {
+        var item = SelectedSuggestion;
+        if (item == null || _playLine == null)
+        {
+            return;
+        }
+
+        _hasPlayed = true;
+        _playLine(item.ParagraphIndex);
+    }
+
+    private bool CanPlayCurrentLine() => SelectedSuggestion != null;
+
+    internal void OnSuggestionsGridDoubleTapped()
+    {
+        PlayCurrentLine();
+    }
+
     [RelayCommand]
     private void SelectAll()
     {
         SetAllSelected(true);
+    }
+
+    [RelayCommand]
+    private void SelectNone()
+    {
+        SetAllSelected(false);
     }
 
     [RelayCommand]
@@ -656,23 +780,104 @@ public partial class AiReviewViewModel : ObservableObject
         await _windowService.ShowDialogAsync<AiReviewPromptWindow, AiReviewPromptViewModel>(Window, vm => vm.Initialize());
     }
 
+    /// <summary>
+    /// Writes the checked fixes and closes - the Ok half of the Ok/Apply pair, so finishing on the
+    /// last pass is one click rather than Apply followed by a separate close.
+    /// </summary>
     [RelayCommand]
     private void Ok()
     {
         SaveSettings();
 
-        FixedSubtitle = new Subtitle(_subtitle, false);
+        var applied = ApplySelectedSuggestions();
+        FixedSubtitle = applied;
+
+        if (_applyCallback == null)
+        {
+            // No live target: the caller picks the result up from FixedSubtitle after the dialog.
+            OkPressed = true;
+        }
+        else
+        {
+            // The callback already delivered the fixes, so OkPressed stays false - a caller that
+            // passes a callback and also reads FixedSubtitle would otherwise apply the pass twice.
+            _applyCallback(applied);
+        }
+
+        _cancellationTokenSource.Cancel();
+        Window?.Close();
+    }
+
+    /// <summary>
+    /// Hands the checked fixes to the caller and leaves the window open: the applied rows drop out
+    /// of the grid, the rest stay reviewable, and the next pass builds on the result - so a review
+    /// that took minutes does not have to be run again to apply a second batch (issue #13807).
+    /// </summary>
+    [RelayCommand(CanExecute = nameof(CanApply))]
+    private void Apply()
+    {
+        if (_applyCallback == null)
+        {
+            return;
+        }
+
+        SaveSettings();
+
+        var applied = ApplySelectedSuggestions();
+        FixedSubtitle = applied;
+        _applyCallback(applied);
+
+        // Keep working against what the caller now holds, and drop the suggestions that are in it -
+        // an applied row is done, and its "before" text no longer exists in the subtitle.
+        _subtitle = new Subtitle(applied, false);
+        RemoveAppliedSuggestions();
+        StatusText = string.Format(Se.Language.Main.FixedXLines, _appliedCount);
+    }
+
+    // Nothing checked means Apply would hand the caller an unchanged subtitle - an undo step and a
+    // "fixed 0 lines" status for no change at all.
+    private bool CanApply() => SelectedCount > 0;
+
+    /// <summary>
+    /// A copy of the working subtitle with every checked suggestion written into it.
+    /// </summary>
+    private Subtitle ApplySelectedSuggestions()
+    {
+        var applied = new Subtitle(_subtitle, false);
+        _appliedCount = 0;
         foreach (var item in _allSuggestions.Where(s => s.IsSelected))
         {
-            if (item.ParagraphIndex >= 0 && item.ParagraphIndex < FixedSubtitle.Paragraphs.Count)
+            if (item.ParagraphIndex >= 0 && item.ParagraphIndex < applied.Paragraphs.Count)
             {
-                FixedSubtitle.Paragraphs[item.ParagraphIndex].Text = item.After;
+                applied.Paragraphs[item.ParagraphIndex].Text = item.After;
+                _appliedCount++;
             }
         }
 
-        OkPressed = true;
-        _cancellationTokenSource.Cancel();
-        Window?.Close();
+        return applied;
+    }
+
+    /// <summary>
+    /// Drops the suggestions that were just applied from both the full list and the filtered grid,
+    /// then refreshes the chip counts, the summary and the reason strip.
+    /// </summary>
+    private void RemoveAppliedSuggestions()
+    {
+        var applied = _allSuggestions.Where(s => s.IsSelected).ToList();
+        if (applied.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var item in applied)
+        {
+            _allSuggestions.Remove(item);
+            Suggestions.Remove(item);
+        }
+
+        SelectedSuggestion = Suggestions.FirstOrDefault();
+        UpdateChipCounts();
+        UpdateSummary();
     }
 
     [RelayCommand]
@@ -695,11 +900,35 @@ public partial class AiReviewViewModel : ObservableObject
             e.Handled = true;
             UiUtil.ShowHelp("features/ai-review");
         }
+        else if (IsPlayVisible && MatchesPlayShortcut(e))
+        {
+            e.Handled = true;
+            PlayCurrentLine();
+        }
+    }
+
+    /// <summary>
+    /// True when the pressed keys match the user's main-window "play selected lines" (default F5)
+    /// or second play/pause (default Ctrl/Cmd+Space) binding. Bare Space is deliberately not
+    /// included: in this window it toggles the apply checkbox of the selected row.
+    /// </summary>
+    private static bool MatchesPlayShortcut(KeyEventArgs e)
+    {
+        return MainShortcutKeys.Matches(e, nameof(MainViewModel.PlaySelectedLinesWithoutLoopCommand), [nameof(Key.F5)]) ||
+               MainShortcutKeys.Matches(e, nameof(MainViewModel.TogglePlayPause2Command), [MainShortcutKeys.CtrlOrCmd, nameof(Key.Space)]);
     }
 
     internal void OnClosing()
     {
         _cancellationTokenSource.Cancel();
+
+        // Only stop what this window started - a video the user left playing before opening the
+        // review should keep playing.
+        if (_hasPlayed)
+        {
+            _stopPlayback?.Invoke();
+        }
+
         UiUtil.SaveWindowPosition(Window);
     }
 }

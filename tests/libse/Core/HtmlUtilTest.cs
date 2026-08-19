@@ -91,10 +91,64 @@ public class HtmlUtilTest
     }
 
     [Fact]
+    public void FixInvalidItalicTagsMergesAcrossLeadingEllipsis()
+    {
+        // StartsAndEndsWithTag now accepts a leading "..." without a dialog dash,
+        // so two fully italic lines merge into one italic block.
+        string s = "...<i>I was going</i>" + Environment.NewLine + "<i>to tell you.</i>";
+        Assert.Equal("<i>...I was going" + Environment.NewLine + "to tell you.</i>", HtmlUtil.FixInvalidItalicTags(s));
+    }
+
+    [Fact]
+    public void FixInvalidItalicTagsMergesAcrossTrailingPunctuationRun()
+    {
+        string s = "<i>Hello</i>?!" + Environment.NewLine + "<i>Bye</i>";
+        Assert.Equal("<i>Hello?!" + Environment.NewLine + "Bye</i>", HtmlUtil.FixInvalidItalicTags(s));
+    }
+
+    [Fact]
     public void FixInvalidItalicTagsDanglingStartTagAtEnd()
     {
         const string s = "<i>a</i><i>";
         Assert.Equal("<i>a</i>", HtmlUtil.FixInvalidItalicTags(s));
+    }
+
+    /// <summary>
+    /// A single stray "&lt;/i&gt;" plus a two-line text whose line break is the very last
+    /// character used to index past the end of the string: the second-line split hard-coded a
+    /// 2-character newline, which is one too many wherever Environment.NewLine is "\n"
+    /// (Linux, macOS). RemoveHtmlTags routes any text containing "&lt; " through here, so
+    /// ordinary malformed subtitle text threw ArgumentOutOfRangeException instead of being
+    /// cleaned. Inputs found by fuzzing RemoveHtmlTags.
+    /// </summary>
+    [Theory]
+    [InlineData("</ i>>< <u>\r\n")]
+    [InlineData("</ i><< u…\r\n")]
+    [InlineData("{\\pos(1,2)}</i>< \r\n")]
+    [InlineData("</i>< \r\n")]
+    [InlineData("< </i>\n")]
+    public void FixInvalidItalicTagsDoesNotThrowOnTrailingLineBreak(string source)
+    {
+        var exception = Record.Exception(() => HtmlUtil.FixInvalidItalicTags(source));
+        Assert.Null(exception);
+
+        var viaRemoveHtmlTags = Record.Exception(() => HtmlUtil.RemoveHtmlTags(source, true));
+        Assert.Null(viaRemoveHtmlTags);
+    }
+
+    /// <summary>
+    /// Stripping tags must never make a line longer — callers rely on it (seconv's linter skips
+    /// the strip entirely when the raw line already fits its length budget).
+    /// </summary>
+    [Theory]
+    [InlineData("</ i>>< <u>\r\n")]
+    [InlineData("<i>Hello</i>< ")]
+    [InlineData("< i>Hello")]
+    [InlineData("{\\an8}<i>Hello</i>")]
+    [InlineData("<v Bob>Hello</v>")]
+    public void RemoveHtmlTagsNeverLengthensInput(string source)
+    {
+        Assert.True(HtmlUtil.RemoveHtmlTags(source, true).Length <= source.Length);
     }
 
     [Fact]

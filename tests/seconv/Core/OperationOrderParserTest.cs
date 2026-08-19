@@ -75,4 +75,44 @@ public class OperationOrderParserTest
 
         Assert.Empty(ops);
     }
+
+    [Fact]
+    public void RemoveFormattingRulesAloneImpliesOnePass_AtFlagPosition()
+    {
+        var args = new[] { "in.srt", "subrip", "--balance-lines", "--remove-formatting-rules:RemoveItalic", "--redo-casing" };
+
+        var ops = OperationOrderParser.BuildOperations(args, fceRequested: false, removeFormattingRequested: true);
+
+        Assert.Equal(new[] { "BalanceLines", "RemoveFormatting", "RedoCasing" }, ops.ToArray());
+    }
+
+    [Fact]
+    public void RemoveFormattingRulesDoesNotAddExtraPassWhenBareFlagPresent()
+    {
+        var args = new[] { "--remove-formatting", "--remove-formatting-rules:RemoveItalic" };
+
+        var ops = OperationOrderParser.BuildOperations(args, fceRequested: false, removeFormattingRequested: true);
+
+        Assert.Equal(new[] { "RemoveFormatting" }, ops.ToArray());
+    }
+
+    [Fact]
+    public void BothRulesOptionsAlone_ImplyPassesInCommandLineOrder()
+    {
+        var args = new[] { "in.srt", "subrip", "--remove-formatting-rules:RemoveItalic", "--fix-common-errors-rules:FixCommas" };
+
+        var ops = OperationOrderParser.BuildOperations(args, fceRequested: true, removeFormattingRequested: true);
+
+        Assert.Equal(new[] { "RemoveFormatting", "FixCommonErrors" }, ops.ToArray());
+    }
+
+    [Fact]
+    public void BothRulesOptionsAroundBareOperation_KeepTheirPositions()
+    {
+        var args = new[] { "--fix-common-errors-rules:FixCommas", "--balance-lines", "--remove-formatting-rules:RemoveItalic" };
+
+        var ops = OperationOrderParser.BuildOperations(args, fceRequested: true, removeFormattingRequested: true);
+
+        Assert.Equal(new[] { "FixCommonErrors", "BalanceLines", "RemoveFormatting" }, ops.ToArray());
+    }
 }

@@ -410,6 +410,31 @@ public class SpellCheckRegexTests
     }
 
     [Fact]
+    public void LoadRegExList_DuplicateSections_LoadsRulesFromAllSections()
+    {
+        // The shipped deu/nld/nor lists contain two RegularExpressionsIfSpelledCorrectly
+        // sections; every rule after the first section used to be silently dropped.
+        var doc = new System.Xml.XmlDocument();
+        doc.LoadXml(
+            "<ReplaceList>" +
+            "<RegularExpressionsIfSpelledCorrectly>" +
+            "<RegEx find=\"\\bl([A-Z]+)\\b\" spellCheck=\"I$1\" replaceWith=\"I$1\" />" +
+            "</RegularExpressionsIfSpelledCorrectly>" +
+            "<RegularExpressions />" +
+            "<RegularExpressionsIfSpelledCorrectly>" +
+            "<RegEx find=\"\\b([A-Z][a-z]+)I\\b\" spellCheck=\"$1l\" replaceWith=\"$1l\" />" +
+            "<RegEx find=\"\\bl([a-z]+)\\b\" spellCheck=\"I$1\" replaceWith=\"I$1\" />" +
+            "</RegularExpressionsIfSpelledCorrectly>" +
+            "</ReplaceList>");
+
+        var list = SpellCheckRegex.LoadRegExList(doc, "RegularExpressionsIfSpelledCorrectly");
+
+        Assert.Equal(3, list.Count);
+        Assert.Contains(list, r => r.Find == @"\b([A-Z][a-z]+)I\b");
+        Assert.Contains(list, r => r.Find == @"\bl([a-z]+)\b");
+    }
+
+    [Fact]
     public void Apply_WordNotInDictionary_ShouldNotReplace()
     {
         // Arrange: lXYZ where IXYZ is not in dictionary

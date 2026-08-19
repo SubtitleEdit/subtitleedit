@@ -7,7 +7,7 @@
 ## Highlights
 
 - **380+ subtitle formats** — text, binary, and image-based.
-- **Container input** — Matroska (`.mkv` / `.mks`), MP4, MCC, transport stream teletext, Blu-Ray `.sup`.
+- **Container input** — Matroska (`.mkv` / `.mks`), MP4, MCC, MXF, AVI (`.avi` / `.divx`), transport stream teletext, Blu-Ray `.sup`.
 - **OCR for image-based sources** via five engines (Tesseract subprocess, nOCR built-in, BinaryOCR built-in, Ollama HTTP, PaddleOCR subprocess).
 - **Auto-translate** via local LLMs (llama.cpp with automatic server start, Ollama, LM Studio) or self-hosted services (LibreTranslate, NLLB).
 - **Image-based output** — Blu-Ray sup, BDN-XML, DOST, FCP (Final Cut Pro + image), D-Cinema interop / SMPTE 2014, images-with-time-code.
@@ -39,6 +39,13 @@ seconv "*.srt,*.ass" subrip --input-folder:./in
 ```
 
 Options accept either `--option:value`, `--option=value`, or `--option value`. The colon form is shown throughout this page.
+
+An unrecognised option is an error, never a silent no-op: `seconv` exits 1 and suggests the closest real option rather than converting the file without the operation you asked for.
+
+```console
+$ seconv movie.srt subrip --remove-formating
+Error: Unknown option '--remove-formating'. Did you mean '--remove-formatting'?
+```
 
 ### Quick examples
 
@@ -73,11 +80,38 @@ seconv list-encodings       # list text encodings
 seconv list-pac-codepages   # list PAC code pages
 seconv list-ocr-engines     # list OCR engines + installation status
 seconv list-fce-rules       # list FixCommonErrors rule IDs
+seconv list-rf-rules        # list remove-formatting rule IDs
 seconv dump-settings        # print a full --settings JSON with libse defaults
 seconv info <file>          # print format/encoding/duration/language for a file
 seconv lint <pattern>       # validate subtitle(s); exit 1 if issues found
-seconv --help               # show help
+seconv --help               # show help (same text as -h, /? and /help)
+seconv --help-json          # print the whole command-line schema as JSON
 seconv --version            # print version and exit
+```
+
+### Machine-readable output
+
+Every subcommand above accepts `--json`, and so does a conversion run. Scripts and agents should prefer it: the tables are hundreds of box-drawing lines, while the JSON gives you the exact tokens each option accepts.
+
+```bash
+seconv formats --json | jq -r '.formats[] | select(.inputOnly | not) | .id'
+seconv list-fce-rules --json | jq -r '.rules[].id'
+seconv list-ocr-engines --json | jq -r '.engines[] | select(.ready) | .id'
+```
+
+In `formats --json`, `id` is the token `--format` matches on (the display name with spaces removed); `name` is the human-readable name; `inputOnly` marks formats that can be loaded but not used as a conversion target.
+
+`seconv --help-json` describes the command line itself — every option with its aliases, type (`flag`, `string`, `integer`, `number`), whether it is an operation, its closed value set where it has one, and the subcommand that enumerates valid values otherwise. It is reflected off the parser, so it cannot drift from the options actually accepted.
+
+```bash
+seconv --help-json | jq -r '.options[] | select(.group == "operation") | .name'
+seconv --help-json | jq -r '.options[] | select(.discover) | "\(.name)\t\(.discover)"'
+```
+
+Under `--json`, stdout is always a single JSON document — on success *and* on failure. A usage error (unknown option, bad value, no files matched) comes back in the same envelope as a failed conversion, with the message in `errors`:
+
+```json
+{ "success": false, "totalFiles": 0, "files": [], "errors": ["Unknown option '--bogus'."], "warnings": [] }
 ```
 
 ### Inspect & validate
@@ -170,6 +204,7 @@ seconv movie.srt bluraysup --font-name:Verdana --font-size:60 --font-bold --box-
 | `.mcc` | MacCaption 1.0 |
 | `.ts`, `.m2ts`, `.mts` | Transport stream — teletext (no OCR) and DVB-sub (via OCR) |
 | `.sup` | Blu-Ray sup (via OCR) |
+| `.avi`, `.divx` | XSUB / DivX subtitles (via OCR) |
 
 When a container has multiple usable tracks, one output file is written per track with the track's language code as a suffix:
 
@@ -180,6 +215,8 @@ movie.mkv → movie.eng.srt
 ```
 
 If two tracks share a language, the track number is added: `movie.#3.eng.srt`.
+
+An AVI stream header carries no language, so a multi-stream `.avi` names its outputs after the stream number instead (`movie.xsub_track1.srt`, `movie.xsub_track2.srt`); `--track-number` takes those same AVI stream numbers.
 
 | Option | Description |
 |---|---|
@@ -209,7 +246,7 @@ If two tracks share a language, the track number is added: `movie.#3.eng.srt`.
 | `--ollama-model:<model>` | Default `llama3.2-vision` |
 | `--ocr-model:<model>` | llama.cpp OCR model: curated `.gguf` file name (e.g. `GLM-OCR-Q8_0.gguf`) or a full path to a `.gguf` with its `mmproj` sidecar next to it. Default: the first downloaded OCR model. |
 | `--ocr-url:<url>` | llama.cpp: endpoint of an already-running `llama-server` (a bare `host:port` is completed to `/v1/chat/completions`); skips the local auto-start. |
-| `--time-codes-only` | Image sources (`.sup`, VobSub `.sub`/`.idx`, MKV PGS/VobSub, MP4 VobSub, TS DVB-sub) → text format with time codes only and empty text. **Skips OCR entirely** — no OCR engine required. Ignored for text inputs and image output targets. |
+| `--time-codes-only` | Image sources (`.sup`, VobSub `.sub`/`.idx`, MKV PGS/VobSub, MP4 VobSub, TS DVB-sub, AVI XSUB) → text format with time codes only and empty text. **Skips OCR entirely** — no OCR engine required. Ignored for text inputs and image output targets. |
 | `--no-vobsub-isolate-colors` | Disable VobSub OCR colour isolation, which is **on by default**. Isolation rebuilds each subpicture as a crisp black-on-white bitmap via histogram-based colour analysis — the most frequent opaque colour (the glyph fill) becomes black and the gray outline / anti-alias colours collapse into the white background, which helps on discs whose outlines otherwise melt adjacent characters together (`Yuri` → `Yurl`). Pass this flag to OCR the raw palette instead. Ignored for non-VobSub sources and with `--time-codes-only`. |
 
 > **OCR database files are not bundled with `seconv`.** The `nocr` and `binaryocr` engines need a `.nocr` or `.db` file passed via `--ocr-db`. Sources:
@@ -238,6 +275,9 @@ seconv movie.sup subrip --ocr-engine:llamacpp --ocr-url:http://127.0.0.1:8080
 # MKV with image (PGS or VobSub) tracks — OCR runs automatically
 seconv movie.mkv subrip --ocr-engine:tesseract --ocr-language:eng
 
+# AVI with XSUB (DivX) subtitles — OCR runs automatically
+seconv movie.avi subrip --ocr-engine:tesseract --ocr-language:eng
+
 # VobSub .sub + .idx pair — the .idx companion is auto-detected
 seconv movie.sub subrip --ocr-engine:tesseract --ocr-language:eng
 
@@ -252,6 +292,8 @@ seconv movie.sub subrip --time-codes-only
 ### Auto-translate
 
 `--translate-to:<language>` machine-translates each file as part of the conversion (after OCR for image sources, before the cleanup operations). Languages are given as a code or English name (`de`, `German`, `da`, `Danish`, …); the source language is auto-detected per file unless `--translate-from` is set.
+
+Translated output is named with the target language code — `way.srt --translate-to:zh-CN` writes `way.zh-CN.srt` (for container tracks the target code replaces the track's own language suffix, since the content leaves in the target language). An explicit `--output-filename` is used as-is.
 
 | Option | Description |
 |---|---|
@@ -440,7 +482,7 @@ seconv *.srt subrip --settings:my.json --profile:broadcast --remove-text-for-hi
 |---|---|
 | `--quiet` / `-q` | Suppress per-file progress and the parameters table; only print the final summary |
 | `--verbose` / `-v` | Print extra diagnostic information, including full exception details (stack traces) on errors |
-| `--json` | Emit per-file results as JSON to stdout (suppresses Spectre output) |
+| `--json` | Emit per-file results as JSON to stdout (suppresses Spectre output). Also accepted by every subcommand. Failures use the same envelope, so stdout is always one JSON document |
 
 ## Operations
 
@@ -465,7 +507,8 @@ Operations run after the structural transforms (offset, fps, renumber, adjust-du
 | `--merge-same-time-codes` | Merge entries with same time codes |
 | `--merge-short-lines` | Merge short lines |
 | `--redo-casing` | Redo text casing |
-| `--remove-formatting` | Remove formatting tags |
+| `--remove-formatting` | Remove **all** formatting tags |
+| `--remove-formatting-rules:<list>` | Remove only some kinds of formatting (CSV; supports `all,-RuleId`) |
 | `--remove-line-breaks` | Remove line breaks |
 | `--remove-text-for-hi` | Remove text for hearing impaired |
 | `--remove-unicode-control-chars` | Remove Unicode control characters |
@@ -555,6 +598,38 @@ The CLI rule IDs match the check-box rules in the desktop app's *Fix Common Erro
 | `RemoveSpaceBetweenNumbers` | Remove space between numbers | — |
 | `FixCommonOcrErrors` | Fix common OCR errors (using OCR replace list) | — |
 
+### Remove-formatting rule selection
+
+`--remove-formatting` (no value) strips **every** tag — HTML plus SSA/ASSA override blocks. Pass `--remove-formatting-rules:<list>` to remove only some kinds of formatting; supplying that option implies `--remove-formatting`.
+
+```bash
+seconv movie.ass subrip --remove-formatting                              # remove every tag
+seconv movie.ass subrip --remove-formatting-rules:RemoveItalic,RemoveBold
+seconv movie.ass subrip --remove-formatting-rules:all,-RemoveColor       # every named rule except colors
+seconv list-rf-rules                                                     # show rule IDs
+```
+
+**`all` is narrower than the bare flag.** The bare `--remove-formatting` removes tags wholesale, including ones no named rule covers — positioning (`{\pos(..)}`), fades, karaoke timing, and any other ASSA override. `--remove-formatting-rules:all` is the *union of the six named rules*, so those tags survive it:
+
+```bash
+# "{\pos(10,20)}<i>Hi</i>"
+seconv in.ass subrip --remove-formatting                     # -> "Hi"
+seconv in.ass subrip --remove-formatting-rules:all           # -> "{\pos(10,20)}Hi"
+```
+
+This mirrors the desktop app, where batch convert's *Remove formatting* function has a separate *Remove all formatting* check box above the six per-kind ones.
+
+#### Rule ID ↔ GUI equivalent
+
+| Rule ID | GUI equivalent | Removes |
+|---|---|---|
+| `RemoveItalic` | Remove italic | `<i>`, `{\i0}`, `{\i1}` |
+| `RemoveBold` | Remove bold | `<b>`, `{\b0}`, `{\b1}` |
+| `RemoveUnderline` | Remove underline | `<u>`, `{\u0}`, `{\u1}` |
+| `RemoveFontName` | Remove font name | `<font face="..">`, `{\fnArial}` |
+| `RemoveAlignment` | Remove alignment | `{\an1}`–`{\an9}`, `{\a1}`–`{\a9}` |
+| `RemoveColor` | Remove color | `<font color="..">`, `{\c&H..&}`, `{\1c&H..&}` |
+
 ## Output format aliases
 
 | Aliases | Format |
@@ -575,6 +650,7 @@ The CLI rule IDs match the check-box rules in the desktop app's *Fix Common Erro
 | `bluraysup`, `sup` | Blu-Ray sup — image |
 | `vobsub` | VobSub — image |
 | `bdnxml`, `bdn-xml` | BDN-XML — image (folder of PNGs + index.xml) |
+| `bdnxml8bit`, `bdn-xml8-bit` | BDN-XML with 8-bit palette-indexed PNGs — image |
 | `dost`, `dostimage` | DOST/image |
 | `fcpimage`, `fcp` | FCP/image |
 | `dcinemainterop` | D-Cinema interop/png |
@@ -583,14 +659,16 @@ The CLI rule IDs match the check-box rules in the desktop app's *Fix Common Erro
 | `plaintext`, `text`, `txt` | Plain text (HTML stripped) |
 | `customtext`, `customtextformat` | Custom-templated text (requires `--custom-format`) |
 
-Run `seconv formats` for the full catalog (380+ entries, including input-only formats like Matroska, MP4, and MCC).
+Run `seconv formats` for the full catalog (380+ entries, including input-only formats like Matroska, MP4, and MCC), or `seconv formats --json` for the machine-readable list whose `id` field is exactly what `--format` accepts.
 
 ## Exit codes
 
 | Code | Meaning |
 |---|---|
 | `0` | Conversion succeeded for all matched files |
-| `1` | Any error: validation failure, parse error, OCR engine missing, invalid `--settings` file, or one or more files failed to convert |
+| `1` | Any error: bad usage, unknown option, rejected option value, no files matched, parse error, OCR engine missing, invalid `--settings` file, or one or more files failed to convert |
+
+There are only these two. Every failure path — including argument parsing — exits 1.
 
 ## Legacy syntax
 

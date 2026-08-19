@@ -633,6 +633,7 @@
     <WordPart from="n/" to="rv" />
     <WordPart from="Ã" to="Å" />
     <WordPart from="í" to="i" />
+    <WordPart from="i" to="l" />
   </PartialWords>
   <WholeLines />
   <PartialLinesAlways>
@@ -782,5 +783,23 @@
     <!-- inCopenhagen → in Copenhagen -->
     <RegEx find="\bin([A-ZÆØÅ][a-zæøå]+)\b" spellCheck="$1" replaceWith="in $1" />
 
+  </RegularExpressionsIfSpelledCorrectly>
+  <RegularExpressionsIfSpelledCorrectly>
+    <!-- Italic l misread as i (#13660): trailing i to l, double ii to ll.  -->
+    <!-- Correct i-words are in the dictionary and protected by the gate.   -->
+    <RegEx find="\b([A-ZÆØÅa-zæøå][a-zæøå]*)i\b" spellCheck="$1l" replaceWith="$1l" />
+    <RegEx find="\b([A-ZÆØÅa-zæøå][a-zæøå]*)ii([a-zæøå]*)\b" spellCheck="$1ll$2" replaceWith="$1ll$2" />
+
+    <!-- word-initial i to l (iove to love, iieber to lieber) -->
+    <RegEx find="\bi([a-zæøå]{2,})\b" spellCheck="l$1" replaceWith="l$1" />
+
+    <!-- word-initial ii to ll (iiegar to llegar) -->
+    <RegEx find="\bii([a-zæøå]+)\b" spellCheck="ll$1" replaceWith="ll$1" />
+
+    <!-- Lowercase l misread as uppercase I (#13660): replace every I in the word, -->
+    <!-- so words with more than one are repaired too (deIectabIe -> delectable,   -->
+    <!-- ExceIIencies -> Excellencies). Words of two letters (AI) are never        -->
+    <!-- touched, and real words (MacIntosh) are kept by the spell check gate.     -->
+    <RegEx find="\b([A-ZÆØÅa-zæøå](?=[a-zæøåI]*I)[a-zæøåI]{2,})\b" replaceAllFrom="I" replaceAllTo="l" spellCheck="$1" replaceWith="$1" />
   </RegularExpressionsIfSpelledCorrectly>
 </OCRFixReplaceList>

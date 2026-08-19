@@ -4,8 +4,10 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.ValueConverters;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Features.Files.Compare;
 
@@ -78,13 +80,27 @@ public static class TextDiffHighlighter
         return string.Join("\n", text.SplitToLines());
     }
 
+    // A text block laid out left to right places its runs left to right, so the chunks of a
+    // right to left line come out in reverse reading order - the line reads backwards even
+    // though each chunk on its own is fine. Each side follows its own content, so an Arabic
+    // line still compares against a Latin one (#13435).
+    private static TextBlock MakeTextBlock(string text)
+    {
+        return new TextBlock
+        {
+            TextWrapping = TextWrapping.Wrap,
+            VerticalAlignment = VerticalAlignment.Center,
+            FlowDirection = TextToFlowDirectionConverter.GetFlowDirection(text),
+        };
+    }
+
     public static (TextBlock left, TextBlock right) Compare(string text1, string text2)
     {
         text1 = NormalizeNewLines(text1);
         text2 = NormalizeNewLines(text2);
 
-        var left = new TextBlock { TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center };
-        var right = new TextBlock { TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center };
+        var left = MakeTextBlock(text1);
+        var right = MakeTextBlock(text2);
 
         if (left.Inlines == null || right.Inlines == null)
         {
@@ -143,8 +159,8 @@ public static class TextDiffHighlighter
         text1 = NormalizeNewLines(text1);
         text2 = NormalizeNewLines(text2);
 
-        var before = new TextBlock { TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center };
-        var after = new TextBlock { TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center };
+        var before = MakeTextBlock(text1);
+        var after = MakeTextBlock(text2);
 
         if (before.Inlines == null || after.Inlines == null)
         {
@@ -187,63 +203,126 @@ public static class TextDiffHighlighter
     private static void BuildDiffRuns(TextBlock textBlock, string text, int commonStart, int commonEnd,
         List<(int start, int length)> middleCommon, bool hasDifferences, IBrush diffForeground, IBrush diffBackground)
     {
-        int currentPos = 0;
+        // Mark which characters differ first, then emit one run per stretch. Going through a
+        // mask instead of straight to runs is what lets the boundaries be moved (see
+        // SnapToWordBoundaries) before anything is rendered.
+        var isDiff = BuildDiffMask(text, commonStart, commonEnd, middleCommon);
 
-        // Add prefix if common
-        if (commonStart > 0)
+        if (LanguageAutoDetect.ContainsRightToLeftLetter(text))
         {
-            textBlock.Inlines!.Add(new Run(text.Substring(0, commonStart))
-            {
-                Background = hasDifferences ? GetDiffBackgroundColor() : null
-            });
-            currentPos = commonStart;
+            SnapToWordBoundaries(text, isDiff);
         }
 
-        // Add middle parts (mix of common and different)
-        int middleEnd = text.Length - commonEnd;
-        if (middleCommon.Count > 0)
+        var commonBackground = hasDifferences ? GetDiffBackgroundColor() : null;
+
+        var pos = 0;
+        while (pos < text.Length)
         {
-            foreach (var (start, length) in middleCommon)
+            var diff = isDiff[pos];
+            var end = pos + 1;
+            while (end < text.Length && isDiff[end] == diff)
             {
-                // Add different part before this common part
-                if (start > currentPos)
+                end++;
+            }
+
+            // Unchanged runs must leave Foreground alone: assigning null sets a local value
+            // that overrides the inherited theme foreground, and a run with a null brush is
+            // drawn as nothing - only the highlighted chunks were visible (#13501).
+            var run = new Run(text.Substring(pos, end - pos))
+            {
+                Background = diff ? diffBackground : commonBackground,
+            };
+
+            if (diff)
+            {
+                run.Foreground = diffForeground;
+            }
+
+            textBlock.Inlines!.Add(run);
+
+            pos = end;
+        }
+    }
+
+    private static bool[] BuildDiffMask(string text, int commonStart, int commonEnd, List<(int start, int length)> middleCommon)
+    {
+        var isDiff = new bool[text.Length];
+        var currentPos = Math.Clamp(commonStart, 0, text.Length);
+        var middleEnd = Math.Clamp(text.Length - commonEnd, 0, text.Length);
+
+        foreach (var (start, length) in middleCommon)
+        {
+            var commonPartStart = Math.Clamp(start, 0, text.Length);
+            for (var i = currentPos; i < commonPartStart; i++)
+            {
+                isDiff[i] = true;
+            }
+
+            currentPos = Math.Clamp(commonPartStart + length, 0, text.Length);
+        }
+
+        for (var i = currentPos; i < middleEnd; i++)
+        {
+            isDiff[i] = true;
+        }
+
+        return isDiff;
+    }
+
+    /// <summary>
+    /// Grows every difference to cover whole words. Arabic script letters join up and Avalonia
+    /// shapes each run on its own, so a boundary inside a word forces the two halves into
+    /// isolated letter forms - a Persian word comes out as loose, unconnected letters (#13435).
+    /// Only applied to text holding right to left letters, so left to right diffs keep their
+    /// finer character level granularity.
+    /// </summary>
+    private static void SnapToWordBoundaries(string text, bool[] isDiff)
+    {
+        var i = 0;
+        while (i < text.Length)
+        {
+            if (!IsWordChar(text[i]))
+            {
+                i++;
+                continue;
+            }
+
+            var wordStart = i;
+            while (i < text.Length && IsWordChar(text[i]))
+            {
+                i++;
+            }
+
+            var wordHasDifference = false;
+            for (var j = wordStart; j < i; j++)
+            {
+                if (isDiff[j])
                 {
-                    textBlock.Inlines!.Add(new Run(text.Substring(currentPos, start - currentPos))
-                    {
-                        Foreground = diffForeground,
-                        Background = diffBackground
-                    });
+                    wordHasDifference = true;
+                    break;
                 }
+            }
 
-                // Add common part
-                textBlock.Inlines!.Add(new Run(text.Substring(start, length))
-                {
-                    Background = GetDiffBackgroundColor()
-                });
+            if (!wordHasDifference)
+            {
+                continue;
+            }
 
-                currentPos = start + length;
+            for (var j = wordStart; j < i; j++)
+            {
+                isDiff[j] = true;
             }
         }
+    }
 
-        // Add remaining different part in the middle
-        if (currentPos < middleEnd)
-        {
-            textBlock.Inlines!.Add(new Run(text.Substring(currentPos, middleEnd - currentPos))
-            {
-                Foreground = diffForeground,
-                Background = diffBackground
-            });
-            currentPos = middleEnd;
-        }
-
-        // Add suffix if common
-        if (commonEnd > 0)
-        {
-            textBlock.Inlines!.Add(new Run(text.Substring(text.Length - commonEnd))
-            {
-                Background = hasDifferences ? GetDiffBackgroundColor() : null
-            });
-        }
+    private static bool IsWordChar(char c)
+    {
+        // Zero width non-joiner and joiner sit inside Persian words (می‌رود), and Arabic
+        // diacritics are non spacing marks - both belong to the word they are written in.
+        return char.IsLetterOrDigit(c)
+               || c == '\u200c'
+               || c == '\u200d'
+               || CharUnicodeInfo.GetUnicodeCategory(c) == UnicodeCategory.NonSpacingMark;
     }
 
     private static (int commonStart, int commonEnd, List<(int start, int length)> middleCommon1, List<(int start, int length)> middleCommon2) FindCommonParts(string text1, string text2)
@@ -307,44 +386,19 @@ public static class TextDiffHighlighter
         var used1 = new bool[s1.Length];
         var used2 = new bool[s2.Length];
 
+        // Both selection routines pick the exact same cell (longest unused run; ties keep the
+        // smallest (i, j) in row-major order, like the original scan did). The per-cell walk
+        // has the lower constant on short texts but re-walks whole runs, which goes cubic on
+        // long repetitive text (a freeze in the Compare window / Multiple Replace preview);
+        // the anti-diagonal scan is O(n*m) per round, so it takes over above the threshold.
+        var useDiagonalScan = (long)s1.Length * s2.Length >= 10_000;
+
         // Find multiple common substrings
         while (true)
         {
-            int maxLen = 0;
-            int maxPos1 = 0;
-            int maxPos2 = 0;
-
-            // Build LCS table for unused parts
-            for (int i = 0; i < s1.Length; i++)
-            {
-                if (used1[i])
-                {
-                    continue;
-                }
-
-                for (int j = 0; j < s2.Length; j++)
-                {
-                    if (used2[j])
-                    {
-                        continue;
-                    }
-
-                    int len = 0;
-                    while (i + len < s1.Length && j + len < s2.Length &&
-                           !used1[i + len] && !used2[j + len] &&
-                           s1[i + len] == s2[j + len])
-                    {
-                        len++;
-                    }
-
-                    if (len > maxLen)
-                    {
-                        maxLen = len;
-                        maxPos1 = i;
-                        maxPos2 = j;
-                    }
-                }
-            }
+            var (maxLen, maxPos1, maxPos2) = useDiagonalScan
+                ? FindLongestUnusedRunByDiagonals(s1, s2, used1, used2)
+                : FindLongestUnusedRunByWalk(s1, s2, used1, used2);
 
             // If no common substring found or too short, stop
             if (maxLen < minLength)
@@ -366,5 +420,88 @@ public static class TextDiffHighlighter
         result.Sort((a, b) => a.pos1.CompareTo(b.pos1));
 
         return result;
+    }
+
+    private static (int maxLen, int maxPos1, int maxPos2) FindLongestUnusedRunByWalk(string s1, string s2, bool[] used1, bool[] used2)
+    {
+        int maxLen = 0;
+        int maxPos1 = 0;
+        int maxPos2 = 0;
+
+        for (int i = 0; i < s1.Length; i++)
+        {
+            if (used1[i])
+            {
+                continue;
+            }
+
+            for (int j = 0; j < s2.Length; j++)
+            {
+                if (used2[j])
+                {
+                    continue;
+                }
+
+                int len = 0;
+                while (i + len < s1.Length && j + len < s2.Length &&
+                       !used1[i + len] && !used2[j + len] &&
+                       s1[i + len] == s2[j + len])
+                {
+                    len++;
+                }
+
+                if (len > maxLen)
+                {
+                    maxLen = len;
+                    maxPos1 = i;
+                    maxPos2 = j;
+                }
+            }
+        }
+
+        return (maxLen, maxPos1, maxPos2);
+    }
+
+    private static (int maxLen, int maxPos1, int maxPos2) FindLongestUnusedRunByDiagonals(string s1, string s2, bool[] used1, bool[] used2)
+    {
+        int maxLen = 0;
+        int maxPos1 = 0;
+        int maxPos2 = 0;
+
+        // Walking each anti-diagonal backward, the run length starting at (i, j) is just the
+        // run below-right plus one - no per-cell re-walk, no table. The explicit tie-break
+        // compensates for the diagonal visiting order.
+        void WalkDiagonal(int startI, int startJ)
+        {
+            var steps = Math.Min(s1.Length - startI, s2.Length - startJ);
+            var below = 0; // run length starting at (i + 1, j + 1)
+            for (var t = steps - 1; t >= 0; t--)
+            {
+                int i = startI + t;
+                int j = startJ + t;
+                var run = !used1[i] && !used2[j] && s1[i] == s2[j] ? below + 1 : 0;
+                below = run;
+
+                if (run > maxLen ||
+                    (run == maxLen && run > 0 && (i < maxPos1 || (i == maxPos1 && j < maxPos2))))
+                {
+                    maxLen = run;
+                    maxPos1 = i;
+                    maxPos2 = j;
+                }
+            }
+        }
+
+        for (int startI = 0; startI < s1.Length; startI++)
+        {
+            WalkDiagonal(startI, 0);
+        }
+
+        for (int startJ = 1; startJ < s2.Length; startJ++)
+        {
+            WalkDiagonal(0, startJ);
+        }
+
+        return (maxLen, maxPos1, maxPos2);
     }
 }

@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -28,6 +28,8 @@ public class Qwen3TtsCpp : ITtsEngine
     public bool HasRegion => false;
     public bool HasModel => true;
     public bool HasKeyFile => false;
+    public bool SupportsVoiceCloning => true;
+    public bool SupportsPerLineVoiceCloning => false;
 
     public const string ModelKey06B = "0.6B";
     public const string ModelKey17BBase = "1.7B Base";
@@ -231,7 +233,7 @@ public class Qwen3TtsCpp : ITtsEngine
         var modelFileName = GetModelFileName(ResolveModelKey(model));
         await EnsureServerRunningAsync(modelFileName, cancellationToken);
 
-        var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
+        var outputFileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetFolder), Guid.NewGuid() + ".wav");
         var inputText = text;
 
         // Voice instruction only does anything on the instruction-tuned VoiceDesign model;
@@ -358,6 +360,11 @@ public class Qwen3TtsCpp : ITtsEngine
                 CreateNoWindow = true,
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
+                // The server writes UTF-8. Without these the reader decodes it in the OS default
+                // codepage, and non-ASCII text in the captured log - the line being synthesised,
+                // upstream's em dashes - reaches bug reports as mojibake (#13572).
+                StandardOutputEncoding = Encoding.UTF8,
+                StandardErrorEncoding = Encoding.UTF8,
             };
             psi.ArgumentList.Add("-m");
             psi.ArgumentList.Add(GetSetModelsFolder());
@@ -375,7 +382,7 @@ public class Qwen3TtsCpp : ITtsEngine
                 {
                     vulkanPath = Logic.VulkanHelper.TryFindBinFolder();
                 }
-                if (!string.IsNullOrEmpty(vulkanPath) && psi.EnvironmentVariables["Path"] != null)
+                if (!string.IsNullOrEmpty(vulkanPath) && ProcessEnvironmentHelper.GetOrNull(psi, "Path") != null)
                 {
                     psi.EnvironmentVariables["Path"] =
                         psi.EnvironmentVariables["Path"]?.TrimEnd(';') + ";" + vulkanPath;

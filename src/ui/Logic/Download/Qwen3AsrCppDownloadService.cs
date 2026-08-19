@@ -22,11 +22,13 @@ public class Qwen3AsrCppDownloadService : IQwen3AsrCppDownloadService
     // tokenization fix, multilingual alignment encoding, tokenizer-config GGUF vocab, thread-
     // count propagation). v0.1.7 fixes the Vulkan (discrete GPU) crash where the engine produced
     // no output JSON — weights are now uploaded to a device-local buffer instead of wrapped from
-    // an unreadable host pointer (issue #12815) — and bumps the ggml backend to 0.17.0. CPU for
-    // every platform, plus Vulkan (GPU) for win64 and linux-x64. When bumping: also prepend the
-    // new archive + executable hashes in DownloadHashManager (Qwen3AsrCpp keys) so the update
-    // prompt fires for old installs.
-    private const string ReleaseUrlBase = "https://github.com/niksedk/qwen3-asr.cpp/releases/download/v0.1.7/";
+    // an unreadable host pointer (issue #12815) — and bumps the ggml backend to 0.17.0. v0.1.8
+    // fixes invalid JSON output ("start": 1,840) on Windows with comma-decimal regional formats
+    // (French, German, ...): the v0.1.6 UTF-8 console setup let the user's LC_NUMERIC leak into
+    // the JSON timestamp formatting. CPU for every platform, plus Vulkan (GPU) for win64 and
+    // linux-x64. When bumping: also prepend the new archive + executable hashes in
+    // DownloadHashManager (Qwen3AsrCpp keys) so the update prompt fires for old installs.
+    private const string ReleaseUrlBase = "https://github.com/niksedk/qwen3-asr.cpp/releases/download/v0.1.8/";
     private const string WindowsUrl = ReleaseUrlBase + "qwen3-asr-cpp-win64.zip";
     private const string WindowsVulkanUrl = ReleaseUrlBase + "qwen3-asr-cpp-win64-vulkan.zip";
     private const string MacArmUrl = ReleaseUrlBase + "qwen3-asr-cpp-mac.zip";

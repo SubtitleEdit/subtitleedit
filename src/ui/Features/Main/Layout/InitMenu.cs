@@ -40,8 +40,9 @@ public static class InitMenu
 
         // In undocked mode the tool windows are topmost while SE is active (#11971), which
         // covers the menu popups - drop their topmost while a menu is open (#13187/#12899).
-        menu.Opened += (s, e) => vm.SetUndockedWindowsTopmost(false);
-        menu.Closed += (s, e) => vm.SetUndockedWindowsTopmost(true);
+        // Ref-counted so a dialog opened from a menu item keeps the suppression alive after
+        // the menu itself closes (#13325).
+        WindowService.SuspendUndockedTopmostWhileOpen(menu);
 
         // Drop the menu's font one notch below the theme default and tighten
         // each item's vertical padding — a denser menu reads better when there
@@ -99,6 +100,14 @@ public static class InitMenu
                 },
                 new MenuItem
                 {
+                    Header = l.EditOriginalSubtitle,
+                    Command = vm.ToggleEditOriginalModeCommand,
+                    ToggleType = MenuItemToggleType.CheckBox,
+                    [!MenuItem.IsCheckedProperty] = new Binding(nameof(vm.IsEditOriginalMode)) { Mode = BindingMode.OneWay },
+                    [!MenuItem.IsVisibleProperty] = new Binding(nameof(vm.ShowColumnOriginalText))
+                },
+                new MenuItem
+                {
                     Header = l.CloseOriginal,
                     Command = vm.FileCloseOriginalCommand,
                     [!MenuItem.IsVisibleProperty] = new Binding(nameof(vm.ShowColumnOriginalText))
@@ -107,7 +116,9 @@ public static class InitMenu
                 {
                     Header = l.CloseTranslation,
                     Command = vm.FileCloseTranslationCommand,
-                    [!MenuItem.IsVisibleProperty] = new Binding(nameof(vm.ShowColumnOriginalText))
+                    // Hidden for a read-only original: promoting a reference file to the working
+                    // subtitle would save a truncated copy over it (issue #13449).
+                    [!MenuItem.IsVisibleProperty] = new Binding(nameof(vm.CanEditOriginal))
                 },
                 vm.MenuReopen,
                 new MenuItem
@@ -213,6 +224,11 @@ public static class InitMenu
                         {
                             Header = Se.Language.General.BdnXml,
                             Command = vm.ExportBdnXmlCommand,
+                        },
+                        new MenuItem
+                        {
+                            Header = Se.Language.General.BdnXml8Bit,
+                            Command = vm.ExportBdnXml8BitCommand,
                         },
                         new MenuItem
                         {
@@ -620,6 +636,11 @@ public static class InitMenu
             },
             new MenuItem
             {
+                Header = Se.Language.Video.Chapters.ChaptersDotDotDot,
+                Command = vm.ShowVideoChaptersCommand,
+            },
+            new MenuItem
+            {
                 Header = Se.Language.Video.ReEncodeVideoForBetterSubtitlingDotDotDot,
                 Command = vm.VideoReEncodeCommand,
             },
@@ -627,6 +648,13 @@ public static class InitMenu
             {
                 Header = Se.Language.Video.CutVideoDotDotDot,
                 Command = vm.VideoCutCommand,
+            },
+            new MenuItem
+            {
+                // Finds who speaks in the video, clones each of them and assigns the cast, so the
+                // whole thing can be dubbed in its own voices (#13698).
+                Header = Se.Language.Video.TextToSpeech.AutoCastMenuItem,
+                Command = vm.ShowVideoAutoCastFromVideoCommand,
             },
             new MenuItem
             {

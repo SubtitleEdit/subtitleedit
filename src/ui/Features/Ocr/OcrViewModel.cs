@@ -165,6 +165,7 @@ public partial class OcrViewModel : ObservableObject
     // reflect the current on-disk state instead of the snapshot taken when first realised.
     public Action? RefreshEngineCombo { get; set; }
     public Action? RefreshCrispEmbedModelCombo { get; set; }
+    public Action? RefreshLlamaCppOcrModelCombo { get; set; }
 
     public MatroskaTrackInfo? SelectedMatroskaTrack { get; set; }
     public bool OkPressed { get; private set; }
@@ -172,6 +173,7 @@ public partial class OcrViewModel : ObservableObject
     public readonly List<SubtitleLineViewModel> OcredSubtitle;
 
     private IOcrSubtitle? _ocrSubtitle;
+    private OcrLineHeightTracker _lineHeightTracker = new();
     private List<OcrSubtitleItem> _allOcrSubtitleItems = new();
     private string _sourceFileName = string.Empty;
     private Iso639Dash2LanguageCode? _sourceLanguageIso;
@@ -304,7 +306,10 @@ public partial class OcrViewModel : ObservableObject
             GoogleVisionApiKey = ocr.GoogleVisionApiKey;
             MistralApiKey = ocr.MistralApiKey;
             SelectedGoogleVisionLanguage = GoogleVisionLanguages.FirstOrDefault(p => p.Code == ocr.GoogleVisionLanguage);
-            SelectedPaddleOcrLanguage = PaddleOcrLanguages.FirstOrDefault(p => p.Code == Se.Settings.Ocr.PaddleOcrLastLanguage) ?? PaddleOcrLanguages.First();
+            var paddleOcrLastLanguage = PaddleOcr.NormalizeLanguageCode(Se.Settings.Ocr.PaddleOcrLastLanguage);
+            SelectedPaddleOcrLanguage = PaddleOcrLanguages.FirstOrDefault(p => p.Code == paddleOcrLastLanguage) ??
+                                        PaddleOcrLanguages.FirstOrDefault(p => p.Code == "en") ??
+                                        PaddleOcrLanguages.First();
             SelectedGoogleLensLanguage = GoogleLensLanguages.FirstOrDefault(p => p.Code == Se.Settings.Ocr.GoogleLensOcrLastLanguage) ?? GoogleLensLanguages.First();
             if (!string.IsNullOrEmpty(ocr.TextBoxFontName))
             {
@@ -1017,7 +1022,7 @@ public partial class OcrViewModel : ObservableObject
         nBmp.MakeTwoColor(200);
         nBmp.CropTop(0, new SKColor(0, 0, 0, 0));
         var letters =
-            NikseBitmapImageSplitter2.SplitBitmapToLettersNew(nBmp, SelectedNOcrPixelsAreSpace, false, true, 20, true);
+            NikseBitmapImageSplitter2.SplitBitmapToLettersNew(nBmp, SelectedNOcrPixelsAreSpace, false, true, _lineHeightTracker.GetMinLineHeight(), true, _lineHeightTracker.GetAverageLineHeight());
         var matches = new List<NOcrChar?>(new NOcrChar?[letters.Count]);
         var idx = 0;
         while (idx < letters.Count)
@@ -1070,7 +1075,7 @@ public partial class OcrViewModel : ObservableObject
         nBmp.MakeTwoColor(200);
         nBmp.CropTop(0, new SKColor(0, 0, 0, 0));
         var letters =
-            NikseBitmapImageSplitter2.SplitBitmapToLettersNew(nBmp, SelectedNOcrPixelsAreSpace, false, true, 20, true);
+            NikseBitmapImageSplitter2.SplitBitmapToLettersNew(nBmp, SelectedNOcrPixelsAreSpace, false, true, _lineHeightTracker.GetMinLineHeight(), true, _lineHeightTracker.GetAverageLineHeight());
         var matches = new List<BinaryOcrMatcher.CompareMatch?>();
         foreach (var splitterItem in letters)
         {
@@ -1278,6 +1283,28 @@ public partial class OcrViewModel : ObservableObject
     }
 
     /// <summary>
+    /// Re-downloads the CrispEmbed engine binaries, re-asking which hardware build to use. The
+    /// CPU/Vulkan/CUDA choice is otherwise only offered on first install, which left anyone who
+    /// picked CPU with no way back to a GPU build (issue #13400). Downloaded models are kept.
+    /// </summary>
+    [RelayCommand]
+    private async Task ReDownloadCrispEmbedEngine()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        await CrispEmbedDownloadHelper.DownloadEngineAsync(
+            Window, _windowService,
+            onEngineDownloadClosed: () =>
+            {
+                _isCtrlDown = false;
+                RefreshEngineCombo?.Invoke();
+            });
+    }
+
+    /// <summary>
     /// Makes sure the CrispEmbed engine binaries and the selected model are on disk, offering
     /// downloads for anything missing - the OCR-side analog of the CrispASR engine/model
     /// download flow in the speech-to-text window.
@@ -1289,110 +1316,18 @@ public partial class OcrViewModel : ObservableObject
             return false;
         }
 
-        if (!CrispEmbedEngine.IsEngineInstalled())
-        {
-            string variant;
-            if (Configuration.IsRunningOnWindows)
+        return await CrispEmbedDownloadHelper.EnsureReadyAsync(
+            Window, _windowService, backend, model.Model, forceModelDownload,
+            onEngineDownloadClosed: () =>
             {
-                var answer = await MessageBox.Show(
-                    Window,
-                    "Download CrispEmbed?",
-                    $"{Environment.NewLine}\"CrispEmbed\" requires downloading the CrispEmbed engine.{Environment.NewLine}{Environment.NewLine}Download and use CrispEmbed?",
-                    MessageBoxButtons.Cancel,
-                    MessageBoxIcon.Question,
-                    "CPU",
-                    "Vulkan",
-                    "CUDA");
-
-                if (answer == MessageBoxResult.Cancel)
-                {
-                    return false;
-                }
-
-                variant = answer switch
-                {
-                    MessageBoxResult.Custom1 => "cpu",
-                    MessageBoxResult.Custom3 => "cuda",
-                    _ => "vulkan",
-                };
-            }
-            else if (Configuration.IsRunningOnLinux && RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
+                _isCtrlDown = false;
+                RefreshEngineCombo?.Invoke();
+            },
+            onModelDownloadClosed: () =>
             {
-                var answer = await MessageBox.Show(
-                    Window,
-                    "Download CrispEmbed?",
-                    $"{Environment.NewLine}\"CrispEmbed\" requires downloading the CrispEmbed engine.{Environment.NewLine}{Environment.NewLine}Download and use CrispEmbed?",
-                    MessageBoxButtons.Cancel,
-                    MessageBoxIcon.Question,
-                    "CPU",
-                    "GPU CUDA");
-
-                if (answer == MessageBoxResult.Cancel)
-                {
-                    return false;
-                }
-
-                variant = answer == MessageBoxResult.Custom2 ? "cuda" : string.Empty;
-            }
-            else
-            {
-                var answer = await MessageBox.Show(
-                    Window,
-                    "Download CrispEmbed?",
-                    $"{Environment.NewLine}\"CrispEmbed\" requires downloading the CrispEmbed engine ({CrispEmbedEngine.DownloadSizeText}).{Environment.NewLine}{Environment.NewLine}Download and use CrispEmbed?",
-                    MessageBoxButtons.YesNoCancel,
-                    MessageBoxIcon.Question);
-
-                if (answer != MessageBoxResult.Yes)
-                {
-                    return false;
-                }
-
-                variant = string.Empty;
-            }
-
-            var engineResult = await _windowService.ShowDialogAsync<DownloadCrispEmbedWindow, DownloadCrispEmbedViewModel>(Window,
-                vm => vm.InitializeEngine(variant));
-
-            _isCtrlDown = false;
-            RefreshEngineCombo?.Invoke();
-
-            if (!engineResult.OkPressed)
-            {
-                return false;
-            }
-        }
-
-        if (forceModelDownload || !backend.IsModelInstalled(model.Model))
-        {
-            if (!forceModelDownload)
-            {
-                var answer = await MessageBox.Show(
-                    Window,
-                    "Download model?",
-                    $"{Environment.NewLine}Download the model \"{model.Model.Name}\" ({model.Model.Size})?",
-                    MessageBoxButtons.YesNoCancel,
-                    MessageBoxIcon.Question);
-
-                if (answer != MessageBoxResult.Yes)
-                {
-                    return false;
-                }
-            }
-
-            var modelResult = await _windowService.ShowDialogAsync<DownloadCrispEmbedWindow, DownloadCrispEmbedViewModel>(Window,
-                vm => vm.InitializeModel(backend, model.Model));
-
-            _isCtrlDown = false;
-            RefreshCrispEmbedModelCombo?.Invoke();
-
-            if (!modelResult.OkPressed)
-            {
-                return false;
-            }
-        }
-
-        return true;
+                _isCtrlDown = false;
+                RefreshCrispEmbedModelCombo?.Invoke();
+            });
     }
 
     [RelayCommand]
@@ -1403,11 +1338,48 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
-        var result = await _windowService.ShowDialogAsync<LlamaCppOcrSettingsWindow, LlamaCppOcrSettingsViewModel>(Window, vm => vm.Initialize());
+        var result = await _windowService.ShowDialogAsync<LlamaCppOcrSettingsWindow, LlamaCppOcrSettingsViewModel>(Window, vm => vm.Initialize(UpdateLlamaCppOcrEngineAsync));
         if (result.OkPressed)
         {
             LlamaCppUrl = Se.Settings.Ocr.LlamaCppUrl;
         }
+
+        RefreshLlamaCppOcrDots();
+    }
+
+    /// <summary>
+    /// Stops the running llama-server (it holds the binary open and would keep serving a stale build),
+    /// re-downloads the matching llama.cpp build, and refreshes the model list and status indicators.
+    /// Wired to the download button in the llama.cpp OCR settings dialog - the only way to update an
+    /// installed engine from the OCR window, since the model download button never re-fetches the engine.
+    /// </summary>
+    private async Task UpdateLlamaCppOcrEngineAsync()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        LlamaCppServerManager.StopServer();
+        UpdateLlamaCppOcrServerButtonText();
+
+        // Re-download the same backend that is installed (CPU/Vulkan/CUDA all unpack into one
+        // folder); when nothing is installed yet, DownloadAsync falls back to asking the user.
+        var folder = LlamaCppServerManager.GetAndCreateFolder();
+        var variant = LlamaCppServerManager.IsEngineInstalled() && OperatingSystem.IsWindows()
+            ? DownloadHashManager.DetectLlamaCppWindowsVariant(folder)
+            : null;
+
+        var model = SelectedLlamaCppOcrModel?.Model;
+        var downloaded = await LlamaCppDownloadHelper.DownloadAsync(Window, _windowService, model, variant, forceEngineDownload: true);
+        if (downloaded != null)
+        {
+            var selectName = string.IsNullOrEmpty(downloaded) ? model?.FileName : downloaded;
+            SelectedLlamaCppOcrModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppOcrModels, LlamaCppServerManager.OcrModels, selectName);
+        }
+
+        RefreshLlamaCppOcrDots();
+        UpdateLlamaCppOcrServerButtonText();
     }
 
     private void UpdateLlamaCppOcrServerButtonText()
@@ -1446,8 +1418,20 @@ public partial class OcrViewModel : ObservableObject
         if (downloaded != null)
         {
             var selectName = string.IsNullOrEmpty(downloaded) ? model?.FileName : downloaded;
+            RefreshLlamaCppOcrDots();
             SelectedLlamaCppOcrModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppOcrModels, LlamaCppServerManager.OcrModels, selectName);
         }
+    }
+
+    /// <summary>
+    /// The install-status dots are one-off snapshots taken when a combo row is realised, so a
+    /// download only shows up once the templates are rebuilt: the llama-server binary may have
+    /// arrived with the model, which moves the engine dot too.
+    /// </summary>
+    private void RefreshLlamaCppOcrDots()
+    {
+        RefreshEngineCombo?.Invoke();
+        RefreshLlamaCppOcrModelCombo?.Invoke();
     }
 
     [RelayCommand]
@@ -1513,6 +1497,7 @@ public partial class OcrViewModel : ObservableObject
             }
 
             await LlamaCppDownloadHelper.DownloadAsync(Window, _windowService, model);
+            RefreshLlamaCppOcrDots();
             if (!LlamaCppServerManager.IsEngineInstalled() || !LlamaCppServerManager.IsModelInstalled(model))
             {
                 return false;
@@ -1620,6 +1605,24 @@ public partial class OcrViewModel : ObservableObject
                 NOcrDatabases.Clear();
                 NOcrDatabases.AddRange(sortedList);
                 SelectedNOcrDatabase = newResult.DatabaseName;
+            }
+
+            return;
+        }
+
+        if (result.TrainPressed)
+        {
+            var trainResult = await _windowService.ShowDialogAsync<NOcrTrainWindow, NOcrTrainViewModel>(Window!, _ => { });
+            _isCtrlDown = false;
+            if (trainResult.TrainedDatabaseName != null)
+            {
+                NOcrDatabases.Clear();
+                foreach (var s in NOcrDb.GetDatabases(Se.OcrFolder).OrderBy(p => p))
+                {
+                    NOcrDatabases.Add(s);
+                }
+
+                SelectedNOcrDatabase = trainResult.TrainedDatabaseName;
             }
 
             return;
@@ -2477,7 +2480,8 @@ public partial class OcrViewModel : ObservableObject
                     MessageBoxButtons.Cancel,
                     MessageBoxIcon.Question,
                     "CPU",
-                    "GPU CUDA");
+                    "GPU CUDA 11",
+                    "GPU CUDA 12");
 
                 if (answer == MessageBoxResult.Cancel)
                 {
@@ -2488,9 +2492,17 @@ public partial class OcrViewModel : ObservableObject
                 var result = await _windowService.ShowDialogAsync<DownloadPaddleOcrWindow, DownloadPaddleOcrViewModel>(Window!,
                     vm =>
                     {
-                        vm.Initialize(answer == MessageBoxResult.Custom1
-                            ? PaddleOcrDownloadType.EngineCpuLinux
-                            : PaddleOcrDownloadType.EngineGpuLinux);
+                        var engine = PaddleOcrDownloadType.EngineCpuLinux;
+                        if (answer == MessageBoxResult.Custom2)
+                        {
+                            engine = PaddleOcrDownloadType.EngineGpu11Linux;
+                        }
+                        else if (answer == MessageBoxResult.Custom3)
+                        {
+                            engine = PaddleOcrDownloadType.EngineGpu12Linux;
+                        }
+
+                        vm.Initialize(engine);
                     });
 
                 _isCtrlDown = false;
@@ -2997,14 +3009,16 @@ public partial class OcrViewModel : ObservableObject
             parentBitmap.MakeTwoColor(200);
             parentBitmap.CropTop(0, new SKColor(0, 0, 0, 0));
             var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, SelectedNOcrPixelsAreSpace,
-                false, true, 20, true);
+                false, true, _lineHeightTracker.GetMinLineHeight(), true, _lineHeightTracker.GetAverageLineHeight());
+            _lineHeightTracker.Update(letters);
             var index = 0;
             while (index < letters.Count)
             {
                 var splitterItem = letters[index];
                 if (splitterItem.NikseBitmap != null)
                 {
-                    var match = _nOcrDb!.GetMatch(parentBitmap, letters, splitterItem, splitterItem.Top, true, SelectedNOcrMaxWrongPixels);
+                    var match = _nOcrDb!.GetMatch(parentBitmap, letters, splitterItem, splitterItem.Top, true, SelectedNOcrMaxWrongPixels,
+                        italicFactor: Se.Settings.Ocr.ItalicFactor);
                     if (match != null)
                     {
                         _nOcrCaseFixer.FixUppercaseLowercaseIssues(splitterItem, match);
@@ -3035,7 +3049,8 @@ public partial class OcrViewModel : ObservableObject
             parentBitmap.MakeTwoColor(200);
             parentBitmap.CropTop(0, new SKColor(0, 0, 0, 0));
             var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, SelectedNOcrPixelsAreSpace,
-                false, true, 20, true);
+                false, true, _lineHeightTracker.GetMinLineHeight(), true, _lineHeightTracker.GetAverageLineHeight());
+            _lineHeightTracker.Update(letters);
             SelectedOcrSubtitleItem = item;
             var index = 0;
             var matches = new List<NOcrChar>();
@@ -3052,7 +3067,7 @@ public partial class OcrViewModel : ObservableObject
                 else
                 {
                     var match = _nOcrDb!.GetMatch(parentBitmap, letters, splitterItem, splitterItem.Top, true,
-                        SelectedNOcrMaxWrongPixels);
+                        SelectedNOcrMaxWrongPixels, italicFactor: Se.Settings.Ocr.ItalicFactor);
 
                     if (match == null && _nOcrFallbackBinaryOcrDb != null && _nOcrFallbackBinaryOcrMatcher != null)
                     {
@@ -3188,7 +3203,7 @@ public partial class OcrViewModel : ObservableObject
             if (ocrFixResultTemp.UnknownWords.Count > 0 && item.Text.Contains("<i>", StringComparison.Ordinal))
             {
                 var unItalicFactor = 0.33;
-                var text = GetTextWithMoreSpacesInItalic(ocrFixResultTemp.UnknownWords, matches, letters, parentBitmap, unItalicFactor, SelectedNOcrPixelsAreSpace);
+                var text = ItalicSpaceFixer.GetTextWithMoreSpacesInItalic(matches, letters, parentBitmap, unItalicFactor, SelectedNOcrPixelsAreSpace);
                 var unItalicItem = new OcrSubtitleItem(item, text);
                 var unItalicResultTemp = OcrFixLine(i, unItalicItem);
                 if (ocrFixResultTemp.UnknownWords.Count > unItalicResultTemp.UnknownWords.Count)
@@ -3251,104 +3266,6 @@ public partial class OcrViewModel : ObservableObject
         return matches;
     }
 
-    private static string GetTextWithMoreSpacesInItalic(
-        List<UnknownWordItem> unknownWords,
-        List<NOcrChar> matches,
-        List<ImageSplitterItem2> letters,
-        NikseBitmap2 parentBitmap,
-        double unItalicFactor,
-        int pixelsIsSpace)
-    {
-        // Clear all CouldBeSpaceBefore flags
-        foreach (var letter in letters)
-        {
-            letter.CouldBeSpaceBefore = false;
-        }
-
-        // Check for potential spaces in italic text
-        for (var i = 0; i < matches.Count - 1; i++)
-        {
-            var match = matches[i];
-            var matchNext = matches[i + 1];
-            if (!match.Italic || matchNext.Text == "," ||
-                string.IsNullOrWhiteSpace(match.Text) || string.IsNullOrWhiteSpace(matchNext.Text) ||
-                match.ImageSplitterItem == null || matchNext.ImageSplitterItem == null)
-            {
-                continue;
-            }
-
-            var blankVerticalLines = IsVerticalAngledLineTransparent(parentBitmap, match.ImageSplitterItem, matchNext.ImageSplitterItem, unItalicFactor);
-            if (match.Text == "f" || match.Text == "," || matchNext.Text.StartsWith('y') || matchNext.Text.StartsWith('j'))
-            {
-                blankVerticalLines++;
-            }
-
-            if (blankVerticalLines >= pixelsIsSpace)
-            {
-                matchNext.ImageSplitterItem.CouldBeSpaceBefore = true;
-            }
-        }
-
-        // Insert spaces where CouldBeSpaceBefore is true and previous match is italic
-        var j = 1;
-        while (j < matches.Count)
-        {
-            var match = matches[j];
-            var prevMatch = matches[j - 1];
-            if (match.ImageSplitterItem?.CouldBeSpaceBefore == true)
-            {
-                match.ImageSplitterItem.CouldBeSpaceBefore = false;
-                if (prevMatch.Italic)
-                {
-                    matches.Insert(j, new NOcrChar(" "));
-                    j++; // Skip the inserted space
-                }
-            }
-
-            j++;
-        }
-
-        return ItalicTextMerger.MergeWithItalicTags(matches).Trim();
-    }
-
-    private static int IsVerticalAngledLineTransparent(NikseBitmap2 parentBitmap, ImageSplitterItem2 match, ImageSplitterItem2 next, double unItalicFactor)
-    {
-        if (match.NikseBitmap == null || next.NikseBitmap == null)
-        {
-            return 0;
-        }
-
-        var blanks = 0;
-        var min = match.X + match.NikseBitmap.Width;
-        var max = next.X + next.NikseBitmap.Width / 2;
-        for (var startX = min; startX < max; startX++)
-        {
-            var lineBlank = true;
-            for (var y = match.Y; y < match.Y + match.NikseBitmap.Height; y++)
-            {
-                var x = startX - (y - match.Y) * unItalicFactor;
-                if (x >= 0 && x < parentBitmap.Width && y < parentBitmap.Height)
-                {
-                    var color = parentBitmap.GetPixel((int)Math.Round(x), y);
-                    if (color.Alpha != 0)
-                    {
-                        lineBlank = false;
-                        if (blanks > 0)
-                        {
-                            return blanks;
-                        }
-                    }
-                }
-            }
-
-            if (lineBlank)
-            {
-                blanks++;
-            }
-        }
-
-        return blanks;
-    }
 
     private void RunBinaryImageCompareOcr(List<int> selectedIndices, CancellationToken cancellationToken)
     {
@@ -3399,7 +3316,8 @@ public partial class OcrViewModel : ObservableObject
             var parentBitmap = new NikseBitmap2(bitmap);
             parentBitmap.MakeTwoColor(200);
             parentBitmap.CropTop(0, new SKColor(0, 0, 0, 0));
-            var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, SelectedBinaryOcrPixelsAreSpace, false, true, 20, true);
+            var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, SelectedBinaryOcrPixelsAreSpace, false, true, _lineHeightTracker.GetMinLineHeight(), true, _lineHeightTracker.GetAverageLineHeight());
+            _lineHeightTracker.Update(letters);
             SelectedOcrSubtitleItem = item;
             var index = 0;
             var matches = new List<BinaryOcrMatcher.CompareMatch>();
@@ -3420,7 +3338,8 @@ public partial class OcrViewModel : ObservableObject
 
                     if (match == null && _binaryOcrFallbackNOcrDb != null)
                     {
-                        var nMatch = _binaryOcrFallbackNOcrDb.GetMatch(parentBitmap, letters, splitterItem, splitterItem.Top, true, SelectedNOcrMaxWrongPixels, lastDitch: true);
+                        var nMatch = _binaryOcrFallbackNOcrDb.GetMatch(parentBitmap, letters, splitterItem, splitterItem.Top, true, SelectedNOcrMaxWrongPixels, lastDitch: true,
+                            italicFactor: Se.Settings.Ocr.ItalicFactor);
                         if (nMatch != null && !string.IsNullOrEmpty(nMatch.Text))
                         {
                             if (nMatch.ExpandCount > 0)
@@ -3429,7 +3348,7 @@ public partial class OcrViewModel : ObservableObject
                             }
 
                             var text = _nOcrCaseFixer.FixUppercaseLowercaseIssues(splitterItem, nMatch);
-                            matches.Add(new BinaryOcrMatcher.CompareMatch(text, nMatch.Italic, nMatch.ExpandCount, "nOcrFallback"));
+                            matches.Add(new BinaryOcrMatcher.CompareMatch(text, nMatch.Italic, nMatch.ExpandCount, "nOcrFallback") { ImageSplitterItem = splitterItem });
                             index++;
                             continue;
                         }
@@ -3517,7 +3436,7 @@ public partial class OcrViewModel : ObservableObject
                     }
                     else
                     {
-                        matches.Add(new BinaryOcrMatcher.CompareMatch(match.Text, match.Italic, match.ExpandCount, match.Name));
+                        matches.Add(new BinaryOcrMatcher.CompareMatch(match.Text, match.Italic, match.ExpandCount, match.Name) { ImageSplitterItem = splitterItem });
                     }
                 }
 
@@ -3525,7 +3444,26 @@ public partial class OcrViewModel : ObservableObject
             }
 
             item.Text = ItalicTextMerger.MergeWithItalicTags(matches).Trim();
-            var unknownWords = OcrFixLineAndSetText(i, item);
+            var ocrFixResultTemp = OcrFixLine(i, item);
+            if (ocrFixResultTemp.UnknownWords.Count > 0 && item.Text.Contains("<i>", StringComparison.Ordinal))
+            {
+                // Italic glyphs lean over the word gaps, so the straight-column space
+                // detection undercounts them - re-measure along the italic slant and
+                // keep the extra spaces only if the dictionary likes the result better.
+                var unItalicFactor = 0.33;
+                var text = ItalicSpaceFixer.GetTextWithMoreSpacesInItalic(matches, letters, parentBitmap, unItalicFactor, SelectedBinaryOcrPixelsAreSpace);
+                var unItalicItem = new OcrSubtitleItem(item, text);
+                var unItalicResultTemp = OcrFixLine(i, unItalicItem);
+                if (ocrFixResultTemp.UnknownWords.Count > unItalicResultTemp.UnknownWords.Count)
+                {
+                    item.Text = unItalicItem.Text;
+                    item.FixResult = unItalicItem.FixResult;
+                    ocrFixResultTemp = unItalicResultTemp;
+                }
+            }
+
+            SetText(i, item, ocrFixResultTemp);
+            var unknownWords = ocrFixResultTemp.UnknownWords;
 
             _runOnceChars.Clear();
             _skipOnceChars.Clear();
@@ -3656,7 +3594,7 @@ public partial class OcrViewModel : ObservableObject
 
                     var suggestions = _ocrFixEngine.GetSpellCheckSuggestions(unknownWord.Word.FixedWord);
                     var result = await _windowService.ShowDialogAsync<PromptUnknownWordWindow, PromptUnknownWordViewModel>(Window!,
-                        vm => { vm.Initialize(item.GetBitmap(), item.Text, unknownWord, suggestions); });
+                        vm => { vm.Initialize(item.GetBitmapCropped(), item.Text, unknownWord, suggestions); });
 
                     if (result.ChangeWholeTextPressed)
                     {
@@ -3774,6 +3712,29 @@ public partial class OcrViewModel : ObservableObject
         public OcrFixLineResult OcrFixLineResult { get; set; } = new OcrFixLineResult();
     }
 
+    // The auto-break language comes from the selected spell check dictionary (used for the
+    // do-not-break-after list). Mapping dictionary name to a two-letter code involves culture
+    // lookups, so memoize it - OcrFixLine runs once per OCR'ed line.
+    private SpellCheckDictionaryDisplay? _autoBreakLanguageSource;
+    private string _autoBreakLanguage = string.Empty;
+
+    private string GetAutoBreakLanguage()
+    {
+        var dictionary = SelectedDictionary;
+        if (dictionary == null || dictionary.Name == GetDictionaryNameNone())
+        {
+            return string.Empty;
+        }
+
+        if (!ReferenceEquals(dictionary, _autoBreakLanguageSource))
+        {
+            _autoBreakLanguageSource = dictionary;
+            _autoBreakLanguage = SpellCheckDictionaryDisplay.GetTwoLetterLanguageCode(dictionary);
+        }
+
+        return _autoBreakLanguage;
+    }
+
     private OcrFixLineResultTemp OcrFixLine(int i, OcrSubtitleItem item)
     {
         var result = new OcrFixLineResultTemp();
@@ -3781,7 +3742,7 @@ public partial class OcrViewModel : ObservableObject
         // The checkbox promises "auto-break if more than X lines", so leave shorter results alone.
         if (DoAutoBreak && Utilities.GetNumberOfLines(item.Text) > Se.Settings.General.MaxNumberOfLines)
         {
-            item.Text = Utilities.AutoBreakLine(item.Text);
+            item.Text = Utilities.AutoBreakLine(item.Text, GetAutoBreakLanguage());
         }
 
         if (SelectedDictionary != null &&
@@ -3873,7 +3834,7 @@ public partial class OcrViewModel : ObservableObject
         // The checkbox promises "auto-break if more than X lines", so leave shorter results alone.
         if (DoAutoBreak && Utilities.GetNumberOfLines(item.Text) > Se.Settings.General.MaxNumberOfLines)
         {
-            item.Text = Utilities.AutoBreakLine(item.Text);
+            item.Text = Utilities.AutoBreakLine(item.Text, GetAutoBreakLanguage());
         }
 
         var unknownWords = new List<UnknownWordItem>();
@@ -4060,10 +4021,17 @@ public partial class OcrViewModel : ObservableObject
 
     private void RunOllamaOcr(List<int> selectedIndices, CancellationToken cancellationToken)
     {
+        // The engine belongs to the background task below, not to this method: a "using" here
+        // disposes the HttpClient the moment the task is started, so every request fails and the
+        // grid fills with blank lines.
         var ollamaOcr = new OllamaOcr(Se.Settings.Ocr.OllamaOcrTimeoutMinutes);
+        var url = OllamaUrl;
+        var model = OllamaModel;
 
         _ = Task.Run(async () =>
         {
+            var processedCount = 0;
+            var producedAnyText = false;
             try
             {
                 for (var processedIndex = 0; processedIndex < selectedIndices.Count; processedIndex++)
@@ -4081,52 +4049,96 @@ public partial class OcrViewModel : ObservableObject
 
                     SelectAndScrollToRow(i);
 
-                    var text = await ollamaOcr.Ocr(bitmap, OllamaUrl, OllamaModel, SelectedOllamaLanguage ?? "English", cancellationToken);
+                    var text = await ollamaOcr.Ocr(bitmap, url, model, SelectedOllamaLanguage ?? "English", cancellationToken);
+
+                    // Surface a real failure (Ollama not running, model not pulled, out of memory)
+                    // instead of silently filling the grid with blank lines.
+                    if (string.IsNullOrEmpty(text) && !string.IsNullOrEmpty(ollamaOcr.Error))
+                    {
+                        await ShowOllamaErrorAsync(ollamaOcr.Error, url, model);
+                        return;
+                    }
+
+                    processedCount++;
+                    if (!string.IsNullOrWhiteSpace(text))
+                    {
+                        producedAnyText = true;
+                    }
+
                     item.Text = text;
 
                     OcrFixLineAndSetText(i, item);
+                }
+
+                if (processedCount >= 1 && !producedAnyText && !cancellationToken.IsCancellationRequested)
+                {
+                    await ShowOllamaErrorAsync(
+                        "Ollama returned no text for " +
+                        (processedCount == 1 ? "the line." : "any of the " + processedCount + " lines.") + Environment.NewLine +
+                        "The model may not suit subtitle images, or the selected language may be wrong.",
+                        url, model);
                 }
             }
             catch (OperationCanceledException)
             {
             }
+            catch (Exception ex)
+            {
+                SeLogger.Error(ex, "Error running Ollama OCR");
+                await ShowOllamaErrorAsync(ollamaOcr.Error is { Length: > 0 } e ? e : ex.Message, url, model);
+            }
             finally
             {
+                ollamaOcr.Dispose();
                 PauseOcr();
             }
         });
     }
 
+    private async Task ShowOllamaErrorAsync(string error, string url, string model)
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        await Dispatcher.UIThread.InvokeAsync(async () =>
+            await MessageBox.Show(
+                Window!,
+                Se.Language.General.Error,
+                "Ollama OCR failed (model \"" + model + "\" at " + url + "):" + Environment.NewLine + Environment.NewLine + error,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error));
+    }
+
     private void RunLlamaCppOcr(List<int> selectedIndices, CancellationToken cancellationToken)
     {
+        // The engine belongs to the background task below, not to this method: a "using" here
+        // disposes the HttpClient the moment the task is started, so every request fails and the
+        // grid fills with blank lines (#13633).
         var engine = new LlamaCppOcr(Se.Settings.Ocr.LlamaCppOcrTimeoutMinutes);
         var selectedModel = SelectedLlamaCppOcrModel?.Model;
         var prompt = Se.Settings.Ocr.LlamaCppOcrPrompt;
 
         _ = Task.Run(async () =>
         {
-            string url;
-            string modelName;
-            if (selectedModel != null)
-            {
-                var ready = await Dispatcher.UIThread.InvokeAsync(EnsureLlamaCppOcrReady);
-                if (!ready)
-                {
-                    PauseOcr();
-                    return;
-                }
-
-                url = LlamaCppServerManager.ApiUrl;
-                modelName = Path.GetFileNameWithoutExtension(selectedModel.FileName);
-            }
-            else
-            {
-                url = LlamaCppUrl;
-                modelName = "glmocr";
-            }
-
+            var url = LlamaCppUrl;
+            var modelName = "glmocr";
             try
             {
+                if (selectedModel != null)
+                {
+                    var ready = await Dispatcher.UIThread.InvokeAsync(EnsureLlamaCppOcrReady);
+                    if (!ready)
+                    {
+                        PauseOcr();
+                        return;
+                    }
+
+                    url = LlamaCppServerManager.ApiUrl;
+                    modelName = Path.GetFileNameWithoutExtension(selectedModel.FileName);
+                }
+
                 for (var processedIndex = 0; processedIndex < selectedIndices.Count; processedIndex++)
                 {
                     var i = selectedIndices[processedIndex];
@@ -4143,6 +4155,15 @@ public partial class OcrViewModel : ObservableObject
                     SelectAndScrollToRow(i);
 
                     var text = await engine.Ocr(bitmap, url, modelName, SelectedOllamaLanguage ?? "English", prompt, cancellationToken);
+
+                    // Surface a real failure (server gone, model not loaded, out of memory) instead
+                    // of silently filling the grid with blank lines.
+                    if (string.IsNullOrEmpty(text) && !string.IsNullOrEmpty(engine.Error))
+                    {
+                        await ShowLlamaCppErrorAsync(engine.Error, url, modelName);
+                        return;
+                    }
+
                     item.Text = text;
 
                     OcrFixLineAndSetText(i, item);
@@ -4151,11 +4172,36 @@ public partial class OcrViewModel : ObservableObject
             catch (OperationCanceledException)
             {
             }
+            catch (Exception ex)
+            {
+                SeLogger.Error(ex, "Error running llama.cpp OCR");
+                await ShowLlamaCppErrorAsync(engine.Error is { Length: > 0 } e ? e : ex.Message, url, modelName);
+            }
             finally
             {
+                engine.Dispose();
                 PauseOcr();
             }
         });
+    }
+
+    private async Task ShowLlamaCppErrorAsync(string error, string url, string model)
+    {
+        if (Window == null || _isWindowClosed)
+        {
+            // No window to parent the dialog - MessageBox.Show would throw inside the
+            // fire-and-forget OCR task. Keep the failure visible in the log instead.
+            SeLogger.Error("llama.cpp OCR failed (model \"" + model + "\" at " + url + "): " + error);
+            return;
+        }
+
+        await Dispatcher.UIThread.InvokeAsync(async () =>
+            await MessageBox.Show(
+                Window!,
+                Se.Language.General.Error,
+                "llama.cpp OCR failed (model \"" + model + "\" at " + url + "):" + Environment.NewLine + Environment.NewLine + error,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error));
     }
 
     private void RunCrispEmbedOcr(List<int> selectedIndices, CancellationToken cancellationToken)
@@ -4317,20 +4363,31 @@ public partial class OcrViewModel : ObservableObject
         if (OperatingSystem.IsWindows())
         {
             var tesseractExe = Path.Combine(Se.TesseractFolder, "tesseract.exe");
-            if (File.Exists(tesseractExe))
+            var isOutdated = TesseractDownloadService.IsWindowsBuildOutdated();
+            var isInstalled = File.Exists(tesseractExe);
+            if (isInstalled && !isOutdated)
             {
                 return true;
             }
 
             var answer = await MessageBox.Show(
                 Window!,
-                "Download Tesseract OCR?",
-                $"{Environment.NewLine}\"Tesseract\" requires downloading Tesseract OCR.{Environment.NewLine}{Environment.NewLine}Download and use Tesseract OCR?",
+                isOutdated ? "Update Tesseract OCR?" : "Download Tesseract OCR?",
+                isOutdated
+                    ? $"{Environment.NewLine}A newer Tesseract OCR ({TesseractDownloadService.WindowsVersion}) is available.{Environment.NewLine}{Environment.NewLine}Download and use it? Your downloaded languages are kept."
+                    : $"{Environment.NewLine}\"Tesseract\" requires downloading Tesseract OCR.{Environment.NewLine}{Environment.NewLine}Download and use Tesseract OCR?",
                 MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Question);
 
             if (answer != MessageBoxResult.Yes)
             {
+                // Declining an update must not break OCR - keep running the installed build.
+                if (isInstalled)
+                {
+                    TesseractDownloadService.DeclineWindowsUpdate();
+                    return true;
+                }
+
                 return false;
             }
 
@@ -4601,11 +4658,47 @@ public partial class OcrViewModel : ObservableObject
         }, DispatcherPriority.Background);
     }
 
+    partial void OnIsOcrRunningChanged(bool value)
+    {
+        if (value)
+        {
+            return;
+        }
+
+        // When OCR stops, the last per-line scroll may have run before that row's
+        // text/image finished layout, leaving the selected row just outside the
+        // viewport. ContextIdle runs below Background, i.e. after any pending
+        // SelectAndScrollToRow work and the layout passes it triggers; the second
+        // pass corrects drift from rows realized at estimated heights.
+        Dispatcher.UIThread.Post(() =>
+        {
+            ScrollSelectedRowIntoView();
+            Dispatcher.UIThread.Post(ScrollSelectedRowIntoView, DispatcherPriority.ContextIdle);
+        }, DispatcherPriority.ContextIdle);
+    }
+
+    private void ScrollSelectedRowIntoView()
+    {
+        var selected = SelectedOcrSubtitleItem;
+        var index = selected != null ? OcrSubtitleItems.IndexOf(selected) : -1;
+        if (index >= 0)
+        {
+            SubtitleGrid.ScrollIntoView(index);
+        }
+    }
+
     private void SetOcrSubtitleItems()
     {
         _allOcrSubtitleItems = _ocrSubtitle!.MakeOcrSubtitleItems();
         HasForcedSubtitles = _allOcrSubtitleItems.Any(p => p.IsForced);
         OcrSubtitleItems = new ObservableCollection<OcrSubtitleItem>(_allOcrSubtitleItems);
+
+        // New source, new glyph-height statistics (Blu-ray fonts are much larger than DVD's,
+        // so the pre-adaptation fallback differs - SE 4's 25 vs 12).
+        _lineHeightTracker = new OcrLineHeightTracker
+        {
+            FallbackMinLineHeight = _ocrSubtitle is OcrSubtitleBluRay or OcrSubtitleMkvBluRay ? 25 : 12,
+        };
     }
 
     partial void OnShowOnlyForcedChanged(bool value)
@@ -4805,7 +4898,8 @@ public partial class OcrViewModel : ObservableObject
         {
             if (SelectedPaddleOcrLanguage == null)
             {
-                SelectedPaddleOcrLanguage = PaddleOcrLanguages.FirstOrDefault(p => p.Code == "eng") ??
+                SelectedPaddleOcrLanguage = PaddleOcrLanguages.FirstOrDefault(p => _sourceLanguageIso != null && p.Code == _sourceLanguageIso.TwoLetterCode) ??
+                                            PaddleOcrLanguages.FirstOrDefault(p => p.Code == "en") ??
                                             PaddleOcrLanguages.FirstOrDefault();
             }
         }
@@ -4892,11 +4986,16 @@ public partial class OcrViewModel : ObservableObject
     }
 
     private bool _forceClose = false;
+    private bool _isWindowClosed = false;
 
     internal async void OnClosing(WindowClosingEventArgs e)
     {
         if (_forceClose || e.IsProgrammatic)
         {
+            // The engine loops only stop through this token: without cancelling here a
+            // close mid-run kept OCRing every remaining line against a closed window.
+            _isWindowClosed = true;
+            _cancellationTokenSource.Cancel();
             SaveSettings();
             UiUtil.SaveWindowPosition(Window);
             return;
@@ -4935,6 +5034,8 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
+        _isWindowClosed = true;
+        _cancellationTokenSource.Cancel();
         SaveSettings();
         UiUtil.SaveWindowPosition(Window);
     }

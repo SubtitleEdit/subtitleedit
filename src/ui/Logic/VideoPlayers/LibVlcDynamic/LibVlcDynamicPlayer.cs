@@ -103,6 +103,10 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayer
     private libvlc_audio_set_volume? _libvlc_audio_set_volume;
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate void libvlc_audio_set_mute(IntPtr mediaPlayer, int status);
+    private libvlc_audio_set_mute? _libvlc_audio_set_mute;
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate int libvlc_audio_get_track_count(IntPtr mediaPlayer);
     private libvlc_audio_get_track_count? _libvlc_audio_get_track_count;
 
@@ -340,6 +344,7 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayer
         _libvlc_audio_get_delay = (libvlc_audio_get_delay)GetDllType(typeof(libvlc_audio_get_delay), "libvlc_audio_get_delay");
         _libvlc_audio_get_volume = (libvlc_audio_get_volume)GetDllType(typeof(libvlc_audio_get_volume), "libvlc_audio_get_volume");
         _libvlc_audio_set_volume = (libvlc_audio_set_volume)GetDllType(typeof(libvlc_audio_set_volume), "libvlc_audio_set_volume");
+        _libvlc_audio_set_mute = (libvlc_audio_set_mute)GetDllType(typeof(libvlc_audio_set_mute), "libvlc_audio_set_mute");
 
         _libvlc_track_description_release = (libvlc_track_description_release)GetDllType(typeof(libvlc_track_description_release), "libvlc_track_description_release");
         if (_libvlc_track_description_release == null)
@@ -634,7 +639,7 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayer
 
     public string FileName => _fileName;
 
-    public async Task LoadFile(string path)
+    public async Task LoadFile(string path, double startPositionSeconds = 0)
     {
         EnsureNotDisposed();
 
@@ -695,6 +700,15 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayer
                 // Ignore
             }
 
+            // The duration only becomes available once playback has begun, so this has to play
+            // the file - but the user asked to open a video, not to hear the first tenth of a
+            // second of it (issue #13329). Silence it for as long as the probe runs. Both mute
+            // and volume are set: libvlc applies whichever it can, depending on when the audio
+            // output gets created.
+            var volumeBeforeProbe = _libvlc_audio_get_volume?.Invoke(_mediaPlayer) ?? -1;
+            _libvlc_audio_set_mute?.Invoke(_mediaPlayer, 1);
+            _libvlc_audio_set_volume?.Invoke(_mediaPlayer, 0);
+
             // Start playing to parse media and get duration
             _libvlc_media_player_play?.Invoke(_mediaPlayer);
 
@@ -715,9 +729,20 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayer
                 }
             }
 
-            // Pause immediately after getting duration and seek to start
+            // Pause immediately after getting duration and go to where the caller wants to be -
+            // seeking only once the player is up shows the start of the video first and then
+            // jumps (issue #13329).
             _libvlc_media_player_set_pause?.Invoke(_mediaPlayer, 1);
-            _libvlc_media_player_set_time?.Invoke(_mediaPlayer, 0);
+            _libvlc_media_player_set_time?.Invoke(_mediaPlayer, startPositionSeconds > 0 ? (long)(startPositionSeconds * 1000.0) : 0);
+
+            // Hand the audio back. VideoPlayerControl.Open re-applies the user's volume right
+            // after this, but LoadFile is also reached from the sub-reload path, which doesn't -
+            // so restore what this player had rather than leaving it silent.
+            _libvlc_audio_set_mute?.Invoke(_mediaPlayer, 0);
+            if (volumeBeforeProbe >= 0)
+            {
+                _libvlc_audio_set_volume?.Invoke(_mediaPlayer, volumeBeforeProbe);
+            }
 
             _fileName = path;
         });

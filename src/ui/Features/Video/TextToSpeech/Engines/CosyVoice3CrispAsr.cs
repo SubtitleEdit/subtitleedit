@@ -61,15 +61,26 @@ public class CosyVoice3CrispAsr : ITtsEngine
     public bool HasRegion => false;
     public bool HasModel => true;
     public bool HasKeyFile => false;
+    public bool SupportsVoiceCloning => true;
+    public bool SupportsPerLineVoiceCloning => false;
 
     // Two LLM quants — Q4_K is the lightweight default (~1.6 GB total), F16 the reference (~2.5 GB).
     // The label total covers every required companion (flow / hift / s3tok / campplus / voices).
+    // Each quant also comes as an RL talker (#13272): upstream ships two checkpoints for the same
+    // architecture, llm.pt and llm.rl.pt, the latter tuned by the authors for speech quality,
+    // pronunciation accuracy and generation stability. Only the talker differs - flow, HiFT,
+    // CAMPPlus, the speech tokenizer and the voice bank are shared - so an RL pick is the same
+    // bundle with a different LLM file and costs nothing extra beyond that one download.
     public const string ModelKeyQ4K = "Q4_K (~1.6 GB total)";
     public const string ModelKeyF16 = "F16 (~2.5 GB total)";
+    public const string ModelKeyRlQ4K = "RL Q4_K (~1.6 GB total)";
+    public const string ModelKeyRlF16 = "RL F16 (~2.5 GB total)";
     public const string DefaultModelKey = ModelKeyQ4K;
 
     public const string LlmQ4KFileName = "cosyvoice3-llm-q4_k.gguf";
     public const string LlmF16FileName = "cosyvoice3-llm-f16.gguf";
+    public const string LlmRlQ4KFileName = "cosyvoice3-llm-rl-q4_k.gguf";
+    public const string LlmRlF16FileName = "cosyvoice3-llm-rl-f16.gguf";
     public const string FlowF16FileName = "cosyvoice3-flow-f16.gguf";
     public const string HiftF16FileName = "cosyvoice3-hift-f16.gguf";
     public const string S3TokF16FileName = "cosyvoice3-s3tok-f16.gguf";
@@ -79,13 +90,22 @@ public class CosyVoice3CrispAsr : ITtsEngine
     public const string BackendName = "cosyvoice3-tts";
 
     /// <summary>
+    /// Combo-box group labels for the engine's two generation modes: a voice baked into
+    /// <c>cosyvoice3-voices.gguf</c>, or zero-shot cloning from an imported reference WAV.
+    /// crispasr's cosyvoice3-tts backend has no third mode — the instruct / voice-design path of
+    /// the upstream web demo is not ported — so these two cover it.
+    /// </summary>
+    public const string PresetLabel = "Preset";
+    public const string CloneLabel = "Clone";
+
+    /// <summary>
     /// All filenames that must be present in <see cref="GetSetModelsFolder"/> for the chosen
     /// quant. Both quants share the F16 companion set — only the LLM differs. Listed in this
     /// order so the download dialog progresses through them deterministically.
     /// </summary>
     public static string[] GetRequiredFileNames(string? modelKey) => new[]
     {
-        ResolveModelKey(modelKey) == ModelKeyF16 ? LlmF16FileName : LlmQ4KFileName,
+        GetLlmFileName(modelKey),
         FlowF16FileName,
         HiftF16FileName,
         S3TokF16FileName,
@@ -115,6 +135,10 @@ public class CosyVoice3CrispAsr : ITtsEngine
     {
         [LlmQ4KFileName] = 383891200L,
         [LlmF16FileName] = 1289653952L,
+        // The RL talkers are the same architecture and quantisation recipe, hence byte-identical
+        // sizes to their non-RL counterparts. The file name is what tells them apart.
+        [LlmRlQ4KFileName] = 383891200L,
+        [LlmRlF16FileName] = 1289653952L,
         [FlowF16FileName] = 665140992L,
         [HiftF16FileName] = 41601888L,
         [S3TokF16FileName] = 484406944L,
@@ -133,6 +157,8 @@ public class CosyVoice3CrispAsr : ITtsEngine
         return modelKey switch
         {
             ModelKeyF16 => ModelKeyF16,
+            ModelKeyRlQ4K => ModelKeyRlQ4K,
+            ModelKeyRlF16 => ModelKeyRlF16,
             _ => ModelKeyQ4K,
         };
     }
@@ -140,6 +166,8 @@ public class CosyVoice3CrispAsr : ITtsEngine
     public static string GetLlmFileName(string? modelKey) => ResolveModelKey(modelKey) switch
     {
         ModelKeyF16 => LlmF16FileName,
+        ModelKeyRlQ4K => LlmRlQ4KFileName,
+        ModelKeyRlF16 => LlmRlF16FileName,
         _ => LlmQ4KFileName,
     };
 
@@ -388,9 +416,15 @@ public class CosyVoice3CrispAsr : ITtsEngine
         // Baked-in presets come first so the combo opens on a working default. Imported WAVs
         // (zero-shot clones) follow — they need a .txt sidecar with the transcription or the
         // server returns noise.
+        //
+        // The two groups are the engine's two generation modes (crispasr's cosyvoice3-tts takes
+        // either a bank name or a reference WAV, and nothing else), so they are labelled as such:
+        // the flat concatenation gave no way to tell an engine preset from your own import
+        // (#13272). Labels live on DisplayName, never on the voice Name, which is what saved
+        // cast-row mappings match against.
         foreach (var (display, preset) in Presets)
         {
-            result.Add(new Voice(new CosyVoice3Voice(display, preset)));
+            result.Add(new Voice(new CosyVoice3Voice(display, preset), $"{PresetLabel}: {display}"));
         }
 
         // Off the UI thread: GetSetVoicesFolder does one-time reference-WAV seeding through
@@ -402,7 +436,7 @@ public class CosyVoice3CrispAsr : ITtsEngine
             {
                 var name = Path.GetFileNameWithoutExtension(file).Replace('_', ' ');
                 var refText = TryReadRefText(file);
-                result.Add(new Voice(new CosyVoice3Voice(name, file, refText)));
+                result.Add(new Voice(new CosyVoice3Voice(name, file, refText), $"{CloneLabel}: {name}"));
             }
         }
 
@@ -435,7 +469,7 @@ public class CosyVoice3CrispAsr : ITtsEngine
 
     public Task<string[]> GetRegions() => Task.FromResult(Array.Empty<string>());
 
-    public Task<string[]> GetModels() => Task.FromResult(new[] { ModelKeyQ4K, ModelKeyF16 });
+    public Task<string[]> GetModels() => Task.FromResult(new[] { ModelKeyQ4K, ModelKeyF16, ModelKeyRlQ4K, ModelKeyRlF16 });
 
     public Task<TtsLanguage[]> GetLanguages(Voice voice, string? model) => Task.FromResult(CosyVoice3Languages.All);
 
@@ -484,7 +518,7 @@ public class CosyVoice3CrispAsr : ITtsEngine
         var modelKey = ResolveModelKey(model);
         await EnsureServerRunningAsync(modelKey, voiceArg, cosyVoice.RefText, cancellationToken);
 
-        var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
+        var outputFileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetFolder), Guid.NewGuid() + ".wav");
 
         var speed = Math.Clamp(Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrSpeed, 0.25, 4.0);
         // Deliberately NO `voice` / `ref_text` field: for cloning, voiceArg is an absolute WAV
@@ -510,22 +544,44 @@ public class CosyVoice3CrispAsr : ITtsEngine
         // reference voice's language and drops the reference transcript from the prompt when they
         // differ, so the clone speaks the target language instead of imitating the reference's.
         // Auto (empty) sends no field and keeps plain zero-shot. Baked presets carry their own
-        // bank language; for imported WAVs the reference language comes from the settings-window
-        // pick (source_lang) since the server's own detection is unreliable for Latin scripts.
+        // bank language; for imported WAVs the reference language is resolved per voice below.
         var languageArg = CosyVoice3Languages.ResolveLanguageArg(language);
         if (!string.IsNullOrEmpty(languageArg))
         {
             payload["language"] = languageArg;
         }
-        var sourceLanguage = (Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrSourceLanguage ?? string.Empty).Trim();
-        if (isClone && !string.IsNullOrEmpty(sourceLanguage))
+
+        // Reference language, per voice: the settings-window pick when set, otherwise detected
+        // from this voice's own transcript. The backend needs BOTH sides to go cross-lingual and
+        // its own detection declines on Latin-script transcripts, so leaving this empty is what
+        // made an en->de clone come out with the English reference's accent (#13272). One global
+        // setting also cannot be right for a user with reference WAVs in two languages, which is
+        // why the per-voice transcript wins over nothing at all.
+        var sourceLanguage = isClone
+            ? CosyVoice3Languages.ResolveSourceLanguageArg(cosyVoice.RefText)
+            : string.Empty;
+        if (!string.IsNullOrEmpty(sourceLanguage))
         {
             payload["source_lang"] = sourceLanguage;
+        }
+        else if (isClone && !string.IsNullOrEmpty(languageArg))
+        {
+            // Target language asked for, reference language unknowable: the backend will fall
+            // back to plain zero-shot and keep the reference's accent. It says so in its own log,
+            // which nobody reads on a request that returned 200 - so say it here, where the user
+            // can act on it.
+            Se.WriteToolsLog(
+                $"CosyVoice3 (CrispASR): target language '{languageArg}' requested for cloned voice "
+                + $"'{cosyVoice.Voice}', but the language of its reference WAV could not be determined "
+                + "from the transcript. Synthesis stays zero-shot and keeps the reference's accent - "
+                + "set \"Reference language\" in the CosyVoice3 settings window to enable cross-lingual "
+                + "synthesis.",
+                true);
         }
 
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
-        Se.WriteToolsLog($"CosyVoice3 (CrispASR): POST {ServerBaseUrl}/v1/audio/speech (voice={cosyVoice}, clone={isClone}, refTextLen={cosyVoice.RefText.Length}, textLen={text.Length}, language={(string.IsNullOrEmpty(languageArg) ? "(auto)" : languageArg)})");
+        Se.WriteToolsLog($"CosyVoice3 (CrispASR): POST {ServerBaseUrl}/v1/audio/speech (voice={cosyVoice}, clone={isClone}, refTextLen={cosyVoice.RefText.Length}, textLen={text.Length}, language={(string.IsNullOrEmpty(languageArg) ? "(auto)" : languageArg)}, sourceLanguage={(string.IsNullOrEmpty(sourceLanguage) ? "(unknown)" : sourceLanguage)})");
 
         HttpResponseMessage response;
         try
@@ -671,6 +727,11 @@ public class CosyVoice3CrispAsr : ITtsEngine
                 CreateNoWindow = true,
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
+                // The server writes UTF-8. Without these the reader decodes it in the OS default
+                // codepage, and non-ASCII text in the captured log - the line being synthesised,
+                // upstream's em dashes - reaches bug reports as mojibake (#13572).
+                StandardOutputEncoding = Encoding.UTF8,
+                StandardErrorEncoding = Encoding.UTF8,
             };
             psi.ArgumentList.Add("--server");
             psi.ArgumentList.Add("--backend");

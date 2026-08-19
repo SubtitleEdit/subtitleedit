@@ -7,15 +7,20 @@ options:
   -mc N,     --max-context N        [-1     ] maximum number of text context tokens to store
   -sp,       --split-on-punct       [false  ] split subtitle lines at sentence-ending punctuation
   -ml N,     --max-len N            [0      ] maximum segment length in characters
+             --hotwords LIST       [       ] comma-separated keyword list to bias recognition (granite: KWB prompt)
+             --context TEXT        [       ] hotword/context text injected into the prompt (vibevoice-asr only)
+             --prefix-text TEXT    [       ] granite incremental decoding: seed the transcript so the model continues from it
   -sow,      --split-on-word        [false  ] split on word rather than on token
   -bo N,     --best-of N            [5      ] number of best candidates to keep
-  -bs N,     --beam-size N          [5      ] beam size for beam search
+  -bs N,     --beam-size N          [greedy ] beam size (default: greedy, -bs 5 for beam search)
   -ac N,     --audio-ctx N          [0      ] audio context size (0 - all)
   -wt N,     --word-thold N         [0.01   ] word timestamp probability threshold
   -et N,     --entropy-thold N      [2.40   ] entropy threshold for decoder fail
   -lpt N,    --logprob-thold N      [-1.00  ] log probability threshold for decoder fail
   -nth N,    --no-speech-thold N    [0.60   ] no speech threshold
+             --sensitivity S       [balanced] preset for the four thresholds above: conservative, balanced, aggressive
   -tp,       --temperature N        [0.00   ] The sampling temperature, between 0 and 1
+             --seed N               [0      ] RNG seed for sampling (0 = non-deterministic)
   -tpi,      --temperature-inc N    [0.20   ] The increment of temperature, between 0 and 1
   -debug,    --debug-mode           [false  ] enable debug mode (eg. dump log_mel)
   -tr,       --translate            [false  ] translate from source language to english
@@ -36,7 +41,7 @@ options:
   -v,        --verbose              [false  ] verbose debug: model/cache paths, device pick, per-stage timings
   -ps,       --print-special        [false  ] print special tokens
   -pc,       --print-colors         [false  ] print colors
-             --print-confidence     [false  ] print confidence
+             --print-confidence     [false  ] print per-token confidence (word[NN%]) after the transcript
   -pp,       --print-progress       [false  ] print progress
   -nt,       --no-timestamps        [false  ] do not print timestamps
   -l LANG,   --language LANG        [auto   ] spoken language ('auto' for auto-detect)
@@ -44,6 +49,7 @@ options:
              --prompt PROMPT        [       ] initial prompt (max n_text_ctx/2 tokens)
              --carry-initial-prompt [false  ] always prepend initial prompt
   -m FNAME,  --model FNAME          [auto   ] model path
+             --model-quant Q        [       ] preferred quant for registry / auto model resolution
   -f FNAME,  --file FNAME           [       ] input audio file path
   -oved D,   --ov-e-device DNAME    [CPU    ] the OpenVINO device used for encode inference
   -dtw MODEL --dtw MODEL            [       ] compute token-level timestamps
@@ -60,22 +66,48 @@ options:
   --grammar-penalty N               [100.0  ] scales down logits of nongrammar tokens
 
 crispasr backend options (select a non-whisper model):
-  --backend NAME                    [       ] backend: whisper|parakeet|canary|cohere|qwen3|voxtral|voxtral4b|granite
+  --backend NAME                    [       ] backend: whisper|parakeet|canary|cohere|qwen3|qwen3-1.7b|mega-asr|voxtral|voxtral4b|granite
   --list-backends                   list backends compiled into this binary and exit
-  -sl LANG,  --source-lang LANG     [       ] source language (canary AST)
-  -tl LANG,  --target-lang LANG     [       ] target language (canary AST)
+  --list-backends-json              same as --list-backends but JSON-formatted, for tooling
+  -sl LANG,  --source-lang LANG     [       ] source language (canary AST; TTS: the
+                                              language a --voice clone reference is spoken in)
+  -tl LANG,  --target-lang LANG     [       ] target language (canary AST; TTS: the
+                                              language to speak, overrides -l)
              --no-punctuation       [false  ] disable punctuation (canary, cohere)
+             --punc-model FNAME     [       ] punctuation GGUF: auto|firered|fullstop|punctuate-all
+             --truecase-model FNAME [       ] truecaser: auto (de) or path to .bin
+             --flush-after N        [0      ] flush SRT to stdout every N segments (0=all at end)
   -am FNAME, --aligner-model FNAME  [       ] CTC aligner GGUF (LLM backends word timestamps)
-  --lid-backend NAME                [       ] language-detect backend: whisper|silero|firered (for non-native backends)
+  -falign,   --force-aligner        [false  ] use the CTC aligner's word timestamps even when the backend produces native ones (issue #62)
+             --no-auto-aligner      [false  ] for --backend canary, skip the implicit `-am auto --force-aligner` default (SubtitleEdit #10775)
+             --return-logits         [false  ] write dense CTC logits as a sidecar .ctc-logits.json when supported
+  --lid-backend NAME                [       ] language-detect backend: whisper|silero|firered|ecapa|probe|off (for non-native backends). 'probe' asks the ASR model itself (cohere), which needs no second model and can only return a language that model supports
   --lid-model FNAME                 [       ] optional LID model path (default ggml-tiny.bin)
-  --diarize-method NAME             [       ] diarize method: energy|xcorr|vad-turns|sherpa|pyannote|ecapa
-                                             (sherpa/pyannote/ecapa all use the sherpa-onnx subprocess)
+  --lid-on-transcript FNAME         [       ] post-ASR text LID. Path or 'auto[:cld3|glotlid|lid-fasttext176]' (default cld3, auto-downloaded). Emits lang=<code>\tconf=<x>\tbackend=<n> to stderr.
+  --diarize-method NAME             [       ] diarize method: energy|xcorr|vad-turns|sherpa|pyannote|ecapa|foxnose
+                                             energy/xcorr: stereo channel split; vad-turns: gap-based turn proxy (mono)
+                                             pyannote: native GGUF segmentation only (experimental — no speaker embeddings or clustering, IDs are not stable across long files; for reliable diarization use sherpa/ecapa)
+                                             sherpa/ecapa: external sherpa-onnx subprocess with segmentation + speaker embedding + clustering
+  --diarize-embedder MODEL          [off    ] speaker-embedding model used to cluster pyannote local tracks into globally stable speaker IDs. Pluggable; known aliases: 'auto' / 'titanet' (192-d TitaNet-Large) and 'indextts' / 'indextts-bigvgan' / 'ecapa' (512-d IndexTTS-BigVGAN ECAPA-TDNN). Pass a .gguf path to load directly. When unset, --diarize-method pyannote labels are local to each forward pass (#107).
+  --diarize-speakers                [opt-in ] convenience alias: enable --diarize + pyannote segmentation + session-scoped speaker clustering for stable per-recording (speaker N) labels. Transient only: identifies no one, no voiceprint database, no names stored. See docs/diarization-speakers.md
+  --speaker-db DIR                  [       ] directory of enrolled voiceprint profiles (<name>.spkr). Identification runs per global speaker cluster and ONLY against the closed roster named via --expect-speakers; requires --speaker-db-consent. See docs/diarization-speakers.md
+  --expect-speakers NAMES           [       ] comma-separated enrolled participants you assert are present in this recording (e.g. "Alice,Bob"). REQUIRED with --speaker-db: matching is a claimed-participant confirmation, never an open who-is-this search. Unmatched clusters keep anonymous (speaker N) labels
+  --enroll-speaker NAME             [       ] enroll the input audio as NAME into --speaker-db and exit. Requires --speaker-db-consent (records the consent attestation in the profile)
+  --speaker-threshold X, -st X      [0.70   ] cosine threshold for cluster-to-profile matching (below it a cluster stays anonymous)
+  --titanet-model PATH              [       ] TitaNet GGUF for enrollment/identification embeddings (default: auto-download)
+  --speaker-db-consent              [off    ] REQUIRED to use the biometric named-profile path (--enroll-speaker / --speaker-db). Affirms you have a lawful basis (GDPR Art. 9) and explicit consent from every enrolled person. Not needed for --diarize-speakers / --diarize-embedder.
+  --diarize-cluster-threshold X     [0.50   ] cosine merge threshold for --diarize-embedder clustering (higher = more distinct clusters, lower = more merged)
+  --diarize-max-speakers N          [8      ] hard cap on cluster count for --diarize-embedder
   --sherpa-bin PATH                 [       ] sherpa-onnx-offline-speaker-diarization binary (default: in PATH)
   --sherpa-segment-model PATH       [       ] sherpa pyannote segmentation ONNX
   --sherpa-embedding-model PATH     [       ] sherpa speaker embedding ONNX
   --sherpa-num-clusters N           [0      ] sherpa cluster count (0 = auto)
   --cache-dir DIR                   [default] override auto-download cache directory
   --auto-download                   [false  ] auto-download missing models without prompting
+  -hfr REPO, --hf-repo OWNER/REPO[:FILE]    fetch model from arbitrary HuggingFace repo (llama-server-compatible). e.g. --hf-repo cstr/parakeet-tdt-0.6b-v3-GGUF -m parakeet-tdt-0.6b-v3-q4_k.gguf, or the shorthand --hf-repo cstr/parakeet-tdt-0.6b-v3-GGUF:parakeet-tdt-0.6b-v3-q4_k.gguf. Implies --auto-download.
+  -hff FNAME, --hf-file FNAME                 filename within --hf-repo (alternative to the OWNER/REPO:FILE shorthand)
+  --dry-run-resolve                 [false  ] print resolved model / companion paths and exit
+  --dry-run-ignore-cache            [false  ] dry-run as if cache were empty
   --alt                             [false  ] show alternative token candidates with probabilities
   --alt-n N                         [3      ] number of alternatives per token
   --stream                          [false  ] streaming mode: read raw s16le PCM from stdin
@@ -85,20 +117,46 @@ crispasr backend options (select a non-whisper model):
   --server                          [false  ] run as HTTP server (persistent model, POST /inference)
   --host HOST                       [127.0.0.1] server bind address
   --port PORT                       [8080   ] server port
+  --server-workers N                [1      ] server: N>1 loads N model instances so pure-ASR requests run concurrently (N× memory; see docs/concurrency.md)
+  --ws-port PORT                    [-1     ] server: real-time WebSocket ASR streaming port (-1 off, 0 = port+1)
+  --wyoming-port PORT               [-1     ] server: Wyoming protocol TCP port for Home Assistant Assist (-1 off)
   --api-keys K1,K2                  [       ] comma-separated server API keys
+  --no-warmup                       [false  ] server: skip startup warmup (workaround for Vulkan hangs, #165)
   --stream-step N                   [3000   ] chunk size in ms for streaming
-  --stream-length N                 [10000  ] context window in ms for streaming
-  --stream-keep N                   [200    ] overlap to keep between chunks in ms
+  --stream-length N                 [10000  ] rolling context window cap in ms (true rolling buffer)
+  --stream-keep N                   [200    ] (legacy, no-op since #84) overlap to keep between chunks
+  --stream-json                     [false  ] emit JSON-Lines partial/final/silence events on stdout
+  --stream-final-on-silence-ms N    [800    ] trailing silence (ms) that promotes a partial to final
+  --stream-vad-merge-gap-ms N       [250    ] JSON+VAD close-gap merge in ms; clamped below final silence
+  --stream-partial-decode-ms N      [0      ] JSON+VAD minimum interval between partial ASR decodes; 0 = every step
+  --stream-punc MODE                [final  ] JSON+VAD FireRedPunc mode: off, final, or partial
+  --stream-final-mode MODE          [redecode] final.text source: 'redecode' (re-runs on the utterance PCM, best quality) or 'prefix' (LCP-accumulated, no extra encoder pass)
+  --stream-utterance-max-sec N      [60     ] cap on per-utterance PCM buffer in redecode mode
+  --firered-vad-debug               [false  ] enable FireRed VAD probability/fbank stderr dumps
   -n N,      --max-new-tokens N     [512    ] max new tokens for LLM backends
+             --frequency-penalty F  [0.00   ] penalize repeated generated tokens on AR backends
   -ck N,     --chunk-seconds N      [30     ] fallback chunk size when VAD is disabled
+             --chunk-overlap F      [3.0    ] overlap context (sec) at chunk boundaries
+             --att-context L,R      [model  ] parakeet/canary local-attention window in encoder frames (~80ms ea) — true windowed attn (O(T*window) mem, NeMo rel_pos_local_attn); -1,-1 = full. CRISPASR_FC_WINDOWED_ATTN=0 forces legacy masked-full
+             --lcs-dedup VAL        [auto   ] sub-word LCS dedup across chunk boundaries: auto|on|off
+             --lcs-min-length N     [1      ] minimum LCS length to act on (raise on long-silence audio)
              -m auto                        download a default model for the chosen backend
+
 
 Voice Activity Detection (VAD) options:
              --vad                           [false  ] enable Voice Activity Detection (VAD)
-  -vm FNAME, --vad-model FNAME               [       ] VAD model path
+  -vm FNAME, --vad-model FNAME               [       ] VAD model: a path, or one of auto, silero, firered, marblenet, webrtc, whisper-vad
   -vt N,     --vad-threshold N               [0.50   ] VAD threshold for speech recognition
-  -vspd N,   --vad-min-speech-duration-ms  N [250    ] VAD min speech duration (0.0-1.0)
+  -vspd N,   --vad-min-speech-duration-ms  N [250    ] VAD min speech duration (ms)
   -vsd N,    --vad-min-silence-duration-ms N [100    ] VAD min silence duration (to split segments)
   -vmsd N,   --vad-max-speech-duration-s   N [FLT_MAX] VAD max speech duration (auto-split longer)
   -vp N,     --vad-speech-pad-ms           N [30     ] VAD speech padding (extend segments)
   -vo N,     --vad-samples-overlap         N [0.10   ] VAD samples overlap (seconds between segments)
+             --vad-export FILE            [none   ] write computed VAD/chunk boundaries to FILE (JSON)
+             --vad-import FILE            [none   ] read segment boundaries from FILE instead of running VAD
+             --vad-import-strict          [false  ] refuse (not warn) if the file's chunk length differs
+             --vad-export-raw FILE        [false  ] export RAW speech segments (chunk-independent, re-chunked on import)
+             --strict-pipeline            [false  ] #311: non-zero exit if an explicitly-requested aux stage (VAD/-vm, aligner/-am, --punc-model) fails to load or produce its output (a stage that ran and found no speech is still success)
+             --require-vad                [false  ] force VAD-load-success requirement (needs --vad/-vm)
+             --require-word-timestamps    [false  ] fail if any non-empty segment lacks word timestamps
+             --require-punctuation        [false  ] force punctuation-model-load requirement (needs --punc-model)

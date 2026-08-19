@@ -19,7 +19,7 @@ public class PointSyncViaOtherWindow : Window
     {
         vm.Window = this;
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Sync.PointSyncViaOther;
+        Title = UiUtil.MakeWindowTitle(Se.Language.Sync.PointSyncViaOther);
         Width = 1100;
         Height = 600;
         MinWidth = 800;
@@ -78,7 +78,7 @@ public class PointSyncViaOtherWindow : Window
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(50, GridUnitType.Pixel) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
             },
             ColumnDefinitions =
@@ -88,6 +88,7 @@ public class PointSyncViaOtherWindow : Window
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             Margin = new Thickness(0, 60, 0, 0),
+            RowSpacing = 10,
         };
 
         // The DataGrid this replaces hid its header (HeadersVisibility.None); TableView
@@ -134,7 +135,23 @@ public class PointSyncViaOtherWindow : Window
         var buttonSetSyncPoint = UiUtil.MakeButton(Se.Language.Sync.SetSyncPoint, vm.SetSyncPointCommand)
             .WithIconLeft(IconNames.ArrowLeftRightBold);
 
-        grid.Add(buttonSetSyncPoint, 0);
+        // The other subtitle is the usual source for a sync point here, but a line it does not
+        // cover still has to be pinnable - so allow picking the time off the video (issue #13341).
+        var buttonSetSyncPointViaVideo = UiUtil.MakeButton(Se.Language.Sync.SetSyncPointViaVideo, vm.SetSyncPointViaVideoCommand)
+            .WithIconLeft(IconNames.MovieOpenOutline);
+
+        var panelSetSyncPoint = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Spacing = 5,
+            Children =
+            {
+                buttonSetSyncPoint,
+                buttonSetSyncPointViaVideo,
+            }
+        };
+
+        grid.Add(panelSetSyncPoint, 0);
         grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 1);
 
         return grid;

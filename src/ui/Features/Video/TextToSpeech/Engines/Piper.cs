@@ -23,6 +23,10 @@ public class Piper : ITtsEngine
     public bool HasRegion => false;
     public bool HasModel => false;
     public bool HasKeyFile => false;
+    // Piper's "import voice" takes a trained .onnx model, not a recording of somebody
+    // speaking - nobody is being imitated, so this is not cloning.
+    public bool SupportsVoiceCloning => false;
+    public bool SupportsPerLineVoiceCloning => false;
 
     public Task<bool> IsInstalled(string? region)
     {
@@ -237,8 +241,8 @@ public class Piper : ITtsEngine
             throw new ArgumentException("Voice is not a PiperVoice");
         }
 
-        var fileNameOnly = Guid.NewGuid() + ".wav";
-        var process = StartPiperProcess(piperVoice, text, fileNameOnly);
+        var fileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetPiperFolder), Guid.NewGuid() + ".wav");
+        var process = StartPiperProcess(piperVoice, text, fileName);
         Se.WriteToolsLog($"Piper: {process.StartInfo.FileName} {process.StartInfo.Arguments} (voice={piperVoice}, textLen={text.Length})");
         var stderrTask = process.StandardError.ReadToEndAsync(cancellationToken);
         await process.WaitForExitAsync(cancellationToken);
@@ -257,7 +261,6 @@ public class Piper : ITtsEngine
             return new TtsResult { Text = text, FileName = string.Empty, Error = true };
         }
 
-        var fileName = Path.Combine(GetSetPiperFolder(), fileNameOnly);
         if (!File.Exists(fileName) || new FileInfo(fileName).Length == 0)
         {
             var msg = $"Piper exited successfully but produced no audio - Parameters: "
@@ -281,7 +284,9 @@ public class Piper : ITtsEngine
             {
                 WorkingDirectory = GetSetPiperFolder(),
                 FileName = GetPiperExecutableFileName(),
-                Arguments = $"-m \"{voice.ModelShort}\" -c \"{voice.ConfigShort}\" -f {outputFileName}",
+                // -f is quoted: the output file now lives in the caller's run folder (an absolute
+                // path that can contain spaces), not a bare GUID name in the piper folder.
+                Arguments = $"-m \"{voice.ModelShort}\" -c \"{voice.ConfigShort}\" -f \"{outputFileName}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true,
                 RedirectStandardInput = true,

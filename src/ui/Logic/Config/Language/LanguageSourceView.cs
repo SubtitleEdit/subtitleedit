@@ -10,6 +10,7 @@ public class LanguageSourceView
     public string SelectedXCharactersYLines { get; set; }
     public string ReplacedXOccurrences { get; set; }
     public string InvalidRegularExpression { get; set; }
+    public string RegularExpressionTooSlowX { get; set; }
     public string MoveLineUp { get; set; }
     public string MoveLineDown { get; set; }
     public string DuplicateLine { get; set; }
@@ -26,6 +27,7 @@ public class LanguageSourceView
         SelectedXCharactersYLines = "Selected: {0} characters in {1} line(s)";
         ReplacedXOccurrences = "Replaced {0} occurrence(s)";
         InvalidRegularExpression = "Invalid regular expression";
+        RegularExpressionTooSlowX = "Regular expression gave up after {0} seconds - try a simpler pattern";
         MoveLineUp = "Move line up";
         MoveLineDown = "Move line down";
         DuplicateLine = "Duplicate line";

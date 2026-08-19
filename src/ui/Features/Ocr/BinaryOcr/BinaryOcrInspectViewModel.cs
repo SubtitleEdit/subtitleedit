@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -160,8 +160,20 @@ public partial class BinaryOcrInspectViewModel : ObservableObject
         {
             BinaryOcrBitmap.Text = NewText;
         }
+
+        SaveSettings();
         OkPressed = true;
         Close();
+    }
+
+    /// <summary>
+    /// The same control in the "add character" window persists this; here it was read on open and
+    /// never written, so changing it only lasted until the window closed.
+    /// </summary>
+    private void SaveSettings()
+    {
+        Se.Settings.Ocr.NOcrNoOfLinesToAutoDraw = SelectedNoOfLinesToAutoDraw;
+        Se.SaveSettings();
     }
 
     [RelayCommand]
@@ -262,7 +274,7 @@ public partial class BinaryOcrInspectViewModel : ObservableObject
         addVm.Initialize(_nBmp, _ocrSubtitleItem, _letters, LetterIndex, _db, _maxWrongPixels,
             _binaryOcrAddHistoryManager, false, false);
         var addWindow = new BinaryOcrCharacterAddWindow(addVm);
-        await addWindow.ShowDialog(Window!);
+        await WindowService.ShowModalAsync(Window!, addWindow);
 
         if (addVm.OkPressed && addVm.BinaryOcrBitmap != null)
         {

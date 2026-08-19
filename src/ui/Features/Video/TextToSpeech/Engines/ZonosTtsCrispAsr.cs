@@ -42,6 +42,8 @@ public class ZonosTtsCrispAsr : ITtsEngine
     public bool HasRegion => false;
     public bool HasModel => false;
     public bool HasKeyFile => false;
+    public bool SupportsVoiceCloning => true;
+    public bool SupportsPerLineVoiceCloning => false;
 
     public const string TalkerFileName = "zonos-v0.1-transformer-q8_0.gguf";
     public const string CodecFileName = "dac-44khz-f16.gguf";
@@ -342,7 +344,7 @@ public class ZonosTtsCrispAsr : ITtsEngine
 
         await EnsureServerRunningAsync(zonosVoice.FilePath, cancellationToken);
 
-        var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
+        var outputFileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetFolder), Guid.NewGuid() + ".wav");
         var inputText = text;
 
         // OpenAI-compatible /v1/audio/speech payload. Zonos transcribes the reference internally
@@ -504,6 +506,11 @@ public class ZonosTtsCrispAsr : ITtsEngine
                 CreateNoWindow = true,
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
+                // The server writes UTF-8. Without these the reader decodes it in the OS default
+                // codepage, and non-ASCII text in the captured log - the line being synthesised,
+                // upstream's em dashes - reaches bug reports as mojibake (#13572).
+                StandardOutputEncoding = Encoding.UTF8,
+                StandardErrorEncoding = Encoding.UTF8,
             };
             psi.ArgumentList.Add("--server");
             psi.ArgumentList.Add("--backend");

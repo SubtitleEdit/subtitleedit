@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config.Language;
 using System;
@@ -16,9 +17,9 @@ namespace Nikse.SubtitleEdit.Logic.Config;
 public class Se
 {
     internal const int CurrentMacOsFontMigrationVersion = 1;
-    internal const int CurrentShortcutsMigrationVersion = 1;
+    internal const int CurrentShortcutsMigrationVersion = 2;
 
-    public static string Version { get; set; } = "v5.2.0-beta3";
+    public static string Version { get; set; } = "v5.2.0-beta18";
 
     public SeGeneral General { get; set; } = new();
     public List<SeShortCut> Shortcuts { get; set; } = new();
@@ -166,9 +167,14 @@ public class Se
     public static string SpeechToTextFolder => Path.Combine(DataFolder, "SpeechToText");
     public static string CrispAsrFolder => Path.Combine(DataFolder, "CrispASR");
     public static string LlamaCppFolder => Path.Combine(DataFolder, "llama.cpp");
+    // audio.cpp is a multi-model runtime (TTS, ASR, VAD, separation), so it sits at the top
+    // level like CrispASR and llama.cpp rather than under a single feature's folder — the
+    // binaries are shared the moment a second audio.cpp-backed engine is added.
+    public static string AudioCppFolder => Path.Combine(DataFolder, "audio.cpp");
     public static string WaveformsFolder => Path.Combine(DataFolder, "Waveforms");
     public static string SpectrogramsFolder => Path.Combine(DataFolder, "Spectrograms");
     public static string ShotChangesFolder => Path.Combine(DataFolder, "ShotChanges");
+    public static string ChaptersFolder => Path.Combine(DataFolder, "Chapters");
     public static string PluginsFolder => Path.Combine(DataFolder, "Plugins");
 
     /// <summary>Root for persistent per-plugin data folders; not scanned for plugins (no manifest).</summary>
@@ -176,12 +182,56 @@ public class Se
 
     public static string OcrFolder => Path.Combine(DataFolder, "OCR");
     public static string TranslationFolder => Path.Combine(DataFolder, "Languages");
-    public static string PaddleOcrFolder => Path.Combine(OcrFolder, "PaddleOCR3-1");
+    // The folder name carries the PaddleOCR version the bundled standalone engine is built
+    // from (3-4 = PaddleOCR 3.4 = PaddleOCR-Standalone v1.4.0). Bump it whenever the engine
+    // or the support-files bundle moves to a new PaddleOCR release: extracting a new build
+    // over an old one would leave orphaned files from the previous Python/paddle runtime,
+    // and the old models bundle is missing recognition models the current language list
+    // offers (the 3.1 bundle has no arabic/cyrillic/devanagari PP-OCRv5 or el/ta/te/th/ka
+    // models at all). A new folder means engine and models always come from the same release.
+    public static string PaddleOcrFolder => Path.Combine(OcrFolder, "PaddleOCR3-4");
     public static string PaddleOcrModelsFolder => Path.Combine(PaddleOcrFolder, "models");
+
+    /// <summary>Install folders of superseded PaddleOCR versions, deleted after a new install succeeds.</summary>
+    public static IReadOnlyList<string> PaddleOcrLegacyFolders => new[] { Path.Combine(OcrFolder, "PaddleOCR3-1") };
     public static string GoogleLensOcrFolder => Path.Combine(OcrFolder, "Google-Lens");
     public static string CrispEmbedFolder => Path.Combine(OcrFolder, "CrispEmbed");
     public static string VlcFolder => Path.Combine(DataFolder, "VLC");
     public static string SevenZipFolder => Path.Combine(DataFolder, "7Zip");
+    private const string TesseractFolderName = "Tesseract";
+    private const string LegacyTesseractFolderName = "Tesseract550";
+
+    private static readonly Lazy<string> _tesseractDataFolder = new(ResolveTesseractDataFolder);
+
+    // Holds the Tesseract binaries (Windows only) and the downloaded models (all platforms).
+    // The name used to carry the Tesseract version, which orphaned every downloaded model on
+    // each bump - and on macOS/Linux, where the binary comes from brew/apt, models were the
+    // only thing in there. Rename it once, version-less, and move the old folder across.
+    private static string ResolveTesseractDataFolder() => ResolveTesseractDataFolder(DataFolder);
+
+    internal static string ResolveTesseractDataFolder(string dataFolder)
+    {
+        var folder = Path.Combine(dataFolder, TesseractFolderName);
+        var legacyFolder = Path.Combine(dataFolder, LegacyTesseractFolderName);
+        if (Directory.Exists(folder) || !Directory.Exists(legacyFolder))
+        {
+            return folder;
+        }
+
+        try
+        {
+            Directory.Move(legacyFolder, folder);
+        }
+        catch (Exception exception)
+        {
+            // Keep using the old folder rather than silently hiding the models that are in it.
+            SeLogger.Error($"Could not move \"{legacyFolder}\" to \"{folder}\": {exception.Message}");
+            return legacyFolder;
+        }
+
+        return folder;
+    }
+
     private static readonly Lazy<string> _tesseractFolder = new(ResolveTesseractFolder);
     public static string TesseractFolder => _tesseractFolder.Value;
 
@@ -189,7 +239,7 @@ public class Se
     {
         if (OperatingSystem.IsWindows())
         {
-            return Path.Combine(DataFolder, "Tesseract550");
+            return _tesseractDataFolder.Value;
         }
 
         var folders = new List<string>();
@@ -216,7 +266,7 @@ public class Se
             }
         }
 
-        return Path.Combine(DataFolder, "Tesseract550");
+        return _tesseractDataFolder.Value;
     }
 
     private static readonly Lazy<string> _tesseractModelFolder = new(ResolveTesseractModelFolder);
@@ -224,7 +274,7 @@ public class Se
 
     private static string ResolveTesseractModelFolder()
     {
-        var modelFolder = Path.Combine(DataFolder, "Tesseract550", "tessdata");
+        var modelFolder = Path.Combine(_tesseractDataFolder.Value, "tessdata");
         SeedBundledTesseractModels(modelFolder);
         return modelFolder;
     }
@@ -288,23 +338,42 @@ public class Se
     /// standard F10 menu-bar activation (#13083). The default is gone now, and the stale persisted
     /// copy - indistinguishable from a user assignment - is cleared here once; users who really
     /// want F10 on the action can assign it again and it will stick.
+    ///
+    /// Version 2: "Text box: Delete selection (no clipboard)" grew into the forward-delete
+    /// (Delete key) command and was renamed; the persisted entry is renamed with it so user
+    /// assignments - including a deliberately cleared binding - survive.
     /// </summary>
     internal void MigrateShortcuts()
     {
-        if (ShortcutsMigrationVersion.GetValueOrDefault() >= CurrentShortcutsMigrationVersion)
+        var fromVersion = ShortcutsMigrationVersion.GetValueOrDefault();
+        if (fromVersion >= CurrentShortcutsMigrationVersion)
         {
             return;
         }
 
         ShortcutsMigrationVersion = CurrentShortcutsMigrationVersion;
 
-        foreach (var shortcut in Shortcuts)
+        if (fromVersion < 1)
         {
-            if (shortcut.ActionName == nameof(MainViewModel.WaveformSetEndAndGoToNextCommand) &&
-                shortcut.Keys.Count == 1 &&
-                shortcut.Keys[0].Equals(nameof(Avalonia.Input.Key.F10), StringComparison.OrdinalIgnoreCase))
+            foreach (var shortcut in Shortcuts)
             {
-                shortcut.Keys.Clear();
+                if (shortcut.ActionName == nameof(MainViewModel.WaveformSetEndAndGoToNextCommand) &&
+                    shortcut.Keys.Count == 1 &&
+                    shortcut.Keys[0].Equals(nameof(Avalonia.Input.Key.F10), StringComparison.OrdinalIgnoreCase))
+                {
+                    shortcut.Keys.Clear();
+                }
+            }
+        }
+
+        if (fromVersion < 2)
+        {
+            foreach (var shortcut in Shortcuts)
+            {
+                if (shortcut.ActionName == "TextBoxDeleteSelectionCommand")
+                {
+                    shortcut.ActionName = nameof(MainViewModel.TextBoxDeleteForwardCommand);
+                }
             }
         }
     }
@@ -400,6 +469,46 @@ public class Se
 
         // Once marked, a later explicit System Font selection must remain untouched.
         appearance.MacOsFontMigrationVersion = CurrentMacOsFontMigrationVersion;
+    }
+
+    /// <summary>
+    /// Drops "-vsync vfr" from a settings file written before ffmpeg 9. ffmpeg 9 removed the
+    /// long-deprecated -vsync option, so it aborts with "Unrecognized option 'vsync'" and shot
+    /// change detection silently finds nothing. The option was a no-op for this command line
+    /// (the output goes to "-f null -"), so removing it changes nothing on older ffmpeg builds.
+    /// A user who has edited the arguments in any other way keeps their own version.
+    /// </summary>
+    internal static void MigrateShotChangesFfmpegArguments(SeVideo video)
+    {
+        var arguments = video.ShowChangesFFmpegArguments;
+        if (string.IsNullOrEmpty(arguments))
+        {
+            return;
+        }
+
+        const string option = "-vsync ";
+        var index = arguments.IndexOf(option, StringComparison.Ordinal);
+        if (index < 0)
+        {
+            return;
+        }
+
+        while (index >= 0)
+        {
+            // -vsync takes a value ("vfr", "0", ...); drop that too, plus the space in front of
+            // the option so the remaining arguments stay separated by single spaces.
+            var end = arguments.IndexOf(' ', index + option.Length);
+            if (end < 0)
+            {
+                end = arguments.Length;
+            }
+
+            var start = index > 0 && arguments[index - 1] == ' ' ? index - 1 : index;
+            arguments = arguments.Remove(start, end - start);
+            index = arguments.IndexOf(option, StringComparison.Ordinal);
+        }
+
+        video.ShowChangesFFmpegArguments = arguments.Trim();
     }
 
     /// <summary>
@@ -546,6 +655,8 @@ public class Se
             Settings.Video = new();
         }
 
+        MigrateShotChangesFfmpegArguments(Settings.Video);
+
         if (Settings.Waveform == null)
         {
             Settings.Waveform = new();
@@ -609,10 +720,14 @@ public class Se
         }
     }
 
-    private static void UpdateLibSeSettings()
+    internal static void UpdateLibSeSettings()
     {
         Configuration.Settings.General.FFmpegLocation = Settings.General.FfmpegPath;
         Configuration.Settings.General.UseTimeFormatHHMMSSFF = Settings.General.UseFrameMode;
+        if (Settings.General.CurrentFrameRate > 0)
+        {
+            Configuration.Settings.General.CurrentFrameRate = Settings.General.CurrentFrameRate;
+        }
 
         Configuration.Settings.Proxy.ProxyAddress = Settings.General.ProxyAddress ?? string.Empty;
         Configuration.Settings.Proxy.UserName = Settings.General.ProxyUserName ?? string.Empty;
@@ -633,6 +748,8 @@ public class Se
         Configuration.Settings.Tools.AutoBreakDashEarly = Settings.Tools.AutoBreakDashEarly;
         Configuration.Settings.Tools.AutoBreakUsePixelWidth = Settings.Tools.AutoBreakUsePixelWidth;
         Configuration.Settings.Tools.AutoBreakPreferBottomHeavy = Settings.Tools.AutoBreakPreferBottomHeavy;
+        Configuration.Settings.Tools.AutoBreakPreferBottomPercent = Settings.Tools.AutoBreakPreferBottomPercent;
+        Configuration.Settings.Tools.UseNoLineBreakAfter = Settings.Tools.UseNoLineBreakAfter;
 
         var stt = Settings.Tools.AudioToText;
         Configuration.Settings.Tools.WhisperChoice = stt.WhisperChoice;
@@ -663,6 +780,17 @@ public class Se
         var ss = Configuration.Settings.SubtitleSettings;
         ss.WebVttUseXTimestampMap = Settings.Formats.WebVttUseXTimestampMap;
         ss.WebVttUseMultipleXTimestampMap = Settings.Formats.WebVttUseMultipleXTimestampMap;
+        ss.WebVttMergeLinesWithSameText = Settings.Formats.WebVttMergeLinesWithSameText;
+        ss.WebVttDoNoMergeTags = Settings.Formats.WebVttDoNoMergeTags;
+        ss.WebVttCueAn1 = Settings.Formats.WebVttCueAn1 ?? string.Empty;
+        ss.WebVttCueAn2 = Settings.Formats.WebVttCueAn2 ?? string.Empty;
+        ss.WebVttCueAn3 = Settings.Formats.WebVttCueAn3 ?? string.Empty;
+        ss.WebVttCueAn4 = Settings.Formats.WebVttCueAn4 ?? string.Empty;
+        ss.WebVttCueAn5 = Settings.Formats.WebVttCueAn5 ?? string.Empty;
+        ss.WebVttCueAn6 = Settings.Formats.WebVttCueAn6 ?? string.Empty;
+        ss.WebVttCueAn7 = Settings.Formats.WebVttCueAn7 ?? string.Empty;
+        ss.WebVttCueAn8 = Settings.Formats.WebVttCueAn8 ?? string.Empty;
+        ss.WebVttCueAn9 = Settings.Formats.WebVttCueAn9 ?? string.Empty;
         ss.DCinemaAutoGenerateSubtitleId = dc.DCinemaAutoGenerateSubtitleId;
         ss.DCinemaFontSize = dc.DCinemaFontSize;
         ss.DCinemaBottomMargin = dc.DCinemaBottomMargin;
@@ -706,6 +834,61 @@ public class Se
         }
 
         (g.CustomContinuationStyle ?? new CustomContinuationStyle()).ApplyToGeneralSettings(Configuration.Settings.General);
+    }
+
+    /// <summary>
+    /// Copies every rule in <paramref name="profile"/> into the general settings; callers still
+    /// need to run the libse bridge afterwards. Kept in one place because the profile picker used
+    /// to apply the fields inline and quietly dropped the two duration limits.
+    /// </summary>
+    public static void ApplyRuleProfile(RulesProfile profile)
+    {
+        var g = Settings.General;
+
+        g.CurrentProfile = profile.Name;
+        g.SubtitleLineMaximumLength = profile.SubtitleLineMaximumLength;
+        g.SubtitleMaximumCharactersPerSeconds = (double)profile.SubtitleMaximumCharactersPerSeconds;
+        g.SubtitleOptimalCharactersPerSeconds = (double)profile.SubtitleOptimalCharactersPerSeconds;
+        g.SubtitleMaximumWordsPerMinute = (double)profile.SubtitleMaximumWordsPerMinute;
+        g.SubtitleMinimumDisplayMilliseconds = profile.SubtitleMinimumDisplayMilliseconds;
+        g.SubtitleMaximumDisplayMilliseconds = profile.SubtitleMaximumDisplayMilliseconds;
+        g.MinimumBetweenLines.Milliseconds = profile.MinimumMillisecondsBetweenLines;
+        g.MinimumBetweenLines.Frames = SubtitleFormat.MillisecondsToFrames(profile.MinimumMillisecondsBetweenLines);
+        g.MaxNumberOfLines = profile.MaxNumberOfLines;
+        g.UnbreakLinesShorterThan = profile.MergeLinesShorterThan;
+        g.DialogStyle = profile.DialogStyle.ToString();
+        g.ContinuationStyle = profile.ContinuationStyle.ToString();
+        g.CpsLineLengthStrategy = profile.CpsLineLengthStrategy;
+        g.CustomContinuationStyle = new CustomContinuationStyle(profile.CustomContinuationStyle);
+    }
+
+    /// <summary>
+    /// Pushes the rule settings into libse's Configuration, which is what the fix/merge engines
+    /// and the duration helpers read. Sits next to <see cref="ApplyRuleProfile"/> so the two
+    /// field lists stay in step - the duration limits were missing here for the same reason.
+    /// </summary>
+    public static void ApplyRuleSettingsToLibSe()
+    {
+        var g = Settings.General;
+        var libSe = Configuration.Settings.General;
+
+        libSe.SubtitleLineMaximumLength = g.SubtitleLineMaximumLength;
+        libSe.SubtitleMaximumCharactersPerSeconds = g.SubtitleMaximumCharactersPerSeconds;
+        libSe.SubtitleOptimalCharactersPerSeconds = g.SubtitleOptimalCharactersPerSeconds;
+        libSe.SubtitleMaximumWordsPerMinute = g.SubtitleMaximumWordsPerMinute;
+        libSe.SubtitleMinimumDisplayMilliseconds = g.SubtitleMinimumDisplayMilliseconds;
+        libSe.SubtitleMaximumDisplayMilliseconds = g.SubtitleMaximumDisplayMilliseconds;
+        libSe.MinimumMillisecondsBetweenLines = g.MinimumBetweenLines.GetMilliseconds();
+        libSe.MaxNumberOfLines = g.MaxNumberOfLines;
+        libSe.MergeLinesShorterThan = g.UnbreakLinesShorterThan;
+        libSe.CpsLineLengthStrategy = g.CpsLineLengthStrategy;
+
+        if (Enum.TryParse<Core.Enums.DialogType>(g.DialogStyle, out var dt))
+        {
+            libSe.DialogStyle = dt;
+        }
+
+        ApplyContinuationStyleToLibSe();
     }
 
     public static string GetErrorLogFilePath()

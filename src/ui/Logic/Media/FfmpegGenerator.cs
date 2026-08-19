@@ -85,8 +85,11 @@ public class FfmpegGenerator
         if (!string.IsNullOrWhiteSpace(videoEncoding))
         {
             videoEncodingSettings = $"-c:v {videoEncoding}";
-            if (videoEncoding == "libx265")
+            if (videoEncoding == "libx265" || videoEncoding.StartsWith("hevc_", StringComparison.Ordinal))
             {
+                // Without the hvc1 tag the mov/mp4 muxer writes hev1, which QuickTime and the rest
+                // of the Apple stack refuse to play. This used to be applied to libx265 only, so
+                // the hardware HEVC encoders produced .mp4 files that would not open there.
                 videoEncodingSettings += " -tag:v hvc1";
             }
         }
@@ -111,7 +114,7 @@ public class FfmpegGenerator
         var presetSettings = string.Empty;
         if (!string.IsNullOrWhiteSpace(preset))
         {
-            if (videoEncoding == "prores_ks")
+            if (videoEncoding is "prores_ks" or "prores_videotoolbox")
             {
                 if (preset == "proxy")
                 {
@@ -147,6 +150,10 @@ public class FfmpegGenerator
                     presetSettings = $" -profile:v {preset}";
                 }
             }
+            else if (videoEncoding is "h264_videotoolbox" or "hevc_videotoolbox")
+            {
+                // VideoToolbox has no preset option - emitting one only produces an ffmpeg warning.
+            }
             else
             {
                 presetSettings = $" -preset {preset}";
@@ -154,7 +161,11 @@ public class FfmpegGenerator
         }
 
         var crfSettings = string.Empty;
-        if (!string.IsNullOrWhiteSpace(crf) && string.IsNullOrWhiteSpace(pass))
+        // A bit rate target and a quality target are mutually exclusive. With -pass that is
+        // implicit, but VideoToolbox targets a file size in a single pass (no -pass), and there
+        // ffmpeg takes -q:v and silently ignores -b:v - the encode would quietly come out at the
+        // quality-based size instead of the requested one (#13401).
+        if (!string.IsNullOrWhiteSpace(crf) && string.IsNullOrWhiteSpace(pass) && string.IsNullOrWhiteSpace(twoPassBitRate))
         {
             if (videoEncoding == "h264_nvenc" || videoEncoding == "hevc_nvenc")
             {
@@ -163,6 +174,11 @@ public class FfmpegGenerator
             else if (videoEncoding == "h264_amf" || videoEncoding == "hevc_amf")
             {
                 crfSettings = $" -quality {crf}";
+            }
+            else if (videoEncoding is "h264_videotoolbox" or "hevc_videotoolbox")
+            {
+                // Constant quality is "-q:v 1-100" (higher is better), not CRF.
+                crfSettings = $" -q:v {crf}";
             }
             else
             {
@@ -179,7 +195,18 @@ public class FfmpegGenerator
         outputVideoFileName = $"\"{outputVideoFileName}\"";
 
         var passSettings = string.Empty;
-        if (!string.IsNullOrWhiteSpace(pass) && !string.IsNullOrWhiteSpace(twoPassBitRate))
+        if (string.IsNullOrWhiteSpace(pass) && !string.IsNullOrWhiteSpace(twoPassBitRate))
+        {
+            // Single-pass average bit rate, used where two-pass is not available (VideoToolbox
+            // writes no stats file, so its "pass 1" is wasted work - see #13401).
+            passSettings = $" -b:v {twoPassBitRate}";
+
+            if (!string.IsNullOrWhiteSpace(audioBitRate))
+            {
+                passSettings += $" -b:a {audioBitRate}";
+            }
+        }
+        else if (!string.IsNullOrWhiteSpace(pass) && !string.IsNullOrWhiteSpace(twoPassBitRate))
         {
             passSettings = $" -b:v {twoPassBitRate} -pass {pass}";
 
@@ -190,9 +217,12 @@ public class FfmpegGenerator
 
             if (pass == "1")
             {
-                var ext = Path.GetExtension(outputVideoFileName.Trim('"')).ToLowerInvariant().TrimStart('.');
-                var outputType = ext == "mkv" ? "matroska" : ext;
-                outputVideoFileName = Configuration.IsRunningOnWindows ? $"-f {outputType} NUL" : "-f mp4 /dev/null";
+                // The analysis pass writes to the null device, where ffmpeg cannot infer the
+                // muxer from the file name. It has to be the real output muxer: the fixed
+                // "-f mp4" used here on Linux/macOS aborts the pass for any codec mp4 cannot
+                // hold - ProRes gets "Could not find tag for codec prores in stream #0".
+                var outputType = Features.Video.BurnIn.OutputContainer.GetMuxerName(Path.GetExtension(outputVideoFileName.Trim('"')));
+                outputVideoFileName = Configuration.IsRunningOnWindows ? $"-f {outputType} NUL" : $"-f {outputType} /dev/null";
             }
         }
 
@@ -469,7 +499,9 @@ public class FfmpegGenerator
             StartInfo =
             {
                 FileName = GetFfmpegLocation(),
-                Arguments = $"-i \"{videoFileName}\" -vf \"select=1\" -vsync vfr \"{outputFileName}\"",
+                // "-vsync vfr" was dropped: ffmpeg 9 removed -vsync and aborts before decoding
+                // anything, and "select=1" already passes every frame through unchanged.
+                Arguments = $"-i \"{videoFileName}\" -vf \"select=1\" \"{outputFileName}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true
             }
@@ -1274,6 +1306,52 @@ public class FfmpegGenerator
     }
 
     /// <summary>
+    /// Build ffmpeg parameters for joining clips cut by
+    /// <see cref="ExtractCloneReferenceClipParameters"/> into one file, in the order listed in
+    /// <paramref name="concatListFileName"/> (an ffmpeg concat demuxer list).
+    /// </summary>
+    /// <remarks>
+    /// Stream copy: the parts were all cut to the same mono PCM16 rate, so there is nothing to
+    /// re-encode. Used to build one long reference for a speaker out of several of their lines -
+    /// a cloning model hears a speaker far better in fifteen seconds than in two.
+    /// </remarks>
+    internal static string ConcatAudioClipsParameters(string concatListFileName, string outputFileName)
+    {
+        return $"-y -f concat -safe 0 -i \"{concatListFileName}\" -c copy \"{outputFileName}\"";
+    }
+
+    /// <summary>
+    /// Build ffmpeg parameters for cutting a voice-cloning reference clip out of a video: the
+    /// requested range as mono PCM16 at <paramref name="sampleRate"/>.
+    /// </summary>
+    /// <remarks>
+    /// Separate from <see cref="ExtractAudioClipFromVideoParameters"/>, which keeps the source
+    /// channel layout because it saves a clip for the user to listen to. A cloning reference is
+    /// read by a model, and every engine that clones wants one mono channel - handing it a stereo
+    /// clip means each engine resamples it again, or worse, clones from a downmix it made itself.
+    /// </remarks>
+    internal static string ExtractCloneReferenceClipParameters(
+        string videoFileName,
+        double startSeconds,
+        double durationSeconds,
+        string outputFileName,
+        int audioTrackFfIndex = -1,
+        int sampleRate = 24000)
+    {
+        var start = $"{startSeconds:0.000}".Replace(",", ".");
+        var duration = $"{durationSeconds:0.000}".Replace(",", ".");
+
+        var args = $"-y -ss {start} -t {duration} -i \"{videoFileName}\"";
+        if (audioTrackFfIndex >= 0)
+        {
+            args += $" -map 0:{audioTrackFfIndex}";
+        }
+
+        args += $" -vn -ar {sampleRate} -ac 1 -c:a pcm_s16le \"{outputFileName}\"";
+        return args;
+    }
+
+    /// <summary>
     /// Build ffmpeg parameters for extracting an audio clip from a video/audio file.
     /// No <c>-c:a</c> is set, so ffmpeg picks the default encoder for the output
     /// extension (typically pcm for .wav, libmp3lame for .mp3, aac for .m4a, flac for .flac).
@@ -1332,6 +1410,34 @@ public class FfmpegGenerator
         args += $" \"{outputFileName}\"";
 
         return args;
+    }
+
+    /// <summary>
+    /// Writes chapters into a copy of a video file. Every stream is copied, so nothing is
+    /// re-encoded - only the container's chapter metadata changes.
+    /// </summary>
+    /// <param name="metadataFileName">An ffmetadata file holding the chapters.</param>
+    public static string GetWriteChaptersParameters(string inputFileName, string metadataFileName, string outputFileName)
+    {
+        var args = new List<string>
+        {
+            "-y",
+            $"-i \"{inputFileName}\"",
+            $"-i \"{metadataFileName}\"",
+
+            // Take metadata from the ffmetadata input, which replaces any chapters already there.
+            "-map_metadata 1",
+
+            // Chapters come from the ffmetadata input rather than being carried over from the video.
+            "-map_chapters 1",
+
+            // Every stream of the video is kept, including subtitles and attachments.
+            "-map 0",
+            "-c copy",
+            $"\"{outputFileName}\"",
+        };
+
+        return string.Join(" ", args);
     }
 
     internal static string AlterEmbeddedTracksMatroska(List<EmbeddedTrack> embeddedTracks, List<EmbeddedTrack> originalTracks, string inputFileName, string outputFileName)

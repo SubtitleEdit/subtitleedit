@@ -157,11 +157,17 @@ public class SourceViewWindow : Window
         var buttonReplaceAll = UiUtil.MakeButton(Se.Language.Edit.Find.ReplaceAll, vm.ReplaceAllCommand);
         buttonReplaceAll.Bind(IsVisibleProperty, new Binding(nameof(vm.IsReplaceVisible)));
 
+        // The options sit shoulder to shoulder after the buttons, so they need their own gap.
+        var optionMargin = new Thickness(10, 0, 0, 0);
         var checkBoxMatchCase = UiUtil.MakeCheckBox(Se.Language.General.CaseSensitive, vm, nameof(vm.MatchCase));
+        checkBoxMatchCase.Margin = optionMargin;
         var checkBoxWholeWord = UiUtil.MakeCheckBox(Se.Language.Edit.Find.WholeWord, vm, nameof(vm.WholeWord));
+        checkBoxWholeWord.Margin = optionMargin;
         var checkBoxRegex = UiUtil.MakeCheckBox(Se.Language.General.RegularExpression, vm, nameof(vm.UseRegularExpression));
+        checkBoxRegex.Margin = optionMargin;
 
         var labelStatus = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.FindStatus));
+        labelStatus.Margin = optionMargin;
 
         var buttonClose = UiUtil.MakeButton(vm.CloseFindBarCommand, IconNames.Close, Se.Language.SourceView.CloseSearch);
         buttonClose.HorizontalAlignment = HorizontalAlignment.Right;
@@ -170,6 +176,7 @@ public class SourceViewWindow : Window
         {
             Orientation = Orientation.Horizontal,
             VerticalAlignment = VerticalAlignment.Center,
+            LineSpacing = 6,
             Children =
             {
                 searchTextBox,

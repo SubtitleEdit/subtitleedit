@@ -271,4 +271,122 @@ public class FindServiceTests
         Assert.Equal(0, idx);
         Assert.False(service.CurrentMatchInOriginal);
     }
+
+    // #13471: searching both columns is not always wanted - the replace window can narrow the
+    // scope to one column, as SE 4's "Replace/search in" combo box did.
+    [Fact]
+    public void FindNext_TextOnly_IgnoresOriginalText()
+    {
+        var lines = new List<string> { "nothing here", "hello world" };
+        var originals = new List<string> { "hello again", "nothing either" };
+        var service = new FindService { CurrentScope = FindService.FindScope.TextOnly };
+        service.Initialize(lines, 0, false, FindService.FindMode.CaseInsensitive, originals);
+
+        var idx = service.FindNext("hello", lines, 0, 0, originals);
+
+        Assert.Equal(1, idx);
+        Assert.False(service.CurrentMatchInOriginal);
+    }
+
+    [Fact]
+    public void FindNext_OriginalOnly_IgnoresText()
+    {
+        var lines = new List<string> { "hello world", "nothing here" };
+        var originals = new List<string> { "nothing either", "hello again" };
+        var service = new FindService { CurrentScope = FindService.FindScope.OriginalOnly };
+        service.Initialize(lines, 0, false, FindService.FindMode.CaseInsensitive, originals);
+
+        var idx = service.FindNext("hello", lines, 0, 0, originals, true);
+
+        Assert.Equal(1, idx);
+        Assert.True(service.CurrentMatchInOriginal);
+    }
+
+    [Fact]
+    public void FindPrevious_TextOnly_IgnoresOriginalText()
+    {
+        var lines = new List<string> { "hello world", "nothing here" };
+        var originals = new List<string> { "nothing either", "hello again" };
+        var service = new FindService { CurrentScope = FindService.FindScope.TextOnly };
+        service.Initialize(lines, 0, false, FindService.FindMode.CaseInsensitive, originals);
+
+        var idx = service.FindPrevious("hello", lines, 1, lines[1].Length - 1, originals);
+
+        Assert.Equal(0, idx);
+        Assert.False(service.CurrentMatchInOriginal);
+    }
+
+    [Fact]
+    public void FindPrevious_OriginalOnly_IgnoresText()
+    {
+        var lines = new List<string> { "hello world", "nothing here" };
+        var originals = new List<string> { "hello again", "nothing either" };
+        var service = new FindService { CurrentScope = FindService.FindScope.OriginalOnly };
+        service.Initialize(lines, 0, false, FindService.FindMode.CaseInsensitive, originals);
+
+        var idx = service.FindPrevious("hello", lines, 1, originals[1].Length - 1, originals, true);
+
+        Assert.Equal(0, idx);
+        Assert.True(service.CurrentMatchInOriginal);
+    }
+
+    [Theory]
+    [InlineData(FindService.FindScope.TextAndOriginal, 3)]
+    [InlineData(FindService.FindScope.TextOnly, 1)]
+    [InlineData(FindService.FindScope.OriginalOnly, 2)]
+    public void Count_HonoursScope(FindService.FindScope scope, int expected)
+    {
+        var lines = new List<string> { "hello world", "nothing" };
+        var originals = new List<string> { "hello again", "hello once more" };
+        var service = new FindService();
+
+        var count = service.Count("hello", lines, false, FindService.FindMode.CaseInsensitive, originals, scope);
+
+        Assert.Equal(expected, count);
+    }
+
+    [Fact]
+    public void ReplaceAll_TextOnly_LeavesOriginalUntouched()
+    {
+        var lines = new List<string> { "hello world" };
+        var originals = new List<string> { "hello again" };
+        var service = new FindService { CurrentScope = FindService.FindScope.TextOnly };
+        service.Initialize(lines, 0, false, FindService.FindMode.CaseInsensitive, originals);
+
+        var count = service.ReplaceAll("hello", "hi");
+
+        Assert.Equal(1, count);
+        Assert.Equal("hi world", lines[0]);
+        Assert.Equal("hello again", originals[0]);
+    }
+
+    [Fact]
+    public void ReplaceAll_OriginalOnly_LeavesTextUntouched()
+    {
+        var lines = new List<string> { "hello world" };
+        var originals = new List<string> { "hello again" };
+        var service = new FindService { CurrentScope = FindService.FindScope.OriginalOnly };
+        service.Initialize(lines, 0, false, FindService.FindMode.CaseInsensitive, originals);
+
+        var count = service.ReplaceAll("hello", "hi");
+
+        Assert.Equal(1, count);
+        Assert.Equal("hello world", lines[0]);
+        Assert.Equal("hi again", originals[0]);
+    }
+
+    // The scope is about which columns exist to search - with no original loaded, "original only"
+    // must not silently swallow the text column.
+    [Fact]
+    public void ReplaceAll_OriginalOnly_WithoutOriginals_ReplacesNothing()
+    {
+        var lines = new List<string> { "hello world" };
+        var service = new FindService { CurrentScope = FindService.FindScope.OriginalOnly };
+        service.Initialize(lines, 0, false, FindService.FindMode.CaseInsensitive);
+
+        var count = service.ReplaceAll("hello", "hi");
+
+        Assert.Equal(0, count);
+        Assert.Equal("hello world", lines[0]);
+    }
 }

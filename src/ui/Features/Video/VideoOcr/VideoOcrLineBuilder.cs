@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Features.Video.VideoOcr;
 
@@ -106,8 +107,16 @@ public static class VideoOcrLineBuilder
             if (line.Length == 0 ||
                 line.StartsWith("```", StringComparison.Ordinal) ||
                 line.StartsWith("You are an OCR engine", StringComparison.OrdinalIgnoreCase) ||
-                line == lastLine ||
                 !line.Any(char.IsLetterOrDigit))
+            {
+                continue;
+            }
+
+            // Strip before the repeat check, not after: a model that emits the same line twice
+            // and emphasises only the second one ("Hello" then "**Hello**") got past a check on
+            // the raw text and produced a subtitle with the line in it twice.
+            line = StripMarkdownEmphasis(line);
+            if (line == lastLine)
             {
                 continue;
             }
@@ -123,6 +132,29 @@ public static class VideoOcrLineBuilder
 
         return string.Join("\n", kept);
     }
+
+    /// <summary>
+    /// Removes markdown bold/emphasis wrappers, which document-OCR models add to text they read
+    /// as emphasised - DeepSeek-OCR-2 returns "It was **built** back in 1948." for a plain
+    /// subtitle line. The markers are never wanted in a subtitle.
+    /// The inner group rejects "*" so censoring like "f***" is left alone.
+    /// </summary>
+    private static string StripMarkdownEmphasis(string line)
+    {
+        if (!line.Contains('*') && !line.Contains('_'))
+        {
+            return line;
+        }
+
+        line = MarkdownBoldAsteriskRegex.Replace(line, "$1");
+        return MarkdownBoldUnderscoreRegex.Replace(line, "$1");
+    }
+
+    private static readonly Regex MarkdownBoldAsteriskRegex =
+        new(@"\*\*([^*]+)\*\*", RegexOptions.Compiled, TimeSpan.FromSeconds(1));
+
+    private static readonly Regex MarkdownBoldUnderscoreRegex =
+        new(@"__([^_]+)__", RegexOptions.Compiled, TimeSpan.FromSeconds(1));
 
     /// <summary>
     /// Similarity of two texts as Levenshtein ratio in percent, ignoring case and

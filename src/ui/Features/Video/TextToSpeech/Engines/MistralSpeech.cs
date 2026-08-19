@@ -20,6 +20,8 @@ public class MistralSpeech : ITtsEngine
     public bool HasRegion => false;
     public bool HasModel => true;
     public bool HasKeyFile => false;
+    public bool SupportsVoiceCloning => false;
+    public bool SupportsPerLineVoiceCloning => false;
 
     public Task<bool> IsInstalled(string? region)
     {
@@ -154,7 +156,7 @@ public class MistralSpeech : ITtsEngine
             return new TtsResult { Text = text, FileName = string.Empty, Error = true };
         }
 
-        var fileName = Path.Combine(GetSetMistralFolder(), Guid.NewGuid() + ".mp3");
+        var fileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetMistralFolder), Guid.NewGuid() + ".mp3");
         await File.WriteAllBytesAsync(fileName, ms.ToArray(), cancellationToken);
         return new TtsResult { Text = text, FileName = fileName };
     }

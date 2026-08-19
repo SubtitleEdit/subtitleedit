@@ -36,6 +36,8 @@ public class LanguageAudioToText
     public string EngineSettings { get; set; }
     public string EngineSettingsSubtitle { get; set; }
     public string BackendAndUpdateStatus { get; set; }
+    public string AddLanguageCodeToFileName { get; set; }
+    public string AddLanguageCodeToFileNameHint { get; set; }
 
     public LanguageAudioToText()
     {
@@ -73,5 +75,7 @@ public class LanguageAudioToText
         EngineSettings = "Speech-to-text engine settings";
         EngineSettingsSubtitle = "Speech-to-text engine";
         BackendAndUpdateStatus = "Backend and update status";
+        AddLanguageCodeToFileName = "Add language code to file name";
+        AddLanguageCodeToFileNameHint = "Name generated subtitles like \"video.en.srt\" instead of \"video.srt\"";
     }
 }

@@ -48,6 +48,8 @@ public partial class AssaApplyCustomOverrideTagsViewModel : ObservableObject
     private LibMpvDynamicPlayer? _mpvPlayer;
     private bool _isSubtitleLoaded;
     private string _oldSubtitleText;
+    private string? _header;
+    private string? _footer;
     private string? _videoFileName;
     private DispatcherTimer _positionTimer = new DispatcherTimer();
     private List<SubtitleLineViewModel> _subtitleLines = new List<SubtitleLineViewModel>();
@@ -81,11 +83,14 @@ public partial class AssaApplyCustomOverrideTagsViewModel : ObservableObject
     }
 
     public void Initialize(
+        Subtitle subtitle,
         List<SubtitleLineViewModel> paragraphs,
         List<SubtitleLineViewModel> selectedParagraphs,
         string? videoFileName)
     {
         Paragraphs = new ObservableCollection<SubtitleDisplayItem>(paragraphs.Select(p => new SubtitleDisplayItem(p)));
+        _header = subtitle.Header;
+        _footer = subtitle.Footer;
         _videoFileName = videoFileName;
         _subtitleLines = paragraphs;
         _selectedSubtitleLines = selectedParagraphs;
@@ -125,24 +130,7 @@ public partial class AssaApplyCustomOverrideTagsViewModel : ObservableObject
                 return;
             }
 
-            var subtitle = new Subtitle();
-            int firstSelectedIndex = Paragraphs.IndexOf(Paragraphs.First(p => p.Subtitle.Id == _selectedSubtitleLines[0].Id));
-            var idx = 0;
-            foreach (var item in Paragraphs)
-            {
-                var p = new SubtitleLineViewModel(item.Subtitle);
-
-                if (AdjustAll ||
-                    AdjustSelectedLines && _selectedSubtitleLines.Any(x => x.Id == item.Subtitle.Id) ||
-                    AdjustSelectedLinesAndForward && idx >= firstSelectedIndex)
-                {
-                    p.Text = CurrentTag + p.Text;
-                }
-
-                subtitle.Paragraphs.Add(p.ToParagraph());
-                idx++;
-            }
-
+            var subtitle = BuildTaggedSubtitle();
             var text = _assaFormat.ToText(subtitle, string.Empty);
             if (_oldSubtitleText == text)
             {
@@ -161,10 +149,60 @@ public partial class AssaApplyCustomOverrideTagsViewModel : ObservableObject
             }
 
             _oldSubtitleText = text;
-            UpdatedSubtitle = subtitle;
         };
 
         _positionTimer.Start();
+    }
+
+    private Subtitle BuildTaggedSubtitle()
+    {
+        return BuildTaggedSubtitle(_header, _footer, _subtitleLines, _selectedSubtitleLines, CurrentTag,
+            AdjustAll, AdjustSelectedLines, AdjustSelectedLinesAndForward, _assaFormat);
+    }
+
+    /// <summary>
+    /// Applies the override tag to the chosen lines and returns the result as a subtitle that
+    /// keeps the file's header, so both the mpv preview and the OK result render/save with the
+    /// real styles.
+    /// </summary>
+    internal static Subtitle BuildTaggedSubtitle(
+        string? header,
+        string? footer,
+        List<SubtitleLineViewModel> lines,
+        List<SubtitleLineViewModel> selectedLines,
+        string tag,
+        bool adjustAll,
+        bool adjustSelectedLines,
+        bool adjustSelectedLinesAndForward,
+        SubtitleFormat format)
+    {
+        var subtitle = new Subtitle { Header = header, Footer = footer };
+
+        // No selection means "selected lines"/"and forward" have nothing to apply to.
+        var firstSelectedIndex = selectedLines.Count > 0
+            ? lines.FindIndex(l => l.Id == selectedLines[0].Id)
+            : -1;
+        if (firstSelectedIndex < 0)
+        {
+            firstSelectedIndex = int.MaxValue;
+        }
+
+        var selectedIds = new HashSet<Guid>(selectedLines.Select(s => s.Id));
+        for (var idx = 0; idx < lines.Count; idx++)
+        {
+            var p = new SubtitleLineViewModel(lines[idx]);
+
+            if (adjustAll ||
+                adjustSelectedLines && selectedIds.Contains(p.Id) ||
+                adjustSelectedLinesAndForward && idx >= firstSelectedIndex)
+            {
+                p.Text = tag + p.Text;
+            }
+
+            subtitle.Paragraphs.Add(p.ToParagraph(format));
+        }
+
+        return subtitle;
     }
 
     [RelayCommand]
@@ -220,6 +258,10 @@ public partial class AssaApplyCustomOverrideTagsViewModel : ObservableObject
     [RelayCommand]
     private void Ok()
     {
+        // Build the result here rather than reusing the preview timer's snapshot: the timer only
+        // runs when a video is loaded (OK used to be a silent no-op without one), and its last
+        // tick could be up to 500 ms behind the current tag.
+        UpdatedSubtitle = BuildTaggedSubtitle();
         OkPressed = true;
         Window?.Close();
     }

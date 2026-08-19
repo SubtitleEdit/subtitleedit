@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.FindText;
@@ -16,6 +17,7 @@ using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.UiLogic.Media;
@@ -42,17 +44,32 @@ public partial class VisualSyncViewModel : ObservableObject
     public ComboBox ComboBoxRight { get; set; }
 
     private readonly IWindowService _windowService;
+    private readonly IFileHelper _fileHelper;
+
+    // One per player: each keeps the temp subtitle file it handed to its own player, so a shared
+    // instance would have the two players overwriting each other's file.
+    private readonly IVideoPreviewSubtitle _previewSubtitleLeft;
+    private readonly IVideoPreviewSubtitle _previewSubtitleRight;
 
     private string? _videoFileName;
+    private string? _wavePeaksVideoFileName;
     private DispatcherTimer _positionTimer = new DispatcherTimer();
     private List<SubtitleLineViewModel> _subtitleLines = new List<SubtitleLineViewModel>();
+    private VideoPreviewSubtitleContext _previewContext = VideoPreviewSubtitleContext.Default;
     private bool _updateAudioVisualizer;
     private double _lastManualOffsetSeconds;
     private double _lastManualSpeedFactor = 1.0;
 
-    public VisualSyncViewModel(IWindowService windowService)
+    public VisualSyncViewModel(
+        IWindowService windowService,
+        IFileHelper fileHelper,
+        IVideoPreviewSubtitle previewSubtitleLeft,
+        IVideoPreviewSubtitle previewSubtitleRight)
     {
         _windowService = windowService;
+        _fileHelper = fileHelper;
+        _previewSubtitleLeft = previewSubtitleLeft;
+        _previewSubtitleRight = previewSubtitleRight;
 
         Title = string.Empty;
         VideoInfo = string.Empty;
@@ -85,13 +102,30 @@ public partial class VisualSyncViewModel : ObservableObject
         List<SubtitleLineViewModel> paragraphs,
         string? videoFileName,
         string? subtitleFileName,
+        VideoPreviewSubtitleContext previewContext,
         AudioVisualizer? audioVisualizer,
         int audioTrackId = -1)
     {
+        // No video handed down from the main window - look for one next to the subtitle file, the
+        // way SE4's visual sync did. Failing that the dialog is not a dead end: "Open video file..."
+        // is there to pick one. The video stays local to this dialog either way - only time codes
+        // are reported back, so a video found on disk cannot walk over the "auto open video file"
+        // setting in the main window.
+        if (string.IsNullOrEmpty(videoFileName) &&
+            !string.IsNullOrEmpty(subtitleFileName) &&
+            FindVideoFileName.TryFindVideoFileName(subtitleFileName, out var foundVideoFileName))
+        {
+            videoFileName = foundVideoFileName;
+        }
+
         SetVideoInFo(videoFileName);
         Paragraphs = new ObservableCollection<SubtitleDisplayItem>(paragraphs.Select(p => new SubtitleDisplayItem(p)));
         _videoFileName = videoFileName;
         _subtitleLines = paragraphs;
+
+        // Carried in so the subtitle drawn on the two videos looks like the one on the main
+        // window's video.
+        _previewContext = previewContext;
 
         Dispatcher.UIThread.Post(() =>
         {
@@ -100,11 +134,14 @@ public partial class VisualSyncViewModel : ObservableObject
                 _ = OpenPlayersAsync(videoFileName, audioTrackId);
             }
 
-            if (audioVisualizer != null)
+            // An audio visualizer without peaks is just an empty box - only show it when the main
+            // window actually has a waveform to lend us.
+            if (audioVisualizer?.WavePeaks != null)
             {
                 AudioVisualizerLeft.WavePeaks = audioVisualizer.WavePeaks;
                 AudioVisualizerRight.WavePeaks = audioVisualizer.WavePeaks;
                 IsAudioVisualizerVisible = true;
+                _wavePeaksVideoFileName = videoFileName;
             }
             StartTitleTimer();
             _updateAudioVisualizer = true;
@@ -169,6 +206,8 @@ public partial class VisualSyncViewModel : ObservableObject
             UpdateAudioVisualizer(VideoPlayerControlLeft.VideoPlayer, AudioVisualizerLeft, SelectedParagraphLeftIndex);
             UpdateAudioVisualizer(VideoPlayerControlRight.VideoPlayer, AudioVisualizerRight, SelectedParagraphRightIndex);
 
+            RefreshPreviewSubtitles();
+
             if (_updateAudioVisualizer)
             {
                 AudioVisualizerLeft.InvalidateVisual();
@@ -177,6 +216,31 @@ public partial class VisualSyncViewModel : ObservableObject
             }
         };
         _positionTimer.Start();
+    }
+
+    /// <summary>
+    /// Both players get the whole subtitle, so each shows whatever line belongs at the frame it is
+    /// parked on - which is the comparison visual sync is for (discussion #13767).
+    /// </summary>
+    internal void RefreshPreviewSubtitles()
+    {
+        _previewSubtitleLeft.Refresh(VideoPlayerControlLeft.VideoPlayer, BuildPreviewSubtitle, _previewContext);
+        _previewSubtitleRight.Refresh(VideoPlayerControlRight.VideoPlayer, BuildPreviewSubtitle, _previewContext);
+    }
+
+    /// <summary>
+    /// The lines as they stand right now - "Sync" adjusts them in place, so the subtitle on the
+    /// videos follows the new time codes just as SE4's did.
+    /// </summary>
+    private Subtitle BuildPreviewSubtitle()
+    {
+        var subtitle = new Subtitle { Header = _previewContext.Header };
+        foreach (var p in Paragraphs)
+        {
+            subtitle.Paragraphs.Add(p.Subtitle.ToParagraph(_previewContext.Format));
+        }
+
+        return subtitle;
     }
 
     private void UpdateAudioVisualizer(
@@ -405,7 +469,7 @@ public partial class VisualSyncViewModel : ObservableObject
         ApplySync(result.SpeedFactor, result.OffsetSeconds);
     }
 
-    private void ApplySync(double factor, double adjust)
+    internal void ApplySync(double factor, double adjust)
     {
         if (Math.Abs(factor) < 0.000001)
         {
@@ -434,6 +498,10 @@ public partial class VisualSyncViewModel : ObservableObject
                 current.EndTime = TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds - 1);
             }
         }
+
+        // The time codes moved, so the subtitle on both videos has to be pushed again.
+        _previewSubtitleLeft.Invalidate();
+        _previewSubtitleRight.Invalidate();
 
         _updateAudioVisualizer = true;
     }
@@ -500,6 +568,10 @@ public partial class VisualSyncViewModel : ObservableObject
         _positionTimer.Stop();
         VideoPlayerControlLeft.VideoPlayer.CloseFile();
         VideoPlayerControlRight.VideoPlayer.CloseFile();
+
+        // Deletes the temp subtitle files handed to the two players.
+        _previewSubtitleLeft.Reset();
+        _previewSubtitleRight.Reset();
     }
 
     [RelayCommand]
@@ -538,14 +610,14 @@ public partial class VisualSyncViewModel : ObservableObject
     {
         UiUtil.RestoreWindowPosition(Window);
 
-        if (string.IsNullOrEmpty(_videoFileName))
+        // Only the video needs waiting for - the start/end scenes still have to be picked when
+        // there is none, so the combo boxes are not left empty while the user finds a video.
+        if (!string.IsNullOrEmpty(_videoFileName))
         {
-            return;
+            // Wait a bit for video players to finish opening the file (or until they report a duration)
+            await VideoPlayerControlLeft.WaitForPlayersReadyAsync();
+            await VideoPlayerControlRight.WaitForPlayersReadyAsync();
         }
-
-        // Wait a bit for video players to finish opening the file (or until they report a duration)
-        await VideoPlayerControlLeft.WaitForPlayersReadyAsync();
-        await VideoPlayerControlRight.WaitForPlayersReadyAsync();
 
         Dispatcher.UIThread.Post(() =>
         {
@@ -558,6 +630,56 @@ public partial class VisualSyncViewModel : ObservableObject
             SelectedParagraphRightIndex = Paragraphs.Count - 1;
             GoToLeftSubtitle();
             GoToRightSubtitle();
+        });
+    }
+
+    /// <summary>
+    /// Opens a video from inside the dialog, so entering visual sync without one is not a dead end
+    /// - SE4 offered the same button. The video stays local to this dialog; only time codes are
+    /// reported back.
+    /// </summary>
+    [RelayCommand]
+    private async Task OpenVideoFile()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var fileName = await _fileHelper.PickOpenVideoFile(Window, Se.Language.General.OpenVideoFileTitle);
+        if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
+        {
+            return;
+        }
+
+        _videoFileName = fileName;
+        SetVideoInFo(fileName);
+
+        // The lent waveform belongs to the video the dialog was opened with - keeping it
+        // under a different video would have the user syncing against the wrong peaks.
+        if (!string.Equals(fileName, _wavePeaksVideoFileName, StringComparison.OrdinalIgnoreCase))
+        {
+            AudioVisualizerLeft.WavePeaks = null;
+            AudioVisualizerRight.WavePeaks = null;
+            IsAudioVisualizerVisible = false;
+        }
+
+        await OpenPlayersAsync(fileName, -1);
+        await VideoPlayerControlLeft.WaitForPlayersReadyAsync();
+        await VideoPlayerControlRight.WaitForPlayersReadyAsync();
+
+        // The external subtitle went with the old file - it has to be added to the new one from
+        // scratch, not reloaded into a track that is no longer there.
+        _previewSubtitleLeft.Reset();
+        _previewSubtitleRight.Reset();
+
+        // Land the players on the scenes already picked in the combo boxes (OnLoaded seeds them
+        // to the first/last line even without a video), instead of both sitting at zero.
+        Dispatcher.UIThread.Post(() =>
+        {
+            GoToLeftSubtitle();
+            GoToRightSubtitle();
+            _updateAudioVisualizer = true;
         });
     }
 

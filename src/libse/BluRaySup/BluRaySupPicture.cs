@@ -122,14 +122,17 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             }
 
             var transparentColor = (byte)palette[palette.Count - 1];
-            var bytes = new List<byte>();
+            var bytes = new List<byte>(bm.Width * 2);
+            var reader = new BitmapRowReader(bm);
+            var row = new SKColor[bm.Width];
             for (var y = 0; y < bm.Height; y++)
             {
+                reader.ReadRow(y, row);
                 int x;
                 int len;
                 for (x = 0; x < bm.Width; x += len)
                 {
-                    var c = bm.GetPixel(x, y);
+                    var c = row[x];
 
                     byte color;
                     if (c.Alpha == 0)
@@ -147,7 +150,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
                     for (len = 1; x + len < bm.Width; len++)
                     {
-                        if (bm.GetPixel(x + len, y) != c)
+                        if (row[x + len] != c)
                         {
                             break;
                         }
@@ -213,6 +216,62 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             return bytes.ToArray();
         }
 
+        /// <summary>
+        /// Hands out whole rows of pixels without a SkiaSharp interop call per pixel. Only color
+        /// types whose bytes <see cref="SKBitmap.GetPixel"/> returns unchanged are read directly:
+        /// premultiplied pixels get un-premultiplied on the way out of GetPixel, and other layouts
+        /// are not four plain BGRA/RGBA bytes, so both keep using GetPixel.
+        /// </summary>
+        private sealed class BitmapRowReader
+        {
+            private readonly SKBitmap _bitmap;
+            private readonly int _redOffset;
+            private readonly int _blueOffset;
+            private readonly bool _direct;
+
+            public BitmapRowReader(SKBitmap bitmap)
+            {
+                _bitmap = bitmap;
+                // Alpha is byte 3 and green byte 1 in both layouts; only red and blue swap.
+                if (bitmap.AlphaType != SKAlphaType.Premul && bitmap.GetPixels() != IntPtr.Zero)
+                {
+                    if (bitmap.ColorType == SKColorType.Bgra8888)
+                    {
+                        _redOffset = 2;
+                        _blueOffset = 0;
+                        _direct = true;
+                    }
+                    else if (bitmap.ColorType == SKColorType.Rgba8888)
+                    {
+                        _redOffset = 0;
+                        _blueOffset = 2;
+                        _direct = true;
+                    }
+                }
+            }
+
+            public unsafe void ReadRow(int y, SKColor[] row)
+            {
+                if (!_direct)
+                {
+                    for (var x = 0; x < row.Length; x++)
+                    {
+                        row[x] = _bitmap.GetPixel(x, y);
+                    }
+
+                    return;
+                }
+
+                var rowBytes = _bitmap.RowBytes;
+                var line = new ReadOnlySpan<byte>((byte*)_bitmap.GetPixels().ToPointer() + (long)y * rowBytes, rowBytes);
+                for (var x = 0; x < row.Length; x++)
+                {
+                    var i = x * 4;
+                    row[x] = new SKColor(line[i + _redOffset], line[i + 1], line[i + _blueOffset], line[i + 3]);
+                }
+            }
+        }
+
         private static byte FindBestMatch(SKColor color, List<SKColor> palette)
         {
             var smallestDiff = 1000;
@@ -252,6 +311,8 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         {
             var pal = new List<SKColor>(255);
             var lookup = new HashSet<SKColor>(255);
+            var reader = new BitmapRowReader(bitmap);
+            var row = new SKColor[bitmap.Width];
 
             // Add font color as first entry
             pal.Add(fontColor);
@@ -260,9 +321,10 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             // first we try with exact colors
             for (var y = 0; y < bitmap.Height; y++)
             {
+                reader.ReadRow(y, row);
                 for (var x = 0; x < bitmap.Width; x++)
                 {
-                    var c = bitmap.GetPixel(x, y);
+                    var c = row[x];
                     if (c.Alpha > 0)
                     {
                         if (lookup.Contains(c))
@@ -301,9 +363,10 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             lookup.Add(fontColor);
             for (var y = 0; y < bitmap.Height; y++)
             {
+                reader.ReadRow(y, row);
                 for (var x = 0; x < bitmap.Width; x++)
                 {
-                    var c = bitmap.GetPixel(x, y);
+                    var c = row[x];
                     if (c.Alpha > 0)
                     {
                         if (lookup.Contains(c))

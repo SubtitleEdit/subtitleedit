@@ -21,8 +21,21 @@ namespace UITests.Features;
 /// is invisible until the window is actually constructed. These tests assert the button reaches the
 /// logical tree and is effectively visible, which a build alone cannot prove.
 /// </summary>
-public class LlamaCppEngineSettingsButtonTests
+public class LlamaCppEngineSettingsButtonTests : IDisposable
 {
+    // Every window opened by a test is closed again in Dispose: if a test stops early, an
+    // unclosed window would outlive the test and race with the headless session teardown.
+    private readonly List<Window> _windows = new();
+
+    public void Dispose()
+    {
+        foreach (var window in _windows)
+        {
+            window.Close();
+        }
+
+        _windows.Clear();
+    }
     private sealed class NullServiceProvider : IServiceProvider
     {
         public object? GetService(Type serviceType) => null;
@@ -44,6 +57,7 @@ public class LlamaCppEngineSettingsButtonTests
     {
         var vm = new AiReviewViewModel(new WindowService(new NullServiceProvider()));
         var window = new AiReviewWindow(vm);
+        _windows.Add(window);
         try
         {
             var button = FindEngineSettingsButton(window);
@@ -63,6 +77,7 @@ public class LlamaCppEngineSettingsButtonTests
     {
         var vm = new AiAssistantViewModel(new WindowService(new NullServiceProvider()));
         var window = new AiAssistantWindow(vm);
+        _windows.Add(window);
         try
         {
             var button = FindEngineSettingsButton(window);
@@ -101,6 +116,7 @@ public class LlamaCppEngineSettingsButtonTests
     {
         var vm = new AiReviewViewModel(new WindowService(new NullServiceProvider()));
         var window = new AiReviewWindow(vm);
+        _windows.Add(window);
         try
         {
             var engineCombo = window.GetLogicalDescendants().OfType<ComboBox>()
@@ -119,6 +135,7 @@ public class LlamaCppEngineSettingsButtonTests
     {
         var vm = new AiAssistantViewModel(new WindowService(new NullServiceProvider()));
         var window = new AiAssistantWindow(vm);
+        _windows.Add(window);
         try
         {
             var engineCombo = window.GetLogicalDescendants().OfType<ComboBox>()
@@ -142,6 +159,7 @@ public class LlamaCppEngineSettingsButtonTests
     {
         var vm = new AutoTranslateViewModel(new WindowService(new NullServiceProvider()), new FolderHelper());
         var window = new AutoTranslateWindow(vm);
+        _windows.Add(window);
         try
         {
             Assert.NotNull(FindEngineSettingsButton(window));
@@ -161,6 +179,7 @@ public class LlamaCppEngineSettingsButtonTests
     {
         var vm = new AiReviewViewModel(new WindowService(new NullServiceProvider()));
         var window = new AiReviewWindow(vm);
+        _windows.Add(window);
         try
         {
             vm.SelectedEngine = SeAiReview.EngineOllama;

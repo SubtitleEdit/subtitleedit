@@ -89,9 +89,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new AdobeAfterEffectsFTME(),
                     new AdobeEncore(),
                     new AdobeEncoreLineTabNewLine(),
+                    new AdobeEncoreLineTabs(),
                     new AdobeEncoreTabs(),
                     new AdobeEncoreWithLineNumbers(),
                     new AdobeEncoreWithLineNumbersNtsc(),
+                    new AdobePremiereMarkersCsv(),
                     new AdvancedSubStationAlpha(),
                     new AQTitle(),
                     new AudacityLabels(),
@@ -135,6 +137,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new EdiusMarkerList2Ms(),
                     new EdiusMarkerList3Frames(),
                     new EdiusMarkerList3Ms(),
+                    new DaVinciResolveMarkerEdl(), // before Edl - the generic EDL would claim marker files with garbage text
                     new Edl(),
                     new Eeg708(),
                     new ElrPrint(),
@@ -153,6 +156,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new FinalCutProXml13(),
                     new FinalCutProXml14(),
                     new FinalCutProXml14Text(),
+                    new FinalCutProXmlCaptions(),
                     new FinalCutProXml15(),
                     new FinalCutProXml16(),
                     new FinalCutProXml17(),
@@ -160,13 +164,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new FinalCutProXml19(),
                     new FinalCutProXml110(),
                     new FinalCutProXml111(),
+                    new FinalCutProXml112(),
+                    new FinalCutProXml113(),
+                    new FinalCutProXml114(),
                     new FinalCutProTestXml(),
                     new FinalCutProTest2Xml(),
+                    new FfmpegMetadataChapters(),
                     new FlashXml(),
                     new FLVCoreCuePoints(),
                     new Footage(),
                     new GooglePlayJson(),
                     new GpacTtxt(),
+                    new CcExtractorTimedTranscript(),
+                    new Grid608(),
                     new Gremots(),
                     new HollyStarJson(),
                     new ImageLogicAutocaption(),
@@ -209,6 +219,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new MacCaption10(),
                     new MacSub(),
                     new MagicVideoTitler(),
+                    new MatroskaChaptersXml(),
                     new MediaTransData(),
                     new MicroDvd(),
                     new MidwayInscriberCGX(),
@@ -307,6 +318,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new Xif(),
                     new Xmp(),
                     new YouTubeAnnotations(),
+                    new YouTubeChapters(),
                     new YouTubeSbv(),
                     new YouTubeTranscript(),
                     new YouTubeTranscriptOneLine(),
@@ -550,29 +562,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public bool BatchMode { get; set; }
         public double? BatchSourceFrameRate { get; set; }
-
-        /// <summary>
-        /// Trims leading/trailing whitespace inside the builder - the "sb.ToString().Trim()"
-        /// idiom in ToText implementations allocates the whole output an extra time.
-        /// </summary>
-        protected static void TrimBuilder(StringBuilder sb)
-        {
-            while (sb.Length > 0 && char.IsWhiteSpace(sb[sb.Length - 1]))
-            {
-                sb.Length--;
-            }
-
-            var start = 0;
-            while (start < sb.Length && char.IsWhiteSpace(sb[start]))
-            {
-                start++;
-            }
-
-            if (start > 0)
-            {
-                sb.Remove(0, start);
-            }
-        }
 
         public static string ToUtf8XmlString(XmlDocument xml, bool omitXmlDeclaration = false)
         {

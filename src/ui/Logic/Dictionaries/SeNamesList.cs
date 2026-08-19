@@ -15,6 +15,9 @@ public class SeNamesList : INamesList
     private HashSet<string> _namesMultiListUppercase = new();
     private HashSet<string> _blackList = new();
 
+    // Lazy reverse index for IsInNamesMultiWordList, see GetMultiNamePartIndex.
+    private Dictionary<string, List<string>>? _namesMultiListParts;
+
     // Case insensitive: "dr." is as much an abbreviation as "Dr.", and the name lists only
     // carry the capitalized form.
     private readonly HashSet<string> _abbreviationList = new(StringComparer.OrdinalIgnoreCase);
@@ -29,6 +32,7 @@ public class SeNamesList : INamesList
         _namesMultiList = new HashSet<string>();
         _namesMultiListUppercase = new HashSet<string>();
         _blackList = new HashSet<string>();
+        _namesMultiListParts = null;
 
         LoadNamesList(GetLocalNamesUserFileName()); // e.g: en_names_user.xml (culture sensitive)
         LoadNamesList(GetLocalNamesFileName()); // e.g: en_names.xml (culture sensitive)
@@ -95,6 +99,7 @@ public class SeNamesList : INamesList
             // Try removing name from both lists
             _namesList.Remove(name);
             _namesMultiList.Remove(name);
+            _namesMultiListParts = null;
 
             var fileName = GetLocalNamesUserFileName();
             var nameListXml = CreateDocument(fileName);
@@ -172,8 +177,13 @@ public class SeNamesList : INamesList
 
     private bool TryAdd(string name)
     {
-        var collection = name.Contains(" ") ? _namesMultiList : _namesList;
-        return collection.Add(name);
+        if (name.Contains(" "))
+        {
+            _namesMultiListParts = null;
+            return _namesMultiList.Add(name);
+        }
+
+        return _namesList.Add(name);
     }
 
     private static XmlDocument CreateDocument(string fileName)
@@ -198,9 +208,6 @@ public class SeNamesList : INamesList
             return false;
         }
 
-        var text = input.Replace(Environment.NewLine, " ");
-        text = text.FixExtraSpaces();
-
         if (_namesMultiList.Contains(word))
         {
             return true;
@@ -211,20 +218,57 @@ public class SeNamesList : INamesList
             return true;
         }
 
-        foreach (var multiWordName in _namesMultiList)
+        // Per word of every line during spell check - see NameList.IsInNamesMultiWordList: the
+        // "not part of any multi-word name" answer must cost one lookup, not a scan of all
+        // several hundred names with three string concatenations each.
+        if (!GetMultiNamePartIndex().TryGetValue(word, out var candidates))
         {
-            if (text.FastIndexOf(multiWordName) < 0)
-            {
-                continue;
-            }
+            return false;
+        }
 
-            if (multiWordName.StartsWith(word + " ", StringComparison.Ordinal) || multiWordName.EndsWith(" " + word, StringComparison.Ordinal) || multiWordName.Contains(" " + word + " "))
+        var text = input.Replace(Environment.NewLine, " ");
+        text = text.FixExtraSpaces();
+
+        foreach (var multiWordName in candidates)
+        {
+            if (text.FastIndexOf(multiWordName) >= 0)
             {
                 return true;
             }
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// Each space-delimited part of every multi-word name, mapped to the names containing it.
+    /// Built on first use and dropped whenever the multi-word list changes.
+    /// </summary>
+    private Dictionary<string, List<string>> GetMultiNamePartIndex()
+    {
+        var index = _namesMultiListParts;
+        if (index != null)
+        {
+            return index;
+        }
+
+        index = new Dictionary<string, List<string>>();
+        foreach (var multiWordName in _namesMultiList)
+        {
+            foreach (var part in multiWordName.Split(' ', StringSplitOptions.RemoveEmptyEntries))
+            {
+                if (!index.TryGetValue(part, out var names))
+                {
+                    names = new List<string>();
+                    index[part] = names;
+                }
+
+                names.Add(multiWordName);
+            }
+        }
+
+        _namesMultiListParts = index;
+        return index;
     }
 
     public bool ContainsCaseInsensitive(string name, out string newName)

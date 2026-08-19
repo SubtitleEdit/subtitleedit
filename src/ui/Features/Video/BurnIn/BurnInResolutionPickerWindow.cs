@@ -2,6 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Styling;
@@ -32,41 +33,47 @@ public class BurnInResolutionPickerWindow : Window
             SelectedItem = vm.SelectedResolution,
             VerticalAlignment = VerticalAlignment.Center,
             [!ListBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedResolution)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
-            ItemTemplate = new FuncDataTemplate<ResolutionItem>((item, namescope) =>
+            // Recycling-safe template: everything binds and nothing dereferences the build
+            // parameter - a recycled container gets a different item as its DataContext, so a
+            // structural branch on the first item (separator vs row) and a captured `item` in
+            // the click handler would both act on the wrong resolution after scrolling.
+            ItemTemplate = new FuncDataTemplate<ResolutionItem>((_, _) =>
             {
-                if (item.IsSeparator)
+                var separator = new Separator
                 {
-                    return new Separator
-                    {
-                        Margin = new Thickness(0, 2, 0, 2),
-                        IsHitTestVisible = false, 
-                    };
-                }
-                else
+                    Margin = new Thickness(0, 2, 0, 2),
+                    IsHitTestVisible = false,
+                };
+                separator.Bind(Visual.IsVisibleProperty, new Binding(nameof(ResolutionItem.IsSeparator)));
+
+                var border = new Border();
+                border.Bind(Border.BackgroundProperty, new Binding(nameof(ResolutionItem.BackgroundColor)));
+                border.Bind(Visual.IsVisibleProperty, new Binding(nameof(ResolutionItem.IsSeparator))
                 {
-                    // Selectable item
-                    var border = new Border();
-                    border.Bind(Border.BackgroundProperty, new Binding(nameof(ResolutionItem.BackgroundColor)));
+                    Converter = BoolConverters.Not,
+                });
 
-                    var textBlock = new TextBlock
+                var textBlock = new TextBlock
+                {
+                    // Use the theme-appropriate text color (white in dark mode, black in
+                    // light mode). Previously the foreground was bound to
+                    // ResolutionItem.TextColor, which was never assigned, so it fell back to
+                    // a black/transparent color that was unreadable in dark mode.
+                    Foreground = UiUtil.GetTextColor(),
+                };
+                textBlock.Bind(TextBlock.TextProperty, new Binding(nameof(ResolutionItem.DisplayName)));
+
+                border.Child = textBlock;
+
+                border.PointerPressed += (s, e) =>
+                {
+                    if ((s as Border)?.DataContext is ResolutionItem current)
                     {
-                        // Use the theme-appropriate text color (white in dark mode, black in
-                        // light mode). Previously the foreground was bound to
-                        // ResolutionItem.TextColor, which was never assigned, so it fell back to
-                        // a black/transparent color that was unreadable in dark mode.
-                        Foreground = UiUtil.GetTextColor(),
-                    };
-                    textBlock.Bind(TextBlock.TextProperty, new Binding(nameof(ResolutionItem.DisplayName)));
+                        vm.ResolutionItemClicked(current);
+                    }
+                };
 
-                    border.Child = textBlock;
-
-                    border.PointerPressed += (s, e) =>
-                    {
-                        vm.ResolutionItemClicked(item); 
-                    };
-
-                    return border;
-                }
+                return new Panel { Children = { separator, border } };
             }, true),
         };
 

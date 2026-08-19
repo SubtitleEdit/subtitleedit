@@ -27,18 +27,20 @@ public sealed class UndoRedoManager : IUndoRedoManager
     // threads (plain int reads aren't guaranteed visible on weak memory
     // architectures).
     private int _disposed;
-    // Reentrancy gate for CheckForChanges. The timer fires every 250ms on the thread
+    // Reentrancy gate for CheckForChanges. The timer fires every 333ms on the thread
     // pool regardless of whether the previous tick finished; when the UI thread is
     // busy for a long stretch (e.g. parsing a large file), each tick would otherwise
     // pile up blocked in the client's dispatcher marshaling and force the pool to
     // inject hundreds of threads — issue #12683. Interlocked so overlapping ticks
     // return immediately instead of queueing.
     private int _checkForChangesInProgress;
-    // Narrowed from 1s → 250ms to reduce the window in which two distinct user
-    // actions (e.g. text edit + waveform drag) get bundled into a single undo
-    // entry — issue #11280. CheckForChanges is gated by IsTyping() and
-    // IsAlreadyTracked() so most ticks are nearly free when nothing has changed.
-    private TimeSpan _detectionInterval = TimeSpan.FromMilliseconds(250);
+    // Narrowed from 1s to reduce the window in which two distinct user actions
+    // (e.g. text edit + waveform drag) get bundled into a single undo entry —
+    // issue #11280. CheckForChanges is gated by IsUserEditing() and IsAlreadyTracked()
+    // so most ticks are nearly free when nothing has changed; a tick that does see a
+    // change deep-copies the whole subtitle, so 333ms rather than 250ms keeps #11280
+    // fixed while paying that cost less often — issue #13234.
+    private TimeSpan _detectionInterval = TimeSpan.FromMilliseconds(333);
 
     private const int MaxUndoItems = 100;
     private const int MaxPreviewLength = 50;
@@ -103,7 +105,7 @@ public sealed class UndoRedoManager : IUndoRedoManager
         lock (_lock)
         {
             _undoRedoClient = client;
-            // Keep the field-initializer default (250ms) when caller passes null
+            // Keep the field-initializer default (333ms) when caller passes null
             // — see the comment on _detectionInterval for the rationale.
             _detectionInterval = interval ?? _detectionInterval;
 
@@ -260,7 +262,7 @@ public sealed class UndoRedoManager : IUndoRedoManager
             return;
         }
 
-        if (client.IsTyping())
+        if (client.IsUserEditing())
         {
             return;
         }
@@ -291,6 +293,15 @@ public sealed class UndoRedoManager : IUndoRedoManager
 
             var snapshot = client.MakeUndoRedoObject("Changes detected");
             if (snapshot is null)
+            {
+                return;
+            }
+
+            // Re-check: the user may have started a continuous edit while this tick was hashing
+            // and snapshotting (both marshal to the UI thread). Without this, a tick that slipped
+            // through the gate above right as a waveform drag began recorded a state from a few
+            // frames into the drag - an undo step landing in the middle of the drag (#13636).
+            if (client.IsUserEditing())
             {
                 return;
             }

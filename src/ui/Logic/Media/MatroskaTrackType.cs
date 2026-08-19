@@ -17,5 +17,7 @@ public class MatroskaTrackType
     public const string WebVTT = "S_TEXT/WEBVTT";
     public const string WebVTT2 = "D_WEBVTT/SUBTITLES";
 
+    public const string VobSub = "S_VOBSUB";
 
+    public const string Dvb = "S_DVBSUB";
 }

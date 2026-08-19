@@ -83,6 +83,34 @@ public class StrippableTextFixCasingTest
     }
 
     [Fact]
+    public void FixCasing_ProtectsTagsFollowingALongerTag()
+    {
+        // A tag is swapped for a 7 char id, so a longer tag before it used to leave the scan
+        // index past the following tags. Those stayed literal, and "}" is a break character -
+        // so the words after them were uppercased in the middle of a sentence.
+        var st = new StrippableText(@"one {\an8\pos(1,2)} two {\i1} three {\b1} four");
+        st.FixCasing(new List<string>(), true, makeUppercaseAfterBreak: true, false, string.Empty);
+        Assert.Equal(@"one {\an8\pos(1,2)} two {\i1} three {\b1} four", st.MergedString);
+    }
+
+    [Fact]
+    public void FixCasing_ProtectsTagFollowingStrayClosingBrace()
+    {
+        // A "}" before the first "{" must not abort the tag scan.
+        var st = new StrippableText(@"a} b {\i1} c");
+        st.FixCasing(new List<string>(), true, makeUppercaseAfterBreak: true, false, string.Empty);
+        Assert.Equal(@"a} B {\i1} c", st.MergedString);
+    }
+
+    [Fact]
+    public void FixCasing_LeavesUnclosedTagAlone()
+    {
+        var st = new StrippableText("hello {unclosed bob");
+        st.FixCasing(new List<string> { "Bob" }, true, false, false, string.Empty);
+        Assert.Equal("hello {unclosed Bob", st.MergedString);
+    }
+
+    [Fact]
     public void FixCasing_NoNamesLeavesTextUnchanged()
     {
         Assert.Equal("nothing to do here", FixNames("nothing to do here", new List<string>()));

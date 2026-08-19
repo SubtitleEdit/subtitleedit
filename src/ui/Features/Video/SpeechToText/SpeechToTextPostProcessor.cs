@@ -138,9 +138,9 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
             return postProcessed;
         }
 
-        private static bool IsNonStandardLineTerminationLanguage(string language)
+        internal static bool IsNonStandardLineTerminationLanguage(string language)
         {
-            return language is "jp" or "ja" or "cn" or "yue";
+            return language is "jp" or "ja" or "zh" or "cn" or "yue";
         }
 
         public Subtitle Fix(Subtitle subtitle, bool usePostProcessing, bool addPeriods, bool mergeLines, bool fixCasing, bool fixShortDuration, bool splitLines, Engine engine)
@@ -275,12 +275,16 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
             const int maxMillisecondsBetweenLines = 100;
             const bool onlyContinuousLines = true;
 
-            if (language == "jp")
+            // Both the Vosk-style codes ("jp"/"cn") and the Whisper codes
+            // ("ja"/"zh") must be handled - engines that report the Whisper
+            // code used to silently fall through to the 86-char Latin cap
+            // (issue #13548).
+            if (language is "jp" or "ja")
             {
                 ParagraphMaxChars = AudioToTextLineMaxCharsJp;
             }
 
-            if (language == "cn" || language == "yue")
+            if (language is "cn" or "zh" or "yue")
             {
                 ParagraphMaxChars = AudioToTextLineMaxCharsCn;
             }

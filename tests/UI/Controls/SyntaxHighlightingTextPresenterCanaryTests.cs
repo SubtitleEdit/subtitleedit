@@ -18,9 +18,23 @@ namespace UITests.Controls;
 /// first layout through the real template, so the breakage surfaces as a red test at upgrade
 /// time instead.
 /// </summary>
-public class SyntaxHighlightingTextPresenterCanaryTests
+public class SyntaxHighlightingTextPresenterCanaryTests : IDisposable
 {
-    private static (Window window, SyntaxHighlightingTextBox textBox) ShowTextBox(string text, ISourceSyntaxHighlighter? highlighter = null)
+    // Every window opened by a test is closed again in Dispose: if a test stops early, an
+    // unclosed window would outlive the test and race with the headless session teardown.
+    private readonly List<Window> _windows = new();
+
+    public void Dispose()
+    {
+        foreach (var window in _windows)
+        {
+            window.Close();
+        }
+
+        _windows.Clear();
+    }
+
+    private (Window window, SyntaxHighlightingTextBox textBox) ShowTextBox(string text, ISourceSyntaxHighlighter? highlighter = null)
     {
         var styles = (Styles)AvaloniaXamlLoader.Load(new Uri("avares://SubtitleEdit/Styles.axaml"));
         var textBox = new SyntaxHighlightingTextBox
@@ -30,6 +44,7 @@ public class SyntaxHighlightingTextPresenterCanaryTests
             FontSize = 16,
         };
         var window = new Window { Content = textBox, Width = 400, Height = 120 };
+        _windows.Add(window);
         window.Styles.Add(styles);
         window.Show();
         textBox.ApplyTemplate();

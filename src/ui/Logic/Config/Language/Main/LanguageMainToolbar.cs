@@ -9,6 +9,7 @@ public class LanguageMainToolbar
     public string SaveAsHint { get; set; }
     public string FindHint { get; set; }
     public string ReplaceHint { get; set; }
+    public string MultipleReplaceHint { get; set; }
     public string SpellCheckHint { get; set; }
     public string FixCommonErrorsHint { get; set; }
     public string RemoveTextForHiHint { get; set; }
@@ -28,8 +29,10 @@ public class LanguageMainToolbar
     public string AssaAttachmentsHint { get; set; }
     public string AssaDrawHint { get; set; }
     public string SsaStylesHint { get; set; }
+    public string WebVttStylesHint { get; set; }
     public string SsaPropertiesHint { get; set; }
     public string SsaAttachmentsHint { get; set; }
+    public string GetFrameRateFromVideoFileHint { get; set; }
 
 
     public LanguageMainToolbar()
@@ -41,6 +44,7 @@ public class LanguageMainToolbar
         SaveAsHint = "Save subtitle with a new name {0}";
         FindHint = "Find text in subtitles {0}";
         ReplaceHint = "Find and replace text {0}";
+        MultipleReplaceHint = "Multiple replace {0}";
         SpellCheckHint = "Check subtitles for spelling errors {0}";
         FixCommonErrorsHint = "Fix common subtitle errors {0}";
         RemoveTextForHiHint = "Remove text for hearing impaired {0}";
@@ -60,7 +64,9 @@ public class LanguageMainToolbar
         AssaAttachmentsHint = "Advanced Sub Station Alpha attachments";
         AssaDrawHint = "Advanced Sub Station Alpha draw shapes";
         SsaStylesHint = "Sub Station Alpha styles";
+        WebVttStylesHint = "WebVTT style manager";
         SsaPropertiesHint = "Sub Station Alpha properties";
         SsaAttachmentsHint = "Sub Station Alpha attachments";
+        GetFrameRateFromVideoFileHint = "Get frame rate from video file";
     }
 }

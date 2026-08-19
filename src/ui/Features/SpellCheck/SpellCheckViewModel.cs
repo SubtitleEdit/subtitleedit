@@ -416,8 +416,12 @@ public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
         var previous = SourceImage;
         try
         {
+            // Trim the transparent screen area around the text so formats with full-screen
+            // bitmaps (e.g. VobSub) show the text zoomed to the preview instead of a tiny
+            // strip at the bottom (#13418).
             using var sourceBitmap = _ocrSourceImages.GetBitmap(bestIndex);
-            SourceImage = sourceBitmap.ToAvaloniaBitmap();
+            using var cropped = sourceBitmap.CropTransparentColors();
+            SourceImage = cropped.ToAvaloniaBitmap();
         }
         catch
         {

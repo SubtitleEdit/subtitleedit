@@ -13,6 +13,15 @@ using UITests.Logic.Accessibility;
 
 [assembly: AvaloniaTestApplication(typeof(TestAppBuilder))]
 
+// Avalonia 12 defaults to PerTest isolation, which resets the dispatcher and rebuilds the
+// whole application - including a Compositor on a timer-driven render loop - for every
+// test. That re-initialization races under CI load: DefaultRenderLoop.Add throws
+// "The calling thread cannot access this object" from AvaloniaHeadlessPlatform.Initialize
+// during a random test's cleanup (~2 in 5 runs on GitHub Actions). One shared application
+// per assembly initializes once and closes the race window. The suite is safe to share:
+// tests close their windows and restore any Application-level state they touch.
+[assembly: AvaloniaTestIsolation(AvaloniaTestIsolationLevel.PerAssembly)]
+
 namespace UITests.Logic.Accessibility;
 
 public class TestApp : Application
@@ -62,13 +71,28 @@ public static class TestAppBuilder
 /// The custom controls receive keyboard focus on an inner PART_TextBox, so the name
 /// set on the outer control must be forwarded to that text box (issue #11553).
 /// </summary>
-public class EditBoxAccessibilityNameTests
+public class EditBoxAccessibilityNameTests : IDisposable
 {
-    private static TextBox GetInnerTextBox(Control control)
+    // Every window opened by a test is closed again in Dispose: if a test stops early, an
+    // unclosed window would outlive the test and race with the headless session teardown.
+    private readonly List<Window> _windows = new();
+
+    public void Dispose()
+    {
+        foreach (var window in _windows)
+        {
+            window.Close();
+        }
+
+        _windows.Clear();
+    }
+
+    private TextBox GetInnerTextBox(Control control)
     {
         // Force the control's template to apply so PART_TextBox exists and the
         // name-forwarding in OnApplyTemplate runs.
         var window = new Window { Content = control, Width = 320, Height = 120 };
+        _windows.Add(window);
         window.Show();
         control.ApplyTemplate();
 

@@ -60,7 +60,7 @@ public class AdvancedEffectWordSpacing : IAdvancedEffectDisplay
             else if (c == ' ' && !insideTags)
             {
                 // Replace space with tagged space using \fsp
-                result.Append($"{{\\fsp{SpacingPixels}}} {{\\fsp0}}");
+                result.Append($"{{\\fsp{AdvancedEffectUtil.Tag(SpacingPixels)}}} {{\\fsp0}}");
             }
             else
             {

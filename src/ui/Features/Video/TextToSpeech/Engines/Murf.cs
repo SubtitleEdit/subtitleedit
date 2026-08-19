@@ -21,6 +21,8 @@ public class Murf : ITtsEngine
     public bool HasRegion => false;
     public bool HasModel => false;
     public bool HasKeyFile => false;
+    public bool SupportsVoiceCloning => false;
+    public bool SupportsPerLineVoiceCloning => false;
 
     public Task<bool> IsInstalled(string? region)
     {
@@ -175,7 +177,7 @@ public class Murf : ITtsEngine
             return new TtsResult { Text = text, FileName = string.Empty, Error = true };
         }
 
-        var fileName = Path.Combine(GetSetMurfFolder(), Guid.NewGuid() + ".mp3");
+        var fileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetMurfFolder), Guid.NewGuid() + ".mp3");
         await File.WriteAllBytesAsync(fileName, ms.ToArray(), cancellationToken);
         return new TtsResult { Text = text, FileName = fileName };
     }

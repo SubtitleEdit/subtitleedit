@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -18,10 +18,10 @@ public class AiReviewWindow : Window
     public AiReviewWindow(AiReviewViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Tools.AiReview.Title;
-        Width = 1024;
+        Title = UiUtil.MakeWindowTitle(Se.Language.Tools.AiReview.Title);
+        Width = 1200;
         Height = 720;
-        MinWidth = 800;
+        MinWidth = 900;
         MinHeight = 500;
         CanResize = true;
         vm.Window = this;
@@ -61,7 +61,7 @@ public class AiReviewWindow : Window
         // Free cloud tiers rate limit hard, so the delay between requests lives next to the API key
         // rather than in a settings dialog. The label would not fit the toolbar - a timer icon plus
         // tooltip carries the meaning, and the accessible name keeps it readable for screen readers.
-        var numericDelay = UiUtil.MakeNumericUpDownInt(0, 600, 0, 70, vm, nameof(vm.RequestDelaySeconds))
+        var numericDelay = UiUtil.MakeNumericUpDownInt(0, 600, 0, double.NaN, vm, nameof(vm.RequestDelaySeconds))
             .WithAccessibleName(Se.Language.Translate.DelayInSecondsBetweenRequests);
         ToolTip.SetTip(numericDelay, Se.Language.Translate.DelayInSecondsBetweenRequests);
         var iconDelay = new Optris.Icons.Avalonia.Icon
@@ -85,12 +85,7 @@ public class AiReviewWindow : Window
             .WithAccessibleName(Se.Language.General.Model);
         // Shared dot template, so the install colours here match auto-translate and the engine
         // settings dialog rather than this window's former bespoke green/grey pair.
-        comboLlamaCppModel.ItemTemplate = StatusDots.ComboItemTemplate<Features.Translate.LlamaCppModelDisplay>(
-            m => m.Model.DisplayName,
-            m => string.IsNullOrEmpty(m.Model.Url)
-                ? (string.IsNullOrEmpty(m.Model.Size) ? Se.Language.General.Custom : $"{Se.Language.General.Custom}, {m.Model.Size}")
-                : (string.IsNullOrEmpty(m.Model.Size) ? null : m.Model.Size),
-            m => m.IsInstalled ? DownloadDotStatus.UpToDate : DownloadDotStatus.NotInstalled);
+        comboLlamaCppModel.ItemTemplate = Features.Translate.AutoTranslateCombos.LlamaCppModelItemTemplate();
 
         comboLlamaCppModel.Bind(IsVisibleProperty, new Binding(nameof(vm.IsLlamaCppVisible)));
 
@@ -365,6 +360,7 @@ public class AiReviewWindow : Window
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedSuggestion)));
         TableViewExtras.AddSpaceToggle<ReviewSuggestionItem>(dataGrid,
             item => item.IsSelected, (item, v) => item.IsSelected = v);
+        dataGrid.DoubleTapped += (_, _) => vm.OnSuggestionsGridDoubleTapped();
 
         var borderGrid = UiUtil.MakeBorderForControlNoPadding(dataGrid);
 
@@ -376,6 +372,9 @@ public class AiReviewWindow : Window
             Height = 6,
             VerticalAlignment = VerticalAlignment.Center,
             [!RangeBase.ValueProperty] = new Binding(nameof(vm.ProgressValue)),
+            // Only meaningful while a review is running - a full bar sitting under a
+            // finished review just looks stuck.
+            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsReviewing)),
         };
         var statusText = MakeBoundTextBlock(nameof(vm.StatusText));
         statusText.VerticalAlignment = VerticalAlignment.Center;
@@ -425,14 +424,26 @@ public class AiReviewWindow : Window
         summaryText.VerticalAlignment = VerticalAlignment.Center;
         summaryText.Opacity = 0.8;
 
+        // Plays the selected suggestion's line in the main window's video player - hidden when no
+        // video is loaded (the view model gets no play hook then).
+        var buttonPlay = UiUtil.MakeButton(Se.Language.General.PlayCurrent, vm.PlayCurrentLineCommand)
+            .WithIconLeft("fa-solid fa-play");
+        buttonPlay.Bind(IsVisibleProperty, new Binding(nameof(vm.IsPlayVisible)));
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(buttonPlay, l.PlayCurrentLineHint);
+        }
+
         var leftButtons = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Spacing = 5,
             Children =
             {
+                buttonPlay.WithMarginRight(10),
                 summaryText.WithMarginRight(10),
                 UiUtil.MakeButton(Se.Language.General.SelectAll, vm.SelectAllCommand),
+                UiUtil.MakeButton(Se.Language.General.SelectNone, vm.SelectNoneCommand),
                 UiUtil.MakeButton(Se.Language.General.InvertSelection, vm.InvertSelectionCommand),
             },
         };
@@ -445,10 +456,16 @@ public class AiReviewWindow : Window
             .WithIconLeft("fa-solid fa-stop");
         buttonStop.Bind(IsVisibleProperty, new Binding(nameof(vm.IsReviewing)));
 
-        var buttonApply = UiUtil.MakeButton(string.Empty, vm.OkCommand);
+        // Apply/Ok/Cancel, the same shape as Multiple replace: Apply writes the checked fixes and
+        // keeps the window open so the review can be worked through in passes (issue #13807), Ok
+        // writes them and closes, Cancel closes and leaves the unapplied ones behind. Apply is
+        // hidden for callers without a live target - they have nowhere to receive a pass.
+        var buttonApply = UiUtil.MakeButton(string.Empty, vm.ApplyCommand)
+            .WithBindIsVisible(nameof(vm.IsApplyVisible));
         buttonApply.Bind(ContentControl.ContentProperty, new Binding(nameof(vm.ApplyButtonText)));
         buttonApply.WithIconLeft("fa-solid fa-check");
 
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
         var bottomBar = new Grid
@@ -456,7 +473,7 @@ public class AiReviewWindow : Window
             ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto"),
         };
         bottomBar.Add(leftButtons, 0, 0);
-        bottomBar.Add(UiUtil.MakeButtonBar(buttonReview, buttonStop, buttonApply, buttonCancel), 0, 2);
+        bottomBar.Add(UiUtil.MakeButtonBar(buttonReview, buttonStop, buttonApply, buttonOk, buttonCancel), 0, 2);
 
         // ---------- layout ----------
         var grid = new Grid

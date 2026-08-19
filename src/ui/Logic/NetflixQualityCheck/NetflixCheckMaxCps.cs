@@ -40,13 +40,12 @@ public class NetflixCheckMaxCps : INetflixQualityChecker
             var charactersPerSeconds = jp.GetCharactersPerSecond(calc);
             if (charactersPerSeconds > charactersPerSecond && !p.StartTime.IsMaxTime)
             {
+                // Count with the same calculator used for the check above, so the new duration
+                // actually lands on the Netflix limit for this language.
+                var numberOfCharacters = (double)calc.CountCharacters(jp.Text, true);
+                var maxDurationMilliseconds = numberOfCharacters / charactersPerSecond * 1000.0;
                 var fixedParagraph = new Paragraph(p, false);
-                if (fixedParagraph.GetCharactersPerSecond() > charactersPerSecond)
-                {
-                    var numberOfCharacters = (double)p.Text.CountCharacters(true);
-                    var maxDurationMilliseconds = numberOfCharacters / Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds * 1000.0;
-                    fixedParagraph.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + maxDurationMilliseconds;
-                }
+                fixedParagraph.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + maxDurationMilliseconds;
 
                 controller.AddRecord(p, fixedParagraph, comment, FormattableString.Invariant($"CPS={charactersPerSeconds:0.##}"), true);
             }

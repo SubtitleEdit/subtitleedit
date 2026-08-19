@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.UiLogic.Http;
+using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -21,7 +22,7 @@ public class MistralOcr
     {
         Error = string.Empty;
         _apiKey = apiKey ?? throw new ArgumentNullException(nameof(apiKey));
-        _httpClient = new HttpClient();
+        _httpClient = HttpClientFactoryWithProxy.CreateHttpClientWithProxy();
         _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
         _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
@@ -106,8 +107,10 @@ public class MistralOcr
 
             return finalText.Trim();
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
+            // Only a real user cancel propagates; an HttpClient timeout also throws
+            // TaskCanceledException and must be recorded in Error below instead.
             throw;
         }
         catch (Exception ex)

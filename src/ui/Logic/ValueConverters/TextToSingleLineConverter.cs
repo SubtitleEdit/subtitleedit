@@ -14,10 +14,16 @@ public class TextToSingleLineConverter : IValueConverter
             return string.Empty;
         }
 
-        var separator = Se.Settings.Appearance.SubtitleGridTextSingleLineSeparator;
-        str = str
-            .Replace("\r\n", separator)
-            .Replace("\n", separator);
+        // Runs for every visible grid row on every repaint. Both Replace calls scan the whole
+        // string, and a single-line row - which is most of them once the grid is scrolled into
+        // dialogue - has nothing for either to find; one vectorized scan settles that.
+        if (str.AsSpan().IndexOfAny('\r', '\n') >= 0)
+        {
+            var separator = Se.Settings.Appearance.SubtitleGridTextSingleLineSeparator;
+            str = str
+                .Replace("\r\n", separator)
+                .Replace("\n", separator);
+        }
 
         // Allow custom max length via binding parameter
         var maxLength = 250;
@@ -33,13 +39,10 @@ public class TextToSingleLineConverter : IValueConverter
 
         // Try to cut at the last space before maxLength
         var lastSpace = str.LastIndexOf(' ', maxLength);
-        if (lastSpace > 0)
-        {
-            return str[..lastSpace] + "...";
-        }
+        var cut = lastSpace > 0 ? lastSpace : maxLength;
 
-        // Fallback: hard cut
-        return str[..maxLength] + "...";
+        // One allocation instead of a substring that is immediately concatenated away
+        return string.Concat(str.AsSpan(0, cut), "...");
     }
     
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

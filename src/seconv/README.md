@@ -8,8 +8,8 @@ Cross-platform (Windows, Linux, macOS); only needs the .NET 10 runtime.
 ## What it does
 
 - 380+ subtitle formats (text, binary, image-based)
-- Container input: Matroska (.mkv/.mks), MP4, MCC, MXF, transport stream teletext
-- OCR for image-based sources (Blu-ray .sup, VobSub .sub/.idx, MKV PGS/VobSub, MP4 VobSub, TS DVB-sub)
+- Container input: Matroska (.mkv/.mks), MP4, MCC, MXF, AVI (.avi/.divx), transport stream teletext
+- OCR for image-based sources (Blu-ray .sup, VobSub .sub/.idx, MKV PGS/VobSub, MP4 VobSub, TS DVB-sub, AVI XSUB)
   via five engines: Tesseract, nOCR, BinaryOCR, Ollama, PaddleOCR — or `--time-codes-only` to skip OCR
 - Image-based output and image-to-image conversion (preserve source bitmaps, no OCR)
 - Full operation pipeline: offset, fps change, renumber, adjust-duration, fix-common-errors,
@@ -34,11 +34,28 @@ seconv movie.srt subrip --encoding:source --fix-common-errors    # keep encoding
 seconv movie.mkv subrip --track-number:3                         # extract MKV text track #3
 seconv movie.sup subrip --ocr-engine:tesseract --ocr-language:eng # OCR a Blu-ray .sup
 seconv movie.sup subrip --time-codes-only                        # timing only, no OCR
+seconv movie.avi subrip --ocr-engine:tesseract --ocr-language:eng # OCR the XSUB subtitles of an .avi
 seconv subs.srt bluraysup --resolution:1920x1080                 # render text → Blu-ray sup
 seconv dump-settings > my.json                                   # starter --settings file (libse defaults)
 ```
 
 Run `seconv` with no arguments for built-in help, or `seconv formats` to list every format.
+
+## Scripting
+
+Every subcommand takes `--json`, and so does a conversion run. Under `--json`, stdout is one
+JSON document on success and on failure alike — a usage error arrives in the same envelope as
+a failed conversion, so nothing has to be parsed out of stderr.
+
+```bash
+seconv --help-json                              # the whole command line as JSON, reflected off the parser
+seconv formats --json | jq -r '.formats[].id'   # exact tokens --format accepts
+seconv movie.srt subrip --json                  # per-file results
+```
+
+An unrecognised option is an error, never a silent no-op: `seconv` exits 1 and names the closest
+real option rather than converting the file without the operation that was asked for. Exit codes
+are only ever 0 (success) or 1 (any failure).
 
 ## Full reference
 

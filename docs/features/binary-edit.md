@@ -45,7 +45,7 @@ The Synchronization menu offers **Adjust all times**, **Change frame rate**, and
 There is no in-place save — use File → Export:
 
 - **Blu-ray (sup)**, **VobSub (sub/idx)**
-- **BDN/xml**, **DOST/png**, **Final Cut Pro + image**
+- **BDN/xml**, **BDN/xml 8-bit**, **DOST/png**, **Final Cut Pro + image**
 - **IMSC 1.1 image profile**, **WebVTT png**
 - **Images with HTML index**, **Images with time code**
 

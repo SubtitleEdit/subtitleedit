@@ -107,9 +107,23 @@ public class LlamaCppOcrSettingsWindow : Window
             BorderBrush = new SolidColorBrush(Color.FromArgb(0x40, 0x80, 0x80, 0x80)),
         };
 
+        var buttonRedownload = UiUtil.MakeButton(string.Empty, vm.RedownloadCommand)
+            .WithIconLeftBindText(IconNames.Download, nameof(vm.DownloadButtonLabel));
+        buttonRedownload.VerticalAlignment = VerticalAlignment.Center;
+
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonBar = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var buttonBar = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = GridLength.Auto },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = GridLength.Auto },
+            },
+        };
+        buttonBar.Add(buttonRedownload, 0, 0);
+        buttonBar.Add(UiUtil.MakeButtonBar(buttonOk, buttonCancel), 0, 2);
 
         var rootGrid = new Grid
         {

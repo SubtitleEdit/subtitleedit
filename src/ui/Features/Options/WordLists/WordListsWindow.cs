@@ -92,6 +92,8 @@ public class WordListsWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
         };
         Optris.Icons.Avalonia.Attached.SetIcon(icon, iconName);
+        // Keep the glyph white on the colored square in the dark theme too (#12717).
+        icon.Classes.Add(UiTheme.IconOnAccentClassName);
         var glyph = new Border
         {
             Width = 22,

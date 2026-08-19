@@ -22,6 +22,8 @@ public class EdgeTts : ITtsEngine
     public bool HasRegion => false;
     public bool HasModel => false;
     public bool HasKeyFile => false;
+    public bool SupportsVoiceCloning => false;
+    public bool SupportsPerLineVoiceCloning => false;
 
     private static string? _cachedExecutableFileName;
 
@@ -122,7 +124,7 @@ public class EdgeTts : ITtsEngine
             throw new ArgumentException("Voice is not an EdgeTtsVoice");
         }
 
-        var folder = GetSetEdgeTtsFolder();
+        var folder = TtsOutputFolder.Resolve(outputFolder, GetSetEdgeTtsFolder);
         var fileName = Path.Combine(folder, Guid.NewGuid() + ".mp3");
         var escapedText = EscapeQuotedArgValue(text);
         var escapedVoice = EscapeQuotedArgValue(edgeVoice.Name);

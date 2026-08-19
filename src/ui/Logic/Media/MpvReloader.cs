@@ -26,10 +26,24 @@ public class MpvReloader : IMpvReloader
     private int _retryCount = 3;
     private string? _mpvPreviewStyleHeader;
 
-    public async Task RefreshMpv(LibMpvDynamicPlayer mpvContext, Subtitle subtitle, Subtitle? subtitleSecondary, SubtitleFormat uiFormat)
+    // Bumped whenever newer state supersedes an in-flight background serialize (a newer
+    // refresh, a reset, or a subtitle removal), so the stale result is discarded instead
+    // of pushing old text over new. Only touched on the UI thread.
+    private int _refreshVersion;
+
+    /// <returns>
+    /// False when the subtitle could not be handed to mpv and the caller should try again - the
+    /// core of a freshly created player (fullscreen, undock, layout rebuild) is initialized
+    /// lazily and rejects sub-add until the file is actually playing. The push used to be
+    /// counted as done either way, so a single mistimed refresh left the video without
+    /// subtitles until the next edit (issue #13407).
+    /// </returns>
+    public async Task<bool> RefreshMpv(LibMpvDynamicPlayer mpvContext, Subtitle subtitle, Subtitle? subtitleSecondary, SubtitleFormat uiFormat)
     {
         if (subtitle.Paragraphs.Count == 0 && subtitleSecondary == null)
         {
+            _refreshVersion++; // an in-flight serialize would re-add the removed subtitle
+
             // All subtitles were deleted - remove any previously loaded subtitle from mpv,
             // otherwise the last shown lines stay visible on the video.
             if (!string.IsNullOrEmpty(_mpvTextFileName) || !string.IsNullOrEmpty(_mpvTextOld))
@@ -50,137 +64,94 @@ public class MpvReloader : IMpvReloader
                 _subtitlePrev = null;
             }
 
-            return;
+            return true;
         }
 
         try
         {
             var uiFormatType = uiFormat.GetType();
+
+            // Deep copy on the calling (UI) thread: the caller usually passes the live
+            // GetUpdateSubtitle() instance, which other UI code clears and repopulates at
+            // will, so it must not be touched from the background serialize below.
             subtitle = new Subtitle(subtitle, false);
 
-            if (SmpteMode)
+            // Prime the lazy style-header memo while still on the UI thread, so the
+            // background thread only ever reads the field (UpdateMpvStyle writes it
+            // from the settings dialog on the UI thread).
+            _ = MpvPreviewStyleHeader;
+
+            var version = ++_refreshVersion;
+            var oldHash = _mpvSubOldHash;
+            var oldText = _mpvTextOld;
+
+            // Serialize off the UI thread: the SMPTE/RTL/header transforms + hash + ToText
+            // are the expensive part of a preview refresh, and running them on the UI thread
+            // is why the preview used to wait out a long typing pause (issue #13234).
+            // "subtitle" is a thread-confined copy from here on; the secondary subtitle is
+            // only read (its paragraphs are never mutated by the transforms).
+            var built = await Task.Run(() => BuildPreviewText(subtitle, subtitleSecondary, uiFormatType, oldHash, oldText));
+
+            if (version != _refreshVersion)
             {
-                foreach (var paragraph in subtitle.Paragraphs)
-                {
-                    paragraph.StartTime.TotalMilliseconds *= 1.001;
-                    paragraph.EndTime.TotalMilliseconds *= 1.001;
-                }
+                // Superseded while serializing (newer refresh, reset, or removal) -
+                // applying this result would push stale text over newer state. Not a
+                // failure: whatever superseded this refresh does the pushing now.
+                return true;
             }
 
-            SubtitleFormat format = _assFormat;
-            string text;
-            if (uiFormatType == typeof(WebVTT) || uiFormatType == typeof(WebVTTFileWithLineNumber))
+            subtitle = built.Subtitle;
+            var text = built.Text;
+            if (built.HashValid)
             {
-                var defaultStyle = GetMpvPreviewStyle(Se.Settings.Video);
-                defaultStyle.BorderStyle = "3";
-                subtitle = new Subtitle(subtitle);
-                subtitle = WebVttToAssa.Convert(subtitle, defaultStyle, VideoWidth, VideoHeight);
-                AddSecondarySubtitle(subtitle, subtitleSecondary);
-                text = subtitle.ToText(_assFormat);
-            }
-            else
-            {
-                if (subtitle.Header == null || !subtitle.Header.Contains("[V4+ Styles]") || uiFormatType != typeof(AdvancedSubStationAlpha))
-                {
-                    if (string.IsNullOrEmpty(subtitle.Header) && uiFormatType == typeof(SubStationAlpha))
-                    {
-                        subtitle.Header = SubStationAlpha.DefaultHeader;
-                    }
-
-                    if (subtitle.Header != null && subtitle.Header.Contains("[V4 Styles]", StringComparison.Ordinal))
-                    {
-                        subtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromSubStationAlpha(subtitle.Header);
-                    }
-
-                    var oldSub = subtitle;
-                    subtitle = new Subtitle(subtitle);
-                    if (Se.Settings.Appearance.RightToLeft)
-                    {
-                        for (var index = 0; index < subtitle.Paragraphs.Count; index++)
-                        {
-                            var paragraph = subtitle.Paragraphs[index];
-                            if (LanguageAutoDetect.ContainsRightToLeftLetter(paragraph.Text))
-                            {
-                                paragraph.Text = Utilities.FixRtlViaUnicodeChars(paragraph.Text);
-                            }
-                        }
-                    }
-
-                    if (subtitle.Header == null || !(subtitle.Header.Contains("[V4+ Styles]") && uiFormatType == typeof(SubStationAlpha)))
-                    {
-                        subtitle.Header = MpvPreviewStyleHeader;
-                    }
-
-                    if (oldSub.Header != null && oldSub.Header.Length > 20 && oldSub.Header.AsSpan(3, 3).SequenceEqual("STL"))
-                    {
-                        var previewFontName = Configuration.IsRunningOnLinux ? Configuration.DefaultLinuxFontName : "Tahoma";
-                        var boxStyle = $"Style: Box,{previewFontName},12,&H00FFFFFF,&H0300FFFF,&H00000000,&H02000000,-1,0,0,0,100,100,0,0,3,2,0,2,10,10,10,1{Environment.NewLine}Style: Default,";
-                        subtitle.Header = subtitle.Header.Replace("Style: Default,", boxStyle, StringComparison.Ordinal);
-
-                        var useBox = false;
-                        if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox)
-                        {
-                            try
-                            {
-                                var encoding = Ebu.GetEncoding(oldSub.Header[..3]);
-                                var buffer = encoding.GetBytes(oldSub.Header);
-                                var header = Ebu.ReadHeader(buffer);
-                                if (header.DisplayStandardCode != "0")
-                                {
-                                    useBox = true;
-                                }
-                            }
-                            catch
-                            {
-                                // ignore
-                            }
-                        }
-
-                        for (var index = 0; index < subtitle.Paragraphs.Count; index++)
-                        {
-                            var p = subtitle.Paragraphs[index];
-
-                            p.Extra = useBox ? "Box" : "Default";
-
-                            if (p.Text.Contains("<box>", StringComparison.Ordinal))
-                            {
-                                p.Extra = "Box";
-                                p.Text = p.Text.Replace("<box>", string.Empty).Replace("</box>", string.Empty);
-                            }
-                        }
-                    }
-                }
-
-                AddSecondarySubtitle(subtitle, subtitleSecondary);
-                var hash = subtitle.GetFastHashCode(null);
-                if (hash != _mpvSubOldHash || string.IsNullOrEmpty(_mpvTextOld))
-                {
-                    text = subtitle.ToText(_assFormat);
-                    _mpvSubOldHash = hash;
-                }
-                else
-                {
-                    text = _mpvTextOld;
-                }
+                _mpvSubOldHash = built.Hash;
             }
 
+            var format = _assFormat;
             if (text != _mpvTextOld || _mpvTextFileName == null || _retryCount > 0)
             {
-                if (_retryCount >= 0 || string.IsNullOrEmpty(_mpvTextFileName) || _subtitlePrev == null || _subtitlePrev.FileName != subtitle.FileName || _mpvTextFileExtension != format.Extension)
+                var reAdd = _retryCount >= 0 || string.IsNullOrEmpty(_mpvTextFileName) || _subtitlePrev == null || _subtitlePrev.FileName != subtitle.FileName || _mpvTextFileExtension != format.Extension;
+                int mpvResult;
+                if (reAdd)
                 {
                     DeleteTempMpvFileName();
                     _mpvTextFileName = FileUtil.GetTempFileName(format.Extension);
                     _mpvTextFileExtension = format.Extension;
                     await File.WriteAllTextAsync(_mpvTextFileName, text);
-                    mpvContext.SubRemove();
-                    mpvContext.SubAdd(_mpvTextFileName);
-                    _retryCount--;
+                    mpvContext.SubRemove(); // nothing to remove yet on a new player - its result says nothing
+                    mpvResult = mpvContext.SubAdd(_mpvTextFileName);
                 }
                 else
                 {
-                    await File.WriteAllTextAsync(_mpvTextFileName, text);
-                    mpvContext.SubReload();
+                    // Not re-adding means the checks above found an existing temp file to rewrite.
+                    await File.WriteAllTextAsync(_mpvTextFileName!, text);
+                    mpvResult = mpvContext.SubReload();
                 }
+
+                if (mpvResult < 0)
+                {
+                    // mpv did not take it (core not up yet, or no file playing). Leave the memo
+                    // fields alone - remembering this text as the one mpv is showing is what used
+                    // to make the miss permanent - and let the caller retry. The retry budget is
+                    // not spent either: nothing was loaded to retry against yet.
+                    if (!reAdd)
+                    {
+                        // A failed sub-reload cannot fix itself: it means the player has no
+                        // loadable file behind its subtitle track (leaving fullscreen goes back
+                        // to a player whose temp file was deleted when fullscreen opened).
+                        // Forget the file so the retry takes the sub-remove + sub-add path
+                        // instead of reloading into the void every 400 ms.
+                        _mpvTextFileName = null;
+                    }
+
+                    return false;
+                }
+
+                if (reAdd)
+                {
+                    _retryCount--;
+                }
+
                 _mpvTextOld = text;
             }
 
@@ -188,28 +159,122 @@ public class MpvReloader : IMpvReloader
             // created player (fullscreen/undock create a new mpv instance).
             mpvContext.SetSubtitleVisibility(SubtitlesVisible);
             _subtitlePrev = subtitle;
+            return true;
         }
         catch (Exception exception)
         {
             Se.LogError(exception);
+            return false;
         }
     }
 
-    private static void AddSecondarySubtitle(Subtitle subtitle, Subtitle? subtitleSecondary)
+    // Runs on a background thread (see RefreshMpv). Must only touch the thread-confined
+    // subtitle copy, read-only state and libse statics - never the memo fields.
+    private (Subtitle Subtitle, string Text, int Hash, bool HashValid) BuildPreviewText(Subtitle subtitle, Subtitle? subtitleSecondary, Type uiFormatType, int oldHash, string oldText)
     {
-        if (subtitleSecondary == null)
+        if (SmpteMode)
         {
-            return;
+            foreach (var paragraph in subtitle.Paragraphs)
+            {
+                paragraph.StartTime.TotalMilliseconds *= 1.001;
+                paragraph.EndTime.TotalMilliseconds *= 1.001;
+            }
         }
 
-
-        var styleName = subtitleSecondary.Paragraphs.FirstOrDefault()?.Extra ?? "Secondary";
-        var style = AdvancedSubStationAlpha.GetSsaStyle(styleName, subtitleSecondary.Header);
-        subtitle.Header = AdvancedSubStationAlpha.AddSsaStyle(style, subtitle.Header);
-        foreach (var p in subtitleSecondary.Paragraphs)
+        if (uiFormatType == typeof(WebVTT) || uiFormatType == typeof(WebVTTFileWithLineNumber))
         {
-            subtitle.Paragraphs.Add(p);
+            var defaultStyle = GetMpvPreviewStyle(Se.Settings.Video);
+            defaultStyle.BorderStyle = "3";
+            // No extra copy here: "subtitle" is already RefreshMpv's private copy, and
+            // Convert deep-copies its input again internally without mutating it.
+            subtitle = WebVttToAssa.Convert(subtitle, defaultStyle, VideoWidth, VideoHeight);
+            SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary);
+            // The WebVTT path never used the hash memo, so keep it untouched (HashValid false).
+            return (subtitle, subtitle.ToText(_assFormat), 0, false);
         }
+
+        if (subtitle.Header == null || !subtitle.Header.Contains("[V4+ Styles]") || uiFormatType != typeof(AdvancedSubStationAlpha))
+        {
+            if (string.IsNullOrEmpty(subtitle.Header) && uiFormatType == typeof(SubStationAlpha))
+            {
+                subtitle.Header = SubStationAlpha.DefaultHeader;
+            }
+
+            if (subtitle.Header != null && subtitle.Header.Contains("[V4 Styles]", StringComparison.Ordinal))
+            {
+                subtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromSubStationAlpha(subtitle.Header);
+            }
+
+            // "subtitle" is RefreshMpv's private copy, so mutating it in place is safe -
+            // the second full deep copy that used to live here cost one Paragraph + two
+            // TimeCode allocations per line on the UI thread for every preview refresh.
+            // Only the pre-preview-style header is needed for the STL checks below.
+            var oldHeader = subtitle.Header;
+            if (Se.Settings.Appearance.RightToLeft)
+            {
+                for (var index = 0; index < subtitle.Paragraphs.Count; index++)
+                {
+                    var paragraph = subtitle.Paragraphs[index];
+                    if (LanguageAutoDetect.ContainsRightToLeftLetter(paragraph.Text))
+                    {
+                        paragraph.Text = Utilities.FixRtlViaUnicodeChars(paragraph.Text);
+                    }
+                }
+            }
+
+            if (subtitle.Header == null || !(subtitle.Header.Contains("[V4+ Styles]") && uiFormatType == typeof(SubStationAlpha)))
+            {
+                subtitle.Header = MpvPreviewStyleHeader;
+            }
+
+            if (oldHeader != null && oldHeader.Length > 20 && oldHeader.AsSpan(3, 3).SequenceEqual("STL"))
+            {
+                var previewFontName = Configuration.IsRunningOnLinux ? Configuration.DefaultLinuxFontName : "Tahoma";
+                var boxStyle = $"Style: Box,{previewFontName},12,&H00FFFFFF,&H0300FFFF,&H00000000,&H02000000,-1,0,0,0,100,100,0,0,3,2,0,2,10,10,10,1{Environment.NewLine}Style: Default,";
+                subtitle.Header = subtitle.Header.Replace("Style: Default,", boxStyle, StringComparison.Ordinal);
+
+                var useBox = false;
+                if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox)
+                {
+                    try
+                    {
+                        var encoding = Ebu.GetEncoding(oldHeader[..3]);
+                        var buffer = encoding.GetBytes(oldHeader);
+                        var header = Ebu.ReadHeader(buffer);
+                        if (header.DisplayStandardCode != "0")
+                        {
+                            useBox = true;
+                        }
+                    }
+                    catch
+                    {
+                        // ignore
+                    }
+                }
+
+                for (var index = 0; index < subtitle.Paragraphs.Count; index++)
+                {
+                    var p = subtitle.Paragraphs[index];
+
+                    p.Extra = useBox ? "Box" : "Default";
+
+                    if (p.Text.Contains("<box>", StringComparison.Ordinal))
+                    {
+                        p.Extra = "Box";
+                        p.Text = p.Text.Replace("<box>", string.Empty).Replace("</box>", string.Empty);
+                    }
+                }
+            }
+        }
+
+        SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary);
+        var hash = subtitle.GetFastHashCode(null);
+        if (hash != oldHash || string.IsNullOrEmpty(oldText))
+        {
+            return (subtitle, subtitle.ToText(_assFormat), hash, true);
+        }
+
+        return (subtitle, oldText, hash, true);
     }
 
     private string MpvPreviewStyleHeader
@@ -271,6 +336,7 @@ public class MpvReloader : IMpvReloader
 
     public void Reset()
     {
+        _refreshVersion++; // discard any in-flight background serialize
         DeleteTempMpvFileName();
         _mpvTextFileName = null;
         _mpvTextFileExtension = null;

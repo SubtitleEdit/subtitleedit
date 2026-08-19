@@ -20,7 +20,7 @@ public class MergeSameTextWindow : Window
     public MergeSameTextWindow(MergeSameTextViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.General.MergeLinesWithSameText;
+        Title = UiUtil.MakeWindowTitle(Se.Language.General.MergeLinesWithSameText);
         CanResize = true;
         Width = 900;
         Height = 800;

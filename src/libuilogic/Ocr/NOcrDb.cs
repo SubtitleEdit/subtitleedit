@@ -37,6 +37,84 @@ public class NOcrDb
 
     private readonly Lock _lock = new();
 
+    // Subtitle lines repeat the same glyph bitmaps over and over, so cache match results per
+    // exact pixel content. Unmatched glyphs benefit the most: a "no match" previously re-ran the
+    // whole pass cascade against the full database for every occurrence. The cache is cleared on
+    // any mutation (Add/Remove/Load) and on Save, because the edit dialogs mutate the character
+    // lists/lines directly and always call Save afterwards.
+    private readonly Dictionary<MatchCacheKey, MatchCacheEntry> _matchCache = new();
+    private const int MatchCacheMaxEntries = 5000;
+
+    // Exact-match candidates bucketed by (width, height) so the exact pass doesn't scan the
+    // whole single-character list per glyph. Rebuilt lazily after mutations; insertion order is
+    // preserved within a bucket so the first-match-wins semantics are unchanged.
+    private Dictionary<long, List<NOcrChar>>? _exactSizeIndex;
+
+    private sealed class MatchCacheEntry
+    {
+        public NOcrChar? ExactMatch;
+        public NOcrChar? SingleMatch;
+    }
+
+    private readonly struct MatchCacheKey : IEquatable<MatchCacheKey>
+    {
+        private readonly byte[] _pixels;
+        private readonly int _width;
+        private readonly int _topMargin;
+        private readonly int _maxWrongPixels;
+        private readonly bool _deepSeek;
+        private readonly bool _lastDitch;
+        private readonly double _italicFactor;
+        private readonly int _hashCode;
+
+        public MatchCacheKey(NikseBitmap2 bitmap, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch, double italicFactor)
+        {
+            _pixels = bitmap.GetPixelData().ToArray();
+            _width = bitmap.Width;
+            _topMargin = topMargin;
+            _maxWrongPixels = maxWrongPixels;
+            _deepSeek = deepSeek;
+            _lastDitch = lastDitch;
+            _italicFactor = italicFactor;
+
+            // FNV-1a over the pixel bytes plus the match parameters.
+            var hash = unchecked((int)2166136261);
+            foreach (var b in _pixels)
+            {
+                hash = unchecked((hash ^ b) * 16777619);
+            }
+
+            hash = unchecked((hash ^ _width) * 16777619);
+            hash = unchecked((hash ^ _topMargin) * 16777619);
+            hash = unchecked((hash ^ _maxWrongPixels) * 16777619);
+            hash = unchecked((hash ^ (_deepSeek ? 1 : 0) ^ (_lastDitch ? 2 : 0)) * 16777619);
+            hash = unchecked((hash ^ _italicFactor.GetHashCode()) * 16777619);
+            _hashCode = hash;
+        }
+
+        public bool Equals(MatchCacheKey other)
+        {
+            return _hashCode == other._hashCode &&
+                   _width == other._width &&
+                   _topMargin == other._topMargin &&
+                   _maxWrongPixels == other._maxWrongPixels &&
+                   _deepSeek == other._deepSeek &&
+                   _lastDitch == other._lastDitch &&
+                   _italicFactor.Equals(other._italicFactor) &&
+                   _pixels.AsSpan().SequenceEqual(other._pixels);
+        }
+
+        public override bool Equals(object? obj) => obj is MatchCacheKey other && Equals(other);
+
+        public override int GetHashCode() => _hashCode;
+    }
+
+    private void InvalidateCaches()
+    {
+        _matchCache.Clear();
+        _exactSizeIndex = null;
+    }
+
     public void Save()
     {
         lock (_lock)
@@ -60,6 +138,10 @@ public class NOcrDb
             }
 
             File.Move(tempFileName, FileName, overwrite: true);
+
+            // The edit dialogs mutate OcrCharacters/character lines directly and then call
+            // Save, so treat Save as a mutation barrier for the caches.
+            InvalidateCaches();
         }
     }
 
@@ -74,6 +156,7 @@ public class NOcrDb
             {
                 OcrCharacters = list;
                 OcrCharactersExpanded = listExpanded;
+                InvalidateCaches();
                 return;
             }
 
@@ -115,6 +198,7 @@ public class NOcrDb
 
             OcrCharacters = list;
             OcrCharactersExpanded = listExpanded;
+            InvalidateCaches();
         }
     }
 
@@ -130,6 +214,8 @@ public class NOcrDb
             {
                 OcrCharacters.Insert(0, ocrChar);
             }
+
+            InvalidateCaches();
         }
     }
 
@@ -145,6 +231,8 @@ public class NOcrDb
             {
                 OcrCharacters.Remove(ocrChar);
             }
+
+            InvalidateCaches();
         }
     }
 
@@ -161,7 +249,7 @@ public class NOcrDb
             var oc = OcrCharactersExpanded[i];
             if (oc.ExpandCount > 1 && oc.Width > w && targetItem.X + oc.Width < nikseBitmap.Width &&
                 oc.LinesForeground.Count + oc.LinesBackground.Count >= MinLinesForExpandedMatch &&
-                IsExpandedLineMatch(oc, targetItem, nikseBitmap, scaled: false))
+                IsExpandedLineMatch(oc, targetItem, nikseBitmap))
             {
                 var size = GetTotalSize(listIndex, list, oc.ExpandCount);
                 if (Math.Abs(size.X - oc.Width) < 3 && Math.Abs(size.Y - oc.Height) < 3)
@@ -175,13 +263,19 @@ public class NOcrDb
         {
             var oc = OcrCharactersExpanded[i];
             if (oc.ExpandCount > 1 && oc.Width > w && targetItem.X + oc.Width < nikseBitmap.Width &&
-                oc.LinesForeground.Count + oc.LinesBackground.Count >= MinLinesForExpandedMatch &&
-                IsExpandedLineMatch(oc, targetItem, nikseBitmap, scaled: true))
+                oc.LinesForeground.Count + oc.LinesBackground.Count >= MinLinesForExpandedMatch)
             {
                 var size = GetTotalSize(listIndex, list, oc.ExpandCount);
+                if (size.X <= 0 || size.Y <= 0)
+                {
+                    continue;
+                }
+
                 var heightToWidthPercent = size.Y * 100.0 / size.X;
                 if (Math.Abs(heightToWidthPercent - oc.HeightToWidthPercent) < 15 &&
-                    Math.Abs(size.X - oc.Width) < 25 && Math.Abs(size.Y - oc.Height) < 20)
+                    Math.Abs(size.X - oc.Width) < 25 && Math.Abs(size.Y - oc.Height) < 20 &&
+                    IsScaleRatioSane(size.X, oc.Width) && IsScaleRatioSane(size.Y, oc.Height) &&
+                    IsExpandedLineMatchScaled(oc, targetItem, nikseBitmap, size.X, size.Y))
                 {
                     return oc;
                 }
@@ -191,12 +285,84 @@ public class NOcrDb
         return null;
     }
 
-    private static bool IsExpandedLineMatch(NOcrChar oc, ImageSplitterItem2 targetItem, NikseBitmap2 nikseBitmap, bool scaled)
+    /// <summary>
+    /// The scaled expanded pass may only bridge a moderate size difference between the trained
+    /// character and the target group. Without this gate the absolute size deltas (±25/±20 px)
+    /// let a tiny two-part glyph (a 10x12 double quote) be "scaled" onto a letter-pair group
+    /// three to four times its size.
+    /// </summary>
+    private static bool IsScaleRatioSane(int targetSize, int charSize)
+    {
+        if (targetSize <= 0 || charSize <= 0)
+        {
+            return false;
+        }
+
+        var big = Math.Max(targetSize, charSize);
+        var small = Math.Min(targetSize, charSize);
+        return big * 2 <= small * 5; // ratio <= 2.5
+    }
+
+    /// <summary>
+    /// Scaled expanded match against the actual bounding box of the target group. The old
+    /// "scaled" pass walked the character's lines at the character's own size, so an expanded
+    /// glyph (e.g. a two-part quote) rendered at a different size than it was trained at could
+    /// essentially never match; the single-part fallback then turned every cross-size " into '.
+    /// The error budget scales with the number of line points actually walked (~5%), NOT with
+    /// the target area: measured legit scaled matches stay under ~2-3% wrong points, while a
+    /// wrong expanded character claiming a group of ordinary neighboring letters (e.g. a
+    /// trained "fi" pair swallowing "t"+"i") runs at 9%+. An area-based budget grows with the
+    /// group being claimed, so it was loosest exactly for those letter-pair steals.
+    /// </summary>
+    private static bool IsExpandedLineMatchScaled(NOcrChar oc, ImageSplitterItem2 targetItem, NikseBitmap2 nikseBitmap, int targetWidth, int targetHeight)
+    {
+        var errors = 0;
+        var points = 0;
+        var scaledMarginTop = (int)Math.Round(oc.MarginTop * targetHeight / (double)Math.Max(1, oc.Height), MidpointRounding.AwayFromZero);
+        var originY = targetItem.Y - scaledMarginTop;
+
+        foreach (var op in oc.LinesForeground)
+        {
+            foreach (var point in op.ScaledWalkPoints(oc, targetWidth, targetHeight))
+            {
+                points++;
+                var p = new OcrPoint(point.X + targetItem.X, point.Y + originY);
+                // Out-of-bounds foreground points can't be on text - count them as errors.
+                if (p.X < 0 || p.Y < 0 || p.X >= nikseBitmap.Width || p.Y >= nikseBitmap.Height ||
+                    nikseBitmap.GetAlpha(p.X, p.Y) <= 150)
+                {
+                    errors++;
+                }
+            }
+        }
+
+        foreach (var op in oc.LinesBackground)
+        {
+            foreach (var point in op.ScaledWalkPoints(oc, targetWidth, targetHeight))
+            {
+                points++;
+                var p = new OcrPoint(point.X + targetItem.X, point.Y + originY);
+                // Out-of-bounds background points are definitionally "not on text" - fine.
+                if (p.X < 0 || p.Y < 0 || p.X >= nikseBitmap.Width || p.Y >= nikseBitmap.Height)
+                {
+                    continue;
+                }
+
+                if (nikseBitmap.GetAlpha(p.X, p.Y) > 150)
+                {
+                    errors++;
+                }
+            }
+        }
+
+        return errors <= Math.Max(4, points / 20);
+    }
+
+    private static bool IsExpandedLineMatch(NOcrChar oc, ImageSplitterItem2 targetItem, NikseBitmap2 nikseBitmap)
     {
         foreach (var op in oc.LinesForeground)
         {
-            var points = scaled ? op.ScaledWalkPoints(oc, oc.Width, oc.Height - 1) : op.WalkPoints();
-            foreach (var point in points)
+            foreach (var point in op.WalkPoints())
             {
                 var p = new OcrPoint(point.X + targetItem.X, point.Y + targetItem.Y - oc.MarginTop);
                 // A foreground line point that falls outside the parent bitmap can't possibly be
@@ -217,8 +383,7 @@ public class NOcrDb
 
         foreach (var op in oc.LinesBackground)
         {
-            var points = scaled ? op.ScaledWalkPoints(oc, oc.Width, oc.Height - 1) : op.WalkPoints();
-            foreach (var point in points)
+            foreach (var point in op.WalkPoints())
             {
                 var p = new OcrPoint(point.X + targetItem.X, point.Y + targetItem.Y - oc.MarginTop);
                 // For background lines, points that fall outside the bitmap are definitionally
@@ -283,11 +448,35 @@ public class NOcrDb
         return new OcrPoint(maximumX - minimumX, maximumY - minimumY);
     }
 
-    public NOcrChar? GetMatch(NikseBitmap2 parentBitmap, List<ImageSplitterItem2> list, ImageSplitterItem2 item, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch = false)
+    /// <param name="italicFactor">
+    /// When greater than zero, a glyph that matches nothing upright is de-slanted by this factor
+    /// and matched again; a hit is returned as italic. Italic subtitles otherwise fail to match
+    /// against upright characters. Pass 0 to disable.
+    /// </param>
+    public NOcrChar? GetMatch(NikseBitmap2 parentBitmap, List<ImageSplitterItem2> list, ImageSplitterItem2 item, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch = false, double italicFactor = 0)
     {
         if (item.NikseBitmap == null)
         {
             return null;
+        }
+
+        var key = new MatchCacheKey(item.NikseBitmap, topMargin, deepSeek, maxWrongPixels, lastDitch, italicFactor);
+        MatchCacheEntry? cached;
+        lock (_lock)
+        {
+            _matchCache.TryGetValue(key, out cached);
+        }
+
+        if (cached != null)
+        {
+            if (cached.ExactMatch != null)
+            {
+                return cached.ExactMatch;
+            }
+
+            // The expanded scan depends on the neighboring splitter items and the parent
+            // bitmap, so it can't be cached per glyph bitmap - always evaluate it live.
+            return GetMatchExpanded(parentBitmap, item, list.IndexOf(item), list) ?? cached.SingleMatch;
         }
 
         // A perfect single match (exact size, 0 errors) means the user has explicitly added an
@@ -295,31 +484,94 @@ public class NOcrDb
         var exactSingle = GetExactMatchSingle(item.NikseBitmap, topMargin);
         if (exactSingle != null)
         {
+            CacheMatch(key, new MatchCacheEntry { ExactMatch = exactSingle });
             return exactSingle;
         }
 
         var expandedResult = GetMatchExpanded(parentBitmap, item, list.IndexOf(item), list);
         if (expandedResult != null)
         {
+            // Nothing cached: the single-match result was never computed, and the expanded
+            // result must not be cached (see above).
             return expandedResult;
         }
 
         // skipExactCheck: the exact scan already ran (and missed) above - without the flag,
         // GetMatchSingle re-scanned the whole single-character list a second time for every
         // glyph that wasn't an exact match.
-        return GetMatchSingle(item.NikseBitmap, topMargin, deepSeek, maxWrongPixels, lastDitch, skipExactCheck: true);
+        var single = GetMatchSingle(item.NikseBitmap, topMargin, deepSeek, maxWrongPixels, lastDitch, skipExactCheck: true);
+
+        if (single == null && italicFactor > 0)
+        {
+            // Nothing matched upright. Straighten the glyph and try once more - this is how an
+            // italic 'l' stops being read as an 'i'. A hit is italic by construction, so flag a
+            // copy; the database entry itself must stay upright.
+            var unItalic = item.NikseBitmap.UnItalic(italicFactor);
+            if (unItalic.Width > 0 && unItalic.Height > 0)
+            {
+                var italicMatch = GetMatchSingle(unItalic, topMargin, deepSeek, maxWrongPixels, lastDitch);
+                if (italicMatch != null)
+                {
+                    single = new NOcrChar(italicMatch) { Italic = true };
+                }
+            }
+        }
+
+        CacheMatch(key, new MatchCacheEntry { SingleMatch = single });
+        return single;
+    }
+
+    private void CacheMatch(MatchCacheKey key, MatchCacheEntry entry)
+    {
+        lock (_lock)
+        {
+            if (_matchCache.Count >= MatchCacheMaxEntries)
+            {
+                _matchCache.Clear();
+            }
+
+            _matchCache[key] = entry;
+        }
     }
 
     private NOcrChar? GetExactMatchSingle(NikseBitmap2 bitmap, int topMargin)
     {
-        foreach (var oc in OcrCharacters)
+        var index = _exactSizeIndex;
+        if (index == null)
         {
-            if (bitmap.Width == oc.Width && bitmap.Height == oc.Height && Math.Abs(oc.MarginTop - topMargin) < 5)
+            lock (_lock)
             {
-                if (IsMatch(bitmap, oc, 0))
+                index = _exactSizeIndex;
+                if (index == null)
                 {
-                    return oc;
+                    index = new Dictionary<long, List<NOcrChar>>();
+                    foreach (var oc in OcrCharacters)
+                    {
+                        var k = ((long)oc.Width << 32) | (uint)oc.Height;
+                        if (!index.TryGetValue(k, out var bucket))
+                        {
+                            bucket = new List<NOcrChar>();
+                            index[k] = bucket;
+                        }
+
+                        bucket.Add(oc);
+                    }
+
+                    _exactSizeIndex = index;
                 }
+            }
+        }
+
+        if (!index.TryGetValue(((long)bitmap.Width << 32) | (uint)bitmap.Height, out var candidates))
+        {
+            return null;
+        }
+
+        foreach (var oc in candidates)
+        {
+            if (Math.Abs(oc.MarginTop - topMargin) < 5 && IsMatch(bitmap, oc, 0))
+            {
+                return oc;
             }
         }
 
@@ -338,6 +590,13 @@ public class NOcrDb
         }
 
         var heightToWidthPercent = bitmap.Height * 100.0 / bitmap.Width;
+
+        // Scale the loose passes' error budgets with the glyph's pixel area: 20 wrong pixels is
+        // nothing on a 25x35 letter but lets a ~50-pixel apostrophe, dash or dot match almost
+        // anything (e.g. "-" was claimed by "." in the last-ditch pass). One error per 8 pixels
+        // of area leaves normal letters unaffected and only tightens tiny glyphs; the floor of 8
+        // keeps cross-size matching of small glyphs possible.
+        var areaErrorCap = Math.Max(8, bitmap.Width * bitmap.Height / 8);
 
         foreach (var pass in MatchPasses)
         {
@@ -358,6 +617,14 @@ public class NOcrDb
 
             var errorsAllowed = pass.ErrorsAllowed(maxWrongPixels);
 
+            // Best-match within the pass: the first candidate that fits the error budget used to
+            // win outright, so with generous budgets a mediocre early entry beat a near-perfect
+            // later one. Now the candidate with the fewest wrong pixels wins; ties keep list
+            // order (newest first), so a user's just-added character still takes precedence over
+            // an equally-good older one. The counting loop shrinks its budget to "current best
+            // minus one", so each candidate aborts as soon as it can no longer win.
+            NOcrChar? best = null;
+            var bestErrors = int.MaxValue;
             foreach (var oc in OcrCharacters)
             {
                 if (!PassFilter(bitmap, heightToWidthPercent, oc, topMargin, pass))
@@ -365,22 +632,69 @@ public class NOcrDb
                     continue;
                 }
 
-                if (IsMatch(bitmap, oc, errorsAllowed))
+                // Sensitive characters (O/o/0, quotes, dashes, ...) get a tighter budget within
+                // the same pass instead of being deferred to a later pass: excluding them
+                // entirely let non-sensitive lookalikes (Q, C, .) claim their glyphs at up to
+                // 20 errors before the sensitive candidate was ever considered.
+                var candidateAllowed = oc.IsSensitive && pass.ErrorsAllowedSensitive != null
+                    ? pass.ErrorsAllowedSensitive(maxWrongPixels)
+                    : errorsAllowed;
+
+                var budget = Math.Min(Math.Min(candidateAllowed, areaErrorCap), bestErrors - 1);
+                if (TryCountErrors(bitmap, oc, budget, out var errors))
                 {
-                    return oc;
+                    best = oc;
+                    bestErrors = errors;
+                    if (errors == 0)
+                    {
+                        break;
+                    }
                 }
+            }
+
+            if (best != null)
+            {
+                return best;
             }
         }
 
         return null;
     }
 
+    // Below this pixel area a glyph is a "small glyph" (dot, comma, dash, apostrophe, ...):
+    // pixel evidence barely discriminates solid blobs, so shape gating must come from the
+    // aspect ratio instead.
+    private const int SmallGlyphAreaLimit = 150;
+    private const double SmallGlyphMaxAspectRatio = 2.0;
+
     private static bool PassFilter(NikseBitmap2 bitmap, double heightToWidthPercent, NOcrChar oc, int topMargin, in MatchPass pass)
     {
-        if (pass.AspectMaxDelta != int.MaxValue &&
-            Math.Abs(heightToWidthPercent - oc.HeightToWidthPercent) >= pass.AspectMaxDelta)
+        if (bitmap.Width * bitmap.Height < SmallGlyphAreaLimit)
         {
-            return false;
+            // Small glyphs: absolute h/w% deltas are useless here - a dot (aspect ~100) vs a
+            // dash (~40) differ by 60 points while two apostrophes can differ by 100+ points,
+            // and the wide passes have no aspect gate at all (which let "." claim "-" through
+            // the 8px size-tolerance pass on 0 pixel errors, since a solid blob's lines all hit
+            // a solid dash). Compare aspect as a ratio instead, in every pass.
+            var big = Math.Max(heightToWidthPercent, oc.HeightToWidthPercent);
+            var small = Math.Min(heightToWidthPercent, oc.HeightToWidthPercent);
+            if (small <= 0 || big / small > SmallGlyphMaxAspectRatio)
+            {
+                return false;
+            }
+        }
+        else
+        {
+            // Sensitive characters may use their own (typically looser) aspect gate - O/o/0
+            // vary more in aspect between fonts than their pixel shapes suggest.
+            var aspectMaxDelta = oc.IsSensitive && pass.AspectMaxDeltaSensitive != 0
+                ? pass.AspectMaxDeltaSensitive
+                : pass.AspectMaxDelta;
+            if (aspectMaxDelta != int.MaxValue &&
+                Math.Abs(heightToWidthPercent - oc.HeightToWidthPercent) >= aspectMaxDelta)
+            {
+                return false;
+            }
         }
 
         if (pass.SizeMaxDelta != int.MaxValue &&
@@ -430,6 +744,8 @@ public class NOcrDb
         public int MinLineCount { get; init; }       // 0 = no line-count check
         public SensitivityFilter Sensitivity { get; init; }
         public Func<int, int> ErrorsAllowed { get; init; }
+        public Func<int, int>? ErrorsAllowedSensitive { get; init; } // budget for IsSensitive candidates (null = same as ErrorsAllowed)
+        public int AspectMaxDeltaSensitive { get; init; }            // aspect gate for IsSensitive candidates (0 = same as AspectMaxDelta)
     }
 
     private static readonly Func<int, int> ErrorsZero = _ => 0;
@@ -469,21 +785,18 @@ public class NOcrDb
             AspectMaxDelta = 20, SizeMaxDelta = int.MaxValue, MarginTopMaxDelta = 15,
             ErrorsAllowed = ErrorsCappedAtThree,
         },
-        // wide tolerance for not-sensitive chars, requires many lines, errors capped at 20
+        // wide tolerance, requires many lines, errors capped at 20 - sensitive chars (O, o, 0,
+        // quotes, dashes, ...) compete in the SAME ranking with a tighter budget (10) and a
+        // looser aspect gate (30). They used to run in a separate later pass, which let
+        // non-sensitive lookalikes (Q, C, .) claim their glyphs unopposed at up to 20 errors.
         new MatchPass
         {
             MinAllowance = 10,
             AspectMaxDelta = 20, SizeMaxDelta = int.MaxValue, MarginTopMaxDelta = 15,
-            MinLineCount = 41, Sensitivity = SensitivityFilter.NotSensitive,
+            MinLineCount = 41,
             ErrorsAllowed = ErrorsCappedAtTwenty,
-        },
-        // looser aspect for sensitive chars (O, o, 0, ...), 10 errors
-        new MatchPass
-        {
-            MinAllowance = 10,
-            AspectMaxDelta = 30, SizeMaxDelta = int.MaxValue, MarginTopMaxDelta = 15,
-            MinLineCount = 41, Sensitivity = SensitivityFilter.OnlySensitive,
-            ErrorsAllowed = ErrorsTen,
+            ErrorsAllowedSensitive = ErrorsTen,
+            AspectMaxDeltaSensitive = 30,
         },
         // deepSeek: very wide aspect, requires lots of lines, errors as requested
         new MatchPass
@@ -506,6 +819,69 @@ public class NOcrDb
             ErrorsAllowed = ErrorsAsRequestedDoubled,
         },
     };
+
+    /// <summary>
+    /// Like <see cref="IsMatch"/> but reports how many pixels disagreed, so callers can rank
+    /// candidates that all fit the budget. Returns false (and an unspecified count) as soon as
+    /// the budget is exceeded.
+    /// </summary>
+    private static bool TryCountErrors(NikseBitmap2 bitmap, NOcrChar oc, int errorsAllowed, out int errors)
+    {
+        errors = 0;
+        if (errorsAllowed < 0)
+        {
+            return false;
+        }
+
+        // Same zero-line guard as IsMatch: an entry with no lines would "match" anything.
+        if (oc.LinesForeground.Count + oc.LinesBackground.Count < MinLinesForSingleMatch)
+        {
+            return false;
+        }
+
+        var width = bitmap.Width;
+        var height = bitmap.Height;
+        var pixelData = bitmap.GetPixelData();
+        var widthX4 = width * 4;
+
+        foreach (var op in oc.LinesForeground)
+        {
+            foreach (var point in op.ScaledWalkPoints(oc, width, height))
+            {
+                if ((uint)point.X < (uint)width && (uint)point.Y < (uint)height)
+                {
+                    var a = pixelData[point.X * 4 + point.Y * widthX4 + 3];
+                    if (a <= 150)
+                    {
+                        if (++errors > errorsAllowed)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+
+        foreach (var op in oc.LinesBackground)
+        {
+            foreach (var point in op.ScaledWalkPoints(oc, width, height))
+            {
+                if ((uint)point.X < (uint)width && (uint)point.Y < (uint)height)
+                {
+                    var a = pixelData[point.X * 4 + point.Y * widthX4 + 3];
+                    if (a > 150)
+                    {
+                        if (++errors > errorsAllowed)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
 
     public static bool IsMatch(NikseBitmap2 bitmap, NOcrChar oc, int errorsAllowed)
     {

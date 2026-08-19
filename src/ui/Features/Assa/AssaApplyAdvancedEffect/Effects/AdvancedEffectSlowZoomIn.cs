@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect.Effects;
 
 /// <summary>
-/// Slow zoom-in: each subtitle starts at 100% scale and smoothly grows to 102%
+/// Slow zoom-in: each subtitle starts at 100% scale and smoothly grows to 110%
 /// over the full subtitle duration — a barely-noticeable creeping zoom.
 /// </summary>
 public class AdvancedEffectSlowZoomIn : IAdvancedEffectDisplay

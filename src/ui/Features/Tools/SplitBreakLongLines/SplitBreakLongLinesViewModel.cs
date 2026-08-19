@@ -589,9 +589,16 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
 
     private void LoadSettings()
     {
-        SingleLineMaxLength = Se.Settings.General.SubtitleLineMaximumLength;
-        MaxNumberOfLines = Se.Settings.General.MaxNumberOfLines;
-        UnbreakLinesShorterThan = Se.Settings.General.UnbreakLinesShorterThan;
+        // Values of 0 mean "not saved yet" - fall back to the general settings
+        SingleLineMaxLength = Se.Settings.Tools.SplitRebalanceLongLinesSingleLineMaxLength > 0
+            ? Se.Settings.Tools.SplitRebalanceLongLinesSingleLineMaxLength
+            : Se.Settings.General.SubtitleLineMaximumLength;
+        MaxNumberOfLines = Se.Settings.Tools.SplitRebalanceLongLinesMaxNumberOfLines > 0
+            ? Se.Settings.Tools.SplitRebalanceLongLinesMaxNumberOfLines
+            : Se.Settings.General.MaxNumberOfLines;
+        UnbreakLinesShorterThan = Se.Settings.Tools.SplitRebalanceLongLinesUnbreakShorterThan > 0
+            ? Se.Settings.Tools.SplitRebalanceLongLinesUnbreakShorterThan
+            : Se.Settings.General.UnbreakLinesShorterThan;
         SplitLongLines = Se.Settings.Tools.SplitRebalanceLongLinesSplit;
         RebalanceLongLines = Se.Settings.Tools.SplitRebalanceLongLinesRebalance;
     }
@@ -600,6 +607,9 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
     {
         Se.Settings.Tools.SplitRebalanceLongLinesSplit = SplitLongLines;
         Se.Settings.Tools.SplitRebalanceLongLinesRebalance = RebalanceLongLines;
+        Se.Settings.Tools.SplitRebalanceLongLinesSingleLineMaxLength = SingleLineMaxLength;
+        Se.Settings.Tools.SplitRebalanceLongLinesMaxNumberOfLines = MaxNumberOfLines;
+        Se.Settings.Tools.SplitRebalanceLongLinesUnbreakShorterThan = UnbreakLinesShorterThan;
         Se.SaveSettings();
     }
 

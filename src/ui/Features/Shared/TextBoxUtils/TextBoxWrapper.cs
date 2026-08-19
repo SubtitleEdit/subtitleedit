@@ -3,6 +3,7 @@ using Avalonia.Input;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Features.SpellCheck;
 using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
@@ -77,8 +78,17 @@ public class TextBoxWrapper : ITextBoxWrapper
     public Control ContentControl => _textBox;
 
     public bool IsFocused => _textBox.IsFocused;
+    public bool IsReadOnly => _textBox.IsReadOnly;
+
     public void Cut()
     {
+        // TextBox.Cut writes the clipboard before its own read-only check, so cutting in a
+        // read-only box would clobber the clipboard while deleting nothing.
+        if (_textBox.IsReadOnly)
+        {
+            return;
+        }
+
         _textBox.Cut();
     }
 
@@ -100,6 +110,33 @@ public class TextBoxWrapper : ITextBoxWrapper
     public void ClearSelection()
     {
         _textBox.ClearSelection();
+    }
+
+    public void DeleteForward()
+    {
+        if (_textBox.IsReadOnly)
+        {
+            return;
+        }
+
+        if (_textBox.SelectionStart != _textBox.SelectionEnd)
+        {
+            _textBox.SelectedText = string.Empty;
+            return;
+        }
+
+        var text = _textBox.Text ?? string.Empty;
+        var caret = _textBox.CaretIndex;
+        if (caret >= text.Length)
+        {
+            return;
+        }
+
+        // Delete a whole text element so CRLF, surrogate pairs, and combining marks go together.
+        var length = System.Globalization.StringInfo.GetNextTextElementLength(text.AsSpan(caret));
+        _textBox.SelectionStart = caret;
+        _textBox.SelectionEnd = caret + length;
+        _textBox.SelectedText = string.Empty;
     }
 
     public void SetAlignment(Avalonia.Media.TextAlignment alignment)

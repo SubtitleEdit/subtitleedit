@@ -253,6 +253,7 @@ public class BatchConvertWindow : Window
             Children =
             {
                 UiUtil.MakeButton(vm.AddFilesCommand, IconNames.Plus, Se.Language.General.Add).WithMarginLeft(10),
+                UiUtil.MakeButton(vm.AddFolderCommand, IconNames.Folder, Se.Language.Tools.BatchConvert.AddFolderDotDotDot).WithMarginLeft(5),
                 UiUtil.MakeButton(vm.RemoveSelectedFilesCommand, IconNames.Trash, Se.Language.General.Remove).WithMarginLeft(5),
                 UiUtil.MakeButton(vm.ClearAllFilesCommand, IconNames.Close, Se.Language.General.Clear).WithMarginLeft(5),
                 UiUtil.MakeLabel(Se.Language.General.TargetFormat).WithMarginLeft(15),
@@ -322,6 +323,14 @@ public class BatchConvertWindow : Window
         };
         flyout.Items.Add(menuItemImport);
 
+        var menuItemImportFolder = new MenuItem
+        {
+            Header = Se.Language.Tools.BatchConvert.AddFolderDotDotDot,
+            DataContext = vm,
+            Command = vm.AddFolderCommand,
+        };
+        flyout.Items.Add(menuItemImportFolder);
+
         // hack to make drag and drop work on the file grid - also on empty rows
         var dropHost = new Border
         {
@@ -376,6 +385,8 @@ public class BatchConvertWindow : Window
         };
         progressBar.Bind(ProgressBar.MaximumProperty, new Binding(nameof(vm.AddingFilesProgressMax)) { Source = vm });
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.AddingFilesProgressValue)) { Source = vm });
+        // A folder scan has no known total (the tree is being walked) - show a marquee for it.
+        progressBar.Bind(ProgressBar.IsIndeterminateProperty, new Binding(nameof(vm.IsScanningFolder)) { Source = vm });
 
         var cancelButton = UiUtil.MakeButtonCancel(vm.CancelAddFilesCommand);
         cancelButton.HorizontalAlignment = HorizontalAlignment.Center;

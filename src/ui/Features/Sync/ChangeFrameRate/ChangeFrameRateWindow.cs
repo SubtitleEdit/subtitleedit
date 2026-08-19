@@ -10,7 +10,7 @@ public class ChangeFrameRateWindow : Window
     public ChangeFrameRateWindow(ChangeFrameRateViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.General.ChangeFrameRate;
+        Title = UiUtil.MakeWindowTitle(Se.Language.General.ChangeFrameRate);
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         vm.Window = this;

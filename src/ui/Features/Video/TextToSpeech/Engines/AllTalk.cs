@@ -20,6 +20,8 @@ public class AllTalk : ITtsEngine
     public bool HasRegion => false;
     public bool HasModel => false;
     public bool HasKeyFile => false;
+    public bool SupportsVoiceCloning => false;
+    public bool SupportsPerLineVoiceCloning => false;
 
     private bool _isInstalled;
     public async Task<bool> IsInstalled(string? region)
@@ -175,7 +177,7 @@ public class AllTalk : ITtsEngine
             return new TtsResult { Text = text, FileName = string.Empty, Error = true, ErrorMessage = error };
         }
 
-        var outputFileName = Path.Combine(GetSetAllTalkFolder(), Guid.NewGuid() + ".wav");
+        var outputFileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetAllTalkFolder), Guid.NewGuid() + ".wav");
         File.Move(allTalkFileNameOutputFileName, outputFileName);
 
         return new TtsResult { FileName = outputFileName, Text = text };

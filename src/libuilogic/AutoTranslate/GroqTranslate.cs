@@ -30,16 +30,11 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         public static string[] Models => new[]
         {
             // High-Performance / Frontier Multilingual
-            "llama-3.3-70b-versatile",                      // Proven high-reliability translator (Production)
             "openai/gpt-oss-120b",                          // Extreme reasoning & nuance (Production)
 
             // Medium / Efficient Multilingual
             "openai/gpt-oss-20b",                           // High-speed reasoning model (Production)
-            "qwen/qwen3-32b",                               // Exceptional for Asian & European languages (Preview)
-            "meta-llama/llama-4-scout-17b-16e-instruct",    // Massive context for long documents (Preview)
-
-            // Lightweight / Fast Translation
-            "llama-3.1-8b-instant",                         // Lowest latency for short strings (Production)
+            "qwen/qwen3.6-27b",                             // Strong multilingual mid-size model (Preview)
 
             // Agentic systems
             "groq/compound",                                // Groq compound system

@@ -348,7 +348,7 @@ public class ModifySelectionRule
                     _cachedRegexOptions = options;
                     try
                     {
-                        _cachedRegex = new Regex(Text, options | RegexOptions.Compiled);
+                        _cachedRegex = new Regex(Text, options | RegexOptions.Compiled, RegexUtils.UserPatternMatchTimeout);
                     }
                     catch
                     {
@@ -356,7 +356,20 @@ public class ModifySelectionRule
                     }
                 }
 
-                return _cachedRegex != null && _cachedRegex.IsMatch(text);
+                if (_cachedRegex == null)
+                {
+                    return false;
+                }
+
+                try
+                {
+                    return _cachedRegex.IsMatch(text);
+                }
+                catch (RegexMatchTimeoutException)
+                {
+                    // Pattern too slow for this line - no match, rather than taking the program down.
+                    return false;
+                }
 
             case RuleType.Odd:
                 return (item.Number % 2) == 1;

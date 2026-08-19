@@ -379,14 +379,17 @@ public class SsaStylesWindow : Window
         return grid;
     }
 
+    /// <summary>
+    /// The style editor for "[V4 Styles]". Underline, strikeout, scale, spacing and angle are
+    /// deliberately absent: a Sub Station Alpha v4 style line has no such fields, so editing them
+    /// here would only have thrown the values away on save (#13734). Use .ass for those.
+    /// </summary>
     private static Border MakeSelectedStyleView(SsaStylesViewModel vm)
     {
         var grid = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
@@ -419,25 +422,7 @@ public class SsaStylesWindow : Window
 
         var checkBoxBold = UiUtil.MakeCheckBox(Se.Language.General.Bold, vm, nameof(vm.CurrentStyle) + "." + nameof(StyleDisplay.Bold));
         var checkBoxItalic = UiUtil.MakeCheckBox(Se.Language.General.Italic, vm, nameof(vm.CurrentStyle) + "." + nameof(StyleDisplay.Italic));
-        var checkBoxUnderline = UiUtil.MakeCheckBox(Se.Language.General.Underline, vm, nameof(vm.CurrentStyle) + "." + nameof(StyleDisplay.Underline));
-        var checkBoxStrikeout = UiUtil.MakeCheckBox(Se.Language.General.Strikeout, vm, nameof(vm.CurrentStyle) + "." + nameof(StyleDisplay.Strikeout));
-        var panelFontStyle = UiUtil.MakeHorizontalPanel(checkBoxBold, checkBoxItalic, checkBoxUnderline, checkBoxStrikeout).WithMarginBottom(10);
-
-        var labelScaleX = UiUtil.MakeLabel(Se.Language.Assa.ScaleX).WithMinWidth(60);
-        var numericUpDownScaleX = UiUtil.MakeNumericUpDownOneDecimal(1, 1000, 130, vm, nameof(vm.CurrentStyle) + "." + nameof(StyleDisplay.ScaleX));
-        numericUpDownScaleX.Increment = 1;
-        var labelScaleY = UiUtil.MakeLabel(Se.Language.Assa.ScaleY).WithMinWidth(60);
-        var numericUpDownScaleY = UiUtil.MakeNumericUpDownOneDecimal(1, 1000, 130, vm, nameof(vm.CurrentStyle) + "." + nameof(StyleDisplay.ScaleY));
-        numericUpDownScaleY.Increment = 1;
-        var panelTransform1 = UiUtil.MakeHorizontalPanel(labelScaleX, numericUpDownScaleX, labelScaleY, numericUpDownScaleY);
-
-        var labelSpacing = UiUtil.MakeLabel(Se.Language.Assa.Spacing).WithMinWidth(60);
-        var numericUpDownSpacing = UiUtil.MakeNumericUpDownOneDecimal(-100, 100, 130, vm, nameof(vm.CurrentStyle) + "." + nameof(StyleDisplay.Spacing));
-        numericUpDownSpacing.Increment = 1;
-        var labelAngle = UiUtil.MakeLabel(Se.Language.Assa.Angle).WithMinWidth(60);
-        var numericUpDownAngle = UiUtil.MakeNumericUpDownOneDecimal(-360, 360, 130, vm, nameof(vm.CurrentStyle) + "." + nameof(StyleDisplay.Angle));
-        numericUpDownAngle.Increment = 1;
-        var panelTransform2 = UiUtil.MakeHorizontalPanel(labelSpacing, numericUpDownSpacing, labelAngle, numericUpDownAngle).WithMarginBottom(10);
+        var panelFontStyle = UiUtil.MakeHorizontalPanel(checkBoxBold, checkBoxItalic).WithMarginBottom(10);
 
         var labelColorPrimary = UiUtil.MakeLabel(Se.Language.Assa.Primary);
         var colorPickerPrimary = MakeStyleColorPickerButton(vm, nameof(StyleDisplay.ColorPrimary));
@@ -467,10 +452,8 @@ public class SsaStylesWindow : Window
         grid.Add(panelName, 1, 0);
         grid.Add(panelFont, 2, 0);
         grid.Add(panelFontStyle, 3, 0);
-        grid.Add(panelTransform1, 4, 0);
-        grid.Add(panelTransform2, 5, 0);
-        grid.Add(panelColors, 6, 0);
-        grid.Add(panelMore, 7, 0);
+        grid.Add(panelColors, 4, 0);
+        grid.Add(panelMore, 5, 0);
 
         return UiUtil.MakeBorderForControl(grid).WithMarginBottom(5);
     }
@@ -674,7 +657,7 @@ public class SsaStylesWindow : Window
             };
             pickerVm.Initialize(SsaStylesViewModel.WithoutAlpha(currentColor));
             var pickerWindow = new ColorPickerWindow(pickerVm);
-            await pickerWindow.ShowDialog(window);
+            await WindowService.ShowModalAsync(window, pickerWindow);
 
             if (pickerVm.OkPressed)
             {

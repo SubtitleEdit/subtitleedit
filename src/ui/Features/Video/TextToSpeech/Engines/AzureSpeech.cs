@@ -20,6 +20,8 @@ public class AzureSpeech : ITtsEngine
     public bool HasRegion => true;
     public bool HasModel => false;
     public bool HasKeyFile => false;
+    public bool SupportsVoiceCloning => false;
+    public bool SupportsPerLineVoiceCloning => false;
 
     public Task<bool> IsInstalled(string? region)
     {
@@ -166,7 +168,7 @@ public class AzureSpeech : ITtsEngine
             return new TtsResult { Text = text, FileName = string.Empty, Error = true };
         }
 
-        var fileName = Path.Combine(GetSetAzureFolder(), Guid.NewGuid() + ".mp3");
+        var fileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetAzureFolder), Guid.NewGuid() + ".mp3");
         await File.WriteAllBytesAsync(fileName, ms.ToArray(), cancellationToken);
         return new TtsResult { Text = text, FileName = fileName };
     }

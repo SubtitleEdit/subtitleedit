@@ -13,15 +13,30 @@ namespace UITests.Logic;
 /// are actually on screen - these tests pin the edge-first behavior and that the target row
 /// is always visible, which is what makes it survive variable row heights.
 /// </summary>
-public class TableViewPageNavigationTests
+public class TableViewPageNavigationTests : IDisposable
 {
-    private static TableView Show(IList<string> items, double windowHeight = 300)
+    // Every window opened by a test is closed again in Dispose: if a test stops early, an
+    // unclosed window would outlive the test and race with the headless session teardown.
+    private readonly List<Window> _windows = new();
+
+    public void Dispose()
+    {
+        foreach (var window in _windows)
+        {
+            window.Close();
+        }
+
+        _windows.Clear();
+    }
+
+    private TableView Show(IList<string> items, double windowHeight = 300)
     {
         var grid = TableViewExtras.MakeTableView(multiSelect: false);
         grid.Columns.Add(new SeTableViewColumn { Binding = new Binding(".") });
         grid.ItemsSource = items;
 
         var window = new Window { Content = grid, Width = 400, Height = windowHeight };
+        _windows.Add(window);
         window.Show();
         Dispatcher.UIThread.RunJobs();
         window.UpdateLayout();

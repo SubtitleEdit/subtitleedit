@@ -4,12 +4,14 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Features.Help.CheckForUpdates;
 using Nikse.SubtitleEdit.Features.Shared.PickLanguage;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -151,6 +153,8 @@ public class SettingsPage : UserControl
             VerticalAlignment = VerticalAlignment.Center,
         };
         Attached.SetIcon(image, section.IconName);
+        // Keep the glyph white on the colored square in the dark theme too (#12717).
+        image.Classes.Add(UiTheme.IconOnAccentClassName);
         var glyph = new Border
         {
             Width = 22,
@@ -272,6 +276,7 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoConvertToUtf8, nameof(_vm.AutoConvertToUtf8)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ForceCrLfOnSave, nameof(_vm.ForceCrLfOnSave)),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoTrimWhiteSpace, nameof(_vm.AutoTrimWhiteSpace)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.RemoveBlankLinesWhenOpening, nameof(_vm.RemoveBlankLinesWhenOpening)),
             new SettingsItem(Se.Language.Options.Settings.DefaultEncoding, () => new ComboBox
             {
                 Width = 200,
@@ -637,11 +642,45 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.AllowSingleLetterShortcutsInTextbox, nameof(_vm.AllowSingleLetterShortcutsInTextbox)),
             MakeCheckboxSetting(Se.Language.Options.Settings.GoToLineNumberSetsVideoPosition, nameof(_vm.GoToLineNumberAlsoSetVideoPosition)),
             MakeCheckboxSetting(Se.Language.Options.Settings.AdjustAllTimesRememberLineSelectionChoice, nameof(_vm.AdjustAllTimesRememberLineSelectionChoice)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.MergeKeepEndTime, nameof(_vm.MergeKeepEndTime)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.MergeKeepEndTimeOnlyAssa, nameof(_vm.MergeKeepEndTimeOnlyAssa),
+                new Binding(nameof(_vm.MergeKeepEndTime)) { Source = _vm }),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoBreakLineEndingEarly, nameof(_vm.AutoBreakLineEndingEarly)),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoBreakCommaBreakEarly, nameof(_vm.AutoBreakCommaBreakEarly)),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoBreakDashEarly, nameof(_vm.AutoBreakDashEarly)),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoBreakUsePixelWidth, nameof(_vm.AutoBreakUsePixelWidth)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.AutoBreakPreferBottomHeavy, nameof(_vm.AutoBreakPreferBottomHeavy)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.AutoBreakPreferBottomHeavy, nameof(_vm.AutoBreakPreferBottomHeavy),
+                new Binding(nameof(_vm.AutoBreakUsePixelWidth)) { Source = _vm }),
+            new SettingsItem(Se.Language.Options.Settings.AutoBreakPreferBottomPercent, () =>
+            {
+                var nud = MakeNumericUpDownInt(nameof(_vm.AutoBreakPreferBottomPercent), 0, 50);
+                // The engine reads the percent only when both pixel width AND prefer-bottom-heavy
+                // are on (TextSplit), so enable it only when editing it can have an effect.
+                nud[!Control.IsEnabledProperty] = new MultiBinding
+                {
+                    Converter = BoolConverters.And,
+                    Bindings =
+                    {
+                        new Binding(nameof(_vm.AutoBreakUsePixelWidth)) { Source = _vm },
+                        new Binding(nameof(_vm.AutoBreakPreferBottomHeavy)) { Source = _vm },
+                    },
+                };
+                return nud;
+            }),
+            new SettingsItem(Se.Language.Options.Settings.UseDoNotBreakAfterList, () => new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Spacing = 10,
+                Children =
+                {
+                    new CheckBox
+                    {
+                        VerticalAlignment = VerticalAlignment.Center,
+                        [!ToggleButton.IsCheckedProperty] = new Binding(nameof(_vm.UseNoLineBreakAfter)) { Source = _vm, Mode = BindingMode.TwoWay },
+                    },
+                    UiUtil.MakeButton(Se.Language.General.Edit, _vm.EditDoNotBreakAfterListCommand),
+                }
+            }),
             new SettingsItem(Se.Language.Options.Settings.SplitOddLinesAction, () => new ComboBox
             {
                 MinWidth = 200,
@@ -764,6 +803,7 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarSaveAs, nameof(_vm.ShowToolbarSaveAs)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarFind, nameof(_vm.ShowToolbarFind)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarReplace, nameof(_vm.ShowToolbarReplace)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarMultipleReplace, nameof(_vm.ShowToolbarMultipleReplace)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarSpellCheck, nameof(_vm.ShowToolbarSpellCheck)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarFixCommonErrors, nameof(_vm.ShowToolbarFixCommonErrors)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarRemoveTextForHi, nameof(_vm.ShowToolbarRemoveTextForHi)),
@@ -779,6 +819,10 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarHelp, nameof(_vm.ShowToolbarHelp)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarEncoding, nameof(_vm.ShowToolbarEncoding)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarFrameRate, nameof(_vm.ShowToolbarFrameRate)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarStyleManager, nameof(_vm.ShowToolbarStyleManager)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarProperties, nameof(_vm.ShowToolbarProperties)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarAttachments, nameof(_vm.ShowToolbarAttachments)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarAssaDraw, nameof(_vm.ShowToolbarAssaDraw)),
         ]));
 
         sections.Add(new SettingsSection(Se.Language.Options.Settings.Network, IconNames.Network, "#6bb84e",
@@ -799,6 +843,26 @@ public class SettingsPage : UserControl
                 return textBox;
             }),
         ]));
+
+        var updateItems = new List<SettingsItem>();
+        if (!UpdateCheckService.IsStoreManagedInstall)
+        {
+            // Store-managed installs (Flatpak) update through the store, so the startup check is hidden there.
+            updateItems.Add(MakeCheckboxSetting(Se.Language.Options.Settings.CheckForUpdatesOnStartup, nameof(_vm.CheckForUpdatesOnStartup)));
+        }
+
+        updateItems.Add(new SettingsItem(Se.Language.Options.Settings.CheckForUpdatesChannel, () => new ComboBox
+        {
+            MinWidth = 200,
+            DataContext = _vm,
+            [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(_vm.UpdateChannels)),
+            [!SelectingItemsControl.SelectedItemProperty] = new Binding(nameof(_vm.SelectedUpdateChannel))
+            {
+                Mode = BindingMode.TwoWay,
+            }
+        }));
+
+        sections.Add(new SettingsSection(Se.Language.Options.Settings.Updates, IconNames.CloudDownload, "#d0a24e", updateItems));
 
         if (OperatingSystem.IsWindows())
         {

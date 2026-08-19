@@ -1,5 +1,4 @@
-﻿using Avalonia.Controls;
-using Avalonia.Data.Converters;
+﻿using Avalonia.Data.Converters;
 using System;
 using System.Globalization;
 
@@ -10,10 +9,10 @@ public class BooleanToGridLengthConverter : IValueConverter
     {
         if (value is bool boolValue)
         {
-            return boolValue ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
+            return boolValue ? ConverterBoxes.StarGridLength : ConverterBoxes.ZeroGridLength;
         }
 
-        return new GridLength(1, GridUnitType.Star);
+        return ConverterBoxes.StarGridLength;
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

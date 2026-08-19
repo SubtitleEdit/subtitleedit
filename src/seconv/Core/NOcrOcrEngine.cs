@@ -10,6 +10,7 @@ namespace SeConv.Core;
 /// </summary>
 internal sealed class NOcrOcrEngine : IOcrEngine
 {
+    private readonly OcrLineHeightTracker _lineHeightTracker = new();
     public string Name => "nocr";
     private readonly NOcrDb _db;
     private readonly NOcrCaseFixer _caseFixer = new();
@@ -42,7 +43,9 @@ internal sealed class NOcrOcrEngine : IOcrEngine
         parent.MakeTwoColor(200);
         parent.CropTop(0, new SKColor(0, 0, 0, 0));
         var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(
-            parent, PixelsAreSpaceDefault, rightToLeft: false, topToBottom: true, minLineHeight: 20, autoHeight: true);
+            parent, PixelsAreSpaceDefault, rightToLeft: false, topToBottom: true,
+            _lineHeightTracker.GetMinLineHeight(), autoHeight: true, _lineHeightTracker.GetAverageLineHeight());
+        _lineHeightTracker.Update(letters);
 
         var matches = new List<NOcrChar>();
         var i = 0;

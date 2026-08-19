@@ -35,6 +35,12 @@ public partial class FontCollectorViewModel : ObservableObject
     [ObservableProperty] private CollectedFont? _selectedCollectedFont;
     [ObservableProperty] private int _selectedTabIndex;
     [ObservableProperty] private Bitmap? _fontPreview;
+    [ObservableProperty] private bool _trimFontsToUsedCharacters;
+
+    partial void OnTrimFontsToUsedCharactersChanged(bool value)
+    {
+        Se.Settings.Assa.FontCollectorTrimFonts = value;
+    }
 
     public Window? Window { get; set; }
 
@@ -55,6 +61,7 @@ public partial class FontCollectorViewModel : ObservableObject
         CollectedFonts = new ObservableCollection<CollectedFont>();
         StatusText = string.Empty;
         _subtitle = new Subtitle();
+        TrimFontsToUsedCharacters = Se.Settings.Assa.FontCollectorTrimFonts;
     }
 
     public void Initialize(Subtitle subtitle)
@@ -562,13 +569,55 @@ public partial class FontCollectorViewModel : ObservableObject
             return;
         }
 
+        // Read (and optionally trim) up front so the confirmation shows the real sizes,
+        // and - when trimming - each font's old -> new size plus the total saving.
+        var usedTextLines = TrimFontsToUsedCharacters ? AssaFontEmbedder.GetUsedTextLines(_subtitle) : null;
         long totalBytes = 0;
+        long savedBytes = 0;
         var fileLines = new List<string>();
+        var fileBytes = new List<(string File, byte[] Bytes)>();
         foreach (var file in files)
         {
-            var length = new FileInfo(file).Length;
-            totalBytes += length;
-            fileLines.Add($"{Path.GetFileName(file)} ({Utilities.FormatBytesToDisplayFileSize(length)})");
+            byte[] bytes;
+            string sizeDisplay;
+            var skipNote = string.Empty;
+            try
+            {
+                bytes = await File.ReadAllBytesAsync(file);
+                sizeDisplay = Utilities.FormatBytesToDisplayFileSize(bytes.Length);
+                if (usedTextLines != null)
+                {
+                    var trimResult = FontTrimmer.Trim(bytes, usedTextLines);
+                    if (trimResult.Trimmed)
+                    {
+                        savedBytes += bytes.Length - trimResult.Bytes.Length;
+                        sizeDisplay += " -> " + Utilities.FormatBytesToDisplayFileSize(trimResult.Bytes.Length);
+                    }
+                    else
+                    {
+                        // Trimming was asked for but not possible (CFF, collection, ...) - say so
+                        // in the confirmation instead of silently listing the full size.
+                        skipNote = " - " + FontTrimmer.GetSkipReasonDisplay(trimResult.SkipReason);
+                    }
+
+                    bytes = trimResult.Bytes;
+                }
+            }
+            catch (Exception exception)
+            {
+                Se.LogError(exception, "Font collector could not read " + file);
+                continue;
+            }
+
+            fileBytes.Add((file, bytes));
+            totalBytes += bytes.Length;
+            fileLines.Add($"{Path.GetFileName(file)} ({sizeDisplay}){skipNote}");
+        }
+
+        if (fileBytes.Count == 0)
+        {
+            await MessageBox.Show(Window, Se.Language.Assa.FontCollectorTitle, Se.Language.Assa.FontCollectorNoFontsToEmbed, MessageBoxButtons.OK);
+            return;
         }
 
         const int maxListedFiles = 12;
@@ -582,10 +631,18 @@ public partial class FontCollectorViewModel : ObservableObject
         var encodedBytes = (long)(totalBytes * 4.0 / 3.0); // the UU-style encoding stores 3 bytes as 4 characters
         var message = string.Format(
             Se.Language.Assa.FontCollectorEmbedXFontsSizeYZPrompt,
-            files.Count,
+            fileBytes.Count,
             Utilities.FormatBytesToDisplayFileSize(totalBytes),
             Utilities.FormatBytesToDisplayFileSize(encodedBytes),
             string.Join(Environment.NewLine, fileLines));
+
+        if (savedBytes > 0)
+        {
+            // Report the saving as the .ass file sees it - same 4/3 encoding factor as above.
+            var savedEncodedBytes = (long)(savedBytes * 4.0 / 3.0);
+            message += Environment.NewLine + Environment.NewLine +
+                       string.Format(Se.Language.Assa.TrimFontsTotalSavingX, Utilities.FormatBytesToDisplayFileSize(savedEncodedBytes));
+        }
 
         var answer = await MessageBox.Show(Window, Se.Language.Assa.FontCollectorTitle, message, MessageBoxButtons.YesNo);
         if (answer != MessageBoxResult.Yes)
@@ -595,11 +652,11 @@ public partial class FontCollectorViewModel : ObservableObject
 
         var footer = _subtitle.Footer;
         var count = 0;
-        foreach (var file in files)
+        foreach (var (file, bytes) in fileBytes)
         {
             try
             {
-                footer = AssaFontEmbedder.AddFontToFooter(footer, file, await File.ReadAllBytesAsync(file));
+                footer = AssaFontEmbedder.AddFontToFooter(footer, file, bytes);
                 count++;
             }
             catch (Exception exception)

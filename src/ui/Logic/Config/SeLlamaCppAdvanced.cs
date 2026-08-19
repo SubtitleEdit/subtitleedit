@@ -21,6 +21,10 @@ public class SeLlamaCppAdvanced
     public int MaxTokens { get; set; } = -1;
     public int ContextSize { get; set; } = 16384;
 
+    // Extra llama-server command-line arguments, appended after SE's own so a repeated flag
+    // (e.g. -ngl) overrides SE's value. Local server mode only (#13830).
+    public string ServerArguments { get; set; } = string.Empty;
+
     public const string FormalityDefault = "Default";
     public const string FormalityFormal = "Formal";
     public const string FormalityInformal = "Informal";

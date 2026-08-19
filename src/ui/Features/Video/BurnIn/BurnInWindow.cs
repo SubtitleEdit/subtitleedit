@@ -406,6 +406,10 @@ public class BurnInWindow : Window
             }
         };
 
+        var labelSpacing = UiUtil.MakeLabel(Se.Language.General.Spacing);
+        var textBoxSpacing = UiUtil.MakeNumericUpDownOneDecimal(-20, 100, 130, vm, nameof(vm.SelectedFontSpacing));
+        textBoxSpacing.ValueChanged += vm.NumericUpDownChanged;
+
         var labelBoxType = UiUtil.MakeLabel(Se.Language.Video.BurnIn.BoxType);
         var comboBoxBoxType = UiUtil.MakeComboBox(vm.FontBoxTypes, vm, nameof(vm.SelectedFontBoxType));
         comboBoxBoxType.SelectionChanged += vm.BoxTypeChanged;
@@ -480,6 +484,7 @@ public class BurnInWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -512,14 +517,17 @@ public class BurnInWindow : Window
         grid.Add(labelShadow, 5, 0);
         grid.Add(panelShadow, 5, 1);
 
-        grid.Add(labelAlignment, 6, 0);
-        grid.Add(comboBoxAlignment, 6, 1);
+        grid.Add(labelSpacing, 6, 0);
+        grid.Add(textBoxSpacing, 6, 1);
 
-        grid.Add(labelMargin, 7, 0);
-        grid.Add(panelMargin, 7, 1);
+        grid.Add(labelAlignment, 7, 0);
+        grid.Add(comboBoxAlignment, 7, 1);
 
-        grid.Add(labelEffect, 8, 0);
-        grid.Add(panelEffect, 8, 1);
+        grid.Add(labelMargin, 8, 0);
+        grid.Add(panelMargin, 8, 1);
+
+        grid.Add(labelEffect, 9, 0);
+        grid.Add(panelEffect, 9, 1);
 
         var panel = new Grid
         {
@@ -545,8 +553,8 @@ public class BurnInWindow : Window
         }.WithBindVisible(vm, nameof(vm.ShowAssaOnlyBox));
         grid.Add(panel, 0, 0, 9, 2);
 
-        grid.Add(labelLogo, 9, 0);
-        grid.Add(panelLogo, 9, 1);
+        grid.Add(labelLogo, 10, 0);
+        grid.Add(panelLogo, 10, 1);
 
         return UiUtil.MakeBorderForControl(grid).WithMarginBottom(5).WithMarginRight(5);
     }
@@ -613,6 +621,7 @@ public class BurnInWindow : Window
 
         var labelVideoExtension = UiUtil.MakeLabel(Se.Language.General.VideoExtension);
         var comboBoxVideoExtension = UiUtil.MakeComboBox(vm.VideoExtensions, vm, nameof(vm.SelectedVideoExtension));
+        comboBoxVideoExtension.SelectionChanged += vm.VideoExtensionChanged;
 
         var grid = new Grid
         {

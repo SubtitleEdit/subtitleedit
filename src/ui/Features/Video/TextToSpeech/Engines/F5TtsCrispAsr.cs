@@ -46,6 +46,8 @@ public class F5TtsCrispAsr : ITtsEngine
     public bool HasRegion => false;
     public bool HasModel => true;
     public bool HasKeyFile => false;
+    public bool SupportsVoiceCloning => true;
+    public bool SupportsPerLineVoiceCloning => false;
 
     // Only one quant on the HF repo at time of integration. ModelKey is still exposed so the
     // engine settings dialog can grow new quants without breaking the saved-settings string.
@@ -376,7 +378,7 @@ public class F5TtsCrispAsr : ITtsEngine
         var modelKey = ResolveModelKey(model);
         await EnsureServerRunningAsync(modelKey, f5Voice.FilePath, refText, cancellationToken);
 
-        var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
+        var outputFileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetFolder), Guid.NewGuid() + ".wav");
 
         var speed = Math.Clamp(Se.Settings.Video.TextToSpeech.F5TtsCrispAsrSpeed, 0.25, 4.0);
         // Deliberately NO `voice` / `ref_text` field: the server rejects absolute paths outright
@@ -561,6 +563,11 @@ public class F5TtsCrispAsr : ITtsEngine
                 CreateNoWindow = true,
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
+                // The server writes UTF-8. Without these the reader decodes it in the OS default
+                // codepage, and non-ASCII text in the captured log - the line being synthesised,
+                // upstream's em dashes - reaches bug reports as mojibake (#13572).
+                StandardOutputEncoding = Encoding.UTF8,
+                StandardErrorEncoding = Encoding.UTF8,
             };
             psi.ArgumentList.Add("--server");
             psi.ArgumentList.Add("--backend");

@@ -23,6 +23,14 @@ finish-args:
   - --device=dri
   # File access (subtitle files are typically in the home directory)
   - --filesystem=home
+  # Mounted drives and network shares (NAS/SMB is a common place for video files).
+  # Direct access avoids the document portal, whose single-file grants strand files
+  # saved with an auto-appended extension as hidden ".xdp-*" temp files (issue #13308)
+  # and add FUSE overhead to video playback.
+  - --filesystem=/mnt
+  - --filesystem=/media
+  - --filesystem=/run/media
+  - --filesystem=xdg-run/gvfs
   # Network (optional online services: translation, TTS, speech-to-text, etc.)
   - --share=network
   # Audio (video playback via mpv)
@@ -196,8 +204,8 @@ modules:
     sources:
       - type: git
         url: https://github.com/FFmpeg/FFmpeg.git
-        tag: n7.1.2
-        commit: 7003a8c4544b780eb0ab5c02ac4ad89d2132f2a2
+        tag: n9.0
+        commit: 5b9252abfe2fda0ccb71ed45cd7a954cc45d2b6f
 
   - name: libXpresent
     buildsystem: autotools

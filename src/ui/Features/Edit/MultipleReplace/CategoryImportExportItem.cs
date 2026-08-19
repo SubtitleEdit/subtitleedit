@@ -105,6 +105,9 @@ public class CategoryImportExportItem
                     Description = rule.Description,
                     IsActive = rule.IsActive,
                     Type = Enum.Parse<MultipleReplaceType>(rule.Type),
+                    // Without the parent link, duplicate / insert / delete / move all silently do
+                    // nothing on a freshly imported rule until the window is reopened.
+                    Parent = categoryNode,
                 };
                 categoryNode.SubNodes?.Add(ruleNode);
             }

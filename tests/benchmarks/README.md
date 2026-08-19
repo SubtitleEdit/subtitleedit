@@ -33,6 +33,13 @@ Reports land in `tests/benchmarks/BenchmarkDotNet.Artifacts/results/` (gitignore
 | `SubtitleImageAdjusterBenchmarks` | The full-frame pixel adjustments the binary-edit dialogs run on every debounced slider tick (brightness/contrast/gamma, alpha, colorize). |
 | `FixCommonErrorsAllowFixBenchmarks` | One apply pass worth of `AllowFix` probes - what every libse fix rule asks once per paragraph during "Apply selected fixes". |
 | `ModifySelectionRuleBenchmarks` | One 250 ms preview-timer tick of the modify-selection window: the selected rule evaluated against every line (regex, line-count and style rules). |
+| `GridCellConverterBenchmarks` | One repaint of a 200-row viewport through the time-code, gap, CPS/WPM, flow-direction and duration-background value converters. |
+| `SyntaxHighlightingConverterBenchmarks` | The same repaint through the syntax highlighting converter - the most expensive per-row work in the grid - in all three formatting modes. |
+| `SmallConverterBenchmarks` | The handful of small converters a row goes through (boolean/null bindings, color swatches, ellipsis, batch convert status). |
+| `BrushCreationBenchmarks` | Why the converters hand out `ImmutableSolidColorBrush`: a `SolidColorBrush` is an AvaloniaObject with a property store, for a color that never changes. |
+| `TimeCodeCellRepaintBenchmarks` | The grid's time-code cells as the app drives them: three cell bindings plus the accessible-name MultiBinding over the same three values. |
+| `WaveformPerFrameTextBenchmarks` | A playback frame zoomed far out, and one with a video loaded whose waveform has not been generated yet. |
+| `ColoredSyntaxHighlightingBenchmarks` | The syntax highlighting converter over rows carrying colours (font tags, ASSA colour overrides), in both formatting modes. |
 
 Benchmarks that model a collection the app gets from Avalonia (e.g. `DataGrid.SelectedItems`)
 reproduce its interface surface rather than substituting a `List<T>` - `SelectedItems` only

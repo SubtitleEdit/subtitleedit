@@ -20,6 +20,8 @@ public class GoogleSpeech : ITtsEngine
     public bool HasRegion => false;
     public bool HasModel => false;
     public bool HasKeyFile => true;
+    public bool SupportsVoiceCloning => false;
+    public bool SupportsPerLineVoiceCloning => false;
 
     public Task<bool> IsInstalled(string? region)
     {
@@ -178,7 +180,7 @@ public class GoogleSpeech : ITtsEngine
             return new TtsResult { Text = text, FileName = string.Empty, Error = true };
         }
 
-        var fileName = Path.Combine(GetSetGoogleFolder(), Guid.NewGuid() + ".mp3");
+        var fileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetGoogleFolder), Guid.NewGuid() + ".mp3");
         await File.WriteAllBytesAsync(fileName, ms.ToArray(), cancellationToken);
         return new TtsResult { Text = text, FileName = fileName };
     }

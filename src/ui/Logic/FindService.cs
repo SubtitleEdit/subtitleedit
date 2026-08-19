@@ -16,6 +16,10 @@ public partial class FindService : IFindService
     public bool CurrentMatchInOriginal { get; set; }
     public bool WholeWord { get; set; }
     public FindMode CurrentFindMode { get; set; } = FindMode.CaseInsensitive;
+    public FindScope CurrentScope { get; set; } = FindScope.TextAndOriginal;
+
+    private bool IncludeText => CurrentScope != FindScope.OriginalOnly;
+    private bool IncludeOriginal => CurrentScope != FindScope.TextOnly;
 
     private List<string> _textLines = new List<string>();
     private List<string>? _originalTextLines;
@@ -25,14 +29,18 @@ public partial class FindService : IFindService
     // ReplaceAll/Count/FindAll call into regex mode once per line; caching the last-built Regex
     // avoids recompiling the same pattern for every line in the subtitle.
     private string? _cachedRegexPattern;
+    private RegexOptions _cachedRegexOptions;
     private Regex? _cachedRegex;
 
-    private Regex GetCachedRegex(string pattern)
+    private Regex GetCachedRegex(string pattern, RegexOptions options = RegexOptions.None)
     {
-        if (_cachedRegex == null || _cachedRegexPattern != pattern)
+        if (_cachedRegex == null || _cachedRegexPattern != pattern || _cachedRegexOptions != options)
         {
-            _cachedRegex = new Regex(pattern);
+            // Timeout so a pattern with catastrophic backtracking cannot hang the UI thread; every
+            // caller below treats RegexMatchTimeoutException like an invalid pattern - no match.
+            _cachedRegex = new Regex(pattern, options, RegexUtils.UserPatternMatchTimeout);
             _cachedRegexPattern = pattern;
+            _cachedRegexOptions = options;
         }
 
         return _cachedRegex;
@@ -131,11 +139,13 @@ public partial class FindService : IFindService
     }
 
     /// <summary>
-    /// Original text of a line, or null when no original subtitle is loaded.
+    /// Original text of a line, or null when no original subtitle is loaded or the current scope
+    /// leaves the original column out. Returning null here is what makes every column-advance
+    /// step treat the original as absent, so the scope needs no further handling in them.
     /// </summary>
     private string? GetOriginalLine(int lineIndex)
     {
-        if (_originalTextLines == null || lineIndex < 0 || lineIndex >= _originalTextLines.Count)
+        if (_originalTextLines == null || !IncludeOriginal || lineIndex < 0 || lineIndex >= _originalTextLines.Count)
         {
             return null;
         }
@@ -210,7 +220,7 @@ public partial class FindService : IFindService
         return CurrentLineNumber;
     }
 
-    public int Count(string searchText, IReadOnlyList<string> textLines, bool wholeWord, FindMode findMode, IReadOnlyList<string>? originalTextLines = null)
+    public int Count(string searchText, IReadOnlyList<string> textLines, bool wholeWord, FindMode findMode, IReadOnlyList<string>? originalTextLines = null, FindScope scope = FindScope.TextAndOriginal)
     {
         if (string.IsNullOrEmpty(searchText) || textLines == null || textLines.Count == 0)
         {
@@ -218,12 +228,15 @@ public partial class FindService : IFindService
         }
 
         var total = 0;
-        foreach (var line in textLines)
+        if (scope != FindScope.OriginalOnly)
         {
-            total += CountMatchesInLine(line, searchText, wholeWord, findMode);
+            foreach (var line in textLines)
+            {
+                total += CountMatchesInLine(line, searchText, wholeWord, findMode);
+            }
         }
 
-        if (originalTextLines != null)
+        if (originalTextLines != null && scope != FindScope.TextOnly)
         {
             foreach (var line in originalTextLines)
             {
@@ -264,17 +277,20 @@ public partial class FindService : IFindService
 
         int totalReplacements = 0;
 
-        for (int lineIndex = 0; lineIndex < _textLines.Count; lineIndex++)
+        if (IncludeText)
         {
-            var replacedText = ReplaceInLine(_textLines[lineIndex], searchText, replaceText);
-            if (replacedText.replaced)
+            for (int lineIndex = 0; lineIndex < _textLines.Count; lineIndex++)
             {
-                _textLines[lineIndex] = replacedText.newText;
-                totalReplacements += replacedText.replacementCount;
+                var replacedText = ReplaceInLine(_textLines[lineIndex], searchText, replaceText);
+                if (replacedText.replaced)
+                {
+                    _textLines[lineIndex] = replacedText.newText;
+                    totalReplacements += replacedText.replacementCount;
+                }
             }
         }
 
-        if (_originalTextLines != null)
+        if (_originalTextLines != null && IncludeOriginal)
         {
             for (int lineIndex = 0; lineIndex < _originalTextLines.Count; lineIndex++)
             {
@@ -348,7 +364,7 @@ public partial class FindService : IFindService
             var first = i == startLineIndex;
             var textIndex = first ? startTextIndex : 0;
 
-            if (!(first && startInOriginal))
+            if (IncludeText && !(first && startInOriginal))
             {
                 var match = FindInLine(_textLines[i], searchText, textIndex);
                 if (match.found)
@@ -396,11 +412,14 @@ public partial class FindService : IFindService
                 }
             }
 
-            var mainTextIndex = first && !startInOriginal ? startTextIndex : _textLines[i].Length - 1;
-            var mainMatch = FindInLineReverse(_textLines[i], searchText, mainTextIndex);
-            if (mainMatch.found)
+            if (IncludeText)
             {
-                return (i, mainMatch.index, mainMatch.foundText, false);
+                var mainTextIndex = first && !startInOriginal ? startTextIndex : _textLines[i].Length - 1;
+                var mainMatch = FindInLineReverse(_textLines[i], searchText, mainTextIndex);
+                if (mainMatch.found)
+                {
+                    return (i, mainMatch.index, mainMatch.foundText, false);
+                }
             }
         }
 
@@ -517,7 +536,7 @@ public partial class FindService : IFindService
                 return (true, newText, totalReplacements);
             }
         }
-        catch (ArgumentException)
+        catch (Exception exception) when (exception is ArgumentException or RegexMatchTimeoutException)
         {
             return (false, line, 0);
         }
@@ -567,7 +586,7 @@ public partial class FindService : IFindService
 
         try
         {
-            var regex = new Regex(pattern, options);
+            var regex = GetCachedRegex(pattern, options);
 
             if (startIndex > 0 && maxReplacements == 1)
             {
@@ -596,7 +615,7 @@ public partial class FindService : IFindService
                 return (newText != line, newText, totalReplacements);
             }
         }
-        catch (ArgumentException)
+        catch (Exception exception) when (exception is ArgumentException or RegexMatchTimeoutException)
         {
             return (false, line, 0);
         }
@@ -613,13 +632,13 @@ public partial class FindService : IFindService
 
             try
             {
-                var match = Regex.Match(searchLine, pattern, options);
+                var match = GetCachedRegex(pattern, options).Match(searchLine);
                 if (match.Success)
                 {
                     return (true, startIndex + match.Index, match.Value);
                 }
             }
-            catch (ArgumentException)
+            catch (Exception exception) when (exception is ArgumentException or RegexMatchTimeoutException)
             {
                 return (false, -1, string.Empty);
             }
@@ -647,14 +666,14 @@ public partial class FindService : IFindService
 
             try
             {
-                var matches = Regex.Matches(searchLine, pattern, options);
+                var matches = GetCachedRegex(pattern, options).Matches(searchLine);
                 if (matches.Count > 0)
                 {
                     var lastMatch = matches[matches.Count - 1];
                     return (true, lastMatch.Index, lastMatch.Value);
                 }
             }
-            catch (ArgumentException)
+            catch (Exception exception) when (exception is ArgumentException or RegexMatchTimeoutException)
             {
                 return (false, -1, string.Empty);
             }
@@ -678,14 +697,14 @@ public partial class FindService : IFindService
             var searchLine = startIndex > 0 ? line.Substring(startIndex) : line;
             var originalLength = searchLine.Length;
             searchLine = NormalizeLineEndingsForRegex(searchLine, out var indexMap);
-            var match = Regex.Match(searchLine, RegexUtils.FixNewLine(searchText));
+            var match = GetCachedRegex(RegexUtils.FixNewLine(searchText)).Match(searchLine);
 
             if (match.Success)
             {
                 return (true, startIndex + MapNormalizedIndex(indexMap, match.Index, originalLength), match.Value);
             }
         }
-        catch (ArgumentException)
+        catch (Exception exception) when (exception is ArgumentException or RegexMatchTimeoutException)
         {
             return (false, -1, string.Empty);
         }
@@ -703,7 +722,7 @@ public partial class FindService : IFindService
 
             // Advance by 1 after each match so overlapping matches are found
             // (e.g. two long lines sharing the \n between them).
-            var regex = new Regex(RegexUtils.FixNewLine(searchText));
+            var regex = GetCachedRegex(RegexUtils.FixNewLine(searchText));
             Match? lastMatch = null;
             var pos = 0;
             while (pos < searchLine.Length)
@@ -719,7 +738,7 @@ public partial class FindService : IFindService
                 return (true, MapNormalizedIndex(indexMap, lastMatch.Index, originalLength), lastMatch.Value);
             }
         }
-        catch (ArgumentException)
+        catch (Exception exception) when (exception is ArgumentException or RegexMatchTimeoutException)
         {
             return (false, -1, string.Empty);
         }
@@ -740,9 +759,9 @@ public partial class FindService : IFindService
                 try
                 {
                     var searchLine = NormalizeLineEndingsForRegex(line);
-                    return Regex.Matches(searchLine, RegexUtils.FixNewLine(searchText)).Count;
+                    return GetCachedRegex(RegexUtils.FixNewLine(searchText)).Matches(searchLine).Count;
                 }
-                catch (ArgumentException)
+                catch (Exception exception) when (exception is ArgumentException or RegexMatchTimeoutException)
                 {
                     return 0;
                 }
@@ -768,13 +787,13 @@ public partial class FindService : IFindService
                 try
                 {
                     var searchLine = NormalizeLineEndingsForRegex(line, out var indexMap);
-                    var regexMatches = Regex.Matches(searchLine, RegexUtils.FixNewLine(searchText));
+                    var regexMatches = GetCachedRegex(RegexUtils.FixNewLine(searchText)).Matches(searchLine);
                     foreach (Match match in regexMatches)
                     {
                         matches.Add(new FindMatch(MapNormalizedIndex(indexMap, match.Index, line.Length), match.Value));
                     }
                 }
-                catch (ArgumentException)
+                catch (Exception exception) when (exception is ArgumentException or RegexMatchTimeoutException)
                 {
                     // Invalid regex pattern
                 }
@@ -792,13 +811,13 @@ public partial class FindService : IFindService
 
                     try
                     {
-                        var regexMatches = Regex.Matches(line, pattern, options);
+                        var regexMatches = GetCachedRegex(pattern, options).Matches(line);
                         foreach (Match match in regexMatches)
                         {
                             matches.Add(new FindMatch(match.Index, match.Value));
                         }
                     }
-                    catch (ArgumentException)
+                    catch (Exception exception) when (exception is ArgumentException or RegexMatchTimeoutException)
                     {
                         // Invalid regex pattern
                     }
@@ -824,8 +843,14 @@ public partial class FindService : IFindService
         return matches;
     }
 
-    private static int MapNormalizedIndex(List<int> indexMap, int normalizedIndex, int originalLength)
+    // A null indexMap means the line had no '\r', i.e. normalization was the identity mapping.
+    private static int MapNormalizedIndex(List<int>? indexMap, int normalizedIndex, int originalLength)
     {
+        if (indexMap == null)
+        {
+            return normalizedIndex < originalLength ? normalizedIndex : originalLength;
+        }
+
         return normalizedIndex < indexMap.Count ? indexMap[normalizedIndex] : originalLength;
     }
 
@@ -856,19 +881,17 @@ public partial class FindService : IFindService
         return normalized.ToString();
     }
 
-    private static string NormalizeLineEndingsForRegex(string line, out List<int> indexMap)
+    private static string NormalizeLineEndingsForRegex(string line, out List<int>? indexMap)
     {
-        indexMap = new List<int>(line.Length);
-
         if (!line.Contains('\r'))
         {
-            for (var i = 0; i < line.Length; i++)
-            {
-                indexMap.Add(i);
-            }
-
+            // The common case: nothing to normalize, so the mapping is the identity - a null
+            // map signals that to MapNormalizedIndex without allocating a per-line List.
+            indexMap = null;
             return line;
         }
+
+        indexMap = new List<int>(line.Length);
 
         var normalized = new StringBuilder(line.Length);
         for (var i = 0; i < line.Length; i++)

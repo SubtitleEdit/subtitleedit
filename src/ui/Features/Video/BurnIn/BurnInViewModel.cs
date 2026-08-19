@@ -45,6 +45,7 @@ public partial class BurnInViewModel : ObservableObject
     [ObservableProperty] private decimal? _selectedFontOutline;
     [ObservableProperty] private string _fontOutlineText;
     [ObservableProperty] private decimal? _selectedFontShadowWidth;
+    [ObservableProperty] private decimal? _selectedFontSpacing;
     [ObservableProperty] private string _fontShadowText;
     [ObservableProperty] private ObservableCollection<FontBoxItem> _fontBoxTypes;
     [ObservableProperty] private FontBoxItem _selectedFontBoxType;
@@ -172,16 +173,8 @@ public partial class BurnInViewModel : ObservableObject
         VideoWidth = 1920;
         VideoHeight = 1080;
 
-        AudioEncodings = new ObservableCollection<string>
-        {
-            "copy",
-            "aac",
-            "ac3",
-            "mp3",
-            "opus",
-            "vorbis",
-        };
-        SelectedAudioEncoding = "copy";
+        AudioEncodings = new ObservableCollection<string>(OutputContainer.GetAudioEncodings(OutputContainer.DefaultExtension));
+        SelectedAudioEncoding = OutputContainer.AudioEncodingCopy;
 
         AudioSampleRates = new ObservableCollection<string>
         {
@@ -212,12 +205,7 @@ public partial class BurnInViewModel : ObservableObject
 
         VideoCrf = new ObservableCollection<string>();
 
-        VideoExtensions = new ObservableCollection<string>
-        {
-            ".mkv",
-            ".mp4",
-            ".mov",
-        };
+        VideoExtensions = new ObservableCollection<string>(OutputContainer.GetExtensions(SelectedVideoEncoding.Codec));
         SelectedVideoExtension = VideoExtensions[0];
 
         JobItems = new ObservableCollection<BurnInJobItem>();
@@ -497,6 +485,10 @@ public partial class BurnInViewModel : ObservableObject
                 jobItem.TotalFrames = (long)Math.Round(jobItem.TotalSeconds * 25.0);
             }
         }
+        // Batch job items survive between Generate clicks, and SetTargetBitRate stores its
+        // computed rate here - stale, it would turn a later quality-based run into a silent
+        // "-b:v <old rate>" encode with the quality flag dropped.
+        jobItem.VideoBitRate = string.Empty;
         jobItem.UseTargetFileSize = UseTargetFileSize;
         // Resolve the per-file target (MB): "match source" derives it from each input file's own
         // size (so a batch of differently-sized videos keeps each output near its source), otherwise
@@ -523,7 +515,7 @@ public partial class BurnInViewModel : ObservableObject
         });
 
         bool result;
-        if (jobItem.UseTargetFileSize)
+        if (jobItem.UseTargetFileSize && !IsVideoToolboxEncoder(SelectedVideoEncoding?.Codec))
         {
             result = await RunTwoPassEncoding(jobItem);
             if (result)
@@ -533,15 +525,46 @@ public partial class BurnInViewModel : ObservableObject
         }
         else
         {
-            result = await RunOnePassEncoding(jobItem);
+            // VideoToolbox accepts -pass but writes an empty stats file, so pass 1 only
+            // doubles the encode time. Hit the target with single-pass average bit rate
+            // instead (#13401).
+            result = !jobItem.UseTargetFileSize || SetTargetBitRate(jobItem);
+
             if (result)
             {
-                _timerGenerate.Start();
+                result = await RunOnePassEncoding(jobItem);
+                if (result)
+                {
+                    _timerGenerate.Start();
+                }
             }
+        }
+
+        if (!result)
+        {
+            // No process and no timer running: nothing would ever consume _doAbort or reset the
+            // generating state, leaving the dialog stuck with a dead Cancel button.
+            jobItem.Status = Se.Language.General.Error;
+            IsGenerating = false;
+            ProgressValue = 0;
         }
     }
 
-    private async Task<bool> RunTwoPassEncoding(BurnInJobItem jobItem)
+    /// <summary>
+    /// VideoToolbox has no working two-pass mode: ffmpeg accepts -pass but the encoder writes
+    /// no statistics, so the analyze pass is pure wasted time. These encodes target a file size
+    /// with a single-pass average bit rate instead (#13401).
+    /// </summary>
+    internal static bool IsVideoToolboxEncoder(string? codec)
+    {
+        return !string.IsNullOrEmpty(codec) && codec.EndsWith("_videotoolbox", StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// Computes the bit rate needed to hit the requested file size and stores it on the job.
+    /// Returns false (and tells the user) when the target is too small to encode.
+    /// </summary>
+    private bool SetTargetBitRate(BurnInJobItem jobItem)
     {
         var bitRate = GetVideoBitRate(jobItem);
         jobItem.VideoBitRate = bitRate.ToString(CultureInfo.InvariantCulture) + "k";
@@ -555,6 +578,16 @@ public partial class BurnInViewModel : ObservableObject
                     $"Bit rate too low: {bitRate}k",
                     MessageBoxButtons.OK);
             });
+            return false;
+        }
+
+        return true;
+    }
+
+    private async Task<bool> RunTwoPassEncoding(BurnInJobItem jobItem)
+    {
+        if (!SetTargetBitRate(jobItem))
+        {
             return false;
         }
 
@@ -701,6 +734,12 @@ public partial class BurnInViewModel : ObservableObject
             cutEnd = $"-t {(int)duration.TotalHours:00}:{duration.Minutes:00}:{duration.Seconds:00}.{duration.Milliseconds:000}";
         }
 
+        // The "save as" dialog can end up with another container than the one the audio encoder
+        // list was built for, so pick an encoder the actual output file can hold.
+        var audioEncoding = OutputContainer.GetAudioEncodingFor(
+            Path.GetExtension(jobItem.OutputVideoFileName),
+            SelectedAudioEncoding);
+
         var ffmpegParameters = FfmpegGenerator.GenerateHardcodedVideoFile(
             jobItem.InputVideoFileName,
             jobItem.AssaSubtitleFileName,
@@ -711,7 +750,7 @@ public partial class BurnInViewModel : ObservableObject
             SelectedVideoPreset ?? string.Empty,
             SelectedVideoPixelFormat?.Codec ?? string.Empty,
             SelectedVideoCrf ?? string.Empty,
-            SelectedAudioEncoding,
+            audioEncoding,
             AudioIsStereo,
             SelectedAudioSampleRate.Replace("Hz", string.Empty).Trim(),
             string.Empty,
@@ -902,6 +941,7 @@ public partial class BurnInViewModel : ObservableObject
         style.Outline = FontOutlineColor.ToSKColor();
         style.OutlineWidth = SelectedFontOutline ?? 0;
         style.ShadowWidth = SelectedFontShadowWidth ?? 0;
+        style.Spacing = SelectedFontSpacing ?? 0;
         style.Alignment = SelectedFontAlignment.Code;
         style.MarginLeft = FontMarginHorizontal ?? 0;
         style.MarginRight = FontMarginHorizontal ?? 0;
@@ -1338,6 +1378,7 @@ public partial class BurnInViewModel : ObservableObject
         FontIsBold = settings.FontBold;
         SelectedFontOutline = settings.OutlineWidth;
         SelectedFontShadowWidth = settings.ShadowWidth;
+        SelectedFontSpacing = settings.NonAssaSpacing;
         SelectedFontName = settings.FontName;
         FontTextColor = settings.NonAssaTextColor.FromHexToColor();
         FontOutlineColor = settings.NonAssaOutlineColor.FromHexToColor();
@@ -1354,7 +1395,9 @@ public partial class BurnInViewModel : ObservableObject
         FontMarginVertical = (int)settings.NonAssaMarginVertical;
         SelectedFontBoxType = FontBoxTypes.FirstOrDefault(p => (int)p.BoxType == settings.NonAssaBoxType) ?? FontBoxTypes[0];
 
-        SelectedVideoEncoding = VideoEncodings.FirstOrDefault(p => p.Codec == settings.Encoding) ?? VideoEncodings[0];
+        SelectedVideoEncoding = VideoEncodings.FirstOrDefault(p => p.Codec == settings.Encoding)
+                                ?? VideoEncodings.FirstOrDefault(p => p.Codec == SeVideoBurnIn.DefaultEncoding)
+                                ?? VideoEncodings[0];
         SelectedVideoPixelFormat = VideoPixelFormats.FirstOrDefault(p => p.Codec == settings.PixelFormat) ?? VideoPixelFormats[0];
         FillPreset(SelectedVideoEncoding.Codec);
         FillCrf(SelectedVideoEncoding.Codec);
@@ -1367,12 +1410,13 @@ public partial class BurnInViewModel : ObservableObject
             SelectedVideoCrf = settings.Crf;
         }
 
-        SelectedAudioEncoding = AudioEncodings.Contains(settings.AudioEncoding) ? settings.AudioEncoding : AudioEncodings[0];
+        // Extension first: it decides which audio encoders the container can take.
+        FillVideoExtensions(SelectedVideoEncoding.Codec, settings.OutputExtension);
+        FillAudioEncodings(SelectedVideoExtension, settings.AudioEncoding);
+
         AudioIsStereo = settings.AudioForceStereo;
         SelectedAudioSampleRate = AudioSampleRates.FirstOrDefault(p => p.Replace("Hz", string.Empty).Trim() == settings.AudioSampleRate) ?? AudioSampleRates[1];
         SelectedAudioBitRate = AudioBitRates.Contains(settings.AudioBitRate) ? settings.AudioBitRate : AudioBitRates[2];
-
-        SelectedVideoExtension = VideoExtensions.Contains(settings.OutputExtension) ? settings.OutputExtension : VideoExtensions[0];
 
         UseTargetFileSize = settings.TargetFileSize;
         TargetFileSize = settings.TargetFileSizeMb;
@@ -1391,6 +1435,7 @@ public partial class BurnInViewModel : ObservableObject
         settings.FontBold = FontIsBold;
         settings.OutlineWidth = SelectedFontOutline ?? 0;
         settings.ShadowWidth = SelectedFontShadowWidth ?? 0;
+        settings.NonAssaSpacing = SelectedFontSpacing ?? 0;
         settings.FontName = SelectedFontName;
         settings.NonAssaTextColor = FontTextColor.FromColorToHex();
         settings.NonAssaOutlineColor = FontOutlineColor.FromColorToHex();
@@ -1433,6 +1478,7 @@ public partial class BurnInViewModel : ObservableObject
 
         var isAssa = _subtitleFormat is { Name: AdvancedSubStationAlpha.NameOfFormat };
         ShowAssaOnlyBox = isAssa;
+        UpdateNonAssaPreview();
     }
 
     [RelayCommand]
@@ -1441,6 +1487,7 @@ public partial class BurnInViewModel : ObservableObject
         IsBatchMode = true;
         IsSingleModeVisible = !string.IsNullOrEmpty(_inputVideoFileName);
         ShowAssaOnlyBox = false;
+        UpdateNonAssaPreview();
     }
 
     [RelayCommand]
@@ -1603,6 +1650,44 @@ public partial class BurnInViewModel : ObservableObject
 
         FillPreset(SelectedVideoEncoding.Codec);
         FillCrf(SelectedVideoEncoding.Codec);
+        FillVideoExtensions(SelectedVideoEncoding.Codec);
+    }
+
+    internal void VideoExtensionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (_loading)
+        {
+            return;
+        }
+
+        FillAudioEncodings(SelectedVideoExtension);
+    }
+
+    /// <summary>
+    /// Keeps the output extension list to the containers the chosen video codec can be muxed into
+    /// (e.g. VP9 can go to WebM but not to MPEG-TS), and follows up with the audio encoders that
+    /// the resulting container accepts.
+    /// </summary>
+    private void FillVideoExtensions(string videoCodec, string? preferredExtension = null)
+    {
+        var wanted = preferredExtension ?? SelectedVideoExtension;
+        var items = OutputContainer.GetExtensions(videoCodec);
+
+        VideoExtensions.Clear();
+        VideoExtensions.AddRange(items);
+        SelectedVideoExtension = !string.IsNullOrEmpty(wanted) && items.Contains(wanted) ? wanted : items[0];
+
+        FillAudioEncodings(SelectedVideoExtension);
+    }
+
+    private void FillAudioEncodings(string extension, string? preferredAudioEncoding = null)
+    {
+        var wanted = OutputContainer.MigrateAudioEncoding(preferredAudioEncoding ?? SelectedAudioEncoding);
+        var items = OutputContainer.GetAudioEncodings(extension);
+
+        AudioEncodings.Clear();
+        AudioEncodings.AddRange(items);
+        SelectedAudioEncoding = !string.IsNullOrEmpty(wanted) && items.Contains(wanted) ? wanted : items[0];
     }
 
     private void FillPreset(string videoCodec)
@@ -1701,7 +1786,12 @@ public partial class BurnInViewModel : ObservableObject
         {
             items = new List<string> { string.Empty };
         }
-        else if (videoCodec == "prores_ks")
+        else if (videoCodec is "h264_videotoolbox" or "hevc_videotoolbox")
+        {
+            // VideoToolbox has no "preset" option at all - passing one only makes ffmpeg warn.
+            items = new List<string> { string.Empty };
+        }
+        else if (videoCodec is "prores_ks" or "prores_videotoolbox")
         {
             items = new List<string>
             {
@@ -1813,6 +1903,23 @@ public partial class BurnInViewModel : ObservableObject
             VideoCrf.AddRange(items);
             SelectedVideoCrf = null;
         }
+        else if (videoCodec is "h264_videotoolbox" or "hevc_videotoolbox")
+        {
+            // VideoToolbox knows no CRF; quality is "-q:v 1-100" and runs the other way round
+            // (higher is better). It also requires Apple silicon - on Intel Macs ffmpeg errors
+            // out with "qscale not available for encoder", so leave it unset by default and let
+            // ffmpeg pick a bitrate.
+            for (var i = 1; i <= 100; i++)
+            {
+                items.Add(i.ToString(CultureInfo.InvariantCulture));
+            }
+
+            VideoCrfText = "Quality";
+            VideoCrfHint = "1=lowest quality, 100=best quality (Apple silicon only)";
+            VideoCrf.Clear();
+            VideoCrf.AddRange(items);
+            SelectedVideoCrf = null;
+        }
         else if (videoCodec.Contains("av1"))
         {
             for (var i = 0; i <= 63; i++)
@@ -1823,7 +1930,7 @@ public partial class BurnInViewModel : ObservableObject
             VideoCrf.AddRange(items);
             SelectedVideoCrf = "30";
         }
-        else if (videoCodec == "prores_ks")
+        else if (videoCodec is "prores_ks" or "prores_videotoolbox")
         {
             items = new List<string>();
             VideoCrf.Clear();
@@ -1889,6 +1996,8 @@ public partial class BurnInViewModel : ObservableObject
         UpdateNonAssaPreview();
     }
 
+    private int _previewRequestId;
+
     private void UpdateNonAssaPreview()
     {
         if (_loading || !string.IsNullOrEmpty(GetValidationError()))
@@ -1896,13 +2005,75 @@ public partial class BurnInViewModel : ObservableObject
             return;
         }
 
-        var text = "This is a test";
-
         if (_subtitleFormat is { Name: AdvancedSubStationAlpha.NameOfFormat } && !IsBatchMode)
         {
             ImagePreview = new SKBitmap(1, 1, true).ToAvaloniaBitmap();
             return;
         }
+
+        // Render the preview with ffmpeg/libass (same engine as the generated video), debounced
+        // as the numeric up/downs fire on every tick. Falls back to the Skia approximation if
+        // ffmpeg is unavailable.
+        var requestId = System.Threading.Interlocked.Increment(ref _previewRequestId);
+        var width = VideoWidth ?? 0;
+        var height = VideoHeight ?? 0;
+        if (width < 16 || height < 16)
+        {
+            width = 1920;
+            height = 1080;
+        }
+
+        Task.Run(async () =>
+        {
+            await Task.Delay(150);
+            if (requestId != _previewRequestId)
+            {
+                return;
+            }
+
+            var previewSubtitle = new Subtitle();
+            previewSubtitle.Paragraphs.Add(new Paragraph("This is a test", 0, 2000));
+            SetStyleForNonAssa(previewSubtitle, width, height);
+
+            SKBitmap? bitmap = null;
+            try
+            {
+                bitmap = NonAssaPreviewRenderer.Render(previewSubtitle, width, height);
+            }
+            catch
+            {
+                // Fall back to the Skia preview below
+            }
+
+            if (requestId != _previewRequestId)
+            {
+                bitmap?.Dispose();
+                return;
+            }
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                if (requestId != _previewRequestId)
+                {
+                    bitmap?.Dispose();
+                    return;
+                }
+
+                if (bitmap != null)
+                {
+                    ImagePreview = bitmap.CropTransparentColors().ToAvaloniaBitmap();
+                }
+                else
+                {
+                    UpdateNonAssaPreviewSkia();
+                }
+            });
+        });
+    }
+
+    private void UpdateNonAssaPreviewSkia()
+    {
+        var text = "This is a test";
 
 
         var fontSize = (float)CalculateFontSize(VideoWidth ?? 0, VideoHeight ?? 0, FontFactor ?? 0);

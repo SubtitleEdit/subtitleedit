@@ -7,6 +7,9 @@
     {
         public class PlainTextImporter
         {
+            private static readonly CharLookup NonLetterChars =
+                CharLookup.Create('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', '.', ',', '-', '>', '/');
+
             private readonly bool _splitAtBlankLines;
             private readonly bool _removeLinesWithoutLetters;
             private readonly int _numberOfLines;
@@ -287,7 +290,7 @@
             public List<string> SplitToFour(string text)
             {
                 var lines = Utilities.AutoBreakLinePrivate(text.Trim(), _singleLineMaxLength, Configuration.Settings.General.MergeLinesShorterThan, _language, true).SplitToLines();
-                var list = new List<string>();
+                var list = new List<string>(lines.Count);
                 foreach (var line in lines)
                 {
                     list.Add(Utilities.AutoBreakLinePrivate(line, _singleLineMaxLength, Configuration.Settings.General.MergeLinesShorterThan, _language, true));
@@ -368,8 +371,7 @@
 
             public static bool ContainsLetters(string line)
             {
-                if (string.IsNullOrWhiteSpace(line
-                    .RemoveChar('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', '.', ',', '-', '>', '/')))
+                if (line.IsOnlyCharsOrWhiteSpace(NonLetterChars))
                 {
                     return false;
                 }

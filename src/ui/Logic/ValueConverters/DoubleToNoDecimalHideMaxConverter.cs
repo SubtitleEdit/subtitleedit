@@ -12,7 +12,8 @@ public class DoubleToNoDecimalHideMaxConverter : IValueConverter
     {
         if (value is double d)
         {
-            if (d == double.MaxValue || d == double.NaN)
+            // NaN never equals anything, itself included - "d == double.NaN" was always false.
+            if (d == double.MaxValue || double.IsNaN(d))
             {
                 return string.Empty;
             }

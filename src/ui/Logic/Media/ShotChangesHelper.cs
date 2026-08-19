@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using System;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -213,6 +214,115 @@ public class ShotChangesHelper
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// The end an "extend to next shot change (or next subtitle)" should produce, or null when the
+    /// line must be left alone.
+    /// <para>
+    /// The command exists to give a line as much reading time as possible without letting it cross a
+    /// cut, which fixes the rules (issue #13811):
+    /// </para>
+    /// <list type="number">
+    /// <item>the target is the <b>first</b> shot change at or after the current end - never a later
+    /// one, or the line would span the cut it was supposed to stop at;</item>
+    /// <item>it lands <paramref name="outCuesGapMs"/> before that cut (the beautify profile's out
+    /// cues gap, so this command, the beautifier and the snap commands share one rule);</item>
+    /// <item>it only ever extends - a target at or before the current end means "already where it
+    /// should be", so nothing moves. Shortening a line is not what the user asked for.</item>
+    /// </list>
+    /// <para>
+    /// The next subtitle's start minus <paramref name="minGapMs"/> caps the result (and is the only
+    /// bound when no cut lies ahead - the "or next subtitle" half of the command), and a result
+    /// longer than <paramref name="maxDurationMs"/> is dropped rather than clamped: a clamped end
+    /// would sit in the middle of a shot, which is the opposite of the point.
+    /// </para>
+    /// </summary>
+    public static double? GetExtendedEndMs(
+        IReadOnlyList<double> shotChanges,
+        double startMs,
+        double endMs,
+        double? nextStartMs,
+        double outCuesGapMs,
+        double minGapMs,
+        double maxDurationMs)
+    {
+        double? newEndMs = null;
+        foreach (var shotChange in shotChanges)
+        {
+            var shotChangeMs = shotChange * 1000.0;
+            if (shotChangeMs >= endMs)
+            {
+                newEndMs = shotChangeMs - outCuesGapMs;
+                break;
+            }
+        }
+
+        if (nextStartMs.HasValue)
+        {
+            var nextStartMinusGapMs = nextStartMs.Value - minGapMs;
+            newEndMs = newEndMs.HasValue ? Math.Min(newEndMs.Value, nextStartMinusGapMs) : nextStartMinusGapMs;
+        }
+
+        if (newEndMs == null || newEndMs.Value <= endMs)
+        {
+            return null;
+        }
+
+        var durationMs = newEndMs.Value - startMs;
+        if (durationMs <= 0 || durationMs > maxDurationMs)
+        {
+            return null;
+        }
+
+        return newEndMs;
+    }
+
+    /// <summary>
+    /// The start an "extend to previous shot change" should produce, or null when the line must be
+    /// left alone - <see cref="GetExtendedEndMs"/> mirrored: the <b>last</b> shot change at or before
+    /// the current start, plus the in cues gap so the line starts after the cut rather than on it,
+    /// and only when that moves the start earlier. The previous subtitle's end plus
+    /// <paramref name="minGapMs"/> is the floor.
+    /// </summary>
+    public static double? GetExtendedStartMs(
+        IReadOnlyList<double> shotChanges,
+        double startMs,
+        double endMs,
+        double? previousEndMs,
+        double inCuesGapMs,
+        double minGapMs,
+        double maxDurationMs)
+    {
+        double? newStartMs = null;
+        for (var i = shotChanges.Count - 1; i >= 0; i--)
+        {
+            var shotChangeMs = shotChanges[i] * 1000.0;
+            if (shotChangeMs <= startMs)
+            {
+                newStartMs = shotChangeMs + inCuesGapMs;
+                break;
+            }
+        }
+
+        if (previousEndMs.HasValue)
+        {
+            var previousEndPlusGapMs = previousEndMs.Value + minGapMs;
+            newStartMs = newStartMs.HasValue ? Math.Max(newStartMs.Value, previousEndPlusGapMs) : previousEndPlusGapMs;
+        }
+
+        if (newStartMs == null || newStartMs.Value >= startMs)
+        {
+            return null;
+        }
+
+        var durationMs = endMs - newStartMs.Value;
+        if (durationMs <= 0 || durationMs > maxDurationMs)
+        {
+            return null;
+        }
+
+        return newStartMs;
     }
 
     public static double? GetClosestShotChange(List<double> shotChanges, TimeCode currentTime)

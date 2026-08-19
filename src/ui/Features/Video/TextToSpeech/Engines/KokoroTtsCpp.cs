@@ -26,6 +26,8 @@ public class KokoroTtsCpp : ITtsEngine
     public bool HasRegion => false;
     public bool HasModel => false;
     public bool HasKeyFile => false;
+    public bool SupportsVoiceCloning => false;
+    public bool SupportsPerLineVoiceCloning => false;
 
     public const string TtsModelFileName     = "kokoro-v1.1-zh.onnx";
     public const string VoicesModelFileName  = "voices-v1.1-zh.bin";
@@ -235,7 +237,7 @@ public class KokoroTtsCpp : ITtsEngine
 
         await EnsureServerRunningAsync(cancellationToken);
 
-        var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
+        var outputFileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetFolder), Guid.NewGuid() + ".wav");
         var inputText = text;
         var voiceName = string.IsNullOrEmpty(kokoroVoice.Voice) ? DefaultVoice : kokoroVoice.Voice;
 
@@ -317,6 +319,11 @@ public class KokoroTtsCpp : ITtsEngine
                 CreateNoWindow = true,
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
+                // The server writes UTF-8. Without these the reader decodes it in the OS default
+                // codepage, and non-ASCII text in the captured log - the line being synthesised,
+                // upstream's em dashes - reaches bug reports as mojibake (#13572).
+                StandardOutputEncoding = Encoding.UTF8,
+                StandardErrorEncoding = Encoding.UTF8,
             };
             psi.ArgumentList.Add("-m");
             psi.ArgumentList.Add(modelPath);

@@ -23,7 +23,7 @@ using Nikse.SubtitleEdit.UiLogic.Media;
 
 namespace Nikse.SubtitleEdit.Features.Tools.FixNetflixErrors;
 
-public partial class FixNetflixErrorsViewModel : ObservableObject
+public partial class FixNetflixErrorsViewModel : ObservableObject, IClosingCleanup
 {
     public class LanguageItem
     {
@@ -58,6 +58,8 @@ public partial class FixNetflixErrorsViewModel : ObservableObject
     [ObservableProperty] private FixNetflixErrorsItem? _selectedFix;
     [ObservableProperty] private string _fixText;
     [ObservableProperty] private bool _fixTextEnabled;
+    [ObservableProperty] private bool _isChildrenProgram;
+    [ObservableProperty] private bool _isSdh;
 
     // New: selectable list of Netflix checks
     [ObservableProperty] private ObservableCollection<NetflixCheckDisplayItem> _checks = new();
@@ -70,6 +72,7 @@ public partial class FixNetflixErrorsViewModel : ObservableObject
     private Subtitle _subtitle;
     private string _videoFileName;
     private readonly Timer _timer;
+    private volatile bool _isClosing;
     private bool _dirty;
     private readonly List<Paragraph> _edited;
 
@@ -122,6 +125,8 @@ public partial class FixNetflixErrorsViewModel : ObservableObject
 
     private void LoadSettings()
     {
+        IsChildrenProgram = Se.Settings.Tools.FixNetflixErrors.IsChildrenProgram;
+        IsSdh = Se.Settings.Tools.FixNetflixErrors.IsSdh;
     }
 
     private void SaveSettings()
@@ -130,6 +135,8 @@ public partial class FixNetflixErrorsViewModel : ObservableObject
             .Where(c => c.IsSelected)
             .Select(c => c.Checker.GetType().Name)
             .ToList();
+        Se.Settings.Tools.FixNetflixErrors.IsChildrenProgram = IsChildrenProgram;
+        Se.Settings.Tools.FixNetflixErrors.IsSdh = IsSdh;
         Se.SaveSettings();
     }
 
@@ -224,6 +231,11 @@ public partial class FixNetflixErrorsViewModel : ObservableObject
 
     private void TimerElapsed(object? sender, ElapsedEventArgs e)
     {
+        if (_isClosing)
+        {
+            return;
+        }
+
         _timer.Stop();
 
         try
@@ -239,7 +251,24 @@ public partial class FixNetflixErrorsViewModel : ObservableObject
             return;
         }
 
-        _timer.Start();
+        // Guard the restart: OnClosingCleanup may have disposed the timer while this handler ran,
+        // and Start() on a disposed timer throws ObjectDisposedException (no longer swallowed on
+        // modern .NET), crashing the app from a thread-pool thread. (#12739)
+        if (!_isClosing)
+        {
+            _timer.Start();
+        }
+    }
+
+    /// <summary>
+    /// Runs on every close path via the central hook in <see cref="UiUtil.InitializeWindow"/>.
+    /// Without it the preview timer kept ticking - and the view model, its subtitle and the closed
+    /// window's fix list stayed alive with it - for the rest of the session, once per dialog open.
+    /// </summary>
+    public void OnClosingCleanup()
+    {
+        _isClosing = true;
+        _timer.StopAndDispose(TimerElapsed);
     }
 
     private void GeneratePreview()
@@ -258,6 +287,9 @@ public partial class FixNetflixErrorsViewModel : ObservableObject
         {
             Language = SelectedLanguage?.Code ?? "en",
             FrameRate = (double)(_mediaInfo?.FramesRate ?? (decimal)Configuration.Settings.General.CurrentFrameRate),
+            VideoFileName = _videoFileName,
+            IsChildrenProgram = IsChildrenProgram,
+            IsSDH = IsSdh,
         };
 
         controller.RunChecks(_subtitle, selectedChecks);
@@ -317,6 +349,16 @@ public partial class FixNetflixErrorsViewModel : ObservableObject
     }
 
     partial void OnSelectedLanguageChanged(LanguageItem? value)
+    {
+        SetDirty();
+    }
+
+    partial void OnIsChildrenProgramChanged(bool value)
+    {
+        SetDirty();
+    }
+
+    partial void OnIsSdhChanged(bool value)
     {
         SetDirty();
     }

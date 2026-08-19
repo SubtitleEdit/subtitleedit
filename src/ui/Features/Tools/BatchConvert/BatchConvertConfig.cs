@@ -48,6 +48,9 @@ public class BatchConvertConfig
     public AutoBalanceLinesSettings AutoBalanceLines { get; set; }
     public SortBySettings SortBy { get; set; }
     public AdjustImageColorsSettings AdjustImageColors { get; set; }
+    public BeautifyTimeCodesSettings2 BeautifyTimeCodes { get; set; }
+    public SnapTimeCodesToFramesSettings SnapTimeCodesToFrames { get; set; }
+    public ConvertColorsToDialogSettings ConvertColorsToDialog { get; set; }
 
     public BatchConvertConfig()
     {
@@ -86,6 +89,9 @@ public class BatchConvertConfig
         AutoBalanceLines = new AutoBalanceLinesSettings();
         SortBy = new SortBySettings();
         AdjustImageColors = new AdjustImageColorsSettings();
+        BeautifyTimeCodes = new BeautifyTimeCodesSettings2();
+        SnapTimeCodesToFrames = new SnapTimeCodesToFramesSettings();
+        ConvertColorsToDialog = new ConvertColorsToDialogSettings();
     }
 
     public bool IsTargetFormatImageBased =>
@@ -93,6 +99,7 @@ public class BatchConvertConfig
         TargetFormatName == BatchConverter.FormatVobSub ||
         TargetFormatName == BatchConverter.FormatDostImage ||
         TargetFormatName == BatchConverter.FormatBdnXml ||
+        TargetFormatName == BatchConverter.FormatBdnXml8Bit ||
         TargetFormatName == BatchConverter.FormatFcpImage ||
         TargetFormatName == BatchConverter.FormatImagesWithTimeCodesInFileName;
 
@@ -321,6 +328,9 @@ public class BatchConvertConfig
     public class AssaEmbedFontsSettings
     {
         public bool IsActive { get; set; }
+
+        /// <summary>Trim each embedded font to the glyphs the subtitle's text uses (see <see cref="FontTrimmer"/>).</summary>
+        public bool TrimFonts { get; set; }
     }
 
     public class MergeShortLinesSettings
@@ -369,6 +379,46 @@ public class BatchConvertConfig
         public SortBySettings()
         {
             SortBy = "Number";
+        }
+    }
+
+    // "2" suffix to avoid clashing with libse's BeautifyTimeCodesSettings (the profile store).
+    public class BeautifyTimeCodesSettings2
+    {
+        public bool IsActive { get; set; }
+        public bool SnapToShotChanges { get; set; }
+        public bool UseFixedFrameRate { get; set; }
+        public double FixedFrameRate { get; set; }
+
+        public BeautifyTimeCodesSettings2()
+        {
+            SnapToShotChanges = true;
+            FixedFrameRate = 23.976;
+        }
+    }
+
+    public class SnapTimeCodesToFramesSettings
+    {
+        public bool IsActive { get; set; }
+        public bool UseFixedFrameRate { get; set; }
+        public double FixedFrameRate { get; set; }
+
+        public SnapTimeCodesToFramesSettings()
+        {
+            FixedFrameRate = 23.976;
+        }
+    }
+
+    public class ConvertColorsToDialogSettings
+    {
+        public bool IsActive { get; set; }
+        public bool RemoveColorTags { get; set; }
+        public bool AddNewLines { get; set; }
+        public bool ReBreakLines { get; set; }
+
+        public ConvertColorsToDialogSettings()
+        {
+            RemoveColorTags = true;
         }
     }
 

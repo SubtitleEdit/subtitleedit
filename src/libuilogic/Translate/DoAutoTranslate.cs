@@ -45,6 +45,20 @@ public class DoAutoTranslate
                 rows.Add(new TranslateRow { Number = p.Number, Show = p.StartTime.TimeSpan, Hide = p.EndTime.TimeSpan, Duration = p.Duration.ToShortDisplayString(), Text = p.Text });
             }
 
+            // The "advanced" local-LLM engines run their own batch loop: numbered batches with a
+            // schema-forced JSON reply and rolling context, so MergeAndSplitHelper's merge/split
+            // heuristics are not needed (and would break the line alignment the schema guarantees).
+            if (translator is IBatchContextTranslator batchTranslator)
+            {
+                while (index < subtitle.Paragraphs.Count && !cancellationToken.IsCancellationRequested)
+                {
+                    index += await batchTranslator.TranslateBatchAsync(rows, index, sourceLanguage.Code, targetLanguage.Code, cancellationToken);
+                    Progress?.Invoke(Math.Min(index, subtitle.Paragraphs.Count), subtitle.Paragraphs.Count);
+                }
+
+                return rows.ToList();
+            }
+
             while (index < subtitle.Paragraphs.Count)
             {
                 if (cancellationToken.IsCancellationRequested)

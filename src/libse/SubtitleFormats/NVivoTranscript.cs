@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (var line in lines)
             {
                 var s = line.Trim();
-                if (RegexTimeCodes1.Match(s).Success)
+                if (RegexTimeCodes1.IsMatch(s))
                 {
                     var timeCode = $"00:{s.Substring(0, 5)}:00";
                     var arr = s.Split('\t');
@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         subtitle.Paragraphs.Add(GetParagraph(timeCode, speaker, text));
                     }
                 }
-                else if (RegexTimeCodes2.Match(s).Success)
+                else if (RegexTimeCodes2.IsMatch(s))
                 {
                     var timeCode = $"{s.Substring(0, 8)}:00";
                     var arr = s.Split('\t');

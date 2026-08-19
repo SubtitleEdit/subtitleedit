@@ -1,4 +1,5 @@
 ﻿using Avalonia.Media;
+using WhisperChoices = Nikse.SubtitleEdit.UiLogic.AudioToText.WhisperChoice;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
 
@@ -6,11 +7,15 @@ public class SeAudioToText
 {
     public bool PostProcessing { get; set; } = true;
 
-    public string WhisperChoice { get; set; } = "WhisperCPP"; //TODO: WhisperEngineCpp.StaticName;
+    // Must be one of the WhisperChoice constants - the engine lookup in SpeechToTextViewModel
+    // matches on ISpeechToTextEngine.Choice/Name, so an unknown value selects no engine at all.
+    public string WhisperChoice { get; set; } = WhisperChoices.Cpp;
 
     public bool WhisperIgnoreVersion { get; set; } = false;
 
     public bool WhisperDeleteTempFiles { get; set; } = true;
+
+    public bool WhisperAddLanguageCodeToFileName { get; set; }
 
     public string? WhisperModel { get; set; } = string.Empty;
 
@@ -41,7 +46,6 @@ public class SeAudioToText
     public string CommandLineParameterPurfviewFasterWhisperXxl { get; set; } = "--standard";
     public string CommandLineParameterOpenAi { get; set; } = string.Empty;
     public string CommandLineParameterQwen3AsrCpp { get; set; } = string.Empty;
-    public string CommandLineParameterChatLlm { get; set; } = string.Empty;
     public string CommandLineParameterCrispAsrCanary { get; set; } = "--max-len 50 --split-on-punct";
     public string CommandLineParameterCrispAsrCohere { get; set; } = "--max-len 50 --split-on-punct";
     public string CommandLineParameterCrispAsrFireRed { get; set; } = "--max-len 50 --split-on-punct";
@@ -60,6 +64,7 @@ public class SeAudioToText
     public string CommandLineParameterCrispAsrMossDiarize { get; set; } = "--max-len 50 --split-on-punct";
     public string CommandLineParameterCrispAsrSenseVoice { get; set; } = "--max-len 50 --split-on-punct";
     public string CommandLineParameterCrispAsrArk { get; set; } = "--max-len 50 --split-on-punct";
+    public string CommandLineParameterCrispAsrVoxtral { get; set; } = "--max-len 50 --split-on-punct";
     public string CrispAsrForcedAligner { get; set; } = "built-in";
 
     public string WhisperExtraSettingsHistory { get; set; } = string.Empty;

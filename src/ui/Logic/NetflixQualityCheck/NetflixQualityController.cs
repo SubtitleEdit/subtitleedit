@@ -117,8 +117,6 @@ public class NetflixQualityController
                 case "ko": // Korean
                 case "zh": // Chinese
                     return 16;
-                case "ru": // Russian
-                    return 39;
                 default:
                     return 42;
             }
@@ -140,7 +138,7 @@ public class NetflixQualityController
                     return DialogType.DashBothLinesWithSpace;
                 case "hu": // Hungarian
                     return DialogType.DashBothLinesWithSpace;
-                case "in": // Indonesian
+                case "id": // Indonesian
                     return DialogType.DashBothLinesWithSpace;
                 case "it": // Italian
                     return DialogType.DashBothLinesWithSpace;
@@ -182,23 +180,18 @@ public class NetflixQualityController
     {
         get
         {
-            if (!string.IsNullOrEmpty(Language))
+            switch (Language)
             {
-                if (Language == "ar") // Arabic
-                {
+                case "ar": // Arabic
+                case "he": // Hebrew
+                case "hi": // Hindi
+                case "ko": // Korean
+                case "th": // Thai
+                case "zh": // Chinese
                     return false;
-                }
-                else if (Language == "ko") // Korean
-                {
-                    return false;
-                }
-                else if (Language == "zh") // Chinese
-                {
-                    return false;
-                }
+                default:
+                    return true;
             }
-
-            return true;
         }
     }
 

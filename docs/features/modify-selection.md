@@ -23,7 +23,7 @@ Text rules:
 - **Starts with** — Text starts with the entered string
 - **Ends with** — Text ends with the entered string
 - **Not contains** — Text does not contain the entered string
-- **Regular expression** — Text matches the entered regex (case-insensitive; an invalid pattern matches nothing)
+- **Regular expression** — Text matches the entered regex (case-insensitive; an invalid pattern matches nothing, and one that has not finished with a line after five seconds is given up on for that line)
 - **All uppercase** — Text has letters and none of them are lowercase
 - **Blank lines** — Text is empty or whitespace only
 

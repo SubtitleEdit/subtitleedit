@@ -130,3 +130,16 @@ wins over the menu activation.
 | Ctrl+Alt+Shift+L | Save language file |
 
 > **Note:** Several actions (Bold, Underline, shot-change snapping/extending, green-zone in/out cues, etc.) ship without a default key. Open **Options** → **Shortcuts** to assign them, or use **Import from SE 4.x** to bring over a familiar set.
+
+## Fix Lists in Dialogs
+
+Dialogs that preview their changes in a list of checkboxes — [Remove text for hearing impaired](../features/remove-text-hi.md), [Multiple replace](../features/edit.md#choosing-which-fixes-to-apply) — accept these in the list itself. They are fixed and not part of **Options** → **Shortcuts**.
+
+| Shortcut | Action |
+|----------|--------|
+| Ctrl+A | Select all (tick every row) |
+| Ctrl+D | Select none (untick every row) |
+| Ctrl+Shift+I | Invert selection |
+| Space | Toggle the checkbox of the highlighted rows |
+
+The same three actions sit in the list's right-click menu. In Multiple replace they apply to the fixes preview on the right; the rules tree on the left keeps its own `Ctrl+D` (duplicate rule). Other tools with such a list (Fix common errors, Merge continuation lines, Remove unicode characters, Fix Netflix errors, AI review) put buttons below the list for the same job.

@@ -117,6 +117,12 @@ public class CrispEmbedOcr : IDisposable
                 },
             };
 
+            // DeepSeek-OCR-2's dynamic crop mode (default since CrispEmbed v0.17.5) tiles the
+            // image into multiple views, which helps full-page documents but is 3-6x slower on
+            // subtitle-sized bitmaps with byte-identical output (measured 2026-08-05, EN/ZH/JA/RU
+            // plus a 1920px two-liner). Only the DeepSeek engine reads this variable.
+            _serverProcess.StartInfo.Environment["DS2_CROP_MODE"] = "0";
+
             _serverProcess.OutputDataReceived += (_, e) => CaptureServerOutput(e.Data);
             _serverProcess.ErrorDataReceived += (_, e) => CaptureServerOutput(e.Data);
             _serverProcess.Start();
@@ -211,7 +217,7 @@ public class CrispEmbedOcr : IDisposable
                     ? textElement.GetString() ?? string.Empty
                     : string.Empty;
 
-            return resultText.Replace("\r\n", "\n").Replace("\n", Environment.NewLine).Trim();
+            return NormalizeServerText(resultText);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
@@ -225,6 +231,15 @@ public class CrispEmbedOcr : IDisposable
         }
         catch (Exception ex)
         {
+            // Record it so the caller can tell a real failure apart from a textless image: the
+            // OCR loops fail fast on a non-empty Error and otherwise grind through the whole
+            // video only to report "no subtitles found". A non-success HTTP status has already
+            // stored the (more informative) response body in Error.
+            if (string.IsNullOrEmpty(Error))
+            {
+                Error = ex.Message;
+            }
+
             SeLogger.Error(ex, "Error calling CrispEmbed for OCR");
             return string.Empty;
         }
@@ -242,6 +257,22 @@ public class CrispEmbedOcr : IDisposable
     }
 
     /// <summary>
+    /// Normalizes a VLM OCR result to platform newlines with per-line trimming. The document
+    /// models reproduce a centered second line's indentation as literal leading spaces, which
+    /// are never meaningful in a subtitle.
+    /// </summary>
+    internal static string NormalizeServerText(string text)
+    {
+        var lines = text.Replace("\r\n", "\n").Split('\n');
+        for (var i = 0; i < lines.Length; i++)
+        {
+            lines[i] = lines[i].Trim();
+        }
+
+        return string.Join(Environment.NewLine, lines).Trim();
+    }
+
+    /// <summary>
     /// Runs one crispembed CLI invocation for the PP-OCRv6 pipeline and returns the recognized
     /// text. --json keeps the result on a single line ("full_text" with "\n" between detected
     /// regions), which is unambiguous next to the progress lines the CLI writes to stdout.
@@ -249,7 +280,7 @@ public class CrispEmbedOcr : IDisposable
     private async Task<string> OcrViaCliPipeline(string imageFileName, CancellationToken cancellationToken)
     {
         var arguments = $"--ocr-pipeline \"{imageFileName}\" --ocr-engine ppocrv6 " +
-                        $"--ocr-det \"{_cliDetectorModel}\" --ocr-rec \"{_cliRecognizerModel}\" --json";
+                        $"--ocr-det \"{_cliDetectorModel}\" --ocr-rec \"{_cliRecognizerModel}\" -t 4 --json";
 
         using var process = new Process
         {
@@ -263,6 +294,16 @@ public class CrispEmbedOcr : IDisposable
                 WorkingDirectory = Path.GetDirectoryName(_cliExecutable),
             },
         };
+
+        // v0.17.7's n_threads audit made the PP-OCRv6 detector honor the CLI's -t 1 default where
+        // it previously ran at ggml's 4-thread default, costing ~18% wall clock on the scalar
+        // (Metal/CPU) path. v0.17.8 fixed both sides (min(4, cores) thread default, recognizer mk
+        // kernel default-on), but IsEngineInstalled() is a presence check - a lingering v0.17.7
+        // binary is never re-downloaded - so "-t 4" and the env gate stay to keep those installs
+        // fast. Both are no-ops on v0.17.8 by design: an explicit -t wins over the fixed default,
+        // and the env matches the new recognizer default. Diagnosed in CrispStrobe/CrispEmbed#45
+        // (2026-08-09); output is byte-identical in every arm.
+        process.StartInfo.Environment["CRISPEMBED_CONV2D_MK"] = "1";
 
         process.Start();
 
@@ -464,8 +505,10 @@ public class CrispEmbedOcr : IDisposable
 
     /// <summary>
     /// Plain-language help for the exit codes the dynamic loader and the shell use on Unix, which
-    /// a user cannot be expected to decode. 127 is the common one: the CrispEmbed CPU builds for
-    /// Linux link against OpenBLAS but do not ship it (see SubtitleEdit issue #13205).
+    /// a user cannot be expected to decode. 127 means a shared library could not be loaded.
+    /// The original cause (issue #13205) was an unshipped OpenBLAS dependency, fixed upstream in
+    /// CrispEmbed v0.17.5; what remains is typically a glibc too old for the pinned build, so the
+    /// hint no longer names a specific package to install.
     /// </summary>
     internal static string GetExitCodeHint(int exitCode)
     {
@@ -478,9 +521,11 @@ public class CrispEmbedOcr : IDisposable
         {
             127 => "Exit code 127 means a shared library the CrispEmbed binaries depend on could not be loaded." +
                    Environment.NewLine +
-                   "The Linux CrispEmbed builds need OpenBLAS, which they do not ship: try installing it" +
+                   "This is usually a system C library (glibc) older than the one the CrispEmbed build needs;" +
                    Environment.NewLine +
-                   "(\"sudo apt install libopenblas0\", \"sudo pacman -S openblas\", or your distro's equivalent).",
+                   "the CUDA builds in particular require a newer glibc than the CPU builds." +
+                   Environment.NewLine +
+                   "Run \"ldd\" on the CrispEmbed binary to see which library is missing.",
             126 => "Exit code 126 means the CrispEmbed binary could not be executed - it may be missing the" +
                    Environment.NewLine +
                    "executable permission, or be blocked by the system.",

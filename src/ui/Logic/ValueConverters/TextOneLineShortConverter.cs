@@ -30,13 +30,10 @@ public class TextOneLineShortConverter : IValueConverter
 
         // Try to cut at the last space before maxLength
         var lastSpace = str.LastIndexOf(' ', maxLength);
-        if (lastSpace > 0)
-        {
-            return str[..lastSpace] + "...";
-        }
+        var cut = lastSpace > 0 ? lastSpace : maxLength;
 
-        // Fallback: hard cut
-        return str[..maxLength] + "...";
+        // One allocation instead of a substring that is immediately concatenated away
+        return string.Concat(str.AsSpan(0, cut), "...");
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

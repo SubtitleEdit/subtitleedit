@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
     public class ChatGptTranslate : IAutoTranslator, IDisposable
     {
         private static readonly Regex UnicodeRegex = new Regex(@"\\u([0-9a-fA-F]{4})", RegexOptions.Compiled);
+        private static readonly Regex PreambleRegex = new Regex(@"^(Here is|Here's) [a-zA-Z ,]+:", RegexOptions.Compiled);
 
         private HttpClient _httpClient = null!;
 
@@ -40,7 +41,6 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             "gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna",
             "gpt-5.5",
             "gpt-5.4", "gpt-5.4-mini", "gpt-5.4-nano",
-            "gpt-5.3-chat",
             "gpt-5.2",
             "gpt-5.1",
             "gpt-5", "gpt-5-mini", "gpt-5-nano",
@@ -62,8 +62,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                 translation = translation.Remove(indexOfStartThink, indexOfEndThink - indexOfStartThink + 8).Trim();
             }
 
-            var regex = new Regex(@"^(Here is|Here's) [a-zA-Z ,]+:");
-            var match = regex.Match(translation);
+            var match = PreambleRegex.Match(translation);
             if (match.Success)
             {
                 var result = translation.Remove(match.Index, match.Value.Length);

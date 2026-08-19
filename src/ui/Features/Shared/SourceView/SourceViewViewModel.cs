@@ -14,6 +14,7 @@ using Nikse.SubtitleEdit.Features.Shared.TextBoxUtils;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -220,7 +221,10 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
 
         var document = _editor.Document;
         var position = document.GetPosition(_editor.CaretOffset);
-        LineAndColumnInfo = string.Format(Se.Language.General.LineXColumnY, position.Line + 1, position.Column + 1);
+        LineAndColumnInfo = string.Format(
+            Se.Language.General.LineXColumnY,
+            Grouped(position.Line + 1),
+            Grouped(position.Column + 1));
 
         var selectionLength = _editor.SelectionLength;
         if (selectionLength == 0)
@@ -233,9 +237,15 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
         var lastLine = document.GetPosition(_editor.SelectionStart + selectionLength).Line;
         SelectionInfo = string.Format(
             Se.Language.SourceView.SelectedXCharactersYLines,
-            selectionLength,
-            lastLine - firstLine + 1);
+            Grouped(selectionLength),
+            Grouped(lastLine - firstLine + 1));
     }
+
+    /// <summary>
+    /// A source file runs to tens of thousands of lines and characters, so the status line counts
+    /// are only readable with thousand separators.
+    /// </summary>
+    private static string Grouped(int value) => value.ToString("#,##0", CultureInfo.CurrentCulture);
 
     private void ValidationTimerTick(object? sender, EventArgs e)
     {
@@ -260,7 +270,7 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
         if (source.Length > MaxValidationTextLength)
         {
             IsValidationError = false;
-            ValidationInfo = string.Format(Se.Language.SourceView.XLinesYSubtitles, lineCount, "?");
+            ValidationInfo = string.Format(Se.Language.SourceView.XLinesYSubtitles, Grouped(lineCount), "?");
             return;
         }
 
@@ -293,8 +303,12 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
         var errorCount = _subtitleFormat.ErrorCount;
         IsValidationError = errorCount > 0;
         ValidationInfo = errorCount > 0
-            ? string.Format(Se.Language.SourceView.XLinesYSubtitlesZErrors, lineCount, subtitle.Paragraphs.Count, errorCount)
-            : string.Format(Se.Language.SourceView.XLinesYSubtitles, lineCount, subtitle.Paragraphs.Count);
+            ? string.Format(
+                Se.Language.SourceView.XLinesYSubtitlesZErrors,
+                Grouped(lineCount),
+                Grouped(subtitle.Paragraphs.Count),
+                Grouped(errorCount))
+            : string.Format(Se.Language.SourceView.XLinesYSubtitles, Grouped(lineCount), Grouped(subtitle.Paragraphs.Count));
     }
 
     // ----------------------------------------------------------------------------------------
@@ -362,13 +376,23 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
         var options = MatchCase ? RegexOptions.None : RegexOptions.IgnoreCase;
         try
         {
-            return new Regex(pattern, options);
+            // Timeout so a pattern with catastrophic backtracking cannot hang the UI thread the
+            // search runs on; the three callers report the timeout as "no match" - see
+            // ReportRegexTooSlow.
+            return new Regex(pattern, options, RegexUtils.UserPatternMatchTimeout);
         }
         catch (ArgumentException)
         {
             FindStatus = Se.Language.SourceView.InvalidRegularExpression;
             return null;
         }
+    }
+
+    private void ReportRegexTooSlow()
+    {
+        FindStatus = string.Format(
+            Se.Language.SourceView.RegularExpressionTooSlowX,
+            RegexUtils.UserPatternMatchTimeout.TotalSeconds);
     }
 
     [RelayCommand]
@@ -412,9 +436,18 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
             searchFrom++;
         }
 
-        var match = forward
-            ? FindForward(regex, text, searchFrom)
-            : FindBackward(regex, text, _editor.SelectionStart);
+        Match? match;
+        try
+        {
+            match = forward
+                ? FindForward(regex, text, searchFrom)
+                : FindBackward(regex, text, _editor.SelectionStart);
+        }
+        catch (RegexMatchTimeoutException)
+        {
+            ReportRegexTooSlow();
+            return false;
+        }
 
         if (match == null)
         {
@@ -486,15 +519,23 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
         if (_editor.SelectionLength > 0)
         {
             var selected = _editor.SelectedText;
-            var match = regex.Match(selected);
-            if (match.Success && match.Index == 0 && match.Length == selected.Length)
+            try
             {
-                var replacement = UseRegularExpression
-                    ? match.Result(ReplaceText ?? string.Empty)
-                    : ReplaceText ?? string.Empty;
+                var match = regex.Match(selected);
+                if (match.Success && match.Index == 0 && match.Length == selected.Length)
+                {
+                    var replacement = UseRegularExpression
+                        ? match.Result(ReplaceText ?? string.Empty)
+                        : ReplaceText ?? string.Empty;
 
-                _editor.InsertText(replacement);
-                _editor.Select(_editor.CaretOffset, 0);
+                    _editor.InsertText(replacement);
+                    _editor.Select(_editor.CaretOffset, 0);
+                }
+            }
+            catch (RegexMatchTimeoutException)
+            {
+                ReportRegexTooSlow();
+                return;
             }
         }
 
@@ -516,22 +557,36 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
         }
 
         var text = _editor.Text ?? string.Empty;
-        var count = regex.Count(text);
-        if (count == 0)
+        int count;
+        string replacedText;
+        try
         {
-            FindStatus = string.Format(Se.Language.General.XNotFound, SearchText);
+            count = regex.Count(text);
+            if (count == 0)
+            {
+                FindStatus = string.Format(Se.Language.General.XNotFound, SearchText);
+                return;
+            }
+
+            var replacement = UseRegularExpression
+                ? ReplaceText ?? string.Empty
+                : (ReplaceText ?? string.Empty).Replace("$", "$$"); // a literal replacement stays literal
+
+            replacedText = regex.Replace(text, replacement);
+        }
+        catch (RegexMatchTimeoutException)
+        {
+            // Nothing is written: a half-applied replace-all over the whole document would be
+            // worse than none at all.
+            ReportRegexTooSlow();
             return;
         }
-
-        var replacement = UseRegularExpression
-            ? ReplaceText ?? string.Empty
-            : (ReplaceText ?? string.Empty).Replace("$", "$$"); // a literal replacement stays literal
 
         var caretBefore = _editor.CaretOffset;
 
         // One edit for the whole document: one undo step, and the text never goes around the undo
         // stack the way assigning Text would.
-        _editor.ReplaceAllText(regex.Replace(text, replacement));
+        _editor.ReplaceAllText(replacedText);
 
         _editor.Select(Math.Min(caretBefore, _editor.Document.TextLength), 0);
         _editor.BringCaretIntoView();
@@ -691,6 +746,14 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
             ? (e.KeyModifiers & KeyModifiers.Meta) != 0
             : (e.KeyModifiers & KeyModifiers.Control) != 0;
         var shift = (e.KeyModifiers & KeyModifiers.Shift) != 0;
+
+        // Help is user-configurable, so it cannot be a case in the switch below.
+        if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/source-view");
+            return;
+        }
 
         switch (e.Key)
         {

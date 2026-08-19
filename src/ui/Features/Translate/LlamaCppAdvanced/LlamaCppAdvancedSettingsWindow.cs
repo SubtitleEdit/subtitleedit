@@ -94,7 +94,20 @@ public class LlamaCppAdvancedSettingsWindow : Window
         var promptBox = MakeMultilineTextBox(vm, nameof(vm.Prompt), 56);
         promptBox.PlaceholderText = LlamaCppAdvancedProtocol.DefaultPrompt;
         SetHint(promptBox, Se.Language.Translate.CustomPromptHint);
-        AddRow(grid, 2, Se.Language.Translate.PromptText, promptBox);
+        // The prompt label carries the reset button, so the editor column keeps its full width.
+        var promptLabel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 5,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children =
+            {
+                MakeSmallLabel(Se.Language.Translate.PromptText),
+                UiUtil.MakeButton(vm.ResetPromptCommand, IconNames.Restore, Se.Language.Translate.ResetPromptToDefault),
+            },
+        };
+        grid.Add(promptLabel, 2, 0);
+        grid.Add(promptBox, 2, 1);
 
         AddRow(grid, 3, Se.Language.Translate.PreviousLinesAsContext,
             UiUtil.MakeNumericUpDownInt(0, 50, 12, 120, vm, nameof(vm.HistoryPairs)));
@@ -133,7 +146,7 @@ public class LlamaCppAdvancedSettingsWindow : Window
             ColumnSpacing = 12,
             RowSpacing = 10,
         };
-        for (var i = 0; i < 5; i++)
+        for (var i = 0; i < 6; i++)
         {
             grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
         }
@@ -167,6 +180,15 @@ public class LlamaCppAdvancedSettingsWindow : Window
         grid.Add(MakeSmallLabel(Se.Language.Translate.ServerContextSizeTokens), 4, 0);
         grid.Add(contextSize, 4, 1);
         Grid.SetColumnSpan(contextSize, 3);
+
+        // Free-form llama-server arguments for the SE-managed local server (#13830) - lets users
+        // tune flags SE does not curate (e.g. partial GPU offload on a too-small card).
+        var serverArguments = UiUtil.MakeTextBox(280, vm, nameof(vm.ServerArguments))
+            .WithAccessibleName(Se.Language.Translate.ExtraServerParameters);
+        SetHint(serverArguments, Se.Language.Translate.ExtraServerParametersHint);
+        grid.Add(MakeSmallLabel(Se.Language.Translate.ExtraServerParameters), 5, 0);
+        grid.Add(serverArguments, 5, 1);
+        Grid.SetColumnSpan(serverArguments, 3);
 
         return grid;
     }

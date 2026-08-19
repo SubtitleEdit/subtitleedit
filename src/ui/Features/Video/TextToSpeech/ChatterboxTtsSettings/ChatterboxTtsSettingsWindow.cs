@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
+using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
@@ -102,6 +103,7 @@ public class ChatterboxTtsSettingsWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnSpacing = 12,
             RowSpacing = 10,
@@ -116,13 +118,10 @@ public class ChatterboxTtsSettingsWindow : Window
         enginePanel.Children.Add(engineButton);
         grid.Add(enginePanel, 0, 1);
 
-        grid.Add(MakeLabel(Se.Language.Video.BaseModel), 1, 0);
-        grid.Add(MakeStatusPanel(nameof(vm.BaseModelBrush), nameof(vm.BaseModelLabel)), 1, 1);
+        grid.Add(MakeLabel(Se.Language.General.Models), 1, 0);
+        grid.Add(MakeModelList(vm), 1, 1);
 
-        grid.Add(MakeLabel(Se.Language.Video.TurboModel), 2, 0);
-        grid.Add(MakeStatusPanel(nameof(vm.TurboModelBrush), nameof(vm.TurboModelLabel)), 2, 1);
-
-        grid.Add(MakeLabel(Se.Language.General.InstallFolder), 3, 0);
+        grid.Add(MakeLabel(Se.Language.General.InstallFolder), 2, 0);
         var folderText = new TextBox
         {
             IsReadOnly = true,
@@ -136,6 +135,25 @@ public class ChatterboxTtsSettingsWindow : Window
         };
         grid.Add(folderText, 3, 1);
 
+        // Language spoken in imported reference WAVs — sent as `source_lang` so cross-lingual
+        // cloning engages when the target language differs. Chatterbox clones from the WAV alone
+        // and never asks for a transcript, so there is normally nothing to detect this from.
+        grid.Add(MakeLabel("Reference language"), 4, 0);
+        var sourceLanguageCombo = UiUtil.MakeComboBox(vm.SourceLanguages, vm, nameof(vm.SelectedSourceLanguage));
+        var sourceLanguageHint = new TextBlock
+        {
+            Text = "Language spoken in imported reference WAVs (for cross-lingual cloning).",
+            FontSize = 12,
+            Opacity = 0.75,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(8, 0, 0, 0),
+        };
+        grid.Add(new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Children = { sourceLanguageCombo, sourceLanguageHint },
+        }, 4, 1);
+
         return new Border
         {
             Child = grid,
@@ -143,6 +161,46 @@ public class ChatterboxTtsSettingsWindow : Window
             CornerRadius = new CornerRadius(6),
             BorderThickness = new Thickness(1),
             BorderBrush = new SolidColorBrush(Color.FromArgb(0x40, 0x80, 0x80, 0x80)),
+        };
+    }
+
+    /// <summary>
+    /// One row per downloadable model pair: name, install-state dot, and its own download
+    /// button. Built as a list rather than fixed rows because the Base weights ship in three
+    /// quantizations (Q8_0 / F16 / Q4_K) alongside Turbo.
+    /// </summary>
+    private static ItemsControl MakeModelList(ChatterboxTtsSettingsViewModel vm)
+    {
+        return new ItemsControl
+        {
+            ItemsSource = vm.Models,
+            ItemTemplate = new FuncDataTemplate<ChatterboxModelStatusViewModel>((_, _) =>
+            {
+                var name = new TextBlock
+                {
+                    Width = 150,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    [!TextBlock.TextProperty] = new Binding(nameof(ChatterboxModelStatusViewModel.DisplayName)),
+                };
+                var status = MakeStatusPanel(
+                    nameof(ChatterboxModelStatusViewModel.StatusBrush),
+                    nameof(ChatterboxModelStatusViewModel.StatusLabel));
+                status.Width = 110;
+                var button = UiUtil.MakeButton(string.Empty)
+                    .WithIconLeft(IconNames.Download);
+                button.Bind(ContentControl.ContentProperty,
+                    new Binding(nameof(ChatterboxModelStatusViewModel.DownloadButtonText)));
+                button.Bind(Button.CommandProperty,
+                    new Binding(nameof(ChatterboxModelStatusViewModel.DownloadCommand)));
+
+                return new StackPanel
+                {
+                    Orientation = Orientation.Horizontal,
+                    Spacing = 8,
+                    Margin = new Thickness(0, 0, 0, 6),
+                    Children = { name, status, button },
+                };
+            }, true),
         };
     }
 
@@ -171,10 +229,6 @@ public class ChatterboxTtsSettingsWindow : Window
 
     private static Grid BuildActions(ChatterboxTtsSettingsViewModel vm)
     {
-        var redownloadBase = UiUtil.MakeButton(string.Empty, vm.RedownloadBaseModelsCommand).WithIconLeft(IconNames.Download);
-        redownloadBase.Bind(ContentControl.ContentProperty, new Binding(nameof(vm.BaseDownloadButtonText)));
-        var redownloadTurbo = UiUtil.MakeButton(string.Empty, vm.RedownloadTurboModelsCommand).WithIconLeft(IconNames.Download);
-        redownloadTurbo.Bind(ContentControl.ContentProperty, new Binding(nameof(vm.TurboDownloadButtonText)));
         var openFolder = UiUtil.MakeButton(Se.Language.General.OpenContainingFolder, vm.OpenModelsFolderCommand).WithIconLeft(IconNames.FolderOpen);
         var close = UiUtil.MakeButton(Se.Language.General.Close, vm.OkCommand);
 
@@ -182,7 +236,7 @@ public class ChatterboxTtsSettingsWindow : Window
         {
             Orientation = Orientation.Horizontal,
             Spacing = 8,
-            Children = { redownloadBase, redownloadTurbo, openFolder },
+            Children = { openFolder },
         };
 
         var rightPanel = new StackPanel

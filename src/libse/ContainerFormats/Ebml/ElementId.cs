@@ -48,6 +48,7 @@
         ChapterAtom = 0xB6,
         ChapterTimeStart = 0x91,
         ChapterDisplay = 0x80,
-        ChapString = 0x85
+        ChapString = 0x85,
+        EditionFlagDefault = 0x45DB
     }
 }

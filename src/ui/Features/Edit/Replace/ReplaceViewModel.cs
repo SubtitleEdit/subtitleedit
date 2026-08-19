@@ -10,6 +10,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using static Nikse.SubtitleEdit.Logic.FindService;
 
@@ -22,12 +23,26 @@ public partial class ReplaceViewModel : ObservableObject
     [ObservableProperty] private bool _wholeWord;
     [ObservableProperty] private string _replaceText;
     [ObservableProperty] private string _countResult;
-    
+    [ObservableProperty] private ObservableCollection<ReplaceScopeDisplay> _scopes;
+    [ObservableProperty] private ReplaceScopeDisplay _selectedScope;
+
+    /// <summary>
+    /// The scope picker only makes sense with an editable original text column on screen, and is
+    /// hidden otherwise (SE 4 showed it disabled) - see <see cref="EffectiveScope"/>.
+    /// </summary>
+    [ObservableProperty] private bool _isScopeVisible;
+
     [ObservableProperty]
     public partial FindMode FindMode { get; set; }
-    
+
     public Window? Window { get; set; }
     public Action? FocusSearchBox { get; set; }
+
+    /// <summary>
+    /// The scope to apply: the picked one while the picker is shown, otherwise both columns - which
+    /// with no original loaded means the text column, the only one there is.
+    /// </summary>
+    public FindScope EffectiveScope => IsScopeVisible ? SelectedScope.Scope : FindScope.TextAndOriginal;
 
     public bool FocusReplaceOnOpen { get; set; }
     public bool FindNextPressed { get; private set; }
@@ -46,6 +61,8 @@ public partial class ReplaceViewModel : ObservableObject
         SearchText = string.Empty;
         ReplaceText = string.Empty;
         CountResult = string.Empty;
+        Scopes = new ObservableCollection<ReplaceScopeDisplay>(ReplaceScopeDisplay.List());
+        SelectedScope = Scopes[0];
 
         LoadSettings();
     }
@@ -60,6 +77,14 @@ public partial class ReplaceViewModel : ObservableObject
             nameof(FindMode.CaseSensitive) => FindMode.CaseSensitive,
             _ => FindMode.RegularExpression
         };
+
+        var scope = Se.Settings.Edit.Find.ReplaceIn switch
+        {
+            nameof(FindScope.TextOnly) => FindScope.TextOnly,
+            nameof(FindScope.OriginalOnly) => FindScope.OriginalOnly,
+            _ => FindScope.TextAndOriginal
+        };
+        SelectedScope = Scopes.First(p => p.Scope == scope);
     }
 
     [RelayCommand]
@@ -112,7 +137,7 @@ public partial class ReplaceViewModel : ObservableObject
             return;
         }
 
-        var count = _findService.Count(SearchText, _subs, WholeWord, FindMode, _originalSubs);
+        var count = _findService.Count(SearchText, _subs, WholeWord, FindMode, _originalSubs, EffectiveScope);
 
         if (count <= 0)
         {
@@ -132,6 +157,13 @@ public partial class ReplaceViewModel : ObservableObject
     {
         Se.Settings.Edit.Find.FindWholeWords = WholeWord;
         Se.Settings.Edit.Find.FindSearchType = FindMode.ToString();
+
+        // Only remember a scope the user could actually see and pick (SE 4 did the same by
+        // leaving the setting alone while its combo box was disabled).
+        if (IsScopeVisible)
+        {
+            Se.Settings.Edit.Find.ReplaceIn = SelectedScope.Scope.ToString();
+        }
     }
     
     internal void OnKeyDown(object? sender, KeyEventArgs e)
@@ -158,18 +190,20 @@ public partial class ReplaceViewModel : ObservableObject
         }
     }
 
-    internal void RefreshSubtitles(List<string> subs, List<string>? originalSubs = null)
+    internal void RefreshSubtitles(List<string> subs, List<string>? originalSubs = null, bool canEditOriginal = false)
     {
         _subs = subs;
         _originalSubs = originalSubs;
+        IsScopeVisible = canEditOriginal;
     }
 
-    internal void InitializeFindData(IFindService findService, List<string> subs, string selectedText, MainViewModel mainViewModel, List<string>? originalSubs = null)
+    internal void InitializeFindData(IFindService findService, List<string> subs, string selectedText, MainViewModel mainViewModel, List<string>? originalSubs = null, bool canEditOriginal = false)
     {
         _findService = findService;
         _subs = subs;
         _originalSubs = originalSubs;
         _findResult = mainViewModel;
+        IsScopeVisible = canEditOriginal;
         if (!string.IsNullOrEmpty(selectedText))
         {
             SearchText = RegexUtils.EscapeNewLines(selectedText);

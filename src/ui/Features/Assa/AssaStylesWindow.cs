@@ -285,7 +285,7 @@ public class AssaStylesWindow : Window
             Header = Se.Language.General.Category,
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(StyleDisplay.Category)),
+            Binding = new Binding(nameof(StyleDisplay.CategoryDisplay)),
             Width = new GridLength(120),
         });
         dataGrid.Columns.Add(new SeTableViewColumn
@@ -710,7 +710,7 @@ public class AssaStylesWindow : Window
             var pickerVm = new ColorPickerViewModel();
             pickerVm.Initialize(currentColor);
             var pickerWindow = new ColorPickerWindow(pickerVm);
-            await pickerWindow.ShowDialog(window);
+            await WindowService.ShowModalAsync(window, pickerWindow);
 
             if (pickerVm.OkPressed)
             {

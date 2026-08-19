@@ -34,7 +34,13 @@ public partial class StyleDisplay : ObservableObject
     [ObservableProperty] private BorderStyleItem _borderStyle;
     [ObservableProperty] private bool _isSelected;
     [ObservableProperty] private bool _isDefault;
-    [ObservableProperty] private string _category = string.Empty;
+    [ObservableProperty][NotifyPropertyChangedFor(nameof(CategoryDisplay))] private string _category = string.Empty;
+
+    /// <summary>
+    /// The category as shown in the storage styles table. An empty category is the built-in
+    /// "Default" category - the category combo box names it, so the table column must too.
+    /// </summary>
+    public string CategoryDisplay => string.IsNullOrEmpty(Category) ? Se.Language.General.Default : Category;
 
     private string _fontName = string.Empty;
 

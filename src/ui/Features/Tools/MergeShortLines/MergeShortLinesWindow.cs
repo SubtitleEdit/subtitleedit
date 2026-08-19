@@ -16,7 +16,7 @@ public class MergeShortLinesWindow : Window
     public MergeShortLinesWindow(MergeShortLinesViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Tools.MergeShortLines.Title;
+        Title = UiUtil.MakeWindowTitle(Se.Language.Tools.MergeShortLines.Title);
         CanResize = true;
         Width = 900;
         Height = 800;

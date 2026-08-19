@@ -1,4 +1,6 @@
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
+using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 using SeConv.Core;
 using Xunit;
 
@@ -6,6 +8,37 @@ namespace SeConvTests.Core;
 
 public class FixCommonErrorsRunnerTest
 {
+    [Fact]
+    public void Run_MissingPeriod_DoesNotAddPeriodBeforeLoadedName()
+    {
+        var originalFolder = SpellCheckConfig.DictionariesFolder;
+        var folder = Path.Combine(Path.GetTempPath(), "SeConvNamesTest_" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(folder);
+        File.WriteAllText(
+            Path.Combine(folder, "nl_names.xml"),
+            "<?xml version=\"1.0\" encoding=\"utf-8\"?><names><name>Roemenië</name></names>");
+
+        try
+        {
+            SpellCheckConfig.DictionariesFolder = () => folder;
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.Add(new Paragraph("Dit komt omdat", 0, 1000));
+            subtitle.Paragraphs.Add(new Paragraph("Roemenië een bondgenoot is", 2000, 3000));
+
+            FixCommonErrorsRunner.Run(
+                subtitle,
+                new[] { nameof(FixMissingPeriodsAtEndOfLine) },
+                languageOverride: "nl");
+
+            Assert.Equal("Dit komt omdat", subtitle.Paragraphs[0].Text);
+        }
+        finally
+        {
+            SpellCheckConfig.DictionariesFolder = originalFolder;
+            Directory.Delete(folder, true);
+        }
+    }
+
     [Fact]
     public void RunAll_OnEmptySubtitle_NoThrow()
     {

@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.UiLogic.Http;
 using Nikse.SubtitleEdit.UiLogic.Translate;
 using System;
 using System.Collections.Generic;
@@ -31,7 +32,9 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         public void Initialize()
         {
             _httpClient?.Dispose();
-            _httpClient = new HttpClient();
+            // The Ollama url is user-configurable and may point at a remote host, so the SE proxy
+            // settings apply like they do for the other translate engines.
+            _httpClient = HttpClientFactoryWithProxy.CreateHttpClientWithProxy();
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
             _httpClient.BaseAddress = new Uri(AutoTranslateUrl.Complete(Configuration.Settings.Tools.OllamaApiUrl, DefaultUrl));
@@ -62,11 +65,12 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             {
                 Configuration.Settings.Tools.OllamaPrompt = new ToolsSettings().OllamaPrompt;
             }
-            var prompt = string.Format(Configuration.Settings.Tools.OllamaPrompt, sourceLanguageCode, targetLanguageCode);
-            var input = "{ " + modelJson + " \"prompt\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\", \"stream\": false }";
+            var encodedUserMessage = LlmTranslatePrompt.BuildEncodedUserMessage(
+                Configuration.Settings.Tools.OllamaPrompt, sourceLanguageCode, targetLanguageCode, text);
+            var input = "{ " + modelJson + " \"prompt\": \"" + encodedUserMessage + "\", \"stream\": false }";
             if (Configuration.Settings.Tools.OllamaApiUrl.TrimEnd('/').EndsWith("v1/chat/completions"))
             {
-                input = "{ " + modelJson + " \"messages\": [{ \"role\": \"user\", \"content\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
+                input = "{ " + modelJson + " \"messages\": [{ \"role\": \"user\", \"content\": \"" + encodedUserMessage + "\" }]}";
             }
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");

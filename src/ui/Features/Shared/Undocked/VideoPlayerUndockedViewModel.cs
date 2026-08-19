@@ -182,7 +182,9 @@ public partial class VideoPlayerUndockedViewModel : ObservableObject
             Dispatcher.UIThread.Post(async () =>
             {
                 await Task.Delay(100);
-                await videoPlayerControl.Open(_originalVideoFileName);
+                // Open where the docked player was - seeking only afterwards shows the start of
+                // the video for a moment and then jumps (issue #13329).
+                await videoPlayerControl.Open(_originalVideoFileName, _originalPosition);
                 await Task.Delay(100);
                 await videoPlayerControl.WaitForPlayersReadyAsync();
                 await Task.Delay(100);

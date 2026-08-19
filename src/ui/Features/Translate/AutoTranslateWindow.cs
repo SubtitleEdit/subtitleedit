@@ -29,7 +29,7 @@ public class AutoTranslateWindow : Window
     public AutoTranslateWindow(AutoTranslateViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.General.AutoTranslate;
+        Title = UiUtil.MakeWindowTitle(Se.Language.General.AutoTranslate);
         Width = 1050;
         MinWidth = 800;
         Height = 780;
@@ -206,60 +206,10 @@ public class AutoTranslateWindow : Window
         return MakeCard(stack);
     }
 
+    // Shared with batch convert's auto-translate view - see AutoTranslateCombos.
     private static FuncDataTemplate<IAutoTranslator> BuildTranslatorItemTemplate()
     {
-        return StatusDots.ComboItemTemplate<IAutoTranslator>(
-            translator => translator.Name,
-            _ => null,
-            GetTranslatorDotStatus);
-    }
-
-    // Install-status dot for the auto-translate engine combo. Only the two engines that Subtitle
-    // Edit downloads itself - llama.cpp and CrispASR/MADLAD - get a dot; cloud/API translators
-    // (Google, DeepL, ChatGPT, ...) and externally-hosted servers have nothing to install.
-    private static DownloadDotStatus GetTranslatorDotStatus(IAutoTranslator translator)
-    {
-        switch (translator)
-        {
-            case LlamaCppTranslate:
-            case LlamaCppAdvancedTranslate:
-                return StatusDots.From(
-                    LlamaCppServerManager.IsEngineInstalled(),
-                    LlamaCppUpdateStatus.GetEngineUpdateStatus());
-            case CrispAsrMadladTranslate:
-                var crispAsr = new CrispAsrMadlad();
-                if (!crispAsr.IsEngineInstalled())
-                {
-                    return DownloadDotStatus.NotInstalled;
-                }
-
-                return StatusDots.From(true, DownloadHashManager.GetSidecarStatus(crispAsr.GetAndCreateWhisperFolder()));
-            default:
-                return DownloadDotStatus.None;
-        }
-    }
-
-    // A custom *.gguf the user dropped into the models folder has no Url - it is already on disk,
-    // so it shows a green dot and a "custom" size tag rather than a download size.
-    private static string? GetLlamaCppModelSize(LlamaCppModelDisplay model)
-    {
-        if (string.IsNullOrEmpty(model.Model.Url))
-        {
-            var custom = Se.Language.General.Custom;
-            return string.IsNullOrEmpty(model.Model.Size) ? custom : $"{custom}, {model.Model.Size}";
-        }
-
-        return string.IsNullOrEmpty(model.Model.Size) ? null : model.Model.Size;
-    }
-
-    private static DownloadDotStatus GetLlamaCppModelDotStatus(LlamaCppModelDisplay model)
-    {
-        if (string.IsNullOrEmpty(model.Model.Url) || LlamaCppServerManager.IsModelInstalled(model.Model))
-        {
-            return DownloadDotStatus.UpToDate;
-        }
-
-        return DownloadDotStatus.NotInstalled;
+        return AutoTranslateCombos.EngineItemTemplate();
     }
 
     private static Border BuildApiConfigCard(AutoTranslateViewModel vm)
@@ -270,19 +220,11 @@ public class AutoTranslateWindow : Window
         buttonDownloadCrispAsr.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.ButtonDownloadIsVisible)));
 
         var crispAsrModelCombo = UiUtil.MakeComboBox(vm.CrispAsrModels, vm, nameof(vm.SelectedCrispAsrModel), nameof(vm.CrispAsrModelComboIsVisible));
-        crispAsrModelCombo.ItemTemplate = StatusDots.ComboItemTemplate<SpeechToTextModelDisplay>(
-            model => model.Model.Name,
-            model => string.IsNullOrEmpty(model.Model.Size) ? null : model.Model.Size,
-            model => model.Engine.IsModelInstalled(model.Model)
-                ? DownloadDotStatus.UpToDate
-                : DownloadDotStatus.NotInstalled);
+        crispAsrModelCombo.ItemTemplate = AutoTranslateCombos.CrispAsrModelItemTemplate();
         crispAsrModelCombo.WithAccessibleName(Se.Language.General.Model);
 
         var llamaCppModelCombo = UiUtil.MakeComboBox(vm.LlamaCppModels, vm, nameof(vm.SelectedLlamaCppModel), nameof(vm.LlamaCppModelComboIsVisible)).WithWidth(220);
-        llamaCppModelCombo.ItemTemplate = StatusDots.ComboItemTemplate<LlamaCppModelDisplay>(
-            model => model.Model.DisplayName,
-            GetLlamaCppModelSize,
-            GetLlamaCppModelDotStatus);
+        llamaCppModelCombo.ItemTemplate = AutoTranslateCombos.LlamaCppModelItemTemplate();
         llamaCppModelCombo.WithAccessibleName(Se.Language.General.Model);
 
         var buttonDownloadLlamaCpp = UiUtil.MakeButton(string.Empty, vm.DownloadLlamaCppCommand)
@@ -293,6 +235,11 @@ public class AutoTranslateWindow : Window
         var buttonLlamaCppServer = UiUtil.MakeButton(string.Empty, vm.ToggleLlamaCppServerCommand).WithMarginLeft(5);
         buttonLlamaCppServer.Bind(Button.ContentProperty, new Binding(nameof(vm.LlamaCppServerButtonText)));
         buttonLlamaCppServer.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.LlamaCppButtonsAreVisible)));
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            // The local server's live endpoint (random port) - see LlamaCppServerUrlInfo.
+            buttonLlamaCppServer.Bind(ToolTip.TipProperty, new Binding(nameof(vm.LlamaCppServerUrlInfo)));
+        }
 
         var buttonLlamaCppOpenFolder = UiUtil.MakeButton(vm.OpenLlamaCppModelsFolderCommand, IconNames.FolderOpen, Se.Language.General.OpenContainingFolder)
             .WithMarginLeft(5);
@@ -428,7 +375,7 @@ public class AutoTranslateWindow : Window
         tableView.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Text,
-            Binding = new Binding(nameof(TranslateRow.Text)),
+            CellTemplate = TableViewExtras.MakeTextCellTemplate(nameof(TranslateRow.Text)),
             Width = new GridLength(1, GridUnitType.Star),
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
@@ -436,7 +383,7 @@ public class AutoTranslateWindow : Window
         tableView.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Translation,
-            Binding = new Binding(nameof(TranslateRow.TranslatedText)),
+            CellTemplate = TableViewExtras.MakeTextCellTemplate(nameof(TranslateRow.TranslatedText)),
             Width = new GridLength(1, GridUnitType.Star),
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,

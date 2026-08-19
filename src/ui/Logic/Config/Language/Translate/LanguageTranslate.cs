@@ -15,6 +15,7 @@ public class LanguageTranslate
     public string DelayInSecondsBetweenRequests { get; set; }
     public string MaxBytesPerRequest { get; set; }
     public string PromptText { get; set; }
+    public string ResetPromptToDefault { get; set; }
     public string TranslateEachLineSeparately { get; set; }
     public string TranslationError { get; set; }
     public string TranslationFailedMessage { get; set; }
@@ -48,6 +49,9 @@ public class LanguageTranslate
     public string RepeatPenalty { get; set; }
     public string MaxTokensPerReply { get; set; }
     public string ServerContextSizeTokens { get; set; }
+    public string ExtraServerParameters { get; set; }
+    public string ExtraServerParametersHint { get; set; }
+    public string ServerRunningAtX { get; set; }
     public string CustomPromptHint { get; set; }
     public string LlamaCppDownloadEngineAndModelPrompt { get; set; }
     public string LlamaCppDownloadEnginePrompt { get; set; }
@@ -68,6 +72,7 @@ public class LanguageTranslate
         DelayInSecondsBetweenRequests = "Delay in seconds between requests";
         MaxBytesPerRequest = "Max bytes per request";
         PromptText = "Prompt text";
+        ResetPromptToDefault = "Reset prompt to default";
         TranslateEachLineSeparately = "Translate each line separately";
         TranslationError = "Translation error";
         TranslationFailedMessage = "{0} translation failed.";
@@ -101,6 +106,9 @@ public class LanguageTranslate
         RepeatPenalty = "Repeat penalty";
         MaxTokensPerReply = "Max tokens per reply";
         ServerContextSizeTokens = "Server context size (tokens)";
+        ExtraServerParameters = "Extra server parameters";
+        ExtraServerParametersHint = "Additional llama-server command-line arguments, e.g. \"-ngl 30 --no-mmap\" - applied when the local server starts";
+        ServerRunningAtX = "Server running at {0}";
         CustomPromptHint = "Custom instructions ({0} = source language, {1} = target language); empty = built-in prompt";
         LlamaCppDownloadEngineAndModelPrompt = "llama.cpp requires the llama-server engine and a translation model to be downloaded. Download now?";
         LlamaCppDownloadEnginePrompt = "llama.cpp requires the llama-server engine to be downloaded. Download now?";

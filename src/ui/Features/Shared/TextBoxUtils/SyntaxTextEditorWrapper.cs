@@ -74,6 +74,7 @@ public class SyntaxTextEditorWrapper : ITextBoxWrapper
     public Control ContentControl => _contentControl;
 
     public bool IsFocused => _editor.View.IsFocused;
+    public bool IsReadOnly => _editor.IsReadOnly;
 
     public void Cut() => _editor.Cut();
 
@@ -84,6 +85,8 @@ public class SyntaxTextEditorWrapper : ITextBoxWrapper
     public void SelectAll() => _editor.SelectAll();
 
     public void ClearSelection() => _editor.ClearSelection();
+
+    public void DeleteForward() => _editor.View.DeleteForward();
 
     /// <summary>
     /// Source text is always left aligned - centering it would only make the time codes harder to

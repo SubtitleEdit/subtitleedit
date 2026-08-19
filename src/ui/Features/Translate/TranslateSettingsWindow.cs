@@ -54,25 +54,20 @@ public class TranslateSettingsWindow : Window
         });
 
         var labelMaxBytes = UiUtil.MakeTextBlock(Se.Language.Translate.MaxBytesPerRequest);
-        var maxBytesNumericUpDown = new NumericUpDown //TODO: UiUtil.MakeNumericUpDown
-        {
-            Minimum = 0,
-            Maximum = 100_000,
-            Value = 1000,
-            Width = 150,
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Increment = 100,
-            FormatString = "#,###,##0",
-        };
-        maxBytesNumericUpDown.Bind(NumericUpDown.ValueProperty, new Binding
-        {
-            Path = nameof(vm.MaxBytesRequest),
-            Mode = BindingMode.TwoWay,
-            Source = vm,
-        });
+        var maxBytesNumericUpDown = UiUtil.MakeNumericUpDownInt(0, 100_000, 1000, 150, vm, nameof(vm.MaxBytesRequest));
+        maxBytesNumericUpDown.Increment = 100;
+        maxBytesNumericUpDown.FormatString = "#,###,##0";
 
-        var labelPrompt = UiUtil.MakeTextBlock(Se.Language.Translate.PromptText, vm, null, nameof(vm.PromptIsVisible));
+        var labelPrompt = UiUtil.MakeTextBlock(Se.Language.Translate.PromptText);
+        var buttonResetPrompt = UiUtil.MakeButton(vm.ResetPromptCommand, IconNames.Restore, Se.Language.Translate.ResetPromptToDefault);
+        var panelPrompt = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Center,
+            Spacing = 5,
+            Children = { labelPrompt, buttonResetPrompt },
+        }.BindIsVisible(vm, nameof(vm.PromptIsVisible));
+
         var promptTextBox = new TextBox
         {
             AcceptsReturn = true,
@@ -123,10 +118,10 @@ public class TranslateSettingsWindow : Window
         Grid.SetColumn(maxBytesNumericUpDown, 1);
         row++;
 
-        grid.Children.Add(labelPrompt);
-        Grid.SetRow(labelPrompt, row);
-        Grid.SetColumn(labelPrompt, 0);
-        Grid.SetColumnSpan(labelPrompt, 2);
+        grid.Children.Add(panelPrompt);
+        Grid.SetRow(panelPrompt, row);
+        Grid.SetColumn(panelPrompt, 0);
+        Grid.SetColumnSpan(panelPrompt, 2);
         row++;
 
         grid.Children.Add(promptTextBox);

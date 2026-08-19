@@ -64,11 +64,13 @@ public class AdvancedEffectStarWarsScroll : IAdvancedEffectDisplay
                 int yOffset = i * internalLineSpacing;
 
                 // THE TAGS
+                // 105 = 140 x 0.75: the 3-D squash folded into the start scale, since a
+                // second \fscy in the same block would simply override the first
                 string tags =
                     $@"\an5\b1\bord2\blur0.6\1c{swYellow}" +
-                    $@"\frx52\fscy75" +
+                    $@"\frx52" +
                     $@"\fad(1200,0)" +
-                    $@"\fscx140\fscy140" +
+                    $@"\fscx140\fscy105" +
                     $@"\move({centerX},{yStartBase + yOffset},{centerX},{yEndBase + yOffset},0,{(int)travelDurationMs})" +
 
                     // SCALE

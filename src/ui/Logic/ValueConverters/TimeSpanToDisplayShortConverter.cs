@@ -11,25 +11,35 @@ public class TimeSpanToDisplayShortConverter : IValueConverter
 {
     public static readonly TimeSpanToDisplayShortConverter Instance = new();
 
+    // Reused to avoid per-call TimeCode allocations (expected to be used from the UI thread only).
+    private readonly TimeCode _formattingTimeCode = new();
+    private const string ZeroFrameMode = "00.00";
+    private const string ZeroTime = "00,000";
+
+    // The duration of every visible row goes through here twice per repaint - see
+    // TimeCodeDisplayCache.
+    private readonly TimeCodeDisplayCache _cache = new();
+
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
+        var useFrameMode = Se.Settings.General.UseFrameMode;
         if (value is TimeSpan ts)
         {
-            if (Se.Settings.General.UseFrameMode)
+            if (_cache.TryGet(ts.Ticks, out var cached))
             {
-                return new TimeCode(ts).ToShortStringHHMMSSFF();
+                return cached;
             }
 
-            var result = new TimeCode(ts).ToShortString();
-            return result;
-        }
-        
-        if (Se.Settings.General.UseFrameMode)
-        {
-            return "00.00";
+            _formattingTimeCode.TimeSpan = ts;
+            var formatted = useFrameMode
+                ? _formattingTimeCode.ToShortStringHHMMSSFF()
+                : _formattingTimeCode.ToShortString();
+
+            _cache.Set(ts.Ticks, formatted);
+            return formatted;
         }
 
-        return "00,000";
+        return useFrameMode ? ZeroFrameMode : ZeroTime;
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

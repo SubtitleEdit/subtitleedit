@@ -105,6 +105,7 @@ public partial class AutoTranslateViewModel : ObservableObject
     [ObservableProperty] private bool _llamaCppRemoteToggleIsVisible;
     [ObservableProperty] private bool _llamaCppUseRemoteServer;
     [ObservableProperty] private string _llamaCppServerButtonText = Se.Language.General.StartServer;
+    [ObservableProperty] private string? _llamaCppServerUrlInfo;
     [ObservableProperty] private string _llamaCppDownloadButtonText = string.Empty;
     [ObservableProperty] private string _crispAsrDownloadButtonText = string.Empty;
 
@@ -220,6 +221,10 @@ public partial class AutoTranslateViewModel : ObservableObject
         Configuration.Settings.Tools.LmStudioApiUrl = Se.Settings.AutoTranslate.LmStudioApiUrl;
         Configuration.Settings.Tools.LmStudioModel = Se.Settings.AutoTranslate.LmStudioModel;
         Configuration.Settings.Tools.LmStudioPrompt = Se.Settings.AutoTranslate.LmStudioPrompt;
+
+        // Only the translate-settings dialog writes the llama.cpp prompt back, so without this the
+        // saved one is lost on the next start (a curated model's own prompt still takes precedence).
+        Configuration.Settings.Tools.LlamaCppPrompt = Se.Settings.AutoTranslate.LlamaCppPrompt;
 
         Configuration.Settings.Tools.GroqApiKey = Se.Settings.AutoTranslate.GroqApiKey;
         Configuration.Settings.Tools.GroqModel = Se.Settings.AutoTranslate.GroqModel;
@@ -390,11 +395,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             // unknown and a custom .gguf carries no template, so both fall back to the generic
             // prompt and server-default sampling.
             var curatedModel = LlamaCppUseRemoteServer ? null : SelectedLlamaCppModel?.Model;
-            Configuration.Settings.Tools.LlamaCppModelPrompt = curatedModel?.PromptTemplate ?? string.Empty;
-            Configuration.Settings.Tools.LlamaCppModelTemperature = curatedModel?.Temperature ?? -1;
-            Configuration.Settings.Tools.LlamaCppModelTopP = curatedModel?.TopP ?? -1;
-            Configuration.Settings.Tools.LlamaCppModelTopK = curatedModel?.TopK ?? -1;
-            Configuration.Settings.Tools.LlamaCppModelRepeatPenalty = curatedModel?.RepeatPenalty ?? -1;
+            LlamaCppServerManager.ApplyTranslatePromptSettings(curatedModel);
         }
 
         if (engineType == typeof(OllamaTranslate))
@@ -595,6 +596,14 @@ public partial class AutoTranslateViewModel : ObservableObject
         Se.Settings.AutoTranslate.PapagoApiKeyId = Configuration.Settings.Tools.AutoTranslatePapagoApiKeyId;
         Se.Settings.AutoTranslate.PapagoApiKey = Configuration.Settings.Tools.AutoTranslatePapagoApiKey;
 
+        // Perplexity was the only engine missing from this block, so its API key, model and URL
+        // were read from Se.Settings on open but only ever written to the libse-side settings -
+        // and lost on restart.
+        Se.Settings.AutoTranslate.PerplexityApiKey = Configuration.Settings.Tools.PerplexityApiKey;
+        Se.Settings.AutoTranslate.PerplexityUrl = Configuration.Settings.Tools.PerplexityUrl;
+        Se.Settings.AutoTranslate.PerplexityModel = Configuration.Settings.Tools.PerplexityModel;
+        Se.Settings.AutoTranslate.PerplexityPrompt = Configuration.Settings.Tools.PerplexityPrompt;
+
         Se.SaveSettings();
     }
 
@@ -737,7 +746,31 @@ public partial class AutoTranslateViewModel : ObservableObject
         if (wasTranslating)
         {
             StatusText = Se.Language.Translate.TranslationCancelled;
+            StopLocalLlamaCppServerAfterCancel();
         }
+    }
+
+    /// <summary>
+    /// Cancelling a local llama.cpp translation also stops the SE-managed server, so the model's
+    /// RAM/VRAM is released right away instead of after the app closes (#13830). Only mid-run: a
+    /// server left idle by a completed translation stays warm (Stop server button / app exit).
+    /// The next translate run auto-restarts it.
+    /// </summary>
+    private void StopLocalLlamaCppServerAfterCancel()
+    {
+        if (SelectedAutoTranslator is not (LlamaCppTranslate or LlamaCppAdvancedTranslate) ||
+            LlamaCppUseRemoteServer ||
+            !LlamaCppServerManager.IsServerRunning)
+        {
+            return;
+        }
+
+        // Off the UI thread - StopServer kills the process and waits up to 2 s for it to exit.
+        _ = Task.Run(() =>
+        {
+            LlamaCppServerManager.StopServer();
+            Dispatcher.UIThread.Post(UpdateLlamaCppServerButtonText);
+        });
     }
 
     [RelayCommand]
@@ -953,6 +986,12 @@ public partial class AutoTranslateViewModel : ObservableObject
     private void UpdateLlamaCppServerButtonText()
     {
         LlamaCppServerButtonText = LlamaCppServerManager.IsServerRunning ? Se.Language.General.StopServer : Se.Language.General.StartServer;
+
+        // The SE-managed server runs on a random free port, not the URL from remote-server mode -
+        // surface the live endpoint so the two are not mistaken for each other (#13830).
+        LlamaCppServerUrlInfo = LlamaCppServerManager.IsServerRunning
+            ? string.Format(Se.Language.Translate.ServerRunningAtX, LlamaCppServerManager.ApiUrl)
+            : null;
     }
 
     [RelayCommand]
@@ -986,10 +1025,24 @@ public partial class AutoTranslateViewModel : ObservableObject
         if (downloaded != null)
         {
             var selectName = string.IsNullOrEmpty(downloaded) ? model?.FileName : downloaded;
-            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.GetAllTranslateModels(), selectName);
+            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, GetLlamaCppModelsForEngine(), selectName);
         }
 
         RefreshDownloadDots?.Invoke();
+    }
+
+    /// <summary>
+    /// The llama.cpp model list for the currently selected engine: everything for the regular
+    /// engine, but no completion-only models (MiLMMT-46) for the advanced engine - they cannot
+    /// follow its JSON batch protocol and reply with well-formed JSON holding the untranslated
+    /// source lines, which would land in the grid as a "successful" batch.
+    /// </summary>
+    private IReadOnlyList<LlamaCppModel> GetLlamaCppModelsForEngine()
+    {
+        var models = LlamaCppServerManager.GetAllTranslateModels();
+        return SelectedAutoTranslator is LlamaCppAdvancedTranslate
+            ? models.Where(m => !m.CompletionOnly).ToList()
+            : models;
     }
 
     /// <summary>
@@ -1097,17 +1150,19 @@ public partial class AutoTranslateViewModel : ObservableObject
             return false;
         }
 
-        SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.GetAllTranslateModels(), model.FileName);
+        SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, GetLlamaCppModelsForEngine(), model.FileName);
         RefreshDownloadDots?.Invoke();
 
         try
         {
             // The advanced engine stuffs history/synopsis/glossary into every request, so it gets
             // a user-configurable (default larger) server context; everything else keeps the default.
-            var contextSize = SelectedAutoTranslator is LlamaCppAdvancedTranslate
+            var isAdvanced = SelectedAutoTranslator is LlamaCppAdvancedTranslate;
+            var contextSize = isAdvanced
                 ? Math.Clamp(Se.Settings.AutoTranslate.LlamaCppAdvanced.ContextSize, 2048, 262144)
                 : LlamaCppServerManager.DefaultContextSize;
-            await LlamaCppServerManager.EnsureServerRunningAsync(model, _cancellationTokenSource.Token, contextSize);
+            var extraArguments = isAdvanced ? Se.Settings.AutoTranslate.LlamaCppAdvanced.ServerArguments : null;
+            await LlamaCppServerManager.EnsureServerRunningAsync(model, _cancellationTokenSource.Token, contextSize, extraArguments);
         }
         catch (Exception ex)
         {
@@ -1204,7 +1259,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         if (downloaded != null)
         {
             var selectName = string.IsNullOrEmpty(downloaded) ? model?.FileName : downloaded;
-            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.GetAllTranslateModels(), selectName);
+            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, GetLlamaCppModelsForEngine(), selectName);
         }
 
         RefreshDownloadDots?.Invoke();
@@ -2045,7 +2100,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             LlamaCppModelComboIsVisible = true;
             LlamaCppButtonsAreVisible = true;
             var savedModelName = Path.GetFileName(Se.Settings.AutoTranslate.LlamaCppModel ?? string.Empty);
-            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.GetAllTranslateModels(), savedModelName);
+            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, GetLlamaCppModelsForEngine(), savedModelName);
             UpdateLlamaCppServerButtonText();
             RefreshEngineUpdateButton();
 
@@ -2431,8 +2486,13 @@ public partial class AutoTranslateViewModel : ObservableObject
     {
         // The OS close button bypasses the Cancel command - stop a running translation
         // loop so it does not keep calling the translation API against a closed window.
+        var wasTranslating = !IsTranslateEnabled;
         _abort = true;
         _cancellationTokenSource.Cancel();
+        if (wasTranslating)
+        {
+            StopLocalLlamaCppServerAfterCancel();
+        }
     }
 
     internal void OnLoaded()
