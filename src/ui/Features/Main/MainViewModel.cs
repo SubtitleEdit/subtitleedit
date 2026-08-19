@@ -1150,14 +1150,21 @@ public partial class MainViewModel :
                 {
                     try
                     {
-                        if (File.Exists(libMpvFileName))
+                        // The update folder also carries libmpv's bundled dependencies
+                        // (e.g. vulkan-1.dll, issue #13856), so move everything in it.
+                        var updateFolder = Path.GetDirectoryName(newFileName)!;
+                        foreach (var sourceFileName in Directory.GetFiles(updateFolder))
                         {
-                            File.Delete(libMpvFileName);
+                            var targetFileName = Path.Combine(Se.DataFolder, Path.GetFileName(sourceFileName));
+                            if (File.Exists(targetFileName))
+                            {
+                                File.Delete(targetFileName);
+                            }
+
+                            File.Move(sourceFileName, targetFileName);
                         }
 
-                        File.Move(newFileName, libMpvFileName);
-
-                        Directory.Delete(Path.GetDirectoryName(newFileName)!);
+                        Directory.Delete(updateFolder);
                     }
                     catch
                     {

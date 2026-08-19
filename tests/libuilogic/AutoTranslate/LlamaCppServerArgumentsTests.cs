@@ -16,6 +16,10 @@ public class LlamaCppServerArgumentsTests
         "Test chatml", "test-chatml.gguf", "1 GB", "https://example.com/test-chatml.gguf",
         ChatTemplate: "chatml", NoJinja: true);
 
+    private static readonly LlamaCppModel NoThinkingModel = new(
+        "Test no-thinking", "test-nothink.gguf", "1 GB", "https://example.com/test-nothink.gguf",
+        NoThinking: true);
+
     private static List<string> Build(LlamaCppModel model, string extraArgs, bool argsOnly, string? mmprojPath = null)
     {
         return LlamaCppServerManager.BuildServerArguments(model, "/models/test.gguf", mmprojPath, 1234, 8192, extraArgs, argsOnly);
@@ -71,5 +75,47 @@ public class LlamaCppServerArgumentsTests
         var args = Build(PlainModel, "--override-kv \"key=str:some value\"", argsOnly: false);
 
         Assert.Equal(new[] { "--override-kv", "key=str:some value" }, args.TakeLast(2));
+    }
+
+    /// <summary>
+    /// Gemma 4 thinks by default, and a thinking model puts its answer in
+    /// "message.reasoning_content" while "message.content" - the only field the translate and
+    /// review clients read - stays empty, so the line comes back untranslated.
+    /// </summary>
+    [Fact]
+    public void NoThinking_TurnsReasoningOff()
+    {
+        var args = Build(NoThinkingModel, string.Empty, argsOnly: false);
+
+        Assert.Equal("off", args[args.IndexOf("--reasoning") + 1]);
+        // Gemma 4 keeps its embedded Jinja template - the flag must not drag a template override in.
+        Assert.DoesNotContain("--no-jinja", args);
+        Assert.DoesNotContain("--chat-template", args);
+    }
+
+    [Fact]
+    public void NoThinking_IsNotAddedForOtherModels()
+    {
+        Assert.DoesNotContain("--reasoning", Build(PlainModel, string.Empty, argsOnly: false));
+    }
+
+    [Fact]
+    public void ArgumentsOnly_LeavesReasoningToTheUser()
+    {
+        Assert.DoesNotContain("--reasoning", Build(NoThinkingModel, "-ngl 30", argsOnly: true));
+    }
+
+    /// <summary>Every curated Gemma 4 entry must carry it - that is the whole bug.</summary>
+    [Fact]
+    public void CuratedGemma4Models_AllDisableThinking()
+    {
+        var gemma4 = LlamaCppServerManager.TranslateModels
+            .Concat(LlamaCppServerManager.ReviewModels)
+            .Concat(LlamaCppServerManager.OcrModels)
+            .Where(m => LlamaCppServerManager.IsGemma4FileName(m.FileName))
+            .ToList();
+
+        Assert.NotEmpty(gemma4);
+        Assert.All(gemma4, m => Assert.True(m.NoThinking, m.DisplayName + " must set NoThinking"));
     }
 }
