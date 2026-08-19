@@ -370,6 +370,7 @@ teletextColumn.Bind(
         Mode = BindingMode.OneWay,
         Source = vm,
     });
+
         columnManager.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Text,
@@ -1135,17 +1136,6 @@ teletextColumn.Bind(
         };
         fontNameMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridDataMenuVisible)));
         flyout.Items.Add(fontNameMenuItem);
-        var teletextAlignmentMenuItem = new MenuItem
-{
-    Header = Se.Language.General.TeletextAlignment + "...",
-    Command = vm.ShowTeletextAlignmentPickerCommand,
-    DataContext = vm,
-};
-teletextAlignmentMenuItem.Bind(
-    Visual.IsVisibleProperty,
-    new Binding(nameof(vm.IsSubtitleGridDataMenuVisible))
-);
-flyout.Items.Add(teletextAlignmentMenuItem);
 
 
         var alignmentMenuItem = new MenuItem
@@ -1934,36 +1924,6 @@ flyout.Items.Add(teletextAlignmentMenuItem);
 
     // Stable keys (DataGridColumn.Tag) used to snapshot/restore subtitle grid column
     // widths across restarts. Headers are localized, so they can't be used as keys (#11415).
-    private static string GetTeletextDisplay(SubtitleLineViewModel value)
-{
-    var line = 23;
-
-    if (int.TryParse(value.MarginV, out var ebuLine) &&
-        ebuLine >= 0 &&
-        ebuLine <= 22)
-    {
-        line = ebuLine + 1;
-    }
-
-    var text = value.Text ?? string.Empty;
-
-    var alignment = "C";
-
-    if (text.StartsWith("{\\an1}") ||
-        text.StartsWith("{\\an4}") ||
-        text.StartsWith("{\\an7}"))
-    {
-        alignment = "L";
-    }
-    else if (text.StartsWith("{\\an3}") ||
-             text.StartsWith("{\\an6}") ||
-             text.StartsWith("{\\an9}"))
-    {
-        alignment = "R";
-    }
-
-    return $"{line} {alignment}";
-}
     internal static class SubtitleGridColumnKeys
     {
         public const string Number = "Number";

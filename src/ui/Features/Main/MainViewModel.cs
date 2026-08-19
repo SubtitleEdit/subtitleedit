@@ -353,6 +353,12 @@ public partial class MainViewModel :
     [ObservableProperty] private bool _isFormatWebVtt;
 
     /// <summary>
+    /// True for EBU STL. Teletext line/alignment editing only makes sense there, so the
+    /// teletext dialog, the "TT" column and the alignment preview are all gated on this.
+    /// </summary>
+    [ObservableProperty] private bool _isFormatEbu;
+
+    /// <summary>
     /// Header of the grid's actor/voice toggle in the column context menu - the column itself is
     /// "Actor" for most formats and "Voice" for WebVTT, and the toggle shows the two columns.
     /// </summary>
@@ -12878,126 +12884,126 @@ private bool _teletextAlignmentPreview;
     }
 
     [RelayCommand]
-private async Task ShowAlignmentPicker()
-{
-    var selected = SelectedSubtitle;
-    if (selected == null)
+    private async Task ShowAlignmentPicker()
     {
-        return;
+        var selected = SelectedSubtitle;
+        if (selected == null)
+        {
+            return;
+        }
+
+        // EBU STL places subtitles on a teletext line rather than an ASSA anchor, so the same
+        // menu item opens the teletext dialog for that format.
+        if (IsFormatEbu)
+        {
+            await ShowTeletextAlignmentPicker(selected);
+            return;
+        }
+
+        var result = await ShowDialogAsync<PickAlignmentWindow, PickAlignmentViewModel>(vm => { vm.Initialize(selected, SubtitleGridSelectedCount); });
+
+        if (result.OkPressed)
+        {
+            SetAlignmentToSelected(result.Alignment);
+            _updateAudioVisualizer = true;
+        }
     }
 
-    var result = await ShowDialogAsync<PickAlignmentWindow, PickAlignmentViewModel>(vm =>
+    private async Task ShowTeletextAlignmentPicker(SubtitleLineViewModel selected)
     {
-        vm.Initialize(selected, SubtitleGridSelectedCount);
-    });
+        var selectedItems = SubtitleGridSelectedItems;
 
-    if (result.OkPressed)
-    {
-        SetAlignmentToSelected(result.Alignment);
-        _updateAudioVisualizer = true;
-    }
-}
+        var result = await ShowDialogAsync<PickTeletextAlignmentWindow, PickTeletextAlignmentViewModel>(
+            vm => vm.Initialize(
+                selected,
+                Se.Settings.General.TeletextAlignmentPreview,
+                Se.Settings.General.ShowColumnTeletext));
 
-[RelayCommand]
-private async Task ShowTeletextAlignmentPicker()
-{
-    var selected = SelectedSubtitle;
-    if (selected == null)
-    {
-        return;
-    }
+        if (!result.OkPressed)
+        {
+            return;
+        }
 
-    var selectedItems = SubtitleGridSelectedItems;
+        TeletextAlignmentPreview = result.Preview;
+        ShowColumnTeletext = result.ShowTeletextColumn;
 
-    var result = await ShowDialogAsync<PickTeletextAlignmentWindow, PickTeletextAlignmentViewModel>(
-    vm => vm.Initialize(
-        selected,
-        Se.Settings.General.TeletextAlignmentPreview,
-        Se.Settings.General.ShowColumnTeletext));
+        Se.Settings.General.TeletextAlignmentPreview = result.Preview;
+        Se.Settings.General.ShowColumnTeletext = result.ShowTeletextColumn;
 
-    if (!result.OkPressed)
-    {
-        return;
-    }
+        // Teletext line is only changed when explicitly selected.
+        if (result.ApplyTeletextLine)
+        {
+            var marginV = (result.TeletextLine - 1).ToString(CultureInfo.InvariantCulture);
 
-   TeletextAlignmentPreview = result.Preview;
-   ShowColumnTeletext = result.ShowTeletextColumn;
+            foreach (var item in selectedItems)
+            {
+                item.MarginV = marginV;
+            }
+        }
 
-   Se.Settings.General.TeletextAlignmentPreview = result.Preview;
-   Se.Settings.General.ShowColumnTeletext = result.ShowTeletextColumn; 
+        // Teletext lines are shifted relatively when explicitly selected.
+        if (result.ApplyLineShift && result.LineShift != 0)
+        {
+            foreach (var item in selectedItems)
+            {
+                if (int.TryParse(item.MarginV, out var ebuLine))
+                {
+                    var teletextLine = ebuLine + 1;
+                    var shiftedLine = teletextLine + result.LineShift;
 
-    // Teletext line is only changed when explicitly selected.
-    if (result.ApplyTeletextLine)
-    {
-        var marginV = (result.TeletextLine - 1).ToString();
+                    if (shiftedLine < 1)
+                    {
+                        shiftedLine = 1;
+                    }
+                    else if (shiftedLine > 23)
+                    {
+                        shiftedLine = 23;
+                    }
+
+                    item.MarginV = (shiftedLine - 1).ToString(CultureInfo.InvariantCulture);
+                }
+            }
+        }
+
+        // Replace one specific teletext line with another.
+        if (result.ApplyLineReplace &&
+            result.ReplaceFromLine != result.ReplaceToLine)
+        {
+            foreach (var item in selectedItems)
+            {
+                if (int.TryParse(item.MarginV, out var ebuLine))
+                {
+                    var teletextLine = ebuLine + 1;
+
+                    if (teletextLine == result.ReplaceFromLine)
+                    {
+                        item.MarginV = (result.ReplaceToLine - 1).ToString(CultureInfo.InvariantCulture);
+                    }
+                }
+            }
+        }
+
+        // Horizontal alignment is only changed when explicitly selected.
+        if (result.ApplyHorizontalAlignment)
+        {
+            var alignment = result.HorizontalAlignment switch
+            {
+                var value when value == Se.Language.General.Left => "an1",
+                var value when value == Se.Language.General.Right => "an3",
+                _ => "an2",
+            };
+
+            SetAlignmentToSelected(alignment);
+        }
 
         foreach (var item in selectedItems)
         {
-            item.MarginV = marginV;
+            item.RefreshTeletextDisplay();
         }
-    }
-// Teletext lines are shifted relatively when explicitly selected.
-if (result.ApplyLineShift && result.LineShift != 0)
-{
-    foreach (var item in selectedItems)
-    {
-        if (int.TryParse(item.MarginV, out var ebuLine))
-        {
-            var teletextLine = ebuLine + 1;
-            var shiftedLine = teletextLine + result.LineShift;
 
-            if (shiftedLine < 1)
-            {
-                shiftedLine = 1;
-            }
-            else if (shiftedLine > 23)
-            {
-                shiftedLine = 23;
-            }
-
-            item.MarginV = (shiftedLine - 1).ToString();
-        }
-    }
-}
-
-// Replace one specific teletext line with another.
-if (result.ApplyLineReplace &&
-    result.ReplaceFromLine != result.ReplaceToLine)
-{
-    foreach (var item in selectedItems)
-    {
-        if (int.TryParse(item.MarginV, out var ebuLine))
-        {
-            var teletextLine = ebuLine + 1;
-
-            if (teletextLine == result.ReplaceFromLine)
-            {
-                item.MarginV = (result.ReplaceToLine - 1).ToString();
-            }
-        }
-    }
-}
-
-    // Horizontal alignment is only changed when explicitly selected.
-    if (result.ApplyHorizontalAlignment)
-    {
-        var alignment = result.HorizontalAlignment switch
-{
-    var value when value == Se.Language.General.Left => "an1",
-    var value when value == Se.Language.General.Right => "an3",
-    _ => "an2",
-};
-
-        SetAlignmentToSelected(alignment);
+        _updateAudioVisualizer = true;
     }
 
-    foreach (var item in selectedItems)
-    {
-        item.RefreshTeletextDisplay();
-    }
-
-    _updateAudioVisualizer = true;
-}
     [RelayCommand]
     private void DoAlignmentAn1()
     {
@@ -22713,6 +22719,9 @@ if (result.ApplyLineReplace &&
                 hash = hash * 23 + (p.Extra?.GetHashCode() ?? 0);
                 hash = hash * 23 + (p.Actor?.GetHashCode() ?? 0);
                 hash = hash * 23 + p.Layer;
+                // The teletext dialog edits MarginV and nothing else, so without it here that
+                // edit is invisible to undo and to the modified/save tracking below.
+                hash = hash * 23 + (p.MarginV?.GetHashCode() ?? 0);
             }
 
             return hash;
@@ -22770,6 +22779,7 @@ if (result.ApplyLineReplace &&
                 hash = hash * 23 + (p.Extra?.GetHashCode() ?? 0);
                 hash = hash * 23 + (p.Actor?.GetHashCode() ?? 0);
                 hash = hash * 23 + p.Layer;
+                hash = hash * 23 + (p.MarginV?.GetHashCode() ?? 0);
             }
 
             return hash;
@@ -27569,6 +27579,7 @@ if (result.ApplyLineReplace &&
         IsFormatSsa = SelectedSubtitleFormat is SubStationAlpha;
         IsFormatAssaOrSsa = SelectedSubtitleFormat is AdvancedSubStationAlpha or SubStationAlpha;
         IsFormatWebVtt = SelectedSubtitleFormat is WebVTT or WebVTTFileWithLineNumber;
+        IsFormatEbu = SelectedSubtitleFormat is Ebu;
         HasFormatStyle = IsFormatAssaOrSsa || IsFormatWebVtt;
         ShowActorColumnMenuHeader = IsFormatWebVtt
             ? Se.Language.File.WebVtt.ShowVoiceColumn
@@ -27580,6 +27591,12 @@ if (result.ApplyLineReplace &&
         {
             ShowColumnLayer = false;
             ShowColumnLayerFlyoutMenuItem = false;
+        }
+
+        if (!IsFormatEbu)
+        {
+            ShowColumnTeletext = false;
+            TeletextAlignmentPreview = false;
         }
 
         AutoFitColumns();
