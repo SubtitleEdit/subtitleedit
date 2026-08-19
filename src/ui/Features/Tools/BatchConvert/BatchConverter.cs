@@ -1377,6 +1377,8 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     }
 
     /// <inheritdoc cref="RunOllamaOcr"/>
+    public bool UsedLocalLlamaCppOcr { get; private set; }
+
     private async Task<bool> RunLlamaCppOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
     {
         // Curated OCR model from settings (picked in batch convert settings / the OCR window).
@@ -1391,6 +1393,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
         try
         {
+            // Set before the await: starting the server is itself the slow part a user cancels
+            // out of, and the shutdown has to know this run owns it by then (#13865).
+            UsedLocalLlamaCppOcr = true;
+
             // Reused across items/files in the same batch run; killed at app exit.
             await LlamaCppServerManager.EnsureServerRunningAsync(model, cancellationToken);
         }
