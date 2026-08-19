@@ -610,13 +610,15 @@ public class ValueConverterTests : IDisposable
         try
         {
             Se.Language.General.ErrorX = "Error: {0}";
-            var first = converter.Convert("Error: nope", typeof(object), null, Culture);
-            Assert.NotNull(first);
+            var errorBrush = converter.Convert("Error: nope", typeof(object), null, Culture);
+            Assert.NotNull(errorBrush);
 
             // A loaded translation swaps the string - the cached prefix has to follow.
+            // Both the error brush and the non-error default are shared instances, so
+            // compare by identity: a non-error status must no longer get the error brush.
             Se.Language.General.ErrorX = "Fejl: {0}";
-            Assert.Null(converter.Convert("Error: nope", typeof(object), null, Culture) as ISolidColorBrush);
-            Assert.NotNull(converter.Convert("Fejl: nix", typeof(object), null, Culture) as ISolidColorBrush);
+            Assert.NotSame(errorBrush, converter.Convert("Error: nope", typeof(object), null, Culture));
+            Assert.Same(errorBrush, converter.Convert("Fejl: nix", typeof(object), null, Culture));
         }
         finally
         {
