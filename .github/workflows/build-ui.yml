@@ -362,9 +362,9 @@ jobs:
 
       - name: Download libmpv for Windows
         run: |
-          Invoke-WebRequest -Uri "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-08-14/libmpv2-win64.zip" -OutFile "libmpv2-64.zip"
+          Invoke-WebRequest -Uri "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-08-14b/libmpv2-win64.zip" -OutFile "libmpv2-64.zip"
           Expand-Archive -Path "libmpv2-64.zip" -DestinationPath "libmpv-temp"
-          Invoke-WebRequest -Uri "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-08-14/libmpv2-win-arm64.zip" -OutFile "libmpv2-arm64.zip"
+          Invoke-WebRequest -Uri "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-08-14b/libmpv2-win-arm64.zip" -OutFile "libmpv2-arm64.zip"
           Expand-Archive -Path "libmpv2-arm64.zip" -DestinationPath "libmpv-arm64-temp"
 
       - name: Publish Windows x64 app
@@ -377,7 +377,8 @@ jobs:
             -p:FileVersion=$env:APP_VER_FULL `
             -p:InformationalVersion=$env:APP_VER_DISPLAY `
             -o ./publish/windows-x64
-          Copy-Item "libmpv-temp/libmpv-2.dll" "./publish/windows-x64/"
+          # The zip also carries libmpv's vulkan-1.dll dependency (+ its license) - copy everything (#13856).
+          Copy-Item "libmpv-temp/*" "./publish/windows-x64/"
           # Native PDBs (libSkiaSharp.pdb, libHarfBuzzSharp.pdb, ...) come from the SkiaSharp
           # runtime NuGet packages and aren't suppressed by -p:DebugType=none.
           Get-ChildItem -Path "./publish/windows-x64" -Filter "*.pdb" -Recurse -File | Remove-Item -Force
@@ -393,7 +394,8 @@ jobs:
             -p:InformationalVersion=$env:APP_VER_DISPLAY `
             -o ./publish/windows-arm64
           # Must be the native ARM64 libmpv build — an ARM64 process cannot load the x64 DLL (issue #12087).
-          Copy-Item "libmpv-arm64-temp/libmpv-2.dll" "./publish/windows-arm64/"
+          # The zip also carries libmpv's vulkan-1.dll dependency (+ its license) - copy everything (#13856).
+          Copy-Item "libmpv-arm64-temp/*" "./publish/windows-arm64/"
           Get-ChildItem -Path "./publish/windows-arm64" -Filter "*.pdb" -Recurse -File | Remove-Item -Force
 
       # - name: Setup WiX
