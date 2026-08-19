@@ -24965,6 +24965,11 @@ public partial class MainViewModel :
     internal void ApplyDragSelectRange(int anchorIndex, int currentIndex)
     {
         SelectGridRange(Math.Min(anchorIndex, currentIndex), Math.Max(anchorIndex, currentIndex), currentIndex);
+
+        // Auto-scrolling a long drag can unrealize the row that had focus when the drag started,
+        // dropping keyboard focus out of the grid and disabling its shortcuts (#13864).
+        Dispatcher.UIThread.Post(() => TableViewExtras.FocusRow(SubtitleGrid));
+
         SubtitleGridSelectionChanged();
     }
 
@@ -25022,6 +25027,15 @@ public partial class MainViewModel :
                     SelectGridRange(Math.Min(anchor, rowIndex), Math.Max(anchor, rowIndex), rowIndex);
 
                     SubtitleGrid.ScrollIntoView(Subtitles[rowIndex]);
+
+                    // Handling the press ourselves means the TableView never focuses the clicked
+                    // row, so keyboard focus stays on whatever it was - and if the grid was
+                    // scrolled since, that container is unrealized and focus has already been
+                    // dropped out of the grid, which kills every SubtitleGrid shortcut (Delete
+                    // did nothing after a shift+click range that involved scrolling, #13864).
+                    // Same re-focus the shift+arrow path does after layout.
+                    Dispatcher.UIThread.Post(() => TableViewExtras.FocusRow(SubtitleGrid));
+
                     SubtitleGridSelectionChanged();
                     e.Handled = true;
                     return;
