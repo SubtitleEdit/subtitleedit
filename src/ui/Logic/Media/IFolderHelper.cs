@@ -9,24 +9,45 @@ namespace Nikse.SubtitleEdit.Logic.Media;
 
 public interface IFolderHelper
 {
-    Task<string> PickFolderAsync(Window window, string title);
+    Task<string> PickFolderAsync(Window window, string title, string? suggestedStartFolder = null);
     Task OpenFolder(Window window, string folder);
     Task OpenFolderWithFileSelected(Window window, string selectedFile);
 }
 
 public class FolderHelper : IFolderHelper
 {
-    public async Task<string> PickFolderAsync(Window window, string title)
+    public async Task<string> PickFolderAsync(Window window, string title, string? suggestedStartFolder = null)
     {
         var storageProvider = window.StorageProvider;
 
         if (storageProvider.CanPickFolder)
         {
-            var folders = await NativePickers.OpenFolderPickerAsync(window, new FolderPickerOpenOptions
+            var options = new FolderPickerOpenOptions
             {
                 Title = title,
                 AllowMultiple = false
-            });
+            };
+
+            // Open in the caller's suggested folder (e.g. the loaded subtitle's own folder)
+            // instead of wherever the picker was last used. Best effort - a missing folder or
+            // a provider that can't resolve paths just falls back to the picker's default.
+            if (!string.IsNullOrEmpty(suggestedStartFolder) && Directory.Exists(suggestedStartFolder))
+            {
+                try
+                {
+                    var startFolder = await storageProvider.TryGetFolderFromPathAsync(suggestedStartFolder);
+                    if (startFolder != null)
+                    {
+                        options.SuggestedStartLocation = startFolder;
+                    }
+                }
+                catch
+                {
+                    // ignore - the picker falls back to its default folder
+                }
+            }
+
+            var folders = await NativePickers.OpenFolderPickerAsync(window, options);
 
             var selected = folders.Count > 0 ? folders[0] : null;
             return selected?.Path.LocalPath ?? string.Empty; 

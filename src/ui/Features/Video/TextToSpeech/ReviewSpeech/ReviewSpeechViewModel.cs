@@ -111,6 +111,11 @@ public partial class ReviewSpeechViewModel : ObservableObject
     // round-tripped through SubtitleEditTts.json so a future Import re-applies the same voices.
     public List<ActorVoiceMapping> ActorVoiceMappings { get; private set; } = new();
 
+    // Full path of the loaded subtitle file (empty for an unsaved subtitle). Export starts its
+    // folder picker here so the session lands next to the subtitle instead of wherever the
+    // picker was last used (#13881).
+    public string SubtitleFileName { get; set; } = string.Empty;
+
     public bool OkPressed { get; private set; }
 
     // Text edits made in this window, published on OK so the caller can offer to apply them to
@@ -513,7 +518,11 @@ public partial class ReviewSpeechViewModel : ObservableObject
             return;
         }
 
-        var folder = await _folderHelper.PickFolderAsync(Window!, Se.Language.General.SelectSaveFolder);
+        // Start the picker in the subtitle's own folder (or the video's, for an unsaved
+        // subtitle) - the OS-remembered last picker folder is rarely where this export
+        // belongs (#13881).
+        var suggestedStartFolder = GetFolderName(SubtitleFileName) ?? GetFolderName(_videoFileName);
+        var folder = await _folderHelper.PickFolderAsync(Window!, Se.Language.General.SelectSaveFolder, suggestedStartFolder);
         if (string.IsNullOrEmpty(folder))
         {
             return;
@@ -687,6 +696,17 @@ public partial class ReviewSpeechViewModel : ObservableObject
         }
 
         await _folderHelper.OpenFolder(Window!, folder);
+    }
+
+    private static string? GetFolderName(string fileName)
+    {
+        if (string.IsNullOrEmpty(fileName))
+        {
+            return null;
+        }
+
+        var folder = Path.GetDirectoryName(fileName);
+        return string.IsNullOrEmpty(folder) ? null : folder;
     }
 
     [RelayCommand]
@@ -1383,7 +1403,10 @@ public partial class ReviewSpeechViewModel : ObservableObject
     public async Task SelectedEngineChangedAsync()
     {
         var engine = SelectedEngine;
-        IsEngineSettingsVisible = TtsEngineSettingsDialog.HasSettings(engine);
+        // No gear for ElevenLabs: its knobs live inline below the engine combo for fast per-line
+        // tweaking, and the settings dialog behind the gear duplicated exactly those sliders -
+        // two "settings windows" showing different values (#13881).
+        IsEngineSettingsVisible = TtsEngineSettingsDialog.HasSettings(engine) && engine is not ElevenLabs;
         if (engine == null)
         {
             return;
