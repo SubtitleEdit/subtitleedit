@@ -487,6 +487,7 @@ public partial class SettingsViewModel : ObservableObject
             Se.Language.Options.Settings.SubtitleGridFormattingNone,
             Se.Language.Options.Settings.SubtitleGridFormattingShowFormatting,
             Se.Language.Options.Settings.SubtitleGridFormattingShowTags,
+            Se.Language.Options.Settings.SubtitleGridFormattingHideTags,
         };
         SubtitleGridFormatting = SubtitleGridFormattings[0];
 
@@ -1406,6 +1407,10 @@ public partial class SettingsViewModel : ObservableObject
         {
             return Se.Language.Options.Settings.SubtitleGridFormattingShowTags;
         }
+        else if (subtitleGridFormattingType == (int)SubtitleGridFormattingTypes.HideTags)
+        {
+            return Se.Language.Options.Settings.SubtitleGridFormattingHideTags;
+        }
         else
         {
             return Se.Language.Options.Settings.SubtitleGridFormattingNone;
@@ -1421,6 +1426,10 @@ public partial class SettingsViewModel : ObservableObject
         else if (translation == Se.Language.Options.Settings.SubtitleGridFormattingShowTags)
         {
             return (int)SubtitleGridFormattingTypes.ShowTags;
+        }
+        else if (translation == Se.Language.Options.Settings.SubtitleGridFormattingHideTags)
+        {
+            return (int)SubtitleGridFormattingTypes.HideTags;
         }
         else
         {

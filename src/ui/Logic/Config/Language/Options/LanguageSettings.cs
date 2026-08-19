@@ -279,6 +279,7 @@ public class LanguageSettings
     public string SubtitleGridFormattingNone { get; set; }
     public string SubtitleGridFormattingShowFormatting { get; set; }
     public string SubtitleGridFormattingShowTags { get; set; }
+    public string SubtitleGridFormattingHideTags { get; set; }
     public string WaveformParagraphBackgroundColor { get; set; }
     public string WaveformParagraphSelectedBackgroundColor { get; set; }
     public string WaveformAllowOverlap { get; set; }
@@ -600,6 +601,7 @@ public class LanguageSettings
         SubtitleGridFormattingNone = "No formatting";
         SubtitleGridFormattingShowFormatting = "Show formatting";
         SubtitleGridFormattingShowTags = "Show tags";
+        SubtitleGridFormattingHideTags = "Hide tags";
         WaveformParagraphBackgroundColor = "Waveform subtitle background color";
         WaveformParagraphSelectedBackgroundColor = "Waveform selected subtitle background color";
         WaveformAllowOverlap = "Allow overlap (when moving/resizing)";

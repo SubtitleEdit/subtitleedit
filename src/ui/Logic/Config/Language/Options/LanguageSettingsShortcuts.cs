@@ -337,7 +337,7 @@ public class LanguageSettingsShortcuts
         GoToNextBookmark = "Go to next bookmark";
         GoToNextEmptyLine = "Go to next empty line";
         ToggleWaveformToolbar = "Toggle waveform toolbar";
-        ToggleSubtitleGridFormatting = "Toggle grid formatting (show formatting/show tags/no formatting)";
+        ToggleSubtitleGridFormatting = "Toggle grid formatting (show formatting/show tags/no formatting/hide tags)";
         WaveformSetStartAndSetEndOfPreviousMinusGap = "Set start and set end of previous minus gap";
         WaveformSetEndAndStartOfNextAfterGap = "Set end and start of next plus gap";
         WaveformSetEndAndStartOfNextAfterGapAndGoToNext = "Set end and start of next plus gap and go to next";

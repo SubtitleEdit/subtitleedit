@@ -148,6 +148,26 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             return SpellCheckLines(lines);
         }
 
+        // "Hide tags" strips the markup and renders what is left as plain themed text - no
+        // colors, fonts or sizes - for translation workflows where the styling only distracts
+        // (issue #13824). Stripping happens before the visible-length truncation for the same
+        // reason ShowFormatting parses first: the cap must spend its characters on dialogue,
+        // not markup. removeDrawingTags because a line that is only a {\p1} vector mask has no
+        // dialogue at all - showing its coordinates would be the clutter this mode exists to hide.
+        if (formattingType == (int)SubtitleGridFormattingTypes.HideTags)
+        {
+            if (str.Length > MaxRawLength)
+            {
+                str = str.Substring(0, MaxRawLength);
+            }
+
+            str = HtmlUtil.RemoveHtmlTags(Utilities.RemoveSsaTags(str, removeDrawingTags: true));
+            if (string.IsNullOrEmpty(str))
+            {
+                return new InlineCollection();
+            }
+        }
+
         // Truncate long strings for performance
         if (str.Length > MaxVisibleLength)
         {
@@ -954,7 +974,9 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         // wrote to the state only inside each attribute's success branch.
         if (values.Color.HasValue)
         {
-            state.Color = values.Color;
+            // Same readability guard as the ASSA path (#13824): a <font> color that vanishes
+            // into the grid background falls back to the default foreground.
+            state.Color = IsColorVisible(values.Color.Value) ? values.Color : null;
         }
 
         if (values.FontName != null)
@@ -1209,10 +1231,12 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         else if (colorCandidateCount > 0)
         {
             // No transition involved, so ASSA's last-wins rule applies: consecutive static
-            // color tags resolve to the last one, matching libass and the video preview. The
-            // visibility guard deliberately does not apply here - a single explicit color is
-            // shown as authored even when it has little contrast.
-            state.Color = colorCandidates[colorCandidateCount - 1];
+            // color tags resolve to the last one, matching libass and the video preview. But an
+            // authored color with next to no contrast against the grid background makes the
+            // line unreadable (#13824), so the winner is only shown when it is visible at all -
+            // never replaced by an earlier candidate, which would misrepresent the file.
+            var lastColor = colorCandidates[colorCandidateCount - 1];
+            state.Color = IsColorVisible(lastColor) ? lastColor : null;
         }
         else if (sawColorTag)
         {
@@ -1247,6 +1271,36 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         // background. Also swallows a malformed DarkModeBackgroundColor rather than
         // letting it throw out of IValueConverter.Convert.
         return UiTheme.GetThemeBackgroundColor();
+    }
+
+    // Visibility verdicts memoized per (color, background): the same few authored colors repeat
+    // down a whole file and this runs per tag block per cell repaint. Keyed on the background
+    // too so a theme switch cannot serve stale verdicts; capped and dropped wholesale like the
+    // brush caches above because the colors are arbitrary user data.
+    private static readonly Dictionary<(Color Foreground, Color Background), bool> ColorVisibilityCache = new();
+    private const int ColorVisibilityCacheLimit = 256;
+
+    /// <summary>
+    /// Whether an authored color is readable at all against the current grid background.
+    /// </summary>
+    private static bool IsColorVisible(Color color)
+    {
+        var background = GetGridBackgroundColor();
+        var key = (color, background);
+        if (ColorVisibilityCache.TryGetValue(key, out var visible))
+        {
+            return visible;
+        }
+
+        var luminance = RelativeLuminance(CompositeOver(color, background));
+        visible = ContrastRatio(luminance, RelativeLuminance(background)) >= MinimumVisibleContrast;
+        if (ColorVisibilityCache.Count >= ColorVisibilityCacheLimit)
+        {
+            ColorVisibilityCache.Clear();
+        }
+
+        ColorVisibilityCache[key] = visible;
+        return visible;
     }
 
     private static Color? PickMostVisibleColor(ReadOnlySpan<Color> candidates)

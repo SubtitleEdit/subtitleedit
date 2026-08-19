@@ -4,6 +4,7 @@ using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
+using System;
 using System.Globalization;
 
 namespace UITests.Logic.ValueConverters;
@@ -14,9 +15,23 @@ namespace UITests.Logic.ValueConverters;
 /// visible row on every repaint, so they get rewritten for speed now and then - these tests are
 /// what says the output did not move.
 /// </summary>
-public class ValueConverterTests
+public class ValueConverterTests : IDisposable
 {
     private static readonly CultureInfo Culture = CultureInfo.InvariantCulture;
+
+    // Authored colors are guarded for readability against the grid background, and the real
+    // theme background depends on the host OS in headless runs ("System" theme) - pin a dark
+    // background so every color assertion is deterministic. Tests that need another
+    // background override it themselves.
+    public ValueConverterTests()
+    {
+        TextWithSubtitleSyntaxHighlightingConverter.GridBackgroundOverride = () => Color.FromRgb(33, 33, 33);
+    }
+
+    public void Dispose()
+    {
+        TextWithSubtitleSyntaxHighlightingConverter.GridBackgroundOverride = null;
+    }
 
     private static InlineCollection Highlight(string text, SubtitleGridFormattingTypes mode, bool singleLine = false)
     {
@@ -342,6 +357,59 @@ public class ValueConverterTests
 
         Assert.Equal("Arial", run.FontFamily.Name);
         Assert.Equal(16, run.FontSize);
+    }
+
+    // Issue #13824: a single authored color nearly identical to the grid background rendered
+    // the line invisible. The guard falls back to the default foreground - it never substitutes
+    // a different authored color.
+    [AvaloniaTheory]
+    [InlineData("{\\c&H232323&}x")]                 // single near-background color
+    [InlineData("{\\1c&HFFFFFF&\\1c&H232323&}x")]   // last-wins winner is unreadable; white must not sneak back in
+    public void ShowFormatting_UnreadableAssaColorFallsBackToDefaultForeground(string text)
+    {
+        var run = SingleRun(Highlight(text, SubtitleGridFormattingTypes.ShowFormatting));
+
+        Assert.False(run.IsSet(TextElement.ForegroundProperty));
+    }
+
+    [AvaloniaFact]
+    public void ShowFormatting_UnreadableFontTagColorFallsBackToDefaultForeground()
+    {
+        var run = SingleRun(Highlight("<font color=\"#232323\">x</font>",
+            SubtitleGridFormattingTypes.ShowFormatting));
+
+        Assert.False(run.IsSet(TextElement.ForegroundProperty));
+    }
+
+    [AvaloniaFact]
+    public void HideTags_StripsMarkupAndAppliesNoStyling()
+    {
+        var inlines = Highlight("{\\an8\\c&H00FF00&}<i><b>one</b></i>\r\ntwo",
+            SubtitleGridFormattingTypes.HideTags);
+
+        Assert.Equal("one\ntwo", FlatText(inlines));
+        var first = Assert.IsType<Run>(inlines[0]);
+        Assert.False(first.IsSet(TextElement.ForegroundProperty));
+        Assert.Equal(FontStyle.Normal, first.FontStyle);
+        Assert.Equal(FontWeight.Normal, first.FontWeight);
+    }
+
+    [AvaloniaTheory]
+    [InlineData("{\\an8\\pos(960,540)}")]                       // override tags only
+    [InlineData("{\\p1}m 0 0 l 100 0 100 100 0 100{\\p0}")]     // vector mask drawing
+    public void HideTags_TagOnlyAndDrawingLinesRenderEmpty(string text)
+    {
+        Assert.Empty(Highlight(text, SubtitleGridFormattingTypes.HideTags));
+    }
+
+    // Stripping must happen before the visible-length cap, or a tag-heavy line spends the
+    // whole cap on markup and shows none of its dialogue (same rule as ShowFormatting).
+    [AvaloniaFact]
+    public void HideTags_TagHeavyLineStillShowsItsDialogue()
+    {
+        var text = "{\\fs" + new string('1', 300) + "}abc";
+
+        Assert.Equal("abc", FlatText(Highlight(text, SubtitleGridFormattingTypes.HideTags)));
     }
 
     [AvaloniaFact]
