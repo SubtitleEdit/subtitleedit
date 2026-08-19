@@ -3711,8 +3711,16 @@ public partial class SpeechToTextViewModel : ObservableObject
             var vadPart = string.Empty;
             // Mega-ASR (crispasr 0.6.10) silently writes a zero-byte SRT unless VAD chunking
             // is enabled — the transcription log says it succeeded but no segments are emitted.
+            // Cohere gets the same treatment because crispasr auto-enables VAD for that backend
+            // on long audio anyway; passing the bundled Silero model keeps it from downloading
+            // its own copy into ~/.cache/crispasr mid-transcription.
+            //
+            // --chunk-seconds/-ck in the user's parameters means "no VAD, use fixed chunks" -
+            // that is crispasr's own documented way to switch its auto-VAD back off, and it is
+            // the only way to switch VAD off at all (--vad is a plain flag with no --no-vad).
+            // So it has to suppress our own --vad too, or the user has no opt-out (#13849).
             if (crispAsrEngine is CrispAsrCohere or CrispAsrMega
-                && !Regex.IsMatch(crispArgs ?? string.Empty, @"(^|\s)(--vad|-vm|--vad-model)\b"))
+                && !Regex.IsMatch(crispArgs ?? string.Empty, @"(^|\s)(--vad|-vm|--vad-model|--chunk-seconds|-ck)\b"))
             {
                 var crispFolder = crispAsrEngine.GetAndCreateWhisperFolder();
                 var vadFiles = Directory.Exists(crispFolder)
