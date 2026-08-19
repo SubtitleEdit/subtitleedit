@@ -46,6 +46,12 @@ public class SeVideo
     public decimal MpvPreviewShadowWidth { get; set; }
     public int MpvPreviewBorderType { get; set; }
 
+    /// <summary>
+    /// Show the lines where the subtitle file says they belong (TTML regions, PAC vertical
+    /// alignment, EBU STL teletext rows) instead of at <see cref="MpvPreviewAlignment"/>.
+    /// </summary>
+    public bool MpvPreviewUsePositionFromFile { get; set; }
+
     public SeVideo()
     {
         BurnIn = new();
@@ -84,5 +90,6 @@ public class SeVideo
         MpvPreviewColorOutline = Color.FromRgb(0, 0, 0).FromColorToHex();
         MpvPreviewColorShadow = Color.FromRgb(0, 0, 0).FromColorToHex();
         MpvPreviewBorderType = (int)BorderStyleType.Outline;
+        MpvPreviewUsePositionFromFile = true;
     }
 }

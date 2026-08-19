@@ -136,6 +136,10 @@ public class VlcReloader : IVlcReloader
                             }
                         }
                     }
+
+                    // See MpvReloader - the position the source format carries beats the one fixed
+                    // preview alignment (discussion #13857).
+                    SubtitlePositionToAssa.ApplyPositions(subtitle, oldSub.Header, Se.Settings.Video.MpvPreviewUsePositionFromFile);
                 }
 
                 SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary);

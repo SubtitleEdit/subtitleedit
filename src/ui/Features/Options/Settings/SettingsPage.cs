@@ -1031,6 +1031,8 @@ public class SettingsPage : UserControl
         var labelAlignment = UiUtil.MakeLabel(Se.Language.General.Alignment);
         var comboBoxAlignment = UiUtil.MakeComboBox(vm.MpvPreviewFontAlignments, vm, nameof(vm.MpvPreviewSelectedFontAlignment));
 
+        var checkBoxUsePositionFromFile = UiUtil.MakeCheckBox(Se.Language.Options.Settings.UsePositionFromSubtitleFile, vm, nameof(vm.MpvPreviewUsePositionFromFile));
+
         var labelMargin = UiUtil.MakeLabel(Se.Language.General.Margin);
         var numericUpDownMargin = UiUtil.MakeNumericUpDownOneDecimal(1, 1000, 130, vm, nameof(vm.MpvPreviewMargin));
         numericUpDownMargin.Increment = 1;
@@ -1048,6 +1050,7 @@ public class SettingsPage : UserControl
         {
             RowDefinitions =
             {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
@@ -1079,19 +1082,21 @@ public class SettingsPage : UserControl
         grid.Add(labelAlignment, 3);
         grid.Add(comboBoxAlignment, 3, 1);
 
-        grid.Add(labelMargin, 4);
-        grid.Add(numericUpDownMargin, 4, 1);
+        grid.Add(checkBoxUsePositionFromFile, 4, 0, 1, 2);
 
-        grid.Add(labelColorPrimary, 5);
-        grid.Add(colorPickerPrimary, 5, 1);
+        grid.Add(labelMargin, 5);
+        grid.Add(numericUpDownMargin, 5, 1);
 
-        grid.Add(labelColorOutline, 6);
-        grid.Add(colorPickerOutline, 6, 1);
+        grid.Add(labelColorPrimary, 6);
+        grid.Add(colorPickerPrimary, 6, 1);
 
-        grid.Add(labelColorShadow, 7);
-        grid.Add(colorPickerShadow, 7, 1);
+        grid.Add(labelColorOutline, 7);
+        grid.Add(colorPickerOutline, 7, 1);
 
-        grid.Add(MakeBorderView(vm), 8, 0, 1, 2);
+        grid.Add(labelColorShadow, 8);
+        grid.Add(colorPickerShadow, 8, 1);
+
+        grid.Add(MakeBorderView(vm), 9, 0, 1, 2);
 
         return UiUtil.MakeBorderForControl(grid);
     }

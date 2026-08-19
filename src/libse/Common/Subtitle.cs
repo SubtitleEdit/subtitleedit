@@ -946,6 +946,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                 hash.Add(p.Extra, StringComparer.Ordinal);
                 hash.Add(p.Actor, StringComparer.Ordinal);
                 hash.Add(p.Layer);
+
+                // The margins move the line on the video (SubtitlePositionToAssa turns a teletext row
+                // or a TTML region into them), so a changed margin has to invalidate the preview too.
+                hash.Add(p.MarginL, StringComparer.Ordinal);
+                hash.Add(p.MarginR, StringComparer.Ordinal);
+                hash.Add(p.MarginV, StringComparer.Ordinal);
             }
 
             return hash.ToHashCode();
