@@ -15181,6 +15181,8 @@ public partial class MainViewModel :
             (nameof(VideoOneSecondForwardCommand),  VideoOneSecondForwardCommand),
             (nameof(VideoOneFrameBackCommand),      VideoOneFrameBackCommand),
             (nameof(VideoOneFrameForwardCommand),   VideoOneFrameForwardCommand),
+            (nameof(VideoOneFrameBackWithPlayCommand), VideoOneFrameBackWithPlayCommand),
+            (nameof(VideoOneFrameForwardWithPlayCommand), VideoOneFrameForwardWithPlayCommand),
             (nameof(WaveformVideoSeekBackCommand),  WaveformVideoSeekBackCommand),
             (nameof(WaveformVideoSeekForwardCommand), WaveformVideoSeekForwardCommand),
             (nameof(VideoMoveCustom1BackCommand),   VideoMoveCustom1BackCommand),
@@ -15196,6 +15198,7 @@ public partial class MainViewModel :
             (nameof(TogglePlayPauseCommand),        TogglePlayPauseCommand),
             (nameof(TogglePlayPause2Command),       TogglePlayPause2Command),
             (nameof(VideoToggleBrightnessCommand),  VideoToggleBrightnessCommand),
+            (nameof(VideoToggleContrastCommand),    VideoToggleContrastCommand),
             (nameof(ToggleSubtitlesOnVideoPlayerCommand), ToggleSubtitlesOnVideoPlayerCommand),
         };
 
@@ -16957,6 +16960,19 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void VideoToggleContrast()
+    {
+        var vp = GetVideoPlayerControl();
+        if (vp?.VideoPlayer is not LibMpvDynamicPlayer mpv)
+        {
+            return;
+        }
+
+        var value = mpv.ToggleContrast();
+        ShowStatus(string.Format(Se.Language.Main.VideoContrastSetTo, value));
+    }
+
+    [RelayCommand]
     private void VideoOneFrameBack()
     {
         if (TryStepVideoFrameSnapped(forward: false))
@@ -17004,6 +17020,47 @@ public partial class MainViewModel :
         }
 
         MoveVideoPositionMs(40);
+    }
+
+    [RelayCommand]
+    private void VideoOneFrameBackWithPlay()
+    {
+        VideoOneFrameWithPlay(forward: false);
+    }
+
+    [RelayCommand]
+    private void VideoOneFrameForwardWithPlay()
+    {
+        VideoOneFrameWithPlay(forward: true);
+    }
+
+    /// <summary>
+    /// SE4's "one frame back/forward with play": step one frame and play just that frame, so
+    /// the step gives audio/visual feedback. Runs through the play-selection stop, whose
+    /// park-one-frame-before-the-end rule lands the playhead exactly on the stepped-to frame.
+    /// </summary>
+    private void VideoOneFrameWithPlay(bool forward)
+    {
+        var vp = GetVideoPlayerControl();
+        if (vp == null || string.IsNullOrEmpty(_videoFileName))
+        {
+            return;
+        }
+
+        var fps = Se.Settings.General.CurrentFrameRate;
+        var frameSeconds = fps >= 10 ? 1.0 / fps : 0.04;
+        var target = Math.Max(0, vp.Position + (forward ? frameSeconds : -frameSeconds));
+
+        vp.VideoPlayer.Pause();
+        vp.Position = target;
+        PinPlayheadTo(target);
+        var frameWindow = new SubtitleLineViewModel
+        {
+            StartTime = TimeSpan.FromSeconds(target),
+            EndTime = TimeSpan.FromSeconds(target + frameSeconds),
+        };
+        _playSelectionItem = new PlaySelectionItem([frameWindow], frameWindow.EndTime, false);
+        PlayVideo(vp);
     }
 
     /// <summary>
