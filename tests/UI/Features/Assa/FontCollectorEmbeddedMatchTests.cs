@@ -15,7 +15,7 @@ public class FontCollectorEmbeddedMatchTests
 {
     private sealed class FakeFolderHelper : IFolderHelper
     {
-        public Task<string> PickFolderAsync(Window window, string title) => Task.FromResult(string.Empty);
+        public Task<string> PickFolderAsync(Window window, string title, string? suggestedStartFolder = null) => Task.FromResult(string.Empty);
         public Task OpenFolder(Window window, string folder) => Task.CompletedTask;
         public Task OpenFolderWithFileSelected(Window window, string selectedFile) => Task.CompletedTask;
     }

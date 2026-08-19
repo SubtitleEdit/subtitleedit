@@ -36,7 +36,7 @@ Dialogue: 0,0:00:04.00,0:00:06.00,Big,,0,0,0,,Second line.
         try
         {
             var inputFile = Path.Combine(dir.FullName, "input.ass");
-            await File.WriteAllTextAsync(inputFile, InputAss);
+            await File.WriteAllTextAsync(inputFile, InputAss, TestContext.Current.CancellationToken);
 
             var outputFolder = Path.Combine(dir.FullName, "out");
             Directory.CreateDirectory(outputFolder);

@@ -36,7 +36,7 @@ public class BatchConvertScanFolderTests
         var dir = MakeTree();
         try
         {
-            var found = Scan(dir.FullName, recursive: false).Select(Path.GetFileName).ToList();
+            var found = Scan(dir.FullName, recursive: false, TestContext.Current.CancellationToken).Select(Path.GetFileName).ToList();
 
             Assert.Equal(2, found.Count);
             Assert.Contains("one.srt", found);
@@ -54,7 +54,7 @@ public class BatchConvertScanFolderTests
         var dir = MakeTree();
         try
         {
-            var found = Scan(dir.FullName, recursive: true).Select(Path.GetFileName).ToList();
+            var found = Scan(dir.FullName, recursive: true, TestContext.Current.CancellationToken).Select(Path.GetFileName).ToList();
 
             Assert.Equal(3, found.Count);
             Assert.Contains("three.vtt", found);
@@ -99,7 +99,7 @@ public class BatchConvertScanFolderTests
                 return; // symlinks unavailable (e.g. Windows without developer mode) - nothing to test
             }
 
-            var found = Scan(dir.FullName, recursive: true).Select(Path.GetFileName).ToList();
+            var found = Scan(dir.FullName, recursive: true, TestContext.Current.CancellationToken).Select(Path.GetFileName).ToList();
 
             Assert.Equal(3, found.Count);
             Assert.Contains("three.vtt", found);
@@ -115,6 +115,6 @@ public class BatchConvertScanFolderTests
     {
         var missing = Path.Combine(Path.GetTempPath(), "se-scan-folder-does-not-exist-" + Guid.NewGuid().ToString("N"));
 
-        Assert.Empty(Scan(missing, recursive: true));
+        Assert.Empty(Scan(missing, recursive: true, TestContext.Current.CancellationToken));
     }
 }

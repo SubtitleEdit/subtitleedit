@@ -20,7 +20,7 @@ public class WordListsLanguageScanTests : IDisposable
 {
     private sealed class StubFolderHelper : IFolderHelper
     {
-        public Task<string> PickFolderAsync(Window window, string title) => Task.FromResult(string.Empty);
+        public Task<string> PickFolderAsync(Window window, string title, string? suggestedStartFolder = null) => Task.FromResult(string.Empty);
         public Task OpenFolder(Window window, string folder) => Task.CompletedTask;
         public Task OpenFolderWithFileSelected(Window window, string selectedFile) => Task.CompletedTask;
     }
@@ -80,7 +80,7 @@ public class WordListsLanguageScanTests : IDisposable
 
         var vm = MakeViewModel();
 
-        Assert.Single(vm.Languages.Where(l => l.TwoLetterISOLanguageName == "el"));
+        Assert.Single(vm.Languages, l => l.TwoLetterISOLanguageName == "el");
     }
 
     [AvaloniaFact]
