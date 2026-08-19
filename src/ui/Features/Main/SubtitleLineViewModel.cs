@@ -143,10 +143,8 @@ public partial class SubtitleLineViewModel : ObservableObject
                 alignment = "R";
             }
 
-            // A teletext row is 40 characters, but a colour change costs a control character at
-            // the start of the row, so a coloured line has one less to play with.
             var hasColor = text.Contains("<font color=", StringComparison.OrdinalIgnoreCase);
-            var maxCharacters = hasColor ? 36 : 37;
+            var maxCharacters = hasColor ? TeletextMaxCharactersWithColor : TeletextMaxCharacters;
 
             var cleanText = HtmlUtil.RemoveHtmlTags(text, true);
             var tooLong = cleanText.SplitToLines().Any(textLine => textLine.Length > maxCharacters);
@@ -155,6 +153,13 @@ public partial class SubtitleLineViewModel : ObservableObject
             return $"{warning}{line} {alignment}";
         }
     }
+
+    // A teletext row holds 40 characters, of which the box and double-height control codes take
+    // the first few; a colour change costs one more. These are the safe widths rather than the
+    // header's MaximumNumberOfDisplayableCharactersInAnyTextRow, which is not reachable from a
+    // per-line view model.
+    private const int TeletextMaxCharacters = 37;
+    private const int TeletextMaxCharactersWithColor = 36;
 
     public TextAlignment TeletextTextAlignment
     {

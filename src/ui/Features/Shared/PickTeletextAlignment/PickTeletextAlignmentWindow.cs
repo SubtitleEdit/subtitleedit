@@ -1,7 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Layout;
 using Avalonia.Data;
+using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -19,186 +19,78 @@ public class PickTeletextAlignmentWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var lineCheckBox = new CheckBox
-{
-    Content = Se.Language.General.TeletextLine + ":",
-    VerticalAlignment = VerticalAlignment.Center,
-};
+        var lineCheckBox = MakeApplyCheckBox(Se.Language.General.TeletextLine, nameof(vm.ApplyTeletextLine));
+        var lineBox = MakeLineBox(1, 23, nameof(vm.TeletextLine));
+        lineBox.HorizontalAlignment = HorizontalAlignment.Right;
 
-lineCheckBox.Bind(
-    CheckBox.IsCheckedProperty,
-    new Binding(nameof(vm.ApplyTeletextLine))
-    {
-        Mode = BindingMode.TwoWay
-    });
-
-        var lineBox = new NumericUpDown
-        {
-            Minimum = 1,
-            Maximum = 23,
-            Increment = 1,
-            Width = 100,
-            HorizontalAlignment = HorizontalAlignment.Right,
-        };
-        lineBox.Bind(
-            NumericUpDown.ValueProperty,
-            new Binding(nameof(vm.TeletextLine))
-            {
-                Mode = BindingMode.TwoWay
-            });
-
-        var alignmentCheckBox = new CheckBox
-{
-    Content = Se.Language.General.Alignment + ":",
-    VerticalAlignment = VerticalAlignment.Center,
-};
-
-alignmentCheckBox.Bind(
-    CheckBox.IsCheckedProperty,
-    new Binding(nameof(vm.ApplyHorizontalAlignment))
-    {
-        Mode = BindingMode.TwoWay
-    });
-
+        var alignmentCheckBox = MakeApplyCheckBox(Se.Language.General.Alignment, nameof(vm.ApplyHorizontalAlignment));
         var alignmentBox = new ComboBox
         {
             ItemsSource = new[]
-{
-    Se.Language.General.Left,
-    Se.Language.General.Center,
-    Se.Language.General.Right
-},
+            {
+                Se.Language.General.Left,
+                Se.Language.General.Center,
+                Se.Language.General.Right,
+            },
             Width = 150,
             HorizontalAlignment = HorizontalAlignment.Right,
         };
-        alignmentBox.Bind(
-            ComboBox.SelectedItemProperty,
-            new Binding(nameof(vm.HorizontalAlignment))
+        alignmentBox.Bind(ComboBox.SelectedItemProperty, new Binding(nameof(vm.HorizontalAlignment))
+        {
+            Mode = BindingMode.TwoWay,
+        });
+
+        var shiftCheckBox = MakeApplyCheckBox(Se.Language.General.ShiftLineBy, nameof(vm.ApplyLineShift));
+        var shiftBox = MakeLineBox(-22, 22, nameof(vm.LineShift));
+        shiftBox.HorizontalAlignment = HorizontalAlignment.Right;
+
+        var replaceLineCheckBox = MakeApplyCheckBox(Se.Language.General.ReplaceLine, nameof(vm.ApplyLineReplace));
+        var replaceLinePanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 8,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            Children =
             {
-                Mode = BindingMode.TwoWay
-            });
-          var shiftCheckBox = new CheckBox
-{
-    Content = Se.Language.General.ShiftLineBy + ":",
-    VerticalAlignment = VerticalAlignment.Center,
-};
+                new Label
+                {
+                    Content = Se.Language.General.From + ":",
+                    VerticalAlignment = VerticalAlignment.Center,
+                },
+                MakeLineBox(1, 23, nameof(vm.ReplaceFromLine)),
+                new Label
+                {
+                    Content = Se.Language.General.To + ":",
+                    VerticalAlignment = VerticalAlignment.Center,
+                },
+                MakeLineBox(1, 23, nameof(vm.ReplaceToLine)),
+            },
+        };
 
-shiftCheckBox.Bind(
-    CheckBox.IsCheckedProperty,
-    new Binding(nameof(vm.ApplyLineShift))
-    {
-        Mode = BindingMode.TwoWay
-    });
+        var previewCheckBox = new CheckBox { Content = Se.Language.General.Preview };
+        previewCheckBox.Bind(CheckBox.IsCheckedProperty, new Binding(nameof(vm.Preview))
+        {
+            Mode = BindingMode.TwoWay,
+        });
 
-var shiftBox = new NumericUpDown
-{
-    Minimum = -22,
-    Maximum = 22,
-    Increment = 1,
-    Width = 100,
-    HorizontalAlignment = HorizontalAlignment.Right,
-};
+        var showTeletextCheckBox = new CheckBox { Content = Se.Language.General.ShowTeletext };
+        showTeletextCheckBox.Bind(CheckBox.IsCheckedProperty, new Binding(nameof(vm.ShowTeletextColumn))
+        {
+            Mode = BindingMode.TwoWay,
+        });
 
-shiftBox.Bind(
-    NumericUpDown.ValueProperty,
-    new Binding(nameof(vm.LineShift))
-    {
-        Mode = BindingMode.TwoWay
-    });  
+        var buttonPanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 10,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            Children =
+            {
+                UiUtil.MakeButton(Se.Language.General.Ok, vm.OkCommand).WithMinWidth(100),
+                UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelCommand).WithMinWidth(100),
+            },
+        };
 
-var replaceLineCheckBox = new CheckBox
-{
-    Content = Se.Language.General.ReplaceLine + ":",
-    VerticalAlignment = VerticalAlignment.Center,
-};
-
-replaceLineCheckBox.Bind(
-    CheckBox.IsCheckedProperty,
-    new Binding(nameof(vm.ApplyLineReplace))
-    {
-        Mode = BindingMode.TwoWay
-    });
-
-var replaceLinePanel = new StackPanel
-{
-    Orientation = Orientation.Horizontal,
-    Spacing = 8,
-    HorizontalAlignment = HorizontalAlignment.Right,
-};
-
-var fromLabel = new Label
-{
-    Content = Se.Language.General.From + ":",
-    VerticalAlignment = VerticalAlignment.Center,
-};
-
-var replaceFromBox = new NumericUpDown
-{
-    Minimum = 1,
-    Maximum = 23,
-    Increment = 1,
-    Width = 100,
-};
-
-replaceFromBox.Bind(
-    NumericUpDown.ValueProperty,
-    new Binding(nameof(vm.ReplaceFromLine))
-    {
-        Mode = BindingMode.TwoWay
-    });
-
-var toLabel = new Label
-{
-    Content = Se.Language.General.To + ":",
-    VerticalAlignment = VerticalAlignment.Center,
-};
-
-var replaceToBox = new NumericUpDown
-{
-    Minimum = 1,
-    Maximum = 23,
-    Increment = 1,
-    Width = 100,
-};
-
-replaceToBox.Bind(
-    NumericUpDown.ValueProperty,
-    new Binding(nameof(vm.ReplaceToLine))
-    {
-        Mode = BindingMode.TwoWay
-    });
-
-replaceLinePanel.Children.Add(fromLabel);
-replaceLinePanel.Children.Add(replaceFromBox);
-replaceLinePanel.Children.Add(toLabel);
-replaceLinePanel.Children.Add(replaceToBox);
-
-var previewCheckBox = new CheckBox
-{
-    Content = Se.Language.General.Preview,
-};
-
-previewCheckBox.Bind(
-    CheckBox.IsCheckedProperty,
-    new Binding(nameof(vm.Preview))
-    {
-        Mode = BindingMode.TwoWay
-    });
-    
-var showTeletextCheckBox = new CheckBox
-{
-    Content = Se.Language.General.ShowTeletext,
-};
-
-showTeletextCheckBox.Bind(
-    CheckBox.IsCheckedProperty,
-    new Binding(nameof(vm.ShowTeletextColumn))
-    {
-        Mode = BindingMode.TwoWay
-    });
-
-        var okButton = UiUtil.MakeButton(Se.Language.General.Ok, vm.OkCommand).WithMinWidth(100);
-var cancelButton = UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelCommand).WithMinWidth(100);
         var grid = new Grid
         {
             RowDefinitions =
@@ -235,22 +127,48 @@ var cancelButton = UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelComman
 
         grid.Add(previewCheckBox, 4, 0);
         grid.Add(showTeletextCheckBox, 5, 0);
-
-        var buttonPanel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 10,
-            HorizontalAlignment = HorizontalAlignment.Right,
-        };
-
-        buttonPanel.Children.Add(okButton);
-        buttonPanel.Children.Add(cancelButton);
-
         grid.Add(buttonPanel, 6, 1);
 
         Content = grid;
 
         Activated += delegate { lineBox.Focus(); };
         KeyDown += (_, e) => vm.OnKeyDown(e);
+    }
+
+    /// <summary>
+    /// Each row of the dialog is opt-in, so its label doubles as the checkbox that enables it.
+    /// </summary>
+    private static CheckBox MakeApplyCheckBox(string header, string applyPropertyName)
+    {
+        var checkBox = new CheckBox
+        {
+            Content = header + ":",
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+
+        checkBox.Bind(CheckBox.IsCheckedProperty, new Binding(applyPropertyName)
+        {
+            Mode = BindingMode.TwoWay,
+        });
+
+        return checkBox;
+    }
+
+    private static NumericUpDown MakeLineBox(decimal minimum, decimal maximum, string propertyName)
+    {
+        var numericUpDown = new NumericUpDown
+        {
+            Minimum = minimum,
+            Maximum = maximum,
+            Increment = 1,
+            Width = 100,
+        };
+
+        numericUpDown.Bind(NumericUpDown.ValueProperty, new Binding(propertyName)
+        {
+            Mode = BindingMode.TwoWay,
+        });
+
+        return numericUpDown;
     }
 }
