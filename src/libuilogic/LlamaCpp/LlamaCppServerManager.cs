@@ -303,6 +303,7 @@ public static class LlamaCppServerManager
     private static string? _serverModelPath;
     private static int _serverContextSize;
     private static string _serverExtraArguments = string.Empty;
+    private static bool _serverExtraArgumentsOnly;
     private static bool _processExitHooked;
     private static readonly StringBuilder _serverLog = new();
 
@@ -555,11 +556,18 @@ public static class LlamaCppServerManager
     /// </summary>
     public const int DefaultContextSize = 8192;
 
-    public static async Task EnsureServerRunningAsync(LlamaCppModel model, CancellationToken cancellationToken, int contextSize = DefaultContextSize, string? extraArguments = null)
+    /// <param name="extraArgumentsOnly">
+    /// Launches llama-server with <paramref name="extraArguments"/> instead of SE's curated flags
+    /// (-ngl/-c/-np/--swa-full/--cache-reuse and the chat-template pair), for users who want full
+    /// control over the server configuration. The model, host and port are always passed - SE has
+    /// to know which model it is talking to and where. (#13865)
+    /// </param>
+    public static async Task EnsureServerRunningAsync(LlamaCppModel model, CancellationToken cancellationToken, int contextSize = DefaultContextSize, string? extraArguments = null, bool extraArgumentsOnly = false)
     {
         var extraArgs = extraArguments?.Trim() ?? string.Empty;
+        var argsOnly = extraArgumentsOnly && extraArgs.Length > 0;
         var modelPath = GetModelPath(model.FileName);
-        if (IsServerRunning && _serverModelPath == modelPath && _serverContextSize == contextSize && _serverExtraArguments == extraArgs)
+        if (IsRunningWith(modelPath, contextSize, extraArgs, argsOnly))
         {
             Configuration.Settings.Tools.LlamaCppApiUrl = ApiUrl;
             return;
@@ -568,7 +576,7 @@ public static class LlamaCppServerManager
         await ServerLock.WaitAsync(cancellationToken);
         try
         {
-            if (IsServerRunning && _serverModelPath == modelPath && _serverContextSize == contextSize && _serverExtraArguments == extraArgs)
+            if (IsRunningWith(modelPath, contextSize, extraArgs, argsOnly))
             {
                 Configuration.Settings.Tools.LlamaCppApiUrl = ApiUrl;
                 return;
@@ -611,53 +619,7 @@ public static class LlamaCppServerManager
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
             };
-            psi.ArgumentList.Add("-m");
-            psi.ArgumentList.Add(modelPath);
-            if (mmprojPath != null)
-            {
-                psi.ArgumentList.Add("--mmproj");
-                psi.ArgumentList.Add(mmprojPath);
-            }
-            psi.ArgumentList.Add("--host");
-            psi.ArgumentList.Add("127.0.0.1");
-            psi.ArgumentList.Add("--port");
-            psi.ArgumentList.Add(port.ToString(CultureInfo.InvariantCulture));
-            // Offload all layers to the GPU when a GPU build is in use; ignored by the CPU build.
-            psi.ArgumentList.Add("-ngl");
-            psi.ArgumentList.Add("99");
-            psi.ArgumentList.Add("-c");
-            psi.ArgumentList.Add(contextSize.ToString(CultureInfo.InvariantCulture));
-            // SE is the server's only client, but llama-server defaults to 4 parallel slots,
-            // which silently splits -c four ways (8192 became 2048 usable tokens per request).
-            psi.ArgumentList.Add("-np");
-            psi.ArgumentList.Add("1");
-            // Keep the full KV cache for sliding-window-attention models (Gemma, Qwen 3.5);
-            // without this their prompt cache only works on byte-identical requests and
-            // cache_prompt reuse is lost entirely. Costs some KV memory at these context sizes.
-            psi.ArgumentList.Add("--swa-full");
-            if (mmprojPath == null)
-            {
-                // Chunk-level KV-cache reuse after the first diverging token; together with the
-                // clients' cache_prompt this keeps repeated prompt prefixes (system prompt,
-                // rolling context) from being re-ingested every request. Auto-disables with a
-                // warning on models whose context cannot shift. Not combined with multimodal -
-                // vision chunks cannot be shifted.
-                psi.ArgumentList.Add("--cache-reuse");
-                psi.ArgumentList.Add("256");
-            }
-            if (model.NoJinja)
-            {
-                psi.ArgumentList.Add("--no-jinja");
-            }
-            if (model.ChatTemplate != null)
-            {
-                psi.ArgumentList.Add("--chat-template");
-                psi.ArgumentList.Add(model.ChatTemplate);
-            }
-
-            // User-supplied llama-server arguments last, so a repeated flag (e.g. -ngl, -c)
-            // overrides SE's value - llama-server applies later arguments over earlier ones.
-            foreach (var arg in SplitCommandLineArguments(extraArgs))
+            foreach (var arg in BuildServerArguments(model, modelPath, mmprojPath, port, contextSize, extraArgs, argsOnly))
             {
                 psi.ArgumentList.Add(arg);
             }
@@ -694,6 +656,7 @@ public static class LlamaCppServerManager
             _serverModelPath = modelPath;
             _serverContextSize = contextSize;
             _serverExtraArguments = extraArgs;
+            _serverExtraArgumentsOnly = argsOnly;
             HookProcessExitOnce();
 
             var deadline = DateTime.UtcNow.AddMinutes(5);
@@ -728,6 +691,88 @@ public static class LlamaCppServerManager
         {
             ServerLock.Release();
         }
+    }
+
+    /// <summary>
+    /// The llama-server command line for one launch. The model, host and port are always ours -
+    /// SE has to know which model it is talking to and where - and the user's own arguments always
+    /// come last, so a repeated flag (e.g. -ngl, -c) overrides SE's value: llama-server applies
+    /// later arguments over earlier ones. <paramref name="argsOnly"/> drops SE's curated tuning
+    /// altogether, for users who want full control; without it a bare switch such as --swa-full
+    /// cannot be turned off at all, since there is nothing to repeat with a different value (#13865).
+    /// </summary>
+    internal static List<string> BuildServerArguments(
+        LlamaCppModel model,
+        string modelPath,
+        string? mmprojPath,
+        int port,
+        int contextSize,
+        string extraArgs,
+        bool argsOnly)
+    {
+        var args = new List<string> { "-m", modelPath };
+        if (mmprojPath != null)
+        {
+            args.Add("--mmproj");
+            args.Add(mmprojPath);
+        }
+
+        args.Add("--host");
+        args.Add("127.0.0.1");
+        args.Add("--port");
+        args.Add(port.ToString(CultureInfo.InvariantCulture));
+
+        if (!argsOnly)
+        {
+            // Offload all layers to the GPU when a GPU build is in use; ignored by the CPU build.
+            args.Add("-ngl");
+            args.Add("99");
+            args.Add("-c");
+            args.Add(contextSize.ToString(CultureInfo.InvariantCulture));
+            // SE is the server's only client, but llama-server defaults to 4 parallel slots,
+            // which silently splits -c four ways (8192 became 2048 usable tokens per request).
+            args.Add("-np");
+            args.Add("1");
+            // Keep the full KV cache for sliding-window-attention models (Gemma, Qwen 3.5);
+            // without this their prompt cache only works on byte-identical requests and
+            // cache_prompt reuse is lost entirely. Costs some KV memory at these context sizes.
+            args.Add("--swa-full");
+            if (mmprojPath == null)
+            {
+                // Chunk-level KV-cache reuse after the first diverging token; together with the
+                // clients' cache_prompt this keeps repeated prompt prefixes (system prompt,
+                // rolling context) from being re-ingested every request. Auto-disables with a
+                // warning on models whose context cannot shift. Not combined with multimodal -
+                // vision chunks cannot be shifted.
+                args.Add("--cache-reuse");
+                args.Add("256");
+            }
+
+            if (model.NoJinja)
+            {
+                args.Add("--no-jinja");
+            }
+
+            if (model.ChatTemplate != null)
+            {
+                args.Add("--chat-template");
+                args.Add(model.ChatTemplate);
+            }
+        }
+
+        args.AddRange(SplitCommandLineArguments(extraArgs));
+        return args;
+    }
+
+    private static bool IsRunningWith(string modelPath, int contextSize, string extraArgs, bool argsOnly)
+    {
+        return IsServerRunning &&
+               _serverModelPath == modelPath &&
+               _serverExtraArguments == extraArgs &&
+               _serverExtraArgumentsOnly == argsOnly &&
+               // With SE's flags suppressed the context size comes from the user's own arguments
+               // (or the server default), so the requested value says nothing about the running one.
+               (argsOnly || _serverContextSize == contextSize);
     }
 
     public static void StopServer()

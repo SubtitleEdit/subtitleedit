@@ -293,6 +293,11 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     private readonly IBatchConvertItemSplitter _batchConvertItemSplitter;
     private CancellationToken _cancellationToken;
     private CancellationTokenSource _cancellationTokenSource;
+
+    // True once a batch run in this window has put the SE-managed llama-server to work - the
+    // llama.cpp translate engines in local-server mode, or the llama.cpp OCR engine. Gates the
+    // shutdown so a cancel never kills a server this window did not start. (#13865)
+    private bool _usesLocalLlamaCppServer;
     private CancellationTokenSource _addFilesCancellationTokenSource = new();
     private CancellationTokenSource? _statusClearCts; // supersedes the pending status-clear timer
     private List<string> _encodings;
@@ -515,6 +520,46 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     {
         _isClosing = true;
         _filesTimer.StopAndDispose(FilesTimerElapsed);
+
+        // A batch left running after its window is gone keeps writing files with no UI to show it
+        // (and would restart the llama-server we are about to kill), so stop it first. (#13865)
+        _cancellationTokenSource.Cancel();
+        _addFilesCancellationTokenSource.Cancel();
+        StopLocalLlamaCppServer();
+    }
+
+    /// <summary>
+    /// Kills the SE-managed llama-server when a batch run is cancelled or this window closes, so
+    /// the model's RAM/VRAM is released right away instead of only at app exit. The Auto-translate
+    /// window keeps a finished run's server warm because it has a stop button and shows the server
+    /// state; the batch window has neither, so a server left behind here is invisible and
+    /// unstoppable (#13865). The next run auto-restarts it.
+    /// </summary>
+    private void StopLocalLlamaCppServer()
+    {
+        if (!_usesLocalLlamaCppServer || !LlamaCppServerManager.IsServerRunning)
+        {
+            return;
+        }
+
+        // Off the UI thread - StopServer kills the process and waits up to 2 s for it to exit.
+        _ = Task.Run(LlamaCppServerManager.StopServer);
+    }
+
+    /// <summary>
+    /// True when <paramref name="config"/> drives the local (SE-managed) llama-server: the
+    /// llama.cpp translate engines unless the user pointed them at their own server, or the
+    /// llama.cpp OCR engine - which always runs locally.
+    /// </summary>
+    private static bool UsesLocalLlamaCppServer(BatchConvertConfig config)
+    {
+        var translate = config.AutoTranslate.IsActive &&
+                        config.AutoTranslate.Translator is LlamaCppTranslate or LlamaCppAdvancedTranslate &&
+                        !Se.Settings.AutoTranslate.LlamaCppUseRemoteServer;
+
+        var ocr = string.Equals(Se.Settings.Tools.BatchConvert.OcrEngine, "llama.cpp", StringComparison.OrdinalIgnoreCase);
+
+        return translate || ocr;
     }
 
     private void UpdateFilteredFiles()
@@ -1021,6 +1066,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     private void Cancel()
     {
         _cancellationTokenSource.Cancel();
+        StopLocalLlamaCppServer();
         IsConverting = false;
         foreach (var batchItem in BatchItems)
         {
@@ -1055,6 +1101,10 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         SaveSettings();
 
         var config = MakeBatchConvertConfig();
+
+        // Set before the ensure-chain below: starting the server is itself the slow part a user
+        // cancels out of, and the shutdown has to know the run owns it by then. (#13865)
+        _usesLocalLlamaCppServer |= UsesLocalLlamaCppServer(config);
 
         if (!await EnsureTranslateApiKeyPresent(config))
         {
@@ -1401,16 +1451,11 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             return true;
         }
 
-        // Auto-detect: reuse an already-running local server - but not one started with a smaller
-        // context than the selected engine needs (say the advanced engine after an OCR run, or after
-        // the regular engine started the server at the default size). Falling through restarts it
-        // with the right context instead of silently translating in a too-small window.
+        // A server that is already running is reused by EnsureServerRunningAsync below, but only
+        // when its model, context size and launch arguments match what this run asks for. Deciding
+        // that here (as "any running server with a big enough context") reused a server started for
+        // OCR, or one still running with the arguments from before the user edited them (#13865).
         var contextSize = GetLlamaCppContextSize(config.AutoTranslate.Translator);
-        if (LlamaCppServerManager.IsServerRunning && LlamaCppServerManager.RunningContextSize >= contextSize)
-        {
-            Configuration.Settings.Tools.LlamaCppApiUrl = LlamaCppServerManager.ApiUrl;
-            return true;
-        }
 
         // Pick the last-used model, else the first available translate model.
         var models = LlamaCppServerManager.GetAllTranslateModels();
@@ -1436,10 +1481,10 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         // Auto-start the local server - this points Configuration.Settings.Tools.LlamaCppApiUrl at it.
         try
         {
-            var extraArguments = config.AutoTranslate.Translator is LlamaCppAdvancedTranslate
-                ? Se.Settings.AutoTranslate.LlamaCppAdvanced.ServerArguments
-                : null;
-            await LlamaCppServerManager.EnsureServerRunningAsync(model, _cancellationToken, contextSize, extraArguments);
+            var isAdvanced = config.AutoTranslate.Translator is LlamaCppAdvancedTranslate;
+            var extraArguments = isAdvanced ? Se.Settings.AutoTranslate.LlamaCppAdvanced.ServerArguments : null;
+            var extraArgumentsOnly = isAdvanced && Se.Settings.AutoTranslate.LlamaCppAdvanced.ServerArgumentsOnly;
+            await LlamaCppServerManager.EnsureServerRunningAsync(model, _cancellationToken, contextSize, extraArguments, extraArgumentsOnly);
         }
         catch (Exception ex)
         {
@@ -1669,6 +1714,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     private void CancelConvert()
     {
         _cancellationTokenSource.Cancel();
+        StopLocalLlamaCppServer();
         IsConverting = false;
     }
 
