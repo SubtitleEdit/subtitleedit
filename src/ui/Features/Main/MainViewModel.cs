@@ -12950,7 +12950,7 @@ public partial class MainViewModel :
         // Teletext line is only changed when explicitly selected.
         if (result.ApplyTeletextLine)
         {
-            var marginV = (result.TeletextLine - 1).ToString(CultureInfo.InvariantCulture);
+            var marginV = result.TeletextLine.ToString(CultureInfo.InvariantCulture);
 
             foreach (var item in selectedItems)
             {
@@ -12963,9 +12963,8 @@ public partial class MainViewModel :
         {
             foreach (var item in selectedItems)
             {
-                if (int.TryParse(item.MarginV, out var ebuLine))
+                if (int.TryParse(item.MarginV, out var teletextLine))
                 {
-                    var teletextLine = ebuLine + 1;
                     var shiftedLine = teletextLine + result.LineShift;
 
                     if (shiftedLine < 1)
@@ -12977,7 +12976,7 @@ public partial class MainViewModel :
                         shiftedLine = 23;
                     }
 
-                    item.MarginV = (shiftedLine - 1).ToString(CultureInfo.InvariantCulture);
+                    item.MarginV = shiftedLine.ToString(CultureInfo.InvariantCulture);
                 }
             }
         }
@@ -12988,37 +12987,64 @@ public partial class MainViewModel :
         {
             foreach (var item in selectedItems)
             {
-                if (int.TryParse(item.MarginV, out var ebuLine))
+                if (int.TryParse(item.MarginV, out var teletextLine) &&
+                    teletextLine == result.ReplaceFromLine)
                 {
-                    var teletextLine = ebuLine + 1;
-
-                    if (teletextLine == result.ReplaceFromLine)
-                    {
-                        item.MarginV = (result.ReplaceToLine - 1).ToString(CultureInfo.InvariantCulture);
-                    }
+                    item.MarginV = result.ReplaceToLine.ToString(CultureInfo.InvariantCulture);
                 }
             }
         }
 
-        // Horizontal alignment is only changed when explicitly selected.
+        // Horizontal alignment is only changed when explicitly selected. SetAlignmentToSelected
+        // is not usable here: it applies one tag to every line, which would flatten each line's
+        // own top/middle/bottom band, and it walks a different row set than the loops above.
         if (result.ApplyHorizontalAlignment)
         {
-            var alignment = result.HorizontalAlignment switch
+            var column = result.HorizontalAlignment switch
             {
-                var value when value == Se.Language.General.Left => "an1",
-                var value when value == Se.Language.General.Right => "an3",
-                _ => "an2",
+                var value when value == Se.Language.General.Left => 1,
+                var value when value == Se.Language.General.Right => 3,
+                _ => 2,
             };
 
-            SetAlignmentToSelected(alignment);
-        }
-
-        foreach (var item in selectedItems)
-        {
-            item.RefreshTeletextDisplay();
+            foreach (var item in selectedItems)
+            {
+                item.Text = AlignmentTagHelper.SetAlignment(
+                    item.Text,
+                    GetHorizontalAlignmentTag(item.Text, column),
+                    Se.Settings.General.WriteAn2Tag);
+            }
         }
 
         _updateAudioVisualizer = true;
+    }
+
+    /// <summary>
+    /// Picks the "anX" tag for the wanted horizontal column (1 = left, 2 = centre, 3 = right)
+    /// while keeping whichever vertical band the text already uses, so changing the horizontal
+    /// alignment of a "{\an8}" line gives "{\an7}".."{\an9}" rather than dropping it to the bottom.
+    /// </summary>
+    private static string GetHorizontalAlignmentTag(string text, int column)
+    {
+        var row = 0; // bottom - an1..an3
+
+        if (text != null)
+        {
+            if (text.StartsWith("{\\an4}", StringComparison.Ordinal) ||
+                text.StartsWith("{\\an5}", StringComparison.Ordinal) ||
+                text.StartsWith("{\\an6}", StringComparison.Ordinal))
+            {
+                row = 1; // middle - an4..an6
+            }
+            else if (text.StartsWith("{\\an7}", StringComparison.Ordinal) ||
+                     text.StartsWith("{\\an8}", StringComparison.Ordinal) ||
+                     text.StartsWith("{\\an9}", StringComparison.Ordinal))
+            {
+                row = 2; // top - an7..an9
+            }
+        }
+
+        return "an" + (row * 3 + column).ToString(CultureInfo.InvariantCulture);
     }
 
     [RelayCommand]

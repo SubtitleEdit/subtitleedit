@@ -19,7 +19,7 @@ public class TeletextAlignmentPreviewConverter : IMultiValueConverter
     {
         if (values.Count < 2 || values[0] is not true)
         {
-            return TextAlignment.Left;
+            return TextAlignment.Start;
         }
 
         if (values[1] is TextAlignment alignment)
@@ -27,7 +27,7 @@ public class TeletextAlignmentPreviewConverter : IMultiValueConverter
             return alignment;
         }
 
-        return TextAlignment.Left;
+        return TextAlignment.Start;
     }
 
     public object[] ConvertBack(

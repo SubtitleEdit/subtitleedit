@@ -59,7 +59,6 @@ private int replaceToLine = 23;
     }
 
 
-// NEU: aktuelle Teletext-Zeile des Untertitels einlesen
     internal void Initialize(
     SubtitleLineViewModel? selectedSubtitle,
     bool preview,
@@ -76,10 +75,10 @@ private int replaceToLine = 23;
     }
 
     if (int.TryParse(selectedSubtitle.MarginV, out var line) &&
-        line >= 0 &&
-        line <= 22)
+        line >= 1 &&
+        line <= 23)
     {
-        TeletextLine = line + 1;
+        TeletextLine = line;
     }
     else
     {

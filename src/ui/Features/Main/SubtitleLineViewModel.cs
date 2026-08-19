@@ -105,78 +105,80 @@ public partial class SubtitleLineViewModel : ObservableObject
     public bool IsComment { get; set; }
     public string MarginL { get; set; }
     public string MarginR { get; set; }
-    public string MarginV { get; set; }
+    /// <summary>
+    /// For EBU STL this is the teletext row the subtitle starts on (1..23, matching the format's
+    /// VerticalPosition field). Observable so the "TT" column follows undo and reload, which
+    /// assign it without going through the teletext dialog.
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(TeletextDisplay))]
+    private string _marginV;
+
     public string TeletextDisplay
-{
-    get
     {
-        var line = 23;
-
-        if (int.TryParse(MarginV, out var ebuLine) &&
-            ebuLine >= 0 &&
-            ebuLine <= 22)
+        get
         {
-            line = ebuLine + 1;
+            var line = 23;
+
+            if (int.TryParse(MarginV, out var ebuLine) &&
+                ebuLine >= 1 &&
+                ebuLine <= 23)
+            {
+                line = ebuLine;
+            }
+
+            var text = Text ?? string.Empty;
+            var alignment = "C";
+
+            if (text.StartsWith("{\\an1}") ||
+                text.StartsWith("{\\an4}") ||
+                text.StartsWith("{\\an7}"))
+            {
+                alignment = "L";
+            }
+            else if (text.StartsWith("{\\an3}") ||
+                     text.StartsWith("{\\an6}") ||
+                     text.StartsWith("{\\an9}"))
+            {
+                alignment = "R";
+            }
+
+            // A teletext row is 40 characters, but a colour change costs a control character at
+            // the start of the row, so a coloured line has one less to play with.
+            var hasColor = text.Contains("<font color=", StringComparison.OrdinalIgnoreCase);
+            var maxCharacters = hasColor ? 36 : 37;
+
+            var cleanText = HtmlUtil.RemoveHtmlTags(text, true);
+            var tooLong = cleanText.SplitToLines().Any(textLine => textLine.Length > maxCharacters);
+            var warning = tooLong ? "⚠ " : string.Empty;
+
+            return $"{warning}{line} {alignment}";
         }
-
-        var text = Text ?? string.Empty;
-        var alignment = "C";
-
-        if (text.StartsWith("{\\an1}") ||
-            text.StartsWith("{\\an4}") ||
-            text.StartsWith("{\\an7}"))
-        {
-            alignment = "L";
-        }
-        else if (text.StartsWith("{\\an3}") ||
-                 text.StartsWith("{\\an6}") ||
-                 text.StartsWith("{\\an9}"))
-        {
-            alignment = "R";
-        }
-
-        var hasColor = text.Contains("<font color=", StringComparison.OrdinalIgnoreCase);
-var maxCharacters = hasColor ? 36 : 37;
-
-var cleanText = HtmlUtil.RemoveHtmlTags(text, true);
-var textLines = cleanText.SplitToLines();
-
-var tooLong = textLines.Any(textLine => textLine.Length > maxCharacters);
-
-var warning = tooLong ? "⚠ " : string.Empty;
-
-return $"{warning}{line} {alignment}";
     }
-}
 
-// HIER direkt dahinter:
-public TextAlignment TeletextTextAlignment
-{
-    get
+    public TextAlignment TeletextTextAlignment
     {
-        var text = Text ?? string.Empty;
-
-        if (text.StartsWith("{\\an1}") ||
-            text.StartsWith("{\\an4}") ||
-            text.StartsWith("{\\an7}"))
+        get
         {
-            return TextAlignment.Left;
-        }
+            var text = Text ?? string.Empty;
 
-        if (text.StartsWith("{\\an3}") ||
-            text.StartsWith("{\\an6}") ||
-            text.StartsWith("{\\an9}"))
-        {
-            return TextAlignment.Right;
-        }
+            if (text.StartsWith("{\\an1}") ||
+                text.StartsWith("{\\an4}") ||
+                text.StartsWith("{\\an7}"))
+            {
+                return TextAlignment.Left;
+            }
 
-        return TextAlignment.Center;
+            if (text.StartsWith("{\\an3}") ||
+                text.StartsWith("{\\an6}") ||
+                text.StartsWith("{\\an9}"))
+            {
+                return TextAlignment.Right;
+            }
+
+            return TextAlignment.Center;
+        }
     }
-}
-public void RefreshTeletextDisplay()
-{
-    OnPropertyChanged(nameof(TeletextDisplay));
-}
 
     public bool NewSection { get; set; }
     public bool Forced { get; set; }

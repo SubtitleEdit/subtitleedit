@@ -290,25 +290,30 @@ new("2F", "French - hearing impaired (VF-MAL)"),
             UseBox = Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox;
 UseDoubleHeight = Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight;
 
+            // Keep the settings the file was written with instead of resetting them to the
+            // defaults above every time the export dialog is opened.
             if (!string.IsNullOrEmpty(_subtitle.Header) &&
-    _subtitle.Header.Length == 1024 &&
-    (_subtitle.Header.Contains("STL24") ||
-     _subtitle.Header.Contains("STL25") ||
-     _subtitle.Header.Contains("STL29") ||
-     _subtitle.Header.Contains("STL30")))
-{
-    try
-    {
-        var encoding = Ebu.GetEncoding(_subtitle.Header.Substring(0, 3));
-        _header = Ebu.ReadHeader(encoding.GetBytes(_subtitle.Header));
-        FillFromHeader(_header);
-    }
-    catch
-    {
-        // Falls der vorhandene Header ungültig ist,
-        // bleiben die normalen Standardwerte aktiv.
-    }
-}
+                _subtitle.Header.Length == 1024 &&
+                (_subtitle.Header.Contains("STL24") ||
+                 _subtitle.Header.Contains("STL25") ||
+                 _subtitle.Header.Contains("STL29") ||
+                 _subtitle.Header.Contains("STL30")))
+            {
+                try
+                {
+                    var encoding = Ebu.GetEncoding(_subtitle.Header.Substring(0, 3));
+                    _header = Ebu.ReadHeader(encoding.GetBytes(_subtitle.Header));
+                    FillFromHeader(_header);
+                }
+                catch (Exception exception)
+                {
+                    // An unreadable header is not worth blocking the export over - the defaults
+                    // above still stand - but it should not vanish silently either.
+                    SeLogger.Error(exception, "Unable to read the EBU STL header of the current subtitle");
+                    _header = new Ebu.EbuGeneralSubtitleInformation();
+                }
+            }
+
             CheckErrors(_subtitle);
         });
     }
@@ -441,16 +446,20 @@ UseDoubleHeight = Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubl
     {
         SelectedCodePage = CodePages.FirstOrDefault(p => p.CodePage == header.CodePageNumber);
 
-        SelectedDiskFormatCode = DiskFormatCodes.First(p => p.Contains(header.DiskFormatCode, StringComparison.OrdinalIgnoreCase));
+        SelectedDiskFormatCode = DiskFormatCodes.FirstOrDefault(p => p.Contains(header.DiskFormatCode, StringComparison.OrdinalIgnoreCase))
+                                 ?? SelectedDiskFormatCode;
 
         if (header.FrameRateFromSaveDialog is > 20 and < 200)
         {
             SelectedFrameRate = header.FrameRateFromSaveDialog.ToString(CultureInfo.CurrentCulture);
         }
 
-        SelectedDisplayStandardCode = DisplayStandardCodes.First(p => p.StartsWith(header.DisplayStandardCode, StringComparison.InvariantCulture));
+        SelectedDisplayStandardCode = DisplayStandardCodes.FirstOrDefault(p => p.StartsWith(header.DisplayStandardCode, StringComparison.InvariantCulture))
+                                      ?? SelectedDisplayStandardCode;
 
-        if (int.TryParse(header.CharacterCodeTableNumber, out var tableNumber))
+        if (int.TryParse(header.CharacterCodeTableNumber, out var tableNumber) &&
+            tableNumber >= 0 &&
+            tableNumber < CharacterTables.Count)
         {
             SelectedCharacterTable = CharacterTables[tableNumber];
         }
