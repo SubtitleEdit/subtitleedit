@@ -4649,16 +4649,20 @@ public partial class OcrViewModel : ObservableObject
     // per-line selection/scroll/text posts at Normal dispatcher priority outrank input processing,
     // so Pause/Cancel clicks and even the window's minimize are starved until the run completes.
     // Per-line UI feedback is queued here instead and applied in one Background-priority dispatcher
-    // job at most every OcrUiFlushIntervalMs. Data updates (line text, fix results, unknown-word
-    // rows) are all applied in order; selection and progress are latest-wins - a newly OCR'ed
-    // line replaces any still-pending selection.
-    private const int OcrUiFlushIntervalMs = 200;
+    // job. The flush is leading-edge throttled: an update arriving after a quiet period is applied
+    // immediately (so slower engines feel live), and only while updates keep streaming are they
+    // batched to at most one flush per OcrUiFlushIntervalMs. Data updates (line text, fix results,
+    // unknown-word rows) are all applied in order; selection and progress are latest-wins - a
+    // newly OCR'ed line replaces any still-pending selection.
+    private const int OcrUiFlushIntervalMs = 100;
     private readonly Lock _ocrUiUpdateLock = new Lock();
+    private readonly System.Diagnostics.Stopwatch _ocrUiFlushClock = System.Diagnostics.Stopwatch.StartNew();
     private List<Action> _ocrUiPendingUpdates = new List<Action>();
     private int _ocrUiPendingSelectIndex = -1;
     private double _ocrUiPendingProgressValue;
     private string? _ocrUiPendingProgressText;
     private bool _ocrUiFlushScheduled;
+    private long _ocrUiLastFlushElapsedMs = -OcrUiFlushIntervalMs;
 
     private void EnqueueOcrUiUpdate(Action update)
     {
@@ -4693,6 +4697,7 @@ public partial class OcrViewModel : ObservableObject
 
     private void ScheduleOcrUiFlush()
     {
+        long delayMs;
         lock (_ocrUiUpdateLock)
         {
             if (_ocrUiFlushScheduled)
@@ -4701,14 +4706,24 @@ public partial class OcrViewModel : ObservableObject
             }
 
             _ocrUiFlushScheduled = true;
+            var sinceLastFlushMs = _ocrUiFlushClock.ElapsedMilliseconds - _ocrUiLastFlushElapsedMs;
+            delayMs = OcrUiFlushIntervalMs - sinceLastFlushMs;
         }
 
         // DispatcherTimer may only be touched from the UI thread, and the enqueue often happens
         // on an OCR worker thread. Background priority keeps both the scheduling hop and the
-        // flush itself below input processing.
-        Dispatcher.UIThread.Post(
-            () => DispatcherTimer.RunOnce(FlushOcrUiUpdates, TimeSpan.FromMilliseconds(OcrUiFlushIntervalMs), DispatcherPriority.Background),
-            DispatcherPriority.Background);
+        // flush itself below input processing, so a flood of updates can never starve input.
+        if (delayMs <= 0)
+        {
+            // Quiet period since the last flush - apply right away so the grid feels live.
+            Dispatcher.UIThread.Post(FlushOcrUiUpdates, DispatcherPriority.Background);
+        }
+        else
+        {
+            Dispatcher.UIThread.Post(
+                () => DispatcherTimer.RunOnce(FlushOcrUiUpdates, TimeSpan.FromMilliseconds(delayMs), DispatcherPriority.Background),
+                DispatcherPriority.Background);
+        }
     }
 
     /// <summary>
@@ -4726,6 +4741,7 @@ public partial class OcrViewModel : ObservableObject
         lock (_ocrUiUpdateLock)
         {
             _ocrUiFlushScheduled = false;
+            _ocrUiLastFlushElapsedMs = _ocrUiFlushClock.ElapsedMilliseconds;
             updates = _ocrUiPendingUpdates;
             _ocrUiPendingUpdates = new List<Action>();
             selectIndex = _ocrUiPendingSelectIndex;
