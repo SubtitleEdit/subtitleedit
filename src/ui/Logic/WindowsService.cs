@@ -575,6 +575,10 @@ namespace Nikse.SubtitleEdit.Logic
             // closing the dialog while minimized should bring the owner back.
             var ownerMinimizedByMirror = false;
 
+            // True while the pair is minimized, so the way back up can be told apart from an
+            // ordinary Normal <-> Maximized change and repair the foreground exactly once.
+            var pairMinimized = false;
+
             void OnDialogStateChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
             {
                 if (e.Property != Window.WindowStateProperty || syncing)
@@ -587,6 +591,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (dialog.WindowState == WindowState.Minimized)
                     {
+                        pairMinimized = true;
                         if (owner.WindowState != WindowState.Minimized)
                         {
                             ownerRestoreState = owner.WindowState;
@@ -603,6 +608,11 @@ namespace Nikse.SubtitleEdit.Logic
                         }
 
                         ownerMinimizedByMirror = false;
+                        if (pairMinimized)
+                        {
+                            pairMinimized = false;
+                            RepairModalForegroundAfterRestore(dialog);
+                        }
                     }
                 }
                 finally
@@ -623,6 +633,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (owner.WindowState == WindowState.Minimized)
                     {
+                        pairMinimized = true;
                         if (dialog.WindowState != WindowState.Minimized)
                         {
                             dialogRestoreState = dialog.WindowState;
@@ -636,6 +647,12 @@ namespace Nikse.SubtitleEdit.Logic
                         if (dialog.WindowState == WindowState.Minimized)
                         {
                             dialog.WindowState = dialogRestoreState;
+                        }
+
+                        if (pairMinimized)
+                        {
+                            pairMinimized = false;
+                            RepairModalForegroundAfterRestore(dialog);
                         }
                     }
                 }
@@ -663,6 +680,47 @@ namespace Nikse.SubtitleEdit.Logic
                     owner.WindowState = ownerRestoreState;
                 }
             });
+        }
+
+        /// <summary>
+        /// Hands the foreground and the keyboard back to <paramref name="dialog"/> after the
+        /// minimize mirror brought the pair back up.
+        ///
+        /// Restoring a window is an activating operation: Avalonia's Win32 backend ends every
+        /// non-minimizing WindowState write with SetFocus + SetForegroundWindow on that window
+        /// (WindowImpl.ShowWindow). So the mirror restoring the owner deliberately puts the OS
+        /// foreground and the keyboard on a window the modal has input-disabled - the #13405
+        /// state all over again: the dialog is drawn on top, Esc is dead, and the dialogs it
+        /// opens come up behind it (#13865). <see cref="EnforceModalForegroundWhileOpen"/> does
+        /// not catch it, because it keys on the owner *becoming* active and the owner has been
+        /// active since the minimize churn - no event fires for the restore at all. So the
+        /// restore repairs the invariant directly, retried on the same short timers the open
+        /// path uses, since the OS is still moving windows around when the first pass runs.
+        /// </summary>
+        private static void RepairModalForegroundAfterRestore(Window dialog)
+        {
+            void Repair()
+            {
+                // Only the top-most dialog may hold the foreground: an inner modal opened over
+                // this one owns it instead, and a lower frame's mirror must not steal it back.
+                if (_modalFrames.Count == 0 || _modalFrames[^1].Dialog != dialog ||
+                    !dialog.IsVisible || dialog.IsClosing() ||
+                    dialog.WindowState == WindowState.Minimized)
+                {
+                    return;
+                }
+
+                if (!dialog.IsActive)
+                {
+                    dialog.Activate();
+                }
+
+                ReclaimKeyboardFocusFromDisabledOwner();
+            }
+
+            Dispatcher.UIThread.Post(Repair, DispatcherPriority.Background);
+            DispatcherTimer.RunOnce(Repair, TimeSpan.FromMilliseconds(150));
+            DispatcherTimer.RunOnce(Repair, TimeSpan.FromMilliseconds(450));
         }
 
         private static WindowState NonMinimized(WindowState state)
