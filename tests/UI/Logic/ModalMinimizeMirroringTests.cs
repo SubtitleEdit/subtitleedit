@@ -11,6 +11,13 @@ namespace UITests.Logic;
 // mirrors minimize/restore between the dialog and its owner: minimizing either sends the whole
 // pair to the taskbar, restoring either brings both back. The undocked tool windows are
 // independent (never in the owner chain) and are not part of the mirror.
+//
+// The mirror's counterpart writes are DELIBERATELY deferred to a posted dispatcher job - a
+// synchronous write from inside the other window's state-change dispatch can land while Windows
+// still has the owned dialog hidden (owner minimized => owned windows hidden), which Avalonia's
+// Win32 backend records without performing, permanently wedging the dialog's rendering on the
+// next real restore (#13865). Tests therefore RunJobs between a state write and its mirrored
+// assertion.
 public class ModalMinimizeMirroringTests : IDisposable
 {
     public ModalMinimizeMirroringTests()
@@ -66,6 +73,7 @@ public class ModalMinimizeMirroringTests : IDisposable
         var (owner, dialog, _) = OpenModal();
 
         dialog.WindowState = WindowState.Minimized;
+        Dispatcher.UIThread.RunJobs();
 
         Assert.Equal(WindowState.Minimized, owner.WindowState);
     }
@@ -76,7 +84,9 @@ public class ModalMinimizeMirroringTests : IDisposable
         var (owner, dialog, _) = OpenModal();
 
         dialog.WindowState = WindowState.Minimized;
+        Dispatcher.UIThread.RunJobs();
         dialog.WindowState = WindowState.Normal;
+        Dispatcher.UIThread.RunJobs();
 
         Assert.Equal(WindowState.Normal, owner.WindowState);
     }
@@ -87,9 +97,11 @@ public class ModalMinimizeMirroringTests : IDisposable
         var (owner, dialog, _) = OpenModal(WindowState.Maximized);
 
         dialog.WindowState = WindowState.Minimized;
+        Dispatcher.UIThread.RunJobs();
         Assert.Equal(WindowState.Minimized, owner.WindowState);
 
         dialog.WindowState = WindowState.Normal;
+        Dispatcher.UIThread.RunJobs();
 
         Assert.Equal(WindowState.Maximized, owner.WindowState);
     }
@@ -100,6 +112,7 @@ public class ModalMinimizeMirroringTests : IDisposable
         var (owner, dialog, _) = OpenModal();
 
         owner.WindowState = WindowState.Minimized;
+        Dispatcher.UIThread.RunJobs();
 
         Assert.Equal(WindowState.Minimized, dialog.WindowState);
     }
@@ -110,7 +123,9 @@ public class ModalMinimizeMirroringTests : IDisposable
         var (owner, dialog, _) = OpenModal();
 
         owner.WindowState = WindowState.Minimized;
+        Dispatcher.UIThread.RunJobs();
         owner.WindowState = WindowState.Normal;
+        Dispatcher.UIThread.RunJobs();
 
         Assert.Equal(WindowState.Normal, dialog.WindowState);
     }
@@ -124,6 +139,7 @@ public class ModalMinimizeMirroringTests : IDisposable
         // e.g. a finished batch job. The dialog's taskbar button is gone, so the owner must
         // come back rather than stay minimized.
         dialog.WindowState = WindowState.Minimized;
+        Dispatcher.UIThread.RunJobs();
         dialog.Close();
         Dispatcher.UIThread.RunJobs();
 
@@ -139,6 +155,7 @@ public class ModalMinimizeMirroringTests : IDisposable
         // Here the minimize was the user's explicit action on the owner itself - the close
         // must not override that choice.
         owner.WindowState = WindowState.Minimized;
+        Dispatcher.UIThread.RunJobs();
         dialog.Close();
         Dispatcher.UIThread.RunJobs();
 
@@ -156,10 +173,12 @@ public class ModalMinimizeMirroringTests : IDisposable
         Dispatcher.UIThread.RunJobs();
 
         topDialog.WindowState = WindowState.Minimized;
+        Dispatcher.UIThread.RunJobs();
         Assert.Equal(WindowState.Minimized, dialog.WindowState);
         Assert.Equal(WindowState.Minimized, owner.WindowState);
 
         topDialog.WindowState = WindowState.Normal;
+        Dispatcher.UIThread.RunJobs();
         Assert.Equal(WindowState.Normal, dialog.WindowState);
         Assert.Equal(WindowState.Normal, owner.WindowState);
     }
@@ -170,6 +189,7 @@ public class ModalMinimizeMirroringTests : IDisposable
         var (owner, dialog, _) = OpenModal();
 
         dialog.WindowState = WindowState.Minimized;
+        Dispatcher.UIThread.RunJobs();
 
         // The foreground churn right after the minimize: the OS briefly hands activation to
         // the owner. The modal foreground enforcement must not answer with dialog.Activate(),
@@ -277,6 +297,7 @@ public class ModalMinimizeMirroringTests : IDisposable
         Dispatcher.UIThread.RunJobs();
 
         topDialog.WindowState = WindowState.Minimized;
+        Dispatcher.UIThread.RunJobs();
         RaisePlatformEvent(dialog, "Deactivated");
         SimulateOsForegroundMove(from: topDialog, to: owner);
         Dispatcher.UIThread.RunJobs();
