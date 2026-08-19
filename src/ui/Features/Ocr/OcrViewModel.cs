@@ -220,6 +220,8 @@ public partial class OcrViewModel : ObservableObject
         _binaryOcrMatcher = binaryOcrMatcher;
         _ocrImageSourceHolder = ocrImageSourceHolder;
 
+        OcrUiUpdates = new CoalescedUiUpdateQueue(ApplyOcrUiSelect, ApplyOcrUiProgress);
+
         Title = Se.Language.Ocr.Ocr;
         OcrEngines = new ObservableCollection<OcrEngineItem>(OcrEngineItem.GetOcrEngines());
         OcrSubtitleItems = new ObservableCollection<OcrSubtitleItem>();
@@ -4650,8 +4652,7 @@ public partial class OcrViewModel : ObservableObject
     // and progress are latest-wins. Flushed directly before any modal that reads line text
     // (unknown-word prompt, add-character windows) and from OK, so dialogs and the final
     // subtitle never see a half-flushed queue.
-    private CoalescedUiUpdateQueue OcrUiUpdates => _ocrUiUpdates ??= new CoalescedUiUpdateQueue(ApplyOcrUiSelect, ApplyOcrUiProgress);
-    private CoalescedUiUpdateQueue? _ocrUiUpdates;
+    private CoalescedUiUpdateQueue OcrUiUpdates { get; }
 
     private void ApplyOcrUiProgress(double value, string text)
     {

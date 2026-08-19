@@ -137,6 +137,8 @@ public partial class AutoTranslateViewModel : ObservableObject
         _windowService = windowService;
         _folderHelper = folderHelper;
 
+        TranslateUiUpdates = new CoalescedUiUpdateQueue(SelectAndScrollToRow, ApplyTranslateProgress);
+
         ApiKeyText = string.Empty;
         ApiUrlText = string.Empty;
         ModelText = string.Empty;
@@ -1762,8 +1764,7 @@ public partial class AutoTranslateViewModel : ObservableObject
     /// MergeAndSplitHelper reads existing translations when re-applying formatting, so a
     /// deferred write would silently degrade the translation itself.
     /// </summary>
-    private CoalescedUiUpdateQueue TranslateUiUpdates => _translateUiUpdates ??= new CoalescedUiUpdateQueue(SelectAndScrollToRow, ApplyTranslateProgress);
-    private CoalescedUiUpdateQueue? _translateUiUpdates;
+    private CoalescedUiUpdateQueue TranslateUiUpdates { get; }
 
     private void ApplyTranslateProgress(double value, string text)
     {
