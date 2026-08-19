@@ -55,10 +55,30 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
+      # The Ubuntu archive can stall mid-fetch on GitHub runners: the runner's
+      # mirrorlist fails over from azure.archive.ubuntu.com to archive.ubuntu.com,
+      # and a fallback connection that dies after the response headers never trips
+      # apt's inactivity timeout. On the first v5.2.0-beta18 release run both
+      # flatpak jobs sat on a single "Get: noble-security InRelease" for 39 minutes
+      # (until cancelled) while every other build was already green - and with no
+      # job timeout set, that would have parked the release for up to 6 hours.
+      # Bound each apt call and retry instead of hanging.
       - name: Install flatpak
+        timeout-minutes: 12
         run: |
-          sudo apt-get update
-          sudo apt-get install -y flatpak
+          apt_opts="-o Acquire::Retries=3 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20"
+          for attempt in 1 2 3; do
+            if sudo timeout 180 apt-get update $apt_opts && \
+               sudo timeout 180 apt-get install -y $apt_opts flatpak; then
+              exit 0
+            fi
+            echo "::warning::apt stalled or failed (attempt $attempt/3)"
+            # A killed apt can leave dpkg half-configured; clear it before retrying.
+            sudo dpkg --configure -a || true
+            sleep 15
+          done
+          echo "::error::Could not install flatpak from the Ubuntu archive after 3 attempts"
+          exit 1
 
       # Cache the Freedesktop SDK + dotnet extension so we don't re-download
       # ~6 GB of runtimes on every CI run. Bump the key suffix (-vN) to invalidate.
@@ -159,10 +179,30 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
+      # The Ubuntu archive can stall mid-fetch on GitHub runners: the runner's
+      # mirrorlist fails over from azure.archive.ubuntu.com to archive.ubuntu.com,
+      # and a fallback connection that dies after the response headers never trips
+      # apt's inactivity timeout. On the first v5.2.0-beta18 release run both
+      # flatpak jobs sat on a single "Get: noble-security InRelease" for 39 minutes
+      # (until cancelled) while every other build was already green - and with no
+      # job timeout set, that would have parked the release for up to 6 hours.
+      # Bound each apt call and retry instead of hanging.
       - name: Install flatpak
+        timeout-minutes: 12
         run: |
-          sudo apt-get update
-          sudo apt-get install -y flatpak
+          apt_opts="-o Acquire::Retries=3 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20"
+          for attempt in 1 2 3; do
+            if sudo timeout 180 apt-get update $apt_opts && \
+               sudo timeout 180 apt-get install -y $apt_opts flatpak; then
+              exit 0
+            fi
+            echo "::warning::apt stalled or failed (attempt $attempt/3)"
+            # A killed apt can leave dpkg half-configured; clear it before retrying.
+            sudo dpkg --configure -a || true
+            sleep 15
+          done
+          echo "::error::Could not install flatpak from the Ubuntu archive after 3 attempts"
+          exit 1
 
       - name: Cache flatpak runtimes
         id: flatpak-cache
