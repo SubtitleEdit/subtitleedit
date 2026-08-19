@@ -120,6 +120,8 @@ public class SeGeneral
 
     public bool ShowColumnStartTime { get; set; }
     public bool ShowColumnEndTime { get; set; }
+    public bool ShowColumnTeletext { get; set; }
+    public bool TeletextAlignmentPreview { get; set; }
     public bool ShowColumnGap { get; set; }
     public bool ShowColumnDuration { get; set; }
     public bool ShowColumnStyle { get; set; }
@@ -246,6 +248,8 @@ public class SeGeneral
         ShowColumnEndTime = true;
         ShowColumnGap = false;
         ShowColumnDuration = true;
+        ShowColumnTeletext = true;
+        TeletextAlignmentPreview = true;
     }
 
     public static void AddExtraProfiles(List<RulesProfile> profiles)

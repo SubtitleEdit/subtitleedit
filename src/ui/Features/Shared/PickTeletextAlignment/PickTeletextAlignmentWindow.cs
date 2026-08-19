@@ -185,12 +185,25 @@ previewCheckBox.Bind(
         Mode = BindingMode.TwoWay
     });
     
+var showTeletextCheckBox = new CheckBox
+{
+    Content = Se.Language.General.ShowTeletext,
+};
+
+showTeletextCheckBox.Bind(
+    CheckBox.IsCheckedProperty,
+    new Binding(nameof(vm.ShowTeletextColumn))
+    {
+        Mode = BindingMode.TwoWay
+    });
+
         var okButton = UiUtil.MakeButton(Se.Language.General.Ok, vm.OkCommand).WithMinWidth(100);
 var cancelButton = UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelCommand).WithMinWidth(100);
         var grid = new Grid
         {
             RowDefinitions =
             {
+                new RowDefinition(GridLength.Auto),
                 new RowDefinition(GridLength.Auto),
                 new RowDefinition(GridLength.Auto),
                 new RowDefinition(GridLength.Auto),
@@ -221,6 +234,7 @@ var cancelButton = UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelComman
         grid.Add(replaceLinePanel, 3, 1);
 
         grid.Add(previewCheckBox, 4, 0);
+        grid.Add(showTeletextCheckBox, 5, 0);
 
         var buttonPanel = new StackPanel
         {
@@ -232,7 +246,7 @@ var cancelButton = UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelComman
         buttonPanel.Children.Add(okButton);
         buttonPanel.Children.Add(cancelButton);
 
-        grid.Add(buttonPanel, 5, 1);
+        grid.Add(buttonPanel, 6, 1);
 
         Content = grid;
 

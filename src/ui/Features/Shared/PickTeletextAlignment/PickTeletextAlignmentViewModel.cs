@@ -23,6 +23,9 @@ public partial class PickTeletextAlignmentViewModel : ObservableObject
 private bool preview;
 
 [ObservableProperty]
+private bool showTeletextColumn;
+
+[ObservableProperty]
 private bool applyTeletextLine = false;
 
 [ObservableProperty]
@@ -57,9 +60,13 @@ private int replaceToLine = 23;
 
 
 // NEU: aktuelle Teletext-Zeile des Untertitels einlesen
-internal void Initialize(SubtitleLineViewModel? selectedSubtitle, bool preview)
+    internal void Initialize(
+    SubtitleLineViewModel? selectedSubtitle,
+    bool preview,
+    bool showTeletextColumn)
 {
      Preview = preview;
+     ShowTeletextColumn = showTeletextColumn;
      
     if (selectedSubtitle == null)
     {

@@ -537,6 +537,7 @@ public class LanguageGeneral
     public string ShowPreview { get; set; }
     public string ShowShotChangesList { get; set; }
     public string ShowStyleColumn { get; set; }
+    public string ShowTeletext { get; set; } = string.Empty;
     public string ShowTimeCodes { get; set; }
     public string ShowWpmColumn { get; set; }
     public string ShowPixelWidthColumn { get; set; }
@@ -1286,6 +1287,7 @@ public class LanguageGeneral
         ShowPreview = "Show preview";
         ShowShotChangesList = "Show shot changes list";
         ShowStyleColumn = "Show \"Style\" column";
+        ShowTeletext = "Show TT";
         ShowTimeCodes = "Show time codes";
         ShowWpmColumn = "Show \"Words/min\" column";
         ShowPixelWidthColumn = "Show \"Pixel width\" column";

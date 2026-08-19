@@ -337,7 +337,7 @@ public static partial class InitListViewAndEditBox
             Mode = BindingMode.OneWay,
             Source = vm,
         });
-        columnManager.Add(new SeTableViewColumn
+       var teletextColumn = new SeTableViewColumn
 {
     Header = "TT",
     Tag = SubtitleGridColumnKeys.Teletext,
@@ -352,14 +352,24 @@ public static partial class InitListViewAndEditBox
             VerticalAlignment = VerticalAlignment.Center,
             HorizontalAlignment = HorizontalAlignment.Center,
             [!TextBlock.TextProperty] = new Binding(nameof(SubtitleLineViewModel.TeletextDisplay))
-{
-    Mode = BindingMode.OneWay
-},
+            {
+                Mode = BindingMode.OneWay
+            },
         };
 
         return textBlock;
     }),
-});
+};
+
+columnManager.Add(teletextColumn);
+
+teletextColumn.Bind(
+    SeTableViewColumn.IsVisibleProperty,
+    new Binding(nameof(vm.ShowColumnTeletext))
+    {
+        Mode = BindingMode.OneWay,
+        Source = vm,
+    });
         columnManager.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Text,

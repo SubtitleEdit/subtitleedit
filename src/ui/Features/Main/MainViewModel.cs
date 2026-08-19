@@ -305,6 +305,7 @@ public partial class MainViewModel :
     [ObservableProperty] private bool _showColumnEndTime;
     [ObservableProperty] private bool _showColumnGap;
     [ObservableProperty] private bool _showColumnDuration;
+    [ObservableProperty] private bool _showColumnTeletext;
     [ObservableProperty] private bool _showColumnActor;
     [ObservableProperty] private bool _showColumnStyle;
     [ObservableProperty] private bool _showColumnCps;
@@ -877,6 +878,8 @@ private bool _teletextAlignmentPreview;
         ShowColumnStartTime = Se.Settings.General.ShowColumnStartTime;
         ShowColumnEndTime = Se.Settings.General.ShowColumnEndTime;
         ShowColumnDuration = Se.Settings.General.ShowColumnDuration;
+        ShowColumnTeletext = Se.Settings.General.ShowColumnTeletext;
+        TeletextAlignmentPreview = Se.Settings.General.TeletextAlignmentPreview;
         ShowColumnGap = Se.Settings.General.ShowColumnGap;
         ShowColumnActor = Se.Settings.General.ShowColumnActor;
         ShowColumnStyle = Se.Settings.General.ShowColumnStyle;
@@ -12907,14 +12910,21 @@ private async Task ShowTeletextAlignmentPicker()
     var selectedItems = SubtitleGridSelectedItems;
 
     var result = await ShowDialogAsync<PickTeletextAlignmentWindow, PickTeletextAlignmentViewModel>(
-        vm => vm.Initialize(selected, TeletextAlignmentPreview));
+    vm => vm.Initialize(
+        selected,
+        Se.Settings.General.TeletextAlignmentPreview,
+        Se.Settings.General.ShowColumnTeletext));
 
     if (!result.OkPressed)
     {
         return;
     }
 
-    TeletextAlignmentPreview = result.Preview;
+   TeletextAlignmentPreview = result.Preview;
+   ShowColumnTeletext = result.ShowTeletextColumn;
+
+   Se.Settings.General.TeletextAlignmentPreview = result.Preview;
+   Se.Settings.General.ShowColumnTeletext = result.ShowTeletextColumn; 
 
     // Teletext line is only changed when explicitly selected.
     if (result.ApplyTeletextLine)
@@ -21277,6 +21287,8 @@ if (result.ApplyLineReplace &&
             Se.Settings.General.ShowColumnStartTime = ShowColumnStartTime;
             Se.Settings.General.ShowColumnEndTime = ShowColumnEndTime;
             Se.Settings.General.ShowColumnDuration = ShowColumnDuration;
+            Se.Settings.General.ShowColumnTeletext = ShowColumnTeletext;
+            Se.Settings.General.TeletextAlignmentPreview = TeletextAlignmentPreview;
             Se.Settings.General.ShowColumnGap = ShowColumnGap;
             Se.Settings.General.ShowColumnActor = ShowColumnActor;
             Se.Settings.General.ShowColumnStyle = ShowColumnStyle;
