@@ -537,7 +537,12 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     /// </summary>
     private void StopLocalLlamaCppServer()
     {
-        if (!_usesLocalLlamaCppServer || !LlamaCppServerManager.IsServerRunning)
+        // The translate leg is known up front (the config names the engine); OCR only decides
+        // per file, deep in the converter, so its claim is read back from there - keying it on
+        // the OCR engine *setting* killed servers other windows started, for batches that never
+        // OCR'd anything (the setting lingers whether or not any input is image-based).
+        var usedForOcr = _batchConverter.UsedLocalLlamaCppOcr;
+        if ((!_usesLocalLlamaCppServer && !usedForOcr) || !LlamaCppServerManager.IsServerRunning)
         {
             return;
         }
@@ -547,19 +552,16 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     }
 
     /// <summary>
-    /// True when <paramref name="config"/> drives the local (SE-managed) llama-server: the
-    /// llama.cpp translate engines unless the user pointed them at their own server, or the
-    /// llama.cpp OCR engine - which always runs locally.
+    /// True when <paramref name="config"/> drives the local (SE-managed) llama-server for
+    /// translation: the llama.cpp engines unless the user pointed them at their own server.
+    /// OCR is not decided here - whether a run OCRs at all depends on the input files, so the
+    /// converter reports that itself (<see cref="IBatchConverter.UsedLocalLlamaCppOcr"/>).
     /// </summary>
     private static bool UsesLocalLlamaCppServer(BatchConvertConfig config)
     {
-        var translate = config.AutoTranslate.IsActive &&
-                        config.AutoTranslate.Translator is LlamaCppTranslate or LlamaCppAdvancedTranslate &&
-                        !Se.Settings.AutoTranslate.LlamaCppUseRemoteServer;
-
-        var ocr = string.Equals(Se.Settings.Tools.BatchConvert.OcrEngine, "llama.cpp", StringComparison.OrdinalIgnoreCase);
-
-        return translate || ocr;
+        return config.AutoTranslate.IsActive &&
+               config.AutoTranslate.Translator is LlamaCppTranslate or LlamaCppAdvancedTranslate &&
+               !Se.Settings.AutoTranslate.LlamaCppUseRemoteServer;
     }
 
     private void UpdateFilteredFiles()

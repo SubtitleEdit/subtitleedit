@@ -879,7 +879,8 @@ public partial class BurnInViewModel : ObservableObject
         {
             // Furigana, bouten and vertical writing become extra positioned render lines - burning
             // in the raw tags would put them on screen as literal text (issue #13861).
-            var japaneseAssaFileName = Path.Combine(Path.GetTempFileName() + ".ass");
+            // Not GetTempFileName() - that creates (and would leak) an empty file whose name is never used.
+            var japaneseAssaFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".ass");
             File.WriteAllText(japaneseAssaFileName, NetflixImsc11JapaneseToAss.Convert(subtitle, jobItem.Width, jobItem.Height));
             return japaneseAssaFileName;
         }
