@@ -30,6 +30,7 @@ public partial class LlamaCppAdvancedSettingsViewModel : ObservableObject
     [ObservableProperty] private int _maxTokens;
     [ObservableProperty] private int _contextSize;
     [ObservableProperty] private string _serverArguments = string.Empty;
+    [ObservableProperty] private bool _serverArgumentsOnly;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
@@ -59,6 +60,7 @@ public partial class LlamaCppAdvancedSettingsViewModel : ObservableObject
         MaxTokens = settings.MaxTokens;
         ContextSize = settings.ContextSize;
         ServerArguments = settings.ServerArguments;
+        ServerArgumentsOnly = settings.ServerArgumentsOnly;
     }
 
     [RelayCommand]
@@ -79,6 +81,7 @@ public partial class LlamaCppAdvancedSettingsViewModel : ObservableObject
         settings.MaxTokens = MaxTokens;
         settings.ContextSize = Math.Clamp(ContextSize, 2048, 262144);
         settings.ServerArguments = ServerArguments?.Trim() ?? string.Empty;
+        settings.ServerArgumentsOnly = ServerArgumentsOnly;
         Se.SaveSettings();
 
         OkPressed = true;
