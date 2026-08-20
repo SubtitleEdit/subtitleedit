@@ -235,6 +235,9 @@ public class SettingsPage : UserControl
                 {
                     MakeNumericUpDownInt(nameof(_vm.MinGapMs), _vm.RuleValueChanged)
                         .WithBindIsVisible(_vm, nameof(_vm.IsMsMode)),
+                    UiUtil.MakeButtonBrowse(_vm.CalculateMinGapMsCommand,
+                            accessibleName: Se.Language.Options.Settings.MinGapCalculateDotDotDot)
+                        .WithBindIsVisible(_vm, nameof(_vm.IsMsMode)),
                     MakeNumericUpDownInt(nameof(_vm.MinGapFrames), _vm.RuleValueChanged)
                         .WithBindIsVisible(_vm, nameof(_vm.UseFrameMode)),
                     new TextBlock
