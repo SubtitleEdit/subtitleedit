@@ -53,6 +53,13 @@ public class SeVideo
     public bool MpvPreviewUsePositionFromFile { get; set; }
 
     /// <summary>
+    /// Include the black bars of a letterboxed video in the area the preview subtitle may use, so
+    /// the margin can move it off the picture (#13934). Off keeps mpv's own default, where an ASS
+    /// subtitle stays inside the video frame.
+    /// </summary>
+    public bool MpvPreviewMarginIsPartOfSubtitleArea { get; set; }
+
+    /// <summary>
     /// mpv's "audio-buffer" option in seconds, applied when a player core is created. mpv's
     /// own default is 0.2 s, and that buffer is why pause/resume/seek take effect ~200 ms
     /// late - the residual the waveform playhead code has to mask. Kept small here; raise it

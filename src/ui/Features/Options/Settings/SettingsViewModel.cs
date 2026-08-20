@@ -108,6 +108,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private AlignmentItem _mpvPreviewSelectedFontAlignment;
     [ObservableProperty] private int _mpvPreviewMargin;
     [ObservableProperty] private bool _mpvPreviewUsePositionFromFile;
+    [ObservableProperty] private bool _mpvPreviewMarginIsPartOfSubtitleArea;
     [ObservableProperty] private Color _mpvPreviewColorPrimary;
     [ObservableProperty] private Color _mpvPreviewColorOutline;
     [ObservableProperty] private Color _mpvPreviewColorShadow;
@@ -1043,6 +1044,7 @@ public partial class SettingsViewModel : ObservableObject
         MpvPreviewFontBold = video.MpvPreviewFontBold;
         MpvPreviewMargin = video.MpvPreviewMargin;
         MpvPreviewUsePositionFromFile = video.MpvPreviewUsePositionFromFile;
+        MpvPreviewMarginIsPartOfSubtitleArea = video.MpvPreviewMarginIsPartOfSubtitleArea;
         MpvPreviewSelectedFontAlignment = MpvPreviewFontAlignments.FirstOrDefault(p => p.Code == video.MpvPreviewAlignment) ?? MpvPreviewFontAlignments[7];
         MpvPreviewOutlineWidth = video.MpvPreviewOutlineWidth;
         MpvPreviewShadowWidth = video.MpvPreviewShadowWidth;
@@ -1869,6 +1871,7 @@ public partial class SettingsViewModel : ObservableObject
         video.MpvPreviewFontBold = MpvPreviewFontBold;
         video.MpvPreviewMargin = MpvPreviewMargin;
         video.MpvPreviewUsePositionFromFile = MpvPreviewUsePositionFromFile;
+        video.MpvPreviewMarginIsPartOfSubtitleArea = MpvPreviewMarginIsPartOfSubtitleArea;
         video.MpvPreviewOutlineWidth = MpvPreviewOutlineWidth;
         video.MpvPreviewAlignment = MpvPreviewSelectedFontAlignment.Code;
         video.MpvPreviewShadowWidth = MpvPreviewShadowWidth;

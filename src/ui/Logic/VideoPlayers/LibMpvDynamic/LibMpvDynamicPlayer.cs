@@ -708,6 +708,23 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         return ptr == IntPtr.Zero ? $"mpv error {error}" : Marshal.PtrToStringUTF8(ptr) ?? $"mpv error {error}";
     }
 
+    /// <summary>
+    /// Whether the black bars of a letterboxed video count as part of the area the subtitle may
+    /// use. With it on, the margin can move the preview off the picture and onto the bar, which
+    /// keeps the translation clear of burned-in forced narrative (#13934).
+    ///
+    /// sub-use-margins covers plain subtitles; an ASS subtitle - which is what the preview is -
+    /// stays inside the video frame unless sub-ass-force-margins is on too, and mpv defaults that
+    /// to "no". Both are written on every call, so turning the setting off again restores mpv's
+    /// own defaults instead of leaving the last value in place.
+    /// </summary>
+    public void ApplySubtitleMarginArea()
+    {
+        var useMargins = Se.Settings.Video.MpvPreviewMarginIsPartOfSubtitleArea;
+        SetOptionString("sub-use-margins", useMargins ? "yes" : "no");
+        SetOptionString("sub-ass-force-margins", useMargins ? "yes" : "no");
+    }
+
     public int SetOptionString(string name, string value)
     {
         if (_mpvSetOptionString == null || _mpv == IntPtr.Zero)
@@ -1463,6 +1480,8 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
         SetOptionString("hr-seek", "yes");
         SetOptionString("rebase-start-time", "no");
+
+        ApplySubtitleMarginArea();
 
         _fileName = path;
 

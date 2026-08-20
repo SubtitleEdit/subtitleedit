@@ -323,6 +323,7 @@ public class LanguageSettings
     public string MatchIconColorToDarkTheme { get; set; }
     public string SubtitlePreviewProperties { get; set; }
     public string UsePositionFromSubtitleFile { get; set; }
+    public string MarginIsPartOfSubtitleArea { get; set; }
     public string PixelWidthInfo { get; set; }
     public string SpellCheckEngineHunSpelll { get; set; }
     public string SpellCheckEngineMsWord { get; set; }
@@ -651,6 +652,7 @@ public class LanguageSettings
         MatchIconColorToDarkTheme = "Match icon color to dark theme foreground color";
         SubtitlePreviewProperties = "Subtitle preview properties";
         UsePositionFromSubtitleFile = "Use position from subtitle file (TTML/PAC/EBU STL)";
+        MarginIsPartOfSubtitleArea = "Margin is part of the subtitle area";
         PixelWidthInfo = "Green lines = max-width limit   |   Red area = text exceeds limit";
         SpellCheckEngineHunSpelll = "Hunspell";
         SpellCheckEngineMsWord = "MS Word";
