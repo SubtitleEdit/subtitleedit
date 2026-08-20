@@ -15902,6 +15902,42 @@ public partial class MainViewModel :
         _updateAudioVisualizer = true;
     }
 
+    /// <summary>
+    /// SE 4 parity ("Go to sub position and pause"): jump the video to the selected line's start
+    /// and stop there, so the frame at the cue point can be studied. SE 5 had the jump on its own
+    /// (VideoSetPositionCurrentSubtitleStart) but it left playback running, which carries the
+    /// picture away from the cue before it can be looked at (#13938).
+    /// </summary>
+    [RelayCommand]
+    private void VideoGoToSubtitlePositionAndPause()
+    {
+        var s = SelectedSubtitle;
+        var vp = GetVideoPlayerControl();
+        if (s == null || vp == null)
+        {
+            return;
+        }
+
+        // Pause before seeking, the order SE 4 used - seeking first would let a playing video
+        // run on from the new position while the seek settles.
+        if (vp.VideoPlayer.IsPlaying)
+        {
+            RequestPausePlayheadFreeze();
+        }
+
+        vp.VideoPlayer.Pause();
+
+        var position = Math.Max(0, s.StartTime.TotalSeconds);
+        vp.Position = position;
+
+        if (AudioVisualizer != null && AudioVisualizer.WavePeaks != null)
+        {
+            AudioVisualizerCenterOnPositionIfNeeded(position);
+        }
+
+        _updateAudioVisualizer = true;
+    }
+
     [RelayCommand]
     private void VideoSetPositionCurrentSubtitleEnd()
     {
