@@ -28,7 +28,9 @@ Automatically translate subtitles using various translation engines and AI servi
 - **ChatGPT** — OpenAI AI translation (requires API key)
 - **LM Studio (local LLM)** — Local LLM translation
 - **Ollama (local LLM)** — Local LLM-based translation
+- **Ollama advanced (local LLM)** — Ollama translated in batches with surrounding context, a synopsis and a glossary; see [Advanced local engines](auto-translate-advanced.md)
 - **llama.cpp (local LLM)** — Server-managed local LLM translation; Subtitle Edit downloads llama.cpp and a curated model (TranslateGemma, Qwen or Aya Expanse) and runs a local `llama-server` for you. See [Using your own model](#llamacpp-using-your-own-model) to run a model we don't ship, such as TranslateGemma 27B
+- **llama.cpp advanced (local LLM)** — The managed llama.cpp server translated in batches with surrounding context, a synopsis and a glossary; see [Advanced local engines](auto-translate-advanced.md)
 - **OpenAI Compatible API** — Generic engine for any service exposing an OpenAI-compatible `chat/completions` endpoint (vLLM, KoboldCpp, a llama.cpp server on another machine, cloud providers, ...); configure URL, model, prompt, and an optional API key
 - **Anthropic Claude** — AI translation (requires API key)
 - **Groq** — AI translation (requires API key)

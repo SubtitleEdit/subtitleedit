@@ -32,9 +32,19 @@ You can chain multiple conversion functions:
 - Convert colors to dialog — turn a color change inside a cue into a dash-prefixed dialog, optionally removing the color tags, adding new lines and re-breaking the lines
 - Bridge gaps
 - Apply minimum gap
+- Apply duration limits
 - Merge lines with same text
 - Merge lines with same time codes
+- Merge short lines
 - Split/break long lines
+- Unbreak lines — join a cue's lines into one, optionally only for short ones
+- Auto-balance lines
+- Fix right-to-left
+- Sort by
+- Change resolution — the [ASSA resolution resampler](assa-resolution-resampler.md) applied to every file
+- Change style — swap one ASSA style for another, or import styles from a file, optionally trimming unused ones
+- Embed fonts — embed the fonts an ASSA file uses as attachments, optionally [trimmed](assa-attachments.md) to the characters actually used
+- Adjust image brightness/alpha/color — for image-based subtitles
 - Auto translate
 - Delete lines
 
@@ -46,6 +56,7 @@ Batch Convert can machine-translate files as part of the conversion. Supported e
 - LibreTranslate
 - LM Studio
 - llama.cpp — fully managed: Batch Convert reuses an already-running local `llama-server`, or downloads llama.cpp plus a curated translation model (e.g. TranslateGemma) and starts the server for you. Point it at your own server via the remote-server option in [Auto-translate](auto-translate.md) settings.
+- llama.cpp advanced (local LLM) — the batch/context engine described in [Advanced local engines](auto-translate-advanced.md); it gets the context size configured there
 - NLLB (nllb-serve and nllb-api)
 - DeepL (API key required)
 - CrispASR MADLAD
@@ -62,7 +73,8 @@ Supported OCR engines in Batch Convert:
 - BinaryOcr
 - Tesseract
 - Ollama
-- llama.cpp (curated OCR vision models — GLM-OCR, LightOnOCR, PaddleOCR-VL; a local `llama-server` is started automatically)
+- llama.cpp (curated OCR vision models — GLM-OCR, LightOnOCR, PaddleOCR-VL, HunyuanOCR 1.5; a local `llama-server` is started automatically)
+- CrispEmbed (local, multiple model backends — see [OCR](ocr.md#crispembed))
 - PaddleOCR (Windows and Linux only)
 
 Subtitle Edit 5 can auto-detect language and pixels-are-space settings for nOcr/BinaryOcr in many batch workflows. This reduces the amount of manual setup needed when converting many image-based subtitle files with similar fonts.
