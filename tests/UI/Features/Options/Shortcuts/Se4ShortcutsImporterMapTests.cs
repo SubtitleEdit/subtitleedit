@@ -58,6 +58,7 @@ public class Se4ShortcutsImporterMapTests
     [InlineData("GeneralTogglePreviewOnVideo", "ToggleSubtitlesOnVideoPlayerCommand")]
     [InlineData("GeneralSwitchOriginalAndTranslation", "SwitchOriginalAndTranslationTextSelectedLinesCommand")]
     [InlineData("GeneralAutoCalcCurrentDuration", "RecalculateDurationSelectedLinesCommand")]
+    [InlineData("MainListViewToggleCustomTags", "SurroundWith1Command")]
     [InlineData("GeneralAutoCalcCurrentDurationByOptimalReadingSpeed", "RecalculateDurationSelectedLinesCommand")]
     [InlineData("GeneralAutoCalcCurrentDurationByMinReadingSpeed", "SetDurationMaxCpsSelectedLinesCommand")]
     [InlineData("MainVideo1FrameLeftWithPlay", "VideoOneFrameBackWithPlayCommand")]
