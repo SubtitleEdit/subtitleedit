@@ -3,6 +3,31 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-beta19 (20th of August 2026)
+
+* Add a Teletext alignment dialog, a TT grid column, and better EBU STL Teletext handling - thx Triathlon-rally
+* Add "Save all images with HTML index" to the OCR window - thx WAusJackBauer
+* Use the position the subtitle file itself carries when previewing on the video (TTML/PAC/EBU STL) - thx gavinhonl
+* Remember which "Multiple replace" categories are expanded - thx KaDeeKe
+* Let the user own the llama.cpp launch flags in batch convert - thx emsb8888-prog
+* Start the text-to-speech export folder picker in the subtitle's own folder - thx cvrle77
+* Delete the temporary files text-to-speech and ffmpeg leave behind - thx subof
+* Let clipboard managers paste into the focused text box on Windows (WM_PASTE)
+* Update the pinned llama.cpp build to b10507
+* Fix black video and no sound on GPUs without a Vulkan runtime - thx jugorakita-creator
+* Fix the batch convert window freezing after minimize/restore, and llama-server surviving cancel - thx emsb8888-prog
+* Fix the UI freezing during OCR, and line editing breaking after a minimize - thx FunkyKnilch
+* Fix the Delete key doing nothing after a shift+click range selection in a scrolled grid - thx Davanix
+* Fix ruby and bouten not being read from real Netflix IMSC 1.1 Japanese files - thx w72k24
+* Fix D-Cinema XML two-line events collapsing into one line - thx clundible
+* Fix Gemma 4 models returning empty translations - thx Oplay66
+* Fix the Chatterbox crash after switching to another cloned voice - thx subof
+* Fix black in-progress status text in the batch convert file list
+* Update Italian translation and installer - thx bovirus
+* Update Japanese translation - thx hisui3393
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-beta18 (19th of August 2026)
 
 * Add a "Hide tags" mode for formatting in the subtitle grid - thx MrGoraj
