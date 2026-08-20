@@ -34,6 +34,14 @@ public static class DownloadHashManager
         public const string WindowsCpu = "CrispAsr.Windows.Cpu";
         public const string WindowsCpuLegacy = "CrispAsr.Windows.CpuLegacy";
         public const string MacOs = "CrispAsr.MacOs";
+
+        /// <summary>
+        /// Intel Macs, built by SubtitleEdit/support-files rather than upstream - see
+        /// <see cref="CrispAsrDownloadService"/>. Its own key because it is a different
+        /// archive with its own history, and an arm64 hash must never read as up to date
+        /// on an Intel install (or the other way round).
+        /// </summary>
+        public const string MacOsX64 = "CrispAsr.MacOsX64";
         public const string Linux = "CrispAsr.Linux";
         public const string LinuxCuda = "CrispAsr.Linux.Cuda";
         public const string LinuxCuda13 = "CrispAsr.Linux.Cuda13";
@@ -48,6 +56,7 @@ public static class DownloadHashManager
         public const string WindowsCpuExecutable = "CrispAsr.Windows.Cpu.Executable";
         public const string WindowsCpuLegacyExecutable = "CrispAsr.Windows.CpuLegacy.Executable";
         public const string MacOsExecutable = "CrispAsr.MacOs.Executable";
+        public const string MacOsX64Executable = "CrispAsr.MacOsX64.Executable";
         public const string LinuxExecutable = "CrispAsr.Linux.Executable";
         public const string LinuxCudaExecutable = "CrispAsr.Linux.Cuda.Executable";
         public const string LinuxCuda13Executable = "CrispAsr.Linux.Cuda13.Executable";
@@ -483,6 +492,10 @@ public static class DownloadHashManager
                 "bbc6422fb0346dc79a7be41b0800ffd67b42dfe81691084c4bc76c85a1caa985", // v0.5.4
                 "88e62281ce19047e34290680ecab35ea2e24af6fc2b9edd6244234733a228703", // v0.5.3
                 "7faa7c92b4b48a64fb653f13e0e985618d4495d6d05abc366b3fd4b27098e65c", // v0.5.2
+            },
+            [CrispAsr.MacOsX64] = new[]
+            {
+                "1ab9bc657c81e9ffcb5c733b66aaa340977cae7308309f4de13651e4896d7783", // v0.8.29 (current download URL)
             },
             [CrispAsr.MacOs] = new[]
             {
@@ -1090,6 +1103,10 @@ public static class DownloadHashManager
                 "d33905a3afb3372e0f8173eba8c65469db6dfafaa4786034a88fd7da2bbb2931", // v0.5.4
                 "2733a81f64c742981bc0a7cf3dff51dc16fbaf028b10f481fb908178b49ba627", // v0.5.3
                 "a6ef3181657f417d9fadbfae343110b42ae788d053de5e3f48407cae8da8f9d2", // v0.5.2
+            },
+            [CrispAsr.MacOsX64Executable] = new[]
+            {
+                "64d488a7b304d14e03ba353a3763b281fa2b55e067182f90ae5ba626ebaf3250", // v0.8.29 (current download URL)
             },
             [CrispAsr.MacOsExecutable] = new[]
             {
@@ -2092,6 +2109,8 @@ public static class DownloadHashManager
     /// On Windows the variant selects between cuda, vulkan, cpu, and cpu-legacy.
     /// On Linux x86_64 the variant selects between cuda, cuda13, vulkan, hip, and the default CPU build.
     /// On Linux ARM64 the variant is ignored (only one build).
+    /// On macOS the variant is ignored too, but arm64 and Intel are separate archives from
+    /// separate places (upstream vs SubtitleEdit/support-files), so they get separate keys.
     /// Returns null if the platform / variant combination is unknown.
     /// </summary>
     public static string? ResolveCrispAsrKey(string? variant)
@@ -2114,7 +2133,9 @@ public static class DownloadHashManager
 
         if (OperatingSystem.IsMacOS())
         {
-            return CrispAsr.MacOs;
+            return RuntimeInformation.ProcessArchitecture == Architecture.Arm64
+                ? CrispAsr.MacOs
+                : CrispAsr.MacOsX64;
         }
 
         if (OperatingSystem.IsWindows())
@@ -2333,7 +2354,9 @@ public static class DownloadHashManager
 
         if (OperatingSystem.IsMacOS())
         {
-            return CrispAsr.MacOsExecutable;
+            return RuntimeInformation.ProcessArchitecture == Architecture.Arm64
+                ? CrispAsr.MacOsExecutable
+                : CrispAsr.MacOsX64Executable;
         }
 
         if (OperatingSystem.IsWindows())
