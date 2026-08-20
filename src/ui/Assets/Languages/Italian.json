@@ -2857,7 +2857,7 @@
       "waveformToolbarItems": "Elementi barra strumenti forma d'onda",
       "matchIconColorToDarkTheme": "Abbina colore icona al colore di primo piano del tema scuro",
       "subtitlePreviewProperties": "Proprietà anteprima sottotitoli",
-      "usePositionFromSubtitleFile": "Usa percorso dal file dei sottotitoli (TTML/PAC/EBU STL)",
+      "usePositionFromSubtitleFile": "Eredita posizione dal file sottotitoli (TTML/PAC/EBU STL)",
       "pixelWidthInfo": "Linee verdi = limite larghezza massima |  Area rossa = il testo supera il limite",
       "spellCheckEngineHunSpelll": "Hunspell",
       "spellCheckEngineMsWord": "MS Word",
