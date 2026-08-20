@@ -52,6 +52,14 @@ public class SeVideo
     /// </summary>
     public bool MpvPreviewUsePositionFromFile { get; set; }
 
+    /// <summary>
+    /// mpv's "audio-buffer" option in seconds, applied when a player core is created. mpv's
+    /// own default is 0.2 s, and that buffer is why pause/resume/seek take effect ~200 ms
+    /// late - the residual the waveform playhead code has to mask. Kept small here; raise it
+    /// (or set 0 to use mpv's default) if audio stutters on slow hardware or Bluetooth audio.
+    /// </summary>
+    public double MpvAudioBufferSeconds { get; set; }
+
     public SeVideo()
     {
         BurnIn = new();
@@ -91,5 +99,6 @@ public class SeVideo
         MpvPreviewColorShadow = Color.FromRgb(0, 0, 0).FromColorToHex();
         MpvPreviewBorderType = (int)BorderStyleType.Outline;
         MpvPreviewUsePositionFromFile = true;
+        MpvAudioBufferSeconds = 0.05;
     }
 }

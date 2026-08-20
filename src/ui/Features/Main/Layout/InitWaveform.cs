@@ -659,18 +659,28 @@ public class InitWaveform
             });
         }
 
+        // This slider is TwoWay-bound to VideoPlayerControl.Position, so it must also flip
+        // the control's own user-moving gate: without that, the control's position timer
+        // keeps writing mpv's position into Position mid-drag and the binding yanks the
+        // thumb back and forth between the mouse and the not-yet-seeked position - the
+        // #13910 jitter, which fixing only the control's built-in slider left behind here.
         var sliderPositionUserMoving = false;
-        sliderPosition.AddHandler(InputElement.PointerPressedEvent, (_, _) => sliderPositionUserMoving = true, RoutingStrategies.Tunnel);
-        sliderPosition.AddHandler(InputElement.PointerReleasedEvent, (_, _) => sliderPositionUserMoving = false, RoutingStrategies.Tunnel);
-        sliderPosition.AddHandler(InputElement.PointerCaptureLostEvent, (_, _) => sliderPositionUserMoving = false, RoutingStrategies.Tunnel);
+        var setSliderPositionUserMoving = (bool moving) =>
+        {
+            sliderPositionUserMoving = moving;
+            vm.GetVideoPlayerControl()?.SetUserMovingPositionSlider(moving);
+        };
+        sliderPosition.AddHandler(InputElement.PointerPressedEvent, (_, _) => setSliderPositionUserMoving(true), RoutingStrategies.Tunnel);
+        sliderPosition.AddHandler(InputElement.PointerReleasedEvent, (_, _) => setSliderPositionUserMoving(false), RoutingStrategies.Tunnel);
+        sliderPosition.AddHandler(InputElement.PointerCaptureLostEvent, (_, _) => setSliderPositionUserMoving(false), RoutingStrategies.Tunnel);
         sliderPosition.AddHandler(InputElement.KeyDownEvent, (_, e) =>
         {
             if (e.Key is Key.Left or Key.Right or Key.Up or Key.Down or Key.Home or Key.End or Key.PageUp or Key.PageDown)
             {
-                sliderPositionUserMoving = true;
+                setSliderPositionUserMoving(true);
             }
         }, RoutingStrategies.Tunnel);
-        sliderPosition.AddHandler(InputElement.KeyUpEvent, (_, _) => sliderPositionUserMoving = false, RoutingStrategies.Tunnel);
+        sliderPosition.AddHandler(InputElement.KeyUpEvent, (_, _) => setSliderPositionUserMoving(false), RoutingStrategies.Tunnel);
         sliderPosition.ValueChanged += (_, e) =>
         {
             if (!sliderPositionUserMoving)

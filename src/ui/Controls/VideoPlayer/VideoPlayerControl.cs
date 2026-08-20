@@ -214,6 +214,18 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             Position = seconds;
         }
 
+        /// <summary>
+        /// Lets external position sliders that are bound to <see cref="Position"/> (the
+        /// waveform toolbar's) join the same mid-drag gate as this control's own slider:
+        /// while set, the position timer leaves <see cref="Position"/> alone, so the timer
+        /// can't yank the dragged thumb back to mpv's not-yet-seeked position (issue #13910
+        /// - fixing only the built-in slider left the toolbar slider fighting the timer).
+        /// </summary>
+        public void SetUserMovingPositionSlider(bool moving)
+        {
+            _isUserMovingPositionSlider = moving;
+        }
+
         public void SetPositionDisplayOnly(double seconds)
         {
             _positionIgnore = seconds;
