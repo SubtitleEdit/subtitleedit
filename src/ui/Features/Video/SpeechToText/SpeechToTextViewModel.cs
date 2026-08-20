@@ -146,6 +146,11 @@ public partial class SpeechToTextViewModel : ObservableObject
     private bool _cudaComputeTypeNotSupported;
     private bool _incompleteModel;
     private string? _missingSharedLibrary;
+
+    // Crisp ASR VAD state for the empty-result retry (#13911): whether the run that just
+    // finished passed --vad, and whether it is itself the retry that leaves --vad off.
+    private bool _crispAsrVadWasUsed;
+    private bool _crispAsrVadSuppressed;
     private bool _loadedFromStdOut;
     private string? _videoFileName;
     private string _audioFileName = string.Empty;
@@ -829,6 +834,11 @@ public partial class SpeechToTextViewModel : ObservableObject
                     return;
                 }
 
+                if (!hasError && _resultList.Count == 0 && RetryCrispAsrWithoutVad())
+                {
+                    return;
+                }
+
                 _outputText.Enqueue("Loading result from STDOUT");
                 var transcribedSubtitleFromStdOut = new Subtitle();
                 transcribedSubtitleFromStdOut.Paragraphs.AddRange(_resultList
@@ -838,6 +848,74 @@ public partial class SpeechToTextViewModel : ObservableObject
                 await MakeResult(transcribedSubtitleFromStdOut);
             });
         }
+    }
+
+    /// <summary>
+    /// Whether SE adds its own "--vad --vad-model ..." to a Crisp ASR command line.
+    ///
+    /// Mega-ASR (crispasr 0.6.10) silently writes a zero-byte SRT unless VAD chunking is enabled -
+    /// the transcription log says it succeeded but no segments are emitted. Cohere gets the same
+    /// treatment because crispasr auto-enables VAD for that backend on long audio anyway; passing
+    /// the bundled Silero model keeps it from downloading its own copy into ~/.cache/crispasr
+    /// mid-transcription.
+    ///
+    /// --chunk-seconds/-ck in the user's parameters means "no VAD, use fixed chunks" - that is
+    /// crispasr's own documented way to switch its auto-VAD back off, and it is the only way to
+    /// switch VAD off at all (--vad is a plain flag with no --no-vad). So it has to suppress our
+    /// own --vad too, or the user has no opt-out (#13849).
+    /// </summary>
+    /// <param name="vadSuppressed">
+    /// Set on the re-run of a job that came back empty with VAD on (#13911).
+    /// </param>
+    internal static bool ShouldForceCrispAsrVad(ISpeechToTextEngine engine, string? crispArgs, bool vadSuppressed)
+    {
+        if (engine is not (CrispAsrCohere or CrispAsrMega) || vadSuppressed)
+        {
+            return false;
+        }
+
+        return !Regex.IsMatch(crispArgs ?? string.Empty, @"(^|\s)(--vad|-vm|--vad-model|--chunk-seconds|-ck)\b");
+    }
+
+    /// <summary>
+    /// Re-runs a Crisp ASR job that produced nothing, this time without the VAD pass.
+    ///
+    /// SE forces --vad on for the Cohere and Mega backends because they otherwise write a
+    /// zero-byte SRT on long audio. On a short clip that trade goes the other way: Silero can
+    /// reject the whole clip as non-speech and the run ends with no segments at all, which is
+    /// how "transcribe selected lines" ended up quietly leaving clips unconverted (#13911).
+    /// Nothing is lost by trying again without it - the alternative is the empty result we
+    /// already have - and the retry is a one-shot: the second run has VAD suppressed, so it
+    /// cannot ask for a third.
+    /// </summary>
+    /// <returns>True when a retry was started and this result should be dropped.</returns>
+    private bool RetryCrispAsrWithoutVad()
+    {
+        // _crispAsrVadWasUsed is only ever set by the Crisp ASR branch of GetWhisperProcess and is
+        // cleared at the start of every attempt, so it doubles as "this was a Crisp ASR VAD run".
+        if (!_crispAsrVadWasUsed || _crispAsrVadSuppressed || _abort)
+        {
+            return false;
+        }
+
+        if (_videoFileName == null)
+        {
+            return false;
+        }
+
+        // Nothing is extracted when the source already is a 16 kHz wav - which is exactly what
+        // "transcribe selected lines" hands over - and _audioFileName is blank in that case, so
+        // the engine input is the source file itself. Same fallback GetResultFromSrt makes.
+        var inputFileName = string.IsNullOrEmpty(_audioFileName) ? _videoFileName : _audioFileName;
+        if (!File.Exists(inputFileName))
+        {
+            return false;
+        }
+
+        LogToConsole($"No speech found with VAD - trying again without it{Environment.NewLine}");
+        Se.WriteToolsLog($"Crisp ASR produced no segments for \"{inputFileName}\" with VAD; retrying without VAD");
+
+        return TranscribeViaWhisper(inputFileName, _videoFileName, retryWithoutCrispAsrVad: true);
     }
 
     /// <summary>
@@ -3490,8 +3568,15 @@ public partial class SpeechToTextViewModel : ObservableObject
         Window?.Close();
     }
 
-    public bool TranscribeViaWhisper(string waveFileName, string videoFileName)
+    /// <param name="retryWithoutCrispAsrVad">
+    /// Re-run of a Crisp ASR job that came back empty, this time without the VAD pass SE adds for
+    /// the Cohere/Mega backends - see RetryCrispAsrWithoutVad (#13911).
+    /// </param>
+    public bool TranscribeViaWhisper(string waveFileName, string videoFileName, bool retryWithoutCrispAsrVad = false)
     {
+        _crispAsrVadSuppressed = retryWithoutCrispAsrVad;
+        _crispAsrVadWasUsed = false;
+
         var engine = GetEffectiveSelectedEngine();
 
         if (_videoFileName == null)
@@ -3776,18 +3861,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             }
 
             var vadPart = string.Empty;
-            // Mega-ASR (crispasr 0.6.10) silently writes a zero-byte SRT unless VAD chunking
-            // is enabled — the transcription log says it succeeded but no segments are emitted.
-            // Cohere gets the same treatment because crispasr auto-enables VAD for that backend
-            // on long audio anyway; passing the bundled Silero model keeps it from downloading
-            // its own copy into ~/.cache/crispasr mid-transcription.
-            //
-            // --chunk-seconds/-ck in the user's parameters means "no VAD, use fixed chunks" -
-            // that is crispasr's own documented way to switch its auto-VAD back off, and it is
-            // the only way to switch VAD off at all (--vad is a plain flag with no --no-vad).
-            // So it has to suppress our own --vad too, or the user has no opt-out (#13849).
-            if (crispAsrEngine is CrispAsrCohere or CrispAsrMega
-                && !Regex.IsMatch(crispArgs ?? string.Empty, @"(^|\s)(--vad|-vm|--vad-model|--chunk-seconds|-ck)\b"))
+            if (ShouldForceCrispAsrVad(crispAsrEngine, crispArgs, _crispAsrVadSuppressed))
             {
                 var crispFolder = crispAsrEngine.GetAndCreateWhisperFolder();
                 var vadFiles = Directory.Exists(crispFolder)
@@ -3800,6 +3874,10 @@ public partial class SpeechToTextViewModel : ObservableObject
                     vadPart = $" --vad --vad-model \"{vadPath}\"";
                 }
             }
+
+            // Remembered so an empty result can be told apart from an empty result *because of*
+            // VAD - only the latter is worth re-running without it (#13911).
+            _crispAsrVadWasUsed = vadPart.Length > 0;
 
             // --print-progress: crispasr streams "crispasr: progress = NN% (i/n slices)" lines
             // in real time (parsed in OutputHandler), while the transcript segments only print
