@@ -698,17 +698,21 @@ public static class ShortcutsMain
 
         AddShortcut(shortcuts, vm.WaveformSetStartAndOffsetTheRestCommand, nameof(vm.WaveformSetStartAndOffsetTheRestCommand), ShortcutCategory.Waveform);
         AddShortcut(shortcuts, vm.WaveformSetEndAndOffsetTheRestCommand, nameof(vm.WaveformSetEndAndOffsetTheRestCommand), ShortcutCategory.Waveform);
-        AddShortcut(shortcuts, vm.WaveformSetStartCommand, nameof(vm.WaveformSetStartCommand), ShortcutCategory.General);
-        AddShortcut(shortcuts, vm.WaveformSetStartAndGoToNextCommand, nameof(vm.WaveformSetStartAndGoToNextCommand), ShortcutCategory.General);
-        AddShortcut(shortcuts, vm.WaveformSetStartAndKeepDurationCommand, nameof(vm.WaveformSetStartAndKeepDurationCommand), ShortcutCategory.General);
-        AddShortcut(shortcuts, vm.WaveformSetEndCommand, nameof(vm.WaveformSetEndCommand), ShortcutCategory.General);
-        AddShortcut(shortcuts, vm.WaveformSetEndAndGoToNextCommand, nameof(vm.WaveformSetEndAndGoToNextCommand), ShortcutCategory.General);
-        AddShortcut(shortcuts, vm.WaveformSetEndAddNewAndGoToNewCommand, nameof(vm.WaveformSetEndAddNewAndGoToNewCommand), ShortcutCategory.General);
-        AddShortcut(shortcuts, vm.WaveformSetEndAddNewAndGoToNewNoFocusTextBoxCommand, nameof(vm.WaveformSetEndAddNewAndGoToNewNoFocusTextBoxCommand), ShortcutCategory.General);
+        // Waveform actions that stay on ShortcutCategory.General on purpose - they work wherever
+        // focus is, not only in the waveform. The category is what decides that; the group only
+        // decides where the shortcut is listed, so these belong under Waveform for browsing, which
+        // is also where SE 4 lists them (#13921).
+        AddShortcut(shortcuts, vm.WaveformSetStartCommand, nameof(vm.WaveformSetStartCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
+        AddShortcut(shortcuts, vm.WaveformSetStartAndGoToNextCommand, nameof(vm.WaveformSetStartAndGoToNextCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
+        AddShortcut(shortcuts, vm.WaveformSetStartAndKeepDurationCommand, nameof(vm.WaveformSetStartAndKeepDurationCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
+        AddShortcut(shortcuts, vm.WaveformSetEndCommand, nameof(vm.WaveformSetEndCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
+        AddShortcut(shortcuts, vm.WaveformSetEndAndGoToNextCommand, nameof(vm.WaveformSetEndAndGoToNextCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
+        AddShortcut(shortcuts, vm.WaveformSetEndAddNewAndGoToNewCommand, nameof(vm.WaveformSetEndAddNewAndGoToNewCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
+        AddShortcut(shortcuts, vm.WaveformSetEndAddNewAndGoToNewNoFocusTextBoxCommand, nameof(vm.WaveformSetEndAddNewAndGoToNewNoFocusTextBoxCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
         AddShortcut(shortcuts, vm.DoWaveformCenterCommand, nameof(vm.DoWaveformCenterCommand), ShortcutCategory.General);
-        AddShortcut(shortcuts, vm.WaveformSetEndAndStartOfNextAfterGapCommand, nameof(vm.WaveformSetEndAndStartOfNextAfterGapCommand), ShortcutCategory.General);
-        AddShortcut(shortcuts, vm.WaveformSetEndAndStartOfNextAfterGapAndGoToNextCommand, nameof(vm.WaveformSetEndAndStartOfNextAfterGapAndGoToNextCommand), ShortcutCategory.General);
-        AddShortcut(shortcuts, vm.WaveformSetStartAndSetEndOfPreviousMinusGapCommand, nameof(vm.WaveformSetStartAndSetEndOfPreviousMinusGapCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.WaveformSetEndAndStartOfNextAfterGapCommand, nameof(vm.WaveformSetEndAndStartOfNextAfterGapCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
+        AddShortcut(shortcuts, vm.WaveformSetEndAndStartOfNextAfterGapAndGoToNextCommand, nameof(vm.WaveformSetEndAndStartOfNextAfterGapAndGoToNextCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
+        AddShortcut(shortcuts, vm.WaveformSetStartAndSetEndOfPreviousMinusGapCommand, nameof(vm.WaveformSetStartAndSetEndOfPreviousMinusGapCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
         AddShortcut(shortcuts, vm.WaveformHorizontalZoomInCommand, nameof(vm.WaveformHorizontalZoomInCommand), ShortcutCategory.Waveform);
         AddShortcut(shortcuts, vm.WaveformHorizontalZoomOutCommand, nameof(vm.WaveformHorizontalZoomOutCommand), ShortcutCategory.Waveform);
         AddShortcut(shortcuts, vm.WaveformVerticalZoomInCommand, nameof(vm.WaveformVerticalZoomInCommand), ShortcutCategory.Waveform);
@@ -840,8 +844,8 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.InsertLineAfterCommand, nameof(vm.InsertLineAfterCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.WaveformInsertNewSelectionCommand, nameof(vm.WaveformInsertNewSelectionCommand), ShortcutCategory.Waveform);
         AddShortcut(shortcuts, vm.WaveformNewSelectionPasteFromClipboardCommand, nameof(vm.WaveformNewSelectionPasteFromClipboardCommand), ShortcutCategory.Waveform);
-        AddShortcut(shortcuts, vm.WaveformInsertAtPositionAndFocusTextBoxCommand, nameof(vm.WaveformInsertAtPositionAndFocusTextBoxCommand), ShortcutCategory.General);
-        AddShortcut(shortcuts, vm.WaveformInsertAtPositionNoFocusTextBoxCommand, nameof(vm.WaveformInsertAtPositionNoFocusTextBoxCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.WaveformInsertAtPositionAndFocusTextBoxCommand, nameof(vm.WaveformInsertAtPositionAndFocusTextBoxCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
+        AddShortcut(shortcuts, vm.WaveformInsertAtPositionNoFocusTextBoxCommand, nameof(vm.WaveformInsertAtPositionNoFocusTextBoxCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
         AddShortcut(shortcuts, vm.WaveformPasteFromClipboardCommand, nameof(vm.WaveformPasteFromClipboardCommand), ShortcutCategory.Waveform);
         AddShortcut(shortcuts, vm.WaveformCopyToClipboardCommand, nameof(vm.WaveformCopyToClipboardCommand), ShortcutCategory.Waveform);
         AddShortcut(shortcuts, vm.WaveformCopyTextToClipboardCommand, nameof(vm.WaveformCopyTextToClipboardCommand), ShortcutCategory.Waveform);
@@ -901,7 +905,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.RecalculateDurationSelectedLinesCommand, nameof(vm.RecalculateDurationSelectedLinesCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SetDurationMaxCpsSelectedLinesCommand, nameof(vm.SetDurationMaxCpsSelectedLinesCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.FillSelectedLinesWithClipboardCommand, nameof(vm.FillSelectedLinesWithClipboardCommand), ShortcutCategory.SubtitleGrid);
-        AddShortcut(shortcuts, vm.WaveformToggleWaveformSpectrogramHeightCommand, nameof(vm.WaveformToggleWaveformSpectrogramHeightCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.WaveformToggleWaveformSpectrogramHeightCommand, nameof(vm.WaveformToggleWaveformSpectrogramHeightCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
         AddShortcut(shortcuts, vm.SpectrogramToggleStyleCommand, nameof(vm.SpectrogramToggleStyleCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowBeautifyTimeCodesCommand, nameof(vm.ShowBeautifyTimeCodesCommand), ShortcutCategory.General, ShortcutGroup.Tools);
         AddShortcut(shortcuts, vm.ZoomLayoutInCommand, nameof(vm.ZoomLayoutInCommand), ShortcutCategory.General);
