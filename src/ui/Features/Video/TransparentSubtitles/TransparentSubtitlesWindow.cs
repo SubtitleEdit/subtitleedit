@@ -41,6 +41,17 @@ public class TransparentSubtitlesWindow : Window
             VerticalAlignment = VerticalAlignment.Top,
             Children = { subtitleSettingsView, videoSettingsView },
         };
+
+        // Same overflow guard as the burn-in window: when the window is shorter than its content
+        // minimum, a bare StackPanel draws its overflow through the progress row below it
+        // (issue #13904). Measures exactly like the panel, so no normal size changes.
+        var leftPanelScroller = new ScrollViewer
+        {
+            Content = leftPanel,
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+        };
+
         var cutView = MakeCutView(vm);
         var previewView = MakePreviewView(vm);
         var batchView = MakeBatchView(vm);
@@ -107,7 +118,7 @@ public class TransparentSubtitlesWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(leftPanel, 0, 0, 3, 1);
+        grid.Add(leftPanelScroller, 0, 0, 3, 1);
         grid.Add(cutView, 0, 1);
         grid.Add(previewView, 1, 1);
         grid.Add(videoInfoView, 2, 1);

@@ -59,6 +59,20 @@ public class BurnInWindow : Window
             Children = { subtitleSettingsView, videoSettingsView, targetFileSizeView },
         };
 
+        // Rows 0-3 hold the panel at any size the window can normally reach, but not when the
+        // window ends up shorter than its own content minimum - which happens on screens too
+        // short for the dialog, where UiUtil lowers the minimum to keep the window on the working
+        // area. A StackPanel draws its overflow straight through whatever is below it, so the
+        // last box ("File size in MB") ended up under the progress bar (issue #13904). The scroll
+        // viewer keeps that overflow inside the cell and still reachable; it measures exactly like
+        // the panel, so at every normal size the layout is unchanged and no scroll bar appears.
+        var leftPanelScroller = new ScrollViewer
+        {
+            Content = leftPanel,
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+        };
+
         var buttonGenerate = new SplitButton
         {
             Content = Se.Language.General.Generate,
@@ -122,7 +136,7 @@ public class BurnInWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(leftPanel, 0, 0, 4, 1);  // rows 0-3 (cut + preview + audio + video info)
+        grid.Add(leftPanelScroller, 0, 0, 4, 1);  // rows 0-3 (cut + preview + audio + video info)
         grid.Add(cutView, 0, 1);
         grid.Add(previewView, 1, 1);
         grid.Add(audioSettingsView, 2, 1);
