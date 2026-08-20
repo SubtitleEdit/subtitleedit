@@ -47,6 +47,8 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     private volatile bool _observedEofReached;
     private long _observedSpeedBits = BitConverter.DoubleToInt64Bits(1.0);
     private long _observedDurationBits;
+    private long _observedTimePosBits;
+    private volatile bool _observedTimePosValid; // false = property unavailable (no file) -> Position reports 0, like the live read
     private long _lastPlaybackRestartTimestamp; // Stopwatch ticks of the last MPV_EVENT_PLAYBACK_RESTART
 
     [StructLayout(LayoutKind.Sequential)]
@@ -103,6 +105,11 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     private delegate int MpvCommand(IntPtr mpvHandle, IntPtr utf8Strings);
 
     private MpvCommand? _mpvCommand;
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate int MpvCommandAsync(IntPtr mpvHandle, ulong replyUserdata, IntPtr utf8Strings);
+
+    private MpvCommandAsync? _mpvCommandAsync;
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate IntPtr MpvWaitEvent(IntPtr mpvHandle, double wait);
@@ -264,6 +271,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     private const ulong ObserveIdSpeed = 2;
     private const ulong ObserveIdDuration = 3;
     private const ulong ObserveIdEofReached = 4;
+    private const ulong ObserveIdTimePos = 5;
 
     public event Action? RequestRender;
 
@@ -353,6 +361,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         _mpvObserveProperty = (MpvObserveProperty)GetDllType(typeof(MpvObserveProperty), "mpv_observe_property");
         _mpvWakeup = (MpvWakeup)GetDllType(typeof(MpvWakeup), "mpv_wakeup");
         _mpvCommand = (MpvCommand)GetDllType(typeof(MpvCommand), "mpv_command");
+        _mpvCommandAsync = (MpvCommandAsync)GetDllType(typeof(MpvCommandAsync), "mpv_command_async");
         _mpvSetOption = (MpvSetOption)GetDllType(typeof(MpvSetOption), "mpv_set_option");
         _mpvSetOptionString = (MpvSetOptionString)GetDllType(typeof(MpvSetOptionString), "mpv_set_option_string");
         _mpvGetPropertyString = (MpvGetPropertyString)GetDllType(typeof(MpvGetPropertyString), "mpv_get_property");
@@ -466,7 +475,8 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         if (_mpvObserveProperty(handle, ObserveIdPause, PropertyNamePause, MPV_FORMAT_FLAG) < 0 ||
             _mpvObserveProperty(handle, ObserveIdSpeed, PropertyNameSpeed, MPV_FORMAT_DOUBLE) < 0 ||
             _mpvObserveProperty(handle, ObserveIdDuration, PropertyNameDuration, MPV_FORMAT_DOUBLE) < 0 ||
-            _mpvObserveProperty(handle, ObserveIdEofReached, PropertyNameEofReached, MPV_FORMAT_FLAG) < 0)
+            _mpvObserveProperty(handle, ObserveIdEofReached, PropertyNameEofReached, MPV_FORMAT_FLAG) < 0 ||
+            _mpvObserveProperty(handle, ObserveIdTimePos, PropertyNameTimePos, MPV_FORMAT_DOUBLE) < 0)
         {
             return;
         }
@@ -495,6 +505,17 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             if (_mpvGetPropertyDouble(handle, PropertyNameDuration, MPV_FORMAT_DOUBLE, ref value) >= 0)
             {
                 Interlocked.Exchange(ref _observedDurationBits, BitConverter.DoubleToInt64Bits(value));
+            }
+
+            value = 0;
+            if (_mpvGetPropertyDouble(handle, PropertyNameTimePos, MPV_FORMAT_DOUBLE, ref value) >= 0)
+            {
+                Interlocked.Exchange(ref _observedTimePosBits, BitConverter.DoubleToInt64Bits(value));
+                _observedTimePosValid = true;
+            }
+            else
+            {
+                _observedTimePosValid = false;
             }
         }
 
@@ -583,6 +604,20 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
                         else if (property.format == MPV_FORMAT_NONE)
                         {
                             _observedEofReached = false;
+                        }
+
+                        break;
+                    case ObserveIdTimePos:
+                        if (property.format == MPV_FORMAT_DOUBLE && property.data != IntPtr.Zero)
+                        {
+                            Interlocked.Exchange(ref _observedTimePosBits, Marshal.ReadInt64(property.data));
+                            _observedTimePosValid = true;
+                        }
+                        else if (property.format == MPV_FORMAT_NONE)
+                        {
+                            // No file loaded: the live read errors and reports 0 - mirror that.
+                            Interlocked.Exchange(ref _observedTimePosBits, 0);
+                            _observedTimePosValid = false;
                         }
 
                         break;
@@ -859,7 +894,11 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     {
         var numberOfStrings = arr.Length + 1;
         byteArrayPointers = new IntPtr[numberOfStrings];
-        var rootPointer = Marshal.AllocCoTaskMem(IntPtr.Size * numberOfStrings);
+        // AllocHGlobal, matching the FreeHGlobal in the callers - this was AllocCoTaskMem,
+        // which pairs with FreeCoTaskMem: freeing it with FreeHGlobal is a mismatched
+        // allocator on Windows (a silent per-command leak; the Unix runtimes map both to
+        // malloc/free, which is why it never showed there).
+        var rootPointer = Marshal.AllocHGlobal(IntPtr.Size * numberOfStrings);
         for (var index = 0; index < arr.Length; index++)
         {
             var bytes = GetUtf8Bytes(arr[index]);
@@ -881,6 +920,40 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
         var mainPtr = AllocateUtf8IntPtrArrayWithSentinel(args, out var byteArrayPointers);
         var result = _mpvCommand(_mpv, mainPtr);
+        foreach (var ptr in byteArrayPointers)
+        {
+            Marshal.FreeHGlobal(ptr);
+        }
+
+        Marshal.FreeHGlobal(mainPtr);
+        return result;
+    }
+
+    /// <summary>
+    /// Queues a command without waiting for the core to run it. mpv_command (the synchronous
+    /// form) holds the caller until the core's dispatch accepts the command - during a scrub
+    /// or slider-drag seek storm on a heavy file that stall lands on the UI thread, once per
+    /// mouse move. mpv_command_async returns as soon as the command is copied into the queue;
+    /// the core posts an MPV_EVENT_COMMAND_REPLY back, which the event loop drains (and
+    /// ignores - matching the synchronous path, whose seek result was never acted on either).
+    /// mpv copies the argument array before returning, so the buffers are freed right away
+    /// exactly like in <see cref="DoMpvCommand"/>. Falls back to the synchronous path when
+    /// the event loop is not running, so the reply events cannot pile up unread.
+    /// </summary>
+    private int DoMpvCommandFireAndForget(params string[] args)
+    {
+        if (_mpv == IntPtr.Zero)
+        {
+            return 0;
+        }
+
+        if (!_eventLoopActive || _mpvCommandAsync == null)
+        {
+            return DoMpvCommand(args);
+        }
+
+        var mainPtr = AllocateUtf8IntPtrArrayWithSentinel(args, out var byteArrayPointers);
+        var result = _mpvCommandAsync(_mpv, 0, mainPtr);
         foreach (var ptr in byteArrayPointers)
         {
             Marshal.FreeHGlobal(ptr);
@@ -1641,6 +1714,27 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             }
 
             EnsureNotDisposed();
+
+            // Observed cache first: this getter runs ~80x/s during playback (60 fps cursor
+            // timer + the 50 ms position timer), and a live mpv_get_property takes the core's
+            // lock - while the core is busy (hr-seek on a heavy file, slow network open) that
+            // read can block the UI thread, felt as cursor/UI hitches. The cached value is at
+            // most one mpv playloop iteration (~a frame) behind a live query; the playhead
+            // estimate in MainViewModel extrapolates on top of raw reads anyway, and its
+            // freeze detection relies on the raw value STOPPING when mpv stalls - which the
+            // cache preserves exactly (no extrapolation here, ever, for that reason).
+            if (_eventLoopActive)
+            {
+                if (!_observedTimePosValid)
+                {
+                    return 0;
+                }
+
+                var observed = BitConverter.Int64BitsToDouble(Interlocked.Read(ref _observedTimePosBits));
+                _lastRawTimePos = observed;
+                return observed;
+            }
+
             if (_mpv == IntPtr.Zero || _mpvGetPropertyDouble == null)
             {
                 return 0;
@@ -1675,11 +1769,11 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
                 return;
             }
 
-            var err = DoMpvCommand("seek", value.ToString(CultureInfo.InvariantCulture), "absolute");
-            //if (err < 0)
-            //{
-            //    Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer Position set");
-            //}
+            // Fire-and-forget: seeks arrive in storms (scrubbing, slider drags, wheel steps -
+            // one per input event), every caller already treats the result as asynchronous
+            // (the playhead pin waits for the position to actually arrive), and the error
+            // result was never acted on here.
+            DoMpvCommandFireAndForget("seek", value.ToString(CultureInfo.InvariantCulture), "absolute");
         }
     }
 
