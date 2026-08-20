@@ -1250,7 +1250,13 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
 
     // Below this WCAG contrast ratio a color is treated as unusable against the grid
     // background (pure white on white is 1.0; white on the default dark background is ~17).
-    private const double MinimumVisibleContrast = 1.3;
+    //
+    // 1.3 caught colors that were perfectly legible: on the mid-grey theme in #13929 a speaker's
+    // #5C1FF4 sits at 1.268 and lost its color, while the three other speakers in the same file
+    // kept theirs. The cases this guard exists for are far lower - a color matching the
+    // background exactly is 1.0, and the #232323-on-dark case from #13824 is 1.06-1.15 - so the
+    // threshold can come down without letting any of them back in.
+    private const double MinimumVisibleContrast = 1.2;
 
     /// <summary>
     /// Test hook: the grid background normally follows the active theme, which headless unit
