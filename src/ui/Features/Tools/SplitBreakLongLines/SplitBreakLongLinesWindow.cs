@@ -96,6 +96,12 @@ public class SplitBreakLongLinesWindow : Window
             .WithMarginRight(40);
         checkBoxRebalanceLongLines.IsCheckedChanged += (s, e) => vm.SetChanged();
 
+        var checkBoxRebalanceOnlyTooLong = UiUtil.MakeCheckBox(Se.Language.Tools.SplitBreakLongLines.RebalanceOnlyLinesTooLong, vm, nameof(vm.RebalanceOnlyLinesTooLong))
+            .WithMarginLeft(25)
+            .WithMarginRight(40);
+        checkBoxRebalanceOnlyTooLong[!InputElement.IsEnabledProperty] = new Binding(nameof(vm.RebalanceLongLines));
+        checkBoxRebalanceOnlyTooLong.IsCheckedChanged += (s, e) => vm.SetChanged();
+
         var labelSingleLineMaxLength = UiUtil.MakeLabel(Se.Language.Options.Settings.SingleLineMaxLength);
         var numericUpDownSingleLineMaxLength = UiUtil.MakeNumericUpDownInt(5, 1000, 10, 130, vm, nameof(vm.SingleLineMaxLength));
         numericUpDownSingleLineMaxLength.ValueChanged += (s, e) => vm.SetChanged();
@@ -111,6 +117,7 @@ public class SplitBreakLongLinesWindow : Window
         {
             ToolTip.SetTip(labelUnbreakLinesShorterThan, Se.Language.Tools.SplitBreakLongLines.UnbreakLinesShorterThanHint);
             ToolTip.SetTip(numericUpDownUnbreakLinesShorterThan, Se.Language.Tools.SplitBreakLongLines.UnbreakLinesShorterThanHint);
+            ToolTip.SetTip(checkBoxRebalanceOnlyTooLong, Se.Language.Tools.SplitBreakLongLines.RebalanceOnlyLinesTooLongHint);
         }
 
         grid.Add(checkBoxSplitLongLines, 0);
@@ -121,6 +128,7 @@ public class SplitBreakLongLinesWindow : Window
         grid.Add(labelMaxNumberOfLines, 1, 1);
         grid.Add(numericUpDownMaxNumberOfLines, 1, 2);
 
+        grid.Add(checkBoxRebalanceOnlyTooLong, 2);
         grid.Add(labelUnbreakLinesShorterThan, 2, 1);
         grid.Add(numericUpDownUnbreakLinesShorterThan, 2, 2);
 

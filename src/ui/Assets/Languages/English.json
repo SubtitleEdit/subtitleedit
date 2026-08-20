@@ -1129,6 +1129,9 @@
       "errors": "Errors",
       "errorsX": "Errors: {0}",
       "maxLengthError": "Line {0} exceeds max length ({1}) by {2}: {3}",
+      "maxLengthErrorTeletextColored": "Line {0}-{1}: 36 (not {2}) should be maximum characters for double height colored text",
+      "maxLengthErrorTeletextWhite": "Line {0}-{1}: 37 (not {2}) should be maximum characters for double height white text",
+      "maxLengthErrorTeletextSingleHeight": "Line {0}: 38 (not {1}) should be maximum characters for single height white text",
       "discSequenceNumber": "Disc sequence number"
     },
     "import": {
@@ -1850,6 +1853,8 @@
       "title": "Split/rebalance long lines",
       "splitLongLines": "Split long lines (to multiple lines)",
       "rebalanceLongLines": "Rebalance long lines",
+      "rebalanceOnlyLinesTooLong": "Only subtitles with a too-long line",
+      "rebalanceOnlyLinesTooLongHint": "Leave existing line breaks untouched when all lines are already within the single line max length - an intentionally unbalanced subtitle can be editorially correct",
       "splitLongLine": "Split long line",
       "rebalanceLongLine": "Rebalance long line",
       "splitIntoXLines": "Split into {0} lines: '{1}' → '{2}...'",
@@ -2873,6 +2878,7 @@
       "matchIconColorToDarkTheme": "Match icon color to dark theme foreground color",
       "subtitlePreviewProperties": "Subtitle preview properties",
       "usePositionFromSubtitleFile": "Use position from subtitle file (TTML/PAC/EBU STL)",
+      "marginIsPartOfSubtitleArea": "Margin is part of the subtitle area",
       "pixelWidthInfo": "Green lines = max-width limit   |   Red area = text exceeds limit",
       "spellCheckEngineHunSpelll": "Hunspell",
       "spellCheckEngineMsWord": "MS Word",

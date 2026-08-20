@@ -288,7 +288,7 @@ new("2F", "French - hearing impaired (VF-MAL)"),
             SelectedBottomAlignment = 2;
             SelectedRowsAddByNewLine = 2;
             UseBox = Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox;
-UseDoubleHeight = Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight;
+            UseDoubleHeight = Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight;
 
             // Keep the settings the file was written with instead of resetting them to the
             // defaults above every time the export dialog is opened.
@@ -569,21 +569,21 @@ UseDoubleHeight = Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubl
                     // 36 characters for double height colored tex
                     if (arr.Count == 2 && s.Length > 36 && arr[index].Contains("<font ", StringComparison.OrdinalIgnoreCase))
                     {
-                        sb.AppendLine($"Line {i}-{index + 1}: 36 (not {s.Length}) should be maximum characters for double height colored text");
+                        sb.AppendLine(string.Format(Se.Language.File.EbuSaveOptions.MaxLengthErrorTeletextColored, i, index + 1, s.Length));
                         errorCount++;
                     }
 
                     // 37 characters for double height white text
                     else if (arr.Count == 2 && s.Length > 37 && !p.Text.Contains("<font ", StringComparison.OrdinalIgnoreCase))
                     {
-                        sb.AppendLine($"Line {i}-{index + 1}: 37 (not {s.Length}) should be maximum characters for double height white text");
+                        sb.AppendLine(string.Format(Se.Language.File.EbuSaveOptions.MaxLengthErrorTeletextWhite, i, index + 1, s.Length));
                         errorCount++;
                     }
 
                     // 38 characters for single height white text
                     else if (arr.Count == 1 && s.Length > 38)
                     {
-                        sb.AppendLine($"Line {i}: 38 (not {s.Length}) should be maximum characters for single height white text");
+                        sb.AppendLine(string.Format(Se.Language.File.EbuSaveOptions.MaxLengthErrorTeletextSingleHeight, i, s.Length));
                         errorCount++;
                     }
                 }

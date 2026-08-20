@@ -118,17 +118,12 @@ public partial class SubtitleLineViewModel : ObservableObject
     {
         get
         {
-            var line = 23;
-
-            if (int.TryParse(MarginV, out var ebuLine) &&
-                ebuLine >= 1 &&
-                ebuLine <= 23)
-            {
-                line = ebuLine;
-            }
+            var hasRow = int.TryParse(MarginV, out var ebuLine) &&
+                         ebuLine >= 1 &&
+                         ebuLine <= 23;
 
             var text = Text ?? string.Empty;
-            var alignment = "C";
+            var alignment = string.Empty;
 
             if (text.StartsWith("{\\an1}") ||
                 text.StartsWith("{\\an4}") ||
@@ -142,8 +137,21 @@ public partial class SubtitleLineViewModel : ObservableObject
             {
                 alignment = "R";
             }
+            else if (text.StartsWith("{\\an2}") ||
+                     text.StartsWith("{\\an5}") ||
+                     text.StartsWith("{\\an8}"))
+            {
+                alignment = "C";
+            }
 
-            return $"{line} {alignment}";
+            if (!hasRow)
+            {
+                // A line without a teletext row (e.g. a converted SRT) should not pretend
+                // to be positioned; show only an explicitly set alignment, if any.
+                return alignment;
+            }
+
+            return $"{ebuLine} {(alignment.Length == 0 ? "C" : alignment)}";
         }
     }
 

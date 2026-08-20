@@ -25742,7 +25742,8 @@ public partial class MainViewModel :
             }
         }
         else if (e.PropertyName is nameof(SubtitleLineViewModel.Text)
-            or nameof(SubtitleLineViewModel.EndTime))
+            or nameof(SubtitleLineViewModel.EndTime)
+            or nameof(SubtitleLineViewModel.MarginV))
         {
             // Preview only: the buffer holds live references sorted by start time, so text
             // and end-time edits change neither membership nor order. Marking it dirty here
@@ -26727,8 +26728,53 @@ public partial class MainViewModel :
             PromoteReferenceOnlyRow(selectedSubtitle);
         }
 
+        AdjustTeletextRowForLineCountChange(selectedSubtitle);
         MakeSubtitleTextInfo(selectedSubtitle.Text, selectedSubtitle);
         _updateAudioVisualizer = true;
+    }
+
+    private Guid _teletextLineCountSubtitleId;
+    private int _teletextLineCountLastSeen;
+
+    // Seed the line-count tracker on selection, so the very first edit to a row can already be
+    // recognized as a line-count change.
+    partial void OnSelectedSubtitleChanged(SubtitleLineViewModel? value)
+    {
+        if (value != null)
+        {
+            _teletextLineCountSubtitleId = value.Id;
+            _teletextLineCountLastSeen = (value.Text ?? string.Empty).SplitToLines().Count;
+        }
+    }
+
+    /// <summary>
+    /// Keeps a bottom-anchored teletext subtitle on the bottom while the user edits its text: a
+    /// single-line subtitle on row 23 that gains a line break moves to row 21, and back to 23 when
+    /// the break is removed. Intentionally positioned subtitles (anything not on the bottom row
+    /// for their previous line count) are left alone.
+    /// </summary>
+    private void AdjustTeletextRowForLineCountChange(SubtitleLineViewModel subtitle)
+    {
+        var newLineCount = (subtitle.Text ?? string.Empty).SplitToLines().Count;
+
+        // The edit box also raises TextChanged when the selection swaps its content to another
+        // row - only line-count changes within the same row are edits.
+        var isSameRow = subtitle.Id == _teletextLineCountSubtitleId;
+        var oldLineCount = _teletextLineCountLastSeen;
+        _teletextLineCountSubtitleId = subtitle.Id;
+        _teletextLineCountLastSeen = newLineCount;
+
+        if (!IsFormatEbu || !isSameRow)
+        {
+            return;
+        }
+
+        var newRow = TeletextRowHelper.GetAdjustedBottomRow(subtitle.MarginV, oldLineCount, newLineCount,
+            Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight);
+        if (newRow.HasValue)
+        {
+            subtitle.MarginV = newRow.Value.ToString(CultureInfo.InvariantCulture);
+        }
     }
 
     /// <summary>

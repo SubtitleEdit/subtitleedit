@@ -77,7 +77,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static readonly Regex RegExprColor = new Regex(@"^[a-f0-9]{6}$", RegexOptions.Compiled);
 
-        public List<int> VerticalPositions = new List<int>();
         public List<int> JustificationCodes = new List<int>();
 
         public EbuGeneralSubtitleInformation Header;
@@ -343,8 +342,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     return buffer;
                 }
 
-                var rawTextField = TextField;
-
                 if (header.CharacterCodeTableNumber == "00")
                 {
                     // 0xC1—0xCF combines characters - http://en.wikipedia.org/wiki/ISO/IEC_6937
@@ -356,80 +353,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         encoding = Encoding.ASCII;
                     }
-
-                    var sbTwoChar = new StringBuilder();
-                    var skipNext = false;
-                    for (var index = 0; index < TextField.Length; index++)
-                    {
-                        var ch = TextField[index];
-                        if (skipNext)
-                        {
-                            skipNext = false;
-                        }
-                        else if (ch == 'ı' && TextField.Substring(index).StartsWith("ı̂")) // extended unicode char - rewritten as simple 'î' - looks the same as "î" but it's not...)
-                        {
-                            sbTwoChar.Append(encoding.GetString(new byte[] { 0xc3, 0x69 })); // Ãi - simple î
-                            skipNext = true;
-                        }
-                        else if ("ÀÈÌÒÙàèìòù".Contains(ch))
-                        {
-                            sbTwoChar.Append(ReplaceSpecialCharactersWithTwoByteEncoding(ch, encoding.GetString(new byte[] { 0xc1 }), "ÀÈÌÒÙàèìòù", "AEIOUaeiou"));
-                        }
-                        else if ("ÁĆÉÍĹŃÓŔŚÚÝŹáćéģíĺńóŕśúýź".Contains(ch))
-                        {
-                            sbTwoChar.Append(ReplaceSpecialCharactersWithTwoByteEncoding(ch, encoding.GetString(new byte[] { 0xc2 }), "ÁĆÉÍĹŃÓŔŚÚÝŹáćéģíĺńóŕśúýź", "ACEILNORSUYZacegilnorsuyz"));
-                        }
-                        else if ("ÂĈÊĜĤÎĴÔŜÛŴŶâĉêĝĥĵôŝûŵŷîı̂".Contains(ch))
-                        {
-                            sbTwoChar.Append(ReplaceSpecialCharactersWithTwoByteEncoding(ch, encoding.GetString(new byte[] { 0xc3 }), "ÂĈÊĜĤÎĴÔŜÛŴŶâĉêĝĥîĵôŝûŵŷ", "ACEGHIJOSUWYaceghijosuwy"));
-                        }
-                        else if ("ÃĨÑÕŨãĩñõũ".Contains(ch))
-                        {
-                            sbTwoChar.Append(ReplaceSpecialCharactersWithTwoByteEncoding(ch, encoding.GetString(new byte[] { 0xc4 }), "ÃĨÑÕŨãĩñõũ", "AINOUainou"));
-                        }
-                        else if ("ĀĒĪŌŪāēīōū".Contains(ch))
-                        {
-                            sbTwoChar.Append(ReplaceSpecialCharactersWithTwoByteEncoding(ch, encoding.GetString(new byte[] { 0xc5 }), "ĀĒĪŌŪāēīōū", "AEIOUaeiou"));
-                        }
-                        else if ("ĂĞŬăğŭ".Contains(ch))
-                        {
-                            sbTwoChar.Append(ReplaceSpecialCharactersWithTwoByteEncoding(ch, encoding.GetString(new byte[] { 0xc6 }), "ĂĞŬăğŭ", "AGUagu"));
-                        }
-                        else if ("ĊĖĠİŻċėġıż".Contains(ch))
-                        {
-                            sbTwoChar.Append(ReplaceSpecialCharactersWithTwoByteEncoding(ch, encoding.GetString(new byte[] { 0xc7 }), "ĊĖĠİŻċėġıż", "CEGIZcegiz"));
-                        }
-                        else if ("ÄËÏÖÜŸäëïöüÿ".Contains(ch))
-                        {
-                            sbTwoChar.Append(ReplaceSpecialCharactersWithTwoByteEncoding(ch, encoding.GetString(new byte[] { 0xc8 }), "ÄËÏÖÜŸäëïöüÿ", "AEIOUYaeiouy"));
-                        }
-                        else if ("ÅŮåů".Contains(ch))
-                        {
-                            sbTwoChar.Append(ReplaceSpecialCharactersWithTwoByteEncoding(ch, encoding.GetString(new byte[] { 0xca }), "ÅŮåů", "AUau"));
-                        }
-                        else if ("ÇĢĶĻŅŖŞŢçķļņŗşţ".Contains(ch))
-                        {
-                            sbTwoChar.Append(ReplaceSpecialCharactersWithTwoByteEncoding(ch, encoding.GetString(new byte[] { 0xcb }), "ÇĢĶĻŅŖŞŢçķļņŗşţ", "CGKLNRSTcklnrst"));
-                        }
-                        else if ("ŐŰőű".Contains(ch))
-                        {
-                            sbTwoChar.Append(ReplaceSpecialCharactersWithTwoByteEncoding(ch, encoding.GetString(new byte[] { 0xcd }), "ŐŰőű", "OUou"));
-                        }
-                        else if ("ĄĘĮŲąęįų".Contains(ch))
-                        {
-                            sbTwoChar.Append(ReplaceSpecialCharactersWithTwoByteEncoding(ch, encoding.GetString(new byte[] { 0xce }), "ĄĘĮŲąęįų", "AEIUaeiu"));
-                        }
-                        else if ("ČĎĚĽŇŘŠŤŽčďěľňřšťž".Contains(ch))
-                        {
-                            sbTwoChar.Append(ReplaceSpecialCharactersWithTwoByteEncoding(ch, encoding.GetString(new byte[] { 0xcf }), "ČĎĚĽŇŘŠŤŽčďěľňřšťž", "CDELNRSTZcdelnrstz"));
-                        }
-                        else
-                        {
-                            sbTwoChar.Append(ch);
-                        }
-                    }
-
-                    TextField = sbTwoChar.ToString();
                 }
                 else if (header.CharacterCodeTableNumber == "01") // Latin/Cyrillic alphabet - from ISO 8859/5-1988
                 {
@@ -448,37 +371,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     encoding = Encoding.GetEncoding("ISO-8859-8");
                 }
 
-                // italic/underline
-                var italicsOn = encoding.GetString(new byte[] { 0x80 });
-                var italicsOff = encoding.GetString(new byte[] { 0x81 });
-                var underlineOn = encoding.GetString(new byte[] { 0x82 });
-                var underlineOff = encoding.GetString(new byte[] { 0x83 });
-                var boxingOn = encoding.GetString(new byte[] { 0x84 });
-                var boxingOff = encoding.GetString(new byte[] { 0x85 });
-
-                TextField = FixItalics(TextField);
-
-                TextField = TextField.Replace("<i>", italicsOn);
-                TextField = TextField.Replace("<I>", italicsOn);
-                TextField = TextField.Replace("</i>", italicsOff);
-                TextField = TextField.Replace("</I>", italicsOff);
-                TextField = TextField.Replace("<u>", underlineOn);
-                TextField = TextField.Replace("<U>", underlineOn);
-                TextField = TextField.Replace("</u>", underlineOff);
-                TextField = TextField.Replace("</U>", underlineOff);
-                TextField = TextField.Replace("<box>", boxingOn);
-                TextField = TextField.Replace("<BOX>", boxingOn);
-                TextField = TextField.Replace("</box>", boxingOff);
-                TextField = TextField.Replace("</BOX>", boxingOff);
-                if (header.CharacterCodeTableNumber == "00")
-                {
-                    foreach (KeyValuePair<int, string> entry in SpecialAsciiCodes)
-                    {
-                        TextField = TextField.Replace(entry.Value, encoding.GetString(new[] { (byte)entry.Key }));
-                    }
-                }
-
-                //TODO: Use bytes directly and not encoding
                 var textBytes = new List<byte>();
                 if (header.DisplayStandardCode != "0") // 0=Open subtitling
                 {
@@ -495,28 +387,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         textBytes.AddRange(new byte[] { 0x0d }); // d=double height
                     }
                 }
-                EncodeText(textBytes, rawTextField, encoding, header.DisplayStandardCode, header.CharacterCodeTableNumber);
-
-
-
-                TextField = EncodeText(TextField, encoding, header.DisplayStandardCode);
-                TextField = HtmlUtil.RemoveHtmlTags(TextField, true);
-
-                if (header.DisplayStandardCode != "0") // 0=Open subtitling
-                {
-                    if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox && Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight)
-                    {
-                        TextField = encoding.GetString(new byte[] { 0x0d, 0x0b, 0x0b }) + TextField; // d=double height, b=start box
-                    }
-                    else if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox)
-                    {
-                        TextField = encoding.GetString(new byte[] { 0x0b, 0x0b }) + TextField; // b=start box
-                    }
-                    else if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight)
-                    {
-                        TextField = encoding.GetString(new byte[] { 0x0d }) + TextField; // d=double height
-                    }
-                }
+                EncodeText(textBytes, TextField, encoding, header.DisplayStandardCode, header.CharacterCodeTableNumber);
 
                 var bytes = textBytes.ToArray();
 
@@ -604,131 +475,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
 
                 return sb.ToString().TrimEnd();
-            }
-
-            private static string EncodeText(string text, Encoding encoding, string displayStandardCode)
-            {
-                // newline
-                var newline = encoding.GetString(new byte[] { 0x8a, 0x8a });
-                if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox && Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight)
-                {
-                    newline = encoding.GetString(new byte[] { 0x0a, 0x0a, 0x8a, 0x8a, 0x0d, 0x0b, 0x0b }); // 0a==end box, 0d==double height, 0b==start box
-                }
-                else if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox)
-                {
-                    newline = "\u000a\u000a" +
-                              string.Empty.PadLeft(Configuration.Settings.SubtitleSettings.EbuStlNewLineRows, '\u008a') +
-                              encoding.GetString(new byte[] { 0x0b, 0x0b }); // 0a==end box, 0b==start box
-                }
-                else if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight)
-                {
-                    newline = encoding.GetString(new byte[] { 0x8a, 0x8a, 0x0d, 0x0d }); // 0d==double height
-                }
-
-                if (displayStandardCode == "0") // 0=Open subtitling
-                {
-                    newline = encoding.GetString(new byte[] { 0x8A }); //8Ah=CR/LF
-                }
-
-                var lastColor = string.Empty;
-                var sb = new StringBuilder();
-                text = text.Replace(" </font>", "</font> ");
-                var lastWasEndColor = false;
-                var lastWasStartColor = false;
-                var list = text.SplitToLines();
-                for (var index = 0; index < list.Count; index++)
-                {
-                    if (index > 0)
-                    {
-                        sb.Append(newline);
-                        if (displayStandardCode != "0" && !string.IsNullOrEmpty(lastColor))
-                        {
-                            sb.Append(lastColor);
-                        }
-                    }
-
-                    var line = list[index];
-                    var i = 0;
-                    while (i < line.Length)
-                    {
-                        var newStart = line.Substring(i);
-                        if (newStart.StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
-                        {
-                            lastWasStartColor = true;
-                            var end = line.IndexOf('>', i);
-                            if (end > 0)
-                            {
-                                if (displayStandardCode != "0")
-                                {
-                                    lastColor = GetColor(encoding, line, i);
-                                    if (sb.EndsWith(' '))
-                                    {
-                                        sb = new StringBuilder(sb.ToString().TrimEnd(' '));
-                                    }
-
-                                    sb.Append(lastColor);
-                                }
-
-                                i = end + 1;
-                            }
-                        }
-                        else if (newStart == "</font>")
-                        {
-                            i += "</font>".Length;
-                            lastColor = string.Empty;
-                            lastWasEndColor = true;
-                        }
-                        else if (newStart.StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
-                        {
-                            i += "</font>".Length;
-
-                            if (displayStandardCode != "0" && line.Length > i + 1)
-                            {
-                                var part = line.Substring(i);
-                                if (part.StartsWith(" <font "))
-                                {
-                                    i++;
-                                }
-                                else if (part.StartsWith("<font "))
-                                {
-                                    // do nothing
-                                }
-                                else
-                                {
-                                    sb.Append(encoding.GetString(new byte[] { 0x07 })); // white
-                                }
-                            }
-
-                            lastWasEndColor = true;
-                            lastColor = string.Empty;
-                        }
-                        else
-                        {
-                            var nextCh = line.Substring(i, 1);
-                            if (nextCh == " " && lastWasEndColor)
-                            {
-                            }
-                            else if (nextCh == " " && lastWasStartColor)
-                            {
-                            }
-                            else
-                            {
-                                sb.Append(nextCh);
-                            }
-
-                            i++;
-                            lastWasEndColor = false;
-                            lastWasStartColor = false;
-                        }
-                    }
-                }
-
-                if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox && displayStandardCode != "0")
-                {
-                    sb.Append(encoding.GetString(new byte[] { 0x0a, 0x0a })); //a=end box
-                }
-
-                return sb.ToString();
             }
 
             //TODO: Use bytes directly and not encoding
@@ -1042,33 +788,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
 
-            private static string GetColor(Encoding encoding, string line, int i)
-            {
-                var end = line.IndexOf('>', i);
-                if (end > 0)
-                {
-                    var f = line.Substring(i, end - i);
-                    if (f.Contains(" color=", StringComparison.OrdinalIgnoreCase))
-                    {
-                        var colorStart = f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
-                        if (line.IndexOf('"', colorStart + " color=".Length + 1) > 0)
-                        {
-                            var colorEnd = f.IndexOf('"', colorStart + " color=".Length + 1);
-                            if (colorStart > 1)
-                            {
-                                var color = f.Substring(colorStart + 7, colorEnd - (colorStart + 7));
-                                color = color.Trim('\'');
-                                color = color.Trim('\"');
-                                color = color.Trim('#');
-                                return GetNearestEbuColorCode(color, encoding);
-                            }
-                        }
-                    }
-                }
-
-                return string.Empty;
-            }
-
             private static byte? GetColorByte(Encoding encoding, string line, int i)
             {
                 var end = line.IndexOf('>', i);
@@ -1096,102 +815,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return null;
             }
 
-
-            private static string GetNearestEbuColorCode(string color, Encoding encoding)
-            {
-                color = color.ToLowerInvariant();
-                if (color == "black" || color == "000000")
-                {
-                    return encoding.GetString(new byte[] { 0x00 }); // black
-                }
-
-                if (color == "red" || color == "ff0000")
-                {
-                    return encoding.GetString(new byte[] { 0x01 }); // red
-                }
-
-                if (color == "green" || color == "00ff00")
-                {
-                    return encoding.GetString(new byte[] { 0x02 }); // green
-                }
-
-                if (color == "yellow" || color == "ffff00")
-                {
-                    return encoding.GetString(new byte[] { 0x03 }); // yellow
-                }
-
-                if (color == "blue" || color == "0000ff")
-                {
-                    return encoding.GetString(new byte[] { 0x04 }); // blue
-                }
-
-                if (color == "magenta" || color == "ff00ff")
-                {
-                    return encoding.GetString(new byte[] { 0x05 }); // magenta
-                }
-
-                if (color == "cyan" || color == "00ffff")
-                {
-                    return encoding.GetString(new byte[] { 0x06 }); // cyan
-                }
-
-                if (color == "white" || color == "ffffff")
-                {
-                    return encoding.GetString(new byte[] { 0x07 }); // white
-                }
-
-                if (color.Length == 6)
-                {
-                    if (RegExprColor.IsMatch(color))
-                    {
-                        const int maxDiff = 130;
-                        var r = int.Parse(color.Substring(0, 2), NumberStyles.HexNumber);
-                        var g = int.Parse(color.Substring(2, 2), NumberStyles.HexNumber);
-                        var b = int.Parse(color.Substring(4, 2), NumberStyles.HexNumber);
-                        if (r < maxDiff && g < maxDiff && b < maxDiff)
-                        {
-                            return encoding.GetString(new byte[] { 0x00 }); // black
-                        }
-
-                        if (r > 255 - maxDiff && g < maxDiff && b < maxDiff)
-                        {
-                            return encoding.GetString(new byte[] { 0x01 }); // red
-                        }
-
-                        if (r < maxDiff && g > 255 - maxDiff && b < maxDiff)
-                        {
-                            return encoding.GetString(new byte[] { 0x02 }); // green
-                        }
-
-                        if (r > 255 - maxDiff && g > 255 - maxDiff && b < maxDiff)
-                        {
-                            return encoding.GetString(new byte[] { 0x03 }); // yellow
-                        }
-
-                        if (r < maxDiff && g < maxDiff && b > 255 - maxDiff)
-                        {
-                            return encoding.GetString(new byte[] { 0x04 }); // blue
-                        }
-
-                        if (r > 255 - maxDiff && g < maxDiff && b > 255 - maxDiff)
-                        {
-                            return encoding.GetString(new byte[] { 0x05 }); // magenta
-                        }
-
-                        if (r < maxDiff && g > 255 - maxDiff && b > 255 - maxDiff)
-                        {
-                            return encoding.GetString(new byte[] { 0x06 }); // cyan
-                        }
-
-                        if (r > 255 - maxDiff && g > 255 - maxDiff && b > 255 - maxDiff)
-                        {
-                            return encoding.GetString(new byte[] { 0x07 }); // white
-                        }
-                    }
-                }
-
-                return string.Empty;
-            }
 
             private static byte? GetNearestEbuColorCodeByte(string color, Encoding encoding)
             {
@@ -1289,24 +912,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return null;
             }
 
-
-            private static string ReplaceSpecialCharactersWithTwoByteEncoding(char ch, string specialCharacter, string originalCharacters, string newCharacters)
-            {
-                if (originalCharacters.Length != newCharacters.Length)
-                {
-                    throw new ArgumentException("originalCharacters and newCharacters must have equal length");
-                }
-
-                for (var i = 0; i < newCharacters.Length; i++)
-                {
-                    if (originalCharacters[i] == ch)
-                    {
-                        return specialCharacter + newCharacters[i];
-                    }
-                }
-
-                return ch.ToString();
-            }
 
             private static byte[] ReplaceSpecialCharactersWithTwoByteEncoding(Encoding encoding, char ch, byte specialCharacter, string originalCharacters, string newCharacters)
             {
@@ -1676,10 +1281,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Paragraphs.Clear();
             var header = ReadHeader(buffer);
             subtitle.Header = header.ToString();
+            if (header.DisplayStandardCode == "1" || header.DisplayStandardCode == "2")
+            {
+                SeedTeletextBoxAndDoubleHeightSettings(buffer);
+            }
             Paragraph last = null;
             byte lastExtensionBlockNumber = 0xff;
             JustificationCodes = new List<int>();
-            VerticalPositions = new List<int>();
             Configuration.Settings.General.CurrentFrameRate = header.FrameRate;
             if (OverrideReadFrameRate > 20)
             {
@@ -1727,6 +1335,47 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             LoadSubtitle(subtitle, FileUtil.ReadAllBytesShared(fileName));
         }
 
+        /// <summary>
+        /// The teletext box/double-height write settings are global, but whether a file actually
+        /// uses boxes or double height is a property of the file: seed the settings from the
+        /// loaded bytes so a plain load-save round trip does not add control codes that were not
+        /// there, and so the export dialog shows the file's actual state.
+        /// </summary>
+        private static void SeedTeletextBoxAndDoubleHeightSettings(byte[] buffer)
+        {
+            const int startOfTextAndTimingBlock = 1024;
+            const int ttiSize = 128;
+            const byte startBox = 0x0b;
+            const byte doubleHeight = 0x0d;
+
+            var useBox = false;
+            var useDoubleHeight = false;
+            var index = startOfTextAndTimingBlock;
+            while (index + ttiSize <= buffer.Length && !(useBox && useDoubleHeight))
+            {
+                if (buffer[index + 3] != 0xfe && buffer[index + 15] == 0) // skip user data and comment blocks
+                {
+                    for (var i = index + 16; i < index + ttiSize; i++)
+                    {
+                        var b = buffer[i];
+                        if (b == startBox)
+                        {
+                            useBox = true;
+                        }
+                        else if (b == doubleHeight)
+                        {
+                            useDoubleHeight = true;
+                        }
+                    }
+                }
+
+                index += ttiSize;
+            }
+
+            Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox = useBox;
+            Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight = useDoubleHeight;
+        }
+
         public static EbuGeneralSubtitleInformation ReadHeader(byte[] buffer)
         {
             var enc = GetEncoding(Encoding.ASCII.GetString(buffer, 0, 3));
@@ -1754,7 +1403,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 MaximumNumberOfDisplayableRows = enc.GetString(buffer, 253, 2),
                 TimeCodeStatus = enc.GetString(buffer, 255, 1),
                 TimeCodeStartOfProgramme = enc.GetString(buffer, 256, 8),
+                TimeCodeFirstInCue = enc.GetString(buffer, 264, 8),
+                TotalNumberOfDisks = enc.GetString(buffer, 272, 1),
+                DiskSequenceNumber = enc.GetString(buffer, 273, 1),
                 CountryOfOrigin = enc.GetString(buffer, 274, 3),
+                Publisher = enc.GetString(buffer, 277, 32),
+                EditorsName = enc.GetString(buffer, 309, 32),
+                EditorsContactDetails = enc.GetString(buffer, 341, 32),
                 SpareBytes = enc.GetString(buffer, 373, 75),
                 UserDefinedArea = enc.GetString(buffer, 448, 576)
             };
@@ -2119,7 +1774,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     JustificationCode = buffer[index + 14],
                     CommentFlag = buffer[index + 15]
                 };
-                VerticalPositions.Add(tti.VerticalPosition);
                 JustificationCodes.Add(tti.JustificationCode);
 
                 // Text block
