@@ -3930,6 +3930,8 @@ public partial class SpeechToTextViewModel : ObservableObject
             {
                 process.StartInfo.WorkingDirectory = whisperFolder;
             }
+
+            EnsureExecutableStackCleared(engine, whisperFolder);
         }
 
         if (OperatingSystem.IsWindows() && ProcessEnvironmentHelper.GetOrNull(process.StartInfo, "Path") != null)
@@ -3989,6 +3991,39 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
 
         return process;
+    }
+
+    private static bool _executableStackChecked;
+
+    /// <summary>
+    /// Repairs an already-installed Purfview Faster-Whisper-XXL before launching it.
+    /// <para>
+    /// Its bundled libctranslate2 is built with PT_GNU_STACK = RWE, and glibc 2.41 stopped making
+    /// the stack executable at dlopen time, so on a distro with glibc 2.41+ (Fedora 42, Arch,
+    /// Ubuntu 25.10) the run dies immediately with "cannot enable executable stack as shared
+    /// object requires: Invalid argument". The download path clears the flag on unpack, but
+    /// installs made by an earlier SE are already on disk and re-downloading is over a gigabyte,
+    /// so fix them here too. Once per session: the scan only reads ELF headers, but there is no
+    /// reason to repeat it for every transcription.
+    /// </para>
+    /// </summary>
+    private static void EnsureExecutableStackCleared(ISpeechToTextEngine engine, string? whisperFolder)
+    {
+        if (_executableStackChecked ||
+            !OperatingSystem.IsLinux() ||
+            string.IsNullOrEmpty(whisperFolder) ||
+            engine is not WhisperEnginePurfviewFasterWhisperXxl)
+        {
+            return;
+        }
+
+        _executableStackChecked = true;
+        var patched = ElfHelper.ClearExecutableStackInFolder(whisperFolder);
+        if (patched > 0)
+        {
+            Se.WriteToolsLog($"Cleared the executable-stack flag on {patched} shared librar" +
+                             (patched == 1 ? "y" : "ies") + $" in \"{whisperFolder}\"");
+        }
     }
 
     private static string GetWhisperTranslateParameter(ISpeechToTextEngine engine)

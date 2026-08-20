@@ -516,13 +516,7 @@ public class FfmpegGenerator
 
     private static string GetFfmpegLocation()
     {
-        var ffmpegLocation = Configuration.Settings.General.FFmpegLocation;
-        if (!Configuration.IsRunningOnWindows && (string.IsNullOrEmpty(ffmpegLocation) || !File.Exists(ffmpegLocation)))
-        {
-            ffmpegLocation = "ffmpeg";
-        }
-
-        return ffmpegLocation;
+        return FfmpegHelper.GetFfmpegLocation();
     }
 
     /// <summary>
