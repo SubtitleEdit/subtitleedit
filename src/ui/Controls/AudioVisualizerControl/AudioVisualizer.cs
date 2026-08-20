@@ -129,6 +129,7 @@ public class AudioVisualizer : Control
         set
         {
             _paintWaveform = new Pen(new SolidColorBrush(value), 1);
+            ResetFancyColorCaches();
             SetValue(WaveformColorProperty, value);
         }
     }
@@ -149,6 +150,7 @@ public class AudioVisualizer : Control
         set
         {
             _paintPenSelected = new Pen(new SolidColorBrush(value), 1);
+            ResetFancyColorCaches();
             SetValue(WaveformSelectedColorProperty, value);
         }
     }
@@ -217,7 +219,17 @@ public class AudioVisualizer : Control
     // "center video position" mode can turn into a seek that keeps the play-head centered
     // (#12864). Hosts without a video player (or that never set this) keep plain scrolling.
     public Func<bool>? GetIsVideoPlaying { get; set; }
-    public Color WaveformFancyHighColor { get; set; } = Colors.Orange;
+    private Color _waveformFancyHighColor = Colors.Orange;
+
+    public Color WaveformFancyHighColor
+    {
+        get => _waveformFancyHighColor;
+        set
+        {
+            _waveformFancyHighColor = value;
+            ResetFancyColorCaches();
+        }
+    }
 
     private Color _paragraphBackground = Color.FromArgb(140, 70, 70, 70);
 
@@ -2597,6 +2609,26 @@ public class AudioVisualizer : Control
     // Pooled buffer for DrawClassicSelectionOverlay's visible selected regions.
     private readonly List<(double Left, double Right)> _selectionOverlayIntervals = new(16);
 
+    /// <summary>
+    /// Drops every fancy-style cache that has a waveform color baked into it. The pen/gradient/glow
+    /// caches - and the pooled per-color-key batches, which keep a pen of their own - are keyed on
+    /// the quantized amplitude bucket, not on the color, so a color change leaves them holding pens
+    /// painted in the old color. Missing the batches here is what made a new waveform/selected/fancy
+    /// high color only show up after a restart (#13897).
+    /// </summary>
+    private void ResetFancyColorCaches()
+    {
+        _fancyWaveformPenCache.Clear();
+        _fancyWaveformGlowPenCache.Clear();
+        _fancyWaveformGradientCache.Clear();
+        _fancyBatches.Clear();
+        _fancyBatchKeysInUse.Clear();
+
+        // The color properties are not AffectsRender, so ask for the repaint that shows the new
+        // color instead of waiting for whatever moves the waveform next.
+        InvalidateVisual();
+    }
+
     private Pen GetCachedFancyWaveformPen(int colorKey, Color color)
     {
         if (!_fancyWaveformPenCache.TryGetValue(colorKey, out var pen))
@@ -4229,9 +4261,7 @@ public class AudioVisualizer : Control
 
     internal void ResetCache()
     {
-        _fancyWaveformPenCache.Clear();
-        _fancyWaveformGlowPenCache.Clear();
-        _fancyWaveformGradientCache.Clear();
+        ResetFancyColorCaches();
         _timeLineTextCache.Clear();
         _paragraphFormattedTextCache.Clear();
         _paragraphTextCache.Clear();
