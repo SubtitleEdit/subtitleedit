@@ -89,6 +89,7 @@ using Nikse.SubtitleEdit.Features.Shared.GoToLineNumber;
 using Nikse.SubtitleEdit.Features.Shared.MediaInfoView;
 using Nikse.SubtitleEdit.Features.Shared.PickAlignment;
 using Nikse.SubtitleEdit.Features.Shared.PickTeletextAlignment;
+using Nikse.SubtitleEdit.Features.Shared.PickTeletextColor;
 using Nikse.SubtitleEdit.Features.Shared.PickFontName;
 using Nikse.SubtitleEdit.Features.Shared.PickLayer;
 using Nikse.SubtitleEdit.Features.Shared.PickLayerFilter;
@@ -13206,9 +13207,45 @@ public partial class MainViewModel :
             return;
         }
 
+        if (IsFormatEbu)
+        {
+            await ShowTeletextColorPicker(selectedItems);
+            return;
+        }
+
         var result = await ShowDialogAsync<ColorPickerWindow, ColorPickerViewModel>(vm => vm.Initialize(Se.Settings.Tools.LastColorPickerColor.FromHexToColor()));
         if (!result.OkPressed)
         {
+            return;
+        }
+
+        if (ColorTextBoxIfSelected(result.SelectedColor))
+        {
+            return;
+        }
+
+        _colorService.SetColor(selectedItems, result.SelectedColor, GetUpdateSubtitle(), SelectedSubtitleFormat);
+        _updateAudioVisualizer = true;
+    }
+
+    /// <summary>
+    /// EBU STL open subtitles can only carry the eight teletext colors, and default
+    /// white without a color code differs from explicit white (37 vs 36 usable
+    /// characters), so the full RGB picker is replaced by a constrained palette.
+    /// </summary>
+    private async Task ShowTeletextColorPicker(List<SubtitleLineViewModel> selectedItems)
+    {
+        var result = await ShowDialogAsync<PickTeletextColorWindow, PickTeletextColorViewModel>(
+            vm => vm.Initialize(selectedItems[0].Text));
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        if (result.NoColorPressed)
+        {
+            _colorService.RemoveColorTags(selectedItems, GetUpdateSubtitle(), SelectedSubtitleFormat);
+            _updateAudioVisualizer = true;
             return;
         }
 

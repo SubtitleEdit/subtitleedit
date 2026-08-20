@@ -81,6 +81,7 @@ using Nikse.SubtitleEdit.Features.Shared.FindText;
 using Nikse.SubtitleEdit.Features.Shared.GoToLineNumber;
 using Nikse.SubtitleEdit.Features.Shared.PickAlignment;
 using Nikse.SubtitleEdit.Features.Shared.PickTeletextAlignment;
+using Nikse.SubtitleEdit.Features.Shared.PickTeletextColor;
 using Nikse.SubtitleEdit.Features.Shared.PickFontName;
 using Nikse.SubtitleEdit.Features.Shared.PickLanguage;
 using Nikse.SubtitleEdit.Features.Shared.PickLayer;
@@ -483,6 +484,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<PartsSavedViewModel>();
         collection.AddTransient<PickAlignmentViewModel>();
         collection.AddTransient<PickTeletextAlignmentViewModel>();
+        collection.AddTransient<PickTeletextColorViewModel>();
         collection.AddTransient<PickFontNameViewModel>();
         collection.AddTransient<PickLayerFilterViewModel>();
         collection.AddTransient<PickLayerViewModel>();

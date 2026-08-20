@@ -102,7 +102,15 @@ public class LanguageGeneral
     public string Codec { get; set; }
     public string Collapse { get; set; }
     public string Color { get; set; }
+    public string ColorBlack { get; set; }
+    public string ColorBlue { get; set; }
+    public string ColorCyan { get; set; }
     public string ColorDotDotDot { get; set; }
+    public string ColorGreen { get; set; }
+    public string ColorMagenta { get; set; }
+    public string ColorRed { get; set; }
+    public string ColorWhite { get; set; }
+    public string ColorYellow { get; set; }
     public string Column { get; set; }
     public string ConsoleLog { get; set; }
     public string ContentAlignment { get; set; }
@@ -336,6 +344,7 @@ public class LanguageGeneral
     public string NewSubtitleStartKeyDownSetEndKeyUp { get; set; }
     public string SetSubtitleStartAtVideoPositionSetEndAtKeyUpAndGoToNext { get; set; }
     public string No { get; set; }
+    public string NoColor { get; set; }
     public string NoFilesToConvert { get; set; }
     public string NoLanguageCode { get; set; }
     public string NoSubtitleLoaded { get; set; }
@@ -592,6 +601,7 @@ public class LanguageGeneral
     public string TargetEncoding { get; set; }
     public string TargetFormat { get; set; }
     public string TeletextAlignment { get; set; } = string.Empty;
+    public string TeletextColor { get; set; } = string.Empty;
     public string TeletextLine { get; set; } = string.Empty;
     public string TenHours { get; set; }
     public string Text { get; set; }
@@ -852,7 +862,15 @@ public class LanguageGeneral
         Codec = "Codec";
         Collapse = "Collapse";
         Color = "Color";
+        ColorBlack = "Black";
+        ColorBlue = "Blue";
+        ColorCyan = "Cyan";
         ColorDotDotDot = "Color...";
+        ColorGreen = "Green";
+        ColorMagenta = "Magenta";
+        ColorRed = "Red";
+        ColorWhite = "White";
+        ColorYellow = "Yellow";
         Column = "Column";
         ConsoleLog = "Console log";
         ContentAlignment = "Content alignment";
@@ -1086,6 +1104,7 @@ public class LanguageGeneral
         NewSubtitleStartKeyDownSetEndKeyUp = "Insert subtitle: Start on key down, set end on key up";
         SetSubtitleStartAtVideoPositionSetEndAtKeyUpAndGoToNext = "Set start at video position set end on key up, and go to next";
         No = "No";
+        NoColor = "No color";
         NoFilesToConvert = "No files to convert";
         NoLanguageCode = "No language code";
         NoSubtitleLoaded = "No subtitle loaded";
@@ -1342,6 +1361,7 @@ public class LanguageGeneral
         TargetEncoding = "Target encoding";
         TargetFormat = "Target format";
         TeletextAlignment = "Teletext alignment";
+        TeletextColor = "Teletext color";
         TeletextLine = "Teletext line";
         TenHours = "10 hours";
         Text = "Text";
