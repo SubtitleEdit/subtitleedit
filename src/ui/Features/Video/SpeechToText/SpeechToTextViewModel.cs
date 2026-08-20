@@ -143,6 +143,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     private bool _unknownArgument;
     private bool _cudaOutOfMemory;
+    private bool _cudaComputeTypeNotSupported;
     private bool _incompleteModel;
     private string? _missingSharedLibrary;
     private bool _loadedFromStdOut;
@@ -794,6 +795,11 @@ public partial class SpeechToTextViewModel : ObservableObject
                         "Whisper ran out of CUDA memory - try a smaller model or run on CPU.");
                     hasError = true;
                 }
+                else if (_cudaComputeTypeNotSupported)
+                {
+                    await ShowCudaComputeTypeNotSupported(engine);
+                    hasError = true;
+                }
 
                 if (!hasError && GetResultFromSrt(_audioFileName, _videoFileName!, out var resultTexts, _outputText, _filesToDelete))
                 {
@@ -832,6 +838,66 @@ public partial class SpeechToTextViewModel : ObservableObject
                 await MakeResult(transcribedSubtitleFromStdOut);
             });
         }
+    }
+
+    /// <summary>
+    /// Shown when cuBLAS refuses the compute type the engine picked and the run dies inside
+    /// encode() without producing a single segment (issue #13902). The cure is always the same -
+    /// force fp16 - so offer to add the parameter instead of only naming it in a message.
+    /// </summary>
+    private async Task ShowCudaComputeTypeNotSupported(ISpeechToTextEngine engine)
+    {
+        const string title = "cuBLAS failed";
+        const string computeTypeArgument = "--compute_type float16";
+        var nl = Environment.NewLine;
+        var cause =
+            "The GPU could not run the model with the compute type the engine picked - cuBLAS " +
+            $"returned CUBLAS_STATUS_NOT_SUPPORTED, and no text was transcribed.{nl}{nl}";
+
+        // Only the faster-whisper based engines take --compute_type; suggesting it anywhere else
+        // would just trade this error for "unrecognized argument".
+        if (!SupportsComputeTypeParameter(engine))
+        {
+            await MessageBox.Show(Window!, title,
+                cause + "Try another model, another engine, or run on CPU.");
+            return;
+        }
+
+        var parameters = Parameters ?? string.Empty;
+        if (parameters.Contains("--compute_type", StringComparison.OrdinalIgnoreCase))
+        {
+            await MessageBox.Show(Window!, title,
+                cause + "The parameters already set \"--compute_type\" - try another value, " +
+                "such as \"float16\", \"int8\", or \"float32\".");
+            return;
+        }
+
+        var answer = await MessageBox.Show(Window!, title,
+            cause + $"Adding \"{computeTypeArgument}\" to the parameters normally fixes this.{nl}{nl}" +
+            "Add it now?",
+            MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+        if (answer != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        Parameters = string.IsNullOrWhiteSpace(parameters)
+            ? computeTypeArgument
+            : parameters.Trim() + " " + computeTypeArgument;
+        engine.CommandLineParameter = Parameters;
+        SaveSettings();
+    }
+
+    /// <summary>
+    /// True for the engines built on faster-whisper/CTranslate2, which are the ones that both
+    /// accept "--compute_type" and can hit the cuBLAS compute type error in the first place.
+    /// </summary>
+    private static bool SupportsComputeTypeParameter(ISpeechToTextEngine engine)
+    {
+        return engine.Choice is WhisperChoice.PurfviewFasterWhisperXxl
+            or WhisperChoice.CTranslate2
+            or WhisperChoice.WhisperX;
     }
 
     /// <summary>
@@ -3142,6 +3208,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
             _unknownArgument = false;
             _cudaOutOfMemory = false;
+            _cudaComputeTypeNotSupported = false;
             _incompleteModel = false;
             _missingSharedLibrary = null;
             _loadedFromStdOut = false;
@@ -4046,6 +4113,14 @@ public partial class SpeechToTextViewModel : ObservableObject
         else if (outLine.Data.Contains("CUDA failed with error out of memory", StringComparison.OrdinalIgnoreCase))
         {
             _cudaOutOfMemory = true;
+        }
+        else if (outLine.Data.Contains("CUBLAS_STATUS_NOT_SUPPORTED", StringComparison.OrdinalIgnoreCase))
+        {
+            // faster-whisper picks float32 when it cannot tell what the GPU supports, and cuBLAS
+            // then refuses the matmul with CUBLAS_STATUS_NOT_SUPPORTED - the run dies inside
+            // encode() and leaves no output at all, so without this the user just gets an empty
+            // result (issue #13902).
+            _cudaComputeTypeNotSupported = true;
         }
         //if (outLine.Data.Contains("running on: CUDA", StringComparison.OrdinalIgnoreCase))
         //{
