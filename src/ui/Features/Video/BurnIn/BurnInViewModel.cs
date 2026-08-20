@@ -2293,6 +2293,50 @@ public partial class BurnInViewModel : ObservableObject
     internal void Loaded()
     {
         Dispatcher.UIThread.Post(LoadVideoPreview);
+        _ = Task.Run(RemoveUnsupportedVideoEncodings);
+    }
+
+    /// <summary>
+    /// Hides the video encoders the running ffmpeg was not built with. The list in
+    /// <see cref="VideoEncodingItem.VideoEncodings"/> is what the platform *could* have, not
+    /// what this ffmpeg actually has: the Flatpak bundles an ffmpeg without x265, NVENC, AMF or
+    /// QSV, and distro packages differ again, so picking one of those started a job that only
+    /// failed at encode time with "Unknown encoder".
+    /// <para>
+    /// The probe launches ffmpeg, so it runs off the UI thread and applies its result afterwards;
+    /// the window opens with the full list for the few milliseconds that takes. A probe that fails
+    /// changes nothing (see <see cref="VideoEncodingItem.GetUnsupported"/>).
+    /// </para>
+    /// </summary>
+    private void RemoveUnsupportedVideoEncodings()
+    {
+        var available = FfmpegHelper.GetAvailableEncoders();
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            var unsupported = VideoEncodingItem.GetUnsupported(VideoEncodings, available);
+            if (unsupported.Count == 0)
+            {
+                return;
+            }
+
+            // Re-point the selection before removing anything: dropping the selected item from the
+            // ComboBox's ItemsSource makes it null its SelectedItem, and the TwoWay binding writes
+            // that null straight back into SelectedVideoEncoding.
+            if (unsupported.Contains(SelectedVideoEncoding))
+            {
+                SelectedVideoEncoding = VideoEncodings.First(p => !unsupported.Contains(p));
+                VideoEncodingChanged();
+            }
+
+            foreach (var item in unsupported)
+            {
+                VideoEncodings.Remove(item);
+            }
+
+            Se.WriteToolsLog("Burn-in: hid video encoders missing from ffmpeg: " +
+                             string.Join(", ", unsupported.Select(p => p.Codec)));
+        });
     }
 
     /// <summary>
