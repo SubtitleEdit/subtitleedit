@@ -340,6 +340,12 @@ public static class Se4ShortcutsImporter
         ["GeneralTogglePreviewOnVideo"] = nameof(MainViewModel.ToggleSubtitlesOnVideoPlayerCommand),
         ["GeneralSwitchOriginalAndTranslation"] = nameof(MainViewModel.SwitchOriginalAndTranslationTextSelectedLinesCommand),
         ["GeneralAutoCalcCurrentDuration"] = nameof(MainViewModel.RecalculateDurationSelectedLinesCommand),
+        // SE 4 offered the same recalculation at three reading speeds. SE 5's "recalculate
+        // duration" is the optimal-reading-speed one (text length / optimal CPS), and "set
+        // duration to max CPS" is the shortest duration the CPS limit allows - which is what
+        // SE 4 calls the minimum reading speed (#13912).
+        ["GeneralAutoCalcCurrentDurationByOptimalReadingSpeed"] = nameof(MainViewModel.RecalculateDurationSelectedLinesCommand),
+        ["GeneralAutoCalcCurrentDurationByMinReadingSpeed"] = nameof(MainViewModel.SetDurationMaxCpsSelectedLinesCommand),
         ["GeneralGoToNextBookmark"] = nameof(MainViewModel.GoToNextBookmarkCommand),
         ["GeneralGoToPreviousBookmark"] = nameof(MainViewModel.GoToPreviousBookmarkCommand),
         ["GeneralGoToNextEmptyLine"] = nameof(MainViewModel.GoToNextEmptyLineCommand),
