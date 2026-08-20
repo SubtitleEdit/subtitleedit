@@ -96,7 +96,9 @@ Right-click on the waveform for options including:
 - Merge subtitles
 - Delete subtitle
 - Go to subtitle
+- Toggle shot change, or toggle a [chapter](chapters.md) at the video position
 - Extract audio, or clone the voice heard in the selected subtitle into a TTS engine (**Clone voice to**)
+- Copy the selected subtitle (Ctrl+C) or paste lines from the clipboard at the waveform position (Ctrl+V)
 - Zoom controls
 
 <!-- Screenshot: Waveform context menu -->
