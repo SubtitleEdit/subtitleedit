@@ -1040,6 +1040,9 @@ public class SettingsPage : UserControl
         var numericUpDownMargin = UiUtil.MakeNumericUpDownOneDecimal(1, 1000, 130, vm, nameof(vm.MpvPreviewMargin));
         numericUpDownMargin.Increment = 1;
 
+        var checkBoxMarginIsPartOfSubtitleArea = UiUtil.MakeCheckBox(
+            Se.Language.Options.Settings.MarginIsPartOfSubtitleArea, vm, nameof(vm.MpvPreviewMarginIsPartOfSubtitleArea));
+
         var labelColorPrimary = UiUtil.MakeLabel(Se.Language.Assa.Primary);
         var colorPickerPrimary = UiUtil.MakeColorPickerButton(vm, nameof(vm.MpvPreviewColorPrimary));
 
@@ -1053,6 +1056,7 @@ public class SettingsPage : UserControl
         {
             RowDefinitions =
             {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
@@ -1090,16 +1094,18 @@ public class SettingsPage : UserControl
         grid.Add(labelMargin, 5);
         grid.Add(numericUpDownMargin, 5, 1);
 
-        grid.Add(labelColorPrimary, 6);
-        grid.Add(colorPickerPrimary, 6, 1);
+        grid.Add(checkBoxMarginIsPartOfSubtitleArea, 6, 0, 1, 2);
 
-        grid.Add(labelColorOutline, 7);
-        grid.Add(colorPickerOutline, 7, 1);
+        grid.Add(labelColorPrimary, 7);
+        grid.Add(colorPickerPrimary, 7, 1);
 
-        grid.Add(labelColorShadow, 8);
-        grid.Add(colorPickerShadow, 8, 1);
+        grid.Add(labelColorOutline, 8);
+        grid.Add(colorPickerOutline, 8, 1);
 
-        grid.Add(MakeBorderView(vm), 9, 0, 1, 2);
+        grid.Add(labelColorShadow, 9);
+        grid.Add(colorPickerShadow, 9, 1);
+
+        grid.Add(MakeBorderView(vm), 10, 0, 1, 2);
 
         return UiUtil.MakeBorderForControl(grid);
     }
