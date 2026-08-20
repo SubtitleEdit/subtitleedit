@@ -619,6 +619,7 @@ public partial class MainViewModel :
     private long _playheadSeekTargetTs;
     private const double PlayheadSeekArriveToleranceSeconds = 0.15;
     private const double PlayheadSeekPinTimeoutMs = 600;
+    private const double PlayheadSeekPinMaxMs = 5000; // hard cap while the player says the seek is still in flight (see UpdatePlayheadEstimate)
     private const double PlayheadResyncThresholdSeconds = 0.5; // drift beyond this = real discontinuity -> snap
     private const double PlayheadDriftCorrection = 0.05; // gentle pull toward mpv when its clock is live
 
@@ -25806,7 +25807,21 @@ public partial class MainViewModel :
         {
             var target = _playheadSeekTarget.Value;
             var arrived = Math.Abs(rawPosition - target) < PlayheadSeekArriveToleranceSeconds;
-            var timedOut = (nowTimestamp - _playheadSeekTargetTs) * 1000.0 / Stopwatch.Frequency > PlayheadSeekPinTimeoutMs;
+
+            // The 600 ms timeout is a guess at "the seek must have landed by now", and for a
+            // slow seek (network share, cold spinning disk, heavy 4K hr-seek) it guesses wrong:
+            // the pin expired mid-seek, the cursor snapped back to the old position, then jumped
+            // again when the seek finally landed. When the player reports seek completion
+            // exactly (mpv's MPV_EVENT_PLAYBACK_RESTART), don't give up while the seek is still
+            // in flight - hold the pin up to a hard cap instead. The restart signal is only ever
+            // used to extend the hold, never to release the pin early: a restart from an older
+            // seek in a scrub burst would otherwise release a newer pin onto a stale position.
+            var pinElapsedMs = (nowTimestamp - _playheadSeekTargetTs) * 1000.0 / Stopwatch.Frequency;
+            var player = vp.VideoPlayer;
+            var seekStillInFlight = player.SupportsPlaybackRestartEvents &&
+                                    !player.HasPlaybackRestartedSince(_playheadSeekTargetTs);
+            var timedOut = pinElapsedMs > PlayheadSeekPinTimeoutMs &&
+                           (!seekStillInFlight || pinElapsedMs > PlayheadSeekPinMaxMs);
 
             // A pause was requested but mpv still reports playing: it keeps decoding for ~100-200 ms and
             // its position runs on past the pinned spot, which is within the arrive tolerance, so "arrived"
@@ -27024,6 +27039,11 @@ public partial class MainViewModel :
 
     internal void OnVideoPlayerUserSeeked(double newPositionSeconds)
     {
+        // Glue the waveform cursor to the drag/wheel target like every other seek path
+        // does: without the pin, a drag during playback shows the cursor lagging on mpv's
+        // old position and then snapping once each seek lands.
+        PinPlayheadTo(newPositionSeconds);
+
         var av = AudioVisualizer;
         if (av?.WavePeaks == null || av.Bounds.Width <= 0 || av.ZoomFactor <= 0 || av.WavePeaks.SampleRate <= 0)
         {

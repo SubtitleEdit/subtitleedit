@@ -35,6 +35,20 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     private string _fileName = string.Empty;
     private double? _audioEndBound;
 
+    // Observed-property caches, kept current by the mpv event thread (see StartEventLoop).
+    // While _eventLoopActive the pause/speed/duration/eof getters read these instead of
+    // doing a synchronous P/Invoke into the core per call. Doubles go through Interlocked
+    // as long bits so a 32-bit runtime can't tear them.
+    private Thread? _eventThread;
+    private IntPtr _eventLoopHandle;
+    private volatile bool _eventLoopStop;
+    private volatile bool _eventLoopActive;
+    private volatile bool _observedPause = true;
+    private volatile bool _observedEofReached;
+    private long _observedSpeedBits = BitConverter.DoubleToInt64Bits(1.0);
+    private long _observedDurationBits;
+    private long _lastPlaybackRestartTimestamp; // Stopwatch ticks of the last MPV_EVENT_PLAYBACK_RESTART
+
     [StructLayout(LayoutKind.Sequential)]
     private struct MpvOpenGlInitParams
     {
@@ -94,6 +108,35 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     private delegate IntPtr MpvWaitEvent(IntPtr mpvHandle, double wait);
 
     private MpvWaitEvent? _mpvWaitEvent;
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate int MpvObserveProperty(IntPtr mpvHandle, ulong replyUserdata, byte[] name, int format);
+
+    private MpvObserveProperty? _mpvObserveProperty;
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate void MpvWakeup(IntPtr mpvHandle);
+
+    private MpvWakeup? _mpvWakeup;
+
+    /// <summary>Matches <c>mpv_event</c> in client.h.</summary>
+    [StructLayout(LayoutKind.Sequential)]
+    private struct MpvEvent
+    {
+        public int eventId;
+        public int error;
+        public ulong replyUserdata;
+        public IntPtr data;
+    }
+
+    /// <summary>Matches <c>mpv_event_property</c> in client.h.</summary>
+    [StructLayout(LayoutKind.Sequential)]
+    private struct MpvEventProperty
+    {
+        public IntPtr name;
+        public int format;
+        public IntPtr data;
+    }
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate int MpvSetOption(IntPtr mpvHandle, byte[] name, int format, ref ulong data);
@@ -206,10 +249,21 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     private const int MPV_RENDER_PARAM_METAL_INIT_PARAMS = 21;
     private const int MPV_RENDER_PARAM_METAL_DRAWABLE = 22;
 
+    private const int MPV_FORMAT_NONE = 0;
     private const int MPV_FORMAT_STRING = 1;
     private const int MPV_FORMAT_FLAG = 3;
     private const int MPV_FORMAT_INT64 = 4;
     private const int MPV_FORMAT_DOUBLE = 5;
+
+    private const int MPV_EVENT_SHUTDOWN = 1;
+    private const int MPV_EVENT_PLAYBACK_RESTART = 21;
+    private const int MPV_EVENT_PROPERTY_CHANGE = 22;
+
+    // reply_userdata ids for the observed properties (see StartEventLoop)
+    private const ulong ObserveIdPause = 1;
+    private const ulong ObserveIdSpeed = 2;
+    private const ulong ObserveIdDuration = 3;
+    private const ulong ObserveIdEofReached = 4;
 
     public event Action? RequestRender;
 
@@ -296,6 +350,8 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         _mpvCreate = (MpvCreate)GetDllType(typeof(MpvCreate), "mpv_create");
         _mpvInitialize = (MpvInitialize)GetDllType(typeof(MpvInitialize), "mpv_initialize");
         _mpvWaitEvent = (MpvWaitEvent)GetDllType(typeof(MpvWaitEvent), "mpv_wait_event");
+        _mpvObserveProperty = (MpvObserveProperty)GetDllType(typeof(MpvObserveProperty), "mpv_observe_property");
+        _mpvWakeup = (MpvWakeup)GetDllType(typeof(MpvWakeup), "mpv_wakeup");
         _mpvCommand = (MpvCommand)GetDllType(typeof(MpvCommand), "mpv_command");
         _mpvSetOption = (MpvSetOption)GetDllType(typeof(MpvSetOption), "mpv_set_option");
         _mpvSetOptionString = (MpvSetOptionString)GetDllType(typeof(MpvSetOptionString), "mpv_set_option_string");
@@ -372,14 +428,223 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         }
 
         SetYtDlpPathOption();
+        SetAudioBufferOption();
 
         var err = _mpvInitialize(_mpv);
         if (err >= 0)
         {
             _coreInitialized = true;
+            StartEventLoop();
         }
 
         return err;
+    }
+
+    /// <summary>
+    /// Observes the state-shaped properties (pause/speed/duration/eof-reached) and runs a
+    /// dedicated thread draining mpv's event queue into the caches above. Before this, every
+    /// IsPlaying/Speed/Duration read was a synchronous P/Invoke into the core - the playhead
+    /// cursor timer alone issued three per 16 ms tick - and Subtitle Edit had no way to know
+    /// when mpv had actually finished applying a seek, which is what the playhead seek pin's
+    /// arrive-tolerance/timeout heuristics guess at. MPV_EVENT_PLAYBACK_RESTART states it
+    /// exactly (see <see cref="HasPlaybackRestartedSince"/>).
+    /// <para>
+    /// If anything here fails the getters silently keep their live P/Invoke fallback - the
+    /// caches only take over once <c>_eventLoopActive</c> is set.
+    /// </para>
+    /// </summary>
+    private void StartEventLoop()
+    {
+        StopEventLoop();
+
+        var handle = _mpv;
+        if (handle == IntPtr.Zero || _mpvWaitEvent == null || _mpvObserveProperty == null || _mpvWakeup == null)
+        {
+            return;
+        }
+
+        if (_mpvObserveProperty(handle, ObserveIdPause, PropertyNamePause, MPV_FORMAT_FLAG) < 0 ||
+            _mpvObserveProperty(handle, ObserveIdSpeed, PropertyNameSpeed, MPV_FORMAT_DOUBLE) < 0 ||
+            _mpvObserveProperty(handle, ObserveIdDuration, PropertyNameDuration, MPV_FORMAT_DOUBLE) < 0 ||
+            _mpvObserveProperty(handle, ObserveIdEofReached, PropertyNameEofReached, MPV_FORMAT_FLAG) < 0)
+        {
+            return;
+        }
+
+        // Seed the caches with live reads so the getters are right in the short gap before
+        // mpv's initial change notifications arrive. Unavailable properties (duration before
+        // a file is loaded) keep their defaults.
+        if (_mpvGetPropertyFlag != null)
+        {
+            var flag = 0;
+            if (_mpvGetPropertyFlag(handle, PropertyNamePause, MPV_FORMAT_FLAG, ref flag) >= 0)
+            {
+                _observedPause = flag != 0;
+            }
+        }
+
+        if (_mpvGetPropertyDouble != null)
+        {
+            double value = 0;
+            if (_mpvGetPropertyDouble(handle, PropertyNameSpeed, MPV_FORMAT_DOUBLE, ref value) >= 0 && value > 0)
+            {
+                Interlocked.Exchange(ref _observedSpeedBits, BitConverter.DoubleToInt64Bits(value));
+            }
+
+            value = 0;
+            if (_mpvGetPropertyDouble(handle, PropertyNameDuration, MPV_FORMAT_DOUBLE, ref value) >= 0)
+            {
+                Interlocked.Exchange(ref _observedDurationBits, BitConverter.DoubleToInt64Bits(value));
+            }
+        }
+
+        _eventLoopStop = false;
+        _eventLoopHandle = handle;
+        _eventThread = new Thread(() => RunEventLoop(handle))
+        {
+            IsBackground = true,
+            Name = "mpv-events",
+        };
+        _eventThread.Start();
+        _eventLoopActive = true;
+    }
+
+    private void RunEventLoop(IntPtr handle)
+    {
+        var waitEvent = _mpvWaitEvent!;
+        while (!_eventLoopStop)
+        {
+            IntPtr eventPtr;
+            try
+            {
+                eventPtr = waitEvent(handle, 1.0);
+            }
+            catch
+            {
+                break;
+            }
+
+            if (_eventLoopStop)
+            {
+                break;
+            }
+
+            if (eventPtr == IntPtr.Zero)
+            {
+                continue;
+            }
+
+            var mpvEvent = Marshal.PtrToStructure<MpvEvent>(eventPtr);
+            if (mpvEvent.eventId == MPV_EVENT_SHUTDOWN)
+            {
+                break;
+            }
+
+            if (mpvEvent.eventId == MPV_EVENT_PLAYBACK_RESTART)
+            {
+                Interlocked.Exchange(ref _lastPlaybackRestartTimestamp, System.Diagnostics.Stopwatch.GetTimestamp());
+            }
+            else if (mpvEvent.eventId == MPV_EVENT_PROPERTY_CHANGE && mpvEvent.data != IntPtr.Zero)
+            {
+                var property = Marshal.PtrToStructure<MpvEventProperty>(mpvEvent.data);
+                switch (mpvEvent.replyUserdata)
+                {
+                    case ObserveIdPause:
+                        if (property.format == MPV_FORMAT_FLAG && property.data != IntPtr.Zero)
+                        {
+                            _observedPause = Marshal.ReadInt32(property.data) != 0;
+                        }
+
+                        break;
+                    case ObserveIdSpeed:
+                        if (property.format == MPV_FORMAT_DOUBLE && property.data != IntPtr.Zero)
+                        {
+                            Interlocked.Exchange(ref _observedSpeedBits, Marshal.ReadInt64(property.data));
+                        }
+
+                        break;
+                    case ObserveIdDuration:
+                        if (property.format == MPV_FORMAT_DOUBLE && property.data != IntPtr.Zero)
+                        {
+                            Interlocked.Exchange(ref _observedDurationBits, Marshal.ReadInt64(property.data));
+                        }
+                        else if (property.format == MPV_FORMAT_NONE)
+                        {
+                            // No file loaded: mimic the live getter, which returns 0 then.
+                            Interlocked.Exchange(ref _observedDurationBits, 0);
+                        }
+
+                        break;
+                    case ObserveIdEofReached:
+                        if (property.format == MPV_FORMAT_FLAG && property.data != IntPtr.Zero)
+                        {
+                            _observedEofReached = Marshal.ReadInt32(property.data) != 0;
+                        }
+                        else if (property.format == MPV_FORMAT_NONE)
+                        {
+                            _observedEofReached = false;
+                        }
+
+                        break;
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Stops the event thread and waits for it to exit. Must complete before
+    /// <c>mpv_terminate_destroy</c> runs: no other thread may sit in <c>mpv_wait_event</c>
+    /// while the core is being destroyed.
+    /// </summary>
+    private void StopEventLoop()
+    {
+        var thread = _eventThread;
+        if (thread == null)
+        {
+            return;
+        }
+
+        _eventThread = null;
+        _eventLoopActive = false;
+        _eventLoopStop = true;
+
+        var handle = _eventLoopHandle;
+        _eventLoopHandle = IntPtr.Zero;
+        if (handle != IntPtr.Zero)
+        {
+            try
+            {
+                _mpvWakeup?.Invoke(handle);
+            }
+            catch
+            {
+                // ignore - the 1 s wait_event timeout still bounds the join below
+            }
+        }
+
+        if (!thread.Join(3000))
+        {
+            // wait_event re-checks the stop flag at least once a second, so this should never
+            // happen; log and continue - leaking a wedged thread beats hanging the dispose.
+            Se.LogError(new InvalidOperationException("mpv event thread did not stop"), "LibMpvDynamicPlayer StopEventLoop");
+        }
+    }
+
+    /// <summary>
+    /// True when the mpv event loop is live, i.e. <see cref="HasPlaybackRestartedSince"/>
+    /// carries real information.
+    /// </summary>
+    public bool SupportsPlaybackRestartEvents => _eventLoopActive;
+
+    /// <summary>
+    /// Whether mpv has reported MPV_EVENT_PLAYBACK_RESTART - "seek finished, output resumed
+    /// from the new position" (it also fires when a file starts) - since the given
+    /// Stopwatch timestamp. This is the exact signal for "the seek has landed" that the
+    /// playhead seek pin otherwise has to infer from position tolerances and timeouts.
+    /// </summary>
+    public bool HasPlaybackRestartedSince(long stopwatchTimestamp)
+    {
+        return Interlocked.Read(ref _lastPlaybackRestartTimestamp) > stopwatchTimestamp;
     }
 
     private static byte[] GetUtf8Bytes(string s)
@@ -537,6 +802,31 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         }
     }
 
+    /// <summary>
+    /// Shrinks mpv's audio output buffer (its default is 0.2 s). That buffer is why pause,
+    /// resume and seeks during playback take effect ~200 ms late: a pause only goes quiet once
+    /// the buffered audio has played out, and resume/seek only sound once it has been refilled.
+    /// Those latencies are the residuals the waveform playhead estimate exists to mask
+    /// (#12740, discussion #10824), so keep the buffer short. A zero or negative setting
+    /// leaves mpv's default alone - the escape hatch for machines where a small buffer
+    /// causes audio dropouts (slow hardware, Bluetooth audio).
+    /// <para>Must be called before mpv_initialize.</para>
+    /// </summary>
+    private void SetAudioBufferOption()
+    {
+        var seconds = Se.Settings.Video.MpvAudioBufferSeconds;
+        if (seconds <= 0)
+        {
+            return;
+        }
+
+        var err = SetOptionString("audio-buffer", seconds.ToString("0.###", CultureInfo.InvariantCulture));
+        if (err < 0)
+        {
+            Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer could not set audio-buffer");
+        }
+    }
+
     private int _brightness;
 
     public int ToggleBrightness()
@@ -629,6 +919,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         // so let mpv auto-detect from the context it receives.
 
         SetYtDlpPathOption();
+        SetAudioBufferOption();
 
         // Initialize mpv first
         var err = _mpvInitialize(_mpv);
@@ -639,6 +930,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         else
         {
             _coreInitialized = true;
+            StartEventLoop();
         }
 
         // Create OpenGL init params
@@ -729,6 +1021,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         SetStartPausedOption();
 
         SetYtDlpPathOption();
+        SetAudioBufferOption();
 
         var err = _mpvInitialize(_mpv);
         if (err < 0)
@@ -738,6 +1031,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         else
         {
             _coreInitialized = true;
+            StartEventLoop();
         }
 
         // Build mpv_metal_init_params: device (required) + layer (optional).
@@ -993,6 +1287,8 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         var mpv = Interlocked.Exchange(ref _mpv, IntPtr.Zero);
         if (mpv != IntPtr.Zero && _mpvTerminateDestroy != null)
         {
+            // The event thread must be out of mpv_wait_event before the core goes away.
+            StopEventLoop();
             _mpvTerminateDestroy.Invoke(mpv);
         }
     }
@@ -1210,6 +1506,11 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         get
         {
             EnsureNotDisposed();
+            if (_eventLoopActive)
+            {
+                return !_observedPause;
+            }
+
             if (_mpv == IntPtr.Zero || _mpvGetPropertyFlag == null)
             {
                 return false;
@@ -1240,6 +1541,11 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         get
         {
             EnsureNotDisposed();
+            if (_eventLoopActive)
+            {
+                return _observedPause;
+            }
+
             if (_mpv == IntPtr.Zero || _mpvGetPropertyFlag == null)
             {
                 return false;
@@ -1287,6 +1593,11 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
     private bool IsEofReached()
     {
+        if (_eventLoopActive)
+        {
+            return _observedEofReached;
+        }
+
         if (_mpv == IntPtr.Zero || _mpvGetPropertyFlag == null)
         {
             return false;
@@ -1377,6 +1688,11 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         get
         {
             EnsureNotDisposed();
+            if (_eventLoopActive)
+            {
+                return BitConverter.Int64BitsToDouble(Interlocked.Read(ref _observedDurationBits));
+            }
+
             if (_mpv == IntPtr.Zero || _mpvGetPropertyDouble == null)
             {
                 return 0;
@@ -1458,6 +1774,11 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         get
         {
             EnsureNotDisposed();
+            if (_eventLoopActive)
+            {
+                return BitConverter.Int64BitsToDouble(Interlocked.Read(ref _observedSpeedBits));
+            }
+
             if (_mpv == IntPtr.Zero || _mpvGetPropertyDouble == null)
             {
                 return 1.0;
@@ -1794,6 +2115,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         }
 
         SetYtDlpPathOption();
+        SetAudioBufferOption();
 
         // Initialize mpv
         var err = _mpvInitialize(_mpv);
@@ -1803,6 +2125,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         }
 
         _coreInitialized = true;
+        StartEventLoop();
 
         // Build render context params for software rendering
         var apiTypeBytes = Encoding.UTF8.GetBytes(MPV_RENDER_API_TYPE_SW + "\0");
