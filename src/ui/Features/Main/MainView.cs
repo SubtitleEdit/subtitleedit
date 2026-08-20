@@ -61,24 +61,11 @@ public class MainView : ViewBase
                 _vm.OnLoaded();
             };
 
-            // Clipboard managers (Ditto, ClipboardFusion, ...) and automation tools often
-            // deliver a paste as a WM_PASTE message instead of synthesizing Ctrl+V. That
-            // message targets the focused HWND - which in Avalonia is always the window
-            // itself - so nothing receives it without this hook. Route it to the focused
-            // control like Ctrl+V would (the wndproc already runs on the UI thread).
+            // Clipboard-manager compatibility (Ditto, CopyQ, ClipClip, ...) - see the
+            // hook for what it intercepts and why (#13822).
             if (OperatingSystem.IsWindows())
             {
-                const uint wmPaste = 0x0302;
-                Win32Properties.AddWndProcHookCallback(_vm.Window,
-                    (IntPtr _, uint msg, IntPtr _, IntPtr _, ref bool handled) =>
-                    {
-                        if (msg == wmPaste && _vm.PasteViaWindowMessage())
-                        {
-                            handled = true;
-                        }
-
-                        return IntPtr.Zero;
-                    });
+                Win32Properties.AddWndProcHookCallback(_vm.Window, MainWindowWndProcHook);
             }
         }
 
@@ -149,6 +136,99 @@ public class MainView : ViewBase
 
         return root;
     }
+
+    // Whether the window has seen (and passed through) an Alt key-down whose release is still
+    // pending. Used by MainWindowWndProcHook to tell a real Alt release from an injected one.
+    private bool _altKeyDownDelivered;
+
+    /// <summary>
+    /// Window-message hook that makes pasting from Windows clipboard managers (Ditto, CopyQ,
+    /// ClipClip, ...) work (#13822). Runs on the UI thread, before Avalonia's own wndproc;
+    /// setting handled skips Avalonia's processing of the message entirely.
+    ///
+    /// 1) Stray Alt key-ups: before synthesizing Ctrl+V, Ditto force-releases every key
+    ///    (CSendKeys::AllKeysUp sends left/right Alt key-ups even when Alt was never down).
+    ///    Avalonia's AccessKeyHandler arms its "showing access keys" state on ANY Alt key-down -
+    ///    including Ctrl+Alt chords - and never disarms the field on pointer-press or menu-close,
+    ///    so once the user has tapped Alt or used a Ctrl+Alt hotkey, ANY later Alt key-up opens
+    ///    the main menu. The menu steals keyboard focus and the clipboard manager's synthesized
+    ///    Ctrl+V lands in the menu instead of the text box: pasting "randomly" fails and the File
+    ///    menu lights up instead (also reported as "Ctrl+1 activates the File menu"). Only let an
+    ///    Alt key-up through when it releases an Alt key-down this window actually delivered.
+    ///    As a bonus this stops Alt+Tab-ing back into SE from activating the menu bar via the
+    ///    orphaned Alt release.
+    /// 2) Left Alt key-down while Ctrl is already held: a Ctrl+Alt chord is never a menu
+    ///    gesture, but it arms the AccessKeyHandler state above, so swallow it before Avalonia
+    ///    sees it. The chord's later keys still carry Ctrl+Alt in KeyEventArgs.KeyModifiers
+    ///    (Avalonia reads the live key state per event), so Ctrl+Alt shortcuts keep firing.
+    ///    Left Alt only: AltGr is physically right Alt, and its key-down must keep reaching
+    ///    the app for ShortcutManager's AltGr detection (which suppresses Ctrl+Alt shortcuts
+    ///    while typing AltGr characters).
+    /// 3) WM_CHAR 0x16 (the Ctrl+V control char): tools that post keystrokes to the window
+    ///    instead of injecting real input can't put Ctrl into the key state, so their paste
+    ///    arrives only as this classic control char - native Win32 edit controls paste on it,
+    ///    Avalonia discards it. Route it to the focused control, but only while Ctrl is really
+    ///    up: during physical Ctrl+V typing the same char arrives right after the TextBox
+    ///    already pasted on the key-down.
+    /// 4) WM_PASTE: some tools deliver the paste as this message. It targets the focused HWND,
+    ///    which in Avalonia is always the window itself, so route it to the focused control.
+    /// </summary>
+    private IntPtr MainWindowWndProcHook(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+    {
+        const uint wmKillFocus = 0x0008;
+        const uint wmKeyDown = 0x0100;
+        const uint wmKeyUp = 0x0101;
+        const uint wmChar = 0x0102;
+        const uint wmSysKeyDown = 0x0104;
+        const uint wmSysKeyUp = 0x0105;
+        const uint wmPaste = 0x0302;
+        const int vkControl = 0x11;
+        const int vkMenu = 0x12;
+        const int ctrlVChar = 0x16;
+
+        if (msg is wmKeyDown or wmSysKeyDown && (int)wParam == vkMenu)
+        {
+            var isLeftAlt = (((long)lParam >> 24) & 1) == 0; // bit 24: extended key = right Alt
+            if (isLeftAlt && GetKeyState(vkControl) < 0)
+            {
+                handled = true;
+            }
+            else
+            {
+                _altKeyDownDelivered = true;
+            }
+        }
+        else if (msg is wmKeyUp or wmSysKeyUp && (int)wParam == vkMenu)
+        {
+            if (_altKeyDownDelivered)
+            {
+                _altKeyDownDelivered = false;
+            }
+            else
+            {
+                handled = true;
+            }
+        }
+        else if (msg == wmKillFocus)
+        {
+            // The matching Alt release will go to whichever window has focus then; a later
+            // unmatched release here (e.g. after Alt+Tab back in) must not open the menu.
+            _altKeyDownDelivered = false;
+        }
+        else if ((msg == wmChar && (int)wParam == ctrlVChar && GetKeyState(vkControl) >= 0) ||
+                 msg == wmPaste)
+        {
+            if (_vm != null && _vm.PasteViaWindowMessage())
+            {
+                handled = true;
+            }
+        }
+
+        return IntPtr.Zero;
+    }
+
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    private static extern short GetKeyState(int keyCode);
 
     internal async Task OpenFile(string fileName)
     {
