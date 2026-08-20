@@ -60,6 +60,26 @@ public class MainView : ViewBase
             {
                 _vm.OnLoaded();
             };
+
+            // Clipboard managers (Ditto, ClipboardFusion, ...) and automation tools often
+            // deliver a paste as a WM_PASTE message instead of synthesizing Ctrl+V. That
+            // message targets the focused HWND - which in Avalonia is always the window
+            // itself - so nothing receives it without this hook. Route it to the focused
+            // control like Ctrl+V would (the wndproc already runs on the UI thread).
+            if (OperatingSystem.IsWindows())
+            {
+                const uint wmPaste = 0x0302;
+                Win32Properties.AddWndProcHookCallback(_vm.Window,
+                    (IntPtr _, uint msg, IntPtr _, IntPtr _, ref bool handled) =>
+                    {
+                        if (msg == wmPaste && _vm.PasteViaWindowMessage())
+                        {
+                            handled = true;
+                        }
+
+                        return IntPtr.Zero;
+                    });
+            }
         }
 
         // Load language (normally already loaded in Program.Main before the window is built; this
