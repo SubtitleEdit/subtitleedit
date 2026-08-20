@@ -39,6 +39,26 @@ env:
 
 
 jobs:
+  # A stable release is the one a Flathub build is cut from: the flathub manifest
+  # pins a tag and installs the AppStream metainfo from that tagged checkout, so
+  # whatever <releases> block is committed at the tag is what the published app
+  # advertises forever. v5.1.0 was tagged without bumping it and therefore claims
+  # 5.0.0 as its newest release. Cheap job, no needs, so it fails within seconds
+  # instead of after the whole build matrix - but create-release depends on it,
+  # so a stable release cannot get out without the entry.
+  verify-metainfo-release-entry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Verify the metainfo has a <release> entry for this version
+        run: |
+          if [ "${{ inputs.is_prerelease }}" = "true" ]; then
+            echo "Pre-release build - a metainfo <release> entry is not required."
+            exit 0
+          fi
+          bash installer/flatpak/update-metainfo-version.sh --check
+
   # The flatpak chain (regenerate-flatpak-nuget-sources → build-linux-flatpak)
   # is defined first so GitHub's job-graph view lays it out in its own visual
   # lane on the left, rather than routing arrows from build-macos / build-linux
@@ -864,7 +884,7 @@ jobs:
 
   create-release:
     if: ${{ inputs.create_release }}
-    needs: [build-windows, build-macos, build-linux, build-linux-flatpak]
+    needs: [build-windows, build-macos, build-linux, build-linux-flatpak, verify-metainfo-release-entry]
     runs-on: ubuntu-latest
     permissions:
       contents: write
