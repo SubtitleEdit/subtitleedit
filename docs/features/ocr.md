@@ -92,6 +92,19 @@ Local OCR engine.
 6. Review and correct any errors
 7. Click **OK** to import the text subtitles
 
+## Saving the Images
+
+The subtitle list's right-click menu has **Save all images with HTML index...**. Pick a folder and
+Subtitle Edit writes `index.html` plus `images/0001.png`, `0002.png`, ... — every subtitle bitmap
+next to the text OCR produced for it, which is the quickest way to proof-read a run against the
+originals.
+
+The page is self-contained (no external css, js or fonts), so it opens straight off the file
+system. It follows the reader's light/dark preference, with an Auto/Light/Dark override, and adds
+a text filter, an "only lines without text" filter for spotting images that produced nothing, a
+dark/light/checkerboard backdrop for the transparent bitmaps, click-to-zoom, and each line's
+number, time codes, duration and image size.
+
 ## Keyboard Shortcuts
 
 ### General

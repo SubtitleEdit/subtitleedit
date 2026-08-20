@@ -68,6 +68,7 @@ Subtitle Edit is a free, open-source editor for video subtitles. This is the doc
 - [Embedded Subtitles](features/embedded-subtitles.md) — Add, remove, preview, and edit subtitle tracks in Matroska/WebM files
 - [Transparent Subtitles](features/transparent-subtitles.md) — Generate transparent subtitle video
 - [Shot Changes](features/shot-changes.md) — Detect and manage shot changes
+- [Chapters](features/chapters.md) — Edit, import, export and write video chapter marks
 - [Blank Video](features/blank-video.md) — Generate a blank video
 - [Re-encode Video](features/re-encode-video.md) — Re-encode video files
 - [Cut Video](features/cut-video.md) — Cut video segments
