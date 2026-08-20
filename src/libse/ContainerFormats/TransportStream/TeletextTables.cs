@@ -204,6 +204,30 @@
             0xff, 0xff, 0xff, 0x09, 0xff, 0xff, 0xff, 0xff
         };
 
+        // Remapping a national subset patches the Latin row of G0 in place, so a new decode
+        // must start from an untouched copy or the previous file's national characters leak
+        // into the next one.
+        private static readonly int[] G0LatinPristine = GetLatinRowCopy();
+
+        private static int[] GetLatinRowCopy()
+        {
+            var copy = new int[G0.GetLength(1)];
+            for (var i = 0; i < copy.Length; i++)
+            {
+                copy[i] = G0[(int)G0CharsetsT.Latin, i];
+            }
+
+            return copy;
+        }
+
+        public static void ResetLatinG0()
+        {
+            for (var i = 0; i < G0LatinPristine.Length; i++)
+            {
+                G0[(int)G0CharsetsT.Latin, i] = G0LatinPristine[i];
+            }
+        }
+
         // --- G2 ----------------------------------------------------------------------
 
         public static readonly int[,] G2 = new int[1, 96]

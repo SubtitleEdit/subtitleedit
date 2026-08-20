@@ -62,4 +62,17 @@ public class SplitBreakLongLinesTests
             Assert.DoesNotContain("\r", line.Text);
         }
     }
+
+    // The "only subtitles with a too-long line" rebalance mode (teletext tester feedback on
+    // PR #13862): an intentionally unbalanced subtitle whose lines all fit must be left alone.
+    [Theory]
+    [InlineData("Four words on top\nline", 37, 2, false)] // unbalanced but compliant
+    [InlineData("This single line is exactly forty chars.", 37, 2, true)] // one line too long
+    [InlineData("ok\nok\nok", 37, 2, true)] // too many lines
+    [InlineData("<i>Italic tags do not count toward the length</i>", 45, 2, false)]
+    public void HasLineTooLong_FlagsOnlyNonCompliantSubtitles(string text, int maxLength, int maxLines, bool expected)
+    {
+        var normalized = text.Replace("\n", "\r\n");
+        Assert.Equal(expected, SplitBreakLongLinesViewModel.HasLineTooLong(normalized, maxLength, maxLines));
+    }
 }
