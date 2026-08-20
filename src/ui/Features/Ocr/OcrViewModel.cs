@@ -31,6 +31,7 @@ using Nikse.SubtitleEdit.Features.Shared.AddToUserDictionary;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit;
 using Nikse.SubtitleEdit.Features.Shared.GoToLineNumber;
 using Nikse.SubtitleEdit.Features.Shared.PickFontName;
+using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 using Nikse.SubtitleEdit.Features.Shared.ShowImage;
 using Nikse.SubtitleEdit.Features.Shared.TextBoxUtils;
 using Nikse.SubtitleEdit.Features.SpellCheck;
@@ -180,6 +181,7 @@ public partial class OcrViewModel : ObservableObject
     private readonly INOcrCaseFixer _nOcrCaseFixer;
     private readonly IWindowService _windowService;
     private readonly IFileHelper _fileHelper;
+    private readonly IFolderHelper _folderHelper;
     private readonly ISpellCheckManager _spellCheckManager;
     private readonly IOcrFixEngine _ocrFixEngine;
     private readonly IBinaryOcrMatcher _binaryOcrMatcher;
@@ -207,6 +209,7 @@ public partial class OcrViewModel : ObservableObject
         INOcrCaseFixer nOcrCaseFixer,
         IWindowService windowService,
         IFileHelper fileHelper,
+        IFolderHelper folderHelper,
         ISpellCheckManager spellCheckManager,
         IOcrFixEngine ocrFixEngine,
         IBinaryOcrMatcher binaryOcrMatcher,
@@ -215,6 +218,7 @@ public partial class OcrViewModel : ObservableObject
         _nOcrCaseFixer = nOcrCaseFixer;
         _windowService = windowService;
         _fileHelper = fileHelper;
+        _folderHelper = folderHelper;
         _spellCheckManager = spellCheckManager;
         _ocrFixEngine = ocrFixEngine;
         _binaryOcrMatcher = binaryOcrMatcher;
@@ -829,6 +833,69 @@ public partial class OcrViewModel : ObservableObject
         var items = OcrSubtitleItems.ToList();
         await _windowService.ShowDialogAsync<BinaryEditWindow, BinaryEditViewModel>(Window, vm => { vm.Initialize(items); });
         _isCtrlDown = false;
+    }
+
+    /// <summary>
+    /// SE4's "Save all images with HTML index": every subtitle image as a png plus a
+    /// standalone index.html showing each image next to its OCR text - handy for proof-reading
+    /// an OCR run against the original bitmaps.
+    /// </summary>
+    [RelayCommand]
+    private async Task SaveAllImagesWithHtmlIndex()
+    {
+        if (Window == null || IsOcrRunning || OcrSubtitleItems.Count == 0)
+        {
+            return;
+        }
+
+        var folder = await _folderHelper.PickFolderAsync(Window, Se.Language.Ocr.SaveAllImagesWithHtmlIndexPickFolder);
+        _isCtrlDown = false;
+        if (string.IsNullOrEmpty(folder))
+        {
+            return;
+        }
+
+        var items = OcrSubtitleItems.ToList();
+        var sourceFileName = _sourceFileName;
+        var pleaseWaitVm = _windowService.ShowWindow<PleaseWaitWindow, PleaseWaitViewModel>(Window);
+        pleaseWaitVm.StatusText = Se.Language.Ocr.SavingImagesDotDotDot;
+
+        OcrHtmlExporter.Result? result = null;
+        var errorMessage = string.Empty;
+        try
+        {
+            result = await Task.Run(() => OcrHtmlExporter.Export(
+                items,
+                folder,
+                sourceFileName,
+                (current, total) => pleaseWaitVm.ReportProgress(current, total),
+                CancellationToken.None));
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Failed to save all images with HTML index");
+            errorMessage = exception.Message;
+        }
+        finally
+        {
+            pleaseWaitVm.Close();
+        }
+
+        if (result == null)
+        {
+            await MessageBox.Show(Window, Se.Language.General.Error, string.IsNullOrEmpty(errorMessage) ? Se.Language.General.UnknownError : errorMessage);
+            return;
+        }
+
+        await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window, vm =>
+        {
+            vm.Initialize(
+                Se.Language.General.FileSaved,
+                string.Format(Se.Language.Ocr.SaveAllImagesWithHtmlIndexSaved, result.ImageCount),
+                result.HtmlFileName,
+                true,
+                true);
+        });
     }
 
     [RelayCommand]
