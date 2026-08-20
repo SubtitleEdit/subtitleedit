@@ -17435,6 +17435,36 @@ public partial class MainViewModel :
         textBox.Paste();
     }
 
+    /// <summary>
+    /// Routes a WM_PASTE sent to the window's HWND (clipboard managers and automation tools
+    /// send it instead of synthesizing Ctrl+V) to whichever control has keyboard focus.
+    /// Avalonia has a single HWND per window, so the message always lands on the window and
+    /// never on the focused control itself. Returns false when no paste target is focused,
+    /// so the hook can leave the message unhandled.
+    /// </summary>
+    internal bool PasteViaWindowMessage()
+    {
+        if (Window?.FocusManager?.GetFocusedElement() is TextBox textBox)
+        {
+            textBox.Paste();
+            return true;
+        }
+
+        if (IsSubtitleGridFocused())
+        {
+            SubtitleGridPasteCommand.Execute(null);
+            return true;
+        }
+
+        if (AudioVisualizer is { IsFocused: true })
+        {
+            WaveformPasteFromClipboardCommand.Execute(null);
+            return true;
+        }
+
+        return false;
+    }
+
     [RelayCommand]
     private void TextBoxSelectAll()
     {
