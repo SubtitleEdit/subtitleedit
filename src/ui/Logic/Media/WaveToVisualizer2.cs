@@ -459,6 +459,32 @@ public class SpectrogramData2 : IDisposable
         _rawSamples = null;
     }
 
+    /// <summary>
+    /// float -> double for a whole chunk, widened a vector at a time rather than one element per
+    /// iteration. Widening float to double is exact, so the result is bit-identical to the
+    /// element-wise copy.
+    /// </summary>
+    private static void WidenToDouble(ReadOnlySpan<float> source, Span<double> destination)
+    {
+        var i = 0;
+        var step = Vector<float>.Count;
+        if (Vector.IsHardwareAccelerated && source.Length >= step)
+        {
+            var half = Vector<double>.Count;
+            for (; i <= source.Length - step; i += step)
+            {
+                Vector.Widen(new Vector<float>(source.Slice(i, step)), out var low, out var high);
+                low.CopyTo(destination.Slice(i, half));
+                high.CopyTo(destination.Slice(i + half, half));
+            }
+        }
+
+        for (; i < source.Length; i++)
+        {
+            destination[i] = source[i];
+        }
+    }
+
     private void GenerateImagesFromRawData()
     {
         if (_rawSamples == null)
@@ -480,11 +506,7 @@ public class SpectrogramData2 : IDisposable
         {
             var offset = iChunk * chunkSampleCount;
             var chunkSamples = new double[chunkSampleCount];
-
-            for (var i = 0; i < chunkSampleCount; i++)
-            {
-                chunkSamples[i] = _rawSamples[offset + i];
-            }
+            WidenToDouble(_rawSamples.AsSpan(offset, chunkSampleCount), chunkSamples);
 
             images[iChunk] = drawer.Draw(chunkSamples);
             return drawer;
@@ -1275,7 +1297,7 @@ public class WavePeakGenerator2 : IDisposable
         private readonly int _nfft;
         private readonly MagnitudeToIndexMapper _mapper;
         private readonly RealFFT _fft;
-        private readonly SKColor[] _palette;
+        private readonly uint[] _paletteRgba;
         private readonly double[] _segment;
         private readonly double[] _window;
         private readonly double[] _magnitude1;
@@ -1316,7 +1338,20 @@ public class WavePeakGenerator2 : IDisposable
             _nfft = nfft;
             _mapper = new MagnitudeToIndexMapper(100.0, MagnitudeIndexRange - 1);
             _fft = new RealFFT(nfft);
-            _palette = palette;
+
+            // The palette pre-packed into the bitmap's own RGBA byte order, so Draw can store a
+            // whole pixel with one 32-bit write instead of four byte writes.
+            _paletteRgba = new uint[palette.Length];
+            Span<byte> rgba = stackalloc byte[4];
+            for (var i = 0; i < palette.Length; i++)
+            {
+                rgba[0] = palette[i].Red;
+                rgba[1] = palette[i].Green;
+                rgba[2] = palette[i].Blue;
+                rgba[3] = palette[i].Alpha;
+                _paletteRgba[i] = MemoryMarshal.Read<uint>(rgba);
+            }
+
             _segment = new double[nfft];
             _window = CreateRaisedCosineWindow(nfft);
             _magnitude1 = new double[nfft / 2];
@@ -1346,18 +1381,15 @@ public class WavePeakGenerator2 : IDisposable
                 ProcessSegment(samples, offset - (x > 0 ? nnftQuarter : 0), _magnitude1);
                 ProcessSegment(samples, offset + (x < width - 1 ? nnftQuarter : 0), _magnitude2);
 
-                var xOffset = x * 4;
+                // Bottom row upwards: one 32-bit store per pixel instead of four byte stores,
+                // and the destination steps back a row at a time instead of being recomputed
+                // with a multiply per pixel. The palette stays a bounds-checked array access so
+                // an out-of-range magnitude still throws instead of writing past the palette.
+                var pixel = pixels + ((height - 1) * stride) + (x * 4);
                 for (var y = 0; y < height; y++)
                 {
-                    int colorIndex = _mapper.Map((_magnitude1[y] + _magnitude2[y]) / 2.0);
-                    SKColor color = _palette[colorIndex];
-
-                    int pixelY = height - y - 1;
-                    byte* pixel = pixels + (pixelY * stride) + xOffset;
-                    pixel[0] = color.Red;
-                    pixel[1] = color.Green;
-                    pixel[2] = color.Blue;
-                    pixel[3] = color.Alpha;
+                    *(uint*)pixel = _paletteRgba[_mapper.Map((_magnitude1[y] + _magnitude2[y]) / 2.0)];
+                    pixel -= stride;
                 }
             }
 
