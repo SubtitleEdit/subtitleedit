@@ -51,8 +51,10 @@ Local LLM-based OCR via an Ollama server (e.g. with a vision model).
 - Default endpoint: `http://localhost:11434/api/chat`
 
 ### llama.cpp
-Local LLM-based OCR using a llama.cpp-compatible server.
+Local LLM-based OCR using a llama.cpp-compatible server. Subtitle Edit can download llama.cpp and the model for you, or talk to a server you run yourself.
 - Default endpoint: `http://127.0.0.1:8080/v1/chat/completions`
+- Curated vision models: **GLM-OCR 0.9B** (Q8_0, about 1.4 GB), **LightOnOCR 1B** (Q8_0, about 1.2 GB), **PaddleOCR-VL 1.6** (about 1.8 GB, 109 languages) and **HunyuanOCR 1.5** (Q8_0, about 1.3 GB — the fastest of the four). Custom `*.gguf` files placed in the llama.cpp models folder also appear in the list
+- The settings dialog has a download/update button for the llama.cpp engine itself; the dot next to it turns amber when a newer build than the one installed is available
 
 ### CrispEmbed
 Local OCR engine with multiple model backends (free/open source).
@@ -89,6 +91,19 @@ Local OCR engine.
 5. Click **Start OCR**
 6. Review and correct any errors
 7. Click **OK** to import the text subtitles
+
+## Saving the Images
+
+The subtitle list's right-click menu has **Save all images with HTML index...**. Pick a folder and
+Subtitle Edit writes `index.html` plus `images/0001.png`, `0002.png`, ... — every subtitle bitmap
+next to the text OCR produced for it, which is the quickest way to proof-read a run against the
+originals.
+
+The page is self-contained (no external css, js or fonts), so it opens straight off the file
+system. It follows the reader's light/dark preference, with an Auto/Light/Dark override, and adds
+a text filter, an "only lines without text" filter for spotting images that produced nothing, a
+dark/light/checkerboard backdrop for the transparent bitmaps, click-to-zoom, and each line's
+number, time codes, duration and image size.
 
 ## Keyboard Shortcuts
 

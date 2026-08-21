@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -456,10 +456,16 @@ public class AiReviewWindow : Window
             .WithIconLeft("fa-solid fa-stop");
         buttonStop.Bind(IsVisibleProperty, new Binding(nameof(vm.IsReviewing)));
 
-        var buttonApply = UiUtil.MakeButton(string.Empty, vm.OkCommand);
+        // Apply/Ok/Cancel, the same shape as Multiple replace: Apply writes the checked fixes and
+        // keeps the window open so the review can be worked through in passes (issue #13807), Ok
+        // writes them and closes, Cancel closes and leaves the unapplied ones behind. Apply is
+        // hidden for callers without a live target - they have nowhere to receive a pass.
+        var buttonApply = UiUtil.MakeButton(string.Empty, vm.ApplyCommand)
+            .WithBindIsVisible(nameof(vm.IsApplyVisible));
         buttonApply.Bind(ContentControl.ContentProperty, new Binding(nameof(vm.ApplyButtonText)));
         buttonApply.WithIconLeft("fa-solid fa-check");
 
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
         var bottomBar = new Grid
@@ -467,7 +473,7 @@ public class AiReviewWindow : Window
             ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto"),
         };
         bottomBar.Add(leftButtons, 0, 0);
-        bottomBar.Add(UiUtil.MakeButtonBar(buttonReview, buttonStop, buttonApply, buttonCancel), 0, 2);
+        bottomBar.Add(UiUtil.MakeButtonBar(buttonReview, buttonStop, buttonApply, buttonOk, buttonCancel), 0, 2);
 
         // ---------- layout ----------
         var grid = new Grid

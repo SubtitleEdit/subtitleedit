@@ -452,8 +452,8 @@ modules:
       # regeneration pass before merging; see ../flathub/README.md.
       - type: git
         url: https://github.com/SubtitleEdit/subtitleedit.git
-        tag: v5.0.0
-        commit: a44ffa7025b59f424aa8a5a7ee250ea85c4c1361
+        tag: v5.1.0
+        commit: 38f1dd4bac6c70bdf1f2d1bb5952aa414c6cb777
         x-checker-data:
           type: git
           tag-pattern: ^v(\d+\.\d+\.\d+)$

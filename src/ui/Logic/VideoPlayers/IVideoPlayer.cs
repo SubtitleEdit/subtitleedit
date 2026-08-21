@@ -38,4 +38,17 @@ public interface IVideoPlayer
     double Volume { get; set; }
 
     double Speed { get; set; }
+
+    /// <summary>
+    /// True when the player can report "the seek has landed" exactly (mpv's
+    /// MPV_EVENT_PLAYBACK_RESTART) via <see cref="HasPlaybackRestartedSince"/>.
+    /// </summary>
+    bool SupportsPlaybackRestartEvents => false;
+
+    /// <summary>
+    /// Whether playback output has (re)started - a seek finished or a file started -
+    /// since the given Stopwatch timestamp. Only meaningful when
+    /// <see cref="SupportsPlaybackRestartEvents"/> is true.
+    /// </summary>
+    bool HasPlaybackRestartedSince(long stopwatchTimestamp) => false;
 }

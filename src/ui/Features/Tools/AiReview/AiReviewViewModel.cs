@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -56,6 +56,14 @@ public partial class AiReviewViewModel : ObservableObject
     [ObservableProperty] private bool _hasWarningNote;
     [ObservableProperty] private bool _isPlayVisible;
 
+    /// <summary>
+    /// True for callers with a live target (both main-window entry points): an "Apply" button is
+    /// shown next to Ok, so the checked fixes can be handed over without closing and a long review
+    /// can be worked through in passes (issue #13807). Callers without a target have nowhere to
+    /// push a pass, so they get the plain Ok/Cancel pair.
+    /// </summary>
+    [ObservableProperty] private bool _isApplyVisible;
+
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
     public Subtitle FixedSubtitle { get; private set; } = new();
@@ -67,6 +75,12 @@ public partial class AiReviewViewModel : ObservableObject
     private string _languageCode = "en";
     private CancellationTokenSource _cancellationTokenSource = new();
     private bool _syncingSelection;
+    private int _appliedCount;
+
+    // Set by callers with a live target (both main-window entry points): "Apply" pushes the checked
+    // fixes to them and the window stays open, so a long review can be worked through in passes
+    // instead of ending at the first Apply (issue #13807).
+    private Action<Subtitle>? _applyCallback;
 
     // Video preview hooks handed in by the caller - they drive the main window's video player.
     // Null when no video is loaded; the play button is then hidden.
@@ -121,15 +135,24 @@ public partial class AiReviewViewModel : ObservableObject
     /// hide the play button. <paramref name="stopPlayback"/> stops such a preview when the window
     /// closes - only ever called when this window actually started playback.
     /// </summary>
+    /// <param name="applyCallback">
+    /// When set, the Apply button hands the fixed subtitle to the caller and leaves the window open
+    /// - the applied suggestions drop out of the list and the rest stay reviewable, so a review that
+    /// took minutes to produce does not have to be run again to apply a second batch (issue #13807).
+    /// Callers without a live target pass null and get the old apply-and-close behavior.
+    /// </param>
     public void Initialize(
         Subtitle subtitle,
         SubtitleFormat? subtitleFormat,
         Action<int>? playLine = null,
-        Action? stopPlayback = null)
+        Action? stopPlayback = null,
+        Action<Subtitle>? applyCallback = null)
     {
         _subtitle = subtitle;
         _playLine = playLine;
         _stopPlayback = stopPlayback;
+        _applyCallback = applyCallback;
+        IsApplyVisible = applyCallback != null;
         IsPlayVisible = playLine != null;
         _languageCode = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
         LanguageDisplay = GetLanguageDisplayName(_languageCode);
@@ -545,6 +568,17 @@ public partial class AiReviewViewModel : ObservableObject
             IsWarning = isWarning,
             IsSelected = !isWarning,
         };
+        AddSuggestionItem(item);
+    }
+
+    /// <summary>
+    /// Puts a built suggestion into the full list and, when it passes the active category filter,
+    /// into the grid. Review() runs on the UI thread (its awaits resume on the captured context),
+    /// so this is synchronous - posting via the dispatcher made the end-of-review status read a
+    /// stale (possibly empty) suggestion count while the last chunk's items were still queued.
+    /// </summary>
+    internal void AddSuggestionItem(ReviewSuggestionItem item)
+    {
         item.PropertyChanged += (_, e) =>
         {
             if (e.PropertyName == nameof(ReviewSuggestionItem.IsSelected))
@@ -553,9 +587,6 @@ public partial class AiReviewViewModel : ObservableObject
             }
         };
 
-        // Review() runs on the UI thread (its awaits resume on the captured context), so add
-        // synchronously - posting via the dispatcher made the end-of-review status read a stale
-        // (possibly empty) suggestion count while the last chunk's items were still queued.
         _allSuggestions.Add(item);
         if (PassesFilter(item))
         {
@@ -619,6 +650,7 @@ public partial class AiReviewViewModel : ObservableObject
         var selected = SelectedCount;
         SummaryText = string.Format(l.XSuggestionsYSelected, _allSuggestions.Count, selected);
         ApplyButtonText = string.Format(l.ApplyXFixes, selected);
+        ApplyCommand.NotifyCanExecuteChanged();
     }
 
     [RelayCommand]
@@ -748,23 +780,104 @@ public partial class AiReviewViewModel : ObservableObject
         await _windowService.ShowDialogAsync<AiReviewPromptWindow, AiReviewPromptViewModel>(Window, vm => vm.Initialize());
     }
 
+    /// <summary>
+    /// Writes the checked fixes and closes - the Ok half of the Ok/Apply pair, so finishing on the
+    /// last pass is one click rather than Apply followed by a separate close.
+    /// </summary>
     [RelayCommand]
     private void Ok()
     {
         SaveSettings();
 
-        FixedSubtitle = new Subtitle(_subtitle, false);
+        var applied = ApplySelectedSuggestions();
+        FixedSubtitle = applied;
+
+        if (_applyCallback == null)
+        {
+            // No live target: the caller picks the result up from FixedSubtitle after the dialog.
+            OkPressed = true;
+        }
+        else
+        {
+            // The callback already delivered the fixes, so OkPressed stays false - a caller that
+            // passes a callback and also reads FixedSubtitle would otherwise apply the pass twice.
+            _applyCallback(applied);
+        }
+
+        _cancellationTokenSource.Cancel();
+        Window?.Close();
+    }
+
+    /// <summary>
+    /// Hands the checked fixes to the caller and leaves the window open: the applied rows drop out
+    /// of the grid, the rest stay reviewable, and the next pass builds on the result - so a review
+    /// that took minutes does not have to be run again to apply a second batch (issue #13807).
+    /// </summary>
+    [RelayCommand(CanExecute = nameof(CanApply))]
+    private void Apply()
+    {
+        if (_applyCallback == null)
+        {
+            return;
+        }
+
+        SaveSettings();
+
+        var applied = ApplySelectedSuggestions();
+        FixedSubtitle = applied;
+        _applyCallback(applied);
+
+        // Keep working against what the caller now holds, and drop the suggestions that are in it -
+        // an applied row is done, and its "before" text no longer exists in the subtitle.
+        _subtitle = new Subtitle(applied, false);
+        RemoveAppliedSuggestions();
+        StatusText = string.Format(Se.Language.Main.FixedXLines, _appliedCount);
+    }
+
+    // Nothing checked means Apply would hand the caller an unchanged subtitle - an undo step and a
+    // "fixed 0 lines" status for no change at all.
+    private bool CanApply() => SelectedCount > 0;
+
+    /// <summary>
+    /// A copy of the working subtitle with every checked suggestion written into it.
+    /// </summary>
+    private Subtitle ApplySelectedSuggestions()
+    {
+        var applied = new Subtitle(_subtitle, false);
+        _appliedCount = 0;
         foreach (var item in _allSuggestions.Where(s => s.IsSelected))
         {
-            if (item.ParagraphIndex >= 0 && item.ParagraphIndex < FixedSubtitle.Paragraphs.Count)
+            if (item.ParagraphIndex >= 0 && item.ParagraphIndex < applied.Paragraphs.Count)
             {
-                FixedSubtitle.Paragraphs[item.ParagraphIndex].Text = item.After;
+                applied.Paragraphs[item.ParagraphIndex].Text = item.After;
+                _appliedCount++;
             }
         }
 
-        OkPressed = true;
-        _cancellationTokenSource.Cancel();
-        Window?.Close();
+        return applied;
+    }
+
+    /// <summary>
+    /// Drops the suggestions that were just applied from both the full list and the filtered grid,
+    /// then refreshes the chip counts, the summary and the reason strip.
+    /// </summary>
+    private void RemoveAppliedSuggestions()
+    {
+        var applied = _allSuggestions.Where(s => s.IsSelected).ToList();
+        if (applied.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var item in applied)
+        {
+            _allSuggestions.Remove(item);
+            Suggestions.Remove(item);
+        }
+
+        SelectedSuggestion = Suggestions.FirstOrDefault();
+        UpdateChipCounts();
+        UpdateSummary();
     }
 
     [RelayCommand]

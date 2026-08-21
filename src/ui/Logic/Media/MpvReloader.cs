@@ -69,6 +69,10 @@ public class MpvReloader : IMpvReloader
 
         try
         {
+            // Applied on every refresh, not only on load: toggling "margin is part of the
+            // subtitle area" in settings has to take effect on the video already open (#13934).
+            mpvContext.ApplySubtitleMarginArea();
+
             var uiFormatType = uiFormat.GetType();
 
             // Deep copy on the calling (UI) thread: the caller usually passes the live
@@ -181,6 +185,16 @@ public class MpvReloader : IMpvReloader
             }
         }
 
+        if (uiFormatType == typeof(NetflixImsc11Japanese))
+        {
+            // Furigana, bouten and vertical writing have no libass equivalent - they have to be
+            // exploded into separately positioned render lines, or the tags show up as literal
+            // text on the video (issue #13861).
+            subtitle = NetflixImsc11JapaneseToAss.ConvertToSubtitle(subtitle, VideoWidth, VideoHeight);
+            SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary);
+            return (subtitle, subtitle.ToText(_assFormat), 0, false);
+        }
+
         if (uiFormatType == typeof(WebVTT) || uiFormatType == typeof(WebVTTFileWithLineNumber))
         {
             var defaultStyle = GetMpvPreviewStyle(Se.Settings.Video);
@@ -265,6 +279,11 @@ public class MpvReloader : IMpvReloader
                     }
                 }
             }
+
+            // TTML regions, PAC vertical alignment and EBU STL teletext rows say where the line
+            // belongs on the video - without this every line lands at the one fixed preview
+            // alignment from the settings (discussion #13857).
+            SubtitlePositionToAssa.ApplyPositions(subtitle, oldHeader, Se.Settings.Video.MpvPreviewUsePositionFromFile);
         }
 
         SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary);

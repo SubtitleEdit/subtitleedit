@@ -187,6 +187,10 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         private readonly Grid _gridProgress; // Reference to the controls grid
         private DispatcherTimer? _autoHideTimer;
         private DateTime _lastActivityTime;
+
+        // True while the user is dragging (or arrow-keying) the position slider. The position
+        // timer must leave the slider alone for as long as it is set - see StartPositionTimer.
+        private bool _isUserMovingPositionSlider;
         private ContentPresenter? _contentPresenter;
 
         private void NotifyPositionChanged(double newPosition)
@@ -208,6 +212,18 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         public void SetPosition(double seconds)
         {
             Position = seconds;
+        }
+
+        /// <summary>
+        /// Lets external position sliders that are bound to <see cref="Position"/> (the
+        /// waveform toolbar's) join the same mid-drag gate as this control's own slider:
+        /// while set, the position timer leaves <see cref="Position"/> alone, so the timer
+        /// can't yank the dragged thumb back to mpv's not-yet-seeked position (issue #13910
+        /// - fixing only the built-in slider left the toolbar slider fighting the timer).
+        /// </summary>
+        public void SetUserMovingPositionSlider(bool moving)
+        {
+            _isUserMovingPositionSlider = moving;
         }
 
         public void SetPositionDisplayOnly(double seconds)
@@ -415,24 +431,23 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             // Also ensure the control can receive keyboard focus
             sliderPosition.Focusable = true;
 
-            var sliderPositionUserMoving = false;
-            sliderPosition.AddHandler(PointerPressedEvent, (_, _) => sliderPositionUserMoving = true, RoutingStrategies.Tunnel);
-            sliderPosition.AddHandler(PointerReleasedEvent, (_, _) => sliderPositionUserMoving = false, RoutingStrategies.Tunnel);
-            sliderPosition.AddHandler(PointerCaptureLostEvent, (_, _) => sliderPositionUserMoving = false, RoutingStrategies.Tunnel);
+            sliderPosition.AddHandler(PointerPressedEvent, (_, _) => _isUserMovingPositionSlider = true, RoutingStrategies.Tunnel);
+            sliderPosition.AddHandler(PointerReleasedEvent, (_, _) => _isUserMovingPositionSlider = false, RoutingStrategies.Tunnel);
+            sliderPosition.AddHandler(PointerCaptureLostEvent, (_, _) => _isUserMovingPositionSlider = false, RoutingStrategies.Tunnel);
             sliderPosition.AddHandler(KeyDownEvent, (_, e) =>
             {
                 if (e.Key is Key.Left or Key.Right or Key.Up or Key.Down or Key.Home or Key.End or Key.PageUp or Key.PageDown)
                 {
-                    sliderPositionUserMoving = true;
+                    _isUserMovingPositionSlider = true;
                 }
             }, RoutingStrategies.Tunnel);
-            sliderPosition.AddHandler(KeyUpEvent, (_, _) => sliderPositionUserMoving = false, RoutingStrategies.Tunnel);
+            sliderPosition.AddHandler(KeyUpEvent, (_, _) => _isUserMovingPositionSlider = false, RoutingStrategies.Tunnel);
 
             // For any direct value changes
             sliderPosition.ValueChanged += (s, e) =>
             {
                 NotifyPositionChanged(e.NewValue);
-                if (sliderPositionUserMoving)
+                if (_isUserMovingPositionSlider)
                 {
                     UserSeeked?.Invoke(e.NewValue);
                 }
@@ -937,13 +952,27 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 }
 
                 var postFix = IsSmpteTimingEnabled ? " (SMPTE)" : string.Empty;
-                var pos = _videoPlayerInstance.Position;
-                if (IsSmpteTimingEnabled)
+                double pos;
+                if (_isUserMovingPositionSlider)
                 {
-                    pos = pos * 1000.0 / 1001.0; // SMPTE timing adjustment
+                    // While the slider is being dragged its own value is the truth. Writing the
+                    // player position back into Position mid-drag pulls the thumb off the mouse
+                    // until the seek lands, and the next mouse move pulls it forward again -
+                    // the back and forth jumping in issue #13910. It only showed up during
+                    // playback because a paused player reports the seeked-to position right
+                    // away, leaving nothing to fight over.
+                    pos = Position;
                 }
+                else
+                {
+                    pos = _videoPlayerInstance.Position;
+                    if (IsSmpteTimingEnabled)
+                    {
+                        pos = pos * 1000.0 / 1001.0; // SMPTE timing adjustment
+                    }
 
-                SetPositionDisplayOnly(pos);
+                    SetPositionDisplayOnly(pos);
+                }
 
                 var fullDuration = TimeCode.FromSeconds(Duration + Se.Settings.General.CurrentVideoOffsetInMs / 1000.0).ToDisplayString();
                 if (VideoPlayerDisplayTimeLeft)

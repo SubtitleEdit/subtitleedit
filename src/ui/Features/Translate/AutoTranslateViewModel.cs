@@ -105,6 +105,7 @@ public partial class AutoTranslateViewModel : ObservableObject
     [ObservableProperty] private bool _llamaCppRemoteToggleIsVisible;
     [ObservableProperty] private bool _llamaCppUseRemoteServer;
     [ObservableProperty] private string _llamaCppServerButtonText = Se.Language.General.StartServer;
+    [ObservableProperty] private string? _llamaCppServerUrlInfo;
     [ObservableProperty] private string _llamaCppDownloadButtonText = string.Empty;
     [ObservableProperty] private string _crispAsrDownloadButtonText = string.Empty;
 
@@ -135,6 +136,8 @@ public partial class AutoTranslateViewModel : ObservableObject
     {
         _windowService = windowService;
         _folderHelper = folderHelper;
+
+        TranslateUiUpdates = new CoalescedUiUpdateQueue(SelectAndScrollToRow, ApplyTranslateProgress);
 
         ApiKeyText = string.Empty;
         ApiUrlText = string.Empty;
@@ -745,7 +748,31 @@ public partial class AutoTranslateViewModel : ObservableObject
         if (wasTranslating)
         {
             StatusText = Se.Language.Translate.TranslationCancelled;
+            StopLocalLlamaCppServerAfterCancel();
         }
+    }
+
+    /// <summary>
+    /// Cancelling a local llama.cpp translation also stops the SE-managed server, so the model's
+    /// RAM/VRAM is released right away instead of after the app closes (#13830). Only mid-run: a
+    /// server left idle by a completed translation stays warm (Stop server button / app exit).
+    /// The next translate run auto-restarts it.
+    /// </summary>
+    private void StopLocalLlamaCppServerAfterCancel()
+    {
+        if (SelectedAutoTranslator is not (LlamaCppTranslate or LlamaCppAdvancedTranslate) ||
+            LlamaCppUseRemoteServer ||
+            !LlamaCppServerManager.IsServerRunning)
+        {
+            return;
+        }
+
+        // Off the UI thread - StopServer kills the process and waits up to 2 s for it to exit.
+        _ = Task.Run(() =>
+        {
+            LlamaCppServerManager.StopServer();
+            Dispatcher.UIThread.Post(UpdateLlamaCppServerButtonText);
+        });
     }
 
     [RelayCommand]
@@ -961,6 +988,12 @@ public partial class AutoTranslateViewModel : ObservableObject
     private void UpdateLlamaCppServerButtonText()
     {
         LlamaCppServerButtonText = LlamaCppServerManager.IsServerRunning ? Se.Language.General.StopServer : Se.Language.General.StartServer;
+
+        // The SE-managed server runs on a random free port, not the URL from remote-server mode -
+        // surface the live endpoint so the two are not mistaken for each other (#13830).
+        LlamaCppServerUrlInfo = LlamaCppServerManager.IsServerRunning
+            ? string.Format(Se.Language.Translate.ServerRunningAtX, LlamaCppServerManager.ApiUrl)
+            : null;
     }
 
     [RelayCommand]
@@ -1126,10 +1159,13 @@ public partial class AutoTranslateViewModel : ObservableObject
         {
             // The advanced engine stuffs history/synopsis/glossary into every request, so it gets
             // a user-configurable (default larger) server context; everything else keeps the default.
-            var contextSize = SelectedAutoTranslator is LlamaCppAdvancedTranslate
+            var isAdvanced = SelectedAutoTranslator is LlamaCppAdvancedTranslate;
+            var contextSize = isAdvanced
                 ? Math.Clamp(Se.Settings.AutoTranslate.LlamaCppAdvanced.ContextSize, 2048, 262144)
                 : LlamaCppServerManager.DefaultContextSize;
-            await LlamaCppServerManager.EnsureServerRunningAsync(model, _cancellationTokenSource.Token, contextSize);
+            var extraArguments = isAdvanced ? Se.Settings.AutoTranslate.LlamaCppAdvanced.ServerArguments : null;
+            var extraArgumentsOnly = isAdvanced && Se.Settings.AutoTranslate.LlamaCppAdvanced.ServerArgumentsOnly;
+            await LlamaCppServerManager.EnsureServerRunningAsync(model, _cancellationTokenSource.Token, contextSize, extraArguments, extraArgumentsOnly);
         }
         catch (Exception ex)
         {
@@ -1496,14 +1532,7 @@ public partial class AutoTranslateViewModel : ObservableObject
                     index += translatedCount;
                     _translationProgressIndex = index;
 
-                    var advancedProgressIndex = index;
-                    Dispatcher.UIThread.Invoke(() =>
-                    {
-                        ProgressValue = (double)advancedProgressIndex * 100 / Rows.Count;
-                        ProgressText = $"{(int)ProgressValue} %";
-                        HasTranslatedSomething = true;
-                        SelectAndScrollToRow(advancedProgressIndex - 1);
-                    });
+                    EnqueueTranslateProgress(index);
                 }
 
                 return; // the finally block below reports completion
@@ -1534,16 +1563,9 @@ public partial class AutoTranslateViewModel : ObservableObject
                     noErrorCount++;
                     index += linesMergedAndTranslated;
 
-                    var index1 = index;
                     if (!_onlyCurrentLine)
                     {
-                        Dispatcher.UIThread.Invoke(() =>
-                        {
-                            ProgressValue = (double)index1 * 100 / Rows.Count;
-                            ProgressText = $"{(int)ProgressValue} %";
-                            HasTranslatedSomething = true;
-                            SelectAndScrollToRow(index1 - 1);
-                        });
+                        EnqueueTranslateProgress(index);
                     }
                     else
                     {
@@ -1591,14 +1613,7 @@ public partial class AutoTranslateViewModel : ObservableObject
                 {
                     index += translateCount;
                     noProgressCount = 0;
-                    var progressIndex = index;
-                    Dispatcher.UIThread.Invoke(() =>
-                    {
-                        ProgressValue = (double)progressIndex * 100 / Rows.Count;
-                        ProgressText = $"{(int)ProgressValue} %";
-                        HasTranslatedSomething = true;
-                        SelectAndScrollToRow(progressIndex - 1);
-                    });
+                    EnqueueTranslateProgress(index);
 
                     if (_onlyCurrentLine)
                     {
@@ -1683,6 +1698,10 @@ public partial class AutoTranslateViewModel : ObservableObject
 
             Dispatcher.UIThread.Invoke(() =>
             {
+                // Apply whatever is still queued first, so the final progress/selection below
+                // is the last word instead of being overridden by a stale queued update.
+                TranslateUiUpdates.Flush();
+
                 IsTranslateEnabled = true;
                 IsProgressEnabled = false;
 
@@ -1737,6 +1756,30 @@ public partial class AutoTranslateViewModel : ObservableObject
         };
     }
 
+    /// <summary>
+    /// Coalesced per-batch UI feedback during translation (#13885, the pattern OCR uses).
+    /// Only the pure feedback - progress and the follow-along selection - is queued. The row
+    /// TranslatedText writes stay immediate on purpose: the advanced engines read them back for
+    /// the next batch's rolling context (AdvancedTranslatorBase.CollectHistory) and
+    /// MergeAndSplitHelper reads existing translations when re-applying formatting, so a
+    /// deferred write would silently degrade the translation itself.
+    /// </summary>
+    private CoalescedUiUpdateQueue TranslateUiUpdates { get; }
+
+    private void ApplyTranslateProgress(double value, string text)
+    {
+        ProgressValue = value;
+        ProgressText = text;
+    }
+
+    private void EnqueueTranslateProgress(int translatedIndex)
+    {
+        var progressValue = (double)translatedIndex * 100 / Rows.Count;
+        TranslateUiUpdates.EnqueueProgress(progressValue, $"{(int)progressValue} %");
+        TranslateUiUpdates.EnqueueUpdate(() => HasTranslatedSomething = true);
+        TranslateUiUpdates.EnqueueSelect(translatedIndex - 1);
+    }
+
     private void SelectAndScrollToRow(int index)
     {
         if (RowGrid == null)
@@ -1768,9 +1811,51 @@ public partial class AutoTranslateViewModel : ObservableObject
             return;
         }
 
+        // Each engine advertises its own language list, so both combos are rebuilt from the new
+        // engine and a default re-derived from the subtitle. That threw away the languages the
+        // user had just picked - switching engine to compare them silently reset one or both, and
+        // they had to be set again before translating (#13943). Carry the picks across instead;
+        // the re-derived default only stands when the new engine cannot offer the same language.
+        var previousSource = SelectedSourceLanguage;
+        var previousTarget = SelectedTargetLanguage;
+
         SetAutoTranslatorEngine(translator);
         UpdateSourceLanguages(translator);
         UpdateTargetLanguages(translator);
+
+        var restoredSource = FindSameLanguage(previousSource, SourceLanguages);
+        if (restoredSource != null)
+        {
+            SelectedSourceLanguage = restoredSource;
+        }
+
+        var restoredTarget = FindSameLanguage(previousTarget, TargetLanguages);
+        if (restoredTarget != null)
+        {
+            SelectedTargetLanguage = restoredTarget;
+        }
+    }
+
+    /// <summary>
+    /// The entry in <paramref name="languages"/> standing for the same language as
+    /// <paramref name="previous"/>, or null when the engine does not offer it.
+    ///
+    /// Code first, then name: engines do not agree on how a language is spelled. NLLB uses
+    /// "eng_Latn" where Google uses "en", and the LLM engines take English names rather than
+    /// codes - so matching on the code alone would drop the selection between exactly the
+    /// engines a user is most likely to be comparing.
+    /// </summary>
+    private static TranslationPair? FindSameLanguage(TranslationPair? previous, ObservableCollection<TranslationPair> languages)
+    {
+        if (previous == null)
+        {
+            return null;
+        }
+
+        return languages.FirstOrDefault(p => !string.IsNullOrEmpty(p.Code) && p.Code.Equals(previous.Code, StringComparison.OrdinalIgnoreCase))
+               ?? languages.FirstOrDefault(p => !string.IsNullOrEmpty(p.Name) && p.Name.Equals(previous.Name, StringComparison.OrdinalIgnoreCase))
+               ?? languages.FirstOrDefault(p => !string.IsNullOrEmpty(p.TwoLetterIsoLanguageName)
+                                                && p.TwoLetterIsoLanguageName.Equals(previous.TwoLetterIsoLanguageName, StringComparison.OrdinalIgnoreCase));
     }
 
     partial void OnSelectedTargetLanguageChanged(TranslationPair? value)
@@ -2453,8 +2538,13 @@ public partial class AutoTranslateViewModel : ObservableObject
     {
         // The OS close button bypasses the Cancel command - stop a running translation
         // loop so it does not keep calling the translation API against a closed window.
+        var wasTranslating = !IsTranslateEnabled;
         _abort = true;
         _cancellationTokenSource.Cancel();
+        if (wasTranslating)
+        {
+            StopLocalLlamaCppServerAfterCancel();
+        }
     }
 
     internal void OnLoaded()

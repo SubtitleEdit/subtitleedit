@@ -262,6 +262,8 @@ public static class ShortcutsMain
 
         { nameof(MainViewModel.VideoOneFrameBackCommand), Se.Language.General.VideoOneFrameBack },
         { nameof(MainViewModel.VideoOneFrameForwardCommand),  Se.Language.General.VideoOneFrameForward },
+        { nameof(MainViewModel.VideoOneFrameBackWithPlayCommand), Se.Language.General.VideoOneFrameBackWithPlay },
+        { nameof(MainViewModel.VideoOneFrameForwardWithPlayCommand), Se.Language.General.VideoOneFrameForwardWithPlay },
         // Waveform toolbar seek buttons - reuse the button hint strings ("Seek video backward {0}")
         // with the shortcut placeholder blanked out, same as their automation names in InitWaveform.
         { nameof(MainViewModel.WaveformVideoSeekBackCommand), string.Format(Se.Language.Main.Waveform.SeekBackHint, string.Empty).TrimEnd() },
@@ -388,6 +390,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.PlaybackSlowerCommand), Se.Language.Options.Shortcuts.PlaybackSpeedSlower },
         { nameof(MainViewModel.PlaybackFasterCommand), Se.Language.Options.Shortcuts.PlaybackSpeedFaster },
         { nameof(MainViewModel.VideoSetPositionCurrentSubtitleStartCommand), Se.Language.Options.Shortcuts.SetVideoPositionCurrentSubtitleStart },
+        { nameof(MainViewModel.VideoGoToSubtitlePositionAndPauseCommand), Se.Language.Options.Shortcuts.GoToSubtitlePositionAndPause },
         { nameof(MainViewModel.VideoSetPositionCurrentSubtitleEndCommand), Se.Language.Options.Shortcuts.SetVideoPositionCurrentSubtitleEnd },
         { nameof(MainViewModel.ToggleAudioTracksCommand), Se.Language.Options.Shortcuts.ToggleAudioTracks },
         { nameof(MainViewModel.ListErrorsCommand), Se.Language.General.ListErrors },
@@ -423,6 +426,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.InsertLineBeforeCommand), Se.Language.General.InsertBefore },
         { nameof(MainViewModel.InsertLineAfterCommand), Se.Language.General.InsertAfter },
         { nameof(MainViewModel.WaveformInsertNewSelectionCommand), Se.Language.Options.Shortcuts.WaveformInsertNewSelection },
+        { nameof(MainViewModel.WaveformNewSelectionPasteFromClipboardCommand), Se.Language.Options.Shortcuts.WaveformNewSelectionPasteFromClipboard },
         { nameof(MainViewModel.WaveformInsertAtPositionAndFocusTextBoxCommand), Se.Language.General.InsertAtPositionAndFocusTextBox },
         { nameof(MainViewModel.WaveformInsertAtPositionNoFocusTextBoxCommand), Se.Language.General.InsertAtPositionNoFocusTextBox },
         { nameof(MainViewModel.WaveformPasteFromClipboardCommand), Se.Language.General.WaveformPasteFromClipboard },
@@ -465,6 +469,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.SortByActorCommand), Se.Language.Options.Shortcuts.SortByActor },
         { nameof(MainViewModel.SortByStyleCommand), Se.Language.Options.Shortcuts.SortByStyle },
         { nameof(MainViewModel.VideoToggleBrightnessCommand), Se.Language.Options.Shortcuts.VideoToggleBrightness },
+        { nameof(MainViewModel.VideoToggleContrastCommand), Se.Language.Options.Shortcuts.VideoToggleContrast },
         { nameof(MainViewModel.ShowPickLayerFilterCommand), Se.Language.General.FilterByLayer },
         { nameof(MainViewModel.ShowPickLayerCommand), Se.Language.General.PickLayer },
         { nameof(MainViewModel.CopyTextToClipboardCommand), Se.Language.Options.Shortcuts.CopyTextToClipboard },
@@ -673,6 +678,8 @@ public static class ShortcutsMain
 
         AddShortcut(shortcuts, vm.VideoOneFrameBackCommand, nameof(vm.VideoOneFrameBackCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.VideoOneFrameForwardCommand, nameof(vm.VideoOneFrameForwardCommand), ShortcutCategory.General, ShortcutGroup.Video);
+        AddShortcut(shortcuts, vm.VideoOneFrameBackWithPlayCommand, nameof(vm.VideoOneFrameBackWithPlayCommand), ShortcutCategory.General, ShortcutGroup.Video);
+        AddShortcut(shortcuts, vm.VideoOneFrameForwardWithPlayCommand, nameof(vm.VideoOneFrameForwardWithPlayCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.WaveformVideoSeekBackCommand, nameof(vm.WaveformVideoSeekBackCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.WaveformVideoSeekForwardCommand, nameof(vm.WaveformVideoSeekForwardCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.Video100MsBackCommand, nameof(vm.Video100MsBackCommand), ShortcutCategory.General, ShortcutGroup.Video);
@@ -798,6 +805,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.PlaybackSlowerCommand, nameof(vm.PlaybackSlowerCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.PlaybackFasterCommand, nameof(vm.PlaybackFasterCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.VideoSetPositionCurrentSubtitleStartCommand, nameof(vm.VideoSetPositionCurrentSubtitleStartCommand), ShortcutCategory.General, ShortcutGroup.Video);
+        AddShortcut(shortcuts, vm.VideoGoToSubtitlePositionAndPauseCommand, nameof(vm.VideoGoToSubtitlePositionAndPauseCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.VideoSetPositionCurrentSubtitleEndCommand, nameof(vm.VideoSetPositionCurrentSubtitleEndCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.ToggleAudioTracksCommand, nameof(vm.ToggleAudioTracksCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.ListErrorsCommand, nameof(vm.ListErrorsCommand), ShortcutCategory.General);
@@ -833,6 +841,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.InsertLineBeforeCommand, nameof(vm.InsertLineBeforeCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.InsertLineAfterCommand, nameof(vm.InsertLineAfterCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.WaveformInsertNewSelectionCommand, nameof(vm.WaveformInsertNewSelectionCommand), ShortcutCategory.Waveform);
+        AddShortcut(shortcuts, vm.WaveformNewSelectionPasteFromClipboardCommand, nameof(vm.WaveformNewSelectionPasteFromClipboardCommand), ShortcutCategory.Waveform);
         AddShortcut(shortcuts, vm.WaveformInsertAtPositionAndFocusTextBoxCommand, nameof(vm.WaveformInsertAtPositionAndFocusTextBoxCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.WaveformInsertAtPositionNoFocusTextBoxCommand, nameof(vm.WaveformInsertAtPositionNoFocusTextBoxCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.WaveformPasteFromClipboardCommand, nameof(vm.WaveformPasteFromClipboardCommand), ShortcutCategory.Waveform);
@@ -877,6 +886,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.SortByActorCommand, nameof(vm.SortByActorCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SortByStyleCommand, nameof(vm.SortByStyleCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.VideoToggleBrightnessCommand, nameof(vm.VideoToggleBrightnessCommand), ShortcutCategory.General, ShortcutGroup.Video);
+        AddShortcut(shortcuts, vm.VideoToggleContrastCommand, nameof(vm.VideoToggleContrastCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.ShowPickLayerFilterCommand, nameof(vm.ShowPickLayerFilterCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowPickLayerCommand, nameof(vm.ShowPickLayerCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.CopyTextToClipboardCommand, nameof(vm.CopyTextToClipboardCommand), ShortcutCategory.General);

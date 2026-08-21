@@ -26,6 +26,7 @@ Generate a transparent video overlay with rendered subtitles that can be composi
 - **Shadow** — Shadow width and color
 - **Box type** — Box style around text
 - **Text color** — Subtitle text color
+- **Spacing** — Letter spacing, from -20 to 100
 - **Alignment** — Subtitle alignment position
 - **Margins** — Horizontal and vertical margins
 - **Fix RTL** — Fix right-to-left text rendering

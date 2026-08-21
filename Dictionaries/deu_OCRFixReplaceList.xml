@@ -7241,5 +7241,11 @@
     <!-- inBerlin → in Berlin -->
     <RegEx find="\bin([A-ZÄÖÜ][a-zäöüß]+)\b" spellCheck="$1" replaceWith="in $1" />
 
+
+    <!-- Lowercase l misread as uppercase I (#13660): replace every I in the word, -->
+    <!-- so words with more than one are repaired too (deIectabIe -> delectable,   -->
+    <!-- ExceIIencies -> Excellencies). Words of two letters (AI) are never        -->
+    <!-- touched, and real words (MacIntosh) are kept by the spell check gate.     -->
+    <RegEx find="\b([A-ZÄÖÜa-zäöüß](?=[a-zäöüßI]*I)[a-zäöüßI]{2,})\b" replaceAllFrom="I" replaceAllTo="l" spellCheck="$1" replaceWith="$1" />
   </RegularExpressionsIfSpelledCorrectly>
 </OCRFixReplaceList>

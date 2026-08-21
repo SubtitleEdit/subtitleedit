@@ -1146,15 +1146,80 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         }
     }
 
+    private int _previewRequestId;
+    private string _lastPreviewSignature = string.Empty;
+
     private void UpdatePreview()
     {
         var style = CurrentStyle;
         if (style == null)
         {
+            _lastPreviewSignature = string.Empty;
             ImagePreview = new SKBitmap(1, 1, true).ToAvaloniaBitmap();
             return;
         }
 
+        // The preview timer polls every 500 ms; only re-render (spawn ffmpeg) when the style
+        // actually changed. Renders via libass so the preview matches playback/burn-in exactly.
+        var ssaStyle = style.ToSsaStyle();
+        var signature = ssaStyle.ToRawAss();
+        if (signature == _lastPreviewSignature)
+        {
+            return;
+        }
+
+        _lastPreviewSignature = signature;
+        var requestId = System.Threading.Interlocked.Increment(ref _previewRequestId);
+        var header = _subtitle.Header;
+
+        Task.Run(() =>
+        {
+            var previewSubtitle = new Subtitle
+            {
+                Header = string.IsNullOrEmpty(header) ? AdvancedSubStationAlpha.DefaultHeader : header,
+            };
+            previewSubtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(
+                previewSubtitle.Header, new List<SsaStyle> { ssaStyle });
+            previewSubtitle.Paragraphs.Add(new Paragraph("This is a test", 0, 2000) { Extra = ssaStyle.Name });
+
+            SKBitmap? bitmap = null;
+            try
+            {
+                bitmap = NonAssaPreviewRenderer.Render(previewSubtitle, 1280, 720);
+            }
+            catch
+            {
+                // Fall back to the Skia preview below
+            }
+
+            if (requestId != _previewRequestId)
+            {
+                bitmap?.Dispose();
+                return;
+            }
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                if (requestId != _previewRequestId)
+                {
+                    bitmap?.Dispose();
+                    return;
+                }
+
+                if (bitmap != null)
+                {
+                    ImagePreview = NonAssaPreviewRenderer.ComposeOnDarkFrame(bitmap).ToAvaloniaBitmap();
+                }
+                else
+                {
+                    UpdatePreviewSkia(style);
+                }
+            });
+        });
+    }
+
+    private void UpdatePreviewSkia(StyleDisplay style)
+    {
         var text = "This is a test";
 
         // Scale the rendered font size to the preview canvas height (~360px) the same way

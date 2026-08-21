@@ -19,6 +19,19 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
 {
     private ISpellCheckManager? _spellCheckManager;
 
+    /// <summary>Characters of a line's own text a grid cell ever shows - the rest is an ellipsis.</summary>
+    private const int MaxVisibleLength = 200;
+
+    /// <summary>
+    /// How much of a line is parsed at all in "show formatting" mode. Tags cost nothing on screen
+    /// but still have to be walked, so this only bounds the pathological case; a line of a few
+    /// hundred characters of override tags is ordinary in karaoke and effect files.
+    /// </summary>
+    private const int MaxRawLength = 5000;
+
+    /// <summary>Longest override-tag block whose contents are still parsed into formatting state.</summary>
+    private const int MaxParsedTagLength = 2000;
+
     // Pre-compiled <font> attribute patterns (reused across every grid-row render)
     private static readonly TimeSpan RegexTimeout = TimeSpan.FromMilliseconds(100);
     private static readonly Regex FontColorRegex = new(@"color\s*=\s*[""']?([^""'\s>]+)[""']?", RegexOptions.IgnoreCase | RegexOptions.Compiled, RegexTimeout);
@@ -116,17 +129,49 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             return new InlineCollection();
         }
 
-        // Truncate long strings for performance
-        if (str.Length > 200)
-        {
-            str = str.Substring(0, 197).TrimEnd() + "...";
-        }
-
         var formattingType = Se.Settings.Appearance.SubtitleGridFormattingType;
+
+        // "Show formatting" hides the ASSA/HTML tags and renders what they mean, so the length that
+        // matters is the dialogue, not the markup around it. Truncating the raw string first threw
+        // away the text of exactly the lines this mode is for: a karaoke or effect line carrying a
+        // few hundred characters of {\t(...)} became 197 characters of tag and no words at all
+        // (issue #13824). Only pathological lines are cut here, and the visible text is capped
+        // inside MakeShowFormatting instead.
         if (formattingType == (int)SubtitleGridFormattingTypes.ShowFormatting)
         {
+            if (str.Length > MaxRawLength)
+            {
+                str = str.Substring(0, MaxRawLength);
+            }
+
             var lines = MakeShowFormatting(str);
             return SpellCheckLines(lines);
+        }
+
+        // "Hide tags" strips the markup and renders what is left as plain themed text - no
+        // colors, fonts or sizes - for translation workflows where the styling only distracts
+        // (issue #13824). Stripping happens before the visible-length truncation for the same
+        // reason ShowFormatting parses first: the cap must spend its characters on dialogue,
+        // not markup. removeDrawingTags because a line that is only a {\p1} vector mask has no
+        // dialogue at all - showing its coordinates would be the clutter this mode exists to hide.
+        if (formattingType == (int)SubtitleGridFormattingTypes.HideTags)
+        {
+            if (str.Length > MaxRawLength)
+            {
+                str = str.Substring(0, MaxRawLength);
+            }
+
+            str = HtmlUtil.RemoveHtmlTags(Utilities.RemoveSsaTags(str, removeDrawingTags: true));
+            if (string.IsNullOrEmpty(str))
+            {
+                return new InlineCollection();
+            }
+        }
+
+        // Truncate long strings for performance
+        if (str.Length > MaxVisibleLength)
+        {
+            str = str.Substring(0, MaxVisibleLength - 3).TrimEnd() + "...";
         }
 
         if (formattingType == (int)SubtitleGridFormattingTypes.ShowTags)
@@ -632,6 +677,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         // Track current formatting state
         var state = new FormattingState();
         var inlines = new InlineCollection();
+        var visibleLength = 0;
 
         // Limit iterations to prevent infinite loops (should never exceed string length)
         var maxIterations = str.Length * 2; // Safety margin
@@ -648,9 +694,17 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             if (c == '{' && c2 == '\\')
             {
                 var tagEnd = str.IndexOf('}', i + 2);
-                if (tagEnd != -1 && tagEnd - i < 500) // Limit tag length to prevent malicious input
+                if (tagEnd != -1)
                 {
-                    ParseAssaTags(str, i + 1, tagEnd, state); // Content between { and }
+                    // A single block of override tags can be long - the animated karaoke lines in
+                    // issue #13824 run past 300 characters - so length decides how much of it is
+                    // interpreted, never whether it counts as a tag. Printing the braces as text
+                    // is the one outcome nobody wants from a mode whose job is hiding them.
+                    if (tagEnd - i < MaxParsedTagLength)
+                    {
+                        ParseAssaTags(str, i + 1, tagEnd, state); // Content between { and }
+                    }
+
                     i = tagEnd + 1;
                     continue;
                 }
@@ -803,9 +857,18 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
 
             if (textLength > 0)
             {
+                // The cap is on what is shown, not on what was read: hidden tags do not eat into
+                // the line's visible characters (issue #13824).
                 var text = str.Substring(textStart, textLength);
-                var run = CreateFormattedRun(text, state);
-                inlines.Add(run);
+                if (visibleLength + text.Length > MaxVisibleLength)
+                {
+                    var keep = Math.Max(0, MaxVisibleLength - visibleLength - 3);
+                    inlines.Add(CreateFormattedRun(text.Substring(0, keep).TrimEnd() + "...", state));
+                    break;
+                }
+
+                visibleLength += text.Length;
+                inlines.Add(CreateFormattedRun(text, state));
             }
         }
 
@@ -911,7 +974,9 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         // wrote to the state only inside each attribute's success branch.
         if (values.Color.HasValue)
         {
-            state.Color = values.Color;
+            // Same readability guard as the ASSA path (#13824): a <font> color that vanishes
+            // into the grid background falls back to the default foreground.
+            state.Color = IsColorVisible(values.Color.Value) ? values.Color : null;
         }
 
         if (values.FontName != null)
@@ -1166,10 +1231,12 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         else if (colorCandidateCount > 0)
         {
             // No transition involved, so ASSA's last-wins rule applies: consecutive static
-            // color tags resolve to the last one, matching libass and the video preview. The
-            // visibility guard deliberately does not apply here - a single explicit color is
-            // shown as authored even when it has little contrast.
-            state.Color = colorCandidates[colorCandidateCount - 1];
+            // color tags resolve to the last one, matching libass and the video preview. But an
+            // authored color with next to no contrast against the grid background makes the
+            // line unreadable (#13824), so the winner is only shown when it is visible at all -
+            // never replaced by an earlier candidate, which would misrepresent the file.
+            var lastColor = colorCandidates[colorCandidateCount - 1];
+            state.Color = IsColorVisible(lastColor) ? lastColor : null;
         }
         else if (sawColorTag)
         {
@@ -1183,7 +1250,13 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
 
     // Below this WCAG contrast ratio a color is treated as unusable against the grid
     // background (pure white on white is 1.0; white on the default dark background is ~17).
-    private const double MinimumVisibleContrast = 1.3;
+    //
+    // 1.3 caught colors that were perfectly legible: on the mid-grey theme in #13929 a speaker's
+    // #5C1FF4 sits at 1.268 and lost its color, while the three other speakers in the same file
+    // kept theirs. The cases this guard exists for are far lower - a color matching the
+    // background exactly is 1.0, and the #232323-on-dark case from #13824 is 1.06-1.15 - so the
+    // threshold can come down without letting any of them back in.
+    private const double MinimumVisibleContrast = 1.2;
 
     /// <summary>
     /// Test hook: the grid background normally follows the active theme, which headless unit
@@ -1204,6 +1277,36 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         // background. Also swallows a malformed DarkModeBackgroundColor rather than
         // letting it throw out of IValueConverter.Convert.
         return UiTheme.GetThemeBackgroundColor();
+    }
+
+    // Visibility verdicts memoized per (color, background): the same few authored colors repeat
+    // down a whole file and this runs per tag block per cell repaint. Keyed on the background
+    // too so a theme switch cannot serve stale verdicts; capped and dropped wholesale like the
+    // brush caches above because the colors are arbitrary user data.
+    private static readonly Dictionary<(Color Foreground, Color Background), bool> ColorVisibilityCache = new();
+    private const int ColorVisibilityCacheLimit = 256;
+
+    /// <summary>
+    /// Whether an authored color is readable at all against the current grid background.
+    /// </summary>
+    private static bool IsColorVisible(Color color)
+    {
+        var background = GetGridBackgroundColor();
+        var key = (color, background);
+        if (ColorVisibilityCache.TryGetValue(key, out var visible))
+        {
+            return visible;
+        }
+
+        var luminance = RelativeLuminance(CompositeOver(color, background));
+        visible = ContrastRatio(luminance, RelativeLuminance(background)) >= MinimumVisibleContrast;
+        if (ColorVisibilityCache.Count >= ColorVisibilityCacheLimit)
+        {
+            ColorVisibilityCache.Clear();
+        }
+
+        ColorVisibilityCache[key] = visible;
+        return visible;
     }
 
     private static Color? PickMostVisibleColor(ReadOnlySpan<Color> candidates)

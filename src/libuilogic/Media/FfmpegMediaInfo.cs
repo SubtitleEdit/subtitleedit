@@ -56,8 +56,20 @@ namespace Nikse.SubtitleEdit.UiLogic.Media
                 }
             }
 
-            var log = GetFfmpegLog(videoFileName);
-            return ParseLog(log);
+            try
+            {
+                return ParseLog(GetFfmpegLog(videoFileName));
+            }
+            catch (Exception exception)
+            {
+                // A configured ffmpeg that cannot actually be launched - moved install, stale path,
+                // no permission - used to throw out of here, and callers that only expect media info
+                // died with it: adding a file to Speech to text silently added nothing at all and
+                // Transcribe stopped dead (issue #13820). Empty info means "unknown", which every
+                // caller already handles.
+                SeLogger.Error(exception, "Unable to read media info via ffmpeg for " + videoFileName);
+                return new FfmpegMediaInfo();
+            }
         }
 
         public long GetTotalFrames()

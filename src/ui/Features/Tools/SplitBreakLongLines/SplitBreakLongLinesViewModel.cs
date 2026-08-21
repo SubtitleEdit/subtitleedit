@@ -26,6 +26,7 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
     [ObservableProperty] private int _maxNumberOfLines;
 
     [ObservableProperty] private bool _rebalanceLongLines;
+    [ObservableProperty] private bool _rebalanceOnlyLinesTooLong;
     [ObservableProperty] private int _unbreakLinesShorterThan;
 
     [ObservableProperty] private string _fixesInfo;
@@ -141,6 +142,13 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
                 for (var index = 0; index < AllSubtitlesFixed.Count; index++)
                 {
                     var item = AllSubtitlesFixed[index];
+                    if (RebalanceOnlyLinesTooLong && !HasLineTooLong(item.Text, SingleLineMaxLength, MaxNumberOfLines))
+                    {
+                        // An intentionally unbalanced subtitle can be editorially correct - when
+                        // every line already fits, its existing line breaks are kept.
+                        continue;
+                    }
+
                     var rebalancedText = Utilities.AutoBreakLine(item.Text, SingleLineMaxLength, mergeLinesShorterThan, _languageCode);
                     if (rebalancedText != item.Text)
                     {
@@ -170,6 +178,25 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
                 FixesInfo = string.Format(Se.Language.Tools.SplitBreakLongLines.LinesSplitXLinesRebalancedY, splitCount, rebalanceCount);
             }
         });
+    }
+
+    public static bool HasLineTooLong(string? text, int singleLineMaxLength, int maxNumberOfLines)
+    {
+        var lines = HtmlUtil.RemoveHtmlTags(text ?? string.Empty, true).SplitToLines();
+        if (lines.Count > maxNumberOfLines)
+        {
+            return true;
+        }
+
+        foreach (var line in lines)
+        {
+            if (line.Length > singleLineMaxLength)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static List<SubtitleLineViewModel> Split(SubtitleLineViewModel item, int maxCharactersPerSubtitle, int singleLineMaxLength)
@@ -601,12 +628,14 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
             : Se.Settings.General.UnbreakLinesShorterThan;
         SplitLongLines = Se.Settings.Tools.SplitRebalanceLongLinesSplit;
         RebalanceLongLines = Se.Settings.Tools.SplitRebalanceLongLinesRebalance;
+        RebalanceOnlyLinesTooLong = Se.Settings.Tools.SplitRebalanceLongLinesRebalanceOnlyTooLong;
     }
 
     private void SaveSettings()
     {
         Se.Settings.Tools.SplitRebalanceLongLinesSplit = SplitLongLines;
         Se.Settings.Tools.SplitRebalanceLongLinesRebalance = RebalanceLongLines;
+        Se.Settings.Tools.SplitRebalanceLongLinesRebalanceOnlyTooLong = RebalanceOnlyLinesTooLong;
         Se.Settings.Tools.SplitRebalanceLongLinesSingleLineMaxLength = SingleLineMaxLength;
         Se.Settings.Tools.SplitRebalanceLongLinesMaxNumberOfLines = MaxNumberOfLines;
         Se.Settings.Tools.SplitRebalanceLongLinesUnbreakShorterThan = UnbreakLinesShorterThan;

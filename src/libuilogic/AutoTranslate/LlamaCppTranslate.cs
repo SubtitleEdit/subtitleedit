@@ -62,31 +62,18 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                 template = Configuration.Settings.Tools.LlamaCppPrompt;
             }
 
-            // Placeholders are replaced (not string.Format'ed) so braces in a user-edited prompt
-            // cannot throw. The "codes" this engine receives are already English language names -
-            // ListLanguages() puts the name in TranslationPair.Code - which is what the templates
-            // expect.
-            string encodedUserMessage;
-            if (template.Contains("{2}"))
-            {
-                // Completion-format models (MiLMMT-46): the trained prompt with the text embedded
-                // must reach the model verbatim, real newlines included - under the "<br />"
-                // placeholder encoding the model still translates but starts mirroring placeholder
-                // fragments into its output.
-                encodedUserMessage = Json.EncodeJsonText(BuildCompletionPrompt(template, sourceLanguageCode, targetLanguageCode, text), "\\n");
-            }
-            else
-            {
-                // Historical chat wire format: prompt, a real blank line, then the text - with
-                // line breaks inside either encoded as the "<br />" placeholder (decoded back below).
-                var prompt = template.Replace("{0}", sourceLanguageCode).Replace("{1}", targetLanguageCode);
-                encodedUserMessage = Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim());
-            }
+            // The "codes" this engine receives are already English language names - ListLanguages()
+            // puts the name in TranslationPair.Code - which is what the templates expect.
+            var encodedUserMessage = LlmTranslatePrompt.BuildEncodedUserMessage(
+                template, sourceLanguageCode, targetLanguageCode, text);
 
             // No "model" field: llama-server serves the single model it was started with, and for a
             // remote server the user's own llama-server does the same. Sending one would only risk a
             // mismatch with whatever that server has loaded.
-            var input = "{ \"messages\": [{ \"role\": \"user\", \"content\": \"" + encodedUserMessage + "\" }]" + MakeSamplingJson() + "}";
+            // Generous output budget (a translation is roughly source-sized) so a model stuck in a
+            // generation loop runs out of tokens instead of generating until the context fills (#13830).
+            var maxTokens = 200 + 2 * text.Length;
+            var input = "{ \"messages\": [{ \"role\": \"user\", \"content\": \"" + encodedUserMessage + "\" }], \"max_tokens\": " + maxTokens + MakeSamplingJson() + "}";
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             var result = await _httpClient.PostAsync(string.Empty, content, cancellationToken);
@@ -118,21 +105,6 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             outputText = ChatGptTranslate.RemovePreamble(text, outputText);
             outputText = ChatGptTranslate.DecodeUnicodeEscapes(outputText);
             return outputText.Trim();
-        }
-
-        /// <summary>
-        /// Fills a completion-format prompt template: {0} = source language English name, {1} =
-        /// target language English name, {2} = the text to translate. Models like MiLMMT-46 are
-        /// trained with the text inside the prompt and a trailing target-language cue after it.
-        /// The text is substituted last so braces in subtitle text (ASSA override tags) can never
-        /// hit a placeholder.
-        /// </summary>
-        public static string BuildCompletionPrompt(string template, string sourceLanguageCode, string targetLanguageCode, string text)
-        {
-            return template
-                .Replace("{0}", sourceLanguageCode)
-                .Replace("{1}", targetLanguageCode)
-                .Replace("{2}", text.Trim());
         }
 
         /// <summary>

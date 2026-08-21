@@ -33,7 +33,7 @@ public class IndexTts25AudioCppDownloadService : IIndexTts25AudioCppDownloadServ
 {
     private readonly HttpClient _httpClient;
 
-    private const string ReleaseTag = "audiocpp-indextts25-2026-08-16-r4";
+    private const string ReleaseTag = "audiocpp-indextts25-2026-08-18";
     private const string ReleaseBase =
         "https://github.com/SubtitleEdit/support-files/releases/download/" + ReleaseTag + "/";
 

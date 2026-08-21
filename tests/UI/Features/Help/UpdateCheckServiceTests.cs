@@ -1,10 +1,66 @@
 using Nikse.SubtitleEdit.Features.Help.CheckForUpdates;
+using System.Net;
+using System.Net.Http;
 
 namespace Tests.Features.Help;
 
 public class UpdateCheckServiceTests
 {
     private const string Separator = "-----------------------------------------------------------------------------------------------------";
+
+    /// <summary>Fails the first <c>failCount</c> requests, then serves the changelog.</summary>
+    private sealed class FlakyHandler : HttpMessageHandler
+    {
+        private readonly int _failCount;
+        private readonly string _content;
+
+        public int Requests { get; private set; }
+
+        public FlakyHandler(int failCount, string content)
+        {
+            _failCount = failCount;
+            _content = content;
+        }
+
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            Requests++;
+            if (Requests <= _failCount)
+            {
+                throw new HttpRequestException("proxy hiccup");
+            }
+
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(_content),
+            });
+        }
+    }
+
+    [Fact]
+    public async Task CheckForUpdates_TransientFailures_SucceedsOnSecondRound()
+    {
+        var changeLog = MakeChangeLog("v999.0.0 (1st of January 2030)\r\n\r\n* Future stuff");
+        var handler = new FlakyHandler(failCount: 3, changeLog); // first round (all three urls) fails
+        var service = new UpdateCheckService(new HttpClient(handler)) { RetryDelay = TimeSpan.Zero };
+
+        var result = await service.CheckForUpdates();
+
+        Assert.Equal(4, handler.Requests);
+        Assert.Equal("v999.0.0", result.LatestVersion);
+        Assert.True(result.IsNewVersionAvailable);
+    }
+
+    [Fact]
+    public async Task CheckForUpdates_AllAttemptsFail_ThrowsLastException()
+    {
+        var handler = new FlakyHandler(failCount: int.MaxValue, string.Empty);
+        var service = new UpdateCheckService(new HttpClient(handler)) { RetryDelay = TimeSpan.Zero };
+
+        await Assert.ThrowsAsync<HttpRequestException>(() => service.CheckForUpdates());
+
+        Assert.Equal(6, handler.Requests); // three urls, two rounds
+    }
 
     private static string MakeChangeLog(params string[] blocks)
     {

@@ -31,4 +31,47 @@ public class Se4ShortcutsImporterMapTests
             "in ShortcutsMain (imported shortcuts would be stored but never fire):\n" +
             string.Join("\n", missing));
     }
+
+    /// <summary>
+    /// The map is keyed by the exact element names SE 4 writes to Settings.xml, and a wrong
+    /// key fails silently as "skipped" (the keep-gap frame moves were mapped under a
+    /// "MainAdjust" prefix SE 4 never uses, #13818). Guards the names most easily gotten
+    /// wrong by importing them from an SE 4-shaped document.
+    /// </summary>
+    [Theory]
+    [InlineData("MoveStartOneFrameBackKeepGapPrev", "MoveStartOneFrameBackKeepGapPrevCommand")]
+    [InlineData("MoveStartOneFrameForwardKeepGapPrev", "MoveStartOneFrameForwardKeepGapPrevCommand")]
+    [InlineData("MoveEndOneFrameBackKeepGapNext", "MoveEndOneFrameBackKeepGapNextCommand")]
+    [InlineData("MoveEndOneFrameForwardKeepGapNext", "MoveEndOneFrameForwardKeepGapNextCommand")]
+    [InlineData("MainVideo3000MsLeft", "VideoMoveCustom3BackCommand")]
+    [InlineData("MainVideo3000MsRight", "VideoMoveCustom3ForwardCommand")]
+    [InlineData("MainVideo5000MsLeft", "VideoMoveCustom4BackCommand")]
+    [InlineData("MainVideo5000MsRight", "VideoMoveCustom4ForwardCommand")]
+    [InlineData("MainVideoGoToPrevChapter", "GoToPreviousChapterCommand")]
+    [InlineData("MainVideoGoToNextChapter", "GoToNextChapterCommand")]
+    [InlineData("MainAdjustSetStartAndOffsetTheWholeSubtitle", "WaveformSetStartAndKeepDurationCommand")]
+    [InlineData("GeneralGoToNextSubtitleAndPlay", "PlayNextCommand")]
+    [InlineData("GeneralGoToPrevSubtitleAndPlay", "PlayPreviousCommand")]
+    [InlineData("GeneralGoToStartOfCurrentSubtitle", "VideoSetPositionCurrentSubtitleStartCommand")]
+    [InlineData("GeneralGoToEndOfCurrentSubtitle", "VideoSetPositionCurrentSubtitleEndCommand")]
+    [InlineData("GeneralPlayFirstSelected", "PlaySelectedLinesWithoutLoopCommand")]
+    [InlineData("GeneralTogglePreviewOnVideo", "ToggleSubtitlesOnVideoPlayerCommand")]
+    [InlineData("GeneralSwitchOriginalAndTranslation", "SwitchOriginalAndTranslationTextSelectedLinesCommand")]
+    [InlineData("GeneralAutoCalcCurrentDuration", "RecalculateDurationSelectedLinesCommand")]
+    [InlineData("MainListViewToggleCustomTags", "SurroundWith1Command")]
+    [InlineData("GeneralAutoCalcCurrentDurationByOptimalReadingSpeed", "RecalculateDurationSelectedLinesCommand")]
+    [InlineData("GeneralAutoCalcCurrentDurationByMinReadingSpeed", "SetDurationMaxCpsSelectedLinesCommand")]
+    [InlineData("MainVideo1FrameLeftWithPlay", "VideoOneFrameBackWithPlayCommand")]
+    [InlineData("MainVideo1FrameRightWithPlay", "VideoOneFrameForwardWithPlayCommand")]
+    [InlineData("MainVideoToggleContrast", "VideoToggleContrastCommand")]
+    public void ImportsSe4ShortcutBySerializedName(string se4Name, string expectedSe5Command)
+    {
+        var xml = $"<Shortcuts><{se4Name}>Control+Shift+F12</{se4Name}></Shortcuts>";
+
+        var result = Se4ShortcutsImporter.ImportFromXml(xml);
+
+        Assert.Equal(0, result.SkippedNoMapping);
+        var shortcut = Assert.Single(result.Shortcuts);
+        Assert.Equal(expectedSe5Command, shortcut.ActionName);
+    }
 }

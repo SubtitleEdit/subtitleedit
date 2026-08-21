@@ -80,6 +80,11 @@ public class LanguageSettings
     public string MaxDurationMs { get; set; }
     public string MinGapMs { get; set; }
     public string MinGapFrames { get; set; }
+    public string MinGapCalculateDotDotDot { get; set; }
+    public string MinGapCalculateTitle { get; set; }
+    public string MinGapCalculateFrames { get; set; }
+    public string MinGapCalculateXFramesAtYGivesZMs { get; set; }
+    public string MinGapCalculateUseXAsNewGap { get; set; }
     public string MaxLines { get; set; }
     public string UnbreakSubtitlesShortThan { get; set; }
     public string AutoBreakLineEndingEarly { get; set; }
@@ -279,6 +284,7 @@ public class LanguageSettings
     public string SubtitleGridFormattingNone { get; set; }
     public string SubtitleGridFormattingShowFormatting { get; set; }
     public string SubtitleGridFormattingShowTags { get; set; }
+    public string SubtitleGridFormattingHideTags { get; set; }
     public string WaveformParagraphBackgroundColor { get; set; }
     public string WaveformParagraphSelectedBackgroundColor { get; set; }
     public string WaveformAllowOverlap { get; set; }
@@ -316,6 +322,8 @@ public class LanguageSettings
     public string WaveformToolbarItems { get; set; }
     public string MatchIconColorToDarkTheme { get; set; }
     public string SubtitlePreviewProperties { get; set; }
+    public string UsePositionFromSubtitleFile { get; set; }
+    public string MarginIsPartOfSubtitleArea { get; set; }
     public string PixelWidthInfo { get; set; }
     public string SpellCheckEngineHunSpelll { get; set; }
     public string SpellCheckEngineMsWord { get; set; }
@@ -402,6 +410,11 @@ public class LanguageSettings
         MaxDurationMs = "Max duration (ms)";
         MinGapMs = "Min gap (ms)";
         MinGapFrames = "Min gap (frames)";
+        MinGapCalculateDotDotDot = "Calculate minimum gap from a frame rate...";
+        MinGapCalculateTitle = "Min. gap between subtitles in ms";
+        MinGapCalculateFrames = "Min. gap in frames";
+        MinGapCalculateXFramesAtYGivesZMs = "{0} frames at a frame rate of {1} gives {2} milliseconds.";
+        MinGapCalculateUseXAsNewGap = "Use \"{0}\" milliseconds as new minimum gap?";
         MaxLines = "Max number of lines";
         UnbreakSubtitlesShortThan = "Unbreak subtitles shorter than";
         AutoBreakLineEndingEarly = "Auto-break early for end of sentence (.!?)";
@@ -600,6 +613,7 @@ public class LanguageSettings
         SubtitleGridFormattingNone = "No formatting";
         SubtitleGridFormattingShowFormatting = "Show formatting";
         SubtitleGridFormattingShowTags = "Show tags";
+        SubtitleGridFormattingHideTags = "Hide tags";
         WaveformParagraphBackgroundColor = "Waveform subtitle background color";
         WaveformParagraphSelectedBackgroundColor = "Waveform selected subtitle background color";
         WaveformAllowOverlap = "Allow overlap (when moving/resizing)";
@@ -637,6 +651,8 @@ public class LanguageSettings
         WaveformToolbarItems = "Waveform toolbar items";
         MatchIconColorToDarkTheme = "Match icon color to dark theme foreground color";
         SubtitlePreviewProperties = "Subtitle preview properties";
+        UsePositionFromSubtitleFile = "Use position from subtitle file (TTML/PAC/EBU STL)";
+        MarginIsPartOfSubtitleArea = "Margin is part of the subtitle area";
         PixelWidthInfo = "Green lines = max-width limit   |   Red area = text exceeds limit";
         SpellCheckEngineHunSpelll = "Hunspell";
         SpellCheckEngineMsWord = "MS Word";

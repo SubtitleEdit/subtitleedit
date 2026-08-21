@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
+﻿using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 using System.Linq;
 
@@ -6,35 +6,6 @@ namespace LibUiLogicTests.AutoTranslate;
 
 public class LlamaCppTranslateTests
 {
-    // MiLMMT-46's completion format: the text sits inside the template and the trailing
-    // "Danish:" cue is what makes the model translate at all - appended-text prompts make it
-    // echo-loop the source instead.
-    [Fact]
-    public void BuildCompletionPrompt_EmbedsTextInsideTemplate()
-    {
-        var result = LlamaCppTranslate.BuildCompletionPrompt(
-            "Translate this from {0} to {1}:\n{0}: {2}\n{1}:", "English", "Danish",
-            "We've lost the signal.\nCheck the antenna on the roof.");
-
-        Assert.Equal(
-            "Translate this from English to Danish:\nEnglish: We've lost the signal.\nCheck the antenna on the roof.\nDanish:",
-            result);
-    }
-
-    // The text is substituted last, so brace sequences in subtitle text (ASSA override tags)
-    // must survive as-is and can never be treated as a placeholder.
-    [Fact]
-    public void BuildCompletionPrompt_TextWithBraces_IsNotReSubstituted()
-    {
-        var result = LlamaCppTranslate.BuildCompletionPrompt(
-            "Translate this from {0} to {1}:\n{0}: {2}\n{1}:", "English", "Danish",
-            @"{\an8}Look {0} up there.");
-
-        Assert.Equal(
-            "Translate this from English to Danish:\nEnglish: {\\an8}Look {0} up there.\nDanish:",
-            result);
-    }
-
     [Fact]
     public void TranslateModels_MiLmMtEntries_AreCompletionOnlyWithEmbeddedTextTemplate()
     {

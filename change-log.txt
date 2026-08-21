@@ -3,6 +3,124 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-beta20 (21st of August 2026)
+
+* Add "Go to sub position and pause" to the video shortcuts - thx BBB2K
+* Add a teletext color picker with a "No color" option for EBU STL - thx Triathlon-rally
+* Add the minimum gap frame rate calculator from SE 4 - thx m0ck69
+* Add the SE 4 "toggle custom tags" and recalculate-duration shortcuts - thx m0ck69
+* Layout 10: put the edit box under the waveform like SE 4/Aegisub - thx Surlime
+* Let the preview subtitle use the letterbox bars - thx m0ck69
+* Keep the chosen languages when the translate engine changes - thx GrampaWildWilly
+* Apply new waveform colors without restarting SE - thx m0ck69
+* Retry a Crisp ASR clip without VAD when it comes back empty - thx Davanix
+* Explain the cuBLAS compute type failure and offer the fix - thx tomelephant-git
+* Smooth the waveform/video cursor and take mpv work off the UI thread
+* Teletext/EBU STL: preview follows row changes, header round-trip, TS charset crash/leak fixes, honest TT column
+* Hide burn-in codecs the bundled ffmpeg lacks (Flatpak) - thx zbcoding
+* Keep the settings column out of the video generating progress bar row - thx zbcoding
+* Docs: add the chapters page, rebuild the settings page, refresh the engine/format/shortcut lists
+* Update CrispEmbed to v0.17.9
+* Update Italian translation - thx bovirus
+* Perf: vectorize the OCR bitmap primitives and the spectrogram pixel write
+* Fix Whisper XXL failing to load on glibc 2.41+ (Fedora 42, Arch, Ubuntu 25.10) - thx zbcoding
+* Fix the grid color guard dropping legible colors - thx St0rmXtr00per
+* Fix the position slider jumping while dragging during playback - thx Davanix
+* Fix clipboard managers failing to paste into text boxes on Windows
+* Fix a working Crisp ASR build not being downloaded on Intel Macs - thx tolikdgan
+* Fix update-metainfo-version.sh flattening the AppStream release history, and re-pin the Flathub manifest to v5.1.0 - thx CaptechOmar
+
+-----------------------------------------------------------------------------------------------------
+
+v5.2.0-beta19 (20th of August 2026)
+
+* Add a Teletext alignment dialog, a TT grid column, and better EBU STL Teletext handling - thx Triathlon-rally
+* Add "Save all images with HTML index" to the OCR window - thx WAusJackBauer
+* Use the position the subtitle file itself carries when previewing on the video (TTML/PAC/EBU STL) - thx gavinhonl
+* Remember which "Multiple replace" categories are expanded - thx KaDeeKe
+* Let the user own the llama.cpp launch flags in batch convert - thx emsb8888-prog
+* Start the text-to-speech export folder picker in the subtitle's own folder - thx cvrle77
+* Delete the temporary files text-to-speech and ffmpeg leave behind - thx subof
+* Let clipboard managers paste into the focused text box on Windows (WM_PASTE)
+* Update the pinned llama.cpp build to b10507
+* Fix black video and no sound on GPUs without a Vulkan runtime - thx jugorakita-creator
+* Fix the batch convert window freezing after minimize/restore, and llama-server surviving cancel - thx emsb8888-prog
+* Fix the UI freezing during OCR, and line editing breaking after a minimize - thx FunkyKnilch
+* Fix the Delete key doing nothing after a shift+click range selection in a scrolled grid - thx Davanix
+* Fix ruby and bouten not being read from real Netflix IMSC 1.1 Japanese files - thx w72k24
+* Fix D-Cinema XML two-line events collapsing into one line - thx clundible
+* Fix Gemma 4 models returning empty translations - thx Oplay66
+* Fix the Chatterbox crash after switching to another cloned voice - thx subof
+* Fix black in-progress status text in the batch convert file list
+* Update Italian translation and installer - thx bovirus
+* Update Japanese translation - thx hisui3393
+
+-----------------------------------------------------------------------------------------------------
+
+v5.2.0-beta18 (19th of August 2026)
+
+* Add a "Hide tags" mode for formatting in the subtitle grid - thx MrGoraj
+* Add letter spacing to "Generate video with burned-in subtitles" and "Generate transparent subtitle"
+* Add a shortcut for pasting clipboard text to a new waveform selection - thx Xenos71
+* Add custom server parameters, a stall watchdog, and a token cap to llama.cpp translate - thx emsb8888-prog
+* Add completion-format translate prompts to LM Studio, KoboldCpp, Ollama and the other local engines - thx subof
+* Add a way to switch VAD off in Crisp ASR (use --chunk-seconds) - thx AmineI
+* Apply AI review suggestions in passes instead of applying and closing - thx fraternl
+* Make Shift+Delete cut in every text box, not only the main edit boxes - thx GrampaWildWilly
+* Import 22 more SE 4 shortcuts, and fix the four "keep gap" frame moves always being skipped
+* Render the style previews with libass in the burn-in, transparent video, and ASSA styles dialogs
+* Show the text of tag-heavy lines in the grid's "show formatting" mode - thx MrGoraj
+* Extend to shot change: stop at the first cut, and never shorten a line - thx m0ck69
+* Find OCR replace lists that only have a "_User" file, and use them everywhere - thx Lentzeris
+* Retry the update check like downloads do, and log why it failed
+* Keep the waveform responsive while shot changes are auto-extracted
+* Speed up waveform generation for 16-bit stereo audio
+* Update the audio.cpp IndexTTS 2.5 engine to the 2026-08-18 build
+* Fix speech to text doing nothing at all when ffmpeg cannot be started - thx GrampaWildWilly
+* Fix "key 'DYLD_LIBRARY_PATH' was not present" starting whisper.cpp on macOS - thx GitGianluc
+* Fix speech to text not finding the Purfview XXL output when using own --output_dir - thx GrampaWildWilly
+* Fix crash in batch auto-translate when the API key is missing - thx wjcarpenter
+* Fix "Remove text for HI" check boxes changing state after a partial Apply - thx Davanix
+* Fix Netflix IMSC 1.1 Japanese files without bouten being read as EBU-TT-D - thx w72k24
+* Fix the subtitle list jumping to the top/bottom after replace or "delete empty lines" - thx St0rmXtr00per
+* Fix the waveform cursor falling behind the audio during long playback - thx hisui3393
+* Fix OCR reading words with more than one "l" as uppercase "I" - thx Miggu82
+* Update Chinese (traditional) translation - thx love80312
+* Update German translation - thx Need74
+* Update Korean translation - thx 12si27
+* Update Polish translation - thx potplayer-fanpack
+
+-----------------------------------------------------------------------------------------------------
+
+v5.2.0-beta17 (18th of August 2026)
+
+* Trim embedded ASSA fonts to the characters actually used (attachments, font collector, batch convert) - thx hisui3393
+* Add show/hide settings for the format specific toolbar icons - thx GrampaWildWilly
+* Add a "Select none" button to the AI review window - thx fraternl
+* Add the CosyVoice3 RL talker models in both quantizations - thx subof
+* Show the subtitle on the video in "Visual sync" and "Set sync point" - thx gabiacas-ops
+* Make the toolbar frame rate usable like the SE 4 one - thx smt-joen
+* Use an index-mapped scrollbar for the subtitle list in the OCR window
+* Update ffmpeg to 9.0.1 (Windows) / 9.0 (macOS arm), Tesseract to 5.5.3, whisper.cpp to v1.9.2, libmpv to shinchiro 20260814, and Paddle OCR standalone to v1.4.0
+* Fix Shift+Delete still not cutting in a text box - thx GrampaWildWilly
+* Fix per-line voice cloning hanging on Windows - thx invio-a11y
+* Fix capitalization after "EE.UU." and other doubled Spanish abbreviations - thx fraternl
+* Fix the Spanish OCR replace rule for "clón" breaking words like "ciclón" - thx fraternl
+* Fix audio clip extraction progress jumping after Subtitle Edit regains focus - thx Davanix
+* Fix speech to text failing on videos where the audio is not the first stream - thx emsb8888-prog
+* Fix speech to text transcribing a different audio track than the engine picks on multi-track files
+* Fix the main window being stuck on screen when a modal dialog is minimized - thx emsb8888-prog
+* Fix text to speech losing the whole run when a local engine crashes mid-generation - thx subof
+* Fix the waveform cursor running ahead of the audio when playback resumes - thx hisui3393
+* Fix ASSA styles from the style storage changing values after OCR - thx FunkyKnilch
+* Update Bulgarian translation - thx jekovcar
+* Update German translation - thx Need74
+* Update Italian translation - thx bovirus, GitGianluc
+* Update Japanese translation - thx hisui3393
+* Update Russian translation - thx jekovcar
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-beta16 (17th of August 2026)
 
 * Add a chapter editor with Matroska/MP4/OGM chapter formats (Video > More > Chapters) - thx alex64-pb

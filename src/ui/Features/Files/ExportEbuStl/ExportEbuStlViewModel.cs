@@ -170,6 +170,8 @@ public partial class ExportEbuStlViewModel : ObservableObject
             new("29", "Turkish"),
             new("2A", "Flemish"),
             new("2B", "Wallon"),
+            new("2D", "German - hearing impaired (VA-MAL)"),
+new("2F", "French - hearing impaired (VF-MAL)"),
             new("7F", "Amharic"),
             new("7E", "Arabic"),
             new("7D", "Armenian"),
@@ -285,6 +287,32 @@ public partial class ExportEbuStlViewModel : ObservableObject
             SelectedTopAlignment = 0;
             SelectedBottomAlignment = 2;
             SelectedRowsAddByNewLine = 2;
+            UseBox = Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox;
+            UseDoubleHeight = Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight;
+
+            // Keep the settings the file was written with instead of resetting them to the
+            // defaults above every time the export dialog is opened.
+            if (!string.IsNullOrEmpty(_subtitle.Header) &&
+                _subtitle.Header.Length == 1024 &&
+                (_subtitle.Header.Contains("STL24") ||
+                 _subtitle.Header.Contains("STL25") ||
+                 _subtitle.Header.Contains("STL29") ||
+                 _subtitle.Header.Contains("STL30")))
+            {
+                try
+                {
+                    var encoding = Ebu.GetEncoding(_subtitle.Header.Substring(0, 3));
+                    _header = Ebu.ReadHeader(encoding.GetBytes(_subtitle.Header));
+                    FillFromHeader(_header);
+                }
+                catch (Exception exception)
+                {
+                    // An unreadable header is not worth blocking the export over - the defaults
+                    // above still stand - but it should not vanish silently either.
+                    SeLogger.Error(exception, "Unable to read the EBU STL header of the current subtitle");
+                    _header = new Ebu.EbuGeneralSubtitleInformation();
+                }
+            }
 
             CheckErrors(_subtitle);
         });
@@ -418,16 +446,20 @@ public partial class ExportEbuStlViewModel : ObservableObject
     {
         SelectedCodePage = CodePages.FirstOrDefault(p => p.CodePage == header.CodePageNumber);
 
-        SelectedDiskFormatCode = DiskFormatCodes.First(p => p.Contains(header.DiskFormatCode, StringComparison.OrdinalIgnoreCase));
+        SelectedDiskFormatCode = DiskFormatCodes.FirstOrDefault(p => p.Contains(header.DiskFormatCode, StringComparison.OrdinalIgnoreCase))
+                                 ?? SelectedDiskFormatCode;
 
         if (header.FrameRateFromSaveDialog is > 20 and < 200)
         {
             SelectedFrameRate = header.FrameRateFromSaveDialog.ToString(CultureInfo.CurrentCulture);
         }
 
-        SelectedDisplayStandardCode = DisplayStandardCodes.First(p => p.StartsWith(header.DisplayStandardCode, StringComparison.InvariantCulture));
+        SelectedDisplayStandardCode = DisplayStandardCodes.FirstOrDefault(p => p.StartsWith(header.DisplayStandardCode, StringComparison.InvariantCulture))
+                                      ?? SelectedDisplayStandardCode;
 
-        if (int.TryParse(header.CharacterCodeTableNumber, out var tableNumber))
+        if (int.TryParse(header.CharacterCodeTableNumber, out var tableNumber) &&
+            tableNumber >= 0 &&
+            tableNumber < CharacterTables.Count)
         {
             SelectedCharacterTable = CharacterTables[tableNumber];
         }
@@ -537,21 +569,21 @@ public partial class ExportEbuStlViewModel : ObservableObject
                     // 36 characters for double height colored tex
                     if (arr.Count == 2 && s.Length > 36 && arr[index].Contains("<font ", StringComparison.OrdinalIgnoreCase))
                     {
-                        sb.AppendLine($"Line {i}-{index + 1}: 36 (not {s.Length}) should be maximum characters for double height colored text");
+                        sb.AppendLine(string.Format(Se.Language.File.EbuSaveOptions.MaxLengthErrorTeletextColored, i, index + 1, s.Length));
                         errorCount++;
                     }
 
                     // 37 characters for double height white text
                     else if (arr.Count == 2 && s.Length > 37 && !p.Text.Contains("<font ", StringComparison.OrdinalIgnoreCase))
                     {
-                        sb.AppendLine($"Line {i}-{index + 1}: 37 (not {s.Length}) should be maximum characters for double height white text");
+                        sb.AppendLine(string.Format(Se.Language.File.EbuSaveOptions.MaxLengthErrorTeletextWhite, i, index + 1, s.Length));
                         errorCount++;
                     }
 
                     // 38 characters for single height white text
                     else if (arr.Count == 1 && s.Length > 38)
                     {
-                        sb.AppendLine($"Line {i}: 38 (not {s.Length}) should be maximum characters for single height white text");
+                        sb.AppendLine(string.Format(Se.Language.File.EbuSaveOptions.MaxLengthErrorTeletextSingleHeight, i, s.Length));
                         errorCount++;
                     }
                 }

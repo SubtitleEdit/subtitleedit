@@ -129,6 +129,7 @@ public class AudioVisualizer : Control
         set
         {
             _paintWaveform = new Pen(new SolidColorBrush(value), 1);
+            ResetFancyColorCaches();
             SetValue(WaveformColorProperty, value);
         }
     }
@@ -149,6 +150,7 @@ public class AudioVisualizer : Control
         set
         {
             _paintPenSelected = new Pen(new SolidColorBrush(value), 1);
+            ResetFancyColorCaches();
             SetValue(WaveformSelectedColorProperty, value);
         }
     }
@@ -217,7 +219,17 @@ public class AudioVisualizer : Control
     // "center video position" mode can turn into a seek that keeps the play-head centered
     // (#12864). Hosts without a video player (or that never set this) keep plain scrolling.
     public Func<bool>? GetIsVideoPlaying { get; set; }
-    public Color WaveformFancyHighColor { get; set; } = Colors.Orange;
+    private Color _waveformFancyHighColor = Colors.Orange;
+
+    public Color WaveformFancyHighColor
+    {
+        get => _waveformFancyHighColor;
+        set
+        {
+            _waveformFancyHighColor = value;
+            ResetFancyColorCaches();
+        }
+    }
 
     private Color _paragraphBackground = Color.FromArgb(140, 70, 70, 70);
 
@@ -1445,7 +1457,21 @@ public class AudioVisualizer : Control
                 // (previous and next are already null if _isShiftDown or Se.Settings.Waveform.AllowOverlap)
                 bool allowOverlap = (previous == null && next == null) || alreadyOverlapping;
 
-                newStart = SnapToFrame(newStart);
+                // SE4 parity: a whole-paragraph drag snaps to shot changes too, not just an edge
+                // resize (issue #13953). Whichever cue is captured first wins, and the other cue
+                // moves with it so the duration is preserved. Frame snapping only applies when no
+                // cut captured the paragraph, exactly like the resize branches below.
+                var snappedWholeStart = TrySnapInCueToShotChange(newStart);
+                if (snappedWholeStart == null)
+                {
+                    var snappedWholeEnd = TrySnapOutCueToShotChange(newStart + _originalDurationSeconds);
+                    if (snappedWholeEnd != null)
+                    {
+                        snappedWholeStart = snappedWholeEnd.Value - _originalDurationSeconds;
+                    }
+                }
+
+                newStart = snappedWholeStart ?? SnapToFrame(newStart);
 
                 if (!allowOverlap && (previous != null || next != null))
                 {
@@ -1550,21 +1576,13 @@ public class AudioVisualizer : Control
                     newStart = 0;
                 }
 
-                var snappedToShotLeft = false;
-                if (SnapToShotChanges && !_isShiftDown && _shotChanges.Count > 0)
+                var snappedStartSeconds = TrySnapInCueToShotChange(newStart);
+                if (snappedStartSeconds != null)
                 {
-                    // ClosestTo directly (binary search) - GetClosestShotChange only wraps it
-                    // behind a TimeCode, which is a class, i.e. one allocation per pointer move.
-                    var nearest = _shotChanges.ClosestTo(newStart);
-                    var snapSeconds = GetInCueSnapSeconds();
-                    if (nearest != newStart && Math.Abs(newStart - nearest) < snapSeconds)
-                    {
-                        newStart = nearest;
-                        snappedToShotLeft = true;
-                    }
+                    newStart = snappedStartSeconds.Value;
                 }
 
-                if (!snappedToShotLeft)
+                if (snappedStartSeconds == null)
                 {
                     newStart = SnapToFrame(newStart);
                 }
@@ -1584,24 +1602,13 @@ public class AudioVisualizer : Control
             case InteractionMode.ResizingRight:
                 newEnd = _originalEndSeconds + dragDeltaSeconds;
 
-                var snappedToShotRight = false;
-                if (SnapToShotChanges && !_isShiftDown && _shotChanges.Count > 0)
+                var snappedEndSeconds = TrySnapOutCueToShotChange(newEnd);
+                if (snappedEndSeconds != null)
                 {
-                    // OUT cues conventionally land one frame BEFORE the shot change so they
-                    // don't bleed visually onto the next shot.
-                    var fps = Se.Settings.General.CurrentFrameRate;
-                    var oneFrameSeconds = fps >= 1 ? 1.0 / fps : 0.0;
-                    // ClosestTo directly - see the ResizingLeft branch.
-                    var nearest = _shotChanges.ClosestTo(newEnd);
-                    var snapSeconds = GetOutCueSnapSeconds();
-                    if (nearest != newEnd && Math.Abs(newEnd - nearest + oneFrameSeconds) < snapSeconds)
-                    {
-                        newEnd = nearest - oneFrameSeconds;
-                        snappedToShotRight = true;
-                    }
+                    newEnd = snappedEndSeconds.Value;
                 }
 
-                if (!snappedToShotRight)
+                if (snappedEndSeconds == null)
                 {
                     newEnd = SnapToFrame(newEnd);
                 }
@@ -1690,6 +1697,58 @@ public class AudioVisualizer : Control
 
         frameDur = 1.0 / fps;
         return true;
+    }
+
+    /// <summary>
+    /// Where an IN cue dragged to <paramref name="seconds"/> should land if a shot change is close
+    /// enough to capture it, or null when none is. In cues land exactly on the cut.
+    /// <para>
+    /// Shared by every drag interaction that moves an in cue - resizing the left edge and moving a
+    /// whole paragraph - so the same grab lands on the same time whichever way the user does it
+    /// (issue #13953).
+    /// </para>
+    /// </summary>
+    private double? TrySnapInCueToShotChange(double seconds)
+    {
+        if (!SnapToShotChanges || _isShiftDown || _shotChanges.Count == 0)
+        {
+            return null;
+        }
+
+        // ClosestTo directly (binary search) - GetClosestShotChange only wraps it
+        // behind a TimeCode, which is a class, i.e. one allocation per pointer move.
+        var nearest = _shotChanges.ClosestTo(seconds);
+        if (nearest == seconds || Math.Abs(seconds - nearest) >= GetInCueSnapSeconds())
+        {
+            return null;
+        }
+
+        return nearest;
+    }
+
+    /// <summary>
+    /// Where an OUT cue dragged to <paramref name="seconds"/> should land if a shot change is close
+    /// enough to capture it, or null when none is. OUT cues conventionally land one frame BEFORE the
+    /// shot change so they don't bleed visually onto the next shot. <see cref="TrySnapInCueToShotChange"/>
+    /// mirrored.
+    /// </summary>
+    private double? TrySnapOutCueToShotChange(double seconds)
+    {
+        if (!SnapToShotChanges || _isShiftDown || _shotChanges.Count == 0)
+        {
+            return null;
+        }
+
+        var fps = Se.Settings.General.CurrentFrameRate;
+        var oneFrameSeconds = fps >= 1 ? 1.0 / fps : 0.0;
+        // ClosestTo directly - see TrySnapInCueToShotChange.
+        var nearest = _shotChanges.ClosestTo(seconds);
+        if (nearest == seconds || Math.Abs(seconds - nearest + oneFrameSeconds) >= GetOutCueSnapSeconds())
+        {
+            return null;
+        }
+
+        return nearest - oneFrameSeconds;
     }
 
     /// <summary>
@@ -2596,6 +2655,26 @@ public class AudioVisualizer : Control
 
     // Pooled buffer for DrawClassicSelectionOverlay's visible selected regions.
     private readonly List<(double Left, double Right)> _selectionOverlayIntervals = new(16);
+
+    /// <summary>
+    /// Drops every fancy-style cache that has a waveform color baked into it. The pen/gradient/glow
+    /// caches - and the pooled per-color-key batches, which keep a pen of their own - are keyed on
+    /// the quantized amplitude bucket, not on the color, so a color change leaves them holding pens
+    /// painted in the old color. Missing the batches here is what made a new waveform/selected/fancy
+    /// high color only show up after a restart (#13897).
+    /// </summary>
+    private void ResetFancyColorCaches()
+    {
+        _fancyWaveformPenCache.Clear();
+        _fancyWaveformGlowPenCache.Clear();
+        _fancyWaveformGradientCache.Clear();
+        _fancyBatches.Clear();
+        _fancyBatchKeysInUse.Clear();
+
+        // The color properties are not AffectsRender, so ask for the repaint that shows the new
+        // color instead of waiting for whatever moves the waveform next.
+        InvalidateVisual();
+    }
 
     private Pen GetCachedFancyWaveformPen(int colorKey, Color color)
     {
@@ -4229,9 +4308,7 @@ public class AudioVisualizer : Control
 
     internal void ResetCache()
     {
-        _fancyWaveformPenCache.Clear();
-        _fancyWaveformGlowPenCache.Clear();
-        _fancyWaveformGradientCache.Clear();
+        ResetFancyColorCaches();
         _timeLineTextCache.Clear();
         _paragraphFormattedTextCache.Clear();
         _paragraphTextCache.Clear();

@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
@@ -47,6 +47,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
     [ObservableProperty] private decimal? _selectedFontOutline;
     [ObservableProperty] private string _fontOutlineText;
     [ObservableProperty] private decimal? _selectedFontShadowWidth;
+    [ObservableProperty] private decimal? _selectedFontSpacing;
     [ObservableProperty] private string _fontShadowText;
     [ObservableProperty] private ObservableCollection<FontBoxItem> _fontBoxTypes;
     [ObservableProperty] private FontBoxItem _selectedFontBoxType;
@@ -92,6 +93,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
     private Subtitle _subtitle = new();
     private bool _loading = true;
     private readonly StringBuilder _log;
+    private readonly TempSubtitleFiles _tempSubtitleFiles = new();
     private long _startTicks;
     private long _processedFrames;
     private Process? _ffmpegProcess;
@@ -603,18 +605,12 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
     {
         var subtitle = new Subtitle(_subtitle);
 
-        var srt = new SubRip();
-        var subtitleFileName = Path.Combine(Path.GetTempFileName() + srt.Extension);
-        if (_subtitleFormat is { Name: AdvancedSubStationAlpha.NameOfFormat })
-        {
-            var assa = new AdvancedSubStationAlpha();
-            subtitleFileName = Path.Combine(Path.GetTempFileName() + assa.Extension);
-            File.WriteAllText(subtitleFileName, assa.ToText(subtitle, string.Empty));
-        }
-        else
-        {
-            File.WriteAllText(subtitleFileName, srt.ToText(subtitle, string.Empty));
-        }
+        // Tracked so the file is swept when the window closes - and not GetTempFileName() plus an
+        // extension, which leaked the empty tmpXXXX.tmp it creates on top of the file written
+        // (#13332).
+        var subtitleFileName = _subtitleFormat is { Name: AdvancedSubStationAlpha.NameOfFormat }
+            ? _tempSubtitleFiles.Write(subtitle, new AdvancedSubStationAlpha())
+            : _tempSubtitleFiles.Write(subtitle, new SubRip());
 
         var jobItem = new BurnInJobItem(string.Empty, VideoWidth ?? 0, VideoHeight ?? 0)
         {
@@ -645,6 +641,16 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
 
         subtitle = GetSubtitleBasedOnCut(subtitle);
 
+        if (subtitle.OriginalFormat is NetflixImsc11Japanese)
+        {
+            // Furigana, bouten and vertical writing become extra positioned render lines - the raw
+            // tags would otherwise be rendered as literal text (issue #13861).
+            var japaneseJobItem = JobItems[_jobItemIndex];
+            var japaneseAssaFileName = _tempSubtitleFiles.GetFileName(".ass");
+            File.WriteAllText(japaneseAssaFileName, NetflixImsc11JapaneseToAss.Convert(subtitle, japaneseJobItem.Width, japaneseJobItem.Height));
+            return japaneseAssaFileName;
+        }
+
         if (!isAssa)
         {
             var jobItem = JobItems[_jobItemIndex];
@@ -661,10 +667,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
             SetStyleForNonAssa(subtitle, jobItem.Width, jobItem.Height);
         }
 
-        var assa = new AdvancedSubStationAlpha();
-        var assaFileName = Path.Combine(Path.GetTempFileName() + assa.Extension);
-        File.WriteAllText(assaFileName, assa.ToText(subtitle, string.Empty));
-        return assaFileName;
+        return _tempSubtitleFiles.Write(subtitle, new AdvancedSubStationAlpha());
     }
 
     private void SetStyleForNonAssa(Subtitle sub, int width, int height)
@@ -679,6 +682,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         style.Outline = FontOutlineColor.ToSKColor();
         style.OutlineWidth = SelectedFontOutline ?? 0;
         style.ShadowWidth = SelectedFontShadowWidth ?? 0;
+        style.Spacing = SelectedFontSpacing ?? 0;
         style.Alignment = SelectedFontAlignment.Code;
         style.MarginLeft = FontMarginHorizontal ?? 0;
         style.MarginRight = FontMarginHorizontal ?? 0;
@@ -998,6 +1002,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         FontIsBold = settings.FontBold;
         SelectedFontOutline = settings.OutlineWidth;
         SelectedFontShadowWidth = settings.ShadowWidth;
+        SelectedFontSpacing = settings.NonAssaSpacing;
         SelectedFontName = settings.FontName;
         FontTextColor = settings.NonAssaTextColor.FromHexToColor();
         FontOutlineColor = settings.NonAssaOutlineColor.FromHexToColor();
@@ -1022,6 +1027,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         settings.FontBold = FontIsBold;
         settings.OutlineWidth = SelectedFontOutline ?? 0;
         settings.ShadowWidth = SelectedFontShadowWidth ?? 0;
+        settings.NonAssaSpacing = SelectedFontSpacing ?? 0;
         settings.FontName = SelectedFontName;
         settings.NonAssaTextColor = FontTextColor.FromColorToHex();
         settings.NonAssaOutlineColor = FontOutlineColor.FromColorToHex();
@@ -1039,6 +1045,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
     {
         IsBatchMode = false;
         IsSingleModeVisible = false;
+        UpdateNonAssaPreview();
     }
 
     [RelayCommand]
@@ -1046,6 +1053,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
     {
         IsBatchMode = true;
         IsSingleModeVisible = !string.IsNullOrEmpty(_inputVideoFileName);
+        UpdateNonAssaPreview();
     }
 
     [RelayCommand]
@@ -1180,6 +1188,8 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         UpdateNonAssaPreview();
     }
 
+    private int _previewRequestId;
+
     private void UpdateNonAssaPreview()
     {
         if (_loading || Window == null || !string.IsNullOrEmpty(GetValidationError()))
@@ -1187,13 +1197,75 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
             return;
         }
 
-        var text = "This is a test";
-
         if (_subtitleFormat is { Name: AdvancedSubStationAlpha.NameOfFormat } && !IsBatchMode)
         {
             ImagePreview = new SKBitmap(1, 1).ToAvaloniaBitmap();
             return;
         }
+
+        // Render the preview with ffmpeg/libass (same engine as the generated video), debounced
+        // as the numeric up/downs fire on every tick. Falls back to the Skia approximation if
+        // ffmpeg is unavailable.
+        var requestId = System.Threading.Interlocked.Increment(ref _previewRequestId);
+        var width = VideoWidth ?? 0;
+        var height = VideoHeight ?? 0;
+        if (width < 16 || height < 16)
+        {
+            width = 1920;
+            height = 1080;
+        }
+
+        Task.Run(async () =>
+        {
+            await Task.Delay(150);
+            if (requestId != _previewRequestId)
+            {
+                return;
+            }
+
+            var previewSubtitle = new Subtitle();
+            previewSubtitle.Paragraphs.Add(new Paragraph("This is a test", 0, 2000));
+            SetStyleForNonAssa(previewSubtitle, width, height);
+
+            SKBitmap? bitmap = null;
+            try
+            {
+                bitmap = NonAssaPreviewRenderer.Render(previewSubtitle, width, height);
+            }
+            catch
+            {
+                // Fall back to the Skia preview below
+            }
+
+            if (requestId != _previewRequestId)
+            {
+                bitmap?.Dispose();
+                return;
+            }
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                if (requestId != _previewRequestId)
+                {
+                    bitmap?.Dispose();
+                    return;
+                }
+
+                if (bitmap != null)
+                {
+                    ImagePreview = bitmap.CropTransparentColors().ToAvaloniaBitmap();
+                }
+                else
+                {
+                    UpdateNonAssaPreviewSkia();
+                }
+            });
+        });
+    }
+
+    private void UpdateNonAssaPreviewSkia()
+    {
+        var text = "This is a test";
 
 
         var fontSize = (float)CalculateFontSize(VideoWidth ?? 0, VideoHeight ?? 0, FontFactor ?? 0);
@@ -1279,6 +1351,11 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         var height = VideoHeight ?? 1080;
 
         var subtitle = new Subtitle(_subtitle, false);
+        if (_subtitleFormat is NetflixImsc11Japanese)
+        {
+            return NetflixImsc11JapaneseToAss.Convert(subtitle, width, height);
+        }
+
         var isAssa = _subtitleFormat is { Name: AdvancedSubStationAlpha.NameOfFormat };
         if (!isAssa)
         {
@@ -1435,6 +1512,10 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
 
     public void CleanupPreview()
     {
+        // The subtitle files handed to ffmpeg live as long as the window does - nothing else
+        // removes them, and they used to pile up in the temp folder run after run (#13332).
+        _tempSubtitleFiles.Delete();
+
         _previewTimer?.Stop();
         _previewTimer = null;
         _mpvPreviewPlayer = null;

@@ -966,7 +966,12 @@ public partial class TextToSpeechViewModel : ObservableObject
         IsModelDownloadVisible = false;
         ProgressText = string.Empty;
         ProgressValue = 0.0;
-        _waveFolder = waveFolder;
+
+        // Own folder per run rather than writing loose into the caller's scratch location: every
+        // pipeline step emits a file per subtitle line, and nothing used to remove any of them
+        // (#13332). OnClosing sweeps this folder in one go. The caller's folder is only the
+        // fallback base - a configured generation folder wins.
+        _waveFolder = TtsRunFolder.Create(waveFolder);
 
         _castKind = ActorVoiceDetector.Detect(subtitle, format);
         // Only surface the cast button when there's actually more than one actor/voice to assign
@@ -1887,12 +1892,14 @@ public partial class TextToSpeechViewModel : ObservableObject
                 videoFileNameForReview,
                 // Scratch folder for regenerate intermediates - NOT the imported JSON's folder:
                 // using that folder filled the user's own export folder with GUID-named temp
-                // wavs on every regenerate (#12093). Same location the fresh Generate flow uses.
-                Path.GetTempPath(),
+                // wavs on every regenerate (#12093). The run folder the fresh Generate flow uses,
+                // so these intermediates get swept on close like the rest (#13332).
+                _waveFolder,
                 peaksForReview);
             // Forward the imported cast so a subsequent Export round-trips the mappings instead
             // of writing ActorVoiceMappings = [] back to SubtitleEditTts.json.
             vm.ActorVoiceMappings.AddRange(_actorVoiceMappings);
+            vm.SubtitleFileName = GetLoadedSubtitleFileName();
 
             if (peaksForReview == null || peaksForReview.Peaks.Count == 0)
             {
@@ -2516,9 +2523,8 @@ public partial class TextToSpeechViewModel : ObservableObject
     /// </summary>
     private string GetSuggestedMergedAudioFileName()
     {
-        // A new, never-saved subtitle has the literal FileName "Untitled" (no path/extension).
-        var subtitleFileName = _subtitle.FileName;
-        var sourceFileName = !string.IsNullOrEmpty(subtitleFileName) && subtitleFileName != "Untitled"
+        var subtitleFileName = GetLoadedSubtitleFileName();
+        var sourceFileName = !string.IsNullOrEmpty(subtitleFileName)
             ? subtitleFileName
             : _videoFileName;
         if (string.IsNullOrEmpty(sourceFileName))
@@ -2529,6 +2535,18 @@ public partial class TextToSpeechViewModel : ObservableObject
         var folder = Path.GetDirectoryName(sourceFileName);
         var name = Path.GetFileNameWithoutExtension(sourceFileName) + ".wav";
         return string.IsNullOrEmpty(folder) ? name : Path.Combine(folder, name);
+    }
+
+    /// <summary>
+    /// Full path of the loaded subtitle file, or empty for a never-saved subtitle (whose
+    /// literal FileName is "Untitled" - no path/extension).
+    /// </summary>
+    private string GetLoadedSubtitleFileName()
+    {
+        var subtitleFileName = _subtitle.FileName;
+        return !string.IsNullOrEmpty(subtitleFileName) && subtitleFileName != "Untitled"
+            ? subtitleFileName
+            : string.Empty;
     }
 
     private async Task<TtsStepResult[]?> GenerateSpeech(CancellationToken cancellationToken)
@@ -2740,7 +2758,8 @@ public partial class TextToSpeechViewModel : ObservableObject
     /// </summary>
     /// <remarks>
     /// A local-server engine can die in the middle of a batch: CrispASR's chatterbox backend
-    /// crashes on the CUDA build at the first autoregressive step after a voice change (#13572).
+    /// crashes at the first autoregressive step after a cloned-voice change - on the CUDA and the
+    /// Vulkan build alike (#13572).
     /// That arrived here as an exception, escaped the generate loop into its catch-all, and
     /// returned null - so every segment already synthesised (five to ten minutes of work in that
     /// report) was discarded because of one bad line. Now the line is recorded as failed and the
@@ -3475,6 +3494,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 _waveFolder,
                 _wavePeakData);
             vm.ActorVoiceMappings.AddRange(_actorVoiceMappings);
+            vm.SubtitleFileName = GetLoadedSubtitleFileName();
         });
 
         if (result.OkPressed)
@@ -3954,12 +3974,30 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
 
         // Release VRAM held by any still-running crispasr.exe servers so models don't stay
-        // pinned for the rest of the SE session. Fire-and-forget on the threadpool — each
-        // StopServer is Kill + WaitForExit(2000), so doing this on the UI thread could block
-        // the close by up to 4 × 2 s if all four engines were used. AppDomain.ProcessExit
-        // performs the same teardown if SE exits before the task completes, so nothing is
-        // left running.
-        _ = Task.Run(StopAllCrispAsrServers);
+        // pinned for the rest of the SE session, then sweep the run's generation folder. Both
+        // fire-and-forget on the threadpool — each StopServer is Kill + WaitForExit(2000), so
+        // doing this on the UI thread could block the close by up to 4 × 2 s if all four engines
+        // were used. AppDomain.ProcessExit performs the same teardown if SE exits before the task
+        // completes, so nothing is left running.
+        //
+        // The sweep runs after the engines are stopped: a live server can still hold its last
+        // clip open, which fails the recursive delete on Windows. Nothing the user asked to keep
+        // lives in there — the merged wav is moved to the picked path before this point, and
+        // Export copies the clips it writes (#13332).
+        var runFolder = _waveFolder;
+        var deleteTempFiles = Se.Settings.Video.TextToSpeech.DeleteTempFiles;
+        _ = Task.Run(async () =>
+        {
+            StopAllCrispAsrServers();
+            if (deleteTempFiles)
+            {
+                await TtsRunFolder.DeleteAsync(runFolder);
+            }
+            else
+            {
+                TtsRunFolder.DeleteIfEmpty(runFolder);
+            }
+        });
 
         try
         {

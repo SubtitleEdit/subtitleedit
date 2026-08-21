@@ -32,6 +32,13 @@ Generate speech audio from subtitle text using various TTS engines.
 - **OmniVoice TTS** — Local CPU TTS with voice cloning and many languages
 - **Qwen3 TTS (CrispASR)** — Local Qwen3 TTS running through the CrispASR runtime (VoiceDesign, CustomVoice, and Voice clone 1.7B models)
 - **Chatterbox TTS (CrispASR)** — Chatterbox TTS via the CrispASR runtime, with voice cloning (multilingual Base or English-only Turbo model)
+- **IndexTTS (CrispASR)** — IndexTTS-1.5 via the CrispASR runtime; the smallest voice-cloning engine here (about 870 MB)
+- **CosyVoice3 (CrispASR)** — Alibaba CosyVoice3 with 9 languages and 18 Mandarin dialects, baked-in voice presets and zero-shot cloning
+- **IndexTTS 2.5 (audio.cpp)** — IndexTTS-2.5 on the audio.cpp runtime: cloning in Chinese, English, Japanese, Spanish and Arabic, with emotion and speaking-rate control. The reference voice is sent per request, so switching voice does not restart the server
+- **VoxCPM2 (CrispASR)** — Tokenizer-free diffusion engine at 48 kHz, about 30 languages, with zero-shot cloning
+- **MOSS-TTS (CrispASR)** — MOSS-TTS v1.5 (Qwen3-8B backbone, 24 kHz) with zero-shot cloning
+- **Zonos TTS (CrispASR)** — Zonos-v0.1 at 44.1 kHz with cloning from a reference recording
+- **OmniVoice TTS (CrispASR)** — The OmniVoice model on the shared CrispASR runtime, run as a persistent server so the model loads once instead of once per line
 
 Local downloadable engines are installed into the Subtitle Edit data folder when you accept the download prompt.
 

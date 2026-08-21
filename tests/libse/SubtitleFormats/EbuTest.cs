@@ -65,4 +65,72 @@ public class EbuTest
         Assert.IsAssignableFrom<IBinaryPersistableSubtitle>(new Ebu());
         Assert.True(new Ebu().ToText(MakeSubtitle(), string.Empty).Length < 20);
     }
+
+    // ReadHeader used to skip GSI offsets 264-372, so publisher/editor metadata and the disk
+    // fields were silently reset to the defaults on every load-save round trip.
+    [Fact]
+    public void EbuStl_ReadHeader_ReadsPublisherEditorAndDiskFields()
+    {
+        var header = new Ebu.EbuGeneralSubtitleInformation
+        {
+            TimeCodeFirstInCue = "10000000",
+            TotalNumberOfDisks = "3",
+            DiskSequenceNumber = "2",
+            Publisher = "Acme Broadcasting".PadRight(32),
+            EditorsName = "Jane Editor".PadRight(32),
+            EditorsContactDetails = "jane@example.com".PadRight(32),
+        };
+        var buffer = Ebu.GetEncoding(header.CodePageNumber).GetBytes(header.ToString());
+        Assert.Equal(1024, buffer.Length);
+
+        var loaded = Ebu.ReadHeader(buffer);
+
+        Assert.Equal("10000000", loaded.TimeCodeFirstInCue);
+        Assert.Equal("3", loaded.TotalNumberOfDisks);
+        Assert.Equal("2", loaded.DiskSequenceNumber);
+        Assert.Equal("Acme Broadcasting", loaded.Publisher.TrimEnd());
+        Assert.Equal("Jane Editor", loaded.EditorsName.TrimEnd());
+        Assert.Equal("jane@example.com", loaded.EditorsContactDetails.TrimEnd());
+    }
+
+    // Builds a minimal teletext STL: a 1024-byte GSI header plus one TTI block whose text
+    // field starts with the given bytes (rest is 8Fh padding).
+    private static byte[] MakeTeletextStl(params byte[] textFieldBytes)
+    {
+        var header = new Ebu.EbuGeneralSubtitleInformation { DisplayStandardCode = "1" };
+        var headerBytes = Ebu.GetEncoding(header.CodePageNumber).GetBytes(header.ToString());
+
+        var tti = new byte[128];
+        tti[3] = 0xff; // extension block number: last block in cue
+        for (var i = 16; i < tti.Length; i++)
+        {
+            tti[i] = 0x8f;
+        }
+        textFieldBytes.CopyTo(tti, 16);
+
+        var buffer = new byte[headerBytes.Length + tti.Length];
+        headerBytes.CopyTo(buffer, 0);
+        tti.CopyTo(buffer, headerBytes.Length);
+        return buffer;
+    }
+
+    // Whether a teletext STL uses boxes/double height must come from the loaded file, not from
+    // whatever the previous export left in the global settings - otherwise a plain load-save
+    // round trip of a boxless file adds boxes that were never there.
+    [Fact]
+    public void EbuStl_Load_SeedsBoxAndDoubleHeightFromFile()
+    {
+        var withCodes = MakeTeletextStl(0x0d, 0x0b, 0x0b, (byte)'H', (byte)'i', 0x0a, 0x0a);
+        var withoutCodes = MakeTeletextStl((byte)'H', (byte)'i');
+
+        Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox = false;
+        Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight = false;
+        new Ebu().LoadSubtitle(new Subtitle(), withCodes);
+        Assert.True(Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox);
+        Assert.True(Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight);
+
+        new Ebu().LoadSubtitle(new Subtitle(), withoutCodes);
+        Assert.False(Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox);
+        Assert.False(Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight);
+    }
 }

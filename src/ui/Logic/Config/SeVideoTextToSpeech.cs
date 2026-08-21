@@ -120,6 +120,16 @@ public class SeVideoTextToSpeech
     // Output sample rate (0 = default)
     public int OutputSampleRate { get; set; }
 
+    // Base folder the generation clips are written into while a run is in progress. Empty = the
+    // system temp folder. Each run still gets its own "se-tts-<guid>" subfolder inside it, so
+    // pointing this at the subtitle folder keeps the clips next to the work instead of buried in
+    // %TMP% (#13332).
+    public string GenerationFolder { get; set; }
+
+    // Remove the run's generation folder when the Text to speech window closes. Turn it off to
+    // keep the per-line clips around for inspection - nothing else sweeps them.
+    public bool DeleteTempFiles { get; set; }
+
     // Remembered actor/voice mappings. Pre-fills the cast dialog so users don't have to
     // re-assign the same character voices every time they open a new subtitle. Keyed by actor
     // name; matches happen case-insensitively.
@@ -201,6 +211,8 @@ public class SeVideoTextToSpeech
         HighQualityTimeStretchEnabled = false;
         SilencePaddingMs = 0;
         OutputSampleRate = 0;
+        GenerationFolder = string.Empty;
+        DeleteTempFiles = true;
         LastActorVoiceMappings = new List<ActorVoiceMapping>();
     }
 }
