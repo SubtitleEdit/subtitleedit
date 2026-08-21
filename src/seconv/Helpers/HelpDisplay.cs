@@ -52,6 +52,7 @@ internal static class HelpDisplay
         ShowParameter(console, "--output-filename:<file name>", "Output file name (for single file only)");
         ShowParameter(console, "--output-folder:<folder name>", "Output folder path");
         ShowParameter(console, "--overwrite", "Overwrite existing files");
+        ShowParameter(console, "--keep-timestamp", "Give output files the source file's modified/created date instead of the conversion time");
         ShowParameter(console, "--pac-codepage:<code page>", "PAC code page");
         ShowParameter(console, "--profile:<profile name>", "Profile name");
         ShowParameter(console, "--renumber:<starting number>", "Renumber subtitles from this number");

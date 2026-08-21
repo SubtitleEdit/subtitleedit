@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.UiLogic.Export;
+﻿using Nikse.SubtitleEdit.UiLogic.Export;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -2577,6 +2577,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             SaveInSourceFolder = Se.Settings.Tools.BatchConvert.SaveInSourceFolder,
             OutputFolder = Se.Settings.Tools.BatchConvert.OutputFolder,
             Overwrite = Se.Settings.Tools.BatchConvert.Overwrite,
+            KeepSourceTimestamp = Se.Settings.Tools.BatchConvert.KeepSourceTimestamp,
             TargetFormatName = SelectedTargetFormat ?? string.Empty,
             TargetEncoding = Se.Settings.Tools.BatchConvert.TargetEncoding,
             AssaUseSourceStylesIfPossible = Se.Settings.Tools.BatchConvert.AssaUseSourceStylesIfPossible,
