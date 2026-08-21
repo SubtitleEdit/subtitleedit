@@ -38,6 +38,17 @@ public static partial class InitListViewAndEditBox
 
     public static Grid MakeLayoutListViewAndEditBox(MainView mainPage, MainViewModel vm)
     {
+        return MakeLayoutListViewAndEditBox(mainPage, vm, detachedEditBox: false, out _);
+    }
+
+    /// <summary>
+    /// Builds the subtitle grid and the edit box. With <paramref name="detachedEditBox"/> the
+    /// edit box is returned via <paramref name="editSection"/> instead of being docked below
+    /// the grid, so a layout can place it elsewhere (layout 10 puts it under the waveform,
+    /// like SE4/Aegisub - issue #13940).
+    /// </summary>
+    internal static Grid MakeLayoutListViewAndEditBox(MainView mainPage, MainViewModel vm, bool detachedEditBox, out Grid editSection)
+    {
         mainPage.DataContext = vm;
 
         // Unhook events from the old SubtitleGrid if it exists
@@ -64,16 +75,14 @@ public static partial class InitListViewAndEditBox
 
         vm.SubtitleGridAlternatingRowBrush = null;
 
-        var mainGrid = new Grid
+        var mainGrid = new Grid();
+        mainGrid.RowDefinitions.Add(new RowDefinition(GridLength.Star) { MinHeight = SubtitleGridMinimumHeight });
+        if (!detachedEditBox)
         {
-            RowDefinitions =
-            {
-                new RowDefinition(GridLength.Star) { MinHeight = SubtitleGridMinimumHeight },
-                // GridSplitter constrains the row definition, so include editGrid's outer
-                // margin to preserve the text box's 92 px minimum at the drag limit.
-                new RowDefinition(GridLength.Auto) { MinHeight = EditGridMinimumHeight + EditGridMargin * 2 },
-            },
-        };
+            // GridSplitter constrains the row definition, so include editGrid's outer
+            // margin to preserve the text box's 92 px minimum at the drag limit.
+            mainGrid.RowDefinitions.Add(new RowDefinition(GridLength.Auto) { MinHeight = EditGridMinimumHeight + EditGridMargin * 2 });
+        }
 
         // TableView (Avalonia 12.1) pilot #3, after Show history (#12704) and the OCR grid
         // (#13001): the main subtitle grid. TableView rows are ListBoxItems, so keyboard
@@ -1873,27 +1882,31 @@ public static partial class InitListViewAndEditBox
         Grid.SetColumn(textEditGrid, 1);
         editGrid.Children.Add(textEditGrid);
 
-        Grid.SetRow(editGrid, 1);
-        mainGrid.Children.Add(editGrid);
-
-        // GridSplitter overlaying the boundary between the subtitle grid (row 0) and the
-        // edit box (row 1) so the text box section can be resized vertically, like SE4
-        // (#10271). The splitter lives in the edit box's own row (no extra row - an extra
-        // row would shrink the grid viewport and break the grid scroll perf tests); with
-        // VerticalAlignment.Top it resizes the row above (grid, Star) and its own row
-        // (edit box, Auto -> becomes Pixel once the user drags). The negative top margin
-        // centers the 4 px strip on the boundary.
-        var editBoxSplitter = new GridSplitter
+        editSection = editGrid;
+        if (!detachedEditBox)
         {
-            Height = UiUtil.SplitterWidthOrHeight,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Top,
-            Margin = new Thickness(0, -UiUtil.SplitterWidthOrHeight / 2.0, 0, 0)
-        };
-        Grid.SetRow(editBoxSplitter, 1);
-        mainGrid.Children.Add(editBoxSplitter);
+            Grid.SetRow(editGrid, 1);
+            mainGrid.Children.Add(editGrid);
 
-        TrackEditSectionMinimumHeight(mainGrid, textEditGrid);
+            // GridSplitter overlaying the boundary between the subtitle grid (row 0) and the
+            // edit box (row 1) so the text box section can be resized vertically, like SE4
+            // (#10271). The splitter lives in the edit box's own row (no extra row - an extra
+            // row would shrink the grid viewport and break the grid scroll perf tests); with
+            // VerticalAlignment.Top it resizes the row above (grid, Star) and its own row
+            // (edit box, Auto -> becomes Pixel once the user drags). The negative top margin
+            // centers the 4 px strip on the boundary.
+            var editBoxSplitter = new GridSplitter
+            {
+                Height = UiUtil.SplitterWidthOrHeight,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Top,
+                Margin = new Thickness(0, -UiUtil.SplitterWidthOrHeight / 2.0, 0, 0)
+            };
+            Grid.SetRow(editBoxSplitter, 1);
+            mainGrid.Children.Add(editBoxSplitter);
+
+            TrackEditSectionMinimumHeight(mainGrid, textEditGrid);
+        }
 
 
         textEditGrid.ColumnDefinitions[1].Bind(ColumnDefinition.WidthProperty, new Binding(nameof(vm.ShowColumnOriginalText))
