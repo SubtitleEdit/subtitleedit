@@ -26430,8 +26430,18 @@ public partial class MainViewModel :
                 // With "center also while paused" on, paused position changes (wheel scrub, waveform
                 // clicks, shortcuts) recenter too — but only on actual changes, so the user can still
                 // scroll around the waveform freely while the play-head is at rest.
+                // ...but never while the user is dragging on the waveform (#13955). An edge drag
+                // scrubs the video to the edge (SetVideoPositionOnMoveStartEnd), so recentering on
+                // that position scrolls the view to the very edge being dragged - and the drag
+                // delta is measured in absolute waveform time (#13600), so the scroll is added to
+                // the delta, which moves the edge further, which scrolls the view further. Each
+                // pointer event amplifies the previous one and the edge shoots off screen after a
+                // few of them. Whole-paragraph moves never scrubbed, which is why only edge drags
+                // ran away. Re-centering the waveform under a held pointer is wrong on its own
+                // terms too - it drags the content out from under the user.
                 var centerPausedChange = WaveformCenter && !isPlaying &&
                                          Se.Settings.Waveform.CenterVideoPositionAlsoWhenPaused &&
+                                         !av.IsEditingWithPointer &&
                                          Math.Abs(est - _pausedCenterLastSeconds) > 0.001;
                 if (WaveformCenter && av.WavePeaks != null && (isPlaying || centerPausedChange))
                 {
