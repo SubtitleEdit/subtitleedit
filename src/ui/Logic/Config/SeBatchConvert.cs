@@ -7,6 +7,9 @@ public class SeBatchConvert
     public string[] ActiveFunctions { get; set; } = [];
     public string OutputFolder { get; set; }
     public bool Overwrite { get; set; }
+
+    /// <summary>Give output files the source file's modified/created date instead of the conversion time.</summary>
+    public bool KeepSourceTimestamp { get; set; }
     public string TargetFormat { get; set; }
     public string CustomTextFormatName { get; set; } = string.Empty;
     public string TargetEncoding { get; set; }

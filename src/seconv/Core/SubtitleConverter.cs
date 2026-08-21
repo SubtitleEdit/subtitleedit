@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 using Spectre.Console;
@@ -96,6 +96,7 @@ internal class SubtitleConverter
                         var warnings = new List<string>();
                         await ConvertFileAsync(inputFile, outputFile, options, warnings);
                         result.SuccessfulFiles++;
+                        ApplySourceTimestamp(options, inputFile, outputFile);
                         result.Files.Add(new FileConversionResult(inputFile, outputFile, true, null, warnings.Count > 0 ? warnings : null));
                         foreach (var warning in warnings)
                         {
@@ -131,6 +132,7 @@ internal class SubtitleConverter
                             }
                             await ConvertTrackAsync(track, outputFile, options);
                             result.SuccessfulFiles++;
+                            ApplySourceTimestamp(options, inputFile, outputFile);
                             result.Files.Add(new FileConversionResult(inputFile, outputFile, true, null));
                             if (!options.Quiet)
                             {
@@ -248,6 +250,14 @@ internal class SubtitleConverter
             // streams there's no clean 1:1 mapping back to inputs, but the OutputFile slot
             // is meant as a hint for the user — they'll see the full list in the summary.
             var primaryOutput = outputs[0].Path;
+            if (options.KeepTimestamp)
+            {
+                var newestVob = vobFiles.OrderByDescending(File.GetLastWriteTimeUtc).First();
+                foreach (var o in outputs)
+                {
+                    ApplySourceTimestamp(options, newestVob, o.Path);
+                }
+            }
             foreach (var f in vobFiles)
             {
                 result.Files.Add(new FileConversionResult(f, primaryOutput, true, null));
@@ -384,6 +394,7 @@ internal class SubtitleConverter
             items = load();
             WritePreservedBitmaps(items, outputFile, options);
             result.SuccessfulFiles++;
+            ApplySourceTimestamp(options, inputFile, outputFile);
             result.Files.Add(new FileConversionResult(inputFile, outputFile, true, null));
             if (!options.Quiet)
             {
@@ -469,6 +480,7 @@ internal class SubtitleConverter
                     : BitmapSubtitleLoader.LoadMatroskaPgs(matroska, track);
                 WritePreservedBitmaps(items, outputFile, options);
                 result.SuccessfulFiles++;
+                ApplySourceTimestamp(options, inputFile, outputFile);
                 result.Files.Add(new FileConversionResult(inputFile, outputFile, true, null));
                 if (!options.Quiet)
                 {
@@ -546,6 +558,7 @@ internal class SubtitleConverter
             {
                 WritePreservedBitmaps(items, outputFile, options);
                 result.SuccessfulFiles++;
+                ApplySourceTimestamp(options, inputFile, outputFile);
                 result.Files.Add(new FileConversionResult(inputFile, outputFile, true, null));
                 if (!options.Quiet)
                 {
@@ -653,6 +666,7 @@ internal class SubtitleConverter
             {
                 WritePreservedBitmaps(items, outputFile, options);
                 result.SuccessfulFiles++;
+                ApplySourceTimestamp(options, inputFile, outputFile);
                 result.Files.Add(new FileConversionResult(inputFile, outputFile, true, null));
                 if (!options.Quiet)
                 {
@@ -990,6 +1004,30 @@ internal class SubtitleConverter
         }
         throw new InvalidOperationException($"Could not find a free output filename for: {baseName}");
     }
+
+    /// <summary>
+    /// --keep-timestamp: stamp the written output (file, or folder for image exports, plus a
+    /// sibling .idx for VobSub) with the source file's timestamps. Best-effort, never throws.
+    /// </summary>
+    private static void ApplySourceTimestamp(ConversionOptions options, string inputFile, string outputFile)
+    {
+        if (!options.KeepTimestamp || string.IsNullOrEmpty(outputFile))
+        {
+            return;
+        }
+
+        if (Directory.Exists(outputFile))
+        {
+            FileTimestampHelper.CopyTimestampsToDirectoryContents(inputFile, outputFile);
+            return;
+        }
+
+        FileTimestampHelper.CopyTimestamps(inputFile, outputFile);
+        if (outputFile.EndsWith(".sub", StringComparison.OrdinalIgnoreCase))
+        {
+            FileTimestampHelper.CopyTimestamps(inputFile, Path.ChangeExtension(outputFile, ".idx"));
+        }
+    }
 }
 
 internal record class ConversionOptions
@@ -1010,6 +1048,9 @@ internal record class ConversionOptions
     public double? Fps { get; init; }
     public double? TargetFps { get; init; }
     public bool Overwrite { get; init; }
+
+    /// <summary>--keep-timestamp: copy the source file's creation/last-write time onto every output file.</summary>
+    public bool KeepTimestamp { get; init; }
     public List<string> Operations { get; init; } = new();
 
     /// <summary>

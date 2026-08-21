@@ -1,4 +1,4 @@
-using Avalonia.Skia;
+﻿using Avalonia.Skia;
 using Nikse.SubtitleEdit.UiLogic.Export;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Features.Assa.ResolutionResampler;
@@ -76,6 +76,9 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     // file would silently clobber each other's output.
     private readonly HashSet<string> _handedOutOutputFileNames = new(StringComparer.OrdinalIgnoreCase);
 
+    /// <summary>Output paths handed out while converting the current item - stamped with the source timestamp afterwards.</summary>
+    private readonly List<string> _currentItemOutputFileNames = new();
+
     public SubtitleFormat Format { get; set; } = new SubRip();
 
     public Encoding Encoding { get; set; } = Encoding.UTF8;
@@ -125,6 +128,48 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         {
             throw new InvalidOperationException("Initialize not called?");
         }
+
+        _currentItemOutputFileNames.Clear();
+        try
+        {
+            await ConvertCore(item, cancellationToken);
+        }
+        finally
+        {
+            if (_config.KeepSourceTimestamp)
+            {
+                ApplySourceTimestamp(item);
+            }
+
+            _currentItemOutputFileNames.Clear();
+        }
+    }
+
+    /// <summary>
+    /// "Keep source file date/time": stamp everything written for this item (file, or folder
+    /// for image exports, plus a sibling .idx for VobSub) with the source file's timestamps.
+    /// Runs after the output streams are closed; best-effort, never fails the conversion.
+    /// </summary>
+    private void ApplySourceTimestamp(BatchConvertItem item)
+    {
+        foreach (var path in _currentItemOutputFileNames)
+        {
+            if (Directory.Exists(path))
+            {
+                FileTimestampHelper.CopyTimestampsToDirectoryContents(item.FileName, path);
+                continue;
+            }
+
+            FileTimestampHelper.CopyTimestamps(item.FileName, path);
+            if (path.EndsWith(".sub", StringComparison.OrdinalIgnoreCase))
+            {
+                FileTimestampHelper.CopyTimestamps(item.FileName, Path.ChangeExtension(path, ".idx"));
+            }
+        }
+    }
+
+    private async Task ConvertCore(BatchConvertItem item, CancellationToken cancellationToken)
+    {
 
         IOcrSubtitle? imageSubtitle = null;
         if (item.Format == FormatBluRaySup)
@@ -3175,6 +3220,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     private string TakeOutputFileName(string outputFileName)
     {
         _handedOutOutputFileNames.Add(outputFileName);
+        _currentItemOutputFileNames.Add(outputFileName);
         return outputFileName;
     }
 
