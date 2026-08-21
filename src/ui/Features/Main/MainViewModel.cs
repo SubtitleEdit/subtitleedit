@@ -9990,35 +9990,25 @@ public partial class MainViewModel :
             return;
         }
 
-        var minDurationMs = Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
-        var maxDurationMs = Se.Settings.General.SubtitleMaximumDisplayMilliseconds;
+        var inCuesGapMs = TimeCodesBeautifierUtils.GetInCuesGapMs();
+        var frameDurationMs = TimeCodesBeautifierUtils.GetFrameDurationMs();
         foreach (var line in selectedLines)
         {
-            // Cast to nullable so a shot change at t=0 isn't lost to the
-            // default-value collision.
-            var next = AudioVisualizer.ShotChanges
-                .Cast<double?>()
-                .FirstOrDefault(s => s > line.StartTime.TotalSeconds + 0.001);
-            if (next == null)
-            {
-                continue;
-            }
+            var newStartMs = ShotChangesHelper.GetSnappedStartMs(
+                AudioVisualizer.ShotChanges,
+                line.StartTime.TotalMilliseconds,
+                line.EndTime.TotalMilliseconds,
+                inCuesGapMs,
+                frameDurationMs);
 
-            var newStart = TimeSpan.FromSeconds(next.Value);
-            if (newStart >= line.EndTime)
-            {
-                continue;
-            }
-
-            var newDurationMs = (line.EndTime - newStart).TotalMilliseconds;
-            if (newDurationMs < minDurationMs || newDurationMs > maxDurationMs)
+            if (newStartMs == null)
             {
                 continue;
             }
 
             // Use SetStartTimeOnly so EndTime stays fixed (the StartTime
             // setter would otherwise shift EndTime to preserve Duration).
-            line.SetStartTimeOnly(newStart);
+            line.SetStartTimeOnly(TimeSpan.FromMilliseconds(newStartMs.Value));
         }
 
         _updateAudioVisualizer = true;
@@ -10036,33 +10026,23 @@ public partial class MainViewModel :
             return;
         }
 
-        var minDurationMs = Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
-        var maxDurationMs = Se.Settings.General.SubtitleMaximumDisplayMilliseconds;
+        var outCuesGapMs = TimeCodesBeautifierUtils.GetOutCuesGapMs();
+        var frameDurationMs = TimeCodesBeautifierUtils.GetFrameDurationMs();
         foreach (var line in selectedLines)
         {
-            // Cast to nullable so a shot change at t=0 isn't lost to the
-            // default-value collision.
-            var prev = AudioVisualizer.ShotChanges
-                .Cast<double?>()
-                .LastOrDefault(s => s < line.EndTime.TotalSeconds - 0.001);
-            if (prev == null)
+            var newEndMs = ShotChangesHelper.GetSnappedEndMs(
+                AudioVisualizer.ShotChanges,
+                line.StartTime.TotalMilliseconds,
+                line.EndTime.TotalMilliseconds,
+                outCuesGapMs,
+                frameDurationMs);
+
+            if (newEndMs == null)
             {
                 continue;
             }
 
-            var newEnd = TimeSpan.FromSeconds(prev.Value);
-            if (newEnd <= line.StartTime)
-            {
-                continue;
-            }
-
-            var newDurationMs = (newEnd - line.StartTime).TotalMilliseconds;
-            if (newDurationMs < minDurationMs || newDurationMs > maxDurationMs)
-            {
-                continue;
-            }
-
-            line.EndTime = newEnd;
+            line.EndTime = TimeSpan.FromMilliseconds(newEndMs.Value);
         }
 
         _updateAudioVisualizer = true;
