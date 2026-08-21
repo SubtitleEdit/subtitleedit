@@ -447,6 +447,26 @@ public class ExportImageBasedWindow : Window
         grid.Add(labelFrameRate, 6, 4);
         grid.Add(comboBoxFrameRate, 6, 5);
 
+        // Only shown for the formats that can use a frame-sized image (see IsFullFrameVisible).
+        var checkBoxFullFrame = UiUtil.MakeCheckBox(Se.Language.File.Export.FullFrameImage, vm, nameof(vm.IsFullFrame));
+        checkBoxFullFrame.IsCheckedChanged += vm.CheckBoxChanged;
+        var colorPickerFullFrame = UiUtil.MakeColorPickerButton(vm, nameof(vm.FullFrameBackgroundColor), true);
+        colorPickerFullFrame.Bind(IsVisibleProperty, new Binding(nameof(vm.IsFullFrame)) { Source = vm });
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(checkBoxFullFrame, Se.Language.File.Export.FullFrameImageHint);
+            ToolTip.SetTip(colorPickerFullFrame, Se.Language.General.BackgroundColor);
+        }
+
+        var panelFullFrame = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 5,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { checkBoxFullFrame, colorPickerFullFrame },
+        }.WithBindIsVisible(vm, nameof(vm.IsFullFrameVisible));
+        grid.Add(panelFullFrame, 7, 0, 1, 6);
+
         return UiUtil.MakeBorderForControl(grid);
     }
 

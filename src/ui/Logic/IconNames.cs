@@ -29,6 +29,7 @@ internal class IconNames
     public const string Close = "mdi-close";
     public const string ClosedCaption = "mdi-closed-caption";
     public const string Cogs = "mdi-cogs";
+    public const string ContentCut = "mdi-content-cut";
     public const string ContentSave = "mdi-content-save";
     public const string Copy = "mdi-content-copy";
     public const string Creation = "mdi-creation";
@@ -99,6 +100,7 @@ internal class IconNames
     public const string Regex = "mdi-regex";
     public const string Repeat = "mdi-repeat";
     public const string Refresh = "mdi-refresh";
+    public const string Restore = "mdi-restore";
     public const string ScaleBalance = "mdi-scale-balance";
     public const string SetMerge = "mdi-set-merge";
     public const string SetSplit = "mdi-set-split";

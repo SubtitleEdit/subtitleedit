@@ -152,7 +152,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var fileName = string.Empty;
             var ext = $".{fileExtension.ToLowerInvariant().TrimStart('.')}";
 
-            foreach (var subtitleFormat in SubtitleFormat.AllSubtitleFormats.Where(p => p.Extension == ext))
+            foreach (var subtitleFormat in SubtitleFormat.AllSubtitleFormats.Where(p => p.Extension.Equals(ext, StringComparison.OrdinalIgnoreCase)))
             {
                 if (subtitleFormat.IsMine(lines, string.Empty))
                 {
@@ -162,7 +162,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
-            foreach (var subtitleFormat in SubtitleFormat.AllSubtitleFormats.Where(p => p.Extension != ext))
+            foreach (var subtitleFormat in SubtitleFormat.AllSubtitleFormats.Where(p => !p.Extension.Equals(ext, StringComparison.OrdinalIgnoreCase)))
             {
                 if (subtitleFormat.IsMine(lines, string.Empty))
                 {
@@ -246,7 +246,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var ext = Path.GetExtension(fileName).ToLowerInvariant();
-            foreach (var subtitleFormat in formatsToLookFor.Where(p => p.Extension == ext && !p.Name.StartsWith("Unknown", StringComparison.Ordinal)))
+            foreach (var subtitleFormat in formatsToLookFor.Where(p => p.Extension.Equals(ext, StringComparison.OrdinalIgnoreCase) && !p.Name.StartsWith("Unknown", StringComparison.Ordinal)))
             {
                 if (subtitleFormat.IsMine(lines, fileName))
                 {
@@ -255,7 +255,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
-            foreach (var subtitleFormat in formatsToLookFor.Where(p => p.Extension != ext || p.Name.StartsWith("Unknown", StringComparison.Ordinal)))
+            foreach (var subtitleFormat in formatsToLookFor.Where(p => !p.Extension.Equals(ext, StringComparison.OrdinalIgnoreCase) || p.Name.StartsWith("Unknown", StringComparison.Ordinal)))
             {
                 if (subtitleFormat.IsMine(lines, fileName))
                 {
@@ -289,7 +289,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var ext = Path.GetExtension(fileName).ToLowerInvariant();
-            foreach (var subtitleFormat in SubtitleFormat.AllSubtitleFormats.Where(p => p.Extension == ext && !p.Name.StartsWith("Unknown", StringComparison.Ordinal)))
+            foreach (var subtitleFormat in SubtitleFormat.AllSubtitleFormats.Where(p => p.Extension.Equals(ext, StringComparison.OrdinalIgnoreCase) && !p.Name.StartsWith("Unknown", StringComparison.Ordinal)))
             {
                 if (subtitleFormat.IsMine(lines, fileName))
                 {
@@ -297,7 +297,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
-            foreach (var subtitleFormat in SubtitleFormat.AllSubtitleFormats.Where(p => p.Extension != ext || p.Name.StartsWith("Unknown", StringComparison.Ordinal)))
+            foreach (var subtitleFormat in SubtitleFormat.AllSubtitleFormats.Where(p => !p.Extension.Equals(ext, StringComparison.OrdinalIgnoreCase) || p.Name.StartsWith("Unknown", StringComparison.Ordinal)))
             {
                 if (subtitleFormat.IsMine(lines, fileName))
                 {
@@ -646,38 +646,54 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return -1;
             }
 
-            var index = Paragraphs.IndexOf(p);
+            var paragraphs = Paragraphs;
+            var index = paragraphs.IndexOf(p);
             if (index >= 0)
             {
                 return index;
             }
 
-            for (var i = 0; i < Paragraphs.Count; i++)
+            // The fallback scan below re-read p.Id / p.Number / p.Text and walked into
+            // p.StartTime / p.EndTime (both reference-typed TimeCode properties) several times
+            // per element. Read them once - only the list side varies inside the loop.
+            var id = p.Id;
+            var number = p.Number;
+            var text = p.Text;
+            var startMs = p.StartTime.TotalMilliseconds;
+            var endMs = p.EndTime.TotalMilliseconds;
+            var count = paragraphs.Count;
+            for (var i = 0; i < count; i++)
             {
-                if (p.Id == Paragraphs[i].Id)
+                var current = paragraphs[i];
+                if (id == current.Id)
                 {
                     return i;
                 }
 
-                if (i < Paragraphs.Count - 1 && p.Id == Paragraphs[i + 1].Id)
+                if (i < count - 1 && id == paragraphs[i + 1].Id)
                 {
                     return i + 1;
                 }
 
-                if (Math.Abs(p.StartTime.TotalMilliseconds - Paragraphs[i].StartTime.TotalMilliseconds) < 0.1 &&
-                    Math.Abs(p.EndTime.TotalMilliseconds - Paragraphs[i].EndTime.TotalMilliseconds) < 0.1)
+                var startMatches = Math.Abs(startMs - current.StartTime.TotalMilliseconds) < 0.1;
+                var endMatches = Math.Abs(endMs - current.EndTime.TotalMilliseconds) < 0.1;
+                if (startMatches && endMatches)
                 {
                     return i;
                 }
 
-                if (p.Number == Paragraphs[i].Number && (Math.Abs(p.StartTime.TotalMilliseconds - Paragraphs[i].StartTime.TotalMilliseconds) < 0.1 ||
-                    Math.Abs(p.EndTime.TotalMilliseconds - Paragraphs[i].EndTime.TotalMilliseconds) < 0.1))
+                if (!startMatches && !endMatches)
+                {
+                    // Neither of the two remaining checks can pass without a time match.
+                    continue;
+                }
+
+                if (number == current.Number)
                 {
                     return i;
                 }
 
-                if (p.Text == Paragraphs[i].Text && (Math.Abs(p.StartTime.TotalMilliseconds - Paragraphs[i].StartTime.TotalMilliseconds) < 0.1 ||
-                    Math.Abs(p.EndTime.TotalMilliseconds - Paragraphs[i].EndTime.TotalMilliseconds) < 0.1))
+                if (text == current.Text)
                 {
                     return i;
                 }
@@ -930,6 +946,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                 hash.Add(p.Extra, StringComparer.Ordinal);
                 hash.Add(p.Actor, StringComparer.Ordinal);
                 hash.Add(p.Layer);
+
+                // The margins move the line on the video (SubtitlePositionToAssa turns a teletext row
+                // or a TTML region into them), so a changed margin has to invalidate the preview too.
+                hash.Add(p.MarginL, StringComparer.Ordinal);
+                hash.Add(p.MarginR, StringComparer.Ordinal);
+                hash.Add(p.MarginV, StringComparer.Ordinal);
             }
 
             return hash.ToHashCode();

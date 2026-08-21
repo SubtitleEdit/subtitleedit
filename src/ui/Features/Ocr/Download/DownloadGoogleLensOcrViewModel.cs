@@ -151,7 +151,10 @@ public partial class DownloadGoogleLensOcrViewModel : ObservableObject, IClosing
             ProgressText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
         });
 
-        var folder = Se.PaddleOcrFolder;
+        // The download lands next to where it is unpacked; using the Paddle OCR folder here
+        // left the temp .7z behind in an unrelated engine's folder (and in a folder that is
+        // deleted wholesale when Paddle OCR is upgraded).
+        var folder = Se.GoogleLensOcrFolder;
         if (!Directory.Exists(folder))
         {
             Directory.CreateDirectory(folder);

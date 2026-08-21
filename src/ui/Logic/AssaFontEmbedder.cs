@@ -210,12 +210,44 @@ public static class AssaFontEmbedder
     }
 
     /// <summary>
+    /// The distinct visible text lines of a subtitle - override tags and drawing commands
+    /// removed, <c>\N</c>/<c>\n</c> split into separate lines - i.e. the text a renderer
+    /// actually draws. Used to compute the glyphs a trimmed font must keep.
+    /// </summary>
+    public static List<string> GetUsedTextLines(Subtitle subtitle)
+    {
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+        var result = new List<string>();
+        foreach (var paragraph in subtitle.Paragraphs)
+        {
+            // RemoveSsaTags turns \h into a space, but renderers draw it as U+00A0.
+            if (paragraph.Text.Contains("\\h", StringComparison.Ordinal) && seen.Add(" "))
+            {
+                result.Add(" ");
+            }
+
+            var text = Utilities.RemoveSsaTags(paragraph.Text, removeDrawingTags: true);
+            foreach (var line in text.SplitToLines())
+            {
+                if (line.Length > 0 && seen.Add(line))
+                {
+                    result.Add(line);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /// <summary>
     /// Embeds the font files the subtitle uses (styles + inline <c>\fn</c> tags) into its
     /// [Fonts] attachment section. Fonts already embedded are skipped; the rest are searched
     /// in SE's Fonts folder and the system font folders. Returns the number of files embedded.
     /// An optional cache (font name -> found files) lets batch runs skip repeated disk scans.
+    /// With <paramref name="trimFonts"/> each embedded font is first trimmed to the glyphs
+    /// the subtitle's text actually uses (see <see cref="FontTrimmer"/>).
     /// </summary>
-    public static int EmbedUsedFonts(Subtitle subtitle, CancellationToken cancellationToken, IDictionary<string, List<string>>? fontFileCache = null)
+    public static int EmbedUsedFonts(Subtitle subtitle, CancellationToken cancellationToken, IDictionary<string, List<string>>? fontFileCache = null, bool trimFonts = false)
     {
         var usedNames = GetUsedFontNames(subtitle);
         if (usedNames.Count == 0)
@@ -258,6 +290,7 @@ public static class AssaFontEmbedder
 
         var embeddedFileNames = new HashSet<string>(
             GetEmbeddedFonts(subtitle.Footer).Select(f => f.FileName), StringComparer.OrdinalIgnoreCase);
+        var usedTextLines = trimFonts ? GetUsedTextLines(subtitle) : null;
         var footer = subtitle.Footer;
         var count = 0;
         foreach (var file in found.Values.SelectMany(f => f).Distinct(StringComparer.OrdinalIgnoreCase))
@@ -274,7 +307,13 @@ public static class AssaFontEmbedder
 
             try
             {
-                footer = AddFontToFooter(footer, file, File.ReadAllBytes(file));
+                var bytes = File.ReadAllBytes(file);
+                if (usedTextLines != null)
+                {
+                    bytes = FontTrimmer.Trim(bytes, usedTextLines).Bytes;
+                }
+
+                footer = AddFontToFooter(footer, file, bytes);
                 count++;
             }
             catch (Exception exception)

@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     </metadata>
     <styling>
       <style xml:id='style.center' tts:color='#ffffff' tts:opacity='1' tts:fontSize='100%' tts:fontFamily='default' tts:textAlign='center'/>
-      <style xml:id='italic' tts:shear='16.6667%' tts:opacity='1' tts:fontSize='100%' tts:fontFamily='default'/>
+      <style xml:id='italic' tts:fontStyle='italic' tts:shear='16.6667%' tts:opacity='1' tts:fontSize='100%'/>
     </styling>
     <layout>
       <region xml:id='region.topLeft' tts:origin='10% 10%' tts:extent='80% 20%' tts:displayAlign='before' tts:textAlign='start'/>
@@ -298,7 +298,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = Utilities.RemoveSsaTags(text);
                 text = string.Join("<br/>", text.SplitToLines());
                 var paragraphContent = new XmlDocument();
-                paragraphContent.LoadXml($"<root>{text.Replace("&", "&amp;")}</root>");
+                paragraphContent.LoadXml($"<root>{TimedText10.EscapeUnsupportedAngleBrackets(text.Replace("&", "&amp;"))}</root>");
                 ConvertParagraphNodeToTtmlNode(paragraphContent.DocumentElement, xml, paragraph);
             }
             catch // Wrong markup, clear it
@@ -608,7 +608,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
 
                 var text = assStyle + ReadParagraph(node, xml).TrimEnd();
-                var p = new Paragraph(begin, end, text);
+
+                // Keep the region name: the alignment tag above only snaps to the screen thirds,
+                // the video preview positions the line from the region box itself.
+                var p = new Paragraph(begin, end, text) { Region = region?.InnerText };
                 subtitle.Paragraphs.Add(p);
             }
 
@@ -733,6 +736,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         color = child.Attributes["tts:color"].Value;
                     }
 
+
+                    if (fontFamily == "default")
+                    {
+                        // "default" is the generic IMSC font family (used by SE's own styles) -
+                        // not a real font the user chose, so don't surface it as a <font> tag
+                        fontFamily = null;
+                    }
 
                     // Applying styles
                     if (isItalic)

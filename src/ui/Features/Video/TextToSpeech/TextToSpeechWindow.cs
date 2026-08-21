@@ -27,7 +27,7 @@ public class TextToSpeechWindow : Window
     public TextToSpeechWindow(TextToSpeechViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Video.TextToSpeech.Title;
+        Title = UiUtil.MakeWindowTitle(Se.Language.Video.TextToSpeech.Title);
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
 
@@ -184,6 +184,8 @@ public class TextToSpeechWindow : Window
                 return StatusDots.From(engine.IsInstalled(null).Result, VibeVoiceCrispAsr.GetEngineUpdateStatus());
             case IndexTtsCrispAsr:
                 return StatusDots.From(engine.IsInstalled(null).Result, IndexTtsCrispAsr.GetEngineUpdateStatus());
+            case IndexTts25AudioCpp:
+                return StatusDots.From(engine.IsInstalled(null).Result, IndexTts25AudioCpp.GetEngineUpdateStatus());
             case CosyVoice3CrispAsr:
                 return StatusDots.From(engine.IsInstalled(null).Result, CosyVoice3CrispAsr.GetEngineUpdateStatus());
             case F5TtsCrispAsr:

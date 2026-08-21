@@ -14,7 +14,7 @@ public class SpellCheckWindow : Window
     public SpellCheckWindow(SpellCheckViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.SpellCheck.SpellCheck;
+        Title = UiUtil.MakeWindowTitle(Se.Language.SpellCheck.SpellCheck);
         SizeToContent = SizeToContent.Height;
         Width = 700;
         CanResize = false;

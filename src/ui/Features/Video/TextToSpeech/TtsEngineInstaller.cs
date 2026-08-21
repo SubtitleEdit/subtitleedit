@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DownloadTts;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTts25License;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
@@ -249,6 +250,63 @@ public static class TtsEngineInstaller
 
                 var dlResult = await windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(window, vm => vm.StartDownloadIndexTtsCrispAsrModels(indexModelKey));
                 if (!dlResult.OkPressed || !IndexTtsCrispAsr.AreModelsInstalled(indexModelKey))
+                {
+                    return false;
+                }
+
+                await Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    await refreshVoices();
+                });
+                return true;
+            }
+
+            return true;
+        }
+
+        if (engine is IndexTts25AudioCpp)
+        {
+            // The model licence gate comes before anything is fetched: the weights are under
+            // the bilibili Model Use License (not open source), so the user has to accept it
+            // once before the first 3.3 GB download rather than after.
+            if (!IndexTts25AudioCpp.IsLicenseAccepted())
+            {
+                var licenseResult = await windowService.ShowDialogAsync<IndexTts25LicenseWindow, IndexTts25LicenseViewModel>(window, _ => { });
+                if (!licenseResult.OkPressed || !IndexTts25AudioCpp.IsLicenseAccepted())
+                {
+                    await MessageBox.Show(
+                        window,
+                        "IndexTTS 2.5",
+                        $"{Environment.NewLine}{Se.Language.Video.IndexTts25LicenseDeclined}",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                    return false;
+                }
+            }
+
+            if (!await TtsVoiceInstaller.EnsureAudioCppForIndexTts25(window, windowService, forceRedownload: false))
+            {
+                return false;
+            }
+
+            var indexTts25ModelKey = IndexTts25AudioCpp.ResolveModelKey(model);
+            if (!IndexTts25AudioCpp.AreModelsInstalled(indexTts25ModelKey))
+            {
+                // Model key already carries its size (e.g. "Q8_0 (~3.3 GB)").
+                var answer = await MessageBox.Show(
+                    window,
+                    "Download IndexTTS 2.5 model?",
+                    $"{Environment.NewLine}\"IndexTTS 2.5 (audio.cpp)\" ({indexTts25ModelKey}) requires a model.{Environment.NewLine}{Environment.NewLine}Download model?",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                if (answer != MessageBoxResult.Yes)
+                {
+                    return false;
+                }
+
+                var dlResult = await windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(window, vm => vm.StartDownloadIndexTts25AudioCppModels(indexTts25ModelKey));
+                if (!dlResult.OkPressed || !IndexTts25AudioCpp.AreModelsInstalled(indexTts25ModelKey))
                 {
                     return false;
                 }

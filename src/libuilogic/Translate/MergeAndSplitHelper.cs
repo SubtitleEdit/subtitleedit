@@ -488,25 +488,6 @@ public static partial class MergeAndSplitHelper
         }
     }
 
-    // Same count as Utilities.CountTagInText(builder.ToString(), c) without materializing the
-    // whole accumulated text into a fresh string per merged row.
-    private static int CountChar(StringBuilder builder, char c)
-    {
-        var count = 0;
-        foreach (var chunk in builder.GetChunks())
-        {
-            foreach (var ch in chunk.Span)
-            {
-                if (ch == c)
-                {
-                    count++;
-                }
-            }
-        }
-
-        return count;
-    }
-
     private static readonly int NewLineUrlEncodeLength = Utilities.UrlEncodeLength(Environment.NewLine);
 
     private static bool ExceedsMaxSize(MergeResult result, MergeContext context, TranslateRow currentRow, int maxTextSize)
@@ -590,7 +571,7 @@ public static partial class MergeAndSplitHelper
             context.CurrentItem.TextIndexStart = result.Text.Length;
             context.CurrentItem.TextIndexEnd = result.Text.Length;
             context.CurrentItem.EndChar = endChar;
-            context.CurrentItem.EndCharOccurrences = CountChar(context.TextBuilder, endChar);
+            context.CurrentItem.EndCharOccurrences = context.TextBuilder.CountChar(endChar);
             result.MergeResultItems.Add(context.CurrentItem);
         }
 
@@ -621,7 +602,7 @@ public static partial class MergeAndSplitHelper
             {
                 var endChar = result.Text[^1];
                 context.CurrentItem.EndChar = endChar;
-                context.CurrentItem.EndCharOccurrences = CountChar(context.TextBuilder, endChar);
+                context.CurrentItem.EndCharOccurrences = context.TextBuilder.CountChar(endChar);
                 context.CurrentItem.TextIndexEnd = result.Text.Length;
             }
 
@@ -681,7 +662,7 @@ public static partial class MergeAndSplitHelper
             {
                 var endChar = result.Text[^1];
                 context.CurrentItem.EndChar = endChar;
-                context.CurrentItem.EndCharOccurrences = CountChar(context.TextBuilder, endChar);
+                context.CurrentItem.EndCharOccurrences = context.TextBuilder.CountChar(endChar);
             }
         }
 

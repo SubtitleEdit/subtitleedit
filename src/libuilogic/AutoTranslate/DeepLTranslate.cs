@@ -157,6 +157,14 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
+            if (_httpClient == null)
+            {
+                // Initialize() bails out without creating the client when the API key or URL is
+                // empty - fail with a readable message instead of a NullReferenceException.
+                Error = $"{StaticName} requires an API key";
+                throw new Exception($"{StaticName} requires an API key - please enter your DeepL API key and try again.");
+            }
+
             int[] retryDelays = { 555, 3007, 7013 };
             HttpResponseMessage result = null!;
             var resultContent = string.Empty;

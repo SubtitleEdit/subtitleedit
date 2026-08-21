@@ -8,6 +8,7 @@ using SkiaSharp;
 using SkiaSharp.HarfBuzz;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -16,7 +17,37 @@ namespace Nikse.SubtitleEdit.Features.Main;
 public partial class SubtitleLineViewModel : ObservableObject
 {
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(NumberDisplay))]
     private int _number;
+
+    /// <summary>
+    /// A display-only row: it exists so that a line in the reference original that has no
+    /// counterpart in the working subtitle is still visible in the grid, side by side with the rest
+    /// (issue #13449). It is never part of the working subtitle - it is filtered out of
+    /// <see cref="MainViewModel.GetUpdateSubtitle"/> (so it can never be saved), out of the change
+    /// hash, out of numbering and out of the waveform. Only <see cref="OriginalText"/> and the time
+    /// codes carry data; <see cref="Text"/> stays empty until the user types into it, which
+    /// promotes the row to an ordinary working line keeping the reference timings (#13594).
+    /// Observable so the promotion re-renders the row live (dim, number).
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(NumberDisplay))]
+    private bool _isReferenceOnly;
+
+    /// <summary>
+    /// The <see cref="Paragraph.Id"/> of the original-subtitle line this row displays - matched
+    /// working rows and reference-only rows alike. The assignment is made once, when the original
+    /// is opened (or the grid rebuilt wholesale), and then sticks: retiming or editing a row never
+    /// re-matches it onto a different original line, so rows do not shuffle around under the user
+    /// (#13594). Null when no original line belongs to this row.
+    /// </summary>
+    public Guid? ReferenceParagraphId { get; set; }
+
+    /// <summary>
+    /// The number column's text: blank for a reference-only row, which has no number because it is
+    /// not part of the working subtitle.
+    /// </summary>
+    public string NumberDisplay => IsReferenceOnly ? string.Empty : Number.ToString(CultureInfo.InvariantCulture);
 
     [ObservableProperty]
     private string? _bookmark;
@@ -31,6 +62,8 @@ public partial class SubtitleLineViewModel : ObservableObject
     private TimeSpan _duration;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(TeletextDisplay))]
+    [NotifyPropertyChangedFor(nameof(TeletextTextAlignment))]
     private string _text;
 
     [ObservableProperty]
@@ -72,7 +105,93 @@ public partial class SubtitleLineViewModel : ObservableObject
     public bool IsComment { get; set; }
     public string MarginL { get; set; }
     public string MarginR { get; set; }
-    public string MarginV { get; set; }
+    /// <summary>
+    /// For EBU STL this is the teletext row the subtitle starts on (1..23, matching the format's
+    /// VerticalPosition field). Observable so the "TT" column follows undo and reload, which
+    /// assign it without going through the teletext dialog.
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(TeletextDisplay))]
+    private string _marginV;
+
+    public string TeletextDisplay
+    {
+        get
+        {
+            var hasRow = int.TryParse(MarginV, out var ebuLine) &&
+                         ebuLine >= 1 &&
+                         ebuLine <= 23;
+
+            var text = Text ?? string.Empty;
+            var alignment = string.Empty;
+
+            if (text.StartsWith("{\\an1}") ||
+                text.StartsWith("{\\an4}") ||
+                text.StartsWith("{\\an7}"))
+            {
+                alignment = "L";
+            }
+            else if (text.StartsWith("{\\an3}") ||
+                     text.StartsWith("{\\an6}") ||
+                     text.StartsWith("{\\an9}"))
+            {
+                alignment = "R";
+            }
+            else if (text.StartsWith("{\\an2}") ||
+                     text.StartsWith("{\\an5}") ||
+                     text.StartsWith("{\\an8}"))
+            {
+                alignment = "C";
+            }
+
+            if (!hasRow)
+            {
+                // A line without a teletext row (e.g. a converted SRT) should not pretend
+                // to be positioned; show only an explicitly set alignment, if any.
+                return alignment;
+            }
+
+            return $"{ebuLine} {(alignment.Length == 0 ? "C" : alignment)}";
+        }
+    }
+
+    /// <summary>
+    /// True while an EBU STL subtitle is open, so a row wider than a teletext page counts as a
+    /// "text too long" error. Set from MainViewModel when the format changes.
+    /// </summary>
+    public static bool UseTeletextLineLength { get; set; }
+
+    // A teletext row holds 40 characters, of which the box and double-height control codes take
+    // the first few; a colour change costs one more. These are the safe widths rather than the
+    // header's MaximumNumberOfDisplayableCharactersInAnyTextRow, which is not reachable from a
+    // per-line view model.
+    private const int TeletextMaxCharacters = 37;
+    private const int TeletextMaxCharactersWithColor = 36;
+
+    public TextAlignment TeletextTextAlignment
+    {
+        get
+        {
+            var text = Text ?? string.Empty;
+
+            if (text.StartsWith("{\\an1}") ||
+                text.StartsWith("{\\an4}") ||
+                text.StartsWith("{\\an7}"))
+            {
+                return TextAlignment.Left;
+            }
+
+            if (text.StartsWith("{\\an3}") ||
+                text.StartsWith("{\\an6}") ||
+                text.StartsWith("{\\an9}"))
+            {
+                return TextAlignment.Right;
+            }
+
+            return TextAlignment.Center;
+        }
+    }
+
     public bool NewSection { get; set; }
     public bool Forced { get; set; }
     public Guid Id { get; set; }
@@ -141,6 +260,8 @@ public partial class SubtitleLineViewModel : ObservableObject
         NewSection = p.NewSection;
         Forced = p.Forced;
         _bookmark = p.Bookmark;
+        _isReferenceOnly = p.IsReferenceOnly;
+        ReferenceParagraphId = p.ReferenceParagraphId;
 
         Id = generateNewId ? Guid.NewGuid() : p.Id;
 
@@ -452,7 +573,8 @@ public partial class SubtitleLineViewModel : ObservableObject
         int FontSize,
         bool ColorTextTooManyLines,
         int MaxNumberOfLines,
-        string? LengthStrategy)
+        string? LengthStrategy,
+        bool UseTeletextLineLength)
     {
         public static TextErrorSettings Current()
         {
@@ -467,7 +589,8 @@ public partial class SubtitleLineViewModel : ObservableObject
                 general.ColorTextTooManyLines,
                 general.MaxNumberOfLines,
                 // GetLineLength counts through this strategy, so it belongs in the key too.
-                Configuration.Settings.General.CpsLineLengthStrategy);
+                Configuration.Settings.General.CpsLineLengthStrategy,
+                SubtitleLineViewModel.UseTeletextLineLength);
         }
     }
 
@@ -527,6 +650,23 @@ public partial class SubtitleLineViewModel : ObservableObject
             if (GetStrippedLines().Count > settings.MaxNumberOfLines)
             {
                 return true;
+            }
+        }
+
+        // A teletext page is narrower than the general maximum, and every character takes a cell,
+        // so this counts raw length rather than going through the CPS length strategy.
+        if (settings.UseTeletextLineLength)
+        {
+            var maxCharacters = Text.Contains("<font color=", StringComparison.OrdinalIgnoreCase)
+                ? TeletextMaxCharactersWithColor
+                : TeletextMaxCharacters;
+
+            foreach (var line in GetStrippedLines())
+            {
+                if (line.Length > maxCharacters)
+                {
+                    return true;
+                }
             }
         }
 
@@ -715,7 +855,7 @@ public partial class SubtitleLineViewModel : ObservableObject
             // Memoized by (Text, settings) - the same verdict the Text cell tint uses.
             if (HasTextRuleError())
             {
-                Add("text too long or wide");
+                Add(UseTeletextLineLength ? "text too long or wide for teletext" : "text too long or wide");
             }
 
             return errors?.ToString() ?? string.Empty;

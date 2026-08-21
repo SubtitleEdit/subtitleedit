@@ -31,7 +31,14 @@ public class MpvReloader : IMpvReloader
     // of pushing old text over new. Only touched on the UI thread.
     private int _refreshVersion;
 
-    public async Task RefreshMpv(LibMpvDynamicPlayer mpvContext, Subtitle subtitle, Subtitle? subtitleSecondary, SubtitleFormat uiFormat)
+    /// <returns>
+    /// False when the subtitle could not be handed to mpv and the caller should try again - the
+    /// core of a freshly created player (fullscreen, undock, layout rebuild) is initialized
+    /// lazily and rejects sub-add until the file is actually playing. The push used to be
+    /// counted as done either way, so a single mistimed refresh left the video without
+    /// subtitles until the next edit (issue #13407).
+    /// </returns>
+    public async Task<bool> RefreshMpv(LibMpvDynamicPlayer mpvContext, Subtitle subtitle, Subtitle? subtitleSecondary, SubtitleFormat uiFormat)
     {
         if (subtitle.Paragraphs.Count == 0 && subtitleSecondary == null)
         {
@@ -57,11 +64,15 @@ public class MpvReloader : IMpvReloader
                 _subtitlePrev = null;
             }
 
-            return;
+            return true;
         }
 
         try
         {
+            // Applied on every refresh, not only on load: toggling "margin is part of the
+            // subtitle area" in settings has to take effect on the video already open (#13934).
+            mpvContext.ApplySubtitleMarginArea();
+
             var uiFormatType = uiFormat.GetType();
 
             // Deep copy on the calling (UI) thread: the caller usually passes the live
@@ -88,8 +99,9 @@ public class MpvReloader : IMpvReloader
             if (version != _refreshVersion)
             {
                 // Superseded while serializing (newer refresh, reset, or removal) -
-                // applying this result would push stale text over newer state.
-                return;
+                // applying this result would push stale text over newer state. Not a
+                // failure: whatever superseded this refresh does the pushing now.
+                return true;
             }
 
             subtitle = built.Subtitle;
@@ -102,21 +114,48 @@ public class MpvReloader : IMpvReloader
             var format = _assFormat;
             if (text != _mpvTextOld || _mpvTextFileName == null || _retryCount > 0)
             {
-                if (_retryCount >= 0 || string.IsNullOrEmpty(_mpvTextFileName) || _subtitlePrev == null || _subtitlePrev.FileName != subtitle.FileName || _mpvTextFileExtension != format.Extension)
+                var reAdd = _retryCount >= 0 || string.IsNullOrEmpty(_mpvTextFileName) || _subtitlePrev == null || _subtitlePrev.FileName != subtitle.FileName || _mpvTextFileExtension != format.Extension;
+                int mpvResult;
+                if (reAdd)
                 {
                     DeleteTempMpvFileName();
                     _mpvTextFileName = FileUtil.GetTempFileName(format.Extension);
                     _mpvTextFileExtension = format.Extension;
                     await File.WriteAllTextAsync(_mpvTextFileName, text);
-                    mpvContext.SubRemove();
-                    mpvContext.SubAdd(_mpvTextFileName);
-                    _retryCount--;
+                    mpvContext.SubRemove(); // nothing to remove yet on a new player - its result says nothing
+                    mpvResult = mpvContext.SubAdd(_mpvTextFileName);
                 }
                 else
                 {
-                    await File.WriteAllTextAsync(_mpvTextFileName, text);
-                    mpvContext.SubReload();
+                    // Not re-adding means the checks above found an existing temp file to rewrite.
+                    await File.WriteAllTextAsync(_mpvTextFileName!, text);
+                    mpvResult = mpvContext.SubReload();
                 }
+
+                if (mpvResult < 0)
+                {
+                    // mpv did not take it (core not up yet, or no file playing). Leave the memo
+                    // fields alone - remembering this text as the one mpv is showing is what used
+                    // to make the miss permanent - and let the caller retry. The retry budget is
+                    // not spent either: nothing was loaded to retry against yet.
+                    if (!reAdd)
+                    {
+                        // A failed sub-reload cannot fix itself: it means the player has no
+                        // loadable file behind its subtitle track (leaving fullscreen goes back
+                        // to a player whose temp file was deleted when fullscreen opened).
+                        // Forget the file so the retry takes the sub-remove + sub-add path
+                        // instead of reloading into the void every 400 ms.
+                        _mpvTextFileName = null;
+                    }
+
+                    return false;
+                }
+
+                if (reAdd)
+                {
+                    _retryCount--;
+                }
+
                 _mpvTextOld = text;
             }
 
@@ -124,10 +163,12 @@ public class MpvReloader : IMpvReloader
             // created player (fullscreen/undock create a new mpv instance).
             mpvContext.SetSubtitleVisibility(SubtitlesVisible);
             _subtitlePrev = subtitle;
+            return true;
         }
         catch (Exception exception)
         {
             Se.LogError(exception);
+            return false;
         }
     }
 
@@ -144,6 +185,16 @@ public class MpvReloader : IMpvReloader
             }
         }
 
+        if (uiFormatType == typeof(NetflixImsc11Japanese))
+        {
+            // Furigana, bouten and vertical writing have no libass equivalent - they have to be
+            // exploded into separately positioned render lines, or the tags show up as literal
+            // text on the video (issue #13861).
+            subtitle = NetflixImsc11JapaneseToAss.ConvertToSubtitle(subtitle, VideoWidth, VideoHeight);
+            SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary);
+            return (subtitle, subtitle.ToText(_assFormat), 0, false);
+        }
+
         if (uiFormatType == typeof(WebVTT) || uiFormatType == typeof(WebVTTFileWithLineNumber))
         {
             var defaultStyle = GetMpvPreviewStyle(Se.Settings.Video);
@@ -151,7 +202,7 @@ public class MpvReloader : IMpvReloader
             // No extra copy here: "subtitle" is already RefreshMpv's private copy, and
             // Convert deep-copies its input again internally without mutating it.
             subtitle = WebVttToAssa.Convert(subtitle, defaultStyle, VideoWidth, VideoHeight);
-            AddSecondarySubtitle(subtitle, subtitleSecondary);
+            SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary);
             // The WebVTT path never used the hash memo, so keep it untouched (HashValid false).
             return (subtitle, subtitle.ToText(_assFormat), 0, false);
         }
@@ -228,9 +279,14 @@ public class MpvReloader : IMpvReloader
                     }
                 }
             }
+
+            // TTML regions, PAC vertical alignment and EBU STL teletext rows say where the line
+            // belongs on the video - without this every line lands at the one fixed preview
+            // alignment from the settings (discussion #13857).
+            SubtitlePositionToAssa.ApplyPositions(subtitle, oldHeader, Se.Settings.Video.MpvPreviewUsePositionFromFile);
         }
 
-        AddSecondarySubtitle(subtitle, subtitleSecondary);
+        SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary);
         var hash = subtitle.GetFastHashCode(null);
         if (hash != oldHash || string.IsNullOrEmpty(oldText))
         {
@@ -238,23 +294,6 @@ public class MpvReloader : IMpvReloader
         }
 
         return (subtitle, oldText, hash, true);
-    }
-
-    private static void AddSecondarySubtitle(Subtitle subtitle, Subtitle? subtitleSecondary)
-    {
-        if (subtitleSecondary == null)
-        {
-            return;
-        }
-
-
-        var styleName = subtitleSecondary.Paragraphs.FirstOrDefault()?.Extra ?? "Secondary";
-        var style = AdvancedSubStationAlpha.GetSsaStyle(styleName, subtitleSecondary.Header);
-        subtitle.Header = AdvancedSubStationAlpha.AddSsaStyle(style, subtitle.Header);
-        foreach (var p in subtitleSecondary.Paragraphs)
-        {
-            subtitle.Paragraphs.Add(p);
-        }
     }
 
     private string MpvPreviewStyleHeader

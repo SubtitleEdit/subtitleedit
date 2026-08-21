@@ -152,12 +152,20 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             _receivingData = false;
             _states = new States();
             _pageBuffer = new TeletextPage();
+            TeletextTables.ResetLatinG0();
         }
 
         private static void RemapG0Charset(int c)
         {
             if (c != _primaryCharset.Current)
             {
+                // X/28 and M/29 designations are 7 bits wide, but only the first 56 ids are defined
+                if (c < 0 || c >= TeletextTables.G0LatinNationalSubsetsMap.Length)
+                {
+                    _config.LogError($"- G0 Latin National Subset ID {c >> 3:X2}.{c & 0x7:X2} is not implemented");
+                    return;
+                }
+
                 var m = TeletextTables.G0LatinNationalSubsetsMap[c];
                 if (m == 0xff)
                 {

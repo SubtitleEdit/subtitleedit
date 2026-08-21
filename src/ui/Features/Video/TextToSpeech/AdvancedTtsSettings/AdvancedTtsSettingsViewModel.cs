@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
+using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.AdvancedTtsSettings;
 
@@ -18,6 +19,8 @@ public partial class AdvancedTtsSettingsViewModel : ObservableObject
     [ObservableProperty] private bool _doHighQualityTimeStretch;
     [ObservableProperty] private string _silencePaddingMs;
     [ObservableProperty] private string _outputSampleRate;
+    [ObservableProperty] private string _generationFolder;
+    [ObservableProperty] private bool _doDeleteTempFiles;
     [ObservableProperty] private string _edgeTtsRate;
     [ObservableProperty] private string _edgeTtsPitch;
     [ObservableProperty] private string _edgeTtsVolume;
@@ -27,8 +30,11 @@ public partial class AdvancedTtsSettingsViewModel : ObservableObject
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
 
-    public AdvancedTtsSettingsViewModel()
+    private readonly IFolderHelper _folderHelper;
+
+    public AdvancedTtsSettingsViewModel(IFolderHelper folderHelper)
     {
+        _folderHelper = folderHelper;
         RubberbandStatus = FfmpegGenerator.IsRubberbandAvailable() ? "(installed)" : "(not found in FFmpeg)";
         var s = Se.Settings.Video.TextToSpeech;
         DoProAudioChain = s.ProAudioChainEnabled;
@@ -42,6 +48,18 @@ public partial class AdvancedTtsSettingsViewModel : ObservableObject
         EdgeTtsRate = s.EdgeTtsRate;
         EdgeTtsPitch = s.EdgeTtsPitch;
         EdgeTtsVolume = s.EdgeTtsVolume;
+        GenerationFolder = s.GenerationFolder ?? string.Empty;
+        DoDeleteTempFiles = s.DeleteTempFiles;
+    }
+
+    [RelayCommand]
+    private async Task BrowseGenerationFolder()
+    {
+        var folder = await _folderHelper.PickFolderAsync(Window!, Se.Language.Video.TextToSpeech.GenerationFolder);
+        if (!string.IsNullOrEmpty(folder))
+        {
+            GenerationFolder = folder;
+        }
     }
 
     [RelayCommand]
@@ -59,6 +77,8 @@ public partial class AdvancedTtsSettingsViewModel : ObservableObject
         s.EdgeTtsRate = EdgeTts.NormalizeProsodyValue(EdgeTtsRate, "%");
         s.EdgeTtsPitch = EdgeTts.NormalizeProsodyValue(EdgeTtsPitch, "Hz");
         s.EdgeTtsVolume = EdgeTts.NormalizeProsodyValue(EdgeTtsVolume, "%");
+        s.GenerationFolder = GenerationFolder?.Trim() ?? string.Empty;
+        s.DeleteTempFiles = DoDeleteTempFiles;
         Se.SaveSettings();
 
         OkPressed = true;

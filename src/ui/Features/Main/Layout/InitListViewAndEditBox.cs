@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -38,6 +39,17 @@ public static partial class InitListViewAndEditBox
 
     public static Grid MakeLayoutListViewAndEditBox(MainView mainPage, MainViewModel vm)
     {
+        return MakeLayoutListViewAndEditBox(mainPage, vm, detachedEditBox: false, out _);
+    }
+
+    /// <summary>
+    /// Builds the subtitle grid and the edit box. With <paramref name="detachedEditBox"/> the
+    /// edit box is returned via <paramref name="editSection"/> instead of being docked below
+    /// the grid, so a layout can place it elsewhere (layout 10 puts it under the waveform,
+    /// like SE4/Aegisub - issue #13940).
+    /// </summary>
+    internal static Grid MakeLayoutListViewAndEditBox(MainView mainPage, MainViewModel vm, bool detachedEditBox, out Grid editSection)
+    {
         mainPage.DataContext = vm;
 
         // Unhook events from the old SubtitleGrid if it exists
@@ -64,16 +76,14 @@ public static partial class InitListViewAndEditBox
 
         vm.SubtitleGridAlternatingRowBrush = null;
 
-        var mainGrid = new Grid
+        var mainGrid = new Grid();
+        mainGrid.RowDefinitions.Add(new RowDefinition(GridLength.Star) { MinHeight = SubtitleGridMinimumHeight });
+        if (!detachedEditBox)
         {
-            RowDefinitions =
-            {
-                new RowDefinition(GridLength.Star) { MinHeight = SubtitleGridMinimumHeight },
-                // GridSplitter constrains the row definition, so include editGrid's outer
-                // margin to preserve the text box's 92 px minimum at the drag limit.
-                new RowDefinition(GridLength.Auto) { MinHeight = EditGridMinimumHeight + EditGridMargin * 2 },
-            },
-        };
+            // GridSplitter constrains the row definition, so include editGrid's outer
+            // margin to preserve the text box's 92 px minimum at the drag limit.
+            mainGrid.RowDefinitions.Add(new RowDefinition(GridLength.Auto) { MinHeight = EditGridMinimumHeight + EditGridMargin * 2 });
+        }
 
         // TableView (Avalonia 12.1) pilot #3, after Show history (#12704) and the OCR grid
         // (#13001): the main subtitle grid. TableView rows are ListBoxItems, so keyboard
@@ -108,11 +118,20 @@ public static partial class InitListViewAndEditBox
         vm.SubtitleGrid = subtitleGrid;
         vm.SubtitleGridDragSelect = new TableViewDragSelect(subtitleGrid, vm.ApplyDragSelectRange);
 
+        // Keep the view on the row being edited when a row changes height (#13619). Rows are
+        // one or two text lines, and the virtualizing panel re-estimates its pixel extent from
+        // the average realized row height - so breaking a line into two grew the estimate and
+        // scrolled the grid tens of rows away from the line the user was editing.
+        TableViewScrollAnchor.Attach(subtitleGrid);
+
         // hack to make drag and drop work on the grid - also on empty rows
         var dropHost = new Border
         {
             Background = Brushes.Transparent,
-            Child = vm.SubtitleGrid
+            // Index-mapped scrollbar (#13579): hides the grid's native pixel-mapped vertical
+            // bar and docks a row-index one beside it, so the thumb no longer jitters with
+            // the virtualization panel's extent re-estimates on variable-height rows.
+            Child = new TableViewIndexScrollBar(vm.SubtitleGrid)
         };
         vm.SubtitleGridDropHost = dropHost;
         DragDrop.SetAllowDrop(dropHost, true);
@@ -165,6 +184,10 @@ public static partial class InitListViewAndEditBox
         // Collapse hidden rows (style bindings evaluate against the row's item).
         TableViewExtras.BindRowProperty(vm.SubtitleGrid, Visual.IsVisibleProperty,
             new Binding(nameof(SubtitleLineViewModel.IsHidden)) { Converter = inverseBooleanConverter });
+
+        // Dim reference-only rows so they are visibly not part of the working subtitle (#13449).
+        TableViewExtras.BindRowProperty(vm.SubtitleGrid, Visual.OpacityProperty,
+            new Binding(nameof(SubtitleLineViewModel.IsReferenceOnly)) { Converter = new ReferenceOnlyRowOpacityConverter() });
 
         // Expose "number: text, start - end, duration" as the row's accessible name so
         // screen readers announce the full row like SE4's list view did (issues #13015,
@@ -220,7 +243,9 @@ public static partial class InitListViewAndEditBox
                             IsHitTestVisible = false,
                             [!Visual.OpacityProperty] = new Binding(nameof(SubtitleLineViewModel.Bookmark)) { Converter = nullToOpacityConverter },
                          },
-                         UiUtil.MakeLabel().WithBindText(value, new Binding(nameof(SubtitleLineViewModel.Number)))
+                         // NumberDisplay, not Number: a reference-only row is not part of the
+                         // working subtitle and shows no number (#13449).
+                         UiUtil.MakeLabel().WithBindText(value, new Binding(nameof(SubtitleLineViewModel.NumberDisplay)))
                     }
                 })
         });
@@ -322,6 +347,30 @@ public static partial class InitListViewAndEditBox
             Mode = BindingMode.OneWay,
             Source = vm,
         });
+        var teletextColumn = new SeTableViewColumn
+        {
+            Header = "TT",
+            Tag = SubtitleGridColumnKeys.Teletext,
+            Width = new GridLength(70),
+            MinWidth = 60,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((value, nameScope) => new TextBlock
+            {
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                [!TextBlock.TextProperty] = new Binding(nameof(SubtitleLineViewModel.TeletextDisplay))
+                {
+                    Mode = BindingMode.OneWay,
+                },
+            }),
+        };
+        columnManager.Add(teletextColumn);
+        teletextColumn.Bind(SeTableViewColumn.IsVisibleProperty, new Binding(nameof(vm.IsTeletextColumnVisible))
+        {
+            Mode = BindingMode.OneWay,
+            Source = vm,
+        });
 
         columnManager.Add(new SeTableViewColumn
         {
@@ -342,7 +391,16 @@ public static partial class InitListViewAndEditBox
                 var textBlock = new TextBlock
                 {
                     VerticalAlignment = VerticalAlignment.Center,
-
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    [!TextBlock.TextAlignmentProperty] = new MultiBinding
+                    {
+                        Converter = TeletextAlignmentPreviewConverter.Instance,
+                        Bindings =
+                        {
+                            new Binding(nameof(vm.IsTeletextPreviewActive)) { Source = vm, Mode = BindingMode.OneWay },
+                            new Binding(nameof(SubtitleLineViewModel.TeletextTextAlignment)) { Mode = BindingMode.OneWay },
+                        },
+                    },
                     // Lets the subtitle grid context menu find the word under the pointer (live spell check)
                     Tag = SubtitleGridColumnKeys.Text,
                     [!TextBlock.InlinesProperty] = new Binding(nameof(SubtitleLineViewModel.Text)) { Converter = syntaxHighlightingConverter, Mode = BindingMode.OneWay },
@@ -1312,7 +1370,7 @@ public static partial class InitListViewAndEditBox
         {
             ToolTip.SetTip(timeCodeUpDown, Se.Language.General.Show);
         }
-        timeCodeUpDown.Bind(TimeCodeUpDown.IsEnabledProperty, new Binding(nameof(vm.LockTimeCodes)) { Mode = BindingMode.TwoWay, Converter = inverseBooleanConverter });
+        timeCodeUpDown.Bind(TimeCodeUpDown.IsEnabledProperty, new Binding(nameof(vm.AreTimeCodesEditable)) { Mode = BindingMode.OneWay });
         startTimePanel.Children.Add(timeCodeUpDown);
         timeCodeUpDown.ValueChanged += vm.StartTimeChanged;
         timeControlsPanel.Children.Add(startTimePanel);
@@ -1344,7 +1402,7 @@ public static partial class InitListViewAndEditBox
         {
             ToolTip.SetTip(endCodeUpDown, Se.Language.General.Hide);
         }
-        endCodeUpDown.Bind(TimeCodeUpDown.IsEnabledProperty, new Binding(nameof(vm.LockTimeCodes)) { Mode = BindingMode.TwoWay, Converter = inverseBooleanConverter });
+        endCodeUpDown.Bind(TimeCodeUpDown.IsEnabledProperty, new Binding(nameof(vm.AreTimeCodesEditable)) { Mode = BindingMode.OneWay });
         endTimePanel.Children.Add(endCodeUpDown);
         endCodeUpDown.ValueChanged += vm.EndTimeChanged;
         timeControlsPanel.Children.Add(endTimePanel);
@@ -1376,7 +1434,7 @@ public static partial class InitListViewAndEditBox
         {
             ToolTip.SetTip(durationUpDown, Se.Language.General.Duration);
         }
-        durationUpDown.Bind(SecondsUpDown.IsEnabledProperty, new Binding(nameof(vm.LockTimeCodes)) { Mode = BindingMode.TwoWay, Converter = inverseBooleanConverter });
+        durationUpDown.Bind(SecondsUpDown.IsEnabledProperty, new Binding(nameof(vm.AreTimeCodesEditable)) { Mode = BindingMode.OneWay });
         durationUpDown.ValueChanged += (_, _) => vm.DurationChanged();
         durationPanel.Children.Add(durationUpDown);
         timeControlsPanel.Children.Add(durationPanel);
@@ -1690,11 +1748,17 @@ public static partial class InitListViewAndEditBox
         // translation mode (original text)
         var textLabelOriginal = new TextBlock
         {
-            Text = Se.Language.General.OriginalText,
             FontWeight = FontWeight.Bold,
             Margin = new Thickness(3, 0, 0, 0),
         };
         textEditGrid.Add(textLabelOriginal, 0, 1);
+        // The label doubles as the read-only indicator - it says "Original text (read-only)"
+        // when the original was opened as a reference (issue #13449).
+        textLabelOriginal.Bind(TextBlock.TextProperty, new Binding(nameof(vm.OriginalTextLabel))
+        {
+            Mode = BindingMode.OneWay,
+            Source = vm
+        });
         textLabelOriginal.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowColumnOriginalText))
         {
             Mode = BindingMode.OneWay,
@@ -1819,27 +1883,31 @@ public static partial class InitListViewAndEditBox
         Grid.SetColumn(textEditGrid, 1);
         editGrid.Children.Add(textEditGrid);
 
-        Grid.SetRow(editGrid, 1);
-        mainGrid.Children.Add(editGrid);
-
-        // GridSplitter overlaying the boundary between the subtitle grid (row 0) and the
-        // edit box (row 1) so the text box section can be resized vertically, like SE4
-        // (#10271). The splitter lives in the edit box's own row (no extra row - an extra
-        // row would shrink the grid viewport and break the grid scroll perf tests); with
-        // VerticalAlignment.Top it resizes the row above (grid, Star) and its own row
-        // (edit box, Auto -> becomes Pixel once the user drags). The negative top margin
-        // centers the 4 px strip on the boundary.
-        var editBoxSplitter = new GridSplitter
+        editSection = editGrid;
+        if (!detachedEditBox)
         {
-            Height = UiUtil.SplitterWidthOrHeight,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Top,
-            Margin = new Thickness(0, -UiUtil.SplitterWidthOrHeight / 2.0, 0, 0)
-        };
-        Grid.SetRow(editBoxSplitter, 1);
-        mainGrid.Children.Add(editBoxSplitter);
+            Grid.SetRow(editGrid, 1);
+            mainGrid.Children.Add(editGrid);
 
-        TrackEditSectionMinimumHeight(mainGrid, textEditGrid);
+            // GridSplitter overlaying the boundary between the subtitle grid (row 0) and the
+            // edit box (row 1) so the text box section can be resized vertically, like SE4
+            // (#10271). The splitter lives in the edit box's own row (no extra row - an extra
+            // row would shrink the grid viewport and break the grid scroll perf tests); with
+            // VerticalAlignment.Top it resizes the row above (grid, Star) and its own row
+            // (edit box, Auto -> becomes Pixel once the user drags). The negative top margin
+            // centers the 4 px strip on the boundary.
+            var editBoxSplitter = new GridSplitter
+            {
+                Height = UiUtil.SplitterWidthOrHeight,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Top,
+                Margin = new Thickness(0, -UiUtil.SplitterWidthOrHeight / 2.0, 0, 0)
+            };
+            Grid.SetRow(editBoxSplitter, 1);
+            mainGrid.Children.Add(editBoxSplitter);
+
+            TrackEditSectionMinimumHeight(mainGrid, textEditGrid);
+        }
 
 
         textEditGrid.ColumnDefinitions[1].Bind(ColumnDefinition.WidthProperty, new Binding(nameof(vm.ShowColumnOriginalText))
@@ -1852,6 +1920,30 @@ public static partial class InitListViewAndEditBox
         return mainGrid;
     }
 
+    /// <summary>
+    /// Adds the vertical-resize splitter for a detached edit section (layout 10: waveform in
+    /// row 0, edit box in row 1 of <paramref name="hostGrid"/>). Same overlay-splitter and
+    /// minimum-height tracking as the docked layout, so the text box cannot be dragged small
+    /// enough to overpaint its labels (#10271).
+    /// </summary>
+    internal static void AttachDetachedEditBoxSplitter(Grid hostGrid, Grid editSection)
+    {
+        hostGrid.RowDefinitions[1].MinHeight = EditGridMinimumHeight + EditGridMargin * 2;
+
+        var editBoxSplitter = new GridSplitter
+        {
+            Height = UiUtil.SplitterWidthOrHeight,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Top,
+            Margin = new Thickness(0, -UiUtil.SplitterWidthOrHeight / 2.0, 0, 0)
+        };
+        Grid.SetRow(editBoxSplitter, 1);
+        hostGrid.Children.Add(editBoxSplitter);
+
+        var textEditGrid = editSection.Children.OfType<Grid>().First(g => g.Name == "SubtitleTextEditGrid");
+        TrackEditSectionMinimumHeight(hostGrid, textEditGrid);
+    }
+
     // Stable keys (DataGridColumn.Tag) used to snapshot/restore subtitle grid column
     // widths across restarts. Headers are localized, so they can't be used as keys (#11415).
     internal static class SubtitleGridColumnKeys
@@ -1860,6 +1952,7 @@ public static partial class InitListViewAndEditBox
         public const string Start = "Start";
         public const string End = "End";
         public const string Duration = "Duration";
+        public const string Teletext = "Teletext";
         public const string Text = "Text";
         public const string OriginalText = "OriginalText";
         public const string Style = "Style";
@@ -1929,6 +2022,18 @@ public static partial class InitListViewAndEditBox
             Mode = BindingMode.TwoWay
         };
         textBox[AutomationProperties.NameProperty] = Se.Language.General.Text;
+
+        // A reference-only row IS editable: typing the missing translation into it is how the line
+        // is adopted from the reference - the first character promotes the row to an ordinary
+        // working line (see MainViewModel.SubtitleTextChanged, #13594).
+        //
+        // In "Edit original" mode, though, the original is the file being worked on, so the
+        // working text box goes read-only to keep the two sides apart.
+        textBox.Bind(TextBox.IsReadOnlyProperty, new Binding(nameof(vm.IsEditOriginalMode))
+        {
+            Mode = BindingMode.OneWay,
+            Source = vm
+        });
 
         textBox.TextChanged += vm.SubtitleTextChanged;
         textBox.GotFocus += (_, _) => vm.SubtitleTextBoxGotFocus();
@@ -2001,6 +2106,10 @@ public static partial class InitListViewAndEditBox
         textBox.IsUndoEnabled = false;
         textBox.ClearSelectionOnLostFocus = false;
 
+        // Pasted text goes straight into the paragraph via the two-way binding, so its line
+        // breaks must be SE's own - see TextBoxPasteNormalizer (#13591).
+        TextBoxPasteNormalizer.NormalizeLineBreaksOnPaste(textBox);
+
         if (appearance.SubtitleTextBoxCenterText)
         {
             textBox.TextAlignment = TextAlignment.Center;
@@ -2021,6 +2130,13 @@ public static partial class InitListViewAndEditBox
         {
             Mode = BindingMode.TwoWay
         };
+
+        // An original opened as a read-only reference must not be typed into (issue #13449).
+        textBox.Bind(TextBox.IsReadOnlyProperty, new Binding(nameof(vm.IsOriginalReadOnly))
+        {
+            Mode = BindingMode.OneWay,
+            Source = vm
+        });
 
         SetupMacContextMenuForTextBox(textBox, vm);
         MainHelpers.RightToLeftHelper.FollowContentDirection(textBox);

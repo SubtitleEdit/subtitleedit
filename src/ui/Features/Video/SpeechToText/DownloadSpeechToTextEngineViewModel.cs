@@ -68,7 +68,6 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
     public bool Qwen3AsrUseVulkan { get; set; }
 
     private readonly IWhisperDownloadService _whisperDownloadService;
-    private readonly IChatLlmDownloadService _chatLlmDownloadService;
     private readonly IQwen3AsrCppDownloadService _qwen3AsrCppDownloadService;
     private readonly ICrispAsrDownloadService _crispAsrDownloadService;
     private Task? _downloadTask;
@@ -84,13 +83,11 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
     public DownloadSpeechToTextEngineViewModel(
         IWhisperDownloadService whisperDownloadService,
         IZipUnpacker zipUnpacker,
-        IChatLlmDownloadService chatLlmDownloadService,
         IQwen3AsrCppDownloadService qwen3AsrCppDownloadService,
         ICrispAsrDownloadService crispAsrDownloadService)
     {
         _whisperDownloadService = whisperDownloadService;
         _zipUnpacker = zipUnpacker;
-        _chatLlmDownloadService = chatLlmDownloadService;
         _qwen3AsrCppDownloadService = qwen3AsrCppDownloadService;
         _crispAsrDownloadService = crispAsrDownloadService;
 
@@ -179,6 +176,7 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
 
                     var path = Engine.GetExecutable();
                     MakeExecutable(path);
+                    ClearExecutableStack(dir);
                 }
                 catch
                 {
@@ -270,7 +268,7 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
                 TitleText = Se.Language.Video.AudioToText.UnpackingSpeechToTextEngine;
                 Unpack(folder, skipFolder);
 
-                if (Engine is not (ChatLlmCppEngine or Qwen3AsrCppEngine))
+                if (Engine is not Qwen3AsrCppEngine)
                 {
                     DownloadAndUnpackSileroVad(folder);
                 }
@@ -305,6 +303,27 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
         if (!_isClosing)
         {
             _timer.Start();
+        }
+    }
+
+    /// <summary>
+    /// Clears the executable-stack flag on the shared libraries just unpacked. Purfview's
+    /// Faster-Whisper-XXL bundles a libctranslate2 built with PT_GNU_STACK = RWE, and glibc 2.41
+    /// stopped granting that at dlopen time, so on Fedora 42, Arch or Ubuntu 25.10 the engine dies
+    /// the moment it loads with "cannot enable executable stack as shared object requires".
+    /// </summary>
+    private static void ClearExecutableStack(string folder)
+    {
+        if (!OperatingSystem.IsLinux())
+        {
+            return;
+        }
+
+        var patched = ElfHelper.ClearExecutableStackInFolder(folder);
+        if (patched > 0)
+        {
+            Se.WriteToolsLog($"Cleared the executable-stack flag on {patched} shared librar" +
+                             (patched == 1 ? "y" : "ies") + $" in \"{folder}\"");
         }
     }
 
@@ -541,11 +560,6 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
             var dir = Engine.GetAndCreateWhisperFolder();
             var tempFileName = Path.Combine(dir, Engine.Name + ".7z");
             _downloadTask = _whisperDownloadService.DownloadWhisperPurfviewFasterWhisperXxl(tempFileName, downloadProgress, _cancellationTokenSource.Token);
-        }
-        else if (Engine is ChatLlmCppEngine)
-        {
-            var dir = Engine.GetAndCreateWhisperFolder();
-            _downloadTask = _chatLlmDownloadService.DownloadEngine(_downloadStream, downloadProgress, _cancellationTokenSource.Token);
         }
         else if (Engine is Qwen3AsrCppEngine)
         {

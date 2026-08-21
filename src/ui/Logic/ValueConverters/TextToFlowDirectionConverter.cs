@@ -1,4 +1,5 @@
 using Avalonia.Data.Converters;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
@@ -15,13 +16,18 @@ namespace Nikse.SubtitleEdit.Logic.ValueConverters;
 /// </summary>
 public class TextToFlowDirectionConverter : IValueConverter
 {
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    /// <summary>
+    /// The flow direction some text should be laid out with. Also for controls built in
+    /// code rather than bound (the compare view's diff runs, for instance), so that every
+    /// text surface follows the same rule.
+    /// </summary>
+    public static FlowDirection GetFlowDirection(string? text)
     {
-        if (value is string text && !string.IsNullOrWhiteSpace(text))
+        if (!string.IsNullOrWhiteSpace(text))
         {
             return LanguageAutoDetect.ContainsRightToLeftLetter(text)
-                ? ConverterBoxes.FlowDirectionRightToLeft
-                : ConverterBoxes.FlowDirectionLeftToRight;
+                ? FlowDirection.RightToLeft
+                : FlowDirection.LeftToRight;
         }
 
         // Always produce an explicit direction: a binding that yields UnsetValue
@@ -29,6 +35,13 @@ public class TextToFlowDirectionConverter : IValueConverter
         // default (left to right), which left right to left cells misaligned in
         // right to left mode.
         return Se.Settings.Appearance.RightToLeft
+            ? FlowDirection.RightToLeft
+            : FlowDirection.LeftToRight;
+    }
+
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return GetFlowDirection(value as string) == FlowDirection.RightToLeft
             ? ConverterBoxes.FlowDirectionRightToLeft
             : ConverterBoxes.FlowDirectionLeftToRight;
     }

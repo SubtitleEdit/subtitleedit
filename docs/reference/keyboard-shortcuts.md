@@ -27,6 +27,8 @@ See also: [Shortcuts Settings](../features/shortcuts.md)
 | Ctrl+4 | Set up like Subtitle Edit 4 (classic theme, icons, waveform, replace rules and shortcuts) |
 | Alt+Up | Go to previous line |
 | Alt+Down | Go to next line |
+| Ctrl+Home | Go to first line |
+| Ctrl+End | Go to last line |
 | F1 | Show help |
 | F2 | Show source view |
 
@@ -44,6 +46,19 @@ See also: [Shortcuts Settings](../features/shortcuts.md)
 | Ctrl+Shift+F3 | Toggle casing |
 | Ctrl+Shift+E | Extend selected line to next |
 | Alt+Shift+E | Extend selected line to previous |
+
+## Text Box
+
+Active while the subtitle text box has focus.
+
+| Shortcut | Action |
+|----------|--------|
+| Ctrl+X / Ctrl+C / Ctrl+V | Cut / copy / paste |
+| Ctrl+A | Select all text |
+| Shift+Delete | Cut (Windows-standard gesture; Subtitle Edit binds it because Avalonia does not) |
+| Shift+Backspace | Delete selection or next character — forward delete. Default on macOS only, where the Delete key is a backspace; assign it yourself elsewhere |
+
+> **Note:** "Text box: Cut / Copy / Paste (alternative)" exist as separate, unbound actions in **Options** → **Shortcuts** for anyone who wants a second gesture (e.g. Ctrl+Insert / Shift+Insert).
 
 ## Subtitle Grid
 
@@ -109,6 +124,7 @@ wins over the menu activation.
 | Shortcut | Action |
 |----------|--------|
 | Ctrl+V | Paste lines from clipboard at waveform position |
+| Ctrl+C | Copy the selected subtitle to the clipboard |
 | Shift++ | Vertical zoom in |
 | Shift+- | Vertical zoom out |
 
@@ -129,4 +145,17 @@ wins over the menu activation.
 | Ctrl+Alt+Shift+D | Open data folder |
 | Ctrl+Alt+Shift+L | Save language file |
 
-> **Note:** Several actions (Bold, Underline, shot-change snapping/extending, green-zone in/out cues, etc.) ship without a default key. Open **Options** → **Shortcuts** to assign them, or use **Import from SE 4.x** to bring over a familiar set.
+> **Note:** Several actions (Bold, Underline, shot-change snapping/extending, green-zone in/out cues, "Go to next empty line", "Waveform paste clipboard text to new selection", etc.) ship without a default key. Open **Options** → **Shortcuts** to assign them, or use **Import from SE 4.x** to bring over a familiar set.
+
+## Fix Lists in Dialogs
+
+Dialogs that preview their changes in a list of checkboxes — [Remove text for hearing impaired](../features/remove-text-hi.md), [Multiple replace](../features/edit.md#choosing-which-fixes-to-apply) — accept these in the list itself. They are fixed and not part of **Options** → **Shortcuts**.
+
+| Shortcut | Action |
+|----------|--------|
+| Ctrl+A | Select all (tick every row) |
+| Ctrl+D | Select none (untick every row) |
+| Ctrl+Shift+I | Invert selection |
+| Space | Toggle the checkbox of the highlighted rows |
+
+The same three actions sit in the list's right-click menu. In Multiple replace they apply to the fixes preview on the right; the rules tree on the left keeps its own `Ctrl+D` (duplicate rule). Other tools with such a list (Fix common errors, Merge continuation lines, Remove unicode characters, Fix Netflix errors, AI review) put buttons below the list for the same job.

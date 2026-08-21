@@ -19,18 +19,25 @@ namespace Nikse.SubtitleEdit.Controls
 {
     public class TimeCodeUpDown : TemplatedControl
     {
-        // Every step (spinner, wheel and Up/Down) applies to the part the caret is on. The caret
-        // starts on the last part, the milliseconds or frames, so a plain spinner click makes the
-        // small adjustment that is wanted almost every time; it used to start on the hours and
-        // jump a whole hour (#12506). The millisecond step size is configurable in Settings.
-        private const int LastPartCaretIndex = 9;
-
         public bool UseVideoOffset { get; set; } = false;
 
         private TextBox? _textBox;
         private ButtonSpinner? _spinner;
         private string _textBuffer = "00:00:00:000";
         private bool _isUpdatingFromValue = false;
+        private bool _minWidthIncludesSign;
+
+        // Every step (spinner, wheel and Up/Down) applies to the part the caret is on. The caret
+        // starts on the last part, the milliseconds or frames, so a plain spinner click makes the
+        // small adjustment that is wanted almost every time; it used to start on the hours and
+        // jump a whole hour (#12506). The millisecond step size is configurable in Settings.
+        // Computed rather than a constant because a negative time code carries a leading minus
+        // (#13695), which shifts every part one to the right, and frame mode has a shorter last part.
+        private int LastPartCaretIndex => LastPartStartIndex(_textBuffer);
+
+        // A negative time code is shown as "-00:00:01,500". Like the separators, the sign is a mask
+        // literal: it is never typed over and the caret skips past it.
+        private int SignOffset => _textBuffer.Length > 0 && _textBuffer[0] == '-' ? 1 : 0;
 
         public static readonly StyledProperty<TimeSpan> ValueProperty =
             AvaloniaProperty.Register<TimeCodeUpDown, TimeSpan>(
@@ -133,8 +140,11 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void UpdateMinWidth()
         {
-            // Measure the sample text
-            var sampleText = "00:00:00:000";
+            // Measure the sample text - with room for the minus sign only while the value actually is
+            // negative, so a negative time code is not clipped (#13695) but every other time box keeps
+            // the width it had.
+            _minWidthIncludesSign = SignOffset > 0;
+            var sampleText = _minWidthIncludesSign ? "-00:00:00:000" : "00:00:00:000";
             var formattedText = new FormattedText(
                 sampleText,
                 System.Globalization.CultureInfo.CurrentCulture,
@@ -175,6 +185,10 @@ namespace Nikse.SubtitleEdit.Controls
                 var newValue = (TimeSpan)change.NewValue!;
                 var clampedValue = Clamp(newValue);
 
+                // Only an out-of-range value is rewritten. Negative time codes are legal - they come
+                // from "adjust all times" with a negative offset - and the value is written straight
+                // back through the two-way binding, so clamping them to zero here destroyed the time
+                // code of every line the user selected (#13695).
                 if (newValue != clampedValue)
                 {
                     SetValue(ValueProperty, clampedValue);
@@ -207,7 +221,7 @@ namespace Nikse.SubtitleEdit.Controls
                     HorizontalAlignment = HorizontalAlignment.Stretch,
                     Width = double.NaN,
                     BorderBrush = Brushes.Transparent,
-                    CaretIndex = LastPartCaretIndex,
+                    CaretIndex = control.LastPartCaretIndex,
                 };
 
                 var grid = new Grid
@@ -275,8 +289,8 @@ namespace Nikse.SubtitleEdit.Controls
                     continue;
                 }
 
-                // Skip separators (colons, commas, dots)
-                while (caret < chars.Length && IsSeparator(chars[caret]))
+                // Skip mask literals (colons, commas, dots and the leading minus)
+                while (caret < chars.Length && IsMaskLiteral(chars[caret], caret))
                 {
                     caret++;
                 }
@@ -292,7 +306,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                 // Move to next editable position
                 caret++;
-                while (caret < chars.Length && IsSeparator(chars[caret]))
+                while (caret < chars.Length && IsMaskLiteral(chars[caret], caret))
                 {
                     caret++;
                 }
@@ -371,6 +385,7 @@ namespace Nikse.SubtitleEdit.Controls
         // A bare number is taken as milliseconds and replaces the whole time code (e.g. "231" ->
         // 00:00:00,231), which is the common paste intent (#12056). Anything with separators is parsed
         // as a full or partial time code ("00:00:05,500", "01:02,300"; frames when in frame mode).
+        // A leading minus makes the value negative, matching what the control now shows (#13695).
         private bool TryParsePastedValue(string? clipboardText, out TimeSpan value)
         {
             value = TimeSpan.Zero;
@@ -386,6 +401,14 @@ namespace Nikse.SubtitleEdit.Controls
                 text = text.Substring(0, newlineIndex).Trim();
             }
 
+            // The sign is taken off here and re-applied at the end: the parts of a time code are
+            // unsigned, and the bare-milliseconds form is parsed with NumberStyles.None.
+            var isNegative = text.StartsWith('-');
+            if (isNegative)
+            {
+                text = text.Substring(1).TrimStart();
+            }
+
             if (text.Length == 0)
             {
                 return false;
@@ -398,7 +421,7 @@ namespace Nikse.SubtitleEdit.Controls
                     return false; // beyond the control's range (max 99:59:59,999) - reject rather than overflow
                 }
 
-                value = RemoveVideoOffset(TimeSpan.FromMilliseconds(milliseconds));
+                value = RemoveVideoOffset(TimeSpan.FromMilliseconds(isNegative ? -milliseconds : milliseconds));
                 return true;
             }
 
@@ -427,11 +450,26 @@ namespace Nikse.SubtitleEdit.Controls
                 return false;
             }
 
-            value = RemoveVideoOffset(TimeSpan.FromMilliseconds(ms));
+            value = RemoveVideoOffset(TimeSpan.FromMilliseconds(isNegative ? -ms : ms));
             return true;
         }
 
         private TimeSpan ParseTime(string text)
+        {
+            // The mask carries the sign as a leading minus; the parts themselves are unsigned, so take
+            // the sign off first and re-apply it to the parsed magnitude (#13695). Without this, editing
+            // a negative time code silently flipped it positive ("-00" parses as 0).
+            var isNegative = text.StartsWith('-');
+            if (isNegative)
+            {
+                text = text.Substring(1);
+            }
+
+            var magnitude = ParseUnsignedTime(text);
+            return RemoveVideoOffset(isNegative ? magnitude.Negate() : magnitude);
+        }
+
+        private static TimeSpan ParseUnsignedTime(string text)
         {
             if (Se.Settings.General.UseFrameMode)
             {
@@ -444,7 +482,7 @@ namespace Nikse.SubtitleEdit.Controls
                     int.TryParse(frameParts[3], out var frames))
                 {
                     var frameMs = SubtitleFormat.FramesToMillisecondsMax999(frames);
-                    return RemoveVideoOffset(new TimeSpan(0, frameHours, frameMinutes, frameSeconds, frameMs));
+                    return new TimeSpan(0, frameHours, frameMinutes, frameSeconds, frameMs);
                 }
 
                 return TimeSpan.Zero;
@@ -453,13 +491,13 @@ namespace Nikse.SubtitleEdit.Controls
             // Try parsing with milliseconds format (00:00:00:000 or 00:00:00.000)
             if (TimeSpan.TryParseExact(text, @"hh\:mm\:ss\:fff", null, out var result))
             {
-                return RemoveVideoOffset(result);
+                return result;
             }
 
             // Try parsing with dot separator for milliseconds
             if (TimeSpan.TryParseExact(text, @"hh\:mm\:ss\.fff", null, out result))
             {
-                return RemoveVideoOffset(result);
+                return result;
             }
 
             // Manual parsing as fallback
@@ -471,7 +509,7 @@ namespace Nikse.SubtitleEdit.Controls
                     int.TryParse(parts[2], out var seconds) &&
                     int.TryParse(parts[3], out var milliseconds))
                 {
-                    return RemoveVideoOffset(new TimeSpan(0, hours, minutes, seconds, milliseconds));
+                    return new TimeSpan(0, hours, minutes, seconds, milliseconds);
                 }
             }
 
@@ -519,7 +557,7 @@ namespace Nikse.SubtitleEdit.Controls
             else if (e.Key == Key.Left)
             {
                 var newPos = _textBox.CaretIndex - 1;
-                while (newPos >= 0 && IsSeparator(_textBuffer[newPos]))
+                while (newPos >= 0 && IsMaskLiteral(_textBuffer[newPos], newPos))
                 {
                     newPos--;
                 }
@@ -534,7 +572,7 @@ namespace Nikse.SubtitleEdit.Controls
             else if (e.Key == Key.Right)
             {
                 var newPos = _textBox.CaretIndex + 1;
-                while (newPos < _textBuffer.Length && IsSeparator(_textBuffer[newPos]))
+                while (newPos < _textBuffer.Length && IsMaskLiteral(_textBuffer[newPos], newPos))
                 {
                     newPos++;
                 }
@@ -560,7 +598,9 @@ namespace Nikse.SubtitleEdit.Controls
                 return;
             }
 
-            var caret = _textBox.CaretIndex;
+            // Measured from the first digit, so the leading minus of a negative time code does not
+            // shift every part one place to the right (#13695).
+            var caret = _textBox.CaretIndex - SignOffset;
             TimeSpan newVal = Value;
 
             if (caret <= 2)
@@ -600,12 +640,20 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void UpdateText()
         {
+            var oldSignOffset = SignOffset;
             _textBuffer = FormatTime(Value);
             if (_textBox != null)
             {
-                var oldCaret = _textBox.CaretIndex;
+                // Stepping across zero adds or removes the leading minus; move the caret with it so it
+                // stays on the same part of the time code (#13695).
+                var oldCaret = _textBox.CaretIndex + (SignOffset - oldSignOffset);
                 _textBox.Text = _textBuffer;
-                _textBox.CaretIndex = Math.Min(oldCaret, _textBuffer.Length);
+                _textBox.CaretIndex = Math.Clamp(oldCaret, 0, _textBuffer.Length);
+            }
+
+            if (_minWidthIncludesSign != SignOffset > 0)
+            {
+                UpdateMinWidth();
             }
         }
 
@@ -616,10 +664,16 @@ namespace Nikse.SubtitleEdit.Controls
                 time = TimeSpan.FromMilliseconds(time.TotalMilliseconds + Se.Settings.General.CurrentVideoOffsetInMs);
             }
 
+            // A negative time span has negative parts throughout, which TimeCode renders as a single
+            // leading minus.
             TimeCode tc;
             if (time.TotalHours > 99)
             {
                 tc = new TimeCode(99, time.Minutes, time.Seconds, time.Milliseconds);
+            }
+            else if (time.TotalHours < -99)
+            {
+                tc = new TimeCode(-99, time.Minutes, time.Seconds, time.Milliseconds);
             }
             else
             {
@@ -637,9 +691,30 @@ namespace Nikse.SubtitleEdit.Controls
 
         private static bool IsSeparator(char c) => c == ':' || c == ',' || c == '.';
 
+        // Positions the caret cannot edit or land on: the separators and the sign of a negative value.
+        private static bool IsMaskLiteral(char c, int index) => IsSeparator(c) || (index == 0 && c == '-');
+
+        // First character of the last part (milliseconds, or frames in frame mode).
+        private static int LastPartStartIndex(string text)
+        {
+            for (var i = text.Length - 1; i >= 0; i--)
+            {
+                if (IsSeparator(text[i]))
+                {
+                    return i + 1;
+                }
+            }
+
+            return 0;
+        }
+
+        // Negative time codes are allowed (#13695); only values the mask cannot render are pulled back
+        // into range.
         private TimeSpan Clamp(TimeSpan time)
         {
-            return time.TotalMilliseconds < 0 ? TimeSpan.Zero : time;
+            return time.TotalMilliseconds < -TimeCode.MaxTimeTotalMilliseconds
+                ? TimeSpan.FromMilliseconds(-TimeCode.MaxTimeTotalMilliseconds)
+                : time;
         }
     }
 }

@@ -7,6 +7,7 @@ using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceCloneConsent;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
@@ -58,6 +59,14 @@ public partial class VoiceSettingsViewModel : ObservableObject
             return;
         }
 
+        // Ask before the file picker rather than after, so a user who declines is not first made
+        // to hunt for a recording. The drag-drop path has no such "before", which is why
+        // ImportVoiceFromFileAsync checks again - both funnel through there.
+        if (!await EnsureVoiceCloningConsentAsync())
+        {
+            return;
+        }
+
         string fileName;
         if (_engine is Piper)
         {
@@ -80,6 +89,13 @@ public partial class VoiceSettingsViewModel : ObservableObject
     private async Task ImportVoiceFromFileAsync(string fileName)
     {
         if (Window == null || _engine == null)
+        {
+            return;
+        }
+
+        // The choke point every import passes through - the button above and the drop handler
+        // below. Gating only the button would leave drag-drop cloning unasked.
+        if (!await EnsureVoiceCloningConsentAsync())
         {
             return;
         }
@@ -286,13 +302,33 @@ public partial class VoiceSettingsViewModel : ObservableObject
             ok = _engine.ImportVoice(fileName);
         }
 
-        if (ok)
+        var importedFileName = Path.GetFileName(fileName);
+        if (!ok)
         {
-            var fileNameOnly = Path.GetFileName(fileName);
-            await MessageBox.Show(Window, Se.Language.Video.TextToSpeech.VoiceImportSuccessTitle, string.Format(Se.Language.Video.TextToSpeech.VoiceXImported, fileNameOnly));
-            RefreshVoices = true;
+            // Without this the dialog just closed with nothing to show for it, which reads as
+            // "imported" - and users then copy the file into the voices folder by hand instead,
+            // bypassing the conversion every cloning engine does on import (#13508).
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Error,
+                string.Format(Se.Language.Video.TextToSpeech.VoiceXCouldNotBeImported, importedFileName));
+            return;
         }
+
+        await MessageBox.Show(Window, Se.Language.Video.TextToSpeech.VoiceImportSuccessTitle, string.Format(Se.Language.Video.TextToSpeech.VoiceXImported, importedFileName));
+        RefreshVoices = true;
     }
+
+    /// <summary>
+    /// Shows the first-clone consent dialog when it is still owed, and reports whether cloning may
+    /// go ahead. A no-op once accepted, and for Piper, whose import is a trained model rather than
+    /// somebody's voice.
+    /// </summary>
+    private Task<bool> EnsureVoiceCloningConsentAsync() =>
+        VoiceCloneConsentPrompt.EnsureAsync(
+            _engine,
+            Window!,
+            () => _windowService.ShowDialogAsync<VoiceCloneConsentWindow, VoiceCloneConsentViewModel>(Window!, _ => { }));
 
     internal void OnDragOver(object? sender, DragEventArgs e)
     {
@@ -440,18 +476,10 @@ public partial class VoiceSettingsViewModel : ObservableObject
     internal void Initialize(ITtsEngine engine)
     {
         _engine = engine;
-        IsImportVoiceVisible = engine.GetType() == typeof(Piper)
-                               || engine.GetType() == typeof(Qwen3TtsCpp)
-                               || engine.GetType() == typeof(Qwen3TtsCrispAsr)
-                               || engine.GetType() == typeof(VibeVoiceCrispAsr)
-                               || engine.GetType() == typeof(IndexTtsCrispAsr)
-                               || engine.GetType() == typeof(CosyVoice3CrispAsr)
-                               || engine.GetType() == typeof(F5TtsCrispAsr)
-                               || engine.GetType() == typeof(VoxCPM2CrispAsr)
-                               || engine.GetType() == typeof(OmniVoiceCrispAsr)
-                               || engine.GetType() == typeof(MossTtsCrispAsr)
-                               || engine.GetType() == typeof(ZonosTtsCrispAsr)
-                               || engine.GetType() == typeof(ChatterboxTtsCpp)
-                               || engine.GetType() == typeof(OmniVoiceTtsCpp);
+
+        // Every cloning engine imports a reference recording; Piper is the one engine that
+        // imports something else (a trained .onnx voice model), so it is named on its own
+        // rather than counted as cloning.
+        IsImportVoiceVisible = engine.SupportsVoiceCloning || engine is Piper;
     }
 }

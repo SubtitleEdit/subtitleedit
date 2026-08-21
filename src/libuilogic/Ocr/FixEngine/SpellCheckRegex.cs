@@ -69,12 +69,24 @@ public class SpellCheckRegex
     {
         var list = new List<SpellCheckRegex>();
 
-        var node = doc.DocumentElement?.SelectSingleNode(name);
-        if (node == null)
+        // Several shipped lists (deu/nld/nor) contain more than one section with the same
+        // name - read them all, or every section after the first is silently dropped.
+        var nodes = doc.DocumentElement?.SelectNodes(name);
+        if (nodes == null)
         {
             return list;
         }
 
+        foreach (XmlNode node in nodes)
+        {
+            LoadRegExNodes(node, list);
+        }
+
+        return list;
+    }
+
+    private static void LoadRegExNodes(XmlNode node, List<SpellCheckRegex> list)
+    {
         foreach (XmlNode item in node.ChildNodes)
         {
             var find = item.Attributes?["find"]?.Value;
@@ -104,8 +116,6 @@ public class SpellCheckRegex
                 // ignore
             }
         }
-
-        return list;
     }
 }
 

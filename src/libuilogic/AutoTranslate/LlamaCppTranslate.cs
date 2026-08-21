@@ -51,28 +51,29 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
-            string prompt;
-            var modelPrompt = Configuration.Settings.Tools.LlamaCppModelPrompt;
-            if (!string.IsNullOrWhiteSpace(modelPrompt))
-            {
-                // A curated model with its own trained-in prompt (e.g. Hy-MT2). The "codes" this
-                // engine receives are already English language names - ListLanguages() puts the
-                // name in TranslationPair.Code - which is exactly what these templates expect.
-                prompt = string.Format(modelPrompt, sourceLanguageCode, targetLanguageCode);
-            }
-            else
+            var template = Configuration.Settings.Tools.LlamaCppModelPrompt;
+            if (string.IsNullOrWhiteSpace(template))
             {
                 if (string.IsNullOrWhiteSpace(Configuration.Settings.Tools.LlamaCppPrompt))
                 {
                     Configuration.Settings.Tools.LlamaCppPrompt = new ToolsSettings().LlamaCppPrompt;
                 }
-                prompt = string.Format(Configuration.Settings.Tools.LlamaCppPrompt, sourceLanguageCode, targetLanguageCode);
+
+                template = Configuration.Settings.Tools.LlamaCppPrompt;
             }
+
+            // The "codes" this engine receives are already English language names - ListLanguages()
+            // puts the name in TranslationPair.Code - which is what the templates expect.
+            var encodedUserMessage = LlmTranslatePrompt.BuildEncodedUserMessage(
+                template, sourceLanguageCode, targetLanguageCode, text);
 
             // No "model" field: llama-server serves the single model it was started with, and for a
             // remote server the user's own llama-server does the same. Sending one would only risk a
             // mismatch with whatever that server has loaded.
-            var input = "{ \"messages\": [{ \"role\": \"user\", \"content\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]" + MakeSamplingJson() + "}";
+            // Generous output budget (a translation is roughly source-sized) so a model stuck in a
+            // generation loop runs out of tokens instead of generating until the context fills (#13830).
+            var maxTokens = 200 + 2 * text.Length;
+            var input = "{ \"messages\": [{ \"role\": \"user\", \"content\": \"" + encodedUserMessage + "\" }], \"max_tokens\": " + maxTokens + MakeSamplingJson() + "}";
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             var result = await _httpClient.PostAsync(string.Empty, content, cancellationToken);

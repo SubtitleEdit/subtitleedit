@@ -31,7 +31,7 @@ public class BinaryOcrMatcher : IBinaryOcrMatcher
         public int ExpandCount { get; set; }
         public string? Name { get; set; }
         public NOcrChar? NOcrCharacter { get; set; }
-        public ImageSplitterItem? ImageSplitterItem { get; set; }
+        public ImageSplitterItem2? ImageSplitterItem { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
         public List<ImageSplitterItem>? Extra { get; set; }
@@ -50,7 +50,7 @@ public class BinaryOcrMatcher : IBinaryOcrMatcher
             NOcrCharacter = character;
         }
 
-        public CompareMatch(string text, bool italic, int expandCount, string name, ImageSplitterItem imageSplitterItem)
+        public CompareMatch(string text, bool italic, int expandCount, string name, ImageSplitterItem2 imageSplitterItem)
             : this(text, italic, expandCount, name)
         {
             ImageSplitterItem = imageSplitterItem;

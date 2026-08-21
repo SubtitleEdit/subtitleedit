@@ -74,9 +74,13 @@ Two mechanisms, doing two different halves of the job:
    on), and updates the manifest's `tag:`/`commit:` to match. That is the entire per-release
    workflow; nothing else in this folder needs manual editing.
 
-   Also run `../update-metainfo-version.sh` (bumps the AppStream `<release>` entry) and add a
-   matching entry to `../dk.nikse.subtitleedit.metainfo.xml` if this is a new stable version,
-   same as before.
+   The AppStream `<release>` entry is the other half, and its timing matters: this manifest
+   installs the metainfo from the **pinned tag's checkout**, so the entry has to be committed
+   *before* the tag is cut, not after. Run `../update-metainfo-version.sh` as part of the
+   release-prep PR - it inserts an entry for whatever version `Se.cs` names, keeping the older
+   ones - and write a `<description>` into the new entry by hand for a stable release.
+   `build-ui.yml`'s `verify-metainfo-release-entry` job enforces this: a dispatch with
+   `is_prerelease=false` fails before the build matrix if the entry is missing.
 
 ## Before submitting (first-time only)
 1. **Validate** (the Flathub review bot also runs this, but catching problems before opening

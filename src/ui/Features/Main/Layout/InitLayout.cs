@@ -837,12 +837,39 @@ public static partial class InitLayout
         Grid.SetColumn(nestedSplitter, 1);
         nestedGrid.Children.Add(nestedSplitter);
 
-        // Right part of nested grid
-        var nestedRight = new Border
+        // The subtitle grid goes at the bottom on its own; the edit box is detached so it can
+        // sit under the waveform, matching the layout thumbnail and SE4's Aegisub-style
+        // layout (issue #13940).
+        var listViewOnly = InitListViewAndEditBox.MakeLayoutListViewAndEditBox(mainPage, vm, detachedEditBox: true, out var editSection);
+
+        // Right part of nested grid: waveform on top, edit box below
+        var rightGrid = new Grid
+        {
+            RowDefinitions =
+            {
+                // The floor keeps the edit box splitter from dragging the waveform away to
+                // nothing, leaving no handle to drag back (same reason as the grid's floor).
+                new RowDefinition(GridLength.Star) { MinHeight = 45 },
+                new RowDefinition(GridLength.Auto),
+            }
+        };
+
+        var waveformBorder = new Border
         {
             Child = InitWaveform.MakeWaveform(vm),
             VerticalAlignment = VerticalAlignment.Stretch,
             Height = double.NaN,
+        };
+        Grid.SetRow(waveformBorder, 0);
+        rightGrid.Children.Add(waveformBorder);
+
+        Grid.SetRow(editSection, 1);
+        rightGrid.Children.Add(editSection);
+        InitListViewAndEditBox.AttachDetachedEditBoxSplitter(rightGrid, editSection);
+
+        var nestedRight = new Border
+        {
+            Child = rightGrid,
         };
         Grid.SetColumn(nestedRight, 2);
         nestedGrid.Children.Add(nestedRight);
@@ -863,7 +890,7 @@ public static partial class InitLayout
         // Bottom content
         var bottomContent = new Border
         {
-            Child = InitListViewAndEditBox.MakeLayoutListViewAndEditBox(mainPage, vm)
+            Child = listViewOnly
         };
         Grid.SetRow(bottomContent, 2);
         contentGrid.Children.Add(bottomContent);

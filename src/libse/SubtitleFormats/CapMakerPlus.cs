@@ -71,7 +71,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (buffer[i] == 0x0b)
                 {
                     string timeCode = Encoding.ASCII.GetString(buffer, i + 1, 11);
-                    if (timeCode != "00:00:00:00" && RegexTimeCodes.IsMatch(timeCode))
+                    // A zero time code is normally a header/placeholder entry, but a real cue can
+                    // start at 00:00:00:00 - those records carry the style byte (1=normal, 3=italic).
+                    var isRealZeroTimeCue = i + 22 < buffer.Length && (buffer[i + 22] == 1 || buffer[i + 22] == 3);
+                    if ((timeCode != "00:00:00:00" || isRealZeroTimeCue) && RegexTimeCodes.IsMatch(timeCode))
                     {
                         var p = new Paragraph { StartTime = DecodeTimeCodeFramesFourParts(timeCode.Split(':')) };
                         bool italic = buffer[i + 22] == 3; // 3=italic, 1=normal

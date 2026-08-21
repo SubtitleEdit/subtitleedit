@@ -18,7 +18,7 @@ internal static class OperationOrderParser
     // The CLI exposes each as a lowercase-hyphenated flag plus a PascalCase alias; both
     // normalize to the canonical name (lower-cased, dashes removed), so this list doubles
     // as the alias table.
-    private static readonly string[] ToggleOperations =
+    internal static readonly string[] ToggleOperations =
     {
         "ApplyDurationLimits",
         "BalanceLines",
@@ -81,7 +81,14 @@ internal static class OperationOrderParser
     /// True when Fix Common Errors was requested (a bare flag and/or <c>--fix-common-errors-rules</c>).
     /// Guarantees at least one Fix Common Errors pass when only the rules option was supplied.
     /// </param>
-    public static List<string> BuildOperations(IReadOnlyList<string> rawArgs, bool fceRequested)
+    /// <param name="removeFormattingRequested">
+    /// Same for Remove Formatting: true when requested via a bare flag and/or
+    /// <c>--remove-formatting-rules</c>, guaranteeing at least one pass.
+    /// </param>
+    public static List<string> BuildOperations(
+        IReadOnlyList<string> rawArgs,
+        bool fceRequested,
+        bool removeFormattingRequested = false)
     {
         var operations = new List<string>();
         if (rawArgs == null)
@@ -90,10 +97,15 @@ internal static class OperationOrderParser
         }
 
         var sawBareFce = false;
-        int? rulesPosition = null;
+        var sawBareRemoveFormatting = false;
+        int? fceRulesPosition = null;
+        int? removeFormattingRulesPosition = null;
+        int? fceRulesArgIndex = null;
+        int? removeFormattingRulesArgIndex = null;
 
-        foreach (var arg in rawArgs)
+        for (var argIndex = 0; argIndex < rawArgs.Count; argIndex++)
         {
+            var arg = rawArgs[argIndex];
             if (string.IsNullOrEmpty(arg) || (arg[0] != '-' && arg[0] != '/'))
             {
                 continue; // positional (e.g. a file pattern) or a value, not a flag
@@ -101,11 +113,19 @@ internal static class OperationOrderParser
 
             var key = Normalize(arg);
 
-            // Fix Common Errors rules option configures the FCE pass(es) globally; it does
-            // not itself add a pass, but it does imply one when no bare flag is present.
+            // A rules option configures its pass(es) globally; it does not itself add a
+            // pass, but it does imply one when no bare flag is present.
             if (key == "fixcommonerrorsrules")
             {
-                rulesPosition ??= operations.Count;
+                fceRulesPosition ??= operations.Count;
+                fceRulesArgIndex ??= argIndex;
+                continue;
+            }
+
+            if (key == "removeformattingrules")
+            {
+                removeFormattingRulesPosition ??= operations.Count;
+                removeFormattingRulesArgIndex ??= argIndex;
                 continue;
             }
 
@@ -115,15 +135,34 @@ internal static class OperationOrderParser
                 {
                     sawBareFce = true;
                 }
+                else if (operation == "RemoveFormatting")
+                {
+                    sawBareRemoveFormatting = true;
+                }
 
                 operations.Add(operation);
             }
         }
 
-        // Back-compat: "--fix-common-errors-rules:..." on its own still runs one FCE pass.
+        // Back-compat: a rules option on its own still runs one pass, inserted where the
+        // rules flag appeared. Insert higher positions first (ties broken by raw-arg order)
+        // so an earlier insert cannot shift a later one.
+        var implied = new List<(int Position, int ArgIndex, string Operation)>();
         if (fceRequested && !sawBareFce)
         {
-            operations.Insert(rulesPosition ?? operations.Count, "FixCommonErrors");
+            implied.Add((fceRulesPosition ?? operations.Count, fceRulesArgIndex ?? int.MaxValue, "FixCommonErrors"));
+        }
+
+        if (removeFormattingRequested && !sawBareRemoveFormatting)
+        {
+            implied.Add((removeFormattingRulesPosition ?? operations.Count, removeFormattingRulesArgIndex ?? int.MaxValue, "RemoveFormatting"));
+        }
+
+        foreach (var (position, _, operation) in implied
+                     .OrderByDescending(i => i.Position)
+                     .ThenByDescending(i => i.ArgIndex))
+        {
+            operations.Insert(position, operation);
         }
 
         return operations;

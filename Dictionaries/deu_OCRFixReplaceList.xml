@@ -6304,6 +6304,8 @@
     <Word from="vial" to="viel" />
     <Word from="Videoiiben/vachung" to="Videoüberwachung" />
     <Word from="Vie/e" to="Viele" />
+    <Word from="Viei" to="Viel" />
+    <Word from="viei" to="viel" />
     <Word from="Vieien" to="Vielen" />
     <Word from="vieiieicht" to="vielleicht" />
     <Word from="vielféltig" to="vielfältig" />
@@ -7025,6 +7027,7 @@
     <WordPart from="f" to="f " />
     <WordPart from="I" to="l" />
     <WordPart from="i" to="t" />
+    <WordPart from="i" to="l" />
     <WordPart from="ii" to="tt" />
     <WordPart from="ii" to="ü" />
     <WordPart from="IVI" to="M" />
@@ -7106,6 +7109,12 @@
     <!-- traIIer → trailer : I→l mid lowercase word -->
     <RegEx find="\b([a-zäöüß]+)I([a-zäöüß]+)\b" spellCheck="$1l$2" replaceWith="$1l$2" />
 
+    <!-- einmaI → einmal : trailing I→l in lowercase word -->
+    <RegEx find="\b([a-zäöüß]+)I\b" spellCheck="$1l" replaceWith="$1l" />
+
+    <!-- voII → voll / SoII → Soll / AII → All : trailing II→ll -->
+    <RegEx find="\b([A-ZÄÖÜa-zäöüß][a-zäöüß]*)II\b" spellCheck="$1ll" replaceWith="$1ll" />
+
     <!-- trailing I→l in capitalised word (e.g. BerlinI → Berlinl) -->
     <RegEx find="\b([A-ZÄÖÜ][a-zäöüß]+)I\b" spellCheck="$1l" replaceWith="$1l" />
 
@@ -7116,11 +7125,33 @@
     <!-- "Ich" starts with I but is only 3 chars — safe minimum is 4 -->
     <RegEx find="\bI([a-zäöüß]{4,})\b" spellCheck="l$1" replaceWith="l$1" />
 
-    <!-- leading l→I before 2+ lowercase chars -->
-    <RegEx find="\bl([a-zäöüß]{2,})\b" spellCheck="I$1" replaceWith="I$1" />
+    <!-- lst → Ist / ln → In / lm → Im : leading l→I before lowercase chars.  -->
+    <!-- Safe with a single following char too: no German word is "l"+letter, -->
+    <!-- and the spellCheck gate only fires when the I-form is a real word.   -->
+    <RegEx find="\bl([a-zäöüß]+)\b" spellCheck="I$1" replaceWith="I$1" />
 
-    <!-- standalone l → I (Roman numerals, list markers) -->
-    <RegEx find="\bl\b" replaceWith="I" />
+    <!-- No standalone \bl\b → I rule: "l" is the German liter abbreviation  -->
+    <!-- (2 l Milch), and an unconditional rule would corrupt it.            -->
+
+    <!-- ============================================================ -->
+    <!-- ITALIC l MISREAD AS i (#13660)                               -->
+    <!-- Slanted glyphs make binary image compare read l as i:       -->
+    <!--   viel → viei, soll → soii, wollen → woiien                 -->
+    <!-- Correct i-words (Juni/Taxi/Ski) are in the dictionary and   -->
+    <!-- protected by the already-spelled-correctly gate.            -->
+    <!-- ============================================================ -->
+
+    <!-- trailing i→l (viei → viel, Viei → Viel) -->
+    <RegEx find="\b([A-ZÄÖÜa-zäöüß][a-zäöüß]*)i\b" spellCheck="$1l" replaceWith="$1l" />
+
+    <!-- double ii→ll (soii → soll, woiien → wollen, Müii → Müll) -->
+    <RegEx find="\b([A-ZÄÖÜa-zäöüß][a-zäöüß]*)ii([a-zäöüß]*)\b" spellCheck="$1ll$2" replaceWith="$1ll$2" />
+
+    <!-- word-initial i to l (iove to love, iieber to lieber) -->
+    <RegEx find="\bi([a-zäöüß]{2,})\b" spellCheck="l$1" replaceWith="l$1" />
+
+    <!-- word-initial ii to ll (iiegar to llegar) -->
+    <RegEx find="\bii([a-zäöüß]+)\b" spellCheck="ll$1" replaceWith="ll$1" />
 
     <!-- ============================================================ -->
     <!-- GERMAN GENITIVE / APOSTROPHE                                 -->
@@ -7210,5 +7241,11 @@
     <!-- inBerlin → in Berlin -->
     <RegEx find="\bin([A-ZÄÖÜ][a-zäöüß]+)\b" spellCheck="$1" replaceWith="in $1" />
 
+
+    <!-- Lowercase l misread as uppercase I (#13660): replace every I in the word, -->
+    <!-- so words with more than one are repaired too (deIectabIe -> delectable,   -->
+    <!-- ExceIIencies -> Excellencies). Words of two letters (AI) are never        -->
+    <!-- touched, and real words (MacIntosh) are kept by the spell check gate.     -->
+    <RegEx find="\b([A-ZÄÖÜa-zäöüß](?=[a-zäöüßI]*I)[a-zäöüßI]{2,})\b" replaceAllFrom="I" replaceAllTo="l" spellCheck="$1" replaceWith="$1" />
   </RegularExpressionsIfSpelledCorrectly>
 </OCRFixReplaceList>

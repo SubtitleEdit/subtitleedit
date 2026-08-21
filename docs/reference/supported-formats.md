@@ -32,6 +32,21 @@ Subtitle Edit supports a wide range of subtitle formats for reading and writing.
 > - [ASSA Format Reference](assa.md) — Complete guide to ASS/SSA format
 > - [ASSA Override Tags Reference](assa-override-tags.md) — Complete list of ASS/SSA override tags for styling and animation
 
+## Editing / NLE Exchange Formats
+
+Formats used to move captions and markers between Subtitle Edit and video editors.
+
+| Format | Extension(s) |
+|--------|--------------|
+| Final Cut Pro Xml Captions | .fcpxml |
+| Final Cut Pro Xml (1.3 – 1.5, X, text and marker variants) | .xml, .fcpxml |
+| DaVinci Resolve Marker EDL | .edl |
+| Csv DaVinci | .csv |
+| EDL | .edl |
+| Adobe Premiere Markers | .csv |
+| Adobe Premiere PrProj Xml | .xml |
+| Adobe Encore (tabs) | .txt |
+
 ## Image-Based Formats
 
 | Format | Extension(s) |
@@ -39,14 +54,16 @@ Subtitle Edit supports a wide range of subtitle formats for reading and writing.
 | Blu-ray PGS (SUP) | .sup |
 | VobSub (DVD) | .sub/.idx |
 | BDN XML | .xml |
+| Timed Text Base64 Image (SMPTE-TT bitmap) | .xml |
 
 ## Container Formats (with embedded subtitles)
 
 | Format | Extension(s) |
 |--------|--------------|
 | Matroska (MKV/MKS) | .mkv, .mks |
-| MP4 / MOV (text tracks) | .mp4, .m4v, .m4s, .3gp |
+| MP4 / MOV (text tracks, including fragmented MP4/DASH — wvtt, stpp, tx3g) | .mp4, .m4v, .m4s, .3gp |
 | Transport Stream (teletext, DVB-sub) | .ts, .m2ts, .mts |
+| AVI (XSUB) | .avi |
 | MacCaption | .mcc |
 
 ## Video Formats (for loading video)

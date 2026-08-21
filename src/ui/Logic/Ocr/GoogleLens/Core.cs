@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using Nikse.SubtitleEdit.UiLogic.Http;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -391,7 +392,7 @@ public class Core
 
     private async Task<HttpResponseMessage> DefaultFetchAsync(HttpRequestMessage request)
     {
-        using var client = new HttpClient();
+        using var client = HttpClientFactoryWithProxy.CreateHttpClientWithProxy();
         return await client.SendAsync(request);
     }
     

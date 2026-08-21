@@ -24,14 +24,28 @@ public sealed record LlamaCppModel(
     string? ChatTemplate = null,
     bool NoJinja = false,
     // Translation prompt this model was trained on ({0} = source language English name,
-    // {1} = target language English name); null = the user's generic llama.cpp prompt.
-    // Needed for Hy-MT2, which answers in Chinese when given the generic prompt.
+    // {1} = target language English name, optional {2} = the text to translate); null = the
+    // user's generic llama.cpp prompt. Needed for Hy-MT2, which answers in Chinese when given
+    // the generic prompt, and for MiLMMT-46, whose completion format embeds the text between
+    // a "{0}: " prefix and a trailing "{1}:" cue.
     string? PromptTemplate = null,
     // Model-recommended sampling; -1 = leave the server default.
     double Temperature = -1,
     double TopP = -1,
     int TopK = -1,
-    double RepeatPenalty = -1);
+    double RepeatPenalty = -1,
+    // Raw-completion translation model with no instruction training (MiLMMT-46): it can only
+    // continue its trained PromptTemplate. Excluded from the advanced engine's model list -
+    // its JSON batch protocol gets back well-formed JSON whose values are the untranslated
+    // source lines, which would be written to the grid as a "successful" batch.
+    bool CompletionOnly = false,
+    // Launches the server with "--reasoning off" for models that think by default (Gemma 4).
+    // Thinking is not just slow here, it loses the answer: the thoughts go to
+    // "message.reasoning_content" and "message.content" - the only field the engines read -
+    // stays empty until the token budget runs out, so the line comes back untranslated. The
+    // Qwen families avoid this through their chat-template override instead (chatml +
+    // --no-jinja bypasses the embedded template's thinking logic).
+    bool NoThinking = false);
 
 /// <summary>
 /// Manages the local <c>llama-server</c> process used by the llama.cpp auto-translate and OCR
@@ -47,6 +61,14 @@ public static class LlamaCppServerManager
     // the other LLM engines.
     private const string HyMt2PromptTemplate =
         "Translate the following text into {1}. Keep line breaks exactly the same. Note that you should only output the translated result without any additional explanation:";
+
+    // MiLMMT-46's trained raw-completion format (with language English names). The text sits
+    // inside the template ({2}) and the trailing "{1}:" cue is mandatory - without it the model
+    // does not switch language and just echo-loops the source. Its GGUF chat template is a pure
+    // passthrough ("{{ message.content }}", no role markers), so the chat endpoint delivers
+    // this verbatim and no ChatTemplate/NoJinja override is wanted.
+    private const string MiLmMt46PromptTemplate =
+        "Translate this from {0} to {1}:\n{0}: {2}\n{1}:";
 
     public static readonly IReadOnlyList<LlamaCppModel> TranslateModels = new[]
     {
@@ -66,18 +88,42 @@ public static class LlamaCppServerManager
             "https://huggingface.co/NikolayKozloff/translategemma-12b-it-Q5_K_M-GGUF/resolve/main/translategemma-12b-it-q5_k_m.gguf",
             ChatTemplate: "gemma", NoJinja: true),
 
+        // MiLMMT-46 v1.0 (Xiaomi, 2026) - Gemma3-based translation-specialized models, 46
+        // languages including Danish/Norwegian/Swedish (the gap in Hy-MT2's coverage); the paper
+        // reports it ahead of TranslateGemma and Hy-MT 1.5. Temperature 0 matches the model
+        // card's greedy-decoding usage. CompletionOnly: see the record field - regular engine only.
+        new LlamaCppModel("MiLMMT-46 4B (Q4_K_M) - 46 languages incl. Nordic", "MiLMMT-46-4B-v1.0.Q4_K_M.gguf", "2.5 GB",
+            "https://huggingface.co/mradermacher/MiLMMT-46-4B-v1.0-GGUF/resolve/main/MiLMMT-46-4B-v1.0.Q4_K_M.gguf",
+            PromptTemplate: MiLmMt46PromptTemplate, Temperature: 0, CompletionOnly: true),
+        new LlamaCppModel("MiLMMT-46 4B (Q8_0) - 46 languages incl. Nordic", "MiLMMT-46-4B-v1.0.Q8_0.gguf", "4.1 GB",
+            "https://huggingface.co/mradermacher/MiLMMT-46-4B-v1.0-GGUF/resolve/main/MiLMMT-46-4B-v1.0.Q8_0.gguf",
+            PromptTemplate: MiLmMt46PromptTemplate, Temperature: 0, CompletionOnly: true),
+        new LlamaCppModel("MiLMMT-46 12B (Q4_K_M) - 46 languages incl. Nordic", "MiLMMT-46-12B-v1.0.Q4_K_M.gguf", "7.3 GB",
+            "https://huggingface.co/mradermacher/MiLMMT-46-12B-v1.0-GGUF/resolve/main/MiLMMT-46-12B-v1.0.Q4_K_M.gguf",
+            PromptTemplate: MiLmMt46PromptTemplate, Temperature: 0, CompletionOnly: true),
+        new LlamaCppModel("MiLMMT-46 12B (Q5_K_M) - 46 languages incl. Nordic", "MiLMMT-46-12B-v1.0.Q5_K_M.gguf", "8.4 GB",
+            "https://huggingface.co/mradermacher/MiLMMT-46-12B-v1.0-GGUF/resolve/main/MiLMMT-46-12B-v1.0.Q5_K_M.gguf",
+            PromptTemplate: MiLmMt46PromptTemplate, Temperature: 0, CompletionOnly: true),
+
         // Gemma 4 (Google, 2026) - 140+ languages, the strongest general model here for translation
         // into non-English targets. NOTE: unlike Gemma 2/3 this must use its own embedded Jinja
         // template - Gemma 4 replaced the <start_of_turn> scheme with <|turn>role ... <turn|>, so
         // llama.cpp's built-in "gemma" template does NOT apply and forcing it produces garbage.
-        // Its template defaults enable_thinking to false, so output is clean translation.
+        // That template turns thinking ON by default, which for subtitle-sized requests means no
+        // translation at all: 7 of 16 English->Danish lines and 11 of 16 English->German lines came
+        // back empty at ~10-12 s/line, each burning the whole max_tokens budget inside
+        // reasoning_content. Hence NoThinking on every Gemma 4 entry - with it, 0 of 16 empty at
+        // ~1 s/line.
         new LlamaCppModel("Gemma 4 E4B it (Q4_K_M)", "google_gemma-4-E4B-it-Q4_K_M.gguf", "5.4 GB",
-            "https://huggingface.co/bartowski/google_gemma-4-E4B-it-GGUF/resolve/main/google_gemma-4-E4B-it-Q4_K_M.gguf"),
+            "https://huggingface.co/bartowski/google_gemma-4-E4B-it-GGUF/resolve/main/google_gemma-4-E4B-it-Q4_K_M.gguf",
+            NoThinking: true),
         new LlamaCppModel("Gemma 4 E4B it (Q8_0)", "google_gemma-4-E4B-it-Q8_0.gguf", "8.0 GB",
-            "https://huggingface.co/bartowski/google_gemma-4-E4B-it-GGUF/resolve/main/google_gemma-4-E4B-it-Q8_0.gguf"),
+            "https://huggingface.co/bartowski/google_gemma-4-E4B-it-GGUF/resolve/main/google_gemma-4-E4B-it-Q8_0.gguf",
+            NoThinking: true),
         // The 12B repo (and its file names) drop the "google_" prefix the E4B repo uses.
         new LlamaCppModel("Gemma 4 12B it (Q4_K_M)", "gemma-4-12B-it-Q4_K_M.gguf", "7.6 GB",
-            "https://huggingface.co/bartowski/gemma-4-12B-it-GGUF/resolve/main/gemma-4-12B-it-Q4_K_M.gguf"),
+            "https://huggingface.co/bartowski/gemma-4-12B-it-GGUF/resolve/main/gemma-4-12B-it-Q4_K_M.gguf",
+            NoThinking: true),
 
         // Alternative model family. Qwen 3 is the strongest open model for CJK
         // (Chinese/Japanese/Korean) and competitive elsewhere — useful fallback
@@ -176,16 +222,22 @@ public static class LlamaCppServerManager
             ChatTemplate: "gemma", NoJinja: true),
         // Gemma 4 uses its own embedded Jinja template - see the note in TranslateModels; the
         // built-in "gemma" template above is the Gemma 2/3 format and must not be forced here.
+        // NoThinking for the same reason as there: the review client reads message.content too,
+        // so a model that answers in reasoning_content returns an empty review.
         // E2B is the smallest option in this list - for laptops/iGPUs where even the 4B models
         // are a stretch.
         new LlamaCppModel("Gemma 4 E2B it (Q4_K_M)", "google_gemma-4-E2B-it-Q4_K_M.gguf", "3.5 GB",
-            "https://huggingface.co/bartowski/google_gemma-4-E2B-it-GGUF/resolve/main/google_gemma-4-E2B-it-Q4_K_M.gguf"),
+            "https://huggingface.co/bartowski/google_gemma-4-E2B-it-GGUF/resolve/main/google_gemma-4-E2B-it-Q4_K_M.gguf",
+            NoThinking: true),
         new LlamaCppModel("Gemma 4 E4B it (Q4_K_M)", "google_gemma-4-E4B-it-Q4_K_M.gguf", "5.4 GB",
-            "https://huggingface.co/bartowski/google_gemma-4-E4B-it-GGUF/resolve/main/google_gemma-4-E4B-it-Q4_K_M.gguf"),
+            "https://huggingface.co/bartowski/google_gemma-4-E4B-it-GGUF/resolve/main/google_gemma-4-E4B-it-Q4_K_M.gguf",
+            NoThinking: true),
         new LlamaCppModel("Gemma 4 E4B it (Q8_0)", "google_gemma-4-E4B-it-Q8_0.gguf", "8.0 GB",
-            "https://huggingface.co/bartowski/google_gemma-4-E4B-it-GGUF/resolve/main/google_gemma-4-E4B-it-Q8_0.gguf"),
+            "https://huggingface.co/bartowski/google_gemma-4-E4B-it-GGUF/resolve/main/google_gemma-4-E4B-it-Q8_0.gguf",
+            NoThinking: true),
         new LlamaCppModel("Gemma 4 12B it (Q4_K_M)", "gemma-4-12B-it-Q4_K_M.gguf", "7.6 GB",
-            "https://huggingface.co/bartowski/gemma-4-12B-it-GGUF/resolve/main/gemma-4-12B-it-Q4_K_M.gguf"),
+            "https://huggingface.co/bartowski/gemma-4-12B-it-GGUF/resolve/main/gemma-4-12B-it-Q4_K_M.gguf",
+            NoThinking: true),
 
         // Different families for second opinions. Llama 3.1 is the strongest English
         // proofreader of its size; Phi-4 mini is the small/fast option.
@@ -228,6 +280,18 @@ public static class LlamaCppServerManager
             "https://huggingface.co/PaddlePaddle/PaddleOCR-VL-1.6-GGUF/resolve/main/PaddleOCR-VL-1.6-GGUF.gguf",
             MmprojFileName: "PaddleOCR-VL-1.6-GGUF-mmproj.gguf",
             MmprojUrl: "https://huggingface.co/PaddlePaddle/PaddleOCR-VL-1.6-GGUF/resolve/main/PaddleOCR-VL-1.6-GGUF-mmproj.gguf"),
+        // HunyuanOCR 1.5 (Tencent, ~1B) - the fastest VLM in this list (~1.6x GLM-OCR per image
+        // on Apple Silicon). Verified 2026-08-15 on the pinned b10310 build, 9-image
+        // EN/DE/FR/ES/IT/ZH/JA/RU subtitle corpus: recognition itself exact in every script,
+        // but two formatting quirks keep it from being the default: it sporadically prefixes a
+        // markdown "# " heading (1/9 images; immune to prompt wording, identical at bf16, and
+        // unstrippable because genuine SDH "# lyrics" hash cues - which it preserves verbatim -
+        // look the same), and it silently drops ♪ note marks. GLM-OCR gets both right.
+        // Q8_0 only: bf16 measured identical on the same corpus while twice the size.
+        new LlamaCppModel("HunyuanOCR 1.5 (Q8_0)", "HunyuanOCR-Q8_0.gguf", "1.3 GB",
+            "https://huggingface.co/ggml-org/HunyuanOCR-GGUF/resolve/main/HunyuanOCR-Q8_0.gguf",
+            MmprojFileName: "mmproj-HunyuanOCR-Q8_0.gguf",
+            MmprojUrl: "https://huggingface.co/ggml-org/HunyuanOCR-GGUF/resolve/main/mmproj-HunyuanOCR-Q8_0.gguf"),
     };
 
     /// <summary>
@@ -258,12 +322,17 @@ public static class LlamaCppServerManager
     private static int _serverPort;
     private static string? _serverModelPath;
     private static int _serverContextSize;
+    private static string _serverExtraArguments = string.Empty;
+    private static bool _serverExtraArgumentsOnly;
     private static bool _processExitHooked;
     private static readonly StringBuilder _serverLog = new();
 
     public static bool IsServerRunning => _serverProcess is { HasExited: false } && _serverPort != 0;
 
     public static string? RunningModelPath => IsServerRunning ? _serverModelPath : null;
+
+    /// <summary>Context size the running server was started with, or 0 when nothing is running.</summary>
+    public static int RunningContextSize => IsServerRunning ? _serverContextSize : 0;
 
     public static string ApiUrl => $"http://127.0.0.1:{_serverPort}/v1/chat/completions";
 
@@ -331,34 +400,106 @@ public static class LlamaCppServerManager
     /// embedded Jinja template is non-standard) and every Qwen needs <c>chatml</c> + <c>--no-jinja</c> (to
     /// bypass the embedded template's thinking mode, which otherwise emits &lt;think&gt; blocks instead of a
     /// translation). Families with a usable embedded template (Aya, Llama, EuroLLM, Phi) fall through to
-    /// the default of no override.
+    /// the default of no override. Gemma 4 keeps its embedded template but needs
+    /// <c>--reasoning off</c> instead (<c>NoThinking</c>), for the reason documented on
+    /// <see cref="LlamaCppModel.NoThinking"/>.
     /// </summary>
-    public static (string? ChatTemplate, bool NoJinja) InferChatTemplate(string fileName)
+    public static (string? ChatTemplate, bool NoJinja, bool NoThinking) InferChatTemplate(string fileName)
     {
         var curated = TranslateModels.Concat(ReviewModels).Concat(OcrModels)
             .FirstOrDefault(m => m.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase));
         if (curated != null)
         {
-            return (curated.ChatTemplate, curated.NoJinja);
+            return (curated.ChatTemplate, curated.NoJinja, curated.NoThinking);
         }
 
         // Gemma 4 dropped the <start_of_turn> scheme for <|turn>role ... <turn|>, so the built-in
-        // "gemma" template does not apply - fall through and let its embedded Jinja template win.
-        var isGemma4 = fileName.Contains("gemma-4", StringComparison.OrdinalIgnoreCase) ||
-                       fileName.Contains("gemma4", StringComparison.OrdinalIgnoreCase);
+        // "gemma" template does not apply - fall through and let its embedded Jinja template win,
+        // with thinking turned off so the translation lands in message.content.
+        if (IsGemma4FileName(fileName))
+        {
+            return (null, false, true);
+        }
 
         // Matches "translategemma-27b-it.Q4_K_M.gguf", "google_gemma-3-27b-it-Q4_K_M.gguf", etc.
-        if (!isGemma4 && fileName.Contains("gemma", StringComparison.OrdinalIgnoreCase))
+        if (fileName.Contains("gemma", StringComparison.OrdinalIgnoreCase))
         {
-            return ("gemma", true);
+            return ("gemma", true, false);
         }
 
         if (fileName.Contains("qwen", StringComparison.OrdinalIgnoreCase))
         {
-            return ("chatml", true);
+            return ("chatml", true, false);
         }
 
-        return (null, false);
+        return (null, false, false);
+    }
+
+    /// <summary>
+    /// True when the file name names the Gemma <b>4</b> family, as opposed to a <b>4B</b> model of
+    /// another Gemma family. Plain "contains gemma-4" is not enough: "translategemma-4b-it-q8_0.gguf"
+    /// contains it too, and treating that TranslateGemma 4B quant as a Gemma 4 would drop the
+    /// <c>gemma</c> chat template it needs. The version digit is therefore only accepted when the
+    /// next character is not a letter - "gemma-4-12B", "gemma-4-E4B" and "gemma4_sub" are the family,
+    /// "gemma-4b" is a size.
+    /// </summary>
+    internal static bool IsGemma4FileName(string fileName)
+    {
+        foreach (var marker in new[] { "gemma-4", "gemma4" })
+        {
+            var i = fileName.IndexOf(marker, StringComparison.OrdinalIgnoreCase);
+            while (i >= 0)
+            {
+                var after = i + marker.Length;
+                if (after >= fileName.Length || !char.IsLetter(fileName[after]))
+                {
+                    return true;
+                }
+
+                i = fileName.IndexOf(marker, after, StringComparison.OrdinalIgnoreCase);
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Builds the <see cref="LlamaCppModel"/> for a non-curated <c>*.gguf</c> (dropped into the
+    /// models folder, or passed to seconv by path), inferring the same per-family settings the
+    /// curated entries carry: chat-template flags via <see cref="InferChatTemplate"/>, and for
+    /// MiLMMT quants the trained completion prompt, greedy sampling and the regular-engine-only
+    /// restriction - a self-supplied MiLMMT quant echo-loops the source under any other prompt.
+    /// <paramref name="fileNameOrPath"/> may be a bare file name or a full path (seconv).
+    /// </summary>
+    public static LlamaCppModel CreateCustomModel(string displayName, string fileNameOrPath, string size)
+    {
+        var name = Path.GetFileName(fileNameOrPath);
+        var (chatTemplate, noJinja, noThinking) = InferChatTemplate(name);
+        var isMiLmMt = name.Contains("milmmt", StringComparison.OrdinalIgnoreCase);
+        return new LlamaCppModel(displayName, fileNameOrPath, size, Url: string.Empty,
+            ChatTemplate: chatTemplate, NoJinja: noJinja,
+            PromptTemplate: isMiLmMt ? MiLmMt46PromptTemplate : null,
+            Temperature: isMiLmMt ? 0 : -1,
+            CompletionOnly: isMiLmMt,
+            NoThinking: noThinking);
+    }
+
+    /// <summary>
+    /// Points the regular llama.cpp translate engine's per-model settings (trained-in prompt and
+    /// recommended sampling) at the given curated/custom model, or resets them for null (remote
+    /// server / unknown model). Must be called wherever a local translate run picks its model
+    /// (Auto-translate window, batch convert, seconv) - the values persist in settings, so a
+    /// stale prompt from a previously used model would otherwise leak into the next run, and for
+    /// completion-only models (MiLMMT-46) the wrong prompt does not just degrade output, it makes
+    /// the model echo the untranslated source.
+    /// </summary>
+    public static void ApplyTranslatePromptSettings(LlamaCppModel? model)
+    {
+        Configuration.Settings.Tools.LlamaCppModelPrompt = model?.PromptTemplate ?? string.Empty;
+        Configuration.Settings.Tools.LlamaCppModelTemperature = model?.Temperature ?? -1;
+        Configuration.Settings.Tools.LlamaCppModelTopP = model?.TopP ?? -1;
+        Configuration.Settings.Tools.LlamaCppModelTopK = model?.TopK ?? -1;
+        Configuration.Settings.Tools.LlamaCppModelRepeatPenalty = model?.RepeatPenalty ?? -1;
     }
 
     /// <summary>
@@ -415,9 +556,7 @@ public static class LlamaCppServerManager
                 }
 
                 var size = FormatFileSize(new FileInfo(path).Length);
-                var (chatTemplate, noJinja) = InferChatTemplate(name);
-                custom.Add(new LlamaCppModel(name, name, size, Url: string.Empty,
-                    ChatTemplate: chatTemplate, NoJinja: noJinja));
+                custom.Add(CreateCustomModel(name, name, size));
             }
         }
         catch
@@ -471,10 +610,18 @@ public static class LlamaCppServerManager
     /// </summary>
     public const int DefaultContextSize = 8192;
 
-    public static async Task EnsureServerRunningAsync(LlamaCppModel model, CancellationToken cancellationToken, int contextSize = DefaultContextSize)
+    /// <param name="extraArgumentsOnly">
+    /// Launches llama-server with <paramref name="extraArguments"/> instead of SE's curated flags
+    /// (-ngl/-c/-np/--swa-full/--cache-reuse and the chat-template pair), for users who want full
+    /// control over the server configuration. The model, host and port are always passed - SE has
+    /// to know which model it is talking to and where. (#13865)
+    /// </param>
+    public static async Task EnsureServerRunningAsync(LlamaCppModel model, CancellationToken cancellationToken, int contextSize = DefaultContextSize, string? extraArguments = null, bool extraArgumentsOnly = false)
     {
+        var extraArgs = extraArguments?.Trim() ?? string.Empty;
+        var argsOnly = extraArgumentsOnly && extraArgs.Length > 0;
         var modelPath = GetModelPath(model.FileName);
-        if (IsServerRunning && _serverModelPath == modelPath && _serverContextSize == contextSize)
+        if (IsRunningWith(modelPath, contextSize, extraArgs, argsOnly))
         {
             Configuration.Settings.Tools.LlamaCppApiUrl = ApiUrl;
             return;
@@ -483,7 +630,7 @@ public static class LlamaCppServerManager
         await ServerLock.WaitAsync(cancellationToken);
         try
         {
-            if (IsServerRunning && _serverModelPath == modelPath && _serverContextSize == contextSize)
+            if (IsRunningWith(modelPath, contextSize, extraArgs, argsOnly))
             {
                 Configuration.Settings.Tools.LlamaCppApiUrl = ApiUrl;
                 return;
@@ -526,48 +673,9 @@ public static class LlamaCppServerManager
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
             };
-            psi.ArgumentList.Add("-m");
-            psi.ArgumentList.Add(modelPath);
-            if (mmprojPath != null)
+            foreach (var arg in BuildServerArguments(model, modelPath, mmprojPath, port, contextSize, extraArgs, argsOnly))
             {
-                psi.ArgumentList.Add("--mmproj");
-                psi.ArgumentList.Add(mmprojPath);
-            }
-            psi.ArgumentList.Add("--host");
-            psi.ArgumentList.Add("127.0.0.1");
-            psi.ArgumentList.Add("--port");
-            psi.ArgumentList.Add(port.ToString(CultureInfo.InvariantCulture));
-            // Offload all layers to the GPU when a GPU build is in use; ignored by the CPU build.
-            psi.ArgumentList.Add("-ngl");
-            psi.ArgumentList.Add("99");
-            psi.ArgumentList.Add("-c");
-            psi.ArgumentList.Add(contextSize.ToString(CultureInfo.InvariantCulture));
-            // SE is the server's only client, but llama-server defaults to 4 parallel slots,
-            // which silently splits -c four ways (8192 became 2048 usable tokens per request).
-            psi.ArgumentList.Add("-np");
-            psi.ArgumentList.Add("1");
-            // Keep the full KV cache for sliding-window-attention models (Gemma, Qwen 3.5);
-            // without this their prompt cache only works on byte-identical requests and
-            // cache_prompt reuse is lost entirely. Costs some KV memory at these context sizes.
-            psi.ArgumentList.Add("--swa-full");
-            if (mmprojPath == null)
-            {
-                // Chunk-level KV-cache reuse after the first diverging token; together with the
-                // clients' cache_prompt this keeps repeated prompt prefixes (system prompt,
-                // rolling context) from being re-ingested every request. Auto-disables with a
-                // warning on models whose context cannot shift. Not combined with multimodal -
-                // vision chunks cannot be shifted.
-                psi.ArgumentList.Add("--cache-reuse");
-                psi.ArgumentList.Add("256");
-            }
-            if (model.NoJinja)
-            {
-                psi.ArgumentList.Add("--no-jinja");
-            }
-            if (model.ChatTemplate != null)
-            {
-                psi.ArgumentList.Add("--chat-template");
-                psi.ArgumentList.Add(model.ChatTemplate);
+                psi.ArgumentList.Add(arg);
             }
 
             var process = Process.Start(psi)
@@ -601,6 +709,8 @@ public static class LlamaCppServerManager
             _serverPort = port;
             _serverModelPath = modelPath;
             _serverContextSize = contextSize;
+            _serverExtraArguments = extraArgs;
+            _serverExtraArgumentsOnly = argsOnly;
             HookProcessExitOnce();
 
             var deadline = DateTime.UtcNow.AddMinutes(5);
@@ -635,6 +745,94 @@ public static class LlamaCppServerManager
         {
             ServerLock.Release();
         }
+    }
+
+    /// <summary>
+    /// The llama-server command line for one launch. The model, host and port are always ours -
+    /// SE has to know which model it is talking to and where - and the user's own arguments always
+    /// come last, so a repeated flag (e.g. -ngl, -c) overrides SE's value: llama-server applies
+    /// later arguments over earlier ones. <paramref name="argsOnly"/> drops SE's curated tuning
+    /// altogether, for users who want full control; without it a bare switch such as --swa-full
+    /// cannot be turned off at all, since there is nothing to repeat with a different value (#13865).
+    /// </summary>
+    internal static List<string> BuildServerArguments(
+        LlamaCppModel model,
+        string modelPath,
+        string? mmprojPath,
+        int port,
+        int contextSize,
+        string extraArgs,
+        bool argsOnly)
+    {
+        var args = new List<string> { "-m", modelPath };
+        if (mmprojPath != null)
+        {
+            args.Add("--mmproj");
+            args.Add(mmprojPath);
+        }
+
+        args.Add("--host");
+        args.Add("127.0.0.1");
+        args.Add("--port");
+        args.Add(port.ToString(CultureInfo.InvariantCulture));
+
+        if (!argsOnly)
+        {
+            // Offload all layers to the GPU when a GPU build is in use; ignored by the CPU build.
+            args.Add("-ngl");
+            args.Add("99");
+            args.Add("-c");
+            args.Add(contextSize.ToString(CultureInfo.InvariantCulture));
+            // SE is the server's only client, but llama-server defaults to 4 parallel slots,
+            // which silently splits -c four ways (8192 became 2048 usable tokens per request).
+            args.Add("-np");
+            args.Add("1");
+            // Keep the full KV cache for sliding-window-attention models (Gemma, Qwen 3.5);
+            // without this their prompt cache only works on byte-identical requests and
+            // cache_prompt reuse is lost entirely. Costs some KV memory at these context sizes.
+            args.Add("--swa-full");
+            if (mmprojPath == null)
+            {
+                // Chunk-level KV-cache reuse after the first diverging token; together with the
+                // clients' cache_prompt this keeps repeated prompt prefixes (system prompt,
+                // rolling context) from being re-ingested every request. Auto-disables with a
+                // warning on models whose context cannot shift. Not combined with multimodal -
+                // vision chunks cannot be shifted.
+                args.Add("--cache-reuse");
+                args.Add("256");
+            }
+
+            if (model.NoThinking)
+            {
+                args.Add("--reasoning");
+                args.Add("off");
+            }
+
+            if (model.NoJinja)
+            {
+                args.Add("--no-jinja");
+            }
+
+            if (model.ChatTemplate != null)
+            {
+                args.Add("--chat-template");
+                args.Add(model.ChatTemplate);
+            }
+        }
+
+        args.AddRange(SplitCommandLineArguments(extraArgs));
+        return args;
+    }
+
+    private static bool IsRunningWith(string modelPath, int contextSize, string extraArgs, bool argsOnly)
+    {
+        return IsServerRunning &&
+               _serverModelPath == modelPath &&
+               _serverExtraArguments == extraArgs &&
+               _serverExtraArgumentsOnly == argsOnly &&
+               // With SE's flags suppressed the context size comes from the user's own arguments
+               // (or the server default), so the requested value says nothing about the running one.
+               (argsOnly || _serverContextSize == contextSize);
     }
 
     public static void StopServer()
@@ -701,6 +899,59 @@ public static class LlamaCppServerManager
         {
             return false;
         }
+    }
+
+    /// <summary>
+    /// Splits a user-entered argument string on whitespace, honoring single/double quotes so
+    /// values with spaces survive (e.g. <c>--override-kv "key=str:some value"</c>).
+    /// </summary>
+    internal static List<string> SplitCommandLineArguments(string arguments)
+    {
+        var result = new List<string>();
+        if (string.IsNullOrWhiteSpace(arguments))
+        {
+            return result;
+        }
+
+        var current = new StringBuilder();
+        var quote = '\0';
+        foreach (var ch in arguments)
+        {
+            if (quote != '\0')
+            {
+                if (ch == quote)
+                {
+                    quote = '\0';
+                }
+                else
+                {
+                    current.Append(ch);
+                }
+            }
+            else if (ch == '"' || ch == '\'')
+            {
+                quote = ch;
+            }
+            else if (char.IsWhiteSpace(ch))
+            {
+                if (current.Length > 0)
+                {
+                    result.Add(current.ToString());
+                    current.Clear();
+                }
+            }
+            else
+            {
+                current.Append(ch);
+            }
+        }
+
+        if (current.Length > 0)
+        {
+            result.Add(current.ToString());
+        }
+
+        return result;
     }
 
     private static int FindFreeLoopbackPort()

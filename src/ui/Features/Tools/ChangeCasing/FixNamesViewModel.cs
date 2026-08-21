@@ -143,10 +143,13 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
 
     private CancellationTokenSource? _cancellationTokenSource;
     private bool _isClosing;
+    private bool _previewPending;
+    private bool _suppressPreviewRequests;
+    private Task _previewTask = Task.CompletedTask;
 
     private void RequestPreview(int delayMilliseconds = 500)
     {
-        if (_isClosing)
+        if (_isClosing || _suppressPreviewRequests)
         {
             return;
         }
@@ -154,7 +157,8 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
         _cancellationTokenSource?.Cancel();
         _cancellationTokenSource?.Dispose();
         _cancellationTokenSource = new CancellationTokenSource();
-        _ = DebouncedPreviewAsync(delayMilliseconds, _cancellationTokenSource.Token);
+        _previewPending = true;
+        _previewTask = DebouncedPreviewAsync(delayMilliseconds, _cancellationTokenSource.Token);
     }
 
     private async Task DebouncedPreviewAsync(int delayMilliseconds, CancellationToken token)
@@ -169,7 +173,7 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
                 Names.Where(n => n.IsChecked).Select(n => n.Name).ToArray());
             token.ThrowIfCancellationRequested();
 
-            GeneratePreview(activeNames);
+            GeneratePreview(activeNames, token);
         }
         catch (OperationCanceledException)
         {
@@ -191,7 +195,7 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
         _cancellationTokenSource = null;
     }
 
-    private void GeneratePreview(string[] activeNames)
+    private void GeneratePreview(string[] activeNames, CancellationToken token)
     {
         var hits = new List<FixNameHitItem>();
 
@@ -229,27 +233,51 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
 
         Dispatcher.UIThread.Invoke(() =>
         {
+            // Cancellation happens on the UI thread, so checking here (not before the Invoke)
+            // guarantees a superseded computation - one that was already past the earlier token
+            // check when a newer request cancelled it - can never overwrite the newer result.
+            if (token.IsCancellationRequested)
+            {
+                return;
+            }
+
             Hits.Clear();
             Hits.AddRange(hits);
+            _previewPending = false;
         });
     }
 
     [RelayCommand]
     public void NamesSelectAll()
     {
-        foreach (var name in Names)
-        {
-            name.IsChecked = true; // PropertyChanged requests the preview
-        }
+        SetAllNames(_ => true);
     }
 
     [RelayCommand]
     public void NamesInvertSelection()
     {
-        foreach (var name in Names)
+        SetAllNames(name => !name.IsChecked);
+    }
+
+    private void SetAllNames(Func<FixNameItem, bool> getValue)
+    {
+        // Each IsChecked change fires the PropertyChanged handler; suppress those
+        // per-item requests during the bulk update and issue one immediate one,
+        // so a whole-list toggle doesn't sit through the 500 ms debounce.
+        _suppressPreviewRequests = true;
+        try
         {
-            name.IsChecked = !name.IsChecked; // PropertyChanged requests the preview
+            foreach (var name in Names)
+            {
+                name.IsChecked = getValue(name);
+            }
         }
+        finally
+        {
+            _suppressPreviewRequests = false;
+        }
+
+        RequestPreview(0);
     }
 
     [RelayCommand]
@@ -271,8 +299,17 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
     }
 
     [RelayCommand]
-    private void Ok()
+    private async Task Ok()
     {
+        // A preview may still be pending (the 500 ms debounce, or a computation in flight), so
+        // Hits can lag behind the checkboxes - applying it would use fixes for names the user
+        // just deselected. Flush with a zero-delay preview and wait for it before committing.
+        if (_previewPending)
+        {
+            RequestPreview(0);
+            await _previewTask;
+        }
+
         Subtitle = new Subtitle(_subtitle, false);
 
         foreach (var hit in Hits)

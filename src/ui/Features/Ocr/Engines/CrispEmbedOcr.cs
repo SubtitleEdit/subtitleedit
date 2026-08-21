@@ -231,6 +231,15 @@ public class CrispEmbedOcr : IDisposable
         }
         catch (Exception ex)
         {
+            // Record it so the caller can tell a real failure apart from a textless image: the
+            // OCR loops fail fast on a non-empty Error and otherwise grind through the whole
+            // video only to report "no subtitles found". A non-success HTTP status has already
+            // stored the (more informative) response body in Error.
+            if (string.IsNullOrEmpty(Error))
+            {
+                Error = ex.Message;
+            }
+
             SeLogger.Error(ex, "Error calling CrispEmbed for OCR");
             return string.Empty;
         }
@@ -271,7 +280,7 @@ public class CrispEmbedOcr : IDisposable
     private async Task<string> OcrViaCliPipeline(string imageFileName, CancellationToken cancellationToken)
     {
         var arguments = $"--ocr-pipeline \"{imageFileName}\" --ocr-engine ppocrv6 " +
-                        $"--ocr-det \"{_cliDetectorModel}\" --ocr-rec \"{_cliRecognizerModel}\" --json";
+                        $"--ocr-det \"{_cliDetectorModel}\" --ocr-rec \"{_cliRecognizerModel}\" -t 4 --json";
 
         using var process = new Process
         {
@@ -286,12 +295,14 @@ public class CrispEmbedOcr : IDisposable
             },
         };
 
-        // v0.17.7 made the PP-OCRv6 detector CUDA-resident, which left the scalar path everyone
-        // else runs (Metal, CPU) ~18% slower than v0.17.6 on a ten-image subtitle corpus, and
-        // slower on all 12 pairs of an interleaved A/B run. The release ships the recovery as an
-        // opt-in gate; it takes back about two thirds of that (+18.1% -> +5.6%) with the text,
-        // region count and mean confidence identical on all ten images. Reported upstream as
-        // CrispStrobe/CrispEmbed#45 - drop this if the gate ever defaults on (2026-08-09).
+        // v0.17.7's n_threads audit made the PP-OCRv6 detector honor the CLI's -t 1 default where
+        // it previously ran at ggml's 4-thread default, costing ~18% wall clock on the scalar
+        // (Metal/CPU) path. v0.17.8 fixed both sides (min(4, cores) thread default, recognizer mk
+        // kernel default-on), but IsEngineInstalled() is a presence check - a lingering v0.17.7
+        // binary is never re-downloaded - so "-t 4" and the env gate stay to keep those installs
+        // fast. Both are no-ops on v0.17.8 by design: an explicit -t wins over the fixed default,
+        // and the env matches the new recognizer default. Diagnosed in CrispStrobe/CrispEmbed#45
+        // (2026-08-09); output is byte-identical in every arm.
         process.StartInfo.Environment["CRISPEMBED_CONV2D_MK"] = "1";
 
         process.Start();

@@ -35,6 +35,12 @@ public class SeOcr
     public int NOcrNoOfLinesToAutoDraw { get; set; }
     public int NOcrZoomFactor { get; set; }
     public string NOcrLineAlgorithm { get; set; }
+
+    /// <summary>
+    /// Slant, as a fraction of glyph height, used to straighten italic letters before matching
+    /// them again when they match nothing upright. 0 disables the retry.
+    /// </summary>
+    public double ItalicFactor { get; set; }
     public string PaddleOcrMode { get; set; }
     public string PaddleOcrLastLanguage { get; set; }
     public string TesseractLastLanguage { get; set; }
@@ -79,6 +85,7 @@ public class SeOcr
         NOcrNoOfLinesToAutoDraw = 60;
         NOcrZoomFactor = 4;
         NOcrLineAlgorithm = "Random";
+        ItalicFactor = 0.2; // SE 4's default
 
         BinaryOcrPixelsAreSpace = 12;
         BinaryOcrMaxErrorPercent = 7.5;

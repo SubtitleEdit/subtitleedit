@@ -48,13 +48,21 @@ public class VlcReloader : IVlcReloader
 
             SubtitleFormat format = _assFormat;
             string text;
-            if (uiFormatType == typeof(WebVTT) || uiFormatType == typeof(WebVTTFileWithLineNumber))
+            if (uiFormatType == typeof(NetflixImsc11Japanese))
+            {
+                // See MpvReloader - the furigana/bouten/vertical markup has to become positioned
+                // render lines before libass sees it (issue #13861).
+                subtitle = NetflixImsc11JapaneseToAss.ConvertToSubtitle(subtitle, VideoWidth, VideoHeight);
+                SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary);
+                text = subtitle.ToText(_assFormat);
+            }
+            else if (uiFormatType == typeof(WebVTT) || uiFormatType == typeof(WebVTTFileWithLineNumber))
             {
                 var defaultStyle = GetMpvPreviewStyle(Se.Settings.Video);
                 defaultStyle.BorderStyle = "3";
                 subtitle = new Subtitle(subtitle);
                 subtitle = WebVttToAssa.Convert(subtitle, defaultStyle, VideoWidth, VideoHeight);
-                AddSecondarySubtitle(subtitle, subtitleSecondary);
+                SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary);
                 text = subtitle.ToText(_assFormat);
             }
             else
@@ -128,9 +136,13 @@ public class VlcReloader : IVlcReloader
                             }
                         }
                     }
+
+                    // See MpvReloader - the position the source format carries beats the one fixed
+                    // preview alignment (discussion #13857).
+                    SubtitlePositionToAssa.ApplyPositions(subtitle, oldSub.Header, Se.Settings.Video.MpvPreviewUsePositionFromFile);
                 }
 
-                AddSecondarySubtitle(subtitle, subtitleSecondary);
+                SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary);
                 var hash = subtitle.GetFastHashCode(null);
                 if (hash != _mpvSubOldHash || string.IsNullOrEmpty(_mpvTextOld))
                 {
@@ -169,23 +181,6 @@ public class VlcReloader : IVlcReloader
         catch (Exception exception)
         {
             Se.LogError(exception);
-        }
-    }
-
-    private static void AddSecondarySubtitle(Subtitle subtitle, Subtitle? subtitleSecondary)
-    {
-        if (subtitleSecondary == null)
-        {
-            return;
-        }
-
-
-        var styleName = subtitleSecondary.Paragraphs.FirstOrDefault()?.Extra ?? "Secondary";
-        var style = AdvancedSubStationAlpha.GetSsaStyle(styleName, subtitleSecondary.Header);
-        subtitle.Header = AdvancedSubStationAlpha.AddSsaStyle(style, subtitle.Header);
-        foreach (var p in subtitleSecondary.Paragraphs)
-        {
-            subtitle.Paragraphs.Add(p);
         }
     }
 

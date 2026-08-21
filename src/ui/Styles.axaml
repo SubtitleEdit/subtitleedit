@@ -2,6 +2,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:logic="clr-namespace:Nikse.SubtitleEdit.Logic;assembly=SubtitleEdit"
         xmlns:seControls="clr-namespace:Nikse.SubtitleEdit.Controls;assembly=SubtitleEdit">
+    <!-- Windows-standard scroll bar for every grid: a trough hold pages toward the cursor and
+         pauses when the thumb reaches it (#12894), shift+click jumps to the position (#12438). -->
+    <Style Selector="TableView">
+        <Setter Property="logic:TableViewScrollBarBehavior.EnableTroughPaging" Value="True"/>
+    </Style>
     <Styles.Resources>
         <!-- Formerly supplied by the retired Avalonia.Controls.DataGrid theme; the
              TableView header theme still resolves this key (and SE's custom themes

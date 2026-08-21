@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Settings;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.UiLogic.Translate;
@@ -74,8 +74,9 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             {
                 Configuration.Settings.Tools.OpenAiCompatibleTranslatePrompt = new ToolsSettings().OpenAiCompatibleTranslatePrompt;
             }
-            var prompt = string.Format(Configuration.Settings.Tools.OpenAiCompatibleTranslatePrompt, sourceLanguageCode, targetLanguageCode);
-            var input = "{" + modelJson + "\"messages\": [{ \"role\": \"user\", \"content\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
+            var encodedUserMessage = LlmTranslatePrompt.BuildEncodedUserMessage(
+                Configuration.Settings.Tools.OpenAiCompatibleTranslatePrompt, sourceLanguageCode, targetLanguageCode, text);
+            var input = "{" + modelJson + "\"messages\": [{ \"role\": \"user\", \"content\": \"" + encodedUserMessage + "\" }]}";
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             var result = await _httpClient.PostAsync(string.Empty, content, cancellationToken);

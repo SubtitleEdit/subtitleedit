@@ -59,6 +59,9 @@ public partial class ReviewSpeechViewModel : ObservableObject
     [ObservableProperty] private bool _isPlayVisible;
     [ObservableProperty] private bool _isStopVisible;
     [ObservableProperty] private bool _isElevenLabsEngineV3Selected;
+    // Whether the picked engine has a settings dialog. The knobs in there (emotion, speed,
+    // instruction) change how a regenerated line sounds, so they belong next to Regenerate.
+    [ObservableProperty] private bool _isEngineSettingsVisible;
     [ObservableProperty] private double _stability;
     [ObservableProperty] private double _similarity;
     [ObservableProperty] private double _speakerBoost;
@@ -107,6 +110,11 @@ public partial class ReviewSpeechViewModel : ObservableObject
     // Cast travelling with the audio. Populated by the main TTS VM via SetActorVoiceMappings;
     // round-tripped through SubtitleEditTts.json so a future Import re-applies the same voices.
     public List<ActorVoiceMapping> ActorVoiceMappings { get; private set; } = new();
+
+    // Full path of the loaded subtitle file (empty for an unsaved subtitle). Export starts its
+    // folder picker here so the session lands next to the subtitle instead of wherever the
+    // picker was last used (#13881).
+    public string SubtitleFileName { get; set; } = string.Empty;
 
     public bool OkPressed { get; private set; }
 
@@ -311,21 +319,29 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
         try
         {
+            // Retire the previous row's core on a worker thread - disposing it inline here runs
+            // mpv_terminate_destroy on the UI thread, and every row-to-row transition (including
+            // the auto-continue timer path) would corrupt state that later blows up as an access
+            // violation in IFrameworkInputPane.Unadvise when a window closes (#13567, #13376).
+            DisposePlayerOffThread();
+
+            Se.WriteToolsLog($"TTS review: creating mpv core to play \"{fileName}\"");
+            LibMpvDynamicPlayer player;
             lock (_playLock)
             {
-                _mpvContext?.Stop();
-                _mpvContext?.Dispose();
-
-                _mpvContext = new LibMpvDynamicPlayer();
-                _mpvContext.LoadLib();
-                var err = _mpvContext.Initialize();
+                player = new LibMpvDynamicPlayer();
+                player.LoadLib();
+                var err = player.Initialize();
                 if (err < 0)
                 {
-                    throw new InvalidOperationException($"Failed to initialize mpv: {_mpvContext.GetErrorString(err)}");
+                    throw new InvalidOperationException($"Failed to initialize mpv: {player.GetErrorString(err)}");
                 }
+
+                _mpvContext = player;
             }
 
-            await _mpvContext.LoadAudio(fileName);
+            // Through the local: a close running now can null the field out from under us.
+            await player.LoadAudio(fileName);
         }
         catch (Exception exception)
         {
@@ -502,7 +518,11 @@ public partial class ReviewSpeechViewModel : ObservableObject
             return;
         }
 
-        var folder = await _folderHelper.PickFolderAsync(Window!, Se.Language.General.SelectSaveFolder);
+        // Start the picker in the subtitle's own folder (or the video's, for an unsaved
+        // subtitle) - the OS-remembered last picker folder is rarely where this export
+        // belongs (#13881).
+        var suggestedStartFolder = GetFolderName(SubtitleFileName) ?? GetFolderName(_videoFileName);
+        var folder = await _folderHelper.PickFolderAsync(Window!, Se.Language.General.SelectSaveFolder, suggestedStartFolder);
         if (string.IsNullOrEmpty(folder))
         {
             return;
@@ -676,6 +696,17 @@ public partial class ReviewSpeechViewModel : ObservableObject
         }
 
         await _folderHelper.OpenFolder(Window!, folder);
+    }
+
+    private static string? GetFolderName(string fileName)
+    {
+        if (string.IsNullOrEmpty(fileName))
+        {
+            return null;
+        }
+
+        var folder = Path.GetDirectoryName(fileName);
+        return string.IsNullOrEmpty(folder) ? null : folder;
     }
 
     [RelayCommand]
@@ -1036,14 +1067,13 @@ public partial class ReviewSpeechViewModel : ObservableObject
     [RelayCommand]
     private void Stop()
     {
+        Se.WriteToolsLog("TTS review: Stop clicked");
         _skipAutoContinue = true;
         _cancellationTokenSource.Cancel();
-        lock (_playLock)
-        {
-            _mpvContext?.Stop();
-            _mpvContext?.Dispose();
-            _mpvContext = null;
-        }
+
+        // Off-thread: an inline Dispose here is mpv_terminate_destroy on the UI thread, the
+        // pattern behind the delayed IFrameworkInputPane.Unadvise crash (#13567, #13376).
+        DisposePlayerOffThread();
 
         _playingRow = null;
         IsPlayVisible = true;
@@ -1053,6 +1083,8 @@ public partial class ReviewSpeechViewModel : ObservableObject
     [RelayCommand]
     private void Ok()
     {
+        Se.WriteToolsLog("TTS review: OK clicked - closing");
+
         // Push any edits the user made to row.Text back into the step results so
         // the caller sees them, then publish the included rows as StepResults.
         foreach (var row in Lines)
@@ -1077,6 +1109,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
     [RelayCommand]
     private void Cancel()
     {
+        Se.WriteToolsLog("TTS review: Cancel clicked - closing");
         Close();
     }
 
@@ -1313,50 +1346,8 @@ public partial class ReviewSpeechViewModel : ObservableObject
     /// </summary>
     private static bool MatchesPlayPauseShortcut(KeyEventArgs e)
     {
-        var cmdOrWin = OperatingSystem.IsMacOS() ? "Win" : "Ctrl";
-        var toggleKeys = Se.Settings.Shortcuts.FirstOrDefault(s => s.ActionName == nameof(MainViewModel.TogglePlayPauseCommand))?.Keys
-                         ?? [nameof(Key.Space)];
-        var toggle2Keys = Se.Settings.Shortcuts.FirstOrDefault(s => s.ActionName == nameof(MainViewModel.TogglePlayPause2Command))?.Keys
-                          ?? [cmdOrWin, nameof(Key.Space)];
-        return MatchesKeys(e, toggleKeys) || MatchesKeys(e, toggle2Keys);
-    }
-
-    // Matches a stored shortcut key list (modifier tokens + one main key) against a key event.
-    // Multi-key non-modifier chords are not supported here - the full ShortcutManager handles
-    // those in the main window; a dialog only needs the simple form.
-    private static bool MatchesKeys(KeyEventArgs e, List<string> keys)
-    {
-        var modifiers = KeyModifiers.None;
-        Key? mainKey = null;
-        foreach (var token in keys)
-        {
-            if (token is "Ctrl" or "Control" or "LeftCtrl" or "RightCtrl")
-            {
-                modifiers |= KeyModifiers.Control;
-            }
-            else if (token is "Alt" or "LeftAlt" or "RightAlt")
-            {
-                modifiers |= KeyModifiers.Alt;
-            }
-            else if (token is "Shift" or "LeftShift" or "RightShift")
-            {
-                modifiers |= KeyModifiers.Shift;
-            }
-            else if (token is "Win" or "Meta" or "LWin" or "RWin" or "Cmd" or "Command")
-            {
-                modifiers |= KeyModifiers.Meta;
-            }
-            else if (Enum.TryParse<Key>(token, out var key) && mainKey == null)
-            {
-                mainKey = key;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        return mainKey != null && mainKey == e.Key && e.KeyModifiers == modifiers;
+        return MainShortcutKeys.Matches(e, nameof(MainViewModel.TogglePlayPauseCommand), [nameof(Key.Space)]) ||
+               MainShortcutKeys.Matches(e, nameof(MainViewModel.TogglePlayPause2Command), [MainShortcutKeys.CtrlOrCmd, nameof(Key.Space)]);
     }
 
     private void TogglePlayPauseSelectedRow()
@@ -1385,6 +1376,17 @@ public partial class ReviewSpeechViewModel : ObservableObject
     // voice/model/instruction with the engine's defaults.
     private bool _suppressEngineRefreshDispatch;
 
+    [RelayCommand]
+    private async Task ShowEngineSettings()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        await TtsEngineSettingsDialog.ShowAsync(SelectedEngine, Window, _windowService);
+    }
+
     public void SelectedEngineChanged()
     {
         if (_suppressEngineRefreshDispatch)
@@ -1401,6 +1403,10 @@ public partial class ReviewSpeechViewModel : ObservableObject
     public async Task SelectedEngineChangedAsync()
     {
         var engine = SelectedEngine;
+        // No gear for ElevenLabs: its knobs live inline below the engine combo for fast per-line
+        // tweaking, and the settings dialog behind the gear duplicated exactly those sliders -
+        // two "settings windows" showing different values (#13881).
+        IsEngineSettingsVisible = TtsEngineSettingsDialog.HasSettings(engine) && engine is not ElevenLabs;
         if (engine == null)
         {
             return;
@@ -1836,6 +1842,49 @@ public partial class ReviewSpeechViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Drops the playback player and destroys its mpv core on a worker thread.
+    /// <para>
+    /// <c>mpv_terminate_destroy</c> runs libmpv's native win32/audio deinit, which must not happen
+    /// on the UI thread while a window is closing: it leaves <c>Window.CloseInternal()</c> to make
+    /// its next COM call (<c>IFrameworkInputPane.Unadvise</c>) into an apartment libmpv's teardown
+    /// has already disturbed - an access violation no catch block can intercept. Same reasoning,
+    /// and same off-thread cure, as <c>TextToSpeechViewModel.DisposePreviewPlayer</c> (#13376) and
+    /// <c>VideoPlayerControl.CloseAndDisposePlayer</c> (#11176).
+    /// </para>
+    /// Safe to call more than once - the second call finds no player and does nothing.
+    /// </summary>
+    private void DisposePlayerOffThread()
+    {
+        LibMpvDynamicPlayer? player;
+        lock (_playLock)
+        {
+            player = _mpvContext;
+            _mpvContext = null;
+        }
+
+        if (player == null)
+        {
+            return;
+        }
+
+        Se.WriteToolsLog("TTS review: disposing playback player (mpv) on worker thread");
+        Task.Run(() =>
+        {
+            try
+            {
+                // Stop first so the core tears down from an idle state instead of mid-playback.
+                player.Stop();
+                player.Dispose();
+                Se.WriteToolsLog("TTS review: playback player (mpv) destroyed");
+            }
+            catch (Exception ex)
+            {
+                SeLogger.Error(ex, "ReviewSpeech: disposing the audio player failed");
+            }
+        });
+    }
+
     internal void OnClosing(WindowClosingEventArgs e)
     {
         // Title-bar X / Alt+F4 bypass the Escape guard, so a regenerate can still be in flight
@@ -1843,6 +1892,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
         // still holds it) and skip the temp-file sweep below - the unwinding pipeline may still
         // be writing those files.
         var regenerateInFlight = !IsRegenerateEnabled;
+        Se.WriteToolsLog($"TTS review: window closing (regenerate in flight={regenerateInFlight})");
 
         _skipAutoContinue = true;
         _isClosing = true;
@@ -1852,11 +1902,8 @@ public partial class ReviewSpeechViewModel : ObservableObject
         {
             try { _cancellationTokenSource.Dispose(); } catch (ObjectDisposedException) { }
         }
-        lock (_playLock)
-        {
-            _mpvContext?.Dispose();
-            _mpvContext = null;
-        }
+
+        DisposePlayerOffThread();
 
         // The waveform mirrors subscribe to PropertyChanged in Initialize so drags
         // on the visualizer write back into the per-row TtsStepResult. Detach now

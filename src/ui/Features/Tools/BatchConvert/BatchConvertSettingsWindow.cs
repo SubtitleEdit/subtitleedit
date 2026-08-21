@@ -37,6 +37,14 @@ public class BatchConvertSettingsWindow : Window
             [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.Overwrite)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
         };
 
+        var checkBoxScanFolderRecursive = new CheckBox
+        {
+            Content = Se.Language.Tools.BatchConvert.IncludeSubfolders,
+            IsChecked = vm.ScanFolderRecursive,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.ScanFolderRecursive)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
+        };
+
         var checkBoxUseSourceFolder = new RadioButton
         {
             Content = Se.Language.General.UseSourceFolder,
@@ -160,6 +168,7 @@ public class BatchConvertSettingsWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -180,7 +189,8 @@ public class BatchConvertSettingsWindow : Window
         grid.Add(panelOcrEngine, 5, 0);
         grid.Add(checkBoxVobSubIsolateColors, 6, 0);
         grid.Add(panelLanguagePostFix, 7, 0);
-        grid.Add(panelButtons, 8, 0);
+        grid.Add(checkBoxScanFolderRecursive, 8, 0);
+        grid.Add(panelButtons, 9, 0);
 
 
         Content = grid;

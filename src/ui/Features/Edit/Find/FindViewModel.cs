@@ -161,7 +161,7 @@ public partial class FindViewModel : ObservableObject
         _originalSubs = originalSubs;
         if (string.IsNullOrEmpty(SearchText))
         {
-            SearchText = RegexUtils.EscapeNewLines(selectedText.Trim());
+            SearchText = RegexUtils.EscapeNewLines(selectedText);
         }
         _findResult = findResult;
 

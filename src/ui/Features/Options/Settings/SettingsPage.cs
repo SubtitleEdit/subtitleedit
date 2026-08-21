@@ -235,6 +235,9 @@ public class SettingsPage : UserControl
                 {
                     MakeNumericUpDownInt(nameof(_vm.MinGapMs), _vm.RuleValueChanged)
                         .WithBindIsVisible(_vm, nameof(_vm.IsMsMode)),
+                    UiUtil.MakeButtonBrowse(_vm.CalculateMinGapMsCommand,
+                            accessibleName: Se.Language.Options.Settings.MinGapCalculateDotDotDot)
+                        .WithBindIsVisible(_vm, nameof(_vm.IsMsMode)),
                     MakeNumericUpDownInt(nameof(_vm.MinGapFrames), _vm.RuleValueChanged)
                         .WithBindIsVisible(_vm, nameof(_vm.UseFrameMode)),
                     new TextBlock
@@ -276,6 +279,7 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoConvertToUtf8, nameof(_vm.AutoConvertToUtf8)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ForceCrLfOnSave, nameof(_vm.ForceCrLfOnSave)),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoTrimWhiteSpace, nameof(_vm.AutoTrimWhiteSpace)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.RemoveBlankLinesWhenOpening, nameof(_vm.RemoveBlankLinesWhenOpening)),
             new SettingsItem(Se.Language.Options.Settings.DefaultEncoding, () => new ComboBox
             {
                 Width = 200,
@@ -802,6 +806,7 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarSaveAs, nameof(_vm.ShowToolbarSaveAs)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarFind, nameof(_vm.ShowToolbarFind)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarReplace, nameof(_vm.ShowToolbarReplace)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarMultipleReplace, nameof(_vm.ShowToolbarMultipleReplace)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarSpellCheck, nameof(_vm.ShowToolbarSpellCheck)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarFixCommonErrors, nameof(_vm.ShowToolbarFixCommonErrors)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarRemoveTextForHi, nameof(_vm.ShowToolbarRemoveTextForHi)),
@@ -817,6 +822,10 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarHelp, nameof(_vm.ShowToolbarHelp)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarEncoding, nameof(_vm.ShowToolbarEncoding)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarFrameRate, nameof(_vm.ShowToolbarFrameRate)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarStyleManager, nameof(_vm.ShowToolbarStyleManager)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarProperties, nameof(_vm.ShowToolbarProperties)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarAttachments, nameof(_vm.ShowToolbarAttachments)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarAssaDraw, nameof(_vm.ShowToolbarAssaDraw)),
         ]));
 
         sections.Add(new SettingsSection(Se.Language.Options.Settings.Network, IconNames.Network, "#6bb84e",
@@ -1025,9 +1034,14 @@ public class SettingsPage : UserControl
         var labelAlignment = UiUtil.MakeLabel(Se.Language.General.Alignment);
         var comboBoxAlignment = UiUtil.MakeComboBox(vm.MpvPreviewFontAlignments, vm, nameof(vm.MpvPreviewSelectedFontAlignment));
 
+        var checkBoxUsePositionFromFile = UiUtil.MakeCheckBox(Se.Language.Options.Settings.UsePositionFromSubtitleFile, vm, nameof(vm.MpvPreviewUsePositionFromFile));
+
         var labelMargin = UiUtil.MakeLabel(Se.Language.General.Margin);
         var numericUpDownMargin = UiUtil.MakeNumericUpDownOneDecimal(1, 1000, 130, vm, nameof(vm.MpvPreviewMargin));
         numericUpDownMargin.Increment = 1;
+
+        var checkBoxMarginIsPartOfSubtitleArea = UiUtil.MakeCheckBox(
+            Se.Language.Options.Settings.MarginIsPartOfSubtitleArea, vm, nameof(vm.MpvPreviewMarginIsPartOfSubtitleArea));
 
         var labelColorPrimary = UiUtil.MakeLabel(Se.Language.Assa.Primary);
         var colorPickerPrimary = UiUtil.MakeColorPickerButton(vm, nameof(vm.MpvPreviewColorPrimary));
@@ -1042,6 +1056,8 @@ public class SettingsPage : UserControl
         {
             RowDefinitions =
             {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
@@ -1073,19 +1089,23 @@ public class SettingsPage : UserControl
         grid.Add(labelAlignment, 3);
         grid.Add(comboBoxAlignment, 3, 1);
 
-        grid.Add(labelMargin, 4);
-        grid.Add(numericUpDownMargin, 4, 1);
+        grid.Add(checkBoxUsePositionFromFile, 4, 0, 1, 2);
 
-        grid.Add(labelColorPrimary, 5);
-        grid.Add(colorPickerPrimary, 5, 1);
+        grid.Add(labelMargin, 5);
+        grid.Add(numericUpDownMargin, 5, 1);
 
-        grid.Add(labelColorOutline, 6);
-        grid.Add(colorPickerOutline, 6, 1);
+        grid.Add(checkBoxMarginIsPartOfSubtitleArea, 6, 0, 1, 2);
 
-        grid.Add(labelColorShadow, 7);
-        grid.Add(colorPickerShadow, 7, 1);
+        grid.Add(labelColorPrimary, 7);
+        grid.Add(colorPickerPrimary, 7, 1);
 
-        grid.Add(MakeBorderView(vm), 8, 0, 1, 2);
+        grid.Add(labelColorOutline, 8);
+        grid.Add(colorPickerOutline, 8, 1);
+
+        grid.Add(labelColorShadow, 9);
+        grid.Add(colorPickerShadow, 9, 1);
+
+        grid.Add(MakeBorderView(vm), 10, 0, 1, 2);
 
         return UiUtil.MakeBorderForControl(grid);
     }

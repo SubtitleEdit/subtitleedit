@@ -189,10 +189,15 @@ public static class InitNativeMacMenu
             v => v.IsVideoLoaded, nameof(MainViewModel.IsVideoLoaded)));
         fileItems.Items.Add(Conditional(Clean(l.OpenOriginal), v => v.FileOpenOriginalCommand,
             v => !v.ShowColumnOriginalText, nameof(MainViewModel.ShowColumnOriginalText)));
+        var editOriginalItem = Toggle(Clean(l.EditOriginalSubtitle), v => v.ToggleEditOriginalModeCommand,
+            v => v.IsEditOriginalMode, nameof(MainViewModel.IsEditOriginalMode));
+        state.Visibilities.Add((editOriginalItem, v => v.ShowColumnOriginalText, [nameof(MainViewModel.ShowColumnOriginalText)]));
+        fileItems.Items.Add(editOriginalItem);
         fileItems.Items.Add(Conditional(Clean(l.CloseOriginal), v => v.FileCloseOriginalCommand,
             v => v.ShowColumnOriginalText, nameof(MainViewModel.ShowColumnOriginalText)));
+        // Hidden for a read-only original - see the same item in InitMenu (issue #13449).
         fileItems.Items.Add(Conditional(Clean(l.CloseTranslation), v => v.FileCloseTranslationCommand,
-            v => v.ShowColumnOriginalText, nameof(MainViewModel.ShowColumnOriginalText)));
+            v => v.CanEditOriginal, nameof(MainViewModel.CanEditOriginal)));
 
         state.ReopenItem = new NativeMenuItem(Clean(l.Reopen)) { Menu = new NativeMenu() };
         fileItems.Items.Add(state.ReopenItem);
@@ -231,6 +236,7 @@ public static class InitNativeMacMenu
         var exportItems = new NativeMenu();
         exportItems.Items.Add(Item(Se.Language.General.BluRaySup, v => v.ExportBluRaySupCommand));
         exportItems.Items.Add(Item(Se.Language.General.BdnXml, v => v.ExportBdnXmlCommand));
+        exportItems.Items.Add(Item(Se.Language.General.BdnXml8Bit, v => v.ExportBdnXml8BitCommand));
         exportItems.Items.Add(Item(new CapMakerPlus().Name, v => v.ExportCapMakerPlusCommand));
         exportItems.Items.Add(Item(CheetahCaption.NameOfFormat, v => v.ExportCheetahCaptionCommand));
         exportItems.Items.Add(Item(CheetahCaptionOld.NameOfFormat, v => v.ExportCheetahCaptionOldCommand));
@@ -340,6 +346,8 @@ public static class InitNativeMacMenu
         videoItems.Items.Add(Item(Clean(l.GenerateTransparent), v => v.ShowVideoTransparentSubtitlesCommand));
         videoItems.Items.Add(Item(Clean(Se.Language.Video.GenerateBlankVideoDotDotDot), v => v.VideoGenerateBlankCommand));
         videoItems.Items.Add(Item(Clean(Se.Language.Video.EmbedSubtitlesDotDotDot), v => v.VideoEmbedCommand));
+        videoItems.Items.Add(new NativeMenuItemSeparator());
+        videoItems.Items.Add(Item(Clean(Se.Language.Video.Chapters.ChaptersDotDotDot), v => v.ShowVideoChaptersCommand));
         videoItems.Items.Add(new NativeMenuItemSeparator());
         videoItems.Items.Add(Item(Clean(l.GenerateImportShotChanges), v => v.ShowShotChangesSubtitlesCommand));
         videoItems.Items.Add(Conditional(Clean(l.ListShotChanges), v => v.ShowShotChangesListCommand,

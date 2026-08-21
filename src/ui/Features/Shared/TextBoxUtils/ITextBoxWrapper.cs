@@ -19,6 +19,7 @@ public interface ITextBoxWrapper
     Control TextControl { get; }
     Control ContentControl { get; }
     bool IsFocused { get; }
+    bool IsReadOnly { get; }
     void Cut();
     void Copy();
     void Paste();

@@ -99,6 +99,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return false;
         }
 
+        private static readonly Regex UnsupportedAngleBracketRegex = new Regex(@"<(?!(/?(i|b|u)>|font[ >]|/font>|br\s*/?>))", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        /// <summary>
+        /// Escapes '&lt;' characters that do not open a known markup tag, so literal angle
+        /// brackets in subtitle text (e.g. "3 &lt; 5") survive the XML parse instead of making
+        /// it fail - which would strip all brackets from the paragraph.
+        /// </summary>
+        internal static string EscapeUnsupportedAngleBrackets(string text)
+        {
+            return UnsupportedAngleBracketRegex.Replace(text, "&lt;");
+        }
+
         internal static string ConvertToTimeString(TimeCode time)
         {
             return ConvertToTimeString(time, Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat);

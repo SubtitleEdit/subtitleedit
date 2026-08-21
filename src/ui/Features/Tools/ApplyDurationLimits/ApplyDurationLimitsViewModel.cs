@@ -236,11 +236,17 @@ public partial class ApplyDurationLimitsViewModel : ObservableObject, IClosingCl
 
     private void LoadSettings()
     {
+        // 0 means "not saved yet" - fall back to the general defaults (#13514 pattern). Saving the
+        // dialog's own copy keeps a one-off run from rewriting the app-wide duration settings.
         FixMinDurationMs = true;
-        MinDurationMs = Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
+        MinDurationMs = Se.Settings.Tools.ApplyDurationLimitsMinDurationMs > 0
+            ? Se.Settings.Tools.ApplyDurationLimitsMinDurationMs
+            : Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
 
         FixMaxDurationMs = true;
-        MaxDurationMs = Se.Settings.General.SubtitleMaximumDisplayMilliseconds;
+        MaxDurationMs = Se.Settings.Tools.ApplyDurationLimitsMaxDurationMs > 0
+            ? Se.Settings.Tools.ApplyDurationLimitsMaxDurationMs
+            : Se.Settings.General.SubtitleMaximumDisplayMilliseconds;
 
         DoNotGoPastShotChange = Se.Settings.Tools.ApplyDurationLimits.DoNotExtendPastShotChange;
     }
@@ -248,6 +254,8 @@ public partial class ApplyDurationLimitsViewModel : ObservableObject, IClosingCl
     private void SaveSettings()
     {
         Se.Settings.Tools.ApplyDurationLimits.DoNotExtendPastShotChange = DoNotGoPastShotChange;
+        Se.Settings.Tools.ApplyDurationLimitsMinDurationMs = MinDurationMs ?? 0;
+        Se.Settings.Tools.ApplyDurationLimitsMaxDurationMs = MaxDurationMs ?? 0;
         Se.SaveSettings();
     }
 

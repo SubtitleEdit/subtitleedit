@@ -36,11 +36,11 @@ public class SpellCheckWordLists
     private readonly HashSet<string> _namesListWithApostrophe = new HashSet<string>();
     private readonly HashSet<string> _wordsWithDashesOrPeriods = new HashSet<string>();
 
-    // Parallel to _wordsWithDashesOrPeriods with the split parts precomputed once.
-    // IsPartOfKnownDashOrPeriodName runs per word during live spell check (and up to four
-    // times per word from the OCR fix engine); splitting every combined name on every call
-    // allocated a string[] plus one string per part, per entry, per word.
-    private readonly List<KeyValuePair<string, string[]>> _wordsWithDashesOrPeriodsParts = new List<KeyValuePair<string, string[]>>();
+    // Reverse index of _wordsWithDashesOrPeriods: each dash/period-delimited part mapped to the
+    // combined words containing it. IsPartOfKnownDashOrPeriodName runs per word during live spell
+    // check (and up to four times per word from the OCR fix engine), and almost no word is part of
+    // a combined name - so that answer has to be one lookup instead of a scan of every entry.
+    private readonly Dictionary<string, List<string>> _wordsWithDashesOrPeriodsByPart = new Dictionary<string, List<string>>();
     private readonly HashSet<string> _userWordList = new HashSet<string>();
     private readonly HashSet<string> _userPhraseList = new HashSet<string>();
     private readonly string _dictionaryFolder;
@@ -132,9 +132,20 @@ public class SpellCheckWordLists
 
     private void AddWordWithDashesOrPeriods(string word)
     {
-        if (_wordsWithDashesOrPeriods.Add(word))
+        if (!_wordsWithDashesOrPeriods.Add(word))
         {
-            _wordsWithDashesOrPeriodsParts.Add(new KeyValuePair<string, string[]>(word, word.Split(PeriodAndDash, StringSplitOptions.RemoveEmptyEntries)));
+            return;
+        }
+
+        foreach (var part in word.Split(PeriodAndDash, StringSplitOptions.RemoveEmptyEntries))
+        {
+            if (!_wordsWithDashesOrPeriodsByPart.TryGetValue(part, out var words))
+            {
+                words = new List<string>();
+                _wordsWithDashesOrPeriodsByPart[part] = words;
+            }
+
+            words.Add(word);
         }
     }
 
@@ -375,9 +386,14 @@ public class SpellCheckWordLists
             return false;
         }
 
-        foreach (var kv in _wordsWithDashesOrPeriodsParts)
+        if (!_wordsWithDashesOrPeriodsByPart.TryGetValue(word, out var combinedWords))
         {
-            if (Array.IndexOf(kv.Value, word) >= 0 && text.Contains(kv.Key, StringComparison.Ordinal))
+            return false;
+        }
+
+        foreach (var combinedWord in combinedWords)
+        {
+            if (text.Contains(combinedWord, StringComparison.Ordinal))
             {
                 return true;
             }

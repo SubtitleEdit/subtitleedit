@@ -55,6 +55,7 @@ public class SubtitleGridSelectionOrderTests : IDisposable
         window.UpdateLayout();
 
         var vm = (MainViewModel)view.DataContext!;
+        window.SuppressSaveChangesPromptOnClose(vm);
         for (var i = 0; i < LineCount; i++)
         {
             vm.Subtitles.Add(new SubtitleLineViewModel(new Paragraph($"Line {i + 1}", i * 2000, i * 2000 + 1500), null!)
@@ -141,6 +142,30 @@ public class SubtitleGridSelectionOrderTests : IDisposable
 
         Assert.Same(vm.Subtitles[2], grid.SelectedItem);
         Assert.Equal(new[] { 3, 4, 5, 6, 7 }, SelectedNumbers(vm));
+
+        window.Close();
+    }
+
+    /// <summary>
+    /// Column commands that write downwards from the selection start at the first selected row, not
+    /// at the current one. Because the current row is the moving end of a shift-selection, anchoring
+    /// on it made "Column &gt; Paste from clipboard &gt; Replace existing cells" work only when the
+    /// rows were picked bottom-to-top: picked top-to-bottom the anchor was the bottom row of the
+    /// selection, so the paste landed there and overwrote the lines below it (issue #13682).
+    /// </summary>
+    [AvaloniaTheory]
+    [InlineData(2, 6)] // downwards - the direction that pasted at the wrong row
+    [InlineData(6, 2)] // upwards
+    public void ShiftClick_KeepsTheFirstSelectedRowAsTheColumnAnchor_InBothDirections(int first, int second)
+    {
+        var (window, vm, grid) = ShowMainWindowWithLines();
+
+        Click(window, grid, first, RawInputModifiers.None);
+        Click(window, grid, second, RawInputModifiers.Shift);
+
+        // The current row is still the row the user stopped on - only the column anchor differs.
+        Assert.Same(vm.Subtitles[second], grid.SelectedItem);
+        Assert.Equal(Math.Min(first, second), vm.FirstSelectedSubtitleIndex);
 
         window.Close();
     }

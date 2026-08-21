@@ -29,15 +29,15 @@ Subtitle Edit stores these components in its **Data Folder**.
 | Component | File(s) | Destination Path |
 |-----------|---------|------------------|
 | **FFmpeg** | `ffmpeg.exe`, `ffprobe.exe` (optional) | `[Data Folder]/ffmpeg` |
-| **MPV** | `libmpv-2.dll` | `[Data Folder]` (root) |
+| **MPV** | `libmpv-2.dll` (+ `vulkan-1.dll`) | `[Data Folder]` (root) |
 | **yt-dlp** | `yt-dlp.exe` | `[Data Folder]` (root) |
-| **Tesseract** | `tesseract.exe`, `tessdata/` folder | `[Data Folder]/Tesseract550` |
+| **Tesseract** | `tesseract.exe`, `tessdata/` folder | `[Data Folder]/Tesseract` |
 | **Whisper CPP** | `whisper-cli.exe`, `Models/` folder | `[Data Folder]/SpeechToText/Cpp` |
 | **Purfview Faster-Whisper XXL** | `faster-whisper-xxl.exe`, `_models/` folder | `[Data Folder]/SpeechToText/Purfview-Faster-Whisper-XXL` |
 | **Crisp ASR** | `crispasr.exe`, `models/` folder | `[Data Folder]/CrispASR` |
 | **Qwen3 ASR CPP** | `qwen3-asr-cli.exe`, `models/` folder | `[Data Folder]/Qwen3ASR` |
 | **Parakeet.cpp** | `parakeet.exe`, model folders | `[Data Folder]/parakeet.cpp` |
-| **PaddleOCR** | `paddleocr.exe`, `models/` folder | `[Data Folder]/OCR/PaddleOCR3-1` |
+| **PaddleOCR** | `paddleocr.exe`, `models/` folder | `[Data Folder]/OCR/PaddleOCR3-4` |
 | **Qwen3 TTS (CrispASR)** | shares `crispasr.exe` + `models/` from `[Data Folder]/CrispASR`; reference voices in `voices/` | `[Data Folder]/TextToSpeech/Qwen3TtsCrispAsr` (voices only) |
 | **Chatterbox TTS (CrispASR)** | shares `crispasr.exe` + `models/` from `[Data Folder]/CrispASR`; reference voices in `voices/` | `[Data Folder]/TextToSpeech/Chatterbox` (voices only) |
 | **OmniVoice TTS** | `omnivoice-tts.exe`, `omnivoice-codec.exe`, `models/`, `voices/` | `[Data Folder]/TextToSpeech/OmniVoice` |
@@ -69,6 +69,9 @@ Used as a video player engine.
     *   **Note:** Builds with "v3" in the filename (e.g., `mpv-dev-x86_64-v3-...`) may offer better performance but require a newer CPU with AVX2 support. Use the standard builds (without "v3") for broader compatibility.
 *   **Destination:** `[Data Folder]` (The root data folder)
 *   **Files:** Extract `libmpv-2.dll` to the **root** of the Data Folder.
+*   **Also needed: `vulkan-1.dll`** — builds from August 2026 onwards link the Vulkan loader dynamically, so `libmpv-2.dll` will not load at all without it (the symptom is a black video with no sound, while the waveform still works). It is normally installed by your graphics driver, but drivers for GPUs older than Vulkan — and the generic Microsoft Basic Display driver — do not provide it.
+    *   Subtitle Edit's own "Download libmpv" button already includes it, so this only applies when you install libmpv manually.
+    *   To get it: download the **Vulkan Runtime** components zip from [vulkan.lunarg.com](https://vulkan.lunarg.com/sdk/home#windows) and place `vulkan-1.dll` (the `x64` one, or the ARM64 build on ARM devices) next to `libmpv-2.dll` in the root of the Data Folder.
 
 ### yt-dlp (Online Video Playback)
 Used to enable mpv to stream online videos (e.g., YouTube, Vimeo, and [many other sites](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md)) via **Video > Open from URL**.
@@ -83,7 +86,7 @@ Used to enable mpv to stream online videos (e.g., YouTube, Vimeo, and [many othe
 Used for converting image-based subtitles (Sup/VobSub) to text.
 
 *   **Download:** [UB-Mannheim Tesseract](https://github.com/UB-Mannheim/tesseract/wiki)
-*   **Destination:** `[Data Folder]/Tesseract550`
+*   **Destination:** `[Data Folder]/Tesseract`
 *   **Files:** The content of the installation folder (containing `tesseract.exe` and `tessdata` folder) should be placed here.
 
 ### Whisper CPP (Speech-to-Text)
@@ -117,9 +120,10 @@ Use [Speech to Text](features/speech-to-text.md) for the current engine list and
 ### PaddleOCR
 Used for OCR of image-based subtitles.
 
-*   **Destination:** `[Data Folder]/OCR/PaddleOCR3-1`
-*   **Models:** `[Data Folder]/OCR/PaddleOCR3-1/models`
-*   **Builds:** Subtitle Edit can download Windows CPU, Windows CUDA 11/12, Linux CPU, or Linux GPU builds when available.
+*   **Destination:** `[Data Folder]/OCR/PaddleOCR3-4`
+*   **Models:** `[Data Folder]/OCR/PaddleOCR3-4/models`
+*   **Builds:** Subtitle Edit can download CPU, CUDA 11.8, or CUDA 12.9 builds, on both Windows and Linux (Linux x64 only; the Linux builds need glibc 2.35 or newer).
+*   **Version:** The folder name follows the PaddleOCR release the standalone engine is built from, so upgrading installs into a new folder instead of mixing files. The old `[Data Folder]/OCR/PaddleOCR3-1` folder is deleted automatically after the new one is installed.
 
 ### Local Text-to-Speech Engines
 Subtitle Edit 5 can download local TTS servers and models from the **Text to speech** window.

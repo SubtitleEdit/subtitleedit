@@ -34,6 +34,14 @@ public class ImageParameter
     public string Error { get; set; }
     public bool IsForced { get; set; }
     public bool IsFullFrame { get; set; }
+
+    /// <summary>
+    /// Background of the frame-sized image made when <see cref="IsFullFrame"/> is set. Separate
+    /// from <see cref="BackgroundColor"/>, which is the colour of the box behind the text.
+    /// Transparent by default, so a full frame image only pads the subtitle out to the frame.
+    /// </summary>
+    public SKColor FullFrameBackgroundColor { get; set; } = SKColors.Transparent;
+
     public double FramesPerSecond { get; set; }
     public bool IsRightToLeft { get; set; } = false;
     public ExportBoxType BoxType { get; set; } = ExportBoxType.None;

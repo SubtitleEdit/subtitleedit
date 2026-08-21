@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Input;
 using Nikse.SubtitleEdit.Logic;
 using Avalonia.Threading;
@@ -133,12 +133,19 @@ public partial class MergeShortLinesViewModel : ObservableObject, IClosingCleanu
 
     private void LoadSettings()
     {
-        SingleLineMaxLength = Se.Settings.General.SubtitleLineMaximumLength;
-        MaxNumberOfLines = Se.Settings.General.MaxNumberOfLines;
+        // 0 means "not saved yet" - fall back to the general defaults (#13514 pattern).
+        SingleLineMaxLength = Se.Settings.Tools.MergeShortLinesSingleLineMaxLength > 0
+            ? Se.Settings.Tools.MergeShortLinesSingleLineMaxLength
+            : Se.Settings.General.SubtitleLineMaximumLength;
+        MaxNumberOfLines = Se.Settings.Tools.MergeShortLinesMaxNumberOfLines > 0
+            ? Se.Settings.Tools.MergeShortLinesMaxNumberOfLines
+            : Se.Settings.General.MaxNumberOfLines;
     }
 
     private void SaveSettings()
     {
+        Se.Settings.Tools.MergeShortLinesSingleLineMaxLength = SingleLineMaxLength;
+        Se.Settings.Tools.MergeShortLinesMaxNumberOfLines = MaxNumberOfLines;
         Se.SaveSettings();
     }
 

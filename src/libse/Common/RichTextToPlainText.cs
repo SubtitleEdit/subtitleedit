@@ -33,7 +33,10 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static readonly Regex RtfRegex = new Regex(@"\\([a-z]{1,32})(-?\d{1,10})?[ ]?|\\'([0-9a-f]{2})|\\([^a-z])|([{}])|[\r\n]+|(.)", RegexOptions.Singleline | RegexOptions.IgnoreCase);
 
-        private static readonly List<string> Destinations = new List<string>
+        // A set, not a list: ConvertToText probes this once per RTF control word, and an RTF
+        // document has thousands of them - a linear scan of ~250 entries per word was the bulk
+        // of the import cost.
+        private static readonly HashSet<string> Destinations = new HashSet<string>(StringComparer.Ordinal)
         {
             "aftncn","aftnsep","aftnsepc","annotation","atnauthor","atndate","atnicn","atnid",
             "atnparent","atnref","atntime","atrfend","atrfstart","author","background",
@@ -118,114 +121,131 @@ namespace Nikse.SubtitleEdit.Core.Common
             bool ignorable = false;              // Whether this group (and all inside it) are "ignorable".
             int ucskip = 1;                      // Number of ASCII characters to skip after a unicode character.
             int curskip = 0;                     // Number of ASCII characters left to skip
-            var outList = new List<string>();    // Output buffer.
+            var outText = new StringBuilder(inputRtf.Length); // Output buffer.
 
             MatchCollection matches = RtfRegex.Matches(inputRtf);
 
-            if (matches.Count > 0)
+            // The regex's last alternative is "(.)", so every plain character of the document is
+            // its own match. Reading all six group values up front therefore allocated six
+            // substrings per character of the RTF, and collecting the output as a List<string>
+            // added one more per character plus an array copy for the final Join. Take a group's
+            // value only in the branch that actually needs it, and append to a StringBuilder.
+            foreach (Match match in matches)
             {
-                foreach (Match match in matches)
-                {
-                    string word = match.Groups[1].Value;
-                    string arg = match.Groups[2].Value;
-                    string hex = match.Groups[3].Value;
-                    string character = match.Groups[4].Value;
-                    string brace = match.Groups[5].Value;
-                    string tchar = match.Groups[6].Value;
+                var brace = match.Groups[5];
+                var character = match.Groups[4];
+                var word = match.Groups[1];
+                var hex = match.Groups[3];
+                var tchar = match.Groups[6];
 
-                    if (!string.IsNullOrEmpty(brace))
+                if (brace.Length > 0)
+                {
+                    curskip = 0;
+                    if (inputRtf[brace.Index] == '{')
                     {
-                        curskip = 0;
-                        if (brace == "{")
+                        // Push state
+                        stack.Push(new StackEntry(ucskip, ignorable));
+                    }
+                    else
+                    {
+                        // Pop state
+                        StackEntry entry = stack.Pop();
+                        ucskip = entry.NumberOfCharactersToSkip;
+                        ignorable = entry.Ignorable;
+                    }
+                }
+                else if (character.Length > 0) // \x (not a letter)
+                {
+                    curskip = 0;
+                    var c = inputRtf[character.Index];
+                    if (c == '~')
+                    {
+                        if (!ignorable)
                         {
-                            // Push state
-                            stack.Push(new StackEntry(ucskip, ignorable));
-                        }
-                        else if (brace == "}")
-                        {
-                            // Pop state
-                            StackEntry entry = stack.Pop();
-                            ucskip = entry.NumberOfCharactersToSkip;
-                            ignorable = entry.Ignorable;
+                            outText.Append('\xA0');
                         }
                     }
-                    else if (!string.IsNullOrEmpty(character)) // \x (not a letter)
+                    else if (c == '{' || c == '}' || c == '\\')
                     {
-                        curskip = 0;
-                        if (character == "~")
+                        if (!ignorable)
                         {
-                            if (!ignorable)
-                            {
-                                outList.Add("\xA0");
-                            }
-                        }
-                        else if ("{}\\".Contains(character))
-                        {
-                            if (!ignorable)
-                            {
-                                outList.Add(character);
-                            }
-                        }
-                        else if (character == "*")
-                        {
-                            ignorable = true;
+                            outText.Append(c);
                         }
                     }
-                    else if (!string.IsNullOrEmpty(word)) // \foo
+                    else if (c == '*')
                     {
-                        curskip = 0;
-                        if (Destinations.Contains(word))
-                        {
-                            ignorable = true;
-                        }
-                        else if (ignorable)
-                        {
-                        }
-                        else if (SpecialCharacters.ContainsKey(word))
-                        {
-                            outList.Add(SpecialCharacters[word]);
-                        }
-                        else if (word == "uc")
-                        {
-                            ucskip = int.Parse(arg);
-                        }
-                        else if (word == "u")
-                        {
-                            int c = int.Parse(arg);
-                            if (c < 0)
-                            {
-                                c += 0x10000;
-                            }
-                            outList.Add(char.ConvertFromUtf32(c));
-                            curskip = ucskip;
-                        }
+                        ignorable = true;
                     }
-                    else if (!string.IsNullOrEmpty(hex)) // \'xx
+                }
+                else if (word.Length > 0) // \foo
+                {
+                    curskip = 0;
+                    var wordValue = word.Value;
+                    if (Destinations.Contains(wordValue))
                     {
-                        if (curskip > 0)
-                        {
-                            curskip -= 1;
-                        }
-                        else if (!ignorable)
-                        {
-                            int c = int.Parse(hex, System.Globalization.NumberStyles.HexNumber);
-                            outList.Add(char.ConvertFromUtf32(c));
-                        }
+                        ignorable = true;
                     }
-                    else if (!string.IsNullOrEmpty(tchar))
+                    else if (ignorable)
                     {
-                        if (curskip > 0)
+                    }
+                    else if (SpecialCharacters.TryGetValue(wordValue, out var special))
+                    {
+                        outText.Append(special);
+                    }
+                    else if (wordValue == "uc")
+                    {
+                        ucskip = int.Parse(match.Groups[2].Value);
+                    }
+                    else if (wordValue == "u")
+                    {
+                        int c = int.Parse(match.Groups[2].Value);
+                        if (c < 0)
                         {
-                            curskip -= 1;
+                            c += 0x10000;
                         }
-                        else if (!ignorable)
-                        {
-                            outList.Add(tchar);
-                        }
+                        outText.Append(char.ConvertFromUtf32(c));
+                        curskip = ucskip;
+                    }
+                }
+                else if (hex.Length > 0) // \'xx
+                {
+                    if (curskip > 0)
+                    {
+                        curskip -= 1;
+                    }
+                    else if (!ignorable)
+                    {
+                        // The group is exactly two hex digits, so read them straight out of the
+                        // input - int.Parse would need a substring per escape.
+                        int c = (HexDigit(inputRtf[hex.Index]) << 4) | HexDigit(inputRtf[hex.Index + 1]);
+                        outText.Append(char.ConvertFromUtf32(c));
+                    }
+                }
+                else if (tchar.Length > 0)
+                {
+                    if (curskip > 0)
+                    {
+                        curskip -= 1;
+                    }
+                    else if (!ignorable)
+                    {
+                        outText.Append(inputRtf, tchar.Index, tchar.Length);
                     }
                 }
             }
-            return string.Join(string.Empty, outList.ToArray());
+
+            return outText.ToString();
+        }
+
+        /// <summary>Value of a single hex digit; the regex only ever matches [0-9a-f], either case.</summary>
+        private static int HexDigit(char c)
+        {
+            if (c >= '0' && c <= '9')
+            {
+                return c - '0';
+            }
+
+            return (c | 0x20) - 'a' + 10;
         }
 
         public static string ConvertToRtf(string value)

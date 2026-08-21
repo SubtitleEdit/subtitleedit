@@ -556,6 +556,37 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return s;
         }
 
+        /// <summary>
+        /// Looks up an attribute by name, ignoring case. The SMPTE DCST schemas spell the text
+        /// attributes "Vposition"/"Valign"/"Halign" while the Interop schema spells them
+        /// "VPosition"/"VAlign"/"HAlign" - and some exporters mix the two, which used to make the
+        /// position lookup fail and collapse multi-line subtitles into one line.
+        /// </summary>
+        internal static XmlAttribute GetAttributeIgnoreCase(XmlNode node, string name)
+        {
+            var attributes = node?.Attributes;
+            if (attributes == null)
+            {
+                return null;
+            }
+
+            var attribute = attributes[name];
+            if (attribute != null)
+            {
+                return attribute;
+            }
+
+            foreach (XmlAttribute a in attributes)
+            {
+                if (a.LocalName.Equals(name, StringComparison.OrdinalIgnoreCase))
+                {
+                    return a;
+                }
+            }
+
+            return null;
+        }
+
         public static string GenerateId()
         {
             return Guid.NewGuid().ToString().RemoveChar('-').Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-").ToLowerInvariant();
@@ -710,10 +741,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             extra = innerNode.OuterXml;
 
-                            if (innerNode.Attributes["VPosition"] != null)
+                            var vPositionNode = GetAttributeIgnoreCase(innerNode, "VPosition");
+                            if (vPositionNode != null)
                             {
-                                vPosition = innerNode.Attributes["VPosition"].InnerText;
-                                var vAlignmentNode = innerNode.Attributes["VAlign"];
+                                vPosition = vPositionNode.InnerText;
+                                var vAlignmentNode = GetAttributeIgnoreCase(innerNode, "VAlign");
                                 if (vAlignmentNode != null)
                                 {
                                     vAlignment = vAlignmentNode.InnerText;
@@ -735,9 +767,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             var alignRight = false;
                             var alignVTop = false;
                             var alignVCenter = false;
-                            if (innerNode.Attributes["HAlign"] != null)
+                            var hAlignNode = GetAttributeIgnoreCase(innerNode, "HAlign");
+                            if (hAlignNode != null)
                             {
-                                var hAlign = innerNode.Attributes["HAlign"].InnerText;
+                                var hAlign = hAlignNode.InnerText;
                                 if (hAlign == "left")
                                 {
                                     alignLeft = true;
@@ -748,9 +781,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 }
                             }
 
-                            if (innerNode.Attributes["VAlign"] != null)
+                            var vAlignNode = GetAttributeIgnoreCase(innerNode, "VAlign");
+                            if (vAlignNode != null)
                             {
-                                var hAlign = innerNode.Attributes["VAlign"].InnerText;
+                                var hAlign = vAlignNode.InnerText;
                                 if (hAlign == "top")
                                 {
                                     alignVTop = true;
@@ -903,9 +937,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                             foreach (XmlNode innerInnerNode in innerNode)
                             {
-                                if (innerInnerNode.Attributes["VPosition"] != null)
+                                var vPositionNode = GetAttributeIgnoreCase(innerInnerNode, "VPosition");
+                                if (vPositionNode != null)
                                 {
-                                    vPosition = innerInnerNode.Attributes["VPosition"].InnerText;
+                                    vPosition = vPositionNode.InnerText;
                                     if (vPosition != lastVPosition)
                                     {
                                         if (pText.Length > 0 && lastVPosition.Length > 0)

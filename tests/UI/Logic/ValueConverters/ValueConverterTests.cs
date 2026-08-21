@@ -4,6 +4,7 @@ using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
+using System;
 using System.Globalization;
 
 namespace UITests.Logic.ValueConverters;
@@ -14,9 +15,23 @@ namespace UITests.Logic.ValueConverters;
 /// visible row on every repaint, so they get rewritten for speed now and then - these tests are
 /// what says the output did not move.
 /// </summary>
-public class ValueConverterTests
+public class ValueConverterTests : IDisposable
 {
     private static readonly CultureInfo Culture = CultureInfo.InvariantCulture;
+
+    // Authored colors are guarded for readability against the grid background, and the real
+    // theme background depends on the host OS in headless runs ("System" theme) - pin a dark
+    // background so every color assertion is deterministic. Tests that need another
+    // background override it themselves.
+    public ValueConverterTests()
+    {
+        TextWithSubtitleSyntaxHighlightingConverter.GridBackgroundOverride = () => Color.FromRgb(33, 33, 33);
+    }
+
+    public void Dispose()
+    {
+        TextWithSubtitleSyntaxHighlightingConverter.GridBackgroundOverride = null;
+    }
 
     private static InlineCollection Highlight(string text, SubtitleGridFormattingTypes mode, bool singleLine = false)
     {
@@ -344,6 +359,98 @@ public class ValueConverterTests
         Assert.Equal(16, run.FontSize);
     }
 
+    // Issue #13824: a single authored color nearly identical to the grid background rendered
+    // the line invisible. The guard falls back to the default foreground - it never substitutes
+    // a different authored color.
+    [AvaloniaTheory]
+    [InlineData("{\\c&H232323&}x")]                 // single near-background color
+    [InlineData("{\\1c&HFFFFFF&\\1c&H232323&}x")]   // last-wins winner is unreadable; white must not sneak back in
+    public void ShowFormatting_UnreadableAssaColorFallsBackToDefaultForeground(string text)
+    {
+        var run = SingleRun(Highlight(text, SubtitleGridFormattingTypes.ShowFormatting));
+
+        Assert.False(run.IsSet(TextElement.ForegroundProperty));
+    }
+
+    [AvaloniaFact]
+    public void ShowFormatting_UnreadableFontTagColorFallsBackToDefaultForeground()
+    {
+        var run = SingleRun(Highlight("<font color=\"#232323\">x</font>",
+            SubtitleGridFormattingTypes.ShowFormatting));
+
+        Assert.False(run.IsSet(TextElement.ForegroundProperty));
+    }
+
+    // Issue #13929: the guard was catching colors that read perfectly well. On a mid-grey theme
+    // one speaker's #5C1FF4 (contrast 1.268) rendered in the default foreground while the three
+    // other speakers in the same file kept their colors, which looks like a bug rather than a
+    // readability aid. The genuinely invisible cases above sit at 1.0-1.15, well clear of it.
+    [AvaloniaFact]
+    public void ShowFormatting_ReadableFontTagColorOnAMidGreyThemeIsKept()
+    {
+        TextWithSubtitleSyntaxHighlightingConverter.GridBackgroundOverride = () => Color.FromRgb(73, 73, 73);
+        try
+        {
+            var run = SingleRun(Highlight("<font color=\"#5C1FF4\">x</font>",
+                SubtitleGridFormattingTypes.ShowFormatting));
+
+            Assert.Equal(Color.FromRgb(0x5C, 0x1F, 0xF4), (run.Foreground as ISolidColorBrush)?.Color);
+        }
+        finally
+        {
+            TextWithSubtitleSyntaxHighlightingConverter.GridBackgroundOverride = null;
+        }
+    }
+
+    // The same background must still drop a color that really does vanish into it.
+    [AvaloniaFact]
+    public void ShowFormatting_ColorMatchingAMidGreyThemeIsStillDropped()
+    {
+        TextWithSubtitleSyntaxHighlightingConverter.GridBackgroundOverride = () => Color.FromRgb(73, 73, 73);
+        try
+        {
+            var run = SingleRun(Highlight("<font color=\"#494949\">x</font>",
+                SubtitleGridFormattingTypes.ShowFormatting));
+
+            Assert.False(run.IsSet(TextElement.ForegroundProperty));
+        }
+        finally
+        {
+            TextWithSubtitleSyntaxHighlightingConverter.GridBackgroundOverride = null;
+        }
+    }
+
+    [AvaloniaFact]
+    public void HideTags_StripsMarkupAndAppliesNoStyling()
+    {
+        var inlines = Highlight("{\\an8\\c&H00FF00&}<i><b>one</b></i>\r\ntwo",
+            SubtitleGridFormattingTypes.HideTags);
+
+        Assert.Equal("one\ntwo", FlatText(inlines));
+        var first = Assert.IsType<Run>(inlines[0]);
+        Assert.False(first.IsSet(TextElement.ForegroundProperty));
+        Assert.Equal(FontStyle.Normal, first.FontStyle);
+        Assert.Equal(FontWeight.Normal, first.FontWeight);
+    }
+
+    [AvaloniaTheory]
+    [InlineData("{\\an8\\pos(960,540)}")]                       // override tags only
+    [InlineData("{\\p1}m 0 0 l 100 0 100 100 0 100{\\p0}")]     // vector mask drawing
+    public void HideTags_TagOnlyAndDrawingLinesRenderEmpty(string text)
+    {
+        Assert.Empty(Highlight(text, SubtitleGridFormattingTypes.HideTags));
+    }
+
+    // Stripping must happen before the visible-length cap, or a tag-heavy line spends the
+    // whole cap on markup and shows none of its dialogue (same rule as ShowFormatting).
+    [AvaloniaFact]
+    public void HideTags_TagHeavyLineStillShowsItsDialogue()
+    {
+        var text = "{\\fs" + new string('1', 300) + "}abc";
+
+        Assert.Equal("abc", FlatText(Highlight(text, SubtitleGridFormattingTypes.HideTags)));
+    }
+
     [AvaloniaFact]
     public void ShowTags_ShowsTheMarkupItself()
     {
@@ -542,17 +649,59 @@ public class ValueConverterTests
         try
         {
             Se.Language.General.ErrorX = "Error: {0}";
-            var first = converter.Convert("Error: nope", typeof(object), null, Culture);
-            Assert.NotNull(first);
+            var errorBrush = converter.Convert("Error: nope", typeof(object), null, Culture);
+            Assert.NotNull(errorBrush);
 
             // A loaded translation swaps the string - the cached prefix has to follow.
+            // Both the error brush and the non-error default are shared instances, so
+            // compare by identity: a non-error status must no longer get the error brush.
             Se.Language.General.ErrorX = "Fejl: {0}";
-            Assert.Null(converter.Convert("Error: nope", typeof(object), null, Culture) as ISolidColorBrush);
-            Assert.NotNull(converter.Convert("Fejl: nix", typeof(object), null, Culture) as ISolidColorBrush);
+            Assert.NotSame(errorBrush, converter.Convert("Error: nope", typeof(object), null, Culture));
+            Assert.Same(errorBrush, converter.Convert("Fejl: nix", typeof(object), null, Culture));
         }
         finally
         {
             Se.Language.General.ErrorX = previous;
         }
+    }
+
+    // A karaoke/effect line carries a few hundred characters of override tags before its first
+    // word. The 200-character cut used to be applied to the raw string, so "show formatting" -
+    // the mode whose whole job is hiding tags - showed nothing but a truncated tag (issue #13824).
+    [Fact]
+    public void ShowFormatting_LongTagBlockBeforeTheText_StillShowsTheText()
+    {
+        var tag = "{\\an8\\fnCourier New\\b1\\bord5\\fs40\\t(\\fs28)\\shad0\\c&H1CFEFC&\\3c&H8B04E0&" +
+                  "\\t(2275,2276,\\alpha&HFF&)\\t(2850,2851,\\alpha&H00&)\\t(4280,4281,\\alpha&HFF&)" +
+                  "\\t(5144,5145,\\alpha&H00&)\\t(9481,9482,\\c&HE8FEDF&\\3c&HF171F4&)" +
+                  "\\t(9650,9651,\\c&H1CFEFC&\\3c&H8B04E0&)\\t(9900,9901,\\c&HE8FEDF&\\3c&HF171F4&)}";
+        Assert.True(tag.Length > 200, "the fixture must be longer than the old raw cut");
+
+        var inlines = Highlight(tag + "YOUNG LADIES DON'T PLAY", SubtitleGridFormattingTypes.ShowFormatting);
+
+        Assert.Equal("YOUNG LADIES DON'T PLAY", FlatText(inlines));
+    }
+
+    // Hiding the tags must not hide the braces' contents as text either, however long the block is.
+    [Fact]
+    public void ShowFormatting_VeryLongTagBlock_IsStillHidden()
+    {
+        var tag = "{\\t(" + new string('9', 3000) + ")}";
+
+        var inlines = Highlight(tag + "text", SubtitleGridFormattingTypes.ShowFormatting);
+
+        Assert.DoesNotContain("{", FlatText(inlines));
+    }
+
+    // The cap moved onto the visible text, so a genuinely long line still stops at an ellipsis.
+    [Fact]
+    public void ShowFormatting_LongDialogue_IsStillTruncated()
+    {
+        var text = new string('a', 500);
+
+        var flat = FlatText(Highlight(text, SubtitleGridFormattingTypes.ShowFormatting));
+
+        Assert.EndsWith("...", flat);
+        Assert.True(flat.Length <= 200, $"visible length was {flat.Length}");
     }
 }

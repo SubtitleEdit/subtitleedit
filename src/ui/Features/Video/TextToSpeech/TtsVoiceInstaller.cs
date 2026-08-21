@@ -7,6 +7,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DownloadTts;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using System;
 using System.IO;
@@ -142,18 +143,19 @@ public static class TtsVoiceInstaller
 
     /// <summary>
     /// Ensures the CrispASR runtime that OmniVoice TTS (CrispASR) runs on is installed.
-    /// The omnivoice backend has shipped since well before the pinned build, so the note only
-    /// names the version SE itself pins.
+    /// The omnivoice backend itself has shipped since well before the pinned build, but the
+    /// per-request target language SE sends is only honoured from v0.8.26 — on anything older the
+    /// field is parsed and ignored (#13273) — so the note names that floor.
     /// </summary>
     public static Task<bool> EnsureCrispAsrForOmniVoice(Window? window, IWindowService windowService, bool forceRedownload)
         => EnsureCrispAsrAsync(window, windowService, forceRedownload,
             engineDisplayName: "OmniVoice TTS (CrispASR)",
             extraCapabilityCheck: null,
-            minVersionNote: "v0.8.25 or newer");
+            minVersionNote: "v0.8.26 or newer");
 
     /// <summary>
     /// Ensures the CrispASR runtime that MOSS-TTS (CrispASR) runs on is installed.
-    /// The moss-tts backend ships in CrispASR v0.8.13 and newer (SE pins v0.8.25).
+    /// The moss-tts backend ships in CrispASR v0.8.13 and newer (SE pins v0.8.29).
     /// </summary>
     public static Task<bool> EnsureCrispAsrForMossTts(Window? window, IWindowService windowService, bool forceRedownload)
         => EnsureCrispAsrAsync(window, windowService, forceRedownload,
@@ -169,6 +171,124 @@ public static class TtsVoiceInstaller
     /// present in the binary, for example); returning false there triggers a re-download
     /// even when CrispASR itself looks up to date.
     /// </summary>
+    /// <summary>
+    /// Ensures the audio.cpp runtime that IndexTTS 2.5 runs on is installed. Unlike the
+    /// CrispASR engines, these binaries are built by SubtitleEdit itself (upstream ships
+    /// Windows-only prebuilts), and the archive is per backend: Metal on Apple Silicon, and
+    /// CPU / Vulkan / CUDA on Windows and Linux x64.
+    /// </summary>
+    public static async Task<bool> EnsureAudioCppForIndexTts25(Window? window, IWindowService windowService, bool forceRedownload)
+    {
+        if (window == null)
+        {
+            return false;
+        }
+
+        var isInstalled = File.Exists(IndexTts25AudioCpp.GetServerExecutable());
+        if (!forceRedownload && isInstalled)
+        {
+            return true;
+        }
+
+        string backend;
+        if (Configuration.IsRunningOnMac)
+        {
+            if (RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
+            {
+                await MessageBox.Show(
+                    window,
+                    "IndexTTS 2.5",
+                    $"{Environment.NewLine}IndexTTS 2.5 (audio.cpp) requires an Apple Silicon Mac.",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                return false;
+            }
+
+            var answer = await MessageBox.Show(
+                window,
+                "Download audio.cpp?",
+                $"{Environment.NewLine}\"IndexTTS 2.5\" runs through the audio.cpp runtime. Download and install now?",
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question);
+
+            if (answer != MessageBoxResult.Yes)
+            {
+                return false;
+            }
+
+            backend = IndexTts25AudioCppDownloadService.BackendMetal;
+        }
+        else if (Configuration.IsRunningOnWindows || Configuration.IsRunningOnLinux)
+        {
+            if (RuntimeInformation.ProcessArchitecture != Architecture.X64)
+            {
+                await MessageBox.Show(
+                    window,
+                    "IndexTTS 2.5",
+                    $"{Environment.NewLine}IndexTTS 2.5 (audio.cpp) is only built for x86-64 on Windows and Linux.",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                return false;
+            }
+
+            var variantAnswer = await MessageBox.Show(
+                window,
+                "Download audio.cpp?",
+                $"{Environment.NewLine}\"IndexTTS 2.5\" runs through the audio.cpp runtime. Select a build to download:",
+                MessageBoxButtons.Cancel,
+                MessageBoxIcon.Question,
+                "CPU",
+                "Vulkan",
+                "CUDA");
+
+            if (variantAnswer == MessageBoxResult.None || variantAnswer == MessageBoxResult.Cancel)
+            {
+                return false;
+            }
+
+            backend = variantAnswer switch
+            {
+                MessageBoxResult.Custom2 => IndexTts25AudioCppDownloadService.BackendVulkan,
+                MessageBoxResult.Custom3 => IndexTts25AudioCppDownloadService.BackendCuda,
+                _ => IndexTts25AudioCppDownloadService.BackendCpu,
+            };
+
+            // The GPU builds import their runtime at load time, so a missing driver is not a
+            // slow fallback — the process dies in the loader before printing anything.
+            if (backend == IndexTts25AudioCppDownloadService.BackendVulkan && !VulkanHelper.IsInstalled())
+            {
+                var vulkanAnswer = await MessageBox.Show(
+                    window,
+                    "Vulkan driver may be required",
+                    $"The Vulkan build needs a Vulkan-capable GPU driver.{Environment.NewLine}{Environment.NewLine}Without it audio.cpp cannot start at all. Pick the CPU build instead if you are unsure.{Environment.NewLine}{Environment.NewLine}Continue with Vulkan download?",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                if (vulkanAnswer != MessageBoxResult.Yes)
+                {
+                    return false;
+                }
+            }
+        }
+        else
+        {
+            return false;
+        }
+
+        var dlResult = await windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(
+            window, vm => vm.StartDownloadIndexTts25AudioCppEngine(backend));
+
+        if (!dlResult.OkPressed || !File.Exists(IndexTts25AudioCpp.GetServerExecutable()))
+        {
+            return false;
+        }
+
+        // Remember which archive is on disk: the engine passes this straight to audio.cpp's
+        // server config as the ggml backend.
+        Se.Settings.Video.TextToSpeech.IndexTts25AudioCppBackend = backend;
+        return true;
+    }
+
     private static async Task<bool> EnsureCrispAsrAsync(
         Window? window,
         IWindowService windowService,

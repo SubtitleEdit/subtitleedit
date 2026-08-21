@@ -67,9 +67,27 @@ Right-click a line to access:
 | `Enter` | Go to next line |
 | `Up/Down` | Navigate lines |
 
+### Pasting over several lines
+
+With **one** line selected, `Ctrl+V` inserts the clipboard content below it. With **several** lines selected, the clipboard is pasted *over* the selection instead — handy for translating: copy the lines out, translate them elsewhere, select the same lines here and paste.
+
+- Clipboard holds a subtitle (SRT, ASSA, …): the selected lines are replaced by the pasted ones, time codes included. The number of pasted lines does not have to match the selection.
+- Clipboard holds plain text: one clipboard line goes into each selected line's text, and the time codes are left alone. Clipboard lines that go past the end of the selection are not pasted.
+
+Both are a normal edit, so `Ctrl+Z` undoes them.
+
 ## Formatting Display
 
-The grid can render formatting tags (italic, bold, color, etc.) visually instead of showing the raw tags — enable **Show formatting in grid** in the settings. A shortcut to toggle the formatting mode on the fly can be assigned in **Options → Shortcuts**.
+How the grid treats HTML/ASSA markup is a four-way choice — **Show formatted (HTML/ASSA) text in subtitle grid** in **Options → Settings → Appearance**:
+
+| Mode | What the grid shows |
+|------|---------------------|
+| **Show formatting** | The tags are hidden and what they mean is rendered — italic, bold, color, font size. The default |
+| **Show tags** | The text with its tags, with the tags colored so they are easy to pick out |
+| **No formatting** | The raw text exactly as it is stored |
+| **Hide tags** | The markup is stripped and only the dialogue is drawn, as plain themed text — no colors, fonts or sizes. Useful for translation, where the styling is only a distraction. Vector drawing tags are dropped too |
+
+A shortcut can be assigned in **Options → Shortcuts** to cycle the four modes on the fly; the status bar names the mode you land on.
 
 ## Bookmarks
 

@@ -90,4 +90,59 @@ public static class JsonRepair
 
         return sb.ToString();
     }
+
+    /// <summary>
+    /// Replaces comma decimal separators in numbers outside string literals with dots, e.g.
+    /// <c>"start": 1,840</c> becomes <c>"start": 1.840</c>. qwen3-asr-cli up to v0.1.7 formatted
+    /// timestamps with the process locale, so on Windows with a comma-decimal regional format
+    /// (French, German, ...) the JSON was invalid. Only a comma directly between two digits is
+    /// rewritten — a structural comma in well-formed output is always followed by whitespace or
+    /// a quote. NOTE: this makes the repair unsafe for JSON with arrays of bare numbers
+    /// (<c>[1,2]</c>); the qwen3 output has none.
+    /// </summary>
+    public static string FixCommaDecimalSeparators(string json)
+    {
+        if (string.IsNullOrEmpty(json))
+        {
+            return json;
+        }
+
+        var chars = json.ToCharArray();
+        var inString = false;
+        var escaped = false;
+
+        for (var i = 0; i < chars.Length; i++)
+        {
+            var c = chars[i];
+            if (inString)
+            {
+                if (escaped)
+                {
+                    escaped = false;
+                }
+                else if (c == '\\')
+                {
+                    escaped = true;
+                }
+                else if (c == '"')
+                {
+                    inString = false;
+                }
+
+                continue;
+            }
+
+            if (c == '"')
+            {
+                inString = true;
+            }
+            else if (c == ',' && i > 0 && i + 1 < chars.Length &&
+                     char.IsAsciiDigit(chars[i - 1]) && char.IsAsciiDigit(chars[i + 1]))
+            {
+                chars[i] = '.';
+            }
+        }
+
+        return new string(chars);
+    }
 }

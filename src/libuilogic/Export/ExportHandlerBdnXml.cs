@@ -7,11 +7,12 @@ namespace Nikse.SubtitleEdit.UiLogic.Export;
 
 public class ExportHandlerBdnXml : IExportHandler
 {
-    public ExportImageType ExportImageType => ExportImageType.BdnXml;
+    public ExportImageType ExportImageType => _use8BitPng ? ExportImageType.BdnXml8Bit : ExportImageType.BdnXml;
     public string Extension => "";
     public bool UseFileName => false;
-    public string Title => string.Format("Export to {0}", "BDN XML");
+    public string Title => string.Format("Export to {0}", _use8BitPng ? "BDN XML 8-bit" : "BDN XML");
 
+    private readonly bool _use8BitPng;
     private int _width;
     private int _height;
     private StringBuilder _sb = new StringBuilder();
@@ -20,6 +21,15 @@ public class ExportHandlerBdnXml : IExportHandler
     private string _folderName = string.Empty;
     private int _imagesSavedCount = 0;
     private double _frameRate = 23.976;
+
+    /// <param name="use8BitPng">
+    /// Write the images as 8-bit palette-indexed PNGs instead of 32-bit RGBA ones. Blu-ray
+    /// authoring tools generally want indexed color for BDN XML image sets (issue #13452).
+    /// </param>
+    public ExportHandlerBdnXml(bool use8BitPng = false)
+    {
+        _use8BitPng = use8BitPng;
+    }
 
     public void WriteHeader(string fileOrFolderName, ImageParameter imageParameter)
     {
@@ -57,7 +67,7 @@ public class ExportHandlerBdnXml : IExportHandler
         var numberString = $"{_imagesSavedCount:0000}";
         var fileName = Path.Combine(_folderName, numberString + ".png");
 
-        File.WriteAllBytes(fileName, param.Bitmap.ToPngArray());
+        File.WriteAllBytes(fileName, _use8BitPng ? param.Bitmap.ToPng8BitArray() : param.Bitmap.ToPngArray());
 
         _sb.AppendLine("<Event InTC=\"" + ToHHMMSSFF(new TimeCode(param.StartTime)) + "\" OutTC=\"" +
                                 ToHHMMSSFF(new TimeCode(param.EndTime)) + "\" Forced=\"" + param.IsForced.ToString().ToLowerInvariant() + "\">");

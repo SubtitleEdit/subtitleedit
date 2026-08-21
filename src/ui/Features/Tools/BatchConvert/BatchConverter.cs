@@ -1,4 +1,4 @@
-﻿using Avalonia.Skia;
+using Avalonia.Skia;
 using Nikse.SubtitleEdit.UiLogic.Export;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Features.Assa.ResolutionResampler;
@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
@@ -48,6 +49,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 {
     public static readonly string FormatAyato = new Ayato().Name;
     public const string FormatBdnXml = "BDN-XML";
+    public const string FormatBdnXml8Bit = "BDN-XML 8-bit";
     public const string FormatBluRaySup = "Blu-ray sup";
     public static readonly string FormatCavena890 = new Cavena890().Name;
     public const string FormatDCinemaInterop = "D-Cinema interop/png";
@@ -69,6 +71,11 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     // "Embed fonts" function does not rescan the font folders for every file.
     private readonly Dictionary<string, List<string>> _fontFilesCache = new(StringComparer.OrdinalIgnoreCase);
 
+    // Output names handed out during the current batch run. A later item must never take
+    // one of these - not even in overwrite mode - or two same-language tracks from one
+    // file would silently clobber each other's output.
+    private readonly HashSet<string> _handedOutOutputFileNames = new(StringComparer.OrdinalIgnoreCase);
+
     public SubtitleFormat Format { get; set; } = new SubRip();
 
     public Encoding Encoding { get; set; } = Encoding.UTF8;
@@ -79,6 +86,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
     private readonly INOcrCaseFixer _nOcrCaseFixer;
     private readonly IBinaryOcrMatcher _binaryOcrMatcher;
+    private OcrLineHeightTracker _lineHeightTracker = new();
     private readonly INamesList _namesList;
     private string _namesListFolder = string.Empty;
     private string _namesListLanguage = string.Empty;
@@ -98,6 +106,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         _config = config;
         _subtitleFormats = SubtitleFormatHelper.GetSubtitleFormatsWithFavoritesAtTop();
         _fontFilesCache.Clear();
+        _handedOutOutputFileNames.Clear();
     }
 
     /// <summary>
@@ -252,7 +261,9 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             }
         }
         else if (IsMp4SubtitleFormat(item.Format) &&
-                 (item.FileName.EndsWith(".mp4") || item.FileName.EndsWith(".m4v") || item.FileName.EndsWith(".m4s")))
+                 (item.FileName.EndsWith(".mp4") || item.FileName.EndsWith(".m4v") || item.FileName.EndsWith(".m4s") ||
+                  item.FileName.EndsWith(".mov") || item.FileName.EndsWith(".3gp") || item.FileName.EndsWith(".m4a") ||
+                  item.FileName.EndsWith(".m4b") || item.FileName.EndsWith(".cmaf")))
         {
             var mp4Files = new List<string>();
             var mp4Parser = new MP4Parser(item.FileName);
@@ -346,6 +357,17 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             else
             {
                 await RunOcrTesseract(imageSubtitle, item, cancellationToken);
+            }
+
+            // OCR is only one step of the run - the item still goes through the convert functions
+            // and the save before it can say "Converted". Leaving the last progress value up would
+            // show a finished-looking "OCR: 100%" for that whole stretch, so put the row back to
+            // the plain working status it started this block with. A runner that deliberately left
+            // a terminal status behind (cancelled, an error, "model likely wrong") keeps it - only
+            // our own percentages are reset.
+            if (IsOcrProgressStatus(item.Status))
+            {
+                item.Status = Se.Language.General.OcrDotDotDot;
             }
         }
 
@@ -568,31 +590,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
     internal static List<VobSubMergedPack> LoadVobSubFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska, out Core.VobSub.Idx? idx)
     {
-        var mergedVobSubPacks = new List<VobSubMergedPack>();
-        if (matroskaSubtitleInfo.ContentEncodingType == 1)
-        {
-            idx = null;
-            return mergedVobSubPacks;
-        }
-
-        var sub = matroska.GetSubtitle(matroskaSubtitleInfo.TrackNumber, null);
-        idx = new Core.VobSub.Idx(matroskaSubtitleInfo.GetCodecPrivate().SplitToLines());
-        foreach (var p in sub)
-        {
-            mergedVobSubPacks.Add(new VobSubMergedPack(p.GetData(matroskaSubtitleInfo), TimeSpan.FromMilliseconds(p.Start), 32, null));
-            if (mergedVobSubPacks.Count > 0)
-            {
-                mergedVobSubPacks[mergedVobSubPacks.Count - 1].EndTime = TimeSpan.FromMilliseconds(p.End);
-            }
-
-            // fix overlapping (some versions of Handbrake makes overlapping time codes - thx Hawke)
-            if (mergedVobSubPacks.Count > 1 && mergedVobSubPacks[mergedVobSubPacks.Count - 2].EndTime > mergedVobSubPacks[mergedVobSubPacks.Count - 1].StartTime)
-            {
-                mergedVobSubPacks[mergedVobSubPacks.Count - 2].EndTime = TimeSpan.FromMilliseconds(mergedVobSubPacks[mergedVobSubPacks.Count - 1].StartTime.TotalMilliseconds - 1);
-            }
-        }
-
-        return mergedVobSubPacks;
+        return MatroskaImageSubtitleExtractor.ExtractVobSub(matroskaSubtitleInfo, matroska, out idx);
     }
 
 
@@ -714,6 +712,46 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         await File.WriteAllTextAsync(path, text, cancellationToken);
     }
 
+    /// <summary>
+    /// True when the status is one of the "OCR: {0}%" progress values the OCR runners write. Used
+    /// to tell our own progress apart from a terminal status a runner deliberately left behind, so
+    /// clearing progress cannot swallow a "Cancelled" or an error. The format string is matched
+    /// rather than hard-coded, since translations move the percent sign and the label.
+    /// </summary>
+    internal static bool IsOcrProgressStatus(string? status)
+    {
+        if (string.IsNullOrEmpty(status))
+        {
+            return false;
+        }
+
+        var format = Se.Language.General.OcrPercentX;
+        var placeholder = format.IndexOf("{0}", StringComparison.Ordinal);
+        if (placeholder < 0)
+        {
+            return false;
+        }
+
+        var prefix = format.AsSpan(0, placeholder);
+        var suffix = format.AsSpan(placeholder + "{0}".Length);
+        if (status.Length <= prefix.Length + suffix.Length ||
+            !status.AsSpan().StartsWith(prefix, StringComparison.Ordinal) ||
+            !status.AsSpan().EndsWith(suffix, StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        for (var i = prefix.Length; i < status.Length - suffix.Length; i++)
+        {
+            if (!char.IsAsciiDigit(status[i]))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     private static async Task RunOcrTesseract(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
     {
         var tesseractOcr = new TesseractOcr();
@@ -739,6 +777,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
     private void RunNOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
     {
+        _lineHeightTracker = new OcrLineHeightTracker { FallbackMinLineHeight = item.Format == FormatBluRaySup ? 25 : 12 };
         var fileName = Path.Combine(Se.OcrFolder, Se.Settings.Ocr.NOcrDatabase + ".nocr");
         var nOcrDb = new NOcrDb(fileName);
         var totalCount = imageSubtitles.Count;
@@ -836,7 +875,8 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         parentBitmap.MakeTwoColor(200);
         parentBitmap.CropTop(0, new SKColor(0, 0, 0, 0));
         var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, pixelsAreSpace,
-            false, true, 20, true);
+            false, true, _lineHeightTracker.GetMinLineHeight(), true, _lineHeightTracker.GetAverageLineHeight());
+        _lineHeightTracker.Update(letters);
         var index = 0;
         var matches = new List<NOcrChar>();
         var maxErrorPercent = Se.Settings.Ocr.BinaryOcrMaxErrorPercent > 0 ? Se.Settings.Ocr.BinaryOcrMaxErrorPercent : 7.5;
@@ -941,6 +981,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
     private void RunBinaryOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
     {
+        _lineHeightTracker = new OcrLineHeightTracker { FallbackMinLineHeight = item.Format == FormatBluRaySup ? 25 : 12 };
         var dbName = string.IsNullOrEmpty(Se.Settings.Tools.BatchConvert.BinaryOcrDatabase)
             ? "Latin"
             : Se.Settings.Tools.BatchConvert.BinaryOcrDatabase;
@@ -1082,7 +1123,8 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         var parentBitmap = new NikseBitmap2(bitmap);
         parentBitmap.MakeTwoColor(200);
         parentBitmap.CropTop(0, new SKColor(0, 0, 0, 0));
-        var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, pixelsAreSpace, false, true, 20, true);
+        var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, pixelsAreSpace, false, true, _lineHeightTracker.GetMinLineHeight(), true, _lineHeightTracker.GetAverageLineHeight());
+        _lineHeightTracker.Update(letters);
         var index = 0;
         var matches = new List<BinaryOcrMatcher.CompareMatch>();
         while (index < letters.Count)
@@ -1139,6 +1181,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
     private static int? DetectPixelsIsSpace(IOcrSubtitle imageSubtitles, int sampleSize, CancellationToken cancellationToken)
     {
+        var lineHeightTracker = new OcrLineHeightTracker(); // static sweep, so track locally
         var gaps = new List<int>(1024);
         for (var i = 0; i < sampleSize; i++)
         {
@@ -1151,7 +1194,8 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             var parentBitmap = new NikseBitmap2(bitmap);
             parentBitmap.MakeTwoColor(200);
             parentBitmap.CropTop(0, new SKColor(0, 0, 0, 0));
-            var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, 1, false, true, 20, true);
+            var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, 1, false, true, lineHeightTracker.GetMinLineHeight(), true, lineHeightTracker.GetAverageLineHeight());
+            lineHeightTracker.Update(letters);
             foreach (var l in letters)
             {
                 if (l.NikseBitmap == null && l.SpecialCharacter == " " && l.SpacePixels > 0)
@@ -1295,7 +1339,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     /// </returns>
     private async Task<bool> RunOllamaOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
     {
-        var ollamaOcr = new OllamaOcr();
+        using var ollamaOcr = new OllamaOcr();
         var url = Se.Settings.Ocr.OllamaUrl;
         var model = Se.Settings.Ocr.OllamaModel;
         var language = Se.Settings.Ocr.OllamaLanguage;
@@ -1333,6 +1377,8 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     }
 
     /// <inheritdoc cref="RunOllamaOcr"/>
+    public bool UsedLocalLlamaCppOcr { get; private set; }
+
     private async Task<bool> RunLlamaCppOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
     {
         // Curated OCR model from settings (picked in batch convert settings / the OCR window).
@@ -1347,6 +1393,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
         try
         {
+            // Set before the await: starting the server is itself the slow part a user cancels
+            // out of, and the shutdown has to know this run owns it by then (#13865).
+            UsedLocalLlamaCppOcr = true;
+
             // Reused across items/files in the same batch run; killed at app exit.
             await LlamaCppServerManager.EnsureServerRunningAsync(model, cancellationToken);
         }
@@ -1356,7 +1406,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return false;
         }
 
-        var engine = new LlamaCppOcr(Se.Settings.Ocr.LlamaCppOcrTimeoutMinutes);
+        using var engine = new LlamaCppOcr(Se.Settings.Ocr.LlamaCppOcrTimeoutMinutes);
         var url = LlamaCppServerManager.ApiUrl;
         var modelName = Path.GetFileNameWithoutExtension(model.FileName);
         var language = Se.Settings.Ocr.OllamaLanguage;
@@ -1534,6 +1584,8 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return;
         }
 
+        var profile = GetExportImagesProfile();
+
         var imageParameters = new List<ImageParameter>();
         for (var i = 0; i < imageSubtitle.Count; i++)
         {
@@ -1562,6 +1614,12 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 BottomTopMargin = 0,
                 LeftRightMargin = 0,
                 Bitmap = ApplyImageAdjustments(imageSubtitle.GetBitmap(i)),
+                // The export handlers read these off the parameters: FCP/BDN take their
+                // timecode frame rate from here (falling back to a 25/23.976 default), and
+                // FCP/Blu-ray render onto a frame-sized canvas when full frame is on.
+                FramesPerSecond = profile.FramesPerSecond,
+                IsFullFrame = profile.IsFullFrame,
+                FullFrameBackgroundColor = profile.FullFrameBackgroundColor.FromHexToColor().ToSKColor(),
             };
             var position = imageSubtitle.GetPosition(i);
             if (position.X >= 0 && position.Y >= 0)
@@ -1589,6 +1647,12 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         if (_config.TargetFormatName == FormatBdnXml)
         {
             exportHandler = new ExportHandlerBdnXml();
+            extension = string.Empty; // folder
+        }
+
+        if (_config.TargetFormatName == FormatBdnXml8Bit)
+        {
+            exportHandler = new ExportHandlerBdnXml(true);
             extension = string.Empty; // folder
         }
 
@@ -1672,7 +1736,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 // styles that are actually written and the embedding is not overwritten.
                 if (_config.AssaEmbedFonts.IsActive)
                 {
-                    AssaFontEmbedder.EmbedUsedFonts(s, cancellationToken, _fontFilesCache);
+                    AssaFontEmbedder.EmbedUsedFonts(s, cancellationToken, _fontFilesCache, _config.AssaEmbedFonts.TrimFonts);
                 }
             }
 
@@ -1708,18 +1772,17 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         }
     }
 
+    /// <summary>The export-images profile the target-format settings dialog edits and saves.</summary>
+    private static SeExportImagesProfile GetExportImagesProfile()
+    {
+        return Se.Settings.File.ExportImages.Profiles.FirstOrDefault(p => p.ProfileName == Se.Settings.File.ExportImages.LastProfileName)
+               ?? Se.Settings.File.ExportImages.Profiles.FirstOrDefault()
+               ?? new SeExportImagesProfile();
+    }
+
     private IOcrSubtitle? CreateImageSubtitles(BatchConvertItem item)
     {
-        var profile = Se.Settings.File.ExportImages.Profiles.FirstOrDefault(p => p.ProfileName == Se.Settings.File.ExportImages.LastProfileName);
-        if (profile == null)
-        {
-            profile = Se.Settings.File.ExportImages.Profiles.FirstOrDefault();
-        }
-
-        if (profile == null)
-        {
-            profile = new SeExportImagesProfile();
-        }
+        var profile = GetExportImagesProfile();
 
         if (item.Subtitle == null)
         {
@@ -1759,6 +1822,12 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 ScreenHeight = profile.ScreenHeight,
                 BottomTopMargin = profile.BottomTopMargin,
                 LeftRightMargin = profile.LeftRightMargin,
+                // The export handlers read these off the parameters: FCP/BDN take their
+                // timecode frame rate from here (falling back to a 25/23.976 default), and
+                // FCP/Blu-ray render onto a frame-sized canvas when full frame is on.
+                FramesPerSecond = profile.FramesPerSecond,
+                IsFullFrame = profile.IsFullFrame,
+                FullFrameBackgroundColor = profile.FullFrameBackgroundColor.FromHexToColor().ToSKColor(),
             };
 
             imageParameter.Bitmap = ExportImageBasedViewModel.GenerateBitmap(imageParameter);
@@ -1788,6 +1857,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             s = BridgeGaps(s);
             s = ApplyMinGap(s);
             s = BeautifyTimeCodes(s, item.FileName);
+            s = SnapTimeCodesToFrames(s, item.FileName);
         }
         else
         {
@@ -1796,7 +1866,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             s = AddFormatting(s);
             s = SplitBreakLongLines(s, Language);
             s = AdjustDisplayDuration(s);
-            s = await AutoTranslate(s, cancellationToken);
+            s = await AutoTranslate(s, item, cancellationToken);
             s = ChangeCasing(s, Language);
             s = OffsetTimeCodes(s);
             s = ChangeFrameRate(s);
@@ -1806,6 +1876,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             s = FixCommonErrors(s);
             s = MergeLinesWithSameText(s);
             s = MergeLinesWithSameTimeCodes(s, Language);
+            s = ConvertColorsToDialog(s, Language);
             s = MergeShortLines(s);
             s = MultipleReplace(s);
             s = RemoveLineBreaks(s);
@@ -1816,6 +1887,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             s = AssaChangeResolution(s);
             s = AssaChangeStyle(s);
             s = BeautifyTimeCodes(s, item.FileName);
+            s = SnapTimeCodesToFrames(s, item.FileName);
             s = SortBy(s);
         }
 
@@ -1830,6 +1902,11 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         }
 
         var replaceExpressions = BuildReplaceExpressions();
+
+        // Patterns the match timeout stopped. Retried on the next file - a pattern can be
+        // pathological on one line and harmless on the rest of the batch.
+        var timedOut = new HashSet<string>();
+
         for (var i = 0; i < subtitle.Paragraphs.Count; i++)
         {
             var p = subtitle.Paragraphs[i];
@@ -1849,12 +1926,28 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 }
                 else if (item.SearchType == ReplaceExpression.SearchRegEx)
                 {
-                    var r = _compiledRegExList[item.FindWhat];
-                    if (r.IsMatch(newText))
+                    if (timedOut.Contains(item.FindWhat) ||
+                        !_compiledRegExList.TryGetValue(item.FindWhat, out var r))
                     {
-                        hit = true;
-                        ruleInfo = string.IsNullOrEmpty(ruleInfo) ? item.RuleInfo : $"{ruleInfo} + {item.RuleInfo}";
-                        newText = RegexUtils.ReplaceNewLineSafe(r, newText, item.ReplaceWith);
+                        continue; // pattern did not compile, or already gave up - both logged
+                    }
+
+                    try
+                    {
+                        if (r.IsMatch(newText))
+                        {
+                            var replaced = RegexUtils.ReplaceNewLineSafe(r, newText, item.ReplaceWith);
+                            hit = true;
+                            ruleInfo = string.IsNullOrEmpty(ruleInfo) ? item.RuleInfo : $"{ruleInfo} + {item.RuleInfo}";
+                            newText = replaced;
+                        }
+                    }
+                    catch (RegexMatchTimeoutException)
+                    {
+                        // Leave the line alone rather than the whole batch: the timeout already
+                        // cost five seconds here and every remaining line would cost the same.
+                        SeLogger.Error($"Batch convert, multiple replace: {DescribeRule(item)} timed out on line {i + 1} - skipping it for the rest of this file");
+                        timedOut.Add(item.FindWhat);
                     }
                 }
                 else
@@ -1895,16 +1988,46 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 var replaceWith = isRegex ? RegexUtils.FixNewLine(rule.ReplaceWith) : rule.ReplaceWith;
 
                 var mpi = new ReplaceExpression(findWhat, replaceWith, rule.Type.ToString(), category.Name + ": " + rule.Description);
-                replaceExpressions.Add(mpi);
                 if (mpi.SearchType == ReplaceExpression.SearchRegEx && !_compiledRegExList.ContainsKey(findWhat))
                 {
-                    _compiledRegExList.Add(findWhat,
-                        new Regex(findWhat, RegexOptions.Compiled | RegexOptions.Multiline));
+                    try
+                    {
+                        // With the match timeout, so a pattern with catastrophic backtracking cannot
+                        // stall the batch - the whole point of running it unattended.
+                        _compiledRegExList.Add(findWhat,
+                            new Regex(findWhat, RegexOptions.Compiled | RegexOptions.Multiline, RegexUtils.UserPatternMatchTimeout));
+                    }
+                    catch (ArgumentException exception)
+                    {
+                        // One saved rule that will not compile used to throw out of here and fail
+                        // every file in the batch with an opaque "parsing ..." status, naming
+                        // neither the rule nor the category. Skip the rule and carry on, the way
+                        // the Multiple replace window does (#13534).
+                        SeLogger.Error(exception, $"Batch convert, multiple replace: skipping rule with invalid regular expression '{findWhat}' in category '{category.Name}'");
+                        continue;
+                    }
                 }
+
+                replaceExpressions.Add(mpi);
             }
         }
 
         return replaceExpressions;
+    }
+
+    /// <summary>
+    /// A rule named so the log pinpoints it. RuleInfo is "category: description" and a description
+    /// is optional - and not unique when it is there - so the pattern is what actually identifies
+    /// the rule in the user's list.
+    /// </summary>
+    internal static string DescribeRule(ReplaceExpression item)
+    {
+        var info = (item.RuleInfo ?? string.Empty).TrimEnd();
+        info = info.TrimEnd(':').TrimEnd();
+
+        return string.IsNullOrEmpty(info)
+            ? $"rule '{item.FindWhat}'"
+            : $"rule '{item.FindWhat}' ({info})";
     }
 
     private Subtitle RemoveFormatting(Subtitle subtitle)
@@ -1914,63 +2037,19 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return subtitle;
         }
 
+        var s = _config.RemoveFormatting;
+        var types = RemoveFormattingType.None;
+        if (s.RemoveAll) { types |= RemoveFormattingType.All; }
+        if (s.RemoveItalic) { types |= RemoveFormattingType.Italic; }
+        if (s.RemoveBold) { types |= RemoveFormattingType.Bold; }
+        if (s.RemoveUnderline) { types |= RemoveFormattingType.Underline; }
+        if (s.RemoveColor) { types |= RemoveFormattingType.Color; }
+        if (s.RemoveFontName) { types |= RemoveFormattingType.FontName; }
+        if (s.RemoveAlignment) { types |= RemoveFormattingType.Alignment; }
+
         foreach (var p in subtitle.Paragraphs)
         {
-            if (_config.RemoveFormatting.RemoveAll)
-            {
-                p.Text = HtmlUtil.RemoveHtmlTags(p.Text, true);
-            }
-            else
-            {
-                if (_config.RemoveFormatting.RemoveItalic)
-                {
-                    p.Text = HtmlUtil.RemoveOpenCloseTags(p.Text, HtmlUtil.TagItalic);
-                    p.Text = p.Text
-                        .Replace("{\\i}", string.Empty)
-                        .Replace("{\\i0}", string.Empty)
-                        .Replace("{\\i1}", string.Empty);
-                }
-
-                if (_config.RemoveFormatting.RemoveBold)
-                {
-                    p.Text = HtmlUtil.RemoveOpenCloseTags(p.Text, HtmlUtil.TagBold);
-                    p.Text = p.Text
-                        .Replace("{\\b}", string.Empty)
-                        .Replace("{\\b0}", string.Empty)
-                        .Replace("{\\b1}", string.Empty);
-                }
-
-                if (_config.RemoveFormatting.RemoveUnderline)
-                {
-                    p.Text = HtmlUtil.RemoveOpenCloseTags(p.Text, HtmlUtil.TagUnderline);
-                    p.Text = p.Text
-                        .Replace("{\\u}", string.Empty)
-                        .Replace("{\\u0}", string.Empty)
-                        .Replace("{\\u1}", string.Empty);
-                }
-
-                if (_config.RemoveFormatting.RemoveColor)
-                {
-                    p.Text = HtmlUtil.RemoveColorTags(p.Text);
-                    if (p.Text.Contains("\\c") || p.Text.Contains("\\1c"))
-                    {
-                        p.Text = HtmlUtil.RemoveAssaColor(p.Text);
-                    }
-                }
-
-                if (_config.RemoveFormatting.RemoveFontName)
-                {
-                    p.Text = HtmlUtil.RemoveFontName(p.Text);
-                }
-
-                if (_config.RemoveFormatting.RemoveAlignment)
-                {
-                    if (p.Text.Contains('{'))
-                    {
-                        p.Text = HtmlUtil.RemoveAssAlignmentTags(p.Text);
-                    }
-                }
-            }
+            p.Text = RemoveFormattingUtil.Remove(p.Text, types);
         }
 
         return subtitle;
@@ -2219,65 +2298,155 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return subtitle;
         }
 
-        // Frame rate comes from either a fixed user-chosen rate or a video file matching
-        // the subtitle file name, when one exists. Shot changes are only available if they
-        // were previously generated/imported for that video (they are cached on disk per
-        // video file).
-        //
-        // Without a fixed rate or a matching video, fall back to the frame rate this batch
-        // is actually producing: the target of the "change frame rate" step when it runs
-        // (it runs before this one), otherwise the project frame rate. Configuration
-        // .Settings.General.DefaultFrameRate is not usable here - nothing in the UI ever
-        // assigns it, so it is always libse's built-in 23.976.
-        var frameRate = _config.ChangeFrameRate.IsActive && _config.ChangeFrameRate.ToFrameRate > 0
-            ? _config.ChangeFrameRate.ToFrameRate
-            : Se.Settings.General.CurrentFrameRate;
-        if (frameRate <= 0)
-        {
-            frameRate = Se.Settings.General.DefaultFrameRate;
-        }
-
-        if (_config.BeautifyTimeCodes.UseFixedFrameRate && _config.BeautifyTimeCodes.FixedFrameRate > 0)
-        {
-            frameRate = _config.BeautifyTimeCodes.FixedFrameRate;
-        }
+        // Shot changes are only available if they were previously generated/imported for the
+        // video matching the subtitle file name (they are cached on disk per video file).
+        var hasVideoFile = FindVideoFileName.TryFindVideoFileName(subtitleFileName, out var videoFileName);
+        var frameRate = ResolveFrameRate(
+            hasVideoFile ? videoFileName : null,
+            _config.BeautifyTimeCodes.UseFixedFrameRate,
+            _config.BeautifyTimeCodes.FixedFrameRate);
 
         var shotChanges = new List<double>();
 
-        if (FindVideoFileName.TryFindVideoFileName(subtitleFileName, out var videoFileName))
+        if (hasVideoFile && _config.BeautifyTimeCodes.SnapToShotChanges)
         {
-            if (!_config.BeautifyTimeCodes.UseFixedFrameRate)
+            try
             {
-                try
-                {
-                    var mediaInfo = FfmpegMediaInfo2.Parse(videoFileName);
-                    if (mediaInfo.FramesRate > 0)
-                    {
-                        frameRate = (double)mediaInfo.FramesRate;
-                    }
-                }
-                catch
-                {
-                    // no ffmpeg or unreadable video file - keep the fallback frame rate
-                }
+                shotChanges = ShotChangesHelper.FromDisk(videoFileName);
             }
-
-            if (_config.BeautifyTimeCodes.SnapToShotChanges)
+            catch
             {
-                try
-                {
-                    shotChanges = ShotChangesHelper.FromDisk(videoFileName);
-                }
-                catch
-                {
-                    // unreadable/corrupt shot-changes cache - beautify without them rather
-                    // than aborting the rest of the batch
-                    shotChanges = new List<double>();
-                }
+                // unreadable/corrupt shot-changes cache - beautify without them rather
+                // than aborting the rest of the batch
+                shotChanges = new List<double>();
             }
         }
 
         new Core.Forms.TimeCodesBeautifier(subtitle, frameRate, new List<double>(), shotChanges).Beautify();
+        return subtitle;
+    }
+
+    private Subtitle SnapTimeCodesToFrames(Subtitle subtitle, string subtitleFileName)
+    {
+        if (!_config.SnapTimeCodesToFrames.IsActive)
+        {
+            return subtitle;
+        }
+
+        string? videoFileName = null;
+        if (!_config.SnapTimeCodesToFrames.UseFixedFrameRate)
+        {
+            FindVideoFileName.TryFindVideoFileName(subtitleFileName, out videoFileName);
+        }
+
+        var frameRate = ResolveFrameRate(
+            videoFileName,
+            _config.SnapTimeCodesToFrames.UseFixedFrameRate,
+            _config.SnapTimeCodesToFrames.FixedFrameRate);
+        if (frameRate < 1)
+        {
+            return subtitle;
+        }
+
+        var frameDurationMs = TimeCode.BaseUnit / frameRate;
+        foreach (var p in subtitle.Paragraphs)
+        {
+            var newStartMs = Math.Round(p.StartTime.TotalMilliseconds / frameDurationMs, MidpointRounding.AwayFromZero) * frameDurationMs;
+            var newEndMs = Math.Round(p.EndTime.TotalMilliseconds / frameDurationMs, MidpointRounding.AwayFromZero) * frameDurationMs;
+
+            // Snapping can collapse start and end to the same frame (or invert them) for
+            // sub-frame durations; keep the cue at least one frame long.
+            if (newEndMs <= newStartMs)
+            {
+                newEndMs = newStartMs + frameDurationMs;
+            }
+
+            p.StartTime.TotalMilliseconds = newStartMs;
+            p.EndTime.TotalMilliseconds = newEndMs;
+        }
+
+        return subtitle;
+    }
+
+    /// <summary>
+    /// Frame rate to use for one file: a fixed user-chosen rate when one is set, otherwise the
+    /// frame rate of <paramref name="videoFileName"/> (a video file matching the subtitle file
+    /// name), when one was found and ffmpeg can read it.
+    ///
+    /// Without either, fall back to the frame rate this batch is actually producing: the target
+    /// of the "change frame rate" step when it runs (it runs before the time code steps),
+    /// otherwise the project frame rate. Configuration.Settings.General.DefaultFrameRate is not
+    /// usable here - nothing in the UI ever assigns it, so it is always libse's built-in 23.976.
+    /// </summary>
+    private double ResolveFrameRate(string? videoFileName, bool useFixedFrameRate, double fixedFrameRate)
+    {
+        if (useFixedFrameRate)
+        {
+            if (fixedFrameRate > 0)
+            {
+                return fixedFrameRate;
+            }
+        }
+        else if (!string.IsNullOrEmpty(videoFileName))
+        {
+            try
+            {
+                var mediaInfo = FfmpegMediaInfo2.Parse(videoFileName);
+                if (mediaInfo.FramesRate > 0)
+                {
+                    return (double)mediaInfo.FramesRate;
+                }
+            }
+            catch
+            {
+                // no ffmpeg or unreadable video file - keep the fallback frame rate
+            }
+        }
+
+        var frameRate = _config.ChangeFrameRate.IsActive && _config.ChangeFrameRate.ToFrameRate > 0
+            ? _config.ChangeFrameRate.ToFrameRate
+            : Se.Settings.General.CurrentFrameRate;
+
+        return frameRate > 0 ? frameRate : Se.Settings.General.DefaultFrameRate;
+    }
+
+    private Subtitle ConvertColorsToDialog(Subtitle subtitle, string language)
+    {
+        if (!_config.ConvertColorsToDialog.IsActive)
+        {
+            return subtitle;
+        }
+
+        var c = _config.ConvertColorsToDialog;
+
+        // The dash/space style is the one configured for the current profile - same mapping as
+        // ConvertColorsToDialogUtils' own convenience overload, but with the language passed in
+        // (it is already detected once per file) instead of re-detecting it here.
+        var dashFirstLine = true;
+        var spaceAfterDash = true;
+        switch (Configuration.Settings.General.DialogStyle)
+        {
+            case DialogType.DashBothLinesWithoutSpace:
+                spaceAfterDash = false;
+                break;
+            case DialogType.DashSecondLineWithSpace:
+                dashFirstLine = false;
+                break;
+            case DialogType.DashSecondLineWithoutSpace:
+                dashFirstLine = false;
+                spaceAfterDash = false;
+                break;
+        }
+
+        ConvertColorsToDialogUtils.ConvertColorsToDialogInSubtitle(
+            subtitle,
+            c.RemoveColorTags,
+            dashFirstLine,
+            spaceAfterDash,
+            c.AddNewLines,
+            c.ReBreakLines,
+            language);
+
         return subtitle;
     }
 
@@ -2639,7 +2808,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         return subtitle;
     }
 
-    private async Task<Subtitle> AutoTranslate(Subtitle subtitle, CancellationToken cancellationToken)
+    private async Task<Subtitle> AutoTranslate(Subtitle subtitle, BatchConvertItem item, CancellationToken cancellationToken)
     {
         if (!_config.AutoTranslate.IsActive)
         {
@@ -2649,6 +2818,11 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         Configuration.Settings.Tools.OllamaPrompt = Se.Settings.AutoTranslate.OllamaPrompt;
         Configuration.Settings.Tools.OllamaApiUrl = Se.Settings.AutoTranslate.OllamaUrl;
         Configuration.Settings.Tools.OllamaModel = Se.Settings.AutoTranslate.OllamaModel;
+
+        // The user-edited llama.cpp prompt lives in Se.Settings; without this a batch run would
+        // fall back to the built-in default (a curated model's own prompt still wins - see
+        // LlamaCppServerManager.ApplyTranslatePromptSettings).
+        Configuration.Settings.Tools.LlamaCppPrompt = Se.Settings.AutoTranslate.LlamaCppPrompt;
 
         Configuration.Settings.Tools.AutoTranslateLibreUrl = Se.Settings.AutoTranslate.LibreTranslateUrl;
         Configuration.Settings.Tools.AutoTranslateLibreApiKey = Se.Settings.AutoTranslate.LibreTranslateApiKey;
@@ -2660,12 +2834,36 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         Configuration.Settings.Tools.AutoTranslateCrispAsrExe = Se.Settings.AutoTranslate.CrispAsrExe;
         Configuration.Settings.Tools.AutoTranslateCrispAsrModel = Se.Settings.AutoTranslate.CrispAsrModel;
 
+        // Translating one file can take minutes (local LLM engines especially), so report
+        // progress in the item's status column like the OCR runners do - otherwise the whole
+        // batch looks stalled (#13706). Engines forced into single-line mode raise this once
+        // per line, so only push a status update when the whole percent actually changes.
+        var lastPercent = -1;
+        var statusBeforeTranslate = item.Status;
         var doAutoTranslate = new DoAutoTranslate
         {
             TranslateEachLineSeparately = Se.Settings.AutoTranslate.IsTranslateEachLineSeparately(_config.AutoTranslate.Translator.Name),
+            Progress = (done, total) =>
+            {
+                var percent = total > 0 ? done * 100 / total : 0;
+                if (percent != lastPercent)
+                {
+                    lastPercent = percent;
+                    item.Status = string.Format(Se.Language.General.TranslatePercentX, percent);
+                }
+            },
         };
         var translatedSubtitle = await doAutoTranslate.DoTranslate(subtitle, _config.AutoTranslate.SourceLanguage, _config.AutoTranslate.TargetLanguage,
             _config.AutoTranslate.Translator, cancellationToken);
+
+        // Translating is only one step of the run - the item still goes through the remaining
+        // convert functions and the save before it can say "Converted". Leaving the last progress
+        // value up would show a finished-looking "Translating: 100%" for that whole stretch, so put
+        // the row back in the state a non-translating item is in for the rest of the pipeline.
+        if (lastPercent >= 0)
+        {
+            item.Status = statusBeforeTranslate;
+        }
 
         for (var i = 0; i < subtitle.Paragraphs.Count && i < translatedSubtitle.Count; i++)
         {
@@ -2920,98 +3118,161 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
         var targetExtension = extension;
 
-        if (!string.IsNullOrEmpty(item.LanguageCode))
+        var languagePart = GetLanguagePostFix(item);
+        if (languagePart.Length > 0 && fileName.EndsWith(languagePart, StringComparison.InvariantCultureIgnoreCase))
         {
-            if (Se.Settings.Tools.BatchConvert.LanguagePostFix == Se.Language.General.TwoLetterLanguageCode)
-            {
-                var code = item.LanguageCode;
-                if (code.Length == 3)
-                {
-                    code = Iso639Dash2LanguageCode.GetTwoLetterCodeFromThreeLetterCode(code);
-                }
-                else if (code.Length > 3)
-                {
-                    code = Iso639Dash2LanguageCode.GetTwoLetterCodeFromEnglishName(code);
-                }
+            languagePart = string.Empty; // base name already carries the language token
+        }
 
-                if (code.Length == 2 && !fileName.EndsWith("." + code, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    fileName += "." + code;
-                }
+        var outputFileName = Path.Combine(outputFolder, fileName + languagePart + targetExtension);
+        if (!_handedOutOutputFileNames.Contains(outputFileName))
+        {
+            if (targetExtension != string.Empty && !File.Exists(outputFileName) && Directory.Exists(outputFolder))
+            {
+                return TakeOutputFileName(outputFileName);
             }
-            else if (Se.Settings.Tools.BatchConvert.LanguagePostFix == Se.Language.General.ThreeLetterLanguageCode)
-            {
-                var code = item.LanguageCode;
-                if (code.Length == 2)
-                {
-                    code = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(code);
-                }
-                else if (code.Length > 3)
-                {
-                    code = Iso639Dash2LanguageCode.GetTwoLetterCodeFromEnglishName(code);
-                    code = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(code);
-                }
 
-                if (code.Length == 3 && !fileName.EndsWith("." + code, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    fileName += "." + code;
-                }
+            if (targetExtension == string.Empty)
+            {
+                // Directory output (image exports): an existing folder is written into,
+                // a missing one is created by the export handler - either way the plain
+                // name is fine as long as this run has not used it for another track.
+                return TakeOutputFileName(outputFileName);
             }
-            else if (Se.Settings.Tools.BatchConvert.LanguagePostFix == Se.Language.General.ThreeLetterLanguageCodeBibliographic)
-            {
-                var code = item.LanguageCode;
-                if (code.Length == 2)
-                {
-                    code = Iso639Dash2LanguageCode.GetThreeLetterBibliographicCodeFromTwoLetterCode(code);
-                }
-                else if (code.Length == 3)
-                {
-                    // GetTwoLetterCodeFromThreeLetterCode now matches both /T and /B forms.
-                    var twoLetter = Iso639Dash2LanguageCode.GetTwoLetterCodeFromThreeLetterCode(code);
-                    if (!string.IsNullOrEmpty(twoLetter))
-                    {
-                        code = Iso639Dash2LanguageCode.GetThreeLetterBibliographicCodeFromTwoLetterCode(twoLetter);
-                    }
-                }
-                else if (code.Length > 3)
-                {
-                    code = Iso639Dash2LanguageCode.GetTwoLetterCodeFromEnglishName(code);
-                    code = Iso639Dash2LanguageCode.GetThreeLetterBibliographicCodeFromTwoLetterCode(code);
-                }
 
-                if (code.Length == 3 && !fileName.EndsWith("." + code, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    fileName += "." + code;
-                }
+            if (targetExtension != string.Empty && _config.Overwrite && File.Exists(outputFileName))
+            {
+                File.Delete(outputFileName);
+                return TakeOutputFileName(outputFileName);
             }
         }
 
-        var outputFileName = Path.Combine(outputFolder, fileName + targetExtension);
-        if (targetExtension != string.Empty && !File.Exists(outputFileName) && Directory.Exists(outputFolder))
+        // The name is taken - by an older file, or by another track of this very run
+        // (e.g. two "en" tracks in one mkv - those must not clobber each other, so this
+        // run's own output never falls into the overwrite branch above). Try the track
+        // number first, seconv style: "video.#3.en.srt".
+        if (!string.IsNullOrEmpty(item.TrackNumber) && languagePart.Length > 0)
         {
-            return outputFileName;
+            var withTrack = Path.Combine(outputFolder, fileName + ".#" + item.TrackNumber + languagePart + targetExtension);
+            if (!File.Exists(withTrack) && !Directory.Exists(withTrack) && !_handedOutOutputFileNames.Contains(withTrack))
+            {
+                return TakeOutputFileName(withTrack);
+            }
         }
 
-        if (targetExtension == string.Empty && Directory.Exists(outputFileName))
+        // Counter fallback goes on the base name - "video_2.en.srt" - because the language
+        // token must stay right before the extension for media players to match it.
+        var counter = 2;
+        do
         {
-            return outputFileName;
+            outputFileName = Path.Combine(outputFolder, fileName + $"_{counter}" + languagePart + targetExtension);
+            counter++;
+        } while (File.Exists(outputFileName) || Directory.Exists(outputFileName) || _handedOutOutputFileNames.Contains(outputFileName));
+
+        return TakeOutputFileName(outputFileName);
+    }
+
+    private string TakeOutputFileName(string outputFileName)
+    {
+        _handedOutOutputFileNames.Add(outputFileName);
+        return outputFileName;
+    }
+
+    /// <summary>
+    /// The ".en"-style language token to put before the target extension, or an empty
+    /// string. Auto-translate rewrites the content's language, so when it is active the
+    /// token is the target language - not the source track's - and it also applies to
+    /// plain subtitle files that have no container track language at all (#13707).
+    /// </summary>
+    private string GetLanguagePostFix(BatchConvertItem item)
+    {
+        var languageCode = _config.AutoTranslate.IsActive
+            ? _config.AutoTranslate.TargetLanguage.Code
+            : item.LanguageCode;
+
+        if (string.IsNullOrEmpty(languageCode))
+        {
+            return string.Empty;
         }
 
-        if (targetExtension != string.Empty && _config.Overwrite && File.Exists(outputFileName))
+        // Translator codes can be regional ("zh-CN", "pt-BR") or NLLB-style ("zho_Hans");
+        // the primary subtag carries the language for the two/three-letter mappings.
+        var primary = languageCode.Split('-', '_')[0];
+
+        var code = string.Empty;
+        if (Se.Settings.Tools.BatchConvert.LanguagePostFix == Se.Language.General.TwoLetterLanguageCode)
         {
-            File.Delete(outputFileName);
+            if (primary.Length == 2)
+            {
+                code = primary;
+            }
+            else if (primary.Length == 3)
+            {
+                code = Iso639Dash2LanguageCode.GetTwoLetterCodeFromThreeLetterCode(primary);
+            }
+            else
+            {
+                code = Iso639Dash2LanguageCode.GetTwoLetterCodeFromEnglishName(languageCode);
+            }
+
+            if (code.Length != 2)
+            {
+                code = string.Empty;
+            }
+        }
+        else if (Se.Settings.Tools.BatchConvert.LanguagePostFix == Se.Language.General.ThreeLetterLanguageCode)
+        {
+            if (primary.Length == 2)
+            {
+                code = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(primary);
+            }
+            else if (primary.Length == 3)
+            {
+                code = primary;
+            }
+            else
+            {
+                code = Iso639Dash2LanguageCode.GetTwoLetterCodeFromEnglishName(languageCode);
+                code = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(code);
+            }
+
+            if (code.Length != 3)
+            {
+                code = string.Empty;
+            }
+        }
+        else if (Se.Settings.Tools.BatchConvert.LanguagePostFix == Se.Language.General.ThreeLetterLanguageCodeBibliographic)
+        {
+            var twoLetter = primary;
+            if (primary.Length == 3)
+            {
+                // GetTwoLetterCodeFromThreeLetterCode matches both /T and /B forms.
+                twoLetter = Iso639Dash2LanguageCode.GetTwoLetterCodeFromThreeLetterCode(primary);
+            }
+            else if (primary.Length != 2)
+            {
+                twoLetter = Iso639Dash2LanguageCode.GetTwoLetterCodeFromEnglishName(languageCode);
+            }
+
+            code = Iso639Dash2LanguageCode.GetThreeLetterBibliographicCodeFromTwoLetterCode(twoLetter);
+            if (code.Length != 3)
+            {
+                code = string.Empty;
+            }
         }
         else
         {
-            var counter = 1;
-            do
-            {
-                outputFileName = Path.Combine(outputFolder, fileName + $"_{counter}" + targetExtension);
-                counter++;
-            } while (File.Exists(outputFileName) || Directory.Exists(outputFileName));
+            return string.Empty; // "No language code"
         }
 
-        return outputFileName;
+        if (code.Length == 0 && _config.AutoTranslate.IsActive)
+        {
+            // A translator code with no ISO 639 mapping (e.g. "fil") still beats no
+            // token at all - it is what media players key on.
+            code = languageCode;
+        }
+
+        return code.Length == 0 ? string.Empty : "." + code;
     }
 
     public bool AllowFix(Paragraph p, string action)

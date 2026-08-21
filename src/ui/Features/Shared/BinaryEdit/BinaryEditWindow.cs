@@ -208,6 +208,11 @@ public class BinaryEditWindow : Window
                         },
                         new MenuItem
                         {
+                            Header = Se.Language.General.BdnXml8Bit,
+                            Command = vm.ExportBdnXml8BitCommand,
+                        },
+                        new MenuItem
+                        {
                             Header = Se.Language.File.Export.TitleExportImscImage,
                             Command = vm.ExportImscImageCommand,
                         },

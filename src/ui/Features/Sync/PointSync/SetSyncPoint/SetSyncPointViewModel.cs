@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared.FindText;
 using Nikse.SubtitleEdit.Logic;
@@ -58,18 +59,21 @@ public partial class SetSyncPointViewModel : ObservableObject
 
     private readonly IWindowService _windowService;
     private readonly IFileHelper _fileHelper;
+    private readonly IVideoPreviewSubtitle _previewSubtitle;
 
     private string? _videoFileName;
     private DispatcherTimer _positionTimer = new DispatcherTimer();
     private List<SubtitleLineViewModel> _subtitleLines = new List<SubtitleLineViewModel>();
+    private VideoPreviewSubtitleContext _previewContext = VideoPreviewSubtitleContext.Default;
     private bool _updateAudioVisualizer;
     private bool _updateTimeCodeFromVideo;
     private bool _timeCodeUpDownFocused;
 
-    public SetSyncPointViewModel(IWindowService windowService, IFileHelper fileHelper)
+    public SetSyncPointViewModel(IWindowService windowService, IFileHelper fileHelper, IVideoPreviewSubtitle previewSubtitle)
     {
         _windowService = windowService;
         _fileHelper = fileHelper;
+        _previewSubtitle = previewSubtitle;
 
         Title = string.Empty;
         VideoInfo = string.Empty;
@@ -90,10 +94,14 @@ public partial class SetSyncPointViewModel : ObservableObject
         SubtitleLineViewModel? selectedSubtitle,
         string? videoFileName,
         string? subtitleFileName,
+        VideoPreviewSubtitleContext previewContext,
         AudioVisualizer? audioVisualizer)
     {
         Paragraphs = new ObservableCollection<SubtitleDisplayItem>(paragraphs.Select(p => new SubtitleDisplayItem(p)));
         _subtitleLines = paragraphs;
+
+        // Carried in so the subtitle drawn on the video looks like the one on the main window's video.
+        _previewContext = previewContext;
 
         // Only a video the caller already had, or one the user picks here, is reported back - a
         // video merely found on disk must not travel up and open in the main window, which would
@@ -188,6 +196,8 @@ public partial class SetSyncPointViewModel : ObservableObject
         {
             UpdateAudioVisualizer(VideoPlayerControl.VideoPlayer, AudioVisualizer, SelectedParagraphIndex);
 
+            RefreshPreviewSubtitle();
+
             // Follow the video position - but leave the time code alone while the user is typing
             // in it (a running video moves on its own, so then the box should still follow).
             // With no video there is nothing to follow and the box is the only input, so the
@@ -205,6 +215,26 @@ public partial class SetSyncPointViewModel : ObservableObject
             }
         };
         _positionTimer.Start();
+    }
+
+    /// <summary>
+    /// The player gets the whole subtitle, so it shows whatever line belongs at the frame it is
+    /// parked on - the point of scrubbing to a scene here (discussion #13767).
+    /// </summary>
+    internal void RefreshPreviewSubtitle()
+    {
+        _previewSubtitle.Refresh(VideoPlayerControl.VideoPlayer, BuildPreviewSubtitle, _previewContext);
+    }
+
+    private Subtitle BuildPreviewSubtitle()
+    {
+        var subtitle = new Subtitle { Header = _previewContext.Header };
+        foreach (var p in Paragraphs)
+        {
+            subtitle.Paragraphs.Add(p.Subtitle.ToParagraph(_previewContext.Format));
+        }
+
+        return subtitle;
     }
 
     private void UpdateAudioVisualizer(
@@ -372,6 +402,10 @@ public partial class SetSyncPointViewModel : ObservableObject
         await VideoPlayerControl.Open(fileName, Math.Max(0, syncPoint.TotalSeconds));
         await VideoPlayerControl.WaitForPlayersReadyAsync();
 
+        // The external subtitle went with the old file (if there was one) - it has to be added to
+        // the new one from scratch, not reloaded into a track that is no longer there.
+        _previewSubtitle.Reset();
+
         // Only now does the player own the sync point - handing it over any earlier would let the
         // timer copy the still-zero position into the time code while the file is loading.
         _videoFileName = fileName;
@@ -447,6 +481,9 @@ public partial class SetSyncPointViewModel : ObservableObject
         UiUtil.SaveWindowPosition(Window);
         _positionTimer.Stop();
         VideoPlayerControl.VideoPlayer.CloseFile();
+
+        // Deletes the temp subtitle file handed to the player.
+        _previewSubtitle.Reset();
     }
 
     [RelayCommand]

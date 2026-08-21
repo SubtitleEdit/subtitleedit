@@ -654,12 +654,27 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (node != null)
                 {
                     ss.CurrentDCinemaEditRate = node.InnerText;
+                    var editRate = node.InnerText.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (editRate.Length == 2 &&
+                        double.TryParse(editRate[0], NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var numerator) &&
+                        double.TryParse(editRate[1], NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var denominator) &&
+                        denominator > 0)
+                    {
+                        _frameRate = numerator / denominator;
+                    }
                 }
 
                 node = xml.DocumentElement.SelectSingleNode("TimeCodeRate");
                 if (node != null)
                 {
                     ss.CurrentDCinemaTimeCodeRate = node.InnerText;
+
+                    // TimeIn/TimeOut count ticks per second at TimeCodeRate - not at the reel edit rate
+                    if (double.TryParse(node.InnerText, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var timeCodeRate) && timeCodeRate > 0)
+                    {
+                        _frameRate = timeCodeRate;
+                    }
+
                     if (ss.CurrentDCinemaEditRate == "24")
                     {
                         Configuration.Settings.General.CurrentFrameRate = 24;
@@ -752,15 +767,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         if (innerNode.Name == "Text")
                         {
-                            if (innerNode.Attributes["Vposition"] != null)
+                            var vPositionNode = DCinemaInterop.GetAttributeIgnoreCase(innerNode, "Vposition");
+                            if (vPositionNode != null)
                             {
-                                var vAlignmentNode = innerNode.Attributes["Valign"];
+                                var vAlignmentNode = DCinemaInterop.GetAttributeIgnoreCase(innerNode, "Valign");
                                 if (vAlignmentNode != null)
                                 {
                                     vAlignment = vAlignmentNode.InnerText;
                                 }
 
-                                var vPosition = innerNode.Attributes["Vposition"].InnerText;
+                                var vPosition = vPositionNode.InnerText;
                                 if (vPosition != lastVPosition)
                                 {
                                     if (pText.Length > 0 && lastVPosition.Length > 0)
@@ -777,9 +793,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             var alignRight = false;
                             var alignVTop = false;
                             var alignVCenter = false;
-                            if (innerNode.Attributes["Halign"] != null)
+                            var hAlignNode = DCinemaInterop.GetAttributeIgnoreCase(innerNode, "Halign");
+                            if (hAlignNode != null)
                             {
-                                var hAlign = innerNode.Attributes["Halign"].InnerText;
+                                var hAlign = hAlignNode.InnerText;
                                 if (hAlign == "left")
                                 {
                                     alignLeft = true;
@@ -790,9 +807,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 }
                             }
 
-                            if (innerNode.Attributes["Valign"] != null)
+                            var vAlignNode = DCinemaInterop.GetAttributeIgnoreCase(innerNode, "Valign");
+                            if (vAlignNode != null)
                             {
-                                var hAlign = innerNode.Attributes["Valign"].InnerText;
+                                var hAlign = vAlignNode.InnerText;
                                 if (hAlign == "top")
                                 {
                                     alignVTop = true;

@@ -41,6 +41,16 @@ public class PlaySelectionItem
         return null;
     }
 
+    public double GetCurrentStartSeconds()
+    {
+        if (Index < 0 || Index >= Subtitles.Count)
+        {
+            return 0;
+        }
+
+        return Subtitles[Index].StartTime.TotalSeconds;
+    }
+
     public bool HasGapOrIsFirst()
     {
         if (Index < 1)

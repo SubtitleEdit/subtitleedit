@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
       <xmpDM:Tracks>
         <rdf:Bag>
           <rdf:li rdf:parseType='Resource'>
-            <xmpDM:frameRate>f25</xmpDM:frameRate>
+            <xmpDM:frameRate>" + GetFrameRateString() + @"</xmpDM:frameRate>
             <xmpDM:markers>
               <rdf:Seq>
               </rdf:Seq>
@@ -54,6 +54,63 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             return ToUtf8XmlString(xml);
+        }
+
+        /// <summary>
+        /// xmpDM:frameRate for the marker times we write: "f25" style for integer rates,
+        /// "f24000s1001" style for NTSC rates. The old header hardcoded f25 while the
+        /// marker times were written at the current frame rate, so any other rate gave
+        /// Adobe apps wrong times.
+        /// </summary>
+        private static string GetFrameRateString()
+        {
+            var rate = Configuration.Settings.General.CurrentFrameRate;
+            if (Math.Abs(rate - 23.976) < 0.01)
+            {
+                return "f24000s1001";
+            }
+
+            if (Math.Abs(rate - 29.97) < 0.01)
+            {
+                return "f30000s1001";
+            }
+
+            if (Math.Abs(rate - 59.94) < 0.01)
+            {
+                return "f60000s1001";
+            }
+
+            return "f" + Math.Round(rate).ToString(CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
+        /// Parses xmpDM:frameRate values like "f25", "f24000s1001" or Premiere's tick-based
+        /// "f254016000000". Returns false when absent/unparseable.
+        /// </summary>
+        public static bool TryParseFrameRate(string input, out double numerator, out double denominator)
+        {
+            numerator = 0;
+            denominator = 1;
+            if (string.IsNullOrEmpty(input) || input.Length < 2 || input[0] != 'f')
+            {
+                return false;
+            }
+
+            var arr = input.Substring(1).Split('s');
+            if (arr.Length > 2 || !long.TryParse(arr[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out var num) || num <= 0)
+            {
+                return false;
+            }
+
+            long den = 1;
+            if (arr.Length == 2 && (!long.TryParse(arr[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out den) || den <= 0))
+            {
+                return false;
+            }
+
+            numerator = num;
+            denominator = den;
+            return true;
         }
 
         private XmlNode CreateParagraphElement(XmlDocument xml, Paragraph paragraph)
@@ -114,8 +171,26 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var textNode = node.SelectSingleNode("xmpDM:comment", namespaceManager);
                     if (startTimeNode != null && durationNode != null && textNode != null)
                     {
-                        double start = FramesToMilliseconds(Convert.ToDouble(startTimeNode.InnerText, CultureInfo.InvariantCulture));
-                        double end = start + FramesToMilliseconds(Convert.ToDouble(durationNode.InnerText, CultureInfo.InvariantCulture));
+                        var startValue = Convert.ToDouble(startTimeNode.InnerText, CultureInfo.InvariantCulture);
+                        var durationValue = Convert.ToDouble(durationNode.InnerText, CultureInfo.InvariantCulture);
+
+                        // Honor the track's declared frame rate - Premiere writes marker
+                        // times as ticks with frameRate "f254016000000", which read as
+                        // frame numbers would be off by ten orders of magnitude.
+                        double start;
+                        double end;
+                        var frameRateNode = node.SelectSingleNode("ancestor::rdf:li/xmpDM:frameRate", namespaceManager);
+                        if (frameRateNode != null && TryParseFrameRate(frameRateNode.InnerText, out var numerator, out var denominator))
+                        {
+                            start = startValue * 1000.0 * denominator / numerator;
+                            end = start + durationValue * 1000.0 * denominator / numerator;
+                        }
+                        else
+                        {
+                            start = FramesToMilliseconds(startValue);
+                            end = start + FramesToMilliseconds(durationValue);
+                        }
+
                         string text = textNode.InnerText;
                         subtitle.Paragraphs.Add(new Paragraph(text, start, end));
                     }

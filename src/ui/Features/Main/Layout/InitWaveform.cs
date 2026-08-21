@@ -10,6 +10,7 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Optris.Icons.Avalonia;
@@ -259,6 +260,13 @@ public class InitWaveform
             };
             flyout.Items.Add(menuItemAddShotChange);
 
+            var menuItemToggleChapter = new MenuItem
+            {
+                Header = Se.Language.Video.Chapters.ToggleChapterAtVideoPosition,
+                Command = vm.ToggleChapterAtVideoPositionCommand,
+            };
+            flyout.Items.Add(menuItemToggleChapter);
+
             var menuItemSeekSilence = new MenuItem
             {
                 Header = Se.Language.Waveform.SeekSilenceDotDotDot,
@@ -273,6 +281,28 @@ public class InitWaveform
             };
             flyout.Items.Add(menuItemExtractAudio);
             vm.MenuItemAudioVisualizerExtractAudio = menuItemExtractAudio;
+
+            // "Clone voice to" - takes the audio under the selected line and imports it into a
+            // cloning engine's voices, so a voice heard in the video can be used for dubbing
+            // without first exporting a clip by hand and hunting for it in the TTS window
+            // (#13698). One sub item per engine that can clone; the list is the catalog's, so a
+            // hidden or new engine needs no change here.
+            var menuItemCloneVoice = new MenuItem
+            {
+                Header = Se.Language.Waveform.CloneVoiceTo,
+            };
+            foreach (var engine in TtsEngineCatalog.CreateVoiceCloningEngines())
+            {
+                menuItemCloneVoice.Items.Add(new MenuItem
+                {
+                    Header = engine.Name,
+                    Command = vm.WaveformCloneVoiceToEngineCommand,
+                    CommandParameter = engine,
+                });
+            }
+
+            flyout.Items.Add(menuItemCloneVoice);
+            vm.MenuItemAudioVisualizerCloneVoice = menuItemCloneVoice;
 
             var menuItemSpeechToTextSelectedLines = new MenuItem
             {
@@ -629,18 +659,28 @@ public class InitWaveform
             });
         }
 
+        // This slider is TwoWay-bound to VideoPlayerControl.Position, so it must also flip
+        // the control's own user-moving gate: without that, the control's position timer
+        // keeps writing mpv's position into Position mid-drag and the binding yanks the
+        // thumb back and forth between the mouse and the not-yet-seeked position - the
+        // #13910 jitter, which fixing only the control's built-in slider left behind here.
         var sliderPositionUserMoving = false;
-        sliderPosition.AddHandler(InputElement.PointerPressedEvent, (_, _) => sliderPositionUserMoving = true, RoutingStrategies.Tunnel);
-        sliderPosition.AddHandler(InputElement.PointerReleasedEvent, (_, _) => sliderPositionUserMoving = false, RoutingStrategies.Tunnel);
-        sliderPosition.AddHandler(InputElement.PointerCaptureLostEvent, (_, _) => sliderPositionUserMoving = false, RoutingStrategies.Tunnel);
+        var setSliderPositionUserMoving = (bool moving) =>
+        {
+            sliderPositionUserMoving = moving;
+            vm.GetVideoPlayerControl()?.SetUserMovingPositionSlider(moving);
+        };
+        sliderPosition.AddHandler(InputElement.PointerPressedEvent, (_, _) => setSliderPositionUserMoving(true), RoutingStrategies.Tunnel);
+        sliderPosition.AddHandler(InputElement.PointerReleasedEvent, (_, _) => setSliderPositionUserMoving(false), RoutingStrategies.Tunnel);
+        sliderPosition.AddHandler(InputElement.PointerCaptureLostEvent, (_, _) => setSliderPositionUserMoving(false), RoutingStrategies.Tunnel);
         sliderPosition.AddHandler(InputElement.KeyDownEvent, (_, e) =>
         {
             if (e.Key is Key.Left or Key.Right or Key.Up or Key.Down or Key.Home or Key.End or Key.PageUp or Key.PageDown)
             {
-                sliderPositionUserMoving = true;
+                setSliderPositionUserMoving(true);
             }
         }, RoutingStrategies.Tunnel);
-        sliderPosition.AddHandler(InputElement.KeyUpEvent, (_, _) => sliderPositionUserMoving = false, RoutingStrategies.Tunnel);
+        sliderPosition.AddHandler(InputElement.KeyUpEvent, (_, _) => setSliderPositionUserMoving(false), RoutingStrategies.Tunnel);
         sliderPosition.ValueChanged += (_, e) =>
         {
             if (!sliderPositionUserMoving)
@@ -826,6 +866,8 @@ public class InitWaveform
         var flyoutMore = new MenuFlyout();
         buttonMore.Flyout = flyoutMore;
         buttonMore.Click += (s, e) => flyoutMore.ShowAt(buttonMore, true);
+        // With the video player undocked (and topmost), it could cover this menu (#13493).
+        WindowService.SuspendUndockedTopmostWhileOpen(flyoutMore);
         var menuItemResetZoom = new MenuItem
         {
             Header = string.Format(languageHints.ResetZoomAndSpeed, UiUtil.MakeShortcutsString(shortcuts, nameof(vm.ResetWaveformZoomAndSpeedCommand))),

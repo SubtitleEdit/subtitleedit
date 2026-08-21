@@ -49,6 +49,7 @@ public class LanguageGeneral
     public string Backward { get; set; }
     public string BatchMode { get; set; }
     public string BdnXml { get; set; }
+    public string BdnXml8Bit { get; set; }
     public string Before { get; set; }
     public string Beginning { get; set; }
     public string BluRaySup { get; set; }
@@ -101,7 +102,15 @@ public class LanguageGeneral
     public string Codec { get; set; }
     public string Collapse { get; set; }
     public string Color { get; set; }
+    public string ColorBlack { get; set; }
+    public string ColorBlue { get; set; }
+    public string ColorCyan { get; set; }
     public string ColorDotDotDot { get; set; }
+    public string ColorGreen { get; set; }
+    public string ColorMagenta { get; set; }
+    public string ColorRed { get; set; }
+    public string ColorWhite { get; set; }
+    public string ColorYellow { get; set; }
     public string Column { get; set; }
     public string ConsoleLog { get; set; }
     public string ContentAlignment { get; set; }
@@ -335,6 +344,7 @@ public class LanguageGeneral
     public string NewSubtitleStartKeyDownSetEndKeyUp { get; set; }
     public string SetSubtitleStartAtVideoPositionSetEndAtKeyUpAndGoToNext { get; set; }
     public string No { get; set; }
+    public string NoColor { get; set; }
     public string NoFilesToConvert { get; set; }
     public string NoLanguageCode { get; set; }
     public string NoSubtitleLoaded { get; set; }
@@ -395,6 +405,7 @@ public class LanguageGeneral
     public string StartServer { get; set; }
     public string StopServer { get; set; }
     public string PickOutputFolder { get; set; }
+    public string PleaseSelectOutputFolder { get; set; }
     public string PickResolutionFromCurrentVideo { get; set; }
     public string PickResolutionFromVideoDotDotDot { get; set; }
     public string PickSubtitleFile { get; set; }
@@ -455,6 +466,7 @@ public class LanguageGeneral
     public string RemoveUnderline { get; set; }
     public string Rename { get; set; }
     public string Replace { get; set; }
+    public string ReplaceLine { get; set; } = string.Empty;
     public string ReplaceWith { get; set; }
     public string RequiresRestart { get; set; }
     public string Reset { get; set; }
@@ -519,6 +531,7 @@ public class LanguageGeneral
     public string Shadow { get; set; }
     public string ShadowColor { get; set; }
     public string ShadowWidth { get; set; }
+    public string ShiftLineBy { get; set; } = string.Empty;
     public string Shortcut { get; set; }
     public string Shortcuts { get; set; }
     public string Show { get; set; }
@@ -533,6 +546,7 @@ public class LanguageGeneral
     public string ShowPreview { get; set; }
     public string ShowShotChangesList { get; set; }
     public string ShowStyleColumn { get; set; }
+    public string ShowTeletext { get; set; } = string.Empty;
     public string ShowTimeCodes { get; set; }
     public string ShowWpmColumn { get; set; }
     public string ShowPixelWidthColumn { get; set; }
@@ -586,6 +600,9 @@ public class LanguageGeneral
     public string System { get; set; }
     public string TargetEncoding { get; set; }
     public string TargetFormat { get; set; }
+    public string TeletextAlignment { get; set; } = string.Empty;
+    public string TeletextColor { get; set; } = string.Empty;
+    public string TeletextLine { get; set; } = string.Empty;
     public string TenHours { get; set; }
     public string Text { get; set; }
     public string TextColor { get; set; }
@@ -610,6 +627,7 @@ public class LanguageGeneral
     public string Top { get; set; }
     public string TotalAdjustmentX { get; set; }
     public string Translate { get; set; }
+    public string TranslatePercentX { get; set; }
     public string TranslateRow { get; set; }
     public string Translation { get; set; }
     public string TwoLetterLanguageCode { get; set; }
@@ -628,6 +646,7 @@ public class LanguageGeneral
     public string UpdateAndClose { get; set; }
     public string UpdateAvailable { get; set; }
     public string UpdateDetails { get; set; }
+    public string UpdateX { get; set; }
     public string UpdatedBy { get; set; }
     public string UpToDate { get; set; }
     public string Url { get; set; }
@@ -661,6 +680,8 @@ public class LanguageGeneral
     public string VideoOffset { get; set; }
     public string VideoOneFrameBack { get; set; }
     public string VideoOneFrameForward { get; set; }
+    public string VideoOneFrameBackWithPlay { get; set; }
+    public string VideoOneFrameForwardWithPlay { get; set; }
     public string VideoOneSecondBack { get; set; }
     public string VideoOneSecondForward { get; set; }
     public string VideoPlayer { get; set; }
@@ -679,6 +700,7 @@ public class LanguageGeneral
     public string PixelWidth { get; set; }
     public string Wpm { get; set; }
     public string XFiles { get; set; }
+    public string XOfYFiles { get; set; }
     public string XFilesConvertedInY { get; set; }
     public string XNoLinesUpdated { get; set; }
     public string XNotFound { get; set; }
@@ -787,6 +809,7 @@ public class LanguageGeneral
         Backward = "Backward";
         BatchMode = "Batch mode";
         BdnXml = "BDN/xml";
+        BdnXml8Bit = "BDN/xml 8-bit";
         Before = "Before";
         Beginning = "Beginning";
         BluRaySup = "Blu-ray (sup)";
@@ -839,7 +862,15 @@ public class LanguageGeneral
         Codec = "Codec";
         Collapse = "Collapse";
         Color = "Color";
+        ColorBlack = "Black";
+        ColorBlue = "Blue";
+        ColorCyan = "Cyan";
         ColorDotDotDot = "Color...";
+        ColorGreen = "Green";
+        ColorMagenta = "Magenta";
+        ColorRed = "Red";
+        ColorWhite = "White";
+        ColorYellow = "Yellow";
         Column = "Column";
         ConsoleLog = "Console log";
         ContentAlignment = "Content alignment";
@@ -1016,7 +1047,7 @@ public class LanguageGeneral
         KeepExistingTimeCodes = "Keep existing time codes (do not add video offset)";
         KeyFile = "Key file";
         Language = "Language";
-        LanguagePostFix = "Language post-fix (mkv/mp4)";
+        LanguagePostFix = "Language post-fix (mkv/mp4/auto-translate)";
         Layer = "Layer";
         LayerFilterOn = "Layer filter on";
         Left = "Left";
@@ -1073,6 +1104,7 @@ public class LanguageGeneral
         NewSubtitleStartKeyDownSetEndKeyUp = "Insert subtitle: Start on key down, set end on key up";
         SetSubtitleStartAtVideoPositionSetEndAtKeyUpAndGoToNext = "Set start at video position set end on key up, and go to next";
         No = "No";
+        NoColor = "No color";
         NoFilesToConvert = "No files to convert";
         NoLanguageCode = "No language code";
         NoSubtitleLoaded = "No subtitle loaded";
@@ -1133,6 +1165,7 @@ public class LanguageGeneral
         StartServer = "Start server";
         StopServer = "Stop server";
         PickOutputFolder = "Pick output folder";
+        PleaseSelectOutputFolder = "Please select an output folder";
         PickResolutionFromCurrentVideo = "Pick resolution from current video";
         PickResolutionFromVideoDotDotDot = "Pick resolution from video...";
         PickSubtitleFile = "Pick subtitle file...";
@@ -1193,6 +1226,7 @@ public class LanguageGeneral
         RemoveUnderline = "Remove underline";
         Rename = "Rename";
         Replace = "Replace";
+        ReplaceLine = "Replace line";
         ReplaceWith = "Replace with";
         RequiresRestart = "Requires restart";
         Reset = "Reset";
@@ -1257,6 +1291,7 @@ public class LanguageGeneral
         Shadow = "Shadow";
         ShadowColor = "Shadow color";
         ShadowWidth = "Shadow width";
+        ShiftLineBy = "Shift line by";
         Shortcut = "Shortcut";
         Shortcuts = "Shortcuts";
         Show = "Show";
@@ -1271,6 +1306,7 @@ public class LanguageGeneral
         ShowPreview = "Show preview";
         ShowShotChangesList = "Show shot changes list";
         ShowStyleColumn = "Show \"Style\" column";
+        ShowTeletext = "Show TT";
         ShowTimeCodes = "Show time codes";
         ShowWpmColumn = "Show \"Words/min\" column";
         ShowPixelWidthColumn = "Show \"Pixel width\" column";
@@ -1324,6 +1360,9 @@ public class LanguageGeneral
         System = "System";
         TargetEncoding = "Target encoding";
         TargetFormat = "Target format";
+        TeletextAlignment = "Teletext alignment";
+        TeletextColor = "Teletext color";
+        TeletextLine = "Teletext line";
         TenHours = "10 hours";
         Text = "Text";
         TextColor = "Text color";
@@ -1348,6 +1387,7 @@ public class LanguageGeneral
         Top = "Top";
         TotalAdjustmentX = "Total adjustment: {0}";
         Translate = "Translate";
+        TranslatePercentX = "Translating: {0}%";
         TranslateRow = "Translate row";
         Translation = "Translation";
         TwoLetterLanguageCode = "Two-letter language code";
@@ -1366,6 +1406,7 @@ public class LanguageGeneral
         UpdateAndClose = "Update and close";
         UpdateAvailable = "Update available";
         UpdateDetails = "Update details";
+        UpdateX = "Update {0}";
         UpdatedBy = "Updated by";
         UpToDate = "Up to date";
         Url = "URL";
@@ -1399,6 +1440,8 @@ public class LanguageGeneral
         VideoOffset = "Video offset";
         VideoOneFrameBack = "Video, one frame back";
         VideoOneFrameForward = "Video, one frame forward";
+        VideoOneFrameBackWithPlay = "Video, one frame back with play";
+        VideoOneFrameForwardWithPlay = "Video, one frame forward with play";
         VideoOneSecondBack = "Video, one second back";
         VideoOneSecondForward = "Video, one second forward";
         VideoPlayer = "Video player";
@@ -1417,6 +1460,7 @@ public class LanguageGeneral
         PixelWidth = "Pixel width";
         Wpm = "Words/min";
         XFiles = "{0:#,###,##0} files";
+        XOfYFiles = "{0:#,###,##0} of {1:#,###,##0} files";
         XFilesConvertedInY = "{0:#,###,##0} files converted in {1}";
         XNoLinesUpdated = "{0}: no line(s) updated";
         XNotFound = "\"{0}\" not found";

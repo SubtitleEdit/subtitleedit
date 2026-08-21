@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Features.Ocr.Engines;
+﻿using Nikse.SubtitleEdit.Features.Ocr.Download;
+using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using Nikse.SubtitleEdit.Logic.Config;
 using SkiaSharp;
 using System;
@@ -31,32 +32,53 @@ public partial class PaddleOcr
     private readonly StringBuilder _errorOutput = new();
     private readonly Lock _errorLock = new();
 
-    public static List<string> UrlsWindowsCpu =
-        ["https://github.com/timminator/PaddleOCR-Standalone/releases/download/v1.4.0/PaddleOCR-CPU-v1.4.0.7z"];
+    // The pinned PaddleOCR-Standalone release. Bumping it means updating this one line and
+    // the file names below - and Se.PaddleOcrFolder when the underlying PaddleOCR version
+    // changes, so engine and models never mix across releases.
+    private const string StandaloneRelease = "https://github.com/timminator/PaddleOCR-Standalone/releases/download/v1.4.0/";
 
-    public static List<string> UrlsLinuxCpu =
-        ["https://github.com/timminator/PaddleOCR-Standalone/releases/download/v1.4.0/PaddleOCR-CPU-v1.4.0-Linux.7z"];
+    /// <summary>
+    /// One downloadable Paddle OCR archive: the file(s) to fetch, and the folder level inside
+    /// the archive that the extractor has to strip. Keeping the two together is what stops a
+    /// version bump from updating the URL but leaving the unpack looking for the old folder.
+    /// </summary>
+    public sealed record PaddleOcrArchive(IReadOnlyList<string> Urls, string RootFolderInArchive);
 
-    public static List<string> UrlsWindowsGpuCuda11 =
-    [
-        "https://github.com/timminator/PaddleOCR-Standalone/releases/download/v1.4.0/PaddleOCR-GPU-v1.4.0-CUDA-11.8.7z"
-    ];
+    public static PaddleOcrArchive GetArchive(PaddleOcrDownloadType downloadType)
+    {
+        return downloadType switch
+        {
+            PaddleOcrDownloadType.Models => Archive("PaddleOCR.PP-OCRv5.support.files.VideOCR.7z", "PaddleOCR.PP-OCRv5.support.files"),
+            PaddleOcrDownloadType.EngineCpu => Archive("PaddleOCR-CPU-v1.4.0.7z"),
+            PaddleOcrDownloadType.EngineGpu11 => Archive("PaddleOCR-GPU-v1.4.0-CUDA-11.8.7z"),
+            PaddleOcrDownloadType.EngineGpu12 => Archive("PaddleOCR-GPU-v1.4.0-CUDA-12.9.7z"),
+            PaddleOcrDownloadType.EngineCpuLinux => Archive("PaddleOCR-CPU-v1.4.0-Linux.7z"),
+            PaddleOcrDownloadType.EngineGpu11Linux => Archive("PaddleOCR-GPU-v1.4.0-CUDA-11.8-Linux.7z"),
 
-    public static List<string> UrlsWindowsGpuCuda12 =
-    [
-        "https://github.com/timminator/PaddleOCR-Standalone/releases/download/v1.4.0/PaddleOCR-GPU-v1.4.0-CUDA-12.9.7z"
-    ];
+            // Split into two volumes upstream. Both have to land in the same folder before the
+            // .001 is handed to the extractor - the download queue takes care of that.
+            PaddleOcrDownloadType.EngineGpu12Linux => Archive(
+                "PaddleOCR-GPU-v1.4.0-CUDA-12.9-Linux.7z.001",
+                "PaddleOCR-GPU-v1.4.0-CUDA-12.9-Linux",
+                "PaddleOCR-GPU-v1.4.0-CUDA-12.9-Linux.7z.002"),
 
-    public static List<string> UrlsLinuxGpu =
-    [
-        "https://github.com/timminator/PaddleOCR-Standalone/releases/download/v1.4.0/PaddleOCR-GPU-v1.4.0-CUDA-12.9-Linux.7z.001",
-        "https://github.com/timminator/PaddleOCR-Standalone/releases/download/v1.4.0/PaddleOCR-GPU-v1.4.0-CUDA-12.9-Linux.7z.002"
-    ];
+            _ => throw new ArgumentOutOfRangeException(nameof(downloadType), downloadType, "Unknown Paddle OCR download type"),
+        };
+    }
 
-    public static List<string> UrlsSupportFiles =
-    [
-        "https://github.com/timminator/PaddleOCR-Standalone/releases/download/v1.4.0/PaddleOCR.PP-OCRv5.support.files.VideOCR.7z"
-    ];
+    // The engine archives all wrap their content in a folder named after the archive itself,
+    // so the root folder is derived rather than repeated; the models archive is the one that
+    // does not follow that rule (".VideOCR" is in the file name only) and passes it in.
+    private static PaddleOcrArchive Archive(string fileName, string? rootFolderInArchive = null, params string[] extraFileNames)
+    {
+        var urls = new List<string>(1 + extraFileNames.Length) { StandaloneRelease + fileName };
+        foreach (var extraFileName in extraFileNames)
+        {
+            urls.Add(StandaloneRelease + extraFileName);
+        }
+
+        return new PaddleOcrArchive(urls, rootFolderInArchive ?? fileName[..fileName.IndexOf(".7z", StringComparison.Ordinal)]);
+    }
 
     private const string TextlineOrientationModelName = "PP-LCNet_x1_0_textline_ori";
 
@@ -186,7 +208,7 @@ public partial class PaddleOcr
             : $"PP-OCRv5_{mode}_det";
     }
 
-    private static SKBitmap MakeTransparentBlack(SKBitmap bitmap)
+    internal static SKBitmap MakeTransparentBlack(SKBitmap bitmap)
     {
         if (bitmap == null)
         {
@@ -203,7 +225,37 @@ public partial class PaddleOcr
             canvas.DrawBitmap(bitmap, 0, 0);
         }
 
-        // Get all pixels at once
+        // Runs per subtitle image inside the batch-OCR parallel loop. The old
+        // `workingBitmap.Pixels` get/set pair allocated an SKColor[Width*Height] (8 MB for a
+        // full-HD frame) and copied the whole image twice; for the 32-bit color types this is
+        // an in-place pass over the raw pixel words instead (alpha is the top byte in both
+        // Rgba8888 and Bgra8888, and opaque black is 0xFF000000 in both).
+        if (workingBitmap.ColorType is SKColorType.Rgba8888 or SKColorType.Bgra8888 &&
+            workingBitmap.GetPixels() != IntPtr.Zero)
+        {
+            unsafe
+            {
+                var basePtr = (byte*)workingBitmap.GetPixels();
+                var stride = workingBitmap.RowBytes;
+                var width = workingBitmap.Width;
+                for (var y = 0; y < workingBitmap.Height; y++)
+                {
+                    var row = (uint*)(basePtr + y * stride);
+                    for (var x = 0; x < width; x++)
+                    {
+                        if (row[x] >> 24 < 100)
+                        {
+                            row[x] = 0xFF000000;
+                        }
+                    }
+                }
+            }
+
+            workingBitmap.NotifyPixelsChanged();
+            return workingBitmap;
+        }
+
+        // Fallback for exotic color types: the original Pixels-based version.
         var colors = workingBitmap.Pixels;
         var blackOpaque = new SKColor(0, 0, 0, 255);
 

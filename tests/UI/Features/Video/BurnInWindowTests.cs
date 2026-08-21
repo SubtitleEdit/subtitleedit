@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Headless.XUnit;
 using Avalonia.LogicalTree;
+using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Features.Video.BurnIn;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Media;
@@ -18,7 +19,10 @@ namespace UITests.Features.Video;
 /// preview row (row 1) carries a MinHeight: it keeps the packed panel inside rows 0-3 (so it
 /// can never overflow into the progress-bar row, which used to draw the bar through the
 /// "File size in MB" field) and keeps the preview box taller than its label + player (so the
-/// player can never spill over the audio settings box when the window is shrunk).
+/// player can never spill over the audio settings box when the window is shrunk). A window
+/// shorter than its own content minimum - which UiUtil produces on screens too short for the
+/// dialog - still leaves rows 0-3 short of the panel, so the panel scrolls rather than draws its
+/// overflow through the progress bar (issue #13904).
 /// </summary>
 public class BurnInWindowTests : IDisposable
 {
@@ -99,18 +103,67 @@ public class BurnInWindowTests : IDisposable
         // The left column is one panel spanning rows 0-3. With the row minimum in place it
         // must fit entirely above the progress view - the regression this guards against drew
         // the progress bar through the "File size in MB" field while generating.
-        var leftPanel = rootGrid.Children.OfType<StackPanel>().FirstOrDefault();
-        Assert.NotNull(leftPanel);
+        AssertSettingsColumnStaysAboveProgressView(window, rootGrid);
+    }
+
+    [AvaloniaFact]
+    public void SettingsColumn_StaysAboveProgressBar_WhenWindowIsShorterThanItsContent()
+    {
+        var window = BuildWindow();
+        var vm = window.DataContext as BurnInViewModel;
+        Assert.NotNull(vm);
+        vm.IsGenerating = true; // progress view is only visible while generating
+        window.Show();
+        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+        window.UpdateLayout();
+
+        // What a screen too short for the dialog produces: UiUtil lowers the window minimum to
+        // the working area, so the grid gets less height than its rows asked for and rows 0-3
+        // end up shorter than the settings column. The column must contain its own overflow -
+        // an unclipped panel drew the last box ("File size in MB") under the progress bar.
+        window.SizeToContent = SizeToContent.Manual;
+        window.MinHeight = 650;
+        window.Height = 650;
+        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+        window.UpdateLayout();
+
+        AssertSettingsColumnStaysAboveProgressView(window, FindRootGrid(window));
+    }
+
+    private static void AssertSettingsColumnStaysAboveProgressView(BurnInWindow window, Grid rootGrid)
+    {
+        var settingsColumn = rootGrid.Children.FirstOrDefault(c => Grid.GetColumn(c) == 0 && Grid.GetRowSpan(c) == 4);
+        Assert.NotNull(settingsColumn);
         var progressView = rootGrid.Children.OfType<Grid>().FirstOrDefault(g => Grid.GetRow(g) == 4);
         Assert.NotNull(progressView);
 
-        var panelBottom = leftPanel.TranslatePoint(new Point(0, leftPanel.Bounds.Height), window)?.Y;
+        var panelBottom = PaintedBottom(settingsColumn, window);
         var progressTop = progressView.TranslatePoint(new Point(0, 0), window)?.Y;
-        Assert.NotNull(panelBottom);
         Assert.NotNull(progressTop);
         Assert.True(
-            panelBottom.Value <= progressTop.Value + 1.5,
-            $"Left panel bottom ({panelBottom.Value:0.#}) is below the progress view top ({progressTop.Value:0.#}).");
+            panelBottom <= progressTop.Value + 1.5,
+            $"Settings column paints down to {panelBottom:0.#}, past the progress view top ({progressTop.Value:0.#}).");
+    }
+
+    /// <summary>
+    /// Lowest point in the window that anything inside <paramref name="visual"/> actually paints
+    /// at. The walk stops at a control that clips, since nothing below it can paint outside its
+    /// bounds - which is what keeps the settings column out of the progress row.
+    /// </summary>
+    private static double PaintedBottom(Visual visual, Visual relativeTo)
+    {
+        var bottom = visual.TranslatePoint(new Point(0, visual.Bounds.Height), relativeTo)?.Y ?? 0;
+        if (visual.ClipToBounds)
+        {
+            return bottom;
+        }
+
+        foreach (var child in visual.GetVisualChildren())
+        {
+            bottom = Math.Max(bottom, PaintedBottom(child, relativeTo));
+        }
+
+        return bottom;
     }
 
     [AvaloniaFact]
@@ -175,6 +228,46 @@ public class BurnInWindowTests : IDisposable
         Assert.True(
             window.ClientSize.Height >= before,
             $"Window shrank when generating started ({before:0.#} -> {window.ClientSize.Height:0.#}).");
+    }
+
+    // The extension list is only correct if both combo boxes are wired up: the encoder box
+    // rebuilds the container list, and the container box rebuilds the audio encoder list.
+    [AvaloniaFact]
+    public void ContainerAndAudioLists_FollowTheSelectedEncoder()
+    {
+        var window = BuildWindow();
+        var vm = window.DataContext as BurnInViewModel;
+        Assert.NotNull(vm);
+        window.Show();
+
+        var encoderComboBox = window.GetLogicalDescendants().OfType<ComboBox>()
+            .First(c => ReferenceEquals(c.ItemsSource, vm.VideoEncodings));
+        var extensionComboBox = window.GetLogicalDescendants().OfType<ComboBox>()
+            .First(c => ReferenceEquals(c.ItemsSource, vm.VideoExtensions));
+
+        encoderComboBox.SelectedItem = vm.VideoEncodings.First(p => p.Codec == "libvpx-vp9");
+        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+
+        Assert.Contains(".webm", vm.VideoExtensions);
+        Assert.DoesNotContain(".ts", vm.VideoExtensions);
+
+        extensionComboBox.SelectedItem = ".webm";
+        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+
+        // WebM holds Opus/Vorbis only, so "copy" (the default) cannot survive the switch.
+        Assert.Equal(".webm", vm.SelectedVideoExtension);
+        Assert.DoesNotContain("copy", vm.AudioEncodings);
+        Assert.DoesNotContain("aac", vm.AudioEncodings);
+        Assert.Contains(vm.SelectedAudioEncoding, vm.AudioEncodings);
+
+        encoderComboBox.SelectedItem = vm.VideoEncodings.First(p => p.Codec == "libx264");
+        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+
+        // H.264 cannot go into WebM, so the container - and with it the audio list - moves back.
+        Assert.Contains(".ts", vm.VideoExtensions);
+        Assert.DoesNotContain(".webm", vm.VideoExtensions);
+        Assert.Contains(vm.SelectedVideoExtension, vm.VideoExtensions);
+        Assert.Contains(vm.SelectedAudioEncoding, vm.AudioEncodings);
     }
 
     // Re-locking the minimum for the progress row is height-only, but it used to clear MinWidth

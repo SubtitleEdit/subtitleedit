@@ -17,6 +17,7 @@ using Nikse.SubtitleEdit.Features.Assa;
 using Nikse.SubtitleEdit.Features.Help.CheckForUpdates;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Options.DoNotBreakAfterList;
+using Nikse.SubtitleEdit.Features.Options.Settings.MinGapCalculate;
 using Nikse.SubtitleEdit.Features.Options.Settings.SyntaxColorTooWideSettings;
 using Nikse.SubtitleEdit.Features.Tools.BeautifyTimeCodes.Profile;
 using Nikse.SubtitleEdit.Features.Options.Settings.WaveformThemes;
@@ -106,6 +107,8 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<AlignmentItem> __mpvPreviewFontAlignments;
     [ObservableProperty] private AlignmentItem _mpvPreviewSelectedFontAlignment;
     [ObservableProperty] private int _mpvPreviewMargin;
+    [ObservableProperty] private bool _mpvPreviewUsePositionFromFile;
+    [ObservableProperty] private bool _mpvPreviewMarginIsPartOfSubtitleArea;
     [ObservableProperty] private Color _mpvPreviewColorPrimary;
     [ObservableProperty] private Color _mpvPreviewColorOutline;
     [ObservableProperty] private Color _mpvPreviewColorShadow;
@@ -154,6 +157,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _autoConvertToUtf8;
     [ObservableProperty] private bool _forceCrLfOnSave;
     [ObservableProperty] private bool _autoTrimWhiteSpace;
+    [ObservableProperty] private bool _removeBlankLinesWhenOpening;
 
     [ObservableProperty] private ObservableCollection<string> _subtitleEnterKeyActionTypes;
     [ObservableProperty] private string _selectedSubtitleEnterKeyActionType;
@@ -206,6 +210,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _showToolbarSaveAs;
     [ObservableProperty] private bool _showToolbarFind;
     [ObservableProperty] private bool _showToolbarReplace;
+    [ObservableProperty] private bool _showToolbarMultipleReplace;
     [ObservableProperty] private bool _showToolbarSpellCheck;
     [ObservableProperty] private bool _showToolbarFixCommonErrors;
     [ObservableProperty] private bool _showToolbarRemoveTextForHi;
@@ -222,6 +227,10 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _showToolbarHelp;
     [ObservableProperty] private bool _showToolbarEncoding;
     [ObservableProperty] private bool _showToolbarFrameRate;
+    [ObservableProperty] private bool _showToolbarStyleManager;
+    [ObservableProperty] private bool _showToolbarProperties;
+    [ObservableProperty] private bool _showToolbarAttachments;
+    [ObservableProperty] private bool _showToolbarAssaDraw;
 
     [ObservableProperty] private bool _showPluginsMenu;
 
@@ -481,6 +490,7 @@ public partial class SettingsViewModel : ObservableObject
             Se.Language.Options.Settings.SubtitleGridFormattingNone,
             Se.Language.Options.Settings.SubtitleGridFormattingShowFormatting,
             Se.Language.Options.Settings.SubtitleGridFormattingShowTags,
+            Se.Language.Options.Settings.SubtitleGridFormattingHideTags,
         };
         SubtitleGridFormatting = SubtitleGridFormattings[0];
 
@@ -767,6 +777,7 @@ public partial class SettingsViewModel : ObservableObject
         AutoConvertToUtf8 = general.AutoConvertToUtf8;
         ForceCrLfOnSave = general.ForceCrLfOnSave;
         AutoTrimWhiteSpace = general.AutoTrimWhiteSpace;
+        RemoveBlankLinesWhenOpening = general.RemoveBlankLinesWhenOpening;
 
         SelectedDefaultSubtitleFormat = general.DefaultSubtitleFormat;
         if (!DefaultSubtitleFormats.Contains(SelectedDefaultSubtitleFormat))
@@ -845,6 +856,7 @@ public partial class SettingsViewModel : ObservableObject
         ShowToolbarSaveAs = appearance.ToolbarShowSaveAs;
         ShowToolbarFind = appearance.ToolbarShowFind;
         ShowToolbarReplace = appearance.ToolbarShowReplace;
+        ShowToolbarMultipleReplace = appearance.ToolbarShowMultipleReplace;
         ShowToolbarSpellCheck = appearance.ToolbarShowSpellCheck;
         ShowToolbarFixCommonErrors = appearance.ToolbarShowFixCommonErrors;
         ShowToolbarRemoveTextForHi = appearance.ToolbarShowRemoveTextForHi;
@@ -860,6 +872,10 @@ public partial class SettingsViewModel : ObservableObject
         ShowToolbarHelp = appearance.ToolbarShowHelp;
         ShowToolbarEncoding = appearance.ToolbarShowEncoding;
         ShowToolbarFrameRate = appearance.ToolbarShowFrameRate;
+        ShowToolbarStyleManager = appearance.ToolbarShowStyleManager;
+        ShowToolbarProperties = appearance.ToolbarShowProperties;
+        ShowToolbarAttachments = appearance.ToolbarShowAttachments;
+        ShowToolbarAssaDraw = appearance.ToolbarShowAssaDraw;
         ShowPluginsMenu = appearance.ShowPluginsMenu;
         SubtitleGridFontSize = appearance.SubtitleGridFontSize;
         SubtitleGridTextSingleLine = appearance.SubtitleGridTextSingleLine;
@@ -1027,6 +1043,8 @@ public partial class SettingsViewModel : ObservableObject
         MpvPreviewFontSize = video.MpvPreviewFontSize;
         MpvPreviewFontBold = video.MpvPreviewFontBold;
         MpvPreviewMargin = video.MpvPreviewMargin;
+        MpvPreviewUsePositionFromFile = video.MpvPreviewUsePositionFromFile;
+        MpvPreviewMarginIsPartOfSubtitleArea = video.MpvPreviewMarginIsPartOfSubtitleArea;
         MpvPreviewSelectedFontAlignment = MpvPreviewFontAlignments.FirstOrDefault(p => p.Code == video.MpvPreviewAlignment) ?? MpvPreviewFontAlignments[7];
         MpvPreviewOutlineWidth = video.MpvPreviewOutlineWidth;
         MpvPreviewShadowWidth = video.MpvPreviewShadowWidth;
@@ -1394,6 +1412,10 @@ public partial class SettingsViewModel : ObservableObject
         {
             return Se.Language.Options.Settings.SubtitleGridFormattingShowTags;
         }
+        else if (subtitleGridFormattingType == (int)SubtitleGridFormattingTypes.HideTags)
+        {
+            return Se.Language.Options.Settings.SubtitleGridFormattingHideTags;
+        }
         else
         {
             return Se.Language.Options.Settings.SubtitleGridFormattingNone;
@@ -1409,6 +1431,10 @@ public partial class SettingsViewModel : ObservableObject
         else if (translation == Se.Language.Options.Settings.SubtitleGridFormattingShowTags)
         {
             return (int)SubtitleGridFormattingTypes.ShowTags;
+        }
+        else if (translation == Se.Language.Options.Settings.SubtitleGridFormattingHideTags)
+        {
+            return (int)SubtitleGridFormattingTypes.HideTags;
         }
         else
         {
@@ -1621,6 +1647,7 @@ public partial class SettingsViewModel : ObservableObject
         general.AutoConvertToUtf8 = AutoConvertToUtf8;
         general.ForceCrLfOnSave = ForceCrLfOnSave;
         general.AutoTrimWhiteSpace = AutoTrimWhiteSpace;
+        general.RemoveBlankLinesWhenOpening = RemoveBlankLinesWhenOpening;
 
         general.DefaultSubtitleFormat = SelectedDefaultSubtitleFormat;
         general.DefaultSaveAsFormat = SelectedSaveSubtitleFormat;
@@ -1679,6 +1706,7 @@ public partial class SettingsViewModel : ObservableObject
         appearance.ToolbarShowSaveAs = ShowToolbarSaveAs;
         appearance.ToolbarShowFind = ShowToolbarFind;
         appearance.ToolbarShowReplace = ShowToolbarReplace;
+        appearance.ToolbarShowMultipleReplace = ShowToolbarMultipleReplace;
         appearance.ToolbarShowSpellCheck = ShowToolbarSpellCheck;
         appearance.ToolbarShowFixCommonErrors = ShowToolbarFixCommonErrors;
         appearance.ToolbarShowRemoveTextForHi = ShowToolbarRemoveTextForHi;
@@ -1694,6 +1722,10 @@ public partial class SettingsViewModel : ObservableObject
         appearance.ToolbarShowHelp = ShowToolbarHelp;
         appearance.ToolbarShowEncoding = ShowToolbarEncoding;
         appearance.ToolbarShowFrameRate = ShowToolbarFrameRate;
+        appearance.ToolbarShowStyleManager = ShowToolbarStyleManager;
+        appearance.ToolbarShowProperties = ShowToolbarProperties;
+        appearance.ToolbarShowAttachments = ShowToolbarAttachments;
+        appearance.ToolbarShowAssaDraw = ShowToolbarAssaDraw;
         appearance.ShowPluginsMenu = ShowPluginsMenu;
         appearance.SubtitleGridFontSize = SubtitleGridFontSize;
         appearance.SubtitleGridTextSingleLine = SubtitleGridTextSingleLine;
@@ -1838,6 +1870,8 @@ public partial class SettingsViewModel : ObservableObject
         video.MpvPreviewFontSize = MpvPreviewFontSize;
         video.MpvPreviewFontBold = MpvPreviewFontBold;
         video.MpvPreviewMargin = MpvPreviewMargin;
+        video.MpvPreviewUsePositionFromFile = MpvPreviewUsePositionFromFile;
+        video.MpvPreviewMarginIsPartOfSubtitleArea = MpvPreviewMarginIsPartOfSubtitleArea;
         video.MpvPreviewOutlineWidth = MpvPreviewOutlineWidth;
         video.MpvPreviewAlignment = MpvPreviewSelectedFontAlignment.Code;
         video.MpvPreviewShadowWidth = MpvPreviewShadowWidth;
@@ -2133,6 +2167,29 @@ public partial class SettingsViewModel : ObservableObject
             ColorTextTooWidePixels = viewModel.MaxWidthPixels;
             ColorTextTooWideFontName = viewModel.SelectedFont;
             ColorTextTooWideFontSize = viewModel.FontSize;
+        }
+    }
+
+    /// <summary>
+    /// Delivery specs give the minimum gap in frames, the setting is in milliseconds - offer the
+    /// same frame rate calculator Subtitle Edit 4 had behind the "..." button (issue #13906).
+    /// </summary>
+    [RelayCommand]
+    private async Task CalculateMinGapMs()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var viewModel = await _windowService.ShowDialogAsync<MinGapCalculateWindow, MinGapCalculateViewModel>(
+            Window,
+            vm => vm.Initialize(MinGapFrames ?? 2));
+
+        if (viewModel.OkPressed)
+        {
+            MinGapMs = viewModel.MinGapMs;
+            RuleValueChanged();
         }
     }
 

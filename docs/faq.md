@@ -162,6 +162,14 @@ See the [Keyboard Shortcuts Reference](reference/keyboard-shortcuts.md) for the 
 - Check that the video player path is correctly set in **Options → Settings → Video Player**
 - Try to re-encode the video for better compatibility via **Video → More → Re-encode video for better subtitling**
 
+### Video is black with no sound, but the waveform works
+The waveform is made with FFmpeg while the picture comes from libmpv, so this points at libmpv failing to load rather than at the file.
+- Update your graphics driver from Intel/NVIDIA/AMD directly — the generic Microsoft Basic Display driver has no usable OpenGL
+- Re-download libmpv via **Options → Settings → Video Player → Download libmpv**
+- If you installed libmpv by hand, make sure `vulkan-1.dll` sits next to `libmpv-2.dll` — recent libmpv builds do not load without it (see [Third-Party Components](third-party-components.md))
+- Check that your antivirus is not blocking `libmpv-2.dll`
+- As a cross-check, switch to VLC under **Options → Settings → Video Player**; if VLC plays the file, the problem is libmpv/OpenGL
+
 ### Waveform is not showing
 - Ensure FFmpeg is installed and the path is set in settings
 

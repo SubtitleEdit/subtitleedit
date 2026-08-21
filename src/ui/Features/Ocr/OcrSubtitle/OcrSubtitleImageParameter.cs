@@ -58,38 +58,12 @@ public class OcrSubtitleImageParameter : IOcrSubtitle
             return new SKPointI(-1, -1);
         }
 
-        var left = 0;
-        var top = 0;
+        // Same placement math as the full-frame export. The hand-rolled version here had no
+        // branch for center or bottom alignments, so the default bottom-center came out as
+        // (0,0) - which the batch converter then promoted to an override position, pinning
+        // batch text->image subtitles to the top-left corner of the frame.
         var param = _imageParameterList[index];
-
-        if (param.Alignment == ExportAlignment.BottomLeft || param.Alignment == ExportAlignment.MiddleLeft || param.Alignment == ExportAlignment.TopLeft)
-        {
-            left = param.LeftRightMargin;
-        }
-        else if (param.Alignment == ExportAlignment.BottomRight || param.Alignment == ExportAlignment.MiddleRight || param.Alignment == ExportAlignment.TopRight)
-        {
-            left = param.ScreenWidth - param.Bitmap.Width - param.LeftRightMargin;
-        }
-
-        if (param.Alignment == ExportAlignment.TopLeft || param.Alignment == ExportAlignment.TopCenter || param.Alignment == ExportAlignment.TopRight)
-        {
-            top = param.BottomTopMargin;
-        }
-
-        if (param.Alignment == ExportAlignment.MiddleLeft || param.Alignment == ExportAlignment.MiddleCenter || param.Alignment == ExportAlignment.MiddleRight)
-        {
-            top = param.ScreenHeight - (param.Bitmap.Height / 2);
-        }
-
-        if (param.OverridePosition != null &&
-            param.OverridePosition.Value.X >= 0 && param.OverridePosition.Value.X < param.ScreenWidth &&
-            param.OverridePosition.Value.Y >= 0 && param.OverridePosition.Value.Y < param.ScreenHeight)
-        {
-            left = param.OverridePosition.Value.X;
-            top = param.OverridePosition.Value.Y;
-        }
-
-        return new SKPointI(left, top);
+        return FullFrameImage.GetPosition(param, param.Bitmap.Width, param.Bitmap.Height);
     }
 
     public SKSizeI GetScreenSize(int index)

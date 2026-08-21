@@ -20,12 +20,38 @@ public partial class LlamaCppOcrSettingsViewModel : ObservableObject
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
 
+    private Func<Task>? _redownloadAsync;
+
     [ObservableProperty] private string _url;
     [ObservableProperty] private string _prompt;
     [ObservableProperty] private int _timeoutMinutes;
     [ObservableProperty] private string _engineLabel = string.Empty;
     [ObservableProperty] private IBrush _engineBrush = Brushes.Gray;
-    [ObservableProperty] private bool _isEngineInstalled;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DownloadButtonLabel))]
+    private bool _isEngineInstalled;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DownloadButtonLabel))]
+    private DownloadHashManager.UpdateStatus _engineUpdateStatus;
+
+    // "Download" when not installed, "Update" when a newer engine release is available,
+    // otherwise "Re-download".
+    public string DownloadButtonLabel
+    {
+        get
+        {
+            if (!IsEngineInstalled)
+            {
+                return Se.Language.General.Download;
+            }
+
+            return EngineUpdateStatus == DownloadHashManager.UpdateStatus.UpdateAvailable
+                ? Se.Language.General.Update
+                : Se.Language.General.Redownload;
+        }
+    }
 
     public LlamaCppOcrSettingsViewModel()
     {
@@ -34,8 +60,14 @@ public partial class LlamaCppOcrSettingsViewModel : ObservableObject
         _timeoutMinutes = Math.Max(1, Se.Settings.Ocr.LlamaCppOcrTimeoutMinutes);
     }
 
-    public void Initialize()
+    /// <summary>
+    /// <paramref name="redownloadAsync"/> is supplied by the caller so the download runs through the
+    /// same flow the caller already owns (stopping the server first, refreshing its model list and
+    /// status dots afterwards) instead of this dialog duplicating it.
+    /// </summary>
+    public void Initialize(Func<Task> redownloadAsync)
     {
+        _redownloadAsync = redownloadAsync;
         Refresh();
     }
 
@@ -44,12 +76,14 @@ public partial class LlamaCppOcrSettingsViewModel : ObservableObject
         IsEngineInstalled = LlamaCppServerManager.IsEngineInstalled();
         if (!IsEngineInstalled)
         {
+            EngineUpdateStatus = DownloadHashManager.UpdateStatus.Unknown;
             EngineLabel = Se.Language.General.NotInstalled;
             EngineBrush = new SolidColorBrush(Color.FromRgb(0xF4, 0x43, 0x36)); // red
             return;
         }
 
-        switch (LlamaCppUpdateStatus.GetEngineUpdateStatus())
+        EngineUpdateStatus = LlamaCppUpdateStatus.GetEngineUpdateStatus();
+        switch (EngineUpdateStatus)
         {
             case DownloadHashManager.UpdateStatus.UpToDate:
                 EngineLabel = Se.Language.General.UpToDate;
@@ -64,6 +98,18 @@ public partial class LlamaCppOcrSettingsViewModel : ObservableObject
                 EngineBrush = new SolidColorBrush(Color.FromRgb(0x9E, 0x9E, 0x9E)); // grey
                 break;
         }
+    }
+
+    [RelayCommand]
+    private async Task Redownload()
+    {
+        if (_redownloadAsync == null)
+        {
+            return;
+        }
+
+        await _redownloadAsync();
+        Refresh();
     }
 
     [RelayCommand]

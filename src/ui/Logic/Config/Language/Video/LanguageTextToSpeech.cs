@@ -35,6 +35,7 @@ public class LanguageTextToSpeech
     public string ImportVoiceDotDotDot { get; set; }
     public string VoiceImportSuccessTitle { get; set; }
     public string VoiceXImported { get; set; }
+    public string VoiceXCouldNotBeImported { get; set; }
     public string ImportPiperVoiceTitle { get; set; }
     public string PiperVoiceConfigMissingTitle { get; set; }
     public string PiperVoiceConfigMissingMessage { get; set; }
@@ -42,6 +43,42 @@ public class LanguageTextToSpeech
     public string DropAudioFileHereHint { get; set; }
     public string VoiceCloneTranscriptTitle { get; set; }
     public string UseSpeechToTextDotDotDot { get; set; }
+
+    // Auto cast: find the voices in the video and clone them
+    public string AutoCastMenuItem { get; set; }
+    public string AutoCastSpeakersTitle { get; set; }
+    public string AutoCastSpeakersSubtitle { get; set; }
+    public string AutoCastFoundXSpeakersInYLines { get; set; }
+    public string AutoCastLines { get; set; }
+    public string AutoCastAudio { get; set; }
+    public string AutoCastSays { get; set; }
+    public string AutoCastNeedsVideo { get; set; }
+    public string AutoCastNoSpeakersFound { get; set; }
+    public string AutoCastCloningX { get; set; }
+    public string AutoCastDoneXVoices { get; set; }
+    public string AutoCastNothingCloned { get; set; }
+    public string AutoCastReplaceSubtitleQuestion { get; set; }
+
+    // Per-line voice cloning ("Clone from video")
+    public string CloneVoicePerLine { get; set; }
+    public string CloneVoicePerLinePreparing { get; set; }
+    public string CloneVoicePerLineNeedsVideo { get; set; }
+    public string CloneVoicePerLineNoClips { get; set; }
+
+    // First-clone consent dialog
+    public string VoiceCloneConsentTitle { get; set; }
+    public string VoiceCloneConsentHeader { get; set; }
+    public string VoiceCloneConsentIntro { get; set; }
+    public string VoiceCloneConsentPointPermission { get; set; }
+    public string VoiceCloneConsentPointDisclose { get; set; }
+    public string VoiceCloneConsentPointNoMarking { get; set; }
+    public string VoiceCloneConsentPointNoImpersonation { get; set; }
+    public string VoiceCloneConsentPointLocal { get; set; }
+    public string VoiceCloneConsentPointModelLicense { get; set; }
+    public string VoiceCloneConsentReadMore { get; set; }
+    public string VoiceCloneConsentCheckBox { get; set; }
+    public string VoiceCloneConsentAccept { get; set; }
+    public string VoiceCloneConsentDeclined { get; set; }
     public string AdvancedTtsSettings { get; set; }
     public string ProAudioPostProcessing { get; set; }
     public string ProAudioPostProcessingDescription { get; set; }
@@ -57,6 +94,10 @@ public class LanguageTextToSpeech
     public string SilencePaddingMsDescription { get; set; }
     public string OutputSampleRate { get; set; }
     public string OutputSampleRateDescription { get; set; }
+    public string GenerationFolder { get; set; }
+    public string GenerationFolderDescription { get; set; }
+    public string DeleteTempFiles { get; set; }
+    public string DeleteTempFilesDescription { get; set; }
     public string EdgeTtsRate { get; set; }
     public string EdgeTtsRateDescription { get; set; }
     public string EdgeTtsPitch { get; set; }
@@ -140,6 +181,7 @@ public class LanguageTextToSpeech
         ImportVoiceDotDotDot = "Import voice...";
         VoiceImportSuccessTitle = "Voice imported";
         VoiceXImported = "Voice '{0}' imported successfully";
+        VoiceXCouldNotBeImported = "Voice '{0}' could not be imported - see the log for details";
         ImportPiperVoiceTitle = "Open Piper voice model (.onnx)";
         PiperVoiceConfigMissingTitle = "Config file missing";
         PiperVoiceConfigMissingMessage = "A Piper voice needs its config file next to the model file: {0}";
@@ -147,6 +189,36 @@ public class LanguageTextToSpeech
         DropAudioFileHereHint = ".wav or .mp3";
         VoiceCloneTranscriptTitle = "Enter transcript of the audio (required for voice cloning)";
         UseSpeechToTextDotDotDot = "Use speech-to-text...";
+        AutoCastMenuItem = "Find voices in video and clone...";
+        AutoCastSpeakersTitle = "Voices found in the video";
+        AutoCastSpeakersSubtitle = "Name each speaker - the name becomes the actor in the subtitle and the name of the cloned voice. Give two speakers the same name to merge them into one voice.";
+        AutoCastFoundXSpeakersInYLines = "{0} speakers in {1} lines";
+        AutoCastLines = "Lines";
+        AutoCastAudio = "Audio";
+        AutoCastSays = "Says";
+        AutoCastNeedsVideo = "Finding the voices needs an open video to listen to.";
+        AutoCastNoSpeakersFound = "No speakers were found. The transcription has to come from a speech-to-text engine that tells speakers apart, such as Crisp ASR MOSS Diarize.";
+        AutoCastCloningX = "Cloning {0}...";
+        AutoCastDoneXVoices = "{0} voices cloned - open Text to speech to generate the dubbing";
+        AutoCastNothingCloned = "None of the voices could be cloned - see the log for details.";
+        AutoCastReplaceSubtitleQuestion = "This replaces the subtitle you have open with the transcription of the video. Continue?";
+        CloneVoicePerLine = "Clone from video (voice of each line)";
+        CloneVoicePerLinePreparing = "Taking the voice of each line from the video...";
+        CloneVoicePerLineNeedsVideo = "Cloning the voice of each line needs the video the subtitle belongs to. Open the video and try again.";
+        CloneVoicePerLineNoClips = "No audio could be taken from the video, so there is nothing to clone from. Check that the video has an audio track.";
+        VoiceCloneConsentTitle = "Voice cloning - before you start";
+        VoiceCloneConsentHeader = "You are about to clone a voice";
+        VoiceCloneConsentIntro = "Cloning copies a real person's voice. That comes with rules in most places, and in the EU with legal duties that fall on you, not on Subtitle Edit. Please read this once.";
+        VoiceCloneConsentPointPermission = "Only clone a voice you have the right to use - your own, or one where the speaker has given permission. A voice is personal data and a personality right, so cloning without permission can be unlawful.";
+        VoiceCloneConsentPointDisclose = "If you publish audio that imitates a real person, you must say that it is AI-generated. In the EU this is required by the AI Act (Regulation (EU) 2024/1689, article 50), which applies from 2 August 2026.";
+        VoiceCloneConsentPointNoMarking = "Subtitle Edit turns off the engine's spoken AI disclaimer, inaudible watermark and C2PA signature so the audio can be used in your video unchanged. That means nothing marks the result as AI-generated for you.";
+        VoiceCloneConsentPointNoImpersonation = "Do not use a cloned voice to impersonate someone, to make a person appear to say things they never said, or for fraud, harassment or deception.";
+        VoiceCloneConsentPointLocal = "The reference recording stays on this computer. Cloning runs locally and the audio is not uploaded to Subtitle Edit or anywhere else.";
+        VoiceCloneConsentPointModelLicense = "Each speech model also has its own license, which may add further limits on commercial use.";
+        VoiceCloneConsentReadMore = "About the EU AI Act transparency rules";
+        VoiceCloneConsentCheckBox = "I have the right to clone this voice, and I will disclose that the generated audio is AI-generated";
+        VoiceCloneConsentAccept = "Accept and continue";
+        VoiceCloneConsentDeclined = "Voice cloning is not available until these terms are accepted.";
         AdvancedTtsSettings = "Advanced TTS settings";
         ProAudioPostProcessing = "Pro audio post-processing";
         ProAudioPostProcessingDescription = "Applies EQ warmth, noise gate, compression, loudness normalization (-16 LUFS), and fade in/out to each segment.";
@@ -162,6 +234,10 @@ public class LanguageTextToSpeech
         SilencePaddingMsDescription = "Adds a short silence at the end of each segment. Useful for breathing room between sentences.";
         OutputSampleRate = "Output sample rate (0 = default)";
         OutputSampleRateDescription = "Resamples all segments to the specified sample rate (e.g. 44100, 48000). Set to 0 to keep the original rate.";
+        GenerationFolder = "Generation folder";
+        GenerationFolderDescription = "Folder for the audio clips generated while a run is in progress. Leave empty to use the system temp folder. Each run gets its own sub-folder.";
+        DeleteTempFiles = "Delete generated clips when closing";
+        DeleteTempFilesDescription = "Removes the run's generation folder when the Text to speech window closes. The saved audio and video files are not affected. Turn this off to keep the individual clips.";
         EdgeTtsRate = "Edge-TTS rate";
         EdgeTtsRateDescription = "Speech rate for Edge-TTS, e.g. \"+50%\", \"-30%\", or \"+0%\" for default.";
         EdgeTtsPitch = "Edge-TTS pitch";

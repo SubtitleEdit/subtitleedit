@@ -54,6 +54,15 @@ internal static class SubtitleLinter
                 }
                 for (var li = 0; li < lines.Count; li++)
                 {
+                    // Stripping tags can only ever shorten a line, so a line that already fits
+                    // with its markup cannot be too long without it. Checking that first skips
+                    // the string RemoveHtmlTags would allocate for every line of every
+                    // paragraph — and on a clean file that is every line.
+                    if (lines[li].Length <= maxLineLen)
+                    {
+                        continue;
+                    }
+
                     var stripped = HtmlUtil.RemoveHtmlTags(lines[li], true);
                     if (stripped.Length > maxLineLen)
                     {
@@ -66,8 +75,9 @@ internal static class SubtitleLinter
                     }
                 }
 
-                CheckTagBalance(p.Text, n, "<i>", "</i>", "italic", issues);
-                CheckTagBalance(p.Text, n, "<b>", "</b>", "bold", issues);
+                CountTags(p.Text, out var openItalic, out var closeItalic, out var openBold, out var closeBold);
+                CheckTagBalance(openItalic, closeItalic, n, "<i>", "</i>", "italic", issues);
+                CheckTagBalance(openBold, closeBold, n, "<b>", "</b>", "bold", issues);
             }
 
             // Duration checks
@@ -146,21 +156,18 @@ internal static class SubtitleLinter
     }
 
     /// <summary>
-    /// Reports a mismatched-tag issue when the count of <paramref name="open"/> and
-    /// <paramref name="close"/> in <paramref name="text"/> differ. Naive substring
-    /// counting is fine here because we only care that opens and closes balance —
-    /// nesting is not validated.
+    /// Reports a mismatched-tag issue when the open and close counts differ. Counting is enough
+    /// here because we only care that opens and closes balance — nesting is not validated.
     /// </summary>
     private static void CheckTagBalance(
-        string text,
+        int opens,
+        int closes,
         int paragraphNumber,
         string open,
         string close,
         string label,
         List<LintIssue> issues)
     {
-        var opens = CountOccurrences(text, open);
-        var closes = CountOccurrences(text, close);
         if (opens != closes)
         {
             issues.Add(new LintIssue
@@ -172,16 +179,56 @@ internal static class SubtitleLinter
         }
     }
 
-    private static int CountOccurrences(string haystack, string needle)
+    /// <summary>
+    /// Counts <c>&lt;i&gt;</c>, <c>&lt;/i&gt;</c>, <c>&lt;b&gt;</c> and <c>&lt;/b&gt;</c> in one
+    /// pass over <paramref name="text"/>. The previous shape ran four separate
+    /// <c>IndexOf(string, StringComparison.OrdinalIgnoreCase)</c> scans per paragraph; hopping
+    /// between '&lt;' positions on a span reads the text once and never allocates.
+    /// </summary>
+    private static void CountTags(string text, out int openItalic, out int closeItalic, out int openBold, out int closeBold)
     {
-        var count = 0;
-        var idx = 0;
-        while ((idx = haystack.IndexOf(needle, idx, StringComparison.OrdinalIgnoreCase)) >= 0)
+        openItalic = 0;
+        closeItalic = 0;
+        openBold = 0;
+        closeBold = 0;
+
+        var remaining = text.AsSpan();
+        while (true)
         {
-            count++;
-            idx += needle.Length;
+            var at = remaining.IndexOf('<');
+            if (at < 0)
+            {
+                return;
+            }
+
+            remaining = remaining[at..];
+            if (remaining.Length >= 3 && remaining[2] == '>')
+            {
+                // <i> / <b>
+                if (remaining[1] is 'i' or 'I')
+                {
+                    openItalic++;
+                }
+                else if (remaining[1] is 'b' or 'B')
+                {
+                    openBold++;
+                }
+            }
+            else if (remaining.Length >= 4 && remaining[1] == '/' && remaining[3] == '>')
+            {
+                // </i> / </b>
+                if (remaining[2] is 'i' or 'I')
+                {
+                    closeItalic++;
+                }
+                else if (remaining[2] is 'b' or 'B')
+                {
+                    closeBold++;
+                }
+            }
+
+            remaining = remaining[1..];
         }
-        return count;
     }
 }
 

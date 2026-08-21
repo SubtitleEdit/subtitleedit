@@ -367,6 +367,9 @@ namespace Nikse.SubtitleEdit
                     ToolTip.SetIsOpen(control, false);
                 }
             });
+
+            // Shift+Delete cut in every text box, in every window (#13711).
+            NativeKeymap.AddShiftDeleteCut();
         }
 
         private static void SetupNativeMenu(Application app, ClassicDesktopStyleApplicationLifetime lifetime)

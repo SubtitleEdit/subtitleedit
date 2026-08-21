@@ -212,12 +212,57 @@ public class CrispAsrTtsLanguagesTests
     }
 
     [Fact]
-    public void ResolveSourceLanguageArg_ExplicitPickWinsOverDetection()
+    public void ResolveSourceLanguageArg_TranscriptDetectionOutranksThePick()
     {
+        // The transcript is the text actually spoken in THIS reference (per-line
+        // clone-from-video makes one per clip), so it beats a stale global pick; the pick
+        // covers the transcripts the detector declines on.
         using var _ = new SavedReferenceLanguageScope("fr");
 
-        Assert.Equal("fr", CosyVoice3Languages.ResolveSourceLanguageArg(
+        Assert.Equal("en", CosyVoice3Languages.ResolveSourceLanguageArg(
             "The quick brown fox is not what it seems, and there is nothing we can do about it."));
+        Assert.Equal("fr", CosyVoice3Languages.ResolveSourceLanguageArg(
+            "Jeg har ikke læst bogen, men jeg er ligeglad med hvad du mener om den."));
+        Assert.Equal("fr", CosyVoice3Languages.ResolveSourceLanguageArg(null));
+    }
+
+    [Fact]
+    public void Chatterbox_ResolveSourceLanguageArg_TranscriptDetectionOutranksThePick()
+    {
+        // Per-line clone-from-video writes a sidecar with the line spoken in each clip - that
+        // per-reference evidence beats the global pick, which describes the user's own imported
+        // reference; the pick covers references without a (detectable) sidecar.
+        using var _ = new ChatterboxReferenceLanguageScope("fr");
+
+        Assert.Equal("en", ChatterboxLanguages.ResolveSourceLanguageArg(
+            "The quick brown fox is not what it seems, and there is nothing we can do about it."));
+        Assert.Equal("fr", ChatterboxLanguages.ResolveSourceLanguageArg(
+            "Nečetl jsem tu knihu, ale je mi jedno, co si o tom myslíš ty."));
+        Assert.Equal("fr", ChatterboxLanguages.ResolveSourceLanguageArg(null));
+    }
+
+    [Fact]
+    public void Chatterbox_ResolveSourceLanguageArg_NoPick_FallsBackToTheSidecar()
+    {
+        using var _ = new ChatterboxReferenceLanguageScope(string.Empty);
+
+        Assert.Equal("en", ChatterboxLanguages.ResolveSourceLanguageArg(
+            "The quick brown fox is not what it seems, and there is nothing we can do about it."));
+        Assert.Equal("de", ChatterboxLanguages.ResolveSourceLanguageArg(
+            "Ich habe das Buch nicht gelesen, aber es ist mir egal, was du davon hältst."));
+        Assert.Equal(string.Empty, ChatterboxLanguages.ResolveSourceLanguageArg(null));
+    }
+
+    [Fact]
+    public void Chatterbox_DetectSourceLanguage_OutsideItsLanguages_ReturnsEmpty()
+    {
+        // Chatterbox knows 23 languages; Czech is not one of them, and the [cs] tag exists in the
+        // vocab without being advertised as trained - so a detection outside the list is dropped
+        // rather than sent.
+        using var _ = new ChatterboxReferenceLanguageScope(string.Empty);
+
+        Assert.Equal(string.Empty, ChatterboxLanguages.DetectSourceLanguage(
+            "Nečetl jsem tu knihu, ale je mi jedno, co si o tom myslíš ty."));
     }
 
     [Fact]
@@ -316,5 +361,24 @@ internal sealed class SavedReferenceLanguageScope : IDisposable
     public void Dispose()
     {
         Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrSourceLanguage = _original;
+    }
+}
+
+/// <summary>
+/// Sets Chatterbox's "Reference language" pick (an ISO code) and restores it afterwards.
+/// </summary>
+internal sealed class ChatterboxReferenceLanguageScope : IDisposable
+{
+    private readonly string _original;
+
+    public ChatterboxReferenceLanguageScope(string code)
+    {
+        _original = Se.Settings.Video.TextToSpeech.ChatterboxCrispAsrSourceLanguage;
+        Se.Settings.Video.TextToSpeech.ChatterboxCrispAsrSourceLanguage = code;
+    }
+
+    public void Dispose()
+    {
+        Se.Settings.Video.TextToSpeech.ChatterboxCrispAsrSourceLanguage = _original;
     }
 }

@@ -264,6 +264,14 @@ public class ReviewSpeechWindow : Window
 
         var comboBoxEngines = UiUtil.MakeComboBox(vm.Engines, vm, nameof(vm.SelectedEngine)).WithMinWidth(controlMinWidth);
         comboBoxEngines.SelectionChanged += vm.SelectedEngineChanged;
+        var buttonEngineSettings = UiUtil.MakeButton(string.Empty, vm.ShowEngineSettingsCommand)
+            .WithIconLeft(IconNames.Settings)
+            .WithBindIsVisible(nameof(vm.IsEngineSettingsVisible));
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(buttonEngineSettings, Se.Language.General.Settings);
+        }
+
         var buttonElevenLabsRest = UiUtil.MakeButton(Se.Language.General.Reset, vm.ElevenLabsResetCommand)
             .WithIconLeft(IconNames.Repeat)
             .WithBindIsVisible(nameof(vm.IsElevenLabsControlsVisible));
@@ -284,6 +292,7 @@ public class ReviewSpeechWindow : Window
                     MinWidth = labelMinWidth,
                 },
                 comboBoxEngines,
+                buttonEngineSettings,
                 buttonElevenLabsRest,
             }
         };

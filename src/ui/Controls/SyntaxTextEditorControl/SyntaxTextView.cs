@@ -1197,6 +1197,13 @@ public class SyntaxTextView : Control
                 isNavigation = false;
                 Backspace();
                 break;
+            // Shift+Delete is the classic Windows cut gesture. SE adds it to the native TextBox
+            // keymap at startup, but this editor does its own key handling, so mirror it here -
+            // Cut() already no-ops for a read-only view or an empty selection (#13711).
+            case Key.Delete when e.KeyModifiers == KeyModifiers.Shift:
+                isNavigation = false;
+                Cut();
+                break;
             case Key.Delete:
                 isNavigation = false;
                 DeleteForward();

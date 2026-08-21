@@ -17,8 +17,10 @@ public interface ILibMpvDownloadService
 public class LibMpvDownloadService : ILibMpvDownloadService
 {
     private readonly HttpClient _httpClient;
-    private const string WindowsUrl = "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-04-21/libmpv2-win64.zip";
-    private const string WindowsUrlArm = "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-04-21/libmpv2-win-arm64.zip";
+    // The "b" repack bundles the Khronos Vulkan loader: this libmpv has a load-time
+    // import of vulkan-1.dll, which GPU drivers older than Vulkan never installed (#13856).
+    private const string WindowsUrl = "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-08-14b/libmpv2-win64.zip";
+    private const string WindowsUrlArm = "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-08-14b/libmpv2-win-arm64.zip";
     private const string MacUrl = "";
     private const string MacUrlArm = "";
 

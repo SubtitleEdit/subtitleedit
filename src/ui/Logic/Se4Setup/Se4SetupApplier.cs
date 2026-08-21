@@ -1,11 +1,14 @@
 using Avalonia.Media;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Edit.MultipleReplace;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Nikse.SubtitleEdit.Logic.Se4Setup;
 
@@ -43,6 +46,7 @@ public static class Se4SetupApplier
         ApplyReplaceRules(settingsXmlPath, result);
         ApplyClassicTheme();
         ApplyToolbarAndEditBox();
+        ApplyFrameRate(vm, settingsXmlPath);
         ApplyWaveformColors();
         ApplyWaveformToolbar();
         ApplySelectCurrentLineWhilePlaying(vm);
@@ -149,6 +153,72 @@ public static class Se4SetupApplier
         // "<br />" (Settings.General.ListViewLineSeparatorString default). Match that.
         Se.Settings.Appearance.SubtitleGridTextSingleLine = true;
         Se.Settings.Appearance.SubtitleGridTextSingleLineSeparator = "<br />";
+    }
+
+    // SE 4 kept the frame rate selector in the toolbar behind General/ShowFrameRate and let the
+    // user pick the frame rate new files start at via General/DefaultFrameRate. SE 5 has the same
+    // toolbar combo box (Appearance/ToolbarShowFrameRate) but no options UI for the default, so
+    // both are carried over from the classic Settings.xml when one is present. Doing nothing
+    // without a Settings.xml is correct: SE 4's own defaults (hidden, 23.976) match SE 5's.
+    internal static void ApplyFrameRate(MainViewModel vm, string? settingsXmlPath)
+    {
+        if (settingsXmlPath == null || !File.Exists(settingsXmlPath))
+        {
+            return;
+        }
+
+        string xml;
+        try
+        {
+            xml = File.ReadAllText(settingsXmlPath);
+        }
+        catch
+        {
+            return;
+        }
+
+        ApplyFrameRateFromXml(vm, xml);
+    }
+
+    internal static void ApplyFrameRateFromXml(MainViewModel? vm, string xml)
+    {
+        XDocument doc;
+        try
+        {
+            doc = XDocument.Parse(xml);
+        }
+        catch
+        {
+            return;
+        }
+
+        var general = doc.Descendants().FirstOrDefault(e => e.Name.LocalName == "General");
+        if (general == null)
+        {
+            return;
+        }
+
+        var showFrameRate = general.Elements().FirstOrDefault(e => e.Name.LocalName == "ShowFrameRate")?.Value;
+        if (bool.TryParse(showFrameRate, out var show))
+        {
+            Se.Settings.Appearance.ToolbarShowFrameRate = show;
+        }
+
+        var defaultFrameRate = general.Elements().FirstOrDefault(e => e.Name.LocalName == "DefaultFrameRate")?.Value;
+        if (!double.TryParse(defaultFrameRate, NumberStyles.Float, CultureInfo.InvariantCulture, out var frameRate) ||
+            frameRate < 10 ||
+            frameRate > 200)
+        {
+            // SE 4 wrote this value with the invariant culture but could read back a locale-mangled
+            // one ("23,976" -> 23976), which it clamped too; anything out of range is ignored here.
+            return;
+        }
+
+        Se.Settings.General.DefaultFrameRate = frameRate;
+        Se.Settings.General.CurrentFrameRate = frameRate;
+        Configuration.Settings.General.DefaultFrameRate = frameRate;
+        Configuration.Settings.General.CurrentFrameRate = frameRate;
+        vm?.SetSelectedFrameRate(frameRate);
     }
 
     // The SE 4 waveform look, taken from the classic AudioVisualizer defaults

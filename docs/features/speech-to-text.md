@@ -21,7 +21,7 @@ Subtitle Edit can automatically transcribe audio to text using Whisper-based and
 | OpenRouter | All | Online. One API key routes to Whisper, gpt-4o-transcribe, Groq and Google Chirp |
 | Alibaba Qwen3-ASR | All | Online Qwen3-ASR via Alibaba Model Studio (DashScope) |
 | Qwen3 ASR CPP | Windows, Linux | Local Qwen3 ASR engine with downloadable GGUF models |
-| Crisp ASR | Windows, Linux, macOS | Single engine with selectable backends: Parakeet, Canary, Cohere, Fire Red, GLM, Granite, Qwen3, Mega, Omni, Kyutai |
+| Crisp ASR | Windows, Linux, macOS | Single engine with selectable backends: Parakeet, Canary, Cohere, Fire Red, Fun-ASR Nano, GigaAM, GLM, Granite, Qwen3, Mega, MOSS Diarize, Omni, Kyutai, SenseVoice, ARK, Voxtral |
 
 Engines and models are downloaded automatically on first use.
 
@@ -29,7 +29,7 @@ Engines and models are downloaded automatically on first use.
 
 - **Whisper CPP** is shown as a single entry; the CPU / cuBLAS / Vulkan backends are selected from a secondary dropdown when Whisper CPP is selected.
 - **Qwen3 ASR CPP** includes 0.6B and 1.7B model options, plus a forced-aligner model used for timing workflows.
-- **Crisp ASR** is exposed as one engine that wraps multiple backends (Parakeet, Canary, Cohere, Fire Red, GLM, Granite, Qwen3, Mega, Omni, Kyutai). Pick the backend from the Crisp ASR backend dropdown.
+- **Crisp ASR** is exposed as one engine that wraps multiple backends (Parakeet, Canary, Cohere, Fire Red, Fun-ASR Nano, GigaAM, GLM, Granite, Qwen3, Mega, MOSS Diarize, Omni, Kyutai, SenseVoice, ARK, Voxtral). Pick the backend from the Crisp ASR backend dropdown.
 - **MLX Whisper** (Apple Silicon Macs) is not bundled or auto-downloaded — it drives Apple's `mlx-whisper` Python package. Install it once with `pip3 install mlx-whisper` (or `pipx install mlx-whisper`); models download from Hugging Face on first use. Subtitle Edit detects the install by finding a Python that can `import mlx_whisper` — it probes Homebrew, python.org, pyenv and system interpreters, and (for pipx / virtual-env / conda installs, which isolate the package) reads the `mlx_whisper` command found on your PATH or at `~/.local/bin/mlx_whisper` to locate the matching interpreter. If it reports "not found" after a pipx/venv install, make sure `which mlx_whisper` resolves.
 - A **Forced aligner** option is shown for Crisp ASR backends and exposes the built-in aligner, Canary CTC, Qwen3, and the wav2vec2 zoo (12 language-specific CTC aligners that run on top of any Crisp ASR backend).
 - Several newer engines support automatic language selection.
@@ -89,6 +89,14 @@ Click the **Advanced** button to configure custom command-line arguments for the
 - Adjust temperature or other model parameters
 
 Advanced settings are stored per engine, so you can keep separate parameters for Whisper CPP, Qwen3 ASR, Crisp ASR, and other engines.
+
+### Voice activity detection with Crisp ASR Cohere and Mega
+
+For the **Cohere** and **Mega** backends, Subtitle Edit adds `--vad` and the bundled Silero VAD model to the command line by default. Crisp ASR turns VAD on for these models by itself on longer audio, so passing the bundled model mainly keeps Crisp ASR from downloading its own copy in the middle of a transcription.
+
+VAD usually gives tighter timings, but on some material it drops quiet speech and clips the first word of a line. Crisp ASR has no `--no-vad` switch, so VAD is turned off by asking for fixed chunking instead: add `--chunk-seconds 30` (or `-ck 30`) to the advanced parameters, and Subtitle Edit leaves `--vad` out of the command line entirely. Expect the trade-off that comes with it - with VAD off, long stretches of silence or music can produce invented lines.
+
+To keep VAD and only change how it behaves, put `--vad` in the advanced parameters yourself (the **Enable VAD** button fills in the flag and the model path). An explicit `--vad` wins over `--chunk-seconds`, so the two can be combined.
 
 ## Post-Processing Settings
 

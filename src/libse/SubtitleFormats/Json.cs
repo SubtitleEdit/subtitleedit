@@ -1,5 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
+#if NET8_0_OR_GREATER
+using System.Buffers;
+#endif
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,12 +14,37 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => "JSON";
 
+
+#if NET8_0_OR_GREATER
+        /// <summary>
+        /// Every character <see cref="EncodeJsonText"/> rewrites: the backslash and the quote,
+        /// plus the whole control range - which covers the line feed, tab, backspace, form feed
+        /// and the \u-escaped rest. Anything else is copied through verbatim, so a text with
+        /// none of these needs no rewriting at all.
+        /// </summary>
+        private static readonly SearchValues<char> EscapeChars = SearchValues.Create("\\\"" + ControlChars);
+
+        // const, so it is a compile-time value and cannot be read before its initializer runs.
+        private const string ControlChars = "\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\u0008\u0009\u000A\u000B\u000C\u000D\u000E\u000F\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001A\u001B\u001C\u001D\u001E\u001F";
+#endif
+
         public static string EncodeJsonText(string text, string newLineCharacter = "<br />")
         {
             // Normalize every line-break variant up front so a stray \n or \r (e.g. from a
             // non-platform line ending) becomes the placeholder instead of being emitted as a
             // raw control character, which would otherwise make the JSON body invalid.
             text = text.Replace("\r\n", "\n").Replace('\r', '\n');
+
+#if NET8_0_OR_GREATER
+            // A line with nothing to escape - no quote, no backslash, no control character and
+            // no line break - is returned as is. That is the common case for a single-line
+            // subtitle, and it replaces the whole per-character walk plus its builder with one
+            // vectorized scan and no allocation.
+            if (!text.AsSpan().ContainsAny(EscapeChars))
+            {
+                return text;
+            }
+#endif
 
             var sb = new StringBuilder(text.Length);
             foreach (var c in text)
@@ -200,9 +228,42 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
+        /// <summary>
+        /// Index of <paramref name="tag"/> wrapped in double or single quotes, double quotes
+        /// first - the same answer as the string[] overload of IndexOfAny this replaces, but
+        /// without building the two quoted needles and the array on every tag read.
+        /// </summary>
+        private static int IndexOfQuotedTag(string s, string tag)
+        {
+            var index = IndexOfQuoted(s, tag, '"');
+            return index >= 0 ? index : IndexOfQuoted(s, tag, '\'');
+        }
+
+        private static int IndexOfQuoted(string s, string tag, char quote)
+        {
+            var from = 0;
+            while (from < s.Length)
+            {
+                var index = s.IndexOf(tag, from, StringComparison.Ordinal);
+                if (index < 0 || index + tag.Length >= s.Length)
+                {
+                    return -1;
+                }
+
+                if (index > 0 && s[index - 1] == quote && s[index + tag.Length] == quote)
+                {
+                    return index - 1;
+                }
+
+                from = index + 1;
+            }
+
+            return -1;
+        }
+
         private static bool IsTagArray(string content, string tag)
         {
-            var startIndex = content.IndexOfAny(new[] { "\"" + tag + "\"", "'" + tag + "'" }, StringComparison.Ordinal);
+            var startIndex = IndexOfQuotedTag(content, tag);
             if (startIndex < 0)
             {
                 return false;
@@ -231,7 +292,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static string ReadTag(string s, string tag)
         {
-            var startIndex = s.IndexOfAny(new[] { "\"" + tag + "\"", "'" + tag + "'" }, StringComparison.Ordinal);
+            var startIndex = IndexOfQuotedTag(s, tag);
             if (startIndex < 0)
             {
                 return null;
@@ -295,7 +356,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var list = new List<string>();
 
-            var startIndex = s.IndexOfAny(new[] { "\"" + tag + "\"", "'" + tag + "'" }, StringComparison.Ordinal);
+            var startIndex = IndexOfQuotedTag(s, tag);
             if (startIndex < 0)
             {
                 return list;

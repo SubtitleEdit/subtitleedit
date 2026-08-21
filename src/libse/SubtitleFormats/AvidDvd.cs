@@ -8,6 +8,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class AvidDvd : SubtitleFormat
     {
+        private static readonly CharLookup TimeCodeChars = CharLookup.Create('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', ':', ',');
+
         //25    10:03:20:23 10:03:23:05 some text
         //I see, on my way.|New line also.
         //
@@ -105,8 +107,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             string text = s.Remove(0, arr[0].Length + arr[1].Length + arr[2].Length + 2).Trim();
 
-                            if (string.IsNullOrWhiteSpace(text
-                                .RemoveChar('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', ':', ',')))
+                            if (text.IsOnlyCharsOrWhiteSpace(TimeCodeChars))
                             {
                                 _errorCount++;
                             }

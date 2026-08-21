@@ -1,4 +1,5 @@
 using Nikse.SubtitleEdit.Logic.Ocr.GoogleLens.Proto;
+using Nikse.SubtitleEdit.UiLogic.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,10 +21,8 @@ public class LensCore
 
     static LensCore()
     {
-        var handler = new HttpClientHandler
-        {
-            AutomaticDecompression = System.Net.DecompressionMethods.All
-        };
+        var handler = HttpClientFactoryWithProxy.CreateHandler();
+        handler.AutomaticDecompression = System.Net.DecompressionMethods.All;
 
         _sharedHttpClient = new HttpClient(handler)
         {

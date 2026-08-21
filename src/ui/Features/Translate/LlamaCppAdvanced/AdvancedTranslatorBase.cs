@@ -15,12 +15,12 @@ namespace Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
 /// Shared batch/context translation loop of the "advanced" local-LLM engines: sends numbered
 /// batches with a rolling history of already-translated lines plus user-configured
 /// synopsis/glossary/style, and requires a schema-constrained JSON reply so line alignment is
-/// guaranteed. The Auto-translate loop calls <see cref="TranslateBatchAsync"/> directly; the
-/// plain <see cref="Translate"/> path (used for "translate current line") is a context-free
-/// batch of one. Subclasses only supply the endpoint and, where the server needs one, the
-/// model name.
+/// guaranteed. The Auto-translate loop and batch convert both call <see cref="TranslateBatchAsync"/>
+/// (via <see cref="IBatchContextTranslator"/>); the plain <see cref="Translate"/> path (used for
+/// "translate current line") is a context-free batch of one. Subclasses only supply the endpoint
+/// and, where the server needs one, the model name.
 /// </summary>
-public abstract class AdvancedTranslatorBase : IAutoTranslator, IDisposable
+public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTranslator, IDisposable
 {
     private LlamaCppAdvancedClient? _client;
 
@@ -123,12 +123,23 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IDisposable
         var userContent = LlamaCppAdvancedProtocol.BuildUserContent(history, lines);
         var responseFormat = LlamaCppAdvancedProtocol.BuildResponseFormatJson(lines);
 
+        // Generous output budget for the batch (a translation is roughly source-sized; the JSON
+        // wrapper adds a little per line). Only a fallback: the user's MaxTokens setting wins in
+        // the client. Without any cap a grammar-cornered model generates until the server context
+        // fills (#13830) - with it, the runaway becomes an incomplete reply that the normal
+        // retry/bisection path handles.
+        var defaultMaxTokens = 200;
+        foreach (var line in lines)
+        {
+            defaultMaxTokens += 32 + 2 * line.Text.Length;
+        }
+
         var map = new Dictionary<int, string>();
         for (var attempt = 0; attempt < 2 && !cancellationToken.IsCancellationRequested; attempt++)
         {
             try
             {
-                var reply = await client.ChatAsync(url, systemPrompt, userContent, responseFormat, cancellationToken, GetModel());
+                var reply = await client.ChatAsync(url, systemPrompt, userContent, responseFormat, cancellationToken, GetModel(), defaultMaxTokens);
                 map = LlamaCppAdvancedProtocol.ParseTranslations(reply);
                 if (IsComplete(map, lines))
                 {

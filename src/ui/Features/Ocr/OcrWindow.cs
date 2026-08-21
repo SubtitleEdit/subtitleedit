@@ -11,6 +11,7 @@ using Avalonia.Media;
 using Avalonia.Styling;
 using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using Nikse.SubtitleEdit.Features.Ocr.FixEngine;
+using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
@@ -236,6 +237,14 @@ public class OcrWindow : Window
         comboBoxCrispEmbedModels.ItemTemplate = MakeCrispEmbedModelItemTemplate();
         vm.RefreshCrispEmbedModelCombo = () => comboBoxCrispEmbedModels.ItemTemplate = MakeCrispEmbedModelItemTemplate();
 
+        var comboBoxLlamaCppModels = UiUtil.MakeComboBox(vm.LlamaCppOcrModels, vm, nameof(vm.SelectedLlamaCppOcrModel),
+                nameof(vm.IsLlamaCppVisible))
+            .WithWidth(220)
+            .WithMarginRight(5)
+            .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter());
+        comboBoxLlamaCppModels.ItemTemplate = LlamaCppDownloadHelper.ModelItemTemplate();
+        vm.RefreshLlamaCppOcrModelCombo = () => comboBoxLlamaCppModels.ItemTemplate = LlamaCppDownloadHelper.ModelItemTemplate();
+
         var panel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -331,11 +340,7 @@ public class OcrWindow : Window
                     .WithMarginRight(10)
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
                 UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Model, vm => vm.IsLlamaCppVisible),
-                UiUtil.MakeComboBox(vm.LlamaCppOcrModels, vm, nameof(vm.SelectedLlamaCppOcrModel),
-                        nameof(vm.IsLlamaCppVisible))
-                    .WithWidth(220)
-                    .WithMarginRight(5)
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                comboBoxLlamaCppModels,
                 UiUtil.MakeButton(vm.DownloadLlamaCppOcrCommand, IconNames.Download, Se.Language.General.Download)
                     .WithMarginRight(5)
                     .BindIsVisible(vm, nameof(vm.IsLlamaCppVisible))
@@ -570,6 +575,13 @@ public class OcrWindow : Window
                 },
         });
 
+        // Index-mapped scrollbar (#13579), like the main subtitle grid: the native bar is
+        // pixel-mapped and the virtualizing panel estimates its extent from the average
+        // realized row height, so the thumb jumps around while scrolling. Rows here vary
+        // even more than in the main grid - each holds a subtitle bitmap - so hide the
+        // native vertical bar and dock a row-index one beside the grid instead.
+        var scrollBarHost = new TableViewIndexScrollBar(dataGridSubtitle);
+
         // The image thumbnails scale with Ctrl+plus/minus (Image.MaxWidth/MaxHeight are
         // bound to the VM) - keep the pixel-sized image column in step with the zoom.
         var imageColumn = dataGridSubtitle.Columns[dataGridSubtitle.Columns.Count - 2];
@@ -578,6 +590,11 @@ public class OcrWindow : Window
             if (args.PropertyName == nameof(vm.ImageMaxWidth))
             {
                 imageColumn.Width = new GridLength(vm.ImageMaxWidth + cellChrome);
+
+                // Zooming re-measures every row, and the ScrollViewer keeps its pixel
+                // offset - which lands on a different row (zooming out far enough pins the
+                // list to its end). Stay on the row the user was looking at.
+                scrollBarHost.PreserveTopRow();
             }
         };
 
@@ -710,9 +727,18 @@ public class OcrWindow : Window
         menuItemExportTextAsSubtitle.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.TwoWay });
         flyout.Items.Add(menuItemExportTextAsSubtitle);
 
+        var menuItemSaveAllImagesWithHtmlIndex = new MenuItem
+        {
+            Header = Se.Language.Ocr.SaveAllImagesWithHtmlIndexDotDotDot,
+            DataContext = vm,
+            Command = vm.SaveAllImagesWithHtmlIndexCommand,
+        };
+        menuItemSaveAllImagesWithHtmlIndex.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.TwoWay });
+        flyout.Items.Add(menuItemSaveAllImagesWithHtmlIndex);
+
         vm.SubtitleGrid.ContextFlyout = flyout;
 
-        return UiUtil.MakeBorderForControlNoPadding(dataGridSubtitle).WithMarginBottom(5);
+        return UiUtil.MakeBorderForControlNoPadding(scrollBarHost).WithMarginBottom(5);
     }
 
     private static Border MakeEditView(OcrViewModel vm)
@@ -1146,9 +1172,10 @@ public class OcrWindow : Window
         return button;
     }
 
-    // Engine combo item template: CrispEmbed is the only OCR engine with a locally tracked
-    // install, so it gets the install-status dot (green = ready, amber = update available,
-    // grey = not downloaded yet) plus its download size; all other engines show no dot.
+    // Engine combo item template: CrispEmbed and llama.cpp are the OCR engines with a locally
+    // tracked install, so they get the install-status dot (green = ready, amber = update
+    // available, grey = not downloaded yet); CrispEmbed also shows its download size until it is
+    // on disk. Engines with nothing for us to download show no dot.
     private static FuncDataTemplate<OcrEngineItem> MakeOcrEngineItemTemplate()
     {
         return StatusDots.ComboItemTemplate<OcrEngineItem>(
@@ -1161,18 +1188,18 @@ public class OcrWindow : Window
 
     private static DownloadDotStatus GetOcrEngineDotStatus(OcrEngineItem engine)
     {
-        if (engine.EngineType != OcrEngineType.CrispEmbed)
+        switch (engine.EngineType)
         {
-            return DownloadDotStatus.None;
+            case OcrEngineType.LlamaCpp:
+                return LlamaCppDownloadHelper.GetEngineDotStatus();
+            case OcrEngineType.CrispEmbed:
+                return CrispEmbedEngine.IsEngineInstalled()
+                    // Installed: the cheap .installed.sha256 sidecar turns an outdated build amber.
+                    ? StatusDots.From(true, DownloadHashManager.GetSidecarStatus(CrispEmbedEngine.GetAndCreateFolder()))
+                    : DownloadDotStatus.NotInstalled;
+            default:
+                return DownloadDotStatus.None;
         }
-
-        if (!CrispEmbedEngine.IsEngineInstalled())
-        {
-            return DownloadDotStatus.NotInstalled;
-        }
-
-        // Installed: read the cheap .installed.sha256 sidecar so an outdated build shows amber.
-        return StatusDots.From(true, DownloadHashManager.GetSidecarStatus(CrispEmbedEngine.GetAndCreateFolder()));
     }
 
     // Model combo item template: a dot (green = downloaded, grey = not downloaded yet) plus the

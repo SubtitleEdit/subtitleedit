@@ -59,6 +59,20 @@ public class BurnInWindow : Window
             Children = { subtitleSettingsView, videoSettingsView, targetFileSizeView },
         };
 
+        // Rows 0-3 hold the panel at any size the window can normally reach, but not when the
+        // window ends up shorter than its own content minimum - which happens on screens too
+        // short for the dialog, where UiUtil lowers the minimum to keep the window on the working
+        // area. A StackPanel draws its overflow straight through whatever is below it, so the
+        // last box ("File size in MB") ended up under the progress bar (issue #13904). The scroll
+        // viewer keeps that overflow inside the cell and still reachable; it measures exactly like
+        // the panel, so at every normal size the layout is unchanged and no scroll bar appears.
+        var leftPanelScroller = new ScrollViewer
+        {
+            Content = leftPanel,
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+        };
+
         var buttonGenerate = new SplitButton
         {
             Content = Se.Language.General.Generate,
@@ -122,7 +136,7 @@ public class BurnInWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(leftPanel, 0, 0, 4, 1);  // rows 0-3 (cut + preview + audio + video info)
+        grid.Add(leftPanelScroller, 0, 0, 4, 1);  // rows 0-3 (cut + preview + audio + video info)
         grid.Add(cutView, 0, 1);
         grid.Add(previewView, 1, 1);
         grid.Add(audioSettingsView, 2, 1);
@@ -406,6 +420,10 @@ public class BurnInWindow : Window
             }
         };
 
+        var labelSpacing = UiUtil.MakeLabel(Se.Language.General.Spacing);
+        var textBoxSpacing = UiUtil.MakeNumericUpDownOneDecimal(-20, 100, 130, vm, nameof(vm.SelectedFontSpacing));
+        textBoxSpacing.ValueChanged += vm.NumericUpDownChanged;
+
         var labelBoxType = UiUtil.MakeLabel(Se.Language.Video.BurnIn.BoxType);
         var comboBoxBoxType = UiUtil.MakeComboBox(vm.FontBoxTypes, vm, nameof(vm.SelectedFontBoxType));
         comboBoxBoxType.SelectionChanged += vm.BoxTypeChanged;
@@ -480,6 +498,7 @@ public class BurnInWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -512,14 +531,17 @@ public class BurnInWindow : Window
         grid.Add(labelShadow, 5, 0);
         grid.Add(panelShadow, 5, 1);
 
-        grid.Add(labelAlignment, 6, 0);
-        grid.Add(comboBoxAlignment, 6, 1);
+        grid.Add(labelSpacing, 6, 0);
+        grid.Add(textBoxSpacing, 6, 1);
 
-        grid.Add(labelMargin, 7, 0);
-        grid.Add(panelMargin, 7, 1);
+        grid.Add(labelAlignment, 7, 0);
+        grid.Add(comboBoxAlignment, 7, 1);
 
-        grid.Add(labelEffect, 8, 0);
-        grid.Add(panelEffect, 8, 1);
+        grid.Add(labelMargin, 8, 0);
+        grid.Add(panelMargin, 8, 1);
+
+        grid.Add(labelEffect, 9, 0);
+        grid.Add(panelEffect, 9, 1);
 
         var panel = new Grid
         {
@@ -545,8 +567,8 @@ public class BurnInWindow : Window
         }.WithBindVisible(vm, nameof(vm.ShowAssaOnlyBox));
         grid.Add(panel, 0, 0, 9, 2);
 
-        grid.Add(labelLogo, 9, 0);
-        grid.Add(panelLogo, 9, 1);
+        grid.Add(labelLogo, 10, 0);
+        grid.Add(panelLogo, 10, 1);
 
         return UiUtil.MakeBorderForControl(grid).WithMarginBottom(5).WithMarginRight(5);
     }
@@ -613,6 +635,7 @@ public class BurnInWindow : Window
 
         var labelVideoExtension = UiUtil.MakeLabel(Se.Language.General.VideoExtension);
         var comboBoxVideoExtension = UiUtil.MakeComboBox(vm.VideoExtensions, vm, nameof(vm.SelectedVideoExtension));
+        comboBoxVideoExtension.SelectionChanged += vm.VideoExtensionChanged;
 
         var grid = new Grid
         {

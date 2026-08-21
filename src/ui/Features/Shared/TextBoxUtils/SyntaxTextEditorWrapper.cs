@@ -74,6 +74,7 @@ public class SyntaxTextEditorWrapper : ITextBoxWrapper
     public Control ContentControl => _contentControl;
 
     public bool IsFocused => _editor.View.IsFocused;
+    public bool IsReadOnly => _editor.IsReadOnly;
 
     public void Cut() => _editor.Cut();
 
