@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.UiLogic.Export;
+using Nikse.SubtitleEdit.UiLogic.Export;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -546,6 +546,7 @@ public partial class MainViewModel :
     Control? _replacePreviousFocus;
     bool _replaceClosingProgrammatically;
     AdjustAllTimesViewModel? _adjustAllTimesViewModel;
+    SourceViewViewModel? _sourceViewViewModel;
 
     private static Color _errorColor = Se.Settings.General.ErrorColor.FromHexToColor();
 
@@ -1622,24 +1623,43 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task ShowSourceView()
     {
-        var oldSelectedIndex = SelectedSubtitleIndex ?? 0;
-        var result = await ShowDialogAsync<SourceViewWindow, SourceViewViewModel>(vm =>
+        if (_sourceViewViewModel != null && _sourceViewViewModel.Window != null && _sourceViewViewModel.Window.IsVisible)
         {
-            var subtitle = GetUpdateSubtitle();
-            var text = subtitle.ToText(SelectedSubtitleFormat);
-            var title = string.Format(Se.Language.General.SourceViewX, (string.IsNullOrEmpty(_subtitleFileName)
-                ? Se.Language.General.Untitled
-                : Path.GetFileName(_subtitleFileName)));
-            vm.Initialize(title, text, SelectedSubtitleFormat, subtitle, oldSelectedIndex);
-        });
-
-        if (result.OkPressed)
-        {
-            SetSubtitles(result.Subtitle);
-            var idx = Math.Min(oldSelectedIndex, Subtitles.Count - 1);
-            SelectAndScrollToRow(idx);
-            _updateAudioVisualizer = true;
+            _sourceViewViewModel.Window.Activate();
+            _sourceViewViewModel.FocusEditor();
+            return;
         }
+
+        var oldSelectedIndex = SelectedSubtitleIndex ?? 0;
+        var subtitle = GetUpdateSubtitle();
+        var text = subtitle.ToText(SelectedSubtitleFormat);
+        var title = string.Format(Se.Language.General.SourceViewX, (string.IsNullOrEmpty(_subtitleFileName)
+            ? Se.Language.General.Untitled
+            : Path.GetFileName(_subtitleFileName)));
+
+        _windowService.ShowWindowInit<SourceViewWindow, SourceViewViewModel>(
+            Window!,
+            configureViewModel: (vm) =>
+            {
+                _sourceViewViewModel = vm;
+                vm.Initialize(title, text, SelectedSubtitleFormat, subtitle, oldSelectedIndex, (newSub, _) =>
+                {
+                    SetSubtitles(newSub);
+                    var idx = Math.Min(oldSelectedIndex, Subtitles.Count - 1);
+                    SelectAndScrollToRow(idx);
+                    _updateAudioVisualizer = true;
+                });
+            },
+            configureWindow: (window) =>
+            {
+                window.Closed += (_, _) =>
+                {
+                    if (_sourceViewViewModel?.Window == window)
+                    {
+                        _sourceViewViewModel = null;
+                    }
+                };
+            });
     }
 
     [RelayCommand]

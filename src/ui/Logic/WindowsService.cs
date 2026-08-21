@@ -40,6 +40,16 @@ namespace Nikse.SubtitleEdit.Logic
             where TViewModel : class;
 
         /// <summary>
+        /// Shows a window of type T with a specified ViewModel type, configuring ViewModel before Window creation.
+        /// </summary>
+        TViewModel ShowWindowInit<TWindow, TViewModel>(
+            Window owner,
+            Action<TViewModel>? configureViewModel = null,
+            Action<TWindow>? configureWindow = null)
+            where TWindow : Window
+            where TViewModel : class;
+
+        /// <summary>
         /// Shows a window of type T with a specified ViewModel type as an independent top-level
         /// window (no owner). Use this for windows that should appear in the OS Alt+Tab list
         /// independently and not be grouped with the main window — e.g. the undocked video player
@@ -127,6 +137,36 @@ namespace Nikse.SubtitleEdit.Logic
             window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
             // Must run before Show() - see the note in ShowWindow<T>. (#12665)
+            ApplyRightToLeftSettings(window);
+            UiTheme.ApplyScaleToWindow(window);
+
+            window.Show(owner);
+            window.Focus();
+
+            return viewModel;
+        }
+
+        /// <inheritdoc />
+        public TViewModel ShowWindowInit<TWindow, TViewModel>(
+            Window owner,
+            Action<TViewModel>? configureViewModel = null,
+            Action<TWindow>? configureWindow = null)
+            where TWindow : Window
+            where TViewModel : class
+        {
+            var viewModel = _serviceProvider.GetRequiredService<TViewModel>();
+            configureViewModel?.Invoke(viewModel);
+
+            var w = Activator.CreateInstance(typeof(TWindow), viewModel);
+            if (w == null)
+            {
+                throw new InvalidOperationException($"Failed to create window of type {typeof(TWindow).Name} with constructor param {typeof(TViewModel).Name}");
+            }
+
+            var window = (TWindow)w;
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            configureWindow?.Invoke(window);
+
             ApplyRightToLeftSettings(window);
             UiTheme.ApplyScaleToWindow(window);
 

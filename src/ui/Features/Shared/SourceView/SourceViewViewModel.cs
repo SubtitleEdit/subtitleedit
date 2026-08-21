@@ -113,16 +113,20 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
         }
     }
 
+    private Action<Subtitle, int>? _onSave;
+
     internal void Initialize(
         string title,
         string text,
         SubtitleFormat subtitleFormat,
         Subtitle subtitle,
-        int selectedParagraphIndex)
+        int selectedParagraphIndex,
+        Action<Subtitle, int>? onSave = null)
     {
         Title = title;
         Text = text;
         _subtitleFormat = subtitleFormat;
+        _onSave = onSave;
         _initialCaretIndex = FindSelectedParagraphCaretIndex(text, subtitle, subtitleFormat, selectedParagraphIndex);
 
         // The editor only lays out the lines it shows, so even a very large source opens fast -
@@ -656,6 +660,7 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
             Subtitle.Paragraphs.Clear();
             Subtitle.Paragraphs.AddRange(subtitle.Paragraphs);
             OkPressed = true;
+            _onSave?.Invoke(subtitle, _initialCaretIndex);
             Window?.Close();
             return;
         }
@@ -666,6 +671,7 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
             Subtitle.Paragraphs.Clear();
             Subtitle.Paragraphs.AddRange(subtitle.Paragraphs);
             OkPressed = true;
+            _onSave?.Invoke(subtitle, _initialCaretIndex);
             Window?.Close();
             return;
         }
