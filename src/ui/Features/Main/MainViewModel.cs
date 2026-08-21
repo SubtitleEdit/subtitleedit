@@ -546,6 +546,7 @@ public partial class MainViewModel :
     Control? _replacePreviousFocus;
     bool _replaceClosingProgrammatically;
     AdjustAllTimesViewModel? _adjustAllTimesViewModel;
+    SourceViewViewModel? _sourceViewViewModel;
 
     private static Color _errorColor = Se.Settings.General.ErrorColor.FromHexToColor();
 
@@ -1620,26 +1621,40 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
-    private async Task ShowSourceView()
+    private void ShowSourceView()
     {
-        var oldSelectedIndex = SelectedSubtitleIndex ?? 0;
-        var result = await ShowDialogAsync<SourceViewWindow, SourceViewViewModel>(vm =>
+        if (Window == null)
         {
+            return;
+        }
+
+        if (_sourceViewViewModel != null && _sourceViewViewModel.Window != null && _sourceViewViewModel.Window.IsVisible)
+        {
+            _sourceViewViewModel.Window.Activate();
+            _sourceViewViewModel.FocusEditor();
+            return;
+        }
+
+        var oldSelectedIndex = SelectedSubtitleIndex ?? 0;
+        var result = _windowService.ShowWindow<SourceViewWindow, SourceViewViewModel>(Window, (window, vm) =>
+        {
+            WindowService.KeepTopmostWhileOwnerActive(window, Window);
+            _sourceViewViewModel = vm;
+
             var subtitle = GetUpdateSubtitle();
             var text = subtitle.ToText(SelectedSubtitleFormat);
             var title = string.Format(Se.Language.General.SourceViewX, (string.IsNullOrEmpty(_subtitleFileName)
                 ? Se.Language.General.Untitled
                 : Path.GetFileName(_subtitleFileName)));
             vm.Initialize(title, text, SelectedSubtitleFormat, subtitle, oldSelectedIndex);
+            vm.OnSaveSubtitle = savedSubtitle =>
+            {
+                SetSubtitles(savedSubtitle);
+                var idx = Math.Min(oldSelectedIndex, Subtitles.Count - 1);
+                SelectAndScrollToRow(idx);
+                _updateAudioVisualizer = true;
+            };
         });
-
-        if (result.OkPressed)
-        {
-            SetSubtitles(result.Subtitle);
-            var idx = Math.Min(oldSelectedIndex, Subtitles.Count - 1);
-            SelectAndScrollToRow(idx);
-            _updateAudioVisualizer = true;
-        }
     }
 
     [RelayCommand]
@@ -2524,6 +2539,12 @@ public partial class MainViewModel :
             {
                 _adjustAllTimesViewModel = null;
             }
+        }
+
+        if (_sourceViewViewModel != null)
+        {
+            _sourceViewViewModel.Window?.Close();
+            _sourceViewViewModel = null;
         }
 
         var vp = GetVideoPlayerControl();

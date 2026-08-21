@@ -44,6 +44,7 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
 
     public bool OkPressed { get; private set; }
     public Subtitle Subtitle { get; private set; }
+    public Action<Subtitle>? OnSaveSubtitle { get; set; }
 
     public SubtitleFormat _subtitleFormat { get; private set; }
     public ITextBoxWrapper SourceViewTextBox { get; set; }
@@ -656,6 +657,7 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
             Subtitle.Paragraphs.Clear();
             Subtitle.Paragraphs.AddRange(subtitle.Paragraphs);
             OkPressed = true;
+            OnSaveSubtitle?.Invoke(Subtitle);
             Window?.Close();
             return;
         }
@@ -666,6 +668,7 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
             Subtitle.Paragraphs.Clear();
             Subtitle.Paragraphs.AddRange(subtitle.Paragraphs);
             OkPressed = true;
+            OnSaveSubtitle?.Invoke(Subtitle);
             Window?.Close();
             return;
         }
