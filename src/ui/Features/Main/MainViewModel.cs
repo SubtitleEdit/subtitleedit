@@ -672,6 +672,7 @@ public partial class MainViewModel :
     private System.Timers.Timer _dropDownFormatsSearchTimer = new System.Timers.Timer(1000);
     private PlaySelectionItem? _playSelectionItem;
     private int _pendingScrollIndex = -1;
+    private SubtitleLineViewModel? _pendingScrollItem;
     private SubtitleLineViewModel? _pendingScrollSubtitle = null;
     private readonly Lock _scrollLock = new();
     private bool _changingFormatProgrammatically;
@@ -2976,6 +2977,45 @@ public partial class MainViewModel :
             Renumber();
             _updateAudioVisualizer = true;
         }
+    }
+
+    /// <summary>
+    /// The working row before <paramref name="index"/>, skipping the display-only reference rows a
+    /// mismatched original adds to the grid. Timing commands that look at "the previous line"
+    /// (extend previous end to this start, snap to shot change, keep-gap nudges...) mean the
+    /// previous line of the subtitle being edited - not a line of the original the user cannot
+    /// edit (#13962).
+    /// </summary>
+    private SubtitleLineViewModel? GetPreviousWorkingRow(int index)
+    {
+        for (var i = Math.Min(index, Subtitles.Count) - 1; i >= 0; i--)
+        {
+            if (!Subtitles[i].IsReferenceOnly)
+            {
+                return Subtitles[i];
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>The working row after <paramref name="index"/>; see <see cref="GetPreviousWorkingRow"/>.</summary>
+    private SubtitleLineViewModel? GetNextWorkingRow(int index)
+    {
+        if (index < 0)
+        {
+            return null;
+        }
+
+        for (var i = index + 1; i < Subtitles.Count; i++)
+        {
+            if (!Subtitles[i].IsReferenceOnly)
+            {
+                return Subtitles[i];
+            }
+        }
+
+        return null;
     }
 
     /// <summary>
@@ -5339,7 +5379,7 @@ public partial class MainViewModel :
                 continue;
             }
 
-            var nextSubtitle = Subtitles.GetOrNull(idx + 1);
+            var nextSubtitle = GetNextWorkingRow(idx);
             var charCount = selectedLine.Text?.Length ?? 0;
 
             var optimalDuration = TimeSpan.FromSeconds(charCount / Se.Settings.General.SubtitleOptimalCharactersPerSeconds);
@@ -5406,7 +5446,7 @@ public partial class MainViewModel :
 
             var minEndTime = TimeSpan.FromMilliseconds(selectedLine.StartTime.TotalMilliseconds + Se.Settings.General.SubtitleMinimumDisplayMilliseconds);
             var maxEndTime = TimeSpan.FromMilliseconds(selectedLine.StartTime.TotalMilliseconds + Se.Settings.General.SubtitleMaximumDisplayMilliseconds);
-            var nextSubtitle = Subtitles.GetOrNull(idx + 1);
+            var nextSubtitle = GetNextWorkingRow(idx);
             if (nextSubtitle != null)
             {
                 var gapBound = TimeSpan.FromMilliseconds(nextSubtitle.StartTime.TotalMilliseconds - Se.Settings.General.MinimumBetweenLines.GetMilliseconds());
@@ -9824,7 +9864,7 @@ public partial class MainViewModel :
         foreach (var line in selectedLines)
         {
             var idx = Subtitles.IndexOf(line);
-            var next = Subtitles.GetOrNull(idx + 1);
+            var next = GetNextWorkingRow(idx);
 
             var newEndMs = ShotChangesHelper.GetExtendedEndMs(
                 AudioVisualizer.ShotChanges,
@@ -9867,8 +9907,8 @@ public partial class MainViewModel :
         foreach (var line in selectedLines)
         {
             var idx = Subtitles.IndexOf(line);
-            var prev = Subtitles.GetOrNull(idx - 1);
-            var next = Subtitles.GetOrNull(idx + 1);
+            var prev = GetPreviousWorkingRow(idx);
+            var next = GetNextWorkingRow(idx);
 
             var nearestStartShotChange = AudioVisualizer.ShotChanges
                 .OrderBy(s => Math.Abs(s - line.StartTime.TotalSeconds))
@@ -9954,7 +9994,7 @@ public partial class MainViewModel :
         foreach (var line in selectedLines)
         {
             var idx = Subtitles.IndexOf(line);
-            var prev = Subtitles.GetOrNull(idx - 1);
+            var prev = GetPreviousWorkingRow(idx);
 
             var newStartMs = ShotChangesHelper.GetExtendedStartMs(
                 AudioVisualizer.ShotChanges,
@@ -10135,7 +10175,7 @@ public partial class MainViewModel :
                 }
 
                 var newStartMs = newInCueMs;
-                var prev = Subtitles.GetOrNull(idx - 1);
+                var prev = GetPreviousWorkingRow(idx);
                 if (prev != null)
                 {
                     double newPreviousEndMs;
@@ -10189,7 +10229,7 @@ public partial class MainViewModel :
                 }
 
                 var newEndMs = newOutCueMs;
-                var next = Subtitles.GetOrNull(idx + 1);
+                var next = GetNextWorkingRow(idx);
                 if (next != null)
                 {
                     double newNextStartMs;
@@ -12407,7 +12447,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void MergeWithLineAfterAsDialog()
     {
-        RunWithoutChangeDetection(() =>
+        RunWithoutChangeDetection(() => WithoutReferenceOnlyRows(() =>
         {
             var selected = SelectedSubtitle;
             if (selected == null)
@@ -12424,15 +12464,15 @@ public partial class MainViewModel :
 
             _mergeManager.MergeSelectedLinesAsDialog(Subtitles, new List<SubtitleLineViewModel> { selected, next });
             Renumber();
-            SelectAndScrollToRow(index);
+            SelectAndScrollToRow(selected);
             _updateAudioVisualizer = true;
-        });
+        }));
     }
 
     [RelayCommand]
     private void MergeWithLineBeforeAsDialog()
     {
-        RunWithoutChangeDetection(() =>
+        RunWithoutChangeDetection(() => WithoutReferenceOnlyRows(() =>
         {
             var selected = SelectedSubtitle;
             if (selected == null)
@@ -12449,9 +12489,9 @@ public partial class MainViewModel :
             var prev = Subtitles[index - 1];
             _mergeManager.MergeSelectedLinesAsDialog(Subtitles, new List<SubtitleLineViewModel> { prev, selected });
             Renumber();
-            SelectAndScrollToRow(index - 1);
+            SelectAndScrollToRow(prev);
             _updateAudioVisualizer = true;
-        });
+        }));
     }
 
     [RelayCommand]
@@ -12593,7 +12633,7 @@ public partial class MainViewModel :
         // is preserved. Otherwise SE 4's behavior would either collapse the gap
         // (moving back) or be clamped at the standard gap (moving forward).
         var idx = SelectedSubtitleIndex ?? -1;
-        var prev = idx > 0 ? Subtitles[idx - 1] : null;
+        var prev = GetPreviousWorkingRow(idx);
         var prevGapMs = 0.0;
         var prevIsClose = false;
         var oneFrameMsStart = FramesToMilliseconds(1);
@@ -12645,7 +12685,7 @@ public partial class MainViewModel :
 
         // KeepGapNext variant: symmetric counterpart to KeepGapPrev above.
         var idx = SelectedSubtitleIndex ?? -1;
-        var next = idx >= 0 && idx + 1 < Subtitles.Count ? Subtitles[idx + 1] : null;
+        var next = GetNextWorkingRow(idx);
         var nextGapMs = 0.0;
         var nextIsClose = false;
         var oneFrameMsEnd = FramesToMilliseconds(1);
@@ -15202,7 +15242,7 @@ public partial class MainViewModel :
             new SubtitleLineViewModel(new Paragraph(string.Empty, startMs, endMs), SelectedSubtitleFormat);
         var idx = _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
         SetDefaultAssaStyleForNewParagraph(newParagraph, idx);
-        var next = Subtitles.GetOrNull(idx + 1);
+        var next = GetNextWorkingRow(idx);
         if (next != null)
         {
             if (next.StartTime.TotalMilliseconds < endMs)
@@ -16128,7 +16168,7 @@ public partial class MainViewModel :
         {
             var idx = _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
             SetDefaultAssaStyleForNewParagraph(newParagraph, idx);
-            var next = Subtitles.GetOrNull(idx + 1);
+            var next = GetNextWorkingRow(idx);
             if (next != null)
             {
                 if (next.StartTime.TotalMilliseconds < endMs && next.StartTime.TotalMilliseconds > newParagraph.StartTime.TotalMilliseconds + 200)
@@ -16170,7 +16210,7 @@ public partial class MainViewModel :
         {
             var idx = _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
             SetDefaultAssaStyleForNewParagraph(newParagraph, idx);
-            var next = Subtitles.GetOrNull(idx + 1);
+            var next = GetNextWorkingRow(idx);
             if (next != null)
             {
                 if (next.StartTime.TotalMilliseconds < endMs && next.StartTime.TotalMilliseconds > newParagraph.StartTime.TotalMilliseconds + 200)
@@ -16490,7 +16530,7 @@ public partial class MainViewModel :
         {
             var idx = _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
             SetDefaultAssaStyleForNewParagraph(newParagraph, idx);
-            var next = Subtitles.GetOrNull(idx + 1);
+            var next = GetNextWorkingRow(idx);
             if (next != null &&
                 next.StartTime.TotalMilliseconds < endMs &&
                 next.StartTime.TotalMilliseconds > newParagraph.StartTime.TotalMilliseconds + 200)
@@ -16522,7 +16562,7 @@ public partial class MainViewModel :
         }
 
         var idx = Subtitles.IndexOf(s);
-        var next = Subtitles.GetOrNull(idx + 1);
+        var next = GetNextWorkingRow(idx);
         if (next == null)
         {
             return;
@@ -16553,7 +16593,7 @@ public partial class MainViewModel :
         }
 
         var idx = Subtitles.IndexOf(s);
-        var next = Subtitles.GetOrNull(idx + 1);
+        var next = GetNextWorkingRow(idx);
         if (next == null)
         {
             return;
@@ -16586,7 +16626,7 @@ public partial class MainViewModel :
         }
 
         var idx = Subtitles.IndexOf(s);
-        var previous = Subtitles.GetOrNull(idx - 1);
+        var previous = GetPreviousWorkingRow(idx);
         if (previous == null)
         {
             return;
@@ -16790,7 +16830,7 @@ public partial class MainViewModel :
         }
 
         var idx = Subtitles.IndexOf(s);
-        var next = Subtitles.GetOrNull(idx + 1);
+        var next = GetNextWorkingRow(idx);
         if (next == null)
         {
             return;
@@ -16818,7 +16858,7 @@ public partial class MainViewModel :
         }
 
         var idx = Subtitles.IndexOf(s);
-        var next = Subtitles.GetOrNull(idx + 1);
+        var next = GetNextWorkingRow(idx);
         if (next == null)
         {
             return;
@@ -16921,7 +16961,7 @@ public partial class MainViewModel :
         var textBefore = currentText.Substring(0, caret).Trim();
         var textAfter = currentText.Substring(caret).Trim();
 
-        var next = Subtitles.GetOrNull(index + 1);
+        var next = GetNextWorkingRow(index);
         if (next == null)
         {
             RunWithoutChangeDetection(() =>
@@ -16931,7 +16971,7 @@ public partial class MainViewModel :
                 _updateAudioVisualizer = true;
             });
 
-            next = Subtitles.GetOrNull(index + 1);
+            next = GetNextWorkingRow(index);
             if (next == null)
             {
                 return;
@@ -17406,7 +17446,7 @@ public partial class MainViewModel :
                 continue;
             }
 
-            var next = Subtitles.GetOrNull(idx + 1);
+            var next = GetNextWorkingRow(idx);
             if (next == null)
             {
                 continue;
@@ -17428,7 +17468,12 @@ public partial class MainViewModel :
             return;
         }
 
-        var prev = Subtitles[idx.Value - 1];
+        var prev = GetPreviousWorkingRow(idx.Value);
+        if (prev == null)
+        {
+            return;
+        }
+
         prev.EndTime = TimeSpan.FromMilliseconds(s.StartTime.TotalMilliseconds - Se.Settings.General.MinimumBetweenLines.GetMilliseconds());
         _updateAudioVisualizer = true;
     }
@@ -17443,7 +17488,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var next = Subtitles.GetOrNull(idx.Value + 1);
+        var next = GetNextWorkingRow(idx.Value);
         if (next == null)
         {
             return;
@@ -18442,6 +18487,30 @@ public partial class MainViewModel :
             return;
         }
 
+        SelectAndScrollToRow(index, null);
+    }
+
+    /// <summary>
+    /// Selects and scrolls to <paramref name="row"/>, resolving its index only when the
+    /// (posted) scroll actually runs. Use this instead of the index overload whenever the
+    /// collection may still shift between the call and the dispatcher callback - the merge
+    /// commands run with the display-only reference rows detached and get them back (plus a
+    /// new one for the merged-away original line) before the callback, so an index captured
+    /// during the merge landed rows above the merged line (#13962).
+    /// </summary>
+    private void SelectAndScrollToRow(SubtitleLineViewModel row)
+    {
+        var index = Subtitles.IndexOf(row);
+        if (index < 0)
+        {
+            return;
+        }
+
+        SelectAndScrollToRow(index, row);
+    }
+
+    private void SelectAndScrollToRow(int index, SubtitleLineViewModel? row)
+    {
         _shiftSelectAnchorIndex = -1;
         _shiftSelectCurrentIndex = -1;
 
@@ -18454,15 +18523,25 @@ public partial class MainViewModel :
         lock (_scrollLock)
         {
             _pendingScrollIndex = index;
+            _pendingScrollItem = row;
         }
 
         Dispatcher.UIThread.Post(() =>
         {
             int indexToScroll;
+            SubtitleLineViewModel? itemToResolve;
             lock (_scrollLock)
             {
                 indexToScroll = _pendingScrollIndex;
+                itemToResolve = _pendingScrollItem;
                 _pendingScrollIndex = -1;
+                _pendingScrollItem = null;
+            }
+
+            if (itemToResolve != null)
+            {
+                // The row is what matters; its index is only valid now.
+                indexToScroll = Subtitles.IndexOf(itemToResolve);
             }
 
             // Only execute if this is the latest scroll request
@@ -18471,12 +18550,24 @@ public partial class MainViewModel :
                 var itemToScroll = Subtitles[indexToScroll];
                 var rowChanged = !ReferenceEquals(SubtitleGrid.SelectedItem, itemToScroll);
 
-                // Get the offset next to the target first - left to itself the virtualizing panel
-                // walks there row by row on long jumps, which is what made Home (and Find/Go to
-                // line hits near the top) crawl on large files (see PrePositionScroll).
-                TableViewExtras.PrePositionScroll(SubtitleGrid, indexToScroll);
+                // A row that is already on screen needs no scrolling at all: after a delete the
+                // next line becomes current and it was visible right below the deleted one, and
+                // jumping/re-centering the view for it only moves the rows around under the
+                // user. Select it in place and leave the offset where the user put it.
+                var alreadyVisible = TableViewExtras.IsRowFullyVisible(SubtitleGrid, itemToScroll);
+                if (!alreadyVisible)
+                {
+                    // Get the offset next to the target first - left to itself the virtualizing panel
+                    // walks there row by row on long jumps, which is what made Home (and Find/Go to
+                    // line hits near the top) crawl on large files (see PrePositionScroll).
+                    TableViewExtras.PrePositionScroll(SubtitleGrid, indexToScroll);
+                }
+
                 SubtitleGrid.SelectedItem = itemToScroll;
-                SubtitleGrid.ScrollIntoView(itemToScroll);
+                if (!alreadyVisible)
+                {
+                    SubtitleGrid.ScrollIntoView(itemToScroll);
+                }
 
                 // TableView can initialize row 0 as selected when ItemsSource is assigned
                 // without raising SelectionChanged, so after a fresh file open the grid
@@ -18509,12 +18600,15 @@ public partial class MainViewModel :
                     EditTextBoxOriginal.CaretIndex = 0;
                 }
 
-                if (Se.Settings.General.SubtitleGridCenterSelectedRow)
+                if (Se.Settings.General.SubtitleGridCenterSelectedRow && !alreadyVisible)
                 {
                     CenterSelectedRowInSubtitleGrid(itemToScroll);
                 }
                 else
                 {
+                    // Posted after layout, and a no-op when nothing pokes out - so for the
+                    // already-visible case it only catches a row the pending layout (rows
+                    // shifting up after a delete) leaves clipped at an edge.
                     EnsureRowFullyVisibleInSubtitleGrid(itemToScroll);
                 }
 
@@ -23232,7 +23326,7 @@ public partial class MainViewModel :
             };
             _mergeManager.MergeSelectedLines(Subtitles, list, breakMode: MergeManager.BreakMode.Normal, keepEndTime: MergeManager.ShouldKeepEndTime(SelectedSubtitleFormat));
             Renumber();
-            SelectAndScrollToRow(index - 1);
+            SelectAndScrollToRow(previous);
             _updateAudioVisualizer = true;
         }
     }
@@ -23257,7 +23351,7 @@ public partial class MainViewModel :
             };
             _mergeManager.MergeSelectedLines(Subtitles, list, breakMode: MergeManager.BreakMode.KeepBreaks, keepEndTime: MergeManager.ShouldKeepEndTime(SelectedSubtitleFormat));
             Renumber();
-            SelectAndScrollToRow(index - 1);
+            SelectAndScrollToRow(previous);
             _updateAudioVisualizer = true;
         }
     }
@@ -23282,7 +23376,7 @@ public partial class MainViewModel :
             };
             _mergeManager.MergeSelectedLines(Subtitles, list, breakMode: MergeManager.BreakMode.Normal, keepEndTime: MergeManager.ShouldKeepEndTime(SelectedSubtitleFormat));
             Renumber();
-            SelectAndScrollToRow(index);
+            SelectAndScrollToRow(selectedItem);
             _updateAudioVisualizer = true;
         }
     }
@@ -23307,7 +23401,7 @@ public partial class MainViewModel :
             };
             _mergeManager.MergeSelectedLines(Subtitles, list, breakMode: MergeManager.BreakMode.KeepBreaks, keepEndTime: MergeManager.ShouldKeepEndTime(SelectedSubtitleFormat));
             Renumber();
-            SelectAndScrollToRow(index);
+            SelectAndScrollToRow(selectedItem);
         }
     }
 
@@ -23319,13 +23413,13 @@ public partial class MainViewModel :
             return;
         }
 
-        // The merged line always lands at the lowest selected index, so keep the
+        // The merged line always lands in the lowest selected row, so keep the
         // selection there regardless of the order the rows were clicked in.
-        var index = selectedItems.Min(item => Subtitles.IndexOf(item));
+        var first = selectedItems.MinBy(item => Subtitles.IndexOf(item))!;
 
         _mergeManager.MergeSelectedLines(Subtitles, selectedItems, breakMode: breakMode, keepEndTime: MergeManager.ShouldKeepEndTime(SelectedSubtitleFormat));
 
-        SelectAndScrollToRow(index);
+        SelectAndScrollToRow(first);
         Renumber();
     }
 
@@ -23337,9 +23431,9 @@ public partial class MainViewModel :
             return; // only two items can be merged as dialog
         }
 
-        var index = Subtitles.IndexOf(selectedItems[0]);
+        var survivor = selectedItems[0]; // the dialog merge keeps the first selected row
         _mergeManager.MergeSelectedLinesAsDialog(Subtitles, selectedItems);
-        SelectAndScrollToRow(index);
+        SelectAndScrollToRow(survivor);
         Renumber();
     }
 
@@ -26847,7 +26941,7 @@ public partial class MainViewModel :
         }
 
         var neighbor = insertedIndex >= 0
-            ? Subtitles.GetOrNull(insertedIndex - 1) ?? Subtitles.GetOrNull(insertedIndex + 1)
+            ? GetPreviousWorkingRow(insertedIndex) ?? GetNextWorkingRow(insertedIndex)
             : null;
 
         newParagraph.Style = AssaStyleStorageHelper.GetStyleNameForNewParagraph(_subtitle, SelectedSubtitleFormat, neighbor?.Style);
