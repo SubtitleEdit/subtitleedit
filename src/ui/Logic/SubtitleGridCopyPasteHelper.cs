@@ -26,25 +26,6 @@ internal static class SubtitleGridCopyPasteHelper
         await ClipboardHelper.SetTextAsync(window, text);
     }
 
-    internal static async Task Cut(Window window, ObservableCollection<SubtitleLineViewModel> subtitles, List<SubtitleLineViewModel> selectedItems, SubtitleFormat subtitleFormat, Subtitle sourceSubtitle)
-    {
-        var subtitle = new Subtitle();
-        subtitle.Header = sourceSubtitle.Header;
-        subtitle.Footer = sourceSubtitle.Footer;
-        foreach (var item in selectedItems)
-        {
-            subtitle.Paragraphs.Add(item.ToParagraph(subtitleFormat));
-        }
-
-        var text = GetClipboardText(subtitleFormat, subtitle);
-        await ClipboardHelper.SetTextAsync(window, text);
-
-        foreach (var item in selectedItems)
-        {
-            subtitles.Remove(item);
-        }
-    }
-
     // When copying ASSA/SSA lines, only the event lines ("Dialogue:"/"Comment:") belong on the
     // clipboard: Aegisub's paste interprets every other clipboard line (the [Script Info] /
     // [V4+ Styles] file header) as a plain-text subtitle line, so the file headers would be
