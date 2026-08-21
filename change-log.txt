@@ -3,6 +3,35 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-beta20 (21st of August 2026)
+
+* Add "Go to sub position and pause" to the video shortcuts - thx BBB2K
+* Add a teletext color picker with a "No color" option for EBU STL - thx Triathlon-rally
+* Add the minimum gap frame rate calculator from SE 4 - thx m0ck69
+* Add the SE 4 "toggle custom tags" and recalculate-duration shortcuts - thx m0ck69
+* Layout 10: put the edit box under the waveform like SE 4/Aegisub - thx Surlime
+* Let the preview subtitle use the letterbox bars - thx m0ck69
+* Keep the chosen languages when the translate engine changes - thx GrampaWildWilly
+* Apply new waveform colors without restarting SE - thx m0ck69
+* Retry a Crisp ASR clip without VAD when it comes back empty - thx Davanix
+* Explain the cuBLAS compute type failure and offer the fix - thx tomelephant-git
+* Smooth the waveform/video cursor and take mpv work off the UI thread
+* Teletext/EBU STL: preview follows row changes, header round-trip, TS charset crash/leak fixes, honest TT column
+* Hide burn-in codecs the bundled ffmpeg lacks (Flatpak) - thx zbcoding
+* Keep the settings column out of the video generating progress bar row - thx zbcoding
+* Docs: add the chapters page, rebuild the settings page, refresh the engine/format/shortcut lists
+* Update CrispEmbed to v0.17.9
+* Update Italian translation - thx bovirus
+* Perf: vectorize the OCR bitmap primitives and the spectrogram pixel write
+* Fix Whisper XXL failing to load on glibc 2.41+ (Fedora 42, Arch, Ubuntu 25.10) - thx zbcoding
+* Fix the grid color guard dropping legible colors - thx St0rmXtr00per
+* Fix the position slider jumping while dragging during playback - thx Davanix
+* Fix clipboard managers failing to paste into text boxes on Windows
+* Fix a working Crisp ASR build not being downloaded on Intel Macs - thx tolikdgan
+* Fix update-metainfo-version.sh flattening the AppStream release history, and re-pin the Flathub manifest to v5.1.0 - thx CaptechOmar
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-beta19 (20th of August 2026)
 
 * Add a Teletext alignment dialog, a TT grid column, and better EBU STL Teletext handling - thx Triathlon-rally
