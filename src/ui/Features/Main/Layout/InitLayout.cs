@@ -847,7 +847,9 @@ public static partial class InitLayout
         {
             RowDefinitions =
             {
-                new RowDefinition(GridLength.Star),
+                // The floor keeps the edit box splitter from dragging the waveform away to
+                // nothing, leaving no handle to drag back (same reason as the grid's floor).
+                new RowDefinition(GridLength.Star) { MinHeight = 45 },
                 new RowDefinition(GridLength.Auto),
             }
         };
@@ -863,6 +865,7 @@ public static partial class InitLayout
 
         Grid.SetRow(editSection, 1);
         rightGrid.Children.Add(editSection);
+        InitListViewAndEditBox.AttachDetachedEditBoxSplitter(rightGrid, editSection);
 
         var nestedRight = new Border
         {

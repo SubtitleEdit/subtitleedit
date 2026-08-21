@@ -41,6 +41,14 @@ public class Layout10EditBoxPlacementTests
             var waveformColumn = vm.AudioVisualizer!.GetLogicalAncestors().OfType<Border>()
                 .First(b => Grid.GetColumn(b) == 2 && b.GetLogicalParent() is Grid g && g.ColumnDefinitions.Count == 3);
             Assert.Contains(waveformColumn, editGrid.GetLogicalAncestors());
+
+            // The waveform/edit box boundary is resizable, and the min-height floors keep both
+            // sides recoverable after a drag.
+            var editSection = Assert.IsType<Grid>(editGrid.GetLogicalParent());
+            var rightGrid = Assert.IsType<Grid>(editSection.GetLogicalParent());
+            Assert.Contains(rightGrid.Children, c => c is GridSplitter);
+            Assert.True(rightGrid.RowDefinitions[0].MinHeight > 0);
+            Assert.True(rightGrid.RowDefinitions[1].MinHeight > 0);
         }
         finally
         {

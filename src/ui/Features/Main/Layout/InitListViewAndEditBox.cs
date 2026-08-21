@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -1917,6 +1918,30 @@ public static partial class InitListViewAndEditBox
         });
 
         return mainGrid;
+    }
+
+    /// <summary>
+    /// Adds the vertical-resize splitter for a detached edit section (layout 10: waveform in
+    /// row 0, edit box in row 1 of <paramref name="hostGrid"/>). Same overlay-splitter and
+    /// minimum-height tracking as the docked layout, so the text box cannot be dragged small
+    /// enough to overpaint its labels (#10271).
+    /// </summary>
+    internal static void AttachDetachedEditBoxSplitter(Grid hostGrid, Grid editSection)
+    {
+        hostGrid.RowDefinitions[1].MinHeight = EditGridMinimumHeight + EditGridMargin * 2;
+
+        var editBoxSplitter = new GridSplitter
+        {
+            Height = UiUtil.SplitterWidthOrHeight,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Top,
+            Margin = new Thickness(0, -UiUtil.SplitterWidthOrHeight / 2.0, 0, 0)
+        };
+        Grid.SetRow(editBoxSplitter, 1);
+        hostGrid.Children.Add(editBoxSplitter);
+
+        var textEditGrid = editSection.Children.OfType<Grid>().First(g => g.Name == "SubtitleTextEditGrid");
+        TrackEditSectionMinimumHeight(hostGrid, textEditGrid);
     }
 
     // Stable keys (DataGridColumn.Tag) used to snapshot/restore subtitle grid column
