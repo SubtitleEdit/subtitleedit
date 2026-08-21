@@ -1457,7 +1457,21 @@ public class AudioVisualizer : Control
                 // (previous and next are already null if _isShiftDown or Se.Settings.Waveform.AllowOverlap)
                 bool allowOverlap = (previous == null && next == null) || alreadyOverlapping;
 
-                newStart = SnapToFrame(newStart);
+                // SE4 parity: a whole-paragraph drag snaps to shot changes too, not just an edge
+                // resize (issue #13953). Whichever cue is captured first wins, and the other cue
+                // moves with it so the duration is preserved. Frame snapping only applies when no
+                // cut captured the paragraph, exactly like the resize branches below.
+                var snappedWholeStart = TrySnapInCueToShotChange(newStart);
+                if (snappedWholeStart == null)
+                {
+                    var snappedWholeEnd = TrySnapOutCueToShotChange(newStart + _originalDurationSeconds);
+                    if (snappedWholeEnd != null)
+                    {
+                        snappedWholeStart = snappedWholeEnd.Value - _originalDurationSeconds;
+                    }
+                }
+
+                newStart = snappedWholeStart ?? SnapToFrame(newStart);
 
                 if (!allowOverlap && (previous != null || next != null))
                 {
@@ -1562,21 +1576,13 @@ public class AudioVisualizer : Control
                     newStart = 0;
                 }
 
-                var snappedToShotLeft = false;
-                if (SnapToShotChanges && !_isShiftDown && _shotChanges.Count > 0)
+                var snappedStartSeconds = TrySnapInCueToShotChange(newStart);
+                if (snappedStartSeconds != null)
                 {
-                    // ClosestTo directly (binary search) - GetClosestShotChange only wraps it
-                    // behind a TimeCode, which is a class, i.e. one allocation per pointer move.
-                    var nearest = _shotChanges.ClosestTo(newStart);
-                    var snapSeconds = GetInCueSnapSeconds();
-                    if (nearest != newStart && Math.Abs(newStart - nearest) < snapSeconds)
-                    {
-                        newStart = nearest;
-                        snappedToShotLeft = true;
-                    }
+                    newStart = snappedStartSeconds.Value;
                 }
 
-                if (!snappedToShotLeft)
+                if (snappedStartSeconds == null)
                 {
                     newStart = SnapToFrame(newStart);
                 }
@@ -1596,24 +1602,13 @@ public class AudioVisualizer : Control
             case InteractionMode.ResizingRight:
                 newEnd = _originalEndSeconds + dragDeltaSeconds;
 
-                var snappedToShotRight = false;
-                if (SnapToShotChanges && !_isShiftDown && _shotChanges.Count > 0)
+                var snappedEndSeconds = TrySnapOutCueToShotChange(newEnd);
+                if (snappedEndSeconds != null)
                 {
-                    // OUT cues conventionally land one frame BEFORE the shot change so they
-                    // don't bleed visually onto the next shot.
-                    var fps = Se.Settings.General.CurrentFrameRate;
-                    var oneFrameSeconds = fps >= 1 ? 1.0 / fps : 0.0;
-                    // ClosestTo directly - see the ResizingLeft branch.
-                    var nearest = _shotChanges.ClosestTo(newEnd);
-                    var snapSeconds = GetOutCueSnapSeconds();
-                    if (nearest != newEnd && Math.Abs(newEnd - nearest + oneFrameSeconds) < snapSeconds)
-                    {
-                        newEnd = nearest - oneFrameSeconds;
-                        snappedToShotRight = true;
-                    }
+                    newEnd = snappedEndSeconds.Value;
                 }
 
-                if (!snappedToShotRight)
+                if (snappedEndSeconds == null)
                 {
                     newEnd = SnapToFrame(newEnd);
                 }
@@ -1702,6 +1697,58 @@ public class AudioVisualizer : Control
 
         frameDur = 1.0 / fps;
         return true;
+    }
+
+    /// <summary>
+    /// Where an IN cue dragged to <paramref name="seconds"/> should land if a shot change is close
+    /// enough to capture it, or null when none is. In cues land exactly on the cut.
+    /// <para>
+    /// Shared by every drag interaction that moves an in cue - resizing the left edge and moving a
+    /// whole paragraph - so the same grab lands on the same time whichever way the user does it
+    /// (issue #13953).
+    /// </para>
+    /// </summary>
+    private double? TrySnapInCueToShotChange(double seconds)
+    {
+        if (!SnapToShotChanges || _isShiftDown || _shotChanges.Count == 0)
+        {
+            return null;
+        }
+
+        // ClosestTo directly (binary search) - GetClosestShotChange only wraps it
+        // behind a TimeCode, which is a class, i.e. one allocation per pointer move.
+        var nearest = _shotChanges.ClosestTo(seconds);
+        if (nearest == seconds || Math.Abs(seconds - nearest) >= GetInCueSnapSeconds())
+        {
+            return null;
+        }
+
+        return nearest;
+    }
+
+    /// <summary>
+    /// Where an OUT cue dragged to <paramref name="seconds"/> should land if a shot change is close
+    /// enough to capture it, or null when none is. OUT cues conventionally land one frame BEFORE the
+    /// shot change so they don't bleed visually onto the next shot. <see cref="TrySnapInCueToShotChange"/>
+    /// mirrored.
+    /// </summary>
+    private double? TrySnapOutCueToShotChange(double seconds)
+    {
+        if (!SnapToShotChanges || _isShiftDown || _shotChanges.Count == 0)
+        {
+            return null;
+        }
+
+        var fps = Se.Settings.General.CurrentFrameRate;
+        var oneFrameSeconds = fps >= 1 ? 1.0 / fps : 0.0;
+        // ClosestTo directly - see TrySnapInCueToShotChange.
+        var nearest = _shotChanges.ClosestTo(seconds);
+        if (nearest == seconds || Math.Abs(seconds - nearest + oneFrameSeconds) >= GetOutCueSnapSeconds())
+        {
+            return null;
+        }
+
+        return nearest - oneFrameSeconds;
     }
 
     /// <summary>
