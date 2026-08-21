@@ -1811,9 +1811,51 @@ public partial class AutoTranslateViewModel : ObservableObject
             return;
         }
 
+        // Each engine advertises its own language list, so both combos are rebuilt from the new
+        // engine and a default re-derived from the subtitle. That threw away the languages the
+        // user had just picked - switching engine to compare them silently reset one or both, and
+        // they had to be set again before translating (#13943). Carry the picks across instead;
+        // the re-derived default only stands when the new engine cannot offer the same language.
+        var previousSource = SelectedSourceLanguage;
+        var previousTarget = SelectedTargetLanguage;
+
         SetAutoTranslatorEngine(translator);
         UpdateSourceLanguages(translator);
         UpdateTargetLanguages(translator);
+
+        var restoredSource = FindSameLanguage(previousSource, SourceLanguages);
+        if (restoredSource != null)
+        {
+            SelectedSourceLanguage = restoredSource;
+        }
+
+        var restoredTarget = FindSameLanguage(previousTarget, TargetLanguages);
+        if (restoredTarget != null)
+        {
+            SelectedTargetLanguage = restoredTarget;
+        }
+    }
+
+    /// <summary>
+    /// The entry in <paramref name="languages"/> standing for the same language as
+    /// <paramref name="previous"/>, or null when the engine does not offer it.
+    ///
+    /// Code first, then name: engines do not agree on how a language is spelled. NLLB uses
+    /// "eng_Latn" where Google uses "en", and the LLM engines take English names rather than
+    /// codes - so matching on the code alone would drop the selection between exactly the
+    /// engines a user is most likely to be comparing.
+    /// </summary>
+    private static TranslationPair? FindSameLanguage(TranslationPair? previous, ObservableCollection<TranslationPair> languages)
+    {
+        if (previous == null)
+        {
+            return null;
+        }
+
+        return languages.FirstOrDefault(p => !string.IsNullOrEmpty(p.Code) && p.Code.Equals(previous.Code, StringComparison.OrdinalIgnoreCase))
+               ?? languages.FirstOrDefault(p => !string.IsNullOrEmpty(p.Name) && p.Name.Equals(previous.Name, StringComparison.OrdinalIgnoreCase))
+               ?? languages.FirstOrDefault(p => !string.IsNullOrEmpty(p.TwoLetterIsoLanguageName)
+                                                && p.TwoLetterIsoLanguageName.Equals(previous.TwoLetterIsoLanguageName, StringComparison.OrdinalIgnoreCase));
     }
 
     partial void OnSelectedTargetLanguageChanged(TranslationPair? value)
