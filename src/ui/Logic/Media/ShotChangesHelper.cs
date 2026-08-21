@@ -325,6 +325,86 @@ public class ShotChangesHelper
         return newStartMs;
     }
 
+    /// <summary>
+    /// The end a "snap selected lines' end to previous shot change" should produce, or null when the
+    /// line must be left alone (issue #13948).
+    /// <para>
+    /// Snapping parks the out cue on the cut the line is currently running past, which means:
+    /// </para>
+    /// <list type="number">
+    /// <item>the target is the shot change <b>on or before</b> the end. "On" is generous by just
+    /// under a frame (<paramref name="frameDurationMs"/>), so an end already sitting on a cut snaps
+    /// to that cut instead of skipping a whole shot backwards;</item>
+    /// <item>it lands <paramref name="outCuesGapMs"/> <b>before</b> that cut - the beautify profile's
+    /// out cues gap, the same rule the beautifier and the extend commands use. An out cue exactly on
+    /// the cut is the thing the gap exists to prevent;</item>
+    /// <item>the only veto is a result that would not leave a positive duration. Minimum/maximum
+    /// display duration deliberately do not veto: the user asked for this cue to move, and silently
+    /// doing nothing reads as a dead shortcut.</item>
+    /// </list>
+    /// </summary>
+    public static double? GetSnappedEndMs(
+        List<double> shotChanges,
+        double startMs,
+        double endMs,
+        double outCuesGapMs,
+        double frameDurationMs)
+    {
+        if (shotChanges == null || shotChanges.Count == 0)
+        {
+            return null;
+        }
+
+        var maxDifference = (frameDurationMs - 1) / 1000;
+        var shotChangeSeconds = shotChanges.FirstOnOrBefore(endMs / 1000.0, maxDifference, -1);
+        if (shotChangeSeconds < 0)
+        {
+            return null;
+        }
+
+        var newEndMs = shotChangeSeconds * 1000.0 - outCuesGapMs;
+        if (newEndMs <= startMs)
+        {
+            return null;
+        }
+
+        return newEndMs;
+    }
+
+    /// <summary>
+    /// The start a "snap selected lines' start to next shot change" should produce, or null when the
+    /// line must be left alone - <see cref="GetSnappedEndMs"/> mirrored: the shot change on or after
+    /// the start, plus <paramref name="inCuesGapMs"/> so the in cue lands after the cut rather than
+    /// on it, vetoed only when it would not leave a positive duration.
+    /// </summary>
+    public static double? GetSnappedStartMs(
+        List<double> shotChanges,
+        double startMs,
+        double endMs,
+        double inCuesGapMs,
+        double frameDurationMs)
+    {
+        if (shotChanges == null || shotChanges.Count == 0)
+        {
+            return null;
+        }
+
+        var maxDifference = (frameDurationMs - 1) / 1000;
+        var shotChangeSeconds = shotChanges.FirstOnOrAfter(startMs / 1000.0, maxDifference, -1);
+        if (shotChangeSeconds < 0)
+        {
+            return null;
+        }
+
+        var newStartMs = shotChangeSeconds * 1000.0 + inCuesGapMs;
+        if (newStartMs >= endMs)
+        {
+            return null;
+        }
+
+        return newStartMs;
+    }
+
     public static double? GetClosestShotChange(List<double> shotChanges, TimeCode currentTime)
     {
         if (shotChanges == null || shotChanges.Count == 0)
