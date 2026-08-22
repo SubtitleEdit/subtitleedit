@@ -1,7 +1,7 @@
 {
   "title": "SubtitleEdit",
-  "version": "v. 5.2.0-beta20",
-  "translatedBy": "v. 21.08.2026 di bovirus e GitGianluc",
+  "version": "v. 5.2.0-beta21",
+  "translatedBy": "v. 22.08.2026 di bovirus e GitGianluc",
   "cultureName": "it-IT",
   "general": {
     "abort": "Annulla",
@@ -1799,6 +1799,7 @@
       "addFolderDotDotDot": "Aggiungi cartella...",
       "selectFolderToConvert": "Seleziona la cartella con i file da convertire",
       "includeSubfolders": "Quando aggiungi una cartella includi le sottocartelle",
+      "keepSourceFileTimestamp": "Usa data/ora file sorgente per i file destinazione",
       "scanningFolderX": "Scansione {0}..."
     },
     "changeCasing": {
@@ -2697,6 +2698,10 @@
       "waveformMouseWheelStepMilliseconds": "{0} ms",
       "waveformSnapToShotChanges": "Aggancia ai cambi di inquadratura",
       "waveformSnapToFrames": "Aggancia ai fotogrammi",
+      "waveformSnapToShotChangesPixels": "Distanza snap durante trascinamento (pixel)",
+      "waveformSnapToShotChangeStartMaxSeconds": "Salto cambio scena più vicino: distanza iniziale massima (secondi)",
+      "waveformSnapToShotChangeEndMaxSeconds": "Salto cambio scena più vicino: distanza finale massima (secondi)",
+      "waveformSnapToShotChangeSameShotEndMaxSeconds": "Salto cambio scena più vicino: distanza finale massima quando l'inizio e la fine condividono un taglio (secondi)",
       "waveformShotChangesAutoGenerate": "Genera automaticamente cambi inquadratura",
       "waveformTextFontSize": "Dimensione font testo forma d'onda",
       "waveformTextFontBold": "Font testo forma d'onda in grassetto",
@@ -3052,6 +3057,7 @@
       "seekSilenceBack": "Cerca indietro il silenzio",
       "seekSilenceForward": "Cerca il silenzio in avanti",
       "setVideoPositionCurrentSubtitleStart": "Imposta la posizione video all'inizio della riga attuale",
+      "goToSubtitlePositionAndPause": "Vai alla posizione sottotitolo e metti in pausa",
       "setVideoPositionCurrentSubtitleEnd": "Imposta la posizione video alla fine della riga attuale",
       "toggleAudioTracks": "Attiva/disattiva tracce audio",
       "goToNextError": "Vai all'errore successivo",
