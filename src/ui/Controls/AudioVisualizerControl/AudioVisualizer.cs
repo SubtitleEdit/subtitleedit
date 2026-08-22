@@ -4,6 +4,7 @@ using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -1701,11 +1702,18 @@ public class AudioVisualizer : Control
 
     /// <summary>
     /// Where an IN cue dragged to <paramref name="seconds"/> should land if a shot change is close
-    /// enough to capture it, or null when none is. In cues land exactly on the cut.
+    /// enough to capture it, or null when none is. An in cue lands the beautify profile's in cues
+    /// gap <b>after</b> the cut.
     /// <para>
     /// Shared by every drag interaction that moves an in cue - resizing the left edge and moving a
     /// whole paragraph - so the same grab lands on the same time whichever way the user does it
     /// (issue #13953).
+    /// </para>
+    /// <para>
+    /// The gap comes from the same profile the beautifier and the snap-to-shot-change shortcuts use,
+    /// so dragging a cue onto a cut and pressing the shortcut for it land in the same place. It used
+    /// to be hard-coded (exactly on the cut for in cues, one frame before it for out cues), which
+    /// silently ignored a profile configured with a wider gap (issue #13984).
     /// </para>
     /// </summary>
     private double? TrySnapInCueToShotChange(double seconds)
@@ -1718,19 +1726,22 @@ public class AudioVisualizer : Control
         // ClosestTo directly (binary search) - GetClosestShotChange only wraps it
         // behind a TimeCode, which is a class, i.e. one allocation per pointer move.
         var nearest = _shotChanges.ClosestTo(seconds);
-        if (nearest == seconds || Math.Abs(seconds - nearest) >= GetInCueSnapSeconds())
+
+        // Measured to the cut, not to the landing point: the red zones the distance comes from are
+        // defined around the cut, so a larger gap must not drag the whole capture window off it.
+        if (Math.Abs(seconds - nearest) >= GetInCueSnapSeconds())
         {
             return null;
         }
 
-        return nearest;
+        return nearest + TimeCodesBeautifierUtils.GetInCuesGapMs() / TimeCode.BaseUnit;
     }
 
     /// <summary>
     /// Where an OUT cue dragged to <paramref name="seconds"/> should land if a shot change is close
-    /// enough to capture it, or null when none is. OUT cues conventionally land one frame BEFORE the
-    /// shot change so they don't bleed visually onto the next shot. <see cref="TrySnapInCueToShotChange"/>
-    /// mirrored.
+    /// enough to capture it, or null when none is. <see cref="TrySnapInCueToShotChange"/> mirrored:
+    /// an out cue lands the beautify profile's out cues gap <b>before</b> the cut, so it does not
+    /// bleed visually onto the next shot.
     /// </summary>
     private double? TrySnapOutCueToShotChange(double seconds)
     {
@@ -1739,16 +1750,14 @@ public class AudioVisualizer : Control
             return null;
         }
 
-        var fps = Se.Settings.General.CurrentFrameRate;
-        var oneFrameSeconds = fps >= 1 ? 1.0 / fps : 0.0;
         // ClosestTo directly - see TrySnapInCueToShotChange.
         var nearest = _shotChanges.ClosestTo(seconds);
-        if (nearest == seconds || Math.Abs(seconds - nearest + oneFrameSeconds) >= GetOutCueSnapSeconds())
+        if (Math.Abs(seconds - nearest) >= GetOutCueSnapSeconds())
         {
             return null;
         }
 
-        return nearest - oneFrameSeconds;
+        return nearest - TimeCodesBeautifierUtils.GetOutCuesGapMs() / TimeCode.BaseUnit;
     }
 
     /// <summary>
