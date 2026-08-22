@@ -74,7 +74,7 @@ public sealed record DownloadedSubtitleInfo(string FilePath, string LanguageCode
 public class YtDlpDownloadService : IYtDlpDownloadService
 {
     private readonly HttpClient _httpClient;
-    internal const string CurrentVersion = "2026.07.04";
+    internal const string CurrentVersion = "2026.08.19";
     // First-run extraction of the self-extracting yt-dlp bundle (especially
     // yt-dlp_macos) routinely needs more than 5s on slower disks; bumped to 15s
     // so the timeout doesn't masquerade as "version unknown / outdated".
@@ -92,19 +92,19 @@ public class YtDlpDownloadService : IYtDlpDownloadService
     internal static readonly IReadOnlyDictionary<string, IReadOnlyDictionary<string, string>> KnownSha256 =
         new Dictionary<string, IReadOnlyDictionary<string, string>>(StringComparer.Ordinal)
         {
-            ["2026.06.09"] = new Dictionary<string, string>(StringComparer.Ordinal)
-            {
-                ["yt-dlp.exe"] = "3a48cb955d55c8821b60ccbdbbc6f61bc958f2f3d3b7ad5eaf3d83a543293a27",
-                ["yt-dlp_linux"] = "bf8aac79b72287a6d2043074415132558b43743a8f9461a22b0141e90f16ce66",
-                ["yt-dlp_linux_aarch64"] = "cabd246445bdfde0eda0dfe68bbe90354be83f3fdbbf077df11a2ea55f41cdbd",
-                ["yt-dlp_macos"] = "b82c3626952e6c14eaf654cc565866775ffd0b9ffb7021628ac59b42c2f4f244",
-            },
             ["2026.07.04"] = new Dictionary<string, string>(StringComparer.Ordinal)
             {
                 ["yt-dlp.exe"] = "52fe3c26dcf71fbdc85b528589020bb0b8e383155cfa81b64dd447bbe35e24b8",
                 ["yt-dlp_linux"] = "6bbb3d314cde4febe36e5fa1d55462e29c974f63444e707871834f6d8cc210ae",
                 ["yt-dlp_linux_aarch64"] = "b6ce97646773070d7a7ffd6bbbdcaecb47c48483909c54c915bf08a7a9b5e0b1",
                 ["yt-dlp_macos"] = "498bd0dae17855c599d371d68ec5bafc439a9d8640e838be25c765a9792f261b",
+            },
+            ["2026.08.19"] = new Dictionary<string, string>(StringComparer.Ordinal)
+            {
+                ["yt-dlp.exe"] = "66674953fe251b89f4d08c5f0e35e0728679bd67ab3d7d05c0562af101dd3e7a",
+                ["yt-dlp_linux"] = "58162f9bfdc27458ea47bfcb311cf47028f17d8154a8bf7d689861d46399230a",
+                ["yt-dlp_linux_aarch64"] = "b16e4dab368a816cd05d477d698a605a6ae87ccee1c8ffd38fa21d7254141fcc",
+                ["yt-dlp_macos"] = "0f192b7ec147ab6288885d6351d9ab67367640029b4377576ef46dd79cf7b202",
             },
         };
 
