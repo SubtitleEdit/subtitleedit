@@ -543,6 +543,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => "Scenarist Closed Captions";
 
+        public override SubtitleFormatLimits FormatLimits => new SubtitleFormatLimits
+        {
+            MaxCharactersPerLine = MaxCharactersPerLine,
+            MaxLines = 4,
+        };
+
         private static string FixMax4LinesAndMax32CharsPerLine(string text, string language)
         {
             // fix attempt 1

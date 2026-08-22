@@ -313,6 +313,7 @@ public class LanguageSettings
     public string UseFocusedButtonBackgroundColor { get; set; }
     public string FocusedButtonBackgroundColor { get; set; }
     public string ForceCrLfOnSave { get; set; }
+    public string ShowFormatLimitWarning { get; set; }
     public string TextBoxButtonShowAutoBreak { get; set; }
     public string TextBoxButtonShowUnbreak { get; set; }
     public string TextBoxButtonShowItalic { get; set; }
@@ -646,6 +647,7 @@ public class LanguageSettings
         UseFocusedButtonBackgroundColor = "Use focused button background color";
         FocusedButtonBackgroundColor = "Focused button background color";
         ForceCrLfOnSave = "Force CR+LF on save (text subtitle files)";
+        ShowFormatLimitWarning = "Warn on save when lines exceed the format's limits (e.g. SCC 32 chars/line)";
         TextBoxButtonShowAutoBreak = "Text box: show auto-break button";
         TextBoxButtonShowUnbreak = "Text box: show unbreak button";
         TextBoxButtonShowItalic = "Text box: show italic button";

@@ -88,6 +88,12 @@ public class SeGeneral
     public int AutoBackupDeleteAfterDays { get; set; }
     public bool ForceCrLfOnSave { get; set; }
 
+    /// <summary>
+    /// Warn before saving in a format with hard line limits (e.g. SCC's 32 chars x 4 lines) when
+    /// some subtitles exceed them and will be re-wrapped/truncated. Cleared via "Do not show again".
+    /// </summary>
+    public bool ShowFormatLimitWarning { get; set; } = true;
+
     public bool ColorDurationTooShort { get; set; }
     public bool ColorDurationTooLong { get; set; }
     public bool ColorTextTooLong { get; set; }
