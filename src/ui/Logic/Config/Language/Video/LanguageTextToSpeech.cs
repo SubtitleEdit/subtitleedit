@@ -30,6 +30,9 @@ public class LanguageTextToSpeech
     public string ElevenLabsSettingsResetHint { get; set; }
     public string RegenerateAudio { get; set; }
     public string AutoContinuePlaying { get; set; }
+    public string PlayLine { get; set; }
+    public string FitDurationToGeneratedAudio { get; set; }
+    public string ResetTiming { get; set; }
     public string AddingAudioToVideoFileDotDotDot { get; set; }
     public string PreparingMergeDotDotDot { get; set; }
     public string ImportVoiceDotDotDot { get; set; }
@@ -176,6 +179,9 @@ public class LanguageTextToSpeech
         ElevenLabsSettingsResetHint = "Reset ElevenLabs settings to default values";
         RegenerateAudio = "Regenerate audio";
         AutoContinuePlaying = "Auto-continue playing";
+        PlayLine = "Play line";
+        FitDurationToGeneratedAudio = "Fit duration to generated audio";
+        ResetTiming = "Reset timing";
         AddingAudioToVideoFileDotDotDot = "Adding audio to video file...";
         PreparingMergeDotDotDot = "Preparing merge...";
         ImportVoiceDotDotDot = "Import voice...";

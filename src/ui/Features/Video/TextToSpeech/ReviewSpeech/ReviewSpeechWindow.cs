@@ -676,6 +676,57 @@ public class ReviewSpeechWindow : Window
             }
         };
 
+        // Clicking or grabbing a block selects its row (#14000). The control only raises
+        // OnPrimarySingleClicked when something listens to OnVideoPositionChanged, hence the
+        // empty playhead handler. OnDragStarted fires on press so the row is selected before a
+        // move/resize mutates it; OnSelectRequested covers right-click-selects.
+        audioVisualizer.OnVideoPositionChanged += (_, _) => { };
+        audioVisualizer.OnPrimarySingleClicked += (_, e) =>
+        {
+            vm.SelectFromWaveform(e.Paragraph);
+            vm.OnWaveformPositionClicked(e.Seconds);
+        };
+        audioVisualizer.OnDragStarted += (_, e) => vm.SelectFromWaveform(e.Paragraph);
+        audioVisualizer.OnSelectRequested += (_, e) => vm.SelectFromWaveform(e.Paragraph);
+
+        // Generated-clip length bar under each block (green fits / red overrun).
+        audioVisualizer.ParagraphAudioLengthProvider = vm.GetWaveformParagraphAudioLength;
+
+        // Context menu: the row actions from the grid plus the two timing fixes that only make
+        // sense here. The target is the row under the pointer (selected on open), so the items
+        // take it as CommandParameter rather than relying on SelectedLine.
+        var menuPlay = new MenuItem { Header = Se.Language.Video.TextToSpeech.PlayLine, Command = vm.PlayRowCommand };
+        var menuRegenerate = new MenuItem { Header = Se.Language.Video.TextToSpeech.RegenerateAudio, Command = vm.RegenerateAudioCommand };
+        var menuHistory = new MenuItem { Header = Se.Language.General.ShowHistory, Command = vm.ShowHistoryCommand };
+        var menuFit = new MenuItem { Header = Se.Language.Video.TextToSpeech.FitDurationToGeneratedAudio, Command = vm.FitDurationToAudioCommand };
+        var menuReset = new MenuItem { Header = Se.Language.Video.TextToSpeech.ResetTiming, Command = vm.ResetTimingCommand };
+        var flyout = new MenuFlyout();
+        flyout.Items.Add(menuPlay);
+        flyout.Items.Add(menuRegenerate);
+        flyout.Items.Add(menuHistory);
+        flyout.Items.Add(new Separator());
+        flyout.Items.Add(menuFit);
+        flyout.Items.Add(menuReset);
+        audioVisualizer.MenuFlyout = flyout;
+        audioVisualizer.FlyoutMenuOpening += (_, e) =>
+        {
+            var row = vm.SelectRowAtWaveformPosition(e.PositionInSeconds);
+            foreach (var item in new[] { menuPlay, menuRegenerate, menuHistory, menuFit, menuReset })
+            {
+                item.CommandParameter = row;
+                item.IsEnabled = row != null;
+            }
+
+            if (row != null)
+            {
+                menuPlay.IsEnabled = row.IsPlayingEnabled && !row.IsPlaying;
+                menuRegenerate.IsEnabled = vm.IsRegenerateEnabled && row.IsPlayingEnabled;
+                menuHistory.IsEnabled = row.HasHistory;
+                menuFit.IsEnabled = vm.GetGeneratedAudioLengthSeconds(row) > 0 && !audioVisualizer.IsReadOnly;
+                menuReset.IsEnabled = !audioVisualizer.IsReadOnly;
+            }
+        };
+
         return new Border
         {
             Margin = new Thickness(2),
@@ -687,6 +738,12 @@ public class ReviewSpeechWindow : Window
     protected override void OnKeyDown(KeyEventArgs e)
     {
         base.OnKeyDown(e);
+        if (!e.Handled && FocusManager?.GetFocusedElement() is AudioVisualizer && _vm.OnWaveformKeyDown(e))
+        {
+            e.Handled = true;
+            return;
+        }
+
         _vm.OnKeyDown(e);
     }
 

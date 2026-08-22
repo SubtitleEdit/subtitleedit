@@ -518,6 +518,23 @@ public class AudioVisualizer : Control
     public event ParagraphNullableEventHandler? OnPrimaryDoubleClicked;
     public event PositionEventHandler? OnSetStartAndOffsetTheRest;
 
+    /// <summary>
+    /// Optional: seconds of audio that belongs to a paragraph (the TTS review window's generated
+    /// clip). When it returns more than 0, a thin bar is drawn along the bottom of the paragraph
+    /// from its start for that many seconds - green while it fits inside the cue, red for the
+    /// part that runs past the cue's end - so the user sees at a glance which lines need their
+    /// timing fixed (#14000).
+    /// </summary>
+    public Func<SubtitleLineViewModel, double>? ParagraphAudioLengthProvider { get; set; }
+
+    private static readonly IBrush PaintAudioLengthFits = new SolidColorBrush(Color.FromArgb(190, 70, 190, 110));
+    private static readonly IBrush PaintAudioLengthOverrun = new SolidColorBrush(Color.FromArgb(220, 235, 70, 70));
+
+    /// <summary>Raised when a primary-button press lands on an existing paragraph and starts a
+    /// move/resize drag. Lets hosts select the paragraph the user grabbed before the drag
+    /// mutates it (#14000) - a click is delivered via <see cref="OnPrimarySingleClicked"/> instead.</summary>
+    public event ParagraphEventHandler? OnDragStarted;
+
     /// <summary>Raised when the user clicks the empty waveform to generate it on demand
     /// (shown only when auto-generate is off and there are no cached peaks).</summary>
     public event EventHandler? OnGenerateWaveformRequested;
@@ -1215,6 +1232,10 @@ public class AudioVisualizer : Control
         }
 
         _pointerDragActive = _interactionMode != InteractionMode.None;
+        if (_pointerDragActive && _activeParagraph != null)
+        {
+            OnDragStarted?.Invoke(this, new ParagraphEventArgs(_startPointerSeconds, _activeParagraph));
+        }
     }
 
     /// <summary>
@@ -3315,6 +3336,39 @@ public class AudioVisualizer : Control
             }
 
             DrawParagraphFooter(context, paragraph, currentRegionLeft, currentRegionWidth, height, ref renderCtx);
+        }
+
+        DrawParagraphAudioLength(context, paragraph, currentRegionLeft, currentRegionRight, height, ref renderCtx);
+    }
+
+    // Drawn outside the text clip on purpose: the overrun part extends past the right border.
+    private void DrawParagraphAudioLength(DrawingContext context, SubtitleLineViewModel paragraph,
+        double currentRegionLeft, double currentRegionRight, double height, ref RenderContext renderCtx)
+    {
+        var provider = ParagraphAudioLengthProvider;
+        if (provider == null)
+        {
+            return;
+        }
+
+        var audioSeconds = provider(paragraph);
+        if (audioSeconds <= 0)
+        {
+            return;
+        }
+
+        var audioRight = SecondsToXPositionOptimized(paragraph.StartTime.TotalSeconds + audioSeconds - renderCtx.StartPositionSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
+        const double barHeight = 4;
+        var y = height - barHeight - 1;
+        var fitsRight = Math.Min(audioRight, currentRegionRight - 1);
+        if (fitsRight > currentRegionLeft + 1)
+        {
+            context.FillRectangle(PaintAudioLengthFits, new Rect(currentRegionLeft + 1, y, fitsRight - currentRegionLeft - 1, barHeight));
+        }
+
+        if (audioRight > currentRegionRight)
+        {
+            context.FillRectangle(PaintAudioLengthOverrun, new Rect(currentRegionRight - 1, y, audioRight - currentRegionRight + 1, barHeight));
         }
     }
 
