@@ -1567,6 +1567,9 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static int CountTagInText(string text, char tag)
         {
+#if NET8_0_OR_GREATER
+            return text.AsSpan().Count(tag);
+#else
             int count = 0;
             int index = text.IndexOf(tag);
             while (index >= 0)
@@ -1580,6 +1583,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 index = text.IndexOf(tag, index + 1);
             }
             return count;
+#endif
         }
 
         /// <summary>
