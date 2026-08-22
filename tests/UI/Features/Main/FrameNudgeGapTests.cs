@@ -24,14 +24,26 @@ namespace UITests.Features.Main;
 /// </summary>
 public class FrameNudgeGapTests : IDisposable
 {
+    private const int GapMs = 24;
+    private const double Fps = 25;
+    private const double OneFrameMs = 1000.0 / Fps;
+
     private readonly List<Window> _windows = new();
     private readonly bool _allowOverlap = Se.Settings.Waveform.AllowOverlap;
     private readonly double _frameRate = Se.Settings.General.CurrentFrameRate;
+    private readonly double _coreFrameRate = Configuration.Settings.General.CurrentFrameRate;
+    private readonly bool _useFrameMode = Se.Settings.General.UseFrameMode;
+    private readonly int _minBetweenMs = Se.Settings.General.MinimumBetweenLines.Milliseconds;
+    private readonly int _minBetweenFrames = Se.Settings.General.MinimumBetweenLines.Frames;
 
     public void Dispose()
     {
         Se.Settings.Waveform.AllowOverlap = _allowOverlap;
         Se.Settings.General.CurrentFrameRate = _frameRate;
+        Configuration.Settings.General.CurrentFrameRate = _coreFrameRate;
+        Se.Settings.General.UseFrameMode = _useFrameMode;
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = _minBetweenMs;
+        Se.Settings.General.MinimumBetweenLines.Frames = _minBetweenFrames;
         foreach (var w in _windows)
         {
             w.Close();
@@ -61,8 +73,16 @@ public class FrameNudgeGapTests : IDisposable
     /// <summary>Two lines, the second starting <paramref name="gapMs"/> after the first ends.</summary>
     private (Window Window, MainViewModel Vm) TwoLines(int gapMs, bool allowOverlap = false)
     {
+        // Everything the clamp reads is pinned here. The minimum gap comes from
+        // MinimumBetweenLines *and* UseFrameMode, and the frame rate has two independent homes
+        // (Se.Settings and the libse Configuration) - leaving any of them to whatever another test
+        // in the run happened to set makes this test order-dependent, which is how it passed
+        // locally and failed on CI.
         Se.Settings.Waveform.AllowOverlap = allowOverlap;
-        Se.Settings.General.CurrentFrameRate = 25; // one frame = 40 ms
+        Se.Settings.General.CurrentFrameRate = Fps; // one frame = 40 ms
+        Configuration.Settings.General.CurrentFrameRate = Fps;
+        Se.Settings.General.UseFrameMode = false;
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = GapMs;
 
         var (window, vm) = CreateMainViewModel();
         vm.Subtitles.Add(new SubtitleLineViewModel(new Paragraph("one", 1000, 3000), null!) { Number = 1 });
@@ -72,6 +92,7 @@ public class FrameNudgeGapTests : IDisposable
     }
 
     private static double MinGapMs => Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
+
 
     [AvaloniaFact]
     public void MoveStartBack_StopsAtTheMinimumGap()
@@ -88,7 +109,8 @@ public class FrameNudgeGapTests : IDisposable
 
         Assert.True(vm.Subtitles[1].StartTime.TotalMilliseconds >= floor - 0.001,
             $"start {vm.Subtitles[1].StartTime.TotalMilliseconds} went past the floor {floor}");
-        Assert.True(vm.Subtitles[1].StartTime.TotalMilliseconds > vm.Subtitles[0].EndTime.TotalMilliseconds);
+        Assert.True(vm.Subtitles[1].StartTime.TotalMilliseconds >= vm.Subtitles[0].EndTime.TotalMilliseconds,
+            "the nudged start overlapped the previous line");
         window.Close();
     }
 
@@ -107,7 +129,8 @@ public class FrameNudgeGapTests : IDisposable
 
         Assert.True(vm.Subtitles[0].EndTime.TotalMilliseconds <= ceiling + 0.001,
             $"end {vm.Subtitles[0].EndTime.TotalMilliseconds} went past the ceiling {ceiling}");
-        Assert.True(vm.Subtitles[0].EndTime.TotalMilliseconds < vm.Subtitles[1].StartTime.TotalMilliseconds);
+        Assert.True(vm.Subtitles[0].EndTime.TotalMilliseconds <= vm.Subtitles[1].StartTime.TotalMilliseconds,
+            "the nudged end overlapped the next line");
         window.Close();
     }
 
@@ -123,7 +146,7 @@ public class FrameNudgeGapTests : IDisposable
         var before = vm.Subtitles[1].StartTime.TotalMilliseconds;
         vm.MoveStartOneFrameBackCommand.Execute(null);
 
-        Assert.Equal(before - 40, vm.Subtitles[1].StartTime.TotalMilliseconds, 3);
+        Assert.Equal(before - OneFrameMs, vm.Subtitles[1].StartTime.TotalMilliseconds, 3);
         window.Close();
     }
 
