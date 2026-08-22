@@ -2816,6 +2816,20 @@ public partial class MainViewModel :
 
         var original = _subtitleOriginal;
         _reapplyingReadOnlyReference = true;
+
+        // The rebuild below rewrites the row collection one row at a time - display-only rows are
+        // removed, re-inserted and glided back into order. Every one of those raises a collection
+        // change, the virtualizing panel re-estimates its extent, and TableViewScrollAnchor reads
+        // that as "the panel moved under the view" and restores the anchor: PrePositionScroll, a
+        // ScrollIntoView and up to three synchronous UpdateLayout passes, each time. A merge that
+        // brings a handful of reference rows back therefore paid for that handful of full restores
+        // in a row, which is the slow scroll up and back down after merging (issues #13962,
+        // #14003). Suspending the anchor for the whole rebuild leaves it following the view - it
+        // just stops moving it - so the burst costs one settle at the end instead of N.
+        using var anchorSuspended = SubtitleGrid is { } grid
+            ? TableViewScrollAnchor.GetFor(grid)?.Suspend()
+            : null;
+
         try
         {
             // Which original line each id belongs to. Ids are unique per file; claimed lines are
