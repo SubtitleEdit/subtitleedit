@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -14,6 +14,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
+using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -62,6 +63,11 @@ public partial class SetSyncPointViewModel : ObservableObject
     private readonly IVideoPreviewSubtitle _previewSubtitle;
 
     private string? _videoFileName;
+
+    // The audio track picked in the main window's Video > Audio tracks. A brand new mpv instance
+    // starts on the file's default track, so it has to be re-applied here or a dubbed track plays
+    // while the user syncs against the original (issue #13995).
+    private int _audioTrackId = -1;
     private DispatcherTimer _positionTimer = new DispatcherTimer();
     private List<SubtitleLineViewModel> _subtitleLines = new List<SubtitleLineViewModel>();
     private VideoPreviewSubtitleContext _previewContext = VideoPreviewSubtitleContext.Default;
@@ -95,8 +101,10 @@ public partial class SetSyncPointViewModel : ObservableObject
         string? videoFileName,
         string? subtitleFileName,
         VideoPreviewSubtitleContext previewContext,
-        AudioVisualizer? audioVisualizer)
+        AudioVisualizer? audioVisualizer,
+        int audioTrackId = -1)
     {
+        _audioTrackId = audioTrackId;
         Paragraphs = new ObservableCollection<SubtitleDisplayItem>(paragraphs.Select(p => new SubtitleDisplayItem(p)));
         _subtitleLines = paragraphs;
 
@@ -138,7 +146,7 @@ public partial class SetSyncPointViewModel : ObservableObject
         {
             if (!string.IsNullOrEmpty(_videoFileName))
             {
-                _ = VideoPlayerControl.Open(_videoFileName);
+                _ = OpenPlayerAsync(_videoFileName);
             }
 
             // An audio visualizer without peaks is just an empty box - only show it when the main
@@ -368,6 +376,25 @@ public partial class SetSyncPointViewModel : ObservableObject
         _updateAudioVisualizer = true;
     }
 
+    /// <summary>
+    /// Opens the preview player and, once the video is loaded, applies the audio track the user
+    /// selected in the main window - the same thing Visual Sync does (issue #11952). Setting it
+    /// before the file is open is silently ignored, so the await matters.
+    /// </summary>
+    private async Task OpenPlayerAsync(string videoFileName, double startPositionSeconds = 0)
+    {
+        await VideoPlayerControl.Open(videoFileName, startPositionSeconds);
+        ApplySelectedAudioTrack();
+    }
+
+    private void ApplySelectedAudioTrack()
+    {
+        if (_audioTrackId > 0 && VideoPlayerControl.VideoPlayer is LibMpvDynamicPlayer mpv)
+        {
+            mpv.SetAudioTrack(_audioTrackId);
+        }
+    }
+
     private void CenterWaveform(VideoPlayerControl videoPlayerControl, AudioVisualizer audioVisualizer)
     {
         audioVisualizer.StartPositionSeconds = Math.Max(0, videoPlayerControl.Position - 0.5);
@@ -399,7 +426,7 @@ public partial class SetSyncPointViewModel : ObservableObject
         // the start of the newly opened file. It has to be passed to Open: the position slider is
         // clamped to Duration, which is only polled once the player is running, so seeking right
         // after the open would land at zero.
-        await VideoPlayerControl.Open(fileName, Math.Max(0, syncPoint.TotalSeconds));
+        await OpenPlayerAsync(fileName, Math.Max(0, syncPoint.TotalSeconds));
         await VideoPlayerControl.WaitForPlayersReadyAsync();
 
         // The external subtitle went with the old file (if there was one) - it has to be added to
