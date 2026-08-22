@@ -130,15 +130,19 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         }
 
         _currentItemOutputFileNames.Clear();
+        // Captured before converting: with "save in source folder" + "overwrite" the output can
+        // be the source file itself, and reading the timestamps afterwards would only give back
+        // the time the output was written.
+        var sourceTimestamps = _config.KeepSourceTimestamp ? FileTimestampHelper.Capture(item.FileName) : null;
         try
         {
             await ConvertCore(item, cancellationToken);
         }
         finally
         {
-            if (_config.KeepSourceTimestamp)
+            if (sourceTimestamps != null)
             {
-                ApplySourceTimestamp(item);
+                ApplySourceTimestamp(sourceTimestamps.Value);
             }
 
             _currentItemOutputFileNames.Clear();
@@ -150,20 +154,20 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     /// for image exports, plus a sibling .idx for VobSub) with the source file's timestamps.
     /// Runs after the output streams are closed; best-effort, never fails the conversion.
     /// </summary>
-    private void ApplySourceTimestamp(BatchConvertItem item)
+    private void ApplySourceTimestamp(FileTimestamps sourceTimestamps)
     {
         foreach (var path in _currentItemOutputFileNames)
         {
             if (Directory.Exists(path))
             {
-                FileTimestampHelper.CopyTimestampsToDirectoryContents(item.FileName, path);
+                FileTimestampHelper.CopyTimestampsToDirectoryContents(sourceTimestamps, path);
                 continue;
             }
 
-            FileTimestampHelper.CopyTimestamps(item.FileName, path);
+            FileTimestampHelper.CopyTimestamps(sourceTimestamps, path);
             if (path.EndsWith(".sub", StringComparison.OrdinalIgnoreCase))
             {
-                FileTimestampHelper.CopyTimestamps(item.FileName, Path.ChangeExtension(path, ".idx"));
+                FileTimestampHelper.CopyTimestamps(sourceTimestamps, Path.ChangeExtension(path, ".idx"));
             }
         }
     }

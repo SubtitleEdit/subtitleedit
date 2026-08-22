@@ -29,6 +29,39 @@ public class FileTimestampHelperTest
     }
 
     [Fact]
+    public void Capture_ThenOverwrite_ThenCopy_RestoresOriginalTime()
+    {
+        var dir = Path.Combine(Path.GetTempPath(), "FileTimestampHelperTest_" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(dir);
+        try
+        {
+            var file = Path.Combine(dir, "inplace.srt");
+            File.WriteAllText(file, "a");
+            var when = new DateTime(2011, 3, 4, 5, 6, 7, DateTimeKind.Utc);
+            File.SetLastWriteTimeUtc(file, when);
+
+            var captured = FileTimestampHelper.Capture(file);
+            Assert.NotNull(captured);
+            File.WriteAllText(file, "b"); // the conversion overwrites the source itself
+            Assert.NotEqual(when, File.GetLastWriteTimeUtc(file));
+
+            Assert.True(FileTimestampHelper.CopyTimestamps(captured.Value, file));
+            Assert.Equal(when, File.GetLastWriteTimeUtc(file));
+        }
+        finally
+        {
+            Directory.Delete(dir, true);
+        }
+    }
+
+    [Fact]
+    public void Capture_MissingFile_ReturnsNull()
+    {
+        Assert.Null(FileTimestampHelper.Capture(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"))));
+        Assert.Null(FileTimestampHelper.Capture(string.Empty));
+    }
+
+    [Fact]
     public void CopyTimestamps_MissingSourceOrTarget_ReturnsFalse()
     {
         var missing = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
