@@ -61,6 +61,31 @@ public class KeepTimestampTest : IDisposable
         Assert.Equal(sourceTime, File.GetLastWriteTimeUtc(output));
     }
 
+    /// <summary>
+    /// --overwrite with no output folder and the same format writes the input file itself; the
+    /// timestamps must be read before that write, or the "kept" time is the conversion time.
+    /// </summary>
+    [Fact]
+    public async Task KeepTimestamp_InPlaceOverwrite_KeepsSourceLastWriteTime()
+    {
+        var input = Path.Combine(_tempRoot, "in.srt");
+        await File.WriteAllTextAsync(input, SrtContent, TestContext.Current.CancellationToken);
+        var sourceTime = new DateTime(2019, 5, 17, 12, 34, 56, DateTimeKind.Utc);
+        File.SetLastWriteTimeUtc(input, sourceTime);
+
+        var result = await new SubtitleConverter().ConvertAsync(new ConversionOptions
+        {
+            Patterns = [input],
+            Format = "SubRip",
+            Overwrite = true,
+            KeepTimestamp = true,
+        });
+        Assert.True(result.Success, string.Join("; ", result.Errors));
+
+        Assert.Equal(input, result.Files.Single().Output);
+        Assert.Equal(sourceTime, File.GetLastWriteTimeUtc(input));
+    }
+
     [Fact]
     public async Task Default_OutputGetsCurrentTime()
     {
