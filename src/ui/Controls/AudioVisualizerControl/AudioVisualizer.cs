@@ -204,6 +204,7 @@ public class AudioVisualizer : Control
 
     public double MinGapSeconds { get; set; } = 0.1;
 
+    /// <summary>Fallback capture distance when the pixel distance cannot be converted (no peaks yet).</summary>
     public double ShotChangeSnapSeconds { get; set; } = 0.05;
     public WaveformDrawStyle WaveformDrawStyle { get; set; } = WaveformDrawStyle.Classic;
 
@@ -1727,9 +1728,9 @@ public class AudioVisualizer : Control
         // behind a TimeCode, which is a class, i.e. one allocation per pointer move.
         var nearest = _shotChanges.ClosestTo(seconds);
 
-        // Measured to the cut, not to the landing point: the red zones the distance comes from are
-        // defined around the cut, so a larger gap must not drag the whole capture window off it.
-        if (Math.Abs(seconds - nearest) >= GetInCueSnapSeconds())
+        // Measured to the cut, not to the landing point: the capture window is around the cut the
+        // user is aiming at, so a larger gap must not drag it off the cut.
+        if (Math.Abs(seconds - nearest) >= GetShotChangeSnapSeconds())
         {
             return null;
         }
@@ -1752,7 +1753,7 @@ public class AudioVisualizer : Control
 
         // ClosestTo directly - see TrySnapInCueToShotChange.
         var nearest = _shotChanges.ClosestTo(seconds);
-        if (Math.Abs(seconds - nearest) >= GetOutCueSnapSeconds())
+        if (Math.Abs(seconds - nearest) >= GetShotChangeSnapSeconds())
         {
             return null;
         }
@@ -1761,45 +1762,24 @@ public class AudioVisualizer : Control
     }
 
     /// <summary>
-    /// Snap distance (seconds) for a paragraph IN-cue near a shot change, derived from
-    /// the BeautifyTimeCodes profile's InCues red zones. Falls back to <see cref="ShotChangeSnapSeconds"/>
-    /// when no profile / fps is available.
+    /// How close (in seconds, at the current zoom) a dragged cue has to be to a shot change for the
+    /// cut to capture it.
+    /// <para>
+    /// Defined in <b>pixels</b> - <see cref="SeWaveform.SnapToShotChangesPixels"/>, the same 8 px
+    /// SE4 used - so snapping happens when the cue <i>looks</i> close, whatever the zoom. A
+    /// time-based distance (the profile's red zones, which this replaced) felt like snapping never
+    /// happened zoomed out and like the cut grabbed from far away zoomed in.
+    /// </para>
     /// </summary>
-    private double GetInCueSnapSeconds()
+    private double GetShotChangeSnapSeconds()
     {
-        var fps = Se.Settings.General.CurrentFrameRate;
-        if (fps < 1)
+        var pixels = Se.Settings.Waveform.SnapToShotChangesPixels;
+        if (pixels <= 0 || WavePeaks == null || WavePeaks.SampleRate <= 0 || ZoomFactor <= 0)
         {
             return ShotChangeSnapSeconds;
         }
 
-        var profile = Nikse.SubtitleEdit.Core.Common.Configuration.Settings.BeautifyTimeCodes?.Profile;
-        if (profile == null)
-        {
-            return ShotChangeSnapSeconds;
-        }
-
-        var frames = Math.Max(profile.InCuesLeftRedZone, profile.InCuesRightRedZone);
-        return frames > 0 ? frames / fps : ShotChangeSnapSeconds;
-    }
-
-    /// <summary>Snap distance (seconds) for a paragraph OUT-cue, derived from OutCues red zones.</summary>
-    private double GetOutCueSnapSeconds()
-    {
-        var fps = Se.Settings.General.CurrentFrameRate;
-        if (fps < 1)
-        {
-            return ShotChangeSnapSeconds;
-        }
-
-        var profile = Nikse.SubtitleEdit.Core.Common.Configuration.Settings.BeautifyTimeCodes?.Profile;
-        if (profile == null)
-        {
-            return ShotChangeSnapSeconds;
-        }
-
-        var frames = Math.Max(profile.OutCuesLeftRedZone, profile.OutCuesRightRedZone);
-        return frames > 0 ? frames / fps : ShotChangeSnapSeconds;
+        return pixels / (WavePeaks.SampleRate * ZoomFactor);
     }
 
     private void UpdateCursor(Point point)
