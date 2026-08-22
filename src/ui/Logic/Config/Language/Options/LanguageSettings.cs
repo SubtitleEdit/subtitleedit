@@ -133,6 +133,10 @@ public class LanguageSettings
     public string WaveformMouseWheelStepMilliseconds { get; set; }
     public string WaveformSnapToShotChanges { get; set; }
     public string WaveformSnapToFrames { get; set; }
+    public string WaveformSnapToShotChangesPixels { get; set; }
+    public string WaveformSnapToShotChangeStartMaxSeconds { get; set; }
+    public string WaveformSnapToShotChangeEndMaxSeconds { get; set; }
+    public string WaveformSnapToShotChangeSameShotEndMaxSeconds { get; set; }
     public string WaveformShotChangesAutoGenerate { get; set; }
     public string WaveformTextFontSize { get; set; }
     public string WaveformTextFontBold { get; set; }
@@ -464,6 +468,10 @@ public class LanguageSettings
         WaveformMouseWheelStepMilliseconds = "{0} ms";
         WaveformSnapToShotChanges = "Snap to shot changes (hold Shift to override)";
         WaveformSnapToFrames = "Snap to frames";
+        WaveformSnapToShotChangesPixels = "Snap distance when dragging (pixels)";
+        WaveformSnapToShotChangeStartMaxSeconds = "Snap to nearest shot change: max start distance (seconds)";
+        WaveformSnapToShotChangeEndMaxSeconds = "Snap to nearest shot change: max end distance (seconds)";
+        WaveformSnapToShotChangeSameShotEndMaxSeconds = "Snap to nearest shot change: max end distance when start and end share a cut (seconds)";
         WaveformShotChangesAutoGenerate = "Shot changes auto-generate";
         WaveformTextFontSize = "Waveform text font size";
         WaveformTextFontBold = "Waveform text font bold";
