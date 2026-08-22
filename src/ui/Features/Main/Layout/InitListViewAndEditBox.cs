@@ -699,10 +699,16 @@ public static partial class InitListViewAndEditBox
             Source = vm,
         };
 
-        // Set up two-way binding for SelectedIndex
+        // SelectedIndex flows grid -> view model only. The view model drives the grid through
+        // SelectedItem above and only ever writes SelectedSubtitleIndex alongside it, and a TwoWay
+        // binding here echoed every grid-originated index change straight back: removing a row
+        // above a multi-selection shifts the grid's SelectedIndex, the echo re-assigned that same
+        // index, and SelectionModel.SelectedIndex's setter is Clear()+Select() even for an unchanged
+        // value - the whole selection collapsed to one row (merge selected lines with a reference
+        // row above the selection silently merged nothing).
         vm.SubtitleGrid[!TableView.SelectedIndexProperty] = new Binding(nameof(vm.SelectedSubtitleIndex))
         {
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWayToSource,
             Source = vm,
         };
 
