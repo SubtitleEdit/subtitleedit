@@ -87,7 +87,20 @@ public class AiReviewWindow : Window
         // settings dialog rather than this window's former bespoke green/grey pair.
         comboLlamaCppModel.ItemTemplate = Features.Translate.AutoTranslateCombos.LlamaCppModelItemTemplate();
 
-        comboLlamaCppModel.Bind(IsVisibleProperty, new Binding(nameof(vm.IsLlamaCppVisible)));
+        // Start/Stop server, as in auto-translate/OCR: without it an idle llama-server (and the
+        // model's VRAM) could only be released by closing Subtitle Edit (#13969).
+        var buttonLlamaCppServer = UiUtil.MakeButton(string.Empty, vm.ToggleLlamaCppServerCommand);
+        buttonLlamaCppServer.Bind(Button.ContentProperty, new Binding(nameof(vm.LlamaCppServerButtonText)));
+        buttonLlamaCppServer.Bind(IsEnabledProperty, new Binding(nameof(vm.IsNotReviewing)));
+
+        var panelLlamaCpp = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 5,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { comboLlamaCppModel, buttonLlamaCppServer },
+        };
+        panelLlamaCpp.Bind(IsVisibleProperty, new Binding(nameof(vm.IsLlamaCppVisible)));
 
         var buttonLlamaCppEngineSettings = UiUtil.MakeButton(vm.ShowLlamaCppEngineSettingsCommand, IconNames.Settings)
             .WithAccessibleName(Se.Language.General.LlamaCppEngineSettings);
@@ -137,7 +150,7 @@ public class AiReviewWindow : Window
         toolbar.Add(labelEngine, 0, 0);
         toolbar.Add(panelEngine, 0, 1);
         toolbar.Add(panelOllama, 0, 2);
-        toolbar.Add(comboLlamaCppModel, 0, 3);
+        toolbar.Add(panelLlamaCpp, 0, 3);
         toolbar.Add(panelOpenAiCompatible, 0, 4);
         toolbar.Add(languageChip, 0, 5);
         toolbar.Add(buttonEditPrompt, 0, 7);
