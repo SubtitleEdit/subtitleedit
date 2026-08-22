@@ -753,6 +753,15 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         Se.Settings.Tools.BatchConvert.BeautifyTimeCodesUseFixedFrameRate = BeautifyTimeCodesUseFixedFrameRate;
         Se.Settings.Tools.BatchConvert.BeautifyTimeCodesFixedFrameRate = SelectedBeautifyTimeCodesFrameRate;
 
+        // Remove formatting
+        Se.Settings.Tools.BatchConvert.FormattingRemoveAll = FormattingRemoveAll;
+        Se.Settings.Tools.BatchConvert.FormattingRemoveItalic = FormattingRemoveItalic;
+        Se.Settings.Tools.BatchConvert.FormattingRemoveBold = FormattingRemoveBold;
+        Se.Settings.Tools.BatchConvert.FormattingRemoveUnderline = FormattingRemoveUnderline;
+        Se.Settings.Tools.BatchConvert.FormattingRemoveFontTags = FormattingRemoveFontTags;
+        Se.Settings.Tools.BatchConvert.FormattingRemoveAlignmentTags = FormattingRemoveAlignmentTags;
+        Se.Settings.Tools.BatchConvert.FormattingRemoveColorTags = FormattingRemoveColors;
+
         // Snap time codes to frames
         Se.Settings.Tools.BatchConvert.SnapTimeCodesToFramesUseFixedFrameRate = SnapTimeCodesToFramesUseFixedFrameRate;
         Se.Settings.Tools.BatchConvert.SnapTimeCodesToFramesFixedFrameRate = SelectedSnapTimeCodesToFramesFrameRate;
@@ -888,6 +897,14 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         BridgeGapsSmallerThanMs = Se.Settings.Tools.BridgeGaps.BridgeGapsSmallerThanMs;
         BridgeGapsMinGapMs = Se.Settings.Tools.BridgeGaps.MinGapMs;
         BridgeGapsPercentForLeft = Se.Settings.Tools.BridgeGaps.PercentForLeft;
+
+        FormattingRemoveAll = Se.Settings.Tools.BatchConvert.FormattingRemoveAll;
+        FormattingRemoveItalic = Se.Settings.Tools.BatchConvert.FormattingRemoveItalic;
+        FormattingRemoveBold = Se.Settings.Tools.BatchConvert.FormattingRemoveBold;
+        FormattingRemoveUnderline = Se.Settings.Tools.BatchConvert.FormattingRemoveUnderline;
+        FormattingRemoveFontTags = Se.Settings.Tools.BatchConvert.FormattingRemoveFontTags;
+        FormattingRemoveAlignmentTags = Se.Settings.Tools.BatchConvert.FormattingRemoveAlignmentTags;
+        FormattingRemoveColors = Se.Settings.Tools.BatchConvert.FormattingRemoveColorTags;
 
         BeautifyTimeCodesSnapToShotChanges = Se.Settings.Tools.BatchConvert.BeautifyTimeCodesSnapToShotChanges;
         BeautifyTimeCodesUseFixedFrameRate = Se.Settings.Tools.BatchConvert.BeautifyTimeCodesUseFixedFrameRate;
