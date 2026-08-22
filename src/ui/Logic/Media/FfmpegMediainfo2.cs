@@ -28,6 +28,10 @@ public class FfmpegMediaInfo2
     //   "Stream #0:2(eng): Subtitle: ..."   or   "Stream #0:2[0x3](eng): ...".
     // Captures the 2-3 letter ISO code in group "lang".
     private static readonly Regex StreamLanguageRegex = new Regex(@"^Stream #\d+:\d+(?:\[[^\]]+\])?\((?<lang>[a-zA-Z]{2,3})\)", RegexOptions.Compiled);
+    // Rotation side data ffmpeg prints under a video stream, e.g.
+    //   "    Side data:"
+    //   "      Display Matrix: rotation of -90.00 degrees".
+    private static readonly Regex DisplayMatrixRotationRegex = new Regex(@"^Display Matrix: rotation of (?<deg>-?\d+(?:\.\d+)?) degrees", RegexOptions.Compiled);
 
     private FfmpegMediaInfo2()
     {
@@ -105,11 +109,23 @@ public class FfmpegMediaInfo2
         // the MP4 embedded-subtitles window) would show duplicate tracks.
         var seenStreamPrefixes = new HashSet<string>(StringComparer.Ordinal);
 
+        // ffmpeg reports the STORED frame size on the "Stream #" line, which for phone
+        // recordings is often landscape with a "Display Matrix: rotation of -90 degrees"
+        // side-data entry that makes it portrait on playback. ffmpeg auto-rotates on
+        // decode, so the frames every filter and encoder sees are the rotated ones.
+        // Report those display dimensions here, otherwise callers such as burn-in size
+        // the output (and the generated ASS PlayRes) to the unrotated frame and the
+        // picture comes out stretched.
+        var inDimensionStreamBlock = false;
+        var rotationApplied = false;
+
         foreach (var line in log.SplitToLines())
         {
             var s = line.Trim();
             if (s.StartsWith("Stream #", StringComparison.Ordinal))
             {
+                inDimensionStreamBlock = false;
+
                 var resolutionMatch = ResolutionRegex.Match(s);
                 if (resolutionMatch.Success)
                 {
@@ -120,6 +136,7 @@ public class FfmpegMediaInfo2
                         int.TryParse(parts[1], out var h))
                     {
                         info.Dimension = new Dimension(w, h);
+                        inDimensionStreamBlock = true;
                     }
                 }
 
@@ -160,6 +177,22 @@ public class FfmpegMediaInfo2
                     else
                     {
                         info.Tracks.Add(new FfmpegTrackInfo { TrackType = FfmpegTrackType.Other, TrackInfo = trackInfo, Language = language });
+                    }
+                }
+            }
+            else if (inDimensionStreamBlock && !rotationApplied)
+            {
+                var rotationMatch = DisplayMatrixRotationRegex.Match(s);
+                if (rotationMatch.Success &&
+                    double.TryParse(rotationMatch.Groups["deg"].Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var degrees))
+                {
+                    // Guard against the duplicated retry log swapping a second time.
+                    rotationApplied = true;
+
+                    var normalized = ((degrees % 360) + 360) % 360;
+                    if (Math.Abs(normalized - 90) < 1 || Math.Abs(normalized - 270) < 1)
+                    {
+                        info.Dimension = new Dimension(info.Dimension.Height, info.Dimension.Width);
                     }
                 }
             }
