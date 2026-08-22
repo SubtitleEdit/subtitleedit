@@ -55,9 +55,26 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                 var text = input.Replace("\r", string.Empty).Trim();
                 var url = $"translate_a/single?client=gtx&sl={sourceLanguageCode}&tl={targetLanguageCode}&dt=t&q={Utilities.UrlEncode(text)}";
 
-                var result = await _httpClient.GetAsync(url, cancellationToken);
-                var bytes = await result.Content.ReadAsByteArrayAsync(cancellationToken);
-                jsonResultString = Encoding.UTF8.GetString(bytes).Trim();
+                // The free "gtx" endpoint intermittently answers 500/502/503/504 (and 429) mid-run
+                // on long translations; a single failure aborted the whole job and the user had to
+                // restart it by hand (issue #14004). Retry with a short backoff before giving up.
+                int[] retryDelays = { 1007, 3013, 7019 };
+                HttpResponseMessage result = null!;
+                jsonResultString = string.Empty;
+                for (var attempt = 0; attempt <= retryDelays.Length; attempt++)
+                {
+                    result = await _httpClient.GetAsync(url, cancellationToken);
+                    var bytes = await result.Content.ReadAsByteArrayAsync(cancellationToken);
+                    jsonResultString = Encoding.UTF8.GetString(bytes).Trim();
+
+                    if (!ShouldRetry(result, jsonResultString) || attempt == retryDelays.Length)
+                    {
+                        break;
+                    }
+
+                    SeLogger.Error($"{StaticName} returned {(int)result.StatusCode} ({result.StatusCode}) - retrying in {retryDelays[attempt]} ms (attempt {attempt + 1} of {retryDelays.Length})");
+                    await Task.Delay(retryDelays[attempt], cancellationToken);
+                }
 
                 if (!result.IsSuccessStatusCode)
                 {
@@ -73,6 +90,18 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
             var resultList = ConvertJsonObjectToStringLines(jsonResultString);
             return string.Join(Environment.NewLine, resultList);
+        }
+
+        /// <summary>
+        /// Transient server-side failures worth retrying: the shared 429/503 rule plus the
+        /// 500/502/504 that translate.googleapis.com hands out under load.
+        /// </summary>
+        public static bool ShouldRetry(HttpResponseMessage result, string resultContent)
+        {
+            return DeepLTranslate.ShouldRetry(result, resultContent) ||
+                   result.StatusCode == HttpStatusCode.InternalServerError ||
+                   result.StatusCode == HttpStatusCode.BadGateway ||
+                   result.StatusCode == HttpStatusCode.GatewayTimeout;
         }
 
         public static List<TranslationPair> GetTranslationPairs()
