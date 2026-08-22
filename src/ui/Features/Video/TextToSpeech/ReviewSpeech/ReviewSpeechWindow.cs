@@ -676,6 +676,15 @@ public class ReviewSpeechWindow : Window
             }
         };
 
+        // Clicking or grabbing a block selects its row (#14000). The control only raises
+        // OnPrimarySingleClicked when something listens to OnVideoPositionChanged, hence the
+        // empty playhead handler. OnDragStarted fires on press so the row is selected before a
+        // move/resize mutates it; OnSelectRequested covers right-click-selects.
+        audioVisualizer.OnVideoPositionChanged += (_, _) => { };
+        audioVisualizer.OnPrimarySingleClicked += (_, e) => vm.SelectFromWaveform(e.Paragraph);
+        audioVisualizer.OnDragStarted += (_, e) => vm.SelectFromWaveform(e.Paragraph);
+        audioVisualizer.OnSelectRequested += (_, e) => vm.SelectFromWaveform(e.Paragraph);
+
         return new Border
         {
             Margin = new Thickness(2),

@@ -474,6 +474,44 @@ public partial class ReviewSpeechViewModel : ObservableObject
         row.Cps = Math.Round(paragraph.GetCharactersPerSecond(), 2).ToString(CultureInfo.CurrentCulture);
     }
 
+    // True while a selection change originates from a click/drag on the waveform itself. The
+    // block the user grabbed is already in view, so RefreshWaveformPosition must only update the
+    // highlight and not recenter - recentering would jump the view (and the block under the
+    // pointer) mid-drag (#14000).
+    private bool _selectionFromWaveform;
+
+    // Click/drag on a waveform block selects the row that owns it, which in turn loads its text
+    // and per-line settings into the edit panel through OnSelectedLineChanged (#14000).
+    //
+    // The event args carry a *copy* of the paragraph (ParagraphEventArgs clones it), so the
+    // lookup goes by Id, which the copy preserves - never by instance.
+    public void SelectFromWaveform(SubtitleLineViewModel? waveformParagraph)
+    {
+        if (waveformParagraph == null)
+        {
+            return;
+        }
+
+        var mirror = WaveformParagraphs.Find(wp => wp.Id == waveformParagraph.Id);
+        if (mirror == null ||
+            !_waveformParagraphToRow.TryGetValue(mirror, out var row) ||
+            ReferenceEquals(row, SelectedLine))
+        {
+            return;
+        }
+
+        _selectionFromWaveform = true;
+        try
+        {
+            SelectedLine = row;
+            LineGrid.ScrollIntoView(row);
+        }
+        finally
+        {
+            _selectionFromWaveform = false;
+        }
+    }
+
     // Centers the visualizer on the currently selected paragraph and marks it as selected so the
     // user can grab its start/end handles. Safe to call before AudioVisualizer is attached.
     public void RefreshWaveformPosition()
@@ -488,6 +526,14 @@ public partial class ReviewSpeechViewModel : ObservableObject
         var waveformParagraph = row?.WaveformParagraph;
         if (waveformParagraph == null || WaveformParagraphs.Count == 0)
         {
+            return;
+        }
+
+        if (_selectionFromWaveform)
+        {
+            av.SelectedParagraph = waveformParagraph;
+            av.AllSelectedParagraphs = new List<SubtitleLineViewModel> { waveformParagraph };
+            av.InvalidateVisual();
             return;
         }
 

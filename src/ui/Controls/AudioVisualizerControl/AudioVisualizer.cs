@@ -518,6 +518,11 @@ public class AudioVisualizer : Control
     public event ParagraphNullableEventHandler? OnPrimaryDoubleClicked;
     public event PositionEventHandler? OnSetStartAndOffsetTheRest;
 
+    /// <summary>Raised when a primary-button press lands on an existing paragraph and starts a
+    /// move/resize drag. Lets hosts select the paragraph the user grabbed before the drag
+    /// mutates it (#14000) - a click is delivered via <see cref="OnPrimarySingleClicked"/> instead.</summary>
+    public event ParagraphEventHandler? OnDragStarted;
+
     /// <summary>Raised when the user clicks the empty waveform to generate it on demand
     /// (shown only when auto-generate is off and there are no cached peaks).</summary>
     public event EventHandler? OnGenerateWaveformRequested;
@@ -1215,6 +1220,10 @@ public class AudioVisualizer : Control
         }
 
         _pointerDragActive = _interactionMode != InteractionMode.None;
+        if (_pointerDragActive && _activeParagraph != null)
+        {
+            OnDragStarted?.Invoke(this, new ParagraphEventArgs(_startPointerSeconds, _activeParagraph));
+        }
     }
 
     /// <summary>
