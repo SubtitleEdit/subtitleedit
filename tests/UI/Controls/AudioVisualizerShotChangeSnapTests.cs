@@ -21,8 +21,8 @@ namespace UITests.Controls;
 /// moves a cue has to keep it, not just the two edge-resize drags. Dragging a whole paragraph
 /// snapped in SE4 and did not in SE5, which reads as the checkbox being broken.
 ///
-/// In cues land exactly on the cut; out cues land one frame before it, so they don't bleed onto
-/// the next shot. A whole-paragraph drag preserves its duration, so whichever cue the cut captures,
+/// A captured cue lands the beautify profile's configured gap away from the cut - in cues after it,
+/// out cues before it, so an out cue doesn't bleed onto the next shot (issue #13984). A whole-paragraph drag preserves its duration, so whichever cue the cut captures,
 /// the other one moves with it.
 /// </summary>
 public class AudioVisualizerShotChangeSnapTests
@@ -31,12 +31,19 @@ public class AudioVisualizerShotChangeSnapTests
     private const double WidthPx = 800;
     private const double HeightPx = 200;
     private const double Fps = 25;
-    private const double OneFrame = 1.0 / Fps;
 
     // Default beautify profile: in cues capture within max(3, 5) frames, out cues within
     // max(10, 3) frames.
     private const double InCueSnapSeconds = 5 / Fps;
     private const double OutCueSnapSeconds = 10 / Fps;
+
+    // Where a captured cue lands: the profile's in/out cues gap, in frames, either side of the cut.
+    // Pinned to non-zero values so the tests would catch a regression back to the old hard-coded
+    // offsets (exactly on the cut / one frame before it) - see issue #13984.
+    private const int InCuesGapFrames = 2;
+    private const int OutCuesGapFrames = 4;
+    private const double InCuesGapSeconds = InCuesGapFrames / Fps;
+    private const double OutCuesGapSeconds = OutCuesGapFrames / Fps;
 
     /// <summary>Pins every setting the snap maths reads, so the test does not drift with defaults.</summary>
     private sealed class SnapSettings : IDisposable
@@ -44,7 +51,11 @@ public class AudioVisualizerShotChangeSnapTests
         private readonly bool _snapToShotChanges = Se.Settings.Waveform.SnapToShotChanges;
         private readonly bool _snapToFrames = Se.Settings.Waveform.SnapToFrames;
         private readonly double _frameRate = Se.Settings.General.CurrentFrameRate;
-        private readonly int _inLeft, _inRight, _outLeft, _outRight;
+        // The app keeps these two in lockstep (every writer sets both - see MainViewModel's
+        // frame-rate paths and Se.cs). The snap distance reads the Se copy and the gap reads the
+        // libse copy, so a test that pinned only one would measure two different frame rates.
+        private readonly double _coreFrameRate = Configuration.Settings.General.CurrentFrameRate;
+        private readonly int _inLeft, _inRight, _outLeft, _outRight, _inGap, _outGap;
 
         public SnapSettings(bool snapToShotChanges = true)
         {
@@ -53,14 +64,19 @@ public class AudioVisualizerShotChangeSnapTests
             _inRight = p.InCuesRightRedZone;
             _outLeft = p.OutCuesLeftRedZone;
             _outRight = p.OutCuesRightRedZone;
+            _inGap = p.InCuesGap;
+            _outGap = p.OutCuesGap;
 
             Se.Settings.Waveform.SnapToShotChanges = snapToShotChanges;
             Se.Settings.Waveform.SnapToFrames = false;
             Se.Settings.General.CurrentFrameRate = Fps;
+            Configuration.Settings.General.CurrentFrameRate = Fps;
             p.InCuesLeftRedZone = 3;
             p.InCuesRightRedZone = 5;
             p.OutCuesLeftRedZone = 10;
             p.OutCuesRightRedZone = 3;
+            p.InCuesGap = InCuesGapFrames;
+            p.OutCuesGap = OutCuesGapFrames;
         }
 
         public void Dispose()
@@ -69,10 +85,13 @@ public class AudioVisualizerShotChangeSnapTests
             Se.Settings.Waveform.SnapToShotChanges = _snapToShotChanges;
             Se.Settings.Waveform.SnapToFrames = _snapToFrames;
             Se.Settings.General.CurrentFrameRate = _frameRate;
+            Configuration.Settings.General.CurrentFrameRate = _coreFrameRate;
             p.InCuesLeftRedZone = _inLeft;
             p.InCuesRightRedZone = _inRight;
             p.OutCuesLeftRedZone = _outLeft;
             p.OutCuesRightRedZone = _outRight;
+            p.InCuesGap = _inGap;
+            p.OutCuesGap = _outGap;
         }
     }
 
@@ -126,7 +145,7 @@ public class AudioVisualizerShotChangeSnapTests
     // The reported bug: this drag did nothing special in SE5 - the paragraph slid straight past
     // the cut - while SE4 parked its start on it.
     [AvaloniaFact]
-    public void MoveWholeLine_StartNearAShotChange_SnapsStartOntoIt()
+    public void MoveWholeLine_StartNearAShotChange_SnapsStartTheInCuesGapAfterIt()
     {
         using var _ = new SnapSettings();
         var (window, av) = Open(new List<double> { 1.5 }, Line(1, 3));
@@ -136,13 +155,13 @@ public class AudioVisualizerShotChangeSnapTests
         // inside the in cue capture distance of the cut at 1.5 s.
         Drag(window, 252, 312);
 
-        Assert.Equal(1.5, line.StartTime.TotalSeconds, 6);
+        Assert.Equal(1.5 + InCuesGapSeconds, line.StartTime.TotalSeconds, 6);
         Assert.Equal(2, line.Duration.TotalSeconds, 6); // a whole-line move keeps its duration
         window.Close();
     }
 
     [AvaloniaFact]
-    public void MoveWholeLine_EndNearAShotChange_SnapsEndOneFrameBeforeIt()
+    public void MoveWholeLine_EndNearAShotChange_SnapsEndTheOutCuesGapBeforeIt()
     {
         using var _ = new SnapSettings();
         var (window, av) = Open(new List<double> { 3.5 }, Line(1, 3));
@@ -151,8 +170,8 @@ public class AudioVisualizerShotChangeSnapTests
         // Same drag, but now only the END lands near a cut.
         Drag(window, 252, 312);
 
-        Assert.Equal(3.5 - OneFrame, line.EndTime.TotalSeconds, 6);
-        Assert.Equal(3.5 - OneFrame - 2, line.StartTime.TotalSeconds, 6);
+        Assert.Equal(3.5 - OutCuesGapSeconds, line.EndTime.TotalSeconds, 6);
+        Assert.Equal(3.5 - OutCuesGapSeconds - 2, line.StartTime.TotalSeconds, 6);
         Assert.Equal(2, line.Duration.TotalSeconds, 6);
         window.Close();
     }
@@ -194,14 +213,14 @@ public class AudioVisualizerShotChangeSnapTests
 
         Drag(window, 252, 312);
 
-        Assert.Equal(1.5, line.StartTime.TotalSeconds, 6);
+        Assert.Equal(1.5 + InCuesGapSeconds, line.StartTime.TotalSeconds, 6);
         window.Close();
     }
 
     // Regression guards: the resize drags kept their behaviour when the snap rule moved into a
     // shared helper.
     [AvaloniaFact]
-    public void ResizeLeft_NearAShotChange_SnapsOntoIt()
+    public void ResizeLeft_NearAShotChange_SnapsTheInCuesGapAfterIt()
     {
         using var _ = new SnapSettings();
         var (window, av) = Open(new List<double> { 1.5 }, Line(1, 3));
@@ -209,13 +228,13 @@ public class AudioVisualizerShotChangeSnapTests
 
         Drag(window, 126, 186); // left edge at 1 s, +60 px
 
-        Assert.Equal(1.5, line.StartTime.TotalSeconds, 6);
+        Assert.Equal(1.5 + InCuesGapSeconds, line.StartTime.TotalSeconds, 6);
         Assert.Equal(3, line.EndTime.TotalSeconds, 6); // the other edge stays put
         window.Close();
     }
 
     [AvaloniaFact]
-    public void ResizeRight_NearAShotChange_SnapsOneFrameBeforeIt()
+    public void ResizeRight_NearAShotChange_SnapsTheOutCuesGapBeforeIt()
     {
         using var _ = new SnapSettings();
         var (window, av) = Open(new List<double> { 3.5 }, Line(1, 3));
@@ -223,9 +242,35 @@ public class AudioVisualizerShotChangeSnapTests
 
         Drag(window, 378, 438); // right edge at 3 s, +60 px
 
-        Assert.Equal(3.5 - OneFrame, line.EndTime.TotalSeconds, 6);
+        Assert.Equal(3.5 - OutCuesGapSeconds, line.EndTime.TotalSeconds, 6);
         Assert.Equal(1, line.StartTime.TotalSeconds, 6);
         window.Close();
+    }
+
+    // Issue #13984: the landing offset is the profile's gap, not a hard-coded one frame. A profile
+    // configured with a wider gap must actually widen the space between the cue and the cut.
+    [AvaloniaFact]
+    public void SnapEnd_LandingOffsetFollowsTheProfilesOutCuesGap()
+    {
+        using var _ = new SnapSettings();
+        var profile = Configuration.Settings.BeautifyTimeCodes.Profile;
+
+        profile.OutCuesGap = 1; // what the offset used to be hard-coded to
+        var (window, av) = Open(new List<double> { 3.5 }, Line(1, 3));
+        var line = av.SelectedParagraph!;
+        Drag(window, 378, 438);
+        var narrow = 3.5 - line.EndTime.TotalSeconds;
+        Assert.Equal(1 / Fps, narrow, 6);
+        window.Close();
+
+        profile.OutCuesGap = 8;
+        var (window2, av2) = Open(new List<double> { 3.5 }, Line(1, 3));
+        var line2 = av2.SelectedParagraph!;
+        Drag(window2, 378, 438);
+        var wide = 3.5 - line2.EndTime.TotalSeconds;
+        Assert.Equal(8 / Fps, wide, 6);
+        Assert.True(wide > narrow);
+        window2.Close();
     }
 
     // Out cues get a wider capture distance than in cues (the profile's out cues red zones are
@@ -251,7 +296,7 @@ public class AudioVisualizerShotChangeSnapTests
         var (window2, av2) = Open(new List<double> { draggedEnd + Offset }, Line(1, 3));
         var line2 = av2.SelectedParagraph!;
         Drag(window2, 252, 312);
-        Assert.Equal(draggedEnd + Offset - OneFrame, line2.EndTime.TotalSeconds, 6);
+        Assert.Equal(draggedEnd + Offset - OutCuesGapSeconds, line2.EndTime.TotalSeconds, 6);
         window2.Close();
     }
 }
