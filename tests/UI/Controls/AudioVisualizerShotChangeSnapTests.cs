@@ -22,7 +22,11 @@ namespace UITests.Controls;
 /// snapped in SE4 and did not in SE5, which reads as the checkbox being broken.
 ///
 /// A captured cue lands the beautify profile's configured gap away from the cut - in cues after it,
-/// out cues before it, so an out cue doesn't bleed onto the next shot (issue #13984). A whole-paragraph drag preserves its duration, so whichever cue the cut captures,
+/// out cues before it, so an out cue doesn't bleed onto the next shot (issue #13984).
+///
+/// Whether a cut captures the cue at all is decided in pixels, not time: the cue has to *look*
+/// close at the current zoom (SnapToShotChangesPixels, SE4's 8 px), so the feel is the same zoomed
+/// in or out. A whole-paragraph drag preserves its duration, so whichever cue the cut captures,
 /// the other one moves with it.
 /// </summary>
 public class AudioVisualizerShotChangeSnapTests
@@ -32,10 +36,10 @@ public class AudioVisualizerShotChangeSnapTests
     private const double HeightPx = 200;
     private const double Fps = 25;
 
-    // Default beautify profile: in cues capture within max(3, 5) frames, out cues within
-    // max(10, 3) frames.
-    private const double InCueSnapSeconds = 5 / Fps;
-    private const double OutCueSnapSeconds = 10 / Fps;
+    // Capture distance: 8 px at zoom 1 = 8/126 s. Zoom-independent in pixels, so it halves in
+    // seconds at zoom 2.
+    private const int SnapPixels = 8;
+    private const double SnapSecondsAtZoom1 = (double)SnapPixels / SampleRate;
 
     // Where a captured cue lands: the profile's in/out cues gap, in frames, either side of the cut.
     // Pinned to non-zero values so the tests would catch a regression back to the old hard-coded
@@ -55,28 +59,22 @@ public class AudioVisualizerShotChangeSnapTests
         // frame-rate paths and Se.cs). The snap distance reads the Se copy and the gap reads the
         // libse copy, so a test that pinned only one would measure two different frame rates.
         private readonly double _coreFrameRate = Configuration.Settings.General.CurrentFrameRate;
-        private readonly int _inLeft, _inRight, _outLeft, _outRight, _inGap, _outGap;
+        private readonly int _inGap, _outGap, _snapPixels;
 
         public SnapSettings(bool snapToShotChanges = true)
         {
             var p = Configuration.Settings.BeautifyTimeCodes.Profile;
-            _inLeft = p.InCuesLeftRedZone;
-            _inRight = p.InCuesRightRedZone;
-            _outLeft = p.OutCuesLeftRedZone;
-            _outRight = p.OutCuesRightRedZone;
             _inGap = p.InCuesGap;
             _outGap = p.OutCuesGap;
+            _snapPixels = Se.Settings.Waveform.SnapToShotChangesPixels;
 
             Se.Settings.Waveform.SnapToShotChanges = snapToShotChanges;
             Se.Settings.Waveform.SnapToFrames = false;
             Se.Settings.General.CurrentFrameRate = Fps;
             Configuration.Settings.General.CurrentFrameRate = Fps;
-            p.InCuesLeftRedZone = 3;
-            p.InCuesRightRedZone = 5;
-            p.OutCuesLeftRedZone = 10;
-            p.OutCuesRightRedZone = 3;
             p.InCuesGap = InCuesGapFrames;
             p.OutCuesGap = OutCuesGapFrames;
+            Se.Settings.Waveform.SnapToShotChangesPixels = SnapPixels;
         }
 
         public void Dispose()
@@ -86,12 +84,9 @@ public class AudioVisualizerShotChangeSnapTests
             Se.Settings.Waveform.SnapToFrames = _snapToFrames;
             Se.Settings.General.CurrentFrameRate = _frameRate;
             Configuration.Settings.General.CurrentFrameRate = _coreFrameRate;
-            p.InCuesLeftRedZone = _inLeft;
-            p.InCuesRightRedZone = _inRight;
-            p.OutCuesLeftRedZone = _outLeft;
-            p.OutCuesRightRedZone = _outRight;
             p.InCuesGap = _inGap;
             p.OutCuesGap = _outGap;
+            Se.Settings.Waveform.SnapToShotChangesPixels = _snapPixels;
         }
     }
 
@@ -273,30 +268,67 @@ public class AudioVisualizerShotChangeSnapTests
         window2.Close();
     }
 
-    // Out cues get a wider capture distance than in cues (the profile's out cues red zones are
-    // larger), so the same offset that is too far for a start still catches an end.
+    // The capture distance is pixels, so the same on-screen distance captures at every zoom - and
+    // the same *time* distance captures at one zoom and not another.
     [AvaloniaFact]
-    public void SnapDistances_ComeFromTheBeautifyProfileRedZones()
+    public void CaptureDistance_IsInPixels_SoItIsZoomIndependent()
     {
         using var _ = new SnapSettings();
-        const double Offset = 0.3; // between the 0.2 s in cue and 0.4 s out cue distances
-        Assert.True(InCueSnapSeconds < Offset && Offset < OutCueSnapSeconds);
 
+        // A cut 5 px past where the drag leaves the start: inside 8 px at zoom 1.
         var draggedStart = 1 + 60.0 / SampleRate;
-        var draggedEnd = draggedStart + 2;
+        var cutAt = draggedStart + 5.0 / SampleRate;
 
-        // Too far for the start to be captured.
-        var (window, av) = Open(new List<double> { draggedStart + Offset }, Line(1, 3));
+        var (window, av) = Open(new List<double> { cutAt }, Line(1, 3));
+        var line = av.SelectedParagraph!;
+        Drag(window, 252, 312);
+        Assert.Equal(cutAt + InCuesGapSeconds, line.StartTime.TotalSeconds, 3);
+        window.Close();
+
+        // Same cut, same drag in *time* (120 px at zoom 2 = 60 px at zoom 1), but that 5-px-at-
+        // zoom-1 gap is now 10 px on screen: outside 8 px, so no capture.
+        var (window2, av2) = Open(new List<double> { cutAt }, Line(1, 3));
+        av2.ZoomFactor = 2;
+        Dispatcher.UIThread.RunJobs();
+        var line2 = av2.SelectedParagraph!;
+        Drag(window2, 504, 624); // middle of the line at zoom 2 is x = 2 s * 126 * 2
+        Assert.Equal(draggedStart, line2.StartTime.TotalSeconds, 3);
+        window2.Close();
+    }
+
+    // A cut 8 px or more away does not capture, however close it is in time at a high zoom.
+    [AvaloniaFact]
+    public void CaptureDistance_JustOutsideThePixelRadius_DoesNotSnap()
+    {
+        using var _ = new SnapSettings();
+        var draggedStart = 1 + 60.0 / SampleRate;
+        var cutAt = draggedStart + SnapSecondsAtZoom1; // exactly 8 px: the strict < excludes it
+
+        var (window, av) = Open(new List<double> { cutAt }, Line(1, 3));
+        var line = av.SelectedParagraph!;
+        Drag(window, 252, 312);
+        Assert.Equal(draggedStart, line.StartTime.TotalSeconds, 6);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void CaptureDistance_FollowsTheSetting()
+    {
+        using var _ = new SnapSettings();
+        var draggedStart = 1 + 60.0 / SampleRate;
+        var cutAt = draggedStart + 12.0 / SampleRate; // 12 px away: outside 8, inside 16
+
+        var (window, av) = Open(new List<double> { cutAt }, Line(1, 3));
         var line = av.SelectedParagraph!;
         Drag(window, 252, 312);
         Assert.Equal(draggedStart, line.StartTime.TotalSeconds, 6);
         window.Close();
 
-        // Same offset, but an end at that range is still captured.
-        var (window2, av2) = Open(new List<double> { draggedEnd + Offset }, Line(1, 3));
+        Se.Settings.Waveform.SnapToShotChangesPixels = 16;
+        var (window2, av2) = Open(new List<double> { cutAt }, Line(1, 3));
         var line2 = av2.SelectedParagraph!;
         Drag(window2, 252, 312);
-        Assert.Equal(draggedEnd + Offset - OutCuesGapSeconds, line2.EndTime.TotalSeconds, 6);
+        Assert.Equal(cutAt + InCuesGapSeconds, line2.StartTime.TotalSeconds, 3);
         window2.Close();
     }
 }
