@@ -11,6 +11,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
 
@@ -185,9 +186,14 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
                         var beforePreview = GetTextPreview(item.Text.Replace("\r\n", " · ").Replace("\n", " · "), 60);
                         var afterPreview = GetTextPreview(rebalancedText.Replace("\r\n", " · ").Replace("\n", " · "), 60);
                         var fixDescription = $"'{beforePreview}' → '{afterPreview}'";
-                        var fixItem = new SplitBreakLongLinesItem(Se.Language.Tools.SplitBreakLongLines.RebalanceLongLine, index + 1, fixDescription, item);
+                        var fixItem = new SplitBreakLongLinesItem(
+                            Se.Language.Tools.SplitBreakLongLines.RebalanceLongLine,
+                            index + 1,
+                            fixDescription,
+                            item,
+                            isSelectable: true,
+                            proposedText: rebalancedText);
                         Fixes.Add(fixItem);
-                        item.Text = rebalancedText;
                     }
                 }
             }
@@ -229,6 +235,14 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
                 }
             }
 
+            // Splitting clones the source SubtitleLineViewModel, including its Number.
+            // When at least one subtitle event was split, renumber the complete result once
+            // at the end so newly created events do not keep duplicate numbers.
+            if (splitCount > 0)
+            {
+                RenumberSubtitles(AllSubtitlesFixed);
+            }
+
             if (splitCount == 0 && rebalanceCount == 0 && gapCount == 0)
             {
                 FixesInfo = Se.Language.Tools.ApplyDurationLimits.NoChangesNeeded;
@@ -248,6 +262,14 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
                 FixesInfo = string.Format(Se.Language.Tools.SplitBreakLongLines.LinesSplitXLinesRebalancedY, splitCount, rebalanceCount);
             }
         });
+    }
+
+    public static void RenumberSubtitles(List<SubtitleLineViewModel> subtitles)
+    {
+        for (var index = 0; index < subtitles.Count; index++)
+        {
+            subtitles[index].Number = index + 1;
+        }
     }
 
     private static double GetGeneralMinimumGapMs()
@@ -383,6 +405,13 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
                         StartTime = item.StartTime,
                         EndTime = item.EndTime,
                     };
+
+                    AdjustTeletextRowForLineCountChange(
+                        balancedItem,
+                        item.MarginV,
+                        originalPlainLines.Count,
+                        GetPlainLineCount(balanced));
+
                     balancedItem.UpdateDuration();
                     lines.Add(balancedItem);
                     return lines;
@@ -528,6 +557,13 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
                 StartTime = TimeSpan.FromMilliseconds(accumulatedMs),
                 EndTime = TimeSpan.FromMilliseconds(accumulatedMs + segDurationMs),
             };
+
+            AdjustTeletextRowForLineCountChange(
+                newLine,
+                item.MarginV,
+                originalPlainLines.Count,
+                GetPlainLineCount(segText));
+
             newLine.UpdateDuration();
             lines.Add(newLine);
 
@@ -546,6 +582,46 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
         }
 
         return lines;
+
+        static int GetPlainLineCount(string text)
+        {
+            return HtmlUtil.RemoveHtmlTags(text ?? string.Empty, true).SplitToLines().Count;
+        }
+
+        static void AdjustTeletextRowForLineCountChange(
+            SubtitleLineViewModel subtitle,
+            string originalMarginV,
+            int oldLineCount,
+            int newLineCount)
+        {
+            if (oldLineCount == newLineCount || oldLineCount < 1 || newLineCount < 1)
+            {
+                return;
+            }
+
+            if (!int.TryParse(originalMarginV, out var originalRow))
+            {
+                return;
+            }
+
+            // Double-height Teletext uses two physical rows per text line.
+            // Keep the subtitle at its existing vertical area and move the start row
+            // only by the number of rows gained/lost through the line-count change.
+            //
+            // Examples:
+            // 2 lines at 21 -> 1 line at 23
+            // 2 lines at 19 -> 1 line at 21
+            // 2 lines at 20 -> 1 line at 22
+            // and the inverse for 1 -> 2.
+            const int rowsPerTextLine = 2;
+            var rowDelta = (oldLineCount - newLineCount) * rowsPerTextLine;
+            var adjustedRow = originalRow + rowDelta;
+
+            if (adjustedRow is >= 1 and <= TeletextRowHelper.BottomRow)
+            {
+                subtitle.MarginV = adjustedRow.ToString(CultureInfo.InvariantCulture);
+            }
+        }
 
         string BalanceSegment(string text)
         {
@@ -862,6 +938,30 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
         Se.Settings.Tools.SplitRebalanceLongLinesMaxNumberOfLines = MaxNumberOfLines;
         Se.Settings.Tools.SplitRebalanceLongLinesUnbreakShorterThan = UnbreakLinesShorterThan;
         Se.SaveSettings();
+    }
+
+    [RelayCommand]
+    private void SelectAllRebalances()
+    {
+        foreach (var fix in Fixes)
+        {
+            if (fix.IsSelectable)
+            {
+                fix.IsSelected = true;
+            }
+        }
+    }
+
+    [RelayCommand]
+    private void DeselectAllRebalances()
+    {
+        foreach (var fix in Fixes)
+        {
+            if (fix.IsSelectable)
+            {
+                fix.IsSelected = false;
+            }
+        }
     }
 
     [RelayCommand]

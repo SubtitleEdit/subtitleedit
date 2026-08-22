@@ -1,5 +1,7 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
+using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 using Avalonia.Data;
 using Avalonia.Input;
@@ -8,7 +10,6 @@ using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Collections;
-using Avalonia;
 
 namespace Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
 
@@ -169,6 +170,7 @@ public class SplitBreakLongLinesWindow : Window
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
             },
             ColumnDefinitions =
@@ -185,6 +187,32 @@ public class SplitBreakLongLinesWindow : Window
             .WithMarginTop(10)
             .WithMarginLeft(10);
 
+        var buttonSelectAll = new Button
+        {
+            Content = "Select all",
+            Command = vm.SelectAllRebalancesCommand,
+            MinWidth = 110,
+        };
+
+        var buttonDeselectAll = new Button
+        {
+            Content = "Deselect all",
+            Command = vm.DeselectAllRebalancesCommand,
+            MinWidth = 110,
+        };
+
+        var selectionButtons = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 8,
+            Margin = new Thickness(10, 0, 0, 0),
+            Children =
+            {
+                buttonSelectAll,
+                buttonDeselectAll,
+            },
+        };
+
         var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
         dataGrid.Width = double.NaN;
         dataGrid.Height = double.NaN;
@@ -192,6 +220,30 @@ public class SplitBreakLongLinesWindow : Window
         dataGrid.ItemsSource = vm.Fixes;
         dataGrid.Columns.AddRange(new TableViewColumn[]
         {
+            new SeTableViewColumn
+            {
+                Header = "Apply",
+                CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                CellTemplate = new FuncDataTemplate<SplitBreakLongLinesItem>((_, _) =>
+                    new Border
+                    {
+                        Background = Brushes.Transparent,
+                        Padding = new Thickness(4),
+                        Child = new CheckBox
+                        {
+                            Focusable = false,
+                            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(SplitBreakLongLinesItem.IsSelected))
+                            {
+                                Mode = BindingMode.TwoWay,
+                            },
+                            [!Visual.IsVisibleProperty] = new Binding(nameof(SplitBreakLongLinesItem.IsSelectable)),
+                            HorizontalAlignment = HorizontalAlignment.Center,
+                            VerticalAlignment = VerticalAlignment.Center,
+                        },
+                    }),
+                Width = new GridLength(70),
+            },
             new SeTableViewColumn
             {
                 Header = Se.Language.General.NumberSymbol,
@@ -259,7 +311,8 @@ public class SplitBreakLongLinesWindow : Window
         }, RoutingStrategies.Tunnel);
 
         grid.Add(labelFixesAvailable, 0);
-        grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 1);
+        grid.Add(selectionButtons, 1);
+        grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 2);
 
         return grid;
     }
