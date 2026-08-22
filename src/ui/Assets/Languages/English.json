@@ -1799,6 +1799,7 @@
       "addFolderDotDotDot": "Add folder...",
       "selectFolderToConvert": "Select folder with files to convert",
       "includeSubfolders": "Include subfolders when adding a folder",
+      "keepSourceFileTimestamp": "Keep source file date/time on output files",
       "scanningFolderX": "Scanning {0}..."
     },
     "changeCasing": {
@@ -3052,6 +3053,7 @@
       "seekSilenceBack": "Seek silence back",
       "seekSilenceForward": "Seek silence forward",
       "setVideoPositionCurrentSubtitleStart": "Set video position to current line start",
+      "goToSubtitlePositionAndPause": "Go to sub position and pause",
       "setVideoPositionCurrentSubtitleEnd": "Set video position to current line end",
       "toggleAudioTracks": "Toggle audio tracks",
       "goToNextError": "GoTo next error",
