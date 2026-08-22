@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
@@ -38,6 +39,7 @@ public partial class AiReviewViewModel : ObservableObject
     [ObservableProperty] private int _requestDelaySeconds;
     [ObservableProperty] private ObservableCollection<LlamaCppModelDisplay> _llamaCppModels;
     [ObservableProperty] private LlamaCppModelDisplay? _selectedLlamaCppModel;
+    [ObservableProperty] private string _llamaCppServerButtonText;
     [ObservableProperty] private string _languageDisplay;
     [ObservableProperty] private ObservableCollection<ReviewFilterChip> _filterChips;
     [ObservableProperty] private ObservableCollection<ReviewSuggestionItem> _suggestions;
@@ -104,6 +106,9 @@ public partial class AiReviewViewModel : ObservableObject
             LlamaCppModels,
             LlamaCppServerManager.GetAllReviewModels(),
             Se.Settings.Tools.AiReview.LlamaCppModelFileName);
+
+        LlamaCppServerButtonText = string.Empty;
+        UpdateLlamaCppServerButtonText();
 
         LanguageDisplay = string.Empty;
         StatusText = string.Empty;
@@ -264,6 +269,7 @@ public partial class AiReviewViewModel : ObservableObject
         }
 
         LlamaCppServerManager.StopServer();
+        UpdateLlamaCppServerButtonText();
 
         // Reuse the installed backend so the user is not re-asked CPU/Vulkan/CUDA on a re-download;
         // null on a fresh install (or off Windows), which lets DownloadAsync prompt.
@@ -339,11 +345,13 @@ public partial class AiReviewViewModel : ObservableObject
             {
                 IsReviewing = false;
                 StatusText = string.Empty;
+                UpdateLlamaCppServerButtonText();
                 await MessageBox.Show(Window, Se.Language.General.Error,
                     string.Format(l.EngineError, e.Message), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
+            UpdateLlamaCppServerButtonText();
             url = LlamaCppServerManager.ApiUrl;
         }
         else if (SelectedEngine == SeAiReview.EngineOpenAiCompatible)
@@ -481,7 +489,88 @@ public partial class AiReviewViewModel : ObservableObject
         {
             ProgressValue = 100;
             IsReviewing = false;
+            UpdateLlamaCppServerButtonText();
         }
+    }
+
+    private void UpdateLlamaCppServerButtonText()
+    {
+        LlamaCppServerButtonText = LlamaCppServerManager.IsServerRunning ? Se.Language.General.StopServer : Se.Language.General.StartServer;
+    }
+
+    /// <summary>
+    /// Start/Stop server button, same as auto-translate and OCR: lets the user release the
+    /// model's RAM/VRAM after a finished review without closing Subtitle Edit, or pre-load it
+    /// before pressing Review.
+    /// </summary>
+    [RelayCommand]
+    private async Task ToggleLlamaCppServer()
+    {
+        if (Window == null || IsReviewing)
+        {
+            return;
+        }
+
+        if (LlamaCppServerManager.IsServerRunning)
+        {
+            LlamaCppServerManager.StopServer();
+            UpdateLlamaCppServerButtonText();
+            return;
+        }
+
+        var display = SelectedLlamaCppModel;
+        if (display == null ||
+            !await LlamaCppDownloadHelper.EnsureReadyAsync(Window, _windowService, display.Model.FileName,
+                LlamaCppServerManager.GetAllReviewModels(), persistAsTranslateModel: false))
+        {
+            RefreshLlamaCppModels();
+            RefreshEngines();
+            return;
+        }
+
+        RefreshLlamaCppModels();
+        RefreshEngines();
+        display = SelectedLlamaCppModel;
+        if (display == null)
+        {
+            return;
+        }
+
+        try
+        {
+            await LlamaCppServerManager.EnsureServerRunningAsync(display.Model, CancellationToken.None);
+        }
+        catch (Exception e)
+        {
+            await MessageBox.Show(Window, Se.Language.General.Error,
+                string.Format(Se.Language.Tools.AiReview.EngineError, e.Message), MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        UpdateLlamaCppServerButtonText();
+    }
+
+    /// <summary>
+    /// Cancelling a running local llama.cpp review also stops the SE-managed server, so the
+    /// model's RAM/VRAM is released right away instead of lingering until Subtitle Edit exits
+    /// (#13969) - the same rule auto-translate applies (#13830). Only mid-run: a server left idle
+    /// by a completed review stays warm (Stop server button / app exit) and the next Review
+    /// auto-restarts it.
+    /// </summary>
+    private void StopLocalLlamaCppServerAfterCancel()
+    {
+        if (!IsReviewing ||
+            SelectedEngine != SeAiReview.EngineLlamaCpp ||
+            !LlamaCppServerManager.IsServerRunning)
+        {
+            return;
+        }
+
+        // Off the UI thread - StopServer kills the process and waits up to 2 s for it to exit.
+        _ = Task.Run(() =>
+        {
+            LlamaCppServerManager.StopServer();
+            Dispatcher.UIThread.Post(UpdateLlamaCppServerButtonText);
+        });
     }
 
     private void ClearSuggestions()
@@ -674,6 +763,7 @@ public partial class AiReviewViewModel : ObservableObject
     [RelayCommand]
     private void StopReview()
     {
+        StopLocalLlamaCppServerAfterCancel();
         _cancellationTokenSource.Cancel();
     }
 
@@ -883,6 +973,8 @@ public partial class AiReviewViewModel : ObservableObject
     [RelayCommand]
     private void Cancel()
     {
+        // OnClosing (hooked on the window) stops a mid-run llama-server; Escape and the OS
+        // close button end up there too, so the rule lives in one place.
         _cancellationTokenSource.Cancel();
         Window?.Close();
     }
@@ -920,6 +1012,7 @@ public partial class AiReviewViewModel : ObservableObject
 
     internal void OnClosing()
     {
+        StopLocalLlamaCppServerAfterCancel();
         _cancellationTokenSource.Cancel();
 
         // Only stop what this window started - a video the user left playing before opening the
