@@ -176,6 +176,8 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     [ObservableProperty] private ObservableCollection<LlamaCppModelDisplay> _llamaCppModels = new();
     [ObservableProperty] private LlamaCppModelDisplay? _selectedLlamaCppModel;
     [ObservableProperty] private bool _llamaCppModelComboIsVisible;
+    [ObservableProperty] private bool _llamaCppRemoteToggleIsVisible;
+    [ObservableProperty] private bool _llamaCppUseRemoteServer;
 
     /// <summary>
     /// Re-assigns the auto-translate engine combo's item template, set by the view. The dots are a
@@ -561,7 +563,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     {
         return config.AutoTranslate.IsActive &&
                config.AutoTranslate.Translator is LlamaCppTranslate or LlamaCppAdvancedTranslate &&
-               !Se.Settings.AutoTranslate.LlamaCppUseRemoteServer;
+               !Se.Settings.Tools.BatchConvert.LlamaCppUseRemoteServer;
     }
 
     private void UpdateFilteredFiles()
@@ -666,6 +668,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         Se.Settings.Tools.BatchConvert.AutoTranslateEngine = SelectedAutoTranslator.Name;
         Se.Settings.Tools.BatchConvert.AutoTranslateSourceLanguage = SelectedSourceLanguage?.TwoLetterIsoLanguageName ?? "auto";
         Se.Settings.Tools.BatchConvert.AutoTranslateTargetLanguage = SelectedTargetLanguage?.TwoLetterIsoLanguageName ?? "en";
+        Se.Settings.Tools.BatchConvert.LlamaCppUseRemoteServer = LlamaCppUseRemoteServer;
 
         // Change casing
         if (NormalCasing)
@@ -1461,11 +1464,11 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             return true;
         }
 
-        // Remote mode: the user pointed llama.cpp at their own running llama-server. Detect it the same
-        // way the interactive Auto-translate window does - via the LlamaCppUseRemoteServer flag - not by
-        // whether AutoTranslateUrl is set, since that is pre-filled with the default localhost URL and so
-        // is never empty (which previously short-circuited the whole auto-start path).
-        if (Se.Settings.AutoTranslate.LlamaCppUseRemoteServer)
+        // Remote mode: the user pointed llama.cpp at their own running llama-server. Detect it via
+        // batch convert's own LlamaCppUseRemoteServer flag (#14005) - not by whether AutoTranslateUrl
+        // is set, since that is pre-filled with the default localhost URL and so is never empty
+        // (which previously short-circuited the whole auto-start path).
+        if (LlamaCppUseRemoteServer)
         {
             return true;
         }
@@ -2897,13 +2900,18 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
         if (engineType == typeof(LlamaCppTranslate) || engineType == typeof(LlamaCppAdvancedTranslate))
         {
-            if (!string.IsNullOrEmpty(AutoTranslateUrl.Trim()))
+            // Only the external server takes its URL from the text box; in local mode the URL is
+            // owned by LlamaCppServerManager, which points LlamaCppApiUrl at the server it starts.
+            if (LlamaCppUseRemoteServer)
             {
-                Configuration.Settings.Tools.LlamaCppApiUrl = AutoTranslateUrl.Trim();
-            }
-            else if (!string.IsNullOrEmpty(Se.Settings.AutoTranslate.LlamaCppApiUrl))
-            {
-                Configuration.Settings.Tools.LlamaCppApiUrl = Se.Settings.AutoTranslate.LlamaCppApiUrl;
+                var apiUrl = AutoTranslateUrl.Trim();
+                if (string.IsNullOrEmpty(apiUrl))
+                {
+                    apiUrl = LlamaCppTranslate.DefaultUrl;
+                }
+
+                Configuration.Settings.Tools.LlamaCppApiUrl = apiUrl;
+                Se.Settings.AutoTranslate.LlamaCppApiUrl = apiUrl;
             }
         }
 
@@ -3093,6 +3101,22 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         Se.Settings.AutoTranslate.LlamaCppModel = LlamaCppServerManager.GetModelPath(value.Model.FileName);
     }
 
+    private bool _suppressLlamaCppRemoteToggle;
+
+    partial void OnLlamaCppUseRemoteServerChanged(bool value)
+    {
+        if (_suppressLlamaCppRemoteToggle)
+        {
+            return;
+        }
+
+        Se.Settings.Tools.BatchConvert.LlamaCppUseRemoteServer = value;
+        if (SelectedAutoTranslator is LlamaCppTranslate or LlamaCppAdvancedTranslate)
+        {
+            PopulateLlamaCppModels();
+        }
+    }
+
     /// <summary>
     /// Fills the llama.cpp model combo and pre-selects the last-used model, or hides the combo when
     /// a remote server is configured (it serves whatever model it was started with). Re-filling the
@@ -3100,11 +3124,12 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     /// </summary>
     private void PopulateLlamaCppModels()
     {
-        if (Se.Settings.AutoTranslate.LlamaCppUseRemoteServer)
+        if (LlamaCppUseRemoteServer)
         {
-            // Nothing local to pick or install - the remote server owns both.
+            // Nothing local to pick or install - the remote server owns both; the user just edits the URL.
             LlamaCppModelComboIsVisible = false;
             LlamaCppEngineSettingsButtonIsVisible = false;
+            AutoTranslateUrlIsVisible = true;
             LlamaCppModels.Clear();
             SelectedLlamaCppModel = null;
             return;
@@ -3112,6 +3137,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
         LlamaCppModelComboIsVisible = true;
         LlamaCppEngineSettingsButtonIsVisible = true;
+        AutoTranslateUrlIsVisible = false;
         var savedModelName = Path.GetFileName(Se.Settings.AutoTranslate.LlamaCppModel ?? string.Empty);
         SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, GetLlamaCppModelsForEngine(), savedModelName);
     }
@@ -3138,6 +3164,10 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         // Both turned back on by PopulateLlamaCppModels for a local llama.cpp.
         LlamaCppModelComboIsVisible = false;
         LlamaCppEngineSettingsButtonIsVisible = false;
+
+        // Batch convert has its own local/external switch for llama.cpp (#14005), so checking
+        // "use external server" in the Auto-translate window no longer leaks into batch runs.
+        LlamaCppRemoteToggleIsVisible = engine is LlamaCppTranslate or LlamaCppAdvancedTranslate;
 
         // Batch size, context history and the synopsis/glossary/style prompt only exist on the
         // advanced engine; they apply to local and remote llama-servers alike.
@@ -3196,12 +3226,14 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             AutoTranslateModelBrowseIsVisible = false;
             AutoTranslateModelIsVisible = false;
             AutoTranslateUrl = Se.Settings.AutoTranslate.LlamaCppApiUrl;
-            AutoTranslateUrlIsVisible = true;
             AutoTranslateApiKey = string.Empty;
             AutoTranslateApiKeyIsVisible = false;
 
-            // A remote server serves whatever model it was started with, so there is nothing to pick
-            // here - same as in the Auto-translate window, which owns that toggle.
+            // Local vs. external server: the URL field is only shown for an external server, and a
+            // remote server serves whatever model it was started with, so the model combo hides.
+            _suppressLlamaCppRemoteToggle = true;
+            LlamaCppUseRemoteServer = Se.Settings.Tools.BatchConvert.LlamaCppUseRemoteServer;
+            _suppressLlamaCppRemoteToggle = false;
             PopulateLlamaCppModels();
         }
         else if (engine is NoLanguageLeftBehindServe)

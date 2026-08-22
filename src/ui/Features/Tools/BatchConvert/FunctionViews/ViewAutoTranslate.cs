@@ -83,10 +83,17 @@ public static class ViewAutoTranslate
             ToolTip.SetTip(buttonAdvanced, Se.Language.Translate.AdvancedSettings);
         }
 
+        // Batch convert's own local/external llama-server switch (#14005) - independent of the one
+        // in the Auto-translate window. Shown only for the llama.cpp engines.
+        var checkBoxLlamaCppRemote = UiUtil.MakeCheckBox(Se.Language.General.LlamaCppUseRemoteServer, vm, nameof(vm.LlamaCppUseRemoteServer))
+            .WithMarginLeft(10);
+        checkBoxLlamaCppRemote.Bind(CheckBox.IsVisibleProperty, new Binding(nameof(vm.LlamaCppRemoteToggleIsVisible)));
+
         var panelEngineControls = UiUtil.MakeHorizontalPanel(
             cbEngines,
             buttonEngineSettings,
-            buttonAdvanced);
+            buttonAdvanced,
+            checkBoxLlamaCppRemote);
 
         // Prompt and the shared request settings for the regular llama.cpp engine (the advanced
         // engine has its own window instead). Right-aligned and away from the engine gear, the same

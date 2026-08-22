@@ -85,6 +85,13 @@ public class SeBatchConvert
     public string AutoTranslateSourceLanguage { get; set; }
     public string AutoTranslateTargetLanguage { get; set; }
 
+    /// <summary>
+    /// Batch convert's own "use external server" switch for the llama.cpp engines - independent of
+    /// the Auto-translate window's <see cref="SeAutoTranslate.LlamaCppUseRemoteServer"/> (#14005).
+    /// The server URL itself is shared via <see cref="SeAutoTranslate.LlamaCppApiUrl"/>.
+    /// </summary>
+    public bool LlamaCppUseRemoteServer { get; set; }
+
     public string ChangeCasingType { get; set; }
     public bool NormalCasingFixNames { get; set; }
     public bool NormalCasingOnlyUpper { get; set; }
