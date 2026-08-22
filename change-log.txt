@@ -3,6 +3,27 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-beta21 (22nd of August 2026)
+
+* Add an option to keep the source file's date/time on converted files (batch convert + seconv) - thx TucocoTucoco
+* Add a Start/Stop server button to the AI review window, and stop llama-server when a review is cancelled - thx emsb8888-prog
+* Snap whole-paragraph waveform drags to shot changes - thx m0ck69
+* Update yt-dlp to 2026.08.19
+* Fix "snap to shot change" ignoring the cue gap and often doing nothing at all - thx m0ck69
+* Fix waveform edge drags running away when the video position is centered - thx GrampaWildWilly
+* Fix OCR reading "l" as "i" or "I" without "try to guess unknown words" turned on - thx Miggu82
+* Fix the subtitle grid jumping after merging lines with a read-only original open - thx torvchen
+* Fix focus, scroll and selection in the subtitle grid after delete, insert and merge commands
+* Fix WebVTT showing a line twice when the same cue is repeated with the same time codes
+* Update Chinese (simplified) translation - thx emsb8888-prog
+* Update French translation - thx Need74
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+* Update Korean translation - thx 12si27
+* Update Polish translation - thx potplayer-fanpack
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-beta20 (21st of August 2026)
 
 * Add "Go to sub position and pause" to the video shortcuts - thx BBB2K
