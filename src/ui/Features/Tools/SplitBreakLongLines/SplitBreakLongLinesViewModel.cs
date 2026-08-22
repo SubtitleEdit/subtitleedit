@@ -5,6 +5,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
@@ -27,6 +28,7 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
 
     [ObservableProperty] private bool _rebalanceLongLines;
     [ObservableProperty] private bool _rebalanceOnlyLinesTooLong;
+    [ObservableProperty] private bool _applyMinimumGapToAllSubtitles;
     [ObservableProperty] private int _unbreakLinesShorterThan;
 
     [ObservableProperty] private string _fixesInfo;
@@ -96,6 +98,7 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
 
             var splitCount = 0;
             var rebalanceCount = 0;
+            var gapCount = 0;
             var maxCharactersPerSubtitle = MaxNumberOfLines * SingleLineMaxLength;
 
             if (SplitLongLines)
@@ -104,14 +107,40 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
                 {
                     var item = new SubtitleLineViewModel(_allSubtitles[index]);
 
-                    var splitLines = Split(item, maxCharactersPerSubtitle, SingleLineMaxLength, _languageCode, makeCompliant: true);
-                    if (splitLines.Count > 1)
+                    var splitLines = Split(
+                        item,
+                        maxCharactersPerSubtitle,
+                        SingleLineMaxLength,
+                        _languageCode,
+                        makeCompliant: true,
+                        GetGeneralMinimumGapMs());
+
+                    var textChanged = splitLines.Count == 1 && splitLines[0].Text != item.Text;
+                    if (splitLines.Count > 1 || textChanged)
                     {
                         splitCount++;
                         var originalPreview = GetTextPreview(item.Text, 50);
-                        var firstSplitPreview = GetTextPreview(splitLines[0].Text, 50);
-                        var fixDescription = string.Format(Se.Language.Tools.SplitBreakLongLines.SplitIntoXLines, splitLines.Count, originalPreview, firstSplitPreview);
-                        var fixItem = new SplitBreakLongLinesItem(Se.Language.Tools.SplitBreakLongLines.SplitLongLine, index + 1, fixDescription, item);
+                        string fixDescription;
+                        if (splitLines.Count > 1)
+                        {
+                            var firstSplitPreview = GetTextPreview(splitLines[0].Text, 50);
+                            fixDescription = string.Format(
+                                Se.Language.Tools.SplitBreakLongLines.SplitIntoXLines,
+                                splitLines.Count,
+                                originalPreview,
+                                firstSplitPreview);
+                        }
+                        else
+                        {
+                            var correctedPreview = GetTextPreview(splitLines[0].Text.Replace("\r\n", " · ").Replace("\n", " · "), 60);
+                            fixDescription = $"'{originalPreview}' → '{correctedPreview}'";
+                        }
+
+                        var fixItem = new SplitBreakLongLinesItem(
+                            Se.Language.Tools.SplitBreakLongLines.SplitLongLine,
+                            index + 1,
+                            fixDescription,
+                            item);
                         Fixes.Add(fixItem);
                     }
                     foreach (var s in splitLines)
@@ -163,13 +192,54 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
                 }
             }
 
-            if (splitCount == 0 && rebalanceCount == 0)
+            if (ApplyMinimumGapToAllSubtitles)
+            {
+                var minimumGapMs = GetGeneralMinimumGapMs();
+                const double toleranceMs = 10.0;
+
+                for (var index = 0; index < AllSubtitlesFixed.Count - 1; index++)
+                {
+                    var current = AllSubtitlesFixed[index];
+                    var next = AllSubtitlesFixed[index + 1];
+                    var currentGapMs = next.StartTime.TotalMilliseconds - current.EndTime.TotalMilliseconds;
+
+                    if (currentGapMs >= minimumGapMs - toleranceMs)
+                    {
+                        continue;
+                    }
+
+                    var newEndMs = next.StartTime.TotalMilliseconds - minimumGapMs;
+                    if (newEndMs <= current.StartTime.TotalMilliseconds)
+                    {
+                        continue;
+                    }
+
+                    var before = new TimeCode(currentGapMs).ToShortDisplayString();
+                    current.EndTime = TimeSpan.FromMilliseconds(newEndMs);
+                    current.UpdateDuration();
+                    var newGapMs = next.StartTime.TotalMilliseconds - current.EndTime.TotalMilliseconds;
+                    var after = new TimeCode(newGapMs).ToShortDisplayString();
+                    gapCount++;
+
+                    Fixes.Add(new SplitBreakLongLinesItem(
+                        Se.Language.Main.Menu.ApplyMinGap,
+                        index + 1,
+                        $"Gap: {before} → {after}",
+                        current));
+                }
+            }
+
+            if (splitCount == 0 && rebalanceCount == 0 && gapCount == 0)
             {
                 FixesInfo = Se.Language.Tools.ApplyDurationLimits.NoChangesNeeded;
                 return;
             }
 
-            if (rebalanceCount == 0)
+            if (gapCount > 0)
+            {
+                FixesInfo = $"Split: {splitCount}, rebalanced: {rebalanceCount}, gaps corrected: {gapCount}";
+            }
+            else if (rebalanceCount == 0)
             {
                 FixesInfo = string.Format(Se.Language.Tools.SplitBreakLongLines.LinesSplitX, splitCount);
             }
@@ -178,6 +248,17 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
                 FixesInfo = string.Format(Se.Language.Tools.SplitBreakLongLines.LinesSplitXLinesRebalancedY, splitCount, rebalanceCount);
             }
         });
+    }
+
+    private static double GetGeneralMinimumGapMs()
+    {
+        var general = Se.Settings.General;
+        if (general.UseFrameMode)
+        {
+            return SubtitleFormat.FramesToMilliseconds(general.MinimumBetweenLines.Frames);
+        }
+
+        return general.MinimumBetweenLines.Milliseconds;
     }
 
     public static bool HasLineTooLong(string? text, int singleLineMaxLength, int maxNumberOfLines)
@@ -210,6 +291,23 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
         int singleLineMaxLength,
         string languageCode,
         bool makeCompliant)
+    {
+        return Split(
+            item,
+            maxCharactersPerSubtitle,
+            singleLineMaxLength,
+            languageCode,
+            makeCompliant,
+            minimumGapMs: 0);
+    }
+
+    public static List<SubtitleLineViewModel> Split(
+        SubtitleLineViewModel item,
+        int maxCharactersPerSubtitle,
+        int singleLineMaxLength,
+        string languageCode,
+        bool makeCompliant,
+        double minimumGapMs)
     {
         var lines = new List<SubtitleLineViewModel>();
 
@@ -390,6 +488,20 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
             }
         }
 
+        // Keep the original outer timecodes, but reserve the configured minimum gap
+        // between newly created subtitle events. If the source duration is too short to
+        // fit the requested gap, clamp it so durations never become negative.
+        var gapMs = 0.0;
+        if (segments.Count > 1)
+        {
+            gapMs = Math.Max(0, minimumGapMs);
+            var maxGapThatFits = originalDurationMs / (segments.Count - 1);
+            gapMs = Math.Min(gapMs, maxGapThatFits);
+        }
+
+        var totalGapMs = gapMs * Math.Max(0, segments.Count - 1);
+        var availableTextDurationMs = Math.Max(0, originalDurationMs - totalGapMs);
+
         double accumulatedMs = originalStartMs;
         for (var i = 0; i < segments.Count; i++)
         {
@@ -402,8 +514,12 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
             }
             else
             {
-                segDurationMs = originalDurationMs * (charCounts[i] / (double)totalChars);
-                segDurationMs = Math.Max(0, Math.Min(segDurationMs, Math.Max(0, originalEndMs - accumulatedMs)));
+                segDurationMs = availableTextDurationMs * (charCounts[i] / (double)totalChars);
+                segDurationMs = Math.Max(
+                    0,
+                    Math.Min(
+                        segDurationMs,
+                        Math.Max(0, originalEndMs - accumulatedMs - gapMs)));
             }
 
             var newLine = new SubtitleLineViewModel(item, true)
@@ -416,6 +532,10 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
             lines.Add(newLine);
 
             accumulatedMs += segDurationMs;
+            if (i < segments.Count - 1)
+            {
+                accumulatedMs += gapMs;
+            }
         }
 
         if (lines.Count > 0)
@@ -730,6 +850,7 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
         SplitLongLines = Se.Settings.Tools.SplitRebalanceLongLinesSplit;
         RebalanceLongLines = Se.Settings.Tools.SplitRebalanceLongLinesRebalance;
         RebalanceOnlyLinesTooLong = Se.Settings.Tools.SplitRebalanceLongLinesRebalanceOnlyTooLong;
+        ApplyMinimumGapToAllSubtitles = false;
     }
 
     private void SaveSettings()

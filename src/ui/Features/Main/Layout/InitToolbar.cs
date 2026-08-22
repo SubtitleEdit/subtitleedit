@@ -548,6 +548,25 @@ public static class InitToolbar
             RoutingStrategies.Tunnel,
             handledEventsToo: true);
         stackPanelRight.Children.Add(comboBoxSubtitleFormat);
+
+        // Direct access to the existing EBU STL header/export dialog.
+        // Match the format ComboBox visually and leave a small right-side margin.
+        stackPanelRight.Children.Add(new Button
+        {
+            Content = "Header",
+            Command = vm.ExportEbuStlCommand,
+            Background = Brushes.Transparent,
+            BorderBrush = Brushes.Gray,
+            BorderThickness = new Thickness(1),
+            Padding = new Thickness(10, 4),
+            Margin = new Thickness(6, 0, 4, 0),
+            MinHeight = 32,
+            MinWidth = 68,
+            VerticalAlignment = VerticalAlignment.Center,
+            [AutomationProperties.NameProperty] = "EBU STL header",
+            [ToolTip.TipProperty] = "Open EBU STL header/export settings",
+        });
+
         isLastSeparator = false;
 
         if (appearance.ToolbarShowEncoding)

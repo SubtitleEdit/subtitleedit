@@ -128,6 +128,38 @@ public class SplitBreakLongLinesViewModelTests
     }
 
     [Fact]
+    public void Split_MultipleEvents_UsesConfiguredMinimumGapAndPreservesOuterTimeCodes()
+    {
+        var subtitle = MakeSubtitle(
+            "This subtitle contains much too much text to fit inside only two lines " +
+            "with a maximum length of thirty-six characters and therefore needs " +
+            "to become more than one subtitle event.");
+
+        const double minimumGapMs = 120;
+
+        var result = SplitBreakLongLinesViewModel.Split(
+            subtitle,
+            MaxSubtitleLength,
+            MaxLineLength,
+            "en",
+            makeCompliant: true,
+            minimumGapMs);
+
+        Assert.True(result.Count >= 2);
+        Assert.Equal(subtitle.StartTime, result[0].StartTime);
+        Assert.Equal(subtitle.EndTime, result[^1].EndTime);
+
+        for (var i = 1; i < result.Count; i++)
+        {
+            var actualGapMs =
+                result[i].StartTime.TotalMilliseconds -
+                result[i - 1].EndTime.TotalMilliseconds;
+
+            Assert.Equal(minimumGapMs, actualGapMs, 1);
+        }
+    }
+
+    [Fact]
     public void Split_LegacyMode_DoesNotAutoBalanceSingleLine()
     {
         var subtitle = MakeSubtitle(

@@ -17,13 +17,15 @@ namespace Nikse.SubtitleEdit.Features.Tools.ApplyMinGap;
 
 public partial class ApplyMinGapViewModel : ObservableObject, IClosingCleanup
 {
+    private const double GapComparisonToleranceMs = 10.0;
+
     [ObservableProperty] private ObservableCollection<ApplyMinGapItem> _subtitles;
     [ObservableProperty] private ApplyMinGapItem? _selectedSubtitle;
     [ObservableProperty] private string _minXBetweenLines;
     [ObservableProperty] private int _minGapMsOrFrames;
     [ObservableProperty] private string _statusText;
-    
-    public List<SubtitleLineViewModel> FixedSubtitles{ get; set; }
+
+    public List<SubtitleLineViewModel> FixedSubtitles { get; set; }
     public Window? Window { get; set; }
 
     public bool OkPressed { get; private set; }
@@ -51,7 +53,7 @@ public partial class ApplyMinGapViewModel : ObservableObject, IClosingCleanup
 
         LoadSettings();
 
-        _allSubtitles = new List<SubtitleLineViewModel>();  
+        _allSubtitles = new List<SubtitleLineViewModel>();
         _timerUpdatePreview = new System.Timers.Timer(500);
         _timerUpdatePreview.Elapsed += TimerUpdatePreviewElapsed;
     }
@@ -70,9 +72,6 @@ public partial class ApplyMinGapViewModel : ObservableObject, IClosingCleanup
             UpdatePreview();
         }
 
-        // Guard the restart: OnClosingCleanup may have disposed the timer while this handler ran,
-        // and Start() on a disposed timer throws ObjectDisposedException (no longer swallowed on
-        // modern .NET), crashing the app from a thread-pool thread. (#12739)
         if (!_isClosing)
         {
             _timerUpdatePreview.Start();
@@ -100,34 +99,42 @@ public partial class ApplyMinGapViewModel : ObservableObject, IClosingCleanup
         {
             Subtitles.Clear();
             var fixedCount = 0;
-            for (var index = 0; index < FixedSubtitles.Count-1; index++)
+            for (var index = 0; index < FixedSubtitles.Count - 1; index++)
             {
                 var current = FixedSubtitles[index];
                 var next = FixedSubtitles[index + 1];
                 var gapMs = next.StartTime.TotalMilliseconds - current.EndTime.TotalMilliseconds;
-                if (gapMs < minMsBetweenLines)
+
+                if (!NeedsGapAdjustment(gapMs, minMsBetweenLines))
                 {
-                    fixedCount++;
-                    
-                    var before = new TimeCode(gapMs).ToShortDisplayString();
-                    
-                    var newEndMs = next.StartTime.TotalMilliseconds  - minMsBetweenLines;
-                    current.EndTime = TimeSpan.FromMilliseconds(newEndMs);
-                    var newGapMs = next.StartTime.TotalMilliseconds - current.EndTime.TotalMilliseconds;
-
-                    var after = new TimeCode(newGapMs).ToShortDisplayString();
-                    var fixFormat = Se.Language.Tools.ApplyMinGaps.ChangedGapFromXToYCommentZ;
-                    var comment = string.Empty;
-                    var info = string.Format(fixFormat, before, after, comment);
-
-                    var vm = new ApplyMinGapItem(current);
-                    vm.InfoText = info; 
-                    Subtitles.Add(vm);
+                    continue;
                 }
+
+                fixedCount++;
+
+                var before = new TimeCode(gapMs).ToShortDisplayString();
+
+                var newEndMs = next.StartTime.TotalMilliseconds - minMsBetweenLines;
+                current.EndTime = TimeSpan.FromMilliseconds(newEndMs);
+                var newGapMs = next.StartTime.TotalMilliseconds - current.EndTime.TotalMilliseconds;
+
+                var after = new TimeCode(newGapMs).ToShortDisplayString();
+                var fixFormat = Se.Language.Tools.ApplyMinGaps.ChangedGapFromXToYCommentZ;
+                var comment = string.Empty;
+                var info = string.Format(fixFormat, before, after, comment);
+
+                var vm = new ApplyMinGapItem(current);
+                vm.InfoText = info;
+                Subtitles.Add(vm);
             }
 
             StatusText = string.Format(Se.Language.Tools.ApplyMinGaps.NumberOfGapsFixedX, fixedCount);
         });
+    }
+
+    public static bool NeedsGapAdjustment(double currentGapMs, double minimumGapMs)
+    {
+        return currentGapMs < minimumGapMs - GapComparisonToleranceMs;
     }
 
     public void Initialize(List<SubtitleLineViewModel> subtitles)
@@ -140,11 +147,6 @@ public partial class ApplyMinGapViewModel : ObservableObject, IClosingCleanup
 
     private void LoadSettings()
     {
-        // Kept per unit: the box holds frames in frame mode and milliseconds otherwise, so one
-        // shared number meant a gap saved as 10 ms came back as 10 frames (~400 ms) after the
-        // user switched the time format. 0 means "not saved yet" - fall back to the general
-        // minimum-gap setting, which is what the dialog used to open on every time because
-        // nothing here was ever written back.
         if (Se.Settings.General.UseFrameMode)
         {
             var savedFrames = Se.Settings.Tools.ApplyMinGapFrames;
@@ -194,7 +196,6 @@ public partial class ApplyMinGapViewModel : ObservableObject, IClosingCleanup
         }
         else if (UiUtil.IsHelp(e))
         {
-            e.Handled = true;
             UiUtil.ShowHelp("features/apply-min-gap");
         }
     }

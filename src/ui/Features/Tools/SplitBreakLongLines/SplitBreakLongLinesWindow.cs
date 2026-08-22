@@ -1,4 +1,3 @@
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Media;
@@ -9,6 +8,7 @@ using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Collections;
+using Avalonia;
 
 namespace Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
 
@@ -57,9 +57,9 @@ public class SplitBreakLongLinesWindow : Window
 
         Content = grid;
 
-        Activated += delegate { _checkBoxSplitLongLines.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        Activated += delegate { _checkBoxSplitLongLines.Focus(); };
         KeyDown += vm.KeyDown;
-        Loaded += (_, _)  => vm.Loaded();
+        Loaded += (_, _) => vm.Loaded();
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
@@ -71,6 +71,7 @@ public class SplitBreakLongLinesWindow : Window
         {
             RowDefinitions =
             {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
@@ -87,20 +88,44 @@ public class SplitBreakLongLinesWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        var checkBoxSplitLongLines = UiUtil.MakeCheckBox(Se.Language.Tools.SplitBreakLongLines.SplitLongLines, vm, nameof(vm.SplitLongLines))
+        var checkBoxSplitLongLines = UiUtil.MakeCheckBox(
+                Se.Language.Tools.SplitBreakLongLines.SplitLongLines,
+                vm,
+                nameof(vm.SplitLongLines))
             .WithMarginRight(40);
         _checkBoxSplitLongLines = checkBoxSplitLongLines;
         checkBoxSplitLongLines.IsCheckedChanged += (s, e) => vm.SetChanged();
 
-        var checkBoxRebalanceLongLines = UiUtil.MakeCheckBox(Se.Language.Tools.SplitBreakLongLines.RebalanceLongLines, vm, nameof(vm.RebalanceLongLines))
+        var checkBoxRebalanceLongLines = UiUtil.MakeCheckBox(
+                Se.Language.Tools.SplitBreakLongLines.RebalanceLongLines,
+                vm,
+                nameof(vm.RebalanceLongLines))
             .WithMarginRight(40);
         checkBoxRebalanceLongLines.IsCheckedChanged += (s, e) => vm.SetChanged();
 
-        var checkBoxRebalanceOnlyTooLong = UiUtil.MakeCheckBox(Se.Language.Tools.SplitBreakLongLines.RebalanceOnlyLinesTooLong, vm, nameof(vm.RebalanceOnlyLinesTooLong))
+        var checkBoxRebalanceOnlyTooLong = UiUtil.MakeCheckBox(
+                Se.Language.Tools.SplitBreakLongLines.RebalanceOnlyLinesTooLong,
+                vm,
+                nameof(vm.RebalanceOnlyLinesTooLong))
             .WithMarginLeft(25)
             .WithMarginRight(40);
         checkBoxRebalanceOnlyTooLong[!InputElement.IsEnabledProperty] = new Binding(nameof(vm.RebalanceLongLines));
         checkBoxRebalanceOnlyTooLong.IsCheckedChanged += (s, e) => vm.SetChanged();
+
+        // Optional final pass: only when the user asks for it, also correct pre-existing
+        // short gaps across the complete subtitle. The value itself comes from the global
+        // Options -> Settings minimum-gap setting.
+        var checkBoxApplyMinimumGapToAll = UiUtil.MakeCheckBox(
+                "Apply minimum gap to all subtitles",
+                vm,
+                nameof(vm.ApplyMinimumGapToAllSubtitles))
+            .WithMarginLeft(25)
+            .WithMarginRight(40);
+        checkBoxApplyMinimumGapToAll[!InputElement.IsEnabledProperty] = new Binding(nameof(vm.SplitLongLines));
+        checkBoxApplyMinimumGapToAll.IsCheckedChanged += (s, e) => vm.SetChanged();
+        ToolTip.SetTip(
+            checkBoxApplyMinimumGapToAll,
+            "After splitting long lines, also apply the general minimum-gap setting to all subtitle gaps.");
 
         var labelSingleLineMaxLength = UiUtil.MakeLabel(Se.Language.Options.Settings.SingleLineMaxLength);
         var numericUpDownSingleLineMaxLength = UiUtil.MakeNumericUpDownInt(5, 1000, 10, 130, vm, nameof(vm.SingleLineMaxLength));
@@ -132,6 +157,8 @@ public class SplitBreakLongLinesWindow : Window
         grid.Add(labelUnbreakLinesShorterThan, 2, 1);
         grid.Add(numericUpDownUnbreakLinesShorterThan, 2, 2);
 
+        grid.Add(checkBoxApplyMinimumGapToAll, 3);
+
         return grid;
     }
 
@@ -158,8 +185,6 @@ public class SplitBreakLongLinesWindow : Window
             .WithMarginTop(10)
             .WithMarginLeft(10);
 
-        // Sorting dropped in the DataGrid -> TableView conversion: the grid previews
-        // split/rebalance fixes in subtitle order.
         var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
         dataGrid.Width = double.NaN;
         dataGrid.Height = double.NaN;
@@ -167,62 +192,59 @@ public class SplitBreakLongLinesWindow : Window
         dataGrid.ItemsSource = vm.Fixes;
         dataGrid.Columns.AddRange(new TableViewColumn[]
         {
-                new SeTableViewColumn
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.NumberSymbol,
+                Binding = new Binding(nameof(SplitBreakLongLinesItem.Number)),
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                Width = new GridLength(60),
+            },
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.Name,
+                CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                CellTemplate = new FuncDataTemplate<SplitBreakLongLinesItem>((item, _) =>
                 {
-                    Header = Se.Language.General.NumberSymbol,
-                    Binding = new Binding(nameof(SplitBreakLongLinesItem.Number)),
-                    CellTheme = UiUtil.TableViewCellTheme,
-                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-                    // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
-                    Width = new GridLength(60),
-                },
-                new SeTableViewColumn
-                {
-                    Header = Se.Language.General.Name,
-                    CellTheme = UiUtil.TableViewNoPaddingCellTheme,
-                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-                    CellTemplate = new FuncDataTemplate<SplitBreakLongLinesItem>((item, _) =>
+                    if (item == null)
                     {
-                        if (item == null)
-                        {
-                            return new Border();
-                        }
+                        return new Border();
+                    }
 
-                        var isSplit = item.Name == Se.Language.Tools.SplitBreakLongLines.SplitLongLine;
-                        var color = isSplit ? Color.FromRgb(0x5f, 0xc6, 0xd8) : Color.FromRgb(0xb4, 0x8c, 0xe8);
-                        return new Border
+                    var isSplit = item.Name == Se.Language.Tools.SplitBreakLongLines.SplitLongLine;
+                    var color = isSplit ? Color.FromRgb(0x5f, 0xc6, 0xd8) : Color.FromRgb(0xb4, 0x8c, 0xe8);
+                    return new Border
+                    {
+                        Background = Brushes.Transparent,
+                        Padding = new Thickness(4),
+                        Child = new Border
                         {
-                            Background = Brushes.Transparent,
-                            Padding = new Thickness(4),
-                            Child = new Border
+                            Background = new SolidColorBrush(Color.FromArgb(0x20, color.R, color.G, color.B)),
+                            CornerRadius = new CornerRadius(5),
+                            Padding = new Thickness(7, 2),
+                            HorizontalAlignment = HorizontalAlignment.Left,
+                            VerticalAlignment = VerticalAlignment.Center,
+                            Child = new TextBlock
                             {
-                                Background = new SolidColorBrush(Color.FromArgb(0x20, color.R, color.G, color.B)),
-                                CornerRadius = new CornerRadius(5),
-                                Padding = new Thickness(7, 2),
-                                HorizontalAlignment = HorizontalAlignment.Left,
+                                Text = item.Name,
+                                FontSize = 12,
+                                Foreground = new SolidColorBrush(color),
                                 VerticalAlignment = VerticalAlignment.Center,
-                                Child = new TextBlock
-                                {
-                                    Text = item.Name,
-                                    FontSize = 12,
-                                    Foreground = new SolidColorBrush(color),
-                                    VerticalAlignment = VerticalAlignment.Center,
-                                },
                             },
-                        };
-                    }),
-                    // Content-sized (Auto) on the DataGrid; fits the "Split long line" /
-                    // "Rebalance long line" pill.
-                    Width = new GridLength(150),
-                },
-                new SeTableViewColumn
-                {
-                    Header = Se.Language.General.Fix,
-                    Binding = new Binding(nameof(SplitBreakLongLinesItem.Fix)),
-                    Width = new GridLength(1, GridUnitType.Star),
-                    CellTheme = UiUtil.TableViewCellTheme,
-                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-                },
+                        },
+                    };
+                }),
+                Width = new GridLength(150),
+            },
+            new SeTableViewColumn
+            {
+                Header = Se.Language.General.Fix,
+                Binding = new Binding(nameof(SplitBreakLongLinesItem.Fix)),
+                Width = new GridLength(1, GridUnitType.Star),
+                CellTheme = UiUtil.TableViewCellTheme,
+                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            },
         });
 
         dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
