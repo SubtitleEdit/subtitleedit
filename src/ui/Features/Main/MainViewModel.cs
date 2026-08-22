@@ -7357,11 +7357,12 @@ public partial class MainViewModel :
         }
 
         var result = await ShowDialogAsync<SplitBreakLongLinesWindow, SplitBreakLongLinesViewModel>(
-            vm => { vm.Initialize(Subtitles.ToList()); });
+            vm => { vm.Initialize(Subtitles.ToList(), IsFormatEbu); });
 
         if (result.OkPressed && result.AllSubtitlesFixed.Count > 0)
         {
             ReplaceSubtitles(result.AllSubtitlesFixed);
+            Renumber();
             SelectAndScrollToRow(0);
             _updateAudioVisualizer = true;
             RefreshSubtitlePreview();
@@ -15655,7 +15656,7 @@ public partial class MainViewModel :
         }
 
         var result = await ShowDialogAsync<SplitBreakLongLinesWindow, SplitBreakLongLinesViewModel>(
-            vm => { vm.Initialize(selectedInOrder); });
+            vm => { vm.Initialize(selectedInOrder, IsFormatEbu); });
 
         if (!result.OkPressed || result.AllSubtitlesFixed.Count == 0)
         {
