@@ -12647,6 +12647,28 @@ public partial class MainViewModel :
             }
         }
 
+        // Moving the start back must not run into the previous line (issue #13999). SE 4 clamped
+        // to "previous end + minimum gap" here; SE 5 checked only this line's own end, so repeated
+        // presses walked straight through the neighbour. The KeepGapPrev variant is exempt: it
+        // carries the previous line along, so there is nothing to run into. "Allow overlap (when
+        // moving/resizing)" is the user saying they want to - the waveform drag reads it the same
+        // way.
+        if (deltaMs < 0 && !prevIsClose && prev != null && !Se.Settings.Waveform.AllowOverlap)
+        {
+            var floorMs = prev.EndTime.TotalMilliseconds + gapMs;
+            if (newStartMs < floorMs)
+            {
+                // Already overlapping before this press (a nudge cannot be asked to repair that):
+                // leave it alone rather than jumping the cue forward to the gap.
+                if (s.StartTime.TotalMilliseconds <= floorMs)
+                {
+                    return;
+                }
+
+                newStartMs = floorMs;
+            }
+        }
+
         s.SetStartTimeOnly(TimeSpan.FromMilliseconds(newStartMs));
 
         if (prevIsClose && prev != null)
@@ -12696,6 +12718,22 @@ public partial class MainViewModel :
                 && (next.EndTime.TotalMilliseconds - next.StartTime.TotalMilliseconds) - deltaMs < minDurMs)
             {
                 return;
+            }
+        }
+
+        // Symmetric counterpart of the clamp in MoveStartByFrames (issue #13999): moving the end
+        // forward must not run into the next line.
+        if (deltaMs > 0 && !nextIsClose && next != null && !Se.Settings.Waveform.AllowOverlap)
+        {
+            var ceilingMs = next.StartTime.TotalMilliseconds - gapMs;
+            if (newEndMs > ceilingMs)
+            {
+                if (s.EndTime.TotalMilliseconds >= ceilingMs)
+                {
+                    return;
+                }
+
+                newEndMs = ceilingMs;
             }
         }
 
