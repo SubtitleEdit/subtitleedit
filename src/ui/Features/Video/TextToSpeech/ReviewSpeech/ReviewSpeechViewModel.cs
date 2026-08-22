@@ -169,7 +169,8 @@ public partial class ReviewSpeechViewModel : ObservableObject
         _cancellationToken = _cancellationTokenSource.Token;
 
         _playLock = new Lock();
-        _timer = new Timer(200);
+        // 100 ms: also drives the waveform playhead during playback, 200 ms looked steppy.
+        _timer = new Timer(100);
         _timer.Elapsed += OnTimerOnElapsed;
         _timer.Start();
     }
@@ -190,6 +191,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
             // unguarded IsPaused read raced the dispose (NRE / native use-after-free window).
             var stopped = false;
             var paused = false;
+            var positionSeconds = 0.0;
             lock (_playLock)
             {
                 if (_cancellationTokenSource.IsCancellationRequested || _mpvContext == null)
@@ -199,6 +201,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
                 else
                 {
                     paused = _mpvContext.IsPaused;
+                    positionSeconds = _mpvContext.Position;
                 }
             }
 
@@ -206,6 +209,15 @@ public partial class ReviewSpeechViewModel : ObservableObject
             {
                 await Dispatcher.UIThread.InvokeAsync(ResetPlaybackUiState);
                 return;
+            }
+
+            // The clip plays from the cue's start, so the waveform playhead is start + clip
+            // position - the user sees where in the cue the speech currently is (#14000).
+            var playingRow = _playingRow;
+            if (!paused && playingRow?.WaveformParagraph != null)
+            {
+                var playheadSeconds = playingRow.WaveformParagraph.StartTime.TotalSeconds + positionSeconds;
+                await Dispatcher.UIThread.InvokeAsync(() => SetWaveformPlayhead(playheadSeconds));
             }
 
             // The row that is actually playing - not SelectedLine: two-way grid selection meant
@@ -472,6 +484,183 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
         // Cps depends on duration; refresh so the grid stays consistent with the dragged times.
         row.Cps = Math.Round(paragraph.GetCharactersPerSecond(), 2).ToString(CultureInfo.CurrentCulture);
+    }
+
+    private void SetWaveformPlayhead(double seconds)
+    {
+        var av = AudioVisualizer;
+        if (av == null)
+        {
+            return;
+        }
+
+        av.CurrentVideoPositionSeconds = seconds;
+        av.InvalidateVisual();
+    }
+
+    // Length of each row's generated clip, keyed by file name: a regenerate always writes a new
+    // file, so a stale entry can never be served for a changed clip. Non-WAV or unreadable files
+    // yield 0, which the visualizer treats as "no bar".
+    private readonly Dictionary<string, double> _audioLengthCache = new();
+
+    public double GetGeneratedAudioLengthSeconds(ReviewRow row)
+    {
+        var fileName = row.StepResult.CurrentFileName;
+        if (string.IsNullOrEmpty(fileName))
+        {
+            return 0;
+        }
+
+        if (_audioLengthCache.TryGetValue(fileName, out var cached))
+        {
+            return cached;
+        }
+
+        var seconds = 0.0;
+        try
+        {
+            if (File.Exists(fileName))
+            {
+                using var stream = File.OpenRead(fileName);
+                var header = new WaveHeader2(stream);
+                if (header.ChunkId == "RIFF" && header.Format == "WAVE" && header.BytesPerSecond > 0)
+                {
+                    seconds = header.LengthInSeconds;
+                }
+            }
+        }
+        catch (Exception exception)
+        {
+            SeLogger.Error(exception, $"ReviewSpeech: cannot read audio length of \"{fileName}\"");
+        }
+
+        _audioLengthCache[fileName] = seconds;
+        return seconds;
+    }
+
+    // Provider for AudioVisualizer.ParagraphAudioLengthProvider - the visualizer hands back the
+    // mirror instance it draws, so an instance lookup is right here (unlike the event args).
+    public double GetWaveformParagraphAudioLength(SubtitleLineViewModel waveformParagraph)
+    {
+        return _waveformParagraphToRow.TryGetValue(waveformParagraph, out var row) ? GetGeneratedAudioLengthSeconds(row) : 0;
+    }
+
+    // "Fit duration to generated audio": the cue ends exactly where the speech ends - what the
+    // user otherwise does by dragging the right edge to the end of the red overrun bar.
+    [RelayCommand]
+    private void FitDurationToAudio(ReviewRow? row)
+    {
+        row ??= SelectedLine;
+        var wp = row?.WaveformParagraph;
+        if (row == null || wp == null)
+        {
+            return;
+        }
+
+        var seconds = GetGeneratedAudioLengthSeconds(row);
+        if (seconds <= 0)
+        {
+            return;
+        }
+
+        wp.EndTime = wp.StartTime + TimeSpan.FromSeconds(seconds);
+        wp.UpdateDuration();
+        AudioVisualizer?.InvalidateVisual();
+    }
+
+    // Restores the times the line had when the window opened (waveform drags have no undo).
+    [RelayCommand]
+    private void ResetTiming(ReviewRow? row)
+    {
+        row ??= SelectedLine;
+        var wp = row?.WaveformParagraph;
+        if (row == null || wp == null)
+        {
+            return;
+        }
+
+        wp.StartTime = TimeSpan.FromMilliseconds(row.OriginalStartMs);
+        wp.EndTime = TimeSpan.FromMilliseconds(row.OriginalEndMs);
+        wp.UpdateDuration();
+        AudioVisualizer?.InvalidateVisual();
+    }
+
+    // Shifts the selected cue as a whole (duration kept), used by the waveform's keyboard nudge.
+    private void NudgeSelectedLine(double milliseconds)
+    {
+        var wp = SelectedLine?.WaveformParagraph;
+        if (wp == null)
+        {
+            return;
+        }
+
+        var start = Math.Max(0, wp.StartTime.TotalMilliseconds + milliseconds);
+        var duration = wp.Duration.TotalMilliseconds;
+        wp.StartTime = TimeSpan.FromMilliseconds(start);
+        wp.EndTime = TimeSpan.FromMilliseconds(start + duration);
+        wp.UpdateDuration();
+        AudioVisualizer?.InvalidateVisual();
+    }
+
+    // Right-click on the waveform: the row under the pointer becomes the context-menu target
+    // (and the selection) whether or not "right click selects" is on; an empty-area right-click
+    // keeps the current selection. Returns the target row or null.
+    public ReviewRow? SelectRowAtWaveformPosition(double seconds)
+    {
+        var wp = WaveformParagraphs.Find(p => p.StartTime.TotalSeconds <= seconds && seconds <= p.EndTime.TotalSeconds);
+        if (wp != null)
+        {
+            SelectFromWaveform(wp);
+        }
+
+        return SelectedLine;
+    }
+
+    // A left-click on empty waveform just parks the playhead there; the review window has no
+    // video to seek, so nothing plays until the user presses Play.
+    public void OnWaveformPositionClicked(double seconds)
+    {
+        if (_playingRow == null)
+        {
+            SetWaveformPlayhead(seconds);
+        }
+    }
+
+    // Keys that act on the waveform when it has focus (the grid handles its own Up/Down):
+    // Home/End jump to the first/last row; Ctrl+Left/Right nudge the selected cue 100 ms
+    // (10 ms with Shift) without changing its duration.
+    public bool OnWaveformKeyDown(KeyEventArgs e)
+    {
+        if (Lines.Count == 0)
+        {
+            return false;
+        }
+
+        var ctrl = e.KeyModifiers.HasFlag(OperatingSystem.IsMacOS() ? KeyModifiers.Meta : KeyModifiers.Control);
+        var shift = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
+
+        if (e.Key == Key.Home && e.KeyModifiers == KeyModifiers.None)
+        {
+            SelectedLine = Lines[0];
+            LineGrid.ScrollIntoView(Lines[0]);
+            return true;
+        }
+
+        if (e.Key == Key.End && e.KeyModifiers == KeyModifiers.None)
+        {
+            SelectedLine = Lines[^1];
+            LineGrid.ScrollIntoView(Lines[^1]);
+            return true;
+        }
+
+        if (ctrl && e.Key is Key.Left or Key.Right)
+        {
+            var step = shift ? 10 : 100;
+            NudgeSelectedLine(e.Key == Key.Left ? -step : step);
+            return true;
+        }
+
+        return false;
     }
 
     // True while a selection change originates from a click/drag on the waveform itself. The

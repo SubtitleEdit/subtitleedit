@@ -295,6 +295,32 @@ public class AudioVisualizerDragTests
         window.Close();
     }
 
+    // #14000: the generated-audio length bar. The provider is consulted once per drawn
+    // paragraph with the very instance the control draws (hosts key on it), and a render with
+    // a provider that overruns the cue, fits the cue, or returns 0 must not throw.
+    [AvaloniaFact]
+    public void ParagraphAudioLengthProvider_IsAskedPerDrawnParagraph()
+    {
+        var av = MakeMeasuredVisualizer(WaveformDrawStyle.Classic, out var line);
+        var asked = new List<SubtitleLineViewModel>();
+        var lengths = new[] { 5.0, 1.0, 0.0 };
+        foreach (var length in lengths)
+        {
+            asked.Clear();
+            av.ParagraphAudioLengthProvider = p =>
+            {
+                asked.Add(p);
+                return length;
+            };
+            RenderFrame(av);
+            Assert.Single(asked);
+            Assert.Same(line, asked[0]);
+        }
+
+        av.ParagraphAudioLengthProvider = null;
+        RenderFrame(av);
+    }
+
     private static Geometry FirstCachedWaveformGeometry(AudioVisualizer av)
     {
         var field = typeof(AudioVisualizer).GetField("_waveformCacheDraws", BindingFlags.NonPublic | BindingFlags.Instance)!;
