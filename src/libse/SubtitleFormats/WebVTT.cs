@@ -451,7 +451,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     current.EndTime.TotalMilliseconds == nextParagraph.EndTime.TotalMilliseconds &&
                     current.Region == nextParagraph.Region)
                 {
-                    current.Text = current.Text + Environment.NewLine + nextParagraph.Text;
+                    // An exact repeat (same times, same text - e.g. a concatenated/duplicated
+                    // segment) is a duplicate, not a second line: drop it instead of stacking it.
+                    if (current.Text != nextParagraph.Text)
+                    {
+                        current.Text = current.Text + Environment.NewLine + nextParagraph.Text;
+                    }
+
                     subtitle.Paragraphs.RemoveAt(i + 1);
                 }
             }
