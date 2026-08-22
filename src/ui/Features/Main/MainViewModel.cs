@@ -23462,18 +23462,24 @@ public partial class MainViewModel :
         _undoRedoManager.StopChangeDetection();
         try
         {
+            // "Consecutive" and "the line after the deleted block" are judged among the working
+            // rows only: with a mismatched read-only original, display-only reference rows sit in
+            // between, so by grid index a contiguous selection looked gapped (no ripple at all)
+            // and the row after the block could be a reference row - whose start time then set
+            // the shift for the rest of the file.
+            var workingRows = Subtitles.Where(p => !p.IsReferenceOnly).ToList();
             var sortedIndices = selectedItems
-                .Select(item => Subtitles.IndexOf(item))
+                .Select(item => workingRows.IndexOf(item))
                 .Where(i => i >= 0)
                 .OrderBy(i => i)
                 .ToList();
 
-            var firstLine = Subtitles.GetOrNull(sortedIndices.FirstOrDefault());
+            var firstLine = workingRows.GetOrNull(sortedIndices.FirstOrDefault());
 
             var areLinesConsecutive = sortedIndices.Count == 1 ||
                                       sortedIndices.Zip(sortedIndices.Skip(1), (a, b) => b - a).All(diff => diff == 1);
 
-            var nextLine = Subtitles.GetOrNull(sortedIndices.FirstOrDefault() + sortedIndices.Count);
+            var nextLine = workingRows.GetOrNull(sortedIndices.FirstOrDefault() + sortedIndices.Count);
 
             var survivor = PickRowToSelectAfterRemoval(selectedItems);
             RemoveRowsAndSelectSurvivor(selectedItems, survivor, gridHadFocus);

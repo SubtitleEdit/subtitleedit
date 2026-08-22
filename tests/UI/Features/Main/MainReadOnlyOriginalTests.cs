@@ -288,6 +288,51 @@ public class MainReadOnlyOriginalTests
         }
     }
 
+    /// <summary>
+    /// Ripple delete judges "consecutive" and "the line after the deleted block" among the
+    /// working rows: a display-only reference row in between must neither make the selection
+    /// look gapped (no ripple) nor become the line whose start time sets the shift.
+    /// </summary>
+    [AvaloniaFact]
+    public async Task RippleDelete_WithReferenceRowAfterTheDeletedLine_ShiftsByTheNextWorkingLine()
+    {
+        Se.Settings.General.PromptBeforeDelete = false;
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            // Working: one (0-2 s), two (4-6 s), three (8-10 s). Reference-only row at 2-4 s lands
+            // between one and two; it is the grid row right after "one".
+            AddLine(vm, "Translated one", string.Empty, 0, 2000);
+            AddLine(vm, "Translated two", string.Empty, 4000, 6000);
+            var three = AddLine(vm, "Translated three", string.Empty, 8000, 10000);
+            ImportReference(vm, BuildSampleReference());
+            Assert.True(vm.Subtitles[1].IsReferenceOnly);
+            var two = vm.Subtitles[2];
+            var referenceRow = vm.Subtitles[1];
+
+            vm.SelectAndScrollToSubtitle(vm.Subtitles[0]);
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal("Translated one", vm.SelectedSubtitle?.Text);
+
+            await vm.RippleDeleteSelectedLinesCommand.ExecuteAsync(null);
+            Dispatcher.UIThread.RunJobs();
+
+            // Shift = two.Start - one.Start = 4 s (not reference.Start - one.Start = 2 s).
+            Assert.Equal(0, two.StartTime.TotalMilliseconds);
+            Assert.Equal(2000, two.EndTime.TotalMilliseconds);
+            Assert.Equal(4000, three.StartTime.TotalMilliseconds);
+            Assert.Equal(6000, three.EndTime.TotalMilliseconds);
+
+            // The original's row is not retimed.
+            Assert.Equal(2000, referenceRow.StartTime.TotalMilliseconds);
+            Assert.DoesNotContain(vm.Subtitles, p => p.Text == "Translated one");
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
     [AvaloniaFact]
     public void ReferenceOnlyRow_SelectedAlone_IsNotReturnedAsASelectedItem()
     {
