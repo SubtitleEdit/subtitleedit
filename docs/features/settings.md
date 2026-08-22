@@ -66,7 +66,9 @@ The subtitle rules that drive error checking, the grid's warning colors, and too
 - **Toolbar items** — Which timing buttons the waveform toolbar shows, and in which order
 - **Waveform single-click / double-click action**
 - **Extract audio format, sample rate and bitrate** — What the audio Subtitle Edit extracts for the waveform looks like
-- **Snap to shot changes (hold Shift to override)**
+- **Snap to shot changes (hold Shift to override)** and **Snap to frames**
+- **Snap distance when dragging (pixels)** — how close a dragged cue has to come to a shot change before it snaps; in pixels, so it feels the same at every zoom
+- **Snap to nearest shot change: max start / end distance (seconds)**, and the tighter **max end distance when start and end share a cut** — how far the *Snap selected lines to nearest shot change* shortcut looks for a cut. Where a snapped cue lands is set by the beautify profile's in/out cues gap (gear icon next to the snap toggle)
 - **Mouse-wheel video position step**
 - **Waveform text font size** and the full color set — text, waveform, subtitle background, background, selected subtitle background, selected, cursor/head, shot change, left/right border, fancy high color. Color themes can be imported and exported
 - **Download ffmpeg** and a **disk space** readout for the extracted audio

@@ -47,7 +47,7 @@ See [Spell Check](spell-check.md) for details.
 - Waveform themes can be imported and exported.
 - **Spectrogram style** can be changed at runtime — no re-generation needed.
 - More customization options for the waveform and spectrogram, including colors, shot-change colors, and visual style.
-- **Snap to shot changes** now reads its snap window from the *Beautify time codes* profile's red zones, and **Shift** while dragging temporarily disables the snap.
+- **Snap to shot changes** is consistent across every way of doing it — dragging an edge, dragging a whole subtitle, and the snap shortcuts all land the cue the *Beautify time codes* profile's in/out cues gap away from the cut. Dragging snaps when the cue *looks* close (a pixel distance, so it feels the same at any zoom), and the snap distances are now in Options → Settings → Waveform. **Shift** while dragging temporarily disables the snap.
 
 ## Beautify Time Codes
 
