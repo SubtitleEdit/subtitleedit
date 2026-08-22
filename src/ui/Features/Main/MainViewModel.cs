@@ -9901,76 +9901,33 @@ public partial class MainViewModel :
             return;
         }
 
-        var maxStartDistance = Se.Settings.Waveform.SnapToShotChangeStartMaxSeconds;
-        var maxEndDistance = Se.Settings.Waveform.SnapToShotChangeEndMaxSeconds;
-        var maxSameShotEndDistance = Se.Settings.Waveform.SnapToShotChangeSameShotEndMaxSeconds;
+        var inCuesGapMs = TimeCodesBeautifierUtils.GetInCuesGapMs();
+        var outCuesGapMs = TimeCodesBeautifierUtils.GetOutCuesGapMs();
+        var maxStartDistanceMs = Se.Settings.Waveform.SnapToShotChangeStartMaxSeconds * 1000.0;
+        var maxEndDistanceMs = Se.Settings.Waveform.SnapToShotChangeEndMaxSeconds * 1000.0;
+        var maxSameShotEndDistanceMs = Se.Settings.Waveform.SnapToShotChangeSameShotEndMaxSeconds * 1000.0;
 
         foreach (var line in selectedLines)
         {
-            var idx = Subtitles.IndexOf(line);
-            var prev = GetPreviousWorkingRow(idx);
-            var next = GetNextWorkingRow(idx);
+            var snapped = ShotChangesHelper.GetSnappedToNearestMs(
+                AudioVisualizer.ShotChanges,
+                line.StartTime.TotalMilliseconds,
+                line.EndTime.TotalMilliseconds,
+                inCuesGapMs,
+                outCuesGapMs,
+                maxStartDistanceMs,
+                maxEndDistanceMs,
+                maxSameShotEndDistanceMs);
 
-            var nearestStartShotChange = AudioVisualizer.ShotChanges
-                .OrderBy(s => Math.Abs(s - line.StartTime.TotalSeconds))
-                .FirstOrDefault(s => Math.Abs(s - line.StartTime.TotalSeconds) < maxStartDistance);
-
-            var nearestEndShotChange = AudioVisualizer.ShotChanges
-                .OrderBy(s => Math.Abs(s - line.EndTime.TotalSeconds))
-                .FirstOrDefault(s => Math.Abs(s - line.EndTime.TotalSeconds) < maxEndDistance);
-
-            if (nearestStartShotChange == 0 && nearestEndShotChange == 0)
+            if (snapped == null)
             {
                 continue;
             }
 
-            if (nearestStartShotChange == 0)
-            {
-                var newDuration = TimeSpan.FromSeconds(nearestEndShotChange) - line.StartTime;
-                if (newDuration.TotalMilliseconds <= Se.Settings.General.SubtitleMaximumDisplayMilliseconds &&
-                    newDuration.TotalMilliseconds >= Se.Settings.General.SubtitleMinimumDisplayMilliseconds)
-                {
-                    line.EndTime = TimeSpan.FromSeconds(nearestEndShotChange);
-                }
-
-                continue;
-            }
-
-            if (nearestEndShotChange == 0)
-            {
-                var newDuration = line.EndTime - TimeSpan.FromSeconds(nearestStartShotChange);
-                if (newDuration.TotalMilliseconds <= Se.Settings.General.SubtitleMaximumDisplayMilliseconds &&
-                    newDuration.TotalMilliseconds >= Se.Settings.General.SubtitleMinimumDisplayMilliseconds)
-                {
-                    line.StartTime = TimeSpan.FromSeconds(nearestStartShotChange);
-                }
-
-                continue;
-            }
-
-            if (nearestStartShotChange == nearestEndShotChange)
-            {
-                nearestEndShotChange = AudioVisualizer.ShotChanges
-                    .OrderBy(s => Math.Abs(s - line.EndTime.TotalSeconds))
-                    .FirstOrDefault(s => Math.Abs(s - line.EndTime.TotalSeconds) < maxSameShotEndDistance);
-
-                if (nearestEndShotChange > 0 && nearestEndShotChange > line.StartTime.TotalSeconds)
-                {
-                    line.EndTime = TimeSpan.FromSeconds(nearestEndShotChange);
-                }
-
-                continue;
-            }
-
-            var newStartTime = TimeSpan.FromSeconds(nearestStartShotChange);
-            var newEndTime = TimeSpan.FromSeconds(nearestEndShotChange);
-            var newCombinedDuration = newEndTime - newStartTime;
-            if (newCombinedDuration.TotalMilliseconds <= Se.Settings.General.SubtitleMaximumDisplayMilliseconds &&
-                newCombinedDuration.TotalMilliseconds >= Se.Settings.General.SubtitleMinimumDisplayMilliseconds)
-            {
-                line.StartTime = newStartTime;
-                line.EndTime = newEndTime;
-            }
+            // Atomic so the bound editor controls never see a transient start > end.
+            line.SetTimes(
+                TimeSpan.FromMilliseconds(snapped.Value.StartMs),
+                TimeSpan.FromMilliseconds(snapped.Value.EndMs));
         }
 
         _updateAudioVisualizer = true;
