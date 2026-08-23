@@ -54,7 +54,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 if (CsvLine.IsMatch(line))
                 {
-                    var parts = line.Split(Separator.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    // Only split off the three leading numeric fields - the text is the rest of the
+                    // line and may contain the separator itself (and may be empty).
+                    var parts = line.Split(Separator.ToCharArray(), 4, StringSplitOptions.None);
                     if (parts.Length == 4)
                     {
                         try

@@ -2302,7 +2302,8 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 {
                     if (line.Length > 10)
                     {
-                        var format = line.Substring(8).ToLowerInvariant().Split(',');
+                        // cut the trimmed line - leading whitespace shifted every field name
+                        var format = s.Substring(8).Split(',');
                         styleCount = format.Length;
                         for (int i = 0; i < format.Length; i++)
                         {
@@ -2403,7 +2404,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                     if (line.Length > 10)
                     {
                         string rawLine = line;
-                        var format = line.Substring(6).Split(',');
+                        var format = line.Trim().Substring(6).Split(',');
 
                         if (format.Length != styleCount)
                         {

@@ -131,6 +131,14 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return 0;
                 }
 
+                // Same guard as GetCharactersPerSecond: a zero or negative duration would give
+                // infinity/a negative rate, which poisons the min/max/average of every statistics
+                // report that sums this up.
+                if (DurationTotalMilliseconds < 1)
+                {
+                    return 999;
+                }
+
                 return 60.0 / DurationTotalSeconds * Text.CountWords();
             }
         }
