@@ -2371,7 +2371,24 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             }
         }
 
-        new Core.Forms.TimeCodesBeautifier(subtitle, frameRate, new List<double>(), shotChanges).Beautify();
+        // Exact frame time codes, when a previous extraction cached them for this video. Batch
+        // never extracts on its own - that decodes the whole video per file.
+        var timeCodes = new List<double>();
+        if (hasVideoFile && Se.Settings.BeautifyTimeCodes.ExtractExactTimeCodes)
+        {
+            try
+            {
+                timeCodes = TimeCodesHelper.FromDisk(videoFileName);
+            }
+            catch
+            {
+                // unreadable/corrupt time-codes cache - beautify without them rather
+                // than aborting the rest of the batch
+                timeCodes = new List<double>();
+            }
+        }
+
+        new Core.Forms.TimeCodesBeautifier(subtitle, frameRate, timeCodes, shotChanges).Beautify();
         return subtitle;
     }
 

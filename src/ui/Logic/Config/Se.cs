@@ -174,6 +174,7 @@ public class Se
     public static string WaveformsFolder => Path.Combine(DataFolder, "Waveforms");
     public static string SpectrogramsFolder => Path.Combine(DataFolder, "Spectrograms");
     public static string ShotChangesFolder => Path.Combine(DataFolder, "ShotChanges");
+    public static string TimeCodesFolder => Path.Combine(DataFolder, "TimeCodes");
     public static string ChaptersFolder => Path.Combine(DataFolder, "Chapters");
     public static string PluginsFolder => Path.Combine(DataFolder, "Plugins");
 
