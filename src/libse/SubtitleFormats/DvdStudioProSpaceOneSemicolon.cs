@@ -52,15 +52,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     if (RegexTimeCodes.IsMatch(line))
                     {
-                        string[] toPart = line.Substring(0, 24).Trim(',').Split(',');
+                        // Split on the separator instead of fixed offsets - the time code parts are
+                        // "\d+" in the regex above, so they are not always two digits wide, and the
+                        // text may itself contain ",".
+                        string[] toPart = line.Split(new[] { ',' }, 3);
                         var p = new Paragraph();
-                        if (toPart.Length == 2 &&
+                        if (toPart.Length == 3 &&
                             DvdStudioPro.GetTimeCode(p.StartTime, toPart[0]) &&
                             DvdStudioPro.GetTimeCode(p.EndTime, toPart[1]))
                         {
                             number++;
                             p.Number = number;
-                            string text = line.Substring(25).Trim();
+                            string text = toPart[2].Trim();
                             p.Text = text.Replace(" | ", Environment.NewLine).Replace("|", Environment.NewLine);
                             p.Text = DvdStudioPro.DecodeStyles(p.Text);
                             if (italicOn && !p.Text.Contains("<i>"))

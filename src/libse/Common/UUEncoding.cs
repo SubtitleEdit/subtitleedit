@@ -28,8 +28,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 if (i + 3 > length)
                 {
+                    // Copy the remaining 1 or 2 bytes and zero-pad the rest. The count used to be
+                    // "i + 2 - length", which is the remainder only by accident when one byte is
+                    // left and zero when two are - silently dropping the last two bytes of every
+                    // attachment whose length % 3 == 2.
                     src = new byte[3];
-                    Array.Copy(bytes, i, src, 0, i + 2 - length);
+                    Array.Copy(bytes, i, src, 0, length - i);
                 }
                 else
                 {

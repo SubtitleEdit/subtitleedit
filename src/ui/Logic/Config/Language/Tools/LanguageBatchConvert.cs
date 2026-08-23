@@ -53,6 +53,7 @@ public class LanguageBatchConvert
     public string AddFolderDotDotDot { get; set; }
     public string SelectFolderToConvert { get; set; }
     public string IncludeSubfolders { get; set; }
+    public string KeepSourceFileTimestamp { get; set; }
     public string ScanningFolderX { get; set; }
 
     public LanguageBatchConvert()
@@ -105,6 +106,7 @@ public class LanguageBatchConvert
         AddFolderDotDotDot = "Add folder...";
         SelectFolderToConvert = "Select folder with files to convert";
         IncludeSubfolders = "Include subfolders when adding a folder";
+        KeepSourceFileTimestamp = "Keep source file date/time on output files";
         ScanningFolderX = "Scanning {0}...";
     }
 }

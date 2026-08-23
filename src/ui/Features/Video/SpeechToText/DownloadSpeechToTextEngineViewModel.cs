@@ -176,6 +176,7 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
 
                     var path = Engine.GetExecutable();
                     MakeExecutable(path);
+                    ClearExecutableStack(dir);
                 }
                 catch
                 {
@@ -302,6 +303,27 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
         if (!_isClosing)
         {
             _timer.Start();
+        }
+    }
+
+    /// <summary>
+    /// Clears the executable-stack flag on the shared libraries just unpacked. Purfview's
+    /// Faster-Whisper-XXL bundles a libctranslate2 built with PT_GNU_STACK = RWE, and glibc 2.41
+    /// stopped granting that at dlopen time, so on Fedora 42, Arch or Ubuntu 25.10 the engine dies
+    /// the moment it loads with "cannot enable executable stack as shared object requires".
+    /// </summary>
+    private static void ClearExecutableStack(string folder)
+    {
+        if (!OperatingSystem.IsLinux())
+        {
+            return;
+        }
+
+        var patched = ElfHelper.ClearExecutableStackInFolder(folder);
+        if (patched > 0)
+        {
+            Se.WriteToolsLog($"Cleared the executable-stack flag on {patched} shared librar" +
+                             (patched == 1 ? "y" : "ies") + $" in \"{folder}\"");
         }
     }
 

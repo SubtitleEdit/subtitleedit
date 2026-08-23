@@ -4,6 +4,7 @@ using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -129,6 +130,7 @@ public class AudioVisualizer : Control
         set
         {
             _paintWaveform = new Pen(new SolidColorBrush(value), 1);
+            ResetFancyColorCaches();
             SetValue(WaveformColorProperty, value);
         }
     }
@@ -149,6 +151,7 @@ public class AudioVisualizer : Control
         set
         {
             _paintPenSelected = new Pen(new SolidColorBrush(value), 1);
+            ResetFancyColorCaches();
             SetValue(WaveformSelectedColorProperty, value);
         }
     }
@@ -201,6 +204,7 @@ public class AudioVisualizer : Control
 
     public double MinGapSeconds { get; set; } = 0.1;
 
+    /// <summary>Fallback capture distance when the pixel distance cannot be converted (no peaks yet).</summary>
     public double ShotChangeSnapSeconds { get; set; } = 0.05;
     public WaveformDrawStyle WaveformDrawStyle { get; set; } = WaveformDrawStyle.Classic;
 
@@ -217,7 +221,17 @@ public class AudioVisualizer : Control
     // "center video position" mode can turn into a seek that keeps the play-head centered
     // (#12864). Hosts without a video player (or that never set this) keep plain scrolling.
     public Func<bool>? GetIsVideoPlaying { get; set; }
-    public Color WaveformFancyHighColor { get; set; } = Colors.Orange;
+    private Color _waveformFancyHighColor = Colors.Orange;
+
+    public Color WaveformFancyHighColor
+    {
+        get => _waveformFancyHighColor;
+        set
+        {
+            _waveformFancyHighColor = value;
+            ResetFancyColorCaches();
+        }
+    }
 
     private Color _paragraphBackground = Color.FromArgb(140, 70, 70, 70);
 
@@ -503,6 +517,23 @@ public class AudioVisualizer : Control
     public event ParagraphNullableEventHandler? OnPrimarySingleClicked;
     public event ParagraphNullableEventHandler? OnPrimaryDoubleClicked;
     public event PositionEventHandler? OnSetStartAndOffsetTheRest;
+
+    /// <summary>
+    /// Optional: seconds of audio that belongs to a paragraph (the TTS review window's generated
+    /// clip). When it returns more than 0, a thin bar is drawn along the bottom of the paragraph
+    /// from its start for that many seconds - green while it fits inside the cue, red for the
+    /// part that runs past the cue's end - so the user sees at a glance which lines need their
+    /// timing fixed (#14000).
+    /// </summary>
+    public Func<SubtitleLineViewModel, double>? ParagraphAudioLengthProvider { get; set; }
+
+    private static readonly IBrush PaintAudioLengthFits = new SolidColorBrush(Color.FromArgb(190, 70, 190, 110));
+    private static readonly IBrush PaintAudioLengthOverrun = new SolidColorBrush(Color.FromArgb(220, 235, 70, 70));
+
+    /// <summary>Raised when a primary-button press lands on an existing paragraph and starts a
+    /// move/resize drag. Lets hosts select the paragraph the user grabbed before the drag
+    /// mutates it (#14000) - a click is delivered via <see cref="OnPrimarySingleClicked"/> instead.</summary>
+    public event ParagraphEventHandler? OnDragStarted;
 
     /// <summary>Raised when the user clicks the empty waveform to generate it on demand
     /// (shown only when auto-generate is off and there are no cached peaks).</summary>
@@ -1201,6 +1232,10 @@ public class AudioVisualizer : Control
         }
 
         _pointerDragActive = _interactionMode != InteractionMode.None;
+        if (_pointerDragActive && _activeParagraph != null)
+        {
+            OnDragStarted?.Invoke(this, new ParagraphEventArgs(_startPointerSeconds, _activeParagraph));
+        }
     }
 
     /// <summary>
@@ -1445,7 +1480,21 @@ public class AudioVisualizer : Control
                 // (previous and next are already null if _isShiftDown or Se.Settings.Waveform.AllowOverlap)
                 bool allowOverlap = (previous == null && next == null) || alreadyOverlapping;
 
-                newStart = SnapToFrame(newStart);
+                // SE4 parity: a whole-paragraph drag snaps to shot changes too, not just an edge
+                // resize (issue #13953). Whichever cue is captured first wins, and the other cue
+                // moves with it so the duration is preserved. Frame snapping only applies when no
+                // cut captured the paragraph, exactly like the resize branches below.
+                var snappedWholeStart = TrySnapInCueToShotChange(newStart);
+                if (snappedWholeStart == null)
+                {
+                    var snappedWholeEnd = TrySnapOutCueToShotChange(newStart + _originalDurationSeconds);
+                    if (snappedWholeEnd != null)
+                    {
+                        snappedWholeStart = snappedWholeEnd.Value - _originalDurationSeconds;
+                    }
+                }
+
+                newStart = snappedWholeStart ?? SnapToFrame(newStart);
 
                 if (!allowOverlap && (previous != null || next != null))
                 {
@@ -1550,21 +1599,13 @@ public class AudioVisualizer : Control
                     newStart = 0;
                 }
 
-                var snappedToShotLeft = false;
-                if (SnapToShotChanges && !_isShiftDown && _shotChanges.Count > 0)
+                var snappedStartSeconds = TrySnapInCueToShotChange(newStart);
+                if (snappedStartSeconds != null)
                 {
-                    // ClosestTo directly (binary search) - GetClosestShotChange only wraps it
-                    // behind a TimeCode, which is a class, i.e. one allocation per pointer move.
-                    var nearest = _shotChanges.ClosestTo(newStart);
-                    var snapSeconds = GetInCueSnapSeconds();
-                    if (nearest != newStart && Math.Abs(newStart - nearest) < snapSeconds)
-                    {
-                        newStart = nearest;
-                        snappedToShotLeft = true;
-                    }
+                    newStart = snappedStartSeconds.Value;
                 }
 
-                if (!snappedToShotLeft)
+                if (snappedStartSeconds == null)
                 {
                     newStart = SnapToFrame(newStart);
                 }
@@ -1584,24 +1625,13 @@ public class AudioVisualizer : Control
             case InteractionMode.ResizingRight:
                 newEnd = _originalEndSeconds + dragDeltaSeconds;
 
-                var snappedToShotRight = false;
-                if (SnapToShotChanges && !_isShiftDown && _shotChanges.Count > 0)
+                var snappedEndSeconds = TrySnapOutCueToShotChange(newEnd);
+                if (snappedEndSeconds != null)
                 {
-                    // OUT cues conventionally land one frame BEFORE the shot change so they
-                    // don't bleed visually onto the next shot.
-                    var fps = Se.Settings.General.CurrentFrameRate;
-                    var oneFrameSeconds = fps >= 1 ? 1.0 / fps : 0.0;
-                    // ClosestTo directly - see the ResizingLeft branch.
-                    var nearest = _shotChanges.ClosestTo(newEnd);
-                    var snapSeconds = GetOutCueSnapSeconds();
-                    if (nearest != newEnd && Math.Abs(newEnd - nearest + oneFrameSeconds) < snapSeconds)
-                    {
-                        newEnd = nearest - oneFrameSeconds;
-                        snappedToShotRight = true;
-                    }
+                    newEnd = snappedEndSeconds.Value;
                 }
 
-                if (!snappedToShotRight)
+                if (snappedEndSeconds == null)
                 {
                     newEnd = SnapToFrame(newEnd);
                 }
@@ -1693,45 +1723,84 @@ public class AudioVisualizer : Control
     }
 
     /// <summary>
-    /// Snap distance (seconds) for a paragraph IN-cue near a shot change, derived from
-    /// the BeautifyTimeCodes profile's InCues red zones. Falls back to <see cref="ShotChangeSnapSeconds"/>
-    /// when no profile / fps is available.
+    /// Where an IN cue dragged to <paramref name="seconds"/> should land if a shot change is close
+    /// enough to capture it, or null when none is. An in cue lands the beautify profile's in cues
+    /// gap <b>after</b> the cut.
+    /// <para>
+    /// Shared by every drag interaction that moves an in cue - resizing the left edge and moving a
+    /// whole paragraph - so the same grab lands on the same time whichever way the user does it
+    /// (issue #13953).
+    /// </para>
+    /// <para>
+    /// The gap comes from the same profile the beautifier and the snap-to-shot-change shortcuts use,
+    /// so dragging a cue onto a cut and pressing the shortcut for it land in the same place. It used
+    /// to be hard-coded (exactly on the cut for in cues, one frame before it for out cues), which
+    /// silently ignored a profile configured with a wider gap (issue #13984).
+    /// </para>
     /// </summary>
-    private double GetInCueSnapSeconds()
+    private double? TrySnapInCueToShotChange(double seconds)
     {
-        var fps = Se.Settings.General.CurrentFrameRate;
-        if (fps < 1)
+        if (!SnapToShotChanges || _isShiftDown || _shotChanges.Count == 0)
         {
-            return ShotChangeSnapSeconds;
+            return null;
         }
 
-        var profile = Nikse.SubtitleEdit.Core.Common.Configuration.Settings.BeautifyTimeCodes?.Profile;
-        if (profile == null)
+        // ClosestTo directly (binary search) - GetClosestShotChange only wraps it
+        // behind a TimeCode, which is a class, i.e. one allocation per pointer move.
+        var nearest = _shotChanges.ClosestTo(seconds);
+
+        // Measured to the cut, not to the landing point: the capture window is around the cut the
+        // user is aiming at, so a larger gap must not drag it off the cut.
+        if (Math.Abs(seconds - nearest) >= GetShotChangeSnapSeconds())
         {
-            return ShotChangeSnapSeconds;
+            return null;
         }
 
-        var frames = Math.Max(profile.InCuesLeftRedZone, profile.InCuesRightRedZone);
-        return frames > 0 ? frames / fps : ShotChangeSnapSeconds;
+        return nearest + TimeCodesBeautifierUtils.GetInCuesGapMs() / TimeCode.BaseUnit;
     }
 
-    /// <summary>Snap distance (seconds) for a paragraph OUT-cue, derived from OutCues red zones.</summary>
-    private double GetOutCueSnapSeconds()
+    /// <summary>
+    /// Where an OUT cue dragged to <paramref name="seconds"/> should land if a shot change is close
+    /// enough to capture it, or null when none is. <see cref="TrySnapInCueToShotChange"/> mirrored:
+    /// an out cue lands the beautify profile's out cues gap <b>before</b> the cut, so it does not
+    /// bleed visually onto the next shot.
+    /// </summary>
+    private double? TrySnapOutCueToShotChange(double seconds)
     {
-        var fps = Se.Settings.General.CurrentFrameRate;
-        if (fps < 1)
+        if (!SnapToShotChanges || _isShiftDown || _shotChanges.Count == 0)
+        {
+            return null;
+        }
+
+        // ClosestTo directly - see TrySnapInCueToShotChange.
+        var nearest = _shotChanges.ClosestTo(seconds);
+        if (Math.Abs(seconds - nearest) >= GetShotChangeSnapSeconds())
+        {
+            return null;
+        }
+
+        return nearest - TimeCodesBeautifierUtils.GetOutCuesGapMs() / TimeCode.BaseUnit;
+    }
+
+    /// <summary>
+    /// How close (in seconds, at the current zoom) a dragged cue has to be to a shot change for the
+    /// cut to capture it.
+    /// <para>
+    /// Defined in <b>pixels</b> - <see cref="SeWaveform.SnapToShotChangesPixels"/>, the same 8 px
+    /// SE4 used - so snapping happens when the cue <i>looks</i> close, whatever the zoom. A
+    /// time-based distance (the profile's red zones, which this replaced) felt like snapping never
+    /// happened zoomed out and like the cut grabbed from far away zoomed in.
+    /// </para>
+    /// </summary>
+    private double GetShotChangeSnapSeconds()
+    {
+        var pixels = Se.Settings.Waveform.SnapToShotChangesPixels;
+        if (pixels <= 0 || WavePeaks == null || WavePeaks.SampleRate <= 0 || ZoomFactor <= 0)
         {
             return ShotChangeSnapSeconds;
         }
 
-        var profile = Nikse.SubtitleEdit.Core.Common.Configuration.Settings.BeautifyTimeCodes?.Profile;
-        if (profile == null)
-        {
-            return ShotChangeSnapSeconds;
-        }
-
-        var frames = Math.Max(profile.OutCuesLeftRedZone, profile.OutCuesRightRedZone);
-        return frames > 0 ? frames / fps : ShotChangeSnapSeconds;
+        return pixels / (WavePeaks.SampleRate * ZoomFactor);
     }
 
     private void UpdateCursor(Point point)
@@ -2597,6 +2666,26 @@ public class AudioVisualizer : Control
     // Pooled buffer for DrawClassicSelectionOverlay's visible selected regions.
     private readonly List<(double Left, double Right)> _selectionOverlayIntervals = new(16);
 
+    /// <summary>
+    /// Drops every fancy-style cache that has a waveform color baked into it. The pen/gradient/glow
+    /// caches - and the pooled per-color-key batches, which keep a pen of their own - are keyed on
+    /// the quantized amplitude bucket, not on the color, so a color change leaves them holding pens
+    /// painted in the old color. Missing the batches here is what made a new waveform/selected/fancy
+    /// high color only show up after a restart (#13897).
+    /// </summary>
+    private void ResetFancyColorCaches()
+    {
+        _fancyWaveformPenCache.Clear();
+        _fancyWaveformGlowPenCache.Clear();
+        _fancyWaveformGradientCache.Clear();
+        _fancyBatches.Clear();
+        _fancyBatchKeysInUse.Clear();
+
+        // The color properties are not AffectsRender, so ask for the repaint that shows the new
+        // color instead of waiting for whatever moves the waveform next.
+        InvalidateVisual();
+    }
+
     private Pen GetCachedFancyWaveformPen(int colorKey, Color color)
     {
         if (!_fancyWaveformPenCache.TryGetValue(colorKey, out var pen))
@@ -3247,6 +3336,39 @@ public class AudioVisualizer : Control
             }
 
             DrawParagraphFooter(context, paragraph, currentRegionLeft, currentRegionWidth, height, ref renderCtx);
+        }
+
+        DrawParagraphAudioLength(context, paragraph, currentRegionLeft, currentRegionRight, height, ref renderCtx);
+    }
+
+    // Drawn outside the text clip on purpose: the overrun part extends past the right border.
+    private void DrawParagraphAudioLength(DrawingContext context, SubtitleLineViewModel paragraph,
+        double currentRegionLeft, double currentRegionRight, double height, ref RenderContext renderCtx)
+    {
+        var provider = ParagraphAudioLengthProvider;
+        if (provider == null)
+        {
+            return;
+        }
+
+        var audioSeconds = provider(paragraph);
+        if (audioSeconds <= 0)
+        {
+            return;
+        }
+
+        var audioRight = SecondsToXPositionOptimized(paragraph.StartTime.TotalSeconds + audioSeconds - renderCtx.StartPositionSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
+        const double barHeight = 4;
+        var y = height - barHeight - 1;
+        var fitsRight = Math.Min(audioRight, currentRegionRight - 1);
+        if (fitsRight > currentRegionLeft + 1)
+        {
+            context.FillRectangle(PaintAudioLengthFits, new Rect(currentRegionLeft + 1, y, fitsRight - currentRegionLeft - 1, barHeight));
+        }
+
+        if (audioRight > currentRegionRight)
+        {
+            context.FillRectangle(PaintAudioLengthOverrun, new Rect(currentRegionRight - 1, y, audioRight - currentRegionRight + 1, barHeight));
         }
     }
 
@@ -4229,9 +4351,7 @@ public class AudioVisualizer : Control
 
     internal void ResetCache()
     {
-        _fancyWaveformPenCache.Clear();
-        _fancyWaveformGlowPenCache.Clear();
-        _fancyWaveformGradientCache.Clear();
+        ResetFancyColorCaches();
         _timeLineTextCache.Clear();
         _paragraphFormattedTextCache.Clear();
         _paragraphTextCache.Clear();

@@ -143,9 +143,16 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     private bool _unknownArgument;
     private bool _cudaOutOfMemory;
+    private bool _cudaComputeTypeNotSupported;
     private bool _incompleteModel;
     private string? _missingSharedLibrary;
+
+    // Crisp ASR VAD state for the empty-result retry (#13911): whether the run that just
+    // finished passed --vad, and whether it is itself the retry that leaves --vad off.
+    private bool _crispAsrVadWasUsed;
+    private bool _crispAsrVadSuppressed;
     private bool _loadedFromStdOut;
+    private SpeechToTextQualityReport? _qualityReport;
     private string? _videoFileName;
     private string _audioFileName = string.Empty;
     private int _audioTrackNumber;
@@ -802,6 +809,11 @@ public partial class SpeechToTextViewModel : ObservableObject
                         "Whisper ran out of CUDA memory - try a smaller model or run on CPU.");
                     hasError = true;
                 }
+                else if (_cudaComputeTypeNotSupported)
+                {
+                    await ShowCudaComputeTypeNotSupported(engine);
+                    hasError = true;
+                }
 
                 if (!hasError && GetResultFromSrt(_audioFileName, _videoFileName!, out var resultTexts, _outputText, _filesToDelete))
                 {
@@ -831,6 +843,11 @@ public partial class SpeechToTextViewModel : ObservableObject
                     return;
                 }
 
+                if (!hasError && _resultList.Count == 0 && RetryCrispAsrWithoutVad())
+                {
+                    return;
+                }
+
                 _outputText.Enqueue("Loading result from STDOUT");
                 var transcribedSubtitleFromStdOut = new Subtitle();
                 transcribedSubtitleFromStdOut.Paragraphs.AddRange(_resultList
@@ -840,6 +857,134 @@ public partial class SpeechToTextViewModel : ObservableObject
                 await MakeResult(transcribedSubtitleFromStdOut);
             });
         }
+    }
+
+    /// <summary>
+    /// Whether SE adds its own "--vad --vad-model ..." to a Crisp ASR command line.
+    ///
+    /// Mega-ASR (crispasr 0.6.10) silently writes a zero-byte SRT unless VAD chunking is enabled -
+    /// the transcription log says it succeeded but no segments are emitted. Cohere gets the same
+    /// treatment because crispasr auto-enables VAD for that backend on long audio anyway; passing
+    /// the bundled Silero model keeps it from downloading its own copy into ~/.cache/crispasr
+    /// mid-transcription.
+    ///
+    /// --chunk-seconds/-ck in the user's parameters means "no VAD, use fixed chunks" - that is
+    /// crispasr's own documented way to switch its auto-VAD back off, and it is the only way to
+    /// switch VAD off at all (--vad is a plain flag with no --no-vad). So it has to suppress our
+    /// own --vad too, or the user has no opt-out (#13849).
+    /// </summary>
+    /// <param name="vadSuppressed">
+    /// Set on the re-run of a job that came back empty with VAD on (#13911).
+    /// </param>
+    internal static bool ShouldForceCrispAsrVad(ISpeechToTextEngine engine, string? crispArgs, bool vadSuppressed)
+    {
+        if (engine is not (CrispAsrCohere or CrispAsrMega) || vadSuppressed)
+        {
+            return false;
+        }
+
+        return !Regex.IsMatch(crispArgs ?? string.Empty, @"(^|\s)(--vad|-vm|--vad-model|--chunk-seconds|-ck)\b");
+    }
+
+    /// <summary>
+    /// Re-runs a Crisp ASR job that produced nothing, this time without the VAD pass.
+    ///
+    /// SE forces --vad on for the Cohere and Mega backends because they otherwise write a
+    /// zero-byte SRT on long audio. On a short clip that trade goes the other way: Silero can
+    /// reject the whole clip as non-speech and the run ends with no segments at all, which is
+    /// how "transcribe selected lines" ended up quietly leaving clips unconverted (#13911).
+    /// Nothing is lost by trying again without it - the alternative is the empty result we
+    /// already have - and the retry is a one-shot: the second run has VAD suppressed, so it
+    /// cannot ask for a third.
+    /// </summary>
+    /// <returns>True when a retry was started and this result should be dropped.</returns>
+    private bool RetryCrispAsrWithoutVad()
+    {
+        // _crispAsrVadWasUsed is only ever set by the Crisp ASR branch of GetWhisperProcess and is
+        // cleared at the start of every attempt, so it doubles as "this was a Crisp ASR VAD run".
+        if (!_crispAsrVadWasUsed || _crispAsrVadSuppressed || _abort)
+        {
+            return false;
+        }
+
+        if (_videoFileName == null)
+        {
+            return false;
+        }
+
+        // Nothing is extracted when the source already is a 16 kHz wav - which is exactly what
+        // "transcribe selected lines" hands over - and _audioFileName is blank in that case, so
+        // the engine input is the source file itself. Same fallback GetResultFromSrt makes.
+        var inputFileName = string.IsNullOrEmpty(_audioFileName) ? _videoFileName : _audioFileName;
+        if (!File.Exists(inputFileName))
+        {
+            return false;
+        }
+
+        LogToConsole($"No speech found with VAD - trying again without it{Environment.NewLine}");
+        Se.WriteToolsLog($"Crisp ASR produced no segments for \"{inputFileName}\" with VAD; retrying without VAD");
+
+        return TranscribeViaWhisper(inputFileName, _videoFileName, retryWithoutCrispAsrVad: true);
+    }
+
+    /// <summary>
+    /// Shown when cuBLAS refuses the compute type the engine picked and the run dies inside
+    /// encode() without producing a single segment (issue #13902). The cure is always the same -
+    /// force fp16 - so offer to add the parameter instead of only naming it in a message.
+    /// </summary>
+    private async Task ShowCudaComputeTypeNotSupported(ISpeechToTextEngine engine)
+    {
+        const string title = "cuBLAS failed";
+        const string computeTypeArgument = "--compute_type float16";
+        var nl = Environment.NewLine;
+        var cause =
+            "The GPU could not run the model with the compute type the engine picked - cuBLAS " +
+            $"returned CUBLAS_STATUS_NOT_SUPPORTED, and no text was transcribed.{nl}{nl}";
+
+        // Only the faster-whisper based engines take --compute_type; suggesting it anywhere else
+        // would just trade this error for "unrecognized argument".
+        if (!SupportsComputeTypeParameter(engine))
+        {
+            await MessageBox.Show(Window!, title,
+                cause + "Try another model, another engine, or run on CPU.");
+            return;
+        }
+
+        var parameters = Parameters ?? string.Empty;
+        if (parameters.Contains("--compute_type", StringComparison.OrdinalIgnoreCase))
+        {
+            await MessageBox.Show(Window!, title,
+                cause + "The parameters already set \"--compute_type\" - try another value, " +
+                "such as \"float16\", \"int8\", or \"float32\".");
+            return;
+        }
+
+        var answer = await MessageBox.Show(Window!, title,
+            cause + $"Adding \"{computeTypeArgument}\" to the parameters normally fixes this.{nl}{nl}" +
+            "Add it now?",
+            MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+        if (answer != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        Parameters = string.IsNullOrWhiteSpace(parameters)
+            ? computeTypeArgument
+            : parameters.Trim() + " " + computeTypeArgument;
+        engine.CommandLineParameter = Parameters;
+        SaveSettings();
+    }
+
+    /// <summary>
+    /// True for the engines built on faster-whisper/CTranslate2, which are the ones that both
+    /// accept "--compute_type" and can hit the cuBLAS compute type error in the first place.
+    /// </summary>
+    private static bool SupportsComputeTypeParameter(ISpeechToTextEngine engine)
+    {
+        return engine.Choice is WhisperChoice.PurfviewFasterWhisperXxl
+            or WhisperChoice.CTranslate2
+            or WhisperChoice.WhisperX;
     }
 
     /// <summary>
@@ -1850,6 +1995,8 @@ public partial class SpeechToTextViewModel : ObservableObject
         var postProcessor = new SpeechToTextPostProcessor(DoTranslateToEnglish ? "en" : languageCode)
         {
             ParagraphMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * 2,
+            RemoveNonSpeechLines = Se.Settings.Tools.AudioToText.WhisperPostProcessingRemoveNonSpeechLines,
+            RemoveRepeatedLines = Se.Settings.Tools.AudioToText.WhisperPostProcessingRemoveRepeatedLines,
         };
 
         WavePeakData2? wavePeaks = null;
@@ -1877,6 +2024,11 @@ public partial class SpeechToTextViewModel : ObservableObject
             settings.WhisperPostProcessingChangeUnderlineToColor,
             settings.WhisperPostProcessingChangeUnderlineToColorColor.FromHexToColor()
             );
+
+        // Keep the report for MakeResult (shown once the run is done) and log a
+        // one-line summary so batch runs leave a trace too (issue #13973).
+        _qualityReport = postProcessor.QualityReport;
+        LogToConsole(_qualityReport.ToLogString());
 
         return transcript;
     }
@@ -2320,6 +2472,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             }
             else if (anyLinesTranscribed)
             {
+                await ShowQualityReport();
                 OkPressed = anyLinesTranscribed;
                 TranscribedSubtitle = transcribedSubtitle ?? new Subtitle();
                 Window?.Close();
@@ -2334,6 +2487,28 @@ public partial class SpeechToTextViewModel : ObservableObject
                     FileHelper.OpenFileWithDefaultProgram(Se.GetToolsLogFilePath());
                 }
             }
+        }
+    }
+
+    /// <summary>
+    /// Tell the user what post-processing found (issue #13973) before the dialog
+    /// closes. Only for the single-file flow - batch runs log the summary instead.
+    /// </summary>
+    private async Task ShowQualityReport()
+    {
+        var report = _qualityReport;
+        _qualityReport = null;
+        if (report == null || !report.HasIssues || !Se.Settings.Tools.AudioToText.WhisperPostProcessingShowQualityReport || Window == null)
+        {
+            return;
+        }
+
+        var vm = await _windowService.ShowDialogAsync<SpeechToTextQualityReportWindow, SpeechToTextQualityReportViewModel>(
+            Window, viewModel => viewModel.Initialize(report));
+
+        if (vm.DoNotShowAgain)
+        {
+            Se.Settings.Tools.AudioToText.WhisperPostProcessingShowQualityReport = false;
         }
     }
 
@@ -2945,6 +3120,9 @@ public partial class SpeechToTextViewModel : ObservableObject
                 viewModal.AddPeriods = Se.Settings.Tools.AudioToText.WhisperPostProcessingAddPeriods;
                 viewModal.MergeShortLines = Se.Settings.Tools.AudioToText.WhisperPostProcessingMergeLines;
                 viewModal.BreakSplitLongLines = Se.Settings.Tools.AudioToText.WhisperPostProcessingSplitLines;
+                viewModal.RemoveNonSpeechLines = Se.Settings.Tools.AudioToText.WhisperPostProcessingRemoveNonSpeechLines;
+                viewModal.RemoveRepeatedLines = Se.Settings.Tools.AudioToText.WhisperPostProcessingRemoveRepeatedLines;
+                viewModal.ShowQualityReport = Se.Settings.Tools.AudioToText.WhisperPostProcessingShowQualityReport;
                 viewModal.ChangeUnderlineToColor = Se.Settings.Tools.AudioToText.WhisperPostProcessingChangeUnderlineToColor;
                 viewModal.ChangeUnderlineToColorColor = Se.Settings.Tools.AudioToText.WhisperPostProcessingChangeUnderlineToColorColor.FromHexToColor();
                 viewModal.CueRebuild = Se.Settings.Tools.AudioToText.WhisperCueRebuild;
@@ -2964,6 +3142,9 @@ public partial class SpeechToTextViewModel : ObservableObject
             Se.Settings.Tools.AudioToText.WhisperPostProcessingAddPeriods = vm.AddPeriods;
             Se.Settings.Tools.AudioToText.WhisperPostProcessingMergeLines = vm.MergeShortLines;
             Se.Settings.Tools.AudioToText.WhisperPostProcessingSplitLines = vm.BreakSplitLongLines;
+            Se.Settings.Tools.AudioToText.WhisperPostProcessingRemoveNonSpeechLines = vm.RemoveNonSpeechLines;
+            Se.Settings.Tools.AudioToText.WhisperPostProcessingRemoveRepeatedLines = vm.RemoveRepeatedLines;
+            Se.Settings.Tools.AudioToText.WhisperPostProcessingShowQualityReport = vm.ShowQualityReport;
             Se.Settings.Tools.AudioToText.WhisperPostProcessingChangeUnderlineToColor = vm.ChangeUnderlineToColor;
             Se.Settings.Tools.AudioToText.WhisperPostProcessingChangeUnderlineToColorColor = vm.ChangeUnderlineToColorColor.FromColorToHex();
             Se.Settings.Tools.AudioToText.WhisperCueRebuild = vm.CueRebuild;
@@ -3159,6 +3340,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
             _unknownArgument = false;
             _cudaOutOfMemory = false;
+            _cudaComputeTypeNotSupported = false;
             _incompleteModel = false;
             _missingSharedLibrary = null;
             _loadedFromStdOut = false;
@@ -3460,8 +3642,15 @@ public partial class SpeechToTextViewModel : ObservableObject
         Window?.Close();
     }
 
-    public bool TranscribeViaWhisper(string waveFileName, string videoFileName)
+    /// <param name="retryWithoutCrispAsrVad">
+    /// Re-run of a Crisp ASR job that came back empty, this time without the VAD pass SE adds for
+    /// the Cohere/Mega backends - see RetryCrispAsrWithoutVad (#13911).
+    /// </param>
+    public bool TranscribeViaWhisper(string waveFileName, string videoFileName, bool retryWithoutCrispAsrVad = false)
     {
+        _crispAsrVadSuppressed = retryWithoutCrispAsrVad;
+        _crispAsrVadWasUsed = false;
+
         var engine = GetEffectiveSelectedEngine();
 
         if (_videoFileName == null)
@@ -3746,18 +3935,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             }
 
             var vadPart = string.Empty;
-            // Mega-ASR (crispasr 0.6.10) silently writes a zero-byte SRT unless VAD chunking
-            // is enabled — the transcription log says it succeeded but no segments are emitted.
-            // Cohere gets the same treatment because crispasr auto-enables VAD for that backend
-            // on long audio anyway; passing the bundled Silero model keeps it from downloading
-            // its own copy into ~/.cache/crispasr mid-transcription.
-            //
-            // --chunk-seconds/-ck in the user's parameters means "no VAD, use fixed chunks" -
-            // that is crispasr's own documented way to switch its auto-VAD back off, and it is
-            // the only way to switch VAD off at all (--vad is a plain flag with no --no-vad).
-            // So it has to suppress our own --vad too, or the user has no opt-out (#13849).
-            if (crispAsrEngine is CrispAsrCohere or CrispAsrMega
-                && !Regex.IsMatch(crispArgs ?? string.Empty, @"(^|\s)(--vad|-vm|--vad-model|--chunk-seconds|-ck)\b"))
+            if (ShouldForceCrispAsrVad(crispAsrEngine, crispArgs, _crispAsrVadSuppressed))
             {
                 var crispFolder = crispAsrEngine.GetAndCreateWhisperFolder();
                 var vadFiles = Directory.Exists(crispFolder)
@@ -3770,6 +3948,10 @@ public partial class SpeechToTextViewModel : ObservableObject
                     vadPart = $" --vad --vad-model \"{vadPath}\"";
                 }
             }
+
+            // Remembered so an empty result can be told apart from an empty result *because of*
+            // VAD - only the latter is worth re-running without it (#13911).
+            _crispAsrVadWasUsed = vadPart.Length > 0;
 
             // --print-progress: crispasr streams "crispasr: progress = NN% (i/n slices)" lines
             // in real time (parsed in OutputHandler), while the transcript segments only print
@@ -4000,6 +4182,8 @@ public partial class SpeechToTextViewModel : ObservableObject
             {
                 process.StartInfo.WorkingDirectory = whisperFolder;
             }
+
+            EnsureExecutableStackCleared(engine, whisperFolder);
         }
 
         if (OperatingSystem.IsWindows() && ProcessEnvironmentHelper.GetOrNull(process.StartInfo, "Path") != null)
@@ -4059,6 +4243,39 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
 
         return process;
+    }
+
+    private static bool _executableStackChecked;
+
+    /// <summary>
+    /// Repairs an already-installed Purfview Faster-Whisper-XXL before launching it.
+    /// <para>
+    /// Its bundled libctranslate2 is built with PT_GNU_STACK = RWE, and glibc 2.41 stopped making
+    /// the stack executable at dlopen time, so on a distro with glibc 2.41+ (Fedora 42, Arch,
+    /// Ubuntu 25.10) the run dies immediately with "cannot enable executable stack as shared
+    /// object requires: Invalid argument". The download path clears the flag on unpack, but
+    /// installs made by an earlier SE are already on disk and re-downloading is over a gigabyte,
+    /// so fix them here too. Once per session: the scan only reads ELF headers, but there is no
+    /// reason to repeat it for every transcription.
+    /// </para>
+    /// </summary>
+    private static void EnsureExecutableStackCleared(ISpeechToTextEngine engine, string? whisperFolder)
+    {
+        if (_executableStackChecked ||
+            !OperatingSystem.IsLinux() ||
+            string.IsNullOrEmpty(whisperFolder) ||
+            engine is not WhisperEnginePurfviewFasterWhisperXxl)
+        {
+            return;
+        }
+
+        _executableStackChecked = true;
+        var patched = ElfHelper.ClearExecutableStackInFolder(whisperFolder);
+        if (patched > 0)
+        {
+            Se.WriteToolsLog($"Cleared the executable-stack flag on {patched} shared librar" +
+                             (patched == 1 ? "y" : "ies") + $" in \"{whisperFolder}\"");
+        }
     }
 
     private static string GetWhisperTranslateParameter(ISpeechToTextEngine engine)
@@ -4183,6 +4400,14 @@ public partial class SpeechToTextViewModel : ObservableObject
         else if (outLine.Data.Contains("CUDA failed with error out of memory", StringComparison.OrdinalIgnoreCase))
         {
             _cudaOutOfMemory = true;
+        }
+        else if (outLine.Data.Contains("CUBLAS_STATUS_NOT_SUPPORTED", StringComparison.OrdinalIgnoreCase))
+        {
+            // faster-whisper picks float32 when it cannot tell what the GPU supports, and cuBLAS
+            // then refuses the matmul with CUBLAS_STATUS_NOT_SUPPORTED - the run dies inside
+            // encode() and leaves no output at all, so without this the user just gets an empty
+            // result (issue #13902).
+            _cudaComputeTypeNotSupported = true;
         }
         //if (outLine.Data.Contains("running on: CUDA", StringComparison.OrdinalIgnoreCase))
         //{

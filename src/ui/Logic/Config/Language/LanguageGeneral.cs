@@ -102,7 +102,15 @@ public class LanguageGeneral
     public string Codec { get; set; }
     public string Collapse { get; set; }
     public string Color { get; set; }
+    public string ColorBlack { get; set; }
+    public string ColorBlue { get; set; }
+    public string ColorCyan { get; set; }
     public string ColorDotDotDot { get; set; }
+    public string ColorGreen { get; set; }
+    public string ColorMagenta { get; set; }
+    public string ColorRed { get; set; }
+    public string ColorWhite { get; set; }
+    public string ColorYellow { get; set; }
     public string Column { get; set; }
     public string ConsoleLog { get; set; }
     public string ContentAlignment { get; set; }
@@ -336,6 +344,7 @@ public class LanguageGeneral
     public string NewSubtitleStartKeyDownSetEndKeyUp { get; set; }
     public string SetSubtitleStartAtVideoPositionSetEndAtKeyUpAndGoToNext { get; set; }
     public string No { get; set; }
+    public string NoColor { get; set; }
     public string NoFilesToConvert { get; set; }
     public string NoLanguageCode { get; set; }
     public string NoSubtitleLoaded { get; set; }
@@ -457,6 +466,7 @@ public class LanguageGeneral
     public string RemoveUnderline { get; set; }
     public string Rename { get; set; }
     public string Replace { get; set; }
+    public string ReplaceLine { get; set; } = string.Empty;
     public string ReplaceWith { get; set; }
     public string RequiresRestart { get; set; }
     public string Reset { get; set; }
@@ -521,6 +531,7 @@ public class LanguageGeneral
     public string Shadow { get; set; }
     public string ShadowColor { get; set; }
     public string ShadowWidth { get; set; }
+    public string ShiftLineBy { get; set; } = string.Empty;
     public string Shortcut { get; set; }
     public string Shortcuts { get; set; }
     public string Show { get; set; }
@@ -535,6 +546,7 @@ public class LanguageGeneral
     public string ShowPreview { get; set; }
     public string ShowShotChangesList { get; set; }
     public string ShowStyleColumn { get; set; }
+    public string ShowTeletext { get; set; } = string.Empty;
     public string ShowTimeCodes { get; set; }
     public string ShowWpmColumn { get; set; }
     public string ShowPixelWidthColumn { get; set; }
@@ -588,6 +600,9 @@ public class LanguageGeneral
     public string System { get; set; }
     public string TargetEncoding { get; set; }
     public string TargetFormat { get; set; }
+    public string TeletextAlignment { get; set; } = string.Empty;
+    public string TeletextColor { get; set; } = string.Empty;
+    public string TeletextLine { get; set; } = string.Empty;
     public string TenHours { get; set; }
     public string Text { get; set; }
     public string TextColor { get; set; }
@@ -847,7 +862,15 @@ public class LanguageGeneral
         Codec = "Codec";
         Collapse = "Collapse";
         Color = "Color";
+        ColorBlack = "Black";
+        ColorBlue = "Blue";
+        ColorCyan = "Cyan";
         ColorDotDotDot = "Color...";
+        ColorGreen = "Green";
+        ColorMagenta = "Magenta";
+        ColorRed = "Red";
+        ColorWhite = "White";
+        ColorYellow = "Yellow";
         Column = "Column";
         ConsoleLog = "Console log";
         ContentAlignment = "Content alignment";
@@ -1081,6 +1104,7 @@ public class LanguageGeneral
         NewSubtitleStartKeyDownSetEndKeyUp = "Insert subtitle: Start on key down, set end on key up";
         SetSubtitleStartAtVideoPositionSetEndAtKeyUpAndGoToNext = "Set start at video position set end on key up, and go to next";
         No = "No";
+        NoColor = "No color";
         NoFilesToConvert = "No files to convert";
         NoLanguageCode = "No language code";
         NoSubtitleLoaded = "No subtitle loaded";
@@ -1202,6 +1226,7 @@ public class LanguageGeneral
         RemoveUnderline = "Remove underline";
         Rename = "Rename";
         Replace = "Replace";
+        ReplaceLine = "Replace line";
         ReplaceWith = "Replace with";
         RequiresRestart = "Requires restart";
         Reset = "Reset";
@@ -1266,6 +1291,7 @@ public class LanguageGeneral
         Shadow = "Shadow";
         ShadowColor = "Shadow color";
         ShadowWidth = "Shadow width";
+        ShiftLineBy = "Shift line by";
         Shortcut = "Shortcut";
         Shortcuts = "Shortcuts";
         Show = "Show";
@@ -1280,6 +1306,7 @@ public class LanguageGeneral
         ShowPreview = "Show preview";
         ShowShotChangesList = "Show shot changes list";
         ShowStyleColumn = "Show \"Style\" column";
+        ShowTeletext = "Show TT";
         ShowTimeCodes = "Show time codes";
         ShowWpmColumn = "Show \"Words/min\" column";
         ShowPixelWidthColumn = "Show \"Pixel width\" column";
@@ -1333,6 +1360,9 @@ public class LanguageGeneral
         System = "System";
         TargetEncoding = "Target encoding";
         TargetFormat = "Target format";
+        TeletextAlignment = "Teletext alignment";
+        TeletextColor = "Teletext color";
+        TeletextLine = "Teletext line";
         TenHours = "10 hours";
         Text = "Text";
         TextColor = "Text color";

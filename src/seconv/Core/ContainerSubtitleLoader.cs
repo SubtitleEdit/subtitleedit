@@ -394,8 +394,8 @@ internal static class ContainerSubtitleLoader
                 continue;
             }
 
-            var paragraphs = track.Mdia.Minf.Stbl.GetParagraphs();
-            if (paragraphs.Count == 0)
+            var paragraphs = track.Mdia.Minf?.Stbl?.GetParagraphs();
+            if (paragraphs == null || paragraphs.Count == 0)
             {
                 continue;
             }

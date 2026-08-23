@@ -7,6 +7,9 @@ public class SeBatchConvert
     public string[] ActiveFunctions { get; set; } = [];
     public string OutputFolder { get; set; }
     public bool Overwrite { get; set; }
+
+    /// <summary>Give output files the source file's modified/created date instead of the conversion time.</summary>
+    public bool KeepSourceTimestamp { get; set; }
     public string TargetFormat { get; set; }
     public string CustomTextFormatName { get; set; } = string.Empty;
     public string TargetEncoding { get; set; }
@@ -81,6 +84,13 @@ public class SeBatchConvert
     public string AutoTranslateEngine { get; set; }
     public string AutoTranslateSourceLanguage { get; set; }
     public string AutoTranslateTargetLanguage { get; set; }
+
+    /// <summary>
+    /// Batch convert's own "use external server" switch for the llama.cpp engines - independent of
+    /// the Auto-translate window's <see cref="SeAutoTranslate.LlamaCppUseRemoteServer"/> (#14005).
+    /// The server URL itself is shared via <see cref="SeAutoTranslate.LlamaCppApiUrl"/>.
+    /// </summary>
+    public bool LlamaCppUseRemoteServer { get; set; }
 
     public string ChangeCasingType { get; set; }
     public bool NormalCasingFixNames { get; set; }

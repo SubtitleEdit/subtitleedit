@@ -815,6 +815,35 @@ public static class TableViewExtras
         });
     }
 
+    /// <summary>
+    /// Whether <paramref name="item"/>'s row is realized and entirely inside the viewport right
+    /// now. Callers use it to leave the scroll offset alone when the row they are about to select
+    /// is already on screen - deleting a line, for example, makes the next line current, and that
+    /// line was visible right below the deleted one; jumping or re-centering the view for it only
+    /// moves the rows out from under the user's eyes.
+    /// </summary>
+    public static bool IsRowFullyVisible(TableView tableView, object item)
+    {
+        var scrollViewer = tableView.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault();
+        if (scrollViewer == null || scrollViewer.Viewport.Height <= 0)
+        {
+            return false;
+        }
+
+        if (tableView.ContainerFromItem(item) is not { } row || row.Bounds.Height <= 0)
+        {
+            return false;
+        }
+
+        var rowTop = row.TranslatePoint(new Point(0, 0), scrollViewer)?.Y;
+        if (rowTop == null)
+        {
+            return false;
+        }
+
+        return rowTop.Value >= -0.5 && rowTop.Value + row.Bounds.Height <= scrollViewer.Viewport.Height + 0.5;
+    }
+
     private static void AdjustScrollForRow(TableView tableView, object item, Func<double, double, double, double> computeDelta)
     {
         Dispatcher.UIThread.Post(() =>

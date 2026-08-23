@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -45,6 +45,9 @@ public partial class PointSyncViewModel : ObservableObject
     private string _videoFileName;
     private AudioVisualizer? _audioVisualizer;
 
+    // Carried down to the "Set sync point" dialog, which opens its own player (issue #13995).
+    private int _audioTrackId = -1;
+
     // Only passed on to "Set sync point", which draws the subtitle on its video (#13767).
     private VideoPreviewSubtitleContext _previewContext = VideoPreviewSubtitleContext.Default;
 
@@ -67,8 +70,10 @@ public partial class PointSyncViewModel : ObservableObject
         string videoFileName,
         string fileName,
         VideoPreviewSubtitleContext previewContext,
-        AudioVisualizer? audioVisualizer)
+        AudioVisualizer? audioVisualizer,
+        int audioTrackId = -1)
     {
+        _audioTrackId = audioTrackId;
         Subtitles.Clear();
         Subtitles.AddRange(subtitles);
         FileName = fileName;
@@ -98,7 +103,7 @@ public partial class PointSyncViewModel : ObservableObject
 
         var result = await _windowService.ShowDialogAsync<SetSyncPointWindow, SetSyncPointViewModel>(Window, vm =>
         {
-            vm.Initialize(Subtitles.ToList(), SelectedSubtitle, _videoFileName, FileName, _previewContext, _audioVisualizer);
+            vm.Initialize(Subtitles.ToList(), SelectedSubtitle, _videoFileName, FileName, _previewContext, _audioVisualizer, _audioTrackId);
         });
 
         // Keep a video opened (or found) in there, so the next sync point starts with it loaded -

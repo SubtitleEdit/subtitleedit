@@ -47,12 +47,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     continue;
                 }
 
+                if (p.Text.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
                 if (p.Text.Contains(".png#xywh=", StringComparison.OrdinalIgnoreCase))
                 {
                     continue;
                 }
 
                 if (p.Text.Contains(".jpg#xywh=", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                if (p.Text.Contains(".jpeg#xywh=", StringComparison.OrdinalIgnoreCase))
                 {
                     continue;
                 }
@@ -108,7 +118,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var posJpeg = imageFileName.IndexOf(".jpeg#xywh=", StringComparison.OrdinalIgnoreCase);
             if (posJpeg >= 0)
             {
-                string spec = imageFileName.Substring(posJpg + 11); // after ".jepg#xywh="
+                string spec = imageFileName.Substring(posJpeg + 11); // after ".jpeg#xywh="
                 imageFileName = imageFileName.Substring(0, posJpeg + 5); // keep ".jpeg"
                 ParseSpriteSpec(spec, out x, out y, out w, out h);
                 useSprite = true;

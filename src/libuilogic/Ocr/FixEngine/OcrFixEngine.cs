@@ -345,6 +345,18 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
                 isWordCorrect = true;
             }
 
+            // Binary image compare reads lowercase l as i (italics) or uppercase I (sans-serif
+            // fonts), in any language: "friendiy", "hostiie", "InteIIigence". The replace-list
+            // rules only cover a fixed pattern per entry, and the PartialWords guesses need
+            // "try to guess unknown words" on - so try the letter swap here, unconditionally,
+            // and keep it only when the dictionary or names list confirms the result (#13660).
+            if (!isWordCorrect && TryFixLMisreadAsI(result, out var lFixed))
+            {
+                result = lFixed;
+                word.GuessUsed = true;
+                isWordCorrect = true;
+            }
+
             if (!string.IsNullOrEmpty(result) && !isWordCorrect && doTryToGuessUnknownWords)
             {
                 var guesses = new List<string>();
@@ -404,6 +416,113 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
 
         word.FixedWord = result;
         word.IsSpellCheckedOk = isWordCorrect;
+    }
+
+    // Tries every combination of the word's 'i'/'I' letters replaced by 'l' (fewest swaps first)
+    // and returns the first one the dictionary or names list accepts. Only words of at least five
+    // letters are considered, like the other unknown-word guesses, and a word with more than six
+    // candidate letters only gets the single-letter and all-letters variants.
+    private bool TryFixLMisreadAsI(string word, out string fixedWord)
+    {
+        fixedWord = word;
+        if (word.Length < 5)
+        {
+            return false;
+        }
+
+        var positions = new List<int>();
+        for (var i = 0; i < word.Length; i++)
+        {
+            var ch = word[i];
+            if (ch == 'i' || ch == 'I')
+            {
+                positions.Add(i);
+            }
+            else if (!char.IsLetter(ch) && ch != '\'' && ch != '-')
+            {
+                return false;
+            }
+        }
+
+        if (positions.Count == 0)
+        {
+            return false;
+        }
+
+        var chars = word.ToCharArray();
+        var found = string.Empty;
+        bool Accept(IReadOnlyList<int> swap)
+        {
+            foreach (var idx in swap)
+            {
+                chars[idx] = 'l';
+            }
+
+            var candidate = new string(chars);
+            foreach (var idx in swap)
+            {
+                chars[idx] = word[idx];
+            }
+
+            if (IsSpelledCorrect(candidate) || _spellCheckWordLists.HasName(candidate.Trim('\'', '-')))
+            {
+                found = candidate;
+                return true;
+            }
+
+            return false;
+        }
+
+        const int maxCombinationLetters = 6;
+        if (positions.Count > maxCombinationLetters)
+        {
+            foreach (var idx in positions)
+            {
+                if (Accept(new[] { idx }))
+                {
+                    fixedWord = found;
+                    return true;
+                }
+            }
+
+            if (Accept(positions))
+            {
+                fixedWord = found;
+                return true;
+            }
+
+            return false;
+        }
+
+        // All non-empty subsets of the positions, smallest subsets first.
+        var total = 1 << positions.Count;
+        for (var size = 1; size <= positions.Count; size++)
+        {
+            for (var mask = 1; mask < total; mask++)
+            {
+                if (System.Numerics.BitOperations.PopCount((uint)mask) != size)
+                {
+                    continue;
+                }
+
+                var swap = new List<int>(size);
+                for (var bit = 0; bit < positions.Count; bit++)
+                {
+                    if ((mask & (1 << bit)) != 0)
+                    {
+                        swap.Add(positions[bit]);
+                    }
+                }
+
+                if (Accept(swap))
+                {
+                    fixedWord = found;
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     // True when the word is a hyphenated compound (at least two parts) and every part is a

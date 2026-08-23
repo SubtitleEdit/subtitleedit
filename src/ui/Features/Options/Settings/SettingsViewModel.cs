@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Animation;
 using Avalonia.Animation.Easings;
 using Avalonia.Controls;
@@ -17,6 +17,7 @@ using Nikse.SubtitleEdit.Features.Assa;
 using Nikse.SubtitleEdit.Features.Help.CheckForUpdates;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Options.DoNotBreakAfterList;
+using Nikse.SubtitleEdit.Features.Options.Settings.MinGapCalculate;
 using Nikse.SubtitleEdit.Features.Options.Settings.SyntaxColorTooWideSettings;
 using Nikse.SubtitleEdit.Features.Tools.BeautifyTimeCodes.Profile;
 using Nikse.SubtitleEdit.Features.Options.Settings.WaveformThemes;
@@ -106,6 +107,8 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<AlignmentItem> __mpvPreviewFontAlignments;
     [ObservableProperty] private AlignmentItem _mpvPreviewSelectedFontAlignment;
     [ObservableProperty] private int _mpvPreviewMargin;
+    [ObservableProperty] private bool _mpvPreviewUsePositionFromFile;
+    [ObservableProperty] private bool _mpvPreviewMarginIsPartOfSubtitleArea;
     [ObservableProperty] private Color _mpvPreviewColorPrimary;
     [ObservableProperty] private Color _mpvPreviewColorOutline;
     [ObservableProperty] private Color _mpvPreviewColorShadow;
@@ -153,6 +156,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private TextEncoding _defaultEncoding;
     [ObservableProperty] private bool _autoConvertToUtf8;
     [ObservableProperty] private bool _forceCrLfOnSave;
+    [ObservableProperty] private bool _showFormatLimitWarning;
     [ObservableProperty] private bool _autoTrimWhiteSpace;
     [ObservableProperty] private bool _removeBlankLinesWhenOpening;
 
@@ -312,6 +316,10 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _waveformMouseWheelSetsVideoPosition;
     [ObservableProperty] private bool _waveformSnapToShotChanges;
     [ObservableProperty] private bool _waveformSnapToFrames;
+    [ObservableProperty] private int _waveformSnapToShotChangesPixels;
+    [ObservableProperty] private decimal _waveformSnapToShotChangeStartMaxSeconds;
+    [ObservableProperty] private decimal _waveformSnapToShotChangeEndMaxSeconds;
+    [ObservableProperty] private decimal _waveformSnapToShotChangeSameShotEndMaxSeconds;
     [ObservableProperty] private bool _waveformShotChangesAutoGenerate;
     [ObservableProperty] private bool _waveformAllowOverlap;
     [ObservableProperty] private bool _waveformSetVideoPositionOnMoveStartEnd;
@@ -773,6 +781,7 @@ public partial class SettingsViewModel : ObservableObject
         DefaultSaveLocationCustomFolder = Se.Settings.General.DefaultSaveLocationCustomFolder ?? string.Empty;
         AutoConvertToUtf8 = general.AutoConvertToUtf8;
         ForceCrLfOnSave = general.ForceCrLfOnSave;
+        ShowFormatLimitWarning = general.ShowFormatLimitWarning;
         AutoTrimWhiteSpace = general.AutoTrimWhiteSpace;
         RemoveBlankLinesWhenOpening = general.RemoveBlankLinesWhenOpening;
 
@@ -991,6 +1000,10 @@ public partial class SettingsViewModel : ObservableObject
             : FormatMouseWheelStep(500);
         WaveformSnapToShotChanges = Se.Settings.Waveform.SnapToShotChanges;
         WaveformSnapToFrames = Se.Settings.Waveform.SnapToFrames;
+        WaveformSnapToShotChangesPixels = Se.Settings.Waveform.SnapToShotChangesPixels;
+        WaveformSnapToShotChangeStartMaxSeconds = (decimal)Se.Settings.Waveform.SnapToShotChangeStartMaxSeconds;
+        WaveformSnapToShotChangeEndMaxSeconds = (decimal)Se.Settings.Waveform.SnapToShotChangeEndMaxSeconds;
+        WaveformSnapToShotChangeSameShotEndMaxSeconds = (decimal)Se.Settings.Waveform.SnapToShotChangeSameShotEndMaxSeconds;
         WaveformShotChangesAutoGenerate = Se.Settings.Waveform.ShotChangesAutoGenerate;
         WaveformAllowOverlap = Se.Settings.Waveform.AllowOverlap;
         WaveformSetVideoPositionOnMoveStartEnd = Se.Settings.Waveform.SetVideoPositionOnMoveStartEnd;
@@ -1040,6 +1053,8 @@ public partial class SettingsViewModel : ObservableObject
         MpvPreviewFontSize = video.MpvPreviewFontSize;
         MpvPreviewFontBold = video.MpvPreviewFontBold;
         MpvPreviewMargin = video.MpvPreviewMargin;
+        MpvPreviewUsePositionFromFile = video.MpvPreviewUsePositionFromFile;
+        MpvPreviewMarginIsPartOfSubtitleArea = video.MpvPreviewMarginIsPartOfSubtitleArea;
         MpvPreviewSelectedFontAlignment = MpvPreviewFontAlignments.FirstOrDefault(p => p.Code == video.MpvPreviewAlignment) ?? MpvPreviewFontAlignments[7];
         MpvPreviewOutlineWidth = video.MpvPreviewOutlineWidth;
         MpvPreviewShadowWidth = video.MpvPreviewShadowWidth;
@@ -1641,6 +1656,7 @@ public partial class SettingsViewModel : ObservableObject
         general.DefaultSaveLocationCustomFolder = DefaultSaveLocationCustomFolder;
         general.AutoConvertToUtf8 = AutoConvertToUtf8;
         general.ForceCrLfOnSave = ForceCrLfOnSave;
+        general.ShowFormatLimitWarning = ShowFormatLimitWarning;
         general.AutoTrimWhiteSpace = AutoTrimWhiteSpace;
         general.RemoveBlankLinesWhenOpening = RemoveBlankLinesWhenOpening;
 
@@ -1823,6 +1839,10 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Waveform.MouseWheelVideoPositionStepMs = ParseMouseWheelStep(SelectedWaveformMouseWheelVideoPositionStep);
         Se.Settings.Waveform.SnapToShotChanges = WaveformSnapToShotChanges;
         Se.Settings.Waveform.SnapToFrames = WaveformSnapToFrames;
+        Se.Settings.Waveform.SnapToShotChangesPixels = WaveformSnapToShotChangesPixels;
+        Se.Settings.Waveform.SnapToShotChangeStartMaxSeconds = (double)WaveformSnapToShotChangeStartMaxSeconds;
+        Se.Settings.Waveform.SnapToShotChangeEndMaxSeconds = (double)WaveformSnapToShotChangeEndMaxSeconds;
+        Se.Settings.Waveform.SnapToShotChangeSameShotEndMaxSeconds = (double)WaveformSnapToShotChangeSameShotEndMaxSeconds;
         Se.Settings.Waveform.ShotChangesAutoGenerate = WaveformShotChangesAutoGenerate;
         Se.Settings.Waveform.AllowOverlap = WaveformAllowOverlap;
         Se.Settings.Waveform.SetVideoPositionOnMoveStartEnd = WaveformSetVideoPositionOnMoveStartEnd;
@@ -1865,6 +1885,8 @@ public partial class SettingsViewModel : ObservableObject
         video.MpvPreviewFontSize = MpvPreviewFontSize;
         video.MpvPreviewFontBold = MpvPreviewFontBold;
         video.MpvPreviewMargin = MpvPreviewMargin;
+        video.MpvPreviewUsePositionFromFile = MpvPreviewUsePositionFromFile;
+        video.MpvPreviewMarginIsPartOfSubtitleArea = MpvPreviewMarginIsPartOfSubtitleArea;
         video.MpvPreviewOutlineWidth = MpvPreviewOutlineWidth;
         video.MpvPreviewAlignment = MpvPreviewSelectedFontAlignment.Code;
         video.MpvPreviewShadowWidth = MpvPreviewShadowWidth;
@@ -2160,6 +2182,29 @@ public partial class SettingsViewModel : ObservableObject
             ColorTextTooWidePixels = viewModel.MaxWidthPixels;
             ColorTextTooWideFontName = viewModel.SelectedFont;
             ColorTextTooWideFontSize = viewModel.FontSize;
+        }
+    }
+
+    /// <summary>
+    /// Delivery specs give the minimum gap in frames, the setting is in milliseconds - offer the
+    /// same frame rate calculator Subtitle Edit 4 had behind the "..." button (issue #13906).
+    /// </summary>
+    [RelayCommand]
+    private async Task CalculateMinGapMs()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var viewModel = await _windowService.ShowDialogAsync<MinGapCalculateWindow, MinGapCalculateViewModel>(
+            Window,
+            vm => vm.Initialize(MinGapFrames ?? 2));
+
+        if (viewModel.OkPressed)
+        {
+            MinGapMs = viewModel.MinGapMs;
+            RuleValueChanged();
         }
     }
 

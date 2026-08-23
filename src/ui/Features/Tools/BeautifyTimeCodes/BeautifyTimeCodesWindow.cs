@@ -62,10 +62,63 @@ public class BeautifyTimeCodesWindow : Window
 
         var grid = new Grid
         {
-            ColumnDefinitions = new ColumnDefinitions("*"),
+            ColumnDefinitions = new ColumnDefinitions("Auto,*"),
         };
-        grid.Add(stats, 0, 0);
+        grid.Add(BuildTimeCodesBar(vm), 0, 0);
+        grid.Add(stats, 0, 1);
         return grid;
+    }
+
+    /// <summary>
+    /// Opt-in for snapping against the video's real frame times rather than an assumed n/fps grid,
+    /// plus the extraction that produces them (a full decode, so it is explicit and cancellable).
+    /// </summary>
+    private static Control BuildTimeCodesBar(BeautifyTimeCodesViewModel vm)
+    {
+        var l = Se.Language.Tools.BeautifyTimeCodes;
+
+        var checkBoxExact = new CheckBox
+        {
+            Content = l.UseExactTimeCodes,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.UseExactTimeCodes))
+            {
+                Source = vm,
+                Mode = BindingMode.TwoWay,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+            },
+        };
+
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(checkBoxExact, l.TimeCodesHint);
+        }
+
+        var status = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            Opacity = 0.8,
+            FontSize = 12,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.TimeCodesStatus)) { Source = vm },
+        };
+
+        var buttonExtract = UiUtil.MakeButton(l.ExtractTimeCodes, vm.ExtractTimeCodesCommand);
+        buttonExtract.VerticalAlignment = VerticalAlignment.Center;
+        buttonExtract.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.CanExtractTimeCodes)) { Source = vm });
+
+        var progress = UiUtil.MakeProgressBar();
+        progress.Width = 140;
+        progress.VerticalAlignment = VerticalAlignment.Center;
+        progress.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ExtractProgressValue)) { Source = vm });
+        progress.Bind(ProgressBar.IsVisibleProperty, new Binding(nameof(vm.IsExtractingTimeCodes)) { Source = vm });
+
+        return new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 8,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { checkBoxExact, status, buttonExtract, progress },
+        };
     }
 
     private static Control BuildVisualizerArea(BeautifyTimeCodesViewModel vm)

@@ -3,6 +3,106 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-beta22 (23rd of August 2026)
+
+* Beautify time codes can now use the video's real frame times instead of assuming a constant frame rate - thx warrentc3
+* Add a transcription quality report to speech to text, plus non-speech and repeated-line removal - thx l0uev4-lab
+* Add an error list with summary cards and per-error rows, in the main window and in batch convert
+* Add shot-change snap distances to Settings
+* Snap to the nearest shot change in the waveform when a cue is close - thx m0ck69
+* Warn before saving SCC when lines exceed 32 characters or 4 lines
+* Add a "Use external server" toggle for llama.cpp in batch convert, independent of the main setting - thx emsb8888-prog
+* Remember the batch convert "Remove formatting" check boxes - thx matake31
+* Use the selected audio track in the sync windows - thx dmist
+* Use display dimensions for rotated video when burning in subtitles - thx thealainpaul
+* Speed up tag counting in the subtitle grid - thx ivandrofly
+* Fix split long lines producing overlong lines, gaps between split events and duplicate numbers - thx Triathlon-rally
+* Fix selecting a text to speech review line by clicking or grabbing its waveform block - thx cvrle77
+* Fix Google Translate failing on transient server errors instead of retrying - thx JoaoDuarte-code
+* Fix the subtitle grid scroll position jumping while the reference projection rebuilds - thx torvchen
+* Fix the minimum gap not being kept when nudging a cue one frame - thx m0ck69
+* Fix the AI review sending ASSA override blocks, and send actor/style as context - thx MrGoraj
+* Fix continuation style fixes being applied twice to each line
+* Update Italian translation - thx bovirus
+* Update Polish translation - thx potplayer-fanpack
+
+-----------------------------------------------------------------------------------------------------
+
+v5.2.0-beta21 (22nd of August 2026)
+
+* Add an option to keep the source file's date/time on converted files (batch convert + seconv) - thx TucocoTucoco
+* Add a Start/Stop server button to the AI review window, and stop llama-server when a review is cancelled - thx emsb8888-prog
+* Snap whole-paragraph waveform drags to shot changes - thx m0ck69
+* Update yt-dlp to 2026.08.19
+* Fix "snap to shot change" ignoring the cue gap and often doing nothing at all - thx m0ck69
+* Fix waveform edge drags running away when the video position is centered - thx GrampaWildWilly
+* Fix OCR reading "l" as "i" or "I" without "try to guess unknown words" turned on - thx Miggu82
+* Fix the subtitle grid jumping after merging lines with a read-only original open - thx torvchen
+* Fix focus, scroll and selection in the subtitle grid after delete, insert and merge commands
+* Fix WebVTT showing a line twice when the same cue is repeated with the same time codes
+* Update Chinese (simplified) translation - thx emsb8888-prog
+* Update French translation - thx Need74
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+* Update Korean translation - thx 12si27
+* Update Polish translation - thx potplayer-fanpack
+
+-----------------------------------------------------------------------------------------------------
+
+v5.2.0-beta20 (21st of August 2026)
+
+* Add "Go to sub position and pause" to the video shortcuts - thx BBB2K
+* Add a teletext color picker with a "No color" option for EBU STL - thx Triathlon-rally
+* Add the minimum gap frame rate calculator from SE 4 - thx m0ck69
+* Add the SE 4 "toggle custom tags" and recalculate-duration shortcuts - thx m0ck69
+* Layout 10: put the edit box under the waveform like SE 4/Aegisub - thx Surlime
+* Let the preview subtitle use the letterbox bars - thx m0ck69
+* Keep the chosen languages when the translate engine changes - thx GrampaWildWilly
+* Apply new waveform colors without restarting SE - thx m0ck69
+* Retry a Crisp ASR clip without VAD when it comes back empty - thx Davanix
+* Explain the cuBLAS compute type failure and offer the fix - thx tomelephant-git
+* Smooth the waveform/video cursor and take mpv work off the UI thread
+* Teletext/EBU STL: preview follows row changes, header round-trip, TS charset crash/leak fixes, honest TT column
+* Hide burn-in codecs the bundled ffmpeg lacks (Flatpak) - thx zbcoding
+* Keep the settings column out of the video generating progress bar row - thx zbcoding
+* Docs: add the chapters page, rebuild the settings page, refresh the engine/format/shortcut lists
+* Update CrispEmbed to v0.17.9
+* Update Italian translation - thx bovirus
+* Perf: vectorize the OCR bitmap primitives and the spectrogram pixel write
+* Fix Whisper XXL failing to load on glibc 2.41+ (Fedora 42, Arch, Ubuntu 25.10) - thx zbcoding
+* Fix the grid color guard dropping legible colors - thx St0rmXtr00per
+* Fix the position slider jumping while dragging during playback - thx Davanix
+* Fix clipboard managers failing to paste into text boxes on Windows
+* Fix a working Crisp ASR build not being downloaded on Intel Macs - thx tolikdgan
+* Fix update-metainfo-version.sh flattening the AppStream release history, and re-pin the Flathub manifest to v5.1.0 - thx CaptechOmar
+
+-----------------------------------------------------------------------------------------------------
+
+v5.2.0-beta19 (20th of August 2026)
+
+* Add a Teletext alignment dialog, a TT grid column, and better EBU STL Teletext handling - thx Triathlon-rally
+* Add "Save all images with HTML index" to the OCR window - thx WAusJackBauer
+* Use the position the subtitle file itself carries when previewing on the video (TTML/PAC/EBU STL) - thx gavinhonl
+* Remember which "Multiple replace" categories are expanded - thx KaDeeKe
+* Let the user own the llama.cpp launch flags in batch convert - thx emsb8888-prog
+* Start the text-to-speech export folder picker in the subtitle's own folder - thx cvrle77
+* Delete the temporary files text-to-speech and ffmpeg leave behind - thx subof
+* Let clipboard managers paste into the focused text box on Windows (WM_PASTE)
+* Update the pinned llama.cpp build to b10507
+* Fix black video and no sound on GPUs without a Vulkan runtime - thx jugorakita-creator
+* Fix the batch convert window freezing after minimize/restore, and llama-server surviving cancel - thx emsb8888-prog
+* Fix the UI freezing during OCR, and line editing breaking after a minimize - thx FunkyKnilch
+* Fix the Delete key doing nothing after a shift+click range selection in a scrolled grid - thx Davanix
+* Fix ruby and bouten not being read from real Netflix IMSC 1.1 Japanese files - thx w72k24
+* Fix D-Cinema XML two-line events collapsing into one line - thx clundible
+* Fix Gemma 4 models returning empty translations - thx Oplay66
+* Fix the Chatterbox crash after switching to another cloned voice - thx subof
+* Fix black in-progress status text in the batch convert file list
+* Update Italian translation and installer - thx bovirus
+* Update Japanese translation - thx hisui3393
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-beta18 (19th of August 2026)
 
 * Add a "Hide tags" mode for formatting in the subtitle grid - thx MrGoraj

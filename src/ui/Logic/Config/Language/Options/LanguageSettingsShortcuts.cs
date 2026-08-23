@@ -174,6 +174,7 @@ public class LanguageSettingsShortcuts
     public string SeekSilenceBack { get; set; }
     public string SeekSilenceForward { get; set; }
     public string SetVideoPositionCurrentSubtitleStart { get; set; }
+    public string GoToSubtitlePositionAndPause { get; set; }
     public string SetVideoPositionCurrentSubtitleEnd { get; set; }
     public string ToggleAudioTracks { get; set; }
     public string GoToNextError { get;set; }
@@ -435,6 +436,7 @@ public class LanguageSettingsShortcuts
         SeekSilenceBack = "Seek silence back";
         SeekSilenceForward = "Seek silence forward";
         SetVideoPositionCurrentSubtitleStart = "Set video position to current line start";
+        GoToSubtitlePositionAndPause = "Go to sub position and pause";
         SetVideoPositionCurrentSubtitleEnd = "Set video position to current line end";
         ToggleAudioTracks = "Toggle audio tracks";
         GoToPreviousError = "GoTo previous error";

@@ -759,7 +759,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
 
                 foreach (var previousGuess in previousGuesses)
                 {
-                    for (var i = 0; i < previousGuess.Length - letter.Length; i++)
+                    for (var i = 0; i <= previousGuess.Length - letter.Length; i++)
                     {
                         if (previousGuess.AsSpan(i).StartsWith(letter, StringComparison.Ordinal))
                         {

@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
@@ -41,6 +41,17 @@ public class SpeechToTextPostProcessingWindow : Window
 
         var labelAddPeriods = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.AddPeriods);
         var checkAddPeriods = UiUtil.MakeCheckBox(vm, nameof(SpeechToTextPostProcessingViewModel.AddPeriods));
+
+        var labelRemoveNonSpeechLines = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.RemoveNonSpeechLines);
+        var checkRemoveNonSpeechLines = UiUtil.MakeCheckBox(vm, nameof(SpeechToTextPostProcessingViewModel.RemoveNonSpeechLines));
+        SetHint(labelRemoveNonSpeechLines, checkRemoveNonSpeechLines, Se.Language.Video.AudioToText.RemoveNonSpeechLinesHint);
+
+        var labelRemoveRepeatedLines = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.RemoveRepeatedLines);
+        var checkRemoveRepeatedLines = UiUtil.MakeCheckBox(vm, nameof(SpeechToTextPostProcessingViewModel.RemoveRepeatedLines));
+        SetHint(labelRemoveRepeatedLines, checkRemoveRepeatedLines, Se.Language.Video.AudioToText.RemoveRepeatedLinesHint);
+
+        var labelShowQualityReport = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.ShowQualityReport);
+        var checkShowQualityReport = UiUtil.MakeCheckBox(vm, nameof(SpeechToTextPostProcessingViewModel.ShowQualityReport));
 
         var labelChangeUnderlineToColor = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.ChangeUnderlineToColor);
         var checkChangeUnderlineToColor = UiUtil.MakeCheckBox(vm, nameof(SpeechToTextPostProcessingViewModel.ChangeUnderlineToColor));
@@ -132,6 +143,18 @@ public class SpeechToTextPostProcessingWindow : Window
         grid.Add(checkAddPeriods, row, 1);
         row++;
 
+        grid.Add(labelRemoveNonSpeechLines, row, 0);
+        grid.Add(checkRemoveNonSpeechLines, row, 1);
+        row++;
+
+        grid.Add(labelRemoveRepeatedLines, row, 0);
+        grid.Add(checkRemoveRepeatedLines, row, 1);
+        row++;
+
+        grid.Add(labelShowQualityReport, row, 0);
+        grid.Add(checkShowQualityReport, row, 1);
+        row++;
+
         grid.Add(labelChangeUnderlineToColor, row, 0);
         grid.Add(checkChangeUnderlineToColor, row, 1);
         grid.Add(colorPickerUnderlineToColor, row, 2);
@@ -192,6 +215,17 @@ public class SpeechToTextPostProcessingWindow : Window
         Content = outerGrid;
 
         Activated += delegate { Focus(); }; // hack to make OnKeyDown work
+    }
+
+    private static void SetHint(Control label, Control checkBox, string hint)
+    {
+        if (!Se.Settings.Appearance.ShowHints)
+        {
+            return;
+        }
+
+        ToolTip.SetTip(label, hint);
+        ToolTip.SetTip(checkBox, hint);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

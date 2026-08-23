@@ -381,6 +381,45 @@ public class ValueConverterTests : IDisposable
         Assert.False(run.IsSet(TextElement.ForegroundProperty));
     }
 
+    // Issue #13929: the guard was catching colors that read perfectly well. On a mid-grey theme
+    // one speaker's #5C1FF4 (contrast 1.268) rendered in the default foreground while the three
+    // other speakers in the same file kept their colors, which looks like a bug rather than a
+    // readability aid. The genuinely invisible cases above sit at 1.0-1.15, well clear of it.
+    [AvaloniaFact]
+    public void ShowFormatting_ReadableFontTagColorOnAMidGreyThemeIsKept()
+    {
+        TextWithSubtitleSyntaxHighlightingConverter.GridBackgroundOverride = () => Color.FromRgb(73, 73, 73);
+        try
+        {
+            var run = SingleRun(Highlight("<font color=\"#5C1FF4\">x</font>",
+                SubtitleGridFormattingTypes.ShowFormatting));
+
+            Assert.Equal(Color.FromRgb(0x5C, 0x1F, 0xF4), (run.Foreground as ISolidColorBrush)?.Color);
+        }
+        finally
+        {
+            TextWithSubtitleSyntaxHighlightingConverter.GridBackgroundOverride = null;
+        }
+    }
+
+    // The same background must still drop a color that really does vanish into it.
+    [AvaloniaFact]
+    public void ShowFormatting_ColorMatchingAMidGreyThemeIsStillDropped()
+    {
+        TextWithSubtitleSyntaxHighlightingConverter.GridBackgroundOverride = () => Color.FromRgb(73, 73, 73);
+        try
+        {
+            var run = SingleRun(Highlight("<font color=\"#494949\">x</font>",
+                SubtitleGridFormattingTypes.ShowFormatting));
+
+            Assert.False(run.IsSet(TextElement.ForegroundProperty));
+        }
+        finally
+        {
+            TextWithSubtitleSyntaxHighlightingConverter.GridBackgroundOverride = null;
+        }
+    }
+
     [AvaloniaFact]
     public void HideTags_StripsMarkupAndAppliesNoStyling()
     {
@@ -610,13 +649,15 @@ public class ValueConverterTests : IDisposable
         try
         {
             Se.Language.General.ErrorX = "Error: {0}";
-            var first = converter.Convert("Error: nope", typeof(object), null, Culture);
-            Assert.NotNull(first);
+            var errorBrush = converter.Convert("Error: nope", typeof(object), null, Culture);
+            Assert.NotNull(errorBrush);
 
             // A loaded translation swaps the string - the cached prefix has to follow.
+            // Both the error brush and the non-error default are shared instances, so
+            // compare by identity: a non-error status must no longer get the error brush.
             Se.Language.General.ErrorX = "Fejl: {0}";
-            Assert.Null(converter.Convert("Error: nope", typeof(object), null, Culture) as ISolidColorBrush);
-            Assert.NotNull(converter.Convert("Fejl: nix", typeof(object), null, Culture) as ISolidColorBrush);
+            Assert.NotSame(errorBrush, converter.Convert("Error: nope", typeof(object), null, Culture));
+            Assert.Same(errorBrush, converter.Convert("Fejl: nix", typeof(object), null, Culture));
         }
         finally
         {

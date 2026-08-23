@@ -1,7 +1,8 @@
-using Avalonia.Media;
+﻿using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Features.Shared.ErrorList;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using SkiaSharp;
@@ -62,6 +63,8 @@ public partial class SubtitleLineViewModel : ObservableObject
     private TimeSpan _duration;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(TeletextDisplay))]
+    [NotifyPropertyChangedFor(nameof(TeletextTextAlignment))]
     private string _text;
 
     [ObservableProperty]
@@ -103,7 +106,93 @@ public partial class SubtitleLineViewModel : ObservableObject
     public bool IsComment { get; set; }
     public string MarginL { get; set; }
     public string MarginR { get; set; }
-    public string MarginV { get; set; }
+    /// <summary>
+    /// For EBU STL this is the teletext row the subtitle starts on (1..23, matching the format's
+    /// VerticalPosition field). Observable so the "TT" column follows undo and reload, which
+    /// assign it without going through the teletext dialog.
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(TeletextDisplay))]
+    private string _marginV;
+
+    public string TeletextDisplay
+    {
+        get
+        {
+            var hasRow = int.TryParse(MarginV, out var ebuLine) &&
+                         ebuLine >= 1 &&
+                         ebuLine <= 23;
+
+            var text = Text ?? string.Empty;
+            var alignment = string.Empty;
+
+            if (text.StartsWith("{\\an1}") ||
+                text.StartsWith("{\\an4}") ||
+                text.StartsWith("{\\an7}"))
+            {
+                alignment = "L";
+            }
+            else if (text.StartsWith("{\\an3}") ||
+                     text.StartsWith("{\\an6}") ||
+                     text.StartsWith("{\\an9}"))
+            {
+                alignment = "R";
+            }
+            else if (text.StartsWith("{\\an2}") ||
+                     text.StartsWith("{\\an5}") ||
+                     text.StartsWith("{\\an8}"))
+            {
+                alignment = "C";
+            }
+
+            if (!hasRow)
+            {
+                // A line without a teletext row (e.g. a converted SRT) should not pretend
+                // to be positioned; show only an explicitly set alignment, if any.
+                return alignment;
+            }
+
+            return $"{ebuLine} {(alignment.Length == 0 ? "C" : alignment)}";
+        }
+    }
+
+    /// <summary>
+    /// True while an EBU STL subtitle is open, so a row wider than a teletext page counts as a
+    /// "text too long" error. Set from MainViewModel when the format changes.
+    /// </summary>
+    public static bool UseTeletextLineLength { get; set; }
+
+    // A teletext row holds 40 characters, of which the box and double-height control codes take
+    // the first few; a colour change costs one more. These are the safe widths rather than the
+    // header's MaximumNumberOfDisplayableCharactersInAnyTextRow, which is not reachable from a
+    // per-line view model.
+    private const int TeletextMaxCharacters = 37;
+    private const int TeletextMaxCharactersWithColor = 36;
+
+    public TextAlignment TeletextTextAlignment
+    {
+        get
+        {
+            var text = Text ?? string.Empty;
+
+            if (text.StartsWith("{\\an1}") ||
+                text.StartsWith("{\\an4}") ||
+                text.StartsWith("{\\an7}"))
+            {
+                return TextAlignment.Left;
+            }
+
+            if (text.StartsWith("{\\an3}") ||
+                text.StartsWith("{\\an6}") ||
+                text.StartsWith("{\\an9}"))
+            {
+                return TextAlignment.Right;
+            }
+
+            return TextAlignment.Center;
+        }
+    }
+
     public bool NewSection { get; set; }
     public bool Forced { get; set; }
     public Guid Id { get; set; }
@@ -485,7 +574,8 @@ public partial class SubtitleLineViewModel : ObservableObject
         int FontSize,
         bool ColorTextTooManyLines,
         int MaxNumberOfLines,
-        string? LengthStrategy)
+        string? LengthStrategy,
+        bool UseTeletextLineLength)
     {
         public static TextErrorSettings Current()
         {
@@ -500,7 +590,8 @@ public partial class SubtitleLineViewModel : ObservableObject
                 general.ColorTextTooManyLines,
                 general.MaxNumberOfLines,
                 // GetLineLength counts through this strategy, so it belongs in the key too.
-                Configuration.Settings.General.CpsLineLengthStrategy);
+                Configuration.Settings.General.CpsLineLengthStrategy,
+                SubtitleLineViewModel.UseTeletextLineLength);
         }
     }
 
@@ -560,6 +651,23 @@ public partial class SubtitleLineViewModel : ObservableObject
             if (GetStrippedLines().Count > settings.MaxNumberOfLines)
             {
                 return true;
+            }
+        }
+
+        // A teletext page is narrower than the general maximum, and every character takes a cell,
+        // so this counts raw length rather than going through the CPS length strategy.
+        if (settings.UseTeletextLineLength)
+        {
+            var maxCharacters = Text.Contains("<font color=", StringComparison.OrdinalIgnoreCase)
+                ? TeletextMaxCharactersWithColor
+                : TeletextMaxCharacters;
+
+            foreach (var line in GetStrippedLines())
+            {
+                if (line.Length > maxCharacters)
+                {
+                    return true;
+                }
             }
         }
 
@@ -748,7 +856,7 @@ public partial class SubtitleLineViewModel : ObservableObject
             // Memoized by (Text, settings) - the same verdict the Text cell tint uses.
             if (HasTextRuleError())
             {
-                Add("text too long or wide");
+                Add(UseTeletextLineLength ? "text too long or wide for teletext" : "text too long or wide");
             }
 
             return errors?.ToString() ?? string.Empty;
@@ -1116,108 +1224,112 @@ public partial class SubtitleLineViewModel : ObservableObject
             ? general.ColorTimeCodeOverlap
             : general.ColorGapTooShort && gapMs < general.MinimumBetweenLines.GetMilliseconds();
 
+    /// <summary>All errors as one newline-separated string (batch error list, tooltips).</summary>
     public string GetErrors(SubtitleLineViewModel? prev, SubtitleLineViewModel? next)
     {
         var errors = new StringBuilder();
+        foreach (var error in GetErrorList(prev, next))
+        {
+            errors.AppendLine(error.ToString());
+        }
 
+        return errors.ToString();
+    }
+
+    /// <summary>
+    /// The errors on this line as typed entries, so "List errors" can count and filter
+    /// by class. Same rules as <see cref="HasErrors"/>; keep the two in sync.
+    /// </summary>
+    public List<LineError> GetErrorList(SubtitleLineViewModel? prev, SubtitleLineViewModel? next)
+    {
+        var errors = new List<LineError>();
         var general = Se.Settings.General;
+        var l = Se.Language.ErrorList;
 
-        if (Se.Settings.General.ColorTextTooManyLines)
+        if (general.ColorTextTooManyLines)
         {
             var lineCount = GetStrippedLines().Count;
             if (lineCount > general.MaxNumberOfLines)
             {
-                errors.AppendLine("Max #lines: " + lineCount + " >" + general.MaxNumberOfLines);
+                errors.Add(new LineError(LineErrorType.TooManyLines, string.Format(l.DetailXGreaterThanY, lineCount, general.MaxNumberOfLines)));
             }
         }
 
         var cpsRounded = Math.Round(CharactersPerSecond, 2, MidpointRounding.AwayFromZero);
-        if (cpsRounded > general.SubtitleMaximumCharactersPerSeconds && Se.Settings.General.ColorCharactersPerSecond)
+        if (cpsRounded > general.SubtitleMaximumCharactersPerSeconds && general.ColorCharactersPerSecond)
         {
-            errors.AppendLine("Cps: " + cpsRounded + " > " + general.SubtitleMaximumCharactersPerSeconds);
+            errors.Add(new LineError(LineErrorType.CharactersPerSecond, string.Format(l.DetailXGreaterThanY, cpsRounded, general.SubtitleMaximumCharactersPerSeconds)));
         }
 
         var durMsRounded = Math.Round(Duration.TotalMilliseconds, 3, MidpointRounding.AwayFromZero);
-        if (durMsRounded < general.SubtitleMinimumDisplayMilliseconds)
+        if (durMsRounded < general.SubtitleMinimumDisplayMilliseconds && general.ColorDurationTooShort)
         {
-            if (Se.Settings.General.ColorDurationTooShort)
-            {
-                errors.AppendLine("Min duration: " + durMsRounded + " < " + general.SubtitleMinimumDisplayMilliseconds);
-            }
-        }
-        if (durMsRounded > general.SubtitleMaximumDisplayMilliseconds)
-        {
-            if (Se.Settings.General.ColorDurationTooLong)
-            {
-                errors.AppendLine("Max duration: " + durMsRounded + " > " + general.SubtitleMaximumDisplayMilliseconds);
-            }
+            errors.Add(new LineError(LineErrorType.DurationTooShort, string.Format(l.DetailXLessThanY, durMsRounded, general.SubtitleMinimumDisplayMilliseconds)));
         }
 
-        if (Se.Settings.General.ColorTextTooLong)
+        if (durMsRounded > general.SubtitleMaximumDisplayMilliseconds && general.ColorDurationTooLong)
+        {
+            errors.Add(new LineError(LineErrorType.DurationTooLong, string.Format(l.DetailXGreaterThanY, durMsRounded, general.SubtitleMaximumDisplayMilliseconds)));
+        }
+
+        if (general.ColorTextTooLong)
         {
             foreach (var line in GetStrippedLines())
             {
                 var lineLength = SubtitleTextInfoHelper.GetLineLength(line);
                 if (lineLength > general.SubtitleLineMaximumLength)
                 {
-                    errors.AppendLine("Max line length: " + lineLength + " > " + general.SubtitleLineMaximumLength);
+                    errors.Add(new LineError(LineErrorType.LineTooLong, string.Format(l.DetailXGreaterThanY, lineLength, general.SubtitleLineMaximumLength)));
                 }
             }
         }
 
-        if (Se.Settings.General.ColorTextTooWide)
+        if (general.ColorTextTooWide)
         {
             foreach (var line in GetStrippedLines())
             {
                 var pixelWidth = CalculatePixelWidth(line);
                 if (pixelWidth > general.ColorTextTooWidePixels)
                 {
-                    errors.AppendLine("Max width (px): " + pixelWidth + " > " + general.ColorTextTooWidePixels);
+                    errors.Add(new LineError(LineErrorType.LineTooWide, string.Format(l.DetailXGreaterThanY, pixelWidth, general.ColorTextTooWidePixels)));
                 }
             }
         }
 
+        var minGap = general.MinimumBetweenLines.GetMilliseconds();
         if (prev != null)
         {
             var gapPrev = (StartTime - prev.EndTime).TotalMilliseconds;
             if (gapPrev < 0)
             {
-                if (Se.Settings.General.ColorTimeCodeOverlap)
+                if (general.ColorTimeCodeOverlap)
                 {
-                    errors.AppendLine("Overlap from previous: " + Math.Round(-gapPrev, 3));
+                    errors.Add(new LineError(LineErrorType.Overlap, string.Format(l.DetailOverlapFromPrevious, Math.Round(-gapPrev, 3))));
                 }
             }
-            else if (gapPrev < general.MinimumBetweenLines.GetMilliseconds())
+            else if (gapPrev < minGap && general.ColorGapTooShort)
             {
-                if (Se.Settings.General.ColorGapTooShort)
+                errors.Add(new LineError(LineErrorType.GapTooShort, string.Format(l.DetailGapToPrevious, Math.Round(gapPrev, 3), minGap)));
+            }
+        }
+
+        if (next != null)
+        {
+            var gapNext = (next.StartTime - EndTime).TotalMilliseconds;
+            if (gapNext < 0)
+            {
+                if (general.ColorTimeCodeOverlap)
                 {
-                    errors.AppendLine("Min gap to previous: " + Math.Round(gapPrev, 3) + " < " + general.MinimumBetweenLines.GetMilliseconds());
+                    errors.Add(new LineError(LineErrorType.Overlap, string.Format(l.DetailOverlapToNext, Math.Round(-gapNext, 3))));
                 }
             }
-        }
-
-        if (next == null)
-        {
-            return errors.ToString();
-        }
-
-        var gapNext = (next.StartTime - EndTime).TotalMilliseconds;
-        if (gapNext < 0)
-        {
-            if (Se.Settings.General.ColorTimeCodeOverlap)
+            else if (gapNext < minGap && general.ColorGapTooShort)
             {
-                errors.AppendLine("Overlap to next: " + Math.Round(-gapNext, 3));
-            }
-        }
-        else if (gapNext < general.MinimumBetweenLines.GetMilliseconds())
-        {
-            if (Se.Settings.General.ColorGapTooShort)
-            {
-                errors.AppendLine("Min gap to next: " + Math.Round(gapNext, 3) + " < " + general.MinimumBetweenLines.GetMilliseconds());
+                errors.Add(new LineError(LineErrorType.GapTooShort, string.Format(l.DetailGapToNext, Math.Round(gapNext, 3), minGap)));
             }
         }
 
-        return errors.ToString();
+        return errors;
     }
 
     public void RefreshTimeCodes()

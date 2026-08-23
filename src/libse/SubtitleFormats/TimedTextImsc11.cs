@@ -608,7 +608,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
 
                 var text = assStyle + ReadParagraph(node, xml).TrimEnd();
-                var p = new Paragraph(begin, end, text);
+
+                // Keep the region name: the alignment tag above only snaps to the screen thirds,
+                // the video preview positions the line from the region box itself.
+                var p = new Paragraph(begin, end, text) { Region = region?.InnerText };
                 subtitle.Paragraphs.Add(p);
             }
 

@@ -78,6 +78,7 @@ The **Edit prompt...** button opens the review instructions sent to the model. `
 ## Safety rails
 
 - Nothing is applied automatically - you decide per suggestion.
-- Suggestions that would add or remove formatting tags are discarded.
+- ASSA override blocks at the start or end of a line (`{\pos(...)\fs54...}`) are never sent to the model - it only sees the text, and the blocks are restored unchanged around its correction. Lines that are pure drawings or tags are skipped. The ASSA actor and style name are sent as read-only context so the model knows who is speaking and whether a line is dialogue or a sign.
+- Suggestions that would add or remove the remaining formatting tags (`<i>`, inline blocks) are discarded.
 - Suggestions that change a line's length a lot are flagged with a warning and start unchecked, since they are usually rewrites rather than corrections.
 - Replies from the model that do not follow the expected format are retried once and then skipped.

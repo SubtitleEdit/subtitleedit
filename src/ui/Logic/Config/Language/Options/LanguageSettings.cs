@@ -80,6 +80,11 @@ public class LanguageSettings
     public string MaxDurationMs { get; set; }
     public string MinGapMs { get; set; }
     public string MinGapFrames { get; set; }
+    public string MinGapCalculateDotDotDot { get; set; }
+    public string MinGapCalculateTitle { get; set; }
+    public string MinGapCalculateFrames { get; set; }
+    public string MinGapCalculateXFramesAtYGivesZMs { get; set; }
+    public string MinGapCalculateUseXAsNewGap { get; set; }
     public string MaxLines { get; set; }
     public string UnbreakSubtitlesShortThan { get; set; }
     public string AutoBreakLineEndingEarly { get; set; }
@@ -128,6 +133,10 @@ public class LanguageSettings
     public string WaveformMouseWheelStepMilliseconds { get; set; }
     public string WaveformSnapToShotChanges { get; set; }
     public string WaveformSnapToFrames { get; set; }
+    public string WaveformSnapToShotChangesPixels { get; set; }
+    public string WaveformSnapToShotChangeStartMaxSeconds { get; set; }
+    public string WaveformSnapToShotChangeEndMaxSeconds { get; set; }
+    public string WaveformSnapToShotChangeSameShotEndMaxSeconds { get; set; }
     public string WaveformShotChangesAutoGenerate { get; set; }
     public string WaveformTextFontSize { get; set; }
     public string WaveformTextFontBold { get; set; }
@@ -304,6 +313,7 @@ public class LanguageSettings
     public string UseFocusedButtonBackgroundColor { get; set; }
     public string FocusedButtonBackgroundColor { get; set; }
     public string ForceCrLfOnSave { get; set; }
+    public string ShowFormatLimitWarning { get; set; }
     public string TextBoxButtonShowAutoBreak { get; set; }
     public string TextBoxButtonShowUnbreak { get; set; }
     public string TextBoxButtonShowItalic { get; set; }
@@ -317,6 +327,8 @@ public class LanguageSettings
     public string WaveformToolbarItems { get; set; }
     public string MatchIconColorToDarkTheme { get; set; }
     public string SubtitlePreviewProperties { get; set; }
+    public string UsePositionFromSubtitleFile { get; set; }
+    public string MarginIsPartOfSubtitleArea { get; set; }
     public string PixelWidthInfo { get; set; }
     public string SpellCheckEngineHunSpelll { get; set; }
     public string SpellCheckEngineMsWord { get; set; }
@@ -403,6 +415,11 @@ public class LanguageSettings
         MaxDurationMs = "Max duration (ms)";
         MinGapMs = "Min gap (ms)";
         MinGapFrames = "Min gap (frames)";
+        MinGapCalculateDotDotDot = "Calculate minimum gap from a frame rate...";
+        MinGapCalculateTitle = "Min. gap between subtitles in ms";
+        MinGapCalculateFrames = "Min. gap in frames";
+        MinGapCalculateXFramesAtYGivesZMs = "{0} frames at a frame rate of {1} gives {2} milliseconds.";
+        MinGapCalculateUseXAsNewGap = "Use \"{0}\" milliseconds as new minimum gap?";
         MaxLines = "Max number of lines";
         UnbreakSubtitlesShortThan = "Unbreak subtitles shorter than";
         AutoBreakLineEndingEarly = "Auto-break early for end of sentence (.!?)";
@@ -452,6 +469,10 @@ public class LanguageSettings
         WaveformMouseWheelStepMilliseconds = "{0} ms";
         WaveformSnapToShotChanges = "Snap to shot changes (hold Shift to override)";
         WaveformSnapToFrames = "Snap to frames";
+        WaveformSnapToShotChangesPixels = "Snap distance when dragging (pixels)";
+        WaveformSnapToShotChangeStartMaxSeconds = "Snap to nearest shot change: max start distance (seconds)";
+        WaveformSnapToShotChangeEndMaxSeconds = "Snap to nearest shot change: max end distance (seconds)";
+        WaveformSnapToShotChangeSameShotEndMaxSeconds = "Snap to nearest shot change: max end distance when start and end share a cut (seconds)";
         WaveformShotChangesAutoGenerate = "Shot changes auto-generate";
         WaveformTextFontSize = "Waveform text font size";
         WaveformTextFontBold = "Waveform text font bold";
@@ -626,6 +647,7 @@ public class LanguageSettings
         UseFocusedButtonBackgroundColor = "Use focused button background color";
         FocusedButtonBackgroundColor = "Focused button background color";
         ForceCrLfOnSave = "Force CR+LF on save (text subtitle files)";
+        ShowFormatLimitWarning = "Warn on save when lines exceed the format's limits (e.g. SCC 32 chars/line)";
         TextBoxButtonShowAutoBreak = "Text box: show auto-break button";
         TextBoxButtonShowUnbreak = "Text box: show unbreak button";
         TextBoxButtonShowItalic = "Text box: show italic button";
@@ -639,6 +661,8 @@ public class LanguageSettings
         WaveformToolbarItems = "Waveform toolbar items";
         MatchIconColorToDarkTheme = "Match icon color to dark theme foreground color";
         SubtitlePreviewProperties = "Subtitle preview properties";
+        UsePositionFromSubtitleFile = "Use position from subtitle file (TTML/PAC/EBU STL)";
+        MarginIsPartOfSubtitleArea = "Margin is part of the subtitle area";
         PixelWidthInfo = "Green lines = max-width limit   |   Red area = text exceeds limit";
         SpellCheckEngineHunSpelll = "Hunspell";
         SpellCheckEngineMsWord = "MS Word";

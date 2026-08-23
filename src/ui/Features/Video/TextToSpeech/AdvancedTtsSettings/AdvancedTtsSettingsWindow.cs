@@ -6,6 +6,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using System.IO;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.AdvancedTtsSettings;
 
@@ -65,6 +66,8 @@ public class AdvancedTtsSettingsWindow : Window
 
                 MakeFieldRow(vm, Se.Language.Video.TextToSpeech.OutputSampleRate, nameof(vm.OutputSampleRate), 60,
                     Se.Language.Video.TextToSpeech.OutputSampleRateDescription),
+
+                MakeGenerationFolderSection(vm),
 
                 MakeFieldRow(vm, Se.Language.Video.TextToSpeech.EdgeTtsRate, nameof(vm.EdgeTtsRate), 120,
                     Se.Language.Video.TextToSpeech.EdgeTtsRateDescription,
@@ -140,6 +143,66 @@ public class AdvancedTtsSettingsWindow : Window
         }
 
         return section;
+    }
+
+    /// <summary>
+    /// Where the per-line clips are written during a run, and whether they are swept when the
+    /// window closes. Before #13332 they went loose into the system temp folder and stayed there.
+    /// </summary>
+    private static StackPanel MakeGenerationFolderSection(AdvancedTtsSettingsViewModel vm)
+    {
+        var textBoxFolder = new TextBox
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            Width = 330,
+            PlaceholderText = Path.GetTempPath(),
+            [!TextBox.TextProperty] = new Binding(nameof(vm.GenerationFolder)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
+        };
+
+        var buttonBrowse = UiUtil.MakeButtonBrowse(vm.BrowseGenerationFolderCommand,
+            accessibleName: Se.Language.Video.TextToSpeech.GenerationFolder);
+
+        var deleteCheckBox = new CheckBox
+        {
+            Content = Se.Language.Video.TextToSpeech.DeleteTempFiles,
+            Margin = new Thickness(0, 6, 0, 0),
+            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.DoDeleteTempFiles)) { Mode = BindingMode.TwoWay },
+        };
+
+        return new StackPanel
+        {
+            Spacing = 2,
+            Margin = new Thickness(0, 0, 0, 10),
+            Children =
+            {
+                new Label
+                {
+                    Content = Se.Language.Video.TextToSpeech.GenerationFolder,
+                    FontWeight = FontWeight.SemiBold,
+                },
+                new StackPanel
+                {
+                    Orientation = Orientation.Horizontal,
+                    Spacing = 5,
+                    Children = { textBoxFolder, buttonBrowse },
+                },
+                new TextBlock
+                {
+                    Text = Se.Language.Video.TextToSpeech.GenerationFolderDescription,
+                    TextWrapping = TextWrapping.Wrap,
+                    Opacity = 0.7,
+                    Margin = new Thickness(26, 0, 0, 0),
+                },
+                deleteCheckBox,
+                new TextBlock
+                {
+                    Text = Se.Language.Video.TextToSpeech.DeleteTempFilesDescription,
+                    TextWrapping = TextWrapping.Wrap,
+                    Opacity = 0.7,
+                    Margin = new Thickness(26, 0, 0, 0),
+                },
+            }
+        };
     }
 
     private static StackPanel MakeSectionWithStatus(AdvancedTtsSettingsViewModel vm, string title, string checkBoxBinding, string statusBinding, string description)

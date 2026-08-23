@@ -406,6 +406,41 @@ public class ChatterboxTtsCppTests
         }).ToList();
         Assert.Equal(files.Count, files.Distinct().Count());
     }
+    /// <summary>
+    /// Installing a second voice's clone conditionals into a live server crashes the chatterbox
+    /// backend at the first autoregressive step, on the CUDA and the Vulkan build alike (#13572),
+    /// so a voice change has to restart the server. See ChatterboxTtsCpp.NeedsRestartForVoice.
+    /// </summary>
+    [Theory]
+    [InlineData("Rich.wav", "Stephen.wav", true)]  // clone → other clone: the reported crash
+    [InlineData("Rich.wav", "", true)]             // clone → baked default: swaps conds back
+    [InlineData("", "Rich.wav", false)]            // default → clone: the clone is the first one
+    [InlineData("", "", false)]                    // default throughout
+    [InlineData("Rich.wav", "Rich.wav", false)]    // same voice line after line
+    public void NeedsRestartForVoice_RestartsOnlyWhenALoadedCloneChanges(
+        string loadedVoiceKey,
+        string requestedVoiceKey,
+        bool expected)
+    {
+        Assert.Equal(expected, ChatterboxTtsCpp.NeedsRestartForVoice(loadedVoiceKey, requestedVoiceKey));
+    }
+
+    /// <summary>
+    /// The restart decision compares the same value the request sends as <c>voice</c>, so two
+    /// references that differ only in folder must not look like one voice.
+    /// </summary>
+    [Fact]
+    public void ResolveVoiceKey_MatchesTheVoiceFieldOfThePayload()
+    {
+        var path = Path.Combine("some", "dir", "Arnold.wav");
+        var payload = ChatterboxTtsCpp.BuildSpeakPayload("hello", path);
+
+        Assert.Equal(payload["voice"], ChatterboxTtsCpp.ResolveVoiceKey(path));
+        Assert.Equal("Arnold.wav", ChatterboxTtsCpp.ResolveVoiceKey(path));
+        Assert.Equal(string.Empty, ChatterboxTtsCpp.ResolveVoiceKey(string.Empty));
+        Assert.Equal(string.Empty, ChatterboxTtsCpp.ResolveVoiceKey(null));
+    }
+
     private static string WriteTempWav(byte[] bytes)
     {
         var path = Path.Combine(Path.GetTempPath(), $"chatterbox-ref-test-{Guid.NewGuid():N}.wav");

@@ -49,6 +49,7 @@ public partial class ReEncodeVideoViewModel : ObservableObject
 
     private Subtitle _subtitle = new();
     private readonly StringBuilder _log;
+    private readonly TempSubtitleFiles _tempSubtitleFiles = new();
     private long _startTicks;
     private long _processedFrames;
     private Process? _ffmpegProcess;
@@ -340,18 +341,12 @@ public partial class ReEncodeVideoViewModel : ObservableObject
     {
         var subtitle = new Subtitle(_subtitle);
 
-        var srt = new SubRip();
-        var subtitleFileName = Path.Combine(Path.GetTempFileName() + srt.Extension);
-        if (_subtitleFormat is { Name: AdvancedSubStationAlpha.NameOfFormat })
-        {
-            var assa = new AdvancedSubStationAlpha();
-            subtitleFileName = Path.Combine(Path.GetTempFileName() + assa.Extension);
-            File.WriteAllText(subtitleFileName, assa.ToText(subtitle, string.Empty));
-        }
-        else
-        {
-            File.WriteAllText(subtitleFileName, srt.ToText(subtitle, string.Empty));
-        }
+        // Tracked so the file is swept when the window closes - and not GetTempFileName() plus an
+        // extension, which leaked the empty tmpXXXX.tmp it creates on top of the file written
+        // (#13332).
+        var subtitleFileName = _subtitleFormat is { Name: AdvancedSubStationAlpha.NameOfFormat }
+            ? _tempSubtitleFiles.Write(subtitle, new AdvancedSubStationAlpha())
+            : _tempSubtitleFiles.Write(subtitle, new SubRip());
 
         var jobItem = new BurnInJobItem(string.Empty, VideoWidth, VideoHeight)
         {
@@ -476,6 +471,13 @@ public partial class ReEncodeVideoViewModel : ObservableObject
         }
 
         Window?.Close();
+    }
+
+    internal void OnClosing()
+    {
+        // The subtitle files handed to ffmpeg live as long as the window does - nothing else
+        // removes them, and they used to pile up in the temp folder run after run (#13332).
+        _tempSubtitleFiles.Delete();
     }
 
     internal void OnKeyDown(KeyEventArgs e)

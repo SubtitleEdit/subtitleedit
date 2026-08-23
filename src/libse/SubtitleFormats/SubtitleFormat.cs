@@ -560,6 +560,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public virtual bool HasStyleSupport => false;
 
+        /// <summary>
+        /// Hard limits the format enforces when writing (e.g. CEA-608's 32 columns x 4 rows). A format
+        /// that declares them lets the UI warn before a save silently re-wraps or truncates text
+        /// that does not fit. Null means no such limits.
+        /// </summary>
+        public virtual SubtitleFormatLimits? FormatLimits => null;
+
         public bool BatchMode { get; set; }
         public double? BatchSourceFrameRate { get; set; }
 

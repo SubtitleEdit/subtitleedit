@@ -46,6 +46,27 @@ public class SeVideo
     public decimal MpvPreviewShadowWidth { get; set; }
     public int MpvPreviewBorderType { get; set; }
 
+    /// <summary>
+    /// Show the lines where the subtitle file says they belong (TTML regions, PAC vertical
+    /// alignment, EBU STL teletext rows) instead of at <see cref="MpvPreviewAlignment"/>.
+    /// </summary>
+    public bool MpvPreviewUsePositionFromFile { get; set; }
+
+    /// <summary>
+    /// Include the black bars of a letterboxed video in the area the preview subtitle may use, so
+    /// the margin can move it off the picture (#13934). Off keeps mpv's own default, where an ASS
+    /// subtitle stays inside the video frame.
+    /// </summary>
+    public bool MpvPreviewMarginIsPartOfSubtitleArea { get; set; }
+
+    /// <summary>
+    /// mpv's "audio-buffer" option in seconds, applied when a player core is created. mpv's
+    /// own default is 0.2 s, and that buffer is why pause/resume/seek take effect ~200 ms
+    /// late - the residual the waveform playhead code has to mask. Kept small here; raise it
+    /// (or set 0 to use mpv's default) if audio stutters on slow hardware or Bluetooth audio.
+    /// </summary>
+    public double MpvAudioBufferSeconds { get; set; }
+
     public SeVideo()
     {
         BurnIn = new();
@@ -84,5 +105,7 @@ public class SeVideo
         MpvPreviewColorOutline = Color.FromRgb(0, 0, 0).FromColorToHex();
         MpvPreviewColorShadow = Color.FromRgb(0, 0, 0).FromColorToHex();
         MpvPreviewBorderType = (int)BorderStyleType.Outline;
+        MpvPreviewUsePositionFromFile = true;
+        MpvAudioBufferSeconds = 0.05;
     }
 }

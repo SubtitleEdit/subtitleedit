@@ -111,6 +111,11 @@ public partial class ReviewSpeechViewModel : ObservableObject
     // round-tripped through SubtitleEditTts.json so a future Import re-applies the same voices.
     public List<ActorVoiceMapping> ActorVoiceMappings { get; private set; } = new();
 
+    // Full path of the loaded subtitle file (empty for an unsaved subtitle). Export starts its
+    // folder picker here so the session lands next to the subtitle instead of wherever the
+    // picker was last used (#13881).
+    public string SubtitleFileName { get; set; } = string.Empty;
+
     public bool OkPressed { get; private set; }
 
     // Text edits made in this window, published on OK so the caller can offer to apply them to
@@ -164,7 +169,8 @@ public partial class ReviewSpeechViewModel : ObservableObject
         _cancellationToken = _cancellationTokenSource.Token;
 
         _playLock = new Lock();
-        _timer = new Timer(200);
+        // 100 ms: also drives the waveform playhead during playback, 200 ms looked steppy.
+        _timer = new Timer(100);
         _timer.Elapsed += OnTimerOnElapsed;
         _timer.Start();
     }
@@ -185,6 +191,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
             // unguarded IsPaused read raced the dispose (NRE / native use-after-free window).
             var stopped = false;
             var paused = false;
+            var positionSeconds = 0.0;
             lock (_playLock)
             {
                 if (_cancellationTokenSource.IsCancellationRequested || _mpvContext == null)
@@ -194,6 +201,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
                 else
                 {
                     paused = _mpvContext.IsPaused;
+                    positionSeconds = _mpvContext.Position;
                 }
             }
 
@@ -201,6 +209,15 @@ public partial class ReviewSpeechViewModel : ObservableObject
             {
                 await Dispatcher.UIThread.InvokeAsync(ResetPlaybackUiState);
                 return;
+            }
+
+            // The clip plays from the cue's start, so the waveform playhead is start + clip
+            // position - the user sees where in the cue the speech currently is (#14000).
+            var playingRow = _playingRow;
+            if (!paused && playingRow?.WaveformParagraph != null)
+            {
+                var playheadSeconds = playingRow.WaveformParagraph.StartTime.TotalSeconds + positionSeconds;
+                await Dispatcher.UIThread.InvokeAsync(() => SetWaveformPlayhead(playheadSeconds));
             }
 
             // The row that is actually playing - not SelectedLine: two-way grid selection meant
@@ -469,6 +486,221 @@ public partial class ReviewSpeechViewModel : ObservableObject
         row.Cps = Math.Round(paragraph.GetCharactersPerSecond(), 2).ToString(CultureInfo.CurrentCulture);
     }
 
+    private void SetWaveformPlayhead(double seconds)
+    {
+        var av = AudioVisualizer;
+        if (av == null)
+        {
+            return;
+        }
+
+        av.CurrentVideoPositionSeconds = seconds;
+        av.InvalidateVisual();
+    }
+
+    // Length of each row's generated clip, keyed by file name: a regenerate always writes a new
+    // file, so a stale entry can never be served for a changed clip. Non-WAV or unreadable files
+    // yield 0, which the visualizer treats as "no bar".
+    private readonly Dictionary<string, double> _audioLengthCache = new();
+
+    public double GetGeneratedAudioLengthSeconds(ReviewRow row)
+    {
+        var fileName = row.StepResult.CurrentFileName;
+        if (string.IsNullOrEmpty(fileName))
+        {
+            return 0;
+        }
+
+        if (_audioLengthCache.TryGetValue(fileName, out var cached))
+        {
+            return cached;
+        }
+
+        var seconds = 0.0;
+        try
+        {
+            if (File.Exists(fileName))
+            {
+                using var stream = File.OpenRead(fileName);
+                var header = new WaveHeader2(stream);
+                if (header.ChunkId == "RIFF" && header.Format == "WAVE" && header.BytesPerSecond > 0)
+                {
+                    seconds = header.LengthInSeconds;
+                }
+            }
+        }
+        catch (Exception exception)
+        {
+            SeLogger.Error(exception, $"ReviewSpeech: cannot read audio length of \"{fileName}\"");
+        }
+
+        _audioLengthCache[fileName] = seconds;
+        return seconds;
+    }
+
+    // Provider for AudioVisualizer.ParagraphAudioLengthProvider - the visualizer hands back the
+    // mirror instance it draws, so an instance lookup is right here (unlike the event args).
+    public double GetWaveformParagraphAudioLength(SubtitleLineViewModel waveformParagraph)
+    {
+        return _waveformParagraphToRow.TryGetValue(waveformParagraph, out var row) ? GetGeneratedAudioLengthSeconds(row) : 0;
+    }
+
+    // "Fit duration to generated audio": the cue ends exactly where the speech ends - what the
+    // user otherwise does by dragging the right edge to the end of the red overrun bar.
+    [RelayCommand]
+    private void FitDurationToAudio(ReviewRow? row)
+    {
+        row ??= SelectedLine;
+        var wp = row?.WaveformParagraph;
+        if (row == null || wp == null)
+        {
+            return;
+        }
+
+        var seconds = GetGeneratedAudioLengthSeconds(row);
+        if (seconds <= 0)
+        {
+            return;
+        }
+
+        wp.EndTime = wp.StartTime + TimeSpan.FromSeconds(seconds);
+        wp.UpdateDuration();
+        AudioVisualizer?.InvalidateVisual();
+    }
+
+    // Restores the times the line had when the window opened (waveform drags have no undo).
+    [RelayCommand]
+    private void ResetTiming(ReviewRow? row)
+    {
+        row ??= SelectedLine;
+        var wp = row?.WaveformParagraph;
+        if (row == null || wp == null)
+        {
+            return;
+        }
+
+        wp.StartTime = TimeSpan.FromMilliseconds(row.OriginalStartMs);
+        wp.EndTime = TimeSpan.FromMilliseconds(row.OriginalEndMs);
+        wp.UpdateDuration();
+        AudioVisualizer?.InvalidateVisual();
+    }
+
+    // Shifts the selected cue as a whole (duration kept), used by the waveform's keyboard nudge.
+    private void NudgeSelectedLine(double milliseconds)
+    {
+        var wp = SelectedLine?.WaveformParagraph;
+        if (wp == null)
+        {
+            return;
+        }
+
+        var start = Math.Max(0, wp.StartTime.TotalMilliseconds + milliseconds);
+        var duration = wp.Duration.TotalMilliseconds;
+        wp.StartTime = TimeSpan.FromMilliseconds(start);
+        wp.EndTime = TimeSpan.FromMilliseconds(start + duration);
+        wp.UpdateDuration();
+        AudioVisualizer?.InvalidateVisual();
+    }
+
+    // Right-click on the waveform: the row under the pointer becomes the context-menu target
+    // (and the selection) whether or not "right click selects" is on; an empty-area right-click
+    // keeps the current selection. Returns the target row or null.
+    public ReviewRow? SelectRowAtWaveformPosition(double seconds)
+    {
+        var wp = WaveformParagraphs.Find(p => p.StartTime.TotalSeconds <= seconds && seconds <= p.EndTime.TotalSeconds);
+        if (wp != null)
+        {
+            SelectFromWaveform(wp);
+        }
+
+        return SelectedLine;
+    }
+
+    // A left-click on empty waveform just parks the playhead there; the review window has no
+    // video to seek, so nothing plays until the user presses Play.
+    public void OnWaveformPositionClicked(double seconds)
+    {
+        if (_playingRow == null)
+        {
+            SetWaveformPlayhead(seconds);
+        }
+    }
+
+    // Keys that act on the waveform when it has focus (the grid handles its own Up/Down):
+    // Home/End jump to the first/last row; Ctrl+Left/Right nudge the selected cue 100 ms
+    // (10 ms with Shift) without changing its duration.
+    public bool OnWaveformKeyDown(KeyEventArgs e)
+    {
+        if (Lines.Count == 0)
+        {
+            return false;
+        }
+
+        var ctrl = e.KeyModifiers.HasFlag(OperatingSystem.IsMacOS() ? KeyModifiers.Meta : KeyModifiers.Control);
+        var shift = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
+
+        if (e.Key == Key.Home && e.KeyModifiers == KeyModifiers.None)
+        {
+            SelectedLine = Lines[0];
+            LineGrid.ScrollIntoView(Lines[0]);
+            return true;
+        }
+
+        if (e.Key == Key.End && e.KeyModifiers == KeyModifiers.None)
+        {
+            SelectedLine = Lines[^1];
+            LineGrid.ScrollIntoView(Lines[^1]);
+            return true;
+        }
+
+        if (ctrl && e.Key is Key.Left or Key.Right)
+        {
+            var step = shift ? 10 : 100;
+            NudgeSelectedLine(e.Key == Key.Left ? -step : step);
+            return true;
+        }
+
+        return false;
+    }
+
+    // True while a selection change originates from a click/drag on the waveform itself. The
+    // block the user grabbed is already in view, so RefreshWaveformPosition must only update the
+    // highlight and not recenter - recentering would jump the view (and the block under the
+    // pointer) mid-drag (#14000).
+    private bool _selectionFromWaveform;
+
+    // Click/drag on a waveform block selects the row that owns it, which in turn loads its text
+    // and per-line settings into the edit panel through OnSelectedLineChanged (#14000).
+    //
+    // The event args carry a *copy* of the paragraph (ParagraphEventArgs clones it), so the
+    // lookup goes by Id, which the copy preserves - never by instance.
+    public void SelectFromWaveform(SubtitleLineViewModel? waveformParagraph)
+    {
+        if (waveformParagraph == null)
+        {
+            return;
+        }
+
+        var mirror = WaveformParagraphs.Find(wp => wp.Id == waveformParagraph.Id);
+        if (mirror == null ||
+            !_waveformParagraphToRow.TryGetValue(mirror, out var row) ||
+            ReferenceEquals(row, SelectedLine))
+        {
+            return;
+        }
+
+        _selectionFromWaveform = true;
+        try
+        {
+            SelectedLine = row;
+            LineGrid.ScrollIntoView(row);
+        }
+        finally
+        {
+            _selectionFromWaveform = false;
+        }
+    }
+
     // Centers the visualizer on the currently selected paragraph and marks it as selected so the
     // user can grab its start/end handles. Safe to call before AudioVisualizer is attached.
     public void RefreshWaveformPosition()
@@ -483,6 +715,14 @@ public partial class ReviewSpeechViewModel : ObservableObject
         var waveformParagraph = row?.WaveformParagraph;
         if (waveformParagraph == null || WaveformParagraphs.Count == 0)
         {
+            return;
+        }
+
+        if (_selectionFromWaveform)
+        {
+            av.SelectedParagraph = waveformParagraph;
+            av.AllSelectedParagraphs = new List<SubtitleLineViewModel> { waveformParagraph };
+            av.InvalidateVisual();
             return;
         }
 
@@ -513,7 +753,11 @@ public partial class ReviewSpeechViewModel : ObservableObject
             return;
         }
 
-        var folder = await _folderHelper.PickFolderAsync(Window!, Se.Language.General.SelectSaveFolder);
+        // Start the picker in the subtitle's own folder (or the video's, for an unsaved
+        // subtitle) - the OS-remembered last picker folder is rarely where this export
+        // belongs (#13881).
+        var suggestedStartFolder = GetFolderName(SubtitleFileName) ?? GetFolderName(_videoFileName);
+        var folder = await _folderHelper.PickFolderAsync(Window!, Se.Language.General.SelectSaveFolder, suggestedStartFolder);
         if (string.IsNullOrEmpty(folder))
         {
             return;
@@ -687,6 +931,17 @@ public partial class ReviewSpeechViewModel : ObservableObject
         }
 
         await _folderHelper.OpenFolder(Window!, folder);
+    }
+
+    private static string? GetFolderName(string fileName)
+    {
+        if (string.IsNullOrEmpty(fileName))
+        {
+            return null;
+        }
+
+        var folder = Path.GetDirectoryName(fileName);
+        return string.IsNullOrEmpty(folder) ? null : folder;
     }
 
     [RelayCommand]
@@ -1383,7 +1638,10 @@ public partial class ReviewSpeechViewModel : ObservableObject
     public async Task SelectedEngineChangedAsync()
     {
         var engine = SelectedEngine;
-        IsEngineSettingsVisible = TtsEngineSettingsDialog.HasSettings(engine);
+        // No gear for ElevenLabs: its knobs live inline below the engine combo for fast per-line
+        // tweaking, and the settings dialog behind the gear duplicated exactly those sliders -
+        // two "settings windows" showing different values (#13881).
+        IsEngineSettingsVisible = TtsEngineSettingsDialog.HasSettings(engine) && engine is not ElevenLabs;
         if (engine == null)
         {
             return;

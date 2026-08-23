@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Spectre.Console;
 using Spectre.Console.Cli;
 using System.ComponentModel;
@@ -174,6 +174,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [CommandOption("--overwrite")]
         [Description("Overwrite existing files")]
         public bool Overwrite { get; init; }
+
+        [CommandOption("--keep-timestamp|--keep-timestamps")]
+        [Description("Give output files the source file's modified/created date instead of now")]
+        public bool KeepTimestamp { get; init; }
 
         [CommandOption("--pac-codepage")]
         [Description("PAC code page")]
@@ -667,6 +671,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 Fps = settings.Fps,
                 TargetFps = settings.TargetFps,
                 Overwrite = settings.Overwrite,
+                KeepTimestamp = settings.KeepTimestamp,
                 Operations = operations,
                 FixCommonErrorsRules = fceRules,
                 FixCommonErrorsLanguage = settings.FixCommonErrorsLanguage,

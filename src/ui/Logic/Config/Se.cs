@@ -19,7 +19,7 @@ public class Se
     internal const int CurrentMacOsFontMigrationVersion = 1;
     internal const int CurrentShortcutsMigrationVersion = 2;
 
-    public static string Version { get; set; } = "v5.2.0-beta18";
+    public static string Version { get; set; } = "v5.2.0-beta22";
 
     public SeGeneral General { get; set; } = new();
     public List<SeShortCut> Shortcuts { get; set; } = new();
@@ -174,6 +174,7 @@ public class Se
     public static string WaveformsFolder => Path.Combine(DataFolder, "Waveforms");
     public static string SpectrogramsFolder => Path.Combine(DataFolder, "Spectrograms");
     public static string ShotChangesFolder => Path.Combine(DataFolder, "ShotChanges");
+    public static string TimeCodesFolder => Path.Combine(DataFolder, "TimeCodes");
     public static string ChaptersFolder => Path.Combine(DataFolder, "Chapters");
     public static string PluginsFolder => Path.Combine(DataFolder, "Plugins");
 

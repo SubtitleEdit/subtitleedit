@@ -5,6 +5,8 @@ public class LanguageSplitBreakLongLines
     public string Title { get; set; }
     public string SplitLongLines { get; set; }
     public string RebalanceLongLines { get; set; }
+    public string RebalanceOnlyLinesTooLong { get; set; }
+    public string RebalanceOnlyLinesTooLongHint { get; set; }
     public string SplitLongLine { get; set; }
     public string RebalanceLongLine { get; set; }
     public string SplitIntoXLines { get; set; }
@@ -17,6 +19,8 @@ public class LanguageSplitBreakLongLines
         Title = "Split/rebalance long lines";
         SplitLongLines = "Split long lines (to multiple lines)";
         RebalanceLongLines = "Rebalance long lines";
+        RebalanceOnlyLinesTooLong = "Only subtitles with a too-long line";
+        RebalanceOnlyLinesTooLongHint = "Leave existing line breaks untouched when all lines are already within the single line max length - an intentionally unbalanced subtitle can be editorially correct";
         SplitLongLine = "Split long line";
         RebalanceLongLine = "Rebalance long line";
         SplitIntoXLines = "Split into {0} lines: '{1}' → '{2}...'";

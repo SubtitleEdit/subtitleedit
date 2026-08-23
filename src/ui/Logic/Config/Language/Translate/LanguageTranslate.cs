@@ -51,6 +51,8 @@ public class LanguageTranslate
     public string ServerContextSizeTokens { get; set; }
     public string ExtraServerParameters { get; set; }
     public string ExtraServerParametersHint { get; set; }
+    public string UseOnlyExtraServerParameters { get; set; }
+    public string UseOnlyExtraServerParametersHint { get; set; }
     public string ServerRunningAtX { get; set; }
     public string CustomPromptHint { get; set; }
     public string LlamaCppDownloadEngineAndModelPrompt { get; set; }
@@ -108,6 +110,8 @@ public class LanguageTranslate
         ServerContextSizeTokens = "Server context size (tokens)";
         ExtraServerParameters = "Extra server parameters";
         ExtraServerParametersHint = "Additional llama-server command-line arguments, e.g. \"-ngl 30 --no-mmap\" - applied when the local server starts";
+        UseOnlyExtraServerParameters = "Use only these parameters";
+        UseOnlyExtraServerParametersHint = "Start llama-server with the parameters above instead of Subtitle Edit's own tuning - only the model, host and port are still set";
         ServerRunningAtX = "Server running at {0}";
         CustomPromptHint = "Custom instructions ({0} = source language, {1} = target language); empty = built-in prompt";
         LlamaCppDownloadEngineAndModelPrompt = "llama.cpp requires the llama-server engine and a translation model to be downloaded. Download now?";

@@ -14,6 +14,7 @@ public class BatchConvertConfig
     public string OutputFolder { get; set; }
     public bool SaveInSourceFolder { get; set; }
     public bool Overwrite { get; set; }
+    public bool KeepSourceTimestamp { get; set; }
     public string TargetFormatName { get; set; }
     public string TargetEncoding { get; set; }
     public bool AssaUseSourceStylesIfPossible { get; set; }
@@ -57,6 +58,7 @@ public class BatchConvertConfig
         OutputFolder = string.Empty;
         SaveInSourceFolder = true;
         Overwrite = false;
+        KeepSourceTimestamp = false;
         AssaUseSourceStylesIfPossible = false;
         AssaHeader = string.Empty;
         AssaFooter = string.Empty;

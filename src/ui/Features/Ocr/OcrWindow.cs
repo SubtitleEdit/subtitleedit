@@ -727,6 +727,15 @@ public class OcrWindow : Window
         menuItemExportTextAsSubtitle.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.TwoWay });
         flyout.Items.Add(menuItemExportTextAsSubtitle);
 
+        var menuItemSaveAllImagesWithHtmlIndex = new MenuItem
+        {
+            Header = Se.Language.Ocr.SaveAllImagesWithHtmlIndexDotDotDot,
+            DataContext = vm,
+            Command = vm.SaveAllImagesWithHtmlIndexCommand,
+        };
+        menuItemSaveAllImagesWithHtmlIndex.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.TwoWay });
+        flyout.Items.Add(menuItemSaveAllImagesWithHtmlIndex);
+
         vm.SubtitleGrid.ContextFlyout = flyout;
 
         return UiUtil.MakeBorderForControlNoPadding(scrollBarHost).WithMarginBottom(5);

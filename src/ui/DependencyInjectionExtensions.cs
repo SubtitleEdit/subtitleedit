@@ -51,6 +51,7 @@ using Nikse.SubtitleEdit.Features.Options.Language;
 using Nikse.SubtitleEdit.Features.Options.Plugins;
 using Nikse.SubtitleEdit.Features.Options.Settings;
 using Nikse.SubtitleEdit.Features.Options.Settings.SettingsImportExport;
+using Nikse.SubtitleEdit.Features.Options.Settings.MinGapCalculate;
 using Nikse.SubtitleEdit.Features.Options.Settings.SyntaxColorTooWideSettings;
 using Nikse.SubtitleEdit.Features.Options.Settings.WaveformThemes;
 using Nikse.SubtitleEdit.Features.Options.Settings.WaveformToolbarItems;
@@ -77,8 +78,11 @@ using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 using Nikse.SubtitleEdit.Features.Shared.ColumnPaste;
 using Nikse.SubtitleEdit.Features.Shared.ErrorList;
 using Nikse.SubtitleEdit.Features.Shared.FindText;
+using Nikse.SubtitleEdit.Features.Shared.FormatLimitWarning;
 using Nikse.SubtitleEdit.Features.Shared.GoToLineNumber;
 using Nikse.SubtitleEdit.Features.Shared.PickAlignment;
+using Nikse.SubtitleEdit.Features.Shared.PickTeletextAlignment;
+using Nikse.SubtitleEdit.Features.Shared.PickTeletextColor;
 using Nikse.SubtitleEdit.Features.Shared.PickFontName;
 using Nikse.SubtitleEdit.Features.Shared.PickLanguage;
 using Nikse.SubtitleEdit.Features.Shared.PickLayer;
@@ -209,6 +213,7 @@ using TmpegEncXmlPropertiesViewModel = Nikse.SubtitleEdit.Features.Files.FormatP
 using VideoPlayerUndockedViewModel = Nikse.SubtitleEdit.Features.Shared.Undocked.VideoPlayerUndockedViewModel;
 using SpeechToTextAdvancedViewModel = Nikse.SubtitleEdit.Features.Video.SpeechToText.SpeechToTextAdvancedViewModel;
 using SpeechToTextPostProcessingViewModel = Nikse.SubtitleEdit.Features.Video.SpeechToText.SpeechToTextPostProcessingViewModel;
+using SpeechToTextQualityReportViewModel = Nikse.SubtitleEdit.Features.Video.SpeechToText.SpeechToTextQualityReportViewModel;
 
 namespace Nikse.SubtitleEdit;
 
@@ -422,6 +427,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<GetDictionariesViewModel>();
         collection.AddTransient<GetKeyViewModel>();
         collection.AddTransient<GoToLineNumberViewModel>();
+        collection.AddTransient<FormatLimitWarningViewModel>();
         collection.AddTransient<GoToVideoPositionViewModel>();
         collection.AddTransient<HearingImpairedRuleSettingsViewModel>();
         collection.AddTransient<ImageBasedPreviewViewModel>();
@@ -480,6 +486,8 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<OpenSecondarySubtitleViewModel>();
         collection.AddTransient<PartsSavedViewModel>();
         collection.AddTransient<PickAlignmentViewModel>();
+        collection.AddTransient<PickTeletextAlignmentViewModel>();
+        collection.AddTransient<PickTeletextColorViewModel>();
         collection.AddTransient<PickFontNameViewModel>();
         collection.AddTransient<PickLayerFilterViewModel>();
         collection.AddTransient<PickLayerViewModel>();
@@ -540,6 +548,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<StatisticsViewModel>();
         collection.AddTransient<SurroundWithViewModel>();
         collection.AddTransient<SyntaxColorTooWideSettingsViewModel>();
+        collection.AddTransient<MinGapCalculateViewModel>();
         collection.AddTransient<TextToSpeechViewModel>();
         collection.AddTransient<ActorVoiceMappingViewModel>();
         collection.AddTransient<ActorVoiceRowSettingsViewModel>();
@@ -563,6 +572,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<WebVttStylePickerViewModel>();
         collection.AddTransient<SpeechToTextAdvancedViewModel>();
         collection.AddTransient<SpeechToTextPostProcessingViewModel>();
+        collection.AddTransient<SpeechToTextQualityReportViewModel>();
         collection.AddTransient<WordListsViewModel>();
     }
 

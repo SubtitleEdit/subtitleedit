@@ -28,6 +28,7 @@ Hardcode (burn-in) subtitles permanently into a video file using FFmpeg.
 - **Box type** — Subtitle box style (none, opaque box, outline)
 - **Text color** — Subtitle text color
 - **Box color** — Background box color
+- **Spacing** — Letter spacing, from -20 to 100. The preview is rendered by libass, so it shows the real spacing
 - **Alignment** — Subtitle alignment position
 - **Margins** — Horizontal and vertical margin offsets
 - **Fix RTL** — Fix right-to-left text rendering
@@ -40,6 +41,10 @@ Hardcode (burn-in) subtitles permanently into a video file using FFmpeg.
 - **Preset** — Encoding speed/quality preset
 - **CRF** — Constant Rate Factor (quality level)
 
+The output container follows the codec, because ffmpeg refuses some combinations outright: H.264
+and H.265 can be written to `.mkv`, `.mp4`, `.mov` or `.ts`, VP9 to `.mkv`, `.webm` or `.mp4`, and
+ProRes to `.mov` or `.mkv`.
+
 ## Hardware Acceleration
 
 Besides the CPU encoders (`libx264`, `libx265`, `libvpx-vp9`, `prores_ks`), the encoding list
@@ -48,7 +53,10 @@ encoding, at somewhat lower quality per bit — for the same visual quality a GP
 produces a larger file.
 
 Only encoders that can actually run on the current operating system are listed, so the choices
-differ between Windows/Linux and macOS.
+differ between Windows/Linux and macOS. On top of that, the window asks ffmpeg what it was built
+with when it opens and drops the encoders that are not there — several ffmpeg builds ship without
+x265, and Subtitle Edit's own Flatpak has neither x265 nor the GPU encoders. If the probe fails,
+the full list is kept.
 
 ### Windows and Linux
 

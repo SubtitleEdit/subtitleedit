@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
@@ -38,6 +39,7 @@ public partial class AiReviewViewModel : ObservableObject
     [ObservableProperty] private int _requestDelaySeconds;
     [ObservableProperty] private ObservableCollection<LlamaCppModelDisplay> _llamaCppModels;
     [ObservableProperty] private LlamaCppModelDisplay? _selectedLlamaCppModel;
+    [ObservableProperty] private string _llamaCppServerButtonText;
     [ObservableProperty] private string _languageDisplay;
     [ObservableProperty] private ObservableCollection<ReviewFilterChip> _filterChips;
     [ObservableProperty] private ObservableCollection<ReviewSuggestionItem> _suggestions;
@@ -72,6 +74,10 @@ public partial class AiReviewViewModel : ObservableObject
     private readonly IWindowService _windowService;
     private readonly List<ReviewSuggestionItem> _allSuggestions = new();
     private Subtitle _subtitle = new();
+    private SubtitleFormat? _subtitleFormat;
+
+    /// <summary>Leading/trailing ASSA blocks cut off each sent line, keyed by line number, glued back on in <see cref="AddSuggestion"/>.</summary>
+    private readonly Dictionary<int, StrippedLine> _strippedByNumber = new();
     private string _languageCode = "en";
     private CancellationTokenSource _cancellationTokenSource = new();
     private bool _syncingSelection;
@@ -104,6 +110,9 @@ public partial class AiReviewViewModel : ObservableObject
             LlamaCppModels,
             LlamaCppServerManager.GetAllReviewModels(),
             Se.Settings.Tools.AiReview.LlamaCppModelFileName);
+
+        LlamaCppServerButtonText = string.Empty;
+        UpdateLlamaCppServerButtonText();
 
         LanguageDisplay = string.Empty;
         StatusText = string.Empty;
@@ -149,6 +158,7 @@ public partial class AiReviewViewModel : ObservableObject
         Action<Subtitle>? applyCallback = null)
     {
         _subtitle = subtitle;
+        _subtitleFormat = subtitleFormat;
         _playLine = playLine;
         _stopPlayback = stopPlayback;
         _applyCallback = applyCallback;
@@ -264,6 +274,7 @@ public partial class AiReviewViewModel : ObservableObject
         }
 
         LlamaCppServerManager.StopServer();
+        UpdateLlamaCppServerButtonText();
 
         // Reuse the installed backend so the user is not re-asked CPU/Vulkan/CUDA on a re-download;
         // null on a fresh install (or off Windows), which lets DownloadAsync prompt.
@@ -339,11 +350,13 @@ public partial class AiReviewViewModel : ObservableObject
             {
                 IsReviewing = false;
                 StatusText = string.Empty;
+                UpdateLlamaCppServerButtonText();
                 await MessageBox.Show(Window, Se.Language.General.Error,
                     string.Format(l.EngineError, e.Message), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
+            UpdateLlamaCppServerButtonText();
             url = LlamaCppServerManager.ApiUrl;
         }
         else if (SelectedEngine == SeAiReview.EngineOpenAiCompatible)
@@ -367,13 +380,19 @@ public partial class AiReviewViewModel : ObservableObject
         ProgressValue = 0;
 
         var lines = new List<ReviewLine>();
+        _strippedByNumber.Clear();
+        var isAssa = _subtitleFormat is AdvancedSubStationAlpha or SubStationAlpha;
         for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
         {
-            var text = _subtitle.Paragraphs[i].Text;
-            if (!string.IsNullOrWhiteSpace(text))
+            var p = _subtitle.Paragraphs[i];
+            var stripped = StrippedLine.Strip(p.Text);
+            if (string.IsNullOrWhiteSpace(stripped.Text))
             {
-                lines.Add(new ReviewLine(i + 1, text));
+                continue; // empty, or a pure override/drawing line - nothing to proofread
             }
+
+            _strippedByNumber[i + 1] = stripped;
+            lines.Add(new ReviewLine(i + 1, stripped.Text, p.Actor, isAssa ? p.Extra : null));
         }
 
         var unitIds = AiReviewChunker.BuildUnitIds(lines);
@@ -481,7 +500,88 @@ public partial class AiReviewViewModel : ObservableObject
         {
             ProgressValue = 100;
             IsReviewing = false;
+            UpdateLlamaCppServerButtonText();
         }
+    }
+
+    private void UpdateLlamaCppServerButtonText()
+    {
+        LlamaCppServerButtonText = LlamaCppServerManager.IsServerRunning ? Se.Language.General.StopServer : Se.Language.General.StartServer;
+    }
+
+    /// <summary>
+    /// Start/Stop server button, same as auto-translate and OCR: lets the user release the
+    /// model's RAM/VRAM after a finished review without closing Subtitle Edit, or pre-load it
+    /// before pressing Review.
+    /// </summary>
+    [RelayCommand]
+    private async Task ToggleLlamaCppServer()
+    {
+        if (Window == null || IsReviewing)
+        {
+            return;
+        }
+
+        if (LlamaCppServerManager.IsServerRunning)
+        {
+            LlamaCppServerManager.StopServer();
+            UpdateLlamaCppServerButtonText();
+            return;
+        }
+
+        var display = SelectedLlamaCppModel;
+        if (display == null ||
+            !await LlamaCppDownloadHelper.EnsureReadyAsync(Window, _windowService, display.Model.FileName,
+                LlamaCppServerManager.GetAllReviewModels(), persistAsTranslateModel: false))
+        {
+            RefreshLlamaCppModels();
+            RefreshEngines();
+            return;
+        }
+
+        RefreshLlamaCppModels();
+        RefreshEngines();
+        display = SelectedLlamaCppModel;
+        if (display == null)
+        {
+            return;
+        }
+
+        try
+        {
+            await LlamaCppServerManager.EnsureServerRunningAsync(display.Model, CancellationToken.None);
+        }
+        catch (Exception e)
+        {
+            await MessageBox.Show(Window, Se.Language.General.Error,
+                string.Format(Se.Language.Tools.AiReview.EngineError, e.Message), MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        UpdateLlamaCppServerButtonText();
+    }
+
+    /// <summary>
+    /// Cancelling a running local llama.cpp review also stops the SE-managed server, so the
+    /// model's RAM/VRAM is released right away instead of lingering until Subtitle Edit exits
+    /// (#13969) - the same rule auto-translate applies (#13830). Only mid-run: a server left idle
+    /// by a completed review stays warm (Stop server button / app exit) and the next Review
+    /// auto-restarts it.
+    /// </summary>
+    private void StopLocalLlamaCppServerAfterCancel()
+    {
+        if (!IsReviewing ||
+            SelectedEngine != SeAiReview.EngineLlamaCpp ||
+            !LlamaCppServerManager.IsServerRunning)
+        {
+            return;
+        }
+
+        // Off the UI thread - StopServer kills the process and waits up to 2 s for it to exit.
+        _ = Task.Run(() =>
+        {
+            LlamaCppServerManager.StopServer();
+            Dispatcher.UIThread.Post(UpdateLlamaCppServerButtonText);
+        });
     }
 
     private void ClearSuggestions()
@@ -507,7 +607,9 @@ public partial class AiReviewViewModel : ObservableObject
         }
 
         var before = _subtitle.Paragraphs[paragraphIndex].Text;
-        var after = change.NewText;
+        var after = _strippedByNumber.TryGetValue(change.Number, out var stripped)
+            ? stripped.Restore(change.NewText)
+            : change.NewText;
         if (before.Trim() == after.Trim())
         {
             return;
@@ -674,6 +776,7 @@ public partial class AiReviewViewModel : ObservableObject
     [RelayCommand]
     private void StopReview()
     {
+        StopLocalLlamaCppServerAfterCancel();
         _cancellationTokenSource.Cancel();
     }
 
@@ -883,6 +986,8 @@ public partial class AiReviewViewModel : ObservableObject
     [RelayCommand]
     private void Cancel()
     {
+        // OnClosing (hooked on the window) stops a mid-run llama-server; Escape and the OS
+        // close button end up there too, so the rule lives in one place.
         _cancellationTokenSource.Cancel();
         Window?.Close();
     }
@@ -920,6 +1025,7 @@ public partial class AiReviewViewModel : ObservableObject
 
     internal void OnClosing()
     {
+        StopLocalLlamaCppServerAfterCancel();
         _cancellationTokenSource.Cancel();
 
         // Only stop what this window started - a video the user left playing before opening the

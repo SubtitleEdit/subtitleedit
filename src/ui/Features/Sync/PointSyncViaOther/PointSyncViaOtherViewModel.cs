@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -50,6 +50,9 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
     private readonly IFileHelper _fileHelper;
     private readonly IWindowService _windowService;
 
+    // Carried down to the "Set sync point" dialog, which opens its own player (issue #13995).
+    private int _audioTrackId = -1;
+
     private string _videoFileName;
     private List<SubtitleLineViewModel> _originalSubtitles;
 
@@ -71,8 +74,9 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
         _originalSubtitles = new List<SubtitleLineViewModel>();
     }
 
-    public void Initialize(List<SubtitleLineViewModel> subtitles, string videoFileName, string fileName, VideoPreviewSubtitleContext previewContext)
+    public void Initialize(List<SubtitleLineViewModel> subtitles, string videoFileName, string fileName, VideoPreviewSubtitleContext previewContext, int audioTrackId = -1)
     {
+        _audioTrackId = audioTrackId;
         Subtitles.Clear();
         Subtitles.AddRange(subtitles);
         _originalSubtitles = subtitles.Select(s => new SubtitleLineViewModel(s)).ToList();
@@ -231,7 +235,7 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
 
         var result = await _windowService.ShowDialogAsync<SetSyncPointWindow, SetSyncPointViewModel>(Window, vm =>
         {
-            vm.Initialize(Subtitles.ToList(), left, _videoFileName, FileName, _previewContext, null);
+            vm.Initialize(Subtitles.ToList(), left, _videoFileName, FileName, _previewContext, null, _audioTrackId);
         });
 
         // Keep a video opened (or found) in there - also when the dialog was cancelled.

@@ -39,6 +39,26 @@ env:
 
 
 jobs:
+  # A stable release is the one a Flathub build is cut from: the flathub manifest
+  # pins a tag and installs the AppStream metainfo from that tagged checkout, so
+  # whatever <releases> block is committed at the tag is what the published app
+  # advertises forever. v5.1.0 was tagged without bumping it and therefore claims
+  # 5.0.0 as its newest release. Cheap job, no needs, so it fails within seconds
+  # instead of after the whole build matrix - but create-release depends on it,
+  # so a stable release cannot get out without the entry.
+  verify-metainfo-release-entry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Verify the metainfo has a <release> entry for this version
+        run: |
+          if [ "${{ inputs.is_prerelease }}" = "true" ]; then
+            echo "Pre-release build - a metainfo <release> entry is not required."
+            exit 0
+          fi
+          bash installer/flatpak/update-metainfo-version.sh --check
+
   # The flatpak chain (regenerate-flatpak-nuget-sources → build-linux-flatpak)
   # is defined first so GitHub's job-graph view lays it out in its own visual
   # lane on the left, rather than routing arrows from build-macos / build-linux
@@ -362,9 +382,9 @@ jobs:
 
       - name: Download libmpv for Windows
         run: |
-          Invoke-WebRequest -Uri "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-08-14/libmpv2-win64.zip" -OutFile "libmpv2-64.zip"
+          Invoke-WebRequest -Uri "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-08-14b/libmpv2-win64.zip" -OutFile "libmpv2-64.zip"
           Expand-Archive -Path "libmpv2-64.zip" -DestinationPath "libmpv-temp"
-          Invoke-WebRequest -Uri "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-08-14/libmpv2-win-arm64.zip" -OutFile "libmpv2-arm64.zip"
+          Invoke-WebRequest -Uri "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-08-14b/libmpv2-win-arm64.zip" -OutFile "libmpv2-arm64.zip"
           Expand-Archive -Path "libmpv2-arm64.zip" -DestinationPath "libmpv-arm64-temp"
 
       - name: Publish Windows x64 app
@@ -377,7 +397,8 @@ jobs:
             -p:FileVersion=$env:APP_VER_FULL `
             -p:InformationalVersion=$env:APP_VER_DISPLAY `
             -o ./publish/windows-x64
-          Copy-Item "libmpv-temp/libmpv-2.dll" "./publish/windows-x64/"
+          # The zip also carries libmpv's vulkan-1.dll dependency (+ its license) - copy everything (#13856).
+          Copy-Item "libmpv-temp/*" "./publish/windows-x64/"
           # Native PDBs (libSkiaSharp.pdb, libHarfBuzzSharp.pdb, ...) come from the SkiaSharp
           # runtime NuGet packages and aren't suppressed by -p:DebugType=none.
           Get-ChildItem -Path "./publish/windows-x64" -Filter "*.pdb" -Recurse -File | Remove-Item -Force
@@ -393,7 +414,8 @@ jobs:
             -p:InformationalVersion=$env:APP_VER_DISPLAY `
             -o ./publish/windows-arm64
           # Must be the native ARM64 libmpv build — an ARM64 process cannot load the x64 DLL (issue #12087).
-          Copy-Item "libmpv-arm64-temp/libmpv-2.dll" "./publish/windows-arm64/"
+          # The zip also carries libmpv's vulkan-1.dll dependency (+ its license) - copy everything (#13856).
+          Copy-Item "libmpv-arm64-temp/*" "./publish/windows-arm64/"
           Get-ChildItem -Path "./publish/windows-arm64" -Filter "*.pdb" -Recurse -File | Remove-Item -Force
 
       # - name: Setup WiX
@@ -862,7 +884,7 @@ jobs:
 
   create-release:
     if: ${{ inputs.create_release }}
-    needs: [build-windows, build-macos, build-linux, build-linux-flatpak]
+    needs: [build-windows, build-macos, build-linux, build-linux-flatpak, verify-metainfo-release-entry]
     runs-on: ubuntu-latest
     permissions:
       contents: write

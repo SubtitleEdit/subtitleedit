@@ -30,6 +30,9 @@ public class LanguageTextToSpeech
     public string ElevenLabsSettingsResetHint { get; set; }
     public string RegenerateAudio { get; set; }
     public string AutoContinuePlaying { get; set; }
+    public string PlayLine { get; set; }
+    public string FitDurationToGeneratedAudio { get; set; }
+    public string ResetTiming { get; set; }
     public string AddingAudioToVideoFileDotDotDot { get; set; }
     public string PreparingMergeDotDotDot { get; set; }
     public string ImportVoiceDotDotDot { get; set; }
@@ -94,6 +97,10 @@ public class LanguageTextToSpeech
     public string SilencePaddingMsDescription { get; set; }
     public string OutputSampleRate { get; set; }
     public string OutputSampleRateDescription { get; set; }
+    public string GenerationFolder { get; set; }
+    public string GenerationFolderDescription { get; set; }
+    public string DeleteTempFiles { get; set; }
+    public string DeleteTempFilesDescription { get; set; }
     public string EdgeTtsRate { get; set; }
     public string EdgeTtsRateDescription { get; set; }
     public string EdgeTtsPitch { get; set; }
@@ -172,6 +179,9 @@ public class LanguageTextToSpeech
         ElevenLabsSettingsResetHint = "Reset ElevenLabs settings to default values";
         RegenerateAudio = "Regenerate audio";
         AutoContinuePlaying = "Auto-continue playing";
+        PlayLine = "Play line";
+        FitDurationToGeneratedAudio = "Fit duration to generated audio";
+        ResetTiming = "Reset timing";
         AddingAudioToVideoFileDotDotDot = "Adding audio to video file...";
         PreparingMergeDotDotDot = "Preparing merge...";
         ImportVoiceDotDotDot = "Import voice...";
@@ -230,6 +240,10 @@ public class LanguageTextToSpeech
         SilencePaddingMsDescription = "Adds a short silence at the end of each segment. Useful for breathing room between sentences.";
         OutputSampleRate = "Output sample rate (0 = default)";
         OutputSampleRateDescription = "Resamples all segments to the specified sample rate (e.g. 44100, 48000). Set to 0 to keep the original rate.";
+        GenerationFolder = "Generation folder";
+        GenerationFolderDescription = "Folder for the audio clips generated while a run is in progress. Leave empty to use the system temp folder. Each run gets its own sub-folder.";
+        DeleteTempFiles = "Delete generated clips when closing";
+        DeleteTempFilesDescription = "Removes the run's generation folder when the Text to speech window closes. The saved audio and video files are not affected. Turn this off to keep the individual clips.";
         EdgeTtsRate = "Edge-TTS rate";
         EdgeTtsRateDescription = "Speech rate for Edge-TTS, e.g. \"+50%\", \"-30%\", or \"+0%\" for default.";
         EdgeTtsPitch = "Edge-TTS pitch";

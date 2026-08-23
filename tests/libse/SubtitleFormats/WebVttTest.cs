@@ -45,6 +45,20 @@ public class WebVttTest
     }
 
     [Fact]
+    public void LoadSubtitleDropsDuplicateCueWithIdenticalTimeCodesAndText()
+    {
+        // A file made of two concatenated WebVTT segments repeats the same cue (same number, same
+        // times, same text) - that is a duplicate, not a second line, so it must not be stacked.
+        var vtt = "WEBVTT\r\nX-TIMESTAMP-MAP=MPEGTS:900000,LOCAL:00:00:00.000\r\n\r\nSTYLE\r\n::cue(.styledotebebeb) { color:#ebebeb }\r\n\r\n" +
+                  "14\r\n00:12:58.333 --> 00:13:00.125 align:middle line:85%,start position:50%,middle\r\n<c.styledotebebeb>Do not translate this.</c>\r\n\r\n" +
+                  "WEBVTT\r\nX-TIMESTAMP-MAP=MPEGTS:900000,LOCAL:00:00:00.000\r\n\r\nSTYLE\r\n::cue(.styledotebebeb) { color:#ebebeb }\r\n\r\n" +
+                  "14\r\n00:12:58.333 --> 00:13:00.125 align:middle line:85%,start position:50%,middle\r\n<c.styledotebebeb>Do not translate this.</c>";
+        var subtitle = LoadWebVttSubtitle(vtt);
+        Assert.Single(subtitle.Paragraphs);
+        Assert.Equal("<c.styledotebebeb>Do not translate this.</c>", subtitle.Paragraphs[0].Text);
+    }
+
+    [Fact]
     public void LoadSubtitleSupportsHourlessEndTimestamp()
     {
         // WebVTT allows each timestamp independently to omit the hour part

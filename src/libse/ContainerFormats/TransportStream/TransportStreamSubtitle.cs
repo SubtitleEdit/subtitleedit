@@ -42,6 +42,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 return _bdSup.GetBitmap();
             }
 
+            if (Pes == null)
+            {
+                return new SKBitmap(1, 1);
+            }
+
             if (ActiveImageIndex.HasValue && ActiveImageIndex >= 0 && ActiveImageIndex < Pes.ObjectDataList.Count)
             {
                 var bitmap = Pes.GetImage(Pes.ObjectDataList[ActiveImageIndex.Value]);
@@ -114,7 +119,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                     return Pes.ObjectDataList.Count;
                 }
 
-                return _bdSup.BitmapObjects.Count;
+                // Both sources are optional (the parameterless constructor leaves them unset),
+                // matching how GetScreenSize/GetPosition already handle it.
+                return _bdSup?.BitmapObjects.Count ?? 0;
             }
         }
     }

@@ -16,8 +16,18 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         public readonly ulong Duration;
         public readonly string Iso639ThreeLetterCode;
 
+        // A media header is well under this; anything larger means the size field was misread.
+        private const ulong MaxSize = 1024 * 1024;
+
         public Mdhd(Stream fs, ulong size)
         {
+            // "size" comes straight from the file - unsigned arithmetic on a too-small value used
+            // to underflow into a ~18 exabyte allocation.
+            if (size < 26 || size > MaxSize)
+            {
+                return;
+            }
+
             Buffer = new byte[size - 4];
             var bytesRead = fs.Read(Buffer, 0, Buffer.Length);
             if (bytesRead < Buffer.Length)
@@ -27,6 +37,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
             var languageIndex = 20;
             int version = Buffer[0];
+            if (version != 0 && Buffer.Length < 34)
+            {
+                return; // the 64-bit layout does not fit in what the size field declared
+            }
+
             if (version == 0)
             {
                 CreationTime = GetUInt(4);

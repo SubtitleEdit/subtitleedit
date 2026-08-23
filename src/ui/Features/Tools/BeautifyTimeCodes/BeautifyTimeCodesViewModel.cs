@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Tools.BeautifyTimeCodes.Profile;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +32,14 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
     private readonly List<SubtitleLineViewModel> _originalSubtitles;
     private readonly List<SubtitleLineViewModel> _beautifiedSubtitles;
     private List<double> _shotChanges;
+    private List<double> _timeCodes;
+
+    /// <summary>Shared "none" list - the beautifier only reads it, and the preview re-runs often.</summary>
+    private static readonly List<double> NoTimeCodes = new List<double>();
     private double _frameRate = 25.0;
+    private double _videoDurationSeconds;
+    private string _videoFileName = string.Empty;
+    private CancellationTokenSource? _extractCancellation;
     private volatile bool _disposed;
 
     private readonly IWindowService _windowService;
@@ -51,6 +59,12 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
     [ObservableProperty] private bool _canGoPrevious;
     [ObservableProperty] private bool _canGoNext;
 
+    [ObservableProperty] private bool _useExactTimeCodes;
+    [ObservableProperty] private bool _canExtractTimeCodes;
+    [ObservableProperty] private bool _isExtractingTimeCodes;
+    [ObservableProperty] private double _extractProgressValue;
+    [ObservableProperty] private string _timeCodesStatus = string.Empty;
+
     public BeautifyTimeCodesViewModel(IWindowService windowService)
     {
         _windowService = windowService;
@@ -58,6 +72,7 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
         _originalSubtitles = new List<SubtitleLineViewModel>();
         _beautifiedSubtitles = new List<SubtitleLineViewModel>();
         _shotChanges = new List<double>();
+        _timeCodes = new List<double>();
 
         _timerUpdatePreview = new System.Timers.Timer(500);
         _timerUpdatePreview.AutoReset = false;
@@ -119,7 +134,7 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
         // beautifier — it reads the profile directly from Configuration.Settings.BeautifyTimeCodes.
         var subtitle = BuildSubtitleFromRows();
 
-        var beautifier = new Core.Forms.TimeCodesBeautifier(subtitle, _frameRate, new List<double>(), _shotChanges);
+        var beautifier = new Core.Forms.TimeCodesBeautifier(subtitle, _frameRate, ActiveTimeCodes(), _shotChanges);
         beautifier.Beautify();
 
         Avalonia.Threading.Dispatcher.UIThread.Post(() =>
@@ -202,9 +217,16 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
     {
         var lang = Se.Language.Tools.BeautifyTimeCodes;
         var fps = _frameRate.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture);
+
+        // With exact time codes the frame grid comes from the video, so showing only the nominal
+        // frame rate would misrepresent what the cues are being snapped to.
+        var frameSource = UseExactTimeCodes && _timeCodes.Count > 0
+            ? $"{fps} ({lang.UseExactTimeCodes})"
+            : fps;
+
         StatsLine = $"{lang.SubtitlesCount}: {_originalSubtitles.Count}   ·   " +
                     $"{lang.ChangedCount}: {_changedIndices.Count}   ·   " +
-                    $"{Se.Language.General.FrameRate}: {fps}   ·   " +
+                    $"{Se.Language.General.FrameRate}: {frameSource}   ·   " +
                     $"{lang.ShotChangesCount}: {_shotChanges.Count}";
     }
 
@@ -492,8 +514,11 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
         _shotChanges = audioVisualizer.ShotChanges ?? new List<double>();
 
         _frameRate = 25.0;
+        _videoDurationSeconds = 0;
+        _videoFileName = string.Empty;
         if (!string.IsNullOrEmpty(videoFileName) && System.IO.File.Exists(videoFileName))
         {
+            _videoFileName = videoFileName;
             try
             {
                 var mediaInfo = Logic.Media.FfmpegMediaInfo2.Parse(videoFileName);
@@ -501,6 +526,8 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
                 {
                     _frameRate = (double)mediaInfo.FramesRate;
                 }
+
+                _videoDurationSeconds = mediaInfo.Duration?.TotalSeconds ?? 0;
             }
             catch
             {
@@ -508,6 +535,24 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
             }
         }
 
+        // Extracting time codes means decoding the whole video, so a previous run is reused.
+        _timeCodes = new List<double>();
+        try
+        {
+            _timeCodes = Logic.Media.TimeCodesHelper.FromDisk(_videoFileName);
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Reading cached video time codes failed");
+        }
+
+        if (!Logic.Media.TimeCodesHelper.IsUsableFor(_timeCodes, _videoDurationSeconds))
+        {
+            _timeCodes = new List<double>();
+        }
+
+        UseExactTimeCodes = Se.Settings.BeautifyTimeCodes.ExtractExactTimeCodes && _timeCodes.Count > 0;
+        UpdateTimeCodesStatus();
         UpdateStatsLine();
 
         Avalonia.Threading.Dispatcher.UIThread.Post(() =>
@@ -595,6 +640,111 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
         }
     }
 
+    /// <summary>
+    /// The time codes the beautifier should use. Empty unless the user asked for exact time codes
+    /// and a usable set is loaded - the beautifier then falls back to n/fps arithmetic.
+    /// </summary>
+    private List<double> ActiveTimeCodes()
+    {
+        return UseExactTimeCodes ? _timeCodes : NoTimeCodes;
+    }
+
+    partial void OnUseExactTimeCodesChanged(bool value)
+    {
+        Se.Settings.BeautifyTimeCodes.ExtractExactTimeCodes = value;
+        UpdateTimeCodesStatus();
+        _dirty = true; // re-run beautify against the other frame grid
+    }
+
+    private void UpdateTimeCodesStatus()
+    {
+        var lang = Se.Language.Tools.BeautifyTimeCodes;
+
+        if (IsExtractingTimeCodes)
+        {
+            TimeCodesStatus = lang.ExtractingTimeCodes;
+        }
+        else
+        {
+            TimeCodesStatus = _timeCodes.Count > 0
+                ? string.Format(lang.XTimeCodesLoaded, _timeCodes.Count)
+                : lang.NoTimeCodesLoaded;
+        }
+
+        CanExtractTimeCodes = !IsExtractingTimeCodes &&
+                              _timeCodes.Count == 0 &&
+                              !string.IsNullOrEmpty(_videoFileName);
+
+        UpdateStatsLine();
+    }
+
+    [RelayCommand]
+    private async Task ExtractTimeCodes()
+    {
+        if (IsExtractingTimeCodes || string.IsNullOrEmpty(_videoFileName))
+        {
+            return;
+        }
+
+        IsExtractingTimeCodes = true;
+        ExtractProgressValue = 0;
+        UpdateTimeCodesStatus();
+
+        using var cancellationSource = new CancellationTokenSource();
+        _extractCancellation = cancellationSource;
+
+        var progress = new Progress<int>(percent =>
+        {
+            if (!_disposed)
+            {
+                ExtractProgressValue = percent;
+            }
+        });
+
+        var extracted = new List<double>();
+        try
+        {
+            extracted = await TimeCodesGenerator.ExtractAsync(_videoFileName, _videoDurationSeconds, progress, cancellationSource.Token);
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Extracting video time codes failed");
+        }
+
+        // Read the flag while the source is still alive, then unpublish it so Dispose() cannot
+        // reach the instance this method is about to dispose.
+        var cancelled = cancellationSource.IsCancellationRequested;
+        _extractCancellation = null;
+        IsExtractingTimeCodes = false;
+
+        // A short list is worse than none: the beautifier maps frame number to list index, so cues
+        // past the end of a partial extraction would snap to the wrong frames rather than fall
+        // back to n/fps. Cancelling mid-way lands here too.
+        if (TimeCodesHelper.IsUsableFor(extracted, _videoDurationSeconds))
+        {
+            _timeCodes = extracted;
+            try
+            {
+                TimeCodesHelper.Save(_videoFileName, extracted);
+            }
+            catch (Exception exception)
+            {
+                Se.LogError(exception, "Saving video time codes failed");
+            }
+
+            UseExactTimeCodes = true;
+            _dirty = true; // OnUseExactTimeCodesChanged does not fire if the box was already ticked
+        }
+        else if (!cancelled)
+        {
+            TimeCodesStatus = Se.Language.Tools.BeautifyTimeCodes.TimeCodesExtractFailed;
+            CanExtractTimeCodes = !string.IsNullOrEmpty(_videoFileName);
+            return;
+        }
+
+        UpdateTimeCodesStatus();
+    }
+
     [RelayCommand]
     private void PreviousChange()
     {
@@ -621,7 +771,7 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
         StopPositionTimer();
         _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
 
-        CommitBeautifiedTimes(_allSubtitles, _frameRate, _shotChanges);
+        CommitBeautifiedTimes(_allSubtitles, _frameRate, _shotChanges, ActiveTimeCodes());
 
         OkPressed = true;
         Window?.Close();
@@ -632,7 +782,7 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
     /// start time, as the beautifier expects). The rows keep all their view-model-only state -
     /// the previous rebuild from Paragraphs silently dropped OriginalText, Id and the ASSA style.
     /// </summary>
-    internal static void CommitBeautifiedTimes(List<SubtitleLineViewModel> rows, double frameRate, List<double> shotChanges)
+    internal static void CommitBeautifiedTimes(List<SubtitleLineViewModel> rows, double frameRate, List<double> shotChanges, List<double>? timeCodes = null)
     {
         var ordered = rows.OrderBy(p => p.StartTime.TotalMilliseconds).ToList();
         var subtitle = new Subtitle();
@@ -641,7 +791,7 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
             subtitle.Paragraphs.Add(vm.ToParagraph());
         }
 
-        var beautifier = new Core.Forms.TimeCodesBeautifier(subtitle, frameRate, new List<double>(), shotChanges);
+        var beautifier = new Core.Forms.TimeCodesBeautifier(subtitle, frameRate, timeCodes ?? new List<double>(), shotChanges);
         beautifier.Beautify();
 
         // Beautify adjusts cue boundaries only, so the paragraphs still line up with the rows.
@@ -704,5 +854,16 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
         _disposed = true;
         StopPositionTimer();
         _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
+
+        // Closing the window must not leave an ffmpeg decode of the whole video running. The
+        // extract command owns and disposes the source, so only signal it here.
+        try
+        {
+            _extractCancellation?.Cancel();
+        }
+        catch (ObjectDisposedException)
+        {
+            // the extraction finished between the null check and Cancel()
+        }
     }
 }

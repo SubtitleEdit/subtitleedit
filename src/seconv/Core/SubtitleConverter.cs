@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 using Spectre.Console;
@@ -70,10 +70,13 @@ internal class SubtitleConverter
             var fileIndex = 1;
             foreach (var inputFile in inputFiles)
             {
+                // --keep-timestamp: read the source's timestamps before anything is written, as
+                // --overwrite can make the output the input file itself.
+                var sourceTimestamps = options.KeepTimestamp ? FileTimestampHelper.Capture(inputFile) : null;
                 try
                 {
                     if (imageTargetHandler is not null
-                        && await TryConvertImageToImageAsync(inputFile, options, result, fileIndex))
+                        && await TryConvertImageToImageAsync(inputFile, options, result, fileIndex, sourceTimestamps))
                     {
                         fileIndex++;
                         continue;
@@ -96,6 +99,7 @@ internal class SubtitleConverter
                         var warnings = new List<string>();
                         await ConvertFileAsync(inputFile, outputFile, options, warnings);
                         result.SuccessfulFiles++;
+                        ApplySourceTimestamp(sourceTimestamps, outputFile);
                         result.Files.Add(new FileConversionResult(inputFile, outputFile, true, null, warnings.Count > 0 ? warnings : null));
                         foreach (var warning in warnings)
                         {
@@ -131,6 +135,7 @@ internal class SubtitleConverter
                             }
                             await ConvertTrackAsync(track, outputFile, options);
                             result.SuccessfulFiles++;
+                            ApplySourceTimestamp(sourceTimestamps, outputFile);
                             result.Files.Add(new FileConversionResult(inputFile, outputFile, true, null));
                             if (!options.Quiet)
                             {
@@ -248,6 +253,15 @@ internal class SubtitleConverter
             // streams there's no clean 1:1 mapping back to inputs, but the OutputFile slot
             // is meant as a hint for the user — they'll see the full list in the summary.
             var primaryOutput = outputs[0].Path;
+            if (options.KeepTimestamp)
+            {
+                var newestVob = vobFiles.OrderByDescending(File.GetLastWriteTimeUtc).First();
+                var vobTimestamps = FileTimestampHelper.Capture(newestVob);
+                foreach (var o in outputs)
+                {
+                    ApplySourceTimestamp(vobTimestamps, o.Path);
+                }
+            }
             foreach (var f in vobFiles)
             {
                 result.Files.Add(new FileConversionResult(f, primaryOutput, true, null));
@@ -295,13 +309,13 @@ internal class SubtitleConverter
     /// input. Returns true if the input was handled (recorded in <paramref name="result"/>),
     /// false if it should fall through to the OCR / text pipeline.
     /// </summary>
-    private async Task<bool> TryConvertImageToImageAsync(string inputFile, ConversionOptions options, ConversionResult result, int fileIndex)
+    private async Task<bool> TryConvertImageToImageAsync(string inputFile, ConversionOptions options, ConversionResult result, int fileIndex, FileTimestamps? sourceTimestamps)
     {
         var ext = Path.GetExtension(inputFile).ToLowerInvariant();
 
         if (ext == ".sup")
         {
-            return await PassThroughSingleStreamAsync(inputFile, options, result, fileIndex,
+            return await PassThroughSingleStreamAsync(inputFile, options, result, fileIndex, sourceTimestamps,
                 () => BitmapSubtitleLoader.LoadBluRaySup(inputFile));
         }
 
@@ -325,7 +339,7 @@ internal class SubtitleConverter
                 // IsPal: default to PAL to match VobSubExtractor. The .idx "size:" field
                 // could disambiguate per-file, but a wrong guess only affects timing scale,
                 // not bitmap content.
-                return await PassThroughSingleStreamAsync(inputFile, options, result, fileIndex,
+                return await PassThroughSingleStreamAsync(inputFile, options, result, fileIndex, sourceTimestamps,
                     () => BitmapSubtitleLoader.LoadVobSub(inputFile, idxPath, isPal: true));
             }
             return false;
@@ -343,23 +357,23 @@ internal class SubtitleConverter
                     + "the .idx only holds timing and palette; the subtitle images live in the .sub.");
             }
 
-            return await PassThroughSingleStreamAsync(subPath, options, result, fileIndex,
+            return await PassThroughSingleStreamAsync(subPath, options, result, fileIndex, sourceTimestamps,
                 () => BitmapSubtitleLoader.LoadVobSub(subPath, inputFile, isPal: true));
         }
 
         if (ext is ".mkv" or ".mks")
         {
-            return await PassThroughMatroskaPgsAsync(inputFile, options, result, fileIndex);
+            return await PassThroughMatroskaPgsAsync(inputFile, options, result, fileIndex, sourceTimestamps);
         }
 
         if (ext is ".ts" or ".m2ts" or ".mts")
         {
-            return await PassThroughTransportStreamDvbAsync(inputFile, options, result, fileIndex);
+            return await PassThroughTransportStreamDvbAsync(inputFile, options, result, fileIndex, sourceTimestamps);
         }
 
         if (ext is ".avi" or ".divx")
         {
-            return await PassThroughXSubAsync(inputFile, options, result, fileIndex);
+            return await PassThroughXSubAsync(inputFile, options, result, fileIndex, sourceTimestamps);
         }
 
         return false;
@@ -370,6 +384,7 @@ internal class SubtitleConverter
         ConversionOptions options,
         ConversionResult result,
         int fileIndex,
+        FileTimestamps? sourceTimestamps,
         Func<IReadOnlyList<BitmapSubtitleLoader.BitmapSubtitleItem>> load)
     {
         var outputFile = ResolveOutputFileName(inputFile, options, usedNames: _usedOutputFileNames);
@@ -384,6 +399,7 @@ internal class SubtitleConverter
             items = load();
             WritePreservedBitmaps(items, outputFile, options);
             result.SuccessfulFiles++;
+            ApplySourceTimestamp(sourceTimestamps, outputFile);
             result.Files.Add(new FileConversionResult(inputFile, outputFile, true, null));
             if (!options.Quiet)
             {
@@ -416,7 +432,7 @@ internal class SubtitleConverter
         return true;
     }
 
-    private async Task<bool> PassThroughMatroskaPgsAsync(string inputFile, ConversionOptions options, ConversionResult result, int fileIndex)
+    private async Task<bool> PassThroughMatroskaPgsAsync(string inputFile, ConversionOptions options, ConversionResult result, int fileIndex, FileTimestamps? sourceTimestamps)
     {
         using var matroska = new Nikse.SubtitleEdit.Core.ContainerFormats.Matroska.MatroskaFile(inputFile);
         if (!matroska.IsValid)
@@ -469,6 +485,7 @@ internal class SubtitleConverter
                     : BitmapSubtitleLoader.LoadMatroskaPgs(matroska, track);
                 WritePreservedBitmaps(items, outputFile, options);
                 result.SuccessfulFiles++;
+                ApplySourceTimestamp(sourceTimestamps, outputFile);
                 result.Files.Add(new FileConversionResult(inputFile, outputFile, true, null));
                 if (!options.Quiet)
                 {
@@ -502,7 +519,7 @@ internal class SubtitleConverter
         return true;
     }
 
-    private async Task<bool> PassThroughTransportStreamDvbAsync(string inputFile, ConversionOptions options, ConversionResult result, int fileIndex)
+    private async Task<bool> PassThroughTransportStreamDvbAsync(string inputFile, ConversionOptions options, ConversionResult result, int fileIndex, FileTimestamps? sourceTimestamps)
     {
         // --teletext-only means "skip DVB-sub". The regular container path
         // (ContainerSubtitleLoader.LoadTransportStream) honors this by gating its DVB-sub
@@ -546,6 +563,7 @@ internal class SubtitleConverter
             {
                 WritePreservedBitmaps(items, outputFile, options);
                 result.SuccessfulFiles++;
+                ApplySourceTimestamp(sourceTimestamps, outputFile);
                 result.Files.Add(new FileConversionResult(inputFile, outputFile, true, null));
                 if (!options.Quiet)
                 {
@@ -581,7 +599,7 @@ internal class SubtitleConverter
     /// number is used as the filename suffix (an AVI stream header carries no language) but only
     /// when the file has more than one, so the usual single-stream file keeps its plain name.
     /// </summary>
-    private async Task<bool> PassThroughXSubAsync(string inputFile, ConversionOptions options, ConversionResult result, int fileIndex)
+    private async Task<bool> PassThroughXSubAsync(string inputFile, ConversionOptions options, ConversionResult result, int fileIndex, FileTimestamps? sourceTimestamps)
     {
         var allStreams = BitmapSubtitleLoader.LoadXSub(inputFile);
         if (allStreams.Count == 0)
@@ -653,6 +671,7 @@ internal class SubtitleConverter
             {
                 WritePreservedBitmaps(items, outputFile, options);
                 result.SuccessfulFiles++;
+                ApplySourceTimestamp(sourceTimestamps, outputFile);
                 result.Files.Add(new FileConversionResult(inputFile, outputFile, true, null));
                 if (!options.Quiet)
                 {
@@ -990,6 +1009,33 @@ internal class SubtitleConverter
         }
         throw new InvalidOperationException($"Could not find a free output filename for: {baseName}");
     }
+
+    /// <summary>
+    /// --keep-timestamp: stamp the written output (file, or folder for image exports, plus a
+    /// sibling .idx for VobSub) with the source file's timestamps, captured before the
+    /// conversion (null when --keep-timestamp is off or the source could not be read).
+    /// Best-effort, never throws.
+    /// </summary>
+    private static void ApplySourceTimestamp(FileTimestamps? sourceTimestamps, string outputFile)
+    {
+        if (sourceTimestamps == null || string.IsNullOrEmpty(outputFile))
+        {
+            return;
+        }
+
+        var timestamps = sourceTimestamps.Value;
+        if (Directory.Exists(outputFile))
+        {
+            FileTimestampHelper.CopyTimestampsToDirectoryContents(timestamps, outputFile);
+            return;
+        }
+
+        FileTimestampHelper.CopyTimestamps(timestamps, outputFile);
+        if (outputFile.EndsWith(".sub", StringComparison.OrdinalIgnoreCase))
+        {
+            FileTimestampHelper.CopyTimestamps(timestamps, Path.ChangeExtension(outputFile, ".idx"));
+        }
+    }
 }
 
 internal record class ConversionOptions
@@ -1010,6 +1056,9 @@ internal record class ConversionOptions
     public double? Fps { get; init; }
     public double? TargetFps { get; init; }
     public bool Overwrite { get; init; }
+
+    /// <summary>--keep-timestamp: copy the source file's creation/last-write time onto every output file.</summary>
+    public bool KeepTimestamp { get; init; }
     public List<string> Operations { get; init; } = new();
 
     /// <summary>

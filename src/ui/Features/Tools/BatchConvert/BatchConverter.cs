@@ -1,4 +1,4 @@
-using Avalonia.Skia;
+﻿using Avalonia.Skia;
 using Nikse.SubtitleEdit.UiLogic.Export;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Features.Assa.ResolutionResampler;
@@ -76,6 +76,9 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     // file would silently clobber each other's output.
     private readonly HashSet<string> _handedOutOutputFileNames = new(StringComparer.OrdinalIgnoreCase);
 
+    /// <summary>Output paths handed out while converting the current item - stamped with the source timestamp afterwards.</summary>
+    private readonly List<string> _currentItemOutputFileNames = new();
+
     public SubtitleFormat Format { get; set; } = new SubRip();
 
     public Encoding Encoding { get; set; } = Encoding.UTF8;
@@ -125,6 +128,52 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         {
             throw new InvalidOperationException("Initialize not called?");
         }
+
+        _currentItemOutputFileNames.Clear();
+        // Captured before converting: with "save in source folder" + "overwrite" the output can
+        // be the source file itself, and reading the timestamps afterwards would only give back
+        // the time the output was written.
+        var sourceTimestamps = _config.KeepSourceTimestamp ? FileTimestampHelper.Capture(item.FileName) : null;
+        try
+        {
+            await ConvertCore(item, cancellationToken);
+        }
+        finally
+        {
+            if (sourceTimestamps != null)
+            {
+                ApplySourceTimestamp(sourceTimestamps.Value);
+            }
+
+            _currentItemOutputFileNames.Clear();
+        }
+    }
+
+    /// <summary>
+    /// "Keep source file date/time": stamp everything written for this item (file, or folder
+    /// for image exports, plus a sibling .idx for VobSub) with the source file's timestamps.
+    /// Runs after the output streams are closed; best-effort, never fails the conversion.
+    /// </summary>
+    private void ApplySourceTimestamp(FileTimestamps sourceTimestamps)
+    {
+        foreach (var path in _currentItemOutputFileNames)
+        {
+            if (Directory.Exists(path))
+            {
+                FileTimestampHelper.CopyTimestampsToDirectoryContents(sourceTimestamps, path);
+                continue;
+            }
+
+            FileTimestampHelper.CopyTimestamps(sourceTimestamps, path);
+            if (path.EndsWith(".sub", StringComparison.OrdinalIgnoreCase))
+            {
+                FileTimestampHelper.CopyTimestamps(sourceTimestamps, Path.ChangeExtension(path, ".idx"));
+            }
+        }
+    }
+
+    private async Task ConvertCore(BatchConvertItem item, CancellationToken cancellationToken)
+    {
 
         IOcrSubtitle? imageSubtitle = null;
         if (item.Format == FormatBluRaySup)
@@ -1377,6 +1426,8 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     }
 
     /// <inheritdoc cref="RunOllamaOcr"/>
+    public bool UsedLocalLlamaCppOcr { get; private set; }
+
     private async Task<bool> RunLlamaCppOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
     {
         // Curated OCR model from settings (picked in batch convert settings / the OCR window).
@@ -1391,6 +1442,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
         try
         {
+            // Set before the await: starting the server is itself the slow part a user cancels
+            // out of, and the shutdown has to know this run owns it by then (#13865).
+            UsedLocalLlamaCppOcr = true;
+
             // Reused across items/files in the same batch run; killed at app exit.
             await LlamaCppServerManager.EnsureServerRunningAsync(model, cancellationToken);
         }
@@ -2316,7 +2371,24 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             }
         }
 
-        new Core.Forms.TimeCodesBeautifier(subtitle, frameRate, new List<double>(), shotChanges).Beautify();
+        // Exact frame time codes, when a previous extraction cached them for this video. Batch
+        // never extracts on its own - that decodes the whole video per file.
+        var timeCodes = new List<double>();
+        if (hasVideoFile && Se.Settings.BeautifyTimeCodes.ExtractExactTimeCodes)
+        {
+            try
+            {
+                timeCodes = TimeCodesHelper.FromDisk(videoFileName);
+            }
+            catch
+            {
+                // unreadable/corrupt time-codes cache - beautify without them rather
+                // than aborting the rest of the batch
+                timeCodes = new List<double>();
+            }
+        }
+
+        new Core.Forms.TimeCodesBeautifier(subtitle, frameRate, timeCodes, shotChanges).Beautify();
         return subtitle;
     }
 
@@ -3169,6 +3241,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     private string TakeOutputFileName(string outputFileName)
     {
         _handedOutOutputFileNames.Add(outputFileName);
+        _currentItemOutputFileNames.Add(outputFileName);
         return outputFileName;
     }
 

@@ -93,6 +93,13 @@ public class SeAudioToText
     public int WhisperBeamSize { get; set; } = 5;
     public double WhisperCueMaxSeconds { get; set; } = 7.0;
     public double WhisperCueMaxCps { get; set; } = 20.0;
+
+    public bool WhisperPostProcessingRemoveNonSpeechLines { get; set; }
+
+    public bool WhisperPostProcessingRemoveRepeatedLines { get; set; }
+
+    public bool WhisperPostProcessingShowQualityReport { get; set; } = true;
+
     public bool WhisperPostProcessingChangeUnderlineToColor { get; set; }
     public string WhisperPostProcessingChangeUnderlineToColorColor { get; set; } = Colors.Red.FromColorToHex();
     public string WhisperCppVulkanGpuDevice { get; set; } = string.Empty;

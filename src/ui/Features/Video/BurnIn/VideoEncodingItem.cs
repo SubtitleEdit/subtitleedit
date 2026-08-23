@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Video.BurnIn;
 
@@ -56,5 +57,32 @@ public class VideoEncodingItem
         }
 
         return items;
+    }
+
+    /// <summary>
+    /// The offered encoders that the ffmpeg SE is going to run was not built with, so the caller
+    /// can hide them. Nothing in SE checks <c>ffmpeg -encoders</c> before building the command
+    /// line, so a codec that is merely listed here fails at encode time with "Unknown encoder"
+    /// once the job is already running - and which encoders exist varies per build. The Flatpak
+    /// bundles an ffmpeg without x265, NVENC, AMF or QSV, and distro packages differ again.
+    /// <para>
+    /// Fails open in both directions: an empty <paramref name="availableEncoders"/> means the
+    /// probe did not work (no ffmpeg yet, a timeout, an unparsable banner) rather than "nothing is
+    /// supported", and a result that would hide every entry is discarded too. In both cases the
+    /// user keeps the full list and the old behaviour.
+    /// </para>
+    /// Pure - exposed for testing.
+    /// </summary>
+    internal static List<VideoEncodingItem> GetUnsupported(
+        IList<VideoEncodingItem> offered,
+        IReadOnlySet<string> availableEncoders)
+    {
+        if (offered.Count == 0 || availableEncoders.Count == 0)
+        {
+            return new List<VideoEncodingItem>();
+        }
+
+        var unsupported = offered.Where(p => !availableEncoders.Contains(p.Codec)).ToList();
+        return unsupported.Count < offered.Count ? unsupported : new List<VideoEncodingItem>();
     }
 }

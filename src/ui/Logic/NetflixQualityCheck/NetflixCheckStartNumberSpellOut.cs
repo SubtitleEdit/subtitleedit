@@ -9,9 +9,13 @@ namespace Nikse.SubtitleEdit.Logic.NetflixQualityCheck;
 /// </summary>
 public class NetflixCheckStartNumberSpellOut : INetflixQualityChecker
 {
-    private static readonly Regex NumberStart = new Regex(@"^\d+ [A-Za-z]", RegexOptions.Compiled);
-    private static readonly Regex NumberStartInside = new Regex(@"[\.,!] \d+ [A-Za-z]", RegexOptions.Compiled);
-    private static readonly Regex NumberStartInside2 = new Regex(@"[\.,!]\r\n\d+ [A-Za-z]", RegexOptions.Compiled);
+    // The digits are captured so the replacement can use the group's own index/length - the
+    // offsets used to be counted off the whole match, which broke as soon as the separator was
+    // not exactly the assumed width. The line break alternation matters off Windows, where
+    // paragraph text is separated by "\n" and the old "\r\n" pattern never matched at all.
+    private static readonly Regex NumberStart = new Regex(@"^(\d+) [A-Za-z]", RegexOptions.Compiled);
+    private static readonly Regex NumberStartInside = new Regex(@"[\.,!] (\d+) [A-Za-z]", RegexOptions.Compiled);
+    private static readonly Regex NumberStartInside2 = new Regex(@"[\.,!](?:\r\n|\n|\r)(\d+) [A-Za-z]", RegexOptions.Compiled);
 
     public string Name { get; set; }
 
@@ -26,29 +30,9 @@ public class NetflixCheckStartNumberSpellOut : INetflixQualityChecker
         {
             var newText = p.Text;
 
-            var m = NumberStart.Match(newText);
-            while (m.Success)
-            {
-                var length = m.Length - 2;
-                newText = newText.Remove(m.Index, length).Insert(m.Index, NetflixHelper.ConvertNumberToString(m.Value.Substring(0, length), true, controller.Language));
-                m = NumberStart.Match(newText, m.Index + 1);
-            }
-
-            m = NumberStartInside.Match(newText);
-            while (m.Success)
-            {
-                var length = m.Length - 4;
-                newText = newText.Remove(m.Index + 2, length).Insert(m.Index + 2, NetflixHelper.ConvertNumberToString(m.Value.Substring(2, length), true, controller.Language));
-                m = NumberStartInside.Match(newText, m.Index + 1);
-            }
-
-            m = NumberStartInside2.Match(newText);
-            while (m.Success)
-            {
-                var length = m.Length - 5;
-                newText = newText.Remove(m.Index + 3, length).Insert(m.Index + 3, NetflixHelper.ConvertNumberToString(m.Value.Substring(3, length), true, controller.Language));
-                m = NumberStartInside2.Match(newText, m.Index + 1);
-            }
+            newText = SpellOutNumbers(NumberStart, newText, controller.Language);
+            newText = SpellOutNumbers(NumberStartInside, newText, controller.Language);
+            newText = SpellOutNumbers(NumberStartInside2, newText, controller.Language);
 
             if (newText != p.Text)
             {
@@ -59,4 +43,17 @@ public class NetflixCheckStartNumberSpellOut : INetflixQualityChecker
         }
     }
 
+    private static string SpellOutNumbers(Regex regex, string text, string language)
+    {
+        var m = regex.Match(text);
+        while (m.Success)
+        {
+            var digits = m.Groups[1];
+            text = text.Remove(digits.Index, digits.Length)
+                       .Insert(digits.Index, NetflixHelper.ConvertNumberToString(digits.Value, true, language));
+            m = regex.Match(text, m.Index + 1);
+        }
+
+        return text;
+    }
 }

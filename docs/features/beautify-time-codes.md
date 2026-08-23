@@ -84,13 +84,14 @@ Each sub-tab offers:
 
 ## Snap-to-shot-changes while editing
 
-The profile's **In cues / Out cues red zones** also drive the snap distance when you drag a paragraph edge in the main waveform:
+The profile's **In cues gap** and **Out cues gap** decide where a cue lands when it snaps to a shot change anywhere in Subtitle Edit — dragging in the waveform, or the *snap to shot change* shortcuts:
 
-- Drag a paragraph start into the red zone around a shot change → snaps to the shot change.
-- Drag a paragraph end into the red zone → snaps to one frame **before** the shot change (so the cue doesn't bleed onto the next shot).
-- **Hold Shift while dragging** to bypass the snap entirely.
+- A snapped **start** lands the *In cues gap* **after** the shot change.
+- A snapped **end** lands the *Out cues gap* **before** the shot change (so the cue doesn't bleed onto the next shot).
 
-Toggle the whole behavior with *Snap to shot changes (hold Shift to override)* in Options → Settings → Waveform.
+With both gaps at 0 (the *Default* preset) cues land exactly on the cut. Raise *Out cues gap* to 1 or 2 frames if you prefer ends to stop just short of it.
+
+*How close* a cue has to be before it snaps is **not** taken from the profile — that is set in Options → Settings → Waveform, in pixels for dragging and in seconds for the keyboard commands. See [Audio Visualizer](audio-visualizer.md#snapping-to-shot-changes).
 
 ## Related
 

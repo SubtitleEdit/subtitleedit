@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -235,6 +235,9 @@ public class SettingsPage : UserControl
                 {
                     MakeNumericUpDownInt(nameof(_vm.MinGapMs), _vm.RuleValueChanged)
                         .WithBindIsVisible(_vm, nameof(_vm.IsMsMode)),
+                    UiUtil.MakeButtonBrowse(_vm.CalculateMinGapMsCommand,
+                            accessibleName: Se.Language.Options.Settings.MinGapCalculateDotDotDot)
+                        .WithBindIsVisible(_vm, nameof(_vm.IsMsMode)),
                     MakeNumericUpDownInt(nameof(_vm.MinGapFrames), _vm.RuleValueChanged)
                         .WithBindIsVisible(_vm, nameof(_vm.UseFrameMode)),
                     new TextBlock
@@ -275,6 +278,7 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.OpenLastFileOnStart, nameof(_vm.OpenLastFileOnStart)),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoConvertToUtf8, nameof(_vm.AutoConvertToUtf8)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ForceCrLfOnSave, nameof(_vm.ForceCrLfOnSave)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ShowFormatLimitWarning, nameof(_vm.ShowFormatLimitWarning)),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoTrimWhiteSpace, nameof(_vm.AutoTrimWhiteSpace)),
             MakeCheckboxSetting(Se.Language.Options.Settings.RemoveBlankLinesWhenOpening, nameof(_vm.RemoveBlankLinesWhenOpening)),
             new SettingsItem(Se.Language.Options.Settings.DefaultEncoding, () => new ComboBox
@@ -558,6 +562,14 @@ public class SettingsPage : UserControl
                     UiUtil.MakeButton(_vm.EditBeautifyTimeCodesProfileCommand, IconNames.Cogs, Se.Language.Tools.BeautifyTimeCodesProfile.Title)
                 )),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformSnapToFrames, nameof(_vm.WaveformSnapToFrames)),
+            new SettingsItem(Se.Language.Options.Settings.WaveformSnapToShotChangesPixels, () => UiUtil.MakeNumericUpDownInt(
+                1, 100, 8, 120, _vm, nameof(_vm.WaveformSnapToShotChangesPixels))),
+            new SettingsItem(Se.Language.Options.Settings.WaveformSnapToShotChangeStartMaxSeconds, () => UiUtil.MakeNumericUpDownOneDecimal(
+                0, 10, 120, _vm, nameof(_vm.WaveformSnapToShotChangeStartMaxSeconds), defaultValue: 1.0m)),
+            new SettingsItem(Se.Language.Options.Settings.WaveformSnapToShotChangeEndMaxSeconds, () => UiUtil.MakeNumericUpDownOneDecimal(
+                0, 10, 120, _vm, nameof(_vm.WaveformSnapToShotChangeEndMaxSeconds), defaultValue: 1.5m)),
+            new SettingsItem(Se.Language.Options.Settings.WaveformSnapToShotChangeSameShotEndMaxSeconds, () => UiUtil.MakeNumericUpDownOneDecimal(
+                0, 10, 120, _vm, nameof(_vm.WaveformSnapToShotChangeSameShotEndMaxSeconds), defaultValue: 0.5m)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformShotChangesAutoGenerate, nameof(_vm.WaveformShotChangesAutoGenerate)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformFocusOnMouseOver, nameof(_vm.WaveformFocusOnMouseOver)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformFocusTextboxAfterInsertNew, nameof(_vm.WaveformFocusTextboxAfterInsertNew)),
@@ -1031,9 +1043,14 @@ public class SettingsPage : UserControl
         var labelAlignment = UiUtil.MakeLabel(Se.Language.General.Alignment);
         var comboBoxAlignment = UiUtil.MakeComboBox(vm.MpvPreviewFontAlignments, vm, nameof(vm.MpvPreviewSelectedFontAlignment));
 
+        var checkBoxUsePositionFromFile = UiUtil.MakeCheckBox(Se.Language.Options.Settings.UsePositionFromSubtitleFile, vm, nameof(vm.MpvPreviewUsePositionFromFile));
+
         var labelMargin = UiUtil.MakeLabel(Se.Language.General.Margin);
         var numericUpDownMargin = UiUtil.MakeNumericUpDownOneDecimal(1, 1000, 130, vm, nameof(vm.MpvPreviewMargin));
         numericUpDownMargin.Increment = 1;
+
+        var checkBoxMarginIsPartOfSubtitleArea = UiUtil.MakeCheckBox(
+            Se.Language.Options.Settings.MarginIsPartOfSubtitleArea, vm, nameof(vm.MpvPreviewMarginIsPartOfSubtitleArea));
 
         var labelColorPrimary = UiUtil.MakeLabel(Se.Language.Assa.Primary);
         var colorPickerPrimary = UiUtil.MakeColorPickerButton(vm, nameof(vm.MpvPreviewColorPrimary));
@@ -1048,6 +1065,8 @@ public class SettingsPage : UserControl
         {
             RowDefinitions =
             {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
@@ -1079,19 +1098,23 @@ public class SettingsPage : UserControl
         grid.Add(labelAlignment, 3);
         grid.Add(comboBoxAlignment, 3, 1);
 
-        grid.Add(labelMargin, 4);
-        grid.Add(numericUpDownMargin, 4, 1);
+        grid.Add(checkBoxUsePositionFromFile, 4, 0, 1, 2);
 
-        grid.Add(labelColorPrimary, 5);
-        grid.Add(colorPickerPrimary, 5, 1);
+        grid.Add(labelMargin, 5);
+        grid.Add(numericUpDownMargin, 5, 1);
 
-        grid.Add(labelColorOutline, 6);
-        grid.Add(colorPickerOutline, 6, 1);
+        grid.Add(checkBoxMarginIsPartOfSubtitleArea, 6, 0, 1, 2);
 
-        grid.Add(labelColorShadow, 7);
-        grid.Add(colorPickerShadow, 7, 1);
+        grid.Add(labelColorPrimary, 7);
+        grid.Add(colorPickerPrimary, 7, 1);
 
-        grid.Add(MakeBorderView(vm), 8, 0, 1, 2);
+        grid.Add(labelColorOutline, 8);
+        grid.Add(colorPickerOutline, 8, 1);
+
+        grid.Add(labelColorShadow, 9);
+        grid.Add(colorPickerShadow, 9, 1);
+
+        grid.Add(MakeBorderView(vm), 10, 0, 1, 2);
 
         return UiUtil.MakeBorderForControl(grid);
     }

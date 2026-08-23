@@ -1,5 +1,7 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Media;
 using Avalonia.Data;
@@ -96,6 +98,12 @@ public class SplitBreakLongLinesWindow : Window
             .WithMarginRight(40);
         checkBoxRebalanceLongLines.IsCheckedChanged += (s, e) => vm.SetChanged();
 
+        var checkBoxRebalanceOnlyTooLong = UiUtil.MakeCheckBox(Se.Language.Tools.SplitBreakLongLines.RebalanceOnlyLinesTooLong, vm, nameof(vm.RebalanceOnlyLinesTooLong))
+            .WithMarginLeft(25)
+            .WithMarginRight(40);
+        checkBoxRebalanceOnlyTooLong[!InputElement.IsEnabledProperty] = new Binding(nameof(vm.RebalanceLongLines));
+        checkBoxRebalanceOnlyTooLong.IsCheckedChanged += (s, e) => vm.SetChanged();
+
         var labelSingleLineMaxLength = UiUtil.MakeLabel(Se.Language.Options.Settings.SingleLineMaxLength);
         var numericUpDownSingleLineMaxLength = UiUtil.MakeNumericUpDownInt(5, 1000, 10, 130, vm, nameof(vm.SingleLineMaxLength));
         numericUpDownSingleLineMaxLength.ValueChanged += (s, e) => vm.SetChanged();
@@ -111,6 +119,7 @@ public class SplitBreakLongLinesWindow : Window
         {
             ToolTip.SetTip(labelUnbreakLinesShorterThan, Se.Language.Tools.SplitBreakLongLines.UnbreakLinesShorterThanHint);
             ToolTip.SetTip(numericUpDownUnbreakLinesShorterThan, Se.Language.Tools.SplitBreakLongLines.UnbreakLinesShorterThanHint);
+            ToolTip.SetTip(checkBoxRebalanceOnlyTooLong, Se.Language.Tools.SplitBreakLongLines.RebalanceOnlyLinesTooLongHint);
         }
 
         grid.Add(checkBoxSplitLongLines, 0);
@@ -121,6 +130,7 @@ public class SplitBreakLongLinesWindow : Window
         grid.Add(labelMaxNumberOfLines, 1, 1);
         grid.Add(numericUpDownMaxNumberOfLines, 1, 2);
 
+        grid.Add(checkBoxRebalanceOnlyTooLong, 2);
         grid.Add(labelUnbreakLinesShorterThan, 2, 1);
         grid.Add(numericUpDownUnbreakLinesShorterThan, 2, 2);
 
@@ -147,8 +157,22 @@ public class SplitBreakLongLinesWindow : Window
 
         var labelFixesAvailable = UiUtil.MakeLabel()
             .WithBindText(vm, nameof(vm.FixesInfo))
-            .WithMarginTop(10)
             .WithMarginLeft(10);
+
+        // Select all / none only touch the rebalance rows (the ones with a checkbox).
+        var panelHeader = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 5,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 10, 0, 0),
+            Children =
+            {
+                labelFixesAvailable.WithMarginRight(10),
+                UiUtil.MakeButton(Se.Language.General.SelectAll, vm.SelectAllCommand),
+                UiUtil.MakeButton(Se.Language.General.SelectNone, vm.SelectNoneCommand),
+            },
+        };
 
         // Sorting dropped in the DataGrid -> TableView conversion: the grid previews
         // split/rebalance fixes in subtitle order.
@@ -159,6 +183,26 @@ public class SplitBreakLongLinesWindow : Window
         dataGrid.ItemsSource = vm.Fixes;
         dataGrid.Columns.AddRange(new TableViewColumn[]
         {
+                new SeTableViewColumn
+                {
+                    Header = Se.Language.General.Apply,
+                    CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+                    HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                    CellTemplate = new FuncDataTemplate<SplitBreakLongLinesItem>((_, _) => new Border
+                    {
+                        Background = Brushes.Transparent,
+                        Padding = new Thickness(4),
+                        Child = new CheckBox
+                        {
+                            Focusable = false,
+                            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(SplitBreakLongLinesItem.IsSelected)),
+                            [!Visual.IsVisibleProperty] = new Binding(nameof(SplitBreakLongLinesItem.IsSelectable)),
+                            [!AutomationProperties.NameProperty] = new Binding(nameof(SplitBreakLongLinesItem.Name)),
+                            HorizontalAlignment = HorizontalAlignment.Center,
+                        },
+                    }),
+                    Width = new GridLength(70),
+                },
                 new SeTableViewColumn
                 {
                     Header = Se.Language.General.NumberSymbol,
@@ -217,6 +261,9 @@ public class SplitBreakLongLinesWindow : Window
                 },
         });
 
+        TableViewExtras.AddSpaceToggle<SplitBreakLongLinesItem>(dataGrid,
+            item => item.IsSelected, (item, v) => { if (item.IsSelectable) { item.IsSelected = v; } });
+
         dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
         {
             if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
@@ -228,7 +275,7 @@ public class SplitBreakLongLinesWindow : Window
             }
         }, RoutingStrategies.Tunnel);
 
-        grid.Add(labelFixesAvailable, 0);
+        grid.Add(panelHeader, 0);
         grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 1);
 
         return grid;

@@ -390,6 +390,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.PlaybackSlowerCommand), Se.Language.Options.Shortcuts.PlaybackSpeedSlower },
         { nameof(MainViewModel.PlaybackFasterCommand), Se.Language.Options.Shortcuts.PlaybackSpeedFaster },
         { nameof(MainViewModel.VideoSetPositionCurrentSubtitleStartCommand), Se.Language.Options.Shortcuts.SetVideoPositionCurrentSubtitleStart },
+        { nameof(MainViewModel.VideoGoToSubtitlePositionAndPauseCommand), Se.Language.Options.Shortcuts.GoToSubtitlePositionAndPause },
         { nameof(MainViewModel.VideoSetPositionCurrentSubtitleEndCommand), Se.Language.Options.Shortcuts.SetVideoPositionCurrentSubtitleEnd },
         { nameof(MainViewModel.ToggleAudioTracksCommand), Se.Language.Options.Shortcuts.ToggleAudioTracks },
         { nameof(MainViewModel.ListErrorsCommand), Se.Language.General.ListErrors },
@@ -804,6 +805,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.PlaybackSlowerCommand, nameof(vm.PlaybackSlowerCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.PlaybackFasterCommand, nameof(vm.PlaybackFasterCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.VideoSetPositionCurrentSubtitleStartCommand, nameof(vm.VideoSetPositionCurrentSubtitleStartCommand), ShortcutCategory.General, ShortcutGroup.Video);
+        AddShortcut(shortcuts, vm.VideoGoToSubtitlePositionAndPauseCommand, nameof(vm.VideoGoToSubtitlePositionAndPauseCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.VideoSetPositionCurrentSubtitleEndCommand, nameof(vm.VideoSetPositionCurrentSubtitleEndCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.ToggleAudioTracksCommand, nameof(vm.ToggleAudioTracksCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.ListErrorsCommand, nameof(vm.ListErrorsCommand), ShortcutCategory.General);

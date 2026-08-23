@@ -325,6 +325,179 @@ public class ShotChangesHelper
         return newStartMs;
     }
 
+    /// <summary>
+    /// The end a "snap selected lines' end to previous shot change" should produce, or null when the
+    /// line must be left alone (issue #13948).
+    /// <para>
+    /// Snapping parks the out cue on the cut the line is currently running past, which means:
+    /// </para>
+    /// <list type="number">
+    /// <item>the target is the shot change <b>on or before</b> the end. "On" is generous by just
+    /// under a frame (<paramref name="frameDurationMs"/>), so an end already sitting on a cut snaps
+    /// to that cut instead of skipping a whole shot backwards;</item>
+    /// <item>it lands <paramref name="outCuesGapMs"/> <b>before</b> that cut - the beautify profile's
+    /// out cues gap, the same rule the beautifier and the extend commands use. An out cue exactly on
+    /// the cut is the thing the gap exists to prevent;</item>
+    /// <item>the only veto is a result that would not leave a positive duration. Minimum/maximum
+    /// display duration deliberately do not veto: the user asked for this cue to move, and silently
+    /// doing nothing reads as a dead shortcut.</item>
+    /// </list>
+    /// </summary>
+    public static double? GetSnappedEndMs(
+        List<double> shotChanges,
+        double startMs,
+        double endMs,
+        double outCuesGapMs,
+        double frameDurationMs)
+    {
+        if (shotChanges == null || shotChanges.Count == 0)
+        {
+            return null;
+        }
+
+        var maxDifference = (frameDurationMs - 1) / 1000;
+        var shotChangeSeconds = shotChanges.FirstOnOrBefore(endMs / 1000.0, maxDifference, -1);
+        if (shotChangeSeconds < 0)
+        {
+            return null;
+        }
+
+        var newEndMs = shotChangeSeconds * 1000.0 - outCuesGapMs;
+        if (newEndMs <= startMs)
+        {
+            return null;
+        }
+
+        return newEndMs;
+    }
+
+    /// <summary>
+    /// The start a "snap selected lines' start to next shot change" should produce, or null when the
+    /// line must be left alone - <see cref="GetSnappedEndMs"/> mirrored: the shot change on or after
+    /// the start, plus <paramref name="inCuesGapMs"/> so the in cue lands after the cut rather than
+    /// on it, vetoed only when it would not leave a positive duration.
+    /// </summary>
+    public static double? GetSnappedStartMs(
+        List<double> shotChanges,
+        double startMs,
+        double endMs,
+        double inCuesGapMs,
+        double frameDurationMs)
+    {
+        if (shotChanges == null || shotChanges.Count == 0)
+        {
+            return null;
+        }
+
+        var maxDifference = (frameDurationMs - 1) / 1000;
+        var shotChangeSeconds = shotChanges.FirstOnOrAfter(startMs / 1000.0, maxDifference, -1);
+        if (shotChangeSeconds < 0)
+        {
+            return null;
+        }
+
+        var newStartMs = shotChangeSeconds * 1000.0 + inCuesGapMs;
+        if (newStartMs >= endMs)
+        {
+            return null;
+        }
+
+        return newStartMs;
+    }
+
+    /// <summary>
+    /// The new start and end a "snap selected lines to nearest shot change" should produce, or null
+    /// when the line must be left alone.
+    /// <para>
+    /// Each cue is snapped independently to its nearest shot change within its own capture distance
+    /// (<paramref name="maxStartDistanceMs"/> / <paramref name="maxEndDistanceMs"/>), landing the
+    /// profile's in/out cues gap either side of the cut - the same landing rule as the waveform drag
+    /// and the start/end snap shortcuts, so every way of snapping a cue to a cut puts it in the same
+    /// place (issues #13948, #13984).
+    /// </para>
+    /// <para>
+    /// When both cues find the <b>same</b> cut the line straddles it, and snapping both would
+    /// collapse it onto the cut. The start keeps that cut (the nearest one by construction) and the
+    /// end retries within the tighter <paramref name="maxSameShotEndDistanceMs"/> for a cut further
+    /// on; if there is none the end stays put.
+    /// </para>
+    /// <para>
+    /// Like the start/end snap shortcuts, the only veto is a result that would not leave a positive
+    /// duration. Minimum/maximum display duration deliberately do not veto: the user asked for this
+    /// line to move, and a silently ignored shortcut reads as a dead one.
+    /// </para>
+    /// </summary>
+    public static (double StartMs, double EndMs)? GetSnappedToNearestMs(
+        List<double> shotChanges,
+        double startMs,
+        double endMs,
+        double inCuesGapMs,
+        double outCuesGapMs,
+        double maxStartDistanceMs,
+        double maxEndDistanceMs,
+        double maxSameShotEndDistanceMs)
+    {
+        if (shotChanges == null || shotChanges.Count == 0)
+        {
+            return null;
+        }
+
+        var nearestStart = ClosestWithin(shotChanges, startMs, maxStartDistanceMs);
+        var nearestEnd = ClosestWithin(shotChanges, endMs, maxEndDistanceMs);
+
+        if (nearestStart == null && nearestEnd == null)
+        {
+            return null;
+        }
+
+        if (nearestStart != null && nearestEnd != null && nearestStart.Value == nearestEnd.Value)
+        {
+            // Straddling one cut: the start takes it, and the end only moves if the next cut
+            // *after* that one sits within the same-shot distance - otherwise it stays where it
+            // is. A nearest-overall retry would just find the straddled cut again.
+            nearestEnd = FirstAfterWithin(shotChanges, nearestStart.Value, endMs, maxSameShotEndDistanceMs);
+        }
+
+        var newStartMs = nearestStart != null ? nearestStart.Value + inCuesGapMs : startMs;
+        var newEndMs = nearestEnd != null ? nearestEnd.Value - outCuesGapMs : endMs;
+
+        if (newEndMs <= newStartMs)
+        {
+            return null;
+        }
+
+        if (newStartMs == startMs && newEndMs == endMs)
+        {
+            return null;
+        }
+
+        return (newStartMs, newEndMs);
+    }
+
+    // The shot change (in ms) nearest to targetMs, or null when none lies strictly within
+    // maxDistanceMs. Shot changes are seconds on disk; the comparison is done in ms.
+    private static double? ClosestWithin(List<double> shotChanges, double targetMs, double maxDistanceMs)
+    {
+        var closestSeconds = shotChanges.ClosestTo(targetMs / 1000.0);
+        var closestMs = closestSeconds * 1000.0;
+        return Math.Abs(closestMs - targetMs) < maxDistanceMs ? closestMs : null;
+    }
+
+    // The first shot change (in ms) strictly after afterMs, or null when there is none or it lies
+    // outside maxDistanceMs of targetMs. The list is sorted, so a binary search finds the spot.
+    private static double? FirstAfterWithin(List<double> shotChanges, double afterMs, double targetMs, double maxDistanceMs)
+    {
+        var index = shotChanges.BinarySearch(afterMs / 1000.0);
+        index = index < 0 ? ~index : index + 1;
+        if (index >= shotChanges.Count)
+        {
+            return null;
+        }
+
+        var candidateMs = shotChanges[index] * 1000.0;
+        return Math.Abs(candidateMs - targetMs) < maxDistanceMs ? candidateMs : null;
+    }
+
     public static double? GetClosestShotChange(List<double> shotChanges, TimeCode currentTime)
     {
         if (shotChanges == null || shotChanges.Count == 0)

@@ -146,7 +146,7 @@ public class LlamaCppAdvancedSettingsWindow : Window
             ColumnSpacing = 12,
             RowSpacing = 10,
         };
-        for (var i = 0; i < 6; i++)
+        for (var i = 0; i < 7; i++)
         {
             grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
         }
@@ -189,6 +189,13 @@ public class LlamaCppAdvancedSettingsWindow : Window
         grid.Add(MakeSmallLabel(Se.Language.Translate.ExtraServerParameters), 5, 0);
         grid.Add(serverArguments, 5, 1);
         Grid.SetColumnSpan(serverArguments, 3);
+
+        // Opt out of SE's own launch flags entirely (#13865): appending user arguments last already
+        // overrides anything that takes a value, but a bare switch like --swa-full cannot be undone.
+        var serverArgumentsOnly = UiUtil.MakeCheckBox(Se.Language.Translate.UseOnlyExtraServerParameters, vm, nameof(vm.ServerArgumentsOnly));
+        SetHint(serverArgumentsOnly, Se.Language.Translate.UseOnlyExtraServerParametersHint);
+        grid.Add(serverArgumentsOnly, 6, 1);
+        Grid.SetColumnSpan(serverArgumentsOnly, 3);
 
         return grid;
     }
