@@ -45,6 +45,8 @@ Missing models are downloaded automatically when you press OK. Progress is shown
 
 Runs normal [speech to text](speech-to-text.md) on the video, then matches your script against the transcript. Useful when the forced aligner does not support your language. Lines that cannot be matched get interpolated time codes.
 
+For the highest local transcription quality, select **WhisperX** in the speech-to-text window. It supports the full Whisper language catalog, and its language-specific word aligners improve timing where available. The imported script remains the source text; this command replaces its time codes from the WhisperX transcript.
+
 ## OK / Result
 
 Pressing **OK** replaces the currently loaded subtitle with the imported lines. Save your current work first if you need it.

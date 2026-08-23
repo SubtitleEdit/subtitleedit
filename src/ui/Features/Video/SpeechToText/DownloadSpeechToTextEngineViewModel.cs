@@ -14,7 +14,9 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -160,7 +162,18 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
         // which left the dialog stuck on "Unpacking..." indefinitely.
         if (_downloadTask is { IsCompletedSuccessfully: true } && Engine != null)
         {
-            if (Engine.Name == WhisperEnginePurfviewFasterWhisperXxl.StaticName)
+            if (Engine is WhisperEngineWhisperX)
+            {
+                StopIndeterminateProgress();
+                OkPressed = Engine.IsEngineInstalled();
+                if (!OkPressed)
+                {
+                    Error = "WhisperX installation completed without creating its executable.";
+                }
+
+                Close();
+            }
+            else if (Engine.Name == WhisperEnginePurfviewFasterWhisperXxl.StaticName)
             {
                 var dir = Engine.GetAndCreateWhisperFolder();
                 var tempFileName = Path.Combine(dir, Engine.Name + ".7z");
@@ -561,6 +574,11 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
             var tempFileName = Path.Combine(dir, Engine.Name + ".7z");
             _downloadTask = _whisperDownloadService.DownloadWhisperPurfviewFasterWhisperXxl(tempFileName, downloadProgress, _cancellationTokenSource.Token);
         }
+        else if (Engine is WhisperEngineWhisperX whisperX)
+        {
+            StartIndeterminateProgress();
+            _downloadTask = InstallWhisperXAsync(whisperX, _cancellationTokenSource.Token);
+        }
         else if (Engine is Qwen3AsrCppEngine)
         {
             var dir = Engine.GetAndCreateWhisperFolder();
@@ -594,6 +612,114 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
             {
                 _downloadTask = _crispAsrDownloadService.DownloadEngine(_downloadStream, downloadProgress, _cancellationTokenSource.Token);
             }
+        }
+    }
+
+    private async Task InstallWhisperXAsync(WhisperEngineWhisperX engine, CancellationToken cancellationToken)
+    {
+        var python = WhisperEngineWhisperX.FindPythonExecutable();
+        if (string.IsNullOrEmpty(python))
+        {
+            throw new InvalidOperationException(
+                "Python 3 was not found. Install Python 3 from python.org, then run the WhisperX installer again.");
+        }
+
+        var folder = engine.GetAndCreateWhisperFolder();
+        var virtualEnvironment = Path.Combine(folder, ".venv");
+        var managedPython = engine.GetManagedPython();
+
+        if (!File.Exists(managedPython))
+        {
+            ProgressText = "Creating isolated Python environment...";
+            await RunWhisperXSetupProcessAsync(
+                python,
+                ["-m", "venv", virtualEnvironment],
+                cancellationToken).ConfigureAwait(false);
+        }
+
+        ProgressText = "Installing WhisperX and its alignment dependencies...";
+        await RunWhisperXSetupProcessAsync(
+            managedPython,
+            ["-m", "pip", "install", "--upgrade", "pip", "whisperx"],
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task RunWhisperXSetupProcessAsync(
+        string executable,
+        IReadOnlyList<string> arguments,
+        CancellationToken cancellationToken)
+    {
+        using var process = new Process
+        {
+            StartInfo = new ProcessStartInfo
+            {
+                FileName = executable,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                WorkingDirectory = Engine?.GetAndCreateWhisperFolder(),
+            },
+        };
+
+        foreach (var argument in arguments)
+        {
+            process.StartInfo.ArgumentList.Add(argument);
+        }
+
+        var error = new StringBuilder();
+        DataReceivedEventHandler onOutput = (_, args) =>
+        {
+            if (string.IsNullOrWhiteSpace(args.Data))
+            {
+                return;
+            }
+
+            if (args.Data.Contains("error", StringComparison.OrdinalIgnoreCase))
+            {
+                lock (error)
+                {
+                    error.AppendLine(args.Data);
+                }
+            }
+
+            Dispatcher.UIThread.Post(() => ProgressText = args.Data.Trim());
+        };
+
+        process.OutputDataReceived += onOutput;
+        process.ErrorDataReceived += onOutput;
+        process.Start();
+        process.BeginOutputReadLine();
+        process.BeginErrorReadLine();
+
+        try
+        {
+            await process.WaitForExitAsync(cancellationToken).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException)
+        {
+            try
+            {
+                if (!process.HasExited)
+                {
+                    process.Kill(true);
+                }
+            }
+            catch
+            {
+                // Best effort cancellation.
+            }
+
+            throw;
+        }
+
+        if (process.ExitCode != 0)
+        {
+            var detail = error.ToString().Trim();
+            throw new InvalidOperationException(
+                string.IsNullOrEmpty(detail)
+                    ? $"WhisperX setup failed with exit code {process.ExitCode}."
+                    : detail);
         }
     }
 

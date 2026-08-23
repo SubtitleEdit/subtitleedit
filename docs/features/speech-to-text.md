@@ -14,6 +14,7 @@ Subtitle Edit can automatically transcribe audio to text using Whisper-based and
 | Whisper CPP | Windows, Linux, macOS | Local CPU engine. On Windows the cuBLAS (NVIDIA CUDA) and Vulkan GPU backends can also be selected from the Whisper CPP backend dropdown. |
 | Purfview Faster Whisper XXL | Windows, Linux | Fast local engine, often used with NVIDIA CUDA |
 | Whisper CTranslate2 | Windows, Linux (x64), macOS (Apple Silicon) | CPU / NVIDIA CUDA depending on installation; CUDA requires [CUDA 12.x](https://developer.nvidia.com/cuda-12-0-0-download-archive) |
+| WhisperX | Windows, Linux, macOS | Installed by Subtitle Edit into an isolated Python environment; word alignment depends on language-specific WhisperX models |
 | MLX Whisper | macOS (Apple Silicon) | Runs Whisper on the Apple GPU / Neural Engine via Apple's MLX. Not downloaded by Subtitle Edit — install the `mlx-whisper` Python package yourself (see notes below) |
 | Whisper Const-me | Windows | DirectX-based engine |
 | Whisper OpenAI | All | Python-based OpenAI Whisper workflow |
@@ -31,6 +32,8 @@ Engines and models are downloaded automatically on first use.
 - **Qwen3 ASR CPP** includes 0.6B and 1.7B model options, plus a forced-aligner model used for timing workflows.
 - **Crisp ASR** is exposed as one engine that wraps multiple backends (Parakeet, Canary, Cohere, Fire Red, Fun-ASR Nano, GigaAM, GLM, Granite, Qwen3, Mega, MOSS Diarize, Omni, Kyutai, SenseVoice, ARK, Voxtral). Pick the backend from the Crisp ASR backend dropdown.
 - **MLX Whisper** (Apple Silicon Macs) is not bundled or auto-downloaded — it drives Apple's `mlx-whisper` Python package. Install it once with `pip3 install mlx-whisper` (or `pipx install mlx-whisper`); models download from Hugging Face on first use. Subtitle Edit detects the install by finding a Python that can `import mlx_whisper` — it probes Homebrew, python.org, pyenv and system interpreters, and (for pipx / virtual-env / conda installs, which isolate the package) reads the `mlx_whisper` command found on your PATH or at `~/.local/bin/mlx_whisper` to locate the matching interpreter. If it reports "not found" after a pipx/venv install, make sure `which mlx_whisper` resolves.
+- **WhisperX** is installed with the Download button into an isolated `.venv` under Subtitle Edit's `SpeechToText` data folder. Python 3 must already be installed. WhisperX downloads the selected faster-whisper model on first use. It exposes the full Whisper language catalog for transcription, while word alignment depends on the language-specific aligner shipped by WhisperX.
+- On Apple Silicon, use `--device cpu --compute_type int8`, which is the supported WhisperX path for macOS. WhisperX's standard faster-whisper and alignment stack does not provide a reliable Metal/MPS mode, so Subtitle Edit does not force Apple GPU use for this engine. For an Apple GPU transcription-only path, use MLX Whisper; it does not replace WhisperX's forced-alignment stage.
 - A **Forced aligner** option is shown for Crisp ASR backends and exposes the built-in aligner, Canary CTC, Qwen3, and the wav2vec2 zoo (12 language-specific CTC aligners that run on top of any Crisp ASR backend).
 - Several newer engines support automatic language selection.
 - Each engine can have separate advanced command-line parameters.

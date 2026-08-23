@@ -1,0 +1,12 @@
+WhisperX is an optional Python-based speech-to-text engine that combines faster-whisper transcription with word-level alignment where a language-specific alignment model is available.
+
+Subtitle Edit installs WhisperX into an isolated .venv below its SpeechToText data folder. Python 3 must already be installed on the computer. The first transcription downloads the selected faster-whisper model from Hugging Face and may take several minutes.
+
+Recommended parameters on Apple Silicon and other CPU-only systems:
+  --device cpu --compute_type int8
+
+WhisperX's standard alignment stack does not provide a supported Apple Metal/MPS execution path. On macOS, keep the CPU/int8 parameters for reliable results. CUDA acceleration remains available on compatible NVIDIA systems through the normal WhisperX parameters.
+
+The model dropdown uses the regular Whisper model names. Use large-v3 for maximum accuracy, or large-v3-turbo for a faster first pass. The existing "Align time codes via Speech to text" command can use WhisperX output to align an imported script while preserving the imported text.
+
+WhisperX supports the full Whisper language catalog for transcription. Word alignment is language-dependent, so languages without a compatible WhisperX aligner still receive normal WhisperX segment timestamps.

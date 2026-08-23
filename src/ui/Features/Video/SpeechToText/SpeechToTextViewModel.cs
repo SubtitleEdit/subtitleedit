@@ -255,6 +255,10 @@ public partial class SpeechToTextViewModel : ObservableObject
             Engines.Add(new WhisperEngineCTranslate2());
         }
 
+        // WhisperX is Python-based and runs on Windows, Linux, and macOS. Its optional
+        // installer creates an isolated environment below Subtitle Edit's data folder.
+        Engines.Add(new WhisperEngineWhisperX());
+
         Engines.Add(new WhisperEngineOpenAi());
 
         // Add OpenAI Compatible STT engine (available on all platforms)
@@ -444,6 +448,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             or WhisperChoice.ConstMe
             or WhisperChoice.PurfviewFasterWhisperXxl
             or WhisperChoice.CTranslate2
+            or WhisperChoice.WhisperX
             or WhisperChoice.OpenAi;
     }
 
@@ -3803,7 +3808,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     private static bool CanEngineReadSourceFileDirectly(ISpeechToTextEngine engine)
     {
         return engine.Name == WhisperEnginePurfviewFasterWhisperXxl.StaticName ||
-               engine is WhisperEngineCTranslate2;
+               engine is WhisperEngineCTranslate2 or WhisperEngineWhisperX;
     }
 
     /// <summary>
@@ -3846,6 +3851,25 @@ public partial class SpeechToTextViewModel : ObservableObject
         DataReceivedEventHandler? dataReceivedHandler = null,
         string engineOutputFolder = "")
     {
+        if (engine is WhisperEngineWhisperX whisperX)
+        {
+            var exe = whisperX.GetExecutable();
+            var whisperXArgs = whisperX.CommandLineParameter;
+            var languageArgX = language.Equals("auto", StringComparison.OrdinalIgnoreCase)
+                ? string.Empty
+                : $"--language {language} ";
+            var taskArg = translate ? "--task translate " : string.Empty;
+            var outputDir = string.IsNullOrEmpty(engineOutputFolder)
+                ? GetSttTempFolder()
+                : engineOutputFolder;
+            var parametersX =
+                $"{languageArgX}--model \"{model}\" --output_format srt --output_dir \"{outputDir}\" " +
+                $"{taskArg}{whisperXArgs} \"{waveFileName}\"";
+
+            Se.WriteToolsLog($"{exe} {parametersX}");
+            return StartEngineProcess(exe, parametersX, dataReceivedHandler);
+        }
+
         if (engine is Qwen3AsrCppEngine qwen3Asr)
         {
             var exe = qwen3Asr.GetExecutable();
@@ -4145,7 +4169,8 @@ public partial class SpeechToTextViewModel : ObservableObject
     {
         if (engine.Choice == new WhisperEnginePurfviewFasterWhisperXxl().Choice ||
             engine.Choice == new WhisperEngineOpenAi().Choice ||
-            engine.Choice == new WhisperEngineCTranslate2().Choice)
+            engine.Choice == new WhisperEngineCTranslate2().Choice ||
+            engine.Choice == WhisperChoice.WhisperX)
         {
             return "--task translate ";
         }
@@ -4692,6 +4717,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                    or WhisperEngineCppCuBlas
                    or WhisperEngineCppVulkan
                    or WhisperEngineCTranslate2
+                   or WhisperEngineWhisperX
                    or WhisperEngineConstMe
                    or WhisperEnginePurfviewFasterWhisperXxl
                    or ICrispAsrEngine;

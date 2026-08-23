@@ -23,23 +23,6 @@ namespace Nikse.SubtitleEdit.UiLogic.AudioToText
         {
             get
             {
-                if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.WhisperX)
-                {
-                    return new[]
-                    {
-                        new WhisperLanguage("zh", "chinese"),
-                        new WhisperLanguage("nl", "dutch"),
-                        new WhisperLanguage("en", "english"),
-                        new WhisperLanguage("fr", "french"),
-                        new WhisperLanguage("de", "german"),
-                        new WhisperLanguage("it", "italian"),
-                        new WhisperLanguage("ja", "japanese"),
-                        new WhisperLanguage("pt", "portuguese"),
-                        new WhisperLanguage("es", "spanish"),
-                        new WhisperLanguage("uk", "ukrainian"),
-                    };
-                }
-
                 var languages = new List<WhisperLanguage>
                 {
                     new WhisperLanguage("en", "english"),
