@@ -1,7 +1,8 @@
-using Avalonia.Media;
+﻿using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Features.Shared.ErrorList;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using SkiaSharp;
@@ -1223,108 +1224,112 @@ public partial class SubtitleLineViewModel : ObservableObject
             ? general.ColorTimeCodeOverlap
             : general.ColorGapTooShort && gapMs < general.MinimumBetweenLines.GetMilliseconds();
 
+    /// <summary>All errors as one newline-separated string (batch error list, tooltips).</summary>
     public string GetErrors(SubtitleLineViewModel? prev, SubtitleLineViewModel? next)
     {
         var errors = new StringBuilder();
+        foreach (var error in GetErrorList(prev, next))
+        {
+            errors.AppendLine(error.ToString());
+        }
 
+        return errors.ToString();
+    }
+
+    /// <summary>
+    /// The errors on this line as typed entries, so "List errors" can count and filter
+    /// by class. Same rules as <see cref="HasErrors"/>; keep the two in sync.
+    /// </summary>
+    public List<LineError> GetErrorList(SubtitleLineViewModel? prev, SubtitleLineViewModel? next)
+    {
+        var errors = new List<LineError>();
         var general = Se.Settings.General;
+        var l = Se.Language.ErrorList;
 
-        if (Se.Settings.General.ColorTextTooManyLines)
+        if (general.ColorTextTooManyLines)
         {
             var lineCount = GetStrippedLines().Count;
             if (lineCount > general.MaxNumberOfLines)
             {
-                errors.AppendLine("Max #lines: " + lineCount + " >" + general.MaxNumberOfLines);
+                errors.Add(new LineError(LineErrorType.TooManyLines, string.Format(l.DetailXGreaterThanY, lineCount, general.MaxNumberOfLines)));
             }
         }
 
         var cpsRounded = Math.Round(CharactersPerSecond, 2, MidpointRounding.AwayFromZero);
-        if (cpsRounded > general.SubtitleMaximumCharactersPerSeconds && Se.Settings.General.ColorCharactersPerSecond)
+        if (cpsRounded > general.SubtitleMaximumCharactersPerSeconds && general.ColorCharactersPerSecond)
         {
-            errors.AppendLine("Cps: " + cpsRounded + " > " + general.SubtitleMaximumCharactersPerSeconds);
+            errors.Add(new LineError(LineErrorType.CharactersPerSecond, string.Format(l.DetailXGreaterThanY, cpsRounded, general.SubtitleMaximumCharactersPerSeconds)));
         }
 
         var durMsRounded = Math.Round(Duration.TotalMilliseconds, 3, MidpointRounding.AwayFromZero);
-        if (durMsRounded < general.SubtitleMinimumDisplayMilliseconds)
+        if (durMsRounded < general.SubtitleMinimumDisplayMilliseconds && general.ColorDurationTooShort)
         {
-            if (Se.Settings.General.ColorDurationTooShort)
-            {
-                errors.AppendLine("Min duration: " + durMsRounded + " < " + general.SubtitleMinimumDisplayMilliseconds);
-            }
-        }
-        if (durMsRounded > general.SubtitleMaximumDisplayMilliseconds)
-        {
-            if (Se.Settings.General.ColorDurationTooLong)
-            {
-                errors.AppendLine("Max duration: " + durMsRounded + " > " + general.SubtitleMaximumDisplayMilliseconds);
-            }
+            errors.Add(new LineError(LineErrorType.DurationTooShort, string.Format(l.DetailXLessThanY, durMsRounded, general.SubtitleMinimumDisplayMilliseconds)));
         }
 
-        if (Se.Settings.General.ColorTextTooLong)
+        if (durMsRounded > general.SubtitleMaximumDisplayMilliseconds && general.ColorDurationTooLong)
+        {
+            errors.Add(new LineError(LineErrorType.DurationTooLong, string.Format(l.DetailXGreaterThanY, durMsRounded, general.SubtitleMaximumDisplayMilliseconds)));
+        }
+
+        if (general.ColorTextTooLong)
         {
             foreach (var line in GetStrippedLines())
             {
                 var lineLength = SubtitleTextInfoHelper.GetLineLength(line);
                 if (lineLength > general.SubtitleLineMaximumLength)
                 {
-                    errors.AppendLine("Max line length: " + lineLength + " > " + general.SubtitleLineMaximumLength);
+                    errors.Add(new LineError(LineErrorType.LineTooLong, string.Format(l.DetailXGreaterThanY, lineLength, general.SubtitleLineMaximumLength)));
                 }
             }
         }
 
-        if (Se.Settings.General.ColorTextTooWide)
+        if (general.ColorTextTooWide)
         {
             foreach (var line in GetStrippedLines())
             {
                 var pixelWidth = CalculatePixelWidth(line);
                 if (pixelWidth > general.ColorTextTooWidePixels)
                 {
-                    errors.AppendLine("Max width (px): " + pixelWidth + " > " + general.ColorTextTooWidePixels);
+                    errors.Add(new LineError(LineErrorType.LineTooWide, string.Format(l.DetailXGreaterThanY, pixelWidth, general.ColorTextTooWidePixels)));
                 }
             }
         }
 
+        var minGap = general.MinimumBetweenLines.GetMilliseconds();
         if (prev != null)
         {
             var gapPrev = (StartTime - prev.EndTime).TotalMilliseconds;
             if (gapPrev < 0)
             {
-                if (Se.Settings.General.ColorTimeCodeOverlap)
+                if (general.ColorTimeCodeOverlap)
                 {
-                    errors.AppendLine("Overlap from previous: " + Math.Round(-gapPrev, 3));
+                    errors.Add(new LineError(LineErrorType.Overlap, string.Format(l.DetailOverlapFromPrevious, Math.Round(-gapPrev, 3))));
                 }
             }
-            else if (gapPrev < general.MinimumBetweenLines.GetMilliseconds())
+            else if (gapPrev < minGap && general.ColorGapTooShort)
             {
-                if (Se.Settings.General.ColorGapTooShort)
+                errors.Add(new LineError(LineErrorType.GapTooShort, string.Format(l.DetailGapToPrevious, Math.Round(gapPrev, 3), minGap)));
+            }
+        }
+
+        if (next != null)
+        {
+            var gapNext = (next.StartTime - EndTime).TotalMilliseconds;
+            if (gapNext < 0)
+            {
+                if (general.ColorTimeCodeOverlap)
                 {
-                    errors.AppendLine("Min gap to previous: " + Math.Round(gapPrev, 3) + " < " + general.MinimumBetweenLines.GetMilliseconds());
+                    errors.Add(new LineError(LineErrorType.Overlap, string.Format(l.DetailOverlapToNext, Math.Round(-gapNext, 3))));
                 }
             }
-        }
-
-        if (next == null)
-        {
-            return errors.ToString();
-        }
-
-        var gapNext = (next.StartTime - EndTime).TotalMilliseconds;
-        if (gapNext < 0)
-        {
-            if (Se.Settings.General.ColorTimeCodeOverlap)
+            else if (gapNext < minGap && general.ColorGapTooShort)
             {
-                errors.AppendLine("Overlap to next: " + Math.Round(-gapNext, 3));
-            }
-        }
-        else if (gapNext < general.MinimumBetweenLines.GetMilliseconds())
-        {
-            if (Se.Settings.General.ColorGapTooShort)
-            {
-                errors.AppendLine("Min gap to next: " + Math.Round(gapNext, 3) + " < " + general.MinimumBetweenLines.GetMilliseconds());
+                errors.Add(new LineError(LineErrorType.GapTooShort, string.Format(l.DetailGapToNext, Math.Round(gapNext, 3), minGap)));
             }
         }
 
-        return errors.ToString();
+        return errors;
     }
 
     public void RefreshTimeCodes()

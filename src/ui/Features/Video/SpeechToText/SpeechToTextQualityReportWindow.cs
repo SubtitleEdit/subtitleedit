@@ -59,13 +59,7 @@ public class SpeechToTextQualityReportWindow : Window
         };
 
         // Summary cards - one per issue type, acting as filter buttons
-        var cards = new ItemsControl
-        {
-            ItemsSource = vm.Cards,
-            Margin = new Thickness(0, 0, 0, 12),
-            ItemsPanel = new FuncTemplate<Panel?>(() => new WrapPanel { Orientation = Orientation.Horizontal, ItemSpacing = 8, LineSpacing = 8 }),
-            ItemTemplate = new FuncDataTemplate<QualityReportCard>((card, _) => MakeCard(card)),
-        };
+        var cards = SummaryCard.MakeCardsPanel(vm.Cards, vm.SetFilterCommand);
 
         // Issue table
         var table = TableViewExtras.MakeTableView(alwaysSelected: false, multiSelect: false);
@@ -192,80 +186,6 @@ public class SpeechToTextQualityReportWindow : Window
         Content = grid;
 
         Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
-    }
-
-    private Control MakeCard(QualityReportCard? card)
-    {
-        if (card == null)
-        {
-            return new Border();
-        }
-
-        var accent = new Border
-        {
-            Width = 5,
-            CornerRadius = new CornerRadius(3),
-            Background = card.Brush,
-            Margin = new Thickness(0, 0, 10, 0),
-            VerticalAlignment = VerticalAlignment.Stretch,
-        };
-        var count = new TextBlock
-        {
-            Text = card.Count.ToString(),
-            FontSize = 24,
-            FontWeight = FontWeight.Bold,
-            Foreground = card.Brush,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-        var label = new TextBlock
-        {
-            Text = card.Label,
-            FontSize = 12,
-            Opacity = 0.85,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-        var texts = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            VerticalAlignment = VerticalAlignment.Center,
-            Children = { count, label },
-        };
-        var content = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Children = { accent, texts },
-        };
-
-        // A bordered button rather than a ToggleButton: the Fluent checked state
-        // floods the card with the accent color and drowns the colored count.
-        var border = new Border
-        {
-            Child = content,
-            Padding = new Thickness(12, 8),
-            MinWidth = 120,
-            BorderThickness = new Thickness(2),
-            CornerRadius = new CornerRadius(UiUtil.CornerRadius + 2),
-            [!Border.BorderBrushProperty] = new Binding(nameof(QualityReportCard.BorderBrush)),
-        };
-
-        var button = new Button
-        {
-            Content = border,
-            Padding = new Thickness(0),
-            Background = Brushes.Transparent,
-            BorderThickness = new Thickness(0),
-            CornerRadius = new CornerRadius(UiUtil.CornerRadius + 2),
-            Command = _vm.SetFilterCommand,
-            CommandParameter = card,
-            Opacity = card.Count == 0 && card.Type != null ? 0.5 : 1.0,
-        };
-        AutomationProperties.SetName(button, $"{card.Label}: {card.Count}");
-        if (Se.Settings.Appearance.ShowHints && !string.IsNullOrEmpty(card.Hint))
-        {
-            ToolTip.SetTip(button, card.Hint);
-        }
-
-        return button;
     }
 
     protected override void OnKeyDown(KeyEventArgs e)
