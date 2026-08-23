@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -15,6 +15,9 @@ public partial class SpeechToTextPostProcessingViewModel : ObservableObject
     [ObservableProperty] private bool _fixShortDuration;
     [ObservableProperty] private bool _fixCasing;
     [ObservableProperty] private bool _addPeriods;
+    [ObservableProperty] private bool _removeNonSpeechLines;
+    [ObservableProperty] private bool _removeRepeatedLines;
+    [ObservableProperty] private bool _showQualityReport;
     [ObservableProperty] private bool _changeUnderlineToColor;
     [ObservableProperty] private Color _changeUnderlineToColorColor;
 

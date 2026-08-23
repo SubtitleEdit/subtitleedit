@@ -83,6 +83,12 @@ public class SeAudioToText
 
     public bool WhisperPostProcessingFixShortDuration { get; set; } = true;
 
+    public bool WhisperPostProcessingRemoveNonSpeechLines { get; set; }
+
+    public bool WhisperPostProcessingRemoveRepeatedLines { get; set; }
+
+    public bool WhisperPostProcessingShowQualityReport { get; set; } = true;
+
     public bool WhisperPostProcessingChangeUnderlineToColor { get; set; }
     public string WhisperPostProcessingChangeUnderlineToColorColor { get; set; } = Colors.Red.FromColorToHex();
     public string WhisperCppVulkanGpuDevice { get; set; } = string.Empty;

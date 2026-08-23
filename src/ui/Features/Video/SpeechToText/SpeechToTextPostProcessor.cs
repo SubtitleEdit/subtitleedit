@@ -35,6 +35,25 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
 
         public string TwoLetterLanguageCode { get; }
 
+        /// <summary>
+        /// Drop lines that are only a sound/music description ("[Music]", "(waves)").
+        /// Whisper emits these on long stretches without speech (issue #13973).
+        /// </summary>
+        public bool RemoveNonSpeechLines { get; set; }
+
+        /// <summary>
+        /// Drop lines whose text repeats the previous line - the classic whisper
+        /// hallucination loop (issue #13973).
+        /// </summary>
+        public bool RemoveRepeatedLines { get; set; }
+
+        /// <summary>
+        /// What was found (and removed) during the last <see cref="Fix(Engine, Subtitle, bool, bool, bool, bool, bool, bool, bool, Color)"/> call.
+        /// Always populated, even when post-processing is off, so the user is told
+        /// when a transcription went badly instead of finding out later (issue #13973).
+        /// </summary>
+        public SpeechToTextQualityReport QualityReport { get; private set; } = new();
+
         public SpeechToTextPostProcessor(string twoLetterLanguageCode)
         {
             TwoLetterLanguageCode = twoLetterLanguageCode == "no" ? "nb" : twoLetterLanguageCode;
@@ -77,10 +96,27 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
             Color changeUnderlineToColorColor)
         {
             var subtitle = new Subtitle();
+            QualityReport = new SpeechToTextQualityReport();
 
             for (var index = 0; index < input.Paragraphs.Count; index++)
             {
                 var paragraph = input.Paragraphs[index];
+
+                if (usePostProcessing && RemoveNonSpeechLines && SpeechToTextQualityReport.IsNonSpeechLine(paragraph.Text))
+                {
+                    QualityReport.Removed.Add(SpeechToTextQualityReport.MakeIssue(SpeechToTextQualityIssueType.NonSpeech, paragraph, index + 1, string.Empty));
+                    continue;
+                }
+
+                // Compare against the last line we kept, so a run of five identical
+                // lines collapses to one rather than to every other line.
+                var lastKept = subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count - 1);
+                if (usePostProcessing && RemoveRepeatedLines && lastKept != null && SpeechToTextQualityReport.IsRepeatOf(paragraph.Text, lastKept.Text))
+                {
+                    QualityReport.Removed.Add(SpeechToTextQualityReport.MakeIssue(SpeechToTextQualityIssueType.Repeated, paragraph, index + 1, $"= #{index}"));
+                    continue;
+                }
+
                 if (usePostProcessing && engine == Engine.Vosk && TwoLetterLanguageCode == "en" && paragraph.Text == "the" && paragraph.EndTime.TotalSeconds - paragraph.StartTime.TotalSeconds > 1)
                 {
                     continue;
@@ -135,6 +171,9 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
                 }
             }
 
+            var general = Configuration.Settings.General;
+            QualityReport.Analyze(postProcessed, general.SubtitleMinimumDisplayMilliseconds, general.SubtitleMaximumDisplayMilliseconds, general.SubtitleMaximumCharactersPerSeconds);
+
             return postProcessed;
         }
 
@@ -160,6 +199,11 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
                 if (fixShortDuration)
                 {
                     subtitle = FixShortDuration(subtitle);
+
+                    // Engines hand back overlapping segments, and extending short
+                    // lines can create more - straighten them out so the result
+                    // does not arrive in the grid full of red overlaps (issue #13973).
+                    subtitle = FixOverlaps(subtitle);
                 }
 
                 if (splitLines && !IsNonStandardLineTerminationLanguage(TwoLetterLanguageCode) && AllowLineContentMove(engine))
@@ -579,6 +623,13 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
         {
             var subtitle = new Subtitle(inputSubtitle);
             new FixShortDisplayTimes().Fix(subtitle, new EmptyFixCallback());
+            return subtitle;
+        }
+
+        private static Subtitle FixOverlaps(Subtitle inputSubtitle)
+        {
+            var subtitle = new Subtitle(inputSubtitle);
+            new FixOverlappingDisplayTimes().Fix(subtitle, new EmptyFixCallback());
             return subtitle;
         }
     }
