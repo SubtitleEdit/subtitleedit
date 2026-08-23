@@ -3,7 +3,12 @@ using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Features.Tools.AiReview;
 
-public record ReviewLine(int Number, string Text);
+/// <summary>
+/// One line as the model sees it: <paramref name="Text"/> is the tag-stripped text, and
+/// <paramref name="Actor"/>/<paramref name="Style"/> are optional read-only context (ASSA actor
+/// field and style name) that tell the model who speaks and whether a line is dialogue or a sign.
+/// </summary>
+public record ReviewLine(int Number, string Text, string? Actor = null, string? Style = null);
 
 public class ReviewChunk
 {

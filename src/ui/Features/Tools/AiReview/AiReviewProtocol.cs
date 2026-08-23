@@ -28,8 +28,9 @@ public static class AiReviewProtocol
 
     public const string ProtocolText =
         "\n\nThe user message is a JSON object. \"lines\" holds the subtitle lines to review, each with a line number \"n\" and its \"text\" " +
-        "(a \"\\n\" inside a text is a line break inside that subtitle and must be kept). \"context_before\" and \"context_after\" are " +
-        "read-only surrounding lines - never change or return those. A sentence may continue across several lines; correct it across " +
+        "(a \"\\n\" inside a text is a line break inside that subtitle and must be kept). A line may also carry an \"actor\" " +
+        "(who speaks) and a \"style\" (e.g. a sign or song style) - use them only as context, never return them. " +
+        "\"context_before\" and \"context_after\" are read-only surrounding lines - never change or return those. A sentence may continue across several lines; correct it across " +
         "the lines, but never move words from one line to another.\n" +
         "Answer with ONLY a JSON object, no other text: {\"changes\":[{\"n\":<line number>,\"orig\":\"<that line's text, copied unchanged>\"," +
         "\"text\":\"<full corrected text>\",\"reason\":\"<short reason>\",\"category\":\"spelling|grammar|punctuation|casing|other\"}]}. " +
@@ -65,6 +66,16 @@ public static class AiReviewProtocol
             writer.WriteStartObject();
             writer.WriteNumber("n", line.Number);
             writer.WriteString("text", line.Text.Replace(Environment.NewLine, "\n"));
+            if (!string.IsNullOrWhiteSpace(line.Actor))
+            {
+                writer.WriteString("actor", line.Actor.Trim());
+            }
+
+            if (!string.IsNullOrWhiteSpace(line.Style))
+            {
+                writer.WriteString("style", line.Style.Trim());
+            }
+
             writer.WriteEndObject();
         }
 

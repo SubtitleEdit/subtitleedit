@@ -74,6 +74,10 @@ public partial class AiReviewViewModel : ObservableObject
     private readonly IWindowService _windowService;
     private readonly List<ReviewSuggestionItem> _allSuggestions = new();
     private Subtitle _subtitle = new();
+    private SubtitleFormat? _subtitleFormat;
+
+    /// <summary>Leading/trailing ASSA blocks cut off each sent line, keyed by line number, glued back on in <see cref="AddSuggestion"/>.</summary>
+    private readonly Dictionary<int, StrippedLine> _strippedByNumber = new();
     private string _languageCode = "en";
     private CancellationTokenSource _cancellationTokenSource = new();
     private bool _syncingSelection;
@@ -154,6 +158,7 @@ public partial class AiReviewViewModel : ObservableObject
         Action<Subtitle>? applyCallback = null)
     {
         _subtitle = subtitle;
+        _subtitleFormat = subtitleFormat;
         _playLine = playLine;
         _stopPlayback = stopPlayback;
         _applyCallback = applyCallback;
@@ -375,13 +380,19 @@ public partial class AiReviewViewModel : ObservableObject
         ProgressValue = 0;
 
         var lines = new List<ReviewLine>();
+        _strippedByNumber.Clear();
+        var isAssa = _subtitleFormat is AdvancedSubStationAlpha or SubStationAlpha;
         for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
         {
-            var text = _subtitle.Paragraphs[i].Text;
-            if (!string.IsNullOrWhiteSpace(text))
+            var p = _subtitle.Paragraphs[i];
+            var stripped = StrippedLine.Strip(p.Text);
+            if (string.IsNullOrWhiteSpace(stripped.Text))
             {
-                lines.Add(new ReviewLine(i + 1, text));
+                continue; // empty, or a pure override/drawing line - nothing to proofread
             }
+
+            _strippedByNumber[i + 1] = stripped;
+            lines.Add(new ReviewLine(i + 1, stripped.Text, p.Actor, isAssa ? p.Extra : null));
         }
 
         var unitIds = AiReviewChunker.BuildUnitIds(lines);
@@ -596,7 +607,9 @@ public partial class AiReviewViewModel : ObservableObject
         }
 
         var before = _subtitle.Paragraphs[paragraphIndex].Text;
-        var after = change.NewText;
+        var after = _strippedByNumber.TryGetValue(change.Number, out var stripped)
+            ? stripped.Restore(change.NewText)
+            : change.NewText;
         if (before.Trim() == after.Trim())
         {
             return;
