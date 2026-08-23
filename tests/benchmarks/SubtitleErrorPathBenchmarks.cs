@@ -156,7 +156,7 @@ public class SubtitleErrorPathBenchmarks
             var next = i < _lines.Count - 1 ? _lines[i + 1] : null;
             if (s.HasErrors(prev, next))
             {
-                items.Add(new ErrorListItem(s, prev, next));
+                items.AddRange(ErrorListItem.Make(s, prev, next));
             }
         }
 
@@ -209,7 +209,7 @@ public class SubtitleErrorPathBenchmarks
         {
             var prev = i > 0 ? list[i - 1] : null;
             var next = i < list.Count - 1 ? list[i + 1] : null;
-            items.Add(new ErrorListItem(list[i], prev, next));
+            items.AddRange(ErrorListItem.Make(list[i], prev, next));
         }
 
         return items.Count;

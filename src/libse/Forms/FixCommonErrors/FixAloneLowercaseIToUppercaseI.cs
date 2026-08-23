@@ -12,6 +12,55 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             public static string FixLowercaseIToUppercaseI { get; set; } = "Fix alone lowercase 'i' to 'I' (English)";
         }
 
+        // Every needle below embeds Environment.NewLine or the target character, so none of them
+        // can be a compile-time constant: written inline they were ten fresh strings allocated
+        // for every line of the file, just to be handed to Replace. Prepared once instead.
+        private static readonly string UppercaseINewLine = ">I" + Environment.NewLine;
+        private static readonly string NewLineLowerImSpace = Environment.NewLine + "i'm ";
+        private static readonly string NewLineUpperImSpace = Environment.NewLine + "I'm ";
+        private static readonly string NewLineLowerImPeriod = Environment.NewLine + "i'm.";
+        private static readonly string NewLineUpperImPeriod = Environment.NewLine + "I'm.";
+
+        /// <summary>Characters that stop the "i-l" -&gt; "I-l" fix; see the match loop below.</summary>
+        private static readonly string LittleIStopChars = Environment.NewLine + @" <>!.?:;,";
+
+        /// <summary>
+        /// The four html-tag needles for one target character, prepared once. A single immutable
+        /// instance swapped by reference keeps this thread-safe without locking; every caller in
+        /// the app passes 'i', so the memo hits on all but the first call.
+        /// </summary>
+        private sealed class TargetNeedles
+        {
+            public readonly char Target;
+            public readonly string CloseTag;
+            public readonly string Space;
+            public readonly string ZeroWidthSpace;
+            public readonly string ZeroWidthNoBreakSpace;
+
+            public TargetNeedles(char target)
+            {
+                Target = target;
+                CloseTag = ">" + target + "</";
+                Space = ">" + target + " ";
+                ZeroWidthSpace = ">" + target + "\u200B" + Environment.NewLine;
+                ZeroWidthNoBreakSpace = ">" + target + "\uFEFF" + Environment.NewLine;
+            }
+        }
+
+        private static TargetNeedles _needles = new TargetNeedles('i');
+
+        private static TargetNeedles GetNeedles(char target)
+        {
+            var needles = _needles;
+            if (needles.Target != target)
+            {
+                needles = new TargetNeedles(target);
+                _needles = needles;
+            }
+
+            return needles;
+        }
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
             string fixAction = Language.FixLowercaseIToUppercaseI;
@@ -38,16 +87,17 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         public static string FixAloneLowercaseIToUppercaseLine(Regex re, string oldText, string input, char target)
         {
             //html tags
-            var s = input.Replace(">" + target + "</", ">I</")
-                         .Replace(">" + target + " ", ">I ")
-                         .Replace(">" + target + "\u200B" + Environment.NewLine, ">I" + Environment.NewLine) // Zero Width Space
-                         .Replace(">" + target + "\uFEFF" + Environment.NewLine, ">I" + Environment.NewLine); // Zero Width No-Break Space
+            var needles = GetNeedles(target);
+            var s = input.Replace(needles.CloseTag, ">I</")
+                         .Replace(needles.Space, ">I ")
+                         .Replace(needles.ZeroWidthSpace, UppercaseINewLine) // Zero Width Space
+                         .Replace(needles.ZeroWidthNoBreakSpace, UppercaseINewLine); // Zero Width No-Break Space
 
             s = s.Replace(" i-i ", " I-I ");
             s = s.Replace(" i-i-i ", " I-I-I ");
             s = s.Replace(" i'm ", " I'm ");
-            s = s.Replace(Environment.NewLine + "i'm ", Environment.NewLine + "I'm ");
-            s = s.Replace(Environment.NewLine + "i'm.", Environment.NewLine + "I'm.");
+            s = s.Replace(NewLineLowerImSpace, NewLineUpperImSpace);
+            s = s.Replace(NewLineLowerImPeriod, NewLineUpperImPeriod);
             s = s.Replace(" i'm.", " I'm.");
             s = s.Replace(" i'm,", " I'm,");
             s = s.Replace("-i'm-", "-I'm-");
@@ -96,7 +146,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             fix = false;
                         }
 
-                        if (fix && next == '-' && match.Index < s.Length - 5 && s[match.Index + 2] == 'l' && !(Environment.NewLine + @" <>!.?:;,").Contains(s[match.Index + 3]))
+                        if (fix && next == '-' && match.Index < s.Length - 5 && s[match.Index + 2] == 'l' && !LittleIStopChars.Contains(s[match.Index + 3]))
                         {
                             fix = false;
                         }

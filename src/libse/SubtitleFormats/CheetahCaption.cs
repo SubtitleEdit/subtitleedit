@@ -10,6 +10,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class CheetahCaption : SubtitleFormat, IBinaryPersistableSubtitle
     {
+        // Resolved once: GetEncoding(1252) was called per paragraph on write and per paragraph
+        // on read, and it is not free - it walks the provider chain on every call.
+        private static readonly Encoding Cp1252 = Encoding.GetEncoding(1252);
+
         private static readonly Dictionary<byte, char> DicCodeLatin = new Dictionary<byte, char>
         {
             [0x81] = '♪',
@@ -217,7 +221,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     sb.Clear();
                     var j = 0;
                     var italics = false;
-                    var encoding = Encoding.GetEncoding(1252);
+                    var encoding = Cp1252;
                     while (j < textLength)
                     {
                         var index = i + start + j;
@@ -383,10 +387,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     textBytes.Add(0xd0);
                 }
 
-                var encoding = Encoding.GetEncoding(1252);
+                var encoding = Cp1252;
                 while (j < text.Length)
                 {
-                    if (text.Substring(j).StartsWith(Environment.NewLine, StringComparison.Ordinal))
+                    // Substring(j) copied the rest of the line for every character just to test
+                    // its first one or two characters.
+                    if (text.AsSpan(j).StartsWith(Environment.NewLine.AsSpan(), StringComparison.Ordinal))
                     {
                         j += Environment.NewLine.Length;
                         textBytes.Add(0);

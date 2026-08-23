@@ -13,6 +13,11 @@ public class NetflixCheckGlyph : INetflixQualityChecker
 {
     private static HashSet<int>? _netflixGlyphs = null;
 
+    // Every character of every line is probed against the allowed set, so the probe is the whole
+    // cost of this check. A BMP bitmap answers it with one array load instead of hashing an int;
+    // astral code points (rare, and outside the table) still go to the hash set.
+    private static bool[]? _netflixGlyphsBmp = null;
+
     public string Name { get; set; }
 
     public NetflixCheckGlyph(string name)
@@ -50,7 +55,18 @@ public class NetflixCheckGlyph : INetflixQualityChecker
             list.Add(13);
         }
 
-        _netflixGlyphs = new HashSet<int>(list);
+        var set = new HashSet<int>(list);
+        var bmp = new bool[0x10000];
+        foreach (var codePoint in set)
+        {
+            if ((uint)codePoint < (uint)bmp.Length)
+            {
+                bmp[codePoint] = true;
+            }
+        }
+
+        _netflixGlyphsBmp = bmp;
+        _netflixGlyphs = set;
         return _netflixGlyphs;
     }
 
@@ -66,17 +82,35 @@ public class NetflixCheckGlyph : INetflixQualityChecker
     {
         // Load allowed glyphs
         var allowedGlyphsSet = LoadNetflixGlyphs();
+        var allowedGlyphsBmp = _netflixGlyphsBmp!;
 
         foreach (var paragraph in subtitle.Paragraphs)
         {
-            for (int pos = 0, actualPos = 0; pos < paragraph.Text.Length; pos += char.IsSurrogatePair(paragraph.Text, pos) ? 2 : 1, actualPos++)
+            var text = paragraph.Text;
+            for (int pos = 0, actualPos = 0; pos < text.Length; actualPos++)
             {
-                int curCodepoint = char.ConvertToUtf32(paragraph.Text, pos);
+                var c = text[pos];
+                var reportPos = pos; // pos advances below; the report wants the character's own index
+                int curCodepoint;
+                if (char.IsSurrogate(c))
+                {
+                    // Throws on a lone surrogate, exactly as ConvertToUtf32 did before.
+                    curCodepoint = char.ConvertToUtf32(text, pos);
+                    pos += 2;
+                }
+                else
+                {
+                    curCodepoint = c;
+                    pos++;
+                }
 
-                if (!allowedGlyphsSet.Contains(curCodepoint))
+                var allowed = (uint)curCodepoint < (uint)allowedGlyphsBmp.Length
+                    ? allowedGlyphsBmp[curCodepoint]
+                    : allowedGlyphsSet.Contains(curCodepoint);
+                if (!allowed)
                 {
                     var timeCode = paragraph.StartTime.ToHHMMSSFF();
-                    var context = NetflixQualityController.StringContext(paragraph.Text, pos, 6);
+                    var context = NetflixQualityController.StringContext(text, reportPos, 6);
                     var comment = string.Format(Se.Language.Tools.NetflixCheckAndFix.GlyphCheckReport, $"U+{curCodepoint:X}", actualPos);
 
                     controller.AddRecord(paragraph, timeCode, context, comment, false);
