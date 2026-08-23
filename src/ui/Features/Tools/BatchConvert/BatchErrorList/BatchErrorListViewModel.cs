@@ -1,9 +1,10 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Features.Shared.ErrorList;
 using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -11,7 +12,9 @@ using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.UiLogic.BatchConvert;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,6 +25,11 @@ public partial class BatchErrorListViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<BatchErrorListItem> _subtitles;
     [ObservableProperty] private BatchErrorListItem? _selectedSubtitle;
     [ObservableProperty] private bool _hasErrors;
+    [ObservableProperty] private string _summary = string.Empty;
+
+    public ObservableCollection<SummaryCard> Cards { get; } = new();
+
+    private readonly List<BatchErrorListItem> _allItems = new();
 
     public Window? Window { get; set; }
 
@@ -51,6 +59,7 @@ public partial class BatchErrorListViewModel : ObservableObject
         }
 
         var sb = new StringBuilder();
+        // Exports what is shown - the active card filter applies.
         sb.AppendLine("FileName,LineNumber,Text,Error");
         foreach (var errorItem in Subtitles)
         {
@@ -73,6 +82,33 @@ public partial class BatchErrorListViewModel : ObservableObject
         s = s.Replace("\r", "\\r");
         s = s.Replace("\n", "\\n");
         return $"\"{s}\"";
+    }
+
+    [RelayCommand]
+    private void SetFilter(SummaryCard? card)
+    {
+        if (card == null)
+        {
+            return;
+        }
+
+        ApplyFilter(card);
+    }
+
+    private void ApplyFilter(SummaryCard card)
+    {
+        foreach (var c in Cards)
+        {
+            c.IsActive = ReferenceEquals(c, card);
+        }
+
+        var filtered = card.Key is LineErrorType type
+            ? _allItems.Where(p => p.Type == type)
+            : _allItems;
+
+        Subtitles = new ObservableCollection<BatchErrorListItem>(filtered);
+        SelectedSubtitle = Subtitles.FirstOrDefault();
+        HasErrors = Subtitles.Count > 0;
     }
 
     [RelayCommand]
@@ -116,16 +152,27 @@ public partial class BatchErrorListViewModel : ObservableObject
                 var next = i < lines.Count - 1 ? lines[i + 1] : null;
                 if (line.HasErrors(prev, next))
                 {
-                    Subtitles.Add(new BatchErrorListItem(batchItem.FileName, line, prev, next));
+                    _allItems.AddRange(BatchErrorListItem.Make(batchItem.FileName, line, prev, next));
                 }
             }
         }
 
-        HasErrors = Subtitles.Count > 0;
+        var l = Se.Language.ErrorList;
+        var lineCount = _allItems.Select(p => (p.FileName, p.Number)).Distinct().Count();
+        var fileCount = _allItems.Select(p => p.FileName).Distinct().Count();
+        Summary = _allItems.Count == 0
+            ? l.NoErrors
+            : string.Format(l.SummaryFilesX, _allItems.Count, lineCount, fileCount);
+
+        Cards.Clear();
+        Cards.Add(new SummaryCard { Key = null, Label = l.All, Count = _allItems.Count, Brush = LineError.AllBrush, IsActive = true });
+        foreach (var type in Enum.GetValues<LineErrorType>())
+        {
+            var count = _allItems.Count(p => p.Type == type);
+            Cards.Add(new SummaryCard { Key = type, Label = LineError.GetLabel(type), Hint = LineError.GetHint(type), Count = count, Brush = LineError.GetBrush(type) });
+        }
+
+        ApplyFilter(Cards[0]);
     }
 
-    internal void GridSelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        HasErrors = SelectedSubtitle != null;
-    }
 }

@@ -5,6 +5,7 @@ public class LanguageErrorList
     public string Title { get; set; }
     public string SummaryX { get; set; }
     public string NoErrors { get; set; }
+    public string SummaryFilesX { get; set; }
     public string All { get; set; }
     public string TooManyLines { get; set; }
     public string CharactersPerSecond { get; set; }
@@ -36,6 +37,7 @@ public class LanguageErrorList
         Title = "List errors";
         SummaryX = "{0} error(s) in {1} of {2} line(s)";
         NoErrors = "No errors found.";
+        SummaryFilesX = "{0} error(s) in {1} line(s) across {2} file(s)";
         All = "All";
         TooManyLines = "Too many lines";
         CharactersPerSecond = "Reading speed";
