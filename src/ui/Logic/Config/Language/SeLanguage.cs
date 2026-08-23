@@ -36,6 +36,7 @@ public class SeLanguage
     public LanguageOcr Ocr { get; set; } = new();
     public LanguageAssa Assa { get; set; } = new();
     public LanguageAbout About { get; set; } = new();
+    public LanguageErrorList ErrorList { get; set; } = new();
 
     /// <summary>
     /// Serializes a language to the exact text used for <c>English.json</c> - the base file every

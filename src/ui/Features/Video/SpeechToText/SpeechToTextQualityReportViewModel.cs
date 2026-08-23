@@ -25,26 +25,6 @@ public class QualityReportDisplayItem
     public IBrush Brush { get; init; } = Brushes.Gray;
 }
 
-/// <summary>A clickable summary card / filter: one per issue type, plus "All" and "Removed".</summary>
-public partial class QualityReportCard : ObservableObject
-{
-    [ObservableProperty] private bool _isActive;
-    [ObservableProperty] private IBrush _borderBrush = UiUtil.GetTextColor(0.25);
-
-    partial void OnIsActiveChanged(bool value)
-    {
-        BorderBrush = value ? Brush : UiUtil.GetTextColor(0.25);
-    }
-
-    /// <summary>null = all issues; Removed uses <see cref="IsRemovedFilter"/>.</summary>
-    public SpeechToTextQualityIssueType? Type { get; init; }
-    public bool IsRemovedFilter { get; init; }
-    public string Label { get; init; } = string.Empty;
-    public string Hint { get; init; } = string.Empty;
-    public int Count { get; init; }
-    public IBrush Brush { get; init; } = Brushes.Gray;
-}
-
 public partial class SpeechToTextQualityReportViewModel : ObservableObject
 {
     [ObservableProperty] private string _summary = string.Empty;
@@ -54,7 +34,10 @@ public partial class SpeechToTextQualityReportViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<QualityReportDisplayItem> _items = new();
     [ObservableProperty] private QualityReportDisplayItem? _selectedItem;
 
-    public ObservableCollection<QualityReportCard> Cards { get; } = new();
+    public ObservableCollection<SummaryCard> Cards { get; } = new();
+
+    /// <summary>Card key for the "removed lines" filter (the issue-type keys are the enum values).</summary>
+    private static readonly object RemovedKey = new();
 
     public int TotalLines { get; private set; }
     public int IssueCount { get; private set; }
@@ -137,7 +120,7 @@ public partial class SpeechToTextQualityReportViewModel : ObservableObject
         }
 
         Cards.Clear();
-        Cards.Add(new QualityReportCard { Type = null, Label = l.QualityReportAll, Count = report.Issues.Count, Brush = AllBrush, IsActive = true });
+        Cards.Add(new SummaryCard { Key = null, Label = l.QualityReportAll, Count = report.Issues.Count, Brush = AllBrush, IsActive = true });
         foreach (var type in new[]
                  {
                      SpeechToTextQualityIssueType.TooShort,
@@ -147,12 +130,12 @@ public partial class SpeechToTextQualityReportViewModel : ObservableObject
                      SpeechToTextQualityIssueType.Repeated,
                  })
         {
-            Cards.Add(new QualityReportCard { Type = type, Label = GetLabel(type), Hint = GetHint(type), Count = report.Count(type), Brush = GetBrush(type) });
+            Cards.Add(new SummaryCard { Key = type, Label = GetLabel(type), Hint = GetHint(type), Count = report.Count(type), Brush = GetBrush(type) });
         }
 
         if (report.Removed.Count > 0)
         {
-            Cards.Add(new QualityReportCard { IsRemovedFilter = true, Label = l.QualityReportRemoved, Count = report.Removed.Count, Brush = RemovedBrush });
+            Cards.Add(new SummaryCard { Key = RemovedKey, Label = l.QualityReportRemoved, Count = report.Removed.Count, Brush = RemovedBrush });
         }
 
         ApplyFilter(Cards[0]);
@@ -176,7 +159,7 @@ public partial class SpeechToTextQualityReportViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void SetFilter(QualityReportCard? card)
+    private void SetFilter(SummaryCard? card)
     {
         if (card == null)
         {
@@ -186,7 +169,7 @@ public partial class SpeechToTextQualityReportViewModel : ObservableObject
         ApplyFilter(card);
     }
 
-    private void ApplyFilter(QualityReportCard card)
+    private void ApplyFilter(SummaryCard card)
     {
         foreach (var c in Cards)
         {
@@ -194,13 +177,13 @@ public partial class SpeechToTextQualityReportViewModel : ObservableObject
         }
 
         IEnumerable<QualityReportDisplayItem> filtered = _allItems;
-        if (card.IsRemovedFilter)
+        if (ReferenceEquals(card.Key, RemovedKey))
         {
             filtered = _allItems.Where(p => p.IsRemoved);
         }
-        else if (card.Type != null)
+        else if (card.Key is SpeechToTextQualityIssueType type)
         {
-            filtered = _allItems.Where(p => !p.IsRemoved && p.Type == card.Type);
+            filtered = _allItems.Where(p => !p.IsRemoved && p.Type == type);
         }
         else
         {

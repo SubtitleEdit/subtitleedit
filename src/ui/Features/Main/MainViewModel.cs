@@ -11977,11 +11977,11 @@ public partial class MainViewModel :
             var next = i < Subtitles.Count - 1 ? Subtitles[i + 1] : null;
             if (s.HasErrors(prev, next))
             {
-                list.Add(new ErrorListItem(s, prev, next));
+                list.AddRange(ErrorListItem.Make(s, prev, next));
             }
         }
 
-        var result = await ShowDialogAsync<ErrorListWindow, ErrorListViewModel>(vm => { vm.Initialize(list); });
+        var result = await ShowDialogAsync<ErrorListWindow, ErrorListViewModel>(vm => { vm.Initialize(list, Subtitles.Count); });
 
         if (result.GoToPressed && result.SelectedSubtitle != null)
         {
