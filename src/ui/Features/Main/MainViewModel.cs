@@ -85,6 +85,7 @@ using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 using Nikse.SubtitleEdit.Features.Shared.ColumnPaste;
 using Nikse.SubtitleEdit.Features.Shared.ErrorList;
 using Nikse.SubtitleEdit.Features.Shared.GetAudioClips;
+using Nikse.SubtitleEdit.Features.Shared.FormatLimitWarning;
 using Nikse.SubtitleEdit.Features.Shared.GoToLineNumber;
 using Nikse.SubtitleEdit.Features.Shared.MediaInfoView;
 using Nikse.SubtitleEdit.Features.Shared.PickAlignment;
@@ -21090,7 +21091,17 @@ public partial class MainViewModel :
             return await SaveBinarySubtitle(binaryFormat, isAutoSave);
         }
 
-        var text = GetUpdateSubtitle(true).ToText(SelectedSubtitleFormat);
+        var subtitleToSave = GetUpdateSubtitle(true);
+
+        // Formats with hard limits (SCC: 32 chars x 4 lines) silently re-wrap/truncate anything
+        // that does not fit, so the saved file stops matching the grid. Warn first - but never
+        // from the auto-save timer, which must not pop modal dialogs.
+        if (!isAutoSave && !await ConfirmFormatLimitsBeforeSave(subtitleToSave, SelectedSubtitleFormat))
+        {
+            return false;
+        }
+
+        var text = subtitleToSave.ToText(SelectedSubtitleFormat);
 
         if (Se.Settings.General.ForceCrLfOnSave)
         {
@@ -21319,6 +21330,33 @@ public partial class MainViewModel :
         }
 
         return _subtitleOriginal;
+    }
+
+    /// <summary>
+    /// Returns false if the user cancelled the save because some subtitles exceed the format's limits.
+    /// </summary>
+    private async Task<bool> ConfirmFormatLimitsBeforeSave(Subtitle subtitle, SubtitleFormat format)
+    {
+        if (!Se.Settings.General.ShowFormatLimitWarning || Window == null)
+        {
+            return true;
+        }
+
+        var limits = format.FormatLimits;
+        if (limits == null)
+        {
+            return true;
+        }
+
+        var violating = limits.GetViolatingParagraphNumbers(subtitle);
+        if (violating.Count == 0)
+        {
+            return true;
+        }
+
+        var vm = await ShowDialogAsync<FormatLimitWarningWindow, FormatLimitWarningViewModel>(
+            vm => vm.Initialize(format, limits, violating));
+        return vm.SaveAnywayPressed;
     }
 
     private async Task<bool> SaveSubtitleAs()

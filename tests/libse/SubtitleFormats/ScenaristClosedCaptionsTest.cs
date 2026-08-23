@@ -139,3 +139,35 @@ public class ScenaristClosedCaptionsTest
         Assert.Equal("<i>♪ De Pueblo Paleta soy ♪</i>", subtitle.Paragraphs[0].Text);
     }
 }
+
+public class ScenaristClosedCaptionsFormatLimitsTest
+{
+    [Fact]
+    public void FormatLimits_Are32CharsAnd4Lines()
+    {
+        var limits = new ScenaristClosedCaptions().FormatLimits;
+        Assert.NotNull(limits);
+        Assert.Equal(32, limits!.MaxCharactersPerLine);
+        Assert.Equal(4, limits.MaxLines);
+    }
+
+    [Fact]
+    public void GetViolatingParagraphNumbers_FlagsLongLinesAndTooManyLines_IgnoringTags()
+    {
+        var subtitle = new Subtitle();
+        subtitle.Paragraphs.Add(new Paragraph("Short line", 0, 1000));
+        subtitle.Paragraphs.Add(new Paragraph("This merged line is well over thirty-two chars", 1000, 2000));
+        subtitle.Paragraphs.Add(new Paragraph("<i>Tags do not count toward 32</i>", 2000, 3000));
+        subtitle.Paragraphs.Add(new Paragraph("1\r\n2\r\n3\r\n4\r\n5", 3000, 4000));
+
+        var violating = new ScenaristClosedCaptions().FormatLimits!.GetViolatingParagraphNumbers(subtitle);
+
+        Assert.Equal(new List<int> { 2, 4 }, violating);
+    }
+
+    [Fact]
+    public void FormatLimits_DefaultIsNull()
+    {
+        Assert.Null(new SubRip().FormatLimits);
+    }
+}

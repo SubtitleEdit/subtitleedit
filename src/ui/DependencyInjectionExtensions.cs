@@ -78,6 +78,7 @@ using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 using Nikse.SubtitleEdit.Features.Shared.ColumnPaste;
 using Nikse.SubtitleEdit.Features.Shared.ErrorList;
 using Nikse.SubtitleEdit.Features.Shared.FindText;
+using Nikse.SubtitleEdit.Features.Shared.FormatLimitWarning;
 using Nikse.SubtitleEdit.Features.Shared.GoToLineNumber;
 using Nikse.SubtitleEdit.Features.Shared.PickAlignment;
 using Nikse.SubtitleEdit.Features.Shared.PickTeletextAlignment;
@@ -425,6 +426,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<GetDictionariesViewModel>();
         collection.AddTransient<GetKeyViewModel>();
         collection.AddTransient<GoToLineNumberViewModel>();
+        collection.AddTransient<FormatLimitWarningViewModel>();
         collection.AddTransient<GoToVideoPositionViewModel>();
         collection.AddTransient<HearingImpairedRuleSettingsViewModel>();
         collection.AddTransient<ImageBasedPreviewViewModel>();

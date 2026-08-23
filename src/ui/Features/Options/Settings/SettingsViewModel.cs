@@ -156,6 +156,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private TextEncoding _defaultEncoding;
     [ObservableProperty] private bool _autoConvertToUtf8;
     [ObservableProperty] private bool _forceCrLfOnSave;
+    [ObservableProperty] private bool _showFormatLimitWarning;
     [ObservableProperty] private bool _autoTrimWhiteSpace;
     [ObservableProperty] private bool _removeBlankLinesWhenOpening;
 
@@ -780,6 +781,7 @@ public partial class SettingsViewModel : ObservableObject
         DefaultSaveLocationCustomFolder = Se.Settings.General.DefaultSaveLocationCustomFolder ?? string.Empty;
         AutoConvertToUtf8 = general.AutoConvertToUtf8;
         ForceCrLfOnSave = general.ForceCrLfOnSave;
+        ShowFormatLimitWarning = general.ShowFormatLimitWarning;
         AutoTrimWhiteSpace = general.AutoTrimWhiteSpace;
         RemoveBlankLinesWhenOpening = general.RemoveBlankLinesWhenOpening;
 
@@ -1654,6 +1656,7 @@ public partial class SettingsViewModel : ObservableObject
         general.DefaultSaveLocationCustomFolder = DefaultSaveLocationCustomFolder;
         general.AutoConvertToUtf8 = AutoConvertToUtf8;
         general.ForceCrLfOnSave = ForceCrLfOnSave;
+        general.ShowFormatLimitWarning = ShowFormatLimitWarning;
         general.AutoTrimWhiteSpace = AutoTrimWhiteSpace;
         general.RemoveBlankLinesWhenOpening = RemoveBlankLinesWhenOpening;
 

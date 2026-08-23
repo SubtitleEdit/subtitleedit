@@ -134,6 +134,14 @@ public class LanguageMain
     public string ReplacedXOccurrences { get; set; }
     public string FfmpegDownloadedAndInstalledToX { get; set; }
     public string NothingToSave { get; set; }
+    public string FormatLimitWarningTitle { get; set; }
+    public string FormatLimitWarningXLinesExceedLimitsOfY { get; set; }
+    public string FormatLimitWarningMaxXCharactersPerLine { get; set; }
+    public string FormatLimitWarningMaxXLines { get; set; }
+    public string FormatLimitWarningTextWillBeRewrapped { get; set; }
+    public string FormatLimitWarningLinesX { get; set; }
+    public string FormatLimitWarningSaveAnyway { get; set; }
+    public string FormatLimitWarningDoNotShowAgain { get; set; }
     public string NothingToSaveOriginal { get; set; }
     public string LiveSpellCheckLanguageXLoaded { get; set; }
     public string DownloadFfmpegTitle { get; set; }
@@ -278,6 +286,14 @@ public class LanguageMain
         ReplacedXOccurrences = "Replaced {0} occurrences";
         FfmpegDownloadedAndInstalledToX = "ffmpeg downloaded and installed to {0}";
         NothingToSave = "Nothing to save";
+        FormatLimitWarningTitle = "Format limits exceeded";
+        FormatLimitWarningXLinesExceedLimitsOfY = "{0} subtitle(s) exceed the limits of the \"{1}\" format:";
+        FormatLimitWarningMaxXCharactersPerLine = "Max {0} characters per line";
+        FormatLimitWarningMaxXLines = "Max {0} lines per subtitle";
+        FormatLimitWarningTextWillBeRewrapped = "When saved, these subtitles will be re-wrapped or truncated to fit, so the file will not match what is shown here.";
+        FormatLimitWarningLinesX = "Lines: {0}";
+        FormatLimitWarningSaveAnyway = "Save anyway";
+        FormatLimitWarningDoNotShowAgain = "Do not show this warning again";
         NothingToSaveOriginal = "Nothing to save (original)";
         LiveSpellCheckLanguageXLoaded = "Live spell check language {0} loaded";
         DownloadFfmpegTitle = "Download FFmpeg?";
