@@ -31,13 +31,20 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         //defaultSampleSize       // 32 unsigned bit
         //defaultSampleFlags      // 32 unsigned bit
 
+        // A track fragment header is well under this; anything larger means the size was misread.
+        private const ulong MaxSize = 1024 * 1024;
+
         public Tfhd(Stream fs, ulong size)
         {
-            var bufferSize = size - 8;
-            if (bufferSize <= 0)
+            // "size" comes straight from the file. The old "size - 8 <= 0" guard could never fire
+            // on an unsigned value, so a too-small size underflowed into a ~18 exabyte allocation.
+            // version/flags + track id.
+            if (size < 16 || size > MaxSize)
             {
                 return;
             }
+
+            var bufferSize = size - 8;
 
             Buffer = new byte[bufferSize];
             var bytesRead = fs.Read(Buffer, 0, Buffer.Length);
@@ -56,6 +63,19 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             DefaultSampleFlagsPresent = (flags & 0x20) == 0x20;
 
             TrackId = GetUInt(4);
+
+            // The flags claim which optional fields follow; a crafted size can declare fewer
+            // bytes than they need, and the readers below index the buffer unchecked.
+            var required = 8
+                           + (BaseDataOffsetPresent ? 8 : 0)
+                           + (SampleDescriptionIndexPresent ? 4 : 0)
+                           + (DefaultSampleDurationPresent ? 4 : 0)
+                           + (DefaultSampleSizePresent ? 4 : 0)
+                           + (DefaultSampleFlagsPresent ? 4 : 0);
+            if (Buffer.Length < required)
+            {
+                return;
+            }
 
             var idx = 8;
             if (BaseDataOffsetPresent)

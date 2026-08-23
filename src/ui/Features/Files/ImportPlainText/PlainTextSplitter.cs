@@ -16,6 +16,11 @@ public static class PlainTextSplitter
             return subtitles;
         }
 
+        // Both come straight from settings; at zero or below the split loop below makes no
+        // progress and spins forever on the UI thread.
+        maxNumberOfLines = Math.Max(1, maxNumberOfLines);
+        singleLineMaximumLength = Math.Max(1, singleLineMaximumLength);
+
         var paragraphs = plainText.SplitToLines();
 
         foreach (var paragraph in paragraphs)
@@ -46,7 +51,9 @@ public static class PlainTextSplitter
                 result.Add(new SubtitleLineViewModel { Text = subtitleText.Trim() });
             }
 
-            remainingText = remainingText.Substring(usedLength).TrimStart();
+            // Backstop: consuming nothing would loop forever on text that does not start with
+            // whitespace (TrimStart is the only other thing that shortens it).
+            remainingText = remainingText.Substring(Math.Max(1, usedLength)).TrimStart();
         }
 
         return result;

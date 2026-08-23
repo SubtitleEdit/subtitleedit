@@ -231,14 +231,17 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats
             // Reduce bytes left
             bytesleft -= TwoDWordSize;
 
-            // Do we have enough bytes?
-            if (bytesleft < size)
+            // Do we have enough bytes? "size" is read as a signed int straight from the file, so a
+            // chunk declaring a size with the high bit set is negative here - that used to slip
+            // past this check and then *grow* bytesleft when subtracted below.
+            if (size < 0 || bytesleft < size)
             {
-                // Skip the bad data and throw an exception
+                // Skip the bad data and throw an exception (report the count before zeroing it)
+                var available = bytesleft;
                 SkipData(bytesleft);
                 bytesleft = 0;
                 throw new RiffParserException("Element size mismatch for element " + FromFourCc(fourCc)
-                + " need " + size + " but have only " + bytesleft);
+                + " need " + size + " but have only " + available);
             }
 
             // Examine the element, is it a list or a chunk
