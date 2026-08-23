@@ -25,6 +25,13 @@ public class LanguageBeautifyTimeCodes
     public string BatchFrameRateFromVideo { get; set; }
     public string BatchFrameRateFixed { get; set; }
     public string BatchInfo { get; set; }
+    public string UseExactTimeCodes { get; set; }
+    public string ExtractTimeCodes { get; set; }
+    public string ExtractingTimeCodes { get; set; }
+    public string NoTimeCodesLoaded { get; set; }
+    public string XTimeCodesLoaded { get; set; }
+    public string TimeCodesExtractFailed { get; set; }
+    public string TimeCodesHint { get; set; }
 
     public LanguageBeautifyTimeCodes()
     {
@@ -51,5 +58,12 @@ public class LanguageBeautifyTimeCodes
         BatchFrameRateFromVideo = "Use frame rate from video file with same name as subtitle file";
         BatchFrameRateFixed = "Use fixed frame rate";
         BatchInfo = "Shot changes are read from a video file with the same name as the subtitle file, if one is found.";
+        UseExactTimeCodes = "Use exact time codes from video";
+        ExtractTimeCodes = "Extract time codes";
+        ExtractingTimeCodes = "Extracting time codes...";
+        NoTimeCodesLoaded = "No time codes loaded";
+        XTimeCodesLoaded = "{0} time codes loaded";
+        TimeCodesExtractFailed = "Could not read time codes from the video";
+        TimeCodesHint = "Snap cues to the video's real frame times instead of assuming a constant frame rate. Requires reading the whole video once; the result is cached.";
     }
 }
