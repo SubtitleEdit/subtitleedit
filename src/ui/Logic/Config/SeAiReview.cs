@@ -20,7 +20,7 @@ public class SeAiReview
     public static string DefaultPrompt =>
         "You are a subtitle proofreader. Fix typos, spelling, grammar and punctuation in {language}." +
         "\n\nDo not rephrase, do not change meaning, tone or style. Keep names, slang and intentional dialect as they are. " +
-        "Keep all formatting tags (like <i> or {\\an8}) and line breaks exactly as they are. Only correct actual errors.";
+        "Keep all formatting tags (like <i>) and line breaks exactly as they are. Only correct actual errors.";
 
     public SeAiReview()
     {

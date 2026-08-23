@@ -7219,7 +7219,7 @@ public partial class MainViewModel :
                 continue;
             }
 
-            var text = Subtitles[i].Text;
+            var text = StrippedLine.RemoveAllBlocks(Subtitles[i].Text);
             if (!string.IsNullOrWhiteSpace(text))
             {
                 context.AppendLine(text.Replace(Environment.NewLine, " ").Replace("\n", " "));
@@ -7229,9 +7229,12 @@ public partial class MainViewModel :
         var languageName = TwoLetterCodeToLanguageName(
             LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(GetUpdateSubtitle()));
 
+        // ASSA override blocks around the line stay on our side (#13927): the model only gets
+        // the text, and the blocks are glued back on around whatever it returns.
+        var stripped = StrippedLine.Strip(current.Text);
         var result = await ShowDialogAsync<AiAssistant.AiAssistantWindow, AiAssistant.AiAssistantViewModel>(vm =>
             vm.Initialize(
-                current.Text,
+                stripped.Text,
                 context.ToString().TrimEnd(),
                 languageName,
                 Se.Settings.General.SubtitleMaximumCharactersPerSeconds,
@@ -7239,7 +7242,7 @@ public partial class MainViewModel :
 
         if (result.ApplyPressed && !string.IsNullOrEmpty(result.ResultToApply))
         {
-            current.Text = result.ResultToApply;
+            current.Text = stripped.Restore(result.ResultToApply);
             SelectAndScrollToRow(index);
         }
     }
