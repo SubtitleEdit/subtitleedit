@@ -154,6 +154,10 @@ public partial class ConvertActorsViewModel : ObservableObject, IClosingCleanup
                 {
                     var updatedVm = new SubtitleLineViewModel(vm);
                     updatedVm.Text = newText;
+                    if (converter.ToActor)
+                    {
+                        updatedVm.Actor = p.Actor;
+                    }
                     items.Add(new ConvertActorsDisplayItem(vm) { NewText = newText, IsChecked = true, UpdatedViewModel = updatedVm });
                     count++;
                 }

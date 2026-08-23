@@ -41,8 +41,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string EncodeTimeCode(TimeCode timeCode)
         {
-            int seconds = (int)Math.Round(timeCode.Seconds + timeCode.Milliseconds / 1000.0);
-            return $"{timeCode.Hours:00}:{timeCode.Minutes:00}:{seconds:00}";
+            // round to whole seconds on the total so 59.6s carries into the minute instead of writing ":60"
+            var rounded = new TimeCode(Math.Round(timeCode.TotalMilliseconds / 1000.0) * 1000.0);
+            return $"{rounded.Hours:00}:{rounded.Minutes:00}:{rounded.Seconds:00}";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
