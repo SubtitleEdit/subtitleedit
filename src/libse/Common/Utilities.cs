@@ -3424,8 +3424,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     text = text.Remove(0, idx); // remove ReadOrder
                     idx = text.IndexOf(',');
-                    text = text.Insert(idx, "," + start + "," + end);
-                    lines.Add("Dialogue: " + text);
+                    if (idx >= 0)
+                    {
+                        text = text.Insert(idx, "," + start + "," + end);
+                        lines.Add("Dialogue: " + text);
+                    }
                 }
             }
             for (int commentIndex = 0; commentIndex < comments.Paragraphs.Count; commentIndex++)

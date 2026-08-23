@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (text.StartsWith("I-if ", StringComparison.Ordinal))
             {
-                text = text.Remove(0, 4).Insert(0, "I-If ");
+                text = text.Remove(0, 4).Insert(0, "I-If");
             }
 
             for (var indexOfI = text.IndexOf('i'); indexOfI >= 0; indexOfI = text.IndexOf('i', indexOfI + 1))
@@ -220,7 +220,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else if (!tagOn && char.IsLetter(ch))
                 {
-                    if (firstLetter && index < text.Length - 6 && char.IsUpper(text[index]) &&
+                    if (firstLetter && index < text.Length - 5 && char.IsUpper(text[index]) &&
                         text[index + 1] == '-' && char.IsLower(text[index + 2]) && text[index] == char.ToUpperInvariant(text[index + 2]) &&
                         text[index + 3] == '-' && char.IsLower(text[index + 4]) && text[index] == char.ToUpperInvariant(text[index + 4]) &&
                         text[index + 5] != '-')
@@ -231,7 +231,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         sb.Append('-');
                         index += 4;
                     }
-                    else if (firstLetter && index < text.Length - 4 && char.IsUpper(text[index]) &&
+                    else if (firstLetter && index < text.Length - 3 && char.IsUpper(text[index]) &&
                              text[index + 1] == '-' && char.IsLower(text[index + 2]) && text[index] == char.ToUpperInvariant(text[index + 2]) &&
                              text[index + 3] != '-')
                     {

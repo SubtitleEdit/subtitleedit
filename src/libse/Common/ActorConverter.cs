@@ -73,10 +73,12 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string FixActorsFromBeforeColon(Paragraph p, char ch, int? changeCasing, SKColor? color)
         {
             var sb = new StringBuilder();
+            var lineIdx = 0;
             foreach (var line in p.Text.SplitToLines())
             {
+                // index into the trimmed line - leading whitespace used to shift every cut by its width
                 var s = line.Trim();
-                var startIdx = line.IndexOf(ch);
+                var startIdx = s.IndexOf(ch);
                 if (startIdx > 0)
                 {
                     var actor = s.Substring(0, startIdx).Trim(' ', '-', '"');
@@ -97,34 +99,29 @@ namespace Nikse.SubtitleEdit.Core.Common
                     {
                         actor = actor + ":";
                     }
-                    else if (ToActor)
-                    {
-                    }
 
                     if (color.HasValue && !ToActor)
                     {
-                        SetColor(_subtitleFormat, color.Value, actor);
+                        actor = SetColor(_subtitleFormat, color.Value, actor);
                     }
 
-                    if (ToSquare)
+                    if (ToActor)
+                    {
+                        if (lineIdx == 0)
+                        {
+                            p.Actor = actor;
+                        }
+
+                        s = s.Substring(startIdx + 1).TrimStart(' ');
+                    }
+                    else
                     {
                         s = actor + " " + s.Substring(startIdx + 1).TrimStart(' ');
-                    }
-                    else if (ToParentheses)
-                    {
-                        s = actor + " " + s.Substring(startIdx + 1).TrimStart(' ');
-                    }
-                    else if (ToColon)
-                    {
-                        s = actor + " " + s.Substring(startIdx + 1).TrimStart(' ');
-                    }
-                    else if (ToActor)
-                    {
-                        s = s.Substring(startIdx + 1);
                     }
                 }
 
                 sb.AppendLine(s);
+                lineIdx++;
             }
 
             return sb.ToString().Trim();
@@ -269,6 +266,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             return actor;
         }
 
+        private static readonly string[] CommonTitles = { "Mr.", "Mrs.", "Dr." };
+
         private bool IsActor(string s)
         {
             if (string.IsNullOrWhiteSpace(s))
@@ -294,15 +293,14 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return false;
                 }
 
+                if (CommonTitles.Contains(word))
+                {
+                    continue;
+                }
+
                 if (word.Any(c => char.IsDigit(c) || (!char.IsLetter(c) && c != '-' && c != '\'')))
                 {
                     return false;
-                }
-
-                var commonTitles = new[] { "Mr.", "Mrs.", "Dr.", };
-                if (commonTitles.Contains(word))
-                {
-                    continue;
                 }
 
                 if (!_nameListInclMulti.Contains(word, StringComparer.OrdinalIgnoreCase))

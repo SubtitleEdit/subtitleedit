@@ -26,8 +26,9 @@ namespace Nikse.SubtitleEdit.Core.Common.TextEffect
                     var karaoke = text.Substring(0, i) + fontClose + text.Substring(i);
                     lastFontCloseIdx = i;
                     result.Add(karaoke);
-                    // skip only whitespace
-                    while (i < len && char.IsWhiteSpace(text[i]))
+                    // skip only whitespace - land on the last whitespace char so the loop's own
+                    // i++ moves onto the next word (or tag) instead of past it
+                    while (i + 1 < len && char.IsWhiteSpace(text[i + 1]))
                     {
                         i++;
                     }
