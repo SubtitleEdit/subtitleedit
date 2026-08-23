@@ -518,6 +518,27 @@ public static class InitToolbar
             VerticalAlignment = VerticalAlignment.Center,
         };
 
+                // Direct access to the existing EBU STL header/export dialog.
+        // Keep it to the left of the format selector so the selector itself
+        // does not move when the button is shown or hidden.
+        var ebuHeaderButton = new Button
+        {
+            Content = "Header",
+            Command = vm.ExportEbuStlCommand,
+            Background = Brushes.Transparent,
+            BorderBrush = Brushes.Gray,
+            BorderThickness = new Thickness(1),
+            Padding = new Thickness(10, 4),
+            Margin = new Thickness(0, 0, 6, 0),
+            MinHeight = 32,
+            MinWidth = 68,
+            VerticalAlignment = VerticalAlignment.Center,
+            IsVisible = vm.IsFormatEbu,
+            [AutomationProperties.NameProperty] = "EBU STL header",
+            [ToolTip.TipProperty] = "Open EBU STL header/export settings",
+        };
+        stackPanelRight.Children.Add(ebuHeaderButton);
+
         // subtitle formats
         stackPanelRight.Children.Add(new TextBlock
         {
@@ -525,6 +546,7 @@ public static class InitToolbar
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(5, 0, 3, 0),
         });
+
         var comboBoxSubtitleFormat = new ComboBox
         {
             Width = 200,
@@ -539,15 +561,25 @@ public static class InitToolbar
                     Width = 150,
                 }, true)
         };
-        comboBoxSubtitleFormat.SelectionChanged += vm.ComboBoxSubtitleFormatChanged;
+
+        comboBoxSubtitleFormat.SelectionChanged += (sender, e) =>
+        {
+            vm.ComboBoxSubtitleFormatChanged(sender, e);
+            ebuHeaderButton.IsVisible = vm.IsFormatEbu;
+        };
+
         comboBoxSubtitleFormat.KeyDown += vm.ComboBoxSubtitleFormatKeyDown;
+
         // Tunnel phase so we see the event before ComboBox consumes a left-click to open
         // its dropdown (matters for Mac Ctrl+Click, which Avalonia delivers as left+Ctrl).
-        comboBoxSubtitleFormat.AddHandler(InputElement.PointerPressedEvent,
+        comboBoxSubtitleFormat.AddHandler(
+            InputElement.PointerPressedEvent,
             vm.ComboBoxSubtitleFormatPointerPressed,
             RoutingStrategies.Tunnel,
             handledEventsToo: true);
+
         stackPanelRight.Children.Add(comboBoxSubtitleFormat);
+        
         isLastSeparator = false;
 
         if (appearance.ToolbarShowEncoding)
