@@ -23,19 +23,25 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             Size = length + 2;
             if (Tag == TagCaDescriptor)
             {
-                Buffer.BlockCopy(data, index + 2, CaSystemId, 0, 2);
+                // "length" is a byte from the stream: below 4 the private data size goes negative,
+                // and the copies need the bytes to actually be there.
+                if (length >= 4 && index + 2 + length <= data.Length)
+                {
+                    Buffer.BlockCopy(data, index + 2, CaSystemId, 0, 2);
 
-                // 13 bytes (skip first 3)
-                CaPid = (uint)((data[index + 4] & 0b00011111) * 256 + // first 5 bytes
-                         data[index + 5]); // last 8 bytes
+                    // 13 bytes (skip first 3)
+                    CaPid = (uint)((data[index + 4] & 0b00011111) * 256 + // first 5 bytes
+                             data[index + 5]); // last 8 bytes
 
-                PrivateDataBytes = new byte[length - 4];
-                Buffer.BlockCopy(data, index + 6, PrivateDataBytes, 0, length - 4);
+                    PrivateDataBytes = new byte[length - 4];
+                    Buffer.BlockCopy(data, index + 6, PrivateDataBytes, 0, length - 4);
+                }
             }
             else
             {
                 Content = new byte[length];
-                if (index + 2 + length < data.Length && length > 0)
+                // "<=": a descriptor ending on the buffer's last byte is complete, not truncated.
+                if (index + 2 + length <= data.Length && length > 0)
                 {
                     Buffer.BlockCopy(data, index + 2, Content, 0, length);
                     ContentAsString = Encoding.UTF8.GetString(Content);

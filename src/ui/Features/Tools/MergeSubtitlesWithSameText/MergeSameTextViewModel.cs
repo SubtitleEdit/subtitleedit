@@ -102,7 +102,6 @@ public partial class MergeSameTextViewModel : ObservableObject, IClosingCleanup
         var fixIncrementing = IncludeIncrementingLines;
         var numberOfMerges = 0;
         Paragraph? p = null;
-        var lineNumbers = new List<int>();
         for (var i = 1; i < _subtitles.Count; i++)
         {
             if (removed.Contains(i - 1))
@@ -136,16 +135,6 @@ public partial class MergeSameTextViewModel : ObservableObject, IClosingCleanup
                     if (!string.IsNullOrEmpty(incrementText))
                     {
                         p.Text = incrementText;
-                    }
-
-                    if (lineNumbers.Count > 0)
-                    {
-                        lineNumbers.Add(next.Number);
-                    }
-                    else
-                    {
-                        lineNumbers.Add(p.Number);
-                        lineNumbers.Add(next.Number);
                     }
 
                     removed.Add(j);
