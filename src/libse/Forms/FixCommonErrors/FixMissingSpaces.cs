@@ -2,6 +2,9 @@
 using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
 using System.Text.RegularExpressions;
+#if NET8_0_OR_GREATER
+using System.Buffers;
+#endif
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
@@ -12,6 +15,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             public static string FixMissingSpace { get; set; } = "Fix missing space";
             public static string FixMissingSpaces { get; set; } = "Fix missing spaces";
         }
+
+        // FixSpaceAfter asks "is this character in that little set?" for every occurrence of the
+        // fix character in the file. Both sets used to be probed with
+        // `"...".Contains(text[i].ToString())`, which allocates a one-character string per probe.
+        private const string SpaceAfterSkipChars = " \r\n\":;()[]<>.؟!\u060C";
+#if NET8_0_OR_GREATER
+        private static readonly SearchValues<char> SpaceAfterSkipSearch = SearchValues.Create(SpaceAfterSkipChars);
+#endif
 
         private static readonly Regex FixMissingSpacesReComma = new Regex(@"[^\s\d],[^\s]", RegexOptions.Compiled);
         private static readonly Regex FixMissingSpacesRePeriod = new Regex(@"\p{Ll}\p{Ll}[.][\p{Ll}\p{Lu}]", RegexOptions.Compiled);
@@ -403,7 +414,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     {
                         skip = true;
                     }
-                    if (!skip && "0123456789".Contains(text[idx + 1].ToString()))
+                    if (!skip && IsAsciiDigit(text[idx + 1]))
                     {
                         skip = true;
                     }
@@ -414,7 +425,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
 
-                if (!skip && !" \r\n\":;()[]<>.؟!\u060C".Contains(text[idx + 1].ToString()))
+                if (!skip && !IsSpaceAfterSkipChar(text[idx + 1]))
                 {
                     text = text.Insert(idx + 1, " ");
                 }
@@ -423,6 +434,17 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             }
 
             return text;
+        }
+
+        private static bool IsAsciiDigit(char c) => c >= '0' && c <= '9';
+
+        private static bool IsSpaceAfterSkipChar(char c)
+        {
+#if NET8_0_OR_GREATER
+            return SpaceAfterSkipSearch.Contains(c);
+#else
+            return SpaceAfterSkipChars.IndexOf(c) >= 0;
+#endif
         }
 
         private static string FixMissingSpaceBeforeAfterMusicQuotes(string input, char musicSymbol)
