@@ -40,6 +40,25 @@ public class OpenRouterSttServiceTests
         Assert.Equal("de", root.GetProperty("language").GetString());
     }
 
+    [Theory]
+    [InlineData("openai/gpt-transcribe")]
+    [InlineData("openai/gpt-4o-transcribe")]
+    [InlineData("openai/gpt-4o-mini-transcribe")]
+    public void BuildRequestBody_GptTranscriptionModelsUseJsonWithoutTimestamps(string model)
+    {
+        var body = OpenRouterSttService.BuildRequestBody(
+            MakeSettings(model),
+            Encoding.UTF8.GetBytes("hello-bytes"),
+            "mp3",
+            "ar");
+
+        using var doc = JsonDocument.Parse(body);
+        var root = doc.RootElement;
+
+        Assert.Equal("json", root.GetProperty("response_format").GetString());
+        Assert.False(root.TryGetProperty("timestamp_granularities", out _));
+    }
+
     [Fact]
     public void BuildRequestBody_OmitsEmptyLanguageAndZeroTemperature()
     {
