@@ -183,6 +183,20 @@ namespace Nikse.SubtitleEdit.Core.Common
             return sb.ToString().TrimEnd() + s;
         }
 
+        // The tag regexes below allow whitespace ("\pos (10,11)"), so the parameters cannot be cut
+        // at a fixed offset from the tag name - take everything between the parentheses instead.
+        private static string GetTagParameters(string matchValue)
+        {
+            var open = matchValue.IndexOf('(');
+            var close = matchValue.LastIndexOf(')');
+            if (open < 0 || close <= open)
+            {
+                return string.Empty;
+            }
+
+            return matchValue.Substring(open + 1, close - open - 1).RemoveChar(' ');
+        }
+
         private static string FixMethodFourParameters(decimal sourceWidth, decimal targetWidth, decimal sourceHeight, decimal targetHeight, string input, string tag)
         {
             var regex = GetCachedRegex("\\\\" + tag + "\\s*\\(\\s*[-+]?\\d+[\\.\\d+]*\\s*,\\s*[-+]?\\d+[\\.\\d+]*\\s*,\\s*[-+]?\\d+[\\.\\d+]*\\s*,\\s*[-+]?\\d+[\\.\\d+]*\\s*\\)");
@@ -190,7 +204,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var match = regex.Match(s);
             while (match.Success)
             {
-                var value = match.Value.Substring(tag.Length + 2, match.Value.Length - tag.Length - 3).RemoveChar(' ');
+                var value = GetTagParameters(match.Value);
                 var arr = value.Split(',');
                 if (arr.Length == 4 &&
                     decimal.TryParse(arr[0], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x1) &&
@@ -212,7 +226,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else
                 {
-                    break;
+                    // Skip this tag rather than abandoning every remaining tag on the line.
+                    match = regex.Match(s, match.Index + match.Value.Length);
                 }
             }
 
@@ -226,7 +241,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var match = regex.Match(s);
             while (match.Success)
             {
-                var value = match.Value.Substring(tag.Length + 2, match.Value.Length - tag.Length - 3).RemoveChar(' ');
+                var value = GetTagParameters(match.Value);
                 var arr = value.Split(',');
                 if (arr.Length == 6 &&
                     decimal.TryParse(arr[0], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x1) &&
@@ -252,7 +267,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else
                 {
-                    break;
+                    // Skip this tag rather than abandoning every remaining tag on the line.
+                    match = regex.Match(s, match.Index + match.Value.Length);
                 }
             }
 
@@ -266,7 +282,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var match = regex.Match(s);
             while (match.Success)
             {
-                var value = match.Value.Substring(tag.Length + 2, match.Value.Length - tag.Length - 3).RemoveChar(' ');
+                var value = GetTagParameters(match.Value);
                 var arr = value.Split(',');
                 if (arr.Length == 2 &&
                     decimal.TryParse(arr[0], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x) &&
@@ -282,7 +298,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else
                 {
-                    break;
+                    // Skip this tag rather than abandoning every remaining tag on the line.
+                    match = regex.Match(s, match.Index + match.Value.Length);
                 }
             }
 
@@ -306,7 +323,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else
                 {
-                    break;
+                    // Skip this tag rather than abandoning every remaining tag on the line.
+                    match = regex.Match(s, match.Index + match.Value.Length);
                 }
             }
 

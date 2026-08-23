@@ -291,10 +291,6 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     sb.Append('1');
                 }
-                else if (f == "strikeout")
-                {
-                    sb.Append('0');
-                }
                 else if (f == "scalex")
                 {
                     sb.Append(ScaleX.ToString(CultureInfo.InvariantCulture));

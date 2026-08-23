@@ -39,7 +39,15 @@ public static class VideoOcrFrameGrouper
             var thumbnail = MakeThumbnail(frameFileNames[index], brightnessMinimum);
             if (thumbnail == null)
             {
-                continue; // unreadable frame - treat as part of the current group
+                // Unreadable frame - keep it inside the current group. Skipping it outright left
+                // the group's EndFrame behind, which shortens the subtitle's end time.
+                if (current != null)
+                {
+                    current.EndFrame = index;
+                    currentFileList.Add(frameFileNames[index]);
+                }
+
+                continue;
             }
 
             var isBlank = brightnessMinimum > 0 && IsBlank(thumbnail);
