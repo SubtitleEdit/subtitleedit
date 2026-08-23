@@ -213,6 +213,7 @@ using TmpegEncXmlPropertiesViewModel = Nikse.SubtitleEdit.Features.Files.FormatP
 using VideoPlayerUndockedViewModel = Nikse.SubtitleEdit.Features.Shared.Undocked.VideoPlayerUndockedViewModel;
 using SpeechToTextAdvancedViewModel = Nikse.SubtitleEdit.Features.Video.SpeechToText.SpeechToTextAdvancedViewModel;
 using SpeechToTextPostProcessingViewModel = Nikse.SubtitleEdit.Features.Video.SpeechToText.SpeechToTextPostProcessingViewModel;
+using SpeechToTextQualityReportViewModel = Nikse.SubtitleEdit.Features.Video.SpeechToText.SpeechToTextQualityReportViewModel;
 
 namespace Nikse.SubtitleEdit;
 
@@ -571,6 +572,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<WebVttStylePickerViewModel>();
         collection.AddTransient<SpeechToTextAdvancedViewModel>();
         collection.AddTransient<SpeechToTextPostProcessingViewModel>();
+        collection.AddTransient<SpeechToTextQualityReportViewModel>();
         collection.AddTransient<WordListsViewModel>();
     }
 

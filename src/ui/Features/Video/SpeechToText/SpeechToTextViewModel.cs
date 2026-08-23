@@ -152,6 +152,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     private bool _crispAsrVadWasUsed;
     private bool _crispAsrVadSuppressed;
     private bool _loadedFromStdOut;
+    private SpeechToTextQualityReport? _qualityReport;
     private string? _videoFileName;
     private string _audioFileName = string.Empty;
     private int _audioTrackNumber;
@@ -1986,6 +1987,8 @@ public partial class SpeechToTextViewModel : ObservableObject
         var postProcessor = new SpeechToTextPostProcessor(DoTranslateToEnglish ? "en" : languageCode)
         {
             ParagraphMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * 2,
+            RemoveNonSpeechLines = Se.Settings.Tools.AudioToText.WhisperPostProcessingRemoveNonSpeechLines,
+            RemoveRepeatedLines = Se.Settings.Tools.AudioToText.WhisperPostProcessingRemoveRepeatedLines,
         };
 
         WavePeakData2? wavePeaks = null;
@@ -2013,6 +2016,11 @@ public partial class SpeechToTextViewModel : ObservableObject
             settings.WhisperPostProcessingChangeUnderlineToColor,
             settings.WhisperPostProcessingChangeUnderlineToColorColor.FromHexToColor()
             );
+
+        // Keep the report for MakeResult (shown once the run is done) and log a
+        // one-line summary so batch runs leave a trace too (issue #13973).
+        _qualityReport = postProcessor.QualityReport;
+        LogToConsole(_qualityReport.ToLogString());
 
         return transcript;
     }
@@ -2456,6 +2464,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             }
             else if (anyLinesTranscribed)
             {
+                await ShowQualityReport();
                 OkPressed = anyLinesTranscribed;
                 TranscribedSubtitle = transcribedSubtitle ?? new Subtitle();
                 Window?.Close();
@@ -2470,6 +2479,28 @@ public partial class SpeechToTextViewModel : ObservableObject
                     FileHelper.OpenFileWithDefaultProgram(Se.GetToolsLogFilePath());
                 }
             }
+        }
+    }
+
+    /// <summary>
+    /// Tell the user what post-processing found (issue #13973) before the dialog
+    /// closes. Only for the single-file flow - batch runs log the summary instead.
+    /// </summary>
+    private async Task ShowQualityReport()
+    {
+        var report = _qualityReport;
+        _qualityReport = null;
+        if (report == null || !report.HasIssues || !Se.Settings.Tools.AudioToText.WhisperPostProcessingShowQualityReport || Window == null)
+        {
+            return;
+        }
+
+        var vm = await _windowService.ShowDialogAsync<SpeechToTextQualityReportWindow, SpeechToTextQualityReportViewModel>(
+            Window, viewModel => viewModel.Initialize(report));
+
+        if (vm.DoNotShowAgain)
+        {
+            Se.Settings.Tools.AudioToText.WhisperPostProcessingShowQualityReport = false;
         }
     }
 
@@ -3083,6 +3114,9 @@ public partial class SpeechToTextViewModel : ObservableObject
                 viewModal.AddPeriods = Se.Settings.Tools.AudioToText.WhisperPostProcessingAddPeriods;
                 viewModal.MergeShortLines = Se.Settings.Tools.AudioToText.WhisperPostProcessingMergeLines;
                 viewModal.BreakSplitLongLines = Se.Settings.Tools.AudioToText.WhisperPostProcessingSplitLines;
+                viewModal.RemoveNonSpeechLines = Se.Settings.Tools.AudioToText.WhisperPostProcessingRemoveNonSpeechLines;
+                viewModal.RemoveRepeatedLines = Se.Settings.Tools.AudioToText.WhisperPostProcessingRemoveRepeatedLines;
+                viewModal.ShowQualityReport = Se.Settings.Tools.AudioToText.WhisperPostProcessingShowQualityReport;
                 viewModal.ChangeUnderlineToColor = Se.Settings.Tools.AudioToText.WhisperPostProcessingChangeUnderlineToColor;
                 viewModal.ChangeUnderlineToColorColor = Se.Settings.Tools.AudioToText.WhisperPostProcessingChangeUnderlineToColorColor.FromHexToColor();
             });
@@ -3096,6 +3130,9 @@ public partial class SpeechToTextViewModel : ObservableObject
             Se.Settings.Tools.AudioToText.WhisperPostProcessingAddPeriods = vm.AddPeriods;
             Se.Settings.Tools.AudioToText.WhisperPostProcessingMergeLines = vm.MergeShortLines;
             Se.Settings.Tools.AudioToText.WhisperPostProcessingSplitLines = vm.BreakSplitLongLines;
+            Se.Settings.Tools.AudioToText.WhisperPostProcessingRemoveNonSpeechLines = vm.RemoveNonSpeechLines;
+            Se.Settings.Tools.AudioToText.WhisperPostProcessingRemoveRepeatedLines = vm.RemoveRepeatedLines;
+            Se.Settings.Tools.AudioToText.WhisperPostProcessingShowQualityReport = vm.ShowQualityReport;
             Se.Settings.Tools.AudioToText.WhisperPostProcessingChangeUnderlineToColor = vm.ChangeUnderlineToColor;
             Se.Settings.Tools.AudioToText.WhisperPostProcessingChangeUnderlineToColorColor = vm.ChangeUnderlineToColorColor.FromColorToHex();
         }
