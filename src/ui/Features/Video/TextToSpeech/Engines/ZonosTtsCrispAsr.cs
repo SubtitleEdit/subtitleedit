@@ -153,7 +153,7 @@ public class ZonosTtsCrispAsr : ITtsEngine
     {
         // Like the other CrispASR-backed engines, the GGUFs live alongside CrispASR's
         // speech-to-text models in CrispASR/models/ rather than under TextToSpeech/.
-        var modelsFolder = Path.Combine(Se.CrispAsrFolder, "models");
+        var modelsFolder = Se.CrispAsrModelsFolder;
         if (!Directory.Exists(modelsFolder))
         {
             Directory.CreateDirectory(modelsFolder);

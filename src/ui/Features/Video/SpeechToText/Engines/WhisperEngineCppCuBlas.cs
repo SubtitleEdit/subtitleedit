@@ -72,7 +72,7 @@ public class WhisperEngineCppCuBlas : ISpeechToTextEngine
             Directory.CreateDirectory(folder);
         }
 
-        var modelsFolder = Path.Combine(folder, "Models");
+        var modelsFolder = new WhisperCppModel().ModelFolder;
         if (!Directory.Exists(modelsFolder))
         {
             Directory.CreateDirectory(modelsFolder);

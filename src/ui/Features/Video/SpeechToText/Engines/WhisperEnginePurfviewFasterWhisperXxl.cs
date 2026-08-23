@@ -70,7 +70,7 @@ public class WhisperEnginePurfviewFasterWhisperXxl : ISpeechToTextEngine
     {
         var baseFolder = GetAndCreateWhisperFolder();
 
-        var folder = Path.Combine(baseFolder, "_models");
+        var folder = Se.ResolveModelsFolder(Path.Combine(baseFolder, "_models"), "SpeechToText", "Purfview-Faster-Whisper-XXL", "_models");
         if (!Directory.Exists(folder))
         {
             Directory.CreateDirectory(folder);
@@ -97,7 +97,9 @@ public class WhisperEnginePurfviewFasterWhisperXxl : ISpeechToTextEngine
     public bool IsModelInstalled(WhisperModel model)
     {
         var baseFolder = GetAndCreateWhisperFolder();
-        var folder = Path.Combine(baseFolder, "_models", GetModelFolderName(model));
+        var folder = Path.Combine(
+            Se.ResolveModelsFolder(Path.Combine(baseFolder, "_models"), "SpeechToText", "Purfview-Faster-Whisper-XXL", "_models"),
+            GetModelFolderName(model));
         if (!Directory.Exists(folder))
         {
             return false;

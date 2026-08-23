@@ -4033,6 +4033,18 @@ public partial class SpeechToTextViewModel : ObservableObject
             process.StartInfo.EnvironmentVariables["GGML_VULKAN_DEVICE"] = cppVulkanDevice;
         }
 
+        // Python Whisper and huggingface_hub derive their default caches from these variables.
+        // Keep their expected subfolder names so model-name arguments continue to work while
+        // the actual weights live under the user-selected Subtitle Edit model root.
+        if (Se.HasCustomModelsFolder && settings.WhisperChoice == WhisperChoice.OpenAi)
+        {
+            process.StartInfo.EnvironmentVariables["XDG_CACHE_HOME"] = Path.Combine(Se.ModelsFolder, "SpeechToText");
+        }
+        else if (Se.HasCustomModelsFolder && settings.WhisperChoice == WhisperChoice.CTranslate2)
+        {
+            process.StartInfo.EnvironmentVariables["HF_HOME"] = Path.Combine(Se.ModelsFolder, "SpeechToText", "HuggingFace");
+        }
+
         var whisperFolder = engine.GetAndCreateWhisperFolder();
         if (!string.IsNullOrEmpty(whisperFolder))
         {

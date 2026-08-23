@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -166,6 +167,7 @@ public partial class SpeechToTextAdvancedViewModel : ObservableObject
     {
         var searchPaths = new List<string>
         {
+            new WhisperCppModel().ModelFolder,
             Path.Combine(Se.SpeechToTextFolder, "Cpp", "Models"),
             Path.Combine(Se.SpeechToTextFolder, "Cpp"),
         };

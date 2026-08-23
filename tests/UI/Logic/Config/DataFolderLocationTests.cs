@@ -1,4 +1,6 @@
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.UiLogic.AudioToText;
 
 namespace UITests.Logic.Config;
 
@@ -97,6 +99,55 @@ public class DataFolderLocationTests
                 Path.IsPathRooted(folder),
                 $"\"{folder}\" is not an absolute path - it would resolve against the working directory.");
             Assert.StartsWith(Se.DataFolder, folder, StringComparison.Ordinal);
+        }
+    }
+
+    [Fact]
+    public void EmptyModelsFolder_PreservesLegacyLocations()
+    {
+        var original = Se.Settings.General.ModelsFolder;
+        var originalModelsDirectory = Configuration.ModelsDirectory;
+        try
+        {
+            Se.Settings.General.ModelsFolder = string.Empty;
+            Configuration.ModelsDirectory = string.Empty;
+
+            Assert.Equal(Se.DataFolder, Se.ModelsFolder);
+            Assert.False(Se.HasCustomModelsFolder);
+            Assert.Equal(
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".cache", "whisper"),
+                new WhisperModel().ModelFolder);
+        }
+        finally
+        {
+            Se.Settings.General.ModelsFolder = original;
+            Configuration.ModelsDirectory = originalModelsDirectory;
+        }
+    }
+
+    [Fact]
+    public void CustomModelsFolder_UsesTheSelectedRootWithoutChangingTheAppDataFolder()
+    {
+        var original = Se.Settings.General.ModelsFolder;
+        var originalModelsDirectory = Configuration.ModelsDirectory;
+        var selected = Path.Combine(Path.GetTempPath(), "subtitle-edit-models-" + Guid.NewGuid().ToString("N"));
+        try
+        {
+            Se.Settings.General.ModelsFolder = selected;
+            Configuration.ModelsDirectory = selected;
+
+            Assert.Equal(Path.GetFullPath(selected), Se.ModelsFolder);
+            Assert.True(Se.HasCustomModelsFolder);
+            Assert.Equal(Se.DataFolder, Path.GetDirectoryName(Se.GetErrorLogFilePath()));
+            Assert.Equal(Path.Combine(selected, "CrispASR", "models"), Se.CrispAsrModelsFolder);
+            Assert.Equal(
+                Path.Combine(selected, "SpeechToText", "whisper"),
+                new WhisperModel().ModelFolder);
+        }
+        finally
+        {
+            Se.Settings.General.ModelsFolder = original;
+            Configuration.ModelsDirectory = originalModelsDirectory;
         }
     }
 }

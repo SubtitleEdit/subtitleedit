@@ -244,7 +244,7 @@ public class Qwen3TtsCrispAsr : ITtsEngine
         // than under TextToSpeech/Qwen3TtsCrispAsr/. The voices folder and synth
         // output WAVs still live under TextToSpeech/Qwen3TtsCrispAsr/ since those
         // are TTS-engine state, not models. Mirrors ChatterboxTtsCpp's layout.
-        var modelsFolder = Path.Combine(Se.CrispAsrFolder, "models");
+        var modelsFolder = Se.CrispAsrModelsFolder;
         if (!Directory.Exists(modelsFolder))
         {
             Directory.CreateDirectory(modelsFolder);

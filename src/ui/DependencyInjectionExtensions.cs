@@ -224,6 +224,7 @@ public static class DependencyInjectionExtensions
         // LlamaCppServerManager lives in libuilogic (shared with seconv) and cannot see the
         // UI's Se config - point it at the UI's llama.cpp folder and tools log explicitly.
         LlamaCppServerManager.FolderOverride = Logic.Config.Se.LlamaCppFolder;
+        LlamaCppServerManager.ModelsFolderOverride = Logic.Config.Se.LlamaCppModelsFolder;
         LlamaCppServerManager.LogAction = Logic.Config.Se.WriteToolsLog;
 
         // Misc services

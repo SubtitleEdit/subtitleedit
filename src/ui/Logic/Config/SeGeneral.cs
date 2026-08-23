@@ -52,6 +52,11 @@ public class SeGeneral
     public string SaveAsAppendLanguageCode { get; set; }
     public string DefaultSaveLocation { get; set; }
     public string DefaultSaveLocationCustomFolder { get; set; }
+    /// <summary>
+    /// Optional root for downloaded AI models. An empty value keeps the historical per-user
+    /// locations, which makes the setting backwards compatible for existing installations.
+    /// </summary>
+    public string ModelsFolder { get; set; }
     public bool AutoConvertToUtf8 { get; set; }
     public bool AutoGuessAnsiEncoding { get; set; }
     public int MaxNumberOfLinesPlusAbort { get; set; }
@@ -212,6 +217,7 @@ public class SeGeneral
         SaveAsBehavior = nameof(SaveAsBehaviourType.UseVideoFileNameThenSubtitleFileName);
         DefaultSaveLocation = nameof(DefaultSaveLocationType.SourceFileFolder);
         DefaultSaveLocationCustomFolder = string.Empty;
+        ModelsFolder = string.Empty;
         SaveAsAppendLanguageCode = nameof(SaveAsLanguageAppendType.None);
         AutoConvertToUtf8 = false;
         AutoGuessAnsiEncoding = true;

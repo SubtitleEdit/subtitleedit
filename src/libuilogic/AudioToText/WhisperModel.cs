@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.UiLogic.AudioToText
 {
@@ -19,16 +20,12 @@ namespace Nikse.SubtitleEdit.UiLogic.AudioToText
             return $"{(AlreadyDownloaded ? "* " : string.Empty)}{Name} ({Size})";
         }
 
-        public string ModelFolder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".cache", "whisper");
+        public string ModelFolder => Configuration.ResolveModelsFolder(
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".cache", "whisper"),
+            "SpeechToText", "whisper");
 
         public void CreateModelFolder()
         {
-            var cacheFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".cache");
-            if (!Directory.Exists(cacheFolder))
-            {
-                Directory.CreateDirectory(cacheFolder);
-            }
-
             if (!Directory.Exists(ModelFolder))
             {
                 Directory.CreateDirectory(ModelFolder);
