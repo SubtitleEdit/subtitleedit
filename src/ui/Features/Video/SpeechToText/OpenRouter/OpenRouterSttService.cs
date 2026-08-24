@@ -17,12 +17,13 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenRouter;
 /// Speech-to-text via OpenRouter's audio transcription API. Unlike OpenAI's
 /// multipart <c>/v1/audio/transcriptions</c>, OpenRouter takes a JSON body with
 /// the audio base64-encoded under <c>input_audio</c>. The documented response is
-/// <c>text</c> + usage only — <c>response_format=verbose_json</c> and
-/// <c>timestamp_granularities[]</c> are sent opportunistically in case the
-/// routed provider honors them and returns the segment/word shape we already
-/// parse into <see cref="OpenAiCompatibleSttResponse"/>. When only <c>text</c>
-/// comes back, the caller's chunk pipeline spans each chunk's duration and
-/// splits into sentences so timing survives.
+/// <c>text</c> + usage only. Whisper-compatible models receive
+/// <c>response_format=verbose_json</c> and <c>timestamp_granularities[]</c> when
+/// supported. OpenAI's newer GPT transcription models only accept
+/// <c>response_format=json</c>, so they receive the plain response format and
+/// no timestamp hints. When only <c>text</c> comes back, the caller's chunk
+/// pipeline spans each chunk's duration and splits into sentences so timing
+/// survives.
 /// </summary>
 public class OpenRouterSttService : ISttTranscriber
 {
@@ -127,8 +128,9 @@ public class OpenRouterSttService : ISttTranscriber
     /// <summary>
     /// Serialize the OpenRouter transcription request body. The audio is
     /// base64-encoded (raw, not a data URI) under <c>input_audio</c>, and
-    /// <c>verbose_json</c> + <c>timestamp_granularities[]</c> ask for segment and
-    /// word timings when the underlying model supports them.
+    /// The newer GPT transcription models only accept <c>json</c>, while
+    /// Whisper-compatible models can return <c>verbose_json</c> with segment and
+    /// word timings.
     /// </summary>
     internal static string BuildRequestBody(OpenRouterSttSettings settings, byte[] audioBytes, string format, string? language)
     {
@@ -144,13 +146,20 @@ public class OpenRouterSttService : ISttTranscriber
             writer.WriteString("format", string.IsNullOrWhiteSpace(format) ? "mp3" : format);
             writer.WriteEndObject();
 
-            writer.WriteString("response_format", "verbose_json");
+            if (IsJsonOnlyModel(settings.Model))
+            {
+                writer.WriteString("response_format", "json");
+            }
+            else
+            {
+                writer.WriteString("response_format", "verbose_json");
 
-            writer.WritePropertyName("timestamp_granularities");
-            writer.WriteStartArray();
-            writer.WriteStringValue("segment");
-            writer.WriteStringValue("word");
-            writer.WriteEndArray();
+                writer.WritePropertyName("timestamp_granularities");
+                writer.WriteStartArray();
+                writer.WriteStringValue("segment");
+                writer.WriteStringValue("word");
+                writer.WriteEndArray();
+            }
 
             var languageToUse = language ?? settings.Language;
             if (!string.IsNullOrWhiteSpace(languageToUse))
@@ -172,6 +181,24 @@ public class OpenRouterSttService : ISttTranscriber
         }
 
         return Encoding.UTF8.GetString(stream.ToArray());
+    }
+
+    /// <summary>
+    /// OpenAI's GPT transcription models (e.g. <c>gpt-4o-transcribe</c>,
+    /// <c>gpt-4o-mini-transcribe</c>) reject <c>verbose_json</c>, unlike Whisper.
+    /// Matched by name shape rather than an exact list so future <c>gpt-*-transcribe</c>
+    /// models are covered without a code change.
+    /// </summary>
+    internal static bool IsJsonOnlyModel(string? model)
+    {
+        if (string.IsNullOrWhiteSpace(model))
+        {
+            return false;
+        }
+
+        var name = model[(model.LastIndexOf('/') + 1)..];
+        return name.StartsWith("gpt-", StringComparison.OrdinalIgnoreCase) &&
+               name.Contains("transcribe", StringComparison.OrdinalIgnoreCase);
     }
 
     /// <summary>
