@@ -945,9 +945,14 @@ public partial class SpeechToTextViewModel : ObservableObject
         var parameters = Parameters ?? string.Empty;
         if (parameters.Contains("--compute_type", StringComparison.OrdinalIgnoreCase))
         {
+            // Only the floating point types are worth naming: on the RTX 50 series - the cards
+            // this error shows up on most - every int8 variant fails with this exact cuBLAS
+            // error, so listing "int8" sent the user straight back to the same dialog
+            // (Purfview/whisper-standalone-win#403, OpenNMT/CTranslate2#1865).
             await MessageBox.Show(Window!, title,
                 cause + "The parameters already set \"--compute_type\" - try another value, " +
-                "such as \"float16\", \"int8\", or \"float32\".");
+                "such as \"float16\", \"float32\", or \"bfloat16\" - the \"int8\" types fail " +
+                "this way on many newer GPUs.");
             return;
         }
 
