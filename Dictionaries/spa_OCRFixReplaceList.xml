@@ -978,5 +978,39 @@
     <!-- ExceIIencies -> Excellencies). Words of two letters (AI) are never        -->
     <!-- touched, and real words (MacIntosh) are kept by the spell check gate.     -->
     <RegEx find="\b([A-ZÁÉÍÓÚÑÜa-záéíóúñü](?=[a-záéíóúñüI]*I)[a-záéíóúñüI]{2,})\b" replaceAllFrom="I" replaceAllTo="l" spellCheck="$1" replaceWith="$1" />
+
+    <!-- ============================================================ -->
+    <!-- MAYÚSCULAS: l minúscula leída en vez de I                    -->
+    <!-- ============================================================ -->
+
+    <!-- [GRlTOS] a [GRITOS] : l a I dentro de corchetes en mayúsculas -->
+    <RegEx find="\[([A-ZÁÉÍÓÚÑÜ ]*)l([A-ZÁÉÍÓÚÑÜ ]*)\]" spellCheck="[$1I$2]" replaceWith="[$1I$2]" />
+    <RegEx find="\[([A-ZÁÉÍÓÚÑÜl]+)\]" replaceAllFrom="l" replaceAllTo="I" spellCheck="$1" replaceWith="[$1]" />
+
+    <!-- SlN a SIN : l entre mayúsculas -->
+    <RegEx find="\b([A-ZÁÉÍÓÚÑÜ]+)l([A-ZÁÉÍÓÚÑÜ]+)\b" spellCheck="$1I$2" replaceWith="$1I$2" />
+    <RegEx find="\b([A-ZÁÉÍÓÚÑÜ]+)l\b" spellCheck="$1I" replaceWith="$1I" />
+    <RegEx find="\bl([A-ZÁÉÍÓÚÑÜ]+)\b" spellCheck="I$1" replaceWith="I$1" />
+
+    <!-- Iavar a lavar : I inicial leída en vez de l ante minúsculas -->
+    <RegEx find="\bI([a-záéíóúñü]{2,})\b" spellCheck="l$1" replaceWith="l$1" />
+
+    <!-- ============================================================ -->
+    <!-- TILDES PERDIDAS EN LA ÚLTIMA SÍLABA (palabras agudas)        -->
+    <!-- La regla solo actúa si la palabra sin tilde NO está en el    -->
+    <!-- diccionario y la forma con tilde SÍ (cancion a canción).     -->
+    <!-- Solo minúsculas: los nombres propios (Mia, Sofia) no se      -->
+    <!-- tocan.                                                       -->
+    <!-- ============================================================ -->
+    <RegEx find="\b([a-záéíóúñü]+)ia\b" spellCheck="$1ía" replaceWith="$1ía" />
+    <RegEx find="\b([a-záéíóúñü]+)ias\b" spellCheck="$1ías" replaceWith="$1ías" />
+    <RegEx find="\b([a-záéíóúñü]{2,})on\b" spellCheck="$1ón" replaceWith="$1ón" />
+    <RegEx find="\b([a-záéíóúñü]{2,})an\b" spellCheck="$1án" replaceWith="$1án" />
+    <RegEx find="\b([a-záéíóúñü]{2,})in\b" spellCheck="$1ín" replaceWith="$1ín" />
+    <RegEx find="\b([a-záéíóúñü]{2,})es\b" spellCheck="$1és" replaceWith="$1és" />
+    <RegEx find="\b([a-záéíóúñü]{2,})as\b" spellCheck="$1ás" replaceWith="$1ás" />
+    <RegEx find="\b([a-záéíóúñü]{2,})i\b" spellCheck="$1í" replaceWith="$1í" />
+    <RegEx find="\b([a-záéíóúñü]{2,})o\b" spellCheck="$1ó" replaceWith="$1ó" />
+    <RegEx find="\b([a-záéíóúñü]{2,})e\b" spellCheck="$1é" replaceWith="$1é" />
   </RegularExpressionsIfSpelledCorrectly>
 </OCRFixReplaceList>
