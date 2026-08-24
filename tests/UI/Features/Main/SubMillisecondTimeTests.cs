@@ -40,6 +40,13 @@ public class SubMillisecondTimeTests
         using var _ = new SettingsScope("General.UseFrameMode");
         Se.Settings.General.UseFrameMode = false;
 
+        // ToDisplayString below reads libse's own mirror of this flag, not the SE 5 setting,
+        // and the mirror is shared by the whole run - so pin it here too rather than
+        // inheriting whatever the last test to sync it left behind. Without this the
+        // assertion reads "00:11:23:12" (frames) in a test that has nothing to do with frame
+        // mode. The scope restores both sides.
+        Configuration.Settings.General.UseTimeFormatHHMMSSFF = false;
+
         var line = Line(682_700, 683_200);
 
         var upDown = new SecondsUpDown { DataContext = line };
