@@ -19,6 +19,9 @@ v5.2.0-beta23 (24th of August 2026)
 * Fix crashes and wrong results when parsing malformed MP4, transport stream and RIFF files
 * Fix WebVTT thumbnail sprite sheets in .jpeg being rejected
 * Fix video OCR ending a subtitle too early after an unreadable frame
+* Fix teletext line length errors missing from the error lists in the main window and batch convert
+* Fix beautify time codes using a cancelled or failed frame time extraction when the video duration is unknown
+* Fix the speech to text quality report naming the wrong line for removed repeats
 * Fix Netflix "spell out leading number" doing nothing outside Windows
 * Fix Unknown 33/34/59 writing 00:00:60 instead of 00:01:00
 * Fix Matroska SSA lines with fewer commas than expected throwing an error
