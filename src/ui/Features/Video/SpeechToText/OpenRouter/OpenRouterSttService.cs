@@ -183,11 +183,22 @@ public class OpenRouterSttService : ISttTranscriber
         return Encoding.UTF8.GetString(stream.ToArray());
     }
 
+    /// <summary>
+    /// OpenAI's GPT transcription models (e.g. <c>gpt-4o-transcribe</c>,
+    /// <c>gpt-4o-mini-transcribe</c>) reject <c>verbose_json</c>, unlike Whisper.
+    /// Matched by name shape rather than an exact list so future <c>gpt-*-transcribe</c>
+    /// models are covered without a code change.
+    /// </summary>
     internal static bool IsJsonOnlyModel(string? model)
     {
-        return model?.Contains("gpt-transcribe", StringComparison.OrdinalIgnoreCase) == true ||
-               model?.Contains("gpt-4o-transcribe", StringComparison.OrdinalIgnoreCase) == true ||
-               model?.Contains("gpt-4o-mini-transcribe", StringComparison.OrdinalIgnoreCase) == true;
+        if (string.IsNullOrWhiteSpace(model))
+        {
+            return false;
+        }
+
+        var name = model[(model.LastIndexOf('/') + 1)..];
+        return name.StartsWith("gpt-", StringComparison.OrdinalIgnoreCase) &&
+               name.Contains("transcribe", StringComparison.OrdinalIgnoreCase);
     }
 
     /// <summary>
