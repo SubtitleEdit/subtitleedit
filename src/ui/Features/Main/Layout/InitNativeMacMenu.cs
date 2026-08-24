@@ -183,6 +183,8 @@ public static class InitNativeMacMenu
         fileItems.Items.Add(Conditional(Clean(l.NewKeepVideo), v => v.CommandFileNewKeepVideoCommand,
             v => v.IsVideoLoaded, nameof(MainViewModel.IsVideoLoaded)));
         fileItems.Items.Add(Item(Clean(l.NewWindow), v => v.CommandFileNewWindowCommand));
+        fileItems.Items.Add(WindowActionItem(Clean(l.CloseWindow), state,
+            new KeyGesture(Key.W, KeyModifiers.Meta), w => w.Close()));
         fileItems.Items.Add(new NativeMenuItemSeparator());
         fileItems.Items.Add(Item(Clean(l.Open), v => v.CommandFileOpenCommand));
         fileItems.Items.Add(Conditional(Clean(l.OpenKeepVideo), v => v.CommandFileOpenKeepVideoCommand,
@@ -474,6 +476,7 @@ public static class InitNativeMacMenu
         // the Dock icon's window list), so this menu is the discoverable way to switch
         // between the windows File > New window opens.
         state.WindowListItem = new NativeMenuItem(Clean(l.WindowTitle)) { Menu = new NativeMenu() };
+        AddStandardWindowItems(state.WindowListItem.Menu, state);
         root.Items.Add(state.WindowListItem);
 
         root.Items.Add(new NativeMenuItem(Clean(l.HelpTitle)) { Menu = helpItems });
@@ -483,6 +486,70 @@ public static class InitNativeMacMenu
         _building = null;
 
         UpdateWindowMenus();
+    }
+
+    /// <summary>
+    /// Minimize / Zoom / Close window, the Window-menu staples AppKit expects every app to
+    /// author for itself. Their key equivalents exist only where a menu item carries them, so
+    /// without these items ⌘M and ⌘W do nothing at all in SE - there is no fallback for a
+    /// missing NSMenuItem the way there is for the app menu's Hide and Quit, which Avalonia
+    /// appends.
+    /// <para>
+    /// Added at build time so they sit above the window list: AppKit appends its own entries
+    /// below whatever the menu already holds when <see cref="MacWindowsMenuInterop"/> hands it
+    /// over, which is the standard layout. The manual fallback in <see cref="UpdateWindowMenus"/>
+    /// clears the whole menu on every refresh, so it re-adds them there too.
+    /// </para>
+    /// </summary>
+    private static void AddStandardWindowItems(NativeMenu menu, MenuState state)
+    {
+        var l = Se.Language.Main.Menu;
+
+        // Zoom is AppKit's performZoom: - the green button's resize, not full screen.
+        // Avalonia's Maximized maps onto that same zoomed state, and toggling matches
+        // performZoom:, which returns a zoomed window to its user size.
+        menu.Items.Add(WindowActionItem(Clean(l.WindowMinimize), state,
+            new KeyGesture(Key.M, KeyModifiers.Meta), w => w.WindowState = WindowState.Minimized));
+        menu.Items.Add(WindowActionItem(Clean(l.WindowZoom), state, gesture: null,
+            w => w.WindowState = w.WindowState == WindowState.Maximized
+                ? WindowState.Normal
+                : WindowState.Maximized));
+        menu.Items.Add(new NativeMenuItemSeparator());
+    }
+
+    /// <summary>
+    /// A menu item that acts on this menu bar's own window rather than on a view-model command.
+    /// macOS shows the focused window's menu bar, so <see cref="MenuState.Window"/> is always the
+    /// window the user means.
+    /// </summary>
+    private static NativeMenuItem WindowActionItem(
+        string header, MenuState state, KeyGesture? gesture, Action<Window> action)
+    {
+        var item = new NativeMenuItem(header);
+        if (gesture != null)
+        {
+            item.Gesture = gesture;
+        }
+
+        item.Click += (_, _) =>
+        {
+            if (state.Window is not { } window)
+            {
+                return;
+            }
+
+            // A modal dialog leaves its owner input-disabled but still showing the menu bar, so
+            // an unguarded ⌘W here would close the window out from under the open dialog (#13405
+            // is the same "keys land in the main window" trap from the other direction).
+            if (WindowService.IsModalDialogOpen)
+            {
+                return;
+            }
+
+            action(window);
+        };
+
+        return item;
     }
 
     // Rebuilds every window's "Window" menu so all menu bars list all open editor
@@ -505,6 +572,7 @@ public static class InitNativeMacMenu
             }
 
             menu.Items.Clear();
+            AddStandardWindowItems(menu, menuState);
             foreach (var other in _states)
             {
                 var window = other.Window;
