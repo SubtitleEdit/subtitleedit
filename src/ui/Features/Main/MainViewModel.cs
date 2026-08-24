@@ -4827,7 +4827,7 @@ public partial class MainViewModel :
         {
             var newParagraph = new SubtitleLineViewModel(p, SelectedSubtitleFormat);
             var offset = p.StartTime.TotalMilliseconds - firstStartTime;
-            newParagraph.SetStartTimeKeepDuration(TimeSpan.FromMilliseconds(videoPosition * 1000 + offset));
+            newParagraph.SetStartTimeKeepDuration(TimeSpanExtensions.FromMillisecondsWholeMilliseconds(videoPosition * 1000 + offset));
 
             _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
         }
@@ -4884,7 +4884,7 @@ public partial class MainViewModel :
         foreach (var p in subtitle.Paragraphs)
         {
             var newParagraph = new SubtitleLineViewModel(p, SelectedSubtitleFormat);
-            newParagraph.SetStartTimeKeepDuration(TimeSpan.FromMilliseconds(p.StartTime.TotalMilliseconds + timeOffset));
+            newParagraph.SetStartTimeKeepDuration(TimeSpanExtensions.FromMillisecondsWholeMilliseconds(p.StartTime.TotalMilliseconds + timeOffset));
             _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
         }
 
@@ -5406,8 +5406,8 @@ public partial class MainViewModel :
             var nextSubtitle = GetNextWorkingRow(idx);
             var charCount = selectedLine.Text?.Length ?? 0;
 
-            var optimalDuration = TimeSpan.FromSeconds(charCount / Se.Settings.General.SubtitleOptimalCharactersPerSeconds);
-            var maxDuration = TimeSpan.FromSeconds(charCount / Se.Settings.General.SubtitleMaximumCharactersPerSeconds);
+            var optimalDuration = TimeSpanExtensions.FromSecondsWholeMilliseconds(charCount / Se.Settings.General.SubtitleOptimalCharactersPerSeconds);
+            var maxDuration = TimeSpanExtensions.FromSecondsWholeMilliseconds(charCount / Se.Settings.General.SubtitleMaximumCharactersPerSeconds);
             var maxEndTime = TimeSpan.FromMilliseconds(selectedLine.StartTime.TotalMilliseconds + Se.Settings.General.SubtitleMaximumDisplayMilliseconds);
             if (nextSubtitle != null)
             {
@@ -5485,7 +5485,7 @@ public partial class MainViewModel :
                 continue;
             }
 
-            var newEndTime = selectedLine.StartTime + TimeSpan.FromSeconds(charCount / maxCps);
+            var newEndTime = selectedLine.StartTime + TimeSpanExtensions.FromSecondsWholeMilliseconds(charCount / maxCps);
             if (newEndTime < minEndTime)
             {
                 newEndTime = minEndTime;
@@ -7441,13 +7441,13 @@ public partial class MainViewModel :
 
                 if (Math.Abs(newStartMs - s.StartTime.TotalMilliseconds) >= 0.5)
                 {
-                    s.SetStartTimeOnly(TimeSpan.FromMilliseconds(newStartMs));
+                    s.SetStartTimeOnly(TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newStartMs));
                     changed++;
                 }
 
                 if (Math.Abs(newEndMs - s.EndTime.TotalMilliseconds) >= 0.5)
                 {
-                    s.EndTime = TimeSpan.FromMilliseconds(newEndMs);
+                    s.EndTime = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newEndMs);
                     changed++;
                 }
             }
@@ -8275,7 +8275,7 @@ public partial class MainViewModel :
                     foreach (var p in transcribedLine.Transcription.Paragraphs)
                     {
                         var newLine = new SubtitleLineViewModel(p, SelectedSubtitleFormat);
-                        newLine.SetStartTimeKeepDuration(selectedLine.StartTime + p.StartTime.TimeSpan);
+                        newLine.SetStartTimeKeepDuration(TimeSpanExtensions.FromMillisecondsWholeMilliseconds(selectedLine.StartTime.TotalMilliseconds + p.StartTime.TotalMilliseconds));
                         newLine.Style = selectedLine.Style; // the lines replace selectedLine, so they keep its style
                         newLines.Add(newLine);
                     }
@@ -9904,7 +9904,7 @@ public partial class MainViewModel :
                 continue;
             }
 
-            line.EndTime = TimeSpan.FromMilliseconds(newEndMs.Value);
+            line.EndTime = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newEndMs.Value);
         }
 
         _updateAudioVisualizer = true;
@@ -9993,7 +9993,7 @@ public partial class MainViewModel :
 
             // Use SetStartTimeOnly so EndTime stays fixed (the StartTime setter would otherwise
             // shift EndTime to preserve Duration - see SubtitleLineViewModel.OnStartTimeChanged).
-            line.SetStartTimeOnly(TimeSpan.FromMilliseconds(newStartMs.Value));
+            line.SetStartTimeOnly(TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newStartMs.Value));
         }
 
         _updateAudioVisualizer = true;
@@ -10029,7 +10029,7 @@ public partial class MainViewModel :
 
             // Use SetStartTimeOnly so EndTime stays fixed (the StartTime
             // setter would otherwise shift EndTime to preserve Duration).
-            line.SetStartTimeOnly(TimeSpan.FromMilliseconds(newStartMs.Value));
+            line.SetStartTimeOnly(TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newStartMs.Value));
         }
 
         _updateAudioVisualizer = true;
@@ -10063,7 +10063,7 @@ public partial class MainViewModel :
                 continue;
             }
 
-            line.EndTime = TimeSpan.FromMilliseconds(newEndMs.Value);
+            line.EndTime = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newEndMs.Value);
         }
 
         _updateAudioVisualizer = true;
@@ -10186,10 +10186,10 @@ public partial class MainViewModel :
                     // Use SetStartTimeOnly so the line's EndTime stays put
                     // (the StartTime setter would otherwise shift EndTime to
                     // preserve Duration — see OnStartTimeChanged).
-                    line.SetStartTimeOnly(TimeSpan.FromMilliseconds(newStartMs));
+                    line.SetStartTimeOnly(TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newStartMs));
                     if (Math.Abs(newPreviousEndMs - prev.EndTime.TotalMilliseconds) > 0.5)
                     {
-                        prev.EndTime = TimeSpan.FromMilliseconds(newPreviousEndMs);
+                        prev.EndTime = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newPreviousEndMs);
                         if (!selectedSet.Contains(prev))
                         {
                             adjustedNeighbors.Add(prev);
@@ -10198,7 +10198,7 @@ public partial class MainViewModel :
                 }
                 else
                 {
-                    line.SetStartTimeOnly(TimeSpan.FromMilliseconds(newStartMs));
+                    line.SetStartTimeOnly(TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newStartMs));
                 }
             }
             else
@@ -10237,12 +10237,12 @@ public partial class MainViewModel :
                         continue;
                     }
 
-                    line.EndTime = TimeSpan.FromMilliseconds(newEndMs);
+                    line.EndTime = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newEndMs);
                     if (Math.Abs(newNextStartMs - next.StartTime.TotalMilliseconds) > 0.5)
                     {
                         // SetStartTimeOnly so the next subtitle's EndTime
                         // isn't shifted to preserve its previous Duration.
-                        next.SetStartTimeOnly(TimeSpan.FromMilliseconds(newNextStartMs));
+                        next.SetStartTimeOnly(TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newNextStartMs));
                         if (!selectedSet.Contains(next))
                         {
                             adjustedNeighbors.Add(next);
@@ -10251,7 +10251,7 @@ public partial class MainViewModel :
                 }
                 else
                 {
-                    line.EndTime = TimeSpan.FromMilliseconds(newEndMs);
+                    line.EndTime = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newEndMs);
                 }
             }
 
@@ -12692,11 +12692,11 @@ public partial class MainViewModel :
             }
         }
 
-        s.SetStartTimeOnly(TimeSpan.FromMilliseconds(newStartMs));
+        s.SetStartTimeOnly(TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newStartMs));
 
         if (prevIsClose && prev != null)
         {
-            prev.EndTime = TimeSpan.FromMilliseconds(newStartMs - prevGapMs);
+            prev.EndTime = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newStartMs - prevGapMs);
         }
 
         _updateAudioVisualizer = true;
@@ -12760,11 +12760,11 @@ public partial class MainViewModel :
             }
         }
 
-        s.EndTime = TimeSpan.FromMilliseconds(newEndMs);
+        s.EndTime = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newEndMs);
 
         if (nextIsClose && next != null)
         {
-            next.SetStartTimeOnly(TimeSpan.FromMilliseconds(newEndMs + nextGapMs));
+            next.SetStartTimeOnly(TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newEndMs + nextGapMs));
         }
 
         _updateAudioVisualizer = true;
@@ -15288,7 +15288,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var startMs = vp.Position * 1000.0;
+        var startMs = Math.Round(vp.Position * 1000.0, MidpointRounding.AwayFromZero);
         var endMs = startMs + Se.Settings.General.NewEmptyDefaultMs;
         var newParagraph =
             new SubtitleLineViewModel(new Paragraph(string.Empty, startMs, endMs), SelectedSubtitleFormat);
@@ -15337,7 +15337,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var startMs = vp.Position * 1000.0;
+        var startMs = Math.Round(vp.Position * 1000.0, MidpointRounding.AwayFromZero);
         selectedSubtitle.StartTime = TimeSpan.FromMilliseconds(startMs);
         _setEndAtKeyUpLine = selectedSubtitle;
         _setEndAtKeyUpLineGoToNext = true;
@@ -15612,8 +15612,7 @@ public partial class MainViewModel :
             var ratio = p.Text.CountCharacters(true) / totalLength;
             var newDurationMs = (double)ratio * totalDurationWithGapsMs;
             var newStartMs = previousEndMs + gapMs;
-            p.StartTime = TimeSpan.FromMilliseconds(newStartMs);
-            p.EndTime = TimeSpan.FromMilliseconds(newStartMs + newDurationMs);
+            p.SetTimes(TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newStartMs), TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newStartMs) + TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newDurationMs));
             previousEndMs = p.EndTime.TotalMilliseconds;
         }
 
@@ -16223,7 +16222,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var startMs = vp.Position * 1000.0;
+        var startMs = Math.Round(vp.Position * 1000.0, MidpointRounding.AwayFromZero);
         var endMs = startMs + Se.Settings.General.NewEmptyDefaultMs;
         var newParagraph =
             new SubtitleLineViewModel(new Paragraph(string.Empty, startMs, endMs), SelectedSubtitleFormat);
@@ -16265,7 +16264,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var startMs = vp.Position * 1000.0;
+        var startMs = Math.Round(vp.Position * 1000.0, MidpointRounding.AwayFromZero);
         var endMs = startMs + Se.Settings.General.NewEmptyDefaultMs;
         var newParagraph =
             new SubtitleLineViewModel(new Paragraph(string.Empty, startMs, endMs), SelectedSubtitleFormat);

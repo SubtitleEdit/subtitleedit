@@ -53,57 +53,14 @@ public partial class SubtitleLineViewModel : ObservableObject
     [ObservableProperty]
     private string? _bookmark;
 
-    // The three time properties are hand-written rather than [ObservableProperty] so that every
-    // assignment is snapped to a whole millisecond - the generated setter offers no coercion hook.
-    // Subtitle formats store whole milliseconds and every time code SE shows is a whole
-    // millisecond, but .NET Core's TimeSpan.FromSeconds/FromMilliseconds truncate to ticks, so a
-    // pixel-derived waveform drag or a typed "0,820" lands here as e.g. 819.9999 ms. Such a value
-    // renders one millisecond apart in the grid (which truncates) and in the duration up/down
-    // (which rounds), and saves a millisecond early - see issue #14056.
+    [ObservableProperty]
     private TimeSpan _startTime;
 
-    public TimeSpan StartTime
-    {
-        get => _startTime;
-        set
-        {
-            var snapped = value.SnapToWholeMilliseconds();
-            if (SetProperty(ref _startTime, snapped))
-            {
-                OnStartTimeChanged(snapped);
-            }
-        }
-    }
-
+    [ObservableProperty]
     private TimeSpan _endTime;
 
-    public TimeSpan EndTime
-    {
-        get => _endTime;
-        set
-        {
-            var snapped = value.SnapToWholeMilliseconds();
-            if (SetProperty(ref _endTime, snapped))
-            {
-                OnEndTimeChanged(snapped);
-            }
-        }
-    }
-
+    [ObservableProperty]
     private TimeSpan _duration;
-
-    public TimeSpan Duration
-    {
-        get => _duration;
-        set
-        {
-            var snapped = value.SnapToWholeMilliseconds();
-            if (SetProperty(ref _duration, snapped))
-            {
-                OnDurationChanged(snapped);
-            }
-        }
-    }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(TeletextDisplay))]
@@ -960,7 +917,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         SetTimes(timeSpan, timeSpan + (EndTime - StartTime));
     }
 
-    private void OnStartTimeChanged(TimeSpan value)
+    partial void OnStartTimeChanged(TimeSpan value)
     {
         OnPropertyChanged(nameof(StartTimeOnly));
         OnPropertyChanged(nameof(StartTimeKeepDuration));
@@ -978,7 +935,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         _skipUpdate = false;
     }
 
-    private void OnEndTimeChanged(TimeSpan value)
+    partial void OnEndTimeChanged(TimeSpan value)
     {
         if (_skipUpdate)
         {
@@ -993,7 +950,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         _skipUpdate = false;
     }
 
-    private void OnDurationChanged(TimeSpan value)
+    partial void OnDurationChanged(TimeSpan value)
     {
         if (_skipUpdate)
         {
@@ -1205,9 +1162,14 @@ public partial class SubtitleLineViewModel : ObservableObject
         // Set both times atomically via SetTimes; updating start then end
         // separately can briefly expose start > end to the bound editor
         // controls, which clamp the negative duration and corrupt the end time.
-        var newStart = TimeSpan.FromMilliseconds(StartTime.TotalMilliseconds * factor + adjustmentInSeconds * TimeCode.BaseUnit);
-        var newEnd = TimeSpan.FromMilliseconds(EndTime.TotalMilliseconds * factor + adjustmentInSeconds * TimeCode.BaseUnit);
-        SetTimes(newStart, newEnd);
+        //
+        // Round to whole milliseconds via start + scaled duration, not start and end
+        // independently: with independent rounding, lines of equal length scale to durations
+        // that differ by 1 ms depending on where they sit, flipping min-duration/CPS warnings
+        // on some rows and not others (#14056).
+        var newStart = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(StartTime.TotalMilliseconds * factor + adjustmentInSeconds * TimeCode.BaseUnit);
+        var newDuration = TimeSpanExtensions.FromMillisecondsWholeMilliseconds((EndTime.TotalMilliseconds - StartTime.TotalMilliseconds) * factor);
+        SetTimes(newStart, newStart + newDuration);
     }
 
     internal double GetCharactersPerSecond()

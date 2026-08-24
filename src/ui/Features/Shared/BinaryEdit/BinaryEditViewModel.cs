@@ -1833,8 +1833,8 @@ public partial class BinaryEditViewModel : ObservableObject
                     continue;
                 }
 
-                s.StartTime = TimeSpan.FromMilliseconds(o.Item1 * factor);
-                s.EndTime = TimeSpan.FromMilliseconds(o.Item2 * factor);
+                s.StartTime = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(o.Item1 * factor);
+                s.EndTime = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(o.Item2 * factor);
             }
         }
 
@@ -2726,8 +2726,8 @@ public partial class BinaryEditViewModel : ObservableObject
     {
         foreach (var s in subtitles)
         {
-            var newStart = TimeSpan.FromMilliseconds(s.StartTime.TotalMilliseconds * factor);
-            var newEnd = TimeSpan.FromMilliseconds(s.EndTime.TotalMilliseconds * factor);
+            var newStart = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(s.StartTime.TotalMilliseconds * factor);
+            var newEnd = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(s.EndTime.TotalMilliseconds * factor);
             s.StartTime = newStart;
             s.EndTime = newEnd;
         }

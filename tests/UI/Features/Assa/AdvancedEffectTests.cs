@@ -97,9 +97,8 @@ public class AdvancedEffectTests
     }
 
     /// <summary>
-    /// The fade duration is emitted as a rounded integer - it must not leak a decimal point
-    /// (or comma) into \fad. A line's times are snapped to whole milliseconds on the way into
-    /// the view model (#14056), so a fractional duration rounds before the effect ever sees it.
+    /// The fade duration is emitted as a rounded integer - a fractional line duration must
+    /// not leak a decimal point (or comma) into \fad.
     /// </summary>
     [Fact]
     public void FadeIn_FractionalDuration_EmitsIntegerFad()
@@ -108,7 +107,7 @@ public class AdvancedEffectTests
         var result = effect.ApplyEffect(string.Empty, [MakeLine("Hello", durationMs: 1500.5)], 1280, 720, null);
 
         var overlay = result[0];
-        Assert.Contains(@"\fad(0,1501)", overlay.Text);
+        Assert.Contains(@"\fad(0,1500)", overlay.Text);
     }
 
     /// <summary>
