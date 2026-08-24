@@ -114,6 +114,7 @@ public partial class OcrViewModel : ObservableObject
     [ObservableProperty] private bool _isTesseractVisible;
     [ObservableProperty] private bool _isBinaryImageCompareVisible;
     [ObservableProperty] private bool _isPaddleOcrVisible;
+    [ObservableProperty] private bool _isAppleVisionVisible;
     [ObservableProperty] private bool _isGoogleVisionVisible;
     [ObservableProperty] private bool _isGoogleLensVisible;
     [ObservableProperty] private bool _isMistralOcrVisible;
@@ -126,6 +127,8 @@ public partial class OcrViewModel : ObservableObject
     [ObservableProperty] private string _mistralApiKey;
     [ObservableProperty] private ObservableCollection<OcrLanguage> _googleVisionLanguages;
     [ObservableProperty] private OcrLanguage? _selectedGoogleVisionLanguage;
+    [ObservableProperty] private ObservableCollection<OcrLanguage2> _appleVisionLanguages;
+    [ObservableProperty] private OcrLanguage2? _selectedAppleVisionLanguage;
     [ObservableProperty] private ObservableCollection<OcrLanguage2> _googleLensLanguages;
     [ObservableProperty] private OcrLanguage2 _selectedGoogleLensLanguage;
     [ObservableProperty] private ObservableCollection<OcrLanguage2> _paddleOcrLanguages;
@@ -258,6 +261,7 @@ public partial class OcrViewModel : ObservableObject
         GoogleVisionApiKey = string.Empty;
         MistralApiKey = string.Empty;
         GoogleVisionLanguages = new ObservableCollection<OcrLanguage>(GoogleVisionOcr.GetLanguages().OrderBy(p => p.ToString()));
+        AppleVisionLanguages = new ObservableCollection<OcrLanguage2>(AppleVisionOcr.GetLanguages().OrderBy(p => p.ToString()));
         GoogleLensLanguages = new ObservableCollection<OcrLanguage2>(GoogleLensOcr.GetLanguages().OrderBy(p => p.ToString()));
         SelectedGoogleLensLanguage = GoogleLensLanguages.FirstOrDefault(p => p.Code == "en") ?? GoogleLensLanguages.First();
         PaddleOcrLanguages = new ObservableCollection<OcrLanguage2>(PaddleOcr.GetLanguages().OrderBy(p => p.ToString()));
@@ -312,6 +316,7 @@ public partial class OcrViewModel : ObservableObject
             GoogleVisionApiKey = ocr.GoogleVisionApiKey;
             MistralApiKey = ocr.MistralApiKey;
             SelectedGoogleVisionLanguage = GoogleVisionLanguages.FirstOrDefault(p => p.Code == ocr.GoogleVisionLanguage);
+            SelectedAppleVisionLanguage = AppleVisionLanguages.FirstOrDefault(p => p.Code == ocr.AppleVisionLanguage);
             var paddleOcrLastLanguage = PaddleOcr.NormalizeLanguageCode(Se.Settings.Ocr.PaddleOcrLastLanguage);
             SelectedPaddleOcrLanguage = PaddleOcrLanguages.FirstOrDefault(p => p.Code == paddleOcrLastLanguage) ??
                                         PaddleOcrLanguages.FirstOrDefault(p => p.Code == "en") ??
@@ -360,6 +365,7 @@ public partial class OcrViewModel : ObservableObject
         ocr.GoogleVisionApiKey = GoogleVisionApiKey;
         ocr.MistralApiKey = MistralApiKey;
         ocr.GoogleVisionLanguage = SelectedGoogleVisionLanguage?.Code ?? "en";
+        ocr.AppleVisionLanguage = SelectedAppleVisionLanguage?.Code ?? ocr.AppleVisionLanguage;
         ocr.TesseractLastLanguage = SelectedTesseractDictionaryItem?.Code ?? "eng";
         ocr.TesseractEngineMode = SelectedTesseractEngineMode?.Oem ?? 3;
         ocr.DoFixOcrErrors = DoFixOcrErrors;
@@ -428,6 +434,23 @@ public partial class OcrViewModel : ObservableObject
     partial void OnSelectedPaddleOcrLanguageChanged(OcrLanguage2? value) => AutoSelectDictionaryForOcrLanguage(value?.Code);
     partial void OnSelectedGoogleLensLanguageChanged(OcrLanguage2 value) => AutoSelectDictionaryForOcrLanguage(value?.Code);
     partial void OnSelectedGoogleVisionLanguageChanged(OcrLanguage? value) => AutoSelectDictionaryForOcrLanguage(value?.Code);
+    partial void OnSelectedAppleVisionLanguageChanged(OcrLanguage2? value) => AutoSelectDictionaryForOcrLanguage(LanguagePartOf(value?.Code));
+
+    /// <summary>
+    /// The language part of a BCP-47 tag - "pt-BR" becomes "pt". Apple Vision names its
+    /// languages that way, while the dictionary and ISO lookups here are keyed on the bare
+    /// language code.
+    /// </summary>
+    private static string? LanguagePartOf(string? bcp47)
+    {
+        if (string.IsNullOrEmpty(bcp47))
+        {
+            return bcp47;
+        }
+
+        var dash = bcp47!.IndexOf('-');
+        return dash < 0 ? bcp47 : bcp47.Substring(0, dash);
+    }
     partial void OnSelectedOllamaLanguageChanged(string? value) => AutoSelectDictionaryForOcrLanguage(Iso639Dash2LanguageCode.GetTwoLetterCodeFromEnglishName(value ?? string.Empty));
 
     private void AutoSelectDictionaryForOcrLanguage(string? languageCode)
@@ -494,6 +517,12 @@ public partial class OcrViewModel : ObservableObject
         if (lensLanguage != null)
         {
             SelectedGoogleLensLanguage = lensLanguage;
+        }
+
+        var appleVisionLanguage = AppleVisionLanguages.FirstOrDefault(p => LanguagePartOf(p.Code) == iso.TwoLetterCode);
+        if (appleVisionLanguage != null)
+        {
+            SelectedAppleVisionLanguage = appleVisionLanguage;
         }
 
         var visionLanguage = GoogleVisionLanguages.FirstOrDefault(p => p.Code == iso.ThreeLetterCode || p.Code == iso.TwoLetterCode);
@@ -2661,6 +2690,10 @@ public partial class OcrViewModel : ObservableObject
         {
             RunGoogleVisionOcr(selectedIndices, _cancellationTokenSource.Token);
         }
+        else if (ocrEngine.EngineType == OcrEngineType.AppleVision)
+        {
+            RunAppleVisionOcr(selectedIndices, _cancellationTokenSource.Token);
+        }
         else if (ocrEngine.EngineType == OcrEngineType.GoogleLens)
         {
             if (Configuration.IsRunningOnWindows && !File.Exists(Path.Combine(Se.GoogleLensOcrFolder, GoogleLensOcr.ExeFileName)))
@@ -4465,6 +4498,44 @@ public partial class OcrViewModel : ObservableObject
         });
     }
 
+    private void RunAppleVisionOcr(List<int> selectedIndices, CancellationToken cancellationToken)
+    {
+        var languageCode = SelectedAppleVisionLanguage?.Code ?? string.Empty;
+
+        _ = Task.Run(() =>
+        {
+            try
+            {
+                for (var processedIndex = 0; processedIndex < selectedIndices.Count; processedIndex++)
+                {
+                    var i = selectedIndices[processedIndex];
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        return;
+                    }
+
+                    UpdateOcrProgress(processedIndex + 1, selectedIndices.Count);
+
+                    var item = OcrSubtitleItems[i];
+                    var bitmap = item.GetSkBitmap();
+
+                    OcrUiUpdates.EnqueueSelect(i);
+
+                    item.Text = AppleVisionOcr.Ocr(bitmap, languageCode, fast: false, cancellationToken);
+
+                    OcrFixLineAndSetText(i, item);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            finally
+            {
+                PauseOcr();
+            }
+        }, cancellationToken);
+    }
+
     private async Task<bool> CheckAndDownloadTesseract()
     {
         if (OperatingSystem.IsWindows())
@@ -4988,6 +5059,7 @@ public partial class OcrViewModel : ObservableObject
         IsCrispEmbedVisible = et == OcrEngineType.CrispEmbed;
         IsTesseractVisible = et == OcrEngineType.Tesseract;
         IsPaddleOcrVisible = et == OcrEngineType.PaddleOcrStandalone || et == OcrEngineType.PaddleOcrPython;
+        IsAppleVisionVisible = et == OcrEngineType.AppleVision;
         IsGoogleVisionVisible = et == OcrEngineType.GoogleVision;
         IsGoogleLensVisible = et == OcrEngineType.GoogleLens || et == OcrEngineType.GoogleLensSharp;
         IsMistralOcrVisible = et == OcrEngineType.Mistral;
@@ -5033,6 +5105,19 @@ public partial class OcrViewModel : ObservableObject
                 SelectedPaddleOcrLanguage = PaddleOcrLanguages.FirstOrDefault(p => _sourceLanguageIso != null && p.Code == _sourceLanguageIso.TwoLetterCode) ??
                                             PaddleOcrLanguages.FirstOrDefault(p => p.Code == "en") ??
                                             PaddleOcrLanguages.FirstOrDefault();
+            }
+        }
+
+        if (IsAppleVisionVisible)
+        {
+            if (SelectedAppleVisionLanguage == null)
+            {
+                // Vision's tags are BCP-47 ("en-US", "pt-BR"), so match the source language on
+                // the part before the region rather than on the whole tag.
+                SelectedAppleVisionLanguage =
+                    AppleVisionLanguages.FirstOrDefault(p => _sourceLanguageIso != null && LanguagePartOf(p.Code) == _sourceLanguageIso.TwoLetterCode) ??
+                    AppleVisionLanguages.FirstOrDefault(p => p.Code == "en-US") ??
+                    AppleVisionLanguages.FirstOrDefault();
             }
         }
 

@@ -28,6 +28,12 @@ public class SeOcr
     public int CrispEmbedOcrTimeoutMinutes { get; set; }
     public string GoogleVisionApiKey { get; set; }
     public string GoogleVisionLanguage { get; set; }
+
+    /// <summary>
+    /// Apple Vision's chosen recognition language, as the BCP-47 tag the framework uses
+    /// ("en-US", "pt-BR"). macOS only.
+    /// </summary>
+    public string AppleVisionLanguage { get; set; }
     public string MistralApiKey { get; set; }
     public bool IsNewLetterItalic { get; set; }
     public bool SubmitOnFirstLetter { get; set; }
@@ -107,6 +113,7 @@ public class SeOcr
 
         GoogleVisionApiKey = string.Empty;
         GoogleVisionLanguage = "en";
+        AppleVisionLanguage = "en-US";
 
         PaddleOcrMode = "mobile";
         PaddleOcrLastLanguage = "en";
