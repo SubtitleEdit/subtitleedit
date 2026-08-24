@@ -132,8 +132,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
             for (var i = 0; i < PaletteEntries; i++)
             {
                 var entry = offset + i * 4;
-                var rgb = BluRaySupPalette.YCbCr2Rgb(data[entry + 1], data[entry + 3], data[entry + 2], true);
-                palette.Add(new SKColor((byte)rgb[0], (byte)rgb[1], (byte)rgb[2]));
+                BluRaySupPalette.YCbCr2Rgb(data[entry + 1], data[entry + 3], data[entry + 2], true, out var r8, out var g8, out var b8);
+                palette.Add(new SKColor((byte)r8, (byte)g8, (byte)b8));
             }
 
             return palette;
