@@ -50,11 +50,15 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// <c>voice-cloning</c> capability for this backend even though cloning demonstrably works — the
 /// capability bitmask is stale, not the feature.
 ///
-/// <b>It is slow.</b> Measured RTF 7.64 on an M4 with the F16 core at 16 ODE steps (3.5 s of audio
-/// in 26.9 s), against ~1.6 for IndexTTS 2.5 on the same machine. The cost is the CFG Euler loop
-/// in the DiT, which stays F16 in every quant, so a smaller quant saves memory rather than time —
-/// the ODE step count is the lever, and it scales close to linearly (4/16/32 steps took 25/38/68 s
-/// wall including model load).
+/// <b>It is slow.</b> Measured in server mode on an M4 at 16 ODE steps, same text both times:
+/// F16 RTF 7.64 (3.5 s of audio in 26.91 s), Q8_0 RTF 7.60 (26.77 s) — against ~1.6 for
+/// IndexTTS 2.5 on the same machine. Synthesis speed is therefore <i>independent of the quant</i>,
+/// exactly as the mixed-quant design predicts: the cost is the CFG Euler loop in the DiT, which
+/// stays F16 in all of them. What a smaller quant does buy is load time — the server reported
+/// healthy in 4 s on Q8_0 versus 21 s on F16 — which is why Q8_0 is the default here.
+///
+/// The one lever on synthesis time is the ODE step count, and it scales close to linearly:
+/// 4 / 16 / 32 steps took 25 / 38 / 68 s wall including model load.
 ///
 /// CLI shape:
 ///   crispasr --backend dots-tts -m dots-tts-soar-q8_0.gguf \
