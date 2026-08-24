@@ -256,8 +256,9 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
 
         // Same platform/architecture support as the standalone build published at
-        // https://github.com/muaz978/subtitleedit-whisperx-standalone.
-        if (OperatingSystem.IsWindows() ||
+        // https://github.com/muaz978/subtitleedit-whisperx-standalone - only builds for
+        // Windows x64 (not ARM64, which would silently get a mismatched x64 binary).
+        if ((OperatingSystem.IsWindows() && RuntimeInformation.ProcessArchitecture == Architecture.X64) ||
             (OperatingSystem.IsMacOS() && RuntimeInformation.ProcessArchitecture == Architecture.Arm64) ||
             (OperatingSystem.IsLinux() && RuntimeInformation.ProcessArchitecture == Architecture.X64))
         {
@@ -4174,9 +4175,9 @@ public partial class SpeechToTextViewModel : ObservableObject
     private static bool _executableStackChecked;
 
     /// <summary>
-    /// Repairs an already-installed Purfview Faster-Whisper-XXL before launching it.
+    /// Repairs an already-installed Purfview Faster-Whisper-XXL or WhisperX before launching it.
     /// <para>
-    /// Its bundled libctranslate2 is built with PT_GNU_STACK = RWE, and glibc 2.41 stopped making
+    /// Both bundle a libctranslate2 built with PT_GNU_STACK = RWE, and glibc 2.41 stopped making
     /// the stack executable at dlopen time, so on a distro with glibc 2.41+ (Fedora 42, Arch,
     /// Ubuntu 25.10) the run dies immediately with "cannot enable executable stack as shared
     /// object requires: Invalid argument". The download path clears the flag on unpack, but
@@ -4190,7 +4191,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         if (_executableStackChecked ||
             !OperatingSystem.IsLinux() ||
             string.IsNullOrEmpty(whisperFolder) ||
-            engine is not WhisperEnginePurfviewFasterWhisperXxl)
+            engine is not (WhisperEnginePurfviewFasterWhisperXxl or WhisperEngineWhisperX))
         {
             return;
         }

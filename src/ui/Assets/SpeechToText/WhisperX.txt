@@ -174,7 +174,10 @@ options:
 
 Notes for the standalone build (https://github.com/muaz978/subtitleedit-whisperx-standalone):
 - No Python install is required - this is a self-contained build.
+- The downloaded archive unpacks to roughly 950 MB (Windows), 1.1 GB (macOS), or 1.7 GB
+  (Linux) on disk.
 - Requires ffmpeg on PATH (Subtitle Edit passes its own bundled copy automatically).
-- Whisper and alignment models download from Hugging Face on first use.
+- Whisper and alignment models download from Hugging Face on first use, adding up to
+  roughly 2 GB more depending on the selected model.
 - --diarize needs a Hugging Face token with access to the gated pyannote
   speaker-diarization model, passed via --hf_token.

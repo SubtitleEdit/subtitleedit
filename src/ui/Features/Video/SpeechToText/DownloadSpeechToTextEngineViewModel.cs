@@ -217,11 +217,25 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
             else if (Engine.Name == WhisperEngineWhisperX.StaticName)
             {
                 var dir = Engine.GetAndCreateWhisperFolder();
+                var tempFileName = Path.Combine(dir, Engine.Name + ".zip");
 
                 TitleText = string.Format(Se.Language.General.UnpackingX, Engine.Name);
                 StartIndeterminateProgress();
-                Unpack(dir, string.Empty);
+                UnpackFile(tempFileName, dir, string.Empty);
                 StopIndeterminateProgress();
+
+                try
+                {
+                    File.Delete(tempFileName);
+
+                    // WhisperX bundles ctranslate2 from the same wheel family that hits the
+                    // glibc 2.41 PT_GNU_STACK=RWE problem patched for Purfview Faster-Whisper-XXL.
+                    ClearExecutableStack(dir);
+                }
+                catch
+                {
+                    // ignore
+                }
 
                 if (_cancellationTokenSource.IsCancellationRequested)
                 {
@@ -469,6 +483,28 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
         MakeExecutable(path);
     }
 
+    /// <summary>
+    /// Same as <see cref="Unpack"/>, but for an engine downloaded straight to a file (via
+    /// <see cref="IWhisperDownloadService"/>'s file-based overloads) instead of buffered into
+    /// the shared <see cref="_downloadStream"/> - large downloads use a file precisely to avoid
+    /// that in-memory buffering.
+    /// </summary>
+    private void UnpackFile(string zipFileName, string folder, string skipFolderLevel)
+    {
+        using (var fileStream = File.OpenRead(zipFileName))
+        {
+            _zipUnpacker.UnpackZipStream(fileStream, folder, skipFolderLevel, false, new List<string>(), null);
+        }
+
+        if (Engine == null || (!OperatingSystem.IsMacOS() && !OperatingSystem.IsLinux()))
+        {
+            return;
+        }
+
+        var path = Path.Combine(folder, Engine.GetExecutableFileName());
+        MakeExecutable(path);
+    }
+
     private void DownloadAndUnpackSileroVad(string folder)
     {
         if (_cancellationTokenSource.IsCancellationRequested)
@@ -572,7 +608,13 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
         }
         else if (Engine is WhisperEngineWhisperX)
         {
-            _downloadTask = _whisperDownloadService.DownloadWhisperX(_downloadStream, downloadProgress, _cancellationTokenSource.Token);
+            // A file download, not the shared _downloadStream MemoryStream: at 850 MB-925 MB,
+            // buffering this in memory (with MemoryStream's doubling growth) would peak at
+            // 1.5-2 GB before unpacking even starts. Purfview Faster-Whisper-XXL is downloaded
+            // the same way for the same reason.
+            var whisperXDir = Engine.GetAndCreateWhisperFolder();
+            var whisperXTempFileName = Path.Combine(whisperXDir, Engine.Name + ".zip");
+            _downloadTask = _whisperDownloadService.DownloadWhisperX(whisperXTempFileName, downloadProgress, _cancellationTokenSource.Token);
         }
         else if (Engine is WhisperEngineConstMe)
         {
