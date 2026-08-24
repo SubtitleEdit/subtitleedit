@@ -22147,7 +22147,25 @@ public partial class MainViewModel :
         var vp = GetVideoPlayerControl();
         if (vp == null)
         {
-            return;
+            // The player control can be legitimately missing for a moment: the undocked video
+            // window only gets its control once its Loaded event has run, and layout rebuilds
+            // swap controls via dispatcher posts. An open issued right after VideoUndockControls()
+            // - e.g. an "Open with"/CLI launch or session restore at startup - used to race that
+            // and silently never open the video (#14047). Wait (bounded) for the control; the
+            // delays yield the UI thread so the pending window/layout build can finish.
+            var waitUntil = DateTime.UtcNow.AddSeconds(5);
+            while (vp == null && DateTime.UtcNow < waitUntil)
+            {
+                await Task.Delay(50);
+                vp = GetVideoPlayerControl();
+            }
+
+            if (vp == null)
+            {
+                Se.LogError(new InvalidOperationException("No video player control available after 5 seconds"),
+                    $"VideoOpenFile could not open \"{videoFileName}\"");
+                return;
+            }
         }
 
         _videoOpenTokenSource?.Cancel();
