@@ -2805,6 +2805,21 @@ public partial class OcrViewModel : ObservableObject
                       "Details:" + Environment.NewLine +
                       error;
         }
+        else if (engineType == OcrEngineType.PaddleOcrPython &&
+                 error.Contains("PP-OCRv6", StringComparison.Ordinal) &&
+                 error.Contains("is not registered on", StringComparison.OrdinalIgnoreCase))
+        {
+            // The downloaded models are PP-OCRv6 (PaddleOCR 3.7). PaddleX looks the model name
+            // up in a registry, so an older pip "paddleocr" fails with "`PP-OCRv6_small_rec`
+            // is not registered on BasePredictor" for every language v6 covers.
+            message = "Paddle OCR Python is too old for the downloaded models." + Environment.NewLine +
+                      Environment.NewLine +
+                      "The models are PP-OCRv6, which needs \"paddleocr\" 3.7 or newer:" + Environment.NewLine +
+                      "    python -m pip install --upgrade paddleocr" + Environment.NewLine +
+                      Environment.NewLine +
+                      "Details:" + Environment.NewLine +
+                      error;
+        }
 
         Dispatcher.UIThread.Post(async void () =>
         {

@@ -75,7 +75,7 @@ public class PaddleOcrDownloadArchiveTests
         {
             // The models archive is the exception: its root folder drops the ".VideOCR" part.
             var models = PaddleOcr.GetArchive(PaddleOcrDownloadType.Models);
-            Assert.Equal("PaddleOCR.PP-OCRv5.support.files", models.RootFolderInArchive);
+            Assert.Equal("PaddleOCR.PP-OCRv6.support.files", models.RootFolderInArchive);
             return;
         }
 
