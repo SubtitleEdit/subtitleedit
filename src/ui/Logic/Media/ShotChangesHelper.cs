@@ -458,8 +458,12 @@ public class ShotChangesHelper
             nearestEnd = FirstAfterWithin(shotChanges, nearestStart.Value, endMs, maxSameShotEndDistanceMs);
         }
 
-        var newStartMs = nearestStart != null ? nearestStart.Value + inCuesGapMs : startMs;
-        var newEndMs = nearestEnd != null ? nearestEnd.Value - outCuesGapMs : endMs;
+        // Shot changes come from video frame positions, so cut ± gap is a fractional
+        // millisecond. Round to the whole millisecond the subtitle will actually store; the
+        // no-op guard below then compares like with like, so re-running the command on an
+        // already-snapped line stays a no-op instead of reporting a change (#14056).
+        var newStartMs = nearestStart != null ? Math.Round(nearestStart.Value + inCuesGapMs, MidpointRounding.AwayFromZero) : startMs;
+        var newEndMs = nearestEnd != null ? Math.Round(nearestEnd.Value - outCuesGapMs, MidpointRounding.AwayFromZero) : endMs;
 
         if (newEndMs <= newStartMs)
         {

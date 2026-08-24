@@ -183,9 +183,11 @@ public partial class ChangeFrameRateViewModel : ObservableObject
         double ratio = GetFrameRateRatio(fromFrameRate, toFrameRate);
         foreach (var line in subtitles)
         {
-            line.SetTimes(
-                TimeSpan.FromMilliseconds(line.StartTime.TotalMilliseconds * ratio),
-                TimeSpan.FromMilliseconds(line.EndTime.TotalMilliseconds * ratio));
+            // Round to whole milliseconds via start + scaled duration, not start and end
+            // independently, so lines of equal length keep equal durations after scaling (#14056).
+            var newStart = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(line.StartTime.TotalMilliseconds * ratio);
+            var newDuration = TimeSpanExtensions.FromMillisecondsWholeMilliseconds((line.EndTime.TotalMilliseconds - line.StartTime.TotalMilliseconds) * ratio);
+            line.SetTimes(newStart, newStart + newDuration);
         }
     }
 }
