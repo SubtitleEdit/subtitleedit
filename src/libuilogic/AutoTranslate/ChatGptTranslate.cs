@@ -57,9 +57,20 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             var translation = input;
             var indexOfStartThink = translation.IndexOf("<think>");
             var indexOfEndThink = translation.IndexOf("</think>");
-            if (indexOfStartThink >= 0 && indexOfEndThink > indexOfStartThink)
+            if (indexOfStartThink >= 0)
             {
-                translation = translation.Remove(indexOfStartThink, indexOfEndThink - indexOfStartThink + 8).Trim();
+                if (indexOfEndThink > indexOfStartThink)
+                {
+                    translation = translation.Remove(indexOfStartThink, indexOfEndThink - indexOfStartThink + 8).Trim();
+                }
+                else
+                {
+                    // The model started reasoning but the response was cut off (hit its token
+                    // budget) before closing the tag, so everything after "<think>" is raw
+                    // internal monologue, not a translation. Empty triggers the caller's
+                    // retry-on-no-progress logic (DoAutoTranslate) instead of shipping it.
+                    return string.Empty;
+                }
             }
 
             var match = PreambleRegex.Match(translation);
