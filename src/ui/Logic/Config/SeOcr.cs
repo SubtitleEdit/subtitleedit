@@ -28,6 +28,12 @@ public class SeOcr
     public int CrispEmbedOcrTimeoutMinutes { get; set; }
     public string GoogleVisionApiKey { get; set; }
     public string GoogleVisionLanguage { get; set; }
+
+    /// <summary>
+    /// Apple Vision's chosen recognition language, as the BCP-47 tag the framework uses
+    /// ("en-US", "pt-BR"). macOS only.
+    /// </summary>
+    public string AppleVisionLanguage { get; set; }
     public string MistralApiKey { get; set; }
     public bool IsNewLetterItalic { get; set; }
     public bool SubmitOnFirstLetter { get; set; }
@@ -71,7 +77,13 @@ public class SeOcr
 
     public SeOcr()
     {
-        Engine = "nOCR";
+        // macOS gets Apple Vision out of the box: it is the only engine there that works with no
+        // download, no runtime and no key, so a fresh install can OCR immediately. Everywhere
+        // else nOCR stays the default. This is the default for NEW settings only - a saved
+        // engine is the user's choice and is never overwritten.
+        Engine = System.OperatingSystem.IsMacOS()
+            ? Features.Ocr.Engines.AppleVisionOcr.StaticName
+            : "nOCR";
         DoFixOcrErrors = true;
         DoTryToGuessUnknownWords = true;
         DoAutoBreak = true;
@@ -107,6 +119,7 @@ public class SeOcr
 
         GoogleVisionApiKey = string.Empty;
         GoogleVisionLanguage = "en";
+        AppleVisionLanguage = "en-US";
 
         PaddleOcrMode = "mobile";
         PaddleOcrLastLanguage = "en";

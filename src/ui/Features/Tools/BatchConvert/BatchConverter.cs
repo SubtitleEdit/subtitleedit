@@ -403,6 +403,13 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                     return;
                 }
             }
+            else if (Se.Settings.Tools.BatchConvert.OcrEngine.Equals(AppleVisionOcr.StaticName, StringComparison.OrdinalIgnoreCase))
+            {
+                if (!RunAppleVisionOcr(imageSubtitle, item, cancellationToken))
+                {
+                    return;
+                }
+            }
             else
             {
                 await RunOcrTesseract(imageSubtitle, item, cancellationToken);
@@ -1572,6 +1579,61 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             item.Subtitle.Paragraphs.All(p => string.IsNullOrWhiteSpace(p.Text)))
         {
             item.Status = Se.Language.Ocr.CrispEmbedReturnedNoText;
+            return false;
+        }
+
+        return !cancelled;
+    }
+
+    /// <summary>
+    /// Runs the file through macOS's Vision recognizer. The one OCR engine here with nothing to
+    /// check first - no install, no model, no server, no API key - so unlike its siblings there
+    /// is no "not downloaded" status it can end on, and no async at all: Vision is synchronous
+    /// in-process work.
+    /// </summary>
+    /// <returns>False when the run was cancelled or every line came back blank, in which case a
+    /// terminal status is already set on the item.</returns>
+    private bool RunAppleVisionOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
+    {
+        var languageCode = Se.Settings.Tools.BatchConvert.AppleVisionLanguage;
+
+        item.Status = Se.Language.General.OcrDotDotDot;
+        item.Subtitle = new Subtitle();
+        var cancelled = false;
+        for (var i = 0; i < imageSubtitles.Count; i++)
+        {
+            var pct = (i + 1) * 100 / imageSubtitles.Count;
+            item.Status = string.Format(Se.Language.General.OcrPercentX, pct);
+
+            string text;
+            try
+            {
+                text = AppleVisionOcr.Ocr(imageSubtitles.GetBitmap(i), languageCode, fast: false, cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                item.Status = Se.Language.General.Cancelled;
+                return false;
+            }
+
+            item.Subtitle.Paragraphs.Add(new Paragraph(text,
+                imageSubtitles.GetStartTime(i).TotalMilliseconds,
+                imageSubtitles.GetEndTime(i).TotalMilliseconds));
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                item.Status = Se.Language.General.Cancelled;
+                cancelled = true;
+                break;
+            }
+        }
+
+        // Every line blank is worth flagging rather than saving an empty subtitle - with this
+        // engine it usually means the chosen language does not match the file.
+        if (!cancelled && item.Subtitle.Paragraphs.Count > 0 &&
+            item.Subtitle.Paragraphs.All(p => string.IsNullOrWhiteSpace(p.Text)))
+        {
+            item.Status = Se.Language.Ocr.AppleVisionReturnedNoText;
             return false;
         }
 

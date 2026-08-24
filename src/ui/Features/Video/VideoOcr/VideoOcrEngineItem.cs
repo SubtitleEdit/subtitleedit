@@ -35,6 +35,14 @@ public class VideoOcrEngineItem
         list.Add(new("Ollama vision", OcrEngineType.Ollama, "Local vision model via Ollama - e.g. glm-ocr"));
         list.Add(new("llama.cpp", OcrEngineType.LlamaCpp, "Local vision model via llama.cpp (downloaded automatically)"));
 
+        // Nothing to download and no key: on macOS this is the one engine that works the
+        // moment the window opens, so it goes first.
+        if (AppleVisionOcr.IsAvailable())
+        {
+            list.Insert(0, new(AppleVisionOcr.StaticName, OcrEngineType.AppleVision,
+                "macOS's built-in OCR engine - local, no download needed"));
+        }
+
         if (CrispEmbedEngine.CanBeDownloaded())
         {
             list.Add(new(CrispEmbedEngine.StaticName, OcrEngineType.CrispEmbed,

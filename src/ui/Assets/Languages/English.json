@@ -3378,6 +3378,7 @@
     "llamaCppDownloadModelPrompt": "llama.cpp requires the selected OCR model to be downloaded. Download now?",
     "crispEmbedNotDownloaded": "CrispEmbed engine/model not downloaded - download via batch convert settings",
     "crispEmbedReturnedNoText": "CrispEmbed returned no text - check the model",
+    "appleVisionReturnedNoText": "Apple Vision returned no text - check the language",
     "crispEmbedSettingsTitle": "CrispEmbed settings",
     "crispEmbedDescription": "Local OCR engine with multiple model backends - download the engine and the models here.",
     "trainNOcrDatabase": "Train nOCR database...",

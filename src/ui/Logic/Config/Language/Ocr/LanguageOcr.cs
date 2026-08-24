@@ -138,6 +138,7 @@ public class LanguageOcr
     public string LlamaCppDownloadModelPrompt { get; set; }
     public string CrispEmbedNotDownloaded { get; set; }
     public string CrispEmbedReturnedNoText { get; set; }
+    public string AppleVisionReturnedNoText { get; set; }
     public string CrispEmbedSettingsTitle { get; set; }
     public string CrispEmbedDescription { get; set; }
     public string TrainNOcrDatabase { get; set; }
@@ -293,6 +294,7 @@ public class LanguageOcr
         LlamaCppDownloadModelPrompt = "llama.cpp requires the selected OCR model to be downloaded. Download now?";
         CrispEmbedNotDownloaded = "CrispEmbed engine/model not downloaded - download via batch convert settings";
         CrispEmbedReturnedNoText = "CrispEmbed returned no text - check the model";
+        AppleVisionReturnedNoText = "Apple Vision returned no text - check the language";
         CrispEmbedSettingsTitle = "CrispEmbed settings";
         CrispEmbedDescription = "Local OCR engine with multiple model backends - download the engine and the models here.";
 

@@ -25,7 +25,7 @@ Subtitle Edit is a free, open-source editor for video subtitles. It allows you t
 
 ## System Requirements
 
-- Windows 10 (version 22H2 / build 19045) or newer, Linux, or macOS 12 (Monterey) or newer
+- Windows 10 (version 22H2 / build 19045) or newer, Linux, or macOS 14 (Sonoma) or newer
 - [FFmpeg](https://ffmpeg.org/) (for audio/video processing)
 - [libmpv](https://mpv.io/) for video playback
 

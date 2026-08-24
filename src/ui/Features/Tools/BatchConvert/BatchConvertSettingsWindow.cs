@@ -125,6 +125,10 @@ public class BatchConvertSettingsWindow : Window
             model => model.Model.DisplayName,
             model => model.Model.Size,
             model => model.IsInstalled ? DownloadDotStatus.UpToDate : DownloadDotStatus.NotInstalled);
+        // Apple Vision: a language and nothing else - no model, no backend, no download.
+        var labelAppleVisionLanguage = UiUtil.MakeLabel(Se.Language.General.Language).WithBindVisible(vm, nameof(vm.IsAppleVisionVisible)).WithMarginLeft(10);
+        var comboBoxAppleVisionLanguages = UiUtil.MakeComboBox(vm.AppleVisionLanguages, vm, nameof(vm.SelectedAppleVisionLanguage))
+            .WithBindVisible(nameof(vm.IsAppleVisionVisible));
         var labelCrispEmbedBackend = UiUtil.MakeLabel(Se.Language.General.Backend).WithBindVisible(vm, nameof(vm.IsCrispEmbedVisible)).WithMarginLeft(10);
         var comboBoxCrispEmbedBackends = UiUtil.MakeComboBox(vm.CrispEmbedBackends, vm, nameof(vm.SelectedCrispEmbedBackend))
             .WithBindVisible(nameof(vm.IsCrispEmbedVisible));
@@ -137,7 +141,7 @@ public class BatchConvertSettingsWindow : Window
         {
             Orientation = Orientation.Horizontal,
             Margin = new Avalonia.Thickness(0, 30, 0, 0),
-            Children = { labelOcrEngine, comboBoxOcrEngine, labelOcLanguage, comboBoxTesseractLanguages, labelTesseractEngineMode, comboBoxTesseractEngineMode, comboBoxPaddleLanguages, labelBinaryOcrDatabase, comboBoxBinaryOcrDatabases, labelBinaryOcrFallback, comboBoxBinaryOcrFallback, labelNOcrDatabase, comboBoxNOcrDatabases, labelNOcrFallback, comboBoxNOcrFallback, labelOllamaModel, comboBoxOllamaModels, buttonOllamaModelBrowse, labelLlamaCppModel, comboBoxLlamaCppModels, labelCrispEmbedBackend, comboBoxCrispEmbedBackends, labelCrispEmbedModel, comboBoxCrispEmbedModels }
+            Children = { labelOcrEngine, comboBoxOcrEngine, labelOcLanguage, comboBoxTesseractLanguages, labelTesseractEngineMode, comboBoxTesseractEngineMode, comboBoxPaddleLanguages, labelBinaryOcrDatabase, comboBoxBinaryOcrDatabases, labelBinaryOcrFallback, comboBoxBinaryOcrFallback, labelNOcrDatabase, comboBoxNOcrDatabases, labelNOcrFallback, comboBoxNOcrFallback, labelOllamaModel, comboBoxOllamaModels, buttonOllamaModelBrowse, labelLlamaCppModel, comboBoxLlamaCppModels, labelCrispEmbedBackend, comboBoxCrispEmbedBackends, labelCrispEmbedModel, comboBoxCrispEmbedModels, labelAppleVisionLanguage, comboBoxAppleVisionLanguages }
         };
         comboBoxOcrEngine.SelectionChanged += (s, e) => vm.OnOcrEngineChanged();
 

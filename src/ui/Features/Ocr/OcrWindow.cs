@@ -375,6 +375,15 @@ public class OcrWindow : Window
                     .BindIsVisible(vm, nameof(vm.IsCrispEmbedVisible))
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
 
+                // Apple Vision settings - language only: the engine ships with macOS, so there is
+                // nothing to download, no key to enter and no model to pick.
+                UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Language, vm => vm.IsAppleVisionVisible),
+                UiUtil.MakeComboBox(vm.AppleVisionLanguages, vm, nameof(vm.SelectedAppleVisionLanguage),
+                        nameof(vm.IsAppleVisionVisible))
+                    .WithWidth(180)
+                    .WithMarginRight(10)
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+
                 // Google vision settings
                 UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Language, vm => vm.IsGoogleVisionVisible),
                 UiUtil.MakeComboBox(vm.GoogleVisionLanguages, vm, nameof(vm.SelectedGoogleVisionLanguage),
