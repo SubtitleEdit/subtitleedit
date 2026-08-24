@@ -2300,7 +2300,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 string s = line.Trim().ToLowerInvariant();
                 if (s.StartsWith("format:", StringComparison.Ordinal))
                 {
-                    if (line.Length > 10)
+                    if (s.Length > 10)
                     {
                         // cut the trimmed line - leading whitespace shifted every field name
                         var format = s.Substring(8).Split(',');

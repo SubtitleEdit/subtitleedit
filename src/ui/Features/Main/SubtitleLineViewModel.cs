@@ -1296,6 +1296,23 @@ public partial class SubtitleLineViewModel : ObservableObject
             }
         }
 
+        // Teletext page width - applies to EBU/teletext-sourced subtitles regardless of the
+        // general "too long" setting, matching the teletext branch in HasTextError.
+        if (UseTeletextLineLength)
+        {
+            var maxCharacters = Text.Contains("<font color=", StringComparison.OrdinalIgnoreCase)
+                ? TeletextMaxCharactersWithColor
+                : TeletextMaxCharacters;
+
+            foreach (var line in GetStrippedLines())
+            {
+                if (line.Length > maxCharacters)
+                {
+                    errors.Add(new LineError(LineErrorType.LineTooLong, string.Format(l.DetailXGreaterThanY, line.Length, maxCharacters)));
+                }
+            }
+        }
+
         var minGap = general.MinimumBetweenLines.GetMilliseconds();
         if (prev != null)
         {

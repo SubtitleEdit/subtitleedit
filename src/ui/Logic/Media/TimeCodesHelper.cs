@@ -123,7 +123,10 @@ public static class TimeCodesHelper
 
         if (durationSeconds <= 0)
         {
-            return true; // unknown length - nothing to check against
+            // Unknown length - a partial list cannot be told apart from a complete one, and
+            // accepting a partial one snaps every cue to its few entries. Callers that know
+            // the extraction ran to completion can pass the last frame time as the duration.
+            return false;
         }
 
         var covered = timeCodes[timeCodes.Count - 1];

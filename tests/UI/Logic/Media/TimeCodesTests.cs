@@ -68,6 +68,21 @@ public class TimeCodesTests
         Assert.False(TimeCodesHelper.IsUsableFor(new List<double>(), 10));
     }
 
+    [Fact]
+    public void IsUsableFor_RejectsAnyListWhenTheDurationIsUnknown()
+    {
+        // With no duration to check against, a cancelled 3-frame extraction is
+        // indistinguishable from a complete one - it must not be trusted (callers that know
+        // the run completed pass the last frame time as the duration instead).
+        var fullList = Enumerable.Range(0, 250).Select(n => n / 25.0).ToList();
+        Assert.False(TimeCodesHelper.IsUsableFor(fullList.Take(3).ToList(), 0));
+        Assert.False(TimeCodesHelper.IsUsableFor(fullList, 0));
+        Assert.False(TimeCodesHelper.IsUsableFor(fullList, -1));
+
+        // A completed run can vouch for itself: its own last frame time is the duration.
+        Assert.True(TimeCodesHelper.IsUsableFor(fullList, fullList[fullList.Count - 1]));
+    }
+
     /// <summary>
     /// The point of the whole feature: on material whose real frames are not on an n/fps grid,
     /// beautifying with the video's own time codes must land cues on real frames, where nominal

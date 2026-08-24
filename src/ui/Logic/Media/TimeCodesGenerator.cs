@@ -77,6 +77,13 @@ public static class TimeCodesGenerator
         try
         {
             await process.WaitForExitAsync(cancellationToken).ConfigureAwait(false);
+
+            // ffmpeg dying mid-decode (corrupt file, unsupported codec) still exits "normally"
+            // here, leaving a partial list that looks complete when the duration is unknown.
+            if (process.ExitCode != 0)
+            {
+                throw new Exception($"ffmpeg exited with code {process.ExitCode} while extracting time codes");
+            }
         }
         catch (OperationCanceledException)
         {
