@@ -1593,7 +1593,6 @@
 		<Word from="nojurisdiction" to="no jurisdiction" />
 		<Word from="noone" to="no one" />
 		<Word from="Noone" to="No one" />
-		<Word from="not judging" to="not judging" />
 		<Word from="noteto" to="note to" />
 		<Word from="notgoing" to="not going" />
 		<Word from="notjudge" to="not judge" />
@@ -1863,7 +1862,6 @@
 		<Word from="Polynes/ans" to="Polynesians" />
 		<Word from="pooL" to="pool" />
 		<Word from="poorshowing" to="poor showing" />
-		<Word from="popsicle" to="popsicle" />
 		<Word from="Potterfan" to="Potter fan" />
 		<Word from="poweryour" to="power your" />
 		<Word from="preferjournalist" to="prefer journalist" />
@@ -2103,7 +2101,6 @@
 		<Word from="thatjust" to="that just" />
 		<Word from="thatleads" to="that leads" />
 		<Word from="Thatl'm" to="That I'm" />
-		<Word from="that's just" to="that's just" />
 		<Word from="thats" to="that's" />
 		<Word from="Thats" to="That's" />
 		<Word from="Thatsand" to="That sand" />
@@ -2802,7 +2799,6 @@
 		<Word from="you'II" to="you'll" />		
 		<Word from="he'II" to="he'll" />
 		<Word from="we'II" to="we'll" />
-		<Word from="I'II" to="I'll" />
 	</WholeWords>
 	<PartialWordsAlways>
 		<!-- Will be replaced always -->
@@ -3412,9 +3408,8 @@
 		<RegEx find="\bI([a-zæøåöääöéèàùâêîôûëï]{3,})\b" spellCheck="l$1" replaceWith="l$1" /> <!-- Iaunch → launch, but NOT Is -->
         <RegEx find="\bof([A-Z][a-zæøåöääöéèàùâêîôûëï]+)\b" spellCheck="$1" replaceWith="of $1" /> <!-- ofDavid → of David -->
         <RegEx find="\bin([A-Z][a-zæøåöääöéèàùâêîôûëï]+)\b" spellCheck="$1" replaceWith="in $1" /> <!-- inLondon → in London -->
-		<RegEx find="\bl\b" replaceWith="I" /> <!-- lowercase l (L) to I (i) -->
+		<RegEx find="\bl\b" spellCheck="I" replaceWith="I" /> <!-- lowercase l (L) to I (i) -->
 		<RegEx find="\[([A-Z ]*)l([A-Z ]*)\]" spellCheck="[$1I$2]" replaceWith="[$1I$2]" /> <!-- [GEARS GRlNDlNG] to [GEARS GRINDING] -->
-		<RegEx find="\b([A-Z]+)l([A-Z]+)\b" spellCheck="$1I$2" replaceWith="$1I$2" />
 		<RegEx find="\b([A-Z][a-zæøåöääöéèàùâêîôûëï]{3,})I([a-zæøåöääöéèàùâêîôûëï]*)\b" spellCheck="$1l$2" replaceWith="$1l$2" />
 		<RegEx find="\b([A-Z][a-zæøåöääöéèàùâêîôûëï]{3,})I\b" spellCheck="$1l" replaceWith="$1l" />
 	</RegularExpressionsIfSpelledCorrectly>

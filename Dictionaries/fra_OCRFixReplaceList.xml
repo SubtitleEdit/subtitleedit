@@ -312,24 +312,14 @@
     <!-- this catches remaining: les, les, etc. — only fires if spellcheck passes as I+word) -->
     <RegEx find="\bl([a-zæøåöäéèàùâêîôûëïœç]{2,})\b" spellCheck="I$1" replaceWith="I$1" />
 
-    <!-- standalone l → I (Roman numerals, list markers) -->
-    <RegEx find="\bl\b" replaceWith="I" />
 
     <!-- ============================================================ -->
     <!-- FRENCH ELISION / APOSTROPHE FIXES                           -->
     <!-- ============================================================ -->
 
-    <!-- l'ami, l'heure : ensure typographic apostrophe -->
-    <RegEx find="\bl['']([a-zæøåöäéèàùâêîôûëïœç])" replaceWith="l'$1" />
 
-    <!-- c'est, j'ai, n'est, m'a, s'il, t'a, d'un : elision contractions -->
-    <RegEx find="\b([cjnmstd])['']([a-zæøåöäéèàùâêîôûëïœç])" replaceWith="$1'$2" />
 
-    <!-- qu'il, qu'on : longer elision prefix -->
-    <RegEx find="\bqu['']([a-zæøåöäéèàùâêîôûëïœç])" replaceWith="qu'$1" />
 
-    <!-- aujourd'hui : guard common compound -->
-    <RegEx find="\baujourd['']hui\b" replaceWith="aujourd'hui" />
 
     <!-- ============================================================ -->
     <!-- MISSING SPACE AFTER COMMON FRENCH PREPOSITIONS / ARTICLES   -->

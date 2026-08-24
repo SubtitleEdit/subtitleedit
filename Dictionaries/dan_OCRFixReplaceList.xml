@@ -49,7 +49,7 @@
     <Word from="Hvergang" to="Hver gang" />
     <Word from="erder" to="er der" />
     <Word from="villetilgive" to="ville tilgive" />
-    <Word from="ﬁeme" to="fjeme" />
+    <Word from="ﬁeme" to="fjerne" />
     <Word from="genopståri" to="genopstår i" />
     <Word from="svigtejer" to="svigte jer" />
     <Word from="kommernu" to="kommer nu" />
@@ -671,7 +671,6 @@
   </RegularExpressionsIfSpelledCorrectly>
   <RegularExpressions>
     <RegEx find="\b\|\b" replaceWith="I" />
-    <RegEx find="\b\l\b" replaceWith="I" />
   </RegularExpressions>
   <RegularExpressionsIfSpelledCorrectly language="da">
 
@@ -719,8 +718,6 @@
     <!-- leading l→I before 2+ lowercase (e.g. lste → Iste caught by spellcheck) -->
     <RegEx find="\bl([a-zæøå]{2,})\b" spellCheck="I$1" replaceWith="I$1" />
 
-    <!-- standalone l → I (Roman numerals, list markers, ordinals) -->
-    <RegEx find="\bl\b" replaceWith="I" />
 
     <!-- ============================================================ -->
     <!-- DANISH GENITIVE / APOSTROPHE                                 -->
