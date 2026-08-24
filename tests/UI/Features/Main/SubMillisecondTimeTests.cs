@@ -55,9 +55,10 @@ public class SubMillisecondTimeTests
 
         Assert.Equal(820, line.Duration.TotalMilliseconds);
         Assert.Equal(683_520, line.EndTime.TotalMilliseconds);
-        Assert.Equal("00:11:23,520", new TimeCode(line.EndTime).ToDisplayString());
-        Assert.Equal("0,820", new TimeCode(line.Duration).ToShortString());
-        Assert.Equal("0,820", textBox.Text);
+        // Normalize the decimal separator - display strings follow the runner's culture.
+        Assert.Equal("00:11:23.520", new TimeCode(line.EndTime).ToDisplayString().Replace(',', '.'));
+        Assert.Equal("0.820", new TimeCode(line.Duration).ToShortString().Replace(',', '.'));
+        Assert.Equal("0.820", textBox.Text!.Replace(',', '.'));
     }
 
     [Theory]
