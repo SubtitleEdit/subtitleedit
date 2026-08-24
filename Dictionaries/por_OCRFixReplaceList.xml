@@ -549,5 +549,44 @@
     <!-- ExceIIencies -> Excellencies). Words of two letters (AI) are never        -->
     <!-- touched, and real words (MacIntosh) are kept by the spell check gate.     -->
     <RegEx find="\b([A-ZÀÁÂÃÇÉÊÍÓÔÕÚa-zàáâãçéêíóôõú](?=[a-zàáâãçéêíóôõúI]*I)[a-zàáâãçéêíóôõúI]{2,})\b" replaceAllFrom="I" replaceAllTo="l" spellCheck="$1" replaceWith="$1" />
+
+    <!-- ============================================================ -->
+    <!-- MAIÚSCULAS: l minúsculo lido em vez de I                     -->
+    <!-- ============================================================ -->
+
+    <!-- [GRlTOS] para [GRITOS] : l para I dentro de colchetes em maiúsculas -->
+    <RegEx find="\[([A-ZÀÁÂÃÇÉÊÍÓÔÕÚ ]*)l([A-ZÀÁÂÃÇÉÊÍÓÔÕÚ ]*)\]" spellCheck="[$1I$2]" replaceWith="[$1I$2]" />
+    <RegEx find="\[([A-ZÀÁÂÃÇÉÊÍÓÔÕÚl]+)\]" replaceAllFrom="l" replaceAllTo="I" spellCheck="$1" replaceWith="[$1]" />
+
+    <!-- SlM para SIM : l entre maiúsculas -->
+    <RegEx find="\b([A-ZÀÁÂÃÇÉÊÍÓÔÕÚ]+)l([A-ZÀÁÂÃÇÉÊÍÓÔÕÚ]+)\b" spellCheck="$1I$2" replaceWith="$1I$2" />
+    <RegEx find="\b([A-ZÀÁÂÃÇÉÊÍÓÔÕÚ]+)l\b" spellCheck="$1I" replaceWith="$1I" />
+    <RegEx find="\bl([A-ZÀÁÂÃÇÉÊÍÓÔÕÚ]+)\b" spellCheck="I$1" replaceWith="I$1" />
+
+    <!-- Iavar para lavar : I inicial lido em vez de l antes de minúsculas -->
+    <RegEx find="\bI([a-zàáâãçéêíóôõú]{2,})\b" spellCheck="l$1" replaceWith="l$1" />
+
+    <!-- ============================================================ -->
+    <!-- ACENTOS PERDIDOS NO FIM DA PALAVRA                           -->
+    <!-- A regra só atua se a palavra sem acento NÃO está no          -->
+    <!-- dicionário e a forma acentuada SIM (nao para não).           -->
+    <!-- Só minúsculas: nomes próprios não são tocados.               -->
+    <!-- ============================================================ -->
+    <RegEx find="\b([a-zàáâãçéêíóôõú]+)ao\b" spellCheck="$1ão" replaceWith="$1ão" />
+    <RegEx find="\b([a-zàáâãçéêíóôõú]+)aos\b" spellCheck="$1ãos" replaceWith="$1ãos" />
+    <RegEx find="\b([a-zàáâãçéêíóôõú]+)oes\b" spellCheck="$1ões" replaceWith="$1ões" />
+    <!-- -cao é tratado sem condições pela regra \Bcao\b em RegularExpressions -->
+    <RegEx find="\b([a-zàáâãçéêíóôõú]{2,})coes\b" spellCheck="$1ções" replaceWith="$1ções" />
+    <RegEx find="\b([a-zàáâãçéêíóôõú]{2,})es\b" spellCheck="$1ês" replaceWith="$1ês" />
+    <RegEx find="\b([a-zàáâãçéêíóôõú]{2,})e\b" spellCheck="$1é" replaceWith="$1é" />
+    <RegEx find="\b([a-zàáâãçéêíóôõú]{2,})e\b" spellCheck="$1ê" replaceWith="$1ê" />
+    <RegEx find="\b([a-zàáâãçéêíóôõú]+)a\b" spellCheck="$1á" replaceWith="$1á" />
+    <RegEx find="\b([a-zàáâãçéêíóôõú]+)o\b" spellCheck="$1ó" replaceWith="$1ó" />
+    <RegEx find="\b([a-zàáâãçéêíóôõú]+)o\b" spellCheck="$1ô" replaceWith="$1ô" />
+    <RegEx find="\b([a-zàáâãçéêíóôõú]+)avel\b" spellCheck="$1ável" replaceWith="$1ável" />
+    <RegEx find="\b([a-zàáâãçéêíóôõú]+)ivel\b" spellCheck="$1ível" replaceWith="$1ível" />
+    <RegEx find="\b([a-zàáâãçéêíóôõú]+)ario(s?)\b" spellCheck="$1ário$2" replaceWith="$1ário$2" />
+    <RegEx find="\b([a-zàáâãçéêíóôõú]+)encia(s?)\b" spellCheck="$1ência$2" replaceWith="$1ência$2" />
+    <RegEx find="\b([a-zàáâãçéêíóôõú]+)ancia(s?)\b" spellCheck="$1ância$2" replaceWith="$1ância$2" />
   </RegularExpressionsIfSpelledCorrectly>
 </OCRFixReplaceList>

@@ -83,5 +83,34 @@
     <!-- ExceIIencies -> Excellencies). Words of two letters (AI) are never        -->
     <!-- touched, and real words (MacIntosh) are kept by the spell check gate.     -->
     <RegEx find="\b([A-ZÀÈÉÌÒÓÙa-zàèéìòóù](?=[a-zàèéìòóùI]*I)[a-zàèéìòóùI]{2,})\b" replaceAllFrom="I" replaceAllTo="l" spellCheck="$1" replaceWith="$1" />
+
+    <!-- ============================================================ -->
+    <!-- MAIUSCOLE: l minuscola letta al posto di I                   -->
+    <!-- ============================================================ -->
+
+    <!-- [MUSlCA] in [MUSICA] : l in I dentro parentesi quadre in maiuscolo -->
+    <RegEx find="\[([A-ZÀÈÉÌÒÓÙ ]*)l([A-ZÀÈÉÌÒÓÙ ]*)\]" spellCheck="[$1I$2]" replaceWith="[$1I$2]" />
+    <RegEx find="\[([A-ZÀÈÉÌÒÓÙl]+)\]" replaceAllFrom="l" replaceAllTo="I" spellCheck="$1" replaceWith="[$1]" />
+
+    <!-- FlNE in FINE : l tra maiuscole -->
+    <RegEx find="\b([A-ZÀÈÉÌÒÓÙ]+)l([A-ZÀÈÉÌÒÓÙ]+)\b" spellCheck="$1I$2" replaceWith="$1I$2" />
+    <RegEx find="\b([A-ZÀÈÉÌÒÓÙ]+)l\b" spellCheck="$1I" replaceWith="$1I" />
+    <RegEx find="\bl([A-ZÀÈÉÌÒÓÙ]+)\b" spellCheck="I$1" replaceWith="I$1" />
+
+    <!-- Iavorare in lavorare : I iniziale letta al posto di l davanti a minuscole -->
+    <RegEx find="\bI([a-zàèéìòóù]{2,})\b" spellCheck="l$1" replaceWith="l$1" />
+
+    <!-- ============================================================ -->
+    <!-- ACCENTI PERSI SULLA VOCALE FINALE                            -->
+    <!-- La regola agisce solo se la parola senza accento NON è nel   -->
+    <!-- dizionario e la forma accentata SÌ (citta in città,          -->
+    <!-- perche in perché). I nomi propri non vengono toccati.        -->
+    <!-- ============================================================ -->
+    <RegEx find="\b([a-zàèéìòóù]{2,})a\b" spellCheck="$1à" replaceWith="$1à" />
+    <RegEx find="\b([a-zàèéìòóù]{2,})e\b" spellCheck="$1é" replaceWith="$1é" />
+    <RegEx find="\b([a-zàèéìòóù]{2,})e\b" spellCheck="$1è" replaceWith="$1è" />
+    <RegEx find="\b([a-zàèéìòóù]{2,})i\b" spellCheck="$1ì" replaceWith="$1ì" />
+    <RegEx find="\b([a-zàèéìòóù]{2,})o\b" spellCheck="$1ò" replaceWith="$1ò" />
+    <RegEx find="\b([a-zàèéìòóù]{2,})u\b" spellCheck="$1ù" replaceWith="$1ù" />
   </RegularExpressionsIfSpelledCorrectly>
 </OCRFixReplaceList>
