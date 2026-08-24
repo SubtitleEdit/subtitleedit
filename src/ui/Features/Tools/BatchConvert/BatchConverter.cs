@@ -1941,6 +1941,9 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 FullFrameBackgroundColor = profile.FullFrameBackgroundColor.FromHexToColor().ToSKColor(),
             };
 
+            // "{\fad(..)}" and "{\alpha&H..&}" change what is drawn - read before rendering.
+            ExportTextTags.ApplyTransparencyTags(imageParameter, subtitle.Text);
+
             imageParameter.Bitmap = ExportImageBasedViewModel.GenerateBitmap(imageParameter);
 
             // "{\pos(x,y)}" anchors the rendered text, so it needs the bitmap size - and the

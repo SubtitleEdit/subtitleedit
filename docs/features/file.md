@@ -127,6 +127,22 @@ Export subtitles as images (BDN XML, VobSub, Blu-ray SUP, Final Cut Pro + image,
 
 The **IMSC 1.1 image profile** export writes a single self-contained TTML file with each subtitle embedded as a base64 PNG (`smpte:image` / `smpte:backgroundImage`), media timebase, and percentage-positioned regions — the standardized image-subtitle carriage for streaming and broadcast delivery.
 
+#### ASSA override tags
+
+Tags in the text are read rather than drawn as literal characters:
+
+| Tag | Effect on the exported image |
+|-----|------------------------------|
+| `{\an1}` - `{\an9}` | Places the subtitle, overriding the alignment chosen in the window |
+| `{\pos(x,y)}` | Positions the subtitle (coordinates are in the script's own resolution) |
+| `{\i1}`, `{\b1}`, `{\c&H..&}`, `{\fn..}`, `{\fs..}` | Italic, bold, colour, font and size |
+| `{\alpha&H80&}`, `{\1a}`, `{\3a}`, `{\4a}` | Transparency — all parts at once, or text, outline and shadow separately |
+| `{\fad(in,out)}`, `{\fade(..)}` | Fade in/out — **Blu-ray SUP only** (see below) |
+
+Anything else is removed before rendering.
+
+**Fading (Blu-ray SUP).** A subtitle with `{\fad(400,400)}` is written the way a Blu-ray disc does it: the image is encoded once and the fade follows as palette updates, one per video frame, which cost about a kilobyte each instead of a whole new image. Long fades are sampled coarser so a single subtitle never adds more than 60 of them. The other image formats have no way to animate a subtitle and ignore the tag - the image is written fully opaque.
+
 <!-- Screenshot: Export image-based window -->
 ![Export Image Based](../screenshots/export-image-based.png)
 

@@ -23,6 +23,11 @@ public static class ExportTextTags
         @"\\pos\(\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*\)",
         RegexOptions.Compiled);
 
+    // "{\alpha&H80&}" and the per part "{\1a&H80&}" (fill), "{\3a}" (outline), "{\4a}" (shadow)
+    private static readonly Regex AlphaTagRegex = new(
+        @"\\(alpha|1a|3a|4a)&H([0-9A-Fa-f]{1,2})&",
+        RegexOptions.Compiled);
+
     /// <summary>
     /// Returns the alignment from a leading "{\anX}" tag - also inside a multi tag block
     /// like "{\an8\i1}" or "{\pos(10,20)\an8}" - or <paramref name="fallback"/> when there is none.
@@ -170,6 +175,83 @@ public static class ExportTextTags
         ip.OverridePosition = new SKPointI(
             (int)Math.Round(Math.Clamp(left, 0, maxLeft), MidpointRounding.AwayFromZero),
             (int)Math.Round(Math.Clamp(top, 0, maxTop), MidpointRounding.AwayFromZero));
+    }
+
+    /// <summary>
+    /// Reads the ASSA transparency tags off the text and puts them on the parameter: the fade
+    /// curve of "{\fad(..)}"/"{\fade(..)}" (used by the Blu-ray sup writer, which can animate
+    /// its palette) and the static transparency of "{\alpha&amp;H80&amp;}" and its per part
+    /// "{\1a}", "{\3a}", "{\4a}" variants.
+    /// <para>
+    /// Has to run before the bitmap is rendered - unlike <see cref="ApplyPositionTag"/>, this
+    /// changes what is drawn. A transparency that applies to text, outline and shadow alike is
+    /// kept for the finished bitmap, where one blend gives the exact alpha asked for; per part
+    /// transparencies go on the colours instead, so the parts can differ.
+    /// </para>
+    /// </summary>
+    public static void ApplyTransparencyTags(ImageParameter ip, string? text)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return;
+        }
+
+        ip.FadeKeyframes = ExportFade.Parse(text, (long)Math.Round((ip.EndTime - ip.StartTime).TotalMilliseconds));
+
+        if (!text.Contains("a&H", StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        int? all = null;
+        int? primary = null;
+        int? outline = null;
+        int? shadow = null;
+        foreach (Match match in AlphaTagRegex.Matches(text))
+        {
+            // ASSA counts transparency (00 = opaque, FF = invisible); opacity is the other way up.
+            var opacity = 255 - int.Parse(match.Groups[2].Value, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+            switch (match.Groups[1].Value)
+            {
+                case "alpha":
+                    all = opacity;
+                    break;
+                case "1a":
+                    primary = opacity;
+                    break;
+                case "3a":
+                    outline = opacity;
+                    break;
+                default: // "4a"
+                    shadow = opacity;
+                    break;
+            }
+        }
+
+        var primaryOpacity = primary ?? all ?? 255;
+        var outlineOpacity = outline ?? all ?? 255;
+        var shadowOpacity = shadow ?? all ?? 255;
+        if (primaryOpacity == 255 && outlineOpacity == 255 && shadowOpacity == 255)
+        {
+            return;
+        }
+
+        if (primaryOpacity == outlineOpacity && primaryOpacity == shadowOpacity)
+        {
+            // The whole subtitle at one transparency - applying it to the drawn bitmap keeps the
+            // outline from showing through the letters, which per colour alpha would do.
+            ip.AlphaPercent = (int)Math.Round(primaryOpacity * 100.0 / 255.0);
+            return;
+        }
+
+        ip.FontColor = Fade(ip.FontColor, primaryOpacity);
+        ip.OutlineColor = Fade(ip.OutlineColor, outlineOpacity);
+        ip.ShadowColor = Fade(ip.ShadowColor, shadowOpacity);
+    }
+
+    private static SKColor Fade(SKColor color, int opacity)
+    {
+        return color.WithAlpha((byte)(color.Alpha * opacity / 255));
     }
 
     /// <summary>
