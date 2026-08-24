@@ -292,12 +292,7 @@ new("2F", "French - hearing impaired (VF-MAL)"),
 
             // Keep the settings the file was written with instead of resetting them to the
             // defaults above every time the export dialog is opened.
-            if (!string.IsNullOrEmpty(_subtitle.Header) &&
-                _subtitle.Header.Length == 1024 &&
-                (_subtitle.Header.Contains("STL24") ||
-                 _subtitle.Header.Contains("STL25") ||
-                 _subtitle.Header.Contains("STL29") ||
-                 _subtitle.Header.Contains("STL30")))
+            if (Ebu.IsStlHeader(_subtitle.Header))
             {
                 try
                 {

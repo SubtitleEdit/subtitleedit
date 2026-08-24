@@ -23,6 +23,21 @@ public class EbuTest
         return subtitle;
     }
 
+    // The first-manual-save prompt and the vertical-position handling both hinge on this check:
+    // it must accept the header the options dialog stores on the subtitle (a bare
+    // EbuGeneralSubtitleInformation.ToString()) and reject anything else.
+    [Fact]
+    public void IsStlHeader_AcceptsDialogStoredHeader_RejectsOtherHeaders()
+    {
+        Assert.False(Ebu.IsStlHeader(null));
+        Assert.False(Ebu.IsStlHeader(string.Empty));
+        Assert.False(Ebu.IsStlHeader("WEBVTT"));
+        Assert.False(Ebu.IsStlHeader(new string(' ', 1024)));
+
+        var stored = new Ebu.EbuGeneralSubtitleInformation().ToString();
+        Assert.True(Ebu.IsStlHeader(stored));
+    }
+
     // Regression for #11910: EBU STL Save produced a 14-byte invalid file ("Not supported!")
     // because the binary format went through the text save path. The binary writer must emit a real
     // EBU file (1024-byte GSI header + TTI blocks) that reads back.
