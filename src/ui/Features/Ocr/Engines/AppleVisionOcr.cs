@@ -242,12 +242,16 @@ public static class AppleVisionOcr
     /// <returns>The recognized text, or an empty string when Vision found none.</returns>
     public static string Ocr(SKBitmap? bitmap, string? languageCode, bool fast, CancellationToken cancellationToken)
     {
+        // Cancellation first: a caller that has already cancelled wants to hear about it whatever
+        // the state of the engine, and checking it after the availability gate made the method
+        // behave differently by platform - off macOS it returned empty for a cancelled token
+        // instead of throwing.
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (bitmap == null || bitmap.Width < 1 || bitmap.Height < 1 || !IsAvailable())
         {
             return string.Empty;
         }
-
-        cancellationToken.ThrowIfCancellationRequested();
 
         var png = EncodePng(bitmap);
         if (png == null || png.Length == 0)

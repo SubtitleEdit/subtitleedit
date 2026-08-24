@@ -139,6 +139,11 @@ public class AppleVisionOcrTests
         Assert.Equal(string.Empty, AppleVisionOcr.Ocr(bitmap, "en-US", fast: false, CancellationToken.None));
     }
 
+    /// <summary>
+    /// Deliberately not gated on macOS: an already-cancelled token has to be honoured on every
+    /// platform, and it was not - off macOS the availability gate returned empty before the token
+    /// was ever looked at, which is how CI caught this.
+    /// </summary>
     [Fact]
     public void Ocr_CancelledBeforeStart_Throws()
     {
@@ -148,6 +153,11 @@ public class AppleVisionOcrTests
 
         Assert.Throws<OperationCanceledException>(
             () => AppleVisionOcr.Ocr(bitmap, "en-US", fast: false, cts.Token));
+
+        // A null bitmap takes the same early-return branch the unavailable engine does, so this
+        // reproduces the CI failure on macOS too: before the fix it returned empty here.
+        Assert.Throws<OperationCanceledException>(
+            () => AppleVisionOcr.Ocr(null, "en-US", fast: false, cts.Token));
     }
 
     private static SKBitmap DrawSubtitle(string[] lines, bool transparentBackground = true)
