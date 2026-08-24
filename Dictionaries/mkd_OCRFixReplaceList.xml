@@ -51,5 +51,37 @@
   <PartialLines />
   <BeginLines />
   <EndLines />
-  <RegularExpressions />
+  <RegularExpressions>
+    <!-- Латинични букви-двојници во кирилични зборови: буква со кириличен сосед
+         мора да биде кирилична (Bо - Во, jас - јас). Целосно латинични зборови
+         (Windows) не се менуваат: тие немаат кирилични соседи. -->
+    <RegEx find="(?&lt;=[а-џА-ЯЀ-Џ])a|a(?=[а-џА-ЯЀ-Џ])" replaceWith="а" />
+    <RegEx find="(?&lt;=[а-џА-ЯЀ-Џ])c|c(?=[а-џА-ЯЀ-Џ])" replaceWith="с" />
+    <RegEx find="(?&lt;=[а-џА-ЯЀ-Џ])e|e(?=[а-џА-ЯЀ-Џ])" replaceWith="е" />
+    <RegEx find="(?&lt;=[а-џА-ЯЀ-Џ])j|j(?=[а-џА-ЯЀ-Џ])" replaceWith="ј" />
+    <RegEx find="(?&lt;=[а-џА-ЯЀ-Џ])o|o(?=[а-џА-ЯЀ-Џ])" replaceWith="о" />
+    <RegEx find="(?&lt;=[а-џА-ЯЀ-Џ])p|p(?=[а-џА-ЯЀ-Џ])" replaceWith="р" />
+    <RegEx find="(?&lt;=[а-џА-ЯЀ-Џ])s|s(?=[а-џА-ЯЀ-Џ])" replaceWith="ѕ" />
+    <RegEx find="(?&lt;=[а-џА-ЯЀ-Џ])x|x(?=[а-џА-ЯЀ-Џ])" replaceWith="х" />
+    <RegEx find="(?&lt;=[а-џА-ЯЀ-Џ])y|y(?=[а-џА-ЯЀ-Џ])" replaceWith="у" />
+    <RegEx find="(?&lt;=[а-џА-ЯЀ-Џ])A|A(?=[а-џА-ЯЀ-Џ])" replaceWith="А" />
+    <RegEx find="(?&lt;=[а-џА-ЯЀ-Џ])B|B(?=[а-џА-ЯЀ-Џ])" replaceWith="В" />
+    <RegEx find="(?&lt;=[а-џА-ЯЀ-Џ])C|C(?=[а-џА-ЯЀ-Џ])" replaceWith="С" />
+    <RegEx find="(?&lt;=[а-џА-ЯЀ-Џ])E|E(?=[а-џА-ЯЀ-Џ])" replaceWith="Е" />
+    <RegEx find="(?&lt;=[а-џА-ЯЀ-Џ])H|H(?=[а-џА-ЯЀ-Џ])" replaceWith="Н" />
+    <RegEx find="(?&lt;=[а-џА-ЯЀ-Џ])J|J(?=[а-џА-ЯЀ-Џ])" replaceWith="Ј" />
+    <RegEx find="(?&lt;=[а-џА-ЯЀ-Џ])K|K(?=[а-џА-ЯЀ-Џ])" replaceWith="К" />
+    <RegEx find="(?&lt;=[а-џА-ЯЀ-Џ])M|M(?=[а-џА-ЯЀ-Џ])" replaceWith="М" />
+    <RegEx find="(?&lt;=[а-џА-ЯЀ-Џ])O|O(?=[а-џА-ЯЀ-Џ])" replaceWith="О" />
+    <RegEx find="(?&lt;=[а-џА-ЯЀ-Џ])P|P(?=[а-џА-ЯЀ-Џ])" replaceWith="Р" />
+    <RegEx find="(?&lt;=[а-џА-ЯЀ-Џ])S|S(?=[а-џА-ЯЀ-Џ])" replaceWith="Ѕ" />
+    <RegEx find="(?&lt;=[а-џА-ЯЀ-Џ])T|T(?=[а-џА-ЯЀ-Џ])" replaceWith="Т" />
+    <RegEx find="(?&lt;=[а-џА-ЯЀ-Џ])X|X(?=[а-џА-ЯЀ-Џ])" replaceWith="Х" />
+    <RegEx find="(?&lt;=[а-џА-ЯЀ-Џ])Y|Y(?=[а-џА-ЯЀ-Џ])" replaceWith="У" />
+    <!-- Цифри наместо букви веднаш по мала кирилична буква: цифра по цифра
+         не се менува (16кг). -->
+    <RegEx find="(?&lt;=[а-џ])3(?![0-9])" replaceWith="з" />
+    <RegEx find="(?&lt;=[а-џ])6(?![0-9])" replaceWith="б" />
+    <RegEx find="(?&lt;=[а-џ])0(?![0-9])" replaceWith="о" />
+  </RegularExpressions>
 </OCRFixReplaceList>

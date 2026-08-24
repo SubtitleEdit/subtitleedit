@@ -112,5 +112,24 @@
     <RegEx find="\b([a-zàèéìòóù]{2,})i\b" spellCheck="$1ì" replaceWith="$1ì" />
     <RegEx find="\b([a-zàèéìòóù]{2,})o\b" spellCheck="$1ò" replaceWith="$1ò" />
     <RegEx find="\b([a-zàèéìòóù]{2,})u\b" spellCheck="$1ù" replaceWith="$1ù" />
+
+    <!-- ============================================================ -->
+    <!-- SPAZIO PERSO TRA PREPOSIZIONE/ARTICOLO E NOME PROPRIO        -->
+    <!-- daRoma in da Roma : solo se la parola con maiuscola è nel    -->
+    <!-- dizionario.                                                  -->
+    <!-- ============================================================ -->
+    <RegEx find="\bdi([A-ZÀÈÉÌÒÓÙ][a-zàèéìòóù]+)\b" spellCheck="$1" replaceWith="di $1" />
+    <RegEx find="\bda([A-ZÀÈÉÌÒÓÙ][a-zàèéìòóù]+)\b" spellCheck="$1" replaceWith="da $1" />
+    <RegEx find="\bil([A-ZÀÈÉÌÒÓÙ][a-zàèéìòóù]+)\b" spellCheck="$1" replaceWith="il $1" />
+    <RegEx find="\bla([A-ZÀÈÉÌÒÓÙ][a-zàèéìòóù]+)\b" spellCheck="$1" replaceWith="la $1" />
+    <RegEx find="\ble([A-ZÀÈÉÌÒÓÙ][a-zàèéìòóù]+)\b" spellCheck="$1" replaceWith="le $1" />
+    <RegEx find="\blo([A-ZÀÈÉÌÒÓÙ][a-zàèéìòóù]+)\b" spellCheck="$1" replaceWith="lo $1" />
+    <RegEx find="\bin([A-ZÀÈÉÌÒÓÙ][a-zàèéìòóù]+)\b" spellCheck="$1" replaceWith="in $1" />
+    <RegEx find="\bun([A-ZÀÈÉÌÒÓÙ][a-zàèéìòóù]+)\b" spellCheck="$1" replaceWith="un $1" />
+    <RegEx find="\buna([A-ZÀÈÉÌÒÓÙ][a-zàèéìòóù]+)\b" spellCheck="$1" replaceWith="una $1" />
+    <RegEx find="\bal([A-ZÀÈÉÌÒÓÙ][a-zàèéìòóù]+)\b" spellCheck="$1" replaceWith="al $1" />
+    <RegEx find="\bdel([A-ZÀÈÉÌÒÓÙ][a-zàèéìòóù]+)\b" spellCheck="$1" replaceWith="del $1" />
+    <RegEx find="\bper([A-ZÀÈÉÌÒÓÙ][a-zàèéìòóù]+)\b" spellCheck="$1" replaceWith="per $1" />
+    <RegEx find="\bcon([A-ZÀÈÉÌÒÓÙ][a-zàèéìòóù]+)\b" spellCheck="$1" replaceWith="con $1" />
   </RegularExpressionsIfSpelledCorrectly>
 </OCRFixReplaceList>

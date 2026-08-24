@@ -83,6 +83,18 @@ public class OcrFixSpanishAccentAndCapsTests : IDisposable
     }
 
     [Theory]
+    [InlineData("Vengo deMadrid.", "Vengo de Madrid.")]
+    [InlineData("Brindo porEspana Zzyzx.", "Brindo porEspana Zzyzx.")] // merged word not in the dictionary stays
+    public void FixOcrErrors_MissingSpaceAfterPreposition_IsSplitWhenTheNameIsKnown(string text, string expected)
+    {
+        var engine = CreateEngine();
+
+        var result = engine.FixOcrErrors(0, text, doTryToGuessUnknownWords: false);
+
+        Assert.Equal(expected, result.GetText());
+    }
+
+    [Theory]
     [InlineData("Mia canta bien Zzyzx.")] // capitalized name, even though "mía" is a word
     [InlineData("La familia llega Zzyzx.")] // correct -ia word is in the dictionary
     [InlineData("Mi amigo llega Zzyzx.")] // correct -o word is in the dictionary
@@ -119,6 +131,7 @@ public class OcrFixSpanishAccentAndCapsTests : IDisposable
     {
         private static readonly HashSet<string> Words = new(StringComparer.Ordinal)
         {
+            "vengo", "madrid", "brindo",
             "un", "montón", "de", "cosas", "el", "capitán", "llega", "hay", "jardín",
             "quizás", "ella", "vivió", "sola", "toma", "café", "sin", "salida", "gritos",
             "vamos", "a", "lavar", "la", "ropa", "mía", "canta", "bien", "familia", "mi", "amigo",
