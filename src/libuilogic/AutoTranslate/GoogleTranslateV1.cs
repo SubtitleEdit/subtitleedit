@@ -78,6 +78,20 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
                 if (!result.IsSuccessStatusCode)
                 {
+                    if (IsGoogleSorryBlockPage(result.StatusCode, jsonResultString))
+                    {
+                        // Keep the HTML page out of Error so the error dialog shows the
+                        // explanation below instead of a wall of markup.
+                        Error = string.Empty;
+                        SeLogger.Error($"Error in {StaticName}.Translate: Google \"unusual traffic\" block page, status code {(int)result.StatusCode}: " + jsonResultString);
+                        throw new Exception(
+                            $"Google is temporarily blocking translation requests from your IP address (status code {(int)result.StatusCode}, \"unusual traffic\" block)." + Environment.NewLine +
+                            Environment.NewLine +
+                            "This is a block on Google's side, not an error in Subtitle Edit. It is usually lifted again after some minutes to a few hours." + Environment.NewLine +
+                            Environment.NewLine +
+                            "You can wait a while and try again, try another network or VPN, or switch to another translation engine.");
+                    }
+
                     Error = jsonResultString;
                     SeLogger.Error($"Error in {StaticName}.Translate: " + Error);
                     throw new Exception($"{StaticName} failed with status code {(int)result.StatusCode} ({result.StatusCode}) - free API quota exceeded?" + Environment.NewLine + Environment.NewLine + jsonResultString);
@@ -98,10 +112,34 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         /// </summary>
         public static bool ShouldRetry(HttpResponseMessage result, string resultContent)
         {
+            if (IsGoogleSorryBlockPage(result.StatusCode, resultContent))
+            {
+                // Google's "Sorry..." page is an IP-level "unusual traffic" block that lasts
+                // minutes to hours (issue #14015) - retrying within seconds cannot clear it,
+                // so fail fast and let Translate surface the explanation instead.
+                return false;
+            }
+
             return DeepLTranslate.ShouldRetry(result, resultContent) ||
                    result.StatusCode == HttpStatusCode.InternalServerError ||
                    result.StatusCode == HttpStatusCode.BadGateway ||
                    result.StatusCode == HttpStatusCode.GatewayTimeout;
+        }
+
+        /// <summary>
+        /// Google's "Sorry..." abuse page: an IP-reputation block served with 429 (sometimes 403)
+        /// when Google decides an IP sends "unusual traffic"/"automated queries" (issue #14015).
+        /// </summary>
+        public static bool IsGoogleSorryBlockPage(HttpStatusCode statusCode, string resultContent)
+        {
+            if (statusCode != HttpStatusCode.TooManyRequests && statusCode != HttpStatusCode.Forbidden)
+            {
+                return false;
+            }
+
+            return resultContent.Contains("<title>Sorry", StringComparison.OrdinalIgnoreCase) ||
+                   resultContent.Contains("unusual traffic", StringComparison.OrdinalIgnoreCase) ||
+                   resultContent.Contains("automated queries", StringComparison.OrdinalIgnoreCase);
         }
 
         public static List<TranslationPair> GetTranslationPairs()
