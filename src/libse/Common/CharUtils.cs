@@ -17,6 +17,7 @@
         /// <summary>
         /// Checks if character is between A-Z or a-z
         /// </summary>
-        public static bool IsEnglishAlphabet(char ch) => ch >= 'A' && ch <= 'z' && (ch <= 'Z' || ch >= 'a');
+        /// <remarks>char.IsAsciiLetter (.NET 7+) is not available in netstandard2.1, which this library also targets.</remarks>
+        public static bool IsAsciiLetter(char ch) => ch >= 'A' && ch <= 'z' && (ch <= 'Z' || ch >= 'a');
     }
 }

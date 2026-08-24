@@ -25,18 +25,18 @@ public class CharUtilsTest
     }
 
     [Fact]
-    public void IsEnglishAlphabet()
+    public void IsAsciiLetter()
     {
-        Assert.True(CharUtils.IsEnglishAlphabet('a'));
-        Assert.True(CharUtils.IsEnglishAlphabet('b'));
-        Assert.True(CharUtils.IsEnglishAlphabet('z'));
-        Assert.True(CharUtils.IsEnglishAlphabet('A'));
-        Assert.True(CharUtils.IsEnglishAlphabet('Y'));
-        Assert.True(CharUtils.IsEnglishAlphabet('Z'));
+        Assert.True(CharUtils.IsAsciiLetter('a'));
+        Assert.True(CharUtils.IsAsciiLetter('b'));
+        Assert.True(CharUtils.IsAsciiLetter('z'));
+        Assert.True(CharUtils.IsAsciiLetter('A'));
+        Assert.True(CharUtils.IsAsciiLetter('Y'));
+        Assert.True(CharUtils.IsAsciiLetter('Z'));
 
-        Assert.False(CharUtils.IsEnglishAlphabet('æ'));
-        Assert.False(CharUtils.IsEnglishAlphabet('ü'));
-        Assert.False(CharUtils.IsEnglishAlphabet('2'));
-        Assert.False(CharUtils.IsEnglishAlphabet('!'));
+        Assert.False(CharUtils.IsAsciiLetter('æ'));
+        Assert.False(CharUtils.IsAsciiLetter('ü'));
+        Assert.False(CharUtils.IsAsciiLetter('2'));
+        Assert.False(CharUtils.IsAsciiLetter('!'));
     }
 }
