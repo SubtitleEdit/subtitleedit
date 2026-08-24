@@ -264,6 +264,45 @@ public static class TtsEngineInstaller
             return true;
         }
 
+        if (engine is DotsTtsCrispAsr)
+        {
+            if (!await TtsVoiceInstaller.EnsureCrispAsrForDotsTts(window, windowService, forceRedownload: false))
+            {
+                return false;
+            }
+
+            var dotsModelKey = DotsTtsCrispAsr.ResolveModelKey(model);
+            if (!DotsTtsCrispAsr.AreModelsInstalled(dotsModelKey))
+            {
+                // Model key already carries the total download size, so no separate size here.
+                var answer = await MessageBox.Show(
+                    window,
+                    "Download dots.tts (CrispASR) models?",
+                    $"{Environment.NewLine}\"dots.tts (CrispASR)\" ({dotsModelKey}) requires models.{Environment.NewLine}{Environment.NewLine}Download models?",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                if (answer != MessageBoxResult.Yes)
+                {
+                    return false;
+                }
+
+                var dlResult = await windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(window, vm => vm.StartDownloadDotsTtsCrispAsrModels(dotsModelKey));
+                if (!dlResult.OkPressed || !DotsTtsCrispAsr.AreModelsInstalled(dotsModelKey))
+                {
+                    return false;
+                }
+
+                await Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    await refreshVoices();
+                });
+                return true;
+            }
+
+            return true;
+        }
+
         if (engine is IndexTts25AudioCpp)
         {
             // The model licence gate comes before anything is fetched: the weights are under
