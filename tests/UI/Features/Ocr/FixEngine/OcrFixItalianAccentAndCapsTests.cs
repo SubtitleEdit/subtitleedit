@@ -81,6 +81,17 @@ public class OcrFixItalianAccentAndCapsTests : IDisposable
     }
 
     [Theory]
+    [InlineData("Arrivo daRoma.", "Arrivo da Roma.")]
+    public void FixOcrErrors_MissingSpaceAfterPreposition_IsSplitWhenTheNameIsKnown(string text, string expected)
+    {
+        var engine = CreateEngine();
+
+        var result = engine.FixOcrErrors(0, text, doTryToGuessUnknownWords: false);
+
+        Assert.Equal(expected, result.GetText());
+    }
+
+    [Theory]
     [InlineData("Vieni anche tu Zzyzx.")] // correct -e word is in the dictionary
     [InlineData("Maria canta Zzyzx.")] // capitalized name is never accented
     public void FixOcrErrors_CorrectWordsAndNames_AreLeftAlone(string text)
@@ -114,6 +125,7 @@ public class OcrFixItalianAccentAndCapsTests : IDisposable
     {
         private static readonly HashSet<string> Words = new(StringComparer.Ordinal)
         {
+            "arrivo", "roma",
             "la", "città", "e", "bella", "non", "so", "perché", "si", "fa", "così",
             "ne", "voglio", "di", "più", "prendo", "un", "caffè", "va", "bene", "però",
             "ora", "musica", "fine", "vieni", "anche", "tu", "canta",

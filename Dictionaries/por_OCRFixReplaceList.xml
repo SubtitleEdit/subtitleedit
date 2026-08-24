@@ -588,5 +588,23 @@
     <RegEx find="\b([a-zàáâãçéêíóôõú]+)ario(s?)\b" spellCheck="$1ário$2" replaceWith="$1ário$2" />
     <RegEx find="\b([a-zàáâãçéêíóôõú]+)encia(s?)\b" spellCheck="$1ência$2" replaceWith="$1ência$2" />
     <RegEx find="\b([a-zàáâãçéêíóôõú]+)ancia(s?)\b" spellCheck="$1ância$2" replaceWith="$1ância$2" />
+
+    <!-- ============================================================ -->
+    <!-- ESPAÇO PERDIDO ENTRE PREPOSIÇÃO/ARTIGO E NOME PRÓPRIO        -->
+    <!-- deLisboa para de Lisboa : só se a palavra com maiúscula      -->
+    <!-- está no dicionário.                                          -->
+    <!-- ============================================================ -->
+    <RegEx find="\bde([A-ZÀÁÂÃÇÉÊÍÓÔÕÚ][a-zàáâãçéêíóôõú]+)\b" spellCheck="$1" replaceWith="de $1" />
+    <RegEx find="\bda([A-ZÀÁÂÃÇÉÊÍÓÔÕÚ][a-zàáâãçéêíóôõú]+)\b" spellCheck="$1" replaceWith="da $1" />
+    <RegEx find="\bdo([A-ZÀÁÂÃÇÉÊÍÓÔÕÚ][a-zàáâãçéêíóôõú]+)\b" spellCheck="$1" replaceWith="do $1" />
+    <RegEx find="\bem([A-ZÀÁÂÃÇÉÊÍÓÔÕÚ][a-zàáâãçéêíóôõú]+)\b" spellCheck="$1" replaceWith="em $1" />
+    <RegEx find="\bno([A-ZÀÁÂÃÇÉÊÍÓÔÕÚ][a-zàáâãçéêíóôõú]+)\b" spellCheck="$1" replaceWith="no $1" />
+    <RegEx find="\bna([A-ZÀÁÂÃÇÉÊÍÓÔÕÚ][a-zàáâãçéêíóôõú]+)\b" spellCheck="$1" replaceWith="na $1" />
+    <RegEx find="\bos([A-ZÀÁÂÃÇÉÊÍÓÔÕÚ][a-zàáâãçéêíóôõú]+)\b" spellCheck="$1" replaceWith="os $1" />
+    <RegEx find="\bas([A-ZÀÁÂÃÇÉÊÍÓÔÕÚ][a-zàáâãçéêíóôõú]+)\b" spellCheck="$1" replaceWith="as $1" />
+    <RegEx find="\bum([A-ZÀÁÂÃÇÉÊÍÓÔÕÚ][a-zàáâãçéêíóôõú]+)\b" spellCheck="$1" replaceWith="um $1" />
+    <RegEx find="\buma([A-ZÀÁÂÃÇÉÊÍÓÔÕÚ][a-zàáâãçéêíóôõú]+)\b" spellCheck="$1" replaceWith="uma $1" />
+    <RegEx find="\bpara([A-ZÀÁÂÃÇÉÊÍÓÔÕÚ][a-zàáâãçéêíóôõú]+)\b" spellCheck="$1" replaceWith="para $1" />
+    <RegEx find="\bcom([A-ZÀÁÂÃÇÉÊÍÓÔÕÚ][a-zàáâãçéêíóôõú]+)\b" spellCheck="$1" replaceWith="com $1" />
   </RegularExpressionsIfSpelledCorrectly>
 </OCRFixReplaceList>

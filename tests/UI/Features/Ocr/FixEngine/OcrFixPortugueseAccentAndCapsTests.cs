@@ -80,6 +80,17 @@ public class OcrFixPortugueseAccentAndCapsTests : IDisposable
     }
 
     [Theory]
+    [InlineData("Venho deLisboa.", "Venho de Lisboa.")]
+    public void FixOcrErrors_MissingSpaceAfterPreposition_IsSplitWhenTheNameIsKnown(string text, string expected)
+    {
+        var engine = CreateEngine();
+
+        var result = engine.FixOcrErrors(0, text, doTryToGuessUnknownWords: false);
+
+        Assert.Equal(expected, result.GetText());
+    }
+
+    [Theory]
     [InlineData("Joao chega logo Zzyzx.")] // capitalized name is never accented
     [InlineData("O cachorro late Zzyzx.")] // correct -e word is in the dictionary
     public void FixOcrErrors_CorrectWordsAndNames_AreLeftAlone(string text)
@@ -115,6 +126,7 @@ public class OcrFixPortugueseAccentAndCapsTests : IDisposable
     {
         private static readonly HashSet<string> Words = new(StringComparer.Ordinal)
         {
+            "venho", "lisboa",
             "eles", "são", "irmãos", "os", "aviões", "chegam", "isso", "e", "necessário",
             "sabe", "que", "você", "fala", "inglês", "quero", "um", "café", "sim",
             "gritos", "chega", "logo", "o", "cachorro", "late",
