@@ -306,6 +306,7 @@ public static class InitNativeMacMenu
             Item(Clean(l.Renumber), v => v.ShowToolsRenumberCommand),
             Item(Clean(l.RemoveTextForHearingImpaired), v => v.ShowToolsRemoveTextForHearingImpairedCommand),
             Item(Clean(l.ConvertActors), v => v.ShowToolsConvertActorsCommand),
+            Item(Clean(l.RemoveUnicodeCharacters), v => v.ShowToolsRemoveUnicodeCharactersCommand),
         };
         var toolItems = new NativeMenu();
         foreach (var toolItem in toolsList.OrderBy(i => i.Header?.Replace("_", string.Empty)))
