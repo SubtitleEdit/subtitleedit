@@ -565,7 +565,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         /// that declares them lets the UI warn before a save silently re-wraps or truncates text
         /// that does not fit. Null means no such limits.
         /// </summary>
-        public virtual SubtitleFormatLimits? FormatLimits => null;
+        /// <remarks>
+        /// Declared without a nullable annotation: libse builds with nullable contexts off, so
+        /// the annotation is inert here and only warns (CS8632). The null contract is above.
+        /// </remarks>
+        public virtual SubtitleFormatLimits FormatLimits => null;
 
         public bool BatchMode { get; set; }
         public double? BatchSourceFrameRate { get; set; }
