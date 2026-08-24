@@ -356,17 +356,18 @@ new("2F", "French - hearing impaired (VF-MAL)"),
             _header.LanguageCode = "0A";
         }
 
-        _header.OriginalProgrammeTitle = OriginalProgramTitle.PadRight(32, ' ');
-        _header.OriginalEpisodeTitle = OriginalEpisodeTitle.PadRight(32, ' ');
-        _header.TranslatedProgrammeTitle = TranslatedProgramTitle.PadRight(32, ' ');
-        _header.TranslatedEpisodeTitle = TranslatedEpisodeTitle.PadRight(32, ' ');
-        _header.TranslatorsName = TranslatorsName.PadRight(32, ' ');
-        _header.SubtitleListReferenceCode = SubtitleListReferenceCode.PadRight(16, ' ');
-        _header.CountryOfOrigin = CountryOfOrigin;
-        if (_header.CountryOfOrigin.Length != 3)
-        {
-            _header.CountryOfOrigin = "USA";
-        }
+        _header.OriginalProgrammeTitle = FixedLength(OriginalProgramTitle, 32);
+        _header.OriginalEpisodeTitle = FixedLength(OriginalEpisodeTitle, 32);
+        _header.TranslatedProgrammeTitle = FixedLength(TranslatedProgramTitle, 32);
+        _header.TranslatedEpisodeTitle = FixedLength(TranslatedEpisodeTitle, 32);
+        _header.TranslatorsName = FixedLength(TranslatorsName, 32);
+        _header.SubtitleListReferenceCode = FixedLength(SubtitleListReferenceCode, 16);
+        // The country of origin is a three-character ISO 3166 code. Keep what the user typed - a
+        // shorter code padded out is closer to the truth than silently claiming "USA" - but keep
+        // the old default for a field nobody filled in.
+        _header.CountryOfOrigin = string.IsNullOrWhiteSpace(CountryOfOrigin)
+            ? "USA"
+            : FixedLength(CountryOfOrigin, 3);
 
         var timeCodeStatus = SelectedTimeCodeStatus ?? TimeCodeStatusList.Last();
         _header.TimeCodeStatus = TimeCodeStatusList.IndexOf(timeCodeStatus).ToString(CultureInfo.InvariantCulture);
@@ -387,11 +388,34 @@ new("2F", "French - hearing impaired (VF-MAL)"),
 
         if (_subtitle != null)
         {
-            _subtitle.Header = _header.ToString();
+            // EbuGeneralSubtitleInformation.ToString() reports a wrong total length by returning an
+            // error message instead of a header, and Ebu.Save silently falls back to its own
+            // defaults ("No Title"/USA/no start time) for anything that is not a real STL header -
+            // so a header that did not come out right must be caught here, not written on.
+            var headerText = _header.ToString();
+            if (Ebu.IsStlHeader(headerText))
+            {
+                _subtitle.Header = headerText;
+            }
+            else
+            {
+                SeLogger.Error("Unable to build an EBU STL header from the save options: " + headerText);
+            }
         }
 
         OkPressed = true;
         Close();
+    }
+
+    /// <summary>
+    /// EBU STL header fields are fixed-width: too short and the header loses its layout, too long
+    /// and it grows past 1024 characters and is thrown away entirely (the text boxes cap the input
+    /// too, this is the last line of defence).
+    /// </summary>
+    private static string FixedLength(string text, int length)
+    {
+        text ??= string.Empty;
+        return text.Length > length ? text.Substring(0, length) : text.PadRight(length, ' ');
     }
 
     [RelayCommand]

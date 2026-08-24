@@ -970,12 +970,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         /// <summary>
         /// True when <paramref name="header"/> is a full 1024-character EBU STL header - present after
         /// loading an STL file or after the EBU save options dialog has stored one on the subtitle.
+        /// The disk format code sits at 3..10 ("STLnn.mm") and is matched there rather than by
+        /// listing frame rates, so every rate the save options dialog offers is recognized (STL23
+        /// used to fall through, which threw the whole header away on save).
         /// </summary>
         public static bool IsStlHeader(string header)
         {
             return header != null &&
                    header.Length == 1024 &&
-                   (header.Contains("STL24") || header.Contains("STL25") || header.Contains("STL29") || header.Contains("STL30"));
+                   header.Substring(3, 3) == "STL";
         }
 
         public bool Save(string fileName, Subtitle subtitle)
