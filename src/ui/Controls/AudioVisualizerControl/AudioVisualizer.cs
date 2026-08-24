@@ -4174,6 +4174,49 @@ public class AudioVisualizer : Control
         return -1;
     }
 
+    /// <summary>
+    /// The lowest peak in a time range, as a percentage of the highest peak in the file.
+    /// Used by "guess start" to find the noise floor around a cue (SE 4 parity).
+    /// </summary>
+    public double FindLowPercentage(double startSeconds, double endSeconds)
+    {
+        if (WavePeaks == null || WavePeaks.Peaks.Count == 0 || WavePeaks.HighestPeak == 0)
+        {
+            return 0;
+        }
+
+        var min = Math.Max(0, SecondsToSampleIndex(startSeconds));
+        var max = Math.Min(WavePeaks.Peaks.Count, SecondsToSampleIndex(endSeconds));
+        if (max <= min)
+        {
+            return 0;
+        }
+
+        var minMax = GetMinAndMax(min, max);
+        return minMax.Min * 100.0 / WavePeaks.HighestPeak;
+    }
+
+    /// <summary>
+    /// The highest peak in a time range, as a percentage of the highest peak in the file.
+    /// </summary>
+    public double FindHighPercentage(double startSeconds, double endSeconds)
+    {
+        if (WavePeaks == null || WavePeaks.Peaks.Count == 0 || WavePeaks.HighestPeak == 0)
+        {
+            return 0;
+        }
+
+        var min = Math.Max(0, SecondsToSampleIndex(startSeconds));
+        var max = Math.Min(WavePeaks.Peaks.Count, SecondsToSampleIndex(endSeconds));
+        if (max <= min)
+        {
+            return 0;
+        }
+
+        var minMax = GetMinAndMax(min, max);
+        return minMax.Max * 100.0 / WavePeaks.HighestPeak;
+    }
+
     private MinMax GetMinAndMax(int startIndex, int endIndex)
     {
         if (WavePeaks == null || WavePeaks.Peaks.Count == 0)

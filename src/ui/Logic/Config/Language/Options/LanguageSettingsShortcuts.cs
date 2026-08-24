@@ -32,6 +32,7 @@ public class LanguageSettingsShortcuts
     public string GeneralGoToVideoPosition { get; set; }
     public string GeneralToggleItalic { get; set; }
     public string GeneralToggleBold { get; set; }
+    public string GeneralToggleUnderline { get; set; }
 
     public string FileOpen { get; set; }
     public string FileOpenKeepVideo { get; set; }
@@ -75,6 +76,7 @@ public class LanguageSettingsShortcuts
     public string AddOrEditBookmark { get; set; }
     public string ToggleBookmark { get; set; }
     public string GoToNextBookmark { get; set; }
+    public string ClearBookmarks { get; set; }
     public string GoToNextEmptyLine { get; set; }
     public string ToggleWaveformToolbar { get; set; }
     public string ToggleSubtitleGridFormatting { get; set; }
@@ -164,6 +166,8 @@ public class LanguageSettingsShortcuts
     public string CopyTextFromOriginalSelectedLines { get; set; }
     public string TextBoxRemoveAllFormatting { get; set; }
     public string TextBoxItalic { get; set; }
+    public string TextBoxBold { get; set; }
+    public string TextBoxUnderline { get; set; }
     public string ResetWaveformZoomAndSpeed { get; set; }
     public string TogglePlaybackSpeed { get; set; }
     public string PlaybackSpeedSlower { get; set; }
@@ -173,6 +177,7 @@ public class LanguageSettingsShortcuts
     public string SeekSilence { get; set; }
     public string SeekSilenceBack { get; set; }
     public string SeekSilenceForward { get; set; }
+    public string WaveformGuessStart { get; set; }
     public string SetVideoPositionCurrentSubtitleStart { get; set; }
     public string GoToSubtitlePositionAndPause { get; set; }
     public string SetVideoPositionCurrentSubtitleEnd { get; set; }
@@ -289,6 +294,7 @@ public class LanguageSettingsShortcuts
         GeneralGoToVideoPosition = "Go to video position";
         GeneralToggleItalic = "Toggle italic";
         GeneralToggleBold = "Toggle bold";
+        GeneralToggleUnderline = "Toggle underline";
 
         FileOpen = "Open";
         FileOpenKeepVideo = "Open (keep video)";
@@ -337,6 +343,7 @@ public class LanguageSettingsShortcuts
         AddOrEditBookmark = "Add or edit bookmark";
         ToggleBookmark = "Toggle bookmark (selected lines, no text)";
         GoToNextBookmark = "Go to next bookmark";
+        ClearBookmarks = "Clear bookmarks";
         GoToNextEmptyLine = "Go to next empty line";
         ToggleWaveformToolbar = "Toggle waveform toolbar";
         ToggleSubtitleGridFormatting = "Toggle grid formatting (show formatting/show tags/no formatting/hide tags)";
@@ -426,6 +433,8 @@ public class LanguageSettingsShortcuts
         CopyTextFromOriginalSelectedLines = "Copy text from original (selected lines)";
         TextBoxRemoveAllFormatting = "Text box, remove all formatting";
         TextBoxItalic = "Text box italic";
+        TextBoxBold = "Text box bold";
+        TextBoxUnderline = "Text box underline";
         ResetWaveformZoomAndSpeed = "Reset waveform zoom and playback speed (play rate)";
         TogglePlaybackSpeed = "Toggle playback speed (play rate)";
         PlaybackSpeedSlower = "Playback speed slower (play rate)";
@@ -435,6 +444,7 @@ public class LanguageSettingsShortcuts
         SeekSilence = "Seek silence";
         SeekSilenceBack = "Seek silence back";
         SeekSilenceForward = "Seek silence forward";
+        WaveformGuessStart = "Guess start time from waveform";
         SetVideoPositionCurrentSubtitleStart = "Set video position to current line start";
         GoToSubtitlePositionAndPause = "Go to sub position and pause";
         SetVideoPositionCurrentSubtitleEnd = "Set video position to current line end";
