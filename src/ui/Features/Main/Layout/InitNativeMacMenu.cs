@@ -237,6 +237,7 @@ public static class InitNativeMacMenu
         exportItems.Items.Add(Item(Se.Language.General.BluRaySup, v => v.ExportBluRaySupCommand));
         exportItems.Items.Add(Item(Se.Language.General.BdnXml, v => v.ExportBdnXmlCommand));
         exportItems.Items.Add(Item(Se.Language.General.BdnXml8Bit, v => v.ExportBdnXml8BitCommand));
+        exportItems.Items.Add(Item(lExport.TitleExportImscImage, v => v.ExportImscImageCommand));
         exportItems.Items.Add(Item(new CapMakerPlus().Name, v => v.ExportCapMakerPlusCommand));
         exportItems.Items.Add(Item(CheetahCaption.NameOfFormat, v => v.ExportCheetahCaptionCommand));
         exportItems.Items.Add(Item(CheetahCaptionOld.NameOfFormat, v => v.ExportCheetahCaptionOldCommand));
@@ -371,6 +372,10 @@ public static class InitNativeMacMenu
                 v => v.IsSubtitleSecondaryVisible, nameof(MainViewModel.IsSubtitleSecondaryVisible)),
             Item(Clean(lVideo.ReEncodeVideoForBetterSubtitlingDotDotDot), v => v.VideoReEncodeCommand),
             Item(Clean(lVideo.CutVideoDotDotDot), v => v.VideoCutCommand),
+
+            // Finds who speaks in the video, clones each of them and assigns the cast, so the
+            // whole thing can be dubbed in its own voices (#13698).
+            Item(Clean(lVideo.TextToSpeech.AutoCastMenuItem), v => v.ShowVideoAutoCastFromVideoCommand),
         };
         videoMoreList.Add(Toggle(Clean(l.WaveformToolbar), v => v.ToggleIsWaveformToolbarVisibleCommand,
             v => v.IsWaveformToolbarVisible, nameof(MainViewModel.IsWaveformToolbarVisible)));
@@ -441,6 +446,18 @@ public static class InitNativeMacMenu
         var assaMenu = new NativeMenuItem(Clean(l.AssaTools)) { Menu = assaItems };
         state.Visibilities.Add((assaMenu, v => v.IsFormatAssa, [nameof(MainViewModel.IsFormatAssa)]));
 
+        // ── SSA Tools ─────────────────────────────────────────────────────────
+        // The old .ssa sibling of the ASSA menu: same three dialogs, but the SSA-specific
+        // commands, and never visible at the same time (IsFormatSsa vs IsFormatAssa).
+        // Kept in InitMenu's order rather than sorted - the headers are the shared Assa*
+        // strings, so sorting them here would only diverge from the non-macOS menu.
+        var ssaItems = new NativeMenu();
+        ssaItems.Items.Add(Item(Clean(l.AssaStyles), v => v.ShowSsaStylesCommand));
+        ssaItems.Items.Add(Item(Clean(l.AssaProperties), v => v.ShowSsaPropertiesCommand));
+        ssaItems.Items.Add(Item(Clean(l.AssaAttachments), v => v.ShowSsaAttachmentsCommand));
+        var ssaMenu = new NativeMenuItem(Clean(l.SsaTools)) { Menu = ssaItems };
+        state.Visibilities.Add((ssaMenu, v => v.IsFormatSsa, [nameof(MainViewModel.IsFormatSsa)]));
+
         // ── Assemble ──────────────────────────────────────────────────────────
         root.Items.Add(new NativeMenuItem(Clean(l.File)) { Menu = fileItems });
         root.Items.Add(new NativeMenuItem(Clean(l.Edit)) { Menu = editItems });
@@ -461,6 +478,7 @@ public static class InitNativeMacMenu
 
         root.Items.Add(new NativeMenuItem(Clean(l.HelpTitle)) { Menu = helpItems });
         root.Items.Add(assaMenu);
+        root.Items.Add(ssaMenu);
 
         _building = null;
 
