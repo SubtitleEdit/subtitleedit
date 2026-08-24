@@ -5,23 +5,23 @@ namespace LibSETests.Core;
 public class CharUtilsTest
 {
     [Fact]
-    public void IsDigit()
+    public void IsAsciiDigit()
     {
-        Assert.True(CharUtils.IsDigit('0'));
-        Assert.True(CharUtils.IsDigit('1'));
-        Assert.True(CharUtils.IsDigit('2'));
-        Assert.True(CharUtils.IsDigit('3'));
-        Assert.True(CharUtils.IsDigit('4'));
-        Assert.True(CharUtils.IsDigit('5'));
-        Assert.True(CharUtils.IsDigit('6'));
-        Assert.True(CharUtils.IsDigit('7'));
-        Assert.True(CharUtils.IsDigit('8'));
-        Assert.True(CharUtils.IsDigit('9'));
+        Assert.True(CharUtils.IsAsciiDigit('0'));
+        Assert.True(CharUtils.IsAsciiDigit('1'));
+        Assert.True(CharUtils.IsAsciiDigit('2'));
+        Assert.True(CharUtils.IsAsciiDigit('3'));
+        Assert.True(CharUtils.IsAsciiDigit('4'));
+        Assert.True(CharUtils.IsAsciiDigit('5'));
+        Assert.True(CharUtils.IsAsciiDigit('6'));
+        Assert.True(CharUtils.IsAsciiDigit('7'));
+        Assert.True(CharUtils.IsAsciiDigit('8'));
+        Assert.True(CharUtils.IsAsciiDigit('9'));
 
-        Assert.False(CharUtils.IsDigit('.'));
-        Assert.False(CharUtils.IsDigit('A'));
-        Assert.False(CharUtils.IsDigit(' '));
-        Assert.False(CharUtils.IsDigit('z'));
+        Assert.False(CharUtils.IsAsciiDigit('.'));
+        Assert.False(CharUtils.IsAsciiDigit('A'));
+        Assert.False(CharUtils.IsAsciiDigit(' '));
+        Assert.False(CharUtils.IsAsciiDigit('z'));
     }
 
     [Fact]

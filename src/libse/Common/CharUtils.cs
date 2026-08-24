@@ -6,7 +6,7 @@
         /// Checks if character matches [0-9]
         /// </summary>
         /// <param name="ch"></param>
-        public static bool IsDigit(char ch) => ch >= '0' && ch <= '9';
+        public static bool IsAsciiDigit(char ch) => ch >= '0' && ch <= '9';
 
         /// <summary>
         /// Checks if given character is hexadecimal

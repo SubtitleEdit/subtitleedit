@@ -722,7 +722,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     return false;
                 }
-                else if (CharUtils.IsDigit(ch))
+                else if (CharUtils.IsAsciiDigit(ch))
                 {
                     numberCount++;
                 }

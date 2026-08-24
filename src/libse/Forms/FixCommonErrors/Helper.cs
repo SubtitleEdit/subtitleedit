@@ -294,7 +294,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         part1.Length > 1 && (char.IsUpper(part1[0]) || "\"'♫♪{[(".Contains(part1[0])))
                     {
                         text = text.Replace(" - ", Environment.NewLine + "- ");
-                        if (char.IsLetter(part0[0]) || CharUtils.IsDigit(part0[0]))
+                        if (char.IsLetter(part0[0]) || CharUtils.IsAsciiDigit(part0[0]))
                         {
                             if (text.Length > 3 && text[0] == '<' && text[2] == '>')
                             {

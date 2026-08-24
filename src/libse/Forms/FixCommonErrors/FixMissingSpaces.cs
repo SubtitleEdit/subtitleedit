@@ -414,7 +414,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     {
                         skip = true;
                     }
-                    if (!skip && IsAsciiDigit(text[idx + 1]))
+
+                    if (!skip && CharUtils.IsAsciiDigit(text[idx + 1]))
                     {
                         skip = true;
                     }
@@ -435,8 +436,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
             return text;
         }
-
-        private static bool IsAsciiDigit(char c) => c >= '0' && c <= '9';
 
         private static bool IsSpaceAfterSkipChar(char c)
         {
