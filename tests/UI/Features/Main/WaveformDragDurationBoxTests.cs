@@ -94,7 +94,7 @@ public class WaveformDragDurationBoxTests : IDisposable
         }
 
         vm.SelectedSubtitle = vm.Subtitles[0];
-        var av = vm.AudioVisualizer;
+        var av = vm.AudioVisualizer!;
         av.WavePeaks = MakePeaks(126, 60);
         av.SetPosition(0, vm.Subtitles, 0, 0, new List<SubtitleLineViewModel> { vm.Subtitles[0] });
         Settle(window);
