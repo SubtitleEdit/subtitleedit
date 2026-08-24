@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text;
 using Avalonia.Headless.XUnit;
 using Avalonia.Threading;
@@ -33,8 +34,16 @@ public class ExportEbuStlHeaderTests
 
     private static byte[] SaveViaDialog(Action<ExportEbuStlViewModel> fillIn)
     {
+        return SaveViaDialog(MakeSubtitle(), fillIn);
+    }
+
+    /// <summary>
+    /// Runs the options dialog the way the main window does - fill in, OK, hand the leftovers to
+    /// the save helper - and saves the subtitle it worked on.
+    /// </summary>
+    private static byte[] SaveViaDialog(Subtitle subtitle, Action<ExportEbuStlViewModel> fillIn)
+    {
         var viewModel = new ExportEbuStlViewModel(new FileHelper());
-        var subtitle = MakeSubtitle();
         viewModel.Initialize(subtitle);
         Dispatcher.UIThread.RunJobs();
 
@@ -42,7 +51,15 @@ public class ExportEbuStlHeaderTests
         viewModel.OkCommand.Execute(null);
         Dispatcher.UIThread.RunJobs();
 
-        Ebu.EbuUiHelper ??= new UiEbuSaveHelper();
+        var helper = new UiEbuSaveHelper { JustificationCode = viewModel.JustificationCode };
+        helper.SetFrameRate(viewModel.StoredHeader, viewModel.FrameRateFromSaveDialog);
+        Ebu.EbuUiHelper = helper;
+
+        return Save(subtitle);
+    }
+
+    private static byte[] Save(Subtitle subtitle)
+    {
         var fileName = Path.Combine(Path.GetTempPath(), "ebu-header-test-" + Guid.NewGuid() + ".stl");
         try
         {
@@ -56,6 +73,12 @@ public class ExportEbuStlHeaderTests
                 File.Delete(fileName);
             }
         }
+    }
+
+    // TTI block 0 starts right after the 1024-byte header; the in-cue time code sits at 5..8.
+    private static string InCueTimeCode(byte[] bytes)
+    {
+        return $"{bytes[1024 + 5]:00}:{bytes[1024 + 6]:00}:{bytes[1024 + 7]:00}:{bytes[1024 + 8]:00}";
     }
 
     private static string Field(byte[] bytes, int index, int length)
@@ -138,5 +161,99 @@ public class ExportEbuStlHeaderTests
         var bytes = SaveViaDialog(vm => { vm.OriginalProgramTitle = "My film"; });
 
         Assert.Equal("USA", Field(bytes, 274, 3));
+    }
+
+    // The frame rate is the one save option that is not part of the 1024-character header, so it
+    // was lost when the writer re-read the header off the subtitle and every file came out with
+    // the rate its disk format code implies.
+    [AvaloniaTheory]
+    [InlineData("23.976", "00:00:01:23")]
+    [InlineData("25", "00:00:01:24")]
+    public void PickedFrameRate_DecidesTheTimeCodeFrames(string frameRate, string expected)
+    {
+        var subtitle = new Subtitle();
+        subtitle.Paragraphs.Add(new Paragraph("Hello world", 1960, 3000));
+
+        var bytes = SaveViaDialog(subtitle, vm =>
+        {
+            vm.SelectedFrameRate = frameRate;
+            vm.OriginalProgramTitle = "My film";
+        });
+
+        Assert.Equal(expected, InCueTimeCode(bytes));
+    }
+
+    // ...but it may not leak to the next file: that one keeps the rate its own header implies.
+    [AvaloniaFact]
+    public void PickedFrameRate_DoesNotLeakToAnotherSubtitle()
+    {
+        var first = new Subtitle();
+        first.Paragraphs.Add(new Paragraph("Hello world", 1960, 3000));
+        SaveViaDialog(first, vm =>
+        {
+            vm.SelectedFrameRate = "23.976";
+            vm.OriginalProgramTitle = "My film";
+        });
+
+        // A second, STL25 subtitle saved without opening the dialog again.
+        var second = new Subtitle { Header = new Ebu.EbuGeneralSubtitleInformation().ToString() };
+        second.Paragraphs.Add(new Paragraph("Hello world", 1960, 3000));
+
+        Assert.Equal("00:00:01:24", InCueTimeCode(Save(second)));
+    }
+
+    // Reopening the dialog showed the 25 fps default for every file, because the rate was read from
+    // a field that is never part of a header read back from bytes.
+    [AvaloniaFact]
+    public void ReopeningTheDialog_ShowsTheRateOfTheFile()
+    {
+        var subtitle = new Subtitle
+        {
+            Header = new Ebu.EbuGeneralSubtitleInformation { DiskFormatCode = "STL30.01" }.ToString(),
+        };
+        subtitle.Paragraphs.Add(new Paragraph("Hello world", 1000, 3000));
+
+        var viewModel = new ExportEbuStlViewModel(new FileHelper());
+        viewModel.Initialize(subtitle);
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal("30", viewModel.SelectedFrameRate);
+
+        // And a rate that no disk format code can express is remembered for this header.
+        Ebu.EbuUiHelper = new UiEbuSaveHelper();
+        SaveViaDialog(subtitle, vm => { vm.SelectedFrameRate = "23.976"; });
+
+        var reopened = new ExportEbuStlViewModel(new FileHelper());
+        reopened.Initialize(subtitle);
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal("23.976", reopened.SelectedFrameRate);
+    }
+
+    // The frame rate list is written with invariant decimal points, so it must not be read back
+    // with the UI culture: in a comma-decimal culture "23.976" parsed as 23976 and the pick was
+    // dropped on the floor.
+    [AvaloniaFact]
+    public void PickedFrameRate_SurvivesACommaDecimalCulture()
+    {
+        var culture = CultureInfo.CurrentCulture;
+        CultureInfo.CurrentCulture = new CultureInfo("da-DK");
+        try
+        {
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.Add(new Paragraph("Hello world", 1960, 3000));
+
+            var bytes = SaveViaDialog(subtitle, vm =>
+            {
+                vm.SelectedFrameRate = "23.976";
+                vm.OriginalProgramTitle = "My film";
+            });
+
+            Assert.Equal("00:00:01:23", InCueTimeCode(bytes));
+        }
+        finally
+        {
+            CultureInfo.CurrentCulture = culture;
+        }
     }
 }
