@@ -422,7 +422,7 @@
     <LinePart from="¿Pero qué haces?" to="¡¿Pero qué haces?!" />
     <LinePart from="¿pero qué haces?" to="¡¿pero qué haces?!" />
     <LinePart from="¿Es que no me has escuchado?" to="¡¿Es que no me has escuchado?!" />
-    <LinePart from="¡¿es que no me has escuchado?!" to="¡¿es que no me has escuchado?!" />
+    <LinePart from="¿es que no me has escuchado?" to="¡¿es que no me has escuchado?!" />
     <!-- Acentos al principio de los signos de interrogación con minúsculas -->
     <LinePart from="¿aun" to="¿aún" />
     <LinePart from="¿tu " to="¿tú " />
@@ -513,7 +513,7 @@
     <LinePart from="¿a donde" to="¿a dónde" />
     <LinePart from="¿a que" to="¿a qué" />
     <LinePart from="¿a cual" to="¿a cuál" />
-    <LinePart from="¿a quien" to="¿a quien" />
+    <LinePart from="¿a quien" to="¿a quién" />
     <LinePart from="¿a como" to="¿a cómo" />
     <LinePart from="¿a cuanto" to="¿a cuánto" />
     <LinePart from="¿a cuanta" to="¿a cuánta" />
@@ -617,7 +617,6 @@
     <LinePart from="¿Con cual" to="¿Con cuál" />
     <LinePart from="¿Con quien" to="¿Con quién" />
     <LinePart from="¿Con cuantos" to="¿Con cuántos" />
-    <LinePart from="¿Con cuanta" to="¿Con cuántas" />
     <LinePart from="¿Con cuanta" to="¿Con cuánta" />
     <LinePart from="¿Con cuanto" to="¿Con cuánto" />
     <LinePart from="¿Para donde" to="¿Para dónde" />
@@ -632,7 +631,7 @@
     <LinePart from="¿A donde" to="¿A dónde" />
     <LinePart from="¿A que" to="¿A qué" />
     <LinePart from="¿A cual" to="¿A cuál" />
-    <LinePart from="¿A quien" to="¿A quien" />
+    <LinePart from="¿A quien" to="¿A quién" />
     <LinePart from="¿A como" to="¿A cómo" />
     <LinePart from="¿A cuanto" to="¿A cuánto" />
     <LinePart from="¿A cuanta" to="¿A cuánta" />
@@ -664,7 +663,6 @@
     <!-- Tilde diacrítica en oraciones interrogativas o exclamativas indirectas -->
     <LinePart from="el porque" to="el porqué" />
     <LinePart from="su porque" to="su porqué" />
-    <LinePart from="los porqués" to="los porqués" />
     <!-- aún -->
     <LinePart from="aun," to="aún," />
     <LinePart from="aun no" to="aún no" />
