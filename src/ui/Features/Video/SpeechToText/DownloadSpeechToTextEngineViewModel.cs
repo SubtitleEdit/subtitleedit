@@ -214,6 +214,25 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
                 OkPressed = true;
                 Close();
             }
+            else if (Engine.Name == WhisperEngineWhisperX.StaticName)
+            {
+                var dir = Engine.GetAndCreateWhisperFolder();
+
+                TitleText = string.Format(Se.Language.General.UnpackingX, Engine.Name);
+                StartIndeterminateProgress();
+                Unpack(dir, string.Empty);
+                StopIndeterminateProgress();
+
+                if (_cancellationTokenSource.IsCancellationRequested)
+                {
+                    Cancel();
+                    return;
+                }
+
+                // WhisperX runs its own bundled voice activity detection - no Silero sidecar needed.
+                OkPressed = true;
+                Close();
+            }
             else
             {
                 if (_downloadStream.Length == 0)
@@ -550,6 +569,10 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
         else if (Engine is WhisperEngineCTranslate2)
         {
             _downloadTask = _whisperDownloadService.DownloadWhisperCTranslate2(_downloadStream, downloadProgress, _cancellationTokenSource.Token);
+        }
+        else if (Engine is WhisperEngineWhisperX)
+        {
+            _downloadTask = _whisperDownloadService.DownloadWhisperX(_downloadStream, downloadProgress, _cancellationTokenSource.Token);
         }
         else if (Engine is WhisperEngineConstMe)
         {

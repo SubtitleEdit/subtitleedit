@@ -255,6 +255,15 @@ public partial class SpeechToTextViewModel : ObservableObject
             Engines.Add(new WhisperEngineCTranslate2());
         }
 
+        // Same platform/architecture support as the standalone build published at
+        // https://github.com/muaz978/subtitleedit-whisperx-standalone.
+        if (OperatingSystem.IsWindows() ||
+            (OperatingSystem.IsMacOS() && RuntimeInformation.ProcessArchitecture == Architecture.Arm64) ||
+            (OperatingSystem.IsLinux() && RuntimeInformation.ProcessArchitecture == Architecture.X64))
+        {
+            Engines.Add(new WhisperEngineWhisperX());
+        }
+
         Engines.Add(new WhisperEngineOpenAi());
 
         // Add OpenAI Compatible STT engine (available on all platforms)
@@ -3737,7 +3746,11 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// stdout/stderr to <paramref name="dataReceivedHandler"/> when one is given.
     /// The working directory is the executable's folder.
     /// </summary>
-    private static Process StartEngineProcess(string executable, string arguments, DataReceivedEventHandler? dataReceivedHandler)
+    private static Process StartEngineProcess(
+        string executable,
+        string arguments,
+        DataReceivedEventHandler? dataReceivedHandler,
+        Action<ProcessStartInfo>? configureStartInfo = null)
     {
         var p = new Process
         {
@@ -3749,6 +3762,8 @@ public partial class SpeechToTextViewModel : ObservableObject
                 WorkingDirectory = Path.GetDirectoryName(executable),
             }
         };
+
+        configureStartInfo?.Invoke(p.StartInfo);
 
         if (dataReceivedHandler != null)
         {
@@ -3794,6 +3809,35 @@ public partial class SpeechToTextViewModel : ObservableObject
     }
 
     /// <summary>
+    /// WhisperX shells out to a real "ffmpeg" binary via subprocess for audio loading (it is not
+    /// bundled in the standalone build - see subtitleedit-whisperx-standalone's README). Puts
+    /// Subtitle Edit's own configured/bundled ffmpeg on PATH so WhisperX finds it without
+    /// requiring a separate ffmpeg install. When ffmpeg is not configured to an actual file
+    /// (e.g. still the bare "ffmpeg" fallback resolved through the system PATH), this leaves
+    /// PATH untouched - the child process falls back to the exact same system PATH resolution
+    /// Subtitle Edit's own ffmpeg calls would use in that situation.
+    /// </summary>
+    private static void AddFfmpegToPath(ProcessStartInfo startInfo)
+    {
+        var ffmpegLocation = FfmpegHelper.GetFfmpegLocation();
+        if (string.IsNullOrEmpty(ffmpegLocation) || !File.Exists(ffmpegLocation))
+        {
+            return;
+        }
+
+        var ffmpegDir = Path.GetDirectoryName(ffmpegLocation);
+        if (string.IsNullOrEmpty(ffmpegDir))
+        {
+            return;
+        }
+
+        var existingPath = ProcessEnvironmentHelper.GetOrNull(startInfo, "PATH");
+        startInfo.EnvironmentVariables["PATH"] = string.IsNullOrEmpty(existingPath)
+            ? ffmpegDir
+            : ffmpegDir + Path.PathSeparator + existingPath;
+    }
+
+    /// <summary>
     /// Engines that demux and decode the source media themselves, so they can be pointed at the
     /// user's original file instead of SE's extracted WAV: Purfview Faster-Whisper-XXL bundles
     /// ffmpeg, whisper-ctranslate2 bundles PyAV. Verified that the others cannot - whisper.cpp
@@ -3803,7 +3847,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     private static bool CanEngineReadSourceFileDirectly(ISpeechToTextEngine engine)
     {
         return engine.Name == WhisperEnginePurfviewFasterWhisperXxl.StaticName ||
-               engine is WhisperEngineCTranslate2;
+               engine is WhisperEngineCTranslate2 or WhisperEngineWhisperX;
     }
 
     /// <summary>
@@ -3846,6 +3890,25 @@ public partial class SpeechToTextViewModel : ObservableObject
         DataReceivedEventHandler? dataReceivedHandler = null,
         string engineOutputFolder = "")
     {
+        if (engine is WhisperEngineWhisperX whisperX)
+        {
+            var exe = whisperX.GetExecutable();
+            var whisperXArgs = whisperX.CommandLineParameter;
+            var languageArgX = language.Equals("auto", StringComparison.OrdinalIgnoreCase)
+                ? string.Empty
+                : $"--language {language} ";
+            var taskArg = translate ? "--task translate " : string.Empty;
+            var outputDir = string.IsNullOrEmpty(engineOutputFolder)
+                ? GetSttTempFolder()
+                : engineOutputFolder;
+            var parametersX =
+                $"{languageArgX}--model \"{model}\" --output_format srt --output_dir \"{outputDir}\" " +
+                $"{taskArg}{whisperXArgs} \"{waveFileName}\"";
+
+            Se.WriteToolsLog($"{exe} {parametersX}");
+            return StartEngineProcess(exe, parametersX, dataReceivedHandler, AddFfmpegToPath);
+        }
+
         if (engine is Qwen3AsrCppEngine qwen3Asr)
         {
             var exe = qwen3Asr.GetExecutable();

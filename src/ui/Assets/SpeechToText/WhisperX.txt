@@ -1,0 +1,180 @@
+usage: whisperx-standalone [-h] [--model MODEL]
+                           [--model_cache_only MODEL_CACHE_ONLY]
+                           [--model_dir MODEL_DIR] [--device DEVICE]
+                           [--device_index DEVICE_INDEX]
+                           [--batch_size BATCH_SIZE]
+                           [--compute_type {default,float16,float32,int8}]
+                           [--output_dir OUTPUT_DIR]
+                           [--output_format {all,srt,vtt,txt,tsv,json,aud}]
+                           [--verbose VERBOSE]
+                           [--log-level {debug,info,warning,error,critical}]
+                           [--task {transcribe,translate}]
+                           [--language LANGUAGE]
+                           [--align_model ALIGN_MODEL]
+                           [--interpolate_method {nearest,linear,ignore}]
+                           [--no_align] [--return_char_alignments]
+                           [--vad_method {pyannote,silero}]
+                           [--vad_onset VAD_ONSET] [--vad_offset VAD_OFFSET]
+                           [--chunk_size CHUNK_SIZE] [--diarize]
+                           [--min_speakers MIN_SPEAKERS]
+                           [--max_speakers MAX_SPEAKERS]
+                           [--diarize_model DIARIZE_MODEL]
+                           [--speaker_embeddings] [--temperature TEMPERATURE]
+                           [--best_of BEST_OF] [--beam_size BEAM_SIZE]
+                           [--patience PATIENCE]
+                           [--length_penalty LENGTH_PENALTY]
+                           [--suppress_tokens SUPPRESS_TOKENS]
+                           [--suppress_numerals]
+                           [--initial_prompt INITIAL_PROMPT]
+                           [--hotwords HOTWORDS]
+                           [--condition_on_previous_text CONDITION_ON_PREVIOUS_TEXT]
+                           [--fp16 FP16]
+                           [--temperature_increment_on_fallback TEMPERATURE_INCREMENT_ON_FALLBACK]
+                           [--compression_ratio_threshold COMPRESSION_RATIO_THRESHOLD]
+                           [--logprob_threshold LOGPROB_THRESHOLD]
+                           [--no_speech_threshold NO_SPEECH_THRESHOLD]
+                           [--max_line_width MAX_LINE_WIDTH]
+                           [--max_line_count MAX_LINE_COUNT]
+                           [--highlight_words HIGHLIGHT_WORDS]
+                           [--segment_resolution {sentence,chunk}]
+                           [--threads THREADS] [--hf_token HF_TOKEN]
+                           [--print_progress PRINT_PROGRESS] [--version]
+                           [--python-version]
+                           audio [audio ...]
+
+positional arguments:
+  audio                 audio file(s) to transcribe
+
+options:
+  -h, --help            show this help message and exit
+  --model MODEL         name of the Whisper model to use (default: small)
+  --model_cache_only MODEL_CACHE_ONLY
+                        If True, will not attempt to download models, instead
+                        using cached models from --model_dir (default: False)
+  --model_dir MODEL_DIR
+                        the path to save model files; uses ~/.cache/whisper by
+                        default (default: None)
+  --device DEVICE       device type to use for PyTorch inference (e.g. cpu,
+                        cuda) (default: cpu)
+  --device_index DEVICE_INDEX
+                        device index to use for FasterWhisper inference
+                        (default: 0)
+  --batch_size BATCH_SIZE
+                        the preferred batch size for inference (default: 8)
+  --compute_type {default,float16,float32,int8}
+                        compute type for computation; 'default' uses float16
+                        on GPU, float32 on CPU (default: default)
+  --output_dir OUTPUT_DIR, -o OUTPUT_DIR
+                        directory to save the outputs (default: .)
+  --output_format {all,srt,vtt,txt,tsv,json,aud}, -f {all,srt,vtt,txt,tsv,json,aud}
+                        format of the output file (default: all)
+  --verbose VERBOSE     whether to print out progress and debug messages
+                        (default: True)
+  --log-level {debug,info,warning,error,critical}
+                        log level (default: info)
+  --task {transcribe,translate}
+                        whether to transcribe or translate to English
+                        (default: transcribe)
+  --language LANGUAGE   language spoken in the audio; specify None to perform
+                        language detection (default: None)
+  --align_model ALIGN_MODEL
+                        name of phoneme-level ASR model to do alignment
+                        (default: None)
+  --interpolate_method {nearest,linear,ignore}
+                        for word .srt, method to assign timestamps to non-
+                        aligned words, or merge them into neighbouring
+                        (default: nearest)
+  --no_align            do not perform alignment (default: False)
+  --return_char_alignments
+                        return character-level alignments in the output json
+                        file (default: False)
+  --vad_method {pyannote,silero}
+                        VAD method to be used (default: pyannote)
+  --vad_onset VAD_ONSET
+                        onset threshold for VAD (see pyannote.audio pipelines)
+                        (default: 0.5)
+  --vad_offset VAD_OFFSET
+                        offset threshold for VAD (see pyannote.audio
+                        pipelines) (default: 0.363)
+  --chunk_size CHUNK_SIZE
+                        Chunk size for merging VAD segments (default: 30)
+  --diarize             apply diarization to assign speaker labels to each
+                        segment/word (default: False)
+  --min_speakers MIN_SPEAKERS
+                        minimum number of speakers to in audio file (default:
+                        None)
+  --max_speakers MAX_SPEAKERS
+                        maximum number of speakers to in audio file (default:
+                        None)
+  --diarize_model DIARIZE_MODEL
+                        Name of the diarization model to use (default:
+                        pyannote/speaker-diarization-3.1)
+  --speaker_embeddings  Include speaker embeddings in JSON output (only works
+                        with --diarize too) (default: False)
+  --temperature TEMPERATURE
+                        temperature to use for sampling (default: 0)
+  --best_of BEST_OF     number of candidates when sampling with non-zero
+                        temperature (default: 5)
+  --beam_size BEAM_SIZE
+                        number of beams in beam search, only applicable when
+                        temperature is zero (default: 5)
+  --patience PATIENCE   optional patience value to use in beam decoding
+                        (default: 1.0)
+  --length_penalty LENGTH_PENALTY
+                        optional token length penalty coefficient (alpha)
+                        (default: 1.0)
+  --suppress_tokens SUPPRESS_TOKENS
+                        comma-separated list of token ids to suppress during
+                        sampling (default: -1)
+  --suppress_numerals   whether to suppress numeric symbols and currency
+                        symbols during sampling, since wav2vec2 cannot align
+                        them correctly (default: False)
+  --initial_prompt INITIAL_PROMPT
+                        optional text to provide as a prompt for the first
+                        window (default: None)
+  --hotwords HOTWORDS   hotwords/hint phrases for the model (default: None)
+  --condition_on_previous_text CONDITION_ON_PREVIOUS_TEXT
+                        if True, provide the previous output as a prompt for
+                        the next window (default: False)
+  --fp16 FP16           whether to perform inference in fp16 (default: True)
+  --temperature_increment_on_fallback TEMPERATURE_INCREMENT_ON_FALLBACK
+                        temperature to increase when falling back (default:
+                        0.2)
+  --compression_ratio_threshold COMPRESSION_RATIO_THRESHOLD
+                        if gzip compression ratio is higher than this, treat
+                        decoding as failed (default: 2.4)
+  --logprob_threshold LOGPROB_THRESHOLD
+                        if average log probability is lower than this, treat
+                        decoding as failed (default: -1.0)
+  --no_speech_threshold NO_SPEECH_THRESHOLD
+                        if the no-speech probability is higher than this and
+                        decoding has failed, consider the segment as silence
+                        (default: 0.6)
+  --max_line_width MAX_LINE_WIDTH
+                        the maximum number of characters in a line before
+                        breaking (default: None)
+  --max_line_count MAX_LINE_COUNT
+                        the maximum number of lines in a segment (default:
+                        None)
+  --highlight_words HIGHLIGHT_WORDS
+                        underline each word as it is spoken in srt/vtt
+                        (default: False)
+  --segment_resolution {sentence,chunk}
+                        the resolution of the segments (default: sentence)
+  --threads THREADS    number of threads used by torch for CPU inference
+                        (default: 0)
+  --hf_token HF_TOKEN   Hugging Face access token, needed to run diarization
+                        (gated models) (default: )
+  --print_progress PRINT_PROGRESS
+                        if True, prints progress in transcribing/aligning
+                        (default: False)
+  --version             show program's version number and exit
+  --python-version      print the Python interpreter version used to build
+                        this executable, then exit
+
+Notes for the standalone build (https://github.com/muaz978/subtitleedit-whisperx-standalone):
+- No Python install is required - this is a self-contained build.
+- Requires ffmpeg on PATH (Subtitle Edit passes its own bundled copy automatically).
+- Whisper and alignment models download from Hugging Face on first use.
+- --diarize needs a Hugging Face token with access to the gated pyannote
+  speaker-diarization model, passed via --hf_token.
