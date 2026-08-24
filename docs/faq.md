@@ -12,7 +12,7 @@ Yes. Subtitle Edit is released under the MIT license. It is completely free with
 Subtitle Edit 5 is built with Avalonia UI and runs on:
 - Windows 10 (version 22H2 / build 19045) and later
 - Linux (native packages or Flatpak)
-- macOS 12 (Monterey) or later, on both Apple Silicon (arm64) and Intel (x64)
+- macOS 14 (Sonoma) or later, on both Apple Silicon (arm64) and Intel (x64)
 
 ### Where is my data stored?
 Subtitle Edit stores settings and data in a platform-specific data folder. You can open it with the keyboard shortcut `Ctrl+Alt+Shift+D` (Windows/Linux) or `Cmd+Alt+Shift+D` (macOS).
