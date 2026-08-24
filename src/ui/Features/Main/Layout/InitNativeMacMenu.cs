@@ -292,6 +292,7 @@ public static class InitNativeMacMenu
             Item(Clean(l.ChangeFormatting), v => v.ShowToolsChangeFormattingCommand),
             Item(Clean(l.FixCommonErrors), v => v.ShowToolsFixCommonErrorsCommand),
             Item(Clean(l.CheckAndFixNetflixErrors), v => v.ShowToolsFixNetflixErrorsCommand),
+            Item(Clean(l.ListErrors), v => v.ListErrorsCommand),
             Item(Clean(l.AiReview), v => v.ShowToolsAiReviewCommand),
             Item(Clean(l.MakeEmptyTranslationFromCurrentSubtitle), v => v.ToolsMakeEmptyTranslationFromCurrentSubtitleCommand),
             Item(Clean(l.MergeLinesWithSameText), v => v.ShowToolsMergeLinesWithSameTextCommand),
@@ -305,6 +306,7 @@ public static class InitNativeMacMenu
             Item(Clean(l.Renumber), v => v.ShowToolsRenumberCommand),
             Item(Clean(l.RemoveTextForHearingImpaired), v => v.ShowToolsRemoveTextForHearingImpairedCommand),
             Item(Clean(l.ConvertActors), v => v.ShowToolsConvertActorsCommand),
+            Item(Clean(l.RemoveUnicodeCharacters), v => v.ShowToolsRemoveUnicodeCharactersCommand),
         };
         var toolItems = new NativeMenu();
         foreach (var toolItem in toolsList.OrderBy(i => i.Header?.Replace("_", string.Empty)))
