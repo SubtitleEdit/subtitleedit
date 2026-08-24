@@ -1530,8 +1530,11 @@ public class AudioVisualizer : Control
 
                 if (_activeParagraph != null)
                 {
-                    _activeParagraph.StartTime = TimeSpan.FromSeconds(newStart);
-                    _activeParagraph.EndTime = TimeSpan.FromSeconds(newStart + _originalDurationSeconds);
+                    // Add the duration as a whole-millisecond TimeSpan rather than in seconds, so
+                    // moving a line cannot round its length a millisecond up or down (#14056).
+                    var movedStart = TimeSpanExtensions.FromSecondsWholeMilliseconds(newStart);
+                    _activeParagraph.StartTime = movedStart;
+                    _activeParagraph.EndTime = movedStart + TimeSpanExtensions.FromSecondsWholeMilliseconds(_originalDurationSeconds);
                 }
                 break;
             case InteractionMode.MovingSelection:
@@ -1558,9 +1561,9 @@ public class AudioVisualizer : Control
 
                 foreach (var item in _selectionMoveSnapshot)
                 {
-                    var start = item.StartSeconds + shift;
-                    item.Paragraph.StartTime = TimeSpan.FromSeconds(start);
-                    item.Paragraph.EndTime = TimeSpan.FromSeconds(start + item.DurationSeconds);
+                    var start = TimeSpanExtensions.FromSecondsWholeMilliseconds(item.StartSeconds + shift);
+                    item.Paragraph.StartTime = start;
+                    item.Paragraph.EndTime = start + TimeSpanExtensions.FromSecondsWholeMilliseconds(item.DurationSeconds);
                 }
 
                 break;

@@ -42,10 +42,12 @@ public class ChangeFrameRateViewModelTests
 
         ChangeFrameRateViewModel.ChangeFrameRate(subtitles, 25.0, 30.0);
 
+        // Scaled times land on whole milliseconds - the only resolution subtitle formats have,
+        // and the one the grid stores since #14056.
         var ratio = 25.0 / 30.0;
-        Assert.Equal(1000.0 * ratio, subtitles[0].StartTime.TotalMilliseconds, 3);
-        Assert.Equal(3000.0 * ratio, subtitles[0].EndTime.TotalMilliseconds, 3);
-        Assert.Equal(6000.0 * ratio, subtitles[1].StartTime.TotalMilliseconds, 3);
-        Assert.Equal(9000.0 * ratio, subtitles[1].EndTime.TotalMilliseconds, 3);
+        Assert.Equal(1000.0 * ratio, subtitles[0].StartTime.TotalMilliseconds, 0);
+        Assert.Equal(3000.0 * ratio, subtitles[0].EndTime.TotalMilliseconds, 0);
+        Assert.Equal(6000.0 * ratio, subtitles[1].StartTime.TotalMilliseconds, 0);
+        Assert.Equal(9000.0 * ratio, subtitles[1].EndTime.TotalMilliseconds, 0);
     }
 }

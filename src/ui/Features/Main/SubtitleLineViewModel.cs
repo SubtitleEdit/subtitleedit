@@ -53,14 +53,57 @@ public partial class SubtitleLineViewModel : ObservableObject
     [ObservableProperty]
     private string? _bookmark;
 
-    [ObservableProperty]
+    // The three time properties are hand-written rather than [ObservableProperty] so that every
+    // assignment is snapped to a whole millisecond - the generated setter offers no coercion hook.
+    // Subtitle formats store whole milliseconds and every time code SE shows is a whole
+    // millisecond, but .NET Core's TimeSpan.FromSeconds/FromMilliseconds truncate to ticks, so a
+    // pixel-derived waveform drag or a typed "0,820" lands here as e.g. 819.9999 ms. Such a value
+    // renders one millisecond apart in the grid (which truncates) and in the duration up/down
+    // (which rounds), and saves a millisecond early - see issue #14056.
     private TimeSpan _startTime;
 
-    [ObservableProperty]
+    public TimeSpan StartTime
+    {
+        get => _startTime;
+        set
+        {
+            var snapped = value.SnapToWholeMilliseconds();
+            if (SetProperty(ref _startTime, snapped))
+            {
+                OnStartTimeChanged(snapped);
+            }
+        }
+    }
+
     private TimeSpan _endTime;
 
-    [ObservableProperty]
+    public TimeSpan EndTime
+    {
+        get => _endTime;
+        set
+        {
+            var snapped = value.SnapToWholeMilliseconds();
+            if (SetProperty(ref _endTime, snapped))
+            {
+                OnEndTimeChanged(snapped);
+            }
+        }
+    }
+
     private TimeSpan _duration;
+
+    public TimeSpan Duration
+    {
+        get => _duration;
+        set
+        {
+            var snapped = value.SnapToWholeMilliseconds();
+            if (SetProperty(ref _duration, snapped))
+            {
+                OnDurationChanged(snapped);
+            }
+        }
+    }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(TeletextDisplay))]
@@ -917,7 +960,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         SetTimes(timeSpan, timeSpan + (EndTime - StartTime));
     }
 
-    partial void OnStartTimeChanged(TimeSpan value)
+    private void OnStartTimeChanged(TimeSpan value)
     {
         OnPropertyChanged(nameof(StartTimeOnly));
         OnPropertyChanged(nameof(StartTimeKeepDuration));
@@ -935,7 +978,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         _skipUpdate = false;
     }
 
-    partial void OnEndTimeChanged(TimeSpan value)
+    private void OnEndTimeChanged(TimeSpan value)
     {
         if (_skipUpdate)
         {
@@ -950,7 +993,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         _skipUpdate = false;
     }
 
-    partial void OnDurationChanged(TimeSpan value)
+    private void OnDurationChanged(TimeSpan value)
     {
         if (_skipUpdate)
         {
