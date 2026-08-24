@@ -167,6 +167,13 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
 
                 TitleText = Se.Language.General.Unpacking7ZipArchiveDotDotDot;
                 StartIndeterminateProgress();
+
+                // Record the build before the archive is deleted below. This engine is streamed
+                // to a file rather than to memory (the archive is ~1.5 GB), so it takes the
+                // file overload. Without a sidecar nothing identifies the install and the
+                // engine-settings dialog can only report it as an unrecognized build (#14057).
+                DownloadHashManager.WriteSidecar(dir, DownloadHashManager.ResolvePurfviewFasterWhisperXxlKey(), tempFileName);
+
                 Unpacker.Extract7Zip(tempFileName, dir, "Faster-Whisper-XXL", _cancellationTokenSource, text => ProgressText = text);
                 StopIndeterminateProgress();
 
@@ -200,6 +207,7 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
 
                 TitleText = string.Format(Se.Language.General.UnpackingX, Engine.Name);
                 StartIndeterminateProgress();
+                DownloadHashManager.WriteSidecar(dir, DownloadHashManager.ResolveWhisperCTranslate2Key(), _downloadStream);
                 Unpack(dir, string.Empty);
                 StopIndeterminateProgress();
 
@@ -256,6 +264,10 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
                 else if (Engine is WhisperEngineCpp or WhisperEngineCppCuBlas or WhisperEngineCppVulkan)
                 {
                     WriteWhisperCppInstalledHash(folder);
+                }
+                else if (Engine is WhisperEngineConstMe)
+                {
+                    DownloadHashManager.WriteSidecar(folder, DownloadHashManager.ResolveWhisperConstMeKey(), _downloadStream);
                 }
                 else if (Engine is Qwen3AsrCppEngine)
                 {

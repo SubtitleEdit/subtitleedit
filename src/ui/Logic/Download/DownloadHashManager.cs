@@ -321,6 +321,29 @@ public static class DownloadHashManager
         public const string LinuxCudaExecutable = "WhisperCpp.Linux.Cuda.Executable";
     }
 
+    public static class PurfviewFasterWhisperXxl
+    {
+        // Hashes of the release archive (.7z) — written to the sidecar at install time.
+        // Upstream publishes every build under one rolling "Faster-Whisper-XXL" tag, so it is the
+        // file name pinned in WhisperDownloadService.cs that identifies the release, not the tag.
+        public const string Windows = "PurfviewFasterWhisperXxl.Windows";   // Faster-Whisper-XXL_<rev>_windows.7z
+        public const string Linux = "PurfviewFasterWhisperXxl.Linux";       // Faster-Whisper-XXL_<rev>_linux.7z
+    }
+
+    public static class WhisperCTranslate2
+    {
+        // Hashes of the release archive (.zip) — written to the sidecar at install time.
+        public const string Windows = "WhisperCTranslate2.Windows";         // whisper-ctranslate2-win64.zip
+        public const string MacArm64 = "WhisperCTranslate2.MacArm64";       // whisper-ctranslate2-mac.zip
+        public const string LinuxX64 = "WhisperCTranslate2.Linux.X64";      // whisper-ctranslate2-Linux64.zip
+    }
+
+    public static class WhisperConstMe
+    {
+        // Hash of the release archive (.zip) — written to the sidecar at install time.
+        public const string Windows = "WhisperConstMe.Windows";             // cli.zip (Const-me/Whisper)
+    }
+
     // For each key, hashes are ordered newest-first. Index 0 is the latest known release.
     // All hashes are lower-case hex SHA-256.
     private static readonly IReadOnlyDictionary<string, IReadOnlyList<string>> KnownHashes =
@@ -1985,6 +2008,39 @@ public static class DownloadHashManager
                 "33bad46e07f0d9bb64fc03ca8c7047b212482c1f45536290f80bb0fe716c9775", // whispercpp-185 / v1.8.5 (missing shared libraries)
                 "315f46514fc09a4fefe2f7b6ae95cfac5441a03b8be04eed1b5f567d5ccc38de", // whispercpp-184 / v1.8.4 (missing shared libraries)
             },
+
+            // Purfview Faster-Whisper-XXL — https://github.com/Purfview/whisper-standalone-win/releases
+            // Everything upstream publishes lives under the single rolling "Faster-Whisper-XXL" tag,
+            // so index 0 is the archive whose file name WhisperDownloadService.cs is pinned to.
+            [PurfviewFasterWhisperXxl.Windows] = new[]
+            {
+                "237dee23939cdabfc96ef859fc5e584b842c3a5557e0d2ca744e1f87c14c5844", // r245.4 (current download URL)
+            },
+            [PurfviewFasterWhisperXxl.Linux] = new[]
+            {
+                "510ee48ed73a7d4779fa8a7531437513ae109a76d934e983cbdaea3fc248c4f4", // r245.4 (current download URL)
+            },
+
+            // whisper-ctranslate2 — SE-repackaged builds under
+            // https://github.com/SubtitleEdit/support-files/releases
+            [WhisperCTranslate2.Windows] = new[]
+            {
+                "a076c16b184ee1a8b8c87e7765db77d345a30c504a8e98c77b2cf5b069562ccb", // whispercpp-183 (current download URL)
+            },
+            [WhisperCTranslate2.MacArm64] = new[]
+            {
+                "f1c67d47be9216e9998df53d32a59fdaa0310f3e576fa4d9135aa1d579a71f86", // whispercpp-183 (current download URL)
+            },
+            [WhisperCTranslate2.LinuxX64] = new[]
+            {
+                "02c6c1b738a10b8f72fbd581febbbc4f4e60abe96ad1fab76e1b432e2cce041b", // whispercpp-183 (current download URL)
+            },
+
+            // Const-me/Whisper — https://github.com/Const-me/Whisper/releases
+            [WhisperConstMe.Windows] = new[]
+            {
+                "baa9b70c824e50fe91f1858006a24b870b7637135659f17fc42beb1af57bd447", // 1.12.0 (current download URL)
+            },
         };
 
     /// <summary>
@@ -2081,6 +2137,36 @@ public static class DownloadHashManager
 
             archiveStream.Position = 0;
             var hash = Sha256Util.ComputeSha256(archiveStream);
+
+            var sidecar = Path.Combine(installFolder, ".installed.sha256");
+            File.WriteAllText(sidecar, key + Environment.NewLine + hash);
+        }
+        catch
+        {
+            // ignore — hash side-car is best-effort
+        }
+    }
+
+    /// <summary>
+    /// Writes the <c>.installed.sha256</c> sidecar for a release archive that was downloaded to a
+    /// file instead of to memory — Faster-Whisper-XXL is ~1.5 GB, so it is streamed to disk.
+    /// Same format as the stream overload: hash key on the first line, archive SHA-256 on the
+    /// second. Best-effort — failures are swallowed since the sidecar only powers update detection.
+    /// </summary>
+    public static void WriteSidecar(string installFolder, string? key, string archiveFilePath)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(key))
+            {
+                return;
+            }
+
+            var hash = Sha256Util.ComputeSha256(archiveFilePath);
+            if (string.IsNullOrEmpty(hash))
+            {
+                return;
+            }
 
             var sidecar = Path.Combine(installFolder, ".installed.sha256");
             File.WriteAllText(sidecar, key + Environment.NewLine + hash);
@@ -2602,6 +2688,60 @@ public static class DownloadHashManager
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// Resolves the Purfview Faster-Whisper-XXL archive hash key for the current OS. Mirrors the
+    /// platform rules in <see cref="WhisperDownloadService"/>: Windows x64 and Linux x64 only.
+    /// Returns null elsewhere (macOS and Linux ARM64 have no build to download).
+    /// </summary>
+    public static string? ResolvePurfviewFasterWhisperXxlKey()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            return PurfviewFasterWhisperXxl.Windows;
+        }
+
+        if (OperatingSystem.IsLinux() && RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
+        {
+            return PurfviewFasterWhisperXxl.Linux;
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Resolves the whisper-ctranslate2 archive hash key for the current OS and architecture.
+    /// Mirrors the platform rules in <see cref="WhisperDownloadService"/>: Windows, macOS ARM64
+    /// and Linux x64 are the only combinations with a download.
+    /// </summary>
+    public static string? ResolveWhisperCTranslate2Key()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            return WhisperCTranslate2.Windows;
+        }
+
+        if (OperatingSystem.IsMacOS() && RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
+        {
+            return WhisperCTranslate2.MacArm64;
+        }
+
+        if (OperatingSystem.IsLinux() && RuntimeInformation.ProcessArchitecture == Architecture.X64)
+        {
+            return WhisperCTranslate2.LinuxX64;
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Resolves the Const-me Whisper archive hash key. Windows-only engine (it is built on
+    /// Direct3D 11), so every other platform returns null.
+    /// </summary>
+    public static string? ResolveWhisperConstMeKey()
+    {
+        return OperatingSystem.IsWindows() ? WhisperConstMe.Windows : null;
     }
 
     /// <summary>
