@@ -77,7 +77,13 @@ public class SeOcr
 
     public SeOcr()
     {
-        Engine = "nOCR";
+        // macOS gets Apple Vision out of the box: it is the only engine there that works with no
+        // download, no runtime and no key, so a fresh install can OCR immediately. Everywhere
+        // else nOCR stays the default. This is the default for NEW settings only - a saved
+        // engine is the user's choice and is never overwritten.
+        Engine = System.OperatingSystem.IsMacOS()
+            ? Features.Ocr.Engines.AppleVisionOcr.StaticName
+            : "nOCR";
         DoFixOcrErrors = true;
         DoTryToGuessUnknownWords = true;
         DoAutoBreak = true;

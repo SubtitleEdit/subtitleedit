@@ -47,6 +47,8 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
     [ObservableProperty] private TesseractEngineModeItem? _selectedTesseractEngineMode;
 
     [ObservableProperty] private ObservableCollection<OcrLanguage2> _paddleOcrLanguages;
+    [ObservableProperty] private ObservableCollection<OcrLanguage2> _appleVisionLanguages;
+    [ObservableProperty] private OcrLanguage2? _selectedAppleVisionLanguage;
     [ObservableProperty] private OcrLanguage2? _selectedPaddleOcrLanguage;
 
     [ObservableProperty] private ObservableCollection<string> _binaryOcrDatabases;
@@ -80,6 +82,7 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
     [ObservableProperty] bool _isOllamaVisible;
     [ObservableProperty] bool _isLlamaCppVisible;
     [ObservableProperty] bool _isCrispEmbedVisible;
+    [ObservableProperty] bool _isAppleVisionVisible;
 
     public Window? Window { get; set; }
     public Action? RefreshCrispEmbedModelCombo { get; set; }
@@ -96,6 +99,11 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
         TargetEncodings = new ObservableCollection<string>(encodings);
 
         OcrEngines = new ObservableCollection<string> { "nOcr", "BinaryOcr", "Tesseract", "Ollama", "llama.cpp" };
+        if (AppleVisionOcr.IsAvailable())
+        {
+            OcrEngines.Add(AppleVisionOcr.StaticName);
+        }
+
         if (CrispEmbedEngine.CanBeDownloaded())
         {
             OcrEngines.Add(CrispEmbedEngine.StaticName);
@@ -122,6 +130,7 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
         }
 
         PaddleOcrLanguages = new ObservableCollection<OcrLanguage2>(PaddleOcr.GetLanguages().OrderBy(p => p.ToString()));
+        AppleVisionLanguages = new ObservableCollection<OcrLanguage2>(AppleVisionOcr.GetLanguages().OrderBy(p => p.ToString()));
         TesseractDictionaryItems = new ObservableCollection<TesseractDictionary>();
         TesseractEngineModes = new ObservableCollection<TesseractEngineModeItem>(TesseractEngineModeItem.List());
         SelectedTesseractEngineMode = TesseractEngineModes.FirstOrDefault(p => p.Oem == Se.Settings.Tools.BatchConvert.TesseractEngineMode)
@@ -229,6 +238,12 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
         if (ocrEngine == "PaddleOCR")
         {
             Se.Settings.Tools.BatchConvert.PaddleLanguage = SelectedPaddleOcrLanguage?.Code ?? "en";
+        }
+
+        if (ocrEngine == AppleVisionOcr.StaticName)
+        {
+            Se.Settings.Tools.BatchConvert.AppleVisionLanguage =
+                SelectedAppleVisionLanguage?.Code ?? Se.Settings.Tools.BatchConvert.AppleVisionLanguage;
         }
 
         if (ocrEngine == "BinaryOcr")
@@ -417,7 +432,7 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
             return;
         }
 
-        IsOcrLanguageVisible = ocrEngine != "nOcr" && ocrEngine != "BinaryOcr" && ocrEngine != "Ollama" && ocrEngine != "llama.cpp" && ocrEngine != CrispEmbedEngine.StaticName;
+        IsOcrLanguageVisible = ocrEngine != "nOcr" && ocrEngine != "BinaryOcr" && ocrEngine != "Ollama" && ocrEngine != "llama.cpp" && ocrEngine != CrispEmbedEngine.StaticName && ocrEngine != AppleVisionOcr.StaticName;
         IsTesseractOcrVisible = ocrEngine == "Tesseract";
         IsPaddleOCrVisible = ocrEngine == "PaddleOCR";
         IsBinaryOcrVisible = ocrEngine == "BinaryOcr";
@@ -425,11 +440,20 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
         IsOllamaVisible = ocrEngine == "Ollama";
         IsLlamaCppVisible = ocrEngine == "llama.cpp";
         IsCrispEmbedVisible = ocrEngine == CrispEmbedEngine.StaticName;
+        IsAppleVisionVisible = ocrEngine == AppleVisionOcr.StaticName;
 
         if (ocrEngine == "Tesseract")
         {
             SelectedTesseractDictionaryItem = TesseractDictionaryItems
                 .FirstOrDefault(p => p.Code == Se.Settings.Tools.BatchConvert.TesseractLanguage) ?? TesseractDictionaryItems.FirstOrDefault();
+        }
+
+        if (ocrEngine == AppleVisionOcr.StaticName)
+        {
+            SelectedAppleVisionLanguage =
+                AppleVisionLanguages.FirstOrDefault(p => p.Code == Se.Settings.Tools.BatchConvert.AppleVisionLanguage) ??
+                AppleVisionLanguages.FirstOrDefault(p => p.Code == "en-US") ??
+                AppleVisionLanguages.FirstOrDefault();
         }
 
         if (ocrEngine == "PaddleOCR")
