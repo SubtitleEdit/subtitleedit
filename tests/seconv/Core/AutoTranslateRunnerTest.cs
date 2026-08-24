@@ -154,8 +154,9 @@ public class AutoTranslateRunnerTest : IDisposable
 
         Assert.NotNull(runner.LlamaCppModel);
         Assert.Equal(path, runner.LlamaCppModel!.FileName);
-        Assert.Equal("chatml", runner.LlamaCppModel.ChatTemplate);
-        Assert.True(runner.LlamaCppModel.NoJinja);
+        Assert.Null(runner.LlamaCppModel.ChatTemplate);
+        Assert.False(runner.LlamaCppModel.NoJinja);
+        Assert.True(runner.LlamaCppModel.NoThinking);
     }
 
     // A TranslateGemma size/quant we do not curate (issue #12440 asked for the 27B). Whether it is
@@ -195,7 +196,7 @@ public class AutoTranslateRunnerTest : IDisposable
     [InlineData("translategemma-4b_Q5_K_M.gguf", "gemma", true, false)]   // curated: exact match
     [InlineData("translategemma-27b-it.Q4_K_M.gguf", "gemma", true, false)] // uncurated: inferred
     [InlineData("google_gemma-3-27b-it-Q4_K_M.gguf", "gemma", true, false)]
-    [InlineData("Qwen_Qwen3.5-32B-Q4_K_M.gguf", "chatml", true, false)]
+    [InlineData("Qwen_Qwen3.5-32B-Q4_K_M.gguf", null, false, true)]
     [InlineData("aya-expanse-8b-Q4_K_M.gguf", null, false, false)]        // curated: embedded template
     [InlineData("Meta-Llama-3.1-70B-Instruct-Q4_K_M.gguf", null, false, false)]
     [InlineData("some-unknown-model.gguf", null, false, false)]

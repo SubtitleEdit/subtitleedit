@@ -118,4 +118,26 @@ public class LlamaCppServerArgumentsTests
         Assert.NotEmpty(gemma4);
         Assert.All(gemma4, m => Assert.True(m.NoThinking, m.DisplayName + " must set NoThinking"));
     }
+
+    /// <summary>
+    /// A controlled A/B (seconv EN-&gt;DA, 10 reps x 20 lines on the Q8_0 9B, 200 lines/variant)
+    /// measured the old "chatml" + "--no-jinja" override leaking raw &lt;think&gt; text into 2.5%
+    /// of lines, while NoThinking alone stayed at 0% on both the 9B and 4B quants - and stacking
+    /// both overrides was worse than either alone (6.5% on 9B, 16.7% on 4B). Every curated Qwen
+    /// 3/3.5/3.6 entry must therefore use NoThinking and must not also force the chatml template.
+    /// </summary>
+    [Fact]
+    public void CuratedQwenModels_AllDisableThinkingAndNeverForceChatml()
+    {
+        var qwen = LlamaCppServerManager.TranslateModels
+            .Concat(LlamaCppServerManager.ReviewModels)
+            .Concat(LlamaCppServerManager.OcrModels)
+            .Where(m => m.FileName.Contains("qwen", System.StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        Assert.NotEmpty(qwen);
+        Assert.All(qwen, m => Assert.True(m.NoThinking, m.DisplayName + " must set NoThinking"));
+        Assert.All(qwen, m => Assert.Null(m.ChatTemplate));
+        Assert.All(qwen, m => Assert.False(m.NoJinja));
+    }
 }
