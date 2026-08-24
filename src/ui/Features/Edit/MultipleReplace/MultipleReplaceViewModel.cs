@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -287,8 +287,10 @@ public partial class MultipleReplaceViewModel : ObservableObject
         // Apply the currently checked replacements to the document, then make the result the new
         // working subtitle so the next round operates on the already-fixed text - without closing
         // the window (Subtitle Edit 4 had this re-usable "Apply" button - #12029).
-        OnApply?.Invoke(new Subtitle(FixedSubtitle), Fixes.Count(f => f.Apply));
-        _subtitle = new Subtitle(FixedSubtitle);
+        // generateNewId: false - the paragraph ids are how the main window finds the grid row each
+        // line came from, so they must survive every Apply round (#14053).
+        OnApply?.Invoke(new Subtitle(FixedSubtitle, false), Fixes.Count(f => f.Apply));
+        _subtitle = new Subtitle(FixedSubtitle, false);
         _dirty = true;
         GeneratePreview();
     }

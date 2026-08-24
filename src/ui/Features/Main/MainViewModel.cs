@@ -7155,8 +7155,10 @@ public partial class MainViewModel :
 
         var idx = SelectedSubtitleIndex ?? 0;
 
-        // Same filter as GetUpdateSubtitle() below, so index N of the reviewed subtitle is line N
-        // here - that mapping is what lets the review window play the line of a suggestion.
+        var subtitle = GetUpdateSubtitleWithRowMap(out var rowByParagraphId);
+
+        // Same filter as GetUpdateSubtitle(), so index N of the reviewed subtitle is line N here -
+        // that mapping is what lets the review window play the line of a suggestion.
         var reviewedLines = Subtitles.Where(s => !s.IsReferenceOnly).ToList();
         // Apply/Ok: each Apply pushes the checked fixes into the grid and the review window stays
         // open with the rest of the suggestions, so a review that took minutes is not spent on one
@@ -7175,11 +7177,11 @@ public partial class MainViewModel :
                 }
             }
 
-            ApplyFixedSubtitle(applied, idx, SelectedSubtitleFormat);
+            ApplyFixedSubtitle(applied, rowByParagraphId, idx, SelectedSubtitleFormat);
             ShowStatus(string.Format(Se.Language.Main.FixedXLines, changed));
 
-            // Re-fill the same list instance the play hook closed over: with reference-only rows in
-            // the grid, ApplyFixedSubtitle rebuilds it and the rows captured before are detached.
+            // Re-fill the same list instance the play hook closed over, in case a row of it is no
+            // longer in the grid.
             var current = Subtitles.Where(s => !s.IsReferenceOnly).ToList();
             reviewedLines.Clear();
             reviewedLines.AddRange(current);
@@ -7187,7 +7189,7 @@ public partial class MainViewModel :
 
         await ShowDialogAsync<AiReviewWindow, AiReviewViewModel>(vm =>
         {
-            vm.Initialize(GetUpdateSubtitle(), SelectedSubtitleFormat, MakeReviewLinePlayer(reviewedLines), StopReviewLinePlayback, ApplyToGrid);
+            vm.Initialize(subtitle, SelectedSubtitleFormat, MakeReviewLinePlayer(reviewedLines), StopReviewLinePlayback, ApplyToGrid);
         });
     }
 
@@ -7279,11 +7281,12 @@ public partial class MainViewModel :
         }
 
         var idx = SelectedSubtitleIndex ?? 0;
-        var viewModel = await ShowDialogAsync<FixCommonErrorsWindow, FixCommonErrorsViewModel>(vm => { vm.Initialize(GetUpdateSubtitle(), SelectedSubtitleFormat); });
+        var subtitle = GetUpdateSubtitleWithRowMap(out var rowByParagraphId);
+        var viewModel = await ShowDialogAsync<FixCommonErrorsWindow, FixCommonErrorsViewModel>(vm => { vm.Initialize(subtitle, SelectedSubtitleFormat); });
 
         if (viewModel.OkPressed)
         {
-            ApplyFixedSubtitle(viewModel.FixedSubtitle, idx, SelectedSubtitleFormat);
+            ApplyFixedSubtitle(viewModel.FixedSubtitle, rowByParagraphId, idx, SelectedSubtitleFormat);
             ShowStatus(string.Format(Se.Language.Main.FixedXLines, viewModel.FixedSubtitle.Paragraphs.Count));
         }
     }
@@ -7303,11 +7306,12 @@ public partial class MainViewModel :
         }
 
         var idx = SelectedSubtitleIndex ?? 0;
-        var viewModel = await ShowDialogAsync<FixNetflixErrorsWindow, FixNetflixErrorsViewModel>(vm => { vm.Initialize(GetUpdateSubtitle(), _videoFileName ?? string.Empty); });
+        var subtitle = GetUpdateSubtitleWithRowMap(out var rowByParagraphId);
+        var viewModel = await ShowDialogAsync<FixNetflixErrorsWindow, FixNetflixErrorsViewModel>(vm => { vm.Initialize(subtitle, _videoFileName ?? string.Empty); });
 
         if (viewModel.OkPressed)
         {
-            ApplyFixedSubtitle(viewModel.FixedSubtitle, idx, SelectedSubtitleFormat);
+            ApplyFixedSubtitle(viewModel.FixedSubtitle, rowByParagraphId, idx, SelectedSubtitleFormat);
             ShowStatus(string.Format(Se.Language.Main.FixedXLines, viewModel.FixedSubtitle.Paragraphs.Count));
         }
     }
@@ -14366,29 +14370,26 @@ public partial class MainViewModel :
             return;
         }
 
+        var subtitle = GetUpdateSubtitleWithRowMap(out var rowByParagraphId);
         var result =
             await ShowDialogAsync<MultipleReplaceWindow, MultipleReplaceViewModel>(vm =>
             {
-                vm.Initialize(GetUpdateSubtitle());
+                vm.Initialize(subtitle);
 
                 // "Apply" applies the replacements live without closing, so several rounds can be run (#12029).
                 vm.OnApply = (fixedSubtitle, count) =>
                 {
-                    // Replacements are 1:1 with the lines they came from, so stay on the line the
-                    // user was on - jumping to the top on every Apply lost their place, and Apply
+                    // The result goes back on the rows it came from, so the user stays on the line
+                    // they were on - jumping to the top on every Apply lost their place, and Apply
                     // is meant to be used several times in a row (issue #13822).
-                    var selectedIndex = SelectedSubtitleIndex ?? 0;
-                    SetSubtitles(fixedSubtitle);
-                    SelectAndScrollToRow(Math.Min(selectedIndex, Subtitles.Count - 1));
+                    ApplyFixedSubtitle(fixedSubtitle, rowByParagraphId, SelectedSubtitleIndex ?? 0, SelectedSubtitleFormat);
                     ShowStatus(string.Format(Se.Language.Main.ReplacedXOccurrences, count));
                 };
             });
 
         if (result.OkPressed)
         {
-            var selectedIndex = SelectedSubtitleIndex ?? 0;
-            SetSubtitles(result.FixedSubtitle);
-            SelectAndScrollToRow(Math.Min(selectedIndex, Subtitles.Count - 1));
+            ApplyFixedSubtitle(result.FixedSubtitle, rowByParagraphId, SelectedSubtitleIndex ?? 0, SelectedSubtitleFormat);
             ShowStatus(string.Format(Se.Language.Main.ReplacedXOccurrences, result.TotalReplaced));
         }
     }
@@ -18832,26 +18833,190 @@ public partial class MainViewModel :
     }
 
     /// <summary>
-    /// Applies the fixed subtitle returned by Fix Common Errors / Fix Netflix Errors.
-    /// When the paragraph count is unchanged (the common case), updates each
-    /// SubtitleLineViewModel in-place so the grid keeps its current scroll position
-    /// and selection without any manipulation.
-    /// Falls back to a full SetSubtitles reset only when rows were added or removed.
+    /// <see cref="GetUpdateSubtitle"/> for a dialog that edits the subtitle, plus the row mapping
+    /// <see cref="ApplyFixedSubtitle(Subtitle, IReadOnlyDictionary{Guid, SubtitleLineViewModel}, int, SubtitleFormat?)"/>
+    /// needs to put the dialog's result back on the rows it came from.
     /// </summary>
-    private void ApplyFixedSubtitle(Subtitle fixedSubtitle, int selectedIndex, SubtitleFormat? subtitleFormat)
+    private Subtitle GetUpdateSubtitleWithRowMap(out Dictionary<Guid, SubtitleLineViewModel> rowByParagraphId)
     {
-        if (fixedSubtitle.Paragraphs.Count == Subtitles.Count)
+        var subtitle = GetUpdateSubtitle();
+        rowByParagraphId = MapParagraphIdsToRows(subtitle);
+        return subtitle;
+    }
+
+    /// <summary>
+    /// Pairs the working rows with the paragraphs <see cref="GetUpdateSubtitle"/> just built from
+    /// them - one paragraph per non-reference row, in row order. The dialogs copy their input with
+    /// <c>new Subtitle(subtitle, generateNewId: false)</c>, so these ids survive the round trip and
+    /// still name a row in the result, whatever the dialog did to the line count.
+    /// </summary>
+    private Dictionary<Guid, SubtitleLineViewModel> MapParagraphIdsToRows(Subtitle subtitle)
+    {
+        var map = new Dictionary<Guid, SubtitleLineViewModel>(subtitle.Paragraphs.Count);
+        var index = 0;
+        foreach (var row in Subtitles)
         {
-            for (var i = 0; i < Subtitles.Count; i++)
-                Subtitles[i].UpdateFrom(fixedSubtitle.Paragraphs[i], subtitleFormat);
+            if (row.IsReferenceOnly)
+            {
+                continue;
+            }
+
+            if (index >= subtitle.Paragraphs.Count)
+            {
+                break;
+            }
+
+            if (subtitle.Paragraphs[index].Id is { } id)
+            {
+                map[id] = row;
+            }
+
+            index++;
+        }
+
+        return map;
+    }
+
+    /// <summary>
+    /// Applies the subtitle a dialog returned (Fix common errors, Fix Netflix errors, AI review,
+    /// Multiple replace) onto the rows it was built from, matched by paragraph id.
+    ///
+    /// The rows are updated in place and never rebuilt. A rebuild drops everything a row holds
+    /// beside the paragraph - the original/translation text above all, which lives on the row and
+    /// nowhere else (<see cref="GetUpdateSubtitleOriginal"/> serializes the file from it), so
+    /// replacing the rows emptied the original column of a translation and then wrote empty lines
+    /// when it was saved (#14053). Display-only original rows went the same way, as they are not
+    /// part of the dialog's subtitle at all.
+    ///
+    /// Deletions are honored by removing exactly the rows whose paragraph is gone - Fix common
+    /// errors removes empty lines, Fix Netflix errors calls RemoveEmptyLines - and the display-only
+    /// rows are put back where they sat.
+    /// </summary>
+    private void ApplyFixedSubtitle(
+        Subtitle fixedSubtitle,
+        IReadOnlyDictionary<Guid, SubtitleLineViewModel> rowByParagraphId,
+        int selectedIndex,
+        SubtitleFormat? subtitleFormat)
+    {
+        // Only rows still in the grid may be reused: after an "Apply" that removed lines, the map
+        // still holds the rows that went with them.
+        var live = new HashSet<SubtitleLineViewModel>(Subtitles);
+        var workingRows = Subtitles.Where(p => !p.IsReferenceOnly).ToList();
+
+        // A dialog that copied its subtitle with fresh ids would match nothing and every line would
+        // come in as a new row. As long as the line count still matches the grid, fall back to the
+        // positional mapping this method used before the ids were tracked - rebuilding the rows is
+        // the one outcome worth avoiding.
+        if (fixedSubtitle.Paragraphs.Count == workingRows.Count &&
+            !fixedSubtitle.Paragraphs.Any(p => p.Id is { } id && rowByParagraphId.ContainsKey(id)))
+        {
+            var positional = new Dictionary<Guid, SubtitleLineViewModel>(workingRows.Count);
+            for (var i = 0; i < workingRows.Count; i++)
+            {
+                if (fixedSubtitle.Paragraphs[i].Id is { } id)
+                {
+                    positional[id] = workingRows[i];
+                }
+            }
+
+            rowByParagraphId = positional;
+        }
+
+        var working = new List<SubtitleLineViewModel>(fixedSubtitle.Paragraphs.Count);
+        var kept = new HashSet<SubtitleLineViewModel>();
+        foreach (var p in fixedSubtitle.Paragraphs)
+        {
+            // No id match means the dialog added the line, or a merge consumed the row that owned
+            // the id - either way there is no row to keep, so it comes in as a new row.
+            if (p.Id is { } id &&
+                rowByParagraphId.TryGetValue(id, out var row) &&
+                live.Contains(row) &&
+                kept.Add(row))
+            {
+                row.UpdateFrom(p, subtitleFormat);
+                working.Add(row);
+            }
+            else
+            {
+                working.Add(new SubtitleLineViewModel(p, subtitleFormat ?? SelectedSubtitleFormat));
+            }
+        }
+
+        // Each display-only row follows the working row it sat behind; ones that came before any
+        // surviving row go back to the front.
+        var leadingReferenceRows = new List<SubtitleLineViewModel>();
+        var referenceRowsAfter = new Dictionary<SubtitleLineViewModel, List<SubtitleLineViewModel>>();
+        SubtitleLineViewModel? anchor = null;
+        foreach (var row in Subtitles)
+        {
+            if (row.IsReferenceOnly)
+            {
+                if (anchor == null)
+                {
+                    leadingReferenceRows.Add(row);
+                }
+                else
+                {
+                    if (!referenceRowsAfter.TryGetValue(anchor, out var rows))
+                    {
+                        rows = new List<SubtitleLineViewModel>();
+                        referenceRowsAfter[anchor] = rows;
+                    }
+
+                    rows.Add(row);
+                }
+            }
+            else if (kept.Contains(row))
+            {
+                anchor = row;
+            }
+        }
+
+        var result = new List<SubtitleLineViewModel>(working.Count + leadingReferenceRows.Count);
+        result.AddRange(leadingReferenceRows);
+        foreach (var row in working)
+        {
+            result.Add(row);
+            if (referenceRowsAfter.TryGetValue(row, out var rows))
+            {
+                result.AddRange(rows);
+            }
+        }
+
+        if (SameRows(result))
+        {
+            // The common case: same rows in the same order, so the grid keeps its scroll position
+            // and selection with no manipulation at all (#13822).
             Renumber();
             UpdateGaps();
+            return;
         }
-        else
+
+        ReplaceSubtitles(result);
+        Renumber();
+        UpdateGaps();
+        if (Subtitles.Count > 0)
         {
-            SetSubtitles(fixedSubtitle);
-            SelectAndScrollToRow(Math.Min(selectedIndex, Subtitles.Count - 1));
+            SelectAndScrollToRow(Math.Clamp(selectedIndex, 0, Subtitles.Count - 1));
         }
+    }
+
+    private bool SameRows(List<SubtitleLineViewModel> rows)
+    {
+        if (rows.Count != Subtitles.Count)
+        {
+            return false;
+        }
+
+        for (var i = 0; i < rows.Count; i++)
+        {
+            if (!ReferenceEquals(rows[i], Subtitles[i]))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /// <summary>
