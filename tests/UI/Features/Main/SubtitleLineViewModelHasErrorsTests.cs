@@ -172,6 +172,51 @@ public class SubtitleLineViewModelHasErrorsTests
         }
     }
 
+    /// <summary>
+    /// The teletext page-width rule (EBU-sourced subtitles) reddens the grid via HasErrors
+    /// regardless of the general "too long" setting - the error list must report the same
+    /// lines, or they silently vanish from "List errors" and batch convert's error list.
+    /// </summary>
+    [AvaloniaFact]
+    public void HasErrors_MatchesGetErrors_WithTeletextLineLengthOn()
+    {
+        var originalSettings = Se.Settings;
+        var originalTeletext = SubtitleLineViewModel.UseTeletextLineLength;
+        try
+        {
+            Se.Settings = new Se();
+            var general = Se.Settings.General;
+            general.ColorDurationTooShort = false;
+            general.ColorDurationTooLong = false;
+            general.ColorTextTooLong = false;
+            general.ColorTextTooWide = false;
+            general.ColorTextTooManyLines = false;
+            general.ColorCharactersPerSecond = false;
+            general.ColorWordsPerMinute = false;
+            general.ColorTimeCodeOverlap = false;
+            general.ColorGapTooShort = false;
+            SubtitleLineViewModel.UseTeletextLineLength = true;
+
+            var lines = new List<SubtitleLineViewModel>
+            {
+                Line("Fits on a teletext row.", 1000, 3000),                              // 23 chars, clean
+                Line("This line is longer than the thirty-seven characters a teletext row holds.", 4000, 8000),
+                Line("<font color=\"#ffff00\">Exactly thirty-seven characters here!</font>", 9000, 12000), // 37 > 36 with color
+            };
+
+            var withErrors = AssertAgrees(lines);
+            Assert.Equal(2, withErrors);
+
+            var errors = lines[1].GetErrorList(lines[0], lines[2]);
+            Assert.Contains(errors, e => e.Type == Nikse.SubtitleEdit.Features.Shared.ErrorList.LineErrorType.LineTooLong);
+        }
+        finally
+        {
+            Se.Settings = originalSettings;
+            SubtitleLineViewModel.UseTeletextLineLength = originalTeletext;
+        }
+    }
+
     /// <summary>The pixel width column reads the same memo, so it must follow the text too.</summary>
     [AvaloniaFact]
     public void PixelWidth_FollowsTextChange()
