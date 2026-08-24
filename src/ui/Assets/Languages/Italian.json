@@ -3636,7 +3636,7 @@
   },
   "errorList": {
     "title": "Elenco errori",
-    "summaryX": "0} errore/i in {1} / {2} riga/e",
+    "summaryX": "{0} errore/i in {1} / {2} riga/e",
     "noErrors": "Nessun errore rilevato.",
     "summaryFilesX": "{0} errore/i in {1} riga/e in {2} file",
     "all": "Tutti",
