@@ -5013,6 +5013,118 @@ public partial class MainViewModel :
         }
     }
 
+    /// <summary>
+    /// SE 4 parity ("guess start"): looks for the silence right before the speech that starts the
+    /// selected line and moves the start cue there, snapping to a nearby shot change when there is
+    /// one. Raising the volume threshold step by step finds the quietest boundary that still reads
+    /// as silence. Moving the start forward keeps the duration when that would otherwise break the
+    /// minimum duration/maximum CPS rules and there is room before the next line.
+    /// </summary>
+    [RelayCommand]
+    private void WaveformGuessStart()
+    {
+        var selected = SelectedSubtitle;
+        if (selected == null || AreTimeCodesLocked || AudioVisualizer?.WavePeaks == null)
+        {
+            return;
+        }
+
+        var index = Subtitles.IndexOf(selected);
+        if (index < 0)
+        {
+            return;
+        }
+
+        const double silenceLengthInSeconds = 0.08;
+        var startSeconds = selected.StartTime.TotalSeconds;
+        var lowPercent = AudioVisualizer.FindLowPercentage(startSeconds - 0.3, startSeconds + 0.1);
+        var highPercent = AudioVisualizer.FindHighPercentage(startSeconds - 0.3, startSeconds + 0.4);
+        var add = 5.0;
+        if (highPercent > 40)
+        {
+            add = 8;
+        }
+        else if (highPercent < 5)
+        {
+            add = highPercent - lowPercent - 0.3;
+        }
+
+        var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
+        var prev = GetPreviousWorkingRow(index);
+        var next = GetNextWorkingRow(index);
+
+        for (var startVolume = lowPercent + add; startVolume < 14; startVolume += 0.3)
+        {
+            var pos = AudioVisualizer.FindDataBelowThresholdBackForStart(startVolume, silenceLengthInSeconds, startSeconds);
+            if (pos < 0 || pos <= startSeconds - 1)
+            {
+                continue;
+            }
+
+            // A slightly higher threshold that still lands inside the same silence is the
+            // better guess - it sits closer to the speech.
+            var pos2 = AudioVisualizer.FindDataBelowThresholdBackForStart(startVolume + 0.3, silenceLengthInSeconds, startSeconds);
+            if (pos2 > pos && pos2 > startSeconds - 1)
+            {
+                pos = pos2;
+            }
+
+            var newStartMs = pos * TimeCode.BaseUnit;
+            if (prev != null && prev.EndTime.TotalMilliseconds + gapMs >= newStartMs)
+            {
+                newStartMs = prev.EndTime.TotalMilliseconds + gapMs;
+                if (newStartMs >= selected.StartTime.TotalMilliseconds)
+                {
+                    break; // cannot move the start time
+                }
+            }
+
+            var shotChanges = AudioVisualizer.ShotChanges;
+            if (shotChanges.Count > 0)
+            {
+                var nearestShotChange = shotChanges
+                    .Where(sc => sc > startSeconds - 0.3 && sc < startSeconds + 0.2)
+                    .OrderBy(sc => Math.Abs(sc - startSeconds))
+                    .Take(1)
+                    .ToList();
+                if (nearestShotChange.Count > 0)
+                {
+                    newStartMs = nearestShotChange[0] * TimeCode.BaseUnit;
+                }
+            }
+
+            if (Math.Abs(selected.StartTime.TotalMilliseconds - newStartMs) < 10)
+            {
+                break; // difference too small
+            }
+
+            var durationMs = selected.EndTime.TotalMilliseconds - selected.StartTime.TotalMilliseconds;
+            var newEndMs = selected.EndTime.TotalMilliseconds;
+            if (newStartMs > selected.StartTime.TotalMilliseconds)
+            {
+                var newStart = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newStartMs);
+                var newCps = SubtitleTextInfoHelper.GetCharactersPerSecond(selected.Text, newStart, selected.EndTime);
+                if (newEndMs - newStartMs < Se.Settings.General.SubtitleMinimumDisplayMilliseconds ||
+                    newCps > Se.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                {
+                    // Shortening the line would break the rules, so move it instead - but only
+                    // when the next line is far enough away to take the whole duration.
+                    if (next == null || next.StartTime.TotalMilliseconds > newStartMs + durationMs + gapMs)
+                    {
+                        newEndMs = newStartMs + durationMs;
+                    }
+                }
+            }
+
+            selected.SetTimes(
+                TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newStartMs),
+                TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newEndMs));
+
+            _updateAudioVisualizer = true;
+            break;
+        }
+    }
+
     [RelayCommand]
     private async Task WaveformExtractAudio()
     {
@@ -11761,6 +11873,51 @@ public partial class MainViewModel :
         _shortcutManager.ClearKeys();
     }
 
+    /// <summary>
+    /// SE 4 parity: clears every bookmark in the file (SE 4's "Clear bookmarks" shortcut).
+    /// Asks first, like the same action in the bookmarks list window does - bookmarks are
+    /// persisted next to the subtitle rather than kept in the undo history, so an accidental
+    /// key press would otherwise be unrecoverable.
+    /// </summary>
+    [RelayCommand]
+    private async Task ClearBookmarks()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var bookmarked = Subtitles.Where(p => p.Bookmark != null).ToList();
+        if (bookmarked.Count == 0)
+        {
+            ShowStatus(Se.Language.General.NoBookmarksFound);
+            _shortcutManager.ClearKeys();
+            return;
+        }
+
+        var answer = await MessageBox.Show(
+            Window,
+            Se.Language.General.Clear,
+            Se.Language.General.BookmarkClearQuestion,
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question);
+
+        if (answer != MessageBoxResult.Yes)
+        {
+            _shortcutManager.ClearKeys();
+            return;
+        }
+
+        foreach (var item in bookmarked)
+        {
+            item.Bookmark = null;
+        }
+
+        new BookmarkPersistence(GetUpdateSubtitle(), _subtitleFileName).Save();
+
+        _shortcutManager.ClearKeys();
+    }
+
     [RelayCommand]
     private void GoToNextBookmark()
     {
@@ -13011,6 +13168,30 @@ public partial class MainViewModel :
         }
 
         ToggleBold();
+    }
+
+    [RelayCommand]
+    private void ToggleLinesUnderline()
+    {
+        ToggleUnderline();
+    }
+
+    [RelayCommand]
+    private void ToggleLinesUnderlineOrSelectedText()
+    {
+        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        if (selectedItems.Count == 0)
+        {
+            return;
+        }
+
+        if (selectedItems.Count == 1 && EditTextBox.SelectedText.Length > 0)
+        {
+            TextBoxUnderline();
+            return;
+        }
+
+        ToggleUnderline();
     }
 
     [RelayCommand]
@@ -24174,6 +24355,66 @@ public partial class MainViewModel :
                 if (!string.IsNullOrEmpty(item.Text))
                 {
                     item.Text = $"<b>{item.Text}</b>";
+                }
+            }
+        }
+    }
+
+    // SE 4 parity: the third of the list view formatting toggles (italic/bold/underline).
+    private void ToggleUnderline()
+    {
+        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        if (selectedItems.Count == 0)
+        {
+            return;
+        }
+
+        var first = true;
+        var makeUnderline = true;
+        var isAssa = SelectedSubtitleFormat is AdvancedSubStationAlpha;
+
+        if (isAssa)
+        {
+            foreach (var item in selectedItems)
+            {
+                if (first)
+                {
+                    first = false;
+                    makeUnderline = !item.Text.Contains("{\\u1}") && !item.Text.Contains("\\u1");
+                }
+
+                item.Text = item.Text
+                    .Replace("{\\u1}", string.Empty)
+                    .Replace("{\\u0}", string.Empty)
+                    .Replace("\\u1\\", "\\")
+                    .Replace("\\u0\\", "\\");
+                if (makeUnderline)
+                {
+                    if (!string.IsNullOrEmpty(item.Text))
+                    {
+                        item.Text = $"{{\\u1}}{item.Text}";
+                    }
+                }
+            }
+
+            return;
+        }
+
+        foreach (var item in selectedItems)
+        {
+            if (first)
+            {
+                first = false;
+                makeUnderline = !item.Text.Contains("<u>");
+            }
+
+            item.Text = item.Text.Replace("<u>", string.Empty).Replace("</u>", string.Empty);
+            item.Text = item.Text.Replace("<U>", string.Empty).Replace("</U>", string.Empty);
+            if (makeUnderline)
+            {
+                if (!string.IsNullOrEmpty(item.Text))
+                {
+                    item.Text = $"<u>{item.Text}</u>";
                 }
             }
         }
