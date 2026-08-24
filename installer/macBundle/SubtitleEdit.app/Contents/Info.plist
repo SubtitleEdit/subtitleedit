@@ -20,8 +20,13 @@
     <string>SBED</string>
     <key>CFBundleIconFile</key>
     <string>SE.icns</string>
+    <!-- The .NET runtime we ship is built against macOS 12, so the app cannot load
+         below it no matter what this key says - it was 10.15 for years, which only
+         meant Catalina users got a crash instead of Finder's "requires a newer
+         version of macOS". Re-derive after a TFM bump with:
+           otool -l .../shared/Microsoft.NETCore.App/<ver>/libcoreclr.dylib | grep -A3 LC_BUILD_VERSION -->
     <key>LSMinimumSystemVersion</key>
-    <string>10.15</string>
+    <string>12.0</string>
     <key>NSHighResolutionCapable</key>
     <true/>
     <key>NSSupportsAutomaticGraphicsSwitching</key>
@@ -41,7 +46,16 @@
                 <string>vtt</string>
                 <string>sbv</string>
                 <string>stl</string>
-                <string>xml</string>
+                <string>ttml</string>
+                <string>dfxp</string>
+                <string>itt</string>
+                <string>smi</string>
+                <string>scc</string>
+                <string>mcc</string>
+                <string>cap</string>
+                <string>pac</string>
+                <string>lrc</string>
+                <string>idx</string>
             </array>
             <key>CFBundleTypeName</key>
             <string>Subtitle Files</string>
@@ -49,6 +63,22 @@
             <string>Editor</string>
             <key>LSHandlerRank</key>
             <string>Owner</string>
+        </dict>
+        <!-- .xml is its own entry, at Alternate rank: SE reads several XML subtitle
+             formats, but claiming Owner made it fight every other app on the machine
+             for every XML file. Alternate keeps SE in "Open With" without taking the
+             default away from whatever owns the file type. -->
+        <dict>
+            <key>CFBundleTypeExtensions</key>
+            <array>
+                <string>xml</string>
+            </array>
+            <key>CFBundleTypeName</key>
+            <string>XML Subtitle Files</string>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>LSHandlerRank</key>
+            <string>Alternate</string>
         </dict>
         <dict>
             <key>CFBundleTypeExtensions</key>
