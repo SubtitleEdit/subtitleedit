@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Files.ExportEbuStl;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using System;
@@ -73,6 +74,12 @@ public partial class ExportEbuStlViewModel : ObservableObject
     public Subtitle Subtitle => _subtitle;
     public int? PacCodePage { get; private set; }
     public byte JustificationCode { get; private set; }
+
+    /// <summary>The header the dialog stored on the subtitle, or null when it could not build one.</summary>
+    public string? StoredHeader { get; private set; }
+
+    /// <summary>The frame rate picked in the dialog - it does not fit in the stored header.</summary>
+    public double FrameRateFromSaveDialog => _header.FrameRateFromSaveDialog;
 
     private IFileHelper _fileHelper;
     private Subtitle _subtitle = new Subtitle();
@@ -298,6 +305,15 @@ new("2F", "French - hearing impaired (VF-MAL)"),
                 {
                     var encoding = Ebu.GetEncoding(_subtitle.Header.Substring(0, 3));
                     _header = Ebu.ReadHeader(encoding.GetBytes(_subtitle.Header));
+
+                    // The frame rate is not part of the header bytes, so a rate picked earlier for
+                    // this very header only survives on the save helper.
+                    if (Ebu.EbuUiHelper is UiEbuSaveHelper saveHelper &&
+                        saveHelper.TryGetFrameRate(_subtitle.Header, out var frameRate))
+                    {
+                        _header.FrameRateFromSaveDialog = frameRate;
+                    }
+
                     FillFromHeader(_header);
                 }
                 catch (Exception exception)
@@ -324,8 +340,12 @@ new("2F", "French - hearing impaired (VF-MAL)"),
 
         _header.DiskFormatCode = SelectedDiskFormatCode?.Substring(0, 8) ?? "STL25.01";
 
-        double d = 25.0;
-        if (SelectedFrameRate != null && double.TryParse(SelectedFrameRate.Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), out d) && d > 20 && d < 200)
+        // The frame rate list is written with invariant decimal points ("23.976"), so it has to be
+        // read back that way: parsing "23.976" in a comma-decimal culture gives 23976, which fails
+        // the range check below and silently left the rate at whatever it was.
+        if (SelectedFrameRate != null &&
+            double.TryParse(SelectedFrameRate, NumberStyles.Any, CultureInfo.InvariantCulture, out var d) &&
+            d > 20 && d < 200)
         {
             _header.FrameRateFromSaveDialog = d;
         }
@@ -356,17 +376,18 @@ new("2F", "French - hearing impaired (VF-MAL)"),
             _header.LanguageCode = "0A";
         }
 
-        _header.OriginalProgrammeTitle = OriginalProgramTitle.PadRight(32, ' ');
-        _header.OriginalEpisodeTitle = OriginalEpisodeTitle.PadRight(32, ' ');
-        _header.TranslatedProgrammeTitle = TranslatedProgramTitle.PadRight(32, ' ');
-        _header.TranslatedEpisodeTitle = TranslatedEpisodeTitle.PadRight(32, ' ');
-        _header.TranslatorsName = TranslatorsName.PadRight(32, ' ');
-        _header.SubtitleListReferenceCode = SubtitleListReferenceCode.PadRight(16, ' ');
-        _header.CountryOfOrigin = CountryOfOrigin;
-        if (_header.CountryOfOrigin.Length != 3)
-        {
-            _header.CountryOfOrigin = "USA";
-        }
+        _header.OriginalProgrammeTitle = FixedLength(OriginalProgramTitle, 32);
+        _header.OriginalEpisodeTitle = FixedLength(OriginalEpisodeTitle, 32);
+        _header.TranslatedProgrammeTitle = FixedLength(TranslatedProgramTitle, 32);
+        _header.TranslatedEpisodeTitle = FixedLength(TranslatedEpisodeTitle, 32);
+        _header.TranslatorsName = FixedLength(TranslatorsName, 32);
+        _header.SubtitleListReferenceCode = FixedLength(SubtitleListReferenceCode, 16);
+        // The country of origin is a three-character ISO 3166 code. Keep what the user typed - a
+        // shorter code padded out is closer to the truth than silently claiming "USA" - but keep
+        // the old default for a field nobody filled in.
+        _header.CountryOfOrigin = string.IsNullOrWhiteSpace(CountryOfOrigin)
+            ? "USA"
+            : FixedLength(CountryOfOrigin, 3);
 
         var timeCodeStatus = SelectedTimeCodeStatus ?? TimeCodeStatusList.Last();
         _header.TimeCodeStatus = TimeCodeStatusList.IndexOf(timeCodeStatus).ToString(CultureInfo.InvariantCulture);
@@ -387,11 +408,58 @@ new("2F", "French - hearing impaired (VF-MAL)"),
 
         if (_subtitle != null)
         {
-            _subtitle.Header = _header.ToString();
+            // EbuGeneralSubtitleInformation.ToString() reports a wrong total length by returning an
+            // error message instead of a header, and Ebu.Save silently falls back to its own
+            // defaults ("No Title"/USA/no start time) for anything that is not a real STL header -
+            // so a header that did not come out right must be caught here, not written on.
+            var headerText = _header.ToString();
+            if (Ebu.IsStlHeader(headerText))
+            {
+                _subtitle.Header = headerText;
+                StoredHeader = headerText;
+            }
+            else
+            {
+                SeLogger.Error("Unable to build an EBU STL header from the save options: " + headerText);
+            }
         }
 
         OkPressed = true;
         Close();
+    }
+
+    /// <summary>
+    /// Picks the closest entry in the frame rate list - the disk format codes only carry whole
+    /// frame rates (STL23/STL29), while the list offers the fractional rates they stand for.
+    /// </summary>
+    private void SelectFrameRate(double frameRate)
+    {
+        if (frameRate <= 20 || frameRate >= 200)
+        {
+            return;
+        }
+
+        var closest = FrameRates
+            .Select(p => new { Text = p, Value = double.TryParse(p, NumberStyles.Any, CultureInfo.InvariantCulture, out var v) ? v : 0 })
+            .Where(p => p.Value > 0)
+            .OrderBy(p => Math.Abs(p.Value - frameRate))
+            .FirstOrDefault();
+
+        if (closest != null)
+        {
+            SelectedFrameRate = closest.Text;
+        }
+    }
+
+    /// <summary>
+    /// EBU STL header fields are fixed-width: too short and the header loses its layout, too long
+    /// and it grows past 1024 characters and is thrown away entirely (the text boxes cap the input
+    /// too, this is the last line of defence).
+    /// </summary>
+    private static string FixedLength(string text, int length)
+    {
+        text ??= string.Empty;
+        return text.Length > length ? text.Substring(0, length) : text.PadRight(length, ' ');
     }
 
     [RelayCommand]
@@ -444,10 +512,10 @@ new("2F", "French - hearing impaired (VF-MAL)"),
         SelectedDiskFormatCode = DiskFormatCodes.FirstOrDefault(p => p.Contains(header.DiskFormatCode, StringComparison.OrdinalIgnoreCase))
                                  ?? SelectedDiskFormatCode;
 
-        if (header.FrameRateFromSaveDialog is > 20 and < 200)
-        {
-            SelectedFrameRate = header.FrameRateFromSaveDialog.ToString(CultureInfo.CurrentCulture);
-        }
+        // header.FrameRate falls back to the rate the disk format code implies, so an STL30 file
+        // opens on 30 instead of the 25 the dialog defaults to. Match against the list by value:
+        // the entries are invariant ("29.97") while ToString() here would follow the UI culture.
+        SelectFrameRate(header.FrameRate);
 
         SelectedDisplayStandardCode = DisplayStandardCodes.FirstOrDefault(p => p.StartsWith(header.DisplayStandardCode, StringComparison.InvariantCulture))
                                       ?? SelectedDisplayStandardCode;

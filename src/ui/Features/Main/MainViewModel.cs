@@ -4455,10 +4455,16 @@ public partial class MainViewModel :
             return false;
         }
 
-        // The justification combo box is the one option that does not live in the header - it is
-        // written per text block, from the UI helper.
+        // Justification and frame rate are the two options that do not live in the header - the
+        // first is written per text block, the second is lost when the writer re-reads the header
+        // off the subtitle. Both ride along on the UI helper.
         Ebu.EbuUiHelper ??= new UiEbuSaveHelper();
         Ebu.EbuUiHelper.JustificationCode = result.JustificationCode;
+        if (Ebu.EbuUiHelper is UiEbuSaveHelper saveHelper)
+        {
+            saveHelper.SetFrameRate(result.StoredHeader, result.FrameRateFromSaveDialog);
+        }
+
         return true;
     }
 
