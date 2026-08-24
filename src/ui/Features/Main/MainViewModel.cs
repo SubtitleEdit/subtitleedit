@@ -3723,6 +3723,11 @@ public partial class MainViewModel :
             SetLibSeSettings();
         }
 
+        if (format is Ebu)
+        {
+            await ShowEbuOptionsDialog();
+        }
+
         _shortcutManager.ClearKeys();
     }
 
@@ -4434,6 +4439,29 @@ public partial class MainViewModel :
         _shortcutManager.ClearKeys();
     }
 
+    /// <summary>
+    /// Shows the EBU STL options dialog (header fields, justification, teletext settings). On OK
+    /// the dialog stores the resulting 1024-character STL header on the working subtitle, so
+    /// later saves write the options the user chose. Returns false when the dialog was cancelled.
+    /// </summary>
+    private async Task<bool> ShowEbuOptionsDialog()
+    {
+        var result = await ShowDialogAsync<ExportEbuStlWindow, ExportEbuStlViewModel>(
+            vm => { vm.Initialize(GetUpdateSubtitle()); },
+            w => { w.Title = Se.Language.File.EbuSaveOptions.Title; });
+
+        if (!result.OkPressed)
+        {
+            return false;
+        }
+
+        // The justification combo box is the one option that does not live in the header - it is
+        // written per text block, from the UI helper.
+        Ebu.EbuUiHelper ??= new UiEbuSaveHelper();
+        Ebu.EbuUiHelper.JustificationCode = result.JustificationCode;
+        return true;
+    }
+
     [RelayCommand]
     private async Task ExportEbuStl()
     {
@@ -4448,15 +4476,10 @@ public partial class MainViewModel :
             return;
         }
 
-        var result =
-            await ShowDialogAsync<ExportEbuStlWindow, ExportEbuStlViewModel>(vm => { vm.Initialize(GetUpdateSubtitle()); });
-
-        if (!result.OkPressed)
+        if (!await ShowEbuOptionsDialog())
         {
             return;
         }
-
-        Ebu.EbuUiHelper ??= new UiEbuSaveHelper();
 
         var format = new Ebu();
 
@@ -4471,7 +4494,7 @@ public partial class MainViewModel :
             return;
         }
 
-        format.Save(fileName, result.Subtitle);
+        format.Save(fileName, GetUpdateSubtitle());
         ShowStatus(string.Format(Se.Language.Main.FileExportedInFormatXToFileY, format.Name, fileName));
     }
 
@@ -21334,6 +21357,16 @@ public partial class MainViewModel :
             return false;
         }
 
+        // SE 4 showed the EBU options dialog on every save; SE 5 saved silently with a default
+        // header the user never got to see. Prompt on the first manual save into EBU STL -
+        // once the subtitle carries an STL header (loaded from an STL file or stored by the
+        // dialog's OK, also reachable via File > "EBU STL properties...") saving is silent
+        // again, and the auto-save timer must never pop a modal dialog.
+        if (binaryFormat is Ebu && !isAutoSave && !Ebu.IsStlHeader(_subtitle.Header) && !await ShowEbuOptionsDialog())
+        {
+            return false;
+        }
+
         try
         {
             // EBU STL needs a UI helper to resolve its header; reuse the same one as File > Export.
@@ -28561,7 +28594,7 @@ public partial class MainViewModel :
         if (e.AddedItems.Count == 1)
         {
             var format = e.AddedItems[0] as SubtitleFormat;
-            if (format is TimedTextImsc11 or ItunesTimedText or TimedText10 or TimedTextImscRosetta or TmpegEncXml or DCinemaSmpte2007 or DCinemaSmpte2010 or DCinemaSmpte2014 or DCinemaInterop or WebVTT or WebVTTFileWithLineNumber)
+            if (format is TimedTextImsc11 or ItunesTimedText or TimedText10 or TimedTextImscRosetta or TmpegEncXml or DCinemaSmpte2007 or DCinemaSmpte2010 or DCinemaSmpte2014 or DCinemaInterop or WebVTT or WebVTTFileWithLineNumber or Ebu)
             {
                 IsFilePropertiesVisible = true;
                 FilePropertiesText = string.Format(Se.Language.Main.XPropertiesDotDotDot, format.Name);
