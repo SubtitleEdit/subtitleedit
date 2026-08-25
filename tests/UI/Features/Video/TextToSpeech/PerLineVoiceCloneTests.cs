@@ -131,4 +131,26 @@ public class PerLineVoiceCloneTests
         // the caller falls back, rather than getting some other engine's voice type.
         Assert.Null(PerLineVoiceClone.MakeVoiceForClip(new EdgeTts(), "/tmp/refs/line-0007.wav"));
     }
+
+    [Fact]
+    public void AnImportedClipKeepsTheVoiceNameItWasExportedWith()
+    {
+        // The exported clip may have been renamed to avoid a collision in the export folder; the
+        // line should still show the voice it was generated with, not the file it came back as.
+        var voice = PerLineVoiceClone.MakeVoiceForClip(new OmniVoiceTtsCpp(), "/tmp/refs/line-0007_1.wav", "line-0007");
+
+        Assert.Equal("line-0007", voice!.Name);
+    }
+
+    [Fact]
+    public void OnlyAVoiceThatCanBeRebuiltReportsAReference()
+    {
+        Assert.Equal("/voices/ada.wav", PerLineVoiceClone.TryGetReferenceClip(new Voice(new OmniVoice("Ada", "/voices/ada.wav"))));
+
+        // Nothing to copy along for a voice that clones from nothing - or for the marker, which
+        // has no recording of its own at all.
+        Assert.Null(PerLineVoiceClone.TryGetReferenceClip(new Voice(new OmniVoice("Default", string.Empty))));
+        Assert.Null(PerLineVoiceClone.TryGetReferenceClip(PerLineVoiceClone.CreateVoice()));
+        Assert.Null(PerLineVoiceClone.TryGetReferenceClip(null));
+    }
 }

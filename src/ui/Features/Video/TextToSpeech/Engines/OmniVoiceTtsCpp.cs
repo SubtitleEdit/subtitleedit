@@ -293,12 +293,24 @@ public class OmniVoiceTtsCpp : ITtsEngine
 
         // Voice cloning: omnivoice-tts requires both --ref-wav and --ref-text.
         // Pair each voices/<name>.wav with a sibling <name>.txt holding the transcript.
-        // The transcript is captured at import time; if it has been deleted out from under
-        // us we fail loudly so the user knows custom voice cloning isn't happening, rather
-        // than silently producing the default speaker.
-        var usingReference = !string.IsNullOrEmpty(omniVoice.FilePath) && File.Exists(omniVoice.FilePath);
+        // The transcript is captured at import time; if either it or the recording itself has
+        // been deleted out from under us we fail loudly so the user knows custom voice cloning
+        // isn't happening, rather than silently producing the default speaker.
+        var usingReference = !string.IsNullOrEmpty(omniVoice.FilePath);
         if (usingReference)
         {
+            // A missing recording used to fall through to the built-in speaker without a word.
+            // That hit hardest where the recording is a temporary clip - the per-line clone cuts
+            // its references into the run folder, which is swept when Subtitle Edit closes - so
+            // regenerating an imported session simply spoke in the wrong voice (#14095).
+            if (!File.Exists(omniVoice.FilePath))
+            {
+                throw new FileNotFoundException(
+                    $"OmniVoice TTS cannot clone \"{omniVoice.Voice}\": its reference recording "
+                    + $"{omniVoice.FilePath} is gone. Re-import the voice, or pick another one.",
+                    omniVoice.FilePath);
+            }
+
             var refTextPath = Path.ChangeExtension(omniVoice.FilePath, ".txt");
             if (!File.Exists(refTextPath))
             {

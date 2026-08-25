@@ -1846,6 +1846,14 @@ public partial class TextToSpeechViewModel : ObservableObject
             {
                 voice = perEngineVoices.FirstOrDefault(v => string.Equals(v.Name, item.VoiceName, StringComparison.OrdinalIgnoreCase));
             }
+
+            // A cloned voice that is not in the engine's voice list - the per-line "clone from
+            // video" cuts one reference per line and never imports any of them - is rebuilt from
+            // the recording the export copied along. Without this the line came back voice-less,
+            // and regenerating it either spoke in whatever voice happened to be selected or failed
+            // outright with "Voice is not an OmniVoice" (#14095).
+            voice ??= RebuildClonedVoice(item, jsonFolder);
+
             voice ??= Voices.FirstOrDefault(v => v.Name == item.VoiceName);
             stepResults.Add(new TtsStepResult
             {
@@ -1915,6 +1923,9 @@ public partial class TextToSpeechViewModel : ObservableObject
             // of writing ActorVoiceMappings = [] back to SubtitleEditTts.json.
             vm.ActorVoiceMappings.AddRange(_actorVoiceMappings);
             vm.SubtitleFileName = GetLoadedSubtitleFileName();
+            // So a regenerate that has to cut its own reference clip transcribes it with what the
+            // video says, not with the translation being dubbed over it.
+            vm.ReferenceTextOf = GetSpokenTextInVideo;
 
             if (peaksForReview == null || peaksForReview.Peaks.Count == 0)
             {
@@ -1966,6 +1977,30 @@ public partial class TextToSpeechViewModel : ObservableObject
                     MessageBoxIcon.Error);
             }
         }
+    }
+
+    /// <summary>
+    /// The voice an imported line clones from, rebuilt from the reference recording that travelled
+    /// with the export. Null when the line's voice clones from nothing, when the recording is not
+    /// there, or when its engine cannot be given a recording directly.
+    /// </summary>
+    private Voice? RebuildClonedVoice(TtsImportExportItem item, string jsonFolder)
+    {
+        if (string.IsNullOrEmpty(item.VoiceFileName) || string.IsNullOrEmpty(item.EngineName))
+        {
+            return null;
+        }
+
+        var engine = Engines.FirstOrDefault(e => string.Equals(e.Name, item.EngineName, StringComparison.OrdinalIgnoreCase));
+        if (engine == null)
+        {
+            return null;
+        }
+
+        var clipFileName = ResolveImportedAudioFileName(item.VoiceFileName, jsonFolder);
+        return File.Exists(clipFileName)
+            ? PerLineVoiceClone.MakeVoiceForClip(engine, clipFileName, item.VoiceName)
+            : null;
     }
 
     /// <summary>
@@ -3510,6 +3545,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 _wavePeakData);
             vm.ActorVoiceMappings.AddRange(_actorVoiceMappings);
             vm.SubtitleFileName = GetLoadedSubtitleFileName();
+            vm.ReferenceTextOf = GetSpokenTextInVideo;
         });
 
         if (result.OkPressed)
