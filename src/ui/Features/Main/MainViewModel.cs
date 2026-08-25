@@ -9528,6 +9528,12 @@ public partial class MainViewModel :
         }
 
         var engine = speakersResult.SelectedEngine;
+
+        // The speakers are confirmed, so the subtitle gets its actors (and the ASSA format that
+        // keeps them) before the cloning starts - a failed or cancelled clone used to throw the
+        // whole diarization away with it, leaving the subtitle exactly as it was.
+        ApplyAutoCastToSubtitle(transcription, speakersResult.RenamedSpeakers);
+
         var clonedVoiceNames = await CloneSpeakerVoicesAsync(engine, speakersResult.SpeakersToClone);
         if (clonedVoiceNames.Count == 0)
         {
@@ -9540,7 +9546,6 @@ public partial class MainViewModel :
             return;
         }
 
-        ApplyAutoCastToSubtitle(transcription, speakersResult.RenamedSpeakers);
         SaveAutoCastMappings(engine, clonedVoiceNames);
 
         ShowStatus(string.Format(Se.Language.Video.TextToSpeech.AutoCastDoneXVoices, clonedVoiceNames.Count));
@@ -9619,7 +9624,7 @@ public partial class MainViewModel :
     /// An open subtitle keeps its own lines and only gains actors, matched to the diarized
     /// segments by overlap; with nothing open, the transcription becomes the subtitle.
     /// </remarks>
-    private void ApplyAutoCastToSubtitle(Subtitle transcription, Dictionary<string, string> renamedSpeakers)
+    internal void ApplyAutoCastToSubtitle(Subtitle transcription, Dictionary<string, string> renamedSpeakers)
     {
         string Rename(string detected) =>
             renamedSpeakers.TryGetValue(detected, out var name) && !string.IsNullOrWhiteSpace(name) ? name : detected;
