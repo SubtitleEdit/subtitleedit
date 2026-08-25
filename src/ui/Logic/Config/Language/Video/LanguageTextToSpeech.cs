@@ -144,6 +144,11 @@ public class LanguageTextToSpeech
     public string NoWebVttVoicesFoundMessage { get; set; }
     public string MergeContinuationLinesPromptTitle { get; set; }
     public string MergeContinuationLinesPromptMessage { get; set; }
+    public string SkipNoiseLinesPromptTitle { get; set; }
+    public string SkipNoiseLinesPromptMessage { get; set; }
+    public string SkipNoiseLinesTitle { get; set; }
+    public string SkipNoiseLinesFoundX { get; set; }
+    public string SkipNoiseLinesColumnSkip { get; set; }
 
     // Applying the TTS window's changes (review text edits, merged lines) back to the subtitle
     public string SubtitleUpdatedFromReviewSingular { get; set; }
@@ -288,6 +293,13 @@ public class LanguageTextToSpeech
         MergeContinuationLinesPromptMessage = "Some lines appear to be a single sentence split across multiple subtitles." + Environment.NewLine + Environment.NewLine +
                                               "Merging them before generation lets the TTS engine speak each thought as one breath group, which usually sounds more natural." + Environment.NewLine + Environment.NewLine +
                                               "Review and apply merges now?";
+        SkipNoiseLinesPromptTitle = "Skip sound and music lines?";
+        SkipNoiseLinesPromptMessage = "Some lines contain only sounds or music - like ♪ or [door slams]." + Environment.NewLine + Environment.NewLine +
+                                      "Speech engines try to read such lines aloud and often make up words." + Environment.NewLine + Environment.NewLine +
+                                      "Review these lines and leave them silent?";
+        SkipNoiseLinesTitle = "Lines with only sounds or music";
+        SkipNoiseLinesFoundX = "{0} lines contain only sounds or music - checked lines are left silent";
+        SkipNoiseLinesColumnSkip = "Skip";
 
         SubtitleUpdatedFromReviewSingular = "Updated one line from the speech review";
         SubtitleUpdatedFromReviewPlural = "Updated {0} lines from the speech review";
