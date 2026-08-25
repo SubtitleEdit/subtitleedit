@@ -17,6 +17,27 @@ public class WhisperEngineWhisperXTests
     }
 
     [Fact]
+    public void ModelsAreAlwaysReportedInstalled_WhisperXDownloadsThemItself()
+    {
+        // Reporting "not installed" made SE offer its own model download into a folder
+        // whisperx never reads, re-prompting on every run - the engine owns its models.
+        var engine = new WhisperEngineWhisperX();
+
+        Assert.All(engine.Models, m => Assert.True(engine.IsModelInstalled(m)));
+    }
+
+    [Fact]
+    public void ModelListExcludesNamesWhisperXCannotResolve()
+    {
+        // The NbAiLab "*.nb" names only work when SE downloads the model and passes a local
+        // folder; whisperx gets the bare name, which is not a size or a Hugging Face repo id.
+        var engine = new WhisperEngineWhisperX();
+
+        Assert.DoesNotContain(engine.Models, m => m.Name.EndsWith(".nb"));
+        Assert.Contains(engine.Models, m => m.Name == "large-v3");
+    }
+
+    [Fact]
     public void LanguageCatalogIncludesLanguagesBeyondTheOriginalWhisperXSubset()
     {
         var engine = new WhisperEngineWhisperX();
