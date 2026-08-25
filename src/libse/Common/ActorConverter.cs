@@ -178,10 +178,47 @@ namespace Nikse.SubtitleEdit.Core.Common
             return line.Trim().IndexOf(ch) > 0;
         }
 
+        /// <summary>
+        /// A line splitter can break a tag in half - "Princess Peach on (Speaker\n2) Super Smash
+        /// Bros." - and the per-line scan in <see cref="FixActors"/> then finds no complete pair on
+        /// either line, so the paragraph was silently left alone. Line breaks inside a bracket pair
+        /// are folded to a space, pulling the two half-lines together. Capped at name length: a
+        /// bracket pair spanning that much text is a parenthetical remark, not a speaker tag.
+        /// </summary>
+        private static string JoinTagBrokenOverLineBreak(string text, char start, char end)
+        {
+            const int maxTagLength = 50;
+
+            var startIdx = text.IndexOf(start);
+            while (startIdx >= 0)
+            {
+                var endIdx = text.IndexOf(end, startIdx + 1);
+                if (endIdx < 0)
+                {
+                    break;
+                }
+
+                var inner = text.Substring(startIdx + 1, endIdx - startIdx - 1);
+                if (inner.Length <= maxTagLength &&
+                    inner.IndexOf(start) < 0 &&
+                    (inner.Contains('\n') || inner.Contains('\r')))
+                {
+                    var joined = string.Join(" ", inner.Split((char[])null, StringSplitOptions.RemoveEmptyEntries));
+                    text = text.Substring(0, startIdx + 1) + joined + text.Substring(endIdx);
+                    endIdx = startIdx + 1 + joined.Length;
+                }
+
+                startIdx = text.IndexOf(start, endIdx + 1);
+            }
+
+            return text;
+        }
+
         public ActorConverterResult FixActors(Paragraph paragraph, char start, char end, int? changeCasing, SKColor? color)
         {
             var p = new Paragraph(paragraph, false);
             Paragraph nextParagraph = null;
+            p.Text = JoinTagBrokenOverLineBreak(p.Text, start, end);
             var lines = p.Text.SplitToLines();
             if (lines.Count > 2)
             {

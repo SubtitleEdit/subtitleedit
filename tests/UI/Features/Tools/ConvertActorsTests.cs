@@ -105,6 +105,49 @@ public class ConvertActorsTests
         Assert.Empty(vm.Subtitles);
     }
 
+    /// <summary>
+    /// A speaker tag the line splitter broke in half - "(Speaker\n2)" - found no complete pair on
+    /// either line, so the paragraph was silently left alone and the actor column stayed empty.
+    /// </summary>
+    [AvaloniaFact]
+    public void ParenthesesBrokenOverLineBreakToActor_StillWritesTheActorColumn()
+    {
+        var rows = Convert(
+            ConvertActorType.InlineParentheses,
+            ConvertActorType.Actor,
+            "Princess Peach on (Speaker" + Environment.NewLine + "2) Super Smash Bros.");
+
+        Assert.Equal(new[] { "Princess Peach on Super Smash Bros." }, rows.Select(r => r.Text));
+        Assert.Equal(new[] { "Speaker 2" }, rows.Select(r => r.Actor));
+    }
+
+    [AvaloniaFact]
+    public void SquareBracketsBrokenOverLineBreakToActor_StillWritesTheActorColumn()
+    {
+        var rows = Convert(
+            ConvertActorType.InlineSquareBrackets,
+            ConvertActorType.Actor,
+            "[NAR" + Environment.NewLine + "RATOR] Once upon a time.");
+
+        Assert.Equal(new[] { "Once upon a time." }, rows.Select(r => r.Text));
+        Assert.Equal(new[] { "NAR RATOR" }, rows.Select(r => r.Actor));
+    }
+
+    /// <summary>
+    /// A parenthetical remark spanning lines is prose, not a broken speaker tag - joining it would
+    /// silently reflow the paragraph, so anything longer than a name is left alone.
+    /// </summary>
+    [AvaloniaFact]
+    public void LongParentheticalOverLineBreak_IsNotJoined()
+    {
+        var text = "He said (which nobody in the whole room actually believed" + Environment.NewLine +
+                   "for even a single second) that he would come.";
+        var rows = Convert(ConvertActorType.InlineParentheses, ConvertActorType.Actor, text);
+
+        Assert.Equal(new[] { text }, rows.Select(r => r.Text));
+        Assert.Equal(new[] { string.Empty }, rows.Select(r => r.Actor));
+    }
+
     private static List<SubtitleLineViewModel> Convert(ConvertActorType from, ConvertActorType to, params string[] texts)
         => Convert(from, to, new SubRip(), texts.Select(t => (Text: t, Actor: string.Empty)).ToArray());
 
