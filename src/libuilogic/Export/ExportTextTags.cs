@@ -89,6 +89,13 @@ public static class ExportTextTags
         // last "{\" away.
         if (text.Contains("{\\", StringComparison.Ordinal))
         {
+            // The position, fade and transparency tags have already been read off the text
+            // (GetAlignment, ApplyPositionTag, ApplyTransparencyTags) - but left in, any one
+            // of them makes GetFormattedText declare the whole line "too complex" and return
+            // every tag untranslated, so "{\i1\pos(10,20)}Hi" kept its position and lost its
+            // italic. Strip what has been consumed; the rest of the line can still convert.
+            s = RemoveConsumedTags(s);
+
             // "{\i1}" -> "<i>", "{\b1}" -> "<b>", "{\c&H0000FF&}" -> "<font color=\"#ff0000\">", ...
             s = AdvancedSubStationAlpha.GetFormattedText(s);
 
@@ -247,6 +254,24 @@ public static class ExportTextTags
         ip.FontColor = Fade(ip.FontColor, primaryOpacity);
         ip.OutlineColor = Fade(ip.OutlineColor, outlineOpacity);
         ip.ShadowColor = Fade(ip.ShadowColor, shadowOpacity);
+    }
+
+    /// <summary>
+    /// Removes the tags this class consumes itself - "\pos(x,y)", "\fad(..)"/"\fade(..)" and
+    /// the "\alpha"/"\1a"/"\3a"/"\4a" transparencies - matching exactly what
+    /// <see cref="TryGetPosition"/>, <see cref="ExportFade.Parse"/> and
+    /// <see cref="ApplyTransparencyTags"/> read, so a tag those did not understand still
+    /// makes the line "too complex" instead of being dropped along with its effect.
+    /// </summary>
+    private static string RemoveConsumedTags(string text)
+    {
+        var s = PositionTagRegex.Replace(text, string.Empty);
+        s = ExportFade.RemoveTags(s);
+        s = AlphaTagRegex.Replace(s, string.Empty);
+
+        // "{\pos(10,20)}Hello" is "{}Hello" now - GetFormattedText has no reason to see the
+        // leftover block.
+        return s.Replace("{}", string.Empty);
     }
 
     private static SKColor Fade(SKColor color, int opacity)

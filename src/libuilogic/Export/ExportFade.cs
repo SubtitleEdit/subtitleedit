@@ -79,6 +79,23 @@ public static class ExportFade
     }
 
     /// <summary>
+    /// Strips the fade tags <see cref="Parse"/> reads off the text. Used by
+    /// <see cref="ExportTextTags.ToRenderableText"/>: a fade tag left in the text makes
+    /// AdvancedSubStationAlpha.GetFormattedText treat the whole line as too complex, which
+    /// costs the line every other tag it carries.
+    /// </summary>
+    public static string RemoveTags(string text)
+    {
+        if (!text.Contains("\\fad", StringComparison.Ordinal))
+        {
+            return text;
+        }
+
+        var s = FadeTagRegex.Replace(text, string.Empty);
+        return FadTagRegex.Replace(s, string.Empty);
+    }
+
+    /// <summary>
     /// Samples the curve into the alpha steps of a Blu-ray epoch: the first step is the alpha
     /// the subtitle appears with, the rest become palette update display sets. Sampling starts
     /// at one step per video frame - a decoder cannot show more than that - and gets coarser
