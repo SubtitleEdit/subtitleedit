@@ -229,6 +229,14 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
 
                 TitleText = string.Format(Se.Language.General.UnpackingX, Engine.Name);
                 StartIndeterminateProgress();
+
+                // Record the build before the archive is deleted below. Like Faster-Whisper-XXL
+                // this engine is streamed to a file rather than to memory (the archive is
+                // 216 MB-355 MB), so it takes the file overload. Without a sidecar nothing
+                // identifies the install and the engine-settings dialog can only report it as
+                // an unrecognized build (#14057).
+                DownloadHashManager.WriteSidecar(dir, DownloadHashManager.ResolveWhisperXKey(), tempFileName);
+
                 // Flat archive (no top-level folder), so no folder level to skip.
                 Unpacker.Extract7Zip(tempFileName, dir, string.Empty, _cancellationTokenSource, text => ProgressText = text);
                 StopIndeterminateProgress();

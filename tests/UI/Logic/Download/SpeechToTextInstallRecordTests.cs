@@ -23,6 +23,9 @@ public class SpeechToTextInstallRecordTests
     private const string CTranslate2MacArm64 = "f1c67d47be9216e9998df53d32a59fdaa0310f3e576fa4d9135aa1d579a71f86";
     private const string CTranslate2LinuxX64 = "02c6c1b738a10b8f72fbd581febbbc4f4e60abe96ad1fab76e1b432e2cce041b";
     private const string ConstMeWindows = "baa9b70c824e50fe91f1858006a24b870b7637135659f17fc42beb1af57bd447";
+    private const string WhisperXWindows = "439776243a3040693e9a2767a3efb4b8dd7549244bb6695ce0ef7209e5456bf3";
+    private const string WhisperXMacArm64 = "89ff2f2dd120c8a2ab51c21e6be34a16c954965d4646ecdff77d0911ac6a2c27";
+    private const string WhisperXLinuxX64 = "46070b23bfa7c152c259264ac2a135406b4462b2b979ea126510a9c6f44f80e2";
 
     [Theory]
     [InlineData(DownloadHashManager.PurfviewFasterWhisperXxl.Windows, PurfviewWindows)]
@@ -31,6 +34,9 @@ public class SpeechToTextInstallRecordTests
     [InlineData(DownloadHashManager.WhisperCTranslate2.MacArm64, CTranslate2MacArm64)]
     [InlineData(DownloadHashManager.WhisperCTranslate2.LinuxX64, CTranslate2LinuxX64)]
     [InlineData(DownloadHashManager.WhisperConstMe.Windows, ConstMeWindows)]
+    [InlineData(DownloadHashManager.WhisperX.Windows, WhisperXWindows)]
+    [InlineData(DownloadHashManager.WhisperX.MacArm64, WhisperXMacArm64)]
+    [InlineData(DownloadHashManager.WhisperX.LinuxX64, WhisperXLinuxX64)]
     public void GetStatus_PinnedArchive_IsUpToDate(string key, string hash)
     {
         // Index 0 of each list must be the archive the download URL currently points at,
@@ -90,6 +96,30 @@ public class SpeechToTextInstallRecordTests
     }
 
     [Fact]
+    public void ResolveWhisperXKey_MatchesDownloadablePlatforms()
+    {
+        var key = DownloadHashManager.ResolveWhisperXKey();
+
+        if (OperatingSystem.IsWindows() && !IsArm64)
+        {
+            Assert.Equal(DownloadHashManager.WhisperX.Windows, key);
+        }
+        else if (OperatingSystem.IsMacOS() && IsArm64)
+        {
+            Assert.Equal(DownloadHashManager.WhisperX.MacArm64, key);
+        }
+        else if (OperatingSystem.IsLinux() && !IsArm64)
+        {
+            Assert.Equal(DownloadHashManager.WhisperX.LinuxX64, key);
+        }
+        else
+        {
+            // Windows ARM64, macOS x64 and Linux ARM64 have no WhisperX standalone build.
+            Assert.Null(key);
+        }
+    }
+
+    [Fact]
     public void EveryEngineKey_HasAtLeastOneKnownHash()
     {
         // A key with no hashes behind it resolves fine and still leaves the install
@@ -102,6 +132,9 @@ public class SpeechToTextInstallRecordTests
                      DownloadHashManager.WhisperCTranslate2.MacArm64,
                      DownloadHashManager.WhisperCTranslate2.LinuxX64,
                      DownloadHashManager.WhisperConstMe.Windows,
+                     DownloadHashManager.WhisperX.Windows,
+                     DownloadHashManager.WhisperX.MacArm64,
+                     DownloadHashManager.WhisperX.LinuxX64,
                  })
         {
             Assert.NotEmpty(DownloadHashManager.GetKnownHashes(key));
