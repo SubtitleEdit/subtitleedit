@@ -82,6 +82,16 @@ public partial class TextEffectViewModel : ObservableObject
         _parent.TextEffectWave = Wave;
     }
 
+    /// <summary>Back to the neutral tuning values; the preset choice stays.</summary>
+    [RelayCommand]
+    private void Reset()
+    {
+        Strength = 100;
+        LetterSpacing = 0;
+        ArcBend = 0;
+        Wave = 0;
+    }
+
     [RelayCommand]
     private void Ok()
     {

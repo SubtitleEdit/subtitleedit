@@ -70,6 +70,13 @@ public class ImageRendererTextEffectsTests
     [InlineData(TextEffectPreset.Ice)]
     [InlineData(TextEffectPreset.Emboss)]
     [InlineData(TextEffectPreset.Hollow)]
+    [InlineData(TextEffectPreset.Marble)]
+    [InlineData(TextEffectPreset.Wood)]
+    [InlineData(TextEffectPreset.Lava)]
+    [InlineData(TextEffectPreset.BrushedSteel)]
+    [InlineData(TextEffectPreset.CandyCane)]
+    [InlineData(TextEffectPreset.Rainbow)]
+    [InlineData(TextEffectPreset.PolkaDots)]
     public void GenerateBitmap_WithPreset_DrawsVisiblePixels(TextEffectPreset preset)
     {
         var ip = MakeParameter(preset);

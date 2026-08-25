@@ -63,6 +63,13 @@ public class LanguageExport
     public string TextEffectIce { get; set; }
     public string TextEffectEmboss { get; set; }
     public string TextEffectHollow { get; set; }
+    public string TextEffectMarble { get; set; }
+    public string TextEffectWood { get; set; }
+    public string TextEffectLava { get; set; }
+    public string TextEffectBrushedSteel { get; set; }
+    public string TextEffectCandyCane { get; set; }
+    public string TextEffectRainbow { get; set; }
+    public string TextEffectPolkaDots { get; set; }
 
     public LanguageExport()
     {
@@ -127,5 +134,12 @@ public class LanguageExport
         TextEffectIce = "Ice";
         TextEffectEmboss = "Emboss";
         TextEffectHollow = "Hollow (outline only)";
+        TextEffectMarble = "Marble";
+        TextEffectWood = "Wood";
+        TextEffectLava = "Lava";
+        TextEffectBrushedSteel = "Brushed steel";
+        TextEffectCandyCane = "Candy cane";
+        TextEffectRainbow = "Rainbow";
+        TextEffectPolkaDots = "Polka dots";
     }
 }

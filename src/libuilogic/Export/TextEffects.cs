@@ -98,8 +98,14 @@ public enum TextEffectFillKind
     LinearGradient,
     RadialGradient,
 
-    /// <summary>Perlin turbulence composed over the gradient - fire/marble style texture.</summary>
+    /// <summary>Perlin turbulence composed over the gradient - fire/marble/wood style texture.</summary>
     Turbulence,
+
+    /// <summary>Repeating two-color stripes (candy cane and friends).</summary>
+    Stripes,
+
+    /// <summary>Repeating polka dots, color 1 on a color 0 background.</summary>
+    Dots,
 }
 
 /// <summary>A paint source resolved against the rendered text's bounds.</summary>
@@ -111,6 +117,22 @@ public class TextEffectFill
 
     /// <summary>Gradient direction in degrees; 90 = top-to-bottom.</summary>
     public float AngleDegrees { get; set; } = 90;
+
+    /// <summary>
+    /// Turbulence tuning. The X/Y base frequencies are what make one texture read as fire,
+    /// marble or wood grain: equal small values give blotches, a strongly anisotropic pair
+    /// gives streaks/grain along the smaller-frequency axis.
+    /// </summary>
+    public float NoiseFrequencyX { get; set; } = 0.012f;
+
+    public float NoiseFrequencyY { get; set; } = 0.035f;
+    public int NoiseOctaves { get; set; } = 3;
+
+    /// <summary>Stripe width or dot cell half-size, in pixels (set from the font size).</summary>
+    public float TileSize { get; set; } = 12f;
+
+    /// <summary>Stripe direction in degrees.</summary>
+    public float TileAngleDegrees { get; set; } = 45f;
 
     public static TextEffectFill Solid(SKColor color)
     {
@@ -146,17 +168,76 @@ public class TextEffectFill
             case TextEffectFillKind.Turbulence:
                 paint.Color = SKColors.White;
                 using (var gradient = MakeLinearGradient(bounds))
-                using (var noise = SKShader.CreatePerlinNoiseTurbulence(0.012f, 0.035f, 3, 7f))
+                using (var noise = SKShader.CreatePerlinNoiseTurbulence(NoiseFrequencyX, NoiseFrequencyY, NoiseOctaves, 7f))
                 {
                     paint.Shader = SKShader.CreateCompose(gradient, noise, SKBlendMode.Overlay);
                 }
 
                 break;
 
+            case TextEffectFillKind.Stripes:
+                paint.Color = SKColors.White;
+                paint.Shader = MakeStripesShader();
+                break;
+
+            case TextEffectFillKind.Dots:
+                paint.Color = SKColors.White;
+                paint.Shader = MakeDotsShader();
+                break;
+
             default:
                 paint.Color = Colors[0];
                 break;
         }
+    }
+
+    /// <summary>
+    /// Repeating stripe texture as a bitmap tile shader. The tile is copied into an
+    /// SKImage, and the shader keeps its own native reference, so nothing here has to
+    /// outlive this call.
+    /// </summary>
+    private SKShader MakeStripesShader()
+    {
+        var stripe = Math.Max(2f, TileSize);
+        var tileHeight = (int)Math.Ceiling(stripe * 2);
+        using var tile = new SKBitmap(8, tileHeight);
+        using (var canvas = new SKCanvas(tile))
+        using (var p = new SKPaint())
+        {
+            p.Color = Colors[0];
+            canvas.DrawRect(0, 0, 8, stripe, p);
+            p.Color = Colors.Length > 1 ? Colors[1] : SKColors.White;
+            canvas.DrawRect(0, stripe, 8, tileHeight - stripe, p);
+        }
+
+        using var image = SKImage.FromBitmap(tile);
+        return image.ToShader(SKShaderTileMode.Repeat, SKShaderTileMode.Repeat,
+            new SKSamplingOptions(SKFilterMode.Linear),
+            SKMatrix.CreateRotationDegrees(TileAngleDegrees));
+    }
+
+    /// <summary>Repeating polka-dot texture: color 1 dots on a color 0 background.</summary>
+    private SKShader MakeDotsShader()
+    {
+        var cell = (int)Math.Ceiling(Math.Max(4f, TileSize * 2));
+        using var tile = new SKBitmap(cell, cell);
+        using (var canvas = new SKCanvas(tile))
+        using (var p = new SKPaint { IsAntialias = true })
+        {
+            canvas.Clear(Colors[0]);
+            p.Color = Colors.Length > 1 ? Colors[1] : SKColors.White;
+            var radius = cell * 0.28f;
+            canvas.DrawCircle(cell / 2f, cell / 2f, radius, p);
+            // quarter dots in the corners give the offset "polka" packing when tiled
+            canvas.DrawCircle(0, 0, radius, p);
+            canvas.DrawCircle(cell, 0, radius, p);
+            canvas.DrawCircle(0, cell, radius, p);
+            canvas.DrawCircle(cell, cell, radius, p);
+        }
+
+        using var image = SKImage.FromBitmap(tile);
+        return image.ToShader(SKShaderTileMode.Repeat, SKShaderTileMode.Repeat,
+            new SKSamplingOptions(SKFilterMode.Linear), SKMatrix.CreateIdentity());
     }
 
     private SKShader MakeLinearGradient(SKRect bounds)

@@ -18,6 +18,13 @@ public enum TextEffectPreset
     Ice,
     Emboss,
     Hollow,
+    Marble,
+    Wood,
+    Lava,
+    BrushedSteel,
+    CandyCane,
+    Rainbow,
+    PolkaDots,
 }
 
 /// <summary>
@@ -278,6 +285,113 @@ public static class TextEffectPresetFactory
                     Fill = TextEffectFill.Solid(SKColors.Transparent),
                     Strokes = { new TextEffectStroke { Width = s * 0.028f, Fill = TextEffectFill.Solid(fontColor) } },
                     Shadows = { new TextEffectShadow { Dx = s * 0.04f, Dy = s * 0.04f, Blur = s * 0.08f, Color = new SKColor(0, 0, 0, 150) } },
+                };
+
+            case TextEffectPreset.Marble:
+                return new TextEffects
+                {
+                    Fill = new TextEffectFill
+                    {
+                        Kind = TextEffectFillKind.Turbulence,
+                        Colors = new[] { SKColors.White, new SKColor(205, 210, 220), new SKColor(130, 140, 160) },
+                        NoiseFrequencyX = 0.008f,
+                        NoiseFrequencyY = 0.008f,
+                        NoiseOctaves = 4,
+                    },
+                    Strokes = { new TextEffectStroke { Width = s * 0.025f, Fill = TextEffectFill.Solid(new SKColor(60, 65, 80)) } },
+                    Shadows = { new TextEffectShadow { Dx = 0, Dy = s * 0.05f, Blur = s * 0.08f, Color = new SKColor(0, 0, 0, 170) } },
+                };
+
+            case TextEffectPreset.Wood:
+                return new TextEffects
+                {
+                    Fill = new TextEffectFill
+                    {
+                        Kind = TextEffectFillKind.Turbulence,
+                        Colors = new[] { new SKColor(210, 160, 100), new SKColor(160, 105, 55), new SKColor(100, 60, 30) },
+                        // Strongly anisotropic frequencies read as horizontal grain.
+                        NoiseFrequencyX = 0.004f,
+                        NoiseFrequencyY = 0.09f,
+                        NoiseOctaves = 4,
+                    },
+                    Strokes = { new TextEffectStroke { Width = s * 0.028f, Fill = TextEffectFill.Solid(new SKColor(55, 30, 12)) } },
+                    Shadows = { new TextEffectShadow { Dx = s * 0.04f, Dy = s * 0.05f, Blur = s * 0.07f, Color = new SKColor(0, 0, 0, 170) } },
+                };
+
+            case TextEffectPreset.Lava:
+                return new TextEffects
+                {
+                    Fill = new TextEffectFill
+                    {
+                        Kind = TextEffectFillKind.Turbulence,
+                        Colors = new[] { new SKColor(255, 235, 100), new SKColor(240, 80, 10), new SKColor(70, 5, 5) },
+                        NoiseFrequencyX = 0.02f,
+                        NoiseFrequencyY = 0.02f,
+                        NoiseOctaves = 4,
+                    },
+                    Strokes = { new TextEffectStroke { Width = s * 0.025f, Fill = TextEffectFill.Solid(new SKColor(35, 5, 5)) } },
+                    Glow = new TextEffectGlow { Color = new SKColor(255, 60, 0), Radius = s * 0.1f, Passes = 2 },
+                };
+
+            case TextEffectPreset.BrushedSteel:
+                return new TextEffects
+                {
+                    Fill = new TextEffectFill
+                    {
+                        Kind = TextEffectFillKind.Turbulence,
+                        Colors = new[] { new SKColor(225, 230, 238), new SKColor(150, 158, 170), new SKColor(200, 208, 218) },
+                        // Fine horizontal streaks over the silver gradient = brushed metal.
+                        NoiseFrequencyX = 0.002f,
+                        NoiseFrequencyY = 0.35f,
+                        NoiseOctaves = 2,
+                    },
+                    Strokes = { new TextEffectStroke { Width = s * 0.023f, Fill = TextEffectFill.Solid(new SKColor(45, 52, 65)) } },
+                    Bevel = new TextEffectBevel { Depth = Math.Max(1.5f, s * 0.028f) },
+                    Shadows = { new TextEffectShadow { Dx = 0, Dy = s * 0.06f, Blur = s * 0.08f, Color = new SKColor(0, 0, 0, 170) } },
+                };
+
+            case TextEffectPreset.CandyCane:
+                return new TextEffects
+                {
+                    Fill = new TextEffectFill
+                    {
+                        Kind = TextEffectFillKind.Stripes,
+                        Colors = new[] { new SKColor(220, 30, 40), SKColors.White },
+                        TileSize = Math.Max(3f, s * 0.14f),
+                        TileAngleDegrees = 45f,
+                    },
+                    Strokes = { new TextEffectStroke { Width = s * 0.028f, Fill = TextEffectFill.Solid(new SKColor(120, 10, 20)) } },
+                    Shadows = { new TextEffectShadow { Dx = s * 0.04f, Dy = s * 0.05f, Blur = s * 0.08f, Color = new SKColor(0, 0, 0, 160) } },
+                };
+
+            case TextEffectPreset.Rainbow:
+                return new TextEffects
+                {
+                    Fill = new TextEffectFill
+                    {
+                        Kind = TextEffectFillKind.LinearGradient,
+                        AngleDegrees = 0,
+                        Colors = new[]
+                        {
+                            new SKColor(228, 30, 40), new SKColor(255, 150, 30), new SKColor(255, 220, 50),
+                            new SKColor(70, 190, 90), new SKColor(50, 120, 230), new SKColor(150, 70, 200),
+                        },
+                    },
+                    Strokes = { new TextEffectStroke { Width = s * 0.028f, Fill = TextEffectFill.Solid(new SKColor(25, 25, 35)) } },
+                    Shadows = { new TextEffectShadow { Dx = 0, Dy = s * 0.05f, Blur = s * 0.09f, Color = new SKColor(0, 0, 0, 170) } },
+                };
+
+            case TextEffectPreset.PolkaDots:
+                return new TextEffects
+                {
+                    Fill = new TextEffectFill
+                    {
+                        Kind = TextEffectFillKind.Dots,
+                        Colors = new[] { new SKColor(230, 60, 120), SKColors.White },
+                        TileSize = Math.Max(3f, s * 0.11f),
+                    },
+                    Strokes = { new TextEffectStroke { Width = s * 0.032f, Fill = TextEffectFill.Solid(new SKColor(90, 15, 45)) } },
+                    Shadows = { new TextEffectShadow { Dx = s * 0.05f, Dy = s * 0.05f, Blur = 0, Color = new SKColor(40, 5, 20, 200) } },
                 };
 
             default:

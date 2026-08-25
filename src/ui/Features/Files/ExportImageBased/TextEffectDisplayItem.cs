@@ -41,6 +41,13 @@ public class TextEffectDisplayItem
             new(TextEffectPreset.Ice, Se.Language.File.Export.TextEffectIce),
             new(TextEffectPreset.Emboss, Se.Language.File.Export.TextEffectEmboss),
             new(TextEffectPreset.Hollow, Se.Language.File.Export.TextEffectHollow),
+            new(TextEffectPreset.Marble, Se.Language.File.Export.TextEffectMarble),
+            new(TextEffectPreset.Wood, Se.Language.File.Export.TextEffectWood),
+            new(TextEffectPreset.Lava, Se.Language.File.Export.TextEffectLava),
+            new(TextEffectPreset.BrushedSteel, Se.Language.File.Export.TextEffectBrushedSteel),
+            new(TextEffectPreset.CandyCane, Se.Language.File.Export.TextEffectCandyCane),
+            new(TextEffectPreset.Rainbow, Se.Language.File.Export.TextEffectRainbow),
+            new(TextEffectPreset.PolkaDots, Se.Language.File.Export.TextEffectPolkaDots),
         };
     }
 }

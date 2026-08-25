@@ -55,9 +55,10 @@ public class TextEffectWindow : Window
         AddSliderRow(grid, 3, Se.Language.File.Export.TextEffectArcBend, nameof(vm.ArcBend), -100, 100, "{0}");
         AddSliderRow(grid, 4, Se.Language.File.Export.TextEffectWave, nameof(vm.Wave), 0, 100, "{0}");
 
+        var buttonReset = UiUtil.MakeButton(Se.Language.General.Reset, vm.ResetCommand);
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var panelButtons = UiUtil.MakeButtonBar(buttonReset, buttonOk, buttonCancel);
         panelButtons.VerticalAlignment = VerticalAlignment.Bottom;
         grid.Add(panelButtons, 5, 0, 1, 3);
 
