@@ -181,13 +181,29 @@ public partial class ChangeFrameRateViewModel : ObservableObject
     internal static void ChangeFrameRate(ObservableCollection<SubtitleLineViewModel> subtitles, double fromFrameRate, double toFrameRate)
     {
         double ratio = GetFrameRateRatio(fromFrameRate, toFrameRate);
+        SubtitleLineViewModel? previous = null;
+        var previousOriginalEndMs = 0d;
         foreach (var line in subtitles)
         {
+            var originalStartMs = line.StartTime.TotalMilliseconds;
+            var originalEndMs = line.EndTime.TotalMilliseconds;
+
             // Round to whole milliseconds via start + scaled duration, not start and end
             // independently, so lines of equal length keep equal durations after scaling (#14056).
-            var newStart = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(line.StartTime.TotalMilliseconds * ratio);
-            var newDuration = TimeSpanExtensions.FromMillisecondsWholeMilliseconds((line.EndTime.TotalMilliseconds - line.StartTime.TotalMilliseconds) * ratio);
+            var newStart = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(originalStartMs * ratio);
+            var newDuration = TimeSpanExtensions.FromMillisecondsWholeMilliseconds((originalEndMs - originalStartMs) * ratio);
             line.SetTimes(newStart, newStart + newDuration);
+
+            // The two roundings can land the previous line's end 1 ms past this line's start,
+            // turning a clean join into an overlap the source never had. Clip the previous end
+            // back; overlaps that were already in the source are left as they were.
+            if (previous != null && previousOriginalEndMs <= originalStartMs && previous.EndTime > line.StartTime)
+            {
+                previous.SetTimes(previous.StartTime, line.StartTime);
+            }
+
+            previous = line;
+            previousOriginalEndMs = originalEndMs;
         }
     }
 }
