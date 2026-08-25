@@ -64,7 +64,12 @@
     <RegEx find="\b\|\b" replaceWith="I" />
     <RegEx find="([\p{Ll},] )(I)([oai][, \.])" replaceWith="$1l$3" />
     <RegEx find="\b(I)([àì]|'[ \r\n])\b" replaceWith="l$2" />
-    <RegEx find="([\p{Ll},] )(II)\b" replaceWith="$1Il" />  
+    <RegEx find="([\p{Ll},] )(II)\b" replaceWith="$1Il" />
+    <!-- E' scritto con apostrofo al posto di È (issue #14092). Il contesto sinistro esplicito
+         evita di mangiare la virgoletta di chiusura di una lettera citata ('E' resta 'E');
+         il lookahead protegge le elisioni attaccate (E'sti). -->
+    <RegEx find="(^|[\s&quot;«(\[\-–—…])E['’](?![\p{L}\p{N}])" replaceWith="$1È" />
+    <RegEx find="(\p{L}['’])E['’](?![\p{L}\p{N}])" replaceWith="$1È" /> <!-- COS'E' in COS'È -->
   </RegularExpressions>
   <RegularExpressionsIfSpelledCorrectly>
     <!-- Italic l misread as i (#13660): trailing i to l, double ii to ll.  -->
@@ -112,14 +117,6 @@
     <RegEx find="\b([a-zàèéìòóù]{2,})i\b" spellCheck="$1ì" replaceWith="$1ì" />
     <RegEx find="\b([a-zàèéìòóù]{2,})o\b" spellCheck="$1ò" replaceWith="$1ò" />
     <RegEx find="\b([a-zàèéìòóù]{2,})u\b" spellCheck="$1ù" replaceWith="$1ù" />
-
-    <!-- ============================================================ -->
-    <!-- E' SCRITTO CON APOSTROFO AL POSTO DI È                       -->
-    <!-- E' un problema in È un problema (issue #14092). Copre sia    -->
-    <!-- l'apostrofo dritto sia quello tipografico; non tocca la E    -->
-    <!-- seguita da un'elisione staccata (E 'sti soldi).              -->
-    <!-- ============================================================ -->
-    <RegEx find="\bE['’](?![\p{L}\p{N}])" spellCheck="È" replaceWith="È" />
 
     <!-- ============================================================ -->
     <!-- SPAZIO PERSO TRA PREPOSIZIONE/ARTICOLO E NOME PROPRIO        -->

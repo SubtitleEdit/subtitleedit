@@ -13,6 +13,8 @@ namespace UITests.Features.Ocr.FixEngine;
 // caffe -> caffè - both accents are tried, the dictionary picks the right one) and l/I
 // confusion in all-caps captions. A rule is only applied when the misread form is NOT in the
 // dictionary and the fixed form IS; lowercase-only classes keep proper names untouched.
+// The E' -> È rule (issue #14092) is ungated on purpose - it must work without a dictionary -
+// and relies on explicit left context so a quoted letter ('E') keeps its closing quote.
 // Runs against the shipped Dictionaries/ita_OCRFixReplaceList.xml, not a copy of its rules.
 public class OcrFixItalianAccentAndCapsTests : IDisposable
 {
@@ -94,6 +96,11 @@ public class OcrFixItalianAccentAndCapsTests : IDisposable
     [Theory]
     [InlineData("Vieni anche tu Zzyzx.")] // correct -e word is in the dictionary
     [InlineData("Maria canta Zzyzx.")] // capitalized name is never accented
+    [InlineData("E 'sti soldi, Zzyzx?")] // the apostrophe belongs to the next word
+    [InlineData("E'sti soldi, Zzyzx?")] // glued elision - guarded by the E' rule's lookahead
+    [InlineData("Ha detto la lettera 'E', Zzyzx.")] // quoted letter must keep its closing quote
+    [InlineData("La lettera ‘E’ canta, Zzyzx.")] // same with typographic quotes
+    [InlineData("Negli anni '80, Zzyzx.")] // decade apostrophe
     public void FixOcrErrors_CorrectWordsAndNames_AreLeftAlone(string text)
     {
         // "Zzyzx" keeps the line from being spelled OK, so every gated rule really runs.
@@ -108,6 +115,9 @@ public class OcrFixItalianAccentAndCapsTests : IDisposable
     [InlineData("E' un problema.", "È un problema.")] // straight apostrophe
     [InlineData("- E' vero!", "- È vero!")] // after a dialog dash
     [InlineData("E’ tardi.", "È tardi.")] // typographic apostrophe
+    [InlineData("«E' colpa mia», disse.", "«È colpa mia», disse.")] // inside guillemets
+    [InlineData("COS'E' successo, Zzyzx?", "COS'È successo, Zzyzx?")] // after an elision
+    [InlineData("PIU' TARDI, E' PROBABILE.", "PIU' TARDI, È PROBABILE.")] // all caps
     public void FixOcrErrors_CapitalEWithApostrophe_BecomesEGrave(string text, string expected)
     {
         var engine = CreateEngine();
@@ -117,15 +127,16 @@ public class OcrFixItalianAccentAndCapsTests : IDisposable
         Assert.Equal(expected, result.GetText());
     }
 
-    [Theory]
-    [InlineData("E 'sti soldi, Zzyzx?")] // the apostrophe belongs to the next word (elision)
-    public void FixOcrErrors_CapitalEBeforeDetachedElision_IsLeftAlone(string text)
+    [Fact]
+    public void FixOcrErrors_CapitalEWithApostrophe_WorksWithoutADictionary()
     {
-        var engine = CreateEngine();
+        // The rule is ungated on purpose: it must also help users who never
+        // downloaded an Italian spell check dictionary.
+        var engine = CreateEngine(new EmptySpellChecker());
 
-        var result = engine.FixOcrErrors(0, text, doTryToGuessUnknownWords: false);
+        var result = engine.FixOcrErrors(0, "E' un problema.", doTryToGuessUnknownWords: false);
 
-        Assert.Equal(text, result.GetText());
+        Assert.Equal("È un problema.", result.GetText());
     }
 
     [Fact]
@@ -153,7 +164,6 @@ public class OcrFixItalianAccentAndCapsTests : IDisposable
             "la", "città", "e", "bella", "non", "so", "perché", "si", "fa", "così",
             "ne", "voglio", "di", "più", "prendo", "un", "caffè", "va", "bene", "però",
             "ora", "musica", "fine", "vieni", "anche", "tu", "canta",
-            "è", "problema", "vero", "tardi",
         };
 
         public bool Initialize(string dictionaryFile, string twoLetterLanguageCode) => true;
