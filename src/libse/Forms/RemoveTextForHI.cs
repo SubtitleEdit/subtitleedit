@@ -1459,7 +1459,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
             var newText = text;
             var s = text;
             int index;
-            if (Settings.RemoveTextBetweenSquares && s.StartsWith('[') && (index = s.IndexOf(']', 1)) > 0 || Settings.RemoveTextBetweenBrackets && s.StartsWith('{') && (index = s.IndexOf('}', 1)) > 0 || Settings.RemoveTextBetweenParentheses && s.StartsWith('(') && (index = s.IndexOf(')', 1)) > 0 || Settings.RemoveTextBetweenQuestionMarks && s.StartsWith('?') && (index = s.IndexOf('?', 1)) > 0)
+            if (Settings.RemoveTextBetweenSquares && s.StartsWith('[') && (index = s.IndexOf(']', 1)) > 0 ||
+                Settings.RemoveTextBetweenBrackets && s.StartsWith('{') && (index = s.IndexOf('}', 1)) > 0 ||
+                Settings.RemoveTextBetweenParentheses && s.StartsWith('(') && (index = s.IndexOf(')', 1)) > 0 ||
+                Settings.RemoveTextBetweenQuestionMarks && s.StartsWith('?') && (index = s.IndexOf('?', 1)) > 0)
             {
                 if (++index < s.Length && s[index] == ':')
                 {
