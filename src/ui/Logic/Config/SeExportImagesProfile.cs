@@ -39,6 +39,10 @@ public class SeExportImagesProfile
     public int PaddingTopBottom { get; set; }
     public int LineSpacingPercent { get; set; }
     public FontBoxType BoxType { get; set; }
+
+    /// <summary>Name of the <see cref="TextEffectPreset"/>; empty = classic rendering.</summary>
+    public string TextEffect { get; set; } = string.Empty;
+
     public int BoxPaddingLeft { get; set; }
     public int BoxPaddingRight { get; set; }
     public int BoxPaddingTop { get; set; }

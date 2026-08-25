@@ -87,6 +87,8 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
     [ObservableProperty] private bool _isFullFrame;
     [ObservableProperty] private Color _fullFrameBackgroundColor;
     [ObservableProperty] private bool _isFullFrameVisible;
+    [ObservableProperty] private ObservableCollection<TextEffectDisplayItem> _textEffectItems = null!;
+    [ObservableProperty] private TextEffectDisplayItem? _selectedTextEffect;
     public ObservableCollection<int> BoxPaddingValues { get; } = new ObservableCollection<int>(Enumerable.Range(0, 100));
 
     private string _outlineColorText = string.Empty;
@@ -190,6 +192,8 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         };
         SelectedBoxType = BoxTypes[0];
         UpdateBoxTypeLabels();
+        TextEffectItems = new ObservableCollection<TextEffectDisplayItem>(TextEffectDisplayItem.GetItems());
+        SelectedTextEffect = TextEffectItems[0];
 
         _generateLock = new Lock();
         _cancellationTokenSource = new CancellationTokenSource();
@@ -559,6 +563,12 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             FramesPerSecond = SelectedFrameRate,
             IsFullFrame = IsFullFrameVisible && IsFullFrame,
             FullFrameBackgroundColor = FullFrameBackgroundColor.ToSKColor(),
+            TextEffects = TextEffectPresetFactory.Create(
+                SelectedTextEffect?.Preset ?? TextEffectPreset.None,
+                SelectedFontSize,
+                FontColor.ToSKColor(),
+                OutlineColor.ToSKColor(),
+                ShadowColor.ToSKColor()),
         };
 
         // "{\fad(..)}" and "{\alpha&H..&}" change what is drawn, so unlike the position tag
@@ -771,6 +781,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
     }
 
     partial void OnFontColorChanged(Color value) => _dirty = true;
+    partial void OnSelectedTextEffectChanged(TextEffectDisplayItem? value) => _dirty = true;
     partial void OnOutlineColorChanged(Color value) => _dirty = true;
     partial void OnShadowColorChanged(Color value) => _dirty = true;
     partial void OnBoxColorChanged(Color value) => _dirty = true;
@@ -933,6 +944,8 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             SelectedFrameRate = FrameRates.Contains(profile.FramesPerSecond) ? profile.FramesPerSecond : 25;
             IsFullFrame = profile.IsFullFrame;
             FullFrameBackgroundColor = profile.FullFrameBackgroundColor.FromHex().ToAvaloniaColor();
+            SelectedTextEffect = TextEffectItems.FirstOrDefault(t => t.Preset.ToString() == profile.TextEffect)
+                                 ?? TextEffectItems[0];
         }
     }
 
@@ -967,6 +980,9 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             profile.FramesPerSecond = SelectedFrameRate;
             profile.IsFullFrame = IsFullFrame;
             profile.FullFrameBackgroundColor = FullFrameBackgroundColor.FromColorToHex(true);
+            profile.TextEffect = SelectedTextEffect == null || SelectedTextEffect.Preset == TextEffectPreset.None
+                ? string.Empty
+                : SelectedTextEffect.Preset.ToString();
         }
     }
 

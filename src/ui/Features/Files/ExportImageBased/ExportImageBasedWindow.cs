@@ -447,6 +447,13 @@ public class ExportImageBasedWindow : Window
         grid.Add(labelFrameRate, 6, 4);
         grid.Add(comboBoxFrameRate, 6, 5);
 
+        // column 4
+        var labelTextEffect = UiUtil.MakeLabel(Se.Language.File.Export.TextEffect);
+        var comboBoxTextEffect = UiUtil.MakeComboBox(vm.TextEffectItems, vm, nameof(vm.SelectedTextEffect));
+        comboBoxTextEffect.SelectionChanged += vm.ComboChanged;
+        grid.Add(labelTextEffect, 0, 6);
+        grid.Add(comboBoxTextEffect, 0, 7);
+
         // Only shown for the formats that can use a frame-sized image (see IsFullFrameVisible).
         var checkBoxFullFrame = UiUtil.MakeCheckBox(Se.Language.File.Export.FullFrameImage, vm, nameof(vm.IsFullFrame));
         checkBoxFullFrame.IsCheckedChanged += vm.CheckBoxChanged;

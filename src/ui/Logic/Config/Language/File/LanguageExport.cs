@@ -43,6 +43,14 @@ public class LanguageExport
     public string ImageBasedSubtitleSaved { get; set; }
     public string FullFrameImage { get; set; }
     public string FullFrameImageHint { get; set; }
+    public string TextEffect { get; set; }
+    public string TextEffectSoftShadow { get; set; }
+    public string TextEffectGradientGold { get; set; }
+    public string TextEffectDoubleOutline { get; set; }
+    public string TextEffectNeonGlow { get; set; }
+    public string TextEffectExtrude3D { get; set; }
+    public string TextEffectChrome { get; set; }
+    public string TextEffectFire { get; set; }
 
     public LanguageExport()
     {
@@ -87,5 +95,13 @@ public class LanguageExport
         ImageBasedSubtitleSaved = "Image-based subtitle saved";
         FullFrameImage = "Full frame image";
         FullFrameImageHint = "Make each image the size of the video frame, with the subtitle in its place";
+        TextEffect = "Text effect";
+        TextEffectSoftShadow = "Soft shadow";
+        TextEffectGradientGold = "Gradient (gold)";
+        TextEffectDoubleOutline = "Double outline";
+        TextEffectNeonGlow = "Neon glow";
+        TextEffectExtrude3D = "3D extrude";
+        TextEffectChrome = "Chrome";
+        TextEffectFire = "Fire";
     }
 }

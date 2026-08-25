@@ -153,8 +153,11 @@ public static class ImageRenderer
         // textStartY must be at least as large as the ascent + effects so the top of
         // the first line is never above y=0 in the temp bitmap.
         var margin = 10;
-        var textStartX = (int)(Math.Abs(shadowWidth) + Math.Abs(outlineWidth) + margin);
-        var textStartY = (int)(Math.Abs(fontMetrics.Ascent) + Math.Abs(shadowWidth) + Math.Abs(outlineWidth) + margin);
+        // Advanced effects (blurred shadows, glow, extrude) draw further out than the classic
+        // outline+shadow, so pad the scratch canvas with their own safety margin too.
+        var effectMargin = ip.TextEffects?.GetSafetyMargin() ?? 0f;
+        var textStartX = (int)(Math.Abs(shadowWidth) + Math.Abs(outlineWidth) + margin + effectMargin);
+        var textStartY = (int)(Math.Abs(fontMetrics.Ascent) + Math.Abs(shadowWidth) + Math.Abs(outlineWidth) + margin + effectMargin);
         RenderTextToCanvas(tempCanvas, lines, ip, regularFont, boldFont, italicFont, boldItalicFont,
             textStartX, textStartY, baseLineHeight, lineSpacing,
             outlineColor, shadowColor, outlineWidth, shadowWidth);
@@ -347,6 +350,13 @@ public static class ImageRenderer
         double outlineWidth,
         double shadowWidth)
     {
+        if (ip.TextEffects != null)
+        {
+            RenderTextWithEffects(canvas, lines, ip, regularFont, boldFont, italicFont, boldItalicFont,
+                textStartX, textStartY, baseLineHeight, lineSpacing);
+            return;
+        }
+
         // Pre-calculate all line widths so alignment is relative to the widest line,
         // not the canvas width (which would push text far right or off-canvas).
         var lineWidths = new float[lines.Count];
@@ -494,6 +504,284 @@ public static class ImageRenderer
             // Move to next line
             currentY += baseLineHeight + lineSpacing;
         }
+    }
+
+    /// <summary>
+    /// A text segment laid out for the effects pipeline: where DrawShapedText will draw it,
+    /// with which font, and its classic per-segment color (used when the effects have no fill).
+    /// </summary>
+    private sealed record EffectSegmentDraw(string Text, float X, float Y, SKFont Font, SKColor Color);
+
+    /// <summary>
+    /// The advanced-formatting counterpart of <see cref="RenderTextToCanvas"/>: same layout
+    /// (widest-line-relative alignment, RTL segment order, styled-segment spacing), but painting
+    /// goes through <see cref="ImageParameter.TextEffects"/> layers. The classic outline/shadow
+    /// widths are not used here - the effects describe the whole look.
+    /// </summary>
+    private static void RenderTextWithEffects(
+        SKCanvas canvas,
+        List<List<TextSegment>> lines,
+        ImageParameter ip,
+        SKFont regularFont,
+        SKFont boldFont,
+        SKFont italicFont,
+        SKFont boldItalicFont,
+        float textStartX,
+        float textStartY,
+        float baseLineHeight,
+        float lineSpacing)
+    {
+        var effects = ip.TextEffects!;
+
+        var lineWidths = new float[lines.Count];
+        for (var li = 0; li < lines.Count; li++)
+        {
+            var line = lines[li];
+            for (var j = 0; j < line.Count; j++)
+            {
+                var seg = line[j];
+                var font = GetFont(seg, regularFont, boldFont, italicFont, boldItalicFont);
+                lineWidths[li] += MeasureTextWithShaping(seg.Text, font);
+                if ((seg.IsItalic || seg.IsBold) && j < line.Count - 1)
+                {
+                    lineWidths[li] += regularFont.Size * 0.17f;
+                }
+            }
+        }
+
+        var maxLineWidth = lineWidths.Length > 0 ? lineWidths.Max() : 0f;
+
+        // Collect the glyph outline path of the whole subtitle plus per-segment draw records.
+        // Edge-tracing effects (strokes, glow, extrude, bevel) work on the combined path; fills
+        // go through DrawShapedText so glyph rasterization matches the classic path (and glyphs
+        // without an outline, like color emoji, still render).
+        using var combinedPath = new SKPath();
+        var segmentDraws = new List<EffectSegmentDraw>();
+
+        var currentY = 0f;
+        for (var li = 0; li < lines.Count; li++)
+        {
+            var line = lines[li];
+            var segmentsToRender = ip.IsRightToLeft ? line.AsEnumerable().Reverse().ToList() : line;
+            var lineWidth = lineWidths[li];
+
+            float currentX;
+            if (ip.ContentAlignment == ExportContentAlignment.Center)
+            {
+                currentX = textStartX + (maxLineWidth - lineWidth) / 2;
+            }
+            else if ((ip.ContentAlignment == ExportContentAlignment.Right && !ip.IsRightToLeft) ||
+                     (ip.ContentAlignment == ExportContentAlignment.Left && ip.IsRightToLeft))
+            {
+                currentX = textStartX + maxLineWidth - lineWidth;
+            }
+            else
+            {
+                currentX = textStartX;
+            }
+
+            for (var i = 0; i < segmentsToRender.Count; i++)
+            {
+                var segment = segmentsToRender[i];
+                var font = GetFont(segment, regularFont, boldFont, italicFont, boldItalicFont);
+                var y = textStartY + currentY;
+
+                using (var segmentPath = GetShapedTextPath(segment.Text, currentX, y, font))
+                {
+                    combinedPath.AddPath(segmentPath);
+                }
+
+                segmentDraws.Add(new EffectSegmentDraw(segment.Text, currentX, y, font, segment.Color));
+
+                currentX += MeasureTextWithShaping(segment.Text, font);
+                if ((segment.IsItalic || segment.IsBold) && i < segmentsToRender.Count - 1)
+                {
+                    currentX += regularFont.Size * 0.17f;
+                }
+            }
+
+            currentY += baseLineHeight + lineSpacing;
+        }
+
+        PaintEffectLayers(canvas, combinedPath, segmentDraws, effects);
+    }
+
+    /// <summary>
+    /// Paints the effect layers back to front: extrude, shadows, glow, outline rings, fill,
+    /// bevel. Outline rings use the doubled-stroke-width trick from the classic path (issue
+    /// #12206), generalized to multiple rings: outermost first, each inner ring covers the
+    /// inner half of the one below it, and the fill covers the innermost half.
+    /// </summary>
+    private static void PaintEffectLayers(SKCanvas canvas, SKPath path, List<EffectSegmentDraw> segments, TextEffects effects)
+    {
+        var bounds = path.TightBounds;
+        var totalStrokeWidth = 0f;
+        foreach (var stroke in effects.Strokes)
+        {
+            totalStrokeWidth += stroke.Width;
+        }
+
+        if (effects.Extrude is { } extrude)
+        {
+            using var paint = new SKPaint { IsAntialias = true };
+            for (var i = extrude.Depth; i >= 1; i--)
+            {
+                paint.Color = LerpColor(extrude.NearColor, extrude.FarColor, (float)i / extrude.Depth);
+                using var offsetPath = new SKPath(path);
+                offsetPath.Offset(extrude.Dx * i, extrude.Dy * i);
+                paint.Style = SKPaintStyle.Fill;
+                canvas.DrawPath(offsetPath, paint);
+
+                // Stroke each step too, so the extrusion is solid instead of showing seams
+                // between the stepped copies.
+                paint.Style = SKPaintStyle.Stroke;
+                paint.StrokeWidth = Math.Max(1.5f, MathF.Sqrt(extrude.Dx * extrude.Dx + extrude.Dy * extrude.Dy));
+                canvas.DrawPath(offsetPath, paint);
+            }
+        }
+
+        foreach (var shadow in effects.Shadows)
+        {
+            using var paint = new SKPaint { IsAntialias = true, Color = shadow.Color };
+            if (shadow.Blur > 0)
+            {
+                paint.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, shadow.Blur);
+            }
+
+            if (totalStrokeWidth > 0)
+            {
+                using var shadowPath = new SKPath(path);
+                shadowPath.Offset(shadow.Dx, shadow.Dy);
+                paint.Style = SKPaintStyle.Stroke;
+                paint.StrokeWidth = totalStrokeWidth * 2;
+                paint.StrokeJoin = SKStrokeJoin.Round;
+                canvas.DrawPath(shadowPath, paint);
+            }
+
+            paint.Style = SKPaintStyle.Fill;
+            foreach (var seg in segments)
+            {
+                DrawShapedText(canvas, seg.Text, seg.X + shadow.Dx, seg.Y + shadow.Dy, seg.Font, paint);
+            }
+        }
+
+        if (effects.Glow is { } glow)
+        {
+            // Repeated blurred draws saturate into a halo around the glyphs.
+            using var paint = new SKPaint
+            {
+                IsAntialias = true,
+                Color = glow.Color,
+                Style = SKPaintStyle.StrokeAndFill,
+                StrokeWidth = totalStrokeWidth * 2 + 2,
+                StrokeJoin = SKStrokeJoin.Round,
+                MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, glow.Radius),
+            };
+            for (var i = 0; i < glow.Passes; i++)
+            {
+                canvas.DrawPath(path, paint);
+            }
+        }
+
+        for (var i = effects.Strokes.Count - 1; i >= 0; i--)
+        {
+            var cumulative = 0f;
+            for (var j = 0; j <= i; j++)
+            {
+                cumulative += effects.Strokes[j].Width;
+            }
+
+            var stroke = effects.Strokes[i];
+            using var paint = new SKPaint
+            {
+                IsAntialias = true,
+                Style = SKPaintStyle.Stroke,
+                StrokeWidth = cumulative * 2,
+                StrokeJoin = SKStrokeJoin.Round,
+                StrokeCap = SKStrokeCap.Round,
+            };
+            stroke.Fill.ApplyTo(paint, SKRect.Inflate(bounds, cumulative, cumulative));
+            var strokeBlur = Math.Max(stroke.Blur, effects.EdgeBlur);
+            if (strokeBlur > 0)
+            {
+                paint.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, strokeBlur);
+            }
+
+            canvas.DrawPath(path, paint);
+        }
+
+        using (var fillPaint = new SKPaint { IsAntialias = true, Style = SKPaintStyle.Fill })
+        {
+            // With outline rings the edge blur lives on the rings; without them it softens
+            // the fill itself.
+            if (effects.EdgeBlur > 0 && effects.Strokes.Count == 0)
+            {
+                fillPaint.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, effects.EdgeBlur);
+            }
+
+            if (effects.Fill != null)
+            {
+                effects.Fill.ApplyTo(fillPaint, bounds);
+                foreach (var seg in segments)
+                {
+                    DrawShapedText(canvas, seg.Text, seg.X, seg.Y, seg.Font, fillPaint);
+                }
+            }
+            else
+            {
+                foreach (var seg in segments)
+                {
+                    fillPaint.Color = seg.Color;
+                    DrawShapedText(canvas, seg.Text, seg.X, seg.Y, seg.Font, fillPaint);
+                }
+            }
+        }
+
+        if (effects.Bevel is { } bevel)
+        {
+            // Light from the top-left, shade from the bottom-right, clipped inside the glyphs.
+            canvas.Save();
+            canvas.ClipPath(path, SKClipOperation.Intersect, antialias: true);
+
+            using (var highlightPaint = new SKPaint
+                   {
+                       IsAntialias = true,
+                       Style = SKPaintStyle.Stroke,
+                       StrokeWidth = bevel.Depth * 2,
+                       Color = bevel.Highlight,
+                       MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, bevel.Depth),
+                   })
+            using (var highlightPath = new SKPath(path))
+            {
+                highlightPath.Offset(bevel.Depth * 0.7f, bevel.Depth * 0.7f);
+                canvas.DrawPath(highlightPath, highlightPaint);
+            }
+
+            using (var shadePaint = new SKPaint
+                   {
+                       IsAntialias = true,
+                       Style = SKPaintStyle.Stroke,
+                       StrokeWidth = bevel.Depth * 2,
+                       Color = bevel.Shade,
+                       MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, bevel.Depth),
+                   })
+            using (var shadePath = new SKPath(path))
+            {
+                shadePath.Offset(-bevel.Depth * 0.7f, -bevel.Depth * 0.7f);
+                canvas.DrawPath(shadePath, shadePaint);
+            }
+
+            canvas.Restore();
+        }
+    }
+
+    private static SKColor LerpColor(SKColor a, SKColor b, float t)
+    {
+        return new SKColor(
+            (byte)(a.Red + (b.Red - a.Red) * t),
+            (byte)(a.Green + (b.Green - a.Green) * t),
+            (byte)(a.Blue + (b.Blue - a.Blue) * t),
+            (byte)(a.Alpha + (b.Alpha - a.Alpha) * t));
     }
 
     // Helper method to measure text with HarfBuzz shaping via SKShaper
