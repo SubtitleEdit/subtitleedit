@@ -45,7 +45,7 @@ Automatically translate subtitles using various translation engines and AI servi
 - **thammegowda-nllb-serve** — Self-hosted NLLB (No Language Left Behind) server
 - **winstxnhdw-nllb-api** — NLLB (No Language Left Behind) API
 - **Baidu Translate** — Baidu translation (requires App ID and secret)
-- **CrispASR MADLAD** — Local MADLAD-based translation with downloadable models (shown with size and install status); also available in Batch Convert
+- **CrispASR MADLAD** — Local MADLAD-based translation with downloadable models (shown with size and install status); also available in Batch Convert. The language list is the 419 languages the MADLAD-400 model itself knows, so it is both longer and shorter than the usual one: it adds languages such as Iloko, Waray, Papiamento, Moroccan Arabic and Latin, and leaves out ones MADLAD cannot produce — including Cantonese, for which Google Translate, NLLB or any of the LLM engines are the alternatives. Quality varies a lot across that long tail — Google evaluated only about half of the languages the model claims
 
 ## llama.cpp: using your own model
 
