@@ -758,7 +758,9 @@ public partial class SettingsViewModel : ObservableObject
         IsEditCustomContinuationStyleVisible = ContinuationStyle?.Code == nameof(Core.Enums.ContinuationStyle.Custom);
         CpsLineLengthStrategy = CpsLineLengthStrategies.FirstOrDefault(p => p.Code == general.CpsLineLengthStrategy) ?? CpsLineLengthStrategies.First();
 
-        UseFrameMode = general.UseFrameMode;
+        // The persisted choice, not the effective value - EBU STL may have frame mode forced on
+        // temporarily, and that must not stick just because the settings dialog was OK'ed.
+        UseFrameMode = general.UseFrameModePersisted;
         TextBoxLimitNewLines = general.SubtitleTextBoxLimitNewLines;
         NewEmptyDefaultMs = general.NewEmptyDefaultMs;
         TimeCodeUpDownStepMs = general.TimeCodeUpDownStepMs;

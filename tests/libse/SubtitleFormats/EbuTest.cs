@@ -84,6 +84,23 @@ public class EbuTest
     }
 
     [Fact]
+    public void EbuStl_Load_ExposesHeaderFrameRateOnTheParsingInstance()
+    {
+        // The SE5 main view reads the frame rate off the parsing instance's header after open, to
+        // show the file's own frame numbers in the forced HH:MM:SS:FF display (#14076).
+        Ebu.EbuUiHelper = new TestEbuUiHelper();
+        using var ms = new MemoryStream();
+        ((IBinaryPersistableSubtitle)new Ebu()).Save("test.stl", ms, MakeSubtitle(), batchMode: true);
+
+        var ebu = new Ebu();
+        ebu.LoadSubtitle(new Subtitle(), ms.ToArray());
+
+        Assert.NotNull(ebu.Header);
+        Assert.StartsWith("STL25", ebu.Header.DiskFormatCode);
+        Assert.Equal(25.0, ebu.Header.FrameRate);
+    }
+
+    [Fact]
     public void EbuStl_ToText_IsNotUsableForSaving()
     {
         // Guards the root cause: ToText is a stub for this binary format, so the save path must use
