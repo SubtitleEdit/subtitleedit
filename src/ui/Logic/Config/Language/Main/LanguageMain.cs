@@ -94,6 +94,7 @@ public class LanguageMain
     public string OriginalTextReadOnly { get; set; }
     public string OriginalTextEditMode { get; set; }
     public string OriginalIsReadOnlyNotSaved { get; set; }
+    public string OriginalIsEmptyNotSaved { get; set; }
     public string OriginalIsReadOnlyReference { get; set; }
     public string AllowEditOfOriginalSubtitle { get; set; }
     public string ShowAllOriginalLinesX { get; set; }
@@ -246,6 +247,7 @@ public class LanguageMain
         OriginalTextReadOnly = "Original text (read-only)";
         OriginalTextEditMode = "Original text (edit mode)";
         OriginalIsReadOnlyNotSaved = "The original subtitle is a read-only reference and was not saved";
+        OriginalIsEmptyNotSaved = "The original subtitle has no text at all and was not saved";
         OriginalIsReadOnlyReference = "The original subtitle is open as a read-only reference";
         AllowEditOfOriginalSubtitle = "Allow edit of original subtitle";
         ShowAllOriginalLinesX = "Show all original lines ({0} have no match here)";
