@@ -108,6 +108,37 @@ public class MainTranslationOriginalTests
     }
 
     /// <summary>
+    /// The guard covers a one-line subtitle too: a single-paragraph original with no text
+    /// overwrites the source file just as irreversibly as a longer one.
+    /// </summary>
+    [AvaloniaFact]
+    public async Task SaveSubtitleOriginal_SingleLineWithoutText_LeavesTheFileUntouched()
+    {
+        var (window, vm) = CreateMainViewModel();
+        var fileName = Path.Combine(Path.GetTempPath(), $"se-empty-original-single-{Guid.NewGuid():N}.srt");
+        const string onDisk = "1\r\n00:00:00,000 --> 00:00:02,000\r\nSource line one\r\n\r\n";
+        await File.WriteAllTextAsync(fileName, onDisk);
+
+        try
+        {
+            AddLine(vm, "Vertaalde regel een", string.Empty, 0, 2000);
+            vm.ShowColumnOriginalText = true;
+            vm.IsOriginalReadOnly = false;
+            SetPrivateField(vm, "_subtitleFileNameOriginal", fileName);
+
+            var saved = await InvokeSaveSubtitleOriginal(vm, isAutoSave: false);
+
+            Assert.False(saved);
+            Assert.Equal(onDisk, await File.ReadAllTextAsync(fileName));
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+            File.Delete(fileName);
+        }
+    }
+
+    /// <summary>
     /// The guard is about a whole original with nothing in it - a single blank line in an otherwise
     /// normal original is ordinary content and must still be saved.
     /// </summary>

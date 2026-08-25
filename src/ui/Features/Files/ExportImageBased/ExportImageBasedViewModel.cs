@@ -122,6 +122,11 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
     public TableView SubtitleGrid { get; set; }
 
     private List<SubtitleLineViewModel>? _selectedSubtitles;
+    // PlayResX/PlayResY from the subtitle's own header - "\pos" coordinates and
+    // "\bord"/"\shad" widths are relative to those, not to the export canvas. (0,0) when
+    // there is no header, which keeps everything at scale 1.0.
+    private int _scriptWidth;
+    private int _scriptHeight;
     private bool _dirty;
     private readonly Lock _generateLock;
     private bool _isCtrlDown;
@@ -435,8 +440,9 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
 
                 var ip = imageParameters[i];
                 ip.Bitmap = GenerateBitmap(ip);
-                // "{\pos(x,y)}" anchors the rendered text, so it needs the bitmap size.
-                ExportTextTags.ApplyPositionTag(ip, Subtitles[i].Text);
+                // "{\pos(x,y)}" anchors the rendered text, so it needs the bitmap size - and
+                // the coordinates are in the script's own resolution, not the export canvas.
+                ExportTextTags.ApplyPositionTag(ip, Subtitles[i].Text, _scriptWidth, _scriptHeight);
                 _exportImageHandler.CreateParagraph(ip);
 
                 lock (_generateLock)
@@ -568,28 +574,24 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             FramesPerSecond = SelectedFrameRate,
             IsFullFrame = IsFullFrameVisible && IsFullFrame,
             FullFrameBackgroundColor = FullFrameBackgroundColor.ToSKColor(),
-            TextEffects = IsTextEffectEnabled
-                ? TextEffectPresetFactory.Create(
-                    SelectedTextEffect?.Preset ?? TextEffectPreset.SoftShadow,
-                    SelectedFontSize,
-                    FontColor.ToSKColor(),
-                    OutlineColor.ToSKColor(),
-                    ShadowColor.ToSKColor(),
-                    new TextEffectAdjustments
-                    {
-                        StrengthPercent = TextEffectStrength,
-                        LetterSpacing = TextEffectLetterSpacing,
-                        ArcBendPercent = TextEffectArcBend,
-                        WaveAmplitude = TextEffectWave,
-                    })
-                : null,
+            TextEffects = TextEffectPresetFactory.Create(
+                IsTextEffectEnabled,
+                SelectedTextEffect?.Preset ?? TextEffectPreset.SoftShadow,
+                SelectedFontSize,
+                FontColor.ToSKColor(),
+                OutlineColor.ToSKColor(),
+                ShadowColor.ToSKColor(),
+                TextEffectStrength,
+                TextEffectLetterSpacing,
+                TextEffectArcBend,
+                TextEffectWave),
         };
 
         // "{\3c..}"/"{\4c..}"/"{\bord..}"/"{\shad..}", "{\fad(..)}" and "{\alpha&H..&}"
         // change what is drawn, so unlike the position tag they have to be read before the
         // bitmap is rendered - overrides first, the transparencies fade whatever colours are
-        // on the parameter.
-        ExportTextTags.ApplyStyleOverrideTags(imageParameter, subtitle.Text);
+        // on the parameter. The widths are in the script's own resolution, like "\pos".
+        ExportTextTags.ApplyStyleOverrideTags(imageParameter, subtitle.Text, _scriptHeight);
         ExportTextTags.ApplyTransparencyTags(imageParameter, subtitle.Text);
 
         return imageParameter;
@@ -647,7 +649,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
                 var ip = GetImageParameter(Subtitles.IndexOf(SelectedSubtitle));
                 var bitmap = GenerateBitmap(ip);
                 ip.Bitmap = bitmap;
-                ExportTextTags.ApplyPositionTag(ip, SelectedSubtitle.Text);
+                ExportTextTags.ApplyPositionTag(ip, SelectedSubtitle.Text, _scriptWidth, _scriptHeight);
                 var position = CalculatePosition(ip, bitmap.Width, bitmap.Height);
                 vm.Initialize(bitmap, ip.ScreenWidth, ip.ScreenHeight, position.X, position.Y);
             });
@@ -668,6 +670,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         ObservableCollection<SubtitleLineViewModel> subtitles,
         string? subtitleFileName,
         string? videoFileName,
+        string? subtitleHeader = null,
         bool hideExportButton = false)
     {
         Subtitles.Clear();
@@ -675,6 +678,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         IsExportButtonVisible = !hideExportButton;
         _exportImageHandler = exportHandler;
         _subtitleFileName = subtitleFileName;
+        (_scriptWidth, _scriptHeight) = ExportTextTags.GetScriptResolution(subtitleHeader);
         Title = exportHandler.Title;
 
         // Only the formats that can carry a frame-sized image: the editing timelines the images
@@ -726,7 +730,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         var ip = GetImageParameter(idx);
         ip.Bitmap = GenerateBitmap(ip);
         BitmapPreview = ip.Bitmap.ToAvaloniaBitmap();
-        ExportTextTags.ApplyPositionTag(ip, text);
+        ExportTextTags.ApplyPositionTag(ip, text, _scriptWidth, _scriptHeight);
         var position = CalculatePosition(ip, BitmapPreview.Size.Width, BitmapPreview.Size.Height);
 
         // With "full frame image" the exported png is the size of the video frame, not of the

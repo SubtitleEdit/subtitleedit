@@ -5,6 +5,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -256,13 +257,23 @@ public static class PerLineVoiceClone
     }
 
     /// <summary>
+    /// Every engine that knows how to clone per line. Taken from the shared catalog rather than
+    /// listed here, so an engine added there (implementing <see cref="IPerLineCloneEngine"/>) is
+    /// covered by <see cref="TryGetReferenceClip"/> for free.
+    /// </summary>
+    private static readonly Lazy<IPerLineCloneEngine[]> CloneEngines = new(() =>
+        TtsEngineCatalog.CreateVoiceCloningEngines().OfType<IPerLineCloneEngine>().ToArray());
+
+    /// <summary>
     /// Wraps a cut clip as a voice <paramref name="engine"/> understands.
     /// </summary>
     /// <remarks>
-    /// The engine voice types share no interface, so each engine that opts into per-line cloning
-    /// is named here. Returning null means the engine says it supports this but nobody taught this
-    /// method how to build its voice - the caller then falls back to the ordinary voice rather
-    /// than silently synthesising with the wrong speaker.
+    /// The per-engine knowledge lives on the engine itself, behind
+    /// <see cref="IPerLineCloneEngine"/>. Returning null means the engine could not use the clip
+    /// as a reference (e.g. no transcript beside it) - the caller then falls back to the ordinary
+    /// voice rather than silently synthesising with the wrong speaker. An engine that sets
+    /// <see cref="ITtsEngine.SupportsPerLineVoiceCloning"/> without implementing the interface is
+    /// a wiring bug, not a fallback case, and asserts in debug builds.
     /// </remarks>
     /// <param name="voiceName">
     /// What to call the voice, for the rows and lists that show it. Defaults to the clip's file
@@ -271,47 +282,49 @@ public static class PerLineVoiceClone
     /// </param>
     public static Voice? MakeVoiceForClip(ITtsEngine engine, string clipFileName, string? voiceName = null)
     {
-        var name = string.IsNullOrEmpty(voiceName) ? Path.GetFileNameWithoutExtension(clipFileName) : voiceName;
-        return engine switch
+        if (engine is not IPerLineCloneEngine cloneEngine)
         {
-            OmniVoiceTtsCpp => new Voice(new OmniVoice(name, clipFileName)),
+            // The capability flag promises per-line cloning; the interface is how it is
+            // delivered. One without the other would offer "Clone from video" and then dub
+            // every line in the fallback voice.
+            Debug.Assert(!engine.SupportsPerLineVoiceCloning,
+                $"{engine.Name} sets {nameof(ITtsEngine.SupportsPerLineVoiceCloning)} but does not implement {nameof(IPerLineCloneEngine)}");
+            return null;
+        }
 
-            // The qwen3-tts backend reads references from its own --voice-dir and nowhere else,
-            // so the clip is copied in there first and FilePath points at the copy - that is the
-            // lookup key, since Speak sends the file's bare name as the request's `voice`. The
-            // name stays free to be the friendly one, which is how an imported session keeps the
-            // voice name a line was generated with. A clip that cannot be staged (no transcript
-            // beside it) is a null here, i.e. that one line falls back to an ordinary voice
-            // instead of failing the run.
-            Qwen3TtsCrispAsr => Qwen3TtsCrispAsr.StagePerLineReference(clipFileName) is { } staged
-                ? new Voice(new Qwen3TtsVoice(name, staged))
-                : null,
-
-            _ => null,
-        };
+        var name = string.IsNullOrEmpty(voiceName) ? Path.GetFileNameWithoutExtension(clipFileName) : voiceName;
+        return cloneEngine.MakePerLineCloneVoice(clipFileName, name);
     }
 
     /// <summary>
     /// The recording <paramref name="voice"/> clones from, or null when it clones from nothing -
-    /// or from something <see cref="MakeVoiceForClip"/> could not rebuild afterwards.
+    /// or when no engine could be handed it back.
     /// </summary>
     /// <remarks>
-    /// Deliberately limited to the voice types <see cref="MakeVoiceForClip"/> handles: the callers
-    /// are export (which copies the recording so the session can be re-imported elsewhere) and
-    /// regenerate (which reuses it), and a reference no engine can be handed back is worth
-    /// neither. Keep the two methods in step when an engine is added.
+    /// Asks every <see cref="IPerLineCloneEngine"/> whether the voice is its own; each engine
+    /// keeps <see cref="IPerLineCloneEngine.MakePerLineCloneVoice"/> and
+    /// <see cref="IPerLineCloneEngine.GetPerLineReferenceClip"/> in step in one place. The
+    /// callers are export (which copies the recording so the session can be re-imported
+    /// elsewhere) and regenerate (which reuses it), and a reference no engine can be handed back
+    /// is worth neither.
     /// </remarks>
-    public static string? TryGetReferenceClip(Voice? voice) => voice?.EngineVoice switch
+    public static string? TryGetReferenceClip(Voice? voice)
     {
-        OmniVoice omniVoice when !string.IsNullOrEmpty(omniVoice.FilePath) => omniVoice.FilePath,
+        if (voice == null)
+        {
+            return null;
+        }
 
-        // The staged copy in the voices folder, which is the only reference this engine ever
-        // speaks from. Exporting it (with its .txt sidecar) is what lets an imported session be
-        // re-dubbed on a machine that no longer has the video.
-        Qwen3TtsVoice qwen3Voice when !string.IsNullOrEmpty(qwen3Voice.FilePath) => qwen3Voice.FilePath,
+        foreach (var engine in CloneEngines.Value)
+        {
+            if (engine.GetPerLineReferenceClip(voice) is { } clip)
+            {
+                return clip;
+            }
+        }
 
-        _ => null,
-    };
+        return null;
+    }
 
     /// <summary>
     /// Clears what a previous run staged inside an engine's own folders, and is called as a
@@ -319,16 +332,12 @@ public static class PerLineVoiceClone
     /// </summary>
     /// <remarks>
     /// Engines that can only read a reference from their voices folder keep a copy of every
-    /// line's clip there (see <see cref="MakeVoiceForClip"/>). Cutting the clips into a fresh
-    /// folder each run - which the caller does - says nothing about those copies, so a run over
-    /// a shorter subtitle than the last would leave the previous run's extra lines behind.
-    /// Engines that take the clip's own path need nothing cleared and are simply not listed.
+    /// line's clip there (see <see cref="IPerLineCloneEngine.MakePerLineCloneVoice"/>). Cutting
+    /// the clips into a fresh folder each run - which the caller does - says nothing about those
+    /// copies, so a run over a shorter subtitle than the last would leave the previous run's
+    /// extra lines behind. Engines that take the clip's own path stage nothing and implement
+    /// this as a no-op.
     /// </remarks>
-    public static void ResetStagedReferences(ITtsEngine? engine)
-    {
-        if (engine is Qwen3TtsCrispAsr)
-        {
-            Qwen3TtsCrispAsr.ClearStagedPerLineReferences();
-        }
-    }
+    public static void ResetStagedReferences(ITtsEngine? engine) =>
+        (engine as IPerLineCloneEngine)?.ResetStagedPerLineReferences();
 }

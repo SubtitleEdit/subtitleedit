@@ -1903,6 +1903,12 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
         var (scriptWidth, scriptHeight) = ExportTextTags.GetScriptResolution(item.Subtitle.Header);
 
+        // Same fallback as the export dialog: an empty or unknown preset name in the profile
+        // selects the first list item (soft shadow).
+        var textEffectPreset = Enum.TryParse<TextEffectPreset>(profile.TextEffect, out var parsedPreset)
+            ? parsedPreset
+            : TextEffectPreset.SoftShadow;
+
         var imageParameters = new List<ImageParameter>();
         for (var i = 0; i < item.Subtitle.Paragraphs.Count; i++)
         {
@@ -1940,6 +1946,20 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 FramesPerSecond = profile.FramesPerSecond,
                 IsFullFrame = profile.IsFullFrame,
                 FullFrameBackgroundColor = profile.FullFrameBackgroundColor.FromHexToColor().ToSKColor(),
+                // The text effect configured in the shared export-images dialog - without this
+                // a batch convert silently rendered classic text while the dialog's preview
+                // showed the effect.
+                TextEffects = TextEffectPresetFactory.Create(
+                    profile.TextEffectEnabled,
+                    textEffectPreset,
+                    profile.FontSize,
+                    profile.FontColor.FromHexToColor().ToSKColor(),
+                    profile.OutlineColor.FromHexToColor().ToSKColor(),
+                    profile.ShadowColor.FromHexToColor().ToSKColor(),
+                    profile.TextEffectStrength,
+                    profile.TextEffectLetterSpacing,
+                    profile.TextEffectArcBend,
+                    profile.TextEffectWave),
             };
 
             // "{\3c..}"/"{\4c..}"/"{\bord..}"/"{\shad..}", "{\fad(..)}" and "{\alpha&H..&}"

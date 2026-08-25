@@ -109,6 +109,29 @@ public class DeepLTranslateTests
     }
 
     /// <summary>
+    /// The two lists come from one shared list: targets are exactly the sources plus the two
+    /// regional variants DeepL only accepts as targets (fr-CA and de-CH), each right after its
+    /// base language. This guards a future refresh from letting the lists silently diverge.
+    /// </summary>
+    [Fact]
+    public void TargetLanguages_AreTheSourceLanguagesPlusTheTwoRegionalTargets()
+    {
+        var deepL = new DeepLTranslate();
+        var sources = deepL.GetSupportedSourceLanguages();
+        var targets = deepL.GetSupportedTargetLanguages();
+
+        var extras = targets.Where(t => sources.All(s => s.Code != t.Code)).Select(t => t.Code).ToList();
+        Assert.Equal(new[] { "fr-CA", "de-CH" }, extras);
+
+        // With the two extras removed, the target list is the source list - same entries, same
+        // order, same formality flags.
+        var targetsWithoutExtras = targets.Where(t => t.Code != "fr-CA" && t.Code != "de-CH").ToList();
+        Assert.Equal(
+            sources.Select(p => (p.Name, p.Code, p.HasFormality)).ToList(),
+            targetsWithoutExtras.Select(p => (p.Name, p.Code, p.HasFormality)).ToList());
+    }
+
+    /// <summary>
     /// DeepL takes no regional variant as a source language, so the source codes SE offers are cut
     /// back to the base code before they are sent.
     /// </summary>

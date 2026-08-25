@@ -1194,8 +1194,9 @@ public partial class ReviewSpeechViewModel : ObservableObject
         var clonedVoice = PerLineVoiceClone.MakeVoiceForClip(engine, clipFileName);
         if (clonedVoice == null)
         {
-            // The engine says it clones per line but nobody taught MakeVoiceForClip how to build
-            // its voice. Say so rather than quietly regenerating in some other voice.
+            // The engine could not use the clip as a reference (or - a wiring bug - it claims
+            // per-line cloning without implementing IPerLineCloneEngine). Say so rather than
+            // quietly regenerating in some other voice.
             await ShowCloneVoiceError($"{engine.Name} cannot clone the voice of each line.");
         }
 

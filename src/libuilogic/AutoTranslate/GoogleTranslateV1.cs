@@ -489,7 +489,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                 new TranslationPair("TAHITIAN", "ty"),
                 new TranslationPair("TAJIK", "tg"),
                 new TranslationPair("TAMAZIGHT", "ber"),
-                new TranslationPair("TAMAZIGHT", "ber-Latn"),
+                new TranslationPair("TAMAZIGHT_(LATIN)", "ber-Latn"),
                 new TranslationPair("TAMIL", "ta"),
                 new TranslationPair("TATAR", "tt"),
                 new TranslationPair("TELUGU", "te"),
