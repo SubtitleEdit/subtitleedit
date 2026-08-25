@@ -454,6 +454,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             or WhisperChoice.ConstMe
             or WhisperChoice.PurfviewFasterWhisperXxl
             or WhisperChoice.CTranslate2
+            or WhisperChoice.WhisperX
             or WhisperChoice.OpenAi;
     }
 
@@ -3911,8 +3912,21 @@ public partial class SpeechToTextViewModel : ObservableObject
                 $"{languageArgX}--model \"{model}\" --output_format srt --output_dir \"{outputDir}\" " +
                 $"{taskArg}{whisperXArgs} \"{waveFileName}\"";
 
+            // The generic launch path is bypassed here, so repeat the two pieces of its setup a
+            // PyInstaller-frozen Python engine needs: the glibc 2.41+ executable-stack repair,
+            // and the Python UTF-8/unbuffered variables - without them Windows decodes piped
+            // output with the ANSI code page (mojibake, or a UnicodeEncodeError killing the run)
+            // and stdout block-buffers so the log sits empty until the process exits.
+            EnsureExecutableStackCleared(whisperX, whisperX.GetAndCreateWhisperFolder());
+
             Se.WriteToolsLog($"{exe} {parametersX}");
-            return StartEngineProcess(exe, parametersX, dataReceivedHandler, AddFfmpegToPath);
+            return StartEngineProcess(exe, parametersX, dataReceivedHandler, startInfo =>
+            {
+                AddFfmpegToPath(startInfo);
+                startInfo.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
+                startInfo.EnvironmentVariables["PYTHONUTF8"] = "1";
+                startInfo.EnvironmentVariables["PYTHONUNBUFFERED"] = "1";
+            });
         }
 
         if (engine is Qwen3AsrCppEngine qwen3Asr)

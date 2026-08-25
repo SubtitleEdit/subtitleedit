@@ -29,7 +29,14 @@ public class WhisperEngineWhisperX : ISpeechToTextEngine
     // so it takes the same model list (correct names like large-v3-turbo/distil-*, and the
     // actual Hugging Face repos this backend downloads from) rather than whisper.cpp's ggml
     // model list, which does not match what this backend understands.
-    public List<WhisperModel> Models => new WhisperPurfviewFasterWhisperModel().Models.ToList();
+    //
+    // Minus the NbAiLab "*.nb" entries: their names only work for engines SE downloads models
+    // for (SE resolves the name to a local folder), while whisperx gets the bare name on the
+    // command line, and "tiny.nb" is neither a faster-whisper size nor a Hugging Face repo id -
+    // the run would fail after the model picker accepted it.
+    public List<WhisperModel> Models => new WhisperPurfviewFasterWhisperModel().Models
+        .Where(m => !m.Name.EndsWith(".nb", StringComparison.Ordinal))
+        .ToList();
 
     public string Extension => string.Empty;
     public string UnpackSkipFolder => string.Empty;
@@ -85,59 +92,12 @@ public class WhisperEngineWhisperX : ISpeechToTextEngine
     public bool IsModelInstalled(WhisperModel model)
     {
         // WhisperX owns the Hugging Face cache and downloads the selected Whisper/alignment
-        // model on first use - do not route its model name through SE's .pt/.bin downloader.
-        // Still worth checking honestly (rather than always reporting "installed"): these models
-        // come from the same Hugging Face repos as WhisperEngineCTranslate2/Purfview (both run
-        // the same backend), so a snapshot already sitting in the Hugging Face hub cache for
-        // that repo id is a reliable signal the model does not need downloading again.
-        var repoId = GetHuggingFaceRepoId(model);
-        if (string.IsNullOrEmpty(repoId))
-        {
-            return false;
-        }
-
-        var cacheFolder = Path.Combine(GetHuggingFaceHubCacheDir(), "models--" + repoId.Replace("/", "--"));
-        return Directory.Exists(cacheFolder);
-    }
-
-    private static string? GetHuggingFaceRepoId(WhisperModel model)
-    {
-        // e.g. "https://huggingface.co/Systran/faster-whisper-tiny/resolve/main/model.bin" -> "Systran/faster-whisper-tiny"
-        var url = model.Urls?.FirstOrDefault();
-        if (string.IsNullOrEmpty(url))
-        {
-            return null;
-        }
-
-        const string marker = "huggingface.co/";
-        var idx = url.IndexOf(marker, StringComparison.OrdinalIgnoreCase);
-        if (idx < 0)
-        {
-            return null;
-        }
-
-        var parts = url[(idx + marker.Length)..].Split('/');
-        return parts.Length >= 2 ? $"{parts[0]}/{parts[1]}" : null;
-    }
-
-    // Mirrors huggingface_hub's own cache directory resolution order: HF_HOME, then the legacy
-    // HUGGINGFACE_HUB_CACHE, then the default ~/.cache/huggingface/hub.
-    private static string GetHuggingFaceHubCacheDir()
-    {
-        var hfHome = Environment.GetEnvironmentVariable("HF_HOME");
-        if (!string.IsNullOrEmpty(hfHome))
-        {
-            return Path.Combine(hfHome, "hub");
-        }
-
-        var hubCache = Environment.GetEnvironmentVariable("HUGGINGFACE_HUB_CACHE");
-        if (!string.IsNullOrEmpty(hubCache))
-        {
-            return hubCache;
-        }
-
-        var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        return Path.Combine(home, ".cache", "huggingface", "hub");
+        // model itself on first use, showing its progress in the console log. Reporting
+        // "not installed" here made SE offer its own model download, which lands in Purfview's
+        // model folder - a folder whisperx never reads, since only the bare model name goes on
+        // the command line - so the user paid for gigabytes twice and the prompt came back on
+        // every run. Always "installed": the engine's own downloader is the only real one.
+        return true;
     }
 
     public string GetModelForCmdLine(string modelName) => modelName;
@@ -155,26 +115,27 @@ public class WhisperEngineWhisperX : ISpeechToTextEngine
 
     public bool CanBeDownloaded() => true;
 
-    // Measured from the v1.0.1 release zips (compressed download size); unpacks to roughly
-    // 950 MB (Windows), 1.1 GB (macOS), 1.7 GB (Linux) on disk, plus another ~2 GB of Whisper/
-    // alignment/diarization models that download from Hugging Face the first time each is used.
+    // Measured from the whisperx-standalone-101 support-files .7z assets (compressed download
+    // size); unpacks to roughly 950 MB (Windows), 1.1 GB (macOS), 1.7 GB (Linux) on disk, plus
+    // another ~2 GB of Whisper/alignment/diarization models that download from Hugging Face the
+    // first time each is used.
     public string DownloadSizeText
     {
         get
         {
             if (OperatingSystem.IsWindows())
             {
-                return "~350 MB";
+                return "~240 MB";
             }
 
             if (OperatingSystem.IsMacOS())
             {
-                return "~365 MB";
+                return "~220 MB";
             }
 
             if (OperatingSystem.IsLinux())
             {
-                return "~575 MB";
+                return "~355 MB";
             }
 
             return string.Empty;
