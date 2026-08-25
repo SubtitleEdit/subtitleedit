@@ -585,8 +585,11 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
                 : null,
         };
 
-        // "{\fad(..)}" and "{\alpha&H..&}" change what is drawn, so unlike the position tag
-        // they have to be read before the bitmap is rendered.
+        // "{\3c..}"/"{\4c..}"/"{\bord..}"/"{\shad..}", "{\fad(..)}" and "{\alpha&H..&}"
+        // change what is drawn, so unlike the position tag they have to be read before the
+        // bitmap is rendered - overrides first, the transparencies fade whatever colours are
+        // on the parameter.
+        ExportTextTags.ApplyStyleOverrideTags(imageParameter, subtitle.Text);
         ExportTextTags.ApplyTransparencyTags(imageParameter, subtitle.Text);
 
         return imageParameter;
