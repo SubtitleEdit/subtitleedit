@@ -356,6 +356,15 @@ public static class DownloadHashManager
         public const string Windows = "WhisperConstMe.Windows";             // cli.zip (Const-me/Whisper)
     }
 
+    public static class WhisperX
+    {
+        // Hashes of the release archive (.7z) — written to the sidecar at install time.
+        // SE-built standalone bundles under https://github.com/SubtitleEdit/support-files/releases.
+        public const string Windows = "WhisperX.Windows";                   // whisperx-standalone-windows-x64.7z
+        public const string MacArm64 = "WhisperX.MacArm64";                 // whisperx-standalone-macos-arm64.7z
+        public const string LinuxX64 = "WhisperX.Linux.X64";                // whisperx-standalone-linux-x64.7z
+    }
+
     // For each key, hashes are ordered newest-first. Index 0 is the latest known release.
     // All hashes are lower-case hex SHA-256.
     private static readonly IReadOnlyDictionary<string, IReadOnlyList<string>> KnownHashes =
@@ -2075,6 +2084,21 @@ public static class DownloadHashManager
             {
                 "baa9b70c824e50fe91f1858006a24b870b7637135659f17fc42beb1af57bd447", // 1.12.0 (current download URL)
             },
+
+            // WhisperX standalone — SE builds under
+            // https://github.com/SubtitleEdit/support-files/releases (build-whisperx-standalone-release.yml)
+            [WhisperX.Windows] = new[]
+            {
+                "439776243a3040693e9a2767a3efb4b8dd7549244bb6695ce0ef7209e5456bf3", // whisperx-standalone-101 / v1.0.1 (current download URL)
+            },
+            [WhisperX.MacArm64] = new[]
+            {
+                "89ff2f2dd120c8a2ab51c21e6be34a16c954965d4646ecdff77d0911ac6a2c27", // whisperx-standalone-101 / v1.0.1 (current download URL)
+            },
+            [WhisperX.LinuxX64] = new[]
+            {
+                "46070b23bfa7c152c259264ac2a135406b4462b2b979ea126510a9c6f44f80e2", // whisperx-standalone-101 / v1.0.1 (current download URL)
+            },
         };
 
     /// <summary>
@@ -2776,6 +2800,31 @@ public static class DownloadHashManager
     public static string? ResolveWhisperConstMeKey()
     {
         return OperatingSystem.IsWindows() ? WhisperConstMe.Windows : null;
+    }
+
+    /// <summary>
+    /// Resolves the WhisperX standalone archive hash key for the current OS and architecture.
+    /// Mirrors the platform rules in <see cref="WhisperDownloadService"/>: Windows x64,
+    /// macOS ARM64 and Linux x64 are the only combinations with a download.
+    /// </summary>
+    public static string? ResolveWhisperXKey()
+    {
+        if (OperatingSystem.IsWindows() && RuntimeInformation.ProcessArchitecture == Architecture.X64)
+        {
+            return WhisperX.Windows;
+        }
+
+        if (OperatingSystem.IsMacOS() && RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
+        {
+            return WhisperX.MacArm64;
+        }
+
+        if (OperatingSystem.IsLinux() && RuntimeInformation.ProcessArchitecture == Architecture.X64)
+        {
+            return WhisperX.LinuxX64;
+        }
+
+        return null;
     }
 
     /// <summary>
