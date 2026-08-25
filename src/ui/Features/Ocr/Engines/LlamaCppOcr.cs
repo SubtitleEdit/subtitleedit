@@ -1,5 +1,6 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.UiLogic.Ocr;
 using SkiaSharp;
 using System;
 using System.Net.Http;
@@ -72,17 +73,7 @@ public class LlamaCppOcr : IDisposable
             // sanitize
             resultText = resultText.Trim();
             resultText = resultText.Replace("\\n", Environment.NewLine);
-            resultText = resultText.Replace(" ,", ",");
-            resultText = resultText.Replace(" .", ".");
-            resultText = resultText.Replace(" !", "!");
-            resultText = resultText.Replace(" ?", "?");
-            resultText = resultText.Replace("( ", "(");
-            resultText = resultText.Replace(" )", ")");
-            resultText = resultText.Replace("\\\"", "\"");
-            if (resultText.EndsWith("!'"))
-            {
-                resultText = resultText.TrimEnd('\'');
-            }
+            resultText = OcrHelper.FixAiOcrPunctuationSpaces(resultText, language);
 
             return resultText.Trim();
         }
