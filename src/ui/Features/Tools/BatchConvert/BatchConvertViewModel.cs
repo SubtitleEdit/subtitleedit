@@ -433,6 +433,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         AutoTranslators =
         [
             new OllamaTranslate(),
+            new OllamaAdvancedTranslate(),
             new LibreTranslate(),
             new LmStudioTranslate(),
             new LlamaCppTranslate(),
@@ -2370,13 +2371,27 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     [RelayCommand]
     private async Task AutoTranslateBrowseModel()
     {
+        // Both Ollama engines list the same installed models; the picker only needs the host,
+        // so the advanced engine's /v1/chat/completions URL works as-is (it strips the path).
+        var isAdvanced = SelectedAutoTranslator is OllamaAdvancedTranslate;
+        var model = isAdvanced ? Se.Settings.AutoTranslate.OllamaAdvancedModel : Se.Settings.AutoTranslate.OllamaModel;
+        var url = isAdvanced ? Se.Settings.AutoTranslate.OllamaAdvancedUrl : Se.Settings.AutoTranslate.OllamaUrl;
+
         var result = await _windowService.ShowDialogAsync<PickOllamaModelWindow, PickOllamaModelViewModel>(Window!,
-            vm => { vm.Initialize(Se.Language.General.PickOllamaModel, Se.Settings.AutoTranslate.OllamaModel, Se.Settings.AutoTranslate.OllamaUrl); });
+            vm => { vm.Initialize(Se.Language.General.PickOllamaModel, model, url); });
 
         if (result is { OkPressed: true, SelectedModel: not null })
         {
             AutoTranslateModel = result.SelectedModel;
-            Se.Settings.AutoTranslate.OllamaModel = result.SelectedModel;
+            if (isAdvanced)
+            {
+                Se.Settings.AutoTranslate.OllamaAdvancedModel = result.SelectedModel;
+            }
+            else
+            {
+                Se.Settings.AutoTranslate.OllamaModel = result.SelectedModel;
+            }
+
             SaveSettings();
         }
     }
@@ -2929,6 +2944,21 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             }
         }
 
+        if (engineType == typeof(OllamaAdvancedTranslate))
+        {
+            // Both live in SE's own settings only - the advanced engine does not go through
+            // Configuration.Settings.Tools (that URL belongs to the classic Ollama engine).
+            if (!string.IsNullOrWhiteSpace(AutoTranslateUrl))
+            {
+                Se.Settings.AutoTranslate.OllamaAdvancedUrl = AutoTranslateUrl.Trim();
+            }
+
+            if (!string.IsNullOrWhiteSpace(AutoTranslateModel))
+            {
+                Se.Settings.AutoTranslate.OllamaAdvancedModel = AutoTranslateModel.Trim();
+            }
+        }
+
         if (engineType == typeof(NoLanguageLeftBehindServe))
         {
             if (!string.IsNullOrEmpty(Se.Settings.AutoTranslate.NllbServeUrl))
@@ -3159,7 +3189,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     {
         var engine = SelectedAutoTranslator;
 
-        AutoTranslateModelIsVisible = engine is OllamaTranslate;
+        AutoTranslateModelIsVisible = engine is OllamaTranslate or OllamaAdvancedTranslate;
         CrispAsrModelComboIsVisible = engine is CrispAsrMadladTranslate;
         // Both turned back on by PopulateLlamaCppModels for a local llama.cpp.
         LlamaCppModelComboIsVisible = false;
@@ -3170,8 +3200,9 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         LlamaCppRemoteToggleIsVisible = engine is LlamaCppTranslate or LlamaCppAdvancedTranslate;
 
         // Batch size, context history and the synopsis/glossary/style prompt only exist on the
-        // advanced engine; they apply to local and remote llama-servers alike.
-        LlamaCppAdvancedButtonIsVisible = engine is LlamaCppAdvancedTranslate;
+        // advanced engines; they are shared settings, so the same window serves both llama.cpp
+        // (local or remote llama-server) and Ollama.
+        LlamaCppAdvancedButtonIsVisible = engine is LlamaCppAdvancedTranslate or OllamaAdvancedTranslate;
 
         // The regular llama.cpp engine has no advanced window - its prompt (and the shared
         // delay/max-bytes/merge settings) live in the translate settings dialog instead.
@@ -3197,6 +3228,18 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             AutoTranslateModelIsVisible = true;
             AutoTranslateUrl = string.Empty;
             AutoTranslateUrlIsVisible = false;
+            AutoTranslateApiKey = string.Empty;
+            AutoTranslateApiKeyIsVisible = false;
+        }
+        else if (engine is OllamaAdvancedTranslate)
+        {
+            // Same installed-model list as the classic Ollama engine - only the endpoint differs
+            // (the OpenAI-compatible /v1/chat/completions, not the native /api/generate).
+            AutoTranslateModel = Se.Settings.AutoTranslate.OllamaAdvancedModel;
+            AutoTranslateModelBrowseIsVisible = true;
+            AutoTranslateModelIsVisible = true;
+            AutoTranslateUrl = Se.Settings.AutoTranslate.OllamaAdvancedUrl;
+            AutoTranslateUrlIsVisible = true;
             AutoTranslateApiKey = string.Empty;
             AutoTranslateApiKeyIsVisible = false;
         }
