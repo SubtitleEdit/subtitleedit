@@ -275,6 +275,18 @@ public static class PerLineVoiceClone
         return engine switch
         {
             OmniVoiceTtsCpp => new Voice(new OmniVoice(name, clipFileName)),
+
+            // The qwen3-tts backend reads references from its own --voice-dir and nowhere else,
+            // so the clip is copied in there first and FilePath points at the copy - that is the
+            // lookup key, since Speak sends the file's bare name as the request's `voice`. The
+            // name stays free to be the friendly one, which is how an imported session keeps the
+            // voice name a line was generated with. A clip that cannot be staged (no transcript
+            // beside it) is a null here, i.e. that one line falls back to an ordinary voice
+            // instead of failing the run.
+            Qwen3TtsCrispAsr => Qwen3TtsCrispAsr.StagePerLineReference(clipFileName) is { } staged
+                ? new Voice(new Qwen3TtsVoice(name, staged))
+                : null,
+
             _ => null,
         };
     }
@@ -292,6 +304,31 @@ public static class PerLineVoiceClone
     public static string? TryGetReferenceClip(Voice? voice) => voice?.EngineVoice switch
     {
         OmniVoice omniVoice when !string.IsNullOrEmpty(omniVoice.FilePath) => omniVoice.FilePath,
+
+        // The staged copy in the voices folder, which is the only reference this engine ever
+        // speaks from. Exporting it (with its .txt sidecar) is what lets an imported session be
+        // re-dubbed on a machine that no longer has the video.
+        Qwen3TtsVoice qwen3Voice when !string.IsNullOrEmpty(qwen3Voice.FilePath) => qwen3Voice.FilePath,
+
         _ => null,
     };
+
+    /// <summary>
+    /// Clears what a previous run staged inside an engine's own folders, and is called as a
+    /// per-line run starts.
+    /// </summary>
+    /// <remarks>
+    /// Engines that can only read a reference from their voices folder keep a copy of every
+    /// line's clip there (see <see cref="MakeVoiceForClip"/>). Cutting the clips into a fresh
+    /// folder each run - which the caller does - says nothing about those copies, so a run over
+    /// a shorter subtitle than the last would leave the previous run's extra lines behind.
+    /// Engines that take the clip's own path need nothing cleared and are simply not listed.
+    /// </remarks>
+    public static void ResetStagedReferences(ITtsEngine? engine)
+    {
+        if (engine is Qwen3TtsCrispAsr)
+        {
+            Qwen3TtsCrispAsr.ClearStagedPerLineReferences();
+        }
+    }
 }

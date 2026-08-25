@@ -133,6 +133,15 @@ public class PerLineVoiceCloneTests
     }
 
     [Fact]
+    public void AQwen3ClipThatCannotBeStagedFallsBackInsteadOfCloning()
+    {
+        // Qwen3 (CrispASR) speaks only from a copy inside its own voices folder, so a clip it
+        // cannot stage - here one that is not there at all - has to come back as null and let the
+        // caller fall back, rather than pointing the engine at a file the backend cannot resolve.
+        Assert.Null(PerLineVoiceClone.MakeVoiceForClip(new Qwen3TtsCrispAsr(), "/tmp/refs/not-a-clip.wav"));
+    }
+
+    [Fact]
     public void AnImportedClipKeepsTheVoiceNameItWasExportedWith()
     {
         // The exported clip may have been renamed to avoid a collision in the export folder; the
