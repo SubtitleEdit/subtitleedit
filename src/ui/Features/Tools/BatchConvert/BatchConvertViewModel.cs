@@ -1837,7 +1837,9 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
                 var subtitles = new ObservableCollection<SubtitleLineViewModel>();
                 var p = new Paragraph("This is a sample text", 0, 1000);
                 subtitles.Add(new SubtitleLineViewModel(p, new SubRip()));
-                vm.Initialize(exportHandler, subtitles, string.Empty, string.Empty, true);
+                // No file is loaded here - the dialog only edits the shared profile - so there
+                // is no header and script tags stay at scale 1.0.
+                vm.Initialize(exportHandler, subtitles, string.Empty, string.Empty, subtitleHeader: null, hideExportButton: true);
             });
             return;
         }

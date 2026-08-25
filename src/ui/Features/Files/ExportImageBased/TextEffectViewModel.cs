@@ -32,6 +32,7 @@ public partial class TextEffectViewModel : ObservableObject
     private int _originalArcBend;
     private int _originalWave;
     private bool _initialized;
+    private bool _restored;
 
     public TextEffectViewModel()
     {
@@ -103,18 +104,43 @@ public partial class TextEffectViewModel : ObservableObject
     [RelayCommand]
     private void Cancel()
     {
-        if (_parent != null)
+        RestoreOriginalValues();
+        Window?.Close();
+    }
+
+    /// <summary>
+    /// Puts the owner's values back to what they were when the dialog opened. Guarded so it
+    /// runs at most once: Cancel restores and then closes, and that close raises
+    /// <see cref="OnWindowClosing"/>, which would otherwise restore a second time.
+    /// </summary>
+    private void RestoreOriginalValues()
+    {
+        if (_restored || _parent == null)
         {
-            _parent.SelectedTextEffect =
-                _parent.TextEffectItems.FirstOrDefault(t => t.Preset == _originalPreset)
-                ?? _parent.SelectedTextEffect;
-            _parent.TextEffectStrength = _originalStrength;
-            _parent.TextEffectLetterSpacing = _originalLetterSpacing;
-            _parent.TextEffectArcBend = _originalArcBend;
-            _parent.TextEffectWave = _originalWave;
+            return;
         }
 
-        Window?.Close();
+        _restored = true;
+        _parent.SelectedTextEffect =
+            _parent.TextEffectItems.FirstOrDefault(t => t.Preset == _originalPreset)
+            ?? _parent.SelectedTextEffect;
+        _parent.TextEffectStrength = _originalStrength;
+        _parent.TextEffectLetterSpacing = _originalLetterSpacing;
+        _parent.TextEffectArcBend = _originalArcBend;
+        _parent.TextEffectWave = _originalWave;
+    }
+
+    /// <summary>
+    /// The window is closing. The values were pushed into the owner live, so any close that
+    /// is not an OK - the Cancel button, Escape, the title bar X, Alt+F4 - must put the
+    /// original values back.
+    /// </summary>
+    internal void OnWindowClosing()
+    {
+        if (!OkPressed)
+        {
+            RestoreOriginalValues();
+        }
     }
 
     internal void OnKeyDown(KeyEventArgs e)

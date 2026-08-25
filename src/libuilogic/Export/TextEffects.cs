@@ -134,6 +134,22 @@ public class TextEffectFill
     /// <summary>Stripe direction in degrees.</summary>
     public float TileAngleDegrees { get; set; } = 45f;
 
+    /// <summary>
+    /// The tile textures (Stripes/Dots) and the Perlin noise shader do not depend on the
+    /// text bounds, so they are cached statically, keyed by the parameters that shape them.
+    /// The cache is static rather than per instance because an image export builds a fresh
+    /// <see cref="TextEffects"/> (and so fresh fills) for every subtitle line - all lines of
+    /// one export resolve to the same key and share one shader. SKShaders are immutable and
+    /// natively ref-counted (assigning one to <see cref="SKPaint.Shader"/> adds a native
+    /// reference), so a single cached shader can serve the export's Parallel.For rendering
+    /// threads concurrently; the lock only guards the dictionaries.
+    /// </summary>
+    private static readonly object ShaderCacheLock = new();
+
+    private static readonly Dictionary<(TextEffectFillKind Kind, SKColor Color0, SKColor Color1, float Size, float Angle), SKShader> TileShaderCache = new();
+    private static readonly Dictionary<(float FrequencyX, float FrequencyY, int Octaves), SKShader> NoiseShaderCache = new();
+    private const int MaxCachedShaders = 16;
+
     public static TextEffectFill Solid(SKColor color)
     {
         return new TextEffectFill { Kind = TextEffectFillKind.Solid, Colors = new[] { color } };
@@ -146,7 +162,8 @@ public class TextEffectFill
 
     /// <summary>
     /// Configures the paint to draw with this fill across <paramref name="bounds"/>.
-    /// Any shader is owned by the paint and freed with it.
+    /// The paint takes its own native reference to any shader, so per-bounds shader
+    /// wrappers are disposed here and cached shaders stay shared.
     /// </summary>
     public void ApplyTo(SKPaint paint, SKRect bounds)
     {
@@ -154,35 +171,41 @@ public class TextEffectFill
         {
             case TextEffectFillKind.LinearGradient:
                 paint.Color = SKColors.White;
-                paint.Shader = MakeLinearGradient(bounds);
+                using (var gradient = MakeLinearGradient(bounds))
+                {
+                    paint.Shader = gradient;
+                }
+
                 break;
 
             case TextEffectFillKind.RadialGradient:
                 paint.Color = SKColors.White;
-                paint.Shader = SKShader.CreateRadialGradient(
+                using (var gradient = SKShader.CreateRadialGradient(
                     new SKPoint(bounds.MidX, bounds.MidY),
                     Math.Max(bounds.Width, bounds.Height) / 2f,
-                    Colors, Stops, SKShaderTileMode.Clamp);
+                    Colors, Stops, SKShaderTileMode.Clamp))
+                {
+                    paint.Shader = gradient;
+                }
+
                 break;
 
             case TextEffectFillKind.Turbulence:
+                // Only the gradient depends on the bounds - the Perlin noise is cached and
+                // composed with a fresh gradient per call.
                 paint.Color = SKColors.White;
                 using (var gradient = MakeLinearGradient(bounds))
-                using (var noise = SKShader.CreatePerlinNoiseTurbulence(NoiseFrequencyX, NoiseFrequencyY, NoiseOctaves, 7f))
+                using (var composed = SKShader.CreateCompose(gradient, GetNoiseShader(), SKBlendMode.Overlay))
                 {
-                    paint.Shader = SKShader.CreateCompose(gradient, noise, SKBlendMode.Overlay);
+                    paint.Shader = composed;
                 }
 
                 break;
 
             case TextEffectFillKind.Stripes:
-                paint.Color = SKColors.White;
-                paint.Shader = MakeStripesShader();
-                break;
-
             case TextEffectFillKind.Dots:
                 paint.Color = SKColors.White;
-                paint.Shader = MakeDotsShader();
+                paint.Shader = GetTileShader();
                 break;
 
             default:
@@ -192,9 +215,65 @@ public class TextEffectFill
     }
 
     /// <summary>
+    /// The cached Stripes/Dots tile shader for this fill's parameters, built on first use.
+    /// The tile ignores the text bounds, so one shader serves every line of an export.
+    /// </summary>
+    private SKShader GetTileShader()
+    {
+        var secondary = Colors.Length > 1 ? Colors[1] : SKColors.White;
+        var angle = Kind == TextEffectFillKind.Stripes ? TileAngleDegrees : 0f;
+        var key = (Kind, Colors[0], secondary, TileSize, angle);
+        lock (ShaderCacheLock)
+        {
+            if (TileShaderCache.TryGetValue(key, out var cached))
+            {
+                return cached;
+            }
+
+            if (TileShaderCache.Count >= MaxCachedShaders)
+            {
+                // Dropped wrappers keep their native shader alive for any paint still
+                // holding a reference; the wrappers themselves are reclaimed by their
+                // finalizers, so evicted entries are never disposed here.
+                TileShaderCache.Clear();
+            }
+
+            var shader = Kind == TextEffectFillKind.Stripes ? MakeStripesShader() : MakeDotsShader();
+            TileShaderCache[key] = shader;
+            return shader;
+        }
+    }
+
+    /// <summary>
+    /// The cached Perlin noise shader for this fill's frequency/octave settings. The noise
+    /// is bounds-independent; only the gradient it is composed with changes per text.
+    /// </summary>
+    private SKShader GetNoiseShader()
+    {
+        var key = (NoiseFrequencyX, NoiseFrequencyY, NoiseOctaves);
+        lock (ShaderCacheLock)
+        {
+            if (NoiseShaderCache.TryGetValue(key, out var cached))
+            {
+                return cached;
+            }
+
+            if (NoiseShaderCache.Count >= MaxCachedShaders)
+            {
+                NoiseShaderCache.Clear();
+            }
+
+            var shader = SKShader.CreatePerlinNoiseTurbulence(NoiseFrequencyX, NoiseFrequencyY, NoiseOctaves, 7f);
+            NoiseShaderCache[key] = shader;
+            return shader;
+        }
+    }
+
+    /// <summary>
     /// Repeating stripe texture as a bitmap tile shader. The tile is copied into an
     /// SKImage, and the shader keeps its own native reference, so nothing here has to
-    /// outlive this call.
+    /// outlive this call. Rasterizing the tile is the expensive part, which is why the
+    /// result is cached in <see cref="GetTileShader"/> instead of rebuilt per line.
     /// </summary>
     private SKShader MakeStripesShader()
     {

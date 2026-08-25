@@ -48,6 +48,39 @@ public class TextEffectAdjustments
 /// </summary>
 public static class TextEffectPresetFactory
 {
+    /// <summary>
+    /// The <see cref="TextEffects"/> the export-images settings describe, or null when the
+    /// effect is turned off. One place for the settings-to-effect mapping, so the export
+    /// dialog and batch convert cannot drift apart (a non-positive strength means an old
+    /// profile that never stored one - treated as the neutral 100%, like the dialog does).
+    /// </summary>
+    public static TextEffects? Create(
+        bool enabled,
+        TextEffectPreset preset,
+        float fontSize,
+        SKColor fontColor,
+        SKColor outlineColor,
+        SKColor shadowColor,
+        int strengthPercent,
+        int letterSpacing,
+        int arcBendPercent,
+        int waveAmplitude)
+    {
+        if (!enabled)
+        {
+            return null;
+        }
+
+        return Create(preset, fontSize, fontColor, outlineColor, shadowColor,
+            new TextEffectAdjustments
+            {
+                StrengthPercent = strengthPercent <= 0 ? 100 : strengthPercent,
+                LetterSpacing = letterSpacing,
+                ArcBendPercent = arcBendPercent,
+                WaveAmplitude = waveAmplitude,
+            });
+    }
+
     public static TextEffects? Create(
         TextEffectPreset preset,
         float fontSize,

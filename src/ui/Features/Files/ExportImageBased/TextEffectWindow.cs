@@ -13,8 +13,11 @@ namespace Nikse.SubtitleEdit.Features.Files.ExportImageBased;
 /// </summary>
 public class TextEffectWindow : Window
 {
+    private readonly TextEffectViewModel _vm;
+
     public TextEffectWindow(TextEffectViewModel vm)
     {
+        _vm = vm;
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.File.Export.TextEffectSettingsTitle;
         CanResize = false;
@@ -68,6 +71,15 @@ public class TextEffectWindow : Window
 
         KeyDown += (_, e) => vm.OnKeyDown(e);
         Activated += delegate { buttonOk.Focus(); };
+    }
+
+    // The settings are pushed into the export dialog live, so a close that is not an OK -
+    // including the title bar X and Alt+F4, which never go through the Cancel command - must
+    // behave exactly like Cancel and put the original values back.
+    protected override void OnClosing(WindowClosingEventArgs e)
+    {
+        base.OnClosing(e);
+        _vm.OnWindowClosing();
     }
 
     private static void AddSliderRow(Grid grid, int row, string label, string propertyName, double min, double max, string valueFormat)

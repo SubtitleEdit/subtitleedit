@@ -165,6 +165,37 @@ public class ImageRendererTextEffectsTests
     }
 
     [Fact]
+    public void StripesFill_ReusesTheCachedTileShader()
+    {
+        // An export builds a fresh TextEffects per subtitle line, so the tile shader cache
+        // is keyed by the tile parameters: two equal fills on different bounds must resolve
+        // to the same native shader instead of re-rasterizing the tile per line.
+        var fill1 = new TextEffectFill
+        {
+            Kind = TextEffectFillKind.Stripes,
+            Colors = new[] { new SKColor(200, 30, 40), SKColors.White },
+            TileSize = 9f,
+            TileAngleDegrees = 45f,
+        };
+        var fill2 = new TextEffectFill
+        {
+            Kind = TextEffectFillKind.Stripes,
+            Colors = new[] { new SKColor(200, 30, 40), SKColors.White },
+            TileSize = 9f,
+            TileAngleDegrees = 45f,
+        };
+
+        using var paint1 = new SKPaint();
+        using var paint2 = new SKPaint();
+        fill1.ApplyTo(paint1, new SKRect(0, 0, 100, 40));
+        fill2.ApplyTo(paint2, new SKRect(0, 0, 640, 80)); // different bounds - the tile ignores them
+
+        Assert.NotNull(paint1.Shader);
+        Assert.NotNull(paint2.Shader);
+        Assert.Equal(paint1.Shader!.Handle, paint2.Shader!.Handle);
+    }
+
+    [Fact]
     public void SafetyMargin_CoversBlurredShadowAndGlow()
     {
         var effects = new TextEffects
