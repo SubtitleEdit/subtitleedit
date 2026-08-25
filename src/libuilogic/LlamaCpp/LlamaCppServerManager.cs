@@ -515,6 +515,55 @@ public static class LlamaCppServerManager
     }
 
     /// <summary>
+    /// Builds the <see cref="LlamaCppModel"/> for a non-curated vision <c>*.gguf</c> used for OCR:
+    /// the model plus the <paramref name="mmprojFileNameOrPath"/> vision projector it is served with
+    /// (<c>--mmproj</c>) - without one llama-server loads the model blind and every image comes back
+    /// as a hallucination. Unlike <see cref="CreateCustomModel"/> this never overrides the chat
+    /// template: a multimodal GGUF's embedded template is what encodes the image placeholder, so
+    /// forcing e.g. <c>gemma</c> + <c>--no-jinja</c> on a Gemma-named vision model would drop the
+    /// image from the prompt entirely. Only the thinking switch is inferred, for the same reason as
+    /// on the translate side (a thinking model answers into <c>reasoning_content</c> and leaves
+    /// <c>content</c> - the only field the OCR engines read - empty).
+    /// </summary>
+    public static LlamaCppModel CreateCustomOcrModel(string displayName, string fileNameOrPath, string size, string mmprojFileNameOrPath)
+    {
+        var (_, _, noThinking) = InferChatTemplate(Path.GetFileName(fileNameOrPath));
+        return new LlamaCppModel(displayName, fileNameOrPath, size, Url: string.Empty,
+            MmprojFileName: mmprojFileNameOrPath,
+            NoThinking: noThinking);
+    }
+
+    /// <summary>
+    /// The vision projector sitting next to <paramref name="modelPath"/>, or null when there is none.
+    /// Covers both curated sidecar conventions: <c>mmproj-&lt;file&gt;</c> (GLM-OCR, LightOnOCR,
+    /// HunyuanOCR) and <c>&lt;stem&gt;-mmproj.gguf</c> (PaddleOCR-VL) - the two names HuggingFace
+    /// GGUF repos publish vision projectors under, so a self-supplied vision model downloaded from
+    /// one of them is recognised as-is.
+    /// </summary>
+    public static string? FindMmprojSidecar(string modelPath)
+    {
+        var dir = Path.GetDirectoryName(modelPath);
+        if (string.IsNullOrEmpty(dir))
+        {
+            return null;
+        }
+
+        var candidates = new[]
+        {
+            Path.Combine(dir, "mmproj-" + Path.GetFileName(modelPath)),
+            Path.Combine(dir, Path.GetFileNameWithoutExtension(modelPath) + "-mmproj.gguf"),
+        };
+        return candidates.FirstOrDefault(File.Exists);
+    }
+
+    /// <summary>True when the file name is a vision projector rather than a model in its own right.</summary>
+    private static bool IsMmprojFileName(string fileName)
+    {
+        return fileName.StartsWith("mmproj-", StringComparison.OrdinalIgnoreCase) ||
+               fileName.EndsWith("-mmproj.gguf", StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>
     /// Points the regular llama.cpp translate engine's per-model settings (trained-in prompt and
     /// recommended sampling) at the given curated/custom model, or resets them for null (remote
     /// server / unknown model). Must be called wherever a local translate run picks its model
@@ -538,7 +587,8 @@ public static class LlamaCppServerManager
     /// (no download needed - already on disk), the file name as <c>DisplayName</c>, a
     /// human-readable file size, and chat-template flags from <see cref="InferChatTemplate"/> so a
     /// self-supplied TranslateGemma/Qwen quant is served with the same flags as the curated ones.
-    /// <c>mmproj-*.gguf</c> sidecars are skipped because they're not standalone translation models.
+    /// Vision projectors (<c>mmproj-*.gguf</c> and <c>*-mmproj.gguf</c>) are skipped because they're
+    /// not standalone translation models.
     /// </summary>
     public static IReadOnlyList<LlamaCppModel> GetAllTranslateModels()
     {
@@ -550,7 +600,18 @@ public static class LlamaCppServerManager
         return GetCuratedPlusCustomModels(ReviewModels);
     }
 
-    private static IReadOnlyList<LlamaCppModel> GetCuratedPlusCustomModels(IReadOnlyList<LlamaCppModel> curated)
+    /// <summary>
+    /// Returns the curated <see cref="OcrModels"/> plus any self-supplied vision <c>*.gguf</c> in the
+    /// llama.cpp models folder. Only files that have a vision projector next to them
+    /// (<see cref="FindMmprojSidecar"/>) qualify: a text-only model served to the OCR engines cannot
+    /// see the image at all, and the sidecar is what tells the two apart without opening the GGUF.
+    /// </summary>
+    public static IReadOnlyList<LlamaCppModel> GetAllOcrModels()
+    {
+        return GetCuratedPlusCustomModels(OcrModels, requireVisionProjector: true);
+    }
+
+    private static IReadOnlyList<LlamaCppModel> GetCuratedPlusCustomModels(IReadOnlyList<LlamaCppModel> curated, bool requireVisionProjector = false)
     {
         var folder = GetAndCreateModelsFolder();
         if (!Directory.Exists(folder))
@@ -580,13 +641,21 @@ public static class LlamaCppServerManager
                 {
                     continue;
                 }
-                if (name.StartsWith("mmproj-", StringComparison.OrdinalIgnoreCase))
+                if (IsMmprojFileName(name))
+                {
+                    continue;
+                }
+
+                var mmproj = requireVisionProjector ? FindMmprojSidecar(path) : null;
+                if (requireVisionProjector && mmproj == null)
                 {
                     continue;
                 }
 
                 var size = FormatFileSize(new FileInfo(path).Length);
-                custom.Add(CreateCustomModel(name, name, size));
+                custom.Add(mmproj == null
+                    ? CreateCustomModel(name, name, size)
+                    : CreateCustomOcrModel(name, name, size, Path.GetFileName(mmproj)));
             }
         }
         catch

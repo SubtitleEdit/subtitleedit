@@ -1473,7 +1473,7 @@ public partial class OcrViewModel : ObservableObject
         if (downloaded != null)
         {
             var selectName = string.IsNullOrEmpty(downloaded) ? model?.FileName : downloaded;
-            SelectedLlamaCppOcrModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppOcrModels, LlamaCppServerManager.OcrModels, selectName);
+            SelectedLlamaCppOcrModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppOcrModels, LlamaCppServerManager.GetAllOcrModels(), selectName);
         }
 
         RefreshLlamaCppOcrDots();
@@ -1517,7 +1517,7 @@ public partial class OcrViewModel : ObservableObject
         {
             var selectName = string.IsNullOrEmpty(downloaded) ? model?.FileName : downloaded;
             RefreshLlamaCppOcrDots();
-            SelectedLlamaCppOcrModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppOcrModels, LlamaCppServerManager.OcrModels, selectName);
+            SelectedLlamaCppOcrModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppOcrModels, LlamaCppServerManager.GetAllOcrModels(), selectName);
         }
     }
 
@@ -1602,7 +1602,7 @@ public partial class OcrViewModel : ObservableObject
             }
         }
 
-        SelectedLlamaCppOcrModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppOcrModels, LlamaCppServerManager.OcrModels, model.FileName);
+        SelectedLlamaCppOcrModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppOcrModels, LlamaCppServerManager.GetAllOcrModels(), model.FileName);
 
         try
         {
@@ -5133,7 +5133,7 @@ public partial class OcrViewModel : ObservableObject
         if (IsLlamaCppVisible && LlamaCppOcrModels.Count == 0)
         {
             var savedModelName = Path.GetFileName(Se.Settings.Ocr.LlamaCppOcrModel ?? string.Empty);
-            SelectedLlamaCppOcrModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppOcrModels, LlamaCppServerManager.OcrModels, savedModelName);
+            SelectedLlamaCppOcrModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppOcrModels, LlamaCppServerManager.GetAllOcrModels(), savedModelName);
             UpdateLlamaCppOcrServerButtonText();
         }
 
