@@ -196,6 +196,18 @@ public static class DownloadHashManager
         public const string Codec = "IndexTtsCrispAsr.Codec";
     }
 
+    public static class DotsTtsCrispAsr
+    {
+        // SHA-256 of the dots.tts SOAR GGUFs on cstr/dots-tts-soar-GGUF (HF LFS oid; the
+        // vocoder and speaker-encoder values were confirmed against a local sha256sum of the
+        // downloaded files).
+        public const string CoreQ4K = "DotsTtsCrispAsr.CoreQ4K";
+        public const string CoreQ8_0 = "DotsTtsCrispAsr.CoreQ8_0";
+        public const string CoreF16 = "DotsTtsCrispAsr.CoreF16";
+        public const string Vocoder = "DotsTtsCrispAsr.Vocoder";
+        public const string SpeakerEncoder = "DotsTtsCrispAsr.SpeakerEncoder";
+    }
+
     public static class IndexTts25AudioCpp
     {
         // SHA-256 of the IndexTTS-2.5 GGUFs on audio-cpp/audio.cpp-gguf (HF LFS oid, confirmed
@@ -1691,6 +1703,28 @@ public static class DownloadHashManager
             [IndexTtsCrispAsr.Codec] = new[]
             {
                 "fcba9a322d80ef318da8a17c01e8a5e7f299ccdf881c62a43abf62cb3c104268", // indextts-bigvgan.gguf
+            },
+
+            // dots.tts SOAR weights, from cstr/dots-tts-soar-GGUF.
+            [DotsTtsCrispAsr.CoreQ4K] = new[]
+            {
+                "9f6bb49d456df154083fa21244657e7a7aa1c775d94bb24edec6977e68b7cb95", // dots-tts-soar-q4_k.gguf
+            },
+            [DotsTtsCrispAsr.CoreQ8_0] = new[]
+            {
+                "d13578498e54c77fde118ce2541903e4c38f595ed1aea26b55d89f87dfb11bba", // dots-tts-soar-q8_0.gguf
+            },
+            [DotsTtsCrispAsr.CoreF16] = new[]
+            {
+                "9811ab16ac4ecc6cb42bdd9e031cbade42b1eb50c6ff920bd1f1e9621fb44988", // dots-tts-soar-f16.gguf
+            },
+            [DotsTtsCrispAsr.Vocoder] = new[]
+            {
+                "10e9990e126165d9eac1a6e90178296b46ae039230d2d18d650336ad627ccec7", // dots-tts-soar-vocoder-f16.gguf
+            },
+            [DotsTtsCrispAsr.SpeakerEncoder] = new[]
+            {
+                "6f6d41f1394273b0da5a7a9be8f15f0e59d3b4d5983cab7d1fac08630b912e7f", // dots-tts-soar-spk-f16.gguf
             },
 
             // IndexTTS-2.5 weights, from audio-cpp/audio.cpp-gguf. Q8_0 confirmed by local
