@@ -222,6 +222,42 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
                 OkPressed = true;
                 Close();
             }
+            else if (Engine.Name == WhisperEngineWhisperX.StaticName)
+            {
+                var dir = Engine.GetAndCreateWhisperFolder();
+                var tempFileName = Path.Combine(dir, Engine.Name + ".7z");
+
+                TitleText = string.Format(Se.Language.General.UnpackingX, Engine.Name);
+                StartIndeterminateProgress();
+                // Flat archive (no top-level folder), so no folder level to skip.
+                Unpacker.Extract7Zip(tempFileName, dir, string.Empty, _cancellationTokenSource, text => ProgressText = text);
+                StopIndeterminateProgress();
+
+                try
+                {
+                    File.Delete(tempFileName);
+
+                    MakeExecutable(Engine.GetExecutable());
+
+                    // WhisperX bundles ctranslate2 from the same wheel family that hits the
+                    // glibc 2.41 PT_GNU_STACK=RWE problem patched for Purfview Faster-Whisper-XXL.
+                    ClearExecutableStack(dir);
+                }
+                catch
+                {
+                    // ignore
+                }
+
+                if (_cancellationTokenSource.IsCancellationRequested)
+                {
+                    Cancel();
+                    return;
+                }
+
+                // WhisperX runs its own bundled voice activity detection - no Silero sidecar needed.
+                OkPressed = true;
+                Close();
+            }
             else
             {
                 if (_downloadStream.Length == 0)
@@ -562,6 +598,16 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
         else if (Engine is WhisperEngineCTranslate2)
         {
             _downloadTask = _whisperDownloadService.DownloadWhisperCTranslate2(_downloadStream, downloadProgress, _cancellationTokenSource.Token);
+        }
+        else if (Engine is WhisperEngineWhisperX)
+        {
+            // A file download, not the shared _downloadStream MemoryStream: at 216 MB-355 MB,
+            // buffering this in memory (with MemoryStream's doubling growth) would peak far
+            // higher before unpacking even starts. Purfview Faster-Whisper-XXL is downloaded
+            // the same way for the same reason.
+            var whisperXDir = Engine.GetAndCreateWhisperFolder();
+            var whisperXTempFileName = Path.Combine(whisperXDir, Engine.Name + ".7z");
+            _downloadTask = _whisperDownloadService.DownloadWhisperX(whisperXTempFileName, downloadProgress, _cancellationTokenSource.Token);
         }
         else if (Engine is WhisperEngineConstMe)
         {
