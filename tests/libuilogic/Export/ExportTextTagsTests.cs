@@ -92,6 +92,24 @@ public class ExportTextTagsTests
     }
 
     [Theory]
+    [InlineData("{\\i1\\pos(10,20)}Hello", "<i>Hello</i>")]
+    [InlineData("{\\pos(10,20)\\i1}Hello", "<i>Hello</i>")]
+    [InlineData("{\\an8\\fad(300,300)\\b1}Hello", "<b>Hello</b>")]
+    [InlineData("{\\fad(300,300}{\\i1}Hello", "<i>Hello</i>")] // missing ")" as SE's own effects write it
+    [InlineData("{\\fade(255,0,255,0,500,2000,2200)\\i1}Hello", "<i>Hello</i>")]
+    [InlineData("{\\alpha&H80&\\i1}Hello", "<i>Hello</i>")]
+    [InlineData("{\\1a&H80&\\3a&HFF&}{\\i1}Hello", "<i>Hello</i>")]
+    [InlineData("{\\pos(10,20)\\c&H0000FF&}Red{\\c}", "<font color=\"#ff0000\">Red</font>")]
+    [InlineData("{\\move(10,20,30,40)\\i1}Hello", "Hello")] // \move is NOT consumed - still too complex
+    public void ToRenderableText_ConsumedTags_DoNotCostTheLineItsFormatting(string text, string expected)
+    {
+        // "\pos", "\fad" and "\alpha" are read off the text before rendering
+        // (ApplyPositionTag/ApplyTransparencyTags), so they must not make GetFormattedText
+        // treat the line as too complex and drop the formatting tags next to them.
+        Assert.Equal(expected, ExportTextTags.ToRenderableText(text));
+    }
+
+    [Theory]
     [InlineData("<u>Hello</u>", "Hello")] // the renderer cannot underline
     [InlineData("{\\u1}Hello{\\u0}", "Hello")]
     public void ToRenderableText_UnderlineTags_AreRemoved(string text, string expected)
