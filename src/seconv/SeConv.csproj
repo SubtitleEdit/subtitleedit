@@ -18,6 +18,10 @@
     <PackageReference Include="Spectre.Console" Version="0.57.2" />
     <PackageReference Include="Spectre.Console.Cli" Version="0.55.0" />
 
+    <!-- `seconv mcp`: Model Context Protocol server over stdio (see Mcp/McpServerHost.cs). -->
+    <PackageReference Include="ModelContextProtocol" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.11" />
+
     <!--
       seconv uses SkiaSharp (FixCommonErrors pixel-width measurement, image output) and
       SkiaSharp.HarfBuzz (image text shaping) via libse / libuilogic. The base SkiaSharp /
