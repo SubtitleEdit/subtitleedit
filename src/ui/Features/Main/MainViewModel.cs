@@ -3140,6 +3140,24 @@ public partial class MainViewModel :
         _subtitleOriginal = captured;
     }
 
+    /// <summary>
+    /// Makes the pre-translation text in the rows' original column the original subtitle. A
+    /// translation made from the current rows leaves that text in the rows only, while the original
+    /// subtitle stays empty - so a wholesale rebuild (<see cref="SetSubtitles(Subtitle, Subtitle?)"/>,
+    /// as most tools do) blanks the column, and saving the original then writes a file with time
+    /// codes and no text at all over the subtitle the translation was made from (#14091).
+    /// </summary>
+    private void CaptureOriginalFromTranslatedRows()
+    {
+        _subtitleOriginal ??= new Subtitle();
+        _subtitleOriginal.OriginalFormat = _subtitle.OriginalFormat ?? SelectedSubtitleFormat;
+
+        // Rebuilds the original from the rows - one line per row, in order - and re-points every
+        // row at the line it just produced. The callers have already left the modes that would
+        // make this a projection instead of the whole original.
+        GetUpdateSubtitleOriginal();
+    }
+
     /// <summary>Drops every display-only reference row, leaving the working subtitle behind.</summary>
     private void RemoveReferenceOnlyRows()
     {
@@ -6595,21 +6613,25 @@ public partial class MainViewModel :
             return;
         }
 
+        // A display-only row of a read-only original carries no text to translate from, and the
+        // original it shows is replaced by the rows' text here (#14091).
+        RemoveReferenceOnlyRows();
+
         foreach (var subtitle in Subtitles)
         {
             subtitle.OriginalText = subtitle.Text;
             subtitle.Text = string.Empty;
+            subtitle.ReferenceParagraphId = null;
         }
 
         _subtitleFileNameOriginal = _subtitleFileName;
-        _subtitleOriginal ??= new Subtitle();
-        _subtitleOriginal.OriginalFormat = _subtitle.OriginalFormat ?? SelectedSubtitleFormat;
         _subtitleFileName = null;
         _converted = true;
         _shortcutManager.ClearKeys();
         IsOriginalReadOnly = false; // a translation made here always lines up 1:1 with its original
         IsShowingOriginalNonMatchingLines = false;
         ShowColumnOriginalText = true;
+        CaptureOriginalFromTranslatedRows();
         AutoFitColumns();
         ShowStatus(Se.Language.Main.CreatedEmptyTranslation);
     }
@@ -10751,6 +10773,13 @@ public partial class MainViewModel :
 
         var wasOldTranslationChanged = _changeSubtitleHash != GetFastHash();
 
+        // The dialog was handed GetUpdateSubtitle(), which leaves the display-only rows of a
+        // read-only original out - so they must go before the rows are matched with the result by
+        // index, or every row past the first of them would take the wrong translation, and the
+        // reference rows themselves would have their original text overwritten with nothing
+        // (#14091). The original they display is replaced by the pre-translation text below anyway.
+        RemoveReferenceOnlyRows();
+
         for (var i = 0; i < Subtitles.Count; i++)
         {
             if (result.Rows.Count <= i)
@@ -10760,6 +10789,10 @@ public partial class MainViewModel :
 
             Subtitles[i].OriginalText = Subtitles[i].Text;
             Subtitles[i].Text = result.Rows[i].TranslatedText;
+
+            // Whatever original this row pointed into is gone - the pre-translation text is the
+            // original now.
+            Subtitles[i].ReferenceParagraphId = null;
         }
 
         // The subtitle language just changed, so the cached detected language is stale (issue #12144).
@@ -10772,8 +10805,6 @@ public partial class MainViewModel :
 
         var targetLanguageCode = result.SelectedTargetLanguage?.TwoLetterIsoLanguageName;
         _subtitleFileNameOriginal = _subtitleFileName;
-        _subtitleOriginal ??= new Subtitle();
-        _subtitleOriginal.OriginalFormat = _subtitle.OriginalFormat ?? SelectedSubtitleFormat;
         if (!string.IsNullOrEmpty(_subtitleFileName) && !string.IsNullOrEmpty(targetLanguageCode))
         {
             var directory = Path.GetDirectoryName(_subtitleFileName) ?? string.Empty;
@@ -10804,12 +10835,26 @@ public partial class MainViewModel :
                 }
             }
 
-            _subtitleFileName = Path.Combine(directory, nameWithoutExt + "." + targetLanguageCode + extension);
+            var translatedFileName = Path.Combine(directory, nameWithoutExt + "." + targetLanguageCode + extension);
 
-            // Saving must offer the translated name, not the video's name - otherwise the
-            // default video-first SaveAsBehavior suggests overwriting the subtitle that was
-            // just translated from.
-            _saveAsFileNameSuggestion = _subtitleFileName;
+            // A source file that already carries the target language code ("movie.nl.srt"
+            // translated to Dutch) would keep its name here, and saving writes both the
+            // translation and the original to it - the second write wiping the first. Leave it
+            // untitled instead, so "Save as" asks for a name (#14091).
+            if (translatedFileName.Equals(_subtitleFileNameOriginal, StringComparison.OrdinalIgnoreCase))
+            {
+                _subtitleFileName = string.Empty;
+                _saveAsFileNameSuggestion = null;
+            }
+            else
+            {
+                _subtitleFileName = translatedFileName;
+
+                // Saving must offer the translated name, not the video's name - otherwise the
+                // default video-first SaveAsBehavior suggests overwriting the subtitle that was
+                // just translated from.
+                _saveAsFileNameSuggestion = _subtitleFileName;
+            }
         }
         else
         {
@@ -10820,6 +10865,7 @@ public partial class MainViewModel :
         IsOriginalReadOnly = false; // the translation was made from the current rows, so it lines up 1:1
         IsShowingOriginalNonMatchingLines = false;
         ShowColumnOriginalText = true;
+        CaptureOriginalFromTranslatedRows();
         AutoFitColumns();
         _updateAudioVisualizer = true;
     }
@@ -10894,34 +10940,42 @@ public partial class MainViewModel :
             return;
         }
 
-        var result = await ShowDialogAsync<CopyPasteTranslateWindow, CopyPasteTranslateViewModel>(vm => { vm.Initialize(Subtitles.ToList()); });
+        // The display-only rows of a read-only original hold no text of the working subtitle -
+        // they have nothing to translate, and the original they show is replaced below (#14091).
+        var rows = Subtitles.Where(p => !p.IsReferenceOnly).ToList();
+
+        var result = await ShowDialogAsync<CopyPasteTranslateWindow, CopyPasteTranslateViewModel>(vm => { vm.Initialize(rows); });
 
         if (!result.OkPressed)
         {
             return;
         }
 
-        for (var i = 0; i < Subtitles.Count && i < result.Subtitles.Count; i++)
+        for (var i = 0; i < rows.Count; i++)
         {
-            if (!result.TranslatedRowIndices.Contains(i))
-            {
-                continue;
-            }
+            // The source text of every row goes into the original column, translated or not: the
+            // original is saved from those rows, so a skipped row left blank there would write a
+            // line with no text over the subtitle the translation was made from (#14091).
+            rows[i].OriginalText = rows[i].Text;
+            rows[i].ReferenceParagraphId = null;
 
-            Subtitles[i].OriginalText = Subtitles[i].Text;
-            Subtitles[i].Text = result.Subtitles[i].Text;
+            if (i < result.Subtitles.Count && result.TranslatedRowIndices.Contains(i))
+            {
+                rows[i].Text = result.Subtitles[i].Text;
+            }
         }
+
+        RemoveReferenceOnlyRows();
 
         // The subtitle language just changed, so the cached detected language is stale (issue #12144).
         _detectedLanguageCode = null;
 
         _subtitleFileNameOriginal = _subtitleFileName;
-        _subtitleOriginal ??= new Subtitle();
-        _subtitleOriginal.OriginalFormat = _subtitle.OriginalFormat ?? SelectedSubtitleFormat;
         _subtitleFileName = string.Empty;
         IsOriginalReadOnly = false; // the translation was made from the current rows, so it lines up 1:1
         IsShowingOriginalNonMatchingLines = false;
         ShowColumnOriginalText = true;
+        CaptureOriginalFromTranslatedRows();
         AutoFitColumns();
         _updateAudioVisualizer = true;
         _converted = true;
@@ -21639,7 +21693,24 @@ public partial class MainViewModel :
         }
 
         var originalFormat = _subtitleOriginal?.OriginalFormat ?? SelectedSubtitleFormat;
-        var text = GetUpdateSubtitleOriginal(true).ToText(originalFormat);
+        var originalSubtitle = GetUpdateSubtitleOriginal(true);
+
+        // A whole original without a single line of text is never something the user typed - the
+        // column was blanked somewhere (a rebuild, a lost translation source). Writing it out
+        // would leave numbers and time codes and no subtitles at all, over the file the
+        // translation was made from, so refuse instead (#14091).
+        if (originalSubtitle.Paragraphs.Count > 1 &&
+            originalSubtitle.Paragraphs.All(p => string.IsNullOrWhiteSpace(p.Text)))
+        {
+            if (!isAutoSave)
+            {
+                ShowStatus(Se.Language.Main.OriginalIsEmptyNotSaved);
+            }
+
+            return false;
+        }
+
+        var text = originalSubtitle.ToText(originalFormat);
 
         try
         {
