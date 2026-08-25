@@ -73,7 +73,7 @@ Supported OCR engines in Batch Convert:
 - BinaryOcr
 - Tesseract
 - Ollama
-- llama.cpp (curated OCR vision models — GLM-OCR, LightOnOCR, PaddleOCR-VL, HunyuanOCR 1.5; a local `llama-server` is started automatically)
+- llama.cpp (curated OCR vision models, best-first — GLM-OCR, PaddleOCR-VL, HunyuanOCR 1.5, LightOnOCR; a local `llama-server` is started automatically)
 - CrispEmbed (local, multiple model backends — see [OCR](ocr.md#crispembed))
 - PaddleOCR (Windows and Linux only)
 

@@ -53,7 +53,7 @@ Local LLM-based OCR via an Ollama server (e.g. with a vision model).
 ### llama.cpp
 Local LLM-based OCR using a llama.cpp-compatible server. Subtitle Edit can download llama.cpp and the model for you, or talk to a server you run yourself.
 - Default endpoint: `http://127.0.0.1:8080/v1/chat/completions`
-- Curated vision models: **GLM-OCR 0.9B** (Q8_0, about 1.4 GB), **LightOnOCR 1B** (Q8_0, about 1.2 GB), **PaddleOCR-VL 1.6** (about 1.8 GB, 109 languages) and **HunyuanOCR 1.5** (Q8_0, about 1.3 GB — the fastest of the four). Custom vision models also appear in the list: put the `*.gguf` in the llama.cpp models folder together with its `mmproj` vision projector, named either `mmproj-<file>.gguf` or `<file>-mmproj.gguf` (the two naming schemes used on Hugging Face). A `*.gguf` without a projector next to it is not offered — it cannot see the image
+- Curated vision models, listed best-first for subtitles: **GLM-OCR 0.9B** (Q8_0, about 1.4 GB — the default, and the most accurate on subtitle images), **PaddleOCR-VL 1.6** (about 1.8 GB, 109 languages), **HunyuanOCR 1.5** (Q8_0, about 1.3 GB) and **LightOnOCR 1B** (Q8_0, about 1.2 GB — the least accurate and much the slowest). Custom vision models also appear in the list: put the `*.gguf` in the llama.cpp models folder together with its `mmproj` vision projector, named either `mmproj-<file>.gguf` or `<file>-mmproj.gguf` (the two naming schemes used on Hugging Face). A `*.gguf` without a projector next to it is not offered — it cannot see the image
 - The settings dialog has a download/update button for the llama.cpp engine itself; the dot next to it turns amber when a newer build than the one installed is available
 
 ### CrispEmbed

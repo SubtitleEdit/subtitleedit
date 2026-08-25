@@ -273,23 +273,35 @@ public static class LlamaCppServerManager
             "https://huggingface.co/ibm-granite/granite-4.1-8b-GGUF/resolve/main/granite-4.1-8b-Q4_K_M.gguf"),
     };
 
+    /// <summary>
+    /// The curated OCR vision models, <b>ordered best-first on subtitle images</b> - the order is
+    /// not cosmetic. The first entry is what the OCR/Video OCR/batch-convert dropdowns preselect
+    /// when nothing is saved, and the headless callers (seconv, batch convert) fall back to the
+    /// first *installed* entry, so a weaker model placed early wins over a better one that happens
+    /// to sit later in the list. Keep new models in measured rank, not in the order they were added.
+    /// Ranked 2026-08-25 on llama.cpp b10625 with SE's own flags, prompt and square-pad
+    /// preprocessing over a 14-image EN/DE/FR/ES/IT/RU/ZH/JA corpus (music cues, SDH hash cues,
+    /// italics, video-frame burn-ins, small/low-res), scoring recognition separately from line-break
+    /// preservation: GLM-OCR 13/14 exact at 2.5 s/image and the only one that keeps every line break
+    /// and every music note; PaddleOCR-VL 12/14 recognized (0.32% char error) but merges two-line
+    /// subtitles; HunyuanOCR 12/14 recognized (0.6%) with the same merging; LightOnOCR 9/14
+    /// recognized (2.53%) at 18.5 s/image - weakest and ~7x slower, hence last.
+    /// </summary>
     public static readonly IReadOnlyList<LlamaCppModel> OcrModels = new[]
     {
         new LlamaCppModel("GLM-OCR 0.9B (Q8_0)", "GLM-OCR-Q8_0.gguf", "1.4 GB",
             "https://huggingface.co/ggml-org/GLM-OCR-GGUF/resolve/main/GLM-OCR-Q8_0.gguf",
             MmprojFileName: "mmproj-GLM-OCR-Q8_0.gguf",
             MmprojUrl: "https://huggingface.co/ggml-org/GLM-OCR-GGUF/resolve/main/mmproj-GLM-OCR-Q8_0.gguf"),
-        new LlamaCppModel("LightOnOCR 1B (Q8_0)", "LightOnOCR-1B-1025-Q8_0.gguf", "1.2 GB",
-            "https://huggingface.co/ggml-org/LightOnOCR-1B-1025-GGUF/resolve/main/LightOnOCR-1B-1025-Q8_0.gguf",
-            MmprojFileName: "mmproj-LightOnOCR-1B-1025-Q8_0.gguf",
-            MmprojUrl: "https://huggingface.co/ggml-org/LightOnOCR-1B-1025-GGUF/resolve/main/mmproj-LightOnOCR-1B-1025-Q8_0.gguf"),
         // PaddlePaddle's official llama.cpp package - 109 languages (NaViT + ERNIE-4.5).
         new LlamaCppModel("PaddleOCR-VL 1.6", "PaddleOCR-VL-1.6-GGUF.gguf", "1.8 GB",
             "https://huggingface.co/PaddlePaddle/PaddleOCR-VL-1.6-GGUF/resolve/main/PaddleOCR-VL-1.6-GGUF.gguf",
             MmprojFileName: "PaddleOCR-VL-1.6-GGUF-mmproj.gguf",
             MmprojUrl: "https://huggingface.co/PaddlePaddle/PaddleOCR-VL-1.6-GGUF/resolve/main/PaddleOCR-VL-1.6-GGUF-mmproj.gguf"),
-        // HunyuanOCR 1.5 (Tencent, ~1B) - the fastest VLM in this list (~1.6x GLM-OCR per image
-        // on Apple Silicon). Verified 2026-08-15 on the pinned b10310 build, 9-image
+        // HunyuanOCR 1.5 (Tencent, ~1B). Was the fastest of the list when added (~1.6x GLM-OCR per
+        // image on b10310); on b10625 that lead is gone - re-measured 2026-08-25 at 3.4 s/image
+        // against GLM-OCR's 2.5 s, and it merges two-line subtitles into one line on 4 of 14
+        // images. Verified 2026-08-15 on the pinned b10310 build, 9-image
         // EN/DE/FR/ES/IT/ZH/JA/RU subtitle corpus: recognition itself exact in every script,
         // but two formatting quirks keep it from being the default: it sporadically prefixes a
         // markdown "# " heading (1/9 images; immune to prompt wording, identical at bf16, and
@@ -300,6 +312,14 @@ public static class LlamaCppServerManager
             "https://huggingface.co/ggml-org/HunyuanOCR-GGUF/resolve/main/HunyuanOCR-Q8_0.gguf",
             MmprojFileName: "mmproj-HunyuanOCR-Q8_0.gguf",
             MmprojUrl: "https://huggingface.co/ggml-org/HunyuanOCR-GGUF/resolve/main/mmproj-HunyuanOCR-Q8_0.gguf"),
+        // Last on purpose: the weakest and by far the slowest of the four on subtitle images
+        // (9/14 recognized, 2.53% character error, 18.5 s/image against GLM-OCR's 2.5 s). It loses
+        // line breaks, drops ♪ note marks, misreads Cyrillic ё as е and Chinese 的, and wraps
+        // Japanese output in ``` fences. Kept for users who already rely on it.
+        new LlamaCppModel("LightOnOCR 1B (Q8_0)", "LightOnOCR-1B-1025-Q8_0.gguf", "1.2 GB",
+            "https://huggingface.co/ggml-org/LightOnOCR-1B-1025-GGUF/resolve/main/LightOnOCR-1B-1025-Q8_0.gguf",
+            MmprojFileName: "mmproj-LightOnOCR-1B-1025-Q8_0.gguf",
+            MmprojUrl: "https://huggingface.co/ggml-org/LightOnOCR-1B-1025-GGUF/resolve/main/mmproj-LightOnOCR-1B-1025-Q8_0.gguf"),
     };
 
     /// <summary>
