@@ -72,6 +72,10 @@ public partial class SpeechToTextAdvancedViewModel : ObservableObject
         var fileName = GetVadCppFile();
         if (string.IsNullOrEmpty(fileName))
         {
+            // No Silero model to point at, so the box is left alone - but the button has
+            // already drawn itself pressed. Announce the unchanged "off" so the one-way
+            // binding pushes the button back out.
+            OnPropertyChanged(nameof(IsVadCppActive));
             return;
         }
 
@@ -82,24 +86,59 @@ public partial class SpeechToTextAdvancedViewModel : ObservableObject
     // input file name and then bails out with "input file not found 'true'".
     private const string WordLevelCppParameters = "-owts -ojf";
 
+    // What comes off again when the button is pressed off: the pair it puts on.
     private static readonly Regex WordLevelCppRegex = new(
         @"(?:^|\s)(-owts|--output-words|-ojf|--output-json-full)(?=\s|$)",
         RegexOptions.Compiled);
 
+    // What counts as "on": the karaoke word output alone. -ojf only asks for a fuller JSON
+    // file and says nothing about word level, so it must not light the button by itself.
+    private static readonly Regex WordLevelCppDetectRegex = new(
+        @"(?:^|\s)(-owts|--output-words)(?=\s|$)",
+        RegexOptions.Compiled);
+
     private static readonly Regex VadRegex = new(
-        @"(?:^|\s)(--vad-model\s+""[^""]+""|--vad-model\s+\S+|--vad)(?=\s|$)",
+        @"(?:^|\s)(--vad-model\s+""[^""]+""|--vad-model\s+\S+|-vm\s+""[^""]+""|-vm\s+\S+|--vad)(?=\s|$)",
+        RegexOptions.Compiled);
+
+    // A model path on its own does nothing - only the --vad switch itself turns VAD on.
+    private static readonly Regex VadDetectRegex = new(
+        @"(?:^|\s)--vad(?=\s|$)",
         RegexOptions.Compiled);
 
     private static readonly Regex VadCTranslate2Regex = new(
         @"(?:^|\s)--vad_filter\s+\S+(?=\s|$)",
         RegexOptions.Compiled);
 
+    // "--vad_filter False" is the filter switched off, not on.
+    private static readonly Regex VadCTranslate2DetectRegex = new(
+        @"(?:^|\s)--vad_filter\s+(?i:true|1)(?=\s|$)",
+        RegexOptions.Compiled);
+
     private static readonly Regex HighlightWordsCTranslate2Regex = new(
         @"(?:^|\s)(--highlight_words\s+\S+|--word_timestamps\s+\S+)(?=\s|$)",
         RegexOptions.Compiled);
 
+    // Word timestamps on their own are just timings - only asking for the words to be
+    // highlighted, and asking for it in earnest, means the button is on.
+    private static readonly Regex HighlightWordsCTranslate2DetectRegex = new(
+        @"(?:^|\s)--highlight_words\s+(?i:true|1)(?=\s|$)",
+        RegexOptions.Compiled);
+
     private static readonly Regex HighlightWordsCrispAsrRegex = new(
         @"(?:^|\s)(-ml\s+\S+|--max-len\s+\S+|-sow|--split-on-word)(?=\s|$)",
+        RegexOptions.Compiled);
+
+    // "Highlight word" is the two together: one word per segment, split at word boundaries.
+    // A maximum length on its own is not that - the "Standard" preset sets one - so matching
+    // any --max-len left the button lit after "Standard", and the press that should have
+    // switched highlighting on took the preset's --max-len back out instead.
+    private static readonly Regex MaxLenOneCrispAsrRegex = new(
+        @"(?:^|\s)(-ml|--max-len)\s+1(?=\s|$)",
+        RegexOptions.Compiled);
+
+    private static readonly Regex SplitOnWordCrispAsrRegex = new(
+        @"(?:^|\s)(-sow|--split-on-word)(?=\s|$)",
         RegexOptions.Compiled);
 
     private static readonly Regex HighlightWordsCrispAsrConflictRegex = new(
@@ -127,12 +166,12 @@ public partial class SpeechToTextAdvancedViewModel : ObservableObject
     partial void OnParametersChanged(string value)
     {
         var text = value ?? string.Empty;
-        IsWordLevelCppActive = WordLevelCppRegex.IsMatch(text);
-        IsVadCppActive = VadRegex.IsMatch(text);
+        IsWordLevelCppActive = WordLevelCppDetectRegex.IsMatch(text);
+        IsVadCppActive = VadDetectRegex.IsMatch(text);
         IsVadCrispAsrActive = IsVadCppActive;
-        IsVadCTranslate2Active = VadCTranslate2Regex.IsMatch(text);
-        IsHighlightWordsCTranslate2Active = HighlightWordsCTranslate2Regex.IsMatch(text);
-        IsHighlightWordsCrispAsrActive = HighlightWordsCrispAsrRegex.IsMatch(text);
+        IsVadCTranslate2Active = VadCTranslate2DetectRegex.IsMatch(text);
+        IsHighlightWordsCTranslate2Active = HighlightWordsCTranslate2DetectRegex.IsMatch(text);
+        IsHighlightWordsCrispAsrActive = MaxLenOneCrispAsrRegex.IsMatch(text) && SplitOnWordCrispAsrRegex.IsMatch(text);
     }
 
     [RelayCommand]
@@ -185,9 +224,7 @@ public partial class SpeechToTextAdvancedViewModel : ObservableObject
         }
 
         // This button has always switched the VAD filter on together with highlighting.
-        var withVad = IsVadCTranslate2Active
-            ? Parameters ?? string.Empty
-            : AddParameters(VadCTranslate2Regex, "--vad_filter True");
+        var withVad = AddParameters(VadCTranslate2Regex, "--vad_filter True");
 
         Parameters = AddParameters(
             HighlightWordsCTranslate2Regex,
