@@ -114,6 +114,14 @@
     <RegEx find="\b([a-zàèéìòóù]{2,})u\b" spellCheck="$1ù" replaceWith="$1ù" />
 
     <!-- ============================================================ -->
+    <!-- E' SCRITTO CON APOSTROFO AL POSTO DI È                       -->
+    <!-- E' un problema in È un problema (issue #14092). Copre sia    -->
+    <!-- l'apostrofo dritto sia quello tipografico; non tocca la E    -->
+    <!-- seguita da un'elisione staccata (E 'sti soldi).              -->
+    <!-- ============================================================ -->
+    <RegEx find="\bE['’](?![\p{L}\p{N}])" spellCheck="È" replaceWith="È" />
+
+    <!-- ============================================================ -->
     <!-- SPAZIO PERSO TRA PREPOSIZIONE/ARTICOLO E NOME PROPRIO        -->
     <!-- daRoma in da Roma : solo se la parola con maiuscola è nel    -->
     <!-- dizionario.                                                  -->

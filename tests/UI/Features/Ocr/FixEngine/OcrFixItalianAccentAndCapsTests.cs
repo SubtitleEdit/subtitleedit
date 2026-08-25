@@ -104,6 +104,30 @@ public class OcrFixItalianAccentAndCapsTests : IDisposable
         Assert.Equal(text, result.GetText());
     }
 
+    [Theory]
+    [InlineData("E' un problema.", "È un problema.")] // straight apostrophe
+    [InlineData("- E' vero!", "- È vero!")] // after a dialog dash
+    [InlineData("E’ tardi.", "È tardi.")] // typographic apostrophe
+    public void FixOcrErrors_CapitalEWithApostrophe_BecomesEGrave(string text, string expected)
+    {
+        var engine = CreateEngine();
+
+        var result = engine.FixOcrErrors(0, text, doTryToGuessUnknownWords: false);
+
+        Assert.Equal(expected, result.GetText());
+    }
+
+    [Theory]
+    [InlineData("E 'sti soldi, Zzyzx?")] // the apostrophe belongs to the next word (elision)
+    public void FixOcrErrors_CapitalEBeforeDetachedElision_IsLeftAlone(string text)
+    {
+        var engine = CreateEngine();
+
+        var result = engine.FixOcrErrors(0, text, doTryToGuessUnknownWords: false);
+
+        Assert.Equal(text, result.GetText());
+    }
+
     [Fact]
     public void FixOcrErrors_WithoutADictionary_AccentRulesDoNothing()
     {
@@ -129,6 +153,7 @@ public class OcrFixItalianAccentAndCapsTests : IDisposable
             "la", "città", "e", "bella", "non", "so", "perché", "si", "fa", "così",
             "ne", "voglio", "di", "più", "prendo", "un", "caffè", "va", "bene", "però",
             "ora", "musica", "fine", "vieni", "anche", "tu", "canta",
+            "è", "problema", "vero", "tardi",
         };
 
         public bool Initialize(string dictionaryFile, string twoLetterLanguageCode) => true;
