@@ -1379,6 +1379,7 @@ public static partial class InitListViewAndEditBox
         timeCodeUpDown.Bind(TimeCodeUpDown.IsEnabledProperty, new Binding(nameof(vm.AreTimeCodesEditable)) { Mode = BindingMode.OneWay });
         startTimePanel.Children.Add(timeCodeUpDown);
         timeCodeUpDown.ValueChanged += vm.StartTimeChanged;
+        vm.EditBoxStartTimeUpDown = timeCodeUpDown;
         timeControlsPanel.Children.Add(startTimePanel);
 
 
@@ -1411,6 +1412,7 @@ public static partial class InitListViewAndEditBox
         endCodeUpDown.Bind(TimeCodeUpDown.IsEnabledProperty, new Binding(nameof(vm.AreTimeCodesEditable)) { Mode = BindingMode.OneWay });
         endTimePanel.Children.Add(endCodeUpDown);
         endCodeUpDown.ValueChanged += vm.EndTimeChanged;
+        vm.EditBoxEndTimeUpDown = endCodeUpDown;
         timeControlsPanel.Children.Add(endTimePanel);
 
         // Duration display
@@ -1442,6 +1444,7 @@ public static partial class InitListViewAndEditBox
         }
         durationUpDown.Bind(SecondsUpDown.IsEnabledProperty, new Binding(nameof(vm.AreTimeCodesEditable)) { Mode = BindingMode.OneWay });
         durationUpDown.ValueChanged += (_, _) => vm.DurationChanged();
+        vm.EditBoxDurationUpDown = durationUpDown;
         durationPanel.Children.Add(durationUpDown);
         timeControlsPanel.Children.Add(durationPanel);
 

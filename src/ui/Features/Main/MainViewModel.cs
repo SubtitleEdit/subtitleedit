@@ -11,6 +11,7 @@ using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Controls.SyntaxTextEditorControl;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -749,6 +750,9 @@ public partial class MainViewModel :
     public MenuItem MenuItemAudioVisualizerCopyText { get; set; }
     public ITextBoxWrapper EditTextBoxOriginal { get; set; }
     public ITextBoxWrapper EditTextBox { get; set; }
+    public TimeCodeUpDown? EditBoxStartTimeUpDown { get; set; }
+    public TimeCodeUpDown? EditBoxEndTimeUpDown { get; set; }
+    public SecondsUpDown? EditBoxDurationUpDown { get; set; }
     public StackPanel PanelSingleLineLengthsOriginal { get; set; }
     public MenuItem MenuItemStyles { get; set; }
     public MenuItem MenuItemActors { get; set; }
@@ -19890,6 +19894,19 @@ public partial class MainViewModel :
             SetSubtitleFormat(SubtitleFormats.FirstOrDefault(p => p.Name == subtitle?.OriginalFormat?.Name) ??
                               SelectedSubtitleFormat);
 
+            // The STL header declares the frame rate the timecodes were authored in, so the
+            // HH:MM:SS:FF display (forced on for EBU STL) shows the file's own frame numbers.
+            // Skipped when the header's disk format code is unreadable - the frame rate would
+            // just be a guessed fallback then (#14076). A video loaded later still wins.
+            if (subtitle?.OriginalFormat is Ebu ebuFormat &&
+                ebuFormat.Header is { } ebuHeader &&
+                ebuHeader.DiskFormatCode != null &&
+                ebuHeader.DiskFormatCode.StartsWith("STL", StringComparison.Ordinal) &&
+                ebuHeader.FrameRate is > 20 and < 130)
+            {
+                SetSelectedFrameRate(ebuHeader.FrameRate);
+            }
+
             if (fileEncoding.WebName.StartsWith("utf-8", StringComparison.OrdinalIgnoreCase))
             {
                 if (FileUtil.HasUtf8Bom(fileName))
@@ -28778,6 +28795,35 @@ public partial class MainViewModel :
         }
     }
 
+    /// <summary>
+    /// EBU STL is a frame-based format, so while it is the active format the timecodes are shown
+    /// as HH:MM:SS:FF via a session-only override - the persisted "use frame mode" setting is left
+    /// untouched, and the display reverts when the format changes away again (#14076).
+    /// </summary>
+    private void UpdateTemporaryFrameMode()
+    {
+        var general = Se.Settings.General;
+        var wasFrameMode = general.UseFrameMode;
+        general.UseFrameModeOverride = IsFormatEbu ? true : null;
+        if (general.UseFrameMode == wasFrameMode)
+        {
+            return;
+        }
+
+        Configuration.Settings.General.UseTimeFormatHHMMSSFF = general.UseFrameMode;
+
+        foreach (var s in Subtitles)
+        {
+            s.RefreshTimeCodes();
+        }
+
+        EditBoxStartTimeUpDown?.RefreshDisplayFormat();
+        EditBoxEndTimeUpDown?.RefreshDisplayFormat();
+        EditBoxDurationUpDown?.RefreshDisplayFormat();
+        RefreshVideoSeekAmounts();
+        _updateAudioVisualizer = true;
+    }
+
     internal void ComboBoxSubtitleFormatChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (!_changingFormatProgrammatically)
@@ -28802,6 +28848,8 @@ public partial class MainViewModel :
                 row.RefreshAfterSettingsChanged();
             }
         }
+
+        UpdateTemporaryFrameMode();
 
         HasFormatStyle = IsFormatAssaOrSsa || IsFormatWebVtt;
         ShowActorColumnMenuHeader = IsFormatWebVtt

@@ -1359,5 +1359,6 @@ public partial class SubtitleLineViewModel : ObservableObject
         OnPropertyChanged(nameof(StartTime));
         OnPropertyChanged(nameof(EndTime));
         OnPropertyChanged(nameof(Duration));
+        OnPropertyChanged(nameof(Gap));
     }
 }
