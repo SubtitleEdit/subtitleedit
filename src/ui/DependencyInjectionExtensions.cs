@@ -413,6 +413,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<ExportCustomTextFormatViewModel>();
         collection.AddTransient<ExportEbuStlViewModel>();
         collection.AddTransient<ExportImageBasedViewModel>();
+        collection.AddTransient<TextEffectViewModel>();
         collection.AddTransient<ExportPacViewModel>();
         collection.AddTransient<ExportPlainTextViewModel>();
         collection.AddTransient<FindDoubleLinesViewModel>();

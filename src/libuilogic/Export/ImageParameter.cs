@@ -64,6 +64,14 @@ public class ImageParameter
     public int BoxPaddingTop { get; set; } = 0;
     public int BoxPaddingBottom { get; set; } = 0;
 
+    /// <summary>
+    /// Advanced text formatting (gradient fills, multiple outlines, soft shadows, glow, 3D
+    /// extrude, bevel). Null renders through the classic fill/outline/shadow path; when set,
+    /// <see cref="OutlineWidth"/> and <see cref="ShadowWidth"/> are ignored - the effects
+    /// describe the whole look.
+    /// </summary>
+    public TextEffects? TextEffects { get; set; }
+
     public ImageParameter()
     {
         Bitmap = new SKBitmap(1, 1, true);

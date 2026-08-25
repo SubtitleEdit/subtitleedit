@@ -87,6 +87,13 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
     [ObservableProperty] private bool _isFullFrame;
     [ObservableProperty] private Color _fullFrameBackgroundColor;
     [ObservableProperty] private bool _isFullFrameVisible;
+    [ObservableProperty] private ObservableCollection<TextEffectDisplayItem> _textEffectItems = null!;
+    [ObservableProperty] private TextEffectDisplayItem? _selectedTextEffect;
+    [ObservableProperty] private bool _isTextEffectEnabled;
+    [ObservableProperty] private int _textEffectStrength = 100;
+    [ObservableProperty] private int _textEffectLetterSpacing;
+    [ObservableProperty] private int _textEffectArcBend;
+    [ObservableProperty] private int _textEffectWave;
     public ObservableCollection<int> BoxPaddingValues { get; } = new ObservableCollection<int>(Enumerable.Range(0, 100));
 
     private string _outlineColorText = string.Empty;
@@ -190,6 +197,8 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         };
         SelectedBoxType = BoxTypes[0];
         UpdateBoxTypeLabels();
+        TextEffectItems = new ObservableCollection<TextEffectDisplayItem>(TextEffectDisplayItem.GetItems());
+        SelectedTextEffect = TextEffectItems[0];
 
         _generateLock = new Lock();
         _cancellationTokenSource = new CancellationTokenSource();
@@ -559,6 +568,21 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             FramesPerSecond = SelectedFrameRate,
             IsFullFrame = IsFullFrameVisible && IsFullFrame,
             FullFrameBackgroundColor = FullFrameBackgroundColor.ToSKColor(),
+            TextEffects = IsTextEffectEnabled
+                ? TextEffectPresetFactory.Create(
+                    SelectedTextEffect?.Preset ?? TextEffectPreset.SoftShadow,
+                    SelectedFontSize,
+                    FontColor.ToSKColor(),
+                    OutlineColor.ToSKColor(),
+                    ShadowColor.ToSKColor(),
+                    new TextEffectAdjustments
+                    {
+                        StrengthPercent = TextEffectStrength,
+                        LetterSpacing = TextEffectLetterSpacing,
+                        ArcBendPercent = TextEffectArcBend,
+                        WaveAmplitude = TextEffectWave,
+                    })
+                : null,
         };
 
         // "{\fad(..)}" and "{\alpha&H..&}" change what is drawn, so unlike the position tag
@@ -771,6 +795,35 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
     }
 
     partial void OnFontColorChanged(Color value) => _dirty = true;
+    partial void OnSelectedTextEffectChanged(TextEffectDisplayItem? value) => _dirty = true;
+    partial void OnIsTextEffectEnabledChanged(bool value) => _dirty = true;
+    partial void OnTextEffectStrengthChanged(int value) => _dirty = true;
+    partial void OnTextEffectLetterSpacingChanged(int value) => _dirty = true;
+    partial void OnTextEffectArcBendChanged(int value) => _dirty = true;
+    partial void OnTextEffectWaveChanged(int value) => _dirty = true;
+
+    [RelayCommand]
+    private async Task ShowTextEffectSettings()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        // Turn the effect on while tuning so the preview shows what the sliders do; put it
+        // back on cancel. The settings window writes straight into this view model, so the
+        // preview underneath follows every change live.
+        var wasEnabled = IsTextEffectEnabled;
+        IsTextEffectEnabled = true;
+
+        var result = await _windowService.ShowDialogAsync<TextEffectWindow, TextEffectViewModel>(Window,
+            vm => vm.Initialize(this));
+
+        if (!result.OkPressed)
+        {
+            IsTextEffectEnabled = wasEnabled;
+        }
+    }
     partial void OnOutlineColorChanged(Color value) => _dirty = true;
     partial void OnShadowColorChanged(Color value) => _dirty = true;
     partial void OnBoxColorChanged(Color value) => _dirty = true;
@@ -933,6 +986,13 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             SelectedFrameRate = FrameRates.Contains(profile.FramesPerSecond) ? profile.FramesPerSecond : 25;
             IsFullFrame = profile.IsFullFrame;
             FullFrameBackgroundColor = profile.FullFrameBackgroundColor.FromHex().ToAvaloniaColor();
+            SelectedTextEffect = TextEffectItems.FirstOrDefault(t => t.Preset.ToString() == profile.TextEffect)
+                                 ?? TextEffectItems[0];
+            IsTextEffectEnabled = profile.TextEffectEnabled;
+            TextEffectStrength = profile.TextEffectStrength <= 0 ? 100 : profile.TextEffectStrength;
+            TextEffectLetterSpacing = profile.TextEffectLetterSpacing;
+            TextEffectArcBend = profile.TextEffectArcBend;
+            TextEffectWave = profile.TextEffectWave;
         }
     }
 
@@ -967,6 +1027,12 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             profile.FramesPerSecond = SelectedFrameRate;
             profile.IsFullFrame = IsFullFrame;
             profile.FullFrameBackgroundColor = FullFrameBackgroundColor.FromColorToHex(true);
+            profile.TextEffect = SelectedTextEffect?.Preset.ToString() ?? string.Empty;
+            profile.TextEffectEnabled = IsTextEffectEnabled;
+            profile.TextEffectStrength = TextEffectStrength;
+            profile.TextEffectLetterSpacing = TextEffectLetterSpacing;
+            profile.TextEffectArcBend = TextEffectArcBend;
+            profile.TextEffectWave = TextEffectWave;
         }
     }
 
