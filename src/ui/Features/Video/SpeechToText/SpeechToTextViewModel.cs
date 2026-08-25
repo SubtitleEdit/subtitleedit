@@ -208,7 +208,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     private List<AudioClip>? _audioClips;
     private bool _audioClipsAutoStart;
     private string _qwen3AsrOutputJsonPath = string.Empty;
-    private int? _qwen3AsrExitCode;
+    private int? _engineExitCode;
 
     private readonly IWindowService _windowService;
     private readonly IFileHelper _fileHelper;
@@ -762,14 +762,15 @@ public partial class SpeechToTextViewModel : ObservableObject
             var settings = Se.Settings.Tools.AudioToText;
 
             // Grab the exit code before disposing - it is the key diagnostic when the engine
-            // dies without producing output (e.g. a Qwen3 ASR GPU/Vulkan crash, issue #12815).
+            // dies without producing output (a Qwen3 ASR GPU/Vulkan crash, issue #12815; a Crisp
+            // ASR build that needs CPU instructions this machine lacks, issue #14038).
             try
             {
-                _qwen3AsrExitCode = _whisperProcess.ExitCode;
+                _engineExitCode = _whisperProcess.ExitCode;
             }
             catch
             {
-                _qwen3AsrExitCode = null;
+                _engineExitCode = null;
             }
 
             _whisperProcess.Dispose();
@@ -887,6 +888,75 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
 
         return !Regex.IsMatch(crispArgs ?? string.Empty, @"(^|\s)(--vad|-vm|--vad-model|--chunk-seconds|-ck)\b");
+    }
+
+    /// <summary>
+    /// Windows terminates a process that executes an instruction its CPU does not implement with
+    /// STATUS_ILLEGAL_INSTRUCTION; Unix reports the SIGILL as 128+4.
+    /// </summary>
+    internal const int StatusIllegalInstruction = unchecked((int)0xC000001D);
+
+    /// <summary>The shell convention for a child killed by SIGILL (128 + SIGILL).</summary>
+    internal const int UnixSigill = 132;
+
+    /// <summary>
+    /// Explains a Crisp ASR run that produced nothing because the engine died, or null when the
+    /// exit code says it did not - an empty result with a clean exit has some other cause and the
+    /// generic message is the honest one.
+    ///
+    /// Worth spelling out because the failure is invisible: a process killed for an illegal
+    /// instruction never reaches stdout, so SE sees a well-behaved engine that simply produced no
+    /// subtitles and said so, which is all the user was told in #14038. The concrete case there
+    /// was the crispasr v0.8.29 GPU packages, built with AVX-512 against a CI runner that had it
+    /// (CrispASR #374) - every CPU without AVX-512 got this on the CUDA/Vulkan build while the CPU
+    /// build ran fine, so naming the installed package is most of the answer.
+    /// </summary>
+    /// <param name="exitCode">The engine process exit code, or null when it could not be read.</param>
+    /// <param name="variant">
+    /// The installed Crisp ASR package ("cuda", "vulkan", "cpu", ...) as reported by
+    /// <see cref="DownloadHashManager.GetCrispAsrVariant"/>, or null when it is not known.
+    /// </param>
+    internal static string? DescribeCrispAsrCrash(int? exitCode, string? variant)
+    {
+        if (exitCode is null or 0)
+        {
+            return null;
+        }
+
+        var code = $"exit code {exitCode.Value} (0x{(uint)exitCode.Value:X8})";
+        if (exitCode.Value is not (StatusIllegalInstruction or UnixSigill))
+        {
+            return $"Crisp ASR crashed before producing any output ({code}).{Environment.NewLine}{Environment.NewLine}" +
+                   "Please check the tools log for engine output.";
+        }
+
+        var isGpuBuild = variant is "cuda" or "cuda13" or "vulkan" or "hip";
+        var advice = isGpuBuild
+            ? $"The installed \"{variant}\" package needs a newer CPU than this one. Download the speech to text " +
+              "engine again and choose the CPU build."
+            : "Download the speech to text engine again and choose the CPU (legacy) build, which targets the " +
+              "oldest CPUs.";
+
+        return $"Crisp ASR was stopped for using CPU instructions this computer does not have ({code}, " +
+               $"illegal instruction), so it never produced any output.{Environment.NewLine}{Environment.NewLine}" +
+               advice;
+    }
+
+    /// <summary>
+    /// The Crisp ASR package the user actually has installed, from the download sidecar. Best-effort:
+    /// this only sharpens a diagnostic message, so an unreadable sidecar is not worth failing over.
+    /// </summary>
+    private static string? TryGetCrispAsrVariant(ICrispAsrEngine engine)
+    {
+        try
+        {
+            var sidecar = DownloadHashManager.TryReadSidecar(engine.GetAndCreateWhisperFolder());
+            return sidecar == null ? null : DownloadHashManager.GetCrispAsrVariant(sidecar.Value.Key);
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     /// <summary>
@@ -1034,7 +1104,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         var jsonPath = _qwen3AsrOutputJsonPath;
         if (string.IsNullOrEmpty(jsonPath) || !File.Exists(jsonPath))
         {
-            var exitCode = _qwen3AsrExitCode;
+            var exitCode = _engineExitCode;
             var isVulkan = false;
             try
             {
@@ -2444,6 +2514,20 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         var anyLinesTranscribed = transcribedSubtitle != null && transcribedSubtitle.Paragraphs.Count > 0;
 
+        // A crashed engine leaves the same empty result as a clean run that found no speech, and
+        // the exit code is the only thing that tells them apart (#14038). Resolved here rather than
+        // in the dialog branch below so a batch run - which returns before any of that - still
+        // records why the file came back empty.
+        string? crispAsrCrash = null;
+        if (!anyLinesTranscribed && GetEffectiveSelectedEngine() is ICrispAsrEngine crispAsrEngine)
+        {
+            crispAsrCrash = DescribeCrispAsrCrash(_engineExitCode, TryGetCrispAsrVariant(crispAsrEngine));
+            if (crispAsrCrash != null)
+            {
+                Se.WriteToolsLog(crispAsrCrash, true);
+            }
+        }
+
         if (_abort)
         {
             // User cancelled mid-run. Leave the dialog open so they can adjust
@@ -2488,6 +2572,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             else if (GetEffectiveSelectedEngine() is ICrispAsrEngine)
             {
                 await MessageBox.Show(Window!, "No transcription result",
+                    crispAsrCrash ??
                     "Crisp ASR finished without generating subtitles. Please check the tools log for engine output.");
 
                 if (Window != null)
@@ -3934,7 +4019,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             var exe = qwen3Asr.GetExecutable();
             var alignerModel = qwen3Asr.ForcedAlignerModel;
             _qwen3AsrOutputJsonPath = Path.Combine(Path.GetTempPath(), $"qwen3_asr_{Guid.NewGuid():N}.json");
-            _qwen3AsrExitCode = null;
+            _engineExitCode = null;
             var qwen3ExtraArgs = engine.CommandLineParameter;
 
             var qwen3Params = string.IsNullOrWhiteSpace(qwen3ExtraArgs)
