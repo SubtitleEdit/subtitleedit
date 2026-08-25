@@ -492,7 +492,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var len = s.Length;
             for (var i = 0; i < len; i++)
             {
-                if (CharUtils.IsDigit(s[i]))
+                if (CharUtils.IsAsciiDigit(s[i]))
                 {
                     return true;
                 }

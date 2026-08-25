@@ -9,6 +9,12 @@ public class LanguageMainMenu
     public string NewKeepVideo { get; set; }
     public string NewWindow { get; set; }
     public string WindowTitle { get; set; }
+
+    // macOS only: the Window-menu staples AppKit expects every app to author itself,
+    // plus File > Close window. Unused by the Windows/Linux menu.
+    public string WindowMinimize { get; set; }
+    public string WindowZoom { get; set; }
+    public string CloseWindow { get; set; }
     public string Open { get; set; }
     public string OpenKeepVideo { get; set; }
     public string OpenOriginal { get; set; }
@@ -52,6 +58,7 @@ public class LanguageMainMenu
     public string AiReview { get; set; }
     public string FixCommonErrors { get; set; }
     public string CheckAndFixNetflixErrors { get; set; }
+    public string ListErrors { get; set; }
     public string MakeEmptyTranslationFromCurrentSubtitle { get; set; }
     public string MergeLinesWithSameText { get; set; }
     public string MergeLinesWithSameTimeCodes { get; set; }
@@ -149,6 +156,9 @@ public class LanguageMainMenu
         NewKeepVideo = "New (keep _video)";
         NewWindow = "New _window";
         WindowTitle = "Window";
+        WindowMinimize = "Minimize";
+        WindowZoom = "Zoom";
+        CloseWindow = "Close window";
         Open = "_Open...";
         OpenKeepVideo = "Open (_keep video)...";
         OpenOriginal = "Open ori_ginal...";
@@ -186,6 +196,7 @@ public class LanguageMainMenu
         AiReview = "AI review...";
         FixCommonErrors = "_Fix common errors...";
         CheckAndFixNetflixErrors = "Check and fix Netfli_x errors...";
+        ListErrors = "L_ist errors...";
         MakeEmptyTranslationFromCurrentSubtitle = "Make new _empty translation from current subtitle";
         MergeLinesWithSameText = "_Merge lines with same text...";
         MergeLinesWithSameTimeCodes = "Merge lines with same time codes...";

@@ -3,12 +3,51 @@ using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using System;
 using System.Collections.Generic;
 using System.Text;
+#if NET8_0_OR_GREATER
+using System.Buffers;
+#endif
 
 namespace Nikse.SubtitleEdit.Core.Forms
 {
     public class RemoveTextForHI
     {
         private static readonly CharLookup MusicSymbols = CharLookup.Create('\u266A', '\u266B');
+
+        // ShouldRemoveNarrator runs for every colon in the file and used to allocate all three
+        // of these sets on every call. Hoisting the string[] literals alone measured *slower*
+        // than the throw-away arrays, so the sets are prepared as multi-value searches instead:
+        // one pass over the text each, rather than two and fifteen separate IndexOf sweeps.
+        private static readonly string[] NarratorSkipWords =
+        {
+            "Previously on",
+            "Improved by",
+            " is ",
+            " are ",
+            " were ",
+            " was ",
+            " think ",
+            " guess ",
+            " will ",
+            " believe ",
+            " say ",
+            " said ",
+            " do ",
+            " want ",
+            "That's "
+        };
+
+        private static readonly string[] NarratorSkipUrlOrList = { "http", ", " };
+        private static readonly char[] NarratorSkipPunctuation = { '!', '?', '\u00BF', '\u00A1' };
+#if NET8_0_OR_GREATER
+        private static readonly SearchValues<string> NarratorSkipWordsSearch =
+            SearchValues.Create(NarratorSkipWords, StringComparison.OrdinalIgnoreCase);
+
+        private static readonly SearchValues<string> NarratorSkipUrlOrListSearch =
+            SearchValues.Create(NarratorSkipUrlOrList, StringComparison.OrdinalIgnoreCase);
+
+        private static readonly SearchValues<char> NarratorSkipPunctuationSearch =
+            SearchValues.Create(NarratorSkipPunctuation);
+#endif
 
         public RemoveTextForHISettings Settings { get; set; }
 
@@ -863,7 +902,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     if (partialRemove)
                     {
                         newText = line.Remove(lastIndexOfPeriod + 4, indexOfColon - lastIndexOfPeriod - 3);
-                        if (newText.Substring(lastIndexOfPeriod + 3).StartsWith("  "))
+                        var doubleSpaceAt = lastIndexOfPeriod + 3;
+                        if (doubleSpaceAt + 1 < newText.Length && newText[doubleSpaceAt] == ' ' && newText[doubleSpaceAt + 1] == ' ')
                         {
                             newText = newText.Remove(lastIndexOfPeriod + 3, 1);
                         }
@@ -905,35 +945,33 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         private static bool ShouldRemoveNarrator(string pre, string language)
         {
-            if (pre.Length > 30 || pre.IndexOfAny(new[] { "http", ", " }, StringComparison.OrdinalIgnoreCase) >= 0)
+#if NET8_0_OR_GREATER
+            if (pre.Length > 30 || pre.AsSpan().IndexOfAny(NarratorSkipUrlOrListSearch) >= 0)
             {
                 return false;
             }
 
-            if (language == "en" && pre.Length > 15 && pre.IndexOfAny(new[]
-                {
-                    "Previously on",
-                    "Improved by",
-                    " is ",
-                    " are ",
-                    " were ",
-                    " was ",
-                    " think ",
-                    " guess ",
-                    " will ",
-                    " believe ",
-                    " say ",
-                    " said ",
-                    " do ",
-                    " want ",
-                    "That's "
-                }, StringComparison.OrdinalIgnoreCase) >= 0)
+            if (language == "en" && pre.Length > 15 && pre.AsSpan().IndexOfAny(NarratorSkipWordsSearch) >= 0)
             {
                 return false;
             }
 
             // Okay! Narrator: Hello!
-            return pre.IndexOfAny(new[] { '!', '?', '¿', '¡' }) < 0;
+            return pre.AsSpan().IndexOfAny(NarratorSkipPunctuationSearch) < 0;
+#else
+            if (pre.Length > 30 || pre.IndexOfAny(NarratorSkipUrlOrList, StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return false;
+            }
+
+            if (language == "en" && pre.Length > 15 && pre.IndexOfAny(NarratorSkipWords, StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return false;
+            }
+
+            // Okay! Narrator: Hello!
+            return pre.IndexOfAny(NarratorSkipPunctuation) < 0;
+#endif
         }
 
         private static readonly char[] TrimStartNoiseChar = { '-', ' ' };
@@ -1421,34 +1459,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
             var newText = text;
             var s = text;
             int index;
-            if (Settings.RemoveTextBetweenSquares && s.StartsWith('[') && (index = s.IndexOf(']', 1)) > 0)
-            {
-                if (++index < s.Length && s[index] == ':')
-                {
-                    index++;
-                }
-
-                newText = s.Remove(0, index);
-            }
-            else if (Settings.RemoveTextBetweenBrackets && s.StartsWith('{') && (index = s.IndexOf('}', 1)) > 0)
-            {
-                if (++index < s.Length && s[index] == ':')
-                {
-                    index++;
-                }
-
-                newText = s.Remove(0, index);
-            }
-            else if (Settings.RemoveTextBetweenParentheses && s.StartsWith('(') && (index = s.IndexOf(')', 1)) > 0)
-            {
-                if (++index < s.Length && s[index] == ':')
-                {
-                    index++;
-                }
-
-                newText = s.Remove(0, index);
-            }
-            else if (Settings.RemoveTextBetweenQuestionMarks && s.StartsWith('?') && (index = s.IndexOf('?', 1)) > 0)
+            if (Settings.RemoveTextBetweenSquares && s.StartsWith('[') && (index = s.IndexOf(']', 1)) > 0 ||
+                Settings.RemoveTextBetweenBrackets && s.StartsWith('{') && (index = s.IndexOf('}', 1)) > 0 ||
+                Settings.RemoveTextBetweenParentheses && s.StartsWith('(') && (index = s.IndexOf(')', 1)) > 0 ||
+                Settings.RemoveTextBetweenQuestionMarks && s.StartsWith('?') && (index = s.IndexOf('?', 1)) > 0)
             {
                 if (++index < s.Length && s[index] == ':')
                 {

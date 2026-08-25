@@ -717,6 +717,14 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
         _extractCancellation = null;
         IsExtractingTimeCodes = false;
 
+        // A completed run decoded the whole video, so its last frame time is the real duration -
+        // this keeps completed extractions usable when ffmpeg reported no duration up front
+        // (IsUsableFor rejects any list it cannot check against a known length).
+        if (!cancelled && _videoDurationSeconds <= 0 && extracted.Count > 0)
+        {
+            _videoDurationSeconds = extracted[extracted.Count - 1];
+        }
+
         // A short list is worse than none: the beautifier maps frame number to list index, so cues
         // past the end of a partial extraction would snap to the wrong frames rather than fall
         // back to n/fps. Cancelling mid-way lands here too.

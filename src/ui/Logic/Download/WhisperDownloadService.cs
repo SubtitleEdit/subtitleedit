@@ -16,6 +16,7 @@ public interface IWhisperDownloadService
     Task DownloadWhisperPurfviewFasterWhisperXxl(string destinationFileName, IProgress<float>? progress, CancellationToken cancellationToken);
     Task DownloadWhisperCppVulkan(Stream stream, Progress<float> progress, CancellationToken cancellationToken);
     Task DownloadWhisperCTranslate2(Stream stream, Progress<float> progress, CancellationToken cancellationToken);
+    Task DownloadWhisperX(string destinationFileName, IProgress<float>? progress, CancellationToken cancellationToken);
     Task DownloadSileroVad(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken);
 }
 
@@ -46,7 +47,14 @@ public class WhisperDownloadService : IWhisperDownloadService
     private const string MacArmCTranslate2 = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-183/whisper-ctranslate2-mac.zip";
     private const string LinuxCTranslate2 = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-183/whisper-ctranslate2-Linux64.zip";
     private const string WindowCTranslate2 = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-183/whisper-ctranslate2-win64.zip";
-    
+
+    // Built by support-files' build-whisperx-standalone-release.yml from a pinned ref of
+    // https://github.com/muaz978/subtitleedit-whisperx-standalone (v1.0.1), so every install
+    // of a given SE version gets the exact same, known-good build.
+    private const string MacArmWhisperX = "https://github.com/SubtitleEdit/support-files/releases/download/whisperx-standalone-101/whisperx-standalone-macos-arm64.7z";
+    private const string LinuxWhisperX = "https://github.com/SubtitleEdit/support-files/releases/download/whisperx-standalone-101/whisperx-standalone-linux-x64.7z";
+    private const string WindowsWhisperX = "https://github.com/SubtitleEdit/support-files/releases/download/whisperx-standalone-101/whisperx-standalone-windows-x64.7z";
+
     public WhisperDownloadService(HttpClient httpClient)
     {
         httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(
@@ -107,6 +115,14 @@ public class WhisperDownloadService : IWhisperDownloadService
         await DownloadHelper.DownloadFileAsync(_httpClient, GetUrlTranslate2(), stream, progress, cancellationToken);
     }
 
+    public async Task DownloadWhisperX(string destinationFileName, IProgress<float>? progress, CancellationToken cancellationToken)
+    {
+        // Downloads straight to a file, like Purfview Faster-Whisper-XXL, instead of the shared
+        // in-memory _downloadStream - at 216 MB-355 MB, buffering this in memory would peak far
+        // higher before unpacking even starts (MemoryStream's doubling growth).
+        await DownloadHelper.DownloadFileAsync(_httpClient, GetUrlWhisperX(), destinationFileName, progress, cancellationToken);
+    }
+
     public async Task DownloadSileroVad(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken)
     {
         await DownloadHelper.DownloadFileAsync(_httpClient, SileroVadUrl, stream, progress, cancellationToken);
@@ -118,15 +134,40 @@ public class WhisperDownloadService : IWhisperDownloadService
         {
             return WindowCTranslate2;
         }
-        
+
         if (OperatingSystem.IsMacOS() && RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
         {
             return MacArmCTranslate2;
         }
-        
+
         if (OperatingSystem.IsLinux() && RuntimeInformation.ProcessArchitecture == Architecture.X64)
         {
             return LinuxCTranslate2;
+        }
+
+        throw new PlatformNotSupportedException();
+    }
+
+    private static string GetUrlWhisperX()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            if (RuntimeInformation.ProcessArchitecture != Architecture.X64)
+            {
+                throw new PlatformNotSupportedException("WhisperX standalone build is not available for Windows ARM64.");
+            }
+
+            return WindowsWhisperX;
+        }
+
+        if (OperatingSystem.IsMacOS() && RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
+        {
+            return MacArmWhisperX;
+        }
+
+        if (OperatingSystem.IsLinux() && RuntimeInformation.ProcessArchitecture == Architecture.X64)
+        {
+            return LinuxWhisperX;
         }
 
         throw new PlatformNotSupportedException();

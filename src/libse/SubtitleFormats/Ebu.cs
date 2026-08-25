@@ -967,6 +967,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             internal int Priority { get; set; }
         }
 
+        /// <summary>
+        /// True when <paramref name="header"/> is a full 1024-character EBU STL header - present after
+        /// loading an STL file or after the EBU save options dialog has stored one on the subtitle.
+        /// The disk format code sits at 3..10 ("STLnn.mm") and is matched there rather than by
+        /// listing frame rates, so every rate the save options dialog offers is recognized (STL23
+        /// used to fall through, which threw the whole header away on save).
+        /// </summary>
+        public static bool IsStlHeader(string header)
+        {
+            return header != null &&
+                   header.Length == 1024 &&
+                   header.Substring(3, 3) == "STL";
+        }
+
         public bool Save(string fileName, Subtitle subtitle)
         {
             return Save(fileName, subtitle, false);
@@ -1005,7 +1019,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             // STL file (see LoadSubtitle). Every other format writes its own meaning into it -
             // ASSA dialogue lines always carry one - so the vertical position below may only be
             // taken from MarginV when this is true.
-            var isEbuSource = subtitle.Header != null && subtitle.Header.Length == 1024 && (subtitle.Header.Contains("STL24") || subtitle.Header.Contains("STL25") || subtitle.Header.Contains("STL29") || subtitle.Header.Contains("STL30"));
+            var isEbuSource = IsStlHeader(subtitle.Header);
             if (isEbuSource)
             {
                 header = ReadHeader(GetEncoding(subtitle.Header.Substring(0, 3)).GetBytes(subtitle.Header));

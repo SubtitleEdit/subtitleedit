@@ -470,7 +470,6 @@
   <EndLines />
   <RegularExpressions>
     <RegEx find="\b\|\b" replaceWith="I" />
-    <RegEx find="\bl\b" replaceWith="I" />
   </RegularExpressions>
   <RegularExpressionsIfSpelledCorrectly>
 
@@ -518,8 +517,6 @@
     <!-- leading l→I before 2+ lowercase chars -->
     <RegEx find="\bl([a-zåäöé]{2,})\b" spellCheck="I$1" replaceWith="I$1" />
 
-    <!-- standalone l → I (Roman numerals, list markers, ordinals) -->
-    <RegEx find="\bl\b" replaceWith="I" />
 
     <!-- ============================================================ -->
     <!-- SWEDISH GENITIVE                                             -->

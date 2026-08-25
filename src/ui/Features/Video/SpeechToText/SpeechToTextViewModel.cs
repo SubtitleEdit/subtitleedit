@@ -263,6 +263,16 @@ public partial class SpeechToTextViewModel : ObservableObject
             Engines.Add(new MlxWhisperMac());
         }
 
+        // Same platform/architecture support as the standalone build published at
+        // https://github.com/muaz978/subtitleedit-whisperx-standalone - only builds for
+        // Windows x64 (not ARM64, which would silently get a mismatched x64 binary).
+        if ((OperatingSystem.IsWindows() && RuntimeInformation.ProcessArchitecture == Architecture.X64) ||
+            (OperatingSystem.IsMacOS() && RuntimeInformation.ProcessArchitecture == Architecture.Arm64) ||
+            (OperatingSystem.IsLinux() && RuntimeInformation.ProcessArchitecture == Architecture.X64))
+        {
+            Engines.Add(new WhisperEngineWhisperX());
+        }
+
         Engines.Add(new WhisperEngineOpenAi());
 
         // Add OpenAI Compatible STT engine (available on all platforms)
@@ -452,6 +462,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             or WhisperChoice.ConstMe
             or WhisperChoice.PurfviewFasterWhisperXxl
             or WhisperChoice.CTranslate2
+            or WhisperChoice.WhisperX
             or WhisperChoice.OpenAi;
     }
 
@@ -953,9 +964,14 @@ public partial class SpeechToTextViewModel : ObservableObject
         var parameters = Parameters ?? string.Empty;
         if (parameters.Contains("--compute_type", StringComparison.OrdinalIgnoreCase))
         {
+            // Only the floating point types are worth naming: on the RTX 50 series - the cards
+            // this error shows up on most - every int8 variant fails with this exact cuBLAS
+            // error, so listing "int8" sent the user straight back to the same dialog
+            // (Purfview/whisper-standalone-win#403, OpenNMT/CTranslate2#1865).
             await MessageBox.Show(Window!, title,
                 cause + "The parameters already set \"--compute_type\" - try another value, " +
-                "such as \"float16\", \"int8\", or \"float32\".");
+                "such as \"float16\", \"float32\", or \"bfloat16\" - the \"int8\" types fail " +
+                "this way on many newer GPUs.");
             return;
         }
 
@@ -3774,7 +3790,11 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// stdout/stderr to <paramref name="dataReceivedHandler"/> when one is given.
     /// The working directory is the executable's folder.
     /// </summary>
-    private static Process StartEngineProcess(string executable, string arguments, DataReceivedEventHandler? dataReceivedHandler)
+    private static Process StartEngineProcess(
+        string executable,
+        string arguments,
+        DataReceivedEventHandler? dataReceivedHandler,
+        Action<ProcessStartInfo>? configureStartInfo = null)
     {
         var p = new Process
         {
@@ -3786,6 +3806,8 @@ public partial class SpeechToTextViewModel : ObservableObject
                 WorkingDirectory = Path.GetDirectoryName(executable),
             }
         };
+
+        configureStartInfo?.Invoke(p.StartInfo);
 
         if (dataReceivedHandler != null)
         {
@@ -3831,6 +3853,35 @@ public partial class SpeechToTextViewModel : ObservableObject
     }
 
     /// <summary>
+    /// WhisperX shells out to a real "ffmpeg" binary via subprocess for audio loading (it is not
+    /// bundled in the standalone build - see subtitleedit-whisperx-standalone's README). Puts
+    /// Subtitle Edit's own configured/bundled ffmpeg on PATH so WhisperX finds it without
+    /// requiring a separate ffmpeg install. When ffmpeg is not configured to an actual file
+    /// (e.g. still the bare "ffmpeg" fallback resolved through the system PATH), this leaves
+    /// PATH untouched - the child process falls back to the exact same system PATH resolution
+    /// Subtitle Edit's own ffmpeg calls would use in that situation.
+    /// </summary>
+    private static void AddFfmpegToPath(ProcessStartInfo startInfo)
+    {
+        var ffmpegLocation = FfmpegHelper.GetFfmpegLocation();
+        if (string.IsNullOrEmpty(ffmpegLocation) || !File.Exists(ffmpegLocation))
+        {
+            return;
+        }
+
+        var ffmpegDir = Path.GetDirectoryName(ffmpegLocation);
+        if (string.IsNullOrEmpty(ffmpegDir))
+        {
+            return;
+        }
+
+        var existingPath = ProcessEnvironmentHelper.GetOrNull(startInfo, "PATH");
+        startInfo.EnvironmentVariables["PATH"] = string.IsNullOrEmpty(existingPath)
+            ? ffmpegDir
+            : ffmpegDir + Path.PathSeparator + existingPath;
+    }
+
+    /// <summary>
     /// Engines that demux and decode the source media themselves, so they can be pointed at the
     /// user's original file instead of SE's extracted WAV: Purfview Faster-Whisper-XXL bundles
     /// ffmpeg, whisper-ctranslate2 bundles PyAV. Verified that the others cannot - whisper.cpp
@@ -3840,7 +3891,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     private static bool CanEngineReadSourceFileDirectly(ISpeechToTextEngine engine)
     {
         return engine.Name == WhisperEnginePurfviewFasterWhisperXxl.StaticName ||
-               engine is WhisperEngineCTranslate2;
+               engine is WhisperEngineCTranslate2 or WhisperEngineWhisperX;
     }
 
     /// <summary>
@@ -3883,6 +3934,38 @@ public partial class SpeechToTextViewModel : ObservableObject
         DataReceivedEventHandler? dataReceivedHandler = null,
         string engineOutputFolder = "")
     {
+        if (engine is WhisperEngineWhisperX whisperX)
+        {
+            var exe = whisperX.GetExecutable();
+            var whisperXArgs = whisperX.CommandLineParameter;
+            var languageArgX = language.Equals("auto", StringComparison.OrdinalIgnoreCase)
+                ? string.Empty
+                : $"--language {language} ";
+            var taskArg = translate ? "--task translate " : string.Empty;
+            var outputDir = string.IsNullOrEmpty(engineOutputFolder)
+                ? GetSttTempFolder()
+                : engineOutputFolder;
+            var parametersX =
+                $"{languageArgX}--model \"{model}\" --output_format srt --output_dir \"{outputDir}\" " +
+                $"{taskArg}{whisperXArgs} \"{waveFileName}\"";
+
+            // The generic launch path is bypassed here, so repeat the two pieces of its setup a
+            // PyInstaller-frozen Python engine needs: the glibc 2.41+ executable-stack repair,
+            // and the Python UTF-8/unbuffered variables - without them Windows decodes piped
+            // output with the ANSI code page (mojibake, or a UnicodeEncodeError killing the run)
+            // and stdout block-buffers so the log sits empty until the process exits.
+            EnsureExecutableStackCleared(whisperX, whisperX.GetAndCreateWhisperFolder());
+
+            Se.WriteToolsLog($"{exe} {parametersX}");
+            return StartEngineProcess(exe, parametersX, dataReceivedHandler, startInfo =>
+            {
+                AddFfmpegToPath(startInfo);
+                startInfo.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
+                startInfo.EnvironmentVariables["PYTHONUTF8"] = "1";
+                startInfo.EnvironmentVariables["PYTHONUNBUFFERED"] = "1";
+            });
+        }
+
         if (engine is Qwen3AsrCppEngine qwen3Asr)
         {
             var exe = qwen3Asr.GetExecutable();
@@ -4248,9 +4331,9 @@ public partial class SpeechToTextViewModel : ObservableObject
     private static bool _executableStackChecked;
 
     /// <summary>
-    /// Repairs an already-installed Purfview Faster-Whisper-XXL before launching it.
+    /// Repairs an already-installed Purfview Faster-Whisper-XXL or WhisperX before launching it.
     /// <para>
-    /// Its bundled libctranslate2 is built with PT_GNU_STACK = RWE, and glibc 2.41 stopped making
+    /// Both bundle a libctranslate2 built with PT_GNU_STACK = RWE, and glibc 2.41 stopped making
     /// the stack executable at dlopen time, so on a distro with glibc 2.41+ (Fedora 42, Arch,
     /// Ubuntu 25.10) the run dies immediately with "cannot enable executable stack as shared
     /// object requires: Invalid argument". The download path clears the flag on unpack, but
@@ -4264,7 +4347,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         if (_executableStackChecked ||
             !OperatingSystem.IsLinux() ||
             string.IsNullOrEmpty(whisperFolder) ||
-            engine is not WhisperEnginePurfviewFasterWhisperXxl)
+            engine is not (WhisperEnginePurfviewFasterWhisperXxl or WhisperEngineWhisperX))
         {
             return;
         }

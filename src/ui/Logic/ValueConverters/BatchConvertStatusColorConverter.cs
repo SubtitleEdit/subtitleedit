@@ -51,6 +51,7 @@ public class BatchConvertStatusColorConverter : IValueConverter
             status == Se.Language.Ocr.LlamaCppReturnedNoText ||
             status == Se.Language.Ocr.CrispEmbedNotDownloaded ||
             status == Se.Language.Ocr.CrispEmbedReturnedNoText ||
+            status == Se.Language.Ocr.AppleVisionReturnedNoText ||
             (errorPrefix.Length > 0 && status.StartsWith(errorPrefix, StringComparison.OrdinalIgnoreCase)) ||
             status.StartsWith("BinaryOcr database not found", StringComparison.Ordinal))
         {

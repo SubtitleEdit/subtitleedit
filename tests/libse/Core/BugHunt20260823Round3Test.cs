@@ -1,6 +1,7 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
+using SkiaSharp;
 
 namespace LibSETests.Core;
 
@@ -98,7 +99,13 @@ public class BugHunt20260823Round3Test
         var s = new TransportStreamSubtitle();
         Assert.Equal(0, s.NumberOfImages);
         Assert.NotNull(s.GetBitmap());
-        Assert.NotNull(s.GetScreenSize());
+
+        // GetScreenSize returns a struct, so "not null" asserted nothing at all (xUnit2002).
+        // Pin the no-source fallback it actually returns instead.
+        Assert.Equal(
+            new SKSize(DvbSubPes.DefaultScreenWidth, DvbSubPes.DefaultScreenHeight),
+            s.GetScreenSize());
+
         Assert.NotNull(s.GetPosition());
     }
 }

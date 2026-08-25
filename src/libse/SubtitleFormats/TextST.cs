@@ -82,8 +82,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 get
                 {
-                    var arr = BluRaySupPalette.YCbCr2Rgb(Y, Cb, Cr, false);
-                    return ColorUtils.FromArgb(T, (byte)arr[0], (byte)arr[1], (byte)arr[2]);
+                    BluRaySupPalette.YCbCr2Rgb(Y, Cb, Cr, false, out var r8, out var g8, out var b8);
+                    return ColorUtils.FromArgb(T, (byte)r8, (byte)g8, (byte)b8);
                 }
             }
         }

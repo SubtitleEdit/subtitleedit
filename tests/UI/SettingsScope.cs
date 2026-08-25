@@ -1,3 +1,4 @@
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Reflection;
 
@@ -20,12 +21,33 @@ internal sealed class SettingsScope : IDisposable
 {
     private readonly List<(PropertyInfo Property, object Owner, object? Value)> _saved = new();
 
+    /// <summary>
+    /// Some of Se.Settings is mirrored into libse's own <see cref="Configuration.Settings"/>
+    /// singleton by <c>Se.UpdateLibSeSettings</c>, and the copy is one-way. Restoring the SE 5
+    /// property therefore is not enough: if anything ran that sync while the scope held a changed
+    /// value, the mirror keeps the changed one for the rest of the run. Test collections do not
+    /// run in parallel here, so this is not a race - it is plain ordering, which is why it shows
+    /// up as a suite that passes alone and fails in a different order.
+    ///
+    /// UseFrameMode is the mirror that bites, because TimeCode.ToDisplayString reads the libse
+    /// side: a leak turns every later "00:11:23.520" assertion into "00:11:23:12" in a test that
+    /// never mentions frames. Snapshot and restore both sides together.
+    /// </summary>
+    private readonly bool _libSeUseTimeFormatHhMmSsFf;
+    private readonly bool _restoreLibSeTimeFormat;
+
     internal SettingsScope(params string[] paths)
     {
         foreach (var path in paths)
         {
             var (owner, property) = Resolve(path);
             _saved.Add((property, owner, property.GetValue(owner)));
+        }
+
+        _restoreLibSeTimeFormat = paths.Contains("General.UseFrameMode");
+        if (_restoreLibSeTimeFormat)
+        {
+            _libSeUseTimeFormatHhMmSsFf = Configuration.Settings.General.UseTimeFormatHHMMSSFF;
         }
     }
 
@@ -36,6 +58,11 @@ internal sealed class SettingsScope : IDisposable
         {
             var (property, owner, value) = _saved[i];
             property.SetValue(owner, value);
+        }
+
+        if (_restoreLibSeTimeFormat)
+        {
+            Configuration.Settings.General.UseTimeFormatHHMMSSFF = _libSeUseTimeFormatHhMmSsFf;
         }
     }
 

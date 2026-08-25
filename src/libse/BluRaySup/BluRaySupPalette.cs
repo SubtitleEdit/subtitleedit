@@ -51,6 +51,17 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
          */
         public static int[] YCbCr2Rgb(int y, int cb, int cr, bool useBt601)
         {
+            YCbCr2Rgb(y, cb, cr, useBt601, out var ir, out var ig, out var ib);
+            return new[] { ir, ig, ib };
+        }
+
+        /// <summary>
+        /// Same conversion as <see cref="YCbCr2Rgb(int, int, int, bool)"/> without the int[3]
+        /// allocation - callers that decode a whole palette (up to 256 entries) call this once
+        /// per entry, so the array was pure per-call garbage.
+        /// </summary>
+        public static void YCbCr2Rgb(int y, int cb, int cr, bool useBt601, out int r8, out int g8, out int b8)
+        {
             // Studio range → center/offset removal
             y -= 16;
             cb -= 128;
@@ -82,7 +93,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             if (r > 254.0) r += 0.35;
             if (g > 254.0) g += 0.35;
             if (b > 254.0) b += 0.35;
-            
+
             int ir = (int)Math.Round(r, MidpointRounding.AwayFromZero);
             int ig = (int)Math.Round(g, MidpointRounding.AwayFromZero);
             int ib = (int)Math.Round(b, MidpointRounding.AwayFromZero);
@@ -91,7 +102,9 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             if (ig < 0) ig = 0; else if (ig > 255) ig = 255;
             if (ib < 0) ib = 0; else if (ib > 255) ib = 255;
 
-            return new[] { ir, ig, ib };
+            r8 = ir;
+            g8 = ig;
+            b8 = ib;
         }
 
         /**
@@ -300,10 +313,10 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             _cb[index] = (byte)cbn;
             _cr[index] = (byte)crn;
             // create RGB
-            var rgb = YCbCr2Rgb(yn, cbn, crn, _useBt601);
-            _r[index] = (byte)rgb[0];
-            _g[index] = (byte)rgb[1];
-            _b[index] = (byte)rgb[2];
+            YCbCr2Rgb(yn, cbn, crn, _useBt601, out var r8, out var g8, out var b8);
+            _r[index] = (byte)r8;
+            _g[index] = (byte)g8;
+            _b[index] = (byte)b8;
         }
 
         /**

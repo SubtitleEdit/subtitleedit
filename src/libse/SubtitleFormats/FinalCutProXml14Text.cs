@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 trimmedTitle.Clear();
                 foreach (var ch in HtmlUtil.RemoveHtmlTags(p.Text, true))
                 {
-                    if (CharUtils.IsEnglishAlphabet(ch) || char.IsDigit(ch))
+                    if (CharUtils.IsAsciiLetter(ch) || char.IsDigit(ch))
                     {
                         trimmedTitle.Append(ch);
                     }

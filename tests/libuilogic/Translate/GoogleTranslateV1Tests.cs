@@ -48,4 +48,57 @@ public class GoogleTranslateV1Tests
 
         Assert.Equal(new[] { "Ahoj." }, lines);
     }
+
+    // The clients5.google.com dict-chrome-ex fallback (issue #14015) answers a much simpler
+    // shape than gtx: a flat array of translated strings, or [text, detected-language] pairs
+    // when the source language is "auto".
+
+    [Fact]
+    public void DictChromeEx_SingleLine()
+    {
+        Assert.Equal("Hej verden", GoogleTranslateV1.ConvertDictChromeExResultToText("[\"Hej verden\"]"));
+    }
+
+    [Fact]
+    public void DictChromeEx_EscapedNewlineBecomesLineBreak()
+    {
+        var text = GoogleTranslateV1.ConvertDictChromeExResultToText("[\"Hej verden\\nHvordan har du det?\"]");
+
+        Assert.Equal("Hej verden" + Environment.NewLine + "Hvordan har du det?", text);
+    }
+
+    [Fact]
+    public void DictChromeEx_AutoDetectPairShape_TakesTranslationOnly()
+    {
+        Assert.Equal("Bonjour", GoogleTranslateV1.ConvertDictChromeExResultToText("[[\"Bonjour\",\"en\"]]"));
+    }
+
+    [Fact]
+    public void DictChromeEx_UnicodeEscape_IsDecoded()
+    {
+        Assert.Equal("café", GoogleTranslateV1.ConvertDictChromeExResultToText("[\"caf\\u00e9\"]"));
+    }
+
+    [Theory]
+    [InlineData("[]")]
+    [InlineData("")]
+    [InlineData("<html><title>Sorry...</title></html>")]
+    public void DictChromeEx_NoTranslation_ReturnsNull(string json)
+    {
+        Assert.Null(GoogleTranslateV1.ConvertDictChromeExResultToText(json));
+    }
+
+    [Fact]
+    public void DictChromeEx_TranslationEndingInQuote_KeepsTheQuote()
+    {
+        // "He said \"hi\"" - trimming every trailing quote char used to leave a dangling
+        // backslash, making Regex.Unescape throw and shipping the raw escapes.
+        Assert.Equal("He said \"hi\"", GoogleTranslateV1.ConvertDictChromeExResultToText("[\"He said \\\"hi\\\"\"]"));
+    }
+
+    [Fact]
+    public void DictChromeEx_TranslationThatIsOnlyAQuotedWord_KeepsBothQuotes()
+    {
+        Assert.Equal("\"Bonjour\"", GoogleTranslateV1.ConvertDictChromeExResultToText("[\"\\\"Bonjour\\\"\"]"));
+    }
 }

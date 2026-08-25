@@ -1,7 +1,8 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ChatterboxTtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.CosyVoice3CrispAsrSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DotsTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ElevenLabsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.F5TtsCrispAsrSettings;
@@ -39,6 +40,7 @@ public static class TtsEngineSettingsDialog
         VibeVoiceCrispAsr or
         IndexTts25AudioCpp or
         IndexTtsCrispAsr or
+        DotsTtsCrispAsr or
         CosyVoice3CrispAsr or
         F5TtsCrispAsr or
         OmniVoiceCrispAsr or
@@ -74,6 +76,10 @@ public static class TtsEngineSettingsDialog
         else if (engine is IndexTtsCrispAsr)
         {
             await windowService.ShowDialogAsync<IndexTtsCrispAsrSettingsWindow, IndexTtsCrispAsrSettingsViewModel>(window, vm => vm.Initialize());
+        }
+        else if (engine is DotsTtsCrispAsr)
+        {
+            await windowService.ShowDialogAsync<DotsTtsCrispAsrSettingsWindow, DotsTtsCrispAsrSettingsViewModel>(window, vm => vm.Initialize());
         }
         else if (engine is CosyVoice3CrispAsr)
         {

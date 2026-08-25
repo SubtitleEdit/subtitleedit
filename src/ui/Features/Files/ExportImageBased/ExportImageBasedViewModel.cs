@@ -561,6 +561,10 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             FullFrameBackgroundColor = FullFrameBackgroundColor.ToSKColor(),
         };
 
+        // "{\fad(..)}" and "{\alpha&H..&}" change what is drawn, so unlike the position tag
+        // they have to be read before the bitmap is rendered.
+        ExportTextTags.ApplyTransparencyTags(imageParameter, subtitle.Text);
+
         return imageParameter;
     }
 

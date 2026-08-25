@@ -157,6 +157,24 @@ public class SpeechToTextQualityReportTests
     }
 
     [Fact]
+    public void Fix_RepeatedDetail_NamesTheLineActuallyDuplicated()
+    {
+        // Line 2 ("[Music]") is removed first, so line 3 repeats line 1 - the detail must
+        // say "= #1", not point at the removed line in between.
+        var subtitle = Make(
+            ("Hello there.", 0, 1500),
+            ("[Music]", 2000, 3500),
+            ("Hello there.", 4000, 5500));
+
+        var pp = new SpeechToTextPostProcessor("en") { RemoveNonSpeechLines = true, RemoveRepeatedLines = true };
+        pp.Fix(SpeechToTextPostProcessor.Engine.Whisper, subtitle, true, false, false, false, false, false, false, Avalonia.Media.Colors.Red);
+
+        var repeated = pp.QualityReport.Removed.Single(i => i.Type == SpeechToTextQualityIssueType.Repeated);
+        Assert.Equal(3, repeated.Number);
+        Assert.Equal("= #1", repeated.Detail);
+    }
+
+    [Fact]
     public void Fix_KeepsLinesButReportsThem_WhenDisabled()
     {
         var subtitle = Make(("Hello there.", 0, 1500), ("[Music]", 2000, 3500), ("Bye.", 4000, 5500), ("Bye.", 6000, 7500));

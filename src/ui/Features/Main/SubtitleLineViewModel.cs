@@ -1162,9 +1162,14 @@ public partial class SubtitleLineViewModel : ObservableObject
         // Set both times atomically via SetTimes; updating start then end
         // separately can briefly expose start > end to the bound editor
         // controls, which clamp the negative duration and corrupt the end time.
-        var newStart = TimeSpan.FromMilliseconds(StartTime.TotalMilliseconds * factor + adjustmentInSeconds * TimeCode.BaseUnit);
-        var newEnd = TimeSpan.FromMilliseconds(EndTime.TotalMilliseconds * factor + adjustmentInSeconds * TimeCode.BaseUnit);
-        SetTimes(newStart, newEnd);
+        //
+        // Round to whole milliseconds via start + scaled duration, not start and end
+        // independently: with independent rounding, lines of equal length scale to durations
+        // that differ by 1 ms depending on where they sit, flipping min-duration/CPS warnings
+        // on some rows and not others (#14056).
+        var newStart = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(StartTime.TotalMilliseconds * factor + adjustmentInSeconds * TimeCode.BaseUnit);
+        var newDuration = TimeSpanExtensions.FromMillisecondsWholeMilliseconds((EndTime.TotalMilliseconds - StartTime.TotalMilliseconds) * factor);
+        SetTimes(newStart, newStart + newDuration);
     }
 
     internal double GetCharactersPerSecond()
@@ -1292,6 +1297,23 @@ public partial class SubtitleLineViewModel : ObservableObject
                 if (pixelWidth > general.ColorTextTooWidePixels)
                 {
                     errors.Add(new LineError(LineErrorType.LineTooWide, string.Format(l.DetailXGreaterThanY, pixelWidth, general.ColorTextTooWidePixels)));
+                }
+            }
+        }
+
+        // Teletext page width - applies to EBU/teletext-sourced subtitles regardless of the
+        // general "too long" setting, matching the teletext branch in HasTextError.
+        if (UseTeletextLineLength)
+        {
+            var maxCharacters = Text.Contains("<font color=", StringComparison.OrdinalIgnoreCase)
+                ? TeletextMaxCharactersWithColor
+                : TeletextMaxCharacters;
+
+            foreach (var line in GetStrippedLines())
+            {
+                if (line.Length > maxCharacters)
+                {
+                    errors.Add(new LineError(LineErrorType.LineTooLong, string.Format(l.DetailXGreaterThanY, line.Length, maxCharacters)));
                 }
             }
         }

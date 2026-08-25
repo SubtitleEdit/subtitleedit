@@ -86,6 +86,56 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             }
         }
 
+        /// <summary>
+        /// Program Identifier, read straight from the packet header - the same value
+        /// <see cref="PacketId"/> ends up with, without constructing a <see cref="Packet"/>.
+        /// </summary>
+        public static int PeekPacketId(byte[] packetBuffer)
+        {
+            return (packetBuffer[1] & 31) * 256 + packetBuffer[2];
+        }
+
+        /// <summary>
+        /// True when this packet's payload starts with the PES marker for private stream 1
+        /// (0xbd - subtitles), computed straight from the raw packet buffer. Deliberately does
+        /// NOT also match video packets (0xE0-0xEF): <see cref="TransportStreamParser"/>'s main
+        /// loop only needs this check after <c>firstVideoMs</c> is already known, at which point
+        /// video packets are never inspected again - matching them here would allocate a
+        /// <see cref="Packet"/> for every video frame's first packet for nothing.
+        /// <para>
+        /// <see cref="Packet"/>'s constructor always copies the payload into a fresh byte[], and
+        /// almost every packet in a real file (audio/video content packets) was paying for that
+        /// copy just to be inspected via <see cref="IsPrivateStream1"/> and discarded immediately.
+        /// </para>
+        /// </summary>
+        public static bool PeekIsPrivateStream1(byte[] packetBuffer)
+        {
+            var adaptationFieldControl = (packetBuffer[3] & 48) >> 4;
+            if (adaptationFieldControl != 0b00000001 && adaptationFieldControl != 0b00000011)
+            {
+                return false; // no payload
+            }
+
+            var payloadStart = 4;
+            if (adaptationFieldControl == 0b00000011)
+            {
+                // Matches the constructor below exactly: payloadStart = 4 + 1 + AdaptationField.Length,
+                // where AdaptationField.Length is the raw byte at offset 4 (no extra +1 here - that
+                // +1 belongs only to the separate, differently-used AdaptionFieldLength property).
+                payloadStart += 1 + (0xFF & packetBuffer[4]);
+            }
+
+            if (payloadStart + 3 >= packetBuffer.Length)
+            {
+                return false;
+            }
+
+            return packetBuffer[payloadStart] == 0 &&
+                   packetBuffer[payloadStart + 1] == 0 &&
+                   packetBuffer[payloadStart + 2] == 1 &&
+                   packetBuffer[payloadStart + 3] == 0xbd;
+        }
+
         public Packet(byte[] packetBuffer)
         {
             if (packetBuffer == null || packetBuffer.Length < 30)

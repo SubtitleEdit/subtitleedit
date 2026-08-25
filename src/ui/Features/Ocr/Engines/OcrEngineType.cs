@@ -17,4 +17,5 @@ public enum OcrEngineType
     BinaryImageCompare,
     Glm,
     CrispEmbed,
+    AppleVision,
 }

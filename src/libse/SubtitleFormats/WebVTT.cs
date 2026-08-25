@@ -538,7 +538,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             for (int i = startIndex + 7; i < s.Length; i++)
             {
                 var ch = s[i];
-                if (CharUtils.IsDigit(ch))
+                if (CharUtils.IsAsciiDigit(ch))
                 {
                     tsSb.Append(ch);
                 }

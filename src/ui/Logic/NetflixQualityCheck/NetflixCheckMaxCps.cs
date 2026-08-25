@@ -20,21 +20,21 @@ public class NetflixCheckMaxCps : INetflixQualityChecker
 
     public void Check(Subtitle subtitle, NetflixQualityController controller)
     {
-        ICalcLength calc = CalcFactory.MakeCalculator(nameof(CalcAll));
+        var isJapanese = controller.Language == "ja";
+        var calc = CalcFactory.MakeCalculator(controller.Language == "ko" ? nameof(CalcCjk) : nameof(CalcAll));
         var charactersPerSecond = controller.CharactersPerSecond;
         var comment = string.Format(Se.Language.Tools.NetflixCheckAndFix.MaximumXCharactersPerSecond, charactersPerSecond);
         foreach (var p in subtitle.Paragraphs)
         {
-            var jp = new Paragraph(p);
-            if (controller.Language == "ja")
+            // Only Japanese needs a scratch copy to strip tags into; every other language read
+            // the clone unchanged, so the deep copy (paragraph + two time codes) was pure waste
+            // on every line of the file.
+            var jp = p;
+            if (isJapanese)
             {
+                jp = new Paragraph(p);
                 jp.Text = HtmlUtil.RemoveHtmlTags(jp.Text, true);
                 jp.Text = NetflixImsc11Japanese.RemoveTags(jp.Text);
-            }
-
-            if (controller.Language == "ko")
-            {
-                calc = CalcFactory.MakeCalculator(nameof(CalcCjk));
             }
 
             var charactersPerSeconds = jp.GetCharactersPerSecond(calc);

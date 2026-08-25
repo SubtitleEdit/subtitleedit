@@ -254,5 +254,33 @@
   <PartialLines />
   <BeginLines />
   <EndLines />
-  <RegularExpressions />
+  <RegularExpressions>
+    <!-- Латинские буквы-двойники внутри кириллических слов: буква с кириллическим
+         соседом обязана быть кириллицей (нaшa - наша, Bот - Вот). Полностью
+         латинские слова (IKEA, Wi-Fi) не трогаются: у них нет кириллических соседей. -->
+    <RegEx find="(?&lt;=[а-яёА-ЯЁ])a|a(?=[а-яёА-ЯЁ])" replaceWith="а" />
+    <RegEx find="(?&lt;=[а-яёА-ЯЁ])c|c(?=[а-яёА-ЯЁ])" replaceWith="с" />
+    <RegEx find="(?&lt;=[а-яёА-ЯЁ])e|e(?=[а-яёА-ЯЁ])" replaceWith="е" />
+    <RegEx find="(?&lt;=[а-яёА-ЯЁ])o|o(?=[а-яёА-ЯЁ])" replaceWith="о" />
+    <RegEx find="(?&lt;=[а-яёА-ЯЁ])p|p(?=[а-яёА-ЯЁ])" replaceWith="р" />
+    <RegEx find="(?&lt;=[а-яёА-ЯЁ])x|x(?=[а-яёА-ЯЁ])" replaceWith="х" />
+    <RegEx find="(?&lt;=[а-яёА-ЯЁ])y|y(?=[а-яёА-ЯЁ])" replaceWith="у" />
+    <RegEx find="(?&lt;=[а-яёА-ЯЁ])A|A(?=[а-яёА-ЯЁ])" replaceWith="А" />
+    <RegEx find="(?&lt;=[а-яёА-ЯЁ])B|B(?=[а-яёА-ЯЁ])" replaceWith="В" />
+    <RegEx find="(?&lt;=[а-яёА-ЯЁ])C|C(?=[а-яёА-ЯЁ])" replaceWith="С" />
+    <RegEx find="(?&lt;=[а-яёА-ЯЁ])E|E(?=[а-яёА-ЯЁ])" replaceWith="Е" />
+    <RegEx find="(?&lt;=[а-яёА-ЯЁ])H|H(?=[а-яёА-ЯЁ])" replaceWith="Н" />
+    <RegEx find="(?&lt;=[а-яёА-ЯЁ])K|K(?=[а-яёА-ЯЁ])" replaceWith="К" />
+    <RegEx find="(?&lt;=[а-яёА-ЯЁ])M|M(?=[а-яёА-ЯЁ])" replaceWith="М" />
+    <RegEx find="(?&lt;=[а-яёА-ЯЁ])O|O(?=[а-яёА-ЯЁ])" replaceWith="О" />
+    <RegEx find="(?&lt;=[а-яёА-ЯЁ])P|P(?=[а-яёА-ЯЁ])" replaceWith="Р" />
+    <RegEx find="(?&lt;=[а-яёА-ЯЁ])T|T(?=[а-яёА-ЯЁ])" replaceWith="Т" />
+    <RegEx find="(?&lt;=[а-яёА-ЯЁ])X|X(?=[а-яёА-ЯЁ])" replaceWith="Х" />
+    <RegEx find="(?&lt;=[а-яёА-ЯЁ])Y|Y(?=[а-яёА-ЯЁ])" replaceWith="У" />
+    <!-- Цифры вместо букв сразу после строчной кириллицы: о6ед - обед,
+         отка3 - отказ, с0рок - сорок. Цифра после цифры не трогается (16кг). -->
+    <RegEx find="(?&lt;=[а-яё])3(?![0-9])" replaceWith="з" />
+    <RegEx find="(?&lt;=[а-яё])6(?![0-9])" replaceWith="б" />
+    <RegEx find="(?&lt;=[а-яё])0(?![0-9])" replaceWith="о" />
+  </RegularExpressions>
 </OCRFixReplaceList>

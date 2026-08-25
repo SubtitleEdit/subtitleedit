@@ -3,6 +3,65 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-beta24 (25th of August 2026)
+
+* Add dots.tts text to speech engine with voice cloning
+* Add WhisperX speech to text engine, standalone - no Python needed - thx muaz978
+* Add Apple Vision OCR on macOS
+* Add a format properties button next to the subtitle format picker
+* Add "List errors..." to the Tools menu
+* Add the SE 4 bookmark, underline and "guess start" shortcuts
+* macOS: add the standard Window menu, close menu-bar gaps and fix the file types the app registers
+* macOS: let Ctrl+click open the shortcuts list's Import/Export menu
+* Blu-ray sup export can now fade lines in/out via ASSA "{\fad}" tags
+* Update Paddle OCR to 3.7 (PP-OCRv6)
+* Google Translate: show a clear message when Google blocks the free service, and retry via a fallback endpoint - thx kadrimarzouki
+* Speech to text advanced: the parameter buttons now toggle their parameter on and off - thx thealainpaul
+* Fix EBU STL save options being silently lost or corrupted
+* Fix subtitle times drifting by one millisecond while editing - thx Davanix
+* Fix the original text disappearing after applying a tool dialog's result - thx madsoft-ha
+* Fix "Open with" on an mkv sometimes opening only the subtitle, not the video - thx wixfigur
+* Fix "convert actors" not writing the actor column for inline "Name: text" lines - thx rotj
+* Fix Faster Whisper XXL, CTranslate2 and Const-me asking to install again every time - thx senaplz
+* Fix Qwen 3.5 leaking "thinking" text into llama.cpp translate and AI review
+* Fix Whisper suggesting int8 again after cuBLAS rejected the compute type
+* Update Russian translation - thx jekovcar
+* Update Bulgarian translation - thx jekovcar
+* Update Chinese Traditional translation - thx love80312
+* Update Italian translation - thx bovirus
+
+-----------------------------------------------------------------------------------------------------
+
+v5.2.0-beta23 (24th of August 2026)
+
+* OCR: add accent, l/I and preposition-split rules for Spanish, Portuguese and Italian
+* OCR: fix Latin letters and digits misread inside Cyrillic words (Russian, Macedonian)
+* OCR: repair about 115 broken, dead or duplicated entries in the fix replace lists
+* Faster Scenarist Closed Captions export (5x), Netflix quality checks and "remove text for hearing impaired"
+* Faster Blu-ray palette decoding, transport stream scanning and Cavena 890 reading
+* Fix ASSA attachments being written with the last two bytes zeroed
+* Fix DVD Studio Pro "with space" files failing to load
+* Fix csv lines containing a semicolon being dropped
+* Fix ASSA resampling giving up on tags with a space, like "\pos (10,11)"
+* Fix words per minute being reported as infinity for zero duration lines
+* Fix "convert actors" losing the name and mangling lines with leading spaces
+* Fix crashes and wrong results when parsing malformed MP4, transport stream and RIFF files
+* Fix WebVTT thumbnail sprite sheets in .jpeg being rejected
+* Fix video OCR ending a subtitle too early after an unreadable frame
+* Fix teletext line length errors missing from the error lists in the main window and batch convert
+* Fix beautify time codes using a cancelled or failed frame time extraction when the video duration is unknown
+* Fix the speech to text quality report naming the wrong line for removed repeats
+* Fix Netflix "spell out leading number" doing nothing outside Windows
+* Fix Unknown 33/34/59 writing 00:00:60 instead of 00:01:00
+* Fix Matroska SSA lines with fewer commas than expected throwing an error
+* Fix plain text import hanging when the max line length setting is zero
+* Fix OpenRouter speech to text with GPT transcription models - thx muaz978
+* Update German translation - thx FunkyKnilch
+* Update Japanese translation - thx hisui3393
+* Update Korean translation - thx 12si27
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-beta22 (23rd of August 2026)
 
 * Beautify time codes can now use the video's real frame times instead of assuming a constant frame rate - thx warrentc3

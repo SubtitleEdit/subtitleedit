@@ -23,6 +23,32 @@ public class EbuTest
         return subtitle;
     }
 
+    // The first-manual-save prompt and the vertical-position handling both hinge on this check:
+    // it must accept the header the options dialog stores on the subtitle (a bare
+    // EbuGeneralSubtitleInformation.ToString()) and reject anything else.
+    [Fact]
+    public void IsStlHeader_AcceptsDialogStoredHeader_RejectsOtherHeaders()
+    {
+        Assert.False(Ebu.IsStlHeader(null));
+        Assert.False(Ebu.IsStlHeader(string.Empty));
+        Assert.False(Ebu.IsStlHeader("WEBVTT"));
+        Assert.False(Ebu.IsStlHeader(new string(' ', 1024)));
+
+        var stored = new Ebu.EbuGeneralSubtitleInformation().ToString();
+        Assert.True(Ebu.IsStlHeader(stored));
+
+        // Every disk format code the save options dialog offers must be recognized - STL23 was not,
+        // so picking it made the save discard the header the dialog had just stored.
+        foreach (var diskFormatCode in new[] { "STL23.01", "STL24.01", "STL25.01", "STL29.01", "STL30.01" })
+        {
+            var header = new Ebu.EbuGeneralSubtitleInformation { DiskFormatCode = diskFormatCode }.ToString();
+            Assert.True(Ebu.IsStlHeader(header), diskFormatCode + " is not recognized as an STL header");
+        }
+
+        // A 1024-character header of some other format that happens to mention STL25 is not one.
+        Assert.False(Ebu.IsStlHeader("STL25".PadRight(1024)));
+    }
+
     // Regression for #11910: EBU STL Save produced a 14-byte invalid file ("Not supported!")
     // because the binary format went through the text save path. The binary writer must emit a real
     // EBU file (1024-byte GSI header + TTI blocks) that reads back.

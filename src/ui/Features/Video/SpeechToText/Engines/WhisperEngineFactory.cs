@@ -47,6 +47,11 @@ public static class WhisperEngineFactory
             return new MlxWhisperMac();
         }
 
+        if (staticName == WhisperEngineWhisperX.StaticName)
+        {
+            return new WhisperEngineWhisperX();
+        }
+
         if (staticName == Qwen3AsrCppEngine.StaticName)
         {
             return new Qwen3AsrCppEngine();

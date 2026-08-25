@@ -128,30 +128,37 @@ public static class LlamaCppServerManager
         // Alternative model family. Qwen 3 is the strongest open model for CJK
         // (Chinese/Japanese/Korean) and competitive elsewhere — useful fallback
         // when Gemma's quirks bite (occasional refusals, formatting drift, etc).
-        // --no-jinja + chatml bypasses the embedded Jinja template's
-        // enable_thinking logic on the hybrid Qwen3-8B so output is clean
-        // translation, not <think>...</think> reasoning blocks.
+        // NoThinking (--reasoning off) suppresses the hybrid Qwen3 template's thinking mode so
+        // output is clean translation, not <think>...</think> reasoning blocks - same mechanism
+        // as Gemma 4 above. This used to be "--no-jinja --chat-template chatml" instead (forcing
+        // the template also bypasses enable_thinking), but that proved unreliable: a controlled
+        // A/B (seconv EN->DA, 10 reps x 20 lines on the Q8_0 9B, 200 lines/variant) measured
+        // chatml+no-jinja leaking raw <think> text - which runs the model out of its token budget
+        // before it ever reaches the translation - into 2.5% of lines (5/200), while NoThinking
+        // alone stayed at 0% (0/200) across every rep on both the 9B and the 4B Q4_K_M (0/60).
+        // Stacking both overrides is worse, not better (6.5% on 9B, 16.7% on 4B): --reasoning off
+        // does not reliably suppress thinking once --chat-template chatml has replaced the
+        // template it hooks into, so the two must never be combined.
         new LlamaCppModel("Qwen 3 4B Instruct (Q4_K_M)", "Qwen_Qwen3-4B-Instruct-2507-Q4_K_M.gguf", "2.5 GB",
             "https://huggingface.co/bartowski/Qwen_Qwen3-4B-Instruct-2507-GGUF/resolve/main/Qwen_Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
-            ChatTemplate: "chatml", NoJinja: true),
+            NoThinking: true),
         new LlamaCppModel("Qwen 3 8B (Q4_K_M)", "Qwen_Qwen3-8B-Q4_K_M.gguf", "4.7 GB",
             "https://huggingface.co/bartowski/Qwen_Qwen3-8B-GGUF/resolve/main/Qwen_Qwen3-8B-Q4_K_M.gguf",
-            ChatTemplate: "chatml", NoJinja: true),
+            NoThinking: true),
 
-        // Qwen 3.5 - newer Qwen generation. Same chatml + --no-jinja handling as Qwen 3 (bypasses the
-        // embedded thinking template so the output is clean translation). Kept to <= 8 GB.
+        // Qwen 3.5 - newer Qwen generation. Same NoThinking handling as Qwen 3 above. Kept to <= 8 GB.
         new LlamaCppModel("Qwen 3.5 4B (Q4_K_M)", "Qwen_Qwen3.5-4B-Q4_K_M.gguf", "2.8 GB",
             "https://huggingface.co/bartowski/Qwen_Qwen3.5-4B-GGUF/resolve/main/Qwen_Qwen3.5-4B-Q4_K_M.gguf",
-            ChatTemplate: "chatml", NoJinja: true),
+            NoThinking: true),
         new LlamaCppModel("Qwen 3.5 4B (Q8_0)", "Qwen_Qwen3.5-4B-Q8_0.gguf", "4.3 GB",
             "https://huggingface.co/bartowski/Qwen_Qwen3.5-4B-GGUF/resolve/main/Qwen_Qwen3.5-4B-Q8_0.gguf",
-            ChatTemplate: "chatml", NoJinja: true),
+            NoThinking: true),
         new LlamaCppModel("Qwen 3.5 9B (Q4_K_M)", "Qwen_Qwen3.5-9B-Q4_K_M.gguf", "5.7 GB",
             "https://huggingface.co/bartowski/Qwen_Qwen3.5-9B-GGUF/resolve/main/Qwen_Qwen3.5-9B-Q4_K_M.gguf",
-            ChatTemplate: "chatml", NoJinja: true),
+            NoThinking: true),
         new LlamaCppModel("Qwen 3.5 9B (Q8_0)", "Qwen_Qwen3.5-9B-Q8_0.gguf", "9.8 GB",
             "https://huggingface.co/bartowski/Qwen_Qwen3.5-9B-GGUF/resolve/main/Qwen_Qwen3.5-9B-Q8_0.gguf",
-            ChatTemplate: "chatml", NoJinja: true),
+            NoThinking: true),
 
         // Qwen 3.6 35B-A3B - a mixture-of-experts model: 35B total but only ~3B active per token, so
         // it generates fast even fully on CPU. That makes it the option for machines with plenty of
@@ -163,7 +170,7 @@ public static class LlamaCppServerManager
         // Qwen 3.5 MoE arch), which the pinned engine already supports.
         new LlamaCppModel("Qwen 3.6 35B-A3B (IQ2_M) - fast on CPU, 2-bit quality", "Qwen3.6-35B-A3B-UD-IQ2_M.gguf", "11.5 GB",
             "https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF/resolve/main/Qwen3.6-35B-A3B-UD-IQ2_M.gguf",
-            ChatTemplate: "chatml", NoJinja: true),
+            NoThinking: true),
 
         // Hy-MT2 (Tencent Hunyuan-MT 2, 2026) - translation-specialized, official GGUFs, Apache-2.0.
         // Excellent for its 33+5 supported languages (CJK, major European/Asian) but has NO Nordic
@@ -198,22 +205,23 @@ public static class LlamaCppServerManager
     // JSON output, where the plain instruct models are much stronger. Kept to ~12 GB or below.
     public static readonly IReadOnlyList<LlamaCppModel> ReviewModels = new[]
     {
+        // NoThinking instead of chatml+no-jinja - see the note in TranslateModels for the A/B data.
         new LlamaCppModel("Qwen 3.5 4B (Q4_K_M)", "Qwen_Qwen3.5-4B-Q4_K_M.gguf", "2.8 GB",
             "https://huggingface.co/bartowski/Qwen_Qwen3.5-4B-GGUF/resolve/main/Qwen_Qwen3.5-4B-Q4_K_M.gguf",
-            ChatTemplate: "chatml", NoJinja: true),
+            NoThinking: true),
         new LlamaCppModel("Qwen 3.5 4B (Q8_0)", "Qwen_Qwen3.5-4B-Q8_0.gguf", "4.3 GB",
             "https://huggingface.co/bartowski/Qwen_Qwen3.5-4B-GGUF/resolve/main/Qwen_Qwen3.5-4B-Q8_0.gguf",
-            ChatTemplate: "chatml", NoJinja: true),
+            NoThinking: true),
         new LlamaCppModel("Qwen 3.5 9B (Q4_K_M)", "Qwen_Qwen3.5-9B-Q4_K_M.gguf", "5.7 GB",
             "https://huggingface.co/bartowski/Qwen_Qwen3.5-9B-GGUF/resolve/main/Qwen_Qwen3.5-9B-Q4_K_M.gguf",
-            ChatTemplate: "chatml", NoJinja: true),
+            NoThinking: true),
         new LlamaCppModel("Qwen 3.5 9B (Q8_0)", "Qwen_Qwen3.5-9B-Q8_0.gguf", "9.8 GB",
             "https://huggingface.co/bartowski/Qwen_Qwen3.5-9B-GGUF/resolve/main/Qwen_Qwen3.5-9B-Q8_0.gguf",
-            ChatTemplate: "chatml", NoJinja: true),
+            NoThinking: true),
         // MoE, ~3B active - fast on CPU; see the note in TranslateModels for the 2-bit caveat.
         new LlamaCppModel("Qwen 3.6 35B-A3B (IQ2_M) - fast on CPU, 2-bit quality", "Qwen3.6-35B-A3B-UD-IQ2_M.gguf", "11.5 GB",
             "https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF/resolve/main/Qwen3.6-35B-A3B-UD-IQ2_M.gguf",
-            ChatTemplate: "chatml", NoJinja: true),
+            NoThinking: true),
         new LlamaCppModel("Gemma 3 4B it (Q4_K_M)", "google_gemma-3-4b-it-Q4_K_M.gguf", "2.5 GB",
             "https://huggingface.co/bartowski/google_gemma-3-4b-it-GGUF/resolve/main/google_gemma-3-4b-it-Q4_K_M.gguf",
             ChatTemplate: "gemma", NoJinja: true),
@@ -396,12 +404,14 @@ public static class LlamaCppServerManager
     /// Picks the llama-server chat-template flags for a <c>.gguf</c> we do not curate (a file the user
     /// downloaded themselves, e.g. a TranslateGemma quant or size we do not offer). A curated entry with
     /// the same file name wins; otherwise the family is guessed from the file name, because getting this
-    /// wrong is not cosmetic: every Gemma we ship needs <c>gemma</c> + <c>--no-jinja</c> (TranslateGemma's
-    /// embedded Jinja template is non-standard) and every Qwen needs <c>chatml</c> + <c>--no-jinja</c> (to
-    /// bypass the embedded template's thinking mode, which otherwise emits &lt;think&gt; blocks instead of a
-    /// translation). Families with a usable embedded template (Aya, Llama, EuroLLM, Phi) fall through to
-    /// the default of no override. Gemma 4 keeps its embedded template but needs
-    /// <c>--reasoning off</c> instead (<c>NoThinking</c>), for the reason documented on
+    /// wrong is not cosmetic: every Gemma (2/3) we ship needs <c>gemma</c> + <c>--no-jinja</c>
+    /// (TranslateGemma's embedded Jinja template is non-standard), and every Qwen needs
+    /// <c>--reasoning off</c> (<c>NoThinking</c>) to suppress the hybrid template's thinking mode, which
+    /// otherwise emits &lt;think&gt; blocks instead of a translation - see the note on the curated Qwen
+    /// entries in <see cref="TranslateModels"/> for why this is <c>NoThinking</c> and not a
+    /// <c>chatml</c>/<c>--no-jinja</c> template override. Families with a usable embedded template (Aya,
+    /// Llama, EuroLLM, Phi) fall through to the default of no override. Gemma 4 also keeps its embedded
+    /// template and needs <c>--reasoning off</c>, for the same reason documented on
     /// <see cref="LlamaCppModel.NoThinking"/>.
     /// </summary>
     public static (string? ChatTemplate, bool NoJinja, bool NoThinking) InferChatTemplate(string fileName)
@@ -429,7 +439,7 @@ public static class LlamaCppServerManager
 
         if (fileName.Contains("qwen", StringComparison.OrdinalIgnoreCase))
         {
-            return ("chatml", true, false);
+            return (null, false, true);
         }
 
         return (null, false, false);

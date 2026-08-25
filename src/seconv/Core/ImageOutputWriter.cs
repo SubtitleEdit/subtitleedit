@@ -187,7 +187,7 @@ internal static class ImageOutputWriter
         // the frame (issue #13025) - as were "{\i1}", "{\b1}" and "{\c&H..&}", which
         // ToRenderableText turns into the HTML tags the renderer understands.
         var text = p.Text ?? string.Empty;
-        return new ImageParameter
+        var imageParameter = new ImageParameter
         {
             Index = index,
             Text = ExportTextTags.ToRenderableText(text),
@@ -223,5 +223,11 @@ internal static class ImageOutputWriter
             IsFullFrame = false,
             Error = string.Empty,
         };
+
+        // "{\fad(..)}" and "{\alpha&H..&}" change what is drawn, so they have to be read
+        // before the bitmap is rendered.
+        ExportTextTags.ApplyTransparencyTags(imageParameter, text);
+
+        return imageParameter;
     }
 }
