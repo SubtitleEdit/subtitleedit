@@ -3,6 +3,34 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-beta24 (25th of August 2026)
+
+* Add dots.tts text to speech engine with voice cloning
+* Add Apple Vision OCR on macOS
+* Add a format properties button next to the subtitle format picker
+* Add "List errors..." to the Tools menu
+* Add the SE 4 bookmark, underline and "guess start" shortcuts
+* macOS: add the standard Window menu, close menu-bar gaps and fix the file types the app registers
+* macOS: let Ctrl+click open the shortcuts list's Import/Export menu
+* Blu-ray sup export can now fade lines in/out via ASSA "{\fad}" tags
+* Update Paddle OCR to 3.7 (PP-OCRv6)
+* Google Translate: show a clear message when Google blocks the free service, and retry via a fallback endpoint - thx kadrimarzouki
+* Speech to text advanced: the parameter buttons now toggle their parameter on and off - thx thealainpaul
+* Fix EBU STL save options being silently lost or corrupted
+* Fix subtitle times drifting by one millisecond while editing - thx Davanix
+* Fix the original text disappearing after applying a tool dialog's result - thx madsoft-ha
+* Fix "Open with" on an mkv sometimes opening only the subtitle, not the video - thx wixfigur
+* Fix "convert actors" not writing the actor column for inline "Name: text" lines - thx rotj
+* Fix Faster Whisper XXL, CTranslate2 and Const-me asking to install again every time - thx senaplz
+* Fix Qwen 3.5 leaking "thinking" text into llama.cpp translate and AI review
+* Fix Whisper suggesting int8 again after cuBLAS rejected the compute type
+* Update Russian translation - thx jekovcar
+* Update Bulgarian translation - thx jekovcar
+* Update Chinese Traditional translation - thx love80312
+* Update Italian translation - thx bovirus
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-beta23 (24th of August 2026)
 
 * OCR: add accent, l/I and preposition-split rules for Spanish, Portuguese and Italian
