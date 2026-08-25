@@ -12,6 +12,25 @@ public enum TextEffectPreset
     Extrude3D,
     Chrome,
     Fire,
+    Comic,
+    Retro80s,
+    Anaglyph3D,
+    Ice,
+    Emboss,
+    Hollow,
+}
+
+/// <summary>
+/// User tweaks applied on top of a preset: overall strength scales every effect size
+/// (stroke widths, blur radii, glow, extrude depth), and the geometry values pass straight
+/// through to <see cref="TextEffects"/>.
+/// </summary>
+public class TextEffectAdjustments
+{
+    public int StrengthPercent { get; set; } = 100;
+    public float LetterSpacing { get; set; }
+    public float ArcBendPercent { get; set; }
+    public float WaveAmplitude { get; set; }
 }
 
 /// <summary>
@@ -23,6 +42,70 @@ public enum TextEffectPreset
 public static class TextEffectPresetFactory
 {
     public static TextEffects? Create(
+        TextEffectPreset preset,
+        float fontSize,
+        SKColor fontColor,
+        SKColor outlineColor,
+        SKColor shadowColor,
+        TextEffectAdjustments? adjustments = null)
+    {
+        var effects = CreateBase(preset, fontSize, fontColor, outlineColor, shadowColor);
+        if (effects == null)
+        {
+            return null;
+        }
+
+        if (adjustments != null)
+        {
+            var strength = Math.Clamp(adjustments.StrengthPercent, 10, 400) / 100f;
+            if (Math.Abs(strength - 1f) > 0.001f)
+            {
+                Scale(effects, strength);
+            }
+
+            effects.LetterSpacing = adjustments.LetterSpacing;
+            effects.ArcBendPercent = adjustments.ArcBendPercent;
+            effects.WaveAmplitude = adjustments.WaveAmplitude;
+        }
+
+        return effects;
+    }
+
+    private static void Scale(TextEffects effects, float factor)
+    {
+        foreach (var stroke in effects.Strokes)
+        {
+            stroke.Width *= factor;
+            stroke.Blur *= factor;
+        }
+
+        foreach (var shadow in effects.Shadows)
+        {
+            shadow.Dx *= factor;
+            shadow.Dy *= factor;
+            shadow.Blur *= factor;
+        }
+
+        if (effects.Glow != null)
+        {
+            effects.Glow.Radius *= factor;
+        }
+
+        if (effects.Extrude != null)
+        {
+            effects.Extrude.Dx *= factor;
+            effects.Extrude.Dy *= factor;
+        }
+
+        if (effects.Bevel != null)
+        {
+            effects.Bevel.Depth *= factor;
+        }
+
+        effects.EdgeBlur *= factor;
+    }
+
+    private static TextEffects? CreateBase(
         TextEffectPreset preset,
         float fontSize,
         SKColor fontColor,
@@ -128,6 +211,73 @@ public static class TextEffectPresetFactory
                     },
                     Strokes = { new TextEffectStroke { Width = s * 0.023f, Fill = TextEffectFill.Solid(new SKColor(60, 10, 0)) } },
                     Glow = new TextEffectGlow { Color = new SKColor(255, 100, 0), Radius = s * 0.11f, Passes = 2 },
+                };
+
+            case TextEffectPreset.Comic:
+                return new TextEffects
+                {
+                    Fill = TextEffectFill.Solid(fontColor),
+                    Strokes = { new TextEffectStroke { Width = s * 0.05f, Fill = TextEffectFill.Solid(SKColors.Black) } },
+                    Shadows = { new TextEffectShadow { Dx = s * 0.09f, Dy = s * 0.09f, Blur = 0, Color = SKColors.Black } },
+                };
+
+            case TextEffectPreset.Retro80s:
+                return new TextEffects
+                {
+                    Fill = new TextEffectFill
+                    {
+                        Kind = TextEffectFillKind.LinearGradient,
+                        Colors = new[] { new SKColor(255, 90, 200), new SKColor(180, 70, 255), new SKColor(60, 200, 255) },
+                    },
+                    Strokes = { new TextEffectStroke { Width = s * 0.015f, Fill = TextEffectFill.Solid(new SKColor(255, 240, 255)) } },
+                    Glow = new TextEffectGlow { Color = new SKColor(200, 60, 255), Radius = s * 0.12f, Passes = 3 },
+                    Extrude = new TextEffectExtrude
+                    {
+                        Depth = Math.Max(3, (int)(s * 0.06f)),
+                        Dx = Math.Max(1f, s * 0.015f),
+                        Dy = Math.Max(1f, s * 0.015f),
+                        NearColor = new SKColor(90, 20, 130),
+                        FarColor = new SKColor(30, 5, 50),
+                    },
+                };
+
+            case TextEffectPreset.Anaglyph3D:
+                return new TextEffects
+                {
+                    Fill = TextEffectFill.Solid(fontColor),
+                    Shadows =
+                    {
+                        new TextEffectShadow { Dx = -s * 0.06f, Dy = 0, Blur = 0, Color = new SKColor(255, 0, 60, 200) },
+                        new TextEffectShadow { Dx = s * 0.06f, Dy = 0, Blur = 0, Color = new SKColor(0, 230, 255, 200) },
+                    },
+                };
+
+            case TextEffectPreset.Ice:
+                return new TextEffects
+                {
+                    Fill = new TextEffectFill
+                    {
+                        Kind = TextEffectFillKind.LinearGradient,
+                        Colors = new[] { SKColors.White, new SKColor(200, 230, 255), new SKColor(110, 175, 230) },
+                    },
+                    Strokes = { new TextEffectStroke { Width = s * 0.02f, Fill = TextEffectFill.Solid(new SKColor(40, 80, 140)) } },
+                    Glow = new TextEffectGlow { Color = new SKColor(170, 220, 255), Radius = s * 0.1f, Passes = 2 },
+                };
+
+            case TextEffectPreset.Emboss:
+                return new TextEffects
+                {
+                    Fill = TextEffectFill.Solid(fontColor),
+                    Bevel = new TextEffectBevel { Depth = Math.Max(1.5f, s * 0.05f) },
+                    Shadows = { new TextEffectShadow { Dx = 0, Dy = s * 0.04f, Blur = s * 0.06f, Color = new SKColor(0, 0, 0, 140) } },
+                };
+
+            case TextEffectPreset.Hollow:
+                return new TextEffects
+                {
+                    Fill = TextEffectFill.Solid(SKColors.Transparent),
+                    Strokes = { new TextEffectStroke { Width = s * 0.028f, Fill = TextEffectFill.Solid(fontColor) } },
+                    Shadows = { new TextEffectShadow { Dx = s * 0.04f, Dy = s * 0.04f, Blur = s * 0.08f, Color = new SKColor(0, 0, 0, 150) } },
                 };
 
             default:

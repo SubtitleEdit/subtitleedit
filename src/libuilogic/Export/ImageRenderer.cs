@@ -156,6 +156,13 @@ public static class ImageRenderer
         // Advanced effects (blurred shadows, glow, extrude) draw further out than the classic
         // outline+shadow, so pad the scratch canvas with their own safety margin too.
         var effectMargin = ip.TextEffects?.GetSafetyMargin() ?? 0f;
+        if (ip.TextEffects is { ArcBendPercent: not 0 } arcEffects)
+        {
+            // Arc rise is width-dependent (~ w * bend / 400); the line width is not known yet,
+            // so pad conservatively from the target frame width.
+            var arcWidth = Math.Max(ip.ScreenWidth, 1000);
+            effectMargin += Math.Abs(arcEffects.ArcBendPercent) / 400f * arcWidth;
+        }
         var textStartX = (int)(Math.Abs(shadowWidth) + Math.Abs(outlineWidth) + margin + effectMargin);
         var textStartY = (int)(Math.Abs(fontMetrics.Ascent) + Math.Abs(shadowWidth) + Math.Abs(outlineWidth) + margin + effectMargin);
         RenderTextToCanvas(tempCanvas, lines, ip, regularFont, boldFont, italicFont, boldItalicFont,
@@ -533,6 +540,13 @@ public static class ImageRenderer
     {
         var effects = ip.TextEffects!;
 
+        if (effects.HasGlyphGeometry)
+        {
+            RenderTextWithGlyphGeometry(canvas, lines, ip, regularFont, boldFont, italicFont, boldItalicFont,
+                textStartX, textStartY, baseLineHeight, lineSpacing);
+            return;
+        }
+
         var lineWidths = new float[lines.Count];
         for (var li = 0; li < lines.Count; li++)
         {
@@ -603,7 +617,164 @@ public static class ImageRenderer
             currentY += baseLineHeight + lineSpacing;
         }
 
-        PaintEffectLayers(canvas, combinedPath, segmentDraws, effects);
+        PaintEffectLayers(canvas, combinedPath, segmentDraws, null, effects);
+    }
+
+    private sealed record GeometryGlyph(SKPath? Path, float X, float Advance, SKColor Color);
+
+    /// <summary>
+    /// The per-glyph geometry variant: letter spacing, arc bend and baseline wave need each
+    /// glyph as its own positioned path, so fills draw from paths here instead of
+    /// DrawShapedText (glyphs with no outline, like color emoji, are skipped).
+    /// </summary>
+    private static void RenderTextWithGlyphGeometry(
+        SKCanvas canvas,
+        List<List<TextSegment>> lines,
+        ImageParameter ip,
+        SKFont regularFont,
+        SKFont boldFont,
+        SKFont italicFont,
+        SKFont boldItalicFont,
+        float textStartX,
+        float textStartY,
+        float baseLineHeight,
+        float lineSpacing)
+    {
+        var effects = ip.TextEffects!;
+        var spacing = effects.LetterSpacing;
+
+        // 1) Shape every line into glyphs at line-relative positions, letter spacing applied.
+        var lineGlyphs = new List<List<GeometryGlyph>>();
+        var lineWidths = new List<float>();
+        foreach (var line in lines)
+        {
+            var segmentsToRender = ip.IsRightToLeft ? line.AsEnumerable().Reverse().ToList() : line;
+            var glyphs = new List<GeometryGlyph>();
+            var x = 0f;
+
+            for (var i = 0; i < segmentsToRender.Count; i++)
+            {
+                var segment = segmentsToRender[i];
+                var font = GetFont(segment, regularFont, boldFont, italicFont, boldItalicFont);
+                using var shaper = new SKShaper(font.Typeface);
+                var result = shaper.Shape(segment.Text, font);
+
+                for (var g = 0; g < result.Codepoints.Length; g++)
+                {
+                    var glyphPath = font.GetGlyphPath((ushort)result.Codepoints[g]);
+                    var gx = x + result.Points[g].X + g * spacing;
+                    var next = g + 1 < result.Points.Length ? result.Points[g + 1].X : result.Width;
+                    glyphs.Add(new GeometryGlyph(
+                        glyphPath is { IsEmpty: false } ? glyphPath : null,
+                        gx,
+                        next - result.Points[g].X,
+                        segment.Color));
+                }
+
+                x += result.Width + result.Codepoints.Length * spacing;
+                if ((segment.IsItalic || segment.IsBold) && i < segmentsToRender.Count - 1)
+                {
+                    x += regularFont.Size * 0.17f;
+                }
+            }
+
+            lineGlyphs.Add(glyphs);
+            lineWidths.Add(glyphs.Count > 0 ? Math.Max(0, x - spacing) : 0);
+        }
+
+        var maxLineWidth = lineWidths.Count > 0 ? lineWidths.Max() : 0f;
+
+        // Arc: bend maps to a circle radius derived from the widest line, so the same value
+        // gives the same visual bend regardless of text length or resolution.
+        var radius = 0f;
+        if (effects.ArcBendPercent != 0 && maxLineWidth > 0)
+        {
+            var totalAngle = Math.Clamp(effects.ArcBendPercent, -100, 100) / 100f * 2.0f; // radians
+            radius = maxLineWidth / totalAngle;
+        }
+
+        var waveLength = effects.WaveLength > 0 ? effects.WaveLength : regularFont.Size * 4.5f;
+        var blockCenterX = textStartX + maxLineWidth / 2f;
+
+        // 2) Assemble the combined path plus per-color groups (for classic per-segment colors).
+        using var combinedPath = new SKPath();
+        var groupsByColor = new Dictionary<SKColor, SKPath>();
+
+        for (var li = 0; li < lineGlyphs.Count; li++)
+        {
+            var lineWidth = lineWidths[li];
+            float lineLeft;
+            if (ip.ContentAlignment == ExportContentAlignment.Center)
+            {
+                lineLeft = textStartX + (maxLineWidth - lineWidth) / 2;
+            }
+            else if ((ip.ContentAlignment == ExportContentAlignment.Right && !ip.IsRightToLeft) ||
+                     (ip.ContentAlignment == ExportContentAlignment.Left && ip.IsRightToLeft))
+            {
+                lineLeft = textStartX + maxLineWidth - lineWidth;
+            }
+            else
+            {
+                lineLeft = textStartX;
+            }
+
+            var baseline = textStartY + li * (baseLineHeight + lineSpacing);
+
+            foreach (var glyph in lineGlyphs[li])
+            {
+                if (glyph.Path == null)
+                {
+                    continue;
+                }
+
+                var mid = lineLeft + glyph.X + glyph.Advance / 2f;
+                var m = SKMatrix.CreateTranslation(lineLeft + glyph.X, baseline);
+
+                if (effects.WaveAmplitude > 0)
+                {
+                    var dy = effects.WaveAmplitude * MathF.Sin(mid * 2f * MathF.PI / waveLength);
+                    m = SKMatrix.Concat(SKMatrix.CreateTranslation(0, dy), m);
+                }
+
+                if (radius != 0)
+                {
+                    // Place the glyph on the circle through (blockCenterX, baseline) and rotate
+                    // it to the local tangent.
+                    var theta = (mid - blockCenterX) / radius;
+                    var px = blockCenterX + radius * MathF.Sin(theta);
+                    var py = baseline + radius - radius * MathF.Cos(theta);
+
+                    var arc = SKMatrix.CreateTranslation(-mid, -baseline);
+                    arc = SKMatrix.Concat(SKMatrix.CreateRotation(theta), arc);
+                    arc = SKMatrix.Concat(SKMatrix.CreateTranslation(px, py), arc);
+                    m = SKMatrix.Concat(arc, m);
+                }
+
+                combinedPath.AddPath(glyph.Path, in m);
+
+                if (!groupsByColor.TryGetValue(glyph.Color, out var groupPath))
+                {
+                    groupPath = new SKPath();
+                    groupsByColor[glyph.Color] = groupPath;
+                }
+
+                groupPath.AddPath(glyph.Path, in m);
+                glyph.Path.Dispose();
+            }
+        }
+
+        var colorGroups = groupsByColor.Select(kv => (kv.Value, kv.Key)).ToList();
+        try
+        {
+            PaintEffectLayers(canvas, combinedPath, null, colorGroups, effects);
+        }
+        finally
+        {
+            foreach (var (groupPath, _) in colorGroups)
+            {
+                groupPath.Dispose();
+            }
+        }
     }
 
     /// <summary>
@@ -612,7 +783,12 @@ public static class ImageRenderer
     /// #12206), generalized to multiple rings: outermost first, each inner ring covers the
     /// inner half of the one below it, and the fill covers the innermost half.
     /// </summary>
-    private static void PaintEffectLayers(SKCanvas canvas, SKPath path, List<EffectSegmentDraw> segments, TextEffects effects)
+    private static void PaintEffectLayers(
+        SKCanvas canvas,
+        SKPath path,
+        List<EffectSegmentDraw>? segments,
+        List<(SKPath Path, SKColor Color)>? pathGroups,
+        TextEffects effects)
     {
         var bounds = path.TightBounds;
         var totalStrokeWidth = 0f;
@@ -659,9 +835,18 @@ public static class ImageRenderer
             }
 
             paint.Style = SKPaintStyle.Fill;
-            foreach (var seg in segments)
+            if (segments != null)
             {
-                DrawShapedText(canvas, seg.Text, seg.X + shadow.Dx, seg.Y + shadow.Dy, seg.Font, paint);
+                foreach (var seg in segments)
+                {
+                    DrawShapedText(canvas, seg.Text, seg.X + shadow.Dx, seg.Y + shadow.Dy, seg.Font, paint);
+                }
+            }
+            else
+            {
+                using var shadowFillPath = new SKPath(path);
+                shadowFillPath.Offset(shadow.Dx, shadow.Dy);
+                canvas.DrawPath(shadowFillPath, paint);
             }
         }
 
@@ -722,17 +907,32 @@ public static class ImageRenderer
             if (effects.Fill != null)
             {
                 effects.Fill.ApplyTo(fillPaint, bounds);
-                foreach (var seg in segments)
+                if (segments != null)
                 {
-                    DrawShapedText(canvas, seg.Text, seg.X, seg.Y, seg.Font, fillPaint);
+                    foreach (var seg in segments)
+                    {
+                        DrawShapedText(canvas, seg.Text, seg.X, seg.Y, seg.Font, fillPaint);
+                    }
+                }
+                else
+                {
+                    canvas.DrawPath(path, fillPaint);
                 }
             }
-            else
+            else if (segments != null)
             {
                 foreach (var seg in segments)
                 {
                     fillPaint.Color = seg.Color;
                     DrawShapedText(canvas, seg.Text, seg.X, seg.Y, seg.Font, fillPaint);
+                }
+            }
+            else if (pathGroups != null)
+            {
+                foreach (var (groupPath, color) in pathGroups)
+                {
+                    fillPaint.Color = color;
+                    canvas.DrawPath(groupPath, fillPaint);
                 }
             }
         }

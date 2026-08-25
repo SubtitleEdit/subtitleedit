@@ -384,14 +384,18 @@ public class ExportImageBasedWindow : Window
         checkBoxBold.IsCheckedChanged += vm.CheckBoxChanged;
         var checkBoxRightToLeft = UiUtil.MakeCheckBox(Se.Language.General.RightToLeft, vm, nameof(vm.IsRightToLeft));
         checkBoxRightToLeft.IsCheckedChanged += vm.CheckBoxChanged;
+        var checkBoxTextEffect = UiUtil.MakeCheckBox(Se.Language.File.Export.TextEffect, vm, nameof(vm.IsTextEffectEnabled));
+        checkBoxTextEffect.IsCheckedChanged += vm.CheckBoxChanged;
+        var buttonTextEffectSettings = UiUtil.MakeButton(vm.ShowTextEffectSettingsCommand, IconNames.Settings,
+            Se.Language.File.Export.TextEffectSettingsTitle);
         var panelBoldAndRightToLeft = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Spacing = 10,
             VerticalAlignment = VerticalAlignment.Center,
-            Children = { checkBoxBold, checkBoxRightToLeft }
+            Children = { checkBoxBold, checkBoxRightToLeft, checkBoxTextEffect, buttonTextEffectSettings }
         };
-        grid.Add(panelBoldAndRightToLeft, 0, 5);
+        grid.Add(panelBoldAndRightToLeft, 0, 5, 1, 3);
 
 
         var labelOutlineWidth = UiUtil.MakeLabel(Se.Language.General.OutlineWidth);
@@ -446,13 +450,6 @@ public class ExportImageBasedWindow : Window
         comboBoxFrameRate.SelectionChanged += vm.ComboChanged;
         grid.Add(labelFrameRate, 6, 4);
         grid.Add(comboBoxFrameRate, 6, 5);
-
-        // column 4
-        var labelTextEffect = UiUtil.MakeLabel(Se.Language.File.Export.TextEffect);
-        var comboBoxTextEffect = UiUtil.MakeComboBox(vm.TextEffectItems, vm, nameof(vm.SelectedTextEffect));
-        comboBoxTextEffect.SelectionChanged += vm.ComboChanged;
-        grid.Add(labelTextEffect, 0, 6);
-        grid.Add(comboBoxTextEffect, 0, 7);
 
         // Only shown for the formats that can use a frame-sized image (see IsFullFrameVisible).
         var checkBoxFullFrame = UiUtil.MakeCheckBox(Se.Language.File.Export.FullFrameImage, vm, nameof(vm.IsFullFrame));

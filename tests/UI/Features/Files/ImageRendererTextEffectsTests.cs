@@ -64,6 +64,12 @@ public class ImageRendererTextEffectsTests
     [InlineData(TextEffectPreset.Extrude3D)]
     [InlineData(TextEffectPreset.Chrome)]
     [InlineData(TextEffectPreset.Fire)]
+    [InlineData(TextEffectPreset.Comic)]
+    [InlineData(TextEffectPreset.Retro80s)]
+    [InlineData(TextEffectPreset.Anaglyph3D)]
+    [InlineData(TextEffectPreset.Ice)]
+    [InlineData(TextEffectPreset.Emboss)]
+    [InlineData(TextEffectPreset.Hollow)]
     public void GenerateBitmap_WithPreset_DrawsVisiblePixels(TextEffectPreset preset)
     {
         var ip = MakeParameter(preset);
@@ -101,6 +107,54 @@ public class ImageRendererTextEffectsTests
         using var bitmap = ImageRenderer.GenerateBitmap(ip);
 
         Assert.True(bitmap.Width <= 2 && bitmap.Height <= 2, "whitespace-only text should not produce a full-size bitmap");
+    }
+
+    [Fact]
+    public void LetterSpacing_WidensTheRenderedText()
+    {
+        var plain = MakeParameter(TextEffectPreset.SoftShadow);
+        var spaced = MakeParameter(TextEffectPreset.SoftShadow);
+        spaced.TextEffects = TextEffectPresetFactory.Create(TextEffectPreset.SoftShadow, 40,
+            SKColors.White, SKColors.Black, SKColors.Black,
+            new TextEffectAdjustments { LetterSpacing = 20 });
+
+        using var plainBitmap = ImageRenderer.GenerateBitmap(plain);
+        using var spacedBitmap = ImageRenderer.GenerateBitmap(spaced);
+
+        Assert.True(spacedBitmap.Width > plainBitmap.Width + 50,
+            $"spaced width {spacedBitmap.Width} should clearly exceed plain width {plainBitmap.Width}");
+    }
+
+    [Fact]
+    public void ArcBend_MakesTheRenderedTextTaller()
+    {
+        var straight = MakeParameter(TextEffectPreset.SoftShadow);
+        straight.Text = "A longer single line of subtitle text";
+        var curved = MakeParameter(TextEffectPreset.SoftShadow);
+        curved.Text = straight.Text;
+        curved.TextEffects = TextEffectPresetFactory.Create(TextEffectPreset.SoftShadow, 40,
+            SKColors.White, SKColors.Black, SKColors.Black,
+            new TextEffectAdjustments { ArcBendPercent = 60 });
+
+        using var straightBitmap = ImageRenderer.GenerateBitmap(straight);
+        using var curvedBitmap = ImageRenderer.GenerateBitmap(curved);
+
+        Assert.True(curvedBitmap.Height > straightBitmap.Height + 20,
+            $"curved height {curvedBitmap.Height} should clearly exceed straight height {straightBitmap.Height}");
+    }
+
+    [Fact]
+    public void Strength_ScalesEffectSizes()
+    {
+        var normal = TextEffectPresetFactory.Create(TextEffectPreset.DoubleOutline, 40,
+            SKColors.White, SKColors.Black, SKColors.Black,
+            new TextEffectAdjustments { StrengthPercent = 100 })!;
+        var strong = TextEffectPresetFactory.Create(TextEffectPreset.DoubleOutline, 40,
+            SKColors.White, SKColors.Black, SKColors.Black,
+            new TextEffectAdjustments { StrengthPercent = 200 })!;
+
+        Assert.Equal(normal.Strokes[0].Width * 2, strong.Strokes[0].Width, 3);
+        Assert.Equal(normal.Shadows[0].Blur * 2, strong.Shadows[0].Blur, 3);
     }
 
     [Fact]

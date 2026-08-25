@@ -30,6 +30,28 @@ public class TextEffects
     /// <summary>Softens the glyph edges (like ASSA "\be").</summary>
     public float EdgeBlur { get; set; }
 
+    /// <summary>Extra pixels between glyphs (like ASSA "\fsp").</summary>
+    public float LetterSpacing { get; set; }
+
+    /// <summary>
+    /// Bends each line along a circular arc. -100..100; positive arches up (rainbow),
+    /// negative curves down (smile), 0 is straight. The radius is derived from the widest
+    /// line so the same value gives the same visual bend at any resolution.
+    /// </summary>
+    public float ArcBendPercent { get; set; }
+
+    /// <summary>Sine-wave baseline offset in pixels; 0 is off.</summary>
+    public float WaveAmplitude { get; set; }
+
+    /// <summary>Wavelength of the baseline wave; 0 = pick from the font size.</summary>
+    public float WaveLength { get; set; }
+
+    /// <summary>
+    /// True when any per-glyph geometry is active - those effects need each glyph as its
+    /// own positioned path instead of a straight DrawShapedText run.
+    /// </summary>
+    public bool HasGlyphGeometry => LetterSpacing != 0 || ArcBendPercent != 0 || WaveAmplitude > 0;
+
     /// <summary>
     /// How far, in pixels, the effects can draw outside the glyph paths - used to pad the
     /// scratch canvas so blurred shadows and glows are never clipped. Blur sigma extends
@@ -64,6 +86,7 @@ public class TextEffects
 
         margin = Math.Max(margin, strokeTotal + Math.Max(strokeBlur, EdgeBlur) * 3f);
         margin = Math.Max(margin, EdgeBlur * 3f);
+        margin += WaveAmplitude;
 
         return margin + 4f;
     }

@@ -43,6 +43,12 @@ public class SeExportImagesProfile
     /// <summary>Name of the <see cref="TextEffectPreset"/>; empty = classic rendering.</summary>
     public string TextEffect { get; set; } = string.Empty;
 
+    public bool TextEffectEnabled { get; set; }
+    public int TextEffectStrength { get; set; } = 100;
+    public int TextEffectLetterSpacing { get; set; }
+    public int TextEffectArcBend { get; set; }
+    public int TextEffectWave { get; set; }
+
     public int BoxPaddingLeft { get; set; }
     public int BoxPaddingRight { get; set; }
     public int BoxPaddingTop { get; set; }
