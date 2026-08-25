@@ -78,12 +78,20 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         }
 
         /// <summary>
-        /// Mirrors GET /v2/languages?type=source (checked 2026-08-25, 101 languages). DeepL takes no
-        /// regional variant as a source - the ones listed here are the pairs SE has always offered,
-        /// and <see cref="MakeContent"/> cuts them back to the base code before sending.
+        /// The languages shared by both directions. Sources are exactly this list; targets are this
+        /// list plus the two regional variants DeepL only accepts as targets (fr-CA and de-CH) -
+        /// see <see cref="GetSupportedTargetLanguages"/>.
+        ///
+        /// Mirrors GET /v2/languages (checked 2026-08-25: type=source has 101 languages, type=target
+        /// has 110), minus the three target codes that are aliases of an entry already here: ZH
+        /// (= zh-hans), DE-DE (= de) and FR-FR (= fr). DeepL takes no regional variant as a source -
+        /// the ones listed here are the pairs SE has always offered, and <see cref="MakeContent"/>
+        /// cuts them back to the base code before sending. The last argument is the API's
+        /// supports_formality flag (targets only).
         /// To refresh: curl -H "Authorization: DeepL-Auth-Key KEY" "https://api-free.deepl.com/v2/languages?type=source"
+        ///         and curl -H "Authorization: DeepL-Auth-Key KEY" "https://api-free.deepl.com/v2/languages?type=target"
         /// </summary>
-        public List<TranslationPair> GetSupportedSourceLanguages()
+        private static List<TranslationPair> GetSharedLanguages()
         {
             return new List<TranslationPair>
             {
@@ -195,124 +203,21 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             };
         }
 
+        public List<TranslationPair> GetSupportedSourceLanguages()
+        {
+            return GetSharedLanguages();
+        }
+
         /// <summary>
-        /// Mirrors GET /v2/languages?type=target (checked 2026-08-25, 110 languages), minus the three
-        /// codes that are aliases of an entry already here: ZH (= zh-hans), DE-DE (= de) and FR-FR
-        /// (= fr). The last argument is the API's supports_formality flag.
-        /// To refresh: curl -H "Authorization: DeepL-Auth-Key KEY" "https://api-free.deepl.com/v2/languages?type=target"
+        /// Targets are the shared list plus the two regional variants DeepL only accepts as targets,
+        /// each inserted right after its base language to keep the list alphabetical.
         /// </summary>
         public List<TranslationPair> GetSupportedTargetLanguages()
         {
-            return new List<TranslationPair>
-            {
-                MakeTranslationPair("Afrikaans", "af", false),
-                MakeTranslationPair("Albanian", "sq", false),
-                MakeTranslationPair("Arabic", "ar", false),
-                MakeTranslationPair("Aragonese", "an", false),
-                MakeTranslationPair("Armenian", "hy", false),
-                MakeTranslationPair("Assamese", "as", false),
-                MakeTranslationPair("Aymara", "ay", false),
-                MakeTranslationPair("Azerbaijani", "az", false),
-                MakeTranslationPair("Bashkir", "ba", false),
-                MakeTranslationPair("Basque", "eu", false),
-                MakeTranslationPair("Belarusian", "be", false),
-                MakeTranslationPair("Bengali", "bn", false),
-                MakeTranslationPair("Bosnian", "bs", false),
-                MakeTranslationPair("Breton", "br", false),
-                MakeTranslationPair("Bulgarian", "bg", false),
-                MakeTranslationPair("Burmese", "my", false),
-                MakeTranslationPair("Catalan", "ca", false),
-                MakeTranslationPair("Chinese (Simplified)", "zh-hans", false),
-                MakeTranslationPair("Chinese (Traditional)", "zh-hant", false),
-                MakeTranslationPair("Croatian", "hr", false),
-                MakeTranslationPair("Czech", "cs", false),
-                MakeTranslationPair("Danish", "da", false),
-                MakeTranslationPair("Dutch", "nl", true),
-                MakeTranslationPair("English (American)", "en-US", false),
-                MakeTranslationPair("English (British)", "en-GB", false),
-                MakeTranslationPair("Esperanto", "eo", false),
-                MakeTranslationPair("Estonian", "et", false),
-                MakeTranslationPair("Finnish", "fi", false),
-                MakeTranslationPair("French", "fr", true),
-                MakeTranslationPair("French (Canadian)", "fr-CA", true),
-                MakeTranslationPair("Galician", "gl", false),
-                MakeTranslationPair("Georgian", "ka", false),
-                MakeTranslationPair("German", "de", true),
-                MakeTranslationPair("German (Swiss)", "de-CH", true),
-                MakeTranslationPair("Greek", "el", false),
-                MakeTranslationPair("Guarani", "gn", false),
-                MakeTranslationPair("Gujarati", "gu", false),
-                MakeTranslationPair("Haitian Creole", "ht", false),
-                MakeTranslationPair("Hausa", "ha", false),
-                MakeTranslationPair("Hebrew", "he", false),
-                MakeTranslationPair("Hindi", "hi", false),
-                MakeTranslationPair("Hungarian", "hu", false),
-                MakeTranslationPair("Icelandic", "is", false),
-                MakeTranslationPair("Igbo", "ig", false),
-                MakeTranslationPair("Indonesian", "id", false),
-                MakeTranslationPair("Irish", "ga", false),
-                MakeTranslationPair("Italian", "it", true),
-                MakeTranslationPair("Japanese", "ja", true),
-                MakeTranslationPair("Javanese", "jv", false),
-                MakeTranslationPair("Kazakh", "kk", false),
-                MakeTranslationPair("Korean", "ko", false),
-                MakeTranslationPair("Kyrgyz", "ky", false),
-                MakeTranslationPair("Latin", "la", false),
-                MakeTranslationPair("Latvian", "lv", false),
-                MakeTranslationPair("Lingala", "ln", false),
-                MakeTranslationPair("Lithuanian", "lt", false),
-                MakeTranslationPair("Luxembourgish", "lb", false),
-                MakeTranslationPair("Macedonian", "mk", false),
-                MakeTranslationPair("Malagasy", "mg", false),
-                MakeTranslationPair("Malay", "ms", false),
-                MakeTranslationPair("Malayalam", "ml", false),
-                MakeTranslationPair("Maltese", "mt", false),
-                MakeTranslationPair("Maori", "mi", false),
-                MakeTranslationPair("Marathi", "mr", false),
-                MakeTranslationPair("Mongolian", "mn", false),
-                MakeTranslationPair("Nepali", "ne", false),
-                MakeTranslationPair("Norwegian (Bokmål)", "nb", false),
-                MakeTranslationPair("Occitan", "oc", false),
-                MakeTranslationPair("Oromo", "om", false),
-                MakeTranslationPair("Pashto", "ps", false),
-                MakeTranslationPair("Persian", "fa", false),
-                MakeTranslationPair("Polish", "pl", true),
-                MakeTranslationPair("Portuguese (Brazilian)", "pt-BR", true),
-                MakeTranslationPair("Portuguese (European)", "pt-PT", true),
-                MakeTranslationPair("Punjabi", "pa", false),
-                MakeTranslationPair("Quechua", "qu", false),
-                MakeTranslationPair("Romanian", "ro", false),
-                MakeTranslationPair("Russian", "ru", true),
-                MakeTranslationPair("Sanskrit", "sa", false),
-                MakeTranslationPair("Serbian", "sr", false),
-                MakeTranslationPair("Sesotho", "st", false),
-                MakeTranslationPair("Slovak", "sk", false),
-                MakeTranslationPair("Slovenian", "sl", false),
-                MakeTranslationPair("Spanish", "es", true),
-                MakeTranslationPair("Spanish (Latin American)", "es-419", true),
-                MakeTranslationPair("Sundanese", "su", false),
-                MakeTranslationPair("Swahili", "sw", false),
-                MakeTranslationPair("Swedish", "sv", false),
-                MakeTranslationPair("Tagalog", "tl", false),
-                MakeTranslationPair("Tajik", "tg", false),
-                MakeTranslationPair("Tamil", "ta", false),
-                MakeTranslationPair("Tatar", "tt", false),
-                MakeTranslationPair("Telugu", "te", false),
-                MakeTranslationPair("Thai", "th", false),
-                MakeTranslationPair("Tsonga", "ts", false),
-                MakeTranslationPair("Tswana", "tn", false),
-                MakeTranslationPair("Turkish", "tr", false),
-                MakeTranslationPair("Turkmen", "tk", false),
-                MakeTranslationPair("Ukrainian", "uk", false),
-                MakeTranslationPair("Urdu", "ur", false),
-                MakeTranslationPair("Uzbek", "uz", false),
-                MakeTranslationPair("Vietnamese", "vi", false),
-                MakeTranslationPair("Welsh", "cy", false),
-                MakeTranslationPair("Wolof", "wo", false),
-                MakeTranslationPair("Xhosa", "xh", false),
-                MakeTranslationPair("Yiddish", "yi", false),
-                MakeTranslationPair("Zulu", "zu", false),
-            };
+            var languages = GetSharedLanguages();
+            languages.Insert(languages.FindIndex(p => p.Code == "fr") + 1, MakeTranslationPair("French (Canadian)", "fr-CA", true));
+            languages.Insert(languages.FindIndex(p => p.Code == "de") + 1, MakeTranslationPair("German (Swiss)", "de-CH", true));
+            return languages;
         }
 
         private static TranslationPair MakeTranslationPair(string name, string code, bool hasFormality)
