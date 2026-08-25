@@ -18,6 +18,32 @@ Generate speech audio from subtitle text using various TTS engines.
 6. Click **Generate** to start
 7. Close the window with **OK** to apply the session's subtitle changes (lines merged before generation, text edits made in the review window) to the subtitle in the main window — or **Cancel** to discard them
 
+## Set Up Cast: One Voice per Speaker
+
+When the subtitle carries speaker names — the **Actor** field in ASSA/SSA, or `<v Name>` voices in WebVTT — a **Set up cast** button appears (with the speaker count). It opens a dialog where each actor is assigned an engine, voice, and optionally a model and voice instruction of their own. Lines without an actor use the globally selected voice. The cast is remembered between sessions, so the same actors open already assigned next time.
+
+If the speaker names are written into the text instead (an SDH subtitle), see the speaker prompt below — and for a video where nobody labeled the speakers at all, [Find Voices in Video and Clone](#find-voices-in-video-and-clone) works out the cast by listening.
+
+## Prompts Before Generation
+
+Clicking **Generate** runs up to three quick checks on the subtitle before any audio is made. Each one only appears when it has something to show, each opens a review dialog where every proposed change is a checkbox, and each can be turned off in **Options → Settings** (search for "Text to speech: prompt").
+
+### Speaker names in the text
+
+An SDH subtitle writes its speakers into the text — `MIKE: text`, `[NARRATOR] text`, `(Speaker 1) text`, or a name alone on its line with the speech below. Sent to a TTS engine as-is, the names are read aloud. When no cast exists yet and at least two speakers are found, Subtitle Edit offers to move the names into the actor field: the tags leave the spoken text, the **Set up cast** dialog opens so each speaker gets a voice, and generation continues with the cast.
+
+- Names written the SDH way (ALL CAPS, `Speaker 1`) are checked by default; mixed-case candidates like `Warning:` are listed for you to judge, but unchecked.
+- **Lines without a name continue the previous speaker** (on by default) handles the SDH convention of naming only the speaker changes — the lines between two tags belong to the name above them.
+- Only the speech generation is affected: the subtitle in the main window keeps its text. To move the names into the actor field of the file itself, use **Tools → Convert actors...**.
+
+### Merge continuation lines
+
+Sentences split across several subtitles are offered for merging, so the engine speaks each thought as one breath group. These merges are applied to the subtitle in the main window when the window is closed with **OK**.
+
+### Skip sound and music lines
+
+Lines that contain only sounds or music — `♪`, `[door slams]`, `(sighs)`, or nothing once formatting tags are stripped — get read aloud or hallucinated into made-up words by TTS engines. Subtitle Edit offers to leave the checked lines silent: no audio is generated for them, and they are not counted as failures. A sound annotation followed by real speech (`[gunshot] Get down!`) is kept.
+
 ## Supported Engines
 
 - **Piper** — Local, open-source TTS (Windows and Linux)
