@@ -264,13 +264,34 @@ public static class PerLineVoiceClone
     /// method how to build its voice - the caller then falls back to the ordinary voice rather
     /// than silently synthesising with the wrong speaker.
     /// </remarks>
-    public static Voice? MakeVoiceForClip(ITtsEngine engine, string clipFileName)
+    /// <param name="voiceName">
+    /// What to call the voice, for the rows and lists that show it. Defaults to the clip's file
+    /// name; an imported session passes the name the clip had when it was exported, so a line
+    /// keeps the voice name it was generated with instead of picking up the exported clip's.
+    /// </param>
+    public static Voice? MakeVoiceForClip(ITtsEngine engine, string clipFileName, string? voiceName = null)
     {
-        var name = Path.GetFileNameWithoutExtension(clipFileName);
+        var name = string.IsNullOrEmpty(voiceName) ? Path.GetFileNameWithoutExtension(clipFileName) : voiceName;
         return engine switch
         {
             OmniVoiceTtsCpp => new Voice(new OmniVoice(name, clipFileName)),
             _ => null,
         };
     }
+
+    /// <summary>
+    /// The recording <paramref name="voice"/> clones from, or null when it clones from nothing -
+    /// or from something <see cref="MakeVoiceForClip"/> could not rebuild afterwards.
+    /// </summary>
+    /// <remarks>
+    /// Deliberately limited to the voice types <see cref="MakeVoiceForClip"/> handles: the callers
+    /// are export (which copies the recording so the session can be re-imported elsewhere) and
+    /// regenerate (which reuses it), and a reference no engine can be handed back is worth
+    /// neither. Keep the two methods in step when an engine is added.
+    /// </remarks>
+    public static string? TryGetReferenceClip(Voice? voice) => voice?.EngineVoice switch
+    {
+        OmniVoice omniVoice when !string.IsNullOrEmpty(omniVoice.FilePath) => omniVoice.FilePath,
+        _ => null,
+    };
 }
