@@ -1,7 +1,7 @@
 {
   "title": "SubtitleEdit",
-  "version": "v. 5.2.0-beta22",
-  "translatedBy": "v. 24.08.2026 di bovirus e GitGianluc",
+  "version": "v. 5.2.0-beta23",
+  "translatedBy": "v. 25.08.2026 di bovirus e GitGianluc",
   "cultureName": "it-IT",
   "general": {
     "abort": "Annulla",
@@ -3378,6 +3378,7 @@
     "llamaCppDownloadModelPrompt": "llama.cpp richiede che venga scaricato il modello OCR selezionato. Vuoi scaricarlo?",
     "crispEmbedNotDownloaded": "Motore/modello CrispEmbed non scaricato: scaricalo tramite le impostazioni di conversione batch.",
     "crispEmbedReturnedNoText": "CrispEmbed non ha restituito alcun testo: verifica il modello",
+    "appleVisionReturnedNoText": "Apple Vision non ha restituito testo - controlla la lingua",
     "crispEmbedSettingsTitle": "Impostazioni CrispEmbed",
     "crispEmbedDescription": "Motore OCR locale con backend modelli multipli: scarica qui il motore e i modelli.",
     "trainNOcrDatabase": "Addestra database nOCR",
