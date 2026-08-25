@@ -237,7 +237,14 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                     s = inner[0];
                 }
 
-                s = s.Trim('"');
+                // The parser returns the raw JSON string with its delimiters; strip exactly that
+                // one pair. Trim('"') would also eat an escaped quote ending the translation
+                // ("He said \"hi\"" -> dangling backslash) and make Regex.Unescape throw.
+                if (s.Length >= 2 && s.StartsWith('"') && s.EndsWith('"'))
+                {
+                    s = s.Substring(1, s.Length - 2);
+                }
+
                 try
                 {
                     s = Regex.Unescape(s);

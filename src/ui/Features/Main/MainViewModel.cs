@@ -15816,13 +15816,21 @@ public partial class MainViewModel :
             return;
         }
 
+        // The whole-millisecond rounding of each duration accumulates through previousEndMs, so
+        // the block would drift off the end it is distributing towards - overlapping whatever
+        // follows the last line at the minimum gap. Pin the last line to the original block end.
+        var blockEndTime = last.EndTime;
         var previousEndMs = first.StartTime.TotalMilliseconds - gapMs;
         foreach (var p in selectedItems)
         {
             var ratio = p.Text.CountCharacters(true) / totalLength;
             var newDurationMs = (double)ratio * totalDurationWithGapsMs;
             var newStartMs = previousEndMs + gapMs;
-            p.SetTimes(TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newStartMs), TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newStartMs) + TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newDurationMs));
+            var newStart = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newStartMs);
+            var newEnd = p == last
+                ? blockEndTime
+                : newStart + TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newDurationMs);
+            p.SetTimes(newStart, newEnd);
             previousEndMs = p.EndTime.TotalMilliseconds;
         }
 
