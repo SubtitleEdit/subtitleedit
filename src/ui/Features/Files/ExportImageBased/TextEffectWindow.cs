@@ -19,7 +19,10 @@ public class TextEffectWindow : Window
         Title = Se.Language.File.Export.TextEffectSettingsTitle;
         CanResize = false;
         Width = 440;
-        Height = 330;
+        // Height comes from the content - a fixed height clipped the button bar below the
+        // visible area. Only the width is fixed (SizeToContent.WidthAndHeight measures too
+        // wide on macOS).
+        SizeToContent = SizeToContent.Height;
         vm.Window = this;
         DataContext = vm;
 
@@ -32,7 +35,7 @@ public class TextEffectWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -59,7 +62,6 @@ public class TextEffectWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonReset, buttonOk, buttonCancel);
-        panelButtons.VerticalAlignment = VerticalAlignment.Bottom;
         grid.Add(panelButtons, 5, 0, 1, 3);
 
         Content = grid;
@@ -82,10 +84,14 @@ public class TextEffectWindow : Window
             [!Slider.ValueProperty] = new Binding(propertyName),
         };
 
-        var valueLabel = UiUtil.MakeLabel();
-        valueLabel.VerticalAlignment = VerticalAlignment.Center;
-        valueLabel.MinWidth = 45;
-        valueLabel[!TextBlock.TextProperty] = new Binding(propertyName) { StringFormat = valueFormat };
+        // A real TextBlock - UiUtil.MakeLabel returns a Label, and a TextBlock.Text binding
+        // set on a Label never renders.
+        var valueLabel = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            MinWidth = 45,
+            [!TextBlock.TextProperty] = new Binding(propertyName) { StringFormat = valueFormat },
+        };
 
         grid.Add(labelControl, row, 0);
         grid.Add(slider, row, 1);
