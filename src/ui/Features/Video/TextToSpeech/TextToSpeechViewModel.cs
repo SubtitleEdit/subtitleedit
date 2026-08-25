@@ -27,6 +27,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.MossTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DotsTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTts25AudioCppSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DetectSpeakers;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.KokoroTtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.SkipNoiseLines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.PiperSettings;
@@ -979,7 +980,17 @@ public partial class TextToSpeechViewModel : ObservableObject
         // fallback base - a configured generation folder wins.
         _waveFolder = TtsRunFolder.Create(waveFolder);
 
-        _castKind = ActorVoiceDetector.Detect(subtitle, format);
+        RefreshCast(ActorVoiceDetector.Detect(subtitle, format), subtitle);
+    }
+
+    /// <summary>
+    /// Recomputes the cast state (kind, button, saved mappings) from <paramref name="subtitle"/>.
+    /// Called at window setup, and again when the detect-speakers prompt writes actors into the
+    /// working subtitle mid-flow.
+    /// </summary>
+    private void RefreshCast(ActorVoiceDetector.CastKind castKind, Subtitle subtitle)
+    {
+        _castKind = castKind;
         // Only surface the cast button when there's actually more than one actor/voice to assign
         // — a single-speaker subtitle uses the global engine/voice and the button would be a no-op.
         var actorCount = _castKind == ActorVoiceDetector.CastKind.None
@@ -1182,6 +1193,65 @@ public partial class TextToSpeechViewModel : ObservableObject
     }
 
     /// <summary>
+    /// The third generate-time prompt: SDH speaker tags written into the text ("MIKE: text",
+    /// "[NARRATOR] text") become actors so "Set up cast" can give each speaker a voice, and the
+    /// names are not read aloud (#14106). Only the TTS working copy changes - the subtitle in the
+    /// main window keeps its text (Tools → Convert actors is the way to persist actors). Runs
+    /// before the merge prompt: tag-free text merges better, and the merge rebuilds
+    /// <see cref="_subtitle"/> while carrying actors through.
+    /// </summary>
+    private async Task PromptDetectSpeakers()
+    {
+        if (Window == null || _castKind != ActorVoiceDetector.CastKind.None)
+        {
+            return;
+        }
+
+        var candidates = TextSpeakerDetector.Detect(_subtitle);
+        var speakerCount = candidates
+            .Where(c => TextSpeakerDetector.IsConfidentSpeakerName(c.Speaker))
+            .Select(c => c.Speaker)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .Count();
+        if (speakerCount < 2)
+        {
+            // One speaker needs no cast, and a subtitle with no confident tag is most likely not
+            // SDH at all - prompting on every "Warning:" would teach users to click prompts away.
+            return;
+        }
+
+        var answer = await MessageBox.Show(
+            Window!,
+            Se.Language.Video.TextToSpeech.DetectSpeakersPromptTitle,
+            Se.Language.Video.TextToSpeech.DetectSpeakersPromptMessage,
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question);
+        if (answer != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<DetectSpeakersWindow, DetectSpeakersViewModel>(
+            Window!, vm => vm.Initialize(candidates));
+        if (!result.OkPressed || result.ConfirmedCandidates.Count == 0)
+        {
+            return;
+        }
+
+        TextSpeakerDetector.Apply(_subtitle, result.ConfirmedCandidates, result.StickySpeakers);
+
+        // The actors exist only in the TTS working copy, so cast detection is not re-run against
+        // the main window's format - the copy holds ASSA-style actors now, whatever the file is.
+        RefreshCast(ActorVoiceDetector.CastKind.AssaActors, _subtitle);
+
+        // Straight into voice assignment - the whole point of confirming the speakers.
+        if (HasCast)
+        {
+            await ShowCast();
+        }
+    }
+
+    /// <summary>
     /// Stop the crispasr.exe servers of every CrispASR-based TTS engine EXCEPT
     /// <paramref name="keepAlive"/>. Pass null to stop all four. Called before starting synth
     /// (Test Voice / Generate TTS) and on window close, so models from previously selected
@@ -1256,6 +1326,11 @@ public partial class TextToSpeechViewModel : ObservableObject
 
         // The engine and/or its models may have just been downloaded - refresh the combo dots.
         RefreshDownloadDots?.Invoke();
+
+        if (Se.Settings.Tools.TextToSpeechPromptDetectSpeakers)
+        {
+            await PromptDetectSpeakers();
+        }
 
         if (Se.Settings.Tools.TextToSpeechPromptMergeContinuationLines)
         {
