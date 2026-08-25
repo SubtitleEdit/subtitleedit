@@ -48,12 +48,12 @@ public class WhisperDownloadService : IWhisperDownloadService
     private const string LinuxCTranslate2 = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-183/whisper-ctranslate2-Linux64.zip";
     private const string WindowCTranslate2 = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-183/whisper-ctranslate2-win64.zip";
 
-    // Pinned to a specific release (not "latest"), so every install of a given SE version
-    // gets the exact same, known-good build - see
-    // https://github.com/muaz978/subtitleedit-whisperx-standalone/releases/tag/v1.0.1.
-    private const string MacArmWhisperX = "https://github.com/muaz978/subtitleedit-whisperx-standalone/releases/download/v1.0.1/whisperx-standalone-macos-arm64.zip";
-    private const string LinuxWhisperX = "https://github.com/muaz978/subtitleedit-whisperx-standalone/releases/download/v1.0.1/whisperx-standalone-linux-x64.zip";
-    private const string WindowsWhisperX = "https://github.com/muaz978/subtitleedit-whisperx-standalone/releases/download/v1.0.1/whisperx-standalone-windows-x64.zip";
+    // Built by support-files' build-whisperx-standalone-release.yml from a pinned ref of
+    // https://github.com/muaz978/subtitleedit-whisperx-standalone (v1.0.1), so every install
+    // of a given SE version gets the exact same, known-good build.
+    private const string MacArmWhisperX = "https://github.com/SubtitleEdit/support-files/releases/download/whisperx-standalone-101/whisperx-standalone-macos-arm64.7z";
+    private const string LinuxWhisperX = "https://github.com/SubtitleEdit/support-files/releases/download/whisperx-standalone-101/whisperx-standalone-linux-x64.7z";
+    private const string WindowsWhisperX = "https://github.com/SubtitleEdit/support-files/releases/download/whisperx-standalone-101/whisperx-standalone-windows-x64.7z";
 
     public WhisperDownloadService(HttpClient httpClient)
     {
@@ -118,8 +118,8 @@ public class WhisperDownloadService : IWhisperDownloadService
     public async Task DownloadWhisperX(string destinationFileName, IProgress<float>? progress, CancellationToken cancellationToken)
     {
         // Downloads straight to a file, like Purfview Faster-Whisper-XXL, instead of the shared
-        // in-memory _downloadStream - at 850 MB-925 MB, buffering this in memory would peak at
-        // 1.5-2 GB before unpacking even starts (MemoryStream's doubling growth).
+        // in-memory _downloadStream - at 216 MB-355 MB, buffering this in memory would peak far
+        // higher before unpacking even starts (MemoryStream's doubling growth).
         await DownloadHelper.DownloadFileAsync(_httpClient, GetUrlWhisperX(), destinationFileName, progress, cancellationToken);
     }
 
