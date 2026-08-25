@@ -2946,7 +2946,9 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
 
         // A fresh folder per run: the clips of a previous run belong to whatever the subtitle
-        // looked like then, and the review window still points at the current run's files.
+        // looked like then, and the review window still points at the current run's files. The
+        // same goes for the copies an engine keeps in its own voices folder.
+        PerLineVoiceClone.ResetStagedReferences(engine);
         var clipFolder = Path.Combine(_waveFolder, "clone-references");
         try
         {

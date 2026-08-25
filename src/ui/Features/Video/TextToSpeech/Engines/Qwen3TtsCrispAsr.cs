@@ -48,7 +48,16 @@ public class Qwen3TtsCrispAsr : ITtsEngine
     public bool HasModel => true;
     public bool HasKeyFile => false;
     public bool SupportsVoiceCloning => true;
-    public bool SupportsPerLineVoiceCloning => false;
+
+    /// <summary>
+    /// True only while the Base (Voice clone) model is picked, and true at all only because this
+    /// backend takes the reference per request: <c>voice</c> is resolved against --voice-dir on
+    /// every call, so a reference that changes per line costs a file copy rather than a server
+    /// restart and a model reload. VoiceDesign and CustomVoice ignore reference WAVs outright,
+    /// so there the offer would be a promise the model cannot keep - the model combo is what
+    /// switches this on, and it re-pulls the voice list on every change.
+    /// </summary>
+    public bool SupportsPerLineVoiceCloning => IsCloneModel(null);
 
     public const string ModelKeyVoiceDesign = "1.7B VoiceDesign";
     public const string ModelKeyCustomVoice = "1.7B CustomVoice";
@@ -261,6 +270,10 @@ public class Qwen3TtsCrispAsr : ITtsEngine
             Directory.CreateDirectory(voicesFolder);
         }
 
+        // First: a crashed run can leave per-line clone references behind, and every pass below
+        // would otherwise treat them as the user's own voices - seeding would think the folder
+        // is already populated, and the transcript pass would rewrite their sidecars.
+        ClearStagedPerLineReferencesOnce(voicesFolder);
         SeedVoicesFromQwen3TtsCppIfEmpty(voicesFolder);
         NormalizeVoiceSampleRatesOnce(voicesFolder);
         NormalizeVoiceTranscriptsOnce(voicesFolder);
@@ -270,6 +283,153 @@ public class Qwen3TtsCrispAsr : ITtsEngine
     private static bool _voiceSeedAttempted;
     private static bool _voiceSampleRatesNormalized;
     private static bool _voiceTranscriptsNormalized;
+    private static bool _stagedPerLineReferencesCleared;
+
+    /// <summary>
+    /// File-name prefix of the reference clips the per-line voice clone stages in the voices
+    /// folder. The name is reserved: a file called this is the current run's reference for one
+    /// subtitle line, never a voice the user imported, so it is hidden from the voice list and
+    /// cleared between runs.
+    /// </summary>
+    public const string PerLineReferencePrefix = "se-per-line-";
+
+    /// <summary>True when <paramref name="fileName"/> is a reference staged for one line.</summary>
+    public static bool IsStagedPerLineReference(string fileName) =>
+        Path.GetFileName(fileName).StartsWith(PerLineReferencePrefix, StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// Copies one per-line cloning reference into the voices folder and returns the staged WAV,
+    /// or null when the clip cannot be used as a reference.
+    /// </summary>
+    /// <remarks>
+    /// A copy is needed because the backend resolves the request's <c>voice</c> as a bare name
+    /// inside --voice-dir; handing it the absolute path of a clip cut into a temp folder skips
+    /// the ref-text sidecar and fails. It is a plain copy and not an ffmpeg pass because the
+    /// clips are cut as 24 kHz mono PCM16 already - exactly what the Base backend demands.
+    ///
+    /// Null when there is no usable transcript beside the clip: the backend answers a reference
+    /// without ref-text with "ref-text not set" (HTTP 500), so the caller is better off falling
+    /// back to an ordinary voice for that line than failing it.
+    /// </remarks>
+    public static string? StagePerLineReference(string clipFileName)
+    {
+        // The voices folder is resolved only once the clip is known to be usable: GetSetVoicesFolder
+        // runs the one-time seeding and resampling passes through ffmpeg, which is wasted work for a
+        // line that is about to fall back to an ordinary voice anyway.
+        return ReadReferenceTranscript(clipFileName) == null
+            ? null
+            : StagePerLineReferenceIn(clipFileName, GetSetVoicesFolder());
+    }
+
+    /// <summary>
+    /// <see cref="StagePerLineReference"/> with the destination spelled out, so the copy can be
+    /// exercised without writing into the user's real voices folder.
+    /// </summary>
+    internal static string? StagePerLineReferenceIn(string clipFileName, string voicesFolder)
+    {
+        try
+        {
+            var transcript = ReadReferenceTranscript(clipFileName);
+            if (transcript == null)
+            {
+                return null;
+            }
+
+            // An exported session carries the staged name, so re-staging it on import would
+            // otherwise pile a second prefix on top - once per round trip.
+            var baseName = Path.GetFileNameWithoutExtension(clipFileName);
+            if (baseName.StartsWith(PerLineReferencePrefix, StringComparison.OrdinalIgnoreCase))
+            {
+                baseName = baseName.Substring(PerLineReferencePrefix.Length);
+            }
+
+            var stagedFileName = Path.Combine(voicesFolder, PerLineReferencePrefix + baseName + ".wav");
+
+            Directory.CreateDirectory(voicesFolder);
+            File.Copy(clipFileName, stagedFileName, overwrite: true);
+            File.WriteAllText(Path.ChangeExtension(stagedFileName, ".txt"), transcript);
+            return stagedFileName;
+        }
+        catch (Exception ex)
+        {
+            Se.LogError(ex, $"Qwen3 TTS (CrispASR): staging the per-line reference '{clipFileName}' failed");
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// What is spoken in a per-line reference clip, or null when the clip is missing or carries no
+    /// usable transcript - the backend answers a reference without ref-text with "ref-text not set"
+    /// (HTTP 500), so such a clip is not a reference and the line falls back instead.
+    /// </summary>
+    private static string? ReadReferenceTranscript(string clipFileName)
+    {
+        if (string.IsNullOrEmpty(clipFileName) || !File.Exists(clipFileName))
+        {
+            return null;
+        }
+
+        var transcript = TryReadUsableTranscript(clipFileName);
+        if (string.IsNullOrWhiteSpace(transcript))
+        {
+            Se.WriteToolsLog(
+                $"Qwen3 TTS (CrispASR): no usable transcript beside '{clipFileName}' - not cloning this line");
+            return null;
+        }
+
+        return transcript;
+    }
+
+    /// <summary>
+    /// Removes every staged per-line reference, leaving the user's imported voices alone. Called
+    /// when a per-line run starts, so a run over a shorter subtitle cannot leave the previous
+    /// run's extra lines lying in the voices folder.
+    /// </summary>
+    public static void ClearStagedPerLineReferences() => DeleteStagedPerLineReferences(GetSetVoicesFolder());
+
+    /// <summary>
+    /// <see cref="ClearStagedPerLineReferences"/> with the folder spelled out - the test seam that
+    /// matches <see cref="StagePerLineReferenceIn"/>.
+    /// </summary>
+    internal static void ClearStagedPerLineReferencesIn(string voicesFolder) =>
+        DeleteStagedPerLineReferences(voicesFolder);
+
+    private static void ClearStagedPerLineReferencesOnce(string voicesFolder)
+    {
+        if (_stagedPerLineReferencesCleared)
+        {
+            return;
+        }
+        _stagedPerLineReferencesCleared = true;
+        DeleteStagedPerLineReferences(voicesFolder);
+    }
+
+    private static void DeleteStagedPerLineReferences(string voicesFolder)
+    {
+        try
+        {
+            if (!Directory.Exists(voicesFolder))
+            {
+                return;
+            }
+
+            foreach (var file in Directory.GetFiles(voicesFolder, PerLineReferencePrefix + "*"))
+            {
+                try
+                {
+                    File.Delete(file);
+                }
+                catch
+                {
+                    // A reference still open (the server may be reading it) is left for next time.
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Se.LogError(ex, "Qwen3 TTS (CrispASR): clearing the staged per-line references failed");
+        }
+    }
 
     /// <summary>
     /// One-time best-effort seeding of reference voices from the existing qwen3-tts.cpp engine's
@@ -292,7 +452,7 @@ public class Qwen3TtsCrispAsr : ITtsEngine
 
         try
         {
-            if (Directory.EnumerateFiles(voicesFolder, "*.wav").Any())
+            if (Directory.EnumerateFiles(voicesFolder, "*.wav").Any(f => !IsStagedPerLineReference(f)))
             {
                 return;
             }
@@ -706,6 +866,13 @@ public class Qwen3TtsCrispAsr : ITtsEngine
         {
             foreach (var file in Directory.GetFiles(voicesFolder, "*.wav"))
             {
+                // The per-line clone's own references live here too (the backend reads them from
+                // nowhere else); they belong to one line of one run, not in a voice combo.
+                if (IsStagedPerLineReference(file))
+                {
+                    continue;
+                }
+
                 var name = Path.GetFileNameWithoutExtension(file).Replace('_', ' ');
                 result.Add(new Voice(new Qwen3TtsVoice(name, file)));
             }
