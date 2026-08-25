@@ -149,6 +149,12 @@ public class LanguageTextToSpeech
     public string SkipNoiseLinesTitle { get; set; }
     public string SkipNoiseLinesFoundX { get; set; }
     public string SkipNoiseLinesColumnSkip { get; set; }
+    public string DetectSpeakersPromptTitle { get; set; }
+    public string DetectSpeakersPromptMessage { get; set; }
+    public string DetectSpeakersTitle { get; set; }
+    public string DetectSpeakersFoundX { get; set; }
+    public string DetectSpeakersColumnUse { get; set; }
+    public string DetectSpeakersSticky { get; set; }
 
     // Applying the TTS window's changes (review text edits, merged lines) back to the subtitle
     public string SubtitleUpdatedFromReviewSingular { get; set; }
@@ -300,6 +306,14 @@ public class LanguageTextToSpeech
         SkipNoiseLinesTitle = "Lines with only sounds or music";
         SkipNoiseLinesFoundX = "{0} lines contain only sounds or music - checked lines are left silent";
         SkipNoiseLinesColumnSkip = "Skip";
+        DetectSpeakersPromptTitle = "Speaker names found in the text?";
+        DetectSpeakersPromptMessage = "Some lines start with a speaker name - like \"MIKE:\" or \"[NARRATOR]\"." + Environment.NewLine + Environment.NewLine +
+                                      "Moved into the actor field, each speaker can get their own voice via \"Set up cast\", and the name is not read aloud." + Environment.NewLine + Environment.NewLine +
+                                      "Review the names now? (only the speech generation is affected - the subtitle itself is not changed)";
+        DetectSpeakersTitle = "Speaker names in the text";
+        DetectSpeakersFoundX = "{0} speaker tags found ({1} speakers) - checked names become actors and are not read aloud";
+        DetectSpeakersColumnUse = "Use";
+        DetectSpeakersSticky = "Lines without a name continue the previous speaker";
 
         SubtitleUpdatedFromReviewSingular = "Updated one line from the speech review";
         SubtitleUpdatedFromReviewPlural = "Updated {0} lines from the speech review";

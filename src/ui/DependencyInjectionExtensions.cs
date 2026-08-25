@@ -154,6 +154,7 @@ using Nikse.SubtitleEdit.Features.Video.ShotChanges;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ActorVoices;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.AutoCast;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DetectSpeakers;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.SkipNoiseLines;
 using Nikse.SubtitleEdit.Features.Video.VideoOcr;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.AdvancedTtsSettings;
@@ -559,6 +560,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<ActorVoiceRowSettingsViewModel>();
         collection.AddTransient<AutoCastSpeakersViewModel>();
         collection.AddTransient<SkipNoiseLinesViewModel>();
+        collection.AddTransient<DetectSpeakersViewModel>();
         collection.AddTransient<TimedText10PropertiesViewModel>();
         collection.AddTransient<TimedTextImsc11PropertiesViewModel>();
         collection.AddTransient<TmpegEncXmlPropertiesViewModel>();
