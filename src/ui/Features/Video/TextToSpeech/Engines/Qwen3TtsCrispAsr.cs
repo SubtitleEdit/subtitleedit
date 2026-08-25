@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// (~986 MB) and lives in this engine's own folder — see <see cref="Qwen3TtsCrispAsrDownloadService"/>
 /// for the URLs.
 /// </summary>
-public class Qwen3TtsCrispAsr : ITtsEngine
+public class Qwen3TtsCrispAsr : ITtsEngine, IPerLineCloneEngine
 {
     public string Name => "Qwen3 TTS (CrispASR)";
     public string Description => "via CrispASR (VoiceDesign or CustomVoice 1.7B)";
@@ -316,25 +316,24 @@ public class Qwen3TtsCrispAsr : ITtsEngine
         // The voices folder is resolved only once the clip is known to be usable: GetSetVoicesFolder
         // runs the one-time seeding and resampling passes through ffmpeg, which is wasted work for a
         // line that is about to fall back to an ordinary voice anyway.
-        return ReadReferenceTranscript(clipFileName) == null
-            ? null
-            : StagePerLineReferenceIn(clipFileName, GetSetVoicesFolder());
+        return ReadReferenceTranscript(clipFileName) is { } transcript
+            ? StagePerLineReferenceIn(clipFileName, GetSetVoicesFolder(), transcript)
+            : null;
     }
 
     /// <summary>
     /// <see cref="StagePerLineReference"/> with the destination spelled out, so the copy can be
     /// exercised without writing into the user's real voices folder.
     /// </summary>
-    internal static string? StagePerLineReferenceIn(string clipFileName, string voicesFolder)
+    internal static string? StagePerLineReferenceIn(string clipFileName, string voicesFolder) =>
+        ReadReferenceTranscript(clipFileName) is { } transcript
+            ? StagePerLineReferenceIn(clipFileName, voicesFolder, transcript)
+            : null;
+
+    private static string? StagePerLineReferenceIn(string clipFileName, string voicesFolder, string transcript)
     {
         try
         {
-            var transcript = ReadReferenceTranscript(clipFileName);
-            if (transcript == null)
-            {
-                return null;
-            }
-
             // An exported session carries the staged name, so re-staging it on import would
             // otherwise pile a second prefix on top - once per round trip.
             var baseName = Path.GetFileNameWithoutExtension(clipFileName);
@@ -344,6 +343,15 @@ public class Qwen3TtsCrispAsr : ITtsEngine
             }
 
             var stagedFileName = Path.Combine(voicesFolder, PerLineReferencePrefix + baseName + ".wav");
+
+            // Regenerate hands back the clip a line was generated from, which IS the staged copy:
+            // source and destination are then the same file, and copying a file onto itself only
+            // throws. The clip is already in place - transcript sidecar beside it (that is where
+            // ReadReferenceTranscript just found it) - so there is nothing to do.
+            if (string.Equals(Path.GetFullPath(stagedFileName), Path.GetFullPath(clipFileName), StringComparison.OrdinalIgnoreCase))
+            {
+                return clipFileName;
+            }
 
             Directory.CreateDirectory(voicesFolder);
             File.Copy(clipFileName, stagedFileName, overwrite: true);
@@ -356,6 +364,35 @@ public class Qwen3TtsCrispAsr : ITtsEngine
             return null;
         }
     }
+
+    /// <summary>
+    /// <see cref="IPerLineCloneEngine"/>: the qwen3-tts backend reads references from its own
+    /// --voice-dir and nowhere else, so the clip is staged in there first and the voice's
+    /// FilePath points at the copy - that is the lookup key, since <see cref="Speak"/> sends the
+    /// file's bare name as the request's <c>voice</c>. The name stays free to be the friendly
+    /// one, which is how an imported session keeps the voice name a line was generated with.
+    /// Null when the clip cannot be staged (no transcript beside it) - that one line falls back
+    /// to an ordinary voice instead of failing the run.
+    /// </summary>
+    public Voice? MakePerLineCloneVoice(string clipFileName, string voiceName) =>
+        StagePerLineReference(clipFileName) is { } staged
+            ? new Voice(new Qwen3TtsVoice(voiceName, staged))
+            : null;
+
+    /// <summary>
+    /// The staged copy in the voices folder, which is the only reference this engine ever speaks
+    /// from. Exporting it (with its .txt sidecar) is what lets an imported session be re-dubbed
+    /// on a machine that no longer has the video.
+    /// </summary>
+    public string? GetPerLineReferenceClip(Voice voice) =>
+        voice.EngineVoice is Qwen3TtsVoice qwen3Voice && !string.IsNullOrEmpty(qwen3Voice.FilePath)
+            ? qwen3Voice.FilePath
+            : null;
+
+    /// <summary>
+    /// <see cref="IPerLineCloneEngine"/>: see <see cref="ClearStagedPerLineReferences"/>.
+    /// </summary>
+    public void ResetStagedPerLineReferences() => ClearStagedPerLineReferences();
 
     /// <summary>
     /// What is spoken in a per-line reference clip, or null when the clip is missing or carries no

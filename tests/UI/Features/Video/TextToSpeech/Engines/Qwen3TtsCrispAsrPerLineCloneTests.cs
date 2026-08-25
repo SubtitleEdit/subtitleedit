@@ -104,6 +104,26 @@ public class Qwen3TtsCrispAsrPerLineCloneTests
     }
 
     [Fact]
+    public void ReStagingTheClipALineWasGeneratedFromReusesItInPlace()
+    {
+        // Regenerate resolves a line's voice back to its staged clip and stages it again; source
+        // and destination are then the same file, and copying a file onto itself throws. That
+        // used to surface as null - silently killing the "clone the same speaker as last time"
+        // branch - so an already-staged clip must simply come back as itself.
+        using var clips = new TempFolder();
+        using var voices = new TempFolder();
+        var staged = Qwen3TtsCrispAsr.StagePerLineReferenceIn(clips.WriteClip("line-0005", "Round again."), voices.Path);
+        Assert.NotNull(staged);
+
+        var reStaged = Qwen3TtsCrispAsr.StagePerLineReferenceIn(staged!, voices.Path);
+
+        Assert.Equal(staged, reStaged);
+        Assert.True(File.Exists(reStaged));
+        // The transcript sidecar was staged with the clip and has to survive the round trip.
+        Assert.Equal("Round again.", File.ReadAllText(Path.ChangeExtension(reStaged!, ".txt")));
+    }
+
+    [Fact]
     public void TheVoiceIsNamedForTheLineButSpeaksFromTheStagedCopy()
     {
         // The two are separate on purpose: Speak sends the FilePath's bare name as the request's

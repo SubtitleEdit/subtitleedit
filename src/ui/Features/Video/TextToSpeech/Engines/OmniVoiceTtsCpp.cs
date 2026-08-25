@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// expecting a sibling &lt;name&gt;.txt with the reference transcript (omnivoice-tts requires
 /// --ref-text whenever --ref-wav is set).
 /// </summary>
-public class OmniVoiceTtsCpp : ITtsEngine
+public class OmniVoiceTtsCpp : ITtsEngine, IPerLineCloneEngine
 {
     public string Name => "OmniVoice TTS";
     public string Description => "646 languages, voice cloning, CPU/Vulkan/CUDA";
@@ -33,6 +33,28 @@ public class OmniVoiceTtsCpp : ITtsEngine
     // Each line is a fresh omnivoice-tts run taking --ref-wav/--ref-text, so a per-line
     // reference costs nothing beyond cutting the clip.
     public bool SupportsPerLineVoiceCloning => true;
+
+    /// <summary>
+    /// <see cref="IPerLineCloneEngine"/>: each line is a fresh omnivoice-tts run taking the
+    /// clip's own path as --ref-wav (with its sibling .txt as --ref-text), so the voice simply
+    /// points at the clip - nothing is staged into this engine's own folders.
+    /// </summary>
+    public Voice? MakePerLineCloneVoice(string clipFileName, string voiceName) =>
+        new Voice(new OmniVoice(voiceName, clipFileName));
+
+    /// <summary>The clip's own path, which is exactly what the voice carries.</summary>
+    public string? GetPerLineReferenceClip(Voice voice) =>
+        voice.EngineVoice is OmniVoice omniVoice && !string.IsNullOrEmpty(omniVoice.FilePath)
+            ? omniVoice.FilePath
+            : null;
+
+    /// <summary>
+    /// <see cref="IPerLineCloneEngine"/>: nothing is ever staged (the voice points straight at
+    /// the clip), so there is nothing to clear between runs.
+    /// </summary>
+    public void ResetStagedPerLineReferences()
+    {
+    }
 
     // Voice-design attribute keywords accepted by omnivoice-tts' --instruct flag (English set).
     // The CLI rejects free text - only these values, comma+space separated, are valid. Grouped
