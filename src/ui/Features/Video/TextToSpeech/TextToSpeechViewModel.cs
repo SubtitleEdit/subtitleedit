@@ -28,6 +28,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DotsTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTts25AudioCppSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.KokoroTtsSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.SkipNoiseLines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.PiperSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.OmniVoiceSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Qwen3TtsCrispAsrSettings;
@@ -1129,6 +1130,58 @@ public partial class TextToSpeechViewModel : ObservableObject
     }
 
     /// <summary>
+    /// Lines the user chose to leave silent in this generation run (SDH sound/music annotations
+    /// like "♪" or "[door slams]" - see <see cref="NoiseLineDetector"/>). Held by reference:
+    /// the set is filled from and checked against the same <see cref="_subtitle"/> instance,
+    /// after any merge prompt has replaced it.
+    /// </summary>
+    private readonly HashSet<Paragraph> _skipNoiseParagraphs = new();
+
+    /// <summary>
+    /// Like the merge-continuation-lines prompt: sound/music-only lines get read aloud or
+    /// hallucinated into made-up words by TTS engines (#14106), so before generating, the lines
+    /// that carry no speech are offered for review and left silent. Runs after the merge prompt -
+    /// that one can replace <see cref="_subtitle"/>.
+    /// </summary>
+    private async Task PromptSkipNoiseLines()
+    {
+        _skipNoiseParagraphs.Clear();
+        if (Window == null)
+        {
+            return;
+        }
+
+        var noiseLines = NoiseLineDetector.Detect(_subtitle);
+        if (noiseLines.Count == 0)
+        {
+            return;
+        }
+
+        var answer = await MessageBox.Show(
+            Window!,
+            Se.Language.Video.TextToSpeech.SkipNoiseLinesPromptTitle,
+            Se.Language.Video.TextToSpeech.SkipNoiseLinesPromptMessage,
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question);
+        if (answer != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<SkipNoiseLinesWindow, SkipNoiseLinesViewModel>(
+            Window!, vm => vm.Initialize(noiseLines));
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        foreach (var paragraph in result.SelectedParagraphs)
+        {
+            _skipNoiseParagraphs.Add(paragraph);
+        }
+    }
+
+    /// <summary>
     /// Stop the crispasr.exe servers of every CrispASR-based TTS engine EXCEPT
     /// <paramref name="keepAlive"/>. Pass null to stop all four. Called before starting synth
     /// (Test Voice / Generate TTS) and on window close, so models from previously selected
@@ -1207,6 +1260,14 @@ public partial class TextToSpeechViewModel : ObservableObject
         if (Se.Settings.Tools.TextToSpeechPromptMergeContinuationLines)
         {
             await PromptMergeContinuationLines();
+        }
+
+        // Cleared unconditionally so a run with the prompt turned off never inherits skips from
+        // an earlier run in the same window.
+        _skipNoiseParagraphs.Clear();
+        if (Se.Settings.Tools.TextToSpeechPromptSkipNoiseLines)
+        {
+            await PromptSkipNoiseLines();
         }
 
         var voice = SelectedVoice;
@@ -2629,11 +2690,23 @@ public partial class TextToSpeechViewModel : ObservableObject
             // segments failed (e.g. the ElevenLabs 429 text) instead of a bare count (#12093).
             var errorMessages = new List<string>();
             _speakRetryFailures = 0;
+            var skippedNoiseCount = 0;
 
             for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
             {
                 ProgressText = $"Generating speech: segment {index + 1} of {_subtitle.Paragraphs.Count}";
                 var paragraph = _subtitle.Paragraphs[index];
+
+                // A line the user chose to leave silent gets no step result at all - exactly like
+                // a failed line downstream (FixSpeed drops it, the merge keeps the base silence
+                // track over its span) but without counting as a failure anywhere.
+                if (_skipNoiseParagraphs.Contains(paragraph))
+                {
+                    skippedNoiseCount++;
+                    ProgressValue = (double)(index + 1) / _subtitle.Paragraphs.Count * 100.0;
+                    continue;
+                }
+
                 var resolution = ResolveVoiceForParagraph(paragraph, castContext, engine, voice);
                 // When the row's engine differs from the globally selected engine, the global
                 // SelectedLanguage/SelectedRegion/SelectedModel were resolved for a different
@@ -2692,6 +2765,11 @@ public partial class TextToSpeechViewModel : ObservableObject
                 }
             }
             ProgressValue = 100;
+
+            if (skippedNoiseCount > 0)
+            {
+                Se.WriteToolsLog($"TTS generation: left {skippedNoiseCount} sound/music lines silent (skipped by user choice)");
+            }
 
             var failedCount = resultList.Count(r => string.IsNullOrEmpty(r.CurrentFileName));
             // First engine-reported failure reason, e.g. the ElevenLabs 429 text. The generic
