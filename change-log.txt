@@ -6,6 +6,7 @@ Subtitle Edit Changelog
 v5.2.0-beta24 (25th of August 2026)
 
 * Add dots.tts text to speech engine with voice cloning
+* Add WhisperX speech to text engine, standalone - no Python needed - thx muaz978
 * Add Apple Vision OCR on macOS
 * Add a format properties button next to the subtitle format picker
 * Add "List errors..." to the Tools menu
