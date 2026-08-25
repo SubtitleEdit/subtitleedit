@@ -95,6 +95,10 @@ public static partial class SpeakerLabelParser
     /// what matters is which speaker is talking for most of the line. Lines that overlap nothing
     /// (music, on-screen text, a line before the first segment) are left without an actor rather
     /// than guessed at.
+    ///
+    /// A segment's speaker is read from its actor field first: by the time the auto-cast flow gets
+    /// here, <see cref="MoveLabelsToActors"/> has already moved the label out of the text, so
+    /// re-parsing the text alone would find no speakers and quietly assign nothing.
     /// </remarks>
     public static Dictionary<Paragraph, string> AssignSpeakersByOverlap(
         IReadOnlyList<Paragraph> lines,
@@ -102,7 +106,7 @@ public static partial class SpeakerLabelParser
     {
         var byLine = new Dictionary<Paragraph, string>();
         var labelled = segments
-            .Select(s => (Speaker: TrySplit(s.Text, out var speaker, out _) ? speaker : string.Empty, Segment: s))
+            .Select(s => (Speaker: GetSegmentSpeaker(s), Segment: s))
             .Where(s => !string.IsNullOrEmpty(s.Speaker))
             .ToList();
         if (labelled.Count == 0)
@@ -133,5 +137,15 @@ public static partial class SpeakerLabelParser
         }
 
         return byLine;
+    }
+
+    private static string GetSegmentSpeaker(Paragraph segment)
+    {
+        if (!string.IsNullOrWhiteSpace(segment.Actor))
+        {
+            return segment.Actor.Trim();
+        }
+
+        return TrySplit(segment.Text, out var speaker, out _) ? speaker : string.Empty;
     }
 }

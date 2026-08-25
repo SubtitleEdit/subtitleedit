@@ -107,4 +107,21 @@ public class SpeakerLabelParserTests
 
         Assert.Empty(SpeakerLabelParser.AssignSpeakersByOverlap(lines, segments));
     }
+
+    [Fact]
+    public void SegmentsWhoseLabelsAlreadyMovedToActorsStillAssignSpeakers()
+    {
+        // The auto-cast flow calls MoveLabelsToActors before assigning speakers to an open
+        // subtitle, so by then the label lives in the actor field and the text carries none -
+        // re-parsing the text alone found no speakers and left every line without an actor.
+        var lines = new List<Paragraph> { new(string.Empty, 1000, 3000) };
+        var segments = new List<Paragraph> { new("(Speaker 1) Hello.", 900, 3100) };
+        var transcription = new Subtitle();
+        transcription.Paragraphs.AddRange(segments);
+        SpeakerLabelParser.MoveLabelsToActors(transcription);
+
+        var assigned = SpeakerLabelParser.AssignSpeakersByOverlap(lines, segments);
+
+        Assert.Equal("Speaker 1", assigned[lines[0]]);
+    }
 }
