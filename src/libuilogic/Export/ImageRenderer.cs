@@ -60,6 +60,28 @@ public static class ImageRenderer
 
     public static SKBitmap GenerateBitmap(ImageParameter ip)
     {
+        var bitmap = RenderBitmap(ip);
+        if (ip.AlphaPercent >= 100)
+        {
+            return bitmap;
+        }
+
+        // "{\alpha&H80&}" - one blend over the finished subtitle, so text, outline, shadow and
+        // box all end up at the asked for alpha instead of showing through each other.
+        var alpha = (byte)(Math.Clamp(ip.AlphaPercent, 0, 100) * 255 / 100);
+        var faded = new SKBitmap(bitmap.Width, bitmap.Height, bitmap.ColorType, bitmap.AlphaType);
+        using (var canvas = new SKCanvas(faded))
+        using (var paint = new SKPaint { Color = SKColors.White.WithAlpha(alpha) })
+        {
+            canvas.Clear(SKColors.Transparent);
+            canvas.DrawBitmap(bitmap, 0, 0, paint);
+        }
+
+        return Replace(bitmap, faded);
+    }
+
+    private static SKBitmap RenderBitmap(ImageParameter ip)
+    {
         var fontName = ip.FontName;
         var fontSize = ip.FontSize;
         var fontColor = ip.FontColor;
@@ -772,7 +794,7 @@ public static class ImageRenderer
                     var r = Convert.ToByte(hex.Substring(0, 2), 16);
                     var g = Convert.ToByte(hex.Substring(2, 2), 16);
                     var b = Convert.ToByte(hex.Substring(4, 2), 16);
-                    return new SKColor(r, g, b);
+                    return new SKColor(r, g, b, defaultFontColor.Alpha);
                 }
                 catch
                 {
@@ -781,7 +803,9 @@ public static class ImageRenderer
             }
 
             // Handle named colors (basic set)
-            return colorValue.ToLowerInvariant() switch
+            // A colour tag only says which colour, never how transparent - a "{\\1a&H80&}" on the
+            // line reached the default colour's alpha, so carry that over to the tag colours too.
+            var named = colorValue.ToLowerInvariant() switch
             {
                 "red" => SKColors.Red,
                 "green" => SKColors.Green,
@@ -795,6 +819,8 @@ public static class ImageRenderer
                 "gray" or "grey" => SKColors.Gray,
                 _ => defaultFontColor
             };
+
+            return named.WithAlpha(defaultFontColor.Alpha);
         }
 
         return defaultFontColor;

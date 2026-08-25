@@ -11,6 +11,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class Cavena890 : SubtitleFormat, IBinaryPersistableSubtitle
     {
+        // The two filler/dash markers built via encoding.GetString(new byte[] { .. }) at every
+        // ReadParagraph call site below - a byte[] and a string allocated per paragraph, per
+        // language branch, just to hand straight to Replace(). cp1252 is fixed for all of them.
+        private static readonly string Cp1252FillerChar = Encoding.GetEncoding(1252).GetString(new byte[] { 0x7F });
+        private static readonly string Cp1252DashChar = Encoding.GetEncoding(1252).GetString(new byte[] { 0xBE });
+
         public const int LanguageIdDanish = 0x07;
         public const int LanguageIdSwedish = 0x28;
         public const int LanguageIdNorwegian = 0x1e;
@@ -505,6 +511,26 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             new Tuple<int, string>(0xCA, "z"),
             new Tuple<int, string>(0xD9, "δι")
         };
+
+        // GreekLookup is a byte-indexed reverse map for Greek: the Greek text decoder in
+        // ReadParagraph ran a LINQ FirstOrDefault scan of all 145 entries for every byte of
+        // every Greek subtitle line. Keys all fit in a byte, so a 256-entry array answers it
+        // with one array load instead of a linear scan. Bytes with no Greek entry stay null,
+        // which is how callers tell "not a Greek byte" from a mapping. (The element type is
+        // written without a nullable annotation because libse builds with nullable contexts
+        // off, where the annotation is inert and only warns - see CS8632.)
+        private static readonly string[] GreekLookup = BuildGreekLookup();
+
+        private static string[] BuildGreekLookup()
+        {
+            var table = new string[256];
+            foreach (var entry in Greek)
+            {
+                table[entry.Item1] = entry.Item2;
+            }
+
+            return table;
+        }
 
         public override string Extension => ".890";
 
@@ -1897,8 +1923,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 text = sb.ToString();
 
-                text = text.Replace(encoding.GetString(new byte[] { 0x7F }), string.Empty); // Used to fill empty space upto 51 bytes
-                text = text.Replace(encoding.GetString(new byte[] { 0xBE }), "-");
+                text = text.Replace(Cp1252FillerChar, string.Empty); // Used to fill empty space upto 51 bytes
+                text = text.Replace(Cp1252DashChar, "-");
                 text = FixColors(text);
 
                 if (text.Contains("<i></i>"))
@@ -1918,10 +1944,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 for (var i = 0; i < textLength; i++)
                 {
                     var b = buffer[start + i];
-                    var entry = Greek.FirstOrDefault(e => e.Item1 == b);
+                    var entry = GreekLookup[b];
                     if (entry != null)
                     {
-                        sb.Append(entry.Item2);
+                        sb.Append(entry);
                     }
                     else if (b != 0x7F)
                     {
@@ -1932,8 +1958,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 text = sb.ToString();
 
-                text = text.Replace(encoding.GetString(new byte[] { 0x7F }), string.Empty); // Used to fill empty space upto 51 bytes
-                text = text.Replace(encoding.GetString(new byte[] { 0xBE }), "-");
+                text = text.Replace(Cp1252FillerChar, string.Empty); // Used to fill empty space upto 51 bytes
+                text = text.Replace(Cp1252DashChar, "-");
                 text = FixColors(text);
 
                 if (text.Contains("<i></i>"))
@@ -1971,8 +1997,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 text = sb.ToString();
 
-                text = text.Replace(encoding.GetString(new byte[] { 0x7F }), string.Empty); // Used to fill empty space upto 51 bytes
-                text = text.Replace(encoding.GetString(new byte[] { 0xBE }), "-");
+                text = text.Replace(Cp1252FillerChar, string.Empty); // Used to fill empty space upto 51 bytes
+                text = text.Replace(Cp1252DashChar, "-");
                 text = FixColors(text);
 
                 text = ReverseAnsi(text);
@@ -1996,7 +2022,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
 
                 text = sb.ToString();
-                text = text.Replace(encoding.GetString(new byte[] { 0xBE }), "-");
+                text = text.Replace(Cp1252DashChar, "-");
                 text = FixColors(text).Trim();
             }
             else if (languageId == LanguageIdChineseTraditional || languageId == LanguageIdChineseSimplified) //  (_language == "CCKM44" || _language == "TVB000")
@@ -2048,8 +2074,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var encoding = Encoding.GetEncoding(1252);
                 text = encoding.GetString(buffer, start, textLength).Replace("\0", string.Empty);
 
-                text = text.Replace(encoding.GetString(new byte[] { 0x7F }), string.Empty); // Used to fill empty space upto 51 bytes
-                text = text.Replace(encoding.GetString(new byte[] { 0xBE }), "-");
+                text = text.Replace(Cp1252FillerChar, string.Empty); // Used to fill empty space upto 51 bytes
+                text = text.Replace(Cp1252DashChar, "-");
                 text = FixColors(text);
 
                 // Raw-byte remappings must run before the control-code mappings below - those

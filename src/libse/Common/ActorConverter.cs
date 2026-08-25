@@ -4,7 +4,6 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -35,8 +34,19 @@ namespace Nikse.SubtitleEdit.Core.Common
             _nameListInclMulti = _namesList.GetAllNames();
         }
 
-        public string FixActorsFromActor(Paragraph p, int? changeCasing, SKColor? color)
+        /// <summary>
+        /// Moves the actor column into the text. The converted paragraph is returned in the result -
+        /// the actor column is cleared, as the name now lives in the text and would otherwise be
+        /// written twice (#14077).
+        /// </summary>
+        public ActorConverterResult FixActorsFromActor(Paragraph paragraph, int? changeCasing, SKColor? color)
         {
+            var p = new Paragraph(paragraph, false);
+            if (ToActor)
+            {
+                return new ActorConverterResult { Paragraph = p, Selected = true };
+            }
+
             var actor = p.Actor;
             if (changeCasing.HasValue)
             {
@@ -55,76 +65,117 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 actor = actor + ":";
             }
-            else if (ToActor)
-            {
-                return p.Text;
-            }
 
-            if (color.HasValue && !ToActor)
+            if (color.HasValue)
             {
                 actor = SetColor(_subtitleFormat, color.Value, actor);
             }
 
             p.Text = actor + " " + p.Text.TrimStart(' ');
+            p.Actor = string.Empty;
 
-            return p.Text;
+            return new ActorConverterResult { Paragraph = p, Selected = true };
         }
 
-        public string FixActorsFromBeforeColon(Paragraph p, char ch, int? changeCasing, SKColor? color)
+        /// <summary>
+        /// Converts "Actor: text" lines. The converted paragraph is returned in the result: converting
+        /// to the actor column writes <see cref="Paragraph.Actor"/> from whichever line carries the
+        /// name, and a second speaker in the same paragraph becomes
+        /// <see cref="ActorConverterResult.NextParagraph"/> - the same shape <see cref="FixActors"/>
+        /// returns for the bracket formats (#14077).
+        /// </summary>
+        public ActorConverterResult FixActorsFromBeforeColon(Paragraph paragraph, char ch, int? changeCasing, SKColor? color)
         {
-            var sb = new StringBuilder();
-            var lineIdx = 0;
-            foreach (var line in p.Text.SplitToLines())
+            var p = new Paragraph(paragraph, false);
+            var lines = p.Text.SplitToLines();
+
+            // Only one extra paragraph can be split off, so a third speaker would be lost.
+            if (ToActor && lines.Count(line => HasActor(line, ch)) > 2)
             {
-                // index into the trimmed line - leading whitespace used to shift every cut by its width
+                return new ActorConverterResult { Paragraph = paragraph, Skip = true };
+            }
+
+            Paragraph nextParagraph = null;
+            var selectFix = true;
+            var actorAssigned = false;
+            var textLines = new List<string>();
+            foreach (var line in lines)
+            {
+                // index into the trimmed line - leading whitespace goes with the actor it precedes
                 var s = line.Trim();
                 var startIdx = s.IndexOf(ch);
-                if (startIdx > 0)
+                if (startIdx <= 0)
                 {
-                    var actor = s.Substring(0, startIdx).Trim(' ', '-', '"');
-                    if (changeCasing.HasValue)
+                    // A line without an actor belongs to the paragraph the previous line went to.
+                    if (nextParagraph != null)
                     {
-                        actor = SetCasing(_subtitleFormat, changeCasing, actor);
-                    }
-
-                    if (ToSquare)
-                    {
-                        actor = "[" + actor + "]";
-                    }
-                    else if (ToParentheses)
-                    {
-                        actor = "(" + actor + ")";
-                    }
-                    else if (ToColon)
-                    {
-                        actor = actor + ":";
-                    }
-
-                    if (color.HasValue && !ToActor)
-                    {
-                        actor = SetColor(_subtitleFormat, color.Value, actor);
-                    }
-
-                    if (ToActor)
-                    {
-                        if (lineIdx == 0)
-                        {
-                            p.Actor = actor;
-                        }
-
-                        s = s.Substring(startIdx + 1).TrimStart(' ');
+                        nextParagraph.Text = (nextParagraph.Text + Environment.NewLine + s).Trim();
                     }
                     else
                     {
-                        s = actor + " " + s.Substring(startIdx + 1).TrimStart(' ');
+                        textLines.Add(s);
                     }
+
+                    continue;
                 }
 
-                sb.AppendLine(s);
-                lineIdx++;
+                var actor = s.Substring(0, startIdx).Trim(' ', '-', '"');
+                selectFix = IsActor(actor);
+                if (changeCasing.HasValue)
+                {
+                    actor = SetCasing(_subtitleFormat, changeCasing, actor);
+                }
+
+                if (ToSquare)
+                {
+                    actor = "[" + actor + "]";
+                }
+                else if (ToParentheses)
+                {
+                    actor = "(" + actor + ")";
+                }
+                else if (ToColon)
+                {
+                    actor = actor + ":";
+                }
+
+                if (color.HasValue && !ToActor)
+                {
+                    actor = SetColor(_subtitleFormat, color.Value, actor);
+                }
+
+                var text = s.Substring(startIdx + 1).TrimStart(' ');
+                if (!ToActor)
+                {
+                    textLines.Add(actor + " " + text);
+                }
+                else if (!actorAssigned)
+                {
+                    // The first name found goes in the actor column...
+                    p.Actor = actor;
+                    actorAssigned = true;
+                    textLines.Add(text);
+                }
+                else
+                {
+                    // ...a second one needs a paragraph of its own, as the column holds one name.
+                    nextParagraph = new Paragraph(p) { Text = text, Actor = actor };
+                }
             }
 
-            return sb.ToString().Trim();
+            p.Text = string.Join(Environment.NewLine, textLines).Trim();
+
+            return new ActorConverterResult
+            {
+                Paragraph = p,
+                NextParagraph = nextParagraph,
+                Selected = selectFix,
+            };
+        }
+
+        private static bool HasActor(string line, char ch)
+        {
+            return line.Trim().IndexOf(ch) > 0;
         }
 
         public ActorConverterResult FixActors(Paragraph paragraph, char start, char end, int? changeCasing, SKColor? color)
@@ -145,13 +196,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var s = line;
                 var startIdx = s.IndexOf(start);
                 var endIdx = s.IndexOf(end);
-                if (startIdx != -1 && endIdx != -1)
-                {
-                    if (endIdx < startIdx)
-                    {
-                        break;
-                    }
 
+                // A closing bracket before the opening one is not an actor - the line is kept as it
+                // is. Giving up on the whole paragraph here dropped this line and every line after
+                // it from the text.
+                if (startIdx != -1 && endIdx > startIdx)
+                {
                     var actor = s.Substring(startIdx + 1, endIdx - startIdx - 1).Trim(' ', '-', '"');
                     selectFix = IsActor(actor);
                     if (changeCasing.HasValue)
@@ -205,9 +255,20 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                     else if (lineIdx == 1 && ToActor)
                     {
-                        nextParagraph = new Paragraph(p);
-                        nextParagraph.Text = s.Trim();
-                        nextParagraph.Actor = actor;
+                        if (string.IsNullOrEmpty(p.Actor))
+                        {
+                            // Only the second line names a speaker, so it belongs to this paragraph -
+                            // splitting off a paragraph with no actor at all would leave the name
+                            // nowhere (#14077).
+                            p.Actor = actor;
+                            p.Text = (p.Text + Environment.NewLine + s.Trim()).Trim();
+                        }
+                        else
+                        {
+                            nextParagraph = new Paragraph(p);
+                            nextParagraph.Text = s.Trim();
+                            nextParagraph.Actor = actor;
+                        }
                     }
                     else if (lineIdx == 1)
                     {

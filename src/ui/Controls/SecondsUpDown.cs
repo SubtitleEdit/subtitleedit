@@ -7,6 +7,7 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Globalization;
@@ -259,7 +260,7 @@ public class SecondsUpDown : TemplatedControl
                int.TryParse(parts[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out var frames))
             {
                 var totalMs = seconds * 1000 + SubtitleFormat.FramesToMilliseconds(frames);
-                return TimeSpan.FromMilliseconds(totalMs);
+                return TimeSpanExtensions.FromMillisecondsWholeMilliseconds(totalMs);
             }
         }
         else
@@ -267,7 +268,10 @@ public class SecondsUpDown : TemplatedControl
             // Expect "seconds.ms" or "seconds,ms"
             if (double.TryParse(text.Replace(',', '.'), NumberStyles.Float, CultureInfo.InvariantCulture, out var seconds))
             {
-                return TimeSpan.FromSeconds(seconds);
+                // Snap to a whole millisecond: TimeSpan.FromSeconds(0.82) is 819.9999 ms, which
+                // reads back as "0,820" here but as "0,819" in the grid, and ends the line a
+                // millisecond early (#14056).
+                return TimeSpanExtensions.FromSecondsWholeMilliseconds(seconds);
             }
         }
 

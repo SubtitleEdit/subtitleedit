@@ -98,7 +98,12 @@ public partial class FixNetflixErrorsViewModel : ObservableObject, IClosingClean
 
     public void Initialize(Subtitle subtitle, string videoFileName)
     {
-        _subtitle = subtitle;
+        // Snapshot with the ids kept: the caller hands over the live working subtitle, which the
+        // auto-backup timer rebuilds (fresh paragraph ids) on any tick while this dialog is open.
+        // Reading it again at OK time would then hand back ids the caller's row map has never
+        // seen, and the id-based apply (#14053) degrades to a full row rebuild that empties the
+        // original column. Fix common errors snapshots the same way.
+        _subtitle = new Subtitle(subtitle, false);
         _videoFileName = videoFileName;
 
         _ = Task.Run(() =>

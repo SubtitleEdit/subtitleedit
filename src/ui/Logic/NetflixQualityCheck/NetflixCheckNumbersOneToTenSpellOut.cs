@@ -13,6 +13,10 @@ public class NetflixCheckNumbersOneToTenSpellOut : INetflixQualityChecker
     private static readonly Regex NumberOneToNine = new Regex(@"\b\d\b", RegexOptions.Compiled);
     private static readonly Regex NumberTen = new Regex(@"\b10\b", RegexOptions.Compiled);
 
+    // Was constructed inside the per-match loop below, so every "3," in the file paid for a
+    // fresh Regex parse. Compiled once here instead.
+    private static readonly Regex CommaDigit = new Regex(@",\d", RegexOptions.Compiled);
+
     public string Name { get; set; }
 
     public NetflixCheckNumbersOneToTenSpellOut(string name)
@@ -33,7 +37,7 @@ public class NetflixCheckNumbersOneToTenSpellOut : INetflixQualityChecker
             var m = NumberOneToNine.Match(newText);
             while (m.Success)
             {
-                bool ok = newText.Length <= m.Index + 1 || newText.Length > m.Index + 1 && !":.".Contains(newText[m.Index + 1].ToString());
+                bool ok = newText.Length <= m.Index + 1 || newText.Length > m.Index + 1 && !IsColonOrPeriod(newText[m.Index + 1]);
                 if (!ok && newText.Length > m.Index + 1)
                 {
                     var rest = newText.Substring(m.Index + m.Length);
@@ -46,17 +50,15 @@ public class NetflixCheckNumbersOneToTenSpellOut : INetflixQualityChecker
                     }
                 }
 
-                if (ok && m.Index + m.Length < newText.Length && newText.Substring(m.Index + m.Length).StartsWith(","))
+                if (ok && m.Index + m.Length < newText.Length && newText[m.Index + m.Length] == ',')
                 {
-                    var rest = newText.Substring(m.Index + 1);
-                    var regex = new Regex(@",\d");
-                    if (regex.IsMatch(rest))
+                    if (CommaDigit.IsMatch(newText, m.Index + 1))
                     {
                         ok = false;
                     }
                 }
 
-                if (ok && m.Index > 0 && ":.".Contains(newText[m.Index - 1].ToString()))
+                if (ok && m.Index > 0 && IsColonOrPeriod(newText[m.Index - 1]))
                 {
                     ok = false;
                 }
@@ -73,7 +75,7 @@ public class NetflixCheckNumbersOneToTenSpellOut : INetflixQualityChecker
             while (m.Success)
             {
                 bool ok = newText.Length <= m.Index + 2 || newText.Length > m.Index + 2 && newText[m.Index + 2] != ':';
-                if (ok && m.Index > 0 && ":.".Contains(newText[m.Index - 1].ToString()))
+                if (ok && m.Index > 0 && IsColonOrPeriod(newText[m.Index - 1]))
                 {
                     ok = false;
                 }
@@ -95,4 +97,9 @@ public class NetflixCheckNumbersOneToTenSpellOut : INetflixQualityChecker
         }
     }
 
+    /// <summary>
+    /// Replaces <c>":.".Contains(c.ToString())</c>: the old shape boxed every neighbour
+    /// character into a one-char string before searching a two-character literal.
+    /// </summary>
+    private static bool IsColonOrPeriod(char c) => c == ':' || c == '.';
 }

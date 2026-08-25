@@ -406,6 +406,41 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static readonly Dictionary<string, string> LettersCodeLookup = BuildLettersCodeLookup();
 
+        // GetCodeFromLetter used to walk all 339 entries of LetterDictionary with a LINQ
+        // predicate for every character written, which made writing an .scc quadratic in the
+        // table size. These reverse maps answer the same question in one probe; "first entry
+        // wins" matches FirstOrDefault's behaviour for the duplicate values in the table.
+        private static readonly Dictionary<string, string> CodeFromLetterLookup = BuildCodeFromLetterLookup();
+        private static readonly Dictionary<char, string> CodeFromCharLookup = BuildCodeFromCharLookup();
+
+        private static Dictionary<string, string> BuildCodeFromLetterLookup()
+        {
+            var lookup = new Dictionary<string, string>(LetterDictionary.Count, StringComparer.Ordinal);
+            foreach (var p in LetterDictionary)
+            {
+                if (p.Value != null && !lookup.ContainsKey(p.Value))
+                {
+                    lookup.Add(p.Value, p.Key);
+                }
+            }
+
+            return lookup;
+        }
+
+        private static Dictionary<char, string> BuildCodeFromCharLookup()
+        {
+            var lookup = new Dictionary<char, string>(LetterDictionary.Count);
+            foreach (var p in LetterDictionary)
+            {
+                if (p.Value != null && p.Value.Length == 1 && !lookup.ContainsKey(p.Value[0]))
+                {
+                    lookup.Add(p.Value[0], p.Key);
+                }
+            }
+
+            return lookup;
+        }
+
         // CEA-608 extended characters (the 0x12/0x13 sets) erase the preceding standard
         // character, so compliant encoders transmit a standard fallback letter first
         // ("o" + extended "ö"). Generate a "fallback + extended" combined entry for every
@@ -731,16 +766,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 while (i < text.Length)
                 {
-                    string s = text.Substring(i, 1);
-                    string codeFromLetter = GetCodeFromLetter(s);
+                    string codeFromLetter = GetCodeFromLetter(text[i]);
                     string newCode;
-                    if (text.Substring(i).StartsWith("<i>", StringComparison.Ordinal))
+                    // Tail tests over a span: Substring(i) copied the rest of the line twice per
+                    // character, which made this loop quadratic in line length.
+                    var tail = text.AsSpan(i);
+                    if (tail.StartsWith("<i>".AsSpan(), StringComparison.Ordinal))
                     {
                         newCode = "91ae";
                         i += 2;
                         italic++;
                     }
-                    else if (text.Substring(i).StartsWith("</i>", StringComparison.Ordinal) && italic > 0)
+                    else if (tail.StartsWith("</i>".AsSpan(), StringComparison.Ordinal) && italic > 0)
                     {
                         newCode = "9120";
                         i += 3;
@@ -857,13 +894,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string GetCodeFromLetter(string letter)
         {
-            var code = LetterDictionary.FirstOrDefault(x => x.Value == letter);
-            if (code.Equals(new KeyValuePair<string, string>()))
-            {
-                return null;
-            }
+            return letter != null && CodeFromLetterLookup.TryGetValue(letter, out var code) ? code : null;
+        }
 
-            return code.Key;
+        /// <summary>
+        /// <see cref="GetCodeFromLetter(string)"/> for a single character, so the writer does not
+        /// have to allocate a one-character string per character of every line.
+        /// </summary>
+        private static string GetCodeFromLetter(char letter)
+        {
+            return CodeFromCharLookup.TryGetValue(letter, out var code) ? code : null;
         }
 
         private static string GetLetterFromCode(string hexCode)

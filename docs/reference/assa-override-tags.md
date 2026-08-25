@@ -215,6 +215,8 @@ This is {\1c&HFF0000&}blue text
 
 **Important:** Alpha values range from `00` (fully opaque/visible) to `FF` (fully transparent/invisible). This is opposite to many other programs!
 
+**Image export:** `\alpha`, `\1a`, `\3a` and `\4a` are honoured by the image-based exports (Blu-ray SUP, VobSub, BDN-XML, PNG, ...) - the subtitle is drawn at the transparency asked for.
+
 **Alpha value examples:**
 - `&H00&` — Fully opaque (100% visible)
 - `&H80&` — 50% transparent
@@ -405,6 +407,8 @@ This is {\1c&HFF0000&}blue text
 - Example: If a line displays for 4 seconds, fadein + fadeout should not exceed 4000 ms
 
 **Example:** `{\fad(500,500)}Fade test` (500ms fade-in, 500ms fade-out)
+
+**Image export:** `\fad` and `\fade` survive an export to **Blu-ray SUP** (File → Export image-based, batch convert, and `seconv`), where the fade is written as palette updates. The other image formats have no way to animate a subtitle and write it fully opaque.
 
 ![Fade 1 example](../screenshots/assa/fade-1.gif)
 

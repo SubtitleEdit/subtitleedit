@@ -12,9 +12,9 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 
 /// <summary>
 /// Online speech-to-text via OpenRouter's audio transcription API. OpenRouter
-/// routes to Whisper / GPT-4o-transcribe / Groq / Chirp behind one endpoint and
-/// one API key, and returns the same verbose_json segment/word shape we already
-/// parse. See <see cref="OpenRouterSttService"/> for the request encoding.
+/// routes to Whisper / GPT transcription / Groq / Chirp behind one endpoint and
+/// one API key. Response formats are selected per model; see
+/// <see cref="OpenRouterSttService"/> for the request encoding.
 /// </summary>
 public class OpenRouterSttEngine : IOnlineSttEngine
 {

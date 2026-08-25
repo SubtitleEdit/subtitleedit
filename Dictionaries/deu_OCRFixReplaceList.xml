@@ -37,7 +37,6 @@
     <Word from="00om" to="000 m" />
     <Word from="100m" to="100 m" />
     <Word from="120m" to="120 m" />
-    <Word from="13Oj§hrie" to="130 jährige" />
     <Word from="13Oj§hrie" to="130-jährige" />
     <Word from="145m" to="145 m" />
     <Word from="150m" to="150 m" />
@@ -804,7 +803,6 @@
     <Word from="bltte" to="bitte" />
     <Word from="Blumenstréiulichen" to="Blumensträußchen" />
     <Word from="Blumentépfen" to="Blumentöpfen" />
-    <Word from="Blutgetränkte" to="Blut getränkte" />
     <Word from="Blutgetrénkte" to="Blutgetränkte" />
     <Word from="blutjungl" to="blutjung!" />
     <Word from="blutriinstig" to="blutrünstig" />
@@ -1313,8 +1311,6 @@
     <Word from="entzuckend" to="entzückend" />
     <Word from="entzundet" to="entzündet" />
     <Word from="enzvérmt" to="erwärmt" />
-    <Word from="Er" to="Er" />
-    <Word from="er" to="er" />
     <Word from="Er6ffnen" to="Eröffnen" />
     <Word from="erbérml/ch" to="erbärmlich" />
     <Word from="erbérmlich" to="erbärmlich" />
@@ -1485,8 +1481,6 @@
     <Word from="érztlichen" to="ärztlichen" />
     <Word from="érztlicher" to="ärztlicher" />
     <Word from="erzurnen" to="erzürnen" />
-    <Word from="es" to="es" />
-    <Word from="Es" to="Es" />
     <Word from="ésthetisch" to="ästhetisch" />
     <Word from="etemity" to="eternity" />
     <Word from="etvva" to="etwa" />
@@ -1693,7 +1687,7 @@
     <Word from="Filr" to="Für" />
     <Word from="filrchten" to="fürchten" />
     <Word from="filrchterlich" to="fürchterlich" />
-    <Word from="filr'ne" to="für'ne" />
+    <Word from="filr'ne" to="für 'ne" />
     <Word from="filrs" to="fürs" />
     <Word from="filter" to="älter" />
     <Word from="findem" to="ändern" />
@@ -2226,8 +2220,6 @@
     <Word from="Gerijcht" to="Gerücht" />
     <Word from="Gerllicht" to="Gerücht" />
     <Word from="gerllistet" to="gerüstet" />
-    <Word from="gernhaben" to="gern haben" />
-    <Word from="gernhaben" to="gern-haben" />
     <Word from="gernntgt" to="geröntgt" />
     <Word from="Gértnern" to="Gärtnern" />
     <Word from="geschafff" to="geschafft" />
@@ -2914,7 +2906,6 @@
     <Word from="hierL" to="hieß" />
     <Word from="hierwar" to="hier war" />
     <Word from="hierzum" to="hier zum" />
-    <Word from="hierzum" to="hier-zum" />
     <Word from="Hiétte" to="Hätte" />
     <Word from="Hiibsch" to="Hübsch" />
     <Word from="Hiibsche" to="Hübsche" />
@@ -3213,15 +3204,12 @@
     <Word from="Illfie" to="Wie" />
     <Word from="Ilrger" to="Ärger" />
     <Word from="Ilufierste" to="Äußerste" />
-    <Word from="im" to="im" />
     <Word from="immerja" to="immer ja" />
     <Word from="immerjung" to="immer jung" />
-    <Word from="immerwährende" to="immer währende" />
     <Word from="immerwéhrende" to="immerwährende" />
     <Word from="immerweinen" to="immer weinen" />
     <Word from="Improvisiation" to="Improvisation" />
     <Word from="Impulswellengeschutz" to="Impulswellengeschütz" />
-    <Word from="in" to="in" />
     <Word from="INBRUNSTIGE" to="INBRÜNSTIGE" />
     <Word from="instfindig" to="inständig" />
     <Word from="intramuskulér" to="intramuskulär" />
@@ -3247,7 +3235,6 @@
     <Word from="ITTITTRZ" to="Danke." />
     <Word from="Ivlégliche" to="Mögliche" />
     <Word from="J0Shua" to="Joshua" />
-    <Word from="Ja" to="Ja" />
     <Word from="Jackettkaufen" to="Jackett kaufen" />
     <Word from="jahr" to="Jahr" />
     <Word from="jahre" to="Jahre" />
@@ -4487,7 +4474,6 @@
     <Word from="nutzlich" to="nützlich" />
     <Word from="Nx'emand" to="Niemand" />
     <Word from="O8" to="08" />
-    <Word from="ob" to="ob" />
     <Word from="obdachlosl" to="obdachlos!" />
     <Word from="Obefiléiche" to="Oberfläche" />
     <Word from="OBERFLACHENSCHWERKRAFT" to="OBERFLÄCHENSCHWERKRAFT" />
@@ -4677,8 +4663,6 @@
     <Word from="rachsiichtiger" to="rachsüchtiger" />
     <Word from="ranghéheren" to="ranghöheren" />
     <Word from="ranghfiheren" to="ranghöheren" />
-    <Word from="ranzukommen" to="ran zukommen" />
-    <Word from="ranzukommen" to="ran-zukommen" />
     <Word from="Rasenméherunfall" to="Rasenmäherunfall" />
     <Word from="Rasterllibertragung" to="Rasterübertragung" />
     <Word from="Rasterubertragung" to="Rasterübertragung" />
@@ -4870,8 +4854,6 @@
     <Word from="Runterl" to="Runter!" />
     <Word from="runterspillen" to="runterspülen" />
     <Word from="runterspllllen" to="runterspülen" />
-    <Word from="runterspült" to="runter spült" />
-    <Word from="runterspült" to="runter-spült" />
     <Word from="runtervverfen" to="runterwerfen" />
     <Word from="Rupem" to="Rupert!" />
     <Word from="Rustung" to="Rüstung" />
@@ -5315,7 +5297,6 @@
     <Word from="Slnd" to="Sind" />
     <Word from="Slr" to="Sir" />
     <Word from="Slrs" to="Sirs" />
-    <Word from="So" to="So" />
     <Word from="SoBen" to="Soßen" />
     <Word from="sofortl" to="sofort!" />
     <Word from="sohénen" to="schönen" />
@@ -5351,9 +5332,9 @@
     <Word from="spéit" to="spät" />
     <Word from="spéiter" to="später" />
     <Word from="spektakular" to="spektakulär" />
-    <Word from="Spell" to="Späß" />
+    <Word from="Spell" to="Spaß" />
     <Word from="Spell»" to="Spaß" />
-    <Word from="Spells" to="Späß" />
+    <Word from="Spells" to="Spaß" />
     <Word from="spét" to="spät" />
     <Word from="Spéter" to="Später" />
     <Word from="Spétzchen" to="Spätzchen" />
@@ -5365,7 +5346,6 @@
     <Word from="Spiei" to="Spiel" />
     <Word from="spieie" to="spiele" />
     <Word from="Spielzeuggeschfiftn" to="Spielzeuggeschäft" />
-    <Word from="Spielzeuggeschfiftn" to="Spielzeuggeschäft--" />
     <Word from="spiilte" to="spülte" />
     <Word from="spiiren" to="spüren" />
     <Word from="spiirt" to="spürt" />
@@ -6493,7 +6473,7 @@
     <Word from="Weill" to="Weiß" />
     <Word from="weills" to="weiß" />
     <Word from="weillst" to="weißt" />
-    <Word from="weillt" to="weisst" />
+    <Word from="weillt" to="weißt" />
     <Word from="weilS" to="weiß" />
     <Word from="weilSe" to="weiße" />
     <Word from="WeilSglut" to="Weißglut" />
@@ -6575,8 +6555,6 @@
     <Word from="widerspriichliche" to="widersprüchliche" />
     <Word from="Widerwéirtig" to="Widerwärtig" />
     <Word from="wiedergewéihltl" to="wiedergewählt" />
-    <Word from="wiederhaben" to="wieder haben" />
-    <Word from="wiederhaben" to="wieder-haben" />
     <Word from="Wiederhéren" to="Wiederhören" />
     <Word from="Wieheifiternoch" to="Wieheißternoch" />
     <Word from="Wieheiliternoch" to="Wieheißternoch" />
@@ -6839,7 +6817,6 @@
     <Word from="zleht" to="zieht" />
     <Word from="ZLIFUCK" to="zurück" />
     <Word from="Zooschlieliung" to="Zooschließung" />
-    <Word from="zu" to="zu" />
     <Word from="Zuckerschnﬂtchen" to="Zuckerschnütchen" />
     <Word from="zuerstvor" to="zuerst vor" />
     <Word from="Zuféillig" to="Zufällig" />

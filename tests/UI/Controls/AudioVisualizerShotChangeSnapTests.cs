@@ -180,7 +180,7 @@ public class AudioVisualizerShotChangeSnapTests
 
         Drag(window, 252, 312);
 
-        Assert.Equal(1 + 60.0 / SampleRate, line.StartTime.TotalSeconds, 6);
+        Assert.Equal(1476, line.StartTime.TotalMilliseconds); // 1 + 60/126 s, rounded to the whole ms the drag stores
         Assert.Equal(2, line.Duration.TotalSeconds, 6);
         window.Close();
     }
@@ -194,7 +194,7 @@ public class AudioVisualizerShotChangeSnapTests
 
         Drag(window, 252, 312);
 
-        Assert.Equal(1 + 60.0 / SampleRate, line.StartTime.TotalSeconds, 6);
+        Assert.Equal(1476, line.StartTime.TotalMilliseconds); // 1 + 60/126 s, rounded to the whole ms the drag stores
         window.Close();
     }
 
@@ -307,7 +307,7 @@ public class AudioVisualizerShotChangeSnapTests
         var (window, av) = Open(new List<double> { cutAt }, Line(1, 3));
         var line = av.SelectedParagraph!;
         Drag(window, 252, 312);
-        Assert.Equal(draggedStart, line.StartTime.TotalSeconds, 6);
+        Assert.Equal(1476, line.StartTime.TotalMilliseconds); // draggedStart rounded to the whole ms the drag stores
         window.Close();
     }
 
@@ -321,7 +321,7 @@ public class AudioVisualizerShotChangeSnapTests
         var (window, av) = Open(new List<double> { cutAt }, Line(1, 3));
         var line = av.SelectedParagraph!;
         Drag(window, 252, 312);
-        Assert.Equal(draggedStart, line.StartTime.TotalSeconds, 6);
+        Assert.Equal(1476, line.StartTime.TotalMilliseconds); // draggedStart rounded to the whole ms the drag stores
         window.Close();
 
         Se.Settings.Waveform.SnapToShotChangesPixels = 16;

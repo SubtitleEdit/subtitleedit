@@ -40,6 +40,45 @@ public class OpenRouterSttServiceTests
         Assert.Equal("de", root.GetProperty("language").GetString());
     }
 
+    [Theory]
+    [InlineData("openai/gpt-transcribe")]
+    [InlineData("openai/gpt-4o-transcribe")]
+    [InlineData("openai/gpt-4o-mini-transcribe")]
+    [InlineData("openai/gpt-5-transcribe")] // not released at the time of writing; matched by name shape, not an exact list
+    public void BuildRequestBody_GptTranscriptionModelsUseJsonWithoutTimestamps(string model)
+    {
+        var body = OpenRouterSttService.BuildRequestBody(
+            MakeSettings(model),
+            Encoding.UTF8.GetBytes("hello-bytes"),
+            "mp3",
+            "ar");
+
+        using var doc = JsonDocument.Parse(body);
+        var root = doc.RootElement;
+
+        Assert.Equal("json", root.GetProperty("response_format").GetString());
+        Assert.False(root.TryGetProperty("timestamp_granularities", out _));
+    }
+
+    [Theory]
+    [InlineData("openai/whisper-1")]
+    [InlineData("openai/whisper-large-v3")]
+    [InlineData("openai/gpt-4o-audio-preview")] // "gpt-" prefixed but not a transcription model
+    public void BuildRequestBody_NonTranscribeModelsKeepVerboseJson(string model)
+    {
+        var body = OpenRouterSttService.BuildRequestBody(
+            MakeSettings(model),
+            Encoding.UTF8.GetBytes("hello-bytes"),
+            "mp3",
+            "ar");
+
+        using var doc = JsonDocument.Parse(body);
+        var root = doc.RootElement;
+
+        Assert.Equal("verbose_json", root.GetProperty("response_format").GetString());
+        Assert.True(root.TryGetProperty("timestamp_granularities", out _));
+    }
+
     [Fact]
     public void BuildRequestBody_OmitsEmptyLanguageAndZeroTemperature()
     {

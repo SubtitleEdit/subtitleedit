@@ -700,7 +700,7 @@ public class AudioVisualizer : Control
             {
                 if (seconds < firstSelected.EndTime.TotalSeconds - 0.01)
                 {
-                    firstSelected.SetStartTimeOnly(TimeSpan.FromSeconds(seconds));
+                    firstSelected.SetStartTimeOnly(TimeSpanExtensions.FromSecondsWholeMilliseconds(seconds));
                 }
 
                 e.Handled = true;
@@ -717,7 +717,7 @@ public class AudioVisualizer : Control
             {
                 if (seconds > firstSelected.StartTime.TotalSeconds + 0.01)
                 {
-                    firstSelected.EndTime = TimeSpan.FromSeconds(seconds);
+                    firstSelected.EndTime = TimeSpanExtensions.FromSecondsWholeMilliseconds(seconds);
                 }
 
                 e.Handled = true;
@@ -732,7 +732,7 @@ public class AudioVisualizer : Control
             var seconds = RelativeXPositionToSeconds(point.X);
             if (firstSelected != null)
             {
-                firstSelected.SetStartTimeKeepDuration(TimeSpan.FromSeconds(seconds));
+                firstSelected.SetStartTimeKeepDuration(TimeSpanExtensions.FromSecondsWholeMilliseconds(seconds));
                 e.Handled = true;
                 InvalidateVisual();
                 return;
@@ -1114,8 +1114,8 @@ public class AudioVisualizer : Control
             var deltaSeconds = RelativeXPositionToSeconds(deltaX);
             _newSelectionSeconds = deltaSeconds;
 
-            NewSelectionParagraph.StartTime = TimeSpan.FromSeconds(deltaSeconds);
-            NewSelectionParagraph.EndTime = TimeSpan.FromSeconds(deltaSeconds);
+            NewSelectionParagraph.StartTime = TimeSpanExtensions.FromSecondsWholeMilliseconds(deltaSeconds);
+            NewSelectionParagraph.EndTime = TimeSpanExtensions.FromSecondsWholeMilliseconds(deltaSeconds);
             _pointerDragActive = true;
             InvalidateVisual();
             return;
@@ -1349,13 +1349,15 @@ public class AudioVisualizer : Control
 
             if (seconds > _newSelectionSeconds)
             {
-                newP.StartTime = TimeSpan.FromSeconds(_newSelectionSeconds);
-                newP.EndTime = TimeSpan.FromSeconds(seconds);
+                newP.SetTimes(
+                    TimeSpanExtensions.FromSecondsWholeMilliseconds(_newSelectionSeconds),
+                    TimeSpanExtensions.FromSecondsWholeMilliseconds(seconds));
             }
             else
             {
-                newP.StartTime = TimeSpan.FromSeconds(seconds);
-                newP.EndTime = TimeSpan.FromSeconds(_newSelectionSeconds);
+                newP.SetTimes(
+                    TimeSpanExtensions.FromSecondsWholeMilliseconds(seconds),
+                    TimeSpanExtensions.FromSecondsWholeMilliseconds(_newSelectionSeconds));
             }
 
             _lastPointerEditMs = Environment.TickCount64;
@@ -1530,8 +1532,11 @@ public class AudioVisualizer : Control
 
                 if (_activeParagraph != null)
                 {
-                    _activeParagraph.StartTime = TimeSpan.FromSeconds(newStart);
-                    _activeParagraph.EndTime = TimeSpan.FromSeconds(newStart + _originalDurationSeconds);
+                    // SetTimes applies both ends atomically (no transient duration exposed to the
+                    // bound editors), and adding the duration as a whole-millisecond TimeSpan means
+                    // moving a line cannot round its length a millisecond up or down (#14056).
+                    var movedStart = TimeSpanExtensions.FromSecondsWholeMilliseconds(newStart);
+                    _activeParagraph.SetTimes(movedStart, movedStart + TimeSpanExtensions.FromSecondsWholeMilliseconds(_originalDurationSeconds));
                 }
                 break;
             case InteractionMode.MovingSelection:
@@ -1558,9 +1563,8 @@ public class AudioVisualizer : Control
 
                 foreach (var item in _selectionMoveSnapshot)
                 {
-                    var start = item.StartSeconds + shift;
-                    item.Paragraph.StartTime = TimeSpan.FromSeconds(start);
-                    item.Paragraph.EndTime = TimeSpan.FromSeconds(start + item.DurationSeconds);
+                    var start = TimeSpanExtensions.FromSecondsWholeMilliseconds(item.StartSeconds + shift);
+                    item.Paragraph.SetTimes(start, start + TimeSpanExtensions.FromSecondsWholeMilliseconds(item.DurationSeconds));
                 }
 
                 break;
@@ -1573,8 +1577,8 @@ public class AudioVisualizer : Control
                 newStart = snappedLeft;
                 if (_activeParagraphPrevious != null)
                 {
-                    _activeParagraph.SetStartTimeOnly(TimeSpan.FromSeconds(newStart));
-                    _activeParagraphPrevious.EndTime = TimeSpan.FromSeconds(newPrevEnd);
+                    _activeParagraph.SetStartTimeOnly(TimeSpanExtensions.FromSecondsWholeMilliseconds(newStart));
+                    _activeParagraphPrevious.EndTime = TimeSpanExtensions.FromSecondsWholeMilliseconds(newPrevEnd);
                 }
 
                 break;
@@ -1586,8 +1590,8 @@ public class AudioVisualizer : Control
                 newEnd = snappedRight;
                 if (_activeParagraphNext != null)
                 {
-                    _activeParagraph.EndTime = TimeSpan.FromSeconds(newEnd);
-                    _activeParagraphNext.SetStartTimeOnly(TimeSpan.FromSeconds(newNextStart));
+                    _activeParagraph.EndTime = TimeSpanExtensions.FromSecondsWholeMilliseconds(newEnd);
+                    _activeParagraphNext.SetStartTimeOnly(TimeSpanExtensions.FromSecondsWholeMilliseconds(newNextStart));
                 }
 
                 break;
@@ -1618,7 +1622,7 @@ public class AudioVisualizer : Control
 
                 if (newStart < _activeParagraph.EndTime.TotalSeconds - 0.1)
                 {
-                    _activeParagraph.SetStartTimeOnly(TimeSpan.FromSeconds(newStart));
+                    _activeParagraph.SetStartTimeOnly(TimeSpanExtensions.FromSecondsWholeMilliseconds(newStart));
                 }
 
                 break;
@@ -1644,7 +1648,7 @@ public class AudioVisualizer : Control
 
                 if (newEnd > _activeParagraph.StartTime.TotalSeconds + 0.1)
                 {
-                    _activeParagraph.EndTime = TimeSpan.FromSeconds(newEnd);
+                    _activeParagraph.EndTime = TimeSpanExtensions.FromSecondsWholeMilliseconds(newEnd);
                 }
 
                 break;
@@ -4168,6 +4172,49 @@ public class AudioVisualizer : Control
         }
 
         return -1;
+    }
+
+    /// <summary>
+    /// The lowest peak in a time range, as a percentage of the highest peak in the file.
+    /// Used by "guess start" to find the noise floor around a cue (SE 4 parity).
+    /// </summary>
+    public double FindLowPercentage(double startSeconds, double endSeconds)
+    {
+        if (WavePeaks == null || WavePeaks.Peaks.Count == 0 || WavePeaks.HighestPeak == 0)
+        {
+            return 0;
+        }
+
+        var min = Math.Max(0, SecondsToSampleIndex(startSeconds));
+        var max = Math.Min(WavePeaks.Peaks.Count, SecondsToSampleIndex(endSeconds));
+        if (max <= min)
+        {
+            return 0;
+        }
+
+        var minMax = GetMinAndMax(min, max);
+        return minMax.Min * 100.0 / WavePeaks.HighestPeak;
+    }
+
+    /// <summary>
+    /// The highest peak in a time range, as a percentage of the highest peak in the file.
+    /// </summary>
+    public double FindHighPercentage(double startSeconds, double endSeconds)
+    {
+        if (WavePeaks == null || WavePeaks.Peaks.Count == 0 || WavePeaks.HighestPeak == 0)
+        {
+            return 0;
+        }
+
+        var min = Math.Max(0, SecondsToSampleIndex(startSeconds));
+        var max = Math.Min(WavePeaks.Peaks.Count, SecondsToSampleIndex(endSeconds));
+        if (max <= min)
+        {
+            return 0;
+        }
+
+        var minMax = GetMinAndMax(min, max);
+        return minMax.Max * 100.0 / WavePeaks.HighestPeak;
     }
 
     private MinMax GetMinAndMax(int startIndex, int endIndex)

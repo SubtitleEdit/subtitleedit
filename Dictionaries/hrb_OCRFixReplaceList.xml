@@ -50,7 +50,7 @@
     <Word from="cao" to="ćao" />
     <Word from="cas" to="sat" />
     <Word from="casa" to="sata" />
-    <Word from="casu" to="satu" />
+    <Word from="casu" to="čašu" />
     <Word from="casom" to="satom" />
     <Word from="casovima" to="satovima" />
     <Word from="Cas" to="Sat" />
@@ -61,7 +61,6 @@
     <Word from="casno" to="časno" />
     <Word from="Casno" to="Časno" />
     <Word from="castis" to="častiš" />
-    <Word from="casu" to="cašu" />
     <Word from="cašu" to="čašu" />
     <Word from="cebe" to="deku" />
     <Word from="cega" to="čega" />
@@ -206,8 +205,6 @@
     <Word from="Dosao" to="Došao" />
     <Word from="dosao" to="došao" />
     <Word from="drhteci" to="drhteći" />
-    <Word from="drhteći" to="drhteći" />
-    <Word from="Drhteći" to="Drhteći" />
     <Word from="drsces" to="dršćeš" />
     <Word from="Drsces" to="Dršćeš" />
     <Word from="drugacija" to="drugačija" />
@@ -281,7 +278,6 @@
     <Word from="Iduci" to="Idući" />
     <Word from="iduci" to="idući" />
     <Word from="ignorisi" to="ignoriraj" />
-    <Word from="ignorisi" to="ignoriraju" />
     <Word from="igras" to="igraš" />
     <Word from="Ijudi" to="ljudi" />
     <Word from="imas" to="imaš" />
@@ -294,8 +290,6 @@
     <Word from="isećemo" to="izrezati" />
     <Word from="isla" to="išla" />
     <Word from="istjece" to="istječe" />
-    <Word from="istrazio" to="istrazio" />
-    <Word from="Istrazio" to="Istrazio" />
     <Word from="isuvise" to="previše" />
     <Word from="izaci" to="izaći" />
     <Word from="Izaci" to="Izaći" />
@@ -478,7 +472,6 @@
     <Word from="Nadjes" to="Nađeš" />
     <Word from="nadjete" to="nađete" />
     <Word from="nagovestaj" to="nagovještaj" />
-    <Word from="najvise" to="najvise" />
     <Word from="Najvise" to="Najviše" />
     <Word from="naocale" to="naočale" />
     <Word from="Napisite" to="Napišite" />
@@ -1059,7 +1052,6 @@
     <Word from="Ucio" to="Učio" />
     <Word from="udas" to="udaš" />
     <Word from="udete" to="uđete" />
-    <Word from="udeš" to="udeš" />
     <Word from="udi" to="uđi" />
     <Word from="Udi" to="Uđi" />
     <Word from="Udje" to="Uđe" />
@@ -1216,7 +1208,6 @@
     <Word from="zvanican" to="služben" />
     <Word from="ćes" to="ćeš" />
     <Word from="ćte" to="ćete" />
-    <Word from="Čime" to="Čime" />
     <Word from="žalis" to="žališ" />
     <Word from="želis" to="želiš" />
     <Word from="Živeo" to="Živio" />

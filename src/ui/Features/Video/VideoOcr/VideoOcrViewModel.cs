@@ -40,9 +40,12 @@ public partial class VideoOcrViewModel : ObservableObject
     [ObservableProperty] private bool _isGlmEngine;
     [ObservableProperty] private bool _isLlamaCppEngine;
     [ObservableProperty] private bool _isCrispEmbedEngine;
+    [ObservableProperty] private bool _isAppleVisionEngine;
     [ObservableProperty] private string _selectedEngineDescription;
     [ObservableProperty] private ObservableCollection<OcrLanguage2> _paddleLanguages;
     [ObservableProperty] private OcrLanguage2? _selectedPaddleLanguage;
+    [ObservableProperty] private ObservableCollection<OcrLanguage2> _appleVisionLanguages;
+    [ObservableProperty] private OcrLanguage2? _selectedAppleVisionLanguage;
     [ObservableProperty] private string _ollamaUrl;
     [ObservableProperty] private string _ollamaModel;
     [ObservableProperty] private string _ollamaLanguage;
@@ -112,6 +115,8 @@ public partial class VideoOcrViewModel : ObservableObject
         SelectedEngine = Engines[0];
         PaddleLanguages = new ObservableCollection<OcrLanguage2>(PaddleOcr.GetLanguages());
         SelectedPaddleLanguage = PaddleLanguages.FirstOrDefault(p => p.Code == "en");
+        AppleVisionLanguages = new ObservableCollection<OcrLanguage2>(AppleVisionOcr.GetLanguages().OrderBy(p => p.ToString()));
+        SelectedAppleVisionLanguage = AppleVisionLanguages.FirstOrDefault(p => p.Code == "en-US") ?? AppleVisionLanguages.FirstOrDefault();
         Lines = new ObservableCollection<VideoOcrLineItem>();
 
         OllamaUrl = string.Empty;
@@ -224,6 +229,7 @@ public partial class VideoOcrViewModel : ObservableObject
         IsGlmEngine = value.EngineType == OcrEngineType.Glm;
         IsLlamaCppEngine = value.EngineType == OcrEngineType.LlamaCpp;
         IsCrispEmbedEngine = value.EngineType == OcrEngineType.CrispEmbed;
+        IsAppleVisionEngine = value.EngineType == OcrEngineType.AppleVision;
         SelectedEngineDescription = value.Description;
 
         if (IsLlamaCppEngine && LlamaCppModels.Count == 0)
@@ -978,6 +984,25 @@ public partial class VideoOcrViewModel : ObservableObject
         {
             await OcrGroupsWithCrispEmbed(ocrGroups, reportProgress, addPreviewLine, cancellationToken);
         }
+        else if (engineType == OcrEngineType.AppleVision)
+        {
+            // Vision is synchronous, in-process CPU work with no server or API behind it, so
+            // each frame goes to the thread pool rather than blocking the caller for the whole
+            // scan. RunLlmOcr's fail-fast-on-first-frame check does nothing here (there is no
+            // error string to report) but the loop, progress and preview are the same.
+            var languageCode = SelectedAppleVisionLanguage?.Code ?? string.Empty;
+            await RunLlmOcr(ocrGroups,
+                group => Task.Run(() => OcrFrameWithAppleVision(group, languageCode, cancellationToken), cancellationToken),
+                () => string.Empty, reportProgress, addPreviewLine, cancellationToken);
+        }
+    }
+
+    private static string OcrFrameWithAppleVision(VideoOcrFrameGroup group, string languageCode, CancellationToken cancellationToken)
+    {
+        using var bitmap = SKBitmap.Decode(group.RepresentativeFileName);
+        return bitmap == null
+            ? string.Empty
+            : AppleVisionOcr.Ocr(bitmap, languageCode, fast: false, cancellationToken);
     }
 
     /// <summary>
@@ -1110,6 +1135,9 @@ public partial class VideoOcrViewModel : ObservableObject
         var settings = Se.Settings.Video.VideoOcr;
         SelectedEngine = Engines.FirstOrDefault(p => p.EngineType.ToString() == settings.Engine) ?? Engines[0];
         OnSelectedEngineChanged(SelectedEngine);
+        SelectedAppleVisionLanguage = AppleVisionLanguages.FirstOrDefault(p => p.Code == settings.AppleVisionLanguage)
+                                      ?? SelectedAppleVisionLanguage;
+
         var paddleLanguage = PaddleOcr.NormalizeLanguageCode(settings.PaddleLanguage);
         SelectedPaddleLanguage = PaddleLanguages.FirstOrDefault(p => p.Code == paddleLanguage) ??
                                  PaddleLanguages.FirstOrDefault(p => p.Code == "en");
@@ -1134,6 +1162,7 @@ public partial class VideoOcrViewModel : ObservableObject
         var settings = Se.Settings.Video.VideoOcr;
         settings.Engine = SelectedEngine.EngineType.ToString();
         settings.PaddleLanguage = SelectedPaddleLanguage?.Code ?? "en";
+        settings.AppleVisionLanguage = SelectedAppleVisionLanguage?.Code ?? settings.AppleVisionLanguage;
         settings.OllamaUrl = OllamaUrl;
         settings.OllamaModel = OllamaModel;
         settings.OllamaLanguage = OllamaLanguage;

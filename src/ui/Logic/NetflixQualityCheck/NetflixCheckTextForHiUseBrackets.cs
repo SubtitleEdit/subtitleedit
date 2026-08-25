@@ -26,7 +26,6 @@ public class NetflixCheckTextForHiUseBrackets : INetflixQualityChecker
         foreach (Paragraph p in subtitle.Paragraphs)
         {
             string newText = p.Text;
-            var arr = p.Text.SplitToLines();
             if (newText.StartsWith('(') && newText.EndsWith(')'))
             {
                 newText = "[" + newText.Substring(1, newText.Length - 2) + "]";
@@ -35,7 +34,10 @@ public class NetflixCheckTextForHiUseBrackets : INetflixQualityChecker
             {
                 newText = "[" + newText.Substring(1, newText.Length - 2) + "]";
             }
-            else if (arr.Count == 2 && arr[0].StartsWith('-') && arr[1].StartsWith('-'))
+            // Only the two-line dash branch needs the split, and it can only fire when the text
+            // starts with a dash - so do not split every line in the file up front.
+            else if (newText.StartsWith('-') && p.Text.SplitToLines() is { Count: 2 } arr &&
+                     arr[0].StartsWith('-') && arr[1].StartsWith('-'))
             {
                 if ((arr[0].StartsWith("-(", StringComparison.Ordinal) && arr[0].EndsWith(')')) || (arr[0].StartsWith("-{", StringComparison.Ordinal) && arr[0].EndsWith('}') && !IsAssaOverride(arr[0].Substring(1))))
                 {

@@ -98,6 +98,10 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
             var subtitle = new Subtitle();
             QualityReport = new SpeechToTextQualityReport();
 
+            // Input line number (1-based) of the last paragraph added to the output, so the
+            // "repeated" detail can name the line actually duplicated - which is not index
+            // when non-speech or repeated lines were dropped in between.
+            var lastKeptNumber = 0;
             for (var index = 0; index < input.Paragraphs.Count; index++)
             {
                 var paragraph = input.Paragraphs[index];
@@ -113,7 +117,7 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
                 var lastKept = subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count - 1);
                 if (usePostProcessing && RemoveRepeatedLines && lastKept != null && SpeechToTextQualityReport.IsRepeatOf(paragraph.Text, lastKept.Text))
                 {
-                    QualityReport.Removed.Add(SpeechToTextQualityReport.MakeIssue(SpeechToTextQualityIssueType.Repeated, paragraph, index + 1, $"= #{index}"));
+                    QualityReport.Removed.Add(SpeechToTextQualityReport.MakeIssue(SpeechToTextQualityIssueType.Repeated, paragraph, index + 1, $"= #{lastKeptNumber}"));
                     continue;
                 }
 
@@ -155,6 +159,7 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
                 }
 
                 subtitle.Paragraphs.Add(paragraph);
+                lastKeptNumber = index + 1;
             }
 
             if (usePostProcessing && engine == Engine.Whisper && TwoLetterLanguageCode == "da")

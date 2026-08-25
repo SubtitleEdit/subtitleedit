@@ -94,7 +94,11 @@ public partial class LlamaCppOcrSettingsViewModel : ObservableObject
                 EngineBrush = new SolidColorBrush(Color.FromRgb(0xFF, 0x98, 0x00)); // amber
                 break;
             default:
-                EngineLabel = Se.Language.General.UnknownNoInstallRecord;
+                // Installed, but nothing identifies the build: an install predating the
+                // .installed.sha256 sidecar, a manual install, or a build older than the ones
+                // SE has hashes for. It still works, so say "Installed" rather than something
+                // that reads as a failed install (#14057).
+                EngineLabel = Se.Language.General.Installed;
                 EngineBrush = new SolidColorBrush(Color.FromRgb(0x9E, 0x9E, 0x9E)); // grey
                 break;
         }

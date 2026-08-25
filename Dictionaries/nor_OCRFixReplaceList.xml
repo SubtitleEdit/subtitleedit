@@ -99,8 +99,6 @@
     <!-- leading l→I before 2+ lowercase chars -->
     <RegEx find="\bl([a-zæøåé]{2,})\b" spellCheck="I$1" replaceWith="I$1" />
 
-    <!-- standalone l → I (Roman numerals, list markers, ordinals) -->
-    <RegEx find="\bl\b" replaceWith="I" />
 
     <!-- ============================================================ -->
     <!-- NORWEGIAN GENITIVE                                           -->

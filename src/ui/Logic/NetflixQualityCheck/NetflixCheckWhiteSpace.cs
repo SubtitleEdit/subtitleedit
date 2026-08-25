@@ -31,15 +31,20 @@ public class NetflixCheckWhiteSpace : INetflixQualityChecker
     {
         foreach (Paragraph p in subtitle.Paragraphs)
         {
-            // Line endings
-            if (LineEndingSpaceBefore.IsMatch(p.Text))
+            // Line endings. Both patterns are anchored, so they can only match when the very
+            // first / very last character is white space - and on a normal subtitle line neither
+            // is. Testing that one character first keeps the regex engine out of the loop
+            // without changing what either pattern accepts (note "$" also matches before a
+            // trailing newline, which is why the guard tests the character, not the pattern).
+            var text = p.Text;
+            if (text.Length > 1 && char.IsWhiteSpace(text[0]) && LineEndingSpaceBefore.IsMatch(text))
             {
                 AddWhiteSpaceWarning(p, controller, Se.Language.Tools.NetflixCheckAndFix.WhiteSpaceLineEnding, 1);
             }
 
-            if (LineEndingSpaceAfter.IsMatch(p.Text))
+            if (text.Length > 1 && char.IsWhiteSpace(text[text.Length - 1]) && LineEndingSpaceAfter.IsMatch(text))
             {
-                AddWhiteSpaceWarning(p, controller, Se.Language.Tools.NetflixCheckAndFix.WhiteSpaceLineEnding, p.Text.Length);
+                AddWhiteSpaceWarning(p, controller, Se.Language.Tools.NetflixCheckAndFix.WhiteSpaceLineEnding, text.Length);
             }
 
             // Spaces before punctuation

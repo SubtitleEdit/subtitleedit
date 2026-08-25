@@ -213,14 +213,8 @@
     <!-- [ABC] bracket with l mixed into caps -->
     <RegEx find="\[([A-Zl]+)\]" replaceAllFrom="l" replaceAllTo="I" spellCheck="$1" replaceWith="[$1]" />
 
-    <!-- SlNG → SING : l inside all-caps word -->
-    <RegEx find="\b([A-Z]+)l([A-Z]+)\b" spellCheck="$1I$2" replaceWith="$1I$2" />
 
-    <!-- trailing l in all-caps word -->
-    <RegEx find="\b([A-Z]+)l\b" spellCheck="$1I" replaceWith="$1I" />
 
-    <!-- leading l before all-caps word -->
-    <RegEx find="\bl([A-Z]+)\b" spellCheck="I$1" replaceWith="I$1" />
 
     <!-- chaIIenge → challenge : II→ll mid lowercase word -->
     <RegEx find="\b([a-zéèëïóöüij]+)II([a-zéèëïóöüij]+)\b" spellCheck="$1ll$2" replaceWith="$1ll$2" />
@@ -241,8 +235,6 @@
     <!-- leading l→I before 2+ lowercase chars -->
     <RegEx find="\bl([a-zéèëïóöüij]{2,})\b" spellCheck="I$1" replaceWith="I$1" />
 
-    <!-- standalone l → I (Roman numerals, list markers) -->
-    <RegEx find="\bl\b" replaceWith="I" />
 
     <!-- ============================================================ -->
     <!-- IJ DIGRAPH FIXES                                             -->

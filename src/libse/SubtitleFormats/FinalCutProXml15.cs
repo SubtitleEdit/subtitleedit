@@ -192,7 +192,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 XmlNode video = xml.CreateElement("video");
                 foreach (var ch in HtmlUtil.RemoveHtmlTags(p.Text, true))
                 {
-                    if (CharUtils.IsEnglishAlphabet(ch) || char.IsDigit(ch))
+                    if (CharUtils.IsAsciiLetter(ch) || char.IsDigit(ch))
                     {
                         sbTrimmedTitle.Append(ch);
                     }

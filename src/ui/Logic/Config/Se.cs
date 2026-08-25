@@ -20,7 +20,7 @@ public class Se
     internal const int CurrentMacOsFontMigrationVersion = 1;
     internal const int CurrentShortcutsMigrationVersion = 2;
 
-    public static string Version { get; set; } = "v5.2.0-beta22";
+    public static string Version { get; set; } = "v5.2.0-beta24";
 
     public SeGeneral General { get; set; } = new();
     public List<SeShortCut> Shortcuts { get; set; } = new();
@@ -237,17 +237,23 @@ public class Se
     public static string OcrFolder => Path.Combine(DataFolder, "OCR");
     public static string TranslationFolder => Path.Combine(DataFolder, "Languages");
     // The folder name carries the PaddleOCR version the bundled standalone engine is built
-    // from (3-4 = PaddleOCR 3.4 = PaddleOCR-Standalone v1.4.0). Bump it whenever the engine
-    // or the support-files bundle moves to a new PaddleOCR release: extracting a new build
-    // over an old one would leave orphaned files from the previous Python/paddle runtime,
-    // and the old models bundle is missing recognition models the current language list
-    // offers (the 3.1 bundle has no arabic/cyrillic/devanagari PP-OCRv5 or el/ta/te/th/ka
-    // models at all). A new folder means engine and models always come from the same release.
-    public static string PaddleOcrFolder => Path.Combine(OcrFolder, "PaddleOCR3-4");
-    public static string PaddleOcrModelsFolder => ResolveModelsFolder(Path.Combine(PaddleOcrFolder, "models"), "OCR", "PaddleOCR3-4", "models");
+    // from (3-7 = PaddleOCR 3.7 = PaddleOCR-Standalone v3.7.0; upstream re-aligned its tag
+    // scheme to the PaddleOCR version, so v1.4.0 is followed by v3.7.0). Bump it whenever the
+    // engine or the support-files bundle moves to a new PaddleOCR release: extracting a new
+    // build over an old one would leave orphaned files from the previous Python/paddle
+    // runtime, and the old models bundle is missing recognition models the current language
+    // list offers (the 3.4 bundle has no PP-OCRv6 models, the 3.1 one has no arabic/cyrillic/
+    // devanagari PP-OCRv5 or el/ta/te/th/ka models at all). A new folder means engine and
+    // models always come from the same release.
+    public static string PaddleOcrFolder => Path.Combine(OcrFolder, "PaddleOCR3-7");
+    public static string PaddleOcrModelsFolder => ResolveModelsFolder(Path.Combine(PaddleOcrFolder, "models"), "OCR", "PaddleOCR3-7", "models");
 
     /// <summary>Install folders of superseded PaddleOCR versions, deleted after a new install succeeds.</summary>
-    public static IReadOnlyList<string> PaddleOcrLegacyFolders => new[] { Path.Combine(OcrFolder, "PaddleOCR3-1") };
+    public static IReadOnlyList<string> PaddleOcrLegacyFolders => new[]
+    {
+        Path.Combine(OcrFolder, "PaddleOCR3-1"),
+        Path.Combine(OcrFolder, "PaddleOCR3-4"),
+    };
     public static string GoogleLensOcrFolder => Path.Combine(OcrFolder, "Google-Lens");
     public static string CrispEmbedFolder => Path.Combine(OcrFolder, "CrispEmbed");
     public static string CrispEmbedModelsFolder => ResolveModelsFolder(Path.Combine(CrispEmbedFolder, "models"), "OCR", "CrispEmbed", "models");
