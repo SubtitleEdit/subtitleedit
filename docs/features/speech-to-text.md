@@ -21,7 +21,7 @@ Subtitle Edit can automatically transcribe audio to text using Whisper-based and
 | OpenRouter | All | Online. One API key routes to Whisper, gpt-4o-transcribe, Groq and Google Chirp |
 | Alibaba Qwen3-ASR | All | Online Qwen3-ASR via Alibaba Model Studio (DashScope) |
 | Qwen3 ASR CPP | Windows, Linux | Local Qwen3 ASR engine with downloadable GGUF models |
-| Crisp ASR | Windows, Linux, macOS | Single engine with selectable backends: Parakeet, Canary, Cohere, Fire Red, Fun-ASR Nano, GigaAM, GLM, Granite, Qwen3, Mega, MOSS Diarize, Omni, Kyutai, SenseVoice, ARK, Voxtral |
+| Crisp ASR | Windows, Linux, macOS | Single engine with selectable backends: Parakeet, Canary, Cohere, Fire Red, Fun-ASR Nano, Fun-ASR MLT Nano, GigaAM, GLM, Granite, Qwen3, Mega, MOSS Diarize, Omni, Kyutai, SenseVoice, ARK, Voxtral |
 
 Engines and models are downloaded automatically on first use.
 
@@ -29,11 +29,50 @@ Engines and models are downloaded automatically on first use.
 
 - **Whisper CPP** is shown as a single entry; the CPU / cuBLAS / Vulkan backends are selected from a secondary dropdown when Whisper CPP is selected.
 - **Qwen3 ASR CPP** includes 0.6B and 1.7B model options, plus a forced-aligner model used for timing workflows.
-- **Crisp ASR** is exposed as one engine that wraps multiple backends (Parakeet, Canary, Cohere, Fire Red, Fun-ASR Nano, GigaAM, GLM, Granite, Qwen3, Mega, MOSS Diarize, Omni, Kyutai, SenseVoice, ARK, Voxtral). Pick the backend from the Crisp ASR backend dropdown.
+- **Crisp ASR** is exposed as one engine that wraps multiple backends (Parakeet, Canary, Cohere, Fire Red, Fun-ASR Nano, Fun-ASR MLT Nano, GigaAM, GLM, Granite, Qwen3, Mega, MOSS Diarize, Omni, Kyutai, SenseVoice, ARK, Voxtral). Pick the backend from the Crisp ASR backend dropdown - see [Crisp ASR backends](#crisp-asr-backends) for what each one is good at.
 - **MLX Whisper** (Apple Silicon Macs) is not bundled or auto-downloaded — it drives Apple's `mlx-whisper` Python package. Install it once with `pip3 install mlx-whisper` (or `pipx install mlx-whisper`); models download from Hugging Face on first use. Subtitle Edit detects the install by finding a Python that can `import mlx_whisper` — it probes Homebrew, python.org, pyenv and system interpreters, and (for pipx / virtual-env / conda installs, which isolate the package) reads the `mlx_whisper` command found on your PATH or at `~/.local/bin/mlx_whisper` to locate the matching interpreter. If it reports "not found" after a pipx/venv install, make sure `which mlx_whisper` resolves.
 - A **Forced aligner** option is shown for Crisp ASR backends and exposes the built-in aligner, Canary CTC, Qwen3, and the wav2vec2 zoo (12 language-specific CTC aligners that run on top of any Crisp ASR backend).
 - Several newer engines support automatic language selection.
 - Each engine can have separate advanced command-line parameters.
+
+## Crisp ASR backends
+
+**Crisp ASR** is one engine wrapping many backends. Set **Engine** to *Crisp ASR*, then pick the backend from the Crisp ASR backend dropdown - the model list updates to that backend's models.
+
+The languages column counts what the backend dropdown offers (an *auto* entry is not counted as a language).
+
+**Output** is what you actually get back. *Native timings* means the backend times its own lines and can use the built-in aligner; *needs aligner* means the text arrives untimed and a forced aligner (Canary CTC, Qwen3, or a wav2vec2 aligner) places it in time. Anything else a backend adds - speaker labels, punctuation and casing - is called out there too.
+
+| Backend | Languages | Output | Model size range | Good for |
+|---------|-----------|------------|------------------|----------|
+| **Parakeet** | 13 (European + zh, ja, ko) | Native timings | 75 MB - 2.14 GB | The fast default. NVIDIA Parakeet TDT/RNN-T in 0.6B, 1.1B and a 110M tdt_ctc model - the smallest Crisp ASR model of all. Has a Japanese fine-tune |
+| **Canary** | 25 (European) | Native timings | 705 MB - 1.97 GB | NVIDIA Canary 1B v2. Broad European coverage with its own timings; also usable as a CTC forced aligner for other backends |
+| **Cohere** | 14 | Native timings | 1.51 - 4.14 GB | Cohere Transcribe. Separate Arabic and Japanese fine-tunes. VAD is on by default (see the VAD section below) |
+| **GigaAM** | 1 (Russian) | Native timings; punctuation + casing on `e2e` only | 151 - 452 MB | Russian only, and very small. Use an `e2e` revision - those emit punctuation and capitalisation, the plain `ctc` / `rnnt` heads return bare lowercase text |
+| **MOSS Diarize** | 2 (en, zh) | Native timings + speaker labels | 1.41 - 1.82 GB | Labels who is speaking. This is the backend preselected by the text-to-speech speaker-separation workflow |
+| **Qwen3** | 30 | Needs aligner | 631 MB - 4.7 GB | Strong all-rounder in 0.6B and 1.7B, with an anime / visual-novel Japanese fine-tune. Also supplies the Qwen3 forced-aligner model |
+| **Omni** | 149 | Needs aligner | 1.08 - 3.26 GB | By far the widest language coverage - the place to start for a language no other backend lists. Languages use NLLB-style codes (`eng_Latn`, `cmn_Hans`) |
+| **Fire Red** | 49 | Needs aligner | 1 - 2.4 GB | FireRedASR2. Chinese-first, and the only backend covering Chinese regional languages: Cantonese, Shanghainese, Minnan, Gan, Hakka and Xiang |
+| **GLM** | 17 | Needs aligner | 1.3 - 4.5 GB | GLM-ASR Nano, Chinese-first with a wide second tier of languages |
+| **SenseVoice** | 5 (zh, yue, en, ja, ko) | Needs aligner | 136 - 469 MB | Tiny and quick for CJK audio - useful on machines where the larger backends are too slow |
+| **Fun-ASR Nano** | 5 (en, zh, yue, ja, ko) | Needs aligner | 0.90 - 1.98 GB | CJK-focused Fun-ASR |
+| **Fun-ASR MLT Nano** | 31 | Needs aligner | 0.90 - 1.98 GB | The multilingual sibling of Fun-ASR Nano at the same size |
+| **Mega** | 2 (en, zh) | Needs aligner | 1.3 - 4.4 GB | Mega-ASR 1.7B. VAD is on by default (see the VAD section below) |
+| **Granite** | 6 (en, fr, de, es, pt, ja) | Needs aligner | 1.54 - 5.58 GB | IBM Granite Speech 4.1 2B. The `plus` models are the newer revision; `mini` and `f16enc` trade encoder precision for size |
+| **ARK** | 19 (European + zh, ja, ko) | Needs aligner | 3.52 - 7.51 GB | A 3B model - the heaviest backend here, so only worth it when the smaller ones fall short |
+| **Kyutai** | 2 (en, fr) | Needs aligner | 0.67 - 5.01 GB | Kyutai STT in 1B and 2.6B |
+| **Voxtral** | 8 | Needs aligner | 2.65 - 4.99 GB | Mistral Voxtral Mini 3B. The backend has no built-in aligner entry at all, so a CTC aligner is always used |
+
+### Picking a quantization
+
+Most backends list the same model several times with a quantization suffix. The suffix only changes file size, memory use and speed - the model is the same:
+
+- `q4_k` - smallest and fastest, with the most accuracy lost. A good first download
+- `q5_0` / `q5_1` / `q6_k` - middle ground where offered
+- `q8_0` - close to full precision at roughly half the size. The best default when disk space allows
+- no suffix / `f16` / `unquantized` - full precision, largest and slowest, and rarely worth it over `q8_0`
+
+A model name with a language in it (`-ja`, `-arabic`) is a fine-tune for that language and usually beats the general model on it - see below.
 
 ## Language-specific models
 

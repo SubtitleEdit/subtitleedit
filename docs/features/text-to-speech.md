@@ -39,8 +39,38 @@ Generate speech audio from subtitle text using various TTS engines.
 - **MOSS-TTS (CrispASR)** — MOSS-TTS v1.5 (Qwen3-8B backbone, 24 kHz) with zero-shot cloning
 - **Zonos TTS (CrispASR)** — Zonos-v0.1 at 44.1 kHz with cloning from a reference recording
 - **OmniVoice TTS (CrispASR)** — The OmniVoice model on the shared CrispASR runtime, run as a persistent server so the model loads once instead of once per line
+- **dots.tts (CrispASR)** — dots.tts SOAR 2B rendered at 48 kHz by a BigVGAN vocoder, with zero-shot cloning
 
 Local downloadable engines are installed into the Subtitle Edit data folder when you accept the download prompt.
+
+## CrispASR voice engines
+
+Several of the local engines above are different models on the same CrispASR runtime, sharing one `CrispASR/models` folder with the speech-to-text backends. What separates them is voice output quality rather than features, so they are collected here.
+
+**Output rate** is the engine's native render rate - 48 kHz carries noticeably more high end than 24 kHz on headphones, though for speech mixed under a video the difference is small. **Reference WAV** is the format a cloning reference is converted to on import; Subtitle Edit resamples with ffmpeg for you, but a clean 3-10 second recording at or above that rate clones best.
+
+| Engine | Output rate | Languages | Voice cloning | Reference WAV | Download |
+|--------|-------------|-----------|---------------|---------------|----------|
+| **OmniVoice TTS (CrispASR)** | 24 kHz | 646 | Built-in voice + zero-shot | 24 kHz mono | ~1 - 1.6 GB |
+| **Qwen3 TTS (CrispASR)** | 24 kHz | 10 | VoiceDesign, CustomVoice or Voice clone | 24 kHz mono (strictly enforced) | ~2.3 GB |
+| **Chatterbox TTS (CrispASR)** | 24 kHz | 23 on Base; Turbo is English-only | Zero-shot | 24 kHz mono | ~700 MB - 1.8 GB Base, ~1 GB Turbo |
+| **IndexTTS (CrispASR)** | 24 kHz | Follows the text | Zero-shot | 24 kHz mono | ~600 MB - 2.4 GB |
+| **CosyVoice3 (CrispASR)** | 24 kHz | 9, plus 18 Mandarin dialects as voices | 8 baked-in presets + zero-shot | 16 kHz mono + a transcript sidecar | ~1.6 - 2.5 GB |
+| **MOSS-TTS (CrispASR)** | 24 kHz | 20 | Zero-shot | 24 kHz mono | ~10.5 - 20.5 GB incl. codec |
+| **Zonos TTS (CrispASR)** | 44.1 kHz | Follows the text | From a reference recording | 24 kHz mono | ~1.8 GB |
+| **VoxCPM2 (CrispASR)** | 48 kHz | ~30 | Zero-shot | 24 kHz mono (upsampled internally) | ~1.7 - 5 GB |
+| **dots.tts (CrispASR)** | 48 kHz | Follows the text | Zero-shot | 24 kHz mono | ~2.4 - 5 GB |
+
+"Follows the text" means the engine has no language picker - it speaks whatever script it is given, taking its accent from the reference voice.
+
+Notes on picking one:
+
+- **Smallest download that still clones:** IndexTTS at about 600 MB - 870 MB.
+- **Most languages:** OmniVoice, at 646.
+- **Highest output rate:** VoxCPM2 and dots.tts at 48 kHz, then Zonos at 44.1 kHz.
+- **MOSS-TTS is by far the largest** because its Qwen3-8B backbone needs a ~3.5 GB codec companion on top of the backbone quant. Check free disk space before selecting it.
+- Quantized engines follow the same rule as the speech-to-text models: `Q4_K` is the small fast default, `Q8_0` is close to full precision, and `F16` is rarely worth the extra gigabytes.
+- **None of the CrispASR engines take a new reference voice per line** - each reads its reference when its server starts, so switching voice reloads the model. That is why [Clone From Video (Voice of Each Line)](#clone-from-video-voice-of-each-line) lists OmniVoice TTS (the standalone engine) rather than a CrispASR one.
 
 ## Engine Settings
 
