@@ -1045,6 +1045,7 @@
     "originalTextReadOnly": "Testo originale (sola lettura)",
     "originalTextEditMode": "Testo originale (modalità modifica)",
     "originalIsReadOnlyNotSaved": "Il sottotitolo originale è in sola lettura come riferimento e non è stato salvato",
+    "originalIsEmptyNotSaved": "Il sottotitolo originale non contiene testo e non è stato salvato",
     "originalIsReadOnlyReference": "Il sottotitolo originale è aperto in sola lettura come riferimento",
     "allowEditOfOriginalSubtitle": "Consenti modifica sottotitolo originale",
     "showAllOriginalLinesX": "Visualizza tutte le righe originali ({0} non hanno qui corrispondenze)",
