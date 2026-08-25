@@ -101,6 +101,20 @@ public static class PointSyncer
                 p.EndTime = originalSubtitles[i].EndTime;
                 p.Adjust(factor, adjust);
             }
+
+            // Adjust rounds start and duration to whole milliseconds separately, which can land
+            // a line's end 1 ms past the next line's start, turning a clean join into an overlap
+            // the source never had. Clip those back; source overlaps are left as they were.
+            for (var i = minIndex; i + 1 < subtitles.Count && i + 1 <= maxIndex; i++)
+            {
+                var current = subtitles[i];
+                var next = subtitles[i + 1];
+                if (originalSubtitles[i].EndTime <= originalSubtitles[i + 1].StartTime &&
+                    current.EndTime > next.StartTime)
+                {
+                    current.SetTimes(current.StartTime, next.StartTime);
+                }
+            }
         }
     }
 }

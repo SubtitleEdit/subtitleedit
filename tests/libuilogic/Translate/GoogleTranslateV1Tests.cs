@@ -87,4 +87,18 @@ public class GoogleTranslateV1Tests
     {
         Assert.Null(GoogleTranslateV1.ConvertDictChromeExResultToText(json));
     }
+
+    [Fact]
+    public void DictChromeEx_TranslationEndingInQuote_KeepsTheQuote()
+    {
+        // "He said \"hi\"" - trimming every trailing quote char used to leave a dangling
+        // backslash, making Regex.Unescape throw and shipping the raw escapes.
+        Assert.Equal("He said \"hi\"", GoogleTranslateV1.ConvertDictChromeExResultToText("[\"He said \\\"hi\\\"\"]"));
+    }
+
+    [Fact]
+    public void DictChromeEx_TranslationThatIsOnlyAQuotedWord_KeepsBothQuotes()
+    {
+        Assert.Equal("\"Bonjour\"", GoogleTranslateV1.ConvertDictChromeExResultToText("[\"\\\"Bonjour\\\"\"]"));
+    }
 }

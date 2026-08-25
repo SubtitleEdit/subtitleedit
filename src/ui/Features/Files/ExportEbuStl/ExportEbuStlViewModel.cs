@@ -99,6 +99,13 @@ public partial class ExportEbuStlViewModel : ObservableObject
             "STL25.01",
             "STL29.01 (non-standard)",
             "STL30.01",
+            // The rates Ebu.FrameRate recognizes on read; without list entries a loaded
+            // STL35/48/50/60 file kept its frame rate but silently fell back to STL25.01,
+            // writing a header whose DFC contradicts the TTI frame fields.
+            "STL35.01 (non-standard)",
+            "STL48.01 (non-standard)",
+            "STL50.01 (non-standard)",
+            "STL60.01 (non-standard)",
         };
 
         FrameRates = new ObservableCollection<string>
@@ -108,6 +115,8 @@ public partial class ExportEbuStlViewModel : ObservableObject
             "25",
             "29.97",
             "30",
+            "35",
+            "48",
             "50",
             "59.94",
             "60",
