@@ -1437,10 +1437,11 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
     private async Task<bool> RunLlamaCppOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
     {
-        // Curated OCR model from settings (picked in batch convert settings / the OCR window).
-        // The batch run never downloads - the settings dialog prompts for that on OK.
-        var model = LlamaCppServerManager.OcrModels.FirstOrDefault(m => m.FileName == Se.Settings.Ocr.LlamaCppOcrModel)
-                    ?? LlamaCppServerManager.OcrModels.FirstOrDefault(LlamaCppServerManager.IsModelInstalled);
+        // Curated or self-supplied OCR model from settings (picked in batch convert settings /
+        // the OCR window). The batch run never downloads - the settings dialog prompts for that on OK.
+        var ocrModels = LlamaCppServerManager.GetAllOcrModels();
+        var model = ocrModels.FirstOrDefault(m => m.FileName == Se.Settings.Ocr.LlamaCppOcrModel)
+                    ?? ocrModels.FirstOrDefault(LlamaCppServerManager.IsModelInstalled);
         if (model == null || !LlamaCppServerManager.IsEngineInstalled() || !LlamaCppServerManager.IsModelInstalled(model))
         {
             item.Status = Se.Language.Ocr.LlamaCppNotDownloaded;

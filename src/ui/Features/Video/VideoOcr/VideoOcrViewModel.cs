@@ -235,7 +235,7 @@ public partial class VideoOcrViewModel : ObservableObject
         if (IsLlamaCppEngine && LlamaCppModels.Count == 0)
         {
             var savedModelName = Path.GetFileName(Se.Settings.Video.VideoOcr.LlamaCppModel);
-            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.OcrModels, savedModelName);
+            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.GetAllOcrModels(), savedModelName);
         }
 
         if (IsCrispEmbedEngine && SelectedCrispEmbedBackend == null)
@@ -355,7 +355,7 @@ public partial class VideoOcrViewModel : ObservableObject
         if (downloaded != null)
         {
             var selectName = string.IsNullOrEmpty(downloaded) ? model?.FileName : downloaded;
-            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.OcrModels, selectName);
+            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.GetAllOcrModels(), selectName);
             (Window as VideoOcrWindow)?.RefreshDownloadDots();
         }
     }
@@ -429,7 +429,7 @@ public partial class VideoOcrViewModel : ObservableObject
             }
         }
 
-        SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.OcrModels, model.FileName);
+        SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.GetAllOcrModels(), model.FileName);
         (Window as VideoOcrWindow)?.RefreshDownloadDots();
 
         try

@@ -21,7 +21,7 @@ The recognized text is editable directly in the list, so OCR mistakes can be fix
 - **Paddle OCR** — local, fast and accurate; downloaded automatically (Windows/Linux). Recommended.
 - **Paddle OCR Python** — local, via a Python `paddleocr` installation (also works on macOS)
 - **Ollama vision** — local vision model via [Ollama](https://ollama.com), e.g. `glm-ocr`
-- **llama.cpp** — local vision model via a managed llama.cpp server; the engine and models are downloaded automatically. Available models: GLM-OCR 0.9B, LightOnOCR 1B, PaddleOCR-VL 1.6 (109 languages) and HunyuanOCR 1.5. A green dot marks models that are already downloaded; custom `*.gguf` files in the llama.cpp models folder also appear.
+- **llama.cpp** — local vision model via a managed llama.cpp server; the engine and models are downloaded automatically. Available models: GLM-OCR 0.9B, LightOnOCR 1B, PaddleOCR-VL 1.6 (109 languages) and HunyuanOCR 1.5. A green dot marks models that are already downloaded; custom vision models in the llama.cpp models folder also appear, as long as the `mmproj` vision projector sits next to the `*.gguf` (see [OCR](ocr.md#llamacpp)).
 - **CrispEmbed** — local OCR engine with several model backends, downloaded automatically; pick the backend and model from the dropdowns (see [OCR](ocr.md#crispembed) for the backend list)
 - **GLM API** — GLM vision model via the Z.ai / bigmodel.cn API (requires an API key)
 - **GLM API** — GLM vision model via the Z.ai / bigmodel.cn cloud API (requires an API key)

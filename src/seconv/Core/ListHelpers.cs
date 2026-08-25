@@ -230,7 +230,7 @@ internal static class ListHelpers
         var tesseractInstalled = TesseractOcrEngine.Detect() is not null;
         var paddleInstalled = PaddleOcrEngine.Detect() is not null;
         var llamaCppInstalled = LlamaCppLocal.TryEnsureServerBinary();
-        var llamaCppModelCount = LlamaCppServerManager.OcrModels.Count(LlamaCppServerManager.IsModelInstalled);
+        var llamaCppModelCount = LlamaCppServerManager.GetAllOcrModels().Count(LlamaCppServerManager.IsModelInstalled);
 
         if (json)
         {
