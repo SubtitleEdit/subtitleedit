@@ -1942,7 +1942,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 FullFrameBackgroundColor = profile.FullFrameBackgroundColor.FromHexToColor().ToSKColor(),
             };
 
-            // "{\fad(..)}" and "{\alpha&H..&}" change what is drawn - read before rendering.
+            // "{\3c..}"/"{\4c..}"/"{\bord..}"/"{\shad..}", "{\fad(..)}" and "{\alpha&H..&}"
+            // change what is drawn - read before rendering, overrides before the
+            // transparencies that fade them.
+            ExportTextTags.ApplyStyleOverrideTags(imageParameter, subtitle.Text, scriptHeight);
             ExportTextTags.ApplyTransparencyTags(imageParameter, subtitle.Text);
 
             imageParameter.Bitmap = ExportImageBasedViewModel.GenerateBitmap(imageParameter);
