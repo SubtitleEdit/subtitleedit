@@ -139,6 +139,100 @@ public class VideoOcrTests
         Assert.Equal(string.Empty, group.Text);
     }
 
+    private static (string Folder, VideoOcrFrameGroup Group) MakeFrameGroup()
+    {
+        var folder = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "vocr_verify_" + Guid.NewGuid().ToString("N"));
+        System.IO.Directory.CreateDirectory(folder);
+        for (var i = 0; i <= 8; i++)
+        {
+            System.IO.File.WriteAllBytes(System.IO.Path.Combine(folder, $"img{i:000000}.jpg"), new byte[] { 1 });
+        }
+
+        var group = new VideoOcrFrameGroup
+        {
+            StartFrame = 0,
+            EndFrame = 8,
+            RepresentativeFileName = System.IO.Path.Combine(folder, "img000004.jpg"),
+        };
+        return (folder, group);
+    }
+
+    [Fact]
+    public async Task RunLlmOcr_HallucinatedShortGhost_ClearedByVerificationFrame()
+    {
+        // A vision model inventing text from a logo produces a different reading on every
+        // frame - two dissimilar short reads mean ghost, and the group ends up empty.
+        var (folder, group) = MakeFrameGroup();
+        try
+        {
+            await VideoOcrViewModel.RunLlmOcr(
+                new List<VideoOcrFrameGroup> { group },
+                g => Task.FromResult(g.RepresentativeFileName.EndsWith("img000004.jpg") ? "NIKE GO" : "NKE WIN"),
+                () => string.Empty,
+                () => { },
+                _ => { },
+                CancellationToken.None);
+
+            Assert.Equal(string.Empty, group.Text);
+        }
+        finally
+        {
+            System.IO.Directory.Delete(folder, true);
+        }
+    }
+
+    [Fact]
+    public async Task RunLlmOcr_DissimilarButLongRead_KeptNotCleared()
+    {
+        // Long text must survive a disagreeing verification frame: a real line polluted by
+        // rolling credits reads differently per frame, and a real line can sit in a group
+        // whose verify frame is unreadable - the longer read wins.
+        var (folder, group) = MakeFrameGroup();
+        try
+        {
+            await VideoOcrViewModel.RunLlmOcr(
+                new List<VideoOcrFrameGroup> { group },
+                g => Task.FromResult(g.RepresentativeFileName.EndsWith("img000004.jpg")
+                    ? "Clean up your house. It's hopeless."
+                    : string.Empty),
+                () => string.Empty,
+                () => { },
+                _ => { },
+                CancellationToken.None);
+
+            Assert.Equal("Clean up your house. It's hopeless.", group.Text);
+        }
+        finally
+        {
+            System.IO.Directory.Delete(folder, true);
+        }
+    }
+
+    [Fact]
+    public async Task RunLlmOcr_NearIdenticalReads_SpellCheckPicksTheBetterOne()
+    {
+        var (folder, group) = MakeFrameGroup();
+        try
+        {
+            await VideoOcrViewModel.RunLlmOcr(
+                new List<VideoOcrFrameGroup> { group },
+                g => Task.FromResult(g.RepresentativeFileName.EndsWith("img000004.jpg")
+                    ? "OK, I'think we can have pizza again."
+                    : "OK, I think we can have pizza again."),
+                () => string.Empty,
+                () => { },
+                _ => { },
+                CancellationToken.None,
+                countUnknownWords: text => text.Contains("I'think") ? 1 : 0);
+
+            Assert.Equal("OK, I think we can have pizza again.", group.Text);
+        }
+        finally
+        {
+            System.IO.Directory.Delete(folder, true);
+        }
+    }
+
     [Theory]
     [InlineData("Hello", "<i>Hello</i>")]                 // plain -> wrapped
     [InlineData("<i>Hello</i>", "Hello")]                 // fully italic -> unwrapped
