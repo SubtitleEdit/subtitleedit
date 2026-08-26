@@ -580,14 +580,20 @@ public class VideoOcrWindow : Window
 
                 e.Handled = true;
             }
-            else if (e.Key is Avalonia.Input.Key.Enter or Avalonia.Input.Key.F2 &&
-                     e.Source is not TextBox &&
-                     tableView.SelectedItem is VideoOcrLineItem editItem)
+        };
+
+        // Tunnel phase: the TableView handles Enter internally (see #12734), so a bubbling
+        // KeyDown never sees it - the edit shortcut must run before the control's own handling.
+        tableView.AddHandler(KeyDownEvent, (s, e) =>
+        {
+            if (e.Key is Avalonia.Input.Key.Enter or Avalonia.Input.Key.F2 &&
+                e.Source is not TextBox &&
+                tableView.SelectedItem is VideoOcrLineItem editItem)
             {
                 e.Handled = true;
                 _ = vm.EditLine(editItem);
             }
-        };
+        }, RoutingStrategies.Tunnel);
 
         return UiUtil.MakeBorderForControl(tableView);
     }
