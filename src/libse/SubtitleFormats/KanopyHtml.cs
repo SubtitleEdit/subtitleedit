@@ -30,7 +30,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     start = $"{p.StartTime.Hours:00}:{start}";
                 }
 
-                sb.AppendLine($"      <a href='#' begin=\"{p.StartTime.TotalSeconds:0.000}\" end=\"{p.EndTime.TotalSeconds:0.000}\"><span class='ts'>{start}</span> {p.Text.Replace(Environment.NewLine, " <br />")}</a>");
+                var begin = p.StartTime.TotalSeconds.ToString("0.000", CultureInfo.InvariantCulture);
+                var end = p.EndTime.TotalSeconds.ToString("0.000", CultureInfo.InvariantCulture);
+                sb.AppendLine($"      <a href='#' begin=\"{begin}\" end=\"{end}\"><span class='ts'>{start}</span> {p.Text.Replace(Environment.NewLine, " <br />")}</a>");
             }
             sb.AppendLine("</div>");
             sb.AppendLine("</body>");

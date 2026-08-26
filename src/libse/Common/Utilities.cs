@@ -2248,9 +2248,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
             // f starts at 'start' within s, so offset f-relative index back into s
             var colorStart = start + f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
-            if (s.IndexOf('"', colorStart + " color=".Length + 1) > 0)
+            var quoteIndex = s.IndexOf('"', colorStart + " color=".Length + 1);
+            if (quoteIndex > 0 && quoteIndex < end)
             {
-                end = s.IndexOf('"', colorStart + " color=".Length + 1);
+                // only a quote inside the font tag itself ends the value - a quotation mark
+                // in the dialogue text must not hijack an unquoted color attribute
+                end = quoteIndex;
             }
             s = s.Substring(colorStart, end - colorStart);
             s = s.Replace(" color=", string.Empty);
@@ -3098,7 +3101,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             // e.g.: \r\n</i>
             if (text.EndsWith(close5, StringComparison.Ordinal))
             {
-                text = text.Remove(text.Length - openTag.Length - Environment.NewLine.Length - 1, Environment.NewLine.Length);
+                text = text.Remove(text.Length - close5.Length, Environment.NewLine.Length);
             }
 
             if (text.Contains(open2, StringComparison.Ordinal))

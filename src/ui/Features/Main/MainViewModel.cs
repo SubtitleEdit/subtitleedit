@@ -4951,7 +4951,7 @@ public partial class MainViewModel :
         var oldLastTime = selectedItem.EndTime.TotalMilliseconds;
         var newFirstTime = subtitle.Paragraphs[0].StartTime.TotalMilliseconds;
         var timeOffset = newFirstTime < oldLastTime
-            ? oldLastTime - newFirstTime + Se.Settings.General.MinimumBetweenLines.Milliseconds
+            ? oldLastTime - newFirstTime + Se.Settings.General.MinimumBetweenLines.GetMilliseconds()
             : 0;
         foreach (var p in subtitle.Paragraphs)
         {
@@ -7582,7 +7582,7 @@ public partial class MainViewModel :
         var result = await ShowDialogAsync<MergeShortLinesWindow, MergeShortLinesViewModel>(
             vm => { vm.Initialize(Subtitles.ToList(), AudioVisualizer?.ShotChanges ?? new List<double>()); });
 
-        if (result.OkPressed)
+        if (result.OkPressed && result.AllSubtitlesFixed.Count > 0)
         {
             ReplaceSubtitles(result.AllSubtitlesFixed);
             SelectAndScrollToRow(0);

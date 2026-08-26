@@ -1577,8 +1577,21 @@ public class AudioVisualizer : Control
                 newStart = snappedLeft;
                 if (_activeParagraphPrevious != null)
                 {
-                    _activeParagraph.SetStartTimeOnly(TimeSpanExtensions.FromSecondsWholeMilliseconds(newStart));
-                    _activeParagraphPrevious.EndTime = TimeSpanExtensions.FromSecondsWholeMilliseconds(newPrevEnd);
+                    // Same guards as the plain left resize, adapted to the pair: never below
+                    // zero, never erase the previous cue, and never past this cue's own end.
+                    var leftGapSeconds = newStart - newPrevEnd;
+                    var minStart = Math.Max(0, _activeParagraphPrevious.StartTime.TotalSeconds + 0.1 + leftGapSeconds);
+                    if (newStart < minStart)
+                    {
+                        newPrevEnd += minStart - newStart;
+                        newStart = minStart;
+                    }
+
+                    if (newStart < _activeParagraph.EndTime.TotalSeconds - 0.1)
+                    {
+                        _activeParagraph.SetStartTimeOnly(TimeSpanExtensions.FromSecondsWholeMilliseconds(newStart));
+                        _activeParagraphPrevious.EndTime = TimeSpanExtensions.FromSecondsWholeMilliseconds(newPrevEnd);
+                    }
                 }
 
                 break;
@@ -1590,8 +1603,21 @@ public class AudioVisualizer : Control
                 newEnd = snappedRight;
                 if (_activeParagraphNext != null)
                 {
-                    _activeParagraph.EndTime = TimeSpanExtensions.FromSecondsWholeMilliseconds(newEnd);
-                    _activeParagraphNext.SetStartTimeOnly(TimeSpanExtensions.FromSecondsWholeMilliseconds(newNextStart));
+                    // Mirror of the left guards: never erase the next cue, and never before
+                    // this cue's own start.
+                    var rightGapSeconds = newNextStart - newEnd;
+                    var maxEnd = _activeParagraphNext.EndTime.TotalSeconds - 0.1 - rightGapSeconds;
+                    if (newEnd > maxEnd)
+                    {
+                        newNextStart -= newEnd - maxEnd;
+                        newEnd = maxEnd;
+                    }
+
+                    if (newEnd > _activeParagraph.StartTime.TotalSeconds + 0.1)
+                    {
+                        _activeParagraph.EndTime = TimeSpanExtensions.FromSecondsWholeMilliseconds(newEnd);
+                        _activeParagraphNext.SetStartTimeOnly(TimeSpanExtensions.FromSecondsWholeMilliseconds(newNextStart));
+                    }
                 }
 
                 break;

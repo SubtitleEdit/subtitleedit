@@ -338,6 +338,17 @@ internal static class ContainerSubtitleLoader
             tracks.Add(new LoadedTrack(subtitle, format, lang, track.TrackNumber, track.IsForced));
         }
 
+        // The file has subtitle tracks, but the filters (or OCR/decode failures) excluded
+        // every one of them. Fail loudly like the MP4/TS/MXF loaders do - a silent empty
+        // list would report a successful conversion of zero files.
+        if (tracks.Count == 0)
+        {
+            throw new InvalidOperationException(
+                $"No subtitle tracks matched in Matroska file: {filePath}" +
+                (options.TrackNumbers.Count > 0 ? $" (--track-number {string.Join(",", options.TrackNumbers)})" : string.Empty) +
+                (options.ForcedOnly ? " (--forced-only)" : string.Empty));
+        }
+
         return tracks;
     }
 
