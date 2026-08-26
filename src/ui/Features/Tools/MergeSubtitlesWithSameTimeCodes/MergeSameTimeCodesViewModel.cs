@@ -106,7 +106,14 @@ public partial class MergeSameTimeCodesViewModel : ObservableObject, IClosingCle
         var mergedText = string.Empty;
         for (var i = 1; i < _subtitles.Count; i++)
         {
-            p = _subtitles[i - 1];
+            // Anchor on the FIRST cue of the current group. Reassigning every iteration compared
+            // each cue with its immediate predecessor, so a run of slowly drifting cues - each
+            // within tolerance of the last but far from the first - chained transitively into a
+            // single subtitle spanning the whole run.
+            if (singleMergeSubtitles.Count == 0)
+            {
+                p = _subtitles[i - 1];
+            }
 
             var next = _subtitles[i];
             if (QualifiesForMerge(p, next, MaxMillisecondsDifference) && IsFixAllowed(p))

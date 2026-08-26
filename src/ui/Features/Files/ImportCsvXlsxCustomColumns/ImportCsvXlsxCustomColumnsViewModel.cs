@@ -337,20 +337,26 @@ public partial class ImportCsvXlsxCustomColumnsViewModel : ObservableObject
             return false;
         }
 
+        // Blank values carry no information either way - a single empty cell, or the blank row
+        // a trailing newline produces, used to veto the whole column and silently reinterpret
+        // HH:MM:SS:FF as milliseconds. Decide on the values that are actually present.
+        var considered = 0;
         foreach (var s in values)
         {
             if (string.IsNullOrWhiteSpace(s))
             {
-                return false;
+                continue;
             }
 
+            considered++;
             var parts = s.Split(TimeCode.TimeSplitChars, StringSplitOptions.RemoveEmptyEntries);
             if (parts.Length != 4 || parts[3].Trim().Length != 2)
             {
                 return false;
             }
         }
-        return true;
+
+        return considered > 0;
     }
 
     private static bool IsMillisecondsHeader(string header)
@@ -449,7 +455,17 @@ public partial class ImportCsvXlsxCustomColumnsViewModel : ObservableObject
                 lettered++;
             }
         }
-        return lettered >= 2;
+
+        // Two lettered cells alone is not evidence - an ordinary "JOHN | Hello there." data row
+        // has that, and consuming it as a header silently dropped the first subtitle. Require at
+        // least one cell that actually names a column we recognise; when nothing does, the row is
+        // treated as data (losing a cue is worse than showing an unmappable header as one).
+        if (lettered < 2)
+        {
+            return false;
+        }
+
+        return firstRow.Any(cell => GuessRoleFromHeader(cell ?? string.Empty) != CsvColumnRole.None);
     }
 
     private static CsvColumnRole GuessRoleFromHeader(string headerName)

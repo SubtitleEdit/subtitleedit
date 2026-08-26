@@ -377,6 +377,13 @@ public partial class SortByViewModel : ObservableObject, IClosingCleanup
     [RelayCommand]
     private void Ok()
     {
+        // Apply what the current criteria produce: the preview is rebuilt by a 500 ms timer, so
+        // clicking OK straight after adding a criterion applied the previous (or unsorted) order.
+        if (_dirty)
+        {
+            UpdatePreview();
+        }
+
         if (SortCriteria.Count > 0)
         {
             AllSubtitles.Clear();

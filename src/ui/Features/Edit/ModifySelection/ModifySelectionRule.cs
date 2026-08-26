@@ -107,6 +107,10 @@ public class ModifySelectionRule
                 RuleType = RuleType.RegEx,
                 Name = g.RegularExpression,
                 HasText = true,
+                // Without this the match-case box is hidden and "HasMatchCase && MatchCase" can
+                // never be true, so every pattern was compiled IgnoreCase - unlike find/replace
+                // and SE 4, where regex is case-sensitive.
+                HasMatchCase = true,
             },
             new()
             {

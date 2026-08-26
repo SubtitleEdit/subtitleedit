@@ -41,8 +41,6 @@ public class ExportCavena890Window : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
         
-        var buttonImport = UiUtil.MakeButton(Se.Language.General.Import, vm.OkCommand).WithRightAlignment();
-
         var labelTranslatedTitle = UiUtil.MakeLabel(Se.Language.File.Export.ExportCavenaTranslatedTitle);
         var textBoxTranslatedTitle = UiUtil.MakeTextBox(300, vm, nameof(vm.TranslatedTitle));
         
@@ -65,7 +63,6 @@ public class ExportCavena890Window : Window
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var panelButtons = UiUtil.MakeButtonBar( buttonOk, buttonCancel);
 
-        grid.Add(buttonImport, 0, 1);
         grid.Add(labelTranslatedTitle, 1, 0);
         grid.Add(textBoxTranslatedTitle, 1, 1);
         grid.Add(labelOriginalTitle, 2, 0);

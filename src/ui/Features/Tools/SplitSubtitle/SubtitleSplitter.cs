@@ -87,7 +87,10 @@ public static class SubtitleSplitter
         {
             var p = subtitle.Paragraphs[i];
             var size = HtmlUtil.RemoveHtmlTags(p.Text, true).Length;
-            if (currentSize + size > nextLimit + 4 && parts.Count < numberOfParts - 1)
+            // Never close an empty part: when the very first paragraph already exceeds the
+            // limit, pushing the untouched accumulator produced a 0-byte "Part1" file with all
+            // the content in Part2.
+            if (currentSize + size > nextLimit + 4 && parts.Count < numberOfParts - 1 && temp.Paragraphs.Count > 0)
             {
                 parts.Add(temp);
                 currentSize = size;
