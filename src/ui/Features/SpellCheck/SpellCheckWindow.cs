@@ -27,6 +27,30 @@ public class SpellCheckWindow : Window
             [!Label.ContentProperty] = new Binding(nameof(SpellCheckViewModel.LineText)) { Mode = BindingMode.OneWay }
         };
 
+        // Plays the line the current word is in, in the main window's video player, and pauses at
+        // its end - hidden when no video is loaded (the view model then gets no play hook). Mainly
+        // for STT output, where only the audio says what an unknown word should be (#14145).
+        var buttonPlay = UiUtil.MakeButton(Se.Language.General.PlayCurrent, vm.PlayCurrentLineCommand)
+            .WithIconLeft("fa-solid fa-play");
+        buttonPlay.VerticalAlignment = VerticalAlignment.Bottom;
+        buttonPlay.Margin = new Thickness(10, 0, 0, 2);
+        buttonPlay.Bind(Visual.IsVisibleProperty, new Binding(nameof(SpellCheckViewModel.IsPlayVisible)));
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(buttonPlay, Se.Language.SpellCheck.PlayCurrentLineHint);
+        }
+
+        var panelLine = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Bottom,
+            Children =
+            {
+                labelLine,
+                buttonPlay,
+            }
+        };
+
         var buttonEditWholeText = UiUtil.MakeButton(vm.EditWholeTextCommand, IconNames.Pencil, Se.Language.SpellCheck.EditWholeText);
         buttonEditWholeText.HorizontalAlignment = HorizontalAlignment.Right;
         buttonEditWholeText.VerticalAlignment = VerticalAlignment.Top;
@@ -89,7 +113,7 @@ public class SpellCheckWindow : Window
         };
 
 
-        grid.Add(labelLine, 0, 0);
+        grid.Add(panelLine, 0, 0);
         grid.Add(borderWholeText, 1, 0);
         grid.Add(panelButtons, 2, 0);
         grid.Add(buttonEditWholeText, 2, 0);

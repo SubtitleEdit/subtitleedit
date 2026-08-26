@@ -8116,7 +8116,8 @@ public partial class MainViewModel :
         // the detected language instead of overriding it.
         var result = await ShowDialogAsync<SpellCheckWindow, SpellCheckViewModel>(vm =>
         {
-            vm.Initialize(Subtitles, SelectedSubtitleIndex, this, _currentSpellCheckDictionary, _spellCheckSessionInProgress);
+            vm.Initialize(Subtitles, SelectedSubtitleIndex, this, _currentSpellCheckDictionary, _spellCheckSessionInProgress,
+                MakeLinePlayer(), StopReviewLinePlayback);
         });
 
         // Only an unfinished spell check leaves something to continue from, and only then is the
@@ -8572,6 +8573,31 @@ public partial class MainViewModel :
             }
 
             PlayLineAndPauseAtEnd(vp, lines[index]);
+        };
+    }
+
+    /// <summary>
+    /// Item-based variant of <see cref="MakeReviewLinePlayer"/> for dialogs that work on the
+    /// grid's own line objects (spell check) instead of a copy of the subtitle - no index mapping
+    /// is needed, so the hook cannot drift if lines move. Null when no video is loaded; the dialog
+    /// then hides its play button.
+    /// </summary>
+    private Action<SubtitleLineViewModel>? MakeLinePlayer()
+    {
+        if (string.IsNullOrEmpty(_videoFileName))
+        {
+            return null;
+        }
+
+        return item =>
+        {
+            var vp = GetVideoPlayerControl();
+            if (vp == null)
+            {
+                return;
+            }
+
+            PlayLineAndPauseAtEnd(vp, item);
         };
     }
 
