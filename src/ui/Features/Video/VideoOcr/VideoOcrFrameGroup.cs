@@ -21,6 +21,13 @@ public class VideoOcrFrameGroup
     /// <summary>OCR result for the representative frame.</summary>
     public string Text { get; set; } = string.Empty;
 
+    /// <summary>
+    /// The OCR engine's recognition confidence for <see cref="Text"/> (0-1). Engines that
+    /// report no confidence leave it at 1, so it only ever down-weights a group's text in
+    /// <see cref="VideoOcrLineBuilder"/>'s vote - never favors one engine over another.
+    /// </summary>
+    public double Confidence { get; set; } = 1.0;
+
     public double GetStartMs(double framesPerSecond)
     {
         return StartFrame * 1000.0 / framesPerSecond;

@@ -6,7 +6,7 @@ namespace UITests.Features;
 
 public class VideoOcrTests
 {
-    private static VideoOcrFrameGroup MakeGroup(int startFrame, int endFrame, string text, bool isBlank = false)
+    private static VideoOcrFrameGroup MakeGroup(int startFrame, int endFrame, string text, bool isBlank = false, double confidence = 1.0)
     {
         return new VideoOcrFrameGroup
         {
@@ -14,7 +14,40 @@ public class VideoOcrTests
             EndFrame = endFrame,
             Text = text,
             IsBlank = isBlank,
+            Confidence = confidence,
         };
+    }
+
+    [Fact]
+    public void Build_ConfidenceWeightsTheVote_ConfidentShortReadBeatsHesitantLongOne()
+    {
+        // "worng" was on screen longer, but the engine hesitated; the short confident
+        // observation must win the majority vote.
+        var groups = new List<VideoOcrFrameGroup>
+        {
+            MakeGroup(0, 5, "Hello worng", confidence: 0.4),
+            MakeGroup(6, 9, "Hello world", confidence: 0.99),
+        };
+
+        var lines = VideoOcrLineBuilder.Build(groups, 5, 80, 250, 250);
+
+        Assert.Single(lines);
+        Assert.Equal("Hello world", lines[0].Text);
+    }
+
+    [Fact]
+    public void Build_EqualConfidence_DurationStillDecides()
+    {
+        var groups = new List<VideoOcrFrameGroup>
+        {
+            MakeGroup(0, 5, "Hello world"),
+            MakeGroup(6, 9, "Hello worng"),
+        };
+
+        var lines = VideoOcrLineBuilder.Build(groups, 5, 80, 250, 250);
+
+        Assert.Single(lines);
+        Assert.Equal("Hello world", lines[0].Text);
     }
 
     [Theory]

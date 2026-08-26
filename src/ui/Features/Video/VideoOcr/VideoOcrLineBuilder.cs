@@ -61,17 +61,23 @@ public static class VideoOcrLineBuilder
             var startMs = group.GetStartMs(framesPerSecond);
             var endMs = group.GetEndMs(framesPerSecond);
 
+            // Weight each observation by how long its text was on screen, scaled by the
+            // engine's recognition confidence, so a long-lived misread with hesitant
+            // confidence can lose the vote to a shorter, confident read. The floor keeps
+            // a zero-confidence report from erasing the only observation of a subtitle.
+            var weight = (endMs - startMs) * Math.Clamp(group.Confidence, 0.1, 1.0);
+
             if (current != null &&
                 startMs - current.EndMs <= maxGapMs &&
                 GetTextSimilarityPercent(current.GetMajorityText(), text) >= textSimilarityPercent)
             {
                 current.EndMs = endMs;
-                current.AddText(text, endMs - startMs);
+                current.AddText(text, weight);
             }
             else
             {
                 current = new WorkLine { StartMs = startMs, EndMs = endMs };
-                current.AddText(text, endMs - startMs);
+                current.AddText(text, weight);
                 work.Add(current);
             }
         }

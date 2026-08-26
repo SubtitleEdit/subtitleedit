@@ -936,6 +936,7 @@ public partial class VideoOcrViewModel : ObservableObject
                 if (group != null)
                 {
                     group.Text = VideoOcrLineBuilder.CleanOcrResult(p.Text);
+                    group.Confidence = p.Confidence;
                     reportProgress();
                     addPreviewLine(group);
                 }
@@ -947,7 +948,13 @@ public partial class VideoOcrViewModel : ObservableObject
                 .Select((g, i) => new PaddleOcrBatchInput { Index = i, SourceFileName = g.RepresentativeFileName })
                 .ToList();
 
-            var paddleOcr = new PaddleOcr();
+            var paddleOcr = new PaddleOcr
+            {
+                // Low-confidence regions in a video frame are nearly always background
+                // clutter (scene text, logos) rather than subtitle text - same cut VideOCR
+                // applies. Only for Video OCR; the subtitle-bitmap OCR window keeps everything.
+                MinConfidencePercent = 75,
+            };
             await paddleOcr.OcrBatch(engineType, batch, language, mode, progress, cancellationToken);
             if (!string.IsNullOrEmpty(paddleOcr.Error) && ocrGroups.All(p => string.IsNullOrEmpty(p.Text)))
             {
