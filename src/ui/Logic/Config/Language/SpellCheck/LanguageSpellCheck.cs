@@ -33,6 +33,7 @@ public class LanguageSpellCheck
     public string ChooseSpellCheckDictionary { get; set; }
     public string PickLiveSpellCheckDictionary { get; set; }
     public string UndoX { get; set; }
+    public string PlayCurrentLineHint { get; set; }
     public string EditWholeText { get; set; }
     public string EditWholeTextTitle { get; set; }
     public string ContinueFromCurrentLine { get; set; }
@@ -76,6 +77,7 @@ public class LanguageSpellCheck
         ChooseSpellCheckDictionary = "Choose spell check dictionary";
         PickLiveSpellCheckDictionary = "Pick live spell check dictionary";
         UndoX = "Undo: {0}";
+        PlayCurrentLineHint = "Play the current line in the video player and pause at its end";
         EditWholeText = "Edit whole text";
         EditWholeTextTitle = "Spell check - Edit whole text";
         ContinueFromCurrentLine = "Continue spell check from the current line?\n\nYes = continue from the current line\nNo = start from the beginning";

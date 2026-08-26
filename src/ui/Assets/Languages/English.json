@@ -2108,6 +2108,7 @@
     "chooseSpellCheckDictionary": "Choose spell check dictionary",
     "pickLiveSpellCheckDictionary": "Pick live spell check dictionary",
     "undoX": "Undo: {0}",
+    "playCurrentLineHint": "Play the current line in the video player and pause at its end",
     "editWholeText": "Edit whole text",
     "editWholeTextTitle": "Spell check - Edit whole text",
     "continueFromCurrentLine": "Continue spell check from the current line?\n\nYes = continue from the current line\nNo = start from the beginning",
