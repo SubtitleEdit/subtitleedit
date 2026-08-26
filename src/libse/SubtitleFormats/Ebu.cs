@@ -794,20 +794,33 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (end > 0)
                 {
                     var f = line.Substring(i, end - i);
-                    if (f.Contains(" color=", StringComparison.OrdinalIgnoreCase))
+                    var colorStart = f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
+                    if (colorStart > 1)
                     {
-                        var colorStart = f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
-                        if (line.IndexOf('"', colorStart + " color=".Length + 1) > 0)
+                        // The attribute value may be double-quoted, single-quoted or bare
+                        // ("<font color=#ffff00>" is common in SubRip files). The old code
+                        // assumed a closing double quote and crashed the whole save on a
+                        // negative Substring length when there was none.
+                        var color = f.Substring(colorStart + " color=".Length).TrimStart();
+                        if (color.Length > 0 && (color[0] == '"' || color[0] == '\''))
                         {
-                            var colorEnd = f.IndexOf('"', colorStart + " color=".Length + 1);
-                            if (colorStart > 1)
+                            var quote = color[0];
+                            var closingQuote = color.IndexOf(quote, 1);
+                            color = closingQuote > 0 ? color.Substring(1, closingQuote - 1) : color.Substring(1);
+                        }
+                        else
+                        {
+                            var space = color.IndexOf(' ');
+                            if (space > 0)
                             {
-                                var color = f.Substring(colorStart + 7, colorEnd - (colorStart + 7));
-                                color = color.Trim('\'');
-                                color = color.Trim('\"');
-                                color = color.Trim('#');
-                                return GetNearestEbuColorCodeByte(color, encoding);
+                                color = color.Substring(0, space);
                             }
+                        }
+
+                        color = color.Trim().Trim('#');
+                        if (color.Length > 0)
+                        {
+                            return GetNearestEbuColorCodeByte(color, encoding);
                         }
                     }
                 }

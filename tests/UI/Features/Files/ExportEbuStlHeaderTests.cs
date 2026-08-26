@@ -230,6 +230,23 @@ public class ExportEbuStlHeaderTests
         Assert.Equal("23.976", reopened.SelectedFrameRate);
     }
 
+    // An unquoted font color plus a quotation mark later in the line crashed the writer with
+    // "length ('-13') must be a non-negative value", so File > Export > EBU STL silently produced
+    // no file at all (reported by email against 5.2.0-beta24).
+    [AvaloniaFact]
+    public void UnquotedFontColor_TeletextExport_WritesTheFile()
+    {
+        var subtitle = new Subtitle();
+        subtitle.Paragraphs.Add(new Paragraph("<font color=#ffff00>Er sagte \"Hallo\" zu mir</font>", 1000, 3000));
+
+        var bytes = SaveViaDialog(subtitle, vm =>
+        {
+            vm.SelectedDisplayStandardCode = vm.DisplayStandardCodes[1]; // Level-1 teletext
+        });
+
+        Assert.True(bytes.Length >= 1024 + 128);
+    }
+
     // The frame rate list is written with invariant decimal points, so it must not be read back
     // with the UI culture: in a comma-decimal culture "23.976" parsed as 23976 and the pick was
     // dropped on the floor.

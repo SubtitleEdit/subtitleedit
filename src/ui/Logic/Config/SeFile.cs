@@ -14,6 +14,7 @@ public class SeFile
     public SeExportImages ExportImages { get; set; } = new();
     public SeExportPlainText ExportPlainText { get; set; } = new();
     public SeDCinemaSmpte DCinemaSmpte { get; set; } = new();
+    public SeEbuSaveOptions EbuSaveOptions { get; set; } = new();
 
     public SeFile()
     {

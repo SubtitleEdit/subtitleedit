@@ -294,17 +294,28 @@ new("2F", "French - hearing impaired (VF-MAL)"),
             SelectedCharacterTable = CharacterTables[0];
             SelectedLanguageCode = LanguageCodes.FirstOrDefault(p => p.Language == "English");
             SelectedTimeCodeStatus = TimeCodeStatusList[1];
-            SelectedJustification = Justifications[1];
             SelectedRevisionNumber = 1;
             SelectedMaxCharactersPerRow = 40;
             SelectedMaxRow = 23;
             SelectedDiscSequenceNumber = 1;
             SelectedTotalNumberOfDiscs = 1;
-            SelectedTopAlignment = 0;
-            SelectedBottomAlignment = 2;
-            SelectedRowsAddByNewLine = 2;
-            UseBox = Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox;
-            UseDoubleHeight = Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight;
+
+            // Text-and-timing options do not fit in the STL header the dialog stores on the
+            // subtitle, so they are restored from the last choice - without this every reopen
+            // fell back to left-justified text and default margins (user report). Justification
+            // comes from the persisted settings; the layout values come from libse's Configuration,
+            // which the persisted settings seed at startup and a loaded STL file may override
+            // (box/double height are read off the file).
+            var justification = Se.Settings.File.EbuSaveOptions.JustificationCode;
+            SelectedJustification = justification >= 0 && justification < Justifications.Count
+                ? Justifications[justification]
+                : Justifications[2];
+            var subtitleSettings = Configuration.Settings.SubtitleSettings;
+            SelectedTopAlignment = TopAlignments.Contains(subtitleSettings.EbuStlMarginTop) ? subtitleSettings.EbuStlMarginTop : 0;
+            SelectedBottomAlignment = BottomAlignments.Contains(subtitleSettings.EbuStlMarginBottom) ? subtitleSettings.EbuStlMarginBottom : 2;
+            SelectedRowsAddByNewLine = RowsAddByNewLine.Contains(subtitleSettings.EbuStlNewLineRows) ? subtitleSettings.EbuStlNewLineRows : 2;
+            UseBox = subtitleSettings.EbuStlTeletextUseBox;
+            UseDoubleHeight = subtitleSettings.EbuStlTeletextUseDoubleHeight;
 
             // Keep the settings the file was written with instead of resetting them to the
             // defaults above every time the export dialog is opened.
@@ -414,6 +425,17 @@ new("2F", "French - hearing impaired (VF-MAL)"),
         Configuration.Settings.SubtitleSettings.EbuStlNewLineRows = SelectedRowsAddByNewLine ?? 1;
         Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox = UseBox;
         Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight = UseDoubleHeight;
+
+        // The libse Configuration above only lives for this session; the persisted settings are
+        // what Initialize restores from and what UpdateLibSeSettings re-applies on the next start.
+        var ebuOptions = Se.Settings.File.EbuSaveOptions;
+        ebuOptions.JustificationCode = JustificationCode;
+        ebuOptions.MarginTop = SelectedTopAlignment ?? 0;
+        ebuOptions.MarginBottom = SelectedBottomAlignment ?? 0;
+        ebuOptions.NewLineRows = SelectedRowsAddByNewLine ?? 1;
+        ebuOptions.TeletextUseBox = UseBox;
+        ebuOptions.TeletextUseDoubleHeight = UseDoubleHeight;
+        Se.SaveSettings();
 
         if (_subtitle != null)
         {
