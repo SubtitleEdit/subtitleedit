@@ -10,6 +10,7 @@ using Nikse.SubtitleEdit.Features.Ocr.CrispEmbedSettings;
 using Nikse.SubtitleEdit.Features.Ocr.Download;
 using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.SpellCheck;
 using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -28,6 +29,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 using Nikse.SubtitleEdit.UiLogic.Media;
+using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
+using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 namespace Nikse.SubtitleEdit.Features.Video.VideoOcr;
 
@@ -42,6 +45,9 @@ public partial class VideoOcrViewModel : ObservableObject
     [ObservableProperty] private bool _isCrispEmbedEngine;
     [ObservableProperty] private bool _isAppleVisionEngine;
     [ObservableProperty] private string _selectedEngineDescription;
+    [ObservableProperty] private ObservableCollection<SpellCheckDictionaryDisplay> _dictionaries;
+    [ObservableProperty] private SpellCheckDictionaryDisplay? _selectedDictionary;
+    [ObservableProperty] private bool _doFixOcrErrors;
     [ObservableProperty] private ObservableCollection<OcrLanguage2> _paddleLanguages;
     [ObservableProperty] private OcrLanguage2? _selectedPaddleLanguage;
     [ObservableProperty] private ObservableCollection<OcrLanguage2> _appleVisionLanguages;
@@ -94,6 +100,8 @@ public partial class VideoOcrViewModel : ObservableObject
     /// <summary>The video being OCR'ed - the window shows its file name in the title.</summary>
     public string VideoFileName => _videoFileName;
     private CancellationTokenSource _cancellationTokenSource = new();
+    private readonly ISpellCheckManager _spellCheckManager;
+    private readonly IOcrFixEngine _ocrFixEngine;
     private Process? _ffmpegProcess;
     private long _extractedFrames;
     private readonly DispatcherTimer _previewTimer;
@@ -110,9 +118,12 @@ public partial class VideoOcrViewModel : ObservableObject
 
     private readonly IWindowService _windowService;
 
-    public VideoOcrViewModel(IWindowService windowService)
+    public VideoOcrViewModel(IWindowService windowService, ISpellCheckManager spellCheckManager, IOcrFixEngine ocrFixEngine)
     {
         _windowService = windowService;
+        _spellCheckManager = spellCheckManager;
+        _ocrFixEngine = ocrFixEngine;
+        Dictionaries = new ObservableCollection<SpellCheckDictionaryDisplay>();
 
         Engines = new ObservableCollection<VideoOcrEngineItem>(VideoOcrEngineItem.GetEngines());
         SelectedEngine = Engines[0];
@@ -713,6 +724,8 @@ public partial class VideoOcrViewModel : ObservableObject
                 },
                 cancellationToken), cancellationToken);
 
+            InitializeOcrFixEngine(contextSubtitle: null);
+
             await RunOcr(groups, cancellationToken);
 
             var mergedLines = VideoOcrLineBuilder.Build(groups, FramesPerSecond, TextSimilarityPercent, MaxGapMs, MinDurationMs);
@@ -756,14 +769,18 @@ public partial class VideoOcrViewModel : ObservableObject
             var number = 1;
             foreach (var line in mergedLines)
             {
-                Lines.Add(new VideoOcrLineItem
+                var item = new VideoOcrLineItem
                 {
                     Number = number++,
                     StartTime = TimeSpan.FromMilliseconds(line.StartMs),
                     EndTime = TimeSpan.FromMilliseconds(line.EndMs),
                     Text = positionTag + line.Text,
-                });
+                };
+                item.PropertyChanged += LineItemPropertyChanged;
+                Lines.Add(item);
             }
+
+            ApplyOcrFixes();
 
             IsRunning = false;
             IsOkEnabled = Lines.Count > 0;
@@ -937,13 +954,15 @@ public partial class VideoOcrViewModel : ObservableObject
 
             Dispatcher.UIThread.Post(() =>
             {
-                Lines.Add(new VideoOcrLineItem
+                var item = new VideoOcrLineItem
                 {
                     Number = Lines.Count + 1,
                     StartTime = TimeSpan.FromMilliseconds(group.GetStartMs(FramesPerSecond)),
                     EndTime = TimeSpan.FromMilliseconds(group.GetEndMs(FramesPerSecond)),
                     Text = group.Text,
-                });
+                };
+                ApplyFixToItem(item, Lines.Count);
+                Lines.Add(item);
             });
         }
 
@@ -1233,6 +1252,65 @@ public partial class VideoOcrViewModel : ObservableObject
         MaxGapMs = Math.Clamp(settings.MaxGapMs, 0, 10_000);
         MinDurationMs = Math.Clamp(settings.MinDurationMs, 0, 10_000);
         AddAssaPositionTag = settings.AddAssaPositionTag;
+        DoFixOcrErrors = settings.FixOcrErrors;
+        LoadDictionaries(settings.DictionaryFileName);
+    }
+
+    /// <summary>
+    /// Fills the spell check dictionary combo: "- None -" first, then the downloaded
+    /// dictionaries. The saved pick wins; otherwise the first dictionary matching the
+    /// engine's OCR language is chosen, so post-processing works without any setup for
+    /// users who already have the dictionary.
+    /// </summary>
+    private void LoadDictionaries(string savedDictionaryFileName)
+    {
+        Dictionaries.Clear();
+        Dictionaries.Add(new SpellCheckDictionaryDisplay
+        {
+            Name = $"- {Se.Language.General.None} -",
+            DictionaryFileName = string.Empty,
+        });
+
+        List<SpellCheckDictionaryDisplay> languages;
+        try
+        {
+            languages = _spellCheckManager.GetDictionaryLanguages(Se.DictionariesFolder);
+        }
+        catch
+        {
+            languages = new List<SpellCheckDictionaryDisplay>();
+        }
+
+        Dictionaries.AddRange(LanguageFavoritesHelper.Order(languages, d => SpellCheckDictionaryDisplay.GetTwoLetterLanguageCode(d)));
+
+        if (!string.IsNullOrEmpty(savedDictionaryFileName))
+        {
+            SelectedDictionary = Dictionaries.FirstOrDefault(d => d.DictionaryFileName == savedDictionaryFileName);
+        }
+
+        SelectedDictionary ??= Dictionaries.FirstOrDefault(d =>
+                                   SpellCheckDictionaryDisplay.GetTwoLetterLanguageCode(d) == GetOcrTwoLetterLanguageCode())
+                               ?? Dictionaries[0];
+    }
+
+    /// <summary>The current engine's OCR language as a two-letter code, for the dictionary auto-pick.</summary>
+    private string GetOcrTwoLetterLanguageCode()
+    {
+        var engineType = SelectedEngine?.EngineType;
+        if (engineType is OcrEngineType.PaddleOcrStandalone or OcrEngineType.PaddleOcrPython)
+        {
+            var code = SelectedPaddleLanguage?.Code ?? "en";
+            return code.Length >= 2 ? code[..2] : "en";
+        }
+
+        if (engineType == OcrEngineType.AppleVision)
+        {
+            var code = SelectedAppleVisionLanguage?.Code ?? "en";
+            return code.Length >= 2 ? code[..2] : "en";
+        }
+
+        // The VLM engines take a language name ("English"); default to English.
+        return "en";
     }
 
     private void SaveSettings()
@@ -1261,6 +1339,8 @@ public partial class VideoOcrViewModel : ObservableObject
         settings.MaxGapMs = MaxGapMs;
         settings.MinDurationMs = MinDurationMs;
         settings.AddAssaPositionTag = AddAssaPositionTag;
+        settings.FixOcrErrors = DoFixOcrErrors;
+        settings.DictionaryFileName = SelectedDictionary?.DictionaryFileName ?? string.Empty;
 
         if (VideoWidth > 0 && VideoHeight > 0)
         {
@@ -1318,6 +1398,171 @@ public partial class VideoOcrViewModel : ObservableObject
     }
 
     /// <summary>Moves the preview to the given line's start time (double-click in the grid).</summary>
+    /// <summary>
+    /// Runs the OCR fix engine (replace lists + spell check) over the result lines: each
+    /// line's text is replaced by the fixed text, and lines with words the dictionary does
+    /// not know are marked so the table can tint them. No per-word prompting here - a video
+    /// run produces hundreds of lines, so unknown words are marked for in-place fixing
+    /// instead.
+    /// </summary>
+    internal void ApplyOcrFixes()
+    {
+        if (!_ocrFixEngine.IsLoaded() && Lines.Count > 0)
+        {
+            InitializeOcrFixEngine(contextSubtitle: null);
+        }
+
+        if (!_ocrFixEngine.IsLoaded())
+        {
+            return;
+        }
+
+        // Re-initialize with the full result as context so the engine's name lists and
+        // word statistics see the whole subtitle, then fix each line.
+        var contextSubtitle = new Subtitle();
+        foreach (var line in Lines)
+        {
+            contextSubtitle.Paragraphs.Add(new Paragraph(line.Text, line.StartTime.TotalMilliseconds, line.EndTime.TotalMilliseconds));
+        }
+
+        InitializeOcrFixEngine(contextSubtitle);
+        for (var i = 0; i < Lines.Count; i++)
+        {
+            ApplyFixToItem(Lines[i], i);
+        }
+    }
+
+    /// <summary>Loads the OCR fix engine for the chosen dictionary (or unloads it when the
+    /// fix is off / no dictionary is chosen). Runs before OCR starts, so lines are fixed and
+    /// colored as they appear.</summary>
+    private void InitializeOcrFixEngine(Subtitle? contextSubtitle)
+    {
+        if (!DoFixOcrErrors ||
+            SelectedDictionary is not { } dictionary ||
+            string.IsNullOrEmpty(dictionary.DictionaryFileName))
+        {
+            _ocrFixEngine.Unload();
+            return;
+        }
+
+        try
+        {
+            _ocrFixEngine.Initialize(contextSubtitle ?? new Subtitle(), dictionary.GetThreeLetterCode(), dictionary);
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Video OCR: could not initialize the OCR fix engine");
+        }
+    }
+
+    /// <summary>Runs one line through the fix engine: the fixed text replaces the raw OCR
+    /// text and the per-word result drives the coloring.</summary>
+    private void ApplyFixToItem(VideoOcrLineItem item, int index)
+    {
+        if (!_ocrFixEngine.IsLoaded())
+        {
+            return;
+        }
+
+        try
+        {
+            var result = _ocrFixEngine.FixOcrErrors(index, item.Text, doTryToGuessUnknownWords: false);
+            item.Text = result.GetText();
+            item.FixResult = result;
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Video OCR: fix engine failed on a line");
+        }
+    }
+
+    /// <summary>
+    /// Re-evaluates the coloring when a line's text changes (the Edit dialog, italic
+    /// toggle). Only the coloring is updated - the text is left exactly as written.
+    /// </summary>
+    private void LineItemPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName != nameof(VideoOcrLineItem.Text) ||
+            sender is not VideoOcrLineItem item ||
+            item.FixResult == null ||
+            !_ocrFixEngine.IsLoaded())
+        {
+            return;
+        }
+
+        try
+        {
+            var result = _ocrFixEngine.FixOcrErrors(Lines.IndexOf(item), item.Text, doTryToGuessUnknownWords: false);
+
+            // Only keep the per-word coloring when the engine's view of the line matches the
+            // text exactly - the cell renders the result's words, and a mismatch (the user
+            // deliberately typed something the engine would "fix") would display stale text.
+            item.FixResult = result.GetText() == item.Text ? result : null;
+        }
+        catch
+        {
+            // ignore - coloring is best-effort
+        }
+    }
+
+    /// <summary>Wraps the lines in italic tags - or unwraps them when every line is already italic.</summary>
+    internal static void ToggleItalic(List<VideoOcrLineItem> items)
+    {
+        if (items.Count == 0)
+        {
+            return;
+        }
+
+        var allItalic = items.All(p => IsFullyItalic(p.Text));
+        foreach (var item in items)
+        {
+            if (allItalic)
+            {
+                var text = item.Text.Trim();
+                item.Text = text[3..^4].Trim();
+            }
+            else if (!IsFullyItalic(item.Text))
+            {
+                item.Text = "<i>" + item.Text.Trim() + "</i>";
+            }
+        }
+    }
+
+    private static bool IsFullyItalic(string text)
+    {
+        var trimmed = text.Trim();
+        return trimmed.StartsWith("<i>", StringComparison.OrdinalIgnoreCase) &&
+               trimmed.EndsWith("</i>", StringComparison.OrdinalIgnoreCase) &&
+
+               // "<i>a</i> b <i>c</i>" starts and ends with tags but is not fully italic.
+               trimmed.IndexOf("</i>", StringComparison.OrdinalIgnoreCase) == trimmed.Length - 4;
+    }
+
+    /// <summary>Opens the text of a line in a small edit window (multi-line texts do not
+    /// edit comfortably inside a table row).</summary>
+    internal async Task EditLine(VideoOcrLineItem item)
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<Features.Shared.PromptTextBox.PromptTextBoxWindow,
+            Features.Shared.PromptTextBox.PromptTextBoxViewModel>(Window, viewModel =>
+        {
+            viewModel.Initialize(
+                string.Format(Se.Language.Video.VideoOcr.EditLineX, item.Number),
+                item.Text,
+                500,
+                80);
+        });
+
+        if (result.OkPressed)
+        {
+            item.Text = result.Text.Trim().Replace("\r\n", "\n").Replace('\r', '\n');
+        }
+    }
+
     internal void SeekPreview(VideoOcrLineItem item)
     {
         PreviewPositionSeconds = Math.Clamp(item.StartTime.TotalSeconds, 0, DurationSeconds);

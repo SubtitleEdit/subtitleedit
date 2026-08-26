@@ -25,6 +25,9 @@ public class LanguageVideoOcr
     public string NoLinesFoundMessage { get; set; }
     public string LinesFoundX { get; set; }
     public string RefiningTimingXY { get; set; }
+    public string FixOcrErrors { get; set; }
+    public string Dictionary { get; set; }
+    public string EditLineX { get; set; }
     public string PreviewPosition { get; set; }
     public string UnableToReadVideoTitle { get; set; }
     public string UnableToReadVideoMessage { get; set; }
@@ -60,6 +63,9 @@ public class LanguageVideoOcr
         NoLinesFoundMessage = "No text was found in the scan area - try adjusting the scan area, engine, or brightness minimum.";
         LinesFoundX = "{0} lines found";
         RefiningTimingXY = "Refining timing... {0}/{1}";
+        FixOcrErrors = "Fix OCR errors";
+        Dictionary = "Dictionary";
+        EditLineX = "Edit line {0}";
         PreviewPosition = "Preview position";
         UnableToReadVideoTitle = "Unable to read video";
         UnableToReadVideoMessage = "Could not read video info from: {0}";
