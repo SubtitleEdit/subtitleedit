@@ -1152,7 +1152,7 @@ public partial class VideoOcrViewModel : ObservableObject
         return await ocr(bitmap);
     }
 
-    private static async Task RunLlmOcr(
+    internal static async Task RunLlmOcr(
         List<VideoOcrFrameGroup> ocrGroups,
         Func<VideoOcrFrameGroup, Task<string>> ocr,
         Func<string> getError,
@@ -1166,6 +1166,32 @@ public partial class VideoOcrViewModel : ObservableObject
             cancellationToken.ThrowIfCancellationRequested();
 
             group.Text = VideoOcrLineBuilder.CleanOcrResult(await ocr(group));
+
+            // An empty result on a group the mask says holds text is often just an unlucky
+            // representative frame - e.g. white text drifting over a white wall mid-group -
+            // so try frames from other parts of the group before giving up. Measured: the
+            // one subtitle a 21-minute episode lost was read perfectly from the frame at
+            // three quarters of its group.
+            if (string.IsNullOrEmpty(group.Text) && group.EndFrame - group.StartFrame >= 2)
+            {
+                var span = group.EndFrame - group.StartFrame;
+                foreach (var alternateIndex in new[] { group.StartFrame + span * 3 / 4, group.StartFrame + span / 4 })
+                {
+                    var alternateFileName = group.GetSiblingFrameFileName(alternateIndex);
+                    if (alternateFileName == group.RepresentativeFileName || !File.Exists(alternateFileName))
+                    {
+                        continue;
+                    }
+
+                    cancellationToken.ThrowIfCancellationRequested();
+                    group.RepresentativeFileName = alternateFileName;
+                    group.Text = VideoOcrLineBuilder.CleanOcrResult(await ocr(group));
+                    if (!string.IsNullOrEmpty(group.Text))
+                    {
+                        break;
+                    }
+                }
+            }
 
             // Fail fast on a broken engine (wrong API key/URL) instead of grinding
             // through the whole video and reporting "no subtitles found".

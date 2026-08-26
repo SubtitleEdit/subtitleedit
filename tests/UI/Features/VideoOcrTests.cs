@@ -1,5 +1,8 @@
 using Nikse.SubtitleEdit.Features.Video.VideoOcr;
+using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Linq;
 
 namespace UITests.Features;
@@ -68,6 +71,72 @@ public class VideoOcrTests
         var lines = VideoOcrLineBuilder.Build(groups, 5, 80, 250, 250);
 
         Assert.Equal(2, lines.Count);
+    }
+
+    [Fact]
+    public async Task RunLlmOcr_EmptyResultOnLongGroup_RetriesOtherFramesOfTheGroup()
+    {
+        // The representative (middle) frame reads empty; the frame at 3/4 of the group
+        // reads fine - the group must end up with that text.
+        var folder = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "vocr_retry_" + Guid.NewGuid().ToString("N"));
+        System.IO.Directory.CreateDirectory(folder);
+        try
+        {
+            for (var i = 0; i <= 12; i++)
+            {
+                System.IO.File.WriteAllBytes(System.IO.Path.Combine(folder, $"img{i:000000}.jpg"), new byte[] { 1 });
+            }
+
+            var group = new VideoOcrFrameGroup
+            {
+                StartFrame = 0,
+                EndFrame = 12,
+                RepresentativeFileName = System.IO.Path.Combine(folder, "img000006.jpg"),
+            };
+
+            var asked = new List<string>();
+            await VideoOcrViewModel.RunLlmOcr(
+                new List<VideoOcrFrameGroup> { group },
+                g =>
+                {
+                    asked.Add(System.IO.Path.GetFileName(g.RepresentativeFileName));
+                    return Task.FromResult(g.RepresentativeFileName.EndsWith("img000009.jpg") ? "Found it" : string.Empty);
+                },
+                () => string.Empty,
+                () => { },
+                _ => { },
+                CancellationToken.None);
+
+            Assert.Equal("Found it", group.Text);
+            Assert.Equal(new[] { "img000006.jpg", "img000009.jpg" }, asked);
+        }
+        finally
+        {
+            System.IO.Directory.Delete(folder, true);
+        }
+    }
+
+    [Fact]
+    public async Task RunLlmOcr_EmptyResultOnShortGroup_NoRetry()
+    {
+        var group = new VideoOcrFrameGroup
+        {
+            StartFrame = 5,
+            EndFrame = 6, // one coarse step - nothing else to try
+            RepresentativeFileName = "img000005.jpg",
+        };
+
+        var calls = 0;
+        await VideoOcrViewModel.RunLlmOcr(
+            new List<VideoOcrFrameGroup> { group },
+            _ => { calls++; return Task.FromResult(string.Empty); },
+            () => string.Empty,
+            () => { },
+            _ => { },
+            CancellationToken.None);
+
+        Assert.Equal(1, calls);
+        Assert.Equal(string.Empty, group.Text);
     }
 
     [Theory]
