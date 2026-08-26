@@ -28,6 +28,16 @@ public class VideoOcrFrameGroup
     /// </summary>
     public double Confidence { get; set; } = 1.0;
 
+    /// <summary>
+    /// File name of another sampled frame belonging to this group, by its 0-based frame
+    /// index (the extraction writes "img000000.jpg" ... into one folder).
+    /// </summary>
+    public string GetSiblingFrameFileName(int frameIndex)
+    {
+        var folder = System.IO.Path.GetDirectoryName(RepresentativeFileName) ?? string.Empty;
+        return System.IO.Path.Combine(folder, $"img{frameIndex:000000}.jpg");
+    }
+
     public double GetStartMs(double framesPerSecond)
     {
         return StartFrame * 1000.0 / framesPerSecond;

@@ -1050,14 +1050,14 @@ public partial class VideoOcrViewModel : ObservableObject
             using var ollamaOcr = new OllamaOcr(Se.Settings.Ocr.OllamaOcrTimeoutMinutes);
             await RunLlmOcr(ocrGroups, group => OcrWithBitmap(group, bitmap =>
                     ollamaOcr.Ocr(bitmap, OllamaUrl, OllamaModel, OllamaLanguage, cancellationToken)),
-                () => ollamaOcr.Error, reportProgress, addPreviewLine, cancellationToken);
+                () => ollamaOcr.Error, reportProgress, addPreviewLine, cancellationToken, CountUnknownWords);
         }
         else if (engineType == OcrEngineType.Glm)
         {
             var glmOcr = new GlmOcr(GlmApiKey);
             await RunLlmOcr(ocrGroups, group =>
                     glmOcr.Ocr(group.RepresentativeFileName, GlmUrl, GlmModel, GlmLanguage, cancellationToken),
-                () => glmOcr.Error, reportProgress, addPreviewLine, cancellationToken);
+                () => glmOcr.Error, reportProgress, addPreviewLine, cancellationToken, CountUnknownWords);
         }
         else if (engineType == OcrEngineType.LlamaCpp)
         {
@@ -1069,7 +1069,7 @@ public partial class VideoOcrViewModel : ObservableObject
             var prompt = Se.Settings.Ocr.LlamaCppOcrPrompt;
             await RunLlmOcr(ocrGroups, group => OcrWithBitmap(group, bitmap =>
                     llamaCppOcr.Ocr(bitmap, url, modelName, LlamaCppLanguage, prompt, cancellationToken)),
-                () => llamaCppOcr.Error, reportProgress, addPreviewLine, cancellationToken);
+                () => llamaCppOcr.Error, reportProgress, addPreviewLine, cancellationToken, CountUnknownWords);
         }
         else if (engineType == OcrEngineType.CrispEmbed)
         {
@@ -1085,7 +1085,7 @@ public partial class VideoOcrViewModel : ObservableObject
             var brightnessMinimum = BrightnessMinimum;
             await RunLlmOcr(ocrGroups,
                 group => Task.Run(() => OcrFrameWithAppleVision(group, languageCode, brightnessMinimum, cancellationToken), cancellationToken),
-                () => string.Empty, reportProgress, addPreviewLine, cancellationToken);
+                () => string.Empty, reportProgress, addPreviewLine, cancellationToken, CountUnknownWords);
         }
     }
 
@@ -1138,7 +1138,7 @@ public partial class VideoOcrViewModel : ObservableObject
         }
 
         await RunLlmOcr(ocrGroups, group => OcrWithBitmap(group, bitmap => engine.Ocr(bitmap, cancellationToken)),
-            () => engine.Error, reportProgress, addPreviewLine, cancellationToken);
+            () => engine.Error, reportProgress, addPreviewLine, cancellationToken, CountUnknownWords);
     }
 
     private static async Task<string> OcrWithBitmap(VideoOcrFrameGroup group, Func<SKBitmap, Task<string>> ocr)
@@ -1152,13 +1152,14 @@ public partial class VideoOcrViewModel : ObservableObject
         return await ocr(bitmap);
     }
 
-    private static async Task RunLlmOcr(
+    internal static async Task RunLlmOcr(
         List<VideoOcrFrameGroup> ocrGroups,
         Func<VideoOcrFrameGroup, Task<string>> ocr,
         Func<string> getError,
         Action reportProgress,
         Action<VideoOcrFrameGroup> addPreviewLine,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        Func<string, int>? countUnknownWords = null)
     {
         var isFirst = true;
         foreach (var group in ocrGroups)
@@ -1166,6 +1167,59 @@ public partial class VideoOcrViewModel : ObservableObject
             cancellationToken.ThrowIfCancellationRequested();
 
             group.Text = VideoOcrLineBuilder.CleanOcrResult(await ocr(group));
+
+            // An empty result on a group the mask says holds text is often just an unlucky
+            // representative frame - e.g. white text drifting over a white wall mid-group -
+            // so try frames from other parts of the group before giving up. Measured: the
+            // one subtitle a 21-minute episode lost was read perfectly from the frame at
+            // three quarters of its group.
+            if (string.IsNullOrEmpty(group.Text) && group.EndFrame - group.StartFrame >= 2)
+            {
+                var span = group.EndFrame - group.StartFrame;
+                foreach (var alternateIndex in new[] { group.StartFrame + span * 3 / 4, group.StartFrame + span / 4 })
+                {
+                    var alternateFileName = group.GetSiblingFrameFileName(alternateIndex);
+                    if (alternateFileName == group.RepresentativeFileName || !File.Exists(alternateFileName))
+                    {
+                        continue;
+                    }
+
+                    cancellationToken.ThrowIfCancellationRequested();
+                    group.RepresentativeFileName = alternateFileName;
+                    group.Text = VideoOcrLineBuilder.CleanOcrResult(await ocr(group));
+                    if (!string.IsNullOrEmpty(group.Text))
+                    {
+                        break;
+                    }
+                }
+            }
+            else if (!string.IsNullOrEmpty(group.Text) && group.EndFrame - group.StartFrame >= 2)
+            {
+                // Verify a non-empty read against a second frame of the group. Real subtitle
+                // text is stable across the group's frames, so the two reads agree apart from
+                // OCR jitter - while hallucinated ghosts (a vision model inventing text from a
+                // logo or scoreboard) come out different on every frame. On disagreement the
+                // longer read wins when it is substantial - a real line polluted by changing
+                // scene text (rolling credits) must survive, as must long text whose verify
+                // frame happened to be unreadable - and anything short is dropped as a ghost.
+                var verified = await OcrVerificationFrame(group, ocr, cancellationToken);
+                if (verified != null)
+                {
+                    var similarity = VideoOcrLineBuilder.GetTextSimilarityPercent(group.Text, verified);
+                    if (similarity < TextSimilarityDefaultPercent)
+                    {
+                        var best = CountLettersAndDigits(verified) > CountLettersAndDigits(group.Text) ? verified : group.Text;
+                        group.Text = CountLettersAndDigits(best) >= 10 ? best : string.Empty;
+                    }
+                    else if (verified != group.Text && countUnknownWords != null &&
+                             countUnknownWords(verified) < countUnknownWords(group.Text))
+                    {
+                        // The two reads agree apart from OCR jitter ("I'think" / "I think") -
+                        // the spell check arbitrates: the read the dictionary knows more of wins.
+                        group.Text = verified;
+                    }
+                }
+            }
 
             // Fail fast on a broken engine (wrong API key/URL) instead of grinding
             // through the whole video and reporting "no subtitles found".
@@ -1179,6 +1233,51 @@ public partial class VideoOcrViewModel : ObservableObject
             reportProgress();
             addPreviewLine(group);
         }
+    }
+
+    // The verification threshold uses the default text similarity rather than the user's
+    // merge setting: verification compares two reads of the SAME frame content, where only
+    // OCR jitter separates them, so the bar is independent of how aggressively the user
+    // wants consecutive lines merged.
+    private const int TextSimilarityDefaultPercent = 80;
+
+    private static async Task<string?> OcrVerificationFrame(
+        VideoOcrFrameGroup group,
+        Func<VideoOcrFrameGroup, Task<string>> ocr,
+        CancellationToken cancellationToken)
+    {
+        var span = group.EndFrame - group.StartFrame;
+        foreach (var alternateIndex in new[] { group.StartFrame + span * 3 / 4, group.StartFrame + span / 4 })
+        {
+            var alternateFileName = group.GetSiblingFrameFileName(alternateIndex);
+            if (alternateFileName == group.RepresentativeFileName || !File.Exists(alternateFileName))
+            {
+                continue;
+            }
+
+            cancellationToken.ThrowIfCancellationRequested();
+            var original = group.RepresentativeFileName;
+            group.RepresentativeFileName = alternateFileName;
+            var text = VideoOcrLineBuilder.CleanOcrResult(await ocr(group));
+            group.RepresentativeFileName = original;
+            return text;
+        }
+
+        return null;
+    }
+
+    private static int CountLettersAndDigits(string text)
+    {
+        var count = 0;
+        foreach (var ch in text)
+        {
+            if (char.IsLetterOrDigit(ch))
+            {
+                count++;
+            }
+        }
+
+        return count;
     }
 
     private async Task<bool> EnsureEngineIsAvailable()
@@ -1466,13 +1565,46 @@ public partial class VideoOcrViewModel : ObservableObject
 
         try
         {
-            var result = _ocrFixEngine.FixOcrErrors(index, item.Text, doTryToGuessUnknownWords: false);
+            OcrFixLineResult result;
+            lock (_ocrFixEngineLock)
+            {
+                result = _ocrFixEngine.FixOcrErrors(index, item.Text, doTryToGuessUnknownWords: false);
+            }
+
             item.Text = result.GetText();
             item.FixResult = result;
         }
         catch (Exception exception)
         {
             Se.LogError(exception, "Video OCR: fix engine failed on a line");
+        }
+    }
+
+    // The fix engine is used both from the OCR worker (spell-check arbitration between two
+    // frame reads) and from the UI thread (preview-line fixes), so its calls are serialized.
+    private readonly object _ocrFixEngineLock = new();
+
+    /// <summary>How many words of the text the spell check does not know - the tiebreak
+    /// between two nearly identical frame reads. 0 when no dictionary is loaded, so the
+    /// arbitration never favors either read without a spell check behind it.</summary>
+    private int CountUnknownWords(string text)
+    {
+        if (!_ocrFixEngine.IsLoaded())
+        {
+            return 0;
+        }
+
+        try
+        {
+            lock (_ocrFixEngineLock)
+            {
+                return _ocrFixEngine.FixOcrErrors(0, text, doTryToGuessUnknownWords: false)
+                    .Words.Count(w => w.IsSpellCheckedOk == false);
+            }
+        }
+        catch
+        {
+            return 0;
         }
     }
 
@@ -1492,7 +1624,11 @@ public partial class VideoOcrViewModel : ObservableObject
 
         try
         {
-            var result = _ocrFixEngine.FixOcrErrors(Lines.IndexOf(item), item.Text, doTryToGuessUnknownWords: false);
+            OcrFixLineResult result;
+            lock (_ocrFixEngineLock)
+            {
+                result = _ocrFixEngine.FixOcrErrors(Lines.IndexOf(item), item.Text, doTryToGuessUnknownWords: false);
+            }
 
             // Only keep the per-word coloring when the engine's view of the line matches the
             // text exactly - the cell renders the result's words, and a mismatch (the user
