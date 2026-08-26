@@ -276,7 +276,7 @@ public partial class OcrViewModel : ObservableObject
         _binaryOcrAddHistoryManager = new BinaryOcrAddHistoryManager();
         _cancellationTokenSource = new CancellationTokenSource();
         TextBoxFontFamily = !string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName)
-            ? new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName)
+            ? FontFamilyHelper.Make(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName)
             : FontFamily.Default;
         TextBoxFontSize = (decimal)Se.Settings.Appearance.SubtitleTextBoxFontSize;
         TextBoxFontWeight = Se.Settings.Appearance.SubtitleTextBoxFontBold ? FontWeight.Bold : FontWeight.Regular;
@@ -328,7 +328,7 @@ public partial class OcrViewModel : ObservableObject
                 _textBoxFontNamePersisted = ocr.TextBoxFontName;
                 TextBoxFontSize = ocr.TextBoxFontSize;
                 TextBoxFontWeight = ocr.TextBoxFontBold ? FontWeight.Bold : FontWeight.Regular;
-                try { TextBoxFontFamily = new FontFamily(ocr.TextBoxFontName); }
+                try { TextBoxFontFamily = FontFamilyHelper.Make(ocr.TextBoxFontName); }
                 catch { /* ignored */ }
             }
 
@@ -670,7 +670,7 @@ public partial class OcrViewModel : ObservableObject
 
         _textBoxFontIsCustom = true;
         _textBoxFontNamePersisted = result.SelectedFontName;
-        TextBoxFontFamily = new FontFamily(result.SelectedFontName);
+        TextBoxFontFamily = FontFamilyHelper.Make(result.SelectedFontName);
         TextBoxFontSize = result.FontSize;
         TextBoxFontWeight = result.IsFontBold ? FontWeight.Bold : FontWeight.Regular;
     }

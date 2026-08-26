@@ -166,6 +166,36 @@ namespace Nikse.SubtitleEdit
                             }
                         });
                 }
+                else if (OperatingSystem.IsWindows())
+                {
+                    // Windows was the only platform left without an explicit fallback chain, so a
+                    // glyph the current font lacks had to be resolved by Skia/DirectWrite alone -
+                    // which does not always answer for a run that also carries a style variant. That
+                    // is how italic Arabic in the subtitle grid ("Show formatting" renders {\i1} as
+                    // a real italic run) came out as empty boxes while the same line was fine in the
+                    // text box, waveform and video (issue #14150). Naming the families explicitly
+                    // makes Avalonia resolve the missing glyph itself, before it ever gets there.
+                    // Segoe UI covers Latin/Greek/Cyrillic/Arabic/Hebrew/Thai; the rest fill in the
+                    // scripts it has no glyphs for. A fallback is only consulted for a character the
+                    // requested font cannot render, so this adds candidates without changing any text
+                    // that already renders.
+                    appBuilder = appBuilder
+                        .With(new FontManagerOptions
+                        {
+                            FontFallbacks = new[]
+                            {
+                                new FontFallback { FontFamily = new FontFamily("Segoe UI") },
+                                new FontFallback { FontFamily = new FontFamily("Tahoma") },
+                                new FontFallback { FontFamily = new FontFamily("Arial") },
+                                new FontFallback { FontFamily = new FontFamily("Nirmala UI") },
+                                new FontFallback { FontFamily = new FontFamily("Microsoft YaHei") },
+                                new FontFallback { FontFamily = new FontFamily("Microsoft JhengHei") },
+                                new FontFallback { FontFamily = new FontFamily("Yu Gothic UI") },
+                                new FontFallback { FontFamily = new FontFamily("Malgun Gothic") },
+                                new FontFallback { FontFamily = new FontFamily("Segoe UI Emoji") },
+                            }
+                        });
+                }
 
                 appBuilder = appBuilder
                     .With(new X11PlatformOptions

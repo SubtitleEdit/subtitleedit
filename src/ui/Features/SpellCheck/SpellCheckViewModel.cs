@@ -1172,7 +1172,7 @@ public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
         var fontName = Se.Settings.Appearance.SubtitleTextBoxAndGridFontName;
         if (!string.IsNullOrEmpty(fontName))
         {
-            textBlock.FontFamily = new FontFamily(fontName);
+            textBlock.FontFamily = FontFamilyHelper.Make(fontName);
         }
         var idx = word.Index;
         if (idx > 0)
@@ -1180,7 +1180,7 @@ public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
             var run = new Run(paragraph.Text.Substring(0, idx));
             if (!string.IsNullOrEmpty(fontName))
             {
-                run.FontFamily = new FontFamily(fontName);
+                run.FontFamily = FontFamilyHelper.Make(fontName);
             }
             textBlock.Inlines!.Add(run);
         }
@@ -1193,7 +1193,7 @@ public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
         };
         if (!string.IsNullOrEmpty(fontName))
         {
-            highlightRun.FontFamily = new FontFamily(fontName);
+            highlightRun.FontFamily = FontFamilyHelper.Make(fontName);
         }
         textBlock.Inlines!.Add(highlightRun);
 
@@ -1202,7 +1202,7 @@ public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
             var run = new Run(paragraph.Text.Substring(idx + word.Text.Length));
             if (!string.IsNullOrEmpty(fontName))
             {
-                run.FontFamily = new FontFamily(fontName);
+                run.FontFamily = FontFamilyHelper.Make(fontName);
             }
             textBlock.Inlines!.Add(run);
         }
