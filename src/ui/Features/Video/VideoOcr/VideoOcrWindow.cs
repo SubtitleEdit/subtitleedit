@@ -25,7 +25,11 @@ public class VideoOcrWindow : Window
     public VideoOcrWindow(VideoOcrViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Video.VideoOcr.Title;
+        // The view model is initialized with the video before the window is built, so the
+        // file being OCR'ed can go straight into the title.
+        Title = string.IsNullOrEmpty(vm.VideoFileName)
+            ? Se.Language.Video.VideoOcr.Title
+            : $"{Se.Language.Video.VideoOcr.Title} - {System.IO.Path.GetFileName(vm.VideoFileName)}";
         CanResize = true;
         Width = 1100;
         Height = 800;
@@ -160,10 +164,20 @@ public class VideoOcrWindow : Window
                 UiUtil.MakeButton(Se.Language.Video.VideoOcr.BottomThird, vm.SetScanAreaBottomThirdCommand),
                 UiUtil.MakeButton(Se.Language.Video.VideoOcr.BottomHalf, vm.SetScanAreaBottomHalfCommand),
                 UiUtil.MakeButton(Se.Language.Video.VideoOcr.FullFrame, vm.SetScanAreaFullFrameCommand),
-                UiUtil.MakeButton(Se.Language.Video.VideoOcr.TestOcr, vm.TestOcrCommand)
-                    .WithBindEnabled(nameof(vm.IsRunning), new InverseBooleanConverter())
-                    .WithMarginLeft(10),
                 scanAreaText,
+            },
+        };
+
+        // On its own row: sharing the scan-area row squeezed that row's buttons once the
+        // preview column narrowed.
+        var testRow = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 5,
+            Children =
+            {
+                UiUtil.MakeButton(Se.Language.Video.VideoOcr.TestOcr, vm.TestOcrCommand)
+                    .WithBindEnabled(nameof(vm.IsRunning), new InverseBooleanConverter()),
             },
         };
 
@@ -174,12 +188,14 @@ public class VideoOcrWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             RowSpacing = 5,
         };
         grid.Add(imageArea, 0, 0);
         grid.Add(sliderRow, 1, 0);
         grid.Add(scanAreaRow, 2, 0);
+        grid.Add(testRow, 3, 0);
 
         return UiUtil.MakeBorderForControl(grid);
     }
@@ -196,7 +212,11 @@ public class VideoOcrWindow : Window
         {
             Orientation = Orientation.Vertical,
             Spacing = 4,
-            Width = 350,
+            Width = 390,
+
+            // Gutter between the controls and the scrollbar - without it the bar sits
+            // flush against the numeric up/downs.
+            Margin = new Thickness(0, 0, 12, 0),
         };
 
         // The engine picker, plus a settings button for the one engine here with something to
@@ -325,6 +345,10 @@ public class VideoOcrWindow : Window
         {
             Content = panel,
             HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled,
+
+            // Give the scrollbar its own layout lane: as an auto-hiding overlay it is drawn
+            // on top of the content and covered the rightmost controls.
+            AllowAutoHide = false,
         };
 
         return UiUtil.MakeBorderForControl(scrollViewer);
@@ -537,22 +561,26 @@ public class VideoOcrWindow : Window
 
         var statusText = new TextBlock
         {
-            Margin = new Thickness(5, 20, 0, 0),
+            Margin = new Thickness(5, 0, 0, 0),
             DataContext = vm,
         };
         statusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ProgressText)));
 
+        // Bar and text each get their own row - overlaying them in one cell with a fixed
+        // top margin on the text made the two collide.
         var grid = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // progress bar
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // status text
             },
+            RowSpacing = 3,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
         grid.Add(progressBar, 0, 0);
-        grid.Add(statusText, 0, 0);
+        grid.Add(statusText, 1, 0);
 
         return grid;
     }
