@@ -11,6 +11,7 @@ using Nikse.SubtitleEdit.Features.Ocr.Download;
 using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.SpellCheck;
+using Nikse.SubtitleEdit.Features.SpellCheck.GetDictionaries;
 using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -1390,6 +1391,34 @@ public partial class VideoOcrViewModel : ObservableObject
         SelectedDictionary ??= Dictionaries.FirstOrDefault(d =>
                                    SpellCheckDictionaryDisplay.GetTwoLetterLanguageCode(d) == GetOcrTwoLetterLanguageCode())
                                ?? Dictionaries[0];
+    }
+
+    [RelayCommand]
+    private async Task DownloadDictionary()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<GetDictionariesWindow, GetDictionariesViewModel>(Window);
+        if (result.OkPressed && result.SelectedDictionary != null)
+        {
+            LoadDictionaries(Se.Settings.Video.VideoOcr.DictionaryFileName);
+
+            // Select the just-downloaded dictionary by its file name - matching the display
+            // name fails on non-English UIs (the list shows the localized culture name).
+            var downloadedFileName = Path.GetFileName(result.SpellCheckDictionary?.DictionaryFileName ?? string.Empty);
+            SelectedDictionary =
+                (!string.IsNullOrEmpty(downloadedFileName)
+                    ? Dictionaries.FirstOrDefault(d => string.Equals(
+                        Path.GetFileName(d.DictionaryFileName), downloadedFileName, StringComparison.OrdinalIgnoreCase))
+                    : null)
+                ?? Dictionaries.FirstOrDefault(d =>
+                    d.Name.Contains(result.SelectedDictionary.EnglishName, StringComparison.OrdinalIgnoreCase) ||
+                    d.Name.Contains(result.SelectedDictionary.NativeName, StringComparison.OrdinalIgnoreCase))
+                ?? SelectedDictionary;
+        }
     }
 
     /// <summary>The current engine's OCR language as a two-letter code, for the dictionary auto-pick.</summary>

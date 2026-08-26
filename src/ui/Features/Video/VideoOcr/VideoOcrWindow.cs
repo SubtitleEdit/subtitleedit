@@ -81,6 +81,8 @@ public class VideoOcrWindow : Window
         Content = grid;
 
         Activated += delegate { _comboEngine?.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Loaded += (s, e) => vm.OnLoaded();
         Closing += (s, e) => vm.OnClosing();
         AddHandler(KeyDownEvent, vm.OnKeyDownHandler, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);
@@ -323,28 +325,50 @@ public class VideoOcrWindow : Window
         panel.Children.Add(MakeHeader(Se.Language.Video.VideoOcr.Scan));
         panel.Children.Add(MakeSettingRow(
             Se.Language.Video.VideoOcr.FramesPerSecond,
-            UiUtil.MakeNumericUpDownInt(1, 30, 5, 120, vm, nameof(vm.FramesPerSecond))));
+            UiUtil.MakeNumericUpDownInt(1, 30, 5, 120, vm, nameof(vm.FramesPerSecond)),
+            Se.Language.Video.VideoOcr.FramesPerSecondHint));
         panel.Children.Add(MakeSettingRow(
             Se.Language.Video.VideoOcr.TextBrightnessMinimum,
-            UiUtil.MakeNumericUpDownInt(0, 255, 190, 120, vm, nameof(vm.BrightnessMinimum))));
+            UiUtil.MakeNumericUpDownInt(0, 255, 190, 120, vm, nameof(vm.BrightnessMinimum)),
+            Se.Language.Video.VideoOcr.TextBrightnessMinimumHint));
 
         // Post-processing settings
         panel.Children.Add(MakeHeader(Se.Language.Video.VideoOcr.PostProcessing));
         panel.Children.Add(MakeSettingRow(
             Se.Language.Video.VideoOcr.TextSimilarityPercent,
-            UiUtil.MakeNumericUpDownInt(0, 100, 80, 120, vm, nameof(vm.TextSimilarityPercent))));
+            UiUtil.MakeNumericUpDownInt(0, 100, 80, 120, vm, nameof(vm.TextSimilarityPercent)),
+            Se.Language.Video.VideoOcr.TextSimilarityPercentHint));
         panel.Children.Add(MakeSettingRow(
             Se.Language.Video.VideoOcr.MaxGapMs,
-            UiUtil.MakeNumericUpDownInt(0, 10_000, 250, 120, vm, nameof(vm.MaxGapMs))));
+            UiUtil.MakeNumericUpDownInt(0, 10_000, 250, 120, vm, nameof(vm.MaxGapMs)),
+            Se.Language.Video.VideoOcr.MaxGapHint));
         panel.Children.Add(MakeSettingRow(
             Se.Language.Video.VideoOcr.MinDurationMs,
-            UiUtil.MakeNumericUpDownInt(0, 10_000, 250, 120, vm, nameof(vm.MinDurationMs))));
+            UiUtil.MakeNumericUpDownInt(0, 10_000, 250, 120, vm, nameof(vm.MinDurationMs)),
+            Se.Language.Video.VideoOcr.MinDurationHint));
         panel.Children.Add(UiUtil.MakeCheckBox(Se.Language.Video.VideoOcr.AddAssaPositionTag, vm, nameof(vm.AddAssaPositionTag)));
         panel.Children.Add(UiUtil.MakeCheckBox(Se.Language.Video.VideoOcr.FixOcrErrors, vm, nameof(vm.DoFixOcrErrors)));
+        var buttonDownloadDictionary = UiUtil.MakeButton("...", vm.DownloadDictionaryCommand)
+            .WithBindEnabled(nameof(vm.DoFixOcrErrors));
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(buttonDownloadDictionary, Se.Language.Video.VideoOcr.DownloadDictionaryHint);
+        }
+
         panel.Children.Add(MakeSettingRow(
             Se.Language.Video.VideoOcr.Dictionary,
-            UiUtil.MakeComboBox(vm.Dictionaries, vm, nameof(vm.SelectedDictionary)).WithWidth(220)
-                .WithBindEnabled(nameof(vm.DoFixOcrErrors))));
+            new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Spacing = 3,
+                Children =
+                {
+                    UiUtil.MakeComboBox(vm.Dictionaries, vm, nameof(vm.SelectedDictionary)).WithWidth(190)
+                        .WithBindEnabled(nameof(vm.DoFixOcrErrors)),
+                    buttonDownloadDictionary,
+                },
+            },
+            Se.Language.Video.VideoOcr.DictionaryHint));
 
         var scrollViewer = new ScrollViewer
         {
@@ -444,7 +468,7 @@ public class VideoOcrWindow : Window
         };
     }
 
-    private static Grid MakeSettingRow(string label, Control control)
+    private static Grid MakeSettingRow(string label, Control control, string? hint = null)
     {
         var grid = new Grid
         {
@@ -456,6 +480,12 @@ public class VideoOcrWindow : Window
         };
         grid.Add(UiUtil.MakeLabel(label), 0, 0);
         grid.Add(control, 0, 1);
+
+        if (hint != null && Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(grid, hint);
+        }
+
         return grid;
     }
 
