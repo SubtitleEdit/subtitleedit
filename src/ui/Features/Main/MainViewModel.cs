@@ -1212,6 +1212,10 @@ public partial class MainViewModel :
 
     private void LoadShortcuts()
     {
+        // Clear first, like ReloadShortcuts does: RebuildLookupTable keeps the
+        // first-registered entry for a given chord, so re-registering without clearing
+        // leaves the *old* binding winning after Apply (and doubles the list every time).
+        _shortcutManager.ClearShortcuts();
         Se.Settings.InitializeMainShortcuts(this);
         foreach (var shortCut in ShortcutsMain.GetUsedShortcuts(this))
         {
@@ -3576,7 +3580,14 @@ public partial class MainViewModel :
                 return;
             }
 
-            await SubtitleOpen(recentFile.SubtitleFileName, recentFile.VideoFileName, recentFile.SelectedLine, desiredAudioTrackId: recentFile.AudioTrack);
+            // Reopen with the encoding the file was last opened with - it is stored on the
+            // recent-file entry for exactly this, but nothing ever read it back, so a file
+            // opened as e.g. Windows-1252 came back auto-detected.
+            var rememberedEncoding = string.IsNullOrEmpty(recentFile.Encoding)
+                ? null
+                : Encodings.FirstOrDefault(p => p.DisplayName == recentFile.Encoding);
+
+            await SubtitleOpen(recentFile.SubtitleFileName, recentFile.VideoFileName, recentFile.SelectedLine, rememberedEncoding, desiredAudioTrackId: recentFile.AudioTrack);
 
             // Seek the video to the restored line - otherwise Reopen leaves it at 0:00.
             await SeekVideoToSelectedLineAsync();

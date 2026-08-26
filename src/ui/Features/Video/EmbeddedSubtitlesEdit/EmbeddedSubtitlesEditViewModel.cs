@@ -271,18 +271,24 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
         var nameNoExt = Path.GetFileNameWithoutExtension(videoFileName);
         var ext = Path.GetExtension(VideoFileName) ?? ".mkv";
         var suffix = Se.Settings.Video.BurnIn.BurnInSuffix;
-        var fileName = Path.Combine(Path.GetDirectoryName(videoFileName)!, nameNoExt + suffix + ext);
-        if (Se.Settings.Video.BurnIn.UseOutputFolder &&
-            !string.IsNullOrEmpty(Se.Settings.Video.BurnIn.OutputFolder) &&
-            Directory.Exists(Se.Settings.Video.BurnIn.OutputFolder))
-        {
-            fileName = Path.Combine(Se.Settings.Video.BurnIn.OutputFolder, nameNoExt + suffix + ext);
-        }
+
+        // Decide the folder once: the collision loop below used to combine with
+        // BurnIn.OutputFolder unconditionally, so with the default (empty, unused) folder
+        // the second file of a run got a bare relative name resolved against the process
+        // working directory instead of the video's folder.
+        var useOutputFolder = Se.Settings.Video.BurnIn.UseOutputFolder &&
+                              !string.IsNullOrEmpty(Se.Settings.Video.BurnIn.OutputFolder) &&
+                              Directory.Exists(Se.Settings.Video.BurnIn.OutputFolder);
+        var outputFolder = useOutputFolder
+            ? Se.Settings.Video.BurnIn.OutputFolder
+            : Path.GetDirectoryName(videoFileName) ?? Path.GetTempPath();
+
+        var fileName = Path.Combine(outputFolder, nameNoExt + suffix + ext);
 
         var i = 2;
         while (File.Exists(fileName))
         {
-            fileName = Path.Combine(Se.Settings.Video.BurnIn.OutputFolder, $"{nameNoExt}{suffix}_{i}{ext}");
+            fileName = Path.Combine(outputFolder, $"{nameNoExt}{suffix}_{i}{ext}");
             i++;
         }
 

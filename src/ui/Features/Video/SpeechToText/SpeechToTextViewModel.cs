@@ -401,8 +401,18 @@ public partial class SpeechToTextViewModel : ObservableObject
         var engine = GetEffectiveSelectedEngine();
         engine.CommandLineParameter = Parameters;
         Se.Settings.Tools.AudioToText.WhisperChoice = engine.Choice;
-        Se.Settings.Tools.AudioToText.WhisperModel = SelectedModel?.Model.Name ?? string.Empty;
-        Se.Settings.Tools.AudioToText.WhisperLanguageCode = SelectedLanguage?.Code ?? string.Empty;
+        // Keep the remembered model/language when the current engine simply doesn't show
+        // those pickers (online STT engines null them out): overwriting with empty strings
+        // lost the user's choice for good, so switching back fell to tiny/English.
+        if (SelectedModel != null || IsModelSelectionVisible)
+        {
+            Se.Settings.Tools.AudioToText.WhisperModel = SelectedModel?.Model.Name ?? string.Empty;
+        }
+
+        if (SelectedLanguage != null || IsLanguageSelectionVisible)
+        {
+            Se.Settings.Tools.AudioToText.WhisperLanguageCode = SelectedLanguage?.Code ?? string.Empty;
+        }
         Se.Settings.Tools.AudioToText.CrispAsrForcedAligner = SelectedForcedAligner?.Choice ?? ForcedAlignerOption.BuiltInChoice;
 
         Se.Settings.Tools.OpenAiCompatibleSttUrl = OpenAiCompatibleSttUrl ?? string.Empty;
@@ -801,9 +811,13 @@ public partial class SpeechToTextViewModel : ObservableObject
                         "The model is incomplete. Please download the full model.");
                     hasError = true;
                 }
-                else if (_unknownArgument && !string.IsNullOrEmpty(settings.WhisperCustomCommandLineArguments))
+                else if (_unknownArgument)
                 {
-                    await MessageBox.Show(Window!, $"Unknown argument: {settings.WhisperCustomCommandLineArguments}",
+                    // Report the parameters the engine actually ran with. This used to be
+                    // gated on a global setting nothing ever writes, so a mistyped flag made
+                    // the run fail with no message at all.
+                    var badArgs = GetEffectiveSelectedEngine()?.CommandLineParameter ?? string.Empty;
+                    await MessageBox.Show(Window!, $"Unknown argument: {badArgs}",
                         "Unknown argument. Please check the advanced settings.");
                     hasError = true;
                 }
@@ -1137,9 +1151,10 @@ public partial class SpeechToTextViewModel : ObservableObject
                     return;
                 }
 
-                if (_unknownArgument && !string.IsNullOrEmpty(settings.WhisperCustomCommandLineArguments))
+                if (_unknownArgument)
                 {
-                    await MessageBox.Show(Window!, $"Unknown argument: {settings.WhisperCustomCommandLineArguments}",
+                    var badArgs = GetEffectiveSelectedEngine()?.CommandLineParameter ?? string.Empty;
+                    await MessageBox.Show(Window!, $"Unknown argument: {badArgs}",
                         "Unknown argument. Please check the advanced settings.");
                 }
                 LogToConsole($"Speech to text: Could not find output JSON file ({exitCodeText}){Environment.NewLine}");
@@ -1338,7 +1353,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 await MessageBox.Show(Window!,
                     Se.Language.General.ConfigurationRequired,
                     configError ?? Se.Language.General.OpenAiCompatibleSttUrlMissing);
-                IsTranscribeEnabled = true;
+                FailCurrentOnlineSttJob();
             });
             return;
         }
@@ -1379,7 +1394,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 await MessageBox.Show(Window!,
                     Se.Language.General.TranscriptionError,
                     string.Format(Se.Language.General.OpenAiCompatibleSttUrlNotResponding, probeError));
-                IsTranscribeEnabled = true;
+                FailCurrentOnlineSttJob();
             });
             return;
         }
@@ -1484,7 +1499,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             {
                 await Dispatcher.UIThread.InvokeAsync(() =>
                 {
-                    IsTranscribeEnabled = true;
+                    FailCurrentOnlineSttJob();
                     HideProgressBar();
                 });
             }
@@ -1522,7 +1537,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
                 await MessageBox.Show(Window!, Se.Language.General.TranscriptionError, message);
-                IsTranscribeEnabled = true;
+                FailCurrentOnlineSttJob();
             });
         }
         catch (TimeoutException ex)
@@ -1564,7 +1579,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
                 await MessageBox.Show(Window!, Se.Language.General.TranscriptionError, $"{Se.Language.General.TranscriptionFailed}: {ex.Message}");
-                IsTranscribeEnabled = true;
+                FailCurrentOnlineSttJob();
             });
         }
         finally
@@ -2075,6 +2090,9 @@ public partial class SpeechToTextViewModel : ObservableObject
             ParagraphMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * 2,
             RemoveNonSpeechLines = Se.Settings.Tools.AudioToText.WhisperPostProcessingRemoveNonSpeechLines,
             RemoveRepeatedLines = Se.Settings.Tools.AudioToText.WhisperPostProcessingRemoveRepeatedLines,
+            // The engine's own parameters, so word-highlighted output is left alone by the
+            // merge/split steps (they are stored per engine, not in one global setting).
+            EngineCommandLineArguments = GetEffectiveSelectedEngine()?.CommandLineParameter ?? string.Empty,
         };
 
         WavePeakData2? wavePeaks = null;
@@ -3689,17 +3707,43 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Fails the online-STT job that is currently running. In batch mode the item is marked
+    /// failed and the batch moves on, the same contract the ffmpeg-failure path uses - every
+    /// online error path used to just re-enable the window, which stopped the batch dead at
+    /// that file with no item marked and no summary.
+    /// </summary>
+    private void FailCurrentOnlineSttJob()
+    {
+        if (IsBatchMode && !_abort)
+        {
+            if (_batchIndex >= 0 && _batchIndex < _jobItems.Count)
+            {
+                _jobItems[_batchIndex].Status = Se.Language.General.Error;
+            }
+
+            StartNext(null);
+            return;
+        }
+
+        IsTranscribeEnabled = true;
+    }
+
     [RelayCommand]
     private void Cancel()
     {
         if (!IsTranscribeEnabled)
         {
+            // Always set _abort, online engines included: during the audio-extraction phase
+            // _openAiCts does not exist yet (it is created once ffmpeg has exited), so
+            // cancelling did nothing at all and the upload started anyway. _abort is also
+            // what MakeResult checks to stop a whole batch rather than skip one item.
+            _abort = true;
             if (GetEffectiveSelectedEngine() is IOnlineSttEngine)
             {
                 _openAiCts?.Cancel();
-                return;
             }
-            _abort = true;
+
             return;
         }
 

@@ -545,6 +545,10 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             Text = ExportTextTags.ToRenderableText(subtitle.Text),
             StartTime = subtitle.StartTime,
             EndTime = subtitle.EndTime,
+            // Carry the forced flag through: BDN XML writes it as Forced="..." and the
+            // Blu-ray sup writer puts it in the display set, so dropping it here silently
+            // un-forces every cue of a forced-caption track on export.
+            IsForced = subtitle.Forced,
             FontColor = FontColor.ToSKColor(),
             FontName = SelectedFontFamily ?? FontFamilies.First(),
             FontSize = SelectedFontSize,

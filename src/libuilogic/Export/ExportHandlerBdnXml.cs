@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using System.Globalization;
 using System.Text;
 using System.Xml;
@@ -74,7 +74,10 @@ public class ExportHandlerBdnXml : IExportHandler
 
         var x = (_width - param.Bitmap.Width) / 2;
         var y = _height - (param.Bitmap.Height + param.BottomTopMargin);
-        var border = 0;
+        // The left/right and top margins the user picked, not 0 - the bitmap is the trimmed
+        // glyph box, so nothing else keeps a left/right/top aligned line off the frame edge.
+        var border = param.LeftRightMargin;
+        var topBorder = param.BottomTopMargin;
         switch (param.Alignment)
         {
             case ExportAlignment.BottomLeft:
@@ -99,15 +102,15 @@ public class ExportHandlerBdnXml : IExportHandler
                 break;
             case ExportAlignment.TopCenter:
                 x = (_width - param.Bitmap.Width) / 2;
-                y = border;
+                y = topBorder;
                 break;
             case ExportAlignment.TopLeft:
                 x = border;
-                y = border;
+                y = topBorder;
                 break;
             case ExportAlignment.TopRight:
                 x = _width - param.Bitmap.Width - border;
-                y = border;
+                y = topBorder;
                 break;
         }
 

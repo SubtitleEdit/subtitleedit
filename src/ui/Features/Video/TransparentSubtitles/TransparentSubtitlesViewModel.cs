@@ -354,7 +354,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
 
-                IsGenerating = true;
+                IsGenerating = false;
                 ProgressValue = 0;
             });
 
@@ -414,6 +414,15 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         var subtitle = !string.IsNullOrWhiteSpace(jobItem.SubtitleFileName) && File.Exists(jobItem.SubtitleFileName)
             ? Subtitle.Parse(jobItem.SubtitleFileName)
             : null;
+
+        // Apply the cut before measuring: the generated video's duration comes from
+        // TotalSeconds, so measuring the untrimmed subtitle produced a full-length file
+        // with the cut range's text bunched at the start.
+        if (subtitle != null)
+        {
+            subtitle = GetSubtitleBasedOnCut(subtitle);
+        }
+
         var totalMs = subtitle?.Paragraphs.Count > 0
             ? subtitle.Paragraphs.Max(p => p.EndTime.TotalMilliseconds) + 2000
             : 2000;
@@ -714,7 +723,9 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
     {
         var nameNoExt = Path.GetFileNameWithoutExtension(videoFileName);
         var ext = SelectedVideoExtension;
-        var suffix = Se.Settings.Video.BurnIn.BurnInSuffix;
+        // This dialog's own suffix ("_transparent"), which existed but was never read -
+        // transparent output was being named with burn-in's "_new".
+        var suffix = Se.Settings.Video.Transparent.OutputSuffix;
 
         // This dialog's own output folder, not burn-in's. The settings window has always written
         // Video.Transparent.OutputFolder / UseOutputFolder, but nothing read them - so whatever
@@ -852,7 +863,11 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
     [RelayCommand]
     private async Task OutputProperties()
     {
-        await _windowService.ShowDialogAsync<BurnInSettingsWindow, BurnInSettingsViewModel>(Window!);
+        // This dialog's own settings window, not burn-in's: it reads and writes
+        // Video.Transparent.*, which is what MakeOutputFileName below actually uses.
+        // Opening the burn-in one edited a store nothing here reads and silently changed
+        // the burn-in dialog's output folder instead.
+        await _windowService.ShowDialogAsync<TransparentSettingsWindow, TransparentSettingsViewModel>(Window!);
         UpdateOutputProperties();
     }
 
@@ -1003,7 +1018,10 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         SelectedFontOutline = settings.OutlineWidth;
         SelectedFontShadowWidth = settings.ShadowWidth;
         SelectedFontSpacing = settings.NonAssaSpacing;
-        SelectedFontName = settings.FontName;
+        // Guard the fallback the way the constructor does: assigning a font that is not
+        // in FontNames nulls the ComboBox selection, and the TwoWay binding then writes
+        // that null back over the saved font name.
+        SelectedFontName = FontNames.FirstOrDefault(p => p == settings.FontName) ?? FontNames[0];
         FontTextColor = settings.NonAssaTextColor.FromHexToColor();
         FontOutlineColor = settings.NonAssaOutlineColor.FromHexToColor();
         FontBoxColor = settings.NonAssaBoxColor.FromHexToColor();
@@ -1145,19 +1163,19 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
 
     private void UpdateOutputProperties()
     {
-        // Use the BurnIn output-folder settings: the "Output properties" dialog
-        // (BurnInSettingsWindow) and MakeOutputFileName both read/write BurnIn.*,
-        // so the UI must read the same store or it would show a stale/empty folder.
-        if (Se.Settings.Video.BurnIn.UseOutputFolder &&
-            string.IsNullOrWhiteSpace(Se.Settings.Video.BurnIn.OutputFolder))
+        // This dialog's own output-folder settings: the settings window and
+        // MakeOutputFileName both read/write Video.Transparent.*, so the UI has to read
+        // the same store or it shows a folder that has no effect on the output.
+        if (Se.Settings.Video.Transparent.UseOutputFolder &&
+            string.IsNullOrWhiteSpace(Se.Settings.Video.Transparent.OutputFolder))
         {
             // Output-folder mode is on but no folder is configured - fall back to the source folder.
-            Se.Settings.Video.BurnIn.UseOutputFolder = false;
+            Se.Settings.Video.Transparent.UseOutputFolder = false;
         }
 
-        UseSourceFolderVisible = !Se.Settings.Video.BurnIn.UseOutputFolder;
-        UseOutputFolderVisible = Se.Settings.Video.BurnIn.UseOutputFolder;
-        OutputFolder = Se.Settings.Video.BurnIn.OutputFolder;
+        UseSourceFolderVisible = !Se.Settings.Video.Transparent.UseOutputFolder;
+        UseOutputFolderVisible = Se.Settings.Video.Transparent.UseOutputFolder;
+        OutputFolder = Se.Settings.Video.Transparent.OutputFolder;
     }
 
     public void BoxTypeChanged(object? sender, SelectionChangedEventArgs e)
@@ -1301,7 +1319,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
                 FontIsBold,
                 FontTextColor.ToSKColor(),
                 FontOutlineColor.ToSKColor(),
-                SKColors.Red,
+                FontShadowColor.ToSKColor(),
                 FontShadowColor.ToSKColor(),
                 (float)(SelectedFontOutline ?? 0),
                 0,

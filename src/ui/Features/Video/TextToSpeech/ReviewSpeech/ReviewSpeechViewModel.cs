@@ -403,12 +403,16 @@ public partial class ReviewSpeechViewModel : ObservableObject
             {
                 Include = p.Include,
                 Number = p.Paragraph.Number,
-                Text = p.Text,
+                // The subtitle's own text, not the tag-stripped/unbroken copy that was fed to
+                // the engine: edits made here are published back to the main subtitle, so
+                // starting from the stripped copy silently dropped italics and line breaks
+                // from every line the user touched. Synthesis strips at the point of use.
+                Text = p.Paragraph.Text,
                 Voice = p.Voice == null ? string.Empty : p.Voice.ToString(),
                 Speed = Math.Round(p.SpeedFactor, 2).ToString(CultureInfo.CurrentCulture),
                 Cps = Math.Round(p.Paragraph.GetCharactersPerSecond(), 2).ToString(CultureInfo.CurrentCulture),
                 StepResult = p,
-                OriginalText = p.Text,
+                OriginalText = p.Paragraph.Text,
                 OriginalStartMs = p.Paragraph.StartTime.TotalMilliseconds,
                 OriginalEndMs = p.Paragraph.EndTime.TotalMilliseconds,
             };
@@ -1359,7 +1363,10 @@ public partial class ReviewSpeechViewModel : ObservableObject
             try
             {
                 var speakResult = await TtsInstructionSwap.RunAsync(engine, instruction, () =>
-                    engine.Speak(Utilities.UnbreakLine(line.Text), _waveFolder, voice, language, region, model, _cancellationToken));
+                    // Strip markup here the way the main generate path does - the row text is
+                    // the subtitle's own text, and engines vocalize "<i>" or garble on tags.
+                    engine.Speak(Utilities.UnbreakLine(HtmlUtil.RemoveHtmlTags(line.Text, alsoSsaTags: true)),
+                        _waveFolder, voice, language, region, model, _cancellationToken));
 
                 if (speakResult.Error || string.IsNullOrEmpty(speakResult.FileName) || !File.Exists(speakResult.FileName))
                 {

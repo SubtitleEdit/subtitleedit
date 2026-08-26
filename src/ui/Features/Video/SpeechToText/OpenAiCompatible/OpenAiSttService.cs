@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -272,10 +272,13 @@ public class OpenAiSttService : ISttTranscriber
             if (string.IsNullOrWhiteSpace(line))
             {
                 // Empty line = end of event, process it
-                if (dataBuilder.Length > 0 && !string.IsNullOrEmpty(eventType))
+                if (dataBuilder.Length > 0)
                 {
                     var data = dataBuilder.ToString().Trim();
-                    ProcessSseEvent(eventType, data, segments, fullText, progress, segmentProgress, ref currentSegmentText, ref currentSegmentId, ref currentSegmentStart, ref currentSegmentEnd);
+                    // Per the SSE spec an event with no "event:" line is type "message", and
+                    // the transcription payloads carry their own "type" field - keying only
+                    // off "event:" discarded every event from servers that omit it.
+                    ProcessSseEvent(ResolveSseEventType(eventType, data), data, segments, fullText, progress, segmentProgress, ref currentSegmentText, ref currentSegmentId, ref currentSegmentStart, ref currentSegmentEnd);
                 }
                 eventType = "";
                 dataBuilder.Clear();
@@ -293,10 +296,10 @@ public class OpenAiSttService : ISttTranscriber
         }
 
         // Process any remaining event
-        if (dataBuilder.Length > 0 && !string.IsNullOrEmpty(eventType))
+        if (dataBuilder.Length > 0)
         {
             var data = dataBuilder.ToString().Trim();
-            ProcessSseEvent(eventType, data, segments, fullText, progress, segmentProgress, ref currentSegmentText, ref currentSegmentId, ref currentSegmentStart, ref currentSegmentEnd);
+            ProcessSseEvent(ResolveSseEventType(eventType, data), data, segments, fullText, progress, segmentProgress, ref currentSegmentText, ref currentSegmentId, ref currentSegmentStart, ref currentSegmentEnd);
         }
 
         return new OpenAiCompatibleSttResponse
@@ -306,6 +309,36 @@ public class OpenAiSttService : ISttTranscriber
             Language = null,
             Duration = segments.Count > 0 ? segments[^1].End : 0
         };
+    }
+
+    /// <summary>
+    /// The event type to dispatch on: the SSE "event:" field when the server sends one,
+    /// otherwise the "type" the JSON payload carries itself (OpenAI's transcription stream
+    /// sends bare "data: {"type":"transcript.text.delta",...}" lines).
+    /// </summary>
+    private static string ResolveSseEventType(string eventType, string data)
+    {
+        if (!string.IsNullOrEmpty(eventType))
+        {
+            return eventType;
+        }
+
+        try
+        {
+            using var doc = JsonDocument.Parse(data);
+            if (doc.RootElement.ValueKind == JsonValueKind.Object &&
+                doc.RootElement.TryGetProperty("type", out var typeElement) &&
+                typeElement.ValueKind == JsonValueKind.String)
+            {
+                return typeElement.GetString() ?? string.Empty;
+            }
+        }
+        catch (JsonException)
+        {
+            // Not JSON (e.g. the "[DONE]" sentinel) - nothing to dispatch on.
+        }
+
+        return string.Empty;
     }
 
     private static void ProcessSseEvent(
@@ -352,22 +385,11 @@ public class OpenAiSttService : ISttTranscriber
                         }
                     }
                 }
-                else if (segments.Count == 0)
-                {
-                    // No segments from streaming or from done.segments array
-                    if (!string.IsNullOrEmpty(doneObj?.Text) && fullText.Length > 0)
-                    {
-                        var newSeg = new OpenAiCompatibleSegment
-                        {
-                            Id = 0,
-                            Start = 0,
-                            End = 0,
-                            Text = fullText.ToString().Trim()
-                        };
-                        segments.Add(newSeg);
-                        segmentProgress?.Report(newSeg);
-                    }
-                }
+                // No segments from streaming or from the done.segments array: leave the
+                // text to be returned as Text with no segments, so the caller's
+                // sentence-spreading fallback gives it real time codes. Synthesising a
+                // 0/0 segment here instead produced one cue holding the whole transcript
+                // at 00:00:00,000 --> 00:00:00,000 and suppressed that fallback.
             }
             else if (eventType == "transcript.segment" || eventType == "transcript.text.segment")
             {

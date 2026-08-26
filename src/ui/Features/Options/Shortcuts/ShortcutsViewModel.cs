@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
@@ -68,6 +68,11 @@ public partial class ShortcutsViewModel : ObservableObject
     // Mirror Se.Settings.Actor1..10 while the dialog is open so OK/Cancel
     // semantics match the other configurable slots (Color1..8, Surround1..3).
     private readonly string[] _actorSlots = new string[10];
+    // Same for the custom video-seek amounts (1Back, 1Forward, 2Back, ... 4Forward) and the
+    // go-to-first/last-line option: these used to be written straight into Se.Settings from
+    // the Configure dialogs, so Cancel did not undo them and the next save persisted them.
+    private readonly int[] _videoSeekSlots = new int[8];
+    private bool _goToFirstAndLastLineAlsoSetVideoPosition;
 
     // Add this flag to prevent updates during selection changes
     private bool _isLoadingSelection = false;
@@ -102,6 +107,15 @@ public partial class ShortcutsViewModel : ObservableObject
         _surround2Right = Se.Settings.Surround2Right;
         _surround3Left = Se.Settings.Surround3Left;
         _surround3Right = Se.Settings.Surround3Right;
+        _videoSeekSlots[0] = Se.Settings.Video.MoveVideoPositionCustom1Back;
+        _videoSeekSlots[1] = Se.Settings.Video.MoveVideoPositionCustom1Forward;
+        _videoSeekSlots[2] = Se.Settings.Video.MoveVideoPositionCustom2Back;
+        _videoSeekSlots[3] = Se.Settings.Video.MoveVideoPositionCustom2Forward;
+        _videoSeekSlots[4] = Se.Settings.Video.MoveVideoPositionCustom3Back;
+        _videoSeekSlots[5] = Se.Settings.Video.MoveVideoPositionCustom3Forward;
+        _videoSeekSlots[6] = Se.Settings.Video.MoveVideoPositionCustom4Back;
+        _videoSeekSlots[7] = Se.Settings.Video.MoveVideoPositionCustom4Forward;
+        _goToFirstAndLastLineAlsoSetVideoPosition = Se.Settings.Tools.GoToFirstAndLastLineAlsoSetVideoPosition;
         _actorSlots[0] = Se.Settings.Actor1;
         _actorSlots[1] = Se.Settings.Actor2;
         _actorSlots[2] = Se.Settings.Actor3;
@@ -573,6 +587,15 @@ public partial class ShortcutsViewModel : ObservableObject
         Se.Settings.Actor8 = _actorSlots[7];
         Se.Settings.Actor9 = _actorSlots[8];
         Se.Settings.Actor10 = _actorSlots[9];
+        Se.Settings.Video.MoveVideoPositionCustom1Back = _videoSeekSlots[0];
+        Se.Settings.Video.MoveVideoPositionCustom1Forward = _videoSeekSlots[1];
+        Se.Settings.Video.MoveVideoPositionCustom2Back = _videoSeekSlots[2];
+        Se.Settings.Video.MoveVideoPositionCustom2Forward = _videoSeekSlots[3];
+        Se.Settings.Video.MoveVideoPositionCustom3Back = _videoSeekSlots[4];
+        Se.Settings.Video.MoveVideoPositionCustom3Forward = _videoSeekSlots[5];
+        Se.Settings.Video.MoveVideoPositionCustom4Back = _videoSeekSlots[6];
+        Se.Settings.Video.MoveVideoPositionCustom4Forward = _videoSeekSlots[7];
+        Se.Settings.Tools.GoToFirstAndLastLineAlsoSetVideoPosition = _goToFirstAndLastLineAlsoSetVideoPosition;
 
         ShortcutsMain.CommandTranslationLookup[nameof(MainViewModel.SurroundWith1Command)] = string.Format(Se.Language.Options.Shortcuts.SurroundWithXY, Se.Settings.Surround1Left, Se.Settings.Surround1Right);
         ShortcutsMain.CommandTranslationLookup[nameof(MainViewModel.SurroundWith2Command)] = string.Format(Se.Language.Options.Shortcuts.SurroundWithXY, Se.Settings.Surround2Left, Se.Settings.Surround2Right);
@@ -615,11 +638,11 @@ public partial class ShortcutsViewModel : ObservableObject
                 Nikse.SubtitleEdit.Features.Shared.PromptCheckBox.PromptCheckBoxViewModel>(Window, vm =>
             {
                 vm.Initialize(node.Title, Se.Language.Options.Shortcuts.AlsoSetVideoPosition,
-                    Se.Settings.Tools.GoToFirstAndLastLineAlsoSetVideoPosition);
+                    _goToFirstAndLastLineAlsoSetVideoPosition);
             });
             if (result.OkPressed)
             {
-                Se.Settings.Tools.GoToFirstAndLastLineAlsoSetVideoPosition = result.IsChecked;
+                _goToFirstAndLastLineAlsoSetVideoPosition = result.IsChecked;
             }
 
             return;
@@ -771,16 +794,16 @@ public partial class ShortcutsViewModel : ObservableObject
         {
             var result = await _windowService.ShowDialogAsync<PickMillisecondsWindow, PickMillisecondsViewModel>(Window, vm =>
             {
-                vm.Initialize(Se.Settings.Video.MoveVideoPositionCustom1Back);
+                vm.Initialize(_videoSeekSlots[0]);
             });
             if (result.OkPressed)
             {
-                Se.Settings.Video.MoveVideoPositionCustom1Back = result.Milliseconds;
+                _videoSeekSlots[0] = result.Milliseconds;
 
                 var flatNodeBack = FlatNodes.FirstOrDefault(n => n?.ShortCut?.Action == MainViewModel.VideoMoveCustom1BackCommand);
                 if (flatNodeBack != null)
                 {
-                    flatNodeBack.Title = string.Format(Se.Language.General.VideoCustom1BackX, Se.Settings.Video.MoveVideoPositionCustom1Back);
+                    flatNodeBack.Title = string.Format(Se.Language.General.VideoCustom1BackX, _videoSeekSlots[0]);
                 }
             }
         }
@@ -788,16 +811,16 @@ public partial class ShortcutsViewModel : ObservableObject
         {
             var result = await _windowService.ShowDialogAsync<PickMillisecondsWindow, PickMillisecondsViewModel>(Window, vm =>
             {
-                vm.Initialize(Se.Settings.Video.MoveVideoPositionCustom1Forward);
+                vm.Initialize(_videoSeekSlots[1]);
             });
             if (result.OkPressed)
             {
-                Se.Settings.Video.MoveVideoPositionCustom1Forward = result.Milliseconds;
+                _videoSeekSlots[1] = result.Milliseconds;
 
                 var flatNodeForward = FlatNodes.FirstOrDefault(n => n?.ShortCut?.Action == MainViewModel.VideoMoveCustom1ForwardCommand);
                 if (flatNodeForward != null)
                 {
-                    flatNodeForward.Title = string.Format(Se.Language.General.VideoCustom1ForwardX, Se.Settings.Video.MoveVideoPositionCustom1Forward);
+                    flatNodeForward.Title = string.Format(Se.Language.General.VideoCustom1ForwardX, _videoSeekSlots[1]);
                 }
             }
         }
@@ -805,16 +828,16 @@ public partial class ShortcutsViewModel : ObservableObject
         {
             var result = await _windowService.ShowDialogAsync<PickMillisecondsWindow, PickMillisecondsViewModel>(Window, vm =>
             {
-                vm.Initialize(Se.Settings.Video.MoveVideoPositionCustom2Back);
+                vm.Initialize(_videoSeekSlots[2]);
             });
             if (result.OkPressed)
             {
-                Se.Settings.Video.MoveVideoPositionCustom2Back = result.Milliseconds;
+                _videoSeekSlots[2] = result.Milliseconds;
 
                 var flatNodeBack = FlatNodes.FirstOrDefault(n => n?.ShortCut?.Action == MainViewModel.VideoMoveCustom2BackCommand);
                 if (flatNodeBack != null)
                 {
-                    flatNodeBack.Title = string.Format(Se.Language.General.VideoCustom2BackX, Se.Settings.Video.MoveVideoPositionCustom2Back);
+                    flatNodeBack.Title = string.Format(Se.Language.General.VideoCustom2BackX, _videoSeekSlots[2]);
                 }
             }
         }
@@ -822,16 +845,16 @@ public partial class ShortcutsViewModel : ObservableObject
         {
             var result = await _windowService.ShowDialogAsync<PickMillisecondsWindow, PickMillisecondsViewModel>(Window, vm =>
             {
-                vm.Initialize(Se.Settings.Video.MoveVideoPositionCustom2Forward);
+                vm.Initialize(_videoSeekSlots[3]);
             });
             if (result.OkPressed)
             {
-                Se.Settings.Video.MoveVideoPositionCustom2Forward = result.Milliseconds;
+                _videoSeekSlots[3] = result.Milliseconds;
 
                 var flatNodeForward = FlatNodes.FirstOrDefault(n => n?.ShortCut?.Action == MainViewModel.VideoMoveCustom2ForwardCommand);
                 if (flatNodeForward != null)
                 {
-                    flatNodeForward.Title = string.Format(Se.Language.General.VideoCustom2ForwardX, Se.Settings.Video.MoveVideoPositionCustom2Forward);
+                    flatNodeForward.Title = string.Format(Se.Language.General.VideoCustom2ForwardX, _videoSeekSlots[3]);
                 }
             }
         }
@@ -839,16 +862,16 @@ public partial class ShortcutsViewModel : ObservableObject
         {
             var result = await _windowService.ShowDialogAsync<PickMillisecondsWindow, PickMillisecondsViewModel>(Window, vm =>
             {
-                vm.Initialize(Se.Settings.Video.MoveVideoPositionCustom3Back);
+                vm.Initialize(_videoSeekSlots[4]);
             });
             if (result.OkPressed)
             {
-                Se.Settings.Video.MoveVideoPositionCustom3Back = result.Milliseconds;
+                _videoSeekSlots[4] = result.Milliseconds;
 
                 var flatNodeBack = FlatNodes.FirstOrDefault(n => n?.ShortCut?.Action == MainViewModel.VideoMoveCustom3BackCommand);
                 if (flatNodeBack != null)
                 {
-                    flatNodeBack.Title = string.Format(Se.Language.General.VideoCustom3BackX, Se.Settings.Video.MoveVideoPositionCustom3Back);
+                    flatNodeBack.Title = string.Format(Se.Language.General.VideoCustom3BackX, _videoSeekSlots[4]);
                 }
             }
         }
@@ -856,16 +879,16 @@ public partial class ShortcutsViewModel : ObservableObject
         {
             var result = await _windowService.ShowDialogAsync<PickMillisecondsWindow, PickMillisecondsViewModel>(Window, vm =>
             {
-                vm.Initialize(Se.Settings.Video.MoveVideoPositionCustom3Forward);
+                vm.Initialize(_videoSeekSlots[5]);
             });
             if (result.OkPressed)
             {
-                Se.Settings.Video.MoveVideoPositionCustom3Forward = result.Milliseconds;
+                _videoSeekSlots[5] = result.Milliseconds;
 
                 var flatNodeForward = FlatNodes.FirstOrDefault(n => n?.ShortCut?.Action == MainViewModel.VideoMoveCustom3ForwardCommand);
                 if (flatNodeForward != null)
                 {
-                    flatNodeForward.Title = string.Format(Se.Language.General.VideoCustom3ForwardX, Se.Settings.Video.MoveVideoPositionCustom3Forward);
+                    flatNodeForward.Title = string.Format(Se.Language.General.VideoCustom3ForwardX, _videoSeekSlots[5]);
                 }
             }
         }
@@ -873,16 +896,16 @@ public partial class ShortcutsViewModel : ObservableObject
         {
             var result = await _windowService.ShowDialogAsync<PickMillisecondsWindow, PickMillisecondsViewModel>(Window, vm =>
             {
-                vm.Initialize(Se.Settings.Video.MoveVideoPositionCustom4Back);
+                vm.Initialize(_videoSeekSlots[6]);
             });
             if (result.OkPressed)
             {
-                Se.Settings.Video.MoveVideoPositionCustom4Back = result.Milliseconds;
+                _videoSeekSlots[6] = result.Milliseconds;
 
                 var flatNodeBack = FlatNodes.FirstOrDefault(n => n?.ShortCut?.Action == MainViewModel.VideoMoveCustom4BackCommand);
                 if (flatNodeBack != null)
                 {
-                    flatNodeBack.Title = string.Format(Se.Language.General.VideoCustom4BackX, Se.Settings.Video.MoveVideoPositionCustom4Back);
+                    flatNodeBack.Title = string.Format(Se.Language.General.VideoCustom4BackX, _videoSeekSlots[6]);
                 }
             }
         }
@@ -890,16 +913,16 @@ public partial class ShortcutsViewModel : ObservableObject
         {
             var result = await _windowService.ShowDialogAsync<PickMillisecondsWindow, PickMillisecondsViewModel>(Window, vm =>
             {
-                vm.Initialize(Se.Settings.Video.MoveVideoPositionCustom4Forward);
+                vm.Initialize(_videoSeekSlots[7]);
             });
             if (result.OkPressed)
             {
-                Se.Settings.Video.MoveVideoPositionCustom4Forward = result.Milliseconds;
+                _videoSeekSlots[7] = result.Milliseconds;
 
                 var flatNodeForward = FlatNodes.FirstOrDefault(n => n?.ShortCut?.Action == MainViewModel.VideoMoveCustom4ForwardCommand);
                 if (flatNodeForward != null)
                 {
-                    flatNodeForward.Title = string.Format(Se.Language.General.VideoCustom4ForwardX, Se.Settings.Video.MoveVideoPositionCustom4Forward);
+                    flatNodeForward.Title = string.Format(Se.Language.General.VideoCustom4ForwardX, _videoSeekSlots[7]);
                 }
             }
         }

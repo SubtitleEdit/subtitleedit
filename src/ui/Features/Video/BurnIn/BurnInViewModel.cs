@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -469,6 +469,19 @@ public partial class BurnInViewModel : ObservableObject
         var mediaInfo = FfmpegMediaInfo.Parse(jobItem.InputVideoFileName);
         jobItem.TotalFrames = mediaInfo.GetTotalFrames();
         jobItem.TotalSeconds = mediaInfo.Duration.TotalSeconds;
+
+        // With "Cut" on, only the cut range is encoded (-ss/-t below). Measuring the full
+        // source made the target-file-size bit rate a fraction of what was asked for, and
+        // left the progress bar creeping to a few percent before jumping to Done.
+        if (IsCutActive && jobItem.TotalSeconds > 0)
+        {
+            var cutSeconds = (CutTo - CutFrom).TotalSeconds;
+            if (cutSeconds > 0 && cutSeconds < jobItem.TotalSeconds)
+            {
+                jobItem.TotalFrames = (long)Math.Round(jobItem.TotalFrames * (cutSeconds / jobItem.TotalSeconds));
+                jobItem.TotalSeconds = cutSeconds;
+            }
+        }
         if (mediaInfo.Dimension.Width > 0 && mediaInfo.Dimension.Height > 0)
         {
             jobItem.Width = mediaInfo.Dimension.Width;
@@ -887,7 +900,10 @@ public partial class BurnInViewModel : ObservableObject
                 {
                     var fontSize = CalculateFontSize(jobItem.Width, jobItem.Height, FontFactor ?? 0);
                     var durationMs = (int)(s.Duration.TotalMilliseconds);
-                    s.Text = effect.ApplyEffect(s.Text, VideoWidth ?? 0, VideoHeight ?? 0, fontSize, durationMs);
+                    // This job's dimensions, not the UI's: the effects emit absolute ASSA
+                    // coordinates that are resolved against the PlayResX/Y written from
+                    // jobItem below, so a batch item of another size placed text wrongly.
+                    s.Text = effect.ApplyEffect(s.Text, jobItem.Width, jobItem.Height, fontSize, durationMs);
                 }
             }
 
@@ -1380,7 +1396,10 @@ public partial class BurnInViewModel : ObservableObject
         SelectedFontOutline = settings.OutlineWidth;
         SelectedFontShadowWidth = settings.ShadowWidth;
         SelectedFontSpacing = settings.NonAssaSpacing;
-        SelectedFontName = settings.FontName;
+        // Guard the fallback the way the constructor does: assigning a font that is not
+        // in FontNames nulls the ComboBox selection, and the TwoWay binding then writes
+        // that null back over the saved font name.
+        SelectedFontName = FontNames.FirstOrDefault(p => p == settings.FontName) ?? FontNames[0];
         FontTextColor = settings.NonAssaTextColor.FromHexToColor();
         FontOutlineColor = settings.NonAssaOutlineColor.FromHexToColor();
         FontBoxColor = settings.NonAssaBoxColor.FromHexToColor();
@@ -1422,7 +1441,7 @@ public partial class BurnInViewModel : ObservableObject
         UseTargetFileSize = settings.TargetFileSize;
         TargetFileSize = settings.TargetFileSizeMb;
         MatchSourceVideoSize = settings.TargetFileSizeMatchSource;
-        PromptForFfmpegParameters = settings.PromptFfmpegParameters;
+        PromptForFfmpegParameters = false; // one-shot, never restored from settings
 
         var effectsAsStringArray = settings.Effects?.Split(',') ?? [];
         _selectedEffects = BurnInEffectItem.List().Where(p => effectsAsStringArray.Contains(p.Name)).ToList();
@@ -1464,7 +1483,9 @@ public partial class BurnInViewModel : ObservableObject
         settings.TargetFileSize = UseTargetFileSize;
         settings.TargetFileSizeMb = TargetFileSize ?? 0;
         settings.TargetFileSizeMatchSource = MatchSourceVideoSize;
-        settings.PromptFfmpegParameters = PromptForFfmpegParameters;
+        // Deliberately not persisted: PromptForFfmpegParameters is a one-shot set by the
+        // "Prompt for ffmpeg params and generate" menu item. Saving it made the plain
+        // Generate button prompt forever, with no UI to turn it back off.
 
         settings.Effects = string.Join(",", _selectedEffects.Select(p => p.Name).Distinct());
 

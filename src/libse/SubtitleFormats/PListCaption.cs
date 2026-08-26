@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 paragraph.AppendChild(keyNode);
 
                 XmlNode valueNode = xml.CreateElement("real");
-                valueNode.InnerText = $"{p.StartTime.TotalSeconds:0.0###############}"; // 3.1600000000000001
+                valueNode.InnerText = p.StartTime.TotalSeconds.ToString("0.0###############", CultureInfo.InvariantCulture); // 3.1600000000000001
                 paragraph.AppendChild(valueNode);
 
                 keyNode = xml.CreateElement("key");
@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 paragraph.AppendChild(keyNode);
 
                 valueNode = xml.CreateElement("real");
-                valueNode.InnerText = $"{p.EndTime.TotalSeconds:0.0###############}"; // 3.1600000000000001
+                valueNode.InnerText = p.EndTime.TotalSeconds.ToString("0.0###############", CultureInfo.InvariantCulture); // 3.1600000000000001
                 paragraph.AppendChild(valueNode);
 
                 int textNo = 0;
@@ -106,7 +106,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             return ToUtf8XmlString(xml).Replace("<plist>", "<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">" + Environment.NewLine +
-                             "<plist version=\"1.0\">;");
+                             "<plist version=\"1.0\">");
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

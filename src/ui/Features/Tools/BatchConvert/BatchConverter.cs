@@ -1711,6 +1711,9 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 Text = string.Empty,
                 StartTime = imageSubtitle.GetStartTime(i),
                 EndTime = imageSubtitle.GetEndTime(i),
+                // The source knows which cues are forced - carry it through so a forced
+                // Blu-ray/PGS track stays forced in the exported sup/BDN XML.
+                IsForced = imageSubtitle.GetIsForced(i),
                 FontColor = SKColors.White,
                 FontName = "Arial",
                 FontSize = 24,
@@ -1721,8 +1724,16 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 ShadowWidth = 2,
                 BackgroundColor = SKColors.Transparent,
                 BackgroundCornerRadius = 0,
-                ScreenWidth = imageSubtitle.GetScreenSize(i).Width,
-                ScreenHeight = imageSubtitle.GetScreenSize(i).Height,
+                // Several IOcrSubtitle sources report "unknown" as -1 x -1 (DivX/XSUB, MP4
+                // VobSub, WebVTT images, BDN...). Passing that straight through made every
+                // exported event land at a large negative X/Y, so fall back to the profile's
+                // resolution the way the text-rendering path does.
+                ScreenWidth = imageSubtitle.GetScreenSize(i).Width > 0
+                    ? imageSubtitle.GetScreenSize(i).Width
+                    : profile.ScreenWidth,
+                ScreenHeight = imageSubtitle.GetScreenSize(i).Height > 0
+                    ? imageSubtitle.GetScreenSize(i).Height
+                    : profile.ScreenHeight,
                 BottomTopMargin = 0,
                 LeftRightMargin = 0,
                 Bitmap = ApplyImageAdjustments(imageSubtitle.GetBitmap(i)),

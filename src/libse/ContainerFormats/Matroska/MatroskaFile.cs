@@ -405,7 +405,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                                     System.Diagnostics.Debug.WriteLine("ContentCompSettings: " + contentCompSettings);
                                     break;
                                 default:
-                                    _stream.Seek(element.DataSize, SeekOrigin.Current);
+                                    // compElement, not element: seeking by the parent
+                                    // ContentCompression's size on an unknown child (CRC-32,
+                                    // Void) jumped past the whole payload and the loop then
+                                    // read garbage as EBML ids.
+                                    _stream.Seek(compElement.DataSize, SeekOrigin.Current);
                                     break;
                             }
                         }
@@ -778,11 +782,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                         System.Diagnostics.Debug.Print("Xiph lacing ({0} frames)", frames);
                         break;
                     case 4: // 00000100 = Fixed-size lacing
+                        // Only the "frames - 1" count byte: fixed-size lacing has no per-lace
+                        // size table (that is Xiph/EBML lacing), so reading one byte per frame
+                        // here ate the first bytes of the actual subtitle payload.
                         frames = _stream.ReadByte() + 1;
-                        for (var i = 0; i < frames; i++)
-                        {
-                            _stream.ReadByte(); // frames
-                        }
                         System.Diagnostics.Debug.Print("Fixed-size lacing ({0} frames)", frames);
                         break;
                     case 6: // 00000110 = EMBL lacing
