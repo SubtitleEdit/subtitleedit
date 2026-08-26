@@ -94,6 +94,9 @@ the source. Set the model's temperature to 0 where the engine offers it. Curated
 the llama.cpp engine's download list carry this prompt already; for LM Studio, KoboldCpp, Ollama or
 your own OpenAI-compatible server, paste it into the engine's prompt field.
 
+Headless runs take the same prompt via `seconv --translate-prompt:<text|file>` — see
+[Auto-translate (command line)](../reference/command-line.md#custom-prompt).
+
 ## Engine Configuration
 
 Depending on the selected engine, you may need to provide:

@@ -497,6 +497,7 @@ internal class Program
         "--translate-engine", "--translateengine",
         "--translate-url", "--translateurl",
         "--translate-model", "--translatemodel",
+        "--translate-prompt", "--translateprompt",
         "--delete-first", "--DeleteFirst",
         "--delete-last", "--DeleteLast",
         "--delete-contains", "--DeleteContains",
