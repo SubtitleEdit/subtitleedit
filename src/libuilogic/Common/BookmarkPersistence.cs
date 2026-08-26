@@ -25,7 +25,10 @@ namespace Nikse.SubtitleEdit.UiLogic.Common
 
         public bool Save()
         {
-            if (_fileName == null)
+            // IsNullOrEmpty: an untitled subtitle has string.Empty, not null, which made the
+            // path a bare relative ".SE.bookmarks" written into the working directory - and
+            // clearing bookmarks then deleted whatever file of that name happened to be there.
+            if (string.IsNullOrEmpty(_fileName))
             {
                 return false;
             }
@@ -81,7 +84,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Common
 
         public bool Load()
         {
-            if (_fileName == null)
+            if (string.IsNullOrEmpty(_fileName))
             {
                 return false;
             }

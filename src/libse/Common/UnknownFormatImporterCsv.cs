@@ -41,7 +41,13 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             var separator = DetectSeparator(lines);
 
-            var headers = lines[0].RemoveChar('"').ToLowerInvariant().Split(separator).ToList();
+            // Split the header exactly like the data rows (quote-aware) and trim each cell:
+            // a naive Split broke on a quoted separator inside a header name - skewing every
+            // column index - and an unpadded "Start, End, Text" failed to match at all.
+            var headers = CsvUtil.CsvSplitLines(new List<string> { lines[0] }, separator)
+                .FirstOrDefault()?
+                .Select(p => p.Trim().Trim('"').ToLowerInvariant())
+                .ToList() ?? new List<string>();
             if (!HasValidHeader(headers))
             {
                 return new Subtitle();
@@ -147,7 +153,10 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             var startGaps = GetGaps(csvLines.Select(p => p.Start).ToArray());
             var avarageStartGap = startGaps.Sum() / startGaps.Length;
-            var avarageTextLength = csvLines.Select(p => p.Text.Length).Sum() / csvLines.Count;
+            // Text stays null when no text column was recognised (HasValidHeader only needs two
+            // hits across all five name lists, so a text column is not required) - dereferencing
+            // it threw straight out of the file-open path, which has no catch.
+            var avarageTextLength = csvLines.Select(p => p.Text?.Length ?? 0).Sum() / csvLines.Count;
             if (avarageStartGap >= 500 || avarageTextLength <= 90)
             {
                 return;

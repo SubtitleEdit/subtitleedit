@@ -138,6 +138,21 @@ public partial class ChangeFormattingViewModel : ObservableObject, IClosingClean
     [RelayCommand]
     private void Ok()
     {
+        // Subtitles is only ever filled by the 500 ms preview timer, so before the first tick it
+        // is empty - and applying an empty result made the caller's count check fail and clear
+        // the whole grid. Build it now if a change is pending or nothing has been built yet.
+        if (_dirty || Subtitles.Count == 0)
+        {
+            UpdatePreview();
+        }
+
+        if (Subtitles.Count == 0)
+        {
+            // Nothing to apply - close without touching the subtitle.
+            Window?.Close();
+            return;
+        }
+
         FixedSubtitle = Subtitles.Select(p => new SubtitleLineViewModel(p.SubtitleLineViewModel)).ToList();
         SaveSettings();
         OkPressed = true;

@@ -195,7 +195,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             for (var i = 0; i < numberOfParts - 1; i++)
             {
-                var endIndex = FindNearestSpaceIndex(text, startIndex + partLength);
+                var endIndex = FindNearestSpaceIndex(text, startIndex + partLength, startIndex);
 
                 if (endIndex == -1)
                 {
@@ -227,10 +227,23 @@ namespace Nikse.SubtitleEdit.Core.Common
             return parts;
         }
 
-        static int FindNearestSpaceIndex(string text, int startIndex)
+        /// <summary>
+        /// A space to break this chunk on: the last one at or before <paramref name="targetIndex"/>,
+        /// but never one belonging to an already-consumed chunk. Returning such a space made the
+        /// computed length non-positive, which appended an empty part and swallowed the rest of
+        /// the text into the following one.
+        /// </summary>
+        static int FindNearestSpaceIndex(string text, int targetIndex, int minIndex)
         {
-            var spaceIndex = text.LastIndexOf(' ', Math.Min(startIndex, text.Length - 1));
-            return spaceIndex;
+            var clamped = Math.Min(targetIndex, text.Length - 1);
+            var spaceIndex = text.LastIndexOf(' ', clamped);
+            if (spaceIndex > minIndex)
+            {
+                return spaceIndex;
+            }
+
+            // No space inside this chunk - take the next one after it rather than break early.
+            return text.IndexOf(' ', clamped);
         }
 
         public static Subtitle TryForWholeSentences(Subtitle inputSubtitle, string language, int lineMaxLength)

@@ -653,8 +653,7 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
         _subtitleFormat.LoadSubtitle(subtitle, lines, string.Empty);
         if (subtitle.Paragraphs.Count > 0)
         {
-            Subtitle.Paragraphs.Clear();
-            Subtitle.Paragraphs.AddRange(subtitle.Paragraphs);
+            ApplyParsedSubtitle(subtitle);
             OkPressed = true;
             Window?.Close();
             return;
@@ -663,14 +662,33 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
         subtitle = Subtitle.Parse(lines, ".srt");
         if (subtitle.Paragraphs.Count > 0)
         {
-            Subtitle.Paragraphs.Clear();
-            Subtitle.Paragraphs.AddRange(subtitle.Paragraphs);
+            ApplyParsedSubtitle(subtitle);
             OkPressed = true;
             Window?.Close();
             return;
         }
 
         await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.General.NoSubtitlesFound, MessageBoxButtons.OK, MessageBoxIcon.Error);
+    }
+
+    /// <summary>
+    /// Copies the parsed result back over the subtitle the caller holds - header and footer
+    /// included. Copying only the paragraphs silently discarded any edit the user made to an
+    /// ASSA [Script Info] / [V4+ Styles] block while accepting their dialogue edits.
+    /// </summary>
+    private void ApplyParsedSubtitle(Subtitle parsed)
+    {
+        Subtitle.Paragraphs.Clear();
+        Subtitle.Paragraphs.AddRange(parsed.Paragraphs);
+        if (!string.IsNullOrEmpty(parsed.Header))
+        {
+            Subtitle.Header = parsed.Header;
+        }
+
+        if (!string.IsNullOrEmpty(parsed.Footer))
+        {
+            Subtitle.Footer = parsed.Footer;
+        }
     }
 
     private static string TrimJunk(string text)

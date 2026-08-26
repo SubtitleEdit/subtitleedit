@@ -88,6 +88,13 @@ public partial class ManualChosenEncodingViewModel : ObservableObject, IClosingC
         if (string.IsNullOrWhiteSpace(SearchText))
         {
             Encodings.AddRange(_allEncodings);
+            // Clearing the collection nulls the bound SelectedItem, and OK requires a non-null
+            // selection - so searching and then clearing the box made OK a silent no-op.
+            if (Encodings.Count > 0)
+            {
+                SelectedEncoding = Encodings[0];
+            }
+
             return;
         }
 

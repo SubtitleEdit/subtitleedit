@@ -31,6 +31,7 @@ public partial class ExportPacViewModel : ObservableObject
             "Chinese Simplified (gb2312)",
             "Korean",
             "Japanese",
+            "Latin Turkish",
             "Portuguese",
         };
 
@@ -46,6 +47,9 @@ public partial class ExportPacViewModel : ObservableObject
         }
 
         OkPressed = true;
+        // The list index is the code page number only because the list mirrors Pac's constants
+        // exactly; it used to skip Turkish, so "Portuguese" selected CodePageLatinTurkish (11)
+        // instead of CodePageLatinPortuguese (12) and Turkish was unreachable entirely.
         PacCodePage = PacCodePages.IndexOf(SelectedPacCodePage);
         Close();
     }

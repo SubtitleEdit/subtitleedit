@@ -412,8 +412,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                         }
                     }
 
-                    // handle overlap with next
-                    if (newEndMilliseconds > nextStartMilliseconds)
+                    // handle overlap with next - measured against the minimum gap, the way
+                    // AdjustDisplayTimeUsingMilliseconds does. Testing only for a hard overlap
+                    // let a new end land inside the gap (or exactly on the next start).
+                    if (newEndMilliseconds > nextStartMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines)
                     {
                         newEndMilliseconds = nextStartMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                     }

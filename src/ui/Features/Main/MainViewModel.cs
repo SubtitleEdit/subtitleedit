@@ -4384,6 +4384,19 @@ public partial class MainViewModel :
             return;
         }
 
+        // Feed the dialog's values into the settings the writer actually reads. They were
+        // collected and then dropped on the floor, so the file always got the output file's base
+        // name as its title and blank translator/comment fields.
+        var subtitleSettings = Configuration.Settings.SubtitleSettings;
+        subtitleSettings.CurrentCavena89Title = result.TranslatedTitle ?? string.Empty;
+        subtitleSettings.CurrentCavena890riginalTitle = result.OriginalTitle ?? string.Empty;
+        subtitleSettings.CurrentCavena890Translator = result.Translator ?? string.Empty;
+        subtitleSettings.CurrentCavena89Comment = result.Comment ?? string.Empty;
+        if (result.StartOfProgramme > TimeSpan.Zero)
+        {
+            subtitleSettings.Cavena890StartOfMessage = new TimeCode(result.StartOfProgramme).ToHHMMSSFF();
+        }
+
         var cavena = new Cavena890();
         var fileName = await _fileHelper.PickSaveSubtitleFile(Window!, cavena, GetNewFileName(),
             string.Format(Se.Language.Main.SaveXFileAs, cavena.Name));
@@ -6547,9 +6560,14 @@ public partial class MainViewModel :
         }
 
         ResetSubtitle();
-        SetSubtitles(result.JoinedSubtitle);
+        // Set the format before building the rows so SubtitleLineViewModel copies the ASSA style
+        // (Extra) into Style - the reverse order left every Style cell blank.
         SetSubtitleFormat(SubtitleFormats.FirstOrDefault(p => p.Name == result.JoinedFormat.Name) ??
                           SubtitleFormats[0]);
+        SetSubtitles(result.JoinedSubtitle);
+        // Carry over the header that SortAndLoad spent its merge building, or the joined file is
+        // written with no style table at all.
+        _subtitle.Header = result.JoinedSubtitle.Header;
         SelectAndScrollToRow(0);
         ShowStatus(Se.Language.Main.JoinedSubtitleLoaded);
     }
@@ -19772,14 +19790,20 @@ public partial class MainViewModel :
                 return;
             }
 
-            var fileEncoding = LanguageAutoDetect.GetEncodingFromFile(fileName);
+            // Honour an explicitly chosen encoding. This parameter was declared and never read,
+            // which made "Import subtitle with manually chosen encoding" inert and silently
+            // discarded the encoding remembered on a recent-file entry.
+            var fileEncoding = textEncoding?.Encoding ?? LanguageAutoDetect.GetEncodingFromFile(fileName);
             Subtitle? subtitle = null;
 
             // For .csv files, try the multi-column CSV importer first. It only succeeds when there is a
             // recognizable header (start/end/text/etc.), so single-text-column CSV formats fall through to Subtitle.Parse.
             if (string.Equals(ext, ".csv", StringComparison.OrdinalIgnoreCase))
             {
-                var csvLines = FileUtil.ReadAllLinesShared(fileName, Encoding.UTF8);
+                // The detected (or chosen) encoding, not a hardcoded UTF-8: a Windows-1252 CSV
+                // decoded as UTF-8 loses every accented character, unrecoverably, because the CSV
+                // importer wins over Subtitle.Parse when the header matches.
+                var csvLines = FileUtil.ReadAllLinesShared(fileName, fileEncoding);
                 var csvSubtitle = new UnknownFormatImporterCsv().AutoGuessImport(csvLines);
                 if (csvSubtitle != null && csvSubtitle.Paragraphs.Count > 0)
                 {

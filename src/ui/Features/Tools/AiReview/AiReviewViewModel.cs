@@ -408,6 +408,9 @@ public partial class AiReviewViewModel : ObservableObject
         using var client = new AiReviewClient();
         var processedLines = 0;
         var consecutiveErrors = 0;
+        // Chunks the engine never answered. Counting their lines as reviewed let a run with an
+        // unreachable engine finish at 100% reporting "no issues found".
+        var failedChunks = 0;
         var delay = TimeSpan.FromSeconds(Math.Max(0, RequestDelaySeconds));
         var lastRequestCompletedUtc = DateTime.MinValue;
 
@@ -468,6 +471,7 @@ public partial class AiReviewViewModel : ObservableObject
                 catch (HttpRequestException e)
                 {
                     consecutiveErrors++;
+                    failedChunks++;
                     if (consecutiveErrors >= 3)
                     {
                         await MessageBox.Show(Window, Se.Language.General.Error,
@@ -488,9 +492,16 @@ public partial class AiReviewViewModel : ObservableObject
                 ProgressValue = Math.Min(100.0, processedLines * 100.0 / Math.Max(1, lines.Count));
             }
 
-            StatusText = _allSuggestions.Count == 0 && processedLines >= lines.Count
+            StatusText = _allSuggestions.Count == 0 && processedLines >= lines.Count && failedChunks == 0
                 ? l.NoIssuesFound
                 : string.Format(l.ReviewDone, _allSuggestions.Count, processedLines);
+
+            if (failedChunks > 0 && Window != null)
+            {
+                await MessageBox.Show(Window, Se.Language.General.Error,
+                    string.Format(l.EngineError, $"{failedChunks} chunk(s) could not be reviewed"),
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
         catch (OperationCanceledException)
         {

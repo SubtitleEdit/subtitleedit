@@ -75,17 +75,14 @@ namespace Nikse.SubtitleEdit.Core.Common
                     var value = GetCellValue(cell);
                     var repeat = ParseRepeat(cell.Attribute(TableNs + "number-columns-repeated")?.Value);
 
-                    if (string.IsNullOrEmpty(value))
+                    // Honour the repeat count for empty cells too: LibreOffice writes an
+                    // *interior* run of blanks that way, and collapsing it to one cell shifted
+                    // every following column left, so a row with a gap lost its text column.
+                    // Trailing blank runs are still handled by the trim below, and ParseRepeat
+                    // already caps the count, so this cannot blow up on a "blank to column 1024" row.
+                    for (var i = 0; i < repeat; i++)
                     {
-                        // Trailing empties with huge repeat counts are common — only emit a single empty cell
-                        cells.Add(string.Empty);
-                    }
-                    else
-                    {
-                        for (var i = 0; i < repeat; i++)
-                        {
-                            cells.Add(value);
-                        }
+                        cells.Add(value ?? string.Empty);
                     }
                 }
 
