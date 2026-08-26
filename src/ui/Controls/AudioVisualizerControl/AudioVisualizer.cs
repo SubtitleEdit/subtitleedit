@@ -317,6 +317,14 @@ public class AudioVisualizer : Control
             {
                 _shotChanges = _shotChanges.Select(sc => Math.Round(sc /= 1.001, 3, MidpointRounding.AwayFromZero)).ToList();
             }
+
+            // The spectrogram is drawn from StartPositionSeconds / SampleDuration, and
+            // StartPositionSeconds is now SMPTE-compressed - so compress the column duration
+            // to match, or the two panels drift ~3.6 s apart per hour.
+            if (_spectrogram != null)
+            {
+                _spectrogram.SampleDuration /= 1.001;
+            }
         }
     }
 

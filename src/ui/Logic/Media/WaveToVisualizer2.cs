@@ -396,7 +396,12 @@ public class SpectrogramData2 : IDisposable
 
     public int ImageWidth { get; private set; }
 
-    public double SampleDuration { get; private set; }
+    /// <summary>
+    /// Seconds of audio per spectrogram column. Settable so SMPTE drop-frame mode can
+    /// compress it by 1.001 in step with the wave peaks - otherwise the two panels share
+    /// an X axis but not a time base and drift apart.
+    /// </summary>
+    public double SampleDuration { get; set; }
 
     public IList<SKBitmap> Images { get; private set; }
 
@@ -448,7 +453,7 @@ public class SpectrogramData2 : IDisposable
         SampleDuration = br.ReadDouble();
 
         // Read raw samples
-        var sampleCount = (int)((fs.Length - 20) / sizeof(float)); // 20 bytes = 3 ints (12 bytes) + 1 double (8 bytes)
+        var sampleCount = (int)((fs.Length - 16) / sizeof(float)); // 16 bytes = 2 ints (8 bytes) + 1 double (8 bytes), matching SaveToBinaryFile
         _rawSamples = new float[sampleCount];
 
         var byteSpan = MemoryMarshal.AsBytes(_rawSamples.AsSpan());
@@ -1320,17 +1325,30 @@ public class WavePeakGenerator2 : IDisposable
 
             var hash = MovieHasher.GenerateHash(videoFileName);
 
-            var files = Directory.GetFiles(dir, $"{hash}-*.spectrogram")
-                .OrderBy(p => p)
-                .ToList();
-            if (files.Count > 0 && trackNumber < 0)
+            if (trackNumber < 0)
             {
-                return files[0];
+                // Same preference order as GetPeakWaveFileName: the untracked file first, then
+                // the first per-track one. Preferring the glob here while the peak resolver
+                // preferred the bare file meant the two panels could show different audio
+                // tracks of the same video.
+                var bare = Path.Combine(dir, $"{hash}.spectrogram");
+                if (File.Exists(bare) || Directory.Exists(bare))
+                {
+                    return bare;
+                }
+
+                var files = Directory.GetFiles(dir, $"{hash}-*.spectrogram")
+                    .OrderBy(p => p)
+                    .ToList();
+                if (files.Count > 0)
+                {
+                    return files[0];
+                }
+
+                return bare;
             }
 
-            var spectrogramFileName = trackNumber >= 0 ? $"{hash}-{trackNumber}.spectrogram" : $"{hash}.spectrogram";
-
-            return Path.Combine(dir, spectrogramFileName);
+            return Path.Combine(dir, $"{hash}-{trackNumber}.spectrogram");
         }
 
         public SpectrogramDrawer(int nfft, SKColor[] palette)

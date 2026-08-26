@@ -594,7 +594,7 @@ public partial class FindService : IFindService
                 var beforePart = line.Substring(0, startIndex);
                 var afterPart = line.Substring(startIndex);
 
-                var newAfterPart = regex.Replace(afterPart, replaceText, 1);
+                var newAfterPart = regex.Replace(afterPart, EscapeReplacement(replaceText), 1);
                 var totalReplacements = newAfterPart != afterPart ? 1 : 0;
 
                 return (totalReplacements > 0, beforePart + newAfterPart, totalReplacements);
@@ -603,8 +603,8 @@ public partial class FindService : IFindService
             {
                 // Replace all or limited occurrences
                 var newText = maxReplacements == -1
-                    ? regex.Replace(line, replaceText)
-                    : regex.Replace(line, replaceText, maxReplacements);
+                    ? regex.Replace(line, EscapeReplacement(replaceText))
+                    : regex.Replace(line, EscapeReplacement(replaceText), maxReplacements);
 
                 var totalReplacements = regex.Matches(line).Count;
                 if (maxReplacements != -1 && totalReplacements > maxReplacements)
@@ -621,6 +621,17 @@ public partial class FindService : IFindService
         }
     }
 
+    /// <summary>
+    /// Escapes a user-supplied replacement so Regex.Replace inserts it literally. Whole-word
+    /// replace goes through a regex while plain replace splices the string in, so without this
+    /// ticking "whole word" silently changed the meaning of the *replacement* field too - "$$"
+    /// collapsed to "$", and "${x}" threw into a swallowed catch, quietly replacing nothing.
+    /// </summary>
+    private static string EscapeReplacement(string replaceText)
+    {
+        return string.IsNullOrEmpty(replaceText) ? replaceText : replaceText.Replace("$", "$$");
+    }
+
     private (bool found, int index, string foundText) FindWithStringComparison(string line, string searchText, StringComparison comparison, int startIndex)
     {
         var searchLine = startIndex > 0 ? line.Substring(startIndex) : line;
@@ -632,10 +643,14 @@ public partial class FindService : IFindService
 
             try
             {
-                var match = GetCachedRegex(pattern, options).Match(searchLine);
+                // Match the whole line from an offset rather than a slice of it: slicing
+                // manufactures a word boundary at position 0, so resuming from a caret inside
+                // a word matched that word's tail ("cat" inside "Bobcat") - while Count, which
+                // evaluates the same pattern against the full line, reported no match.
+                var match = GetCachedRegex(pattern, options).Match(line, Math.Min(startIndex, line.Length));
                 if (match.Success)
                 {
-                    return (true, startIndex + match.Index, match.Value);
+                    return (true, match.Index, match.Value);
                 }
             }
             catch (Exception exception) when (exception is ArgumentException or RegexMatchTimeoutException)
@@ -666,11 +681,24 @@ public partial class FindService : IFindService
 
             try
             {
-                var matches = GetCachedRegex(pattern, options).Matches(searchLine);
-                if (matches.Count > 0)
+                // Match the full line and take the last hit at or before the caret: truncating
+                // the line fabricates a trailing word boundary, so a caret after "cat" inside
+                // "cathedral" matched it as a whole word.
+                var matches = GetCachedRegex(pattern, options).Matches(line);
+                Match? lastBefore = null;
+                foreach (Match m in matches)
                 {
-                    var lastMatch = matches[matches.Count - 1];
-                    return (true, lastMatch.Index, lastMatch.Value);
+                    if (m.Index > startIndex)
+                    {
+                        break;
+                    }
+
+                    lastBefore = m;
+                }
+
+                if (lastBefore != null)
+                {
+                    return (true, lastBefore.Index, lastBefore.Value);
                 }
             }
             catch (Exception exception) when (exception is ArgumentException or RegexMatchTimeoutException)
@@ -694,6 +722,9 @@ public partial class FindService : IFindService
     {
         try
         {
+            // The line is sliced at the caret on purpose: "^" then re-anchors at the resume
+            // point, which is what lets a "(^|\n).{38,}($|\n)"-style pattern find the second
+            // line of a paragraph in full (see FindServiceTests.RegexOverlappingNewlineBoundary).
             var searchLine = startIndex > 0 ? line.Substring(startIndex) : line;
             var originalLength = searchLine.Length;
             searchLine = NormalizeLineEndingsForRegex(searchLine, out var indexMap);
@@ -716,6 +747,8 @@ public partial class FindService : IFindService
     {
         try
         {
+            // Truncated at the caret on purpose, mirroring FindWithRegex: "$" then anchors at
+            // the resume point so the search walks backwards line by line.
             var searchLine = line.Substring(0, Math.Min(startIndex + 1, line.Length));
             var originalLength = searchLine.Length;
             searchLine = NormalizeLineEndingsForRegex(searchLine, out var indexMap);

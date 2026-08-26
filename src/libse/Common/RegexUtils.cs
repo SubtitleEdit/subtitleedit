@@ -291,7 +291,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// \n left behind by the match normalization above was written as a physical newline
         /// inside the Dialogue line, corrupting the saved file on Windows (#12620).
         /// </summary>
-        private static string RestorePlatformNewLines(string text)
+        public static string RestorePlatformNewLines(string text)
         {
             if (Environment.NewLine == "\n" || text.IndexOf('\n') < 0)
             {

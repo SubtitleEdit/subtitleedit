@@ -456,7 +456,12 @@ internal static class LibSEIntegration
         // Strip native source-format markup that the target wouldn't understand
         if (sourceFormat != null && !sourceFormat.GetType().Equals(targetFormat.GetType()))
         {
-            targetFormat.RemoveNativeFormatting(subtitle, sourceFormat);
+            // The *source* format strips its own markup, taking the target as the argument -
+            // see SubtitleFormat.RemoveNativeFormatting(subtitle, newFormat) and every UI/batch
+            // caller. Swapped, this asked the target to strip the source's tags, which for a
+            // text target is a no-op: every ASSA override and drawing block survived into the
+            // converted file.
+            sourceFormat.RemoveNativeFormatting(subtitle, targetFormat);
         }
 
         var outputDir = Path.GetDirectoryName(filePath);

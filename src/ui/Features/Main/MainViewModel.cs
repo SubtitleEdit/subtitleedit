@@ -6155,9 +6155,14 @@ public partial class MainViewModel :
             return;
         }
 
-        var total = Subtitles.Count;
+        // The column is the working subtitle's: a display-only reference row is not a cell,
+        // so it must neither give up its text nor receive a rotated one (the sibling column
+        // commands filter the same way). Rotating over raw Subtitles pulled reference text
+        // into working lines and wrote working text onto rows that are never saved.
+        var column = Subtitles.Where(p => !p.IsReferenceOnly).ToList();
+        var total = column.Count;
         var sel = selectedItems
-            .Select(x => Subtitles.IndexOf(x))
+            .Select(x => column.IndexOf(x))
             .Where(i => i >= 0 && i < total)
             .Distinct()
             .OrderBy(i => i)
@@ -6196,14 +6201,14 @@ public partial class MainViewModel :
                 continue;
             }
 
-            var temp = Subtitles[start - 1].Text;
+            var temp = column[start - 1].Text;
             // shift up
             for (int i = start - 1; i < end; i++)
             {
-                Subtitles[i].Text = Subtitles[i + 1].Text;
+                column[i].Text = column[i + 1].Text;
             }
 
-            Subtitles[end].Text = temp;
+            column[end].Text = temp;
         }
 
         _shortcutManager.ClearKeys();
@@ -6219,9 +6224,14 @@ public partial class MainViewModel :
             return;
         }
 
-        var total = Subtitles.Count;
+        // The column is the working subtitle's: a display-only reference row is not a cell,
+        // so it must neither give up its text nor receive a rotated one (the sibling column
+        // commands filter the same way). Rotating over raw Subtitles pulled reference text
+        // into working lines and wrote working text onto rows that are never saved.
+        var column = Subtitles.Where(p => !p.IsReferenceOnly).ToList();
+        var total = column.Count;
         var sel = selectedItems
-            .Select(x => Subtitles.IndexOf(x))
+            .Select(x => column.IndexOf(x))
             .Where(i => i >= 0 && i < total)
             .Distinct()
             .OrderBy(i => i)
@@ -6260,14 +6270,14 @@ public partial class MainViewModel :
                 continue;
             }
 
-            var temp = Subtitles[end + 1].Text;
+            var temp = column[end + 1].Text;
             // shift down
             for (int i = end + 1; i > start; i--)
             {
-                Subtitles[i].Text = Subtitles[i - 1].Text;
+                column[i].Text = column[i - 1].Text;
             }
 
-            Subtitles[start].Text = temp;
+            column[start].Text = temp;
         }
 
         _shortcutManager.ClearKeys();
@@ -10855,7 +10865,15 @@ public partial class MainViewModel :
             }
 
             Subtitles[i].OriginalText = Subtitles[i].Text;
-            Subtitles[i].Text = result.Rows[i].TranslatedText;
+
+            // Only rows that actually came back translated: OK is enabled as soon as a single
+            // row has a translation (translate-one-row, translate-from-here, or Cancel part way),
+            // so writing every row unconditionally blanked every line that was never sent.
+            // Same guard the translate-via-copy-paste and translate-selected-lines paths use.
+            if (!string.IsNullOrEmpty(result.Rows[i].TranslatedText))
+            {
+                Subtitles[i].Text = result.Rows[i].TranslatedText;
+            }
 
             // Whatever original this row pointed into is gone - the pre-translation text is the
             // original now.
@@ -14519,7 +14537,12 @@ public partial class MainViewModel :
                 }
 
                 var replaced = match.Result(fixedReplaceText);
-                newLine = normalizedLine.Substring(0, normalizedIndex) + replaced + normalizedLine.Substring(normalizedIndex + match.Length);
+                // The result is assembled from the \n-normalized copy, so restore the platform
+                // line endings before it goes back into the paragraph - otherwise a single-step
+                // regex replace silently rewrote every \r\n in the line to a bare \n (Replace
+                // all does this via RegexUtils.ReplaceNewLineSafe).
+                newLine = RegexUtils.RestorePlatformNewLines(
+                    normalizedLine.Substring(0, normalizedIndex) + replaced + normalizedLine.Substring(normalizedIndex + match.Length));
                 return replaced.Length;
             }
             catch (Exception exception) when (exception is ArgumentException or RegexMatchTimeoutException)
@@ -23377,7 +23400,10 @@ public partial class MainViewModel :
                 {
                     WaveformGeneratingText = Se.Language.Main.GeneratingSpectrogramDotDotDot;
                     var spectrogram = waveFile.GenerateSpectrogram(0, spectrogramFolderName, _videoOpenTokenSource.Token);
-                    AudioVisualizer?.SetSpectrogram(spectrogram);
+                    // On the UI thread: SetSpectrogram synchronously disposes the SKBitmaps
+                    // DrawSpectrogram is handing to Skia, and this method runs on the
+                    // extraction worker (everything else here marshals the same way).
+                    Dispatcher.UIThread.Post(() => AudioVisualizer?.SetSpectrogram(spectrogram));
 
                     if (WasCancelled())
                     {
@@ -23732,6 +23758,10 @@ public partial class MainViewModel :
                 // The teletext dialog edits MarginV and nothing else, so without it here that
                 // edit is invisible to undo and to the modified/save tracking below.
                 hash = hash * 23 + (p.MarginV?.GetHashCode() ?? 0);
+                // Bookmarks are compared by DetectContentChanges, so they have to move the hash
+                // too - otherwise bookmarking alone records no snapshot and the bookmark gets
+                // baked into the next unrelated edit's entry, where one undo removes both.
+                hash = hash * 23 + (p.Bookmark?.GetHashCode() ?? 0);
             }
 
             return hash;

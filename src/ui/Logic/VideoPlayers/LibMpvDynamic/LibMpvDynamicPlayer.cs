@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using System;
@@ -2061,6 +2061,12 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         {
             return;
         }
+
+        // Every other state transition clears this (LoadFile/PlayOrPause/CloseFile/Stop/Play/
+        // frame steps). Without it, pausing after a seek made during playback made the Position
+        // getter keep returning that old seek target, so the slider, clock and playhead all
+        // jumped back to it.
+        _pausedValue = null;
 
         var err = DoMpvCommand("set", "pause", "yes");
         if (err < 0)

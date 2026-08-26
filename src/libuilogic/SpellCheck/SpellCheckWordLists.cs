@@ -82,11 +82,17 @@ public class SpellCheckWordLists
             }
         }
 
+        // The two-letter file is read as well as the five-letter one: Utilities.AddToUserDictionary
+        // falls back to "<twoLetter>_user.xml" when the five-letter file does not exist, and
+        // Options > Word lists offers neutral cultures ("en"), so words genuinely land there.
+        // Reading only the five-letter name made those words invisible to the spell checker.
+        var twoLetterName = fiveLetterName.Length >= 2 ? fiveLetterName.Substring(0, 2).ToLowerInvariant() : fiveLetterName;
         var paths = new[]
         {
             Path.Combine(_dictionaryFolder, fiveLetterName + "_user.xml"),
             Path.Combine(_dictionaryFolder, fiveLetterName + "_se.xml"),
-        };
+            Path.Combine(_dictionaryFolder, twoLetterName + "_user.xml"),
+        }.Distinct().ToArray();
 
         var xmlDoc = new XmlDocument();
         foreach (var path in paths)
@@ -203,6 +209,15 @@ public class SpellCheckWordLists
         SaveUseAlwaysList(null, null, key);
     }
 
+    /// <summary>
+    /// Persists a "use always" (change-all) pair. Only the remove side was wired up, so the
+    /// list on disk could ever only shrink and a change-all never survived the session.
+    /// </summary>
+    public void UseAlwaysListAdd(string key, string value)
+    {
+        SaveUseAlwaysList(key, value);
+    }
+
     private void SaveUseAlwaysList(string? newKey = null, string? newValue = null, string? oldKey = null)
     {
         if (!Configuration.Settings.Tools.RememberUseAlwaysList)
@@ -249,10 +264,19 @@ public class SpellCheckWordLists
 
     public void RemoveName(string word)
     {
-        if (word == null || word.Length <= 1 || !_names.Contains(word))
+        // Multi-word names live in the name list's multi-word set, not in _names, so testing
+        // only _names made them impossible to remove at all.
+        if (word == null || word.Length <= 1 ||
+            (!_names.Contains(word) && !_nameList.GetMultiNames().Contains(word)))
         {
             return;
         }
+
+        // Persist first: NameList.GetNames() hands out its live set, so _names IS the name
+        // list's own collection. Removing from it here before delegating made NameList.Remove's
+        // "do I know this name?" guard fail, and the blacklist/XML write was skipped entirely -
+        // undoing "add to names list" changed nothing on disk.
+        _nameList.Remove(word);
 
         _names.Remove(word);
         _namesListUppercase.Remove(word.ToUpperInvariant());
@@ -270,8 +294,46 @@ public class SpellCheckWordLists
         {
             _namesListWithApostrophe.Remove(word + "'");
         }
+    }
 
-        _nameList.Remove(word);
+    /// <summary>
+    /// True when <paramref name="word"/> falls inside a user phrase occurring in
+    /// <paramref name="text"/>. The index-based overload needs the neighbouring words, which
+    /// the live spell-check path (underlines, grid context menu) does not have - so user
+    /// phrases were honoured only inside the spell-check window.
+    /// </summary>
+    public bool IsWordInUserPhrases(SpellCheckWord word, string text)
+    {
+        if (_userPhraseList.Count == 0 || string.IsNullOrEmpty(text) || word == null)
+        {
+            return false;
+        }
+
+        foreach (var userPhrase in _userPhraseList)
+        {
+            if (userPhrase.Length == 0)
+            {
+                continue;
+            }
+
+            var start = text.IndexOf(userPhrase, StringComparison.OrdinalIgnoreCase);
+            while (start >= 0)
+            {
+                if (word.Index >= start && word.Index + word.Length <= start + userPhrase.Length)
+                {
+                    return true;
+                }
+
+                if (start + 1 >= text.Length)
+                {
+                    break;
+                }
+
+                start = text.IndexOf(userPhrase, start + 1, StringComparison.OrdinalIgnoreCase);
+            }
+        }
+
+        return false;
     }
 
     public bool IsWordInUserPhrases(int index, List<SpellCheckWord> words)

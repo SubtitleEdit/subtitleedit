@@ -50,10 +50,20 @@ namespace Nikse.SubtitleEdit.Core.Common
                 dest[2] += 33;
                 dest[3] += 33;
 
-                sb.Append(Encoding.ASCII.GetString(dest));
+                // The final group emits only as many characters as it carries data for -
+                // min(remaining + 1, 4), per the ASS/Aegisub convention that UUDecode below
+                // already implements. Always writing 4 made every embedded font/attachment
+                // 1-2 bytes longer than the original, decoding back with padding zeros.
+                var charsToWrite = 4;
+                if (i + 3 > length)
+                {
+                    charsToWrite = Math.Min(length - i + 1, 4);
+                }
 
-                lineElements += 4;
-                if (lineElements == 80)
+                sb.Append(Encoding.ASCII.GetString(dest, 0, charsToWrite));
+
+                lineElements += charsToWrite;
+                if (lineElements >= 80)
                 {
                     sb.AppendLine();
                     lineElements = 0;
