@@ -13,8 +13,8 @@ public class BugHunt20260823Test
         var c = new ActorConverter(new SubRip(), "en") { ToSquare = true };
         var p = new Paragraph { Text = "Joe: How are you?" };
         var result = c.FixActorsFromBeforeColon(p, ':', null, SKColors.Red);
-        Assert.StartsWith("<font color=\"#ff0000", result);
-        Assert.EndsWith("\">[Joe]</font> How are you?", result);
+        Assert.StartsWith("<font color=\"#ff0000", result.Paragraph.Text);
+        Assert.EndsWith("\">[Joe]</font> How are you?", result.Paragraph.Text);
     }
 
     [Fact]
@@ -23,7 +23,7 @@ public class BugHunt20260823Test
         var c = new ActorConverter(new SubRip(), "en") { ToSquare = true };
         var p = new Paragraph { Text = "   Joe: How are you?" };
         var result = c.FixActorsFromBeforeColon(p, ':', null, null);
-        Assert.Equal("[Joe] How are you?", result);
+        Assert.Equal("[Joe] How are you?", result.Paragraph.Text);
     }
 
     [Fact]
@@ -32,8 +32,8 @@ public class BugHunt20260823Test
         var c = new ActorConverter(new SubRip(), "en") { ToActor = true };
         var p = new Paragraph { Text = "Joe: How are you?" };
         var result = c.FixActorsFromBeforeColon(p, ':', null, null);
-        Assert.Equal("How are you?", result);
-        Assert.Equal("Joe", p.Actor);
+        Assert.Equal("How are you?", result.Paragraph.Text);
+        Assert.Equal("Joe", result.Paragraph.Actor);
     }
 
     [Fact]

@@ -40,6 +40,7 @@ public partial class ToolbarItemDisplay : ObservableObject
             SeWaveformToolbarItemType.VerticalZoom => Format(w.ZoomVerticalHint),
             SeWaveformToolbarItemType.HorizontalZoom => Format(w.ZoomHorizontalHint),
             SeWaveformToolbarItemType.VideoPositionSlider => Format(w.VideoPosition),
+            SeWaveformToolbarItemType.VideoPositionText => Format(w.VideoPositionTextBox),
             SeWaveformToolbarItemType.PlaybackSpeed => Se.Language.General.PlaybackSpeed,
             SeWaveformToolbarItemType.AutoSelectOnPlay => Format(w.SelectCurrentLineWhilePlayingHint),
             SeWaveformToolbarItemType.Center => Format(w.CenterWaveformHint),

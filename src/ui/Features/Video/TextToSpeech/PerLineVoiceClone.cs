@@ -5,6 +5,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -256,21 +257,87 @@ public static class PerLineVoiceClone
     }
 
     /// <summary>
+    /// Every engine that knows how to clone per line. Taken from the shared catalog rather than
+    /// listed here, so an engine added there (implementing <see cref="IPerLineCloneEngine"/>) is
+    /// covered by <see cref="TryGetReferenceClip"/> for free.
+    /// </summary>
+    private static readonly Lazy<IPerLineCloneEngine[]> CloneEngines = new(() =>
+        TtsEngineCatalog.CreateVoiceCloningEngines().OfType<IPerLineCloneEngine>().ToArray());
+
+    /// <summary>
     /// Wraps a cut clip as a voice <paramref name="engine"/> understands.
     /// </summary>
     /// <remarks>
-    /// The engine voice types share no interface, so each engine that opts into per-line cloning
-    /// is named here. Returning null means the engine says it supports this but nobody taught this
-    /// method how to build its voice - the caller then falls back to the ordinary voice rather
-    /// than silently synthesising with the wrong speaker.
+    /// The per-engine knowledge lives on the engine itself, behind
+    /// <see cref="IPerLineCloneEngine"/>. Returning null means the engine could not use the clip
+    /// as a reference (e.g. no transcript beside it) - the caller then falls back to the ordinary
+    /// voice rather than silently synthesising with the wrong speaker. An engine that sets
+    /// <see cref="ITtsEngine.SupportsPerLineVoiceCloning"/> without implementing the interface is
+    /// a wiring bug, not a fallback case, and asserts in debug builds.
     /// </remarks>
-    public static Voice? MakeVoiceForClip(ITtsEngine engine, string clipFileName)
+    /// <param name="voiceName">
+    /// What to call the voice, for the rows and lists that show it. Defaults to the clip's file
+    /// name; an imported session passes the name the clip had when it was exported, so a line
+    /// keeps the voice name it was generated with instead of picking up the exported clip's.
+    /// </param>
+    public static Voice? MakeVoiceForClip(ITtsEngine engine, string clipFileName, string? voiceName = null)
     {
-        var name = Path.GetFileNameWithoutExtension(clipFileName);
-        return engine switch
+        if (engine is not IPerLineCloneEngine cloneEngine)
         {
-            OmniVoiceTtsCpp => new Voice(new OmniVoice(name, clipFileName)),
-            _ => null,
-        };
+            // The capability flag promises per-line cloning; the interface is how it is
+            // delivered. One without the other would offer "Clone from video" and then dub
+            // every line in the fallback voice.
+            Debug.Assert(!engine.SupportsPerLineVoiceCloning,
+                $"{engine.Name} sets {nameof(ITtsEngine.SupportsPerLineVoiceCloning)} but does not implement {nameof(IPerLineCloneEngine)}");
+            return null;
+        }
+
+        var name = string.IsNullOrEmpty(voiceName) ? Path.GetFileNameWithoutExtension(clipFileName) : voiceName;
+        return cloneEngine.MakePerLineCloneVoice(clipFileName, name);
     }
+
+    /// <summary>
+    /// The recording <paramref name="voice"/> clones from, or null when it clones from nothing -
+    /// or when no engine could be handed it back.
+    /// </summary>
+    /// <remarks>
+    /// Asks every <see cref="IPerLineCloneEngine"/> whether the voice is its own; each engine
+    /// keeps <see cref="IPerLineCloneEngine.MakePerLineCloneVoice"/> and
+    /// <see cref="IPerLineCloneEngine.GetPerLineReferenceClip"/> in step in one place. The
+    /// callers are export (which copies the recording so the session can be re-imported
+    /// elsewhere) and regenerate (which reuses it), and a reference no engine can be handed back
+    /// is worth neither.
+    /// </remarks>
+    public static string? TryGetReferenceClip(Voice? voice)
+    {
+        if (voice == null)
+        {
+            return null;
+        }
+
+        foreach (var engine in CloneEngines.Value)
+        {
+            if (engine.GetPerLineReferenceClip(voice) is { } clip)
+            {
+                return clip;
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Clears what a previous run staged inside an engine's own folders, and is called as a
+    /// per-line run starts.
+    /// </summary>
+    /// <remarks>
+    /// Engines that can only read a reference from their voices folder keep a copy of every
+    /// line's clip there (see <see cref="IPerLineCloneEngine.MakePerLineCloneVoice"/>). Cutting
+    /// the clips into a fresh folder each run - which the caller does - says nothing about those
+    /// copies, so a run over a shorter subtitle than the last would leave the previous run's
+    /// extra lines behind. Engines that take the clip's own path stage nothing and implement
+    /// this as a no-op.
+    /// </remarks>
+    public static void ResetStagedReferences(ITtsEngine? engine) =>
+        (engine as IPerLineCloneEngine)?.ResetStagedPerLineReferences();
 }

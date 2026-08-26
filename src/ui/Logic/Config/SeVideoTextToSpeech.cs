@@ -38,6 +38,10 @@ public class SeVideoTextToSpeech
     public double VibeVoiceCrispAsrSpeed { get; set; }
     public string IndexTtsCrispAsrModel { get; set; }
     public double IndexTtsCrispAsrSpeed { get; set; }
+    public string DotsTtsCrispAsrModel { get; set; }
+    // Flow-matching Euler steps for dots.tts (8-32, default 16). Higher is better and slower;
+    // there is no CLI flag for it, so the engine passes it as CRISPASR_DOTS_ODE_STEPS.
+    public int DotsTtsCrispAsrOdeSteps { get; set; }
     public string IndexTts25AudioCppModel { get; set; }
     // Licence version the user accepted for the IndexTTS-2.5 weights (bilibili Model Use
     // License, not OSI-approved). Empty until accepted; a version bump re-prompts.
@@ -169,6 +173,8 @@ public class SeVideoTextToSpeech
         VibeVoiceCrispAsrSpeed = 1.1;
         IndexTtsCrispAsrModel = "Q8_0 (~870 MB)";
         IndexTtsCrispAsrSpeed = 1.0;
+        DotsTtsCrispAsrModel = "Q8_0 (~3.5 GB)";
+        DotsTtsCrispAsrOdeSteps = 16;
         IndexTts25AudioCppModel = "Q8_0 (~3.3 GB)";
         IndexTts25AudioCppLicenseAccepted = string.Empty;
         IndexTts25AudioCppBackend = string.Empty;

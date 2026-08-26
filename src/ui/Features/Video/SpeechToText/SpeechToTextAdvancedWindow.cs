@@ -1,9 +1,10 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
+using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -112,22 +113,49 @@ public class SpeechToTextAdvancedWindow : Window
             }
         }.WithBindIsVisible(nameof(vm.IsWhisperXxlVisible));
 
+        // These switch parameters on. As plain buttons there was no way to press one back off
+        // again, so anything they set - word-level output above all - stayed on for good.
+        static ToggleButton MakeToggleButton(string text, IRelayCommand command, string activePath, string visiblePath)
+        {
+            var toggleButton = new ToggleButton
+            {
+                Content = text,
+                Margin = new Thickness(4, 0),
+                Padding = new Thickness(12, 6),
+                MinWidth = 80,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalContentAlignment = HorizontalAlignment.Center,
+                VerticalContentAlignment = VerticalAlignment.Center,
+                Command = command,
+            }.WithBindIsVisible(visiblePath);
+
+            // One way only: the parameter text is what says whether the switch is set, the
+            // button just shows it.
+            toggleButton.Bind(ToggleButton.IsCheckedProperty, new Binding(activePath)
+            {
+                Mode = BindingMode.OneWay,
+            });
+
+            return toggleButton;
+        }
+
         var buttonPanel = UiUtil.MakeButtonBar(
             buttonXxlOptions,
-            UiUtil.MakeButton(Se.Language.Video.AudioToText.EnableVad, vm.EnableVadCppCommand)
-                .WithBindIsVisible(nameof(vm.IsWhisperCppVisible)),
-            UiUtil.MakeButton(Se.Language.Video.AudioToText.EnableVad, vm.EnableVadCTranslate2Command)
-                .WithBindIsVisible(nameof(vm.IsWhisperCTranslate2Visible)),
+            MakeToggleButton(Se.Language.Video.AudioToText.EnableVad, vm.EnableVadCppCommand,
+                nameof(vm.IsVadCppActive), nameof(vm.IsWhisperCppVisible)),
+            MakeToggleButton(Se.Language.Video.AudioToText.EnableVad, vm.EnableVadCTranslate2Command,
+                nameof(vm.IsVadCTranslate2Active), nameof(vm.IsWhisperCTranslate2Visible)),
             UiUtil.MakeButton(Se.Language.Video.AudioToText.WhisperXxlStandard, vm.StandardCrispAsrCommand)
                 .WithBindIsVisible(nameof(vm.IsCrispAsrVisible)),
-            UiUtil.MakeButton(Se.Language.Video.AudioToText.EnableVad, vm.EnableVadCrispAsrCommand)
-                .WithBindIsVisible(nameof(vm.IsCrispAsrVisible)),
-            UiUtil.MakeButton(Se.Language.Video.AudioToText.WhisperXxlHighlightWord, vm.EnableHighlightWordsCrispAsrCommand)
-                .WithBindIsVisible(nameof(vm.IsCrispAsrVisible)),
-            UiUtil.MakeButton(Se.Language.Video.AudioToText.WhisperXxlHighlightWord, vm.EnableWordLevelCppCommand)
-                .WithBindIsVisible(nameof(vm.IsWhisperCppVisible)),
-            UiUtil.MakeButton(Se.Language.Video.AudioToText.WhisperXxlHighlightWord, vm.WhisperCTranslate2HighLightWordCommand)
-                .WithBindIsVisible(nameof(vm.IsWhisperCTranslate2Visible)),
+            MakeToggleButton(Se.Language.Video.AudioToText.EnableVad, vm.EnableVadCrispAsrCommand,
+                nameof(vm.IsVadCrispAsrActive), nameof(vm.IsCrispAsrVisible)),
+            MakeToggleButton(Se.Language.Video.AudioToText.WhisperXxlHighlightWord, vm.EnableHighlightWordsCrispAsrCommand,
+                nameof(vm.IsHighlightWordsCrispAsrActive), nameof(vm.IsCrispAsrVisible)),
+            MakeToggleButton(Se.Language.Video.AudioToText.WhisperXxlHighlightWord, vm.EnableWordLevelCppCommand,
+                nameof(vm.IsWordLevelCppActive), nameof(vm.IsWhisperCppVisible)),
+            MakeToggleButton(Se.Language.Video.AudioToText.WhisperXxlHighlightWord, vm.WhisperCTranslate2HighLightWordCommand,
+                nameof(vm.IsHighlightWordsCTranslate2Active), nameof(vm.IsWhisperCTranslate2Visible)),
             UiUtil.MakeButton(Se.Language.General.Ok, vm.OkCommand),
             UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelCommand)
         );

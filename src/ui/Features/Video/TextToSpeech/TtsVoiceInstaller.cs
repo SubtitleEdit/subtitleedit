@@ -164,6 +164,18 @@ public static class TtsVoiceInstaller
             minVersionNote: "v0.8.13 or newer");
 
     /// <summary>
+    /// Ensures the CrispASR runtime that dots.tts (CrispASR) runs on is installed.
+    /// The dots-tts backend ships in CrispASR v0.8.25 and newer (SE pins v0.8.29); the version
+    /// note names that floor because older builds have no dots-tts backend at all and abort on
+    /// the unknown --backend value.
+    /// </summary>
+    public static Task<bool> EnsureCrispAsrForDotsTts(Window? window, IWindowService windowService, bool forceRedownload)
+        => EnsureCrispAsrAsync(window, windowService, forceRedownload,
+            engineDisplayName: "dots.tts (CrispASR)",
+            extraCapabilityCheck: null,
+            minVersionNote: "v0.8.25 or newer");
+
+    /// <summary>
     /// Shared CrispASR install/update flow used by all TTS engines that sit on the
     /// CrispASR runtime. Prompts refer to <paramref name="engineDisplayName"/> so users
     /// see the right engine name. <paramref name="extraCapabilityCheck"/> lets the caller

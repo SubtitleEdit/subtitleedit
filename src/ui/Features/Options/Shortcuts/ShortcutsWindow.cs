@@ -450,6 +450,11 @@ public class ShortcutsWindow : Window
         };
         flyout.Items.Add(menuItemImportSe4);
 
+        // On macOS a Ctrl+click is the secondary click, but it does not reach ContextFlyout
+        // reliably - so without this the Import/Export menu is unreachable for anyone using a
+        // one-button mouse or a trackpad with secondary click turned off. Every other window
+        // with a control-scoped flyout already does this; this grid was the one left out.
+        UiUtil.AttachMacContextFlyoutHandler(shortcutsGrid);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.CommandOkCommand);
         var buttonResetAllShortcuts = UiUtil.MakeButton(Se.Language.General.Reset, vm.ResetAllShortcutsCommand);

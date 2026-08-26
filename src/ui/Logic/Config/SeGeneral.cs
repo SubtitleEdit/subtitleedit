@@ -5,6 +5,7 @@ using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
 
@@ -36,7 +37,27 @@ public class SeGeneral
     public bool FixContinuationStyleIgnoreLyrics { get; set; }
 
 
-    public bool UseFrameMode { get; set; } = false;
+    /// <summary>
+    /// The user's persisted frame-mode choice, stored as "UseFrameMode" in the settings file.
+    /// Read <see cref="UseFrameMode"/> instead, so the temporary override is honored.
+    /// </summary>
+    [JsonPropertyName("UseFrameMode")]
+    public bool UseFrameModePersisted { get; set; }
+
+    /// <summary>
+    /// Session-only frame mode, forced while a frame-based format (EBU STL) is the active
+    /// format (#14076). Managed by the main view when the subtitle format changes; never saved.
+    /// </summary>
+    [JsonIgnore]
+    public bool? UseFrameModeOverride { get; set; }
+
+    [JsonIgnore]
+    public bool UseFrameMode
+    {
+        get => UseFrameModeOverride ?? UseFrameModePersisted;
+        set => UseFrameModePersisted = value;
+    }
+
     public double DefaultFrameRate { get; set; }
     public double CurrentFrameRate { get; set; }
     public string DefaultSubtitleFormat { get; set; }

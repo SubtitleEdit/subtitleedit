@@ -2,6 +2,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.UiLogic.Http;
+using Nikse.SubtitleEdit.UiLogic.Ocr;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -93,17 +94,7 @@ public class OllamaOcr : IDisposable
             // Strip any trailing garbage the model still appends after the real text (repeated
             // lines, ``` fences, an echo of the prompt) — the transcription is always first.
             resultText = CleanOcrText(resultText, prompt);
-            resultText = resultText.Replace(" ,", ",");
-            resultText = resultText.Replace(" .", ".");
-            resultText = resultText.Replace(" !", "!");
-            resultText = resultText.Replace(" ?", "?");
-            resultText = resultText.Replace("( ", "(");
-            resultText = resultText.Replace(" )", ")");
-            resultText = resultText.Replace("\\\"", "\"");
-            if (resultText.EndsWith("!'"))
-            {
-                resultText = resultText.TrimEnd('\'');
-            }
+            resultText = OcrHelper.FixAiOcrPunctuationSpaces(resultText, language);
 
             return resultText.Trim();
         }

@@ -88,8 +88,9 @@ public class BinaryEditViewModelTests
 
         BinaryEditViewModel.ScaleBinarySubtitleTimes([item], factor);
 
-        Assert.Equal(9090.909, item.StartTime.TotalMilliseconds, 3);
-        Assert.Equal(9272.727, item.EndTime.TotalMilliseconds, 3);
+        // Scaled times are rounded to the whole millisecond subtitle formats store (#14056).
+        Assert.Equal(9091, item.StartTime.TotalMilliseconds); // round(10000 * 100/110)
+        Assert.Equal(9273, item.EndTime.TotalMilliseconds);   // round(10200 * 100/110)
         Assert.True(item.Duration > TimeSpan.Zero);
     }
 }

@@ -76,6 +76,7 @@ internal static class HelpDisplay
         ShowParameter(console, "--translate-engine:<engine>", "llamacpp (default; auto-starts a local llama-server) | ollama | lmstudio | libretranslate | nllb-serve | nllb-api");
         ShowParameter(console, "--translate-url:<url>", "Endpoint of an already-running translate server (llamacpp: skips the auto-start)");
         ShowParameter(console, "--translate-model:<model>", "Ollama/LM Studio model name, or llamacpp .gguf file name/path");
+        ShowParameter(console, "--translate-prompt:<text|file>", "Prompt for llamacpp/ollama/lmstudio: inline text (\\n = line break) or a text file; {0}=source, {1}=target, {2}=text (completion-format models)");
         ShowParameter(console, "--multiple-replace:<path.xml>", "SE MultipleSearchAndReplaceGroups XML applied per paragraph");
         ShowParameter(console, "--custom-format:<path.xml>", "SE CustomFormatItem XML (use with --format customtext)");
         ShowParameter(console, "--settings:<path.json>", "JSON settings file overriding libse defaults");
@@ -194,6 +195,9 @@ internal static class HelpDisplay
         ShowExample(console,
             "seconv movie.srt subrip --translate-to:da --translate-engine:ollama --translate-model:gemma2",
             "Translate to Danish via a running Ollama instance");
+        ShowExample(console,
+            "seconv movie.srt subrip --translate-to:de --translate-prompt:my-prompt.txt",
+            "Translate with your own prompt ({0}=source language, {1}=target language)");
         ShowExample(console,
             "seconv formats",
             "List all available formats");

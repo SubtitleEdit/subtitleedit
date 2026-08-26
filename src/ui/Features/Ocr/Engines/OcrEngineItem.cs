@@ -43,6 +43,14 @@ public class OcrEngineItem
         list.Add(new("Ollama", OcrEngineType.Ollama, "Ollama e.g. via llama-vision", "", "http://localhost:11434/api/chat"));
         list.Add(new("llama.cpp", OcrEngineType.LlamaCpp, "llama.cpp", "", "http://127.0.0.1:8080/v1/chat/completions"));
 
+        // Apple Vision sits with the other local engines, above the cloud ones: on macOS it is
+        // the only engine that needs no download, no runtime and no key, and on an Intel Mac it
+        // is the only local engine SE can offer without sending the user to Homebrew or pip.
+        if (AppleVisionOcr.IsAvailable())
+        {
+            list.Add(new(AppleVisionOcr.StaticName, OcrEngineType.AppleVision, "Apple Vision is macOS's built-in OCR engine (no download needed)", "", ""));
+        }
+
         if (CrispEmbedEngine.CanBeDownloaded())
         {
             list.Add(new(CrispEmbedEngine.StaticName, OcrEngineType.CrispEmbed, "CrispEmbed is a local OCR engine with multiple model backends (free/open source)", "", ""));

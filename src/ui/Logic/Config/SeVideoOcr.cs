@@ -6,6 +6,9 @@ public class SeVideoOcr
 {
     public string Engine { get; set; }
     public string PaddleLanguage { get; set; }
+
+    /// <summary>Apple Vision's recognition language, as its BCP-47 tag. macOS only.</summary>
+    public string AppleVisionLanguage { get; set; }
     public string OllamaUrl { get; set; }
     public string OllamaModel { get; set; }
     public string OllamaLanguage { get; set; }
@@ -32,10 +35,14 @@ public class SeVideoOcr
 
     public SeVideoOcr()
     {
-        Engine = System.OperatingSystem.IsWindows() || System.OperatingSystem.IsLinux()
-            ? OcrEngineType.PaddleOcrStandalone.ToString()
-            : OcrEngineType.PaddleOcrPython.ToString();
+        // Unlike the other two, this setting stores the enum name rather than the display name.
+        // macOS had been defaulting to the Python PaddleOCR, which needs a pip install before it
+        // does anything; Apple Vision is there already.
+        Engine = System.OperatingSystem.IsMacOS()
+            ? OcrEngineType.AppleVision.ToString()
+            : OcrEngineType.PaddleOcrStandalone.ToString();
         PaddleLanguage = "en";
+        AppleVisionLanguage = "en-US";
         OllamaUrl = "http://localhost:11434/api/chat";
         OllamaModel = "glm-ocr";
         OllamaLanguage = "English";

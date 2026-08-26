@@ -128,30 +128,37 @@ public static class LlamaCppServerManager
         // Alternative model family. Qwen 3 is the strongest open model for CJK
         // (Chinese/Japanese/Korean) and competitive elsewhere — useful fallback
         // when Gemma's quirks bite (occasional refusals, formatting drift, etc).
-        // --no-jinja + chatml bypasses the embedded Jinja template's
-        // enable_thinking logic on the hybrid Qwen3-8B so output is clean
-        // translation, not <think>...</think> reasoning blocks.
+        // NoThinking (--reasoning off) suppresses the hybrid Qwen3 template's thinking mode so
+        // output is clean translation, not <think>...</think> reasoning blocks - same mechanism
+        // as Gemma 4 above. This used to be "--no-jinja --chat-template chatml" instead (forcing
+        // the template also bypasses enable_thinking), but that proved unreliable: a controlled
+        // A/B (seconv EN->DA, 10 reps x 20 lines on the Q8_0 9B, 200 lines/variant) measured
+        // chatml+no-jinja leaking raw <think> text - which runs the model out of its token budget
+        // before it ever reaches the translation - into 2.5% of lines (5/200), while NoThinking
+        // alone stayed at 0% (0/200) across every rep on both the 9B and the 4B Q4_K_M (0/60).
+        // Stacking both overrides is worse, not better (6.5% on 9B, 16.7% on 4B): --reasoning off
+        // does not reliably suppress thinking once --chat-template chatml has replaced the
+        // template it hooks into, so the two must never be combined.
         new LlamaCppModel("Qwen 3 4B Instruct (Q4_K_M)", "Qwen_Qwen3-4B-Instruct-2507-Q4_K_M.gguf", "2.5 GB",
             "https://huggingface.co/bartowski/Qwen_Qwen3-4B-Instruct-2507-GGUF/resolve/main/Qwen_Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
-            ChatTemplate: "chatml", NoJinja: true),
+            NoThinking: true),
         new LlamaCppModel("Qwen 3 8B (Q4_K_M)", "Qwen_Qwen3-8B-Q4_K_M.gguf", "4.7 GB",
             "https://huggingface.co/bartowski/Qwen_Qwen3-8B-GGUF/resolve/main/Qwen_Qwen3-8B-Q4_K_M.gguf",
-            ChatTemplate: "chatml", NoJinja: true),
+            NoThinking: true),
 
-        // Qwen 3.5 - newer Qwen generation. Same chatml + --no-jinja handling as Qwen 3 (bypasses the
-        // embedded thinking template so the output is clean translation). Kept to <= 8 GB.
+        // Qwen 3.5 - newer Qwen generation. Same NoThinking handling as Qwen 3 above. Kept to <= 8 GB.
         new LlamaCppModel("Qwen 3.5 4B (Q4_K_M)", "Qwen_Qwen3.5-4B-Q4_K_M.gguf", "2.8 GB",
             "https://huggingface.co/bartowski/Qwen_Qwen3.5-4B-GGUF/resolve/main/Qwen_Qwen3.5-4B-Q4_K_M.gguf",
-            ChatTemplate: "chatml", NoJinja: true),
+            NoThinking: true),
         new LlamaCppModel("Qwen 3.5 4B (Q8_0)", "Qwen_Qwen3.5-4B-Q8_0.gguf", "4.3 GB",
             "https://huggingface.co/bartowski/Qwen_Qwen3.5-4B-GGUF/resolve/main/Qwen_Qwen3.5-4B-Q8_0.gguf",
-            ChatTemplate: "chatml", NoJinja: true),
+            NoThinking: true),
         new LlamaCppModel("Qwen 3.5 9B (Q4_K_M)", "Qwen_Qwen3.5-9B-Q4_K_M.gguf", "5.7 GB",
             "https://huggingface.co/bartowski/Qwen_Qwen3.5-9B-GGUF/resolve/main/Qwen_Qwen3.5-9B-Q4_K_M.gguf",
-            ChatTemplate: "chatml", NoJinja: true),
+            NoThinking: true),
         new LlamaCppModel("Qwen 3.5 9B (Q8_0)", "Qwen_Qwen3.5-9B-Q8_0.gguf", "9.8 GB",
             "https://huggingface.co/bartowski/Qwen_Qwen3.5-9B-GGUF/resolve/main/Qwen_Qwen3.5-9B-Q8_0.gguf",
-            ChatTemplate: "chatml", NoJinja: true),
+            NoThinking: true),
 
         // Qwen 3.6 35B-A3B - a mixture-of-experts model: 35B total but only ~3B active per token, so
         // it generates fast even fully on CPU. That makes it the option for machines with plenty of
@@ -163,7 +170,7 @@ public static class LlamaCppServerManager
         // Qwen 3.5 MoE arch), which the pinned engine already supports.
         new LlamaCppModel("Qwen 3.6 35B-A3B (IQ2_M) - fast on CPU, 2-bit quality", "Qwen3.6-35B-A3B-UD-IQ2_M.gguf", "11.5 GB",
             "https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF/resolve/main/Qwen3.6-35B-A3B-UD-IQ2_M.gguf",
-            ChatTemplate: "chatml", NoJinja: true),
+            NoThinking: true),
 
         // Hy-MT2 (Tencent Hunyuan-MT 2, 2026) - translation-specialized, official GGUFs, Apache-2.0.
         // Excellent for its 33+5 supported languages (CJK, major European/Asian) but has NO Nordic
@@ -198,22 +205,23 @@ public static class LlamaCppServerManager
     // JSON output, where the plain instruct models are much stronger. Kept to ~12 GB or below.
     public static readonly IReadOnlyList<LlamaCppModel> ReviewModels = new[]
     {
+        // NoThinking instead of chatml+no-jinja - see the note in TranslateModels for the A/B data.
         new LlamaCppModel("Qwen 3.5 4B (Q4_K_M)", "Qwen_Qwen3.5-4B-Q4_K_M.gguf", "2.8 GB",
             "https://huggingface.co/bartowski/Qwen_Qwen3.5-4B-GGUF/resolve/main/Qwen_Qwen3.5-4B-Q4_K_M.gguf",
-            ChatTemplate: "chatml", NoJinja: true),
+            NoThinking: true),
         new LlamaCppModel("Qwen 3.5 4B (Q8_0)", "Qwen_Qwen3.5-4B-Q8_0.gguf", "4.3 GB",
             "https://huggingface.co/bartowski/Qwen_Qwen3.5-4B-GGUF/resolve/main/Qwen_Qwen3.5-4B-Q8_0.gguf",
-            ChatTemplate: "chatml", NoJinja: true),
+            NoThinking: true),
         new LlamaCppModel("Qwen 3.5 9B (Q4_K_M)", "Qwen_Qwen3.5-9B-Q4_K_M.gguf", "5.7 GB",
             "https://huggingface.co/bartowski/Qwen_Qwen3.5-9B-GGUF/resolve/main/Qwen_Qwen3.5-9B-Q4_K_M.gguf",
-            ChatTemplate: "chatml", NoJinja: true),
+            NoThinking: true),
         new LlamaCppModel("Qwen 3.5 9B (Q8_0)", "Qwen_Qwen3.5-9B-Q8_0.gguf", "9.8 GB",
             "https://huggingface.co/bartowski/Qwen_Qwen3.5-9B-GGUF/resolve/main/Qwen_Qwen3.5-9B-Q8_0.gguf",
-            ChatTemplate: "chatml", NoJinja: true),
+            NoThinking: true),
         // MoE, ~3B active - fast on CPU; see the note in TranslateModels for the 2-bit caveat.
         new LlamaCppModel("Qwen 3.6 35B-A3B (IQ2_M) - fast on CPU, 2-bit quality", "Qwen3.6-35B-A3B-UD-IQ2_M.gguf", "11.5 GB",
             "https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF/resolve/main/Qwen3.6-35B-A3B-UD-IQ2_M.gguf",
-            ChatTemplate: "chatml", NoJinja: true),
+            NoThinking: true),
         new LlamaCppModel("Gemma 3 4B it (Q4_K_M)", "google_gemma-3-4b-it-Q4_K_M.gguf", "2.5 GB",
             "https://huggingface.co/bartowski/google_gemma-3-4b-it-GGUF/resolve/main/google_gemma-3-4b-it-Q4_K_M.gguf",
             ChatTemplate: "gemma", NoJinja: true),
@@ -265,23 +273,35 @@ public static class LlamaCppServerManager
             "https://huggingface.co/ibm-granite/granite-4.1-8b-GGUF/resolve/main/granite-4.1-8b-Q4_K_M.gguf"),
     };
 
+    /// <summary>
+    /// The curated OCR vision models, <b>ordered best-first on subtitle images</b> - the order is
+    /// not cosmetic. The first entry is what the OCR/Video OCR/batch-convert dropdowns preselect
+    /// when nothing is saved, and the headless callers (seconv, batch convert) fall back to the
+    /// first *installed* entry, so a weaker model placed early wins over a better one that happens
+    /// to sit later in the list. Keep new models in measured rank, not in the order they were added.
+    /// Ranked 2026-08-25 on llama.cpp b10625 with SE's own flags, prompt and square-pad
+    /// preprocessing over a 14-image EN/DE/FR/ES/IT/RU/ZH/JA corpus (music cues, SDH hash cues,
+    /// italics, video-frame burn-ins, small/low-res), scoring recognition separately from line-break
+    /// preservation: GLM-OCR 13/14 exact at 2.5 s/image and the only one that keeps every line break
+    /// and every music note; PaddleOCR-VL 12/14 recognized (0.32% char error) but merges two-line
+    /// subtitles; HunyuanOCR 12/14 recognized (0.6%) with the same merging; LightOnOCR 9/14
+    /// recognized (2.53%) at 18.5 s/image - weakest and ~7x slower, hence last.
+    /// </summary>
     public static readonly IReadOnlyList<LlamaCppModel> OcrModels = new[]
     {
         new LlamaCppModel("GLM-OCR 0.9B (Q8_0)", "GLM-OCR-Q8_0.gguf", "1.4 GB",
             "https://huggingface.co/ggml-org/GLM-OCR-GGUF/resolve/main/GLM-OCR-Q8_0.gguf",
             MmprojFileName: "mmproj-GLM-OCR-Q8_0.gguf",
             MmprojUrl: "https://huggingface.co/ggml-org/GLM-OCR-GGUF/resolve/main/mmproj-GLM-OCR-Q8_0.gguf"),
-        new LlamaCppModel("LightOnOCR 1B (Q8_0)", "LightOnOCR-1B-1025-Q8_0.gguf", "1.2 GB",
-            "https://huggingface.co/ggml-org/LightOnOCR-1B-1025-GGUF/resolve/main/LightOnOCR-1B-1025-Q8_0.gguf",
-            MmprojFileName: "mmproj-LightOnOCR-1B-1025-Q8_0.gguf",
-            MmprojUrl: "https://huggingface.co/ggml-org/LightOnOCR-1B-1025-GGUF/resolve/main/mmproj-LightOnOCR-1B-1025-Q8_0.gguf"),
         // PaddlePaddle's official llama.cpp package - 109 languages (NaViT + ERNIE-4.5).
         new LlamaCppModel("PaddleOCR-VL 1.6", "PaddleOCR-VL-1.6-GGUF.gguf", "1.8 GB",
             "https://huggingface.co/PaddlePaddle/PaddleOCR-VL-1.6-GGUF/resolve/main/PaddleOCR-VL-1.6-GGUF.gguf",
             MmprojFileName: "PaddleOCR-VL-1.6-GGUF-mmproj.gguf",
             MmprojUrl: "https://huggingface.co/PaddlePaddle/PaddleOCR-VL-1.6-GGUF/resolve/main/PaddleOCR-VL-1.6-GGUF-mmproj.gguf"),
-        // HunyuanOCR 1.5 (Tencent, ~1B) - the fastest VLM in this list (~1.6x GLM-OCR per image
-        // on Apple Silicon). Verified 2026-08-15 on the pinned b10310 build, 9-image
+        // HunyuanOCR 1.5 (Tencent, ~1B). Was the fastest of the list when added (~1.6x GLM-OCR per
+        // image on b10310); on b10625 that lead is gone - re-measured 2026-08-25 at 3.4 s/image
+        // against GLM-OCR's 2.5 s, and it merges two-line subtitles into one line on 4 of 14
+        // images. Verified 2026-08-15 on the pinned b10310 build, 9-image
         // EN/DE/FR/ES/IT/ZH/JA/RU subtitle corpus: recognition itself exact in every script,
         // but two formatting quirks keep it from being the default: it sporadically prefixes a
         // markdown "# " heading (1/9 images; immune to prompt wording, identical at bf16, and
@@ -292,6 +312,14 @@ public static class LlamaCppServerManager
             "https://huggingface.co/ggml-org/HunyuanOCR-GGUF/resolve/main/HunyuanOCR-Q8_0.gguf",
             MmprojFileName: "mmproj-HunyuanOCR-Q8_0.gguf",
             MmprojUrl: "https://huggingface.co/ggml-org/HunyuanOCR-GGUF/resolve/main/mmproj-HunyuanOCR-Q8_0.gguf"),
+        // Last on purpose: the weakest and by far the slowest of the four on subtitle images
+        // (9/14 recognized, 2.53% character error, 18.5 s/image against GLM-OCR's 2.5 s). It loses
+        // line breaks, drops ♪ note marks, misreads Cyrillic ё as е and Chinese 的, and wraps
+        // Japanese output in ``` fences. Kept for users who already rely on it.
+        new LlamaCppModel("LightOnOCR 1B (Q8_0)", "LightOnOCR-1B-1025-Q8_0.gguf", "1.2 GB",
+            "https://huggingface.co/ggml-org/LightOnOCR-1B-1025-GGUF/resolve/main/LightOnOCR-1B-1025-Q8_0.gguf",
+            MmprojFileName: "mmproj-LightOnOCR-1B-1025-Q8_0.gguf",
+            MmprojUrl: "https://huggingface.co/ggml-org/LightOnOCR-1B-1025-GGUF/resolve/main/mmproj-LightOnOCR-1B-1025-Q8_0.gguf"),
     };
 
     /// <summary>
@@ -396,12 +424,14 @@ public static class LlamaCppServerManager
     /// Picks the llama-server chat-template flags for a <c>.gguf</c> we do not curate (a file the user
     /// downloaded themselves, e.g. a TranslateGemma quant or size we do not offer). A curated entry with
     /// the same file name wins; otherwise the family is guessed from the file name, because getting this
-    /// wrong is not cosmetic: every Gemma we ship needs <c>gemma</c> + <c>--no-jinja</c> (TranslateGemma's
-    /// embedded Jinja template is non-standard) and every Qwen needs <c>chatml</c> + <c>--no-jinja</c> (to
-    /// bypass the embedded template's thinking mode, which otherwise emits &lt;think&gt; blocks instead of a
-    /// translation). Families with a usable embedded template (Aya, Llama, EuroLLM, Phi) fall through to
-    /// the default of no override. Gemma 4 keeps its embedded template but needs
-    /// <c>--reasoning off</c> instead (<c>NoThinking</c>), for the reason documented on
+    /// wrong is not cosmetic: every Gemma (2/3) we ship needs <c>gemma</c> + <c>--no-jinja</c>
+    /// (TranslateGemma's embedded Jinja template is non-standard), and every Qwen needs
+    /// <c>--reasoning off</c> (<c>NoThinking</c>) to suppress the hybrid template's thinking mode, which
+    /// otherwise emits &lt;think&gt; blocks instead of a translation - see the note on the curated Qwen
+    /// entries in <see cref="TranslateModels"/> for why this is <c>NoThinking</c> and not a
+    /// <c>chatml</c>/<c>--no-jinja</c> template override. Families with a usable embedded template (Aya,
+    /// Llama, EuroLLM, Phi) fall through to the default of no override. Gemma 4 also keeps its embedded
+    /// template and needs <c>--reasoning off</c>, for the same reason documented on
     /// <see cref="LlamaCppModel.NoThinking"/>.
     /// </summary>
     public static (string? ChatTemplate, bool NoJinja, bool NoThinking) InferChatTemplate(string fileName)
@@ -429,7 +459,7 @@ public static class LlamaCppServerManager
 
         if (fileName.Contains("qwen", StringComparison.OrdinalIgnoreCase))
         {
-            return ("chatml", true, false);
+            return (null, false, true);
         }
 
         return (null, false, false);
@@ -485,6 +515,55 @@ public static class LlamaCppServerManager
     }
 
     /// <summary>
+    /// Builds the <see cref="LlamaCppModel"/> for a non-curated vision <c>*.gguf</c> used for OCR:
+    /// the model plus the <paramref name="mmprojFileNameOrPath"/> vision projector it is served with
+    /// (<c>--mmproj</c>) - without one llama-server loads the model blind and every image comes back
+    /// as a hallucination. Unlike <see cref="CreateCustomModel"/> this never overrides the chat
+    /// template: a multimodal GGUF's embedded template is what encodes the image placeholder, so
+    /// forcing e.g. <c>gemma</c> + <c>--no-jinja</c> on a Gemma-named vision model would drop the
+    /// image from the prompt entirely. Only the thinking switch is inferred, for the same reason as
+    /// on the translate side (a thinking model answers into <c>reasoning_content</c> and leaves
+    /// <c>content</c> - the only field the OCR engines read - empty).
+    /// </summary>
+    public static LlamaCppModel CreateCustomOcrModel(string displayName, string fileNameOrPath, string size, string mmprojFileNameOrPath)
+    {
+        var (_, _, noThinking) = InferChatTemplate(Path.GetFileName(fileNameOrPath));
+        return new LlamaCppModel(displayName, fileNameOrPath, size, Url: string.Empty,
+            MmprojFileName: mmprojFileNameOrPath,
+            NoThinking: noThinking);
+    }
+
+    /// <summary>
+    /// The vision projector sitting next to <paramref name="modelPath"/>, or null when there is none.
+    /// Covers both curated sidecar conventions: <c>mmproj-&lt;file&gt;</c> (GLM-OCR, LightOnOCR,
+    /// HunyuanOCR) and <c>&lt;stem&gt;-mmproj.gguf</c> (PaddleOCR-VL) - the two names HuggingFace
+    /// GGUF repos publish vision projectors under, so a self-supplied vision model downloaded from
+    /// one of them is recognised as-is.
+    /// </summary>
+    public static string? FindMmprojSidecar(string modelPath)
+    {
+        var dir = Path.GetDirectoryName(modelPath);
+        if (string.IsNullOrEmpty(dir))
+        {
+            return null;
+        }
+
+        var candidates = new[]
+        {
+            Path.Combine(dir, "mmproj-" + Path.GetFileName(modelPath)),
+            Path.Combine(dir, Path.GetFileNameWithoutExtension(modelPath) + "-mmproj.gguf"),
+        };
+        return candidates.FirstOrDefault(File.Exists);
+    }
+
+    /// <summary>True when the file name is a vision projector rather than a model in its own right.</summary>
+    private static bool IsMmprojFileName(string fileName)
+    {
+        return fileName.StartsWith("mmproj-", StringComparison.OrdinalIgnoreCase) ||
+               fileName.EndsWith("-mmproj.gguf", StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>
     /// Points the regular llama.cpp translate engine's per-model settings (trained-in prompt and
     /// recommended sampling) at the given curated/custom model, or resets them for null (remote
     /// server / unknown model). Must be called wherever a local translate run picks its model
@@ -508,7 +587,8 @@ public static class LlamaCppServerManager
     /// (no download needed - already on disk), the file name as <c>DisplayName</c>, a
     /// human-readable file size, and chat-template flags from <see cref="InferChatTemplate"/> so a
     /// self-supplied TranslateGemma/Qwen quant is served with the same flags as the curated ones.
-    /// <c>mmproj-*.gguf</c> sidecars are skipped because they're not standalone translation models.
+    /// Vision projectors (<c>mmproj-*.gguf</c> and <c>*-mmproj.gguf</c>) are skipped because they're
+    /// not standalone translation models.
     /// </summary>
     public static IReadOnlyList<LlamaCppModel> GetAllTranslateModels()
     {
@@ -520,7 +600,18 @@ public static class LlamaCppServerManager
         return GetCuratedPlusCustomModels(ReviewModels);
     }
 
-    private static IReadOnlyList<LlamaCppModel> GetCuratedPlusCustomModels(IReadOnlyList<LlamaCppModel> curated)
+    /// <summary>
+    /// Returns the curated <see cref="OcrModels"/> plus any self-supplied vision <c>*.gguf</c> in the
+    /// llama.cpp models folder. Only files that have a vision projector next to them
+    /// (<see cref="FindMmprojSidecar"/>) qualify: a text-only model served to the OCR engines cannot
+    /// see the image at all, and the sidecar is what tells the two apart without opening the GGUF.
+    /// </summary>
+    public static IReadOnlyList<LlamaCppModel> GetAllOcrModels()
+    {
+        return GetCuratedPlusCustomModels(OcrModels, requireVisionProjector: true);
+    }
+
+    private static IReadOnlyList<LlamaCppModel> GetCuratedPlusCustomModels(IReadOnlyList<LlamaCppModel> curated, bool requireVisionProjector = false)
     {
         var folder = GetAndCreateModelsFolder();
         if (!Directory.Exists(folder))
@@ -550,13 +641,21 @@ public static class LlamaCppServerManager
                 {
                     continue;
                 }
-                if (name.StartsWith("mmproj-", StringComparison.OrdinalIgnoreCase))
+                if (IsMmprojFileName(name))
+                {
+                    continue;
+                }
+
+                var mmproj = requireVisionProjector ? FindMmprojSidecar(path) : null;
+                if (requireVisionProjector && mmproj == null)
                 {
                     continue;
                 }
 
                 var size = FormatFileSize(new FileInfo(path).Length);
-                custom.Add(CreateCustomModel(name, name, size));
+                custom.Add(mmproj == null
+                    ? CreateCustomModel(name, name, size)
+                    : CreateCustomOcrModel(name, name, size, Path.GetFileName(mmproj)));
             }
         }
         catch

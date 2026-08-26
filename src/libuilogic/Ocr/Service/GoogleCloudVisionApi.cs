@@ -299,7 +299,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.Service
                             last = l;
                         }
 
-                        if (language == "fr")
+                        if (OcrHelper.UsesSpaceBeforeQuestionAndExclamationMark(language))
                         {
                             sb.AppendLine(sbLine.ToString().Trim());
                         }

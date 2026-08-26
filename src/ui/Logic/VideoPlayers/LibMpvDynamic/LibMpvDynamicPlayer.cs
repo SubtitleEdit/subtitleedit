@@ -35,6 +35,13 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     private string _fileName = string.Empty;
     private double? _audioEndBound;
 
+    // A LoadFile that arrived before the (lazily initialized) core was up - replayed by
+    // MarkCoreInitialized as soon as the first render pass brings the core online (#14047).
+    // Claimed via Interlocked.Exchange so the replay and a concurrent LoadFile can't both
+    // run the same request.
+    private string? _pendingLoadFileName;
+    private double _pendingLoadStartPositionSeconds;
+
     // Observed-property caches, kept current by the mpv event thread (see StartEventLoop).
     // While _eventLoopActive the pause/speed/duration/eof getters read these instead of
     // doing a synchronous P/Invoke into the core per call. Doubles go through Interlocked
@@ -442,11 +449,51 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         var err = _mpvInitialize(_mpv);
         if (err >= 0)
         {
-            _coreInitialized = true;
-            StartEventLoop();
+            MarkCoreInitialized();
         }
 
         return err;
+    }
+
+    /// <summary>
+    /// Flips the core to initialized, starts the event loop, and replays a LoadFile that
+    /// arrived before the core was up. The core is created lazily by the first render pass
+    /// (see WaitForCoreInitializedAsync), so a load issued before any frame was rendered -
+    /// e.g. an "Open with" launch while the video window is still being built, or a window
+    /// opened minimized/behind - used to fail with MPV_ERROR_UNINITIALIZED and the open was
+    /// silently lost (#14047).
+    /// </summary>
+    private void MarkCoreInitialized()
+    {
+        _coreInitialized = true;
+        StartEventLoop();
+
+        var pendingFileName = Interlocked.Exchange(ref _pendingLoadFileName, null);
+        if (string.IsNullOrEmpty(pendingFileName))
+        {
+            return;
+        }
+
+        var startPositionSeconds = _pendingLoadStartPositionSeconds;
+
+        // Off this thread: the rendering Initialize* methods run during a render pass, and
+        // loadfile has no business there (it can block on I/O).
+        Task.Run(async () =>
+        {
+            try
+            {
+                if (_disposed)
+                {
+                    return;
+                }
+
+                await LoadFile(pendingFileName, startPositionSeconds);
+            }
+            catch (Exception e)
+            {
+                Se.LogError(e, "LibMpvDynamicPlayer deferred LoadFile replay");
+            }
+        });
     }
 
     /// <summary>
@@ -1019,8 +1066,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         }
         else
         {
-            _coreInitialized = true;
-            StartEventLoop();
+            MarkCoreInitialized();
         }
 
         // Create OpenGL init params
@@ -1120,8 +1166,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         }
         else
         {
-            _coreInitialized = true;
-            StartEventLoop();
+            MarkCoreInitialized();
         }
 
         // Build mpv_metal_init_params: device (required) + layer (optional).
@@ -1361,6 +1406,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     public void Dispose()
     {
         _disposed = true;
+        _pendingLoadFileName = null;
 
         if (_renderContextNeedsGraphicsContext && _renderContext != IntPtr.Zero)
         {
@@ -1419,6 +1465,9 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     {
         EnsureNotDisposed();
 
+        // A fresh explicit load supersedes any older one still parked for the core (#14047).
+        _pendingLoadFileName = null;
+
         // For audio-only files there is no video track, so mpv never fires the render
         // callback and subtitles are never drawn.  Inject a virtual black video stream
         // via lavfi so mpv has something to render subtitles on top of.
@@ -1445,6 +1494,34 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         }
 
         await WaitForCoreInitializedAsync();
+
+        if (!_coreInitialized)
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            // Still not up: the core only comes online when the first render pass runs one of
+            // the Initialize* methods, and that pass hasn't happened yet (video window still
+            // being built, opened minimized or behind - e.g. an "Open with" launch, #14047).
+            // Issuing loadfile now would fail with MPV_ERROR_UNINITIALIZED and the open would
+            // be lost with only a log line to show for it. Park the request instead;
+            // MarkCoreInitialized replays it the moment the core comes up. Position before
+            // file name - the file name is the claim token, so it must be published last.
+            _fileName = path;
+            _pendingLoadStartPositionSeconds = startPositionSeconds;
+            _pendingLoadFileName = path;
+
+            // The core may have come up between the timeout above and parking the request,
+            // with MarkCoreInitialized finding no pending load to replay. Re-check and take
+            // the request back; if the exchange loses, MarkCoreInitialized owns the replay.
+            if (!_coreInitialized || Interlocked.Exchange(ref _pendingLoadFileName, null) == null)
+            {
+                Se.LogError("LibMpvDynamicPlayer LoadFile: mpv core not initialized yet - load of \"" + path + "\" deferred to core initialization");
+                return;
+            }
+        }
 
         // mpv's own default is pause=no, so it starts playing the instant it has decoded
         // something. The core is created paused (see the Initialize* methods) and every caller
@@ -1572,6 +1649,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     public void CloseFile()
     {
         _fileName = string.Empty;
+        _pendingLoadFileName = null; // a close discards a load still parked for the core
         _pausedValue = null;
         _audioEndBound = null;
         _lastRawTimePos = -1;
@@ -2237,8 +2315,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             throw new InvalidOperationException(GetErrorString(err));
         }
 
-        _coreInitialized = true;
-        StartEventLoop();
+        MarkCoreInitialized();
 
         // Build render context params for software rendering
         var apiTypeBytes = Encoding.UTF8.GetBytes(MPV_RENDER_API_TYPE_SW + "\0");

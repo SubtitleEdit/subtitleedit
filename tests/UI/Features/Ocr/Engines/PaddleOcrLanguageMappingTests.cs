@@ -11,17 +11,18 @@ namespace UITests.Features.Ocr.Engines;
 /// </summary>
 public class PaddleOcrLanguageMappingTests
 {
-    // Model folders shipped in "PaddleOCR.PP-OCRv5.support.files" (standalone v1.4.0),
-    // which is the only model source - nothing is downloaded per language.
+    // Model folders shipped in "PaddleOCR.PP-OCRv6.support.files" (standalone v3.7.0), which
+    // is the only model source - nothing is downloaded per language. Listed from the unpacked
+    // archive: the v6 bundle dropped the general-purpose PP-OCRv5 recognition models (mobile,
+    // server and en_), so anything still asking for one of those points at a missing folder.
     private static readonly HashSet<string> BundledRecModels = new()
     {
-        "PP-OCRv5_mobile_rec",
-        "PP-OCRv5_server_rec",
+        "PP-OCRv6_medium_rec",
+        "PP-OCRv6_small_rec",
         "arabic_PP-OCRv5_mobile_rec",
         "cyrillic_PP-OCRv5_mobile_rec",
         "devanagari_PP-OCRv5_mobile_rec",
         "el_PP-OCRv5_mobile_rec",
-        "en_PP-OCRv5_mobile_rec",
         "eslav_PP-OCRv5_mobile_rec",
         "ka_PP-OCRv3_mobile_rec",
         "korean_PP-OCRv5_mobile_rec",
@@ -36,6 +37,8 @@ public class PaddleOcrLanguageMappingTests
         "PP-OCRv3_mobile_det",
         "PP-OCRv5_mobile_det",
         "PP-OCRv5_server_det",
+        "PP-OCRv6_medium_det",
+        "PP-OCRv6_small_det",
     };
 
     public static TheoryData<string, string> LanguageAndMode()
@@ -60,13 +63,29 @@ public class PaddleOcrLanguageMappingTests
 
     [Theory]
     [MemberData(nameof(LanguageAndMode))]
-    public void OnlyLatinLanguages_UseTheLatinModel(string code, string mode)
+    public void OnlyPali_UsesTheLatinPpOcrV5Model(string code, string mode)
     {
-        var isLatinCode = PaddleOcr.GetLatinLanguageCodesForTest().Contains(code);
+        // PP-OCRv6 recognizes every Latin language except Pali, so the PP-OCRv5 Latin model is
+        // Pali's now - and still the fallback for a code no script group claims, which is what
+        // makes this the test that catches such a code (it would report "latin" but not be pi).
+        Assert.Equal(code == "pi", PaddleOcr.GetRecName(code, mode) == "latin_PP-OCRv5_mobile_rec");
+    }
 
-        // A code missing from every script group falls through to the Latin model, so
-        // "uses latin" and "is a Latin language" must be the same set.
-        Assert.Equal(isLatinCode, PaddleOcr.GetRecName(code, mode) == "latin_PP-OCRv5_mobile_rec");
+    [Theory]
+    [MemberData(nameof(LanguageAndMode))]
+    public void PpOcrV6Languages_UseTheUnifiedV6ModelPair(string code, string mode)
+    {
+        // _PPOCRV6_LANGS in PaddleOCR 3.7: Chinese, English, Japanese and the Latin languages
+        // except Pali. Everything else has no v6 model at all and must stay on PP-OCRv5/v3.
+        var isV6Language =
+            code is "ch" or "chinese_cht" or "en" or "japan" ||
+            (PaddleOcr.GetLatinLanguageCodesForTest().Contains(code) && code != "pi");
+
+        // "mobile"/"server" is what the setting stores; v6 ships tiers instead.
+        var tier = mode == "server" ? "medium" : "small";
+
+        Assert.Equal(isV6Language, PaddleOcr.GetRecName(code, mode) == $"PP-OCRv6_{tier}_rec");
+        Assert.Equal(isV6Language, PaddleOcr.GetDetectionName(code, mode) == $"PP-OCRv6_{tier}_det");
     }
 
     [Fact]

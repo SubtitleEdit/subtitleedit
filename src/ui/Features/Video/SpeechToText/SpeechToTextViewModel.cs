@@ -208,7 +208,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     private List<AudioClip>? _audioClips;
     private bool _audioClipsAutoStart;
     private string _qwen3AsrOutputJsonPath = string.Empty;
-    private int? _qwen3AsrExitCode;
+    private int? _engineExitCode;
 
     private readonly IWindowService _windowService;
     private readonly IFileHelper _fileHelper;
@@ -253,6 +253,16 @@ public partial class SpeechToTextViewModel : ObservableObject
             (OperatingSystem.IsLinux() && RuntimeInformation.ProcessArchitecture == Architecture.X64))
         {
             Engines.Add(new WhisperEngineCTranslate2());
+        }
+
+        // Same platform/architecture support as the standalone build published at
+        // https://github.com/muaz978/subtitleedit-whisperx-standalone - only builds for
+        // Windows x64 (not ARM64, which would silently get a mismatched x64 binary).
+        if ((OperatingSystem.IsWindows() && RuntimeInformation.ProcessArchitecture == Architecture.X64) ||
+            (OperatingSystem.IsMacOS() && RuntimeInformation.ProcessArchitecture == Architecture.Arm64) ||
+            (OperatingSystem.IsLinux() && RuntimeInformation.ProcessArchitecture == Architecture.X64))
+        {
+            Engines.Add(new WhisperEngineWhisperX());
         }
 
         Engines.Add(new WhisperEngineOpenAi());
@@ -444,6 +454,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             or WhisperChoice.ConstMe
             or WhisperChoice.PurfviewFasterWhisperXxl
             or WhisperChoice.CTranslate2
+            or WhisperChoice.WhisperX
             or WhisperChoice.OpenAi;
     }
 
@@ -751,14 +762,15 @@ public partial class SpeechToTextViewModel : ObservableObject
             var settings = Se.Settings.Tools.AudioToText;
 
             // Grab the exit code before disposing - it is the key diagnostic when the engine
-            // dies without producing output (e.g. a Qwen3 ASR GPU/Vulkan crash, issue #12815).
+            // dies without producing output (a Qwen3 ASR GPU/Vulkan crash, issue #12815; a Crisp
+            // ASR build that needs CPU instructions this machine lacks, issue #14038).
             try
             {
-                _qwen3AsrExitCode = _whisperProcess.ExitCode;
+                _engineExitCode = _whisperProcess.ExitCode;
             }
             catch
             {
-                _qwen3AsrExitCode = null;
+                _engineExitCode = null;
             }
 
             _whisperProcess.Dispose();
@@ -879,6 +891,75 @@ public partial class SpeechToTextViewModel : ObservableObject
     }
 
     /// <summary>
+    /// Windows terminates a process that executes an instruction its CPU does not implement with
+    /// STATUS_ILLEGAL_INSTRUCTION; Unix reports the SIGILL as 128+4.
+    /// </summary>
+    internal const int StatusIllegalInstruction = unchecked((int)0xC000001D);
+
+    /// <summary>The shell convention for a child killed by SIGILL (128 + SIGILL).</summary>
+    internal const int UnixSigill = 132;
+
+    /// <summary>
+    /// Explains a Crisp ASR run that produced nothing because the engine died, or null when the
+    /// exit code says it did not - an empty result with a clean exit has some other cause and the
+    /// generic message is the honest one.
+    ///
+    /// Worth spelling out because the failure is invisible: a process killed for an illegal
+    /// instruction never reaches stdout, so SE sees a well-behaved engine that simply produced no
+    /// subtitles and said so, which is all the user was told in #14038. The concrete case there
+    /// was the crispasr v0.8.29 GPU packages, built with AVX-512 against a CI runner that had it
+    /// (CrispASR #374) - every CPU without AVX-512 got this on the CUDA/Vulkan build while the CPU
+    /// build ran fine, so naming the installed package is most of the answer.
+    /// </summary>
+    /// <param name="exitCode">The engine process exit code, or null when it could not be read.</param>
+    /// <param name="variant">
+    /// The installed Crisp ASR package ("cuda", "vulkan", "cpu", ...) as reported by
+    /// <see cref="DownloadHashManager.GetCrispAsrVariant"/>, or null when it is not known.
+    /// </param>
+    internal static string? DescribeCrispAsrCrash(int? exitCode, string? variant)
+    {
+        if (exitCode is null or 0)
+        {
+            return null;
+        }
+
+        var code = $"exit code {exitCode.Value} (0x{(uint)exitCode.Value:X8})";
+        if (exitCode.Value is not (StatusIllegalInstruction or UnixSigill))
+        {
+            return $"Crisp ASR crashed before producing any output ({code}).{Environment.NewLine}{Environment.NewLine}" +
+                   "Please check the tools log for engine output.";
+        }
+
+        var isGpuBuild = variant is "cuda" or "cuda13" or "vulkan" or "hip";
+        var advice = isGpuBuild
+            ? $"The installed \"{variant}\" package needs a newer CPU than this one. Download the speech to text " +
+              "engine again and choose the CPU build."
+            : "Download the speech to text engine again and choose the CPU (legacy) build, which targets the " +
+              "oldest CPUs.";
+
+        return $"Crisp ASR was stopped for using CPU instructions this computer does not have ({code}, " +
+               $"illegal instruction), so it never produced any output.{Environment.NewLine}{Environment.NewLine}" +
+               advice;
+    }
+
+    /// <summary>
+    /// The Crisp ASR package the user actually has installed, from the download sidecar. Best-effort:
+    /// this only sharpens a diagnostic message, so an unreadable sidecar is not worth failing over.
+    /// </summary>
+    private static string? TryGetCrispAsrVariant(ICrispAsrEngine engine)
+    {
+        try
+        {
+            var sidecar = DownloadHashManager.TryReadSidecar(engine.GetAndCreateWhisperFolder());
+            return sidecar == null ? null : DownloadHashManager.GetCrispAsrVariant(sidecar.Value.Key);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
     /// Re-runs a Crisp ASR job that produced nothing, this time without the VAD pass.
     ///
     /// SE forces --vad on for the Cohere and Mega backends because they otherwise write a
@@ -945,9 +1026,14 @@ public partial class SpeechToTextViewModel : ObservableObject
         var parameters = Parameters ?? string.Empty;
         if (parameters.Contains("--compute_type", StringComparison.OrdinalIgnoreCase))
         {
+            // Only the floating point types are worth naming: on the RTX 50 series - the cards
+            // this error shows up on most - every int8 variant fails with this exact cuBLAS
+            // error, so listing "int8" sent the user straight back to the same dialog
+            // (Purfview/whisper-standalone-win#403, OpenNMT/CTranslate2#1865).
             await MessageBox.Show(Window!, title,
                 cause + "The parameters already set \"--compute_type\" - try another value, " +
-                "such as \"float16\", \"int8\", or \"float32\".");
+                "such as \"float16\", \"float32\", or \"bfloat16\" - the \"int8\" types fail " +
+                "this way on many newer GPUs.");
             return;
         }
 
@@ -1018,7 +1104,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         var jsonPath = _qwen3AsrOutputJsonPath;
         if (string.IsNullOrEmpty(jsonPath) || !File.Exists(jsonPath))
         {
-            var exitCode = _qwen3AsrExitCode;
+            var exitCode = _engineExitCode;
             var isVulkan = false;
             try
             {
@@ -2428,6 +2514,20 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         var anyLinesTranscribed = transcribedSubtitle != null && transcribedSubtitle.Paragraphs.Count > 0;
 
+        // A crashed engine leaves the same empty result as a clean run that found no speech, and
+        // the exit code is the only thing that tells them apart (#14038). Resolved here rather than
+        // in the dialog branch below so a batch run - which returns before any of that - still
+        // records why the file came back empty.
+        string? crispAsrCrash = null;
+        if (!anyLinesTranscribed && GetEffectiveSelectedEngine() is ICrispAsrEngine crispAsrEngine)
+        {
+            crispAsrCrash = DescribeCrispAsrCrash(_engineExitCode, TryGetCrispAsrVariant(crispAsrEngine));
+            if (crispAsrCrash != null)
+            {
+                Se.WriteToolsLog(crispAsrCrash, true);
+            }
+        }
+
         if (_abort)
         {
             // User cancelled mid-run. Leave the dialog open so they can adjust
@@ -2472,6 +2572,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             else if (GetEffectiveSelectedEngine() is ICrispAsrEngine)
             {
                 await MessageBox.Show(Window!, "No transcription result",
+                    crispAsrCrash ??
                     "Crisp ASR finished without generating subtitles. Please check the tools log for engine output.");
 
                 if (Window != null)
@@ -3737,7 +3838,11 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// stdout/stderr to <paramref name="dataReceivedHandler"/> when one is given.
     /// The working directory is the executable's folder.
     /// </summary>
-    private static Process StartEngineProcess(string executable, string arguments, DataReceivedEventHandler? dataReceivedHandler)
+    private static Process StartEngineProcess(
+        string executable,
+        string arguments,
+        DataReceivedEventHandler? dataReceivedHandler,
+        Action<ProcessStartInfo>? configureStartInfo = null)
     {
         var p = new Process
         {
@@ -3749,6 +3854,8 @@ public partial class SpeechToTextViewModel : ObservableObject
                 WorkingDirectory = Path.GetDirectoryName(executable),
             }
         };
+
+        configureStartInfo?.Invoke(p.StartInfo);
 
         if (dataReceivedHandler != null)
         {
@@ -3794,6 +3901,35 @@ public partial class SpeechToTextViewModel : ObservableObject
     }
 
     /// <summary>
+    /// WhisperX shells out to a real "ffmpeg" binary via subprocess for audio loading (it is not
+    /// bundled in the standalone build - see subtitleedit-whisperx-standalone's README). Puts
+    /// Subtitle Edit's own configured/bundled ffmpeg on PATH so WhisperX finds it without
+    /// requiring a separate ffmpeg install. When ffmpeg is not configured to an actual file
+    /// (e.g. still the bare "ffmpeg" fallback resolved through the system PATH), this leaves
+    /// PATH untouched - the child process falls back to the exact same system PATH resolution
+    /// Subtitle Edit's own ffmpeg calls would use in that situation.
+    /// </summary>
+    private static void AddFfmpegToPath(ProcessStartInfo startInfo)
+    {
+        var ffmpegLocation = FfmpegHelper.GetFfmpegLocation();
+        if (string.IsNullOrEmpty(ffmpegLocation) || !File.Exists(ffmpegLocation))
+        {
+            return;
+        }
+
+        var ffmpegDir = Path.GetDirectoryName(ffmpegLocation);
+        if (string.IsNullOrEmpty(ffmpegDir))
+        {
+            return;
+        }
+
+        var existingPath = ProcessEnvironmentHelper.GetOrNull(startInfo, "PATH");
+        startInfo.EnvironmentVariables["PATH"] = string.IsNullOrEmpty(existingPath)
+            ? ffmpegDir
+            : ffmpegDir + Path.PathSeparator + existingPath;
+    }
+
+    /// <summary>
     /// Engines that demux and decode the source media themselves, so they can be pointed at the
     /// user's original file instead of SE's extracted WAV: Purfview Faster-Whisper-XXL bundles
     /// ffmpeg, whisper-ctranslate2 bundles PyAV. Verified that the others cannot - whisper.cpp
@@ -3803,7 +3939,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     private static bool CanEngineReadSourceFileDirectly(ISpeechToTextEngine engine)
     {
         return engine.Name == WhisperEnginePurfviewFasterWhisperXxl.StaticName ||
-               engine is WhisperEngineCTranslate2;
+               engine is WhisperEngineCTranslate2 or WhisperEngineWhisperX;
     }
 
     /// <summary>
@@ -3846,12 +3982,44 @@ public partial class SpeechToTextViewModel : ObservableObject
         DataReceivedEventHandler? dataReceivedHandler = null,
         string engineOutputFolder = "")
     {
+        if (engine is WhisperEngineWhisperX whisperX)
+        {
+            var exe = whisperX.GetExecutable();
+            var whisperXArgs = whisperX.CommandLineParameter;
+            var languageArgX = language.Equals("auto", StringComparison.OrdinalIgnoreCase)
+                ? string.Empty
+                : $"--language {language} ";
+            var taskArg = translate ? "--task translate " : string.Empty;
+            var outputDir = string.IsNullOrEmpty(engineOutputFolder)
+                ? GetSttTempFolder()
+                : engineOutputFolder;
+            var parametersX =
+                $"{languageArgX}--model \"{model}\" --output_format srt --output_dir \"{outputDir}\" " +
+                $"{taskArg}{whisperXArgs} \"{waveFileName}\"";
+
+            // The generic launch path is bypassed here, so repeat the two pieces of its setup a
+            // PyInstaller-frozen Python engine needs: the glibc 2.41+ executable-stack repair,
+            // and the Python UTF-8/unbuffered variables - without them Windows decodes piped
+            // output with the ANSI code page (mojibake, or a UnicodeEncodeError killing the run)
+            // and stdout block-buffers so the log sits empty until the process exits.
+            EnsureExecutableStackCleared(whisperX, whisperX.GetAndCreateWhisperFolder());
+
+            Se.WriteToolsLog($"{exe} {parametersX}");
+            return StartEngineProcess(exe, parametersX, dataReceivedHandler, startInfo =>
+            {
+                AddFfmpegToPath(startInfo);
+                startInfo.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
+                startInfo.EnvironmentVariables["PYTHONUTF8"] = "1";
+                startInfo.EnvironmentVariables["PYTHONUNBUFFERED"] = "1";
+            });
+        }
+
         if (engine is Qwen3AsrCppEngine qwen3Asr)
         {
             var exe = qwen3Asr.GetExecutable();
             var alignerModel = qwen3Asr.ForcedAlignerModel;
             _qwen3AsrOutputJsonPath = Path.Combine(Path.GetTempPath(), $"qwen3_asr_{Guid.NewGuid():N}.json");
-            _qwen3AsrExitCode = null;
+            _engineExitCode = null;
             var qwen3ExtraArgs = engine.CommandLineParameter;
 
             var qwen3Params = string.IsNullOrWhiteSpace(qwen3ExtraArgs)
@@ -4111,9 +4279,9 @@ public partial class SpeechToTextViewModel : ObservableObject
     private static bool _executableStackChecked;
 
     /// <summary>
-    /// Repairs an already-installed Purfview Faster-Whisper-XXL before launching it.
+    /// Repairs an already-installed Purfview Faster-Whisper-XXL or WhisperX before launching it.
     /// <para>
-    /// Its bundled libctranslate2 is built with PT_GNU_STACK = RWE, and glibc 2.41 stopped making
+    /// Both bundle a libctranslate2 built with PT_GNU_STACK = RWE, and glibc 2.41 stopped making
     /// the stack executable at dlopen time, so on a distro with glibc 2.41+ (Fedora 42, Arch,
     /// Ubuntu 25.10) the run dies immediately with "cannot enable executable stack as shared
     /// object requires: Invalid argument". The download path clears the flag on unpack, but
@@ -4127,7 +4295,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         if (_executableStackChecked ||
             !OperatingSystem.IsLinux() ||
             string.IsNullOrEmpty(whisperFolder) ||
-            engine is not WhisperEnginePurfviewFasterWhisperXxl)
+            engine is not (WhisperEnginePurfviewFasterWhisperXxl or WhisperEngineWhisperX))
         {
             return;
         }

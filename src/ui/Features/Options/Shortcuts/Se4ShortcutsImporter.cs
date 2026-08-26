@@ -158,6 +158,7 @@ public static class Se4ShortcutsImporter
         // List view
         ["MainListViewItalic"] = nameof(MainViewModel.ToggleLinesItalicOrSelectedTextCommand),
         ["MainListViewBold"] = nameof(MainViewModel.ToggleLinesBoldOrSelectedTextCommand),
+        ["MainListViewUnderline"] = nameof(MainViewModel.ToggleLinesUnderlineOrSelectedTextCommand),
         ["MainListViewAlignment"] = nameof(MainViewModel.ShowAlignmentPickerCommand),
         ["MainListViewAlignmentN1"] = nameof(MainViewModel.DoAlignmentAn1Command),
         ["MainListViewAlignmentN2"] = nameof(MainViewModel.DoAlignmentAn2Command),
@@ -319,6 +320,7 @@ public static class Se4ShortcutsImporter
         ["WaveformListShotChanges"] = nameof(MainViewModel.ShowShotChangesListCommand),
         ["WaveformSearchSilenceForward"] = nameof(MainViewModel.SeekSilenceForwardCommand),
         ["WaveformSearchSilenceBack"] = nameof(MainViewModel.SeekSilenceBackCommand),
+        ["WaveformGuessStart"] = nameof(MainViewModel.WaveformGuessStartCommand),
         ["WaveformAudioToTextWhisper"] = nameof(MainViewModel.ShowSpeechToTextWhisperCommand),
         ["WaveformPlaySelection"] = nameof(MainViewModel.PlaySelectedLinesWithoutLoopCommand),
         ["Waveform100MsLeft"] = nameof(MainViewModel.Video100MsBackCommand),
@@ -358,6 +360,9 @@ public static class Se4ShortcutsImporter
         ["GeneralToggleBookmarksWithText"] = nameof(MainViewModel.AddOrEditBookmarkCommand),
         ["GeneralToggleBookmarks"] = nameof(MainViewModel.ToggleBookmarkSelectedLinesNoTextCommand),
         ["GeneralEditBookmarks"] = nameof(MainViewModel.ListBookmarksCommand),
+        // SE 4's "go to bookmark" opened a bookmark picker; SE 5's bookmarks list is that picker.
+        ["GeneralGoToBookmark"] = nameof(MainViewModel.ListBookmarksCommand),
+        ["GeneralClearBookmarks"] = nameof(MainViewModel.ClearBookmarksCommand),
         ["GeneralRemoveBlankLines"] = nameof(MainViewModel.RemoveBlankLinesCommand),
         ["GeneralChooseProfile"] = nameof(MainViewModel.ShowChooseProfileCommand),
         ["GeneralLayoutChoose"] = nameof(MainViewModel.CommandShowLayoutCommand),

@@ -2,6 +2,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
+using UITests.Features.Video.TextToSpeech.Engines;
 
 namespace UITests.Features.Video.TextToSpeech;
 
@@ -9,6 +10,7 @@ namespace UITests.Features.Video.TextToSpeech;
 /// Per-line voice cloning stands or falls on which slice of the video each line is cloned from:
 /// too short and the clone is mush, too greedy and it clones the neighbouring speaker instead.
 /// </summary>
+[Collection(TtsSettingsCollection.Name)]
 public class PerLineVoiceCloneTests
 {
     private static List<Paragraph> Lines(params (double Start, double End)[] times) =>
@@ -127,8 +129,59 @@ public class PerLineVoiceCloneTests
         Assert.NotNull(voice);
         Assert.Equal("/tmp/refs/line-0007.wav", Assert.IsType<OmniVoice>(voice!.EngineVoice).FilePath);
 
-        // An engine that opted in without being taught how to build its voice must return null so
-        // the caller falls back, rather than getting some other engine's voice type.
+        // An engine that does not clone per line (no IPerLineCloneEngine) must come back as null
+        // so the caller falls back, rather than getting some other engine's voice type.
         Assert.Null(PerLineVoiceClone.MakeVoiceForClip(new EdgeTts(), "/tmp/refs/line-0007.wav"));
+    }
+
+    [Fact]
+    public void AQwen3ClipThatCannotBeStagedFallsBackInsteadOfCloning()
+    {
+        // Qwen3 (CrispASR) speaks only from a copy inside its own voices folder, so a clip it
+        // cannot stage - here one that is not there at all - has to come back as null and let the
+        // caller fall back, rather than pointing the engine at a file the backend cannot resolve.
+        Assert.Null(PerLineVoiceClone.MakeVoiceForClip(new Qwen3TtsCrispAsr(), "/tmp/refs/not-a-clip.wav"));
+    }
+
+    [Fact]
+    public void AnImportedClipKeepsTheVoiceNameItWasExportedWith()
+    {
+        // The exported clip may have been renamed to avoid a collision in the export folder; the
+        // line should still show the voice it was generated with, not the file it came back as.
+        var voice = PerLineVoiceClone.MakeVoiceForClip(new OmniVoiceTtsCpp(), "/tmp/refs/line-0007_1.wav", "line-0007");
+
+        Assert.Equal("line-0007", voice!.Name);
+    }
+
+    [Fact]
+    public void EveryEngineThatOffersPerLineCloningKnowsHowToBuildItsVoice()
+    {
+        // The capability flag and IPerLineCloneEngine only work as a pair: the flag offers
+        // "Clone from video" in the UI, the interface is what builds each line's voice. An engine
+        // with the flag but not the interface would offer cloning and then dub every line in the
+        // fallback voice. Qwen3 (CrispASR) only raises the flag on its clone model, so that model
+        // is pinned while the catalog is swept.
+        using var _ = new Qwen3TtsCrispAsrModelScope(Qwen3TtsCrispAsr.ModelKeyClone);
+
+        foreach (var engine in TtsEngineCatalog.CreateVoiceCloningEngines())
+        {
+            if (engine.SupportsPerLineVoiceCloning)
+            {
+                Assert.True(engine is IPerLineCloneEngine,
+                    $"{engine.Name} sets SupportsPerLineVoiceCloning but does not implement IPerLineCloneEngine");
+            }
+        }
+    }
+
+    [Fact]
+    public void OnlyAVoiceThatCanBeRebuiltReportsAReference()
+    {
+        Assert.Equal("/voices/ada.wav", PerLineVoiceClone.TryGetReferenceClip(new Voice(new OmniVoice("Ada", "/voices/ada.wav"))));
+
+        // Nothing to copy along for a voice that clones from nothing - or for the marker, which
+        // has no recording of its own at all.
+        Assert.Null(PerLineVoiceClone.TryGetReferenceClip(new Voice(new OmniVoice("Default", string.Empty))));
+        Assert.Null(PerLineVoiceClone.TryGetReferenceClip(PerLineVoiceClone.CreateVoice()));
+        Assert.Null(PerLineVoiceClone.TryGetReferenceClip(null));
     }
 }

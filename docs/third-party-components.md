@@ -37,7 +37,7 @@ Subtitle Edit stores these components in its **Data Folder**.
 | **Crisp ASR** | `crispasr.exe`, `models/` folder | `[Data Folder]/CrispASR` |
 | **Qwen3 ASR CPP** | `qwen3-asr-cli.exe`, `models/` folder | `[Data Folder]/Qwen3ASR` |
 | **Parakeet.cpp** | `parakeet.exe`, model folders | `[Data Folder]/parakeet.cpp` |
-| **PaddleOCR** | `paddleocr.exe`, `models/` folder | `[Data Folder]/OCR/PaddleOCR3-4` |
+| **PaddleOCR** | `paddleocr.exe`, `models/` folder | `[Data Folder]/OCR/PaddleOCR3-7` |
 | **Qwen3 TTS (CrispASR)** | shares `crispasr.exe` + `models/` from `[Data Folder]/CrispASR`; reference voices in `voices/` | `[Data Folder]/TextToSpeech/Qwen3TtsCrispAsr` (voices only) |
 | **Chatterbox TTS (CrispASR)** | shares `crispasr.exe` + `models/` from `[Data Folder]/CrispASR`; reference voices in `voices/` | `[Data Folder]/TextToSpeech/Chatterbox` (voices only) |
 | **OmniVoice TTS** | `omnivoice-tts.exe`, `omnivoice-codec.exe`, `models/`, `voices/` | `[Data Folder]/TextToSpeech/OmniVoice` |
@@ -120,10 +120,12 @@ Use [Speech to Text](features/speech-to-text.md) for the current engine list and
 ### PaddleOCR
 Used for OCR of image-based subtitles.
 
-*   **Destination:** `[Data Folder]/OCR/PaddleOCR3-4`
-*   **Models:** `[Data Folder]/OCR/PaddleOCR3-4/models`
+*   **Destination:** `[Data Folder]/OCR/PaddleOCR3-7`
+*   **Models:** `[Data Folder]/OCR/PaddleOCR3-7/models`
 *   **Builds:** Subtitle Edit can download CPU, CUDA 11.8, or CUDA 12.9 builds, on both Windows and Linux (Linux x64 only; the Linux builds need glibc 2.35 or newer).
-*   **Version:** The folder name follows the PaddleOCR release the standalone engine is built from, so upgrading installs into a new folder instead of mixing files. The old `[Data Folder]/OCR/PaddleOCR3-1` folder is deleted automatically after the new one is installed.
+*   **Recognition models:** PP-OCRv6 (PaddleOCR 3.7) recognizes Chinese, English, Japanese and the Latin languages with one unified model; Arabic, Cyrillic, E-Slavic, Devanagari, Korean, Greek, Tamil, Telugu, Thai and Pali still use their PP-OCRv5 models, and Georgian its PP-OCRv3 one. All of them ship in the same bundle.
+*   **Version:** The folder name follows the PaddleOCR release the standalone engine is built from, so upgrading installs into a new folder instead of mixing files. The old `[Data Folder]/OCR/PaddleOCR3-1` and `[Data Folder]/OCR/PaddleOCR3-4` folders are deleted automatically after the new one is installed.
+*   **Paddle OCR Python:** The pip-installed engine uses the same downloaded models, so it needs `paddleocr` 3.7 or newer - older versions do not know the PP-OCRv6 model names.
 
 ### Local Text-to-Speech Engines
 Subtitle Edit 5 can download local TTS servers and models from the **Text to speech** window.

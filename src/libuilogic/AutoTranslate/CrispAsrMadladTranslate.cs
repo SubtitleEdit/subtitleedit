@@ -32,14 +32,19 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             _modelPath = Configuration.Settings.Tools.AutoTranslateCrispAsrModel;
         }
 
+        /// <summary>
+        /// The same list as the target languages: MADLAD detects the source language itself and
+        /// ignores <c>-sl</c>, so the choice here only decides what the "swap languages" button
+        /// has to work with.
+        /// </summary>
         public List<TranslationPair> GetSupportedSourceLanguages()
         {
-            return ListLanguages();
+            return CrispAsrMadladLanguages.List();
         }
 
         public List<TranslationPair> GetSupportedTargetLanguages()
         {
-            return ListLanguages();
+            return CrispAsrMadladLanguages.List();
         }
 
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
@@ -53,6 +58,15 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             if (string.IsNullOrEmpty(_modelPath) || !File.Exists(_modelPath))
             {
                 Error = "CrispASR MADLAD model not found - please use the 'Download' button to install it. Path: " + _modelPath;
+                throw new Exception(Error);
+            }
+
+            // An unknown target language is not an error for MADLAD - it silently translates into
+            // the wrong language instead - so refuse it here rather than hand back a subtitle in
+            // whatever language the model settled on.
+            if (!CrispAsrMadladLanguages.IsSupported(targetLanguageCode))
+            {
+                Error = $"CrispASR MADLAD cannot translate to '{targetLanguageCode}' - the model has no such language.";
                 throw new Exception(Error);
             }
 
@@ -133,21 +147,6 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
                 return outputBuilder.ToString().Trim();
             }
-        }
-
-        private static List<TranslationPair> ListLanguages()
-        {
-            var result = new List<TranslationPair>();
-            var seen = new HashSet<string>();
-            foreach (var culture in Utilities.GetSubtitleLanguageCultures(false))
-            {
-                if (!string.IsNullOrEmpty(culture.TwoLetterISOLanguageName) && seen.Add(culture.TwoLetterISOLanguageName))
-                {
-                    result.Add(new TranslationPair(culture.EnglishName, culture.TwoLetterISOLanguageName));
-                }
-            }
-
-            return result;
         }
     }
 }

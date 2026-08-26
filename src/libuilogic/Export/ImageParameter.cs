@@ -42,6 +42,20 @@ public class ImageParameter
     /// </summary>
     public SKColor FullFrameBackgroundColor { get; set; } = SKColors.Transparent;
 
+    /// <summary>
+    /// Transparency of the whole rendered subtitle, 0-100, from an ASSA "{\alpha&amp;H80&amp;}"
+    /// tag (see <see cref="ExportTextTags.ApplyTransparencyTags"/>). 100 - fully opaque - unless
+    /// the text asks for less.
+    /// </summary>
+    public int AlphaPercent { get; set; } = 100;
+
+    /// <summary>
+    /// The "{\fad(..)}"/"{\fade(..)}" curve of the subtitle, or null when it has no fade tag.
+    /// Only used by the Blu-ray sup writer, which can fade with palette updates; the other
+    /// image formats have no way to animate a subtitle and ignore it.
+    /// </summary>
+    public List<ExportFadeKeyframe>? FadeKeyframes { get; set; }
+
     public double FramesPerSecond { get; set; }
     public bool IsRightToLeft { get; set; } = false;
     public ExportBoxType BoxType { get; set; } = ExportBoxType.None;
@@ -49,6 +63,14 @@ public class ImageParameter
     public int BoxPaddingRight { get; set; } = 0;
     public int BoxPaddingTop { get; set; } = 0;
     public int BoxPaddingBottom { get; set; } = 0;
+
+    /// <summary>
+    /// Advanced text formatting (gradient fills, multiple outlines, soft shadows, glow, 3D
+    /// extrude, bevel). Null renders through the classic fill/outline/shadow path; when set,
+    /// <see cref="OutlineWidth"/> and <see cref="ShadowWidth"/> are ignored - the effects
+    /// describe the whole look.
+    /// </summary>
+    public TextEffects? TextEffects { get; set; }
 
     public ImageParameter()
     {

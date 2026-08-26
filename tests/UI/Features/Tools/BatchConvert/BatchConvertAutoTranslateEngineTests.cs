@@ -27,7 +27,15 @@ public class BatchConvertAutoTranslateEngineTests
     }
 
     [AvaloniaFact]
-    public void AdvancedButton_IsShownForLlamaCppAdvancedOnly()
+    public void EngineList_ContainsOllamaAdvanced()
+    {
+        var viewModel = MakeViewModel();
+
+        Assert.Contains(viewModel.AutoTranslators, t => t is OllamaAdvancedTranslate);
+    }
+
+    [AvaloniaFact]
+    public void AdvancedButton_IsShownForAdvancedEnginesOnly()
     {
         var viewModel = MakeViewModel();
         var view = ViewAutoTranslate.Make(viewModel);
@@ -41,8 +49,33 @@ public class BatchConvertAutoTranslateEngineTests
             viewModel.SelectedAutoTranslator = engine;
             viewModel.OnAutoTranslatorChanged();
 
-            Assert.Equal(engine is LlamaCppAdvancedTranslate, viewModel.LlamaCppAdvancedButtonIsVisible);
+            // Batch size, history, synopsis/glossary/style - shared settings, so every engine
+            // running the advanced batch protocol opens the same window.
+            Assert.Equal(engine is AdvancedTranslatorBase, viewModel.LlamaCppAdvancedButtonIsVisible);
         }
+    }
+
+    /// <summary>
+    /// The advanced Ollama engine talks to the OpenAI-compatible endpoint, which is a different URL
+    /// and a separately stored model from the classic Ollama engine - so both fields must be shown
+    /// and filled from its own settings, not the classic engine's.
+    /// </summary>
+    [AvaloniaFact]
+    public void OllamaAdvanced_ShowsItsOwnUrlAndModel()
+    {
+        var viewModel = MakeViewModel();
+        Se.Settings.AutoTranslate.OllamaAdvancedUrl = "http://example.local:11434/v1/chat/completions";
+        Se.Settings.AutoTranslate.OllamaAdvancedModel = "qwen3:8b";
+
+        viewModel.SelectedAutoTranslator = viewModel.AutoTranslators.First(t => t is OllamaAdvancedTranslate);
+        viewModel.OnAutoTranslatorChanged();
+
+        Assert.True(viewModel.AutoTranslateUrlIsVisible);
+        Assert.True(viewModel.AutoTranslateModelIsVisible);
+        Assert.True(viewModel.AutoTranslateModelBrowseIsVisible);
+        Assert.False(viewModel.AutoTranslateApiKeyIsVisible);
+        Assert.Equal("http://example.local:11434/v1/chat/completions", viewModel.AutoTranslateUrl);
+        Assert.Equal("qwen3:8b", viewModel.AutoTranslateModel);
     }
 
     private static BatchConvertViewModel MakeViewModel()

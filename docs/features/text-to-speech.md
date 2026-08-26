@@ -18,6 +18,32 @@ Generate speech audio from subtitle text using various TTS engines.
 6. Click **Generate** to start
 7. Close the window with **OK** to apply the session's subtitle changes (lines merged before generation, text edits made in the review window) to the subtitle in the main window — or **Cancel** to discard them
 
+## Set Up Cast: One Voice per Speaker
+
+When the subtitle carries speaker names — the **Actor** field in ASSA/SSA, or `<v Name>` voices in WebVTT — a **Set up cast** button appears (with the speaker count). It opens a dialog where each actor is assigned an engine, voice, and optionally a model and voice instruction of their own. Lines without an actor use the globally selected voice. The cast is remembered between sessions, so the same actors open already assigned next time.
+
+If the speaker names are written into the text instead (an SDH subtitle), see the speaker prompt below — and for a video where nobody labeled the speakers at all, [Find Voices in Video and Clone](#find-voices-in-video-and-clone) works out the cast by listening.
+
+## Prompts Before Generation
+
+Clicking **Generate** runs up to three quick checks on the subtitle before any audio is made. Each one only appears when it has something to show, each opens a review dialog where every proposed change is a checkbox, and each can be turned off in **Options → Settings** (search for "Text to speech: prompt").
+
+### Speaker names in the text
+
+An SDH subtitle writes its speakers into the text — `MIKE: text`, `[NARRATOR] text`, `(Speaker 1) text`, or a name alone on its line with the speech below. Sent to a TTS engine as-is, the names are read aloud. When no cast exists yet and at least two speakers are found, Subtitle Edit offers to move the names into the actor field: the tags leave the spoken text, the **Set up cast** dialog opens so each speaker gets a voice, and generation continues with the cast.
+
+- Names written the SDH way (ALL CAPS, `Speaker 1`) are checked by default; mixed-case candidates like `Warning:` are listed for you to judge, but unchecked.
+- **Lines without a name continue the previous speaker** (on by default) handles the SDH convention of naming only the speaker changes — the lines between two tags belong to the name above them.
+- Only the speech generation is affected: the subtitle in the main window keeps its text. To move the names into the actor field of the file itself, use **Tools → Convert actors...**.
+
+### Merge continuation lines
+
+Sentences split across several subtitles are offered for merging, so the engine speaks each thought as one breath group. These merges are applied to the subtitle in the main window when the window is closed with **OK**.
+
+### Skip sound and music lines
+
+Lines that contain only sounds or music — `♪`, `[door slams]`, `(sighs)`, or nothing once formatting tags are stripped — get read aloud or hallucinated into made-up words by TTS engines. Subtitle Edit offers to leave the checked lines silent: no audio is generated for them, and they are not counted as failures. A sound annotation followed by real speech (`[gunshot] Get down!`) is kept.
+
 ## Supported Engines
 
 - **Piper** — Local, open-source TTS (Windows and Linux)
@@ -39,8 +65,38 @@ Generate speech audio from subtitle text using various TTS engines.
 - **MOSS-TTS (CrispASR)** — MOSS-TTS v1.5 (Qwen3-8B backbone, 24 kHz) with zero-shot cloning
 - **Zonos TTS (CrispASR)** — Zonos-v0.1 at 44.1 kHz with cloning from a reference recording
 - **OmniVoice TTS (CrispASR)** — The OmniVoice model on the shared CrispASR runtime, run as a persistent server so the model loads once instead of once per line
+- **dots.tts (CrispASR)** — dots.tts SOAR 2B rendered at 48 kHz by a BigVGAN vocoder, with zero-shot cloning
 
 Local downloadable engines are installed into the Subtitle Edit data folder when you accept the download prompt.
+
+## CrispASR voice engines
+
+Several of the local engines above are different models on the same CrispASR runtime, sharing one `CrispASR/models` folder with the speech-to-text backends. What separates them is voice output quality rather than features, so they are collected here.
+
+**Output rate** is the engine's native render rate - 48 kHz carries noticeably more high end than 24 kHz on headphones, though for speech mixed under a video the difference is small. **Reference WAV** is the format a cloning reference is converted to on import; Subtitle Edit resamples with ffmpeg for you, but a clean 3-10 second recording at or above that rate clones best.
+
+| Engine | Output rate | Languages | Voice cloning | Reference WAV | Download |
+|--------|-------------|-----------|---------------|---------------|----------|
+| **OmniVoice TTS (CrispASR)** | 24 kHz | 646 | Built-in voice + zero-shot | 24 kHz mono | ~1 - 1.6 GB |
+| **Qwen3 TTS (CrispASR)** | 24 kHz | 10 | VoiceDesign, CustomVoice or Voice clone | 24 kHz mono (strictly enforced) | ~2.3 GB |
+| **Chatterbox TTS (CrispASR)** | 24 kHz | 23 on Base; Turbo is English-only | Zero-shot | 24 kHz mono | ~700 MB - 1.8 GB Base, ~1 GB Turbo |
+| **IndexTTS (CrispASR)** | 24 kHz | Follows the text | Zero-shot | 24 kHz mono | ~600 MB - 2.4 GB |
+| **CosyVoice3 (CrispASR)** | 24 kHz | 9, plus 18 Mandarin dialects as voices | 8 baked-in presets + zero-shot | 16 kHz mono + a transcript sidecar | ~1.6 - 2.5 GB |
+| **MOSS-TTS (CrispASR)** | 24 kHz | 20 | Zero-shot | 24 kHz mono | ~10.5 - 20.5 GB incl. codec |
+| **Zonos TTS (CrispASR)** | 44.1 kHz | Follows the text | From a reference recording | 24 kHz mono | ~1.8 GB |
+| **VoxCPM2 (CrispASR)** | 48 kHz | ~30 | Zero-shot | 24 kHz mono (upsampled internally) | ~1.7 - 5 GB |
+| **dots.tts (CrispASR)** | 48 kHz | Follows the text | Zero-shot | 24 kHz mono | ~2.4 - 5 GB |
+
+"Follows the text" means the engine has no language picker - it speaks whatever script it is given, taking its accent from the reference voice.
+
+Notes on picking one:
+
+- **Smallest download that still clones:** IndexTTS at about 600 MB - 870 MB.
+- **Most languages:** OmniVoice, at 646.
+- **Highest output rate:** VoxCPM2 and dots.tts at 48 kHz, then Zonos at 44.1 kHz.
+- **MOSS-TTS is by far the largest** because its Qwen3-8B backbone needs a ~3.5 GB codec companion on top of the backbone quant. Check free disk space before selecting it.
+- Quantized engines follow the same rule as the speech-to-text models: `Q4_K` is the small fast default, `Q8_0` is close to full precision, and `F16` is rarely worth the extra gigabytes.
+- **None of the CrispASR engines take a new reference voice per line** - each reads its reference when its server starts, so switching voice reloads the model. That is why [Clone From Video (Voice of Each Line)](#clone-from-video-voice-of-each-line) lists OmniVoice TTS (the standalone engine) rather than a CrispASR one.
 
 ## Engine Settings
 

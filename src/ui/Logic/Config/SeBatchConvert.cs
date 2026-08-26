@@ -17,6 +17,9 @@ public class SeBatchConvert
     public string TesseractLanguage { get; set; }
     public int TesseractEngineMode { get; set; }
     public string PaddleLanguage { get; set; }
+
+    /// <summary>Apple Vision's recognition language, as its BCP-47 tag. macOS only.</summary>
+    public string AppleVisionLanguage { get; set; }
     public string BinaryOcrDatabase { get; set; }
     public string NOcrBinaryOcrFallbackDatabase { get; set; }
     public string BinaryOcrNOcrFallbackDatabase { get; set; }
@@ -150,10 +153,15 @@ public class SeBatchConvert
         SaveInSourceFolder = true;
         TargetFormat = string.Empty;
         TargetEncoding = string.Empty;
-        OcrEngine = "Tesseract";
+        // See SeOcr.Engine: on macOS the built-in recognizer needs no install, while the
+        // Tesseract default would send a fresh Mac user to Homebrew before the first batch run.
+        OcrEngine = System.OperatingSystem.IsMacOS()
+            ? Features.Ocr.Engines.AppleVisionOcr.StaticName
+            : "Tesseract";
         TesseractLanguage = "eng";
         TesseractEngineMode = 3; // Default, based on what is available (tesseract --oem)
         PaddleLanguage = "en";
+        AppleVisionLanguage = "en-US";
         BinaryOcrDatabase = "Latin";
         NOcrBinaryOcrFallbackDatabase = string.Empty;
         BinaryOcrNOcrFallbackDatabase = string.Empty;

@@ -1180,6 +1180,13 @@ internal record class ConversionOptions
     /// <summary>Model: ollama/lmstudio model name, or llamacpp .gguf file name/path.</summary>
     public string? TranslateModel { get; init; }
 
+    /// <summary>
+    /// Prompt override for the LLM translate engines (llamacpp/ollama/lmstudio): inline text
+    /// (<c>\n</c> for a line break) or the path to a text file. See
+    /// <see cref="AutoTranslateRunner.ReadPromptOption"/>.
+    /// </summary>
+    public string? TranslatePrompt { get; init; }
+
     public bool TeletextOnly { get; init; }
     public bool SkipTeletext { get; init; }
     public int? TeletextOnlyPage { get; init; }

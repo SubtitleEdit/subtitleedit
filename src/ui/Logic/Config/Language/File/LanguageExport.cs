@@ -43,6 +43,33 @@ public class LanguageExport
     public string ImageBasedSubtitleSaved { get; set; }
     public string FullFrameImage { get; set; }
     public string FullFrameImageHint { get; set; }
+    public string TextEffect { get; set; }
+    public string TextEffectSettingsTitle { get; set; }
+    public string TextEffectPreset { get; set; }
+    public string TextEffectStrength { get; set; }
+    public string TextEffectLetterSpacing { get; set; }
+    public string TextEffectArcBend { get; set; }
+    public string TextEffectWave { get; set; }
+    public string TextEffectSoftShadow { get; set; }
+    public string TextEffectGradientGold { get; set; }
+    public string TextEffectDoubleOutline { get; set; }
+    public string TextEffectNeonGlow { get; set; }
+    public string TextEffectExtrude3D { get; set; }
+    public string TextEffectChrome { get; set; }
+    public string TextEffectFire { get; set; }
+    public string TextEffectComic { get; set; }
+    public string TextEffectRetro80s { get; set; }
+    public string TextEffectAnaglyph3D { get; set; }
+    public string TextEffectIce { get; set; }
+    public string TextEffectEmboss { get; set; }
+    public string TextEffectHollow { get; set; }
+    public string TextEffectMarble { get; set; }
+    public string TextEffectWood { get; set; }
+    public string TextEffectLava { get; set; }
+    public string TextEffectBrushedSteel { get; set; }
+    public string TextEffectCandyCane { get; set; }
+    public string TextEffectRainbow { get; set; }
+    public string TextEffectPolkaDots { get; set; }
 
     public LanguageExport()
     {
@@ -87,5 +114,32 @@ public class LanguageExport
         ImageBasedSubtitleSaved = "Image-based subtitle saved";
         FullFrameImage = "Full frame image";
         FullFrameImageHint = "Make each image the size of the video frame, with the subtitle in its place";
+        TextEffect = "Text effect";
+        TextEffectSettingsTitle = "Text effect settings";
+        TextEffectPreset = "Preset";
+        TextEffectStrength = "Strength";
+        TextEffectLetterSpacing = "Letter spacing";
+        TextEffectArcBend = "Curve";
+        TextEffectWave = "Wave";
+        TextEffectSoftShadow = "Soft shadow";
+        TextEffectGradientGold = "Gradient (gold)";
+        TextEffectDoubleOutline = "Double outline";
+        TextEffectNeonGlow = "Neon glow";
+        TextEffectExtrude3D = "3D extrude";
+        TextEffectChrome = "Chrome";
+        TextEffectFire = "Fire";
+        TextEffectComic = "Comic book";
+        TextEffectRetro80s = "Retro 80s";
+        TextEffectAnaglyph3D = "3D glasses";
+        TextEffectIce = "Ice";
+        TextEffectEmboss = "Emboss";
+        TextEffectHollow = "Hollow (outline only)";
+        TextEffectMarble = "Marble";
+        TextEffectWood = "Wood";
+        TextEffectLava = "Lava";
+        TextEffectBrushedSteel = "Brushed steel";
+        TextEffectCandyCane = "Candy cane";
+        TextEffectRainbow = "Rainbow";
+        TextEffectPolkaDots = "Polka dots";
     }
 }

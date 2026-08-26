@@ -42,6 +42,11 @@ public static class WhisperEngineFactory
             return new WhisperEnginePurfviewFasterWhisperXxl();
         }
 
+        if (staticName == WhisperEngineWhisperX.StaticName)
+        {
+            return new WhisperEngineWhisperX();
+        }
+
         if (staticName == Qwen3AsrCppEngine.StaticName)
         {
             return new Qwen3AsrCppEngine();

@@ -638,6 +638,15 @@ namespace Nikse.SubtitleEdit.Controls
             _isUpdatingFromValue = false;
         }
 
+        /// <summary>
+        /// Re-renders the unchanged value after the frame-mode display setting changed - the text
+        /// otherwise only re-formats when the value itself changes.
+        /// </summary>
+        public void RefreshDisplayFormat()
+        {
+            UpdateText();
+        }
+
         private void UpdateText()
         {
             var oldSignOffset = SignOffset;

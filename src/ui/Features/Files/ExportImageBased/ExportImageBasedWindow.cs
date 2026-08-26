@@ -384,14 +384,18 @@ public class ExportImageBasedWindow : Window
         checkBoxBold.IsCheckedChanged += vm.CheckBoxChanged;
         var checkBoxRightToLeft = UiUtil.MakeCheckBox(Se.Language.General.RightToLeft, vm, nameof(vm.IsRightToLeft));
         checkBoxRightToLeft.IsCheckedChanged += vm.CheckBoxChanged;
+        var checkBoxTextEffect = UiUtil.MakeCheckBox(Se.Language.File.Export.TextEffect, vm, nameof(vm.IsTextEffectEnabled));
+        checkBoxTextEffect.IsCheckedChanged += vm.CheckBoxChanged;
+        var buttonTextEffectSettings = UiUtil.MakeButton(vm.ShowTextEffectSettingsCommand, IconNames.Settings,
+            Se.Language.File.Export.TextEffectSettingsTitle);
         var panelBoldAndRightToLeft = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Spacing = 10,
             VerticalAlignment = VerticalAlignment.Center,
-            Children = { checkBoxBold, checkBoxRightToLeft }
+            Children = { checkBoxBold, checkBoxRightToLeft, checkBoxTextEffect, buttonTextEffectSettings }
         };
-        grid.Add(panelBoldAndRightToLeft, 0, 5);
+        grid.Add(panelBoldAndRightToLeft, 0, 5, 1, 3);
 
 
         var labelOutlineWidth = UiUtil.MakeLabel(Se.Language.General.OutlineWidth);

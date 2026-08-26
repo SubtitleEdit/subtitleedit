@@ -23,6 +23,32 @@ public class EbuTest
         return subtitle;
     }
 
+    // The first-manual-save prompt and the vertical-position handling both hinge on this check:
+    // it must accept the header the options dialog stores on the subtitle (a bare
+    // EbuGeneralSubtitleInformation.ToString()) and reject anything else.
+    [Fact]
+    public void IsStlHeader_AcceptsDialogStoredHeader_RejectsOtherHeaders()
+    {
+        Assert.False(Ebu.IsStlHeader(null));
+        Assert.False(Ebu.IsStlHeader(string.Empty));
+        Assert.False(Ebu.IsStlHeader("WEBVTT"));
+        Assert.False(Ebu.IsStlHeader(new string(' ', 1024)));
+
+        var stored = new Ebu.EbuGeneralSubtitleInformation().ToString();
+        Assert.True(Ebu.IsStlHeader(stored));
+
+        // Every disk format code the save options dialog offers must be recognized - STL23 was not,
+        // so picking it made the save discard the header the dialog had just stored.
+        foreach (var diskFormatCode in new[] { "STL23.01", "STL24.01", "STL25.01", "STL29.01", "STL30.01" })
+        {
+            var header = new Ebu.EbuGeneralSubtitleInformation { DiskFormatCode = diskFormatCode }.ToString();
+            Assert.True(Ebu.IsStlHeader(header), diskFormatCode + " is not recognized as an STL header");
+        }
+
+        // A 1024-character header of some other format that happens to mention STL25 is not one.
+        Assert.False(Ebu.IsStlHeader("STL25".PadRight(1024)));
+    }
+
     // Regression for #11910: EBU STL Save produced a 14-byte invalid file ("Not supported!")
     // because the binary format went through the text save path. The binary writer must emit a real
     // EBU file (1024-byte GSI header + TTI blocks) that reads back.
@@ -55,6 +81,23 @@ public class EbuTest
         Assert.Equal(2, loaded.Paragraphs.Count);
         Assert.Contains("Hello world", loaded.Paragraphs[0].Text);
         Assert.Contains("Second line", loaded.Paragraphs[1].Text);
+    }
+
+    [Fact]
+    public void EbuStl_Load_ExposesHeaderFrameRateOnTheParsingInstance()
+    {
+        // The SE5 main view reads the frame rate off the parsing instance's header after open, to
+        // show the file's own frame numbers in the forced HH:MM:SS:FF display (#14076).
+        Ebu.EbuUiHelper = new TestEbuUiHelper();
+        using var ms = new MemoryStream();
+        ((IBinaryPersistableSubtitle)new Ebu()).Save("test.stl", ms, MakeSubtitle(), batchMode: true);
+
+        var ebu = new Ebu();
+        ebu.LoadSubtitle(new Subtitle(), ms.ToArray());
+
+        Assert.NotNull(ebu.Header);
+        Assert.StartsWith("STL25", ebu.Header.DiskFormatCode);
+        Assert.Equal(25.0, ebu.Header.FrameRate);
     }
 
     [Fact]
@@ -132,5 +175,35 @@ public class EbuTest
         new Ebu().LoadSubtitle(new Subtitle(), withoutCodes);
         Assert.False(Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox);
         Assert.False(Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight);
+    }
+
+    // The teletext color writer assumed the font tag's color value ends with a double quote and
+    // took a Substring up to it. For an unquoted value ("<font color=#ffff00>" is common in
+    // SubRip files) with any double quote later in the line - a quotation in the dialogue - that
+    // Substring length came out as -13 and the whole save crashed, so no STL file was written at
+    // all (reported by email against 5.2.0-beta24 as "The value -13 must be positive").
+    [Theory]
+    [InlineData("<font color=#ffff00>He said \"hello\" to me</font>")]
+    [InlineData("<font color='#ffff00'>He said \"hello\" to me</font>")]
+    [InlineData("<font color=\"#ffff00\">He said \"hello\" to me</font>")]
+    [InlineData("<font color=yellow size=\"12\">He said hello</font>")]
+    public void TeletextSave_FontColorValueQuotingVariants_AllWriteTheColor(string text)
+    {
+        Ebu.EbuUiHelper = new TestEbuUiHelper();
+        var subtitle = new Subtitle();
+        subtitle.Paragraphs.Add(new Paragraph(text, 1000, 3000));
+
+        var header = new Ebu.EbuGeneralSubtitleInformation { DisplayStandardCode = "1" };
+        using var ms = new MemoryStream();
+        var ok = new Ebu().Save("test.stl", ms, subtitle, batchMode: true, header);
+        var bytes = ms.ToArray();
+
+        Assert.True(ok);
+        Assert.True(bytes.Length >= 1024 + 128, "no TTI block was written");
+
+        // Yellow's teletext color code must sit in the TTI text field (offset 16..127).
+        var textField = new byte[112];
+        Array.Copy(bytes, 1024 + 16, textField, 0, 112);
+        Assert.Contains((byte)0x03, textField);
     }
 }

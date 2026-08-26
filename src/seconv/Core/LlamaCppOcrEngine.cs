@@ -127,8 +127,8 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
 
     /// <summary>
     /// Resolves <c>--ocr-model</c> to an installed model: a full <c>.gguf</c> path (needs its
-    /// mmproj vision-projector sidecar next to it), a curated OCR model by file/display name,
-    /// or - when omitted - the first installed curated OCR model.
+    /// mmproj vision-projector sidecar next to it), a curated or self-supplied OCR model in the
+    /// models folder by file/display name, or - when omitted - the first installed OCR model.
     /// </summary>
     internal static LlamaCppModel ResolveOcrModel(string? requestedModel)
     {
@@ -148,7 +148,7 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
                 }
 
                 var fullPath = Path.GetFullPath(name);
-                var mmproj = FindMmprojSidecar(fullPath);
+                var mmproj = LlamaCppServerManager.FindMmprojSidecar(fullPath);
                 if (mmproj == null)
                 {
                     var fileName = Path.GetFileName(fullPath);
@@ -162,10 +162,12 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
                     MmprojFileName: mmproj);
             }
 
-            // Name: match the curated OCR models (with or without .gguf).
-            var model = LlamaCppServerManager.OcrModels.FirstOrDefault(m => m.FileName.Equals(name, StringComparison.OrdinalIgnoreCase))
-                        ?? LlamaCppServerManager.OcrModels.FirstOrDefault(m => m.FileName.Equals(name + ".gguf", StringComparison.OrdinalIgnoreCase))
-                        ?? LlamaCppServerManager.OcrModels.FirstOrDefault(m => m.DisplayName.Equals(name, StringComparison.OrdinalIgnoreCase));
+            // Name: match the curated OCR models (with or without .gguf), plus any self-supplied
+            // vision model in the models folder - the same list the OCR window offers.
+            var all = LlamaCppServerManager.GetAllOcrModels();
+            var model = all.FirstOrDefault(m => m.FileName.Equals(name, StringComparison.OrdinalIgnoreCase))
+                        ?? all.FirstOrDefault(m => m.FileName.Equals(name + ".gguf", StringComparison.OrdinalIgnoreCase))
+                        ?? all.FirstOrDefault(m => m.DisplayName.Equals(name, StringComparison.OrdinalIgnoreCase));
             if (model == null || !LlamaCppServerManager.IsModelInstalled(model))
             {
                 throw new InvalidOperationException(
@@ -177,8 +179,8 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
             return model;
         }
 
-        // No model given: pick the first installed curated OCR model.
-        var installed = LlamaCppServerManager.OcrModels.FirstOrDefault(LlamaCppServerManager.IsModelInstalled);
+        // No model given: pick the first installed OCR model (curated first, then self-supplied).
+        var installed = LlamaCppServerManager.GetAllOcrModels().FirstOrDefault(LlamaCppServerManager.IsModelInstalled);
         if (installed == null)
         {
             throw new InvalidOperationException(
@@ -188,19 +190,6 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
         }
 
         return installed;
-    }
-
-    private static string? FindMmprojSidecar(string modelPath)
-    {
-        // Both curated sidecar conventions: "mmproj-<file>" (GLM-OCR, LightOnOCR) and
-        // "<stem>-mmproj.gguf" (PaddleOCR-VL).
-        var dir = Path.GetDirectoryName(modelPath)!;
-        var candidates = new[]
-        {
-            Path.Combine(dir, "mmproj-" + Path.GetFileName(modelPath)),
-            Path.Combine(dir, Path.GetFileNameWithoutExtension(modelPath) + "-mmproj.gguf"),
-        };
-        return candidates.FirstOrDefault(File.Exists);
     }
 
     private static string Escape(string s) =>

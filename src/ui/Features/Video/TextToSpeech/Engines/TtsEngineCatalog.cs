@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Logic.Download;
+﻿using Nikse.SubtitleEdit.Logic.Download;
 using System;
 using System.Collections.Generic;
 
@@ -67,6 +67,11 @@ public static class TtsEngineCatalog
             // new VibeVoiceCrispAsr(),
 
             new IndexTtsCrispAsr(),
+
+            // dots.tts SOAR 2B (CrispASR) — continuous-latent AR model with a flow-matching DiT
+            // head and a 48 kHz BigVGAN vocoder, Apache-2.0. Grouped with the other CrispASR
+            // engines; clones from a CAM++ speaker embedding so no reference transcript is needed.
+            new DotsTtsCrispAsr(),
 
             // CosyVoice3 (CrispASR) sits immediately after IndexTtsCrispAsr to keep the CrispASR
             // engines grouped visually in the engine combo.

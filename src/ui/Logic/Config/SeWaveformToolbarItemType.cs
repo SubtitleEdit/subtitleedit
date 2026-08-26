@@ -25,6 +25,10 @@ public enum SeWaveformToolbarItemType
     HorizontalZoom = 10,
     VideoPositionSlider = 11,
 
+    // SE 4's editable video position box (#12266): the slider's exact-time counterpart - type,
+    // step or copy the current position as a time code.
+    VideoPositionText = 22,
+
     // Picks which audio track the waveform is extracted from; only rendered when the
     // open video has more than one audio track.
     AudioTrackPicker = 21,

@@ -23,6 +23,7 @@ You can find the latest cross-platform builds here:
 ### macOS
 
 - **Minimum macOS version**: 12 (Monterey) or newer
+- **Recommended**: macOS 14 (Sonoma) or newer - the oldest macOS that .NET 10 is supported on. Subtitle Edit still starts on 12 and 13, but that combination is not one the .NET runtime is tested against.
 - The `.dmg` is self-contained: `libmpv` and `ffmpeg` are bundled inside `Subtitle Edit.app`, so no MacPorts or Homebrew install is required.
 
 #### Installing Subtitle Edit on macOS

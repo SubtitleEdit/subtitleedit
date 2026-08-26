@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.UiLogic.Http;
+using Nikse.SubtitleEdit.UiLogic.Ocr;
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -92,18 +93,7 @@ public class MistralOcr
 
             // Sanitize the result (keeping your existing logic)
             finalText = finalText.Replace("\\n", Environment.NewLine);
-            finalText = finalText.Replace(" ,", ",");
-            finalText = finalText.Replace(" .", ".");
-            finalText = finalText.Replace(" !", "!");
-            finalText = finalText.Replace(" ?", "?");
-            finalText = finalText.Replace("( ", "(");
-            finalText = finalText.Replace(" )", ")");
-            finalText = finalText.Replace("\\\"", "\"");
-
-            if (finalText.EndsWith("!'"))
-            {
-                finalText = finalText.TrimEnd('\'');
-            }
+            finalText = OcrHelper.FixAiOcrPunctuationSpaces(finalText, language);
 
             return finalText.Trim();
         }

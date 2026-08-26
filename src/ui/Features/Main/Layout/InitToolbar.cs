@@ -542,29 +542,23 @@ public static class InitToolbar
             VerticalAlignment = VerticalAlignment.Center,
         };
 
-        // EBU STL only: direct access to the existing header/export settings.
-        // It sits before the format selector so the selector itself stays in a stable position.
-        var ebuHeaderButton = new Button
+        // One properties/options button for every format with format-specific settings (EBU STL
+        // options, DCinema/timed-text/WebVTT properties, ...) - the same dialogs as the File menu's
+        // "<format> properties..." item. Placed left of the format selector: the right-aligned
+        // panel grows leftwards, so the selector keeps its position when the button appears.
+        var formatPropertiesButton = new Button
         {
-            Content = "Header",
-            Command = vm.ExportEbuStlCommand,
+            Content = MakeImage("Settings"),
+            Command = vm.FilePropertiesShowCommand,
             Background = Brushes.Transparent,
-            BorderBrush = Brushes.Gray,
-            BorderThickness = new Thickness(1),
-            Padding = new Thickness(10, 4),
-            Margin = new Thickness(0, 0, 6, 0),
-            MinHeight = 32,
-            MinWidth = 68,
-            VerticalAlignment = VerticalAlignment.Center,
-            [AutomationProperties.NameProperty] = "EBU STL header",
-            [ToolTip.TipProperty] = "Open EBU STL header/export settings",
-            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsFormatEbu))
-            {
-                Source = vm,
-                Mode = BindingMode.OneWay,
-            },
+            [!AutomationProperties.NameProperty] = new Binding(nameof(vm.FilePropertiesText)) { Source = vm },
+            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsFilePropertiesVisible)) { Source = vm },
         };
-        stackPanelRight.Children.Add(ebuHeaderButton);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            formatPropertiesButton[!ToolTip.TipProperty] = new Binding(nameof(vm.FilePropertiesText)) { Source = vm };
+        }
+        stackPanelRight.Children.Add(formatPropertiesButton);
 
         // subtitle formats
         stackPanelRight.Children.Add(new TextBlock

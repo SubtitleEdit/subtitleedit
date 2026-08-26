@@ -144,6 +144,17 @@ public class LanguageTextToSpeech
     public string NoWebVttVoicesFoundMessage { get; set; }
     public string MergeContinuationLinesPromptTitle { get; set; }
     public string MergeContinuationLinesPromptMessage { get; set; }
+    public string SkipNoiseLinesPromptTitle { get; set; }
+    public string SkipNoiseLinesPromptMessage { get; set; }
+    public string SkipNoiseLinesTitle { get; set; }
+    public string SkipNoiseLinesFoundX { get; set; }
+    public string SkipNoiseLinesColumnSkip { get; set; }
+    public string DetectSpeakersPromptTitle { get; set; }
+    public string DetectSpeakersPromptMessage { get; set; }
+    public string DetectSpeakersTitle { get; set; }
+    public string DetectSpeakersFoundX { get; set; }
+    public string DetectSpeakersColumnUse { get; set; }
+    public string DetectSpeakersSticky { get; set; }
 
     // Applying the TTS window's changes (review text edits, merged lines) back to the subtitle
     public string SubtitleUpdatedFromReviewSingular { get; set; }
@@ -288,6 +299,21 @@ public class LanguageTextToSpeech
         MergeContinuationLinesPromptMessage = "Some lines appear to be a single sentence split across multiple subtitles." + Environment.NewLine + Environment.NewLine +
                                               "Merging them before generation lets the TTS engine speak each thought as one breath group, which usually sounds more natural." + Environment.NewLine + Environment.NewLine +
                                               "Review and apply merges now?";
+        SkipNoiseLinesPromptTitle = "Skip sound and music lines?";
+        SkipNoiseLinesPromptMessage = "Some lines contain only sounds or music - like ♪ or [door slams]." + Environment.NewLine + Environment.NewLine +
+                                      "Speech engines try to read such lines aloud and often make up words." + Environment.NewLine + Environment.NewLine +
+                                      "Review these lines and leave them silent?";
+        SkipNoiseLinesTitle = "Lines with only sounds or music";
+        SkipNoiseLinesFoundX = "{0} lines contain only sounds or music - checked lines are left silent";
+        SkipNoiseLinesColumnSkip = "Skip";
+        DetectSpeakersPromptTitle = "Speaker names found in the text?";
+        DetectSpeakersPromptMessage = "Some lines start with a speaker name - like \"MIKE:\" or \"[NARRATOR]\"." + Environment.NewLine + Environment.NewLine +
+                                      "Moved into the actor field, each speaker can get their own voice via \"Set up cast\", and the name is not read aloud." + Environment.NewLine + Environment.NewLine +
+                                      "Review the names now? (only the speech generation is affected - the subtitle itself is not changed)";
+        DetectSpeakersTitle = "Speaker names in the text";
+        DetectSpeakersFoundX = "{0} speaker tags found ({1} speakers) - checked names become actors and are not read aloud";
+        DetectSpeakersColumnUse = "Use";
+        DetectSpeakersSticky = "Lines without a name continue the previous speaker";
 
         SubtitleUpdatedFromReviewSingular = "Updated one line from the speech review";
         SubtitleUpdatedFromReviewPlural = "Updated {0} lines from the speech review";

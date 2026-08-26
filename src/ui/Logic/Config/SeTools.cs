@@ -136,6 +136,8 @@ public class SeTools
     public bool MultipleReplaceShowDotDotDotButtons { get; set; }
     public bool GridFocusTextboxAfterInsertNew { get; set; }
     public bool TextToSpeechPromptMergeContinuationLines { get; set; }
+    public bool TextToSpeechPromptSkipNoiseLines { get; set; }
+    public bool TextToSpeechPromptDetectSpeakers { get; set; }
 
     // OpenAI Compatible STT settings
     public string OpenAiCompatibleSttUrl { get; set; } = "http://localhost:8000/v1/audio/transcriptions";
@@ -260,6 +262,8 @@ public class SeTools
         AllowSingleLetterShortcutsInTextbox = false;
         WriteToolsLog = true;
         TextToSpeechPromptMergeContinuationLines = true;
+        TextToSpeechPromptSkipNoiseLines = true;
+        TextToSpeechPromptDetectSpeakers = true;
 
         LastColorPickerColor = Colors.Yellow.FromColorToHex();
         LastColorPickerColor1 = Colors.Red.FromColorToHex();

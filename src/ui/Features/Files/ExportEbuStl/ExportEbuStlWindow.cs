@@ -128,18 +128,23 @@ public class ExportEbuStlWindow : Window
 
         var labelOriginalProgramTitle = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.OriginalProgramTitle);
         var textBoxOriginalProgramTitle = UiUtil.MakeTextBox(textBoxWidth, vm, nameof(vm.OriginalProgramTitle));
+        textBoxOriginalProgramTitle.MaxLength = 32; // EBU STL header field width
 
         var labelOriginalEpisodeTitle = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.OriginalEpisodeTitle);
         var textBoxOriginalEpisodeTitle = UiUtil.MakeTextBox(textBoxWidth, vm, nameof(vm.OriginalEpisodeTitle));
+        textBoxOriginalEpisodeTitle.MaxLength = 32; // EBU STL header field width
 
         var labelTranslatedProgramTitle = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.TranslatedProgramTitle);
         var textBoxTranslatedProgramTitle = UiUtil.MakeTextBox(textBoxWidth, vm, nameof(vm.TranslatedProgramTitle));
+        textBoxTranslatedProgramTitle.MaxLength = 32; // EBU STL header field width
 
         var labelTranslatedEpisodeTitle = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.TranslatedEpisodeTitle);
         var textBoxTranslatedEpisodeTitle = UiUtil.MakeTextBox(textBoxWidth, vm, nameof(vm.TranslatedEpisodeTitle));
+        textBoxTranslatedEpisodeTitle.MaxLength = 32; // EBU STL header field width
 
         var labelTranslatorsName = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.TranslatorsName);
         var textBoxTranslatorsName = UiUtil.MakeTextBox(textBoxWidth, vm, nameof(vm.TranslatorsName));
+        textBoxTranslatorsName.MaxLength = 32; // EBU STL header field width
 
         grid.Add(labelCodePageNumber, 0, 0);
         grid.Add(comboBoxCodeNumbers, 0, 1);
@@ -177,9 +182,11 @@ public class ExportEbuStlWindow : Window
 
         var labelSubtitleListReferenceCode = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.SubtitleListReferenceCode);
         var textBoxSubtitleListReferenceCode = UiUtil.MakeTextBox(textBoxWidth, vm, nameof(vm.SubtitleListReferenceCode));
+        textBoxSubtitleListReferenceCode.MaxLength = 16; // EBU STL header field width
 
         var labelCountryOfOrigin = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.CountryOfOrigin);
         var textBoxCountryOfOrigin = UiUtil.MakeTextBox(textBoxWidth, vm, nameof(vm.CountryOfOrigin));
+        textBoxCountryOfOrigin.MaxLength = 3; // EBU STL header field width
 
         var labelTimeCodeStatus = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.TimeCodeStatus);
         var comboBoxTimeCodeStatus = UiUtil.MakeComboBox(vm.TimeCodeStatusList, vm, nameof(vm.SelectedTimeCodeStatus)).WithMinWidth(textBoxWidth);

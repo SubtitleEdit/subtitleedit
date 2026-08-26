@@ -291,6 +291,14 @@ public class VideoOcrWindow : Window
         crispEmbedPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsCrispEmbedEngine)) { Source = vm });
         panel.Children.Add(crispEmbedPanel);
 
+        // Apple Vision settings - language only: the engine is part of macOS, so there is no
+        // model to pick, nothing to download and no server to start.
+        var appleVisionPanel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 4 };
+        appleVisionPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Language));
+        appleVisionPanel.Children.Add(UiUtil.MakeComboBox(vm.AppleVisionLanguages, vm, nameof(vm.SelectedAppleVisionLanguage)).WithWidth(330));
+        appleVisionPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsAppleVisionEngine)) { Source = vm });
+        panel.Children.Add(appleVisionPanel);
+
         // Scan settings
         panel.Children.Add(MakeHeader(Se.Language.Video.VideoOcr.Scan));
         panel.Children.Add(MakeSettingRow(

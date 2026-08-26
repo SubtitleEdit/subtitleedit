@@ -106,6 +106,37 @@ public class SeConvSettingsTest : IDisposable
     }
 
     [Fact]
+    public void ApplyToLibSe_AppliesTranslatePrompts()
+    {
+        var tools = Configuration.Settings.Tools;
+        var saved = (tools.LlamaCppPrompt, tools.OllamaPrompt, tools.LmStudioPrompt);
+        try
+        {
+            var path = WriteSettings("""
+                {
+                  "tools": {
+                    "llamaCppPrompt": "Translate from {0} to {1} in a formal register:",
+                    "ollamaPrompt": "Translate from {0} to {1} like a pirate:",
+                    "lmStudioPrompt": "Translate from {0} to {1}:"
+                  }
+                }
+                """);
+
+            var settings = SeConvSettings.Load(path);
+            settings.ApplyToLibSe();
+
+            Assert.Empty(settings.GetUnknownKeys());
+            Assert.Equal("Translate from {0} to {1} in a formal register:", tools.LlamaCppPrompt);
+            Assert.Equal("Translate from {0} to {1} like a pirate:", tools.OllamaPrompt);
+            Assert.Equal("Translate from {0} to {1}:", tools.LmStudioPrompt);
+        }
+        finally
+        {
+            (tools.LlamaCppPrompt, tools.OllamaPrompt, tools.LmStudioPrompt) = saved;
+        }
+    }
+
+    [Fact]
     public void ApplyToLibSe_AppliesProfileGeneralValues()
     {
         // Regression for #11874: the FixCommonErrors profile values must be mappable.

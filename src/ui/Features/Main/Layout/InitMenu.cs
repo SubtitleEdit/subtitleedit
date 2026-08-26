@@ -489,6 +489,11 @@ public static class InitMenu
             },
             new MenuItem
             {
+                Header = l.ListErrors,
+                Command = vm.ListErrorsCommand,
+            },
+            new MenuItem
+            {
                 Header = l.AiReview,
                 Command = vm.ShowToolsAiReviewCommand,
             },

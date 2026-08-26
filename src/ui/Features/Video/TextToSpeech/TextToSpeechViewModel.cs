@@ -24,9 +24,12 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.F5TtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.OmniVoiceCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoxCPM2CrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.MossTtsCrispAsrSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DotsTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTts25AudioCppSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DetectSpeakers;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.KokoroTtsSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.SkipNoiseLines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.PiperSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.OmniVoiceSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Qwen3TtsCrispAsrSettings;
@@ -340,6 +343,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         else if (SelectedEngine is IndexTtsCrispAsr)
         {
             Se.Settings.Video.TextToSpeech.IndexTtsCrispAsrModel = SelectedModel ?? IndexTtsCrispAsr.DefaultModelKey;
+        }
+        else if (SelectedEngine is DotsTtsCrispAsr)
+        {
+            Se.Settings.Video.TextToSpeech.DotsTtsCrispAsrModel = SelectedModel ?? DotsTtsCrispAsr.DefaultModelKey;
         }
         else if (SelectedEngine is IndexTts25AudioCpp)
         {
@@ -973,7 +980,17 @@ public partial class TextToSpeechViewModel : ObservableObject
         // fallback base - a configured generation folder wins.
         _waveFolder = TtsRunFolder.Create(waveFolder);
 
-        _castKind = ActorVoiceDetector.Detect(subtitle, format);
+        RefreshCast(ActorVoiceDetector.Detect(subtitle, format), subtitle);
+    }
+
+    /// <summary>
+    /// Recomputes the cast state (kind, button, saved mappings) from <paramref name="subtitle"/>.
+    /// Called at window setup, and again when the detect-speakers prompt writes actors into the
+    /// working subtitle mid-flow.
+    /// </summary>
+    private void RefreshCast(ActorVoiceDetector.CastKind castKind, Subtitle subtitle)
+    {
+        _castKind = castKind;
         // Only surface the cast button when there's actually more than one actor/voice to assign
         // — a single-speaker subtitle uses the global engine/voice and the button would be a no-op.
         var actorCount = _castKind == ActorVoiceDetector.CastKind.None
@@ -1124,6 +1141,117 @@ public partial class TextToSpeechViewModel : ObservableObject
     }
 
     /// <summary>
+    /// Lines the user chose to leave silent in this generation run (SDH sound/music annotations
+    /// like "♪" or "[door slams]" - see <see cref="NoiseLineDetector"/>). Held by reference:
+    /// the set is filled from and checked against the same <see cref="_subtitle"/> instance,
+    /// after any merge prompt has replaced it.
+    /// </summary>
+    private readonly HashSet<Paragraph> _skipNoiseParagraphs = new();
+
+    /// <summary>
+    /// Like the merge-continuation-lines prompt: sound/music-only lines get read aloud or
+    /// hallucinated into made-up words by TTS engines (#14106), so before generating, the lines
+    /// that carry no speech are offered for review and left silent. Runs after the merge prompt -
+    /// that one can replace <see cref="_subtitle"/>.
+    /// </summary>
+    private async Task PromptSkipNoiseLines()
+    {
+        _skipNoiseParagraphs.Clear();
+        if (Window == null)
+        {
+            return;
+        }
+
+        var noiseLines = NoiseLineDetector.Detect(_subtitle);
+        if (noiseLines.Count == 0)
+        {
+            return;
+        }
+
+        var answer = await MessageBox.Show(
+            Window!,
+            Se.Language.Video.TextToSpeech.SkipNoiseLinesPromptTitle,
+            Se.Language.Video.TextToSpeech.SkipNoiseLinesPromptMessage,
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question);
+        if (answer != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<SkipNoiseLinesWindow, SkipNoiseLinesViewModel>(
+            Window!, vm => vm.Initialize(noiseLines));
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        foreach (var paragraph in result.SelectedParagraphs)
+        {
+            _skipNoiseParagraphs.Add(paragraph);
+        }
+    }
+
+    /// <summary>
+    /// The third generate-time prompt: SDH speaker tags written into the text ("MIKE: text",
+    /// "[NARRATOR] text") become actors so "Set up cast" can give each speaker a voice, and the
+    /// names are not read aloud (#14106). Only the TTS working copy changes - the subtitle in the
+    /// main window keeps its text (Tools → Convert actors is the way to persist actors). Runs
+    /// before the merge prompt: tag-free text merges better, and the merge rebuilds
+    /// <see cref="_subtitle"/> while carrying actors through.
+    /// </summary>
+    private async Task PromptDetectSpeakers()
+    {
+        if (Window == null || _castKind != ActorVoiceDetector.CastKind.None)
+        {
+            return;
+        }
+
+        var candidates = TextSpeakerDetector.Detect(_subtitle);
+        var speakerCount = candidates
+            .Where(c => TextSpeakerDetector.IsConfidentSpeakerName(c.Speaker))
+            .Select(c => c.Speaker)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .Count();
+        if (speakerCount < 2)
+        {
+            // One speaker needs no cast, and a subtitle with no confident tag is most likely not
+            // SDH at all - prompting on every "Warning:" would teach users to click prompts away.
+            return;
+        }
+
+        var answer = await MessageBox.Show(
+            Window!,
+            Se.Language.Video.TextToSpeech.DetectSpeakersPromptTitle,
+            Se.Language.Video.TextToSpeech.DetectSpeakersPromptMessage,
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question);
+        if (answer != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<DetectSpeakersWindow, DetectSpeakersViewModel>(
+            Window!, vm => vm.Initialize(candidates));
+        if (!result.OkPressed || result.ConfirmedCandidates.Count == 0)
+        {
+            return;
+        }
+
+        TextSpeakerDetector.Apply(_subtitle, result.ConfirmedCandidates, result.StickySpeakers);
+
+        // The actors exist only in the TTS working copy, so cast detection is not re-run against
+        // the main window's format - the copy holds ASSA-style actors now, whatever the file is.
+        RefreshCast(ActorVoiceDetector.CastKind.AssaActors, _subtitle);
+
+        // Straight into voice assignment - the whole point of confirming the speakers.
+        if (HasCast)
+        {
+            await ShowCast();
+        }
+    }
+
+    /// <summary>
     /// Stop the crispasr.exe servers of every CrispASR-based TTS engine EXCEPT
     /// <paramref name="keepAlive"/>. Pass null to stop all four. Called before starting synth
     /// (Test Voice / Generate TTS) and on window close, so models from previously selected
@@ -1144,6 +1272,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         if (keepAlive is not IndexTtsCrispAsr)
         {
             IndexTtsCrispAsr.StopServer();
+        }
+        if (keepAlive is not DotsTtsCrispAsr)
+        {
+            DotsTtsCrispAsr.StopServer();
         }
         if (keepAlive is not IndexTts25AudioCpp)
         {
@@ -1195,9 +1327,22 @@ public partial class TextToSpeechViewModel : ObservableObject
         // The engine and/or its models may have just been downloaded - refresh the combo dots.
         RefreshDownloadDots?.Invoke();
 
+        if (Se.Settings.Tools.TextToSpeechPromptDetectSpeakers)
+        {
+            await PromptDetectSpeakers();
+        }
+
         if (Se.Settings.Tools.TextToSpeechPromptMergeContinuationLines)
         {
             await PromptMergeContinuationLines();
+        }
+
+        // Cleared unconditionally so a run with the prompt turned off never inherits skips from
+        // an earlier run in the same window.
+        _skipNoiseParagraphs.Clear();
+        if (Se.Settings.Tools.TextToSpeechPromptSkipNoiseLines)
+        {
+            await PromptSkipNoiseLines();
         }
 
         var voice = SelectedVoice;
@@ -1417,6 +1562,9 @@ public partial class TextToSpeechViewModel : ObservableObject
             case IndexTtsCrispAsr:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadIndexTtsCrispAsrModels(IndexTtsCrispAsr.ResolveModelKey(SelectedModel)));
                 break;
+            case DotsTtsCrispAsr:
+                await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadDotsTtsCrispAsrModels(DotsTtsCrispAsr.ResolveModelKey(SelectedModel)));
+                break;
             case IndexTts25AudioCpp:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadIndexTts25AudioCppModels(IndexTts25AudioCpp.ResolveModelKey(SelectedModel)));
                 break;
@@ -1488,6 +1636,9 @@ public partial class TextToSpeechViewModel : ObservableObject
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
             IndexTtsCrispAsr => IndexTtsCrispAsr.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
+            DotsTtsCrispAsr => DotsTtsCrispAsr.AreModelsInstalled(modelKey)
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
             IndexTts25AudioCpp => IndexTts25AudioCpp.AreModelsInstalled(modelKey)
@@ -1831,6 +1982,14 @@ public partial class TextToSpeechViewModel : ObservableObject
             {
                 voice = perEngineVoices.FirstOrDefault(v => string.Equals(v.Name, item.VoiceName, StringComparison.OrdinalIgnoreCase));
             }
+
+            // A cloned voice that is not in the engine's voice list - the per-line "clone from
+            // video" cuts one reference per line and never imports any of them - is rebuilt from
+            // the recording the export copied along. Without this the line came back voice-less,
+            // and regenerating it either spoke in whatever voice happened to be selected or failed
+            // outright with "Voice is not an OmniVoice" (#14095).
+            voice ??= RebuildClonedVoice(item, jsonFolder);
+
             voice ??= Voices.FirstOrDefault(v => v.Name == item.VoiceName);
             stepResults.Add(new TtsStepResult
             {
@@ -1900,6 +2059,9 @@ public partial class TextToSpeechViewModel : ObservableObject
             // of writing ActorVoiceMappings = [] back to SubtitleEditTts.json.
             vm.ActorVoiceMappings.AddRange(_actorVoiceMappings);
             vm.SubtitleFileName = GetLoadedSubtitleFileName();
+            // So a regenerate that has to cut its own reference clip transcribes it with what the
+            // video says, not with the translation being dubbed over it.
+            vm.ReferenceTextOf = GetSpokenTextInVideo;
 
             if (peaksForReview == null || peaksForReview.Peaks.Count == 0)
             {
@@ -1951,6 +2113,30 @@ public partial class TextToSpeechViewModel : ObservableObject
                     MessageBoxIcon.Error);
             }
         }
+    }
+
+    /// <summary>
+    /// The voice an imported line clones from, rebuilt from the reference recording that travelled
+    /// with the export. Null when the line's voice clones from nothing, when the recording is not
+    /// there, or when its engine cannot be given a recording directly.
+    /// </summary>
+    private Voice? RebuildClonedVoice(TtsImportExportItem item, string jsonFolder)
+    {
+        if (string.IsNullOrEmpty(item.VoiceFileName) || string.IsNullOrEmpty(item.EngineName))
+        {
+            return null;
+        }
+
+        var engine = Engines.FirstOrDefault(e => string.Equals(e.Name, item.EngineName, StringComparison.OrdinalIgnoreCase));
+        if (engine == null)
+        {
+            return null;
+        }
+
+        var clipFileName = ResolveImportedAudioFileName(item.VoiceFileName, jsonFolder);
+        return File.Exists(clipFileName)
+            ? PerLineVoiceClone.MakeVoiceForClip(engine, clipFileName, item.VoiceName)
+            : null;
     }
 
     /// <summary>
@@ -2579,11 +2765,23 @@ public partial class TextToSpeechViewModel : ObservableObject
             // segments failed (e.g. the ElevenLabs 429 text) instead of a bare count (#12093).
             var errorMessages = new List<string>();
             _speakRetryFailures = 0;
+            var skippedNoiseCount = 0;
 
             for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
             {
                 ProgressText = $"Generating speech: segment {index + 1} of {_subtitle.Paragraphs.Count}";
                 var paragraph = _subtitle.Paragraphs[index];
+
+                // A line the user chose to leave silent gets no step result at all - exactly like
+                // a failed line downstream (FixSpeed drops it, the merge keeps the base silence
+                // track over its span) but without counting as a failure anywhere.
+                if (_skipNoiseParagraphs.Contains(paragraph))
+                {
+                    skippedNoiseCount++;
+                    ProgressValue = (double)(index + 1) / _subtitle.Paragraphs.Count * 100.0;
+                    continue;
+                }
+
                 var resolution = ResolveVoiceForParagraph(paragraph, castContext, engine, voice);
                 // When the row's engine differs from the globally selected engine, the global
                 // SelectedLanguage/SelectedRegion/SelectedModel were resolved for a different
@@ -2642,6 +2840,11 @@ public partial class TextToSpeechViewModel : ObservableObject
                 }
             }
             ProgressValue = 100;
+
+            if (skippedNoiseCount > 0)
+            {
+                Se.WriteToolsLog($"TTS generation: left {skippedNoiseCount} sound/music lines silent (skipped by user choice)");
+            }
 
             var failedCount = resultList.Count(r => string.IsNullOrEmpty(r.CurrentFileName));
             // First engine-reported failure reason, e.g. the ElevenLabs 429 text. The generic
@@ -2896,7 +3099,9 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
 
         // A fresh folder per run: the clips of a previous run belong to whatever the subtitle
-        // looked like then, and the review window still points at the current run's files.
+        // looked like then, and the review window still points at the current run's files. The
+        // same goes for the copies an engine keeps in its own voices folder.
+        PerLineVoiceClone.ResetStagedReferences(engine);
         var clipFolder = Path.Combine(_waveFolder, "clone-references");
         try
         {
@@ -3495,6 +3700,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 _wavePeakData);
             vm.ActorVoiceMappings.AddRange(_actorVoiceMappings);
             vm.SubtitleFileName = GetLoadedSubtitleFileName();
+            vm.ReferenceTextOf = GetSpokenTextInVideo;
         });
 
         if (result.OkPressed)
@@ -3788,6 +3994,16 @@ public partial class TextToSpeechViewModel : ObservableObject
             else if (SelectedEngine is IndexTtsCrispAsr)
             {
                 SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.IndexTtsCrispAsrModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Models.FirstOrDefault();
+                }
+                IsEngineSettingsVisible = true;
+                IsModelDownloadVisible = true;
+            }
+            else if (SelectedEngine is DotsTtsCrispAsr)
+            {
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.DotsTtsCrispAsrModel);
                 if (string.IsNullOrEmpty(SelectedModel))
                 {
                     SelectedModel = Models.FirstOrDefault();

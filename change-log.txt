@@ -3,6 +3,67 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-beta25 (26th of August 2026)
+
+* Add advanced text effects to image based export - gradient, neon glow, 3D extrude and more
+* Add speaker-name detection and a "leave sound/music lines silent" prompt to text to speech - thx subof
+* Add "Clone from video" to Qwen3 TTS, so each line can be dubbed in the voice heard in the video - thx invio-a11y
+* Add an editable video position box to the waveform toolbar - thx 95Midnight
+* Add custom llama.cpp vision models to the OCR model list
+* Add the "Ollama advanced" translate engine to batch convert
+* Add "--translate-prompt" to seconv for the local LLM translate engines - thx Makar8000
+* Image based export now honors per-line ASSA colors and outline/shadow widths
+* EBU STL: show frame-based time codes while the format is active - thx Triathlon-rally
+* "Normalize strings" now folds curly quotes, dashes and ellipsis to plain ASCII - thx fraternl
+* DeepL: offer all the languages the API supports, and use the host that matches the key
+* Google Translate: use the right language list for the free and the paid engine, and drop two broken entries
+* Auto-translate: take the CrispASR MADLAD language list from the model - thx ecotycoon
+* OCR: list the most accurate llama.cpp models first
+* Italian OCR: fix "E'" to "È" - thx GitGianluc
+* Speech to text: say when Crisp ASR was killed instead of reporting no speech - thx marwanlhabti5-coder
+* Update llama.cpp to b10625
+* Fix the original text being erased after translating - thx fraternl
+* Fix EBU STL export doing nothing when a font color tag has no quotes, and remember the save options
+* Fix regenerating a cloned line after importing a text to speech session - thx invio-a11y
+* Fix "find voices in video and clone" not setting actors when a subtitle is open - thx subof
+* Fix "convert actors" missing a speaker tag split across a line break - thx subof
+* Fix OCR removing the French space before "?" and "!"
+* Fix Microsoft Translator throwing an error when the language list cannot be fetched
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+* Update Polish translation - thx potplayer-fanpack
+
+-----------------------------------------------------------------------------------------------------
+
+v5.2.0-beta24 (25th of August 2026)
+
+* Add dots.tts text to speech engine with voice cloning
+* Add WhisperX speech to text engine, standalone - no Python needed - thx muaz978
+* Add Apple Vision OCR on macOS
+* Add a format properties button next to the subtitle format picker
+* Add "List errors..." to the Tools menu
+* Add the SE 4 bookmark, underline and "guess start" shortcuts
+* macOS: add the standard Window menu, close menu-bar gaps and fix the file types the app registers
+* macOS: let Ctrl+click open the shortcuts list's Import/Export menu
+* Blu-ray sup export can now fade lines in/out via ASSA "{\fad}" tags
+* Update Paddle OCR to 3.7 (PP-OCRv6)
+* Google Translate: show a clear message when Google blocks the free service, and retry via a fallback endpoint - thx kadrimarzouki
+* Speech to text advanced: the parameter buttons now toggle their parameter on and off - thx thealainpaul
+* Fix EBU STL save options being silently lost or corrupted
+* Fix subtitle times drifting by one millisecond while editing - thx Davanix
+* Fix the original text disappearing after applying a tool dialog's result - thx madsoft-ha
+* Fix "Open with" on an mkv sometimes opening only the subtitle, not the video - thx wixfigur
+* Fix "convert actors" not writing the actor column for inline "Name: text" lines - thx rotj
+* Fix Faster Whisper XXL, CTranslate2 and Const-me asking to install again every time - thx senaplz
+* Fix Qwen 3.5 leaking "thinking" text into llama.cpp translate and AI review
+* Fix Whisper suggesting int8 again after cuBLAS rejected the compute type
+* Update Russian translation - thx jekovcar
+* Update Bulgarian translation - thx jekovcar
+* Update Chinese Traditional translation - thx love80312
+* Update Italian translation - thx bovirus
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-beta23 (24th of August 2026)
 
 * OCR: add accent, l/I and preposition-split rules for Spanish, Portuguese and Italian

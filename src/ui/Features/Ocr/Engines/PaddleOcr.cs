@@ -35,7 +35,7 @@ public partial class PaddleOcr
     // The pinned PaddleOCR-Standalone release. Bumping it means updating this one line and
     // the file names below - and Se.PaddleOcrFolder when the underlying PaddleOCR version
     // changes, so engine and models never mix across releases.
-    private const string StandaloneRelease = "https://github.com/timminator/PaddleOCR-Standalone/releases/download/v1.4.0/";
+    private const string StandaloneRelease = "https://github.com/timminator/PaddleOCR-Standalone/releases/download/v3.7.0/";
 
     /// <summary>
     /// One downloadable Paddle OCR archive: the file(s) to fetch, and the folder level inside
@@ -48,19 +48,19 @@ public partial class PaddleOcr
     {
         return downloadType switch
         {
-            PaddleOcrDownloadType.Models => Archive("PaddleOCR.PP-OCRv5.support.files.VideOCR.7z", "PaddleOCR.PP-OCRv5.support.files"),
-            PaddleOcrDownloadType.EngineCpu => Archive("PaddleOCR-CPU-v1.4.0.7z"),
-            PaddleOcrDownloadType.EngineGpu11 => Archive("PaddleOCR-GPU-v1.4.0-CUDA-11.8.7z"),
-            PaddleOcrDownloadType.EngineGpu12 => Archive("PaddleOCR-GPU-v1.4.0-CUDA-12.9.7z"),
-            PaddleOcrDownloadType.EngineCpuLinux => Archive("PaddleOCR-CPU-v1.4.0-Linux.7z"),
-            PaddleOcrDownloadType.EngineGpu11Linux => Archive("PaddleOCR-GPU-v1.4.0-CUDA-11.8-Linux.7z"),
+            PaddleOcrDownloadType.Models => Archive("PaddleOCR.PP-OCRv6.support.files.VideOCR.7z", "PaddleOCR.PP-OCRv6.support.files"),
+            PaddleOcrDownloadType.EngineCpu => Archive("PaddleOCR-CPU-v3.7.0.7z"),
+            PaddleOcrDownloadType.EngineGpu11 => Archive("PaddleOCR-GPU-v3.7.0-CUDA-11.8.7z"),
+            PaddleOcrDownloadType.EngineGpu12 => Archive("PaddleOCR-GPU-v3.7.0-CUDA-12.9.7z"),
+            PaddleOcrDownloadType.EngineCpuLinux => Archive("PaddleOCR-CPU-v3.7.0-Linux.7z"),
+            PaddleOcrDownloadType.EngineGpu11Linux => Archive("PaddleOCR-GPU-v3.7.0-CUDA-11.8-Linux.7z"),
 
             // Split into two volumes upstream. Both have to land in the same folder before the
             // .001 is handed to the extractor - the download queue takes care of that.
             PaddleOcrDownloadType.EngineGpu12Linux => Archive(
-                "PaddleOCR-GPU-v1.4.0-CUDA-12.9-Linux.7z.001",
-                "PaddleOCR-GPU-v1.4.0-CUDA-12.9-Linux",
-                "PaddleOCR-GPU-v1.4.0-CUDA-12.9-Linux.7z.002"),
+                "PaddleOCR-GPU-v3.7.0-CUDA-12.9-Linux.7z.001",
+                "PaddleOCR-GPU-v3.7.0-CUDA-12.9-Linux",
+                "PaddleOCR-GPU-v3.7.0-CUDA-12.9-Linux.7z.002"),
 
             _ => throw new ArgumentOutOfRangeException(nameof(downloadType), downloadType, "Unknown Paddle OCR download type"),
         };
@@ -83,7 +83,7 @@ public partial class PaddleOcr
     private const string TextlineOrientationModelName = "PP-LCNet_x1_0_textline_ori";
 
     // The script groups below mirror LATIN_LANGS/ARABIC_LANGS/ESLAV_LANGS/CYRILLIC_LANGS/
-    // DEVANAGARI_LANGS in PaddleOCR 3.4 (paddleocr/_pipelines/ocr.py) - the version the
+    // DEVANAGARI_LANGS in PaddleOCR 3.7 (paddleocr/_utils/langs.py) - the version the
     // bundled standalone engine is built from. Keep them in sync with GetLanguages(); a
     // code offered in the dropdown but missing from every group here silently falls
     // through to the Latin recognition model and OCRs to garbage.
@@ -126,6 +126,31 @@ public partial class PaddleOcr
         "el", "ta", "te", "th"
     };
 
+    // Pali is the one Latin language PP-OCRv6 does not cover, so it stays on the PP-OCRv5
+    // Latin model (_PPOCRV6_UNSUPPORTED_LATIN_LANGS in paddleocr/_pipelines/ocr.py).
+    private const string PaliLanguageCode = "pi";
+
+    /// <summary>
+    /// True for the languages PP-OCRv6 (new in PaddleOCR 3.7) recognizes with its single
+    /// unified model: Chinese, English, Japanese and the Latin languages except Pali - the
+    /// _PPOCRV6_LANGS set in paddleocr/_pipelines/ocr.py. No non-Latin script has a v6 model
+    /// at all, so every other language keeps the PP-OCRv5 (Georgian: PP-OCRv3) models that
+    /// the support-files bundle still ships alongside the v6 pair.
+    /// </summary>
+    private static bool IsPpOcrV6Language(string language)
+    {
+        if (language is "ch" or "chinese_cht" or "en" or "japan")
+        {
+            return true;
+        }
+
+        return LatinLanguageCodes.Contains(language) && language != PaliLanguageCode;
+    }
+
+    // PP-OCRv6 replaced the mobile/server pair with tiny/small/medium tiers, and the bundle
+    // ships small and medium - so the saved mode picks between those two.
+    private static string PpOcrV6Tier(string mode) => mode == "server" ? "medium" : "small";
+
     internal static IReadOnlyCollection<string> GetLatinLanguageCodesForTest() => LatinLanguageCodes;
 
     internal static IEnumerable<string> GetAllScriptGroupCodesForTest() =>
@@ -148,19 +173,16 @@ public partial class PaddleOcr
         _cancellationToken = new CancellationToken();
     }
 
-    // Only the recognition models shipped in "PaddleOCR.PP-OCRv5.support.files" are on
+    // Only the recognition models shipped in "PaddleOCR.PP-OCRv6.support.files" are on
     // disk - nothing is fetched per language. Returning a name that is not in that bundle
     // points at a folder that does not exist, and the run then fails when PaddleX tries to
     // read the model's inference.yml.
     internal static string GetRecName(string language, string mode)
     {
         string recName;
-        if (language == "ch" ||
-            language == "chinese_cht" ||
-            language == "en" ||
-            language == "japan")
+        if (IsPpOcrV6Language(language))
         {
-            recName = $"PP-OCRv5_{mode}_rec";
+            recName = $"PP-OCRv6_{PpOcrV6Tier(mode)}_rec";
         }
         else if (ArabicLanguageCodes.Contains(language))
         {
@@ -193,6 +215,8 @@ public partial class PaddleOcr
         }
         else
         {
+            // Pali, plus the safety net for a code no script group claims - the v6 bundle
+            // no longer has a general-purpose PP-OCRv5 model to fall back on.
             recName = "latin_PP-OCRv5_mobile_rec";
         }
 
@@ -201,10 +225,16 @@ public partial class PaddleOcr
 
     internal static string GetDetectionName(string language, string mode)
     {
-        // Georgian is the one remaining PP-OCRv3 language; everything else recognizes
-        // with a PP-OCRv5 model and detects with the matching PP-OCRv5 detector.
-        return language == "ka"
-            ? "PP-OCRv3_mobile_det"
+        // Georgian is the one remaining PP-OCRv3 language.
+        if (language == "ka")
+        {
+            return "PP-OCRv3_mobile_det";
+        }
+
+        // Detector and recognition model come from the same PaddleOCR generation, which is
+        // how upstream pairs them (PP-OCRv6 languages get the v6 detector of the same tier).
+        return IsPpOcrV6Language(language)
+            ? $"PP-OCRv6_{PpOcrV6Tier(mode)}_det"
             : $"PP-OCRv5_{mode}_det";
     }
 
@@ -1122,7 +1152,7 @@ public partial class PaddleOcr
     }
 
 
-    // Every language PaddleOCR 3.4 supports with a recognition model that ships in the
+    // Every language PaddleOCR 3.7 supports with a recognition model that ships in the
     // bundled support files. Adding a code here is enough to offer it - as long as the
     // code is also listed in the matching script group above, so GetRecName picks the
     // right model (PaddleOcrLanguageMappingTests guards that).

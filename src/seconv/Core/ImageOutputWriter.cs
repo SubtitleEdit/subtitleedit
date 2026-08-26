@@ -62,7 +62,7 @@ internal static class ImageOutputWriter
         var (scriptWidth, scriptHeight) = ExportTextTags.GetScriptResolution(subtitle.Header);
 
         // Pre-render header with the first paragraph as a representative
-        var firstParam = BuildParameter(subtitle.Paragraphs[0], 0, screenWidth, screenHeight, options);
+        var firstParam = BuildParameter(subtitle.Paragraphs[0], 0, screenWidth, screenHeight, scriptHeight, options);
         firstParam.Bitmap = ImageRenderer.GenerateBitmap(firstParam);
         handler.WriteHeader(filePath, firstParam);
         firstParam.Bitmap?.Dispose();
@@ -70,7 +70,7 @@ internal static class ImageOutputWriter
         for (var i = 0; i < subtitle.Paragraphs.Count; i++)
         {
             var p = subtitle.Paragraphs[i];
-            var ip = BuildParameter(p, i, screenWidth, screenHeight, options);
+            var ip = BuildParameter(p, i, screenWidth, screenHeight, scriptHeight, options);
             ip.Bitmap = ImageRenderer.GenerateBitmap(ip);
             // Needs the rendered size, so it cannot happen in BuildParameter.
             ExportTextTags.ApplyPositionTag(ip, p.Text, scriptWidth, scriptHeight);
@@ -178,7 +178,7 @@ internal static class ImageOutputWriter
         };
     }
 
-    private static ImageParameter BuildParameter(Paragraph p, int index, int screenWidth, int screenHeight, ConversionOptions options)
+    private static ImageParameter BuildParameter(Paragraph p, int index, int screenWidth, int screenHeight, int scriptHeight, ConversionOptions options)
     {
         var style = options.ImageStyle;
 
@@ -187,7 +187,7 @@ internal static class ImageOutputWriter
         // the frame (issue #13025) - as were "{\i1}", "{\b1}" and "{\c&H..&}", which
         // ToRenderableText turns into the HTML tags the renderer understands.
         var text = p.Text ?? string.Empty;
-        return new ImageParameter
+        var imageParameter = new ImageParameter
         {
             Index = index,
             Text = ExportTextTags.ToRenderableText(text),
@@ -223,5 +223,13 @@ internal static class ImageOutputWriter
             IsFullFrame = false,
             Error = string.Empty,
         };
+
+        // "{\3c..}"/"{\4c..}"/"{\bord..}"/"{\shad..}", "{\fad(..)}" and "{\alpha&H..&}"
+        // change what is drawn, so they have to be read before the bitmap is rendered -
+        // overrides first, the transparencies fade whatever colours are on the parameter.
+        ExportTextTags.ApplyStyleOverrideTags(imageParameter, text, scriptHeight);
+        ExportTextTags.ApplyTransparencyTags(imageParameter, text);
+
+        return imageParameter;
     }
 }

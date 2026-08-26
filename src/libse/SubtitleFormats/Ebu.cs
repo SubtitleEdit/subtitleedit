@@ -794,20 +794,33 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (end > 0)
                 {
                     var f = line.Substring(i, end - i);
-                    if (f.Contains(" color=", StringComparison.OrdinalIgnoreCase))
+                    var colorStart = f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
+                    if (colorStart > 1)
                     {
-                        var colorStart = f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
-                        if (line.IndexOf('"', colorStart + " color=".Length + 1) > 0)
+                        // The attribute value may be double-quoted, single-quoted or bare
+                        // ("<font color=#ffff00>" is common in SubRip files). The old code
+                        // assumed a closing double quote and crashed the whole save on a
+                        // negative Substring length when there was none.
+                        var color = f.Substring(colorStart + " color=".Length).TrimStart();
+                        if (color.Length > 0 && (color[0] == '"' || color[0] == '\''))
                         {
-                            var colorEnd = f.IndexOf('"', colorStart + " color=".Length + 1);
-                            if (colorStart > 1)
+                            var quote = color[0];
+                            var closingQuote = color.IndexOf(quote, 1);
+                            color = closingQuote > 0 ? color.Substring(1, closingQuote - 1) : color.Substring(1);
+                        }
+                        else
+                        {
+                            var space = color.IndexOf(' ');
+                            if (space > 0)
                             {
-                                var color = f.Substring(colorStart + 7, colorEnd - (colorStart + 7));
-                                color = color.Trim('\'');
-                                color = color.Trim('\"');
-                                color = color.Trim('#');
-                                return GetNearestEbuColorCodeByte(color, encoding);
+                                color = color.Substring(0, space);
                             }
+                        }
+
+                        color = color.Trim().Trim('#');
+                        if (color.Length > 0)
+                        {
+                            return GetNearestEbuColorCodeByte(color, encoding);
                         }
                     }
                 }
@@ -967,6 +980,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             internal int Priority { get; set; }
         }
 
+        /// <summary>
+        /// True when <paramref name="header"/> is a full 1024-character EBU STL header - present after
+        /// loading an STL file or after the EBU save options dialog has stored one on the subtitle.
+        /// The disk format code sits at 3..10 ("STLnn.mm") and is matched there rather than by
+        /// listing frame rates, so every rate the save options dialog offers is recognized (STL23
+        /// used to fall through, which threw the whole header away on save).
+        /// </summary>
+        public static bool IsStlHeader(string header)
+        {
+            return header != null &&
+                   header.Length == 1024 &&
+                   header.Substring(3, 3) == "STL";
+        }
+
         public bool Save(string fileName, Subtitle subtitle)
         {
             return Save(fileName, subtitle, false);
@@ -1005,7 +1032,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             // STL file (see LoadSubtitle). Every other format writes its own meaning into it -
             // ASSA dialogue lines always carry one - so the vertical position below may only be
             // taken from MarginV when this is true.
-            var isEbuSource = subtitle.Header != null && subtitle.Header.Length == 1024 && (subtitle.Header.Contains("STL24") || subtitle.Header.Contains("STL25") || subtitle.Header.Contains("STL29") || subtitle.Header.Contains("STL30"));
+            var isEbuSource = IsStlHeader(subtitle.Header);
             if (isEbuSource)
             {
                 header = ReadHeader(GetEncoding(subtitle.Header.Substring(0, 3)).GetBytes(subtitle.Header));

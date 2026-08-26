@@ -108,7 +108,10 @@ public partial class DownloadLlamaCppViewModel : ObservableObject
                 MakeExecutable(LlamaCppServerManager.GetExecutable());
             }
 
-            if (Model != null && (ForceModelDownload || !LlamaCppServerManager.IsModelInstalled(Model.FileName)))
+            // Custom entries (a *.gguf the user dropped into the models folder) carry no Url - they
+            // are already on disk, so there is nothing to fetch even when a re-download was asked for.
+            if (Model != null && !string.IsNullOrEmpty(Model.Url) &&
+                (ForceModelDownload || !LlamaCppServerManager.IsModelInstalled(Model.FileName)))
             {
                 TitleText = string.Format(Se.Language.General.DownloadingX, Model.DisplayName);
                 var finalPath = LlamaCppServerManager.GetModelPath(Model.FileName);

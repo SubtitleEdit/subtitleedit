@@ -194,6 +194,8 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _multipleReplaceShowDotDotDotButtons;
     [ObservableProperty] private bool _gridFocusTextboxAfterInsertNew;
     [ObservableProperty] private bool _textToSpeechPromptMergeContinuationLines;
+    [ObservableProperty] private bool _textToSpeechPromptSkipNoiseLines;
+    [ObservableProperty] private bool _textToSpeechPromptDetectSpeakers;
     [ObservableProperty] private bool _openAiCompatibleSttAutoTranscribeOnAudioSelection;
 
     [ObservableProperty] private ObservableCollection<string> _spellCheckEngines;
@@ -758,7 +760,9 @@ public partial class SettingsViewModel : ObservableObject
         IsEditCustomContinuationStyleVisible = ContinuationStyle?.Code == nameof(Core.Enums.ContinuationStyle.Custom);
         CpsLineLengthStrategy = CpsLineLengthStrategies.FirstOrDefault(p => p.Code == general.CpsLineLengthStrategy) ?? CpsLineLengthStrategies.First();
 
-        UseFrameMode = general.UseFrameMode;
+        // The persisted choice, not the effective value - EBU STL may have frame mode forced on
+        // temporarily, and that must not stick just because the settings dialog was OK'ed.
+        UseFrameMode = general.UseFrameModePersisted;
         TextBoxLimitNewLines = general.SubtitleTextBoxLimitNewLines;
         NewEmptyDefaultMs = general.NewEmptyDefaultMs;
         TimeCodeUpDownStepMs = general.TimeCodeUpDownStepMs;
@@ -838,6 +842,8 @@ public partial class SettingsViewModel : ObservableObject
         MultipleReplaceShowDotDotDotButtons = Se.Settings.Tools.MultipleReplaceShowDotDotDotButtons;
         GridFocusTextboxAfterInsertNew = Se.Settings.Tools.GridFocusTextboxAfterInsertNew;
         TextToSpeechPromptMergeContinuationLines = Se.Settings.Tools.TextToSpeechPromptMergeContinuationLines;
+        TextToSpeechPromptSkipNoiseLines = Se.Settings.Tools.TextToSpeechPromptSkipNoiseLines;
+        TextToSpeechPromptDetectSpeakers = Se.Settings.Tools.TextToSpeechPromptDetectSpeakers;
         OpenAiCompatibleSttAutoTranscribeOnAudioSelection = Se.Settings.Tools.OpenAiCompatibleSttAutoTranscribeOnAudioSelection;
         FixCommonErrorsSkipStep1 = Se.Settings.Tools.FixCommonErrors.SkipStep1;
         MusicSymbol = Se.Settings.Tools.MusicSymbol;
@@ -1688,6 +1694,8 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Tools.MultipleReplaceShowDotDotDotButtons = MultipleReplaceShowDotDotDotButtons;
         Se.Settings.Tools.GridFocusTextboxAfterInsertNew = GridFocusTextboxAfterInsertNew;
         Se.Settings.Tools.TextToSpeechPromptMergeContinuationLines = TextToSpeechPromptMergeContinuationLines;
+        Se.Settings.Tools.TextToSpeechPromptSkipNoiseLines = TextToSpeechPromptSkipNoiseLines;
+        Se.Settings.Tools.TextToSpeechPromptDetectSpeakers = TextToSpeechPromptDetectSpeakers;
         Se.Settings.Tools.FixCommonErrors.SkipStep1 = FixCommonErrorsSkipStep1;
         Se.Settings.Tools.WriteToolsLog = WriteToolsLog;
         Se.Settings.Tools.OpenAiCompatibleSttAutoTranscribeOnAudioSelection = OpenAiCompatibleSttAutoTranscribeOnAudioSelection;

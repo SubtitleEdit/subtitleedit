@@ -515,12 +515,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         // GreekLookup is a byte-indexed reverse map for Greek: the Greek text decoder in
         // ReadParagraph ran a LINQ FirstOrDefault scan of all 145 entries for every byte of
         // every Greek subtitle line. Keys all fit in a byte, so a 256-entry array answers it
-        // with one array load instead of a linear scan.
-        private static readonly string?[] GreekLookup = BuildGreekLookup();
+        // with one array load instead of a linear scan. Bytes with no Greek entry stay null,
+        // which is how callers tell "not a Greek byte" from a mapping. (The element type is
+        // written without a nullable annotation because libse builds with nullable contexts
+        // off, where the annotation is inert and only warns - see CS8632.)
+        private static readonly string[] GreekLookup = BuildGreekLookup();
 
-        private static string?[] BuildGreekLookup()
+        private static string[] BuildGreekLookup()
         {
-            var table = new string?[256];
+            var table = new string[256];
             foreach (var entry in Greek)
             {
                 table[entry.Item1] = entry.Item2;

@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.BluRaySup;
+using Nikse.SubtitleEdit.Logic;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -29,12 +30,13 @@ public class OcrSubtitleBluRay : IOcrSubtitle
 
     public TimeSpan GetStartTime(int index)
     {
-        return TimeSpan.FromMilliseconds(_pcsDataList[index].StartTime / 90.0);
+        // 90 kHz PTS is a fractional millisecond; round to the whole ms subtitle formats store (#14056).
+        return TimeSpanExtensions.FromMillisecondsWholeMilliseconds(_pcsDataList[index].StartTime / 90.0);
     }
 
     public TimeSpan GetEndTime(int index)
     {
-        return TimeSpan.FromMilliseconds(_pcsDataList[index].EndTime / 90.0);
+        return TimeSpanExtensions.FromMillisecondsWholeMilliseconds(_pcsDataList[index].EndTime / 90.0);
     }
 
     public List<OcrSubtitleItem> MakeOcrSubtitleItems()
