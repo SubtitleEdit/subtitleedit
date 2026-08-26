@@ -135,6 +135,100 @@ public class SplitBreakLongLinesTests
         Assert.Same(item, result[0]);
     }
 
+    // --- SE4 parity (#11476): "Split long lines" must not be skipped just because re-wrapping
+    // --- happens to make the text fit - that pulls two sentences onto one line.
+    // --- These use Environment.NewLine because that is what a Paragraph holds, and
+    // --- AutoBreakLine only unwraps that separator.
+
+    private const string QuestionAndAnswer = "Und, war ich in der Kantine?\nNein. Ich konnte Sie dort nicht finden.";
+
+    [Fact]
+    public void CanBeFixedByRebalancing_SentenceEndingLineBreak_DemandsASplit()
+    {
+        // The reported case. Rebalancing yields "Und, war ich in der Kantine? Nein." (34) and
+        // "Ich konnte Sie dort nicht finden." (33) - within 36 chars over 2 lines, so the old
+        // gate skipped the split - but it answers the question on the question's own line.
+        var text = QuestionAndAnswer.Replace("\n", Environment.NewLine);
+
+        var result = SplitBreakLongLinesViewModel.CanBeFixedByRebalancing(text, singleLineMaxLength: 36, maxNumberOfLines: 2, mergeLinesShorterThan: 37, languageCode: "de");
+
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void SplitThenRebalance_SentenceEndingLineBreak_ProducesTheSe4Result()
+    {
+        // End to end, in the order UpdatePreview runs the two steps: SE4 turned this into two
+        // events, the second one wrapped over two lines.
+        var item = MakeSubtitle(QuestionAndAnswer.Replace("\n", Environment.NewLine), 10, 14);
+
+        var events = SplitBreakLongLinesViewModel.Split(item, maxCharactersPerSubtitle: 72, singleLineMaxLength: 36);
+        var texts = events.Select(e => Utilities.AutoBreakLine(e.Text, 36, 37, "de")).ToList();
+
+        Assert.Equal(2, events.Count);
+        Assert.Equal("Und, war ich in der Kantine?", texts[0]);
+        Assert.Equal(new[] { "Nein. Ich konnte", "Sie dort nicht finden." }, texts[1].SplitToLines());
+        Assert.Equal(item.StartTime, events[0].StartTime);
+        Assert.Equal(item.EndTime, events[^1].EndTime);
+        Assert.All(events, e => Assert.True(e.Duration.TotalMilliseconds > 0));
+    }
+
+    [Fact]
+    public void CanBeFixedByRebalancing_WrappedSentence_StillRebalancesInsteadOfSplitting()
+    {
+        // No sentence ends at the line break, so this is an ordinary bad wrap: re-wrapping is
+        // the right fix and the subtitle must stay a single event.
+        var text = "I told him that we would be arriving\na little bit later than we planned.".Replace("\n", Environment.NewLine);
+
+        var result = SplitBreakLongLinesViewModel.CanBeFixedByRebalancing(text, singleLineMaxLength: 36, maxNumberOfLines: 2, mergeLinesShorterThan: 37, languageCode: "en");
+
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void CanBeFixedByRebalancing_SingleLongLine_RebalancesInsteadOfSplitting()
+    {
+        var result = SplitBreakLongLinesViewModel.CanBeFixedByRebalancing("This single line is a good deal too long to fit.", singleLineMaxLength: 36, maxNumberOfLines: 2, mergeLinesShorterThan: 37, languageCode: "en");
+
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void CanBeFixedByRebalancing_CompliantSubtitle_IsLeftAlone()
+    {
+        // Every line already fits, so a sentence-ending line break is no reason to split.
+        var text = "Yes.\nI think so.".Replace("\n", Environment.NewLine);
+
+        var result = SplitBreakLongLinesViewModel.CanBeFixedByRebalancing(text, singleLineMaxLength: 36, maxNumberOfLines: 2, mergeLinesShorterThan: 37, languageCode: "en");
+
+        Assert.True(result);
+    }
+
+    [Theory]
+    [InlineData("Und, war ich in der Kantine?\nNein.", true)]
+    [InlineData("Stop!\nI mean it.", true)]
+    [InlineData("That is all.\nOr is it?", true)]
+    [InlineData("<i>Italic ends the sentence.</i>\nNext one.", true)] // a tag must not hide the '.'
+    [InlineData("Trailing spaces are trimmed.  \nNext one.", true)]
+    [InlineData("First.\nSecond.\nThird", true)] // break after any but the last line counts
+    [InlineData("A sentence that simply\nwrapped here.", false)]
+    [InlineData("A comma is not a sentence end,\nso this wrapped.", false)]
+    [InlineData("One line only.", false)]
+    [InlineData("", false)]
+    public void HasSentenceEndingLineBreak_DetectsAuthorSentenceBoundaries(string text, bool expected)
+    {
+        Assert.Equal(expected, SplitBreakLongLinesViewModel.HasSentenceEndingLineBreak(text.Replace("\n", Environment.NewLine)));
+    }
+
+    [Fact]
+    public void HasSentenceEndingLineBreak_IgnoresPunctuationOnTheLastLine()
+    {
+        // Nothing follows the last line, so its full stop is not a break worth preserving.
+        var text = "A sentence that\nwrapped here.".Replace("\n", Environment.NewLine);
+
+        Assert.False(SplitBreakLongLinesViewModel.HasSentenceEndingLineBreak(text));
+    }
+
     [Fact]
     public void Split_ReservesMinimumGapBetweenEventsAndKeepsOuterTimeCodes()
     {
