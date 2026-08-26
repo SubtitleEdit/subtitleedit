@@ -846,6 +846,14 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
     [RelayCommand]
     private void Ok()
     {
+        // Apply what the current settings produce, not what the 250/500 ms preview timer
+        // last computed: clicking OK right after changing a value handed the caller the
+        // previous settings' result while saving the new ones.
+        if (_isDirty)
+        {
+            UpdatePreview();
+        }
+
         if (Window == null)
         {
             return;

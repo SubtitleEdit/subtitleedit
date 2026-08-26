@@ -567,6 +567,9 @@ public partial class VideoOcrViewModel : ObservableObject
             return;
         }
 
+        // Fresh token before preparing the engine - see StartOcr.
+        _cancellationTokenSource = new CancellationTokenSource();
+
         var engineOk = await EnsureEngineIsAvailable();
         if (!engineOk)
         {
@@ -575,13 +578,17 @@ public partial class VideoOcrViewModel : ObservableObject
 
         ClampSelection();
 
-        _cancellationTokenSource = new CancellationTokenSource();
         var cancellationToken = _cancellationTokenSource.Token;
 
         IsRunning = true;
         ProgressText = Se.Language.Video.VideoOcr.TestOcrRunning;
 
-        var frameFileName = Path.Combine(Path.GetTempPath(), "se_video_ocr_test_" + Guid.NewGuid() + ".jpg");
+        // Its own scratch folder, not the shared temp root: OcrGroups derives the masked-copy
+        // folder from the frame's directory, so a brightness minimum wrote full-resolution
+        // masked JPEGs straight into %TEMP%/masked, which nothing ever cleaned up.
+        var testFolder = Path.Combine(Path.GetTempPath(), "se_video_ocr_test_" + Guid.NewGuid());
+        Directory.CreateDirectory(testFolder);
+        var frameFileName = Path.Combine(testFolder, "frame.jpg");
         try
         {
             await ExtractSingleFrame(frameFileName, PreviewPositionSeconds, cancellationToken);
@@ -619,7 +626,7 @@ public partial class VideoOcrViewModel : ObservableObject
 
             try
             {
-                File.Delete(frameFileName);
+                Directory.Delete(testFolder, true);
             }
             catch
             {
@@ -675,6 +682,11 @@ public partial class VideoOcrViewModel : ObservableObject
             return;
         }
 
+        // Fresh token first: EnsureEngineIsAvailable passes _cancellationTokenSource.Token down
+        // to the llama.cpp server start, so after a cancel it threw immediately on the stale
+        // cancelled token and the scan could never be started again.
+        _cancellationTokenSource = new CancellationTokenSource();
+
         var engineOk = await EnsureEngineIsAvailable();
         if (!engineOk)
         {
@@ -684,7 +696,6 @@ public partial class VideoOcrViewModel : ObservableObject
         ClampSelection();
         SaveSettings();
 
-        _cancellationTokenSource = new CancellationTokenSource();
         var cancellationToken = _cancellationTokenSource.Token;
 
         IsRunning = true;
@@ -801,7 +812,11 @@ public partial class VideoOcrViewModel : ObservableObject
         catch (OperationCanceledException)
         {
             IsRunning = false;
-            IsOkEnabled = Lines.Count > 0;
+            // Lines still holds the raw per-frame-group preview rows - the merge/filter/tag/
+            // refine pipeline only rebuilds it on completion. Inserting those would produce
+            // near-duplicate paragraphs on the scan grid with no position tag, so a cancelled
+            // scan offers nothing to apply.
+            IsOkEnabled = false;
             ProgressValue = 0;
             ProgressText = string.Empty;
         }
@@ -1204,7 +1219,11 @@ public partial class VideoOcrViewModel : ObservableObject
                 // scene text (rolling credits) must survive, as must long text whose verify
                 // frame happened to be unreadable - and anything short is dropped as a ghost.
                 var verified = await OcrVerificationFrame(group, ocr, cancellationToken);
-                if (verified != null)
+                // An empty verification read carries no evidence of a ghost - the verify frame
+                // was simply unreadable (a fade in/out). Scoring it as a disagreement deleted
+                // correctly-read short lines outright; the retry path above already treats an
+                // empty read as bad luck rather than proof.
+                if (!string.IsNullOrWhiteSpace(verified))
                 {
                     var similarity = VideoOcrLineBuilder.GetTextSimilarityPercent(group.Text, verified);
                     if (similarity < TextSimilarityDefaultPercent)

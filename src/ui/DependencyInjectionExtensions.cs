@@ -245,7 +245,6 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<IDictionaryInitializer, DictionaryInitializer>();
         collection.AddTransient<IFindService, FindService>();
         collection.AddTransient<IFontNameService, FontNameService>();
-        collection.AddTransient<IGoogleLensOcrDownloadService, GoogleLensOcrDownloadService>();
         collection.AddTransient<IInsertService, InsertService>();
         collection.AddTransient<ILanguageInitializer, LanguageInitializer>();
         collection.AddTransient<ILens, Lens>();
@@ -264,7 +263,6 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<ISplitManager, SplitManager>();
         collection.AddTransient<ISubtitleFileService, SubtitleFileService>();
         collection.AddTransient<IThemeInitializer, ThemeInitializer>();
-        collection.AddTransient<ITtsDownloadService, TtsDownloadService>();
         collection.AddTransient<IUndoRedoManager, UndoRedoManager>();
         collection.AddTransient<IVideoPreviewSubtitle, VideoPreviewSubtitle>();
         collection.AddTransient<IVlcReloader, VlcReloader>();
@@ -272,6 +270,11 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<IZipUnpacker, ZipUnpacker>();
 
         // Download services
+        // These two take an HttpClient like every other downloader, so they must be
+        // registered the same way - plain AddTransient resolved the default client and
+        // silently bypassed the user's proxy settings.
+        collection.AddHttpClientWithProxy<IGoogleLensOcrDownloadService, GoogleLensOcrDownloadService>();
+        collection.AddHttpClientWithProxy<ITtsDownloadService, TtsDownloadService>();
         collection.AddHttpClientWithProxy<IFfmpegDownloadService, FfmpegDownloadService>();
         collection.AddHttpClientWithProxy<ILibMpvDownloadService, LibMpvDownloadService>();
         collection.AddHttpClientWithProxy<ILibVlcDownloadService, LibVlcDownloadService>();
@@ -595,7 +598,14 @@ public static class DependencyInjectionExtensions
         where TClient : class
         where TImplementation : class, TClient
     {
-        collection.AddHttpClient<TClient, TImplementation>()
+        collection.AddHttpClient<TClient, TImplementation>(client =>
+            {
+                // The download helper governs its own deadline with a linked CancellationTokenSource
+                // (30 minutes for large files). HttpClient.Timeout defaults to 100 s and aborts
+                // during the body read too, so it silently capped every download attempt and made
+                // that CTS dead code.
+                client.Timeout = System.Threading.Timeout.InfiniteTimeSpan;
+            })
             .ConfigurePrimaryHttpMessageHandler(() => HttpClientFactoryWithProxy.CreateHandler());
     }
 }

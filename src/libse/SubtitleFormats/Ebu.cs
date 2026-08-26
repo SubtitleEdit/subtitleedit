@@ -282,20 +282,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 CommentFlag = 0;
             }
 
-            public byte[] GetBytesExtra(EbuGeneralSubtitleInformation header, MemoryStream extra)
+            /// <summary>
+            /// One extension block carrying the 112 text bytes starting at <paramref name="offset"/>.
+            /// Callers emit as many as the overflow needs - a single block capped the whole
+            /// subtitle at 224 bytes and silently discarded the rest.
+            /// </summary>
+            public byte[] GetBytesExtra(EbuGeneralSubtitleInformation header, byte[] extraBytes, int offset)
             {
                 var buffer = SaveHeader(header);
-                var bytes = extra.ToArray();
                 for (var i = 0; i < 112; i++)
                 {
-                    if (i < bytes.Length)
-                    {
-                        buffer[16 + i] = bytes[i];
-                    }
-                    else
-                    {
-                        buffer[16 + i] = 0x8f;
-                    }
+                    var index = offset + i;
+                    buffer[16 + i] = index < extraBytes.Length ? extraBytes[index] : (byte)0x8f;
                 }
 
                 return buffer;
@@ -1076,6 +1074,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             stream.Write(buffer, 0, buffer.Length);
 
             var subtitleNumber = 0;
+            // Counted as blocks are written: a paragraph whose encoded text needs an
+            // extension block emits two, so TNB is not the subtitle count. It is patched
+            // into the already-written header below.
+            var numberOfTtiBlocks = 0;
             foreach (var p in subtitle.Paragraphs)
             {
                 var tti = new EbuTextTimingInformation();
@@ -1191,18 +1193,45 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 buffer = tti.GetBytes(header, extra);
                 if (extra.Length > 0)
                 {
-                    buffer[3] = 0; // ExtensionBlockNumber 
-                    stream.Write(buffer, 0, buffer.Length);
+                    // As many extension blocks as the overflow needs (112 text bytes each).
+                    // EBN 0xFF marks the last block of the subtitle; earlier blocks are numbered,
+                    // which is what makes LoadSubtitle merge them back together.
+                    var extraBytes = extra.ToArray();
+                    var extraBlockCount = (extraBytes.Length + 111) / 112;
 
-                    buffer = tti.GetBytesExtra(header, extra);
+                    buffer[3] = 0; // ExtensionBlockNumber - more blocks follow
                     stream.Write(buffer, 0, buffer.Length);
+                    numberOfTtiBlocks++;
+
+                    for (var extraBlock = 0; extraBlock < extraBlockCount; extraBlock++)
+                    {
+                        var extraBuffer = tti.GetBytesExtra(header, extraBytes, extraBlock * 112);
+                        extraBuffer[3] = extraBlock == extraBlockCount - 1
+                            ? (byte)0xff
+                            : (byte)Math.Min(extraBlock + 1, 0xef);
+                        stream.Write(extraBuffer, 0, extraBuffer.Length);
+                        numberOfTtiBlocks++;
+                    }
                 }
                 else
                 {
                     stream.Write(buffer, 0, buffer.Length);
+                    numberOfTtiBlocks++;
                 }
                 subtitleNumber++;
             }
+            // Rewrite GSI "Total Number of TTI blocks" (offset 238, 5 ASCII digits) now that the
+            // real count is known - it was written as the subtitle count, so any file containing
+            // an extension block under-reported it and tools walking the file by TNB lost the tail.
+            if (stream.CanSeek && numberOfTtiBlocks > 0)
+            {
+                var position = stream.Position;
+                var tnb = Encoding.ASCII.GetBytes(numberOfTtiBlocks.ToString("D5", CultureInfo.InvariantCulture));
+                stream.Seek(238, SeekOrigin.Begin);
+                stream.Write(tnb, 0, tnb.Length);
+                stream.Seek(position, SeekOrigin.Begin);
+            }
+
             return true;
         }
 
@@ -1781,6 +1810,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var list = new List<EbuTextTimingInformation>();
             var index = startOfTextAndTimingBlock;
             var sb = new StringBuilder();
+            // EBN 0xFF marks the LAST block of a subtitle, so a block continues the previous one
+            // when the previous block's EBN was not 0xFF - the same rule LoadSubtitle merges on.
+            byte previousExtensionBlockNumber = 0xff;
             while (index + ttiSize <= buffer.Length)
             {
                 var tti = new EbuTextTimingInformation
@@ -1919,45 +1951,57 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     rows = 23;
                 }
 
-                if (tti.VerticalPosition < 3)
+                // Only the first block of a subtitle carries the alignment tag. A continuation
+                // block (EBN != 0xFF) is appended to the previous paragraph's text by
+                // LoadSubtitle, so tagging it too spliced an "{\anN}" into mid-sentence.
+                var isContinuationBlock = previousExtensionBlockNumber != 0xff;
+                if (tti.ExtensionBlockNumber != 0xfe) // FEh is user data, not part of the chain
                 {
-                    if (tti.JustificationCode == 1) // left
+                    previousExtensionBlockNumber = tti.ExtensionBlockNumber;
+                }
+
+                if (!isContinuationBlock)
+                {
+                    if (tti.VerticalPosition < 3)
                     {
-                        tti.TextField = "{\\an7}" + tti.TextField;
+                        if (tti.JustificationCode == 1) // left
+                        {
+                            tti.TextField = "{\\an7}" + tti.TextField;
+                        }
+                        else if (tti.JustificationCode == 3) // right
+                        {
+                            tti.TextField = "{\\an9}" + tti.TextField;
+                        }
+                        else
+                        {
+                            tti.TextField = "{\\an8}" + tti.TextField;
+                        }
                     }
-                    else if (tti.JustificationCode == 3) // right
+                    else if (tti.VerticalPosition <= rows / 2 + 1)
                     {
-                        tti.TextField = "{\\an9}" + tti.TextField;
+                        if (tti.JustificationCode == 1) // left
+                        {
+                            tti.TextField = "{\\an4}" + tti.TextField;
+                        }
+                        else if (tti.JustificationCode == 3) // right
+                        {
+                            tti.TextField = "{\\an6}" + tti.TextField;
+                        }
+                        else
+                        {
+                            tti.TextField = "{\\an5}" + tti.TextField;
+                        }
                     }
                     else
                     {
-                        tti.TextField = "{\\an8}" + tti.TextField;
-                    }
-                }
-                else if (tti.VerticalPosition <= rows / 2 + 1)
-                {
-                    if (tti.JustificationCode == 1) // left
-                    {
-                        tti.TextField = "{\\an4}" + tti.TextField;
-                    }
-                    else if (tti.JustificationCode == 3) // right
-                    {
-                        tti.TextField = "{\\an6}" + tti.TextField;
-                    }
-                    else
-                    {
-                        tti.TextField = "{\\an5}" + tti.TextField;
-                    }
-                }
-                else
-                {
-                    if (tti.JustificationCode == 1) // left
-                    {
-                        tti.TextField = "{\\an1}" + tti.TextField;
-                    }
-                    else if (tti.JustificationCode == 3) // right
-                    {
-                        tti.TextField = "{\\an3}" + tti.TextField;
+                        if (tti.JustificationCode == 1) // left
+                        {
+                            tti.TextField = "{\\an1}" + tti.TextField;
+                        }
+                        else if (tti.JustificationCode == 3) // right
+                        {
+                            tti.TextField = "{\\an3}" + tti.TextField;
+                        }
                     }
                 }
                 index += ttiSize;
