@@ -3654,12 +3654,134 @@ namespace Nikse.SubtitleEdit.Core.Common
             return sb.ToString().Replace("  ", " ").Replace(Environment.NewLine + " ", Environment.NewLine);
         }
 
+        private const char RightToLeftEmbedding = '\u202B';
+        private const char PopDirectionalFormatting = '\u202C';
+
+        /// <summary>
+        /// Puts each line in a right-to-left embedding, so what the line mixes in - numbers, a Latin
+        /// name, the full stop that ends the sentence - reads in the right order.
+        /// <para>
+        /// The embedding starts after the markup a line opens with and ends before the markup it
+        /// closes with. An ASSA override block or an HTML tag is not part of the sentence, and an
+        /// embedding started in front of one only moves the tag itself to the other end - which is
+        /// what "{\i1}text" looked like when reported (issue #14150).
+        /// </para>
+        /// <para>
+        /// Every embedding is closed with U+202C. An unterminated one is left for whatever the
+        /// renderer draws next to inherit, and re-running the fix used to stack another opening
+        /// character on top of the last one.
+        /// </para>
+        /// </summary>
         public static string FixRtlViaUnicodeChars(string input)
         {
-            string rtl = "\u202B";
-            var text = input.Replace(rtl, string.Empty);
-            text = rtl + text.Replace(Environment.NewLine, Environment.NewLine + rtl);
-            return text;
+            if (string.IsNullOrEmpty(input))
+            {
+                return input;
+            }
+
+            var text = input
+                .Replace(RightToLeftEmbedding.ToString(), string.Empty)
+                .Replace(PopDirectionalFormatting.ToString(), string.Empty);
+
+            var lines = text.SplitToLines();
+            var sb = new StringBuilder(text.Length + lines.Count * 2);
+            for (var i = 0; i < lines.Count; i++)
+            {
+                if (i > 0)
+                {
+                    sb.Append(Environment.NewLine);
+                }
+
+                var line = lines[i];
+                if (HasAssaDrawing(line))
+                {
+                    // A "{\p1}" line is coordinates, not a sentence - a directional mark dropped in
+                    // among the drawing commands is something libass has to parse as one of them.
+                    sb.Append(line);
+                    continue;
+                }
+
+                var start = GetTextStartAfterMarkup(line);
+                var end = GetTextEndBeforeMarkup(line, start);
+                if (end <= start)
+                {
+                    // Nothing but markup (an "{\an8}" on its own) - there is no sentence to embed,
+                    // and wrapping the tags would only give the renderer something to trip on.
+                    sb.Append(line);
+                    continue;
+                }
+
+                sb.Append(line, 0, start);
+                sb.Append(RightToLeftEmbedding);
+                sb.Append(line, start, end - start);
+                sb.Append(PopDirectionalFormatting);
+                sb.Append(line, end, line.Length - end);
+            }
+
+            return sb.ToString();
+        }
+
+        /// <summary>Whether a line turns on vector drawing anywhere - "\p1".."\p9" inside an ASSA block.</summary>
+        private static bool HasAssaDrawing(string line)
+        {
+            var index = line.IndexOf('{');
+            while (index >= 0)
+            {
+                var close = line.IndexOf('}', index);
+                if (close < 0)
+                {
+                    return false;
+                }
+
+                for (var i = index; i < close - 2; i++)
+                {
+                    if (line[i] == '\\' && (line[i + 1] == 'p' || line[i + 1] == 'P') && line[i + 2] >= '1' && line[i + 2] <= '9')
+                    {
+                        return true;
+                    }
+                }
+
+                index = line.IndexOf('{', close);
+            }
+
+            return false;
+        }
+
+        /// <summary>Index of the first character after the ASSA blocks / HTML tags a line opens with.</summary>
+        private static int GetTextStartAfterMarkup(string line)
+        {
+            var index = 0;
+            while (index < line.Length)
+            {
+                var close = line[index] == '{' ? line.IndexOf('}', index) : line[index] == '<' ? line.IndexOf('>', index) : -1;
+                if (close < 0)
+                {
+                    break;
+                }
+
+                index = close + 1;
+            }
+
+            return index;
+        }
+
+        /// <summary>Index of the first character of the ASSA blocks / HTML tags a line closes with.</summary>
+        private static int GetTextEndBeforeMarkup(string line, int start)
+        {
+            var index = line.Length;
+            while (index > start)
+            {
+                var last = line[index - 1];
+                var open = last == '}' ? line.LastIndexOf('{', index - 1) : last == '>' ? line.LastIndexOf('<', index - 1) : -1;
+                if (open < start)
+                {
+                    break;
+                }
+
+                index = open;
+            }
+
+            return index;
         }
 
         private static readonly char[] UnicodeControlCharsAndNoBreakSpace = { '\u200E', '\u200F', '\u202A', '\u202B', '\u202C', '\u202D', '\u202E', '\u00A0' };
