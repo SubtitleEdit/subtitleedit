@@ -455,14 +455,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             var frameRate = Configuration.Settings.General.CurrentFrameRate;
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument { XmlResolver = null };
             try
             {
-                xml.LoadXml(sb.ToString().Trim());
+                xml.LoadXml(JoinLinesTrimmed(lines));
                 var header = new XmlDocument { XmlResolver = null };
-                header.LoadXml(sb.ToString());
+                header.LoadXml(JoinLines(lines));
                 if (header.SelectSingleNode("sequence/media/video/track") != null)
                 {
                     header.RemoveChild(header.SelectSingleNode("sequence/media/video/track"));

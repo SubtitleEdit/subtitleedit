@@ -121,9 +121,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            if (!sb.ToString().Contains("</annotations>") || !sb.ToString().Contains("</TEXT>"))
+            if (!JoinLines(lines).Contains("</annotations>") || !JoinLines(lines).Contains("</TEXT>"))
             {
                 return;
             }
@@ -131,7 +129,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var xml = new XmlDocument { XmlResolver = null };
             try
             {
-                string xmlText = sb.ToString();
+                string xmlText = JoinLines(lines);
                 xml.LoadXml(xmlText);
                 var styles = new List<string> { "speech" };
 

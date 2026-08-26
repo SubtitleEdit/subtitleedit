@@ -60,9 +60,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return false;
             }
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            var text = sb.ToString();
+            var text = JoinLines(lines);
 
             // "urn:ebu:tt:distribution" (the conformsToStandard urn) and ebutts:linePadding are
             // EBU-TT-D specific; plain "urn:ebu:tt" also appears in Netflix Japanese IMSC docs,
@@ -263,19 +261,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument { XmlResolver = null, PreserveWhitespace = true };
             try
             {
-                xml.LoadXml(sb.ToString().RemoveControlCharactersButWhiteSpace().Trim());
+                xml.LoadXml(JoinLines(lines).RemoveControlCharactersButWhiteSpace().Trim());
             }
             catch
             {
-                xml.LoadXml(sb.ToString().Replace(" & ", " &amp; ").RemoveControlCharactersButWhiteSpace().Trim());
+                xml.LoadXml(JoinLines(lines).Replace(" & ", " &amp; ").RemoveControlCharactersButWhiteSpace().Trim());
             }
 
-            subtitle.Header = sb.ToString();
+            subtitle.Header = JoinLines(lines);
 
             var namespaceManager = new XmlNamespaceManager(xml.NameTable);
             namespaceManager.AddNamespace("ttml", TtmlNamespace);

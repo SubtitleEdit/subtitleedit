@@ -14,9 +14,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            string xmlAsString = sb.ToString().Trim();
+            string xmlAsString = JoinLinesTrimmed(lines);
             if (xmlAsString.Contains("<w:tc>"))
             {
                 return base.IsMine(lines, fileName);
@@ -211,9 +209,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
             var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument { XmlResolver = null };
-            xml.LoadXml(sb.ToString().Trim());
+            xml.LoadXml(JoinLinesTrimmed(lines));
             var nsmgr = new XmlNamespaceManager(xml.NameTable);
             nsmgr.AddNamespace("w", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("//w:tr", nsmgr))

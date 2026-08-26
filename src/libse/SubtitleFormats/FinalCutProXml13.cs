@@ -110,9 +110,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             FrameRate = Configuration.Settings.General.CurrentFrameRate;
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            string x = sb.ToString();
+            string x = JoinLines(lines);
             if (!x.Contains("<fcpxml version=\"1.3\"") && !x.Contains("<fcpxml version=\"1.2\""))
             {
                 return;

@@ -89,9 +89,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             else if (lines != null)
             {
-                var sb = new StringBuilder();
-                lines.ForEach(line => sb.AppendLine(line));
-                xmlString = sb.ToString();
+                xmlString = JoinLines(lines);
             }
             else
             {

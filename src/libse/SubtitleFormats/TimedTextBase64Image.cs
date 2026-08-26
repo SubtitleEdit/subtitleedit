@@ -95,10 +95,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
 
-            var xmlString = sb.ToString();
+            var xmlString = JoinLines(lines);
             if (!xmlString.Contains("smpte:backgroundImage") || !xmlString.Contains("smpte:image") || !xmlString.Contains("imagetype="))
             {
                 return;

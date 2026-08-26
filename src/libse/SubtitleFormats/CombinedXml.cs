@@ -20,9 +20,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            var searchText = sb.ToString();
+            var searchText = JoinLines(lines);
             var idx = searchText.IndexOf(findString, StringComparison.Ordinal);
             if (idx < 0)
             {
@@ -48,9 +46,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            var searchText = sb.ToString();
+            var searchText = JoinLines(lines);
             var idx = searchText.IndexOf(findString, StringComparison.Ordinal);
             var start = idx;
             var parts = new List<string>();

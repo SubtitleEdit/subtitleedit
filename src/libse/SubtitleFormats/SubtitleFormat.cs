@@ -38,6 +38,53 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         protected static readonly char[] SplitCharColon = { ':' };
 
+        // Auto-detection hands the same List<string> to every candidate format in turn
+        // (60 formats claim ".xml" alone), and most of them join all lines into one string
+        // before a cheap marker test rejects the file - allocating roughly the file size in
+        // garbage per format. Memoize the last join per thread; the key is the list
+        // reference plus its count (no caller mutates the list between joins).
+        [ThreadStatic] private static List<string> _joinedLinesKey;
+        [ThreadStatic] private static int _joinedLinesKeyCount;
+        [ThreadStatic] private static string _joinedLines;
+        [ThreadStatic] private static string _joinedLinesTrimmed;
+
+        /// <summary>
+        /// All lines joined with <see cref="Environment.NewLine"/> after each line -
+        /// same result as appending every line to a StringBuilder with AppendLine.
+        /// </summary>
+        protected static string JoinLines(List<string> lines)
+        {
+            if (!ReferenceEquals(lines, _joinedLinesKey) || lines.Count != _joinedLinesKeyCount)
+            {
+                var capacity = 0;
+                var newLineLength = Environment.NewLine.Length;
+                foreach (var line in lines)
+                {
+                    capacity += line.Length + newLineLength;
+                }
+
+                var sb = new StringBuilder(capacity);
+                foreach (var line in lines)
+                {
+                    sb.AppendLine(line);
+                }
+
+                _joinedLines = sb.ToString();
+                _joinedLinesTrimmed = null;
+                _joinedLinesKey = lines;
+                _joinedLinesKeyCount = lines.Count;
+            }
+
+            return _joinedLines;
+        }
+
+        /// <summary>Same as <see cref="JoinLines"/> followed by Trim().</summary>
+        protected static string JoinLinesTrimmed(List<string> lines)
+        {
+            var joined = JoinLines(lines);
+            return _joinedLinesTrimmed ??= joined.Trim();
+        }
+
         /// <summary>
         /// Builds the format cache on a worker thread so the ~330 type loads and constructor JITs
         /// overlap with other start-up work instead of blocking the first window. Purely an

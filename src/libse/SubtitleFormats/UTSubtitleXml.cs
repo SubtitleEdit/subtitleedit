@@ -52,9 +52,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            if (!sb.ToString().Contains("<uts") || !sb.ToString().Contains("secOut="))
+            if (!JoinLines(lines).Contains("<uts") || !JoinLines(lines).Contains("secOut="))
             {
                 return;
             }
@@ -62,7 +60,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var xml = new XmlDocument { XmlResolver = null };
             try
             {
-                string xmlText = sb.ToString();
+                string xmlText = JoinLines(lines);
                 xml.LoadXml(xmlText);
 
                 foreach (XmlNode node in xml.SelectNodes("//ut"))

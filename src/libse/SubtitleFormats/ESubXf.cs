@@ -267,9 +267,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            string xmlString = sb.ToString();
+            string xmlString = JoinLines(lines);
             if (!xmlString.Contains("<subtitlelist"))
             {
                 return;
@@ -287,6 +285,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             subtitle.Header = xmlString;
+            var sb = new StringBuilder();
             char[] timeCodeSeparators = { ':' };
             var ns = new XmlNamespaceManager(xml.NameTable);
             ns.AddNamespace("esub-xf", NameSpaceUri);
