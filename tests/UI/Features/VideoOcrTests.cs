@@ -36,6 +36,41 @@ public class VideoOcrTests
     }
 
     [Fact]
+    public void Build_JunkBlipBetweenCleanReads_DoesNotSeverTheLine()
+    {
+        // Scene text (a jersey number) flashes into one observation of a short subtitle.
+        // The chain must resume, or all three 200ms fragments die below MinDuration.
+        var groups = new List<VideoOcrFrameGroup>
+        {
+            MakeGroup(0, 0, "Wait."),
+            MakeGroup(1, 1, "14 Wait."),
+            MakeGroup(2, 2, "Wait."),
+        };
+
+        var lines = VideoOcrLineBuilder.Build(groups, 5, 80, 250, 250);
+
+        Assert.Single(lines);
+        Assert.Equal("Wait.", lines[0].Text);
+        Assert.Equal(0, lines[0].StartMs);
+        Assert.Equal(600, lines[0].EndMs);
+    }
+
+    [Fact]
+    public void Build_RealSubtitleChange_NotBridged()
+    {
+        // A long line followed by another long line: no blip in between, no bridging.
+        var groups = new List<VideoOcrFrameGroup>
+        {
+            MakeGroup(0, 9, "First subtitle text here"),
+            MakeGroup(10, 19, "Completely different words now"),
+        };
+
+        var lines = VideoOcrLineBuilder.Build(groups, 5, 80, 250, 250);
+
+        Assert.Equal(2, lines.Count);
+    }
+
+    [Fact]
     public void Build_EqualConfidence_DurationStillDecides()
     {
         var groups = new List<VideoOcrFrameGroup>

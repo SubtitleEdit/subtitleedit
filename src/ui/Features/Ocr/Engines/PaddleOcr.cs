@@ -1038,6 +1038,15 @@ public partial class PaddleOcr
             kept = textDetectionResults
                 .Where(p => p.Confidence <= 0 || p.Confidence * 100.0 >= MinConfidencePercent)
                 .ToList();
+
+            // The cut removes low-confidence clutter *next to* confident text. When nothing
+            // clears the bar there is no confident text to prefer - dropping everything would
+            // erase a short real subtitle ("Wait.") that the engine merely hesitated on, so
+            // keep the frame's regions and let the low average confidence weigh the vote down.
+            if (kept.Count == 0)
+            {
+                kept = textDetectionResults;
+            }
         }
 
         if (kept.Count == 0)

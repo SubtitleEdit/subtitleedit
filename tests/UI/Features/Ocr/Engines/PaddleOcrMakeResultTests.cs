@@ -63,16 +63,18 @@ public class PaddleOcrMakeResultTests
     }
 
     [Fact]
-    public void MakeResult_AllBelowThreshold_EmptyTextZeroConfidence()
+    public void MakeResult_AllBelowThreshold_KeptWithLowConfidence()
     {
+        // When nothing clears the bar the cut has no confident text to prefer - dropping
+        // everything would erase short real subtitles the engine hesitated on ("Wait.").
         var ocr = new PaddleOcr { MinConfidencePercent = 75 };
         var text = ocr.MakeResult(new List<PaddleOcrResultParser.TextDetectionResult>
         {
-            Box("junk", 0.30, 10, 10),
+            Box("Wait.", 0.60, 10, 10),
         }, out var confidence);
 
-        Assert.Equal(string.Empty, text);
-        Assert.Equal(0, confidence, 3);
+        Assert.Equal("Wait.", text);
+        Assert.Equal(0.60, confidence, 3);
     }
 
     [Fact]

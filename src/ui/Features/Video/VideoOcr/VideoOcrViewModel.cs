@@ -942,10 +942,33 @@ public partial class VideoOcrViewModel : ObservableObject
                 }
             });
 
+            // Black out everything below the brightness minimum before recognition, like
+            // VideOCR does: Paddle's detector otherwise picks up darker scene text (shirt
+            // prints, credits) and prepends it to subtitles. Only for the Paddle path -
+            // vision/VLM engines measured better on the natural frames.
+            var ocrFileNames = ocrGroups.Select(g => g.RepresentativeFileName).ToList();
+            if (BrightnessMinimum > 0 && ocrGroups.Count > 0)
+            {
+                var maskedFolder = Path.Combine(
+                    Path.GetDirectoryName(ocrGroups[0].RepresentativeFileName) ?? string.Empty, "masked");
+                Directory.CreateDirectory(maskedFolder);
+                Parallel.For(0, ocrGroups.Count,
+                    new ParallelOptions { CancellationToken = cancellationToken, MaxDegreeOfParallelism = Environment.ProcessorCount },
+                    i =>
+                    {
+                        var source = ocrGroups[i].RepresentativeFileName;
+                        var target = Path.Combine(maskedFolder, Path.GetFileName(source));
+                        if (VideoOcrFrameGrouper.WriteMaskedCopy(source, target, BrightnessMinimum))
+                        {
+                            ocrFileNames[i] = target;
+                        }
+                    });
+            }
+
             // The frames are already image files on disk, so pass them by file name -
             // one batch, no per-image decode/encode, memory stays flat.
             var batch = ocrGroups
-                .Select((g, i) => new PaddleOcrBatchInput { Index = i, SourceFileName = g.RepresentativeFileName })
+                .Select((g, i) => new PaddleOcrBatchInput { Index = i, SourceFileName = ocrFileNames[i] })
                 .ToList();
 
             var paddleOcr = new PaddleOcr

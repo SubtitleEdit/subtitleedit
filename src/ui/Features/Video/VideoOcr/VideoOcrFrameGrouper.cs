@@ -1,6 +1,7 @@
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 
 namespace Nikse.SubtitleEdit.Features.Video.VideoOcr;
@@ -240,6 +241,82 @@ public static class VideoOcrFrameGrouper
         }
 
         return result;
+    }
+
+    /// <summary>
+    /// Writes a copy of a video frame with everything below the brightness minimum blacked
+    /// out - the same input filtering VideOCR applies before recognition. Detector-based
+    /// OCR (PaddleOCR) then only sees the bright subtitle text, not darker scene text like
+    /// shirt prints or credits, which its detector otherwise picks up and prepends to
+    /// subtitles. The keep-mask is dilated a little so anti-aliased glyph edges survive.
+    /// Vision/VLM engines are better off with the natural frame - measured: masking cost
+    /// Apple Vision accuracy while it clearly helped PaddleOCR - so only the Paddle path
+    /// uses this.
+    /// </summary>
+    public static bool WriteMaskedCopy(string sourceFileName, string targetFileName, int brightnessMinimum)
+    {
+        try
+        {
+            using var bitmap = SKBitmap.Decode(sourceFileName);
+            if (bitmap == null || bitmap.Width == 0 || bitmap.Height == 0)
+            {
+                return false;
+            }
+
+            var width = bitmap.Width;
+            var height = bitmap.Height;
+            var pixels = bitmap.Pixels;
+            var keep = new bool[pixels.Length];
+            for (var i = 0; i < pixels.Length; i++)
+            {
+                var c = pixels[i];
+                keep[i] = (c.Red * 299 + c.Green * 587 + c.Blue * 114) / 1000 >= brightnessMinimum;
+            }
+
+            const int dilate = 2;
+            var keepDilated = new bool[pixels.Length];
+            for (var y = 0; y < height; y++)
+            {
+                var row = y * width;
+                for (var x = 0; x < width; x++)
+                {
+                    if (!keep[row + x])
+                    {
+                        continue;
+                    }
+
+                    var yEnd = Math.Min(height - 1, y + dilate);
+                    var xEnd = Math.Min(width - 1, x + dilate);
+                    for (var yy = Math.Max(0, y - dilate); yy <= yEnd; yy++)
+                    {
+                        var rowOut = yy * width;
+                        for (var xx = Math.Max(0, x - dilate); xx <= xEnd; xx++)
+                        {
+                            keepDilated[rowOut + xx] = true;
+                        }
+                    }
+                }
+            }
+
+            var black = new SKColor(0, 0, 0);
+            for (var i = 0; i < pixels.Length; i++)
+            {
+                if (!keepDilated[i])
+                {
+                    pixels[i] = black;
+                }
+            }
+
+            bitmap.Pixels = pixels;
+            using var image = SKImage.FromBitmap(bitmap);
+            using var data = image.Encode(SKEncodedImageFormat.Jpeg, 92);
+            File.WriteAllBytes(targetFileName, data.ToArray());
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     /// <summary>

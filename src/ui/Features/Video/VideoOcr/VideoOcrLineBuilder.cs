@@ -46,6 +46,7 @@ public static class VideoOcrLineBuilder
     {
         var work = new List<WorkLine>();
         WorkLine? current = null;
+        WorkLine? previous = null;
 
         foreach (var group in groups.OrderBy(p => p.StartFrame))
         {
@@ -74,8 +75,26 @@ public static class VideoOcrLineBuilder
                 current.EndMs = endMs;
                 current.AddText(text, weight);
             }
+            else if (current != null &&
+                     current.EndMs - current.StartMs < minDurationMs &&
+                     previous != null &&
+                     startMs - previous.EndMs <= maxGapMs &&
+                     GetTextSimilarityPercent(previous.GetMajorityText(), text) >= textSimilarityPercent)
+            {
+                // A single junk observation (scene text flashing over the subtitle, e.g. a
+                // jersey number read as "14 Wait." between two clean "Wait." reads) must not
+                // sever the chain: the interrupted line would fall apart into fragments that
+                // are each below the minimum duration and silently vanish. When the current
+                // line is itself below the minimum duration - so it is going to be dropped
+                // anyway - and the new text continues the line before it, resume that line.
+                previous.EndMs = endMs;
+                previous.AddText(text, weight);
+                current = previous;
+                previous = null;
+            }
             else
             {
+                previous = current;
                 current = new WorkLine { StartMs = startMs, EndMs = endMs };
                 current.AddText(text, weight);
                 work.Add(current);
