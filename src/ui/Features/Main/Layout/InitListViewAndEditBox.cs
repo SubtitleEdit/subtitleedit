@@ -959,6 +959,83 @@ public static partial class InitListViewAndEditBox
         insertLineMenuItem.Command = vm.InsertLineAtEndCommand;
         flyout.Items.Add(insertLineMenuItem);
 
+        void InsertEmptyEbuSubtitle(TimeSpan startTime)
+        {
+            if (!vm.IsFormatEbu ||
+                vm.Subtitles.Count != 0)
+            {
+                return;
+            }
+
+            var subtitle =
+                FlowEditingView.CreateEmptyEbuSubtitle(
+                    startTime);
+
+            subtitle.Number = 1;
+
+            vm.Subtitles.Add(
+                subtitle);
+
+            vm.SelectedSubtitle =
+                subtitle;
+
+            vm.SelectedSubtitleIndex =
+                0;
+        }
+
+        var insertEmptyAtTenHoursMenuItem =
+            new MenuItem
+            {
+                Header = "Insert empty subtitle at 10:00:00:00",
+            };
+
+        insertEmptyAtTenHoursMenuItem.Click +=
+            (_, _) =>
+                InsertEmptyEbuSubtitle(
+                    TimeSpan.FromHours(10));
+
+        var insertEmptyAtZeroMenuItem =
+            new MenuItem
+            {
+                Header = "Insert empty subtitle at 00:00:00:00",
+            };
+
+        insertEmptyAtZeroMenuItem.Click +=
+            (_, _) =>
+                InsertEmptyEbuSubtitle(
+                    TimeSpan.Zero);
+
+        var insertEmptyEbuMenuItem =
+            new MenuItem
+            {
+                Header = "Insert subtitle",
+                IsVisible = false,
+            };
+
+        insertEmptyEbuMenuItem.Items.Add(
+            insertEmptyAtZeroMenuItem);
+
+        insertEmptyEbuMenuItem.Items.Add(
+            insertEmptyAtTenHoursMenuItem);
+
+        flyout.Items.Add(
+            insertEmptyEbuMenuItem);
+
+        flyout.Opening +=
+            (_, _) =>
+            {
+                var showEmptyEbuInsert =
+                    vm.IsFormatEbu &&
+                    vm.Subtitles.Count == 0;
+
+                insertEmptyEbuMenuItem.IsVisible =
+                    showEmptyEbuInsert;
+
+                insertLineMenuItem.IsVisible =
+                    vm.IsInsertLineNoSelectionVisible &&
+                    !showEmptyEbuInsert;
+            };
+
         var insertSubtitleFileAfterLineMenuItem = new MenuItem { Header = Se.Language.General.InsertSubtitleAfterCurrentLine, DataContext = vm };
         insertSubtitleFileAfterLineMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsInsertSubtitleFileAfterLineVisible)));
         insertSubtitleFileAfterLineMenuItem.Command = vm.InsertSubtitleFileAfterThisLineCommand;

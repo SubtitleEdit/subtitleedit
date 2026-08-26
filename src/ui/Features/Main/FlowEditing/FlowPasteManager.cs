@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Main.FlowEditing;
@@ -26,7 +27,10 @@ public sealed class FlowPasteManager
         string clipboardText,
         TimeSpan insertionStart,
         TimeSpan? nextExistingSubtitleStart,
-        bool hasColor)
+        bool hasColor,
+        Func<string, double>? plainTextDurationCalculator = null,
+        bool? plainTextHasColor = null,
+        TimeSpan? plainTextInsertionStart = null)
     {
         var normalized =
             NormalizeClipboardText(
@@ -60,16 +64,18 @@ public sealed class FlowPasteManager
 
         return BuildPlainTextPlan(
             normalized,
-            insertionStart,
+            plainTextInsertionStart ?? insertionStart,
             nextExistingSubtitleStart,
-            hasColor);
+            plainTextHasColor ?? hasColor,
+            plainTextDurationCalculator);
     }
 
     private static FlowPastePlan BuildPlainTextPlan(
         string text,
         TimeSpan insertionStart,
         TimeSpan? nextExistingSubtitleStart,
-        bool hasColor)
+        bool hasColor,
+        Func<string, double>? durationCalculator)
     {
         var maxCharactersPerLine =
             hasColor ? 36 : 37;
@@ -97,6 +103,8 @@ public sealed class FlowPasteManager
         foreach (var subtitleText in subtitleTexts)
         {
             var durationMs =
+                durationCalculator?.Invoke(
+                    subtitleText) ??
                 CalculateDurationMilliseconds(
                     subtitleText);
 
@@ -209,16 +217,6 @@ public sealed class FlowPasteManager
 
         for (var i = 1; i < items.Count; i++)
         {
-            if (items[i].StartTime < items[i - 1].EndTime)
-            {
-                return FlowPastePlan.Failure(
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        "Paste not possible. Pasted subtitles {0} and {1} overlap.",
-                        i,
-                        i + 1));
-            }
-
             var actualGapMs =
                 (items[i].StartTime -
                  items[i - 1].EndTime)
@@ -226,13 +224,34 @@ public sealed class FlowPasteManager
 
             if (actualGapMs + 0.5 < requiredGapMs)
             {
-                return FlowPastePlan.Failure(
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        "Paste not possible. The pasted time codes contain a gap of " +
-                        "{0:0.00} s, but the current minimum gap is {1:0.00} s.",
-                        actualGapMs / 1000.0,
-                        requiredGapMs / 1000.0));
+                var previous =
+                    items[i - 1];
+
+                var next =
+                    items[i];
+
+                if (!TryRepairTimedGap(
+                        previous,
+                        next,
+                        requiredGapMs,
+                        out var repairedPrevious,
+                        out var repairedNext))
+                {
+                    return FlowPastePlan.Failure(
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            "Paste not possible. Subtitles {0} and {1} are too short " +
+                            "to apply the configured minimum gap without creating " +
+                            "a zero-duration subtitle.",
+                            i,
+                            i + 1));
+                }
+
+                items[i - 1] =
+                    repairedPrevious;
+
+                items[i] =
+                    repairedNext;
             }
         }
 
@@ -273,6 +292,115 @@ public sealed class FlowPasteManager
         return FlowPastePlan.Successful(
             items,
             hasExplicitTimeCodes: true);
+    }
+
+    private static bool TryRepairTimedGap(
+        FlowPasteItem previous,
+        FlowPasteItem next,
+        double requiredGapMs,
+        out FlowPasteItem repairedPrevious,
+        out FlowPasteItem repairedNext)
+    {
+        repairedPrevious =
+            previous;
+
+        repairedNext =
+            next;
+
+        var actualGapMs =
+            (next.StartTime -
+             previous.EndTime)
+            .TotalMilliseconds;
+
+        var missingMs =
+            requiredGapMs -
+            actualGapMs;
+
+        if (missingMs <= 0.5)
+        {
+            return true;
+        }
+
+        var frameRate =
+            Se.Settings.General.CurrentFrameRate;
+
+        if (frameRate <= 0)
+        {
+            frameRate =
+                Se.Settings.General.DefaultFrameRate;
+        }
+
+        var missingFrames =
+            Se.Settings.General.UseFrameMode
+                ? Math.Max(
+                    1,
+                    Se.Settings.General.MinimumBetweenLines.Frames -
+                    SubtitleFormat.MillisecondsToFrames(
+                        actualGapMs,
+                        frameRate))
+                : Math.Max(
+                    1,
+                    SubtitleFormat.MillisecondsToFrames(
+                        missingMs,
+                        frameRate));
+
+        var previousFrames =
+            missingFrames == 1
+                ? 0
+                : (missingFrames + 1) / 2;
+
+        var nextFrames =
+            missingFrames -
+            previousFrames;
+
+        var nextAdjustmentMs =
+            missingFrames == 1
+                ? missingMs
+                : SubtitleFormat.FramesToMilliseconds(
+                    nextFrames,
+                    frameRate);
+
+        var previousAdjustmentMs =
+            missingMs -
+            nextAdjustmentMs;
+
+        var repairedPreviousEnd =
+            previous.EndTime -
+            TimeSpan.FromMilliseconds(
+                previousAdjustmentMs);
+
+        var repairedNextStart =
+            next.StartTime +
+            TimeSpan.FromMilliseconds(
+                nextAdjustmentMs);
+
+        if (repairedPreviousEnd <=
+                previous.StartTime ||
+            repairedNextStart >=
+                next.EndTime)
+        {
+            return false;
+        }
+
+        repairedPrevious =
+            previous with
+            {
+                EndTime =
+                    repairedPreviousEnd,
+            };
+
+        repairedNext =
+            next with
+            {
+                StartTime =
+                    repairedNextStart,
+            };
+
+        return Math.Abs(
+                   (repairedNext.StartTime -
+                    repairedPrevious.EndTime)
+                   .TotalMilliseconds -
+                   requiredGapMs) <= 0.5;
     }
 
     private static FlowTimedParseResult ParseTimedBlocks(
@@ -436,12 +564,6 @@ public sealed class FlowPasteManager
                     Environment.NewLine,
                     textLines)
                     .Trim();
-
-            if (blockText.Length == 0)
-            {
-                return FlowTimedParseResult.Failure(
-                    $"No subtitle text follows time code {FormatTime(startTime)}.");
-            }
 
             blocks.Add(
                 new FlowTimedTextBlock(
@@ -699,45 +821,15 @@ public sealed class FlowPasteManager
             NormalizeClipboardText(
                 text);
 
-        var words =
-            normalized
-                .Split(
-                    new[] { ' ', '\t', '\r', '\n' },
-                    StringSplitOptions.RemoveEmptyEntries)
-                .SelectMany(
-                    word =>
-                        SplitLongWord(
-                            word,
-                            maxCharactersPerLine))
-                .ToList();
-
         var result =
             new List<string>();
 
-        var lines =
+        var subtitleLines =
             new List<string>(2);
-
-        var currentLine =
-            new StringBuilder();
-
-        void FlushLine()
-        {
-            if (currentLine.Length == 0)
-            {
-                return;
-            }
-
-            lines.Add(
-                currentLine.ToString());
-
-            currentLine.Clear();
-        }
 
         void FlushSubtitle()
         {
-            FlushLine();
-
-            if (lines.Count == 0)
+            if (subtitleLines.Count == 0)
             {
                 return;
             }
@@ -745,10 +837,54 @@ public sealed class FlowPasteManager
             result.Add(
                 string.Join(
                     Environment.NewLine,
-                    lines));
+                    subtitleLines));
 
-            lines.Clear();
+            subtitleLines.Clear();
         }
+
+        var sourceLines =
+            normalized.Split('\n');
+
+        foreach (var sourceLine in sourceLines)
+        {
+            if (string.IsNullOrWhiteSpace(
+                    sourceLine))
+            {
+                FlushSubtitle();
+
+                continue;
+            }
+
+            foreach (var wrappedLine in WrapPlainTextLine(
+                         sourceLine,
+                         maxCharactersPerLine))
+            {
+                if (subtitleLines.Count == 2)
+                {
+                    FlushSubtitle();
+                }
+
+                subtitleLines.Add(
+                    wrappedLine);
+            }
+        }
+
+        FlushSubtitle();
+
+        return result;
+    }
+
+    private static IEnumerable<string> WrapPlainTextLine(
+        string sourceLine,
+        int maxCharactersPerLine)
+    {
+        var words =
+            sourceLine.Split(
+                new[] { ' ', '\t' },
+                StringSplitOptions.RemoveEmptyEntries);
+
+        var currentLine =
+            new StringBuilder();
 
         foreach (var word in words)
         {
@@ -770,47 +906,18 @@ public sealed class FlowPasteManager
                 continue;
             }
 
-            FlushLine();
+            yield return
+                currentLine.ToString();
 
-            if (lines.Count >= 2)
-            {
-                FlushSubtitle();
-            }
-
+            currentLine.Clear();
             currentLine.Append(
                 word);
         }
 
-        FlushSubtitle();
-
-        return result;
-    }
-
-    private static IEnumerable<string> SplitLongWord(
-        string word,
-        int maxCharactersPerLine)
-    {
-        if (word.Length <= maxCharactersPerLine)
+        if (currentLine.Length > 0)
         {
-            yield return word;
-            yield break;
-        }
-
-        var index = 0;
-
-        while (index < word.Length)
-        {
-            var length =
-                Math.Min(
-                    maxCharactersPerLine,
-                    word.Length - index);
-
             yield return
-                word.Substring(
-                    index,
-                    length);
-
-            index += length;
+                currentLine.ToString();
         }
     }
 

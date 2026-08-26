@@ -13,6 +13,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Files.ImportPlainText;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
@@ -140,13 +141,36 @@ public sealed class FlowEditingView : Border
 
         if (subtitles.Count == 0)
         {
-            _itemsPanel.Children.Add(
+            var emptyState =
                 new TextBlock
                 {
                     Text = "No subtitles",
                     Opacity = 0.65,
                     Margin = new Thickness(8),
-                });
+                };
+
+            var pastePlainTextMenuItem =
+                new MenuItem
+                {
+                    Header = "Paste plain text",
+                };
+
+            pastePlainTextMenuItem.Click +=
+                async (_, _) =>
+                    await PasteIntoEmptyDocumentAsync();
+
+            emptyState.ContextMenu =
+                new ContextMenu
+                {
+                    ItemsSource =
+                        new[]
+                        {
+                            pastePlainTextMenuItem,
+                        },
+                };
+
+            _itemsPanel.Children.Add(
+                emptyState);
 
             return;
         }
@@ -881,6 +905,167 @@ public sealed class FlowEditingView : Border
             item);
     }
 
+    private async System.Threading.Tasks.Task<bool> PasteIntoEmptyDocumentAsync()
+    {
+        if (_vm.Subtitles.Count != 0)
+        {
+            return false;
+        }
+
+        var clipboard =
+            TopLevel.GetTopLevel(this)?.Clipboard;
+
+        if (clipboard == null)
+        {
+            return false;
+        }
+
+        var clipboardText =
+            await clipboard.TryGetTextAsync();
+
+        if (string.IsNullOrWhiteSpace(
+                clipboardText))
+        {
+            return false;
+        }
+
+        var plan =
+            _pasteManager.BuildPlan(
+                clipboardText,
+                TimeSpan.Zero,
+                nextExistingSubtitleStart: null,
+                hasColor: _vm.IsFormatEbu,
+                plainTextDurationCalculator:
+                    CalculateSeOptimalDurationMilliseconds,
+                plainTextHasColor: false);
+
+        if (!plan.Success ||
+            plan.Items.Count == 0)
+        {
+            return false;
+        }
+
+        SubtitleLineViewModel? lastInserted =
+            null;
+
+        var presentationTemplate =
+            new SubtitleLineViewModel();
+
+        foreach (var pasteItem in plan.Items)
+        {
+            var newSubtitle =
+                new SubtitleLineViewModel
+                {
+                    Text =
+                        pasteItem.Text,
+                };
+
+            if (_vm.IsFormatEbu)
+            {
+                ApplyNewEbuFlowPresentation(
+                    newSubtitle,
+                    presentationTemplate,
+                    presentationTemplate,
+                    pasteItem.Text);
+            }
+
+            newSubtitle.SetStartTimeOnly(
+                pasteItem.StartTime);
+
+            newSubtitle.EndTime =
+                pasteItem.EndTime;
+
+            _vm.Subtitles.Add(
+                newSubtitle);
+
+            lastInserted =
+                newSubtitle;
+        }
+
+        RenumberSubtitles();
+
+        if (lastInserted == null)
+        {
+            return false;
+        }
+
+        _selectedSources.Clear();
+        _selectedSources.Add(
+            lastInserted);
+
+        _selectionAnchorSource =
+            lastInserted;
+
+        _pendingFocusSource =
+            lastInserted;
+
+        _pendingFocusAtStart =
+            false;
+
+        _vm.SelectedSubtitle =
+            lastInserted;
+
+        Refresh();
+        CenterSelectedSubtitleInFlow();
+
+        return true;
+    }
+
+    internal static SubtitleLineViewModel CreateEmptyEbuSubtitle(
+        TimeSpan startTime)
+    {
+        var frameRate =
+            Se.Settings.General.CurrentFrameRate;
+
+        if (frameRate <= 0)
+        {
+            frameRate =
+                Se.Settings.General.DefaultFrameRate;
+        }
+
+        var duration =
+            TimeSpan.FromMilliseconds(
+                SubtitleFormat.FramesToMilliseconds(
+                    5,
+                    frameRate));
+
+        var subtitle =
+            new SubtitleLineViewModel
+            {
+                Text = string.Empty,
+            };
+
+        var presentationTemplate =
+            new SubtitleLineViewModel();
+
+        ApplyNewEbuFlowPresentation(
+            subtitle,
+            presentationTemplate,
+            presentationTemplate,
+            string.Empty);
+
+        var doubleHeight =
+            Configuration.Settings.SubtitleSettings
+                .EbuStlTeletextUseDoubleHeight;
+
+        subtitle.MarginV =
+            TeletextRowHelper
+                .GetBottomStartRow(
+                    1,
+                    doubleHeight)
+                .ToString(
+                    CultureInfo.InvariantCulture);
+
+        subtitle.SetStartTimeOnly(
+            startTime);
+
+        subtitle.EndTime =
+            startTime +
+            duration;
+
+        return subtitle;
+    }
+
     private async System.Threading.Tasks.Task<bool> PasteBeforeSubtitleAsync(
         FlowEditingItem item)
     {
@@ -966,7 +1151,10 @@ public sealed class FlowEditingView : Border
                     clipboardText,
                     TimeSpan.Zero,
                     nextExistingSubtitleStart: null,
-                    hasColor);
+                    hasColor,
+                    CalculateSeOptimalDurationMilliseconds,
+                    !string.IsNullOrWhiteSpace(
+                        parsedSource.ColorToken));
 
             if (!copiedPlan.Success ||
                 copiedPlan.Items.Count == 0)
@@ -1011,7 +1199,10 @@ public sealed class FlowEditingView : Border
                     clipboardText,
                     TimeSpan.Zero,
                     nextExistingSubtitleStart: null,
-                    hasColor);
+                    hasColor,
+                    CalculateSeOptimalDurationMilliseconds,
+                    !string.IsNullOrWhiteSpace(
+                        parsedSource.ColorToken));
         }
 
         if (!plan.Success ||
@@ -1092,7 +1283,8 @@ public sealed class FlowEditingView : Border
             return false;
         }
 
-        if (sourceIndex > 0)
+        if (!plan.HasExplicitTimeCodes &&
+            sourceIndex > 0)
         {
             var previous =
                 subtitles[
@@ -1274,7 +1466,10 @@ public sealed class FlowEditingView : Border
                     clipboardText,
                     TimeSpan.Zero,
                     nextExistingSubtitleStart: null,
-                    hasColor);
+                    hasColor,
+                    CalculateSeOptimalDurationMilliseconds,
+                    !string.IsNullOrWhiteSpace(
+                        parsedSource.ColorToken));
 
             if (!copiedPlan.Success ||
                 copiedPlan.Items.Count == 0)
@@ -1318,9 +1513,14 @@ public sealed class FlowEditingView : Border
             plan =
                 _pasteManager.BuildPlan(
                     clipboardText,
-                    insertionStart,
+                    TimeSpan.Zero,
                     nextExistingSubtitleStart: null,
-                    hasColor);
+                    hasColor,
+                    CalculateSeOptimalDurationMilliseconds,
+                    !string.IsNullOrWhiteSpace(
+                        parsedSource.ColorToken),
+                    plainTextInsertionStart:
+                        insertionStart);
         }
 
         if (!plan.Success ||
@@ -3449,6 +3649,17 @@ public sealed class FlowEditingView : Border
             (timingProbe.EndTime -
              timingProbe.StartTime)
             .TotalMilliseconds);
+    }
+
+    private double CalculateSeOptimalDurationMilliseconds(
+        string visibleText)
+    {
+        return CalculateSeOptimalDurationMilliseconds(
+            new SubtitleLineViewModel
+            {
+                Text =
+                    visibleText,
+            });
     }
 
     private void ApplySeOptimalDurationKeepingStart(
