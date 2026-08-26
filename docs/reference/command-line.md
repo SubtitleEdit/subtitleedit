@@ -343,10 +343,16 @@ language (both as English names, e.g. `English` / `German`). A prompt that also 
 *completion template*: the subtitle text is placed at `{2}` and the filled-in block is sent as-is,
 which is what raw-completion translation models such as MiLMMT-46 are trained on.
 
-The value is either inline text or the path to a text file. A value that names an existing file, or
-that ends in `.txt` / `.prompt` / `.md`, is read from disk — the practical way to pass a multi-line
-completion template. In inline text, `\n` (also `\r`, `\t`, `\\`) is unescaped, so a short template
-still fits on one command line.
+The value is either inline text or the path to a text file. Reading from a file is the practical way
+to pass a multi-line completion template; in inline text `\n` (also `\r`, `\t`, `\\`) is unescaped, so
+a short template still fits on one command line.
+
+The two are told apart by shape: an existing file is always read, and so is a value that *looks*
+like a path — no spaces, or a `.txt` / `.prompt` / `.md` extension. A path-shaped value that does not
+exist is an error, so a typo (`--translate-prompt:prompts/mine.tmpl`) fails immediately instead of
+being handed to the model as the prompt and quietly mistranslating the whole batch. Prompt text is
+recognised by containing a space, a line break, or a `{0}`/`{1}`/`{2}` placeholder — which every
+real prompt does.
 
 ```bash
 # Inline instruction prompt
