@@ -129,7 +129,19 @@ public partial class VideoOcrViewModel : ObservableObject
         LlamaCppModels = new ObservableCollection<LlamaCppModelDisplay>();
         LlamaCppLanguage = string.Empty;
         LlamaCppServerButtonText = Se.Language.General.StartServer;
-        CrispEmbedBackends = new ObservableCollection<CrispEmbedBackend>(CrispEmbedEngine.GetBackends());
+        // For burned-in video, only the backends that measured well are offered, best first
+        // (real-footage clips with burned real SRTs as ground truth, 2026-08-26): GLM-OCR
+        // 19/24 lines exact at ~1.1 s/frame; DeepSeek-OCR-2 was the close second in the
+        // 2026-08-12 frame corpus; PP-OCRv6 is the light option (79 MB, detector-based) and
+        // holds up on ordinary backgrounds. GOT-OCR2 (13/24, 27 phantom lines from textless
+        // frames) and Qwen3-VL-2B (18/24, 22 phantom lines, 1.7 s/frame) are left to the
+        // subtitle-bitmap OCR window, whose clean crops they were tuned for.
+        var videoBackendNames = new[] { "GLM-OCR", "DeepSeek-OCR-2", "PP-OCRv6" };
+        CrispEmbedBackends = new ObservableCollection<CrispEmbedBackend>(
+            videoBackendNames
+                .Select(name => CrispEmbedEngine.GetBackends().FirstOrDefault(p => p.Name == name))
+                .Where(p => p != null)
+                .Select(p => p!));
         CrispEmbedModels = new ObservableCollection<CrispEmbedModelDisplay>();
         ProgressText = string.Empty;
         PreviewPositionText = string.Empty;
