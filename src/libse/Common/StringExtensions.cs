@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var len = text.Length;
-            if (len < 6 || text[len - 1] != '>')
+            if (len < 5 || text[len - 1] != '>')
             {
                 return false;
             }
@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return true;
             }
 
-            if (includeFont && len > 8 && text[len - 7] == '<' && text[len - 6] == '/')
+            if (includeFont && len >= 8 && text[len - 7] == '<' && text[len - 6] == '/')
             {
                 return true;
             }

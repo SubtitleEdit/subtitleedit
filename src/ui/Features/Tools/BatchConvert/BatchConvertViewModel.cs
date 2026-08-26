@@ -703,6 +703,13 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         // Change speed
         Se.Settings.Tools.BatchConvert.ChangeSpeedPercent = ChangeSpeedPercent;
 
+        // Merge lines with same text / same time codes (shared with the standalone dialogs)
+        Se.Settings.Tools.MergeSameText.MaxMillisecondsBetweenLines = MergeSameTextMaxMillisecondsBetweenLines;
+        Se.Settings.Tools.MergeSameText.IncludeIncrementingLines = MergeSameTextIncludeIncrementingLines;
+        Se.Settings.Tools.MergeSameTimeCode.MaxMillisecondsDifference = MergeSameTimeMaxMillisecondsDifference;
+        Se.Settings.Tools.MergeSameTimeCode.MergeDialog = MergeSameTimeMergeDialog;
+        Se.Settings.Tools.MergeSameTimeCode.AutoBreak = MergeSameTimeAutoBreak;
+
         // Delete lines
         Se.Settings.Tools.BatchConvert.DeleteXFirstLines = DeleteXFirstLines;
         Se.Settings.Tools.BatchConvert.DeleteXLastLines = DeleteXLastLines;
@@ -1575,7 +1582,9 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     [RelayCommand]
     private void ChangeSpeedSetToDropFrameValue()
     {
-        ChangeSpeedPercent = 99.9889;
+        // Inverse of the from-drop-frame preset under the factor = 100 / percent
+        // convention: 100 / 99.9001 = 1.001001, so From -> To round-trips.
+        ChangeSpeedPercent = 99.9001;
     }
 
     [RelayCommand]
@@ -2692,7 +2701,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             MergeLinesWithSameTimeCodes = new BatchConvertConfig.MergeLinesWithSameTimeCodesSettings
             {
                 IsActive = activeFunctions.Contains(BatchConvertFunctionType.MergeLinesWithSameTimeCodes),
-                MaxMillisecondsDifference = MergeSameTextMaxMillisecondsBetweenLines,
+                MaxMillisecondsDifference = MergeSameTimeMaxMillisecondsDifference,
                 MergeDialog = MergeSameTimeMergeDialog,
                 AutoBreak = MergeSameTimeAutoBreak,
             },

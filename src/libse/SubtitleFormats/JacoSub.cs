@@ -175,7 +175,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
                         case 'T':
                             {
-                                sb.Append(DateTime.Now.ToString("HH:MM")); // HH:MM (24-hour time)
+                                sb.Append(DateTime.Now.ToString("HH:mm")); // HH:MM (24-hour time)
                                 i++;
                                 break;
                             }

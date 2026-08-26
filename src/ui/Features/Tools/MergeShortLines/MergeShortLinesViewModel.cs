@@ -83,6 +83,11 @@ public partial class MergeShortLinesViewModel : ObservableObject, IClosingCleanu
     {
         Dispatcher.UIThread.Post(() =>
         {
+            if (_isClosing)
+            {
+                return; // must not overwrite the final result Ok() just computed
+            }
+
             Subtitles.Clear();
             AllSubtitlesFixed.Clear();
             Fixes.Clear();
@@ -155,6 +160,24 @@ public partial class MergeShortLinesViewModel : ObservableObject, IClosingCleanu
         if (Window == null)
         {
             return;
+        }
+
+        // "Highlight parts" only affects the on-screen preview (unmerged lines with the
+        // combined text underlined). The result applied to the document must always be
+        // the real merge, so recompute it when the preview was in highlight mode.
+        if (HighLight)
+        {
+            var gapThresholdMs = Se.Settings.Tools.BridgeGaps.BridgeGapsSmallerThanMs;
+            var unbreakLinesShorterThan = Se.Settings.General.UnbreakLinesShorterThan;
+            var mergeResult = MergeShortLinesHelper.Merge(
+                _allSubtitles,
+                _shotChanges,
+                SingleLineMaxLength,
+                MaxNumberOfLines,
+                gapThresholdMs,
+                unbreakLinesShorterThan);
+            AllSubtitlesFixed.Clear();
+            AllSubtitlesFixed.AddRange(mergeResult.MergedSubtitles);
         }
 
         SaveSettings();

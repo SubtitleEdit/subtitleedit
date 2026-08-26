@@ -185,13 +185,21 @@ internal class SubtitleConverter
             return result;
         }
 
+        // The VOB extractor copies subpicture packets verbatim - the timing transforms
+        // never run on this path, so refuse them rather than silently ignore them.
+        ThrowOnUnsupportedImagePassThroughOptions(options);
+
         // Derive output base name: --output-filename wins, otherwise use the first VOB's
         // stem dropped one underscore-segment (so VTS_01_1.VOB becomes VTS_01.sub for the
         // typical DVD layout). Falls back to the bare stem when there's no underscore.
         string outputBase;
         if (!string.IsNullOrEmpty(options.OutputFilename))
         {
-            outputBase = options.OutputFilename;
+            // Same rule as ResolveOutputFileName: a relative --output-filename still lands
+            // in --output-folder; an absolute one wins outright.
+            outputBase = !string.IsNullOrEmpty(options.OutputFolder) && !Path.IsPathRooted(options.OutputFilename)
+                ? Path.Combine(options.OutputFolder, options.OutputFilename)
+                : options.OutputFilename;
             // VobSubWriter derives the .idx path as Substring(0, length - 3) + "idx", so
             // a user-supplied --output-filename without ".sub" (e.g. "movie" or "movie.txt")
             // would produce a broken companion path like "vieidx" or "movie.tidx". Force
@@ -702,11 +710,40 @@ internal class SubtitleConverter
         return true;
     }
 
+    /// <summary>
+    /// The bitmap pass-through path writes the source items' timestamps verbatim - none of
+    /// the timing/deletion transforms run on it. Silently ignoring those options would make
+    /// a run look successful while producing something other than what was asked for, so
+    /// fail loudly instead (convert via a text/OCR format to apply them).
+    /// </summary>
+    private static void ThrowOnUnsupportedImagePassThroughOptions(ConversionOptions options)
+    {
+        var unsupported = new List<string>();
+        if (options.Offset.HasValue) { unsupported.Add("--offset"); }
+        if (options.ChangeSpeedPercent.HasValue) { unsupported.Add("--change-speed"); }
+        if (options.DeleteFirst.HasValue) { unsupported.Add("--delete-first"); }
+        if (options.DeleteLast.HasValue) { unsupported.Add("--delete-last"); }
+        if (options.DeleteContains != null) { unsupported.Add("--delete-contains"); }
+        if (options.Renumber.HasValue) { unsupported.Add("--renumber"); }
+        if (options.AdjustDurationMs.HasValue) { unsupported.Add("--adjust-duration"); }
+        if (options.BridgeGapsMaxMs.HasValue) { unsupported.Add("--bridge-gaps"); }
+        if (options.ApplyMinGapMs.HasValue) { unsupported.Add("--apply-min-gap"); }
+        if (options.TargetFps.HasValue) { unsupported.Add("--target-fps"); }
+
+        if (unsupported.Count > 0)
+        {
+            throw new InvalidOperationException(
+                $"Not supported when passing image subtitles straight through to an image format: {string.Join(", ", unsupported)}. " +
+                "Convert to a text format (OCR) to apply timing transforms, or drop the option(s).");
+        }
+    }
+
     private static void WritePreservedBitmaps(
         IReadOnlyList<BitmapSubtitleLoader.BitmapSubtitleItem> items,
         string outputFile,
         ConversionOptions options)
     {
+        ThrowOnUnsupportedImagePassThroughOptions(options);
         var handler = ImageOutputWriter.TryCreateHandler(LibSEIntegration.NormalizeFormatName(options.Format))
             ?? throw new InvalidOperationException($"No image handler for format '{options.Format}'");
         var outputDir = Path.GetDirectoryName(outputFile);
@@ -955,6 +992,7 @@ internal class SubtitleConverter
         ISet<string>? usedNames = null)
     {
         string baseName;
+        string ext;
         if (!string.IsNullOrEmpty(options.OutputFilename))
         {
             // A relative --output-filename still lands in --output-folder; an absolute
@@ -962,6 +1000,7 @@ internal class SubtitleConverter
             baseName = !string.IsNullOrEmpty(options.OutputFolder) && !Path.IsPathRooted(options.OutputFilename)
                 ? Path.Combine(options.OutputFolder, options.OutputFilename)
                 : options.OutputFilename;
+            ext = Path.GetExtension(baseName);
         }
         else
         {
@@ -974,6 +1013,10 @@ internal class SubtitleConverter
                 ? fileName
                 : $"{fileName}.{languageSuffix}";
             baseName = Path.Combine(outputFolder, stemWithLang + extension);
+            // Track the real extension: for an extension-less format (BDN-XML writes a
+            // folder) Path.GetExtension(baseName) would mistake the language suffix for
+            // the extension and the collision names below would double it.
+            ext = extension;
         }
 
         if ((options.Overwrite || !File.Exists(baseName)) && usedNames?.Contains(baseName) != true)
@@ -983,8 +1026,10 @@ internal class SubtitleConverter
         }
 
         var dir = Path.GetDirectoryName(baseName) ?? string.Empty;
-        var stem = Path.GetFileNameWithoutExtension(baseName);
-        var ext = Path.GetExtension(baseName);
+        var baseFileName = Path.GetFileName(baseName);
+        var stem = ext.Length > 0 && baseFileName.EndsWith(ext, StringComparison.OrdinalIgnoreCase)
+            ? baseFileName.Substring(0, baseFileName.Length - ext.Length)
+            : baseFileName;
 
         // For container collisions, try inserting the track number first
         if (trackNumber.HasValue && !string.IsNullOrEmpty(languageSuffix))

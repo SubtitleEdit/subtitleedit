@@ -421,9 +421,12 @@ public partial class CompareViewModel : ObservableObject
             right = GetRightItemOrNull(index);
         }
 
-        // insert rest
+        // insert rest - pad to the max of the *current* collection counts: the alignment
+        // above inserts blanks, so one side may already have grown past the raw-line max,
+        // and every consumer of the two lists assumes equal lengths
+        var maxNow = Math.Max(LeftSubtitles.Count, RightSubtitles.Count);
         var minSub = LeftSubtitles.Count < RightSubtitles.Count ? LeftSubtitles : RightSubtitles;
-        for (var idx = minSub.Count; idx < max; idx++)
+        for (var idx = minSub.Count; idx < maxNow; idx++)
         {
             minSub.Insert(idx, new CompareItem());
         }
