@@ -82,6 +82,11 @@ public class SeBatchConvert
     public string AssaChangeStyleToStyle { get; set; }
     public bool AssaChangeStyleTrimUnusedStyles { get; set; }
 
+    public bool AssaChangeStylePropertiesSetSpacing { get; set; }
+    public decimal AssaChangeStylePropertiesSpacing { get; set; }
+    public bool AssaChangeStylePropertiesSetAlignment { get; set; }
+    public string AssaChangeStylePropertiesAlignment { get; set; }
+
     public bool SaveInSourceFolder { get; set; }
 
     public string AutoTranslateEngine { get; set; }
@@ -187,6 +192,10 @@ public class SeBatchConvert
         AssaChangeStyleFromStyle = string.Empty;
         AssaChangeStyleToStyle = string.Empty;
         AssaChangeStyleTrimUnusedStyles = false;
+        AssaChangeStylePropertiesSetSpacing = true;
+        AssaChangeStylePropertiesSpacing = 0;
+        AssaChangeStylePropertiesSetAlignment = false;
+        AssaChangeStylePropertiesAlignment = "an2";
         AutoTranslateEngine = new OllamaTranslate().Name;
         AutoTranslateSourceLanguage = "auto";
         AutoTranslateTargetLanguage = "en";

@@ -96,7 +96,7 @@ public partial class PromptUnknownWordViewModel : ObservableObject
         var fontName = Se.Settings.Appearance.SubtitleTextBoxAndGridFontName;
         if (!string.IsNullOrEmpty(fontName))
         {
-            textBlock.FontFamily = new FontFamily(fontName);
+            textBlock.FontFamily = FontFamilyHelper.Make(fontName);
         }
         var idx = word.Word.WordIndex;
         var paragraph = word.Result.GetText();
@@ -111,7 +111,7 @@ public partial class PromptUnknownWordViewModel : ObservableObject
                 var run = new Run(paragraph);
                 if (!string.IsNullOrEmpty(fontName))
                 {
-                    run.FontFamily = new FontFamily(fontName);
+                    run.FontFamily = FontFamilyHelper.Make(fontName);
                 }
                 textBlock.Inlines!.Add(run);
                 PanelWholeText.Children.Clear();
@@ -125,7 +125,7 @@ public partial class PromptUnknownWordViewModel : ObservableObject
             var run = new Run(paragraph.Substring(0, idx));
             if (!string.IsNullOrEmpty(fontName))
             {
-                run.FontFamily = new FontFamily(fontName);
+                run.FontFamily = FontFamilyHelper.Make(fontName);
             }
             textBlock.Inlines!.Add(run);
         }
@@ -138,7 +138,7 @@ public partial class PromptUnknownWordViewModel : ObservableObject
         };
         if (!string.IsNullOrEmpty(fontName))
         {
-            highlightRun.FontFamily = new FontFamily(fontName);
+            highlightRun.FontFamily = FontFamilyHelper.Make(fontName);
         }
         textBlock.Inlines!.Add(highlightRun);
 
@@ -147,7 +147,7 @@ public partial class PromptUnknownWordViewModel : ObservableObject
             var run = new Run(paragraph.Substring(idx + w.Length));
             if (!string.IsNullOrEmpty(fontName))
             {
-                run.FontFamily = new FontFamily(fontName);
+                run.FontFamily = FontFamilyHelper.Make(fontName);
             }
             textBlock.Inlines!.Add(run);
         }

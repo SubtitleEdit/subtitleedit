@@ -110,7 +110,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             return fontFamily;
         }
 
-        fontFamily = new FontFamily(name);
+        fontFamily = FontFamilyHelper.Make(name);
         if (FontFamilyCache.Count < FontFamilyCacheLimit)
         {
             FontFamilyCache[name] = fontFamily;

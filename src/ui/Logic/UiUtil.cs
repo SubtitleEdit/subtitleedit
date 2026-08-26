@@ -2934,7 +2934,7 @@ public static class UiUtil
         {
             Setters =
             {
-                new Setter(TextBlock.FontFamilyProperty, new FontFamily(fontName)),
+                new Setter(TextBlock.FontFamilyProperty, FontFamilyHelper.Make(fontName)),
             }
         });
 
@@ -2942,7 +2942,7 @@ public static class UiUtil
         {
             Setters =
             {
-                new Setter(TextBox.FontFamilyProperty, new FontFamily(fontName)),
+                new Setter(TextBox.FontFamilyProperty, FontFamilyHelper.Make(fontName)),
             }
         });
 
@@ -2950,7 +2950,7 @@ public static class UiUtil
         {
             Setters =
             {
-                new Setter(Button.FontFamilyProperty, new FontFamily(fontName)),
+                new Setter(Button.FontFamilyProperty, FontFamilyHelper.Make(fontName)),
             }
         });
 
@@ -2958,7 +2958,7 @@ public static class UiUtil
         {
             Setters =
             {
-                new Setter(Avalonia.Controls.MenuItem.FontFamilyProperty, new FontFamily(fontName)),
+                new Setter(Avalonia.Controls.MenuItem.FontFamilyProperty, FontFamilyHelper.Make(fontName)),
             }
         });
 
@@ -2966,7 +2966,7 @@ public static class UiUtil
         {
             Setters =
             {
-                new Setter(Label.FontFamilyProperty, new FontFamily(fontName)),
+                new Setter(Label.FontFamilyProperty, FontFamilyHelper.Make(fontName)),
             }
         });
 
@@ -2974,7 +2974,7 @@ public static class UiUtil
         {
             Setters =
             {
-                new Setter(ComboBox.FontFamilyProperty, new FontFamily(fontName)),
+                new Setter(ComboBox.FontFamilyProperty, FontFamilyHelper.Make(fontName)),
             }
         });
     }

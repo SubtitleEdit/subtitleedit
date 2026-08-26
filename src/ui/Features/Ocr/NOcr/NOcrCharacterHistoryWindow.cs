@@ -99,7 +99,7 @@ public class NOcrCharacterHistoryWindow : Window
         vm.TextBoxNew = UiUtil.MakeTextBox(100, vm, nameof(vm.NewText));
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
         {
-            vm.TextBoxNew.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
+            vm.TextBoxNew.FontFamily = FontFamilyHelper.Make(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
         }
         var image = new Image
         {

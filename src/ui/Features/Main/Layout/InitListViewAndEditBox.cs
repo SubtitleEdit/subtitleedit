@@ -410,7 +410,7 @@ public static partial class InitListViewAndEditBox
 
                 if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
                 {
-                    textBlock.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
+                    textBlock.FontFamily = FontFamilyHelper.Make(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
                 }
 
                 border.Child = textBlock;
@@ -446,7 +446,7 @@ public static partial class InitListViewAndEditBox
 
                 if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
                 {
-                    textBlock.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
+                    textBlock.FontFamily = FontFamilyHelper.Make(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
                 }
 
                 border.Child = textBlock;
@@ -2126,7 +2126,7 @@ public static partial class InitListViewAndEditBox
 
         if (!string.IsNullOrEmpty(appearance.SubtitleTextBoxAndGridFontName))
         {
-            textBox.FontFamily = new FontFamily(appearance.SubtitleTextBoxAndGridFontName);
+            textBox.FontFamily = FontFamilyHelper.Make(appearance.SubtitleTextBoxAndGridFontName);
         }
 
         return textBox;

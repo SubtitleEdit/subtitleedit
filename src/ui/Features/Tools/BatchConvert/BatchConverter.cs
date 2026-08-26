@@ -2035,6 +2035,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             s = FixRightToLeft(s);
             s = AssaChangeResolution(s);
             s = AssaChangeStyle(s);
+            s = AssaChangeStyleProperties(s);
             s = BeautifyTimeCodes(s, item.FileName);
             s = SnapTimeCodesToFrames(s, item.FileName);
             s = SortBy(s);
@@ -2833,6 +2834,78 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         }
 
         return subtitle;
+    }
+
+    /// <summary>
+    /// Sets fields on the styles a file already has, instead of replacing them like
+    /// <see cref="AssaChangeStyle"/> does: a translated Arabic subtitle inherits the source styles,
+    /// and there letter spacing hurts readability and the block may need to sit on the right - but
+    /// the rest of each style (font, colors, margins) should survive (issue #14150).
+    /// </summary>
+    private Subtitle AssaChangeStyleProperties(Subtitle subtitle)
+    {
+        var c = _config.AssaChangeStyleProperties;
+        if (!c.IsActive || (!c.SetSpacing && !c.SetAlignment))
+        {
+            return subtitle;
+        }
+
+        if (subtitle.OriginalFormat == null || subtitle.OriginalFormat.Name != AdvancedSubStationAlpha.NameOfFormat)
+        {
+            return subtitle;
+        }
+
+        var alignment = GetAssaStyleAlignment(c.Alignment);
+        if (c.SetAlignment && alignment == null)
+        {
+            return subtitle;
+        }
+
+        if (string.IsNullOrEmpty(subtitle.Header))
+        {
+            subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
+        }
+
+        var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(subtitle.Header);
+        if (styles.Count == 0)
+        {
+            return subtitle;
+        }
+
+        foreach (var style in styles)
+        {
+            if (c.SetSpacing)
+            {
+                style.Spacing = c.Spacing;
+            }
+
+            if (c.SetAlignment)
+            {
+                style.Alignment = alignment;
+            }
+        }
+
+        subtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(subtitle.Header, styles);
+
+        return subtitle;
+    }
+
+    /// <summary>
+    /// Turns an "an1".."an9" drop-down code into the numpad digit an ASSA style's Alignment field
+    /// holds. Returns null for anything else, so a hand-edited setting cannot write a broken style.
+    /// </summary>
+    internal static string? GetAssaStyleAlignment(string? alignmentCode)
+    {
+        if (alignmentCode == null ||
+            alignmentCode.Length != 3 ||
+            !alignmentCode.StartsWith("an", StringComparison.Ordinal) ||
+            alignmentCode[2] < '1' ||
+            alignmentCode[2] > '9')
+        {
+            return null;
+        }
+
+        return alignmentCode.Substring(2);
     }
 
     private Subtitle MergeShortLines(Subtitle subtitle)
