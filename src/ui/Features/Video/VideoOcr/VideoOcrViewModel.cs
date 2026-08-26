@@ -90,6 +90,9 @@ public partial class VideoOcrViewModel : ObservableObject
     public CropAreaSelector? CropSelector { get; set; }
 
     private string _videoFileName = string.Empty;
+
+    /// <summary>The video being OCR'ed - the window shows its file name in the title.</summary>
+    public string VideoFileName => _videoFileName;
     private CancellationTokenSource _cancellationTokenSource = new();
     private Process? _ffmpegProcess;
     private long _extractedFrames;
