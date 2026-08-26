@@ -1048,18 +1048,24 @@ public partial class VideoOcrViewModel : ObservableObject
             // scan. RunLlmOcr's fail-fast-on-first-frame check does nothing here (there is no
             // error string to report) but the loop, progress and preview are the same.
             var languageCode = SelectedAppleVisionLanguage?.Code ?? string.Empty;
+            var brightnessMinimum = BrightnessMinimum;
             await RunLlmOcr(ocrGroups,
-                group => Task.Run(() => OcrFrameWithAppleVision(group, languageCode, cancellationToken), cancellationToken),
+                group => Task.Run(() => OcrFrameWithAppleVision(group, languageCode, brightnessMinimum, cancellationToken), cancellationToken),
                 () => string.Empty, reportProgress, addPreviewLine, cancellationToken);
         }
     }
 
-    private static string OcrFrameWithAppleVision(VideoOcrFrameGroup group, string languageCode, CancellationToken cancellationToken)
+    private static string OcrFrameWithAppleVision(VideoOcrFrameGroup group, string languageCode, int brightnessMinimum, CancellationToken cancellationToken)
     {
         using var bitmap = SKBitmap.Decode(group.RepresentativeFileName);
-        return bitmap == null
-            ? string.Empty
-            : AppleVisionOcr.Ocr(bitmap, languageCode, fast: false, cancellationToken);
+        if (bitmap == null)
+        {
+            return string.Empty;
+        }
+
+        var observations = AppleVisionOcr.OcrObservations(bitmap, languageCode, fast: false, cancellationToken);
+        var kept = VideoOcrObservationFilter.FilterByBrightness(observations, bitmap, brightnessMinimum);
+        return AppleVisionTextLayout.Compose(kept);
     }
 
     /// <summary>
