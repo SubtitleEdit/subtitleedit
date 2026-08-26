@@ -2022,7 +2022,9 @@ public sealed class FlowEditingView : Border
         newSubtitle.Text =
             FlowTextParser.ApplyEditedText(
                 newSubtitle.Text,
-                overflowWord);
+                RebalanceTeletextVisibleText(
+                    overflowWord,
+                    maxCharacters));
 
         ApplySeOptimalDurationKeepingStart(
             newSubtitle);
@@ -2170,6 +2172,15 @@ public sealed class FlowEditingView : Border
 
         var secondLine =
             lines[1];
+
+        if (FlowSentenceBoundaryHelper.IsPreferredBoundary(
+                lines[0],
+                secondLine))
+        {
+            currentText = lines[0].TrimEnd();
+            overflowWord = secondLine.TrimStart();
+            return overflowWord.Length > 0;
+        }
 
         var wordStart =
             FindCurrentWordStart(
@@ -3419,6 +3430,27 @@ public sealed class FlowEditingView : Border
             return normalized;
         }
 
+        if (FlowSentenceBoundaryHelper.TrySplitAtPreferredBoundary(
+                normalized,
+                out var beforeBoundary,
+                out var afterBoundary))
+        {
+            var preferredLines = new[] { beforeBoundary, afterBoundary }
+                .SelectMany(part => part
+                    .Replace("\r\n", "\n", StringComparison.Ordinal)
+                    .Replace('\r', '\n')
+                    .Split('\n'))
+                .SelectMany(line => WrapTeletextLine(line, maxCharacters))
+                .ToArray();
+
+            if (preferredLines.Length <= 2)
+            {
+                return string.Join(Environment.NewLine, preferredLines);
+            }
+
+            return normalized;
+        }
+
         // Rebalance only the visible text. Colour tags are restored afterwards
         // by FlowTextParser.ApplyEditedText.
         var words =
@@ -3539,6 +3571,38 @@ public sealed class FlowEditingView : Border
         // turn this into additional subtitles; until then do not silently lose
         // or truncate text.
         return normalized;
+    }
+
+    private static IEnumerable<string> WrapTeletextLine(
+        string line,
+        int maxCharacters)
+    {
+        var words = line.Split(
+            new[] { ' ', '\t' },
+            StringSplitOptions.RemoveEmptyEntries);
+
+        var current = string.Empty;
+        foreach (var word in words)
+        {
+            if (current.Length == 0)
+            {
+                current = word;
+            }
+            else if (current.Length + 1 + word.Length <= maxCharacters)
+            {
+                current += " " + word;
+            }
+            else
+            {
+                yield return current;
+                current = word;
+            }
+        }
+
+        if (current.Length > 0)
+        {
+            yield return current;
+        }
     }
 
     private void RedistributeSplitTiming(
@@ -4027,6 +4091,18 @@ public sealed class FlowEditingView : Border
             return false;
         }
 
+        var previousParsed =
+            FlowTextParser.Parse(previous.Text);
+
+        var currentParsed =
+            FlowTextParser.Parse(currentItem.Source.Text);
+
+        var preserveSentenceBoundary =
+            _vm.IsFormatEbu &&
+            FlowSentenceBoundaryHelper.IsPreferredBoundary(
+                previousParsed.Text,
+                currentParsed.Text);
+
         var actualGapMs =
             currentItem.Source.StartTime.TotalMilliseconds -
             previous.EndTime.TotalMilliseconds;
@@ -4051,20 +4127,16 @@ public sealed class FlowEditingView : Border
             return true;
         }
 
-        var previousParsed =
-            FlowTextParser.Parse(previous.Text);
-
-        var currentParsed =
-            FlowTextParser.Parse(currentItem.Source.Text);
-
         var previousVisibleText =
             previousParsed.Text;
 
         if (_vm.IsFormatEbu)
         {
-            var mergedVisibleText =
-                (previousParsed.Text.TrimEnd() + " " +
-                 currentParsed.Text.TrimStart()).Trim();
+            var mergedVisibleText = preserveSentenceBoundary
+                ? previousParsed.Text.TrimEnd() + Environment.NewLine +
+                  currentParsed.Text.TrimStart()
+                : (previousParsed.Text.TrimEnd() + " " +
+                   currentParsed.Text.TrimStart()).Trim();
 
             var hasColor =
                 !string.IsNullOrWhiteSpace(previousParsed.ColorToken) ||
@@ -4074,13 +4146,22 @@ public sealed class FlowEditingView : Border
                 hasColor ? 36 : 37;
 
             var rebalanced =
-                mergedVisibleText.Length <= maxCharacters
+                preserveSentenceBoundary
+                    ? mergedVisibleText
+                    : mergedVisibleText.Length <= maxCharacters
                     ? mergedVisibleText
                     : RebalanceTeletextVisibleText(
                         mergedVisibleText,
                         maxCharacters);
 
-            if (!IsValidTeletextVisibleText(
+            var stopAtNextCompleteSentence =
+                preserveSentenceBoundary &&
+                FlowSentenceBoundaryHelper
+                    .HasContentAfterFirstCompleteSentence(
+                        currentParsed.Text);
+
+            if (stopAtNextCompleteSentence ||
+                !IsValidTeletextVisibleText(
                     rebalanced,
                     maxCharacters))
             {
@@ -4093,16 +4174,23 @@ public sealed class FlowEditingView : Border
                         currentItem.Source,
                         previousParsed,
                         currentParsed,
-                        maxCharacters))
+                        maxCharacters,
+                        preserveSentenceBoundary))
                 {
                     return true;
+                }
+
+                if (preserveSentenceBoundary)
+                {
+                    FocusPreviousSubtitleAtProtectedBoundary(previous);
                 }
 
                 return true;
             }
         }
 
-        if (_vm.IsFormatEbu)
+        if (_vm.IsFormatEbu &&
+            !preserveSentenceBoundary)
         {
             var mergedVisibleText =
                 (previousParsed.Text.TrimEnd() + " " +
@@ -4131,8 +4219,11 @@ public sealed class FlowEditingView : Border
         }
 
         var visibleCharactersBeforeJoin =
-            CountCharactersWithoutLineBreaks(
-                previousVisibleText);
+            preserveSentenceBoundary
+                ? CountCharactersWithoutLineBreaks(
+                    previousParsed.Text + currentParsed.Text)
+                : CountCharactersWithoutLineBreaks(
+                    previousVisibleText);
 
          // Make sure the Flow row is also the selected subtitle in MainViewModel.
         // The normal SE merge command operates on SelectedSubtitle.
@@ -4146,7 +4237,14 @@ public sealed class FlowEditingView : Border
 
         // Re-use Subtitle Edit's existing merge logic for timing,
         // removal of the second subtitle, renumbering and selection.
-        _vm.MergeWithLineBeforeCommand.Execute(null);
+        if (preserveSentenceBoundary)
+        {
+            _vm.MergeWithLineBeforeKeepBreaksCommand.Execute(null);
+        }
+        else
+        {
+            _vm.MergeWithLineBeforeCommand.Execute(null);
+        }
 
         if (!_vm.Subtitles.Contains(previous))
         {
@@ -4226,17 +4324,42 @@ public sealed class FlowEditingView : Border
         return true;
     }
 
+    private void FocusPreviousSubtitleAtProtectedBoundary(
+        SubtitleLineViewModel previous)
+    {
+        _selectedSources.Clear();
+        _selectedSources.Add(previous);
+        _selectionAnchorSource = previous;
+        _pendingFocusSource = previous;
+        _pendingFocusAtStart = false;
+        _vm.SelectedSubtitle = previous;
+
+        UpdateSelectionVisuals();
+
+        var previousItem = _items.FirstOrDefault(
+            item => ReferenceEquals(item.Source, previous));
+
+        if (previousItem != null)
+        {
+            _pendingFocusSource = null;
+            FocusTextBox(previousItem, focusAtStart: false);
+        }
+
+        CenterSelectedSubtitleInFlow();
+    }
+
     private bool RedistributeBackspaceAcrossTeletextBoundary(
         SubtitleLineViewModel previous,
         SubtitleLineViewModel current,
         FlowTextInfo previousParsed,
         FlowTextInfo currentParsed,
-        int maxCharacters)
+        int maxCharacters,
+        bool preserveSentenceBoundary)
     {
-        var combined =
-            (previousParsed.Text.TrimEnd() + " " +
-             currentParsed.Text.TrimStart())
-            .Trim();
+        var combined = preserveSentenceBoundary
+            ? currentParsed.Text.Trim()
+            : (previousParsed.Text.TrimEnd() + " " +
+               currentParsed.Text.TrimStart()).Trim();
 
         var words =
             combined
@@ -4262,34 +4385,63 @@ public sealed class FlowEditingView : Border
         var bestPreviousText =
             string.Empty;
 
-        // Find the longest word prefix that fits legally into the previous
-        // subtitle. Existing words are never split.
-        for (var count = 1;
-             count <= words.Length;
-             count++)
+        if (preserveSentenceBoundary)
         {
+            // A protected boundary is semantic, not spare line capacity. Move
+            // exactly the next complete sentence when it fits, then stop even
+            // if the second Teletext line still has room.
+            var sentenceWordCount =
+                FlowSentenceBoundaryHelper
+                    .GetFirstCompleteSentenceWordCount(words);
+
             var candidate =
                 string.Join(
                     " ",
-                    words.Take(count));
+                    words.Take(sentenceWordCount));
 
             var candidateFlow =
-                RebalanceTeletextVisibleText(
-                    candidate,
-                    maxCharacters);
+                previousParsed.Text.TrimEnd() +
+                Environment.NewLine + candidate;
 
-            if (!IsValidTeletextVisibleText(
+            if (IsValidTeletextVisibleText(
                     candidateFlow,
                     maxCharacters))
             {
-                break;
+                bestPrefixWordCount = sentenceWordCount;
+                bestPreviousText = candidateFlow;
             }
+        }
+        else
+        {
+            // Find the longest word prefix that fits legally into the previous
+            // subtitle. Existing words are never split.
+            for (var count = 1;
+                 count <= words.Length;
+                 count++)
+            {
+                var candidate =
+                    string.Join(
+                        " ",
+                        words.Take(count));
 
-            bestPrefixWordCount =
-                count;
+                var candidateFlow =
+                    RebalanceTeletextVisibleText(
+                    candidate,
+                    maxCharacters);
 
-            bestPreviousText =
-                candidateFlow;
+                if (!IsValidTeletextVisibleText(
+                        candidateFlow,
+                        maxCharacters))
+                {
+                    break;
+                }
+
+                bestPrefixWordCount =
+                    count;
+
+                bestPreviousText =
+                    candidateFlow;
+            }
         }
 
         if (bestPrefixWordCount <= 0)

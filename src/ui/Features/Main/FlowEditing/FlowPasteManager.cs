@@ -618,6 +618,27 @@ public sealed class FlowPasteManager
             return true;
         }
 
+        if (FlowSentenceBoundaryHelper.TrySplitAtPreferredBoundary(
+                normalized,
+                out var beforeBoundary,
+                out var afterBoundary))
+        {
+            var preferredLines = beforeBoundary
+                .Split('\n')
+                .Concat(afterBoundary.Split('\n'))
+                .SelectMany(line => WrapPlainTextLine(line, maxCharactersPerLine))
+                .ToArray();
+
+            if (preferredLines.Length <= 2)
+            {
+                result = string.Join(Environment.NewLine, preferredLines);
+                return true;
+            }
+
+            result = normalized;
+            return false;
+        }
+
         var words =
             normalized
                 .Split(
@@ -845,8 +866,9 @@ public sealed class FlowPasteManager
         var sourceLines =
             normalized.Split('\n');
 
-        foreach (var sourceLine in sourceLines)
+        for (var sourceIndex = 0; sourceIndex < sourceLines.Length; sourceIndex++)
         {
+            var sourceLine = sourceLines[sourceIndex];
             if (string.IsNullOrWhiteSpace(
                     sourceLine))
             {
@@ -855,9 +877,22 @@ public sealed class FlowPasteManager
                 continue;
             }
 
-            foreach (var wrappedLine in WrapPlainTextLine(
-                         sourceLine,
-                         maxCharactersPerLine))
+            var wrappedLines = WrapPlainTextLine(
+                    sourceLine,
+                    maxCharactersPerLine)
+                .ToList();
+
+            if (subtitleLines.Count > 0 &&
+                sourceIndex > 0 &&
+                subtitleLines.Count + wrappedLines.Count > 2 &&
+                FlowSentenceBoundaryHelper.IsPreferredBoundary(
+                    sourceLines[sourceIndex - 1],
+                    sourceLine))
+            {
+                FlushSubtitle();
+            }
+
+            foreach (var wrappedLine in wrappedLines)
             {
                 if (subtitleLines.Count == 2)
                 {
