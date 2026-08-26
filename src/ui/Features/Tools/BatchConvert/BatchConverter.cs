@@ -2995,7 +2995,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
         Configuration.Settings.Tools.AutoTranslateNllbApiUrl = Se.Settings.AutoTranslate.NllbApiUrl;
 
-        Configuration.Settings.Tools.AutoTranslateNllbServeUrl = Se.Settings.AutoTranslate.NnlbServeUrl;
+        Configuration.Settings.Tools.AutoTranslateNllbServeUrl = Se.Settings.AutoTranslate.NllbServeUrl;
 
         Configuration.Settings.Tools.AutoTranslateCrispAsrExe = Se.Settings.AutoTranslate.CrispAsrExe;
         Configuration.Settings.Tools.AutoTranslateCrispAsrModel = Se.Settings.AutoTranslate.CrispAsrModel;
@@ -3033,7 +3033,12 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
         for (var i = 0; i < subtitle.Paragraphs.Count && i < translatedSubtitle.Count; i++)
         {
-            subtitle.Paragraphs[i].Text = translatedSubtitle[i].TranslatedText;
+            // A row the engine never returned text for keeps its source text rather than
+            // being blanked - an engine failure part way through must not empty the rest.
+            if (!string.IsNullOrEmpty(translatedSubtitle[i].TranslatedText))
+            {
+                subtitle.Paragraphs[i].Text = translatedSubtitle[i].TranslatedText;
+            }
         }
 
         return subtitle;

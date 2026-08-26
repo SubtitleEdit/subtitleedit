@@ -776,6 +776,10 @@ public class Se
 
 
         Configuration.Settings.Tools.AutoTranslateDelaySeconds = (int)Math.Round(Settings.AutoTranslate.RequestDelaySeconds, MidpointRounding.AwayFromZero);
+        if (Settings.AutoTranslate.RequestMaxBytes > 0)
+        {
+            Configuration.Settings.Tools.AutoTranslateMaxBytes = (int)Math.Round(Settings.AutoTranslate.RequestMaxBytes, MidpointRounding.AwayFromZero);
+        }
 
         // BeautifyTimeCodes profile: skip apply on a fresh install so libse's built-in
         // default-preset values stay intact. Once the user clicks OK in the profile editor,

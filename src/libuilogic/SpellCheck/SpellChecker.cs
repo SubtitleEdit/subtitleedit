@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text.RegularExpressions;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using WeCantSpell.Hunspell;
@@ -135,6 +135,16 @@ public class SpellChecker : ISpellChecker, IDoSpell
             {
                 SpellCheckConfig.LogError("Error loading names for SpellCheckManager: " + exception.Message);
                 WordLists = new SpellCheckWordLists(string.Empty, this);
+            }
+        }
+
+        // Apply the persisted "use always" pairs - they were loaded from
+        // <lang>_UseAlways.xml and then never consumed by anything.
+        if (WordLists != null)
+        {
+            foreach (var pair in WordLists.GetUseAlwaysList())
+            {
+                ChangeAllDictionary[pair.Key] = pair.Value;
             }
         }
 
@@ -331,6 +341,11 @@ public class SpellChecker : ISpellChecker, IDoSpell
         }
 
         if (WordLists != null && WordLists.HasUserWord(word))
+        {
+            return true;
+        }
+
+        if (WordLists != null && WordLists.IsWordInUserPhrases(spellCheckWord, text))
         {
             return true;
         }

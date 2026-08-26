@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Threading;
@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Features.Assa.AssaSetPosition;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -188,6 +189,16 @@ public partial class AssSetBackgroundViewModel : ObservableObject
             _subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
         }
 
+        // The box drawing below is built from screenshot pixel coordinates on a
+        // _videoWidth x _videoHeight canvas, but libass reads \p drawing coordinates in script
+        // (PlayRes) space. Settle PlayRes once - stamping the video size when the header has
+        // none - and scale into it, the way AssaSetPositionViewModel does for \pos (#13350).
+        var (headerWithPlayRes, playResX, playResY) =
+            AssaSetPositionViewModel.EnsurePlayRes(_subtitle.Header, _videoWidth, _videoHeight);
+        _subtitle.Header = headerWithPlayRes;
+        var scaleX = _videoWidth > 0 ? (double)playResX / _videoWidth : 1.0;
+        var scaleY = _videoHeight > 0 ? (double)playResY / _videoHeight : 1.0;
+
         // Generate unique style name
         var boxStyleName = GenerateUniqueStyleName();
         var styleBoxBg = MakeBoxStyle(boxStyleName);
@@ -230,7 +241,11 @@ public partial class AssSetBackgroundViewModel : ObservableObject
                 var right = FillWidth ? (_videoWidth - FillWidthMarginRight) : (trimResult.Left + trimResult.TrimmedBitmap.Width + PaddingRight);
                 var top = trimResult.Top - PaddingTop;
                 var bottom = trimResult.Top + trimResult.TrimmedBitmap.Height + PaddingBottom;
-                var boxDrawing = GenerateBackgroundBox(left, right, top, bottom);
+                var boxDrawing = GenerateBackgroundBox(
+                    (int)Math.Round(left * scaleX, MidpointRounding.AwayFromZero),
+                    (int)Math.Round(right * scaleX, MidpointRounding.AwayFromZero),
+                    (int)Math.Round(top * scaleY, MidpointRounding.AwayFromZero),
+                    (int)Math.Round(bottom * scaleY, MidpointRounding.AwayFromZero));
                 var boxParagraph = MakeBoxParagraph(boxStyleName, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds, boxDrawing);
 
                 lock (_addSubtitleLock)

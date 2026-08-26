@@ -286,7 +286,11 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 // Appending directly skips AppendFormat's per-call format parsing, the object[10]
                 // and the boxed layer, plus the two intermediate time-code strings.
                 sb.Append(p.IsComment ? "Comment: " : "Dialogue: ");
-                sb.Append(p.Layer).Append(',');
+                // InvariantCulture: StringBuilder.Append(int) uses the current culture, and
+                // sv-SE/nb-NO/fi-FI/lt-LT render the negative sign as U+2212, which libass and
+                // VSFilter parse as layer 0 - breaking SE's own Layer = -1000 background boxes
+                // and Layer = -1 progress bars. Every other number on the line is already invariant.
+                sb.Append(p.Layer.ToString(CultureInfo.InvariantCulture)).Append(',');
                 AppendTimeCode(sb, p.StartTime).Append(',');
                 AppendTimeCode(sb, p.EndTime).Append(',');
                 sb.Append(style).Append(',');
@@ -2115,7 +2119,12 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 }
             }
 
-            var p0Index = s.IndexOf("{\\p0}", StringComparison.Ordinal);
+            // The drawing can be closed by "\p0" inside a multi-tag block ("{\p0\fs20}"), not
+            // just by the literal "{\p0}" - searching only for the literal left p0Index at -1
+            // and the else branch below then truncated the whole rest of the line.
+            var p0Match = Regex.Match(s, @"\{[^}]*\\p0(?![0-9])[^}]*\}");
+            var p0Index = p0Match.Success ? p0Match.Index : -1;
+            var p0Length = p0Match.Success ? p0Match.Length : 0;
             if (p1Index > 0 && (p0Index > p1Index || p0Index == -1))
             {
                 var startTagIndex = s.Substring(0, p1Index).LastIndexOf('{');
@@ -2123,7 +2132,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 {
                     if (p0Index > p1Index)
                     {
-                        s = s.Remove(startTagIndex, p0Index - startTagIndex + "{\\p0}".Length);
+                        s = s.Remove(startTagIndex, p0Index - startTagIndex + p0Length);
                     }
                     else
                     {
@@ -2140,12 +2149,20 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             int indexOfTag = s.IndexOf(@"\" + tag, StringComparison.Ordinal);
             if (indexOfTag > 0)
             {
-                var endIndex1 = s.IndexOf('\\', indexOfTag + 1);
-                var endIndex2 = s.IndexOf('}', indexOfTag + 1);
-                endIndex1 = Math.Min(endIndex1, endIndex2);
-                if (endIndex1 > 0)
+                // The tag ends at whichever comes first: the next tag in the block or the
+                // closing brace. -1 is IndexOf's "not found" sentinel, not a position, so
+                // Math.Min would pick it and the tag was never removed - which is the common
+                // case of a tag that is the only/last one in its block ("{\pos(1,2)}").
+                var nextTagIndex = s.IndexOf('\\', indexOfTag + 1);
+                var closingBraceIndex = s.IndexOf('}', indexOfTag + 1);
+                var endIndex = nextTagIndex < 0
+                    ? closingBraceIndex
+                    : closingBraceIndex < 0
+                        ? nextTagIndex
+                        : Math.Min(nextTagIndex, closingBraceIndex);
+                if (endIndex > 0)
                 {
-                    return s.Remove(indexOfTag, endIndex1 - indexOfTag);
+                    return s.Remove(indexOfTag, endIndex - indexOfTag);
                 }
             }
             return s;

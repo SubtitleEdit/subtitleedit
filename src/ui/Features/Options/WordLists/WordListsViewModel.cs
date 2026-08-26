@@ -193,7 +193,10 @@ public partial class WordListsViewModel : ObservableObject
             return;
         }
 
-        if (Names.Contains(word) || !SaveUserWord(SelectedLanguage, word))
+        // UserWords, not Names: this guard was copy-pasted from AddName, so a word that merely
+        // happened to be in the names list could never be added as a user word - and because ||
+        // short-circuits, SaveUserWord was never even called.
+        if (UserWords.Contains(word) || !SaveUserWord(SelectedLanguage, word))
         {
             await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Options.WordLists.UnableToAddItem, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
