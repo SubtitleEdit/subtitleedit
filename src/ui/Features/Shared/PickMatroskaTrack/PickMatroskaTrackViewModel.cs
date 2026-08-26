@@ -56,6 +56,12 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
     // slow part, so the progress window is only shown until that initial read has completed.
     private bool _clusterLoaded;
 
+    // Building the preview of a PGS track parses every cue - the exact same work the caller would
+    // otherwise redo right after OK, for a second (and unprogressed) "parsing Matroska file" wait
+    // on the very same data. Keep the parsed list so the caller can pick it up instead. (#14161)
+    private List<BluRaySupParser.PcsData>? _previewBluRaySubtitles;
+    private int _previewBluRayTrackNumber = -1;
+
     // Only bother with the progress window for files large enough that the read is noticeable.
     private const long MatroskaProgressWindowMinFileSize = 25 * 1024 * 1024; // 25 MB
 
@@ -97,6 +103,15 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
     private void Close()
     {
         Dispatcher.UIThread.Post(() => { Window?.Close(); });
+    }
+
+    /// <summary>
+    /// The PGS cues already parsed for the preview of <paramref name="trackNumber"/>, or null when
+    /// that track was not previewed (or is not PGS) and the caller has to parse them itself.
+    /// </summary>
+    public List<BluRaySupParser.PcsData>? GetPreParsedBluRaySubtitles(int trackNumber)
+    {
+        return _previewBluRayTrackNumber == trackNumber ? _previewBluRaySubtitles : null;
     }
 
     [RelayCommand]
@@ -370,6 +385,9 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
                     return;
                 }
 
+                _previewBluRaySubtitles = preview.BluRaySubtitles;
+                _previewBluRayTrackNumber = preview.BluRaySubtitles != null ? trackInfo.TrackNumber : -1;
+
                 foreach (var cue in preview.Cues)
                 {
                     Rows.Add(new MatroskaSubtitleCueDisplay
@@ -410,13 +428,14 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
         var cues = new List<PreviewCueData>();
         var count = 0;
         int? forcedCount = null;
+        List<BluRaySupParser.PcsData>? bluRaySubtitles = null;
 
         MatroskaFile.LoadMatroskaCallback? callback =
             pleaseWaitVm != null ? (position, total) => pleaseWaitVm.ReportProgress(position, total) : null;
         var subtitles = matroskaFile.GetSubtitle(trackInfo.TrackNumber, callback);
         if (subtitles == null)
         {
-            return new PreviewResult(0, null, cues);
+            return new PreviewResult(0, null, cues, null);
         }
 
         if (trackInfo.CodecId is MatroskaTrackType.SubRip
@@ -441,6 +460,7 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
         else if (trackInfo.CodecId == MatroskaTrackType.BluRay)
         {
             var pcsData = BluRaySupParser.ParseBluRaySupFromMatroska(trackInfo, matroskaFile);
+            bluRaySubtitles = pcsData;
             count = pcsData.Count;
             forcedCount = pcsData.Count(p => p.IsForced);
             for (var i = 0; i < 20 && i < pcsData.Count; i++)
@@ -514,7 +534,7 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
             }
         }
 
-        return new PreviewResult(count, forcedCount, cues);
+        return new PreviewResult(count, forcedCount, cues, bluRaySubtitles);
     }
 
     /// <summary>
@@ -531,7 +551,7 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
     }
 
     /// <summary><see cref="ForcedCount"/> is null for formats without a forced flag.</summary>
-    private sealed record PreviewResult(int Count, int? ForcedCount, List<PreviewCueData> Cues);
+    private sealed record PreviewResult(int Count, int? ForcedCount, List<PreviewCueData> Cues, List<BluRaySupParser.PcsData>? BluRaySubtitles);
 
     private sealed class PreviewCueData
     {
