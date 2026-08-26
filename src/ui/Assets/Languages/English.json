@@ -1,6 +1,6 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.2.0-beta24",
+  "version": "v5.2.0-beta25",
   "translatedBy": "",
   "cultureName": "en-US",
   "general": {
@@ -943,6 +943,7 @@
       "zoomVerticalHint": "Zoom vertical {0}",
       "selectCurrentLineWhilePlayingHint": "Select current subtitle while playing {0}",
       "videoPosition": "Video position {0}",
+      "videoPositionTextBox": "Video position text box {0}",
       "hideWaveformToolbar": "Hide toolbar {0}",
       "resetZoomAndSpeed": "Reset zoom & playback speed {0}",
       "removeBlankLines": "Remove blank lines {0}",
