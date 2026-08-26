@@ -4522,7 +4522,28 @@ public partial class MainViewModel :
             return;
         }
 
-        format.Save(fileName, GetUpdateSubtitle());
+        try
+        {
+            // A failed write must surface as an error dialog: an exception out of an async command
+            // dies silently, which read as "Save does nothing" in the field (unquoted font colors
+            // used to throw here).
+            if (!format.Save(fileName, GetUpdateSubtitle()))
+            {
+                await MessageBox.Show(Window!, Se.Language.General.Error,
+                    string.Format(Se.Language.General.CouldNotSaveFileXErrorY, fileName, string.Empty),
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+        }
+        catch (Exception ex)
+        {
+            SeLogger.Error(ex, "Export to EBU STL failed for " + fileName);
+            await MessageBox.Show(Window!, Se.Language.General.Error,
+                string.Format(Se.Language.General.CouldNotSaveFileXErrorY, fileName, ex.Message),
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
         ShowStatus(string.Format(Se.Language.Main.FileExportedInFormatXToFileY, format.Name, fileName));
     }
 
