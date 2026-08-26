@@ -3171,8 +3171,10 @@ public static class UiUtil
         // Guarded so the cleanup runs at most once per window even if Closed were ever raised
         // again, keeping non-idempotent cleanups safe by construction. (#13100)
         var cleanedUp = false;
+        var closed = false;
         window.Closed += (_, _) =>
         {
+            closed = true;
             if (!cleanedUp && window.DataContext is IClosingCleanup cleanup)
             {
                 cleanedUp = true;
@@ -3186,10 +3188,19 @@ public static class UiUtil
         // Clamp once when opened, and once more at Background priority so windows that
         // re-fit themselves in a posted callback (LockMinimumToContentSize in e.g. the
         // burn-in window runs at Loaded priority) get clamped again afterwards.
+        // Short-lived windows (e.g. the "please wait" window shown while extracting a
+        // Matroska track) can close before the posted callback runs; touching the window
+        // then throws ObjectDisposedException from the disposed platform impl. (#14161)
         window.Opened += (_, _) =>
         {
             ClampToWorkingArea(window);
-            Dispatcher.UIThread.Post(() => ClampToWorkingArea(window), DispatcherPriority.Background);
+            Dispatcher.UIThread.Post(() =>
+            {
+                if (!closed)
+                {
+                    ClampToWorkingArea(window);
+                }
+            }, DispatcherPriority.Background);
         };
     }
 

@@ -804,6 +804,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             }
         }
 
+        /// <summary>
+        /// True once <see cref="GetSubtitle"/> has read the clusters; further calls are served from
+        /// memory. Callers use this to skip a progress window that would just flash by.
+        /// </summary>
+        public bool IsSubtitleDataLoaded => _subtitleRipLoaded;
+
         public List<MatroskaSubtitle> GetSubtitle(int trackNumber, LoadMatroskaCallback progressCallback)
         {
             if (!_subtitleRipLoaded)

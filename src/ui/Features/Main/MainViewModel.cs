@@ -20829,7 +20829,8 @@ public partial class MainViewModel :
                     await ShowDialogAsync<PickMatroskaTrackWindow, PickMatroskaTrackViewModel>(vm => { vm.Initialize(matroska, subtitleList, fileName); });
                 if (result.OkPressed && result.SelectedMatroskaTrack != null)
                 {
-                    if (await LoadMatroskaSubtitle(result.SelectedMatroskaTrack, matroska, fileName, skipLoadVideo))
+                    if (await LoadMatroskaSubtitle(result.SelectedMatroskaTrack, matroska, fileName, skipLoadVideo,
+                            result.GetPreParsedBluRaySubtitles(result.SelectedMatroskaTrack.TrackNumber)))
                     {
                         if (!IsImageSubtitleTrack(result.SelectedMatroskaTrack))
                         {
@@ -20924,25 +20925,31 @@ public partial class MainViewModel :
         return true;
     }
 
+    /// <param name="preParsedBluRaySubtitles">
+    /// PGS cues the "pick track" window already parsed for its preview, so the exact same parse is
+    /// not run a second time behind another progress window (#14161). Null when unavailable.
+    /// </param>
     private async Task<bool> LoadMatroskaSubtitle(
         MatroskaTrackInfo matroskaSubtitleInfo,
         MatroskaFile matroska,
         string fileName,
-        bool skipLoadVideo = false)
+        bool skipLoadVideo = false,
+        List<BluRaySupParser.PcsData>? preParsedBluRaySubtitles = null)
     {
         if (matroskaSubtitleInfo.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase))
         {
             // Off the UI thread with progress, like the other track types - a PGS track in a
             // large mkv otherwise froze the window with no feedback (#6772).
             var pgsError = string.Empty;
-            var pgsSubtitle = await ExtractFromMatroskaAsync(
+            var pgsSubtitle = preParsedBluRaySubtitles ?? await ExtractFromMatroskaAsync(
                 matroska,
                 cb =>
                 {
                     var list = _bluRayHelper.LoadBluRaySubFromMatroska(matroskaSubtitleInfo, matroska, out var err, cb);
                     pgsError = err;
                     return list;
-                });
+                },
+                parsesCachedData: true);
 
             if (!string.IsNullOrEmpty(pgsError))
             {
@@ -21180,7 +21187,13 @@ public partial class MainViewModel :
     /// files. The callback handed to <paramref name="extract"/> drives that progress bar.
     /// Must be called on the UI thread.
     /// </summary>
-    private async Task<T> ExtractFromMatroskaAsync<T>(MatroskaFile matroska, Func<MatroskaFile.LoadMatroskaCallback, T> extract)
+    /// <param name="parsesCachedData">
+    /// True when the extraction is slow even after the clusters have been read (PGS decodes every
+    /// cue). For plain "give me the blocks" extractions a second call is served from memory, so the
+    /// progress window would only flash open and closed - and could be gone again before Avalonia
+    /// runs the callbacks posted when it opened (#14161).
+    /// </param>
+    private async Task<T> ExtractFromMatroskaAsync<T>(MatroskaFile matroska, Func<MatroskaFile.LoadMatroskaCallback, T> extract, bool parsesCachedData = false)
     {
         PleaseWaitViewModel? pleaseWaitVm = null;
         long fileSize = 0;
@@ -21193,7 +21206,7 @@ public partial class MainViewModel :
             // ignore - just means no size-based gating
         }
 
-        if (fileSize >= MatroskaProgressWindowMinFileSize)
+        if (fileSize >= MatroskaProgressWindowMinFileSize && (parsesCachedData || !matroska.IsSubtitleDataLoaded))
         {
             pleaseWaitVm = _windowService.ShowWindow<PleaseWaitWindow, PleaseWaitViewModel>(Window!);
             pleaseWaitVm.StatusText = Se.Language.Main.ParsingMatroskaFile;
