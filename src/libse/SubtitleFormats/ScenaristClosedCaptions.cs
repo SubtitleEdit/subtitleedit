@@ -990,7 +990,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var ts = TimeSpan.FromMilliseconds(totalMilliseconds);
             if (DropFrame)
             {
-                return $"{ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds:00};{MillisecondsToFramesMaxFrameRate(ts.Milliseconds):00}";
+                // 29.97 drop-frame skips frame numbers 00 and 01 at the start of every minute
+                // except every tenth, so those labels do not exist in a DF file - emitting them
+                // produced timecodes no DF-aware tool accepts. Same skip MacCaption10's
+                // StepToNextFrame already applies.
+                var frames = MillisecondsToFramesMaxFrameRate(ts.Milliseconds);
+                if (ts.Seconds == 0 && ts.Minutes % 10 != 0 && frames < 2)
+                {
+                    frames = 2;
+                }
+
+                return $"{ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds:00};{frames:00}";
             }
 
             return $"{ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds:00}:{MillisecondsToFramesMaxFrameRate(ts.Milliseconds):00}";

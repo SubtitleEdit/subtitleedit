@@ -59,7 +59,19 @@ public class ZipUnpacker : IZipUnpacker
                 entryFullName = Path.GetFileName(entryFullName);
             }
 
-            var filePath = Path.Combine(outputPath, entryFullName);
+            // Keep every entry inside the extraction folder, the way the 7-zip unpacker does.
+            // This unpacker handles third-party plugin zips, and combining an unchecked entry
+            // name let an archive write outside the target directory.
+            var targetRoot = Path.GetFullPath(outputPath);
+            var filePath = Path.GetFullPath(Path.Combine(targetRoot, entryFullName));
+            var relativePath = Path.GetRelativePath(targetRoot, filePath);
+            if (Path.IsPathRooted(entryFullName) ||
+                relativePath.Equals("..", StringComparison.Ordinal) ||
+                relativePath.StartsWith(".." + Path.DirectorySeparatorChar, StringComparison.Ordinal) ||
+                Path.IsPathRooted(relativePath))
+            {
+                throw new InvalidDataException("Archive entry is outside the extraction folder: " + entryFullName);
+            }
             var directoryPath = Path.GetDirectoryName(filePath);
 
             if (!string.IsNullOrEmpty(directoryPath) && !Directory.Exists(directoryPath))
@@ -114,7 +126,19 @@ public class ZipUnpacker : IZipUnpacker
                 entryFullName = Path.GetFileName(entryFullName);
             }
 
-            var filePath = Path.Combine(outputPath, entryFullName);
+            // Keep every entry inside the extraction folder, the way the 7-zip unpacker does.
+            // This unpacker handles third-party plugin zips, and combining an unchecked entry
+            // name let an archive write outside the target directory.
+            var targetRoot = Path.GetFullPath(outputPath);
+            var filePath = Path.GetFullPath(Path.Combine(targetRoot, entryFullName));
+            var relativePath = Path.GetRelativePath(targetRoot, filePath);
+            if (Path.IsPathRooted(entryFullName) ||
+                relativePath.Equals("..", StringComparison.Ordinal) ||
+                relativePath.StartsWith(".." + Path.DirectorySeparatorChar, StringComparison.Ordinal) ||
+                Path.IsPathRooted(relativePath))
+            {
+                throw new InvalidDataException("Archive entry is outside the extraction folder: " + entryFullName);
+            }
             var directoryPath = Path.GetDirectoryName(filePath);
 
             if (!string.IsNullOrEmpty(directoryPath) && !Directory.Exists(directoryPath))

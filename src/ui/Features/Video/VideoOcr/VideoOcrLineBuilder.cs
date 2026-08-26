@@ -141,6 +141,11 @@ public static class VideoOcrLineBuilder
             // and emphasises only the second one ("Hello" then "**Hello**") got past a check on
             // the raw text and produced a subtitle with the line in it twice.
             line = StripMarkdownEmphasis(line);
+            // Adjacent identical lines are collapsed on purpose: vision models routinely echo a
+            // line twice (sometimes emphasising only one copy), and CleanOcrResult_KnownValues /
+            // CleanOcrResult_RepeatedLine_IsDroppedEvenWhenOnlyOneIsEmphasised pin that down.
+            // A burned-in subtitle whose two lines are genuinely identical ("- No." / "- No.")
+            // therefore loses its second line - accepted as the lesser evil versus echoed text.
             if (line == lastLine)
             {
                 continue;

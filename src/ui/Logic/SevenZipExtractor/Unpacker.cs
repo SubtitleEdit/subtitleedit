@@ -158,7 +158,12 @@ public static class Unpacker
                     {
                         // Ignore if already exited
                     }
-                    return;
+
+                    // Throw rather than return: a bare return was indistinguishable from a
+                    // completed unpack, so callers reported the install as successful, deleted
+                    // the archive, and left a half-extracted folder that passes their
+                    // "is it installed?" file check.
+                    throw new OperationCanceledException(cancellationTokenSource.Token);
                 }
 
                 var line = process.StandardOutput.ReadLine();
@@ -269,7 +274,12 @@ public static class Unpacker
                     {
                         // Ignore if already exited
                     }
-                    return;
+
+                    // Throw rather than return: a bare return was indistinguishable from a
+                    // completed unpack, so callers reported the install as successful, deleted
+                    // the archive, and left a half-extracted folder that passes their
+                    // "is it installed?" file check.
+                    throw new OperationCanceledException(cancellationTokenSource.Token);
                 }
 
                 var line = process.StandardOutput.ReadLine();
@@ -385,7 +395,9 @@ public static class Unpacker
         {
             if (cancellationTokenSource.IsCancellationRequested)
             {
-                return;
+                // See the process-based paths above: a cancelled unpack must not look like a
+                // completed one to the caller.
+                throw new OperationCanceledException(cancellationTokenSource.Token);
             }
 
             if (!string.IsNullOrEmpty(reader.Entry.Key))

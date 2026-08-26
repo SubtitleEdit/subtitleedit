@@ -157,8 +157,34 @@ public class YtDlpDownloadService : IYtDlpDownloadService
     public async Task DownloadYtDlp(IProgress<float>? progress, CancellationToken cancellationToken)
     {
         var fileName = GetFullFileName();
-        await DownloadHelper.DownloadFileAsync(_httpClient, GetUrl(), fileName, progress, cancellationToken);
-        await VerifyChecksumAsync(fileName, CurrentVersion, cancellationToken);
+
+        // Download beside the target and move into place only once the checksum passes.
+        // Writing straight to the final path left a truncated binary behind when the user
+        // cancelled - which the "is yt-dlp installed?" check then accepted and ran - and on an
+        // update it truncated the working binary before the first byte even arrived.
+        var partFileName = fileName + ".part";
+        try
+        {
+            await DownloadHelper.DownloadFileAsync(_httpClient, GetUrl(), partFileName, progress, cancellationToken);
+            await VerifyChecksumAsync(partFileName, CurrentVersion, cancellationToken);
+            File.Move(partFileName, fileName, true);
+        }
+        catch
+        {
+            try
+            {
+                if (File.Exists(partFileName))
+                {
+                    File.Delete(partFileName);
+                }
+            }
+            catch
+            {
+                // ignore - nothing useful to do if the partial file cannot be removed
+            }
+
+            throw;
+        }
     }
 
     /// <summary>

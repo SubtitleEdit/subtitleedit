@@ -82,13 +82,12 @@ public partial class BridgeGapsViewModel : ObservableObject, IClosingCleanup
     {
         _dic = new Dictionary<string, string>();
         var fixedIndexes = new List<int>(Subtitles.Count);
+        // Both values are milliseconds - that is what the labels say, what the settings keys
+        // (BridgeGapsSmallerThanMs / MinGapMs) hold, and how MergeShortLines reads the same
+        // stored numbers. Converting them with FramesToMilliseconds in HH:MM:SS:FF mode turned
+        // the 2000 ms default into 80 000 ms at 25 fps.
         var minMsBetweenLines = MinGapMs;
         var maxMs = BridgeGapsSmallerThanMs;
-        if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
-        {
-            minMsBetweenLines = SubtitleFormat.FramesToMilliseconds(minMsBetweenLines);
-            maxMs = SubtitleFormat.FramesToMilliseconds(maxMs);
-        }
 
         var allSubtitles = new ObservableCollection<SubtitleLineViewModel>(AllSubtitles.Select(p => new SubtitleLineViewModel(p)));
         var fixedCount = DurationsBridgeGaps2.BridgeGaps(allSubtitles, minMsBetweenLines, PercentForLeft, maxMs, fixedIndexes, _dic, Configuration.Settings.General.UseTimeFormatHHMMSSFF);
@@ -158,6 +157,14 @@ public partial class BridgeGapsViewModel : ObservableObject, IClosingCleanup
     [RelayCommand]
     private void Ok()
     {
+        // Apply what the current settings produce, not what the 250/500 ms preview timer
+        // last computed: clicking OK right after changing a value handed the caller the
+        // previous settings' result while saving the new ones.
+        if (_dirty)
+        {
+            UpdatePreview();
+        }
+
         SaveSettings();
         OkPressed = true;
         Window?.Close();

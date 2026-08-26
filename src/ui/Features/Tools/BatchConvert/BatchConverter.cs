@@ -3144,6 +3144,13 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             RemoveIfOnlyMusicSymbols = s.IsRemoveOnlyMusicSymbolsOn,
             CustomStart = s.CustomStart,
             CustomEnd = s.CustomEnd,
+            // The whitelist the dialog edits, not the libse default: without this the batch run
+            // kept using "YES, NO, WHY, HI, OK, TV" and ignored whatever the user configured.
+            UppercaseWhitelist = (s.UppercaseWhitelist ?? string.Empty)
+                .Split([',', ';'], StringSplitOptions.RemoveEmptyEntries)
+                .Select(p => p.Trim())
+                .Where(p => p.Length > 0)
+                .ToList(),
         };
 
         foreach (var item in s.TextContains.Split([',', ';'], StringSplitOptions.RemoveEmptyEntries))

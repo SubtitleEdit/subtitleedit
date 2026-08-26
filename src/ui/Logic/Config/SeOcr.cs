@@ -7,6 +7,12 @@ public class SeOcr
 {
     public string Engine { get; set; }
     public string NOcrDatabase { get; set; }
+
+    /// <summary>
+    /// Selected binary image-compare database. Was never persisted, so the picker reverted
+    /// to the alphabetically first database and trained characters went into the wrong one.
+    /// </summary>
+    public string BinaryOcrDatabase { get; set; }
     public string NOcrBinaryOcrFallbackDatabase { get; set; }
     public string BinaryOcrNOcrFallbackDatabase { get; set; }
     public int NOcrMaxWrongPixels { get; set; }
@@ -89,6 +95,7 @@ public class SeOcr
         DoAutoBreak = true;
 
         NOcrDatabase = "Latin";
+        BinaryOcrDatabase = "Latin";
         NOcrBinaryOcrFallbackDatabase = string.Empty;
         BinaryOcrNOcrFallbackDatabase = string.Empty;
         NOcrMaxWrongPixels = 25;
