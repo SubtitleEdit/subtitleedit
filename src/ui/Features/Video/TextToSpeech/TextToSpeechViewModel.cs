@@ -2982,11 +2982,17 @@ public partial class TextToSpeechViewModel : ObservableObject
     {
         try
         {
-            return await TtsInstructionSwap.RunAsync(
+            var result = await TtsInstructionSwap.RunAsync(
                 resolution.Engine,
                 resolution.Instruction,
                 () => resolution.Engine.Speak(resolution.Text, _waveFolder, resolution.Voice,
                     language, region, model, cancellationToken));
+
+            // The counter tracks failures *in a row*, so a line that succeeds first time
+            // clears it. Without this it accumulated over the whole run and retries were
+            // switched off permanently after the second failure, however far apart.
+            _speakRetryFailures = 0;
+            return result;
         }
         catch (OperationCanceledException)
         {
@@ -3009,7 +3015,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                     resolution.Instruction,
                     () => resolution.Engine.Speak(resolution.Text, _waveFolder, resolution.Voice,
                         language, region, model, cancellationToken));
-                _speakRetryFailures = 0;
+                _speakRetryFailures = 0; // see the reset on first-attempt success below too
                 Se.WriteToolsLog("TTS generation: the segment succeeded on retry");
                 return retried;
             }
@@ -3126,7 +3132,9 @@ public partial class TextToSpeechViewModel : ObservableObject
             clipFolder,
             videoDurationSeconds,
             audioTrackFfIndex: -1,
-            progress: (done, total) => ProgressValue = total == 0 ? 0 : (double)done / total,
+            // The progress bar is 0-100, like every other stage reports (a raw 0-1 fraction
+            // left it pinned at 0 for the whole clip-cutting phase).
+            progress: (done, total) => ProgressValue = total == 0 ? 0 : (double)done / total * 100.0,
             cancellationToken);
 
         if (_perLineCloneClips.Count > 0)
@@ -3771,12 +3779,35 @@ public partial class TextToSpeechViewModel : ObservableObject
     // once enough progress exists for it not to jump around.
     private readonly Stopwatch _generateStopwatch = new();
 
+    // ProgressValue is driven 0->100 once per stage (generate, fix speed, post-process,
+    // merge), so the whole-run elapsed cannot be projected against it - that read "18:00
+    // left" seconds before finishing. Time each stage separately for the projection and
+    // keep the run stopwatch for the elapsed figure.
+    private readonly Stopwatch _stageStopwatch = new();
+    private double _lastProgressValue;
+
     partial void OnProgressValueChanged(double value)
     {
         if (!IsGenerating || value <= 0)
         {
+            _stageStopwatch.Restart(); // a stage boundary resets the bar to 0
+            _lastProgressValue = 0;
             return;
         }
+
+        // The import/merge path enters the generating state without starting the run
+        // stopwatch, which would otherwise still hold a previous run's elapsed.
+        if (!_generateStopwatch.IsRunning)
+        {
+            _generateStopwatch.Restart();
+        }
+
+        if (value < _lastProgressValue)
+        {
+            _stageStopwatch.Restart();
+        }
+
+        _lastProgressValue = value;
 
         ProgressPercentText = $"{Math.Clamp((int)Math.Round(value), 0, 100)}%";
 
@@ -3786,9 +3817,10 @@ public partial class TextToSpeechViewModel : ObservableObject
             return;
         }
 
-        if (value >= 3 && value <= 100)
+        var stageElapsed = _stageStopwatch.IsRunning ? _stageStopwatch.Elapsed : elapsed;
+        if (value >= 3 && value <= 100 && stageElapsed.TotalSeconds >= 1)
         {
-            var remaining = TimeSpan.FromSeconds(elapsed.TotalSeconds * (100 - value) / value);
+            var remaining = TimeSpan.FromSeconds(stageElapsed.TotalSeconds * (100 - value) / value);
             ProgressEtaText = string.Format(Se.Language.Video.TextToSpeech.XElapsedYLeft, FormatProgressDuration(elapsed), FormatProgressDuration(remaining));
         }
         else

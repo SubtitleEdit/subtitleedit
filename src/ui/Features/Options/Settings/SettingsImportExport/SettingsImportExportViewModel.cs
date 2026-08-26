@@ -179,6 +179,7 @@ public partial class SettingsImportExportViewModel : ObservableObject
             if (!IsRulesEnabled)
             {
                 ExportImportRules = false;
+                ExportImportSyntaxColoring = false; // the coloring fields live in General
             }
 
             if (!IsAppearanceEnabled)
@@ -261,45 +262,29 @@ public partial class SettingsImportExportViewModel : ObservableObject
         var exportData = new Se();
         var currentSettings = Se.Settings;
 
-        if (ExportImportAll || ExportImportRules)
-        {
-            exportData.General = currentSettings.General;
-        }
+        // Every Se section is self-initializing, so a section left untouched here would still
+        // serialize as a full block of *defaults* - and the importer, which only checks for
+        // null, would happily install those defaults over the user's settings. Assign null
+        // for anything not being exported so "what's in the file" is unambiguous.
 
-        if (ExportImportAll || ExportImportWaveform)
-        {
-            exportData.Waveform = currentSettings.Waveform;
-        }
+        // Syntax coloring lives inside General, so General has to travel for it - the import
+        // side then applies either the whole section or just the coloring fields.
+        exportData.General = ExportImportAll || ExportImportRules || ExportImportSyntaxColoring
+            ? currentSettings.General
+            : null!;
 
-        if (ExportImportAll)
-        {
-            exportData.Tools = currentSettings.Tools;
-        }
+        exportData.Waveform = ExportImportAll || ExportImportWaveform ? currentSettings.Waveform : null!;
+        exportData.Tools = ExportImportAll ? currentSettings.Tools : null!;
+        exportData.Appearance = ExportImportAll || ExportImportAppearance ? currentSettings.Appearance : null!;
+        exportData.Options = ExportImportAll ? currentSettings.Options : null!;
+        exportData.Shortcuts = ExportImportAll || ExportImportShortcuts ? currentSettings.Shortcuts : null!;
+        exportData.AutoTranslate = ExportImportAll || ExportImportAutoTranslate ? currentSettings.AutoTranslate : null!;
+        exportData.SpellCheck = ExportImportAll ? currentSettings.SpellCheck : null!;
 
-        if (ExportImportAll || ExportImportAppearance)
-        {
-            exportData.Appearance = currentSettings.Appearance;
-        }
-
-        if (ExportImportAll)
-        {
-            exportData.Options = currentSettings.Options;
-        }
-
-        if (ExportImportAll || ExportImportShortcuts)
-        {
-            exportData.Shortcuts = currentSettings.Shortcuts;
-        }
-
-        if (ExportImportAll || ExportImportAutoTranslate)
-        {
-            exportData.AutoTranslate = currentSettings.AutoTranslate;
-        }
-
-        if (ExportImportAll)
-        {
-            exportData.SpellCheck = currentSettings.SpellCheck;
-        }
+        // Video was never assigned, so an "all settings" file carried a default Video block
+        // that the importer applied - silently resetting the player choice, the mpv preview
+        // style and the custom seek amounts.
+        exportData.Video = ExportImportAll ? currentSettings.Video : null!;
 
         var json = JsonSerializer.Serialize(exportData, new JsonSerializerOptions { WriteIndented = true });
         var jsonWithSource = InjectExportSourceOs(json, GetCurrentOsName());
@@ -321,6 +306,27 @@ public partial class SettingsImportExportViewModel : ObservableObject
             {
                 Se.Settings.General = importData.General;
             }
+        }
+        else if (ExportImportSyntaxColoring && importData.General != null)
+        {
+            // Only the syntax-coloring fields of General - the rest of the section is the
+            // "Rules" import, which the user did not ask for. (This checkbox used to be
+            // wired to nothing at all.)
+            var from = importData.General;
+            var to = Se.Settings.General;
+            to.ColorDurationTooShort = from.ColorDurationTooShort;
+            to.ColorDurationTooLong = from.ColorDurationTooLong;
+            to.ColorTextTooLong = from.ColorTextTooLong;
+            to.ColorTextTooWide = from.ColorTextTooWide;
+            to.ColorTextTooWidePixels = from.ColorTextTooWidePixels;
+            to.ColorTextTooWideFontName = from.ColorTextTooWideFontName;
+            to.ColorTextTooWideFontSize = from.ColorTextTooWideFontSize;
+            to.ColorTextTooManyLines = from.ColorTextTooManyLines;
+            to.ColorCharactersPerSecond = from.ColorCharactersPerSecond;
+            to.ColorWordsPerMinute = from.ColorWordsPerMinute;
+            to.ColorTimeCodeOverlap = from.ColorTimeCodeOverlap;
+            to.ColorGapTooShort = from.ColorGapTooShort;
+            to.ErrorColor = from.ErrorColor;
         }
 
         if (ExportImportAll || ExportImportWaveform)

@@ -106,18 +106,25 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
                 x = 0;
                 y = 1;
+                // EN 300 743 7.2.5: a zero bottom_field_data_block_length means the bottom
+                // field repeats the top field's pixel data, so decode the top block again -
+                // and bound the loop by the block actually being read, not by the (zero)
+                // bottom length, which would end the loop before a single run was drawn.
+                int bottomLength;
                 if (BottomFieldDataBlockLength == 0)
                 {
                     index = start;
+                    bottomLength = TopFieldDataBlockLength;
                 }
                 else
                 {
                     length = BottomFieldDataBlockLength;
                     index = start + TopFieldDataBlockLength;
                     start = index;
+                    bottomLength = BottomFieldDataBlockLength - 1;
                 }
                 dataType = buffer[index - 1];
-                while (index < start + BottomFieldDataBlockLength - 1 && index < buffer.Length)
+                while (index < start + bottomLength && index < buffer.Length)
                 {
                     index = ProcessDataType(buffer, index, clutLookup, ref dataType, start, twoToFourBitColorLookup, fourToEightBitColorLookup, twoToEightBitColorLookup, ref x, ref y, length, ref pixelCode, ref runLength);
                 }
@@ -191,18 +198,25 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
                 x = 0;
                 y = 1;
+                // EN 300 743 7.2.5: a zero bottom_field_data_block_length means the bottom
+                // field repeats the top field's pixel data, so decode the top block again -
+                // and bound the loop by the block actually being read, not by the (zero)
+                // bottom length, which would end the loop before a single run was drawn.
+                int bottomLength;
                 if (BottomFieldDataBlockLength == 0)
                 {
                     index = start;
+                    bottomLength = TopFieldDataBlockLength;
                 }
                 else
                 {
                     length = BottomFieldDataBlockLength;
                     index = start + TopFieldDataBlockLength;
                     start = index;
+                    bottomLength = BottomFieldDataBlockLength - 1;
                 }
                 dataType = buffer[index - 1];
-                while (index < start + BottomFieldDataBlockLength - 1 && index < buffer.Length)
+                while (index < start + bottomLength && index < buffer.Length)
                 {
                     index = ProcessDataTypeForPosition(buffer, index, clutLookup, ref dataType, start, twoToFourBitColorLookup, fourToEightBitColorLookup, twoToEightBitColorLookup, ref x, ref y, length, ref pixelCode, ref runLength, width, height, out Position subPos);
                     if (subPos.Left < pos.Left)

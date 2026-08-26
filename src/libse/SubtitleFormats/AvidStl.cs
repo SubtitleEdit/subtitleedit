@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             fs.WriteByte(2);
             fs.WriteByte(0);
             var buffer = Encoding.GetEncoding(1252).GetBytes(p.Text.Replace(Environment.NewLine, "Š"));
-            if (buffer.Length <= 128)
+            if (buffer.Length <= TextLength)
             {
                 fs.Write(buffer, 0, buffer.Length);
                 for (int i = buffer.Length; i < TextLength; i++)
