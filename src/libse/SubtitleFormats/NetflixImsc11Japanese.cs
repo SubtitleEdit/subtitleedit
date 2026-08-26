@@ -86,9 +86,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return false;
             }
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            var text = sb.ToString();
+            var text = JoinLines(lines);
             if (!text.Contains("lang=\"ja\"", StringComparison.Ordinal) || !ContainsJapaneseProfileStyling(text))
             {
                 return false;
@@ -402,16 +400,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument { XmlResolver = null, PreserveWhitespace = true };
             try
             {
-                xml.LoadXml(sb.ToString().RemoveControlCharactersButWhiteSpace().Trim());
+                xml.LoadXml(JoinLines(lines).RemoveControlCharactersButWhiteSpace().Trim());
             }
             catch
             {
-                xml.LoadXml(sb.ToString().Replace(" & ", " &amp; ").Replace("Q&A", "Q&amp;A").RemoveControlCharactersButWhiteSpace().Trim());
+                xml.LoadXml(JoinLines(lines).Replace(" & ", " &amp; ").Replace("Q&A", "Q&amp;A").RemoveControlCharactersButWhiteSpace().Trim());
             }
 
             var frameRateAttr = xml.DocumentElement.Attributes["ttp:frameRate"];
@@ -457,7 +453,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = null;
-            subtitle.Header = sb.ToString();
+            subtitle.Header = JoinLines(lines);
 
             var namespaceManager = new XmlNamespaceManager(xml.NameTable);
             namespaceManager.AddNamespace("ttml", "http://www.w3.org/ns/ttml");

@@ -52,9 +52,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            if (!sb.ToString().Contains("<TEXT_TRACK"))
+            if (!JoinLines(lines).Contains("<TEXT_TRACK"))
             {
                 return;
             }
@@ -62,7 +60,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var xml = new XmlDocument { XmlResolver = null };
             try
             {
-                var xmlText = sb.ToString();
+                var xmlText = JoinLines(lines);
                 var startDocType = xmlText.IndexOf("<!DOCTYPE", StringComparison.Ordinal);
                 if (startDocType > 0)
                 {

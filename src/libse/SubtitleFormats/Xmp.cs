@@ -138,9 +138,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            string allText = sb.ToString();
+            string allText = JoinLines(lines);
             if (!allText.Contains("<x:xmpmeta"))
             {
                 return;

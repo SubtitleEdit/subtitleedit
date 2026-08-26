@@ -15,9 +15,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            string xmlAsString = sb.ToString().RemoveControlCharactersButWhiteSpace().Trim();
+            string xmlAsString = JoinLines(lines).RemoveControlCharactersButWhiteSpace().Trim();
 
             if (xmlAsString.Contains("xmlns:tts=\"http://www.w3.org/2006/04"))
             {
@@ -60,10 +58,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument { XmlResolver = null };
-            xml.LoadXml(sb.ToString().RemoveControlCharactersButWhiteSpace().Trim());
+            xml.LoadXml(JoinLines(lines).RemoveControlCharactersButWhiteSpace().Trim());
 
             var nsmgr = new XmlNamespaceManager(xml.NameTable);
             nsmgr.AddNamespace("tt", xml.DocumentElement.NamespaceURI);

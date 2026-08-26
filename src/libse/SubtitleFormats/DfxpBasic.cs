@@ -23,9 +23,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return false;
             }
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            var text = sb.ToString();
+            var text = JoinLines(lines);
             if (!text.Contains("<style xml:id=\"basic\"") || !text.Contains("<body style=\"basic\">"))
             {
                 return false;

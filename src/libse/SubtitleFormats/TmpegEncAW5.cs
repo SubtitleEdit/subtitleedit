@@ -56,9 +56,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            string xmlAsString = sb.ToString().Trim();
+            string xmlAsString = JoinLinesTrimmed(lines);
             if ((xmlAsString.Contains("<TMPGEncVMESubtitleTextFormat>") || xmlAsString.Contains("<SubtitleItem ")) && (xmlAsString.Contains("<Subtitle")))
             {
                 return base.IsMine(lines, fileName);

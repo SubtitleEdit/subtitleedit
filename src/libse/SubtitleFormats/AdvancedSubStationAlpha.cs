@@ -84,9 +84,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var subtitle = new Subtitle();
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            var all = sb.ToString();
+            var all = JoinLines(lines);
             if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".ass", StringComparison.OrdinalIgnoreCase) && !all.Contains("[V4 Styles]"))
             {
             }

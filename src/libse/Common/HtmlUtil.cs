@@ -879,6 +879,14 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <returns>A string with corrected italic tags.</returns>
         public static string FixInvalidItalicTags(string input)
         {
+            // Every transformation below requires a '<' somewhere in the text (the "{\...}"
+            // prefix is only sliced off to be re-prepended verbatim), and most subtitle lines
+            // carry no tags at all - so skip the ~50 full-string Replace scans for those.
+            if (string.IsNullOrEmpty(input) || input.IndexOf('<') < 0)
+            {
+                return input;
+            }
+
             var text = input;
 
             var preTags = string.Empty;

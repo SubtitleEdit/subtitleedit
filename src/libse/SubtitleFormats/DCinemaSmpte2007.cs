@@ -45,9 +45,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            string xmlAsString = sb.ToString().Trim();
+            string xmlAsString = JoinLinesTrimmed(lines);
             if (xmlAsString.Contains("http://www.smpte-ra.org/schemas/428-7/2010/DCST") ||
                 xmlAsString.Contains("http://www.smpte-ra.org/schemas/428-7/2014/DCST"))
             {
@@ -594,10 +592,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument { XmlResolver = null };
-            xml.LoadXml(sb.ToString().Replace("<dcst:", "<").Replace("</dcst:", "</").Replace("xmlns=\"http://www.smpte-ra.org/schemas/428-7/2007/DCST\"", string.Empty)); // tags might be prefixed with namespace (or not)... so we just remove them
+            xml.LoadXml(JoinLines(lines).Replace("<dcst:", "<").Replace("</dcst:", "</").Replace("xmlns=\"http://www.smpte-ra.org/schemas/428-7/2007/DCST\"", string.Empty)); // tags might be prefixed with namespace (or not)... so we just remove them
             var ss = Configuration.Settings.SubtitleSettings;
             try
             {

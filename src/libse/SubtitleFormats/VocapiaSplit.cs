@@ -81,10 +81,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
 
-            string xmlString = sb.ToString();
+            string xmlString = JoinLines(lines);
             if (!xmlString.Contains("<SpeechSegment"))
             {
                 return;
