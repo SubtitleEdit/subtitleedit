@@ -3,6 +3,38 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-beta25 (26th of August 2026)
+
+* Add advanced text effects to image based export - gradient, neon glow, 3D extrude and more
+* Add speaker-name detection and a "leave sound/music lines silent" prompt to text to speech - thx subof
+* Add "Clone from video" to Qwen3 TTS, so each line can be dubbed in the voice heard in the video - thx invio-a11y
+* Add an editable video position box to the waveform toolbar - thx 95Midnight
+* Add custom llama.cpp vision models to the OCR model list
+* Add the "Ollama advanced" translate engine to batch convert
+* Add "--translate-prompt" to seconv for the local LLM translate engines - thx Makar8000
+* Image based export now honors per-line ASSA colors and outline/shadow widths
+* EBU STL: show frame-based time codes while the format is active - thx Triathlon-rally
+* "Normalize strings" now folds curly quotes, dashes and ellipsis to plain ASCII - thx fraternl
+* DeepL: offer all the languages the API supports, and use the host that matches the key
+* Google Translate: use the right language list for the free and the paid engine, and drop two broken entries
+* Auto-translate: take the CrispASR MADLAD language list from the model - thx ecotycoon
+* OCR: list the most accurate llama.cpp models first
+* Italian OCR: fix "E'" to "È" - thx GitGianluc
+* Speech to text: say when Crisp ASR was killed instead of reporting no speech - thx marwanlhabti5-coder
+* Update llama.cpp to b10625
+* Fix the original text being erased after translating - thx fraternl
+* Fix EBU STL export doing nothing when a font color tag has no quotes, and remember the save options
+* Fix regenerating a cloned line after importing a text to speech session - thx invio-a11y
+* Fix "find voices in video and clone" not setting actors when a subtitle is open - thx subof
+* Fix "convert actors" missing a speaker tag split across a line break - thx subof
+* Fix OCR removing the French space before "?" and "!"
+* Fix Microsoft Translator throwing an error when the language list cannot be fetched
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+* Update Polish translation - thx potplayer-fanpack
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-beta24 (25th of August 2026)
 
 * Add dots.tts text to speech engine with voice cloning
