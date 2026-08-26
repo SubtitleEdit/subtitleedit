@@ -603,17 +603,10 @@ public partial class VideoOcrViewModel : ObservableObject
 
     private async Task ExtractSingleFrame(string outputFileName, double positionSeconds, CancellationToken cancellationToken)
     {
-        var scale = string.Empty;
-        var maxImageWidth = Se.Settings.Video.VideoOcr.MaxImageWidth;
-        if (maxImageWidth > 0 && SelectionWidth > maxImageWidth)
-        {
-            scale = $",scale={maxImageWidth}:-2";
-        }
-
         // -ss before -i: seek in the demuxer, so a test frame late in a long video is still fast.
         var arguments = $"-nostdin -y -ss {positionSeconds.ToString("0.###", CultureInfo.InvariantCulture)} " +
                         $"-i \"{_videoFileName}\" " +
-                        $"-vf \"crop={SelectionWidth}:{SelectionHeight}:{SelectionX}:{SelectionY}{scale}\" " +
+                        $"-vf \"{GetCropAndScaleFilter()}\" " +
                         $"-frames:v 1 -q:v 2 \"{outputFileName}\"";
 
         Se.WriteToolsLog("Video OCR: extracting test frame - ffmpeg " + arguments);
@@ -709,6 +702,33 @@ public partial class VideoOcrViewModel : ObservableObject
 
             var mergedLines = VideoOcrLineBuilder.Build(groups, FramesPerSecond, TextSimilarityPercent, MaxGapMs, MinDurationMs);
 
+            var lastRefineUpdate = 0L;
+            await VideoOcrTimingRefiner.RefineAsync(
+                mergedLines,
+                new VideoOcrTimingRefiner.Context
+                {
+                    VideoFileName = _videoFileName,
+                    FramesFolder = framesFolder,
+                    CoarseFps = FramesPerSecond,
+                    BrightnessMinimum = BrightnessMinimum,
+                    ImageSimilarityPercent = Se.Settings.Video.VideoOcr.ImageSimilarityPercent,
+                    CropAndScaleFilter = GetCropAndScaleFilter(),
+                },
+                (current, total) =>
+                {
+                    var now = Environment.TickCount64;
+                    if (now - lastRefineUpdate > 200 || current == total)
+                    {
+                        lastRefineUpdate = now;
+                        Dispatcher.UIThread.Post(() =>
+                        {
+                            ProgressText = string.Format(Se.Language.Video.VideoOcr.RefiningTimingXY, current, total);
+                            ProgressValue = total == 0 ? 0 : current * 100.0 / total;
+                        });
+                    }
+                },
+                cancellationToken);
+
             var positionTag = string.Empty;
             if (AddAssaPositionTag)
             {
@@ -780,7 +800,9 @@ public partial class VideoOcrViewModel : ObservableObject
         }
     }
 
-    private async Task ExtractFrames(string framesFolder, CancellationToken cancellationToken)
+    /// <summary>The crop (and optional downscale) part of the extraction filter - shared by
+    /// the scan, the test frame and the timing refinement so they all see the same pixels.</summary>
+    private string GetCropAndScaleFilter()
     {
         var scale = string.Empty;
         var maxImageWidth = Se.Settings.Video.VideoOcr.MaxImageWidth;
@@ -789,12 +811,17 @@ public partial class VideoOcrViewModel : ObservableObject
             scale = $",scale={maxImageWidth}:-2";
         }
 
+        return $"crop={SelectionWidth}:{SelectionHeight}:{SelectionX}:{SelectionY}{scale}";
+    }
+
+    private async Task ExtractFrames(string framesFolder, CancellationToken cancellationToken)
+    {
         // JPEG (near-lossless q=2) instead of PNG: a long video at 5 fps produces tens of
         // thousands of frames, and PNG would need gigabytes of temp disk space.
         var outputPattern = Path.Combine(framesFolder, "img%06d.jpg");
         var arguments = $"-nostdin -y -i \"{_videoFileName}\" " +
                         $"-vf \"fps={FramesPerSecond.ToString(CultureInfo.InvariantCulture)}," +
-                        $"crop={SelectionWidth}:{SelectionHeight}:{SelectionX}:{SelectionY}{scale}\" " +
+                        $"{GetCropAndScaleFilter()}\" " +
                         $"-q:v 2 -start_number 0 \"{outputPattern}\"";
 
         _extractedFrames = 0;

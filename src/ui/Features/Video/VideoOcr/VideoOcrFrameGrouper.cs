@@ -107,7 +107,7 @@ public static class VideoOcrFrameGrouper
         groups.Add(group);
     }
 
-    private static bool IsBlank(byte[] thumbnail)
+    internal static bool IsBlank(byte[] thumbnail)
     {
         var bright = 0;
         foreach (var b in thumbnail)
@@ -174,7 +174,7 @@ public static class VideoOcrFrameGrouper
         return (int)Math.Round(100.0 - meanDiff * 100.0 / 255.0);
     }
 
-    private static byte[]? MakeThumbnail(string fileName, int brightnessMinimum)
+    internal static byte[]? MakeThumbnail(string fileName, int brightnessMinimum)
     {
         try
         {
