@@ -20,9 +20,21 @@ internal sealed class AutoTranslateRunner
 {
     public static readonly string[] SupportedEngines = { "llamacpp", "ollama", "lmstudio", "libretranslate", "nllb-serve", "nllb-api" };
 
+    /// <summary>
+    /// Engines that build their request from an editable prompt, i.e. the ones
+    /// <c>--translate-prompt</c> can steer. The rest (LibreTranslate, NLLB) are translation
+    /// services with no prompt at all.
+    /// </summary>
+    public static readonly string[] PromptEngines = { "llamacpp", "ollama", "lmstudio" };
+
+    /// <summary>File extensions that make <c>--translate-prompt</c> a file path rather than inline text.</summary>
+    private static readonly string[] PromptFileExtensions = { ".txt", ".prompt", ".md" };
+
     private readonly ConversionOptions _options;
     private readonly IAutoTranslator _translator;
     private readonly LlamaCppModel? _llamaCppModel; // non-null = local server mode; start before first use
+    private readonly string _engine;
+    private readonly string? _prompt; // --translate-prompt, already read from file / unescaped
 
     /// <summary>The resolved local llama.cpp model, exposed for tests.</summary>
     internal LlamaCppModel? LlamaCppModel => _llamaCppModel;
@@ -54,11 +66,13 @@ internal sealed class AutoTranslateRunner
         }
     }
 
-    private AutoTranslateRunner(ConversionOptions options, IAutoTranslator translator, LlamaCppModel? llamaCppModel)
+    private AutoTranslateRunner(ConversionOptions options, IAutoTranslator translator, LlamaCppModel? llamaCppModel, string engine, string? prompt)
     {
         _options = options;
         _translator = translator;
         _llamaCppModel = llamaCppModel;
+        _engine = engine;
+        _prompt = prompt;
     }
 
     /// <summary>
@@ -69,10 +83,16 @@ internal sealed class AutoTranslateRunner
     /// </summary>
     public static AutoTranslateRunner Create(ConversionOptions options)
     {
-        var engine = string.IsNullOrWhiteSpace(options.TranslateEngine) ? "llamacpp" : options.TranslateEngine.Trim().ToLowerInvariant();
+        var engine = NormalizeEngine(options.TranslateEngine);
         var url = options.TranslateUrl?.Trim();
         var tools = Configuration.Settings.Tools;
         LlamaCppModel? llamaCppModel = null;
+        var prompt = ReadPromptOption(options.TranslatePrompt);
+        if (prompt != null && !SupportsPrompt(engine))
+        {
+            throw new InvalidOperationException(
+                $"--translate-prompt is not supported by translate engine '{engine}'. Use one of: {string.Join(", ", PromptEngines)}.");
+        }
 
         if (options.Verbose)
         {
@@ -82,7 +102,7 @@ internal sealed class AutoTranslateRunner
         IAutoTranslator translator;
         switch (engine)
         {
-            case "llamacpp" or "llama.cpp" or "llama":
+            case "llamacpp":
                 translator = new LlamaCppTranslate();
                 if (!string.IsNullOrEmpty(url))
                 {
@@ -106,6 +126,10 @@ internal sealed class AutoTranslateRunner
                 {
                     tools.OllamaModel = options.TranslateModel.Trim();
                 }
+                if (prompt != null)
+                {
+                    tools.OllamaPrompt = prompt;
+                }
                 break;
             case "lmstudio":
                 translator = new LmStudioTranslate();
@@ -113,6 +137,10 @@ internal sealed class AutoTranslateRunner
                 if (!string.IsNullOrWhiteSpace(options.TranslateModel))
                 {
                     tools.LmStudioModel = options.TranslateModel.Trim();
+                }
+                if (prompt != null)
+                {
+                    tools.LmStudioPrompt = prompt;
                 }
                 break;
             case "libretranslate":
@@ -141,7 +169,142 @@ internal sealed class AutoTranslateRunner
                     $"Translate engine '{options.TranslateEngine}' is not supported. Use one of: {string.Join(", ", SupportedEngines)}.");
         }
 
-        return new AutoTranslateRunner(options, translator, llamaCppModel);
+        var runner = new AutoTranslateRunner(options, translator, llamaCppModel, engine, prompt);
+        runner.ApplyPromptOverride();
+        return runner;
+    }
+
+    /// <summary>Canonical engine id: empty means the default (llamacpp), and llama.cpp/llama are aliases for it.</summary>
+    internal static string NormalizeEngine(string? engine)
+    {
+        var name = string.IsNullOrWhiteSpace(engine) ? "llamacpp" : engine.Trim().ToLowerInvariant();
+        return name is "llama.cpp" or "llama" ? "llamacpp" : name;
+    }
+
+    /// <summary>True when the engine builds its request from an editable prompt (see <see cref="PromptEngines"/>).</summary>
+    public static bool SupportsPrompt(string? engine)
+    {
+        return PromptEngines.Contains(NormalizeEngine(engine));
+    }
+
+    /// <summary>
+    /// Resolves the <c>--translate-prompt</c> value to the prompt text, or null when the option
+    /// was not given. A value ending in <c>.txt</c>/<c>.prompt</c>/<c>.md</c>, or naming a file
+    /// that exists, is read from disk - completion templates are multi-line and a shell cannot
+    /// always pass those as one argument. Inline text gets <c>\n</c>, <c>\r</c>, <c>\t</c> and
+    /// <c>\\</c> unescaped for the same reason.
+    /// </summary>
+    internal static string? ReadPromptOption(string? value)
+    {
+        if (value == null)
+        {
+            return null;
+        }
+
+        var trimmed = value.Trim();
+        if (trimmed.Length == 0)
+        {
+            throw new InvalidOperationException("--translate-prompt is empty. Pass the prompt text or the path to a text file.");
+        }
+
+        var looksLikeFile = PromptFileExtensions.Any(e => trimmed.EndsWith(e, StringComparison.OrdinalIgnoreCase)) &&
+                            !trimmed.Contains('\n') && !trimmed.Contains('\r');
+        var exists = FileExistsSafe(trimmed);
+        if (looksLikeFile || exists)
+        {
+            if (!exists)
+            {
+                throw new InvalidOperationException($"Translate prompt file not found: {trimmed}");
+            }
+
+            var fromFile = File.ReadAllText(trimmed).Trim();
+            if (fromFile.Length == 0)
+            {
+                throw new InvalidOperationException($"Translate prompt file is empty: {trimmed}");
+            }
+
+            return fromFile;
+        }
+
+        return Unescape(value.Trim('\r', '\n'));
+    }
+
+    private static bool FileExistsSafe(string path)
+    {
+        try
+        {
+            return File.Exists(path);
+        }
+        catch (Exception)
+        {
+            // A prompt sentence is not a path - too long, invalid characters, ...
+            return false;
+        }
+    }
+
+    private static string Unescape(string text)
+    {
+        if (!text.Contains('\\'))
+        {
+            return text;
+        }
+
+        var sb = new System.Text.StringBuilder(text.Length);
+        for (var i = 0; i < text.Length; i++)
+        {
+            if (text[i] != '\\' || i == text.Length - 1)
+            {
+                sb.Append(text[i]);
+                continue;
+            }
+
+            i++;
+            switch (text[i])
+            {
+                case 'n': sb.Append('\n'); break;
+                case 'r': sb.Append('\r'); break;
+                case 't': sb.Append('\t'); break;
+                case '\\': sb.Append('\\'); break;
+                default: sb.Append('\\').Append(text[i]); break;
+            }
+        }
+
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// Writes <c>--translate-prompt</c> into the settings field the selected engine reads.
+    /// For llama.cpp that means <em>both</em> prompt fields: the engine prefers the per-model
+    /// template (<c>Tools.LlamaCppModelPrompt</c>, set from the curated model by
+    /// <see cref="LlamaCppServerManager.ApplyTranslatePromptSettings"/> before every file), so
+    /// setting only the plain prompt would be silently ignored for MiLMMT/Hy-MT2 and friends.
+    /// Called again after each ApplyTranslatePromptSettings for that reason.
+    /// </summary>
+    /// <summary>
+    /// Prompt/sampling settings for the upcoming file. The engine reads the per-model
+    /// prompt/sampling (e.g. Hy-MT2's or MiLMMT-46's trained-in prompt) from settings, which
+    /// nothing in a console run sets otherwise - and an explicit <c>--translate-prompt</c>
+    /// overrides it again. Internal so the precedence can be tested without a llama-server.
+    /// </summary>
+    internal void ApplyPromptSettings()
+    {
+        if (_llamaCppModel != null)
+        {
+            LlamaCppServerManager.ApplyTranslatePromptSettings(_llamaCppModel);
+        }
+
+        ApplyPromptOverride();
+    }
+
+    private void ApplyPromptOverride()
+    {
+        if (_prompt == null || _engine != "llamacpp")
+        {
+            return; // ollama/lmstudio are set once in Create; nothing overwrites them later
+        }
+
+        Configuration.Settings.Tools.LlamaCppPrompt = _prompt;
+        Configuration.Settings.Tools.LlamaCppModelPrompt = _prompt;
     }
 
     /// <summary>
@@ -150,12 +313,10 @@ internal sealed class AutoTranslateRunner
     /// </summary>
     public async Task TranslateAsync(Subtitle subtitle, CancellationToken cancellationToken)
     {
+        ApplyPromptSettings();
+
         if (_llamaCppModel != null)
         {
-            // The engine reads the per-model prompt/sampling (e.g. Hy-MT2's or MiLMMT-46's
-            // trained-in prompt) from settings, which nothing in a console run sets otherwise.
-            LlamaCppServerManager.ApplyTranslatePromptSettings(_llamaCppModel);
-
             if (!LlamaCppServerManager.IsServerRunning)
             {
                 if (!_options.Quiet)

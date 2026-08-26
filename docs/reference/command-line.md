@@ -303,6 +303,7 @@ Translated output is named with the target language code — `way.srt --translat
 | `--translate-engine:<engine>` | `llamacpp` (default) \| `ollama` \| `lmstudio` \| `libretranslate` \| `nllb-serve` \| `nllb-api` |
 | `--translate-url:<url>` | Endpoint of an already-running translate server. For `llamacpp` this skips the local server auto-start; a bare `host:port` is completed to `/v1/chat/completions`. |
 | `--translate-model:<model>` | `ollama`/`lmstudio`: model name. `llamacpp`: a `.gguf` file name from the models folder or a full path (default: the first installed translate model). |
+| `--translate-prompt:<text\|file>` | Prompt for `llamacpp` / `ollama` / `lmstudio` — inline text or a path to a text file. See [Custom prompt](#custom-prompt) below. |
 
 **llama.cpp (default engine).** With no `--translate-url`, seconv runs a local `llama-server` for you: it looks for the binary in Subtitle Edit's data folder (`llama.cpp` next to `seconv`, then `%AppData%\Subtitle Edit\llama.cpp` / `~/Library/Application Support/Subtitle Edit/llama.cpp` / `~/.config/Subtitle Edit/llama.cpp`) and falls back to `llama-server` on `PATH`. The server is started on a free localhost port with the model's correct chat-template flags and stopped again when seconv exits. Models resolve against the data folder's `models` subfolder.
 
@@ -329,13 +330,54 @@ seconv movie.srt subrip --translate-to:da --translate-engine:ollama --translate-
 seconv movie.sup subrip --ocr-engine:tesseract --ocr-language:eng --translate-to:de
 ```
 
+#### Custom prompt
+
+`--translate-prompt` is the command-line equivalent of the prompt field the GUI offers for the
+local-LLM engines (see [Prompts: chat models and completion models](../features/auto-translate.md#prompts-chat-models-and-completion-models)).
+It applies to `llamacpp`, `ollama` and `lmstudio`; the translation services (`libretranslate`,
+`nllb-serve`, `nllb-api`) have no prompt, and passing it to them is an error rather than a silent
+no-op.
+
+The same placeholders as in the GUI are substituted: `{0}` = source language, `{1}` = target
+language (both as English names, e.g. `English` / `German`). A prompt that also contains `{2}` is a
+*completion template*: the subtitle text is placed at `{2}` and the filled-in block is sent as-is,
+which is what raw-completion translation models such as MiLMMT-46 are trained on.
+
+The value is either inline text or the path to a text file. A value that names an existing file, or
+that ends in `.txt` / `.prompt` / `.md`, is read from disk — the practical way to pass a multi-line
+completion template. In inline text, `\n` (also `\r`, `\t`, `\\`) is unescaped, so a short template
+still fits on one command line.
+
+```bash
+# Inline instruction prompt
+seconv movie.srt subrip --translate-to:de \
+  --translate-prompt:"Translate from {0} to {1}. Keep the line breaks. Use informal address. Output only the translation:"
+
+# Completion template, inline
+seconv movie.srt subrip --translate-to:da --translate-prompt:"Translate this from {0} to {1}:\n{0}: {2}\n{1}:"
+
+# The same, from a file (recommended for anything multi-line)
+seconv movie.srt subrip --translate-to:da --translate-prompt:milmmt.prompt
+
+# Ollama / LM Studio take the same option
+seconv movie.srt subrip --translate-to:da --translate-engine:ollama --translate-model:gemma2 \
+  --translate-prompt:my-prompt.txt
+```
+
+Precedence for `llamacpp`, highest first: `--translate-prompt`, then a curated model's own trained
+prompt (MiLMMT-46, Hy-MT2 — applied automatically when that model is selected), then
+`tools.llamaCppPrompt` from a `--settings` file, then the built-in default. `--translate-prompt`
+deliberately overrides the curated template too: an option given on the command line must never be
+a no-op. `ollama` and `lmstudio` have no per-model template, so it is simply
+`--translate-prompt` > `--settings` > built-in default.
+
 ### Templates / replacements
 
 | Option | Description |
 |---|---|
 | `--multiple-replace:<path>` | Multiple-replace rules applied per paragraph after operations. Accepts the legacy SE *MultipleSearchAndReplaceGroups* XML **and** the file the SE5 GUI exports from *Tools → Multiple replace → export* — either `.template` (JSON) or `.csv`. Supports case-insensitive, `CaseSensitive`, and `RegularExpression` rules; only active rules are applied. The format is chosen by extension, then by content |
 | `--custom-format:<path.xml>` | SE *CustomFormatItem* XML (use with `--format customtext`) |
-| `--settings:<path.json>` | JSON file overlaying `Configuration.Settings` (general / tools / removeTextForHearingImpaired) plus image-output styling (exportImages). Optional `profiles` map for named overlays |
+| `--settings:<path.json>` | JSON file overlaying `Configuration.Settings` (general / tools / removeTextForHearingImpaired) plus image-output styling (exportImages). Optional `profiles` map for named overlays. The `tools` section also carries the auto-translate prompts (`llamaCppPrompt`, `ollamaPrompt`, `lmStudioPrompt`), so a `profiles` entry can hold a per-target-language prompt |
 | `--profile:<name>` | Selects a named overlay from the settings file's `profiles` map. Requires `--settings` |
 
 #### Multiple-replace rule files

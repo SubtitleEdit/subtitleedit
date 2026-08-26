@@ -159,6 +159,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [Description("Translate model: ollama/lmstudio model name, or llamacpp .gguf file name/path (default: first downloaded translate model)")]
         public string? TranslateModel { get; init; }
 
+        [CommandOption("--translate-prompt|--translateprompt")]
+        [Description("Prompt for llamacpp/ollama/lmstudio: inline text (\\n = line break) or a path to a text file; {0}=source language, {1}=target language, {2}=the text (completion-format models)")]
+        public string? TranslatePrompt { get; init; }
+
         [CommandOption("--offset")]
         [Description("Offset time (hh:mm:ss:ms)")]
         public string? Offset { get; init; }
@@ -440,9 +444,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 (!string.IsNullOrWhiteSpace(settings.TranslateFrom) ||
                  !string.IsNullOrWhiteSpace(settings.TranslateEngine) ||
                  !string.IsNullOrWhiteSpace(settings.TranslateUrl) ||
-                 !string.IsNullOrWhiteSpace(settings.TranslateModel)))
+                 !string.IsNullOrWhiteSpace(settings.TranslateModel) ||
+                 !string.IsNullOrWhiteSpace(settings.TranslatePrompt)))
             {
-                return Fail(settings, "--translate-from/--translate-engine/--translate-url/--translate-model require --translate-to:<language>.");
+                return Fail(settings, "--translate-from/--translate-engine/--translate-url/--translate-model/--translate-prompt require --translate-to:<language>.");
             }
 
             if (!string.IsNullOrWhiteSpace(settings.TranslateEngine) &&
@@ -453,6 +458,29 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                     settings,
                     $"Translate engine '{settings.TranslateEngine}' is not supported (pass via --translate-engine). " +
                     $"Use one of: {string.Join(", ", AutoTranslateRunner.SupportedEngines)}.");
+            }
+
+            // --translate-prompt only means something to the LLM engines; the translation
+            // services have no prompt at all. Fail instead of silently ignoring it, and read
+            // the prompt (it may be a file) up front so a typo'd path never costs a conversion.
+            if (!string.IsNullOrWhiteSpace(settings.TranslatePrompt))
+            {
+                if (!AutoTranslateRunner.SupportsPrompt(settings.TranslateEngine))
+                {
+                    return Fail(
+                        settings,
+                        $"--translate-prompt is not supported by translate engine '{settings.TranslateEngine}'. " +
+                        $"Use one of: {string.Join(", ", AutoTranslateRunner.PromptEngines)}.");
+                }
+
+                try
+                {
+                    AutoTranslateRunner.ReadPromptOption(settings.TranslatePrompt);
+                }
+                catch (Exception ex)
+                {
+                    return Fail(settings, ex.Message);
+                }
             }
 
             // Fail fast on a typo in --encoding so we don't silently substitute UTF-8 and
@@ -713,6 +741,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 TranslateEngine = settings.TranslateEngine,
                 TranslateUrl = settings.TranslateUrl,
                 TranslateModel = settings.TranslateModel,
+                TranslatePrompt = settings.TranslatePrompt,
                 TeletextOnly = settings.TeletextOnly,
                 TeletextOnlyPage = settings.TeletextOnlyPage,
                 Quiet = silent,
@@ -755,7 +784,8 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             {
                 var translateEngine = string.IsNullOrWhiteSpace(settings.TranslateEngine) ? "llamacpp" : settings.TranslateEngine.Trim().ToLowerInvariant();
                 var translateFrom = string.IsNullOrWhiteSpace(settings.TranslateFrom) ? "auto" : settings.TranslateFrom;
-                table.AddRow("Translate", $"{translateFrom} -> {settings.TranslateTo} ({translateEngine})");
+                var customPrompt = string.IsNullOrWhiteSpace(settings.TranslatePrompt) ? string.Empty : ", custom prompt";
+                table.AddRow("Translate", $"{translateFrom} -> {settings.TranslateTo} ({translateEngine}{customPrompt})");
             }
 
             if (settings.DeleteFirst.HasValue)
