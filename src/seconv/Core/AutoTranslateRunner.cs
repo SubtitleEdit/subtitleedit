@@ -30,6 +30,9 @@ internal sealed class AutoTranslateRunner
     /// <summary>File extensions that make <c>--translate-prompt</c> a file path rather than inline text.</summary>
     private static readonly string[] PromptFileExtensions = { ".txt", ".prompt", ".md" };
 
+    /// <summary>Refuse to read a whole video/model file as a prompt when a path points at one.</summary>
+    private const long MaxPromptFileBytes = 256 * 1024;
+
     private readonly ConversionOptions _options;
     private readonly IAutoTranslator _translator;
     private readonly LlamaCppModel? _llamaCppModel; // non-null = local server mode; start before first use
@@ -207,14 +210,23 @@ internal sealed class AutoTranslateRunner
             throw new InvalidOperationException("--translate-prompt is empty. Pass the prompt text or the path to a text file.");
         }
 
-        var looksLikeFile = PromptFileExtensions.Any(e => trimmed.EndsWith(e, StringComparison.OrdinalIgnoreCase)) &&
-                            !trimmed.Contains('\n') && !trimmed.Contains('\r');
         var exists = FileExistsSafe(trimmed);
-        if (looksLikeFile || exists)
+        if (exists || LooksLikePromptFile(trimmed))
         {
             if (!exists)
             {
-                throw new InvalidOperationException($"Translate prompt file not found: {trimmed}");
+                throw new InvalidOperationException(
+                    $"Translate prompt file not found: {trimmed}. " +
+                    "A --translate-prompt value with no spaces, or ending in .txt/.prompt/.md, is read as a file path; " +
+                    "prompt text passed inline has to contain a space or a {0}/{1}/{2} placeholder.");
+            }
+
+            var size = new FileInfo(trimmed).Length;
+            if (size > MaxPromptFileBytes)
+            {
+                throw new InvalidOperationException(
+                    $"Translate prompt file is too large ({size / 1024} KB, max {MaxPromptFileBytes / 1024} KB): {trimmed}. " +
+                    "--translate-prompt takes the prompt itself, not a data file.");
             }
 
             var fromFile = File.ReadAllText(trimmed).Trim();
@@ -227,6 +239,26 @@ internal sealed class AutoTranslateRunner
         }
 
         return Unescape(value.Trim('\r', '\n'));
+    }
+
+    /// <summary>
+    /// Whether a value that is not an existing file was still meant as one - a typo'd path must
+    /// fail loudly instead of being handed to the model as the prompt, which silently translates
+    /// a whole batch under "prompts/mine.tmpl". A real prompt is a sentence: it contains a space,
+    /// a line break, or at least a <c>{0}</c>/<c>{1}</c>/<c>{2}</c> placeholder. Anything else -
+    /// or anything with a prompt-file extension - is treated as a path.
+    /// </summary>
+    private static bool LooksLikePromptFile(string value)
+    {
+        if (value.Any(char.IsWhiteSpace))
+        {
+            // Spaces or line breaks: only a prompt-file extension still makes it a path
+            // ("my prompts/milmmt.txt"), never a sentence.
+            return !value.Contains('\n') && !value.Contains('\r') && !value.Contains('{') &&
+                   PromptFileExtensions.Any(e => value.EndsWith(e, StringComparison.OrdinalIgnoreCase));
+        }
+
+        return !value.Contains('{');
     }
 
     private static bool FileExistsSafe(string path)

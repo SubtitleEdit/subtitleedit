@@ -302,13 +302,64 @@ public class AutoTranslateRunnerTest : IDisposable
         }
     }
 
-    // A .txt/.prompt/.md value is a path even when it does not exist - saying so beats sending
-    // "my-prompt.txt" to the model as the prompt.
-    [Fact]
-    public void ReadPromptOption_MissingPromptFile_Throws()
+    // A path-shaped value is a path even when it does not exist - saying so beats sending
+    // "prompts/mine.tmpl" to the model as the prompt, which would silently translate a whole
+    // batch under a garbage instruction.
+    [Theory]
+    [InlineData("no-such-prompt.txt")]      // prompt-file extension
+    [InlineData("prompts/mine.tmpl")]       // any extension, no spaces
+    [InlineData("./missing")]               // no extension at all
+    [InlineData("my prompts/milmmt.txt")]   // spaces in the path, prompt-file extension
+    public void ReadPromptOption_MissingPromptFile_Throws(string value)
     {
-        var ex = Assert.Throws<InvalidOperationException>(() => AutoTranslateRunner.ReadPromptOption("no-such-prompt.txt"));
+        var ex = Assert.Throws<InvalidOperationException>(() => AutoTranslateRunner.ReadPromptOption(value));
         Assert.Contains("not found", ex.Message);
+    }
+
+    // ... while anything sentence-shaped stays inline text, placeholders included.
+    [Theory]
+    [InlineData("Translate from {0} to {1}:")]
+    [InlineData("{0}->{1}:")]                       // terse, no spaces, but has placeholders
+    [InlineData("Translate this. Keep line breaks.")]
+    public void ReadPromptOption_SentenceShapedValue_StaysInline(string value)
+    {
+        Assert.Equal(value, AutoTranslateRunner.ReadPromptOption(value));
+    }
+
+    [Fact]
+    public void ReadPromptOption_ExistingFile_WinsOverAnyShape()
+    {
+        // No extension and no spaces, but it exists - read it.
+        var path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName().Replace(".", string.Empty));
+        File.WriteAllText(path, "Translate from {0} to {1}:");
+        try
+        {
+            Assert.Equal("Translate from {0} to {1}:", AutoTranslateRunner.ReadPromptOption(path));
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [Fact]
+    public void ReadPromptOption_HugeFile_Throws()
+    {
+        var path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".txt");
+        using (var fs = File.Create(path))
+        {
+            fs.SetLength(300 * 1024); // e.g. --translate-prompt pointed at a data file by mistake
+        }
+
+        try
+        {
+            var ex = Assert.Throws<InvalidOperationException>(() => AutoTranslateRunner.ReadPromptOption(path));
+            Assert.Contains("too large", ex.Message);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
     }
 
     [Fact]
