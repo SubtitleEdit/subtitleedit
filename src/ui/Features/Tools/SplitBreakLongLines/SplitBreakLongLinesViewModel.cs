@@ -123,7 +123,7 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
 
                     // Like SE4: a subtitle is not cut into several events when re-wrapping its
                     // lines is enough to make it fit - the rebalance pass below does that.
-                    if (RebalanceLongLines && CanBeFixedByRebalancing(item.Text, mergeLinesShorterThan))
+                    if (RebalanceLongLines && CanBeFixedByRebalancing(item.Text, SingleLineMaxLength, MaxNumberOfLines, mergeLinesShorterThan, _languageCode))
                     {
                         AllSubtitlesFixed.Add(item);
                         continue;
@@ -241,15 +241,49 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
         }
     }
 
-    private bool CanBeFixedByRebalancing(string? text, int mergeLinesShorterThan)
+    /// <summary>
+    /// True when re-wrapping a subtitle's own lines makes it fit, so it does not have to be cut
+    /// into several events.
+    /// </summary>
+    public static bool CanBeFixedByRebalancing(string? text, int singleLineMaxLength, int maxNumberOfLines, int mergeLinesShorterThan, string languageCode)
     {
-        if (!HasLineTooLong(text, SingleLineMaxLength, MaxNumberOfLines))
+        if (!HasLineTooLong(text, singleLineMaxLength, maxNumberOfLines))
         {
             return true;
         }
 
-        var rebalanced = Utilities.AutoBreakLine(text ?? string.Empty, SingleLineMaxLength, mergeLinesShorterThan, _languageCode);
-        return !HasLineTooLong(rebalanced, SingleLineMaxLength, MaxNumberOfLines);
+        // SE4 left an existing line break alone when it ended a sentence and cut the subtitle
+        // there instead of re-wrapping across it (#11476). The two halves are usually two
+        // speakers, so pulling them onto one line - "Und, war ich in der Kantine? Nein." -
+        // is wrong no matter how well the result fits.
+        if (HasSentenceEndingLineBreak(text))
+        {
+            return false;
+        }
+
+        var rebalanced = Utilities.AutoBreakLine(text ?? string.Empty, singleLineMaxLength, mergeLinesShorterThan, languageCode);
+        return !HasLineTooLong(rebalanced, singleLineMaxLength, maxNumberOfLines);
+    }
+
+    private const string SentenceEndings = ".!?؟";
+
+    /// <summary>
+    /// True when a line break follows sentence-ending punctuation, i.e. the break is where the
+    /// author ended a sentence rather than where the text happened to wrap.
+    /// </summary>
+    public static bool HasSentenceEndingLineBreak(string? text)
+    {
+        var lines = HtmlUtil.RemoveHtmlTags(text ?? string.Empty, true).SplitToLines();
+        for (var index = 0; index < lines.Count - 1; index++)
+        {
+            var line = lines[index].TrimEnd();
+            if (line.Length > 0 && SentenceEndings.Contains(line[^1]))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static int GetPlainLineCount(string? text)
