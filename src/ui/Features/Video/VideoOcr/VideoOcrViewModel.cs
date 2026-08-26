@@ -603,17 +603,10 @@ public partial class VideoOcrViewModel : ObservableObject
 
     private async Task ExtractSingleFrame(string outputFileName, double positionSeconds, CancellationToken cancellationToken)
     {
-        var scale = string.Empty;
-        var maxImageWidth = Se.Settings.Video.VideoOcr.MaxImageWidth;
-        if (maxImageWidth > 0 && SelectionWidth > maxImageWidth)
-        {
-            scale = $",scale={maxImageWidth}:-2";
-        }
-
         // -ss before -i: seek in the demuxer, so a test frame late in a long video is still fast.
         var arguments = $"-nostdin -y -ss {positionSeconds.ToString("0.###", CultureInfo.InvariantCulture)} " +
                         $"-i \"{_videoFileName}\" " +
-                        $"-vf \"crop={SelectionWidth}:{SelectionHeight}:{SelectionX}:{SelectionY}{scale}\" " +
+                        $"-vf \"{GetCropAndScaleFilter()}\" " +
                         $"-frames:v 1 -q:v 2 \"{outputFileName}\"";
 
         Se.WriteToolsLog("Video OCR: extracting test frame - ffmpeg " + arguments);
@@ -709,6 +702,33 @@ public partial class VideoOcrViewModel : ObservableObject
 
             var mergedLines = VideoOcrLineBuilder.Build(groups, FramesPerSecond, TextSimilarityPercent, MaxGapMs, MinDurationMs);
 
+            var lastRefineUpdate = 0L;
+            await VideoOcrTimingRefiner.RefineAsync(
+                mergedLines,
+                new VideoOcrTimingRefiner.Context
+                {
+                    VideoFileName = _videoFileName,
+                    FramesFolder = framesFolder,
+                    CoarseFps = FramesPerSecond,
+                    BrightnessMinimum = BrightnessMinimum,
+                    ImageSimilarityPercent = Se.Settings.Video.VideoOcr.ImageSimilarityPercent,
+                    CropAndScaleFilter = GetCropAndScaleFilter(),
+                },
+                (current, total) =>
+                {
+                    var now = Environment.TickCount64;
+                    if (now - lastRefineUpdate > 200 || current == total)
+                    {
+                        lastRefineUpdate = now;
+                        Dispatcher.UIThread.Post(() =>
+                        {
+                            ProgressText = string.Format(Se.Language.Video.VideoOcr.RefiningTimingXY, current, total);
+                            ProgressValue = total == 0 ? 0 : current * 100.0 / total;
+                        });
+                    }
+                },
+                cancellationToken);
+
             var positionTag = string.Empty;
             if (AddAssaPositionTag)
             {
@@ -780,7 +800,9 @@ public partial class VideoOcrViewModel : ObservableObject
         }
     }
 
-    private async Task ExtractFrames(string framesFolder, CancellationToken cancellationToken)
+    /// <summary>The crop (and optional downscale) part of the extraction filter - shared by
+    /// the scan, the test frame and the timing refinement so they all see the same pixels.</summary>
+    private string GetCropAndScaleFilter()
     {
         var scale = string.Empty;
         var maxImageWidth = Se.Settings.Video.VideoOcr.MaxImageWidth;
@@ -789,12 +811,17 @@ public partial class VideoOcrViewModel : ObservableObject
             scale = $",scale={maxImageWidth}:-2";
         }
 
+        return $"crop={SelectionWidth}:{SelectionHeight}:{SelectionX}:{SelectionY}{scale}";
+    }
+
+    private async Task ExtractFrames(string framesFolder, CancellationToken cancellationToken)
+    {
         // JPEG (near-lossless q=2) instead of PNG: a long video at 5 fps produces tens of
         // thousands of frames, and PNG would need gigabytes of temp disk space.
         var outputPattern = Path.Combine(framesFolder, "img%06d.jpg");
         var arguments = $"-nostdin -y -i \"{_videoFileName}\" " +
                         $"-vf \"fps={FramesPerSecond.ToString(CultureInfo.InvariantCulture)}," +
-                        $"crop={SelectionWidth}:{SelectionHeight}:{SelectionX}:{SelectionY}{scale}\" " +
+                        $"{GetCropAndScaleFilter()}\" " +
                         $"-q:v 2 -start_number 0 \"{outputPattern}\"";
 
         _extractedFrames = 0;
@@ -936,18 +963,48 @@ public partial class VideoOcrViewModel : ObservableObject
                 if (group != null)
                 {
                     group.Text = VideoOcrLineBuilder.CleanOcrResult(p.Text);
+                    group.Confidence = p.Confidence;
                     reportProgress();
                     addPreviewLine(group);
                 }
             });
 
+            // Black out everything below the brightness minimum before recognition, like
+            // VideOCR does: Paddle's detector otherwise picks up darker scene text (shirt
+            // prints, credits) and prepends it to subtitles. Only for the Paddle path -
+            // vision/VLM engines measured better on the natural frames.
+            var ocrFileNames = ocrGroups.Select(g => g.RepresentativeFileName).ToList();
+            if (BrightnessMinimum > 0 && ocrGroups.Count > 0)
+            {
+                var maskedFolder = Path.Combine(
+                    Path.GetDirectoryName(ocrGroups[0].RepresentativeFileName) ?? string.Empty, "masked");
+                Directory.CreateDirectory(maskedFolder);
+                Parallel.For(0, ocrGroups.Count,
+                    new ParallelOptions { CancellationToken = cancellationToken, MaxDegreeOfParallelism = Environment.ProcessorCount },
+                    i =>
+                    {
+                        var source = ocrGroups[i].RepresentativeFileName;
+                        var target = Path.Combine(maskedFolder, Path.GetFileName(source));
+                        if (VideoOcrFrameGrouper.WriteMaskedCopy(source, target, BrightnessMinimum))
+                        {
+                            ocrFileNames[i] = target;
+                        }
+                    });
+            }
+
             // The frames are already image files on disk, so pass them by file name -
             // one batch, no per-image decode/encode, memory stays flat.
             var batch = ocrGroups
-                .Select((g, i) => new PaddleOcrBatchInput { Index = i, SourceFileName = g.RepresentativeFileName })
+                .Select((g, i) => new PaddleOcrBatchInput { Index = i, SourceFileName = ocrFileNames[i] })
                 .ToList();
 
-            var paddleOcr = new PaddleOcr();
+            var paddleOcr = new PaddleOcr
+            {
+                // Low-confidence regions in a video frame are nearly always background
+                // clutter (scene text, logos) rather than subtitle text - same cut VideOCR
+                // applies. Only for Video OCR; the subtitle-bitmap OCR window keeps everything.
+                MinConfidencePercent = 75,
+            };
             await paddleOcr.OcrBatch(engineType, batch, language, mode, progress, cancellationToken);
             if (!string.IsNullOrEmpty(paddleOcr.Error) && ocrGroups.All(p => string.IsNullOrEmpty(p.Text)))
             {
@@ -991,18 +1048,24 @@ public partial class VideoOcrViewModel : ObservableObject
             // scan. RunLlmOcr's fail-fast-on-first-frame check does nothing here (there is no
             // error string to report) but the loop, progress and preview are the same.
             var languageCode = SelectedAppleVisionLanguage?.Code ?? string.Empty;
+            var brightnessMinimum = BrightnessMinimum;
             await RunLlmOcr(ocrGroups,
-                group => Task.Run(() => OcrFrameWithAppleVision(group, languageCode, cancellationToken), cancellationToken),
+                group => Task.Run(() => OcrFrameWithAppleVision(group, languageCode, brightnessMinimum, cancellationToken), cancellationToken),
                 () => string.Empty, reportProgress, addPreviewLine, cancellationToken);
         }
     }
 
-    private static string OcrFrameWithAppleVision(VideoOcrFrameGroup group, string languageCode, CancellationToken cancellationToken)
+    private static string OcrFrameWithAppleVision(VideoOcrFrameGroup group, string languageCode, int brightnessMinimum, CancellationToken cancellationToken)
     {
         using var bitmap = SKBitmap.Decode(group.RepresentativeFileName);
-        return bitmap == null
-            ? string.Empty
-            : AppleVisionOcr.Ocr(bitmap, languageCode, fast: false, cancellationToken);
+        if (bitmap == null)
+        {
+            return string.Empty;
+        }
+
+        var observations = AppleVisionOcr.OcrObservations(bitmap, languageCode, fast: false, cancellationToken);
+        var kept = VideoOcrObservationFilter.FilterByBrightness(observations, bitmap, brightnessMinimum);
+        return AppleVisionTextLayout.Compose(kept);
     }
 
     /// <summary>

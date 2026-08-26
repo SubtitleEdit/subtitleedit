@@ -19,6 +19,16 @@ namespace Nikse.SubtitleEdit.Features.Ocr;
 public partial class PaddleOcr
 {
     public string Error { get; set; }
+
+    /// <summary>
+    /// Detected text regions with a recognition confidence below this percentage are
+    /// dropped from the result (0 = keep everything). Off by default so subtitle-bitmap
+    /// OCR is unchanged; Video OCR turns it on, where low-confidence regions are almost
+    /// always background clutter (scene text, logos, edge junk) rather than subtitle text.
+    /// </summary>
+    public int MinConfidencePercent { get; set; }
+
+    private bool _batchRightToLeft;
     private List<PaddleOcrResultParser.TextDetectionResult> _textDetectionResults = new();
     private IProgress<PaddleOcrBatchProgress>? _batchProgress;
     private string _batchFileName = string.Empty;
@@ -309,6 +319,7 @@ public partial class PaddleOcr
     {
         var detName = GetDetectionName(language, mode);
         var recName = GetRecName(language, mode);
+        _batchRightToLeft = ArabicLanguageCodes.Contains(language);
         _batchProgress = progress;
         var folder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
         Directory.CreateDirectory(folder);
@@ -573,7 +584,8 @@ public partial class PaddleOcr
             var p = new PaddleOcrBatchProgress
             {
                 Index = input.Index,
-                Text = MakeResult(_textDetectionResults),
+                Text = MakeResult(_textDetectionResults, out var resultConfidence),
+                Confidence = resultConfidence,
                 Item = input.Item,
             };
             _batchProgress?.Report(p);
@@ -651,11 +663,14 @@ public partial class PaddleOcr
             var results = ParsePaddleOcrJsonContent(json, jsonPath);
             Se.WriteToolsLog(
                 $"Paddle OCR result {reportedStems.Count} (line index {input.Index}) ready at {_batchStopwatch.Elapsed.TotalSeconds:F1}s");
+            var resultConfidence = 0.0;
+            var text = results.Count > 0 ? MakeResult(results, out resultConfidence) : string.Empty;
             _batchProgress?.Report(new PaddleOcrBatchProgress
             {
                 Index = input.Index,
                 Item = input.Item,
-                Text = results.Count > 0 ? MakeResult(results) : string.Empty,
+                Text = text,
+                Confidence = resultConfidence,
             });
         }
     }
@@ -1011,8 +1026,39 @@ public partial class PaddleOcr
 
     private string MakeResult(List<PaddleOcrResultParser.TextDetectionResult> textDetectionResults)
     {
+        return MakeResult(textDetectionResults, out _);
+    }
+
+    internal string MakeResult(List<PaddleOcrResultParser.TextDetectionResult> textDetectionResults, out double confidence)
+    {
+        var kept = textDetectionResults;
+        if (MinConfidencePercent > 0)
+        {
+            // A confidence of 0 means "not reported" (older output formats) - never drop those.
+            kept = textDetectionResults
+                .Where(p => p.Confidence <= 0 || p.Confidence * 100.0 >= MinConfidencePercent)
+                .ToList();
+
+            // The cut removes low-confidence clutter *next to* confident text. When nothing
+            // clears the bar there is no confident text to prefer - dropping everything would
+            // erase a short real subtitle ("Wait.") that the engine merely hesitated on, so
+            // keep the frame's regions and let the low average confidence weigh the vote down.
+            if (kept.Count == 0)
+            {
+                kept = textDetectionResults;
+            }
+        }
+
+        if (kept.Count == 0)
+        {
+            confidence = 0;
+            return string.Empty;
+        }
+
+        confidence = kept.Average(p => p.Confidence <= 0 ? 1.0 : p.Confidence);
+
         var sb = new StringBuilder();
-        var lines = MakeLines(textDetectionResults);
+        var lines = MakeLines(kept, _batchRightToLeft);
         foreach (var line in lines)
         {
             var text = string.Join(' ', line.Select(p => p.Text));
@@ -1022,40 +1068,74 @@ public partial class PaddleOcr
         return sb.ToString().Trim().Replace(" " + Environment.NewLine, Environment.NewLine);
     }
 
-    private List<List<PaddleOcrResultParser.TextDetectionResult>> MakeLines(
-        List<PaddleOcrResultParser.TextDetectionResult> input)
+    /// <summary>
+    /// Groups the detected text boxes into visual lines by vertical overlap (two boxes
+    /// share a line when either box's vertical midpoint falls inside the other), then
+    /// orders lines top-to-bottom and the words within a line left-to-right - or
+    /// right-to-left for Arabic-script languages, where the first word of the sentence
+    /// is the rightmost box.
+    /// </summary>
+    internal static List<List<PaddleOcrResultParser.TextDetectionResult>> MakeLines(
+        List<PaddleOcrResultParser.TextDetectionResult> input, bool rightToLeft)
     {
-        var result = new List<List<PaddleOcrResultParser.TextDetectionResult>>();
-        var heightAverage = input.Average(p => p.BoundingBox.Height);
-        var sorted = input.OrderBy(p => p.BoundingBox.Center.Y);
-        var line = new List<PaddleOcrResultParser.TextDetectionResult>();
-        PaddleOcrResultParser.TextDetectionResult? last = null;
-        foreach (var element in sorted)
+        var lines = new List<List<PaddleOcrResultParser.TextDetectionResult>>();
+        foreach (var element in input)
         {
-            if (last == null)
+            List<PaddleOcrResultParser.TextDetectionResult>? home = null;
+            foreach (var line in lines)
             {
-                line.Add(element);
+                if (IsOnSameLine(line[0].BoundingBox, element.BoundingBox))
+                {
+                    home = line;
+                    break;
+                }
+            }
+
+            if (home == null)
+            {
+                lines.Add(new List<PaddleOcrResultParser.TextDetectionResult> { element });
             }
             else
             {
-                if (element.BoundingBox.Center.Y > last.BoundingBox.TopLeft.Y + heightAverage)
-                {
-                    result.Add(line.OrderBy(p => p.BoundingBox.TopLeft.X).ToList());
-                    line = new List<PaddleOcrResultParser.TextDetectionResult>();
-                }
-
-                line.Add(element);
+                home.Add(element);
             }
-
-            last = element;
         }
 
-        if (line.Count > 0)
+        foreach (var line in lines)
         {
-            result.Add(line.OrderBy(p => p.BoundingBox.TopLeft.X).ToList());
+            line.Sort((a, b) => rightToLeft
+                ? b.BoundingBox.TopLeft.X.CompareTo(a.BoundingBox.TopLeft.X)
+                : a.BoundingBox.TopLeft.X.CompareTo(b.BoundingBox.TopLeft.X));
         }
 
-        return result;
+        lines.Sort((a, b) => MinY(a).CompareTo(MinY(b)));
+        return lines;
+    }
+
+    private static double MinY(List<PaddleOcrResultParser.TextDetectionResult> line)
+    {
+        var min = double.MaxValue;
+        foreach (var element in line)
+        {
+            var y = Math.Min(element.BoundingBox.TopLeft.Y, element.BoundingBox.TopRight.Y);
+            if (y < min)
+            {
+                min = y;
+            }
+        }
+
+        return min;
+    }
+
+    private static bool IsOnSameLine(PaddleOcrResultParser.BoundingBox a, PaddleOcrResultParser.BoundingBox b)
+    {
+        var aMin = Math.Min(a.TopLeft.Y, a.TopRight.Y);
+        var aMax = Math.Max(a.BottomLeft.Y, a.BottomRight.Y);
+        var bMin = Math.Min(b.TopLeft.Y, b.TopRight.Y);
+        var bMax = Math.Max(b.BottomLeft.Y, b.BottomRight.Y);
+        var aMid = (aMin + aMax) / 2.0;
+        var bMid = (bMin + bMax) / 2.0;
+        return (aMin < bMid && bMid < aMax) || (bMin < aMid && aMid < bMax);
     }
 
     private void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
@@ -1118,7 +1198,8 @@ public partial class PaddleOcr
                         {
                             Index = old.Index,
                             Item = old.Item,
-                            Text = MakeResult(_textDetectionResults),
+                            Text = MakeResult(_textDetectionResults, out var resultConfidence),
+                            Confidence = resultConfidence,
                         };
                         _textDetectionResults.Clear();
                         _batchProgress?.Report(progress);

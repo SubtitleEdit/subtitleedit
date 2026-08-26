@@ -2435,6 +2435,7 @@
       "noLinesFoundTitle": "No subtitles found",
       "noLinesFoundMessage": "No text was found in the scan area - try adjusting the scan area, engine, or brightness minimum.",
       "linesFoundX": "{0} lines found",
+      "refiningTimingXY": "Refining timing... {0}/{1}",
       "previewPosition": "Preview position",
       "unableToReadVideoTitle": "Unable to read video",
       "unableToReadVideoMessage": "Could not read video info from: {0}",
