@@ -967,6 +967,8 @@ public static partial class InitListViewAndEditBox
                 return;
             }
 
+            vm.InitializeEmptyEbuTeletextHeader();
+
             var subtitle =
                 FlowEditingView.CreateEmptyEbuSubtitle(
                     startTime);

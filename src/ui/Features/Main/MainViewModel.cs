@@ -21301,6 +21301,45 @@ public partial class MainViewModel :
         return _subtitle;
     }
 
+    internal void InitializeEmptyEbuTeletextHeader()
+    {
+        if (!IsFormatEbu || Subtitles.Count != 0)
+        {
+            return;
+        }
+
+        Ebu.EbuGeneralSubtitleInformation header;
+        if (!string.IsNullOrEmpty(_subtitle.Header) && _subtitle.Header.Length == 1024)
+        {
+            try
+            {
+                var encoding = Ebu.GetEncoding(_subtitle.Header.Substring(0, 3));
+                header = Ebu.ReadHeader(encoding.GetBytes(_subtitle.Header));
+            }
+            catch
+            {
+                header = new Ebu.EbuGeneralSubtitleInformation
+                {
+                    LanguageCode = "  ",
+                };
+            }
+        }
+        else
+        {
+            header = new Ebu.EbuGeneralSubtitleInformation
+            {
+                LanguageCode = "  ",
+            };
+        }
+
+        header.CodePageNumber = "850";
+        header.CharacterCodeTableNumber = "00";
+        header.DisplayStandardCode = "2";
+        _subtitle.Header = header.ToString();
+
+        Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight = true;
+    }
+
     public Subtitle GetUpdateSubtitleOriginal(bool subtractVideoOffset = false)
     {
         _subtitleOriginal ??= new Subtitle();
