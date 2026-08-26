@@ -340,6 +340,11 @@ public class VideoOcrWindow : Window
             Se.Language.Video.VideoOcr.MinDurationMs,
             UiUtil.MakeNumericUpDownInt(0, 10_000, 250, 120, vm, nameof(vm.MinDurationMs))));
         panel.Children.Add(UiUtil.MakeCheckBox(Se.Language.Video.VideoOcr.AddAssaPositionTag, vm, nameof(vm.AddAssaPositionTag)));
+        panel.Children.Add(UiUtil.MakeCheckBox(Se.Language.Video.VideoOcr.FixOcrErrors, vm, nameof(vm.DoFixOcrErrors)));
+        panel.Children.Add(MakeSettingRow(
+            Se.Language.Video.VideoOcr.Dictionary,
+            UiUtil.MakeComboBox(vm.Dictionaries, vm, nameof(vm.SelectedDictionary)).WithWidth(220)
+                .WithBindEnabled(nameof(vm.DoFixOcrErrors))));
 
         var scrollViewer = new ScrollViewer
         {
@@ -495,35 +500,63 @@ public class VideoOcrWindow : Window
             Width = new GridLength(90),
         });
 
-        // TableView has no cell editing, so the editable text column (OCR mistakes must stay
-        // fixable in place) becomes a borderless in-cell TextBox bound two-way.
+        // Text is edited in a dialog (context menu "Edit..." - multi-line texts do not edit
+        // comfortably inside a table row). The cell renders the item's FormattedText: the
+        // fix engine's per-word coloring (green = word known, red = unknown, same palette as
+        // the subtitle-bitmap OCR window) as lines arrive during OCR, plain themed text
+        // before that. Everything is bound (never captured), so container recycling stays
+        // safe - see the FuncDataTemplate recycling notes in NOcrTrainFontListTests.
         tableView.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Text,
-            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Width = new GridLength(1, GridUnitType.Star),
-            CellTemplate = new Avalonia.Controls.Templates.FuncDataTemplate<VideoOcrLineItem>((item, _) =>
-            {
-                if (item == null)
+            CellTemplate = new Avalonia.Controls.Templates.FuncDataTemplate<VideoOcrLineItem>((_, _) =>
+                new ContentControl
                 {
-                    return new TextBlock();
-                }
-
-                var textBox = new TextBox
-                {
-                    Background = Brushes.Transparent,
-                    BorderThickness = new Thickness(0),
                     VerticalContentAlignment = VerticalAlignment.Center,
-                    [!TextBox.TextProperty] = new Binding(nameof(VideoOcrLineItem.Text)) { Mode = BindingMode.TwoWay },
-                };
-
-                // Clicking into a cell to edit should also make it the current row, so the
-                // double-tap preview seek and Delete act on the line being edited.
-                textBox.GotFocus += (_, _) => tableView.SelectedItem = item;
-                return textBox;
-            }),
+                    [!ContentControl.ContentProperty] = new Binding(nameof(VideoOcrLineItem.FormattedText)),
+                }, supportsRecycling: true),
         });
+
+        var flyout = new MenuFlyout();
+        var menuItemEdit = new MenuItem
+        {
+            Header = Se.Language.General.EditDotDotDot,
+            InputGesture = new Avalonia.Input.KeyGesture(Avalonia.Input.Key.Enter),
+        };
+        menuItemEdit.Click += async (_, _) =>
+        {
+            if (tableView.SelectedItem is VideoOcrLineItem item)
+            {
+                await vm.EditLine(item);
+            }
+        };
+        flyout.Items.Add(menuItemEdit);
+
+        var menuItemItalic = new MenuItem
+        {
+            Header = Se.Language.General.Italic,
+        };
+        menuItemItalic.Click += (_, _) =>
+        {
+            VideoOcrViewModel.ToggleItalic(tableView.SelectedItems.OfType<VideoOcrLineItem>().ToList());
+        };
+        flyout.Items.Add(menuItemItalic);
+
+        var menuItemDelete = new MenuItem
+        {
+            Header = Se.Language.General.Delete,
+        };
+        menuItemDelete.Click += (_, _) =>
+        {
+            vm.DeleteLines(tableView.SelectedItems.OfType<VideoOcrLineItem>().ToList());
+        };
+        flyout.Items.Add(menuItemDelete);
+
+        tableView.ContextFlyout = flyout;
+        UiUtil.AttachMacContextFlyoutHandler(tableView);
 
         // Double-click a line to see the frame it came from in the preview.
         tableView.DoubleTapped += (s, e) =>
@@ -546,6 +579,13 @@ public class VideoOcrWindow : Window
                 }
 
                 e.Handled = true;
+            }
+            else if (e.Key is Avalonia.Input.Key.Enter or Avalonia.Input.Key.F2 &&
+                     e.Source is not TextBox &&
+                     tableView.SelectedItem is VideoOcrLineItem editItem)
+            {
+                e.Handled = true;
+                _ = vm.EditLine(editItem);
             }
         };
 

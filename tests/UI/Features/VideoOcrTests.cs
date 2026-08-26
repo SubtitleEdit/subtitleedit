@@ -70,6 +70,41 @@ public class VideoOcrTests
         Assert.Equal(2, lines.Count);
     }
 
+    [Theory]
+    [InlineData("Hello", "<i>Hello</i>")]                 // plain -> wrapped
+    [InlineData("<i>Hello</i>", "Hello")]                 // fully italic -> unwrapped
+    public void ToggleItalic_SingleLine(string text, string expected)
+    {
+        var item = new VideoOcrLineItem { Text = text };
+
+        VideoOcrViewModel.ToggleItalic(new List<VideoOcrLineItem> { item });
+
+        Assert.Equal(expected, item.Text);
+    }
+
+    [Fact]
+    public void ToggleItalic_MixedSelection_MakesEverythingItalic()
+    {
+        // Partially italic selection: the un-italic line gets wrapped, the italic one is kept.
+        var plain = new VideoOcrLineItem { Text = "Plain" };
+        var italic = new VideoOcrLineItem { Text = "<i>Already</i>" };
+
+        VideoOcrViewModel.ToggleItalic(new List<VideoOcrLineItem> { plain, italic });
+
+        Assert.Equal("<i>Plain</i>", plain.Text);
+        Assert.Equal("<i>Already</i>", italic.Text);
+    }
+
+    [Fact]
+    public void ToggleItalic_PartiallyItalicText_IsNotTreatedAsFullyItalic()
+    {
+        var item = new VideoOcrLineItem { Text = "<i>a</i> b <i>c</i>" };
+
+        VideoOcrViewModel.ToggleItalic(new List<VideoOcrLineItem> { item });
+
+        Assert.Equal("<i><i>a</i> b <i>c</i></i>", item.Text);
+    }
+
     [Fact]
     public void Build_EqualConfidence_DurationStillDecides()
     {

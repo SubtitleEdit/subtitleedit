@@ -28,6 +28,12 @@ public class SeVideoOcr
     public int BrightnessMinimum { get; set; }
     public int MaxImageWidth { get; set; }
     public bool AddAssaPositionTag { get; set; }
+
+    /// <summary>Run the OCR fix engine (replace lists + spell check marking) on the result lines.</summary>
+    public bool FixOcrErrors { get; set; }
+
+    /// <summary>Spell check dictionary for the fix engine; empty = pick by the OCR language.</summary>
+    public string DictionaryFileName { get; set; }
     public double CropXPercent { get; set; }
     public double CropYPercent { get; set; }
     public double CropWidthPercent { get; set; }
@@ -65,6 +71,8 @@ public class SeVideoOcr
         BrightnessMinimum = 190;
         MaxImageWidth = 720;
         AddAssaPositionTag = false;
+        FixOcrErrors = true;
+        DictionaryFileName = string.Empty;
 
         // Default scan area: bottom third, full width.
         CropXPercent = 0;
