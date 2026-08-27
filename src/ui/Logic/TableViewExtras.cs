@@ -242,6 +242,16 @@ public sealed class TableViewColumnManager
 /// </summary>
 public static class TableViewExtras
 {
+    /// <summary>
+    /// The visual whose origin is the viewport's top-left corner. The TableView template keeps the
+    /// column header INSIDE the ScrollViewer (pinned above the rows), so the ScrollViewer's own
+    /// origin sits a header height above the viewport - measuring against it inflated every row
+    /// top while Viewport.Height excludes the header, so a row clipped under the header counted as
+    /// fully visible and page/centre targets were off by one row. Same helper as
+    /// TableViewScrollAnchor.ViewportOrigin and TableViewIndexScrollBar.
+    /// </summary>
+    private static Visual ViewportOrigin(ScrollViewer scrollViewer) => (Visual?)scrollViewer.Presenter ?? scrollViewer;
+
     private static readonly TextToFlowDirectionConverter TextToFlowDirection = new();
 
     /// <summary>
@@ -673,7 +683,7 @@ public static class TableViewExtras
                 continue;
             }
 
-            var top = ((Visual)row).TranslatePoint(new Point(0, 0), scrollViewer)?.Y;
+            var top = ((Visual)row).TranslatePoint(new Point(0, 0), ViewportOrigin(scrollViewer))?.Y;
             if (top == null || top.Value < -0.5 || top.Value + height > scrollViewer.Viewport.Height + 0.5)
             {
                 continue;
@@ -751,7 +761,7 @@ public static class TableViewExtras
             }
 
             var first = rows[0];
-            var firstTop = ((Visual)first.Row).TranslatePoint(new Point(0, 0), scrollViewer)?.Y;
+            var firstTop = ((Visual)first.Row).TranslatePoint(new Point(0, 0), ViewportOrigin(scrollViewer))?.Y;
             if (firstTop == null)
             {
                 return;
@@ -835,7 +845,7 @@ public static class TableViewExtras
             return false;
         }
 
-        var rowTop = row.TranslatePoint(new Point(0, 0), scrollViewer)?.Y;
+        var rowTop = row.TranslatePoint(new Point(0, 0), ViewportOrigin(scrollViewer))?.Y;
         if (rowTop == null)
         {
             return false;
@@ -864,7 +874,7 @@ public static class TableViewExtras
             }
 
             // Row top in viewport coordinates.
-            var rowTop = row.TranslatePoint(new Point(0, 0), scrollViewer)?.Y;
+            var rowTop = row.TranslatePoint(new Point(0, 0), ViewportOrigin(scrollViewer))?.Y;
             if (rowTop == null)
             {
                 return;

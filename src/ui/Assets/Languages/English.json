@@ -180,6 +180,7 @@
     "engine": "Engine",
     "enterProfileName": "Enter profile name",
     "error": "Error",
+    "outputFileCannotBeTheInputFile": "The output file cannot be the same as the input file.",
     "errorX": "Error; {0}",
     "example": "Example",
     "exampleX": "Example: {0}",

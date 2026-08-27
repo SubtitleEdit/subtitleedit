@@ -436,28 +436,31 @@ public class Se
 
     public static void LoadSettings(string settingsFileName)
     {
-        if (!System.IO.File.Exists(settingsFileName))
+        // Only the deserialize is conditional. Returning early on a missing file also skipped
+        // UpdateLibSeSettings() - the single bridge onto libse's Configuration.Settings - so on a
+        // first run libse kept its own defaults for the whole session. Among them
+        // RememberUseAlwaysList, which gates every <lang>_UseAlways.xml load and save, so spell
+        // check's "Change all" was silently session-only until the first settings save.
+        var settingsFileExists = System.IO.File.Exists(settingsFileName);
+        if (settingsFileExists)
         {
-            MigrateMacOsFontSettings(Settings.Appearance, OperatingSystem.IsMacOS(), false);
-            return;
+            try
+            {
+                // Stream + source-generated metadata: no UTF-16 string round-trip and no
+                // runtime reflection over the settings type graph.
+                using var stream = System.IO.File.OpenRead(settingsFileName);
+                Settings = JsonSerializer.Deserialize(stream, SeJsonContext.Default.Se)!;
+            }
+            catch (Exception exception)
+            {
+                Se.LogError(exception);
+                Settings = new Se();
+            }
+
+            SetDefaultValues();
         }
 
-        try
-        {
-            // Stream + source-generated metadata: no UTF-16 string round-trip and no
-            // runtime reflection over the settings type graph.
-            using var stream = System.IO.File.OpenRead(settingsFileName);
-            Settings = JsonSerializer.Deserialize(stream, SeJsonContext.Default.Se)!;
-        }
-        catch (Exception exception)
-        {
-            Se.LogError(exception);
-            Settings = new Se();
-        }
-
-        SetDefaultValues();
-
-        MigrateMacOsFontSettings(Settings.Appearance, OperatingSystem.IsMacOS(), true);
+        MigrateMacOsFontSettings(Settings.Appearance, OperatingSystem.IsMacOS(), settingsFileExists);
 
         UpdateLibSeSettings();
 

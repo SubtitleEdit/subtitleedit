@@ -949,7 +949,9 @@ public class FfmpegGenerator
         else if (checkered)
         {
             var tempImageFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".png");
-            var skBitmap = new SKBitmap(width, height, true);
+            // The branch above uses "using" for its bitmap; this one leaked ~8 MB of native
+            // pixels at 1080p on every "generate video with checkered background".
+            using var skBitmap = new SKBitmap(width, height, true);
             using (var canvas = new SKCanvas(skBitmap))
             {
                 UiUtil.DrawCheckerboardBackground(canvas, width, height);

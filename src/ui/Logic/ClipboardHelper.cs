@@ -306,16 +306,24 @@ public static class ClipboardHelper
             var tempPath = Path.Combine(Path.GetTempPath(), $"clipboard_{Guid.NewGuid()}.png");
             bitmap.Save(tempPath, PngBitmapEncoderOptions.Default);
 
-            // Try xclip first
+            // Build the argument vector rather than a command line: with UseShellExecute=false
+            // there is no shell, so on Unix .NET only honours " and \ - the single quotes were
+            // passed to xclip as part of the file name, and "<" reached wl-copy as a literal
+            // argument instead of redirecting stdin. Both silently did nothing.
             var psi = new ProcessStartInfo
             {
                 FileName = "xclip",
-                Arguments = $"-selection clipboard -t image/png -i '{tempPath}'",
                 UseShellExecute = false,
                 CreateNoWindow = true,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true
             };
+            psi.ArgumentList.Add("-selection");
+            psi.ArgumentList.Add("clipboard");
+            psi.ArgumentList.Add("-t");
+            psi.ArgumentList.Add("image/png");
+            psi.ArgumentList.Add("-i");
+            psi.ArgumentList.Add(tempPath);
 
             try
             {
@@ -332,13 +340,23 @@ public static class ClipboardHelper
             }
             catch
             {
-                // If xclip fails, try wl-copy (Wayland)
+                // If xclip fails, try wl-copy (Wayland). It reads the image from stdin, so feed
+                // the file in ourselves - there is no shell to do the redirect for us.
                 psi.FileName = "wl-copy";
-                psi.Arguments = $"--type image/png < '{tempPath}'";
+                psi.ArgumentList.Clear();
+                psi.ArgumentList.Add("--type");
+                psi.ArgumentList.Add("image/png");
+                psi.RedirectStandardInput = true;
 
                 using var process = Process.Start(psi);
                 if (process != null)
                 {
+                    using (var stdin = process.StandardInput.BaseStream)
+                    using (var pngFile = File.OpenRead(tempPath))
+                    {
+                        await pngFile.CopyToAsync(stdin);
+                    }
+
                     await process.WaitForExitAsync();
 
                     await Task.Delay(500);
@@ -365,12 +383,16 @@ public static class ClipboardHelper
             var psi = new ProcessStartInfo
             {
                 FileName = "osascript",
-                Arguments = $"-e 'set the clipboard to (read (POSIX file \"{tempPath}\") as «class PNGf»)'",
                 UseShellExecute = false,
                 CreateNoWindow = true,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true
             };
+
+            // One -e argument, passed whole. As a command line the outer single quotes were
+            // literal and the script was split on spaces, so osascript never compiled it.
+            psi.ArgumentList.Add("-e");
+            psi.ArgumentList.Add($"set the clipboard to (read (POSIX file \"{tempPath}\") as «class PNGf»)");
 
             using var process = Process.Start(psi);
             if (process != null)
