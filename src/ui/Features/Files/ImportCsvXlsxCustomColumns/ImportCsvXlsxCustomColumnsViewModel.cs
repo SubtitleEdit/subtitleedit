@@ -33,10 +33,13 @@ public partial class ImportCsvXlsxCustomColumnsViewModel : ObservableObject
 
     private readonly IFileHelper _fileHelper;
 
+    // Kept in sync with UnknownFormatImporterCsv's name lists, so a spreadsheet that auto-imports
+    // when opened directly gets the same columns pre-mapped when opened through this window.
     private static readonly HashSet<string> StartHeaderNames = new(StringComparer.OrdinalIgnoreCase)
     {
         "start", "start time", "in", "begin", "starttime", "start_time", "startmillis", "start_millis",
         "startms", "start_ms", "startmilliseconds", "start_milliseconds", "from", "fromtime",
+        "from_ms", "fromms", "frommilliseconds", "from_milliseconds", "timecode",
         "tc-in", "tc in", "show", "start tc", "start-tc", "tc start", "tc-start",
     };
 
@@ -44,6 +47,7 @@ public partial class ImportCsvXlsxCustomColumnsViewModel : ObservableObject
     {
         "end", "end time", "out", "stop", "endtime", "end_time", "endmillis", "end_millis",
         "endms", "end_ms", "endmilliseconds", "end_milliseconds", "to", "totime",
+        "to_ms", "toms", "tomilliseconds", "to_milliseconds",
         "tc-out", "tc out", "hide", "end tc", "end-tc", "tc end", "tc-end",
     };
 
@@ -59,7 +63,7 @@ public partial class ImportCsvXlsxCustomColumnsViewModel : ObservableObject
 
     private static readonly HashSet<string> CharacterHeaderNames = new(StringComparer.OrdinalIgnoreCase)
     {
-        "speaker", "voice", "character", "role", "actor", "rolle", "character name", "sprecher",
+        "speaker", "voice", "character", "role", "name", "actor", "rolle", "character name", "sprecher",
     };
 
     public ImportCsvXlsxCustomColumnsViewModel(IFileHelper fileHelper)
@@ -113,6 +117,11 @@ public partial class ImportCsvXlsxCustomColumnsViewModel : ObservableObject
         {
             e.Handled = true;
             Window?.Close();
+        }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/import-csv-xlsx");
         }
     }
 
