@@ -1264,7 +1264,11 @@ public partial class MultipleReplaceViewModel : ObservableObject
     {
         return new RuleTreeNode(node.Parent, new MultipleReplaceRule
         {
-            Active = node.IsActive,
+            // "node" is only the neighbour used to find the insert position - a rule the user just
+            // typed must start active, as CategoryAddRule does. Inheriting the neighbour's state
+            // meant inserting next to an unticked rule silently created an unticked one that never
+            // ran, with nothing in the dialog to explain why.
+            Active = true,
             Description = result.Description,
             Find = result.FindWhat,
             ReplaceWith = result.ReplaceWith,

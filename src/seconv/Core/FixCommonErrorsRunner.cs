@@ -134,8 +134,12 @@ internal static class FixCommonErrorsRunner
             return;
         }
 
+        // An EMPTY list means "no rules" - that is exactly what "-all" resolves to (RuleIdSpec
+        // clears the set). Treating empty as null made "--fix-common-errors-rules:-all" run every
+        // rule plus the OCR-fix pass, i.e. the maximum instead of nothing. RemoveFormattingRunner
+        // documents the same distinction.
         HashSet<string>? wanted = null;
-        if (ruleIds != null && ruleIds.Count > 0)
+        if (ruleIds != null)
         {
             wanted = new HashSet<string>(ruleIds, StringComparer.OrdinalIgnoreCase);
         }

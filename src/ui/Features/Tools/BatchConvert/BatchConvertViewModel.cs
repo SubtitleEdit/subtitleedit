@@ -826,6 +826,18 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             Se.Settings.Tools.BatchConvert.FixRtlMode = "ReverseStartEnd";
         }
 
+        // These were read in LoadSettings but never written back, so every number the user typed
+        // into the bridge-gaps, min-gap and split/break function panels was discarded on close.
+        // They go to the same keys the dedicated dialogs use.
+        Se.Settings.Tools.BridgeGaps.BridgeGapsSmallerThanMs = BridgeGapsSmallerThanMs;
+        Se.Settings.Tools.BridgeGaps.MinGapMs = BridgeGapsMinGapMs;
+        Se.Settings.Tools.BridgeGaps.PercentForLeft = BridgeGapsPercentForLeft;
+        Se.Settings.Tools.ApplyMinGapMilliseconds = MinGapMs;
+        Se.Settings.Tools.SplitRebalanceLongLinesSplit = SplitBreakSplitLongLines;
+        Se.Settings.Tools.SplitRebalanceLongLinesRebalance = SplitBreakRebalanceLongLines;
+        Se.Settings.Tools.SplitRebalanceLongLinesSingleLineMaxLength = SplitBreakSingleLineMaxLength;
+        Se.Settings.Tools.SplitRebalanceLongLinesMaxNumberOfLines = SplitBreakMaxNumberOfLines;
+
         Se.SaveSettings();
     }
 
@@ -928,6 +940,11 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         BridgeGapsMinGapMs = Se.Settings.Tools.BridgeGaps.MinGapMs;
         BridgeGapsPercentForLeft = Se.Settings.Tools.BridgeGaps.PercentForLeft;
 
+        // "Apply minimum gap" was never loaded. Its editor passes the saved value only as the
+        // converter's DefaultValue, which a non-nullable int can never reach, so the box opened at
+        // 0 and the function inserted no gap at all.
+        MinGapMs = Se.Settings.Tools.ApplyMinGapMilliseconds;
+
         FormattingRemoveAll = Se.Settings.Tools.BatchConvert.FormattingRemoveAll;
         FormattingRemoveItalic = Se.Settings.Tools.BatchConvert.FormattingRemoveItalic;
         FormattingRemoveBold = Se.Settings.Tools.BatchConvert.FormattingRemoveBold;
@@ -959,8 +976,15 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         ConvertColorsToDialogAddNewLines = Se.Settings.Tools.BatchConvert.ConvertColorsToDialogAddNewLines;
         ConvertColorsToDialogReBreakLines = Se.Settings.Tools.BatchConvert.ConvertColorsToDialogReBreakLines;
 
-        SplitBreakSingleLineMaxLength = Se.Settings.General.SubtitleLineMaximumLength;
-        SplitBreakMaxNumberOfLines = Se.Settings.General.MaxNumberOfLines;
+        // Prefer this tool's own saved values over the app-wide rules, exactly as the dedicated
+        // split/break dialog does - otherwise the numbers typed here reset on every open (and
+        // writing them back to General.* would silently change a global setting).
+        SplitBreakSingleLineMaxLength = Se.Settings.Tools.SplitRebalanceLongLinesSingleLineMaxLength > 0
+            ? Se.Settings.Tools.SplitRebalanceLongLinesSingleLineMaxLength
+            : Se.Settings.General.SubtitleLineMaximumLength;
+        SplitBreakMaxNumberOfLines = Se.Settings.Tools.SplitRebalanceLongLinesMaxNumberOfLines > 0
+            ? Se.Settings.Tools.SplitRebalanceLongLinesMaxNumberOfLines
+            : Se.Settings.General.MaxNumberOfLines;
         SplitBreakSplitLongLines = Se.Settings.Tools.SplitRebalanceLongLinesSplit;
         SplitBreakRebalanceLongLines = Se.Settings.Tools.SplitRebalanceLongLinesRebalance;
 

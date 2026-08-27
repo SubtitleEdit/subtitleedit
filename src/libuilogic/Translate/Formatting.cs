@@ -112,7 +112,11 @@ namespace Nikse.SubtitleEdit.UiLogic.Translate
                 {
                     SquareBracketsUppercase = true;
                 }
-                else if (text.Length > 0 && char.IsLower(text[0]))
+                // text[0] is '[' here (the block is guarded by StartsWith('[')) and the brackets
+                // are not stripped until below, so this was always false: the flag was never set,
+                // and both the CapitalizeFirstLetter here and the re-lowercasing in
+                // ReAddFormatting were dead. Test the first character INSIDE the brackets.
+                else if (text.Length > 2 && char.IsLower(text[1]))
                 {
                     SquareBracketsStartWithLowercase = true;
                 }

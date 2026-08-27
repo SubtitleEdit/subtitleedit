@@ -708,7 +708,9 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             foreach (var prefix in Prefixes)
             {
-                if (newFirstWord.StartsWith(prefix, StringComparison.Ordinal) && !newFirstWord.EndsWith(prefix + Environment.NewLine, StringComparison.Ordinal))
+                // EndsWith cannot express "the prefix is followed by a line break" - the prefix was
+                // just matched at the START. HasPrefix below is the correct twin of this test.
+                if (newFirstWord.StartsWith(prefix, StringComparison.Ordinal) && !newFirstWord.StartsWith(prefix + Environment.NewLine, StringComparison.Ordinal))
                 {
                     newFirstWord = newFirstWord.Substring(prefix.Length);
                 }

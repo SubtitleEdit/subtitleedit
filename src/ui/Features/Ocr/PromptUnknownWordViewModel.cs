@@ -102,7 +102,10 @@ public partial class PromptUnknownWordViewModel : ObservableObject
         var paragraph = word.Result.GetText();
         var w = word.Word.FixedWord;
 
-        if (!paragraph.Substring(idx).StartsWith(w))
+        // idx was measured against the engine's fixed line, not against GetText(), so it can point
+        // past the end - the IndexOf fallback right below exists for exactly that mismatch, but
+        // the Substring threw before ever reaching it.
+        if (idx < 0 || idx > paragraph.Length || !paragraph.Substring(idx).StartsWith(w))
         {
             idx = paragraph.IndexOf(w, StringComparison.Ordinal);
             if (idx < 0)

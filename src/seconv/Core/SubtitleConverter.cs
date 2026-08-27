@@ -867,10 +867,12 @@ internal class SubtitleConverter
             subtitle.AddTimeToAllParagraphs(options.Offset.Value);
         }
 
-        // Apply target frame rate via libse (handles frame-based formats correctly)
-        if (options.Fps.HasValue && options.TargetFps.HasValue)
+        // Apply target frame rate via libse (handles frame-based formats correctly).
+        // --target-fps on its own used to be accepted and then silently ignored; SE4 converts from
+        // the current frame rate in that case, and the image path here already does the same.
+        if (options.TargetFps is > 0)
         {
-            subtitle.ChangeFrameRate(options.Fps.Value, options.TargetFps.Value);
+            subtitle.ChangeFrameRate(options.Fps ?? Configuration.Settings.General.CurrentFrameRate, options.TargetFps.Value);
         }
 
         // Scale all times by 100/percent (matches Sync > Change Speed in the UI)
