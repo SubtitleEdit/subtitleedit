@@ -291,7 +291,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var ext = Path.GetExtension(fileName).ToLowerInvariant();
             foreach (var subtitleFormat in SubtitleFormat.AllSubtitleFormats.Where(p => p.Extension.Equals(ext, StringComparison.OrdinalIgnoreCase) && !p.Name.StartsWith("Unknown", StringComparison.Ordinal)))
             {
-                if (subtitleFormat.IsMine(lines, fileName))
+                if (IsFormatMine(subtitleFormat, lines, fileName))
                 {
                     return FinalizeFormat(fileName, batchMode, sourceFrameRate, lines, subtitleFormat, loadSubtitle);
                 }
@@ -299,7 +299,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             foreach (var subtitleFormat in SubtitleFormat.AllSubtitleFormats.Where(p => !p.Extension.Equals(ext, StringComparison.OrdinalIgnoreCase) || p.Name.StartsWith("Unknown", StringComparison.Ordinal)))
             {
-                if (subtitleFormat.IsMine(lines, fileName))
+                if (IsFormatMine(subtitleFormat, lines, fileName))
                 {
                     return FinalizeFormat(fileName, batchMode, sourceFrameRate, lines, subtitleFormat, loadSubtitle);
                 }
@@ -311,6 +311,25 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Asks one format whether the lines are its own. A damaged or truncated file can make a
+        /// reader throw (an unclosed xml element, a json string with no end quote, ...), and this
+        /// runs for EVERY format when a file is opened - so a throw here used to take down the
+        /// whole open instead of moving on to the next format.
+        /// </summary>
+        private static bool IsFormatMine(SubtitleFormat subtitleFormat, List<string> lines, string fileName)
+        {
+            try
+            {
+                return subtitleFormat.IsMine(lines, fileName);
+            }
+            catch (Exception exception)
+            {
+                System.Diagnostics.Debug.WriteLine($"{subtitleFormat.Name}.IsMine failed: {exception.Message}");
+                return false;
+            }
         }
 
         private static List<string> ReadLinesFromFile(string fileName, Encoding useThisEncoding, out Encoding encoding)

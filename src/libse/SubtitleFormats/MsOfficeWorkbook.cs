@@ -154,7 +154,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             catch
             {
-                xml.LoadXml(JoinLines(lines));
+                try
+                {
+                    xml.LoadXml(JoinLines(lines));
+                }
+                catch (Exception exception)
+                {
+                    // The retry is the last chance to make sense of the file; a truncated or
+                    // damaged one must read as "not mine", not throw out of the reader (and out
+                    // of IsMine, which runs for every format when a file is opened).
+                    System.Diagnostics.Debug.WriteLine(exception.Message);
+                    _errorCount = 1;
+                    return;
+                }
             }
 
             var xmlNamespaceManager = MakeNamespaceManager(xml);

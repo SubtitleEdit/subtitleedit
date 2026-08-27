@@ -43,10 +43,27 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var csvLines = ReadCsvLines(lines, ',');
             foreach (var line in csvLines)
             {
+                if (line.Text == null)
+                {
+                    // No text column at this index: the file is some other csv dialect. Count it
+                    // as an error so IsMine (paragraphs > errors) stops claiming those files and
+                    // importing every cue with blank text.
+                    _errorCount++;
+                    if (_errorCount > 10)
+                    {
+                        return;
+                    }
+
+                    continue;
+                }
+
                 if (ParseTimeCode(line.Start, out var start) &&
                     ParseTimeCode(line.End, out var end))
                 {
-                    var p = new Paragraph(start, end, line.Text)
+                    // A row with fewer columns than this layout expects (any other csv
+                    // dialect) never assigns Text, and a Paragraph with a null Text makes
+                    // everything downstream - the grid, saving, RemoveEmptyLines - throw.
+                    var p = new Paragraph(start, end, line.Text ?? string.Empty)
                     {
                         Actor = line.Character,
                         Effect = line.Play ? "True" : "False"
