@@ -63,7 +63,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         ;
                 }
 
-                var cyrillicLanguages = new[] { "ru" };
+                // Replacing Cyrillic "е" with Latin "e" is an OCR heuristic for Latin-script
+                // languages. Only Russian was exempt, so Bulgarian, Ukrainian, Serbian, Macedonian
+                // and the rest had a Latin "e" spliced into Cyrillic words - breaking spell check,
+                // search and sorting.
+                var cyrillicLanguages = new[] { "ru", "uk", "bg", "sr", "mk", "be", "kk", "ky", "mn", "tg" };
                 if (!cyrillicLanguages.Contains(twoLetterLanguageCode))
                 {
                     text = text

@@ -120,16 +120,33 @@ public class FixCommonErrorsRunnerTest
     }
 
     [Fact]
-    public void Run_WithEmptyList_RunsAllRules()
+    public void Run_WithNullList_RunsAllRules()
     {
+        var sub = new Subtitle();
+        sub.Paragraphs.Add(new Paragraph("hello,world.", 0, 2000));
+        sub.Renumber();
+
+        FixCommonErrorsRunner.Run(sub, null);
+
+        // Same outcome as RunAll: capitalised + space inserted
+        Assert.Equal("Hello, world.", sub.Paragraphs[0].Text);
+    }
+
+    [Fact]
+    public void Run_WithEmptyList_RunsNothing()
+    {
+        // An empty list is what "--fix-common-errors-rules:-all" resolves to, so it must select
+        // NO rules. This used to fall through to "run everything" - the exact opposite - because
+        // the runner tested Count > 0 instead of null. RemoveFormattingRunner.ToTypes documents
+        // the same null-vs-empty contract, and ResolveRuleIds(null) already returns every id, so
+        // nothing depends on empty meaning "all".
         var sub = new Subtitle();
         sub.Paragraphs.Add(new Paragraph("hello,world.", 0, 2000));
         sub.Renumber();
 
         FixCommonErrorsRunner.Run(sub, Array.Empty<string>());
 
-        // Same outcome as RunAll: capitalised + space inserted
-        Assert.Equal("Hello, world.", sub.Paragraphs[0].Text);
+        Assert.Equal("hello,world.", sub.Paragraphs[0].Text);
     }
 
     [Fact]

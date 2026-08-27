@@ -3830,8 +3830,11 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
+        // WordIndex is an offset into the fixed line the OCR engine built, not into item.Text, and
+        // the two can differ in length (French spacing inserts a character per "!?:;"). The two
+        // branches below already bounds-check; this one did not, and threw out of the OCR run.
         var idx = unknownWord.Word.WordIndex;
-        if (item.Text.Substring(idx).StartsWith(unknownWord.Word.FixedWord))
+        if (idx >= 0 && idx <= item.Text.Length && item.Text.Substring(idx).StartsWith(unknownWord.Word.FixedWord))
         {
             item.Text = item.Text.Remove(idx, unknownWord.Word.FixedWord.Length).Insert(idx, word);
         }

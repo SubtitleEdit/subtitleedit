@@ -175,7 +175,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                     if (start.StartsWith(title.AsSpan(), StringComparison.OrdinalIgnoreCase))
                     {
                         var idx = i + title.Length;
-                        if (idx < text.Length - 2 && text[idx] == ' ')
+                        // The body reads text[idx] after the increment below, so the bound only
+                        // needs to leave one character - "- 2" skipped a one-letter word at the
+                        // end of the line ("Mr. t" was left alone while "Mr. to" was fixed).
+                        if (idx < text.Length - 1 && text[idx] == ' ')
                         {
                             idx++;
                             var words = text.Substring(idx).Split(' ', '\r', '\n', ',', '"', '?', '!', '.', '\'');

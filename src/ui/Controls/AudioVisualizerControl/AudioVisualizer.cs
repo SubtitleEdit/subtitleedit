@@ -4258,6 +4258,16 @@ public class AudioVisualizer : Control
             return new MinMax { Min = 0, Max = 0, Avg = 0 };
         }
 
+        // Clamp here rather than at each call site: most callers clamp, but the "guess start"
+        // pair passes SecondsToSampleIndex(...) raw, so a cue starting within 0.8 s of the end of
+        // the peaks indexed past the array. This also removes the divide-by-zero on an empty range.
+        startIndex = Math.Max(0, startIndex);
+        endIndex = Math.Min(WavePeaks.Peaks.Count, endIndex);
+        if (endIndex <= startIndex)
+        {
+            return new MinMax { Min = 0, Max = 0, Avg = 0 };
+        }
+
         var minPeak = int.MaxValue;
         var maxPeak = int.MinValue;
         double total = 0;
