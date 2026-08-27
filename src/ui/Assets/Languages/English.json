@@ -1,6 +1,6 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.2.0-beta25",
+  "version": "v5.2.0-beta26",
   "translatedBy": "",
   "cultureName": "en-US",
   "general": {
@@ -3021,8 +3021,10 @@
       "generalToggleTranslationMode": "Toggle translation mode",
       "generalChooseLayout": "Choose layout",
       "generalGoToNextSubtitle": "Go to next subtitle",
+      "generalGoToNextSubtitlePlayTranslate": "Go to next subtitle (play translate)",
       "generalGoToNextSubtitleCursorAtEnd": "Go to next subtitle and set cursor at end",
       "generalGoToPrevSubtitle": "Go to previous subtitle",
+      "generalGoToPrevSubtitlePlayTranslate": "Go to previous subtitle (play translate)",
       "generalGoToFirstLine": "Go to first line",
       "generalGoToLastLine": "Go to last line",
       "alsoSetVideoPosition": "Also set video position",

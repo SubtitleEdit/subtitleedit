@@ -3,6 +3,51 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-beta26 (27th of August 2026)
+
+* Video OCR: read far more subtitles, with much better text and start times - thx caiweihan
+* Video OCR: run the OCR fix engine and spell check coloring on the lines, plus an edit dialog and a context menu
+* Video OCR: order the engines best-measured first, add setting hints, a dictionary download button and window layout polish
+* Add "Change ASSA style properties" (spacing and alignment) to batch convert - thx adeltalon
+* Add "Play current" to spell check, so you can hear the line a flagged word is in - thx fraternl
+* Add "Google it" to the subtitle text box context menu
+* Add the SE 4 "go to next/prev subtitle (play translate)" shortcuts - thx kadrimarzouki
+* Add Central Kurdish translation - thx dkakaie
+* Spreadsheets (csv/xlsx/ods) can now be opened from File - open, and the import is documented - thx GrampaWildWilly
+* Lambda Cap: read and write ruby, emphasis dots and positioning control codes - thx magsmike
+* EBU STL: keep the colors when the header claims open subtitling
+* Split long lines: keep a sentence-ending line break as an event boundary - thx AuroraMartell, Triathlon-rally
+* "Fix RTL via Unicode" now wraps the sentence inside the tags, and closes the embedding
+* Netflix check and fix: the timing fixes (min/max duration, gaps, shot changes) are now actually applied
+* Faster XML format detection, Timed Text saving and DVB/VobSub image decoding
+* WSB is now import only - Subtitle Edit could not read back the files it wrote
+* Fix "apply minimum gap", "change formatting" and "sort by" clearing the subtitle when OK was pressed quickly
+* Fix the first save after a translation overwriting the source file's ASSA styles
+* Fix cancelling "save as" saving anyway, and "save original as" using the wrong format
+* Fix a crash when dropping an mkv file on the subtitle grid, and the doubled "parsing Matroska file" wait
+* Fix Arabic subtitle text showing up as boxes in the subtitle grid - thx adeltalon
+* Fix auto-translate blanking every untranslated line when pressing OK after a partial translation
+* Fix "play current and pause" running past the end of the line - thx kadrimarzouki
+* Fix Multiple replace losing the selection when moving a rule up or down - thx madsoft-ha
+* Fix the undocked waveform window coming to the front instead of the main window - thx GrampaWildWilly
+* Fix export/import of settings resetting video settings and rules, and wiping shortcuts
+* Fix "whole word" find and replace matching inside words
+* Fix spell check losing user words, names and "use always" entries
+* Fix speech to text losing word level highlighting, and cancel not stopping a batch
+* Fix text to speech review edits dropping italics and line breaks
+* Fix several burn-in and transparent video bugs (cut length, target file size, output properties)
+* Fix image based export duplicating text after a "<", and ASSA fade-outs exporting fully transparent
+* Fix five bugs in the csv/xlsx/ods importers (pipe separator, merged cells, sheet order)
+* Fix shot changes import losing precision, decimal commas and "frame_time" files
+* Fix CEA-608 roll-up captions scrolling the wrong rows
+* Fix around 200 more bugs found in six code sweeps - subtitle formats, dialogs, settings, OCR, downloads and core helpers
+* Update German translation - thx FunkyKnilch
+* Update Italian translation - thx bovirus
+* Update Polish translation - thx potplayer-fanpack
+* Update Turkish translation - thx bilimiyorum
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-beta25 (26th of August 2026)
 
 * Add advanced text effects to image based export - gradient, neon glow, 3D extrude and more
