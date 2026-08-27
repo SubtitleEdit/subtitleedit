@@ -89,7 +89,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     else
                     {
-                        var p = new Paragraph(texts[0], startTime, endTime);
+                        // ToText encodes with Json.EncodeJsonText ("<br />" line breaks, escaped
+                        // quotes...), so the text must be decoded again on the way in.
+                        var p = new Paragraph(Json.DecodeJsonText(texts[0]), startTime, endTime);
                         subtitle.Paragraphs.Add(p);
                     }
                 }

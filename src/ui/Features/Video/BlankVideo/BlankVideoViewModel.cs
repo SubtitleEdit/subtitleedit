@@ -172,7 +172,7 @@ public partial class BlankVideoViewModel : ObservableObject
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
 
-                IsGenerating = true;
+                IsGenerating = false;
                 ProgressValue = 0;
             });
 
@@ -503,6 +503,23 @@ public partial class BlankVideoViewModel : ObservableObject
         // The subtitle files handed to ffmpeg live as long as the window does - nothing else
         // removes them, and they used to pile up in the temp folder run after run (#13332).
         _tempSubtitleFiles.Delete();
+
+        // Stop the poll timer and any still-running encode - closing the window used to
+        // leave the ffmpeg process encoding to completion in the background.
+        _timerGenerate.StopAndDispose(TimerGenerateElapsed);
+        if (_ffmpegProcess != null && !_ffmpegProcess.HasExited)
+        {
+            try
+            {
+#pragma warning disable CA1416
+                _ffmpegProcess.Kill(true);
+#pragma warning restore CA1416
+            }
+            catch
+            {
+                // ignore - it may have exited in between
+            }
+        }
     }
 
     internal void OnKeyDown(KeyEventArgs e)
@@ -510,7 +527,9 @@ public partial class BlankVideoViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
-            Window?.Close();
+            // Route through Cancel so Escape during generation aborts the encode
+            // instead of closing the window over a running ffmpeg.
+            Cancel();
         }
         else if (UiUtil.IsHelp(e))
         {

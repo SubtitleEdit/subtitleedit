@@ -104,10 +104,13 @@ ATTENTION : Pas plus de 40 caractères PAR LIGNE
                         p.Text = p.Text + Environment.NewLine + line;
                     }
                 }
-                else
+                else if (subtitle.Paragraphs.Count > 0)
                 {
                     _errorCount++;
                 }
+                // else: the Titra header block before the first time code (every file starts
+                // with ~10 such lines) - counting it as errors made IsMine (paragraphs >
+                // errors) reject any file with ten or fewer subtitles.
             }
 
             subtitle.Renumber();

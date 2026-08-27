@@ -255,7 +255,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 subtitle.Paragraphs[i].EndTime.TotalMilliseconds = subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds;
             }
-            subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.TotalMilliseconds = 2500;
+            if (subtitle.Paragraphs.Count > 0)
+            {
+                // The last row has no following time code; give it a default duration
+                // (this used to assign an ABSOLUTE 2500 ms, putting the last line's end
+                // before its start - and crashed on documents with no rows at all).
+                var last = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1];
+                last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + 2500;
+            }
+
             subtitle.RemoveEmptyLines();
             for (int i = 0; i < subtitle.Paragraphs.Count - 1; i++)
             {

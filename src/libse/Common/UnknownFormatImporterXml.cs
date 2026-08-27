@@ -542,7 +542,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else if (child is XmlElement childElement)
                 {
-                    if (childElement.Name.Equals("br", StringComparison.OrdinalIgnoreCase))
+                    // LocalName, like the inline tags below - matching the prefixed Name
+                    // dropped the line break in prefixed dialects (<tt:br/>).
+                    if (childElement.LocalName.Equals("br", StringComparison.OrdinalIgnoreCase))
                     {
                         sb.AppendLine();
                     }
