@@ -250,6 +250,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.UnbreakCommand), Se.Language.General.Unbreak },
         { nameof(MainViewModel.AutoBreakCommand), Se.Language.General.AutoBreak },
         { nameof(MainViewModel.SplitCommand), Se.Language.General.SplitLine },
+        { nameof(MainViewModel.AssistedSplitCommand), Se.Language.General.AssistedSplit },
         { nameof(MainViewModel.SplitAtVideoPositionCommand), Se.Language.General.SplitLineAtVideoPosition },
         { nameof(MainViewModel.SplitAtTextBoxCursorPositionCommand), Se.Language.General.SplitAtTextBoxCursorPosition },
         { nameof(MainViewModel.SplitAtVideoPositionAndTextBoxCursorPositionCommand), Se.Language.General.SplitLineAtVideoAndTextBoxPosition },
@@ -621,6 +622,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.UnbreakNoSpaceCommand, nameof(vm.UnbreakNoSpaceCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.AutoBreakCommand, nameof(vm.AutoBreakCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SplitCommand, nameof(vm.SplitCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.AssistedSplitCommand, nameof(vm.AssistedSplitCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SplitAtVideoPositionCommand, nameof(vm.SplitAtVideoPositionCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SplitAtTextBoxCursorPositionCommand, nameof(vm.SplitAtTextBoxCursorPositionCommand), ShortcutCategory.TextBox);
         AddShortcut(shortcuts, vm.SplitAtVideoPositionAndTextBoxCursorPositionCommand, nameof(vm.SplitAtVideoPositionAndTextBoxCursorPositionCommand), ShortcutCategory.General);

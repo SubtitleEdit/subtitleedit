@@ -144,6 +144,7 @@ using Nikse.SubtitleEdit.Features.Tools.MergeSubtitlesWithSameTimeCodes;
 using Nikse.SubtitleEdit.Features.Tools.RemoveTextForHearingImpaired;
 using Nikse.SubtitleEdit.Features.Tools.Renumber;
 using Nikse.SubtitleEdit.Features.Tools.SortBy;
+using Nikse.SubtitleEdit.Features.Main.AssistedSplit;
 using Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
 using Nikse.SubtitleEdit.Features.Tools.SplitSubtitle;
 using Nikse.SubtitleEdit.Features.Translate;
@@ -16450,6 +16451,51 @@ public partial class MainViewModel :
     private void SplitAtVideoPositionAndTextBoxCursorPosition()
     {
         SplitSelectedLine(true, true);
+    }
+
+    [RelayCommand]
+    private async Task AssistedSplit()
+    {
+        var s = SelectedSubtitle;
+        if (s == null || s.IsReferenceOnly)
+        {
+            return;
+        }
+
+        var language = LanguageAutoDetect.AutoDetectGoogleLanguage(GetUpdateSubtitle());
+        var candidates = AssistedSplitCandidateGenerator.Generate(s, language, _splitManager);
+        if (candidates.Count == 0)
+        {
+            return;
+        }
+
+        var vm = await ShowDialogAsync<AssistedSplitWindow, AssistedSplitViewModel>(viewModel =>
+        {
+            viewModel.Initialize(s, candidates);
+        });
+
+        if (!vm.OkPressed || vm.SelectedCandidate == null)
+        {
+            return;
+        }
+
+        var countBefore = Subtitles.Count;
+        RunWithoutChangeDetection(() =>
+        {
+            _splitManager.Split(Subtitles, s, vm.SelectedCandidate.TextIndex, language);
+            Renumber();
+        });
+
+        if (Subtitles.Count > countBefore)
+        {
+            var newHalf = Subtitles.GetOrNull(Subtitles.IndexOf(s) + 1);
+            if (newHalf != null)
+            {
+                RevealRowPosted(newHalf);
+            }
+        }
+
+        _updateAudioVisualizer = true;
     }
 
     [RelayCommand]
