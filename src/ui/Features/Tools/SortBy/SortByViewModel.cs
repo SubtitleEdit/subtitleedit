@@ -173,11 +173,11 @@ public partial class SortByViewModel : ObservableObject, IClosingCleanup
 
     private void UpdatePreview()
     {
-        if (SortCriteria.Count == 0)
-        {
-            return;
-        }
-
+        // No early return on an empty criteria list: ApplySorting already returns the rows
+        // unsorted in that case, and returning here left Subtitles holding the PREVIOUS sorted
+        // order. Removing the last criterion therefore looked like it had done nothing, and OK
+        // then applied the stale sort anyway (ClearSortCriteria repopulates by hand for the same
+        // reason).
         Dispatcher.UIThread.Post(() =>
         {
             var sorted = ApplySorting(_originalSubtitles);

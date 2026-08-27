@@ -141,6 +141,23 @@ public sealed class TableViewHeaderSorter
         if (selectedSet.Count > 0)
         {
             _tableView.Selection.BeginBatchUpdate();
+
+            // Select the anchor FIRST - the first Select in the batch sets SelectedIndex, so the
+            // current row is restored without a later "SelectedItem =" assignment. That
+            // assignment routes to Selection.SelectedIndex, which REPLACES the selection, so
+            // clicking a column header collapsed a restored multi-row selection down to one row
+            // (contradicting this class's own "selection is preserved" contract).
+            // MoveSelectedRows below uses the same ordering and explains it.
+            if (selectedItem != null)
+            {
+                var anchorIndex = sorted.IndexOf(selectedItem);
+                if (anchorIndex >= 0)
+                {
+                    _tableView.Selection.Select(anchorIndex);
+                    selectedSet.Remove(selectedItem);
+                }
+            }
+
             for (var i = 0; i < sorted.Count && selectedSet.Count > 0; i++)
             {
                 if (selectedSet.Remove(sorted[i]))
@@ -151,8 +168,11 @@ public sealed class TableViewHeaderSorter
 
             _tableView.Selection.EndBatchUpdate();
         }
+        else
+        {
+            _tableView.SelectedItem = selectedItem;
+        }
 
-        _tableView.SelectedItem = selectedItem;
         if (selectedItem != null)
         {
             _tableView.ScrollIntoView(selectedItem);

@@ -101,9 +101,8 @@ public class CrispEmbedSettingsWindow : Window
 
         var enginePanel = MakeStatusPanel(nameof(vm.EngineBrush), nameof(vm.EngineLabel));
         var engineButton = UiUtil.MakeButton(string.Empty, vm.RedownloadEngineCommand)
-            .WithIconLeft(IconNames.CloudDownload)
+            .WithIconLeftBindText(IconNames.CloudDownload, nameof(vm.EngineDownloadButtonText))
             .WithMarginLeft(12);
-        engineButton.Bind(ContentControl.ContentProperty, new Binding(nameof(vm.EngineDownloadButtonText)));
         enginePanel.Children.Add(engineButton);
 
         grid.Add(MakeLabel(Se.Language.General.Engine), 0, 0);

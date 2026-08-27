@@ -67,6 +67,8 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
     /// </summary>
     public bool Qwen3AsrUseVulkan { get; set; }
 
+    /// <summary>The .7z being streamed to disk, so a cancel can remove the partial file.</summary>
+    private string? _tempArchiveFileName;
     private readonly IWhisperDownloadService _whisperDownloadService;
     private readonly IQwen3AsrCppDownloadService _qwen3AsrCppDownloadService;
     private readonly ICrispAsrDownloadService _crispAsrDownloadService;
@@ -567,6 +569,27 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
     {
         _cancellationTokenSource?.Cancel();
         StopIndeterminateProgress();
+
+        // The Faster-Whisper-XXL / WhisperX archives stream straight to disk (216 MB - 1.5 GB) and
+        // were deleted only on the success path, so cancelling stranded the partial file in the
+        // engine folder where nothing would ever clean it up or notice it.
+        var partialArchive = _tempArchiveFileName;
+        _tempArchiveFileName = null;
+        if (!string.IsNullOrEmpty(partialArchive))
+        {
+            try
+            {
+                if (File.Exists(partialArchive))
+                {
+                    File.Delete(partialArchive);
+                }
+            }
+            catch
+            {
+                // best-effort - it may still be open for writing
+            }
+        }
+
         Close();
     }
 
@@ -615,6 +638,7 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
             // the same way for the same reason.
             var whisperXDir = Engine.GetAndCreateWhisperFolder();
             var whisperXTempFileName = Path.Combine(whisperXDir, Engine.Name + ".7z");
+            _tempArchiveFileName = whisperXTempFileName;
             _downloadTask = _whisperDownloadService.DownloadWhisperX(whisperXTempFileName, downloadProgress, _cancellationTokenSource.Token);
         }
         else if (Engine is WhisperEngineConstMe)
@@ -625,6 +649,7 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
         {
             var dir = Engine.GetAndCreateWhisperFolder();
             var tempFileName = Path.Combine(dir, Engine.Name + ".7z");
+            _tempArchiveFileName = tempFileName;
             _downloadTask = _whisperDownloadService.DownloadWhisperPurfviewFasterWhisperXxl(tempFileName, downloadProgress, _cancellationTokenSource.Token);
         }
         else if (Engine is Qwen3AsrCppEngine)

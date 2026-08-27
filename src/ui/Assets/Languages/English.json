@@ -2995,6 +2995,7 @@
       "subtitlePreviewProperties": "Subtitle preview properties",
       "usePositionFromSubtitleFile": "Use position from subtitle file (TTML/PAC/EBU STL)",
       "marginIsPartOfSubtitleArea": "Margin is part of the subtitle area",
+      "textJustify": "Justify lines",
       "pixelWidthInfo": "Green lines = max-width limit   |   Red area = text exceeds limit",
       "spellCheckEngineHunSpelll": "Hunspell",
       "spellCheckEngineMsWord": "MS Word",

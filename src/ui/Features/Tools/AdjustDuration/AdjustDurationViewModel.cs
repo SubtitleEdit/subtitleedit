@@ -99,13 +99,34 @@ public partial class AdjustDurationViewModel : ObservableObject
 
             if (nextSubtitle != null && newEndTime > nextSubtitle.StartTime)
             {
-                subtitle.EndTime = nextSubtitle.StartTime;
+                // Leave the minimum gap and keep a positive duration, as libse's
+                // SetFixedDuration / AdjustDisplayTimeUsingPercent do (so the dialog and Batch
+                // convert agree). Capping flat at next.Start gave a ZERO-duration line whenever
+                // two rows share a start time, and a negative one when rows are out of order -
+                // the DoAdjustViaSeconds branch above already floors its result.
+                subtitle.EndTime = ClampEndTime(subtitle.StartTime, nextSubtitle.StartTime);
             }
             else
             {
                 subtitle.EndTime = newEndTime;
             }
         }
+    }
+
+
+    /// <summary>
+    /// An end time that leaves the configured minimum gap before <paramref name="nextStartTime"/>
+    /// and is still at least 1 ms after <paramref name="startTime"/>.
+    /// </summary>
+    private static TimeSpan ClampEndTime(TimeSpan startTime, TimeSpan nextStartTime)
+    {
+        var capped = nextStartTime - TimeSpan.FromMilliseconds(Configuration.Settings.General.MinimumMillisecondsBetweenLines);
+        if (capped <= startTime)
+        {
+            capped = startTime + TimeSpan.FromMilliseconds(1);
+        }
+
+        return capped;
     }
 
     private void DoAdjustViaPercent(ObservableCollection<SubtitleLineViewModel> subtitles)
@@ -121,7 +142,12 @@ public partial class AdjustDurationViewModel : ObservableObject
 
             if (nextSubtitle != null && newEndTime > nextSubtitle.StartTime)
             {
-                subtitle.EndTime = nextSubtitle.StartTime;
+                // Leave the minimum gap and keep a positive duration, as libse's
+                // SetFixedDuration / AdjustDisplayTimeUsingPercent do (so the dialog and Batch
+                // convert agree). Capping flat at next.Start gave a ZERO-duration line whenever
+                // two rows share a start time, and a negative one when rows are out of order -
+                // the DoAdjustViaSeconds branch above already floors its result.
+                subtitle.EndTime = ClampEndTime(subtitle.StartTime, nextSubtitle.StartTime);
             }
             else
             {

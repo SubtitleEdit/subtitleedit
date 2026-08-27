@@ -27,9 +27,8 @@ public class GetDictionariesWindow : Window
         DataContext = vm;
 
         var downloadButton = UiUtil.MakeButton(string.Empty, vm.DownloadCommand)
-            .WithIconLeft(IconNames.Download)
+            .WithIconLeftBindText(IconNames.Download, nameof(vm.DownloadButtonText))
             .WithBindEnabled(nameof(vm.IsDownloadEnabled));
-        downloadButton.Bind(ContentControl.ContentProperty, new Binding(nameof(vm.DownloadButtonText)));
 
         var stack = new StackPanel
         {
