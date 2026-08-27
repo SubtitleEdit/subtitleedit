@@ -95,7 +95,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.AppendLine($"{text}{Environment.NewLine}{p.StartTime.ToHHMMSSPeriodFF().Replace(".", ":")}\\{p.EndTime.ToHHMMSSPeriodFF().Replace(".", ":")}");
             }
 
-            var last = subtitle.Paragraphs.Last();
+            // LastOrDefault, not Last: an empty subtitle threw "Sequence contains no
+            // elements" out of the writer (the null check right below shows null was
+            // always the intended empty case).
+            var last = subtitle.Paragraphs.LastOrDefault();
             if (last == null)
             {
                 sb.AppendLine("*END*");
