@@ -1196,7 +1196,12 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             }
 
             // Primary color: \c&HBBGGRR& or \1c&HBBGGRR& or \c (reset color)
-            if (firstChar == 'c' && (tagLen == 1 || !char.IsDigit(trimmedTag[1])))
+            // Exclude a LETTER after the "c" as well as a digit: "\clip" passed the digit-only
+            // test, so a block like "{\clip(0,0,100,100)}" was treated as a colour tag with no
+            // parseable colour and the fall-through then cleared state.Color - the rest of the
+            // line lost its colour in the grid while libass and SE's own preview kept it.
+            // SubtitleSyntaxTokenizer.IsAssColorTag does the exact-name comparison.
+            if (firstChar == 'c' && (tagLen == 1 || !char.IsLetterOrDigit(trimmedTag[1])))
             {
                 if (tagLen == 1)
                 {

@@ -113,9 +113,8 @@ public class VibeVoiceCrispAsrSettingsWindow : Window
         grid.Add(MakeLabel(Se.Language.General.Engine), 0, 0);
         var enginePanel = MakeStatusPanel(nameof(vm.EngineBrush), nameof(vm.EngineLabel));
         var engineButton = UiUtil.MakeButton(string.Empty, vm.RedownloadEngineCommand)
-            .WithIconLeft(IconNames.Download)
+            .WithIconLeftBindText(IconNames.Download, nameof(vm.EngineDownloadButtonText))
             .WithMarginLeft(12);
-        engineButton.Bind(ContentControl.ContentProperty, new Binding(nameof(vm.EngineDownloadButtonText)));
         enginePanel.Children.Add(engineButton);
         grid.Add(enginePanel, 0, 1);
 

@@ -357,7 +357,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                             var idx = sb.ToString().IndexOf('[');
                             if (s == ']' && idx > 1)
                             { // I [Motor roaring] love you!
-                                var temp = sb.ToString(0, idx - 1).Trim();
+                                // The text before '[' is [0, idx), so the length is idx - the
+                                // "- 1" dropped the last character before the bracket, which is
+                                // exactly the one this test looks at. "Yes.[Motor roaring] hello."
+                                // saw "Yes" (a letter) instead of "Yes." and left "hello"
+                                // lowercase. The documented "I [Motor roaring]" case is unchanged.
+                                var temp = sb.ToString(0, idx).Trim();
                                 if (temp.Length > 0 && !char.IsLetterOrDigit(temp[temp.Length - 1]))
                                 {
                                     lastWasBreak = true;

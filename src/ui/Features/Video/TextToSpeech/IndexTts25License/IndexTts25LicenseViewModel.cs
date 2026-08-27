@@ -48,7 +48,11 @@ public partial class IndexTts25LicenseViewModel : ObservableObject
             return;
         }
 
+        // AcceptLicense only assigns the settings field; persist it right away, as the
+        // voice-cloning consent dialog does - otherwise an acceptance given once is lost if the
+        // session ends before the next settings save and the user is prompted again.
         IndexTts25AudioCpp.AcceptLicense();
+        Se.SaveSettings();
         OkPressed = true;
         Window?.Close();
     }

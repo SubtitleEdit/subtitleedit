@@ -129,11 +129,24 @@ public partial class ApplyMinGapViewModel : ObservableObject, IClosingCleanup
                 continue;
             }
 
+            var newEndMs = next.StartTime.TotalMilliseconds - minMsBetweenLines;
+
+            // Skip only when the new end would land at or before this line's own start. That
+            // happens for a short line followed closely by the next one (a 50 ms line, next at
+            // +10 ms, gap 100), and produced a negative duration that was still counted as a fix
+            // and reached the grid and the saved file.
+            // Deliberately NOT the minimum-display threshold that BatchConverter.ApplyMinGap
+            // uses: shortening a line below it is this dialog's normal, intended behaviour.
+            var newDuration = newEndMs - current.StartTime.TotalMilliseconds;
+            if (newDuration <= 0)
+            {
+                continue;
+            }
+
             fixedCount++;
 
             var before = new TimeCode(gapMs).ToShortDisplayString();
 
-            var newEndMs = next.StartTime.TotalMilliseconds - minMsBetweenLines;
             current.EndTime = TimeSpan.FromMilliseconds(newEndMs);
             var newGapMs = next.StartTime.TotalMilliseconds - current.EndTime.TotalMilliseconds;
 

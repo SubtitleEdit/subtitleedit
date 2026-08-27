@@ -473,10 +473,12 @@ public class AiReviewWindow : Window
         // keeps the window open so the review can be worked through in passes (issue #13807), Ok
         // writes them and closes, Cancel closes and leaves the unapplied ones behind. Apply is
         // hidden for callers without a live target - they have nowhere to receive a pass.
+        // WithIconLeft assigns Content, so setting it after binding ContentProperty replaced the
+        // bound text with the bare icon (and binding after WithIconLeft would drop the icon).
+        // WithIconLeftBindText builds the icon+bound-text panel once, which is what was wanted.
         var buttonApply = UiUtil.MakeButton(string.Empty, vm.ApplyCommand)
-            .WithBindIsVisible(nameof(vm.IsApplyVisible));
-        buttonApply.Bind(ContentControl.ContentProperty, new Binding(nameof(vm.ApplyButtonText)));
-        buttonApply.WithIconLeft("fa-solid fa-check");
+            .WithBindIsVisible(nameof(vm.IsApplyVisible))
+            .WithIconLeftBindText("fa-solid fa-check", nameof(vm.ApplyButtonText));
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
