@@ -581,6 +581,7 @@ public class LanguageGeneral
     public string StartingDotDotDot { get; set; }
     public string Status { get; set; }
     public string Stereo { get; set; }
+    public string SpreadsheetFiles { get; set; }
     public string Stop { get; set; }
     public string Strikeout { get; set; }
     public string Style { get; set; }
@@ -1341,6 +1342,7 @@ public class LanguageGeneral
         StartingDotDotDot = "Starting...";
         Status = "Status";
         Stereo = "Stereo";
+        SpreadsheetFiles = "Spreadsheet files";
         Stop = "Stop";
         Strikeout = "Strikeout";
         Style = "Style";

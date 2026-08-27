@@ -546,6 +546,8 @@ public partial class MainViewModel :
     VideoPlayerUndockedViewModel? _videoPlayerUndockedViewModel;
     AudioVisualizerUndockedViewModel? _audioVisualizerUndockedViewModel;
     bool _suppressUndockedTopmost;
+    bool _mainWindowLostForegroundToOtherApp;
+    bool _undockedWindowPointerPressed;
     FindViewModel? _findViewModel;
     Control? _findPreviousFocus;
     Control? _focusBeforeMainMenu;
@@ -3470,7 +3472,8 @@ public partial class MainViewModel :
             return;
         }
 
-        var fileName = await _fileHelper.PickOpenSubtitleFile(Window!, Se.Language.General.OpenSubtitleFileTitle, lastOpenedFilePath: _subtitleFileName);
+        // Spreadsheets are offered too - opening one runs the CSV/XLSX/ODS import (#14168).
+        var fileName = await _fileHelper.PickOpenSubtitleFile(Window!, Se.Language.General.OpenSubtitleFileTitle, lastOpenedFilePath: _subtitleFileName, includeSpreadsheets: true);
         if (!string.IsNullOrEmpty(fileName))
         {
             await SubtitleOpen(fileName);
@@ -3551,7 +3554,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var fileName = await _fileHelper.PickOpenSubtitleFile(Window!, Se.Language.General.OpenSubtitleFileTitle, lastOpenedFilePath: _subtitleFileName);
+        var fileName = await _fileHelper.PickOpenSubtitleFile(Window!, Se.Language.General.OpenSubtitleFileTitle, lastOpenedFilePath: _subtitleFileName, includeSpreadsheets: true);
         if (!string.IsNullOrEmpty(fileName))
         {
             await SubtitleOpen(fileName, skipLoadVideo: true);
@@ -7998,6 +8001,7 @@ public partial class MainViewModel :
                 // The two undocked windows are still independent in Alt+Tab — KeepTopmost… is
                 // just a Z-order knob, not an ownership change.
                 WindowService.KeepTopmostWhileOwnerActive(window, Window!, () => _suppressUndockedTopmost);
+                WatchUndockedForegroundSteal(window);
             });
 
             _windowService.ShowIndependentWindow<AudioVisualizerUndockedWindow, AudioVisualizerUndockedViewModel>((window, vm) =>
@@ -8006,6 +8010,7 @@ public partial class MainViewModel :
                 vm.Initialize(AudioVisualizer, this);
                 ReloadAudioVisualizer();
                 WindowService.KeepTopmostWhileOwnerActive(window, Window!, () => _suppressUndockedTopmost);
+                WatchUndockedForegroundSteal(window);
             });
 
             InitLayout.MakeLayout12KeepVideo(MainView!, this);
@@ -8071,6 +8076,89 @@ public partial class MainViewModel :
     {
         return _videoPlayerUndockedViewModel?.Window?.IsActive == true ||
                _audioVisualizerUndockedViewModel?.Window?.IsActive == true;
+    }
+
+    /// <summary>
+    /// Hands the foreground back to the main window when the OS hands it to an undocked tool
+    /// window instead (#14168).
+    ///
+    /// The undocked video/waveform windows are topmost while SE is active, and dropping that on
+    /// deactivation re-inserts them at the TOP of the non-topmost band on Windows - i.e. still
+    /// above the main window. So when the application the user switched to closes (or is
+    /// minimized), Windows activates the frontmost window of this process, which is a tool
+    /// window, not the main window the user left. Same family as the startup case in #13569.
+    ///
+    /// Only corrected when the main window was the one that lost the foreground, and only when
+    /// the activation was not aimed at the tool window itself - a click that activates a window
+    /// is delivered after the activation on Windows, so the decision waits a beat for it.
+    ///
+    /// The one case this cannot tell apart from the OS handing over the foreground is the user
+    /// Alt+Tabbing straight back to a tool window (they are separate entries in the task
+    /// switcher): that lands in the main window instead. The tool windows stay visible on top
+    /// either way, so the cost is keyboard focus - which is where it belongs for everything but
+    /// the waveform's own shortcuts.
+    /// </summary>
+    private void WatchUndockedForegroundSteal(Window undockedWindow)
+    {
+        undockedWindow.AddHandler(
+            InputElement.PointerPressedEvent,
+            (_, _) => _undockedWindowPointerPressed = true,
+            RoutingStrategies.Tunnel,
+            handledEventsToo: true);
+
+        undockedWindow.Activated += (_, _) =>
+        {
+            if (!_mainWindowLostForegroundToOtherApp)
+            {
+                return;
+            }
+
+            _mainWindowLostForegroundToOtherApp = false;
+            _undockedWindowPointerPressed = false;
+
+            DispatcherTimer.RunOnce(() =>
+            {
+                if (Window is not { } mainWindow || !ShouldHandForegroundBackToMainWindow(
+                        _undockedWindowPointerPressed,
+                        undockedWindow.IsPointerOver,
+                        undockedWindow.IsActive,
+                        mainWindow.IsActive,
+                        mainWindow.WindowState == WindowState.Minimized,
+                        WindowService.IsModalDialogOpen))
+                {
+                    return;
+                }
+
+                mainWindow.Activate();
+            }, TimeSpan.FromMilliseconds(200));
+        };
+    }
+
+    /// <summary>
+    /// Whether an undocked tool window that just took the foreground should hand it to the main
+    /// window - see <see cref="WatchUndockedForegroundSteal"/>. Pure so the rule can be tested.
+    /// </summary>
+    internal static bool ShouldHandForegroundBackToMainWindow(
+        bool undockedWindowPointerPressed,
+        bool undockedWindowPointerOver,
+        bool undockedWindowIsActive,
+        bool mainWindowIsActive,
+        bool mainWindowIsMinimized,
+        bool modalDialogOpen)
+    {
+        if (undockedWindowPointerPressed || undockedWindowPointerOver)
+        {
+            return false; // the user aimed at the tool window - leave it in front
+        }
+
+        if (!undockedWindowIsActive || mainWindowIsActive)
+        {
+            return false; // the foreground already moved on
+        }
+
+        // Activate() misfires on a minimized window, and a modal dialog owns the foreground
+        // while it is open (#13405).
+        return !mainWindowIsMinimized && !modalDialogOpen;
     }
 
     /// <summary>
@@ -25433,6 +25521,18 @@ public partial class MainViewModel :
         // Captured before the cleanup below, which can move focus itself.
         _focusBeforeWindowDeactivated = GetRestorableFocusedControl();
 
+        // Note whether the whole application - not just this window - went to the background with
+        // the main window in front, so an undocked tool window taking the foreground back can be
+        // corrected (see WatchUndockedForegroundSteal, #14168). Deferred because the newly active
+        // window's IsActive has not settled while Deactivated runs.
+        Dispatcher.UIThread.Post(() =>
+        {
+            _mainWindowLostForegroundToOtherApp =
+                Window is { IsActive: false } &&
+                !IsUndockedWindowActive() &&
+                GetActiveWindowOtherThanMainAndUndocked() == null;
+        }, DispatcherPriority.Background);
+
         // Avalonia's AccessKeyHandler must not be left mid-Alt-gesture either: a modal opened
         // while Alt was held (Alt, O, ... reaching the Shortcuts window) eats the physical Alt
         // release, and the stranded "ignore the next Alt up" state makes the next bare Alt press
@@ -25475,6 +25575,10 @@ public partial class MainViewModel :
     {
         var previous = _focusBeforeWindowDeactivated;
         _focusBeforeWindowDeactivated = null;
+
+        // The main window is where the foreground belongs, so there is nothing left to correct
+        // (#14168).
+        _mainWindowLostForegroundToOtherApp = false;
 
         Dispatcher.UIThread.Post(() =>
         {
