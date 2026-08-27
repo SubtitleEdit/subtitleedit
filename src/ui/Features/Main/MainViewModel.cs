@@ -685,6 +685,10 @@ public partial class MainViewModel :
     string _dropDownFormatsSearchText = string.Empty;
     private System.Timers.Timer _dropDownFormatsSearchTimer = new System.Timers.Timer(1000);
     private PlaySelectionItem? _playSelectionItem;
+
+    // Holds off the position timer's "playback stopped" handling for the moment between asking the
+    // player to play and it reporting that it is playing (#14167) - see PlayStartGate.
+    private readonly PlayStartGate _playStartGate = new();
     private int _pendingScrollIndex = -1;
     private SubtitleLineViewModel? _pendingScrollItem;
     private SubtitleLineViewModel? _pendingScrollSubtitle = null;
@@ -1651,15 +1655,20 @@ public partial class MainViewModel :
     internal void RequestPausePlayheadFreeze()
     {
         _pauseRequested = true;
+        _playStartGate.PauseRequested(); // a pause supersedes any play still waiting to be observed
         _playheadPausedSettled = false; // reconcile the cursor to mpv's final frame once this pause settles
         _playheadPauseSettleTs = Stopwatch.GetTimestamp();
     }
 
     // Playback (re)started, so a pause freeze from a moment ago is stale: while it is set the cursor
     // is held frozen at the pause spot, which would stall the first ~100 ms of playback.
+    // Every play request in the app funnels through here (PlayVideo, the play half of
+    // TogglePlayPause, and the player control's own PlayPauseRequested wiring), so this is also
+    // where the play-start gate is armed.
     internal void CancelPausePlayheadFreeze()
     {
         _pauseRequested = false;
+        _playStartGate.PlayRequested(Stopwatch.GetTimestamp());
     }
 
     // The player's Stop button pauses and seeks to 0; freeze the cursor immediately and pin it to
@@ -27623,6 +27632,8 @@ public partial class MainViewModel :
                         Optris.Icons.Avalonia.Attached.SetIcon(ButtonWaveformPlay, IconNames.Pause);
                     }
 
+                    _playStartGate.PlayingObserved();
+
                     if (_playSelectionItem != null && mediaPlayerSeconds >= _playSelectionItem.EndSeconds)
                     {
                         var p = _playSelectionItem.GetNextSubtitle(mediaPlayerSeconds);
@@ -27676,20 +27687,32 @@ public partial class MainViewModel :
                         Optris.Icons.Avalonia.Attached.SetIcon(ButtonWaveformPlay, IconNames.Play);
                     }
 
-                    ResetPlaySelection();
-
-                    // "Center also while paused" scrub-editing (SE 4's locked mode): while the user
-                    // wheels through the waveform, keep selecting the line under the centered cursor.
-                    // Only react to position *changes* — otherwise this would immediately steal back
-                    // the selection when the user picks a different line in the grid while paused.
-                    if (WaveformCenter && Se.Settings.Waveform.CenterVideoPositionAlsoWhenPaused &&
-                        SelectCurrentSubtitleWhilePlaying &&
-                        Math.Abs(mediaPlayerSeconds - _pausedSelectLastSeconds) > 0.001)
+                    // "Not playing" here does not always mean playback stopped: mpv reports its
+                    // pause state through an asynchronous property-change event, so a play we
+                    // asked for microseconds ago still reads as paused for a tick or two. Doing
+                    // the stopped-handling in that window drops the play-selection stop/loop
+                    // point the caller just set - so "play current and pause" (grid double-click,
+                    // play next/previous and stop, play selected lines) sailed past the end of
+                    // the line instead of stopping there (#14167). It would also let the paused
+                    // scrub-select below move the selection off the line about to be played,
+                    // which resets the play selection a second way through SelectionChanged.
+                    if (!_playStartGate.IsPending(Stopwatch.GetTimestamp(), Stopwatch.Frequency))
                     {
-                        SelectCurrentSubtitleAtPlayhead(mediaPlayerSeconds, subtitle);
-                    }
+                        ResetPlaySelection();
 
-                    _pausedSelectLastSeconds = mediaPlayerSeconds;
+                        // "Center also while paused" scrub-editing (SE 4's locked mode): while the user
+                        // wheels through the waveform, keep selecting the line under the centered cursor.
+                        // Only react to position *changes* — otherwise this would immediately steal back
+                        // the selection when the user picks a different line in the grid while paused.
+                        if (WaveformCenter && Se.Settings.Waveform.CenterVideoPositionAlsoWhenPaused &&
+                            SelectCurrentSubtitleWhilePlaying &&
+                            Math.Abs(mediaPlayerSeconds - _pausedSelectLastSeconds) > 0.001)
+                        {
+                            SelectCurrentSubtitleAtPlayhead(mediaPlayerSeconds, subtitle);
+                        }
+
+                        _pausedSelectLastSeconds = mediaPlayerSeconds;
+                    }
                 }
 
                 _avLastScrolling = isAvScrolloing;
