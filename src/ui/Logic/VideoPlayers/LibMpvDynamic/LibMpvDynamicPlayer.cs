@@ -1744,6 +1744,11 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
     private double? _pausedValue;
 
+    // Stopwatch timestamp of the last seek issued through the Position setter; 0 = none yet.
+    // Compared against the playback-restart timestamp so Pause() can tell a seek target that
+    // is still in flight (keep it) from one whose seek finished long ago (stale - clear it).
+    private long _lastSeekIssuedTimestamp;
+
     // Last raw time-pos seen by the Position getter/setter, used to gate the eof-reached
     // probe below. -1 = unknown (always probe).
     private double _lastRawTimePos = -1;
@@ -1878,6 +1883,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             // one per input event), every caller already treats the result as asynchronous
             // (the playhead pin waits for the position to actually arrive), and the error
             // result was never acted on here.
+            Interlocked.Exchange(ref _lastSeekIssuedTimestamp, System.Diagnostics.Stopwatch.GetTimestamp());
             DoMpvCommandFireAndForget("seek", value.ToString(CultureInfo.InvariantCulture), "absolute");
         }
     }
@@ -2070,11 +2076,24 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             return;
         }
 
-        // Every other state transition clears this (LoadFile/PlayOrPause/CloseFile/Stop/Play/
-        // frame steps). Without it, pausing after a seek made during playback made the Position
-        // getter keep returning that old seek target, so the slider, clock and playhead all
-        // jumped back to it.
-        _pausedValue = null;
+        // A finished seek's target is stale: pausing after a seek made minutes ago during
+        // playback made the Position getter keep returning that old target, so the slider,
+        // clock and playhead all jumped back to it - clear it, like the other state
+        // transitions do (LoadFile/PlayOrPause/CloseFile/Stop/Play/frame steps).
+        //
+        // But a seek still in flight is the opposite case: its target IS where playback is
+        // about to be, and the waveform click path depends on the getter reporting it. A
+        // click seeks first (pointer release) and pauses a moment later (tap), and the
+        // second Position assignment no-ops in Avalonia because the property already holds
+        // the value - so clearing here left the getter serving mpv's pre-seek position
+        // until the async seek landed, and the cursor jumped away from the click (#14187).
+        var seekInFlight = _eventLoopActive &&
+                           Interlocked.Read(ref _lastSeekIssuedTimestamp) != 0 &&
+                           !HasPlaybackRestartedSince(Interlocked.Read(ref _lastSeekIssuedTimestamp));
+        if (!seekInFlight)
+        {
+            _pausedValue = null;
+        }
 
         var err = DoMpvCommand("set", "pause", "yes");
         if (err < 0)
