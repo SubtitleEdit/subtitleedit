@@ -164,10 +164,14 @@ public class OpenAiSttServiceTests
     }
 
     [Fact]
-    public async Task TranscribeAsync_PlainTextBody_FallsBackToSingleSegment()
+    public async Task TranscribeAsync_PlainTextBody_ReturnsTextWithNoSegments()
     {
-        // Body that JsonSerializer cannot deserialize into OpenAiCompatibleSttResponse
-        // forces the fallback branch that wraps it as a single-segment response.
+        // Body that JsonSerializer cannot deserialize into OpenAiCompatibleSttResponse forces the
+        // plain-text fallback. It must return the text with NO segments: the caller takes the
+        // segments branch whenever Segments.Count > 0, so the synthetic 0/0 segment this used to
+        // build put the whole transcript in one cue at 00:00:00,000 --> 00:00:00,000 and
+        // suppressed the sentence-spreading fallback that gives it real time codes. The streaming
+        // path above documents the same fix, and OpenRouterSttService already did it this way.
         using var handler = new StubHandler((req, ct) =>
             Task.FromResult(JsonResponse("not valid json at all", contentType: "application/json")));
         using var client = new HttpClient(handler);
@@ -180,9 +184,7 @@ public class OpenAiSttServiceTests
             var response = await service.TranscribeAsync(wav, cancellationToken: ct);
 
             Assert.Equal("not valid json at all", response.Text);
-            Assert.NotNull(response.Segments);
-            Assert.Single(response.Segments!);
-            Assert.Equal("not valid json at all", response.Segments![0].Text);
+            Assert.True(response.Segments == null || response.Segments.Count == 0);
         }
         finally
         {

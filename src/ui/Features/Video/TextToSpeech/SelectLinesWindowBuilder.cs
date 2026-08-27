@@ -63,7 +63,21 @@ public static class SelectLinesWindowBuilder
 
         window.Content = grid;
 
-        window.Activated += delegate { buttonOk.Focus(); };
+        // Focus the table, not OK. AddSpaceToggle puts a tunnelling handler on the TableView, so
+        // Space only toggles a row while focus is inside it - with OK focused the very first
+        // Space activated the button and accepted the dialog with every line still pre-checked.
+        // ProfilesWindow spells out the same rule ("a focused button clicks on bare Space").
+        window.Activated += delegate
+        {
+            if (rowsView is TableView tableView)
+            {
+                TableViewExtras.FocusRow(tableView);
+            }
+            else
+            {
+                buttonOk.Focus();
+            }
+        };
         window.KeyDown += vm.KeyDown;
 
         window.Closing += delegate { UiUtil.SaveWindowPosition(window); };

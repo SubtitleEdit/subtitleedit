@@ -96,7 +96,13 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         p.Text = p.Text.Replace(match.Value, match.Value[0] + ", " + match.Value[match.Value.Length - 1]);
                         callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                     }
-                    match = match.NextMatch();
+
+                    // Re-match against the UPDATED text as the "?", "!" and ":" loops do.
+                    // NextMatch() walks the pre-replacement string, so after the first fix every
+                    // later match.Index was one short and "p.Text[match.Index + 2]" read the
+                    // comma itself - defeating the expectedChars exclusion for every comma after
+                    // the first ("Well,I know,<i>maybe</i>." gained a space before the tag).
+                    match = FixMissingSpacesReComma.Match(p.Text, match.Index + 1);
                 }
 
                 var allowFix = callbacks.AllowFix(p, fixAction);
@@ -186,7 +192,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             isMatchAbbreviation = true;
                         }
 
-                        if (match.Value.Equals("h.d", StringComparison.OrdinalIgnoreCase) && match.Index > 0 && p.Text.Substring(match.Index - 1, 4).Equals("ph.d", StringComparison.OrdinalIgnoreCase))
+                        // FixMissingSpacesRePeriod matches exactly four characters, so
+                        // match.Value can never equal the three-character "h.d" - the guard was
+                        // left over from an earlier three-character pattern and never fired, so
+                        // "his ph.d yesterday" was split into "ph. d". The leading letter is
+                        // inside the match now, so test it directly.
+                        if (match.Value.Equals("ph.d", StringComparison.OrdinalIgnoreCase))
                         {
                             isMatchAbbreviation = true;
                         }
@@ -199,7 +210,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                         }
                     }
-                    match = match.NextMatch();
+
+                    // Same as the comma loop above: continue over the updated text.
+                    match = FixMissingSpacesRePeriod.Match(p.Text, match.Index + 1);
                 }
 
                 if (!p.Text.StartsWith("--", StringComparison.Ordinal))

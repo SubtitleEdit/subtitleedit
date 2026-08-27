@@ -577,14 +577,18 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 }
             }
 
-            if (text.LineStartsWithHtmlTag(true) && text[3] == 0x20)
+            // Bound the index like the "{\...}" branch above: LineStartsWithHtmlTag(true) is
+            // satisfied by a string that is exactly "<i>", so text[3] read past the end. Reached
+            // by FixHyphensRemoveForSingleLine on "<i>-" (the dash is stripped first, leaving
+            // "<i>"), which took down the whole Fix-Common-Errors / Remove-text-for-HI run.
+            if (text.Length > 3 && text.LineStartsWithHtmlTag(true) && text[3] == 0x20)
             {
                 text = text.Remove(3, 1).TrimStart();
             }
             if (text.LineStartsWithHtmlTag(false, true))
             {
                 var closeIdx = text.IndexOf('>');
-                if (closeIdx > 6 && text[closeIdx + 1] == 0x20)
+                if (closeIdx > 6 && closeIdx + 1 < text.Length && text[closeIdx + 1] == 0x20)
                 {
                     text = text.Remove(closeIdx + 1, 1);
                 }

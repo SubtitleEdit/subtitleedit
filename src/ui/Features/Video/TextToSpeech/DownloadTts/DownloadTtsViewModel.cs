@@ -188,7 +188,12 @@ public partial class DownloadTtsViewModel : ObservableObject
 
         _timer.Interval = 500;
         _timer.Elapsed += OnTimerOnElapsed;
-        _timer.Start();
+        // OnClosing disposes the timer, so restarting it from a chained download
+        // step threw ObjectDisposedException on a thread-pool thread (#12739).
+        if (!_isClosing)
+        {
+            _timer.Start();
+        }
     }
 
     private void OnTimerOnElapsed(object? sender, ElapsedEventArgs args)
@@ -626,7 +631,12 @@ public partial class DownloadTtsViewModel : ObservableObject
                 // CrispASR qwen3-tts backend rejects any other rate.
                 _downloadTaskQwen3TtsCrispAsrVoices = _qwen3TtsCppDownloadService.DownloadVoices(
                     _downloadStreamQwen3TtsCrispAsrVoices, voicesProgress, _cancellationTokenSource.Token);
-                _timer.Start();
+                // OnClosing disposes the timer, so restarting it from a chained download
+                // step threw ObjectDisposedException on a thread-pool thread (#12739).
+                if (!_isClosing)
+                {
+                    _timer.Start();
+                }
             }
             else if (_downloadTaskQwen3TtsCrispAsrModels is { IsFaulted: true })
             {
@@ -728,7 +738,12 @@ public partial class DownloadTtsViewModel : ObservableObject
                 });
                 _downloadTaskVibeVoiceCrispAsrVoices = _qwen3TtsCppDownloadService.DownloadVoices(
                     _downloadStreamVibeVoiceCrispAsrVoices, voicesProgress, _cancellationTokenSource.Token);
-                _timer.Start();
+                // OnClosing disposes the timer, so restarting it from a chained download
+                // step threw ObjectDisposedException on a thread-pool thread (#12739).
+                if (!_isClosing)
+                {
+                    _timer.Start();
+                }
             }
             else if (_downloadTaskVibeVoiceCrispAsrModels is { IsFaulted: true })
             {
@@ -888,7 +903,12 @@ public partial class DownloadTtsViewModel : ObservableObject
                 });
                 _downloadTaskIndexTts25AudioCppVoices = _qwen3TtsCppDownloadService.DownloadVoices(
                     _downloadStreamIndexTts25AudioCppVoices, voicesProgress, _cancellationTokenSource.Token);
-                _timer.Start();
+                // OnClosing disposes the timer, so restarting it from a chained download
+                // step threw ObjectDisposedException on a thread-pool thread (#12739).
+                if (!_isClosing)
+                {
+                    _timer.Start();
+                }
                 return;
             }
 
@@ -1012,7 +1032,12 @@ public partial class DownloadTtsViewModel : ObservableObject
                 });
                 _downloadTaskIndexTtsCrispAsrVoices = _qwen3TtsCppDownloadService.DownloadVoices(
                     _downloadStreamIndexTtsCrispAsrVoices, voicesProgress, _cancellationTokenSource.Token);
-                _timer.Start();
+                // OnClosing disposes the timer, so restarting it from a chained download
+                // step threw ObjectDisposedException on a thread-pool thread (#12739).
+                if (!_isClosing)
+                {
+                    _timer.Start();
+                }
             }
             else if (_downloadTaskIndexTtsCrispAsrModels is { IsFaulted: true })
             {
@@ -1096,7 +1121,12 @@ public partial class DownloadTtsViewModel : ObservableObject
                 });
                 _downloadTaskZonosTtsCrispAsrVoices = _qwen3TtsCppDownloadService.DownloadVoices(
                     _downloadStreamZonosTtsCrispAsrVoices, voicesProgress, _cancellationTokenSource.Token);
-                _timer.Start();
+                // OnClosing disposes the timer, so restarting it from a chained download
+                // step threw ObjectDisposedException on a thread-pool thread (#12739).
+                if (!_isClosing)
+                {
+                    _timer.Start();
+                }
             }
             else if (_downloadTaskZonosTtsCrispAsrModels is { IsFaulted: true })
             {
@@ -1211,7 +1241,12 @@ public partial class DownloadTtsViewModel : ObservableObject
                 });
                 _downloadTaskCosyVoice3CrispAsrVoices = _qwen3TtsCppDownloadService.DownloadVoices(
                     _downloadStreamCosyVoice3CrispAsrVoices, voicesProgress, _cancellationTokenSource.Token);
-                _timer.Start();
+                // OnClosing disposes the timer, so restarting it from a chained download
+                // step threw ObjectDisposedException on a thread-pool thread (#12739).
+                if (!_isClosing)
+                {
+                    _timer.Start();
+                }
             }
             else if (_downloadTaskCosyVoice3CrispAsrModels is { IsFaulted: true })
             {
@@ -1297,7 +1332,12 @@ public partial class DownloadTtsViewModel : ObservableObject
                 });
                 _downloadTaskF5TtsCrispAsrVoices = _qwen3TtsCppDownloadService.DownloadVoices(
                     _downloadStreamF5TtsCrispAsrVoices, voicesProgress, _cancellationTokenSource.Token);
-                _timer.Start();
+                // OnClosing disposes the timer, so restarting it from a chained download
+                // step threw ObjectDisposedException on a thread-pool thread (#12739).
+                if (!_isClosing)
+                {
+                    _timer.Start();
+                }
             }
             else if (_downloadTaskF5TtsCrispAsrModels is { IsFaulted: true })
             {
@@ -1383,7 +1423,12 @@ public partial class DownloadTtsViewModel : ObservableObject
                 });
                 _downloadTaskVoxCPM2CrispAsrVoices = _qwen3TtsCppDownloadService.DownloadVoices(
                     _downloadStreamVoxCPM2CrispAsrVoices, voicesProgress, _cancellationTokenSource.Token);
-                _timer.Start();
+                // OnClosing disposes the timer, so restarting it from a chained download
+                // step threw ObjectDisposedException on a thread-pool thread (#12739).
+                if (!_isClosing)
+                {
+                    _timer.Start();
+                }
             }
             else if (_downloadTaskVoxCPM2CrispAsrModels is { IsFaulted: true })
             {
@@ -1469,7 +1514,12 @@ public partial class DownloadTtsViewModel : ObservableObject
                 });
                 _downloadTaskMossTtsCrispAsrVoices = _qwen3TtsCppDownloadService.DownloadVoices(
                     _downloadStreamMossTtsCrispAsrVoices, voicesProgress, _cancellationTokenSource.Token);
-                _timer.Start();
+                // OnClosing disposes the timer, so restarting it from a chained download
+                // step threw ObjectDisposedException on a thread-pool thread (#12739).
+                if (!_isClosing)
+                {
+                    _timer.Start();
+                }
             }
             else if (_downloadTaskMossTtsCrispAsrModels is { IsFaulted: true })
             {
@@ -1608,7 +1658,12 @@ public partial class DownloadTtsViewModel : ObservableObject
                 });
                 _downloadTaskOmniVoices = _omniVoiceDownloadService.DownloadVoices(
                     _downloadStreamOmniVoices, voicesProgress, _cancellationTokenSource.Token);
-                _timer.Start();
+                // OnClosing disposes the timer, so restarting it from a chained download
+                // step threw ObjectDisposedException on a thread-pool thread (#12739).
+                if (!_isClosing)
+                {
+                    _timer.Start();
+                }
             }
             else if (_downloadTaskOmniVoice is { IsFaulted: true })
             {

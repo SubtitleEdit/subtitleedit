@@ -69,7 +69,11 @@ public class WhisperEngineCTranslate2 : ISpeechToTextEngine
 
         if (!File.Exists(fullPath) && OperatingSystem.IsLinux())
         {
-            string[] paths = ["/usr/bin/whisper-cli", "usr/local/bin/"];
+            // This engine's binary is whisper-ctranslate2. The list was copy-pasted from the
+            // whisper.cpp engines, so on Linux with a distro whisper.cpp installed the engine
+            // reported itself installed, no download was offered, and SE launched whisper-cli
+            // with faster-whisper arguments (--model_directory, --verbose True).
+            string[] paths = ["/usr/bin/whisper-ctranslate2", "/usr/local/bin/whisper-ctranslate2"];
             foreach (var path in paths)
             {
                 if (File.Exists(path))

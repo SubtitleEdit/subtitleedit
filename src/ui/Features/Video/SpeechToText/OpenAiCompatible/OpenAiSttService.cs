@@ -439,19 +439,13 @@ public class OpenAiSttService : ISttTranscriber
             // If verbose_json fails, try simple text response
         }
 
-        // Fallback: treat as plain text response
+        // Fallback: treat as plain text response. No synthetic segment - the caller takes the
+        // segments branch whenever Segments.Count > 0, so a 0/0 entry put the whole transcript in
+        // one cue at 00:00:00,000 --> 00:00:00,000 and suppressed the sentence-spreading
+        // fallback. Same fix as the streaming path above; OpenRouterSttService does it this way.
         return new OpenAiCompatibleSttResponse
         {
             Text = jsonResponse.Trim(),
-            Segments = new List<OpenAiCompatibleSegment>
-            {
-                new OpenAiCompatibleSegment
-                {
-                    Start = 0,
-                    End = 0,
-                    Text = jsonResponse.Trim()
-                }
-            }
         };
     }
 
