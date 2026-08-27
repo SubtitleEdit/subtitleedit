@@ -507,7 +507,9 @@ public partial class ImportCsvXlsxCustomColumnsViewModel : ObservableObject
         {
             return CsvColumnRole.Start;
         }
-        if (compact.StartsWith("end") || compact.StartsWith("to") || compact.StartsWith("stop"))
+        // No bare "to" prefix here: it also matched unrelated headers like "Total" or
+        // "Topic" - the common "to"/"toMs"/"toTime" spellings are in the exact-name set.
+        if (compact.StartsWith("end") || compact.StartsWith("stop"))
         {
             return CsvColumnRole.End;
         }

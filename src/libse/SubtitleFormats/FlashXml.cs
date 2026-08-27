@@ -146,7 +146,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     startSeconds = endCode.TotalSeconds;
 
-                    subtitle.Paragraphs.Add(new Paragraph(startCode, endCode, pText.ToString().Replace("<sub>", string.Empty).Replace("</sub>", string.Empty)));
+                    // The text usually arrives as one CDATA block ("<sub>line one<br />line two</sub>"),
+                    // so the <br/> line breaks are part of the raw text - the child-node walk above
+                    // only sees real <br> elements, never these.
+                    var textValue = pText.ToString()
+                        .Replace("<sub>", string.Empty)
+                        .Replace("</sub>", string.Empty)
+                        .Replace("<br />", Environment.NewLine)
+                        .Replace("<br/>", Environment.NewLine)
+                        .Replace("<br>", Environment.NewLine);
+                    subtitle.Paragraphs.Add(new Paragraph(startCode, endCode, textValue));
                 }
                 catch (Exception ex)
                 {

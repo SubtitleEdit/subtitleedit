@@ -93,14 +93,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 var duration = Json.ReadTag(s, "duration");
                 var start = Json.ReadTag(s, "time");
-                var text = Json.ReadTag(s, "name");
+                // ToText encodes with Json.EncodeJsonText ("<br />" line breaks, escaped
+                // quotes...), so the text must be decoded again on the way in.
+                var text = Json.DecodeJsonText(Json.ReadTag(s, "name") ?? string.Empty);
                 bool skip = false;
                 if (!string.IsNullOrEmpty(duration) && !string.IsNullOrEmpty(start) && !string.IsNullOrEmpty(text) &&
                     double.TryParse(start, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out double startSeconds) &&
                     double.TryParse(duration, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out double durationSeconds))
                 {
                     var startMilliseconds = TimeSpan.FromSeconds(startSeconds).TotalMilliseconds;
-                    var p = new Paragraph(text, startMilliseconds, startMilliseconds + TimeSpan.FromSeconds(durationSeconds).Milliseconds);
+                    // TotalMilliseconds, not Milliseconds - the latter is only the 0-999 component,
+                    // so any whole-second duration collapsed the line to zero length.
+                    var p = new Paragraph(text, startMilliseconds, startMilliseconds + TimeSpan.FromSeconds(durationSeconds).TotalMilliseconds);
                     if (p.Text != null && (p.Text == "." || p.Text == "?" || p.Text == "!"))
                     {
                         var last = subtitle.Paragraphs.LastOrDefault();

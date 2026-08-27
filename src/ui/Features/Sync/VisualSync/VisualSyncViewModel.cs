@@ -293,14 +293,14 @@ public partial class VisualSyncViewModel : ObservableObject
     [RelayCommand]
     private void LeftOneSecondForward()
     {
-        VideoPlayerControlLeft.Position = Math.Max(0, VideoPlayerControlLeft.Position + 1);
+        VideoPlayerControlLeft.Position = Math.Min(VideoPlayerControlLeft.Duration, VideoPlayerControlLeft.Position + 1);
         _updateAudioVisualizer = true;
     }
 
     [RelayCommand]
     private void RightOneSecondBack()
     {
-        VideoPlayerControlRight.Position = Math.Min(VideoPlayerControlRight.Duration, VideoPlayerControlRight.Position - 1);
+        VideoPlayerControlRight.Position = Math.Max(0, VideoPlayerControlRight.Position - 1);
         _updateAudioVisualizer = true;
     }
 
@@ -321,14 +321,14 @@ public partial class VisualSyncViewModel : ObservableObject
     [RelayCommand]
     private void LeftHalfSecondForward()
     {
-        VideoPlayerControlLeft.Position = Math.Max(0, VideoPlayerControlLeft.Position + 0.5);
+        VideoPlayerControlLeft.Position = Math.Min(VideoPlayerControlLeft.Duration, VideoPlayerControlLeft.Position + 0.5);
         _updateAudioVisualizer = true;
     }
 
     [RelayCommand]
     private void RightHalfSecondBack()
     {
-        VideoPlayerControlRight.Position = Math.Min(VideoPlayerControlRight.Duration, VideoPlayerControlRight.Position - 0.5);
+        VideoPlayerControlRight.Position = Math.Max(0, VideoPlayerControlRight.Position - 0.5);
         _updateAudioVisualizer = true;
     }
 

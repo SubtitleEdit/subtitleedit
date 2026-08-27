@@ -70,7 +70,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
                             else
                             {
-                                if (p.EndTime.TotalMilliseconds < 0.01)
+                                // An end time is only unexpected when one was ALREADY read for this
+                                // entry. The old check was inverted (it flagged the normal "end not
+                                // set yet" case), so every well-formed entry counted as an error and
+                                // IsMine (paragraphs > errors) could never detect the format.
+                                if (p.EndTime.TotalMilliseconds > 0.01)
                                 {
                                     _errorCount++;
                                 }

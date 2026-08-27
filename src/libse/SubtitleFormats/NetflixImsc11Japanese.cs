@@ -97,20 +97,33 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            var xml = new XmlDocument { XmlResolver = null };
-            xml.LoadXml(GetXmlStructure());
-            var namespaceManager = new XmlNamespaceManager(xml.NameTable);
-            namespaceManager.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
-            var div = xml.DocumentElement.SelectSingleNode("ttml:body", namespaceManager).SelectSingleNode("ttml:div", namespaceManager);
-            foreach (var p in subtitle.Paragraphs)
+            // The fixed template header declares ttp:frameRate 24 with multiplier 1000/1001,
+            // and readers (including SE's own) parse the HH:MM:SS:FF frames part at that
+            // declared 23.976 - so the frames must also be WRITTEN at 23.976, not at whatever
+            // video happens to be open (a 29.97 video shifted every written time code).
+            var savedFrameRate = Configuration.Settings.General.CurrentFrameRate;
+            Configuration.Settings.General.CurrentFrameRate = 23.976;
+            try
             {
-                var paragraphNode = MakeParagraph(xml, p);
-                div.AppendChild(paragraphNode);
-            }
+                var xml = new XmlDocument { XmlResolver = null };
+                xml.LoadXml(GetXmlStructure());
+                var namespaceManager = new XmlNamespaceManager(xml.NameTable);
+                namespaceManager.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
+                var div = xml.DocumentElement.SelectSingleNode("ttml:body", namespaceManager).SelectSingleNode("ttml:div", namespaceManager);
+                foreach (var p in subtitle.Paragraphs)
+                {
+                    var paragraphNode = MakeParagraph(xml, p);
+                    div.AppendChild(paragraphNode);
+                }
 
-            var xmlString = ToUtf8XmlString(xml).Replace(" xmlns=\"\"", string.Empty);
-            subtitle.Header = xmlString;
-            return xmlString;
+                var xmlString = ToUtf8XmlString(xml).Replace(" xmlns=\"\"", string.Empty);
+                subtitle.Header = xmlString;
+                return xmlString;
+            }
+            finally
+            {
+                Configuration.Settings.General.CurrentFrameRate = savedFrameRate;
+            }
         }
 
         private static XmlNode MakeParagraph(XmlDocument xml, Paragraph p)
