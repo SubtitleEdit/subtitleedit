@@ -557,7 +557,10 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                             subtitles.Add(sup);
 
                             // fix overlapping
-                            if (subtitles.Count > 1 && sub[subtitles.Count - 2].End > sub[subtitles.Count - 1].Start)
+                            // Index "subtitles", not "sub": the two lists are not parallel (one
+                            // container block can yield several display sets), so this compared
+                            // unrelated blocks and threw once subtitles outgrew sub.
+                            if (subtitles.Count > 1 && subtitles[subtitles.Count - 2].EndTime > subtitles[subtitles.Count - 1].StartTime)
                             {
                                 subtitles[subtitles.Count - 2].EndTime = subtitles[subtitles.Count - 1].StartTime - 1;
                             }

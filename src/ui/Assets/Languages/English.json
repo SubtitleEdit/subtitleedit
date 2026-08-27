@@ -1578,6 +1578,7 @@
       "fixShortDisplayTimes": "Fix short display times",
       "fixLongDisplayTimes": "Fix long display times",
       "fixShortGaps": "Fix short gaps",
+      "fixShortGap": "Fix short gap",
       "fixInvalidItalicTags": "Fix invalid italic tags",
       "removeUnneededSpaces": "Remove unneeded spaces",
       "removeUnneededPeriods": "Remove unneeded periods",

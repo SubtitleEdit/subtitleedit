@@ -111,13 +111,23 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             return a1.SequenceEqual(a2);
         }
 
-        public class TrimResult
+        /// <summary>
+        /// <see cref="TrimmedBitmap"/> is always a new bitmap (a crop or a copy), never the source,
+        /// so callers own it - hence <see cref="IDisposable"/>.
+        /// </summary>
+        public class TrimResult : IDisposable
         {
             public SKBitmap TrimmedBitmap { get; set; }
             public int Top { get; set; }
             public int Left { get; set; }
             public int Right { get; set; }
             public int Bottom { get; set; }
+
+            public void Dispose()
+            {
+                TrimmedBitmap?.Dispose();
+                TrimmedBitmap = null;
+            }
         }
 
         /// <summary>

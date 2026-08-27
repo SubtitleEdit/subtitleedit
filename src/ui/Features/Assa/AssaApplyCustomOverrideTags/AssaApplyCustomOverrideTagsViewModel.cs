@@ -262,6 +262,22 @@ public partial class AssaApplyCustomOverrideTagsViewModel : ObservableObject
         // runs when a video is loaded (OK used to be a silent no-op without one), and its last
         // tick could be up to 500 ms behind the current tag.
         UpdatedSubtitle = BuildTaggedSubtitle();
+
+        // History has to remember the tag that was actually applied - the editable CurrentTag -
+        // not the combo box template. Recording SelectedOverrideTag from OnClosing meant the list
+        // could only ever hold the stock tags, and filled up even when the user pressed Cancel.
+        var applied = (CurrentTag ?? string.Empty).Trim();
+        if (applied.Length > 0)
+        {
+            var history = Se.Settings.Assa.LastOverrideTags;
+            history.Remove(applied);
+            history.Insert(0, applied);
+            while (history.Count > 25)
+            {
+                history.RemoveAt(history.Count - 1);
+            }
+        }
+
         OkPressed = true;
         Window?.Close();
     }
@@ -275,7 +291,9 @@ public partial class AssaApplyCustomOverrideTagsViewModel : ObservableObject
     [RelayCommand]
     private async Task PlayAndBack()
     {
-        if (SelectedParagraphIndex <= 0)
+        // Index 0 is the first line, not "nothing selected" - the sibling advanced-effect dialog
+        // gets this right. With <= 0 the first line never moved the video.
+        if (SelectedParagraphIndex < 0)
         {
             await PlayAndBack(VideoPlayerControl, 3000);
             return;
@@ -311,13 +329,11 @@ public partial class AssaApplyCustomOverrideTagsViewModel : ObservableObject
             // ignore
         }
 
+        // Only the combo box restore value belongs here; the history list is written from Ok().
         var tag = SelectedOverrideTag?.Tag ?? string.Empty;
         if (!string.IsNullOrEmpty(tag))
         {
             Se.Settings.Assa.LastOverrideTag = tag;
-
-            Se.Settings.Assa.LastOverrideTags.Remove(tag);
-            Se.Settings.Assa.LastOverrideTags.Insert(0, tag);
         }
     }
 
@@ -368,7 +384,7 @@ public partial class AssaApplyCustomOverrideTagsViewModel : ObservableObject
 
     internal void ComboBoxParagraphsChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (SelectedParagraphIndex <= 0)
+        if (SelectedParagraphIndex < 0)
         {
             return;
         }

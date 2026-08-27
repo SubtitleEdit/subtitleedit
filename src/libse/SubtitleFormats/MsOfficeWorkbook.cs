@@ -186,6 +186,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var text = cells[2].SelectSingleNode("ss:Data", xmlNamespaceManager)?.InnerText;
                     var alignment = cells[7].SelectSingleNode("ss:Data", xmlNamespaceManager)?.InnerText;
 
+                    // The writer puts the actor in the ninth column ("Actors" in the header row),
+                    // but the reader never read it back, so the actor was lost on every load.
+                    var actor = cells.Count > 8
+                        ? cells[8].SelectSingleNode("ss:Data", xmlNamespaceManager)?.InnerText
+                        : null;
+
                     try
                     {
                         text = string.Join(Environment.NewLine, text.SplitToLines().ToArray());
@@ -193,6 +199,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             DecodeTimeCodeFrames(start, new[] { ':' }),
                             DecodeTimeCodeFrames(end, new[] { ':' }),
                             GetAlignment(alignment) + text);
+                        if (!string.IsNullOrWhiteSpace(actor))
+                        {
+                            p.Actor = actor;
+                        }
+
                         subtitle.Paragraphs.Add(p);
                     }
                     catch

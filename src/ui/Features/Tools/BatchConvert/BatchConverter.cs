@@ -2990,7 +2990,11 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         }
 
         var c = _config.DeleteLines;
-        if (c.DeleteXFirst == 0 && c.DeleteXLast == 0 && string.IsNullOrWhiteSpace(c.DeleteContains))
+        // DeleteActorsOrStyles is a field of this function too; leaving it out of the early-out
+        // meant configuring only an actor or style deleted nothing and still reported success.
+        if (c.DeleteXFirst == 0 && c.DeleteXLast == 0 &&
+            string.IsNullOrWhiteSpace(c.DeleteContains) &&
+            string.IsNullOrWhiteSpace(c.DeleteActorsOrStyles))
         {
             return subtitle;
         }
@@ -3007,8 +3011,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             .Select(a => a.Trim()).ToList();
         foreach (var actor in actorsOrSpeakers)
         {
-            paragraphs = paragraphs.Where(p => !p.Actor.Equals(actor, StringComparison.OrdinalIgnoreCase)).ToList();
-            paragraphs = paragraphs.Where(p => !p.Style.Equals(actor, StringComparison.OrdinalIgnoreCase)).ToList();
+            // Paragraph.Actor/Style have no initializer, so they are null for SRT and friends -
+            // p.Actor.Equals(...) threw an NRE on the first line of any non-ASSA file.
+            paragraphs = paragraphs.Where(p => !string.Equals(p.Actor, actor, StringComparison.OrdinalIgnoreCase)).ToList();
+            paragraphs = paragraphs.Where(p => !string.Equals(p.Style, actor, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
         subtitle.Paragraphs.Clear();

@@ -153,13 +153,9 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         FrameRates = new ObservableCollection<double> { 23.976, 24, 25, 29.97, 30, 50, 59.94, 60 };
         SelectedFrameRate = FrameRates[0];
 
-        VideoExtensions = new ObservableCollection<string>
-        {
-            ".mov",
-            ".mkv",
-            ".mp4",
-            ".webm",
-        };
+        // Transparent output is always encoded as ProRes 4444, which mp4 has no tag for and WebM
+        // cannot carry at all - offering those two only produced a failed run with no file.
+        VideoExtensions = new ObservableCollection<string>(OutputContainer.GetExtensions("prores_ks"));
         SelectedVideoExtension = VideoExtensions[0];
 
         JobItems = new ObservableCollection<BurnInJobItem>();
@@ -1037,6 +1033,17 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         var effectsAsStringArray = settings.Effects?.Split(',') ?? [];
         _selectedEffects = BurnInEffectItem.List().Where(p => effectsAsStringArray.Contains(p.Name)).ToList();
         DisplayEffect = string.Join(", ", _selectedEffects.Select(p => p.Name));
+
+        // The frame rate is a real encoding parameter and the extension picks the container, but
+        // neither was ever loaded or saved, so both reset to the default on every reopen.
+        var transparent = Se.Settings.Video.Transparent;
+        if (FrameRates.Contains(transparent.FrameRate))
+        {
+            SelectedFrameRate = transparent.FrameRate;
+        }
+
+        SelectedVideoExtension = VideoExtensions.FirstOrDefault(p => p == settings.GenTransparentVideoExtension)
+                                 ?? VideoExtensions[0];
     }
 
     private void SaveSettings()
@@ -1055,6 +1062,8 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         settings.NonAssaFixRtlUnicode = FontFixRtl;
         settings.NonAssaAlignment = SelectedFontAlignment.Code;
         settings.UseSourceResolution = UseSourceResolution;
+        settings.GenTransparentVideoExtension = SelectedVideoExtension;
+        Se.Settings.Video.Transparent.FrameRate = SelectedFrameRate;
 
         Se.SaveSettings();
     }

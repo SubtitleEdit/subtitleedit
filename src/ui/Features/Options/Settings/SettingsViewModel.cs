@@ -803,10 +803,13 @@ public partial class SettingsViewModel : ObservableObject
 
         WebVttUseXTimestampMap = Se.Settings.Formats.WebVttUseXTimestampMap;
 
+        // Clear unconditionally, the way FavoriteLanguages does below: LoadSettings runs again
+        // after importing a settings file, so with the Clear() inside the guard an import that
+        // has no favorites left the old ones in place - and OK wrote them straight back.
+        FavoriteSubtitleFormats.Clear();
         if (!string.IsNullOrEmpty(general.FavoriteSubtitleFormats))
         {
             var favoriteFormats = general.FavoriteSubtitleFormats.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-            FavoriteSubtitleFormats.Clear();
             foreach (var format in favoriteFormats)
             {
                 if (SaveSubtitleFormats.Contains(format))
@@ -1264,7 +1267,10 @@ public partial class SettingsViewModel : ObservableObject
             return Se.Language.Options.Settings.SaveAsBehaviorUseSubtitleFileName;
         }
 
-        return Se.Language.General.Default;
+        // The remaining value is New, whose combo box entry is "Name". Returning "Default" - a
+        // string not in SaveAsBehaviorTypes - left the dropdown blank after reopening Settings,
+        // and the two-way binding then wrote the cleared selection back.
+        return Se.Language.General.Name;
     }
 
     private static string MapFromDefaultSaveLocation(string defaultSaveLocation)
@@ -1482,14 +1488,17 @@ public partial class SettingsViewModel : ObservableObject
 
     public static string MapToSelectedSubtitleEnterKeyAction(string text)
     {
+        // SubtitleEnterKeyActionType has no None member (this was copy/pasted from the
+        // single-click mapper above), so falling back to it persisted a token nothing can map
+        // back, leaving the dropdown blank. Fall back to the setting's own default instead.
         if (string.IsNullOrEmpty(text))
         {
-            return SubtitleSingleClickActionType.None.ToString();
+            return nameof(SubtitleEnterKeyActionType.GoToSubtitleAndSetVideoPosition);
         }
 
         return KeyEnterTextToActionMap.TryGetValue(text, out var action)
             ? action
-            : SubtitleSingleClickActionType.None.ToString();
+            : nameof(SubtitleEnterKeyActionType.GoToSubtitleAndSetVideoPosition);
     }
 
     private static readonly Dictionary<string, string> _singleClickActionToTextMap = BuildSingleClickActionToTextMap();

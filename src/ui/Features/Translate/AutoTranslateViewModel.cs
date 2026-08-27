@@ -210,6 +210,10 @@ public partial class AutoTranslateViewModel : ObservableObject
         Configuration.Settings.Tools.OpenRouterModel = Se.Settings.AutoTranslate.OpenRouterModel;
         Configuration.Settings.Tools.OpenRouterPrompt = Se.Settings.AutoTranslate.OpenRouterPrompt;
 
+        // The url is saved but was the only field of these two engines never bridged back, so both
+        // the url box and the translator fell back to the built-in endpoint on the next start.
+        Configuration.Settings.Tools.OpenRouterUrl = Se.Settings.AutoTranslate.OpenRouterUrl;
+
         Configuration.Settings.Tools.ChatGptApiKey = Se.Settings.AutoTranslate.ChatGptApiKey;
         Configuration.Settings.Tools.ChatGptUrl = Se.Settings.AutoTranslate.ChatGptUrl;
         Configuration.Settings.Tools.ChatGptModel = Se.Settings.AutoTranslate.ChatGptModel;
@@ -231,6 +235,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         Configuration.Settings.Tools.GroqApiKey = Se.Settings.AutoTranslate.GroqApiKey;
         Configuration.Settings.Tools.GroqModel = Se.Settings.AutoTranslate.GroqModel;
         Configuration.Settings.Tools.GroqPrompt = Se.Settings.AutoTranslate.GroqPrompt;
+        Configuration.Settings.Tools.GroqUrl = Se.Settings.AutoTranslate.GroqUrl;
 
         Configuration.Settings.Tools.GoogleApiV2Key = Se.Settings.AutoTranslate.GoogleApiV2Key;
 

@@ -795,7 +795,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                            && index + 1 < input.Length
                            && (input[index + 1] == 'N' || input[index + 1] == 'n' || input[index + 1] == 'h'))
                 {
-                    tags.Add(new KeyValuePair<int, string>(index, input.Substring(index, 2)));
+                    // sb.Length, not index: every other tag is recorded in tag-stripped
+                    // coordinates, which is what RestoreSavedAndRemovedTags re-inserts into. Using
+                    // the input offset put "\N" back in the wrong place whenever a tag preceded it
+                    // ("{\an8}One\Ntwo" toggled to "{\an8}ONETWO\N").
+                    tags.Add(new KeyValuePair<int, string>(sb.Length, input.Substring(index, 2)));
                     skipNext = true;
                     continue;
                 }

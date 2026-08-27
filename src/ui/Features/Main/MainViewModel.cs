@@ -2156,8 +2156,11 @@ public partial class MainViewModel :
 
         var result = await ShowDialogAsync<SsaPropertiesWindow, SsaPropertiesViewModel>(vm =>
         {
+            // Pass the dimensions we already know, as the ASSA dialog does - without them the
+            // "get resolution from video" button always re-shells ffmpeg, and does nothing at all
+            // when ffmpeg cannot parse the file.
             vm.Initialize(_subtitle, SelectedSubtitleFormat, _subtitleFileName ?? string.Empty,
-                _videoFileName ?? string.Empty);
+                _videoFileName ?? string.Empty, _mediaInfo?.Dimension.Width ?? 0, _mediaInfo?.Dimension.Height ?? 0);
         });
 
         if (result.OkPressed)
