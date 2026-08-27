@@ -163,19 +163,25 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
                 ScreenWidth = (int)Math.Round(pcsData[0].GetScreenSize().Width, MidpointRounding.AwayFromZero),
                 ScreenHeight = (int)Math.Round(pcsData[0].GetScreenSize().Height, MidpointRounding.AwayFromZero),
             });
+            var screenSize = pcsData[0].GetScreenSize();
             for (var i = 0; i < pcsData.Count; i++)
             {
                 var item = pcsData[i];
+                using var bitmap = item.GetBitmap();
                 var ip = new ImageParameter
                 {
-                    Bitmap = item.GetBitmap(),
+                    Bitmap = bitmap,
                     StartTime = TimeSpan.FromMilliseconds(item.StartTimeCode.TotalMilliseconds),
                     EndTime = TimeSpan.FromMilliseconds(item.EndTimeCode.TotalMilliseconds),
-                    ScreenWidth = 1920,
-                    ScreenHeight = 1080,
+                    ScreenWidth = (int)Math.Round(screenSize.Width, MidpointRounding.AwayFromZero),
+                    ScreenHeight = (int)Math.Round(screenSize.Height, MidpointRounding.AwayFromZero),
                     Index = i + 1,
                     OverridePosition = new SKPointI(item.GetPosition().Left, item.GetPosition().Top),
                 };
+
+                // WriteParagraph only writes ImageParameter.Buffer, and CreateParagraph is what
+                // fills it - without this every cue wrote zero bytes and the .sup came out empty.
+                exportHandler.CreateParagraph(ip);
                 exportHandler.WriteParagraph(ip);
             }
 
@@ -466,12 +472,16 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
             for (var i = 0; i < 20 && i < pcsData.Count; i++)
             {
                 var item = pcsData[i];
+
+                // GetBitmap allocates a new native bitmap each call; ToAvaloniaBitmap copies out
+                // of it, so it has to be released like the VobSub branch below does.
+                using var previewBitmap = item.GetBitmap();
                 cues.Add(new PreviewCueData
                 {
                     Number = i + 1,
                     Show = TimeSpan.FromMilliseconds(item.StartTimeCode.TotalMilliseconds),
                     Duration = TimeSpan.FromMilliseconds(item.EndTimeCode.TotalMilliseconds - item.StartTimeCode.TotalMilliseconds),
-                    Image = item.GetBitmap().ToAvaloniaBitmap(),
+                    Image = previewBitmap.ToAvaloniaBitmap(),
                 });
             }
         }

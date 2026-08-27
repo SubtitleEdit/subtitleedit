@@ -511,7 +511,9 @@ public partial class MergeTwoSubtitlesViewModel : ObservableObject
         const int width = 480;
         const int height = 200;
 
-        var bitmap = new SKBitmap(width, height, SKColorType.Bgra8888, SKAlphaType.Premul);
+        // ToAvaloniaBitmap copies the pixels out, and UpdatePreview runs on every font, colour and
+        // size change - without the using, each keystroke leaked a 480x200 native bitmap.
+        using var bitmap = new SKBitmap(width, height, SKColorType.Bgra8888, SKAlphaType.Premul);
         using (var canvas = new SKCanvas(bitmap))
         {
             DrawCheckerboard(canvas, width, height);

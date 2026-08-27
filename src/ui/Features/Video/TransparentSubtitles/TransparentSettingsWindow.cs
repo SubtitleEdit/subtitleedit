@@ -38,7 +38,10 @@ public class TransparentSettingsWindow : Window
             Text = vm.OutputFolder,
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBox.TextProperty] = new Binding(nameof(vm.OutputFolder)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
-            IsEnabled = vm.UseOutputFolder,
+
+            // Bound, not read once at construction: ticking "use output folder" has to enable the
+            // box, otherwise the path can only be set through Browse (the burn-in twin binds it).
+            [!Control.IsEnabledProperty] = new Binding(nameof(vm.UseOutputFolder)) { Mode = BindingMode.OneWay },
             Width = 400,
         };
 

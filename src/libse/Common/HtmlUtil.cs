@@ -1107,7 +1107,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                 text = beginTag + text + endTag;
             }
 
-            if (italicBeginTagCount == 0 && italicEndTagCount == 2)
+            // "else if": the counts above are stale after the block just ran, so this used to undo
+            // it - rewriting the closing tag it had just added into a second opening tag.
+            else if (italicBeginTagCount == 0 && italicEndTagCount == 2)
             {
                 var firstIndex = text.IndexOf(endTag, StringComparison.Ordinal);
                 text = text.Remove(firstIndex, endTag.Length).Insert(firstIndex, beginTag);

@@ -259,7 +259,10 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 if (p == null ||
                     next == null ||
-                    p.EndTime.TotalMilliseconds - next.StartTime.TotalMilliseconds > 100 ||
+                    // The gap is next.Start - p.End; written the other way round it is positive
+                    // only when the two overlap, so the "don't move a word across a long pause"
+                    // guard never fired and a word could jump a minute of silence.
+                    next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > 100 ||
                     p.Text.Contains('<') ||
                     next.Text.Contains('<') ||
                     !(p.Text.Contains('.') || p.Text.Contains('?') || p.Text.Contains('!') || next.Text.Contains('.') || next.Text.Contains('?') || next.Text.Contains('!')) ||

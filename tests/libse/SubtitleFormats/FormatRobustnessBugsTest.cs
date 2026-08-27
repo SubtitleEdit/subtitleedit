@@ -186,4 +186,21 @@ public class FormatRobustnessBugsTest
         Assert.Equal(4, target.Paragraphs.Count);
         Assert.Contains("with a line break.", target.Paragraphs[1].Text, StringComparison.Ordinal);
     }
+
+    [Fact]
+    public void MsOfficeWorkbook_KeepsTheActor()
+    {
+        // ToText writes the actor as the ninth column (the header row calls it "Actors"), but
+        // LoadSubtitle only ever read eight columns, so the actor was lost on every load.
+        var subtitle = MakeSubtitle();
+        subtitle.Paragraphs[0].Actor = "NARRATOR";
+        subtitle.Paragraphs[2].Actor = "Anna";
+
+        var target = RoundTrip(new MsOfficeWorkbook(), subtitle);
+
+        Assert.Equal(4, target.Paragraphs.Count);
+        Assert.Equal("NARRATOR", target.Paragraphs[0].Actor);
+        Assert.Equal("Anna", target.Paragraphs[2].Actor);
+        Assert.True(string.IsNullOrEmpty(target.Paragraphs[1].Actor));
+    }
 }

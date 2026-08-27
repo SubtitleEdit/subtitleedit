@@ -482,12 +482,16 @@ public partial class BurnInViewModel : ObservableObject
                 jobItem.TotalSeconds = cutSeconds;
             }
         }
-        if (mediaInfo.Dimension.Width > 0 && mediaInfo.Dimension.Height > 0)
+        // Only adopt the source resolution when the user asked for it. Unconditionally copying it
+        // threw away an explicitly picked output resolution (e.g. 720p from a 4K source), so the
+        // job still encoded at the source size.
+        if (mediaInfo.Dimension.Width > 0 && mediaInfo.Dimension.Height > 0 &&
+            (UseSourceResolution || jobItem.Width <= 0 || jobItem.Height <= 0))
         {
             jobItem.Width = mediaInfo.Dimension.Width;
             jobItem.Height = mediaInfo.Dimension.Height;
         }
-        else
+        else if (mediaInfo.Dimension.Width <= 0 || mediaInfo.Dimension.Height <= 0)
         {
             // No video stream to read a resolution from - keep the resolution chosen in the
             // UI and burn the subtitles onto a generated black canvas (issue #11570).
@@ -850,7 +854,8 @@ public partial class BurnInViewModel : ObservableObject
             : _tempSubtitleFiles.Write(subtitle, new SubRip());
 
         _mediaInfo = FfmpegMediaInfo2.Parse(VideoFileName);
-        if (_mediaInfo.Dimension.Width > 0 && _mediaInfo.Dimension.Height > 0)
+        if (_mediaInfo.Dimension.Width > 0 && _mediaInfo.Dimension.Height > 0 &&
+            (UseSourceResolution || VideoWidth is null or <= 0 || VideoHeight is null or <= 0))
         {
             VideoWidth = _mediaInfo.Dimension.Width;
             VideoHeight = _mediaInfo.Dimension.Height;
@@ -1047,7 +1052,7 @@ public partial class BurnInViewModel : ObservableObject
 
         var result = await _windowService.ShowDialogAsync<BurnInLogoWindow, BurnInLogoViewModel>(Window!, vm =>
         {
-            vm.BurnInLogo = BurnInLogo;
+            vm.BurnInLogo = BurnInLogo.Clone();
             vm.Initialize(VideoFileName, VideoWidth.Value, VideoHeight.Value);
         });
 

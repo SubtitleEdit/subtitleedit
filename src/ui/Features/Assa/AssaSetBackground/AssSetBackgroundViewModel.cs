@@ -234,8 +234,32 @@ public partial class AssSetBackgroundViewModel : ObservableObject
                     return;
                 }
 
-                var skBitmap = SKBitmap.Decode(previewScreenshotFileName);
-                var trimResult = skBitmap.TrimTransparentPixels();
+                // Both the decoded frame and the trimmed copy are native bitmaps, and the
+                // screenshot is a full-size png on disk - one of each per selected line, so they
+                // have to go or a long selection eats hundreds of MB and litters the temp folder.
+                using var skBitmap = SKBitmap.Decode(previewScreenshotFileName);
+                try
+                {
+                    File.Delete(previewScreenshotFileName);
+                }
+                catch
+                {
+                    // ignore cleanup errors
+                }
+
+                if (skBitmap == null)
+                {
+                    return;
+                }
+
+                // A line that renders nothing (only tags, or fully transparent) trims to the whole
+                // frame, which used to draw a background box across the entire video.
+                if (skBitmap.GetNonTransparentBounds().IsEmpty)
+                {
+                    return;
+                }
+
+                using var trimResult = skBitmap.TrimTransparentPixels();
 
                 var left = FillWidth ? FillWidthMarginLeft : trimResult.Left - PaddingLeft;
                 var right = FillWidth ? (_videoWidth - FillWidthMarginRight) : (trimResult.Left + trimResult.TrimmedBitmap.Width + PaddingRight);
@@ -712,7 +736,27 @@ public partial class AssSetBackgroundViewModel : ObservableObject
         if (_trimResult == null)
         {
             var previewScreenshotFileName = FfmpegGenerator.GetScreenShotWithSubtitle(previewSubtitle, _videoWidth, _videoHeight);
-            var skBitmap = SKBitmap.Decode(previewScreenshotFileName);
+            if (string.IsNullOrEmpty(previewScreenshotFileName))
+            {
+                // ffmpeg gave us no frame - show the line without a box instead of crashing.
+                return previewSubtitle;
+            }
+
+            using var skBitmap = SKBitmap.Decode(previewScreenshotFileName);
+            try
+            {
+                File.Delete(previewScreenshotFileName);
+            }
+            catch
+            {
+                // ignore cleanup errors
+            }
+
+            if (skBitmap == null)
+            {
+                return previewSubtitle;
+            }
+
             _trimResult = skBitmap.TrimTransparentPixels();
         }
 

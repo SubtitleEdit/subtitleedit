@@ -94,8 +94,16 @@ public partial class WebVttStyleDisplay : ObservableObject
         _shadowColor = Colors.Black;
     }
 
+    /// <summary>
+    /// Whether the cue selector this style came from was a class selector (<c>::cue(.red)</c>)
+    /// rather than an element one (<c>::cue(b)</c>). Styles added in the editor are class
+    /// selectors; without this, an element selector was silently rewritten as a class on save.
+    /// </summary>
+    public bool IsClassSelector { get; set; } = true;
+
     public WebVttStyleDisplay(WebVttStyle style) : this()
     {
+        IsClassSelector = (style.Name ?? string.Empty).TrimStart().StartsWith('.');
         _name = (style.Name ?? string.Empty).TrimStart('.');
         _fontName = style.FontName ?? string.Empty;
         _fontSize = style.FontSize ?? 0;
@@ -146,7 +154,7 @@ public partial class WebVttStyleDisplay : ObservableObject
     {
         return new WebVttStyle
         {
-            Name = "." + Name.TrimStart('.'),
+            Name = (IsClassSelector ? "." : string.Empty) + Name.TrimStart('.'),
             FontName = string.IsNullOrWhiteSpace(FontName) ? null : FontName,
             FontSize = FontSize > 0 ? FontSize : null,
             Bold = Bold ? true : null,

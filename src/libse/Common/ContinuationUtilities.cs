@@ -962,15 +962,15 @@ namespace Nikse.SubtitleEdit.Core.Common
             var endIndex = input.LastIndexOf("</", StringComparison.Ordinal);
             if (endIndex >= 0)
             {
+                // A truncated closing tag ("</i" with no '>') made IndexOf return -1, and the +1
+                // turned that into 0 - a negative Substring length below, which threw.
+                var closeIndex = input.IndexOf('>', endIndex);
                 if (startIndex == endIndex)
                 {
                     startIndex = 0;
-                    endIndex = input.IndexOf('>', endIndex) + 1;
                 }
-                else
-                {
-                    endIndex = input.IndexOf('>', endIndex) + 1;
-                }
+
+                endIndex = closeIndex >= 0 ? closeIndex + 1 : input.Length;
             }
             else
             {

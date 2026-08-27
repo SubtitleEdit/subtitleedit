@@ -808,7 +808,10 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         FixLongDisplayTimes.Language.FixLongDisplayTime = language.FixLongDisplayTime;
 
         FixShortGaps.Language.FixShortGaps = language.FixShortGaps;
-        FixShortGaps.Language.FixShortGaps = language.FixShortGaps;
+
+        // The per-fix action label ("Fix short gap") is the singular; assigning the plural twice
+        // left every fixed gap in the results list showing the untranslated English string.
+        FixShortGaps.Language.FixShortGap = language.FixShortGap;
 
         FixInvalidItalicTags.Language.FixInvalidItalicTags = language.FixInvalidItalicTags;
         FixInvalidItalicTags.Language.FixInvalidItalicTag = language.FixInvalidItalicTag;

@@ -447,7 +447,9 @@ public partial class JoinSubtitlesViewModel : ObservableObject
         }
 
         JoinedSubtitle = new Subtitle();
-        if (JoinedFormat != null && JoinedFormat.FriendlyName != SubRip.NameOfFormat)
+        // FriendlyName is "SubRip (.srt)", never "SubRip", so this guard never fired and a join of
+        // mixed formats falling back to SubRip still inherited the last file's ASSA header.
+        if (JoinedFormat != null && JoinedFormat.Name != SubRip.NameOfFormat)
         {
             JoinedSubtitle.Header = header;
         }

@@ -218,7 +218,9 @@ public partial class ProfilesViewModel : ObservableObject
         var newProfile = new ProfileDisplay(SelectedProfile);
         var idx = Profiles.IndexOf(SelectedProfile);
 
-        newProfile.Name = SelectedProfile.Name + " 2";
+        // Profiles are looked up by name, so a duplicate makes the second one unreachable and
+        // sends its rule edits to the first. New() already goes through this helper.
+        newProfile.Name = GetUniqueProfileName(SelectedProfile.Name + " 2");
         Profiles.Insert(idx + 1, newProfile);
     }
 
