@@ -157,6 +157,99 @@ public class LibMpvEventLoopTests
     }
 
     /// <summary>
+    /// Issue #14187: a waveform click seeks first (pointer release) and pauses a moment later
+    /// (tap) - and the second Position assignment no-ops at the Avalonia property layer, so the
+    /// player-level setter never runs again after the pause. Pause() must therefore not clear
+    /// the cached seek target while that seek is still in flight: the getter would fall back to
+    /// mpv's pre-seek time-pos and the waveform cursor jumped off the clicked position.
+    /// </summary>
+    [Fact]
+    public async Task Pause_RightAfterSeek_KeepsReportingTheSeekTarget()
+    {
+        var player = CreatePlayer();
+        if (player == null)
+        {
+            return; // no libmpv on this machine
+        }
+
+        var wavFileName = WriteTempWav();
+        try
+        {
+            await player.LoadFile(wavFileName);
+            Assert.True(await WaitUntilAsync(() => player.Duration > 1.0, 5000), "file never loaded");
+
+            player.Play();
+            Assert.True(await WaitUntilAsync(() => player.IsPlaying, 3000), "playback never started");
+            Assert.True(await WaitUntilAsync(() => player.Position > 0.1, 3000), "time-pos never advanced");
+
+            // The click sequence, back to back so the seek is still in flight when Pause runs.
+            player.Position = 1.5;
+            player.Pause();
+
+            // The very first read must already be the click target - the cursor pin releases
+            // onto whatever this getter returns.
+            Assert.Equal(1.5, player.Position, 3);
+
+            // And it must stay there while the async seek lands and the pause settles.
+            var end = Environment.TickCount64 + 800;
+            while (Environment.TickCount64 < end)
+            {
+                Assert.Equal(1.5, player.Position, 3);
+                await Task.Delay(40, TestContext.Current.CancellationToken);
+            }
+        }
+        finally
+        {
+            player.Dispose();
+            TryDelete(wavFileName);
+        }
+    }
+
+    /// <summary>
+    /// The stale-target half of the same invariant: a seek whose restart has long since fired is
+    /// finished business, so pausing later must NOT jump the reported position back to it.
+    /// </summary>
+    [Fact]
+    public async Task Pause_LongAfterSeek_DoesNotJumpBackToTheOldTarget()
+    {
+        var player = CreatePlayer();
+        if (player == null)
+        {
+            return; // no libmpv on this machine
+        }
+
+        var wavFileName = WriteTempWav();
+        try
+        {
+            await player.LoadFile(wavFileName);
+            Assert.True(await WaitUntilAsync(() => player.Duration > 1.0, 5000), "file never loaded");
+
+            player.Play();
+            Assert.True(await WaitUntilAsync(() => player.IsPlaying, 3000), "playback never started");
+
+            var beforeSeekTimestamp = Stopwatch.GetTimestamp();
+            player.Position = 0.5;
+            Assert.True(await WaitUntilAsync(() => player.HasPlaybackRestartedSince(beforeSeekTimestamp), 5000),
+                "seek never restarted");
+
+            // Let playback run well past the old target, then pause.
+            Assert.True(await WaitUntilAsync(() => player.Position >= 0.9, 5000),
+                $"playback never moved past the old seek target (was {player.Position})");
+            player.Pause();
+            Assert.True(await WaitUntilAsync(() => player.IsPaused, 3000), "pause never observed");
+
+            // Reported position must be where playback stopped, not the 0.5 from the old seek.
+            Assert.True(player.Position >= 0.85,
+                $"paused position jumped back toward the stale seek target (was {player.Position})");
+        }
+        finally
+        {
+            player.Dispose();
+            TryDelete(wavFileName);
+        }
+    }
+
+    /// <summary>
     /// A render-free core, like the text-to-speech preview players: null video/audio outputs so
     /// nothing opens a window or touches an audio device, but the clock still runs in real time.
     /// </summary>
