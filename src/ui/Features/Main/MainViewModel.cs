@@ -29014,7 +29014,10 @@ public partial class MainViewModel :
                     _subtitleOriginal = GetUpdateSubtitleOriginal();
                 }
 
-                if (format is AdvancedSubStationAlpha && oldFormat is NetflixImsc11Japanese)
+                // Lambda Cap decodes furigana and emphasis marks to the same markup (issue #14165).
+                var keepJapaneseMarkup = format is AdvancedSubStationAlpha &&
+                                         (oldFormat is NetflixImsc11Japanese || NetflixImsc11JapaneseToAss.HasJapaneseMarkup(_subtitle));
+                if (keepJapaneseMarkup)
                 {
                     // Converting to ASSA is the only way to keep furigana/bouten/vertical writing -
                     // they become extra positioned lines. RemoveNativeFormatting would just drop the
@@ -29026,7 +29029,7 @@ public partial class MainViewModel :
                     oldFormat.RemoveNativeFormatting(_subtitle, format);
                 }
 
-                if (format is AdvancedSubStationAlpha && oldFormat is not NetflixImsc11Japanese)
+                if (format is AdvancedSubStationAlpha && !keepJapaneseMarkup)
                 {
                     if (oldFormat is WebVTT || oldFormat is WebVTTFileWithLineNumber)
                     {

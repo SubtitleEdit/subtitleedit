@@ -650,10 +650,11 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
 
         subtitle = GetSubtitleBasedOnCut(subtitle);
 
-        if (subtitle.OriginalFormat is NetflixImsc11Japanese)
+        if (subtitle.OriginalFormat is NetflixImsc11Japanese || NetflixImsc11JapaneseToAss.HasJapaneseMarkup(subtitle))
         {
             // Furigana, bouten and vertical writing become extra positioned render lines - the raw
-            // tags would otherwise be rendered as literal text (issue #13861).
+            // tags would otherwise be rendered as literal text (issue #13861). Lambda Cap decodes
+            // to the same markup (issue #14165).
             var japaneseJobItem = JobItems[_jobItemIndex];
             var japaneseAssaFileName = _tempSubtitleFiles.GetFileName(".ass");
             File.WriteAllText(japaneseAssaFileName, NetflixImsc11JapaneseToAss.Convert(subtitle, japaneseJobItem.Width, japaneseJobItem.Height));
@@ -1369,7 +1370,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         var height = VideoHeight ?? 1080;
 
         var subtitle = new Subtitle(_subtitle, false);
-        if (_subtitleFormat is NetflixImsc11Japanese)
+        if (_subtitleFormat is NetflixImsc11Japanese || NetflixImsc11JapaneseToAss.HasJapaneseMarkup(subtitle))
         {
             return NetflixImsc11JapaneseToAss.Convert(subtitle, width, height);
         }
