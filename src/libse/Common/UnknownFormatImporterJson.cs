@@ -315,7 +315,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var isArray = s.Contains("[");
-            if (isArray && textLines.Any(p => p == "end_time" || p == "endTime" || p == "end" || p == "endMs" || p == "endMilliseconds" || p == "end_ms" || p == "endms" || p == "to" || p == "to_ms" || p == "toms" || p == "from" || p == "from_ms" | p == "hide"))
+            if (isArray && textLines.Any(p => p == "end_time" || p == "endTime" || p == "end" || p == "endMs" || p == "endMilliseconds" || p == "end_ms" || p == "endms" || p == "to" || p == "to_ms" || p == "toms" || p == "from" || p == "from_ms" || p == "hide"))
             {
                 isArray = false;
             }

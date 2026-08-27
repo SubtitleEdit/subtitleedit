@@ -82,19 +82,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     switch (ch)
                     {
-                        case ',' when !quoteOn && separator == ',':
-                            lines.Add(item.ToString());
-                            item.Clear();
-                            index++;
-                            stringOn = false;
-                            continue;
-                        case ';' when !quoteOn && separator == ';':
-                            lines.Add(item.ToString());
-                            item.Clear();
-                            index++;
-                            stringOn = false;
-                            continue;
-                        case '\t' when !quoteOn && separator == '\t':
+                        // Any separator, not just comma/semicolon/tab: the import window's
+                        // detection also picks '|', and an unhandled separator left the whole
+                        // row in the first field with every other column empty.
+                        case var _ when !quoteOn && ch == separator:
                             lines.Add(item.ToString());
                             item.Clear();
                             index++;
