@@ -1035,6 +1035,23 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
     }
 
+
+    /// <summary>
+    /// The language name saved for <paramref name="engine"/>, or null when that engine keeps no
+    /// per-engine language. Each engine has its own settings key, so reading one engine's key
+    /// from another engine's code path silently drops the user's choice.
+    /// </summary>
+    private static string? GetSavedLanguageName(ITtsEngine? engine) => engine switch
+    {
+        OmniVoiceCrispAsr => Se.Settings.Video.TextToSpeech.OmniVoiceCrispAsrLanguage,
+        MossTtsCrispAsr => Se.Settings.Video.TextToSpeech.MossTtsCrispAsrLanguage,
+        CosyVoice3CrispAsr => Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrLanguage,
+        Qwen3TtsCrispAsr => Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrLanguage,
+        ChatterboxTtsCpp => Se.Settings.Video.TextToSpeech.ChatterboxCrispAsrLanguage,
+        ElevenLabs => Se.Settings.Video.TextToSpeech.ElevenLabsLanguage,
+        _ => null,
+    };
+
     [RelayCommand]
     private async Task ShowCast()
     {
@@ -4318,8 +4335,14 @@ public partial class TextToSpeechViewModel : ObservableObject
 
                 // Keep the language the user already picked when it survives the model switch -
                 // otherwise a MOSS-TTS quant change (Q4_K <-> F16) silently re-selects English.
+                // Ask for THIS engine's saved language. Consulting the ElevenLabs key here meant
+                // that e.g. Chatterbox Base -> Turbo -> Base landed on "Auto" instead of the saved
+                // German, and the next Generate then persisted "Auto" over it.
+                var savedLanguageName = GetSavedLanguageName(SelectedEngine);
                 SelectedLanguage = Languages.FirstOrDefault(p => p.Name == previousLanguageName)
-                                   ?? Languages.FirstOrDefault(p => p.Name == Se.Settings.Video.TextToSpeech.ElevenLabsLanguage);
+                                   ?? (string.IsNullOrEmpty(savedLanguageName)
+                                       ? null
+                                       : Languages.FirstOrDefault(p => p.Name == savedLanguageName));
                 if (SelectedLanguage == null)
                 {
                     // Fall back to the list's first entry so the combo is never left empty -

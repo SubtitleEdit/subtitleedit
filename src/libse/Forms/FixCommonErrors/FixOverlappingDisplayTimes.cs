@@ -107,6 +107,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             if (!canBeEqual)
                             {
                                 bool okEqual = true;
+                                var changedCurrent = false;
                                 if (prev.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                                 {
                                     prev.EndTime.TotalMilliseconds--;
@@ -114,6 +115,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                 else if (p.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                                 {
                                     p.StartTime.TotalMilliseconds++;
+                                    changedCurrent = true;
                                 }
                                 else
                                 {
@@ -123,7 +125,19 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                 if (okEqual)
                                 {
                                     noOfOverlappingDisplayTimesFixed++;
-                                    callbacks.AddFixToListView(target, fixAction, oldPrevious, prev.ToString());
+
+                                    // Report the paragraph that actually moved. This branch changes
+                                    // "p" while prev is untouched, so reporting prev produced a fix
+                                    // row whose before and after were identical and hid the real
+                                    // change - every other branch reports the one it modified.
+                                    if (changedCurrent)
+                                    {
+                                        callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());
+                                    }
+                                    else
+                                    {
+                                        callbacks.AddFixToListView(target, fixAction, oldPrevious, prev.ToString());
+                                    }
                                 }
                             }
                         }
