@@ -547,7 +547,7 @@ public partial class MainViewModel :
     VideoPlayerUndockedViewModel? _videoPlayerUndockedViewModel;
     AudioVisualizerUndockedViewModel? _audioVisualizerUndockedViewModel;
     bool _suppressUndockedTopmost;
-    bool _mainWindowLostForegroundToOtherApp;
+    bool _foregroundBelongsToMainWindow;
     bool _undockedWindowPointerPressed;
     FindViewModel? _findViewModel;
     Control? _findPreviousFocus;
@@ -8209,9 +8209,21 @@ public partial class MainViewModel :
     /// minimized), Windows activates the frontmost window of this process, which is a tool
     /// window, not the main window the user left. Same family as the startup case in #13569.
     ///
-    /// Only corrected when the main window was the one that lost the foreground, and only when
-    /// the activation was not aimed at the tool window itself - a click that activates a window
-    /// is delivered after the activation on Windows, so the decision waits a beat for it.
+    /// The claim on the SE foreground (_foregroundBelongsToMainWindow) is re-armable state, not a
+    /// one-shot flag: it follows the user (set while the main window is active, moved to a tool
+    /// window only by an activation the user aimed at it) and is read fresh on EVERY tool-window
+    /// activation. The first cut latched a flag when the main window deactivated and consumed it
+    /// on the first tool-window Activated, which a single churn activation - topmost churn while
+    /// another application takes over, or the foreground bouncing between the two tool windows -
+    /// disarmed for the whole round (#14168 beta 26 feedback).
+    ///
+    /// "Aimed at" is decided by the physical pointer buttons: a click that activates a window
+    /// (client area or title bar, including a drag by the title bar) still has the button down
+    /// while the activation is delivered, whereas the OS handing the foreground over because
+    /// another application's window went away does not. Where the buttons cannot be sampled the
+    /// cursor resting over the window has to do - knowing that the closing application may have
+    /// merely exposed the tool window under the cursor. The Avalonia press event only covers the
+    /// client area and arrives after the activation, so the decision still waits a beat for it.
     ///
     /// The one case this cannot tell apart from the OS handing over the foreground is the user
     /// Alt+Tabbing straight back to a tool window (they are separate entries in the task
@@ -8229,19 +8241,36 @@ public partial class MainViewModel :
 
         undockedWindow.Activated += (_, _) =>
         {
-            if (!_mainWindowLostForegroundToOtherApp)
+            if (!_foregroundBelongsToMainWindow)
             {
+                return; // the user was already working in a tool window - leave it in front
+            }
+
+            if (IsUndockedActivationAimedAtToolWindow(
+                    CursorPositionHelper.IsAnyPointerButtonDown(),
+                    undockedWindow.IsPointerOver))
+            {
+                _foregroundBelongsToMainWindow = false; // the user moved to the tool window
                 return;
             }
 
-            _mainWindowLostForegroundToOtherApp = false;
             _undockedWindowPointerPressed = false;
 
             DispatcherTimer.RunOnce(() =>
             {
-                if (Window is not { } mainWindow || !ShouldHandForegroundBackToMainWindow(
-                        _undockedWindowPointerPressed,
-                        undockedWindow.IsPointerOver,
+                if (_undockedWindowPointerPressed)
+                {
+                    // A press the button sampling missed (e.g. touch) - the user aimed here.
+                    _foregroundBelongsToMainWindow = false;
+                    return;
+                }
+
+                // Re-checked because the beat is long enough for the state to move: the user may
+                // have clicked into the main window, or the foreground may have bounced
+                // to the other tool window - whose own Activated handler owns the decision then.
+                if (!_foregroundBelongsToMainWindow ||
+                    Window is not { } mainWindow ||
+                    !ShouldHandForegroundBackToMainWindow(
                         undockedWindow.IsActive,
                         mainWindow.IsActive,
                         mainWindow.WindowState == WindowState.Minimized,
@@ -8256,22 +8285,31 @@ public partial class MainViewModel :
     }
 
     /// <summary>
-    /// Whether an undocked tool window that just took the foreground should hand it to the main
+    /// Whether an undocked tool window's activation was the user's doing rather than the OS
+    /// handing the foreground over - see <see cref="WatchUndockedForegroundSteal"/>. Pure so the
+    /// rule can be tested.
+    /// </summary>
+    internal static bool IsUndockedActivationAimedAtToolWindow(
+        bool? pointerButtonDown,
+        bool pointerOverToolWindow)
+    {
+        // The button state is authoritative when it can be sampled: the cursor merely resting
+        // over the tool window is NOT aiming - closing another application's window exposes the
+        // tool window under a cursor that never moved (Windows even synthesizes the mouse-move
+        // that flips IsPointerOver). Hover is only trusted where the buttons cannot be read.
+        return pointerButtonDown ?? pointerOverToolWindow;
+    }
+
+    /// <summary>
+    /// Whether an undocked tool window that took the foreground should hand it to the main
     /// window - see <see cref="WatchUndockedForegroundSteal"/>. Pure so the rule can be tested.
     /// </summary>
     internal static bool ShouldHandForegroundBackToMainWindow(
-        bool undockedWindowPointerPressed,
-        bool undockedWindowPointerOver,
         bool undockedWindowIsActive,
         bool mainWindowIsActive,
         bool mainWindowIsMinimized,
         bool modalDialogOpen)
     {
-        if (undockedWindowPointerPressed || undockedWindowPointerOver)
-        {
-            return false; // the user aimed at the tool window - leave it in front
-        }
-
         if (!undockedWindowIsActive || mainWindowIsActive)
         {
             return false; // the foreground already moved on
@@ -25674,16 +25712,19 @@ public partial class MainViewModel :
         // Captured before the cleanup below, which can move focus itself.
         _focusBeforeWindowDeactivated = GetRestorableFocusedControl();
 
-        // Note whether the whole application - not just this window - went to the background with
-        // the main window in front, so an undocked tool window taking the foreground back can be
-        // corrected (see WatchUndockedForegroundSteal, #14168). Deferred because the newly active
-        // window's IsActive has not settled while Deactivated runs.
+        // The claim on the SE foreground moves to a dialog when one is what took over; it
+        // deliberately STAYS with the main window otherwise - through the application going to
+        // the background, and through an undocked tool window reading as active here (topmost
+        // churn can flicker one active while another application takes the foreground, and that
+        // must not disarm the correction - the tool window's own Activated watcher decides
+        // whether the user aimed at it; see WatchUndockedForegroundSteal, #14168). Deferred
+        // because the newly active window's IsActive has not settled while Deactivated runs.
         Dispatcher.UIThread.Post(() =>
         {
-            _mainWindowLostForegroundToOtherApp =
-                Window is { IsActive: false } &&
-                !IsUndockedWindowActive() &&
-                GetActiveWindowOtherThanMainAndUndocked() == null;
+            if (GetActiveWindowOtherThanMainAndUndocked() != null)
+            {
+                _foregroundBelongsToMainWindow = false;
+            }
         }, DispatcherPriority.Background);
 
         // Avalonia's AccessKeyHandler must not be left mid-Alt-gesture either: a modal opened
@@ -25729,9 +25770,9 @@ public partial class MainViewModel :
         var previous = _focusBeforeWindowDeactivated;
         _focusBeforeWindowDeactivated = null;
 
-        // The main window is where the foreground belongs, so there is nothing left to correct
-        // (#14168).
-        _mainWindowLostForegroundToOtherApp = false;
+        // The user is in the main window, so that is where the SE foreground belongs until an
+        // activation aimed at a tool window says otherwise (#14168).
+        _foregroundBelongsToMainWindow = true;
 
         Dispatcher.UIThread.Post(() =>
         {
