@@ -1014,6 +1014,11 @@ public static partial class InitListViewAndEditBox
         assistedSplitMenuItem.Command = vm.AssistedSplitCommand;
         flyout.Items.Add(assistedSplitMenuItem);
 
+        var assistedMoveMenuItem = new MenuItem { Header = Se.Language.General.AssistedMoveDotDotDot, DataContext = vm };
+        assistedMoveMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridDataMenuVisible)));
+        assistedMoveMenuItem.Command = vm.AssistedMoveCommand;
+        flyout.Items.Add(assistedMoveMenuItem);
+
         var mergePreviousMenuItem = new MenuItem { Header = Se.Language.General.MergeBefore, DataContext = vm };
         mergePreviousMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsMergeWithNextOrPreviousVisible)));
         mergePreviousMenuItem.Command = vm.MergeWithLineBeforeCommand;

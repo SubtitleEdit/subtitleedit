@@ -144,6 +144,7 @@ using Nikse.SubtitleEdit.Features.Tools.MergeSubtitlesWithSameTimeCodes;
 using Nikse.SubtitleEdit.Features.Tools.RemoveTextForHearingImpaired;
 using Nikse.SubtitleEdit.Features.Tools.Renumber;
 using Nikse.SubtitleEdit.Features.Tools.SortBy;
+using Nikse.SubtitleEdit.Features.Main.AssistedMove;
 using Nikse.SubtitleEdit.Features.Main.AssistedSplit;
 using Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
 using Nikse.SubtitleEdit.Features.Tools.SplitSubtitle;
@@ -16466,6 +16467,7 @@ public partial class MainViewModel :
         var candidates = AssistedSplitCandidateGenerator.Generate(s, language, _splitManager);
         if (candidates.Count == 0)
         {
+            ShowStatus(Se.Language.General.AssistedSplitNoSuggestions);
             return;
         }
 
@@ -16492,6 +16494,59 @@ public partial class MainViewModel :
             if (newHalf != null)
             {
                 RevealRowPosted(newHalf);
+            }
+        }
+
+        _updateAudioVisualizer = true;
+    }
+
+    [RelayCommand]
+    private async Task AssistedMove()
+    {
+        var s = SelectedSubtitle;
+        if (s == null || s.IsReferenceOnly)
+        {
+            return;
+        }
+
+        var idx = Subtitles.IndexOf(s);
+        var previous = GetPreviousWorkingRow(idx);
+        var next = GetNextWorkingRow(idx);
+        var candidates = AssistedMoveCandidateGenerator.Generate(s, previous, next, GetDetectedLanguageCode());
+        if (candidates.Count == 0)
+        {
+            ShowStatus(Se.Language.General.AssistedMoveNoSuggestions);
+            return;
+        }
+
+        var vm = await ShowDialogAsync<AssistedMoveWindow, AssistedMoveViewModel>(viewModel =>
+        {
+            viewModel.Initialize(s, candidates);
+        });
+
+        if (!vm.OkPressed || vm.SelectedCandidate == null)
+        {
+            return;
+        }
+
+        var candidate = vm.SelectedCandidate;
+        s.Text = candidate.NewCurrentText;
+        if (candidate.Kind == AssistedMoveKind.WithPrevious && previous != null)
+        {
+            previous.Text = candidate.NewOtherText;
+            if (candidate.NewFirstEnd != null && candidate.NewSecondStart != null)
+            {
+                previous.EndTime = candidate.NewFirstEnd.Value;
+                s.SetStartTimeOnly(candidate.NewSecondStart.Value);
+            }
+        }
+        else if (candidate.Kind == AssistedMoveKind.WithNext && next != null)
+        {
+            next.Text = candidate.NewOtherText;
+            if (candidate.NewFirstEnd != null && candidate.NewSecondStart != null)
+            {
+                s.EndTime = candidate.NewFirstEnd.Value;
+                next.SetStartTimeOnly(candidate.NewSecondStart.Value);
             }
         }
 

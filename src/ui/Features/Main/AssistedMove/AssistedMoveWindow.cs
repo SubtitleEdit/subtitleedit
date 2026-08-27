@@ -7,16 +7,16 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 
-namespace Nikse.SubtitleEdit.Features.Main.AssistedSplit;
+namespace Nikse.SubtitleEdit.Features.Main.AssistedMove;
 
-public class AssistedSplitWindow : Window
+public class AssistedMoveWindow : Window
 {
-    private readonly AssistedSplitViewModel _vm;
+    private readonly AssistedMoveViewModel _vm;
 
-    public AssistedSplitWindow(AssistedSplitViewModel vm)
+    public AssistedMoveWindow(AssistedMoveViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.General.AssistedSplit;
+        Title = Se.Language.General.AssistedMove;
         SizeToContent = SizeToContent.Height;
         CanResize = false;
         Width = 720;
@@ -25,7 +25,7 @@ public class AssistedSplitWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var labelHeader = UiUtil.MakeLabel(Se.Language.General.AssistedSplitChooseSplitPoint);
+        var labelHeader = UiUtil.MakeLabel(Se.Language.General.AssistedMoveChooseMove);
         labelHeader.FontWeight = FontWeight.Bold;
 
         var originalText = new TextBlock
@@ -81,7 +81,7 @@ public class AssistedSplitWindow : Window
         };
     }
 
-    private static Button MakeCandidateCard(AssistedSplitViewModel vm, AssistedSplitCandidate candidate)
+    private static Button MakeCandidateCard(AssistedMoveViewModel vm, AssistedMoveCandidate candidate)
     {
         var labelNumber = new TextBlock
         {
@@ -106,10 +106,14 @@ public class AssistedSplitWindow : Window
             Children =
             {
                 labelTitle,
-                MakeHalfPreview(candidate.FirstText, candidate.FirstInfo),
-                MakeHalfPreview(candidate.SecondText, candidate.SecondInfo),
+                MakePreview(candidate.FirstText, candidate.FirstInfo),
             },
         };
+
+        if (!string.IsNullOrEmpty(candidate.SecondText))
+        {
+            panelTexts.Children.Add(MakePreview(candidate.SecondText, candidate.SecondInfo));
+        }
 
         var grid = new Grid
         {
@@ -133,7 +137,7 @@ public class AssistedSplitWindow : Window
         }.WithGreenishActiveBackground();
     }
 
-    private static Border MakeHalfPreview(string text, string info)
+    private static Border MakePreview(string text, string info)
     {
         var textBlock = new TextBlock
         {

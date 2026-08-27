@@ -32,6 +32,11 @@ public class LanguageGeneral
     public string Apply { get; set; }
     public string ApplyTo { get; set; }
     public string Ascending { get; set; }
+    public string AssistedMove { get; set; }
+    public string AssistedMoveChooseMove { get; set; }
+    public string AssistedMoveDotDotDot { get; set; }
+    public string AssistedMoveNoSuggestions { get; set; }
+    public string AssistedSplitNoSuggestions { get; set; }
     public string AssistedSplit { get; set; }
     public string AssistedSplitChooseSplitPoint { get; set; }
     public string AssistedSplitDotDotDot { get; set; }
@@ -574,6 +579,14 @@ public class LanguageGeneral
     public string SpeechToTextSelectedLinesPromptAlways { get; set; }
     public string SpeechToTextSelectedLinesPromptFirstTime { get; set; }
     public string Speed { get; set; }
+    public string BalanceWithNextSubtitle { get; set; }
+    public string BalanceWithPreviousSubtitle { get; set; }
+    public string FetchLastWordFromPreviousSubtitle { get; set; }
+    public string FetchRestOfSentenceFromNextSubtitle { get; set; }
+    public string FetchUnfinishedSentenceFromPreviousSubtitle { get; set; }
+    public string MoveFirstWordToPreviousSubtitle { get; set; }
+    public string MoveRestOfSentenceToPreviousSubtitle { get; set; }
+    public string MoveUnfinishedSentenceToNextSubtitle { get; set; }
     public string SplitAtComma { get; set; }
     public string SplitAtDialogDash { get; set; }
     public string SplitAtLineBreak { get; set; }
@@ -802,6 +815,19 @@ public class LanguageGeneral
         Apply = "Apply";
         ApplyTo = "Apply to";
         Ascending = "Ascending";
+        AssistedMove = "Assisted move";
+        AssistedMoveChooseMove = "Click an option or press its number to move words";
+        AssistedMoveDotDotDot = "Assisted move...";
+        AssistedMoveNoSuggestions = "No move suggestions - the sentence does not continue into the previous/next subtitle";
+        AssistedSplitNoSuggestions = "No split suggestions for this line";
+        BalanceWithNextSubtitle = "Balance with next subtitle";
+        BalanceWithPreviousSubtitle = "Balance with previous subtitle";
+        FetchLastWordFromPreviousSubtitle = "Fetch last word from previous subtitle";
+        FetchRestOfSentenceFromNextSubtitle = "Fetch rest of sentence from next subtitle";
+        FetchUnfinishedSentenceFromPreviousSubtitle = "Fetch unfinished sentence from previous subtitle";
+        MoveFirstWordToPreviousSubtitle = "Move first word to previous subtitle";
+        MoveRestOfSentenceToPreviousSubtitle = "Move rest of sentence to previous subtitle";
+        MoveUnfinishedSentenceToNextSubtitle = "Move unfinished sentence to next subtitle";
         AssistedSplit = "Assisted split";
         AssistedSplitChooseSplitPoint = "Click an option or press its number to split the line";
         AssistedSplitDotDotDot = "Assisted split...";

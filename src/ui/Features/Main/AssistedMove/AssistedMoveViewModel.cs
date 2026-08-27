@@ -4,32 +4,32 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.Generic;
 
-namespace Nikse.SubtitleEdit.Features.Main.AssistedSplit;
+namespace Nikse.SubtitleEdit.Features.Main.AssistedMove;
 
-public partial class AssistedSplitViewModel : ObservableObject
+public partial class AssistedMoveViewModel : ObservableObject
 {
     [ObservableProperty] private string _subtitleInfo;
 
-    public List<AssistedSplitCandidate> Candidates { get; private set; }
+    public List<AssistedMoveCandidate> Candidates { get; private set; }
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
-    public AssistedSplitCandidate? SelectedCandidate { get; private set; }
+    public AssistedMoveCandidate? SelectedCandidate { get; private set; }
 
-    public AssistedSplitViewModel()
+    public AssistedMoveViewModel()
     {
         SubtitleInfo = string.Empty;
-        Candidates = new List<AssistedSplitCandidate>();
+        Candidates = new List<AssistedMoveCandidate>();
     }
 
-    public void Initialize(SubtitleLineViewModel subtitle, List<AssistedSplitCandidate> candidates)
+    public void Initialize(SubtitleLineViewModel subtitle, List<AssistedMoveCandidate> candidates)
     {
         Candidates = candidates;
         SubtitleInfo = subtitle.Text;
     }
 
     [RelayCommand]
-    private void Pick(AssistedSplitCandidate candidate)
+    private void Pick(AssistedMoveCandidate candidate)
     {
         SelectedCandidate = candidate;
         OkPressed = true;
@@ -52,6 +52,7 @@ public partial class AssistedSplitViewModel : ObservableObject
             Key.D3 or Key.NumPad3 => 3,
             Key.D4 or Key.NumPad4 => 4,
             Key.D5 or Key.NumPad5 => 5,
+            Key.D6 or Key.NumPad6 => 6,
             _ => 0,
         };
 

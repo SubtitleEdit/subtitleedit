@@ -498,6 +498,25 @@ public static class UiUtil
         };
     }
 
+    /// <summary>
+    /// Gives a card-style button a green-ish background while hovered, focused or pressed,
+    /// so the active choice stands out (used by the assisted split/move option cards).
+    /// </summary>
+    public static Button WithGreenishActiveBackground(this Button button)
+    {
+        var activeBrush = new SolidColorBrush(Color.FromArgb(0x50, 0x4C, 0xAF, 0x50));
+        var pressedBrush = new SolidColorBrush(Color.FromArgb(0x78, 0x4C, 0xAF, 0x50));
+        foreach (var (pseudoClass, brush) in new[] { (":pointerover", activeBrush), (":focus", activeBrush), (":pressed", pressedBrush) })
+        {
+            button.Styles.Add(new Style(x => x.OfType<Button>().Class(pseudoClass).Template().OfType<ContentPresenter>())
+            {
+                Setters = { new Setter(ContentPresenter.BackgroundProperty, brush) },
+            });
+        }
+
+        return button;
+    }
+
     public static Button MakeButtonOk(IRelayCommand? command)
     {
         return MakeButton(Se.Language.General.Ok, command);
