@@ -1525,6 +1525,77 @@ public partial class MainViewModel :
         PlayVideo(vp);
     }
 
+    /// <summary>
+    /// SE 4's "go to next subtitle (play translate)" — the action behind its Alt+Down default
+    /// (issue #14167). Moves to the next line, plays it and stops at its end, then focuses the
+    /// edit box with all of its text selected so a translation can be typed straight over it.
+    /// Without a video it degrades to a plain move-next, like SE 4's did.
+    /// </summary>
+    [RelayCommand]
+    private void GoToNextSubtitlePlayTranslate()
+    {
+        if (GetVideoPlayerControl() == null)
+        {
+            GoToNextLine();
+        }
+        else
+        {
+            PlayNextParagraph(false);
+        }
+
+        FocusEditTextBoxAndSelectAll();
+    }
+
+    /// <summary>
+    /// The previous-line half of <see cref="GoToNextSubtitlePlayTranslate"/>; SE 4 bound it to
+    /// Alt+Up.
+    /// </summary>
+    [RelayCommand]
+    private void GoToPrevSubtitlePlayTranslate()
+    {
+        if (GetVideoPlayerControl() == null)
+        {
+            GoToPreviousLine();
+        }
+        else
+        {
+            PlayPreviousParagraph(false);
+        }
+
+        FocusEditTextBoxAndSelectAll();
+    }
+
+    /// <summary>
+    /// Focus the edit box and select all of its text, so typing replaces the line. Mirrors
+    /// <see cref="FocusEditTextBox(bool)"/> rather than calling it: the select-all has to happen
+    /// after its second, delayed Focus() call, not between the two. The grid selection was just
+    /// changed and the text-box binding may not have propagated yet (same situation as
+    /// <see cref="GoToNextLineCursorAtEnd"/>), so make sure the box shows the selected line's
+    /// text before selecting it.
+    /// </summary>
+    private void FocusEditTextBoxAndSelectAll()
+    {
+        Dispatcher.UIThread.Post(async () =>
+        {
+            if (AudioVisualizer != null && AudioVisualizer.IsFocused)
+            {
+                AudioVisualizer.SkipNextPointerEntered = true;
+            }
+
+            ActivateWindow(Window);
+            EditTextBox.Focus();
+            await Task.Delay(10);
+            EditTextBox.Focus();
+
+            if (SubtitleGrid.SelectedItem is SubtitleLineViewModel subtitle && EditTextBox.Text != subtitle.Text)
+            {
+                EditTextBox.Text = subtitle.Text;
+            }
+
+            EditTextBox.SelectAll();
+        });
+    }
+
     [RelayCommand]
     private void Pause()
     {
