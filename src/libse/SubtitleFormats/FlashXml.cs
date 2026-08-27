@@ -65,8 +65,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 XmlNode paragraph = xml.CreateElement("p");
                 string text = HtmlUtil.RemoveHtmlTags(p.Text, true);
 
-                paragraph.InnerText = text;
-                paragraph.InnerXml = "<![CDATA[<sub>" + paragraph.InnerXml.Replace(Environment.NewLine, "<br />") + "</sub>]]>";
+                // Build the CDATA from the RAW text: going through InnerText first escaped it
+                // ("Tom &amp; Jerry"), and since CDATA content is not parsed those entities
+                // came back literally on read.
+                var cdataText = text.Replace(Environment.NewLine, "<br />");
+                if (cdataText.Contains("]]>", StringComparison.Ordinal))
+                {
+                    paragraph.InnerText = cdataText; // cannot be expressed in one CDATA section
+                }
+                else
+                {
+                    paragraph.InnerXml = "<![CDATA[<sub>" + cdataText + "</sub>]]>";
+                }
 
                 XmlAttribute start = xml.CreateAttribute("begin");
                 start.InnerText = ConvertToTimeString(p.StartTime);

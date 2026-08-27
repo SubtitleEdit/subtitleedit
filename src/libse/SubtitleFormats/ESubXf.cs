@@ -290,6 +290,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var ns = new XmlNamespaceManager(xml.NameTable);
             ns.AddNamespace("esub-xf", NameSpaceUri);
             var isTimebaseSmtp = xml.DocumentElement.Attributes["timebase"]?.Value != "msec"; // "msec" or "smtp"
+
+            // The file declares the frame rate its SMPTE time codes were written at (ToText
+            // writes it) - honor it, or the frames are decoded at whatever rate happens to be
+            // loaded and every time code shifts.
+            var frameRateAttribute = xml.DocumentElement.Attributes["framerate"]?.Value;
+            if (isTimebaseSmtp && !string.IsNullOrEmpty(frameRateAttribute) &&
+                double.TryParse(frameRateAttribute, NumberStyles.Float, CultureInfo.InvariantCulture, out var declaredFrameRate) &&
+                declaredFrameRate > 1 && declaredFrameRate < 200)
+            {
+                Configuration.Settings.General.CurrentFrameRate = declaredFrameRate;
+            }
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("//esub-xf:subtitlelist/esub-xf:subtitle", ns))
             {
                 try

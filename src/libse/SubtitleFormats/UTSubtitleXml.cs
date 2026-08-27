@@ -39,8 +39,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 st.InnerText = string.Format("{0:0.0##}", p.StartTime.TotalSeconds).Replace(",", ".");
                 ut.Attributes.Append(st);
 
-                ut.InnerText = p.Text;
-                ut.InnerXml = "<![CDATA[" + ut.InnerXml.Replace(Environment.NewLine, "<br>") + "]]>";
+                // Build the CDATA from the RAW text: going through InnerText first escaped the
+                // markup ("&lt;i&gt;"), and since CDATA content is not parsed those entities
+                // came back literally, turning every <i> into "&lt;i&gt;" on read.
+                var cdataText = p.Text.Replace(Environment.NewLine, "<br>");
+                if (cdataText.Contains("]]>", StringComparison.Ordinal))
+                {
+                    // Cannot be expressed in one CDATA section - fall back to escaped text.
+                    ut.InnerText = cdataText;
+                }
+                else
+                {
+                    ut.InnerXml = "<![CDATA[" + cdataText + "]]>";
+                }
 
                 root.AppendChild(ut);
             }

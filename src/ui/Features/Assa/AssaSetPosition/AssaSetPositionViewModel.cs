@@ -222,7 +222,7 @@ public partial class AssaSetPositionViewModel : ObservableObject
 
         if (TargetWidth <= 0 || TargetHeight <= 0)
         {
-            TargetWidth = 1820;
+            TargetWidth = 1920;
             TargetHeight = 1080;
         }
 

@@ -1858,6 +1858,14 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         }
         set
         {
+            // mpv clamps a negative seek to the start, but the cached value below is what the
+            // getter reports while paused - so nudging back at 0:00 handed callers (set start
+            // time, waveform, position display) a negative time until real playback resumed.
+            if (value < 0)
+            {
+                value = 0;
+            }
+
             _pausedValue = value;
             _lastRawTimePos = value; // keep the eof-reached gate accurate across seeks
             EnsureNotDisposed();
