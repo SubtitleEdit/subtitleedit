@@ -207,6 +207,33 @@ public class TextDiffHighlighterTests
         }
     }
 
+    [Fact]
+    public void Compare_AppendedSuffix_HighlightsTheAddedTail()
+    {
+        // The whole of text1 is the common prefix, so commonStart == text1.Length and
+        // commonEnd == 0 - the old hasDifferences derivation concluded "identical" and the
+        // appended tail was rendered with no highlighting at all.
+        var (left, right) = TextDiffHighlighter.Compare("Hello", "Hello world");
+
+        Assert.Equal("Hello", JoinRuns(left.Inlines));
+        Assert.Equal("Hello world", JoinRuns(right.Inlines));
+
+        var rightRuns = right.Inlines!.Cast<Run>().ToArray();
+        Assert.Contains(rightRuns, r => r.Text == " world" && r.Foreground != null);
+    }
+
+    [Fact]
+    public void CompareReplacement_AppendedSuffix_HighlightsTheAddedTail()
+    {
+        var (before, after) = TextDiffHighlighter.CompareReplacement("Hello", "Hello world");
+
+        Assert.Equal("Hello", JoinRuns(before.Inlines));
+        Assert.Equal("Hello world", JoinRuns(after.Inlines));
+
+        var afterRuns = after.Inlines!.Cast<Run>().ToArray();
+        Assert.Contains(afterRuns, r => r.Text == " world" && r.Foreground != null);
+    }
+
     private static void AssertNoRunSplitsAWord(InlineCollection? inlines)
     {
         var isWordChar = typeof(TextDiffHighlighter).GetMethod(

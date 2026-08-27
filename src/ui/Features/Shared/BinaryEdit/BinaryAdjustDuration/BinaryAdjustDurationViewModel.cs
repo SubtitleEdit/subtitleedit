@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
@@ -96,6 +97,14 @@ public partial class BinaryAdjustDurationViewModel : ObservableObject
             var nextSubtitle = index + 1 < allSubtitles.Count ? allSubtitles[index + 1] : null;
             
             var newEndTime = subtitle.EndTime + TimeSpan.FromSeconds(AdjustSeconds);
+
+            // A negative adjustment must not push the end time before the start time
+            var minEndTime = subtitle.StartTime + TimeSpan.FromMilliseconds(100);
+            if (AdjustSeconds < 0 && newEndTime < minEndTime)
+            {
+                newEndTime = minEndTime;
+            }
+
             if (nextSubtitle != null && newEndTime <= nextSubtitle.StartTime || nextSubtitle == null)
             {
                 subtitle.EndTime = newEndTime;
@@ -143,9 +152,12 @@ public partial class BinaryAdjustDurationViewModel : ObservableObject
             var index = allSubtitles.IndexOf(subtitle);
             var nextSubtitle = index + 1 < allSubtitles.Count ? allSubtitles[index + 1] : null;
 
+            // Set the duration TO the percentage of the original (110% = 10% longer), like the
+            // main "Adjust durations" dialog and SE4 - the two share the same saved setting,
+            // so they must not interpret it differently (this used to ADD the percentage).
             var originalDuration = subtitle.EndTime - subtitle.StartTime;
-            var adjustment = originalDuration.TotalSeconds * (AdjustPercent / 100.0);
-            var newEndTime = subtitle.EndTime + TimeSpan.FromSeconds(adjustment);
+            var newDuration = originalDuration.TotalSeconds * (AdjustPercent / 100.0);
+            var newEndTime = subtitle.StartTime + TimeSpan.FromSeconds(newDuration);
 
             if (nextSubtitle != null && newEndTime > nextSubtitle.StartTime)
             {
@@ -165,7 +177,8 @@ public partial class BinaryAdjustDurationViewModel : ObservableObject
         foreach (var subtitle in itemsToAdjust)
         {
             var index = allSubtitles.IndexOf(subtitle);
-            var charCount = subtitle.Text?.Length ?? 0;
+            // Strip tags/line breaks so the recalculated durations land at the requested CPS
+            var charCount = (double)(subtitle.Text ?? string.Empty).CountCharacters(true);
 
             var optimalDuration = TimeSpan.FromSeconds(charCount / AdjustRecalculateOptimalCharacterPerSecond);
             var maxDuration = TimeSpan.FromSeconds(charCount / AdjustRecalculateMaxCharacterPerSecond);

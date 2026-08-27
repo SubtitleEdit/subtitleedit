@@ -161,7 +161,6 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
         _timerGenerate.Stop();
         ProgressValue = 100;
         ProgressText = string.Empty;
-        Se.LogError(_log.ToString());
 
         if (!File.Exists(_outputFileName))
         {
@@ -505,7 +504,10 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
             VideoFileName = fileName;
             _ = Task.Run(() =>
             {
+                // Parse once, off the UI thread - this used to also parse synchronously on the
+                // UI thread after starting the task, freezing the window for the probe.
                 var mediaInfo = FfmpegMediaInfo2.Parse(fileName);
+                _mediaInfo = mediaInfo;
                 Dispatcher.UIThread.Invoke(() =>
                 {
                     Tracks.Clear();
@@ -519,7 +521,6 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
                     SelectAndScrollToRow(0);
                 });
             });
-            _mediaInfo = FfmpegMediaInfo2.Parse(fileName);
         }
     }
 

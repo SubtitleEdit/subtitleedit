@@ -71,6 +71,12 @@ public partial class WaveformGuessTimeCodesViewModel : ObservableObject
 
     private void SaveSettings()
     {
+        var s = Se.Settings.Waveform;
+        s.GuessTimeCodeStartFromBeginning = StartFromBeginning;
+        s.GuessTimeCodeScanBlockSize = ScanBlockSize ?? 100;
+        s.GuessTimeCodeScanBlockAverageMin = ScanBlockAverageMin ?? 35;
+        s.GuessTimeCodeScanBlockAverageMax = ScanBlockAverageMax ?? 70;
+        s.GuessTimeCodeSplitLongSubtitlesAtMs = SplitLongSubtitlesAtMs ?? 3500;
         Se.SaveSettings();
     }
 

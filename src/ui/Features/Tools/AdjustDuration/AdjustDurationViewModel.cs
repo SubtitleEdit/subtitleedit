@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
@@ -64,6 +65,14 @@ public partial class AdjustDurationViewModel : ObservableObject
             var subtitle = subtitles[i];
             var nextSubtitle = subtitles.GetOrNull(i + 1);
             var newEndTime = subtitle.EndTime + TimeSpan.FromSeconds(AdjustSeconds);
+
+            // A negative adjustment must not push the end time before the start time
+            var minEndTime = subtitle.StartTime + TimeSpan.FromMilliseconds(100);
+            if (AdjustSeconds < 0 && newEndTime < minEndTime)
+            {
+                newEndTime = minEndTime;
+            }
+
             if (nextSubtitle != null && newEndTime <= nextSubtitle.StartTime || nextSubtitle == null)
             {
                 subtitle.EndTime = newEndTime;
@@ -126,7 +135,9 @@ public partial class AdjustDurationViewModel : ObservableObject
         for (int i = 0; i < subtitles.Count; i++)
         {
             var subtitle = subtitles[i];
-            var charCount = subtitle.Text?.Length ?? 0;
+            // Count like the grid's CPS column does (tags and line breaks stripped), so the
+            // recalculated durations actually land at the requested chars-per-second.
+            var charCount = (double)(subtitle.Text ?? string.Empty).CountCharacters(true);
 
             var optimalDuration = TimeSpan.FromSeconds(charCount / AdjustRecalculateOptimalCharacterPerSecond);
             var maxDuration = TimeSpan.FromSeconds(charCount / AdjustRecalculateMaxCharacterPerSecond);

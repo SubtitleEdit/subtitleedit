@@ -162,10 +162,10 @@ public partial class MergeShortLinesViewModel : ObservableObject, IClosingCleanu
             return;
         }
 
-        // "Highlight parts" only affects the on-screen preview (unmerged lines with the
-        // combined text underlined). The result applied to the document must always be
-        // the real merge, so recompute it when the preview was in highlight mode.
-        if (HighLight)
+        // Always recompute the real merge from the current settings instead of handing back
+        // what the 250 ms preview timer last produced: the preview is empty when OK comes
+        // right after opening, stale when it comes right after a settings change, and in
+        // "highlight parts" mode it is not the real merge at all.
         {
             var gapThresholdMs = Se.Settings.Tools.BridgeGaps.BridgeGapsSmallerThanMs;
             var unbreakLinesShorterThan = Se.Settings.General.UnbreakLinesShorterThan;

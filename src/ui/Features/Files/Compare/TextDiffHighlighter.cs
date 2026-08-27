@@ -135,7 +135,10 @@ public static class TextDiffHighlighter
         // Use longest common substring to find the best match
         var (commonStart, commonEnd, middleCommon1, middleCommon2) = FindCommonParts(text1, text2);
 
-        bool hasDifferences = commonStart != text1.Length || commonEnd != 0 || middleCommon1.Count > 0;
+        // Compare the strings directly: deriving this from commonStart/commonEnd missed the
+        // pure-append case ("Hello" vs "Hello world"), where the whole of text1 is the common
+        // prefix - so the appended tail was rendered with no highlighting at all.
+        var hasDifferences = text1 != text2;
 
         if (!hasDifferences)
         {
@@ -185,7 +188,8 @@ public static class TextDiffHighlighter
         }
 
         var (commonStart, commonEnd, middleCommon1, middleCommon2) = FindCommonParts(text1, text2);
-        var hasDifferences = commonStart != text1.Length || commonEnd != 0 || middleCommon1.Count > 0;
+        // See Compare: a direct comparison also covers the pure-append case.
+        var hasDifferences = text1 != text2;
 
         if (!hasDifferences)
         {

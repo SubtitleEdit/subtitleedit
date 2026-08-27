@@ -54,8 +54,13 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
         Subtitle = new Subtitle();
     }
 
-    internal void Initialize(Subtitle subtitle)
+    // Lines already changed by the step that opened this dialog (normal casing), so the
+    // final "lines changed" info covers the whole operation, like SE4's combined count.
+    private int _noOfFixesBefore;
+
+    internal void Initialize(Subtitle subtitle, int noOfFixesBefore = 0)
     {
+        _noOfFixesBefore = noOfFixesBefore;
         subtitle.Renumber();
         _subtitle = new Subtitle(subtitle);
         _subtitleBefore = subtitle;
@@ -331,7 +336,7 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
             }
         }
 
-        Info = $"Change casing - lines changed: {noOfLinesChanged}";
+        Info = $"Change casing - lines changed: {noOfLinesChanged + _noOfFixesBefore}";
 
         OkPressed = true;
         Window?.Close();

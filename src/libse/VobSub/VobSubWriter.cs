@@ -372,7 +372,11 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         public void WriteIdxFile()
         {
             string idxFileName = _subFileName.Substring(0, _subFileName.Length - 3) + "idx";
-            File.WriteAllText(idxFileName, _idx.ToString().Trim());
+            // _emphasis2 (the anti-alias blend color) is only computed by ConvertToFourColors
+            // during WriteParagraph, i.e. after the header template was built in the
+            // constructor - so its palette entry is patched in here, at write time.
+            var idx = _idx.ToString().Replace(Emphasis2PalettePlaceholder, ToHexColor(_emphasis2));
+            File.WriteAllText(idxFileName, idx.Trim());
         }
 
         private StringBuilder CreateIdxHeader()
@@ -427,7 +431,7 @@ time offset: 0
 forced subs: OFF
 
 # The original palette of the DVD
-palette: 000000, " + ToHexColor(_pattern) + ", " + ToHexColor(_emphasis1) + ", " + ToHexColor(_emphasis2) + @", 828282, 828282, 828282, ffffff, 828282, bababa, 828282, 828282, 828282, 828282, 828282, 828282
+palette: 000000, " + ToHexColor(_pattern) + ", " + ToHexColor(_emphasis1) + ", " + Emphasis2PalettePlaceholder + @", 828282, 828282, 828282, ffffff, 828282, bababa, 828282, 828282, 828282, 828282, 828282, 828282
 
 # Custom colors (transp idxs and the four colors)
 custom colors: OFF, tridx: 0000, colors: 000000, 000000, 000000, 000000
@@ -442,6 +446,8 @@ id: " + _languageNameShort + @", index: 0
 # Vob/Cell ID: 1, 1 (PTS: 0)");
             return sb;
         }
+
+        private const string Emphasis2PalettePlaceholder = "[EMPHASIS2]";
 
         private static string ToHexColor(SKColor c)
         {

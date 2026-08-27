@@ -5686,7 +5686,11 @@ public partial class MainViewModel :
         }
         else if (result.DeleteLinesFromVideoPosition)
         {
-            var subsToKeep = Subtitles.Where(p => p.StartTime.TotalSeconds >= vp.Position).ToList();
+            // New time codes are generated from the video position onward, so the existing
+            // lines from that position are the ones to delete - the lines BEFORE it are kept
+            // (this used to be inverted, wiping the user's work before the position and
+            // doubling up lines after it).
+            var subsToKeep = Subtitles.Where(p => p.StartTime.TotalSeconds < vp.Position).ToList();
             _subtitle.Paragraphs.Clear();
             // Pass the format so Paragraph.Extra keeps the ASSA style - SetSubtitles below
             // rebuilds the rows from these paragraphs and reads the style back from Extra.
@@ -5716,7 +5720,8 @@ public partial class MainViewModel :
             }
 
             var nextSubtitle = GetNextWorkingRow(idx);
-            var charCount = selectedLine.Text?.Length ?? 0;
+            // Count like the grid's CPS column does (tags and line breaks stripped)
+            var charCount = (double)(selectedLine.Text ?? string.Empty).CountCharacters(true);
 
             var optimalDuration = TimeSpanExtensions.FromSecondsWholeMilliseconds(charCount / Se.Settings.General.SubtitleOptimalCharactersPerSeconds);
             var maxDuration = TimeSpanExtensions.FromSecondsWholeMilliseconds(charCount / Se.Settings.General.SubtitleMaximumCharactersPerSeconds);
@@ -5768,8 +5773,9 @@ public partial class MainViewModel :
                 continue;
             }
 
-            var charCount = selectedLine.Text?.Length ?? 0;
-            if (charCount == 0)
+            // Count like the grid's CPS column does (tags and line breaks stripped)
+            var charCount = (double)(selectedLine.Text ?? string.Empty).CountCharacters(true);
+            if (charCount <= 0)
             {
                 continue;
             }
@@ -15251,7 +15257,9 @@ public partial class MainViewModel :
             vm.Initialize(Subtitles.ToList(), selectedItems);
         });
 
-        if (result.OkPressed && result.Subtitles.Count > 0)
+        // Gate on the computed selection, not the preview collection - the preview is filled by
+        // a 250 ms debounce timer, so it can be empty/stale when OK is pressed quickly.
+        if (result.OkPressed && result.Selection.Count > 0)
         {
             // Work out the final selection up front with O(1) membership tests
             // (newSelection / current are HashSets, not List.Contains), keeping
