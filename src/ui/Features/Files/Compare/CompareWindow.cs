@@ -115,7 +115,12 @@ public class CompareWindow : Window
         checkBoxIgnoreFormatting.IsCheckedChanged += vm.CheckBoxChanged;
         var buttonPreviousDifference = UiUtil.MakeButton(vm.PreviousDifferenceCommand, IconNames.ChevronLeft, Se.Language.File.PreviousDifference).WithBindIsVisible(nameof(vm.IsExportVisible));
         var buttonNextDifference = UiUtil.MakeButton(vm.NextDifferenceCommand, IconNames.ChevronRight, Se.Language.File.NextDifference).WithBindIsVisible(nameof(vm.IsExportVisible));
-        var buttonExport = UiUtil.MakeButton(Se.Language.General.Export, vm.ExportCommand).WithMarginLeft(15);
+        // Bound like its two neighbours: with only one side loaded (which is how Tools > Compare
+        // always opens) the collections are never padded to equal length, and Export indexes the
+        // right-hand list by the left-hand count.
+        var buttonExport = UiUtil.MakeButton(Se.Language.General.Export, vm.ExportCommand)
+            .WithBindIsVisible(nameof(vm.IsExportVisible))
+            .WithMarginLeft(15);
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var panelButtons = UiUtil.MakeButtonBar(
             checkBoxIgnoreWhiteSpace,

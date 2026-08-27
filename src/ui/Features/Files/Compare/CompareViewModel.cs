@@ -744,7 +744,9 @@ public partial class CompareViewModel : ObservableObject
         sb.AppendLine("      <th>&nbsp;</th>");
         sb.AppendLine("      <th colspan='4' style='text-align:left'>" + GetFileName(RightFileName) + "</th>");
         sb.AppendLine("    </tr>");
-        for (var i = 0; i < LeftSubtitles.Count; i++)
+        // Belt and braces alongside the button guard: only the padded rows are pairs.
+        var rowCount = Math.Min(LeftSubtitles.Count, RightSubtitles.Count);
+        for (var i = 0; i < rowCount; i++)
         {
             var itemLeft = LeftSubtitles[i];
             var itemRight = RightSubtitles[i];

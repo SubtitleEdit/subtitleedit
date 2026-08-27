@@ -56,7 +56,8 @@ internal sealed class OllamaOcrEngine : IOcrEngine
         using var content = new StringContent(body, Encoding.UTF8);
         content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
-        var resp = _httpClient.PostAsync(_url, content).GetAwaiter().GetResult();
+        // One response per subtitle bitmap - without the using, a long file leaks them all.
+        using var resp = _httpClient.PostAsync(_url, content).GetAwaiter().GetResult();
         var bodyBytes = resp.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
         var json = Encoding.UTF8.GetString(bodyBytes).Trim();
         if (!resp.IsSuccessStatusCode)

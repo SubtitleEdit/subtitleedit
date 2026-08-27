@@ -379,7 +379,12 @@ public static class ImageRenderer
         var lineWidths = new float[lines.Count];
         for (var li = 0; li < lines.Count; li++)
         {
-            var line = lines[li];
+            // Measure in the SAME order the line is drawn in. Reversing for RTL changes which
+            // segment is last, and the 0.17em styled-segment padding is only added to "not the
+            // last one" - so an RTL line was measured with that padding on a different segment
+            // than it was rendered with, shifting centered/right-aligned text and, through
+            // maxLineWidth, every other line of the same subtitle.
+            var line = ip.IsRightToLeft ? lines[li].AsEnumerable().Reverse().ToList() : lines[li];
             for (var j = 0; j < line.Count; j++)
             {
                 var seg = line[j];
@@ -560,7 +565,12 @@ public static class ImageRenderer
         var lineWidths = new float[lines.Count];
         for (var li = 0; li < lines.Count; li++)
         {
-            var line = lines[li];
+            // Measure in the SAME order the line is drawn in. Reversing for RTL changes which
+            // segment is last, and the 0.17em styled-segment padding is only added to "not the
+            // last one" - so an RTL line was measured with that padding on a different segment
+            // than it was rendered with, shifting centered/right-aligned text and, through
+            // maxLineWidth, every other line of the same subtitle.
+            var line = ip.IsRightToLeft ? lines[li].AsEnumerable().Reverse().ToList() : lines[li];
             for (var j = 0; j < line.Count; j++)
             {
                 var seg = line[j];

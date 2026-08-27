@@ -179,12 +179,28 @@ public class ColorService : IColorService
                 var colorStart = f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
                 if (colorStart >= 0)
                 {
-                    if (s.IndexOf('"', colorStart + 8) > 0)
+                    var valueStart = colorStart + " color=".Length;
+                    var quoteEnd = s.IndexOf('"', valueStart);
+                    if (quoteEnd > 0)
                     {
-                        end = s.IndexOf('"', colorStart + 8);
+                        // Quoted value: the closing quote comes from the tail we keep.
+                        s = s.Substring(0, colorStart) + string.Format(" color=\"{0}", ToHex(color)) + s.Substring(quoteEnd);
+                    }
+                    else
+                    {
+                        // Unquoted value ("<font color=red>"). "end" is the '>' here, so the old
+                        // code emitted an opening quote and then kept the rest of the tag,
+                        // producing the broken '<font color="#0000FF>'. Replace the whole
+                        // unquoted value with a properly quoted one instead.
+                        var valueEnd = valueStart;
+                        while (valueEnd < end && !char.IsWhiteSpace(s[valueEnd]))
+                        {
+                            valueEnd++;
+                        }
+
+                        s = s.Substring(0, colorStart) + string.Format(" color=\"{0}\"", ToHex(color)) + s.Substring(valueEnd);
                     }
 
-                    s = s.Substring(0, colorStart) + string.Format(" color=\"{0}", ToHex(color)) + s.Substring(end);
                     text = pre + s;
                     return text;
                 }

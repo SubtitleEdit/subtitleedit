@@ -68,6 +68,10 @@ public partial class FindService : IFindService
 
     public int FindNext(string searchText, List<string> textLines, int startLineIndex, int startTextIndex, List<string>? originalTextLines = null, bool startInOriginal = false)
     {
+        // Adopt the caller's list BEFORE testing it: the guard used to read the field, i.e. the
+        // previous search's lines, so a Find opened on an empty subtitle kept answering "not
+        // found" for every later F3 no matter how many lines had been added since.
+        _textLines = textLines;
         if (string.IsNullOrEmpty(searchText) || _textLines.Count == 0)
         {
             ResetSearchState();
@@ -75,7 +79,6 @@ public partial class FindService : IFindService
         }
 
         SearchText = RegexUtils.EscapeNewLines(searchText);
-        _textLines = textLines;
         _originalTextLines = originalTextLines;
         AddToSearchHistory(searchText);
 
@@ -161,6 +164,8 @@ public partial class FindService : IFindService
 
     public int FindPrevious(string searchText, List<string> textLines, int startLineIndex, int startTextIndex, List<string>? originalTextLines = null, bool startInOriginal = false)
     {
+        // Same as FindNext: adopt the caller's list before testing it.
+        _textLines = textLines;
         if (string.IsNullOrEmpty(searchText) || _textLines.Count == 0)
         {
             ResetSearchState();
@@ -168,7 +173,6 @@ public partial class FindService : IFindService
         }
 
         SearchText = RegexUtils.EscapeNewLines(searchText);
-        _textLines = textLines;
         _originalTextLines = originalTextLines;
         AddToSearchHistory(searchText);
 

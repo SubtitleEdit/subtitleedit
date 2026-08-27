@@ -172,7 +172,11 @@ public static class SpeechToTextTimingFixer
             if (pctHere < percentageMax)
             {
                 var startPosForward = p.StartTime.TotalSeconds;
-                while (pctHere < percentageMax && startPos < p.EndTime.TotalSeconds - 1)
+                // Bound the scan by the variable that actually advances. "startPos" is assigned
+                // once above and never changes inside the loop, so this guard was a constant: the
+                // scan ran past the cue's own end until FindPercentage gave up, and the -1 exit
+                // then abandoned the whole method, leaving every later line unadjusted.
+                while (pctHere < percentageMax && startPosForward < p.EndTime.TotalSeconds - 1)
                 {
                     pctHere = FindPercentage(startPosForward - 0.05, startPosForward + 0.05, wavePeaks);
                     if (Math.Abs(pctHere - (-1)) < 0.01)
