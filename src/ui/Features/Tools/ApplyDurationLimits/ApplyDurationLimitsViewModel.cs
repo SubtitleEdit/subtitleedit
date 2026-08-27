@@ -95,94 +95,106 @@ public partial class ApplyDurationLimitsViewModel : ObservableObject, IClosingCl
 
     private void UpdatePreview()
     {
+        Dispatcher.UIThread.Post(BuildPreview);
+    }
+
+    /// <summary>
+    /// Rebuilds <see cref="AllSubtitlesFixed"/>, <see cref="Fixes"/> and the preview rows from the
+    /// current settings. Must run on the UI thread; kept separate from <see cref="UpdatePreview"/>
+    /// so <see cref="Ok"/> can build the result it hands to the caller rather than depending on the
+    /// preview timer having ticked.
+    /// </summary>
+    private void BuildPreview()
+    {
         if (MinDurationMs == null || MaxDurationMs == null || _allSubtitles.Count == 0)
         {
             return;
         }
 
-        Dispatcher.UIThread.Post(() =>
+        Subtitles.Clear();
+        AllSubtitlesFixed.Clear();
+        Fixes.Clear();
+
+        // Only a conflict when both limits are actually applied - bailing out whenever the
+        // numbers cross meant "shorten to 500 ms" with a stale 1000 ms minimum in the other
+        // box silently did nothing at all.
+        if (FixMinDurationMs && FixMaxDurationMs && MinDurationMs >= MaxDurationMs)
         {
-            Subtitles.Clear();
-            AllSubtitlesFixed.Clear();
-            Fixes.Clear();
-            if (MinDurationMs >= MaxDurationMs)
+            return;
+        }
+
+        var minMs = MinDurationMs.Value;
+        var maxMs = MaxDurationMs.Value;
+        var fixCount = 0;
+        var improveCount = 0;
+        var skipCount = 0;
+
+        for (var index = 0; index < _allSubtitles.Count; index++)
+        {
+            var item = new SubtitleLineViewModel(_allSubtitles[index]);
+            AllSubtitlesFixed.Add(item);
+
+            var next = _allSubtitles.GetOrNull(index + 1);
+
+            if (item.Duration.TotalMilliseconds > maxMs && FixMaxDurationMs)
             {
-                return;
+                // Shortening never runs into the next line or a shot change.
+                var newEndTime = TimeSpan.FromMilliseconds(item.StartTime.TotalMilliseconds + maxMs);
+                Update(item, newEndTime);
+                fixCount++;
             }
 
-            var minMs = MinDurationMs.Value;
-            var maxMs = MaxDurationMs.Value;
-            var fixCount = 0;
-            var improveCount = 0;
-            var skipCount = 0;
-
-            for (var index = 0; index < _allSubtitles.Count; index++)
+            if (item.Duration.TotalMilliseconds < minMs && FixMinDurationMs)
             {
-                var item = new SubtitleLineViewModel(_allSubtitles[index]);
-                AllSubtitlesFixed.Add(item);
+                var wantedEndTime = TimeSpan.FromMilliseconds(item.StartTime.TotalMilliseconds + minMs);
+                var allowedEndTime = wantedEndTime;
 
-                var next = _allSubtitles.GetOrNull(index + 1);
-
-                if (item.Duration.TotalMilliseconds > maxMs && FixMaxDurationMs)
+                // Never overlap the next line.
+                if (next != null && wantedEndTime > next.StartTime)
                 {
-                    // Shortening never runs into the next line or a shot change.
-                    var newEndTime = TimeSpan.FromMilliseconds(item.StartTime.TotalMilliseconds + maxMs);
-                    Update(item, newEndTime);
+                    allowedEndTime = TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds - Se.Settings.General.MinimumBetweenLines.GetMilliseconds());
+                }
+
+                allowedEndTime = CapAtShotChange(item, allowedEndTime);
+
+                if (allowedEndTime >= wantedEndTime)
+                {
+                    Update(item, wantedEndTime);
                     fixCount++;
                 }
-
-                if (item.Duration.TotalMilliseconds < minMs && FixMinDurationMs)
+                else if (allowedEndTime > item.EndTime)
                 {
-                    var wantedEndTime = TimeSpan.FromMilliseconds(item.StartTime.TotalMilliseconds + minMs);
-                    var allowedEndTime = wantedEndTime;
-
-                    // Never overlap the next line.
-                    if (next != null && wantedEndTime > next.StartTime)
-                    {
-                        allowedEndTime = TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds - Se.Settings.General.MinimumBetweenLines.GetMilliseconds());
-                    }
-
-                    allowedEndTime = CapAtShotChange(item, allowedEndTime);
-
-                    if (allowedEndTime >= wantedEndTime)
-                    {
-                        Update(item, wantedEndTime);
-                        fixCount++;
-                    }
-                    else if (allowedEndTime > item.EndTime)
-                    {
-                        // improved, but not fixed
-                        Update(item, allowedEndTime, Se.Language.Tools.ApplyDurationLimits.OnlyPartialFixed);
-                        improveCount++;
-                    }
-                    else
-                    {
-                        // unfixable
-                        Subtitles.Add(item);
-                        skipCount++;
-                    }
+                    // improved, but not fixed
+                    Update(item, allowedEndTime, Se.Language.Tools.ApplyDurationLimits.OnlyPartialFixed);
+                    improveCount++;
+                }
+                else
+                {
+                    // unfixable
+                    Subtitles.Add(item);
+                    skipCount++;
                 }
             }
+        }
 
-            if (fixCount == 0 && improveCount == 0 && skipCount == 0)
-            {
-                FixesInfo = Se.Language.Tools.ApplyDurationLimits.NoChangesNeeded;
-                FixesSkippedInfo = string.Empty;
-                return;
-            }
+        if (fixCount == 0 && improveCount == 0 && skipCount == 0)
+        {
+            FixesInfo = Se.Language.Tools.ApplyDurationLimits.NoChangesNeeded;
+            FixesSkippedInfo = string.Empty;
+            return;
+        }
 
-            if (improveCount == 0)
-            {
-                FixesInfo = string.Format(Se.Language.Tools.ApplyDurationLimits.FixedX, fixCount);
-            }
-            else
-            {
-                FixesInfo = string.Format(Se.Language.Tools.ApplyDurationLimits.FixedXImprovedY, fixCount, improveCount);
-            }
+        if (improveCount == 0)
+        {
+            FixesInfo = string.Format(Se.Language.Tools.ApplyDurationLimits.FixedX, fixCount);
+        }
+        else
+        {
+            FixesInfo = string.Format(Se.Language.Tools.ApplyDurationLimits.FixedXImprovedY, fixCount, improveCount);
+        }
 
 
-            FixesSkippedInfo = skipCount > 0 ? string.Format(Se.Language.Tools.ApplyDurationLimits.UnfixableX, skipCount) : string.Empty;
-        });
+        FixesSkippedInfo = skipCount > 0 ? string.Format(Se.Language.Tools.ApplyDurationLimits.UnfixableX, skipCount) : string.Empty;
     }
 
     /// <summary>
@@ -268,12 +280,20 @@ public partial class ApplyDurationLimitsViewModel : ObservableObject, IClosingCl
         }
 
         SaveSettings();
-        
-        if (FixMinDurationMs && FixMaxDurationMs && MinDurationMs > MaxDurationMs)
+
+        if (FixMinDurationMs && FixMaxDurationMs && MinDurationMs >= MaxDurationMs)
         {
             var msg = Se.Language.Tools.ApplyDurationLimits.MaxDurationShouldBeHigherThanMinDuration;
             await MessageBox.Show(Window, Se.Language.General.Error, msg, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             return;
+        }
+
+        // The preview timer fills AllSubtitlesFixed, so before its first tick - or right after a
+        // value changed - OK either did nothing or applied the previous limits. Build it now.
+        if (_isDirty || AllSubtitlesFixed.Count == 0)
+        {
+            _isDirty = false;
+            BuildPreview();
         }
 
         if (FixMinDurationMs || FixMaxDurationMs)
