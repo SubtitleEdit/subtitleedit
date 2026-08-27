@@ -1741,6 +1741,22 @@ public static partial class InitListViewAndEditBox
 
         flyoutTextBox.Items.Add(new Separator());
 
+        // Shown only with a selection - the command searches the selected text and does nothing
+        // without one. It had no default shortcut and was in no menu, so it was unreachable
+        // unless you imported SE4 shortcuts (same invisibility as casing, #13093).
+        var menuItemTextBoxGoogleIt = new MenuItem
+        {
+            Header = Se.Language.General.GoogleIt,
+            Command = vm.GoogleItCommand,
+            Icon = new Icon
+            {
+                Value = IconNames.Web,
+                VerticalAlignment = VerticalAlignment.Center,
+            },
+        };
+        menuItemTextBoxGoogleIt.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsTextBoxGoogleItVisible)));
+        flyoutTextBox.Items.Add(menuItemTextBoxGoogleIt);
+
         var menuItemTextBoxAiAssistant = new MenuItem
         {
             Header = Se.Language.Tools.AiAssistant.Title,

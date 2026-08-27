@@ -396,6 +396,7 @@ public partial class MainViewModel :
     [ObservableProperty] private bool _showColumnLayerFlyoutMenuItem;
     [ObservableProperty] private bool _isVideoLoaded;
     [ObservableProperty] private bool _isTextBoxSplitAtCursorAndVideoPositionVisible;
+    [ObservableProperty] private bool _isTextBoxGoogleItVisible;
     [ObservableProperty] private ObservableCollection<string> _speeds;
     [ObservableProperty] private string _selectedSpeed;
     [ObservableProperty] private ObservableCollection<string> _videoSeekAmounts;
@@ -28668,6 +28669,10 @@ public partial class MainViewModel :
     internal void TextBoxContextOpening(object? sender, EventArgs e)
     {
         IsTextBoxSplitAtCursorAndVideoPositionVisible = false;
+
+        // "Google it" searches the selection, so it only makes sense with one - and it was
+        // shortcut-only (with no default gesture), which made it look removed since SE4.
+        IsTextBoxGoogleItVisible = !string.IsNullOrWhiteSpace(EditTextBox.SelectedText);
 
         var s = SelectedSubtitle;
         var vp = GetVideoPlayerControl();
