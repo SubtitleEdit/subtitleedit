@@ -1161,7 +1161,8 @@ internal record class ConversionOptions
     public string OcrEngine { get; init; } = "tesseract";
 
     /// <summary>Language code or human name passed to the OCR engine (Tesseract: ISO 639-2 like <c>eng</c>; Paddle: <c>en</c>; Ollama: human name like <c>English</c>).</summary>
-    public string OcrLanguage { get; init; } = "eng";
+    /// <summary>Null = let each OCR engine apply its own default code set.</summary>
+    public string? OcrLanguage { get; init; }
 
     /// <summary>Path to a <c>.nocr</c> database file (required when <c>OcrEngine == "nocr"</c>).</summary>
     public string? OcrDb { get; init; }

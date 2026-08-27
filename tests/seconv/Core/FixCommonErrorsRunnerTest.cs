@@ -363,9 +363,24 @@ public class FixCommonErrorsRunnerTest
     [InlineData("")]
     [InlineData("   ")]
     [InlineData("spanihs")]
+    // A plausible two-letter typo for Spanish (the real code is "es"). This used to be returned
+    // verbatim by an unchecked "length == 2" shortcut: being non-null it suppressed the warning
+    // and the auto-detect fallback, then matched no language gate, and left the OCR-fix pass -
+    // which needs a valid three-letter code - silently doing nothing.
+    [InlineData("sp")]
+    [InlineData("zz")]
     public void NormalizeLanguageOverride_BlankOrUnknown_ReturnsNull(string? input)
     {
         Assert.Null(FixCommonErrorsRunner.NormalizeLanguageOverride(input));
+    }
+
+    [Theory]
+    [InlineData("es", "es")]
+    [InlineData("ES", "es")]
+    [InlineData("da", "da")]
+    public void NormalizeLanguageOverride_RealTwoLetterCode_StillResolves(string input, string expected)
+    {
+        Assert.Equal(expected, FixCommonErrorsRunner.NormalizeLanguageOverride(input));
     }
 
     [Fact]

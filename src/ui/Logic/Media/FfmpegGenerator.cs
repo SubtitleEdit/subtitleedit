@@ -1235,7 +1235,11 @@ public class FfmpegGenerator
                 keepIndex++;
             }
 
-            lastEnd = seg.EndTime.TotalSeconds;
+            // Never move the cursor backwards: cut segments are sorted by start but not merged,
+            // so an overlapping pair like [10-20] then [12-15] used to reset lastEnd to 15 and
+            // leave 15-20 s in the output - while the subtitle re-timer treats it as removed,
+            // desyncing everything after the cut.
+            lastEnd = Math.Max(lastEnd, seg.EndTime.TotalSeconds);
         }
 
         // Keep remainder (from lastEnd → EOF)
@@ -1442,7 +1446,10 @@ public class FfmpegGenerator
         args.Add($"-i \"{inputFileName}\"");
 
         // New external subtitle inputs
-        var newInputs = embeddedTracks.Where(t => t.New && !string.IsNullOrEmpty(t.FileName) && File.Exists(t.FileName)).ToList();
+        // "!t.Deleted" as in the mp4 path below: a track the user added and then removed was
+        // still -i'd and -map'd in, and since outputSubs excludes it, every following subtitle
+        // stream picked up the previous track's language/title/disposition metadata.
+        var newInputs = embeddedTracks.Where(t => t.New && !t.Deleted && !string.IsNullOrEmpty(t.FileName) && File.Exists(t.FileName)).ToList();
         foreach (var track in newInputs)
         {
             args.Add($"-i \"{track.FileName}\"");

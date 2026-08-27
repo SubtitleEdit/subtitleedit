@@ -12,12 +12,12 @@ internal static class OcrEngineFactory
         var engine = (options.OcrEngine ?? "tesseract").Trim().ToLowerInvariant();
         return engine switch
         {
-            "tesseract" or "" => TesseractOcrEngine.Create(options.OcrLanguage),
+            "tesseract" or "" => TesseractOcrEngine.Create(options.OcrLanguage ?? "eng"),
             "nocr" => new NOcrOcrEngine(ResolveOcrDbPath(options, "nocr", ".nocr")),
             "binaryocr" or "binary" => new BinaryOcrOcrEngine(ResolveOcrDbPath(options, "binaryocr", ".db")),
             "ollama" => new OllamaOcrEngine(options.OllamaUrl, options.OllamaModel, options.OcrLanguage),
             "llamacpp" or "llama.cpp" or "llama" => LlamaCppOcrEngine.Create(options),
-            "paddle" or "paddleocr" => PaddleOcrEngine.Create(options.OcrLanguage),
+            "paddle" or "paddleocr" => PaddleOcrEngine.Create(options.OcrLanguage ?? "en"),
             _ => throw new InvalidOperationException(
                 $"OCR engine '{options.OcrEngine}' is not supported. Use one of: tesseract, nocr, binaryocr, ollama, llamacpp, paddle.")
         };

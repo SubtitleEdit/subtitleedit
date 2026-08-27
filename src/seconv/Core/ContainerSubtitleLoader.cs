@@ -517,6 +517,14 @@ internal static class ContainerSubtitleLoader
             parser.Parse(filePath, null);
             foreach (var pidEntry in parser.TeletextSubtitlesLookup)
             {
+                // Every other container path honours --track-number; the transport-stream path
+                // did not, so the filter was accepted and then silently ignored and SE wrote one
+                // output per teletext page, per ARIB language and per DVB PID.
+                if (options.TrackNumbers.Count > 0 && !options.TrackNumbers.Contains(pidEntry.Key))
+                {
+                    continue;
+                }
+
                 foreach (var pageEntry in pidEntry.Value)
                 {
                     if (options.TeletextOnlyPage.HasValue && pageEntry.Key != options.TeletextOnlyPage.Value)
@@ -538,6 +546,11 @@ internal static class ContainerSubtitleLoader
             // ARIB STD-B24 captions (ISDB broadcasts) — also text
             foreach (var pidEntry in parser.AribSubtitlesLookup)
             {
+                if (options.TrackNumbers.Count > 0 && !options.TrackNumbers.Contains(pidEntry.Key))
+                {
+                    continue;
+                }
+
                 foreach (var languageEntry in pidEntry.Value)
                 {
                     if (languageEntry.Value.Count == 0)
@@ -570,6 +583,11 @@ internal static class ContainerSubtitleLoader
                 var dvbSubs = ImageOcrLoader.LoadTransportStreamDvbSub(filePath, options);
                 foreach (var (subtitle, pid) in dvbSubs)
                 {
+                    if (options.TrackNumbers.Count > 0 && !options.TrackNumbers.Contains(pid))
+                    {
+                        continue;
+                    }
+
                     tracks.Add(new LoadedTrack(subtitle, new SubRip(), $"dvb_pid{pid}", pid));
                 }
             }
@@ -581,6 +599,12 @@ internal static class ContainerSubtitleLoader
 
         if (tracks.Count == 0)
         {
+            if (options.TrackNumbers.Count > 0)
+            {
+                throw new InvalidOperationException(
+                    $"Transport stream contained no subtitle stream matching --track-number ({string.Join(",", options.TrackNumbers)}): {filePath}");
+            }
+
             throw new InvalidOperationException($"No subtitles found in transport stream: {filePath}");
         }
         return tracks;

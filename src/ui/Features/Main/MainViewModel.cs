@@ -10766,7 +10766,18 @@ public partial class MainViewModel :
             return;
         }
 
-        var frameRate = _mediaInfo != null ? (double)_mediaInfo.FramesRateNonNormalized : Se.Settings.General.CurrentFrameRate;
+        // A non-null _mediaInfo can still carry a rate of 0 (ffmpeg missing, or audio-only media
+        // whose log has no fps line), so the null check alone protected nothing: "seconds" became
+        // Infinity and every shot change was pushed out of range - silently emptying the user's
+        // whole shot-change list. The sibling command above already guards it this way.
+        var frameRate = _mediaInfo != null && _mediaInfo.FramesRateNonNormalized > 0
+            ? (double)_mediaInfo.FramesRateNonNormalized
+            : Se.Settings.General.CurrentFrameRate;
+        if (frameRate < 1)
+        {
+            return;
+        }
+
         var milliseconds = 1000.0 / frameRate;
         var seconds = milliseconds / 1000.0;
 
@@ -10795,7 +10806,18 @@ public partial class MainViewModel :
             return;
         }
 
-        var frameRate = _mediaInfo != null ? (double)_mediaInfo.FramesRateNonNormalized : Se.Settings.General.CurrentFrameRate;
+        // A non-null _mediaInfo can still carry a rate of 0 (ffmpeg missing, or audio-only media
+        // whose log has no fps line), so the null check alone protected nothing: "seconds" became
+        // Infinity and every shot change was pushed out of range - silently emptying the user's
+        // whole shot-change list. The sibling command above already guards it this way.
+        var frameRate = _mediaInfo != null && _mediaInfo.FramesRateNonNormalized > 0
+            ? (double)_mediaInfo.FramesRateNonNormalized
+            : Se.Settings.General.CurrentFrameRate;
+        if (frameRate < 1)
+        {
+            return;
+        }
+
         var milliseconds = 1000.0 / frameRate;
         var seconds = milliseconds / 1000.0;
 
@@ -11574,6 +11596,12 @@ public partial class MainViewModel :
             return;
         }
 
+        // Map each paragraph handed to the dialog back to its row. The dialog copies its input
+        // with generateNewId:false, so these ids survive and still name a row in the result -
+        // which positional indexing does not: rules that remove a paragraph (FixEmptyLines is on
+        // by default) shift every later result onto its neighbour's row.
+        var rowByParagraphId = new Dictionary<Guid, SubtitleLineViewModel>(selectedItems.Count);
+
         var result = await ShowDialogAsync<FixCommonErrorsWindow, FixCommonErrorsViewModel>(vm =>
         {
             var sub = new Subtitle();
@@ -11593,6 +11621,10 @@ public partial class MainViewModel :
                     Bookmark = line.Bookmark,
                 };
                 sub.Paragraphs.Add(p);
+                if (p.Id.HasValue)
+                {
+                    rowByParagraphId[p.Id.Value] = line;
+                }
             }
 
             vm.Initialize(sub, SelectedSubtitleFormat);
@@ -11604,14 +11636,11 @@ public partial class MainViewModel :
             return;
         }
 
-        for (var i = 0; i < result.FixedSubtitle.Paragraphs.Count; i++)
+        foreach (var paragraph in result.FixedSubtitle.Paragraphs)
         {
-            var text = result.FixedSubtitle.Paragraphs[i].Text;
-            var id = selectedItems[i].Id;
-            var p = Subtitles.FirstOrDefault(x => x.Id == id);
-            if (p != null)
+            if (paragraph.Id.HasValue && rowByParagraphId.TryGetValue(paragraph.Id.Value, out var row))
             {
-                p.Text = text;
+                row.Text = paragraph.Text;
             }
         }
 
@@ -16987,7 +17016,14 @@ public partial class MainViewModel :
 
         RunWithoutChangeDetection(() =>
         {
-            for (var i = index; i < Subtitles.Count; i++)
+            // Set the END of the selected line and offset only the lines AFTER it. The loop used
+            // to start at "index" and slide the selected line bodily with SetStartTimeKeepDuration,
+            // so its start moved by the end-delta too and its duration never changed - the exact
+            // opposite of "set end". (The start twin above is right to start at index: there the
+            // delta is measured from the start, so moving the whole line is the intent.)
+            s.EndTime = videoTime;
+
+            for (var i = index + 1; i < Subtitles.Count; i++)
             {
                 var subtitle = Subtitles[i];
                 subtitle.SetStartTimeKeepDuration(subtitle.StartTime + difference);
@@ -18088,7 +18124,16 @@ public partial class MainViewModel :
         var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
         foreach (var item in selectedItems)
         {
-            var prev = Subtitles.GetOrNull(Subtitles.IndexOf(item) - 1);
+            // "The previous line" means the previous line of the subtitle being edited, not a
+            // display-only reference row of a mismatched original (#13962) - which is what the
+            // raw grid predecessor could be. Every sibling timing command uses these helpers.
+            var idx = Subtitles.IndexOf(item);
+            if (idx < 0)
+            {
+                continue;
+            }
+
+            var prev = GetPreviousWorkingRow(idx);
             if (prev == null)
             {
                 continue;

@@ -243,7 +243,6 @@ public class SeTools
         MultipleReplaceShowDotDotDotButtons = true;
         GridFocusTextboxAfterInsertNew = true;
         AllowSingleLetterShortcutsInTextbox = false;
-        WriteToolsLog = true;
         TextToSpeechPromptMergeContinuationLines = true;
         TextToSpeechPromptSkipNoiseLines = true;
         TextToSpeechPromptDetectSpeakers = true;

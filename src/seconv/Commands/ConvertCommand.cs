@@ -726,7 +726,11 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 TrackNumbers = ParseTrackNumbers(settings.TrackNumber),
                 ForcedOnly = settings.ForcedOnly,
                 OcrEngine = string.IsNullOrWhiteSpace(settings.OcrEngine) ? "tesseract" : settings.OcrEngine,
-                OcrLanguage = settings.OcrLanguage ?? "eng",
+                // No "eng" here: the engines take different code sets (Tesseract "eng", Paddle
+                // "en", Ollama/llama.cpp a human name like "English") and each has its own
+                // default. Forcing Tesseract's on all of them made "--ocr-engine:paddle" run
+                // paddleocr with "--lang eng", which it rejects, failing the whole conversion.
+                OcrLanguage = settings.OcrLanguage,
                 OcrDb = settings.OcrDb,
                 DictionaryFolder = settings.DictionaryFolder,
                 TimeCodesOnly = settings.TimeCodesOnly,
