@@ -21,6 +21,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static readonly Regex FontTagsNoSpace1 = new Regex("[a-zA-z.!?]</font><font[a-zA-Z =\"']+>[a-zA-Z-]", RegexOptions.Compiled);
         private static readonly Regex FontTagsNoSpace2 = new Regex("[a-zA-z.!?]<font[a-zA-Z =\"']+>[a-zA-Z-]", RegexOptions.Compiled);
 
+        // "<font color=\"Blue\"></font>" - two teletext color codes in a row, e.g. a background
+        // color set right before the text color. Only the last one has any text, and SE has no
+        // background color for STL, so the empty tag is noise that shifts the text by a space.
+        private static readonly Regex EmptyFontTag = new Regex("<font color=\"[A-Za-z]+\"></font>", RegexOptions.Compiled);
+
         private static readonly Regex FontTagsStartSpace = new Regex("^<font color=\"[A-Za-z]+\"> ", RegexOptions.Compiled); // "<font color=\"Black\"> "
         private static readonly Regex FontTagsNewLineSpace = new Regex("[\r\n]+<font color=\"[A-Za-z]+\"> ", RegexOptions.Compiled); // "\r\n<font color=\"Black\"> "
 
@@ -1308,7 +1313,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Paragraphs.Clear();
             var header = ReadHeader(buffer);
             subtitle.Header = header.ToString();
-            if (header.DisplayStandardCode == "1" || header.DisplayStandardCode == "2")
+            if (header.DisplayStandardCode == "1" || header.DisplayStandardCode == "2" || HasTeletextColorCodes(buffer))
             {
                 SeedTeletextBoxAndDoubleHeightSettings(buffer);
             }
@@ -1401,6 +1406,40 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox = useBox;
             Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight = useDoubleHeight;
+        }
+
+        /// <summary>
+        /// Colors only exist as teletext control codes, so a file that declares open subtitling
+        /// (DSC=0) is read without them. Some tools - Adobe Premiere among them - write the
+        /// teletext codes anyway and still stamp the header with 0, and reading those strictly
+        /// throws every color away. Nothing else uses 00h-1Fh in an open subtitling text field,
+        /// so their presence is taken as proof the file really is teletext coded.
+        /// </summary>
+        private static bool HasTeletextColorCodes(byte[] buffer)
+        {
+            const int startOfTextAndTimingBlock = 1024;
+            const int ttiSize = 128;
+
+            var index = startOfTextAndTimingBlock;
+            while (index + ttiSize <= buffer.Length)
+            {
+                if (buffer[index + 3] != 0xfe && buffer[index + 15] == 0) // skip user data and comment blocks
+                {
+                    for (var i = index + 16; i < index + ttiSize; i++)
+                    {
+                        // 00h (black) is left out on purpose: a writer that pads the text field with
+                        // zero bytes instead of 8Fh would otherwise look like a colored file.
+                        if (buffer[i] >= 0x01 && buffer[i] <= 0x07)
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+                index += ttiSize;
+            }
+
+            return false;
         }
 
         public static EbuGeneralSubtitleInformation ReadHeader(byte[] buffer)
@@ -1779,6 +1818,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             const byte boxingOff = 0x85;
 
             var list = new List<EbuTextTimingInformation>();
+            var hasTeletextColorCodes = header.DisplayStandardCode == "0" && HasTeletextColorCodes(buffer);
             var index = startOfTextAndTimingBlock;
             var sb = new StringBuilder();
             while (index + ttiSize <= buffer.Length)
@@ -1809,7 +1849,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 // - unused space = 8Fh
                 var i = index + 16; // text block start at 17th byte (index 16)
                 var open = header.DisplayStandardCode != "1" && header.DisplayStandardCode != "2";
-                var closed = header.DisplayStandardCode != "0";
+                var closed = header.DisplayStandardCode != "0" || hasTeletextColorCodes;
                 var max = i + 112;
                 sb.Clear();
                 var lastWasNewLine = false;
@@ -2089,7 +2129,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string FixSpacesAndTags(string text)
         {
-            text = text.Trim();
+            text = EmptyFontTag.Replace(text, string.Empty).Trim();
             while (text.Contains("  </font>"))
             {
                 text = text.Replace("  </font>", " </font>");

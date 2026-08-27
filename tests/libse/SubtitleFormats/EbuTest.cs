@@ -140,11 +140,17 @@ public class EbuTest
     // field starts with the given bytes (rest is 8Fh padding).
     private static byte[] MakeTeletextStl(params byte[] textFieldBytes)
     {
-        var header = new Ebu.EbuGeneralSubtitleInformation { DisplayStandardCode = "1" };
+        return MakeStl("1", textFieldBytes);
+    }
+
+    private static byte[] MakeStl(string displayStandardCode, params byte[] textFieldBytes)
+    {
+        var header = new Ebu.EbuGeneralSubtitleInformation { DisplayStandardCode = displayStandardCode };
         var headerBytes = Ebu.GetEncoding(header.CodePageNumber).GetBytes(header.ToString());
 
         var tti = new byte[128];
         tti[3] = 0xff; // extension block number: last block in cue
+        tti[13] = 20; // vertical position: bottom, so no {\an} prefix is added
         for (var i = 16; i < tti.Length; i++)
         {
             tti[i] = 0x8f;
@@ -175,6 +181,34 @@ public class EbuTest
         new Ebu().LoadSubtitle(new Subtitle(), withoutCodes);
         Assert.False(Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox);
         Assert.False(Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight);
+    }
+
+    // Adobe Premiere exports teletext control codes (colors, boxes) but stamps the header with
+    // "open subtitling" (DSC=0), where 00h-1Fh is not defined - so reading it strictly dropped
+    // every color and the user's colored subtitles imported as plain white (reported by email
+    // against 5.2.0-beta25).
+    [Fact]
+    public void EbuStl_Load_ReadsTeletextColorsInOpenSubtitlingFile()
+    {
+        var buffer = MakeStl("0", 0x0b, 0x0b, 0x06, (byte)'Z', (byte)'Y', (byte)'A', (byte)'N', 0x0a, 0x0a);
+
+        var subtitle = new Subtitle();
+        new Ebu().LoadSubtitle(subtitle, buffer);
+
+        Assert.Equal("<font color=\"Cyan\">ZYAN</font>", subtitle.Paragraphs[0].Text);
+    }
+
+    // ...but an open subtitling file without any color code must stay untouched: its 80h-85h
+    // italic/underline codes are the ones that count, and no font tag may appear out of nowhere.
+    [Fact]
+    public void EbuStl_Load_OpenSubtitlingWithoutColorsIsUnchanged()
+    {
+        var buffer = MakeStl("0", 0x80, (byte)'H', (byte)'i', 0x81);
+
+        var subtitle = new Subtitle();
+        new Ebu().LoadSubtitle(subtitle, buffer);
+
+        Assert.Equal("<i>Hi</i>", subtitle.Paragraphs[0].Text);
     }
 
     // The teletext color writer assumed the font tag's color value ends with a double quote and
