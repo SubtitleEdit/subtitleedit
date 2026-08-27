@@ -175,6 +175,25 @@ public class ZipUnpacker : IZipUnpacker
                     continue;
                 }
 
+                // The containment check above validates where the LINK is written, never where it
+                // points. An archive shipping "lib -> /etc" (or "../..") followed by a regular
+                // "lib/x" entry passes that check and then writes outside the extraction folder,
+                // and the copy fallback below would pull an arbitrary host file in. Reject an
+                // absolute target, and require a relative one to resolve inside the root.
+                if (Path.IsPathRooted(linkTarget))
+                {
+                    continue;
+                }
+
+                var resolvedLinkTarget = Path.GetFullPath(Path.Combine(directoryPath ?? targetRoot, linkTarget));
+                var linkTargetRelative = Path.GetRelativePath(targetRoot, resolvedLinkTarget);
+                if (linkTargetRelative.Equals("..", StringComparison.Ordinal) ||
+                    linkTargetRelative.StartsWith(".." + Path.DirectorySeparatorChar, StringComparison.Ordinal) ||
+                    Path.IsPathRooted(linkTargetRelative))
+                {
+                    continue;
+                }
+
                 try
                 {
                     if (File.Exists(filePath) || Directory.Exists(filePath))
@@ -188,10 +207,9 @@ public class ZipUnpacker : IZipUnpacker
                 {
                     // Symlinks may be unsupported (e.g. Windows without privileges) - fall back to
                     // copying the already-extracted target file when it is available.
-                    var resolvedTarget = Path.Combine(directoryPath ?? outputPath, linkTarget);
-                    if (File.Exists(resolvedTarget) && !File.Exists(filePath))
+                    if (File.Exists(resolvedLinkTarget) && !File.Exists(filePath))
                     {
-                        File.Copy(resolvedTarget, filePath);
+                        File.Copy(resolvedLinkTarget, filePath);
                     }
                     else
                     {

@@ -51,7 +51,6 @@ public partial class CutVideoViewModel : ObservableObject
     [ObservableProperty] private bool _isAudioVisualizerVisible;
     [ObservableProperty] private ObservableCollection<SubtitleLineViewModel> _segments;
     [ObservableProperty] private SubtitleLineViewModel? _selectedSegment;
-    [ObservableProperty] private int _selectedSegmentIndex;
     [ObservableProperty] private ObservableCollection<CutTypeDisplay> _cutTypes;
     [ObservableProperty] private CutTypeDisplay _selectedCutType;
     [ObservableProperty] private bool _isSetStartEnabled;
@@ -116,11 +115,12 @@ public partial class CutVideoViewModel : ObservableObject
         FrameRates = new ObservableCollection<double> { 23.976, 24, 25, 29.97, 30, 50, 59.94, 60 };
         SelectedFrameRate = FrameRates[0];
 
+        // No .webm: the video path always encodes libx264, which the WebM muxer cannot carry.
+        // (.mp3/.wav take the audio-only branch and are fine.)
         VideoExtensions = new ObservableCollection<string>
         {
             ".mkv",
             ".mp4",
-            ".webm",
             ".mp3",
             ".wav",
         };
@@ -223,7 +223,10 @@ public partial class CutVideoViewModel : ObservableObject
         _positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(150) };
         _positionTimer.Tick += (s, e) =>
         {
-            UpdateAudioVisualizer(VideoPlayer.VideoPlayer, AudioVisualizer, SelectedSegmentIndex);
+            // Derive the index from the row the grid actually binds. SelectedSegmentIndex is
+            // written nowhere in the repo and is not bound, so it stayed 0 and the waveform
+            // always highlighted the first segment no matter which row was selected.
+            UpdateAudioVisualizer(VideoPlayer.VideoPlayer, AudioVisualizer, SelectedSegment == null ? -1 : Segments.IndexOf(SelectedSegment));
 
             if (_updateAudioVisualizer)
             {

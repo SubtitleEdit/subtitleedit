@@ -387,10 +387,14 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         _mpvRenderContextSetUpdateCallback = (MpvRenderContextSetUpdateCallback)GetDllType(typeof(MpvRenderContextSetUpdateCallback), "mpv_render_context_set_update_callback");
     }
 
-    private object GetDllType(Type type, string name)
+    private object? GetDllType(Type type, string name)
     {
+        // null, not IntPtr.Zero, when the export is missing: every caller casts the result to a
+        // delegate type, so a boxed IntPtr threw InvalidCastException instead - which made the
+        // "== null" libvlc-4 fallbacks unreachable and turned one missing symbol into a failed
+        // load and a silent EmptyVideoPlayer.
         var address = NativeMethods.CrossGetProcAddress(_library, name);
-        return address != IntPtr.Zero ? Marshal.GetDelegateForFunctionPointer(address, type) : IntPtr.Zero;
+        return address != IntPtr.Zero ? Marshal.GetDelegateForFunctionPointer(address, type) : null;
     }
 
     private bool LoadLibraryInternal()
@@ -1035,7 +1039,11 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
     public void InitializeWithOpenGL(GetProcAddress getProcAddress)
     {
-        LoadLibraryInternal();
+        // LoadLib(), not LoadLibraryInternal(): the latter always calls mpv_create() and
+        // overwrites _mpv. CanLoad() has already created a core by the time the render path gets
+        // here, so this created a second one and orphaned the first - its threads and allocations
+        // leaked for the process lifetime, on every player construction.
+        LoadLib();
         EnsureNotDisposed();
 
         if (_mpvInitialize == null || _mpvRenderContextCreate == null || _mpvRenderContextSetUpdateCallback == null)
@@ -1142,7 +1150,11 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     [System.Runtime.Versioning.SupportedOSPlatform("macos")]
     public void InitializeWithMetal(IntPtr mtlDevice, IntPtr metalLayer)
     {
-        LoadLibraryInternal();
+        // LoadLib(), not LoadLibraryInternal(): the latter always calls mpv_create() and
+        // overwrites _mpv. CanLoad() has already created a core by the time the render path gets
+        // here, so this created a second one and orphaned the first - its threads and allocations
+        // leaked for the process lifetime, on every player construction.
+        LoadLib();
         EnsureNotDisposed();
 
         if (_mpvInitialize == null || _mpvRenderContextCreate == null || _mpvRenderContextSetUpdateCallback == null)
@@ -2326,7 +2338,11 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
     public void InitializeWithSoftwareRendering()
     {
-        LoadLibraryInternal();
+        // LoadLib(), not LoadLibraryInternal(): the latter always calls mpv_create() and
+        // overwrites _mpv. CanLoad() has already created a core by the time the render path gets
+        // here, so this created a second one and orphaned the first - its threads and allocations
+        // leaked for the process lifetime, on every player construction.
+        LoadLib();
         EnsureNotDisposed();
 
         // Set mpv to use software rendering

@@ -373,10 +373,14 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayer
         }
     }
 
-    private object GetDllType(Type type, string name)
+    private object? GetDllType(Type type, string name)
     {
+        // null, not IntPtr.Zero, when the export is missing: every caller casts the result to a
+        // delegate type, so a boxed IntPtr threw InvalidCastException instead - which made the
+        // "== null" libvlc-4 fallbacks unreachable and turned one missing symbol into a failed
+        // load and a silent EmptyVideoPlayer.
         var address = NativeMethods.CrossGetProcAddress(_library, name);
-        return address != IntPtr.Zero ? Marshal.GetDelegateForFunctionPointer(address, type) : IntPtr.Zero;
+        return address != IntPtr.Zero ? Marshal.GetDelegateForFunctionPointer(address, type) : null;
     }
 
     private bool LoadLibraryInternal()
@@ -945,13 +949,11 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayer
 
             try
             {
+                // The slider runs 0..MaxVolume (130), and libvlc's own scale is the same, so the
+                // value passes straight through. Rescaling and capping at 100 here was the mirror
+                // of the setter bug below.
                 var v = _libvlc_audio_get_volume(_mediaPlayer);
-                if (MaxVolume > 100)
-                {
-                    var result = (int)Math.Round(v / (MaxVolume / 100.0));
-                    return result > 100 ? 100 : result;
-                }
-                return v > 100 ? 100 : v;
+                return v > MaxVolume ? MaxVolume : v;
             }
             catch
             {
@@ -969,15 +971,12 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayer
 
             try
             {
-                var clampedVolume = Math.Max(0, Math.Min(100, value));
-                if (MaxVolume > 100)
-                {
-                    _libvlc_audio_set_volume(_mediaPlayer, (int)(clampedVolume * (MaxVolume / 100.0)));
-                }
-                else
-                {
-                    _libvlc_audio_set_volume(_mediaPlayer, (int)clampedVolume);
-                }
+                // Clamp to the player maximum, not to 100: the slider's Maximum IS MaxVolume
+                // (130), so clamping to 100 and then scaling by MaxVolume/100 sent 130 when the
+                // user asked for 100 - 30% amplification at the nominal setting - and made
+                // 101..130 do nothing. The mpv player was already fixed the same way.
+                var clampedVolume = Math.Max(0, Math.Min(MaxVolume, value));
+                _libvlc_audio_set_volume(_mediaPlayer, (int)clampedVolume);
             }
             catch
             {

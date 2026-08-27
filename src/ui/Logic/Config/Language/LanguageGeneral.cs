@@ -180,6 +180,7 @@ public class LanguageGeneral
     public string Engine { get; set; }
     public string EnterProfileName { get; set; }
     public string Error { get; set; }
+    public string OutputFileCannotBeTheInputFile { get; set; }
     public string ErrorX { get; set; }
     public string Example { get; set; }
     public string ExampleX { get; set; }
@@ -941,6 +942,7 @@ public class LanguageGeneral
         Engine = "Engine";
         EnterProfileName = "Enter profile name";
         Error = "Error";
+        OutputFileCannotBeTheInputFile = "The output file cannot be the same as the input file.";
         ErrorX = "Error; {0}";
         Example = "Example";
         ExampleX = "Example: {0}";

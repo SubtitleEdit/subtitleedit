@@ -47,6 +47,7 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
     private long _processedFrames;
     private Process? _ffmpegProcess;
     private readonly Timer _timerGenerate;
+    private bool _loaded;
     private bool _doAbort;
     private SubtitleFormat? _subtitleFormat;
     private DispatcherTimer _positionTimer = new DispatcherTimer();
@@ -626,6 +627,16 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
 
     internal void OnLoaded()
     {
+        // Avalonia's Window.Loaded can fire more than once (re-attach to visual tree, layout
+        // pass), and the scan below APPENDS without clearing - so a second fire listed every
+        // existing subtitle track twice and Generate then mapped each kept stream twice into the
+        // output. The mp4 twin already guards this.
+        if (_loaded)
+        {
+            return;
+        }
+
+        _loaded = true;
         StartTitleTimer();
         UiUtil.RestoreWindowPosition(Window);
         Task.Run(() =>
@@ -671,7 +682,9 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
 
         if (FileUtil.IsMatroskaFileFast(videoFileName))
         {
-            var matroskaFile = new MatroskaFile(videoFileName);
+            // MatroskaFile opens a FileStream on the video in its constructor, so without the
+            // using every window open and every Browse left a handle on a multi-GB file behind.
+            using var matroskaFile = new MatroskaFile(videoFileName);
             if (matroskaFile.IsValid)
             {
                 var tracks = matroskaFile.GetTracks();

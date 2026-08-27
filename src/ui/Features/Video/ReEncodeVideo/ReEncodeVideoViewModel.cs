@@ -75,11 +75,12 @@ public partial class ReEncodeVideoViewModel : ObservableObject
         FrameRates = new ObservableCollection<double> { 23.976, 24, 25, 29.97, 30, 50, 59.94, 60 };
         SelectedFrameRate = FrameRates[0];
 
+        // No .webm: this always encodes libx264, and the WebM muxer takes only VP8/VP9/AV1, so
+        // picking it could only ever end in "Output video file not generated".
         VideoExtensions = new ObservableCollection<string>
         {
             ".mkv",
             ".mp4",
-            ".webm",
         };
         SelectedVideoExtension = VideoExtensions[0];
 
@@ -262,8 +263,18 @@ public partial class ReEncodeVideoViewModel : ObservableObject
         var mediaInfo = FfmpegMediaInfo.Parse(jobItem.InputVideoFileName);
         jobItem.TotalFrames = mediaInfo.GetTotalFrames();
         jobItem.TotalSeconds = mediaInfo.Duration.TotalSeconds;
-        jobItem.Width = mediaInfo.Dimension.Width;
-        jobItem.Height = mediaInfo.Dimension.Height;
+
+        // Only adopt the source size when the user asked for it. This dialog exists to produce a
+        // SMALLER file ("high resolutions make subtitling slow"), and Initialize scales large
+        // sources down to 1280 wide - unconditionally overwriting both here threw that away, so
+        // every re-encode ran at the source resolution and the resolution picker did nothing.
+        // The burn-in dialog was fixed the same way.
+        if (mediaInfo.Dimension.Width > 0 && mediaInfo.Dimension.Height > 0 &&
+            (UseSourceResolution || jobItem.Width <= 0 || jobItem.Height <= 0))
+        {
+            jobItem.Width = mediaInfo.Dimension.Width;
+            jobItem.Height = mediaInfo.Dimension.Height;
+        }
         jobItem.UseTargetFileSize = false;
         jobItem.Status = Se.Language.General.Generating;
 
@@ -403,13 +414,50 @@ public partial class ReEncodeVideoViewModel : ObservableObject
         PromptForFfmpegParameters = false;
     }
 
+    /// <summary>
+    /// A distinct output name beside the source: "<name>_reencoded<ext>", with a collision
+    /// counter, mirroring the cut-video dialog. Never returns the input path.
+    /// </summary>
+    private string MakeOutputFileName(string videoFileName)
+    {
+        var nameNoExt = Path.GetFileNameWithoutExtension(videoFileName);
+        var folder = Path.GetDirectoryName(videoFileName) ?? Path.GetTempPath();
+        var fileName = Path.Combine(folder, nameNoExt + "_reencoded" + SelectedVideoExtension);
+
+        var i = 2;
+        while (File.Exists(fileName))
+        {
+            fileName = Path.Combine(folder, nameNoExt + "_reencoded_" + i.ToString(CultureInfo.InvariantCulture) + SelectedVideoExtension);
+            i++;
+        }
+
+        return fileName;
+    }
+
     [RelayCommand]
     private async Task Generate()
     {
-        var outputVideoFileName = Path.ChangeExtension(VideoFileName, SelectedVideoExtension);
+        // Suggest a DISTINCT name: ChangeExtension on an .mkv input with the default .mkv output
+        // handed the save dialog the input path itself, so accepting the suggestion pointed
+        // ffmpeg at the file it was reading and destroyed the user's video. The cut-video and
+        // embedded-subtitles dialogs both build a suffixed name with a collision counter.
+        var outputVideoFileName = MakeOutputFileName(VideoFileName);
         outputVideoFileName = await _fileHelper.PickSaveFile(Window!, SelectedVideoExtension, outputVideoFileName, Se.Language.General.SaveVideoAsVideoTitle);
         if (string.IsNullOrEmpty(outputVideoFileName))
         {
+            return;
+        }
+
+        // ...and refuse it outright if the user still picks the input, as the write-chapters
+        // dialog does: ffmpeg reads the input while writing the output.
+        if (string.Equals(Path.GetFullPath(outputVideoFileName), Path.GetFullPath(VideoFileName), StringComparison.OrdinalIgnoreCase))
+        {
+            await MessageBox.Show(
+                Window!,
+                Se.Language.General.Error,
+                Se.Language.General.OutputFileCannotBeTheInputFile,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
             return;
         }
 
@@ -478,6 +526,24 @@ public partial class ReEncodeVideoViewModel : ObservableObject
         // The subtitle files handed to ffmpeg live as long as the window does - nothing else
         // removes them, and they used to pile up in the temp folder run after run (#13332).
         _tempSubtitleFiles.Delete();
+
+        // Stop the poll timer and any still-running encode - closing the window used to leave the
+        // ffmpeg process encoding to completion in the background, with the timer still firing
+        // into a closed window. Same fix as the blank-video and embedded-subtitles dialogs.
+        _timerGenerate.StopAndDispose(TimerGenerateElapsed);
+        if (_ffmpegProcess != null && !_ffmpegProcess.HasExited)
+        {
+            try
+            {
+#pragma warning disable CA1416
+                _ffmpegProcess.Kill(true);
+#pragma warning restore CA1416
+            }
+            catch
+            {
+                // ignore - it may have exited in between
+            }
+        }
     }
 
     internal void OnKeyDown(KeyEventArgs e)
@@ -485,7 +551,9 @@ public partial class ReEncodeVideoViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
-            Window?.Close();
+            // Route through Cancel so Escape during generation aborts the encode
+            // instead of closing the window over a running ffmpeg.
+            Cancel();
         }
         else if (UiUtil.IsHelp(e))
         {

@@ -258,7 +258,13 @@ public partial class SubRipSourceSyntaxHighlighting : ISourceSyntaxHighlighter
                     styler.Apply(valueStart, 1, CharsColor);
 
                     // Color the value content (check for style attribute)
-                    var hasColon = lineText.IndexOf(':', i + 1, valueEnd - i - 2) != -1;
+                    // Clamp the span, as SubtitleSyntaxTokenizer does: with the opening quote as
+                    // the last character of the line (typing '<font color="') valueEnd lands on
+                    // Length and the count goes to -1, throwing out of Render.
+                    var contentStart = i + 1;
+                    var contentEnd = Math.Max(contentStart, valueEnd - 1);
+                    var hasColon = contentEnd > contentStart &&
+                                   lineText.IndexOf(':', contentStart, contentEnd - contentStart) != -1;
                     var valueColor = hasColon ? StyleColor : ValuesColor;
 
                     if (valueEnd > valueStart + 1)
