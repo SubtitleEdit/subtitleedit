@@ -466,6 +466,7 @@ public class Se
         // open (see the note in UpdateLibSeSettings).
         Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox = Settings.File.EbuSaveOptions.TeletextUseBox;
         Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight = Settings.File.EbuSaveOptions.TeletextUseDoubleHeight;
+        ApplyStartupOnlyDCinemaSettings();
     }
 
     internal static void MigrateMacOsFontSettings(SeAppearance appearance, bool isMacOs, bool isLegacySettings)
@@ -819,11 +820,39 @@ public class Se
         ss.WebVttCueAn7 = Settings.Formats.WebVttCueAn7 ?? string.Empty;
         ss.WebVttCueAn8 = Settings.Formats.WebVttCueAn8 ?? string.Empty;
         ss.WebVttCueAn9 = Settings.Formats.WebVttCueAn9 ?? string.Empty;
+        ss.TimedText10TimeCodeFormat = Settings.Formats.TimedText10TimeCodeFormat;
+        ss.TimedText10FileExtension = Settings.Formats.TimedText10FileExtension;
+        ss.TimedTextItunesTopOrigin = Settings.Formats.TimedTextItunesTopOrigin;
+        ss.TimedTextItunesTopExtent = Settings.Formats.TimedTextItunesTopExtent;
+        ss.TimedTextItunesBottomOrigin = Settings.Formats.TimedTextItunesBottomOrigin;
+        ss.TimedTextItunesBottomExtent = Settings.Formats.TimedTextItunesBottomExtent;
+        ss.TimedTextItunesTimeCodeFormat = Settings.Formats.TimedTextItunesTimeCodeFormat;
+        ss.TimedTextItunesStyleAttribute = Settings.Formats.TimedTextItunesStyleAttribute;
+        ss.TimedTextItunesLanguage = Settings.Formats.TimedTextItunesLanguage ?? string.Empty;
+        ss.TimedTextImsc11TimeCodeFormat = Settings.Formats.TimedTextImsc11TimeCodeFormat;
+        ss.TimedTextImsc11FileExtension = Settings.Formats.TimedTextImsc11FileExtension;
+
         ss.DCinemaAutoGenerateSubtitleId = dc.DCinemaAutoGenerateSubtitleId;
         ss.DCinemaFontSize = dc.DCinemaFontSize;
         ss.DCinemaBottomMargin = dc.DCinemaBottomMargin;
         ss.DCinemaFadeUpTime = dc.DCinemaFadeUpTime;
         ss.DCinemaFadeDownTime = dc.DCinemaFadeDownTime;
+        Configuration.Settings.Tools.RememberUseAlwaysList = Settings.Tools.SpellCheckRememberUseAlwaysList;
+    }
+
+    /// <summary>
+    /// The "current D-Cinema file" values, applied at startup only. Same reason as the EBU
+    /// teletext flags above: DCinemaSmpte2007/2010/2014.LoadSubtitle seeds every one of these from
+    /// the opened file, so re-applying the persisted defaults after every SaveSettings (any dialog
+    /// OK) threw away the reel number, rates and start time of the file the user has open. The
+    /// D-Cinema properties dialogs push their own values through
+    /// MainViewModel.CopyCurrentDCinemaSettingsFromSe instead.
+    /// </summary>
+    private static void ApplyStartupOnlyDCinemaSettings()
+    {
+        var dc = Settings.File.DCinemaSmpte;
+        var ss = Configuration.Settings.SubtitleSettings;
+
         ss.CurrentDCinemaSubtitleId = dc.CurrentDCinemaSubtitleId;
         ss.CurrentDCinemaMovieTitle = dc.CurrentDCinemaMovieTitle;
         ss.CurrentDCinemaReelNumber = dc.CurrentDCinemaReelNumber;

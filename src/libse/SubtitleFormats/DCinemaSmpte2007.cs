@@ -144,7 +144,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             xml.DocumentElement.SelectSingleNode("dcst:Language", nsmgr).InnerText = ss.CurrentDCinemaLanguage;
-            if (ss.CurrentDCinemaEditRate == null && ss.CurrentDCinemaTimeCodeRate == null)
+            // Empty, not just null: SE5 mirrors its settings onto this singleton and pushes
+            // string.Empty for a rate never set in File > Properties, so a "== null" guard could
+            // never fire there and the file got <EditRate></EditRate> - invalid D-Cinema XML.
+            if (string.IsNullOrEmpty(ss.CurrentDCinemaEditRate) && string.IsNullOrEmpty(ss.CurrentDCinemaTimeCodeRate))
             {
                 if (Configuration.Settings.General.CurrentFrameRate == 24)
                 {

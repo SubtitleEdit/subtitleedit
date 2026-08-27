@@ -3160,6 +3160,22 @@ public partial class MainViewModel :
         _subtitleOriginal ??= new Subtitle();
         _subtitleOriginal.OriginalFormat = _subtitle.OriginalFormat ?? SelectedSubtitleFormat;
 
+        // The format alone is not enough: for ASSA the header carries [Script Info] and the whole
+        // [V4+ Styles] block, and AdvancedSubStationAlpha.ToText falls back to its built-in default
+        // template when the header has no [V4+ Styles]. The original started life as an empty
+        // Subtitle, so saving it wrote that default over the styles of the very file the
+        // translation was made from - leaving every row's Style/Extra naming a style that no
+        // longer existed.
+        if (string.IsNullOrEmpty(_subtitleOriginal.Header))
+        {
+            _subtitleOriginal.Header = _subtitle.Header;
+        }
+
+        if (string.IsNullOrEmpty(_subtitleOriginal.Footer))
+        {
+            _subtitleOriginal.Footer = _subtitle.Footer;
+        }
+
         // Rebuilds the original from the rows - one line per row, in order - and re-points every
         // row at the line it just produced. The callers have already left the modes that would
         // make this a projection instead of the whole original.
@@ -3654,7 +3670,11 @@ public partial class MainViewModel :
         var saved = await SaveSubtitle();
         var savedOriginal = false;
 
-        if (ShowColumnOriginalText && _changeSubtitleHashOriginal != GetFastHashOriginal())
+        // Only when the subtitle itself was written. Ctrl+S is one gesture: after a translation
+        // _converted is set, so SaveSubtitle routes to "Save as" and returns false when the user
+        // dismisses the picker - and the original was written anyway, over the file the
+        // translation was made from, by a save the user had just cancelled.
+        if (saved && ShowColumnOriginalText && _changeSubtitleHashOriginal != GetFastHashOriginal())
         {
             savedOriginal = await SaveSubtitleOriginal();
         }
@@ -6677,6 +6697,11 @@ public partial class MainViewModel :
             return;
         }
 
+        // Nothing has been edited yet when the subtitle was clean on the way in: the original
+        // column then holds exactly the file that is already on disk, so the hash may be rebased
+        // below and Ctrl+S will not rewrite that file for no reason.
+        var wasClean = _changeSubtitleHash == GetFastHash();
+
         // A display-only row of a read-only original carries no text to translate from, and the
         // original it shows is replaced by the rows' text here (#14091).
         RemoveReferenceOnlyRows();
@@ -6696,6 +6721,12 @@ public partial class MainViewModel :
         IsShowingOriginalNonMatchingLines = false;
         ShowColumnOriginalText = true;
         CaptureOriginalFromTranslatedRows();
+
+        if (wasClean)
+        {
+            _changeSubtitleHashOriginal = GetFastHashOriginal();
+        }
+
         AutoFitColumns();
         ShowStatus(Se.Language.Main.CreatedEmptyTranslation);
     }
@@ -9271,6 +9302,18 @@ public partial class MainViewModel :
         _vlcReloader.SmpteMode = IsSmpteTimingEnabled;
     }
 
+    /// <summary>
+    /// SMPTE mode is session state on this view model, but BDN XML export, DOST export and the
+    /// Netflix shot-change check all read it off the libse singleton - and nothing ever wrote that
+    /// flag, so it was permanently false and all three kept applying the 1.001 pull-down to a
+    /// subtitle the user had put in SMPTE timing.
+    /// </summary>
+    partial void OnIsSmpteTimingEnabledChanged(bool value)
+    {
+        Se.Settings.General.CurrentVideoIsSmpte = value;
+        Configuration.Settings.General.CurrentVideoIsSmpte = value;
+    }
+
     [RelayCommand]
     private async Task ShowSmpteTiming()
     {
@@ -10901,11 +10944,6 @@ public partial class MainViewModel :
         // The subtitle language just changed, so the cached detected language is stale (issue #12144).
         _detectedLanguageCode = null;
 
-        if (!wasOldTranslationChanged)
-        {
-            _changeSubtitleHashOriginal = GetFastHashOriginal();
-        }
-
         var targetLanguageCode = result.SelectedTargetLanguage?.TwoLetterIsoLanguageName;
         _subtitleFileNameOriginal = _subtitleFileName;
         if (!string.IsNullOrEmpty(_subtitleFileName) && !string.IsNullOrEmpty(targetLanguageCode))
@@ -10969,6 +11007,15 @@ public partial class MainViewModel :
         IsShowingOriginalNonMatchingLines = false;
         ShowColumnOriginalText = true;
         CaptureOriginalFromTranslatedRows();
+
+        // Rebased here, not before the block above: _subtitleFileNameOriginal is part of the hash
+        // and only changes up there, so taking it early left the original permanently "dirty" and
+        // every Ctrl+S rewrote the file the translation was made from, edited or not.
+        if (!wasOldTranslationChanged)
+        {
+            _changeSubtitleHashOriginal = GetFastHashOriginal();
+        }
+
         AutoFitColumns();
         _updateAudioVisualizer = true;
     }
@@ -19710,22 +19757,29 @@ public partial class MainViewModel :
                 var f = new IsmtDfxp();
                 if (f.IsMine(null, fileName))
                 {
-                    f.LoadSubtitle(_subtitle, null, fileName);
+                    // Into a local subtitle, not _subtitle: ResetSubtitle() below clears that
+                    // object's paragraphs *and* replaces the field with a fresh Subtitle, so
+                    // loading first (as this did) left the grid empty and _subtitleFileName
+                    // pointing at a name an later save would have written empty over. The .mcc
+                    // branch just below has the order right.
+                    var loaded = new Subtitle();
+                    f.LoadSubtitle(loaded, null, fileName);
 
-                    if (_subtitle.OriginalFormat?.Name == new TimedTextBase64Image().Name)
+                    if (loaded.OriginalFormat?.Name == new TimedTextBase64Image().Name)
                     {
-                        ImportAndInlineBase64(_subtitle, fileName, skipLoadVideo);
+                        ImportAndInlineBase64(loaded, fileName, skipLoadVideo);
                         return;
                     }
 
-                    if (_subtitle.OriginalFormat?.Name == new TimedTextImage().Name)
+                    if (loaded.OriginalFormat?.Name == new TimedTextImage().Name)
                     {
-                        ImportAndOcrDost(fileName, _subtitle, skipLoadVideo);
+                        ImportAndOcrDost(fileName, loaded, skipLoadVideo);
                         return;
                     }
 
                     VideoCloseFile();
                     ResetSubtitle();
+                    _subtitle.Paragraphs.AddRange(loaded.Paragraphs);
                     _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) +
                                         SelectedSubtitleFormat.Extension;
                     _subtitle.Renumber();
@@ -22207,20 +22261,25 @@ public partial class MainViewModel :
             return false;
         }
 
-        var newFileName = "New" + SelectedSubtitleFormat.Extension;
+        // The format the original is actually written with (see SaveSubtitleOriginal), which is
+        // not necessarily the one selected in the toolbar. Offering the selected format's
+        // extension and file filter produced a file named ".ass" with SubRip text inside it.
+        var originalFormat = _subtitleOriginal?.OriginalFormat ?? SelectedSubtitleFormat;
+
+        var newFileName = "New" + originalFormat.Extension;
         if (!string.IsNullOrEmpty(_subtitleFileNameOriginal))
         {
             newFileName = Path.GetFileNameWithoutExtension(_subtitleFileNameOriginal) +
-                          SelectedSubtitleFormat.Extension;
+                          originalFormat.Extension;
         }
         else if (!string.IsNullOrEmpty(_videoFileName))
         {
-            newFileName = Path.GetFileNameWithoutExtension(_videoFileName) + SelectedSubtitleFormat.Extension;
+            newFileName = Path.GetFileNameWithoutExtension(_videoFileName) + originalFormat.Extension;
         }
 
         var fileName = await _fileHelper.PickSaveSubtitleFile(
             Window!,
-            SelectedSubtitleFormat,
+            originalFormat,
             newFileName,
             Se.Language.General.SaveOriginalAsTitle);
 
@@ -22231,19 +22290,21 @@ public partial class MainViewModel :
 
         var oldSubtitleFileNameOriginal = _subtitleFileNameOriginal;
         var oldSubtitleOriginalFileName = _subtitleOriginal.FileName;
-        var oldLastOpenSaveFormat = _lastOpenSaveFormat;
 
         _subtitleFileNameOriginal = fileName;
         _subtitleOriginal ??= new Subtitle();
         _subtitleOriginal.FileName = fileName;
 
-        _lastOpenSaveFormat = SelectedSubtitleFormat;
+        // _lastOpenSaveFormat belongs to the *main* subtitle - SaveSubtitle compares it against
+        // SelectedSubtitleFormat and diverts to "Save as", which is the only thing stopping a
+        // format change from being written straight into the old file. SaveSubtitleOriginal never
+        // reads it, and setting it here left it pointing at the wrong format, so the next Ctrl+S
+        // silently wrote (say) ASSA text into movie.srt.
         var result = await SaveSubtitleOriginal();
         if (!result)
         {
             _subtitleFileNameOriginal = oldSubtitleFileNameOriginal;
             _subtitleOriginal.FileName = oldSubtitleOriginalFileName;
-            _lastOpenSaveFormat = oldLastOpenSaveFormat;
             return false;
         }
 
@@ -29158,13 +29219,12 @@ public partial class MainViewModel :
                     return;
                 }
 
-                foreach (var file in files)
+                // One subtitle at a time: looping and calling SubtitleOpen per file left only the
+                // last one loaded, with the "save changes?" prompt asked once at the top.
+                var path = files.Select(f => f.Path?.LocalPath).FirstOrDefault(p => p != null && File.Exists(p));
+                if (path != null)
                 {
-                    var path = file.Path?.LocalPath;
-                    if (path != null && File.Exists(path))
-                    {
-                        await SubtitleOpen(path);
-                    }
+                    await SubtitleOpen(path);
                 }
             });
         }
@@ -29202,23 +29262,19 @@ public partial class MainViewModel :
                     if (path != null && File.Exists(path))
                     {
                         var ext = Path.GetExtension(path).ToLowerInvariant();
-                        var subtitleExtensions = new List<string>
+
+                        // The open picker's own list, so dropping a file here and dropping it on
+                        // the grid can never disagree about what a subtitle is. The hardcoded 16
+                        // entries this replaces sent .scc, .sbv, .itt, .lrc, .rt, .mpl2 and .usf
+                        // straight to mpv, which then reported the subtitle file as a loaded
+                        // video. GetOpenSubtitleExtensions deliberately leaves .mkv/.mp4/.ts out,
+                        // so those still open as video; the binary image formats are added back on
+                        // top because they were in the old list.
+                        var subtitleExtensions = new HashSet<string>(
+                            FileHelper.GetOpenSubtitleExtensions(false), StringComparer.OrdinalIgnoreCase)
                         {
-                            ".ass",
-                            ".cap",
-                            ".dfxp",
-                            ".pac",
-                            ".sami",
-                            ".smi",
-                            ".srt",
-                            ".ssa",
-                            ".stl",
-                            ".sub",
                             ".sup",
-                            ".ttml",
-                            ".txt",
-                            ".vtt",
-                            ".xml",
+                            ".idx",
                         };
 
                         if (subtitleExtensions.Contains(ext))

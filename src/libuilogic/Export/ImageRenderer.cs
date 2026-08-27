@@ -207,9 +207,18 @@ public static class ImageRenderer
         // The line box can only fall outside the scratch canvas for text taller than the
         // canvas, which is already clipped; keep the transparent rows for it anyway so the
         // exported height stays a function of the line count alone.
-        var cropTop = Math.Max(0, Math.Min(drawnBounds.Top, lineBoxTop));
+        var bitmapTop = Math.Min(drawnBounds.Top, lineBoxTop);
+
+        // Row of the first line's ascent top inside the finished bitmap. The crop deliberately
+        // keeps outlineWidth rows above it (and outline + shadow below the last descender), so a
+        // box drawn from row 0 sits that much too high: the bottom padding came out as
+        // padBottom - 2 * outlineWidth, i.e. negative at the shipped defaults, and the outline
+        // under g/p/y was drawn outside the box.
+        var firstLineTopInBitmap = (float)(firstBaseline - Math.Abs(fontMetrics.Ascent) - bitmapTop);
+
+        var cropTop = Math.Max(0, bitmapTop);
         var cropBottom = Math.Min(tempBitmap.Height - 1, Math.Max(drawnBounds.Bottom, lineBoxBottom));
-        var overflowTop = cropTop - Math.Min(drawnBounds.Top, lineBoxTop);
+        var overflowTop = cropTop - bitmapTop;
         var overflowBottom = Math.Max(drawnBounds.Bottom, lineBoxBottom) - cropBottom;
 
         var textBitmap = tempBitmap.CropTo(drawnBounds.Left, cropTop, drawnBounds.Right, cropBottom);
@@ -220,7 +229,7 @@ public static class ImageRenderer
 
         if (ip.BoxType != ExportBoxType.None)
         {
-            textBitmap = Replace(textBitmap, DrawBoxBehindText(textBitmap, lines, ip, regularFont, boldFont, italicFont, boldItalicFont, baseLineHeight, lineSpacing));
+            textBitmap = Replace(textBitmap, DrawBoxBehindText(textBitmap, lines, ip, regularFont, boldFont, italicFont, boldItalicFont, baseLineHeight, lineSpacing, firstLineTopInBitmap));
         }
 
         if (ip.PaddingTopBottom == 0 && ip.PaddingLeftRight == 0)
@@ -269,7 +278,8 @@ public static class ImageRenderer
         SKFont italicFont,
         SKFont boldItalicFont,
         float baseLineHeight,
-        float lineSpacing)
+        float lineSpacing,
+        float firstLineTopInBitmap)
     {
         var padLeft = ip.BoxPaddingLeft;
         var padRight = ip.BoxPaddingRight;
@@ -315,7 +325,7 @@ public static class ImageRenderer
             var maxLineWidth = lineWidths.Length > 0 ? lineWidths.Max() : 0f;
 
             // Draw one box per line, aligned the same way as text rendering
-            var currentY = (float)padTop;
+            var currentY = padTop + firstLineTopInBitmap;
             for (var li = 0; li < lines.Count; li++)
             {
                 var lineWidth = lineWidths[li];
@@ -1194,8 +1204,14 @@ public static class ImageRenderer
             }
             else
             {
-                // Invalid tag, treat as regular text
-                currentPos++;
+                // Not a tag we know (a literal "<", "<br>", ...). The text before it has already
+                // been emitted above, so advancing by one made the next iteration find the same
+                // bracket and emit that same text again, minus one leading character, until
+                // currentPos caught up - "Wait < 5 minutes" rendered as "Wait ait it t   5 minutes".
+                // Emit the bracket as text and move past it.
+                segments.Add(new TextSegment(text.Substring(nextTagPos, 1), currentStyle.IsItalic,
+                    currentStyle.IsBold, currentStyle.Color));
+                currentPos = nextTagPos + 1;
             }
         }
 
@@ -1318,6 +1334,15 @@ public static class ImageRenderer
     private static string ReverseNumberAndLatinOnly(string input, bool isRightToLeft)
     {
         if (!isRightToLeft || string.IsNullOrEmpty(input))
+        {
+            return input;
+        }
+
+        // The pre-reverse exists only to cancel out SKShaper reversing the line, and HarfBuzz
+        // reverses only when the line itself resolves right-to-left. A line with no RTL letter -
+        // a song title, a credit, a bare number - resolves left-to-right, so pre-reversing it just
+        // rendered it mirrored ("ABC" as "CBA", "123" as "321").
+        if (!LanguageAutoDetect.ContainsRightToLeftLetter(input))
         {
             return input;
         }

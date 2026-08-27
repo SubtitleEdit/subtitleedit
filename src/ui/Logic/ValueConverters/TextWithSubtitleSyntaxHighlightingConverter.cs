@@ -177,7 +177,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         if (formattingType == (int)SubtitleGridFormattingTypes.ShowTags)
         {
             var lines = MakeShowTags(str);
-            return SpellCheckLines(lines);
+            return SpellCheckLines(lines, skipColouredRuns: true);
         }
 
         // No formatting (default) - walk the line breaks directly instead of SplitToLines(),
@@ -212,7 +212,13 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         return SpellCheckLines(inlines);
     }
 
-    private InlineCollection SpellCheckLines(InlineCollection lines)
+    /// <param name="skipColouredRuns">
+    /// Set for the "show tags" layout, where markup is split into its own coloured runs and only
+    /// the subtitle's own text is left with no brush. IsBetweenAssaTags/IsInsideHtmlTag look for
+    /// braces and brackets in the run they are given, and a tag-name run is bare ("pos"), so both
+    /// guards returned false and every tag name and attribute value got a red squiggle.
+    /// </param>
+    private InlineCollection SpellCheckLines(InlineCollection lines, bool skipColouredRuns = false)
     {
         if (_spellCheckManager == null || !Se.Settings.Appearance.SubtitleGridLiveSpellCheck)
         {
@@ -228,6 +234,12 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                 if (inline is not Run run || string.IsNullOrWhiteSpace(run.Text))
                 {
                     newInlines.Add(inline);
+                    continue;
+                }
+
+                if (skipColouredRuns && run.Foreground != null)
+                {
+                    newInlines.Add(run);
                     continue;
                 }
 

@@ -108,18 +108,9 @@ public class SeTools
     public bool BinEditPositionMonitorTitleSafeOn { get; set; }
     public double BinEditPositionMonitorTitleSafePercent { get; set; }
 
+    // Import plain text. Only the three options the dialog actually has are kept - the other
+    // twelve SE4-shaped keys here were written to Settings.json and read by nothing at all.
     public string ImportTextSplitting { get; set; }
-    public string ImportTextSplittingLineMode { get; set; }
-    public string ImportTextLineBreak { get; set; }
-    public bool ImportTextMergeShortLines { get; set; }
-    public bool ImportTextAutoSplitAtBlank { get; set; }
-    public bool ImportTextRemoveLinesNoLetters { get; set; }
-    public bool ImportTextGenerateTimeCodes { get; set; }
-    public bool ImportTextAutoBreak { get; set; }
-    public bool ImportTextAutoBreakAtEnd { get; set; }
-    public int ImportTextGap { get; set; }
-    public int ImportTextAutoSplitNumberOfLines { get; set; }
-    public string ImportTextAutoBreakAtEndMarkerText { get; set; }
     public bool ImportTextDurationAuto { get; set; }
     public int ImportTextFixedDuration { get; set; }
 
@@ -131,7 +122,10 @@ public class SeTools
     public string LastColorPickerColor5 { get; set; }
     public string LastColorPickerColor6 { get; set; }
     public string LastColorPickerColor7 { get; set; }
-    public bool ImportTextTryToFindTimeCodes { get; set; }
+    // Mirrored onto Configuration.Settings.Tools.RememberUseAlwaysList, which SpellCheckWordLists
+    // guards every load/save of "<lang>_UseAlways.xml" with. Nothing in SE5 ever set that flag, so
+    // "Change all" in spell check was a no-op that never survived the session.
+    public bool SpellCheckRememberUseAlwaysList { get; set; }
     public bool SpeechToTextSelectedLinesPromptFirstTimeOnly { get; set; }
     public bool MultipleReplaceShowDotDotDotButtons { get; set; }
     public bool GridFocusTextboxAfterInsertNew { get; set; }
@@ -242,20 +236,9 @@ public class SeTools
         BinEditPositionMonitorTitleSafePercent = 5;
 
         ImportTextSplitting = "auto";
-        ImportTextSplittingLineMode = "OneLineIsOneSubtitle";
-        ImportTextLineBreak = "|";
-        ImportTextMergeShortLines = false;
-        ImportTextAutoSplitAtBlank = true;
-        ImportTextRemoveLinesNoLetters = false;
-        ImportTextGenerateTimeCodes = true;
-        ImportTextAutoBreak = true;
-        ImportTextAutoBreakAtEnd = true;
-        ImportTextGap = 90;
-        ImportTextAutoSplitNumberOfLines = 2;
-        ImportTextAutoBreakAtEndMarkerText = ".!?";
         ImportTextDurationAuto = true;
-        ImportTextFixedDuration = 3000;
-        ImportTextTryToFindTimeCodes = false;
+        ImportTextFixedDuration = 0; // 0 = fall back to the "Adjust durations" fixed value
+        SpellCheckRememberUseAlwaysList = true;
         SpeechToTextSelectedLinesPromptFirstTimeOnly = true;
         MultipleReplaceShowDotDotDotButtons = true;
         GridFocusTextboxAfterInsertNew = true;
