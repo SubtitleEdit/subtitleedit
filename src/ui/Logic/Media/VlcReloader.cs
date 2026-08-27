@@ -48,10 +48,10 @@ public class VlcReloader : IVlcReloader
 
             SubtitleFormat format = _assFormat;
             string text;
-            if (uiFormatType == typeof(NetflixImsc11Japanese))
+            if (uiFormatType == typeof(NetflixImsc11Japanese) || NetflixImsc11JapaneseToAss.HasJapaneseMarkup(subtitle))
             {
                 // See MpvReloader - the furigana/bouten/vertical markup has to become positioned
-                // render lines before libass sees it (issue #13861).
+                // render lines before libass sees it (issue #13861, issue #14165).
                 subtitle = NetflixImsc11JapaneseToAss.ConvertToSubtitle(subtitle, VideoWidth, VideoHeight);
                 SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary);
                 text = subtitle.ToText(_assFormat);
