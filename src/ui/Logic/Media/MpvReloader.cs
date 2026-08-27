@@ -72,6 +72,7 @@ public class MpvReloader : IMpvReloader
             // Applied on every refresh, not only on load: toggling "margin is part of the
             // subtitle area" in settings has to take effect on the video already open (#13934).
             mpvContext.ApplySubtitleMarginArea();
+            mpvContext.ApplySubtitleJustify();
 
             var uiFormatType = uiFormat.GetType();
 
