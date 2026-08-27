@@ -232,8 +232,10 @@ public static class ShortcutsMain
         { nameof(MainViewModel.CommandShowLayoutCommand), Se.Language.Options.Shortcuts.GeneralChooseLayout },
 
         { nameof(MainViewModel.GoToNextLineCommand), Se.Language.Options.Shortcuts.GeneralGoToNextSubtitle },
+        { nameof(MainViewModel.GoToNextSubtitlePlayTranslateCommand), Se.Language.Options.Shortcuts.GeneralGoToNextSubtitlePlayTranslate },
         { nameof(MainViewModel.GoToNextLineCursorAtEndCommand), Se.Language.Options.Shortcuts.GeneralGoToNextSubtitleCursorAtEnd },
         { nameof(MainViewModel.GoToPreviousLineCommand), Se.Language.Options.Shortcuts.GeneralGoToPrevSubtitle },
+        { nameof(MainViewModel.GoToPrevSubtitlePlayTranslateCommand), Se.Language.Options.Shortcuts.GeneralGoToPrevSubtitlePlayTranslate },
         { nameof(MainViewModel.GoToFirstLineCommand), Se.Language.Options.Shortcuts.GeneralGoToFirstLine },
         { nameof(MainViewModel.GoToLastLineCommand), Se.Language.Options.Shortcuts.GeneralGoToLastLine },
         { nameof(MainViewModel.GoToNextLineAndSetVideoPositionCommand), Se.Language.Options.Shortcuts.GoToNextLineAndSetVideoPosition },
@@ -603,6 +605,8 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.GoToPreviousLineCommand, nameof(vm.GoToPreviousLineCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.GoToNextLineCommand, nameof(vm.GoToNextLineCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.GoToNextLineCursorAtEndCommand, nameof(vm.GoToNextLineCursorAtEndCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.GoToPrevSubtitlePlayTranslateCommand, nameof(vm.GoToPrevSubtitlePlayTranslateCommand), ShortcutCategory.General, ShortcutGroup.Video);
+        AddShortcut(shortcuts, vm.GoToNextSubtitlePlayTranslateCommand, nameof(vm.GoToNextSubtitlePlayTranslateCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.GoToFirstLineCommand, nameof(vm.GoToFirstLineCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.GoToLastLineCommand, nameof(vm.GoToLastLineCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.GoToPreviousLineAndSetVideoPositionCommand, nameof(vm.GoToPreviousLineAndSetVideoPositionCommand), ShortcutCategory.General);

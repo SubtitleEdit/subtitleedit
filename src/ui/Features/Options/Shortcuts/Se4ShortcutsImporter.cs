@@ -332,6 +332,10 @@ public static class Se4ShortcutsImporter
         // General
         ["GeneralGoToFirstSelectedLine"] = nameof(MainViewModel.FocusSelectedLineCommand),
         ["GeneralGoToNextSubtitle"] = nameof(MainViewModel.GoToNextLineCommand),
+        // SE 4's Alt+Down/Alt+Up defaults - not the plain go-to-next/prev above, which SE 4
+        // bound to Shift+Return (#14167).
+        ["GeneralGoToNextSubtitlePlayTranslate"] = nameof(MainViewModel.GoToNextSubtitlePlayTranslateCommand),
+        ["GeneralGoToPrevSubtitlePlayTranslate"] = nameof(MainViewModel.GoToPrevSubtitlePlayTranslateCommand),
         ["GeneralGoToNextSubtitleCursorAtEnd"] = nameof(MainViewModel.GoToNextLineCursorAtEndCommand),
         ["GeneralGoToNextSubtitleAndPlay"] = nameof(MainViewModel.PlayNextCommand),
         ["GeneralGoToPrevSubtitle"] = nameof(MainViewModel.GoToPreviousLineCommand),
