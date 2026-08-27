@@ -70,9 +70,14 @@ namespace Nikse.SubtitleEdit.Core.Common
             foreach (var row in table.Elements(TableNs + "table-row"))
             {
                 var cells = new List<string>();
-                foreach (var cell in row.Elements(TableNs + "table-cell"))
+
+                // covered-table-cell too, not just table-cell: a merged cell is written as one
+                // table-cell plus one covered-table-cell per column it swallows, and skipping the
+                // placeholders pulled every later column one to the left - so the text column of
+                // a row with a merge was read as the end time.
+                foreach (var cell in row.Elements().Where(e => e.Name == TableNs + "table-cell" || e.Name == TableNs + "covered-table-cell"))
                 {
-                    var value = GetCellValue(cell);
+                    var value = cell.Name == TableNs + "covered-table-cell" ? string.Empty : GetCellValue(cell);
                     var repeat = ParseRepeat(cell.Attribute(TableNs + "number-columns-repeated")?.Value);
 
                     // Honour the repeat count for empty cells too: LibreOffice writes an
