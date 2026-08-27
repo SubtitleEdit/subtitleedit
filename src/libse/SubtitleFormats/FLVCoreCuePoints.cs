@@ -123,7 +123,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
-                p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(p.Text);
+
+                // Only estimate a duration when the cue point carried none: this used to
+                // overwrite unconditionally, throwing away every "duration" parameter the loop
+                // above had just read (and that ToText writes).
+                if (p.DurationTotalMilliseconds < 1)
+                {
+                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(p.Text);
+                }
+
                 if (i < subtitle.Paragraphs.Count - 1)
                 {
                     Paragraph next = subtitle.Paragraphs[i + 1];

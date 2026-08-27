@@ -420,8 +420,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 XmlNode paragraph = xml.CreateElement("SubtitleItem");
 
                 var text = HtmlUtil.RemoveHtmlTags(p.Text, true);
-                paragraph.InnerText = text;
-                paragraph.InnerXml = "<Text><![CDATA[" + paragraph.InnerXml.Replace(Environment.NewLine, "\\n") + "]]></Text>";
+                // See TmpegEncAW5: the CDATA must be built from the RAW text, or the XML
+                // escaping is read back as literal text and escaped again on every save.
+                var cdataText = text.Replace(Environment.NewLine, "\\n");
+                if (cdataText.Contains("]]>", StringComparison.Ordinal))
+                {
+                    paragraph.InnerText = cdataText;
+                }
+                else
+                {
+                    paragraph.InnerXml = "<Text><![CDATA[" + cdataText + "]]></Text>";
+                }
 
                 XmlAttribute layoutIndex = xml.CreateAttribute("layoutindex");
                 var layoutIndexValue = GetLayoutIndexFromAssAlignment(p.Text);

@@ -89,14 +89,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 string startTime = EncodeTime(p.StartTime);
                 string endTime = EncodeTime(p.EndTime);
-                string text = p.Text.Replace(Environment.NewLine, "\\n");
-                text = text.Replace("<i>", "\\I");
-                text = text.Replace("</i>", "\\i");
-                text = text.Replace("<b>", "\\B");
-                text = text.Replace("</b>", "\\b");
-                text = text.Replace("<u>", "\\U");
-                text = text.Replace("</u>", "\\u");
+                // The JACOsub escape codes are backslash codes ("\n", "\I", ...) and
+                // RemoveHtmlTags(alsoSsaTags: true) treats those as ASSA tags - running it after
+                // the substitutions turned the "\n" line break back into a real newline (which
+                // the reader then dropped, losing the second line) and ate the style codes. Build
+                // the codes via a placeholder so they are materialized only after all stripping.
+                const char marker = '\u0001';
+                string text = p.Text
+                    .Replace("<i>", marker + "I")
+                    .Replace("</i>", marker + "i")
+                    .Replace("<b>", marker + "B")
+                    .Replace("</b>", marker + "b")
+                    .Replace("<u>", marker + "U")
+                    .Replace("</u>", marker + "u");
                 text = HtmlUtil.RemoveHtmlTags(text, true);
+                text = text.Replace(Environment.NewLine, marker + "n").Replace(marker, '\\');
                 sb.AppendFormat(writeFormat, startTime, endTime, text);
             }
             return sb.ToString();

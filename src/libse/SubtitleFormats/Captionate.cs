@@ -121,21 +121,62 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         string start = node.Attributes["time"].InnerText;
                         double startMilliseconds = DecodeTimeToMilliseconds(start);
+                        // An end marker (a caption with no <tracks>) carries this cue's exact
+                        // end time; only a real following caption means "ends just before it".
+                        // Always subtracting 1 ms moved the end one millisecond earlier on
+                        // every save, and the shift accumulated.
+                        var hasTextNode = node.SelectSingleNode("tracks/track0") != null;
                         if (p != null)
                         {
-                            p.EndTime.TotalMilliseconds = startMilliseconds - 1;
+                            p.EndTime.TotalMilliseconds = hasTextNode ? startMilliseconds - 1 : startMilliseconds;
                         }
 
                         if (node.SelectSingleNode("tracks/track0") != null)
                         {
-                            string text = node.SelectSingleNode("tracks/track0").InnerText;
-                            text = HtmlUtil.RemoveHtmlTags(text);
+                            // Walk the children: <br /> is an ELEMENT, and InnerText drops it
+                            // silently - so every line break was lost on read.
+                            var trackNode = node.SelectSingleNode("tracks/track0");
+                            var textBuilder = new StringBuilder();
+                            foreach (XmlNode textChild in trackNode.ChildNodes)
+                            {
+                                if (textChild is XmlText || textChild is XmlCDataSection || textChild is XmlWhitespace || textChild is XmlSignificantWhitespace)
+                                {
+                                    textBuilder.Append(textChild.Value);
+                                }
+                                else if (textChild.Name.Equals("br", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    textBuilder.Append(Environment.NewLine);
+                                }
+                                else
+                                {
+                                    textBuilder.Append(textChild.InnerText);
+                                }
+                            }
+
+                            string text = textBuilder.ToString();
                             text = text.Replace("<br>", Environment.NewLine).Replace("<br />", Environment.NewLine).Replace("<BR>", Environment.NewLine);
-                            p = new Paragraph(text, startMilliseconds, startMilliseconds + 3000);
+                            text = HtmlUtil.RemoveHtmlTags(text);
                             if (!string.IsNullOrWhiteSpace(text))
                             {
+                                p = new Paragraph(text, startMilliseconds, startMilliseconds + 3000);
                                 subtitle.Paragraphs.Add(p);
                             }
+                            else
+                            {
+                                // A blank caption is the end marker for the previous one (the
+                                // writer emits one after every gap). Keeping it as "p" made the
+                                // NEXT caption set the end time on this phantom paragraph
+                                // instead, so the real cue kept its 3 second placeholder.
+                                p = null;
+                            }
+                        }
+                        else
+                        {
+                            // A caption with no <tracks> is the end marker ToText emits after a
+                            // gap; it already set the previous cue's end above. Not clearing "p"
+                            // here let the NEXT caption overwrite that end time, so every cue ran
+                            // on until the following one started.
+                            p = null;
                         }
                     }
                 }
@@ -156,7 +197,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string EncodeTime(TimeCode time)
         {
-            return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}:{time.Milliseconds / 10.0:00}";
+            // Integer division: 999 ms through "/ 10.0" formatted as "100", a three digit
+            // field that no reader can parse back (and DecodeTimeToMilliseconds multiplies
+            // this field by 10, so it is hundredths, capped at 99).
+            return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}:{time.Milliseconds / 10:00}";
         }
 
     }

@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Globalization;
 using System.Text;
 using System.Xml;
@@ -190,7 +191,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 sb.AppendLine();
                             }
                         }
-                        var p = new Paragraph(timeCodeIn, timeCodeOut, sb.ToString().Replace("  ", " ").Trim());
+                        // Each <Text> run is joined with a leading space, so the run after a
+                        // <HardReturn> started the next line with one - and since the writer
+                        // keeps whatever it is given, the indent grew on every save. The outer
+                        // Trim() only ever reached the first and last line.
+                        var xifText = string.Join(Environment.NewLine,
+                            sb.ToString().Replace("  ", " ").SplitToLines().Select(l => l.Trim()));
+                        var p = new Paragraph(timeCodeIn, timeCodeOut, xifText);
                         subtitle.Paragraphs.Add(p);
                     }
                     catch (Exception ex)
