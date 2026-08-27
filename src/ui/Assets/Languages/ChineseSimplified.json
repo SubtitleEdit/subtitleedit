@@ -1,6 +1,6 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.2.0-beta20",
+  "version": "v5.2.0-beta26",
   "translatedBy": "wuwufei | FeiXJ | Leon Cheung | larsenlouis | VK | nkh0472 | 蒙太奇字幕组（MontageSubs） | emsb8888-prog",
   "cultureName": "zh-Hans",
   "general": {
@@ -581,6 +581,7 @@
     "startingDotDotDot": "正在开始...",
     "status": "状态",
     "stereo": "立体声",
+	"spreadsheetFiles": "电子表格文件",
     "stop": "停止",
     "strikeout": "删除线",
     "style": "样式",
@@ -891,7 +892,10 @@
       "filterLayersForDisplayDotDotDot": "筛选显示层...",
       "toggleSelectSubtitleWhilePlayingCurrentlyOn": "播放时切换选中字幕...（当前：开启）",
       "toggleSelectSubtitleWhilePlayingCurrentlyOff": "播放时切换选中字幕...（当前：关闭）",
-      "selectSubtitleWhilePlaying": "播放时自动选中对应字幕"
+      "selectSubtitleWhilePlaying": "播放时自动选中对应字幕",
+      "windowMinimize": "最小化",
+      "windowZoom": "缩放",
+      "closeWindow": "关闭窗口"
     },
     "toolbar": {
       "newHint": "新建字幕文件 {0}",
@@ -951,7 +955,8 @@
       "textPreviousHint": "播放上一条字幕并在结尾停止 {0}",
       "textPlayHint": "播放当前字幕并在结尾停止 {0}",
       "textPauseHint": "暂停播放 {0}",
-      "textNextHint": "播放下一条字幕并在结尾停止 {0}"
+      "textNextHint": "播放下一条字幕并在结尾停止 {0}",
+      "videoPositionTextBox": "视频位置文本框 {0}"
     },
     "audioTrackIsNowX": "音轨现在为 “{0}”",
     "audioTrackX": "音轨 {0}",
@@ -1093,7 +1098,16 @@
     "setUpLikeSe4ShortcutsAddedX": "新增/更新快捷键: {0} 项",
     "setUpLikeSe4ShortcutsSkippedX": "跳过快捷键（无匹配项）: {0} 项",
     "setUpLikeSe4ReplaceRulesAddedXY": "导入替换规则: {0} 条（存放于 {1} 个新建分类）",
-    "setUpLikeSe4ThemeSet": "主题、工具栏图标与波形界面已切换为 Subtitle Edit 4 样式。"
+    "setUpLikeSe4ThemeSet": "主题、工具栏图标与波形界面已切换为 Subtitle Edit 4 样式。",
+    "formatLimitWarningTitle": "超出格式限制",
+    "formatLimitWarningXLinesExceedLimitsOfY": "{0} 条字幕超出“{1}”格式的限制：",
+    "formatLimitWarningMaxXCharactersPerLine": "每行最多 {0} 个字符",
+    "formatLimitWarningMaxXLines": "每条字幕最多 {0} 行",
+    "formatLimitWarningTextWillBeRewrapped": "保存时，这些字幕将被重新换行或截断以符合格式，因此保存后的文件将与当前显示的内容不符。",
+    "formatLimitWarningLinesX": "行数：{0}",
+    "formatLimitWarningSaveAnyway": "仍然保存",
+    "formatLimitWarningDoNotShowAgain": "不再显示此警告",
+    "originalIsEmptyNotSaved": "原始字幕没有任何文本，因此未保存"
   },
   "file": {
     "ebuSaveOptions": {
@@ -1216,7 +1230,34 @@
       "titleExportDCinemaSmpte2014Png": "D-Cinema SMPTE 2014/png",
       "imageBasedSubtitleSaved": "基于图像的字幕已保存",
       "fullFrameImage": "全帧图像",
-      "fullFrameImageHint": "将每张图片调整为与视频帧相同的尺寸，并将字幕放置在画面中的原始位置"
+      "fullFrameImageHint": "将每张图片调整为与视频帧相同的尺寸，并将字幕放置在画面中的原始位置",
+      "textEffect": "文字特效",
+      "textEffectSettingsTitle": "文字特效设置",
+      "textEffectPreset": "预设",
+      "textEffectStrength": "强度",
+      "textEffectLetterSpacing": "字间距",
+      "textEffectArcBend": "弯曲",
+      "textEffectWave": "波浪",
+      "textEffectSoftShadow": "柔化阴影",
+      "textEffectGradientGold": "渐变（金色）",
+      "textEffectDoubleOutline": "双重描边",
+      "textEffectNeonGlow": "霓虹辉光",
+      "textEffectExtrude3D": "3D 突出",
+      "textEffectChrome": "镀铬",
+      "textEffectFire": "火焰",
+      "textEffectComic": "漫画",
+      "textEffectRetro80s": "复古 80 年代",
+      "textEffectAnaglyph3D": "3D 立体（红蓝）",
+      "textEffectIce": "冰霜",
+      "textEffectEmboss": "浮雕",
+      "textEffectHollow": "空心（仅轮廓）",
+      "textEffectMarble": "大理石",
+      "textEffectWood": "木质",
+      "textEffectLava": "熔岩",
+      "textEffectBrushedSteel": "拉丝钢",
+      "textEffectCandyCane": "拐杖糖",
+      "textEffectRainbow": "彩虹",
+      "textEffectPolkaDots": "波尔卡圆点"
     },
     "statistics": {
       "title": "统计",
@@ -1800,7 +1841,11 @@
       "selectFolderToConvert": "选择包含待转换文件的文件夹",
       "includeSubfolders": "添加文件夹时包含子文件夹",
       "keepSourceFileTimestamp": "输出文件保留源文件的日期/时间",
-      "scanningFolderX": "正在扫描 {0}..."
+      "scanningFolderX": "正在扫描 {0}...",
+      "assaChangeStylePropertiesTitle": "更改样式属性",
+      "assaChangeStylePropertiesInfo": "更改文件中所有样式中的选定字段，但保留样式本身不变。",
+      "assaChangeStylePropertiesSetSpacing": "将间距设为",
+      "assaChangeStylePropertiesSetAlignment": "将对齐设为"
     },
     "changeCasing": {
       "fixNames": "修复名称",
@@ -2070,7 +2115,8 @@
     "correctWordsX": "无误单词: {0}",
     "namesX": "专有名词: {0}",
     "addedToDictionaryX": "添加至词典: {0}",
-    "doNotShowThisAgain": "不再显示此提示"
+    "doNotShowThisAgain": "不再显示此提示",
+    "playCurrentLineHint": "在视频播放器中播放当前行并在其结束时暂停"
   },
   "video": {
     "burnIn": {
@@ -2134,7 +2180,34 @@
       "engineSettingsSubtitle": "语音转文字引擎",
       "backendAndUpdateStatus": "后台服务与更新状态",
       "addLanguageCodeToFileName": "在文件名中添加语言代码",
-      "addLanguageCodeToFileNameHint": "生成的字幕文件名格式为 \"video.en.srt\"，而不是 \"video.srt\""
+      "addLanguageCodeToFileNameHint": "生成的字幕文件名格式为 \"video.en.srt\"，而不是 \"video.srt\"",
+      "removeNonSpeechLines": "移除非语音行",
+      "removeNonSpeechLinesHint": "删除仅描述声音的行，如“[音乐]”或“(海浪声)”。",
+      "removeRepeatedLines": "移除重复行",
+      "removeRepeatedLinesHint": "删除与上一行逐字重复的行（引擎循环所致）。",
+      "showQualityReport": "转写后显示质量报告",
+      "qualityReportTitle": "转写质量报告",
+      "qualityReportNoIssues": "未发现问题——转写效果良好。",
+      "qualityReportSummaryX": "在 {1} 行中发现 {0} 个问题",
+      "qualityReportLinesChecked": "已检查行数",
+      "qualityReportIssuesFound": "发现问题数",
+      "qualityReportLinesRemoved": "已移除行数",
+      "qualityReportTooShort": "过短",
+      "qualityReportTooShortHint": "短于最短显示时间，或阅读速度高于最大值。",
+      "qualityReportTooLong": "过长",
+      "qualityReportTooLongHint": "长于最长显示时间，或长时间内单词极少（常为幻觉）。",
+      "qualityReportOverlap": "重叠",
+      "qualityReportOverlapHint": "在下一条字幕开始后才结束。",
+      "qualityReportNonSpeech": "非语音",
+      "qualityReportNonSpeechHint": "仅包含声音或音乐描述，如“[音乐]”。",
+      "qualityReportRepeated": "重复",
+      "qualityReportRepeatedHint": "与上一行文本相同（引擎循环）。",
+      "qualityReportRemoved": "已移除",
+      "qualityReportAll": "全部",
+      "qualityReportIssue": "问题",
+      "qualityReportDetail": "详情",
+      "qualityReportTip": "行号对应新字幕中的编号。可使用“修复常规错误”或后处理设置自动修复更多问题，若影响行数较多，可尝试其他模型/引擎。",
+      "qualityReportDoNotShowAgain": "不再显示此报告"
     },
     "textToSpeech": {
       "title": "文本转语音",
@@ -2268,7 +2341,21 @@
       "subtitleUpdatedFromReviewSingular": "已根据语音审阅更新1条字幕",
       "subtitleUpdatedFromReviewPlural": "已根据语音审阅更新 {0} 条字幕",
       "subtitleMergedLinesAppliedSingular": "已应用1条文本转语音字幕合并操作",
-      "subtitleMergedLinesAppliedPlural": "已应用 {0} 条文本转语音字幕合并操作"
+      "subtitleMergedLinesAppliedPlural": "已应用 {0} 条文本转语音字幕合并操作",
+      "skipNoiseLinesPromptTitle": "跳过音效与音乐行？",
+      "skipNoiseLinesPromptMessage": "部分行仅包含声音或音乐——如 ♪ 或 [门砰声]。\n\n语音引擎会尝试朗读此类行，且常编造词语。\n\n是否复查这些行并将其静音？",
+      "skipNoiseLinesTitle": "仅包含声音或音乐的行",
+      "skipNoiseLinesFoundX": "{0} 行仅包含声音或音乐——已勾选的行将保持静音。",
+      "skipNoiseLinesColumnSkip": "跳过",
+      "detectSpeakersPromptTitle": "文本中发现说话人名称？",
+      "detectSpeakersPromptMessage": "部分行以说话人名称开头——如“MIKE:”或“[NARRATOR]”。\n\n将其移至“演员”字段后，每个说话人可通过“角色音色配置”获得专属语音，且名称不会被朗读。\n\n是否立即复查这些名称？（仅影响语音生成，不会改变字幕文本本身。）",
+      "detectSpeakersTitle": "文本中的说话人名称",
+      "detectSpeakersFoundX": "发现 {0} 个说话人标签（共 {1} 个说话人）——已勾选的名称将成为演员且不被朗读。",
+      "detectSpeakersColumnUse": "使用",
+      "detectSpeakersSticky": "不带名称的行沿用上一说话人",
+      "fitDurationToGeneratedAudio": "根据生成的音频调整时长",
+      "resetTiming": "重置计时",
+      "playLine": "播放当前行"
     },
     "shotChanges": {
       "generateShotChanges": "生成场景切换",
@@ -2354,7 +2441,18 @@
       "testOcr": "测试当前画面",
       "testOcrRunning": "正在对当前画面执行 OCR 测试...",
       "testOcrResultX": "测试结果: {0}",
-      "testOcrNoTextFound": "测试：扫描区域内未找到文字"
+      "testOcrNoTextFound": "测试：扫描区域内未找到文字",
+      "refiningTimingXY": "优化时间轴... {0}/{1}",
+      "fixOcrErrors": "修复 OCR 错误",
+      "dictionary": "词典",
+      "editLineX": "编辑第 {0} 行",
+      "downloadDictionaryHint": "下载拼写检查词典...",
+      "framesPerSecondHint": "每秒扫描帧数。5 帧适用于普通字幕；更高值可捕捉极短行并收紧分组，但会增加 OCR 耗时。",
+      "textBrightnessMinimumHint": "低于此亮度的像素不计为字幕文字：帧分组依据亮色文本，无亮色像素的帧将被跳过，Paddle 引擎读取时所有更暗部分会被涂黑。若字幕文字较暗，请设为 0。",
+      "textSimilarityPercentHint": "两次连续 OCR 结果需达到此相似度（百分比）才视为相同字幕并合并为一行。",
+      "maxGapHint": "两次相似 OCR 结果之间合并为一条字幕的最大间隔——可桥接单帧闪烁。设太高可能将重复显示的行合并。",
+      "minDurationHint": "屏幕上显示时间短于此值的行将被视为 OCR 杂散而丢弃。",
+      "dictionaryHint": "OCR 修复引擎和单词着色使用的拼写检查词典：已知单词显示为绿色，未知单词显示为红色。"
     },
     "goToVideoPosition": "跳转到视频位置",
     "goToVideoPositionDotDotDot": "跳转到视频位置...",
@@ -2446,7 +2544,16 @@
     "ttsEngineNotInstalled": "{0} 未安装",
     "ttsEngineUpdateAvailable": "{0} - 有可用更新",
     "ttsEngineTooOldUpdateRequired": "{0} 版本过旧 - 需要更新",
-    "ttsEngineChatterboxCapable": "{0} (支持 Chatterbox)"
+    "ttsEngineChatterboxCapable": "{0} (支持 Chatterbox)",
+    "beautifyTimeCodes": {
+      "useExactTimeCodes": "使用视频的精确时间码",
+      "extractTimeCodes": "提取时间码",
+      "extractingTimeCodes": "正在提取时间码...",
+      "noTimeCodesLoaded": "未加载时间码",
+      "xTimeCodesLoaded": "已加载 {0} 个时间码",
+      "timeCodesExtractFailed": "无法从视频读取时间码",
+      "timeCodesHint": "将字幕对齐到视频的真实帧时间，而非假定恒定帧率。需完整读取视频一次，结果将被缓存。"
+    }
   },
   "waveform": {
     "guessTimeCodes": "猜测时间码",
@@ -2888,7 +2995,14 @@
       "waveformColorTheme": "配色主题：",
       "waveformSaveAsCustomTheme": "保存为自定义主题...",
       "waveformLoadThemeDotDotDot": "加载主题...",
-      "waveformExportThemeDotDotDot": "导出主题..."
+      "waveformExportThemeDotDotDot": "导出主题...",
+      "waveformSnapToShotChangesPixels": "拖动时吸附距离（像素）",
+      "waveformSnapToShotChangeStartMaxSeconds": "吸附至最近镜头切换：起始点最大距离（秒）",
+      "waveformSnapToShotChangeEndMaxSeconds": "吸附至最近镜头切换：结束点最大距离（秒）",
+      "waveformSnapToShotChangeSameShotEndMaxSeconds": "吸附至最近镜头切换：当起始和结束在同一剪辑内时，结束点最大距离（秒）",
+      "showFormatLimitWarning": "保存时若行超出格式限制（例如 SCC 每行 32 字符）则发出警告",
+      "textToSpeechPromptSkipNoiseLines": "文本转语音：提示跳过音效/音乐行",
+      "textToSpeechPromptDetectSpeakers": "文本转语音：提示检测文本中的说话人名称"
     },
     "shortcuts": {
       "searchShortcuts": "搜索快捷键...",
@@ -3342,7 +3456,8 @@
     "alsoTrainItalic": "同时训练斜体",
     "trainingXLearnedYSkipped": "正在训练 \"{0}\" - 已学习 {1:#,##0} 个字符，跳过 {2:#,##0} 个",
     "trainingDoneXLearned": "训练完成 - 已学习 {0:#,##0} 个字符",
-    "selectAtLeastOneFont": "请至少选择一种字体"
+    "selectAtLeastOneFont": "请至少选择一种字体",
+    "appleVisionReturnedNoText": "Apple Vision 未返回文本——请检查语言设置"
   },
   "assa": {
     "assaDraw": "ASSA 绘图",
