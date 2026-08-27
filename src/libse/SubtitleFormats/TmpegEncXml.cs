@@ -471,7 +471,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             double startSeconds = 0;
 
             var xml = new XmlDocument { XmlResolver = null };
-            xml.LoadXml(JoinLinesTrimmed(lines));
+            try
+            {
+                xml.LoadXml(JoinLinesTrimmed(lines));
+            }
+            catch (Exception exception)
+            {
+                // Damaged/truncated xml is "not mine", not an exception out of the reader.
+                System.Diagnostics.Debug.WriteLine(exception.Message);
+                _errorCount = 1;
+                return;
+            }
             var italicStyles = new List<bool>();
             var positionCodes = new List<int>();
 

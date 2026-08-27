@@ -52,9 +52,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Dictionary<string, object> dictionary;
             try
             {
-                dictionary = (Dictionary<string, object>)parser.Parse(allText);
+                // "as", not a cast: this format expects a json OBJECT at the root, but plenty of
+                // subtitle json files are an ARRAY - and the InvalidCastException escaped through
+                // IsMine (which the format detection calls unguarded), so merely opening such a
+                // file crashed instead of moving on to the next format.
+                dictionary = parser.Parse(allText) as Dictionary<string, object>;
             }
             catch (ParserException)
+            {
+                return;
+            }
+
+            if (dictionary == null)
             {
                 return;
             }

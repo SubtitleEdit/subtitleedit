@@ -24,8 +24,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
+            // Hand the ASCII probe the lines we already have: passing null made it fall through
+            // to reading the file from disk, which threw FileNotFoundException whenever detection
+            // ran on content that is not on disk under this name (clipboard, batch, conversion).
             var asc = new TimeLineFootageAscii();
-            if (fileName != null && asc.IsMine(null, fileName))
+            if (fileName != null && asc.IsMine(lines, fileName))
             {
                 return false;
             }

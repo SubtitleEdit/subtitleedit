@@ -27,8 +27,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
+                // One time code per cue, as the sample at the top of this file shows and as
+                // LoadSubtitle expects - writing the end time as a second time code made the
+                // reader treat it as the NEXT cue's start, so every exported file came back
+                // with shifted times and could not even be detected as this format.
                 sb.AppendLine(EncodeTimeCode(p.StartTime));
-                sb.AppendLine(EncodeTimeCode(p.EndTime));
                 sb.AppendLine(HtmlUtil.RemoveHtmlTags(p.Text));
                 sb.AppendLine();
             }
