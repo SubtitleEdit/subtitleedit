@@ -450,6 +450,23 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return xmlAsText;
         }
 
+        /// <summary>
+        /// A Final Cut rate is a whole "timebase" plus an "ntsc" flag: timebase 24 with
+        /// ntsc TRUE means 23.976, timebase 30 with ntsc TRUE means 29.97. Ignoring the flag
+        /// read every NTSC file 0.1% too fast (about 3.6 seconds an hour) and flipped the
+        /// flag to FALSE when the file was saved again.
+        /// </summary>
+        private static double ApplyNtsc(double timebase, XmlNode rateNode)
+        {
+            var ntsc = rateNode?.SelectSingleNode("ntsc")?.InnerText;
+            if (!string.IsNullOrEmpty(ntsc) && ntsc.Trim().Equals("TRUE", StringComparison.OrdinalIgnoreCase))
+            {
+                return timebase * 1000.0 / 1001.0;
+            }
+
+            return timebase;
+        }
+
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
@@ -472,7 +489,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     try
                     {
-                        frameRate = double.Parse(xml.DocumentElement.SelectSingleNode("sequence/rate/timebase").InnerText, CultureInfo.InvariantCulture);
+                        frameRate = ApplyNtsc(
+                            double.Parse(xml.DocumentElement.SelectSingleNode("sequence/rate/timebase").InnerText, CultureInfo.InvariantCulture),
+                            xml.DocumentElement.SelectSingleNode("sequence/rate"));
                     }
                     catch
                     {
@@ -492,7 +511,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 XmlNode timebase = rate.SelectSingleNode("timebase");
                                 if (timebase != null)
                                 {
-                                    frameRate = double.Parse(timebase.InnerText, CultureInfo.InvariantCulture);
+                                    frameRate = ApplyNtsc(double.Parse(timebase.InnerText, CultureInfo.InvariantCulture), rate);
                                 }
                             }
 

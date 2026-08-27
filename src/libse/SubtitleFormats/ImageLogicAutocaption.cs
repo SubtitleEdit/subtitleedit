@@ -111,7 +111,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 p = subtitle.Paragraphs[j];
                 Paragraph next = subtitle.Paragraphs[j + 1];
-                p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+
+                // A numbered row with no text carries this cue's END time (ToText writes one
+                // after every gap), so take it as-is. Subtracting the minimum gap from it made
+                // every cue a little shorter on each save, and the shrink accumulated.
+                p.EndTime.TotalMilliseconds = string.IsNullOrWhiteSpace(next.Text)
+                    ? next.StartTime.TotalMilliseconds
+                    : next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
             }
             if (subtitle.Paragraphs.Count > 0)
             {

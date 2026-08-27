@@ -135,16 +135,26 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
+            // Several decoded values are TWO characters ("nj", "Lj", "Dz"...), so a per-character
+            // lookup could never match them: the digraphs were left as-is while the reader kept
+            // mapping the single ASCII letter back to them, so text drifted on every save.
             var sb = new StringBuilder();
-            foreach (var ch in s)
+            for (var i = 0; i < s.Length; i++)
             {
-                if (_encodeDictionary.TryGetValue(ch.ToString(), out var v))
+                if (i + 1 < s.Length && _encodeDictionary.TryGetValue(s.Substring(i, 2), out var twoCharValue))
+                {
+                    sb.Append(twoCharValue);
+                    i++;
+                    continue;
+                }
+
+                if (_encodeDictionary.TryGetValue(s[i].ToString(), out var v))
                 {
                     sb.Append(v);
                 }
                 else
                 {
-                    sb.Append(ch);
+                    sb.Append(s[i]);
                 }
             }
 

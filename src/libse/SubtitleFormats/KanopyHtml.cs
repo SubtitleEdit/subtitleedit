@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Globalization;
 using System.Text;
 
@@ -106,7 +107,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
                         }
 
-                        text = text.Replace("<br />", Environment.NewLine);
+                        // ToText writes " <br />" (with a leading space), so replacing the tag
+                        // alone left a trailing space on every line - and the next save added
+                        // another one, growing the indentation with each round trip.
+                        text = text.Replace(" <br />", Environment.NewLine).Replace("<br />", Environment.NewLine);
+                        text = string.Join(Environment.NewLine, text.SplitToLines().Select(l => l.Trim()));
                     }
 
                     double startSeconds;
