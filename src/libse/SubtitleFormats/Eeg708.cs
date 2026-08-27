@@ -84,6 +84,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         lastParagraph = new Paragraph(s, startTime.TotalMilliseconds, startTime.TotalMilliseconds + 3000);
                         subtitle.Paragraphs.Add(lastParagraph);
                     }
+                    else
+                    {
+                        // A node with no <Text> is the explicit end-of-caption marker ToText writes,
+                        // and it has just set the end time above. Leaving the paragraph pending let
+                        // the *next* caption's start time overwrite that end time again, so every
+                        // gap in the file was swallowed and only the last cue kept its end time.
+                        lastParagraph = null;
+                    }
                 }
                 catch (Exception ex)
                 {

@@ -123,7 +123,7 @@ public class ColorService : IColorService
             return text;
         }
 
-        if (subtitleFormat is WebVTT)
+        if (subtitleFormat is WebVTT or WebVTTFileWithLineNumber)
         {
             try
             {
@@ -216,7 +216,7 @@ public class ColorService : IColorService
             return text;
         }
 
-        if (subtitleFormat is WebVTT)
+        if (subtitleFormat is WebVTT or WebVTTFileWithLineNumber)
         {
             try
             {

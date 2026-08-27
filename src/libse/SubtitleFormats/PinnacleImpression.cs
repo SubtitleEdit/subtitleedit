@@ -49,7 +49,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static string EncodeTimeCode(TimeCode time)
         {
             //00:03:15:22 (last is frame)
-            int frames = time.Milliseconds / (1000 / 30);
+            // "1000 / 30" is integer division (33), so 990-999 ms produced frame 30 - not a valid
+            // frame number at 30 fps. Compute in floating point and clamp, as
+            // MillisecondsToFramesMaxFrameRate does.
+            var frames = (int)(time.Milliseconds / (1000.0 / 30.0));
+            if (frames > 29)
+            {
+                frames = 29;
+            }
+
             return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}:{frames:00}";
         }
 

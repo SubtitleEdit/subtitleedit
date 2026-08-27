@@ -80,6 +80,15 @@ public partial class CutVideoViewModel : ObservableObject
     private SubtitleFormat? _subtitleFormat;
     private string _inputVideoFileName;
     private bool _updateAudioVisualizer;
+
+    // ffmpeg's stdout and stderr readers both call OutputHandlerKeyFrames, on two thread pool
+    // threads, while the waveform render thread walks AudioVisualizer.ShotChanges every frame.
+    // List<T>.Add publishes the grown array and the new size non-atomically, so adding straight
+    // into the live list could throw IndexOutOfRangeException out of Render. Collect here under a
+    // lock and hand the visualizer a finished list on the UI thread instead - what every other
+    // shot-change writer does - coalescing the publishes so a long file cannot flood the queue.
+    private readonly List<double> _keyFrameSeconds = new List<double>();
+    private bool _keyFramePublishPending;
     private DispatcherTimer _positionTimer = new DispatcherTimer();
     private string _importFileName;
     private Subtitle _currentSubtitle;
@@ -288,8 +297,29 @@ public partial class CutVideoViewModel : ObservableObject
 
             if (double.TryParse(ptsValue, NumberStyles.Float, CultureInfo.InvariantCulture, out double seconds))
             {
-                AudioVisualizer.ShotChanges.Add(seconds);
-                _updateAudioVisualizer = true;
+                lock (_keyFrameSeconds)
+                {
+                    _keyFrameSeconds.Add(seconds);
+                    if (_keyFramePublishPending)
+                    {
+                        return;
+                    }
+
+                    _keyFramePublishPending = true;
+                }
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    List<double> snapshot;
+                    lock (_keyFrameSeconds)
+                    {
+                        _keyFramePublishPending = false;
+                        snapshot = new List<double>(_keyFrameSeconds);
+                    }
+
+                    AudioVisualizer.ShotChanges = snapshot;
+                    _updateAudioVisualizer = true;
+                }, DispatcherPriority.Background);
             }
         }
     }
