@@ -772,6 +772,28 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         SetOptionString("sub-ass-force-margins", useMargins ? "yes" : "no");
     }
 
+    /// <summary>
+    /// How the lines of a multi-line preview subtitle are justified inside the text block
+    /// (#14167) - not the same thing as the alignment, which moves the whole block and rides
+    /// along in the generated ASS style. Justification has no ASS style field: it is a player
+    /// option, and sub-justify reaches an ASS subtitle - which the preview is - only with
+    /// sub-ass-justify on, which mpv defaults to "no".
+    ///
+    /// Both options are written on every call, so picking "auto" again restores mpv's own
+    /// defaults instead of leaving the last value in place.
+    /// </summary>
+    public void ApplySubtitleJustify()
+    {
+        var justify = Se.Settings.Video.MpvPreviewJustify;
+        if (string.IsNullOrWhiteSpace(justify))
+        {
+            justify = "auto";
+        }
+
+        SetOptionString("sub-justify", justify);
+        SetOptionString("sub-ass-justify", justify == "auto" ? "no" : "yes");
+    }
+
     public int SetOptionString(string name, string value)
     {
         if (_mpvSetOptionString == null || _mpv == IntPtr.Zero)
@@ -1559,6 +1581,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         SetOptionString("rebase-start-time", "no");
 
         ApplySubtitleMarginArea();
+        ApplySubtitleJustify();
 
         _fileName = path;
 

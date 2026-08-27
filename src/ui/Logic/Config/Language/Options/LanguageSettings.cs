@@ -331,6 +331,7 @@ public class LanguageSettings
     public string SubtitlePreviewProperties { get; set; }
     public string UsePositionFromSubtitleFile { get; set; }
     public string MarginIsPartOfSubtitleArea { get; set; }
+    public string TextJustify { get; set; }
     public string PixelWidthInfo { get; set; }
     public string SpellCheckEngineHunSpelll { get; set; }
     public string SpellCheckEngineMsWord { get; set; }
@@ -667,6 +668,7 @@ public class LanguageSettings
         SubtitlePreviewProperties = "Subtitle preview properties";
         UsePositionFromSubtitleFile = "Use position from subtitle file (TTML/PAC/EBU STL)";
         MarginIsPartOfSubtitleArea = "Margin is part of the subtitle area";
+        TextJustify = "Justify lines";
         PixelWidthInfo = "Green lines = max-width limit   |   Red area = text exceeds limit";
         SpellCheckEngineHunSpelll = "Hunspell";
         SpellCheckEngineMsWord = "MS Word";
