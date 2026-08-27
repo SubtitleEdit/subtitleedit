@@ -204,7 +204,7 @@ public partial class ReEncodeVideoViewModel : ObservableObject
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
 
-                IsGenerating = true;
+                IsGenerating = false;
                 ProgressValue = 0;
             });
 
