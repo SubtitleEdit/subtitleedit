@@ -199,6 +199,10 @@ public partial class VideoPlayerUndockedViewModel : ObservableObject
                 videoPlayerControl.Volume = _originalVolume;
                 videoPlayerControl.Position = _originalPosition;
 
+                // The player is where it belongs - a rebuild from here on can read the live
+                // position again (issue #14218).
+                videoPlayerControl.EndPositionRestore();
+
                 // Undocking opens the video in a new player, which starts on mpv's default audio
                 // track - re-apply the track the user picked in the main window (issue #12844).
                 MainViewModel?.ReapplySelectedAudioTrack(videoPlayerControl);

@@ -8091,7 +8091,11 @@ public partial class MainViewModel :
 
             AreVideoControlsUndocked = true;
 
-            var position = vp.Position;
+            // Not vp.Position: this rebuild can land while the outgoing player is still
+            // restoring its own position - Settings -> Apply rebuilds the undocked windows and
+            // OK rebuilds them again a moment later - and a player that has not finished
+            // loading reports 0, which would come back as a rewind to the start (issue #14218).
+            var position = vp.PositionForRestore;
             var volume = vp.Volume;
             var videoFileName = vp.VideoPlayer.FileName;
 
@@ -11863,8 +11867,7 @@ public partial class MainViewModel :
         _oldGenerateSpectrogram = Se.Settings.Waveform.GenerateSpectrogram;
         _oldSpectrogramStyle = Se.Settings.Waveform.SpectrogramStyle;
 
-        Se.Settings.General.WindowPositions = Se.Settings.General.WindowPositions.OrderBy(p => p.WindowName).ToList();
-        var oldSettngsSerialized = JsonSerializer.Serialize(Se.Settings);
+        var oldSettngsSerialized = SettingsChangeSnapshot.Take();
 
         var viewModel = await ShowDialogAsync<SettingsWindow, SettingsViewModel>(
     vm => { vm.Initialize(this); });
@@ -11874,10 +11877,15 @@ public partial class MainViewModel :
             return;
         }
 
-        Se.Settings.General.WindowPositions = Se.Settings.General.WindowPositions.OrderBy(p => p.WindowName).ToList();
-        var newSettingsSerialized = JsonSerializer.Serialize(Se.Settings);
+        // Apply already ran the whole thing, so only what changed *since the last Apply* is
+        // still unapplied. Comparing against the pre-dialog snapshot instead made Apply followed
+        // by OK rebuild the layout - and with it the video player - a second time, which is what
+        // rewound the video: the second rebuild sampled the position from a player that was
+        // still restoring the position the first one gave it (issue #14218).
+        var baselineSerialized = viewModel.AppliedSettingsSnapshot ?? oldSettngsSerialized;
+        var newSettingsSerialized = SettingsChangeSnapshot.Take();
 
-        if (oldSettngsSerialized != newSettingsSerialized)
+        if (baselineSerialized != newSettingsSerialized)
         {
             var firstSelectedIndex = SubtitleGrid.SelectedIndex;
 
@@ -11899,7 +11907,7 @@ public partial class MainViewModel :
                 vp.FullScreenIsVisible = Se.Settings.Video.ShowFullscreenButton;
             }
 
-            if (OnlyVideoPlayerVisibilityFlagsChanged(oldSettngsSerialized, newSettingsSerialized))
+            if (OnlyVideoPlayerVisibilityFlagsChanged(baselineSerialized, newSettingsSerialized))
             {
                 return;
             }
@@ -16022,7 +16030,11 @@ public partial class MainViewModel :
         }
 
         PauseVideoAndFreezePlayhead(control);
-        var position = control.Position;
+
+        // PositionForRestore, not Position: going fullscreen right after a layout rebuild would
+        // otherwise open the fullscreen player at the 0 the still-restoring docked player
+        // reports (issue #14218).
+        var position = control.PositionForRestore;
         var volume = control.Volume;
         var parent = (Control)control.Parent!;
 
@@ -16071,7 +16083,7 @@ public partial class MainViewModel :
 
         var fullScreenWindow = new FullScreenVideoWindow(_fullScreenVideoPlayerControl, _videoFileName, _subtitleFileName ?? string.Empty, position, volume, () =>
         {
-            control!.Position = _fullScreenVideoPlayerControl.Position;
+            control!.Position = _fullScreenVideoPlayerControl.PositionForRestore;
             control!.Volume = _fullScreenVideoPlayerControl.Volume;
             _fullScreenVideoPlayerControl = null;
 

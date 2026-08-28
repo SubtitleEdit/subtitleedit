@@ -256,6 +256,10 @@ public class FullScreenVideoWindow : Window
 
                 videoPlayer.VideoPlayer.Position = position;
                 videoPlayer.Position = position;
+
+                // Restore done - a rebuild reading from this control gets the live position
+                // again (issue #14218).
+                videoPlayer.EndPositionRestore();
             });
         };
     }
