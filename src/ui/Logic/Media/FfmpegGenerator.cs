@@ -282,8 +282,12 @@ public class FfmpegGenerator
             filterParameter = $"-filter_complex \"{filterComplex}\"";
         }
 
+        // "-y" (overwrite): the output file name comes from a "save as" dialog that has already
+        // asked about replacing an existing file, or from the batch naming that never collides.
+        // Without it ffmpeg hits "File ... already exists. Exiting." and writes nothing - and as
+        // the old file is still there, the burn-in looked like it succeeded (issue #14210).
         return
-            $"{cutStart}-i \"{inputVideoFileName}\"{canvasInput}{logoInput}{cutEnd} {filterParameter} -g 30 -bf 2 -s {width}x{height} {videoEncodingSettings} {passSettings} {presetSettings} {crfSettings} {pixelFormat} {audioSettings}{tuneParameter} -use_editlist 0 -movflags +faststart{shortestParameter} {outputVideoFileName}";
+            $"-y{cutStart}-i \"{inputVideoFileName}\"{canvasInput}{logoInput}{cutEnd} {filterParameter} -g 30 -bf 2 -s {width}x{height} {videoEncodingSettings} {passSettings} {presetSettings} {crfSettings} {pixelFormat} {audioSettings}{tuneParameter} -use_editlist 0 -movflags +faststart{shortestParameter} {outputVideoFileName}";
     }
 
     private static Process GetFFmpegProcess(string imageFileName, string outputFileName, int videoWidth, int videoHeight, int seconds, decimal frameRate, bool addTimeCode = false, string addTimeColor = "white")
