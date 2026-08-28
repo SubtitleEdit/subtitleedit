@@ -17,6 +17,7 @@ using Nikse.SubtitleEdit.Features.Edit.ShowHistory;
 using Nikse.SubtitleEdit.Features.Files.Compare;
 using Nikse.SubtitleEdit.Features.Files.Export.ExportEbuStl;
 using Nikse.SubtitleEdit.Features.Files.ExportCavena890;
+using Nikse.SubtitleEdit.Features.Files.ExportDvbTeletext;
 using Nikse.SubtitleEdit.Features.Files.ExportCustomTextFormat;
 using Nikse.SubtitleEdit.Features.Files.ExportImageBased;
 using Nikse.SubtitleEdit.Features.Files.ExportPac;
@@ -415,6 +416,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<EncodingSettingsViewModel>();
         collection.AddTransient<ErrorListViewModel>();
         collection.AddTransient<ExportCavena890ViewModel>();
+        collection.AddTransient<ExportDvbTeletextViewModel>();
         collection.AddTransient<ExportCustomTextFormatViewModel>();
         collection.AddTransient<ExportEbuStlViewModel>();
         collection.AddTransient<ExportImageBasedViewModel>();

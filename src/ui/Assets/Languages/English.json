@@ -1235,6 +1235,8 @@
       "exportCavenaTranslator": "Translator",
       "exportCavenaComment": "Comment",
       "exportCavenaStartOfProgramme": "Start of programme",
+      "titleExportDvbTeletext": "DVB teletext (Manzanita)",
+      "exportDvbTeletextPageNumber": "Teletext page number",
       "customTextFormatsDotDotDot": "_Custom text formats...",
       "plainTextDotDotDot": "_Plain text...",
       "customTextFormats": "Custom text formats",

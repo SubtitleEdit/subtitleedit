@@ -7,16 +7,12 @@ namespace Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
 
 public class OcrSubtitleTransportStream : IOcrSubtitle
 {
-    private TransportStreamParser _tsParser;
-    private List<TransportStreamSubtitle> _subtitles;
-    private string _fileName;
+    private readonly List<TransportStreamSubtitle> _subtitles;
     public int Count { get; private set; }
 
-    public OcrSubtitleTransportStream(TransportStreamParser tsParser, List<TransportStreamSubtitle> subtitles, string fileName)
+    public OcrSubtitleTransportStream(List<TransportStreamSubtitle> subtitles)
     {
-        _tsParser = tsParser;
         _subtitles = subtitles;
-        _fileName = fileName;
         Count = _subtitles.Count;
     }
 

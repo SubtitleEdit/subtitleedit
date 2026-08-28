@@ -48,6 +48,7 @@ using Nikse.SubtitleEdit.Features.Edit.ShowHistory;
 using Nikse.SubtitleEdit.Features.Files.Compare;
 using Nikse.SubtitleEdit.Features.Files.Export.ExportEbuStl;
 using Nikse.SubtitleEdit.Features.Files.ExportCavena890;
+using Nikse.SubtitleEdit.Features.Files.ExportDvbTeletext;
 using Nikse.SubtitleEdit.Features.Files.ExportCustomTextFormat;
 using Nikse.SubtitleEdit.Features.Files.ExportEbuStl;
 using Nikse.SubtitleEdit.Features.Files.ExportImageBased;
@@ -4522,6 +4523,51 @@ public partial class MainViewModel :
         }
 
         ShowStatus(string.Format(Se.Language.Main.FileExportedInFormatXToY, cavena.Name, fileName));
+    }
+
+    [RelayCommand]
+    private async Task ExportDvbTeletext()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        if (IsEmpty)
+        {
+            ShowSubtitleNotLoadedMessage();
+            return;
+        }
+
+        var result = await ShowDialogAsync<ExportDvbTeletextWindow, ExportDvbTeletextViewModel>(vm =>
+            vm.Initialize(Se.Settings.File.ExportDvbTeletextPageNumber, Se.Settings.File.ExportDvbTeletextLanguageCode));
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        Se.Settings.File.ExportDvbTeletextPageNumber = result.PageNumber;
+        Se.Settings.File.ExportDvbTeletextLanguageCode = result.LanguageCode;
+
+        var fileName = await _fileHelper.PickSaveFile(
+            Window!,
+            new[] { (Se.Language.File.Export.TitleExportDvbTeletext, ".dvbttx") },
+            Utilities.GetPathAndFileNameWithoutExtension(GetNewFileName()) + ".dvbttx",
+            string.Format(Se.Language.Main.SaveXFileAs, Se.Language.File.Export.TitleExportDvbTeletext));
+        if (string.IsNullOrEmpty(fileName))
+        {
+            return;
+        }
+
+        var writer = new ManzanitaTeletextWriter
+        {
+            PageNumber = result.PageNumber,
+            LanguageCode = result.LanguageCode,
+            FrameRate = Configuration.Settings.General.CurrentFrameRate,
+        };
+        await File.WriteAllBytesAsync(fileName, writer.GetBytes(GetUpdateSubtitle()));
+
+        ShowStatus(string.Format(Se.Language.Main.FileExportedInFormatXToY, Se.Language.File.Export.TitleExportDvbTeletext, fileName));
     }
 
     [RelayCommand]
@@ -20066,6 +20112,16 @@ public partial class MainViewModel :
                 }
             }
 
+            // A Manzanita dump is an XML preamble plus raw PES payloads, so it has to be caught
+            // before the text based subtitle formats get a look at it.
+            if (fileSize > 100 && FileUtil.IsManzanita(fileName))
+            {
+                if (await ImportSubtitleFromManzanita(fileName))
+                {
+                    return;
+                }
+            }
+
             if ((ext == ".ts" || ext == ".tsv" || ext == ".tts" || ext == ".rec" || ext == ".mpeg" || ext == ".mpg") && fileSize > 10000 && FileUtil.IsTransportStream(fileName))
             {
                 await ImportSubtitleFromTransportStream(fileName, skipLoadVideo);
@@ -20988,6 +21044,81 @@ public partial class MainViewModel :
         }
     }
 
+    /// <summary>
+    /// Opens the teletext subtitles of a Manzanita "private_stream_1" dump (.dvbttx).
+    /// </summary>
+    /// <returns>True if subtitles were loaded, false to let the other loaders try the file.</returns>
+    private async Task<bool> ImportSubtitleFromManzanita(string fileName)
+    {
+        ShowStatus(string.Format(Se.Language.General.ParsingXDotDotDot, fileName));
+        var parser = new ManzanitaTransportStreamParser();
+        var pages = new Dictionary<int, List<Paragraph>>();
+        var dvbSubtitles = new List<TransportStreamSubtitle>();
+        try
+        {
+            await Task.Run(() =>
+            {
+                parser.Parse(fileName);
+                pages = parser.GetTeletext();
+                if (pages.Count == 0)
+                {
+                    dvbSubtitles = parser.GetDvbSup();
+                }
+            });
+        }
+        catch (Exception exception)
+        {
+            SeLogger.Error(exception, $"Error parsing Manzanita file: {fileName}");
+            ShowStatus(string.Empty);
+            return false;
+        }
+
+        ShowStatus(string.Empty);
+
+        if (pages.Count == 0)
+        {
+            // A "dvb_subtitle" dump carries bitmaps instead of teletext - they have to be OCR'ed.
+            if (dvbSubtitles.Count == 0)
+            {
+                return false;
+            }
+
+            Dispatcher.UIThread.Post(async () =>
+            {
+                var ocrResult = await ShowDialogAsync<OcrWindow, OcrViewModel>(vm => vm.Initialize(dvbSubtitles, fileName));
+                if (ocrResult.OkPressed)
+                {
+                    await FinishOcrImportAsync(fileName, ocrResult.OcredSubtitle);
+                }
+            });
+
+            return true;
+        }
+
+        var paragraphs = pages.First().Value;
+        if (pages.Count > 1)
+        {
+            var result = await ShowDialogAsync<PickTsTrackWindow, PickTsTrackViewModel>(vm => vm.Initialize(pages, fileName));
+            if (!result.OkPressed || result.SelectedTrack == null)
+            {
+                return true; // the file was ours, the user just did not pick a page
+            }
+
+            paragraphs = result.SelectedTrack.Teletext;
+        }
+
+        VideoCloseFile();
+        ResetSubtitle();
+        _subtitle = new Subtitle(paragraphs);
+        _subtitle.Renumber();
+        ReplaceSubtitles(_subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
+        SelectAndScrollToRow(0);
+        _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) + SelectedSubtitleFormat.Extension;
+        _converted = true;
+
+        return true;
+    }
+
     private async Task ImportSubtitleFromTransportStream(string fileName, bool skipLoadVideo = false)
     {
         ShowStatus(string.Format(Se.Language.General.ParsingXDotDotDot, fileName));
@@ -21067,7 +21198,7 @@ public partial class MainViewModel :
         var subtitles = tsParser.GetDvbSubtitles(packetId);
         Dispatcher.UIThread.Post(async () =>
         {
-            var result = await ShowDialogAsync<OcrWindow, OcrViewModel>(vm => { vm.Initialize(tsParser, subtitles, fileName); });
+            var result = await ShowDialogAsync<OcrWindow, OcrViewModel>(vm => { vm.Initialize(subtitles, fileName); });
 
             if (result.OkPressed)
             {

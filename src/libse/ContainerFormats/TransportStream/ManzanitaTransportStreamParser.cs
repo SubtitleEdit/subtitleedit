@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.VobSub;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml;
 
@@ -13,11 +14,29 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
     /// </summary>
     public class ManzanitaTransportStreamParser
     {
+        /// <summary>
+        /// The "type" attribute of a Manzanita file carrying DVB teletext (as opposed to
+        /// "dvb_subtitle", which carries the bitmap subtitles handled by <see cref="GetDvbSup"/>).
+        /// </summary>
+        public const string TeletextStreamType = "dvb_teletext";
+
+        // Teletext state in Teletext.cs is keyed by the transport stream packet id; a Manzanita
+        // dump holds a single elementary stream, so any fixed id will do.
+        private const int TeletextPacketId = 1;
+
         private readonly List<DvbSubPes> _dvbSubs;
+        private readonly List<DvbSubPes> _teletextPes;
+
+        /// <summary>
+        /// Teletext page numbers (decimal, e.g. 888) seen in the parsed file.
+        /// </summary>
+        public List<int> TeletextPages { get; }
 
         public ManzanitaTransportStreamParser()
         {
             _dvbSubs = new List<DvbSubPes>();
+            _teletextPes = new List<DvbSubPes>();
+            TeletextPages = new List<int>();
         }
 
         public void Parse(string fileName)
@@ -34,7 +53,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         /// <param name="ms">Input stream</param>
         public void Parse(Stream ms)
         {
-            var dataIndices = GetDataIndicesAndPesStart(ms, out var dvbPesStartIndex);
+            var dataIndices = GetDataIndicesAndPesStart(ms, out var dvbPesStartIndex, out var streamType);
             if (dvbPesStartIndex <= 0)
             {
                 return;
@@ -49,6 +68,31 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 if (bytesRead < pesData.Length)
                 {
                     break; // incomplete packet at end-of-file
+                }
+
+                // A teletext dump holds the bare PES payload - data_identifier plus data units -
+                // so it has no PES header for the constructors below to read.
+                if (streamType == TeletextStreamType || DvbSubPes.IsTeletextPayload(pesData))
+                {
+                    if (!DvbSubPes.IsTeletextPayload(pesData))
+                    {
+                        continue; // a teletext stream, but not in a shape this can decode
+                    }
+
+                    var teletextPes = DvbSubPes.FromTeletextPayload(pesData, dataIndex.Pts);
+                    foreach (var page in teletextPes.PrepareTeletext()) // also flips the bit order - call once per packet
+                    {
+                        // Page numbers are binary coded decimals, so the filler pages FF and FE
+                        // that close a transmission read back as 965 and 964 - out of range for a
+                        // real page (magazine 1-8, page 00-99) and empty anyway.
+                        if (page >= 100 && page <= 899 && !TeletextPages.Contains(page))
+                        {
+                            TeletextPages.Add(page);
+                        }
+                    }
+
+                    _teletextPes.Add(teletextPes);
+                    continue;
                 }
 
                 DvbSubPes pes;
@@ -72,7 +116,17 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
         public static IEnumerable<ManzanitaDataIndex> GetDataIndicesAndPesStart(Stream ms, out int startIndex)
         {
+            return GetDataIndicesAndPesStart(ms, out startIndex, out _);
+        }
+
+        /// <summary>
+        /// Same as <see cref="GetDataIndicesAndPesStart(Stream, out int)"/>, but also reports the
+        /// "type" attribute of the root element ("dvb_teletext", "dvb_subtitle", ...).
+        /// </summary>
+        public static IEnumerable<ManzanitaDataIndex> GetDataIndicesAndPesStart(Stream ms, out int startIndex, out string streamType)
+        {
             startIndex = 0;
+            streamType = string.Empty;
             ms.Position = 0;
             var buffer = new byte[200_000];
             var bytesRead = ms.Read(buffer, 0, buffer.Length);
@@ -98,6 +152,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             {
                 return result;
             }
+
+            streamType = xmlDoc.DocumentElement.Attributes?["type"]?.Value ?? string.Empty;
 
             var dataIndexNode = xmlDoc.DocumentElement.SelectSingleNode("ns:data_index", namespaceManager);
             if (dataIndexNode == null)
@@ -169,6 +225,45 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             }
 
             return 0;
+        }
+
+        /// <summary>
+        /// Decodes every teletext page found while parsing.
+        /// </summary>
+        /// <returns>Page number (decimal, e.g. 888) to the subtitles on that page.</returns>
+        public Dictionary<int, List<Paragraph>> GetTeletext()
+        {
+            var result = new Dictionary<int, List<Paragraph>>();
+            foreach (var page in TeletextPages.OrderBy(p => p))
+            {
+                var pageBcd = Teletext.DecToBec(page);
+                Teletext.InitializeStaticFields(TeletextPacketId, pageBcd);
+                // Unlike a transport stream there is no video track to measure the start of the
+                // programme against, so the time stamps in the index are used as they are - a
+                // file whose first subtitle sits ten minutes in must not slide to zero.
+                var runSettings = new TeletextRunSettings(null);
+                var paragraphs = new List<Paragraph>();
+                foreach (var pes in _teletextPes)
+                {
+                    foreach (var kvp in pes.GetTeletext(runSettings, page, pageBcd))
+                    {
+                        paragraphs.Add(kvp.Value);
+                    }
+                }
+
+                // The last page has no following page header to close it - flush it by hand.
+                foreach (var kvp in Teletext.ProcessTelxPacketPendingLeftovers(runSettings, page))
+                {
+                    paragraphs.Add(kvp.Value);
+                }
+
+                if (paragraphs.Count > 0)
+                {
+                    result.Add(page, paragraphs);
+                }
+            }
+
+            return result;
         }
 
         public List<TransportStreamSubtitle> GetDvbSup()

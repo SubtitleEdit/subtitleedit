@@ -534,7 +534,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             var subtitles = tsParser.GetDvbSubtitles(packetId);
             if (subtitles.Count > 0)
             {
-                result.Add(new TransportStreamResult { IsImage = true, OcrSubtitle = new OcrSubtitleTransportStream(tsParser, subtitles, item.FileName) });
+                result.Add(new TransportStreamResult { IsImage = true, OcrSubtitle = new OcrSubtitleTransportStream(subtitles) });
             }
         }
 

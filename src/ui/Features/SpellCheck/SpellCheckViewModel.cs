@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Input;
 using Avalonia.Media;
@@ -360,7 +360,7 @@ public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
                 }
 
                 var subtitles = tsParser.GetDvbSubtitles(tsParser.SubtitlePacketIds[0]);
-                return subtitles.Count > 0 ? new OcrSubtitleTransportStream(tsParser, subtitles, fileName) : null;
+                return subtitles.Count > 0 ? new OcrSubtitleTransportStream(subtitles) : null;
 
             case ".mkv":
             case ".mks":
