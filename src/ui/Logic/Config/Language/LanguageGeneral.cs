@@ -32,6 +32,14 @@ public class LanguageGeneral
     public string Apply { get; set; }
     public string ApplyTo { get; set; }
     public string Ascending { get; set; }
+    public string AssistedMove { get; set; }
+    public string AssistedMoveChooseMove { get; set; }
+    public string AssistedMoveDotDotDot { get; set; }
+    public string AssistedMoveNoSuggestions { get; set; }
+    public string AssistedSplitNoSuggestions { get; set; }
+    public string AssistedSplit { get; set; }
+    public string AssistedSplitChooseSplitPoint { get; set; }
+    public string AssistedSplitDotDotDot { get; set; }
     public string Descending { get; set; }
     public string AttachDotDotDot { get; set; }
     public string AudioFileSaved { get; set; }
@@ -571,8 +579,21 @@ public class LanguageGeneral
     public string SpeechToTextSelectedLinesPromptAlways { get; set; }
     public string SpeechToTextSelectedLinesPromptFirstTime { get; set; }
     public string Speed { get; set; }
+    public string BalanceWithNextSubtitle { get; set; }
+    public string BalanceWithPreviousSubtitle { get; set; }
+    public string FetchLastWordFromPreviousSubtitle { get; set; }
+    public string FetchRestOfSentenceFromNextSubtitle { get; set; }
+    public string FetchUnfinishedSentenceFromPreviousSubtitle { get; set; }
+    public string MoveFirstWordToPreviousSubtitle { get; set; }
+    public string MoveRestOfSentenceToPreviousSubtitle { get; set; }
+    public string MoveUnfinishedSentenceToNextSubtitle { get; set; }
+    public string SplitAtComma { get; set; }
+    public string SplitAtDialogDash { get; set; }
+    public string SplitAtLineBreak { get; set; }
+    public string SplitAtSentenceEnd { get; set; }
     public string SplitAtTextBoxCursorPosition { get; set; }
     public string SplitLine { get; set; }
+    public string SplitNearMiddle { get; set; }
     public string SplitLineAtTextBoxCursorPosition { get; set; }
     public string SplitLineAtVideoAndTextBoxPosition { get; set; }
     public string SplitLineAtVideoPosition { get; set; }
@@ -794,6 +815,22 @@ public class LanguageGeneral
         Apply = "Apply";
         ApplyTo = "Apply to";
         Ascending = "Ascending";
+        AssistedMove = "Assisted move";
+        AssistedMoveChooseMove = "Click an option or press its number to move words";
+        AssistedMoveDotDotDot = "Assisted move...";
+        AssistedMoveNoSuggestions = "No move suggestions - the sentence does not continue into the previous/next subtitle";
+        AssistedSplitNoSuggestions = "No split suggestions for this line";
+        BalanceWithNextSubtitle = "Balance with next subtitle";
+        BalanceWithPreviousSubtitle = "Balance with previous subtitle";
+        FetchLastWordFromPreviousSubtitle = "Fetch last word from previous subtitle";
+        FetchRestOfSentenceFromNextSubtitle = "Fetch rest of sentence from next subtitle";
+        FetchUnfinishedSentenceFromPreviousSubtitle = "Fetch unfinished sentence from previous subtitle";
+        MoveFirstWordToPreviousSubtitle = "Move first word to previous subtitle";
+        MoveRestOfSentenceToPreviousSubtitle = "Move rest of sentence to previous subtitle";
+        MoveUnfinishedSentenceToNextSubtitle = "Move unfinished sentence to next subtitle";
+        AssistedSplit = "Assisted split";
+        AssistedSplitChooseSplitPoint = "Click an option or press its number to split the line";
+        AssistedSplitDotDotDot = "Assisted split...";
         Descending = "Descending";
         AttachDotDotDot = "Attach...";
         AudioFileSaved = "Audio file saved";
@@ -1333,8 +1370,13 @@ public class LanguageGeneral
         SpeechToTextSelectedLinesPromptAlways = "Speech to text selected lines (always prompt engine/language)";
         SpeechToTextSelectedLines = "Speech to text selected (see Options - Settings)";
         Speed = "Speed";
+        SplitAtComma = "Split at comma";
+        SplitAtDialogDash = "Split at dialog dash";
+        SplitAtLineBreak = "Split at line break";
+        SplitAtSentenceEnd = "Split at end of sentence";
         SplitAtTextBoxCursorPosition = "Split at text cursor position";
         SplitLine = "Split line";
+        SplitNearMiddle = "Split at space nearest the middle";
         SplitLineAtTextBoxCursorPosition = "Split line at cursor position";
         SplitLineAtVideoAndTextBoxPosition = "Split line at video and text box position";
         SplitLineAtVideoPosition = "Split line at video position";

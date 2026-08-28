@@ -38,6 +38,8 @@ using Nikse.SubtitleEdit.Features.Files.Statistics;
 using Nikse.SubtitleEdit.Features.Help.About;
 using Nikse.SubtitleEdit.Features.Help.CheckForUpdates;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Features.Main.AssistedMove;
+using Nikse.SubtitleEdit.Features.Main.AssistedSplit;
 using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Features.Main.MainHelpers;
 using Nikse.SubtitleEdit.Features.Ocr;
@@ -495,6 +497,8 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<PickOnlineSubtitleViewModel>();
         collection.AddTransient<OpenSecondarySubtitleViewModel>();
         collection.AddTransient<PartsSavedViewModel>();
+        collection.AddTransient<AssistedSplitViewModel>();
+        collection.AddTransient<AssistedMoveViewModel>();
         collection.AddTransient<PickAlignmentViewModel>();
         collection.AddTransient<PickTeletextAlignmentViewModel>();
         collection.AddTransient<PickTeletextColorViewModel>();
