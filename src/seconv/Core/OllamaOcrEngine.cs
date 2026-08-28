@@ -20,12 +20,16 @@ internal sealed class OllamaOcrEngine : IOcrEngine
     private readonly string _url;
     private readonly string _model;
     private readonly string _language;
+    private readonly string? _promptTemplate;
 
-    public OllamaOcrEngine(string? url, string? model, string? language)
+    public OllamaOcrEngine(string? url, string? model, string? language, string? prompt = null)
     {
         _url = string.IsNullOrWhiteSpace(url) ? "http://localhost:11434/api/chat" : url;
         _model = string.IsNullOrWhiteSpace(model) ? "llama3.2-vision" : model;
         _language = string.IsNullOrWhiteSpace(language) ? "English" : language;
+        // Ollama OCR has no prompt in the GUI, so its built-in wording stays the default here;
+        // --ocr-prompt replaces it for users driving a model that wants different phrasing.
+        _promptTemplate = string.IsNullOrWhiteSpace(prompt) ? null : prompt;
 
         _httpClient = new HttpClient
         {
@@ -47,7 +51,9 @@ internal sealed class OllamaOcrEngine : IOcrEngine
         var pngBytes = data.ToArray();
         var base64 = Convert.ToBase64String(pngBytes);
 
-        var prompt = $"Act as a precise OCR engine. Transcribe every line of text from this image exactly as it appears. The language is {_language}. Maintain the vertical order. Use a single '\\n' to separate each line. Do not skip any text. Output only the transcribed text";
+        var prompt = _promptTemplate != null
+            ? _promptTemplate.Replace("{language}", _language)
+            : $"Act as a precise OCR engine. Transcribe every line of text from this image exactly as it appears. The language is {_language}. Maintain the vertical order. Use a single '\\n' to separate each line. Do not skip any text. Output only the transcribed text";
         var body = "{ \"model\": \"" + Escape(_model) + "\", " +
                    "\"messages\": [ { \"role\": \"user\", \"content\": \"" + Escape(prompt) + "\", " +
                    "\"images\": [ \"" + base64 + "\" ] } ], " +

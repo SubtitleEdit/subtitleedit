@@ -65,6 +65,7 @@ internal static class HelpDisplay
         ShowParameter(console, "--ocr-language:<lang>", "Language for OCR (e.g. eng, deu, spa)");
         ShowParameter(console, "--ocr-db:<path>", ".nocr (--ocr-engine=nocr) or .db (--ocr-engine=binaryocr)");
         ShowParameter(console, "--ocr-model:<model>", "llamacpp OCR .gguf file name/path (default: first downloaded OCR model)");
+        ShowParameter(console, "--ocr-prompt:<text|file>", "prompt for llamacpp/ollama OCR; {language} = --ocr-language (default: same as the OCR window)");
         ShowParameter(console, "--ocr-url:<url>", "Endpoint of an already-running llama-server for OCR (skips the auto-start)");
         ShowParameter(console, "--time-codes-only", "Image sources (.sup/VobSub/PGS/DVB/XSUB) -> text with time codes only; skips OCR");
         ShowParameter(console, "--no-vobsub-isolate-colors", "Disable VobSub OCR colour isolation (on by default; isolation binarises to black-on-white, dropping outline colours)");

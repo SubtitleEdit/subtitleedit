@@ -115,6 +115,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [Description("llama.cpp OCR: endpoint of an already-running llama-server; skips the local auto-start")]
         public string? OcrUrl { get; init; }
 
+        [CommandOption("--ocr-prompt|--ocrprompt")]
+        [Description("Prompt for --ocr-engine=llamacpp/ollama (or a path to a text file holding it); {language} is replaced with --ocr-language. Default: the same prompt as the OCR window")]
+        public string? OcrPrompt { get; init; }
+
         [CommandOption("--dictionary-folder|--dictionaryfolder")]
         [Description("Folder with Hunspell dictionaries + *_OCRFixReplaceList.xml; enables the 'Fix common OCR errors' pass of --fix-common-errors")]
         public string? DictionaryFolder { get; init; }
@@ -439,6 +443,29 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 return Fail(settings, "--ocr-model/--ocr-url require --ocr-engine:llamacpp.");
             }
 
+            // --ocr-prompt only means something to the two prompt-driven OCR engines; tesseract,
+            // nOCR, binary image compare and Paddle have no prompt at all. Fail instead of
+            // silently ignoring it, and read the prompt (it may be a file) up front so a typo'd
+            // path never costs a conversion - same contract as --translate-prompt.
+            if (!string.IsNullOrWhiteSpace(settings.OcrPrompt))
+            {
+                var isOllamaOcr = !string.IsNullOrWhiteSpace(settings.OcrEngine) &&
+                                  settings.OcrEngine.Trim().Equals("ollama", StringComparison.OrdinalIgnoreCase);
+                if (!isLlamaCppOcr && !isOllamaOcr)
+                {
+                    return Fail(settings, "--ocr-prompt requires --ocr-engine:llamacpp or --ocr-engine:ollama.");
+                }
+
+                try
+                {
+                    AutoTranslateRunner.ReadPromptOption(settings.OcrPrompt, "--ocr-prompt", "{language}");
+                }
+                catch (Exception ex)
+                {
+                    return Fail(settings, ex.Message);
+                }
+            }
+
             // Validate the translate options: --translate-to is the trigger, the rest refine it.
             if (string.IsNullOrWhiteSpace(settings.TranslateTo) &&
                 (!string.IsNullOrWhiteSpace(settings.TranslateFrom) ||
@@ -740,6 +767,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 OllamaModel = settings.OllamaModel,
                 OcrUrl = settings.OcrUrl,
                 OcrModel = settings.OcrModel,
+                OcrPrompt = AutoTranslateRunner.ReadPromptOption(settings.OcrPrompt, "--ocr-prompt", "{language}"),
                 TranslateTo = settings.TranslateTo,
                 TranslateFrom = settings.TranslateFrom,
                 TranslateEngine = settings.TranslateEngine,

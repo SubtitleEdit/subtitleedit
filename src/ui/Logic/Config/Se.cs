@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config.Language;
+using Nikse.SubtitleEdit.UiLogic.Ocr;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -489,6 +490,22 @@ public class Se
     }
 
     /// <summary>
+    /// Moves a settings file still holding the pre-#14221 llama.cpp OCR prompt onto the current
+    /// default. That prompt asked the models to "preserve line breaks", which measurably merged
+    /// two-line subtitles into one (see <see cref="SeOcrDefaults.LlamaCppOcrPrompt"/>), and the
+    /// default is persisted, so without this only fresh installs would ever get the fix. Matched
+    /// verbatim: a user who has edited the prompt at all keeps their own version.
+    /// </summary>
+    internal static void MigrateLlamaCppOcrPrompt(SeOcr ocr)
+    {
+        const string legacyPrompt = "Extract all text exactly as written. The language is {language}. Preserve line breaks.";
+        if (ocr.LlamaCppOcrPrompt?.Trim() == legacyPrompt)
+        {
+            ocr.LlamaCppOcrPrompt = SeOcrDefaults.LlamaCppOcrPrompt;
+        }
+    }
+
+    /// <summary>
     /// Drops "-vsync vfr" from a settings file written before ffmpeg 9. ffmpeg 9 removed the
     /// long-deprecated -vsync option, so it aborts with "Unrecognized option 'vsync'" and shot
     /// change detection silently finds nothing. The option was a no-op for this command line
@@ -692,6 +709,8 @@ public class Se
         {
             Settings.Ocr = new();
         }
+
+        MigrateLlamaCppOcrPrompt(Settings.Ocr);
 
         if (Settings.Formats == null)
         {

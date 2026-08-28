@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Nikse.SubtitleEdit.UiLogic.Ocr;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
@@ -117,7 +118,7 @@ public class SeOcr
 
         LlamaCppUrl = "http://127.0.0.1:8080/v1/chat/completions";
         LlamaCppOcrModel = string.Empty;
-        LlamaCppOcrPrompt = "Extract all text exactly as written. The language is {language}. Preserve line breaks.";
+        LlamaCppOcrPrompt = SeOcrDefaults.LlamaCppOcrPrompt;
         LlamaCppOcrTimeoutMinutes = 5;
 
         CrispEmbedBackend = "GLM-OCR";

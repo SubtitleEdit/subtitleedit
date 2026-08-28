@@ -247,6 +247,7 @@ An AVI stream header carries no language, so a multi-stream `.avi` names its out
 | `--ollama-model:<model>` | Default `llama3.2-vision` |
 | `--ocr-model:<model>` | llama.cpp OCR model: the file name of a model in the llama.cpp models folder - curated (e.g. `GLM-OCR-Q8_0.gguf`) or your own vision model with its `mmproj` sidecar next to it - or a full path to a `.gguf` with its `mmproj` sidecar next to it. Default: the first downloaded OCR model. |
 | `--ocr-url:<url>` | llama.cpp: endpoint of an already-running `llama-server` (a bare `host:port` is completed to `/v1/chat/completions`); skips the local auto-start. |
+| `--ocr-prompt:<text\|file>` | Prompt for the prompt-driven OCR engines (`llamacpp`, `ollama`); rejected for the others. `{language}` is replaced with `--ocr-language`. A value that names an existing file, or ends in `.txt`/`.prompt`/`.md`, is read from that file; inline text gets `\n`/`\r`/`\t` unescaped. Default: the same prompt as the SE OCR window. |
 | `--time-codes-only` | Image sources (`.sup`, VobSub `.sub`/`.idx`, MKV PGS/VobSub, MP4 VobSub, TS DVB-sub, AVI XSUB) → text format with time codes only and empty text. **Skips OCR entirely** — no OCR engine required. Ignored for text inputs and image output targets. |
 | `--no-vobsub-isolate-colors` | Disable VobSub OCR colour isolation, which is **on by default**. Isolation rebuilds each subpicture as a crisp black-on-white bitmap via histogram-based colour analysis — the most frequent opaque colour (the glyph fill) becomes black and the gray outline / anti-alias colours collapse into the white background, which helps on discs whose outlines otherwise melt adjacent characters together (`Yuri` → `Yurl`). Pass this flag to OCR the raw palette instead. Ignored for non-VobSub sources and with `--time-codes-only`. |
 
@@ -272,6 +273,11 @@ seconv movie.sup subrip --ocr-engine:binaryocr --ocr-db:"C:\Users\me\AppData\Roa
 seconv movie.sup subrip --ocr-engine:llamacpp
 seconv movie.sup subrip --ocr-engine:llamacpp --ocr-model:GLM-OCR-Q8_0.gguf
 seconv movie.sup subrip --ocr-engine:llamacpp --ocr-url:http://127.0.0.1:8080
+
+# Override the OCR prompt (inline or from a file); {language} = --ocr-language
+seconv movie.sup subrip --ocr-engine:llamacpp --ocr-language:German \
+  --ocr-prompt:"Identify the number of lines, then extract the text of each line exactly as written. The language is {language}."
+seconv movie.sup subrip --ocr-engine:llamacpp --ocr-prompt:my-ocr-prompt.txt
 
 # MKV with image (PGS or VobSub) tracks — OCR runs automatically
 seconv movie.mkv subrip --ocr-engine:tesseract --ocr-language:eng

@@ -191,13 +191,18 @@ internal sealed class AutoTranslateRunner
     }
 
     /// <summary>
-    /// Resolves the <c>--translate-prompt</c> value to the prompt text, or null when the option
-    /// was not given. A value ending in <c>.txt</c>/<c>.prompt</c>/<c>.md</c>, or naming a file
-    /// that exists, is read from disk - completion templates are multi-line and a shell cannot
-    /// always pass those as one argument. Inline text gets <c>\n</c>, <c>\r</c>, <c>\t</c> and
+    /// Resolves a prompt option's value to the prompt text, or null when the option was not
+    /// given. A value ending in <c>.txt</c>/<c>.prompt</c>/<c>.md</c>, or naming a file that
+    /// exists, is read from disk - completion templates are multi-line and a shell cannot always
+    /// pass those as one argument. Inline text gets <c>\n</c>, <c>\r</c>, <c>\t</c> and
     /// <c>\\</c> unescaped for the same reason.
+    /// <para>
+    /// Shared by <c>--translate-prompt</c> and <c>--ocr-prompt</c>; <paramref name="optionName"/>
+    /// and <paramref name="placeholders"/> only shape the error messages and the "is this a path
+    /// or a sentence?" hint, so both options behave identically.
+    /// </para>
     /// </summary>
-    internal static string? ReadPromptOption(string? value)
+    internal static string? ReadPromptOption(string? value, string optionName = "--translate-prompt", string placeholders = "{0}/{1}/{2}")
     {
         if (value == null)
         {
@@ -207,7 +212,7 @@ internal sealed class AutoTranslateRunner
         var trimmed = value.Trim();
         if (trimmed.Length == 0)
         {
-            throw new InvalidOperationException("--translate-prompt is empty. Pass the prompt text or the path to a text file.");
+            throw new InvalidOperationException($"{optionName} is empty. Pass the prompt text or the path to a text file.");
         }
 
         var exists = FileExistsSafe(trimmed);
@@ -216,23 +221,23 @@ internal sealed class AutoTranslateRunner
             if (!exists)
             {
                 throw new InvalidOperationException(
-                    $"Translate prompt file not found: {trimmed}. " +
-                    "A --translate-prompt value with no spaces, or ending in .txt/.prompt/.md, is read as a file path; " +
-                    "prompt text passed inline has to contain a space or a {0}/{1}/{2} placeholder.");
+                    $"Prompt file not found: {trimmed}. " +
+                    $"A {optionName} value with no spaces, or ending in .txt/.prompt/.md, is read as a file path; " +
+                    $"prompt text passed inline has to contain a space or a {placeholders} placeholder.");
             }
 
             var size = new FileInfo(trimmed).Length;
             if (size > MaxPromptFileBytes)
             {
                 throw new InvalidOperationException(
-                    $"Translate prompt file is too large ({size / 1024} KB, max {MaxPromptFileBytes / 1024} KB): {trimmed}. " +
-                    "--translate-prompt takes the prompt itself, not a data file.");
+                    $"Prompt file is too large ({size / 1024} KB, max {MaxPromptFileBytes / 1024} KB): {trimmed}. " +
+                    $"{optionName} takes the prompt itself, not a data file.");
             }
 
             var fromFile = File.ReadAllText(trimmed).Trim();
             if (fromFile.Length == 0)
             {
-                throw new InvalidOperationException($"Translate prompt file is empty: {trimmed}");
+                throw new InvalidOperationException($"Prompt file is empty: {trimmed}");
             }
 
             return fromFile;
