@@ -21,6 +21,8 @@ public class LanguageExport
     public string ExportCavenaTranslator { get; set; }
     public string ExportCavenaComment { get; set; }
     public string ExportCavenaStartOfProgramme { get; set; }
+    public string TitleExportDvbTeletext { get; set; }
+    public string ExportDvbTeletextPageNumber { get; set; }
     public string CustomTextFormatsDotDotDot { get; set; }
     public string PlainTextDotDotDot { get; set; }
     public string CustomTextFormats { get; set; }
@@ -92,6 +94,8 @@ public class LanguageExport
         ExportCavenaTranslator = "Translator";
         ExportCavenaComment = "Comment";
         ExportCavenaStartOfProgramme = "Start of programme";
+        TitleExportDvbTeletext = "DVB teletext (Manzanita)";
+        ExportDvbTeletextPageNumber = "Teletext page number";
         CustomTextFormatsDotDotDot = "_Custom text formats...";
         PlainTextDotDotDot = "_Plain text...";
         CustomTextFormats = "Custom text formats";

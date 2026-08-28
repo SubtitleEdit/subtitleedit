@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -5121,11 +5121,11 @@ public partial class OcrViewModel : ObservableObject
         AutoDetectSourceLanguage();
     }
 
-    internal void Initialize(TransportStreamParser tsParser, List<TransportStreamSubtitle> subtitles, string fileName)
+    internal void Initialize(List<TransportStreamSubtitle> subtitles, string fileName)
     {
         _sourceFileName = fileName;
         Title = string.Format(Se.Language.Ocr.OcrX, fileName);
-        _ocrSubtitle = new OcrSubtitleTransportStream(tsParser, subtitles, fileName);
+        _ocrSubtitle = new OcrSubtitleTransportStream(subtitles);
         SetOcrSubtitleItems();
         AutoDetectSourceLanguage();
     }

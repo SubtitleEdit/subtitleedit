@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
@@ -803,7 +803,7 @@ public partial class BinaryEditViewModel : ObservableObject
             var subtitles = tsParser.GetDvbSubtitles(0);
             if (subtitles.Count > 0)
             {
-                return new OcrSubtitleTransportStream(tsParser, subtitles, fileName);
+                return new OcrSubtitleTransportStream(subtitles);
             }
 
             return null;

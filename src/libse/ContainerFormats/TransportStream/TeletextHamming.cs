@@ -62,6 +62,30 @@
             0x08, 0xff, 0xff, 0x05, 0xff, 0x0e, 0x0d, 0xff, 0xff, 0x0e, 0x0f, 0xff, 0x0e, 0x0e, 0xff, 0x0e
         };
 
+        // ETS 300 706, chapter 8.2 - the 16 Hamming 8/4 code words, i.e. the inverse of Unham84.
+        public static readonly byte[] Hamming84 =
+        {
+            0x15, 0x02, 0x49, 0x5e, 0x64, 0x73, 0x38, 0x2f,
+            0xd0, 0xc7, 0x8c, 0x9b, 0xa1, 0xb6, 0xfd, 0xea
+        };
+
+        /// <summary>
+        /// Hamming 8/4 encodes the lower four bits of <paramref name="value"/>.
+        /// </summary>
+        public static byte Hamming84Encode(int value)
+        {
+            return Hamming84[value & 0x0f];
+        }
+
+        /// <summary>
+        /// ETS 300 706, chapter 8.1 - adds the odd parity bit to a seven bit character.
+        /// </summary>
+        public static byte OddParityEncode(int value)
+        {
+            var v = (byte)(value & 0x7f);
+            return Parity8[v] == 1 ? v : (byte)(v | 0x80);
+        }
+
         // ETS 300 706, chapter 8.2 - Hamming 8/4
         public static byte UnHamming84(byte a)
         {

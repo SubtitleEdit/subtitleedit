@@ -31,6 +31,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         {
             DataUnitEbuTeletextNonSubtitle = 0x02,
             DataUnitEbuTeletextSubtitle = 0x03,
+            DataUnitStuffing = 0xff,
         }
 
         public enum TransmissionMode

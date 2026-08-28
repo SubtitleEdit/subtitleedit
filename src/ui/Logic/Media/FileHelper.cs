@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using Nikse.SubtitleEdit.Core.Common;
@@ -257,6 +257,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
             AddExt(existingTypes, extensions, ".pac");
             AddExt(existingTypes, extensions, ".890");
             AddExt(existingTypes, extensions, ".fpc");
+            AddExt(existingTypes, extensions, ".dvbttx");
 
             if (includeVideoFiles)
             {
