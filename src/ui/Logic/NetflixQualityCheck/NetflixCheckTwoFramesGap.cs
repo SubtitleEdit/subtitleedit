@@ -29,7 +29,13 @@ public class NetflixCheckTwoFramesGap : INetflixQualityChecker
         {
             Paragraph p = subtitle.Paragraphs[index];
             var next = subtitle.GetParagraphOrDefault(index + 1);
-            if (next != null && SubtitleFormat.MillisecondsToFrames(next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds) < 2 && !p.StartTime.IsMaxTime)
+            // controller.FrameRate, not the app's CurrentFrameRate: the threshold above is
+            // computed from the video's frame rate, so measuring the gap with a different one
+            // let real violations through (23.976 video with the 25 default: a 61 ms gap is
+            // 1.5 frames but measured as 2, so it was never flagged).
+            if (next != null &&
+                SubtitleFormat.MillisecondsToFrames(next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds, controller.FrameRate) < 2 &&
+                !p.StartTime.IsMaxTime)
             {
                 var fixedParagraph = new Paragraph(p, false) { EndTime = { TotalMilliseconds = next.StartTime.TotalMilliseconds - twoFramesGap } };
                 string comment;
