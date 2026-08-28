@@ -2444,7 +2444,11 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             {
                 var newEndMs = next.StartTime.TotalMilliseconds - minMsBetweenLines;
                 var newDuration = newEndMs - current.StartTime.TotalMilliseconds;
-                if (newDuration > Se.Settings.General.SubtitleMinimumDisplayMilliseconds)
+
+                // Only a non-positive duration is skipped, like the Apply minimum gap dialog.
+                // Guarding on the minimum display duration instead (default 1000 ms) skipped
+                // ordinary shortening and left the gap the user asked for unapplied.
+                if (newDuration > 0)
                 {
                     current.EndTime.TotalMilliseconds = newEndMs;
                     var newGapMs = next.StartTime.TotalMilliseconds - current.EndTime.TotalMilliseconds;
@@ -2640,33 +2644,8 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
         // Not subtitle.ChangeFrameRate: that scales start and end independently and leaves
         // fractional milliseconds, which reach every writer that formats from TotalMilliseconds -
-        // and two equal-length source cues can round to different durations. Use the same
-        // start-plus-scaled-duration rounding the Change frame rate dialog was fixed to use
-        // (#14056), including its clip of an overlap the rounding manufactured.
-        var ratio = SubtitleFormat.GetFrameForCalculation(_config.ChangeFrameRate.FromFrameRate) /
-                    SubtitleFormat.GetFrameForCalculation(_config.ChangeFrameRate.ToFrameRate);
-        Paragraph? previousParagraph = null;
-        var previousOriginalEndMs = 0d;
-        foreach (var paragraph in subtitle.Paragraphs)
-        {
-            var originalStartMs = paragraph.StartTime.TotalMilliseconds;
-            var originalEndMs = paragraph.EndTime.TotalMilliseconds;
-
-            var newStartMs = Math.Round(originalStartMs * ratio, MidpointRounding.AwayFromZero);
-            var newDurationMs = Math.Round((originalEndMs - originalStartMs) * ratio, MidpointRounding.AwayFromZero);
-            paragraph.StartTime.TotalMilliseconds = newStartMs;
-            paragraph.EndTime.TotalMilliseconds = newStartMs + newDurationMs;
-
-            if (previousParagraph != null &&
-                previousOriginalEndMs <= originalStartMs &&
-                previousParagraph.EndTime.TotalMilliseconds > paragraph.StartTime.TotalMilliseconds)
-            {
-                previousParagraph.EndTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds;
-            }
-
-            previousParagraph = paragraph;
-            previousOriginalEndMs = originalEndMs;
-        }
+        // and two equal-length source cues can round to different durations (#14056).
+        subtitle.ChangeFrameRateWholeMilliseconds(_config.ChangeFrameRate.FromFrameRate, _config.ChangeFrameRate.ToFrameRate);
 
         return subtitle;
     }

@@ -38,7 +38,7 @@ public partial class AssaImageColorPickerViewModel : ObservableObject
     [ObservableProperty] private SolidColorBrush _clickedColor = new SolidColorBrush(Colors.Transparent);
     [ObservableProperty] private string _currentMouseColorHex = "#00000000";
     [ObservableProperty] private string _clickedColorHex = "#00000000";
-    [ObservableProperty] private string _copyButtonContent = "Copy";
+    [ObservableProperty] private string _copyButtonContent = Se.Language.General.Copy;
 
     private Subtitle _subtitle = new();
 
@@ -165,7 +165,7 @@ public partial class AssaImageColorPickerViewModel : ObservableObject
 
             // Show check icon temporarily
             var originalContent = CopyButtonContent;
-            CopyButtonContent = "✓ Copied!";
+            CopyButtonContent = "\u2713 " + Se.Language.General.CopiedToClipboard;
 
             // Reset after 2 seconds
             await Task.Delay(2000);

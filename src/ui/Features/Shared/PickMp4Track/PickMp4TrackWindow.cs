@@ -194,7 +194,7 @@ public class PickMp4TrackWindow : Window
                 },
                 new SeTableViewColumn
                 {
-                    Header = "Text/Image",
+                    Header = Se.Language.General.TextOrImage,
                     CellTheme = UiUtil.TableViewCellTheme,
                     HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Width = new GridLength(1, GridUnitType.Star),
