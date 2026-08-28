@@ -38,7 +38,10 @@ public class NetflixCheckBridgeGaps : INetflixQualityChecker
                 continue;
             }
 
-            var gapInFrames = SubtitleFormat.MillisecondsToFrames(next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds);
+            // Measured at the video's frame rate, like the two bounds it is compared against.
+            // With the app's CurrentFrameRate instead, a 470 ms gap on a 23.976 video read as
+            // 12 frames rather than 11 and fell outside the bridge range entirely.
+            var gapInFrames = SubtitleFormat.MillisecondsToFrames(next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds, controller.FrameRate);
             if (gapInFrames > 2 && gapInFrames < halfSecGap && !p.StartTime.IsMaxTime)
             {
                 var fixedParagraph = new Paragraph(p, false) { EndTime = { TotalMilliseconds = next.StartTime.TotalMilliseconds - twoFramesGap } };
