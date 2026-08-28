@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
+using SkiaSharp;
 using System;
 using System.IO;
 using System.Linq;
@@ -244,9 +245,24 @@ public class MpvReloader : IMpvReloader
 
             if (oldHeader != null && oldHeader.Length > 20 && oldHeader.AsSpan(3, 3).SequenceEqual("STL"))
             {
-                var previewFontName = Configuration.IsRunningOnLinux ? Configuration.DefaultLinuxFontName : "Tahoma";
-                var boxStyle = $"Style: Box,{previewFontName},12,&H00FFFFFF,&H0300FFFF,&H00000000,&H02000000,-1,0,0,0,100,100,0,0,3,2,0,2,10,10,10,1{Environment.NewLine}Style: Default,";
-                subtitle.Header = subtitle.Header.Replace("Style: Default,", boxStyle, StringComparison.Ordinal);
+                // The teletext box is the preview style drawn with an opaque background instead
+                // of an outline. It used to be a hard coded 12 pt Tahoma style, so a boxed line
+                // threw away the font, size, color, alignment and margins the preview was set
+                // up with, and rendered much smaller than an unboxed one.
+                var boxStyle = GetMpvPreviewStyle(Se.Settings.Video);
+                boxStyle.Name = "Box";
+                boxStyle.BorderStyle = "3"; // opaque box
+                boxStyle.Outline = SKColors.Black; // border style 3 fills the box with the outline color, and a teletext box is black
+                boxStyle.ShadowWidth = 0;
+                if (boxStyle.OutlineWidth < 1)
+                {
+                    boxStyle.OutlineWidth = 1; // the box would otherwise cling to the glyphs
+                }
+
+                subtitle.Header = subtitle.Header.Replace(
+                    "Style: Default,",
+                    boxStyle.ToRawAss(SsaStyle.DefaultAssStyleFormat) + Environment.NewLine + "Style: Default,",
+                    StringComparison.Ordinal);
 
                 var useBox = false;
                 if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox)

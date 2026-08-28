@@ -4666,6 +4666,11 @@ public partial class MainViewModel :
             saveHelper.SetFrameRate(result.StoredHeader, result.FrameRateFromSaveDialog);
         }
 
+        // The box, the justification and the row options all change how the lines are drawn in
+        // the video preview. Only subtitle edits mark it dirty, so a settings-only change used to
+        // sit there unseen until the next keystroke.
+        _mpvPreviewDirty = true;
+
         return true;
     }
 
