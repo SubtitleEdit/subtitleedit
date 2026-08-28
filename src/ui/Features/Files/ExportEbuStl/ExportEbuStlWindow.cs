@@ -298,11 +298,13 @@ public class ExportEbuStlWindow : Window
 
         var labelTeletext = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.Teletext);
 
-        var labelUseBox = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.UseBox);
-        var checkBoxUseBox = UiUtil.MakeCheckBox(vm, nameof(vm.UseBox));
+        // Both are teletext control codes: "0 Open subtitling" writes neither, so leaving them
+        // enabled there only promises a box the file and the video preview never show.
+        var labelUseBox = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.UseBox).WithBindIsEnabled(nameof(vm.IsTeletext));
+        var checkBoxUseBox = UiUtil.MakeCheckBox(vm, nameof(vm.UseBox)).WithBindIsEnabled(nameof(vm.IsTeletext));
 
-        var labelUseDoubleHeight = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.DoubleHeight);
-        var checkBoxUseDoubleHeight = UiUtil.MakeCheckBox(vm, nameof(vm.UseDoubleHeight));
+        var labelUseDoubleHeight = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.DoubleHeight).WithBindIsEnabled(nameof(vm.IsTeletext));
+        var checkBoxUseDoubleHeight = UiUtil.MakeCheckBox(vm, nameof(vm.UseDoubleHeight)).WithBindIsEnabled(nameof(vm.IsTeletext));
 
 
         grid.Add(labelJustification, 0, 0);

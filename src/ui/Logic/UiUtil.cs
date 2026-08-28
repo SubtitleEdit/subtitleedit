@@ -1635,6 +1635,17 @@ public static class UiUtil
         return control;
     }
 
+    public static T WithBindIsEnabled<T>(this T control, string isEnabledPropertyPath) where T : Control
+    {
+        control.Bind(InputElement.IsEnabledProperty, new Binding
+        {
+            Path = isEnabledPropertyPath,
+            Mode = BindingMode.OneWay,
+        });
+
+        return control;
+    }
+
     public static Button WithBindIsEnabled(this Button control, string isEnabledPropertyPath)
     {
         control.Bind(Button.IsEnabledProperty, new Binding
