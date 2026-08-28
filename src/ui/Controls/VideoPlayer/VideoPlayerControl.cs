@@ -193,6 +193,52 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         private bool _isUserMovingPositionSlider;
         private ContentPresenter? _contentPresenter;
 
+        // Where an in-flight open+restore sequence is heading. See PositionForRestore.
+        private double? _pendingRestorePositionSeconds;
+
+        /// <summary>
+        /// The position another player should be handed when this control is thrown away and
+        /// rebuilt (layout rebuild, dock/undock, fullscreen) - the pending restore target while
+        /// an open+restore sequence is still in flight, and the live <see cref="Position"/>
+        /// otherwise.
+        /// <para>
+        /// Never sample <see cref="Position"/> for that: <see cref="Open"/> zeroes the position
+        /// display before loading, and a freshly created player reports 0 until its core is up
+        /// and playback has restarted, so anything reading the live position during that window
+        /// (half a second plus the load, easily seconds on a big file) carries 0 forward and
+        /// rewinds the video to the start. Settings -> Apply -> OK does exactly that: Apply
+        /// rebuilds the player and OK rebuilds it again while the first restore is still
+        /// running (issue #14218).
+        /// </para>
+        /// </summary>
+        internal double PositionForRestore => _pendingRestorePositionSeconds ?? Position;
+
+        /// <summary>
+        /// Announces that an open+restore sequence heading for <paramref name="seconds"/> has
+        /// started, so <see cref="PositionForRestore"/> reports that target instead of the 0 the
+        /// not-yet-loaded player reports. <see cref="Open"/> calls this itself when given a start
+        /// position; callers that seek only after the open (the layout rebuild) call it first.
+        /// The pending value is dropped by <see cref="EndPositionRestore"/> and, as a safety net
+        /// for restores that are abandoned without one, as soon as the player actually reports
+        /// the restored position.
+        /// </summary>
+        internal void BeginPositionRestore(double seconds)
+        {
+            if (seconds > 0)
+            {
+                _pendingRestorePositionSeconds = seconds;
+            }
+        }
+
+        /// <summary>
+        /// Ends the restore announced by <see cref="BeginPositionRestore"/>: the player is where
+        /// it should be, so <see cref="PositionForRestore"/> follows the live position again.
+        /// </summary>
+        internal void EndPositionRestore()
+        {
+            _pendingRestorePositionSeconds = null;
+        }
+
         private void NotifyPositionChanged(double newPosition)
         {
             if (Math.Abs(_positionIgnore - newPosition) < 0.001)
@@ -758,6 +804,12 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 return;
             }
 
+            // From here until the file is up and playback has restarted the position reads 0,
+            // so remember where this open is heading for anything that rebuilds the player
+            // meanwhile (issue #14218). Callers that seek only after the open have already
+            // announced their target - a start-less open must not clear it.
+            BeginPositionRestore(startPositionSeconds);
+
             // Reset slider state before LoadFile. Otherwise, when the new file's
             // Duration arrives on the next timer tick, the slider's Maximum drops
             // and a stale Value (left over from the previous file) gets clamped to
@@ -972,6 +1024,15 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                     }
 
                     SetPositionDisplayOnly(pos);
+
+                    // The player has arrived where the restore was heading - drop the pending
+                    // target even if the restoring code never got to end it (an abandoned
+                    // sequence would otherwise pin PositionForRestore for the rest of the
+                    // control's life).
+                    if (_pendingRestorePositionSeconds is { } pending && Math.Abs(pos - pending) < 0.5)
+                    {
+                        EndPositionRestore();
+                    }
                 }
 
                 var fullDuration = TimeCode.FromSeconds(Duration + Se.Settings.General.CurrentVideoOffsetInMs / 1000.0).ToDisplayString();

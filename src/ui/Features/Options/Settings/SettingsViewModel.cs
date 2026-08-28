@@ -438,6 +438,14 @@ public partial class SettingsViewModel : ObservableObject
     };
 
     public bool OkPressed { get; set; }
+
+    /// <summary>
+    /// The settings as they stood after the last Apply, or null when Apply was never pressed.
+    /// The caller compares the settings at OK against this so that an Apply followed by OK does
+    /// not apply - and rebuild - everything twice (issue #14218).
+    /// </summary>
+    public string? AppliedSettingsSnapshot { get; private set; }
+
     public Window? Window { get; internal set; }
     public ScrollViewer ScrollView { get; internal set; }
     public List<SettingsSection> Sections { get; internal set; }
@@ -2759,6 +2767,11 @@ public partial class SettingsViewModel : ObservableObject
 
         await FileTypeAssociationsManager.SaveFileTypeAssociationsAsync(FileTypeAssociations, Window);
         _mainViewModel?.ApplySettings();
+
+        // Everything up to here is now applied, so this is the baseline the OK press must be
+        // compared against - without it OK re-applies every change this Apply already made and
+        // rebuilds the layout (and the video player) a second time (issue #14218).
+        AppliedSettingsSnapshot = SettingsChangeSnapshot.Take();
     }
 
     [RelayCommand]
