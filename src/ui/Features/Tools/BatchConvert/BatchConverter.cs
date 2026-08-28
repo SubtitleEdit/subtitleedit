@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
+using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Core.Interfaces;
@@ -21,6 +22,7 @@ using Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
 using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.UiLogic.AdjustDuration;
 using Nikse.SubtitleEdit.UiLogic.BatchConvert;
+using Nikse.SubtitleEdit.Features.Tools.ChangeCasing;
 using Nikse.SubtitleEdit.Features.Tools.MergeSubtitlesWithSameTimeCodes;
 using Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
 using Nikse.SubtitleEdit.Logic;
@@ -2321,11 +2323,23 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         var maxCharactersPerSubtitle = c.MaxNumberOfLines * c.SingleLineMaxLength;
         if (c.SplitLongLines)
         {
+            var splitOptions = new SplitBreakLongLinesViewModel.SplitOptions
+            {
+                MinimumGapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds(),
+                AdjustTeletextRows = _config.TargetFormatName == Ebu.NameOfFormat,
+                TeletextDoubleHeight = Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight,
+            };
+
             for (var index = 0; index < subtitles.Count; index++)
             {
                 var item = new SubtitleLineViewModel(subtitles[index]);
 
-                var splitLines = SplitBreakLongLinesViewModel.Split(item, maxCharactersPerSubtitle, c.SingleLineMaxLength);
+                // Pass the split options the dialog passes. The 3-argument overload uses a
+                // default SplitOptions with MinimumGapMs = 0, so batch produced back-to-back
+                // events with a ZERO gap - which then trips the min-gap error rules and is
+                // illegal for several broadcast targets - and skipped the teletext row
+                // adjustment for EBU STL output.
+                var splitLines = SplitBreakLongLinesViewModel.Split(item, maxCharactersPerSubtitle, c.SingleLineMaxLength, splitOptions);
                 foreach (var s in splitLines)
                 {
                     subtitlesFixed.Add(s);
@@ -2392,13 +2406,13 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
         var dic = new Dictionary<string, string>();
         var fixedIndexes = new List<int>(subtitle.Paragraphs.Count);
+        // Both values are milliseconds - the labels say "(ms)", the settings keys are named
+        // ...Ms, and the dialog reads the same two keys without converting. Running them through
+        // FramesToMilliseconds in HH:MM:SS:FF mode turned the 2000 ms default into 80 000 ms at
+        // 25 fps, so batch bridged half-minute gaps the dialog leaves alone. The interactive
+        // dialog was already fixed; this is the batch half of that fix.
         var minMsBetweenLines = _config.BridgeGaps.MinGapMs;
         var maxMs = _config.BridgeGaps.BridgeGapsSmallerThanMs;
-        if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
-        {
-            minMsBetweenLines = SubtitleFormat.FramesToMilliseconds(minMsBetweenLines);
-            maxMs = SubtitleFormat.FramesToMilliseconds(maxMs);
-        }
 
         var subtitles = new ObservableCollection<SubtitleLineViewModel>(subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, subtitle.OriginalFormat)));
         var fixedCount = DurationsBridgeGaps2.BridgeGaps(subtitles, minMsBetweenLines, _config.BridgeGaps.PercentForLeft, maxMs, fixedIndexes, dic,
@@ -2624,7 +2638,35 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return subtitle;
         }
 
-        subtitle.ChangeFrameRate(_config.ChangeFrameRate.FromFrameRate, _config.ChangeFrameRate.ToFrameRate);
+        // Not subtitle.ChangeFrameRate: that scales start and end independently and leaves
+        // fractional milliseconds, which reach every writer that formats from TotalMilliseconds -
+        // and two equal-length source cues can round to different durations. Use the same
+        // start-plus-scaled-duration rounding the Change frame rate dialog was fixed to use
+        // (#14056), including its clip of an overlap the rounding manufactured.
+        var ratio = SubtitleFormat.GetFrameForCalculation(_config.ChangeFrameRate.FromFrameRate) /
+                    SubtitleFormat.GetFrameForCalculation(_config.ChangeFrameRate.ToFrameRate);
+        Paragraph? previousParagraph = null;
+        var previousOriginalEndMs = 0d;
+        foreach (var paragraph in subtitle.Paragraphs)
+        {
+            var originalStartMs = paragraph.StartTime.TotalMilliseconds;
+            var originalEndMs = paragraph.EndTime.TotalMilliseconds;
+
+            var newStartMs = Math.Round(originalStartMs * ratio, MidpointRounding.AwayFromZero);
+            var newDurationMs = Math.Round((originalEndMs - originalStartMs) * ratio, MidpointRounding.AwayFromZero);
+            paragraph.StartTime.TotalMilliseconds = newStartMs;
+            paragraph.EndTime.TotalMilliseconds = newStartMs + newDurationMs;
+
+            if (previousParagraph != null &&
+                previousOriginalEndMs <= originalStartMs &&
+                previousParagraph.EndTime.TotalMilliseconds > paragraph.StartTime.TotalMilliseconds)
+            {
+                previousParagraph.EndTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds;
+            }
+
+            previousParagraph = paragraph;
+            previousOriginalEndMs = originalEndMs;
+        }
 
         return subtitle;
     }
@@ -2632,6 +2674,14 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     private Subtitle ChangeSpeed(Subtitle subtitle)
     {
         if (!_config.ChangeSpeed.IsActive)
+        {
+            return subtitle;
+        }
+
+        // 100/0 is infinity and TimeSpan.FromMilliseconds throws on it, so a 0% speed failed the
+        // whole item instead of converting it. The dialog's spinner has Minimum = 1 with the same
+        // reasoning, but the batch config is deserialized from JSON so the UI cannot be the guard.
+        if (_config.ChangeSpeed.SpeedPercent <= 0)
         {
             return subtitle;
         }
@@ -2653,19 +2703,55 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return subtitle;
         }
 
-        var fixCasing = new FixCasing(language)
+        // "Fix names only" turns every FixCasing flag off, so without the names pass below the
+        // whole step was a silent no-op - and with "Normal casing" + "Fix names" the names half
+        // was dropped. The batch UI offers both, so both have to do something here.
+        if (!_config.ChangeCasing.FixNamesOnly)
         {
-            FixNormal = _config.ChangeCasing.NormalCasing,
-            FixNormalOnlyAllUppercase = _config.ChangeCasing.NormalCasingOnlyUpper,
-            FixMakeUppercase = _config.ChangeCasing.AllUppercase,
-            FixMakeLowercase = _config.ChangeCasing.AllLowercase,
-            FixMakeProperCase = false,
-            FixProperCaseOnlyAllUppercase = false,
-            Format = subtitle.OriginalFormat,
-        };
-        fixCasing.Fix(subtitle);
+            var fixCasing = new FixCasing(language)
+            {
+                FixNormal = _config.ChangeCasing.NormalCasing,
+                FixNormalOnlyAllUppercase = _config.ChangeCasing.NormalCasingOnlyUpper,
+                FixMakeUppercase = _config.ChangeCasing.AllUppercase,
+                FixMakeLowercase = _config.ChangeCasing.AllLowercase,
+                FixMakeProperCase = false,
+                FixProperCaseOnlyAllUppercase = false,
+                Format = subtitle.OriginalFormat,
+            };
+            fixCasing.Fix(subtitle);
+        }
+
+        if (_config.ChangeCasing.FixNamesOnly ||
+            (_config.ChangeCasing.NormalCasing && _config.ChangeCasing.NormalCasingFixNames))
+        {
+            FixNames(subtitle, language);
+        }
 
         return subtitle;
+    }
+
+    /// <summary>
+    /// The unattended half of the Fix names dialog: apply the names it would have pre-checked.
+    /// </summary>
+    private void FixNames(Subtitle subtitle, string language)
+    {
+        var nameListLanguage = string.IsNullOrEmpty(language) ? "en_US" : language;
+        var nameList = new NameList(Se.DictionariesFolder, nameListLanguage, false, string.Empty);
+        var activeNames = FixNamesLogic
+            .FindNames(subtitle, nameList.GetAllNames(), Se.Settings.Tools.ChangeCasing.ExtraNames, nameListLanguage)
+            .Where(n => n.IsChecked)
+            .Select(n => n.Name)
+            .ToList();
+
+        if (activeNames.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var p in subtitle.Paragraphs)
+        {
+            p.Text = FixNamesLogic.ApplyNames(p.Text, activeNames);
+        }
     }
 
     private Subtitle FixCommonErrors(Subtitle subtitle)
@@ -3039,7 +3125,13 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         }
         else if (c.AdjustmentType == AdjustDurationType.Recalculate)
         {
-            subtitle.RecalculateDisplayTimes(c.MaxCharsPerSecond, null, c.OptimalCharsPerSecond, true, shotChanges, true);
+            // Honour the user's "extend only" choice - the same setting the Adjust durations
+            // dialog persists - instead of hardcoding true. With true, Recalculate could only
+            // ever lengthen cues, so batch silently left every over-long cue over-long: exactly
+            // what the user ran the step to fix. (The batch panel has no checkbox of its own, so
+            // read the shared setting rather than invent one.)
+            var extendOnly = Se.Settings.Tools.AdjustDurations.AdjustDurationExtendOnly;
+            subtitle.RecalculateDisplayTimes(c.MaxCharsPerSecond, null, c.OptimalCharsPerSecond, extendOnly, shotChanges, true);
         }
         else if (c.AdjustmentType == AdjustDurationType.Fixed)
         {
@@ -3231,21 +3323,27 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         var makeDialog = _config.MergeLinesWithSameTimeCodes.MergeDialog;
         var removed = new HashSet<int>();
 
+        // Anchor on the FIRST cue of the current run, like libse's MergeLinesWithSameTimeCodes
+        // and the interactive dialog. Re-taking Paragraphs[i - 1] every iteration meant that for
+        // a run of three cues, the third merged into the SECOND - which had already been
+        // discarded - so its text was silently dropped from the output.
+        var lastMerged = false;
+        Paragraph? p = null;
         for (var i = 1; i < subtitle.Paragraphs.Count; i++)
         {
-            if (removed.Contains(i))
+            if (!lastMerged)
             {
-                continue;
+                p = subtitle.Paragraphs[i - 1];
             }
 
-            var p = subtitle.Paragraphs[i - 1];
             var next = subtitle.Paragraphs[i];
 
             if (!MergeSameTimeCodesViewModel.QualifiesForMerge(
-                    new SubtitleLineViewModel(p, subtitle.OriginalFormat),
+                    new SubtitleLineViewModel(p!, subtitle.OriginalFormat),
                     new SubtitleLineViewModel(next, subtitle.OriginalFormat),
                     _config.MergeLinesWithSameTimeCodes.MaxMillisecondsDifference))
             {
+                lastMerged = false;
                 continue;
             }
 
@@ -3261,7 +3359,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 .Replace("{\\an9}", string.Empty);
 
             string mergedText;
-            if (p.Text.StartsWith("<i>", StringComparison.Ordinal) && p.Text.EndsWith("</i>", StringComparison.Ordinal) &&
+            if (p!.Text.StartsWith("<i>", StringComparison.Ordinal) && p.Text.EndsWith("</i>", StringComparison.Ordinal) &&
                 nextText.StartsWith("<i>", StringComparison.Ordinal) && nextText.EndsWith("</i>", StringComparison.Ordinal))
             {
                 mergedText = MergeSameTimeCodesViewModel.GetMergedLines(
@@ -3279,9 +3377,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 mergedText = Utilities.AutoBreakLine(mergedText, language);
             }
 
-            p.Text = mergedText;
+            p!.Text = mergedText;
             p.EndTime.TotalMilliseconds = next.EndTime.TotalMilliseconds;
             removed.Add(i);
+            lastMerged = true;
         }
 
         // rebuild subtitle without removed paragraphs
