@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
+﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -159,6 +159,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                         alignment = 5;
                     }
 
+                    // The row says how far down the line sits, the justification says which way it
+                    // is aligned - without this every line stays centered no matter what the EBU
+                    // options dialog is set to.
+                    alignment += GetEbuJustificationOffset();
+
                     p.Text = "{\\an" + alignment.ToString(CultureInfo.InvariantCulture) + "}" + p.Text;
                 }
 
@@ -179,6 +184,21 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return applied;
+        }
+
+        /// <summary>
+        /// Turns the EBU justification code into a shift of the ASSA alignment column: the codes
+        /// are 0 = unchanged, 1 = left, 2 = centered and 3 = right, and each centered alignment
+        /// (2, 5 and 8) has its left neighbour one below it and its right one above.
+        /// </summary>
+        private static int GetEbuJustificationOffset()
+        {
+            switch (Ebu.EbuUiHelper?.JustificationCode)
+            {
+                case 1: return -1;
+                case 3: return 1;
+                default: return 0;
+            }
         }
 
         private static int GetEbuRowCount(string header)
