@@ -561,7 +561,8 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             }
             else
             {
-                numAddPackets = 1 + (rleBuf.Length - 0xffe4) / 0xffeb;
+                // round up, but without an extra empty packet when the rest divides evenly
+                numAddPackets = (rleBuf.Length - 0xffe4 + 0xffeb - 1) / 0xffeb;
             }
 
             // a typical frame consists of 8 packets. It can be elongated by additional object frames
@@ -621,7 +622,8 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             {
                 0x00, 0x00,             // 0: object_id
                 0x00,                   // 2: object_version_number
-                0x40                    // 3: first_in_sequence (0x80), last_in_sequence (0x40), 6bits reserved
+                0x00                    // 3: first_in_sequence (0x80), last_in_sequence (0x40), 6bits reserved
+                                        //    set per packet below - only the final one is last_in_sequence
             };
 
             // Fade steps ride along as palette update display sets (PCS + PDS + END) between the
@@ -810,6 +812,8 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                     buf[index++] = packetHeader[i];
                 }
 
+                // only the final fragment carries last_in_sequence - middle ones must be 0x00
+                headerOdsNext[3] = (byte)(p == numAddPackets - 1 ? 0x40 : 0x00);
                 for (var i = 0; i < headerOdsNext.Length; i++)
                 {
                     buf[index++] = headerOdsNext[i];
