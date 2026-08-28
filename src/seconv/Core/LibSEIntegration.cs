@@ -625,7 +625,9 @@ internal static class LibSEIntegration
 
             case "mergesametexts":
                 {
-                    var merged = MergeLinesSameTextUtils.MergeLinesWithSameTextInSubtitle(subtitle, true, 250);
+                    // 100 ms is the GUI default for "Merge lines with same text" (SeMergeSameText /
+                    // BatchConvertConfig); seconv used 250 and merged lines the dialog would not.
+                    var merged = MergeLinesSameTextUtils.MergeLinesWithSameTextInSubtitle(subtitle, true, 100);
                     if (merged.Paragraphs.Count != subtitle.Paragraphs.Count)
                     {
                         subtitle.Paragraphs.Clear();
@@ -636,7 +638,9 @@ internal static class LibSEIntegration
 
             case "mergesametimecodes":
                 {
-                    var merged = MergeLinesWithSameTimeCodes.Merge(subtitle, new List<int>(), out _, true, false, false, 1000, "en", new List<int>(), new Dictionary<int, bool>(), new Subtitle());
+                    // 250 ms is the GUI default for "Merge lines with same time codes". At 1000 ms
+                    // this merged cues a full second apart - not "same time codes" at all.
+                    var merged = MergeLinesWithSameTimeCodes.Merge(subtitle, new List<int>(), out _, true, false, false, 250, "en", new List<int>(), new Dictionary<int, bool>(), new Subtitle());
                     if (merged.Paragraphs.Count != subtitle.Paragraphs.Count)
                     {
                         subtitle.Paragraphs.Clear();
@@ -657,15 +661,12 @@ internal static class LibSEIntegration
                 break;
 
             case "splitlonglines":
-                try
                 {
+                    // No catch-all here: every sibling operation lets a failure surface, and
+                    // swallowing it left the CLI reporting success on a file it had not split.
                     var split = SplitLongLinesHelper.SplitLongLinesInSubtitle(subtitle, Configuration.Settings.General.SubtitleLineMaximumLength * 2, Configuration.Settings.General.SubtitleLineMaximumLength);
                     subtitle.Paragraphs.Clear();
                     subtitle.Paragraphs.AddRange(split.Paragraphs);
-                }
-                catch
-                {
-                    // ignore
                 }
                 break;
 
@@ -794,8 +795,7 @@ internal static class LibSEIntegration
 
     /// <summary>
     /// Enforces a minimum gap of <paramref name="minMs"/> between consecutive paragraphs by pulling
-    /// the earlier end time backwards. Skips edits that would shrink a paragraph below the
-    /// configured minimum display duration.
+    /// the earlier end time backwards. Skips only edits that would leave no duration at all.
     /// </summary>
     public static void ApplyMinGap(Subtitle subtitle, int minMs)
     {
@@ -804,7 +804,6 @@ internal static class LibSEIntegration
             return;
         }
 
-        var minDisplayMs = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
         for (var i = 0; i < subtitle.Paragraphs.Count - 1; i++)
         {
             var current = subtitle.Paragraphs[i];
@@ -817,7 +816,11 @@ internal static class LibSEIntegration
 
             var newEndMs = next.StartTime.TotalMilliseconds - minMs;
             var newDuration = newEndMs - current.StartTime.TotalMilliseconds;
-            if (newDuration > minDisplayMs)
+
+            // Only a non-positive duration is skipped, like the Apply minimum gap dialog.
+            // Guarding on the minimum display duration instead (default 1000 ms) meant
+            // --apply-min-gap silently left the gap unapplied on every short line.
+            if (newDuration > 0)
             {
                 current.EndTime.TotalMilliseconds = newEndMs;
             }

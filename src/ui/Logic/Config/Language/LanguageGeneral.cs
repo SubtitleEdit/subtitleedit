@@ -445,6 +445,7 @@ public class LanguageGeneral
     public string Preview { get; set; }
     public string Previous { get; set; }
     public string Profile { get; set; }
+    public string Quality { get; set; }
     public string ProfileName { get; set; }
     public string Profiles { get; set; }
     public string Property { get; set; }
@@ -1238,6 +1239,7 @@ public class LanguageGeneral
         Preview = "Preview";
         Previous = "Previous";
         Profile = "Profile";
+        Quality = "Quality";
         ProfileName = "Profile name";
         Profiles = "Profiles";
         Property = "Property";

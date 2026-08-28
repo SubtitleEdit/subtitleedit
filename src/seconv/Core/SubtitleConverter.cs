@@ -872,7 +872,10 @@ internal class SubtitleConverter
         // the current frame rate in that case, and the image path here already does the same.
         if (options.TargetFps is > 0)
         {
-            subtitle.ChangeFrameRate(options.Fps ?? Configuration.Settings.General.CurrentFrameRate, options.TargetFps.Value);
+            // Whole milliseconds: scaling start and end independently leaves fractional times in
+            // everything seconv writes, and rounds two equal-length cues to different lengths.
+            // The Change frame rate dialog was fixed the same way for #14056.
+            subtitle.ChangeFrameRateWholeMilliseconds(options.Fps ?? Configuration.Settings.General.CurrentFrameRate, options.TargetFps.Value);
         }
 
         // Scale all times by 100/percent (matches Sync > Change Speed in the UI)

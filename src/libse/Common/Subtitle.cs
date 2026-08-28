@@ -402,6 +402,43 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Frame-rate conversion that lands on whole milliseconds. Scales the start and the
+        /// duration rather than the start and the end independently, so two cues of equal length
+        /// keep equal lengths afterwards - scaling both ends separately rounds them apart (#14056).
+        /// <see cref="ChangeFrameRate(double,double)"/> keeps the fractional result for callers
+        /// that want it.
+        /// </summary>
+        public void ChangeFrameRateWholeMilliseconds(double oldFrameRate, double newFrameRate)
+        {
+            var factor = SubtitleFormat.GetFrameForCalculation(oldFrameRate) / SubtitleFormat.GetFrameForCalculation(newFrameRate);
+            Paragraph previous = null;
+            var previousOriginalEndMs = 0d;
+            foreach (var p in Paragraphs)
+            {
+                var originalStartMs = p.StartTime.TotalMilliseconds;
+                var originalEndMs = p.EndTime.TotalMilliseconds;
+
+                var newStartMs = Math.Round(originalStartMs * factor, MidpointRounding.AwayFromZero);
+                var newDurationMs = Math.Round((originalEndMs - originalStartMs) * factor, MidpointRounding.AwayFromZero);
+                p.StartTime.TotalMilliseconds = newStartMs;
+                p.EndTime.TotalMilliseconds = newStartMs + newDurationMs;
+
+                // The two roundings can push the previous end one millisecond past this start,
+                // turning a clean join into an overlap the source never had. Overlaps that were
+                // already in the source are left as they were.
+                if (previous != null &&
+                    previousOriginalEndMs <= originalStartMs &&
+                    previous.EndTime.TotalMilliseconds > p.StartTime.TotalMilliseconds)
+                {
+                    previous.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
+                }
+
+                previous = p;
+                previousOriginalEndMs = originalEndMs;
+            }
+        }
+
         public void AdjustDisplayTimeUsingPercent(double percent, List<int> selectedIndexes, List<double> shotChanges = null, bool enforceDurationLimits = true)
         {
             // List.Contains per paragraph made this O(paragraphs * selection) - quadratic with

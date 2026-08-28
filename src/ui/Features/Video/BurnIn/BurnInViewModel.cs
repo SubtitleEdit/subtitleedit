@@ -1720,7 +1720,7 @@ public partial class BurnInViewModel : ObservableObject
 
     private void FillPreset(string videoCodec)
     {
-        VideoPresetText = "Preset";
+        VideoPresetText = Se.Language.Video.BurnIn.Preset;
         var previousPreset = SelectedVideoPreset;
         SelectedVideoPreset = null;
 
@@ -1833,7 +1833,7 @@ public partial class BurnInViewModel : ObservableObject
 
             defaultItem = "standard";
 
-            VideoPresetText = "Profile";
+            VideoPresetText = Se.Language.General.Profile;
         }
         else if (videoCodec.Contains("av1"))
         {
@@ -1876,7 +1876,7 @@ public partial class BurnInViewModel : ObservableObject
     {
         var previousCrf = SelectedVideoCrf;
         SelectedVideoCrf = null;
-        VideoCrfText = "CRF";
+        VideoCrfText = Se.Language.Video.BurnIn.Crf;
         VideoCrfHint = string.Empty;
 
         var items = new List<string> { " " };
@@ -1925,7 +1925,7 @@ public partial class BurnInViewModel : ObservableObject
                 items.Add(i.ToString(CultureInfo.InvariantCulture));
             }
 
-            VideoCrfText = "Quality";
+            VideoCrfText = Se.Language.General.Quality;
             VideoCrfHint = "0=best quality, 10=best speed";
             VideoCrf.Clear();
             VideoCrf.AddRange(items);
@@ -1942,7 +1942,7 @@ public partial class BurnInViewModel : ObservableObject
                 items.Add(i.ToString(CultureInfo.InvariantCulture));
             }
 
-            VideoCrfText = "Quality";
+            VideoCrfText = Se.Language.General.Quality;
             VideoCrfHint = "1=lowest quality, 100=best quality (Apple silicon only)";
             VideoCrf.Clear();
             VideoCrf.AddRange(items);

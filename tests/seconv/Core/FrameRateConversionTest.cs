@@ -56,9 +56,11 @@ public class FrameRateConversionTest : IDisposable
         Assert.True(File.Exists(outFile));
         var outText = await File.ReadAllTextAsync(outFile, TestContext.Current.CancellationToken);
 
-        // 1.000s * (25/23.976) ≈ 1.04270s -> "00:00:01,042"
-        Assert.Contains("00:00:01,042", outText);
-        // 5.000s * (25/23.976) ≈ 5.21354s -> "00:00:05,213"
-        Assert.Contains("00:00:05,213", outText);
+        // Times land on whole milliseconds: 1.000s * (25/23.976) = 1042.708 ms rounds to 1043,
+        // and the end is the start plus the scaled duration so equal-length cues stay equal.
+        // This used to assert 1042 and 5213 - the SRT writer truncating the fractional result
+        // the conversion left behind, which is exactly what #14056 was about.
+        Assert.Contains("00:00:01,043 --> 00:00:04,171", outText);
+        Assert.Contains("00:00:05,214 --> 00:00:08,342", outText);
     }
 }
