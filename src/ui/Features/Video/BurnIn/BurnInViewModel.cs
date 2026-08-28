@@ -325,6 +325,14 @@ public partial class BurnInViewModel : ObservableObject
 
         _timerAnalyze.Stop();
 
+        // A failed analyze pass writes no statistics file, so pass 2 could only fail too - it used
+        // to run anyway and report whatever was already at the output path.
+        if (_ffmpegProcess.ExitCode != 0)
+        {
+            ReportFfmpegFailure(JobItems[_jobItemIndex], "Two-pass analyze (pass 1) failed for");
+            return;
+        }
+
         Dispatcher.UIThread.Invoke(async () =>
         {
             var jobItem = JobItems[_jobItemIndex];
@@ -393,29 +401,18 @@ public partial class BurnInViewModel : ObservableObject
         var jobItem = JobItems[_jobItemIndex];
         Se.WriteToolsLog($"Burn-in ffmpeg finished with exit code {_ffmpegProcess.ExitCode} for \"{jobItem.OutputVideoFileName}\"");
 
+        // The output file existing is not proof that this run produced it: with an old file at the
+        // target path a refused or failed ffmpeg passed the check, and the job was reported as
+        // "Done" while the stale file was left untouched (issue #14210).
+        if (_ffmpegProcess.ExitCode != 0)
+        {
+            ReportFfmpegFailure(jobItem, "ffmpeg failed for");
+            return;
+        }
+
         if (!File.Exists(jobItem.OutputVideoFileName))
         {
-            Se.WriteToolsLog("Output video file not found: " + jobItem.OutputVideoFileName + Environment.NewLine +
-                             "ffmpeg: " + _ffmpegProcess.StartInfo.FileName + Environment.NewLine +
-                             "Parameters: " + _ffmpegProcess.StartInfo.Arguments + Environment.NewLine +
-                             "OS: " + Environment.OSVersion + Environment.NewLine +
-                             "64-bit: " + Environment.Is64BitOperatingSystem + Environment.NewLine +
-                             "ffmpeg exit code: " + _ffmpegProcess.ExitCode + Environment.NewLine +
-                             "ffmpeg log: " + _log);
-
-            Dispatcher.UIThread.Invoke(async () =>
-            {
-                await MessageBox.Show(Window!,
-                    "Unable to generate video",
-                    "Output video file not generated: " + jobItem.OutputVideoFileName + Environment.NewLine +
-                    "Parameters: " + _ffmpegProcess.StartInfo.Arguments,
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
-
-                IsGenerating = false;
-                ProgressValue = 0;
-            });
-
+            ReportFfmpegFailure(jobItem, "Output video file not generated:");
             return;
         }
 
@@ -458,6 +455,37 @@ public partial class BurnInViewModel : ObservableObject
                     sb.ToString(),
                     MessageBoxButtons.OK);
             }
+        });
+    }
+
+    /// <summary>
+    /// Tells the user that an ffmpeg run failed, and writes the full command line, exit code and
+    /// ffmpeg log to the tools log for bug reports.
+    /// </summary>
+    private void ReportFfmpegFailure(BurnInJobItem jobItem, string reason)
+    {
+        Se.WriteToolsLog(reason + " " + jobItem.OutputVideoFileName + Environment.NewLine +
+                         "ffmpeg: " + _ffmpegProcess!.StartInfo.FileName + Environment.NewLine +
+                         "Parameters: " + _ffmpegProcess.StartInfo.Arguments + Environment.NewLine +
+                         "OS: " + Environment.OSVersion + Environment.NewLine +
+                         "64-bit: " + Environment.Is64BitOperatingSystem + Environment.NewLine +
+                         "ffmpeg exit code: " + _ffmpegProcess.ExitCode + Environment.NewLine +
+                         "ffmpeg log: " + _log);
+
+        jobItem.Status = Se.Language.General.Error;
+
+        Dispatcher.UIThread.Invoke(async () =>
+        {
+            await MessageBox.Show(Window!,
+                "Unable to generate video",
+                reason + " " + jobItem.OutputVideoFileName + Environment.NewLine +
+                "ffmpeg exit code: " + _ffmpegProcess.ExitCode + Environment.NewLine +
+                "Parameters: " + _ffmpegProcess.StartInfo.Arguments,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+
+            IsGenerating = false;
+            ProgressValue = 0;
         });
     }
 
