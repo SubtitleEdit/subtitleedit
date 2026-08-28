@@ -89,6 +89,25 @@ public class ImageParameter
     public SKPoint? OverridePositionPoint =>
         OverridePosition.HasValue ? new SKPoint(OverridePosition.Value.X, OverridePosition.Value.Y) : null;
 
+    /// <summary>
+    /// <see cref="ContentAlignment"/> with <see cref="ExportContentAlignment.FromAlignment"/>
+    /// resolved against <see cref="Alignment"/> - the alignment the "{\anX}" tag of the line
+    /// already put on the parameter. Left/right placed subtitles then get left/right justified
+    /// lines instead of the one justification picked for the whole export (issue #14202).
+    /// </summary>
+    public ExportContentAlignment ResolvedContentAlignment => ContentAlignment switch
+    {
+        ExportContentAlignment.FromAlignment => Alignment switch
+        {
+            ExportAlignment.TopLeft or ExportAlignment.MiddleLeft or ExportAlignment.BottomLeft
+                => ExportContentAlignment.Left,
+            ExportAlignment.TopRight or ExportAlignment.MiddleRight or ExportAlignment.BottomRight
+                => ExportContentAlignment.Right,
+            _ => ExportContentAlignment.Center,
+        },
+        _ => ContentAlignment,
+    };
+
     public BluRayContentAlignment BluRayContentAlignment => Alignment switch
     {
         ExportAlignment.TopLeft => BluRayContentAlignment.TopLeft,

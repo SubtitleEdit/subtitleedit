@@ -106,7 +106,7 @@ internal static class HelpDisplay
         ShowParameter(console, "--box-padding:<px>", "Box padding in pixels; one value for all sides or left,right,top,bottom (default: 5,5,3,3)");
         ShowParameter(console, "--line-spacing:<percent>", "Extra gap between lines as percent of line height (default: 0)");
         ShowParameter(console, "--alignment:<position>", "Screen position, e.g. bottom-center (default), top-left, middle-right");
-        ShowParameter(console, "--content-alignment:<mode>", "Multi-line text justification: left | center (default) | right");
+        ShowParameter(console, "--content-alignment:<mode>", "Multi-line text justification: left | center (default) | right | from-alignment");
         ShowParameter(console, "--bottom-top-margin:<px>", "Vertical screen-edge margin in pixels (default: 5% of height)");
         ShowParameter(console, "--left-right-margin:<px>", "Horizontal screen-edge margin in pixels (default: 5% of width)");
 

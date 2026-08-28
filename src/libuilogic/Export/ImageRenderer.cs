@@ -330,9 +330,9 @@ public static class ImageRenderer
             {
                 var lineWidth = lineWidths[li];
                 float textX;
-                if (ip.ContentAlignment == ExportContentAlignment.Center)
+                if (ip.ResolvedContentAlignment == ExportContentAlignment.Center)
                     textX = padLeft + (maxLineWidth - lineWidth) / 2;
-                else if (ip.ContentAlignment == ExportContentAlignment.Right)
+                else if (ip.ResolvedContentAlignment == ExportContentAlignment.Right)
                     textX = padLeft + maxLineWidth - lineWidth;
                 else
                     textX = padLeft;
@@ -412,11 +412,11 @@ public static class ImageRenderer
             // This keeps all lines within [textStartX, textStartX + maxLineWidth].
             if (ip.IsRightToLeft)
             {
-                if (ip.ContentAlignment == ExportContentAlignment.Center)
+                if (ip.ResolvedContentAlignment == ExportContentAlignment.Center)
                 {
                     currentX = textStartX + (maxLineWidth - lineWidth) / 2;
                 }
-                else if (ip.ContentAlignment == ExportContentAlignment.Left)
+                else if (ip.ResolvedContentAlignment == ExportContentAlignment.Left)
                 {
                     currentX = textStartX + maxLineWidth - lineWidth;
                 }
@@ -427,11 +427,11 @@ public static class ImageRenderer
             }
             else
             {
-                if (ip.ContentAlignment == ExportContentAlignment.Center)
+                if (ip.ResolvedContentAlignment == ExportContentAlignment.Center)
                 {
                     currentX = textStartX + (maxLineWidth - lineWidth) / 2;
                 }
-                else if (ip.ContentAlignment == ExportContentAlignment.Right)
+                else if (ip.ResolvedContentAlignment == ExportContentAlignment.Right)
                 {
                     currentX = textStartX + maxLineWidth - lineWidth;
                 }
@@ -600,12 +600,12 @@ public static class ImageRenderer
             var lineWidth = lineWidths[li];
 
             float currentX;
-            if (ip.ContentAlignment == ExportContentAlignment.Center)
+            if (ip.ResolvedContentAlignment == ExportContentAlignment.Center)
             {
                 currentX = textStartX + (maxLineWidth - lineWidth) / 2;
             }
-            else if ((ip.ContentAlignment == ExportContentAlignment.Right && !ip.IsRightToLeft) ||
-                     (ip.ContentAlignment == ExportContentAlignment.Left && ip.IsRightToLeft))
+            else if ((ip.ResolvedContentAlignment == ExportContentAlignment.Right && !ip.IsRightToLeft) ||
+                     (ip.ResolvedContentAlignment == ExportContentAlignment.Left && ip.IsRightToLeft))
             {
                 currentX = textStartX + maxLineWidth - lineWidth;
             }
@@ -724,12 +724,12 @@ public static class ImageRenderer
         {
             var lineWidth = lineWidths[li];
             float lineLeft;
-            if (ip.ContentAlignment == ExportContentAlignment.Center)
+            if (ip.ResolvedContentAlignment == ExportContentAlignment.Center)
             {
                 lineLeft = textStartX + (maxLineWidth - lineWidth) / 2;
             }
-            else if ((ip.ContentAlignment == ExportContentAlignment.Right && !ip.IsRightToLeft) ||
-                     (ip.ContentAlignment == ExportContentAlignment.Left && ip.IsRightToLeft))
+            else if ((ip.ResolvedContentAlignment == ExportContentAlignment.Right && !ip.IsRightToLeft) ||
+                     (ip.ResolvedContentAlignment == ExportContentAlignment.Left && ip.IsRightToLeft))
             {
                 lineLeft = textStartX + maxLineWidth - lineWidth;
             }

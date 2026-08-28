@@ -266,7 +266,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public string? Alignment { get; init; }
 
         [CommandOption("--content-alignment|--contentalignment")]
-        [Description("Image output: multi-line text justification: left | center (default) | right")]
+        [Description("Image output: multi-line text justification: left | center (default) | right | from-alignment")]
         public string? ContentAlignment { get; init; }
 
         [CommandOption("--bottom-top-margin|--bottomtopmargin")]
@@ -1143,7 +1143,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         {
             if (!ImageExportStyle.TryParseContentAlignment(settings.ContentAlignment, out var contentAlignment))
             {
-                return $"Unknown content alignment '{settings.ContentAlignment}' for --content-alignment. Use: left, center, or right.";
+                return $"Unknown content alignment '{settings.ContentAlignment}' for --content-alignment. Use: left, center, right, or from-alignment.";
             }
             style.ContentAlignment = contentAlignment;
         }
