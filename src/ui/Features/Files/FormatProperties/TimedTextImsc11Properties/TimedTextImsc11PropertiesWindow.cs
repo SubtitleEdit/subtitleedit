@@ -20,7 +20,7 @@ public class TimedTextImsc11PropertiesWindow : Window
 
         var labelWidth = 200;
 
-        var labelTitle = UiUtil.MakeLabel("Title").WithMinWidth(labelWidth);
+        var labelTitle = UiUtil.MakeLabel(Se.Language.General.Title).WithMinWidth(labelWidth);
         var textBoxTitle = UiUtil.MakeTextBox(263, vm, nameof(vm.Title));
         var panelTitle = new StackPanel
         {
@@ -29,7 +29,7 @@ public class TimedTextImsc11PropertiesWindow : Window
             Children = { labelTitle, textBoxTitle },
         };
 
-        var labelTimeBase = UiUtil.MakeLabel("Time base").WithMinWidth(labelWidth);
+        var labelTimeBase = UiUtil.MakeLabel(Se.Language.File.PropertyTimeBase).WithMinWidth(labelWidth);
         var comboBoxTimeBase = UiUtil.MakeComboBox(vm.TimeBases, vm, nameof(vm.SelectedTimeBase)).WithMinWidth(263);
         var panelTimeBase = new StackPanel
         {
@@ -38,7 +38,7 @@ public class TimedTextImsc11PropertiesWindow : Window
             Children = { labelTimeBase, comboBoxTimeBase },
         };
 
-        var labelFrameRate = UiUtil.MakeLabel("Frame rate").WithMinWidth(labelWidth);
+        var labelFrameRate = UiUtil.MakeLabel(Se.Language.General.FrameRate).WithMinWidth(labelWidth);
         var textBoxFrameRate = UiUtil.MakeTextBox(263, vm, nameof(vm.SelectedFrameRate));
         var panelFrameRate = new StackPanel
         {
@@ -47,7 +47,7 @@ public class TimedTextImsc11PropertiesWindow : Window
             Children = { labelFrameRate, textBoxFrameRate },
         };
 
-        var labelFrameRateMultiplier = UiUtil.MakeLabel("Frame rate multiplier").WithMinWidth(labelWidth);
+        var labelFrameRateMultiplier = UiUtil.MakeLabel(Se.Language.File.PropertyFrameRateMultiplier).WithMinWidth(labelWidth);
         var textBoxFrameRateMultiplier = UiUtil.MakeTextBox(263, vm, nameof(vm.SelectedFrameRateMultiplier));
         var panelFrameRateMultiplier = new StackPanel
         {
@@ -56,7 +56,7 @@ public class TimedTextImsc11PropertiesWindow : Window
             Children = { labelFrameRateMultiplier, textBoxFrameRateMultiplier },
         };
 
-        var labelDropMode = UiUtil.MakeLabel("Drop mode").WithMinWidth(labelWidth);
+        var labelDropMode = UiUtil.MakeLabel(Se.Language.File.PropertyDropMode).WithMinWidth(labelWidth);
         var comboBoxDropMode = UiUtil.MakeComboBox(vm.DropModes, vm, nameof(vm.SelectedDropMode)).WithMinWidth(263);
         var panelDropMode = new StackPanel
         {
@@ -65,7 +65,7 @@ public class TimedTextImsc11PropertiesWindow : Window
             Children = { labelDropMode, comboBoxDropMode },
         };
 
-        var labelDefaultStyle = UiUtil.MakeLabel("Default style").WithMinWidth(labelWidth);
+        var labelDefaultStyle = UiUtil.MakeLabel(Se.Language.File.PropertyDefaultStyle).WithMinWidth(labelWidth);
         var comboBoxDefaultStyle = UiUtil.MakeComboBox<string>(vm.DefaultStyles, vm, nameof(vm.SelectedDefaultStyle)).WithMinWidth(263);
         var panelDefaultStyle = new StackPanel
         {
@@ -74,7 +74,7 @@ public class TimedTextImsc11PropertiesWindow : Window
             Children = { labelDefaultStyle, comboBoxDefaultStyle },
         };
 
-        var labelDefaultRegion = UiUtil.MakeLabel("Default region").WithMinWidth(labelWidth);
+        var labelDefaultRegion = UiUtil.MakeLabel(Se.Language.File.PropertyDefaultRegion).WithMinWidth(labelWidth);
         var comboBoxDefaultRegion = UiUtil.MakeComboBox(vm.DefaultRegions, vm, nameof(vm.SelectedDefaultRegion)).WithMinWidth(263);
         var panelDefaultRegion = new StackPanel
         {
@@ -83,7 +83,7 @@ public class TimedTextImsc11PropertiesWindow : Window
             Children = { labelDefaultRegion, comboBoxDefaultRegion },
         };
 
-        var labelTimeCodeFormat = UiUtil.MakeLabel("Time code format").WithMinWidth(labelWidth);
+        var labelTimeCodeFormat = UiUtil.MakeLabel(Se.Language.File.PropertyTimeCodeFormat).WithMinWidth(labelWidth);
         var comboBoxTimeCodeFormat = UiUtil.MakeComboBox(vm.TimeCodeFormats, vm, nameof(vm.SelectedTimeCodeFormat)).WithMinWidth(263);
         var panelTimeCodeFormat = new StackPanel
         {
@@ -92,7 +92,7 @@ public class TimedTextImsc11PropertiesWindow : Window
             Children = { labelTimeCodeFormat, comboBoxTimeCodeFormat },
         };
 
-        var labelFileExtension = UiUtil.MakeLabel("File extension").WithMinWidth(labelWidth);
+        var labelFileExtension = UiUtil.MakeLabel(Se.Language.File.PropertyFileExtension).WithMinWidth(labelWidth);
         var comboBoxFileExtension = UiUtil.MakeComboBox(vm.FileExtensions, vm, nameof(vm.SelectedFileExtension)).WithMinWidth(263);
         var panelFileExtension = new StackPanel
         {

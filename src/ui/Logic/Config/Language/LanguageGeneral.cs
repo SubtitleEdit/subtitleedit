@@ -188,6 +188,8 @@ public class LanguageGeneral
     public string Engine { get; set; }
     public string EnterProfileName { get; set; }
     public string Error { get; set; }
+    public string Start { get; set; }
+    public string VobSub { get; set; }
     public string OutputFileCannotBeTheInputFile { get; set; }
     public string ErrorX { get; set; }
     public string Example { get; set; }
@@ -979,6 +981,8 @@ public class LanguageGeneral
         Engine = "Engine";
         EnterProfileName = "Enter profile name";
         Error = "Error";
+        Start = "Start";
+        VobSub = "VobSub";
         OutputFileCannotBeTheInputFile = "The output file cannot be the same as the input file.";
         ErrorX = "Error; {0}";
         Example = "Example";
