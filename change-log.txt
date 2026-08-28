@@ -3,6 +3,25 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-beta27 (28th of August 2026)
+
+* Add "Assisted split" and "Assisted move" windows, with ranked one-click suggestions and full previews - thx GitGianluc
+* Add "Justify lines" for the mpv video preview in Options - Settings - Video - thx kadrimarzouki
+* Image based export: let the line justification follow the alignment tag - thx smt-joen
+* Much better import of unknown subtitle formats - a new generic XML importer plus a dozen JSON fixes
+* Netflix check: measure gaps, bridges and shot changes at the video's frame rate, and fix two "spell out numbers" defects
+* Fix the waveform cursor jumping away a moment after a click - thx Davanix
+* Fix the undocked waveform window taking the foreground when another program is closed - thx GrampaWildWilly
+* Fix around 290 more bugs found in 13 code sweeps - subtitle formats, batch convert, seconv, dialogs, settings, binary edit and core helpers
+* Update Chinese (simplified) translation - thx emsb8888-prog
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+* Update Korean translation - thx 12si27
+* Update Polish translation - thx potplayer-fanpack
+* Update Portuguese (Brazil) translation - thx igorruckert
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-beta26 (27th of August 2026)
 
 * Video OCR: read far more subtitles, with much better text and start times - thx caiweihan
