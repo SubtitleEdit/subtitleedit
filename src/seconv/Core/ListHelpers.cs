@@ -267,14 +267,14 @@ internal static class ListHelpers
                         id = "ollama", aliases = Array.Empty<string>(), type = "http",
                         isDefault = false, ready = (bool?)null,
                         requires = "A running Ollama instance with a vision model",
-                        options = new[] { "--ollama-url", "--ollama-model", "--ocr-language" },
+                        options = new[] { "--ollama-url", "--ollama-model", "--ocr-language", "--ocr-prompt" },
                     },
                     new
                     {
                         id = "llamacpp", aliases = Array.Empty<string>(), type = "http",
                         isDefault = false, ready = llamaCppInstalled && llamaCppModelCount > 0,
                         requires = $"llama-server ({(llamaCppInstalled ? "installed" : "not found")}) plus an OCR model ({llamaCppModelCount} installed) — download via Subtitle Edit's OCR window, or point --ocr-url at a running server",
-                        options = new[] { "--ocr-model", "--ocr-url", "--ocr-language" },
+                        options = new[] { "--ocr-model", "--ocr-url", "--ocr-language", "--ocr-prompt" },
                     },
                     new
                     {

@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
+using Nikse.SubtitleEdit.UiLogic.Ocr;
 
 namespace SeConv.Core;
 
@@ -20,22 +21,22 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
 {
     public string Name => "llama.cpp";
 
-    // Same default prompt as the UI's llama.cpp OCR (SeOcr.LlamaCppOcrPrompt).
-    private const string PromptTemplate = "Extract all text exactly as written. The language is {language}. Preserve line breaks.";
-
     private readonly HttpClient _httpClient;
     private readonly string _language;
     private readonly string _modelName;
+    private readonly string _promptTemplate;
     private readonly string? _url;          // non-null = user-managed server via --ocr-url
     private readonly LlamaCppModel? _model; // non-null = local server mode; started on first Recognize
     private readonly bool _quiet;
 
-    private LlamaCppOcrEngine(string? url, LlamaCppModel? model, string modelName, string? language, bool quiet)
+    private LlamaCppOcrEngine(string? url, LlamaCppModel? model, string modelName, string? language, string? prompt, bool quiet)
     {
         _url = url;
         _model = model;
         _modelName = modelName;
         _language = string.IsNullOrWhiteSpace(language) ? "English" : language;
+        // Shared with the UI's default so the two cannot drift; --ocr-prompt overrides it.
+        _promptTemplate = string.IsNullOrWhiteSpace(prompt) ? SeOcrDefaults.LlamaCppOcrPrompt : prompt;
         _quiet = quiet;
         _httpClient = new HttpClient
         {
@@ -67,12 +68,12 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
             var modelName = string.IsNullOrWhiteSpace(options.OcrModel)
                 ? "glmocr"
                 : Path.GetFileNameWithoutExtension(options.OcrModel.Trim());
-            return new LlamaCppOcrEngine(fullUrl, null, modelName, options.OcrLanguage, options.Quiet);
+            return new LlamaCppOcrEngine(fullUrl, null, modelName, options.OcrLanguage, options.OcrPrompt, options.Quiet);
         }
 
         LlamaCppLocal.EnsureServerBinary("the OCR window > llama.cpp", "--ocr-url");
         var model = ResolveOcrModel(options.OcrModel);
-        return new LlamaCppOcrEngine(null, model, Path.GetFileNameWithoutExtension(model.FileName), options.OcrLanguage, options.Quiet);
+        return new LlamaCppOcrEngine(null, model, Path.GetFileNameWithoutExtension(model.FileName), options.OcrLanguage, options.OcrPrompt, options.Quiet);
     }
 
     public string Recognize(SKBitmap bitmap)
@@ -101,7 +102,7 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
         using var data = image.Encode(SKEncodedImageFormat.Png, 90);
         var base64 = Convert.ToBase64String(data.ToArray());
 
-        var prompt = PromptTemplate.Replace("{language}", _language);
+        var prompt = _promptTemplate.Replace("{language}", _language);
         var body = "{ \"model\": \"" + Escape(_modelName) + "\", \"temperature\": 0, \"messages\": [ { \"role\": \"user\", \"content\": [ " +
                    "{ \"type\": \"text\", \"text\": \"" + Escape(prompt) + "\" }, " +
                    "{ \"type\": \"image_url\", \"image_url\": { \"url\": \"data:image/png;base64," + base64 + "\" } } " +

@@ -1216,6 +1216,12 @@ internal record class ConversionOptions
     /// <summary>llama.cpp OCR model: curated <c>.gguf</c> file name or full path (default: first installed OCR model).</summary>
     public string? OcrModel { get; init; }
 
+    /// <summary>
+    /// Prompt for the prompt-driven OCR engines (llamacpp, ollama); <c>{language}</c> is replaced
+    /// with <see cref="OcrLanguage"/>. Null = each engine's built-in default.
+    /// </summary>
+    public string? OcrPrompt { get; init; }
+
     /// <summary>Auto-translate target language (code or English name). Non-null enables translation.</summary>
     public string? TranslateTo { get; init; }
 
