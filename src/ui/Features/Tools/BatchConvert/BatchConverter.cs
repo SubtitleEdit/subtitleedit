@@ -1931,7 +1931,9 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 // "{\an8}" & co. were stripped from the text but not honored, so top-positioned
                 // lines silently ended up at the bottom (issue #13025).
                 Alignment = ExportTextTags.GetAlignment(subtitle.Text, ExportAlignment.BottomCenter),
-                ContentAlignment = ExportContentAlignment.Center,
+                // Everything else here follows the export-images profile, so the justification
+                // has to as well - it was hardcoded, ignoring what the dialog had saved.
+                ContentAlignment = profile.ContentAlignment,
                 PaddingLeftRight = profile.PaddingLeftRight,
                 PaddingTopBottom = profile.PaddingTopBottom,
                 Index = i,

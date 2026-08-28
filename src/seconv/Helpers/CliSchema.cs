@@ -46,7 +46,7 @@ internal static class CliSchema
         ["--ocr-engine"] = ["tesseract", "nocr", "binaryocr", "ollama", "llamacpp", "paddle"],
         ["--translate-engine"] = ["llamacpp", "ollama", "lmstudio", "libretranslate", "nllb-serve", "nllb-api"],
         ["--box-type"] = ["none", "one-box", "box-per-line"],
-        ["--content-alignment"] = ["left", "center", "right"],
+        ["--content-alignment"] = ["left", "center", "right", "from-alignment"],
         ["--alignment"] =
         [
             "top-left", "top-center", "top-right",

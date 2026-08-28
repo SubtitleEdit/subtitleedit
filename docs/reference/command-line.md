@@ -180,7 +180,7 @@ When rendering a text subtitle to an image-based target (Blu-Ray `sup`, VobSub, 
 | `--box-padding:<px>` | Box padding: one value for all sides, or `left,right,top,bottom` (default: `5,5,3,3`) |
 | `--line-spacing:<percent>` | Extra gap between lines as percent of line height (default: `0`) |
 | `--alignment:<pos>` | Screen position: `bottom-center` (default), `top-left`, `middle-right`, ... |
-| `--content-alignment:<align>` | Multi-line text justification: `left` \| `center` (default) \| `right` |
+| `--content-alignment:<align>` | Multi-line text justification: `left` \| `center` (default) \| `right` \| `from-alignment` (follow the `{\anX}` tag) |
 | `--bottom-top-margin:<px>` | Vertical screen-edge margin (default: 5% of height) |
 | `--left-right-margin:<px>` | Horizontal screen-edge margin (default: 5% of width) |
 
