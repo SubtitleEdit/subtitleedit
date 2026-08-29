@@ -192,6 +192,7 @@ public class LanguageSettingsShortcuts
     public string ColorX { get; set; }
     public string SurroundWith { get; set; }
     public string SurroundWithXY { get; set; }
+    public string SurroundWithNumberX { get; set; }
     public string MoveVideoPositionMilliseconds { get; set; }
     public string ImportShortcutsTitle { get; set; }
     public string ExportShortcutsTitle { get; set; }
@@ -461,6 +462,7 @@ public class LanguageSettingsShortcuts
         ColorX = "Color {0}";
         SurroundWith = "Surround with...";
         SurroundWithXY = "Surround with {0}/{1}";
+        SurroundWithNumberX = "Surround with #{0}";
         MoveVideoPositionMilliseconds = "Move video position in milliseconds";
         ImportShortcutsTitle = "Import shortcuts";
         ExportShortcutsTitle = "Export shortcuts";

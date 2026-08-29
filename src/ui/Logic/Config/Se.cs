@@ -39,6 +39,16 @@ public class Se
     public string Surround2Right { get; set; } = "♫";
     public string Surround3Left { get; set; } = "[";
     public string Surround3Right { get; set; } = "]";
+    public string Surround4Left { get; set; } = string.Empty;
+    public string Surround4Right { get; set; } = string.Empty;
+    public string Surround5Left { get; set; } = string.Empty;
+    public string Surround5Right { get; set; } = string.Empty;
+    public string Surround6Left { get; set; } = string.Empty;
+    public string Surround6Right { get; set; } = string.Empty;
+    public string Surround7Left { get; set; } = string.Empty;
+    public string Surround7Right { get; set; } = string.Empty;
+    public string Surround8Left { get; set; } = string.Empty;
+    public string Surround8Right { get; set; } = string.Empty;
     public string Actor1 { get; set; } = "Actor 1";
     public string Actor2 { get; set; } = "Actor 2";
     public string Actor3 { get; set; } = "Actor 3";
@@ -311,6 +321,53 @@ public class Se
         catch (Exception ex)
         {
             SeLogger.Error("Error seeding bundled Tesseract model: " + ex.Message);
+        }
+    }
+
+    /// <summary>
+    /// Number of configurable "surround with" slots (#14232). Slots are one-based; the ones left
+    /// blank are simply hidden from the subtitle grid context menu.
+    /// </summary>
+    public const int SurroundWithSlotCount = 8;
+
+    public string GetSurroundLeft(int slotNumber) => slotNumber switch
+    {
+        1 => Surround1Left,
+        2 => Surround2Left,
+        3 => Surround3Left,
+        4 => Surround4Left,
+        5 => Surround5Left,
+        6 => Surround6Left,
+        7 => Surround7Left,
+        8 => Surround8Left,
+        _ => string.Empty,
+    };
+
+    public string GetSurroundRight(int slotNumber) => slotNumber switch
+    {
+        1 => Surround1Right,
+        2 => Surround2Right,
+        3 => Surround3Right,
+        4 => Surround4Right,
+        5 => Surround5Right,
+        6 => Surround6Right,
+        7 => Surround7Right,
+        8 => Surround8Right,
+        _ => string.Empty,
+    };
+
+    public void SetSurround(int slotNumber, string left, string right)
+    {
+        switch (slotNumber)
+        {
+            case 1: Surround1Left = left; Surround1Right = right; break;
+            case 2: Surround2Left = left; Surround2Right = right; break;
+            case 3: Surround3Left = left; Surround3Right = right; break;
+            case 4: Surround4Left = left; Surround4Right = right; break;
+            case 5: Surround5Left = left; Surround5Right = right; break;
+            case 6: Surround6Left = left; Surround6Right = right; break;
+            case 7: Surround7Left = left; Surround7Right = right; break;
+            case 8: Surround8Left = left; Surround8Right = right; break;
         }
     }
 

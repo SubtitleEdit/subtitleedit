@@ -82,6 +82,27 @@ public static class ShortcutsMain
         }
     }
 
+    /// <summary>
+    /// Display name for a "surround with" slot: the configured tags when it has any, otherwise just
+    /// the slot number - the extra slots from #14232 ship unconfigured.
+    /// </summary>
+    public static string GetSurroundWithTitle(int slotNumber)
+    {
+        var left = Se.Settings.GetSurroundLeft(slotNumber);
+        var right = Se.Settings.GetSurroundRight(slotNumber);
+        return GetSurroundWithTitle(slotNumber, left, right);
+    }
+
+    public static string GetSurroundWithTitle(int slotNumber, string left, string right)
+    {
+        if (string.IsNullOrEmpty(left) && string.IsNullOrEmpty(right))
+        {
+            return string.Format(Se.Language.Options.Shortcuts.SurroundWithNumberX, slotNumber.ToString());
+        }
+
+        return string.Format(Se.Language.Options.Shortcuts.SurroundWithXY, left, right);
+    }
+
     private static Dictionary<string, string> BuildCommandTranslations()
     {
         return new Dictionary<string, string>
@@ -429,9 +450,14 @@ public static class ShortcutsMain
         { nameof(MainViewModel.SetActor10Command), string.Format(Se.Language.Options.Shortcuts.SetActorXY, "10", Se.Settings.Actor10) },
         { nameof(MainViewModel.SetNewActorCommand), Se.Language.Options.Shortcuts.SetNewActor },
         { nameof(MainViewModel.RemoveActorCommand), Se.Language.General.Actor + " - " + Se.Language.General.Remove },
-        { nameof(MainViewModel.SurroundWith1Command), string.Format(Se.Language.Options.Shortcuts.SurroundWithXY,  Se.Settings.Surround1Left, Se.Settings.Surround1Right) },
-        { nameof(MainViewModel.SurroundWith2Command), string.Format(Se.Language.Options.Shortcuts.SurroundWithXY,  Se.Settings.Surround2Left, Se.Settings.Surround2Right) },
-        { nameof(MainViewModel.SurroundWith3Command), string.Format(Se.Language.Options.Shortcuts.SurroundWithXY,  Se.Settings.Surround3Left, Se.Settings.Surround3Right) },
+        { nameof(MainViewModel.SurroundWith1Command), GetSurroundWithTitle(1) },
+        { nameof(MainViewModel.SurroundWith2Command), GetSurroundWithTitle(2) },
+        { nameof(MainViewModel.SurroundWith3Command), GetSurroundWithTitle(3) },
+        { nameof(MainViewModel.SurroundWith4Command), GetSurroundWithTitle(4) },
+        { nameof(MainViewModel.SurroundWith5Command), GetSurroundWithTitle(5) },
+        { nameof(MainViewModel.SurroundWith6Command), GetSurroundWithTitle(6) },
+        { nameof(MainViewModel.SurroundWith7Command), GetSurroundWithTitle(7) },
+        { nameof(MainViewModel.SurroundWith8Command), GetSurroundWithTitle(8) },
         { nameof(MainViewModel.InsertLineBeforeCommand), Se.Language.General.InsertBefore },
         { nameof(MainViewModel.InsertLineAfterCommand), Se.Language.General.InsertAfter },
         { nameof(MainViewModel.WaveformInsertNewSelectionCommand), Se.Language.Options.Shortcuts.WaveformInsertNewSelection },
@@ -856,6 +882,11 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.SurroundWith1Command, nameof(vm.SurroundWith1Command), ShortcutCategory.SubtitleGridAndTextBox);
         AddShortcut(shortcuts, vm.SurroundWith2Command, nameof(vm.SurroundWith2Command), ShortcutCategory.SubtitleGridAndTextBox);
         AddShortcut(shortcuts, vm.SurroundWith3Command, nameof(vm.SurroundWith3Command), ShortcutCategory.SubtitleGridAndTextBox);
+        AddShortcut(shortcuts, vm.SurroundWith4Command, nameof(vm.SurroundWith4Command), ShortcutCategory.SubtitleGridAndTextBox);
+        AddShortcut(shortcuts, vm.SurroundWith5Command, nameof(vm.SurroundWith5Command), ShortcutCategory.SubtitleGridAndTextBox);
+        AddShortcut(shortcuts, vm.SurroundWith6Command, nameof(vm.SurroundWith6Command), ShortcutCategory.SubtitleGridAndTextBox);
+        AddShortcut(shortcuts, vm.SurroundWith7Command, nameof(vm.SurroundWith7Command), ShortcutCategory.SubtitleGridAndTextBox);
+        AddShortcut(shortcuts, vm.SurroundWith8Command, nameof(vm.SurroundWith8Command), ShortcutCategory.SubtitleGridAndTextBox);
         AddShortcut(shortcuts, vm.InsertLineBeforeCommand, nameof(vm.InsertLineBeforeCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.InsertLineAfterCommand, nameof(vm.InsertLineAfterCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.WaveformInsertNewSelectionCommand, nameof(vm.WaveformInsertNewSelectionCommand), ShortcutCategory.Waveform);
