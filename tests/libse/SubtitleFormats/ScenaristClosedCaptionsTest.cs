@@ -138,6 +138,142 @@ public class ScenaristClosedCaptionsTest
         Assert.Single(subtitle.Paragraphs);
         Assert.Equal("<i>♪ De Pueblo Paleta soy ♪</i>", subtitle.Paragraphs[0].Text);
     }
+
+    private static string SaveScc(string text)
+    {
+        var subtitle = new Subtitle();
+        subtitle.Paragraphs.Add(new Paragraph(text, 1000, 3000));
+        var scc = new ScenaristClosedCaptions().ToText(subtitle, "test");
+        return scc.SplitToLines().First(line => line.Contains("9420")).Trim();
+    }
+
+    private static string SaveAndReloadScc(string text)
+    {
+        var subtitle = new Subtitle();
+        subtitle.Paragraphs.Add(new Paragraph(text, 1000, 3000));
+        var format = new ScenaristClosedCaptions();
+        var reloaded = new Subtitle();
+        format.LoadSubtitle(reloaded, format.ToText(subtitle, "test").SplitToLines(), "test.scc");
+        return reloaded.Paragraphs.Count == 0 ? string.Empty : reloaded.Paragraphs[0].Text;
+    }
+
+    [Fact]
+    public void WritesColorAsMidRowCode()
+    {
+        // Issue #14239: the writer only knew "<i>", so a color tag was encoded letter by letter
+        // and showed up on screen as "<font color=...". Yellow is the mid-row code 912a, and
+        // going back to white after it is 9120 (control codes are always sent twice).
+        var scc = SaveScc("-- <font color=\"yellow\">Captions by VITAC</font> --");
+
+        Assert.Contains("912a 912a", scc);
+        Assert.Contains("9120 9120", scc);
+        Assert.Equal("-- <font color=\"Yellow\">Captions by VITAC</font> --", SaveAndReloadScc("-- <font color=\"yellow\">Captions by VITAC</font> --"));
+    }
+
+    [Fact]
+    public void WritesWebVttColorClassAsMidRowCode()
+    {
+        // WebVTT color classes are kept as they are when a .vtt file is loaded, so they reach
+        // the SCC writer as "<c.yellow>" instead of "<font color=...>".
+        Assert.Contains("912a 912a", SaveScc("<c.yellow>Captions by VITAC</c>"));
+        Assert.Equal("<font color=\"Yellow\">Captions by VITAC</font>", SaveAndReloadScc("<c.yellow>Captions by VITAC</c>"));
+    }
+
+    [Theory]
+    [InlineData("white", "9120")]
+    [InlineData("green", "91a2")]
+    [InlineData("blue", "91a4")]
+    [InlineData("cyan", "9126")]
+    [InlineData("red", "91a8")]
+    [InlineData("yellow", "912a")]
+    [InlineData("magenta", "912c")]
+    [InlineData("#00FF00", "91a2")]     // hex spelling
+    [InlineData("#104010", "91a2")]     // a dark green is still green
+    [InlineData("#808080", "9120")]     // gray is nearest to white
+    [InlineData("black", "9120")]       // CEA-608 has no black foreground - stay white
+    [InlineData("chucknorris", "9120")] // not a color at all
+    public void WritesAllCea608Colors(string color, string expectedCode)
+    {
+        var scc = SaveScc("Hi <font color=\"" + color + "\">there</font>");
+
+        if (expectedCode == "9120")
+        {
+            Assert.DoesNotContain("91a2", scc);
+            Assert.DoesNotContain("912a", scc);
+        }
+        else
+        {
+            Assert.Contains(expectedCode + " " + expectedCode, scc);
+        }
+    }
+
+    [Fact]
+    public void DoesNotWriteTagsAsText()
+    {
+        // Any tag with no CEA-608 equivalent must be dropped, not encoded letter by letter.
+        foreach (var text in new[] { "<b>Hello</b>", "<ruby>Hello</ruby>", "<v Fred>Hello</v>", "<font face=\"Arial\">Hello</font>" })
+        {
+            var scc = SaveScc(text);
+
+            Assert.DoesNotContain("bc", scc); // "<" with odd parity
+            Assert.DoesNotContain("3e", scc); // ">"
+            Assert.Equal("Hello", SaveAndReloadScc(text));
+        }
+    }
+
+    [Fact]
+    public void KeepsLessThanSignInText()
+    {
+        // ...but a stray "<" is text, not a tag ("bc" is "<" with odd parity, "3e" is ">").
+        var scc = SaveScc("a < b > c");
+
+        Assert.Contains("bc", scc);
+        Assert.Contains("3e", scc);
+        Assert.Equal("a < b > c", SaveAndReloadScc("a < b > c"));
+    }
+
+    [Fact]
+    public void ItalicsWinsOverColor()
+    {
+        // CEA-608 encodes italics in the same slot as the colors - colored italics do not exist,
+        // so the color inside an italic run is dropped instead of ending the italics.
+        var scc = SaveScc("<i>Italic <font color=\"yellow\">yellow</font></i>");
+
+        Assert.Contains("91ae 91ae", scc);
+        Assert.DoesNotContain("912a", scc);
+        Assert.Equal("<i>Italic yellow</i>", SaveAndReloadScc("<i>Italic <font color=\"yellow\">yellow</font></i>"));
+    }
+
+    [Fact]
+    public void ReopensColorOnEveryRow()
+    {
+        // A Preamble Address Code resets the row to white, so a color spanning two lines must be
+        // written again on the second row.
+        var scc = SaveScc("<font color=\"yellow\">Line one" + Environment.NewLine + "line two</font>");
+
+        Assert.Equal(2, scc.Split(new[] { "912a 912a" }, StringSplitOptions.None).Length - 1);
+    }
+
+    [Fact]
+    public void CenteringCountsMidRowCodeCells()
+    {
+        // A mid-row code takes a screen cell (it shows as a space), so a line with a color and a
+        // reset in it is two cells wider than its text and must be indented two cells less:
+        // 24 characters center on column 4 (the row 15 code 94f2), 24 + 2 on column 0 + tab 3.
+        Assert.Contains("94f2 94f2", SaveScc("Twenty four characters!!"));
+        Assert.Contains("9470 9470 9723 9723", SaveScc("<font color=\"yellow\">Twenty four</font> characters!!"));
+    }
+
+    [Fact]
+    public void LongColoredLineStaysOnTheRow()
+    {
+        // The 32 characters plus the mid-row code do not fit the row - do not fall back to a
+        // right-hand column (the old negative indent picked column 28).
+        var scc = SaveScc("<font color=\"yellow\">12345678901234567890123456789012</font>");
+
+        Assert.Contains("9470 9470", scc); // row 15, column 0
+        Assert.DoesNotContain("94fe", scc); // row 15, column 28
+    }
 }
 
 public class ScenaristClosedCaptionsFormatLimitsTest
