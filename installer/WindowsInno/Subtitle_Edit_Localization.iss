@@ -242,7 +242,7 @@ hu.types_default=Default installation
 ; Italian
 [CustomMessages]
 it.sm_com_Changelog=Elenco novità di Subtitle Edit
-it.run_ViewChangelog=Visualizza le novità
+it.run_ViewChangelog=Visualizza elenco novità di Subtitle Edit
 it.msg_DeleteSettings=Vuoi eliminare le impostazioni personali di Subtitle Edit?
 it.tsk_AllUsers=Per tutti gli utenti
 it.tsk_CurrentUser=Solo per l'utente attuale
