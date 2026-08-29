@@ -15540,26 +15540,81 @@ public partial class MainViewModel :
         });
     }
 
-    // Replaces the subtitle grid selection with the given rows.
-    private void ApplyGridSelection(IReadOnlyList<SubtitleLineViewModel> items)
+    /// <summary>
+    /// Replaces the subtitle grid selection with the given rows.
+    /// </summary>
+    /// <param name="current">
+    /// The row that should end up as the current one - the row the edit box shows, the shift-
+    /// selection anchor, and the row the grid scrolls to. Null means the first of
+    /// <paramref name="items"/>, which is what a caller whose selection is a result set (the
+    /// matches of a Modify selection) wants. Pass a row explicitly when the new selection is not
+    /// something to jump to, or row 1 would drag the view to the top of the file.
+    /// </param>
+    private void ApplyGridSelection(IReadOnlyList<SubtitleLineViewModel> items, SubtitleLineViewModel? current = null)
     {
         // Map items to indexes in one pass - Selection works on indexes, and per-item
         // IndexOf would be O(n²) on large selections.
         var wanted = new HashSet<SubtitleLineViewModel>(items);
+        var currentRow = current ?? (items.Count > 0 ? items[0] : null);
+        var currentIndex = currentRow != null ? Subtitles.IndexOf(currentRow) : -1;
+
         BatchGridSelection(() =>
         {
             SubtitleGrid.Selection.Clear();
-            for (var i = 0; i < Subtitles.Count && wanted.Count > 0; i++)
+
+            // The row selected first becomes SelectedItem and the selection anchor, the same
+            // trick SelectGridRange uses for the moving end of a shift-selection. It is covered
+            // again by one of the ranges below, which is a no-op.
+            if (currentIndex >= 0)
+            {
+                SubtitleGrid.Selection.Select(currentIndex);
+            }
+
+            // Hand the rest over as contiguous ranges rather than one Select per row.
+            // SelectionModel.Select forces the anchor to the row it selects, so a per-row loop
+            // leaves the anchor on the *last* row of the selection - and SelectingItemsControl
+            // posts a ScrollIntoView for the anchor, which threw the grid to the end of the file
+            // after an inverse selection. SelectRange leaves an anchor that is already set alone.
+            var runStart = -1;
+            for (var i = 0; i < Subtitles.Count; i++)
             {
                 if (wanted.Remove(Subtitles[i]))
                 {
-                    SubtitleGrid.Selection.Select(i);
+                    if (runStart < 0)
+                    {
+                        runStart = i;
+                    }
+
+                    continue;
+                }
+
+                if (runStart >= 0)
+                {
+                    SubtitleGrid.Selection.SelectRange(runStart, i - 1);
+                    runStart = -1;
+                }
+
+                if (wanted.Count == 0)
+                {
+                    break;
                 }
             }
 
-            SelectedSubtitle = items.Count > 0 ? items[0] : null;
-            SelectedSubtitleIndex = SelectedSubtitle != null ? Subtitles.IndexOf(SelectedSubtitle) : null;
+            if (runStart >= 0)
+            {
+                SubtitleGrid.Selection.SelectRange(runStart, Subtitles.Count - 1);
+            }
         });
+
+        // Only now that the batch has committed. SelectedSubtitle is TwoWay-bound to the grid's
+        // SelectedItem, and SelectionModel's SelectedIndex setter is a Clear() + Select() - so
+        // assigning it while the batch was still open wrote back through the binding and wiped
+        // every row the batch had queued: an inverse selection queued 299 of 300 rows and came
+        // out with one row selected, so every command that reads the selection saw a single
+        // line. After the commit the grid already has this row as SelectedItem, so the binding
+        // write is a no-op and the selection survives.
+        SelectedSubtitle = currentIndex >= 0 ? Subtitles[currentIndex] : null;
+        SelectedSubtitleIndex = currentIndex >= 0 ? currentIndex : null;
 
         SubtitleGridSelectionChanged();
     }
@@ -19487,6 +19542,31 @@ public partial class MainViewModel :
         SubtitleGrid.SelectAll();
     }
 
+    /// <summary>
+    /// The row nearest <paramref name="index"/> that is not in <paramref name="excluded"/> -
+    /// searching down from it first, then up. Null when every row is excluded.
+    /// </summary>
+    private SubtitleLineViewModel? NearestRowNotIn(HashSet<SubtitleLineViewModel> excluded, int index)
+    {
+        for (var i = Math.Max(0, index); i < Subtitles.Count; i++)
+        {
+            if (!excluded.Contains(Subtitles[i]))
+            {
+                return Subtitles[i];
+            }
+        }
+
+        for (var i = Math.Min(index, Subtitles.Count) - 1; i >= 0; i--)
+        {
+            if (!excluded.Contains(Subtitles[i]))
+            {
+                return Subtitles[i];
+            }
+        }
+
+        return null;
+    }
+
     private void InverseRowSelection()
     {
         if (Subtitles.Count == 0)
@@ -19498,10 +19578,29 @@ public partial class MainViewModel :
         // With reference: inverting works on rows as displayed, so a selected reference row
         // must count as selected and end up deselected.
         var selectedItems = new HashSet<SubtitleLineViewModel>(SubtitleGridSelectedItemsWithReference);
+        var currentIndex = SelectedSubtitleIndex ?? 0;
 
-        // Inverting a small selection on a large file selects almost every row, so
-        // apply via the detach/reattach helper to avoid the per-row hang (#11529).
-        ApplyGridSelection(Subtitles.Where(s => !selectedItems.Contains(s)).ToList());
+        // SE 4 inverted by flipping each row's Selected flag and never touched the focused row
+        // or the scroll offset, so the user stayed where they were looking. The current row is
+        // always inverted away, and letting the first row of the new selection become current
+        // instead - row 1 whenever the user had a single row selected - pulled the grid to the
+        // top of the file and put line 1 in the edit box. Hand the current row to the nearest
+        // row that survived the inversion.
+        var current = NearestRowNotIn(selectedItems, currentIndex);
+        if (current == null)
+        {
+            // Everything was selected, so the inverse is nothing - but the grid is
+            // AlwaysSelected and would re-pick row 1 and scroll to the top. Collapse to the
+            // row the user is on instead.
+            var row = Subtitles.GetOrNull(currentIndex) ?? Subtitles[0];
+            ApplyGridSelection(new[] { row }, row);
+            return;
+        }
+
+        // Inverting a small selection on a large file selects almost every row, so it goes
+        // through ApplyGridSelection, which applies it as index ranges in one batch instead of
+        // row by row (#11529).
+        ApplyGridSelection(Subtitles.Where(s => !selectedItems.Contains(s)).ToList(), current);
     }
 
     private void SelectAndScrollToRow(int index)
