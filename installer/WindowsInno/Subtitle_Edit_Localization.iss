@@ -1,4 +1,4 @@
-﻿;* Subtitle Edit - installer localization script 
+;* Subtitle Edit - installer localization script 
 
 ; English
 [CustomMessages]
@@ -242,7 +242,7 @@ hu.types_default=Default installation
 ; Italian
 [CustomMessages]
 it.sm_com_Changelog=Elenco novità di Subtitle Edit
-it.run_ViewChangelog=Visualizza le novità
+it.run_ViewChangelog=Visualizza elenco novità di Subtitle Edit
 it.msg_DeleteSettings=Vuoi eliminare le impostazioni personali di Subtitle Edit?
 it.tsk_AllUsers=Per tutti gli utenti
 it.tsk_CurrentUser=Solo per l'utente attuale
@@ -254,6 +254,9 @@ it.types_custom=Installazione personalizzata
 it.types_default=Installazione predefinita
 it.NameAndVersion=%1 %2
 it.LaunchProgram=Esegui %1
+it.AdditionalIcons=Collegamenti:
+it.CreateDesktopIcon=Crea collegamento programma sul &desktop
+it.CreateQuickLaunchIcon=Crea collegamento programma nella &barra 'Avvio veloce'
 
 ; Japanese
 [CustomMessages]
