@@ -1283,19 +1283,57 @@ public static partial class InitListViewAndEditBox
                 new MenuItem
                 {
                     [!MenuItem.HeaderProperty] = new Binding(nameof(vm.SurroundWith1Text)),
+                    [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsSurroundWith1Visible)),
                     Command = vm.SurroundWith1Command,
                     DataContext = vm,
                 },
                 new MenuItem
                 {
                     [!MenuItem.HeaderProperty] = new Binding(nameof(vm.SurroundWith2Text)),
+                    [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsSurroundWith2Visible)),
                     Command = vm.SurroundWith2Command,
                     DataContext = vm,
                 },
                 new MenuItem
                 {
                     [!MenuItem.HeaderProperty] = new Binding(nameof(vm.SurroundWith3Text)),
+                    [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsSurroundWith3Visible)),
                     Command = vm.SurroundWith3Command,
+                    DataContext = vm,
+                },
+                new MenuItem
+                {
+                    [!MenuItem.HeaderProperty] = new Binding(nameof(vm.SurroundWith4Text)),
+                    [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsSurroundWith4Visible)),
+                    Command = vm.SurroundWith4Command,
+                    DataContext = vm,
+                },
+                new MenuItem
+                {
+                    [!MenuItem.HeaderProperty] = new Binding(nameof(vm.SurroundWith5Text)),
+                    [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsSurroundWith5Visible)),
+                    Command = vm.SurroundWith5Command,
+                    DataContext = vm,
+                },
+                new MenuItem
+                {
+                    [!MenuItem.HeaderProperty] = new Binding(nameof(vm.SurroundWith6Text)),
+                    [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsSurroundWith6Visible)),
+                    Command = vm.SurroundWith6Command,
+                    DataContext = vm,
+                },
+                new MenuItem
+                {
+                    [!MenuItem.HeaderProperty] = new Binding(nameof(vm.SurroundWith7Text)),
+                    [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsSurroundWith7Visible)),
+                    Command = vm.SurroundWith7Command,
+                    DataContext = vm,
+                },
+                new MenuItem
+                {
+                    [!MenuItem.HeaderProperty] = new Binding(nameof(vm.SurroundWith8Text)),
+                    [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsSurroundWith8Visible)),
+                    Command = vm.SurroundWith8Command,
                     DataContext = vm,
                 },
                 new MenuItem

@@ -425,6 +425,19 @@ public partial class MainViewModel :
     [ObservableProperty] private string _surroundWith1Text;
     [ObservableProperty] private string _surroundWith2Text;
     [ObservableProperty] private string _surroundWith3Text;
+    [ObservableProperty] private string _surroundWith4Text;
+    [ObservableProperty] private string _surroundWith5Text;
+    [ObservableProperty] private string _surroundWith6Text;
+    [ObservableProperty] private string _surroundWith7Text;
+    [ObservableProperty] private string _surroundWith8Text;
+    [ObservableProperty] private bool _isSurroundWith1Visible;
+    [ObservableProperty] private bool _isSurroundWith2Visible;
+    [ObservableProperty] private bool _isSurroundWith3Visible;
+    [ObservableProperty] private bool _isSurroundWith4Visible;
+    [ObservableProperty] private bool _isSurroundWith5Visible;
+    [ObservableProperty] private bool _isSurroundWith6Visible;
+    [ObservableProperty] private bool _isSurroundWith7Visible;
+    [ObservableProperty] private bool _isSurroundWith8Visible;
     [ObservableProperty] private bool _isSubtitleSecondaryVisible;
 
     public TableView SubtitleGrid { get; set; }
@@ -896,6 +909,14 @@ public partial class MainViewModel :
         _subtitleFileName = string.Empty;
         Subtitles = [];
         FilePropertiesText = string.Empty;
+        SurroundWith1Text = string.Empty;
+        SurroundWith2Text = string.Empty;
+        SurroundWith3Text = string.Empty;
+        SurroundWith4Text = string.Empty;
+        SurroundWith5Text = string.Empty;
+        SurroundWith6Text = string.Empty;
+        SurroundWith7Text = string.Empty;
+        SurroundWith8Text = string.Empty;
 
         SubtitleFormats = [.. SubtitleFormatHelper.GetSubtitleFormatsWithFavoritesAtTop()];
         _changingFormatProgrammatically = true;
@@ -1012,9 +1033,7 @@ public partial class MainViewModel :
         InitializeLibMpv();
         LibVlcDynamicPlayer.LibVlcPath = Se.VlcFolder;
         LoadShortcuts();
-        SurroundWith1Text = string.Format(Se.Language.Options.Shortcuts.SurroundWithXY, Se.Settings.Surround1Left, Se.Settings.Surround1Right);
-        SurroundWith2Text = string.Format(Se.Language.Options.Shortcuts.SurroundWithXY, Se.Settings.Surround2Left, Se.Settings.Surround2Right);
-        SurroundWith3Text = string.Format(Se.Language.Options.Shortcuts.SurroundWithXY, Se.Settings.Surround3Left, Se.Settings.Surround3Right);
+        UpdateSurroundWithMenuItems();
 
         StartTimers();
         _autoBackupService.StartAutoBackup(this);
@@ -1245,9 +1264,7 @@ public partial class MainViewModel :
             _shortcutManager.RegisterShortcut(shortCut);
         }
 
-        SurroundWith1Text = string.Format(Se.Language.Options.Shortcuts.SurroundWithXY, Se.Settings.Surround1Left, Se.Settings.Surround1Right);
-        SurroundWith2Text = string.Format(Se.Language.Options.Shortcuts.SurroundWithXY, Se.Settings.Surround2Left, Se.Settings.Surround2Right);
-        SurroundWith3Text = string.Format(Se.Language.Options.Shortcuts.SurroundWithXY, Se.Settings.Surround3Left, Se.Settings.Surround3Right);
+        UpdateSurroundWithMenuItems();
     }
 
     [RelayCommand]
@@ -14204,19 +14221,85 @@ public partial class MainViewModel :
     [RelayCommand]
     private void SurroundWith1()
     {
-        SurroundWith(Se.Settings.Surround1Left, Se.Settings.Surround1Right);
+        SurroundWithSlot(1);
     }
 
     [RelayCommand]
     private void SurroundWith2()
     {
-        SurroundWith(Se.Settings.Surround2Left, Se.Settings.Surround2Right);
+        SurroundWithSlot(2);
     }
 
     [RelayCommand]
     private void SurroundWith3()
     {
-        SurroundWith(Se.Settings.Surround3Left, Se.Settings.Surround3Right);
+        SurroundWithSlot(3);
+    }
+
+    [RelayCommand]
+    private void SurroundWith4()
+    {
+        SurroundWithSlot(4);
+    }
+
+    [RelayCommand]
+    private void SurroundWith5()
+    {
+        SurroundWithSlot(5);
+    }
+
+    [RelayCommand]
+    private void SurroundWith6()
+    {
+        SurroundWithSlot(6);
+    }
+
+    [RelayCommand]
+    private void SurroundWith7()
+    {
+        SurroundWithSlot(7);
+    }
+
+    [RelayCommand]
+    private void SurroundWith8()
+    {
+        SurroundWithSlot(8);
+    }
+
+    private void SurroundWithSlot(int slotNumber)
+    {
+        SurroundWith(Se.Settings.GetSurroundLeft(slotNumber), Se.Settings.GetSurroundRight(slotNumber));
+    }
+
+    /// <summary>
+    /// Refreshes the "surround with" context menu entries; slots left unconfigured stay hidden so
+    /// the eight available slots (#14232) do not clutter the menu.
+    /// </summary>
+    private void UpdateSurroundWithMenuItems()
+    {
+        SurroundWith1Text = ShortcutsMain.GetSurroundWithTitle(1);
+        SurroundWith2Text = ShortcutsMain.GetSurroundWithTitle(2);
+        SurroundWith3Text = ShortcutsMain.GetSurroundWithTitle(3);
+        SurroundWith4Text = ShortcutsMain.GetSurroundWithTitle(4);
+        SurroundWith5Text = ShortcutsMain.GetSurroundWithTitle(5);
+        SurroundWith6Text = ShortcutsMain.GetSurroundWithTitle(6);
+        SurroundWith7Text = ShortcutsMain.GetSurroundWithTitle(7);
+        SurroundWith8Text = ShortcutsMain.GetSurroundWithTitle(8);
+
+        IsSurroundWith1Visible = IsSurroundWithSlotConfigured(1);
+        IsSurroundWith2Visible = IsSurroundWithSlotConfigured(2);
+        IsSurroundWith3Visible = IsSurroundWithSlotConfigured(3);
+        IsSurroundWith4Visible = IsSurroundWithSlotConfigured(4);
+        IsSurroundWith5Visible = IsSurroundWithSlotConfigured(5);
+        IsSurroundWith6Visible = IsSurroundWithSlotConfigured(6);
+        IsSurroundWith7Visible = IsSurroundWithSlotConfigured(7);
+        IsSurroundWith8Visible = IsSurroundWithSlotConfigured(8);
+    }
+
+    private static bool IsSurroundWithSlotConfigured(int slotNumber)
+    {
+        return !string.IsNullOrEmpty(Se.Settings.GetSurroundLeft(slotNumber)) ||
+               !string.IsNullOrEmpty(Se.Settings.GetSurroundRight(slotNumber));
     }
 
     [RelayCommand]
@@ -23251,9 +23334,7 @@ public partial class MainViewModel :
                         TableViewExtras.FocusRow(SubtitleGrid);
                     }
 
-                    SurroundWith1Text = string.Format(Se.Language.Options.Shortcuts.SurroundWithXY, Se.Settings.Surround1Left, Se.Settings.Surround1Right);
-                    SurroundWith2Text = string.Format(Se.Language.Options.Shortcuts.SurroundWithXY, Se.Settings.Surround2Left, Se.Settings.Surround2Right);
-                    SurroundWith3Text = string.Format(Se.Language.Options.Shortcuts.SurroundWithXY, Se.Settings.Surround3Left, Se.Settings.Surround3Right);
+                    UpdateSurroundWithMenuItems();
                 }
             });
         });
