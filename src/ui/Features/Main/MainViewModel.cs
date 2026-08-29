@@ -15540,7 +15540,7 @@ public partial class MainViewModel :
             return;
         }
 
-        SelectAndScrollToRow(idx);
+        SelectAndScrollToRowCentered(idx);
 
         if (WaveformCenter)
         {
@@ -15600,7 +15600,7 @@ public partial class MainViewModel :
             return;
         }
 
-        SelectAndScrollToRow(idx);
+        SelectAndScrollToRowCentered(idx);
 
         if (WaveformCenter)
         {
@@ -15632,7 +15632,7 @@ public partial class MainViewModel :
             return;
         }
 
-        SelectAndScrollToRow(idx);
+        SelectAndScrollToRowCentered(idx);
         vp.Position = Subtitles[idx].StartTime.TotalSeconds;
 
         if (AudioVisualizer != null && AudioVisualizer.WavePeaks != null)
@@ -15661,7 +15661,7 @@ public partial class MainViewModel :
         }
 
         vp.Position = Subtitles[idx].StartTime.TotalSeconds;
-        SelectAndScrollToRow(idx);
+        SelectAndScrollToRowCentered(idx);
 
         if (AudioVisualizer != null && AudioVisualizer.WavePeaks != null)
         {
@@ -15780,7 +15780,7 @@ public partial class MainViewModel :
         }
 
         vp.Position = next.StartTime.TotalSeconds;
-        SelectAndScrollToRow(idx);
+        SelectAndScrollToRowCentered(idx);
         AudioVisualizerCenterOnPositionIfNeeded(next, next.StartTime.TotalSeconds);
         _updateAudioVisualizer = true;
     }
@@ -15832,7 +15832,7 @@ public partial class MainViewModel :
         }
 
         vp.Position = previous.StartTime.TotalSeconds;
-        SelectAndScrollToRow(idx);
+        SelectAndScrollToRowCentered(idx);
         AudioVisualizerCenterOnPositionIfNeeded(previous, previous.StartTime.TotalSeconds);
         _updateAudioVisualizer = true;
     }
@@ -19432,6 +19432,21 @@ public partial class MainViewModel :
     }
 
     /// <summary>
+    /// <see cref="SelectAndScrollToRow(int)"/> for the "go to previous/next line" commands: with
+    /// "subtitle grid, center when selecting prev/next row" on, these re-center the view on every
+    /// step, not only when the target row happens to be off screen.
+    /// </summary>
+    private void SelectAndScrollToRowCentered(int index)
+    {
+        if (index < 0 || index >= Subtitles.Count)
+        {
+            return;
+        }
+
+        SelectAndScrollToRow(index, null, null, Se.Settings.General.SubtitleGridCenterSelectedRow);
+    }
+
+    /// <summary>
     /// Selects and scrolls to <paramref name="row"/>, resolving its index only when the
     /// (posted) scroll actually runs. Use this instead of the index overload whenever the
     /// collection may still shift between the call and the dispatcher callback - the merge
@@ -19457,7 +19472,13 @@ public partial class MainViewModel :
         SelectAndScrollToRow(index, row, restoreGridFocus);
     }
 
-    private void SelectAndScrollToRow(int index, SubtitleLineViewModel? row, bool? restoreGridFocus = null)
+    /// <param name="centerEvenIfVisible">
+    /// Center the target row even when it is already fully on screen - what the prev/next-line
+    /// navigation needs with "center when selecting prev/next row" on. Off for the rest, where
+    /// the scroll offset is left alone for a visible row (see <paramref name="row"/> callers such
+    /// as delete/insert, which must not move the rows out from under the user).
+    /// </param>
+    private void SelectAndScrollToRow(int index, SubtitleLineViewModel? row, bool? restoreGridFocus = null, bool centerEvenIfVisible = false)
     {
         _shiftSelectAnchorIndex = -1;
         _shiftSelectCurrentIndex = -1;
@@ -19554,7 +19575,7 @@ public partial class MainViewModel :
                     EditTextBoxOriginal.CaretIndex = 0;
                 }
 
-                if (Se.Settings.General.SubtitleGridCenterSelectedRow && !alreadyVisible)
+                if (Se.Settings.General.SubtitleGridCenterSelectedRow && (!alreadyVisible || centerEvenIfVisible))
                 {
                     CenterSelectedRowInSubtitleGrid(itemToScroll);
                 }
@@ -19683,6 +19704,18 @@ public partial class MainViewModel :
     private void CenterSelectedRowInSubtitleGrid(SubtitleLineViewModel itemToCenter)
     {
         TableViewExtras.CenterRow(SubtitleGrid, itemToCenter);
+    }
+
+    /// <summary>
+    /// Centers whatever row the grid has selected right now - for the arrow keys, where the
+    /// selection is moved by TableView's own list navigation rather than by a command.
+    /// </summary>
+    private void CenterCurrentRowInSubtitleGrid()
+    {
+        if (SubtitleGrid.SelectedItem is SubtitleLineViewModel current)
+        {
+            CenterSelectedRowInSubtitleGrid(current);
+        }
     }
 
     /// <summary>
@@ -26697,6 +26730,17 @@ public partial class MainViewModel :
                 {
                     _shiftSelectAnchorIndex = -1;
                     _shiftSelectCurrentIndex = -1;
+
+                    // A plain arrow key is left to TableView's own list navigation, which only
+                    // scrolls when the next row is off screen - so with "center when selecting
+                    // prev/next row" on, the selection walked from the middle of the view all the
+                    // way down to the bottom edge before anything moved, and the view then jumped
+                    // a half screen (#14231). This handler tunnels, so post the centering to run
+                    // after the built-in navigation has moved the selection.
+                    if (Se.Settings.General.SubtitleGridCenterSelectedRow)
+                    {
+                        Dispatcher.UIThread.Post(CenterCurrentRowInSubtitleGrid);
+                    }
                 }
                 else if (keyEventArgs.Key == Key.PageDown && IsExtendSelectionChord(keyEventArgs) && Subtitles.Count > 0)
                 {
@@ -26719,7 +26763,7 @@ public partial class MainViewModel :
                 {
                     keyEventArgs.Handled = true;
                     var current = SelectedSubtitleIndex ?? 0;
-                    SelectAndScrollToRow(TableViewExtras.GetPageTarget(SubtitleGrid, current, keyEventArgs.Key == Key.PageDown));
+                    SelectAndScrollToRowCentered(TableViewExtras.GetPageTarget(SubtitleGrid, current, keyEventArgs.Key == Key.PageDown));
                     return;
                 }
                 else if (keyEventArgs.Key == Key.Home && IsExtendSelectionChord(keyEventArgs) && Subtitles.Count > 0)
