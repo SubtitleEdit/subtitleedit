@@ -41,6 +41,7 @@ public class EbuSaveOptionsPersistenceTests
     /// </summary>
     private sealed class LibSeEbuScope : IDisposable
     {
+        private readonly int _justification = Configuration.Settings.SubtitleSettings.EbuStlJustificationCode;
         private readonly int _marginTop = Configuration.Settings.SubtitleSettings.EbuStlMarginTop;
         private readonly int _marginBottom = Configuration.Settings.SubtitleSettings.EbuStlMarginBottom;
         private readonly int _newLineRows = Configuration.Settings.SubtitleSettings.EbuStlNewLineRows;
@@ -49,6 +50,7 @@ public class EbuSaveOptionsPersistenceTests
 
         public void Dispose()
         {
+            Configuration.Settings.SubtitleSettings.EbuStlJustificationCode = _justification;
             Configuration.Settings.SubtitleSettings.EbuStlMarginTop = _marginTop;
             Configuration.Settings.SubtitleSettings.EbuStlMarginBottom = _marginBottom;
             Configuration.Settings.SubtitleSettings.EbuStlNewLineRows = _newLineRows;
@@ -214,5 +216,38 @@ public class EbuSaveOptionsPersistenceTests
 
         viewModel.SelectedDisplayStandardCode = viewModel.DisplayStandardCodes[3]; // undefined
         Assert.False(viewModel.IsTeletext);
+    }
+
+    // The video preview reads the justification off the libse settings, next to the margins and the
+    // teletext flags. It used to read Ebu.EbuUiHelper, which is the carrier that takes the code to
+    // the writer and does not exist until a save or this dialog creates one - so the preview showed
+    // everything centered until then, and followed batch convert's job code after (PR #14229).
+    [AvaloniaFact]
+    public void Justification_ReachesTheLibSeSettingsForThePreview()
+    {
+        using var scope = new SettingsScope(ScopePaths);
+        using var libSeScope = new LibSeEbuScope();
+
+        var viewModel = OpenDialog(MakeSubtitle());
+        viewModel.SelectedJustification = viewModel.Justifications[1]; // left-justified
+        viewModel.OkCommand.Execute(null);
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal(1, Configuration.Settings.SubtitleSettings.EbuStlJustificationCode);
+    }
+
+    // A save that never opens the dialog still has to preview and write the persisted pick, so the
+    // settings sync has to carry it over like every other EBU STL option.
+    [AvaloniaFact]
+    public void Justification_IsMirroredIntoLibSeBySettingsSync()
+    {
+        using var scope = new SettingsScope(ScopePaths);
+        using var libSeScope = new LibSeEbuScope();
+        Se.Settings.File.EbuSaveOptions.JustificationCode = 3;
+        Configuration.Settings.SubtitleSettings.EbuStlJustificationCode = 0;
+
+        Se.UpdateLibSeSettings();
+
+        Assert.Equal(3, Configuration.Settings.SubtitleSettings.EbuStlJustificationCode);
     }
 }

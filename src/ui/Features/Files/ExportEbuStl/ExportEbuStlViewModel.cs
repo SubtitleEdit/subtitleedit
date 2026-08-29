@@ -430,6 +430,7 @@ new("2F", "French - hearing impaired (VF-MAL)"),
         _header.TotalNumberOfDisks = SelectedTotalNumberOfDiscs?.ToString(CultureInfo.InvariantCulture) ?? string.Empty;
 
         JustificationCode = (byte)Justifications.IndexOf(SelectedJustification ?? Justifications[0]);
+        Configuration.Settings.SubtitleSettings.EbuStlJustificationCode = JustificationCode;
         Configuration.Settings.SubtitleSettings.EbuStlMarginTop = SelectedTopAlignment ?? 0;
         Configuration.Settings.SubtitleSettings.EbuStlMarginBottom = SelectedBottomAlignment ?? 0;
         Configuration.Settings.SubtitleSettings.EbuStlNewLineRows = SelectedRowsAddByNewLine ?? 1;
