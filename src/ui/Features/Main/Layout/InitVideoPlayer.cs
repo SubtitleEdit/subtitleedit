@@ -89,7 +89,10 @@ public static class InitVideoPlayer
                     control.Position = position;
                 }
 
-                control.EndPositionRestore();
+                // Only if the player really got there - the loop above is a fixed 100 ms of
+                // seeks, so a player still loading when it runs out would otherwise be handed
+                // back as the truth while it still reports 0 (issue #14218).
+                control.EndPositionRestoreIfArrived();
             });
         }
 
