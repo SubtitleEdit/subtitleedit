@@ -142,6 +142,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.FileOpenOriginalCommand), Se.Language.Options.Shortcuts.FileOpenOriginal },
         { nameof(MainViewModel.FileCloseOriginalCommand), Se.Language.Options.Shortcuts.FileCloseOriginal },
         { nameof(MainViewModel.ToggleTranslationModeCommand), Se.Language.Options.Shortcuts.GeneralToggleTranslationMode },
+        { nameof(MainViewModel.ToggleOriginalTextInPreviewCommand), Se.Language.Options.Shortcuts.GeneralToggleTranslationAndOriginalInPreviews },
         { nameof(MainViewModel.FileCloseTranslationCommand), Se.Language.Options.Shortcuts.FileCloseTranslation },
         { nameof(MainViewModel.CommandExitCommand), Se.Language.Options.Shortcuts.FileExit },
         { nameof(MainViewModel.CommandFileNewCommand), Se.Language.General.New },
@@ -587,6 +588,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.FileOpenOriginalCommand, nameof(vm.FileOpenOriginalCommand), ShortcutCategory.General, ShortcutGroup.File);
         AddShortcut(shortcuts, vm.FileCloseOriginalCommand, nameof(vm.FileCloseOriginalCommand), ShortcutCategory.General, ShortcutGroup.File);
         AddShortcut(shortcuts, vm.ToggleTranslationModeCommand, nameof(vm.ToggleTranslationModeCommand), ShortcutCategory.General, ShortcutGroup.Translate);
+        AddShortcut(shortcuts, vm.ToggleOriginalTextInPreviewCommand, nameof(vm.ToggleOriginalTextInPreviewCommand), ShortcutCategory.General, ShortcutGroup.Translate);
         AddShortcut(shortcuts, vm.FileCloseTranslationCommand, nameof(vm.FileCloseTranslationCommand), ShortcutCategory.General, ShortcutGroup.File);
         AddShortcut(shortcuts, vm.ExportBluRaySupCommand, nameof(vm.ExportBluRaySupCommand), ShortcutCategory.General, ShortcutGroup.File);
         AddShortcut(shortcuts, vm.ShowExportCustomTextFormatCommand, nameof(vm.ShowExportCustomTextFormatCommand), ShortcutCategory.General, ShortcutGroup.File);
