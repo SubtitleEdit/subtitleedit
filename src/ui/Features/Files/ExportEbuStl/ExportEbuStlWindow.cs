@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Controls;
@@ -269,6 +270,7 @@ public class ExportEbuStlWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -315,6 +317,17 @@ public class ExportEbuStlWindow : Window
 
         var labelPreviewFont = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.PreviewFont);
         var comboBoxPreviewFont = UiUtil.MakeComboBox(vm.PreviewFonts, vm, nameof(vm.SelectedPreviewFont)).WithMinWidth(textBoxWidth);
+        var buttonPreviewFont = UiUtil.MakeButtonBrowse(vm.PickPreviewFontCommand, null, Se.Language.Tools.PickFontNameTitle);
+        var panelPreviewFont = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 5,
+            Children = { comboBoxPreviewFont, buttonPreviewFont },
+        };
+
+        // The drop-down is a name; this shows what the name looks like, in the font itself.
+        var labelPreviewFontSample = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.PreviewFontSample));
+        labelPreviewFontSample.Bind(TemplatedControl.FontFamilyProperty, new Binding(nameof(vm.PreviewFontFamily)) { Source = vm });
 
 
         grid.Add(labelJustification, 0, 0);
@@ -343,7 +356,9 @@ public class ExportEbuStlWindow : Window
         grid.Add(labelVideoPreview, 11, 0);
 
         grid.Add(labelPreviewFont, 12, 0);
-        grid.Add(comboBoxPreviewFont, 12, 1);
+        grid.Add(panelPreviewFont, 12, 1);
+
+        grid.Add(labelPreviewFontSample, 13, 1);
 
         return UiUtil.MakeBorderForControl(grid).WithMinWidth(944).WithMinHeight(465);
     }
