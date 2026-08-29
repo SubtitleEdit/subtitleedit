@@ -69,7 +69,7 @@ public class EbuSaveOptionsPersistenceTests
 
     private static ExportEbuStlViewModel OpenDialog(Subtitle subtitle)
     {
-        var viewModel = new ExportEbuStlViewModel(new FileHelper());
+        var viewModel = new ExportEbuStlViewModel(new FileHelper(), new StubWindowService());
         viewModel.Initialize(subtitle);
         Dispatcher.UIThread.RunJobs();
         return viewModel;
@@ -302,5 +302,34 @@ public class EbuSaveOptionsPersistenceTests
         var viewModel = OpenDialog(MakeSubtitle());
 
         Assert.Equal(viewModel.PreviewFonts[0], viewModel.SelectedPreviewFont);
+    }
+
+    // The sample label next to the drop-down: the first entry is not a font family, so it has to
+    // show the font the preview will really use rather than a family named "(use the ...)".
+    [AvaloniaFact]
+    public void PreviewFontSample_UsesTheVideoPreviewFontForTheDefaultEntry()
+    {
+        using var scope = new SettingsScope(ScopePaths);
+        using var libSeScope = new LibSeEbuScope();
+        Se.Settings.File.EbuSaveOptions.PreviewFontName = string.Empty;
+
+        var viewModel = OpenDialog(MakeSubtitle());
+
+        Assert.Equal(
+            FontFamilyHelper.Make(Se.Settings.Video.MpvPreviewFontName),
+            viewModel.PreviewFontFamily);
+    }
+
+    [AvaloniaFact]
+    public void PreviewFontSample_FollowsThePickedFont()
+    {
+        using var scope = new SettingsScope(ScopePaths);
+        using var libSeScope = new LibSeEbuScope();
+
+        var viewModel = OpenDialog(MakeSubtitle());
+        var font = viewModel.PreviewFonts.Last();
+        viewModel.SelectedPreviewFont = font;
+
+        Assert.Equal(FontFamilyHelper.Make(font), viewModel.PreviewFontFamily);
     }
 }
