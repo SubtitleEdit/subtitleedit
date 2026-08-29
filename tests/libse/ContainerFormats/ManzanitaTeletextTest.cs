@@ -131,4 +131,35 @@ public class ManzanitaTeletextTest
 
         Assert.Empty(pages);
     }
+
+    [Fact]
+    public void AFeatureLengthFileIsReadBackWhole()
+    {
+        // The XML preamble holds one <packet /> line per teletext packet - two per subtitle here,
+        // one to show it and one to erase it - so it grows past the 200 KB the reader used to
+        // look at somewhere around 1650 subtitles. Everything beyond that read back as an empty
+        // file, with no error: the end tag was never found, so the packet index came out empty.
+        var subtitle = new Subtitle();
+        for (var i = 0; i < 2000; i++)
+        {
+            subtitle.Paragraphs.Add(new Paragraph("Line " + i, i * 3000, i * 3000 + 2000));
+        }
+
+        var paragraphs = WriteAndRead(subtitle)[888];
+
+        Assert.Equal(2000, paragraphs.Count);
+        Assert.Equal("Line 0", paragraphs[0].Text);
+        Assert.Equal("Line 1999", paragraphs[1999].Text);
+    }
+
+    [Fact]
+    public void AFileWithNoEndTagIsNotRead()
+    {
+        var parser = new ManzanitaTransportStreamParser();
+        using var ms = new MemoryStream(new byte[500_000]);
+
+        parser.Parse(ms);
+
+        Assert.Empty(parser.GetTeletext());
+    }
 }
