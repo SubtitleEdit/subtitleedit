@@ -240,4 +240,29 @@ public class EbuTest
         Array.Copy(bytes, 1024 + 16, textField, 0, 112);
         Assert.Contains((byte)0x03, textField);
     }
+
+    // An STL file carries eight teletext colors, so the writer snaps anything else to the nearest
+    // one. The UI asks the same question before it writes a color tag, so what the grid and the
+    // video preview show is what the file will get - these are the answers it relies on.
+    [Theory]
+    [InlineData("#FF0000", "Red")]
+    [InlineData("ff0000", "Red")]
+    [InlineData("Red", "Red")]
+    [InlineData("#FFA500", "Yellow")]  // orange
+    [InlineData("#FFC0CB", "White")]   // pink
+    [InlineData("#003300", "Black")]   // very dark green
+    [InlineData("#00FFFF", "Cyan")]
+    public void GetNearestColorName_SnapsToTheEightTeletextColors(string color, string expected)
+    {
+        Assert.Equal(expected, Ebu.GetNearestColorName(color));
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("not a color")]
+    [InlineData("#12345")]
+    public void GetNearestColorName_IsNullWhenTheValueIsNotAColor(string color)
+    {
+        Assert.Null(Ebu.GetNearestColorName(color));
+    }
 }

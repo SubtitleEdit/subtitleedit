@@ -823,7 +823,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         color = color.Trim().Trim('#');
                         if (color.Length > 0)
                         {
-                            return GetNearestEbuColorCodeByte(color, encoding);
+                            return GetNearestColorCode(color);
                         }
                     }
                 }
@@ -832,101 +832,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
 
-            private static byte? GetNearestEbuColorCodeByte(string color, Encoding encoding)
-            {
-                color = color.ToLowerInvariant();
-                if (color == "black" || color == "000000")
-                {
-                    return 0x00; // black
-                }
-
-                if (color == "red" || color == "ff0000")
-                {
-                    return 0x01; // red
-                }
-
-                if (color == "green" || color == "00ff00")
-                {
-                    return 0x02; // green
-                }
-
-                if (color == "yellow" || color == "ffff00")
-                {
-                    return 0x03; // yellow
-                }
-
-                if (color == "blue" || color == "0000ff")
-                {
-                    return 0x04; // blue
-                }
-
-                if (color == "magenta" || color == "ff00ff")
-                {
-                    return 0x05; // magenta
-                }
-
-                if (color == "cyan" || color == "00ffff")
-                {
-                    return 0x06; // cyan
-                }
-
-                if (color == "white" || color == "ffffff")
-                {
-                    return 0x07; // white
-                }
-
-                if (color.Length == 6)
-                {
-                    if (RegExprColor.IsMatch(color))
-                    {
-                        const int maxDiff = 130;
-                        var r = int.Parse(color.Substring(0, 2), NumberStyles.HexNumber);
-                        var g = int.Parse(color.Substring(2, 2), NumberStyles.HexNumber);
-                        var b = int.Parse(color.Substring(4, 2), NumberStyles.HexNumber);
-                        if (r < maxDiff && g < maxDiff && b < maxDiff)
-                        {
-                            return 0x00; // black
-                        }
-
-                        if (r > 255 - maxDiff && g < maxDiff && b < maxDiff)
-                        {
-                            return 0x01; // red
-                        }
-
-                        if (r < maxDiff && g > 255 - maxDiff && b < maxDiff)
-                        {
-                            return 0x02; // green
-                        }
-
-                        if (r > 255 - maxDiff && g > 255 - maxDiff && b < maxDiff)
-                        {
-                            return 0x03; // yellow
-                        }
-
-                        if (r < maxDiff && g < maxDiff && b > 255 - maxDiff)
-                        {
-                            return 0x04; // blue
-                        }
-
-                        if (r > 255 - maxDiff && g < maxDiff && b > 255 - maxDiff)
-                        {
-                            return 0x05; // magenta
-                        }
-
-                        if (r < maxDiff && g > 255 - maxDiff && b > 255 - maxDiff)
-                        {
-                            return 0x06; // cyan
-                        }
-
-                        if (r > 255 - maxDiff && g > 255 - maxDiff && b > 255 - maxDiff)
-                        {
-                            return 0x07; // white
-                        }
-                    }
-                }
-
-                return null;
-            }
 
 
             private static byte[] ReplaceSpecialCharactersWithTwoByteEncoding(Encoding encoding, char ch, byte specialCharacter, string originalCharacters, string newCharacters)
@@ -2142,33 +2047,152 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-        private static string GetColorOrTag(byte b)
+        /// <summary>
+        /// The teletext colour code an STL file would carry for <paramref name="color"/> - a colour
+        /// name ("Red") or six hex digits, with or without a leading '#' - or null when the value is
+        /// not a colour at all. The eight teletext colours are the corners of the RGB cube, so
+        /// anything else is snapped to the nearest one; Save writes what this returns, and the UI
+        /// asks it what a colour will become before it writes a tag (via GetNearestColorName).
+        /// </summary>
+        internal static byte? GetNearestColorCode(string color)
+        {
+            color = color.Trim().TrimStart('#').ToLowerInvariant();
+            if (color == "black" || color == "000000")
+            {
+                return 0x00; // black
+            }
+
+            if (color == "red" || color == "ff0000")
+            {
+                return 0x01; // red
+            }
+
+            if (color == "green" || color == "00ff00")
+            {
+                return 0x02; // green
+            }
+
+            if (color == "yellow" || color == "ffff00")
+            {
+                return 0x03; // yellow
+            }
+
+            if (color == "blue" || color == "0000ff")
+            {
+                return 0x04; // blue
+            }
+
+            if (color == "magenta" || color == "ff00ff")
+            {
+                return 0x05; // magenta
+            }
+
+            if (color == "cyan" || color == "00ffff")
+            {
+                return 0x06; // cyan
+            }
+
+            if (color == "white" || color == "ffffff")
+            {
+                return 0x07; // white
+            }
+
+            if (color.Length == 6)
+            {
+                if (RegExprColor.IsMatch(color))
+                {
+                    const int maxDiff = 130;
+                    var r = int.Parse(color.Substring(0, 2), NumberStyles.HexNumber);
+                    var g = int.Parse(color.Substring(2, 2), NumberStyles.HexNumber);
+                    var b = int.Parse(color.Substring(4, 2), NumberStyles.HexNumber);
+                    if (r < maxDiff && g < maxDiff && b < maxDiff)
+                    {
+                        return 0x00; // black
+                    }
+
+                    if (r > 255 - maxDiff && g < maxDiff && b < maxDiff)
+                    {
+                        return 0x01; // red
+                    }
+
+                    if (r < maxDiff && g > 255 - maxDiff && b < maxDiff)
+                    {
+                        return 0x02; // green
+                    }
+
+                    if (r > 255 - maxDiff && g > 255 - maxDiff && b < maxDiff)
+                    {
+                        return 0x03; // yellow
+                    }
+
+                    if (r < maxDiff && g < maxDiff && b > 255 - maxDiff)
+                    {
+                        return 0x04; // blue
+                    }
+
+                    if (r > 255 - maxDiff && g < maxDiff && b > 255 - maxDiff)
+                    {
+                        return 0x05; // magenta
+                    }
+
+                    if (r < maxDiff && g > 255 - maxDiff && b > 255 - maxDiff)
+                    {
+                        return 0x06; // cyan
+                    }
+
+                    if (r > 255 - maxDiff && g > 255 - maxDiff && b > 255 - maxDiff)
+                    {
+                        return 0x07; // white
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// The name of the teletext colour <paramref name="color"/> is nearest to - the same name
+        /// the STL reader writes into the text - or null when it is not a colour at all.
+        /// </summary>
+        public static string GetNearestColorName(string color)
+        {
+            var code = GetNearestColorCode(color);
+            return code == null ? null : GetColorName(code.Value);
+        }
+
+        private static string GetColorName(byte b)
         {
             switch (b)
             {
                 case 0x00:
-                    return "<font color=\"Black\">";
+                    return "Black";
                 case 0x01:
-                    return "<font color=\"Red\">";
+                    return "Red";
                 case 0x02:
-                    return "<font color=\"Green\">";
+                    return "Green";
                 case 0x03:
-                    return "<font color=\"Yellow\">";
+                    return "Yellow";
                 case 0x04:
-                    return "<font color=\"Blue\">";
+                    return "Blue";
                 case 0x05:
-                    return "<font color=\"Magenta\">";
+                    return "Magenta";
                 case 0x06:
-                    return "<font color=\"Cyan\">";
+                    return "Cyan";
                 case 0x07:
-                    return "<font color=\"White\">";
-                    //case 0x0a:
-                    //    return "</box>";
-                    //case 0x0b:
-                    //    return "<box>";
+                    return "White";
             }
 
             return null;
+        }
+
+        private static string GetColorOrTag(byte b)
+        {
+            //case 0x0a:
+            //    return "</box>";
+            //case 0x0b:
+            //    return "<box>";
+            var name = GetColorName(b);
+            return name == null ? null : "<font color=\"" + name + "\">";
         }
 
         private static string FixSpacesAndTags(string text)

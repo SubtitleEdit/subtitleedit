@@ -152,6 +152,17 @@ public class ColorService : IColorService
             return text;
         }
 
+        // An STL file carries eight teletext colours, and Ebu.Save snaps whatever it finds to the
+        // nearest of them - so a shortcut colour like orange was shown orange in the grid and in
+        // the video preview and came out yellow in the file. Snap when the tag is written instead:
+        // grid, preview and file then agree. Written as the colour name the STL reader itself
+        // produces, so the shortcut also toggles off a colour that came from a file.
+        var colorText = ToHex(color);
+        if (subtitleFormat is Ebu)
+        {
+            colorText = Ebu.GetNearestColorName(colorText) ?? colorText;
+        }
+
         string pre = string.Empty;
         if (text.StartsWith("{\\", StringComparison.Ordinal) && text.IndexOf('}') >= 0)
         {
@@ -171,7 +182,7 @@ public class ColorService : IColorService
                 if (f.Contains(" face=", StringComparison.OrdinalIgnoreCase) && !f.Contains(" color=", StringComparison.OrdinalIgnoreCase))
                 {
                     var start = s.IndexOf(" face=", StringComparison.OrdinalIgnoreCase);
-                    s = s.Insert(start, string.Format(" color=\"{0}\"", ToHex(color)));
+                    s = s.Insert(start, string.Format(" color=\"{0}\"", colorText));
                     text = pre + s;
                     return text;
                 }
@@ -184,7 +195,7 @@ public class ColorService : IColorService
                     if (quoteEnd > 0)
                     {
                         // Quoted value: the closing quote comes from the tail we keep.
-                        s = s.Substring(0, colorStart) + string.Format(" color=\"{0}", ToHex(color)) + s.Substring(quoteEnd);
+                        s = s.Substring(0, colorStart) + string.Format(" color=\"{0}", colorText) + s.Substring(quoteEnd);
                     }
                     else
                     {
@@ -198,7 +209,7 @@ public class ColorService : IColorService
                             valueEnd++;
                         }
 
-                        s = s.Substring(0, colorStart) + string.Format(" color=\"{0}\"", ToHex(color)) + s.Substring(valueEnd);
+                        s = s.Substring(0, colorStart) + string.Format(" color=\"{0}\"", colorText) + s.Substring(valueEnd);
                     }
 
                     text = pre + s;
@@ -207,7 +218,7 @@ public class ColorService : IColorService
             }
         }
 
-        return $"{pre}<font color=\"{ToHex(color)}\">{text}</font>";
+        return $"{pre}<font color=\"{colorText}\">{text}</font>";
     }
 
     public string RemoveColorTag(string input, Color color, Subtitle subtitle, SubtitleFormat subtitleFormat)
