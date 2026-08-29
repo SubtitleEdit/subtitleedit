@@ -1,4 +1,4 @@
-﻿;* Subtitle Edit - installer localization script 
+;* Subtitle Edit - installer localization script 
 
 ; English
 [CustomMessages]
@@ -254,6 +254,9 @@ it.types_custom=Installazione personalizzata
 it.types_default=Installazione predefinita
 it.NameAndVersion=%1 %2
 it.LaunchProgram=Esegui %1
+it.AdditionalIcons=Collegamenti:
+it.CreateDesktopIcon=Crea collegamento programma sul &desktop
+it.CreateQuickLaunchIcon=Crea collegamento programma nella &barra 'Avvio veloce'
 
 ; Japanese
 [CustomMessages]
