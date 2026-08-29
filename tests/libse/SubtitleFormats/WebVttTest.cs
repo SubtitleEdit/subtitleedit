@@ -91,6 +91,77 @@ public class WebVttTest
         Assert.Equal("World", subtitle.Paragraphs[1].Text);
     }
 
+    // A cue split horizontally into two halves of the same line (#10444) sits on one row -
+    // different position%, near-identical line% - and must still be merged.
+    [Fact]
+    public void LoadSubtitleMergesCuesSplitHorizontallyOnTheSameRow()
+    {
+        var vtt = "WEBVTT\r\n\r\n" +
+                  "00:00:41.166 --> 00:00:44.461 position:36.67%,start align:start size:36.67% line:79.29%\r\nSo you've come\r\n\r\n" +
+                  "00:00:41.166 --> 00:00:44.461 position:23.33%,start align:start size:61.43% line:84.62%\r\nto the master for guidance?";
+        var subtitle = LoadWebVttSubtitle(vtt);
+
+        // The second half keeps the {\an1} its own position% earns - pre-existing, not what this covers.
+        Assert.Single(subtitle.Paragraphs);
+        Assert.Equal("So you've come" + Environment.NewLine + "{\\an1}to the master for guidance?", subtitle.Paragraphs[0].Text);
+    }
+
+    // A caption pinned to the top of the screen over the dialogue below it shares the time codes but not
+    // the placement - merging them leaves a single alignment for both, so one of the two lands in the
+    // wrong half of the screen.
+    [Fact]
+    public void LoadSubtitleDoesNotMergeCuesPlacedFarApartVertically()
+    {
+        var vtt = "WEBVTT\r\n\r\n" +
+                  "00:09:48.666 --> 00:09:50.600 position:50.00%,middle align:middle size:80.00% line:79.33%\r\nLook at Lori's Snapmatic.\r\n\r\n" +
+                  "00:09:48.666 --> 00:09:50.600 position:50.00%,middle align:middle size:80.00% line:10.00%\r\n[INTERACTION PROMPT: HOLD HANDS]";
+        var subtitle = LoadWebVttSubtitle(vtt);
+
+        Assert.Equal(2, subtitle.Paragraphs.Count);
+        Assert.Equal("Look at Lori's Snapmatic.", subtitle.Paragraphs[0].Text);
+        Assert.Equal("{\\an8}[INTERACTION PROMPT: HOLD HANDS]", subtitle.Paragraphs[1].Text);
+    }
+
+    // A three-row caption reaches the top row of the pair one comparison at a time, so every row of it
+    // still ends up in one paragraph even though the first and the last are more than a row apart.
+    [Fact]
+    public void LoadSubtitleMergesAllRowsOfACaptionSpanningThreeRows()
+    {
+        var vtt = "WEBVTT\r\n\r\n" +
+                  "00:00:01.000 --> 00:00:04.000 line:74.00%\r\nRow one\r\n\r\n" +
+                  "00:00:01.000 --> 00:00:04.000 line:79.33%\r\nRow two\r\n\r\n" +
+                  "00:00:01.000 --> 00:00:04.000 line:84.67%\r\nRow three";
+        var subtitle = LoadWebVttSubtitle(vtt);
+
+        // The top row carries the {\an5} its own line% earns from GetPositionInfo's 75% band -
+        // pre-existing, and unchanged by the merge check.
+        Assert.Single(subtitle.Paragraphs);
+        Assert.Equal("{\\an5}Row one" + Environment.NewLine + "Row two" + Environment.NewLine + "Row three", subtitle.Paragraphs[0].Text);
+    }
+
+    [Theory]
+    [InlineData("line:10.00%", "line:20.00%", 1)]   // consecutive rows near the top
+    [InlineData("line:79.33%", "line:84.67%", 1)]   // consecutive rows at the bottom
+    [InlineData("line:74.00%", "line:79.33%", 1)]   // consecutive rows either side of the middle of the screen
+    [InlineData("", "", 1)]                         // no cue settings at all - neither says where it sits
+    [InlineData("line:79.33%", "", 1)]              // only one of the two says where it sits
+    [InlineData("line:auto", "line:10.00%", 1)]     // "auto" says nothing we can compare
+    [InlineData("line:-2", "line:-1", 1)]           // consecutive rows counted from the bottom
+    [InlineData("line:10.00%", "line:84.67%", 2)]   // top of the screen vs bottom
+    [InlineData("line:10.00%", "line:50.00%", 2)]   // top vs the middle
+    [InlineData("line:50.00%", "line:84.67%", 2)]   // middle vs the bottom
+    [InlineData("line:0", "line:16", 2)]            // line numbers instead of percentages
+    [InlineData("line:-16", "line:79.33%", 2)]      // a negative line number counts from the bottom: -16 is the top
+    public void LoadSubtitleMergesOnlyCuesPlacedCloseTogetherVertically(string firstCueSettings, string secondCueSettings, int expectedCount)
+    {
+        var vtt = "WEBVTT\r\n\r\n" +
+                  "00:00:01.000 --> 00:00:04.000 " + firstCueSettings + "\r\nHello\r\n\r\n" +
+                  "00:00:01.000 --> 00:00:04.000 " + secondCueSettings + "\r\nWorld";
+        var subtitle = LoadWebVttSubtitle(vtt);
+
+        Assert.Equal(expectedCount, subtitle.Paragraphs.Count);
+    }
+
     // Regression coverage for https://github.com/SubtitleEdit/subtitleedit/issues/10676
     // Apple TV WebVTT files carry `X-TIMESTAMP-MAP=MPEGTS:900000,LOCAL:00:00:00.000` (HLS segment metadata)
     // and a STYLE block using class selectors like `.styledotAB9216dotitalic` for italic/bold/color.
