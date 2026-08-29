@@ -91,6 +91,55 @@ public class WebVttTest
         Assert.Equal("World", subtitle.Paragraphs[1].Text);
     }
 
+    // A cue split horizontally into two halves of the same line (#10444) sits in one vertical band -
+    // different position%, same line% band - and must still be merged.
+    [Fact]
+    public void LoadSubtitleMergesCuesSplitHorizontallyInTheSameVerticalBand()
+    {
+        var vtt = "WEBVTT\r\n\r\n" +
+                  "00:00:41.166 --> 00:00:44.461 position:36.67%,start align:start size:36.67% line:79.29%\r\nSo you've come\r\n\r\n" +
+                  "00:00:41.166 --> 00:00:44.461 position:23.33%,start align:start size:61.43% line:84.62%\r\nto the master for guidance?";
+        var subtitle = LoadWebVttSubtitle(vtt);
+
+        // The second cue keeps the {\an1} its own position% earns - pre-existing, not what this covers.
+        Assert.Single(subtitle.Paragraphs);
+        Assert.Contains("So you've come", subtitle.Paragraphs[0].Text);
+        Assert.Contains("to the master for guidance?", subtitle.Paragraphs[0].Text);
+    }
+
+    // A top caption over bottom dialogue shares the time codes but not the vertical band - merging them
+    // leaves a single alignment for both, so one of the two lands in the wrong half of the screen.
+    [Fact]
+    public void LoadSubtitleDoesNotMergeCuesInDifferentVerticalBands()
+    {
+        var vtt = "WEBVTT\r\n\r\n" +
+                  "00:09:48.666 --> 00:09:50.600 position:50.00%,middle align:middle size:80.00% line:79.33%\r\nLook at Lori's Snapmatic.\r\n\r\n" +
+                  "00:09:48.666 --> 00:09:50.600 position:50.00%,middle align:middle size:80.00% line:10.00%\r\n[INTERACTION PROMPT: HOLD HANDS]";
+        var subtitle = LoadWebVttSubtitle(vtt);
+
+        Assert.Equal(2, subtitle.Paragraphs.Count);
+        Assert.Equal("Look at Lori's Snapmatic.", subtitle.Paragraphs[0].Text);
+        Assert.Equal("{\\an8}[INTERACTION PROMPT: HOLD HANDS]", subtitle.Paragraphs[1].Text);
+    }
+
+    [Theory]
+    [InlineData("line:10.00%", "line:20.00%", 1)]  // both top
+    [InlineData("line:79.33%", "line:84.67%", 1)]  // both bottom
+    [InlineData("", "", 1)]                        // no cue settings at all - both default to bottom
+    [InlineData("line:10.00%", "line:84.67%", 2)]  // top vs bottom
+    [InlineData("line:10.00%", "line:50.00%", 2)]  // top vs middle
+    [InlineData("line:50.00%", "line:84.67%", 2)]  // middle vs bottom
+    [InlineData("line:0", "line:16", 2)]           // line numbers instead of percentages
+    public void LoadSubtitleMergesOnlyCuesInTheSameVerticalBand(string firstCueSettings, string secondCueSettings, int expectedCount)
+    {
+        var vtt = "WEBVTT\r\n\r\n" +
+                  "00:00:01.000 --> 00:00:04.000 " + firstCueSettings + "\r\nHello\r\n\r\n" +
+                  "00:00:01.000 --> 00:00:04.000 " + secondCueSettings + "\r\nWorld";
+        var subtitle = LoadWebVttSubtitle(vtt);
+
+        Assert.Equal(expectedCount, subtitle.Paragraphs.Count);
+    }
+
     // Regression coverage for https://github.com/SubtitleEdit/subtitleedit/issues/10676
     // Apple TV WebVTT files carry `X-TIMESTAMP-MAP=MPEGTS:900000,LOCAL:00:00:00.000` (HLS segment metadata)
     // and a STYLE block using class selectors like `.styledotAB9216dotitalic` for italic/bold/color.

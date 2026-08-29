@@ -442,14 +442,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 subtitle.Paragraphs.AddRange(merged.Paragraphs);
             }
 
-            // Merge consecutive cues with identical time codes (common in WebVTT as alternative to line breaks)
+            // Merge consecutive cues with identical time codes (common in WebVTT as alternative to line breaks) -
+            // but only within one vertical band: a top caption over bottom dialogue is two subtitles, not one line.
             for (var i = subtitle.Paragraphs.Count - 2; i >= 0; i--)
             {
                 var current = subtitle.Paragraphs[i];
                 var nextParagraph = subtitle.Paragraphs[i + 1];
                 if (current.StartTime.TotalMilliseconds == nextParagraph.StartTime.TotalMilliseconds &&
                     current.EndTime.TotalMilliseconds == nextParagraph.EndTime.TotalMilliseconds &&
-                    current.Region == nextParagraph.Region)
+                    current.Region == nextParagraph.Region &&
+                    GetVerticalAlignment(current.Style) == GetVerticalAlignment(nextParagraph.Style))
                 {
                     // An exact repeat (same times, same text - e.g. a concatenated/duplicated
                     // segment) is a duplicate, not a second line: drop it instead of stacking it.
@@ -560,17 +562,68 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return 0;
         }
 
+        private enum VerticalAlignment
+        {
+            Top,
+            Middle,
+            Bottom
+        }
+
+        /// <summary>
+        /// The vertical band a cue sits in, read from its raw "line:" cue setting.
+        /// </summary>
+        private static VerticalAlignment GetVerticalAlignment(string s)
+        {
+            //line: x --- 0 or -16 or 0% = top, 16 or -1 or 100% = bottom (vertical)
+            var line = GetTag(s, "line:");
+            if (string.IsNullOrEmpty(line))
+            {
+                return VerticalAlignment.Bottom;
+            }
+
+            line = line.Trim();
+            double number;
+            if (line.EndsWith('%'))
+            {
+                if (double.TryParse(line.TrimEnd('%'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out number))
+                {
+                    if (number < 25)
+                    {
+                        return VerticalAlignment.Top;
+                    }
+
+                    if (number < 75)
+                    {
+                        return VerticalAlignment.Middle;
+                    }
+                }
+            }
+            else if (double.TryParse(line, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out number))
+            {
+                if (number >= 0 && number <= 7)
+                {
+                    return VerticalAlignment.Top; // Positive numbers indicate top down
+                }
+
+                if (number > 7 && number < 11)
+                {
+                    return VerticalAlignment.Middle;
+                }
+            }
+
+            return VerticalAlignment.Bottom;
+        }
+
         internal static string GetPositionInfo(string s)
         {
             //position: x --- 0% = left, 100% = right (horizontal)
-            //line: x --- 0 or -16 or 0% = top, 16 or -1 or 100% = bottom (vertical)
             var pos = GetTag(s, "position:");
-            var line = GetTag(s, "line:");
             var positionInfo = string.Empty;
             var hAlignLeft = false;
             var hAlignRight = false;
-            var vAlignTop = false;
-            var vAlignMiddle = false;
+            var vAlign = GetVerticalAlignment(s);
+            var vAlignTop = vAlign == VerticalAlignment.Top;
+            var vAlignMiddle = vAlign == VerticalAlignment.Middle;
             double number;
 
             if (!string.IsNullOrEmpty(pos) && pos.EndsWith('%') && double.TryParse(pos.TrimEnd('%'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out number))
@@ -582,39 +635,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (number > 75)
                 {
                     hAlignRight = true;
-                }
-            }
-
-            if (!string.IsNullOrEmpty(line))
-            {
-                line = line.Trim();
-                if (line.EndsWith('%'))
-                {
-                    if (double.TryParse(line.TrimEnd('%'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out number))
-                    {
-                        if (number < 25)
-                        {
-                            vAlignTop = true;
-                        }
-                        else if (number < 75)
-                        {
-                            vAlignMiddle = true;
-                        }
-                    }
-                }
-                else
-                {
-                    if (double.TryParse(line, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out number))
-                    {
-                        if (number >= 0 && number <= 7)
-                        {
-                            vAlignTop = true; // Positive numbers indicate top down
-                        }
-                        else if (number > 7 && number < 11)
-                        {
-                            vAlignMiddle = true;
-                        }
-                    }
                 }
             }
 
