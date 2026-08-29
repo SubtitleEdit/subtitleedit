@@ -101,11 +101,18 @@ public partial class SettingsImportExportViewModel : ObservableObject
     private string _importFilePath = string.Empty;
     private Se? _importData;
     private string? _importSourceOs;
+    private bool _importHasShortcutSlots;
 
     // Marker property name written at the top level of the export JSON so the
     // importer can tell which OS the file came from (Se has no such field, so
     // System.Text.Json silently ignores it when deserializing into Se).
     private const string ExportSourceOsProperty = "exportSourceOs";
+
+    // Second marker: set when the file carries the shortcut *slot* values (colors,
+    // actors, "surround with" pairs). Files written before #14232 always held the
+    // defaults for those, so without the marker the importer must leave them alone
+    // rather than reset the user's own to factory values.
+    private const string ExportShortcutSlotsProperty = "exportIncludesShortcutSlots";
     public bool OkPressed { get; set; }
     public Window? Window { get; set; }
     private readonly IFileHelper _fileHelper;
@@ -169,6 +176,7 @@ public partial class SettingsImportExportViewModel : ObservableObject
             }
 
             _importSourceOs = TryReadExportSourceOs(json);
+            _importHasShortcutSlots = TryReadExportIncludesShortcutSlots(json);
 
             IsRulesEnabled = _importData.General != null;
             IsAppearanceEnabled = _importData.Appearance != null;
@@ -277,7 +285,13 @@ public partial class SettingsImportExportViewModel : ObservableObject
         exportData.Tools = ExportImportAll ? currentSettings.Tools : null!;
         exportData.Appearance = ExportImportAll || ExportImportAppearance ? currentSettings.Appearance : null!;
         exportData.Options = ExportImportAll ? currentSettings.Options : null!;
-        exportData.Shortcuts = ExportImportAll || ExportImportShortcuts ? currentSettings.Shortcuts : null!;
+        // The shortcut slots the Shortcuts window configures (colors 1-8, actors 1-10 and the
+        // "surround with" pairs) live as top-level values on Se, so they were left at the
+        // defaults of `new Se()` above and the import side never looked at them - every one of
+        // those customizations was silently dropped on export/import (#14232).
+        var exportShortcuts = ExportImportAll || ExportImportShortcuts;
+        exportData.Shortcuts = exportShortcuts ? currentSettings.Shortcuts : null!;
+        CopyShortcutSlots(exportShortcuts ? currentSettings : null, exportData);
         exportData.AutoTranslate = ExportImportAll || ExportImportAutoTranslate ? currentSettings.AutoTranslate : null!;
         exportData.SpellCheck = ExportImportAll ? currentSettings.SpellCheck : null!;
 
@@ -287,7 +301,7 @@ public partial class SettingsImportExportViewModel : ObservableObject
         exportData.Video = ExportImportAll ? currentSettings.Video : null!;
 
         var json = JsonSerializer.Serialize(exportData, new JsonSerializerOptions { WriteIndented = true });
-        var jsonWithSource = InjectExportSourceOs(json, GetCurrentOsName());
+        var jsonWithSource = InjectExportMarkers(json, GetCurrentOsName(), exportShortcuts);
         File.WriteAllText(fileName, jsonWithSource);
     }
 
@@ -381,6 +395,11 @@ public partial class SettingsImportExportViewModel : ObservableObject
 
                 Se.Settings.Shortcuts = importData.Shortcuts;
             }
+
+            if (_importHasShortcutSlots)
+            {
+                CopyShortcutSlots(importData, Se.Settings);
+            }
         }
 
         if (ExportImportAll || ExportImportAutoTranslate)
@@ -450,10 +469,43 @@ public partial class SettingsImportExportViewModel : ObservableObject
         return "Linux";
     }
 
-    // Adds a top-level "exportSourceOs" property to the serialized JSON without
-    // touching the Se type. Se has no such property, so System.Text.Json
-    // silently ignores it on import.
-    private static string InjectExportSourceOs(string json, string osName)
+    /// <summary>
+    /// Copies the shortcut slot values the Shortcuts window owns - colors 1-8, actors 1-10 and the
+    /// "surround with" pairs - which sit as top-level values on <see cref="Se"/> rather than in one
+    /// of its sections. A null <paramref name="from"/> clears them, so an export that leaves
+    /// shortcuts out says so instead of shipping a block of defaults.
+    /// </summary>
+    private static void CopyShortcutSlots(Se? from, Se to)
+    {
+        to.Color1 = from?.Color1!;
+        to.Color2 = from?.Color2!;
+        to.Color3 = from?.Color3!;
+        to.Color4 = from?.Color4!;
+        to.Color5 = from?.Color5!;
+        to.Color6 = from?.Color6!;
+        to.Color7 = from?.Color7!;
+        to.Color8 = from?.Color8!;
+
+        for (var slot = 1; slot <= Se.SurroundWithSlotCount; slot++)
+        {
+            to.SetSurround(slot, from?.GetSurroundLeft(slot)!, from?.GetSurroundRight(slot)!);
+        }
+
+        to.Actor1 = from?.Actor1!;
+        to.Actor2 = from?.Actor2!;
+        to.Actor3 = from?.Actor3!;
+        to.Actor4 = from?.Actor4!;
+        to.Actor5 = from?.Actor5!;
+        to.Actor6 = from?.Actor6!;
+        to.Actor7 = from?.Actor7!;
+        to.Actor8 = from?.Actor8!;
+        to.Actor9 = from?.Actor9!;
+        to.Actor10 = from?.Actor10!;
+    }
+
+    // Adds the top-level marker properties to the serialized JSON without touching the Se
+    // type. Se has no such properties, so System.Text.Json silently ignores them on import.
+    private static string InjectExportMarkers(string json, string osName, bool includesShortcutSlots)
     {
         try
         {
@@ -468,6 +520,11 @@ public partial class SettingsImportExportViewModel : ObservableObject
             {
                 writer.WriteStartObject();
                 writer.WriteString(ExportSourceOsProperty, osName);
+                if (includesShortcutSlots)
+                {
+                    writer.WriteBoolean(ExportShortcutSlotsProperty, true);
+                }
+
                 foreach (var prop in doc.RootElement.EnumerateObject())
                 {
                     prop.WriteTo(writer);
@@ -501,6 +558,22 @@ public partial class SettingsImportExportViewModel : ObservableObject
         }
 
         return null;
+    }
+
+    private static bool TryReadExportIncludesShortcutSlots(string json)
+    {
+        try
+        {
+            using var doc = JsonDocument.Parse(json);
+            return doc.RootElement.ValueKind == JsonValueKind.Object &&
+                   doc.RootElement.TryGetProperty(ExportShortcutSlotsProperty, out var element) &&
+                   element.ValueKind == JsonValueKind.True;
+        }
+        catch
+        {
+            // Missing marker: a file from before the slots travelled - leave them alone.
+            return false;
+        }
     }
 
     public async void OnLoaded(object? sender, RoutedEventArgs e)
