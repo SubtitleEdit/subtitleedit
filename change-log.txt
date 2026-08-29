@@ -1,5 +1,23 @@
-
+﻿
 Subtitle Edit Changelog
+
+-----------------------------------------------------------------------------------------------------
+
+v5.2.0-beta28 (29th of August 2026)
+
+* Read and write Manzanita DVB teletext files (.dvbttx) - thx René
+* EBU STL video preview: draw the box, the justification, double height rows and an optional custom font
+* Surround with: more slots, and fix the slots getting lost in settings export/import - thx kadrimarzouki
+* SCC: write colors as CEA-608 mid-row codes instead of putting the color tags on screen - thx Jessecar96
+* Video OCR: a better default prompt for two-line subtitles, and "--ocr-prompt" for seconv - thx tekk42
+* Update CrispASR to v0.8.30
+* Fix the subtitle grid not centering on the selected row during prev/next navigation - thx St0rmXtr00per
+* Fix "inverse selection" selecting a single row and jumping to the top of the file
+* Fix the video rewinding after leaving Settings - thx GrampaWildWilly
+* Fix the duration field in frame mode not accepting a value typed without the colon - thx René
+* Blu-ray sup: fix the export of bitmaps over 64 KB
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
 
 -----------------------------------------------------------------------------------------------------
 
