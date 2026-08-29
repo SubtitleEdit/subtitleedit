@@ -688,6 +688,8 @@ public partial class MainViewModel :
     private const double PlayheadPausedSettleStableMs = 100; // mpv's position unchanged this long after a pause = its clock is at rest -> snap the cursor there once
     private bool _playheadResyncOnPlay; // armed while paused: re-seed the estimate from mpv once playback actually moves again
     private const double PlayheadResyncOnPlayThresholdSeconds = 0.04; // ~one frame; below this the standing residual isn't worth moving the cursor for
+    private long _frameStepFollowUntilTs; // a native frame step is in flight: treat mpv's un-pause as paused (see BeginFrameStepPlayheadFollow)
+    private const double FrameStepFollowWindowMs = 1000; // safety cap; the window normally closes as soon as the step lands
     private CancellationTokenSource _videoOpenTokenSource;
     private readonly HashSet<string> _waveformsBeingGenerated = new(StringComparer.OrdinalIgnoreCase);
     private readonly Lock _waveformsBeingGeneratedLock = new();
@@ -18290,6 +18292,7 @@ public partial class MainViewModel :
         var vp = GetVideoPlayerControl();
         if (vp != null && vp.VideoPlayer is LibMpvDynamicPlayer mpv)
         {
+            BeginFrameStepPlayheadFollow();
             mpv.StepOneFrameBack();
             return;
         }
@@ -18315,6 +18318,7 @@ public partial class MainViewModel :
         var vp = GetVideoPlayerControl();
         if (vp != null && vp.VideoPlayer is LibMpvDynamicPlayer mpv)
         {
+            BeginFrameStepPlayheadFollow();
             mpv.StepOneFrameForward();
             return;
         }
@@ -27780,6 +27784,32 @@ public partial class MainViewModel :
 
         var nowTimestamp = Stopwatch.GetTimestamp();
 
+        // A native frame step is in flight: mpv's `frame-step` is a real un-pause (it sets pause=no,
+        // plays until the next video frame, then sets pause=yes), so the observed pause flag flickers
+        // and reads here as a play->pause cycle. That cleared _playheadPausedSettled on the very tick
+        // mpv reported the stepped-to frame, so the follow-a-paused-seek branch below skipped it - and
+        // settling deliberately never snaps (#12740), so the frame was dropped from the cursor for good
+        // and the step drifted a frame per press until the 0.5 s discontinuity snap caught up (#14245).
+        // How often it bit depended on the audio period (a PipeWire quantum change is enough): that
+        // sets how long the un-pause window lasts and whether mpv coalesces the pause change at all.
+        // Stepping backwards never had this - `frame-back-step` seeks and stays paused - which is why
+        // it always landed the cursor correctly. So treat the core as paused for the duration of the
+        // step and let the paused branch follow mpv's reported position exactly, as it does for a
+        // paused seek. The window closes as soon as the step lands, so a real Play() right after a
+        // step isn't swallowed.
+        var frameStepping = _frameStepFollowUntilTs != 0;
+        if (frameStepping)
+        {
+            var stepLanded = _playheadLastRealSeconds >= 0 &&
+                             Math.Abs(rawPosition - _playheadLastRealSeconds) > 0.0005;
+            if (stepLanded || nowTimestamp > _frameStepFollowUntilTs)
+            {
+                _frameStepFollowUntilTs = 0;
+            }
+
+            isPlaying = false;
+        }
+
         // Any tick with mpv stopped arms a one-shot resync for when playback starts again (see the
         // resync block in the playing branch). Armed here rather than in PlayVideo so every way of
         // starting playback is covered - the player's own toolbar button, a click on the video
@@ -27967,9 +27997,13 @@ public partial class MainViewModel :
             // discontinuity (a seek while paused, beyond the resync threshold) moves the cursor now.
             if (!isPlaying)
             {
-                if (_playheadWasPlaying)
+                if (_playheadWasPlaying && !frameStepping)
                 {
-                    _playheadPausedSettled = false; // play -> pause edge: wait for mpv's clock to settle
+                    // Play -> pause edge: wait for mpv's clock to settle. Not for a frame step, where
+                    // the "playing" state was mpv's one-frame un-pause (or, when stepping out of real
+                    // playback, an explicit request for the next frame): the cursor belongs on the
+                    // frame mpv reports, so keep it authoritative and let it follow (#14245).
+                    _playheadPausedSettled = false;
                 }
 
                 _pauseRequested = false; // mpv has actually paused now
@@ -28031,6 +28065,19 @@ public partial class MainViewModel :
         _playheadLastTimestamp = nowTimestamp;
         _playheadWasPlaying = isPlaying;
         return _playheadEstimateSeconds;
+    }
+
+    /// <summary>
+    /// Called just before a native mpv frame step (`frame-step` / `frame-back-step`): opens a short
+    /// window in which the playhead estimate treats the core as paused and stays authoritative, so
+    /// the cursor snaps onto the frame mpv steps to instead of losing it to the un-pause that
+    /// `frame-step` really is. See the frame-step block in <see cref="UpdatePlayheadEstimate"/>.
+    /// </summary>
+    private void BeginFrameStepPlayheadFollow()
+    {
+        _frameStepFollowUntilTs = Stopwatch.GetTimestamp() +
+                                 (long)(Stopwatch.Frequency * FrameStepFollowWindowMs / 1000.0);
+        _playheadPausedSettled = true; // stepping: the cursor is at the current frame and follows to the next one
     }
 
     // Called when the user seeks via the waveform: show the clicked position on the cursor
