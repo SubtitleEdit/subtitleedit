@@ -1,5 +1,6 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using System.Text;
 
@@ -39,15 +40,17 @@ public class EbuStlPreviewStylerTests
         return Ebu.ReadHeader(buffer).ToString();
     }
 
-    private static Subtitle Style(string displayStandardCode, bool useBox, bool useDoubleHeight, string text = "Hello world")
+    private static Subtitle Style(string displayStandardCode, bool useBox, bool useDoubleHeight, string text = "Hello world", string previewFontName = "")
     {
         var settings = Configuration.Settings.SubtitleSettings;
         var oldUseBox = settings.EbuStlTeletextUseBox;
         var oldUseDoubleHeight = settings.EbuStlTeletextUseDoubleHeight;
+        var oldPreviewFontName = Se.Settings.File.EbuSaveOptions.PreviewFontName;
         try
         {
             settings.EbuStlTeletextUseBox = useBox;
             settings.EbuStlTeletextUseDoubleHeight = useDoubleHeight;
+            Se.Settings.File.EbuSaveOptions.PreviewFontName = previewFontName;
 
             var header = MakeStlHeader(displayStandardCode);
             var subtitle = new Subtitle { Header = header };
@@ -60,6 +63,7 @@ public class EbuStlPreviewStylerTests
         }
         finally
         {
+            Se.Settings.File.EbuSaveOptions.PreviewFontName = oldPreviewFontName;
             settings.EbuStlTeletextUseDoubleHeight = oldUseDoubleHeight;
             settings.EbuStlTeletextUseBox = oldUseBox;
         }
@@ -148,5 +152,37 @@ public class EbuStlPreviewStylerTests
     public void OnlyAGsiBlockIsTreatedAsStl(string header, bool expected)
     {
         Assert.Equal(expected, EbuStlPreviewStyler.IsStlHeader(header));
+    }
+
+    // Preview only, and never written to the file - an STL carries a character table, not a
+    // typeface. It lets someone with a teletext face installed see the preview a decoder would draw.
+    [Fact]
+    public void ACustomFontReplacesThePreviewFontInBothStyles()
+    {
+        var subtitle = Style("1", useBox: true, useDoubleHeight: false, previewFontName: "Courier New");
+
+        Assert.Equal("Courier New", GetStyle(subtitle, "Box")[FontNameField]);
+        Assert.Equal("Courier New", GetStyle(subtitle, "Default")[FontNameField]);
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void NoCustomFontLeavesThePreviewFontAlone(string previewFontName)
+    {
+        var subtitle = Style("1", useBox: true, useDoubleHeight: false, previewFontName: previewFontName);
+
+        Assert.Equal("Verdana", GetStyle(subtitle, "Box")[FontNameField]);
+        Assert.Equal("Verdana", GetStyle(subtitle, "Default")[FontNameField]);
+    }
+
+    // Unlike the box and the double height, the font is not a teletext control code - it is just
+    // how the preview draws, so open subtitling gets it too.
+    [Fact]
+    public void ACustomFontAppliesToOpenSubtitlingAsWell()
+    {
+        var subtitle = Style("0", useBox: true, useDoubleHeight: false, previewFontName: "Courier New");
+
+        Assert.Equal("Courier New", GetStyle(subtitle, "Default")[FontNameField]);
     }
 }

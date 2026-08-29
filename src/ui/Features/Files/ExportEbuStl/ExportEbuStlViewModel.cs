@@ -69,6 +69,8 @@ public partial class ExportEbuStlViewModel : ObservableObject
     [ObservableProperty] private int? _selectedRowsAddByNewLine;
     [ObservableProperty] private bool _useBox;
     [ObservableProperty] private bool _useDoubleHeight;
+    [ObservableProperty] private ObservableCollection<string> _previewFonts;
+    [ObservableProperty] private string? _selectedPreviewFont;
     [ObservableProperty] private string _errorTitle;
     [ObservableProperty] private string _errorLog;
 
@@ -273,6 +275,12 @@ new("2F", "French - hearing impaired (VF-MAL)"),
             "Right-justified text",
         };
 
+        // Preview only - an STL file carries a character table, not a typeface, so nothing here is
+        // written to it. It is for someone with a teletext face installed who wants the preview to
+        // look like a decoder; the first entry means "leave the video preview font alone".
+        PreviewFonts = new ObservableCollection<string>(FontHelper.GetSystemFonts());
+        PreviewFonts.Insert(0, Se.Language.File.EbuSaveOptions.PreviewFontDefault);
+
         RevisionNumbers = new ObservableCollection<int>(Enumerable.Range(0, 100).ToList());
         MaxCharactersPerRow = new ObservableCollection<int>(Enumerable.Range(0, 100).ToList());
         MaxRows = new ObservableCollection<int>(Enumerable.Range(0, 100).ToList());
@@ -326,6 +334,10 @@ new("2F", "French - hearing impaired (VF-MAL)"),
             SelectedRowsAddByNewLine = RowsAddByNewLine.Contains(subtitleSettings.EbuStlNewLineRows) ? subtitleSettings.EbuStlNewLineRows : 2;
             UseBox = subtitleSettings.EbuStlTeletextUseBox;
             UseDoubleHeight = subtitleSettings.EbuStlTeletextUseDoubleHeight;
+            var previewFont = Se.Settings.File.EbuSaveOptions.PreviewFontName;
+            SelectedPreviewFont = string.IsNullOrEmpty(previewFont)
+                ? PreviewFonts[0]
+                : PreviewFonts.FirstOrDefault(p => p == previewFont) ?? PreviewFonts[0];
 
             // Keep the settings the file was written with instead of resetting them to the
             // defaults above every time the export dialog is opened.
@@ -446,6 +458,9 @@ new("2F", "French - hearing impaired (VF-MAL)"),
         ebuOptions.NewLineRows = SelectedRowsAddByNewLine ?? 1;
         ebuOptions.TeletextUseBox = UseBox;
         ebuOptions.TeletextUseDoubleHeight = UseDoubleHeight;
+        ebuOptions.PreviewFontName = SelectedPreviewFont == null || SelectedPreviewFont == PreviewFonts[0]
+            ? string.Empty
+            : SelectedPreviewFont;
         Se.SaveSettings();
 
         if (_subtitle != null)

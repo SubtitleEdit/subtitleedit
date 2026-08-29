@@ -1,5 +1,6 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic.Config;
 using SkiaSharp;
 using System;
 
@@ -57,7 +58,18 @@ internal static class EbuStlPreviewStyler
         }
 
         var defaultStyle = new SsaStyle(previewStyle);
-        var boxStyle = new SsaStyle(previewStyle)
+
+        // Preview only, and never written to the file - an STL carries a character table, not a
+        // typeface. It is here for someone with a teletext face installed who wants the preview to
+        // look like a decoder, so it applies whatever the display standard is: a house font is as
+        // valid for open subtitling as a teletext font is for teletext.
+        var previewFontName = Se.Settings.File.EbuSaveOptions.PreviewFontName;
+        if (!string.IsNullOrWhiteSpace(previewFontName))
+        {
+            defaultStyle.FontName = previewFontName;
+        }
+
+        var boxStyle = new SsaStyle(defaultStyle)
         {
             Name = "Box",
             BorderStyle = "3", // opaque box

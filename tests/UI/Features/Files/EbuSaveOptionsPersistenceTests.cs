@@ -32,6 +32,7 @@ public class EbuSaveOptionsPersistenceTests
         "File.EbuSaveOptions.NewLineRows",
         "File.EbuSaveOptions.TeletextUseBox",
         "File.EbuSaveOptions.TeletextUseDoubleHeight",
+        "File.EbuSaveOptions.PreviewFontName",
     };
 
     /// <summary>
@@ -249,5 +250,57 @@ public class EbuSaveOptionsPersistenceTests
         Se.UpdateLibSeSettings();
 
         Assert.Equal(3, Configuration.Settings.SubtitleSettings.EbuStlJustificationCode);
+    }
+
+    // Preview only - nothing about it is written to the STL file, so it lives in the persisted
+    // settings alone and the first list entry means "leave the video preview font alone".
+    [AvaloniaFact]
+    public void PreviewFont_DefaultsToTheVideoPreviewFont()
+    {
+        using var scope = new SettingsScope(ScopePaths);
+        using var libSeScope = new LibSeEbuScope();
+        Se.Settings.File.EbuSaveOptions.PreviewFontName = string.Empty;
+
+        var viewModel = OpenDialog(MakeSubtitle());
+
+        Assert.Equal(viewModel.PreviewFonts[0], viewModel.SelectedPreviewFont);
+
+        viewModel.OkCommand.Execute(null);
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal(string.Empty, Se.Settings.File.EbuSaveOptions.PreviewFontName);
+    }
+
+    [AvaloniaFact]
+    public void PreviewFont_SurvivesReopeningTheDialog()
+    {
+        using var scope = new SettingsScope(ScopePaths);
+        using var libSeScope = new LibSeEbuScope();
+        var subtitle = MakeSubtitle();
+
+        var viewModel = OpenDialog(subtitle);
+        var font = viewModel.PreviewFonts.Last();
+        viewModel.SelectedPreviewFont = font;
+        viewModel.OkCommand.Execute(null);
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal(font, Se.Settings.File.EbuSaveOptions.PreviewFontName);
+
+        var reopened = OpenDialog(subtitle);
+
+        Assert.Equal(font, reopened.SelectedPreviewFont);
+    }
+
+    // A font that is no longer installed must not leave the combo box blank.
+    [AvaloniaFact]
+    public void PreviewFont_FallsBackWhenTheFontIsGone()
+    {
+        using var scope = new SettingsScope(ScopePaths);
+        using var libSeScope = new LibSeEbuScope();
+        Se.Settings.File.EbuSaveOptions.PreviewFontName = "A font nobody has installed";
+
+        var viewModel = OpenDialog(MakeSubtitle());
+
+        Assert.Equal(viewModel.PreviewFonts[0], viewModel.SelectedPreviewFont);
     }
 }
