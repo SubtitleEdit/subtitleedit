@@ -18433,6 +18433,14 @@ public partial class MainViewModel :
         var player = vp.VideoPlayer;
         var elapsedMs = (Stopwatch.GetTimestamp() - _frameStepPlayStartTs) * 1000.0 / Stopwatch.Frequency;
 
+        // The anchor/stop values live in UI time, which in SMPTE mode is the drop-frame clock;
+        // compress the player's real clock the same way the estimator does before comparing.
+        var playerPosition = player.Position;
+        if (IsSmpteTimingEnabled)
+        {
+            playerPosition = playerPosition * 1000.0 / 1001.0;
+        }
+
         // The seek onto the frame is asynchronous, so until it lands mpv's clock still reports the
         // spot we came from - which for a backward step is already past the stop point and would
         // end the blip before it played anything.
@@ -18440,14 +18448,14 @@ public partial class MainViewModel :
             ? player.HasPlaybackRestartedSince(_frameStepPlayStartTs)
             : elapsedMs > FrameStepPlaySeekWaitMs;
 
-        var frameIsPlayedOut = seekLanded && player.Position >= _frameStepPlayStopSeconds;
+        var frameIsPlayedOut = seekLanded && playerPosition >= _frameStepPlayStopSeconds;
         if (!frameIsPlayedOut && elapsedMs < FrameStepPlayMaxMs)
         {
             return;
         }
 
         _frameStepPlayBlipping = false;
-        var anchor = _frameStepPlayAnchorSeconds ?? player.Position;
+        var anchor = _frameStepPlayAnchorSeconds ?? playerPosition;
         PauseVideoAndFreezePlayhead(vp);
         vp.SeekTo(anchor);
         PinPlayheadTo(anchor);
@@ -19343,7 +19351,14 @@ public partial class MainViewModel :
             newPosition = vp.Duration;
         }
 
-        vp.Position = newPosition;
+        // SeekTo, not the Position property: an assignment equal to the currently displayed
+        // value silently no-ops at the styled-property layer and the seek never reaches the
+        // player. And pin like the waveform click/scrub paths do - without it the cursor sat
+        // on the old position for the 100-200 ms the seek takes while the view below had
+        // already scrolled to the target, so keyboard nudges and snapped frame steps read as
+        // laggy next to a click.
+        vp.SeekTo(newPosition);
+        PinPlayheadTo(newPosition);
 
         if (vp.IsPlaying)
         {

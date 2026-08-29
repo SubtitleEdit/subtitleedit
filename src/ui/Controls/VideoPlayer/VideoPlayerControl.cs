@@ -280,10 +280,24 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             // First update our property
             Position = newPosition;
 
-            _videoPlayerInstance.Position = newPosition;
+            _videoPlayerInstance.Position = UiToPlayerSeconds(newPosition);
 
             // Then notify listeners like the ViewModel
             PositionChanged?.Invoke(newPosition);
+        }
+
+        /// <summary>
+        /// UI position values (the <see cref="Position"/> property, the sliders, the waveform
+        /// time axis) run on the SMPTE drop-frame clock while <see cref="IsSmpteTimingEnabled"/>:
+        /// every read from the player is compressed by 1000/1001 (the position timer below, the
+        /// view model's playhead estimator, the waveform peaks). A seek must expand the UI value
+        /// back to the player's real clock, or every seek lands 0.1% early - proportional to the
+        /// absolute position, about a second per 17 minutes - and the playhead pin, whose arrive
+        /// check compares in UI space, then snaps the cursor back once its timeout expires.
+        /// </summary>
+        private double UiToPlayerSeconds(double seconds)
+        {
+            return IsSmpteTimingEnabled ? seconds * 1001.0 / 1000.0 : seconds;
         }
 
         public void SetPosition(double seconds)
@@ -319,7 +333,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         public void SeekTo(double seconds)
         {
             SetPositionDisplayOnly(seconds);
-            _videoPlayerInstance.Position = seconds;
+            _videoPlayerInstance.Position = UiToPlayerSeconds(seconds);
         }
 
         public int ContentWidth => _contentPresenter?.Bounds.Width > 0 ? (int)_contentPresenter.Bounds.Width : 0;
