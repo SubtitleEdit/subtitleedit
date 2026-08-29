@@ -1,5 +1,6 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using System;
 using System.Text;
 
 namespace LibSETests.Common;
@@ -31,24 +32,35 @@ public class SubtitlePositionEbuJustificationTest
         return Ebu.ReadHeader(buffer).ToString();
     }
 
-    private static string Position(byte justificationCode, string teletextRow, string text = "Hello world")
+    private static Paragraph Positioned(byte justificationCode, string teletextRow, string text = "Hello world", bool usePositions = true)
     {
         var oldHelper = Ebu.EbuUiHelper;
+        var oldMarginBottom = Configuration.Settings.SubtitleSettings.EbuStlMarginBottom;
+        var oldNewLineRows = Configuration.Settings.SubtitleSettings.EbuStlNewLineRows;
         try
         {
             Ebu.EbuUiHelper = new JustificationHelper { JustificationCode = justificationCode };
+            Configuration.Settings.SubtitleSettings.EbuStlMarginBottom = 2;
+            Configuration.Settings.SubtitleSettings.EbuStlNewLineRows = 2;
             var header = MakeStlHeader();
             var subtitle = new Subtitle { Header = header };
             subtitle.Paragraphs.Add(new Paragraph(text, 1000, 3000) { MarginV = teletextRow });
 
-            SubtitlePositionToAssa.ApplyPositions(subtitle, header);
+            SubtitlePositionToAssa.ApplyPositions(subtitle, header, usePositions);
 
-            return subtitle.Paragraphs[0].Text;
+            return subtitle.Paragraphs[0];
         }
         finally
         {
+            Configuration.Settings.SubtitleSettings.EbuStlNewLineRows = oldNewLineRows;
+            Configuration.Settings.SubtitleSettings.EbuStlMarginBottom = oldMarginBottom;
             Ebu.EbuUiHelper = oldHelper;
         }
+    }
+
+    private static string Position(byte justificationCode, string teletextRow, string text = "Hello world")
+    {
+        return Positioned(justificationCode, teletextRow, text).Text;
     }
 
     [Theory]
@@ -95,5 +107,48 @@ public class SubtitlePositionEbuJustificationTest
         {
             Ebu.EbuUiHelper = oldHelper;
         }
+    }
+
+    // Only a subtitle read from an STL file carries teletext rows in MarginV. A subtitle that was
+    // typed in or converted from another format has none, and used to be skipped outright - so the
+    // justification and the vertical margins of the EBU options dialog did nothing on screen for
+    // the far more common case (user report on PR #14228).
+    [Theory]
+    [InlineData(0, "{\\an2}")] // unchanged
+    [InlineData(1, "{\\an1}")] // left
+    [InlineData(2, "{\\an2}")] // centered
+    [InlineData(3, "{\\an3}")] // right
+    public void JustificationAlsoAppliesWithoutATeletextRow(byte justificationCode, string expected)
+    {
+        Assert.StartsWith(expected, Position(justificationCode, null));
+    }
+
+    [Fact]
+    public void WithoutATeletextRowTheLineSitsAtTheBottomMargin()
+    {
+        // 2 rows up from the bottom of the 23 teletext rows, in the 288 high libass script.
+        Assert.Equal("25", Positioned(2, null).MarginV);
+    }
+
+    [Fact]
+    public void WithoutATeletextRowTheSecondLineStillFitsAboveTheBottomMargin()
+    {
+        // Two lines at 2 rows each start higher up, but the last one keeps the same bottom margin.
+        Assert.Equal("25", Positioned(2, null, "Hello" + Environment.NewLine + "world").MarginV);
+    }
+
+    [Fact]
+    public void ATeletextRowFromTheFileStillWins()
+    {
+        Assert.Equal("38", Positioned(2, "20").MarginV); // 3 rows up from the bottom of 23, in 288
+    }
+
+    [Fact]
+    public void NothingIsPositionedWhenPositionsAreTurnedOff()
+    {
+        var p = Positioned(1, null, usePositions: false);
+
+        Assert.Equal("Hello world", p.Text);
+        Assert.Null(p.MarginV);
     }
 }

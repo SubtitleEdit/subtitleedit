@@ -191,4 +191,28 @@ public class EbuSaveOptionsPersistenceTests
             }
         }
     }
+
+    // The box and the double height are teletext control codes - Ebu.Save writes neither when the
+    // display standard is open subtitling, and the video preview shows neither. The two check
+    // boxes have to say so instead of promising a box nothing ever draws (user report on PR #14228).
+    [AvaloniaFact]
+    public void TeletextOptions_AreOnlyEnabledForTeletext()
+    {
+        using var scope = new SettingsScope(ScopePaths);
+        using var libSeScope = new LibSeEbuScope();
+
+        var viewModel = OpenDialog(MakeSubtitle());
+
+        Assert.Equal(viewModel.DisplayStandardCodes[0], viewModel.SelectedDisplayStandardCode); // 0 = open subtitling
+        Assert.False(viewModel.IsTeletext);
+
+        viewModel.SelectedDisplayStandardCode = viewModel.DisplayStandardCodes[1]; // 1 = level-1 teletext
+        Assert.True(viewModel.IsTeletext);
+
+        viewModel.SelectedDisplayStandardCode = viewModel.DisplayStandardCodes[2]; // 2 = level-2 teletext
+        Assert.True(viewModel.IsTeletext);
+
+        viewModel.SelectedDisplayStandardCode = viewModel.DisplayStandardCodes[3]; // undefined
+        Assert.False(viewModel.IsTeletext);
+    }
 }

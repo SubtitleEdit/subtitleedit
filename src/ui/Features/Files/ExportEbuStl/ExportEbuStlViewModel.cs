@@ -28,7 +28,10 @@ public partial class ExportEbuStlViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<string> _frameRates;
     [ObservableProperty] private string? _selectedFrameRate;
     [ObservableProperty] private ObservableCollection<string> _displayStandardCodes;
-    [ObservableProperty] private string? _selectedDisplayStandardCode;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsTeletext))]
+    private string? _selectedDisplayStandardCode;
     [ObservableProperty] private ObservableCollection<string> _characterTables;
     [ObservableProperty] private string? _selectedCharacterTable;
     [ObservableProperty] private ObservableCollection<LanguageItem> _languageCodes;
@@ -68,6 +71,13 @@ public partial class ExportEbuStlViewModel : ObservableObject
     [ObservableProperty] private bool _useDoubleHeight;
     [ObservableProperty] private string _errorTitle;
     [ObservableProperty] private string _errorLog;
+
+    /// <summary>
+    /// The box and the double height are teletext control codes, so "0 Open subtitling" gets
+    /// neither - not in the saved file (see Ebu.Save) and not in the video preview. Without this
+    /// the two check boxes sat there enabled and did nothing at all.
+    /// </summary>
+    public bool IsTeletext => SelectedDisplayStandardCode?.Contains("teletext", StringComparison.OrdinalIgnoreCase) ?? false;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }

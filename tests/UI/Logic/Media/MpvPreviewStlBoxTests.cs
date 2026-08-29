@@ -35,7 +35,7 @@ public class MpvPreviewStlBoxTests
         return Ebu.ReadHeader(buffer).ToString();
     }
 
-    private static string BuildPreviewText(bool useBox)
+    private static string BuildPreviewText(bool useBox, string displayStandardCode = "1")
     {
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
@@ -48,7 +48,7 @@ public class MpvPreviewStlBoxTests
             Se.Settings.Video.MpvPreviewFontName = "Verdana";
             Se.Settings.Video.MpvPreviewFontSize = 33;
 
-            var subtitle = new Subtitle { Header = MakeStlHeader("1") }; // 1 = level 1 teletext
+            var subtitle = new Subtitle { Header = MakeStlHeader(displayStandardCode) };
             subtitle.Paragraphs.Add(new Paragraph("Hello world", 1000, 3000));
 
             var reloader = new MpvReloader();
@@ -118,5 +118,14 @@ public class MpvPreviewStlBoxTests
     {
         Assert.Equal("Box", GetDialogueStyle(BuildPreviewText(useBox: true)));
         Assert.Equal("Default", GetDialogueStyle(BuildPreviewText(useBox: false)));
+    }
+
+    // The box is a teletext control code, so Ebu.Save writes none for open subtitling however the
+    // save options dialog is set - and a preview that drew one anyway would promise a box the
+    // file never carries (user report on PR #14228).
+    [AvaloniaFact]
+    public void OpenSubtitlingNeverUsesTheBoxStyle()
+    {
+        Assert.Equal("Default", GetDialogueStyle(BuildPreviewText(useBox: true, displayStandardCode: "0")));
     }
 }
