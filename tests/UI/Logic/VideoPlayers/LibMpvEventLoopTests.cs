@@ -157,6 +157,114 @@ public class LibMpvEventLoopTests
     }
 
     /// <summary>
+    /// A restart is stamped when the event thread DEQUEUES it, not when mpv emitted it, so the
+    /// restart that opening the file fires can be stamped later than a seek issued in the
+    /// meantime - and "has anything restarted since some old moment?" would then answer yes for
+    /// a seek that has not run at all. mpv's event queue is FIFO, so the seek's own
+    /// MPV_EVENT_COMMAND_REPLY orders the two; while a seek is outstanding the answer must be
+    /// about that seek. Concretely: reporting a restart since the beginning of time while
+    /// reporting none since the seek was issued is the contradiction that broke Pause() (#14187).
+    /// </summary>
+    [Fact]
+    public async Task HasPlaybackRestartedSince_AnswersForTheOutstandingSeekNotAnOlderRestart()
+    {
+        var player = CreatePlayer();
+        if (player == null)
+        {
+            return; // no libmpv on this machine
+        }
+
+        var wavFileName = WriteTempWav();
+        try
+        {
+            await player.LoadFile(wavFileName);
+            Assert.True(await WaitUntilAsync(() => player.Duration > 1.0, 5000), "file never loaded");
+
+            player.Play();
+            Assert.True(await WaitUntilAsync(() => player.IsPlaying, 3000), "playback never started");
+
+            // Opening the file fires a restart of its own (unpausing does not) - that is the one
+            // that must not be mistaken for the seek's below. No seek has been issued yet, so
+            // this is a plain "any restart at all?" question; wait until it is definitely in.
+            Assert.True(await WaitUntilAsync(() => player.HasPlaybackRestartedSince(0), 5000),
+                "no playback restart arrived before the seek");
+
+            var beforeSeekTimestamp = Stopwatch.GetTimestamp();
+            player.Position = 1.2;
+
+            var landed = false;
+            var end = Environment.TickCount64 + 5000;
+            while (Environment.TickCount64 < end)
+            {
+                // "Since forever" first, "since the seek" second: read the other way round, a
+                // restart landing between the two reads would look like a violation. In this
+                // order a restart that lands mid-iteration simply satisfies both.
+                var restartedSinceForever = player.HasPlaybackRestartedSince(0);
+                landed = player.HasPlaybackRestartedSince(beforeSeekTimestamp);
+                Assert.False(restartedSinceForever && !landed,
+                    "a restart from before the seek passed for the outstanding seek's own restart");
+                if (landed)
+                {
+                    break;
+                }
+            }
+
+            Assert.True(landed, "the seek's playback restart never arrived");
+            Assert.True(player.HasPlaybackRestartedSince(0), "the landed seek should satisfy any older timestamp");
+        }
+        finally
+        {
+            player.Dispose();
+            TryDelete(wavFileName);
+        }
+    }
+
+    /// <summary>
+    /// The observed pause cache must be truthful the instant Play()/Pause()/PlayOrPause()
+    /// return. Those commands are synchronous - the core has applied them - but mpv's pause
+    /// property-change event only reaches the cache a moment later on the event thread, and
+    /// IsPaused/IsPlaying answer from that cache. The Position getter gates its cached
+    /// seek-target branch on IsPaused, so a stale "still playing" answer there is what let a
+    /// waveform click report mpv's pre-seek time-pos instead of the clicked position (#14187) -
+    /// a race the click test below only loses when the machine is busy.
+    /// </summary>
+    [Fact]
+    public async Task PlayAndPause_UpdateTheObservedPauseCacheImmediately()
+    {
+        var player = CreatePlayer();
+        if (player == null)
+        {
+            return; // no libmpv on this machine
+        }
+
+        var wavFileName = WriteTempWav();
+        try
+        {
+            await player.LoadFile(wavFileName);
+            Assert.True(await WaitUntilAsync(() => player.Duration > 1.0, 5000), "file never loaded");
+
+            player.Play();
+            Assert.True(player.IsPlaying, "IsPlaying still false on the very next read after Play()");
+            Assert.False(player.IsPaused, "IsPaused still true on the very next read after Play()");
+
+            player.Pause();
+            Assert.True(player.IsPaused, "IsPaused still false on the very next read after Pause()");
+            Assert.False(player.IsPlaying, "IsPlaying still true on the very next read after Pause()");
+
+            player.PlayOrPause();
+            Assert.True(player.IsPlaying, "IsPlaying still false on the very next read after PlayOrPause()");
+
+            player.PlayOrPause();
+            Assert.True(player.IsPaused, "IsPaused still false on the very next read after PlayOrPause()");
+        }
+        finally
+        {
+            player.Dispose();
+            TryDelete(wavFileName);
+        }
+    }
+
+    /// <summary>
     /// Issue #14187: a waveform click seeks first (pointer release) and pauses a moment later
     /// (tap) - and the second Position assignment no-ops at the Avalonia property layer, so the
     /// player-level setter never runs again after the pause. Pause() must therefore not clear
