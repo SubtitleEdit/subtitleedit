@@ -438,6 +438,17 @@ public partial class MainViewModel :
     [ObservableProperty] private bool _isSurroundWith6Visible;
     [ObservableProperty] private bool _isSurroundWith7Visible;
     [ObservableProperty] private bool _isSurroundWith8Visible;
+    [ObservableProperty] private string _customSearch1Text;
+    [ObservableProperty] private string _customSearch2Text;
+    [ObservableProperty] private string _customSearch3Text;
+    [ObservableProperty] private string _customSearch4Text;
+    [ObservableProperty] private string _customSearch5Text;
+    [ObservableProperty] private bool _isCustomSearch1Visible;
+    [ObservableProperty] private bool _isCustomSearch2Visible;
+    [ObservableProperty] private bool _isCustomSearch3Visible;
+    [ObservableProperty] private bool _isCustomSearch4Visible;
+    [ObservableProperty] private bool _isCustomSearch5Visible;
+    [ObservableProperty] private bool _isCustomSearchVisible;
     [ObservableProperty] private bool _isSubtitleSecondaryVisible;
 
     public TableView SubtitleGrid { get; set; }
@@ -929,6 +940,11 @@ public partial class MainViewModel :
         SurroundWith6Text = string.Empty;
         SurroundWith7Text = string.Empty;
         SurroundWith8Text = string.Empty;
+        CustomSearch1Text = string.Empty;
+        CustomSearch2Text = string.Empty;
+        CustomSearch3Text = string.Empty;
+        CustomSearch4Text = string.Empty;
+        CustomSearch5Text = string.Empty;
 
         SubtitleFormats = [.. SubtitleFormatHelper.GetSubtitleFormatsWithFavoritesAtTop()];
         _changingFormatProgrammatically = true;
@@ -1046,6 +1062,7 @@ public partial class MainViewModel :
         LibVlcDynamicPlayer.LibVlcPath = Se.VlcFolder;
         LoadShortcuts();
         UpdateSurroundWithMenuItems();
+        UpdateCustomSearchMenuItems();
 
         StartTimers();
         _autoBackupService.StartAutoBackup(this);
@@ -1277,6 +1294,7 @@ public partial class MainViewModel :
         }
 
         UpdateSurroundWithMenuItems();
+        UpdateCustomSearchMenuItems();
     }
 
     [RelayCommand]
@@ -13665,6 +13683,99 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void CustomSearch1()
+    {
+        RunCustomSearch(1);
+    }
+
+    [RelayCommand]
+    private void CustomSearch2()
+    {
+        RunCustomSearch(2);
+    }
+
+    [RelayCommand]
+    private void CustomSearch3()
+    {
+        RunCustomSearch(3);
+    }
+
+    [RelayCommand]
+    private void CustomSearch4()
+    {
+        RunCustomSearch(4);
+    }
+
+    [RelayCommand]
+    private void CustomSearch5()
+    {
+        RunCustomSearch(5);
+    }
+
+    /// <summary>
+    /// Opens a "search via" slot's URL with the selected text - or, with nothing selected, with the
+    /// whole text of the focused text box, like SE 4 does.
+    /// </summary>
+    private void RunCustomSearch(int slotNumber)
+    {
+        var url = Se.Settings.GetCustomSearchUrl(slotNumber);
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            return;
+        }
+
+        var tb = GetFocusedTextBoxWrapper() ?? EditTextBox;
+        var text = tb.SelectedText;
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            text = tb.Text;
+        }
+
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            ShowStatus(Se.Language.General.NothingSelected);
+            return;
+        }
+
+        var searchUrl = CustomSearchUrlBuilder.Build(url, text);
+        if (searchUrl == null)
+        {
+            // Nothing sensible to open - say which slot, so a broken URL is findable in Options.
+            ShowStatus(ShortcutsMain.GetSearchViaTitle(slotNumber) + ": " + url);
+            return;
+        }
+
+        UiUtil.OpenUrl(searchUrl);
+    }
+
+    /// <summary>
+    /// Refreshes the "search via" context menu entries; slots without a URL stay hidden, and the
+    /// submenu itself disappears when no slot is configured at all.
+    /// </summary>
+    private void UpdateCustomSearchMenuItems()
+    {
+        CustomSearch1Text = ShortcutsMain.GetSearchViaTitle(1);
+        CustomSearch2Text = ShortcutsMain.GetSearchViaTitle(2);
+        CustomSearch3Text = ShortcutsMain.GetSearchViaTitle(3);
+        CustomSearch4Text = ShortcutsMain.GetSearchViaTitle(4);
+        CustomSearch5Text = ShortcutsMain.GetSearchViaTitle(5);
+
+        IsCustomSearch1Visible = IsCustomSearchSlotConfigured(1);
+        IsCustomSearch2Visible = IsCustomSearchSlotConfigured(2);
+        IsCustomSearch3Visible = IsCustomSearchSlotConfigured(3);
+        IsCustomSearch4Visible = IsCustomSearchSlotConfigured(4);
+        IsCustomSearch5Visible = IsCustomSearchSlotConfigured(5);
+
+        IsCustomSearchVisible = IsCustomSearch1Visible || IsCustomSearch2Visible || IsCustomSearch3Visible ||
+                                IsCustomSearch4Visible || IsCustomSearch5Visible;
+    }
+
+    private static bool IsCustomSearchSlotConfigured(int slotNumber)
+    {
+        return !string.IsNullOrWhiteSpace(Se.Settings.GetCustomSearchUrl(slotNumber));
+    }
+
+    [RelayCommand]
     private void ToggleLinesItalic()
     {
         ToggleItalic();
@@ -23599,6 +23710,7 @@ public partial class MainViewModel :
                     }
 
                     UpdateSurroundWithMenuItems();
+                    UpdateCustomSearchMenuItems();
                 }
             });
         });

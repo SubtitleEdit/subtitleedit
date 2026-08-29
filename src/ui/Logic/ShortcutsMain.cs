@@ -103,6 +103,32 @@ public static class ShortcutsMain
         return string.Format(Se.Language.Options.Shortcuts.SurroundWithXY, left, right);
     }
 
+    /// <summary>
+    /// Display name for a "search via" slot: the configured name when it has one, otherwise the
+    /// URL, otherwise just the slot number - the extra slots ship unconfigured.
+    /// </summary>
+    public static string GetSearchViaTitle(int slotNumber)
+    {
+        var name = Se.Settings.GetCustomSearchName(slotNumber);
+        var url = Se.Settings.GetCustomSearchUrl(slotNumber);
+        return GetSearchViaTitle(slotNumber, name, url);
+    }
+
+    public static string GetSearchViaTitle(int slotNumber, string name, string url)
+    {
+        if (!string.IsNullOrWhiteSpace(name))
+        {
+            return string.Format(Se.Language.Options.Shortcuts.SearchViaX, name);
+        }
+
+        if (!string.IsNullOrWhiteSpace(url))
+        {
+            return string.Format(Se.Language.Options.Shortcuts.SearchViaX, url);
+        }
+
+        return string.Format(Se.Language.Options.Shortcuts.SearchViaNumberX, slotNumber.ToString());
+    }
+
     private static Dictionary<string, string> BuildCommandTranslations()
     {
         return new Dictionary<string, string>
@@ -485,6 +511,11 @@ public static class ShortcutsMain
         { nameof(MainViewModel.SelectionToUpperCommand), Se.Language.Options.Shortcuts.SelectionToUpper },
         { nameof(MainViewModel.SelectionToSentenceCaseCommand), Se.Language.Options.Shortcuts.SelectionToSentenceCase },
         { nameof(MainViewModel.GoogleItCommand), Se.Language.Options.Shortcuts.GoogleIt },
+        { nameof(MainViewModel.CustomSearch1Command), GetSearchViaTitle(1) },
+        { nameof(MainViewModel.CustomSearch2Command), GetSearchViaTitle(2) },
+        { nameof(MainViewModel.CustomSearch3Command), GetSearchViaTitle(3) },
+        { nameof(MainViewModel.CustomSearch4Command), GetSearchViaTitle(4) },
+        { nameof(MainViewModel.CustomSearch5Command), GetSearchViaTitle(5) },
         { nameof(MainViewModel.ImportImageSubtitleForEditCommand), Se.Language.Options.Shortcuts.ImportImageSubtitleForEdit },
         { nameof(MainViewModel.ShowMediaInformationCommand), Se.Language.Options.Shortcuts.ShowMediaInformation },
         { nameof(MainViewModel.ShowSubtitleFormatPickerCommand), Se.Language.Options.Shortcuts.ChooseSubtitleFormat },
@@ -916,6 +947,11 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.SelectionToUpperCommand, nameof(vm.SelectionToUpperCommand), ShortcutCategory.TextBox);
         AddShortcut(shortcuts, vm.SelectionToSentenceCaseCommand, nameof(vm.SelectionToSentenceCaseCommand), ShortcutCategory.TextBox);
         AddShortcut(shortcuts, vm.GoogleItCommand, nameof(vm.GoogleItCommand), ShortcutCategory.TextBox, ShortcutGroup.Search);
+        AddShortcut(shortcuts, vm.CustomSearch1Command, nameof(vm.CustomSearch1Command), ShortcutCategory.TextBox, ShortcutGroup.Search);
+        AddShortcut(shortcuts, vm.CustomSearch2Command, nameof(vm.CustomSearch2Command), ShortcutCategory.TextBox, ShortcutGroup.Search);
+        AddShortcut(shortcuts, vm.CustomSearch3Command, nameof(vm.CustomSearch3Command), ShortcutCategory.TextBox, ShortcutGroup.Search);
+        AddShortcut(shortcuts, vm.CustomSearch4Command, nameof(vm.CustomSearch4Command), ShortcutCategory.TextBox, ShortcutGroup.Search);
+        AddShortcut(shortcuts, vm.CustomSearch5Command, nameof(vm.CustomSearch5Command), ShortcutCategory.TextBox, ShortcutGroup.Search);
         AddShortcut(shortcuts, vm.ImportImageSubtitleForEditCommand, nameof(vm.ImportImageSubtitleForEditCommand), ShortcutCategory.General, ShortcutGroup.File);
         AddShortcut(shortcuts, vm.ShowMediaInformationCommand, nameof(vm.ShowMediaInformationCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.ShowSubtitleFormatPickerCommand, nameof(vm.ShowSubtitleFormatPickerCommand), ShortcutCategory.General, ShortcutGroup.File);

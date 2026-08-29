@@ -193,6 +193,10 @@ public class LanguageSettingsShortcuts
     public string SurroundWith { get; set; }
     public string SurroundWithXY { get; set; }
     public string SurroundWithNumberX { get; set; }
+    public string SearchVia { get; set; }
+    public string SearchViaX { get; set; }
+    public string SearchViaNumberX { get; set; }
+    public string SearchViaUrlHint { get; set; }
     public string MoveVideoPositionMilliseconds { get; set; }
     public string ImportShortcutsTitle { get; set; }
     public string ExportShortcutsTitle { get; set; }
@@ -463,6 +467,10 @@ public class LanguageSettingsShortcuts
         SurroundWith = "Surround with...";
         SurroundWithXY = "Surround with {0}/{1}";
         SurroundWithNumberX = "Surround with #{0}";
+        SearchVia = "Search via";
+        SearchViaX = "Search via {0}";
+        SearchViaNumberX = "Search via #{0}";
+        SearchViaUrlHint = "The searched text takes the place of {0} in the URL";
         MoveVideoPositionMilliseconds = "Move video position in milliseconds";
         ImportShortcutsTitle = "Import shortcuts";
         ExportShortcutsTitle = "Export shortcuts";

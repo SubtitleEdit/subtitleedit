@@ -5,6 +5,7 @@ using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Features.Options.Shortcuts.CustomSearch;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts.PickMilliseconds;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts.SurroundWith;
 using Nikse.SubtitleEdit.Features.Shared;
@@ -63,6 +64,9 @@ public partial class ShortcutsViewModel : ObservableObject
     // leaves the settings untouched.
     private readonly string[] _surroundLeftSlots = new string[Se.SurroundWithSlotCount];
     private readonly string[] _surroundRightSlots = new string[Se.SurroundWithSlotCount];
+    // Same for the "search via" slots (name + URL).
+    private readonly string[] _customSearchNameSlots = new string[Se.CustomSearchSlotCount];
+    private readonly string[] _customSearchUrlSlots = new string[Se.CustomSearchSlotCount];
     // Mirror Se.Settings.Actor1..10 while the dialog is open so OK/Cancel
     // semantics match the other configurable slots (Color1..8, Surround1..3).
     private readonly string[] _actorSlots = new string[10];
@@ -103,6 +107,11 @@ public partial class ShortcutsViewModel : ObservableObject
         {
             _surroundLeftSlots[i] = Se.Settings.GetSurroundLeft(i + 1);
             _surroundRightSlots[i] = Se.Settings.GetSurroundRight(i + 1);
+        }
+        for (var i = 0; i < Se.CustomSearchSlotCount; i++)
+        {
+            _customSearchNameSlots[i] = Se.Settings.GetCustomSearchName(i + 1);
+            _customSearchUrlSlots[i] = Se.Settings.GetCustomSearchUrl(i + 1);
         }
         _videoSeekSlots[0] = Se.Settings.Video.MoveVideoPositionCustom1Back;
         _videoSeekSlots[1] = Se.Settings.Video.MoveVideoPositionCustom1Forward;
@@ -242,6 +251,11 @@ public partial class ShortcutsViewModel : ObservableObject
         _configurableCommands.Add(vm.SurroundWith6Command);
         _configurableCommands.Add(vm.SurroundWith7Command);
         _configurableCommands.Add(vm.SurroundWith8Command);
+        _configurableCommands.Add(vm.CustomSearch1Command);
+        _configurableCommands.Add(vm.CustomSearch2Command);
+        _configurableCommands.Add(vm.CustomSearch3Command);
+        _configurableCommands.Add(vm.CustomSearch4Command);
+        _configurableCommands.Add(vm.CustomSearch5Command);
         _configurableCommands.Add(vm.VideoMoveCustom1BackCommand);
         _configurableCommands.Add(vm.VideoMoveCustom1ForwardCommand);
         _configurableCommands.Add(vm.VideoMoveCustom2BackCommand);
@@ -434,6 +448,7 @@ public partial class ShortcutsViewModel : ObservableObject
             }
 
             ApplySe4CustomTags(importResult);
+            ApplySe4CustomSearches(importResult);
 
             foreach (var imported in importResult.Shortcuts)
             {
@@ -579,6 +594,10 @@ public partial class ShortcutsViewModel : ObservableObject
         {
             Se.Settings.SetSurround(i + 1, _surroundLeftSlots[i], _surroundRightSlots[i]);
         }
+        for (var i = 0; i < Se.CustomSearchSlotCount; i++)
+        {
+            Se.Settings.SetCustomSearch(i + 1, _customSearchNameSlots[i], _customSearchUrlSlots[i]);
+        }
         Se.Settings.Actor1 = _actorSlots[0];
         Se.Settings.Actor2 = _actorSlots[1];
         Se.Settings.Actor3 = _actorSlots[2];
@@ -602,6 +621,11 @@ public partial class ShortcutsViewModel : ObservableObject
         for (var i = 1; i <= Se.SurroundWithSlotCount; i++)
         {
             ShortcutsMain.CommandTranslationLookup[$"SurroundWith{i}Command"] = ShortcutsMain.GetSurroundWithTitle(i);
+        }
+
+        for (var i = 1; i <= Se.CustomSearchSlotCount; i++)
+        {
+            ShortcutsMain.CommandTranslationLookup[$"CustomSearch{i}Command"] = ShortcutsMain.GetSearchViaTitle(i);
         }
 
         for (var i = 0; i < 10; i++)
@@ -638,6 +662,13 @@ public partial class ShortcutsViewModel : ObservableObject
         if (surroundSlotIndex >= 0)
         {
             await ConfigureSurroundSlot(surroundSlotIndex);
+            return;
+        }
+
+        var customSearchSlotIndex = GetCustomSearchSlotIndex(node.ShortCut.Action);
+        if (customSearchSlotIndex >= 0)
+        {
+            await ConfigureCustomSearchSlot(customSearchSlotIndex);
             return;
         }
 
@@ -988,6 +1019,74 @@ public partial class ShortcutsViewModel : ObservableObject
         if (flatNodeBack != null)
         {
             flatNodeBack.Title = ShortcutsMain.GetSurroundWithTitle(slotIndex + 1, result.Before, result.After);
+        }
+    }
+
+    /// <summary>
+    /// Carries SE 4's custom search slots (name + URL) over with the shortcuts that fire them. The
+    /// slots line up one for one with SE 5's, so slot N is simply overwritten with SE 4's slot N:
+    /// the imported key and the site it searches have to stay together, and an import of SE 4
+    /// shortcuts is already a wholesale "use my SE 4 setup".
+    /// </summary>
+    internal void ApplySe4CustomSearches(Se4ShortcutsImporter.ImportResult importResult)
+    {
+        foreach (var (slotNumber, search) in importResult.CustomSearches)
+        {
+            if (slotNumber < 1 || slotNumber > Se.CustomSearchSlotCount)
+            {
+                continue;
+            }
+
+            _customSearchNameSlots[slotNumber - 1] = search.Name;
+            _customSearchUrlSlots[slotNumber - 1] = search.Url;
+
+            // The rest of this import writes straight to Se.Settings, so the pair goes there too -
+            // and into the dialog's own slots above, or pressing OK would write the old value back.
+            Se.Settings.SetCustomSearch(slotNumber, search.Name, search.Url);
+
+            ShortcutsMain.CommandTranslationLookup[$"CustomSearch{slotNumber}Command"] =
+                ShortcutsMain.GetSearchViaTitle(slotNumber, search.Name, search.Url);
+        }
+    }
+
+    private int GetCustomSearchSlotIndex(IRelayCommand action)
+    {
+        if (MainViewModel == null)
+        {
+            return -1;
+        }
+
+        if (action == MainViewModel.CustomSearch1Command) { return 0; }
+        if (action == MainViewModel.CustomSearch2Command) { return 1; }
+        if (action == MainViewModel.CustomSearch3Command) { return 2; }
+        if (action == MainViewModel.CustomSearch4Command) { return 3; }
+        if (action == MainViewModel.CustomSearch5Command) { return 4; }
+        return -1;
+    }
+
+    private async Task ConfigureCustomSearchSlot(int slotIndex)
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<CustomSearchWindow, CustomSearchViewModel>(Window, vm =>
+        {
+            vm.Initialize(_customSearchNameSlots[slotIndex], _customSearchUrlSlots[slotIndex]);
+        });
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        _customSearchNameSlots[slotIndex] = result.Name;
+        _customSearchUrlSlots[slotIndex] = result.Url;
+
+        var flatNodeBack = FlatNodes.FirstOrDefault(n => n?.ShortCut != null && GetCustomSearchSlotIndex(n.ShortCut.Action) == slotIndex);
+        if (flatNodeBack != null)
+        {
+            flatNodeBack.Title = ShortcutsMain.GetSearchViaTitle(slotIndex + 1, result.Name, result.Url);
         }
     }
 

@@ -29,6 +29,13 @@ public static class Se4ShortcutsImporter
         /// </summary>
         public string? CustomTagsStart { get; set; }
         public string? CustomTagsEnd { get; set; }
+
+        /// <summary>
+        /// SE 4's custom search slots (<c>VideoControls/CustomSearchTextN</c> +
+        /// <c>CustomSearchUrlN</c>), keyed by slot number. Empty for an exported SE_Shortcuts.xml,
+        /// which carries no VideoControls section.
+        /// </summary>
+        public Dictionary<int, (string Name, string Url)> CustomSearches { get; } = new();
     }
 
     // Exposed for tests: every mapped SE 5 command must stay registered in the shortcut
@@ -311,6 +318,11 @@ public static class Se4ShortcutsImporter
         ["MainTranslateAutoSelectedLines"] = nameof(MainViewModel.AutoTranslateSelectedLinesCommand),
         ["MainTranslateGoogleTranslateIt"] = nameof(MainViewModel.ShowTranslateViaCopyPasteCommand),
         ["MainTranslateGoogleIt"] = nameof(MainViewModel.GoogleItCommand),
+        ["MainTranslateCustomSearch1"] = nameof(MainViewModel.CustomSearch1Command),
+        ["MainTranslateCustomSearch2"] = nameof(MainViewModel.CustomSearch2Command),
+        ["MainTranslateCustomSearch3"] = nameof(MainViewModel.CustomSearch3Command),
+        ["MainTranslateCustomSearch4"] = nameof(MainViewModel.CustomSearch4Command),
+        ["MainTranslateCustomSearch5"] = nameof(MainViewModel.CustomSearch5Command),
 
         // Waveform
         ["WaveformAdd"] = nameof(MainViewModel.WaveformInsertAtPositionAndFocusTextBoxCommand),
@@ -478,6 +490,7 @@ public static class Se4ShortcutsImporter
         }
 
         ReadCustomTags(doc, result);
+        ReadCustomSearches(doc, result);
 
         return result;
     }
@@ -513,6 +526,30 @@ public static class Se4ShortcutsImporter
 
         result.CustomTagsStart = start;
         result.CustomTagsEnd = end;
+    }
+
+    // <VideoControls><CustomSearchTextN>/<CustomSearchUrlN> hold the name and the URL template of
+    // SE 4's five custom search slots - the same layout SE 5 uses, so they carry over slot for slot.
+    // Only present in a full Settings.xml.
+    private static void ReadCustomSearches(XDocument doc, ImportResult result)
+    {
+        var videoControls = doc.Root?.Element("VideoControls");
+        if (videoControls == null)
+        {
+            return;
+        }
+
+        for (var slot = 1; slot <= Se.CustomSearchSlotCount; slot++)
+        {
+            var url = videoControls.Element("CustomSearchUrl" + slot)?.Value ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                continue;
+            }
+
+            var name = videoControls.Element("CustomSearchText" + slot)?.Value ?? string.Empty;
+            result.CustomSearches[slot] = (name.Trim(), url.Trim());
+        }
     }
 
     private static List<string> ParseShortcutValue(string value)
