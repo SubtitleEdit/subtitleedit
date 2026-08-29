@@ -152,6 +152,9 @@ public class CompareWindow : Window
         {
             vm.LeftGrid.SelectionChanged += vm.LeftGridSelectionChanged;
             vm.RightGrid.SelectionChanged += vm.RightGridSelectionChanged;
+
+            // Scrolling either side keeps the other aligned to the same rows, like SE4 (#13504).
+            vm.ScrollSync = new TableViewScrollSync(vm.LeftGrid, vm.RightGrid);
         }
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };

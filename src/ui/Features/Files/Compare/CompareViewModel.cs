@@ -46,12 +46,16 @@ public partial class CompareViewModel : ObservableObject
     public TableView? LeftGrid { get; set; } = new();
     public TableView? RightGrid { get; set; } = new();
 
+    /// <summary>Keeps the two grids showing the same rows while either one scrolls (#13504).</summary>
+    public TableViewScrollSync? ScrollSync { get; set; }
+
     private IFileHelper _fileHelper;
     private IFolderHelper _folderHelper;
     private List<SubtitleLineViewModel> _leftLines = new();
     private List<SubtitleLineViewModel> _rightLines = new();
     private string _language = string.Empty;
     private bool _languageDirty = true;
+    private bool _mirroringSelection;
 
     // Theme aware - the light pastels are unreadable under the dark theme's near-white text (#13435).
     private static IBrush ListViewRed => CompareColors.OnlyInOneFileRow;
@@ -885,41 +889,60 @@ public partial class CompareViewModel : ObservableObject
 
     internal void LeftGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (e.AddedItems.Count == 0)
-        {
-            return;
-        }
-
-        var selection = e.AddedItems[0] as CompareItem;
-        if (selection == null)
-        {
-            return;
-        }
-
-        var idx = LeftSubtitles.IndexOf(selection);
-        Dispatcher.UIThread.Post(() =>
-        {
-            SelectAndScrollToRow(RightGrid, idx);
-        });
+        MirrorSelection(e, LeftSubtitles, LeftGrid, RightGrid);
     }
 
     internal void RightGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (e.AddedItems.Count == 0)
+        MirrorSelection(e, RightSubtitles, RightGrid, LeftGrid);
+    }
+
+    /// <summary>
+    /// Selects the same row on the other side and lines the two views up again. SE4 assigned the
+    /// other list view's TopItem here (Compare.SelectLinesInBothListViews); ScrollIntoView only
+    /// promises the row is somewhere in view, so the two sides could keep the same row selected
+    /// while showing ranges a page apart (#13504).
+    /// </summary>
+    private void MirrorSelection(
+        SelectionChangedEventArgs e,
+        ObservableCollection<CompareItem> sourceItems,
+        TableView? source,
+        TableView? target)
+    {
+        if (_mirroringSelection || source == null || target == null || e.AddedItems.Count == 0)
         {
             return;
         }
 
-        var selection = e.AddedItems[0] as CompareItem;
-        if (selection == null)
+        if (e.AddedItems[0] is not CompareItem selection)
         {
             return;
         }
 
-        var idx = RightSubtitles.IndexOf(selection);
+        var idx = sourceItems.IndexOf(selection);
+        if (idx < 0)
+        {
+            return;
+        }
+
         Dispatcher.UIThread.Post(() =>
         {
-            SelectAndScrollToRow(LeftGrid, idx);
+            // Mirroring the selection raises SelectionChanged on the other grid, which would
+            // mirror it straight back and re-align from the wrong side.
+            _mirroringSelection = true;
+            try
+            {
+                if (idx < target.ItemCount && target.SelectedIndex != idx)
+                {
+                    target.SelectedIndex = idx;
+                }
+
+                ScrollSync?.SyncFrom(source);
+            }
+            finally
+            {
+                _mirroringSelection = false;
+            }
         });
     }
 
