@@ -201,9 +201,16 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// are 0 = unchanged, 1 = left, 2 = centered and 3 = right, and each centered alignment
         /// (2, 5 and 8) has its left neighbour one below it and its right one above.
         /// </summary>
+        /// <remarks>
+        /// Read from the EBU STL settings, next to the margins and the teletext flags this method's
+        /// caller uses. It used to come off <see cref="Ebu.EbuUiHelper"/>, which is the carrier that
+        /// takes the code to the writer, not a setting: it is null until a save or the save options
+        /// dialog creates one - so a preview before either showed everything centered - and batch
+        /// convert overwrites it with its own job's code.
+        /// </remarks>
         private static int GetEbuJustificationOffset()
         {
-            switch (Ebu.EbuUiHelper?.JustificationCode)
+            switch (Configuration.Settings.SubtitleSettings.EbuStlJustificationCode)
             {
                 case 1: return -1;
                 case 3: return 1;

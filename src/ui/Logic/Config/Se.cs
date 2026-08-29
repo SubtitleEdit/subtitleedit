@@ -825,6 +825,7 @@ public class Se
         // seeds them from the loaded file, and this sync runs after every SaveSettings - it would
         // clobber the file's flags. They are applied once at startup in LoadSettings instead.
         var ebu = Settings.File.EbuSaveOptions;
+        ss.EbuStlJustificationCode = ebu.JustificationCode;
         ss.EbuStlMarginTop = ebu.MarginTop;
         ss.EbuStlMarginBottom = ebu.MarginBottom;
         ss.EbuStlNewLineRows = ebu.NewLineRows;

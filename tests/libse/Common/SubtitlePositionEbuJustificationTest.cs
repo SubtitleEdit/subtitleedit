@@ -10,13 +10,6 @@ namespace LibSETests.Common;
 // screen.
 public class SubtitlePositionEbuJustificationTest
 {
-    private class JustificationHelper : Ebu.IEbuUiHelper
-    {
-        public byte JustificationCode { get; set; }
-        public void Initialize(Ebu.EbuGeneralSubtitleInformation header, byte justificationCode, string fileName, Subtitle subtitle) { }
-        public bool ShowDialogOk() => true;
-    }
-
     private static string MakeStlHeader()
     {
         var buffer = new byte[1024];
@@ -32,16 +25,17 @@ public class SubtitlePositionEbuJustificationTest
         return Ebu.ReadHeader(buffer).ToString();
     }
 
-    private static Paragraph Positioned(byte justificationCode, string teletextRow, string text = "Hello world", bool usePositions = true)
+    private static Paragraph Positioned(int justificationCode, string teletextRow, string text = "Hello world", bool usePositions = true)
     {
-        var oldHelper = Ebu.EbuUiHelper;
-        var oldMarginBottom = Configuration.Settings.SubtitleSettings.EbuStlMarginBottom;
-        var oldNewLineRows = Configuration.Settings.SubtitleSettings.EbuStlNewLineRows;
+        var settings = Configuration.Settings.SubtitleSettings;
+        var oldJustification = settings.EbuStlJustificationCode;
+        var oldMarginBottom = settings.EbuStlMarginBottom;
+        var oldNewLineRows = settings.EbuStlNewLineRows;
         try
         {
-            Ebu.EbuUiHelper = new JustificationHelper { JustificationCode = justificationCode };
-            Configuration.Settings.SubtitleSettings.EbuStlMarginBottom = 2;
-            Configuration.Settings.SubtitleSettings.EbuStlNewLineRows = 2;
+            settings.EbuStlJustificationCode = justificationCode;
+            settings.EbuStlMarginBottom = 2;
+            settings.EbuStlNewLineRows = 2;
             var header = MakeStlHeader();
             var subtitle = new Subtitle { Header = header };
             subtitle.Paragraphs.Add(new Paragraph(text, 1000, 3000) { MarginV = teletextRow });
@@ -52,13 +46,13 @@ public class SubtitlePositionEbuJustificationTest
         }
         finally
         {
-            Configuration.Settings.SubtitleSettings.EbuStlNewLineRows = oldNewLineRows;
-            Configuration.Settings.SubtitleSettings.EbuStlMarginBottom = oldMarginBottom;
-            Ebu.EbuUiHelper = oldHelper;
+            settings.EbuStlNewLineRows = oldNewLineRows;
+            settings.EbuStlMarginBottom = oldMarginBottom;
+            settings.EbuStlJustificationCode = oldJustification;
         }
     }
 
-    private static string Position(byte justificationCode, string teletextRow, string text = "Hello world")
+    private static string Position(int justificationCode, string teletextRow, string text = "Hello world")
     {
         return Positioned(justificationCode, teletextRow, text).Text;
     }
@@ -68,7 +62,7 @@ public class SubtitlePositionEbuJustificationTest
     [InlineData(1, "{\\an1}")] // left
     [InlineData(2, "{\\an2}")] // centered
     [InlineData(3, "{\\an3}")] // right
-    public void JustificationPicksTheAlignmentColumnOnTheBottomRow(byte justificationCode, string expected)
+    public void JustificationPicksTheAlignmentColumnOnTheBottomRow(int justificationCode, string expected)
     {
         Assert.StartsWith(expected, Position(justificationCode, "22"));
     }
@@ -77,7 +71,7 @@ public class SubtitlePositionEbuJustificationTest
     [InlineData(1, "{\\an7}")] // left
     [InlineData(2, "{\\an8}")] // centered
     [InlineData(3, "{\\an9}")] // right
-    public void JustificationPicksTheAlignmentColumnOnTheTopRow(byte justificationCode, string expected)
+    public void JustificationPicksTheAlignmentColumnOnTheTopRow(int justificationCode, string expected)
     {
         Assert.StartsWith(expected, Position(justificationCode, "2"));
     }
@@ -88,20 +82,19 @@ public class SubtitlePositionEbuJustificationTest
         Assert.StartsWith("{\\an1}", Position(3, "22", "{\\an1}Hello world"));
     }
 
+    // The code comes from the EBU STL settings, not from Ebu.EbuUiHelper - that carrier only exists
+    // once a save or the save options dialog has created one, so a preview before either used to
+    // show every line centered whatever the dialog said (user report on PR #14229).
     [Fact]
-    public void NoHelperLeavesTheLineCentered()
+    public void TheSaveHelperDoesNotDecideTheJustification()
     {
         var oldHelper = Ebu.EbuUiHelper;
         try
         {
             Ebu.EbuUiHelper = null;
-            var header = MakeStlHeader();
-            var subtitle = new Subtitle { Header = header };
-            subtitle.Paragraphs.Add(new Paragraph("Hello world", 1000, 3000) { MarginV = "22" });
 
-            SubtitlePositionToAssa.ApplyPositions(subtitle, header);
-
-            Assert.StartsWith("{\\an2}", subtitle.Paragraphs[0].Text);
+            Assert.StartsWith("{\\an1}", Position(1, "22"));
+            Assert.StartsWith("{\\an3}", Position(3, "22"));
         }
         finally
         {
@@ -118,7 +111,7 @@ public class SubtitlePositionEbuJustificationTest
     [InlineData(1, "{\\an1}")] // left
     [InlineData(2, "{\\an2}")] // centered
     [InlineData(3, "{\\an3}")] // right
-    public void JustificationAlsoAppliesWithoutATeletextRow(byte justificationCode, string expected)
+    public void JustificationAlsoAppliesWithoutATeletextRow(int justificationCode, string expected)
     {
         Assert.StartsWith(expected, Position(justificationCode, null));
     }
