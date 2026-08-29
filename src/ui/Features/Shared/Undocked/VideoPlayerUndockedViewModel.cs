@@ -179,6 +179,12 @@ public partial class VideoPlayerUndockedViewModel : ObservableObject
 
         if (!string.IsNullOrEmpty(_originalVideoFileName))
         {
+            // Announced here rather than left to Open below: this control is already published
+            // as the undocked video player, so a rebuild landing before the posted open has run
+            // (Settings -> Apply followed by OK) would read the live position of a player that
+            // has not been given a file yet - 0 - and rewind the video (issue #14218).
+            videoPlayerControl.BeginPositionRestore(_originalPosition);
+
             Dispatcher.UIThread.Post(async () =>
             {
                 await Task.Delay(100);
@@ -200,8 +206,10 @@ public partial class VideoPlayerUndockedViewModel : ObservableObject
                 videoPlayerControl.Position = _originalPosition;
 
                 // The player is where it belongs - a rebuild from here on can read the live
-                // position again (issue #14218).
-                videoPlayerControl.EndPositionRestore();
+                // position again (issue #14218). If it is not there yet (mpv still loading), the
+                // target stays until the position tick sees the player arrive; handing a rebuild
+                // the 0 of a player that never got there is the rewind this guards against.
+                videoPlayerControl.EndPositionRestoreIfArrived();
 
                 // Undocking opens the video in a new player, which starts on mpv's default audio
                 // track - re-apply the track the user picked in the main window (issue #12844).
