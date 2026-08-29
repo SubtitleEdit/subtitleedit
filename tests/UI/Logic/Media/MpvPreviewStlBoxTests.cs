@@ -18,6 +18,7 @@ public class MpvPreviewStlBoxTests
 {
     private const int FontNameField = 1;
     private const int FontSizeField = 2;
+    private const int ScaleYField = 12;
     private const int BorderStyleField = 15;
 
     private static string MakeStlHeader(string displayStandardCode)
@@ -35,16 +36,18 @@ public class MpvPreviewStlBoxTests
         return Ebu.ReadHeader(buffer).ToString();
     }
 
-    private static string BuildPreviewText(bool useBox, string displayStandardCode = "1")
+    private static string BuildPreviewText(bool useBox, string displayStandardCode = "1", bool useDoubleHeight = false)
     {
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
         var oldUseBox = Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox;
+        var oldUseDoubleHeight = Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight;
         var oldFontName = Se.Settings.Video.MpvPreviewFontName;
         var oldFontSize = Se.Settings.Video.MpvPreviewFontSize;
         try
         {
             Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox = useBox;
+            Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight = useDoubleHeight;
             Se.Settings.Video.MpvPreviewFontName = "Verdana";
             Se.Settings.Video.MpvPreviewFontSize = 33;
 
@@ -60,6 +63,7 @@ public class MpvPreviewStlBoxTests
         finally
         {
             Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox = oldUseBox;
+            Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight = oldUseDoubleHeight;
             Se.Settings.Video.MpvPreviewFontName = oldFontName;
             Se.Settings.Video.MpvPreviewFontSize = oldFontSize;
         }
@@ -127,5 +131,36 @@ public class MpvPreviewStlBoxTests
     public void OpenSubtitlingNeverUsesTheBoxStyle()
     {
         Assert.Equal("Default", GetDialogueStyle(BuildPreviewText(useBox: true, displayStandardCode: "0")));
+    }
+
+    // A teletext double height row is the same glyphs at twice the height. The code is written per
+    // text field (Ebu.EncodeText), so a file that uses it uses it for every line - boxed or not.
+    [AvaloniaTheory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void DoubleHeightStretchesTheLineVertically(bool useBox)
+    {
+        var assText = BuildPreviewText(useBox: useBox, useDoubleHeight: true);
+
+        Assert.Equal("200", GetStyle(assText, "Box")[ScaleYField]);
+        Assert.Equal("200", GetStyle(assText, "Default")[ScaleYField]);
+    }
+
+    [AvaloniaFact]
+    public void SingleHeightLeavesTheLineAlone()
+    {
+        var assText = BuildPreviewText(useBox: true, useDoubleHeight: false);
+
+        Assert.Equal("100", GetStyle(assText, "Box")[ScaleYField]);
+        Assert.Equal("100", GetStyle(assText, "Default")[ScaleYField]);
+    }
+
+    // Double height is a teletext control code, so open subtitling is written without it.
+    [AvaloniaFact]
+    public void OpenSubtitlingNeverUsesDoubleHeight()
+    {
+        var assText = BuildPreviewText(useBox: true, displayStandardCode: "0", useDoubleHeight: true);
+
+        Assert.Equal("100", GetStyle(assText, "Default")[ScaleYField]);
     }
 }
