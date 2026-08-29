@@ -1472,6 +1472,7 @@ public partial class MainViewModel :
         // Change selection first, then assign _playSelectionItem.
         SubtitleGrid.SelectedItem = next;
         SubtitleGrid.ScrollIntoView(next);
+        CenterOrEnsureRowVisibleInSubtitleGrid(next);
         vp.Position = next.StartTime.TotalSeconds;
         PinPlayheadTo(next.StartTime.TotalSeconds);
         _playSelectionItem = new PlaySelectionItem(new List<SubtitleLineViewModel> { next }, next.EndTime, loop);
@@ -1548,6 +1549,7 @@ public partial class MainViewModel :
         // Mirror PlayNextParagraph — change selection first, then assign _playSelectionItem.
         SubtitleGrid.SelectedItem = previous;
         SubtitleGrid.ScrollIntoView(previous);
+        CenterOrEnsureRowVisibleInSubtitleGrid(previous);
         vp.Position = previous.StartTime.TotalSeconds;
         PinPlayheadTo(previous.StartTime.TotalSeconds);
         _playSelectionItem = new PlaySelectionItem(new List<SubtitleLineViewModel> { previous }, previous.EndTime, loop);
@@ -16037,7 +16039,7 @@ public partial class MainViewModel :
         }
 
         vp.Position = foundSeconds;
-        SelectAndScrollToRow(Subtitles.IndexOf(found));
+        SelectAndScrollToRowCentered(Subtitles.IndexOf(found));
         AudioVisualizerCenterOnPositionIfNeeded(found, foundSeconds);
         _updateAudioVisualizer = true;
     }
@@ -19890,6 +19892,25 @@ public partial class MainViewModel :
     private void CenterSelectedRowInSubtitleGrid(SubtitleLineViewModel itemToCenter)
     {
         TableViewExtras.CenterRow(SubtitleGrid, itemToCenter);
+    }
+
+    /// <summary>
+    /// The scroll follow-up <see cref="SelectAndScrollToRow(int,SubtitleLineViewModel?,bool?,bool)"/>
+    /// does, for the prev/next-line commands that must move the selection synchronously and so set
+    /// <see cref="SubtitleGrid"/>'s selected item themselves (play next/previous line): center the
+    /// row when "center when selecting prev/next row" is on, otherwise only nudge it fully into
+    /// view. Both halves are posted, so neither disturbs the selection just made.
+    /// </summary>
+    private void CenterOrEnsureRowVisibleInSubtitleGrid(SubtitleLineViewModel row)
+    {
+        if (Se.Settings.General.SubtitleGridCenterSelectedRow)
+        {
+            CenterSelectedRowInSubtitleGrid(row);
+        }
+        else
+        {
+            EnsureRowFullyVisibleInSubtitleGrid(row);
+        }
     }
 
     /// <summary>
@@ -28121,7 +28142,7 @@ public partial class MainViewModel :
                         var idx = Subtitles.IndexOf(_setEndAtKeyUpLine);
                         if (idx >= 0)
                         {
-                            SelectAndScrollToRow(idx + 1);
+                            SelectAndScrollToRowCentered(idx + 1);
                         }
 
                         _setEndAtKeyUpLine = null;

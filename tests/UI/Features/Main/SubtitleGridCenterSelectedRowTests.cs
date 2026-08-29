@@ -131,6 +131,61 @@ public class SubtitleGridCenterSelectedRowTests : IDisposable
         Assert.Equal(before, scrollViewer.Offset.Y);
     }
 
+    [AvaloniaFact]
+    public async Task PlayNextAndStop_Repeatedly_KeepsTheRowCentered()
+    {
+        // "Play next line (and stop)" - also what SE 4's Alt+Down ("go to next subtitle (play
+        // translate)", #14167) runs with a video open. It sets the grid's selection itself
+        // instead of going through SelectAndScrollToRow, so it needs its own centering.
+        Se.Settings.General.SubtitleGridCenterSelectedRow = true;
+        var (window, vm) = ShowMainWindowWithLines(300);
+        vm.SelectAndScrollToSubtitle(vm.Subtitles[100]);
+        await SettleAsync(window);
+
+        Assert.NotNull(vm.GetVideoPlayerControl());
+
+        var offsets = await Step(window, vm, 8, () => vm.PlayNextAndStopCommand.Execute(null));
+
+        Assert.Equal(108, vm.SelectedSubtitleIndex);
+        AssertAllCentered(offsets);
+    }
+
+    [AvaloniaFact]
+    public async Task PlayPreviousAndStop_Repeatedly_KeepsTheRowCentered()
+    {
+        Se.Settings.General.SubtitleGridCenterSelectedRow = true;
+        var (window, vm) = ShowMainWindowWithLines(300);
+        vm.SelectAndScrollToSubtitle(vm.Subtitles[200]);
+        await SettleAsync(window);
+
+        var offsets = await Step(window, vm, 8, () => vm.PlayPreviousAndStopCommand.Execute(null));
+
+        Assert.Equal(192, vm.SelectedSubtitleIndex);
+        AssertAllCentered(offsets);
+    }
+
+    [AvaloniaFact]
+    public async Task GoToNextTimeCode_Repeatedly_KeepsTheRowCentered()
+    {
+        // "Go to next time code" walks the cue boundaries, i.e. a line at a time.
+        Se.Settings.General.SubtitleGridCenterSelectedRow = true;
+        var (window, vm) = ShowMainWindowWithLines(300);
+        vm.SelectAndScrollToSubtitle(vm.Subtitles[100]);
+        await SettleAsync(window);
+
+        // The position slider clamps Position to Duration, so give the stub player a length first.
+        var videoPlayer = vm.GetVideoPlayerControl()!;
+        videoPlayer.Duration = vm.Subtitles[^1].EndTime.TotalSeconds + 10;
+        videoPlayer.Position = vm.Subtitles[100].StartTime.TotalSeconds;
+        Assert.Equal(vm.Subtitles[100].StartTime.TotalSeconds, videoPlayer.Position);
+
+        // Two steps per line: its end time, then the next line's start time.
+        var offsets = await Step(window, vm, 16, () => vm.VideoGoToNextTimeCodeCommand.Execute(null));
+
+        Assert.Equal(108, vm.SelectedSubtitleIndex);
+        AssertAllCentered(offsets);
+    }
+
     private static async Task<List<double>> Step(Window window, MainViewModel vm, int steps, Action move)
     {
         var offsets = new List<double>();
