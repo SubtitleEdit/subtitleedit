@@ -40,6 +40,7 @@ public class PlayheadFrameStepTests : IDisposable
         if (_vm != null)
         {
             _vm.VideoPlayerControl = null;
+            _vm.AudioVisualizer = null;
         }
 
         Se.Settings.General.CurrentFrameRate = _originalFrameRate;
@@ -235,6 +236,26 @@ public class PlayheadFrameStepTests : IDisposable
 
         Assert.True(player.IsPlaying);
         Assert.Equal(5.0, player.Position, 4);
+    }
+
+    [AvaloniaFact]
+    public void KeyboardNudgeSeek_PinsTheCursorToTheTargetImmediately()
+    {
+        // MoveVideoPositionMs / snapped frame steps route through SetVideoPositionSeconds. It
+        // scrolls the view to the target at once, so without a pin the cursor sat on the old
+        // position for the 100-200 ms the seek takes and the nudge read as laggy next to a
+        // waveform click (which always pinned).
+        var (vm, vp, player) = MakeViewModelWithPlayer(startSeconds: 5.0);
+        vp.Duration = 60; // published, or the bound position slider clamps the display write
+        vm.AudioVisualizer = new Nikse.SubtitleEdit.Controls.AudioVisualizerControl.AudioVisualizer(); // detached in Dispose
+
+        typeof(MainViewModel)
+            .GetMethod("SetVideoPositionSeconds", BindingFlags.NonPublic | BindingFlags.Instance)!
+            .Invoke(vm, [7.5]);
+
+        Assert.Equal(7.5, GetField<double?>(vm, "_playheadSeekTarget") ?? -1, 4); // pinned
+        Assert.Equal(7.5, player.Position, 4); // and the seek really reached the player
+        Assert.Equal(7.5, Tick(vm, vp, isPlaying: false), 4); // cursor shows the target at once
     }
 
     private (MainViewModel Vm, VideoPlayerControl Vp, FakeVideoPlayer Player) MakeViewModelWithPlayer(double startSeconds)
