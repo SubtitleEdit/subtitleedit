@@ -266,6 +266,9 @@ public class ExportEbuStlWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -306,6 +309,13 @@ public class ExportEbuStlWindow : Window
         var labelUseDoubleHeight = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.DoubleHeight).WithBindIsEnabled(nameof(vm.IsTeletext));
         var checkBoxUseDoubleHeight = UiUtil.MakeCheckBox(vm, nameof(vm.UseDoubleHeight)).WithBindIsEnabled(nameof(vm.IsTeletext));
 
+        // Not a save option: an STL file carries a character table, not a typeface. It is here so
+        // someone with a teletext face installed can have the preview look like a decoder.
+        var labelVideoPreview = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.VideoPreview);
+
+        var labelPreviewFont = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.PreviewFont);
+        var comboBoxPreviewFont = UiUtil.MakeComboBox(vm.PreviewFonts, vm, nameof(vm.SelectedPreviewFont)).WithMinWidth(textBoxWidth);
+
 
         grid.Add(labelJustification, 0, 0);
         grid.Add(comboBoxJustifications, 0, 1);
@@ -329,6 +339,11 @@ public class ExportEbuStlWindow : Window
 
         grid.Add(labelUseDoubleHeight, 9, 0);
         grid.Add(checkBoxUseDoubleHeight, 9, 1);
+
+        grid.Add(labelVideoPreview, 11, 0);
+
+        grid.Add(labelPreviewFont, 12, 0);
+        grid.Add(comboBoxPreviewFont, 12, 1);
 
         return UiUtil.MakeBorderForControl(grid).WithMinWidth(944).WithMinHeight(465);
     }

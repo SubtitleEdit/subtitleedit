@@ -3,7 +3,6 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
-using SkiaSharp;
 using System;
 using System.IO;
 using System.Linq;
@@ -243,58 +242,9 @@ public class MpvReloader : IMpvReloader
                 subtitle.Header = MpvPreviewStyleHeader;
             }
 
-            if (oldHeader != null && oldHeader.Length > 20 && oldHeader.AsSpan(3, 3).SequenceEqual("STL"))
+            if (EbuStlPreviewStyler.IsStlHeader(oldHeader))
             {
-                // The teletext box is the preview style drawn with an opaque background instead
-                // of an outline. It used to be a hard coded 12 pt Tahoma style, so a boxed line
-                // threw away the font, size, color, alignment and margins the preview was set
-                // up with, and rendered much smaller than an unboxed one.
-                var boxStyle = GetMpvPreviewStyle(Se.Settings.Video);
-                boxStyle.Name = "Box";
-                boxStyle.BorderStyle = "3"; // opaque box
-                boxStyle.Outline = SKColors.Black; // border style 3 fills the box with the outline color, and a teletext box is black
-                boxStyle.ShadowWidth = 0;
-                if (boxStyle.OutlineWidth < 1)
-                {
-                    boxStyle.OutlineWidth = 1; // the box would otherwise cling to the glyphs
-                }
-
-                subtitle.Header = subtitle.Header.Replace(
-                    "Style: Default,",
-                    boxStyle.ToRawAss(SsaStyle.DefaultAssStyleFormat) + Environment.NewLine + "Style: Default,",
-                    StringComparison.Ordinal);
-
-                var useBox = false;
-                if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox)
-                {
-                    try
-                    {
-                        var encoding = Ebu.GetEncoding(oldHeader[..3]);
-                        var buffer = encoding.GetBytes(oldHeader);
-                        var header = Ebu.ReadHeader(buffer);
-                        if (header.DisplayStandardCode != "0")
-                        {
-                            useBox = true;
-                        }
-                    }
-                    catch
-                    {
-                        // ignore
-                    }
-                }
-
-                for (var index = 0; index < subtitle.Paragraphs.Count; index++)
-                {
-                    var p = subtitle.Paragraphs[index];
-
-                    p.Extra = useBox ? "Box" : "Default";
-
-                    if (p.Text.Contains("<box>", StringComparison.Ordinal))
-                    {
-                        p.Extra = "Box";
-                        p.Text = p.Text.Replace("<box>", string.Empty).Replace("</box>", string.Empty);
-                    }
-                }
+                EbuStlPreviewStyler.Apply(subtitle, oldHeader, GetMpvPreviewStyle(Se.Settings.Video), MpvPreviewTitle);
             }
 
             // TTML regions, PAC vertical alignment and EBU STL teletext rows say where the line
@@ -327,10 +277,12 @@ public class MpvReloader : IMpvReloader
         set => _mpvPreviewStyleHeader = value;
     }
 
+    private const string MpvPreviewTitle = "MPV preview file";
+
     public void UpdateMpvStyle()
     {
         var mpvStyle = GetMpvPreviewStyle(Se.Settings.Video);
-        MpvPreviewStyleHeader = string.Format(AdvancedSubStationAlpha.HeaderNoStyles, "MPV preview file", mpvStyle.ToRawAss(SsaStyle.DefaultAssStyleFormat));
+        MpvPreviewStyleHeader = string.Format(AdvancedSubStationAlpha.HeaderNoStyles, MpvPreviewTitle, mpvStyle.ToRawAss(SsaStyle.DefaultAssStyleFormat));
     }
 
     private static SsaStyle GetMpvPreviewStyle(SeVideo gs)
