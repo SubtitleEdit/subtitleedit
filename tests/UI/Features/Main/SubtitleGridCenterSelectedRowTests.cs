@@ -7,7 +7,6 @@ using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit;
-using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
@@ -140,9 +139,10 @@ public class SubtitleGridCenterSelectedRowTests : IDisposable
         // instead of going through SelectAndScrollToRow, so it needs its own centering.
         Se.Settings.General.SubtitleGridCenterSelectedRow = true;
         var (window, vm) = ShowMainWindowWithLines(300);
-        vm.VideoPlayerControl = new VideoPlayerControl(new EmptyVideoPlayer());
         vm.SelectAndScrollToSubtitle(vm.Subtitles[100]);
         await SettleAsync(window);
+
+        Assert.NotNull(vm.GetVideoPlayerControl());
 
         var offsets = await Step(window, vm, 8, () => vm.PlayNextAndStopCommand.Execute(null));
 
@@ -155,7 +155,6 @@ public class SubtitleGridCenterSelectedRowTests : IDisposable
     {
         Se.Settings.General.SubtitleGridCenterSelectedRow = true;
         var (window, vm) = ShowMainWindowWithLines(300);
-        vm.VideoPlayerControl = new VideoPlayerControl(new EmptyVideoPlayer());
         vm.SelectAndScrollToSubtitle(vm.Subtitles[200]);
         await SettleAsync(window);
 
@@ -171,7 +170,6 @@ public class SubtitleGridCenterSelectedRowTests : IDisposable
         // "Go to next time code" walks the cue boundaries, i.e. a line at a time.
         Se.Settings.General.SubtitleGridCenterSelectedRow = true;
         var (window, vm) = ShowMainWindowWithLines(300);
-        vm.VideoPlayerControl = new VideoPlayerControl(new EmptyVideoPlayer());
         vm.SelectAndScrollToSubtitle(vm.Subtitles[100]);
         await SettleAsync(window);
 
