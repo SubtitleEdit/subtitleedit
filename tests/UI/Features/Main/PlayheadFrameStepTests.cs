@@ -24,9 +24,26 @@ namespace UITests.Features.Main;
 /// 0.5 s discontinuity snap caught up. (`frame-back-step` seeks and stays paused, which is why
 /// stepping backwards always landed correctly.)
 /// </summary>
-public class PlayheadFrameStepTests
+public class PlayheadFrameStepTests : IDisposable
 {
     private const double FrameSeconds = 1.0 / 23.976;
+
+    // Tests that drive commands through GetVideoPlayerControl() must not leave their test-built
+    // VideoPlayerControl assigned to the view model: an unparented control left reachable on the
+    // per-assembly headless application is the documented contamination-cascade trigger - unrelated
+    // windows start failing out of the compositor on CI, a different victim per run (PR #14258).
+    private MainViewModel? _vm;
+    private readonly double _originalFrameRate = Se.Settings.General.CurrentFrameRate;
+
+    public void Dispose()
+    {
+        if (_vm != null)
+        {
+            _vm.VideoPlayerControl = null;
+        }
+
+        Se.Settings.General.CurrentFrameRate = _originalFrameRate;
+    }
 
     private sealed class FakeVideoPlayer : IVideoPlayer
     {
@@ -220,7 +237,7 @@ public class PlayheadFrameStepTests
         Assert.Equal(5.0, player.Position, 4);
     }
 
-    private static (MainViewModel Vm, VideoPlayerControl Vp, FakeVideoPlayer Player) MakeViewModelWithPlayer(double startSeconds)
+    private (MainViewModel Vm, VideoPlayerControl Vp, FakeVideoPlayer Player) MakeViewModelWithPlayer(double startSeconds)
     {
         var services = new ServiceCollection();
         services.AddSubtitleEditServices();
@@ -232,6 +249,7 @@ public class PlayheadFrameStepTests
 
         Se.Settings.General.CurrentFrameRate = 23.976;
         vm.VideoPlayerControl = vp;
+        _vm = vm; // detached again in Dispose - see the cascade note on the field
         vp.SetPositionDisplayOnly(startSeconds);
         SetField(vm, "_videoFileName", "video.mkv");
 
