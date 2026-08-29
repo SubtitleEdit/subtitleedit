@@ -1,12 +1,14 @@
-using Avalonia.Headless.XUnit;
+﻿using Avalonia.Headless.XUnit;
 using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
+using System.Diagnostics;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -59,6 +61,13 @@ public class PlayheadFrameStepTests
         public int VolumeMaximum => 100;
         public double Volume { get; set; } = 50;
         public double Speed { get; set; } = 1.0;
+
+        // The frame-with-play blip waits for the seek onto the frame to land before it starts
+        // watching mpv's clock; tests drive that signal explicitly instead of waiting on a clock.
+        public bool SupportsPlaybackRestartEvents => PlaybackRestartTimestamp.HasValue;
+        public long? PlaybackRestartTimestamp { get; set; }
+        public bool HasPlaybackRestartedSince(long stopwatchTimestamp) =>
+            PlaybackRestartTimestamp is { } ts && ts >= stopwatchTimestamp;
     }
 
     [AvaloniaFact]
@@ -132,6 +141,85 @@ public class PlayheadFrameStepTests
         Assert.Equal(1.0, Tick(vm, vp, isPlaying: false), 4);
     }
 
+    [AvaloniaFact]
+    public void FrameStepWithPlay_HoldsTheCursorOnTheSteppedFrameWhileTheFramePlays()
+    {
+        var (vm, vp, player) = MakeViewModelWithPlayer(startSeconds: 1.0);
+
+        StepOneFrameWithPlay(vm, forward: true);
+        var frame = 1.0 + FrameSeconds;
+
+        // mpv is really playing for the length of the frame - and then keeps decoding past it for
+        // ~100 ms after the pause. None of that may move the cursor off the frame we stepped to.
+        Assert.Equal(frame, Tick(vm, vp, isPlaying: true), 4);
+        player.Position = frame + 0.03;
+        Assert.Equal(frame, Tick(vm, vp, isPlaying: true), 4);
+        player.Position = frame + 0.12;
+        Assert.Equal(frame, Tick(vm, vp, isPlaying: true), 4);
+    }
+
+    [AvaloniaFact]
+    public void FrameStepWithPlay_Repeated_AdvancesExactlyOneFramePerPress()
+    {
+        var (vm, vp, player) = MakeViewModelWithPlayer(startSeconds: 1.0);
+
+        for (var step = 1; step <= 10; step++)
+        {
+            StepOneFrameWithPlay(vm, forward: true);
+            Assert.Equal(1.0 + (step * FrameSeconds), player.Position, 4);
+
+            // The previous blip is still winding down when the next press arrives: mpv's clock (and
+            // so the control's 50 ms position display) sits past the frame. Chaining off that made
+            // each press jump a random one to four frames.
+            Tick(vm, vp, isPlaying: true);
+            player.Position += 0.09;
+            vp.SetPositionDisplayOnly(player.Position);
+            Tick(vm, vp, isPlaying: true);
+        }
+    }
+
+    [AvaloniaFact]
+    public void FrameStepWithPlay_Blip_StopsAndParksOnTheFrameOnceItHasPlayed()
+    {
+        var (vm, vp, player) = MakeViewModelWithPlayer(startSeconds: 1.0);
+
+        StepOneFrameWithPlay(vm, forward: true);
+        var frame = 1.0 + FrameSeconds;
+        Assert.True(player.IsPlaying);
+
+        // The seek onto the frame hasn't landed yet, so mpv's clock says nothing about the frame.
+        UpdateBlip(vm, vp);
+        Assert.True(player.IsPlaying);
+
+        player.PlaybackRestartTimestamp = Stopwatch.GetTimestamp();
+        UpdateBlip(vm, vp);
+        Assert.True(player.IsPlaying); // the frame itself hasn't played out yet
+
+        player.Position = frame + FrameSeconds;
+        UpdateBlip(vm, vp);
+
+        Assert.False(player.IsPlaying);
+        Assert.Equal(frame, player.Position, 4); // parked back on the frame that was stepped to
+        Assert.Equal(frame, Tick(vm, vp, isPlaying: false), 4);
+    }
+
+    [AvaloniaFact]
+    public void FrameStepWithPlay_Blip_IsDroppedWhenPlaybackIsStartedAfterIt()
+    {
+        // A stale blip must never pause playback the user started, nor hold the cursor on its frame.
+        var (vm, vp, player) = MakeViewModelWithPlayer(startSeconds: 1.0);
+
+        StepOneFrameWithPlay(vm, forward: true);
+        vm.CancelPausePlayheadFreeze(); // what every play path does
+
+        player.PlaybackRestartTimestamp = Stopwatch.GetTimestamp();
+        player.Position = 5.0;
+        UpdateBlip(vm, vp);
+
+        Assert.True(player.IsPlaying);
+        Assert.Equal(5.0, player.Position, 4);
+    }
+
     private static (MainViewModel Vm, VideoPlayerControl Vp, FakeVideoPlayer Player) MakeViewModelWithPlayer(double startSeconds)
     {
         var services = new ServiceCollection();
@@ -142,6 +230,11 @@ public class PlayheadFrameStepTests
         var player = new FakeVideoPlayer { Position = startSeconds };
         var vp = new VideoPlayerControl(player);
 
+        Se.Settings.General.CurrentFrameRate = 23.976;
+        vm.VideoPlayerControl = vp;
+        vp.SetPositionDisplayOnly(startSeconds);
+        SetField(vm, "_videoFileName", "video.mkv");
+
         // Paused at startSeconds, settled, with the cursor already on that spot.
         SetField(vm, "_playheadEstimateSeconds", startSeconds);
         SetField(vm, "_playheadLastRealSeconds", startSeconds);
@@ -151,6 +244,16 @@ public class PlayheadFrameStepTests
 
         return (vm, vp, player);
     }
+
+    private static void StepOneFrameWithPlay(MainViewModel vm, bool forward) =>
+        typeof(MainViewModel)
+            .GetMethod("VideoOneFrameWithPlay", BindingFlags.NonPublic | BindingFlags.Instance)!
+            .Invoke(vm, [forward]);
+
+    private static void UpdateBlip(MainViewModel vm, VideoPlayerControl vp) =>
+        typeof(MainViewModel)
+            .GetMethod("UpdateFrameStepPlayBlip", BindingFlags.NonPublic | BindingFlags.Instance)!
+            .Invoke(vm, [vp]);
 
     private static void BeginFrameStep(MainViewModel vm) =>
         typeof(MainViewModel)

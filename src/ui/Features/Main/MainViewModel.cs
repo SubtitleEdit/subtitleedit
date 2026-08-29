@@ -690,6 +690,16 @@ public partial class MainViewModel :
     private const double PlayheadResyncOnPlayThresholdSeconds = 0.04; // ~one frame; below this the standing residual isn't worth moving the cursor for
     private long _frameStepFollowUntilTs; // a native frame step is in flight: treat mpv's un-pause as paused (see BeginFrameStepPlayheadFollow)
     private const double FrameStepFollowWindowMs = 1000; // safety cap; the window normally closes as soon as the step lands
+
+    // "One frame back/forward with play" (VideoOneFrameWithPlay): mpv really plays for the length of
+    // one frame, so the blip is kept from moving the waveform cursor - it is held on the frame that
+    // was stepped to - and is ended off mpv's own clock. See UpdateFrameStepPlayBlip.
+    private double? _frameStepPlayAnchorSeconds; // the frame the last blip stepped to; also the base for the next press
+    private double _frameStepPlayStopSeconds; // mpv's clock must reach this (one frame on) before the blip ends
+    private long _frameStepPlayStartTs;
+    private bool _frameStepPlayBlipping; // a blip is running: hold the cursor and watch for its end
+    private const double FrameStepPlaySeekWaitMs = 250; // players that can't report seek completion: assume the seek landed after this
+    private const double FrameStepPlayMaxMs = 700; // safety cap: end the blip even if mpv's clock never reaches the stop point
     private CancellationTokenSource _videoOpenTokenSource;
     private readonly HashSet<string> _waveformsBeingGenerated = new(StringComparer.OrdinalIgnoreCase);
     private readonly Lock _waveformsBeingGeneratedLock = new();
@@ -1678,6 +1688,7 @@ public partial class MainViewModel :
     // surface) can trigger it too, via the PlayPauseRequested wiring in InitVideoPlayer (#12233).
     internal void RequestPausePlayheadFreeze()
     {
+        CancelFrameStepPlayBlip(); // a pause supersedes a one-frame play blip too
         _pauseRequested = true;
         _playStartGate.PauseRequested(); // a pause supersedes any play still waiting to be observed
         _playheadPausedSettled = false; // reconcile the cursor to mpv's final frame once this pause settles
@@ -1691,6 +1702,7 @@ public partial class MainViewModel :
     // where the play-start gate is armed.
     internal void CancelPausePlayheadFreeze()
     {
+        CancelFrameStepPlayBlip(); // playback the user started must not be stopped by a stale blip
         _pauseRequested = false;
         _playStartGate.PlayRequested(Stopwatch.GetTimestamp());
     }
@@ -18348,9 +18360,10 @@ public partial class MainViewModel :
     }
 
     /// <summary>
-    /// SE4's "one frame back/forward with play": step one frame and play just that frame, so
-    /// the step gives audio/visual feedback. Runs through the play-selection stop, whose
-    /// park-one-frame-before-the-end rule lands the playhead exactly on the stepped-to frame.
+    /// SE4's "one frame back/forward with play": step one frame and play just that frame, so the
+    /// step gives audio as well as visual feedback. The blip is a real (very short) playback, but
+    /// it is not allowed to move the waveform cursor: the cursor is parked on the frame that was
+    /// stepped to and held there while mpv plays the frame out. See UpdateFrameStepPlayBlip.
     /// </summary>
     private void VideoOneFrameWithPlay(bool forward)
     {
@@ -18362,18 +18375,96 @@ public partial class MainViewModel :
 
         var fps = Se.Settings.General.CurrentFrameRate;
         var frameSeconds = fps >= 10 ? 1.0 / fps : 0.04;
-        var target = Math.Max(0, vp.Position + (forward ? frameSeconds : -frameSeconds));
 
-        vp.VideoPlayer.Pause();
-        vp.Position = target;
-        PinPlayheadTo(target);
-        var frameWindow = new SubtitleLineViewModel
+        // Step from the frame the previous press stepped to, not from the player's reported
+        // position: vp.Position is refreshed from mpv by a 50 ms timer and, right after a blip,
+        // holds mpv's overshoot (it keeps decoding for ~100 ms past a pause) rather than the frame
+        // the cursor is parked on. Chaining off that made a held-down shortcut advance a random
+        // one to four frames per press. Every other position change drops the anchor
+        // (CancelFrameStepPlayBlip); the distance check is a net for the ones that don't, exactly
+        // as the relative-seek tracker in MoveVideoPositionMs does it.
+        var from = _frameStepPlayAnchorSeconds is { } anchor && Math.Abs(anchor - vp.Position) < 0.5
+            ? anchor
+            : vp.Position;
+
+        var target = Math.Max(0, from + (forward ? frameSeconds : -frameSeconds));
+        if (vp.Duration > 0 && target > vp.Duration)
         {
-            StartTime = TimeSpan.FromSeconds(target),
-            EndTime = TimeSpan.FromSeconds(target + frameSeconds),
-        };
-        _playSelectionItem = new PlaySelectionItem([frameWindow], frameWindow.EndTime, false);
+            target = vp.Duration;
+        }
+
+        ResetPlaySelection();
+        vp.VideoPlayer.Pause();
+        vp.SeekTo(target);
+        PinPlayheadTo(target);
         PlayVideo(vp);
+
+        // After PlayVideo: it cancels a pending pause freeze, which also cancels a blip.
+        BeginFrameStepPlayBlip(target, target + frameSeconds);
+    }
+
+    /// <summary>
+    /// Arms the "one frame with play" blip started by <see cref="VideoOneFrameWithPlay"/>: mpv is
+    /// playing from <paramref name="anchorSeconds"/> and must be stopped again once its clock
+    /// reaches <paramref name="stopSeconds"/>, one frame on.
+    /// </summary>
+    private void BeginFrameStepPlayBlip(double anchorSeconds, double stopSeconds)
+    {
+        _frameStepPlayAnchorSeconds = anchorSeconds;
+        _frameStepPlayStopSeconds = stopSeconds;
+        _frameStepPlayStartTs = Stopwatch.GetTimestamp();
+        _frameStepPlayBlipping = true;
+    }
+
+    /// <summary>
+    /// Ends a "one frame with play" blip once mpv has actually played the frame, and parks the
+    /// player back on it. Driven from the 16 ms cursor timer and measured against mpv's own clock:
+    /// the play-selection stop this used to run through ticks at 50 ms and compares the *cursor
+    /// estimate*, so a one-frame window overshot by 50-150 ms - the cursor glided a few frames
+    /// forward and then snapped back on every single press.
+    /// </summary>
+    private void UpdateFrameStepPlayBlip(VideoPlayerControl vp)
+    {
+        if (!_frameStepPlayBlipping)
+        {
+            return;
+        }
+
+        var player = vp.VideoPlayer;
+        var elapsedMs = (Stopwatch.GetTimestamp() - _frameStepPlayStartTs) * 1000.0 / Stopwatch.Frequency;
+
+        // The seek onto the frame is asynchronous, so until it lands mpv's clock still reports the
+        // spot we came from - which for a backward step is already past the stop point and would
+        // end the blip before it played anything.
+        var seekLanded = player.SupportsPlaybackRestartEvents
+            ? player.HasPlaybackRestartedSince(_frameStepPlayStartTs)
+            : elapsedMs > FrameStepPlaySeekWaitMs;
+
+        var frameIsPlayedOut = seekLanded && player.Position >= _frameStepPlayStopSeconds;
+        if (!frameIsPlayedOut && elapsedMs < FrameStepPlayMaxMs)
+        {
+            return;
+        }
+
+        _frameStepPlayBlipping = false;
+        var anchor = _frameStepPlayAnchorSeconds ?? player.Position;
+        PauseVideoAndFreezePlayhead(vp);
+        vp.SeekTo(anchor);
+        PinPlayheadTo(anchor);
+
+        // Pausing and pinning are seek paths and clear the anchor; this one *is* the anchor, and
+        // the next press chains off it.
+        _frameStepPlayAnchorSeconds = anchor;
+    }
+
+    /// <summary>
+    /// Drops a running "one frame with play" blip. Called from every play/pause/seek path, so a
+    /// blip can never pause playback the user started afterwards, or hold the cursor off a seek.
+    /// </summary>
+    private void CancelFrameStepPlayBlip()
+    {
+        _frameStepPlayBlipping = false;
+        _frameStepPlayAnchorSeconds = null;
     }
 
     /// <summary>
@@ -19234,6 +19325,7 @@ public partial class MainViewModel :
         // relative-seek tracker so the next small step resyncs to the real position.
         // MoveVideoPositionMs re-arms it immediately after calling this. (#12027)
         _relativeSeekTargetSeconds = null;
+        CancelFrameStepPlayBlip(); // ...and the frame-with-play anchor, for the same reason
 
         var vp = GetVideoPlayerControl();
         if (vp == null || string.IsNullOrEmpty(_videoFileName) || AudioVisualizer == null)
@@ -27805,6 +27897,24 @@ public partial class MainViewModel :
 
         var nowTimestamp = Stopwatch.GetTimestamp();
 
+        // A "one frame back/forward with play" blip is running (see VideoOneFrameWithPlay): mpv is
+        // genuinely playing, but only for the length of the frame that was just stepped to, and the
+        // cursor belongs on that frame. Letting it track playback made it glide a few frames forward
+        // and then snap back when the blip parked - the jerky, seemingly random cursor motion of
+        // holding the shortcut down. The blip is cancelled by every other play/pause/seek path, so
+        // this can't hold the cursor against playback the user started.
+        if (_frameStepPlayBlipping && _frameStepPlayAnchorSeconds is { } blipAnchor)
+        {
+            _playheadLastRealSeconds = rawPosition;
+            _playheadLastTimestamp = nowTimestamp;
+            _playheadLastRawChangeTs = nowTimestamp;
+            _playheadEstimateSeconds = blipAnchor;
+            _playheadValid = true;
+            _playheadPausedSettled = true; // the cursor is authoritative on the frame, as after a pinned seek
+            _playheadWasPlaying = false; // the blip's own pause must not read as a play -> pause edge
+            return blipAnchor;
+        }
+
         // A native frame step is in flight: mpv's `frame-step` is a real un-pause (it sets pause=no,
         // plays until the next video frame, then sets pause=yes), so the observed pause flag flickers
         // and reads here as a play->pause cycle. That cleared _playheadPausedSettled on the very tick
@@ -28096,6 +28206,7 @@ public partial class MainViewModel :
     /// </summary>
     private void BeginFrameStepPlayheadFollow()
     {
+        CancelFrameStepPlayBlip(); // a native step moves the play-head off the blip's frame
         _frameStepFollowUntilTs = Stopwatch.GetTimestamp() +
                                  (long)(Stopwatch.Frequency * FrameStepFollowWindowMs / 1000.0);
         _playheadPausedSettled = true; // stepping: the cursor is at the current frame and follows to the next one
@@ -28105,6 +28216,7 @@ public partial class MainViewModel :
     // immediately and pin it there until mpv's clock catches up (see UpdatePlayheadEstimate).
     private void PinPlayheadTo(double targetSeconds)
     {
+        CancelFrameStepPlayBlip(); // any other seek moves the cursor off the stepped-to frame
         _playheadSeekTarget = targetSeconds;
         _playheadSeekTargetTs = Stopwatch.GetTimestamp();
         _playheadEstimateSeconds = targetSeconds;
@@ -28407,6 +28519,11 @@ public partial class MainViewModel :
                     PinPlayheadTo(target);
                 }
             }
+
+            // End a "one frame back/forward with play" blip as soon as mpv has played the frame.
+            // Checked here rather than from the 50 ms position timer so the blip is one frame long
+            // instead of one-frame-plus-however-long-that-timer-took-to-notice.
+            UpdateFrameStepPlayBlip(vp);
 
             // Always advance the estimate: the 50 ms _positionTimer reads _playheadEstimateSeconds as
             // its source of truth (SelectCurrentSubtitleWhilePlaying, play-selection end detection, the

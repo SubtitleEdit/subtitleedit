@@ -309,6 +309,19 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             Position = seconds;
         }
 
+        /// <summary>
+        /// Seeks the player and moves the position display with it. Prefer this over assigning
+        /// <see cref="Position"/> when the seek must happen: the styled property drops an
+        /// assignment equal to the value it already holds, so a caller landing on the spot the
+        /// display happens to show (a frame step parking back where the last tick reported)
+        /// would silently never reach the player.
+        /// </summary>
+        public void SeekTo(double seconds)
+        {
+            SetPositionDisplayOnly(seconds);
+            _videoPlayerInstance.Position = seconds;
+        }
+
         public int ContentWidth => _contentPresenter?.Bounds.Width > 0 ? (int)_contentPresenter.Bounds.Width : 0;
         public int ContentHeight => _contentPresenter?.Bounds.Height > 0 ? (int)_contentPresenter.Bounds.Height : 0;
 
