@@ -21,6 +21,14 @@ public static class Se4ShortcutsImporter
         public List<SeShortCut> Shortcuts { get; } = new();
         public int SkippedNoMapping { get; set; }
         public int SkippedEmpty { get; set; }
+
+        /// <summary>
+        /// SE 4's "toggle custom tags" characters, kept in General settings rather than with the
+        /// shortcut itself (<c>TagsInToggleCustomTags</c>, one string of "startÆend"). Null when
+        /// the file has no usable pair - an exported SE_Shortcuts.xml carries no General section.
+        /// </summary>
+        public string? CustomTagsStart { get; set; }
+        public string? CustomTagsEnd { get; set; }
     }
 
     // Exposed for tests: every mapped SE 5 command must stay registered in the shortcut
@@ -346,11 +354,10 @@ public static class Se4ShortcutsImporter
         ["GeneralTogglePreviewOnVideo"] = nameof(MainViewModel.ToggleSubtitlesOnVideoPlayerCommand),
         ["GeneralSwitchOriginalAndTranslation"] = nameof(MainViewModel.SwitchOriginalAndTranslationTextSelectedLinesCommand),
         ["GeneralAutoCalcCurrentDuration"] = nameof(MainViewModel.RecalculateDurationSelectedLinesCommand),
-        // SE 4's single "toggle custom tags" pair became three configurable surround-with slots,
-        // whose characters are edited from the shortcut itself. The key lands on the first slot;
-        // its characters are SE 5's own default, not the pair SE 4 kept in General settings, and
-        // the shortcut list spells them out ("Surround with X and Y") so the difference is
-        // visible rather than silent (#13907).
+        // SE 4's single "toggle custom tags" pair became the configurable surround-with slots,
+        // whose characters are edited from the shortcut itself. The key lands on the first slot
+        // here; the caller moves it onto whichever slot ends up holding SE 4's own characters
+        // (#13907, #14232).
         ["MainListViewToggleCustomTags"] = nameof(MainViewModel.SurroundWith1Command),
         // SE 4 offered the same recalculation at three reading speeds. SE 5's "recalculate
         // duration" is the optimal-reading-speed one (text length / optimal CPS), and "set
@@ -470,7 +477,42 @@ public static class Se4ShortcutsImporter
             result.Shortcuts.Add(new SeShortCut(se5Name, keys));
         }
 
+        ReadCustomTags(doc, result);
+
         return result;
+    }
+
+    // <General><TagsInToggleCustomTags> holds the pair as one "startÆend" string; SE 4 reads a
+    // single field as both sides. Only present in a full Settings.xml - an exported
+    // SE_Shortcuts.xml is rooted at <Shortcuts> and has no General section.
+    private static void ReadCustomTags(XDocument doc, ImportResult result)
+    {
+        var value = doc.Root?.Element("General")?.Element("TagsInToggleCustomTags")?.Value;
+        if (string.IsNullOrEmpty(value))
+        {
+            return;
+        }
+
+        var tags = value.Split('Æ');
+        var start = tags.Length switch
+        {
+            1 or 2 => tags[0],
+            _ => string.Empty,
+        };
+        var end = tags.Length switch
+        {
+            1 => tags[0],
+            2 => tags[1],
+            _ => string.Empty,
+        };
+
+        if (start.Length == 0 && end.Length == 0)
+        {
+            return;
+        }
+
+        result.CustomTagsStart = start;
+        result.CustomTagsEnd = end;
     }
 
     private static List<string> ParseShortcutValue(string value)

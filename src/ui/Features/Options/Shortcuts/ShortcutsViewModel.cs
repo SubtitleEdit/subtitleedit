@@ -433,6 +433,8 @@ public partial class ShortcutsViewModel : ObservableObject
                 return;
             }
 
+            ApplySe4CustomTags(importResult);
+
             foreach (var imported in importResult.Shortcuts)
             {
                 var existing = Se.Settings.Shortcuts.FirstOrDefault(s => s.ActionName == imported.ActionName);
@@ -881,6 +883,68 @@ public partial class ShortcutsViewModel : ObservableObject
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// SE 4 kept the "toggle custom tags" characters in General settings, apart from the shortcut
+    /// itself, so the imported key used to arrive pointing at surround-with slot 1 and SE 5's own
+    /// characters (#13907). Park SE 4's pair on a slot and move the key onto it: the slot already
+    /// holding that pair if there is one, otherwise the first unconfigured slot. When every slot
+    /// is in use the key stays on slot 1 as before - overwriting a pair the user is using would
+    /// cost them more than the import gains.
+    /// </summary>
+    internal void ApplySe4CustomTags(Se4ShortcutsImporter.ImportResult importResult)
+    {
+        var start = importResult.CustomTagsStart;
+        var end = importResult.CustomTagsEnd;
+        if (start == null || end == null)
+        {
+            return;
+        }
+
+        // Only when the pair has a key to travel with: SE 4 ships "(Æ)" as the default, so an
+        // unassigned shortcut would otherwise spend a slot on characters nobody asked for.
+        var importedShortcut = importResult.Shortcuts
+            .FirstOrDefault(s => s.ActionName == nameof(MainViewModel.SurroundWith1Command));
+        if (importedShortcut == null)
+        {
+            return;
+        }
+
+        var slotIndex = -1;
+        for (var i = 0; i < Se.SurroundWithSlotCount; i++)
+        {
+            if (_surroundLeftSlots[i] == start && _surroundRightSlots[i] == end)
+            {
+                slotIndex = i;
+                break;
+            }
+        }
+
+        for (var i = 0; slotIndex < 0 && i < Se.SurroundWithSlotCount; i++)
+        {
+            if (string.IsNullOrEmpty(_surroundLeftSlots[i]) && string.IsNullOrEmpty(_surroundRightSlots[i]))
+            {
+                slotIndex = i;
+            }
+        }
+
+        if (slotIndex < 0)
+        {
+            return;
+        }
+
+        var slotNumber = slotIndex + 1;
+        _surroundLeftSlots[slotIndex] = start;
+        _surroundRightSlots[slotIndex] = end;
+
+        // The rest of this import writes straight to Se.Settings, so the pair goes there too -
+        // and into the dialog's own slots above, or pressing OK would write the old value back.
+        Se.Settings.SetSurround(slotNumber, start, end);
+
+        var commandName = $"SurroundWith{slotNumber}Command";
+        importedShortcut.ActionName = commandName;
+        ShortcutsMain.CommandTranslationLookup[commandName] = ShortcutsMain.GetSurroundWithTitle(slotNumber, start, end);
     }
 
     private int GetSurroundSlotIndex(IRelayCommand action)
