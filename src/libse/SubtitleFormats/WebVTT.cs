@@ -102,6 +102,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public const string NameOfFormat = "WebVTT";
         public override string Name => NameOfFormat;
 
+        // Carries the region of every cue, and the regions themselves in the header.
+        public override bool HasPositionSupport => true;
+
         public override string ToText(Subtitle subtitle, string title)
         {
             const string timeCodeFormatHours = "{0:00}:{1:00}:{2:00}.{3:000}"; // hh:mm:ss.mmm

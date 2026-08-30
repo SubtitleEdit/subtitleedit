@@ -874,6 +874,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => NameOfFormat;
 
+        // Carries the teletext row the line starts on (MarginV) and the row count in the GSI block.
+        public override bool HasPositionSupport => true;
+
         internal struct SpecialCharacter
         {
             internal SpecialCharacter(string character, bool switchOrder = false, int priority = 2)
@@ -1240,6 +1243,27 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             return "Not supported!";
+        }
+
+        /// <summary>
+        /// Drops what only an STL can carry: the teletext box tags and the teletext row in MarginV.
+        /// </summary>
+        /// <remarks>
+        /// No other format knows either of them - the box tags used to end up as visible text in the
+        /// video preview and in the saved file, and a row number ("20") counts as an ASSA pixel
+        /// margin, which moved every line by a near random amount.
+        /// </remarks>
+        public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
+        {
+            foreach (var p in subtitle.Paragraphs)
+            {
+                if (p.Text != null && p.Text.Contains("<box>", StringComparison.Ordinal))
+                {
+                    p.Text = p.Text.Replace("<box>", string.Empty).Replace("</box>", string.Empty);
+                }
+
+                p.MarginV = null;
+            }
         }
 
         public void LoadSubtitle(Subtitle subtitle, byte[] buffer)

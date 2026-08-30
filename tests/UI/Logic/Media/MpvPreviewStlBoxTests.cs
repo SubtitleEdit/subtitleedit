@@ -36,7 +36,7 @@ public class MpvPreviewStlBoxTests
         return Ebu.ReadHeader(buffer).ToString();
     }
 
-    private static string BuildPreviewText(bool useBox, string displayStandardCode = "1", bool useDoubleHeight = false)
+    private static string BuildPreviewText(bool useBox, string displayStandardCode = "1", bool useDoubleHeight = false, Type? uiFormatType = null)
     {
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
@@ -52,12 +52,13 @@ public class MpvPreviewStlBoxTests
             Se.Settings.Video.MpvPreviewFontSize = 33;
 
             var subtitle = new Subtitle { Header = MakeStlHeader(displayStandardCode) };
-            subtitle.Paragraphs.Add(new Paragraph("Hello world", 1000, 3000));
+            subtitle.Paragraphs.Add(new Paragraph("Hello world", 1000, 3000) { MarginV = "20" });
 
+            var format = (SubtitleFormat)Activator.CreateInstance(uiFormatType ?? typeof(Ebu))!;
             var reloader = new MpvReloader();
             var method = typeof(MpvReloader).GetMethod("BuildPreviewText", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.NotNull(method);
-            var result = method!.Invoke(reloader, new object?[] { subtitle, null, typeof(Ebu), 0, string.Empty })!;
+            var result = method!.Invoke(reloader, new object?[] { subtitle, null, format.GetType(), format.HasPositionSupport, 0, string.Empty })!;
             return (string)result.GetType().GetField("Item2")!.GetValue(result)!;
         }
         finally
@@ -80,9 +81,20 @@ public class MpvPreviewStlBoxTests
 
     private static string GetDialogueStyle(string assText)
     {
+        return GetDialogueField(assText, 3);
+    }
+
+    // Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+    private static string GetDialogueMarginV(string assText)
+    {
+        return GetDialogueField(assText, 7);
+    }
+
+    private static string GetDialogueField(string assText, int index)
+    {
         var line = assText.Split('\n').FirstOrDefault(l => l.StartsWith("Dialogue:", StringComparison.Ordinal));
         Assert.NotNull(line);
-        return line!.Split(',')[3];
+        return line!.Split(',')[index].Trim();
     }
 
     [AvaloniaFact]
@@ -162,5 +174,27 @@ public class MpvPreviewStlBoxTests
         var assText = BuildPreviewText(useBox: true, displayStandardCode: "0", useDoubleHeight: true);
 
         Assert.Equal("100", GetStyle(assText, "Default")[ScaleYField]);
+    }
+
+    // The GSI block and the teletext row in MarginV stay on the subtitle when the format is
+    // switched in the toolbar, and the preview kept drawing the box, the double height and the
+    // rows of a file the subtitle is no longer shown as.
+    [AvaloniaFact]
+    public void SwitchingTheFormatToSubRipDropsTheTeletextStyling()
+    {
+        var assText = BuildPreviewText(useBox: true, useDoubleHeight: true, uiFormatType: typeof(SubRip));
+
+        Assert.DoesNotContain("Style: Box,", assText, StringComparison.Ordinal);
+        Assert.Equal("Default", GetDialogueStyle(assText));
+        Assert.Equal("100", GetStyle(assText, "Default")[ScaleYField]);
+    }
+
+    // A teletext row is not a pixel margin - left behind it moved every line by a near random
+    // amount, so it has to be stripped even though nothing is positioned any more.
+    [AvaloniaFact]
+    public void SwitchingTheFormatToSubRipLeavesNoTeletextRowBehind()
+    {
+        Assert.NotEqual("0", GetDialogueMarginV(BuildPreviewText(useBox: false)));
+        Assert.Equal("0", GetDialogueMarginV(BuildPreviewText(useBox: false, uiFormatType: typeof(SubRip))));
     }
 }

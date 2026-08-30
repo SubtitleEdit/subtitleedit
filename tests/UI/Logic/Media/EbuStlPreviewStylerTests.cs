@@ -154,6 +154,19 @@ public class EbuStlPreviewStylerTests
         Assert.Equal(expected, EbuStlPreviewStyler.IsStlHeader(header));
     }
 
+    // The GSI block stays on the subtitle when the format is switched in the toolbar, so the header
+    // alone kept the teletext box and the double height on a subtitle now shown as SubRip.
+    [Fact]
+    public void TheStlHeaderOnlyStylesThePreviewWhileTheFormatIsEbu()
+    {
+        var header = MakeStlHeader("1");
+
+        Assert.True(EbuStlPreviewStyler.IsStlPreview(header, typeof(Ebu)));
+        Assert.False(EbuStlPreviewStyler.IsStlPreview(header, typeof(SubRip)));
+        Assert.False(EbuStlPreviewStyler.IsStlPreview(header, null));
+        Assert.False(EbuStlPreviewStyler.IsStlPreview(null, typeof(Ebu)));
+    }
+
     // Preview only, and never written to the file - an STL carries a character table, not a
     // typeface. It lets someone with a teletext face installed see the preview a decoder would draw.
     [Fact]

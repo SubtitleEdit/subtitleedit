@@ -18,6 +18,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string Extension => ".xml";
         public override string Name => "Netflix IMSC 1.1 Japanese";
 
+        // Carries the region of every paragraph, and the regions themselves in the header.
+        public override bool HasPositionSupport => true;
+
         private static string GetXmlStructure()
         {
             return @"<?xml version='1.0' encoding='UTF-8' standalone='no'?>

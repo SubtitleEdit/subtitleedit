@@ -98,14 +98,18 @@ public class VlcReloader : IVlcReloader
                         subtitle.Header = MpvPreviewStyleHeader;
                     }
 
-                    if (EbuStlPreviewStyler.IsStlHeader(oldSub.Header))
+                    // See MpvReloader - the GSI block survives a format change in the toolbar, so
+                    // an STL header alone does not mean the subtitle is still EBU STL.
+                    if (EbuStlPreviewStyler.IsStlPreview(oldSub.Header, uiFormatType))
                     {
                         EbuStlPreviewStyler.Apply(subtitle, oldSub.Header, GetMpvPreviewStyle(Se.Settings.Video), MpvPreviewTitle);
                     }
 
                     // See MpvReloader - the position the source format carries beats the one fixed
-                    // preview alignment (discussion #13857).
-                    SubtitlePositionToAssa.ApplyPositions(subtitle, oldSub.Header, Se.Settings.Video.MpvPreviewUsePositionFromFile);
+                    // preview alignment (discussion #13857), but only while the format still carries
+                    // it. With the positioning off the call strips what the old format left behind.
+                    var usePositions = Se.Settings.Video.MpvPreviewUsePositionFromFile && uiFormat.HasPositionSupport;
+                    SubtitlePositionToAssa.ApplyPositions(subtitle, oldSub.Header, usePositions);
                 }
 
                 SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary);
