@@ -259,6 +259,12 @@ An AVI stream header carries no language, so a multi-stream `.avi` names its out
 
 Run `seconv list-ocr-engines` for the per-engine installation-status table.
 
+Long OCR runs report progress as images *finished* of the current source (per PID for TS
+DVB-sub, per track for MKV). On a terminal this rewrites a single line - `  OCR 42/345 (12%)...`;
+when stdout is a pipe or a file it prints one plain line per 10% instead, so a log of a
+5000-image run holds ten lines rather than one endless one. Auto-translate reports the same way
+(`  Translated 42/345 (12%)...`). Both are suppressed by `--quiet` and `--json`.
+
 ```bash
 # Tesseract
 seconv movie.sup subrip --ocr-engine:tesseract --ocr-language:eng
@@ -535,7 +541,7 @@ seconv *.srt subrip --settings:my.json --profile:broadcast --remove-text-for-hi
 
 | Option | Description |
 |---|---|
-| `--quiet` / `-q` | Suppress per-file progress and the parameters table; only print the final summary |
+| `--quiet` / `-q` | Suppress per-file progress, the parameters table, and the OCR/translate progress lines; only print the final summary |
 | `--verbose` / `-v` | Print extra diagnostic information, including full exception details (stack traces) on errors |
 | `--json` | Emit per-file results as JSON to stdout (suppresses Spectre output). Also accepted by every subcommand. Failures use the same envelope, so stdout is always one JSON document |
 
