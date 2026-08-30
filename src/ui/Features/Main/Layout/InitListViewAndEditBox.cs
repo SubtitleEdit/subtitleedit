@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows.Input;
 using Avalonia;
@@ -1789,6 +1789,25 @@ public static partial class InitListViewAndEditBox
         }
 
         flyoutTextBox.Items.Add(new Separator());
+
+        // macOS-only "Look up" (#14277): every macOS text field has it in the system context menu,
+        // and it is the shortest way into the dictionaries/thesauri the user has installed. It sits
+        // above "Google it", where macOS puts it (Look Up, then Search with Google).
+        if (OperatingSystem.IsMacOS())
+        {
+            var menuItemTextBoxLookUp = new MenuItem
+            {
+                [!MenuItem.HeaderProperty] = new Binding(nameof(vm.TextBoxLookUpHeader)),
+                [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsTextBoxLookUpVisible)),
+                Command = vm.LookUpInDictionaryCommand,
+                Icon = new Icon
+                {
+                    Value = IconNames.BookAlphabet,
+                    VerticalAlignment = VerticalAlignment.Center,
+                },
+            };
+            flyoutTextBox.Items.Add(menuItemTextBoxLookUp);
+        }
 
         // Shown only with a selection - the command searches the selected text and does nothing
         // without one. It had no default shortcut and was in no menu, so it was unreachable

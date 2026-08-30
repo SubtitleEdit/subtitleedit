@@ -406,6 +406,8 @@ public partial class MainViewModel :
     [ObservableProperty] private bool _isVideoLoaded;
     [ObservableProperty] private bool _isTextBoxSplitAtCursorAndVideoPositionVisible;
     [ObservableProperty] private bool _isTextBoxGoogleItVisible;
+    [ObservableProperty] private bool _isTextBoxLookUpVisible;
+    [ObservableProperty] private string _textBoxLookUpHeader = string.Empty;
     [ObservableProperty] private ObservableCollection<string> _speeds;
     [ObservableProperty] private string _selectedSpeed;
     [ObservableProperty] private ObservableCollection<string> _videoSeekAmounts;
@@ -630,6 +632,7 @@ public partial class MainViewModel :
     private bool _loading;
     private bool _opening;
     private PointerEventArgs? _lastTextEditorPointerArgs;
+    private string? _textBoxLookUpWord;
     private PointerEventArgs? _lastSubtitleGridPointerArgs;
 
     // The dictionary currently loaded into _spellCheckManager for live spell check, null when none
@@ -13763,6 +13766,27 @@ public partial class MainViewModel :
         }
 
         UiUtil.OpenUrl("https://www.google.com/search?q=" + Uri.EscapeDataString(selected));
+    }
+
+    /// <summary>
+    /// macOS "Look up" (#14277): opens the selected text - or the word that was right-clicked - in
+    /// Dictionary.app, which holds every dictionary and thesaurus the user has installed.
+    /// </summary>
+    [RelayCommand]
+    private void LookUpInDictionary()
+    {
+        if (!OperatingSystem.IsMacOS())
+        {
+            return;
+        }
+
+        var url = MacDictionaryLookup.BuildUrl(_textBoxLookUpWord);
+        if (url == null)
+        {
+            return;
+        }
+
+        UiUtil.OpenUrl(url);
     }
 
     [RelayCommand]
@@ -29958,6 +29982,31 @@ public partial class MainViewModel :
         SelectAndScrollToSubtitle(p);
     }
 
+    /// <summary>
+    /// Works out what the macOS "Look up" menu item would look up: the selected text, or - with no
+    /// selection - the word the right-click landed on, like the system context menu does.
+    /// </summary>
+    private void UpdateTextBoxLookUp()
+    {
+        _textBoxLookUpWord = null;
+
+        if (OperatingSystem.IsMacOS())
+        {
+            var selected = EditTextBox.SelectedText;
+            _textBoxLookUpWord = !string.IsNullOrWhiteSpace(selected)
+                ? MacDictionaryLookup.Normalize(selected)
+                : MacDictionaryLookup.Normalize(_lastTextEditorPointerArgs == null
+                    ? null
+                    : EditTextBox.GetWordAtPosition(_lastTextEditorPointerArgs)?.Text);
+        }
+
+        IsTextBoxLookUpVisible = _textBoxLookUpWord != null;
+        if (_textBoxLookUpWord != null)
+        {
+            TextBoxLookUpHeader = MacDictionaryLookup.BuildHeader(Se.Language.General.LookUpX, _textBoxLookUpWord);
+        }
+    }
+
     internal void TextBoxContextOpening(object? sender, EventArgs e)
     {
         IsTextBoxSplitAtCursorAndVideoPositionVisible = false;
@@ -29965,6 +30014,10 @@ public partial class MainViewModel :
         // "Google it" searches the selection, so it only makes sense with one - and it was
         // shortcut-only (with no default gesture), which made it look removed since SE4.
         IsTextBoxGoogleItVisible = !string.IsNullOrWhiteSpace(EditTextBox.SelectedText);
+
+        // macOS "Look up" (#14277). Must run before the spell check block below, which clears
+        // "_lastTextEditorPointerArgs" - that is what tells us which word was right-clicked.
+        UpdateTextBoxLookUp();
 
         var s = SelectedSubtitle;
         var vp = GetVideoPlayerControl();

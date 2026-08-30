@@ -314,6 +314,7 @@ public class LanguageGeneral
     public string LoadDefaults { get; set; }
     public string LockTimeCodes { get; set; }
     public string Logo { get; set; }
+    public string LookUpX { get; set; }
     public string Margin { get; set; }
     public string Match { get; set; }
     public string MaxCharactersPerSecond { get; set; }
@@ -1110,6 +1111,7 @@ public class LanguageGeneral
         LoadDefaults = "Load defaults";
         LockTimeCodes = "Lock time codes";
         Logo = "Logo";
+        LookUpX = "Look up \"{0}\"";
         Margin = "Margin";
         Match = "Match";
         MaxCharactersPerSecond = "Max characters per second";
