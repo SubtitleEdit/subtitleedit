@@ -3489,7 +3489,11 @@ public class AudioVisualizer : Control
         string? cpsLine = null;
         if (n > 99 && Se.Settings.Waveform.WaveformShowCps && paragraph.Duration.TotalMilliseconds > 0)
         {
-            cpsLine = GetCachedCpsLabel(paragraph.CharactersPerSecond);
+            // Counts the text that is actually on screen: with the original drawn, a CPS taken
+            // from the hidden translation reads as the original's and would be wrong (#14252).
+            cpsLine = GetCachedCpsLabel(ShowOriginalText
+                ? paragraph.OriginalCharactersPerSecond
+                : paragraph.CharactersPerSecond);
         }
 
         if (baseLine == null && cpsLine == null)

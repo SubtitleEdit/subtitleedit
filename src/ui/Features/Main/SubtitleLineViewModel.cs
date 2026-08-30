@@ -529,6 +529,45 @@ public partial class SubtitleLineViewModel : ObservableObject
         }
     }
 
+    private string? _cpsOriginalCacheText;
+    private TimeSpan _cpsOriginalCacheStart;
+    private TimeSpan _cpsOriginalCacheEnd;
+    private double _cpsOriginalCacheValue;
+
+    /// <summary>
+    /// Characters per second of the original text - what the waveform footer shows while it draws
+    /// the original instead of the translation ("toggle translation and original in video/audio
+    /// preview", #14252). Memoized exactly like <see cref="CharactersPerSecond"/>: the footer reads
+    /// it for every visible paragraph on every painted frame.
+    /// </summary>
+    public double OriginalCharactersPerSecond
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(OriginalText))
+            {
+                return 0;
+            }
+
+            if (Duration.TotalMilliseconds <= 1.0)
+            {
+                return 999.0;
+            }
+
+            if (!ReferenceEquals(_cpsOriginalCacheText, OriginalText) ||
+                _cpsOriginalCacheStart != StartTime ||
+                _cpsOriginalCacheEnd != EndTime)
+            {
+                _cpsOriginalCacheText = OriginalText;
+                _cpsOriginalCacheStart = StartTime;
+                _cpsOriginalCacheEnd = EndTime;
+                _cpsOriginalCacheValue = SubtitleTextInfoHelper.GetCharactersPerSecond(OriginalText, StartTime, EndTime);
+            }
+
+            return _cpsOriginalCacheValue;
+        }
+    }
+
     public double WordsPerMinute // WPM
     {
         get
