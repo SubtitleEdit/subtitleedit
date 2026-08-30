@@ -128,6 +128,36 @@ public class SettingsImportExportShortcutSlotsTests
         Assert.Equal("»", target.GetSurroundRight(1));
     }
 
+    // The "search via" slots joined after the slot marker, so a file written by a build between
+    // the two carries the marker but no CustomSearch keys at all - deserializing hands back the
+    // factory defaults, and copying those would silently reset the user's own slots (and empty
+    // out 4 and 5).
+    [AvaloniaFact]
+    public async Task ImportingAMarkedFileWithoutCustomSearchKeysLeavesTheCurrentSlotsAlone()
+    {
+        Directory.CreateDirectory(SettingsIsolationFixture.SettingsDirectory);
+        var path = TempFile();
+
+        var source = new Se { Color1 = "#ff112233" };
+        await ExportAll(path, source);
+        var withoutCustomSearch = string.Join(
+            Environment.NewLine,
+            (await File.ReadAllLinesAsync(path)).Where(l => !l.TrimStart().StartsWith("\"CustomSearch", StringComparison.Ordinal)));
+        await File.WriteAllTextAsync(path, withoutCustomSearch);
+
+        var target = new Se();
+        target.SetCustomSearch(4, "IMDB", "https://www.imdb.com/find?q={0}");
+
+        await ImportAllInto(path, target);
+
+        // The marked slot families still travel...
+        Assert.Equal("#ff112233", target.Color1);
+
+        // ...but the slots the file does not carry are left alone.
+        Assert.Equal("IMDB", target.GetCustomSearchName(4));
+        Assert.Equal("https://www.imdb.com/find?q={0}", target.GetCustomSearchUrl(4));
+    }
+
     [AvaloniaFact]
     public async Task ExportWithoutShortcutsDoesNotClaimToCarryTheSlots()
     {

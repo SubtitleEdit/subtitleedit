@@ -606,6 +606,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             line = line.Trim();
+
+            // The spec allows an alignment suffix after a comma ("line:0,start"). GetTag only
+            // strips it from the percent form ("line:10%,start"), so strip it here too - or the
+            // line-number form with a suffix reads as unparsable and cannot rule a merge out.
+            var comma = line.IndexOf(',');
+            if (comma >= 0)
+            {
+                line = line.Substring(0, comma).TrimEnd();
+            }
+
             if (line.EndsWith('%'))
             {
                 return double.TryParse(line.TrimEnd('%'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out percent);

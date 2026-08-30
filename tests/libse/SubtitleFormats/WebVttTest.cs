@@ -152,6 +152,8 @@ public class WebVttTest
     [InlineData("line:50.00%", "line:84.67%", 2)]   // middle vs the bottom
     [InlineData("line:0", "line:16", 2)]            // line numbers instead of percentages
     [InlineData("line:-16", "line:79.33%", 2)]      // a negative line number counts from the bottom: -16 is the top
+    [InlineData("line:-2,start", "line:-1,start", 1)] // the spec's alignment suffix rides along on line numbers too
+    [InlineData("line:0,start", "line:-1,end", 2)]  // top vs bottom, both spelled with an alignment suffix
     public void LoadSubtitleMergesOnlyCuesPlacedCloseTogetherVertically(string firstCueSettings, string secondCueSettings, int expectedCount)
     {
         var vtt = "WEBVTT\r\n\r\n" +

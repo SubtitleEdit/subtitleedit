@@ -104,6 +104,7 @@ public static class InitVideoPlayer
         control.VideoFileNamePointerPressed += vm.VideoPlayerControlPointerPressed;
         control.SurfacePointerPressed += (_, _) => vm.VideoPlayerAreaPointerPressed();
         control.UserSeeked += vm.OnVideoPlayerUserSeeked;
+        control.PositionChanged += vm.OnVideoPlayerPositionSet;
         // Freeze the interpolated waveform cursor the instant a pause is requested from the
         // player itself (toolbar button / click on the video); without this the cursor keeps
         // gliding until mpv's IsPlaying flips ~100 ms later (issue #12233).

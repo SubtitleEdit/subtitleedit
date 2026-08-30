@@ -270,11 +270,36 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             }
         }
 
+        /// <summary>
+        /// A seek issued while an open+restore sequence is still in flight moves where the user
+        /// wants to be, so the pending target follows it. Dropping the target instead would
+        /// reopen the issue #14218 rewind (a still-loading player reports 0); keeping the old
+        /// one would make the next rebuild jump back to a spot the user has already left. The
+        /// restore sequence's own seeks re-announce the unchanged target, and the position tick
+        /// still ends the restore once the player lands near the (re)target.
+        /// </summary>
+        private void RetargetPositionRestore(double seconds)
+        {
+            if (_pendingRestorePositionSeconds != null)
+            {
+                _pendingRestorePositionSeconds = seconds;
+            }
+        }
+
         private void NotifyPositionChanged(double newPosition)
         {
             if (Math.Abs(_positionIgnore - newPosition) < 0.001)
             {
                 return;
+            }
+
+            // Only a control that knows its duration reports trustworthy values here: until it is
+            // published, the bound position slider clamps every write, so this fires with the
+            // clamped echo of the restore sequence's own seeks - retargeting on that would hand
+            // the pending target the near-0 the guard exists to keep out (issue #14218).
+            if (Duration > 0)
+            {
+                RetargetPositionRestore(newPosition);
             }
 
             // First update our property
@@ -332,6 +357,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         /// </summary>
         public void SeekTo(double seconds)
         {
+            RetargetPositionRestore(seconds);
             SetPositionDisplayOnly(seconds);
             _videoPlayerInstance.Position = UiToPlayerSeconds(seconds);
         }

@@ -141,6 +141,36 @@ public class MainOriginalTextInPreviewTests
         }
     }
 
+    /// <summary>
+    /// Layouts 7-9 have a video player but no waveform, so toggling there and then switching to a
+    /// waveform layout builds the AudioVisualizer only at that point - it must come up showing the
+    /// same text as the video preview instead of defaulting back to the translation.
+    /// </summary>
+    [AvaloniaFact]
+    public void Toggle_ReachesAWaveformBuiltAfterwards()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            AddLine(vm, "Vertaalde regel een", "Source line one", 0, 2000);
+            vm.ShowColumnOriginalText = true;
+
+            vm.AudioVisualizer = null; // the current layout has no waveform
+            vm.ToggleOriginalTextInPreviewCommand.Execute(null);
+            Assert.True(vm.ShowOriginalTextInPreview);
+
+            Nikse.SubtitleEdit.Features.Main.Layout.InitWaveform.MakeWaveform(vm);
+
+            Assert.NotNull(vm.AudioVisualizer);
+            Assert.True(vm.AudioVisualizer!.ShowOriginalText);
+        }
+        finally
+        {
+            vm.AudioVisualizer = null; // built detached from the window - not left on the vm
+            CloseWindow(window, vm);
+        }
+    }
+
     private static Subtitle GetVideoPreviewSubtitle(MainViewModel vm)
     {
         var method = typeof(MainViewModel).GetMethod(
