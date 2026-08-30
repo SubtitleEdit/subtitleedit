@@ -92,7 +92,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 for (var i = 0; i < 4 && pos < len; ++pos)
                 {
                     var c = text[pos];
-                    if (c != '\n' && c != '\r')
+                    // Encoded data is always ASCII (a 6-bit value plus 33, so 33..96). Anything
+                    // above U+00FF cannot be part of it, and Convert.ToByte threw OverflowException
+                    // on it - a single stray non-ASCII character in an [Fonts]/[Graphics] block
+                    // took down the attachments dialog. Skip it like a line break.
+                    if (c != '\n' && c != '\r' && c <= byte.MaxValue)
                     {
                         src[i++] = (byte)(Convert.ToByte(c) - 33);
                         bytes++;

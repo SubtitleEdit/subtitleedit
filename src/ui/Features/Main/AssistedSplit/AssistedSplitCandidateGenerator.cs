@@ -230,10 +230,14 @@ public static class AssistedSplitCandidateGenerator
                 continue;
             }
 
-            // Skip decimal numbers like "1.5" and web addresses like "nikse.dk".
+            // Skip decimal numbers like "1.5" and web addresses like "nikse.dk": a '.' glued to a
+            // letter or digit is not a sentence end. Testing for "not whitespace" instead also
+            // rejected a '.' followed by a closing quote or bracket - which made the closers loop
+            // below unreachable for '.', so `She said "Stop." He left.` offered no sentence-end
+            // split at all.
             if (text[i] == '.' &&
                 i > 0 && i + 1 < text.Length &&
-                !char.IsWhiteSpace(text[i + 1]))
+                char.IsLetterOrDigit(text[i + 1]))
             {
                 continue;
             }

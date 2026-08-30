@@ -23,6 +23,16 @@ public static class Se4ShortcutsImporter
         public int SkippedEmpty { get; set; }
 
         /// <summary>
+        /// SE 4 actions that map onto an SE 5 command another entry already claimed. SE 4 has
+        /// more action slots than SE 5, so several of its actions share one SE 5 command
+        /// (four SE 4 actions land on "recalculate duration" alone). Only one key can be bound
+        /// per command, so the first entry in the file wins and the rest are reported here -
+        /// they used to be handed to the caller anyway, where each silently replaced the one
+        /// before it while still being counted as imported.
+        /// </summary>
+        public int SkippedDuplicate { get; set; }
+
+        /// <summary>
         /// SE 4's "toggle custom tags" characters, kept in General settings rather than with the
         /// shortcut itself (<c>TagsInToggleCustomTags</c>, one string of "startÆend"). Null when
         /// the file has no usable pair - an exported SE_Shortcuts.xml carries no General section.
@@ -448,6 +458,7 @@ public static class Se4ShortcutsImporter
     public static ImportResult ImportFromXml(string xml)
     {
         var result = new ImportResult();
+        var mappedCommands = new HashSet<string>(StringComparer.Ordinal);
         var doc = XDocument.Parse(xml);
 
         // SE 4 ships two layouts of the same data: the full Settings.xml has
@@ -484,6 +495,13 @@ public static class Se4ShortcutsImporter
             if (keys.Count == 0)
             {
                 result.SkippedEmpty++;
+                continue;
+            }
+
+            // First one in the file wins - see ImportResult.SkippedDuplicate.
+            if (!mappedCommands.Add(se5Name))
+            {
+                result.SkippedDuplicate++;
                 continue;
             }
 

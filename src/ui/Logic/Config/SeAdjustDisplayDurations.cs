@@ -9,8 +9,6 @@ public class SeAdjustDisplayDurations
     public int AdjustDurationPercent { get; set; } 
     public string AdjustDurationLast { get; set; } 
     public bool AdjustDurationExtendOnly { get; set; }
-    public bool AdjustDurationExtendEnforceDurationLimits { get; set; }
-    public bool AdjustDurationExtendCheckShotChanges { get; set; } 
     public double AdjustDurationMaximumCps { get; set; }
     public double AdjustDurationOptimalCps { get; set; }
 

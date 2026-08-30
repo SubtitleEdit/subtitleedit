@@ -914,6 +914,14 @@ public partial class BurnInViewModel : ObservableObject
         var isAssa = subtitleFileName.EndsWith(".ass", StringComparison.OrdinalIgnoreCase);
 
         var subtitle = Subtitle.Parse(subtitleFileName);
+        if (subtitle == null)
+        {
+            // Not a subtitle format we know: Parse returns null, and everything below
+            // dereferences it. TransparentSubtitlesViewModel skips the job the same way.
+            jobItem.Status = "Skipped";
+            return string.Empty;
+        }
+
         subtitle = GetSubtitleBasedOnCut(subtitle);
 
         if (subtitle.OriginalFormat is NetflixImsc11Japanese || NetflixImsc11JapaneseToAss.HasJapaneseMarkup(subtitle))
