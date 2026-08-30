@@ -167,6 +167,7 @@ public class LanguageSettingsShortcuts
     public string ChooseRuleProfile { get; set; }
     public string VideoFullScreen { get; set; }
     public string CopyTextFromOriginalSelectedLines { get; set; }
+    public string CopyTextToOriginalSelectedLines { get; set; }
     public string TextBoxRemoveAllFormatting { get; set; }
     public string TextBoxItalic { get; set; }
     public string TextBoxBold { get; set; }
@@ -442,6 +443,7 @@ public class LanguageSettingsShortcuts
         ChooseRuleProfile = "Choose rule profile";
         VideoFullScreen = "Video full screen";
         CopyTextFromOriginalSelectedLines = "Copy text from original (selected lines)";
+        CopyTextToOriginalSelectedLines = "Copy text to original (selected lines)";
         TextBoxRemoveAllFormatting = "Text box, remove all formatting";
         TextBoxItalic = "Text box italic";
         TextBoxBold = "Text box bold";

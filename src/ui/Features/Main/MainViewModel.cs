@@ -7002,6 +7002,43 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void CopyTextFromTranslationToOriginal()
+    {
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        if (Window == null || selectedItems.Count == 0 || !ShowColumnOriginalText)
+        {
+            return;
+        }
+
+        if (IsOriginalReadOnly)
+        {
+            ShowStatus(Se.Language.Main.OriginalIsReadOnlyReference);
+            _shortcutManager.ClearKeys();
+            return;
+        }
+
+        if (IsEmpty)
+        {
+            ShowSubtitleNotLoadedMessage();
+            return;
+        }
+
+        foreach (var subtitle in selectedItems)
+        {
+            subtitle.OriginalText = subtitle.Text;
+        }
+
+        _shortcutManager.ClearKeys();
+        var msg = string.Format(Se.Language.Main.XLinesCopiedToOriginal, selectedItems.Count);
+        if (selectedItems.Count == 1)
+        {
+            msg = Se.Language.Main.OneLineCopiedToOriginal;
+        }
+
+        ShowStatus(msg);
+    }
+
+    [RelayCommand]
     private void SwitchOriginalAndTranslationTextSelectedLines()
     {
         var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
