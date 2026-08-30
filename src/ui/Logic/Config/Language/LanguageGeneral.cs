@@ -453,6 +453,7 @@ public class LanguageGeneral
     public string ReDownloadX { get; set; }
     public string Reason { get; set; }
     public string RecentFiles { get; set; }
+    public string RecentlyUsedVideoOffsets { get; set; }
     public string Redo { get; set; }
     public string Redownload { get; set; }
     public string Release { get; set; }
@@ -1247,6 +1248,7 @@ public class LanguageGeneral
         ReDownloadX = "Re-download {0}";
         Reason = "Reason";
         RecentFiles = "Recent files";
+        RecentlyUsedVideoOffsets = "Recently used video offsets";
         Redo = "Redo";
         Redownload = "Re-download...";
         Release = "Release";

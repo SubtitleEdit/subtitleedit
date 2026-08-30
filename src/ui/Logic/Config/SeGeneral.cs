@@ -176,6 +176,13 @@ public class SeGeneral
     public long CurrentVideoOffsetInMs = 0;
     public bool CurrentVideoIsSmpte = false;
 
+    /// <summary>
+    /// Video offsets the user has applied, most recently used first, so the "Set video offset"
+    /// dialog can offer them for one-click reuse instead of retyping the same time code every
+    /// time (SE 4 parity). Capped at ten entries by the dialog.
+    /// </summary>
+    public List<long> VideoOffsetHistoryInMs { get; set; } = new List<long>();
+
     public SeGeneral()
     {
         Version = Se.Version;

@@ -9530,40 +9530,36 @@ public partial class MainViewModel :
             return;
         }
 
+        // The dialog stays open and applies through these callbacks, so several offsets can be
+        // tried out without reopening it; "Cancel" just closes and keeps what was applied.
+        await ShowDialogAsync<SetVideoOffsetWindow, SetVideoOffsetViewModel>(vm =>
+        {
+            vm.Initialize(ApplyVideoOffset, ResetVideoOffset);
+        });
+    }
+
+    private void ApplyVideoOffset(TimeSpan offset, bool relativeToCurrentVideoPosition, bool keepTimeCodes)
+    {
         var oldOffsetMs = Se.Settings.General.CurrentVideoOffsetInMs;
 
-        var result = await ShowDialogAsync<SetVideoOffsetWindow, SetVideoOffsetViewModel>();
-
-        if (result.ResetPressed)
-        {
-            Se.Settings.General.CurrentVideoOffsetInMs = 0;
-            UpdateVideoOffsetStatus();
-            _updateAudioVisualizer = true;
-            return;
-        }
-
-        if (!result.OkPressed || !result.TimeOffset.HasValue)
-        {
-            return;
-        }
-
-        var offset = result.TimeOffset.Value;
-        if (result.RelativeToCurrentVideoPosition)
+        if (relativeToCurrentVideoPosition)
         {
             var vp = GetVideoPlayerControl();
             if (vp != null)
             {
                 offset = offset - TimeSpan.FromSeconds(vp.Position);
             }
-
-            Se.Settings.General.CurrentVideoOffsetInMs = (long)Math.Round(offset.TotalMilliseconds, MidpointRounding.AwayFromZero);
         }
+
+        Se.Settings.General.CurrentVideoOffsetInMs = (long)Math.Round(offset.TotalMilliseconds, MidpointRounding.AwayFromZero);
 
         // The video offset is a non-destructive display offset (see TimeSpanToDisplayFullConverter):
         // the listview shows "time code + offset" while the underlying time codes stay untouched.
         // "Keep existing time codes" therefore leaves the time codes alone. When it is NOT checked,
         // we bake the offset change into the time codes so the displayed values stay the same.
-        if (!result.KeepTimeCodes)
+        // The shift is against the offset in force right now, so applying twice from the open
+        // dialog lands on the same time codes as applying the second value straight away.
+        if (!keepTimeCodes)
         {
             var delta = TimeSpan.FromMilliseconds(Se.Settings.General.CurrentVideoOffsetInMs - oldOffsetMs);
             if (delta != TimeSpan.Zero)
@@ -9576,6 +9572,13 @@ public partial class MainViewModel :
             }
         }
 
+        UpdateVideoOffsetStatus();
+        _updateAudioVisualizer = true;
+    }
+
+    private void ResetVideoOffset()
+    {
+        Se.Settings.General.CurrentVideoOffsetInMs = 0;
         UpdateVideoOffsetStatus();
         _updateAudioVisualizer = true;
     }
