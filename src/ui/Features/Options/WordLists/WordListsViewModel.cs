@@ -432,6 +432,8 @@ public partial class WordListsViewModel : ObservableObject
             result.Add(new OcrFixItem(item.Key, item.Value));
         }
 
+        result.Sort((a, b) => string.Compare(a.Find, b.Find, StringComparison.OrdinalIgnoreCase));
+
         return result;
     }
 
