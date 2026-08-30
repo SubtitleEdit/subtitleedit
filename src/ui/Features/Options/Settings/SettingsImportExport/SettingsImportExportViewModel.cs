@@ -471,7 +471,7 @@ public partial class SettingsImportExportViewModel : ObservableObject
 
     /// <summary>
     /// Copies the shortcut slot values the Shortcuts window owns - colors 1-8, actors 1-10 and the
-    /// "surround with" pairs - which sit as top-level values on <see cref="Se"/> rather than in one
+    /// "surround with" pairs and the "search via" slots - which sit as top-level values on <see cref="Se"/> rather than in one
     /// of its sections. A null <paramref name="from"/> clears them, so an export that leaves
     /// shortcuts out says so instead of shipping a block of defaults.
     /// </summary>
@@ -489,6 +489,11 @@ public partial class SettingsImportExportViewModel : ObservableObject
         for (var slot = 1; slot <= Se.SurroundWithSlotCount; slot++)
         {
             to.SetSurround(slot, from?.GetSurroundLeft(slot)!, from?.GetSurroundRight(slot)!);
+        }
+
+        for (var slot = 1; slot <= Se.CustomSearchSlotCount; slot++)
+        {
+            to.SetCustomSearch(slot, from?.GetCustomSearchName(slot)!, from?.GetCustomSearchUrl(slot)!);
         }
 
         to.Actor1 = from?.Actor1!;

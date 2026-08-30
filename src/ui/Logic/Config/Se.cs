@@ -49,6 +49,16 @@ public class Se
     public string Surround7Right { get; set; } = string.Empty;
     public string Surround8Left { get; set; } = string.Empty;
     public string Surround8Right { get; set; } = string.Empty;
+    public string CustomSearch1Name { get; set; } = "The Free Dictionary";
+    public string CustomSearch1Url { get; set; } = "https://www.thefreedictionary.com/{0}";
+    public string CustomSearch2Name { get; set; } = "Wikipedia";
+    public string CustomSearch2Url { get; set; } = "https://en.wikipedia.org/wiki?search={0}";
+    public string CustomSearch3Name { get; set; } = "DuckDuckGo";
+    public string CustomSearch3Url { get; set; } = "https://duckduckgo.com/?q={0}";
+    public string CustomSearch4Name { get; set; } = string.Empty;
+    public string CustomSearch4Url { get; set; } = string.Empty;
+    public string CustomSearch5Name { get; set; } = string.Empty;
+    public string CustomSearch5Url { get; set; } = string.Empty;
     public string Actor1 { get; set; } = "Actor 1";
     public string Actor2 { get; set; } = "Actor 2";
     public string Actor3 { get; set; } = "Actor 3";
@@ -368,6 +378,44 @@ public class Se
             case 6: Surround6Left = left; Surround6Right = right; break;
             case 7: Surround7Left = left; Surround7Right = right; break;
             case 8: Surround8Left = left; Surround8Right = right; break;
+        }
+    }
+
+    /// <summary>
+    /// Number of configurable "search via" slots (name + URL, SE 4 parity). Slots are one-based;
+    /// a slot without a URL is hidden from the text box context menu.
+    /// </summary>
+    public const int CustomSearchSlotCount = 5;
+
+    public string GetCustomSearchName(int slotNumber) => slotNumber switch
+    {
+        1 => CustomSearch1Name,
+        2 => CustomSearch2Name,
+        3 => CustomSearch3Name,
+        4 => CustomSearch4Name,
+        5 => CustomSearch5Name,
+        _ => string.Empty,
+    };
+
+    public string GetCustomSearchUrl(int slotNumber) => slotNumber switch
+    {
+        1 => CustomSearch1Url,
+        2 => CustomSearch2Url,
+        3 => CustomSearch3Url,
+        4 => CustomSearch4Url,
+        5 => CustomSearch5Url,
+        _ => string.Empty,
+    };
+
+    public void SetCustomSearch(int slotNumber, string name, string url)
+    {
+        switch (slotNumber)
+        {
+            case 1: CustomSearch1Name = name; CustomSearch1Url = url; break;
+            case 2: CustomSearch2Name = name; CustomSearch2Url = url; break;
+            case 3: CustomSearch3Name = name; CustomSearch3Url = url; break;
+            case 4: CustomSearch4Name = name; CustomSearch4Url = url; break;
+            case 5: CustomSearch5Name = name; CustomSearch5Url = url; break;
         }
     }
 

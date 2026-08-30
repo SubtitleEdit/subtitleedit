@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Windows.Input;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -1805,6 +1806,26 @@ public static partial class InitListViewAndEditBox
         menuItemTextBoxGoogleIt.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsTextBoxGoogleItVisible)));
         flyoutTextBox.Items.Add(menuItemTextBoxGoogleIt);
 
+        // The configurable "search via" slots (name + URL, set in Options > Shortcuts). They live in
+        // a submenu so a handful of search engines do not push the rest of the menu down, and the
+        // whole submenu is hidden while no slot has a URL.
+        var menuItemTextBoxSearchVia = new MenuItem
+        {
+            Header = Se.Language.Options.Shortcuts.SearchVia,
+            Icon = new Icon
+            {
+                Value = IconNames.Find,
+                VerticalAlignment = VerticalAlignment.Center,
+            },
+        };
+        menuItemTextBoxSearchVia.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsCustomSearchVisible)));
+        AddCustomSearchMenuItem(menuItemTextBoxSearchVia, vm, nameof(vm.CustomSearch1Text), nameof(vm.IsCustomSearch1Visible), vm.CustomSearch1Command);
+        AddCustomSearchMenuItem(menuItemTextBoxSearchVia, vm, nameof(vm.CustomSearch2Text), nameof(vm.IsCustomSearch2Visible), vm.CustomSearch2Command);
+        AddCustomSearchMenuItem(menuItemTextBoxSearchVia, vm, nameof(vm.CustomSearch3Text), nameof(vm.IsCustomSearch3Visible), vm.CustomSearch3Command);
+        AddCustomSearchMenuItem(menuItemTextBoxSearchVia, vm, nameof(vm.CustomSearch4Text), nameof(vm.IsCustomSearch4Visible), vm.CustomSearch4Command);
+        AddCustomSearchMenuItem(menuItemTextBoxSearchVia, vm, nameof(vm.CustomSearch5Text), nameof(vm.IsCustomSearch5Visible), vm.CustomSearch5Command);
+        flyoutTextBox.Items.Add(menuItemTextBoxSearchVia);
+
         var menuItemTextBoxAiAssistant = new MenuItem
         {
             Header = Se.Language.Tools.AiAssistant.Title,
@@ -2015,6 +2036,20 @@ public static partial class InitListViewAndEditBox
 
         var textEditGrid = editSection.Children.OfType<Grid>().First(g => g.Name == "SubtitleTextEditGrid");
         TrackEditSectionMinimumHeight(hostGrid, textEditGrid);
+    }
+
+    // One entry of the "search via" submenu. The header and the visibility are bound rather than
+    // set, so renaming a slot in Options > Shortcuts shows up without rebuilding the menu.
+    private static void AddCustomSearchMenuItem(MenuItem parent, MainViewModel vm, string textProperty, string visibleProperty, ICommand command)
+    {
+        var item = new MenuItem
+        {
+            [!MenuItem.HeaderProperty] = new Binding(textProperty),
+            [!Visual.IsVisibleProperty] = new Binding(visibleProperty),
+            Command = command,
+            DataContext = vm,
+        };
+        parent.Items.Add(item);
     }
 
     // Stable keys (DataGridColumn.Tag) used to snapshot/restore subtitle grid column

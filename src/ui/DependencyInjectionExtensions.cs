@@ -59,6 +59,7 @@ using Nikse.SubtitleEdit.Features.Options.Settings.SyntaxColorTooWideSettings;
 using Nikse.SubtitleEdit.Features.Options.Settings.WaveformThemes;
 using Nikse.SubtitleEdit.Features.Options.Settings.WaveformToolbarItems;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts;
+using Nikse.SubtitleEdit.Features.Options.Shortcuts.CustomSearch;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts.PickMilliseconds;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts.SurroundWith;
 using Nikse.SubtitleEdit.Features.Options.WordLists;
@@ -563,6 +564,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<SplitSubtitleViewModel>();
         collection.AddTransient<StatisticsViewModel>();
         collection.AddTransient<SurroundWithViewModel>();
+        collection.AddTransient<CustomSearchViewModel>();
         collection.AddTransient<SyntaxColorTooWideSettingsViewModel>();
         collection.AddTransient<MinGapCalculateViewModel>();
         collection.AddTransient<TextToSpeechViewModel>();
