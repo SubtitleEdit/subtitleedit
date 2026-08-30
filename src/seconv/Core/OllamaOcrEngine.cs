@@ -1,5 +1,6 @@
 using Nikse.SubtitleEdit.Core.Common;
 using SkiaSharp;
+using System.Globalization;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -16,6 +17,13 @@ internal sealed class OllamaOcrEngine : IOcrEngine
 {
     public string Name => "ollama";
 
+    // Same generation limits the GUI's OllamaOcr uses, and for the same reason: a thinking
+    // model (glm-ocr and friends) left unbounded emits its reasoning, markdown fences and the
+    // same line over and over. Uncapped that is both slow - nothing stops generation once the
+    // text is transcribed - and wrong. The CLI never got these when the GUI was tuned (#14310).
+    private const int MaxTokens = 96;
+    private const double RepeatPenalty = 1.1;
+
     private readonly HttpClient _httpClient;
     private readonly string _url;
     private readonly string _model;
@@ -24,7 +32,9 @@ internal sealed class OllamaOcrEngine : IOcrEngine
 
     public OllamaOcrEngine(string? url, string? model, string? language, string? prompt = null)
     {
-        _url = string.IsNullOrWhiteSpace(url) ? "http://localhost:11434/api/chat" : url;
+        // Trailing slash costs a 307 redirect on every single image (Ollama's route is
+        // /api/chat), which the GUI already trims.
+        _url = string.IsNullOrWhiteSpace(url) ? "http://localhost:11434/api/chat" : url.TrimEnd('/');
         _model = string.IsNullOrWhiteSpace(model) ? "llama3.2-vision" : model;
         _language = string.IsNullOrWhiteSpace(language) ? "English" : language;
         // Ollama OCR has no prompt in the GUI, so its built-in wording stays the default here;
@@ -54,10 +64,7 @@ internal sealed class OllamaOcrEngine : IOcrEngine
         var prompt = _promptTemplate != null
             ? _promptTemplate.Replace("{language}", _language)
             : $"Act as a precise OCR engine. Transcribe every line of text from this image exactly as it appears. The language is {_language}. Maintain the vertical order. Use a single '\\n' to separate each line. Do not skip any text. Output only the transcribed text";
-        var body = "{ \"model\": \"" + Escape(_model) + "\", " +
-                   "\"messages\": [ { \"role\": \"user\", \"content\": \"" + Escape(prompt) + "\", " +
-                   "\"images\": [ \"" + base64 + "\" ] } ], " +
-                   "\"stream\": false }";
+        var body = BuildRequestBody(_model, prompt, base64);
 
         using var content = new StringContent(body, Encoding.UTF8);
         content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
@@ -76,6 +83,25 @@ internal sealed class OllamaOcrEngine : IOcrEngine
         var text = string.Join(string.Empty, contents).Trim();
         text = text.Replace("\\n", Environment.NewLine).Replace("\\\"", "\"");
         return text.Trim();
+    }
+
+    /// <summary>
+    /// The /api/chat payload. Split out so the option block stays checkable - it is hand-built
+    /// JSON, and a stray comma here fails as an Ollama 400 per image rather than at build time.
+    /// </summary>
+    internal static string BuildRequestBody(string model, string prompt, string base64Image)
+    {
+        var options = "\"options\": { \"temperature\": 0, \"repeat_penalty\": " +
+                      RepeatPenalty.ToString(CultureInfo.InvariantCulture) +
+                      ", \"num_predict\": " + MaxTokens + " }, ";
+
+        // "think": false turns off the model's chain-of-thought, which is the single biggest
+        // source of "way too much text" from a thinking model.
+        return "{ \"model\": \"" + Escape(model) + "\", " + options +
+               "\"think\": false, " +
+               "\"messages\": [ { \"role\": \"user\", \"content\": \"" + Escape(prompt) + "\", " +
+               "\"images\": [ \"" + base64Image + "\" ] } ], " +
+               "\"stream\": false }";
     }
 
     private static string Escape(string s) =>
