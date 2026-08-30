@@ -9,6 +9,7 @@ using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.Logic.ValueConverters;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -3233,21 +3234,26 @@ public class AudioVisualizer : Control
     // short-lived garbage to trigger GC pauses, which show up as the cursor briefly freezing and
     // then jumping. Cache the prepared text and the shaped FormattedText; both are cleared in
     // ResetCache() when the waveform font/colors change.
-    private readonly Dictionary<string, FormattedText> _paragraphFormattedTextCache = new(512);
-    private readonly Dictionary<string, (List<string> Lines, string Unwrapped)> _paragraphTextCache = new(512);
+    private readonly Dictionary<(string Text, bool RightToLeft), FormattedText> _paragraphFormattedTextCache = new(512);
+    private readonly Dictionary<string, (List<string> Lines, string Unwrapped, bool RightToLeft)> _paragraphTextCache = new(512);
 
-    private FormattedText GetCachedParagraphText(string text)
+    // The direction is part of the key: the same string shapes differently in the two directions
+    // (see GetPreparedParagraphText), and the number/duration/CPS labels stay left to right even
+    // under a right to left paragraph.
+    internal FormattedText GetCachedParagraphText(string text, bool rightToLeft = false)
     {
-        if (!_paragraphFormattedTextCache.TryGetValue(text, out var formatted))
+        var key = (text, rightToLeft);
+        if (!_paragraphFormattedTextCache.TryGetValue(key, out var formatted))
         {
             if (_paragraphFormattedTextCache.Count > 8000)
             {
                 _paragraphFormattedTextCache.Clear();
             }
 
-            formatted = new FormattedText(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
+            formatted = new FormattedText(text, CultureInfo.CurrentCulture,
+                rightToLeft ? FlowDirection.RightToLeft : FlowDirection.LeftToRight,
                 _typeface, _fontSize, _paintText);
-            _paragraphFormattedTextCache[text] = formatted;
+            _paragraphFormattedTextCache[key] = formatted;
         }
 
         return formatted;
@@ -3310,7 +3316,7 @@ public class AudioVisualizer : Control
         return label;
     }
 
-    private (List<string> Lines, string Unwrapped) GetPreparedParagraphText(string rawText)
+    internal (List<string> Lines, string Unwrapped, bool RightToLeft) GetPreparedParagraphText(string rawText)
     {
         if (!_paragraphTextCache.TryGetValue(rawText, out var prepared))
         {
@@ -3322,7 +3328,14 @@ public class AudioVisualizer : Control
 
             var lines = text.SplitToLines();
             var unwrapped = string.Join("  ", lines);
-            prepared = (lines, unwrapped);
+
+            // Laying Arabic or Hebrew out left to right hands the neutrals - a dialogue dash, an
+            // ellipsis, brackets - the paragraph direction instead of the direction of the letters
+            // around them, so they end up on the wrong side of the line (issue 14262). Take the
+            // direction from the whole paragraph, not per line: a second line that happens to hold
+            // only neutrals or a Latin name belongs to the same block as the first.
+            var rightToLeft = TextToFlowDirectionConverter.GetFlowDirection(text) == FlowDirection.RightToLeft;
+            prepared = (lines, unwrapped, rightToLeft);
 
             if (_paragraphTextCache.Count > 8000)
             {
@@ -3365,7 +3378,7 @@ public class AudioVisualizer : Control
         {
             if (Se.Settings.Waveform.WaveformUnwrapText)
             {
-                var formattedText = GetCachedParagraphText(prepared.Unwrapped);
+                var formattedText = GetCachedParagraphText(prepared.Unwrapped, prepared.RightToLeft);
                 context.DrawText(formattedText, new Point(currentRegionLeft + 3, 14));
             }
             else
@@ -3373,7 +3386,7 @@ public class AudioVisualizer : Control
                 double addY = 0;
                 foreach (var line in prepared.Lines)
                 {
-                    var formattedText = GetCachedParagraphText(line);
+                    var formattedText = GetCachedParagraphText(line, prepared.RightToLeft);
                     context.DrawText(formattedText, new Point(currentRegionLeft + 3, 14 + addY));
                     addY += formattedText.Height;
                 }
@@ -3604,12 +3617,18 @@ public class AudioVisualizer : Control
                 _chapterTextCache.Clear();
             }
 
-            formatted = new FormattedText(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
+            // Right to left titles get their own direction, like the paragraph text does, so that
+            // neutrals keep the side the letters around them ask for. The alignment is pinned to
+            // the left: the flag is drawn from its left edge, and a right to left line would
+            // otherwise be pushed to the far end of MaxTextWidth, outside the flag.
+            formatted = new FormattedText(text, CultureInfo.CurrentCulture,
+                TextToFlowDirectionConverter.GetFlowDirection(text),
                 _typeface, 10, _paintChapterFlagTextBrush)
             {
                 MaxTextWidth = ChapterFlagMaxWidth - ChapterFlagPadding * 2,
                 MaxLineCount = 1,
                 Trimming = TextTrimming.CharacterEllipsis,
+                TextAlignment = TextAlignment.Left,
             };
 
             _chapterTextCache[text] = formatted;
