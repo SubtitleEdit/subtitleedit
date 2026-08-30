@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
 
@@ -10,6 +11,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         {
             public static string FixEllipsesStart { get; set; } = "Remove leading '...'";
         }
+
+        public FixType FixType => FixType.Punctuation;
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {

@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
 using System.Text.RegularExpressions;
@@ -15,6 +16,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             public static string FixMissingSpace { get; set; } = "Fix missing space";
             public static string FixMissingSpaces { get; set; } = "Fix missing spaces";
         }
+
+        public FixType FixType => FixType.Spacing;
 
         // FixSpaceAfter asks "is this character in that little set?" for every occurrence of the
         // fix character in the file. Both sets used to be probed with

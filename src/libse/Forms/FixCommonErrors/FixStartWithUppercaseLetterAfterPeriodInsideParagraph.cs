@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using System.Text.RegularExpressions;
 
@@ -10,6 +11,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         {
             public static string StartWithUppercaseLetterAfterPeriodInsideParagraph { get; set; } = "Start with uppercase letter after period inside paragraph";
         }
+
+        public FixType FixType => FixType.Casing;
 
         private static readonly char[] ExpectedChars = { '.', '!', '?' };
 

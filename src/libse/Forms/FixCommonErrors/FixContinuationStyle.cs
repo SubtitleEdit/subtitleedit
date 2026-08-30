@@ -17,6 +17,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             public static string FixUnnecessaryLeadingDots { get; set; } = "Remove unnecessary leading dots";
         }
 
+        public FixType FixType => FixType.Punctuation;
+
         private ContinuationUtilities.ContinuationProfile _continuationProfile;
         private List<string> _names;
         public string FixAction { get; set; }

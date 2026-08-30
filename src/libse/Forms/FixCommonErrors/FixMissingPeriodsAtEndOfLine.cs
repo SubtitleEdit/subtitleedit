@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
 using System.Linq;
@@ -12,6 +13,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             public static string FixMissingPeriodAtEndOfLine { get; set; } = "Add missing period at end of line";
             public static string AddPeriods { get; set; } = "Add missing period at end of line";
         }
+
+        public FixType FixType => FixType.Punctuation;
 
         private static readonly char[] WordSplitChars = { ' ', '.', ',', '-', '?', '!', ':', ';', '"', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n' };
 

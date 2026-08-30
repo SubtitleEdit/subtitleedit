@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
 using System.Globalization;
@@ -16,6 +17,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         {
             public static string FixSpanishInvertedQuestionAndExclamationMarks { get; set; } = "Fix Spanish inverted question and exclamation marks";
         }
+
+        public FixType FixType => FixType.Punctuation;
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {

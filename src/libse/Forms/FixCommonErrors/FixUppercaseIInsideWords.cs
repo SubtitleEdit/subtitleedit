@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
 using System.Text.RegularExpressions;
@@ -12,6 +13,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             public static string FixUppercaseIInsideLowercaseWord { get; set; } = "Fix uppercase 'i' inside lowercase word";
             public static string FixUppercaseIInsideLowercaseWords { get; set; } = "Fix uppercase 'i' inside lowercase words (OCR error)";
         }
+
+        public FixType FixType => FixType.Casing;
 
         private static readonly Regex ReAfterLowercaseLetter = new Regex(@"\p{Ll}I", RegexOptions.Compiled);
         private static readonly Regex ReBeforeLowercaseLetter = new Regex(@"\p{L}I\p{Ll}", RegexOptions.Compiled);
