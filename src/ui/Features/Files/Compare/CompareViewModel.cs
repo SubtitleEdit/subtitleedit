@@ -70,6 +70,41 @@ public partial class CompareViewModel : ObservableObject
 
         CompareVisuals = new ObservableCollection<CompareVisual>(CompareVisual.GetCompareVisuals());
         SelectedCompareVisual = CompareVisuals[0];
+
+        LoadSettings();
+    }
+
+    /// <summary>
+    /// The "Show" choice and the two ignore options are remembered between sessions, like SE4
+    /// did through Configuration.Settings.Compare (#14299).
+    /// </summary>
+    private void LoadSettings()
+    {
+        var settings = Se.Settings.File.Compare;
+
+        if (Enum.TryParse<CompareVisualType>(settings.Show, out var show))
+        {
+            var visual = CompareVisuals.FirstOrDefault(p => p.Type == show);
+            if (visual != null)
+            {
+                SelectedCompareVisual = visual;
+            }
+        }
+
+        IgnoreWhiteSpace = settings.IgnoreWhitespace;
+        IgnoreFormatting = settings.IgnoreFormatting;
+    }
+
+    /// <summary>
+    /// Only updates the in-memory settings, like Find/Replace do - the main window writes
+    /// Settings.json when the application closes.
+    /// </summary>
+    internal void SaveSettings()
+    {
+        var settings = Se.Settings.File.Compare;
+        settings.Show = SelectedCompareVisual.Type.ToString();
+        settings.IgnoreWhitespace = IgnoreWhiteSpace;
+        settings.IgnoreFormatting = IgnoreFormatting;
     }
 
     internal void Initialize(
@@ -132,7 +167,11 @@ public partial class CompareViewModel : ObservableObject
         {
             var left = LeftSubtitles[i];
             var right = RightSubtitles[i];
-            var (leftBlock, rightBlock) = TextDiffHighlighter.Compare(left.Text, right.Text);
+            // A pair the options count as equal gets no markup whatsoever - the same call the row
+            // coloring makes, so the cell can never mark a difference the row has dropped (#14299).
+            var (leftBlock, rightBlock) = AreTextsEqual(left, right)
+                ? TextDiffHighlighter.MakePlainText(left.Text, right.Text)
+                : TextDiffHighlighter.Compare(left.Text, right.Text, IgnoreWhiteSpace, IgnoreFormatting);
             left.TextPanel.Children.Clear();
             left.TextPanel.Children.Add(leftBlock);
             right.TextPanel.Children.Clear();
@@ -510,10 +549,23 @@ public partial class CompareViewModel : ObservableObject
 
     private bool AreTextsEqual(CompareItem p1, CompareItem p2)
     {
-        return p1.Text.Trim() == p2.Text.Trim() ||
-                    IgnoreFormatting && HtmlUtil.RemoveHtmlTags(p1.Text.Trim()) == HtmlUtil.RemoveHtmlTags(p2.Text.Trim()) ||
-                    IgnoreWhiteSpace && RemoveWhiteSpace(p1.Text) == RemoveWhiteSpace(p2.Text) ||
-                    IgnoreFormatting && IgnoreWhiteSpace && RemoveWhiteSpace(HtmlUtil.RemoveHtmlTags(p1.Text)) == RemoveWhiteSpace(HtmlUtil.RemoveHtmlTags(p2.Text));
+        return NormalizeForCompare(p1.Text) == NormalizeForCompare(p2.Text);
+    }
+
+    /// <summary>
+    /// Strips whatever the two ignore options say to ignore, so one place decides what counts as
+    /// a difference - the row coloring, the word statistics and the in-cell highlighting all go
+    /// through this. RemoveHtmlTags must be told to take the ASSA tags too, or "Ignore formatting"
+    /// does nothing at all on an .ass/.ssa file, where every tag is {\an8}-style (#14299).
+    /// </summary>
+    internal string NormalizeForCompare(string text)
+    {
+        if (IgnoreFormatting)
+        {
+            text = HtmlUtil.RemoveHtmlTags(text, true);
+        }
+
+        return IgnoreWhiteSpace ? RemoveWhiteSpace(text) : text.Trim();
     }
 
     public static string RemoveWhiteSpace(string text)
