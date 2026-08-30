@@ -420,6 +420,9 @@ public static class InitNativeMacMenu
         optionsItems.Items.Add(Item(Clean(l.Shortcuts), v => v.CommandShowSettingsShortcutsCommand));
         optionsItems.Items.Add(Item(Clean(l.WordLists), v => v.ShowWordListsCommand));
         optionsItems.Items.Add(Item(Clean(l.ChooseLanguage), v => v.CommandShowSettingsLanguageCommand));
+        optionsItems.Items.Add(new NativeMenuItemSeparator());
+        // Mirrors the same entry in InitMenu.cs - see the note there (#14309).
+        optionsItems.Items.Add(Item(Clean(Se.Language.General.SetUpLikeSubtitleEdit4), v => v.SetupLikeSe4Command));
 
         // ── Help ──────────────────────────────────────────────────────────────
         var helpItems = new NativeMenu();

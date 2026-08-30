@@ -894,6 +894,16 @@ public static class InitMenu
                     Header = l.ChooseLanguage,
                     Command = vm.CommandShowSettingsLanguageCommand,
                 },
+                new Separator(),
+                // The one-shot SE 4 import (shortcuts + replace rules from the classic
+                // Settings.xml, plus the SE 4 theme/waveform colors). It had a default shortcut
+                // and a Shortcuts-window entry but no menu item, so people coming from SE 4 had
+                // no way to find it (#14309).
+                new MenuItem
+                {
+                    Header = Se.Language.General.SetUpLikeSubtitleEdit4,
+                    Command = vm.SetupLikeSe4Command,
+                },
             },
         });
 
