@@ -40,10 +40,10 @@ public class AudioVisualizerOriginalTextTests
 
         var line = new SubtitleLineViewModel
         {
-            // Same length in both: the paragraph footer keeps showing the row's own CPS (the line
-            // being edited), so only equal-length texts make the two frames below pixel-identical.
+            // Deliberately different lengths: the footer's CPS follows the drawn text, so the
+            // frames below can only match if it swapped too.
             Text = "Vertaalde regel",
-            OriginalText = "Originele regel",
+            OriginalText = "Source line",
             StartTime = TimeSpan.FromSeconds(LineStartSeconds),
             EndTime = TimeSpan.FromSeconds(LineStartSeconds + 3),
         };
@@ -61,9 +61,10 @@ public class AudioVisualizerOriginalTextTests
         Assert.NotEqual(translation, original);
 
         // ... and it is the original text that was drawn, not merely something else: the same
-        // waveform with the original text in the ordinary Text property paints the same frame.
+        // waveform with the original text in the ordinary Text property paints the same frame -
+        // text, and the CPS in the paragraph footer with it.
         av.ShowOriginalText = false;
-        line.Text = "Originele regel";
+        line.Text = "Source line";
         av.InvalidateVisual();
         Assert.Equal(original, Capture(window));
     }
