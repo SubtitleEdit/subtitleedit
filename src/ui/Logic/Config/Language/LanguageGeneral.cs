@@ -443,6 +443,7 @@ public class LanguageGeneral
     public string PoweredBy { get; set; }
     public string Prefix { get; set; }
     public string Preview { get; set; }
+    public string PreviewAlignmentInListView { get; set; }
     public string Previous { get; set; }
     public string Profile { get; set; }
     public string Quality { get; set; }
@@ -1238,6 +1239,7 @@ public class LanguageGeneral
         PoweredBy = "Powered by";
         Prefix = "Prefix";
         Preview = "Preview";
+        PreviewAlignmentInListView = "Preview alignment in list view";
         Previous = "Previous";
         Profile = "Profile";
         Quality = "Quality";
@@ -1354,7 +1356,7 @@ public class LanguageGeneral
         ShowPreview = "Show preview";
         ShowShotChangesList = "Show shot changes list";
         ShowStyleColumn = "Show \"Style\" column";
-        ShowTeletext = "Show TT";
+        ShowTeletext = "Show teletext column in list view";
         ShowTimeCodes = "Show time codes";
         ShowWpmColumn = "Show \"Words/min\" column";
         ShowPixelWidthColumn = "Show \"Pixel width\" column";
