@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -15,7 +15,40 @@ namespace SeConv.Helpers;
 /// </summary>
 internal static class CliSchema
 {
-    public const string Version = "5.0.0";
+    /// <summary>
+    /// Version reported by <c>seconv --version</c> and <c>seconv --help-json</c>.
+    ///
+    /// Release builds stamp <see cref="AssemblyInformationalVersionAttribute"/> from the
+    /// <c>Se.Version</c> string (see build-seconv.yml), so this follows the Subtitle Edit
+    /// version on its own. This used to be a hardcoded constant that nobody remembered to
+    /// bump, so every release after 5.0.0 still reported "5.0.0" (issue #14303).
+    /// </summary>
+    public static readonly string Version = ResolveVersion();
+
+    /// <summary>
+    /// Reported when the assembly carries no stamped version - a plain <c>dotnet build</c>
+    /// gets the SDK default of 1.0.0, which would be more misleading than a stale number.
+    /// </summary>
+    private const string FallbackVersion = "5.2.0";
+
+    /// <summary>The version the .NET SDK assigns when the build does not pass one in.</summary>
+    private const string UnstampedSdkDefault = "1.0.0";
+
+    private static string ResolveVersion()
+    {
+        var informational = typeof(CliSchema).Assembly
+            .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+        if (string.IsNullOrWhiteSpace(informational))
+        {
+            return FallbackVersion;
+        }
+
+        // Source Link appends "+<commit sha>" - callers want the release version, not the build.
+        var plus = informational.IndexOf('+');
+        var version = (plus >= 0 ? informational.Substring(0, plus) : informational).Trim();
+
+        return version.Length == 0 || version == UnstampedSdkDefault ? FallbackVersion : version;
+    }
 
     /// <summary>Schema revision, bumped when the emitted JSON shape changes (not its contents).</summary>
     public const int SchemaVersion = 1;
