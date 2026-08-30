@@ -22,6 +22,7 @@ public class LanguageSettingsShortcuts
     public string GeneralUnbreakNoSpaceCjk { get; set; }
     public string GeneralMergeSelectedLinesBilingual { get; set; }
     public string GeneralToggleTranslationMode { get; set; }
+    public string GeneralToggleTranslationAndOriginalInPreviews { get; set; }
     public string GeneralChooseLayout { get; set; }
     public string GeneralGoToNextSubtitle { get; set; }
     public string GeneralGoToNextSubtitlePlayTranslate { get; set; }
@@ -287,6 +288,7 @@ public class LanguageSettingsShortcuts
         GeneralUnbreakNoSpaceCjk = "Unbreak without space (CJK)";
         GeneralMergeSelectedLinesBilingual = "Merge selected lines bilingual";
         GeneralToggleTranslationMode = "Toggle translation mode";
+        GeneralToggleTranslationAndOriginalInPreviews = "Toggle translation and original in video/audio preview";
         GeneralChooseLayout = "Choose layout";
         GeneralGoToNextSubtitle = "Go to next subtitle";
         GeneralGoToNextSubtitlePlayTranslate = "Go to next subtitle (play translate)";

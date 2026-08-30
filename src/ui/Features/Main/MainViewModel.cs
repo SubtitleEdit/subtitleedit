@@ -301,6 +301,12 @@ public partial class MainViewModel :
     /// <summary>Whether the original text column may be written to (see <see cref="IsOriginalReadOnly"/>).</summary>
     public bool CanEditOriginal => ShowColumnOriginalText && !IsOriginalReadOnly;
 
+    /// <summary>
+    /// Whether the video preview and the waveform show the original text instead of the translation
+    /// (see <see cref="ToggleOriginalTextInPreviewCommand"/>). Never true without an original.
+    /// </summary>
+    public bool ShowOriginalTextInPreview { get; private set; }
+
     public string OriginalTextLabel => IsOriginalReadOnly
         ? Se.Language.Main.OriginalTextReadOnly
         : IsEditOriginalMode
@@ -3534,6 +3540,43 @@ public partial class MainViewModel :
         _shortcutManager.ClearKeys();
     }
 
+    /// <summary>
+    /// SE4 parity (MainEditToggleTranslationOriginalInPreviews): show the original text instead of
+    /// the translation in the video preview and in the waveform (#14252). Session state, not a
+    /// saved setting: it only means anything while an original is loaded, and a remembered "on"
+    /// would start the next session with a blank preview and no visible way back.
+    /// </summary>
+    [RelayCommand]
+    private void ToggleOriginalTextInPreview()
+    {
+        if (!ShowColumnOriginalText)
+        {
+            _shortcutManager.ClearKeys();
+            return;
+        }
+
+        SetOriginalTextInPreview(!ShowOriginalTextInPreview);
+
+        ShowStatus(string.Format(
+            Se.Language.Main.VideoAndWaveformPreviewTextX,
+            ShowOriginalTextInPreview ? Se.Language.General.OriginalText : Se.Language.General.Translation));
+
+        _shortcutManager.ClearKeys();
+    }
+
+    private void SetOriginalTextInPreview(bool showOriginal)
+    {
+        ShowOriginalTextInPreview = showOriginal;
+
+        if (AudioVisualizer != null)
+        {
+            AudioVisualizer.ShowOriginalText = showOriginal;
+        }
+
+        _mpvPreviewDirty = true;
+        _updateAudioVisualizer = true;
+    }
+
     [RelayCommand]
     private async Task FileCloseTranslation()
     {
@@ -3659,14 +3702,14 @@ public partial class MainViewModel :
                 _mpvReloader.Reset();
                 // Through RunPreviewRefresh so a rejected push (player just recreated, mpv not
                 // playing yet) arms the dirty-flag retry instead of being lost (#13407).
-                _ = RunPreviewRefresh(() => _mpvReloader.RefreshMpv(mpv, GetUpdateSubtitle(), _subtitleSecondary, SelectedSubtitleFormat));
+                _ = RunPreviewRefresh(() => _mpvReloader.RefreshMpv(mpv, GetVideoPreviewSubtitle(), _subtitleSecondary, SelectedSubtitleFormat));
             }
             else if (vp.VideoPlayer is LibVlcDynamicPlayer vlc)
             {
                 _vlcReloader.Reset();
                 _ = RunPreviewRefresh(async () =>
                 {
-                    await _vlcReloader.RefreshVlc(vlc, GetUpdateSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
+                    await _vlcReloader.RefreshVlc(vlc, GetVideoPreviewSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
                     return true;
                 });
             }
@@ -12223,12 +12266,12 @@ public partial class MainViewModel :
             if (vp.VideoPlayer is LibMpvDynamicPlayer mpv)
             {
                 _mpvReloader.Reset();
-                _mpvReloader.RefreshMpv(mpv, GetUpdateSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
+                _mpvReloader.RefreshMpv(mpv, GetVideoPreviewSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
             }
             else if (vp.VideoPlayer is LibVlcDynamicPlayer vlc)
             {
                 _vlcReloader.Reset();
-                _vlcReloader.RefreshVlc(vlc, GetUpdateSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
+                _vlcReloader.RefreshVlc(vlc, GetVideoPreviewSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
             }
         }
 
@@ -22818,6 +22861,45 @@ public partial class MainViewModel :
         return _subtitle;
     }
 
+    /// <summary>
+    /// The subtitle the video preview should render: the working subtitle, or - with "toggle
+    /// translation and original in video/audio preview" on - the original text (#14252). The
+    /// original variant goes into a throw-away subtitle rather than through
+    /// <see cref="GetUpdateSubtitleOriginal"/>: that one owns <see cref="_subtitleOriginal"/>, the
+    /// instance that gets saved, and re-stamps every row's reference id - far too much for
+    /// something a timer calls whenever the preview is dirty.
+    /// </summary>
+    private Subtitle GetVideoPreviewSubtitle()
+    {
+        if (!ShowOriginalTextInPreview)
+        {
+            return GetUpdateSubtitle();
+        }
+
+        var subtitle = new Subtitle
+        {
+            Header = _subtitle.Header,
+            Footer = _subtitle.Footer,
+            OriginalFormat = _subtitle.OriginalFormat,
+            FileName = _subtitle.FileName,
+        };
+
+        foreach (var line in Subtitles)
+        {
+            // Rows with no original line contribute nothing here - including the read-only
+            // reference rows, which are the original's non-matching lines and so belong in this
+            // one (unlike in GetUpdateSubtitle, which must leave them out).
+            if (string.IsNullOrEmpty(line.OriginalText))
+            {
+                continue;
+            }
+
+            subtitle.Paragraphs.Add(line.ToParagraphOriginal(SelectedSubtitleFormat));
+        }
+
+        return subtitle;
+    }
+
     public Subtitle GetUpdateSubtitleOriginal(bool subtractVideoOffset = false)
     {
         _subtitleOriginal ??= new Subtitle();
@@ -27752,6 +27834,13 @@ public partial class MainViewModel :
         {
             MakeSubtitleTextInfoOriginal(SelectedSubtitle.OriginalText, SelectedSubtitle);
         }
+
+        // Without an original there is no original text to preview - leaving the flag set would
+        // blank out the waveform text and the video preview (SE4 cleared it the same way).
+        if (!value && ShowOriginalTextInPreview)
+        {
+            SetOriginalTextInPreview(false);
+        }
     }
 
     private void MakeSubtitleTextInfoOriginal(string text, SubtitleLineViewModel item)
@@ -28670,7 +28759,7 @@ public partial class MainViewModel :
 
         if (vp.VideoPlayer is LibMpvDynamicPlayer mpv)
         {
-            var subtitle = GetUpdateSubtitle();
+            var subtitle = GetVideoPreviewSubtitle();
             _mpvPreviewDirty = false; // clear only after subtitle snapshot is successfully obtained
             if (hideLayers)
             {
@@ -28681,7 +28770,7 @@ public partial class MainViewModel :
         }
         else if (vp.VideoPlayer is LibVlcDynamicPlayer vlc)
         {
-            var subtitle = GetUpdateSubtitle();
+            var subtitle = GetVideoPreviewSubtitle();
             _mpvPreviewDirty = false; // clear only after subtitle snapshot is successfully obtained
             if (hideLayers)
             {

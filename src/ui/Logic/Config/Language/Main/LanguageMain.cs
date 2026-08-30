@@ -77,6 +77,7 @@ public class LanguageMain
     public string UnbreakHint { get; set; }
     public string UndoPerformed { get; set; }
     public string UndoPerformedXActionLeft { get; set; }
+    public string VideoAndWaveformPreviewTextX { get; set; }
     public string XLinesCopiedFromOriginal { get; set; }
     public string XLinesMerged { get; set; }
     public string XLinesSelectedOfY { get; set; }
@@ -230,6 +231,7 @@ public class LanguageMain
         UnbreakHint = "Unbreak selected lines";
         UndoPerformed = "Undo performed";
         UndoPerformedXActionLeft = "Undo performed (actions left: {0})";
+        VideoAndWaveformPreviewTextX = "Video/waveform preview: {0}";
         XLinesCopiedFromOriginal = "{0} lines copied from original subtitle";
         XLinesMerged = "{0} lines merged";
         XLinesSelectedOfY = "{0} lines selected of {1}";

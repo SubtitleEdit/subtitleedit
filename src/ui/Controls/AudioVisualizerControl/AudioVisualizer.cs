@@ -218,6 +218,11 @@ public class AudioVisualizer : Control
     public bool FocusOnMouseOver { get; set; } = true;
     public int WaveformHeightPercentage { get; set; } = 50;
 
+    // Draw the original text instead of the translation - "toggle translation and original in
+    // video/audio preview" (#14252). Only the main window sets it, and only while an original
+    // subtitle is loaded; the dialogs that host a waveform keep showing the text they were given.
+    public bool ShowOriginalText { get; set; }
+
     // Lets the wheel handler ask the host whether the video is playing, so a plain scroll in
     // "center video position" mode can turn into a seek that keeps the play-head centered
     // (#12864). Hosts without a video player (or that never set this) keep plain scrolling.
@@ -3369,8 +3374,10 @@ public class AudioVisualizer : Control
         context.DrawLine(_paintLeft, new Point(currentRegionLeft, 0), new Point(currentRegionLeft, height));
         context.DrawLine(_paintRight, new Point(currentRegionRight - 1, 0), new Point(currentRegionRight - 1, height));
 
-        // Draw clipped text (prepared text + shaped FormattedText are cached; see GetCachedParagraphText)
-        var prepared = GetPreparedParagraphText(paragraph.Text);
+        // Draw clipped text (prepared text + shaped FormattedText are cached; see GetCachedParagraphText).
+        // With "toggle translation and original in video/audio preview" on, the waveform shows the
+        // original text like SE4 did (#14252).
+        var prepared = GetPreparedParagraphText(ShowOriginalText ? paragraph.OriginalText : paragraph.Text);
 
         var textBounds = new Rect(currentRegionLeft + 1, 0, currentRegionWidth - 3, height);
 
