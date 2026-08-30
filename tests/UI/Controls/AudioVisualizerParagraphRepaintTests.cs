@@ -27,8 +27,23 @@ namespace UITests.Controls;
 /// shows the right time range with nothing in it. The reload a tick later fixed the list but not
 /// the picture.
 /// </summary>
-public class AudioVisualizerParagraphRepaintTests
+public class AudioVisualizerParagraphRepaintTests : IDisposable
 {
+    // A window left open outlives the test: it keeps the application-wide activation and focused
+    // element, so a later test's click or key press is delivered to it instead. Closing here rather
+    // than at the end of each test also covers the tests that stop early on a failed assertion.
+    private readonly List<Window> _windows = new();
+
+    public void Dispose()
+    {
+        foreach (var window in _windows)
+        {
+            window.Close();
+        }
+
+        _windows.Clear();
+    }
+
     private const int SampleRate = 126; // px per second at zoom 1
     private const double WidthPx = 800;
     private const double HeightPx = 200;
@@ -67,6 +82,7 @@ public class AudioVisualizerParagraphRepaintTests
             Content = av,
         };
 
+        _windows.Add(window);
         window.Show();
         window.UpdateLayout();
 
@@ -115,6 +131,7 @@ public class AudioVisualizerParagraphRepaintTests
             Content = av,
         };
 
+        _windows.Add(window);
         window.Show();
         window.UpdateLayout();
 

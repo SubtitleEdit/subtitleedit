@@ -11,6 +11,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace UITests.Features.Edit;
@@ -21,14 +22,29 @@ namespace UITests.Features.Edit;
 /// next key press and the second Ctrl+Up moved the category instead (#14136). These tests drive
 /// the real window, because the bug lives in the container lookup, not in the reorder itself.
 /// </summary>
-public class MultipleReplaceMoveFocusTests
+public class MultipleReplaceMoveFocusTests : IDisposable
 {
+    // A window left open outlives the test: it keeps the application-wide activation and focused
+    // element, so a later test's click or key press is delivered to it instead. Closing here rather
+    // than at the end of each test also covers the tests that stop early on a failed assertion.
+    private readonly List<Window> _windows = new();
+
+    public void Dispose()
+    {
+        foreach (var window in _windows)
+        {
+            window.Close();
+        }
+
+        _windows.Clear();
+    }
+
     private sealed class NullServiceProvider : IServiceProvider
     {
         public object? GetService(Type serviceType) => null;
     }
 
-    private static (MultipleReplaceViewModel Vm, Window Window) Open()
+    private (MultipleReplaceViewModel Vm, Window Window) Open()
     {
         var vm = new MultipleReplaceViewModel(new WindowService(new NullServiceProvider()), new FileHelper());
         vm.Nodes.Clear();
@@ -56,6 +72,7 @@ public class MultipleReplaceMoveFocusTests
         vm.Initialize(subtitle);
 
         var window = new MultipleReplaceWindow(vm);
+        _windows.Add(window);
         window.Show();
         window.UpdateLayout();
         Dispatcher.UIThread.RunJobs();
