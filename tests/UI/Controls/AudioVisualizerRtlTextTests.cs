@@ -82,8 +82,16 @@ public class AudioVisualizerRtlTextTests
 
     /// <summary>
     /// And the direction really reaches the shaping: the same string drawn right to left comes out
-    /// as a different picture (same width - the direction only reorders the glyphs).
+    /// as a different picture.
     /// </summary>
+    /// <remarks>
+    /// Only the picture, not the width. This used to also assert that the two directions measure
+    /// the same, and that made the test flaky: a trailing neutral run ("...") measures wider laid
+    /// out right to left than left to right (about a tenth of the line here), and how much wider
+    /// depends on which font the Arabic falls back to - which in turn depends on what else ran
+    /// first in the shared headless application. Avalonia promises no such equality, and nothing
+    /// in the waveform compares the two directions, so the width was never the point.
+    /// </remarks>
     [AvaloniaFact]
     public void TheDirectionChangesWhatIsDrawn()
     {
@@ -91,7 +99,6 @@ public class AudioVisualizerRtlTextTests
         var rightToLeft = av.GetCachedParagraphText(ArabicLine, true);
         var leftToRight = av.GetCachedParagraphText(ArabicLine, false);
 
-        Assert.Equal(leftToRight.Width, rightToLeft.Width, 3);
         Assert.NotEqual(Render(leftToRight), Render(rightToLeft));
     }
 

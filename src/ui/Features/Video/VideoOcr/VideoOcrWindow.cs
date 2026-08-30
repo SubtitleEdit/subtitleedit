@@ -571,7 +571,11 @@ public class VideoOcrWindow : Window
         };
         menuItemItalic.Click += (_, _) =>
         {
-            VideoOcrViewModel.ToggleItalic(tableView.SelectedItems.OfType<VideoOcrLineItem>().ToList());
+            var selected = tableView.SelectedItems?.OfType<VideoOcrLineItem>().ToList();
+            if (selected != null)
+            {
+                VideoOcrViewModel.ToggleItalic(selected);
+            }
         };
         flyout.Items.Add(menuItemItalic);
 
@@ -581,7 +585,11 @@ public class VideoOcrWindow : Window
         };
         menuItemDelete.Click += (_, _) =>
         {
-            vm.DeleteLines(tableView.SelectedItems.OfType<VideoOcrLineItem>().ToList());
+            var selected = tableView.SelectedItems?.OfType<VideoOcrLineItem>().ToList();
+            if (selected != null)
+            {
+                vm.DeleteLines(selected);
+            }
         };
         flyout.Items.Add(menuItemDelete);
 

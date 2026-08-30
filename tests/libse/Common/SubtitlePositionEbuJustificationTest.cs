@@ -25,7 +25,7 @@ public class SubtitlePositionEbuJustificationTest
         return Ebu.ReadHeader(buffer).ToString();
     }
 
-    private static Paragraph Positioned(int justificationCode, string teletextRow, string text = "Hello world", bool usePositions = true)
+    private static Paragraph Positioned(int justificationCode, string? teletextRow, string text = "Hello world", bool usePositions = true)
     {
         var settings = Configuration.Settings.SubtitleSettings;
         var oldJustification = settings.EbuStlJustificationCode;
@@ -52,7 +52,7 @@ public class SubtitlePositionEbuJustificationTest
         }
     }
 
-    private static string Position(int justificationCode, string teletextRow, string text = "Hello world")
+    private static string Position(int justificationCode, string? teletextRow, string text = "Hello world")
     {
         return Positioned(justificationCode, teletextRow, text).Text;
     }

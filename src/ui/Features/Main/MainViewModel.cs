@@ -20977,13 +20977,13 @@ public partial class MainViewModel :
                                                                               "You can open media files via the Video menu.");
                     return;
                 }
+            }
 
-                if (subtitle == null)
-                {
-                    var message = Se.Language.General.UnknownSubtitleFormat;
-                    await MessageBox.Show(Window!, Se.Language.General.Error, message, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
+            if (subtitle == null)
+            {
+                var message = Se.Language.General.UnknownSubtitleFormat;
+                await MessageBox.Show(Window!, Se.Language.General.Error, message, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
 
             if (!skipLoadVideo)
@@ -20996,14 +20996,15 @@ public partial class MainViewModel :
             AudioVisualizer?.StartPositionSeconds = 0;
             AudioVisualizer?.CurrentVideoPositionSeconds = 0;
 
-            SetSubtitleFormat(SubtitleFormats.FirstOrDefault(p => p.Name == subtitle?.OriginalFormat?.Name) ??
+            var loadedFormatName = subtitle.OriginalFormat?.Name;
+            SetSubtitleFormat(SubtitleFormats.FirstOrDefault(p => p.Name == loadedFormatName) ??
                               SelectedSubtitleFormat);
 
             // The STL header declares the frame rate the timecodes were authored in, so the
             // HH:MM:SS:FF display (forced on for EBU STL) shows the file's own frame numbers.
             // Skipped when the header's disk format code is unreadable - the frame rate would
             // just be a guessed fallback then (#14076). A video loaded later still wins.
-            if (subtitle?.OriginalFormat is Ebu ebuFormat &&
+            if (subtitle.OriginalFormat is Ebu ebuFormat &&
                 ebuFormat.Header is { } ebuHeader &&
                 ebuHeader.DiskFormatCode != null &&
                 ebuHeader.DiskFormatCode.StartsWith("STL", StringComparison.Ordinal) &&
@@ -23343,11 +23344,11 @@ public partial class MainViewModel :
             return false;
         }
 
+        _subtitleOriginal ??= new Subtitle();
         var oldSubtitleFileNameOriginal = _subtitleFileNameOriginal;
         var oldSubtitleOriginalFileName = _subtitleOriginal.FileName;
 
         _subtitleFileNameOriginal = fileName;
-        _subtitleOriginal ??= new Subtitle();
         _subtitleOriginal.FileName = fileName;
 
         // _lastOpenSaveFormat belongs to the *main* subtitle - SaveSubtitle compares it against

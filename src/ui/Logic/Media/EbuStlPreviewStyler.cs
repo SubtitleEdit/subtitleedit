@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic.Config;
 using SkiaSharp;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Nikse.SubtitleEdit.Logic.Media;
 
@@ -21,7 +22,7 @@ internal static class EbuStlPreviewStyler
     /// True when <paramref name="header"/> is the verbatim GSI block Ebu.LoadSubtitle keeps:
     /// 3 characters of code page number, then the disk format code ("STL25.01").
     /// </summary>
-    public static bool IsStlHeader(string header)
+    public static bool IsStlHeader([NotNullWhen(true)] string? header)
     {
         return header != null && header.Length > 20 && header.AsSpan(3, 3).SequenceEqual("STL");
     }
