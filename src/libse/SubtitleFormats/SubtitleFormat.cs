@@ -258,6 +258,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new JsonType21(),
                     new JsonType22(),
                     new JsonType23(),
+                    new WistiaJson(),
                     new KanopyHtml(),
                     new LambdaCap(),
                     new Lrc(),
@@ -314,6 +315,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new SonyDVDArchitectLineDurationLength(),
                     new SonyDVDArchitectTabs(),
                     new SonyDVDArchitectWithLineNumbers(),
+                    new SonicDvdProducer(), // after Adobe Encore w. line# - same layout, this one only takes the column-padded files
+                    new Spc(), // before TMPlayer - TMPlayer reads "00:00:05:25&..." as its own "h:mm:ss:text" and keeps the rest as text
                     new Speechmatics(),
                     new Spruce(),
                     new SpruceWithSpace(),
