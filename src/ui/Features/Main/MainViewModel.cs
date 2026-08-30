@@ -16416,6 +16416,7 @@ public partial class MainViewModel :
             }
         };
         _fullScreenVideoPlayerControl.StopRequested += OnVideoPlayerStopRequested;
+        _fullScreenVideoPlayerControl.PositionChanged += OnVideoPlayerPositionSet;
         var toggleKeys = Se.Settings.Shortcuts
             .FirstOrDefault(s => s.ActionName == nameof(VideoFullScreenCommand))?.Keys;
         var showMediaInfoKeys = Se.Settings.Shortcuts
@@ -29498,6 +29499,27 @@ public partial class MainViewModel :
         PinPlayheadTo(newPosition);
 
         _updateAudioVisualizer = true;
+    }
+
+    /// <summary>
+    /// Raised for every seek that reaches the player through the control's Position/slider path -
+    /// the direct "vp.Position = x" writes (bookmarks, shot changes, seek silence, go-to-line...)
+    /// that never go through <see cref="PinPlayheadTo"/>. An armed "one frame with play" blip
+    /// would survive such a seek and, when it ends a moment later, pause the video and yank it
+    /// back to the blip's anchor frame - swallowing the navigation. The blip's playback is
+    /// transient, so stop it and let the seek win.
+    /// </summary>
+    internal void OnVideoPlayerPositionSet(double newPositionSeconds)
+    {
+        if (_frameStepPlayBlipping)
+        {
+            // The blip started this playback and its end (which would have paused) will never
+            // run - pause here so the foreign seek lands on a paused player, like the frame
+            // step it interrupted.
+            GetVideoPlayerControl()?.VideoPlayer.Pause();
+        }
+
+        CancelFrameStepPlayBlip();
     }
 
     internal void OnVideoPlayerUserSeeked(double newPositionSeconds)

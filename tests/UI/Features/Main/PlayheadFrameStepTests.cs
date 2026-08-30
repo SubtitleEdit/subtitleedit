@@ -239,6 +239,30 @@ public class PlayheadFrameStepTests : IDisposable
     }
 
     [AvaloniaFact]
+    public void FrameStepWithPlay_Blip_IsDroppedAndPausedByADirectPositionSeek()
+    {
+        // Bookmarks, shot changes, seek-silence and friends write vp.Position directly - no pin,
+        // no cancel. The control reports those writes through PositionChanged (wired to
+        // OnVideoPlayerPositionSet), which must stop the blip's transient playback and drop the
+        // blip, or its end pauses the video and yanks it back to the blip's anchor frame.
+        var (vm, vp, player) = MakeViewModelWithPlayer(startSeconds: 1.0);
+
+        StepOneFrameWithPlay(vm, forward: true);
+        Assert.True(player.IsPlaying);
+
+        vm.OnVideoPlayerPositionSet(30.0);
+        player.Position = 30.0;
+
+        Assert.False(player.IsPlaying);
+        Assert.False(GetField<bool>(vm, "_frameStepPlayBlipping"));
+
+        // And a late blip tick can no longer park the player back on the anchor.
+        player.PlaybackRestartTimestamp = Stopwatch.GetTimestamp();
+        UpdateBlip(vm, vp);
+        Assert.Equal(30.0, player.Position, 4);
+    }
+
+    [AvaloniaFact]
     public void KeyboardNudgeSeek_PinsTheCursorToTheTargetImmediately()
     {
         // MoveVideoPositionMs / snapped frame steps route through SetVideoPositionSeconds. It

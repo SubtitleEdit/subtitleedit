@@ -25,6 +25,12 @@ public partial class SetVideoOffsetViewModel : ObservableObject
     private Action<TimeSpan, bool, bool>? _applyCallback;
     private Action? _resetCallback;
 
+    // Whether the current inputs have already been applied, so OK after Apply just closes. In
+    // "relative to current video position" mode a re-apply is not idempotent while the video
+    // plays: it would recompute against the moved position and silently replace the offset (and
+    // shift baked time codes) the user just verified.
+    private bool _appliedWithCurrentInput;
+
     public Window? Window { get; set; }
 
     public SetVideoOffsetViewModel()
@@ -61,7 +67,11 @@ public partial class SetVideoOffsetViewModel : ObservableObject
             return;
         }
 
-        ApplyCurrentOffset();
+        if (!_appliedWithCurrentInput)
+        {
+            ApplyCurrentOffset();
+        }
+
         Window?.Close();
     }
 
@@ -104,6 +114,10 @@ public partial class SetVideoOffsetViewModel : ObservableObject
         // The typed offset is remembered, not the one "relative to current video position"
         // computed from it - the typed one is what the user would want to pick again.
         AddToHistory(offset);
+
+        // Last: the history sync above can echo a rounded value back into TimeOffset, which
+        // would clear the flag again right after it was set.
+        _appliedWithCurrentInput = true;
     }
 
     private void LoadHistory()
@@ -176,7 +190,18 @@ public partial class SetVideoOffsetViewModel : ObservableObject
 
     partial void OnTimeOffsetChanged(TimeSpan? value)
     {
+        _appliedWithCurrentInput = false;
         SyncSelectedHistoryItem();
+    }
+
+    partial void OnRelativeToCurrentVideoPositionChanged(bool value)
+    {
+        _appliedWithCurrentInput = false;
+    }
+
+    partial void OnKeepTimeCodesChanged(bool value)
+    {
+        _appliedWithCurrentInput = false;
     }
 
     partial void OnSelectedOffsetHistoryItemChanged(VideoOffsetHistoryItem? value)

@@ -68,6 +68,42 @@ public class SetVideoOffsetViewModelTests
         Assert.Equal(NineFiftyNineForty, recorder.Applied[0].Offset);
     }
 
+    // OK after Apply with untouched inputs must only close - in "relative to current video
+    // position" mode a second apply recomputes against a playback position that has moved on,
+    // silently replacing the offset the user just verified.
+    [Fact]
+    public void Ok_AfterApplyWithUnchangedInput_DoesNotApplyAgain()
+    {
+        using var _ = new SettingsScope("General.VideoOffsetHistoryInMs");
+        Se.Settings.General.VideoOffsetHistoryInMs = new List<long>();
+        var recorder = new Recorder();
+        var vm = recorder.NewViewModel();
+
+        vm.TimeOffset = TenHours;
+        vm.RelativeToCurrentVideoPosition = true;
+        vm.ApplyCommand.Execute(null);
+        vm.OkCommand.Execute(null);
+
+        Assert.Single(recorder.Applied);
+    }
+
+    [Fact]
+    public void Ok_AfterApplyWithChangedInput_AppliesTheNewValue()
+    {
+        using var _ = new SettingsScope("General.VideoOffsetHistoryInMs");
+        Se.Settings.General.VideoOffsetHistoryInMs = new List<long>();
+        var recorder = new Recorder();
+        var vm = recorder.NewViewModel();
+
+        vm.TimeOffset = TenHours;
+        vm.ApplyCommand.Execute(null);
+        vm.TimeOffset = NineFiftyNineForty;
+        vm.OkCommand.Execute(null);
+
+        Assert.Equal(2, recorder.Applied.Count);
+        Assert.Equal(NineFiftyNineForty, recorder.Applied[1].Offset);
+    }
+
     [Fact]
     public void Reset_ClearsTheOffsetFieldAndCallsBack()
     {
