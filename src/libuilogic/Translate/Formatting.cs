@@ -37,6 +37,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Translate
         private string Font { get; set; } = string.Empty;
         private bool ItalicTwoLines { get; set; }
         private string StartTags { get; set; } = string.Empty;
+        private string EndTags { get; set; } = string.Empty;
         private bool AutoBreak { get; set; }
         private bool SquareBrackets { get; set; }
         private bool SquareBracketsUppercase { get; set; }
@@ -69,6 +70,22 @@ namespace Nikse.SubtitleEdit.UiLogic.Translate
 
                 StartTags += text.Substring(0, endIndex + 1);
                 text = text.Remove(0, endIndex + 1).Trim();
+            }
+
+            // Trailing SSA/ASS tags. Only leading blocks used to be taken off, so a block at the
+            // end ("Overboard{\fad(200,200)}") travelled to the engine, where it costs tokens and
+            // comes back "normalized" by small models (#13927). Taking it off here also lets the
+            // italic/font/bracket checks below see the real end of the text.
+            while (text.EndsWith('}'))
+            {
+                var startIndex = text.LastIndexOf("{\\", StringComparison.Ordinal);
+                if (startIndex < 0 || text.IndexOf('}', startIndex) != text.Length - 1)
+                {
+                    break; // no opening block, or the '}' belongs to an earlier block
+                }
+
+                EndTags = text.Substring(startIndex) + EndTags;
+                text = text.Remove(startIndex).Trim();
             }
 
             // ASSA reset tag
@@ -223,7 +240,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Translate
             }
 
             // SSA/ASS tags
-            text = StartTags + text;
+            text = StartTags + text + EndTags;
 
             return text;
         }

@@ -22,6 +22,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
+using Nikse.SubtitleEdit.UiLogic.Translate;
 
 namespace Nikse.SubtitleEdit.Features.Tools.AiReview;
 
