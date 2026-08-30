@@ -98,6 +98,66 @@
             return (byte)(r & 0x0f);
         }
 
+        // ETS 300 706, chapter 8.3 - where the eighteen data bits D1-D18 sit in a code word.
+        private static readonly int[] Hamming2418DataBits =
+        {
+            2, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22
+        };
+
+        // The protection bits P1-P5 take the power of two positions; P6 is bit 23.
+        private static readonly int[] Hamming2418ProtectionBits = { 0, 1, 3, 7, 15 };
+
+        /// <summary>
+        /// ETS 300 706, chapter 8.3 - Hamming 24/18 encodes eighteen bits into the three bytes of
+        /// a triplet, the inverse of <see cref="UnHamming2418"/>.
+        /// </summary>
+        public static int Hamming2418Encode(int value)
+        {
+            var result = 0;
+            for (var i = 0; i < Hamming2418DataBits.Length; i++)
+            {
+                if (((value >> i) & 1) != 0)
+                {
+                    result |= 1 << Hamming2418DataBits[i];
+                }
+            }
+
+            // Tests A-E are odd parity checks over the bits whose one based position has the
+            // matching bit set, so those positions have to add up to 0x1f - the five protection
+            // bits, one per power of two, carry whatever the data bits leave missing.
+            var syndrome = 0x1f;
+            for (var i = 0; i < 23; i++)
+            {
+                if (((result >> i) & 1) != 0)
+                {
+                    syndrome ^= i + 1;
+                }
+            }
+
+            for (var i = 0; i < Hamming2418ProtectionBits.Length; i++)
+            {
+                if (((syndrome >> i) & 1) != 0)
+                {
+                    result |= 1 << Hamming2418ProtectionBits[i];
+                }
+            }
+
+            // Test F: the whole code word carries an odd number of ones, so a single bit error
+            // can be told from a double one.
+            var ones = 0;
+            for (var i = 0; i < 24; i++)
+            {
+                ones += (result >> i) & 1;
+            }
+
+            if (ones % 2 == 0)
+            {
+                result |= 1 << 23;
+            }
+
+            return result;
+        }
+
         // ETS 300 706, chapter 8.3 - Hamming 24/18
         public static uint UnHamming2418(int a)
         {

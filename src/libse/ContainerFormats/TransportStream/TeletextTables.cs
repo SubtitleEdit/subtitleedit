@@ -1,4 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
+﻿using System.Collections.Generic;
+
+namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 {
     public class TeletextTables
     {
@@ -397,5 +399,124 @@
                 0x0000, 0x0000, 0x0000, 0x017e
             }
         };
+
+        // --- Reverse lookups, used when writing teletext -------------------------------
+
+        /// <summary>
+        /// X/26 mode for a character taken from the G2 supplementary set, ETS 300 706 table 27.
+        /// </summary>
+        public const byte G2Mode = 0x0f;
+
+        /// <summary>
+        /// The first of the fifteen X/26 modes that put a diacritical mark on a G0 letter.
+        /// </summary>
+        public const byte FirstDiacriticalMarkMode = 0x11;
+
+        /// <summary>
+        /// How a character that no G0 cell can hold is put on screen: an X/26 triplet naming
+        /// either a G2 character or a G0 letter that carries a diacritical mark.
+        /// </summary>
+        public struct G2Replacement
+        {
+            /// <summary>X/26 mode - <see cref="G2Mode"/>, or 0x11-0x1f for a diacritical mark.</summary>
+            public byte Mode { get; }
+
+            /// <summary>The G2 code, or the plain letter the diacritical mark belongs to.</summary>
+            public byte Data { get; }
+
+            public G2Replacement(byte mode, byte data)
+            {
+                Mode = mode;
+                Data = data;
+            }
+        }
+
+        private static readonly Dictionary<int, byte> LatinG0Codes = BuildLatinG0Codes();
+        private static readonly Dictionary<int, G2Replacement> G2Replacements = BuildG2Replacements();
+
+        /// <summary>
+        /// Finds the seven bit code of a character in the default Latin G0 set. Teletext is not
+        /// ASCII: "#" is 0x5f, 0x23 is "£", and "[", "]" and "{" to "~" have no code at all.
+        /// </summary>
+        public static bool TryGetLatinG0Code(int codePoint, out byte code)
+        {
+            return LatinG0Codes.TryGetValue(codePoint, out code);
+        }
+
+        /// <summary>
+        /// Reads a code from the default Latin G0 set, i.e. the one a national option sub-set has
+        /// not been patched into. Packet X/26 uses it to reach the characters that the sub-set in
+        /// force has given away - "@" on a German page, for one.
+        /// </summary>
+        public static int GetDefaultLatinG0(int code)
+        {
+            var index = code - 0x20;
+            return index >= 0 && index < G0LatinPristine.Length ? G0LatinPristine[index] : 0x20;
+        }
+
+        /// <summary>
+        /// Finds the X/26 triplet that puts a character on screen, i.e. the inverse of what a
+        /// decoder does with the enhancement modes <see cref="G2Mode"/> and 0x11-0x1f.
+        /// </summary>
+        public static bool TryGetG2Replacement(int codePoint, out G2Replacement replacement)
+        {
+            return G2Replacements.TryGetValue(codePoint, out replacement);
+        }
+
+        private static Dictionary<int, byte> BuildLatinG0Codes()
+        {
+            // The pristine row, so a decode that remapped a national option sub-set in the
+            // meantime cannot change what gets written.
+            var result = new Dictionary<int, byte>();
+            for (var i = 0; i < G0LatinPristine.Length; i++)
+            {
+                // "-" sits at both 0x2d and 0x60, and the lower code is the portable one.
+                if (G0LatinPristine[i] != 0 && !result.ContainsKey(G0LatinPristine[i]))
+                {
+                    result.Add(G0LatinPristine[i], (byte)(0x20 + i));
+                }
+            }
+
+            return result;
+        }
+
+        private static Dictionary<int, G2Replacement> BuildG2Replacements()
+        {
+            var result = new Dictionary<int, G2Replacement>();
+
+            // A letter with a diacritical mark comes first: it is what broadcasters send, and it
+            // leaves the plain letter in the row for a decoder that ignores the enhancement.
+            for (var mark = 0; mark < G2Accents.GetLength(0); mark++)
+            {
+                for (var i = 0; i < G2Accents.GetLength(1); i++)
+                {
+                    var codePoint = G2Accents[mark, i];
+                    var letter = i < 26 ? 'A' + i : 'a' + i - 26;
+                    if (codePoint != 0 && !result.ContainsKey(codePoint))
+                    {
+                        result.Add(codePoint, new G2Replacement((byte)(FirstDiacriticalMarkMode + mark), (byte)letter));
+                    }
+                }
+            }
+
+            for (var i = 0; i < G2.GetLength(1); i++)
+            {
+                var codePoint = G2[0, i];
+
+                // The unused slots, the two further spaces, and the standalone combining marks -
+                // none of them stands for a character worth writing.
+                if (codePoint == 0 || codePoint == 0x0020 || (codePoint >= 0x0300 && codePoint <= 0x036f))
+                {
+                    continue;
+                }
+
+                if (!result.ContainsKey(codePoint))
+                {
+                    result.Add(codePoint, new G2Replacement(G2Mode, (byte)(0x20 + i)));
+                }
+            }
+
+            return result;
+        }
     }
 }

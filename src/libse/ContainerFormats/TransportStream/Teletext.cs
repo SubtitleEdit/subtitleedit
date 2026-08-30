@@ -632,6 +632,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                         }
                     }
 
+                    // ETS 300 706, chapter 12.3.1, table 27: G0 character without diacritical
+                    // mark - used to place a character the national option sub-set in force has
+                    // given away, so it must not fall through to the Level 1 row.
+                    if (mode == 0x10 && !rowAddressGroup && data >= 0x20)
+                    {
+                        _pageBuffer.Text[x26Row, (int)address2] = TeletextTables.GetDefaultLatinG0((int)data);
+                    }
+
                     // ETS 300 706, chapter 12.3.1, table 27: G0 character with diacritical mark
                     if (mode >= 0x11 && mode <= 0x1f && !rowAddressGroup)
                     {
@@ -644,9 +652,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                         {
                             _pageBuffer.Text[x26Row, x26Col] = TeletextTables.G2Accents[mode - 0x11, data - 71];
                         }
-                        else // other
+                        else // a mark on something that is not a letter - show the bare character
                         {
-                            _pageBuffer.Text[x26Row, x26Col] = TelxToUcs2((byte)data);
+                            // The data field carries no parity bit, so TelxToUcs2 would reject it.
+                            _pageBuffer.Text[x26Row, x26Col] = TeletextTables.GetDefaultLatinG0((int)data);
                         }
                     }
                 }
