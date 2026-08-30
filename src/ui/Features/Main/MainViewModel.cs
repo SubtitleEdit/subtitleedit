@@ -202,6 +202,7 @@ using System.Xml.Linq;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 using Nikse.SubtitleEdit.UiLogic.Media;
 using Nikse.SubtitleEdit.UiLogic.Common;
+using Nikse.SubtitleEdit.UiLogic.Translate;
 
 namespace Nikse.SubtitleEdit.Features.Main;
 

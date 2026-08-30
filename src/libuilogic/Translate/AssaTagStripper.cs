@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace Nikse.SubtitleEdit.Features.Tools.AiReview;
+namespace Nikse.SubtitleEdit.UiLogic.Translate;
 
 /// <summary>
 /// Keeps ASSA override blocks ("{\pos(946.5,250.8)\fs54\1c&amp;HFDF9AA&amp;}") away from the model
