@@ -176,6 +176,14 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
+            foreach (var format in SubtitleFormat.AllSubtitleFormats)
+            {
+                if (format.AlternateNames.Contains(friendlyName))
+                {
+                    return format;
+                }
+            }
+
             return null;
         }
 
