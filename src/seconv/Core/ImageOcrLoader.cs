@@ -124,11 +124,14 @@ internal static class ImageOcrLoader
                 var subtitle = new Subtitle();
                 foreach (var dvb in dvbSubtitles)
                 {
-                    done++;
+                    // Reported before the image is recognised, so the count is images
+                    // *finished* - 100% must not show while the last one is still running.
                     if (showProgress)
                     {
                         ProgressLine.Report("OCR", done, dvbSubtitles.Count);
                     }
+
+                    done++;
 
                     var bitmap = dvb.GetBitmap();
                     if (bitmap is null)
@@ -166,6 +169,7 @@ internal static class ImageOcrLoader
 
                 if (showProgress)
                 {
+                    ProgressLine.Report("OCR", dvbSubtitles.Count, dvbSubtitles.Count);
                     ProgressLine.Finish();
                 }
 
@@ -304,11 +308,13 @@ internal static class ImageOcrLoader
         var done = 0;
         foreach (var item in items)
         {
-            done++;
+            // Reported before the image is recognised, so the count is images *finished*.
             if (showProgress)
             {
                 ProgressLine.Report("OCR", done, items.Count);
             }
+
+            done++;
 
             string text;
             if (ocr is null)
@@ -338,6 +344,7 @@ internal static class ImageOcrLoader
 
         if (showProgress)
         {
+            ProgressLine.Report("OCR", items.Count, items.Count);
             ProgressLine.Finish();
         }
 
@@ -369,11 +376,13 @@ internal static class ImageOcrLoader
 
         foreach (var pcs in pcsList)
         {
-            done++;
+            // Reported before the image is recognised, so the count is images *finished*.
             if (showProgress)
             {
                 ProgressLine.Report("OCR", done, pcsList.Count);
             }
+
+            done++;
 
             var bitmap = pcs.GetBitmap();
             if (bitmap is null)
@@ -411,6 +420,7 @@ internal static class ImageOcrLoader
 
         if (showProgress)
         {
+            ProgressLine.Report("OCR", pcsList.Count, pcsList.Count);
             ProgressLine.Finish();
         }
 

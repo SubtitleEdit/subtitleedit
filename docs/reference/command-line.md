@@ -259,9 +259,11 @@ An AVI stream header carries no language, so a multi-stream `.avi` names its out
 
 Run `seconv list-ocr-engines` for the per-engine installation-status table.
 
-Long OCR runs report progress on one rewritten line - `  OCR 42/345 (12%)...` - counting the
-images of the current source (per PID for TS DVB-sub, per track for MKV). Auto-translate reports
-the same way (`  Translated 42/345 (12%)...`). Both are suppressed by `--quiet` and `--json`.
+Long OCR runs report progress as images *finished* of the current source (per PID for TS
+DVB-sub, per track for MKV). On a terminal this rewrites a single line - `  OCR 42/345 (12%)...`;
+when stdout is a pipe or a file it prints one plain line per 10% instead, so a log of a
+5000-image run holds ten lines rather than one endless one. Auto-translate reports the same way
+(`  Translated 42/345 (12%)...`). Both are suppressed by `--quiet` and `--json`.
 
 ```bash
 # Tesseract
