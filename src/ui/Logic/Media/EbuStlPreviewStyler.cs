@@ -28,6 +28,19 @@ internal static class EbuStlPreviewStyler
     }
 
     /// <summary>
+    /// True when the subtitle in the video preview is still an EBU STL.
+    /// </summary>
+    /// <remarks>
+    /// The GSI block stays on the subtitle when the format is switched in the toolbar, so the
+    /// header on its own says only which file the subtitle was read from - a subtitle shown as
+    /// SubRip must lose the teletext box and the double height with the format.
+    /// </remarks>
+    public static bool IsStlPreview([NotNullWhen(true)] string? header, Type? uiFormatType)
+    {
+        return uiFormatType == typeof(Ebu) && IsStlHeader(header);
+    }
+
+    /// <summary>
     /// Replaces the preview header with a boxed and an unboxed style and points every paragraph at
     /// the right one.
     /// </summary>

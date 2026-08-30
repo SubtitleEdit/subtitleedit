@@ -112,6 +112,22 @@ public class SubtitlePositionToAssaTest
         Assert.Null(p.MarginV);
     }
 
+    // The header of the file a subtitle was read from stays on it when the format is switched in
+    // the toolbar, so a subtitle now shown as SubRip asks for the positioning to be left off - see
+    // SubtitleFormat.HasPositionSupport.
+    [Fact]
+    public void TtmlRegionIsIgnoredWhenPositionsAreOff()
+    {
+        var subtitle = SubtitleWith(ParagraphWithRegion("Hi there!", "top"));
+
+        Assert.False(SubtitlePositionToAssa.ApplyPositions(subtitle, TtmlHeader, false));
+
+        var p = subtitle.Paragraphs[0];
+        Assert.Equal("Hi there!", p.Text);
+        Assert.Null(p.MarginV);
+        Assert.Null(p.MarginL);
+    }
+
     [Fact]
     public void PacPercentageBecomesAMargin()
     {

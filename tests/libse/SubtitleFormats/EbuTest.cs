@@ -265,4 +265,21 @@ public class EbuTest
     {
         Assert.Null(Ebu.GetNearestColorName(color));
     }
+
+    // Switching the format in the toolbar (or converting in batch convert) leaves the STL specific
+    // bits behind: the box tags used to show up as text in the video preview and in the saved file,
+    // and a teletext row in MarginV counts as an ASSA pixel margin.
+    [Fact]
+    public void RemoveNativeFormatting_DropsBoxTagsAndTeletextRows()
+    {
+        var subtitle = new Subtitle();
+        subtitle.Paragraphs.Add(new Paragraph("<box>Hello world</box>", 1000, 3000) { MarginV = "20" });
+        subtitle.Paragraphs.Add(new Paragraph("<i>Second line</i>", 4000, 6000) { MarginV = "18" });
+
+        new Ebu().RemoveNativeFormatting(subtitle, new SubRip());
+
+        Assert.Equal("Hello world", subtitle.Paragraphs[0].Text);
+        Assert.Equal("<i>Second line</i>", subtitle.Paragraphs[1].Text);
+        Assert.All(subtitle.Paragraphs, p => Assert.Null(p.MarginV));
+    }
 }

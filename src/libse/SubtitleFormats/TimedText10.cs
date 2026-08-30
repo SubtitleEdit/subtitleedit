@@ -23,6 +23,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => NameOfFormat;
 
+        // Carries the region of every paragraph, and the regions themselves in the header.
+        public override bool HasPositionSupport => true;
+
         public static string TtmlNamespace => "http://www.w3.org/ns/ttml";
         public static string TtmlParameterNamespace => "http://www.w3.org/ns/ttml#parameter";
         public static string TtmlStylingNamespace => "http://www.w3.org/ns/ttml#styling";

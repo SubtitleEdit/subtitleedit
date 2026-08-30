@@ -15,6 +15,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         public override string Name => "Timed Text IMSC Rosetta";
 
+        // Carries the region of every paragraph, and the regions themselves in the header.
+        public override bool HasPositionSupport => true;
+
         public static string LineHeight = "125%";
         public static string FontSize = "5.3rh";
         public static string Language = string.Empty;

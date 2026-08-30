@@ -17,6 +17,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         public override string Name => "Timed Text IMSC 1.1";
 
+        // Carries the region of every paragraph, and the regions themselves in the header.
+        public override bool HasPositionSupport => true;
+
         private static string GetXmlStructure()
         {
             return @"<?xml version='1.0' encoding='UTF-8'?>

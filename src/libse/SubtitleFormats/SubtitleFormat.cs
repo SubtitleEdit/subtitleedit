@@ -608,6 +608,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public virtual bool HasStyleSupport => false;
 
         /// <summary>
+        /// True when the format says where a line sits on the video - TTML regions, EBU STL teletext
+        /// rows or PAC's vertical percentage - and keeps it on the paragraphs (Region, Effect or
+        /// MarginV) and in the header.
+        /// </summary>
+        /// <remarks>
+        /// The video preview asks before it turns any of that into ASSA alignment and margins (see
+        /// <see cref="Common.SubtitlePositionToAssa"/>): the header and the paragraph fields of the
+        /// file a subtitle was read from survive a format change in the toolbar, so a subtitle now
+        /// shown as SubRip would otherwise keep the layout of a format it has left.
+        /// </remarks>
+        public virtual bool HasPositionSupport => false;
+
+        /// <summary>
         /// Hard limits the format enforces when writing (e.g. CEA-608's 32 columns x 4 rows). A format
         /// that declares them lets the UI warn before a save silently re-wraps or truncates text
         /// that does not fit. Null means no such limits.
