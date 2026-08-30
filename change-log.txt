@@ -3,6 +3,35 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-beta29 (30th of August 2026)
+
+* Add configurable "Search via X" shortcuts, with a "Search via" submenu in the text box context menu - thx kadrimarzouki
+* Add "toggle translation and original in video/audio preview" shortcut - thx Surlime
+* Add shortcut to copy the text of the selected lines to the original - thx hisui3393
+* Add macOS "Look up" to the subtitle text box context menu - thx routineCode
+* Video offset: remember recently used offsets, and an "Apply" that keeps the window open - thx kadrimarzouki
+* EBU STL: a font picker with a preview sample in the save options, color shortcuts snapping to the nearest teletext color, and clearer labels in the teletext alignment dialog
+* Waveform: give right-to-left text the direction its letters ask for - thx kadrimarzouki
+* seconv: per-image OCR progress, and percentages on OCR and translate - thx gmariani
+* Fix the waveform cursor drifting off the frame when stepping forward - thx rookes
+* Fix "one frame forward/back (with play)" not stepping smoothly - thx rookes
+* Fix waveform seek drift at SMPTE frame rates, unpinned nudges and a mixed-up blip clock - thx Davanix
+* Fix the mpv seek target being dropped after a click in the waveform - thx Davanix
+* Fix Compare no longer scrolling the two grids together - thx Davanix
+* Fix the subtitle grid not centering on the last prev/next-line paths - thx St0rmXtr00per
+* Fix the blank waveform and the rest of the rewinding after leaving Settings - thx GrampaWildWilly
+* Fix .dvbttx files with a preamble over 200 KB reading back as empty
+* Fix a translation being re-split inside a number - thx fraternl
+* Fix WebVTT cues placed in different vertical bands being merged - thx MrAnter
+* Fix six more bugs found in a code sweep
+* Update Bulgarian translation - thx jekovcar
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+* Update Persian translation - thx rmtjokar
+* Update Russian translation - thx jekovcar
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-beta28 (29th of August 2026)
 
 * Read and write Manzanita DVB teletext files (.dvbttx) - thx René
