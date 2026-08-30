@@ -661,10 +661,10 @@ public class AssaStylesWindow : Window
             [!Image.SourceProperty] = new Binding(nameof(vm.ImagePreview)),
             DataContext = vm,
             HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Top,
+            VerticalAlignment = VerticalAlignment.Stretch,
             Stretch = Stretch.Uniform, // Scale the preview frame to fit while keeping aspect ratio
+            // No MaxHeight - the preview grows with the window via the star row it sits in
             MinHeight = 150,
-            MaxHeight = 220,
         };
 
         grid.Add(label, 0);
