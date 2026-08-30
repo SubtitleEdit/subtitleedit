@@ -28,6 +28,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             xmlAsString = xmlAsString.RemoveControlCharactersButWhiteSpace();
 
+            if (xmlAsString.Contains("<timedtext", StringComparison.OrdinalIgnoreCase))
+            {
+                return false; // YouTube timed text (srv3/.ytt) - see YouTubeTimedText
+            }
+
             if (xmlAsString.Contains("profile/imsc1"))
             {
                 var f = new TimedTextImsc11();

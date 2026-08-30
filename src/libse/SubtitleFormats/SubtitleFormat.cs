@@ -259,6 +259,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new JsonType22(),
                     new JsonType23(),
                     new WistiaJson(),
+                    new JsonType24(),
                     new KanopyHtml(),
                     new LambdaCap(),
                     new Lrc(),
@@ -455,7 +456,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new UnknownSubtitle79(),
                     new UnknownSubtitle80(),
                     new UnknownSubtitle81(),
-                    new UnknownSubtitle82(),
+                    new YouTubeTimedText(),
                     new UnknownSubtitle83(),
                     new UnknownSubtitle84(),
                     new UnknownSubtitle85(),
@@ -552,6 +553,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         }
 
         public virtual List<string> AlternateExtensions => new List<string>();
+
+        /// <summary>
+        /// Names this format used to be called. Settings store formats by name
+        /// (DefaultSubtitleFormat, FavoriteSubtitleFormats), so renaming a format would
+        /// otherwise silently drop it from an existing user's default and favorites.
+        /// </summary>
+        public virtual List<string> AlternateNames => new List<string>();
 
         public static int MillisecondsToFrames(double milliseconds)
         {
@@ -844,6 +852,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     format.FriendlyName.Trim().Equals(trimmedFormatName, StringComparison.OrdinalIgnoreCase))
                 {
                     return format;
+                }
+            }
+
+            foreach (var format in AllSubtitleFormats)
+            {
+                foreach (var alternateName in format.AlternateNames)
+                {
+                    if (alternateName.Trim().Equals(trimmedFormatName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return format;
+                    }
                 }
             }
 
