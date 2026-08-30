@@ -10,6 +10,7 @@ using Avalonia.Threading;
 using Nikse.SubtitleEdit.Features.Files.Compare;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Optris.Icons.Avalonia;
 using System;
 using System.Collections.ObjectModel;
 
@@ -57,12 +58,14 @@ public class CompareWindow : Window
         var panelLeftBrowse = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Children = { buttonLeftFileName, labelLeftFileName, labelLeftFileNameHasChanges },
+            Spacing = 4,
+            Children = { buttonLeftFileName, MakeIcon(IconNames.FileOutline), labelLeftFileName, labelLeftFileNameHasChanges },
         };
         grid.Add(panelLeftBrowse, 0);
 
         var buttonRightFileName = UiUtil.MakeButtonBrowse(vm.PickRightSubtitleFileCommand, accessibleName: Se.Language.General.OpenSubtitleFileTitle);
         var buttonRightReload = UiUtil.MakeButton(string.Format(Se.Language.File.LoadXFromFile, System.IO.Path.GetFileName(vm.LeftFileName)), vm.ReloadRightFromFileCommand)
+            .WithIconLeft(IconNames.Refresh)
             .WithBindIsVisible(nameof(vm.IsReloadFromFileVisible));
         var labelRightFileName = new TextBlock
         {
@@ -73,7 +76,8 @@ public class CompareWindow : Window
         var panelRightBrowse = new StackPanel()
         {
             Orientation = Orientation.Horizontal,
-            Children = { buttonRightFileName, buttonRightReload, labelRightFileName },
+            Spacing = 4,
+            Children = { buttonRightFileName, buttonRightReload, MakeIcon(IconNames.FileOutline), labelRightFileName },
         };
         grid.Add(panelRightBrowse, 0, 1);
 
@@ -85,52 +89,73 @@ public class CompareWindow : Window
         var rightView = MakeSubtitlesView(vm.RightSubtitles, nameof(vm.SelectedRight), vm.FileGridOnDragOver, vm.FileGridOnDropRight);
         grid.Add(rightView, 1, 1);
 
-        // status text
+        // status text on the left, color legend for the difference highlighting on the right
         var statusText = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.StatusText));
-        grid.Add(statusText, 2, 0, 1, 2);
+        statusText.VerticalAlignment = VerticalAlignment.Center;
+        var panelLegend = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 0, 10, 0), // line up with the button bar's right edge
+            Children =
+            {
+                MakeLegendSwatch(CompareColors.OnlyInOneFile, Se.Language.File.CompareOnlyInOneFile),
+                MakeLegendSwatch(CompareColors.TextOrTimeDifference, Se.Language.File.CompareTextOrTimeDifference),
+                MakeLegendSwatch(CompareColors.NumberDifference, Se.Language.File.CompareNumberDifference),
+            },
+        };
+        grid.Add(MakeTwoColumnBar(statusText, panelLegend), 2, 0, 1, 2);
 
-        // display type combo box
+        // what to display + the two compare options
         var labelDisplayType = UiUtil.MakeLabel(Se.Language.General.Show).WithMarginRight(5);
         var comboBoxCompareVisual = UiUtil.MakeComboBox(vm.CompareVisuals, vm, nameof(vm.SelectedCompareVisual));
         comboBoxCompareVisual.SelectionChanged += vm.ComboBoxCompareVisualSelectionChanged;
-        var panelDisplayType = new StackPanel
+        var checkBoxIgnoreWhiteSpace = UiUtil.MakeCheckBox(Se.Language.File.IgnoreWhitespace, vm, nameof(vm.IgnoreWhiteSpace))
+            .WithMarginLeft(20);
+        checkBoxIgnoreWhiteSpace.IsCheckedChanged += vm.CheckBoxChanged;
+        AddHint(checkBoxIgnoreWhiteSpace, Se.Language.File.IgnoreWhitespaceHint);
+        var checkBoxIgnoreFormatting = UiUtil.MakeCheckBox(Se.Language.File.IgnoreFormatting, vm, nameof(vm.IgnoreFormatting))
+            .WithMarginLeft(14);
+        checkBoxIgnoreFormatting.IsCheckedChanged += vm.CheckBoxChanged;
+        AddHint(checkBoxIgnoreFormatting, Se.Language.File.IgnoreFormattingHint);
+        var panelOptions = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Spacing = 4,
-            Children = { labelDisplayType, comboBoxCompareVisual },
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children =
+            {
+                MakeIcon(IconNames.Filter),
+                labelDisplayType,
+                comboBoxCompareVisual,
+                checkBoxIgnoreWhiteSpace,
+                checkBoxIgnoreFormatting,
+            },
         };
 
-        // color legend for the difference highlighting
-        panelDisplayType.Children.Add(MakeLegendSwatch(CompareColors.OnlyInOneFile, Se.Language.File.CompareOnlyInOneFile));
-        panelDisplayType.Children.Add(MakeLegendSwatch(CompareColors.TextOrTimeDifference, Se.Language.File.CompareTextOrTimeDifference));
-        panelDisplayType.Children.Add(MakeLegendSwatch(CompareColors.NumberDifference, Se.Language.File.CompareNumberDifference));
-        grid.Add(panelDisplayType, 3, 0, 1, 2);
-
         // buttons
-        CheckBox checkBoxIgnoreWhiteSpace = UiUtil.MakeCheckBox(Se.Language.File.IgnoreWhitespace, vm, nameof(vm.IgnoreWhiteSpace))
-            .WithMarginLeft(10);
-        checkBoxIgnoreWhiteSpace.IsCheckedChanged += vm.CheckBoxChanged;
-        var checkBoxIgnoreFormatting = UiUtil.MakeCheckBox(Se.Language.File.IgnoreFormatting, vm, nameof(vm.IgnoreFormatting))
-            .WithMarginLeft(10).WithMarginRight(15);
-        checkBoxIgnoreFormatting.IsCheckedChanged += vm.CheckBoxChanged;
         var buttonPreviousDifference = UiUtil.MakeButton(vm.PreviousDifferenceCommand, IconNames.ChevronLeft, Se.Language.File.PreviousDifference).WithBindIsVisible(nameof(vm.IsExportVisible));
         var buttonNextDifference = UiUtil.MakeButton(vm.NextDifferenceCommand, IconNames.ChevronRight, Se.Language.File.NextDifference).WithBindIsVisible(nameof(vm.IsExportVisible));
         // Bound like its two neighbours: with only one side loaded (which is how Tools > Compare
         // always opens) the collections are never padded to equal length, and Export indexes the
         // right-hand list by the left-hand count.
         var buttonExport = UiUtil.MakeButton(Se.Language.General.Export, vm.ExportCommand)
+            .WithIconLeft(IconNames.Export)
             .WithBindIsVisible(nameof(vm.IsExportVisible))
             .WithMarginLeft(15);
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var panelButtons = UiUtil.MakeButtonBar(
-            checkBoxIgnoreWhiteSpace,
-            checkBoxIgnoreFormatting,
             buttonPreviousDifference,
             buttonNextDifference,
             buttonExport,
             buttonOk
             );
-        grid.Add(panelButtons, 3, 0, 1, 2);
+
+        // One row holding both: the two used to be dropped on top of each other in the same cell,
+        // which only stayed readable while the left group was short enough to clear the buttons.
+        grid.Add(MakeTwoColumnBar(panelOptions, panelButtons), 3, 0, 1, 2);
 
         Content = grid;
 
@@ -157,8 +182,51 @@ public class CompareWindow : Window
             vm.ScrollSync = new TableViewScrollSync(vm.LeftGrid, vm.RightGrid);
         }
 
-        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Closing += delegate
+        {
+            UiUtil.SaveWindowPosition(this);
+            vm.SaveSettings(); // the compare options are remembered between sessions (#14299)
+        };
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
+    }
+
+    /// <summary>Left group and right group in one row, so a wide left group cannot overlap the buttons.</summary>
+    private static Grid MakeTwoColumnBar(Control left, Control right)
+    {
+        var bar = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition(GridLength.Star),
+                new ColumnDefinition(GridLength.Auto),
+            },
+        };
+
+        bar.Add(left, 0);
+        bar.Add(right, 0, 1);
+
+        return bar;
+    }
+
+    private static ContentControl MakeIcon(string iconName)
+    {
+        var icon = new ContentControl
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            Opacity = 0.75,
+        };
+
+        Attached.SetIcon(icon, iconName);
+
+        return icon;
+    }
+
+    private static void AddHint(Control control, string hint)
+    {
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            UiUtil.AttachHoverTooltip(control, hint);
+        }
     }
 
     private static Control MakeLegendSwatch(Color color, string label)

@@ -24,7 +24,9 @@ public class LanguageFile
     public string CompareTextOrTimeDifference { get; set; }
     public string CompareNumberDifference { get; set; }
     public string IgnoreWhitespace { get; set; }
+    public string IgnoreWhitespaceHint { get; set; }
     public string IgnoreFormatting { get; set; }
+    public string IgnoreFormattingHint { get; set; }
     public string ShowOnlyDifferencesInText { get; set; }
     public string LoadXFromFile { get; set; }
     public string SaveCompareHtmlTitle { get; set; }
@@ -62,7 +64,9 @@ public class LanguageFile
         CompareNumberDifference = "Number difference";
         ShowOnlyDifferencesInText = "Only differences in text";
         IgnoreWhitespace = "Ignore whitespace";
+        IgnoreWhitespaceHint = "Lines that differ only in spaces, tabs or line breaks do not count as different";
         IgnoreFormatting = "Ignore formatting";
+        IgnoreFormattingHint = "Lines that differ only in formatting tags, like <i> or {\\an8}, do not count as different";
         LoadXFromFile = "Load \"{0}\" from file";
         SaveCompareHtmlTitle = "Save compare HTML file";
         PickMatroskaTrackX = "Pick Matroska track - {0}";
