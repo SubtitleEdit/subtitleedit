@@ -376,29 +376,29 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
     private void LoadLibMpvMethods()
     {
-        _mpvCreate = (MpvCreate)GetDllType(typeof(MpvCreate), "mpv_create");
-        _mpvInitialize = (MpvInitialize)GetDllType(typeof(MpvInitialize), "mpv_initialize");
-        _mpvWaitEvent = (MpvWaitEvent)GetDllType(typeof(MpvWaitEvent), "mpv_wait_event");
-        _mpvObserveProperty = (MpvObserveProperty)GetDllType(typeof(MpvObserveProperty), "mpv_observe_property");
-        _mpvWakeup = (MpvWakeup)GetDllType(typeof(MpvWakeup), "mpv_wakeup");
-        _mpvCommand = (MpvCommand)GetDllType(typeof(MpvCommand), "mpv_command");
-        _mpvCommandAsync = (MpvCommandAsync)GetDllType(typeof(MpvCommandAsync), "mpv_command_async");
-        _mpvSetOption = (MpvSetOption)GetDllType(typeof(MpvSetOption), "mpv_set_option");
-        _mpvSetOptionString = (MpvSetOptionString)GetDllType(typeof(MpvSetOptionString), "mpv_set_option_string");
-        _mpvGetPropertyString = (MpvGetPropertyString)GetDllType(typeof(MpvGetPropertyString), "mpv_get_property");
-        _mpvGetPropertyDouble = (MpvGetPropertyDouble)GetDllType(typeof(MpvGetPropertyDouble), "mpv_get_property");
-        _mpvGetPropertyFlag = (MpvGetPropertyFlag)GetDllType(typeof(MpvGetPropertyFlag), "mpv_get_property");
-        _mpvSetProperty = (MpvSetProperty)GetDllType(typeof(MpvSetProperty), "mpv_set_property");
-        _mpvFree = (MpvFree)GetDllType(typeof(MpvFree), "mpv_free");
-        _mpvClientApiVersion = (MpvClientApiVersion)GetDllType(typeof(MpvClientApiVersion), "mpv_client_api_version");
-        _mpvErrorString = (MpvErrorString)GetDllType(typeof(MpvErrorString), "mpv_error_string");
-        _mpvTerminateDestroy = (MpvTerminateDestroy)GetDllType(typeof(MpvTerminateDestroy), "mpv_terminate_destroy");
+        _mpvCreate = (MpvCreate?)GetDllType(typeof(MpvCreate), "mpv_create");
+        _mpvInitialize = (MpvInitialize?)GetDllType(typeof(MpvInitialize), "mpv_initialize");
+        _mpvWaitEvent = (MpvWaitEvent?)GetDllType(typeof(MpvWaitEvent), "mpv_wait_event");
+        _mpvObserveProperty = (MpvObserveProperty?)GetDllType(typeof(MpvObserveProperty), "mpv_observe_property");
+        _mpvWakeup = (MpvWakeup?)GetDllType(typeof(MpvWakeup), "mpv_wakeup");
+        _mpvCommand = (MpvCommand?)GetDllType(typeof(MpvCommand), "mpv_command");
+        _mpvCommandAsync = (MpvCommandAsync?)GetDllType(typeof(MpvCommandAsync), "mpv_command_async");
+        _mpvSetOption = (MpvSetOption?)GetDllType(typeof(MpvSetOption), "mpv_set_option");
+        _mpvSetOptionString = (MpvSetOptionString?)GetDllType(typeof(MpvSetOptionString), "mpv_set_option_string");
+        _mpvGetPropertyString = (MpvGetPropertyString?)GetDllType(typeof(MpvGetPropertyString), "mpv_get_property");
+        _mpvGetPropertyDouble = (MpvGetPropertyDouble?)GetDllType(typeof(MpvGetPropertyDouble), "mpv_get_property");
+        _mpvGetPropertyFlag = (MpvGetPropertyFlag?)GetDllType(typeof(MpvGetPropertyFlag), "mpv_get_property");
+        _mpvSetProperty = (MpvSetProperty?)GetDllType(typeof(MpvSetProperty), "mpv_set_property");
+        _mpvFree = (MpvFree?)GetDllType(typeof(MpvFree), "mpv_free");
+        _mpvClientApiVersion = (MpvClientApiVersion?)GetDllType(typeof(MpvClientApiVersion), "mpv_client_api_version");
+        _mpvErrorString = (MpvErrorString?)GetDllType(typeof(MpvErrorString), "mpv_error_string");
+        _mpvTerminateDestroy = (MpvTerminateDestroy?)GetDllType(typeof(MpvTerminateDestroy), "mpv_terminate_destroy");
 
         // Load render API functions
-        _mpvRenderContextCreate = (MpvRenderContextCreate)GetDllType(typeof(MpvRenderContextCreate), "mpv_render_context_create");
-        _mpvRenderContextRender = (MpvRenderContextRender)GetDllType(typeof(MpvRenderContextRender), "mpv_render_context_render");
-        _mpvRenderContextFree = (MpvRenderContextFree)GetDllType(typeof(MpvRenderContextFree), "mpv_render_context_free");
-        _mpvRenderContextSetUpdateCallback = (MpvRenderContextSetUpdateCallback)GetDllType(typeof(MpvRenderContextSetUpdateCallback), "mpv_render_context_set_update_callback");
+        _mpvRenderContextCreate = (MpvRenderContextCreate?)GetDllType(typeof(MpvRenderContextCreate), "mpv_render_context_create");
+        _mpvRenderContextRender = (MpvRenderContextRender?)GetDllType(typeof(MpvRenderContextRender), "mpv_render_context_render");
+        _mpvRenderContextFree = (MpvRenderContextFree?)GetDllType(typeof(MpvRenderContextFree), "mpv_render_context_free");
+        _mpvRenderContextSetUpdateCallback = (MpvRenderContextSetUpdateCallback?)GetDllType(typeof(MpvRenderContextSetUpdateCallback), "mpv_render_context_set_update_callback");
     }
 
     private object? GetDllType(Type type, string name)

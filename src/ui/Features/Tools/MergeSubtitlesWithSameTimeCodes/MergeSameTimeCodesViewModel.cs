@@ -116,7 +116,7 @@ public partial class MergeSameTimeCodesViewModel : ObservableObject, IClosingCle
             }
 
             var next = _subtitles[i];
-            if (QualifiesForMerge(p, next, MaxMillisecondsDifference) && IsFixAllowed(p))
+            if (p != null && QualifiesForMerge(p, next, MaxMillisecondsDifference) && IsFixAllowed(p))
             {
                 if (!singleMergeSubtitles.Contains(p))
                 {

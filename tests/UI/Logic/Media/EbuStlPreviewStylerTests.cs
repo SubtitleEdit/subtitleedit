@@ -149,7 +149,7 @@ public class EbuStlPreviewStylerTests
     [InlineData("", false)]
     [InlineData("short", false)]
     [InlineData("850STL25.01 and then some padding to get past twenty characters", true)]
-    public void OnlyAGsiBlockIsTreatedAsStl(string header, bool expected)
+    public void OnlyAGsiBlockIsTreatedAsStl(string? header, bool expected)
     {
         Assert.Equal(expected, EbuStlPreviewStyler.IsStlHeader(header));
     }

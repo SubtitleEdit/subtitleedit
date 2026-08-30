@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
+using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Features.Main;
@@ -87,7 +88,7 @@ public class AudioVisualizerOriginalTextTests
 
         using var frame = window.CaptureRenderedFrame()!;
         using var stream = new MemoryStream();
-        frame.Save(stream);
+        frame.Save(stream, PngBitmapEncoderOptions.Default);
         return stream.ToArray();
     }
 }

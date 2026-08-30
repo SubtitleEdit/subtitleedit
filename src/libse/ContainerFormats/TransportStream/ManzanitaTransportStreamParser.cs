@@ -220,6 +220,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         /// more than the 200 KB that used to be read in one go. A preamble that did not fit was
         /// reported as "no packets at all" and the file then opened as nothing, with no error.
         /// </remarks>
+        /// <param name="ms">The stream to read from, positioned at the start of the file.</param>
         /// <param name="bytesRead">Bytes actually in the returned buffer.</param>
         /// <param name="endTagIndex">Index of the end tag, or -1 when there is none.</param>
         private static byte[] ReadPreamble(Stream ms, out int bytesRead, out int endTagIndex)

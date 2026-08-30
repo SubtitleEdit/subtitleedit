@@ -132,9 +132,9 @@ public static  class CursorPositionHelper
             {
                 // The high bit is "down now". VK_L/RBUTTON are physical buttons, so a swapped
                 // primary button still lands on one of the three.
-                return ((GetAsyncKeyState(VkLButton) |
-                         GetAsyncKeyState(VkRButton) |
-                         GetAsyncKeyState(VkMButton)) & 0x8000) != 0;
+                return (((ushort)GetAsyncKeyState(VkLButton) |
+                         (ushort)GetAsyncKeyState(VkRButton) |
+                         (ushort)GetAsyncKeyState(VkMButton)) & 0x8000) != 0;
             }
 
             if (OperatingSystem.IsMacOS())
