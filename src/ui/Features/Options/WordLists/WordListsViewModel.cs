@@ -432,6 +432,14 @@ public partial class WordListsViewModel : ObservableObject
             result.Add(new OcrFixItem(item.Key, item.Value));
         }
 
+        // AddWordOrPartial routes any "find" containing a space into the partial-line list, so
+        // reading only the whole-word list left those entries invisible here - saved, but
+        // impossible to see or remove from this window.
+        foreach (var item in list.PartialLineWordBoundaryReplaceList)
+        {
+            result.Add(new OcrFixItem(item.Key, item.Value));
+        }
+
         result.Sort((a, b) => string.Compare(a.Find, b.Find, StringComparison.OrdinalIgnoreCase));
 
         return result;

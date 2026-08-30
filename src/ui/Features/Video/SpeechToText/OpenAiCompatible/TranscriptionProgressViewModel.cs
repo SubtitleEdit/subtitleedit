@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Text;
 using System.Threading;
 
@@ -51,7 +52,7 @@ public partial class TranscriptionProgressViewModel : ObservableObject
     {
         Dispatcher.UIThread.Post(() =>
         {
-            ReceivedSegments.Add($"[{TimeSpan.FromSeconds(start):mm\\:ss\\.fff} -> {TimeSpan.FromSeconds(end):mm\\:ss\\.fff}] {segmentText}");
+            ReceivedSegments.Add($"[{FormatTimestamp(start)} -> {FormatTimestamp(end)}] {segmentText}");
             SegmentCount = ReceivedSegments.Count;
         });
     }
@@ -63,6 +64,16 @@ public partial class TranscriptionProgressViewModel : ObservableObject
             IsCompleted = true;
             StatusText = Se.Language.General.TranscriptionComplete;
         });
+    }
+
+    // "mm\\:ss\\.fff" drops whole hours - every segment past the first hour of a long file was
+    // shown at the same wrong minute. Only spend the hours field when there are hours.
+    private static string FormatTimestamp(double seconds)
+    {
+        var time = TimeSpan.FromSeconds(seconds);
+        return time.TotalHours >= 1
+            ? time.ToString(@"h\:mm\:ss\.fff", CultureInfo.InvariantCulture)
+            : time.ToString(@"mm\:ss\.fff", CultureInfo.InvariantCulture);
     }
 
     [RelayCommand]

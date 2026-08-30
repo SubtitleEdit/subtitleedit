@@ -265,7 +265,9 @@ public class OpenAiSttService : ISttTranscriber
         string eventType = "";
         var dataBuilder = new StringBuilder();
 
-        while ((line = await reader.ReadLineAsync()) != null)
+        // Pass the token: without it a server that opens the stream and then stalls blocks here
+        // forever, and the per-call timeout never fires.
+        while ((line = await reader.ReadLineAsync(cancellationToken)) != null)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -374,6 +376,16 @@ public class OpenAiSttService : ISttTranscriber
             else if (eventType == "transcript.text.done")
             {
                 var doneObj = JsonSerializer.Deserialize<TranscriptDone>(data, options);
+
+                // The done event carries the complete transcript. Servers that stream nothing but
+                // this final event (and any run whose deltas were dropped as malformed) left
+                // fullText empty, so the whole transcription came back blank.
+                if (fullText.Length == 0 && !string.IsNullOrEmpty(doneObj?.Text))
+                {
+                    fullText.Append(doneObj.Text);
+                    progress?.Report(doneObj.Text);
+                }
+
                 if (doneObj?.Segments != null && doneObj.Segments.Count > 0)
                 {
                     if (segments.Count == 0)

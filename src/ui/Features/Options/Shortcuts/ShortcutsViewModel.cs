@@ -471,7 +471,7 @@ public partial class ShortcutsViewModel : ObservableObject
                 string.Format(Se.Language.Options.Shortcuts.ImportFromSe4XImportedYSkipped,
                     importResult.Shortcuts.Count,
                     System.IO.Path.GetFileName(fileName),
-                    importResult.SkippedNoMapping),
+                    importResult.SkippedNoMapping + importResult.SkippedDuplicate),
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         catch (Exception ex)

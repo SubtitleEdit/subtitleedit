@@ -518,7 +518,10 @@ public partial class MultipleReplaceViewModel : ObservableObject
     [RelayCommand]
     private async Task CategoryAddCategory(RuleTreeNode? node)
     {
-        var category = new RuleTreeNode(node, string.Empty, new ObservableCollection<RuleTreeNode>(), true);
+        // Categories are always top-level (they are added to, removed from and reordered inside
+        // Nodes), so the new one has no parent - passing the node whose context menu was used
+        // left a root category claiming another category as its Parent.
+        var category = new RuleTreeNode(null, string.Empty, new ObservableCollection<RuleTreeNode>(), true);
         var result = await _windowService.ShowDialogAsync<EditCategoryWindow, EditCategoryViewModel>(Window!,
             vm =>
             {
