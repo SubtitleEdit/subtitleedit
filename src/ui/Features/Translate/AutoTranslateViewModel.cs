@@ -2523,10 +2523,71 @@ public partial class AutoTranslateViewModel : ObservableObject
         {
             Cancel();
         }
+        else if (e.Key == Key.Enter && e.KeyModifiers == KeyModifiers.None)
+        {
+            RunDefaultButton(e);
+        }
         else if (UiUtil.IsHelp(e))
         {
             e.Handled = true;
             UiUtil.ShowHelp("features/auto-translate");
+        }
+    }
+
+    /// <summary>
+    /// The row grid marks Enter as handled without doing anything with it, so a key press made
+    /// with a line selected never reached the window. Take it while the event tunnels down when
+    /// the grid has the keyboard - everything else that uses Enter (a focused button, an open
+    /// combo box drop-down) is left alone and answered by <see cref="KeyDown"/> on the way back up.
+    /// </summary>
+    public void PreviewKeyDown(KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter && e.KeyModifiers == KeyModifiers.None && RowGrid?.IsKeyboardFocusWithin == true)
+        {
+            RunDefaultButton(e);
+        }
+    }
+
+    internal enum DefaultButtonAction
+    {
+        None,
+        Translate,
+        Ok,
+    }
+
+    /// <summary>
+    /// What Enter does in the window - the same rule that gives one of the footer buttons the
+    /// accent colour: Translate until something has been translated, then OK. Nothing while a
+    /// translation is running, as both buttons are disabled then.
+    /// </summary>
+    internal DefaultButtonAction GetDefaultButtonAction()
+    {
+        if (IsOkPrimary)
+        {
+            return DefaultButtonAction.Ok;
+        }
+
+        return IsTranslatePrimary ? DefaultButtonAction.Translate : DefaultButtonAction.None;
+    }
+
+    /// <summary>
+    /// Avalonia has no WinForms-style AcceptButton, so the accented button only looked like the
+    /// default one: Enter did nothing unless that button also had keyboard focus. Anything that
+    /// uses Enter itself - a focused button, an open combo box drop-down - has already marked the
+    /// key handled before it reaches the window.
+    /// </summary>
+    private void RunDefaultButton(KeyEventArgs e)
+    {
+        switch (GetDefaultButtonAction())
+        {
+            case DefaultButtonAction.Ok:
+                e.Handled = true;
+                Ok();
+                break;
+            case DefaultButtonAction.Translate:
+                e.Handled = true;
+                TranslateCommand.Execute(null);
+                break;
         }
     }
 
