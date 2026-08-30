@@ -1,4 +1,5 @@
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Features.Files.Compare;
@@ -74,6 +75,14 @@ internal static class CompareColors
         return null;
     }
 
+    /// <summary>
+    /// Immutable, and deliberately so: a <see cref="SolidColorBrush"/> is an AvaloniaObject and
+    /// belongs to the thread it was built on, while these six live in static fields whose
+    /// initializer runs wherever <see cref="CompareColors"/> is first touched. Reading one of the
+    /// colors off the UI thread was therefore enough to make every later compare row throw
+    /// "the calling thread cannot access this object" out of the renderer - and an exception
+    /// thrown inside a render job leaves the compositor broken for good.
+    /// </summary>
     private static IBrush MakeRowBrush(Color color)
-        => new SolidColorBrush(Color.FromArgb(RowAlpha, color.R, color.G, color.B));
+        => new ImmutableSolidColorBrush(Color.FromArgb(RowAlpha, color.R, color.G, color.B));
 }
