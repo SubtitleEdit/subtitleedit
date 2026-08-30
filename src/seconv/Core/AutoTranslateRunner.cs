@@ -382,13 +382,13 @@ internal sealed class AutoTranslateRunner
         var doTranslate = new DoAutoTranslate();
         if (!_options.Quiet)
         {
-            doTranslate.Progress = (done, total) => Console.Write($"\r  Translated {done}/{total} lines...");
+            doTranslate.Progress = (done, total) => ProgressLine.Report("Translated", done, total);
         }
 
         var rows = await doTranslate.DoTranslate(subtitle, source, target, _translator, cancellationToken);
         if (!_options.Quiet)
         {
-            Console.WriteLine();
+            ProgressLine.Finish();
         }
 
         for (var i = 0; i < subtitle.Paragraphs.Count && i < rows.Count; i++)
