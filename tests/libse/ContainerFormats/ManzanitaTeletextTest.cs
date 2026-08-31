@@ -50,6 +50,83 @@ public class ManzanitaTeletextTest
         Assert.Equal("<font color=\"#00ff00\">Green line</font>", paragraphs[0].Text);
     }
 
+    [Theory]
+    // A colour past the eight of Level 1 goes to a redefinable colour map entry, carried by an
+    // X/28/0 packet and named at its cell by an X/26 foreground colour triplet - ZDF's Level 2.5
+    // orange among them.
+    [InlineData("<font color=\"#ff8822\">Level 2.5 orange</font>")]
+    [InlineData("<font color=\"#8833ee\">A softer violet</font>")]
+    // The half intensity colours are CLUT 1 defaults, so they need an X/26 triplet but no X/28.
+    [InlineData("<font color=\"#770000\">Half red</font>")]
+    [InlineData("<font color=\"#777777\">Half white</font>")]
+    // A full intensity colour still travels as a plain Level 1 spacing attribute.
+    [InlineData("<font color=\"#00ff00\">Green line</font>")]
+    public void RoundTripKeepsLevel25Colors(string text)
+    {
+        var subtitle = MakeSubtitle(new Paragraph(text, 1000, 3000));
+
+        var paragraphs = WriteAndRead(subtitle)[888];
+
+        Assert.Equal(text, paragraphs[0].Text);
+    }
+
+    [Fact]
+    public void Level25ColorsSurviveOnLaterSubtitlesAndOtherRows()
+    {
+        var subtitle = MakeSubtitle(
+            new Paragraph("<font color=\"#ff8822\">First</font>", 1000, 3000),
+            new Paragraph("Plain middle", 5000, 7000),
+            new Paragraph("<font color=\"#ff8822\">Same orange</font>" + Environment.NewLine +
+                          "<font color=\"#22ccff\">New sky blue</font>", 9000, 11000));
+
+        var paragraphs = WriteAndRead(subtitle)[888];
+
+        Assert.Equal(3, paragraphs.Count);
+        Assert.Equal("<font color=\"#ff8822\">First</font>", paragraphs[0].Text);
+        Assert.Equal("Plain middle", paragraphs[1].Text);
+        Assert.Equal("<font color=\"#ff8822\">Same orange</font>" + Environment.NewLine +
+                     "<font color=\"#22ccff\">New sky blue</font>", paragraphs[2].Text);
+    }
+
+    [Fact]
+    public void Level25ColorOnAnEnhancedCharacterKeepsBoth()
+    {
+        // The music note needs a G2 triplet on its cell, the colour a foreground colour triplet
+        // on the same cell - one touches the text plane, the other the colour plane.
+        var subtitle = MakeSubtitle(new Paragraph("<font color=\"#ff8822\">♪ La la</font>", 1000, 3000));
+
+        var paragraphs = WriteAndRead(subtitle)[888];
+
+        Assert.Equal("<font color=\"#ff8822\">♪ La la</font>", paragraphs[0].Text);
+    }
+
+    [Fact]
+    public void MoreCustomColorsThanEntriesSnapToTheNearest()
+    {
+        // Sixteen redefinable entries (CLUT 2 and 3); the seventeenth distinct colour has to make
+        // do with the nearest colour already in the map.
+        var subtitle = new Subtitle();
+        for (var i = 0; i < 16; i++)
+        {
+            // 16 distinct 12 bit colours (0x013 to 0xf13), none a default map entry.
+            var hex = $"#{i:x1}{i:x1}1133";
+            subtitle.Paragraphs.Add(new Paragraph($"<font color=\"{hex}\">Line {i}</font>", i * 3000 + 1000, i * 3000 + 2500));
+        }
+
+        subtitle.Paragraphs.Add(new Paragraph("<font color=\"#ee1122\">Line 16</font>", 49000, 50500));
+
+        var paragraphs = WriteAndRead(subtitle)[888];
+
+        Assert.Equal(17, paragraphs.Count);
+        for (var i = 0; i < 16; i++)
+        {
+            Assert.Equal($"<font color=\"#{i:x1}{i:x1}1133\">Line {i}</font>", paragraphs[i].Text);
+        }
+
+        // #ee1122 quantizes to 0xe12, the map is full, and the nearest entry is 0xe13 (#ee1133).
+        Assert.Equal("<font color=\"#ee1133\">Line 16</font>", paragraphs[16].Text);
+    }
+
     [Fact]
     public void RoundTripKeepsTopAlignment()
     {
