@@ -555,7 +555,8 @@ public static class DownloadHashManager
             },
             [CrispAsr.MacOsX64] = new[]
             {
-                "ab6d673642e6a7c52374cdab9558d63c455ab8485654f56fcdae8054d34f7f75", // v0.8.30 (current download URL)
+                "ae781eda4a1e1223a617f753da4df3feff892fda84e1cd7e666d51a11dfbb846", // v0.8.31 (current download URL)
+                "ab6d673642e6a7c52374cdab9558d63c455ab8485654f56fcdae8054d34f7f75", // v0.8.30
                 "1ab9bc657c81e9ffcb5c733b66aaa340977cae7308309f4de13651e4896d7783", // v0.8.29
             },
             [CrispAsr.MacOs] = new[]
@@ -1204,7 +1205,8 @@ public static class DownloadHashManager
             },
             [CrispAsr.MacOsX64Executable] = new[]
             {
-                "4dc7534c7a8196f5894c5ab685e1f407ae479ed5538340d457d1e668a3fdf580", // v0.8.30 (current download URL)
+                "3f09562abe72bfb7b0bc697a046171fd058754868db81896da4b632aa7be3acb", // v0.8.31 (current download URL)
+                "4dc7534c7a8196f5894c5ab685e1f407ae479ed5538340d457d1e668a3fdf580", // v0.8.30
                 "64d488a7b304d14e03ba353a3763b281fa2b55e067182f90ae5ba626ebaf3250", // v0.8.29
             },
             [CrispAsr.MacOsExecutable] = new[]

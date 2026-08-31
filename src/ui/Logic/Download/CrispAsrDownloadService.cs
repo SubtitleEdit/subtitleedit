@@ -48,12 +48,8 @@ public class CrispAsrDownloadService : ICrispAsrDownloadService
     /// It is a CPU + Accelerate build (ggml's Metal kernels crash on the AMD GPUs in Intel
     /// Macs) and targets macOS 12, and the archive's inner folder matches upstream's so the
     /// unpack path is shared.
-    ///
-    /// NOTE: still on the v0.8.30 slice while the rest of this file is on v0.8.31 - the x86_64
-    /// build has to be produced and uploaded to support-files before this can move, so an Intel
-    /// Mac stays a release behind until then (#14343).
     /// </summary>
-    private const string MacIntelUrl = "https://github.com/SubtitleEdit/support-files/releases/download/crispasr-0830-macos-x64/crispasr-macos-x86_64.tar.gz";
+    private const string MacIntelUrl = "https://github.com/SubtitleEdit/support-files/releases/download/crispasr-0831-macos-x64/crispasr-macos-x86_64.tar.gz";
     private const string LinuxUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.31/crispasr-linux-x86_64.tar.gz";
     private const string LinuxCudaUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.31/crispasr-linux-x86_64-cuda.tar.gz";
     private const string LinuxCuda13Url = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.31/crispasr-linux-x86_64-cuda13.tar.gz";
