@@ -3,6 +3,29 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-beta30 (31st of August 2026)
+
+* Read Wistia json, DVD Junior SPC, Sonic DVD Producer and YouTube srv3 (.ytt) subtitles
+* Add "Center text in subtitle grid" (SE 4 parity) - thx matmaggi
+* Settings import: accept an SE 4 Settings.xml - thx JDario16
+* Teletext: write G2 characters like the music note, and read the national option sub-set and the Level 2.5 colours - thx René
+* Make dialogs keyboard-navigable: initial focus and Tab, across the UI - thx GrampaWildWilly
+* ASSA style window: scale the preview with the window and give it the whole panel
+* Auto-translate: make Enter press the default button
+* Keep ASSA override blocks out of auto-translate too - thx MrGoraj
+* Sort the OCR fix list alphabetically in Options - Word lists - thx Anth70
+* seconv: give Ollama OCR the same generation limits as the GUI - thx gmariani
+* Fix seconv reporting its version as 5.0.0 - thx gmariani
+* Fix the mouse wheel setting the video position with the option turned off - thx rookes
+* Fix Compare's ignore options, and remember its settings - thx FunkyKnilch
+* Fix the video preview showing EBU STL (and TTML positions) after the format was changed
+* Fix 20 bugs found in a code sweep
+* Update French translation - thx Need74
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-beta29 (30th of August 2026)
 
 * Add configurable "Search via X" shortcuts, with a "Search via" submenu in the text box context menu - thx kadrimarzouki
