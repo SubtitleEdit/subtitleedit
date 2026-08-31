@@ -246,7 +246,7 @@ public class LanguageTextToSpeech
         ProAudioPostProcessing = "Pro audio post-processing";
         ProAudioPostProcessingDescription = "Adds EQ, noise gate, compression, loudness normalization (-16 LUFS) and a short fade in/out to every clip.";
         AudioDucking = "Audio ducking";
-        AudioDuckingDescription = "Turns the original video sound down and mixes the speech over it, so the original track stays faintly audible.";
+        AudioDuckingDescription = "Turns the original video sound down and mixes the speech over it, so the original track stays faintly audible. Only applies when the speech is added to the video file.";
         OriginalVolumePercent = "Original volume %";
         VadSilenceCompression = "VAD silence compression";
         VadSilenceCompressionDescription = "Shortens the pauses between words instead of speeding up the speech, so a clip fits without any loss of quality.";
