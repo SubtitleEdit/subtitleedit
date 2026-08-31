@@ -86,13 +86,116 @@ public class ManzanitaTeletextTest
     }
 
     [Fact]
-    public void ItalicAndUnsupportedCharactersAreFolded()
+    public void ItalicIsDroppedButAccentsSurvive()
     {
         var subtitle = MakeSubtitle(new Paragraph("<i>Voilà</i>", 1000, 3000));
 
         var paragraphs = WriteAndRead(subtitle)[888];
 
-        Assert.Equal("Voila", paragraphs[0].Text);
+        Assert.Equal("Voilà", paragraphs[0].Text);
+    }
+
+    [Theory]
+    // The G2 supplementary set, reached through an X/26 triplet with mode 0x0f.
+    [InlineData("♪ La la la ♪")]
+    [InlineData("Il coûte 5 €")]
+    [InlineData("© Nikse, ® and ™")]
+    [InlineData("«Bonjour» ¿Qué? ¡Vaya!")]
+    [InlineData("Œuvre, œuf, Ærø, ø and ß")]
+    // A G0 letter plus a diacritical mark, X/26 modes 0x11-0x1f.
+    [InlineData("Voilà, très élégant")]
+    [InlineData("Größe, Übermäßig, schön")]
+    [InlineData("Zażółć gęślą jaźń")]
+    [InlineData("Příliš žluťoučký kůň")]
+    // Teletext gives these codes to the national option sub-sets, so they need the G0 lookup.
+    [InlineData("# is not £, and @ is @")]
+    public void RoundTripKeepsNonAsciiCharacters(string text)
+    {
+        var subtitle = MakeSubtitle(new Paragraph(text, 1000, 3000));
+
+        var paragraphs = WriteAndRead(subtitle)[888];
+
+        Assert.Equal(text, paragraphs[0].Text);
+    }
+
+    [Fact]
+    public void EnhancedCharactersSurviveOnEveryRow()
+    {
+        var subtitle = MakeSubtitle(new Paragraph(
+            "♪ Hey, es klingt ein bisschen weirdo" + Environment.NewLine +
+            "Doch ich soll deine Nummer klären. ♪", 1000, 3000));
+
+        var paragraphs = WriteAndRead(subtitle)[888];
+
+        Assert.Equal("♪ Hey, es klingt ein bisschen weirdo" + Environment.NewLine +
+                     "Doch ich soll deine Nummer klären. ♪", paragraphs[0].Text);
+    }
+
+    [Fact]
+    public void MoreEnhancementsThanOnePacketHoldsAreAllWritten()
+    {
+        // Thirteen triplets fit in a packet, and every row spends one on its active position.
+        var text = string.Concat(Enumerable.Repeat("é", 30));
+        var subtitle = MakeSubtitle(new Paragraph(text, 1000, 3000));
+
+        var paragraphs = WriteAndRead(subtitle)[888];
+
+        Assert.Equal(text, paragraphs[0].Text);
+    }
+
+    [Fact]
+    public void X26EnhancementsAreRead()
+    {
+        // The fixture holds "mail*se.org # note" in the row, with an X/26 packet putting "@" over
+        // the star (mode 0x10, a G0 character without a diacritical mark) and the music note over
+        // the hash (mode 0x0f, G2 code 0x55) - the shapes ZDF and arte transmit.
+        var parser = new ManzanitaTransportStreamParser();
+        parser.Parse(Path.Combine("Files", "teletext_x26_enhancements.dvbttx"));
+
+        var paragraphs = parser.GetTeletext()[888];
+
+        Assert.Equal("mail@se.org ♪ note", paragraphs[0].Text);
+    }
+
+    [Fact]
+    public void X28NationalOptionIsRead()
+    {
+        // The fixture declares the French sub-set in an X/28/0 packet and then sends the codes
+        // 0x23 and 0x40, which French fills with "é" and "à" - what canal+ transmits. The three
+        // national option bits run the other way round in that packet than in the page header,
+        // and reading them the header's way lands on German instead ("d#j§ all#s").
+        var parser = new ManzanitaTransportStreamParser();
+        parser.Parse(Path.Combine("Files", "teletext_x28_national_option.dvbttx"));
+
+        var paragraphs = parser.GetTeletext()[888];
+
+        Assert.Equal("On est déjà allés", paragraphs[0].Text);
+    }
+
+    [Fact]
+    public void X28ColourMapAndX26ForegroundColourAreRead()
+    {
+        // The fixture carries ZDF's own X/28/0 colour map, where colour map entry 17 - CLUT 2,
+        // the first table a broadcaster may redefine - is the orange #ff8822 from their page 100,
+        // and an X/26 foreground colour triplet that paints the row with it. Level 1 can only
+        // name the first eight entries, so nothing but the enhancement can reach this colour.
+        var parser = new ManzanitaTransportStreamParser();
+        parser.Parse(Path.Combine("Files", "teletext_x28_colour_map.dvbttx"));
+
+        var paragraphs = parser.GetTeletext()[888];
+
+        Assert.Equal("<font color=\"#ff8822\">Level 2.5 orange</font>", paragraphs[0].Text);
+    }
+
+    [Fact]
+    public void UnsupportedCharactersAreStillFolded()
+    {
+        var subtitle = MakeSubtitle(new Paragraph("[Привет] and 日本", 1000, 3000));
+
+        var paragraphs = WriteAndRead(subtitle)[888];
+
+        // No teletext code and nothing to fold to, so the brackets are the closest stand-in.
+        Assert.Equal("(??????) and ??", paragraphs[0].Text);
     }
 
     [Fact]
