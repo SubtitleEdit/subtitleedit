@@ -158,6 +158,21 @@ public class ManzanitaTeletextTest
     }
 
     [Fact]
+    public void X28NationalOptionIsRead()
+    {
+        // The fixture declares the French sub-set in an X/28/0 packet and then sends the codes
+        // 0x23 and 0x40, which French fills with "é" and "à" - what canal+ transmits. The three
+        // national option bits run the other way round in that packet than in the page header,
+        // and reading them the header's way lands on German instead ("d#j§ all#s").
+        var parser = new ManzanitaTransportStreamParser();
+        parser.Parse(Path.Combine("Files", "teletext_x28_national_option.dvbttx"));
+
+        var paragraphs = parser.GetTeletext()[888];
+
+        Assert.Equal("On est déjà allés", paragraphs[0].Text);
+    }
+
+    [Fact]
     public void UnsupportedCharactersAreStillFolded()
     {
         var subtitle = MakeSubtitle(new Paragraph("[Привет] and 日本", 1000, 3000));

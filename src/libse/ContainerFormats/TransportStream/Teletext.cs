@@ -156,6 +156,18 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             TeletextTables.ResetLatinG0();
         }
 
+        /// <summary>
+        /// Puts the charset designation of a packet X/28 or M/29 in the order the sub-set map is
+        /// indexed by. ETS 300 706 chapter 9.3.1.2 names the three national option bits C12, C13
+        /// and C14, and the page header above reads them as C12 + 2*C13 + 4*C14 - the designation
+        /// field carries the same three bits the other way round, so they have to be swapped or
+        /// French and German (and Italian and Czech) trade places.
+        /// </summary>
+        private static int ToNationalOptionOrder(int designation)
+        {
+            return (designation & ~0x07) | ((designation & 0x01) << 2) | (designation & 0x02) | ((designation & 0x04) >> 2);
+        }
+
         private static void RemapG0Charset(int c)
         {
             if (c != _primaryCharset.Current)
@@ -681,7 +693,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                         // ETS 300 706, chapter 9.4.2: Packet X/28/0 Format 1 only
                         if ((triplet0 & 0x0f) == 0x00)
                         {
-                            _primaryCharset.G0X28 = (int)((triplet0 & 0x3f80) >> 7);
+                            _primaryCharset.G0X28 = ToNationalOptionOrder((int)((triplet0 & 0x3f80) >> 7));
                             RemapG0Charset(_primaryCharset.G0X28);
                         }
                     }
@@ -709,7 +721,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                         // ETS 300 706, table 13: Coding of Packet M/29/4
                         if ((triplet0 & 0xff) == 0x00)
                         {
-                            _primaryCharset.G0M29 = (int)((triplet0 & 0x3f80) >> 7);
+                            _primaryCharset.G0M29 = ToNationalOptionOrder((int)((triplet0 & 0x3f80) >> 7));
                             // X/28 takes precedence over M/29
                             if (_primaryCharset.G0X28 == (int)BoolT.Undef)
                             {
