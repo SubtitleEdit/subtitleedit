@@ -470,41 +470,18 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        // Calculate and update the green rectangle
-        var videoPlayerWidth = VideoPlayerControl.Bounds.Width;
-        var videoPlayerHeight = VideoPlayerControl.Bounds.Height;
-
-        if (videoPlayerWidth <= 0 || videoPlayerHeight <= 0)
+        // The video surface, not the whole control: the player's controls row is Auto-sized, so
+        // its height moves with the UI scale and the platform. This used to subtract a
+        // hard-coded 55 px for it and scale the overlay against the rectangle that came out
+        // (#14328); ContentWidth/ContentHeight are the measured surface.
+        var contentRect = VideoContentRect.Calculate(
+            VideoPlayerControl.ContentWidth, VideoPlayerControl.ContentHeight, ScreenWidth, ScreenHeight);
+        if (contentRect == null)
         {
             return;
         }
 
-        const double controlsHeight = 55;
-        var availableHeight = videoPlayerHeight - controlsHeight;
-        if (availableHeight <= 0)
-        {
-            return;
-        }
-
-        var screenAspect = (double)ScreenWidth / ScreenHeight;
-        var availableAspect = videoPlayerWidth / availableHeight;
-
-        double rectWidth, rectHeight, rectX, rectY;
-
-        if (availableAspect > screenAspect)
-        {
-            rectHeight = availableHeight;
-            rectWidth = availableHeight * screenAspect;
-            rectX = (videoPlayerWidth - rectWidth) / 2;
-            rectY = 0;
-        }
-        else
-        {
-            rectWidth = videoPlayerWidth;
-            rectHeight = videoPlayerWidth / screenAspect;
-            rectX = 0;
-            rectY = (availableHeight - rectHeight) / 2;
-        }
+        var (rectX, rectY, rectWidth, rectHeight) = contentRect.Value;
 
         VideoContentBorder.Width = rectWidth;
         VideoContentBorder.Height = rectHeight;
