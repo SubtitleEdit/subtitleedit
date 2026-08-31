@@ -2995,6 +2995,13 @@ public partial class SpeechToTextViewModel : ObservableObject
             _ => "vulkan",
         };
 
+        if (crispVariant == "cuda")
+        {
+            // Upstream added a Windows CUDA 13 build alongside the CUDA 12 one in v0.8.31, so
+            // Windows now gets the same follow-up Linux has had since v0.8.30 (#14343).
+            return await PromptCrispAsrCudaVersionAsync();
+        }
+
         if (crispVariant == "cpu")
         {
             return await PromptCrispAsrCpuFlavorAsync();
@@ -3044,7 +3051,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         if (answer == MessageBoxResult.Custom3)
         {
-            return await PromptCrispAsrLinuxCudaVersionAsync();
+            return await PromptCrispAsrCudaVersionAsync();
         }
 
         return answer switch
@@ -3057,10 +3064,11 @@ public partial class SpeechToTextViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Follow-up prompt after the user picks "CUDA" in the Linux CrispASR variant selector.
+    /// Follow-up prompt after the user picks "CUDA" in the CrispASR variant selector, on both
+    /// Windows and Linux - upstream ships a CUDA 12 and a CUDA 13 build for each.
     /// Returns "cuda" (CUDA 12 build) or "cuda13", or null when the user cancels.
     /// </summary>
-    private async Task<string?> PromptCrispAsrLinuxCudaVersionAsync()
+    private async Task<string?> PromptCrispAsrCudaVersionAsync()
     {
         var answer = await MessageBox.Show(
             Window!,
