@@ -96,6 +96,17 @@ public static class TtsVoiceInstaller
             minVersionNote: null);
 
     /// <summary>
+    /// Ensures the CrispASR runtime that Pocket TTS (CrispASR) runs on is installed.
+    /// The pocket-tts backend is older, but the per-language backends and model routing SE
+    /// relies on (pocket-tts-de/es/it/pt/fr) ship in CrispASR v0.8.31+.
+    /// </summary>
+    public static Task<bool> EnsureCrispAsrForPocketTts(Window? window, IWindowService windowService, bool forceRedownload)
+        => EnsureCrispAsrAsync(window, windowService, forceRedownload,
+            engineDisplayName: "Pocket TTS (CrispASR)",
+            extraCapabilityCheck: null,
+            minVersionNote: "v0.8.31 or newer");
+
+    /// <summary>
     /// Ensures the CrispASR runtime that Zonos TTS (CrispASR) runs on is installed.
     /// The zonos-tts backend's GGUFs (transformer + DAC codec) are staged into SE's
     /// CrispAsr/models folder by

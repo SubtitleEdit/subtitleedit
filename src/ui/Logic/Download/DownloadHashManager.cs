@@ -198,6 +198,20 @@ public static class DownloadHashManager
         public const string Codec = "IndexTtsCrispAsr.Codec";
     }
 
+    public static class PocketTtsCrispAsr
+    {
+        // SHA-256 of the per-language Pocket TTS checkpoints on cstr/pocket-tts-GGUF (HF LFS
+        // oid; the English F16 value was confirmed against a local sha256sum of the
+        // downloaded file).
+        public const string EnglishF16 = "PocketTtsCrispAsr.EnglishF16";
+        public const string EnglishQ8_0 = "PocketTtsCrispAsr.EnglishQ8_0";
+        public const string GermanQ8_0 = "PocketTtsCrispAsr.GermanQ8_0";
+        public const string SpanishQ8_0 = "PocketTtsCrispAsr.SpanishQ8_0";
+        public const string ItalianQ8_0 = "PocketTtsCrispAsr.ItalianQ8_0";
+        public const string PortugueseQ8_0 = "PocketTtsCrispAsr.PortugueseQ8_0";
+        public const string FrenchQ8_0 = "PocketTtsCrispAsr.FrenchQ8_0";
+    }
+
     public static class DotsTtsCrispAsr
     {
         // SHA-256 of the dots.tts SOAR GGUFs on cstr/dots-tts-soar-GGUF (HF LFS oid; the
@@ -1789,6 +1803,34 @@ public static class DownloadHashManager
             [IndexTtsCrispAsr.Codec] = new[]
             {
                 "fcba9a322d80ef318da8a17c01e8a5e7f299ccdf881c62a43abf62cb3c104268", // indextts-bigvgan.gguf
+            },
+            [PocketTtsCrispAsr.EnglishF16] = new[]
+            {
+                "66d16cef2b59e51003be1a025a8df2fea5f878dcf9434ca72aab5f13a48a2603", // pocket-tts-english-f16.gguf
+            },
+            [PocketTtsCrispAsr.EnglishQ8_0] = new[]
+            {
+                "fc80ece425f647b93174860ef279b877e5ad3454bbba3ec4fc76f535942c12c4", // pocket-tts-english-q8_0.gguf
+            },
+            [PocketTtsCrispAsr.GermanQ8_0] = new[]
+            {
+                "dfd58f89a443991b2ee538a9e0595a1c41728907a0b086441b0bff99ba7b28c1", // pocket-tts-german-q8_0.gguf
+            },
+            [PocketTtsCrispAsr.SpanishQ8_0] = new[]
+            {
+                "9f53d588fc8564f8aa0de2b8f17493a56b834202bf200744b87d3e0cd8c0dd66", // pocket-tts-spanish-q8_0.gguf
+            },
+            [PocketTtsCrispAsr.ItalianQ8_0] = new[]
+            {
+                "73c36a7e00779fb45b92ab90f613ffe040ee418408990958e69103e6a5820b98", // pocket-tts-italian-q8_0.gguf
+            },
+            [PocketTtsCrispAsr.PortugueseQ8_0] = new[]
+            {
+                "02f28b603e1e3b2a9c6bf51c93688b151203f387f50f09e89fb02329ab787e81", // pocket-tts-portuguese-q8_0.gguf
+            },
+            [PocketTtsCrispAsr.FrenchQ8_0] = new[]
+            {
+                "9fe5ca8c8797c03b83ce081124037cfa9970fc5db92972b57def6ef5f3a31cff", // pocket-tts-french_24l-q8_0.gguf
             },
 
             // dots.tts SOAR weights, from cstr/dots-tts-soar-GGUF.
