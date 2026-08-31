@@ -642,6 +642,15 @@ public partial class MainViewModel :
     private long _lastKeyPressedMs;
     private bool _loading;
     private bool _opening;
+    // Transient dedupe for repeated open requests of the same file. macOS delivers a second
+    // file-activation event when the user opens an already-opening file from Finder again;
+    // for a multi-track Matroska the (async) track picker then opens a second, pixel-identical
+    // picker exactly on top of the first. _openingFileName covers the in-flight SubtitleOpen
+    // call and _pickMatroskaTrackFileName covers the posted track picker, which outlives
+    // SubtitleOpen. Both are cleared when their operation finishes - deliberately opening the
+    // same file again afterwards (e.g. to pick another track) works as always.
+    private string? _openingFileName;
+    private string? _pickMatroskaTrackFileName;
     private PointerEventArgs? _lastTextEditorPointerArgs;
     private string? _textBoxLookUpWord;
     private PointerEventArgs? _lastSubtitleGridPointerArgs;
@@ -20698,6 +20707,40 @@ public partial class MainViewModel :
     }
 
 
+    // True when two paths refer to the same file: normalized full paths compared
+    // case-insensitively (the macOS file system default), with a final-component symlink
+    // resolved so a link and its target compare equal. A false negative only skips the
+    // duplicate-open dedupe, so best effort is enough here.
+    private static bool IsSameFile(string? a, string? b)
+    {
+        if (string.IsNullOrEmpty(a) || string.IsNullOrEmpty(b))
+        {
+            return false;
+        }
+
+        try
+        {
+            return string.Equals(ResolveSymlink(Path.GetFullPath(a)), ResolveSymlink(Path.GetFullPath(b)),
+                StringComparison.OrdinalIgnoreCase);
+        }
+        catch
+        {
+            return string.Equals(a, b, StringComparison.OrdinalIgnoreCase);
+        }
+    }
+
+    private static string ResolveSymlink(string fullPath)
+    {
+        try
+        {
+            return new FileInfo(fullPath).ResolveLinkTarget(returnFinalTarget: true)?.FullName ?? fullPath;
+        }
+        catch
+        {
+            return fullPath;
+        }
+    }
+
     /// <summary>
     /// OpenSubtitle - open subtitle file, video file is optional.
     /// </summary>
@@ -20710,6 +20753,16 @@ public partial class MainViewModel :
         int desiredAudioTrackId = -1)
     {
         if (string.IsNullOrEmpty(fileName))
+        {
+            return;
+        }
+
+        // A duplicate request for a file that is still opening, or whose Matroska track picker
+        // is open, would run the whole open a second time (and stack a second track picker on
+        // top of the first) - macOS re-delivers the file-activation event when the user opens
+        // the same file from Finder again. Only in-flight state is checked, so re-opening a
+        // finished file stays possible.
+        if (IsSameFile(fileName, _openingFileName) || IsSameFile(fileName, _pickMatroskaTrackFileName))
         {
             return;
         }
@@ -20748,6 +20801,7 @@ public partial class MainViewModel :
         try
         {
             _opening = true;
+            _openingFileName = fileName;
 
             if (FileUtil.IsMatroskaFileFast(fileName) && FileUtil.IsMatroskaFile(fileName))
             {
@@ -21338,6 +21392,7 @@ public partial class MainViewModel :
             _undoRedoManager.Do(MakeUndoRedoObject(string.Format(Se.Language.General.SubtitleLoadedX, fileName)));
             _undoRedoManager.StartChangeDetection();
             _opening = false;
+            _openingFileName = null;
 
             SetupLiveSpellCheck();
         }
@@ -22154,10 +22209,23 @@ public partial class MainViewModel :
 
         if (subtitleList.Count > 1)
         {
+            // Set before the picker is posted and cleared when its dialog closes: the picker
+            // outlives SubtitleOpen (and its in-flight guard), so without this a duplicate open
+            // request for the same file stacks a second, pixel-identical picker on top of it.
+            _pickMatroskaTrackFileName = fileName;
             Dispatcher.UIThread.Post(async void () =>
             {
-                var result =
-                    await ShowDialogAsync<PickMatroskaTrackWindow, PickMatroskaTrackViewModel>(vm => { vm.Initialize(matroska, subtitleList, fileName); });
+                PickMatroskaTrackViewModel result;
+                try
+                {
+                    result =
+                        await ShowDialogAsync<PickMatroskaTrackWindow, PickMatroskaTrackViewModel>(vm => { vm.Initialize(matroska, subtitleList, fileName); });
+                }
+                finally
+                {
+                    _pickMatroskaTrackFileName = null;
+                }
+
                 if (result.OkPressed && result.SelectedMatroskaTrack != null)
                 {
                     if (await LoadMatroskaSubtitle(result.SelectedMatroskaTrack, matroska, fileName, skipLoadVideo,
