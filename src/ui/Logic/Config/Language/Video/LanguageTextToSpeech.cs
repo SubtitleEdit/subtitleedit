@@ -83,6 +83,8 @@ public class LanguageTextToSpeech
     public string VoiceCloneConsentAccept { get; set; }
     public string VoiceCloneConsentDeclined { get; set; }
     public string AdvancedTtsSettings { get; set; }
+    public string AdvancedTtsAudioProcessing { get; set; }
+    public string AdvancedTtsOutput { get; set; }
     public string ProAudioPostProcessing { get; set; }
     public string ProAudioPostProcessingDescription { get; set; }
     public string AudioDucking { get; set; }
@@ -93,6 +95,8 @@ public class LanguageTextToSpeech
     public string MaxSilenceMs { get; set; }
     public string HighQualityTimeStretch { get; set; }
     public string HighQualityTimeStretchDescription { get; set; }
+    public string RubberbandInstalled { get; set; }
+    public string RubberbandNotFound { get; set; }
     public string SilencePaddingMs { get; set; }
     public string SilencePaddingMsDescription { get; set; }
     public string OutputSampleRate { get; set; }
@@ -237,30 +241,34 @@ public class LanguageTextToSpeech
         VoiceCloneConsentAccept = "Accept and continue";
         VoiceCloneConsentDeclined = "Voice cloning is not available until these terms are accepted.";
         AdvancedTtsSettings = "Advanced TTS settings";
+        AdvancedTtsAudioProcessing = "Audio processing";
+        AdvancedTtsOutput = "Output";
         ProAudioPostProcessing = "Pro audio post-processing";
-        ProAudioPostProcessingDescription = "Applies EQ warmth, noise gate, compression, loudness normalization (-16 LUFS), and fade in/out to each segment.";
+        ProAudioPostProcessingDescription = "Adds EQ, noise gate, compression, loudness normalization (-16 LUFS) and a short fade in/out to every clip.";
         AudioDucking = "Audio ducking";
-        AudioDuckingDescription = "Reduces the original video audio volume and mixes it with the TTS audio, so the original soundtrack is still faintly audible.";
+        AudioDuckingDescription = "Turns the original video sound down and mixes the speech over it, so the original track stays faintly audible. Only applies when the speech is added to the video file.";
         OriginalVolumePercent = "Original volume %";
         VadSilenceCompression = "VAD silence compression";
-        VadSilenceCompressionDescription = "Shortens pauses between words before changing tempo. Uses Voice Activity Detection to compress only silence gaps while keeping speech untouched. This is the preferred first step — it reduces duration without any quality loss.";
+        VadSilenceCompressionDescription = "Shortens the pauses between words instead of speeding up the speech, so a clip fits without any loss of quality.";
         MaxSilenceMs = "Max silence (ms)";
-        HighQualityTimeStretch = "High-quality time-stretch (WSOLA/rubberband)";
-        HighQualityTimeStretchDescription = "Uses the rubberband algorithm (WSOLA) instead of the default atempo filter for pitch-preserving speed changes. Produces more natural-sounding speech, especially at higher speed factors. Requires librubberband in your FFmpeg build — falls back to atempo automatically if unavailable.";
+        HighQualityTimeStretch = "High-quality time-stretch";
+        HighQualityTimeStretchDescription = "Speeds up speech with the rubberband algorithm, which sounds more natural than the default. Needs librubberband in FFmpeg; otherwise the default is used.";
+        RubberbandInstalled = "(installed)";
+        RubberbandNotFound = "(not found in FFmpeg)";
         SilencePaddingMs = "Silence padding (ms)";
-        SilencePaddingMsDescription = "Adds a short silence at the end of each segment. Useful for breathing room between sentences.";
-        OutputSampleRate = "Output sample rate (0 = default)";
-        OutputSampleRateDescription = "Resamples all segments to the specified sample rate (e.g. 44100, 48000). Set to 0 to keep the original rate.";
+        SilencePaddingMsDescription = "Extra silence added at the end of every clip, to give room between sentences.";
+        OutputSampleRate = "Output sample rate";
+        OutputSampleRateDescription = "Resamples every clip, e.g. to 44100 or 48000. Use 0 to keep the original rate.";
         GenerationFolder = "Generation folder";
-        GenerationFolderDescription = "Folder for the audio clips generated while a run is in progress. Leave empty to use the system temp folder. Each run gets its own sub-folder.";
+        GenerationFolderDescription = "Where clips are written while generating. Leave empty for the system temp folder. Each run gets its own sub-folder.";
         DeleteTempFiles = "Delete generated clips when closing";
-        DeleteTempFilesDescription = "Removes the run's generation folder when the Text to speech window closes. The saved audio and video files are not affected. Turn this off to keep the individual clips.";
+        DeleteTempFilesDescription = "Deletes the generation folder when the Text to speech window closes. Saved audio and video files are kept.";
         EdgeTtsRate = "Edge-TTS rate";
-        EdgeTtsRateDescription = "Speech rate for Edge-TTS, e.g. \"+50%\", \"-30%\", or \"+0%\" for default.";
+        EdgeTtsRateDescription = "Speech rate, e.g. \"+50%\" or \"-30%\". Use \"+0%\" for the default.";
         EdgeTtsPitch = "Edge-TTS pitch";
-        EdgeTtsPitchDescription = "Pitch adjustment for Edge-TTS, e.g. \"+10Hz\", \"-5Hz\", or \"+0Hz\" for default.";
+        EdgeTtsPitchDescription = "Pitch adjustment, e.g. \"+10Hz\" or \"-5Hz\". Use \"+0Hz\" for the default.";
         EdgeTtsVolume = "Edge-TTS volume";
-        EdgeTtsVolumeDescription = "Volume adjustment for Edge-TTS, e.g. \"+20%\", \"-10%\", or \"+0%\" for default.";
+        EdgeTtsVolumeDescription = "Volume adjustment, e.g. \"+20%\" or \"-10%\". Use \"+0%\" for the default.";
         DownloadPiperPrompt = $"\"Text to speech\" requires Piper.{Environment.NewLine}{Environment.NewLine}Download and use Piper?";
 
         OmniVoiceTtsSettings = "OmniVoice TTS settings";

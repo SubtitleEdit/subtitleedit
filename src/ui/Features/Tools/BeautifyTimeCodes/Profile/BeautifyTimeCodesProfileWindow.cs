@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
@@ -191,7 +191,7 @@ public class BeautifyTimeCodesProfileWindow : Window
             Orientation = Orientation.Horizontal,
             Spacing = 6,
             VerticalAlignment = VerticalAlignment.Center,
-            Children = { labelGap, nudGap, suffix, MakeHintIcon(_l.HintGap) },
+            Children = { labelGap, nudGap, suffix, UiUtil.MakeHintIcon(_l.HintGap) },
         };
 
         return MakeGroupBox(_l.General, content);
@@ -271,7 +271,7 @@ public class BeautifyTimeCodesProfileWindow : Window
         {
             Orientation = Orientation.Horizontal,
             Spacing = 6,
-            Children = { labelGap, nudGapInLeft, nudGapInRight, nudGapOutLeft, nudGapOutRight, MakeHintIcon(_l.HintConnected) },
+            Children = { labelGap, nudGapInLeft, nudGapInRight, nudGapOutLeft, nudGapOutRight, UiUtil.MakeHintIcon(_l.HintConnected) },
         };
 
         var rowZones = MakeZonesRow(
@@ -448,7 +448,7 @@ public class BeautifyTimeCodesProfileWindow : Window
             {
                 Orientation = Orientation.Horizontal,
                 Spacing = 6,
-                Children = { labelBehavior, combo, MakeHintIcon(_l.HintChaining) },
+                Children = { labelBehavior, combo, UiUtil.MakeHintIcon(_l.HintChaining) },
             };
             stack.Children.Add(behaviorRow);
         }
@@ -494,7 +494,7 @@ public class BeautifyTimeCodesProfileWindow : Window
                 MakeZoneNud(leftRedPath, isGreen: false),
                 MakeZoneNud(rightRedPath, isGreen: false),
                 MakeZoneNud(rightGreenPath, isGreen: true),
-                MakeHintIcon(_l.HintZones),
+                UiUtil.MakeHintIcon(_l.HintZones),
             },
         };
     }
@@ -539,20 +539,6 @@ public class BeautifyTimeCodesProfileWindow : Window
         nud.Background = new SolidColorBrush(isGreen ? Color.FromArgb(80, 0, 160, 0) : Color.FromArgb(80, 200, 30, 30));
         nud.Width = 95;
         return nud;
-    }
-
-    private Control MakeHintIcon(string tip)
-    {
-        var icon = new ContentControl
-        {
-            Width = 16,
-            Height = 16,
-            VerticalAlignment = VerticalAlignment.Center,
-            Opacity = 0.7,
-            [ToolTip.TipProperty] = tip,
-        };
-        Attached.SetIcon(icon, IconNames.Information);
-        return icon;
     }
 
     private static Control MakeGroupBox(string title, Control content)
