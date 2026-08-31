@@ -767,6 +767,16 @@ public class AudioVisualizer : Control
     {
         _lastMouseWheelScroll = Environment.TickCount64;
 
+        // Resync from the wheel event itself, like every other pointer handler here. The
+        // KeyDown/KeyUp mirror goes stale whenever a Ctrl shortcut is pressed over the
+        // waveform: the shortcut handler swallows the key-up, so _isCtrlDown stayed true and
+        // the wheel kept setting the video position at the cursor even with "mouse-wheel sets
+        // video position" turned off (#14306). e.KeyModifiers is the state at the scroll.
+        _isCtrlDown = e.KeyModifiers.HasFlag(KeyModifiers.Control);
+        _isShiftDown = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
+        _isAltDown = e.KeyModifiers.HasFlag(KeyModifiers.Alt);
+        _isMetaDown = e.KeyModifiers.HasFlag(KeyModifiers.Meta);
+
         var point = e.GetPosition(this);
         var properties = e.GetCurrentPoint(this).Properties;
 
