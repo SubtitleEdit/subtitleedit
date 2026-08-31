@@ -900,13 +900,19 @@ public class AudioVisualizer : Control
             }
             OnVideoPositionChanged?.Invoke(this, new PositionEventArgs { PositionInSeconds = videoPosition });
         }
-        else if (Se.Settings.Waveform.CenterVideoPosition && WavePeaks != null && GetIsVideoPlaying?.Invoke() == true)
+        else if (Se.Settings.Waveform.CenterVideoPosition && WavePeaks != null &&
+                 (GetIsVideoPlaying?.Invoke() == true || Se.Settings.Waveform.CenterVideoPositionAlsoWhenPaused))
         {
             // Center mode while playing: the ~60 fps cursor timer re-centers the view on the
             // play-head every tick, so a plain scroll used to snap straight back - scrolling
             // only worked while paused (#12864). Honor the scroll by seeking the video to the
             // new view center instead: the play-head stays pinned to the middle and the video
-            // follows the scroll, matching SE 4. Paused scrolling stays free (no seek).
+            // follows the scroll, matching SE 4.
+            //
+            // "Center video position also while paused" extends that to the paused case (#14318):
+            // the play-head is pinned to the middle, so scrolling the view has to carry the video
+            // with it or the pin is broken the moment the wheel turns. Without that setting,
+            // paused scrolling stays free (no seek), as #12864 left it.
             var halfWidthInSeconds = (Bounds.Width / 2) / (WavePeaks.SampleRate * ZoomFactor);
             OnVideoPositionChanged?.Invoke(this, new PositionEventArgs { PositionInSeconds = StartPositionSeconds + halfWidthInSeconds });
         }
