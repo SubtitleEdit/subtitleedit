@@ -86,6 +86,9 @@ public partial class BinaryEditViewModel : ObservableObject
     private readonly IFileHelper _fileHelper;
     private readonly IFolderHelper _folderHelper;
     private readonly IWindowService _windowService;
+
+    /// <summary>For the shared image-preview background menu item (#14328).</summary>
+    internal IWindowService WindowService => _windowService;
     private readonly IShortcutManager _shortcutManager;
     private readonly IBluRayHelper _bluRayHelper;
 
