@@ -352,6 +352,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     ConvertParagraphNodeToTtmlNode(child, ttmlXml, span);
                     ttmlNode.AppendChild(span);
                 }
+                else if (child.Name == "font" && child.Attributes?["color"] != null)
+                {
+                    XmlNode span = ttmlXml.CreateElement("span", "http://www.w3.org/ns/ttml");
+                    XmlAttribute attr = ttmlXml.CreateAttribute("tts:color", "http://www.w3.org/ns/ttml#styling");
+                    attr.InnerText = child.Attributes["color"].Value;
+                    span.Attributes.Append(attr);
+
+                    // Recursively process child nodes to handle nested tags
+                    ConvertParagraphNodeToTtmlNode(child, ttmlXml, span);
+                    ttmlNode.AppendChild(span);
+                }
                 else
                 {
                     ConvertParagraphNodeToTtmlNode(child, ttmlXml, ttmlNode);

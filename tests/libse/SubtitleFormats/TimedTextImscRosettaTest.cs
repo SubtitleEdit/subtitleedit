@@ -71,6 +71,25 @@ public class TimedTextImscRosettaTest
     }
 
     [Fact]
+    public void Font_Color_Is_Preserved()
+    {
+        var rosetta = new TimedTextImscRosetta();
+
+        // make xml
+        var subtitle = new Subtitle();
+        var text = "This is <font color=\"Yellow\">yellow</font>.";
+        subtitle.Paragraphs.Add(new Paragraph(text, 0, 2000));
+        var xml = rosetta.ToText(subtitle, "test");
+
+        Assert.Contains("tts:color=\"Yellow\"", xml);
+
+        // load xml
+        subtitle = new Subtitle();
+        rosetta.LoadSubtitle(subtitle, xml.SplitToLines(), "test.xml");
+        Assert.Equal(text, subtitle.Paragraphs[0].Text);
+    }
+
+    [Fact]
     public void TopAlignment_An8()
     {
         var sut = new TimedTextImscRosetta();
