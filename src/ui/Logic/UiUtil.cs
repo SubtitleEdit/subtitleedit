@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -3186,6 +3186,26 @@ public static class UiUtil
         }
 
         return title + " - " + System.IO.Path.GetFileName(fileName);
+    }
+
+    /// <summary>
+    /// Gives <paramref name="control"/> the initial keyboard focus, once, the first time the
+    /// window is activated.
+    ///
+    /// The usual "Activated += delegate { x.Focus(); }" fires on <em>every</em> activation, so
+    /// Alt+Tabbing away and back yanks focus out of whatever the user had moved it to and
+    /// drops it back on the same control (#14313). Only the first activation is the initial
+    /// one; after that the window's own focus memory is the right answer.
+    /// </summary>
+    internal static void FocusOnFirstActivation(Window window, Control control)
+    {
+        void OnActivated(object? sender, EventArgs e)
+        {
+            window.Activated -= OnActivated;
+            control.Focus();
+        }
+
+        window.Activated += OnActivated;
     }
 
     internal static void InitializeWindow(Window window, string name)
