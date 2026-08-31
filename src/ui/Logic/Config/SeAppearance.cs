@@ -32,6 +32,12 @@ public class SeAppearance
     public bool SubtitleTextBoxColorTags { get; set; }
     public int SubtitleGridFormattingType { get; set; }
     public bool SubtitleGridLiveSpellCheck { get; set; }
+
+    /// <summary>
+    /// Backdrop behind subtitle bitmap thumbnails in the OCR and binary-edit grids, as
+    /// #AARRGGBB. Empty means <see cref="Logic.ImagePreviewBackground.DefaultColor"/>.
+    /// </summary>
+    public string ImagePreviewBackgroundColor { get; set; }
     public bool SubtitleGridCenterText { get; set; }
 
     public bool SubtitleTextBoxCenterText { get; set; }
@@ -114,6 +120,7 @@ public class SeAppearance
         SubtitleTextBoxColorTags = true;
         ShowHints = true;
         SubtitleTextBoxCenterText = false;
+        ImagePreviewBackgroundColor = string.Empty;
         SubtitleGridCenterText = false;
         SubtitleTextBoxLiveSpellCheck = false;
         SubtitleGridFormattingType = (int)SubtitleGridFormattingTypes.ShowFormatting;
