@@ -86,7 +86,7 @@ public class FixNetflixErrorsWindow : Window
 
         Content = grid;
 
-        Activated += delegate { _comboBoxLanguage.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, _comboBoxLanguage); // initial focus on an input, not an action button - a focused button clicks on bare Space
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };

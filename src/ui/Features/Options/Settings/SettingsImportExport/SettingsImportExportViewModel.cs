@@ -101,11 +101,19 @@ public partial class SettingsImportExportViewModel : ObservableObject
     private string _importFilePath = string.Empty;
     private Se? _importData;
     private string? _importSourceOs;
+    private bool _importHasShortcutSlots;
+    private bool _importHasCustomSearchSlots;
 
     // Marker property name written at the top level of the export JSON so the
     // importer can tell which OS the file came from (Se has no such field, so
     // System.Text.Json silently ignores it when deserializing into Se).
     private const string ExportSourceOsProperty = "exportSourceOs";
+
+    // Second marker: set when the file carries the shortcut *slot* values (colors,
+    // actors, "surround with" pairs). Files written before #14232 always held the
+    // defaults for those, so without the marker the importer must leave them alone
+    // rather than reset the user's own to factory values.
+    private const string ExportShortcutSlotsProperty = "exportIncludesShortcutSlots";
     public bool OkPressed { get; set; }
     public Window? Window { get; set; }
     private readonly IFileHelper _fileHelper;
@@ -169,6 +177,8 @@ public partial class SettingsImportExportViewModel : ObservableObject
             }
 
             _importSourceOs = TryReadExportSourceOs(json);
+            _importHasShortcutSlots = TryReadExportIncludesShortcutSlots(json);
+            _importHasCustomSearchSlots = TryReadHasCustomSearchSlots(json);
 
             IsRulesEnabled = _importData.General != null;
             IsAppearanceEnabled = _importData.Appearance != null;
@@ -179,6 +189,7 @@ public partial class SettingsImportExportViewModel : ObservableObject
             if (!IsRulesEnabled)
             {
                 ExportImportRules = false;
+                ExportImportSyntaxColoring = false; // the coloring fields live in General
             }
 
             if (!IsAppearanceEnabled)
@@ -261,48 +272,38 @@ public partial class SettingsImportExportViewModel : ObservableObject
         var exportData = new Se();
         var currentSettings = Se.Settings;
 
-        if (ExportImportAll || ExportImportRules)
-        {
-            exportData.General = currentSettings.General;
-        }
+        // Every Se section is self-initializing, so a section left untouched here would still
+        // serialize as a full block of *defaults* - and the importer, which only checks for
+        // null, would happily install those defaults over the user's settings. Assign null
+        // for anything not being exported so "what's in the file" is unambiguous.
 
-        if (ExportImportAll || ExportImportWaveform)
-        {
-            exportData.Waveform = currentSettings.Waveform;
-        }
+        // Syntax coloring lives inside General, so General has to travel for it - the import
+        // side then applies either the whole section or just the coloring fields.
+        exportData.General = ExportImportAll || ExportImportRules || ExportImportSyntaxColoring
+            ? currentSettings.General
+            : null!;
 
-        if (ExportImportAll)
-        {
-            exportData.Tools = currentSettings.Tools;
-        }
+        exportData.Waveform = ExportImportAll || ExportImportWaveform ? currentSettings.Waveform : null!;
+        exportData.Tools = ExportImportAll ? currentSettings.Tools : null!;
+        exportData.Appearance = ExportImportAll || ExportImportAppearance ? currentSettings.Appearance : null!;
+        exportData.Options = ExportImportAll ? currentSettings.Options : null!;
+        // The shortcut slots the Shortcuts window configures (colors 1-8, actors 1-10 and the
+        // "surround with" pairs) live as top-level values on Se, so they were left at the
+        // defaults of `new Se()` above and the import side never looked at them - every one of
+        // those customizations was silently dropped on export/import (#14232).
+        var exportShortcuts = ExportImportAll || ExportImportShortcuts;
+        exportData.Shortcuts = exportShortcuts ? currentSettings.Shortcuts : null!;
+        CopyShortcutSlots(exportShortcuts ? currentSettings : null, exportData);
+        exportData.AutoTranslate = ExportImportAll || ExportImportAutoTranslate ? currentSettings.AutoTranslate : null!;
+        exportData.SpellCheck = ExportImportAll ? currentSettings.SpellCheck : null!;
 
-        if (ExportImportAll || ExportImportAppearance)
-        {
-            exportData.Appearance = currentSettings.Appearance;
-        }
-
-        if (ExportImportAll)
-        {
-            exportData.Options = currentSettings.Options;
-        }
-
-        if (ExportImportAll || ExportImportShortcuts)
-        {
-            exportData.Shortcuts = currentSettings.Shortcuts;
-        }
-
-        if (ExportImportAll || ExportImportAutoTranslate)
-        {
-            exportData.AutoTranslate = currentSettings.AutoTranslate;
-        }
-
-        if (ExportImportAll)
-        {
-            exportData.SpellCheck = currentSettings.SpellCheck;
-        }
+        // Video was never assigned, so an "all settings" file carried a default Video block
+        // that the importer applied - silently resetting the player choice, the mpv preview
+        // style and the custom seek amounts.
+        exportData.Video = ExportImportAll ? currentSettings.Video : null!;
 
         var json = JsonSerializer.Serialize(exportData, new JsonSerializerOptions { WriteIndented = true });
-        var jsonWithSource = InjectExportSourceOs(json, GetCurrentOsName());
+        var jsonWithSource = InjectExportMarkers(json, GetCurrentOsName(), exportShortcuts);
         File.WriteAllText(fileName, jsonWithSource);
     }
 
@@ -321,6 +322,27 @@ public partial class SettingsImportExportViewModel : ObservableObject
             {
                 Se.Settings.General = importData.General;
             }
+        }
+        else if (ExportImportSyntaxColoring && importData.General != null)
+        {
+            // Only the syntax-coloring fields of General - the rest of the section is the
+            // "Rules" import, which the user did not ask for. (This checkbox used to be
+            // wired to nothing at all.)
+            var from = importData.General;
+            var to = Se.Settings.General;
+            to.ColorDurationTooShort = from.ColorDurationTooShort;
+            to.ColorDurationTooLong = from.ColorDurationTooLong;
+            to.ColorTextTooLong = from.ColorTextTooLong;
+            to.ColorTextTooWide = from.ColorTextTooWide;
+            to.ColorTextTooWidePixels = from.ColorTextTooWidePixels;
+            to.ColorTextTooWideFontName = from.ColorTextTooWideFontName;
+            to.ColorTextTooWideFontSize = from.ColorTextTooWideFontSize;
+            to.ColorTextTooManyLines = from.ColorTextTooManyLines;
+            to.ColorCharactersPerSecond = from.ColorCharactersPerSecond;
+            to.ColorWordsPerMinute = from.ColorWordsPerMinute;
+            to.ColorTimeCodeOverlap = from.ColorTimeCodeOverlap;
+            to.ColorGapTooShort = from.ColorGapTooShort;
+            to.ErrorColor = from.ErrorColor;
         }
 
         if (ExportImportAll || ExportImportWaveform)
@@ -374,6 +396,11 @@ public partial class SettingsImportExportViewModel : ObservableObject
                 }
 
                 Se.Settings.Shortcuts = importData.Shortcuts;
+            }
+
+            if (_importHasShortcutSlots)
+            {
+                CopyShortcutSlots(importData, Se.Settings, _importHasCustomSearchSlots);
             }
         }
 
@@ -444,10 +471,54 @@ public partial class SettingsImportExportViewModel : ObservableObject
         return "Linux";
     }
 
-    // Adds a top-level "exportSourceOs" property to the serialized JSON without
-    // touching the Se type. Se has no such property, so System.Text.Json
-    // silently ignores it on import.
-    private static string InjectExportSourceOs(string json, string osName)
+    /// <summary>
+    /// Copies the shortcut slot values the Shortcuts window owns - colors 1-8, actors 1-10 and the
+    /// "surround with" pairs and the "search via" slots - which sit as top-level values on <see cref="Se"/> rather than in one
+    /// of its sections. A null <paramref name="from"/> clears them, so an export that leaves
+    /// shortcuts out says so instead of shipping a block of defaults.
+    /// </summary>
+    private static void CopyShortcutSlots(Se? from, Se to, bool includeCustomSearch = true)
+    {
+        to.Color1 = from?.Color1!;
+        to.Color2 = from?.Color2!;
+        to.Color3 = from?.Color3!;
+        to.Color4 = from?.Color4!;
+        to.Color5 = from?.Color5!;
+        to.Color6 = from?.Color6!;
+        to.Color7 = from?.Color7!;
+        to.Color8 = from?.Color8!;
+
+        for (var slot = 1; slot <= Se.SurroundWithSlotCount; slot++)
+        {
+            to.SetSurround(slot, from?.GetSurroundLeft(slot)!, from?.GetSurroundRight(slot)!);
+        }
+
+        // The "search via" slots were added after the slot marker, so a file carrying the marker
+        // may still predate them - deserializing then hands back the factory defaults, and
+        // copying those would silently reset the user's own slots. Only copy what the file says.
+        if (includeCustomSearch)
+        {
+            for (var slot = 1; slot <= Se.CustomSearchSlotCount; slot++)
+            {
+                to.SetCustomSearch(slot, from?.GetCustomSearchName(slot)!, from?.GetCustomSearchUrl(slot)!);
+            }
+        }
+
+        to.Actor1 = from?.Actor1!;
+        to.Actor2 = from?.Actor2!;
+        to.Actor3 = from?.Actor3!;
+        to.Actor4 = from?.Actor4!;
+        to.Actor5 = from?.Actor5!;
+        to.Actor6 = from?.Actor6!;
+        to.Actor7 = from?.Actor7!;
+        to.Actor8 = from?.Actor8!;
+        to.Actor9 = from?.Actor9!;
+        to.Actor10 = from?.Actor10!;
+    }
+
+    // Adds the top-level marker properties to the serialized JSON without touching the Se
+    // type. Se has no such properties, so System.Text.Json silently ignores them on import.
+    private static string InjectExportMarkers(string json, string osName, bool includesShortcutSlots)
     {
         try
         {
@@ -462,6 +533,11 @@ public partial class SettingsImportExportViewModel : ObservableObject
             {
                 writer.WriteStartObject();
                 writer.WriteString(ExportSourceOsProperty, osName);
+                if (includesShortcutSlots)
+                {
+                    writer.WriteBoolean(ExportShortcutSlotsProperty, true);
+                }
+
                 foreach (var prop in doc.RootElement.EnumerateObject())
                 {
                     prop.WriteTo(writer);
@@ -495,6 +571,53 @@ public partial class SettingsImportExportViewModel : ObservableObject
         }
 
         return null;
+    }
+
+    private static bool TryReadExportIncludesShortcutSlots(string json)
+    {
+        try
+        {
+            using var doc = JsonDocument.Parse(json);
+            return doc.RootElement.ValueKind == JsonValueKind.Object &&
+                   doc.RootElement.TryGetProperty(ExportShortcutSlotsProperty, out var element) &&
+                   element.ValueKind == JsonValueKind.True;
+        }
+        catch
+        {
+            // Missing marker: a file from before the slots travelled - leave them alone.
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Whether the export file carries the "search via" slot values at all. They joined the
+    /// existing shortcut-slot marker later, so this is detected off the serialized property
+    /// itself: a file from a build without them lacks the key entirely.
+    /// </summary>
+    private static bool TryReadHasCustomSearchSlots(string json)
+    {
+        try
+        {
+            using var doc = JsonDocument.Parse(json);
+            if (doc.RootElement.ValueKind != JsonValueKind.Object)
+            {
+                return false;
+            }
+
+            foreach (var prop in doc.RootElement.EnumerateObject())
+            {
+                if (string.Equals(prop.Name, nameof(Se.CustomSearch1Name), StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     public async void OnLoaded(object? sender, RoutedEventArgs e)

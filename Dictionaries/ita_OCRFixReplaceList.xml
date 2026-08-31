@@ -64,7 +64,12 @@
     <RegEx find="\b\|\b" replaceWith="I" />
     <RegEx find="([\p{Ll},] )(I)([oai][, \.])" replaceWith="$1l$3" />
     <RegEx find="\b(I)([àì]|'[ \r\n])\b" replaceWith="l$2" />
-    <RegEx find="([\p{Ll},] )(II)\b" replaceWith="$1Il" />  
+    <RegEx find="([\p{Ll},] )(II)\b" replaceWith="$1Il" />
+    <!-- E' scritto con apostrofo al posto di È (issue #14092). Il contesto sinistro esplicito
+         evita di mangiare la virgoletta di chiusura di una lettera citata ('E' resta 'E');
+         il lookahead protegge le elisioni attaccate (E'sti). -->
+    <RegEx find="(^|[\s&quot;«(\[\-–—…])E['’](?![\p{L}\p{N}])" replaceWith="$1È" />
+    <RegEx find="(\p{L}['’])E['’](?![\p{L}\p{N}])" replaceWith="$1È" /> <!-- COS'E' in COS'È -->
   </RegularExpressions>
   <RegularExpressionsIfSpelledCorrectly>
     <!-- Italic l misread as i (#13660): trailing i to l, double ii to ll.  -->

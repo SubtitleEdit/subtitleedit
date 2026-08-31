@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -496,6 +496,25 @@ public static class UiUtil
             VerticalContentAlignment = VerticalAlignment.Center,
             Command = command,
         };
+    }
+
+    /// <summary>
+    /// Gives a card-style button a green-ish background while hovered, focused or pressed,
+    /// so the active choice stands out (used by the assisted split/move option cards).
+    /// </summary>
+    public static Button WithGreenishActiveBackground(this Button button)
+    {
+        var activeBrush = new SolidColorBrush(Color.FromArgb(0x50, 0x4C, 0xAF, 0x50));
+        var pressedBrush = new SolidColorBrush(Color.FromArgb(0x78, 0x4C, 0xAF, 0x50));
+        foreach (var (pseudoClass, brush) in new[] { (":pointerover", activeBrush), (":focus", activeBrush), (":pressed", pressedBrush) })
+        {
+            button.Styles.Add(new Style(x => x.OfType<Button>().Class(pseudoClass).Template().OfType<ContentPresenter>())
+            {
+                Setters = { new Setter(ContentPresenter.BackgroundProperty, brush) },
+            });
+        }
+
+        return button;
     }
 
     public static Button MakeButtonOk(IRelayCommand? command)
@@ -1610,6 +1629,17 @@ public static class UiUtil
         control.Bind(Visual.IsVisibleProperty, new Binding(isVisiblePropertyPath)
         {
             Source = source,
+            Mode = BindingMode.OneWay,
+        });
+
+        return control;
+    }
+
+    public static T WithBindIsEnabled<T>(this T control, string isEnabledPropertyPath) where T : Control
+    {
+        control.Bind(InputElement.IsEnabledProperty, new Binding
+        {
+            Path = isEnabledPropertyPath,
             Mode = BindingMode.OneWay,
         });
 
@@ -2934,7 +2964,7 @@ public static class UiUtil
         {
             Setters =
             {
-                new Setter(TextBlock.FontFamilyProperty, new FontFamily(fontName)),
+                new Setter(TextBlock.FontFamilyProperty, FontFamilyHelper.Make(fontName)),
             }
         });
 
@@ -2942,7 +2972,7 @@ public static class UiUtil
         {
             Setters =
             {
-                new Setter(TextBox.FontFamilyProperty, new FontFamily(fontName)),
+                new Setter(TextBox.FontFamilyProperty, FontFamilyHelper.Make(fontName)),
             }
         });
 
@@ -2950,7 +2980,7 @@ public static class UiUtil
         {
             Setters =
             {
-                new Setter(Button.FontFamilyProperty, new FontFamily(fontName)),
+                new Setter(Button.FontFamilyProperty, FontFamilyHelper.Make(fontName)),
             }
         });
 
@@ -2958,7 +2988,7 @@ public static class UiUtil
         {
             Setters =
             {
-                new Setter(Avalonia.Controls.MenuItem.FontFamilyProperty, new FontFamily(fontName)),
+                new Setter(Avalonia.Controls.MenuItem.FontFamilyProperty, FontFamilyHelper.Make(fontName)),
             }
         });
 
@@ -2966,7 +2996,7 @@ public static class UiUtil
         {
             Setters =
             {
-                new Setter(Label.FontFamilyProperty, new FontFamily(fontName)),
+                new Setter(Label.FontFamilyProperty, FontFamilyHelper.Make(fontName)),
             }
         });
 
@@ -2974,7 +3004,7 @@ public static class UiUtil
         {
             Setters =
             {
-                new Setter(ComboBox.FontFamilyProperty, new FontFamily(fontName)),
+                new Setter(ComboBox.FontFamilyProperty, FontFamilyHelper.Make(fontName)),
             }
         });
     }
@@ -3158,6 +3188,36 @@ public static class UiUtil
         return title + " - " + System.IO.Path.GetFileName(fileName);
     }
 
+    /// <summary>
+    /// Gives <paramref name="control"/> the initial keyboard focus, once, the first time the
+    /// window is activated.
+    ///
+    /// The usual "Activated += delegate { x.Focus(); }" fires on <em>every</em> activation, so
+    /// Alt+Tabbing away and back yanks focus out of whatever the user had moved it to and
+    /// drops it back on the same control (#14313). Only the first activation is the initial
+    /// one; after that the window's own focus memory is the right answer.
+    /// </summary>
+    internal static void FocusOnFirstActivation(Window window, Control control)
+    {
+        FocusOnFirstActivation(window, () => control.Focus());
+    }
+
+    /// <summary>
+    /// Runs <paramref name="setInitialFocus"/> once, on the first activation of the window.
+    /// The overload to use when the initial focus is more than one control's Focus() call -
+    /// a row in a grid, a choice between two controls, a select-all before the focus.
+    /// </summary>
+    internal static void FocusOnFirstActivation(Window window, Action setInitialFocus)
+    {
+        void OnActivated(object? sender, EventArgs e)
+        {
+            window.Activated -= OnActivated;
+            setInitialFocus();
+        }
+
+        window.Activated += OnActivated;
+    }
+
     internal static void InitializeWindow(Window window, string name)
     {
         window.Icon = GetSeIcon();
@@ -3171,8 +3231,10 @@ public static class UiUtil
         // Guarded so the cleanup runs at most once per window even if Closed were ever raised
         // again, keeping non-idempotent cleanups safe by construction. (#13100)
         var cleanedUp = false;
+        var closed = false;
         window.Closed += (_, _) =>
         {
+            closed = true;
             if (!cleanedUp && window.DataContext is IClosingCleanup cleanup)
             {
                 cleanedUp = true;
@@ -3186,10 +3248,19 @@ public static class UiUtil
         // Clamp once when opened, and once more at Background priority so windows that
         // re-fit themselves in a posted callback (LockMinimumToContentSize in e.g. the
         // burn-in window runs at Loaded priority) get clamped again afterwards.
+        // Short-lived windows (e.g. the "please wait" window shown while extracting a
+        // Matroska track) can close before the posted callback runs; touching the window
+        // then throws ObjectDisposedException from the disposed platform impl. (#14161)
         window.Opened += (_, _) =>
         {
             ClampToWorkingArea(window);
-            Dispatcher.UIThread.Post(() => ClampToWorkingArea(window), DispatcherPriority.Background);
+            Dispatcher.UIThread.Post(() =>
+            {
+                if (!closed)
+                {
+                    ClampToWorkingArea(window);
+                }
+            }, DispatcherPriority.Background);
         };
     }
 

@@ -106,7 +106,7 @@ public class WebVttPropertiesWindow : Window
 
         Content = grid;
 
-        Activated += delegate { textBoxAn7.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, textBoxAn7); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 

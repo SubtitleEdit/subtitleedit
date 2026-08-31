@@ -63,7 +63,7 @@ public class FindTextWindow : Window
 
         Content = grid;
         
-        Activated += delegate { textBoxSearch.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, textBoxSearch); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 

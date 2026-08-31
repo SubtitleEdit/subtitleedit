@@ -33,10 +33,13 @@ public partial class ImportCsvXlsxCustomColumnsViewModel : ObservableObject
 
     private readonly IFileHelper _fileHelper;
 
+    // Kept in sync with UnknownFormatImporterCsv's name lists, so a spreadsheet that auto-imports
+    // when opened directly gets the same columns pre-mapped when opened through this window.
     private static readonly HashSet<string> StartHeaderNames = new(StringComparer.OrdinalIgnoreCase)
     {
         "start", "start time", "in", "begin", "starttime", "start_time", "startmillis", "start_millis",
         "startms", "start_ms", "startmilliseconds", "start_milliseconds", "from", "fromtime",
+        "from_ms", "fromms", "frommilliseconds", "from_milliseconds", "timecode",
         "tc-in", "tc in", "show", "start tc", "start-tc", "tc start", "tc-start",
     };
 
@@ -44,6 +47,7 @@ public partial class ImportCsvXlsxCustomColumnsViewModel : ObservableObject
     {
         "end", "end time", "out", "stop", "endtime", "end_time", "endmillis", "end_millis",
         "endms", "end_ms", "endmilliseconds", "end_milliseconds", "to", "totime",
+        "to_ms", "toms", "tomilliseconds", "to_milliseconds",
         "tc-out", "tc out", "hide", "end tc", "end-tc", "tc end", "tc-end",
     };
 
@@ -59,7 +63,7 @@ public partial class ImportCsvXlsxCustomColumnsViewModel : ObservableObject
 
     private static readonly HashSet<string> CharacterHeaderNames = new(StringComparer.OrdinalIgnoreCase)
     {
-        "speaker", "voice", "character", "role", "actor", "rolle", "character name", "sprecher",
+        "speaker", "voice", "character", "role", "name", "actor", "rolle", "character name", "sprecher",
     };
 
     public ImportCsvXlsxCustomColumnsViewModel(IFileHelper fileHelper)
@@ -113,6 +117,11 @@ public partial class ImportCsvXlsxCustomColumnsViewModel : ObservableObject
         {
             e.Handled = true;
             Window?.Close();
+        }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/import-csv-xlsx");
         }
     }
 
@@ -337,20 +346,26 @@ public partial class ImportCsvXlsxCustomColumnsViewModel : ObservableObject
             return false;
         }
 
+        // Blank values carry no information either way - a single empty cell, or the blank row
+        // a trailing newline produces, used to veto the whole column and silently reinterpret
+        // HH:MM:SS:FF as milliseconds. Decide on the values that are actually present.
+        var considered = 0;
         foreach (var s in values)
         {
             if (string.IsNullOrWhiteSpace(s))
             {
-                return false;
+                continue;
             }
 
+            considered++;
             var parts = s.Split(TimeCode.TimeSplitChars, StringSplitOptions.RemoveEmptyEntries);
             if (parts.Length != 4 || parts[3].Trim().Length != 2)
             {
                 return false;
             }
         }
-        return true;
+
+        return considered > 0;
     }
 
     private static bool IsMillisecondsHeader(string header)
@@ -449,7 +464,17 @@ public partial class ImportCsvXlsxCustomColumnsViewModel : ObservableObject
                 lettered++;
             }
         }
-        return lettered >= 2;
+
+        // Two lettered cells alone is not evidence - an ordinary "JOHN | Hello there." data row
+        // has that, and consuming it as a header silently dropped the first subtitle. Require at
+        // least one cell that actually names a column we recognise; when nothing does, the row is
+        // treated as data (losing a cue is worse than showing an unmappable header as one).
+        if (lettered < 2)
+        {
+            return false;
+        }
+
+        return firstRow.Any(cell => GuessRoleFromHeader(cell ?? string.Empty) != CsvColumnRole.None);
     }
 
     private static CsvColumnRole GuessRoleFromHeader(string headerName)
@@ -482,7 +507,9 @@ public partial class ImportCsvXlsxCustomColumnsViewModel : ObservableObject
         {
             return CsvColumnRole.Start;
         }
-        if (compact.StartsWith("end") || compact.StartsWith("to") || compact.StartsWith("stop"))
+        // No bare "to" prefix here: it also matched unrelated headers like "Total" or
+        // "Topic" - the common "to"/"toMs"/"toTime" spellings are in the exact-name set.
+        if (compact.StartsWith("end") || compact.StartsWith("stop"))
         {
             return CsvColumnRole.End;
         }

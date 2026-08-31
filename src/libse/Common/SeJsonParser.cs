@@ -86,6 +86,15 @@ namespace Nikse.SubtitleEdit.Core.Common
                     {
                         i++;
                         var end = content.IndexOf('"', i);
+                        if (end < 0)
+                        {
+                            // Unterminated name - the file is truncated or damaged. Bail out
+                            // instead of letting Substring throw out of the reader (and out of
+                            // IsMine, which format detection calls unguarded).
+                            Errors.Add($"Fatal - unterminated string at position {i}");
+                            return list;
+                        }
+
                         objectName = content.Substring(i, end - i).Trim();
                         var colon = content.IndexOf(':', end);
                         if (colon < 0)
@@ -151,7 +160,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                                 Errors.Add($"Fatal - expected char \" after position {endSeek}");
                                 return list;
                             }
-                            skip = content[end - 1] == '\\';
+                            // end can be 0 when the value's opening quote is the very first
+                            // character (a truncated file), and content[-1] threw.
+                            skip = end > 0 && content[end - 1] == '\\';
                             if (skip)
                             {
                                 endSeek = end + 1;
@@ -247,7 +258,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                     else if ("+-0123456789".IndexOf(ch) >= 0)
                     {
                         sb.Clear();
-                        while (IsNumberChar(content[i]) && i < max)
+                        // Bounds check FIRST: this indexed content[i] before testing i < max,
+                        // so a file whose last characters are a number (a truncated one)
+                        // threw IndexOutOfRangeException straight out of the reader.
+                        while (i < max && IsNumberChar(content[i]))
                         {
                             sb.Append(content[i]);
                             i++;
@@ -378,6 +392,15 @@ namespace Nikse.SubtitleEdit.Core.Common
                     {
                         i++;
                         var end = content.IndexOf('"', i);
+                        if (end < 0)
+                        {
+                            // Unterminated name - the file is truncated or damaged. Bail out
+                            // instead of letting Substring throw out of the reader (and out of
+                            // IsMine, which format detection calls unguarded).
+                            Errors.Add($"Fatal - unterminated string at position {i}");
+                            return list;
+                        }
+
                         objectName = content.Substring(i, end - i).Trim();
                         var colon = content.IndexOf(':', end);
                         if (colon < 0)
@@ -443,7 +466,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                                 Errors.Add($"Fatal - expected char \" after position {endSeek}");
                                 return list;
                             }
-                            skip = content[end - 1] == '\\';
+                            // end can be 0 when the value's opening quote is the very first
+                            // character (a truncated file), and content[-1] threw.
+                            skip = end > 0 && content[end - 1] == '\\';
                             if (skip)
                             {
                                 endSeek = end + 1;
@@ -684,6 +709,15 @@ namespace Nikse.SubtitleEdit.Core.Common
                     {
                         i++;
                         var end = content.IndexOf('"', i);
+                        if (end < 0)
+                        {
+                            // Unterminated name - the file is truncated or damaged. Bail out
+                            // instead of letting Substring throw out of the reader (and out of
+                            // IsMine, which format detection calls unguarded).
+                            Errors.Add($"Fatal - unterminated string at position {i}");
+                            return list;
+                        }
+
                         objectName = content.Substring(i, end - i).Trim();
                         var colon = content.IndexOf(':', end);
                         if (colon < 0)
@@ -749,7 +783,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                                 Errors.Add($"Fatal - expected char \" after position {endSeek}");
                                 return list;
                             }
-                            skip = content[end - 1] == '\\';
+                            // end can be 0 when the value's opening quote is the very first
+                            // character (a truncated file), and content[-1] threw.
+                            skip = end > 0 && content[end - 1] == '\\';
                             if (skip)
                             {
                                 endSeek = end + 1;
@@ -826,7 +862,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                     else if ("+-0123456789".IndexOf(ch) >= 0)
                     {
-                        while (IsNumberChar(content[i]) && i < max)
+                        // Bounds check FIRST: this indexed content[i] before testing i < max,
+                        // so a file whose last characters are a number (a truncated one)
+                        // threw IndexOutOfRangeException straight out of the reader.
+                        while (i < max && IsNumberChar(content[i]))
                         {
                             i++;
                         }
@@ -978,6 +1017,13 @@ namespace Nikse.SubtitleEdit.Core.Common
                     {
                         i++;
                         var end = content.IndexOf('"', i);
+                        if (end < 0)
+                        {
+                            // Unterminated name - see the list-returning overloads above.
+                            Errors.Add($"Fatal - unterminated string at position {i}");
+                            return string.Empty;
+                        }
+
                         objectName = content.Substring(i, end - i).Trim();
                         var colon = content.IndexOf(':', end);
                         if (colon < 0)
@@ -1052,7 +1098,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                                 Errors.Add($"Fatal - expected char \" after position {endSeek}");
                                 return string.Empty;
                             }
-                            skip = content[end - 1] == '\\';
+                            // end can be 0 when the value's opening quote is the very first
+                            // character (a truncated file), and content[-1] threw.
+                            skip = end > 0 && content[end - 1] == '\\';
                             if (skip)
                             {
                                 endSeek = end + 1;
@@ -1137,7 +1185,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                     else if ("+-0123456789".IndexOf(ch) >= 0)
                     {
                         sb.Clear();
-                        while (IsNumberChar(content[i]) && i < max)
+                        // Bounds check FIRST: this indexed content[i] before testing i < max,
+                        // so a file whose last characters are a number (a truncated one)
+                        // threw IndexOutOfRangeException straight out of the reader.
+                        while (i < max && IsNumberChar(content[i]))
                         {
                             sb.Append(content[i]);
                             i++;
@@ -1280,6 +1331,15 @@ namespace Nikse.SubtitleEdit.Core.Common
                     {
                         i++;
                         var end = content.IndexOf('"', i);
+                        if (end < 0)
+                        {
+                            // Unterminated name - the file is truncated or damaged. Bail out
+                            // instead of letting Substring throw out of the reader (and out of
+                            // IsMine, which format detection calls unguarded).
+                            Errors.Add($"Fatal - unterminated string at position {i}");
+                            return list;
+                        }
+
                         objectName = content.Substring(i, end - i).Trim();
                         var colon = content.IndexOf(':', end);
                         if (colon < 0)
@@ -1364,7 +1424,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                                 Errors.Add($"Fatal - expected char \" after position {endSeek}");
                                 return list;
                             }
-                            skip = content[end - 1] == '\\';
+                            // end can be 0 when the value's opening quote is the very first
+                            // character (a truncated file), and content[-1] threw.
+                            skip = end > 0 && content[end - 1] == '\\';
                             if (skip)
                             {
                                 endSeek = end + 1;

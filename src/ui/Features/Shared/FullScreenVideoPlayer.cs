@@ -210,7 +210,7 @@ public class FullScreenVideoWindow : Window
         // back to the docked player.
         Closed += (_, _) => videoPlayer.CloseAndDisposePlayer();
 
-        Activated += delegate { Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, () => { Focus(); }); // hack to make OnKeyDown work
         Loaded += async(_, _) =>
         {
             WindowState = WindowState.Maximized;
@@ -256,6 +256,12 @@ public class FullScreenVideoWindow : Window
 
                 videoPlayer.VideoPlayer.Position = position;
                 videoPlayer.Position = position;
+
+                // Restore done - a rebuild reading from this control gets the live position
+                // again (issue #14218). Only once the player has actually arrived, though: mpv
+                // can still be loading here, and handing a rebuild the 0 of a player that never
+                // reached the target is the rewind this guard exists to prevent.
+                videoPlayer.EndPositionRestoreIfArrived();
             });
         };
     }

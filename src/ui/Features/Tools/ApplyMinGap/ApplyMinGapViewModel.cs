@@ -87,47 +87,78 @@ public partial class ApplyMinGapViewModel : ObservableObject, IClosingCleanup
 
     private void UpdatePreview()
     {
+        var (fixedSubtitles, previewItems, fixedCount) = BuildFixedSubtitles();
+        FixedSubtitles = fixedSubtitles;
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            Subtitles.Clear();
+            foreach (var item in previewItems)
+            {
+                Subtitles.Add(item);
+            }
+
+            StatusText = string.Format(Se.Language.Tools.ApplyMinGaps.NumberOfGapsFixedX, fixedCount);
+        });
+    }
+
+    /// <summary>
+    /// Applies the current minimum gap to a copy of the subtitle and returns the result together
+    /// with the preview rows. Kept synchronous so <see cref="Ok"/> can build the list it hands to
+    /// the caller instead of depending on the preview timer having ticked.
+    /// </summary>
+    private (List<SubtitleLineViewModel> Fixed, List<ApplyMinGapItem> Preview, int FixedCount) BuildFixedSubtitles()
+    {
         var minMsBetweenLines = MinGapMsOrFrames;
         if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
         {
             minMsBetweenLines = SubtitleFormat.FramesToMilliseconds(minMsBetweenLines);
         }
 
-        FixedSubtitles.Clear();
-        FixedSubtitles = new List<SubtitleLineViewModel>(_allSubtitles.Select(p => new SubtitleLineViewModel(p)));
+        var fixedSubtitles = _allSubtitles.Select(p => new SubtitleLineViewModel(p)).ToList();
+        var previewItems = new List<ApplyMinGapItem>();
+        var fixedCount = 0;
 
-        Dispatcher.UIThread.Post(() =>
+        for (var index = 0; index < fixedSubtitles.Count - 1; index++)
         {
-            Subtitles.Clear();
-            var fixedCount = 0;
-            for (var index = 0; index < FixedSubtitles.Count-1; index++)
+            var current = fixedSubtitles[index];
+            var next = fixedSubtitles[index + 1];
+            var gapMs = next.StartTime.TotalMilliseconds - current.EndTime.TotalMilliseconds;
+            if (gapMs >= minMsBetweenLines)
             {
-                var current = FixedSubtitles[index];
-                var next = FixedSubtitles[index + 1];
-                var gapMs = next.StartTime.TotalMilliseconds - current.EndTime.TotalMilliseconds;
-                if (gapMs < minMsBetweenLines)
-                {
-                    fixedCount++;
-                    
-                    var before = new TimeCode(gapMs).ToShortDisplayString();
-                    
-                    var newEndMs = next.StartTime.TotalMilliseconds  - minMsBetweenLines;
-                    current.EndTime = TimeSpan.FromMilliseconds(newEndMs);
-                    var newGapMs = next.StartTime.TotalMilliseconds - current.EndTime.TotalMilliseconds;
-
-                    var after = new TimeCode(newGapMs).ToShortDisplayString();
-                    var fixFormat = Se.Language.Tools.ApplyMinGaps.ChangedGapFromXToYCommentZ;
-                    var comment = string.Empty;
-                    var info = string.Format(fixFormat, before, after, comment);
-
-                    var vm = new ApplyMinGapItem(current);
-                    vm.InfoText = info; 
-                    Subtitles.Add(vm);
-                }
+                continue;
             }
 
-            StatusText = string.Format(Se.Language.Tools.ApplyMinGaps.NumberOfGapsFixedX, fixedCount);
-        });
+            var newEndMs = next.StartTime.TotalMilliseconds - minMsBetweenLines;
+
+            // Skip only when the new end would land at or before this line's own start. That
+            // happens for a short line followed closely by the next one (a 50 ms line, next at
+            // +10 ms, gap 100), and produced a negative duration that was still counted as a fix
+            // and reached the grid and the saved file.
+            // Deliberately NOT the minimum-display threshold that BatchConverter.ApplyMinGap
+            // uses: shortening a line below it is this dialog's normal, intended behaviour.
+            var newDuration = newEndMs - current.StartTime.TotalMilliseconds;
+            if (newDuration <= 0)
+            {
+                continue;
+            }
+
+            fixedCount++;
+
+            var before = new TimeCode(gapMs).ToShortDisplayString();
+
+            current.EndTime = TimeSpan.FromMilliseconds(newEndMs);
+            var newGapMs = next.StartTime.TotalMilliseconds - current.EndTime.TotalMilliseconds;
+
+            var after = new TimeCode(newGapMs).ToShortDisplayString();
+            var fixFormat = Se.Language.Tools.ApplyMinGaps.ChangedGapFromXToYCommentZ;
+            var comment = string.Empty;
+            var info = string.Format(fixFormat, before, after, comment);
+
+            previewItems.Add(new ApplyMinGapItem(current) { InfoText = info });
+        }
+
+        return (fixedSubtitles, previewItems, fixedCount);
     }
 
     public void Initialize(List<SubtitleLineViewModel> subtitles)
@@ -174,6 +205,12 @@ public partial class ApplyMinGapViewModel : ObservableObject, IClosingCleanup
     [RelayCommand]
     private void Ok()
     {
+        // FixedSubtitles was only ever built by the 500 ms preview timer, and the caller replaces
+        // the whole subtitle with it - so pressing OK before the first tick wiped every line, and
+        // pressing it right after changing the gap applied the previous value. Build it here.
+        var (fixedSubtitles, _, _) = BuildFixedSubtitles();
+        FixedSubtitles = fixedSubtitles;
+
         SaveSettings();
         OkPressed = true;
         Window?.Close();

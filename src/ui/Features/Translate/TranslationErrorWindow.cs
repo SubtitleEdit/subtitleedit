@@ -126,7 +126,7 @@ public class TranslationErrorWindow : Window
 
         Content = content;
 
-        Activated += delegate { buttonOk.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, buttonOk);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

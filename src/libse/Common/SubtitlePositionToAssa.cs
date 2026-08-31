@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
+﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -123,26 +123,36 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             var rows = GetEbuRowCount(header);
             var newLineRows = Math.Max(1, Configuration.Settings.SubtitleSettings.EbuStlNewLineRows);
+            var marginBottom = Configuration.Settings.SubtitleSettings.EbuStlMarginBottom;
             var applied = false;
 
             foreach (var p in subtitle.Paragraphs)
             {
-                if (string.IsNullOrEmpty(p.MarginV))
+                var hasRow = int.TryParse(p.MarginV, NumberStyles.Integer, CultureInfo.InvariantCulture, out var row) &&
+                             row >= 1 &&
+                             row <= rows;
+
+                // A row number is not a pixel margin - leaving one behind would nudge the line by
+                // a near random amount.
+                p.MarginV = null;
+
+                if (!usePositions)
                 {
                     continue;
                 }
 
-                if (!usePositions ||
-                    !int.TryParse(p.MarginV, NumberStyles.Integer, CultureInfo.InvariantCulture, out var row) ||
-                    row < 1 || row > rows)
+                var lineCount = Math.Max(1, Utilities.GetNumberOfLines(p.Text));
+                if (!hasRow)
                 {
-                    // A row number is not a pixel margin - leaving it would nudge every line
-                    // by a near random amount.
-                    p.MarginV = null;
-                    continue;
+                    // Only a subtitle that was read from an STL file carries teletext rows. Anything
+                    // typed in or converted from another format has none, and used to be skipped
+                    // outright - so for the far more common case the justification and the vertical
+                    // margins of the EBU options dialog changed nothing on screen at all. Put the
+                    // line where Ebu.Save would put it: counted up from the bottom margin.
+                    row = Math.Max(1, rows - marginBottom - (lineCount - 1) * newLineRows);
                 }
 
-                var lastRow = row + (Math.Max(1, Utilities.GetNumberOfLines(p.Text)) - 1) * newLineRows;
+                var lastRow = row + (lineCount - 1) * newLineRows;
                 var alignment = GetLeadingAlignment(p.Text);
                 if (alignment == 0)
                 {
@@ -158,6 +168,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                     {
                         alignment = 5;
                     }
+
+                    // The row says how far down the line sits, the justification says which way it
+                    // is aligned - without this every line stays centered no matter what the EBU
+                    // options dialog is set to.
+                    alignment += GetEbuJustificationOffset();
 
                     p.Text = "{\\an" + alignment.ToString(CultureInfo.InvariantCulture) + "}" + p.Text;
                 }
@@ -179,6 +194,28 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return applied;
+        }
+
+        /// <summary>
+        /// Turns the EBU justification code into a shift of the ASSA alignment column: the codes
+        /// are 0 = unchanged, 1 = left, 2 = centered and 3 = right, and each centered alignment
+        /// (2, 5 and 8) has its left neighbour one below it and its right one above.
+        /// </summary>
+        /// <remarks>
+        /// Read from the EBU STL settings, next to the margins and the teletext flags this method's
+        /// caller uses. It used to come off <see cref="Ebu.EbuUiHelper"/>, which is the carrier that
+        /// takes the code to the writer, not a setting: it is null until a save or the save options
+        /// dialog creates one - so a preview before either showed everything centered - and batch
+        /// convert overwrites it with its own job's code.
+        /// </remarks>
+        private static int GetEbuJustificationOffset()
+        {
+            switch (Configuration.Settings.SubtitleSettings.EbuStlJustificationCode)
+            {
+                case 1: return -1;
+                case 3: return 1;
+                default: return 0;
+            }
         }
 
         private static int GetEbuRowCount(string header)

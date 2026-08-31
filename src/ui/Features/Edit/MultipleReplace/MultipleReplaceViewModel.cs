@@ -518,7 +518,10 @@ public partial class MultipleReplaceViewModel : ObservableObject
     [RelayCommand]
     private async Task CategoryAddCategory(RuleTreeNode? node)
     {
-        var category = new RuleTreeNode(node, string.Empty, new ObservableCollection<RuleTreeNode>(), true);
+        // Categories are always top-level (they are added to, removed from and reordered inside
+        // Nodes), so the new one has no parent - passing the node whose context menu was used
+        // left a root category claiming another category as its Parent.
+        var category = new RuleTreeNode(null, string.Empty, new ObservableCollection<RuleTreeNode>(), true);
         var result = await _windowService.ShowDialogAsync<EditCategoryWindow, EditCategoryViewModel>(Window!,
             vm =>
             {
@@ -1040,15 +1043,24 @@ public partial class MultipleReplaceViewModel : ObservableObject
 
         _dirty = true;
         SelectedNode = node;
-        Dispatcher.UIThread.Post(() =>
+        Dispatcher.UIThread.Post(() => FocusNode(node), DispatcherPriority.Input);
+    }
+
+    /// <summary>
+    /// Selects a node and puts keyboard focus back on its row, so the next Ctrl+Up/Down keeps
+    /// walking the same node. <see cref="ItemsControl.ContainerFromItem"/> only ever sees the
+    /// top-level categories, so a rule - which lives one level down - never got its container
+    /// back: focus was left nowhere, the tree handed it to the category above on the next key
+    /// press, and that stole the selection (#14136).
+    /// </summary>
+    private void FocusNode(RuleTreeNode node)
+    {
+        SelectedNode = node;
+        if (RulesTreeView.TreeContainerFromItem(node) is TreeViewItem container)
         {
-            SelectedNode = node;
-            if (RulesTreeView.ContainerFromItem(node) is TreeViewItem container)
-            {
-                container.BringIntoView();
-                container.Focus(NavigationMethod.Directional);
-            }
-        }, DispatcherPriority.Input);
+            container.BringIntoView();
+            container.Focus(NavigationMethod.Directional);
+        }
     }
 
     internal void OnKeyDown(object? sender, KeyEventArgs e)
@@ -1137,16 +1149,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
 
         // The rule's own container only exists once the category above it has expanded, so
         // selecting and scrolling to it has to wait for that layout pass.
-        Dispatcher.UIThread.Post(() =>
-        {
-            SelectedNode = rule;
-            var container = RulesTreeView.ContainerFromItem(rule) as TreeViewItem;
-            if (container != null)
-            {
-                container.BringIntoView();
-                container.Focus(NavigationMethod.Directional);
-            }
-        }, DispatcherPriority.Input);
+        Dispatcher.UIThread.Post(() => FocusNode(rule), DispatcherPriority.Input);
     }
 
     /// <summary>
@@ -1221,19 +1224,10 @@ public partial class MultipleReplaceViewModel : ObservableObject
                         selectedNode = parent.SubNodes[parent.SubNodes.Count - 1];
                     }
 
-                    Dispatcher.UIThread.Post(() =>
+                    if (selectedNode != null)
                     {
-                        if (selectedNode != null)
-                        {
-                            SelectedNode = selectedNode;
-                            var container = RulesTreeView.ContainerFromItem(selectedNode) as TreeViewItem;
-                            if (container != null)
-                            {
-                                container.BringIntoView();
-                                container.Focus(NavigationMethod.Directional);
-                            }
-                        }
-                    }, DispatcherPriority.Input);
+                        Dispatcher.UIThread.Post(() => FocusNode(selectedNode), DispatcherPriority.Input);
+                    }
                 }
             }
         }
@@ -1273,7 +1267,11 @@ public partial class MultipleReplaceViewModel : ObservableObject
     {
         return new RuleTreeNode(node.Parent, new MultipleReplaceRule
         {
-            Active = node.IsActive,
+            // "node" is only the neighbour used to find the insert position - a rule the user just
+            // typed must start active, as CategoryAddRule does. Inheriting the neighbour's state
+            // meant inserting next to an unticked rule silently created an unticked one that never
+            // ran, with nothing in the dialog to explain why.
+            Active = true,
             Description = result.Description,
             Find = result.FindWhat,
             ReplaceWith = result.ReplaceWith,

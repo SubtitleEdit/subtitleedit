@@ -149,7 +149,7 @@ public class ElevenLabsSettingsWindow : Window
 
         Content = grid;
 
-        Activated += delegate { sliderStability.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, sliderStability); // initial focus on an input, not an action button - a focused button clicks on bare Space
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

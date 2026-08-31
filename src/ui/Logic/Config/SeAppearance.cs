@@ -32,6 +32,7 @@ public class SeAppearance
     public bool SubtitleTextBoxColorTags { get; set; }
     public int SubtitleGridFormattingType { get; set; }
     public bool SubtitleGridLiveSpellCheck { get; set; }
+    public bool SubtitleGridCenterText { get; set; }
 
     public bool SubtitleTextBoxCenterText { get; set; }
     public bool SubtitleTextBoxLiveSpellCheck { get; set; }
@@ -113,6 +114,7 @@ public class SeAppearance
         SubtitleTextBoxColorTags = true;
         ShowHints = true;
         SubtitleTextBoxCenterText = false;
+        SubtitleGridCenterText = false;
         SubtitleTextBoxLiveSpellCheck = false;
         SubtitleGridFormattingType = (int)SubtitleGridFormattingTypes.ShowFormatting;
         GridLinesAppearance = SeGridLinesVisibility.None.ToString();

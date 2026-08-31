@@ -65,7 +65,7 @@ public class MergeSameTimeCodesWindow : Window
 
         Content = grid;
 
-        Activated += delegate { _numericUpDownMaxDiff.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, _numericUpDownMaxDiff); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += _vm.OnKeyDown;
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };

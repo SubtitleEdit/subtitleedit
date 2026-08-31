@@ -21,6 +21,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static readonly Regex FontTagsNoSpace1 = new Regex("[a-zA-z.!?]</font><font[a-zA-Z =\"']+>[a-zA-Z-]", RegexOptions.Compiled);
         private static readonly Regex FontTagsNoSpace2 = new Regex("[a-zA-z.!?]<font[a-zA-Z =\"']+>[a-zA-Z-]", RegexOptions.Compiled);
 
+        // "<font color=\"Blue\"></font>" - two teletext color codes in a row, e.g. a background
+        // color set right before the text color. Only the last one has any text, and SE has no
+        // background color for STL, so the empty tag is noise that shifts the text by a space.
+        private static readonly Regex EmptyFontTag = new Regex("<font color=\"[A-Za-z]+\"></font>", RegexOptions.Compiled);
+
         private static readonly Regex FontTagsStartSpace = new Regex("^<font color=\"[A-Za-z]+\"> ", RegexOptions.Compiled); // "<font color=\"Black\"> "
         private static readonly Regex FontTagsNewLineSpace = new Regex("[\r\n]+<font color=\"[A-Za-z]+\"> ", RegexOptions.Compiled); // "\r\n<font color=\"Black\"> "
 
@@ -282,20 +287,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 CommentFlag = 0;
             }
 
-            public byte[] GetBytesExtra(EbuGeneralSubtitleInformation header, MemoryStream extra)
+            /// <summary>
+            /// One extension block carrying the 112 text bytes starting at <paramref name="offset"/>.
+            /// Callers emit as many as the overflow needs - a single block capped the whole
+            /// subtitle at 224 bytes and silently discarded the rest.
+            /// </summary>
+            public byte[] GetBytesExtra(EbuGeneralSubtitleInformation header, byte[] extraBytes, int offset)
             {
                 var buffer = SaveHeader(header);
-                var bytes = extra.ToArray();
                 for (var i = 0; i < 112; i++)
                 {
-                    if (i < bytes.Length)
-                    {
-                        buffer[16 + i] = bytes[i];
-                    }
-                    else
-                    {
-                        buffer[16 + i] = 0x8f;
-                    }
+                    var index = offset + i;
+                    buffer[16 + i] = index < extraBytes.Length ? extraBytes[index] : (byte)0x8f;
                 }
 
                 return buffer;
@@ -794,123 +797,41 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (end > 0)
                 {
                     var f = line.Substring(i, end - i);
-                    if (f.Contains(" color=", StringComparison.OrdinalIgnoreCase))
+                    var colorStart = f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
+                    if (colorStart > 1)
                     {
-                        var colorStart = f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
-                        if (line.IndexOf('"', colorStart + " color=".Length + 1) > 0)
+                        // The attribute value may be double-quoted, single-quoted or bare
+                        // ("<font color=#ffff00>" is common in SubRip files). The old code
+                        // assumed a closing double quote and crashed the whole save on a
+                        // negative Substring length when there was none.
+                        var color = f.Substring(colorStart + " color=".Length).TrimStart();
+                        if (color.Length > 0 && (color[0] == '"' || color[0] == '\''))
                         {
-                            var colorEnd = f.IndexOf('"', colorStart + " color=".Length + 1);
-                            if (colorStart > 1)
+                            var quote = color[0];
+                            var closingQuote = color.IndexOf(quote, 1);
+                            color = closingQuote > 0 ? color.Substring(1, closingQuote - 1) : color.Substring(1);
+                        }
+                        else
+                        {
+                            var space = color.IndexOf(' ');
+                            if (space > 0)
                             {
-                                var color = f.Substring(colorStart + 7, colorEnd - (colorStart + 7));
-                                color = color.Trim('\'');
-                                color = color.Trim('\"');
-                                color = color.Trim('#');
-                                return GetNearestEbuColorCodeByte(color, encoding);
+                                color = color.Substring(0, space);
                             }
                         }
-                    }
-                }
 
-                return null;
-            }
-
-
-            private static byte? GetNearestEbuColorCodeByte(string color, Encoding encoding)
-            {
-                color = color.ToLowerInvariant();
-                if (color == "black" || color == "000000")
-                {
-                    return 0x00; // black
-                }
-
-                if (color == "red" || color == "ff0000")
-                {
-                    return 0x01; // red
-                }
-
-                if (color == "green" || color == "00ff00")
-                {
-                    return 0x02; // green
-                }
-
-                if (color == "yellow" || color == "ffff00")
-                {
-                    return 0x03; // yellow
-                }
-
-                if (color == "blue" || color == "0000ff")
-                {
-                    return 0x04; // blue
-                }
-
-                if (color == "magenta" || color == "ff00ff")
-                {
-                    return 0x05; // magenta
-                }
-
-                if (color == "cyan" || color == "00ffff")
-                {
-                    return 0x06; // cyan
-                }
-
-                if (color == "white" || color == "ffffff")
-                {
-                    return 0x07; // white
-                }
-
-                if (color.Length == 6)
-                {
-                    if (RegExprColor.IsMatch(color))
-                    {
-                        const int maxDiff = 130;
-                        var r = int.Parse(color.Substring(0, 2), NumberStyles.HexNumber);
-                        var g = int.Parse(color.Substring(2, 2), NumberStyles.HexNumber);
-                        var b = int.Parse(color.Substring(4, 2), NumberStyles.HexNumber);
-                        if (r < maxDiff && g < maxDiff && b < maxDiff)
+                        color = color.Trim().Trim('#');
+                        if (color.Length > 0)
                         {
-                            return 0x00; // black
-                        }
-
-                        if (r > 255 - maxDiff && g < maxDiff && b < maxDiff)
-                        {
-                            return 0x01; // red
-                        }
-
-                        if (r < maxDiff && g > 255 - maxDiff && b < maxDiff)
-                        {
-                            return 0x02; // green
-                        }
-
-                        if (r > 255 - maxDiff && g > 255 - maxDiff && b < maxDiff)
-                        {
-                            return 0x03; // yellow
-                        }
-
-                        if (r < maxDiff && g < maxDiff && b > 255 - maxDiff)
-                        {
-                            return 0x04; // blue
-                        }
-
-                        if (r > 255 - maxDiff && g < maxDiff && b > 255 - maxDiff)
-                        {
-                            return 0x05; // magenta
-                        }
-
-                        if (r < maxDiff && g > 255 - maxDiff && b > 255 - maxDiff)
-                        {
-                            return 0x06; // cyan
-                        }
-
-                        if (r > 255 - maxDiff && g > 255 - maxDiff && b > 255 - maxDiff)
-                        {
-                            return 0x07; // white
+                            return GetNearestColorCode(color);
                         }
                     }
                 }
 
                 return null;
             }
+
+
 
 
             private static byte[] ReplaceSpecialCharactersWithTwoByteEncoding(Encoding encoding, char ch, byte specialCharacter, string originalCharacters, string newCharacters)
@@ -952,6 +873,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public const string NameOfFormat = "EBU STL";
 
         public override string Name => NameOfFormat;
+
+        // Carries the teletext row the line starts on (MarginV) and the row count in the GSI block.
+        public override bool HasPositionSupport => true;
 
         internal struct SpecialCharacter
         {
@@ -1063,6 +987,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             stream.Write(buffer, 0, buffer.Length);
 
             var subtitleNumber = 0;
+            // Counted as blocks are written: a paragraph whose encoded text needs an
+            // extension block emits two, so TNB is not the subtitle count. It is patched
+            // into the already-written header below.
+            var numberOfTtiBlocks = 0;
             foreach (var p in subtitle.Paragraphs)
             {
                 var tti = new EbuTextTimingInformation();
@@ -1178,18 +1106,45 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 buffer = tti.GetBytes(header, extra);
                 if (extra.Length > 0)
                 {
-                    buffer[3] = 0; // ExtensionBlockNumber 
-                    stream.Write(buffer, 0, buffer.Length);
+                    // As many extension blocks as the overflow needs (112 text bytes each).
+                    // EBN 0xFF marks the last block of the subtitle; earlier blocks are numbered,
+                    // which is what makes LoadSubtitle merge them back together.
+                    var extraBytes = extra.ToArray();
+                    var extraBlockCount = (extraBytes.Length + 111) / 112;
 
-                    buffer = tti.GetBytesExtra(header, extra);
+                    buffer[3] = 0; // ExtensionBlockNumber - more blocks follow
                     stream.Write(buffer, 0, buffer.Length);
+                    numberOfTtiBlocks++;
+
+                    for (var extraBlock = 0; extraBlock < extraBlockCount; extraBlock++)
+                    {
+                        var extraBuffer = tti.GetBytesExtra(header, extraBytes, extraBlock * 112);
+                        extraBuffer[3] = extraBlock == extraBlockCount - 1
+                            ? (byte)0xff
+                            : (byte)Math.Min(extraBlock + 1, 0xef);
+                        stream.Write(extraBuffer, 0, extraBuffer.Length);
+                        numberOfTtiBlocks++;
+                    }
                 }
                 else
                 {
                     stream.Write(buffer, 0, buffer.Length);
+                    numberOfTtiBlocks++;
                 }
                 subtitleNumber++;
             }
+            // Rewrite GSI "Total Number of TTI blocks" (offset 238, 5 ASCII digits) now that the
+            // real count is known - it was written as the subtitle count, so any file containing
+            // an extension block under-reported it and tools walking the file by TNB lost the tail.
+            if (stream.CanSeek && numberOfTtiBlocks > 0)
+            {
+                var position = stream.Position;
+                var tnb = Encoding.ASCII.GetBytes(numberOfTtiBlocks.ToString("D5", CultureInfo.InvariantCulture));
+                stream.Seek(238, SeekOrigin.Begin);
+                stream.Write(tnb, 0, tnb.Length);
+                stream.Seek(position, SeekOrigin.Begin);
+            }
+
             return true;
         }
 
@@ -1290,12 +1245,33 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return "Not supported!";
         }
 
+        /// <summary>
+        /// Drops what only an STL can carry: the teletext box tags and the teletext row in MarginV.
+        /// </summary>
+        /// <remarks>
+        /// No other format knows either of them - the box tags used to end up as visible text in the
+        /// video preview and in the saved file, and a row number ("20") counts as an ASSA pixel
+        /// margin, which moved every line by a near random amount.
+        /// </remarks>
+        public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
+        {
+            foreach (var p in subtitle.Paragraphs)
+            {
+                if (p.Text != null && p.Text.Contains("<box>", StringComparison.Ordinal))
+                {
+                    p.Text = p.Text.Replace("<box>", string.Empty).Replace("</box>", string.Empty);
+                }
+
+                p.MarginV = null;
+            }
+        }
+
         public void LoadSubtitle(Subtitle subtitle, byte[] buffer)
         {
             subtitle.Paragraphs.Clear();
             var header = ReadHeader(buffer);
             subtitle.Header = header.ToString();
-            if (header.DisplayStandardCode == "1" || header.DisplayStandardCode == "2")
+            if (header.DisplayStandardCode == "1" || header.DisplayStandardCode == "2" || HasTeletextColorCodes(buffer))
             {
                 SeedTeletextBoxAndDoubleHeightSettings(buffer);
             }
@@ -1388,6 +1364,40 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox = useBox;
             Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight = useDoubleHeight;
+        }
+
+        /// <summary>
+        /// Colors only exist as teletext control codes, so a file that declares open subtitling
+        /// (DSC=0) is read without them. Some tools - Adobe Premiere among them - write the
+        /// teletext codes anyway and still stamp the header with 0, and reading those strictly
+        /// throws every color away. Nothing else uses 00h-1Fh in an open subtitling text field,
+        /// so their presence is taken as proof the file really is teletext coded.
+        /// </summary>
+        private static bool HasTeletextColorCodes(byte[] buffer)
+        {
+            const int startOfTextAndTimingBlock = 1024;
+            const int ttiSize = 128;
+
+            var index = startOfTextAndTimingBlock;
+            while (index + ttiSize <= buffer.Length)
+            {
+                if (buffer[index + 3] != 0xfe && buffer[index + 15] == 0) // skip user data and comment blocks
+                {
+                    for (var i = index + 16; i < index + ttiSize; i++)
+                    {
+                        // 00h (black) is left out on purpose: a writer that pads the text field with
+                        // zero bytes instead of 8Fh would otherwise look like a colored file.
+                        if (buffer[i] >= 0x01 && buffer[i] <= 0x07)
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+                index += ttiSize;
+            }
+
+            return false;
         }
 
         public static EbuGeneralSubtitleInformation ReadHeader(byte[] buffer)
@@ -1766,8 +1776,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             const byte boxingOff = 0x85;
 
             var list = new List<EbuTextTimingInformation>();
+            var hasTeletextColorCodes = header.DisplayStandardCode == "0" && HasTeletextColorCodes(buffer);
             var index = startOfTextAndTimingBlock;
             var sb = new StringBuilder();
+            // EBN 0xFF marks the LAST block of a subtitle, so a block continues the previous one
+            // when the previous block's EBN was not 0xFF - the same rule LoadSubtitle merges on.
+            byte previousExtensionBlockNumber = 0xff;
             while (index + ttiSize <= buffer.Length)
             {
                 var tti = new EbuTextTimingInformation
@@ -1796,7 +1810,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 // - unused space = 8Fh
                 var i = index + 16; // text block start at 17th byte (index 16)
                 var open = header.DisplayStandardCode != "1" && header.DisplayStandardCode != "2";
-                var closed = header.DisplayStandardCode != "0";
+                var closed = header.DisplayStandardCode != "0" || hasTeletextColorCodes;
                 var max = i + 112;
                 sb.Clear();
                 var lastWasNewLine = false;
@@ -1906,45 +1920,57 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     rows = 23;
                 }
 
-                if (tti.VerticalPosition < 3)
+                // Only the first block of a subtitle carries the alignment tag. A continuation
+                // block (EBN != 0xFF) is appended to the previous paragraph's text by
+                // LoadSubtitle, so tagging it too spliced an "{\anN}" into mid-sentence.
+                var isContinuationBlock = previousExtensionBlockNumber != 0xff;
+                if (tti.ExtensionBlockNumber != 0xfe) // FEh is user data, not part of the chain
                 {
-                    if (tti.JustificationCode == 1) // left
+                    previousExtensionBlockNumber = tti.ExtensionBlockNumber;
+                }
+
+                if (!isContinuationBlock)
+                {
+                    if (tti.VerticalPosition < 3)
                     {
-                        tti.TextField = "{\\an7}" + tti.TextField;
+                        if (tti.JustificationCode == 1) // left
+                        {
+                            tti.TextField = "{\\an7}" + tti.TextField;
+                        }
+                        else if (tti.JustificationCode == 3) // right
+                        {
+                            tti.TextField = "{\\an9}" + tti.TextField;
+                        }
+                        else
+                        {
+                            tti.TextField = "{\\an8}" + tti.TextField;
+                        }
                     }
-                    else if (tti.JustificationCode == 3) // right
+                    else if (tti.VerticalPosition <= rows / 2 + 1)
                     {
-                        tti.TextField = "{\\an9}" + tti.TextField;
+                        if (tti.JustificationCode == 1) // left
+                        {
+                            tti.TextField = "{\\an4}" + tti.TextField;
+                        }
+                        else if (tti.JustificationCode == 3) // right
+                        {
+                            tti.TextField = "{\\an6}" + tti.TextField;
+                        }
+                        else
+                        {
+                            tti.TextField = "{\\an5}" + tti.TextField;
+                        }
                     }
                     else
                     {
-                        tti.TextField = "{\\an8}" + tti.TextField;
-                    }
-                }
-                else if (tti.VerticalPosition <= rows / 2 + 1)
-                {
-                    if (tti.JustificationCode == 1) // left
-                    {
-                        tti.TextField = "{\\an4}" + tti.TextField;
-                    }
-                    else if (tti.JustificationCode == 3) // right
-                    {
-                        tti.TextField = "{\\an6}" + tti.TextField;
-                    }
-                    else
-                    {
-                        tti.TextField = "{\\an5}" + tti.TextField;
-                    }
-                }
-                else
-                {
-                    if (tti.JustificationCode == 1) // left
-                    {
-                        tti.TextField = "{\\an1}" + tti.TextField;
-                    }
-                    else if (tti.JustificationCode == 3) // right
-                    {
-                        tti.TextField = "{\\an3}" + tti.TextField;
+                        if (tti.JustificationCode == 1) // left
+                        {
+                            tti.TextField = "{\\an1}" + tti.TextField;
+                        }
+                        else if (tti.JustificationCode == 3) // right
+                        {
+                            tti.TextField = "{\\an3}" + tti.TextField;
+                        }
                     }
                 }
                 index += ttiSize;
@@ -2045,38 +2071,157 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-        private static string GetColorOrTag(byte b)
+        /// <summary>
+        /// The teletext colour code an STL file would carry for <paramref name="color"/> - a colour
+        /// name ("Red") or six hex digits, with or without a leading '#' - or null when the value is
+        /// not a colour at all. The eight teletext colours are the corners of the RGB cube, so
+        /// anything else is snapped to the nearest one; Save writes what this returns, and the UI
+        /// asks it what a colour will become before it writes a tag (via GetNearestColorName).
+        /// </summary>
+        internal static byte? GetNearestColorCode(string color)
         {
-            switch (b)
+            color = color.Trim().TrimStart('#').ToLowerInvariant();
+            if (color == "black" || color == "000000")
             {
-                case 0x00:
-                    return "<font color=\"Black\">";
-                case 0x01:
-                    return "<font color=\"Red\">";
-                case 0x02:
-                    return "<font color=\"Green\">";
-                case 0x03:
-                    return "<font color=\"Yellow\">";
-                case 0x04:
-                    return "<font color=\"Blue\">";
-                case 0x05:
-                    return "<font color=\"Magenta\">";
-                case 0x06:
-                    return "<font color=\"Cyan\">";
-                case 0x07:
-                    return "<font color=\"White\">";
-                    //case 0x0a:
-                    //    return "</box>";
-                    //case 0x0b:
-                    //    return "<box>";
+                return 0x00; // black
+            }
+
+            if (color == "red" || color == "ff0000")
+            {
+                return 0x01; // red
+            }
+
+            if (color == "green" || color == "00ff00")
+            {
+                return 0x02; // green
+            }
+
+            if (color == "yellow" || color == "ffff00")
+            {
+                return 0x03; // yellow
+            }
+
+            if (color == "blue" || color == "0000ff")
+            {
+                return 0x04; // blue
+            }
+
+            if (color == "magenta" || color == "ff00ff")
+            {
+                return 0x05; // magenta
+            }
+
+            if (color == "cyan" || color == "00ffff")
+            {
+                return 0x06; // cyan
+            }
+
+            if (color == "white" || color == "ffffff")
+            {
+                return 0x07; // white
+            }
+
+            if (color.Length == 6)
+            {
+                if (RegExprColor.IsMatch(color))
+                {
+                    const int maxDiff = 130;
+                    var r = int.Parse(color.Substring(0, 2), NumberStyles.HexNumber);
+                    var g = int.Parse(color.Substring(2, 2), NumberStyles.HexNumber);
+                    var b = int.Parse(color.Substring(4, 2), NumberStyles.HexNumber);
+                    if (r < maxDiff && g < maxDiff && b < maxDiff)
+                    {
+                        return 0x00; // black
+                    }
+
+                    if (r > 255 - maxDiff && g < maxDiff && b < maxDiff)
+                    {
+                        return 0x01; // red
+                    }
+
+                    if (r < maxDiff && g > 255 - maxDiff && b < maxDiff)
+                    {
+                        return 0x02; // green
+                    }
+
+                    if (r > 255 - maxDiff && g > 255 - maxDiff && b < maxDiff)
+                    {
+                        return 0x03; // yellow
+                    }
+
+                    if (r < maxDiff && g < maxDiff && b > 255 - maxDiff)
+                    {
+                        return 0x04; // blue
+                    }
+
+                    if (r > 255 - maxDiff && g < maxDiff && b > 255 - maxDiff)
+                    {
+                        return 0x05; // magenta
+                    }
+
+                    if (r < maxDiff && g > 255 - maxDiff && b > 255 - maxDiff)
+                    {
+                        return 0x06; // cyan
+                    }
+
+                    if (r > 255 - maxDiff && g > 255 - maxDiff && b > 255 - maxDiff)
+                    {
+                        return 0x07; // white
+                    }
+                }
             }
 
             return null;
         }
 
+        /// <summary>
+        /// The name of the teletext colour <paramref name="color"/> is nearest to - the same name
+        /// the STL reader writes into the text - or null when it is not a colour at all.
+        /// </summary>
+        public static string GetNearestColorName(string color)
+        {
+            var code = GetNearestColorCode(color);
+            return code == null ? null : GetColorName(code.Value);
+        }
+
+        private static string GetColorName(byte b)
+        {
+            switch (b)
+            {
+                case 0x00:
+                    return "Black";
+                case 0x01:
+                    return "Red";
+                case 0x02:
+                    return "Green";
+                case 0x03:
+                    return "Yellow";
+                case 0x04:
+                    return "Blue";
+                case 0x05:
+                    return "Magenta";
+                case 0x06:
+                    return "Cyan";
+                case 0x07:
+                    return "White";
+            }
+
+            return null;
+        }
+
+        private static string GetColorOrTag(byte b)
+        {
+            //case 0x0a:
+            //    return "</box>";
+            //case 0x0b:
+            //    return "<box>";
+            var name = GetColorName(b);
+            return name == null ? null : "<font color=\"" + name + "\">";
+        }
+
         private static string FixSpacesAndTags(string text)
         {
-            text = text.Trim();
+            text = EmptyFontTag.Replace(text, string.Empty).Trim();
             while (text.Contains("  </font>"))
             {
                 text = text.Replace("  </font>", " </font>");

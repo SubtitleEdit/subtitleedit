@@ -64,6 +64,14 @@ public class ImageParameter
     public int BoxPaddingTop { get; set; } = 0;
     public int BoxPaddingBottom { get; set; } = 0;
 
+    /// <summary>
+    /// Advanced text formatting (gradient fills, multiple outlines, soft shadows, glow, 3D
+    /// extrude, bevel). Null renders through the classic fill/outline/shadow path; when set,
+    /// <see cref="OutlineWidth"/> and <see cref="ShadowWidth"/> are ignored - the effects
+    /// describe the whole look.
+    /// </summary>
+    public TextEffects? TextEffects { get; set; }
+
     public ImageParameter()
     {
         Bitmap = new SKBitmap(1, 1, true);
@@ -80,6 +88,25 @@ public class ImageParameter
     /// </summary>
     public SKPoint? OverridePositionPoint =>
         OverridePosition.HasValue ? new SKPoint(OverridePosition.Value.X, OverridePosition.Value.Y) : null;
+
+    /// <summary>
+    /// <see cref="ContentAlignment"/> with <see cref="ExportContentAlignment.FromAlignment"/>
+    /// resolved against <see cref="Alignment"/> - the alignment the "{\anX}" tag of the line
+    /// already put on the parameter. Left/right placed subtitles then get left/right justified
+    /// lines instead of the one justification picked for the whole export (issue #14202).
+    /// </summary>
+    public ExportContentAlignment ResolvedContentAlignment => ContentAlignment switch
+    {
+        ExportContentAlignment.FromAlignment => Alignment switch
+        {
+            ExportAlignment.TopLeft or ExportAlignment.MiddleLeft or ExportAlignment.BottomLeft
+                => ExportContentAlignment.Left,
+            ExportAlignment.TopRight or ExportAlignment.MiddleRight or ExportAlignment.BottomRight
+                => ExportContentAlignment.Right,
+            _ => ExportContentAlignment.Center,
+        },
+        _ => ContentAlignment,
+    };
 
     public BluRayContentAlignment BluRayContentAlignment => Alignment switch
     {

@@ -93,7 +93,16 @@ namespace Nikse.SubtitleEdit.Core.Common
                             currentColor = newColor;
                         }
 
-                        index = p.Text.IndexOf(">", index) + 1;
+                        // An unterminated tag has no '>': IndexOf returns -1 and "+ 1" put the
+                        // scan back at 0, so the same tag matched again forever and the whole
+                        // app froze. Nothing after an unterminated tag is parseable - stop.
+                        var tagEnd = p.Text.IndexOf(">", index, StringComparison.Ordinal);
+                        if (tagEnd < 0)
+                        {
+                            break;
+                        }
+
+                        index = tagEnd + 1;
 
                         endOfColor = false;
                     }
@@ -113,8 +122,15 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                     else if (index + "{".Length <= p.Text.Length && p.Text.SafeSubstring(index, "{".Length) == "{")
                     {
-                        // ASS tag, jump over
-                        index = p.Text.IndexOf("}", index) + 1;
+                        // ASS tag, jump over. Same trap as the '>' search above: an unclosed
+                        // '{' has no '}', and "-1 + 1" restarted the scan at 0 forever.
+                        var assaTagEnd = p.Text.IndexOf("}", index, StringComparison.Ordinal);
+                        if (assaTagEnd < 0)
+                        {
+                            break;
+                        }
+
+                        index = assaTagEnd + 1;
                     }
                     else if (index + 1 <= p.Text.Length && p.Text.SafeSubstring(index, 1) == " " || p.Text.SafeSubstring(index, 1) == "\r" || p.Text.SafeSubstring(index, 1) == "\n")
                     {

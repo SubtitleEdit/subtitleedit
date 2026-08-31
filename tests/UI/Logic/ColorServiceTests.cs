@@ -211,6 +211,35 @@ public class ColorServiceTests
         Assert.Equal("Hello", lines[0].Text);
     }
 
+    // An STL file carries eight teletext colors and Ebu.Save snaps to the nearest one, so a
+    // shortcut color the file cannot hold used to be shown in the grid and the video preview and
+    // then come out as another color in the file. The tag is snapped when it is written now.
+    [Fact]
+    public void SetColorTag_Ebu_SnapsToTheNearestTeletextColor()
+    {
+        var service = new ColorService();
+        var subtitle = new Subtitle();
+        var format = new Ebu();
+
+        var orange = Color.FromRgb(0xFF, 0xA5, 0x00);
+
+        Assert.Equal("<font color=\"Yellow\">Hello</font>", service.SetColorTag("Hello", orange, subtitle, format));
+        Assert.Equal("<font color=\"Red\">Hello</font>", service.SetColorTag("Hello", Red, subtitle, format));
+    }
+
+    // The name is the one Ebu's reader writes, so the shortcut toggles off a color that came
+    // from a file - it used to compare "#FF0000" against the file's "Red" and never match.
+    [Fact]
+    public void ContainsColor_Ebu_MatchesTheColorNameFromAFile()
+    {
+        var service = new ColorService();
+        var format = new Ebu();
+
+        Assert.True(service.ContainsColor(Red, "<font color=\"Red\">Hello</font>", format));
+        Assert.True(service.ContainsColor(Color.FromRgb(0xFF, 0xA5, 0x00), "<font color=\"Yellow\">Hello</font>", format));
+        Assert.False(service.ContainsColor(Blue, "<font color=\"Red\">Hello</font>", format));
+    }
+
     [Fact]
     public void ContainsColor_WebVtt_DetectsAppliedColor()
     {

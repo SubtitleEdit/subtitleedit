@@ -7,11 +7,22 @@ using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    internal class UnknownSubtitle82 : SubtitleFormat
+    /// <summary>
+    /// YouTube timed text, aka srv3 - what yt-dlp writes for --sub-format srv3 and what
+    /// YTSubConverter produces as .ytt. Text can be split over several timed s runs inside
+    /// each p element.
+    /// </summary>
+    internal class YouTubeTimedText : SubtitleFormat
     {
         public override string Extension => ".xml";
 
-        public override string Name => "Unknown 82";
+        public override string Name => "YouTube timed text srv3";
+
+        // No parenthesis in the name above - GetSubtitleFormatByFriendlyName truncates there.
+
+        public override List<string> AlternateExtensions => new List<string> { ".ytt", ".srv3" };
+
+        public override List<string> AlternateNames => new List<string> { "Unknown 82" };
 
    public override string ToText(Subtitle subtitle, string title)
         {
@@ -44,9 +55,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            var xmlAsText = sb.ToString().Trim();
+            var xmlAsText = JoinLinesTrimmed(lines);
             if (!xmlAsText.Contains("</timedtext>") || !xmlAsText.Contains("<p "))
             {
                 return;

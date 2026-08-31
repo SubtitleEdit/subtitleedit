@@ -72,8 +72,12 @@ public class MpvReloader : IMpvReloader
             // Applied on every refresh, not only on load: toggling "margin is part of the
             // subtitle area" in settings has to take effect on the video already open (#13934).
             mpvContext.ApplySubtitleMarginArea();
+            mpvContext.ApplySubtitleJustify();
 
             var uiFormatType = uiFormat.GetType();
+
+            // Read here, on the UI thread, so the background serialize below only sees a bool.
+            var uiFormatHasPositions = uiFormat.HasPositionSupport;
 
             // Deep copy on the calling (UI) thread: the caller usually passes the live
             // GetUpdateSubtitle() instance, which other UI code clears and repopulates at
@@ -94,7 +98,7 @@ public class MpvReloader : IMpvReloader
             // is why the preview used to wait out a long typing pause (issue #13234).
             // "subtitle" is a thread-confined copy from here on; the secondary subtitle is
             // only read (its paragraphs are never mutated by the transforms).
-            var built = await Task.Run(() => BuildPreviewText(subtitle, subtitleSecondary, uiFormatType, oldHash, oldText));
+            var built = await Task.Run(() => BuildPreviewText(subtitle, subtitleSecondary, uiFormatType, uiFormatHasPositions, oldHash, oldText));
 
             if (version != _refreshVersion)
             {
@@ -174,7 +178,7 @@ public class MpvReloader : IMpvReloader
 
     // Runs on a background thread (see RefreshMpv). Must only touch the thread-confined
     // subtitle copy, read-only state and libse statics - never the memo fields.
-    private (Subtitle Subtitle, string Text, int Hash, bool HashValid) BuildPreviewText(Subtitle subtitle, Subtitle? subtitleSecondary, Type uiFormatType, int oldHash, string oldText)
+    private (Subtitle Subtitle, string Text, int Hash, bool HashValid) BuildPreviewText(Subtitle subtitle, Subtitle? subtitleSecondary, Type uiFormatType, bool uiFormatHasPositions, int oldHash, string oldText)
     {
         if (SmpteMode)
         {
@@ -185,11 +189,11 @@ public class MpvReloader : IMpvReloader
             }
         }
 
-        if (uiFormatType == typeof(NetflixImsc11Japanese))
+        if (uiFormatType == typeof(NetflixImsc11Japanese) || NetflixImsc11JapaneseToAss.HasJapaneseMarkup(subtitle))
         {
             // Furigana, bouten and vertical writing have no libass equivalent - they have to be
             // exploded into separately positioned render lines, or the tags show up as literal
-            // text on the video (issue #13861).
+            // text on the video (issue #13861). Lambda Cap decodes to the same markup (issue #14165).
             subtitle = NetflixImsc11JapaneseToAss.ConvertToSubtitle(subtitle, VideoWidth, VideoHeight);
             SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary);
             return (subtitle, subtitle.ToText(_assFormat), 0, false);
@@ -241,49 +245,23 @@ public class MpvReloader : IMpvReloader
                 subtitle.Header = MpvPreviewStyleHeader;
             }
 
-            if (oldHeader != null && oldHeader.Length > 20 && oldHeader.AsSpan(3, 3).SequenceEqual("STL"))
+            // The GSI block survives a format change in the toolbar, so an STL header alone does
+            // not mean the subtitle is still EBU STL - shown as SubRip it must lose the teletext
+            // box, the double height and the rows.
+            if (EbuStlPreviewStyler.IsStlPreview(oldHeader, uiFormatType))
             {
-                var previewFontName = Configuration.IsRunningOnLinux ? Configuration.DefaultLinuxFontName : "Tahoma";
-                var boxStyle = $"Style: Box,{previewFontName},12,&H00FFFFFF,&H0300FFFF,&H00000000,&H02000000,-1,0,0,0,100,100,0,0,3,2,0,2,10,10,10,1{Environment.NewLine}Style: Default,";
-                subtitle.Header = subtitle.Header.Replace("Style: Default,", boxStyle, StringComparison.Ordinal);
-
-                var useBox = false;
-                if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox)
-                {
-                    try
-                    {
-                        var encoding = Ebu.GetEncoding(oldHeader[..3]);
-                        var buffer = encoding.GetBytes(oldHeader);
-                        var header = Ebu.ReadHeader(buffer);
-                        if (header.DisplayStandardCode != "0")
-                        {
-                            useBox = true;
-                        }
-                    }
-                    catch
-                    {
-                        // ignore
-                    }
-                }
-
-                for (var index = 0; index < subtitle.Paragraphs.Count; index++)
-                {
-                    var p = subtitle.Paragraphs[index];
-
-                    p.Extra = useBox ? "Box" : "Default";
-
-                    if (p.Text.Contains("<box>", StringComparison.Ordinal))
-                    {
-                        p.Extra = "Box";
-                        p.Text = p.Text.Replace("<box>", string.Empty).Replace("</box>", string.Empty);
-                    }
-                }
+                EbuStlPreviewStyler.Apply(subtitle, oldHeader, GetMpvPreviewStyle(Se.Settings.Video), MpvPreviewTitle);
             }
 
             // TTML regions, PAC vertical alignment and EBU STL teletext rows say where the line
             // belongs on the video - without this every line lands at the one fixed preview
-            // alignment from the settings (discussion #13857).
-            SubtitlePositionToAssa.ApplyPositions(subtitle, oldHeader, Se.Settings.Video.MpvPreviewUsePositionFromFile);
+            // alignment from the settings (discussion #13857). Only for a format that still carries
+            // them: the header and the paragraph fields of the file the subtitle was read from
+            // survive a format change in the toolbar. The call is made either way - with the
+            // positioning off it strips the leftovers, and a teletext row or a percentage left in
+            // MarginV would otherwise count as an ASSA pixel margin.
+            var usePositions = Se.Settings.Video.MpvPreviewUsePositionFromFile && uiFormatHasPositions;
+            SubtitlePositionToAssa.ApplyPositions(subtitle, oldHeader, usePositions);
         }
 
         SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary);
@@ -310,10 +288,12 @@ public class MpvReloader : IMpvReloader
         set => _mpvPreviewStyleHeader = value;
     }
 
+    private const string MpvPreviewTitle = "MPV preview file";
+
     public void UpdateMpvStyle()
     {
         var mpvStyle = GetMpvPreviewStyle(Se.Settings.Video);
-        MpvPreviewStyleHeader = string.Format(AdvancedSubStationAlpha.HeaderNoStyles, "MPV preview file", mpvStyle.ToRawAss(SsaStyle.DefaultAssStyleFormat));
+        MpvPreviewStyleHeader = string.Format(AdvancedSubStationAlpha.HeaderNoStyles, MpvPreviewTitle, mpvStyle.ToRawAss(SsaStyle.DefaultAssStyleFormat));
     }
 
     private static SsaStyle GetMpvPreviewStyle(SeVideo gs)

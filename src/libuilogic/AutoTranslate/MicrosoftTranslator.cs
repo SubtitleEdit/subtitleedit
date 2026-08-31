@@ -169,17 +169,30 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                 return _translationPairs;
             }
 
-            return Task.Run(async () =>
+            // Unlike the other engines this list is not hardcoded - it is fetched from the service,
+            // so it is current by construction. The flip side is that picking the engine with no
+            // network (or behind a blocking proxy) used to throw straight out of this synchronous
+            // call and into the language combo box; answer with an empty list instead, and do not
+            // cache it, so the next attempt tries again.
+            try
             {
-                using (var httpClient = DownloaderFactory.MakeHttpClient())
+                return Task.Run(async () =>
                 {
-                    httpClient.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
-                    httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json; charset=UTF-8");
-                    var json = await httpClient.GetStringAsync(LanguagesUrl).ConfigureAwait(false);
-                    _translationPairs = FillTranslationPairsFromJson(json);
-                    return _translationPairs;
-                }
-            }).GetAwaiter().GetResult();
+                    using (var httpClient = DownloaderFactory.MakeHttpClient())
+                    {
+                        httpClient.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
+                        httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json; charset=UTF-8");
+                        var json = await httpClient.GetStringAsync(LanguagesUrl).ConfigureAwait(false);
+                        _translationPairs = FillTranslationPairsFromJson(json);
+                        return _translationPairs;
+                    }
+                }).GetAwaiter().GetResult();
+            }
+            catch (Exception exception)
+            {
+                SeLogger.Error(exception, $"{StaticName}: could not fetch the language list from {LanguagesUrl}");
+                return new List<TranslationPair>();
+            }
         }
 
         private static List<TranslationPair> FillTranslationPairsFromJson(string json)

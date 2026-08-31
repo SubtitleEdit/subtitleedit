@@ -1239,6 +1239,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => NameOfFormat;
 
+        // Carries the vertical position as a percentage in MarginV.
+        public override bool HasPositionSupport => true;
+
         private static readonly byte[] MarkerStartOfUnicode = { 0x1f, 0xef, 0xbb, 0xbf };
         private const byte MarkerEndOfUnicode = 0x2e;
         private const byte MarkerReplaceEndOfUnicode = 0xff;

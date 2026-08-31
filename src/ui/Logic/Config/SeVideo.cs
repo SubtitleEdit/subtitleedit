@@ -60,6 +60,14 @@ public class SeVideo
     public bool MpvPreviewMarginIsPartOfSubtitleArea { get; set; }
 
     /// <summary>
+    /// How the lines of a multi-line preview subtitle are justified inside the text block:
+    /// mpv's "sub-justify" - "auto", "left", "center" or "right" (#14167). This is not the same
+    /// as <see cref="MpvPreviewAlignment"/>, which moves the whole block: justify keeps the block
+    /// where the alignment put it and only decides where the shorter lines sit within it.
+    /// </summary>
+    public string MpvPreviewJustify { get; set; }
+
+    /// <summary>
     /// mpv's "audio-buffer" option in seconds, applied when a player core is created. mpv's
     /// own default is 0.2 s, and that buffer is why pause/resume/seek take effect ~200 ms
     /// late - the residual the waveform playhead code has to mask. Kept small here; raise it
@@ -106,6 +114,7 @@ public class SeVideo
         MpvPreviewColorShadow = Color.FromRgb(0, 0, 0).FromColorToHex();
         MpvPreviewBorderType = (int)BorderStyleType.Outline;
         MpvPreviewUsePositionFromFile = true;
+        MpvPreviewJustify = "auto";
         MpvAudioBufferSeconds = 0.05;
     }
 }

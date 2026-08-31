@@ -19,7 +19,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static string MakeTimeCode(TimeCode tc)
         {
             var ts = tc.TimeSpan;
-            var s = $"{ts.Days * 24 + ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds:00}:{(int)Math.Round(ts.Milliseconds / 10.0, MidpointRounding.AwayFromZero):00}.00";
+
+            // Rounding the hundredths carries into the next second (997 ms -> 100) and ":00" then
+            // printed three digits - a time code RegexTimeCode rejects, so on reload the whole line
+            // fell through to the text branch and the cue itself vanished.
+            var hundredths = (int)Math.Round(ts.Milliseconds / 10.0, MidpointRounding.AwayFromZero);
+            if (hundredths >= 100)
+            {
+                ts = ts.Add(TimeSpan.FromMilliseconds(1000 - ts.Milliseconds));
+                hundredths = 0;
+            }
+
+            var s = $"{ts.Days * 24 + ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds:00}:{hundredths:00}.00";
             return s;
         }
 

@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Files.FormatProperties.TimedTextImsc11Properties;
 
@@ -298,20 +299,23 @@ public partial class TimedTextImsc11PropertiesViewModel : ObservableObject
         }
 
         // Settings
-        Configuration.Settings.SubtitleSettings.TimedTextImsc11TimeCodeFormat = SelectedTimeCodeFormat;
+        var formats = Se.Settings.Formats;
+        formats.TimedTextImsc11TimeCodeFormat = SelectedTimeCodeFormat;
 
-        var currentExt = Configuration.Settings.SubtitleSettings.TimedTextImsc11FileExtension;
+        var currentExt = formats.TimedTextImsc11FileExtension;
         if (currentExt != SelectedFileExtension)
         {
-            var favoriteFormats = Configuration.Settings.General.FavoriteSubtitleFormats;
+            // Same as Timed Text 1.0: SE5's favourites are in Se.Settings.General, so renaming the
+            // libse copy did nothing and the favourite was silently dropped.
+            var favoriteFormats = Se.Settings.General.FavoriteSubtitleFormats;
             var currentWithExt = $"Timed Text IMSC 1.1 ({currentExt})";
             var newWithExt = $"Timed Text IMSC 1.1 ({SelectedFileExtension})";
-            if (favoriteFormats != null && favoriteFormats.Contains(currentWithExt))
+            if (!string.IsNullOrEmpty(favoriteFormats) && favoriteFormats.Contains(currentWithExt))
             {
-                Configuration.Settings.General.FavoriteSubtitleFormats = favoriteFormats.Replace(currentWithExt, newWithExt);
+                Se.Settings.General.FavoriteSubtitleFormats = favoriteFormats.Replace(currentWithExt, newWithExt);
             }
 
-            Configuration.Settings.SubtitleSettings.TimedTextImsc11FileExtension = SelectedFileExtension;
+            formats.TimedTextImsc11FileExtension = SelectedFileExtension;
         }
     }
 
@@ -334,8 +338,10 @@ public partial class TimedTextImsc11PropertiesViewModel : ObservableObject
         
         if (!string.IsNullOrEmpty(SelectedFileExtension))
         {
-            Configuration.Settings.SubtitleSettings.TimedTextImsc11FileExtension = SelectedFileExtension;
+            Se.Settings.Formats.TimedTextImsc11FileExtension = SelectedFileExtension;
         }
+
+        Se.SaveSettings();
 
         OkPressed = true;
         Window?.Close();

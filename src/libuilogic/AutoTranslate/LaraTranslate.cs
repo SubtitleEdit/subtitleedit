@@ -135,9 +135,14 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             return Convert.ToBase64String(hash);
         }
 
-        private static TranslationPair MakePair(string nameCode, string twoLetter)
+        private static TranslationPair MakePair(string nameCode, string localeCode)
         {
-            return new TranslationPair(nameCode, twoLetter, twoLetter);
+            // The code is an RFC3066 locale ("ja-JP"); the language tag is the part before the
+            // dash. Passing the whole locale as TwoLetterIsoLanguageName meant the exact
+            // two-letter comparisons downstream (IsCjkLanguage, TextSplit, IsNonMergeLanguage)
+            // matched nothing, so Japanese was merged and split with Latin heuristics.
+            var twoLetterIsoName = localeCode.Split('-')[0].ToLowerInvariant();
+            return new TranslationPair(nameCode, localeCode, twoLetterIsoName);
         }
 
         public static List<TranslationPair> ListLanguages()

@@ -59,7 +59,7 @@ public class BinaryAdjustAlphaWindow : Window
 
         Content = mainGrid;
 
-        Activated += delegate { alphaAdjustmentSlider.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, alphaAdjustmentSlider); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 

@@ -296,14 +296,23 @@ public partial class SpeechToTextAdvancedViewModel : ObservableObject
         return File.Exists(fallback) ? fallback : null;
     }
 
-    private static string? GetVadCppFile()
+    private string? GetVadCppFile()
     {
-        var searchPaths = new List<string>
+        // Look in the SELECTED backend's own folder first. The Silero model is unpacked into
+        // GetAndCreateWhisperFolder(), which is "CppCuBlas" or "CppVulkan" for those two
+        // backends - so hard-coding "Cpp" meant the lookup returned null, EnableVadCpp took its
+        // bail-out branch, and the toggle popped back out with no message. GetVadCrispAsrFile
+        // below already resolves its engine's folder.
+        var searchPaths = new List<string> { new WhisperCppModel().ModelFolder };
+        if (SelectedEngine is WhisperCppEngine whisperCppEngine)
         {
-            new WhisperCppModel().ModelFolder,
-            Path.Combine(Se.SpeechToTextFolder, "Cpp", "Models"),
-            Path.Combine(Se.SpeechToTextFolder, "Cpp"),
-        };
+            var engineFolder = whisperCppEngine.GetAndCreateWhisperFolder();
+            searchPaths.Add(Path.Combine(engineFolder, "Models"));
+            searchPaths.Add(engineFolder);
+        }
+
+        searchPaths.Add(Path.Combine(Se.SpeechToTextFolder, "Cpp", "Models"));
+        searchPaths.Add(Path.Combine(Se.SpeechToTextFolder, "Cpp"));
 
         foreach (var searchPath in searchPaths)
         {

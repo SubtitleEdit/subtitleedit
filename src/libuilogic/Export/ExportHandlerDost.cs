@@ -17,6 +17,15 @@ public class ExportHandlerDost : IExportHandler
 
     public void WriteHeader(string fileOrFolderName, ImageParameter imageParameter)
     {
+        // Nothing sets the FrameRate property, so the chosen frame rate only ever reached this
+        // handler through the image parameters - and every time code was written at the 23.976
+        // default (whose fractional part also triggered the NTSC pull-down). Take it from the
+        // parameters, like the BDN XML and FCP handlers do.
+        if (imageParameter.FramesPerSecond > 0)
+        {
+            FrameRate = imageParameter.FramesPerSecond;
+        }
+
         _folderName = fileOrFolderName;
         if (!Directory.Exists(_folderName))
         {
@@ -87,7 +96,36 @@ $ULEAD=TRUE
 $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 "NO\tINTIME\t\tOUTTIME\t\tXPOS\tYPOS\tFILENAME\tFADEIN\tFADEOUT";
 
+        // Derive from the frame rate instead of always claiming 30 fps (SE4 did the same).
         var dropValue = "30000";
+        if (Math.Abs(FrameRate - 23.976) < 0.01)
+        {
+            dropValue = "23976";
+        }
+        else if (Math.Abs(FrameRate - 24.0) < 0.01)
+        {
+            dropValue = "24000";
+        }
+        else if (Math.Abs(FrameRate - 25.0) < 0.01)
+        {
+            dropValue = "25000";
+        }
+        else if (Math.Abs(FrameRate - 29.97) < 0.01)
+        {
+            dropValue = "29970";
+        }
+        else if (Math.Abs(FrameRate - 50.0) < 0.01)
+        {
+            dropValue = "50000";
+        }
+        else if (Math.Abs(FrameRate - 59.94) < 0.01)
+        {
+            dropValue = "59940";
+        }
+        else if (Math.Abs(FrameRate - 60.0) < 0.01)
+        {
+            dropValue = "60000";
+        }
         header = header.Replace("[DROPVALUE]", dropValue);
         File.WriteAllText(Path.Combine(_folderName, "index.dost"), header + Environment.NewLine + _sb.ToString());
     }

@@ -19,7 +19,7 @@ public class BurnInEffectItem(string name, BurnInEffectType type)
     {
         if (Type == BurnInEffectType.FadeInOut)
         {
-            return $"{{\\fad(250,250}}{subtitleText}";
+            return $"{{\\fad(250,250)}}{subtitleText}";
         }
         else if (Type == BurnInEffectType.SlowFontSizeChange)
         {

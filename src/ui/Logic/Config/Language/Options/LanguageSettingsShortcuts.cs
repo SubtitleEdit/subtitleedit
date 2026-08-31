@@ -22,10 +22,13 @@ public class LanguageSettingsShortcuts
     public string GeneralUnbreakNoSpaceCjk { get; set; }
     public string GeneralMergeSelectedLinesBilingual { get; set; }
     public string GeneralToggleTranslationMode { get; set; }
+    public string GeneralToggleTranslationAndOriginalInPreviews { get; set; }
     public string GeneralChooseLayout { get; set; }
     public string GeneralGoToNextSubtitle { get; set; }
+    public string GeneralGoToNextSubtitlePlayTranslate { get; set; }
     public string GeneralGoToNextSubtitleCursorAtEnd { get; set; }
     public string GeneralGoToPrevSubtitle { get; set; }
+    public string GeneralGoToPrevSubtitlePlayTranslate { get; set; }
     public string GeneralGoToFirstLine { get; set; }
     public string GeneralGoToLastLine { get; set; }
     public string AlsoSetVideoPosition { get; set; }
@@ -164,6 +167,7 @@ public class LanguageSettingsShortcuts
     public string ChooseRuleProfile { get; set; }
     public string VideoFullScreen { get; set; }
     public string CopyTextFromOriginalSelectedLines { get; set; }
+    public string CopyTextToOriginalSelectedLines { get; set; }
     public string TextBoxRemoveAllFormatting { get; set; }
     public string TextBoxItalic { get; set; }
     public string TextBoxBold { get; set; }
@@ -190,6 +194,11 @@ public class LanguageSettingsShortcuts
     public string ColorX { get; set; }
     public string SurroundWith { get; set; }
     public string SurroundWithXY { get; set; }
+    public string SurroundWithNumberX { get; set; }
+    public string SearchVia { get; set; }
+    public string SearchViaX { get; set; }
+    public string SearchViaNumberX { get; set; }
+    public string SearchViaUrlHint { get; set; }
     public string MoveVideoPositionMilliseconds { get; set; }
     public string ImportShortcutsTitle { get; set; }
     public string ExportShortcutsTitle { get; set; }
@@ -284,10 +293,13 @@ public class LanguageSettingsShortcuts
         GeneralUnbreakNoSpaceCjk = "Unbreak without space (CJK)";
         GeneralMergeSelectedLinesBilingual = "Merge selected lines bilingual";
         GeneralToggleTranslationMode = "Toggle translation mode";
+        GeneralToggleTranslationAndOriginalInPreviews = "Toggle translation and original in video/audio preview";
         GeneralChooseLayout = "Choose layout";
         GeneralGoToNextSubtitle = "Go to next subtitle";
+        GeneralGoToNextSubtitlePlayTranslate = "Go to next subtitle (play translate)";
         GeneralGoToNextSubtitleCursorAtEnd = "Go to next subtitle and set cursor at end";
         GeneralGoToPrevSubtitle = "Go to previous subtitle";
+        GeneralGoToPrevSubtitlePlayTranslate = "Go to previous subtitle (play translate)";
         GeneralGoToFirstLine = "Go to first line";
         GeneralGoToLastLine = "Go to last line";
         AlsoSetVideoPosition = "Also set video position";
@@ -431,6 +443,7 @@ public class LanguageSettingsShortcuts
         ChooseRuleProfile = "Choose rule profile";
         VideoFullScreen = "Video full screen";
         CopyTextFromOriginalSelectedLines = "Copy text from original (selected lines)";
+        CopyTextToOriginalSelectedLines = "Copy text to original (selected lines)";
         TextBoxRemoveAllFormatting = "Text box, remove all formatting";
         TextBoxItalic = "Text box italic";
         TextBoxBold = "Text box bold";
@@ -457,6 +470,11 @@ public class LanguageSettingsShortcuts
         ColorX = "Color {0}";
         SurroundWith = "Surround with...";
         SurroundWithXY = "Surround with {0}/{1}";
+        SurroundWithNumberX = "Surround with #{0}";
+        SearchVia = "Search via";
+        SearchViaX = "Search via {0}";
+        SearchViaNumberX = "Search via #{0}";
+        SearchViaUrlHint = "The searched text takes the place of {0} in the URL";
         MoveVideoPositionMilliseconds = "Move video position in milliseconds";
         ImportShortcutsTitle = "Import shortcuts";
         ExportShortcutsTitle = "Export shortcuts";

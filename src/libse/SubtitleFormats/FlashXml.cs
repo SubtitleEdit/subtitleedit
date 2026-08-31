@@ -25,9 +25,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            string xmlAsString = sb.ToString().Trim();
+            string xmlAsString = JoinLinesTrimmed(lines);
             if ((xmlAsString.Contains("<tt>") || xmlAsString.Contains("<tt ")) && (xmlAsString.Contains("<sub>")))
             {
                 var xml = new XmlDocument { XmlResolver = null };
@@ -67,8 +65,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 XmlNode paragraph = xml.CreateElement("p");
                 string text = HtmlUtil.RemoveHtmlTags(p.Text, true);
 
-                paragraph.InnerText = text;
-                paragraph.InnerXml = "<![CDATA[<sub>" + paragraph.InnerXml.Replace(Environment.NewLine, "<br />") + "</sub>]]>";
+                // Build the CDATA from the RAW text: going through InnerText first escaped it
+                // ("Tom &amp; Jerry"), and since CDATA content is not parsed those entities
+                // came back literally on read.
+                var cdataText = text.Replace(Environment.NewLine, "<br />");
+                if (cdataText.Contains("]]>", StringComparison.Ordinal))
+                {
+                    paragraph.InnerText = cdataText; // cannot be expressed in one CDATA section
+                }
+                else
+                {
+                    paragraph.InnerXml = "<![CDATA[<sub>" + cdataText + "</sub>]]>";
+                }
 
                 XmlAttribute start = xml.CreateAttribute("begin");
                 start.InnerText = ConvertToTimeString(p.StartTime);
@@ -89,10 +97,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             double startSeconds = 0;
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument { XmlResolver = null };
-            xml.LoadXml(sb.ToString().Trim());
+            xml.LoadXml(JoinLinesTrimmed(lines));
 
             var pText = new StringBuilder();
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("div/p"))
@@ -150,7 +156,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     startSeconds = endCode.TotalSeconds;
 
-                    subtitle.Paragraphs.Add(new Paragraph(startCode, endCode, pText.ToString().Replace("<sub>", string.Empty).Replace("</sub>", string.Empty)));
+                    // The text usually arrives as one CDATA block ("<sub>line one<br />line two</sub>"),
+                    // so the <br/> line breaks are part of the raw text - the child-node walk above
+                    // only sees real <br> elements, never these.
+                    var textValue = pText.ToString()
+                        .Replace("<sub>", string.Empty)
+                        .Replace("</sub>", string.Empty)
+                        .Replace("<br />", Environment.NewLine)
+                        .Replace("<br/>", Environment.NewLine)
+                        .Replace("<br>", Environment.NewLine);
+                    subtitle.Paragraphs.Add(new Paragraph(startCode, endCode, textValue));
                 }
                 catch (Exception ex)
                 {

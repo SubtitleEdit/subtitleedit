@@ -183,7 +183,10 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
                 SelectedRules = new List<string>()
             };
 
-            foreach (var rule in profile.FixRules)
+            // The grid collection (FixRules) may be filtered by the search box - persist
+            // from the full list so hidden rules keep their selection.
+            var rules = profile.AllFixRules.Count > 0 ? profile.AllFixRules : profile.FixRules.ToList();
+            foreach (var rule in rules)
             {
                 if (rule.IsSelected)
                 {
@@ -211,6 +214,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
                     IsSelected = setting.SelectedRules.Contains(rule.FixCommonErrorFunctionName)
                 }))
             };
+            profile.AllFixRules = profile.FixRules.ToList();
 
             Profiles.Add(profile);
         }
@@ -714,7 +718,10 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             canonicalOrder.TryAdd(_allFixRules[i].FixCommonErrorFunctionName, i);
         }
 
-        var selectedRules = SelectedProfile.FixRules
+        var profileRules = SelectedProfile.AllFixRules.Count > 0
+            ? (IEnumerable<FixRuleDisplayItem>)SelectedProfile.AllFixRules // full set - FixRules may be search-filtered
+            : SelectedProfile.FixRules;
+        var selectedRules = profileRules
             .Where(f => f.IsSelected)
             .OrderBy(f => canonicalOrder.TryGetValue(f.FixCommonErrorFunctionName, out var order) ? order : int.MaxValue)
             .ToList(); // OrderBy is stable, so unknown rules keep their relative order at the end
@@ -801,7 +808,10 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         FixLongDisplayTimes.Language.FixLongDisplayTime = language.FixLongDisplayTime;
 
         FixShortGaps.Language.FixShortGaps = language.FixShortGaps;
-        FixShortGaps.Language.FixShortGaps = language.FixShortGaps;
+
+        // The per-fix action label ("Fix short gap") is the singular; assigning the plural twice
+        // left every fixed gap in the results list showing the untranslated English string.
+        FixShortGaps.Language.FixShortGap = language.FixShortGap;
 
         FixInvalidItalicTags.Language.FixInvalidItalicTags = language.FixInvalidItalicTags;
         FixInvalidItalicTags.Language.FixInvalidItalicTag = language.FixInvalidItalicTag;
@@ -958,9 +968,15 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             return;
         }
 
-        var rules = SelectedProfile.FixRules.ToList();
+        // Filter from the profile's full rule list, never from the already-filtered grid
+        // collection - filtering that one is one-way and permanently loses rules.
+        if (SelectedProfile.AllFixRules.Count == 0)
+        {
+            SelectedProfile.AllFixRules = SelectedProfile.FixRules.ToList();
+        }
+
         SelectedProfile.FixRules.Clear();
-        foreach (var rule in rules)
+        foreach (var rule in SelectedProfile.AllFixRules)
         {
             if (string.IsNullOrEmpty(SearchText) || rule.Name.ToLowerInvariant().Contains(SearchText.ToLowerInvariant()))
             {

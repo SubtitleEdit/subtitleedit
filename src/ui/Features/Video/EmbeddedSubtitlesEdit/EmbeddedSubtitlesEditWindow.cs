@@ -88,7 +88,7 @@ public class EmbeddedSubtitlesEditWindow : Window
 
         Content = grid;
 
-        Activated += delegate { textBoxVideoFileName.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, textBoxVideoFileName); // initial focus on an input, not an action button - a focused button clicks on bare Space
         Loaded += (s, e) => vm.OnLoaded();
         Closing += (s, e) => vm.OnClosing();
         KeyDown += (s, e) => vm.OnKeyDown(e);

@@ -27,9 +27,8 @@ public class GetDictionariesWindow : Window
         DataContext = vm;
 
         var downloadButton = UiUtil.MakeButton(string.Empty, vm.DownloadCommand)
-            .WithIconLeft(IconNames.Download)
+            .WithIconLeftBindText(IconNames.Download, nameof(vm.DownloadButtonText))
             .WithBindEnabled(nameof(vm.IsDownloadEnabled));
-        downloadButton.Bind(ContentControl.ContentProperty, new Binding(nameof(vm.DownloadButtonText)));
 
         var stack = new StackPanel
         {
@@ -53,7 +52,7 @@ public class GetDictionariesWindow : Window
             Padding = new Thickness(4),
         };
 
-        Activated += delegate { downloadButton.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, downloadButton); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 

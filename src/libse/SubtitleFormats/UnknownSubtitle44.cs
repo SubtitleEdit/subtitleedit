@@ -34,6 +34,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     text.Append(' ');
                 }
 
+                // A line longer than the text column ran straight into the time code
+                // ("...break.00:00:06:00"), which the reader cannot split - that cue was lost on
+                // read and its time code swallowed by the previous one. Always keep a separator.
+                if (text.Length >= 34)
+                {
+                    text.Append(' ');
+                }
+
                 sb.AppendFormat("{0}{1}", text, EncodeTimeCode(p.StartTime));
                 if (index % 50 == 1)
                 {

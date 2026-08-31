@@ -115,7 +115,7 @@ public class VobSubColorChooserWindow : Window
         Content = rootPanel;
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
-        Activated += delegate { buttonCancel.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, buttonCancel);
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 

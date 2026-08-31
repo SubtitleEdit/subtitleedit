@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -276,7 +276,7 @@ public partial class OcrViewModel : ObservableObject
         _binaryOcrAddHistoryManager = new BinaryOcrAddHistoryManager();
         _cancellationTokenSource = new CancellationTokenSource();
         TextBoxFontFamily = !string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName)
-            ? new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName)
+            ? FontFamilyHelper.Make(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName)
             : FontFamily.Default;
         TextBoxFontSize = (decimal)Se.Settings.Appearance.SubtitleTextBoxFontSize;
         TextBoxFontWeight = Se.Settings.Appearance.SubtitleTextBoxFontBold ? FontWeight.Bold : FontWeight.Regular;
@@ -296,6 +296,11 @@ public partial class OcrViewModel : ObservableObject
             if (!string.IsNullOrEmpty(ocr.Engine) && OcrEngines.Any(p => p.Name == ocr.Engine))
             {
                 SelectedOcrEngine = OcrEngines.First(p => p.Name == ocr.Engine);
+            }
+
+            if (!string.IsNullOrEmpty(ocr.BinaryOcrDatabase) && ImageCompareDatabases.Contains(ocr.BinaryOcrDatabase))
+            {
+                SelectedImageCompareDatabase = ocr.BinaryOcrDatabase;
             }
 
             if (!string.IsNullOrEmpty(ocr.NOcrDatabase) && NOcrDatabases.Contains(ocr.NOcrDatabase))
@@ -328,7 +333,7 @@ public partial class OcrViewModel : ObservableObject
                 _textBoxFontNamePersisted = ocr.TextBoxFontName;
                 TextBoxFontSize = ocr.TextBoxFontSize;
                 TextBoxFontWeight = ocr.TextBoxFontBold ? FontWeight.Bold : FontWeight.Regular;
-                try { TextBoxFontFamily = new FontFamily(ocr.TextBoxFontName); }
+                try { TextBoxFontFamily = FontFamilyHelper.Make(ocr.TextBoxFontName); }
                 catch { /* ignored */ }
             }
 
@@ -347,6 +352,7 @@ public partial class OcrViewModel : ObservableObject
         var ocr = Se.Settings.Ocr;
         ocr.Engine = SelectedOcrEngine?.Name ?? "nOCR";
         ocr.NOcrDatabase = SelectedNOcrDatabase ?? "Latin";
+        ocr.BinaryOcrDatabase = SelectedImageCompareDatabase ?? "Latin";
         ocr.NOcrMaxWrongPixels = SelectedNOcrMaxWrongPixels;
         ocr.NOcrDrawUnknownText = NOcrDrawUnknownText;
         ocr.NOcrPixelsAreSpace = SelectedNOcrPixelsAreSpace;
@@ -670,7 +676,7 @@ public partial class OcrViewModel : ObservableObject
 
         _textBoxFontIsCustom = true;
         _textBoxFontNamePersisted = result.SelectedFontName;
-        TextBoxFontFamily = new FontFamily(result.SelectedFontName);
+        TextBoxFontFamily = FontFamilyHelper.Make(result.SelectedFontName);
         TextBoxFontSize = result.FontSize;
         TextBoxFontWeight = result.IsFontBold ? FontWeight.Bold : FontWeight.Regular;
     }
@@ -1173,7 +1179,9 @@ public partial class OcrViewModel : ObservableObject
         nBmp.MakeTwoColor(200);
         nBmp.CropTop(0, new SKColor(0, 0, 0, 0));
         var letters =
-            NikseBitmapImageSplitter2.SplitBitmapToLettersNew(nBmp, SelectedNOcrPixelsAreSpace, false, true, _lineHeightTracker.GetMinLineHeight(), true, _lineHeightTracker.GetAverageLineHeight());
+            // The binary run splits with SelectedBinaryOcrPixelsAreSpace - inspecting with the
+            // nOCR value gave a different letter/space breakdown than the text being inspected.
+            NikseBitmapImageSplitter2.SplitBitmapToLettersNew(nBmp, SelectedBinaryOcrPixelsAreSpace, false, true, _lineHeightTracker.GetMinLineHeight(), true, _lineHeightTracker.GetAverageLineHeight());
         var matches = new List<BinaryOcrMatcher.CompareMatch?>();
         foreach (var splitterItem in letters)
         {
@@ -1473,7 +1481,7 @@ public partial class OcrViewModel : ObservableObject
         if (downloaded != null)
         {
             var selectName = string.IsNullOrEmpty(downloaded) ? model?.FileName : downloaded;
-            SelectedLlamaCppOcrModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppOcrModels, LlamaCppServerManager.OcrModels, selectName);
+            SelectedLlamaCppOcrModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppOcrModels, LlamaCppServerManager.GetAllOcrModels(), selectName);
         }
 
         RefreshLlamaCppOcrDots();
@@ -1517,7 +1525,7 @@ public partial class OcrViewModel : ObservableObject
         {
             var selectName = string.IsNullOrEmpty(downloaded) ? model?.FileName : downloaded;
             RefreshLlamaCppOcrDots();
-            SelectedLlamaCppOcrModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppOcrModels, LlamaCppServerManager.OcrModels, selectName);
+            SelectedLlamaCppOcrModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppOcrModels, LlamaCppServerManager.GetAllOcrModels(), selectName);
         }
     }
 
@@ -1602,7 +1610,7 @@ public partial class OcrViewModel : ObservableObject
             }
         }
 
-        SelectedLlamaCppOcrModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppOcrModels, LlamaCppServerManager.OcrModels, model.FileName);
+        SelectedLlamaCppOcrModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppOcrModels, LlamaCppServerManager.GetAllOcrModels(), model.FileName);
 
         try
         {
@@ -2481,13 +2489,17 @@ public partial class OcrViewModel : ObservableObject
         if (SelectedDictionary != null && DoFixOcrErrors && SelectedDictionary.Name != GetDictionaryNameNone())
         {
             var threeLetterCode = SelectedDictionary.GetThreeLetterCode();
-            var fixSubtitle = new Subtitle();
+            // Paragraphs share the OCR items' text as it is produced: this snapshot is taken
+            // before the run, when every text is still empty, and the fix engine keeps it for
+            // the whole run - so SkipAddLineEnding ("don't add a full stop when the next line
+            // continues in lowercase") always saw an empty next line and never fired.
+            _fixEngineSubtitle = new Subtitle();
             foreach (var ocrItem in OcrSubtitleItems)
             {
-                fixSubtitle.Paragraphs.Add(new Paragraph(new TimeCode(ocrItem.StartTime), new TimeCode(ocrItem.EndTime), ocrItem.Text));
+                _fixEngineSubtitle.Paragraphs.Add(new Paragraph(new TimeCode(ocrItem.StartTime), new TimeCode(ocrItem.EndTime), ocrItem.Text));
             }
 
-            _ocrFixEngine.Initialize(fixSubtitle, threeLetterCode, SelectedDictionary);
+            _ocrFixEngine.Initialize(_fixEngineSubtitle, threeLetterCode, SelectedDictionary);
         }
         else
         {
@@ -3332,6 +3344,14 @@ public partial class OcrViewModel : ObservableObject
                 {
                     item.Text = unItalicItem.Text;
                     item.FixResult = unItalicItem.FixResult;
+                    // Re-point the unknown words at the real grid item: they were built against
+                    // the throwaway clone, which is in no collection, so clicking one found
+                    // nothing (IndexOf -> -1) and deleting the line left it orphaned.
+                    foreach (var unknownWord in unItalicResultTemp.UnknownWords)
+                    {
+                        unknownWord.Item = item;
+                    }
+
                     ocrFixResultTemp = unItalicResultTemp;
                 }
             }
@@ -3582,6 +3602,14 @@ public partial class OcrViewModel : ObservableObject
                 {
                     item.Text = unItalicItem.Text;
                     item.FixResult = unItalicItem.FixResult;
+                    // Re-point the unknown words at the real grid item: they were built against
+                    // the throwaway clone, which is in no collection, so clicking one found
+                    // nothing (IndexOf -> -1) and deleting the line left it orphaned.
+                    foreach (var unknownWord in unItalicResultTemp.UnknownWords)
+                    {
+                        unknownWord.Item = item;
+                    }
+
                     ocrFixResultTemp = unItalicResultTemp;
                 }
             }
@@ -3802,8 +3830,11 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
+        // WordIndex is an offset into the fixed line the OCR engine built, not into item.Text, and
+        // the two can differ in length (French spacing inserts a character per "!?:;"). The two
+        // branches below already bounds-check; this one did not, and threw out of the OCR run.
         var idx = unknownWord.Word.WordIndex;
-        if (item.Text.Substring(idx).StartsWith(unknownWord.Word.FixedWord))
+        if (idx >= 0 && idx <= item.Text.Length && item.Text.Substring(idx).StartsWith(unknownWord.Word.FixedWord))
         {
             item.Text = item.Text.Remove(idx, unknownWord.Word.FixedWord.Length).Insert(idx, word);
         }
@@ -3909,6 +3940,9 @@ public partial class OcrViewModel : ObservableObject
         return result;
     }
 
+    // The subtitle handed to the fix engine, kept in step with the text as it is produced.
+    private Subtitle? _fixEngineSubtitle;
+
     private void SetText(int i, OcrSubtitleItem item, OcrFixLineResultTemp resultTemp)
     {
         string text;
@@ -3933,6 +3967,13 @@ public partial class OcrViewModel : ObservableObject
 
         // The bound collections (UnknownWords/AllGuesses/AllFixes) must only be touched on the
         // UI thread, so the adds ride in the same coalesced update as the text.
+        // Keep the fix engine's view of the subtitle current so the next line's end-line rules
+        // can look ahead/behind at real text rather than the empty pre-run snapshot.
+        if (_fixEngineSubtitle != null && i >= 0 && i < _fixEngineSubtitle.Paragraphs.Count)
+        {
+            _fixEngineSubtitle.Paragraphs[i].Text = text;
+        }
+
         OcrUiUpdates.EnqueueUpdate(() =>
         {
             CurrentText = text;
@@ -4207,7 +4248,18 @@ public partial class OcrViewModel : ObservableObject
 
                     item.Text = text;
 
-                    OcrFixLineAndSetText(i, item);
+                    var unknownWordsFound = OcrFixLineAndSetText(i, item);
+
+                    // Same prompt Tesseract's loop runs - these engines discarded the unknown
+                    // words, so ticking "prompt for unknown words" did nothing for them.
+                    if (DoPromptForUnknownWords && unknownWordsFound.Count > 0)
+                    {
+                        var keepRunningAfterPrompt = await PromptForUnknownWordsAsync(i, item);
+                        if (!keepRunningAfterPrompt)
+                        {
+                            return;
+                        }
+                    }
                 }
 
                 if (processedCount >= 1 && !producedAnyText && !cancellationToken.IsCancellationRequested)
@@ -4306,7 +4358,18 @@ public partial class OcrViewModel : ObservableObject
 
                     item.Text = text;
 
-                    OcrFixLineAndSetText(i, item);
+                    var unknownWordsFound = OcrFixLineAndSetText(i, item);
+
+                    // Same prompt Tesseract's loop runs - these engines discarded the unknown
+                    // words, so ticking "prompt for unknown words" did nothing for them.
+                    if (DoPromptForUnknownWords && unknownWordsFound.Count > 0)
+                    {
+                        var keepRunningAfterPrompt = await PromptForUnknownWordsAsync(i, item);
+                        if (!keepRunningAfterPrompt)
+                        {
+                            return;
+                        }
+                    }
                 }
             }
             catch (OperationCanceledException)
@@ -4406,7 +4469,18 @@ public partial class OcrViewModel : ObservableObject
                     var text = await engine.Ocr(bitmap, cancellationToken);
                     item.Text = text;
 
-                    OcrFixLineAndSetText(i, item);
+                    var unknownWordsFound = OcrFixLineAndSetText(i, item);
+
+                    // Same prompt Tesseract's loop runs - these engines discarded the unknown
+                    // words, so ticking "prompt for unknown words" did nothing for them.
+                    if (DoPromptForUnknownWords && unknownWordsFound.Count > 0)
+                    {
+                        var keepRunningAfterPrompt = await PromptForUnknownWordsAsync(i, item);
+                        if (!keepRunningAfterPrompt)
+                        {
+                            return;
+                        }
+                    }
                 }
             }
             catch (OperationCanceledException)
@@ -4446,7 +4520,18 @@ public partial class OcrViewModel : ObservableObject
                     var text = await mistralOcr.Ocr(bitmap, SelectedOllamaLanguage ?? "English", cancellationToken);
                     item.Text = text;
 
-                    OcrFixLineAndSetText(i, item);
+                    var unknownWordsFound = OcrFixLineAndSetText(i, item);
+
+                    // Same prompt Tesseract's loop runs - these engines discarded the unknown
+                    // words, so ticking "prompt for unknown words" did nothing for them.
+                    if (DoPromptForUnknownWords && unknownWordsFound.Count > 0)
+                    {
+                        var keepRunningAfterPrompt = await PromptForUnknownWordsAsync(i, item);
+                        if (!keepRunningAfterPrompt)
+                        {
+                            return;
+                        }
+                    }
                 }
             }
             catch (OperationCanceledException)
@@ -4485,7 +4570,18 @@ public partial class OcrViewModel : ObservableObject
                     var text = await engine.Ocr(bitmap, GoogleVisionApiKey, SelectedGoogleVisionLanguage?.Code ?? "en", cancellationToken);
                     item.Text = text;
 
-                    OcrFixLineAndSetText(i, item);
+                    var unknownWordsFound = OcrFixLineAndSetText(i, item);
+
+                    // Same prompt Tesseract's loop runs - these engines discarded the unknown
+                    // words, so ticking "prompt for unknown words" did nothing for them.
+                    if (DoPromptForUnknownWords && unknownWordsFound.Count > 0)
+                    {
+                        var keepRunningAfterPrompt = await PromptForUnknownWordsAsync(i, item);
+                        if (!keepRunningAfterPrompt)
+                        {
+                            return;
+                        }
+                    }
                 }
             }
             catch (OperationCanceledException)
@@ -4502,7 +4598,8 @@ public partial class OcrViewModel : ObservableObject
     {
         var languageCode = SelectedAppleVisionLanguage?.Code ?? string.Empty;
 
-        _ = Task.Run(() =>
+        // async so the unknown-word prompt can be awaited, like every other engine loop
+        _ = Task.Run(async () =>
         {
             try
             {
@@ -4523,7 +4620,18 @@ public partial class OcrViewModel : ObservableObject
 
                     item.Text = AppleVisionOcr.Ocr(bitmap, languageCode, fast: false, cancellationToken);
 
-                    OcrFixLineAndSetText(i, item);
+                    var unknownWordsFound = OcrFixLineAndSetText(i, item);
+
+                    // Same prompt Tesseract's loop runs - these engines discarded the unknown
+                    // words, so ticking "prompt for unknown words" did nothing for them.
+                    if (DoPromptForUnknownWords && unknownWordsFound.Count > 0)
+                    {
+                        var keepRunningAfterPrompt = await PromptForUnknownWordsAsync(i, item);
+                        if (!keepRunningAfterPrompt)
+                        {
+                            return;
+                        }
+                    }
                 }
             }
             catch (OperationCanceledException)
@@ -5013,11 +5121,11 @@ public partial class OcrViewModel : ObservableObject
         AutoDetectSourceLanguage();
     }
 
-    internal void Initialize(TransportStreamParser tsParser, List<TransportStreamSubtitle> subtitles, string fileName)
+    internal void Initialize(List<TransportStreamSubtitle> subtitles, string fileName)
     {
         _sourceFileName = fileName;
         Title = string.Format(Se.Language.Ocr.OcrX, fileName);
-        _ocrSubtitle = new OcrSubtitleTransportStream(tsParser, subtitles, fileName);
+        _ocrSubtitle = new OcrSubtitleTransportStream(subtitles);
         SetOcrSubtitleItems();
         AutoDetectSourceLanguage();
     }
@@ -5133,7 +5241,7 @@ public partial class OcrViewModel : ObservableObject
         if (IsLlamaCppVisible && LlamaCppOcrModels.Count == 0)
         {
             var savedModelName = Path.GetFileName(Se.Settings.Ocr.LlamaCppOcrModel ?? string.Empty);
-            SelectedLlamaCppOcrModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppOcrModels, LlamaCppServerManager.OcrModels, savedModelName);
+            SelectedLlamaCppOcrModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppOcrModels, LlamaCppServerManager.GetAllOcrModels(), savedModelName);
             UpdateLlamaCppOcrServerButtonText();
         }
 

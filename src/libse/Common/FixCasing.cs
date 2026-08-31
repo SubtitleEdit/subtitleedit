@@ -175,7 +175,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                     if (start.StartsWith(title.AsSpan(), StringComparison.OrdinalIgnoreCase))
                     {
                         var idx = i + title.Length;
-                        if (idx < text.Length - 2 && text[idx] == ' ')
+                        // The body reads text[idx] after the increment below, so the bound only
+                        // needs to leave one character - "- 2" skipped a one-letter word at the
+                        // end of the line ("Mr. t" was left alone while "Mr. to" was fixed).
+                        if (idx < text.Length - 1 && text[idx] == ' ')
                         {
                             idx++;
                             var words = text.Substring(idx).Split(' ', '\r', '\n', ',', '"', '?', '!', '.', '\'');
@@ -281,12 +284,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             else if (FixMakeUppercase)
             {
                 var st = new StrippableText(text);
-                text = st.Pre + MakeUpperCaseExceptTags(st.StrippedText) + st.Post;
+                text = st.Pre + MakeUpperCaseExceptTags(st.StrippedText, subtitleCulture) + st.Post;
                 text = HtmlUtil.FixUpperTags(text); // tags inside text
             }
             else if (FixMakeLowercase)
             {
-                text = MakeLowerCaseExceptTags(text);
+                text = MakeLowerCaseExceptTags(text, subtitleCulture);
             }
             else if (FixMakeProperCase)
             {
@@ -312,15 +315,19 @@ namespace Nikse.SubtitleEdit.Core.Common
             return text;
         }
 
-        private string MakeUpperCaseExceptTags(string text)
+        // The case conversion follows the SUBTITLE's language, not the machine's: char.ToUpper /
+        // char.ToLower without a culture use CurrentCulture, so on a Turkish system every "i" in
+        // an English subtitle became "I-with-dot" and every "I" became a dotless "i".
+        private string MakeUpperCaseExceptTags(string text, CultureInfo culture)
         {
             if (string.IsNullOrEmpty(text))
             {
                 return text;
             }
 
-            return string.Create(text.Length, text, (span, src) =>
+            return string.Create(text.Length, (text, culture), (span, state) =>
             {
+                var (src, ci) = state;
                 var insideAngle = false;
                 var insideCurly = false;
 
@@ -344,20 +351,21 @@ namespace Nikse.SubtitleEdit.Core.Common
                         insideCurly = false;
                     }
 
-                    span[i] = insideAngle || insideCurly ? c : char.ToUpper(c);
+                    span[i] = insideAngle || insideCurly ? c : char.ToUpper(c, ci);
                 }
             });
         }
 
-        private string MakeLowerCaseExceptTags(string text)
+        private string MakeLowerCaseExceptTags(string text, CultureInfo culture)
         {
             if (string.IsNullOrEmpty(text))
             {
                 return text;
             }
 
-            return string.Create(text.Length, text, (span, src) =>
+            return string.Create(text.Length, (text, culture), (span, state) =>
             {
+                var (src, ci) = state;
                 var insideAngle = false;
                 var insideCurly = false;
 
@@ -381,7 +389,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         insideCurly = false;
                     }
 
-                    span[i] = insideAngle || insideCurly ? c : char.ToLower(c);
+                    span[i] = insideAngle || insideCurly ? c : char.ToLower(c, ci);
                 }
             });
         }

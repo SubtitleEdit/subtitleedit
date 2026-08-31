@@ -249,8 +249,9 @@ public class ColorWheelControl : Control
 
             canvas.DrawBitmap(_bitmap, 0, 0);
 
-            // Draw selection indicator
-            var paint = new SKPaint
+            // Draw selection indicator - disposed, since Render runs on every frame and an
+            // undisposed SKPaint holds native memory until a GC finalizer gets to it.
+            using var paint = new SKPaint
             {
                 Color = SKColors.White,
                 Style = SKPaintStyle.Stroke,

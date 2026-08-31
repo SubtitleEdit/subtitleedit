@@ -67,4 +67,31 @@ public class MergeAndSplitHelperTests
         var rowsWithText = rows.Count(r => !string.IsNullOrEmpty(r.TranslatedText));
         Assert.Equal(count, rowsWithText);
     }
+
+    // Issue #14230: two lines are merged and translated as one sentence, and the reply contains
+    // a clock time written with a period ("04.00 uur") where the English source had a colon
+    // ("4:00am"). The split back over the two rows must not mistake that period for the end of
+    // a sentence and cut the number in half.
+    [Fact]
+    public async Task MergeAndTranslateIfPossible_DoesNotSplitInsideANumber()
+    {
+        var rows = MakeRows("and Carl Wilsher back to Chislehurst", "together at around 4:00am.");
+        var translator = new FixedResultTranslator
+        {
+            Result = "en Carl Wilsher rond 04.00 uur samen terug naar Chislehurst heeft gereden.",
+        };
+
+        var count = await MergeAndSplitHelper.MergeAndTranslateIfPossible(
+            rows,
+            new TranslationPair("English", "en"),
+            new TranslationPair("Dutch", "nl"),
+            0,
+            translator,
+            forceSingleLineMode: false,
+            CancellationToken.None);
+
+        Assert.Equal(2, count);
+        Assert.DoesNotContain("04." + Environment.NewLine, string.Join(Environment.NewLine, rows.Select(r => r.TranslatedText)));
+        Assert.Contains("04.00 uur", rows[0].TranslatedText + " " + rows[1].TranslatedText);
+    }
 }

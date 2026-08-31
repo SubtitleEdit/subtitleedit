@@ -13,7 +13,9 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
         private static readonly Regex RegExIAndZero = new Regex(@"[a-zæøåöääöéèàùâêîôûëï][I1]", RegexOptions.Compiled);
         private static readonly Regex RegExTime1 = new Regex(@"[a-zæøåöääöéèàùâêîôûëï]0", RegexOptions.Compiled);
         private static readonly Regex RegExTime2 = new Regex(@"0[a-zæøåöääöéèàùâêîôûëï]", RegexOptions.Compiled);
-        private static readonly Regex HexNumber = new Regex(@"^#?[\dABDEFabcdef]+$", RegexOptions.Compiled);
+        // Uppercase "C" was missing (the lowercase run is complete), so this hex bail-out did not
+        // recognise e.g. "#0C0d" and the OCR fixer rewrote its "d" to "o".
+        private static readonly Regex HexNumber = new Regex(@"^#?[\dABCDEFabcdef]+$", RegexOptions.Compiled);
         private static readonly Regex StartsAndEndsWithNumber = new Regex(@"^\d+.+\d$", RegexOptions.Compiled);
 
         public readonly Dictionary<string, string> WordReplaceList;

@@ -15,7 +15,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             ClutVersionNumber = buffer[index + 1] >> 4;
 
             int k = index + 2;
-            while (k + 6 <= index + segmentLength)
+            // A reduced-range entry is 4 bytes (id + flags + one packed word); only a
+            // full-range entry needs 6. Demanding 6 for every entry dropped the last
+            // reduced-range entry, and BuildClutLookup then paints its colour id red.
+            while (k + 4 <= index + segmentLength)
             {
                 var rcse = new RegionClutSegmentEntry();
                 rcse.ClutEntryId = buffer[k];
@@ -28,6 +31,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
                 if (rcse.FullRangeFlag)
                 {
+                    if (k + 6 > index + segmentLength)
+                    {
+                        break; // truncated full-range entry
+                    }
+
                     rcse.ClutEntryY = buffer[k + 2];
                     rcse.ClutEntryCr = buffer[k + 3];
                     rcse.ClutEntryCb = buffer[k + 4];

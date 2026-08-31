@@ -40,6 +40,11 @@ public class NetflixCheckShotChange : INetflixQualityChecker
             shotChanges = shotChanges.Select(sc => Math.Round(sc /= 1.001, 3, MidpointRounding.AwayFromZero)).ToList();
         }
 
+        // Every frame conversion below uses controller.FrameRate - the video's rate, the same
+        // one these two bounds come from. They used the app's CurrentFrameRate, so absolute
+        // times were converted in a different frame space than the bounds they were compared
+        // against, and the error grew with the time code (at ten minutes, 25 vs 23.976 is a
+        // difference of about 600 frames).
         int halfSecGapInFrames = (int)Math.Round(controller.FrameRate / 2, MidpointRounding.AwayFromZero);
         double twoFramesGap = 1000.0 / controller.FrameRate * 2.0;
 
@@ -47,19 +52,19 @@ public class NetflixCheckShotChange : INetflixQualityChecker
         {
             // These frame values are invariant across all shot changes - compute once per paragraph
             // instead of recomputing inside every Where/FirstOrDefault predicate.
-            var startFrame = SubtitleFormat.MillisecondsToFrames(p.StartTime.TotalMilliseconds);
-            var endFrame = SubtitleFormat.MillisecondsToFrames(p.EndTime.TotalMilliseconds);
+            var startFrame = SubtitleFormat.MillisecondsToFrames(p.StartTime.TotalMilliseconds, controller.FrameRate);
+            var endFrame = SubtitleFormat.MillisecondsToFrames(p.EndTime.TotalMilliseconds, controller.FrameRate);
 
-            List<double> previousStartShotChanges = shotChanges.Where(x => SubtitleFormat.MillisecondsToFrames(x * 1000) < startFrame).ToList();
-            List<double> nextStartShotChanges = shotChanges.Where(x => SubtitleFormat.MillisecondsToFrames(x * 1000) > startFrame).ToList();
-            List<double> previousEndShotChanges = shotChanges.Where(x => SubtitleFormat.MillisecondsToFrames(x * 1000) < endFrame).ToList();
-            List<double> nextEndShotChanges = shotChanges.Where(x => SubtitleFormat.MillisecondsToFrames(x * 1000) > endFrame).ToList();
-            var onShotChange = shotChanges.FirstOrDefault(x => SubtitleFormat.MillisecondsToFrames(x * 1000) == endFrame);
+            List<double> previousStartShotChanges = shotChanges.Where(x => SubtitleFormat.MillisecondsToFrames(x * 1000, controller.FrameRate) < startFrame).ToList();
+            List<double> nextStartShotChanges = shotChanges.Where(x => SubtitleFormat.MillisecondsToFrames(x * 1000, controller.FrameRate) > startFrame).ToList();
+            List<double> previousEndShotChanges = shotChanges.Where(x => SubtitleFormat.MillisecondsToFrames(x * 1000, controller.FrameRate) < endFrame).ToList();
+            List<double> nextEndShotChanges = shotChanges.Where(x => SubtitleFormat.MillisecondsToFrames(x * 1000, controller.FrameRate) > endFrame).ToList();
+            var onShotChange = shotChanges.FirstOrDefault(x => SubtitleFormat.MillisecondsToFrames(x * 1000, controller.FrameRate) == endFrame);
 
             if (previousStartShotChanges.Count > 0)
             {
                 double nearestStartPrevShotChange = previousStartShotChanges.Aggregate((x, y) => Math.Abs(x - p.StartTime.TotalSeconds) < Math.Abs(y - p.StartTime.TotalSeconds) ? x : y);
-                var gapToShotChange = SubtitleFormat.MillisecondsToFrames(p.StartTime.TotalMilliseconds - nearestStartPrevShotChange * 1000);
+                var gapToShotChange = SubtitleFormat.MillisecondsToFrames(p.StartTime.TotalMilliseconds - nearestStartPrevShotChange * 1000, controller.FrameRate);
                 if (gapToShotChange != 0 && gapToShotChange < halfSecGapInFrames)
                 {
                     var fixedParagraph = new Paragraph(p, false);
@@ -72,7 +77,7 @@ public class NetflixCheckShotChange : INetflixQualityChecker
             if (nextStartShotChanges.Count > 0)
             {
                 double nearestStartNextShotChange = nextStartShotChanges.Aggregate((x, y) => Math.Abs(x - p.StartTime.TotalSeconds) < Math.Abs(y - p.StartTime.TotalSeconds) ? x : y);
-                var gapToShotChange = SubtitleFormat.MillisecondsToFrames(nearestStartNextShotChange * 1000 - p.StartTime.TotalMilliseconds);
+                var gapToShotChange = SubtitleFormat.MillisecondsToFrames(nearestStartNextShotChange * 1000 - p.StartTime.TotalMilliseconds, controller.FrameRate);
                 var threshold = (int)Math.Round(halfSecGapInFrames * 0.75, MidpointRounding.AwayFromZero);
                 if (gapToShotChange != 0 && gapToShotChange < halfSecGapInFrames)
                 {
@@ -98,7 +103,7 @@ public class NetflixCheckShotChange : INetflixQualityChecker
             if (previousEndShotChanges.Count > 0)
             {
                 double nearestEndPrevShotChange = previousEndShotChanges.Aggregate((x, y) => Math.Abs(x - p.EndTime.TotalSeconds) < Math.Abs(y - p.EndTime.TotalSeconds) ? x : y);
-                if (SubtitleFormat.MillisecondsToFrames(p.EndTime.TotalMilliseconds - nearestEndPrevShotChange * 1000) < halfSecGapInFrames)
+                if (SubtitleFormat.MillisecondsToFrames(p.EndTime.TotalMilliseconds - nearestEndPrevShotChange * 1000, controller.FrameRate) < halfSecGapInFrames)
                 {
                     var fixedParagraph = new Paragraph(p, false);
                     fixedParagraph.EndTime.TotalMilliseconds = nearestEndPrevShotChange * 1000 - twoFramesGap;
@@ -114,7 +119,7 @@ public class NetflixCheckShotChange : INetflixQualityChecker
                 // extend the out-time to the shot change, respecting the two-frame gap from the shot
                 // change." An out-cue already sitting on the two-frame gap is what we would move it
                 // to, so it is not an issue.
-                var framesToShotChange = SubtitleFormat.MillisecondsToFrames(nearestEndNextShotChange * 1000 - p.EndTime.TotalMilliseconds);
+                var framesToShotChange = SubtitleFormat.MillisecondsToFrames(nearestEndNextShotChange * 1000 - p.EndTime.TotalMilliseconds, controller.FrameRate);
                 if (framesToShotChange < halfSecGapInFrames && framesToShotChange != 2)
                 {
                     var fixedParagraph = new Paragraph(p, false);

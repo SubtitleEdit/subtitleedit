@@ -34,10 +34,6 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
     private NameList? _nameList;
     private List<string> _nameListInclMulti;
     private string _language;
-    private const string PrefixChars = "([ --'>\r\n¿¡\"”“„";
-    private const string SuffixChars = " ,.!?:;…')]<-\"\r\n";
-    private static readonly string[] CommonWords = ["US", "Lane", "Bill", "Rose"];
-    private readonly HashSet<string> _usedNames;
 
     public FixNamesViewModel()
     {
@@ -48,14 +44,18 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
         _language = "en_US";
         _subtitleBefore = new Subtitle();
         _subtitle = new Subtitle();
-        _usedNames = new HashSet<string>();
         ExtraNames = string.Empty;
         Info = string.Empty;
         Subtitle = new Subtitle();
     }
 
-    internal void Initialize(Subtitle subtitle)
+    // Lines already changed by the step that opened this dialog (normal casing), so the
+    // final "lines changed" info covers the whole operation, like SE4's combined count.
+    private int _noOfFixesBefore;
+
+    internal void Initialize(Subtitle subtitle, int noOfFixesBefore = 0)
     {
+        _noOfFixesBefore = noOfFixesBefore;
         subtitle.Renumber();
         _subtitle = new Subtitle(subtitle);
         _subtitleBefore = subtitle;
@@ -68,59 +68,11 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
 
     private void FindAllNames()
     {
-        var text = HtmlUtil.RemoveHtmlTags(_subtitle.GetAllTexts());
-
         _nameListInclMulti = _nameList!.GetAllNames(); // Will contains both one word names and multi names
-        foreach (var s in ExtraNames.Split(','))
-        {
-            var name = s.Trim();
-            if (name.Length > 1 && !_nameListInclMulti.Contains(name))
-            {
-                _nameListInclMulti.Add(name);
-            }
-        }
 
-        _usedNames.Clear();
-        var names = new List<FixNameItem>();
-
-        const string english = "en";
-        const string dont = "don't";
-
-        foreach (var name in _nameListInclMulti)
-        {
-            // filter out invalid names
-            if (name.Length <= 1 || name == name.ToLowerInvariant())
-            {
-                continue;
-            }
-
-            var startIndex = text.IndexOf(name, StringComparison.OrdinalIgnoreCase);
-            while (startIndex >= 0)
-            {
-                if (IsWordBoundary(text, startIndex, name) && !text.AsSpan().Slice(startIndex, name.Length).Equals(name, StringComparison.Ordinal)) // do not add names where casing already is correct
-                {
-                    if (!_usedNames.Contains(name))
-                    {
-                        var skip = false;
-                        var isChecked = true;
-                        if (_language.StartsWith(english, StringComparison.OrdinalIgnoreCase))
-                        {
-                            skip = text.AsSpan()[startIndex..].StartsWith(dont, StringComparison.OrdinalIgnoreCase);
-                            isChecked = !CommonWords.Contains(name);
-                        }
-
-                        if (!skip)
-                        {
-                            _usedNames.Add(name);
-                            names.Add(new FixNameItem(name, isChecked));
-                            break; // break while
-                        }
-                    }
-                }
-
-                startIndex = text.IndexOf(name, startIndex + name.Length, StringComparison.OrdinalIgnoreCase);
-            }
-        }
+        var names = FixNamesLogic.FindNames(_subtitle, _nameListInclMulti, ExtraNames, _language)
+            .Select(n => new FixNameItem(n.Name, n.IsChecked))
+            .ToList();
 
         foreach (var item in names)
         {
@@ -132,13 +84,6 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
 
         Names.Clear();
         Names.AddRange(names);
-    }
-
-    private static bool IsWordBoundary(string text, int startIndex, string name)
-    {
-        var afterNameIndex = startIndex + name.Length;
-        return (startIndex == 0 || PrefixChars.Contains(text[startIndex - 1]))
-               && (afterNameIndex == text.Length || SuffixChars.Contains(text[afterNameIndex]));
     }
 
     private CancellationTokenSource? _cancellationTokenSource;
@@ -199,31 +144,9 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
     {
         var hits = new List<FixNameHitItem>();
 
-        // reusable array
-        var processingNames = new string[1];
-
         foreach (var p in _subtitle.Paragraphs)
         {
-            var text = p.Text;
-            foreach (var name in activeNames)
-            {
-                // no extra processing if paragraph doesn't contain name
-                if (!text.Contains(name, StringComparison.OrdinalIgnoreCase))
-                {
-                    continue;
-                }
-
-                var textNoTags = HtmlUtil.RemoveHtmlTags(text, true);
-
-                // has letter and not already uppercase
-                if (textNoTags != textNoTags.ToUpperInvariant())
-                {
-                    var st = new StrippableText(text);
-                    processingNames[0] = name;
-                    st.FixCasing(processingNames, true, false, false, string.Empty);
-                    text = st.MergedString;
-                }
-            }
+            var text = FixNamesLogic.ApplyNames(p.Text, activeNames);
 
             if (text != p.Text)
             {
@@ -331,7 +254,7 @@ public partial class FixNamesViewModel : ObservableObject, IClosingCleanup
             }
         }
 
-        Info = $"Change casing - lines changed: {noOfLinesChanged}";
+        Info = $"Change casing - lines changed: {noOfLinesChanged + _noOfFixesBefore}";
 
         OkPressed = true;
         Window?.Close();

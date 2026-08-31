@@ -11,6 +11,8 @@ namespace Nikse.SubtitleEdit.Core.Common
     public class UnknownFormatImporterXlsx
     {
         private static readonly XNamespace Ns = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
+        private static readonly XNamespace RelationshipsNs = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
+        private static readonly XNamespace PackageRelationshipsNs = "http://schemas.openxmlformats.org/package/2006/relationships";
 
         public Subtitle AutoGuessImport(string fileName)
         {
@@ -36,11 +38,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 using (var archive = new ZipArchive(stream, ZipArchiveMode.Read))
                 {
                     var sharedStrings = ReadSharedStrings(archive);
-                    var sheetEntry = archive.Entries
-                        .Where(e => e.FullName.StartsWith("xl/worksheets/sheet", StringComparison.OrdinalIgnoreCase) &&
-                                    e.FullName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
-                        .OrderBy(e => e.FullName, StringComparer.OrdinalIgnoreCase)
-                        .FirstOrDefault();
+                    var sheetEntry = FindFirstSheet(archive);
                     if (sheetEntry == null)
                     {
                         return null;
@@ -53,6 +51,70 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 return null;
             }
+        }
+
+        /// <summary>
+        /// The worksheet the user sees first: the first &lt;sheet&gt; in xl/workbook.xml, resolved
+        /// through the workbook relationships. That is not necessarily sheet1.xml - moving a sheet
+        /// in Excel reorders the workbook entries but never renames the parts - so picking the
+        /// first worksheet file imported the wrong sheet. Falls back to the first worksheet part
+        /// when the workbook or its relationships cannot be read.
+        /// </summary>
+        private static ZipArchiveEntry FindFirstSheet(ZipArchive archive)
+        {
+            var worksheets = archive.Entries
+                .Where(e => e.FullName.StartsWith("xl/worksheets/sheet", StringComparison.OrdinalIgnoreCase) &&
+                            e.FullName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
+                .OrderBy(e => e.FullName, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+            if (worksheets.Count <= 1)
+            {
+                return worksheets.FirstOrDefault();
+            }
+
+            try
+            {
+                var workbookEntry = archive.GetEntry("xl/workbook.xml");
+                var relsEntry = archive.GetEntry("xl/_rels/workbook.xml.rels");
+                if (workbookEntry != null && relsEntry != null)
+                {
+                    string relationshipId;
+                    using (var stream = workbookEntry.Open())
+                    {
+                        relationshipId = (string)XDocument.Load(stream).Root?
+                            .Element(Ns + "sheets")?
+                            .Elements(Ns + "sheet")
+                            .FirstOrDefault()?
+                            .Attribute(RelationshipsNs + "id");
+                    }
+
+                    if (!string.IsNullOrEmpty(relationshipId))
+                    {
+                        using (var stream = relsEntry.Open())
+                        {
+                            var target = XDocument.Load(stream).Root?
+                                .Elements(PackageRelationshipsNs + "Relationship")
+                                .FirstOrDefault(r => (string)r.Attribute("Id") == relationshipId)?
+                                .Attribute("Target")?.Value;
+                            if (!string.IsNullOrEmpty(target))
+                            {
+                                var fullName = "xl/" + target.TrimStart('/').Replace("../", string.Empty);
+                                var match = worksheets.FirstOrDefault(e => e.FullName.Equals(fullName, StringComparison.OrdinalIgnoreCase));
+                                if (match != null)
+                                {
+                                    return match;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // fall through to the first worksheet part
+            }
+
+            return worksheets[0];
         }
 
         private static List<string> ReadSharedStrings(ZipArchive archive)

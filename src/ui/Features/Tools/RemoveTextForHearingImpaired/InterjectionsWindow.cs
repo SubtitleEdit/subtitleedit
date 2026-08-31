@@ -86,7 +86,7 @@ public class InterjectionsWindow : Window
 
         Content = grid;
         
-        Activated += delegate { textBoxInterjections.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, textBoxInterjections); // initial focus on an input, not an action button - a focused button clicks on bare Space
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

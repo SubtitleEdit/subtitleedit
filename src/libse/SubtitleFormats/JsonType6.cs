@@ -165,9 +165,29 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 }
             }
+            // The loop above stops at Count - 1, so the final word is only ever seen as
+            // "next" - add it here, or the last subtitle loses its last word.
+            var lastWord = subtitle.Paragraphs.Count > 0 ? subtitle.Paragraphs[subtitle.Paragraphs.Count - 1] : null;
+            if (lastWord != null && !string.IsNullOrWhiteSpace(lastWord.Text))
+            {
+                if (sb.Length == 0)
+                {
+                    startMilliseconds = lastWord.StartTime.TotalMilliseconds;
+                }
+
+                sb.Append(' ');
+                sb.Append(lastWord.Text);
+            }
+
             if (sb.Length > 0)
             {
-                var newParagraph = new Paragraph(sb.ToString().Trim(), startMilliseconds, Utilities.GetOptimalDisplayMilliseconds(sb.ToString()));
+                // GetOptimalDisplayMilliseconds is a DURATION - using it as the absolute end
+                // time put the last subtitle's end before its own start.
+                var lastText = sb.ToString().Trim();
+                var endMilliseconds = lastWord != null && lastWord.EndTime.TotalMilliseconds > startMilliseconds
+                    ? lastWord.EndTime.TotalMilliseconds
+                    : startMilliseconds + Utilities.GetOptimalDisplayMilliseconds(lastText);
+                var newParagraph = new Paragraph(lastText, startMilliseconds, endMilliseconds);
                 sub.Paragraphs.Add(newParagraph);
             }
 

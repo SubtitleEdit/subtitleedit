@@ -1,0 +1,44 @@
+<private_stream_1
+  xmlns="http://www.manzanitasystems.com/schema/v1.03/private_stream_1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.manzanitasystems.com/schema/v1.03/private_stream_1"
+  version="1.03"
+  type="dvb_teletext">
+
+  <preamble>
+    <conversion_data
+      creator="Subtitle Edit test fixture"
+      date="2026-01-01"
+      source_format="demux"
+    />
+    <descriptors>
+      <dvb_teletext_descriptor>
+        <dvb_teletext_content
+          ISO_639_language_code="eng"
+          teletext_type="subtitle"
+          teletext_magazine_number="0"
+          teletext_page_number="136"
+        />
+      </dvb_teletext_descriptor>
+    </descriptors>
+    <pes_header
+      PES_priority="0"
+      copyright="0"
+      original_or_copy="0"
+      stream_id="189"
+    />
+    <timing_information
+      average_rate="37600.000"
+      max_rate="37600.000"
+      min_advance_time="3600"
+      max_advance_time="7200"
+    />
+  </preamble>
+
+  <data_index>
+    <packet pts="90000" offset="0" length="185" />
+    <packet pts="273600" offset="185" length="185" />
+  </data_index>
+
+</private_stream_1>
+,Çä¨¨¨¨ô@,Èä¨m¨žÈàü?=ª.þÿ.þÿ.þÿ.þÿ.þÿ.þÿ.þÿ.þÿ.þÿ.þÿ,Éä¨Ù°ÐÐ¶†—7TÎ§u÷OæÄv÷/§QQ,Êä¨¨¿W¨¨¨ô@,Çä¨¨¨¨ô@,Èä¨¨¿W¨¨¨ô@ÿ,ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ,ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ

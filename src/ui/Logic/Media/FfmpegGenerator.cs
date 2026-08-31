@@ -282,8 +282,12 @@ public class FfmpegGenerator
             filterParameter = $"-filter_complex \"{filterComplex}\"";
         }
 
+        // "-y" (overwrite): the output file name comes from a "save as" dialog that has already
+        // asked about replacing an existing file, or from the batch naming that never collides.
+        // Without it ffmpeg hits "File ... already exists. Exiting." and writes nothing - and as
+        // the old file is still there, the burn-in looked like it succeeded (issue #14210).
         return
-            $"{cutStart}-i \"{inputVideoFileName}\"{canvasInput}{logoInput}{cutEnd} {filterParameter} -g 30 -bf 2 -s {width}x{height} {videoEncodingSettings} {passSettings} {presetSettings} {crfSettings} {pixelFormat} {audioSettings}{tuneParameter} -use_editlist 0 -movflags +faststart{shortestParameter} {outputVideoFileName}";
+            $"-y{cutStart}-i \"{inputVideoFileName}\"{canvasInput}{logoInput}{cutEnd} {filterParameter} -g 30 -bf 2 -s {width}x{height} {videoEncodingSettings} {passSettings} {presetSettings} {crfSettings} {pixelFormat} {audioSettings}{tuneParameter} -use_editlist 0 -movflags +faststart{shortestParameter} {outputVideoFileName}";
     }
 
     private static Process GetFFmpegProcess(string imageFileName, string outputFileName, int videoWidth, int videoHeight, int seconds, decimal frameRate, bool addTimeCode = false, string addTimeColor = "white")
@@ -949,7 +953,9 @@ public class FfmpegGenerator
         else if (checkered)
         {
             var tempImageFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".png");
-            var skBitmap = new SKBitmap(width, height, true);
+            // The branch above uses "using" for its bitmap; this one leaked ~8 MB of native
+            // pixels at 1080p on every "generate video with checkered background".
+            using var skBitmap = new SKBitmap(width, height, true);
             using (var canvas = new SKCanvas(skBitmap))
             {
                 UiUtil.DrawCheckerboardBackground(canvas, width, height);
@@ -1235,7 +1241,11 @@ public class FfmpegGenerator
                 keepIndex++;
             }
 
-            lastEnd = seg.EndTime.TotalSeconds;
+            // Never move the cursor backwards: cut segments are sorted by start but not merged,
+            // so an overlapping pair like [10-20] then [12-15] used to reset lastEnd to 15 and
+            // leave 15-20 s in the output - while the subtitle re-timer treats it as removed,
+            // desyncing everything after the cut.
+            lastEnd = Math.Max(lastEnd, seg.EndTime.TotalSeconds);
         }
 
         // Keep remainder (from lastEnd → EOF)
@@ -1442,7 +1452,10 @@ public class FfmpegGenerator
         args.Add($"-i \"{inputFileName}\"");
 
         // New external subtitle inputs
-        var newInputs = embeddedTracks.Where(t => t.New && !string.IsNullOrEmpty(t.FileName) && File.Exists(t.FileName)).ToList();
+        // "!t.Deleted" as in the mp4 path below: a track the user added and then removed was
+        // still -i'd and -map'd in, and since outputSubs excludes it, every following subtitle
+        // stream picked up the previous track's language/title/disposition metadata.
+        var newInputs = embeddedTracks.Where(t => t.New && !t.Deleted && !string.IsNullOrEmpty(t.FileName) && File.Exists(t.FileName)).ToList();
         foreach (var track in newInputs)
         {
             args.Add($"-i \"{track.FileName}\"");

@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Globalization;
 using System.Text;
 using System.Xml;
@@ -161,9 +162,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            var xmlAsText = sb.ToString().Trim();
+            var xmlAsText = JoinLinesTrimmed(lines);
             if (!xmlAsText.Contains("<XIF") || !xmlAsText.Contains("<SubtitleText"))
             {
                 return;
@@ -171,6 +170,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             try
             {
+                var sb = new StringBuilder();
                 var xml = new XmlDocument { XmlResolver = null };
                 xml.LoadXml(xmlAsText);
                 foreach (XmlNode node in xml.DocumentElement.SelectNodes("FileBody/ContentBlock"))
@@ -191,7 +191,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 sb.AppendLine();
                             }
                         }
-                        var p = new Paragraph(timeCodeIn, timeCodeOut, sb.ToString().Replace("  ", " ").Trim());
+                        // Each <Text> run is joined with a leading space, so the run after a
+                        // <HardReturn> started the next line with one - and since the writer
+                        // keeps whatever it is given, the indent grew on every save. The outer
+                        // Trim() only ever reached the first and last line.
+                        var xifText = string.Join(Environment.NewLine,
+                            sb.ToString().Replace("  ", " ").SplitToLines().Select(l => l.Trim()));
+                        var p = new Paragraph(timeCodeIn, timeCodeOut, xifText);
                         subtitle.Paragraphs.Add(p);
                     }
                     catch (Exception ex)

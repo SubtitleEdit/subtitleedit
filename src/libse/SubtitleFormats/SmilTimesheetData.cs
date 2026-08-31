@@ -209,11 +209,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (Paragraph paragraph in subtitle.Paragraphs)
             {
                 Paragraph next = subtitle.GetParagraphOrDefault(index);
-                if (next != null)
+                if (next != null && paragraph.EndTime.TotalMilliseconds < 50)
                 {
+                    // Only fill in a MISSING end time. This used to overwrite unconditionally,
+                    // throwing away every "data-end" the loop above had just parsed and making
+                    // each cue run right up to the next one.
                     paragraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
                 }
-                else if (paragraph.EndTime.TotalMilliseconds < 50)
+                else if (next == null && paragraph.EndTime.TotalMilliseconds < 50)
                 {
                     paragraph.EndTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(paragraph.Text);
                 }

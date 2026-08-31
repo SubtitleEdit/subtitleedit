@@ -151,7 +151,7 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
         OllamaModels = new ObservableCollection<string>(Se.Settings.Ocr.OllamaModels);
         LlamaCppOcrModels = new ObservableCollection<LlamaCppModelDisplay>();
         SelectedLlamaCppOcrModel = LlamaCppDownloadHelper.PopulateModels(
-            LlamaCppOcrModels, LlamaCppServerManager.OcrModels, Se.Settings.Ocr.LlamaCppOcrModel);
+            LlamaCppOcrModels, LlamaCppServerManager.GetAllOcrModels(), Se.Settings.Ocr.LlamaCppOcrModel);
 
         CrispEmbedBackends = new ObservableCollection<CrispEmbedBackend>(CrispEmbedEngine.GetBackends());
         CrispEmbedModels = new ObservableCollection<CrispEmbedModelDisplay>();
@@ -366,7 +366,7 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
         if (SelectedOcrEngine == "llama.cpp")
         {
             var ready = await LlamaCppDownloadHelper.EnsureReadyAsync(Window!, _windowService,
-                SelectedLlamaCppOcrModel?.Model.FileName, LlamaCppServerManager.OcrModels, persistAsTranslateModel: false);
+                SelectedLlamaCppOcrModel?.Model.FileName, LlamaCppServerManager.GetAllOcrModels(), persistAsTranslateModel: false);
             if (!ready)
             {
                 return;

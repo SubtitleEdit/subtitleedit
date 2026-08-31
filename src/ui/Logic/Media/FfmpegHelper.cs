@@ -291,6 +291,13 @@ public static class FfmpegHelper
                 return string.Empty;
             }
 
+            // Drain both pipes BEFORE waiting, as ProbeEncodersOutput does: a full build's
+            // "configuration:" line runs to several KB, past the 4 KB Windows pipe buffer, and
+            // reading only after WaitForExit deadlocks until the timeout kills ffmpeg - which
+            // returned empty and let IsSupportedVersion accept any ffmpeg at all.
+            var stdOut = process.StandardOutput.ReadToEndAsync();
+            var stdErr = process.StandardError.ReadToEndAsync();
+
             // "-version" prints a short banner and exits immediately; 4 s is generous.
             if (!process.WaitForExit(4000))
             {
@@ -298,7 +305,10 @@ public static class FfmpegHelper
                 return string.Empty;
             }
 
-            return process.StandardOutput.ReadToEnd() + "\n" + process.StandardError.ReadToEnd();
+            // Lets the async readers finish after the timed wait returned (documented pattern).
+            process.WaitForExit();
+
+            return stdOut.Result + "\n" + stdErr.Result;
         }
         catch (Exception ex)
         {

@@ -90,7 +90,7 @@ public class AddToNamesListWindow : Window
 
         Content = grid;
 
-        Activated += delegate { (vm.IsSingleMode ? textBoxWord : textBoxMultiNames).Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, () => { (vm.IsSingleMode ? textBoxWord : textBoxMultiNames).Focus(); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
     }
 }

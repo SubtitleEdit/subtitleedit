@@ -461,49 +461,15 @@ internal class Program
 
     // Options that take a value as the next argument. Used to know which positional
     // tokens are file patterns vs. option-values when injecting a positional format.
-    // Canonical lowercase-hyphenated names; legacy smashed/PascalCase aliases included for
-    // backward compatibility with older scripts.
-    private static readonly HashSet<string> ValueOptions = new(StringComparer.OrdinalIgnoreCase)
-    {
-        "--format", "-f",
-        "--adjust-duration", "--adjustduration",
-        "--assa-style-file",
-        "--change-speed",
-        "--custom-format", "--customformat",
-        "--ebu-header-file", "--ebuheaderfile",
-        "--encoding",
-        "--input-encoding-fallback", "--inputencodingfallback",
-        "--fps",
-        "--input-folder", "--inputfolder",
-        "--multiple-replace", "--multiplereplace",
-        "--ocr-engine", "--ocrengine",
-        "--ocr-language", "--ocrlanguage",
-        "--ocr-db", "--ocrdb",
-        "--offset",
-        "--output-filename", "--outputfilename",
-        "--output-folder", "--outputfolder",
-        "--pac-codepage",
-        "--profile",
-        "--renumber",
-        "--resolution",
-        "--settings",
-        "--target-fps", "--targetfps",
-        "--teletext-only-page", "--teletextonlypage",
-        "--track-number",
-        "--ollama-url",
-        "--ollama-model",
-        "--translate-to", "--translateto",
-        "--translate-from", "--translatefrom",
-        "--translate-engine", "--translateengine",
-        "--translate-url", "--translateurl",
-        "--translate-model", "--translatemodel",
-        "--delete-first", "--DeleteFirst",
-        "--delete-last", "--DeleteLast",
-        "--delete-contains", "--DeleteContains",
-        "--fix-common-errors-rules", "--FixCommonErrorsRules",
-        "--bridge-gaps", "--BridgeGaps",
-        "--apply-min-gap", "--ApplyMinGap",
-    };
+    // Derived from the reflected CLI schema so the set cannot drift from the options the
+    // parser actually binds (a hand-maintained copy went stale and broke valid command
+    // lines). FlagValue options ("--apply-min-gap [MS]") count as value-taking here: a
+    // separate value token following one must not be mistaken for a positional.
+    private static readonly HashSet<string> ValueOptions = new(
+        CliSchema.Options
+            .Where(o => o.Type != "flag")
+            .SelectMany(o => new[] { o.Name }.Concat(o.Aliases)),
+        StringComparer.OrdinalIgnoreCase);
 
     private static bool HasFormatOption(string[] args)
     {

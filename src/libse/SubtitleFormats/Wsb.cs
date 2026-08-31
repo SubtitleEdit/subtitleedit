@@ -1,7 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -20,29 +19,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return base.IsMine(lines, fileName);
         }
 
+        /// <summary>
+        /// WSB is import-only, like the other read-only formats here (DlDd, FTE, SPU image...).
+        /// </summary>
+        /// <remarks>
+        /// WSB records are binary: <see cref="LoadSubtitle"/> finds a cue by the "     10     "
+        /// separator after the text and the 16 timecode digits that sit immediately before the
+        /// 0x37 0x01 0x01 0x00 marker. The writer that used to live here emitted an unrelated
+        /// plain-text layout ("0001 : 00031522,...", "80 80 80", "C1Y00 &lt;text&gt;") which no WSB
+        /// tool reads and which this format's own reader parses as zero paragraphs - so saving
+        /// as WSB and reopening silently lost the whole subtitle. It was written that way in
+        /// 2011 and never matched the reader, in SE 4 either.
+        ///
+        /// Reconstructing a real WSB record needs the actual binary layout; emitting something
+        /// shaped only around the two anchors above would round-trip inside Subtitle Edit while
+        /// still being rejected by real WSB software, which is a worse failure than refusing.
+        /// </remarks>
         public override string ToText(Subtitle subtitle, string title)
         {
-            var sb = new StringBuilder();
-            int index = 0;
-            foreach (Paragraph p in subtitle.Paragraphs)
-            {
-                sb.AppendLine($"{index + 1:0000} : {EncodeTimeCode(p.StartTime)},{EncodeTimeCode(p.EndTime)},10");
-                sb.AppendLine("80 80 80");
-                foreach (string line in p.Text.SplitToLines())
-                {
-                    sb.AppendLine("C1Y00 " + line.Trim());
-                }
-
-                sb.AppendLine();
-                index++;
-            }
-            return sb.ToString();
-        }
-
-        private static string EncodeTimeCode(TimeCode time)
-        {
-            //00:03:15:22 (last is frame)
-            return $"{time.Hours:00}{time.Minutes:00}{time.Seconds:00}{MillisecondsToFramesMaxFrameRate(time.Milliseconds):00}";
+            throw new NotImplementedException("WSB is a read-only format in Subtitle Edit - it can be opened, but not saved.");
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

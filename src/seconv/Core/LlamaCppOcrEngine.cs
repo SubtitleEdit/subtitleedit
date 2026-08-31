@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
+using Nikse.SubtitleEdit.UiLogic.Ocr;
 
 namespace SeConv.Core;
 
@@ -20,22 +21,22 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
 {
     public string Name => "llama.cpp";
 
-    // Same default prompt as the UI's llama.cpp OCR (SeOcr.LlamaCppOcrPrompt).
-    private const string PromptTemplate = "Extract all text exactly as written. The language is {language}. Preserve line breaks.";
-
     private readonly HttpClient _httpClient;
     private readonly string _language;
     private readonly string _modelName;
+    private readonly string _promptTemplate;
     private readonly string? _url;          // non-null = user-managed server via --ocr-url
     private readonly LlamaCppModel? _model; // non-null = local server mode; started on first Recognize
     private readonly bool _quiet;
 
-    private LlamaCppOcrEngine(string? url, LlamaCppModel? model, string modelName, string? language, bool quiet)
+    private LlamaCppOcrEngine(string? url, LlamaCppModel? model, string modelName, string? language, string? prompt, bool quiet)
     {
         _url = url;
         _model = model;
         _modelName = modelName;
         _language = string.IsNullOrWhiteSpace(language) ? "English" : language;
+        // Shared with the UI's default so the two cannot drift; --ocr-prompt overrides it.
+        _promptTemplate = string.IsNullOrWhiteSpace(prompt) ? SeOcrDefaults.LlamaCppOcrPrompt : prompt;
         _quiet = quiet;
         _httpClient = new HttpClient
         {
@@ -67,12 +68,12 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
             var modelName = string.IsNullOrWhiteSpace(options.OcrModel)
                 ? "glmocr"
                 : Path.GetFileNameWithoutExtension(options.OcrModel.Trim());
-            return new LlamaCppOcrEngine(fullUrl, null, modelName, options.OcrLanguage, options.Quiet);
+            return new LlamaCppOcrEngine(fullUrl, null, modelName, options.OcrLanguage, options.OcrPrompt, options.Quiet);
         }
 
         LlamaCppLocal.EnsureServerBinary("the OCR window > llama.cpp", "--ocr-url");
         var model = ResolveOcrModel(options.OcrModel);
-        return new LlamaCppOcrEngine(null, model, Path.GetFileNameWithoutExtension(model.FileName), options.OcrLanguage, options.Quiet);
+        return new LlamaCppOcrEngine(null, model, Path.GetFileNameWithoutExtension(model.FileName), options.OcrLanguage, options.OcrPrompt, options.Quiet);
     }
 
     public string Recognize(SKBitmap bitmap)
@@ -101,7 +102,7 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
         using var data = image.Encode(SKEncodedImageFormat.Png, 90);
         var base64 = Convert.ToBase64String(data.ToArray());
 
-        var prompt = PromptTemplate.Replace("{language}", _language);
+        var prompt = _promptTemplate.Replace("{language}", _language);
         var body = "{ \"model\": \"" + Escape(_modelName) + "\", \"temperature\": 0, \"messages\": [ { \"role\": \"user\", \"content\": [ " +
                    "{ \"type\": \"text\", \"text\": \"" + Escape(prompt) + "\" }, " +
                    "{ \"type\": \"image_url\", \"image_url\": { \"url\": \"data:image/png;base64," + base64 + "\" } } " +
@@ -127,8 +128,8 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
 
     /// <summary>
     /// Resolves <c>--ocr-model</c> to an installed model: a full <c>.gguf</c> path (needs its
-    /// mmproj vision-projector sidecar next to it), a curated OCR model by file/display name,
-    /// or - when omitted - the first installed curated OCR model.
+    /// mmproj vision-projector sidecar next to it), a curated or self-supplied OCR model in the
+    /// models folder by file/display name, or - when omitted - the first installed OCR model.
     /// </summary>
     internal static LlamaCppModel ResolveOcrModel(string? requestedModel)
     {
@@ -148,7 +149,7 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
                 }
 
                 var fullPath = Path.GetFullPath(name);
-                var mmproj = FindMmprojSidecar(fullPath);
+                var mmproj = LlamaCppServerManager.FindMmprojSidecar(fullPath);
                 if (mmproj == null)
                 {
                     var fileName = Path.GetFileName(fullPath);
@@ -162,10 +163,12 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
                     MmprojFileName: mmproj);
             }
 
-            // Name: match the curated OCR models (with or without .gguf).
-            var model = LlamaCppServerManager.OcrModels.FirstOrDefault(m => m.FileName.Equals(name, StringComparison.OrdinalIgnoreCase))
-                        ?? LlamaCppServerManager.OcrModels.FirstOrDefault(m => m.FileName.Equals(name + ".gguf", StringComparison.OrdinalIgnoreCase))
-                        ?? LlamaCppServerManager.OcrModels.FirstOrDefault(m => m.DisplayName.Equals(name, StringComparison.OrdinalIgnoreCase));
+            // Name: match the curated OCR models (with or without .gguf), plus any self-supplied
+            // vision model in the models folder - the same list the OCR window offers.
+            var all = LlamaCppServerManager.GetAllOcrModels();
+            var model = all.FirstOrDefault(m => m.FileName.Equals(name, StringComparison.OrdinalIgnoreCase))
+                        ?? all.FirstOrDefault(m => m.FileName.Equals(name + ".gguf", StringComparison.OrdinalIgnoreCase))
+                        ?? all.FirstOrDefault(m => m.DisplayName.Equals(name, StringComparison.OrdinalIgnoreCase));
             if (model == null || !LlamaCppServerManager.IsModelInstalled(model))
             {
                 throw new InvalidOperationException(
@@ -177,8 +180,8 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
             return model;
         }
 
-        // No model given: pick the first installed curated OCR model.
-        var installed = LlamaCppServerManager.OcrModels.FirstOrDefault(LlamaCppServerManager.IsModelInstalled);
+        // No model given: pick the first installed OCR model (curated first, then self-supplied).
+        var installed = LlamaCppServerManager.GetAllOcrModels().FirstOrDefault(LlamaCppServerManager.IsModelInstalled);
         if (installed == null)
         {
             throw new InvalidOperationException(
@@ -188,19 +191,6 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
         }
 
         return installed;
-    }
-
-    private static string? FindMmprojSidecar(string modelPath)
-    {
-        // Both curated sidecar conventions: "mmproj-<file>" (GLM-OCR, LightOnOCR) and
-        // "<stem>-mmproj.gguf" (PaddleOCR-VL).
-        var dir = Path.GetDirectoryName(modelPath)!;
-        var candidates = new[]
-        {
-            Path.Combine(dir, "mmproj-" + Path.GetFileName(modelPath)),
-            Path.Combine(dir, Path.GetFileNameWithoutExtension(modelPath) + "-mmproj.gguf"),
-        };
-        return candidates.FirstOrDefault(File.Exists);
     }
 
     private static string Escape(string s) =>

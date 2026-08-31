@@ -1,4 +1,5 @@
 ﻿using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
@@ -64,7 +65,7 @@ public class AssaStylesWindow : Window
         Content = grid;
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
-        Activated += delegate { TableViewExtras.FocusRow(vm.FileStyleGrid); };
+        UiUtil.FocusOnFirstActivation(this, () => { TableViewExtras.FocusRow(vm.FileStyleGrid); });
         KeyDown += vm.KeyDown;
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
@@ -639,38 +640,23 @@ public class AssaStylesWindow : Window
 
     private static Border MakePreviewView(AssaStylesViewModel vm)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(2, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(2, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        var label = UiUtil.MakeLabel(Se.Language.General.Preview).WithBold();
-
         var image = new Image
         {
             [!Image.SourceProperty] = new Binding(nameof(vm.ImagePreview)),
             DataContext = vm,
             HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Top,
+            VerticalAlignment = VerticalAlignment.Stretch,
             Stretch = Stretch.Uniform, // Scale the preview frame to fit while keeping aspect ratio
+            // No MaxHeight - the preview grows with the window via the star row it sits in
             MinHeight = 150,
-            MaxHeight = 220,
         };
 
-        grid.Add(label, 0);
-        grid.Add(image, 1);
+        // No "Preview" heading - the label only ate vertical space the preview itself can use,
+        // so the name lives on as a hover hint (and as the screen reader name).
+        UiUtil.AttachHoverTooltip(image, Se.Language.General.Preview);
+        AutomationProperties.SetName(image, Se.Language.General.Preview);
 
-        return UiUtil.MakeBorderForControl(grid);
+        return UiUtil.MakeBorderForControl(image);
     }
 
     private static Button MakeStyleColorPickerButton(AssaStylesViewModel vm, string colorPropertyName)

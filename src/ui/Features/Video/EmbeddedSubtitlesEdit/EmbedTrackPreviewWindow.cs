@@ -56,6 +56,7 @@ public class EmbedTrackPreviewWindow : Window
 
         //KeyDown += (_, e) => vm.OnKeyDown(e);
         AddHandler(KeyDownEvent, vm.OnKeyDownHandler, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);
+        Closing += (_, _) => vm.OnClosing();
 
 
         Loaded += (_, _) => 

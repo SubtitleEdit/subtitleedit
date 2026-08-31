@@ -97,6 +97,34 @@ namespace Nikse.SubtitleEdit.Core.Common
                 ch >= 0xFFE0 && ch <= 0xFFE6);
         }
 
+        /// <summary>
+        /// True when the subtitle carries the Japanese profile markup libass cannot draw by itself.
+        /// The format alone does not say: "Lambda Cap" decodes furigana, emphasis marks and
+        /// tate-chu-yoko to the same markup, and its control codes would otherwise end up on screen
+        /// as literal text (issue #14165).
+        /// </summary>
+        public static bool HasJapaneseMarkup(Subtitle subtitle)
+        {
+            if (subtitle == null)
+            {
+                return false;
+            }
+
+            foreach (var p in subtitle.Paragraphs)
+            {
+                var text = p.Text;
+                if (!string.IsNullOrEmpty(text) && text.Contains('<') &&
+                    (text.Contains("<ruby-", StringComparison.Ordinal) ||
+                     text.Contains("<bouten-", StringComparison.Ordinal) ||
+                     text.Contains("<horizontalDigit>", StringComparison.Ordinal)))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public static List<Paragraph> SplitToAssRenderLines(Paragraph p, int width, int height)
         {
             var metrics = new Metrics(height);
@@ -182,6 +210,16 @@ namespace Nikse.SubtitleEdit.Core.Common
                         actual.Append("{\\i0}");
                         i += 4;
                         italicOn = false;
+                    }
+                    else if (line.Substring(i).StartsWith("<horizontalDigit>", StringComparison.Ordinal))
+                    {
+                        // Tate-chu-yoko only means something in a vertical column - horizontal digits
+                        // are already horizontal, so just drop the tags (issue #14165).
+                        i += "<horizontalDigit>".Length;
+                    }
+                    else if (line.Substring(i).StartsWith("</horizontalDigit>", StringComparison.Ordinal))
+                    {
+                        i += "</horizontalDigit>".Length;
                     }
                     else if (line.Substring(i).StartsWith("<bouten-", StringComparison.Ordinal))
                     {

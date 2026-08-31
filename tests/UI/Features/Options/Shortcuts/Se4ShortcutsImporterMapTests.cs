@@ -51,6 +51,8 @@ public class Se4ShortcutsImporterMapTests
     [InlineData("MainVideoGoToNextChapter", "GoToNextChapterCommand")]
     [InlineData("MainAdjustSetStartAndOffsetTheWholeSubtitle", "WaveformSetStartAndKeepDurationCommand")]
     [InlineData("GeneralGoToNextSubtitleAndPlay", "PlayNextCommand")]
+    [InlineData("GeneralGoToNextSubtitlePlayTranslate", "GoToNextSubtitlePlayTranslateCommand")]
+    [InlineData("GeneralGoToPrevSubtitlePlayTranslate", "GoToPrevSubtitlePlayTranslateCommand")]
     [InlineData("GeneralGoToPrevSubtitleAndPlay", "PlayPreviousCommand")]
     [InlineData("GeneralGoToStartOfCurrentSubtitle", "VideoSetPositionCurrentSubtitleStartCommand")]
     [InlineData("GeneralGoToEndOfCurrentSubtitle", "VideoSetPositionCurrentSubtitleEndCommand")]
@@ -68,6 +70,7 @@ public class Se4ShortcutsImporterMapTests
     [InlineData("GeneralClearBookmarks", "ClearBookmarksCommand")]
     [InlineData("MainListViewUnderline", "ToggleLinesUnderlineOrSelectedTextCommand")]
     [InlineData("WaveformGuessStart", "WaveformGuessStartCommand")]
+    [InlineData("MainEditToggleTranslationOriginalInPreviews", "ToggleOriginalTextInPreviewCommand")]
     public void ImportsSe4ShortcutBySerializedName(string se4Name, string expectedSe5Command)
     {
         var xml = $"<Shortcuts><{se4Name}>Control+Shift+F12</{se4Name}></Shortcuts>";

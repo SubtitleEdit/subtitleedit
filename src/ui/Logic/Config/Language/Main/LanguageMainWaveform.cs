@@ -14,6 +14,7 @@ public class LanguageMainWaveform
     public string ZoomVerticalHint { get; set; }
     public string SelectCurrentLineWhilePlayingHint { get; set; }
     public string VideoPosition { get; set; }
+    public string VideoPositionTextBox { get; set; }
     public string HideWaveformToolbar { get; set; }
     public string ResetZoomAndSpeed { get; set; }
     public string RemoveBlankLines { get; set; }
@@ -42,6 +43,7 @@ public class LanguageMainWaveform
         ZoomVerticalHint = "Zoom vertical {0}";
         SelectCurrentLineWhilePlayingHint = "Select current subtitle while playing {0}";
         VideoPosition = "Video position {0}";
+        VideoPositionTextBox = "Video position text box {0}";
         HideWaveformToolbar = "Hide toolbar {0}";
         ResetZoomAndSpeed = "Reset zoom & playback speed {0}";
         RemoveBlankLines = "Remove blank lines {0}";

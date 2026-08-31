@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Threading;
@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Features.Assa.AssaSetPosition;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -188,6 +189,16 @@ public partial class AssSetBackgroundViewModel : ObservableObject
             _subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
         }
 
+        // The box drawing below is built from screenshot pixel coordinates on a
+        // _videoWidth x _videoHeight canvas, but libass reads \p drawing coordinates in script
+        // (PlayRes) space. Settle PlayRes once - stamping the video size when the header has
+        // none - and scale into it, the way AssaSetPositionViewModel does for \pos (#13350).
+        var (headerWithPlayRes, playResX, playResY) =
+            AssaSetPositionViewModel.EnsurePlayRes(_subtitle.Header, _videoWidth, _videoHeight);
+        _subtitle.Header = headerWithPlayRes;
+        var scaleX = _videoWidth > 0 ? (double)playResX / _videoWidth : 1.0;
+        var scaleY = _videoHeight > 0 ? (double)playResY / _videoHeight : 1.0;
+
         // Generate unique style name
         var boxStyleName = GenerateUniqueStyleName();
         var styleBoxBg = MakeBoxStyle(boxStyleName);
@@ -223,14 +234,42 @@ public partial class AssSetBackgroundViewModel : ObservableObject
                     return;
                 }
 
-                var skBitmap = SKBitmap.Decode(previewScreenshotFileName);
-                var trimResult = skBitmap.TrimTransparentPixels();
+                // Both the decoded frame and the trimmed copy are native bitmaps, and the
+                // screenshot is a full-size png on disk - one of each per selected line, so they
+                // have to go or a long selection eats hundreds of MB and litters the temp folder.
+                using var skBitmap = SKBitmap.Decode(previewScreenshotFileName);
+                try
+                {
+                    File.Delete(previewScreenshotFileName);
+                }
+                catch
+                {
+                    // ignore cleanup errors
+                }
+
+                if (skBitmap == null)
+                {
+                    return;
+                }
+
+                // A line that renders nothing (only tags, or fully transparent) trims to the whole
+                // frame, which used to draw a background box across the entire video.
+                if (skBitmap.GetNonTransparentBounds().IsEmpty)
+                {
+                    return;
+                }
+
+                using var trimResult = skBitmap.TrimTransparentPixels();
 
                 var left = FillWidth ? FillWidthMarginLeft : trimResult.Left - PaddingLeft;
                 var right = FillWidth ? (_videoWidth - FillWidthMarginRight) : (trimResult.Left + trimResult.TrimmedBitmap.Width + PaddingRight);
                 var top = trimResult.Top - PaddingTop;
                 var bottom = trimResult.Top + trimResult.TrimmedBitmap.Height + PaddingBottom;
-                var boxDrawing = GenerateBackgroundBox(left, right, top, bottom);
+                var boxDrawing = GenerateBackgroundBox(
+                    (int)Math.Round(left * scaleX, MidpointRounding.AwayFromZero),
+                    (int)Math.Round(right * scaleX, MidpointRounding.AwayFromZero),
+                    (int)Math.Round(top * scaleY, MidpointRounding.AwayFromZero),
+                    (int)Math.Round(bottom * scaleY, MidpointRounding.AwayFromZero));
                 var boxParagraph = MakeBoxParagraph(boxStyleName, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds, boxDrawing);
 
                 lock (_addSubtitleLock)
@@ -697,7 +736,27 @@ public partial class AssSetBackgroundViewModel : ObservableObject
         if (_trimResult == null)
         {
             var previewScreenshotFileName = FfmpegGenerator.GetScreenShotWithSubtitle(previewSubtitle, _videoWidth, _videoHeight);
-            var skBitmap = SKBitmap.Decode(previewScreenshotFileName);
+            if (string.IsNullOrEmpty(previewScreenshotFileName))
+            {
+                // ffmpeg gave us no frame - show the line without a box instead of crashing.
+                return previewSubtitle;
+            }
+
+            using var skBitmap = SKBitmap.Decode(previewScreenshotFileName);
+            try
+            {
+                File.Delete(previewScreenshotFileName);
+            }
+            catch
+            {
+                // ignore cleanup errors
+            }
+
+            if (skBitmap == null)
+            {
+                return previewSubtitle;
+            }
+
             _trimResult = skBitmap.TrimTransparentPixels();
         }
 

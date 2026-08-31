@@ -50,7 +50,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             int g = (int)(y - (0.34413 * (cb - 128)) - (0.71414 * (cr - 128)));
             int b = (int)(y + (1.772 * (cb - 128)));
 
-            int t = byte.MaxValue - BoundByteRange(ClutEntryT);
+            // A reduced-range entry stores transparency in 2 bits, like Y/Cr/Cb above it are
+            // stored in 6/4/4 - scale it to 8 bits (0, 64, 128, 192) instead of using the raw
+            // 0-3, which made every such entry come out opaque.
+            int t = byte.MaxValue - BoundByteRange(FullRangeFlag ? ClutEntryT : ClutEntryT << 6);
             r = BoundByteRange(r);
             g = BoundByteRange(g);
             b = BoundByteRange(b);

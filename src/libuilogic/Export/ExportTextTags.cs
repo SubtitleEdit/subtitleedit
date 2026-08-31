@@ -28,6 +28,19 @@ public static class ExportTextTags
         @"\\(alpha|1a|3a|4a)&H([0-9A-Fa-f]{1,2})&",
         RegexOptions.Compiled);
 
+    // "{\3c&H0000FF&}" (outline colour) and "{\4c&H0000FF&}" (shadow colour) - up to eight
+    // digits, because some tools write the colour with an alpha in front (&HAABBGGRR&).
+    private static readonly Regex OutlineShadowColorTagRegex = new(
+        @"\\([34]c)&H([0-9A-Fa-f]{1,8})&",
+        RegexOptions.Compiled);
+
+    // "{\bord4}"/"{\shad0}", also with decimals ("{\bord2.5}"). Does not match the one axis
+    // variants "\xbord"/"\ybord"/"\xshad"/"\yshad", which nothing here consumes - the
+    // backslash has to sit right in front of the tag name.
+    private static readonly Regex OutlineShadowWidthTagRegex = new(
+        @"\\(bord|shad)(\d+(?:\.\d+)?)",
+        RegexOptions.Compiled);
+
     /// <summary>
     /// Returns the alignment from a leading "{\anX}" tag - also inside a multi tag block
     /// like "{\an8\i1}" or "{\pos(10,20)\an8}" - or <paramref name="fallback"/> when there is none.
@@ -89,6 +102,13 @@ public static class ExportTextTags
         // last "{\" away.
         if (text.Contains("{\\", StringComparison.Ordinal))
         {
+            // The position, fade and transparency tags have already been read off the text
+            // (GetAlignment, ApplyPositionTag, ApplyTransparencyTags) - but left in, any one
+            // of them makes GetFormattedText declare the whole line "too complex" and return
+            // every tag untranslated, so "{\i1\pos(10,20)}Hi" kept its position and lost its
+            // italic. Strip what has been consumed; the rest of the line can still convert.
+            s = RemoveConsumedTags(s);
+
             // "{\i1}" -> "<i>", "{\b1}" -> "<b>", "{\c&H0000FF&}" -> "<font color=\"#ff0000\">", ...
             s = AdvancedSubStationAlpha.GetFormattedText(s);
 
@@ -178,6 +198,66 @@ public static class ExportTextTags
     }
 
     /// <summary>
+    /// Reads the per line outline/shadow overrides off the text and puts them on the
+    /// parameter: the colours of "{\3c&amp;H..&amp;}" (outline) and "{\4c&amp;H..&amp;}"
+    /// (shadow), and the widths of "{\bord..}" and "{\shad..}" - "{\bord0}" in particular is
+    /// how ASSA subtitles turn the outline off for one line.
+    /// <para>
+    /// Call before <see cref="ApplyTransparencyTags"/>: "\3a"/"\4a" fade whatever colours are
+    /// on the parameter, so the "\3c"/"\4c" colours have to be there first. The widths are in
+    /// the script's own resolution, like "\pos" - pass PlayResY as
+    /// <paramref name="scriptHeight"/> (see <see cref="GetScriptResolution"/>) to scale them
+    /// to the canvas.
+    /// </para>
+    /// </summary>
+    public static void ApplyStyleOverrideTags(ImageParameter ip, string? text, int scriptHeight = 0)
+    {
+        if (string.IsNullOrEmpty(text) || !text.Contains("{\\", StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        // Inside a "\t(..)" block these tags are an animation target, not the line's look -
+        // leave the whole line alone rather than freezing it at its final state.
+        if (text.Contains("\\t(", StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        foreach (Match match in OutlineShadowColorTagRegex.Matches(text))
+        {
+            // ASSA colours are &HBBGGRR& - blue first. Longer values carry an alpha up front,
+            // which the "\3a"/"\4a" tags own, so only the low six digits are read here.
+            var bgr = Convert.ToUInt32(match.Groups[2].Value, 16) & 0xFFFFFF;
+            var color = new SKColor((byte)(bgr & 0xFF), (byte)((bgr >> 8) & 0xFF), (byte)((bgr >> 16) & 0xFF));
+            if (match.Groups[1].Value == "3c")
+            {
+                ip.OutlineColor = color.WithAlpha(ip.OutlineColor.Alpha);
+            }
+            else
+            {
+                ip.ShadowColor = color.WithAlpha(ip.ShadowColor.Alpha);
+            }
+        }
+
+        // Like "\pos", the widths scale with the script resolution when exporting to a
+        // different canvas size.
+        var scale = scriptHeight > 0 && ip.ScreenHeight > 0 ? ip.ScreenHeight / (double)scriptHeight : 1.0;
+        foreach (Match match in OutlineShadowWidthTagRegex.Matches(text))
+        {
+            var width = double.Parse(match.Groups[2].Value, NumberStyles.Float, CultureInfo.InvariantCulture) * scale;
+            if (match.Groups[1].Value == "bord")
+            {
+                ip.OutlineWidth = width;
+            }
+            else
+            {
+                ip.ShadowWidth = width;
+            }
+        }
+    }
+
+    /// <summary>
     /// Reads the ASSA transparency tags off the text and puts them on the parameter: the fade
     /// curve of "{\fad(..)}"/"{\fade(..)}" (used by the Blu-ray sup writer, which can animate
     /// its palette) and the static transparency of "{\alpha&amp;H80&amp;}" and its per part
@@ -199,6 +279,14 @@ public static class ExportTextTags
         ip.FadeKeyframes = ExportFade.Parse(text, (long)Math.Round((ip.EndTime - ip.StartTime).TotalMilliseconds));
 
         if (!text.Contains("a&H", StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        // Same reason ApplyStyleOverrideTags bails out on "\t(": inside a transition these tags are
+        // an animation target, not the line's look. Freezing at the end value made the common
+        // fade-out "{\t(0,300,\alpha&HFF&)}" export as a fully invisible subtitle.
+        if (text.Contains("\\t(", StringComparison.Ordinal))
         {
             return;
         }
@@ -247,6 +335,34 @@ public static class ExportTextTags
         ip.FontColor = Fade(ip.FontColor, primaryOpacity);
         ip.OutlineColor = Fade(ip.OutlineColor, outlineOpacity);
         ip.ShadowColor = Fade(ip.ShadowColor, shadowOpacity);
+    }
+
+    /// <summary>
+    /// Removes the tags this class consumes itself - "\pos(x,y)", "\fad(..)"/"\fade(..)",
+    /// the "\alpha"/"\1a"/"\3a"/"\4a" transparencies and the "\3c"/"\4c"/"\bord"/"\shad"
+    /// overrides - matching exactly what <see cref="TryGetPosition"/>,
+    /// <see cref="ExportFade.Parse"/>, <see cref="ApplyTransparencyTags"/> and
+    /// <see cref="ApplyStyleOverrideTags"/> read, so a tag those did not understand still
+    /// makes the line "too complex" instead of being dropped along with its effect.
+    /// </summary>
+    private static string RemoveConsumedTags(string text)
+    {
+        var s = PositionTagRegex.Replace(text, string.Empty);
+        s = ExportFade.RemoveTags(s);
+        s = AlphaTagRegex.Replace(s, string.Empty);
+
+        // The outline/shadow overrides are only consumed outside "\t(..)" blocks (see
+        // ApplyStyleOverrideTags) - with a "\t" on the line nothing is consumed, and the "\t"
+        // makes the line too complex regardless.
+        if (!text.Contains("\\t(", StringComparison.Ordinal))
+        {
+            s = OutlineShadowColorTagRegex.Replace(s, string.Empty);
+            s = OutlineShadowWidthTagRegex.Replace(s, string.Empty);
+        }
+
+        // "{\pos(10,20)}Hello" is "{}Hello" now - GetFormattedText has no reason to see the
+        // leftover block.
+        return s.Replace("{}", string.Empty);
     }
 
     private static SKColor Fade(SKColor color, int opacity)

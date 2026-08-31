@@ -629,7 +629,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     }
                 }
 
-                if (insertDash)
+                // arr came from SplitToLines, which accepts "\n", "\r" and "\r\n" alike, so on
+                // Windows a text broken with a bare "\n" reached the Substring below with an index
+                // of -1 and threw out of the whole Remove-text-for-HI run.
+                if (insertDash && newText.IndexOf(Environment.NewLine, StringComparison.Ordinal) >= 0)
                 {
                     if (indexOfDialogChar < 0 || indexOfDialogChar > 4)
                     {
@@ -901,12 +904,17 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
                     if (partialRemove)
                     {
-                        newText = line.Remove(lastIndexOfPeriod + 4, indexOfColon - lastIndexOfPeriod - 3);
+                        var modifiedLine = line.Remove(lastIndexOfPeriod + 4, indexOfColon - lastIndexOfPeriod - 3);
                         var doubleSpaceAt = lastIndexOfPeriod + 3;
-                        if (doubleSpaceAt + 1 < newText.Length && newText[doubleSpaceAt] == ' ' && newText[doubleSpaceAt + 1] == ' ')
+                        if (doubleSpaceAt + 1 < modifiedLine.Length && modifiedLine[doubleSpaceAt] == ' ' && modifiedLine[doubleSpaceAt + 1] == ' ')
                         {
-                            newText = newText.Remove(lastIndexOfPeriod + 3, 1);
+                            modifiedLine = modifiedLine.Remove(lastIndexOfPeriod + 3, 1);
                         }
+
+                        // Append to the accumulator, the way every other branch of RemoveColon
+                        // does. Assigning replaced it, throwing away every line already
+                        // processed - so removing "NAME:" on line 2 deleted line 1.
+                        newText = (newText + Environment.NewLine + modifiedLine).Trim();
 
                         if (count == 0)
                         {
@@ -1148,12 +1156,11 @@ namespace Nikse.SubtitleEdit.Core.Forms
             text = RemoveColon(text);
             text = RemoveLineIfAllUppercase(text);
             text = RemoveHearingImpairedTagsInsideLine(text);
-            if (Settings.RemoveInterjections)
+            // Interjection removal needs a list; the caller supplies one via ReloadInterjection.
+            // Without this guard a caller that enables the setting but never loads a list (the
+            // seconv "removetextforhi" path) dereferenced null inside RemoveInterjection.
+            if (Settings.RemoveInterjections && _interjections != null)
             {
-                if (_interjections == null)
-                {
-                    //ReloadInterjection(twoLetterIsoLanguageName);
-                }
 
                 // reusable context
                 _interjectionRemoveContext.Text = text;
@@ -1615,7 +1622,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
             do
             {
-                var end = text.IndexOf(endTag, start + startTag.Length, StringComparison.Ordinal);
+                var end = FindMatchingEndTag(text, start, startTag, endTag);
                 if (end < 0)
                 {
                     break;
@@ -1647,6 +1654,49 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return text.FixExtraSpaces().TrimEnd();
         }
 
+        /// <summary>
+        /// Index of the end tag that closes the start tag at <paramref name="start"/>, counting
+        /// nesting depth. Taking the first end tag instead cut the wrong span for a nested pair
+        /// of the same kind - "(WOMAN (V.O.)) Where are you?" lost "(WOMAN (V.O.)" and left the
+        /// outer ")" stranded. Returns -1 when the pair is never closed.
+        /// </summary>
+        private static int FindMatchingEndTag(string text, int start, string startTag, string endTag)
+        {
+            // Identical start/end tags (e.g. "#...#") cannot nest - the first one closes it.
+            if (startTag == endTag)
+            {
+                return text.IndexOf(endTag, start + startTag.Length, StringComparison.Ordinal);
+            }
+
+            var depth = 1;
+            var i = start + startTag.Length;
+            while (i < text.Length)
+            {
+                if (string.CompareOrdinal(text, i, startTag, 0, startTag.Length) == 0)
+                {
+                    depth++;
+                    i += startTag.Length;
+                    continue;
+                }
+
+                if (string.CompareOrdinal(text, i, endTag, 0, endTag.Length) == 0)
+                {
+                    depth--;
+                    if (depth == 0)
+                    {
+                        return i;
+                    }
+
+                    i += endTag.Length;
+                    continue;
+                }
+
+                i++;
+            }
+
+            return -1;
+        }
+
         public string RemoveLineIfAllUppercase(string text)
         {
             if (!Settings.RemoveIfAllUppercase)
@@ -1657,14 +1707,17 @@ namespace Nikse.SubtitleEdit.Core.Forms
             var whitelist = GetUppercaseWhitelist();
 
             var sb = new StringBuilder();
-            char[] endTrimChars = { '.', '!', '?', ':' };
+            // Commas, semicolons and quote marks too: IsAllUppercase accepts them, so a
+            // whitelisted word punctuated any other way ("OK," / '"OK"') failed the lookup
+            // below and the whole line was deleted.
+            char[] endTrimChars = { '.', '!', '?', ':', ',', ';', '"', '\'', '\u201d', '\u2019' };
             char[] trimChars = { ' ', '-', '—' };
             foreach (var line in text.SplitToLines())
             {
                 var lineNoHtml = HtmlUtil.RemoveHtmlTags(line, true);
                 if (Utilities.IsAllUppercase(lineNoHtml) && Utilities.HasUppercase(lineNoHtml))
                 {
-                    var temp = lineNoHtml.TrimEnd(endTrimChars).Trim().Trim(trimChars);
+                    var temp = lineNoHtml.Trim(endTrimChars).Trim().Trim(trimChars);
                     // Single-letter lines (e.g. "I") are always kept; otherwise keep only the
                     // user-configurable whitelist words / acronyms (OK, TV, WWE, ...) - issue #11563.
                     if (temp.Length == 1 || whitelist.Contains(temp))

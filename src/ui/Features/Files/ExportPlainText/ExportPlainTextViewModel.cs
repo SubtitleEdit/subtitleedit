@@ -11,6 +11,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
+using System.Globalization;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
@@ -263,7 +264,7 @@ public partial class ExportPlainTextViewModel : ObservableObject, IClosingCleanu
 
         if (SelectedTimeCodeFormat == Se.Language.General.Seconds)
         {
-            return $"{tc.TotalSeconds:0.000}";
+            return tc.TotalSeconds.ToString("0.000", CultureInfo.InvariantCulture);
         }
 
         return SelectedTimeCodeFormat switch
@@ -291,7 +292,11 @@ public partial class ExportPlainTextViewModel : ObservableObject, IClosingCleanu
             return;
         }
 
-        await System.IO.File.WriteAllTextAsync(fileName, text, SelectedEncoding?.Encoding ?? Encoding.UTF8);
+        // Resolve by display name like the custom-format export does: TextEncoding maps both
+        // UTF-8 entries to Encoding.UTF8, which emits a preamble - so "UTF-8 without BOM" still
+        // wrote a BOM.
+        var encoding = EncodingHelper.ResolveEncoding(SelectedEncoding?.DisplayName, null) ?? Encoding.UTF8;
+        await System.IO.File.WriteAllTextAsync(fileName, text, encoding);
         SaveSettings();
     }
 

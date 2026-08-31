@@ -94,30 +94,39 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 _fastImage = new FastBitmap(Image);
                 _fastImage.LockImage();
 
+                var clutLookup = BuildClutLookup(cds);
+
                 x = 0;
                 y = 0;
                 index = start;
                 while (index < start + TopFieldDataBlockLength && index < buffer.Length)
                 {
-                    index = ProcessDataType(buffer, index, cds, ref dataType, start, twoToFourBitColorLookup, fourToEightBitColorLookup, twoToEightBitColorLookup, ref x, ref y, length, ref pixelCode, ref runLength);
+                    index = ProcessDataType(buffer, index, clutLookup, ref dataType, start, twoToFourBitColorLookup, fourToEightBitColorLookup, twoToEightBitColorLookup, ref x, ref y, length, ref pixelCode, ref runLength);
                 }
 
                 x = 0;
                 y = 1;
+                // EN 300 743 7.2.5: a zero bottom_field_data_block_length means the bottom
+                // field repeats the top field's pixel data, so decode the top block again -
+                // and bound the loop by the block actually being read, not by the (zero)
+                // bottom length, which would end the loop before a single run was drawn.
+                int bottomLength;
                 if (BottomFieldDataBlockLength == 0)
                 {
                     index = start;
+                    bottomLength = TopFieldDataBlockLength;
                 }
                 else
                 {
                     length = BottomFieldDataBlockLength;
                     index = start + TopFieldDataBlockLength;
                     start = index;
+                    bottomLength = BottomFieldDataBlockLength - 1;
                 }
                 dataType = buffer[index - 1];
-                while (index < start + BottomFieldDataBlockLength - 1 && index < buffer.Length)
+                while (index < start + bottomLength && index < buffer.Length)
                 {
-                    index = ProcessDataType(buffer, index, cds, ref dataType, start, twoToFourBitColorLookup, fourToEightBitColorLookup, twoToEightBitColorLookup, ref x, ref y, length, ref pixelCode, ref runLength);
+                    index = ProcessDataType(buffer, index, clutLookup, ref dataType, start, twoToFourBitColorLookup, fourToEightBitColorLookup, twoToEightBitColorLookup, ref x, ref y, length, ref pixelCode, ref runLength);
                 }
                 _fastImage.UnlockImage();
             }
@@ -170,12 +179,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 }
 
                 var height = y + 1;
+                var clutLookup = BuildClutLookup(cds);
                 x = 0;
                 y = 0;
                 index = start;
                 while (index < start + TopFieldDataBlockLength && index < buffer.Length)
                 {
-                    index = ProcessDataTypeForPosition(buffer, index, cds, ref dataType, start, twoToFourBitColorLookup, fourToEightBitColorLookup, twoToEightBitColorLookup, ref x, ref y, length, ref pixelCode, ref runLength, width, height, out Position subPos);
+                    index = ProcessDataTypeForPosition(buffer, index, clutLookup, ref dataType, start, twoToFourBitColorLookup, fourToEightBitColorLookup, twoToEightBitColorLookup, ref x, ref y, length, ref pixelCode, ref runLength, width, height, out Position subPos);
                     if (subPos.Left < pos.Left)
                     {
                         pos.Left = subPos.Left;
@@ -188,20 +198,27 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
                 x = 0;
                 y = 1;
+                // EN 300 743 7.2.5: a zero bottom_field_data_block_length means the bottom
+                // field repeats the top field's pixel data, so decode the top block again -
+                // and bound the loop by the block actually being read, not by the (zero)
+                // bottom length, which would end the loop before a single run was drawn.
+                int bottomLength;
                 if (BottomFieldDataBlockLength == 0)
                 {
                     index = start;
+                    bottomLength = TopFieldDataBlockLength;
                 }
                 else
                 {
                     length = BottomFieldDataBlockLength;
                     index = start + TopFieldDataBlockLength;
                     start = index;
+                    bottomLength = BottomFieldDataBlockLength - 1;
                 }
                 dataType = buffer[index - 1];
-                while (index < start + BottomFieldDataBlockLength - 1 && index < buffer.Length)
+                while (index < start + bottomLength && index < buffer.Length)
                 {
-                    index = ProcessDataTypeForPosition(buffer, index, cds, ref dataType, start, twoToFourBitColorLookup, fourToEightBitColorLookup, twoToEightBitColorLookup, ref x, ref y, length, ref pixelCode, ref runLength, width, height, out Position subPos);
+                    index = ProcessDataTypeForPosition(buffer, index, clutLookup, ref dataType, start, twoToFourBitColorLookup, fourToEightBitColorLookup, twoToEightBitColorLookup, ref x, ref y, length, ref pixelCode, ref runLength, width, height, out Position subPos);
                     if (subPos.Left < pos.Left)
                     {
                         pos.Left = subPos.Left;
@@ -220,7 +237,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             return new Position(pos.Left == int.MaxValue ? 0 : pos.Left, pos.Top == int.MaxValue ? 0 : pos.Top);
         }
 
-        private int ProcessDataType(byte[] buffer, int index, ClutDefinitionSegment cds, ref int dataType, int start,
+        private int ProcessDataType(byte[] buffer, int index, SKColor[] clutLookup, ref int dataType, int start,
                                     List<int> twoToFourBitColorLookup, List<int> fourToEightBitColorLookup, List<int> twoToEightBitColorLookup,
                                     ref int x, ref int y, int length, ref int pixelCode, ref int runLength)
         {
@@ -229,7 +246,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 var bitIndex = 0;
                 while (index < start + length - 1 && index < buffer.Length && TwoBitPixelDecoding(buffer, ref index, ref bitIndex, out pixelCode, out runLength))
                 {
-                    DrawPixels(cds, twoToFourBitColorLookup[pixelCode], runLength, ref x, ref y);
+                    DrawPixels(clutLookup, twoToFourBitColorLookup[pixelCode], runLength, ref x, ref y);
                 }
             }
             else if (dataType == PixelDecoding4Bit)
@@ -237,14 +254,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 var startHalf = false;
                 while (index < start + length - 1 && index < buffer.Length && FourBitPixelDecoding(buffer, ref index, ref startHalf, out pixelCode, out runLength))
                 {
-                    DrawPixels(cds, fourToEightBitColorLookup[pixelCode], runLength, ref x, ref y);
+                    DrawPixels(clutLookup, fourToEightBitColorLookup[pixelCode], runLength, ref x, ref y);
                 }
             }
             else if (dataType == PixelDecoding8Bit)
             {
                 while (index < start + length - 1 && index < buffer.Length && EightBitPixelDecoding(buffer, ref index, out pixelCode, out runLength))
                 {
-                    DrawPixels(cds, pixelCode, runLength, ref x, ref y);
+                    DrawPixels(clutLookup, pixelCode, runLength, ref x, ref y);
                 }
             }
             else if (dataType == MapTable2To4Bit)
@@ -296,7 +313,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             return index;
         }
 
-        private int ProcessDataTypeForPosition(byte[] buffer, int index, ClutDefinitionSegment cds, ref int dataType, int start,
+        private int ProcessDataTypeForPosition(byte[] buffer, int index, SKColor[] clutLookup, ref int dataType, int start,
                                     List<int> twoToFourBitColorLookup, List<int> fourToEightBitColorLookup, List<int> twoToEightBitColorLookup,
                                     ref int x, ref int y, int length, ref int pixelCode, ref int runLength, int width, int height, out Position pos)
         {
@@ -307,7 +324,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 var bitIndex = 0;
                 while (index < start + length - 1 && index < buffer.Length && TwoBitPixelDecoding(buffer, ref index, ref bitIndex, out pixelCode, out runLength))
                 {
-                    var subPos = GetFirstPixelPosition(cds, twoToFourBitColorLookup[pixelCode], runLength, ref x, ref y, width, height);
+                    var subPos = GetFirstPixelPosition(clutLookup, twoToFourBitColorLookup[pixelCode], runLength, ref x, ref y, width, height);
                     if (subPos.Left < pos.Left)
                     {
                         pos.Left = subPos.Left;
@@ -323,7 +340,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 var startHalf = false;
                 while (index < start + length - 1 && index < buffer.Length && FourBitPixelDecoding(buffer, ref index, ref startHalf, out pixelCode, out runLength))
                 {
-                    var subPos = GetFirstPixelPosition(cds, fourToEightBitColorLookup[pixelCode], runLength, ref x, ref y, width, height);
+                    var subPos = GetFirstPixelPosition(clutLookup, fourToEightBitColorLookup[pixelCode], runLength, ref x, ref y, width, height);
                     if (subPos.Left < pos.Left)
                     {
                         pos.Left = subPos.Left;
@@ -338,7 +355,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             {
                 while (index < start + length - 1 && index < buffer.Length && EightBitPixelDecoding(buffer, ref index, out pixelCode, out runLength))
                 {
-                    var subPos = GetFirstPixelPosition(cds, pixelCode, runLength, ref x, ref y, width, height);
+                    var subPos = GetFirstPixelPosition(clutLookup, pixelCode, runLength, ref x, ref y, width, height);
                     if (subPos.Left < pos.Left)
                     {
                         pos.Left = subPos.Left;
@@ -463,60 +480,60 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             return index;
         }
 
-        private void DrawPixels(ClutDefinitionSegment cds, int pixelCode, int runLength, ref int x, ref int y)
+        /// <summary>
+        /// Resolves every CLUT entry id to its RGB color once. The per-run path used to
+        /// linear-scan <see cref="ClutDefinitionSegment.Entries"/> (first match wins) and
+        /// redo the YCbCr conversion for every RLE run of every object.
+        /// </summary>
+        private static SKColor[] BuildClutLookup(ClutDefinitionSegment cds)
         {
-            var c = SKColors.Red;
+            var lookup = new SKColor[256];
+            for (var i = 0; i < lookup.Length; i++)
+            {
+                lookup[i] = SKColors.Red; // same fallback as the old scan for unknown ids
+            }
+
             if (cds != null)
             {
+                var seen = new bool[lookup.Length];
                 foreach (var item in cds.Entries)
                 {
-                    if (item.ClutEntryId == pixelCode)
+                    var id = item.ClutEntryId;
+                    if (id >= 0 && id < lookup.Length && !seen[id])
                     {
-                        c = item.GetColor();
-                        break;
+                        seen[id] = true; // first entry with an id wins, like the old scan
+                        lookup[id] = item.GetColor();
                     }
                 }
             }
 
-            for (var k = 0; k < runLength; k++)
-            {
-                if (y < _fastImage.Height && x < _fastImage.Width)
-                {
-                    _fastImage.SetPixel(x, y, c);
-                }
-
-                x++;
-            }
+            return lookup;
         }
 
-        private Position GetFirstPixelPosition(ClutDefinitionSegment cds, int pixelCode, int runLength, ref int x, ref int y, int width, int height)
+        private void DrawPixels(SKColor[] clutLookup, int pixelCode, int runLength, ref int x, ref int y)
         {
-            var c = SKColors.Red;
-            if (cds != null)
+            var c = (uint)pixelCode < (uint)clutLookup.Length ? clutLookup[pixelCode] : SKColors.Red;
+
+            if (y < _fastImage.Height && x < _fastImage.Width)
             {
-                foreach (var item in cds.Entries)
-                {
-                    if (item.ClutEntryId == pixelCode)
-                    {
-                        c = item.GetColor();
-                        break;
-                    }
-                }
+                _fastImage.SetPixel(x, y, c, Math.Min(runLength, _fastImage.Width - x));
             }
 
-            for (var k = 0; k < runLength; k++)
-            {
-                if (y < height && x < width)
-                {
-                    if (c.Alpha > 0)
-                    {
-                        return new Position(x, y);
-                    }
-                }
+            x += runLength;
+        }
 
-                x++;
+        private static Position GetFirstPixelPosition(SKColor[] clutLookup, int pixelCode, int runLength, ref int x, ref int y, int width, int height)
+        {
+            var c = (uint)pixelCode < (uint)clutLookup.Length ? clutLookup[pixelCode] : SKColors.Red;
+
+            // x only grows inside a run, so the first pixel can be in bounds only at the
+            // run start; the old loop returned there without advancing x past the run.
+            if (c.Alpha > 0 && y < height && x < width)
+            {
+                return new Position(x, y);
             }
 
+            x += runLength;
             return new Position(int.MaxValue, int.MaxValue);
         }
 

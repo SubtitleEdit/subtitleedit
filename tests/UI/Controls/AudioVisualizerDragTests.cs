@@ -28,8 +28,24 @@ namespace UITests.Controls;
 /// as a clipped overlay instead. The fancy style bakes selection into per-column colors, so it
 /// still rebuilds.
 /// </summary>
-public class AudioVisualizerDragTests
+public class AudioVisualizerDragTests : IDisposable
 {
+    // A window left open outlives the test: it keeps the application-wide activation and focused
+    // element, so a later test's click or key press is delivered to it instead. The tests close
+    // their window on the last line, which leaks one whenever an assertion above it fails - and one
+    // stranded window is enough to take the rest of the class down with it.
+    private readonly List<Window> _windows = new();
+
+    public void Dispose()
+    {
+        foreach (var window in _windows)
+        {
+            window.Close();
+        }
+
+        _windows.Clear();
+    }
+
     private const int SampleRate = 126; // Se.Settings.Waveform.WaveformMinimumSampleRate default
     private const double WidthPx = 800;
     private const double HeightPx = 200;
@@ -52,7 +68,7 @@ public class AudioVisualizerDragTests
         EndTime = TimeSpan.FromSeconds(endSeconds),
     };
 
-    private static (Window Window, AudioVisualizer Av, List<SubtitleLineViewModel> Lines) Open(params SubtitleLineViewModel[] lines)
+    private (Window Window, AudioVisualizer Av, List<SubtitleLineViewModel> Lines) Open(params SubtitleLineViewModel[] lines)
     {
         var av = new AudioVisualizer
         {
@@ -70,6 +86,7 @@ public class AudioVisualizerDragTests
             Height = HeightPx,
             Content = av,
         };
+        _windows.Add(window);
         window.Show();
         Dispatcher.UIThread.RunJobs();
         window.UpdateLayout();

@@ -88,6 +88,13 @@ public partial class ManualChosenEncodingViewModel : ObservableObject, IClosingC
         if (string.IsNullOrWhiteSpace(SearchText))
         {
             Encodings.AddRange(_allEncodings);
+            // Clearing the collection nulls the bound SelectedItem, and OK requires a non-null
+            // selection - so searching and then clearing the box made OK a silent no-op.
+            if (Encodings.Count > 0)
+            {
+                SelectedEncoding = Encodings[0];
+            }
+
             return;
         }
 
@@ -190,5 +197,15 @@ public partial class ManualChosenEncodingViewModel : ObservableObject, IClosingC
     internal void SearchTextChanged()
     {
         _dirty = true;
+    }
+
+    /// <summary>
+    /// OK needs both a readable file and a selected encoding. A search that matches nothing
+    /// clears the list (and with it the bound selection), which used to leave OK enabled and
+    /// silently doing nothing - the caller ignores a null encoding.
+    /// </summary>
+    partial void OnSelectedEncodingChanged(TextEncoding? value)
+    {
+        IsOkEnabled = value != null && _fileBuffer.Length > 0;
     }
 }

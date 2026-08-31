@@ -1,5 +1,6 @@
-using System;
+﻿using System;
 using System.Linq;
+using System.Windows.Input;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -372,6 +373,12 @@ public static partial class InitListViewAndEditBox
             Source = vm,
         });
 
+        // Read once per grid build, like the grid font: ApplySettings rebuilds the layout, so
+        // toggling the setting takes effect as soon as Settings is closed (#14316).
+        var gridTextAlignment = Se.Settings.Appearance.SubtitleGridCenterText
+            ? TextAlignment.Center
+            : TextAlignment.Start;
+
         columnManager.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Text,
@@ -395,6 +402,8 @@ public static partial class InitListViewAndEditBox
                     [!TextBlock.TextAlignmentProperty] = new MultiBinding
                     {
                         Converter = TeletextAlignmentPreviewConverter.Instance,
+                        // The alignment to use when the teletext preview is not overriding it.
+                        ConverterParameter = gridTextAlignment,
                         Bindings =
                         {
                             new Binding(nameof(vm.IsTeletextPreviewActive)) { Source = vm, Mode = BindingMode.OneWay },
@@ -410,7 +419,7 @@ public static partial class InitListViewAndEditBox
 
                 if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
                 {
-                    textBlock.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
+                    textBlock.FontFamily = FontFamilyHelper.Make(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
                 }
 
                 border.Child = textBlock;
@@ -436,6 +445,7 @@ public static partial class InitListViewAndEditBox
                 var textBlock = new TextBlock
                 {
                     VerticalAlignment = VerticalAlignment.Center,
+                    TextAlignment = gridTextAlignment,
 
                     // Lets the subtitle grid context menu find the word under the pointer (live spell check)
                     Tag = SubtitleGridColumnKeys.OriginalText,
@@ -446,7 +456,7 @@ public static partial class InitListViewAndEditBox
 
                 if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
                 {
-                    textBlock.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
+                    textBlock.FontFamily = FontFamilyHelper.Make(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
                 }
 
                 border.Child = textBlock;
@@ -1009,6 +1019,16 @@ public static partial class InitListViewAndEditBox
         splitMenuItem.Command = vm.SplitCommand;
         flyout.Items.Add(splitMenuItem);
 
+        var assistedSplitMenuItem = new MenuItem { Header = Se.Language.General.AssistedSplitDotDotDot, DataContext = vm };
+        assistedSplitMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridDataMenuVisible)));
+        assistedSplitMenuItem.Command = vm.AssistedSplitCommand;
+        flyout.Items.Add(assistedSplitMenuItem);
+
+        var assistedMoveMenuItem = new MenuItem { Header = Se.Language.General.AssistedMoveDotDotDot, DataContext = vm };
+        assistedMoveMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridDataMenuVisible)));
+        assistedMoveMenuItem.Command = vm.AssistedMoveCommand;
+        flyout.Items.Add(assistedMoveMenuItem);
+
         var mergePreviousMenuItem = new MenuItem { Header = Se.Language.General.MergeBefore, DataContext = vm };
         mergePreviousMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsMergeWithNextOrPreviousVisible)));
         mergePreviousMenuItem.Command = vm.MergeWithLineBeforeCommand;
@@ -1273,19 +1293,57 @@ public static partial class InitListViewAndEditBox
                 new MenuItem
                 {
                     [!MenuItem.HeaderProperty] = new Binding(nameof(vm.SurroundWith1Text)),
+                    [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsSurroundWith1Visible)),
                     Command = vm.SurroundWith1Command,
                     DataContext = vm,
                 },
                 new MenuItem
                 {
                     [!MenuItem.HeaderProperty] = new Binding(nameof(vm.SurroundWith2Text)),
+                    [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsSurroundWith2Visible)),
                     Command = vm.SurroundWith2Command,
                     DataContext = vm,
                 },
                 new MenuItem
                 {
                     [!MenuItem.HeaderProperty] = new Binding(nameof(vm.SurroundWith3Text)),
+                    [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsSurroundWith3Visible)),
                     Command = vm.SurroundWith3Command,
+                    DataContext = vm,
+                },
+                new MenuItem
+                {
+                    [!MenuItem.HeaderProperty] = new Binding(nameof(vm.SurroundWith4Text)),
+                    [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsSurroundWith4Visible)),
+                    Command = vm.SurroundWith4Command,
+                    DataContext = vm,
+                },
+                new MenuItem
+                {
+                    [!MenuItem.HeaderProperty] = new Binding(nameof(vm.SurroundWith5Text)),
+                    [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsSurroundWith5Visible)),
+                    Command = vm.SurroundWith5Command,
+                    DataContext = vm,
+                },
+                new MenuItem
+                {
+                    [!MenuItem.HeaderProperty] = new Binding(nameof(vm.SurroundWith6Text)),
+                    [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsSurroundWith6Visible)),
+                    Command = vm.SurroundWith6Command,
+                    DataContext = vm,
+                },
+                new MenuItem
+                {
+                    [!MenuItem.HeaderProperty] = new Binding(nameof(vm.SurroundWith7Text)),
+                    [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsSurroundWith7Visible)),
+                    Command = vm.SurroundWith7Command,
+                    DataContext = vm,
+                },
+                new MenuItem
+                {
+                    [!MenuItem.HeaderProperty] = new Binding(nameof(vm.SurroundWith8Text)),
+                    [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsSurroundWith8Visible)),
+                    Command = vm.SurroundWith8Command,
                     DataContext = vm,
                 },
                 new MenuItem
@@ -1379,6 +1437,7 @@ public static partial class InitListViewAndEditBox
         timeCodeUpDown.Bind(TimeCodeUpDown.IsEnabledProperty, new Binding(nameof(vm.AreTimeCodesEditable)) { Mode = BindingMode.OneWay });
         startTimePanel.Children.Add(timeCodeUpDown);
         timeCodeUpDown.ValueChanged += vm.StartTimeChanged;
+        vm.EditBoxStartTimeUpDown = timeCodeUpDown;
         timeControlsPanel.Children.Add(startTimePanel);
 
 
@@ -1411,6 +1470,7 @@ public static partial class InitListViewAndEditBox
         endCodeUpDown.Bind(TimeCodeUpDown.IsEnabledProperty, new Binding(nameof(vm.AreTimeCodesEditable)) { Mode = BindingMode.OneWay });
         endTimePanel.Children.Add(endCodeUpDown);
         endCodeUpDown.ValueChanged += vm.EndTimeChanged;
+        vm.EditBoxEndTimeUpDown = endCodeUpDown;
         timeControlsPanel.Children.Add(endTimePanel);
 
         // Duration display
@@ -1442,6 +1502,7 @@ public static partial class InitListViewAndEditBox
         }
         durationUpDown.Bind(SecondsUpDown.IsEnabledProperty, new Binding(nameof(vm.AreTimeCodesEditable)) { Mode = BindingMode.OneWay });
         durationUpDown.ValueChanged += (_, _) => vm.DurationChanged();
+        vm.EditBoxDurationUpDown = durationUpDown;
         durationPanel.Children.Add(durationUpDown);
         timeControlsPanel.Children.Add(durationPanel);
 
@@ -1738,6 +1799,61 @@ public static partial class InitListViewAndEditBox
 
         flyoutTextBox.Items.Add(new Separator());
 
+        // macOS-only "Look up" (#14277): every macOS text field has it in the system context menu,
+        // and it is the shortest way into the dictionaries/thesauri the user has installed. It sits
+        // above "Google it", where macOS puts it (Look Up, then Search with Google).
+        if (OperatingSystem.IsMacOS())
+        {
+            var menuItemTextBoxLookUp = new MenuItem
+            {
+                [!MenuItem.HeaderProperty] = new Binding(nameof(vm.TextBoxLookUpHeader)),
+                [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsTextBoxLookUpVisible)),
+                Command = vm.LookUpInDictionaryCommand,
+                Icon = new Icon
+                {
+                    Value = IconNames.BookAlphabet,
+                    VerticalAlignment = VerticalAlignment.Center,
+                },
+            };
+            flyoutTextBox.Items.Add(menuItemTextBoxLookUp);
+        }
+
+        // Shown only with a selection - the command searches the selected text and does nothing
+        // without one. It had no default shortcut and was in no menu, so it was unreachable
+        // unless you imported SE4 shortcuts (same invisibility as casing, #13093).
+        var menuItemTextBoxGoogleIt = new MenuItem
+        {
+            Header = Se.Language.General.GoogleIt,
+            Command = vm.GoogleItCommand,
+            Icon = new Icon
+            {
+                Value = IconNames.Web,
+                VerticalAlignment = VerticalAlignment.Center,
+            },
+        };
+        menuItemTextBoxGoogleIt.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsTextBoxGoogleItVisible)));
+        flyoutTextBox.Items.Add(menuItemTextBoxGoogleIt);
+
+        // The configurable "search via" slots (name + URL, set in Options > Shortcuts). They live in
+        // a submenu so a handful of search engines do not push the rest of the menu down, and the
+        // whole submenu is hidden while no slot has a URL.
+        var menuItemTextBoxSearchVia = new MenuItem
+        {
+            Header = Se.Language.Options.Shortcuts.SearchVia,
+            Icon = new Icon
+            {
+                Value = IconNames.Find,
+                VerticalAlignment = VerticalAlignment.Center,
+            },
+        };
+        menuItemTextBoxSearchVia.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsCustomSearchVisible)));
+        AddCustomSearchMenuItem(menuItemTextBoxSearchVia, vm, nameof(vm.CustomSearch1Text), nameof(vm.IsCustomSearch1Visible), vm.CustomSearch1Command);
+        AddCustomSearchMenuItem(menuItemTextBoxSearchVia, vm, nameof(vm.CustomSearch2Text), nameof(vm.IsCustomSearch2Visible), vm.CustomSearch2Command);
+        AddCustomSearchMenuItem(menuItemTextBoxSearchVia, vm, nameof(vm.CustomSearch3Text), nameof(vm.IsCustomSearch3Visible), vm.CustomSearch3Command);
+        AddCustomSearchMenuItem(menuItemTextBoxSearchVia, vm, nameof(vm.CustomSearch4Text), nameof(vm.IsCustomSearch4Visible), vm.CustomSearch4Command);
+        AddCustomSearchMenuItem(menuItemTextBoxSearchVia, vm, nameof(vm.CustomSearch5Text), nameof(vm.IsCustomSearch5Visible), vm.CustomSearch5Command);
+        flyoutTextBox.Items.Add(menuItemTextBoxSearchVia);
+
         var menuItemTextBoxAiAssistant = new MenuItem
         {
             Header = Se.Language.Tools.AiAssistant.Title,
@@ -1950,6 +2066,20 @@ public static partial class InitListViewAndEditBox
         TrackEditSectionMinimumHeight(hostGrid, textEditGrid);
     }
 
+    // One entry of the "search via" submenu. The header and the visibility are bound rather than
+    // set, so renaming a slot in Options > Shortcuts shows up without rebuilding the menu.
+    private static void AddCustomSearchMenuItem(MenuItem parent, MainViewModel vm, string textProperty, string visibleProperty, ICommand command)
+    {
+        var item = new MenuItem
+        {
+            [!MenuItem.HeaderProperty] = new Binding(textProperty),
+            [!Visual.IsVisibleProperty] = new Binding(visibleProperty),
+            Command = command,
+            DataContext = vm,
+        };
+        parent.Items.Add(item);
+    }
+
     // Stable keys (DataGridColumn.Tag) used to snapshot/restore subtitle grid column
     // widths across restarts. Headers are localized, so they can't be used as keys (#11415).
     internal static class SubtitleGridColumnKeys
@@ -2123,7 +2253,7 @@ public static partial class InitListViewAndEditBox
 
         if (!string.IsNullOrEmpty(appearance.SubtitleTextBoxAndGridFontName))
         {
-            textBox.FontFamily = new FontFamily(appearance.SubtitleTextBoxAndGridFontName);
+            textBox.FontFamily = FontFamilyHelper.Make(appearance.SubtitleTextBoxAndGridFontName);
         }
 
         return textBox;

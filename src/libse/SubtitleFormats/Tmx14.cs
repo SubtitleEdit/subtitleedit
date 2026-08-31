@@ -77,10 +77,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
 
-            string xmlString = sb.ToString();
+            string xmlString = JoinLines(lines);
             if (!xmlString.Contains("<tmx") || !xmlString.Contains("<seg>"))
             {
                 return;
@@ -109,7 +107,28 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     if (seg != null)
                     {
-                        string text = seg.InnerText.Replace("<br />", Environment.NewLine);
+                        // Walk the children: InnerText never contains markup, so the <br />
+                        // elements the writer emits were gone before the replaces below could
+                        // see them - and every line break was silently lost on read.
+                        var segText = new StringBuilder();
+                        foreach (XmlNode child in seg.ChildNodes)
+                        {
+                            if (child is XmlText || child is XmlCDataSection || child is XmlWhitespace || child is XmlSignificantWhitespace)
+                            {
+                                segText.Append(child.Value);
+                            }
+                            else if (child.Name.Equals("br", StringComparison.OrdinalIgnoreCase))
+                            {
+                                segText.Append(Environment.NewLine);
+                            }
+                            else
+                            {
+                                segText.Append(child.InnerText);
+                            }
+                        }
+
+                        // The string replaces stay for files that carry the tags as escaped text.
+                        string text = segText.ToString().Replace("<br />", Environment.NewLine);
                         text = text.Replace("<br/>", Environment.NewLine);
                         text = text.Replace("<br>", Environment.NewLine);
                         text = text.Replace("<BR />", Environment.NewLine);

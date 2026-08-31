@@ -62,11 +62,9 @@ public partial class NOcrDbEditViewModel : ObservableObject
     [RelayCommand]
     private void Ok()
     {
-        if (string.IsNullOrWhiteSpace(DatabaseName))
-        {
-            return;
-        }
-
+        // No guard on DatabaseName here: this dialog edits an existing database and has no name
+        // box, so the field stays empty and the copied guard made the OK button do nothing at all.
+        // (The "new database" dialog does bind a name box, which is where the guard belongs.)
         OkPressed = true;
         Close();
     }

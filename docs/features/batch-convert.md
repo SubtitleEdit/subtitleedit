@@ -53,6 +53,7 @@ You can chain multiple conversion functions:
 Batch Convert can machine-translate files as part of the conversion. Supported engines:
 
 - Ollama
+- Ollama advanced (local LLM) — the batch/context engine described in [Advanced local engines](auto-translate-advanced.md), talking to Ollama's OpenAI-compatible endpoint
 - LibreTranslate
 - LM Studio
 - llama.cpp — fully managed: Batch Convert reuses an already-running local `llama-server`, or downloads llama.cpp plus a curated translation model (e.g. TranslateGemma) and starts the server for you. Point it at your own server via the remote-server option in [Auto-translate](auto-translate.md) settings.
@@ -73,7 +74,7 @@ Supported OCR engines in Batch Convert:
 - BinaryOcr
 - Tesseract
 - Ollama
-- llama.cpp (curated OCR vision models — GLM-OCR, LightOnOCR, PaddleOCR-VL, HunyuanOCR 1.5; a local `llama-server` is started automatically)
+- llama.cpp (curated OCR vision models, best-first — GLM-OCR, PaddleOCR-VL, HunyuanOCR 1.5, LightOnOCR; a local `llama-server` is started automatically)
 - CrispEmbed (local, multiple model backends — see [OCR](ocr.md#crispembed))
 - PaddleOCR (Windows and Linux only)
 

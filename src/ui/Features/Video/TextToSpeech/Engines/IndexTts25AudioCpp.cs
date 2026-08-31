@@ -331,12 +331,15 @@ public class IndexTts25AudioCpp : ITtsEngine
     /// </summary>
     public Task<TtsLanguage[]> GetLanguages(Voice voice, string? model) => Task.FromResult(new[]
     {
-        new TtsLanguage("auto", "Auto"),
-        new TtsLanguage("zh", "Chinese"),
-        new TtsLanguage("en", "English"),
-        new TtsLanguage("ja", "Japanese"),
-        new TtsLanguage("es", "Spanish"),
-        new TtsLanguage("ar", "Arabic"),
+        // TtsLanguage is (name, code) - every other engine writes it that way. Reversed here, the
+        // combo listed "zh"/"en"/"ja" instead of language names and Speak sent language.Code, i.e.
+        // the literal "Chinese", to audio.cpp - so no explicit pick ever worked.
+        new TtsLanguage("Auto", "auto"),
+        new TtsLanguage("Chinese", "zh"),
+        new TtsLanguage("English", "en"),
+        new TtsLanguage("Japanese", "ja"),
+        new TtsLanguage("Spanish", "es"),
+        new TtsLanguage("Arabic", "ar"),
     });
 
     public Task<Voice[]> RefreshVoices(string language, CancellationToken cancellationToken) =>

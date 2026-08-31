@@ -229,7 +229,14 @@ public partial class BinaryOcrDbEditViewModel : ObservableObject
 
         ItemText = selectedItem.Text ?? string.Empty;
         IsItemItalic = selectedItem.Italic;
-        ItemBitmap = selectedItem.ToSKBitmap().ToAvaloniaBitmap();
+
+        // Runs on every selection change; ToAvaloniaBitmap copies the pixels, so the intermediate
+        // native bitmap has to go or arrow-keying through a large database leaks one per character.
+        using (var itemSkBitmap = selectedItem.ToSKBitmap())
+        {
+            ItemBitmap = itemSkBitmap.ToAvaloniaBitmap();
+        }
+
         ResolutionAndTopMargin = string.Format(Se.Language.Ocr.ResolutionXYAndTopmarginZ, selectedItem.Width, selectedItem.Height, selectedItem.Y);
 
         if (selectedItem.ExpandCount == 0)
@@ -239,12 +246,6 @@ public partial class BinaryOcrDbEditViewModel : ObservableObject
         else
         {
             ExpandInfo = string.Format(Se.Language.Ocr.ExpandInfoX, selectedItem.ExpandCount);
-        }
-
-        var skBitmap = new SKBitmap(selectedItem.Width, selectedItem.Height);
-        using (var canvas = new SKCanvas(skBitmap))
-        {
-            canvas.Clear(SKColors.LightGray);
         }
     }
 }

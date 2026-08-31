@@ -129,7 +129,7 @@ public partial class OcrSubtitleItem : ObservableObject
         var tb = new TextBlock { Text = Text };
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
         {
-            tb.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
+            tb.FontFamily = FontFamilyHelper.Make(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
         }
 
         UiUtil.FixMacDiacriticClipping(tb);

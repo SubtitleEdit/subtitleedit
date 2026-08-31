@@ -65,6 +65,7 @@ internal static class HelpDisplay
         ShowParameter(console, "--ocr-language:<lang>", "Language for OCR (e.g. eng, deu, spa)");
         ShowParameter(console, "--ocr-db:<path>", ".nocr (--ocr-engine=nocr) or .db (--ocr-engine=binaryocr)");
         ShowParameter(console, "--ocr-model:<model>", "llamacpp OCR .gguf file name/path (default: first downloaded OCR model)");
+        ShowParameter(console, "--ocr-prompt:<text|file>", "prompt for llamacpp/ollama OCR; {language} = --ocr-language (default: same as the OCR window)");
         ShowParameter(console, "--ocr-url:<url>", "Endpoint of an already-running llama-server for OCR (skips the auto-start)");
         ShowParameter(console, "--time-codes-only", "Image sources (.sup/VobSub/PGS/DVB/XSUB) -> text with time codes only; skips OCR");
         ShowParameter(console, "--no-vobsub-isolate-colors", "Disable VobSub OCR colour isolation (on by default; isolation binarises to black-on-white, dropping outline colours)");
@@ -76,6 +77,7 @@ internal static class HelpDisplay
         ShowParameter(console, "--translate-engine:<engine>", "llamacpp (default; auto-starts a local llama-server) | ollama | lmstudio | libretranslate | nllb-serve | nllb-api");
         ShowParameter(console, "--translate-url:<url>", "Endpoint of an already-running translate server (llamacpp: skips the auto-start)");
         ShowParameter(console, "--translate-model:<model>", "Ollama/LM Studio model name, or llamacpp .gguf file name/path");
+        ShowParameter(console, "--translate-prompt:<text|file>", "Prompt for llamacpp/ollama/lmstudio: inline text (\\n = line break) or a text file; {0}=source, {1}=target, {2}=text (completion-format models)");
         ShowParameter(console, "--multiple-replace:<path.xml>", "SE MultipleSearchAndReplaceGroups XML applied per paragraph");
         ShowParameter(console, "--custom-format:<path.xml>", "SE CustomFormatItem XML (use with --format customtext)");
         ShowParameter(console, "--settings:<path.json>", "JSON settings file overriding libse defaults");
@@ -105,7 +107,7 @@ internal static class HelpDisplay
         ShowParameter(console, "--box-padding:<px>", "Box padding in pixels; one value for all sides or left,right,top,bottom (default: 5,5,3,3)");
         ShowParameter(console, "--line-spacing:<percent>", "Extra gap between lines as percent of line height (default: 0)");
         ShowParameter(console, "--alignment:<position>", "Screen position, e.g. bottom-center (default), top-left, middle-right");
-        ShowParameter(console, "--content-alignment:<mode>", "Multi-line text justification: left | center (default) | right");
+        ShowParameter(console, "--content-alignment:<mode>", "Multi-line text justification: left | center (default) | right | from-alignment");
         ShowParameter(console, "--bottom-top-margin:<px>", "Vertical screen-edge margin in pixels (default: 5% of height)");
         ShowParameter(console, "--left-right-margin:<px>", "Horizontal screen-edge margin in pixels (default: 5% of width)");
 
@@ -194,6 +196,9 @@ internal static class HelpDisplay
         ShowExample(console,
             "seconv movie.srt subrip --translate-to:da --translate-engine:ollama --translate-model:gemma2",
             "Translate to Danish via a running Ollama instance");
+        ShowExample(console,
+            "seconv movie.srt subrip --translate-to:de --translate-prompt:my-prompt.txt",
+            "Translate with your own prompt ({0}=source language, {1}=target language)");
         ShowExample(console,
             "seconv formats",
             "List all available formats");

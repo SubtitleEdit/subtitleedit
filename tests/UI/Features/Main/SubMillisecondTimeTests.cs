@@ -13,6 +13,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace UITests.Features.Main;
 
@@ -27,8 +28,23 @@ namespace UITests.Features.Main;
 /// a fractional double (typed input, pixel positions, video positions, scale factors) into a
 /// subtitle time rounds through TimeSpanExtensions.FromSeconds/FromMillisecondsWholeMilliseconds.
 /// </summary>
-public class SubMillisecondTimeTests
+public class SubMillisecondTimeTests : IDisposable
 {
+    // A window left open outlives the test: it keeps the application-wide activation and focused
+    // element, so a later test's click or key press is delivered to it instead. Closing here rather
+    // than at the end of each test also covers the tests that stop early on a failed assertion.
+    private readonly List<Window> _windows = new();
+
+    public void Dispose()
+    {
+        foreach (var window in _windows)
+        {
+            window.Close();
+        }
+
+        _windows.Clear();
+    }
+
     private static SubtitleLineViewModel Line(double startMs, double endMs) =>
         new() { StartTime = TimeSpan.FromMilliseconds(startMs), EndTime = TimeSpan.FromMilliseconds(endMs) };
 
@@ -53,6 +69,7 @@ public class SubMillisecondTimeTests
         upDown[!SecondsUpDown.ValueProperty] =
             new Binding(nameof(SubtitleLineViewModel.Duration)) { Mode = BindingMode.TwoWay };
         var window = new Window { Content = upDown };
+        _windows.Add(window);
         window.Show();
         var textBox = upDown.GetVisualDescendants().OfType<TextBox>().Single();
 
@@ -108,6 +125,7 @@ public class SubMillisecondTimeTests
         upDown[!SecondsUpDown.ValueProperty] =
             new Binding(nameof(SubtitleLineViewModel.Duration)) { Mode = BindingMode.TwoWay };
         var window = new Window { Content = upDown };
+        _windows.Add(window);
         window.Show();
         var textBox = upDown.GetVisualDescendants().OfType<TextBox>().Single();
 

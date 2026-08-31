@@ -54,6 +54,7 @@ public class LanguageSettings
     public string SubtitleGridTextDisplayWrap { get; set; }
     public string SubtitleGridTextDisplayEllipsis { get; set; }
     public string SubtitleGridLiveSpellCheck { get; set; }
+    public string SubtitleGridCenterText { get; set; }
     public string SubtitleGridShowFormatting { get; set; }
     public string ShowUpDownStartTime { get; set; }
     public string ShowUpDownEndTime { get; set; }
@@ -311,6 +312,8 @@ public class LanguageSettings
     public string MusicSymbol { get; set; }
     public string MusicSymbolsToReplace { get; set; }
     public string TextToSpeechPromptMergeContinuationLines { get; set; }
+    public string TextToSpeechPromptSkipNoiseLines { get; set; }
+    public string TextToSpeechPromptDetectSpeakers { get; set; }
     public string UseFocusedButtonBackgroundColor { get; set; }
     public string FocusedButtonBackgroundColor { get; set; }
     public string ForceCrLfOnSave { get; set; }
@@ -330,6 +333,7 @@ public class LanguageSettings
     public string SubtitlePreviewProperties { get; set; }
     public string UsePositionFromSubtitleFile { get; set; }
     public string MarginIsPartOfSubtitleArea { get; set; }
+    public string TextJustify { get; set; }
     public string PixelWidthInfo { get; set; }
     public string SpellCheckEngineHunSpelll { get; set; }
     public string SpellCheckEngineMsWord { get; set; }
@@ -390,6 +394,7 @@ public class LanguageSettings
         SubtitleGridTextDisplayWrap = "Wrap to fit window";
         SubtitleGridTextDisplayEllipsis = "Single line with ellipsis";
         SubtitleGridLiveSpellCheck = "Live spell check in subtitle grid";
+        SubtitleGridCenterText = "Center text in subtitle grid";
         SubtitleGridShowFormatting = "Show formatted (HTML/ASSA) text in subtitle grid";
         ShowUpDownStartTime = "Show up/down control for \"Show\"";
         ShowUpDownEndTime = "Show up/down control for \"Hide\"";
@@ -646,6 +651,8 @@ public class LanguageSettings
         MusicSymbol = "Music symbol";
         MusicSymbolsToReplace = "Music symbols to replace (separated by comma)";
         TextToSpeechPromptMergeContinuationLines = "Text to speech: prompt to merge continuation lines";
+        TextToSpeechPromptSkipNoiseLines = "Text to speech: prompt to skip sound/music lines";
+        TextToSpeechPromptDetectSpeakers = "Text to speech: prompt to detect speaker names in the text";
         UseFocusedButtonBackgroundColor = "Use focused button background color";
         FocusedButtonBackgroundColor = "Focused button background color";
         ForceCrLfOnSave = "Force CR+LF on save (text subtitle files)";
@@ -665,6 +672,7 @@ public class LanguageSettings
         SubtitlePreviewProperties = "Subtitle preview properties";
         UsePositionFromSubtitleFile = "Use position from subtitle file (TTML/PAC/EBU STL)";
         MarginIsPartOfSubtitleArea = "Margin is part of the subtitle area";
+        TextJustify = "Justify lines";
         PixelWidthInfo = "Green lines = max-width limit   |   Red area = text exceeds limit";
         SpellCheckEngineHunSpelll = "Hunspell";
         SpellCheckEngineMsWord = "MS Word";

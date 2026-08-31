@@ -62,6 +62,30 @@
             0x08, 0xff, 0xff, 0x05, 0xff, 0x0e, 0x0d, 0xff, 0xff, 0x0e, 0x0f, 0xff, 0x0e, 0x0e, 0xff, 0x0e
         };
 
+        // ETS 300 706, chapter 8.2 - the 16 Hamming 8/4 code words, i.e. the inverse of Unham84.
+        public static readonly byte[] Hamming84 =
+        {
+            0x15, 0x02, 0x49, 0x5e, 0x64, 0x73, 0x38, 0x2f,
+            0xd0, 0xc7, 0x8c, 0x9b, 0xa1, 0xb6, 0xfd, 0xea
+        };
+
+        /// <summary>
+        /// Hamming 8/4 encodes the lower four bits of <paramref name="value"/>.
+        /// </summary>
+        public static byte Hamming84Encode(int value)
+        {
+            return Hamming84[value & 0x0f];
+        }
+
+        /// <summary>
+        /// ETS 300 706, chapter 8.1 - adds the odd parity bit to a seven bit character.
+        /// </summary>
+        public static byte OddParityEncode(int value)
+        {
+            var v = (byte)(value & 0x7f);
+            return Parity8[v] == 1 ? v : (byte)(v | 0x80);
+        }
+
         // ETS 300 706, chapter 8.2 - Hamming 8/4
         public static byte UnHamming84(byte a)
         {
@@ -72,6 +96,66 @@
                 r = 0;
             }
             return (byte)(r & 0x0f);
+        }
+
+        // ETS 300 706, chapter 8.3 - where the eighteen data bits D1-D18 sit in a code word.
+        private static readonly int[] Hamming2418DataBits =
+        {
+            2, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22
+        };
+
+        // The protection bits P1-P5 take the power of two positions; P6 is bit 23.
+        private static readonly int[] Hamming2418ProtectionBits = { 0, 1, 3, 7, 15 };
+
+        /// <summary>
+        /// ETS 300 706, chapter 8.3 - Hamming 24/18 encodes eighteen bits into the three bytes of
+        /// a triplet, the inverse of <see cref="UnHamming2418"/>.
+        /// </summary>
+        public static int Hamming2418Encode(int value)
+        {
+            var result = 0;
+            for (var i = 0; i < Hamming2418DataBits.Length; i++)
+            {
+                if (((value >> i) & 1) != 0)
+                {
+                    result |= 1 << Hamming2418DataBits[i];
+                }
+            }
+
+            // Tests A-E are odd parity checks over the bits whose one based position has the
+            // matching bit set, so those positions have to add up to 0x1f - the five protection
+            // bits, one per power of two, carry whatever the data bits leave missing.
+            var syndrome = 0x1f;
+            for (var i = 0; i < 23; i++)
+            {
+                if (((result >> i) & 1) != 0)
+                {
+                    syndrome ^= i + 1;
+                }
+            }
+
+            for (var i = 0; i < Hamming2418ProtectionBits.Length; i++)
+            {
+                if (((syndrome >> i) & 1) != 0)
+                {
+                    result |= 1 << Hamming2418ProtectionBits[i];
+                }
+            }
+
+            // Test F: the whole code word carries an odd number of ones, so a single bit error
+            // can be told from a double one.
+            var ones = 0;
+            for (var i = 0; i < 24; i++)
+            {
+                ones += (result >> i) & 1;
+            }
+
+            if (ones % 2 == 0)
+            {
+                result |= 1 << 23;
+            }
+
+            return result;
         }
 
         // ETS 300 706, chapter 8.3 - Hamming 24/18

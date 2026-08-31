@@ -67,17 +67,8 @@ public class PickTeletextAlignmentWindow : Window
             },
         };
 
-        var previewCheckBox = new CheckBox { Content = Se.Language.General.Preview };
-        previewCheckBox.Bind(CheckBox.IsCheckedProperty, new Binding(nameof(vm.Preview))
-        {
-            Mode = BindingMode.TwoWay,
-        });
-
-        var showTeletextCheckBox = new CheckBox { Content = Se.Language.General.ShowTeletext };
-        showTeletextCheckBox.Bind(CheckBox.IsCheckedProperty, new Binding(nameof(vm.ShowTeletextColumn))
-        {
-            Mode = BindingMode.TwoWay,
-        });
+        var previewCheckBox = UiUtil.MakeCheckBox(Se.Language.General.PreviewAlignmentInListView, vm, nameof(vm.Preview));
+        var showTeletextCheckBox = UiUtil.MakeCheckBox(Se.Language.General.ShowTeletext, vm, nameof(vm.ShowTeletextColumn));
 
         var buttonPanel = new StackPanel
         {
@@ -95,6 +86,7 @@ public class PickTeletextAlignmentWindow : Window
         {
             RowDefinitions =
             {
+                new RowDefinition(GridLength.Auto),
                 new RowDefinition(GridLength.Auto),
                 new RowDefinition(GridLength.Auto),
                 new RowDefinition(GridLength.Auto),
@@ -125,13 +117,15 @@ public class PickTeletextAlignmentWindow : Window
         grid.Add(replaceLineCheckBox, 3, 0);
         grid.Add(replaceLinePanel, 3, 1);
 
-        grid.Add(previewCheckBox, 4, 0);
-        grid.Add(showTeletextCheckBox, 5, 0);
-        grid.Add(buttonPanel, 6, 1);
+        // View options, separated from the opt-in edit rows above.
+        grid.Add(UiUtil.MakeHorizontalSeparator(margin: new Thickness(0, 2)), 4, 0, 1, 2);
+        grid.Add(previewCheckBox, 5, 0, 1, 2);
+        grid.Add(showTeletextCheckBox, 6, 0, 1, 2);
+        grid.Add(buttonPanel, 7, 1);
 
         Content = grid;
 
-        Activated += delegate { lineBox.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, lineBox);
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
@@ -161,7 +155,7 @@ public class PickTeletextAlignmentWindow : Window
             Minimum = minimum,
             Maximum = maximum,
             Increment = 1,
-            Width = 100,
+            Width = 120,
         };
 
         numericUpDown.Bind(NumericUpDown.ValueProperty, new Binding(propertyName)

@@ -209,7 +209,7 @@ public class SetSyncPointWindow : Window
         // Focus the time code box, not a button, so the window receives key events without arming
         // any button: a focused button fires OnClick on bare Space, and "Set sync point" used to be
         // focused here - so the first Space a user pressed closed the dialog instead of playing.
-        Activated += delegate { vm.FocusTimeCodeUpDown(); };
+        UiUtil.FocusOnFirstActivation(this, () => { vm.FocusTimeCodeUpDown(); });
 
         AddHandler(KeyDownEvent, vm.OnKeyDownHandler, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);
 

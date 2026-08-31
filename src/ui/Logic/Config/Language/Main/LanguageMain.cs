@@ -48,6 +48,7 @@ public class LanguageMain
     public string NoTextInClipboard { get; set; }
     public string NumberOfLinesEvenlyDistributedX { get; set; }
     public string OneLineCopiedFromOriginal { get; set; }
+    public string OneLineCopiedToOriginal { get; set; }
     public string OneLineMerged { get; set; }
     public string OneLineSwitched { get; set; }
     public string OverwriteExistingCells { get; set; }
@@ -77,7 +78,9 @@ public class LanguageMain
     public string UnbreakHint { get; set; }
     public string UndoPerformed { get; set; }
     public string UndoPerformedXActionLeft { get; set; }
+    public string VideoAndWaveformPreviewTextX { get; set; }
     public string XLinesCopiedFromOriginal { get; set; }
+    public string XLinesCopiedToOriginal { get; set; }
     public string XLinesMerged { get; set; }
     public string XLinesSelectedOfY { get; set; }
     public string XLinesSwitched { get; set; }
@@ -94,6 +97,7 @@ public class LanguageMain
     public string OriginalTextReadOnly { get; set; }
     public string OriginalTextEditMode { get; set; }
     public string OriginalIsReadOnlyNotSaved { get; set; }
+    public string OriginalIsEmptyNotSaved { get; set; }
     public string OriginalIsReadOnlyReference { get; set; }
     public string AllowEditOfOriginalSubtitle { get; set; }
     public string ShowAllOriginalLinesX { get; set; }
@@ -200,6 +204,7 @@ public class LanguageMain
         NoTextInClipboard = "No text in clipboard";
         NumberOfLinesEvenlyDistributedX = "Evenly distributed {0} lines";
         OneLineCopiedFromOriginal = "One line copied from original subtitle";
+        OneLineCopiedToOriginal = "One line copied to original subtitle";
         OneLineMerged = "One line merged";
         OneLineSwitched = "One line switched";
         OverwriteExistingCells = "Overwrite existing cells";
@@ -229,7 +234,9 @@ public class LanguageMain
         UnbreakHint = "Unbreak selected lines";
         UndoPerformed = "Undo performed";
         UndoPerformedXActionLeft = "Undo performed (actions left: {0})";
+        VideoAndWaveformPreviewTextX = "Video/waveform preview: {0}";
         XLinesCopiedFromOriginal = "{0} lines copied from original subtitle";
+        XLinesCopiedToOriginal = "{0} lines copied to original subtitle";
         XLinesMerged = "{0} lines merged";
         XLinesSelectedOfY = "{0} lines selected of {1}";
         XLinesSwitched = "{0} lines switched";
@@ -246,6 +253,7 @@ public class LanguageMain
         OriginalTextReadOnly = "Original text (read-only)";
         OriginalTextEditMode = "Original text (edit mode)";
         OriginalIsReadOnlyNotSaved = "The original subtitle is a read-only reference and was not saved";
+        OriginalIsEmptyNotSaved = "The original subtitle has no text at all and was not saved";
         OriginalIsReadOnlyReference = "The original subtitle is open as a read-only reference";
         AllowEditOfOriginalSubtitle = "Allow edit of original subtitle";
         ShowAllOriginalLinesX = "Show all original lines ({0} have no match here)";

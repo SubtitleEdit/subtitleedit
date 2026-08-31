@@ -19,9 +19,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            var xmlAsString = sb.ToString().Trim();
+            var xmlAsString = JoinLinesTrimmed(lines);
 
             if (xmlAsString.Contains("xmlns="))
             {
@@ -29,6 +27,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             xmlAsString = xmlAsString.RemoveControlCharactersButWhiteSpace();
+
+            if (xmlAsString.Contains("<timedtext", StringComparison.OrdinalIgnoreCase))
+            {
+                return false; // YouTube timed text (srv3/.ytt) - see YouTubeTimedText
+            }
 
             if (xmlAsString.Contains("profile/imsc1"))
             {
@@ -290,16 +293,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument { XmlResolver = null, PreserveWhitespace = true };
             try
             {
-                xml.LoadXml(sb.ToString().RemoveControlCharactersButWhiteSpace().Trim());
+                xml.LoadXml(JoinLines(lines).RemoveControlCharactersButWhiteSpace().Trim());
             }
             catch
             {
-                xml.LoadXml(FixBadXml(sb.ToString()));
+                xml.LoadXml(FixBadXml(JoinLines(lines)));
             }
 
             XmlNode body = xml.DocumentElement.SelectSingleNode("body");

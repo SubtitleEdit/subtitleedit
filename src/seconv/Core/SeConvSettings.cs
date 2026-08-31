@@ -91,6 +91,9 @@ internal sealed class SeConvSettings
             {
                 MergeShortLinesMaxGap = s.Tools.MergeShortLinesMaxGap,
                 MergeShortLinesOnlyContinuous = s.Tools.MergeShortLinesOnlyContinuous,
+                LlamaCppPrompt = s.Tools.LlamaCppPrompt,
+                OllamaPrompt = s.Tools.OllamaPrompt,
+                LmStudioPrompt = s.Tools.LmStudioPrompt,
             },
             RemoveTextForHearingImpaired = new RemoveHiSection
             {
@@ -299,6 +302,15 @@ internal sealed class SeConvSettings
                 s.Tools.MergeShortLinesMaxGap = t.MergeShortLinesMaxGap.Value;
             if (t.MergeShortLinesOnlyContinuous.HasValue)
                 s.Tools.MergeShortLinesOnlyContinuous = t.MergeShortLinesOnlyContinuous.Value;
+
+            // Auto-translate prompts. --translate-prompt is applied later (AutoTranslateRunner),
+            // so the command line still wins over a settings file / profile.
+            if (!string.IsNullOrWhiteSpace(t.LlamaCppPrompt))
+                s.Tools.LlamaCppPrompt = t.LlamaCppPrompt;
+            if (!string.IsNullOrWhiteSpace(t.OllamaPrompt))
+                s.Tools.OllamaPrompt = t.OllamaPrompt;
+            if (!string.IsNullOrWhiteSpace(t.LmStudioPrompt))
+                s.Tools.LmStudioPrompt = t.LmStudioPrompt;
         }
 
         if (RemoveTextForHearingImpaired is { } r)
@@ -355,6 +367,15 @@ internal sealed class SeConvSettings
     {
         public int? MergeShortLinesMaxGap { get; set; }
         public bool? MergeShortLinesOnlyContinuous { get; set; }
+
+        /// <summary>Auto-translate prompt for the llama.cpp engine ({0}=source, {1}=target, {2}=text).</summary>
+        public string? LlamaCppPrompt { get; set; }
+
+        /// <summary>Auto-translate prompt for the Ollama engine ({0}=source, {1}=target, {2}=text).</summary>
+        public string? OllamaPrompt { get; set; }
+
+        /// <summary>Auto-translate prompt for the LM Studio engine ({0}=source, {1}=target, {2}=text).</summary>
+        public string? LmStudioPrompt { get; set; }
 
         [JsonExtensionData]
         public Dictionary<string, JsonElement>? UnknownMembers { get; set; }

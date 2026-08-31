@@ -51,7 +51,7 @@ public class PromptCheckBoxWindow : Window
 
         Content = grid;
 
-        Activated += delegate { checkBox.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, checkBox); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

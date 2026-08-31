@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -75,18 +76,23 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             sb.AppendLine(string.Format(format, Separator, "Start time (hh:mm:ss:ff)", "End time (hh:mm:ss:ff)", "Line 1", "Line 2"));
             foreach (Paragraph p in subtitle.Paragraphs)
             {
+                // The format has two text columns, so rebalance at THREE lines - the old
+                // ">3" guard let a three-line subtitle through and then wrote only the first
+                // two lines, silently dropping the third.
                 var arr = p.Text.Trim().SplitToLines();
-                if (arr.Count > 3)
+                if (arr.Count > 2)
                 {
                     string s = Utilities.AutoBreakLine(p.Text);
                     arr = s.Trim().SplitToLines();
                 }
-                string line1 = string.Empty;
+
+                string line1 = arr[0];
                 string line2 = string.Empty;
-                line1 = arr[0];
                 if (arr.Count > 1)
                 {
-                    line2 = arr[1];
+                    // Anything that still does not fit in two lines is appended to the second
+                    // column rather than thrown away.
+                    line2 = string.Join(" ", arr.Skip(1));
                 }
 
                 line1 = line1.Replace("\"", "\"\"");
@@ -142,8 +148,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return string.Empty;
             }
 
-            csv = csv.Replace("\"\"", "\"");
-
+            // No pre-collapse of "" here: ToText escapes an embedded quote by doubling it, and
+            // collapsing before the walk below left the loop unable to tell an escaped quote
+            // from a field delimiter - so quoted words came back with their quotes eaten.
             var sb = new StringBuilder();
             csv = csv.Trim();
             if (csv.StartsWith('"'))
@@ -160,9 +167,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             for (int i = 0; i < csv.Length; i++)
             {
                 var s = csv[i];
-                if (s == '"' && csv.Substring(i).StartsWith("\"\"", StringComparison.Ordinal))
+                if (s == '"' && i + 1 < csv.Length && csv[i + 1] == '"')
                 {
+                    // An escaped quote - emit one and consume BOTH characters.
                     sb.Append('"');
+                    i++;
                 }
                 else if (s == '"')
                 {

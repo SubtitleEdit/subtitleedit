@@ -180,7 +180,7 @@ When rendering a text subtitle to an image-based target (Blu-Ray `sup`, VobSub, 
 | `--box-padding:<px>` | Box padding: one value for all sides, or `left,right,top,bottom` (default: `5,5,3,3`) |
 | `--line-spacing:<percent>` | Extra gap between lines as percent of line height (default: `0`) |
 | `--alignment:<pos>` | Screen position: `bottom-center` (default), `top-left`, `middle-right`, ... |
-| `--content-alignment:<align>` | Multi-line text justification: `left` \| `center` (default) \| `right` |
+| `--content-alignment:<align>` | Multi-line text justification: `left` \| `center` (default) \| `right` \| `from-alignment` (follow the `{\anX}` tag) |
 | `--bottom-top-margin:<px>` | Vertical screen-edge margin (default: 5% of height) |
 | `--left-right-margin:<px>` | Horizontal screen-edge margin (default: 5% of width) |
 
@@ -234,7 +234,7 @@ An AVI stream header carries no language, so a multi-stream `.avi` names its out
 | `nocr` | In-process | Built-in nOCR matcher. Required: `--ocr-db:<path-to-Latin.nocr>`. |
 | `binaryocr` *(alias: `binary`)* | In-process | Built-in BinaryOCR matcher (different accuracy profile, similar speed). Required: `--ocr-db:<path-to-Latin.db>`. |
 | `ollama` | HTTP | Local Ollama server with a vision-capable model (e.g. `llama3.2-vision`, `qwen2.5vl`). Configure via `--ollama-url` (default `http://localhost:11434/api/chat`) and `--ollama-model` (default `llama3.2-vision`). Pass `--ocr-language` as a human name like `English`. |
-| `llamacpp` *(aliases: `llama.cpp`, `llama`)* | HTTP | llama.cpp with a curated OCR vision model (GLM-OCR, LightOnOCR, PaddleOCR-VL). With no `--ocr-url`, seconv finds `llama-server` (SE data folder next to seconv, installed SE data folder, then `PATH`) and an installed OCR model, starts the server on a free loopback port, and stops it at exit. seconv never downloads engines/models — install them via the SE UI's OCR window (engine "llama.cpp") or point `--ocr-url` at a running server. Pass `--ocr-language` as a human name like `English`. |
+| `llamacpp` *(aliases: `llama.cpp`, `llama`)* | HTTP | llama.cpp with a curated OCR vision model (best-first: GLM-OCR, PaddleOCR-VL, HunyuanOCR 1.5, LightOnOCR). With no `--ocr-url`, seconv finds `llama-server` (SE data folder next to seconv, installed SE data folder, then `PATH`) and an OCR model — the first model in that order that is installed, unless `--ocr-model` names one — starts the server on a free loopback port, and stops it at exit. seconv never downloads engines/models — install them via the SE UI's OCR window (engine "llama.cpp") or point `--ocr-url` at a running server. Pass `--ocr-language` as a human name like `English`. |
 | `paddle` *(alias: `paddleocr`)* | Subprocess | Install via `pip install paddleocr` (3.7 or newer, for the PP-OCRv6 models); ensure the `paddleocr` binary is on `PATH`. Pass `--ocr-language` as a short code (`en`, `de`, …). |
 
 | Option | Description |
@@ -245,8 +245,9 @@ An AVI stream header carries no language, so a multi-stream `.avi` names its out
 | `--dictionary-folder:<path>` | Folder with Hunspell dictionaries + `*_OCRFixReplaceList.xml`; enables the "Fix common OCR errors" pass of `--fix-common-errors` (English is bundled, so this is only needed for other languages) |
 | `--ollama-url:<url>` | Default `http://localhost:11434/api/chat` |
 | `--ollama-model:<model>` | Default `llama3.2-vision` |
-| `--ocr-model:<model>` | llama.cpp OCR model: curated `.gguf` file name (e.g. `GLM-OCR-Q8_0.gguf`) or a full path to a `.gguf` with its `mmproj` sidecar next to it. Default: the first downloaded OCR model. |
+| `--ocr-model:<model>` | llama.cpp OCR model: the file name of a model in the llama.cpp models folder - curated (e.g. `GLM-OCR-Q8_0.gguf`) or your own vision model with its `mmproj` sidecar next to it - or a full path to a `.gguf` with its `mmproj` sidecar next to it. Default: the first downloaded OCR model. |
 | `--ocr-url:<url>` | llama.cpp: endpoint of an already-running `llama-server` (a bare `host:port` is completed to `/v1/chat/completions`); skips the local auto-start. |
+| `--ocr-prompt:<text\|file>` | Prompt for the prompt-driven OCR engines (`llamacpp`, `ollama`); rejected for the others. `{language}` is replaced with `--ocr-language`. A value that names an existing file, or ends in `.txt`/`.prompt`/`.md`, is read from that file; inline text gets `\n`/`\r`/`\t` unescaped. Default: the same prompt as the SE OCR window. |
 | `--time-codes-only` | Image sources (`.sup`, VobSub `.sub`/`.idx`, MKV PGS/VobSub, MP4 VobSub, TS DVB-sub, AVI XSUB) → text format with time codes only and empty text. **Skips OCR entirely** — no OCR engine required. Ignored for text inputs and image output targets. |
 | `--no-vobsub-isolate-colors` | Disable VobSub OCR colour isolation, which is **on by default**. Isolation rebuilds each subpicture as a crisp black-on-white bitmap via histogram-based colour analysis — the most frequent opaque colour (the glyph fill) becomes black and the gray outline / anti-alias colours collapse into the white background, which helps on discs whose outlines otherwise melt adjacent characters together (`Yuri` → `Yurl`). Pass this flag to OCR the raw palette instead. Ignored for non-VobSub sources and with `--time-codes-only`. |
 
@@ -257,6 +258,12 @@ An AVI stream header carries no language, so a multi-stream `.avi` names its out
 > - Other languages: download from the SE UI (Tools → "OCR with nOCR" / BinaryOCR → download).
 
 Run `seconv list-ocr-engines` for the per-engine installation-status table.
+
+Long OCR runs report progress as images *finished* of the current source (per PID for TS
+DVB-sub, per track for MKV). On a terminal this rewrites a single line - `  OCR 42/345 (12%)...`;
+when stdout is a pipe or a file it prints one plain line per 10% instead, so a log of a
+5000-image run holds ten lines rather than one endless one. Auto-translate reports the same way
+(`  Translated 42/345 (12%)...`). Both are suppressed by `--quiet` and `--json`.
 
 ```bash
 # Tesseract
@@ -272,6 +279,11 @@ seconv movie.sup subrip --ocr-engine:binaryocr --ocr-db:"C:\Users\me\AppData\Roa
 seconv movie.sup subrip --ocr-engine:llamacpp
 seconv movie.sup subrip --ocr-engine:llamacpp --ocr-model:GLM-OCR-Q8_0.gguf
 seconv movie.sup subrip --ocr-engine:llamacpp --ocr-url:http://127.0.0.1:8080
+
+# Override the OCR prompt (inline or from a file); {language} = --ocr-language
+seconv movie.sup subrip --ocr-engine:llamacpp --ocr-language:German \
+  --ocr-prompt:"Identify the number of lines, then extract the text of each line exactly as written. The language is {language}."
+seconv movie.sup subrip --ocr-engine:llamacpp --ocr-prompt:my-ocr-prompt.txt
 
 # MKV with image (PGS or VobSub) tracks — OCR runs automatically
 seconv movie.mkv subrip --ocr-engine:tesseract --ocr-language:eng
@@ -303,6 +315,7 @@ Translated output is named with the target language code — `way.srt --translat
 | `--translate-engine:<engine>` | `llamacpp` (default) \| `ollama` \| `lmstudio` \| `libretranslate` \| `nllb-serve` \| `nllb-api` |
 | `--translate-url:<url>` | Endpoint of an already-running translate server. For `llamacpp` this skips the local server auto-start; a bare `host:port` is completed to `/v1/chat/completions`. |
 | `--translate-model:<model>` | `ollama`/`lmstudio`: model name. `llamacpp`: a `.gguf` file name from the models folder or a full path (default: the first installed translate model). |
+| `--translate-prompt:<text\|file>` | Prompt for `llamacpp` / `ollama` / `lmstudio` — inline text or a path to a text file. See [Custom prompt](#custom-prompt) below. |
 
 **llama.cpp (default engine).** With no `--translate-url`, seconv runs a local `llama-server` for you: it looks for the binary in Subtitle Edit's data folder (`llama.cpp` next to `seconv`, then `%AppData%\Subtitle Edit\llama.cpp` / `~/Library/Application Support/Subtitle Edit/llama.cpp` / `~/.config/Subtitle Edit/llama.cpp`) and falls back to `llama-server` on `PATH`. The server is started on a free localhost port with the model's correct chat-template flags and stopped again when seconv exits. Models resolve against the data folder's `models` subfolder.
 
@@ -329,13 +342,60 @@ seconv movie.srt subrip --translate-to:da --translate-engine:ollama --translate-
 seconv movie.sup subrip --ocr-engine:tesseract --ocr-language:eng --translate-to:de
 ```
 
+#### Custom prompt
+
+`--translate-prompt` is the command-line equivalent of the prompt field the GUI offers for the
+local-LLM engines (see [Prompts: chat models and completion models](../features/auto-translate.md#prompts-chat-models-and-completion-models)).
+It applies to `llamacpp`, `ollama` and `lmstudio`; the translation services (`libretranslate`,
+`nllb-serve`, `nllb-api`) have no prompt, and passing it to them is an error rather than a silent
+no-op.
+
+The same placeholders as in the GUI are substituted: `{0}` = source language, `{1}` = target
+language (both as English names, e.g. `English` / `German`). A prompt that also contains `{2}` is a
+*completion template*: the subtitle text is placed at `{2}` and the filled-in block is sent as-is,
+which is what raw-completion translation models such as MiLMMT-46 are trained on.
+
+The value is either inline text or the path to a text file. Reading from a file is the practical way
+to pass a multi-line completion template; in inline text `\n` (also `\r`, `\t`, `\\`) is unescaped, so
+a short template still fits on one command line.
+
+The two are told apart by shape: an existing file is always read, and so is a value that *looks*
+like a path — no spaces, or a `.txt` / `.prompt` / `.md` extension. A path-shaped value that does not
+exist is an error, so a typo (`--translate-prompt:prompts/mine.tmpl`) fails immediately instead of
+being handed to the model as the prompt and quietly mistranslating the whole batch. Prompt text is
+recognised by containing a space, a line break, or a `{0}`/`{1}`/`{2}` placeholder — which every
+real prompt does.
+
+```bash
+# Inline instruction prompt
+seconv movie.srt subrip --translate-to:de \
+  --translate-prompt:"Translate from {0} to {1}. Keep the line breaks. Use informal address. Output only the translation:"
+
+# Completion template, inline
+seconv movie.srt subrip --translate-to:da --translate-prompt:"Translate this from {0} to {1}:\n{0}: {2}\n{1}:"
+
+# The same, from a file (recommended for anything multi-line)
+seconv movie.srt subrip --translate-to:da --translate-prompt:milmmt.prompt
+
+# Ollama / LM Studio take the same option
+seconv movie.srt subrip --translate-to:da --translate-engine:ollama --translate-model:gemma2 \
+  --translate-prompt:my-prompt.txt
+```
+
+Precedence for `llamacpp`, highest first: `--translate-prompt`, then a curated model's own trained
+prompt (MiLMMT-46, Hy-MT2 — applied automatically when that model is selected), then
+`tools.llamaCppPrompt` from a `--settings` file, then the built-in default. `--translate-prompt`
+deliberately overrides the curated template too: an option given on the command line must never be
+a no-op. `ollama` and `lmstudio` have no per-model template, so it is simply
+`--translate-prompt` > `--settings` > built-in default.
+
 ### Templates / replacements
 
 | Option | Description |
 |---|---|
 | `--multiple-replace:<path>` | Multiple-replace rules applied per paragraph after operations. Accepts the legacy SE *MultipleSearchAndReplaceGroups* XML **and** the file the SE5 GUI exports from *Tools → Multiple replace → export* — either `.template` (JSON) or `.csv`. Supports case-insensitive, `CaseSensitive`, and `RegularExpression` rules; only active rules are applied. The format is chosen by extension, then by content |
 | `--custom-format:<path.xml>` | SE *CustomFormatItem* XML (use with `--format customtext`) |
-| `--settings:<path.json>` | JSON file overlaying `Configuration.Settings` (general / tools / removeTextForHearingImpaired) plus image-output styling (exportImages). Optional `profiles` map for named overlays |
+| `--settings:<path.json>` | JSON file overlaying `Configuration.Settings` (general / tools / removeTextForHearingImpaired) plus image-output styling (exportImages). Optional `profiles` map for named overlays. The `tools` section also carries the auto-translate prompts (`llamaCppPrompt`, `ollamaPrompt`, `lmStudioPrompt`), so a `profiles` entry can hold a per-target-language prompt |
 | `--profile:<name>` | Selects a named overlay from the settings file's `profiles` map. Requires `--settings` |
 
 #### Multiple-replace rule files
@@ -481,7 +541,7 @@ seconv *.srt subrip --settings:my.json --profile:broadcast --remove-text-for-hi
 
 | Option | Description |
 |---|---|
-| `--quiet` / `-q` | Suppress per-file progress and the parameters table; only print the final summary |
+| `--quiet` / `-q` | Suppress per-file progress, the parameters table, and the OCR/translate progress lines; only print the final summary |
 | `--verbose` / `-v` | Print extra diagnostic information, including full exception details (stack traces) on errors |
 | `--json` | Emit per-file results as JSON to stdout (suppresses Spectre output). Also accepted by every subcommand. Failures use the same envelope, so stdout is always one JSON document |
 

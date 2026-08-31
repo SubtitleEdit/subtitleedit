@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var len = text.Length;
-            if (len < 6 || text[len - 1] != '>')
+            if (len < 5 || text[len - 1] != '>')
             {
                 return false;
             }
@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return true;
             }
 
-            if (includeFont && len > 8 && text[len - 7] == '<' && text[len - 6] == '/')
+            if (includeFont && len >= 8 && text[len - 7] == '<' && text[len - 6] == '/')
             {
                 return true;
             }
@@ -795,7 +795,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                            && index + 1 < input.Length
                            && (input[index + 1] == 'N' || input[index + 1] == 'n' || input[index + 1] == 'h'))
                 {
-                    tags.Add(new KeyValuePair<int, string>(index, input.Substring(index, 2)));
+                    // sb.Length, not index: every other tag is recorded in tag-stripped
+                    // coordinates, which is what RestoreSavedAndRemovedTags re-inserts into. Using
+                    // the input offset put "\N" back in the wrong place whenever a tag preceded it
+                    // ("{\an8}One\Ntwo" toggled to "{\an8}ONETWO\N").
+                    tags.Add(new KeyValuePair<int, string>(sb.Length, input.Substring(index, 2)));
                     skipNext = true;
                     continue;
                 }

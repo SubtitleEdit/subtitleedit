@@ -102,6 +102,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public const string NameOfFormat = "WebVTT";
         public override string Name => NameOfFormat;
 
+        // Carries the region of every cue, and the regions themselves in the header.
+        public override bool HasPositionSupport => true;
+
         public override string ToText(Subtitle subtitle, string title)
         {
             const string timeCodeFormatHours = "{0:00}:{1:00}:{2:00}.{3:000}"; // hh:mm:ss.mmm
@@ -442,14 +445,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 subtitle.Paragraphs.AddRange(merged.Paragraphs);
             }
 
-            // Merge consecutive cues with identical time codes (common in WebVTT as alternative to line breaks)
+            // Merge consecutive cues with identical time codes (common in WebVTT as alternative to line breaks) -
+            // but only where they sit together on screen: a caption pinned to the top over the dialogue
+            // below it is two subtitles, not two rows of one.
             for (var i = subtitle.Paragraphs.Count - 2; i >= 0; i--)
             {
                 var current = subtitle.Paragraphs[i];
                 var nextParagraph = subtitle.Paragraphs[i + 1];
                 if (current.StartTime.TotalMilliseconds == nextParagraph.StartTime.TotalMilliseconds &&
                     current.EndTime.TotalMilliseconds == nextParagraph.EndTime.TotalMilliseconds &&
-                    current.Region == nextParagraph.Region)
+                    current.Region == nextParagraph.Region &&
+                    IsSameVerticalPlacement(current.Style, nextParagraph.Style))
                 {
                     // An exact repeat (same times, same text - e.g. a concatenated/duplicated
                     // segment) is a duplicate, not a second line: drop it instead of stacking it.
@@ -558,6 +564,73 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             return 0;
+        }
+
+        /// <summary>
+        /// A "line:" cue setting counts rows, not percent, and the WebVTT spec leaves the number of
+        /// rows to the height of the video. Sixteen is the usual assumption - it is the one the
+        /// "0 or -16 = top, 16 or -1 = bottom" reading of a line number is built on.
+        /// </summary>
+        private const double AssumedRowCount = 16.0;
+
+        /// <summary>
+        /// How far apart two cues may sit vertically and still be read as two rows of one caption.
+        /// A row is only a few percent of the video tall, so this leaves room for a row or two of
+        /// rounding while staying far below the gap between a caption at the top of the screen and
+        /// the dialogue at the bottom.
+        /// </summary>
+        private const double SameVerticalPlacementMaxPercentApart = 15.0;
+
+        /// <summary>
+        /// Whether two cues sit close enough vertically to be two rows of one caption.
+        /// Only a cue that says where it sits can rule the merge out, so cues without a usable
+        /// "line:" setting keep merging exactly as they did before this check existed.
+        /// </summary>
+        private static bool IsSameVerticalPlacement(string cueSettings1, string cueSettings2)
+        {
+            return !TryGetVerticalPositionPercent(cueSettings1, out var percent1) ||
+                   !TryGetVerticalPositionPercent(cueSettings2, out var percent2) ||
+                   Math.Abs(percent1 - percent2) <= SameVerticalPlacementMaxPercentApart;
+        }
+
+        /// <summary>
+        /// Reads the "line:" cue setting as a percentage down the video: 0 = top, 100 = bottom.
+        /// Both forms are understood - a percentage, and a line number counting rows from the top
+        /// (0 = top) or, when it is negative, from the bottom (-1 = bottom row).
+        /// Returns false when the cue does not say, or says something we cannot read ("auto").
+        /// </summary>
+        private static bool TryGetVerticalPositionPercent(string s, out double percent)
+        {
+            percent = 0;
+            var line = GetTag(s, "line:");
+            if (string.IsNullOrEmpty(line))
+            {
+                return false;
+            }
+
+            line = line.Trim();
+
+            // The spec allows an alignment suffix after a comma ("line:0,start"). GetTag only
+            // strips it from the percent form ("line:10%,start"), so strip it here too - or the
+            // line-number form with a suffix reads as unparsable and cannot rule a merge out.
+            var comma = line.IndexOf(',');
+            if (comma >= 0)
+            {
+                line = line.Substring(0, comma).TrimEnd();
+            }
+
+            if (line.EndsWith('%'))
+            {
+                return double.TryParse(line.TrimEnd('%'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out percent);
+            }
+
+            if (!double.TryParse(line, NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var lineNumber))
+            {
+                return false;
+            }
+
+            percent = (lineNumber < 0 ? AssumedRowCount + lineNumber : lineNumber) * 100.0 / AssumedRowCount;
+            return true;
         }
 
         internal static string GetPositionInfo(string s)

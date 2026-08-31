@@ -9,8 +9,6 @@ public class SeSpellCheck
 
     public string? LastLanguageDictionaryFile { get; set; }
     public string? LastLanguageDictionaryName { get; set; }
-    public bool PromptForUnknownOneLetterWords { get; set; } = false;
-    public bool TreatInQuoteASIng { get; set; } = true;
     public bool ShowCompletedMessage { get; set; } = true;
 
     public SeSpellCheck()

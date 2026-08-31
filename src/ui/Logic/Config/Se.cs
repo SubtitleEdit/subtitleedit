@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config.Language;
 using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
+using Nikse.SubtitleEdit.UiLogic.Ocr;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -20,7 +21,7 @@ public class Se
     internal const int CurrentMacOsFontMigrationVersion = 1;
     internal const int CurrentShortcutsMigrationVersion = 2;
 
-    public static string Version { get; set; } = "v5.2.0-beta24";
+    public static string Version { get; set; } = "v5.2.0-beta29";
 
     public SeGeneral General { get; set; } = new();
     public List<SeShortCut> Shortcuts { get; set; } = new();
@@ -39,6 +40,26 @@ public class Se
     public string Surround2Right { get; set; } = "♫";
     public string Surround3Left { get; set; } = "[";
     public string Surround3Right { get; set; } = "]";
+    public string Surround4Left { get; set; } = string.Empty;
+    public string Surround4Right { get; set; } = string.Empty;
+    public string Surround5Left { get; set; } = string.Empty;
+    public string Surround5Right { get; set; } = string.Empty;
+    public string Surround6Left { get; set; } = string.Empty;
+    public string Surround6Right { get; set; } = string.Empty;
+    public string Surround7Left { get; set; } = string.Empty;
+    public string Surround7Right { get; set; } = string.Empty;
+    public string Surround8Left { get; set; } = string.Empty;
+    public string Surround8Right { get; set; } = string.Empty;
+    public string CustomSearch1Name { get; set; } = "The Free Dictionary";
+    public string CustomSearch1Url { get; set; } = "https://www.thefreedictionary.com/{0}";
+    public string CustomSearch2Name { get; set; } = "Wikipedia";
+    public string CustomSearch2Url { get; set; } = "https://en.wikipedia.org/wiki?search={0}";
+    public string CustomSearch3Name { get; set; } = "DuckDuckGo";
+    public string CustomSearch3Url { get; set; } = "https://duckduckgo.com/?q={0}";
+    public string CustomSearch4Name { get; set; } = string.Empty;
+    public string CustomSearch4Url { get; set; } = string.Empty;
+    public string CustomSearch5Name { get; set; } = string.Empty;
+    public string CustomSearch5Url { get; set; } = string.Empty;
     public string Actor1 { get; set; } = "Actor 1";
     public string Actor2 { get; set; } = "Actor 2";
     public string Actor3 { get; set; } = "Actor 3";
@@ -369,6 +390,91 @@ public class Se
         }
     }
 
+    /// <summary>
+    /// Number of configurable "surround with" slots (#14232). Slots are one-based; the ones left
+    /// blank are simply hidden from the subtitle grid context menu.
+    /// </summary>
+    public const int SurroundWithSlotCount = 8;
+
+    public string GetSurroundLeft(int slotNumber) => slotNumber switch
+    {
+        1 => Surround1Left,
+        2 => Surround2Left,
+        3 => Surround3Left,
+        4 => Surround4Left,
+        5 => Surround5Left,
+        6 => Surround6Left,
+        7 => Surround7Left,
+        8 => Surround8Left,
+        _ => string.Empty,
+    };
+
+    public string GetSurroundRight(int slotNumber) => slotNumber switch
+    {
+        1 => Surround1Right,
+        2 => Surround2Right,
+        3 => Surround3Right,
+        4 => Surround4Right,
+        5 => Surround5Right,
+        6 => Surround6Right,
+        7 => Surround7Right,
+        8 => Surround8Right,
+        _ => string.Empty,
+    };
+
+    public void SetSurround(int slotNumber, string left, string right)
+    {
+        switch (slotNumber)
+        {
+            case 1: Surround1Left = left; Surround1Right = right; break;
+            case 2: Surround2Left = left; Surround2Right = right; break;
+            case 3: Surround3Left = left; Surround3Right = right; break;
+            case 4: Surround4Left = left; Surround4Right = right; break;
+            case 5: Surround5Left = left; Surround5Right = right; break;
+            case 6: Surround6Left = left; Surround6Right = right; break;
+            case 7: Surround7Left = left; Surround7Right = right; break;
+            case 8: Surround8Left = left; Surround8Right = right; break;
+        }
+    }
+
+    /// <summary>
+    /// Number of configurable "search via" slots (name + URL, SE 4 parity). Slots are one-based;
+    /// a slot without a URL is hidden from the text box context menu.
+    /// </summary>
+    public const int CustomSearchSlotCount = 5;
+
+    public string GetCustomSearchName(int slotNumber) => slotNumber switch
+    {
+        1 => CustomSearch1Name,
+        2 => CustomSearch2Name,
+        3 => CustomSearch3Name,
+        4 => CustomSearch4Name,
+        5 => CustomSearch5Name,
+        _ => string.Empty,
+    };
+
+    public string GetCustomSearchUrl(int slotNumber) => slotNumber switch
+    {
+        1 => CustomSearch1Url,
+        2 => CustomSearch2Url,
+        3 => CustomSearch3Url,
+        4 => CustomSearch4Url,
+        5 => CustomSearch5Url,
+        _ => string.Empty,
+    };
+
+    public void SetCustomSearch(int slotNumber, string name, string url)
+    {
+        switch (slotNumber)
+        {
+            case 1: CustomSearch1Name = name; CustomSearch1Url = url; break;
+            case 2: CustomSearch2Name = name; CustomSearch2Url = url; break;
+            case 3: CustomSearch3Name = name; CustomSearch3Url = url; break;
+            case 4: CustomSearch4Name = name; CustomSearch4Url = url; break;
+            case 5: CustomSearch5Name = name; CustomSearch5Url = url; break;
+        }
+    }
+
     public void InitializeMainShortcuts(MainViewModel vm)
     {
         MigrateShortcuts();
@@ -493,30 +599,40 @@ public class Se
 
     public static void LoadSettings(string settingsFileName)
     {
-        if (!System.IO.File.Exists(settingsFileName))
+        // Only the deserialize is conditional. Returning early on a missing file also skipped
+        // UpdateLibSeSettings() - the single bridge onto libse's Configuration.Settings - so on a
+        // first run libse kept its own defaults for the whole session. Among them
+        // RememberUseAlwaysList, which gates every <lang>_UseAlways.xml load and save, so spell
+        // check's "Change all" was silently session-only until the first settings save.
+        var settingsFileExists = System.IO.File.Exists(settingsFileName);
+        if (settingsFileExists)
         {
-            MigrateMacOsFontSettings(Settings.Appearance, OperatingSystem.IsMacOS(), false);
-            return;
+            try
+            {
+                // Stream + source-generated metadata: no UTF-16 string round-trip and no
+                // runtime reflection over the settings type graph.
+                using var stream = System.IO.File.OpenRead(settingsFileName);
+                Settings = JsonSerializer.Deserialize(stream, SeJsonContext.Default.Se)!;
+            }
+            catch (Exception exception)
+            {
+                Se.LogError(exception);
+                Settings = new Se();
+            }
+
+            SetDefaultValues();
         }
 
-        try
-        {
-            // Stream + source-generated metadata: no UTF-16 string round-trip and no
-            // runtime reflection over the settings type graph.
-            using var stream = System.IO.File.OpenRead(settingsFileName);
-            Settings = JsonSerializer.Deserialize(stream, SeJsonContext.Default.Se)!;
-        }
-        catch (Exception exception)
-        {
-            Se.LogError(exception);
-            Settings = new Se();
-        }
-
-        SetDefaultValues();
-
-        MigrateMacOsFontSettings(Settings.Appearance, OperatingSystem.IsMacOS(), true);
+        MigrateMacOsFontSettings(Settings.Appearance, OperatingSystem.IsMacOS(), settingsFileExists);
 
         UpdateLibSeSettings();
+
+        // Startup-only: the libse mirror of these is session truth - Ebu.LoadSubtitle re-seeds it
+        // from every loaded STL file - so the persisted values may only win before any file is
+        // open (see the note in UpdateLibSeSettings).
+        Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox = Settings.File.EbuSaveOptions.TeletextUseBox;
+        Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight = Settings.File.EbuSaveOptions.TeletextUseDoubleHeight;
+        ApplyStartupOnlyDCinemaSettings();
     }
 
     internal static void MigrateMacOsFontSettings(SeAppearance appearance, bool isMacOs, bool isLegacySettings)
@@ -533,6 +649,22 @@ public class Se
 
         // Once marked, a later explicit System Font selection must remain untouched.
         appearance.MacOsFontMigrationVersion = CurrentMacOsFontMigrationVersion;
+    }
+
+    /// <summary>
+    /// Moves a settings file still holding the pre-#14221 llama.cpp OCR prompt onto the current
+    /// default. That prompt asked the models to "preserve line breaks", which measurably merged
+    /// two-line subtitles into one (see <see cref="SeOcrDefaults.LlamaCppOcrPrompt"/>), and the
+    /// default is persisted, so without this only fresh installs would ever get the fix. Matched
+    /// verbatim: a user who has edited the prompt at all keeps their own version.
+    /// </summary>
+    internal static void MigrateLlamaCppOcrPrompt(SeOcr ocr)
+    {
+        const string legacyPrompt = "Extract all text exactly as written. The language is {language}. Preserve line breaks.";
+        if (ocr.LlamaCppOcrPrompt?.Trim() == legacyPrompt)
+        {
+            ocr.LlamaCppOcrPrompt = SeOcrDefaults.LlamaCppOcrPrompt;
+        }
     }
 
     /// <summary>
@@ -740,6 +872,8 @@ public class Se
             Settings.Ocr = new();
         }
 
+        MigrateLlamaCppOcrPrompt(Settings.Ocr);
+
         if (Settings.Formats == null)
         {
             Settings.Formats = new SeFormats();
@@ -828,6 +962,10 @@ public class Se
 
 
         Configuration.Settings.Tools.AutoTranslateDelaySeconds = (int)Math.Round(Settings.AutoTranslate.RequestDelaySeconds, MidpointRounding.AwayFromZero);
+        if (Settings.AutoTranslate.RequestMaxBytes > 0)
+        {
+            Configuration.Settings.Tools.AutoTranslateMaxBytes = (int)Math.Round(Settings.AutoTranslate.RequestMaxBytes, MidpointRounding.AwayFromZero);
+        }
 
         // BeautifyTimeCodes profile: skip apply on a fresh install so libse's built-in
         // default-preset values stay intact. Once the user clicks OK in the profile editor,
@@ -843,6 +981,18 @@ public class Se
 
         var dc = Settings.File.DCinemaSmpte;
         var ss = Configuration.Settings.SubtitleSettings;
+
+        // Ebu.Save reads these off the libse Configuration singleton, so a plain "Save" that
+        // never opens the EBU save options dialog must still see the persisted choices. The
+        // teletext box/double-height flags are deliberately NOT re-applied here: Ebu.LoadSubtitle
+        // seeds them from the loaded file, and this sync runs after every SaveSettings - it would
+        // clobber the file's flags. They are applied once at startup in LoadSettings instead.
+        var ebu = Settings.File.EbuSaveOptions;
+        ss.EbuStlJustificationCode = ebu.JustificationCode;
+        ss.EbuStlMarginTop = ebu.MarginTop;
+        ss.EbuStlMarginBottom = ebu.MarginBottom;
+        ss.EbuStlNewLineRows = ebu.NewLineRows;
+
         ss.WebVttUseXTimestampMap = Settings.Formats.WebVttUseXTimestampMap;
         ss.WebVttUseMultipleXTimestampMap = Settings.Formats.WebVttUseMultipleXTimestampMap;
         ss.WebVttMergeLinesWithSameText = Settings.Formats.WebVttMergeLinesWithSameText;
@@ -856,11 +1006,39 @@ public class Se
         ss.WebVttCueAn7 = Settings.Formats.WebVttCueAn7 ?? string.Empty;
         ss.WebVttCueAn8 = Settings.Formats.WebVttCueAn8 ?? string.Empty;
         ss.WebVttCueAn9 = Settings.Formats.WebVttCueAn9 ?? string.Empty;
+        ss.TimedText10TimeCodeFormat = Settings.Formats.TimedText10TimeCodeFormat;
+        ss.TimedText10FileExtension = Settings.Formats.TimedText10FileExtension;
+        ss.TimedTextItunesTopOrigin = Settings.Formats.TimedTextItunesTopOrigin;
+        ss.TimedTextItunesTopExtent = Settings.Formats.TimedTextItunesTopExtent;
+        ss.TimedTextItunesBottomOrigin = Settings.Formats.TimedTextItunesBottomOrigin;
+        ss.TimedTextItunesBottomExtent = Settings.Formats.TimedTextItunesBottomExtent;
+        ss.TimedTextItunesTimeCodeFormat = Settings.Formats.TimedTextItunesTimeCodeFormat;
+        ss.TimedTextItunesStyleAttribute = Settings.Formats.TimedTextItunesStyleAttribute;
+        ss.TimedTextItunesLanguage = Settings.Formats.TimedTextItunesLanguage ?? string.Empty;
+        ss.TimedTextImsc11TimeCodeFormat = Settings.Formats.TimedTextImsc11TimeCodeFormat;
+        ss.TimedTextImsc11FileExtension = Settings.Formats.TimedTextImsc11FileExtension;
+
         ss.DCinemaAutoGenerateSubtitleId = dc.DCinemaAutoGenerateSubtitleId;
         ss.DCinemaFontSize = dc.DCinemaFontSize;
         ss.DCinemaBottomMargin = dc.DCinemaBottomMargin;
         ss.DCinemaFadeUpTime = dc.DCinemaFadeUpTime;
         ss.DCinemaFadeDownTime = dc.DCinemaFadeDownTime;
+        Configuration.Settings.Tools.RememberUseAlwaysList = Settings.Tools.SpellCheckRememberUseAlwaysList;
+    }
+
+    /// <summary>
+    /// The "current D-Cinema file" values, applied at startup only. Same reason as the EBU
+    /// teletext flags above: DCinemaSmpte2007/2010/2014.LoadSubtitle seeds every one of these from
+    /// the opened file, so re-applying the persisted defaults after every SaveSettings (any dialog
+    /// OK) threw away the reel number, rates and start time of the file the user has open. The
+    /// D-Cinema properties dialogs push their own values through
+    /// MainViewModel.CopyCurrentDCinemaSettingsFromSe instead.
+    /// </summary>
+    private static void ApplyStartupOnlyDCinemaSettings()
+    {
+        var dc = Settings.File.DCinemaSmpte;
+        var ss = Configuration.Settings.SubtitleSettings;
+
         ss.CurrentDCinemaSubtitleId = dc.CurrentDCinemaSubtitleId;
         ss.CurrentDCinemaMovieTitle = dc.CurrentDCinemaMovieTitle;
         ss.CurrentDCinemaReelNumber = dc.CurrentDCinemaReelNumber;

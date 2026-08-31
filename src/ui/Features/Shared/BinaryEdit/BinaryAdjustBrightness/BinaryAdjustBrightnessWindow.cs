@@ -60,7 +60,7 @@ public class BinaryAdjustBrightnessWindow : Window
 
         Content = mainGrid;
 
-        Activated += delegate { brightnessInputSlider.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, brightnessInputSlider); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 

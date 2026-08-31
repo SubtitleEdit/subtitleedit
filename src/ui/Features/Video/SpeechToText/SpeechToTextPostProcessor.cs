@@ -29,6 +29,14 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
 
         public int ParagraphMaxChars { get; set; }
 
+        /// <summary>
+        /// The command line the engine actually ran with, used to detect word-level output
+        /// (--highlight_words / --one_word) that merging and splitting would destroy.
+        /// SE 5 stores these per engine (engine.CommandLineParameter) - the old global
+        /// setting this used to read is never written, so the guard never fired.
+        /// </summary>
+        public string EngineCommandLineArguments { get; set; } = string.Empty;
+
         private const int AudioToTextLineMaxChars = 86;
         private const int AudioToTextLineMaxCharsJp = 32;
         private const int AudioToTextLineMaxCharsCn = 36;
@@ -230,19 +238,19 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
             return subtitle;
         }
 
-        private static bool AllowLineContentMove(Engine engine)
+        private bool AllowLineContentMove(Engine engine)
         {
             if (engine != Engine.Whisper)
             {
                 return true;
             }
 
-            if (string.IsNullOrEmpty(Se.Settings.Tools.AudioToText.WhisperCustomCommandLineArguments))
+            if (string.IsNullOrEmpty(EngineCommandLineArguments))
             {
                 return true;
             }
 
-            var es = Se.Settings.Tools.AudioToText.WhisperCustomCommandLineArguments.ToLowerInvariant();
+            var es = EngineCommandLineArguments.ToLowerInvariant();
             return !es.Contains("--highlight_words", StringComparison.OrdinalIgnoreCase) &&
                    !es.Contains("-hw ", StringComparison.OrdinalIgnoreCase) &&
                    !es.Contains("-hw=true", StringComparison.OrdinalIgnoreCase) &&

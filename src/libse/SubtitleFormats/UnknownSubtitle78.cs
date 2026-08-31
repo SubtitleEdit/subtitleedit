@@ -156,9 +156,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            var xmlAsText = sb.ToString().Trim();
+            var xmlAsText = JoinLinesTrimmed(lines);
             if (!xmlAsText.Contains("<TextSection>") || !xmlAsText.Contains("<TextScreen>"))
             {
                 return;
@@ -166,6 +164,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             try
             {
+                var sb = new StringBuilder();
                 var xml = new XmlDocument { XmlResolver = null };
                 xml.LoadXml(xmlAsText);
                 foreach (XmlNode node in xml.DocumentElement.SelectNodes("TextSection/TextScreen"))

@@ -77,6 +77,24 @@ See [Import Plain Text](import-plain-text.md) for details.
 
 Import image files and create subtitle entries from them.
 
+### Import image-based subtitle for OCR
+
+Read the subtitles out of an image-based file (Blu-ray `.sup`, VobSub `.sub`, `.ts`, BDN xml) and run [OCR](ocr.md) on them to get editable text.
+
+### Import image-based subtitle for edit
+
+Open an image-based subtitle in the [image-based subtitle editor](binary-edit.md) — moving, resizing and re-colouring the bitmaps — without converting them to text.
+
+### Import CSV/XLSX/ODS with custom columns
+
+Import a spreadsheet or delimited text file and choose which column holds the start time, end time, text, and so on.
+
+See [Import Spreadsheets](import-csv-xlsx.md) for details, including the column names that are recognised automatically when a spreadsheet is opened directly.
+
+### Import formatting
+
+Copy the formatting — italic/bold/underline, font tags and ASSA override tags — from another subtitle file onto the currently loaded lines, matched line by line. A warning is shown first when the two files do not have the same number of lines.
+
 ## Export
 
 ### Export as plain text
@@ -137,6 +155,8 @@ Tags in the text are read rather than drawn as literal characters:
 | `{\pos(x,y)}` | Positions the subtitle (coordinates are in the script's own resolution) |
 | `{\i1}`, `{\b1}`, `{\c&H..&}`, `{\fn..}`, `{\fs..}` | Italic, bold, colour, font and size |
 | `{\alpha&H80&}`, `{\1a}`, `{\3a}`, `{\4a}` | Transparency — all parts at once, or text, outline and shadow separately |
+| `{\3c&H..&}`, `{\4c&H..&}` | Outline and shadow colour, overriding the colours chosen in the window |
+| `{\bord2}`, `{\shad0}` | Outline and shadow width (in the script's own resolution) — `{\bord0}` turns the outline off |
 | `{\fad(in,out)}`, `{\fade(..)}` | Fade in/out — **Blu-ray SUP only** (see below) |
 
 Anything else is removed before rendering.

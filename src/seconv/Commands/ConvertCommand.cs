@@ -115,6 +115,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [Description("llama.cpp OCR: endpoint of an already-running llama-server; skips the local auto-start")]
         public string? OcrUrl { get; init; }
 
+        [CommandOption("--ocr-prompt|--ocrprompt")]
+        [Description("Prompt for --ocr-engine=llamacpp/ollama (or a path to a text file holding it); {language} is replaced with --ocr-language. Default: the same prompt as the OCR window")]
+        public string? OcrPrompt { get; init; }
+
         [CommandOption("--dictionary-folder|--dictionaryfolder")]
         [Description("Folder with Hunspell dictionaries + *_OCRFixReplaceList.xml; enables the 'Fix common OCR errors' pass of --fix-common-errors")]
         public string? DictionaryFolder { get; init; }
@@ -158,6 +162,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [CommandOption("--translate-model|--translatemodel")]
         [Description("Translate model: ollama/lmstudio model name, or llamacpp .gguf file name/path (default: first downloaded translate model)")]
         public string? TranslateModel { get; init; }
+
+        [CommandOption("--translate-prompt|--translateprompt")]
+        [Description("Prompt for llamacpp/ollama/lmstudio: inline text (\\n = line break) or a path to a text file; {0}=source language, {1}=target language, {2}=the text (completion-format models)")]
+        public string? TranslatePrompt { get; init; }
 
         [CommandOption("--offset")]
         [Description("Offset time (hh:mm:ss:ms)")]
@@ -262,7 +270,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public string? Alignment { get; init; }
 
         [CommandOption("--content-alignment|--contentalignment")]
-        [Description("Image output: multi-line text justification: left | center (default) | right")]
+        [Description("Image output: multi-line text justification: left | center (default) | right | from-alignment")]
         public string? ContentAlignment { get; init; }
 
         [CommandOption("--bottom-top-margin|--bottomtopmargin")]
@@ -435,14 +443,38 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 return Fail(settings, "--ocr-model/--ocr-url require --ocr-engine:llamacpp.");
             }
 
+            // --ocr-prompt only means something to the two prompt-driven OCR engines; tesseract,
+            // nOCR, binary image compare and Paddle have no prompt at all. Fail instead of
+            // silently ignoring it, and read the prompt (it may be a file) up front so a typo'd
+            // path never costs a conversion - same contract as --translate-prompt.
+            if (!string.IsNullOrWhiteSpace(settings.OcrPrompt))
+            {
+                var isOllamaOcr = !string.IsNullOrWhiteSpace(settings.OcrEngine) &&
+                                  settings.OcrEngine.Trim().Equals("ollama", StringComparison.OrdinalIgnoreCase);
+                if (!isLlamaCppOcr && !isOllamaOcr)
+                {
+                    return Fail(settings, "--ocr-prompt requires --ocr-engine:llamacpp or --ocr-engine:ollama.");
+                }
+
+                try
+                {
+                    AutoTranslateRunner.ReadPromptOption(settings.OcrPrompt, "--ocr-prompt", "{language}");
+                }
+                catch (Exception ex)
+                {
+                    return Fail(settings, ex.Message);
+                }
+            }
+
             // Validate the translate options: --translate-to is the trigger, the rest refine it.
             if (string.IsNullOrWhiteSpace(settings.TranslateTo) &&
                 (!string.IsNullOrWhiteSpace(settings.TranslateFrom) ||
                  !string.IsNullOrWhiteSpace(settings.TranslateEngine) ||
                  !string.IsNullOrWhiteSpace(settings.TranslateUrl) ||
-                 !string.IsNullOrWhiteSpace(settings.TranslateModel)))
+                 !string.IsNullOrWhiteSpace(settings.TranslateModel) ||
+                 !string.IsNullOrWhiteSpace(settings.TranslatePrompt)))
             {
-                return Fail(settings, "--translate-from/--translate-engine/--translate-url/--translate-model require --translate-to:<language>.");
+                return Fail(settings, "--translate-from/--translate-engine/--translate-url/--translate-model/--translate-prompt require --translate-to:<language>.");
             }
 
             if (!string.IsNullOrWhiteSpace(settings.TranslateEngine) &&
@@ -453,6 +485,29 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                     settings,
                     $"Translate engine '{settings.TranslateEngine}' is not supported (pass via --translate-engine). " +
                     $"Use one of: {string.Join(", ", AutoTranslateRunner.SupportedEngines)}.");
+            }
+
+            // --translate-prompt only means something to the LLM engines; the translation
+            // services have no prompt at all. Fail instead of silently ignoring it, and read
+            // the prompt (it may be a file) up front so a typo'd path never costs a conversion.
+            if (!string.IsNullOrWhiteSpace(settings.TranslatePrompt))
+            {
+                if (!AutoTranslateRunner.SupportsPrompt(settings.TranslateEngine))
+                {
+                    return Fail(
+                        settings,
+                        $"--translate-prompt is not supported by translate engine '{settings.TranslateEngine}'. " +
+                        $"Use one of: {string.Join(", ", AutoTranslateRunner.PromptEngines)}.");
+                }
+
+                try
+                {
+                    AutoTranslateRunner.ReadPromptOption(settings.TranslatePrompt);
+                }
+                catch (Exception ex)
+                {
+                    return Fail(settings, ex.Message);
+                }
             }
 
             // Fail fast on a typo in --encoding so we don't silently substitute UTF-8 and
@@ -698,7 +753,11 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 TrackNumbers = ParseTrackNumbers(settings.TrackNumber),
                 ForcedOnly = settings.ForcedOnly,
                 OcrEngine = string.IsNullOrWhiteSpace(settings.OcrEngine) ? "tesseract" : settings.OcrEngine,
-                OcrLanguage = settings.OcrLanguage ?? "eng",
+                // No "eng" here: the engines take different code sets (Tesseract "eng", Paddle
+                // "en", Ollama/llama.cpp a human name like "English") and each has its own
+                // default. Forcing Tesseract's on all of them made "--ocr-engine:paddle" run
+                // paddleocr with "--lang eng", which it rejects, failing the whole conversion.
+                OcrLanguage = settings.OcrLanguage,
                 OcrDb = settings.OcrDb,
                 DictionaryFolder = settings.DictionaryFolder,
                 TimeCodesOnly = settings.TimeCodesOnly,
@@ -708,11 +767,13 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 OllamaModel = settings.OllamaModel,
                 OcrUrl = settings.OcrUrl,
                 OcrModel = settings.OcrModel,
+                OcrPrompt = AutoTranslateRunner.ReadPromptOption(settings.OcrPrompt, "--ocr-prompt", "{language}"),
                 TranslateTo = settings.TranslateTo,
                 TranslateFrom = settings.TranslateFrom,
                 TranslateEngine = settings.TranslateEngine,
                 TranslateUrl = settings.TranslateUrl,
                 TranslateModel = settings.TranslateModel,
+                TranslatePrompt = settings.TranslatePrompt,
                 TeletextOnly = settings.TeletextOnly,
                 TeletextOnlyPage = settings.TeletextOnlyPage,
                 Quiet = silent,
@@ -755,7 +816,8 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             {
                 var translateEngine = string.IsNullOrWhiteSpace(settings.TranslateEngine) ? "llamacpp" : settings.TranslateEngine.Trim().ToLowerInvariant();
                 var translateFrom = string.IsNullOrWhiteSpace(settings.TranslateFrom) ? "auto" : settings.TranslateFrom;
-                table.AddRow("Translate", $"{translateFrom} -> {settings.TranslateTo} ({translateEngine})");
+                var customPrompt = string.IsNullOrWhiteSpace(settings.TranslatePrompt) ? string.Empty : ", custom prompt";
+                table.AddRow("Translate", $"{translateFrom} -> {settings.TranslateTo} ({translateEngine}{customPrompt})");
             }
 
             if (settings.DeleteFirst.HasValue)
@@ -1109,7 +1171,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         {
             if (!ImageExportStyle.TryParseContentAlignment(settings.ContentAlignment, out var contentAlignment))
             {
-                return $"Unknown content alignment '{settings.ContentAlignment}' for --content-alignment. Use: left, center, or right.";
+                return $"Unknown content alignment '{settings.ContentAlignment}' for --content-alignment. Use: left, center, right, or from-alignment.";
             }
             style.ContentAlignment = contentAlignment;
         }

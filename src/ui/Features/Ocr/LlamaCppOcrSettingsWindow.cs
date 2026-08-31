@@ -142,7 +142,7 @@ public class LlamaCppOcrSettingsWindow : Window
 
         Content = rootGrid;
 
-        Activated += delegate { textBoxUrl.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, textBoxUrl);
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 

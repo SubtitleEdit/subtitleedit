@@ -92,7 +92,7 @@ public class BurnInEffectWindow : Window
 
         Content = grid;
 
-        Activated += delegate { (checkBoxPanel.Children.Count > 0 ? checkBoxPanel.Children[0] : buttonCancel).Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, () => { (checkBoxPanel.Children.Count > 0 ? checkBoxPanel.Children[0] : buttonCancel).Focus(); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
     }
 
     protected override void OnLoaded(RoutedEventArgs e)

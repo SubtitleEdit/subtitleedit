@@ -174,7 +174,7 @@ public class AssaImageColorPickerWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, buttonOk);
         KeyDown += vm.KeyDown;
     }
 }

@@ -209,6 +209,13 @@ public class SpellCheckDictionaryDisplay
 
     public static string? GetFiveLetterLanguageName(string fileName)
     {
+        // Normalize here rather than only in the instance overload: the other caller
+        // (SpellChecker) passed the raw file name, so a hyphenated dictionary ("fa-IR",
+        // "sr-Latn", "be-official", "ca-valencia") failed the '_' test below, returned null and
+        // silently fell back to the en_US word lists - while "add to names/user dictionary" wrote
+        // to fa_IR_*.xml, so added words were never read back.
+        fileName = fileName.Replace('-', '_');
+
         if (fileName == "es_ANY" || fileName == "es-ANY")
         {
             return "es_ES";

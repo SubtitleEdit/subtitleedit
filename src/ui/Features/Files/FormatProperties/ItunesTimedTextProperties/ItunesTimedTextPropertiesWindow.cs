@@ -20,7 +20,7 @@ public class ItunesTimedTextPropertiesWindow : Window
 
         var labelWidth = 200;
 
-        var labelTitle = UiUtil.MakeLabel("Title").WithMinWidth(labelWidth);
+        var labelTitle = UiUtil.MakeLabel(Se.Language.General.Title).WithMinWidth(labelWidth);
         var textBoxTitle = UiUtil.MakeTextBox(263, vm, nameof(vm.Title));
         var panelTitle = new StackPanel
         {
@@ -29,7 +29,7 @@ public class ItunesTimedTextPropertiesWindow : Window
             Children = { labelTitle, textBoxTitle },
         };
 
-        var labelDescription = UiUtil.MakeLabel("Description").WithMinWidth(labelWidth);
+        var labelDescription = UiUtil.MakeLabel(Se.Language.General.Description).WithMinWidth(labelWidth);
         var textBoxDescription = UiUtil.MakeTextBox(263, vm, nameof(vm.Description));
         var panelDescription = new StackPanel
         {
@@ -47,7 +47,7 @@ public class ItunesTimedTextPropertiesWindow : Window
             Children = { labelLanguage, textBoxLanguage },
         };
 
-        var labelTimeBase = UiUtil.MakeLabel("Time base").WithMinWidth(labelWidth);
+        var labelTimeBase = UiUtil.MakeLabel(Se.Language.File.PropertyTimeBase).WithMinWidth(labelWidth);
         var comboBoxTimeBase = UiUtil.MakeComboBox(vm.TimeBases, vm, nameof(vm.SelectedTimeBase)).WithMinWidth(263);
         var panelTimeBase = new StackPanel
         {
@@ -56,7 +56,7 @@ public class ItunesTimedTextPropertiesWindow : Window
             Children = { labelTimeBase, comboBoxTimeBase },
         };
 
-        var labelFrameRate = UiUtil.MakeLabel("Frame rate").WithMinWidth(labelWidth);
+        var labelFrameRate = UiUtil.MakeLabel(Se.Language.General.FrameRate).WithMinWidth(labelWidth);
         var textBoxFrameRate = UiUtil.MakeTextBox(263, vm, nameof(vm.SelectedFrameRate));
         var panelFrameRate = new StackPanel
         {
@@ -65,7 +65,7 @@ public class ItunesTimedTextPropertiesWindow : Window
             Children = { labelFrameRate, textBoxFrameRate },
         };
 
-        var labelFrameRateMultiplier = UiUtil.MakeLabel("Frame rate multiplier").WithMinWidth(labelWidth);
+        var labelFrameRateMultiplier = UiUtil.MakeLabel(Se.Language.File.PropertyFrameRateMultiplier).WithMinWidth(labelWidth);
         var textBoxFrameRateMultiplier = UiUtil.MakeTextBox(263, vm, nameof(vm.SelectedFrameRateMultiplier));
         var panelFrameRateMultiplier = new StackPanel
         {
@@ -74,7 +74,7 @@ public class ItunesTimedTextPropertiesWindow : Window
             Children = { labelFrameRateMultiplier, textBoxFrameRateMultiplier },
         };
 
-        var labelDropMode = UiUtil.MakeLabel("Drop mode").WithMinWidth(labelWidth);
+        var labelDropMode = UiUtil.MakeLabel(Se.Language.File.PropertyDropMode).WithMinWidth(labelWidth);
         var comboBoxDropMode = UiUtil.MakeComboBox(vm.DropModes, vm, nameof(vm.SelectedDropMode)).WithMinWidth(263);
         var panelDropMode = new StackPanel
         {
@@ -83,7 +83,7 @@ public class ItunesTimedTextPropertiesWindow : Window
             Children = { labelDropMode, comboBoxDropMode },
         };
 
-        var labelDefaultStyle = UiUtil.MakeLabel("Default style").WithMinWidth(labelWidth);
+        var labelDefaultStyle = UiUtil.MakeLabel(Se.Language.File.PropertyDefaultStyle).WithMinWidth(labelWidth);
         var comboBoxDefaultStyle = UiUtil.MakeComboBox<string>(vm.DefaultStyles, vm, nameof(vm.SelectedDefaultStyle)).WithMinWidth(263);
         var panelDefaultStyle = new StackPanel
         {
@@ -92,7 +92,7 @@ public class ItunesTimedTextPropertiesWindow : Window
             Children = { labelDefaultStyle, comboBoxDefaultStyle },
         };
 
-        var labelDefaultRegion = UiUtil.MakeLabel("Default region").WithMinWidth(labelWidth);
+        var labelDefaultRegion = UiUtil.MakeLabel(Se.Language.File.PropertyDefaultRegion).WithMinWidth(labelWidth);
         var comboBoxDefaultRegion = UiUtil.MakeComboBox(vm.DefaultRegions, vm, nameof(vm.SelectedDefaultRegion)).WithMinWidth(263);
         var panelDefaultRegion = new StackPanel
         {
@@ -101,7 +101,7 @@ public class ItunesTimedTextPropertiesWindow : Window
             Children = { labelDefaultRegion, comboBoxDefaultRegion },
         };
 
-        var labelStyleAttribute = UiUtil.MakeLabel("Style attribute name").WithMinWidth(labelWidth);
+        var labelStyleAttribute = UiUtil.MakeLabel(Se.Language.File.PropertyStyleAttributeName).WithMinWidth(labelWidth);
         var comboBoxStyleAttribute = UiUtil.MakeComboBox(vm.StyleAttributes, vm, nameof(vm.SelectedStyleAttribute)).WithMinWidth(263);
         var panelStyleAttribute = new StackPanel
         {
@@ -110,7 +110,7 @@ public class ItunesTimedTextPropertiesWindow : Window
             Children = { labelStyleAttribute, comboBoxStyleAttribute },
         };
 
-        var labelTimeCodeFormat = UiUtil.MakeLabel("Time code format").WithMinWidth(labelWidth);
+        var labelTimeCodeFormat = UiUtil.MakeLabel(Se.Language.File.PropertyTimeCodeFormat).WithMinWidth(labelWidth);
         var comboBoxTimeCodeFormat = UiUtil.MakeComboBox(vm.TimeCodeFormats, vm, nameof(vm.SelectedTimeCodeFormat)).WithMinWidth(263);
         var panelTimeCodeFormat = new StackPanel
         {
@@ -120,7 +120,7 @@ public class ItunesTimedTextPropertiesWindow : Window
         };
 
         // Alignment section
-        var labelTopOrigin = UiUtil.MakeLabel("Top origin").WithMinWidth(labelWidth);
+        var labelTopOrigin = UiUtil.MakeLabel(Se.Language.File.PropertyTopOrigin).WithMinWidth(labelWidth);
         var textBoxTopOrigin = UiUtil.MakeTextBox(263, vm, nameof(vm.TopOrigin));
         var panelTopOrigin = new StackPanel
         {
@@ -129,7 +129,7 @@ public class ItunesTimedTextPropertiesWindow : Window
             Children = { labelTopOrigin, textBoxTopOrigin },
         };
 
-        var labelTopExtent = UiUtil.MakeLabel("Top extent").WithMinWidth(labelWidth);
+        var labelTopExtent = UiUtil.MakeLabel(Se.Language.File.PropertyTopExtent).WithMinWidth(labelWidth);
         var textBoxTopExtent = UiUtil.MakeTextBox(263, vm, nameof(vm.TopExtent));
         var panelTopExtent = new StackPanel
         {
@@ -138,7 +138,7 @@ public class ItunesTimedTextPropertiesWindow : Window
             Children = { labelTopExtent, textBoxTopExtent },
         };
 
-        var labelBottomOrigin = UiUtil.MakeLabel("Bottom origin").WithMinWidth(labelWidth);
+        var labelBottomOrigin = UiUtil.MakeLabel(Se.Language.File.PropertyBottomOrigin).WithMinWidth(labelWidth);
         var textBoxBottomOrigin = UiUtil.MakeTextBox(263, vm, nameof(vm.BottomOrigin));
         var panelBottomOrigin = new StackPanel
         {
@@ -147,7 +147,7 @@ public class ItunesTimedTextPropertiesWindow : Window
             Children = { labelBottomOrigin, textBoxBottomOrigin },
         };
 
-        var labelBottomExtent = UiUtil.MakeLabel("Bottom extent").WithMinWidth(labelWidth);
+        var labelBottomExtent = UiUtil.MakeLabel(Se.Language.File.PropertyBottomExtent).WithMinWidth(labelWidth);
         var textBoxBottomExtent = UiUtil.MakeTextBox(263, vm, nameof(vm.BottomExtent));
         var panelBottomExtent = new StackPanel
         {
@@ -211,7 +211,7 @@ public class ItunesTimedTextPropertiesWindow : Window
 
         Content = grid;
 
-        Activated += delegate { textBoxTitle.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, textBoxTitle); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

@@ -80,10 +80,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
 
-            string xmlString = sb.ToString();
+            string xmlString = JoinLines(lines);
             if (!xmlString.Contains("<captionate>") || !xmlString.Contains("</caption>"))
             {
                 return;
@@ -109,21 +107,58 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         string start = node.Attributes["time"].InnerText;
                         double startMilliseconds = double.Parse(start, CultureInfo.InvariantCulture);
+                        // An end marker (a caption with no <tracks>) carries this cue's exact
+                        // end time; only a real following caption means "ends just before it".
+                        // Always subtracting 1 ms moved the end one millisecond earlier on
+                        // every save, and the shift accumulated.
+                        var hasTextNode = node.SelectSingleNode("tracks/track0") != null;
                         if (p != null)
                         {
-                            p.EndTime.TotalMilliseconds = startMilliseconds - 1;
+                            p.EndTime.TotalMilliseconds = hasTextNode ? startMilliseconds - 1 : startMilliseconds;
                         }
 
                         if (node.SelectSingleNode("tracks/track0") != null)
                         {
-                            string text = node.SelectSingleNode("tracks/track0").InnerText;
-                            text = HtmlUtil.RemoveHtmlTags(text);
+                            // Walk the children: <br /> is an ELEMENT, and InnerText drops it
+                            // silently - so every line break was lost on read.
+                            var trackNode = node.SelectSingleNode("tracks/track0");
+                            var textBuilder = new StringBuilder();
+                            foreach (XmlNode textChild in trackNode.ChildNodes)
+                            {
+                                if (textChild is XmlText || textChild is XmlCDataSection || textChild is XmlWhitespace || textChild is XmlSignificantWhitespace)
+                                {
+                                    textBuilder.Append(textChild.Value);
+                                }
+                                else if (textChild.Name.Equals("br", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    textBuilder.Append(Environment.NewLine);
+                                }
+                                else
+                                {
+                                    textBuilder.Append(textChild.InnerText);
+                                }
+                            }
+
+                            string text = textBuilder.ToString();
                             text = text.Replace("<br>", Environment.NewLine).Replace("<br />", Environment.NewLine).Replace("<BR>", Environment.NewLine);
-                            p = new Paragraph(text, startMilliseconds, startMilliseconds + 3000);
+                            text = HtmlUtil.RemoveHtmlTags(text);
                             if (!string.IsNullOrWhiteSpace(text))
                             {
+                                p = new Paragraph(text, startMilliseconds, startMilliseconds + 3000);
                                 subtitle.Paragraphs.Add(p);
                             }
+                            else
+                            {
+                                p = null;
+                            }
+                        }
+                        else
+                        {
+                            // A caption with no <tracks> is the end marker ToText emits after a
+                            // gap; it already set the previous cue's end above. Not clearing "p"
+                            // here let the NEXT caption overwrite that end time, so every cue ran
+                            // on until the following one started.
+                            p = null;
                         }
                     }
                 }

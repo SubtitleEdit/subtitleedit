@@ -67,10 +67,10 @@ public class PickMp4TrackWindow : Window
 
         Content = grid;
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             buttonOk.Focus(); // hack to make OnKeyDown work
-        };
+        });
     }
 
     protected override void OnLoaded(RoutedEventArgs e)
@@ -91,7 +91,10 @@ public class PickMp4TrackWindow : Window
         // narrow columns get fixed widths and Name becomes the star column.
         var handlerColumn = new SeTableViewColumn
         {
-            Header = "HandlerName",
+            // Localized, and not the raw C# property name: this dialog showed "HandlerName" and
+            // "IsVobSubSubtitle" to the user as column headers. The Matroska track picker beside
+            // it uses Se.Language for every header.
+            Header = Se.Language.General.Type,
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Binding = new Binding(nameof(Mp4TrackInfoDisplay.HandlerType)),
@@ -99,7 +102,7 @@ public class PickMp4TrackWindow : Window
         };
         var nameColumn = new SeTableViewColumn
         {
-            Header = "Name",
+            Header = Se.Language.General.Name,
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Binding = new Binding(nameof(Mp4TrackInfoDisplay.Name)),
@@ -107,7 +110,7 @@ public class PickMp4TrackWindow : Window
         };
         var durationColumn = new SeTableViewColumn
         {
-            Header = "Duration",
+            Header = Se.Language.General.Duration,
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Binding = new Binding(nameof(Mp4TrackInfoDisplay.Duration)) { Converter = new TimeSpanToDisplayFullConverter() },
@@ -115,7 +118,7 @@ public class PickMp4TrackWindow : Window
         };
         var vobSubColumn = new SeTableViewColumn
         {
-            Header = "IsVobSubSubtitle",
+            Header = Se.Language.General.VobSub,
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Binding = new Binding(nameof(Mp4TrackInfoDisplay.IsVobSubSubtitle)),
@@ -123,7 +126,7 @@ public class PickMp4TrackWindow : Window
         };
         var startPositionColumn = new SeTableViewColumn
         {
-            Header = "StartPosition",
+            Header = Se.Language.General.Start,
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Binding = new Binding(nameof(Mp4TrackInfoDisplay.StartPosition)),
@@ -167,7 +170,7 @@ public class PickMp4TrackWindow : Window
         {
                 new SeTableViewColumn
                 {
-                    Header = "#",
+                    Header = Se.Language.General.NumberSymbol,
                     CellTheme = UiUtil.TableViewCellTheme,
                     HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(Mp4SubtitleCueDisplay.Number)),
@@ -175,7 +178,7 @@ public class PickMp4TrackWindow : Window
                 },
                 new SeTableViewColumn
                 {
-                    Header = "Show",
+                    Header = Se.Language.General.Show,
                     CellTheme = UiUtil.TableViewCellTheme,
                     HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(Mp4SubtitleCueDisplay.Show)) { Converter = fullTimeConverter },
@@ -183,7 +186,7 @@ public class PickMp4TrackWindow : Window
                 },
                 new SeTableViewColumn
                 {
-                    Header = "Duration",
+                    Header = Se.Language.General.Duration,
                     CellTheme = UiUtil.TableViewCellTheme,
                     HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(Mp4SubtitleCueDisplay.Duration)) { Converter = shortTimeConverter },
@@ -191,7 +194,7 @@ public class PickMp4TrackWindow : Window
                 },
                 new SeTableViewColumn
                 {
-                    Header = "Text/Image",
+                    Header = Se.Language.General.TextOrImage,
                     CellTheme = UiUtil.TableViewCellTheme,
                     HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Width = new GridLength(1, GridUnitType.Star),
