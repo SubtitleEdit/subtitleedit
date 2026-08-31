@@ -100,7 +100,7 @@ public class FormatLimitWarningWindow : Window
         Content = panel;
 
         // Cancel is the safe default: Enter must not accidentally commit a lossy save.
-        Activated += delegate { buttonCancel.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, buttonCancel);
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 

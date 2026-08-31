@@ -51,7 +51,7 @@ public class CrispEmbedSettingsWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonClose.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, buttonClose);
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 

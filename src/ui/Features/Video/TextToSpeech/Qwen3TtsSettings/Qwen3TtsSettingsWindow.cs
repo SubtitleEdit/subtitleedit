@@ -33,7 +33,7 @@ public class Qwen3TtsSettingsWindow : Window
         Content = BuildContent(vm);
 
         var ok = UiUtil.MakeButtonOk(vm.OkCommand);
-        Activated += delegate { ok.Focus(); }; // ensure OnKeyDown fires
+        UiUtil.FocusOnFirstActivation(this, ok); // ensure OnKeyDown fires
     }
 
     private Border BuildContent(Qwen3TtsSettingsViewModel vm)

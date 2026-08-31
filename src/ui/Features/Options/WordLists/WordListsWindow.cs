@@ -70,7 +70,7 @@ public class WordListsWindow : Window
 
         Content = grid;
 
-        Activated += delegate { comboLanguages.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, comboLanguages); // initial focus on an input, not an action button - a focused button clicks on bare Space
         Closing += (s, e) => _vm.Closing();
         Loaded += (s, e) => vm.Loaded();
 

@@ -57,14 +57,14 @@ public class ModifySelectionWindow : Window
 
         Content = grid;
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             buttonOk.Focus();
             if (textbox.IsVisible)
             {
                 textbox.Focus();
             }
-        };
+        });
         KeyDown += vm.KeyDown;
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };

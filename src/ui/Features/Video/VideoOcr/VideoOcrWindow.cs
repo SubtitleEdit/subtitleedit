@@ -80,7 +80,7 @@ public class VideoOcrWindow : Window
 
         Content = grid;
 
-        Activated += delegate { _comboEngine?.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, () => { _comboEngine?.Focus(); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Loaded += (s, e) => vm.OnLoaded();

@@ -3199,10 +3199,20 @@ public static class UiUtil
     /// </summary>
     internal static void FocusOnFirstActivation(Window window, Control control)
     {
+        FocusOnFirstActivation(window, () => control.Focus());
+    }
+
+    /// <summary>
+    /// Runs <paramref name="setInitialFocus"/> once, on the first activation of the window.
+    /// The overload to use when the initial focus is more than one control's Focus() call -
+    /// a row in a grid, a choice between two controls, a select-all before the focus.
+    /// </summary>
+    internal static void FocusOnFirstActivation(Window window, Action setInitialFocus)
+    {
         void OnActivated(object? sender, EventArgs e)
         {
             window.Activated -= OnActivated;
-            control.Focus();
+            setInitialFocus();
         }
 
         window.Activated += OnActivated;

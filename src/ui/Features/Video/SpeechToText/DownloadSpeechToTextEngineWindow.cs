@@ -68,10 +68,10 @@ public class DownloadSpeechToTextEngineWindow : Window
             }
         };
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             buttonCancel.Focus(); // hack to make OnKeyDown work
-        };
+        });
         KeyDown += (s, e) => vm.OnKeyDown(e);
     }
 }

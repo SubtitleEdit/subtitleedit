@@ -125,7 +125,7 @@ public class PickTeletextAlignmentWindow : Window
 
         Content = grid;
 
-        Activated += delegate { lineBox.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, lineBox);
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 

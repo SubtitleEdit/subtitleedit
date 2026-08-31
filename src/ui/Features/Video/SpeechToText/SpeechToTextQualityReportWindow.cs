@@ -185,7 +185,7 @@ public class SpeechToTextQualityReportWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, buttonOk); // hack to make OnKeyDown work
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

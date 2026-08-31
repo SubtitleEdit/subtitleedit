@@ -52,7 +52,7 @@ public class GetDictionariesWindow : Window
             Padding = new Thickness(4),
         };
 
-        Activated += delegate { downloadButton.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, downloadButton); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 

@@ -83,7 +83,7 @@ public class ReviewSpeechWindow : Window
         // focused element) without arming any button: a focused button fires OnClick on bare
         // Space/Enter, and OK used to be focused here - so the first Space a user pressed
         // published the whole session instead of playing the selected line (#12093).
-        Activated += delegate { TableViewExtras.FocusRow(vm.LineGrid); };
+        UiUtil.FocusOnFirstActivation(this, () => { TableViewExtras.FocusRow(vm.LineGrid); });
 
         // Tunnel-stage handlers: see Space/R before the focused control does. KeyDown alone is
         // not enough - Avalonia's Button fires OnClick from OnKeyUp on Space (unconditionally

@@ -99,7 +99,7 @@ public class AdvancedTtsSettingsWindow : Window
         Content = mainPanel;
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
-        Activated += delegate { (sectionProAudio.Children[0] as CheckBox)?.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, () => { (sectionProAudio.Children[0] as CheckBox)?.Focus(); });
     }
 
     private static StackPanel MakeSection(AdvancedTtsSettingsViewModel vm, string title, string checkBoxBinding, string description,

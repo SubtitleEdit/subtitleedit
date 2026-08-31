@@ -166,7 +166,7 @@ public class TimedText10PropertiesWindow : Window
 
         Content = grid;
 
-        Activated += delegate { textBoxTitle.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, textBoxTitle); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

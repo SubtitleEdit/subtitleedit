@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
@@ -26,7 +26,6 @@ public class AutoTranslateWindow : Window
     private readonly AutoTranslateViewModel _vm;
     private Button? _buttonTranslate;
     private Button? _buttonOk;
-    private bool _initialFocusDone;
 
     public AutoTranslateWindow(AutoTranslateViewModel vm)
     {
@@ -75,17 +74,10 @@ public class AutoTranslateWindow : Window
 
         Loaded += (s, e) => UiUtil.RestoreWindowPosition(this);
 
-        Activated += delegate
-        {
-            // Start out on the accented button so it is selected, not just coloured like it -
-            // Enter then starts the translation right away. Only the first activation: coming
-            // back from a dialog must not pull focus away from where the user left it.
-            if (!_initialFocusDone)
-            {
-                _initialFocusDone = true;
-                _buttonTranslate?.Focus();
-            }
-        };
+        // Start out on the accented button so it is selected, not just coloured like it - Enter
+        // then starts the translation right away. First activation only: coming back from a
+        // dialog must not pull focus away from where the user left it.
+        UiUtil.FocusOnFirstActivation(this, () => _buttonTranslate?.Focus());
     }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)

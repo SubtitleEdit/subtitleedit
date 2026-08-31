@@ -162,7 +162,7 @@ public class TextToSpeechWindow : Window
 
         Content = grid;
 
-        Activated += delegate { _comboBoxEngines?.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, () => { _comboBoxEngines?.Focus(); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
     }
 
     // Install-status dot for the engine combo: green = ready, amber = a newer build is available,

@@ -67,10 +67,10 @@ public class PickMp4TrackWindow : Window
 
         Content = grid;
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             buttonOk.Focus(); // hack to make OnKeyDown work
-        };
+        });
     }
 
     protected override void OnLoaded(RoutedEventArgs e)

@@ -263,7 +263,7 @@ public class DCinemaSmptePropertiesWindow : Window
 
         Content = mainPanel;
 
-        Activated += delegate { checkBoxGenerateIdAuto.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, checkBoxGenerateIdAuto); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 

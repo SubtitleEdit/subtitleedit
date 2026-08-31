@@ -69,7 +69,7 @@ public class ExportEbuStlWindow : Window
 
         Content = grid;
 
-        Activated += delegate { comboBoxCodePage.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, comboBoxCodePage); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.OnKeyDown;
     }
 

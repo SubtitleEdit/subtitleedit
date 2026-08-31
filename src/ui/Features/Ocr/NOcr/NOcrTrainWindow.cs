@@ -123,10 +123,10 @@ public class NOcrTrainWindow : Window
 
         Content = grid;
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             buttonTrain.Focus(); // hack to make OnKeyDown work
-        };
+        });
         KeyDown += (_, e) => vm.KeyDown(e);
         Closing += (_, _) => vm.OnClosing();
     }

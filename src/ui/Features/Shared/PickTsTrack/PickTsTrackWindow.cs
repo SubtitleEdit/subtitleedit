@@ -60,10 +60,10 @@ public class PickTsTrackWindow : Window
 
         Content = grid;
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             buttonOk.Focus(); // hack to make OnKeyDown work
-        };
+        });
 
         Loaded += (_, _) => vm.SelectAndScrollToRow(0);
         KeyDown += (_, e) => vm.OnKeyDown(e);

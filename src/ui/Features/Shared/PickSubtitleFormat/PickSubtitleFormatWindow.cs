@@ -105,10 +105,10 @@ public class PickSubtitleFormatWindow : Window
 
         Content = grid;
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             textBoxSearch.Focus();
-        };
+        });
         
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }

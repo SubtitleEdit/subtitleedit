@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -55,7 +55,7 @@ public class ExportPlainTextWindow : Window
 
         Content = grid;
 
-        Activated += delegate { comboBoxEncoding.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, comboBoxEncoding); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.OnKeyDown;
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
@@ -200,7 +200,8 @@ public class ExportPlainTextWindow : Window
         var textBox = new TextBox
         {
             AcceptsReturn = true,
-            AcceptsTab = true,
+            // Read-only preview - see ManualChosenEncodingWindow (#14313).
+            AcceptsTab = false,
             IsReadOnly = true,
             TextWrapping = TextWrapping.Wrap,
             Width = double.NaN,

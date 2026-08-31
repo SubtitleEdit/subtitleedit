@@ -116,7 +116,7 @@ public class BatchConvertWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonDone.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, buttonDone); // hack to make OnKeyDown work
         Loaded += vm.Onloaded;
         Closing += vm.OnClosing;
         KeyDown += (s, e) => vm.OnKeyDown(e);

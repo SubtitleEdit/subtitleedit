@@ -132,7 +132,7 @@ public class FixCommonErrorsProfileWindow : Window
 
         Content = grid;
 
-        Activated += delegate { Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, () => { Focus(); }); // hack to make OnKeyDown work
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

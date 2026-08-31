@@ -54,10 +54,10 @@ public class BinaryOcrDbEditWindow : Window
 
         Content = grid;
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             buttonOk.Focus(); // hack to make OnKeyDown work
-        };
+        });
         KeyDown += (_, e) => vm.KeyDown(e);
         Loaded += (_, _) => Title = vm.Title;
     }

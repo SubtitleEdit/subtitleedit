@@ -75,7 +75,7 @@ public class EncodingSettingsWindow : Window
 
         Content = grid;
 
-        Activated += delegate { comboEncoding.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, comboEncoding); // initial focus on an input, not an action button - a focused button clicks on bare Space
     }
 
     protected override void OnKeyDown(KeyEventArgs e)
