@@ -248,7 +248,7 @@ public class MpvReloader : IMpvReloader
             // The GSI block survives a format change in the toolbar, so an STL header alone does
             // not mean the subtitle is still EBU STL - shown as SubRip it must lose the teletext
             // box, the double height and the rows.
-            if (EbuStlPreviewStyler.IsStlPreview(oldHeader, uiFormatType))
+            if (EbuStlPreviewStyler.IsTeletextPreview(oldHeader, uiFormatType))
             {
                 EbuStlPreviewStyler.Apply(subtitle, oldHeader, GetMpvPreviewStyle(Se.Settings.Video), MpvPreviewTitle);
             }

@@ -8,8 +8,8 @@ using System.Diagnostics.CodeAnalysis;
 namespace Nikse.SubtitleEdit.Logic.Media;
 
 /// <summary>
-/// Draws an EBU STL subtitle in the video preview the way a teletext decoder would: the box behind
-/// the text and the double height rows.
+/// Draws an EBU STL or DVB teletext subtitle in the video preview the way a teletext decoder
+/// would: the box behind the text and the double height rows.
 /// </summary>
 /// <remarks>
 /// Shared by the mpv and the VLC reloader. They used to carry a copy each, and only the mpv copy
@@ -28,16 +28,19 @@ internal static class EbuStlPreviewStyler
     }
 
     /// <summary>
-    /// True when the subtitle in the video preview is still an EBU STL.
+    /// True when the subtitle in the video preview is still a teletext format - EBU STL, or DVB
+    /// teletext (.dvbttx), which draws the same boxed double height rows.
     /// </summary>
     /// <remarks>
-    /// The GSI block stays on the subtitle when the format is switched in the toolbar, so the
-    /// header on its own says only which file the subtitle was read from - a subtitle shown as
-    /// SubRip must lose the teletext box and the double height with the format.
+    /// The GSI block (and the dvbteletext marker) stays on the subtitle when the format is
+    /// switched in the toolbar, so the header on its own says only which file the subtitle was
+    /// read from - a subtitle shown as SubRip must lose the teletext box and the double height
+    /// with the format.
     /// </remarks>
-    public static bool IsStlPreview([NotNullWhen(true)] string? header, Type? uiFormatType)
+    public static bool IsTeletextPreview([NotNullWhen(true)] string? header, Type? uiFormatType)
     {
-        return uiFormatType == typeof(Ebu) && IsStlHeader(header);
+        return (uiFormatType == typeof(Ebu) && IsStlHeader(header)) ||
+               (uiFormatType == typeof(DvbTeletext) && DvbTeletext.IsDvbTeletextHeader(header));
     }
 
     /// <summary>
@@ -55,20 +58,30 @@ internal static class EbuStlPreviewStyler
         // Ebu.EncodeText, which gates both the same way.
         var useBox = false;
         var useDoubleHeight = false;
-        try
+        if (DvbTeletext.IsDvbTeletextHeader(sourceHeader))
         {
-            var encoding = Ebu.GetEncoding(sourceHeader[..3]);
-            var header = Ebu.ReadHeader(encoding.GetBytes(sourceHeader));
-            if (header.DisplayStandardCode != "0")
-            {
-                var subtitleSettings = Configuration.Settings.SubtitleSettings;
-                useBox = subtitleSettings.EbuStlTeletextUseBox;
-                useDoubleHeight = subtitleSettings.EbuStlTeletextUseDoubleHeight;
-            }
+            // A .dvbttx is always teletext, and its writer always boxes and double-heights the
+            // rows (ManzanitaTeletextWriter.GetRow) - the EBU save options play no part here.
+            useBox = true;
+            useDoubleHeight = true;
         }
-        catch
+        else
         {
-            // ignore - an unreadable header is previewed as plain text
+            try
+            {
+                var encoding = Ebu.GetEncoding(sourceHeader[..3]);
+                var header = Ebu.ReadHeader(encoding.GetBytes(sourceHeader));
+                if (header.DisplayStandardCode != "0")
+                {
+                    var subtitleSettings = Configuration.Settings.SubtitleSettings;
+                    useBox = subtitleSettings.EbuStlTeletextUseBox;
+                    useDoubleHeight = subtitleSettings.EbuStlTeletextUseDoubleHeight;
+                }
+            }
+            catch
+            {
+                // ignore - an unreadable header is previewed as plain text
+            }
         }
 
         var defaultStyle = new SsaStyle(previewStyle);

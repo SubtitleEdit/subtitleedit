@@ -373,20 +373,29 @@ public partial class MainViewModel :
     /// teletext dialog, the "TT" column and the alignment preview are all gated on this.
     /// </summary>
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsTeletextColumnVisible))]
-    [NotifyPropertyChangedFor(nameof(IsTeletextPreviewActive))]
     private bool _isFormatEbu;
 
     /// <summary>
-    /// The "TT" column and the alignment preview only mean anything for EBU STL, but the user's
-    /// choice has to survive switching to another format and back - unlike ShowColumnLayer, which
-    /// is cleared outright, these gate the view while <see cref="ShowColumnTeletext"/> and
-    /// <see cref="TeletextAlignmentPreview"/> keep the remembered setting.
+    /// True while the toolbar format is one of the teletext formats - EBU STL or DVB teletext
+    /// (.dvbttx). They share the teletext machinery: the 1-23 row in MarginV, the alignment
+    /// picker, the TT column, the 40-column line length and the boxed preview.
     /// </summary>
-    public bool IsTeletextColumnVisible => ShowColumnTeletext && IsFormatEbu;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsTeletextColumnVisible))]
+    [NotifyPropertyChangedFor(nameof(IsTeletextPreviewActive))]
+    private bool _isFormatTeletext;
+
+    /// <summary>
+    /// The "TT" column and the alignment preview only mean anything for the teletext formats, but
+    /// the user's choice has to survive switching to another format and back - unlike
+    /// ShowColumnLayer, which is cleared outright, these gate the view while
+    /// <see cref="ShowColumnTeletext"/> and <see cref="TeletextAlignmentPreview"/> keep the
+    /// remembered setting.
+    /// </summary>
+    public bool IsTeletextColumnVisible => ShowColumnTeletext && IsFormatTeletext;
 
     /// <inheritdoc cref="IsTeletextColumnVisible"/>
-    public bool IsTeletextPreviewActive => TeletextAlignmentPreview && IsFormatEbu;
+    public bool IsTeletextPreviewActive => TeletextAlignmentPreview && IsFormatTeletext;
 
     /// <summary>
     /// Header of the grid's actor/voice toggle in the column context menu - the column itself is
@@ -7939,7 +7948,7 @@ public partial class MainViewModel :
         }
 
         var result = await ShowDialogAsync<SplitBreakLongLinesWindow, SplitBreakLongLinesViewModel>(
-            vm => { vm.Initialize(Subtitles.ToList(), IsFormatEbu); });
+            vm => { vm.Initialize(Subtitles.ToList(), IsFormatTeletext); });
 
         if (result.OkPressed && result.AllSubtitlesFixed.Count > 0)
         {
@@ -14087,9 +14096,9 @@ public partial class MainViewModel :
             return;
         }
 
-        // EBU STL places subtitles on a teletext line rather than an ASSA anchor, so the same
-        // menu item opens the teletext dialog for that format.
-        if (IsFormatEbu)
+        // The teletext formats (EBU STL, DVB teletext) place subtitles on a teletext line rather
+        // than an ASSA anchor, so the same menu item opens the teletext dialog for them.
+        if (IsFormatTeletext)
         {
             await ShowTeletextAlignmentPicker(selected);
             return;
@@ -14376,7 +14385,7 @@ public partial class MainViewModel :
             return;
         }
 
-        if (IsFormatEbu || SelectedSubtitleFormat is DvbTeletext)
+        if (IsFormatTeletext)
         {
             await ShowTeletextColorPicker(selectedItems);
             return;
@@ -16917,7 +16926,7 @@ public partial class MainViewModel :
         }
 
         var result = await ShowDialogAsync<SplitBreakLongLinesWindow, SplitBreakLongLinesViewModel>(
-            vm => { vm.Initialize(selectedInOrder, IsFormatEbu); });
+            vm => { vm.Initialize(selectedInOrder, IsFormatTeletext); });
 
         if (!result.OkPressed || result.AllSubtitlesFixed.Count == 0)
         {
@@ -29390,13 +29399,15 @@ public partial class MainViewModel :
         _teletextLineCountSubtitleId = subtitle.Id;
         _teletextLineCountLastSeen = newLineCount;
 
-        if (!IsFormatEbu || !isSameRow)
+        if (!IsFormatTeletext || !isSameRow)
         {
             return;
         }
 
+        // The dvbttx writer always uses double height rows; for EBU STL it is a save option.
+        var useDoubleHeight = !IsFormatEbu || Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight;
         var newRow = TeletextRowHelper.GetAdjustedBottomRow(subtitle.MarginV, oldLineCount, newLineCount,
-            Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight);
+            useDoubleHeight);
         if (newRow.HasValue)
         {
             subtitle.MarginV = newRow.Value.ToString(CultureInfo.InvariantCulture);
@@ -30502,12 +30513,13 @@ public partial class MainViewModel :
         IsFormatAssaOrSsa = SelectedSubtitleFormat is AdvancedSubStationAlpha or SubStationAlpha;
         IsFormatWebVtt = SelectedSubtitleFormat is WebVTT or WebVTTFileWithLineNumber;
         IsFormatEbu = SelectedSubtitleFormat is Ebu;
+        IsFormatTeletext = SelectedSubtitleFormat is Ebu or DvbTeletext;
 
-        // A teletext page is narrower than the general line-length limit, so for EBU STL an
-        // over-wide row counts as a text error (red Text cell, error list, next-error).
-        if (SubtitleLineViewModel.UseTeletextLineLength != IsFormatEbu)
+        // A teletext page is narrower than the general line-length limit, so for the teletext
+        // formats an over-wide row counts as a text error (red Text cell, error list, next-error).
+        if (SubtitleLineViewModel.UseTeletextLineLength != IsFormatTeletext)
         {
-            SubtitleLineViewModel.UseTeletextLineLength = IsFormatEbu;
+            SubtitleLineViewModel.UseTeletextLineLength = IsFormatTeletext;
             foreach (var row in Subtitles)
             {
                 row.RefreshAfterSettingsChanged();

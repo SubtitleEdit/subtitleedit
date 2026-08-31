@@ -783,6 +783,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return new SubtitleFormat[]
             {
                 new Ebu { BatchMode = batchMode },
+                new DvbTeletext(),
                 new Pac { BatchMode = batchMode },
                 new PacUnicode(),
                 new Cavena890 { BatchMode = batchMode },

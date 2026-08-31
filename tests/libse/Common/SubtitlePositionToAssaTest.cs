@@ -184,6 +184,42 @@ public class SubtitlePositionToAssaTest
     }
 
     [Fact]
+    public void DvbTeletextRowNearTheBottomLeavesTheRowsBelowItFree()
+    {
+        var subtitle = SubtitleWith(new Paragraph("Hi" + Environment.NewLine + "there!", 1000, 3000) { MarginV = "20" });
+
+        Assert.True(SubtitlePositionToAssa.ApplyPositions(subtitle, DvbTeletext.CreateHeader(888, "eng")));
+
+        var p = subtitle.Paragraphs[0];
+        Assert.StartsWith(@"{\an2}", p.Text, StringComparison.Ordinal);
+        Assert.Equal("13", p.MarginV); // one row of 23 left below the two lines (rows 20 and 22)
+    }
+
+    [Fact]
+    public void DvbTeletextWithoutARowLandsOnTheWritersDefaultRow()
+    {
+        // ManzanitaTeletextWriter puts a single line on row 22 (a double height row covers 22
+        // and 23) - the preview should show it there, not wherever the EBU margins point.
+        var subtitle = SubtitleWith(new Paragraph("Hi there!", 1000, 3000));
+
+        Assert.True(SubtitlePositionToAssa.ApplyPositions(subtitle, DvbTeletext.CreateHeader(888, "eng")));
+
+        var p = subtitle.Paragraphs[0];
+        Assert.StartsWith(@"{\an2}", p.Text, StringComparison.Ordinal);
+        Assert.Equal("13", p.MarginV); // row 22 of 23, one row left below
+    }
+
+    [Fact]
+    public void DvbTeletextRowIsNotLeftBehindAsAPixelMargin()
+    {
+        var subtitle = SubtitleWith(new Paragraph("Hi there!", 1000, 3000) { MarginV = "20" });
+
+        Assert.False(SubtitlePositionToAssa.ApplyPositions(subtitle, DvbTeletext.CreateHeader(888, "eng"), false));
+
+        Assert.Null(subtitle.Paragraphs[0].MarginV);
+    }
+
+    [Fact]
     public void AssaMarginsAreLeftAlone()
     {
         var subtitle = SubtitleWith(new Paragraph("Hi there!", 1000, 3000) { MarginV = "60" });

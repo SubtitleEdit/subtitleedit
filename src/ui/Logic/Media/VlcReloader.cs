@@ -100,7 +100,7 @@ public class VlcReloader : IVlcReloader
 
                     // See MpvReloader - the GSI block survives a format change in the toolbar, so
                     // an STL header alone does not mean the subtitle is still EBU STL.
-                    if (EbuStlPreviewStyler.IsStlPreview(oldSub.Header, uiFormatType))
+                    if (EbuStlPreviewStyler.IsTeletextPreview(oldSub.Header, uiFormatType))
                     {
                         EbuStlPreviewStyler.Apply(subtitle, oldSub.Header, GetMpvPreviewStyle(Se.Settings.Video), MpvPreviewTitle);
                     }
