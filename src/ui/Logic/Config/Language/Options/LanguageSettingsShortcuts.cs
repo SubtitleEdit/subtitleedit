@@ -78,6 +78,7 @@ public class LanguageSettingsShortcuts
     public string SourceView { get; set; }
     public string AddOrEditBookmark { get; set; }
     public string ToggleBookmark { get; set; }
+    public string ToggleForcedSelectedLines { get; set; } = string.Empty;
     public string GoToNextBookmark { get; set; }
     public string ClearBookmarks { get; set; }
     public string GoToNextEmptyLine { get; set; }
@@ -354,6 +355,7 @@ public class LanguageSettingsShortcuts
         SourceView = "Source view";
         AddOrEditBookmark = "Add or edit bookmark";
         ToggleBookmark = "Toggle bookmark (selected lines, no text)";
+        ToggleForcedSelectedLines = "Toggle forced (selected lines)";
         GoToNextBookmark = "Go to next bookmark";
         ClearBookmarks = "Clear bookmarks";
         GoToNextEmptyLine = "Go to next empty line";

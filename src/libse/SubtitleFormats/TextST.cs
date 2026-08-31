@@ -597,7 +597,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new SubtitleRegion
                     {
                         ContinuousPresentation = false,
-                        Forced = false,
+                        // The region flags byte has a force bit and the reader parses it, so
+                        // carry the paragraph's own flag rather than always writing false.
+                        Forced = paragraph.Forced,
                         RegionStyleId = regionStyle.RegionStyleId,
                         Texts = new List<string>(),
                         Content = new List<SubtitleRegionContent>()

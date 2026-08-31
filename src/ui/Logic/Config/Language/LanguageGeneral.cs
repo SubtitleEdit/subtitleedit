@@ -554,6 +554,7 @@ public class LanguageGeneral
     public string ShowCpsColumn { get; set; }
     public string ShowDurationColumn { get; set; }
     public string ShowGapColumn { get; set; }
+    public string ShowForcedColumn { get; set; } = string.Empty;
     public string ShowStartColumn { get; set; }
     public string ShowHideColumn { get; set; }
     public string ShowHistory { get; set; }
@@ -647,6 +648,10 @@ public class LanguageGeneral
     public string ToggleCasing { get; set; }
     public string ToggleDirection { get; set; }
     public string ToggleForced { get; set; }
+    public string MarkedXLinesAsForced { get; set; } = string.Empty;
+    public string UnmarkedXLinesAsForced { get; set; } = string.Empty;
+    public string NoForcedLinesFound { get; set; } = string.Empty;
+    public string SaveForcedLinesAs { get; set; } = string.Empty;
     public string ToggleShotChangesAtVideoPosition { get; set; }
     public string Toolbar { get; set; }
     public string Tools { get; set; }
@@ -1351,6 +1356,7 @@ public class LanguageGeneral
         ShowCpsColumn = "Show \"Chars/sec\" column";
         ShowDurationColumn = "Show \"Duration\" column";
         ShowGapColumn = "Show \"Gap\" column";
+        ShowForcedColumn = "Show \"Forced\" column";
         ShowStartColumn = "Show \"Start\" column";
         ShowHideColumn = "Show \"Hide\" column";
         ShowHistory = "Show history";
@@ -1436,6 +1442,10 @@ public class LanguageGeneral
         ToggleCasing = "Toggle casing";
         ToggleDirection = "Toggle direction";
         ToggleForced = "Toggle forced";
+        MarkedXLinesAsForced = "Marked {0} line(s) as forced";
+        UnmarkedXLinesAsForced = "Unmarked {0} line(s) as forced";
+        NoForcedLinesFound = "No forced lines found";
+        SaveForcedLinesAs = "Save forced lines as...";
         ToggleShotChangesAtVideoPosition = "Toggle shot changes at video position";
         Toolbar = "Toolbar";
         Tools = "Tools";

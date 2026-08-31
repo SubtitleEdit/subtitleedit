@@ -373,6 +373,37 @@ public static partial class InitListViewAndEditBox
             Source = vm,
         });
 
+        // Forced narrative: a check mark shown only on marked lines, like the bookmark icon in
+        // the number column - the mark is set with the toggle command, not by clicking the cell
+        // (#14322).
+        var forcedColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Forced,
+            Tag = SubtitleGridColumnKeys.Forced,
+            Width = new GridLength(70),
+            MinWidth = 50,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((value, nameScope) => new Icon
+            {
+                Value = IconNames.CheckBold,
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                IsHitTestVisible = false,
+                [AutomationProperties.NameProperty] = Se.Language.General.Forced,
+                [!Visual.IsVisibleProperty] = new Binding(nameof(SubtitleLineViewModel.Forced))
+                {
+                    Mode = BindingMode.OneWay,
+                },
+            }),
+        };
+        columnManager.Add(forcedColumn);
+        forcedColumn.Bind(SeTableViewColumn.IsVisibleProperty, new Binding(nameof(vm.ShowColumnForced))
+        {
+            Mode = BindingMode.OneWay,
+            Source = vm,
+        });
+
         // Read once per grid build, like the grid font: ApplySettings rebuilds the layout, so
         // toggling the setting takes effect as soon as Settings is closed (#14316).
         var gridTextAlignment = Se.Settings.Appearance.SubtitleGridCenterText
@@ -930,6 +961,21 @@ public static partial class InitListViewAndEditBox
         showPixelWidthMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridFlyoutHeaderVisible)) { Mode = BindingMode.TwoWay });
         flyout.Items.Add(showPixelWidthMenuItem);
 
+        var showForcedMenuItem = new MenuItem
+        {
+            Header = Se.Language.General.ShowForcedColumn,
+            Command = vm.ToggleShowColumnForcedCommand,
+            DataContext = vm,
+            Icon = new Icon
+            {
+                Value = IconNames.CheckBold,
+                VerticalAlignment = VerticalAlignment.Center,
+                [!Visual.IsVisibleProperty] = new Binding(nameof(vm.ShowColumnForced)),
+            }
+        };
+        showForcedMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridFlyoutHeaderVisible)) { Mode = BindingMode.TwoWay });
+        flyout.Items.Add(showForcedMenuItem);
+
         var showLayerMenuItem = new MenuItem
         {
             Header = Se.Language.General.ShowLayerColumn,
@@ -1176,6 +1222,15 @@ public static partial class InitListViewAndEditBox
         bookmarkMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridDataMenuVisible)));
         flyout.Items.Add(bookmarkMenuItem);
 
+        var toggleForcedMenuItem = new MenuItem
+        {
+            Header = Se.Language.General.ToggleForced,
+            Command = vm.ToggleForcedSelectedLinesCommand,
+            DataContext = vm,
+        };
+        toggleForcedMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridDataMenuVisible)));
+        flyout.Items.Add(toggleForcedMenuItem);
+
         var menuItemSelectedLines = new MenuItem
         {
             Header = Se.Language.General.SelectedLines,
@@ -1369,6 +1424,15 @@ public static partial class InitListViewAndEditBox
         };
         menuItemSelectedLines.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridDataMenuVisible)));
         flyout.Items.Add(menuItemSelectedLines);
+
+        var saveForcedLinesAsMenuItem = new MenuItem
+        {
+            Header = Se.Language.General.SaveForcedLinesAs,
+            Command = vm.SaveForcedLinesAsCommand,
+            DataContext = vm,
+        };
+        saveForcedLinesAsMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridDataMenuVisible)));
+        flyout.Items.Add(saveForcedLinesAsMenuItem);
 
 
         // Set the ContextFlyout on the drop host so right-clicks on empty space also show the menu
@@ -2089,6 +2153,7 @@ public static partial class InitListViewAndEditBox
         public const string End = "End";
         public const string Duration = "Duration";
         public const string Teletext = "Teletext";
+        public const string Forced = "Forced";
         public const string Text = "Text";
         public const string OriginalText = "OriginalText";
         public const string Style = "Style";

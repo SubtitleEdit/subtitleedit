@@ -158,6 +158,12 @@ public class SeGeneral
     public bool ShowColumnPixelWidth { get; set; }
     public bool ShowColumnLayer { get; set; }
 
+    /// <summary>
+    /// The forced-narrative column (#14322). Off by default - only dubbing/localization
+    /// workflows that have to deliver a separate forced file need it.
+    /// </summary>
+    public bool ShowColumnForced { get; set; }
+
     // Subtitle grid column widths (pixels) keyed by column key (DataGridColumn.Tag),
     // snapshotted on exit and restored on startup. The stretchy Text/OriginalText
     // columns are intentionally not stored so they keep filling the window (#11415).

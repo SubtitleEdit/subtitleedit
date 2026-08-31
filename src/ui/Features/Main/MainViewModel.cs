@@ -327,6 +327,7 @@ public partial class MainViewModel :
     [ObservableProperty] private bool _showColumnWpm;
     [ObservableProperty] private bool _showColumnPixelWidth;
     [ObservableProperty] private bool _showColumnLayer;
+    [ObservableProperty] private bool _showColumnForced;
     [ObservableProperty] private bool _showUpDownStartTime;
     [ObservableProperty] private bool _showUpDownEndTime;
     [ObservableProperty] private bool _showUpDownDuration;
@@ -996,6 +997,7 @@ public partial class MainViewModel :
         ShowColumnWpm = Se.Settings.General.ShowColumnWpm;
         ShowColumnPixelWidth = Se.Settings.General.ShowColumnPixelWidth;
         ShowColumnLayer = Se.Settings.General.ShowColumnLayer;
+        ShowColumnForced = Se.Settings.General.ShowColumnForced;
         ShowUpDownStartTime = Se.Settings.Appearance.ShowUpDownStartTime;
         ShowUpDownEndTime = Se.Settings.Appearance.ShowUpDownEndTime;
         ShowUpDownDuration = Se.Settings.Appearance.ShowUpDownDuration;
@@ -11979,11 +11981,6 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task SaveSelectedLinesAs()
     {
-        if (Window == null)
-        {
-            return;
-        }
-
         var selectedItems = new HashSet<SubtitleLineViewModel>(SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>());
         var ordered = Subtitles.Where(s => selectedItems.Contains(s)).ToList();
         if (ordered.Count == 0)
@@ -11991,18 +11988,39 @@ public partial class MainViewModel :
             return;
         }
 
+        await SaveLinesAs(ordered, string.Empty);
+    }
+
+    /// <summary>
+    /// Writes a subset of the grid to a file of its own, leaving the open subtitle and its file
+    /// name alone. <paramref name="fileNameSuffix"/> is appended to the suggested file name.
+    /// </summary>
+    private async Task SaveLinesAs(List<SubtitleLineViewModel> lines, string fileNameSuffix)
+    {
+        if (Window == null || lines.Count == 0)
+        {
+            return;
+        }
+
         var subtitle = new Subtitle();
-        foreach (var line in ordered)
+        foreach (var line in lines)
         {
             subtitle.Paragraphs.Add(line.ToParagraph(SelectedSubtitleFormat));
         }
 
         subtitle.Renumber();
 
+        // Untitled: GetNewFileName is empty and a bare ".forced" would be a poor suggestion.
+        var suggestedFileName = GetNewFileName();
+        if (suggestedFileName.Length > 0)
+        {
+            suggestedFileName += fileNameSuffix;
+        }
+
         var fileName = await _fileHelper.PickSaveSubtitleFile(
             Window,
             SelectedSubtitleFormat,
-            GetNewFileName(),
+            suggestedFileName,
             Se.Language.General.SaveFileAsTitle);
 
         _shortcutManager.ClearKeys();
@@ -12446,7 +12464,7 @@ public partial class MainViewModel :
             }
         }
 
-        new BookmarkPersistence(GetUpdateSubtitle(), _subtitleFileName).Save();
+        new SubtitleMarksPersistence(GetUpdateSubtitle(), _subtitleFileName).Save();
 
         if (result.ListPressed)
         {
@@ -12472,9 +12490,72 @@ public partial class MainViewModel :
             }
         }
 
-        new BookmarkPersistence(GetUpdateSubtitle(), _subtitleFileName).Save();
+        new SubtitleMarksPersistence(GetUpdateSubtitle(), _subtitleFileName).Save();
 
         _shortcutManager.ClearKeys();
+    }
+
+    /// <summary>
+    /// Marks or unmarks the selected lines as forced narrative (#14322). Mixed selections are
+    /// marked rather than cleared, so pressing the shortcut over a block always ends with the
+    /// whole block marked; pressing it again clears it.
+    /// </summary>
+    [RelayCommand]
+    private void ToggleForcedSelectedLines()
+    {
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        if (selectedItems.Count == 0)
+        {
+            _shortcutManager.ClearKeys();
+            return;
+        }
+
+        var forced = !selectedItems.All(p => p.Forced);
+        foreach (var item in selectedItems)
+        {
+            item.Forced = forced;
+        }
+
+        SaveSubtitleMarks();
+
+        ShowStatus(forced
+            ? string.Format(Se.Language.General.MarkedXLinesAsForced, selectedItems.Count)
+            : string.Format(Se.Language.General.UnmarkedXLinesAsForced, selectedItems.Count));
+
+        _shortcutManager.ClearKeys();
+    }
+
+    /// <summary>
+    /// Set when a row's forced mark changes without going through the toggle command - undo and
+    /// redo restore it straight onto the row, and the sidecar has to follow. The 400 ms tick
+    /// flushes it, so a restored batch costs one write rather than one per line.
+    /// </summary>
+    private bool _subtitleMarksDirty;
+
+    private void SaveSubtitleMarks()
+    {
+        _subtitleMarksDirty = false;
+        new SubtitleMarksPersistence(GetUpdateSubtitle(), _subtitleFileName).Save();
+    }
+
+    /// <summary>
+    /// SE 4 has no equivalent: writes the lines marked as forced narrative to a file of their
+    /// own, leaving the open subtitle untouched - the deliverable many clients ask for next to
+    /// the full subtitle (#14322).
+    /// </summary>
+    [RelayCommand]
+    private async Task SaveForcedLinesAs()
+    {
+        var forced = Subtitles.Where(p => p.Forced && !p.IsReferenceOnly).ToList();
+        if (forced.Count == 0)
+        {
+            ShowStatus(Se.Language.General.NoForcedLinesFound);
+            _shortcutManager.ClearKeys();
+            return;
+        }
+
+        // Not localized: it becomes part of a file name.
+        await SaveLinesAs(forced, ".forced");
     }
 
     [RelayCommand]
@@ -12499,7 +12580,7 @@ public partial class MainViewModel :
 
         var result = await ShowDialogAsync<BookmarksListWindow, BookmarksListViewModel>(vm => { vm.Initialize(Subtitles.Where(p => p.Bookmark != null).ToList()); });
 
-        new BookmarkPersistence(GetUpdateSubtitle(), _subtitleFileName).Save();
+        new SubtitleMarksPersistence(GetUpdateSubtitle(), _subtitleFileName).Save();
 
         if (result.GoToPressed && result.SelectedSubtitle != null)
         {
@@ -12516,7 +12597,7 @@ public partial class MainViewModel :
             item.Bookmark = null;
         }
 
-        new BookmarkPersistence(GetUpdateSubtitle(), _subtitleFileName).Save();
+        new SubtitleMarksPersistence(GetUpdateSubtitle(), _subtitleFileName).Save();
 
         _shortcutManager.ClearKeys();
     }
@@ -12561,7 +12642,7 @@ public partial class MainViewModel :
             item.Bookmark = null;
         }
 
-        new BookmarkPersistence(GetUpdateSubtitle(), _subtitleFileName).Save();
+        new SubtitleMarksPersistence(GetUpdateSubtitle(), _subtitleFileName).Save();
 
         _shortcutManager.ClearKeys();
     }
@@ -13078,6 +13159,14 @@ public partial class MainViewModel :
     {
         Se.Settings.General.ShowColumnPixelWidth = !Se.Settings.General.ShowColumnPixelWidth;
         ShowColumnPixelWidth = Se.Settings.General.ShowColumnPixelWidth;
+        AutoFitColumns();
+    }
+
+    [RelayCommand]
+    private void ToggleShowColumnForced()
+    {
+        Se.Settings.General.ShowColumnForced = !Se.Settings.General.ShowColumnForced;
+        ShowColumnForced = Se.Settings.General.ShowColumnForced;
         AutoFitColumns();
     }
 
@@ -21460,11 +21549,22 @@ public partial class MainViewModel :
     private void LoadBookmarks()
     {
         var sub = GetUpdateSubtitle();
-        new BookmarkPersistence(sub, _subtitleFileName).Load();
+        new SubtitleMarksPersistence(sub, _subtitleFileName).Load();
         for (var i = 0; i < Subtitles.Count && i < sub.Paragraphs.Count; i++)
         {
             Subtitles[i].Bookmark = sub.Paragraphs[i].Bookmark;
+
+            // Union, not assignment: a format that carries the forced flag itself (BDN xml)
+            // has already set it on the row, and the sidecar only ever adds marks.
+            if (sub.Paragraphs[i].Forced)
+            {
+                Subtitles[i].Forced = true;
+            }
         }
+
+        // Applying what was just read is not an edit - without this, opening a file with forced
+        // marks rewrote its sidecar on the next tick.
+        _subtitleMarksDirty = false;
     }
 
     /// <summary>
@@ -22861,7 +22961,7 @@ public partial class MainViewModel :
         _changeSubtitleHash = GetFastHash();
         _lastOpenSaveFormat = SelectedSubtitleFormat;
 
-        new BookmarkPersistence(GetUpdateSubtitle(), _subtitleFileName).Save();
+        new SubtitleMarksPersistence(GetUpdateSubtitle(), _subtitleFileName).Save();
 
         return true;
     }
@@ -22926,7 +23026,7 @@ public partial class MainViewModel :
         _changeSubtitleHash = GetFastHash();
         _lastOpenSaveFormat = SelectedSubtitleFormat;
 
-        new BookmarkPersistence(GetUpdateSubtitle(), _subtitleFileName).Save();
+        new SubtitleMarksPersistence(GetUpdateSubtitle(), _subtitleFileName).Save();
 
         return true;
     }
@@ -24978,6 +25078,8 @@ public partial class MainViewModel :
                 // too - otherwise bookmarking alone records no snapshot and the bookmark gets
                 // baked into the next unrelated edit's entry, where one undo removes both.
                 hash = hash * 23 + (p.Bookmark?.GetHashCode() ?? 0);
+                // Same reasoning for the forced-narrative mark (#14322).
+                hash = hash * 23 + (p.Forced ? 1 : 0);
             }
 
             return hash;
@@ -28093,6 +28195,10 @@ public partial class MainViewModel :
                 _referenceMappingDirty = true;
             }
         }
+        else if (e.PropertyName is nameof(SubtitleLineViewModel.Forced))
+        {
+            _subtitleMarksDirty = true;
+        }
         else if (e.PropertyName is nameof(SubtitleLineViewModel.Text)
             or nameof(SubtitleLineViewModel.EndTime)
             or nameof(SubtitleLineViewModel.MarginV))
@@ -28872,6 +28978,11 @@ public partial class MainViewModel :
             UpdateTitleStatus(mainHash, originalHash);
             UpdateGaps();
             AutoSaveTick(mainHash, originalHash);
+
+            if (_subtitleMarksDirty)
+            {
+                SaveSubtitleMarks();
+            }
 
             TryRefreshVideoPreview();
         };
