@@ -178,6 +178,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new DvdSubtitle(),
                     new DvdSubtitleSystem(),
                     new DvSubtitle(),
+                    new DvbTeletext(),
                     new Ebu(),
                     new Edius4Frames(),
                     new Edius4Ms(),

@@ -42,6 +42,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         /// </summary>
         public List<int> TeletextPages { get; }
 
+        /// <summary>
+        /// The ISO 639-2 language code of the teletext descriptor in the XML preamble, or an
+        /// empty string when the file does not carry one.
+        /// </summary>
+        public string LanguageCode { get; private set; } = string.Empty;
+
         public ManzanitaTransportStreamParser()
         {
             _dvbSubs = new List<DvbSubPes>();
@@ -63,7 +69,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         /// <param name="ms">Input stream</param>
         public void Parse(Stream ms)
         {
-            var dataIndices = GetDataIndicesAndPesStart(ms, out var dvbPesStartIndex, out var streamType);
+            var dataIndices = GetDataIndicesAndPesStart(ms, out var dvbPesStartIndex, out var streamType, out var languageCode);
+            LanguageCode = languageCode;
             if (dvbPesStartIndex <= 0)
             {
                 return;
@@ -135,8 +142,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         /// </summary>
         public static IEnumerable<ManzanitaDataIndex> GetDataIndicesAndPesStart(Stream ms, out int startIndex, out string streamType)
         {
+            return GetDataIndicesAndPesStart(ms, out startIndex, out streamType, out _);
+        }
+
+        private static IEnumerable<ManzanitaDataIndex> GetDataIndicesAndPesStart(Stream ms, out int startIndex, out string streamType, out string languageCode)
+        {
             startIndex = 0;
             streamType = string.Empty;
+            languageCode = string.Empty;
             ms.Position = 0;
             var buffer = ReadPreamble(ms, out var bytesRead, out var endIndex);
             if (endIndex < 0)
@@ -160,6 +173,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             }
 
             streamType = xmlDoc.DocumentElement.Attributes?["type"]?.Value ?? string.Empty;
+
+            var teletextContentNode = xmlDoc.DocumentElement.SelectSingleNode("//ns:dvb_teletext_content", namespaceManager);
+            languageCode = teletextContentNode?.Attributes?["ISO_639_language_code"]?.Value ?? string.Empty;
 
             var dataIndexNode = xmlDoc.DocumentElement.SelectSingleNode("ns:data_index", namespaceManager);
             if (dataIndexNode == null)

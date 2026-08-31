@@ -66,6 +66,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         private const int EnhancementPacketNumber = 26;
         private const int TripletsPerPacket = 13;
         private const byte SetActivePositionMode = 0x04;
+
+        // ETS 300 706, chapter 12.3.1, table 27: an X/26 foreground colour triplet names one of
+        // the 32 colour map entries at a character position - the only road to the Level 2.5
+        // colours beyond the eight a spacing attribute reaches. The map itself travels in a
+        // packet X/28/0.
+        private const byte ForegroundColorMode = 0x00;
+        private const int ColorMapPacketNumber = 28;
         private const int RowAddressGroupStart = 40;
         private const int TerminationAddress = 63;
         private const byte TerminationMode = 0x1f;
@@ -108,11 +115,16 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             {
             }
 
-            public Cell(byte value, byte mode, byte data)
+            public Cell(byte value, byte mode, byte data) : this(value, mode, data, -1)
+            {
+            }
+
+            public Cell(byte value, byte mode, byte data, int colorEntry)
             {
                 Value = value;
                 Mode = mode;
                 Data = data;
+                ColorEntry = colorEntry;
             }
 
             public byte Value { get; }
@@ -121,6 +133,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             public byte Mode { get; }
 
             public byte Data { get; }
+
+            /// <summary>
+            /// The colour map entry an X/26 foreground colour triplet paints this cell (and the
+            /// rest of the run) with, or -1 when the Level 1 attributes already have it right.
+            /// </summary>
+            public int ColorEntry { get; }
         }
 
         /// <summary>
@@ -257,13 +275,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             var magazine = PageNumber / 100 % 8;
             var pageBcd = Teletext.DecToBec(PageNumber) & 0xff;
             var paragraphs = subtitle.Paragraphs;
+            var colorMap = new TeletextColorMap();
 
             for (var i = 0; i < paragraphs.Count; i++)
             {
                 var p = paragraphs[i];
                 var show = new TeletextPacket { Milliseconds = ToMilliseconds(p.StartTime.TotalMilliseconds) };
                 show.DataUnits.Add(GetPageHeaderDataUnit(magazine, pageBcd, show.DataUnits.Count, erasePage: true));
-                show.DataUnits.AddRange(GetTextDataUnits(p, magazine, show.DataUnits.Count));
+                show.DataUnits.AddRange(GetTextDataUnits(p, magazine, show.DataUnits.Count, colorMap));
                 show.DataUnits.Add(GetPageHeaderDataUnit(magazine, FillerPageBcd, show.DataUnits.Count, erasePage: false));
                 packets.Add(show);
 
@@ -317,7 +336,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             return GetDataUnit(magazine, 0, data, unitIndex, alreadyEncoded: true);
         }
 
-        private static List<byte[]> GetTextDataUnits(Paragraph paragraph, int magazine, int firstUnitIndex)
+        private static List<byte[]> GetTextDataUnits(Paragraph paragraph, int magazine, int firstUnitIndex, TeletextColorMap colorMap)
         {
             var result = new List<byte[]>();
             var text = paragraph.Text ?? string.Empty;
@@ -338,7 +357,17 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             var rowData = new List<byte[]>();
             for (var i = 0; i < lines.Count; i++)
             {
-                rowData.Add(GetRow(lines[i], alignment, doubleHeight, rows[i], enhancements));
+                rowData.Add(GetRow(lines[i], alignment, doubleHeight, rows[i], enhancements, colorMap));
+            }
+
+            // ETS 300 706, chapter 9.4.2: the colour map rides in a packet X/28/0, transmitted
+            // with every page so a decoder joining anywhere has it. Once any subtitle has put a
+            // colour in a redefinable entry, every later page carries the map - entries are only
+            // ever added, so a page is never sent ahead of an entry it uses.
+            if (colorMap.NeedsColorMapPacket)
+            {
+                result.Add(GetDataUnit(magazine, ColorMapPacketNumber, colorMap.GetColorMapPacketData(),
+                    firstUnitIndex + result.Count, alreadyEncoded: true));
             }
 
             // ETS 300 706, annex B.2.2: packets with Y = 26 are transmitted before the rows they
@@ -534,11 +563,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         /// the double height and start box attributes, the text itself and the end box markers,
         /// padded to the wanted alignment.
         /// </summary>
-        private static byte[] GetRow(string line, Alignment alignment, bool doubleHeight, int row, List<Enhancement> enhancements)
+        private static byte[] GetRow(string line, Alignment alignment, bool doubleHeight, int row, List<Enhancement> enhancements, TeletextColorMap colorMap)
         {
             var lead = new List<byte>();
             var body = new List<Cell>();
-            AppendText(line, lead, body);
+            AppendText(line, lead, body, colorMap);
 
             var attributes = doubleHeight ? new List<byte> { DoubleHeight, StartBox, StartBox } : new List<byte> { StartBox, StartBox };
             var maxBody = ColumnCount - lead.Count - attributes.Count;
@@ -572,6 +601,20 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             for (var i = 0; i < body.Count; i++)
             {
                 cells.Add(body[i].Value);
+
+                // The foreground colour triplet goes first at its column, so that a G2 character
+                // at the same cell (which only touches the text plane) cannot be affected.
+                if (body[i].ColorEntry >= 0)
+                {
+                    enhancements.Add(new Enhancement
+                    {
+                        Row = row,
+                        Column = bodyStart + i,
+                        Mode = ForegroundColorMode,
+                        Data = (byte)body[i].ColorEntry
+                    });
+                }
+
                 if (body[i].Mode != 0)
                 {
                     enhancements.Add(new Enhancement
@@ -602,8 +645,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         /// shows a spacing attribute as a space, so a leading color is free of charge there) and
         /// the boxed cells, where every further color change costs one cell.
         /// </summary>
-        private static void AppendText(string line, List<byte> lead, List<Cell> body)
+        private static void AppendText(string line, List<byte> lead, List<Cell> body, TeletextColorMap colorMap)
         {
+            // A colour that needs a colour map entry is painted by an X/26 triplet on the first
+            // character cell that follows - on the spacing attribute's own cell the Level 1
+            // attribute would win, and a spacing attribute in the lead has no body column at all.
+            var pendingColorEntry = -1;
+
             var i = 0;
             while (i < line.Length)
             {
@@ -615,16 +663,17 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                         var tag = line.Substring(i, end - i + 1);
                         if (tag.StartsWith("<font", StringComparison.OrdinalIgnoreCase))
                         {
-                            var color = GetTeletextColor(tag);
-                            if (color.HasValue)
+                            if (TryParseColor(tag, out var rgb12))
                             {
+                                var resolved = colorMap.Resolve(rgb12);
+                                pendingColorEntry = resolved.Entry;
                                 if (body.Count == 0 && lead.Count == 0)
                                 {
-                                    lead.Add(color.Value);
+                                    lead.Add(resolved.SpacingAttribute);
                                 }
                                 else
                                 {
-                                    body.Add(new Cell(color.Value));
+                                    body.Add(new Cell(resolved.SpacingAttribute));
                                 }
                             }
 
@@ -634,6 +683,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
                         if (tag.Equals("</font>", StringComparison.OrdinalIgnoreCase))
                         {
+                            pendingColorEntry = -1;
+
                             // Back to the start-of-row default, but only when text follows.
                             if (body.Count > 0 && end + 1 < line.Length)
                             {
@@ -648,7 +699,15 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
                 foreach (var cell in GetTeletextCells(line[i]))
                 {
-                    body.Add(cell);
+                    if (pendingColorEntry >= 0)
+                    {
+                        body.Add(new Cell(cell.Value, cell.Mode, cell.Data, pendingColorEntry));
+                        pendingColorEntry = -1;
+                    }
+                    else
+                    {
+                        body.Add(cell);
+                    }
                 }
 
                 i++;
@@ -753,34 +812,39 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             return Space;
         }
 
-        private static byte? GetTeletextColor(string fontTag)
+        /// <summary>
+        /// The colour of a font tag at the resolution the teletext colour map has: four bits per
+        /// component, red in the high nibble.
+        /// </summary>
+        private static bool TryParseColor(string fontTag, out int rgb12)
         {
+            rgb12 = 0;
             var colorStart = fontTag.IndexOf("color=", StringComparison.OrdinalIgnoreCase);
             if (colorStart < 0)
             {
-                return null;
+                return false;
             }
 
             var color = fontTag.Substring(colorStart + "color=".Length).TrimStart().TrimEnd('>', '/', ' ');
             color = color.Trim('"', '\'').Trim().Trim('#').ToLowerInvariant();
             if (color.Length == 0)
             {
-                return null;
+                return false;
             }
 
             switch (color)
             {
-                case "black": return 0x00;
-                case "red": return 0x01;
+                case "black": rgb12 = 0x000; return true;
+                case "red": rgb12 = 0xf00; return true;
                 case "lime":
-                case "green": return 0x02;
-                case "yellow": return 0x03;
-                case "blue": return 0x04;
+                case "green": rgb12 = 0x0f0; return true;
+                case "yellow": rgb12 = 0xff0; return true;
+                case "blue": rgb12 = 0x00f; return true;
                 case "magenta":
-                case "fuchsia": return 0x05;
+                case "fuchsia": rgb12 = 0xf0f; return true;
                 case "cyan":
-                case "aqua": return 0x06;
-                case "white": return 0x07;
+                case "aqua": rgb12 = 0x0ff; return true;
+                case "white": rgb12 = 0xfff; return true;
             }
 
             if (color.Length == 6 &&
@@ -788,12 +852,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 int.TryParse(color.Substring(2, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var g) &&
                 int.TryParse(color.Substring(4, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var b))
             {
-                // Teletext only has the eight combinations of full red, green and blue.
-                var code = (r >= 128 ? 1 : 0) | (g >= 128 ? 2 : 0) | (b >= 128 ? 4 : 0);
-                return (byte)code;
+                // Round each component to the four bits the map holds - 0x11 steps, so #ff8822
+                // becomes 0xf82 and reads back as exactly #ff8822.
+                rgb12 = TeletextColorMap.QuantizeRgb(r, g, b);
+                return true;
             }
 
-            return null;
+            return false;
         }
 
         private static byte[] GetStuffingDataUnit()

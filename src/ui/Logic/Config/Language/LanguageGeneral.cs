@@ -114,7 +114,14 @@ public class LanguageGeneral
     public string ColorBlue { get; set; }
     public string ColorCyan { get; set; }
     public string ColorDotDotDot { get; set; }
+    public string ColorGray { get; set; }
     public string ColorGreen { get; set; }
+    public string ColorHalfBlue { get; set; }
+    public string ColorHalfCyan { get; set; }
+    public string ColorHalfGreen { get; set; }
+    public string ColorHalfMagenta { get; set; }
+    public string ColorHalfRed { get; set; }
+    public string ColorHalfYellow { get; set; }
     public string ColorMagenta { get; set; }
     public string ColorRed { get; set; }
     public string ColorWhite { get; set; }
@@ -917,7 +924,14 @@ public class LanguageGeneral
         ColorBlue = "Blue";
         ColorCyan = "Cyan";
         ColorDotDotDot = "Color...";
+        ColorGray = "Gray";
         ColorGreen = "Green";
+        ColorHalfBlue = "Half blue";
+        ColorHalfCyan = "Half cyan";
+        ColorHalfGreen = "Half green";
+        ColorHalfMagenta = "Half magenta";
+        ColorHalfRed = "Half red";
+        ColorHalfYellow = "Half yellow";
         ColorMagenta = "Magenta";
         ColorRed = "Red";
         ColorWhite = "White";

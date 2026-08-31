@@ -1,6 +1,7 @@
 ﻿using Avalonia.Media;
 using Avalonia.Skia;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using System;
@@ -161,6 +162,13 @@ public class ColorService : IColorService
         if (subtitleFormat is Ebu)
         {
             colorText = Ebu.GetNearestColorName(colorText) ?? colorText;
+        }
+        else if (subtitleFormat is DvbTeletext)
+        {
+            // A .dvbttx colour map entry holds four bits per component (Level 2.5), so snap the
+            // tag to that grid - grid, preview and the written file then agree, and the tag
+            // matches what the teletext reader produces so ContainsColor can toggle it off.
+            colorText = TeletextTables.ColorToHtml(TeletextColorMap.QuantizeRgb(color.R, color.G, color.B));
         }
 
         string pre = string.Empty;
