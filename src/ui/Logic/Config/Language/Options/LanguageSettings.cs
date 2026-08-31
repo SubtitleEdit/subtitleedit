@@ -54,6 +54,7 @@ public class LanguageSettings
     public string SubtitleGridTextDisplayWrap { get; set; }
     public string SubtitleGridTextDisplayEllipsis { get; set; }
     public string SubtitleGridLiveSpellCheck { get; set; }
+    public string SubtitleGridCenterText { get; set; }
     public string SubtitleGridShowFormatting { get; set; }
     public string ShowUpDownStartTime { get; set; }
     public string ShowUpDownEndTime { get; set; }
@@ -392,6 +393,7 @@ public class LanguageSettings
         SubtitleGridTextDisplayWrap = "Wrap to fit window";
         SubtitleGridTextDisplayEllipsis = "Single line with ellipsis";
         SubtitleGridLiveSpellCheck = "Live spell check in subtitle grid";
+        SubtitleGridCenterText = "Center text in subtitle grid";
         SubtitleGridShowFormatting = "Show formatted (HTML/ASSA) text in subtitle grid";
         ShowUpDownStartTime = "Show up/down control for \"Show\"";
         ShowUpDownEndTime = "Show up/down control for \"Hide\"";

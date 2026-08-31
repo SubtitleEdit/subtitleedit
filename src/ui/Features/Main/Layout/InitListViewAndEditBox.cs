@@ -373,6 +373,12 @@ public static partial class InitListViewAndEditBox
             Source = vm,
         });
 
+        // Read once per grid build, like the grid font: ApplySettings rebuilds the layout, so
+        // toggling the setting takes effect as soon as Settings is closed (#14316).
+        var gridTextAlignment = Se.Settings.Appearance.SubtitleGridCenterText
+            ? TextAlignment.Center
+            : TextAlignment.Start;
+
         columnManager.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Text,
@@ -396,6 +402,8 @@ public static partial class InitListViewAndEditBox
                     [!TextBlock.TextAlignmentProperty] = new MultiBinding
                     {
                         Converter = TeletextAlignmentPreviewConverter.Instance,
+                        // The alignment to use when the teletext preview is not overriding it.
+                        ConverterParameter = gridTextAlignment,
                         Bindings =
                         {
                             new Binding(nameof(vm.IsTeletextPreviewActive)) { Source = vm, Mode = BindingMode.OneWay },
@@ -437,6 +445,7 @@ public static partial class InitListViewAndEditBox
                 var textBlock = new TextBlock
                 {
                     VerticalAlignment = VerticalAlignment.Center,
+                    TextAlignment = gridTextAlignment,
 
                     // Lets the subtitle grid context menu find the word under the pointer (live spell check)
                     Tag = SubtitleGridColumnKeys.OriginalText,
