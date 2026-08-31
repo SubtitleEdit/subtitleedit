@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -295,6 +295,7 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
                             : CrispAsrWindowsVariant switch
                             {
                                 "cuda"       => "crispasr-windows-x86_64-cuda",
+                                "cuda13"     => "crispasr-windows-x86_64-cuda13",
                                 "cpu"        => "crispasr-windows-x86_64-cpu",
                                 "cpu-legacy" => "crispasr-windows-x86_64-cpu-legacy",
                                 "vulkan"     => "crispasr-windows-x86_64-vulkan",
@@ -664,6 +665,7 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
                 _downloadTask = CrispAsrWindowsVariant switch
                 {
                     "cuda"       => _crispAsrDownloadService.DownloadEngineWindowsCuda(_downloadStream, downloadProgress, _cancellationTokenSource.Token),
+                    "cuda13"     => _crispAsrDownloadService.DownloadEngineWindowsCuda13(_downloadStream, downloadProgress, _cancellationTokenSource.Token),
                     "cpu"        => _crispAsrDownloadService.DownloadEngineWindowsCpu(_downloadStream, downloadProgress, _cancellationTokenSource.Token),
                     "cpu-legacy" => _crispAsrDownloadService.DownloadEngineWindowsCpuLegacy(_downloadStream, downloadProgress, _cancellationTokenSource.Token),
                     _            => _crispAsrDownloadService.DownloadEngineWindowsVulkan(_downloadStream, downloadProgress, _cancellationTokenSource.Token),
