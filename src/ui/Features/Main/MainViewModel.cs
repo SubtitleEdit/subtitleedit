@@ -3971,6 +3971,11 @@ public partial class MainViewModel :
             await ShowEbuOptionsDialog();
         }
 
+        if (format is DvbTeletext)
+        {
+            await ShowDvbTeletextOptionsDialog();
+        }
+
         _shortcutManager.ClearKeys();
     }
 
@@ -4771,6 +4776,34 @@ public partial class MainViewModel :
         // sit there unseen until the next keystroke.
         _mpvPreviewDirty = true;
 
+        return true;
+    }
+
+    /// <summary>
+    /// Asks for the DVB teletext save options (page number, language) and stores them on the
+    /// subtitle header, the way the EBU options dialog stores the GSI block. Returns false when
+    /// the user cancels.
+    /// </summary>
+    private async Task<bool> ShowDvbTeletextOptionsDialog()
+    {
+        var currentPage = Se.Settings.File.ExportDvbTeletextPageNumber;
+        var currentLanguage = Se.Settings.File.ExportDvbTeletextLanguageCode;
+        if (DvbTeletext.TryParseHeader(_subtitle.Header, out var headerPage, out var headerLanguage))
+        {
+            currentPage = headerPage;
+            currentLanguage = headerLanguage;
+        }
+
+        var result = await ShowDialogAsync<ExportDvbTeletextWindow, ExportDvbTeletextViewModel>(vm =>
+            vm.Initialize(currentPage, currentLanguage));
+        if (!result.OkPressed)
+        {
+            return false;
+        }
+
+        Se.Settings.File.ExportDvbTeletextPageNumber = result.PageNumber;
+        Se.Settings.File.ExportDvbTeletextLanguageCode = result.LanguageCode;
+        _subtitle.Header = DvbTeletext.CreateHeader(result.PageNumber, result.LanguageCode);
         return true;
     }
 
@@ -14343,7 +14376,7 @@ public partial class MainViewModel :
             return;
         }
 
-        if (IsFormatEbu)
+        if (IsFormatEbu || SelectedSubtitleFormat is DvbTeletext)
         {
             await ShowTeletextColorPicker(selectedItems);
             return;
@@ -14368,11 +14401,14 @@ public partial class MainViewModel :
     /// EBU STL open subtitles can only carry the eight teletext colors, and default
     /// white without a color code differs from explicit white (37 vs 36 usable
     /// characters), so the full RGB picker is replaced by a constrained palette.
+    /// DVB teletext gets the Level 2.5 additions on top: the half intensity CLUT 1
+    /// colors and a free color choice via a redefinable colour map entry.
     /// </summary>
     private async Task ShowTeletextColorPicker(List<SubtitleLineViewModel> selectedItems)
     {
+        var isLevel25 = SelectedSubtitleFormat is DvbTeletext;
         var result = await ShowDialogAsync<PickTeletextColorWindow, PickTeletextColorViewModel>(
-            vm => vm.Initialize(selectedItems[0].Text));
+            vm => vm.Initialize(selectedItems[0].Text, isLevel25));
         if (!result.OkPressed)
         {
             return;
@@ -14381,6 +14417,25 @@ public partial class MainViewModel :
         if (result.NoColorPressed)
         {
             _colorService.RemoveColorTags(selectedItems, GetUpdateSubtitle(), SelectedSubtitleFormat);
+            _updateAudioVisualizer = true;
+            return;
+        }
+
+        if (result.CustomPressed)
+        {
+            var customResult = await ShowDialogAsync<ColorPickerWindow, ColorPickerViewModel>(
+                vm => vm.Initialize(Se.Settings.Tools.LastColorPickerColor.FromHexToColor()));
+            if (!customResult.OkPressed)
+            {
+                return;
+            }
+
+            if (ColorTextBoxIfSelected(customResult.SelectedColor))
+            {
+                return;
+            }
+
+            _colorService.SetColor(selectedItems, customResult.SelectedColor, GetUpdateSubtitle(), SelectedSubtitleFormat);
             _updateAudioVisualizer = true;
             return;
         }
@@ -21768,6 +21823,7 @@ public partial class MainViewModel :
             return true;
         }
 
+        var pageNumber = pages.First().Key;
         var paragraphs = pages.First().Value;
         if (pages.Count > 1)
         {
@@ -21778,16 +21834,24 @@ public partial class MainViewModel :
             }
 
             paragraphs = result.SelectedTrack.Teletext;
+            pageNumber = result.SelectedTrack.TrackNumber;
         }
 
+        // DVB teletext is a first class format: the toolbar shows it and a plain save writes the
+        // .dvbttx back - the page number and language ride on the header like an STL's GSI block.
+        var dvbTeletextFormat = SubtitleFormats.FirstOrDefault(p => p is DvbTeletext);
+
         VideoCloseFile();
-        ResetSubtitle();
+        ResetSubtitle(dvbTeletextFormat);
         _subtitle = new Subtitle(paragraphs);
         _subtitle.Renumber();
+        _subtitle.Header = DvbTeletext.CreateHeader(pageNumber, parser.LanguageCode);
         ReplaceSubtitles(_subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
         SelectAndScrollToRow(0);
-        _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) + SelectedSubtitleFormat.Extension;
-        _converted = true;
+        _subtitleFileName = fileName;
+        _lastOpenSaveFormat = SelectedSubtitleFormat;
+        _changeSubtitleHash = GetFastHash();
+        ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
 
         return true;
     }
@@ -22985,6 +23049,13 @@ public partial class MainViewModel :
         // dialog's OK, also reachable via File > "EBU STL properties...") saving is silent
         // again, and the auto-save timer must never pop a modal dialog.
         if (binaryFormat is Ebu && !isAutoSave && !Ebu.IsStlHeader(_subtitle.Header) && !await ShowEbuOptionsDialog())
+        {
+            return false;
+        }
+
+        // Same pattern for DVB teletext: ask for page number and language on the first manual
+        // save, then the header carries them and saving is silent.
+        if (binaryFormat is DvbTeletext && !isAutoSave && !DvbTeletext.IsDvbTeletextHeader(_subtitle.Header) && !await ShowDvbTeletextOptionsDialog())
         {
             return false;
         }
@@ -30564,7 +30635,7 @@ public partial class MainViewModel :
         if (e.AddedItems.Count == 1)
         {
             var format = e.AddedItems[0] as SubtitleFormat;
-            if (format is TimedTextImsc11 or ItunesTimedText or TimedText10 or TimedTextImscRosetta or TmpegEncXml or DCinemaSmpte2007 or DCinemaSmpte2010 or DCinemaSmpte2014 or DCinemaInterop or WebVTT or WebVTTFileWithLineNumber or Ebu)
+            if (format is TimedTextImsc11 or ItunesTimedText or TimedText10 or TimedTextImscRosetta or TmpegEncXml or DCinemaSmpte2007 or DCinemaSmpte2010 or DCinemaSmpte2014 or DCinemaInterop or WebVTT or WebVTTFileWithLineNumber or Ebu or DvbTeletext)
             {
                 IsFilePropertiesVisible = true;
                 FilePropertiesText = string.Format(Se.Language.Main.XPropertiesDotDotDot, format.Name);

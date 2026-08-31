@@ -854,7 +854,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             {
                 // Round each component to the four bits the map holds - 0x11 steps, so #ff8822
                 // becomes 0xf82 and reads back as exactly #ff8822.
-                rgb12 = (((r * 15 + 127) / 255) << 8) | (((g * 15 + 127) / 255) << 4) | ((b * 15 + 127) / 255);
+                rgb12 = TeletextColorMap.QuantizeRgb(r, g, b);
                 return true;
             }
 

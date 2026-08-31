@@ -92,6 +92,15 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         }
 
         /// <summary>
+        /// Rounds a 24 bit colour to the four bits per component the colour map holds - 0x11
+        /// steps, so #ff8822 becomes 0xf82 and widens back to exactly #ff8822.
+        /// </summary>
+        public static int QuantizeRgb(int r, int g, int b)
+        {
+            return (((r * 15 + 127) / 255) << 8) | (((g * 15 + 127) / 255) << 4) | ((b * 15 + 127) / 255);
+        }
+
+        /// <summary>
         /// The Level 1 spacing attribute nearest to a colour: each component rounded to full
         /// intensity or off, which is all the eight CLUT 0 colours can tell apart.
         /// </summary>
