@@ -207,6 +207,60 @@ public class TableViewScrollAnchorTests : IDisposable
     }
 
     [AvaloniaFact]
+    public void CutOfTheTopRowThenAutoBreak_DoesNotJumpToTheEndOfTheList()
+    {
+        // Issue #14231: near the end of the file, cutting the selected line (the row at the
+        // top of the viewport) removed the anchor item, so the next extent re-estimate -
+        // triggered by auto-break growing a row - had nothing to restore to and the clamped
+        // offset landed at the very bottom of the list.
+        var (window, grid, scrollViewer, items) = BuildShownGrid();
+
+        grid.ScrollIntoView(RowCount - 20);
+        Settle(window);
+
+        var before = FirstVisibleIndex(grid, scrollViewer);
+        Assert.True(before > RowCount - 40, "sanity: the test runs near the end of the list");
+
+        // Cut: the row at the top of the viewport goes away; the row below it takes its index.
+        var survivor = items[before + 1];
+        items.RemoveAt(before);
+        Settle(window);
+
+        // Auto-break: a visible one-line row gains a second line, changing its height and
+        // making the panel re-estimate the extent.
+        var oneLine = Enumerable.Range(items.IndexOf(survivor), 5).First(i => !items[i].Text.Contains('\n'));
+        items[oneLine].Text = "Byl jsem v jeho mysli, Rhiannon.\nZnam ho.";
+        Settle(window);
+
+        // The view must stay on the surviving neighbor, not jump to the last rows.
+        var first = FirstVisibleIndex(grid, scrollViewer);
+        Assert.InRange(first, items.IndexOf(survivor) - 1, items.IndexOf(survivor) + 1);
+    }
+
+    [AvaloniaFact]
+    public void RemovingRowsAboveTheAnchor_KeepsTheSameRowInView()
+    {
+        var (window, grid, scrollViewer, items) = BuildShownGrid();
+
+        var before = FirstVisibleIndex(grid, scrollViewer);
+        var anchorItem = items[before];
+
+        // A delete far above the viewport shifts every index but must not move the view
+        // off the anchored item when the extent re-estimates afterwards.
+        for (var i = 0; i < 5; i++)
+        {
+            items.RemoveAt(10);
+        }
+
+        Settle(window);
+
+        items[items.IndexOf(anchorItem) + 2].Text = "Byl jsem v jeho mysli, Rhiannon.\nZnam ho.";
+        Settle(window);
+
+        Assert.InRange(FirstVisibleIndex(grid, scrollViewer), items.IndexOf(anchorItem) - 1, items.IndexOf(anchorItem) + 1);
+    }
+
+    [AvaloniaFact]
     public void OrdinarysScrolling_StillMovesTheView()
     {
         var (window, grid, scrollViewer, _) = BuildShownGrid();
