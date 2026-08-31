@@ -161,10 +161,55 @@ public class EbuStlPreviewStylerTests
     {
         var header = MakeStlHeader("1");
 
-        Assert.True(EbuStlPreviewStyler.IsStlPreview(header, typeof(Ebu)));
-        Assert.False(EbuStlPreviewStyler.IsStlPreview(header, typeof(SubRip)));
-        Assert.False(EbuStlPreviewStyler.IsStlPreview(header, null));
-        Assert.False(EbuStlPreviewStyler.IsStlPreview(null, typeof(Ebu)));
+        Assert.True(EbuStlPreviewStyler.IsTeletextPreview(header, typeof(Ebu)));
+        Assert.False(EbuStlPreviewStyler.IsTeletextPreview(header, typeof(SubRip)));
+        Assert.False(EbuStlPreviewStyler.IsTeletextPreview(header, null));
+        Assert.False(EbuStlPreviewStyler.IsTeletextPreview(null, typeof(Ebu)));
+    }
+
+    // Same gate for the other teletext format: the dvbteletext marker styles the preview only
+    // while the toolbar still shows DVB Teletext, and the two headers do not cross over.
+    [Fact]
+    public void TheDvbTeletextHeaderOnlyStylesThePreviewWhileTheFormatIsDvbTeletext()
+    {
+        var header = DvbTeletext.CreateHeader(888, "eng");
+
+        Assert.True(EbuStlPreviewStyler.IsTeletextPreview(header, typeof(DvbTeletext)));
+        Assert.False(EbuStlPreviewStyler.IsTeletextPreview(header, typeof(SubRip)));
+        Assert.False(EbuStlPreviewStyler.IsTeletextPreview(header, typeof(Ebu)));
+        Assert.False(EbuStlPreviewStyler.IsTeletextPreview(MakeStlHeader("1"), typeof(DvbTeletext)));
+    }
+
+    // A .dvbttx is always teletext and its writer always boxes and double-heights the rows, so
+    // the preview draws both whatever the EBU save options say.
+    [Fact]
+    public void DvbTeletextIsAlwaysBoxedAndDoubleHeight()
+    {
+        var settings = Configuration.Settings.SubtitleSettings;
+        var oldUseBox = settings.EbuStlTeletextUseBox;
+        var oldUseDoubleHeight = settings.EbuStlTeletextUseDoubleHeight;
+        try
+        {
+            settings.EbuStlTeletextUseBox = false;
+            settings.EbuStlTeletextUseDoubleHeight = false;
+
+            var header = DvbTeletext.CreateHeader(888, "eng");
+            var subtitle = new Subtitle { Header = header };
+            subtitle.Paragraphs.Add(new Paragraph("Hello world", 1000, 3000));
+
+            var previewStyle = new SsaStyle { Name = "Default", FontName = "Verdana", FontSize = 33 };
+            EbuStlPreviewStyler.Apply(subtitle, header, previewStyle, "preview");
+
+            Assert.Equal("Box", subtitle.Paragraphs[0].Extra);
+            Assert.Equal("3", GetStyle(subtitle, "Box")[BorderStyleField]);
+            Assert.Equal("200", GetStyle(subtitle, "Box")[ScaleYField]);
+            Assert.Equal("200", GetStyle(subtitle, "Default")[ScaleYField]);
+        }
+        finally
+        {
+            settings.EbuStlTeletextUseBox = oldUseBox;
+            settings.EbuStlTeletextUseDoubleHeight = oldUseDoubleHeight;
+        }
     }
 
     // Preview only, and never written to the file - an STL carries a character table, not a

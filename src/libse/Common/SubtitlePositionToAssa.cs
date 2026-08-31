@@ -69,6 +69,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return ApplyEbuTeletextRows(subtitle, sourceHeader, playResY, usePositions);
             }
 
+            if (DvbTeletext.IsDvbTeletextHeader(sourceHeader))
+            {
+                return ApplyDvbTeletextRows(subtitle, playResY, usePositions);
+            }
+
             var regions = GetTtmlRegions(sourceHeader);
             if (regions != null)
             {
@@ -121,9 +126,30 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// </summary>
         private static bool ApplyEbuTeletextRows(Subtitle subtitle, string header, int playResY, bool usePositions)
         {
-            var rows = GetEbuRowCount(header);
-            var newLineRows = Math.Max(1, Configuration.Settings.SubtitleSettings.EbuStlNewLineRows);
-            var marginBottom = Configuration.Settings.SubtitleSettings.EbuStlMarginBottom;
+            return ApplyTeletextRows(
+                subtitle,
+                GetEbuRowCount(header),
+                Math.Max(1, Configuration.Settings.SubtitleSettings.EbuStlNewLineRows),
+                Configuration.Settings.SubtitleSettings.EbuStlMarginBottom,
+                GetEbuJustificationOffset(),
+                playResY,
+                usePositions);
+        }
+
+        /// <summary>
+        /// DVB teletext places subtitles the same way, but with the writer's fixed geometry
+        /// instead of the EBU save options: 23 rows, the default bottom row 22 (a double height
+        /// row covers 22 and 23), two rows per extra line, and the alignment coming off the
+        /// {\an} tags alone - see ManzanitaTeletextWriter.GetRowNumbers.
+        /// </summary>
+        private static bool ApplyDvbTeletextRows(Subtitle subtitle, int playResY, bool usePositions)
+        {
+            return ApplyTeletextRows(subtitle, rows: 23, newLineRows: 2, marginBottom: 1,
+                justificationOffset: 0, playResY, usePositions);
+        }
+
+        private static bool ApplyTeletextRows(Subtitle subtitle, int rows, int newLineRows, int marginBottom, int justificationOffset, int playResY, bool usePositions)
+        {
             var applied = false;
 
             foreach (var p in subtitle.Paragraphs)
@@ -172,7 +198,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     // The row says how far down the line sits, the justification says which way it
                     // is aligned - without this every line stays centered no matter what the EBU
                     // options dialog is set to.
-                    alignment += GetEbuJustificationOffset();
+                    alignment += justificationOffset;
 
                     p.Text = "{\\an" + alignment.ToString(CultureInfo.InvariantCulture) + "}" + p.Text;
                 }

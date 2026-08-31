@@ -27,6 +27,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsTextBased => false;
 
+        // The alignment picker stores the teletext row a line starts on in MarginV (1-23), and
+        // the writer places the line there - so the video preview should too.
+        public override bool HasPositionSupport => true;
+
         /// <summary>
         /// The teletext page the subtitles ride on - kept from the loaded file (or the save
         /// options dialog) via the subtitle header, see <see cref="CreateHeader"/>.
@@ -37,6 +41,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         /// Three letter ISO 639-2 language code for the teletext descriptor.
         /// </summary>
         public string LanguageCode { get; set; } = "eng";
+
+        /// <summary>
+        /// Drops what only teletext can carry when converting away: the teletext row in MarginV,
+        /// which any other format would read as a pixel margin or a percentage.
+        /// </summary>
+        public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
+        {
+            foreach (var p in subtitle.Paragraphs)
+            {
+                p.MarginV = null;
+            }
+        }
 
         public override bool IsMine(List<string> lines, string fileName)
         {
