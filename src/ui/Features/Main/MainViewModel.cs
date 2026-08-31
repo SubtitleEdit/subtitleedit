@@ -642,6 +642,13 @@ public partial class MainViewModel :
     private long _lastKeyPressedMs;
     private bool _loading;
     private bool _opening;
+    // Dedupe state for the macOS launch double-open (a launched-with file arrives via BOTH
+    // the CLI argument AND the "open file" activation event, which re-fires on every focus).
+    // _openingFileName marks the file whose open is in flight; _openMatroskaFileName marks
+    // the currently-open Matroska container — set synchronously before the async track
+    // picker is posted, so it survives past the open and dedupes the picker storm.
+    private string? _openingFileName;
+    private string? _openMatroskaFileName;
     private PointerEventArgs? _lastTextEditorPointerArgs;
     private string? _textBoxLookUpWord;
     private PointerEventArgs? _lastSubtitleGridPointerArgs;
@@ -20701,6 +20708,48 @@ public partial class MainViewModel :
     /// <summary>
     /// OpenSubtitle - open subtitle file, video file is optional.
     /// </summary>
+    // True when two paths point at the same file, comparing normalized full paths
+    // (case-insensitive — macOS default) and resolving symlinks (e.g. /tmp -> /private/tmp),
+    // so the activation event's path and a CLI/stored path for the same file compare equal.
+    private static bool SamePath(string? a, string? b)
+    {
+        if (string.IsNullOrEmpty(a) || string.IsNullOrEmpty(b))
+        {
+            return false;
+        }
+
+        try
+        {
+            var fa = Path.GetFullPath(a);
+            var fb = Path.GetFullPath(b);
+            if (string.Equals(fa, fb, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            var ra = ResolveReal(fa);
+            var rb = ResolveReal(fb);
+            return string.Equals(ra, rb, StringComparison.OrdinalIgnoreCase);
+        }
+        catch
+        {
+            return string.Equals(a, b, StringComparison.OrdinalIgnoreCase);
+        }
+    }
+
+    private static string ResolveReal(string fullPath)
+    {
+        try
+        {
+            var info = new FileInfo(fullPath);
+            return info.ResolveLinkTarget(returnFinalTarget: true)?.FullName ?? fullPath;
+        }
+        catch
+        {
+            return fullPath;
+        }
+    }
+
     public async Task SubtitleOpen(
         string fileName,
         string? videoFileName = null,
@@ -20710,6 +20759,19 @@ public partial class MainViewModel :
         int desiredAudioTrackId = -1)
     {
         if (string.IsNullOrEmpty(fileName))
+        {
+            return;
+        }
+
+        // A launched-with file arrives via BOTH the CLI argument AND the macOS "open file"
+        // activation event, and the activation re-fires on every focus. A multi-track
+        // Matroska leaves the subtitle list empty while the (async) track picker is open,
+        // so a "subtitles loaded?" guard never trips and every activation posts another
+        // picker. Dedupe on the in-flight open, the open Matroska container, and the loaded
+        // standalone file:
+        if (SamePath(fileName, _openingFileName) ||
+            SamePath(fileName, _openMatroskaFileName) ||
+            (Subtitles.Count > 0 && SamePath(fileName, _subtitleFileName)))
         {
             return;
         }
@@ -20748,6 +20810,8 @@ public partial class MainViewModel :
         try
         {
             _opening = true;
+            _openingFileName = fileName;
+            _openMatroskaFileName = null;
 
             if (FileUtil.IsMatroskaFileFast(fileName) && FileUtil.IsMatroskaFile(fileName))
             {
@@ -21338,6 +21402,7 @@ public partial class MainViewModel :
             _undoRedoManager.Do(MakeUndoRedoObject(string.Format(Se.Language.General.SubtitleLoadedX, fileName)));
             _undoRedoManager.StartChangeDetection();
             _opening = false;
+            _openingFileName = null;
 
             SetupLiveSpellCheck();
         }
@@ -22144,6 +22209,9 @@ public partial class MainViewModel :
     /// </summary>
     private async Task<bool> ImportSubtitleFromMatroskaFile(string fileName, string? videoFileName, bool skipLoadVideo = false)
     {
+        // Mark the container as the currently-open Matroska BEFORE the async picker is
+        // posted, so re-fired activations during the picker (and after) are deduped.
+        _openMatroskaFileName = fileName;
         var matroska = new MatroskaFile(fileName);
         var subtitleList = matroska.GetTracks(true);
         if (subtitleList.Count == 0)
