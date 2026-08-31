@@ -98,6 +98,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 pageNumber = headerPage;
                 languageCode = headerLanguage;
             }
+            else if (EbuTt.TryGetTeletextPageAndLanguage(subtitle.Header, out var ebuTtPage, out var ebuTtLanguage))
+            {
+                // An EBU-TT document written from a .dvbttx source carries the page and language
+                // in its metadata - the trip through EBU-TT must not reset them to the defaults.
+                pageNumber = ebuTtPage;
+                if (!string.IsNullOrEmpty(ebuTtLanguage))
+                {
+                    languageCode = ebuTtLanguage;
+                }
+            }
 
             var writer = new ManzanitaTeletextWriter
             {

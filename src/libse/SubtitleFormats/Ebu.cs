@@ -940,6 +940,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     header.DisplayStandardCode = "1";
                 }
+
+                // An EBU-TT source carries the GSI metadata (titles, translator, publisher, ...)
+                // in its document metadata - a no-op for any other header.
+                EbuTt.ApplyDocumentMetadata(header, subtitle.Header);
             }
 
             if (EbuUiHelper == null)

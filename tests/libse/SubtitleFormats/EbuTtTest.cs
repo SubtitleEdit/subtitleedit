@@ -1,3 +1,4 @@
+using System.IO;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
@@ -5,6 +6,14 @@ namespace LibSETests.SubtitleFormats;
 
 public class EbuTtTest
 {
+    // Minimal headless stand-in for the UI's EBU save helper so the binary writer can run in a test.
+    private sealed class TestEbuUiHelper : Ebu.IEbuUiHelper
+    {
+        public byte JustificationCode { get; set; }
+        public void Initialize(Ebu.EbuGeneralSubtitleInformation header, byte justificationCode, string fileName, Subtitle subtitle) { }
+        public bool ShowDialogOk() => true;
+    }
+
     /// <summary>
     /// A minimal EBU STL GSI header marked as teletext level 1 - what a subtitle loaded from a
     /// teletext STL carries, and what makes the EBU-TT writer trust MarginV rows and the
@@ -310,6 +319,106 @@ public class EbuTtTest
         new Ebu().RemoveNativeFormatting(sub, new SubRip());
         Assert.Equal("Boxed", sub.Paragraphs[0].Text);
         Assert.Null(sub.Paragraphs[0].MarginV);
+    }
+
+    [Fact]
+    public void StlMetadataTravelsToEbuTtAndBack()
+    {
+        // A GSI header with real metadata - the same shape Ebu.LoadSubtitle stores.
+        var gsi = new Ebu.EbuGeneralSubtitleInformation
+        {
+            DisplayStandardCode = "1",
+            OriginalProgrammeTitle = "Die Sendung".PadRight(32),
+            OriginalEpisodeTitle = "Folge 7".PadRight(32),
+            TranslatedProgrammeTitle = "The Programme".PadRight(32),
+            TranslatorsName = "R. Weiss".PadRight(32),
+            SubtitleListReferenceCode = "REF0001".PadRight(16),
+            CreationDate = "260830",
+            RevisionNumber = "02",
+            TimeCodeStartOfProgramme = "10000000",
+            CountryOfOrigin = "CHE",
+            Publisher = "SRF".PadRight(32),
+        };
+
+        var sub = new Subtitle { Header = gsi.ToString() };
+        sub.Paragraphs.Add(new Paragraph("Hallo", 0, 2000));
+
+        var format = new EbuTt();
+        var raw = sub.ToText(format);
+
+        Assert.Contains("<ebuttm:documentOriginalProgrammeTitle>Die Sendung</ebuttm:documentOriginalProgrammeTitle>", raw);
+        Assert.Contains("<ebuttm:documentOriginalEpisodeTitle>Folge 7</ebuttm:documentOriginalEpisodeTitle>", raw);
+        Assert.Contains("<ebuttm:documentTranslatedProgrammeTitle>The Programme</ebuttm:documentTranslatedProgrammeTitle>", raw);
+        Assert.Contains("<ebuttm:documentTranslatorsName>R. Weiss</ebuttm:documentTranslatorsName>", raw);
+        Assert.Contains("<ebuttm:documentSubtitleListReferenceCode>REF0001</ebuttm:documentSubtitleListReferenceCode>", raw);
+        Assert.Contains("<ebuttm:documentCreationDate>2026-08-30</ebuttm:documentCreationDate>", raw);
+        Assert.Contains("<ebuttm:documentRevisionNumber>2</ebuttm:documentRevisionNumber>", raw);
+        Assert.Contains("<ebuttm:documentStartOfProgramme>10:00:00:00</ebuttm:documentStartOfProgramme>", raw);
+        Assert.Contains("<ebuttm:documentCountryOfOrigin>CHE</ebuttm:documentCountryOfOrigin>", raw);
+        Assert.Contains("<ebuttm:documentPublisher>SRF</ebuttm:documentPublisher>", raw);
+
+        // The metadata carries forward when re-saving an EBU-TT document...
+        var loaded = new Subtitle();
+        format.LoadSubtitle(loaded, raw.SplitToLines(), null);
+        var resaved = loaded.ToText(format);
+        Assert.Contains("<ebuttm:documentOriginalProgrammeTitle>Die Sendung</ebuttm:documentOriginalProgrammeTitle>", resaved);
+        Assert.Contains("<ebuttm:documentStartOfProgramme>10:00:00:00</ebuttm:documentStartOfProgramme>", resaved);
+
+        // ...and fills the GSI fields again on the way back to STL.
+        Ebu.EbuUiHelper = new TestEbuUiHelper();
+        using var ms = new MemoryStream();
+        var ok = new Ebu().Save("test.stl", ms, loaded, batchMode: true, null);
+        Assert.True(ok);
+        var writtenGsi = Ebu.ReadHeader(ms.ToArray());
+        Assert.Equal("Die Sendung", writtenGsi.OriginalProgrammeTitle.Trim());
+        Assert.Equal("Folge 7", writtenGsi.OriginalEpisodeTitle.Trim());
+        Assert.Equal("R. Weiss", writtenGsi.TranslatorsName.Trim());
+        Assert.Equal("REF0001", writtenGsi.SubtitleListReferenceCode.Trim());
+        Assert.Equal("02", writtenGsi.RevisionNumber);
+        Assert.Equal("10000000", writtenGsi.TimeCodeStartOfProgramme);
+        Assert.Equal("CHE", writtenGsi.CountryOfOrigin);
+        Assert.Equal("SRF", writtenGsi.Publisher.Trim());
+    }
+
+    [Fact]
+    public void DvbTeletextPageAndLanguageTravelThroughEbuTt()
+    {
+        var sub = new Subtitle { Header = DvbTeletext.CreateHeader(150, "ger") };
+        sub.Paragraphs.Add(new Paragraph("Hallo", 0, 2000));
+
+        var format = new EbuTt();
+        var raw = sub.ToText(format);
+
+        Assert.Contains("urn:subtitleedit:metadata", raw);
+        Assert.Contains("page=\"150\"", raw);
+        Assert.Contains("language=\"ger\"", raw);
+
+        var loaded = new Subtitle();
+        format.LoadSubtitle(loaded, raw.SplitToLines(), null);
+        Assert.True(EbuTt.TryGetTeletextPageAndLanguage(loaded.Header, out var page, out var language));
+        Assert.Equal(150, page);
+        Assert.Equal("ger", language);
+
+        // The page also survives a re-save of the EBU-TT document itself.
+        var resaved = loaded.ToText(format);
+        Assert.Contains("page=\"150\"", resaved);
+
+        // Non EBU-TT headers say no.
+        Assert.False(EbuTt.TryGetTeletextPageAndLanguage(DvbTeletext.CreateHeader(150, "ger"), out _, out _));
+        Assert.False(EbuTt.TryGetTeletextPageAndLanguage(null, out _, out _));
+    }
+
+    [Fact]
+    public void MetadataAbsentStaysAbsent()
+    {
+        var sub = new Subtitle();
+        sub.Paragraphs.Add(new Paragraph("Plain", 0, 2000));
+
+        var raw = sub.ToText(new EbuTt());
+
+        Assert.DoesNotContain("documentOriginalProgrammeTitle", raw);
+        Assert.DoesNotContain("urn:subtitleedit:metadata", raw);
+        Assert.Contains("<ebuttm:documentOriginatingSystem>Subtitle Edit</ebuttm:documentOriginatingSystem>", raw);
     }
 
     [Fact]

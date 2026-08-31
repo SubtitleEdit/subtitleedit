@@ -4811,6 +4811,15 @@ public partial class MainViewModel :
             currentPage = headerPage;
             currentLanguage = headerLanguage;
         }
+        else if (EbuTt.TryGetTeletextPageAndLanguage(_subtitle.Header, out var ebuTtPage, out var ebuTtLanguage))
+        {
+            // An EBU-TT document from a .dvbttx source carries the page and language in its metadata.
+            currentPage = ebuTtPage;
+            if (!string.IsNullOrEmpty(ebuTtLanguage))
+            {
+                currentLanguage = ebuTtLanguage;
+            }
+        }
 
         var result = await ShowDialogAsync<ExportDvbTeletextWindow, ExportDvbTeletextViewModel>(vm =>
             vm.Initialize(currentPage, currentLanguage));
