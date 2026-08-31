@@ -2779,6 +2779,7 @@
       "subtitleGridTextDisplayWrap": "Wrap to fit window",
       "subtitleGridTextDisplayEllipsis": "Single line with ellipsis",
       "subtitleGridLiveSpellCheck": "Live spell check in subtitle grid",
+      "subtitleGridCenterText": "Center text in subtitle grid",
       "subtitleGridShowFormatting": "Show formatted (HTML/ASSA) text in subtitle grid",
       "showUpDownStartTime": "Show up/down control for \"Show\"",
       "showUpDownEndTime": "Show up/down control for \"Hide\"",
