@@ -207,6 +207,7 @@ public static class InitNativeMacMenu
         fileItems.Items.Add(new NativeMenuItemSeparator());
         fileItems.Items.Add(Item(Clean(l.Save), v => v.CommandFileSaveCommand));
         fileItems.Items.Add(Item(Clean(l.SaveAs), v => v.CommandFileSaveAsCommand));
+        fileItems.Items.Add(Item(Clean(Se.Language.General.SaveForcedLinesAs), v => v.SaveForcedLinesAsCommand));
         fileItems.Items.Add(new NativeMenuItemSeparator());
 
         var filePropsItem = new NativeMenuItem(string.Empty);

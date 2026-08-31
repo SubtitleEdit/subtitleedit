@@ -53,6 +53,16 @@ public partial class SubtitleLineViewModel : ObservableObject
     [ObservableProperty]
     private string? _bookmark;
 
+    /// <summary>
+    /// The forced-narrative mark: a line that must also go into the separate forced subtitle
+    /// many clients ask for alongside the full file (#14322). Observable so the "Forced"
+    /// column follows the toggle, undo and reload. Kept in the same sidecar as the bookmarks
+    /// (<see cref="Nikse.SubtitleEdit.UiLogic.Common.SubtitleMarksPersistence"/>) - almost no subtitle format has
+    /// anywhere to put it, though the image formats do (Blu-ray sup, VobSub, BDN xml).
+    /// </summary>
+    [ObservableProperty]
+    private bool _forced;
+
     [ObservableProperty]
     private TimeSpan _startTime;
 
@@ -194,7 +204,6 @@ public partial class SubtitleLineViewModel : ObservableObject
     }
 
     public bool NewSection { get; set; }
-    public bool Forced { get; set; }
     public Guid Id { get; set; }
     public bool IsCpsColumnVisible { get; set; } = true;
     public bool IsDefault => Text == string.Empty && Number == 0 && Duration == TimeSpan.Zero && StartTime == TimeSpan.Zero;
@@ -259,7 +268,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         MarginR = p.MarginR;
         MarginV = p.MarginV;
         NewSection = p.NewSection;
-        Forced = p.Forced;
+        _forced = p.Forced;
         _bookmark = p.Bookmark;
         _isReferenceOnly = p.IsReferenceOnly;
         ReferenceParagraphId = p.ReferenceParagraphId;

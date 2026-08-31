@@ -1,4 +1,4 @@
-using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -149,6 +149,9 @@ public static class ShortcutsMain
         { nameof(MainViewModel.DoAlignmentAn9Command), string.Format(Se.Language.General.AlignmentX, "an9")},
         { nameof(MainViewModel.AddOrEditBookmarkCommand), Se.Language.Options.Shortcuts.AddOrEditBookmark},
         { nameof(MainViewModel.ToggleBookmarkSelectedLinesNoTextCommand), Se.Language.Options.Shortcuts.ToggleBookmark},
+        { nameof(MainViewModel.ToggleForcedSelectedLinesCommand), Se.Language.Options.Shortcuts.ToggleForcedSelectedLines},
+        { nameof(MainViewModel.SaveForcedLinesAsCommand), Se.Language.General.SaveForcedLinesAs},
+        { nameof(MainViewModel.ToggleShowColumnForcedCommand), Se.Language.General.ShowForcedColumn},
         { nameof(MainViewModel.CopyTextFromOriginalToTranslationCommand), Se.Language.Options.Shortcuts.CopyTextFromOriginalSelectedLines},
         { nameof(MainViewModel.CopyTextFromTranslationToOriginalCommand), Se.Language.Options.Shortcuts.CopyTextToOriginalSelectedLines},
         { nameof(MainViewModel.SwitchOriginalAndTranslationTextSelectedLinesCommand), Se.Language.Options.Shortcuts.SwitchOriginalAndTranslationSelectedLines},
@@ -588,6 +591,9 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.DoAlignmentAn9Command, nameof(vm.DoAlignmentAn9Command), ShortcutCategory.SubtitleGridAndTextBox);
         AddShortcut(shortcuts, vm.AddOrEditBookmarkCommand, nameof(vm.AddOrEditBookmarkCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ToggleBookmarkSelectedLinesNoTextCommand, nameof(vm.ToggleBookmarkSelectedLinesNoTextCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.ToggleForcedSelectedLinesCommand, nameof(vm.ToggleForcedSelectedLinesCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SaveForcedLinesAsCommand, nameof(vm.SaveForcedLinesAsCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.ToggleShowColumnForcedCommand, nameof(vm.ToggleShowColumnForcedCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.CopyTextFromOriginalToTranslationCommand, nameof(vm.CopyTextFromOriginalToTranslationCommand), ShortcutCategory.SubtitleGrid, ShortcutGroup.Translate);
         AddShortcut(shortcuts, vm.CopyTextFromTranslationToOriginalCommand, nameof(vm.CopyTextFromTranslationToOriginalCommand), ShortcutCategory.SubtitleGrid, ShortcutGroup.Translate);
         AddShortcut(shortcuts, vm.SwitchOriginalAndTranslationTextSelectedLinesCommand, nameof(vm.SwitchOriginalAndTranslationTextSelectedLinesCommand), ShortcutCategory.SubtitleGrid, ShortcutGroup.Translate);

@@ -137,6 +137,11 @@ public static class InitMenu
                     Header = l.SaveAs,
                     Command = vm.CommandFileSaveAsCommand,
                 },
+                new MenuItem
+                {
+                    Header = Se.Language.General.SaveForcedLinesAs,
+                    Command = vm.SaveForcedLinesAsCommand,
+                },
                 new Separator(),
                 new MenuItem
                 {
