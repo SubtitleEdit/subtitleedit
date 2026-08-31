@@ -67,7 +67,7 @@ public class GoToLineNumberWindow : Window
 
         Content = contentPanel;
 
-        Activated += delegate { vm.Activated(); };
+        UiUtil.FocusOnFirstActivation(this, () => { vm.Activated(); });
         KeyDown += (_, args) => vm.OnKeyDown(args);
     }
 }

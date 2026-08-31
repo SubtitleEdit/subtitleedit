@@ -59,7 +59,7 @@ public class PickTeletextColorWindow : Window
 
         Content = panel;
 
-        Activated += delegate { buttonCancel.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, buttonCancel);
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 

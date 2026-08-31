@@ -147,7 +147,7 @@ public class AssaApplyCustomOverrideTagsWindow : Window
         Content = grid;
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
-        Activated += delegate { comboBoxOverrideTags.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, comboBoxOverrideTags);
 
         AddHandler(KeyDownEvent, vm.OnKeyDownHandler, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);
         Loaded += (_, _) => vm.OnLoaded();

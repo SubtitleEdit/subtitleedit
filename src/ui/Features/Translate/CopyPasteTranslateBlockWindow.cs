@@ -60,7 +60,7 @@ public class CopyPasteTranslateBlockWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonCancel.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, buttonCancel); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
         Loaded += vm.Loaded;
     }

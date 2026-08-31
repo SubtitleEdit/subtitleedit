@@ -107,7 +107,7 @@ public class WriteChaptersToVideoWindow : Window
 
         Content = grid;
 
-        Activated += delegate { textBoxOutput.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, textBoxOutput);
     }
 
     /// <summary>

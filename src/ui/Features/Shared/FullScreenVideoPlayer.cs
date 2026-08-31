@@ -210,7 +210,7 @@ public class FullScreenVideoWindow : Window
         // back to the docked player.
         Closed += (_, _) => videoPlayer.CloseAndDisposePlayer();
 
-        Activated += delegate { Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, () => { Focus(); }); // hack to make OnKeyDown work
         Loaded += async(_, _) =>
         {
             WindowState = WindowState.Maximized;

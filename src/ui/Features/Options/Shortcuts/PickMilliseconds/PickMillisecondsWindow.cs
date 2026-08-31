@@ -50,7 +50,7 @@ public class PickMillisecondsWindow : Window
 
         Content = grid;
 
-        Activated += delegate { numericUpDownMilliseconds.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, numericUpDownMilliseconds); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (s, e) => vm.OnKeyDown(e);
     }
 }

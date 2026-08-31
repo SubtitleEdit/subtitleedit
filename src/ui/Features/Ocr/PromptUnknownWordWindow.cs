@@ -67,7 +67,7 @@ public class PromptUnknownWordWindow : Window
 
         Content = grid;
 
-        Activated += delegate { vm.TextBoxWord.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, vm.TextBoxWord); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);
         Loaded += vm.Onloaded;
         Closing += vm.OnClosing;

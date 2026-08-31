@@ -92,7 +92,7 @@ public class PickLanguageWindow : Window
 
         Content = grid;
 
-        Activated += delegate { textBoxSearch.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, textBoxSearch);
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

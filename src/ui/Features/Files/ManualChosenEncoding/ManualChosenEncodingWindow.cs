@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
@@ -74,7 +74,7 @@ public class ManualChosenEncodingWindow : Window
 
         Content = grid;
 
-        Activated += delegate { searchBox.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, searchBox); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
@@ -158,7 +158,9 @@ public class ManualChosenEncodingWindow : Window
         var textBox = new TextBox
         {
             AcceptsReturn = true,
-            AcceptsTab = true,
+            // Read-only: a typed tab could never land here anyway, and accepting it only
+            // swallowed Tab/Shift+Tab so the box could not be left from the keyboard (#14313).
+            AcceptsTab = false,
             IsReadOnly = true,
             Margin = new Thickness(0, 0, 0, 0),
             Width = double.NaN,

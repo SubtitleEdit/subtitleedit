@@ -59,10 +59,10 @@ public class NOcrSettingsWindow : Window
         grid.ContextFlyout = menuFlyout;
         UiUtil.AttachMacContextFlyoutHandler(this, grid);
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             buttonEdit.Focus(); // hack to make OnKeyDown work
-        };
+        });
         KeyDown += (_, e) => vm.KeyDown(e);
     }
 }

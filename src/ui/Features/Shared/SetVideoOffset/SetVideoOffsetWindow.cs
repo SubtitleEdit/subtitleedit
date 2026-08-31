@@ -86,7 +86,7 @@ public class SetVideoOffsetWindow : Window
 
         Content = contentPanel;
 
-        Activated += delegate { timeCodeUpDownOffset.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, timeCodeUpDownOffset);
         KeyDown += (sender, args) => vm.OnKeyDown(args);
     }
 }

@@ -357,7 +357,7 @@ public class FixCommonErrorsWindow : Window
             }
         };
 
-        Activated += delegate { FocusStepButton(); };
+        UiUtil.FocusOnFirstActivation(this, () => { FocusStepButton(); });
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };

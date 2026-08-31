@@ -55,10 +55,10 @@ public class NOcrDbEditWindow : Window
 
         Content = grid;
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             buttonOk.Focus(); // hack to make OnKeyDown work
-        };
+        });
         PointerWheelChanged += vm.PointerWheelChanged;
         KeyDown += (_, e) => vm.KeyDown(e);
         KeyUp += (_, e) => vm.KeyUp(e);

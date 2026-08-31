@@ -70,7 +70,7 @@ public class TextEffectWindow : Window
         Content = grid;
 
         KeyDown += (_, e) => vm.OnKeyDown(e);
-        Activated += delegate { buttonOk.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, buttonOk);
     }
 
     // The settings are pushed into the export dialog live, so a close that is not an OK -

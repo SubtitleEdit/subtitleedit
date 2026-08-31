@@ -49,7 +49,7 @@ public class WaveformGuessTimeCodesWindow : Window
 
         Content = grid;
 
-        Activated += delegate { radioStartFromVideoPosition.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, radioStartFromVideoPosition); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
     }
 

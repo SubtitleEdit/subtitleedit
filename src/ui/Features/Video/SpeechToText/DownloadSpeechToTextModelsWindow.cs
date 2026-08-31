@@ -164,10 +164,10 @@ public class DownloadSpeechToTextModelsWindow : Window
 
         Content = grid;
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             buttonCancel.Focus(); // hack to make OnKeyDown work
-        };
+        });
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

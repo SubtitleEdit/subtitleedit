@@ -159,7 +159,7 @@ public class CompareWindow : Window
 
         Content = grid;
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             Dispatcher.UIThread.Post(() =>
             {
@@ -168,7 +168,7 @@ public class CompareWindow : Window
                     TableViewExtras.FocusRow(vm.LeftGrid); // initial focus on an input, not an action button - a focused button clicks on bare Space
                 }
             });
-        };
+        });
         KeyDown += vm.KeyDown;
 
         vm.LeftGrid = (leftView.Child as Border)?.Child as TableView;

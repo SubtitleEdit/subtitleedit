@@ -78,7 +78,7 @@ public class ChangeFormattingWindow : Window
 
         Content = grid;
 
-        Activated += delegate { comboBoxFrom.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, comboBoxFrom); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };

@@ -96,7 +96,7 @@ public class HearingImpairedRuleSettingsWindow : Window
 
         Content = grid;
 
-        Activated += delegate { checkBoxBrackets.Focus(); }; // not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, checkBoxBrackets); // not an action button - a focused button clicks on bare Space
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

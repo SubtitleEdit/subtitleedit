@@ -80,7 +80,7 @@ public class BeautifyTimeCodesProfileWindow : Window
         outerGrid.Add(buttonBar, 1, 0);
         Content = outerGrid;
 
-        Activated += delegate { ok.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, ok);
         KeyDown += (_, e) => vm.OnKeyDown(e);
 
         // Push initial values into the preview controls once they're attached

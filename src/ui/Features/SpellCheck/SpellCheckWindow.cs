@@ -149,7 +149,7 @@ public class SpellCheckWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonDone.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, buttonDone); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 

@@ -73,10 +73,10 @@ public class NOcrCharacterAddWindow : Window
         CharactersFlyoutMenuHelper.MakeFlyoutLetters(menuFlyout, vm.InsertSpecialCharacterCommand);
         vm.TextBoxNew.ContextFlyout = menuFlyout;
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             vm.TextBoxNew.Focus(); // hack to make OnKeyDown work
-        };
+        });
         Loaded += vm.Onloaded;
         Closing += vm.OnClosing;
         PointerWheelChanged += vm.PointerWheelChanged;

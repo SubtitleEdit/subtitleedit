@@ -133,7 +133,7 @@ public class PreProcessingWindow : Window
         Content = grid;
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
-        Activated += delegate { checkBoxCropTransparent.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, checkBoxCropTransparent);
         KeyDown += vm.KeyDown;
     }
 

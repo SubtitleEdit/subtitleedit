@@ -69,10 +69,10 @@ public sealed class DownloadTtsWindow : Window
             }
         };
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             buttonCancel.Focus(); // hack to make OnKeyDown work
-        };
+        });
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

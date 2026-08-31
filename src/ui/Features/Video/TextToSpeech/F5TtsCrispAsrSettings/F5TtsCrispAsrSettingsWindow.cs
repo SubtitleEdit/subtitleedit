@@ -33,7 +33,7 @@ public class F5TtsCrispAsrSettingsWindow : Window
         Content = BuildContent(vm);
 
         var ok = UiUtil.MakeButtonOk(vm.OkCommand);
-        Activated += delegate { ok.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, ok);
     }
 
     private Border BuildContent(F5TtsCrispAsrSettingsViewModel vm)

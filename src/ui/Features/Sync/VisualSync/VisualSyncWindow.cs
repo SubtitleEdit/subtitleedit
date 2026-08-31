@@ -215,7 +215,7 @@ public class VisualSyncWindow : Window
 
         Content = grid;
 
-        Activated += delegate { comboBoxLeft.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, comboBoxLeft); // initial focus on an input, not an action button - a focused button clicks on bare Space
 
         AddHandler(KeyDownEvent, vm.OnKeyDownHandler, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);
         Loaded += (_, _) => vm.OnLoaded();

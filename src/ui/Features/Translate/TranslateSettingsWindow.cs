@@ -71,7 +71,9 @@ public class TranslateSettingsWindow : Window
         var promptTextBox = new TextBox
         {
             AcceptsReturn = true,
-            AcceptsTab = true,
+            // A tab is not meaningful in a translation prompt, and accepting it trapped the
+            // keyboard in this box - Tab could not reach the buttons below (#14313).
+            AcceptsTab = false,
             VerticalAlignment = VerticalAlignment.Stretch,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             Width = double.NaN,
@@ -137,7 +139,7 @@ public class TranslateSettingsWindow : Window
 
         Content = grid;
 
-        Activated += delegate { comboMerge.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, comboMerge); // initial focus on an input, not an action button - a focused button clicks on bare Space
         Loaded += vm.Onloaded;
         Closing += vm.OnClosing;
     }

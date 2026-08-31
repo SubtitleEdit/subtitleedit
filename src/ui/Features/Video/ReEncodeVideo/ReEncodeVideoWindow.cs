@@ -82,7 +82,7 @@ public class ReEncodeVideoWindow : Window
 
         Content = grid;
 
-        Activated += delegate { _comboBoxFrameRate?.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, () => { _comboBoxFrameRate?.Focus(); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
     }
 
     private Border MakeVideoSettingsView(ReEncodeVideoViewModel vm)

@@ -68,7 +68,7 @@ public class AssistedSplitWindow : Window
 
         Content = grid;
 
-        Activated += delegate { scrollCandidates.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, scrollCandidates); // hack to make OnKeyDown work
 
         // Keep the whole card list reachable on small screens - the ScrollViewer takes over.
         Opened += (_, _) =>

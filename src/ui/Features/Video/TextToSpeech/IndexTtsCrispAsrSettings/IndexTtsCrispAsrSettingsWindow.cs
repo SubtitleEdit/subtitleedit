@@ -33,7 +33,7 @@ public class IndexTtsCrispAsrSettingsWindow : Window
         Content = BuildContent(vm);
 
         var ok = UiUtil.MakeButtonOk(vm.OkCommand);
-        Activated += delegate { ok.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, ok);
     }
 
     private Border BuildContent(IndexTtsCrispAsrSettingsViewModel vm)
