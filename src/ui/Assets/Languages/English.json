@@ -2357,7 +2357,7 @@
       "proAudioPostProcessing": "Pro audio post-processing",
       "proAudioPostProcessingDescription": "Adds EQ, noise gate, compression, loudness normalization (-16 LUFS) and a short fade in/out to every clip.",
       "audioDucking": "Audio ducking",
-      "audioDuckingDescription": "Turns the original video sound down and mixes the speech over it, so the original track stays faintly audible.",
+      "audioDuckingDescription": "Turns the original video sound down and mixes the speech over it, so the original track stays faintly audible. Only applies when the speech is added to the video file.",
       "originalVolumePercent": "Original volume %",
       "vadSilenceCompression": "VAD silence compression",
       "vadSilenceCompressionDescription": "Shortens the pauses between words instead of speeding up the speech, so a clip fits without any loss of quality.",
