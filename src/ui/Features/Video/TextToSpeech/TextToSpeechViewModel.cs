@@ -26,6 +26,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoxCPM2CrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.MossTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DotsTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTtsCrispAsrSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.PocketTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTts25AudioCppSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DetectSpeakers;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.KokoroTtsSettings;
@@ -343,6 +344,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         else if (SelectedEngine is IndexTtsCrispAsr)
         {
             Se.Settings.Video.TextToSpeech.IndexTtsCrispAsrModel = SelectedModel ?? IndexTtsCrispAsr.DefaultModelKey;
+        }
+        else if (SelectedEngine is PocketTtsCrispAsr)
+        {
+            Se.Settings.Video.TextToSpeech.PocketTtsCrispAsrModel = SelectedModel ?? PocketTtsCrispAsr.DefaultModelKey;
         }
         else if (SelectedEngine is DotsTtsCrispAsr)
         {
@@ -1290,6 +1295,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             IndexTtsCrispAsr.StopServer();
         }
+        if (keepAlive is not PocketTtsCrispAsr)
+        {
+            PocketTtsCrispAsr.StopServer();
+        }
         if (keepAlive is not DotsTtsCrispAsr)
         {
             DotsTtsCrispAsr.StopServer();
@@ -1579,6 +1588,9 @@ public partial class TextToSpeechViewModel : ObservableObject
             case IndexTtsCrispAsr:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadIndexTtsCrispAsrModels(IndexTtsCrispAsr.ResolveModelKey(SelectedModel)));
                 break;
+            case PocketTtsCrispAsr:
+                await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadPocketTtsCrispAsrModels(PocketTtsCrispAsr.ResolveModelKey(SelectedModel)));
+                break;
             case DotsTtsCrispAsr:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadDotsTtsCrispAsrModels(DotsTtsCrispAsr.ResolveModelKey(SelectedModel)));
                 break;
@@ -1653,6 +1665,9 @@ public partial class TextToSpeechViewModel : ObservableObject
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
             IndexTtsCrispAsr => IndexTtsCrispAsr.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
+            PocketTtsCrispAsr => PocketTtsCrispAsr.AreModelsInstalled(modelKey)
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
             DotsTtsCrispAsr => DotsTtsCrispAsr.AreModelsInstalled(modelKey)
@@ -4043,6 +4058,16 @@ public partial class TextToSpeechViewModel : ObservableObject
             else if (SelectedEngine is IndexTtsCrispAsr)
             {
                 SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.IndexTtsCrispAsrModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Models.FirstOrDefault();
+                }
+                IsEngineSettingsVisible = true;
+                IsModelDownloadVisible = true;
+            }
+            else if (SelectedEngine is PocketTtsCrispAsr)
+            {
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.PocketTtsCrispAsrModel);
                 if (string.IsNullOrEmpty(SelectedModel))
                 {
                     SelectedModel = Models.FirstOrDefault();

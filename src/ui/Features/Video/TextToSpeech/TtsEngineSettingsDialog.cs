@@ -13,6 +13,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.MossTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.OmniVoiceCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.OmniVoiceSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.PiperSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.PocketTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Qwen3TtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Qwen3TtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VibeVoiceCrispAsrSettings;
@@ -42,6 +43,7 @@ public static class TtsEngineSettingsDialog
         IndexTtsCrispAsr or
         DotsTtsCrispAsr or
         CosyVoice3CrispAsr or
+        PocketTtsCrispAsr or
         F5TtsCrispAsr or
         OmniVoiceCrispAsr or
         VoxCPM2CrispAsr or
@@ -84,6 +86,10 @@ public static class TtsEngineSettingsDialog
         else if (engine is CosyVoice3CrispAsr)
         {
             await windowService.ShowDialogAsync<CosyVoice3CrispAsrSettingsWindow, CosyVoice3CrispAsrSettingsViewModel>(window, vm => vm.Initialize());
+        }
+        else if (engine is PocketTtsCrispAsr)
+        {
+            await windowService.ShowDialogAsync<PocketTtsCrispAsrSettingsWindow, PocketTtsCrispAsrSettingsViewModel>(window, vm => vm.Initialize());
         }
         else if (engine is F5TtsCrispAsr)
         {

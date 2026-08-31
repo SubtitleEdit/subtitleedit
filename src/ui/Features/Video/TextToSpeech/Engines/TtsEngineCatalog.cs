@@ -78,6 +78,11 @@ public static class TtsEngineCatalog
             // engines grouped visually in the engine combo.
             new CosyVoice3CrispAsr(),
 
+            // Pocket TTS (CrispASR) — Kyutai's 100M model, the smallest and fastest cloning
+            // engine here (one 124-365 MB GGUF per language, RTF ~0.1 on CPU). Six languages;
+            // per-request reference resolution, so voice changes need no server restart.
+            new PocketTtsCrispAsr(),
+
             // IndexTTS 2.5 on the audio.cpp runtime (not CrispASR): 5 languages, emotion
             // control and speaking-rate control, with a per-request reference voice so the
             // server is not restarted when the voice changes.

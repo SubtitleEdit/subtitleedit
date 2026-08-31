@@ -264,6 +264,46 @@ public static class TtsEngineInstaller
             return true;
         }
 
+        if (engine is PocketTtsCrispAsr)
+        {
+            if (!await TtsVoiceInstaller.EnsureCrispAsrForPocketTts(window, windowService, forceRedownload: false))
+            {
+                return false;
+            }
+
+            var pocketModelKey = PocketTtsCrispAsr.ResolveModelKey(model);
+            if (!PocketTtsCrispAsr.AreModelsInstalled(pocketModelKey))
+            {
+                // Model key already carries the language and size in its label (e.g.
+                // "German Q8_0 (~124 MB)") so we don't append a separate size.
+                var answer = await MessageBox.Show(
+                    window,
+                    "Download Pocket TTS (CrispASR) model?",
+                    $"{Environment.NewLine}\"Pocket TTS (CrispASR)\" ({pocketModelKey}) requires a model.{Environment.NewLine}{Environment.NewLine}Download model?",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                if (answer != MessageBoxResult.Yes)
+                {
+                    return false;
+                }
+
+                var dlResult = await windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(window, vm => vm.StartDownloadPocketTtsCrispAsrModels(pocketModelKey));
+                if (!dlResult.OkPressed || !PocketTtsCrispAsr.AreModelsInstalled(pocketModelKey))
+                {
+                    return false;
+                }
+
+                await Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    await refreshVoices();
+                });
+                return true;
+            }
+
+            return true;
+        }
+
         if (engine is DotsTtsCrispAsr)
         {
             if (!await TtsVoiceInstaller.EnsureCrispAsrForDotsTts(window, windowService, forceRedownload: false))
