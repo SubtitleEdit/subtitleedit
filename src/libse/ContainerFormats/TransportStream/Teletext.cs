@@ -104,7 +104,29 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             public ulong ShowTimestamp { get; set; }
             public ulong HideTimestamp { get; set; }
             public int[,] Text { get; set; } = new int[25, 40];
+
+            /// <summary>
+            /// The colour map entry a packet X/26 foreground colour triplet sets at a character
+            /// position, or -1 where the row's own spacing attributes decide. A Level 1 row can
+            /// only name the first eight entries, and only at the cost of a cell.
+            /// </summary>
+            public int[,] ForegroundColor { get; set; } = NewColorPlane();
+
             public bool Tainted { get; set; }
+
+            public static int[,] NewColorPlane()
+            {
+                var plane = new int[25, 40];
+                for (var row = 0; row < 25; row++)
+                {
+                    for (var col = 0; col < 40; col++)
+                    {
+                        plane[row, col] = -1;
+                    }
+                }
+
+                return plane;
+            }
         }
 
         public class PrimaryCharset
@@ -121,11 +143,17 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             }
         }
 
-        private static readonly string[] TeletextColors =
+        // ETS 300 706, chapter 12.4: the colour map in force, which packets X/28/0 and M/29/0 may
+        // redefine for the current page or magazine. Reset per decode, or one file's colours
+        // would leak into the next.
+        private static int[] _colorMap = (int[])TeletextTables.DefaultColorMap.Clone();
+
+        private static string GetColor(int entry)
         {
-            //black,   red,       green,     yellow,    blue,      magenta,   cyan,      white
-            "#000000", "#ff0000", "#00ff00", "#ffff00", "#0000ff", "#ff00ff", "#00ffff", "#ffffff"
-        };
+            return entry >= 0 && entry < _colorMap.Length
+                ? TeletextTables.ColorToHtml(_colorMap[entry])
+                : TeletextTables.ColorToHtml(TeletextTables.DefaultColorMap[7]);
+        }
 
         // subtitle type pages bitmap, 2048 bits = 2048 possible pages in teletext (excl. subpages)
         private static readonly byte[] CcMap = new byte[256];
@@ -153,6 +181,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             _receivingData = false;
             _states = new States();
             _pageBuffer = new TeletextPage();
+            _colorMap = (int[])TeletextTables.DefaultColorMap.Clone();
             TeletextTables.ResetLatinG0();
         }
 
@@ -166,6 +195,54 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         private static int ToNationalOptionOrder(int designation)
         {
             return (designation & ~0x07) | ((designation & 0x01) << 2) | (designation & 0x02) | ((designation & 0x04) >> 2);
+        }
+
+        /// <summary>
+        /// ETS 300 706, chapter 9.4.2: the colour map a packet X/28/0 or M/29/0 Format 1 carries
+        /// in its triplets 2 to 13. Those twelve triplets are one bit stream: a five bit default
+        /// screen colour, a five bit default row colour, then the sixteen entries of CLUT 2 and 3
+        /// - twelve bits each, red in the low nibble - and the panel flags at the end.
+        /// <para>
+        /// Packets X/28/4 and M/29/4, which redefine CLUT 0 and 1 instead, are left alone: none of
+        /// the streams this was written against transmits one, so where their entries start in the
+        /// bit stream could not be checked, and guessing would recolour ordinary subtitles.
+        /// </para>
+        /// </summary>
+        private static void ReadColorMap(TeletextPacketPayload packet)
+        {
+            var stream = new bool[216];
+            for (var triplet = 0; triplet < 12; triplet++)
+            {
+                var i = 4 + triplet * 3;
+                var value = TeletextHamming.UnHamming2418((packet.Data[i + 2] << 16) | (packet.Data[i + 1] << 8) | packet.Data[i]);
+                if (value == 0xffffffff)
+                {
+                    // A damaged triplet would silently recolour the page - leave the map alone.
+                    _config.LogError("! Unrecoverable data error in colour map; UNHAM24/18()");
+                    return;
+                }
+
+                for (var bit = 0; bit < 18; bit++)
+                {
+                    stream[triplet * 18 + bit] = ((value >> bit) & 1) != 0;
+                }
+            }
+
+            const int firstColorMapBit = 10; // past the default screen and row colours
+            for (var entry = 0; entry < 16; entry++)
+            {
+                var value = 0;
+                for (var bit = 0; bit < 12; bit++)
+                {
+                    if (stream[firstColorMapBit + entry * 12 + bit])
+                    {
+                        value |= 1 << bit;
+                    }
+                }
+
+                // CLUT 2 and 3 are entries 16 to 31.
+                _colorMap[16 + entry] = ((value & 0x00f) << 8) | (value & 0x0f0) | ((value >> 8) & 0x00f);
+            }
         }
 
         private static void RemapG0Charset(int c)
@@ -372,9 +449,19 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                     // v is just a shortcut
                     var v = page.Text[row, col];
 
+                    // ETS 300 706, chapter 12.3.1: a packet X/26 foreground colour triplet sets the
+                    // colour at a character position without spending a cell on it, and it can
+                    // name all 32 colour map entries rather than the eight a spacing attribute
+                    // reaches. It is set-at, so it counts from this position on.
+                    var enhancedColor = page.ForegroundColor[row, col];
+
                     if (col < colStart)
                     {
-                        if (v <= 0x7)
+                        if (enhancedColor >= 0)
+                        {
+                            foregroundColor = enhancedColor;
+                        }
+                        else if (v <= 0x7)
                         {
                             foregroundColor = v;
                         }
@@ -382,15 +469,37 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
                     if (col == colStart)
                     {
+                        // An enhancement on the first cell decides the colour the row opens with,
+                        // rather than opening a tag that the next line would close straight away.
+                        if (enhancedColor >= 0)
+                        {
+                            foregroundColor = enhancedColor;
+                        }
+
                         if (foregroundColor != 0x7 && _config.Colors)
                         {
-                            sb.Append($"<font color=\"{TeletextColors[foregroundColor]}\">");
+                            sb.Append($"<font color=\"{GetColor(foregroundColor)}\">");
                             fontTagOpened = true;
                         }
                     }
 
                     if (col >= colStart)
                     {
+                        if (enhancedColor >= 0 && col > colStart && _config.Colors)
+                        {
+                            if (fontTagOpened)
+                            {
+                                sb.Append("</font>");
+                                fontTagOpened = false;
+                            }
+
+                            if (enhancedColor != 0x7)
+                            {
+                                sb.Append($"<font color=\"{GetColor(enhancedColor)}\">");
+                                fontTagOpened = true;
+                            }
+                        }
+
                         if (v <= 0x7)
                         {
                             // ETS 300 706, chapter 12.2: Unless operating in "Hold Mosaics" mode,
@@ -407,7 +516,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                                 // telxcc writes <font/> tags only when needed
                                 if (v > 0x0 && v < 0x7)
                                 {
-                                    sb.Append($"<font color=\"{TeletextColors[v]}\">");
+                                    sb.Append($"<font color=\"{GetColor(v)}\">");
                                     fontTagOpened = true;
                                 }
                             }
@@ -558,6 +667,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 _pageBuffer.ShowTimestamp = timestamp;
                 _pageBuffer.HideTimestamp = 0;
                 _pageBuffer.Text = new int[25, 40];
+                _pageBuffer.ForegroundColor = TeletextPage.NewColorPlane();
                 _pageBuffer.Tainted = false;
                 _receivingData = true;
                 _primaryCharset.G0X28 = (int)BoolT.Undef;
@@ -633,6 +743,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                         break;
                     }
 
+                    // ETS 300 706, chapter 12.3.1, table 27: foreground colour. The data field
+                    // names one of the 32 colour map entries, so it reaches the colours a Level 1
+                    // spacing attribute cannot, and it costs no cell.
+                    if (mode == 0x00 && !rowAddressGroup)
+                    {
+                        _pageBuffer.ForegroundColor[x26Row, (int)address2] = (int)(data & 0x1f);
+                    }
+
                     // ETS 300 706, chapter 12.3.1, table 27: character from G2 set
                     int x26Col;
                     if (mode == 0x0f && !rowAddressGroup)
@@ -695,6 +813,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                         {
                             _primaryCharset.G0X28 = ToNationalOptionOrder((int)((triplet0 & 0x3f80) >> 7));
                             RemapG0Charset(_primaryCharset.G0X28);
+
+                            if (designationCode == 0)
+                            {
+                                ReadColorMap(packet);
+                            }
                         }
                     }
                 }
@@ -726,6 +849,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                             if (_primaryCharset.G0X28 == (int)BoolT.Undef)
                             {
                                 RemapG0Charset(_primaryCharset.G0M29);
+                            }
+
+                            if (designationCode == 0)
+                            {
+                                ReadColorMap(packet);
                             }
                         }
                     }

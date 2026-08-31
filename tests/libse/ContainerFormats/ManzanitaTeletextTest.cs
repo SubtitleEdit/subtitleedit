@@ -173,6 +173,21 @@ public class ManzanitaTeletextTest
     }
 
     [Fact]
+    public void X28ColourMapAndX26ForegroundColourAreRead()
+    {
+        // The fixture carries ZDF's own X/28/0 colour map, where colour map entry 17 - CLUT 2,
+        // the first table a broadcaster may redefine - is the orange #ff8822 from their page 100,
+        // and an X/26 foreground colour triplet that paints the row with it. Level 1 can only
+        // name the first eight entries, so nothing but the enhancement can reach this colour.
+        var parser = new ManzanitaTransportStreamParser();
+        parser.Parse(Path.Combine("Files", "teletext_x28_colour_map.dvbttx"));
+
+        var paragraphs = parser.GetTeletext()[888];
+
+        Assert.Equal("<font color=\"#ff8822\">Level 2.5 orange</font>", paragraphs[0].Text);
+    }
+
+    [Fact]
     public void UnsupportedCharactersAreStillFolded()
     {
         var subtitle = MakeSubtitle(new Paragraph("[Привет] and 日本", 1000, 3000));

@@ -400,6 +400,38 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             }
         };
 
+        // --- Colour map ----------------------------------------------------------------
+
+        /// <summary>
+        /// ETS 300 706, chapter 12.4, table 30: the 32 colour map entries a Level 2.5 decoder
+        /// knows, four bits per component. Entries 0-7 are the eight colours Level 1 can name
+        /// through a spacing attribute, 8-15 their half intensity companions, and 16-31 the two
+        /// tables a broadcaster is free to redefine in packet X/28/0 - ZDF's orange lives there.
+        /// </summary>
+        public static readonly int[] DefaultColorMap =
+        {
+            // CLUT 0 - black, red, green, yellow, blue, magenta, cyan, white
+            0x000, 0xf00, 0x0f0, 0xff0, 0x00f, 0xf0f, 0x0ff, 0xfff,
+            // CLUT 1
+            0x000, 0x700, 0x070, 0x770, 0x007, 0x707, 0x077, 0x777,
+            // CLUT 2
+            0xf05, 0xf70, 0x0f7, 0xffb, 0x0ca, 0x500, 0x652, 0xc77,
+            // CLUT 3
+            0x333, 0xf77, 0x7f7, 0xff7, 0x77f, 0xf7f, 0x7ff, 0xddd
+        };
+
+        /// <summary>
+        /// Spells a colour map entry as "#rrggbb", widening each four bit component the usual way
+        /// so that 0xf becomes 0xff.
+        /// </summary>
+        public static string ColorToHtml(int entry)
+        {
+            var r = ((entry >> 8) & 0x0f) * 0x11;
+            var g = ((entry >> 4) & 0x0f) * 0x11;
+            var b = (entry & 0x0f) * 0x11;
+            return $"#{r:x2}{g:x2}{b:x2}";
+        }
+
         // --- Reverse lookups, used when writing teletext -------------------------------
 
         /// <summary>

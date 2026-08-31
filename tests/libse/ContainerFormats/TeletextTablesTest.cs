@@ -74,4 +74,20 @@ public class TeletextTablesTest
         // A plain space is in the G2 table three times over, and needs no enhancement.
         Assert.False(TeletextTables.TryGetG2Replacement(' ', out _));
     }
+    // ETS 300 706, chapter 12.4, table 30. Entries 0-7 have to keep the exact values the decoder
+    // used before there was a colour map, or every existing teletext subtitle changes colour.
+    [Fact]
+    public void DefaultColorMap_KeepsTheLevel1Colors()
+    {
+        var level1 = new[] { "#000000", "#ff0000", "#00ff00", "#ffff00", "#0000ff", "#ff00ff", "#00ffff", "#ffffff" };
+
+        Assert.Equal(32, TeletextTables.DefaultColorMap.Length);
+        for (var i = 0; i < level1.Length; i++)
+        {
+            Assert.Equal(level1[i], TeletextTables.ColorToHtml(TeletextTables.DefaultColorMap[i]));
+        }
+
+        // CLUT 2 entry 1 is the orange a broadcaster reaches for; ZDF redefines it to #ff8822.
+        Assert.Equal("#ff7700", TeletextTables.ColorToHtml(TeletextTables.DefaultColorMap[17]));
+    }
 }
