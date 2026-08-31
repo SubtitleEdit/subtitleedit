@@ -29,6 +29,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private const string TtmlNamespace = "http://www.w3.org/ns/ttml";
         private const string TtmlStylingNamespace = "http://www.w3.org/ns/ttml#styling";
+        private const string EbuttmNamespace = "urn:ebu:tt:metadata";
+
+        // Carries what EBU-TT has no element for - the DVB teletext page and language of a
+        // .dvbttx source. A foreign namespace inside tt:metadata is valid TTML; other tools
+        // ignore it.
+        private const string SeMetadataNamespace = "urn:subtitleedit:metadata";
 
         // The teletext cell grid of EBU Tech 3360 - 40 columns, 24 rows (row 0 is the header row,
         // subtitles use rows 1-23 like the VerticalPosition byte of an STL TTI block).
@@ -129,6 +135,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var namespaceManager = new XmlNamespaceManager(xml.NameTable);
             namespaceManager.AddNamespace("ttml", TtmlNamespace);
+            namespaceManager.AddNamespace("ebuttm", EbuttmNamespace);
+
+            // GSI titles, translator, publisher etc. of an STL source (or the metadata of an
+            // EBU-TT source, or the page/language of a .dvbttx source) travel in the document
+            // metadata.
+            var metadataNode = xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata", namespaceManager);
+            var documentMetadataNode = metadataNode.SelectSingleNode("ebuttm:documentMetadata", namespaceManager);
+            DocumentMetadata.FromHeader(subtitle.Header).WriteTo(xml, metadataNode, documentMetadataNode);
 
             var styling = xml.DocumentElement.SelectSingleNode("ttml:head/ttml:styling", namespaceManager);
             var layout = xml.DocumentElement.SelectSingleNode("ttml:head/ttml:layout", namespaceManager);
@@ -154,6 +168,303 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             return ToUtf8XmlString(xml).Replace(" xmlns=\"\"", string.Empty);
+        }
+
+        /// <summary>
+        /// The document level metadata that travels with the subtitle - the GSI block fields of
+        /// an STL mapped to their ebuttm:documentMetadata elements (Tech 3350 models them on the
+        /// GSI block), plus the DVB teletext page/language of a .dvbttx source.
+        /// </summary>
+        private sealed class DocumentMetadata
+        {
+            public string OriginalProgrammeTitle;
+            public string OriginalEpisodeTitle;
+            public string TranslatedProgrammeTitle;
+            public string TranslatedEpisodeTitle;
+            public string TranslatorsName;
+            public string TranslatorsContactDetails;
+            public string SubtitleListReferenceCode;
+            public string CreationDate;      // ISO yyyy-MM-dd (xs:date)
+            public string RevisionDate;      // ISO yyyy-MM-dd (xs:date)
+            public string RevisionNumber;    // integer as string
+            public string StartOfProgramme;  // SMPTE HH:MM:SS:FF
+            public string CountryOfOrigin;
+            public string Publisher;
+            public string EditorsName;
+            public string EditorsContactDetails;
+            public int? TeletextPage;
+            public string TeletextLanguage;
+
+            public static DocumentMetadata FromHeader(string header)
+            {
+                if (Ebu.IsStlHeader(header))
+                {
+                    return FromStlHeader(header);
+                }
+
+                if (IsEbuTtHeader(header))
+                {
+                    return FromEbuTtDocument(header);
+                }
+
+                var metadata = new DocumentMetadata();
+                if (DvbTeletext.TryParseHeader(header, out var page, out var language))
+                {
+                    metadata.TeletextPage = page;
+                    metadata.TeletextLanguage = language;
+                }
+
+                return metadata;
+            }
+
+            private static DocumentMetadata FromStlHeader(string header)
+            {
+                var metadata = new DocumentMetadata();
+                try
+                {
+                    var gsi = Ebu.ReadHeader(Ebu.GetEncoding(header.Substring(0, 3)).GetBytes(header));
+                    metadata.OriginalProgrammeTitle = Clean(gsi.OriginalProgrammeTitle);
+                    metadata.OriginalEpisodeTitle = Clean(gsi.OriginalEpisodeTitle);
+                    metadata.TranslatedProgrammeTitle = Clean(gsi.TranslatedProgrammeTitle);
+                    metadata.TranslatedEpisodeTitle = Clean(gsi.TranslatedEpisodeTitle);
+                    metadata.TranslatorsName = Clean(gsi.TranslatorsName);
+                    metadata.TranslatorsContactDetails = Clean(gsi.TranslatorsContactDetails);
+                    metadata.SubtitleListReferenceCode = Clean(gsi.SubtitleListReferenceCode);
+                    metadata.CreationDate = GsiDateToIso(gsi.CreationDate);
+                    metadata.RevisionDate = GsiDateToIso(gsi.RevisionDate);
+                    if (int.TryParse((gsi.RevisionNumber ?? string.Empty).Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var revision) && revision > 0)
+                    {
+                        metadata.RevisionNumber = revision.ToString(CultureInfo.InvariantCulture);
+                    }
+
+                    metadata.StartOfProgramme = GsiTimeCodeToSmpte(gsi.TimeCodeStartOfProgramme);
+                    metadata.CountryOfOrigin = Clean(gsi.CountryOfOrigin);
+                    metadata.Publisher = Clean(gsi.Publisher);
+                    metadata.EditorsName = Clean(gsi.EditorsName);
+                    metadata.EditorsContactDetails = Clean(gsi.EditorsContactDetails);
+                }
+                catch
+                {
+                    // an unreadable GSI block only costs the metadata, never the save
+                }
+
+                return metadata;
+            }
+
+            public static DocumentMetadata FromEbuTtDocument(string header)
+            {
+                var metadata = new DocumentMetadata();
+                try
+                {
+                    var xml = new XmlDocument { XmlResolver = null };
+                    xml.LoadXml(header);
+
+                    foreach (XmlNode node in xml.GetElementsByTagName("documentMetadata", EbuttmNamespace))
+                    {
+                        foreach (XmlNode child in node.ChildNodes)
+                        {
+                            var value = child.InnerText?.Trim();
+                            if (string.IsNullOrEmpty(value))
+                            {
+                                continue;
+                            }
+
+                            switch (child.LocalName)
+                            {
+                                case "documentOriginalProgrammeTitle": metadata.OriginalProgrammeTitle = value; break;
+                                case "documentOriginalEpisodeTitle": metadata.OriginalEpisodeTitle = value; break;
+                                case "documentTranslatedProgrammeTitle": metadata.TranslatedProgrammeTitle = value; break;
+                                case "documentTranslatedEpisodeTitle": metadata.TranslatedEpisodeTitle = value; break;
+                                case "documentTranslatorsName": metadata.TranslatorsName = value; break;
+                                case "documentTranslatorsContactDetails": metadata.TranslatorsContactDetails = value; break;
+                                case "documentSubtitleListReferenceCode": metadata.SubtitleListReferenceCode = value; break;
+                                case "documentCreationDate": metadata.CreationDate = value; break;
+                                case "documentRevisionDate": metadata.RevisionDate = value; break;
+                                case "documentRevisionNumber": metadata.RevisionNumber = value; break;
+                                case "documentStartOfProgramme": metadata.StartOfProgramme = value; break;
+                                case "documentCountryOfOrigin": metadata.CountryOfOrigin = value; break;
+                                case "documentPublisher": metadata.Publisher = value; break;
+                                case "documentEditorsName": metadata.EditorsName = value; break;
+                                case "documentEditorsContactDetails": metadata.EditorsContactDetails = value; break;
+                            }
+                        }
+                    }
+
+                    foreach (XmlNode node in xml.GetElementsByTagName("teletext", SeMetadataNamespace))
+                    {
+                        if (int.TryParse(node.Attributes?["page"]?.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var page) &&
+                            page >= 100 && page <= 899)
+                        {
+                            metadata.TeletextPage = page;
+                            metadata.TeletextLanguage = node.Attributes?["language"]?.Value;
+                        }
+                    }
+                }
+                catch
+                {
+                    // a damaged source document only costs the metadata
+                }
+
+                return metadata;
+            }
+
+            /// <summary>
+            /// Appends the elements to ebuttm:documentMetadata in the schema order of Tech 3350,
+            /// and the teletext page/language as a namespaced sibling of documentMetadata.
+            /// </summary>
+            public void WriteTo(XmlDocument xml, XmlNode metadataNode, XmlNode documentMetadataNode)
+            {
+                void Append(string name, string value)
+                {
+                    if (string.IsNullOrEmpty(value))
+                    {
+                        return;
+                    }
+
+                    var element = xml.CreateElement("ebuttm", name, EbuttmNamespace);
+                    element.InnerText = value;
+                    documentMetadataNode.AppendChild(element);
+                }
+
+                Append("documentOriginatingSystem", "Subtitle Edit");
+                Append("documentOriginalProgrammeTitle", OriginalProgrammeTitle);
+                Append("documentOriginalEpisodeTitle", OriginalEpisodeTitle);
+                Append("documentTranslatedProgrammeTitle", TranslatedProgrammeTitle);
+                Append("documentTranslatedEpisodeTitle", TranslatedEpisodeTitle);
+                Append("documentTranslatorsName", TranslatorsName);
+                Append("documentTranslatorsContactDetails", TranslatorsContactDetails);
+                Append("documentSubtitleListReferenceCode", SubtitleListReferenceCode);
+                Append("documentCreationDate", CreationDate);
+                Append("documentRevisionDate", RevisionDate);
+                Append("documentRevisionNumber", RevisionNumber);
+                Append("documentStartOfProgramme", StartOfProgramme);
+                Append("documentCountryOfOrigin", CountryOfOrigin);
+                Append("documentPublisher", Publisher);
+                Append("documentEditorsName", EditorsName);
+                Append("documentEditorsContactDetails", EditorsContactDetails);
+
+                if (TeletextPage.HasValue)
+                {
+                    var teletext = xml.CreateElement("sem", "teletext", SeMetadataNamespace);
+                    var pageAttribute = xml.CreateAttribute("page");
+                    pageAttribute.InnerText = TeletextPage.Value.ToString(CultureInfo.InvariantCulture);
+                    teletext.Attributes.Append(pageAttribute);
+                    if (!string.IsNullOrEmpty(TeletextLanguage))
+                    {
+                        var languageAttribute = xml.CreateAttribute("language");
+                        languageAttribute.InnerText = TeletextLanguage;
+                        teletext.Attributes.Append(languageAttribute);
+                    }
+
+                    metadataNode.AppendChild(teletext);
+                }
+            }
+
+            private static string Clean(string value)
+            {
+                value = value?.Trim();
+                return string.IsNullOrEmpty(value) ? null : value;
+            }
+
+            /// <summary>
+            /// A GSI YYMMDD date as the ISO date xs:date wants - STL predates 2000, so 70-99 read
+            /// as 19xx.
+            /// </summary>
+            private static string GsiDateToIso(string gsiDate)
+            {
+                gsiDate = gsiDate?.Trim();
+                if (gsiDate == null || gsiDate.Length != 6 ||
+                    !int.TryParse(gsiDate.Substring(0, 2), NumberStyles.Integer, CultureInfo.InvariantCulture, out var year) ||
+                    !int.TryParse(gsiDate.Substring(2, 2), NumberStyles.Integer, CultureInfo.InvariantCulture, out var month) ||
+                    !int.TryParse(gsiDate.Substring(4, 2), NumberStyles.Integer, CultureInfo.InvariantCulture, out var day) ||
+                    month < 1 || month > 12 || day < 1 || day > 31)
+                {
+                    return null;
+                }
+
+                year += year >= 70 ? 1900 : 2000;
+                return $"{year:0000}-{month:00}-{day:00}";
+            }
+
+            private static string GsiTimeCodeToSmpte(string timeCode)
+            {
+                timeCode = timeCode?.Trim();
+                if (timeCode == null || timeCode.Length != 8 || !long.TryParse(timeCode, NumberStyles.Integer, CultureInfo.InvariantCulture, out var numeric) || numeric == 0)
+                {
+                    return null;
+                }
+
+                return $"{timeCode.Substring(0, 2)}:{timeCode.Substring(2, 2)}:{timeCode.Substring(4, 2)}:{timeCode.Substring(6, 2)}";
+            }
+        }
+
+        /// <summary>
+        /// The DVB teletext page and language a document carries when it came from a .dvbttx
+        /// dump - stored by <see cref="ToText"/> so the trip back to DVB teletext keeps them.
+        /// </summary>
+        public static bool TryGetTeletextPageAndLanguage(string header, out int pageNumber, out string languageCode)
+        {
+            pageNumber = 0;
+            languageCode = string.Empty;
+            if (!IsEbuTtHeader(header))
+            {
+                return false;
+            }
+
+            var metadata = DocumentMetadata.FromEbuTtDocument(header);
+            if (!metadata.TeletextPage.HasValue)
+            {
+                return false;
+            }
+
+            pageNumber = metadata.TeletextPage.Value;
+            languageCode = metadata.TeletextLanguage ?? string.Empty;
+            return true;
+        }
+
+        /// <summary>
+        /// Fills the GSI block fields of an invented STL header from the document metadata of an
+        /// EBU-TT source, so titles, translator, publisher etc. survive the trip back to STL.
+        /// The GSI block is fixed width - every value is padded/truncated to its field.
+        /// </summary>
+        public static void ApplyDocumentMetadata(Ebu.EbuGeneralSubtitleInformation stlHeader, string ebuTtHeader)
+        {
+            if (stlHeader == null || !IsEbuTtHeader(ebuTtHeader))
+            {
+                return;
+            }
+
+            var metadata = DocumentMetadata.FromEbuTtDocument(ebuTtHeader);
+
+            string Fixed(string value, string current, int width)
+            {
+                return value == null ? current : value.PadRight(width).Substring(0, width);
+            }
+
+            stlHeader.OriginalProgrammeTitle = Fixed(metadata.OriginalProgrammeTitle, stlHeader.OriginalProgrammeTitle, 32);
+            stlHeader.OriginalEpisodeTitle = Fixed(metadata.OriginalEpisodeTitle, stlHeader.OriginalEpisodeTitle, 32);
+            stlHeader.TranslatedProgrammeTitle = Fixed(metadata.TranslatedProgrammeTitle, stlHeader.TranslatedProgrammeTitle, 32);
+            stlHeader.TranslatedEpisodeTitle = Fixed(metadata.TranslatedEpisodeTitle, stlHeader.TranslatedEpisodeTitle, 32);
+            stlHeader.TranslatorsName = Fixed(metadata.TranslatorsName, stlHeader.TranslatorsName, 32);
+            stlHeader.TranslatorsContactDetails = Fixed(metadata.TranslatorsContactDetails, stlHeader.TranslatorsContactDetails, 32);
+            stlHeader.SubtitleListReferenceCode = Fixed(metadata.SubtitleListReferenceCode, stlHeader.SubtitleListReferenceCode, 16);
+            stlHeader.CountryOfOrigin = Fixed(metadata.CountryOfOrigin, stlHeader.CountryOfOrigin, 3);
+            stlHeader.Publisher = Fixed(metadata.Publisher, stlHeader.Publisher, 32);
+            stlHeader.EditorsName = Fixed(metadata.EditorsName, stlHeader.EditorsName, 32);
+            stlHeader.EditorsContactDetails = Fixed(metadata.EditorsContactDetails, stlHeader.EditorsContactDetails, 32);
+
+            if (int.TryParse(metadata.RevisionNumber, NumberStyles.Integer, CultureInfo.InvariantCulture, out var revision) &&
+                revision >= 0 && revision <= 99)
+            {
+                stlHeader.RevisionNumber = revision.ToString("00", CultureInfo.InvariantCulture);
+            }
+
+            var startOfProgramme = metadata.StartOfProgramme?.Replace(":", string.Empty);
+            if (startOfProgramme != null && startOfProgramme.Length == 8 &&
+                long.TryParse(startOfProgramme, NumberStyles.Integer, CultureInfo.InvariantCulture, out _))
+            {
+                stlHeader.TimeCodeStartOfProgramme = startOfProgramme;
+            }
         }
 
         /// <summary>
