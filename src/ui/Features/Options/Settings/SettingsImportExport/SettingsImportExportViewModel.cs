@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.Logic.Se4Setup;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -104,6 +105,11 @@ public partial class SettingsImportExportViewModel : ObservableObject
     private bool _importHasShortcutSlots;
     private bool _importHasCustomSearchSlots;
 
+    // Set instead of _importData when the picked file is an SE 4 Settings.xml (#14309): SE 4 has
+    // no Settings.json, so the only file a user migrating from 4.x can point at is the classic
+    // XML. Field-by-field mapping, see Se4SettingsXmlImporter.
+    private Se4SettingsXmlImporter.Se4SettingsFile? _se4ImportData;
+
     // Marker property name written at the top level of the export JSON so the
     // importer can tell which OS the file came from (Se has no such field, so
     // System.Text.Json silently ignores it when deserializing into Se).
@@ -152,7 +158,9 @@ public partial class SettingsImportExportViewModel : ObservableObject
             Window,
             Se.Language.General.ImportDotDotDot,
             "JSON files",
-            ".json");
+            ".json",
+            "Subtitle Edit 4 settings",
+            ".xml");
 
         if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
         {
@@ -164,6 +172,12 @@ public partial class SettingsImportExportViewModel : ObservableObject
         try
         {
             var json = File.ReadAllText(_importFilePath);
+
+            if (Se4SettingsXmlImporter.LooksLikeXml(json))
+            {
+                return LoadSe4ImportFile(json);
+            }
+
             _importData = JsonSerializer.Deserialize<Se>(json, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,
@@ -218,6 +232,62 @@ public partial class SettingsImportExportViewModel : ObservableObject
         {
             return false;
         }
+    }
+
+    // An SE 4 Settings.xml carries only some of what the dialog offers - the categories its
+    // sections cover - so the checkboxes for the rest are greyed out just like they are for a
+    // partial JSON export.
+    private bool LoadSe4ImportFile(string xml)
+    {
+        var se4 = Se4SettingsXmlImporter.Parse(xml);
+        if (se4 == null)
+        {
+            return false;
+        }
+
+        _importData = null;
+        _se4ImportData = se4;
+        _importSourceOs = null;
+        _importHasShortcutSlots = false;
+        _importHasCustomSearchSlots = false;
+
+        IsRulesEnabled = se4.HasRules;
+        IsAppearanceEnabled = se4.HasAppearance;
+        IsAutoTranslateEnabled = se4.HasAutoTranslate;
+        IsWaveformEnabled = se4.HasWaveform;
+        IsShortcutsEnabled = se4.HasShortcuts;
+
+        if (!IsRulesEnabled)
+        {
+            ExportImportRules = false;
+        }
+
+        if (!se4.HasSyntaxColoring)
+        {
+            ExportImportSyntaxColoring = false;
+        }
+
+        if (!IsAppearanceEnabled)
+        {
+            ExportImportAppearance = false;
+        }
+
+        if (!IsAutoTranslateEnabled)
+        {
+            ExportImportAutoTranslate = false;
+        }
+
+        if (!IsWaveformEnabled)
+        {
+            ExportImportWaveform = false;
+        }
+
+        if (!IsShortcutsEnabled)
+        {
+            ExportImportShortcuts = false;
+        }
+
+        return true;
     }
 
     [RelayCommand]
@@ -309,6 +379,12 @@ public partial class SettingsImportExportViewModel : ObservableObject
 
     private void ImportSettings()
     {
+        if (_se4ImportData != null)
+        {
+            ImportSe4Settings(_se4ImportData);
+            return;
+        }
+
         if (_importData == null)
         {
             return;
@@ -410,6 +486,54 @@ public partial class SettingsImportExportViewModel : ObservableObject
             {
                 Se.Settings.AutoTranslate = importData.AutoTranslate;
             }
+        }
+
+        Se.SaveSettings();
+    }
+
+    // The SE 4 side of the import. Same checkboxes, but every category is copied field by field
+    // into the current settings instead of replacing a whole section: SE 4 has no counterpart for
+    // most of what an SE 5 section holds, and a section-level assignment would reset all of it.
+    internal void ImportSe4Settings(Se4SettingsXmlImporter.Se4SettingsFile se4)
+    {
+        if (ExportImportAll || ExportImportRules)
+        {
+            Se4SettingsXmlImporter.ApplyRules(se4);
+        }
+
+        if (ExportImportAll || ExportImportRules || ExportImportSyntaxColoring)
+        {
+            // The coloring values live in General, same as the JSON path - "Rules" brings them
+            // along and the syntax-coloring checkbox brings them on their own.
+            Se4SettingsXmlImporter.ApplySyntaxColoring(se4);
+        }
+
+        if (ExportImportAll || ExportImportWaveform)
+        {
+            Se4SettingsXmlImporter.ApplyWaveform(se4);
+        }
+
+        if (ExportImportAll || ExportImportAppearance)
+        {
+            Se4SettingsXmlImporter.ApplyAppearance(se4);
+        }
+
+        if (ExportImportAll || ExportImportAutoTranslate)
+        {
+            Se4SettingsXmlImporter.ApplyAutoTranslate(se4);
+        }
+
+        if (ExportImportAll || ExportImportShortcuts)
+        {
+            // SE 4 is Windows-only, so every binding in the file is Ctrl-based - on macOS they
+            // get the same Ctrl -> Cmd swap a Windows JSON export gets.
+            Se4SettingsXmlImporter.ApplyShortcuts(se4, shortcuts =>
+            {
+                if (OperatingSystem.IsMacOS())
+                {
+                    NormalizeShortcutModifiersForCurrentOs(shortcuts);
+                }
+            });
         }
 
         Se.SaveSettings();
