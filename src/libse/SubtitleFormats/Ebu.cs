@@ -932,6 +932,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (header == null)
             {
                 header = new EbuGeneralSubtitleInformation { LanguageCode = AutoDetectLanguageCode(subtitle) };
+
+                // In an STL colours only exist as teletext control codes - open subtitling (the
+                // default) has no colour mechanism at all. A coloured subtitle saved with an
+                // invented header must be teletext level 1, or every colour would be dropped.
+                if (subtitle.Paragraphs.Any(p => p.Text != null && p.Text.Contains("<font color", StringComparison.OrdinalIgnoreCase)))
+                {
+                    header.DisplayStandardCode = "1";
+                }
             }
 
             if (EbuUiHelper == null)
@@ -944,6 +952,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             // ASSA dialogue lines always carry one - so the vertical position below may only be
             // taken from MarginV when this is true.
             var isEbuSource = IsStlHeader(subtitle.Header);
+
+            // EBU-TT and DVB teletext write the same teletext row into MarginV as the STL reader
+            // does, so a subtitle exchanged through them keeps its exact rows too.
+            var isTeletextRowSource = isEbuSource ||
+                                      EbuTt.IsEbuTtHeader(subtitle.Header) ||
+                                      DvbTeletext.IsDvbTeletextHeader(subtitle.Header);
             if (isEbuSource)
             {
                 header = ReadHeader(GetEncoding(subtitle.Header.Substring(0, 3)).GetBytes(subtitle.Header));
@@ -1014,7 +1028,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var teletextPosition = 0;
                 var isTeletext = header.DisplayStandardCode == "1" || header.DisplayStandardCode == "2";
                 var hasTeletextPosition =
-                    isEbuSource &&
+                    isTeletextRowSource &&
                     isTeletext &&
                     int.TryParse(p.MarginV, out teletextPosition) &&
                     teletextPosition >= 1 &&
@@ -1255,6 +1269,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         /// </remarks>
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
+            // The other teletext capable formats understand both: EBU-TT maps the box to a black
+            // span background and the row to a region, DVB teletext boxes everything and places
+            // lines by row - exchanging a subtitle between them keeps the teletext look.
+            if (newFormat is EbuTt)
+            {
+                return;
+            }
+
+            var keepRows = newFormat is DvbTeletext;
             foreach (var p in subtitle.Paragraphs)
             {
                 if (p.Text != null && p.Text.Contains("<box>", StringComparison.Ordinal))
@@ -1262,7 +1285,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     p.Text = p.Text.Replace("<box>", string.Empty).Replace("</box>", string.Empty);
                 }
 
-                p.MarginV = null;
+                if (!keepRows)
+                {
+                    p.MarginV = null;
+                }
             }
         }
 

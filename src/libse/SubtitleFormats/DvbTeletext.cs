@@ -44,10 +44,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         /// <summary>
         /// Drops what only teletext can carry when converting away: the teletext row in MarginV,
-        /// which any other format would read as a pixel margin or a percentage.
+        /// which any other format would read as a pixel margin or a percentage. EBU STL and
+        /// EBU-TT place lines by the same rows, so converting to them keeps the positions.
         /// </summary>
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
+            if (newFormat is Ebu || newFormat is EbuTt || newFormat is DvbTeletext)
+            {
+                return;
+            }
+
             foreach (var p in subtitle.Paragraphs)
             {
                 p.MarginV = null;
