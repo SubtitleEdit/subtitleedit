@@ -162,6 +162,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new Csv4(),
                     new Csv5(),
                     new CsvDaVinci(),
+                    new CsvExcel(),
                     new CsvNuendo(),
                     new DCinemaInterop(),
                     new DCinemaSmpte2007(),
