@@ -462,7 +462,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         }
 
         SetYtDlpPathOption();
-        SetAudioBufferOption();
+        SetPreInitAudioOptions();
 
         var err = _mpvInitialize(_mpv);
         if (err >= 0)
@@ -993,6 +993,35 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         }
     }
 
+    /// <summary>
+    /// Every mpv audio option that has to be set before mpv_initialize, in one call so a new
+    /// init path cannot pick up half of them.
+    /// </summary>
+    private void SetPreInitAudioOptions()
+    {
+        SetAudioBufferOption();
+        SetAudioKeepOpenOption();
+    }
+
+    /// <summary>
+    /// mpv's "audio-keep-open". Its default is "no": the audio device is closed whenever
+    /// playback pauses or stops. Over HDMI to a receiver that drops the audio link on every
+    /// pause - the receiver reports no signal - and reopening it on resume costs a second or
+    /// two of re-handshake, which is heard as missing audio at the start of playback (#14330).
+    /// Holding the device open removes both. Off by setting, for anyone who needs mpv to hand
+    /// the device back the moment it pauses.
+    /// <para>Must be called before mpv_initialize.</para>
+    /// </summary>
+    private void SetAudioKeepOpenOption()
+    {
+        var keepOpen = Se.Settings.Video.MpvAudioKeepOpen;
+        var err = SetOptionString("audio-keep-open", keepOpen ? "yes" : "no");
+        if (err < 0)
+        {
+            Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer could not set audio-keep-open");
+        }
+    }
+
     private int _brightness;
 
     public int ToggleBrightness()
@@ -1132,7 +1161,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         // so let mpv auto-detect from the context it receives.
 
         SetYtDlpPathOption();
-        SetAudioBufferOption();
+        SetPreInitAudioOptions();
 
         // Initialize mpv first
         var err = _mpvInitialize(_mpv);
@@ -1237,7 +1266,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         SetStartPausedOption();
 
         SetYtDlpPathOption();
-        SetAudioBufferOption();
+        SetPreInitAudioOptions();
 
         var err = _mpvInitialize(_mpv);
         if (err < 0)
@@ -2503,7 +2532,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         }
 
         SetYtDlpPathOption();
-        SetAudioBufferOption();
+        SetPreInitAudioOptions();
 
         // Initialize mpv
         var err = _mpvInitialize(_mpv);

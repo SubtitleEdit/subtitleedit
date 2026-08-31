@@ -75,6 +75,15 @@ public class SeVideo
     /// </summary>
     public double MpvAudioBufferSeconds { get; set; }
 
+    /// <summary>
+    /// mpv's "audio-keep-open" option. mpv's own default is "no", which closes the audio device
+    /// every time playback pauses or stops. On a receiver reached over HDMI that shows up as a
+    /// dropped link on every pause and a second or two of missing audio on resume, while the
+    /// device is reopened and the link re-handshakes (#14330). Held open by default; turn it off
+    /// if you need mpv to release the audio device the moment it pauses.
+    /// </summary>
+    public bool MpvAudioKeepOpen { get; set; }
+
     public SeVideo()
     {
         BurnIn = new();
@@ -116,5 +125,6 @@ public class SeVideo
         MpvPreviewUsePositionFromFile = true;
         MpvPreviewJustify = "auto";
         MpvAudioBufferSeconds = 0.05;
+        MpvAudioKeepOpen = true;
     }
 }
