@@ -1,10 +1,11 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
+using System;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.AdvancedTtsSettings;
@@ -13,12 +14,12 @@ public partial class AdvancedTtsSettingsViewModel : ObservableObject
 {
     [ObservableProperty] private bool _doProAudioChain;
     [ObservableProperty] private bool _doAudioDucking;
-    [ObservableProperty] private string _audioDuckingVolume;
+    [ObservableProperty] private int _audioDuckingVolume;
     [ObservableProperty] private bool _doVadSilenceCompression;
-    [ObservableProperty] private string _vadMaxSilenceMs;
+    [ObservableProperty] private int _vadMaxSilenceMs;
     [ObservableProperty] private bool _doHighQualityTimeStretch;
-    [ObservableProperty] private string _silencePaddingMs;
-    [ObservableProperty] private string _outputSampleRate;
+    [ObservableProperty] private int _silencePaddingMs;
+    [ObservableProperty] private int _outputSampleRate;
     [ObservableProperty] private string _generationFolder;
     [ObservableProperty] private bool _doDeleteTempFiles;
     [ObservableProperty] private string _edgeTtsRate;
@@ -35,16 +36,18 @@ public partial class AdvancedTtsSettingsViewModel : ObservableObject
     public AdvancedTtsSettingsViewModel(IFolderHelper folderHelper)
     {
         _folderHelper = folderHelper;
-        RubberbandStatus = FfmpegGenerator.IsRubberbandAvailable() ? "(installed)" : "(not found in FFmpeg)";
+        RubberbandStatus = FfmpegGenerator.IsRubberbandAvailable()
+            ? Se.Language.Video.TextToSpeech.RubberbandInstalled
+            : Se.Language.Video.TextToSpeech.RubberbandNotFound;
         var s = Se.Settings.Video.TextToSpeech;
         DoProAudioChain = s.ProAudioChainEnabled;
         DoAudioDucking = s.AudioDuckingEnabled;
-        AudioDuckingVolume = s.AudioDuckingOriginalVolume.ToString();
+        AudioDuckingVolume = s.AudioDuckingOriginalVolume;
         DoVadSilenceCompression = s.VadSilenceCompressionEnabled;
-        VadMaxSilenceMs = ((int)(s.VadMaxSilenceSeconds * 1000)).ToString();
+        VadMaxSilenceMs = (int)Math.Round(s.VadMaxSilenceSeconds * 1000);
         DoHighQualityTimeStretch = s.HighQualityTimeStretchEnabled;
-        SilencePaddingMs = s.SilencePaddingMs.ToString();
-        OutputSampleRate = s.OutputSampleRate.ToString();
+        SilencePaddingMs = s.SilencePaddingMs;
+        OutputSampleRate = s.OutputSampleRate;
         EdgeTtsRate = s.EdgeTtsRate;
         EdgeTtsPitch = s.EdgeTtsPitch;
         EdgeTtsVolume = s.EdgeTtsVolume;
@@ -68,12 +71,12 @@ public partial class AdvancedTtsSettingsViewModel : ObservableObject
         var s = Se.Settings.Video.TextToSpeech;
         s.ProAudioChainEnabled = DoProAudioChain;
         s.AudioDuckingEnabled = DoAudioDucking;
-        s.AudioDuckingOriginalVolume = int.TryParse(AudioDuckingVolume, out var dv) ? dv : 15;
+        s.AudioDuckingOriginalVolume = AudioDuckingVolume;
         s.VadSilenceCompressionEnabled = DoVadSilenceCompression;
-        s.VadMaxSilenceSeconds = int.TryParse(VadMaxSilenceMs, out var vadMs) ? vadMs / 1000.0 : 0.15;
+        s.VadMaxSilenceSeconds = VadMaxSilenceMs / 1000.0;
         s.HighQualityTimeStretchEnabled = DoHighQualityTimeStretch;
-        s.SilencePaddingMs = int.TryParse(SilencePaddingMs, out var sp) ? sp : 0;
-        s.OutputSampleRate = int.TryParse(OutputSampleRate, out var sr) ? sr : 0;
+        s.SilencePaddingMs = SilencePaddingMs;
+        s.OutputSampleRate = OutputSampleRate;
         s.EdgeTtsRate = EdgeTts.NormalizeProsodyValue(EdgeTtsRate, "%");
         s.EdgeTtsPitch = EdgeTts.NormalizeProsodyValue(EdgeTtsPitch, "Hz");
         s.EdgeTtsVolume = EdgeTts.NormalizeProsodyValue(EdgeTtsVolume, "%");

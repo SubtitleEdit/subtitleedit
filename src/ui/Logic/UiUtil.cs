@@ -591,6 +591,41 @@ public static class UiUtil
         return button;
     }
 
+    /// <summary>
+    /// A small "i" icon that shows <paramref name="hint"/> on hover - the compact alternative to a
+    /// wall of description text under every option (#14331). The icon only carries a tooltip, so it
+    /// is hidden outright when hints are turned off; the text is still handed to screen readers via
+    /// the described control's help text, which does not depend on the hint setting.
+    /// </summary>
+    /// <param name="hint">The explanation to show.</param>
+    /// <param name="describes">The control the hint belongs to, so screen readers announce it too.</param>
+    public static Control MakeHintIcon(string hint, Control? describes = null)
+    {
+        var icon = new ContentControl
+        {
+            Width = 16,
+            Height = 16,
+            VerticalAlignment = VerticalAlignment.Center,
+            Opacity = 0.7,
+            IsVisible = Se.Settings.Appearance.ShowHints,
+        };
+
+        Attached.SetIcon(icon, IconNames.Information);
+        AutomationProperties.SetName(icon, hint);
+
+        if (describes != null)
+        {
+            AutomationProperties.SetHelpText(describes, hint);
+        }
+
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            AttachHoverTooltip(icon, hint);
+        }
+
+        return icon;
+    }
+
     // On macOS, Avalonia's built-in ToolTip hover service does not open on hover inside modal
     // dialogs - the popup itself works (a forced ToolTip.IsOpen renders it, and the pointer-over
     // state is detected), but the hover trigger never fires, so icon-button hints were invisible in
