@@ -902,6 +902,29 @@ public class FfmpegGenerator
     }
 
     /// <summary>
+    /// Resamples / mixes the input to mono PCM16 WAV at 44.1 kHz. Used by Fish Audio S2 Pro
+    /// (audio.cpp) for its voice-cloning reference WAV — the S2 Pro codec runs at 44.1 kHz,
+    /// so importing at that rate means the reference is only resampled once.
+    /// </summary>
+    public static Process ConvertToMono44kHzWav(string inputFileName, string outputFileName, DataReceivedEventHandler? dataReceivedHandler = null)
+    {
+        var process = new Process
+        {
+            StartInfo =
+            {
+                FileName = GetFfmpegLocation(),
+                Arguments = $"-y -i \"{inputFileName}\" -ar 44100 -ac 1 -c:a pcm_s16le \"{outputFileName}\"",
+                UseShellExecute = false,
+                CreateNoWindow = true,
+            }
+        };
+
+        SetupDataReceiveHandler(dataReceivedHandler, process);
+
+        return process;
+    }
+
+    /// <summary>
     /// Resamples / mixes the input to mono PCM16 WAV at 16 kHz. Used by CosyVoice3 (CrispASR)
     /// for its zero-shot voice-cloning reference WAV — the s3tok speech tokenizer expects
     /// 16 kHz mono. Higher rates work but cause a lossy resample on every synth call.

@@ -63,6 +63,15 @@ public class SeVideoTextToSpeech
     // One of IndexTts25AudioCpp.EmotionNames, or empty/"none" for no emotion conditioning.
     public string IndexTts25AudioCppEmotion { get; set; }
     public double IndexTts25AudioCppEmotionAlpha { get; set; }
+
+    // Higgs Audio v3 (audio.cpp). The runtime backend is shared with IndexTTS 2.5 —
+    // see AudioCppRuntime.GetBackend — so only model choice and licence live here.
+    public string HiggsTtsAudioCppModel { get; set; }
+    public string HiggsTtsAudioCppLicenseAccepted { get; set; }
+
+    // Fish Audio S2 Pro (audio.cpp). Same sharing as above.
+    public string FishTtsAudioCppModel { get; set; }
+    public string FishTtsAudioCppLicenseAccepted { get; set; }
     public string CosyVoice3CrispAsrModel { get; set; }
     public double CosyVoice3CrispAsrSpeed { get; set; }
     // Display name of the picked CosyVoice3 target language ("Auto" = plain zero-shot cloning).
@@ -195,6 +204,10 @@ public class SeVideoTextToSpeech
         IndexTts25AudioCppDurationFactor = 1.0;
         IndexTts25AudioCppEmotion = string.Empty;
         IndexTts25AudioCppEmotionAlpha = 0.8;
+        HiggsTtsAudioCppModel = "Q8_0 (~4.7 GB)";
+        HiggsTtsAudioCppLicenseAccepted = string.Empty;
+        FishTtsAudioCppModel = "Q8_0 (~5.9 GB)";
+        FishTtsAudioCppLicenseAccepted = string.Empty;
         CosyVoice3CrispAsrModel = "Q4_K (~1.6 GB total)";
         CosyVoice3CrispAsrSpeed = 1.0;
         CosyVoice3CrispAsrLanguage = string.Empty;

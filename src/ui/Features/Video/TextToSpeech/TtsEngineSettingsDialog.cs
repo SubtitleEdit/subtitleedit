@@ -7,6 +7,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DotsTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ElevenLabsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.F5TtsCrispAsrSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.AudioCppTtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTts25AudioCppSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.KokoroTtsSettings;
@@ -41,6 +42,8 @@ public static class TtsEngineSettingsDialog
         Qwen3TtsCrispAsr or
         VibeVoiceCrispAsr or
         IndexTts25AudioCpp or
+        HiggsTtsAudioCpp or
+        FishTtsAudioCpp or
         IndexTtsCrispAsr or
         DotsTtsCrispAsr or
         Confucius4TtsCrispAsr or
@@ -76,6 +79,14 @@ public static class TtsEngineSettingsDialog
         else if (engine is IndexTts25AudioCpp)
         {
             await windowService.ShowDialogAsync<IndexTts25AudioCppSettingsWindow, IndexTts25AudioCppSettingsViewModel>(window, vm => vm.Initialize());
+        }
+        else if (engine is HiggsTtsAudioCpp)
+        {
+            await windowService.ShowDialogAsync<AudioCppTtsSettingsWindow, AudioCppTtsSettingsViewModel>(window, vm => vm.Initialize(AudioCppTtsSettingsAdapters.Higgs));
+        }
+        else if (engine is FishTtsAudioCpp)
+        {
+            await windowService.ShowDialogAsync<AudioCppTtsSettingsWindow, AudioCppTtsSettingsViewModel>(window, vm => vm.Initialize(AudioCppTtsSettingsAdapters.Fish));
         }
         else if (engine is IndexTtsCrispAsr)
         {

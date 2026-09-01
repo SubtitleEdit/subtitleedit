@@ -253,6 +253,22 @@ public static class DownloadHashManager
         public const string EngineLinuxCuda = "IndexTts25AudioCpp.EngineLinuxCuda";
     }
 
+    public static class HiggsTtsAudioCpp
+    {
+        // SHA-256 of the Higgs Audio v3 TTS 4B GGUFs on audio-cpp/audio.cpp-gguf (HF LFS oid).
+        // The engine binaries are the shared audio.cpp archives keyed under IndexTts25AudioCpp.
+        public const string ModelQ8_0 = "HiggsTtsAudioCpp.ModelQ8_0";
+        public const string ModelBf16 = "HiggsTtsAudioCpp.ModelBf16";
+    }
+
+    public static class FishTtsAudioCpp
+    {
+        // SHA-256 of the Fish Audio S2 Pro GGUFs on audio-cpp/audio.cpp-gguf (HF LFS oid).
+        // The engine binaries are the shared audio.cpp archives keyed under IndexTts25AudioCpp.
+        public const string ModelQ8_0 = "FishTtsAudioCpp.ModelQ8_0";
+        public const string ModelBf16 = "FishTtsAudioCpp.ModelBf16";
+    }
+
     public static class ZonosTtsCrispAsr
     {
         // SHA-256 of the Zonos-v0.1 transformer (Q8_0) and the shared DAC 44 kHz codec.
@@ -1906,6 +1922,26 @@ public static class DownloadHashManager
             [IndexTts25AudioCpp.ModelF16] = new[]
             {
                 "87bed9b82fc8f22119a1a1042332091016c28e37f29b0e93343ccdbfa76ef66a", // index-tts2_5-f16.gguf
+            },
+
+            // Higgs Audio v3 TTS 4B weights, from audio-cpp/audio.cpp-gguf (HF LFS oid).
+            [HiggsTtsAudioCpp.ModelQ8_0] = new[]
+            {
+                "79746822045b5bf8f9ab2bda87b16cd3f8ea3d9e319cbcf887a87aa1b537a74a", // higgs-audio-v3-tts-4b-q8_0.gguf
+            },
+            [HiggsTtsAudioCpp.ModelBf16] = new[]
+            {
+                "2c04410d9ae6af9a48ce989c1b6d7dfaa0320c8e09ff7da8d3e04b8d9b0669dc", // higgs-audio-v3-tts-4b-bf16.gguf
+            },
+
+            // Fish Audio S2 Pro weights, from audio-cpp/audio.cpp-gguf (HF LFS oid).
+            [FishTtsAudioCpp.ModelQ8_0] = new[]
+            {
+                "4ffc169447b7a26df8bf49e8637adb4000bfa763a22c018b6c03968564259d0b", // fish-audio-s2-pro-q8_0.gguf
+            },
+            [FishTtsAudioCpp.ModelBf16] = new[]
+            {
+                "781fdece3ff837838c48f7d5a7b37e37c4d661a6416416ad57fe92fed47d96ff", // fish-audio-s2-pro-bf16.gguf
             },
 
             // audio.cpp engine archives we build in SubtitleEdit/support-files

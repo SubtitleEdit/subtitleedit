@@ -94,6 +94,17 @@ public static class TtsEngineCatalog
             // server is not restarted when the voice changes.
             new IndexTts25AudioCpp(),
 
+            // Higgs Audio v3 (audio.cpp) — Boson AI's 4B model, cloning across 100+ languages,
+            // the broadest coverage of any engine here. Shares the audio.cpp runtime install
+            // with IndexTTS 2.5, so it is grouped right after it. Weights are research /
+            // non-commercial licensed (first-run accept window, like IndexTTS 2.5's).
+            new HiggsTtsAudioCpp(),
+
+            // Fish Audio S2 Pro (audio.cpp) — cloning from a 10-30 s reference across 80+
+            // languages with inline prosody/emotion control. Same shared runtime; weights are
+            // under the Fish Audio Research License (first-run accept window).
+            new FishTtsAudioCpp(),
+
             // F5-TTS (CrispASR) hidden: CrispASR 0.6.12 has no GPU backend for f5-tts, so
             // synthesis runs the fixed 32-step Euler ODE through a 22-layer DiT + Vocos on
             // CPU only. That's 3-8 minutes per short utterance on Mac CPU — unusable for the
