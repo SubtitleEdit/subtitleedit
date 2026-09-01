@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
@@ -6,6 +6,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Threading;
 using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
@@ -69,7 +70,14 @@ public class AutoTranslateWindow : Window
         ApplyButtonAccentStates(vm);
         vm.PropertyChanged += OnViewModelPropertyChanged;
 
+        AddHandler(KeyDownEvent, (_, e) => _vm.PreviewKeyDown(e), RoutingStrategies.Tunnel, handledEventsToo: false);
+
         Loaded += (s, e) => UiUtil.RestoreWindowPosition(this);
+
+        // Start out on the accented button so it is selected, not just coloured like it - Enter
+        // then starts the translation right away. First activation only: coming back from a
+        // dialog must not pull focus away from where the user left it.
+        UiUtil.FocusOnFirstActivation(this, () => _buttonTranslate?.Focus());
     }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -90,6 +98,21 @@ public class AutoTranslateWindow : Window
     {
         SetAccent(_buttonTranslate, vm.IsTranslatePrimary);
         SetAccent(_buttonOk, vm.IsOkPrimary);
+
+        // A focused button answers Enter itself, so let the focus follow the accent when OK takes
+        // over as the default button after a translation - otherwise Enter would keep translating.
+        // Posted: this runs from the first of the property changes that flip the two buttons, and
+        // OK is still disabled (hence unfocusable) until its own IsEnabled binding has caught up.
+        if (vm.IsOkPrimary && _buttonTranslate?.IsFocused == true)
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                if (_vm.IsOkPrimary && _buttonTranslate?.IsFocused == true)
+                {
+                    _buttonOk?.Focus();
+                }
+            });
+        }
     }
 
     private static void SetAccent(Button? button, bool accent)

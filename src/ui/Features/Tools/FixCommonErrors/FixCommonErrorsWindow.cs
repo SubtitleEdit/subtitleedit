@@ -357,7 +357,7 @@ public class FixCommonErrorsWindow : Window
             }
         };
 
-        Activated += delegate { FocusStepButton(); };
+        UiUtil.FocusOnFirstActivation(this, () => { FocusStepButton(); });
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
@@ -749,7 +749,7 @@ public class FixCommonErrorsWindow : Window
                 };
                 if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
                 {
-                    textBlock.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
+                    textBlock.FontFamily = FontFamilyHelper.Make(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
                 }
 
                 return new Border
@@ -848,7 +848,7 @@ public class FixCommonErrorsWindow : Window
         };
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
         {
-            textBox.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
+            textBox.FontFamily = FontFamilyHelper.Make(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
         }
 
         AutomationProperties.SetName(textBox, Se.Language.General.Text);

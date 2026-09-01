@@ -92,6 +92,30 @@ public class ExportTextTagsTests
     }
 
     [Theory]
+    [InlineData("{\\i1\\pos(10,20)}Hello", "<i>Hello</i>")]
+    [InlineData("{\\pos(10,20)\\i1}Hello", "<i>Hello</i>")]
+    [InlineData("{\\an8\\fad(300,300)\\b1}Hello", "<b>Hello</b>")]
+    [InlineData("{\\fad(300,300}{\\i1}Hello", "<i>Hello</i>")] // missing ")" as SE's own effects write it
+    [InlineData("{\\fade(255,0,255,0,500,2000,2200)\\i1}Hello", "<i>Hello</i>")]
+    [InlineData("{\\alpha&H80&\\i1}Hello", "<i>Hello</i>")]
+    [InlineData("{\\1a&H80&\\3a&HFF&}{\\i1}Hello", "<i>Hello</i>")]
+    [InlineData("{\\pos(10,20)\\c&H0000FF&}Red{\\c}", "<font color=\"#ff0000\">Red</font>")]
+    [InlineData("{\\move(10,20,30,40)\\i1}Hello", "Hello")] // \move is NOT consumed - still too complex
+    [InlineData("{\\bord0\\i1}Hello", "<i>Hello</i>")]
+    [InlineData("{\\bord2.5\\shad0\\b1}Hello", "<b>Hello</b>")]
+    [InlineData("{\\3c&H0000FF&\\4c&H00FF00&\\i1}Hello", "<i>Hello</i>")]
+    [InlineData("{\\xbord4\\i1}Hello", "Hello")] // one axis variants are NOT consumed - still too complex
+    [InlineData("{\\t(0,200,\\bord0)\\i1}Hello", "Hello")] // inside \t nothing is consumed - still too complex
+    public void ToRenderableText_ConsumedTags_DoNotCostTheLineItsFormatting(string text, string expected)
+    {
+        // "\pos", "\fad", "\alpha", "\3c"/"\4c" and "\bord"/"\shad" are read off the text
+        // before rendering (ApplyPositionTag/ApplyTransparencyTags/ApplyStyleOverrideTags),
+        // so they must not make GetFormattedText treat the line as too complex and drop the
+        // formatting tags next to them.
+        Assert.Equal(expected, ExportTextTags.ToRenderableText(text));
+    }
+
+    [Theory]
     [InlineData("<u>Hello</u>", "Hello")] // the renderer cannot underline
     [InlineData("{\\u1}Hello{\\u0}", "Hello")]
     public void ToRenderableText_UnderlineTags_AreRemoved(string text, string expected)
@@ -165,6 +189,95 @@ public class ExportTextTagsTests
         Assert.NotNull(ip.OverridePosition);
         Assert.Equal(0, ip.OverridePosition!.Value.X);
         Assert.Equal(1080 - 50, ip.OverridePosition.Value.Y);
+    }
+
+    private static ImageParameter MakeStyledParameter()
+    {
+        var ip = MakeParameter(ExportAlignment.BottomCenter);
+        ip.OutlineColor = new SKColor(1, 2, 3);
+        ip.ShadowColor = new SKColor(4, 5, 6, 128); // half transparent - a "\4c" must keep that
+        ip.OutlineWidth = 3;
+        ip.ShadowWidth = 2;
+        return ip;
+    }
+
+    [Fact]
+    public void ApplyStyleOverrideTags_OutlineColorTag_SetsOutlineColor()
+    {
+        var ip = MakeStyledParameter();
+
+        // ASSA colors are &HBBGGRR& - "&H0000FF&" is red
+        ExportTextTags.ApplyStyleOverrideTags(ip, "{\\3c&H0000FF&}Hello");
+
+        Assert.Equal(new SKColor(255, 0, 0), ip.OutlineColor);
+        Assert.Equal(new SKColor(4, 5, 6, 128), ip.ShadowColor); // untouched
+    }
+
+    [Fact]
+    public void ApplyStyleOverrideTags_ShadowColorTag_KeepsTheParameterAlpha()
+    {
+        var ip = MakeStyledParameter();
+
+        ExportTextTags.ApplyStyleOverrideTags(ip, "{\\4c&HFF0000&}Hello");
+
+        // "&HFF0000&" is blue; the transparency stays with the parameter ("\4a" owns it)
+        Assert.Equal(new SKColor(0, 0, 255, 128), ip.ShadowColor);
+    }
+
+    [Fact]
+    public void ApplyStyleOverrideTags_EightDigitColor_ReadsOnlyTheLowSixDigits()
+    {
+        var ip = MakeStyledParameter();
+
+        // Some tools write "&HAABBGGRR&" - the alpha up front belongs to "\3a", not the color
+        ExportTextTags.ApplyStyleOverrideTags(ip, "{\\3c&H800000FF&}Hello");
+
+        Assert.Equal(new SKColor(255, 0, 0), ip.OutlineColor);
+    }
+
+    [Theory]
+    [InlineData("{\\bord0}Hello", 0.0, 2.0)] // how ASSA turns the outline off for one line
+    [InlineData("{\\bord2.5}Hello", 2.5, 2.0)]
+    [InlineData("{\\shad0}Hello", 3.0, 0.0)]
+    [InlineData("{\\bord4\\shad1}Hello", 4.0, 1.0)]
+    public void ApplyStyleOverrideTags_WidthTags_OverrideTheDialogWidths(string text, double expectedOutline, double expectedShadow)
+    {
+        var ip = MakeStyledParameter();
+
+        ExportTextTags.ApplyStyleOverrideTags(ip, text);
+
+        Assert.Equal(expectedOutline, ip.OutlineWidth);
+        Assert.Equal(expectedShadow, ip.ShadowWidth);
+    }
+
+    [Fact]
+    public void ApplyStyleOverrideTags_ScriptResolutionDiffers_ScalesTheWidths()
+    {
+        var ip = MakeStyledParameter();
+
+        // 288 line script on a 1080 line canvas: 2 * 1080/288 = 7.5
+        ExportTextTags.ApplyStyleOverrideTags(ip, "{\\bord2}Hello", scriptHeight: 288);
+
+        Assert.Equal(7.5, ip.OutlineWidth);
+    }
+
+    [Theory]
+    [InlineData("Hello")]
+    [InlineData(null)]
+    [InlineData("{\\i1}Hello")]
+    [InlineData("{\\xbord4\\yshad3}Hello")] // one axis variants are not consumed
+    [InlineData("{\\t(0,200,\\bord0)}Hello")] // an animation target, not the line's look
+    [InlineData("{\\t(0,200,\\3c&H0000FF&)}Hello")]
+    public void ApplyStyleOverrideTags_NoConsumableTag_LeavesTheParameterAlone(string? text)
+    {
+        var ip = MakeStyledParameter();
+
+        ExportTextTags.ApplyStyleOverrideTags(ip, text);
+
+        Assert.Equal(new SKColor(1, 2, 3), ip.OutlineColor);
+        Assert.Equal(new SKColor(4, 5, 6, 128), ip.ShadowColor);
+        Assert.Equal(3.0, ip.OutlineWidth);
+        Assert.Equal(2.0, ip.ShadowWidth);
     }
 
     [Fact]

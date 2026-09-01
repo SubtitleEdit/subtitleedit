@@ -55,10 +55,10 @@ public class BinaryOcrCharacterHistoryWindow : Window
 
         vm.TextBoxNew.KeyDown += vm.TextBoxNewOnKeyDown;
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             vm.TextBoxNew.Focus(); // hack to make OnKeyDown work
-        };
+        });
         PointerWheelChanged += vm.PointerWheelChanged;
         KeyDown += (_, e) => vm.KeyDown(e);
         KeyUp += (_, e) => vm.KeyUp(e);
@@ -97,7 +97,7 @@ public class BinaryOcrCharacterHistoryWindow : Window
         vm.TextBoxNew = UiUtil.MakeTextBox(100, vm, nameof(vm.NewText));
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
         {
-            vm.TextBoxNew.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
+            vm.TextBoxNew.FontFamily = FontFamilyHelper.Make(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
         }
         var image = new Image
         {

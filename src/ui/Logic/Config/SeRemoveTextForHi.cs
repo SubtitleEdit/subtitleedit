@@ -18,7 +18,6 @@ public class SeRemoveTextForHi
     public string CustomStart { get; set; }
     public string CustomEnd { get; set; }
     public bool IsOnlySeparateLine { get; set; }
-    public bool IsOnlySingleLine { get; set; }
 
     public bool IsRemoveTextBeforeColonOn { get; set; }
     public bool IsRemoveTextBeforeColonUppercaseOn { get; set; }

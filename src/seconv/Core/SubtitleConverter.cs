@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.UiLogic.Export;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 using Spectre.Console;
 
@@ -17,6 +18,31 @@ internal class SubtitleConverter
     // one mkv would otherwise silently overwrite each other).
     private readonly HashSet<string> _usedOutputFileNames = new(StringComparer.OrdinalIgnoreCase);
 
+    /// <summary>
+    /// "Full frame" reaches only <see cref="ExportHandlerFcp"/> and
+    /// <see cref="ExportHandlerBluRaySup"/>; the other image handlers ignore
+    /// <see cref="ImageParameter.IsFullFrame"/> and write the cropped bitmap. Silently doing
+    /// nothing is worse on a command line than in the export dialog - the setting often comes
+    /// from a shared --settings profile - so say it was dropped (issue #14376). A text target
+    /// ignores every image styling option, not just this one, so it warns for image targets only.
+    /// </summary>
+    private static void WarnIfFullFrameIgnored(ConversionOptions options, ConversionResult result)
+    {
+        if (!options.ImageStyle.IsFullFrame)
+        {
+            return;
+        }
+
+        var handler = ImageOutputWriter.TryCreateHandler(LibSEIntegration.NormalizeFormatName(options.Format));
+        if (handler is null || handler.ExportImageType is ExportImageType.Fcp or ExportImageType.BluRaySup)
+        {
+            return;
+        }
+
+        result.Warnings.Add(
+            $"Full frame image is not supported by '{options.Format}' and was ignored - it applies to fcpimage and bluraysup.");
+    }
+
     public async Task<ConversionResult> ConvertAsync(ConversionOptions options)
     {
         var result = new ConversionResult();
@@ -28,6 +54,8 @@ internal class SubtitleConverter
             {
                 _translateRunner = AutoTranslateRunner.Create(options);
             }
+
+            WarnIfFullFrameIgnored(options, result);
 
             // Get input files
             var inputFiles = GetInputFiles(options);
@@ -185,13 +213,21 @@ internal class SubtitleConverter
             return result;
         }
 
+        // The VOB extractor copies subpicture packets verbatim - the timing transforms
+        // never run on this path, so refuse them rather than silently ignore them.
+        ThrowOnUnsupportedImagePassThroughOptions(options);
+
         // Derive output base name: --output-filename wins, otherwise use the first VOB's
         // stem dropped one underscore-segment (so VTS_01_1.VOB becomes VTS_01.sub for the
         // typical DVD layout). Falls back to the bare stem when there's no underscore.
         string outputBase;
         if (!string.IsNullOrEmpty(options.OutputFilename))
         {
-            outputBase = options.OutputFilename;
+            // Same rule as ResolveOutputFileName: a relative --output-filename still lands
+            // in --output-folder; an absolute one wins outright.
+            outputBase = !string.IsNullOrEmpty(options.OutputFolder) && !Path.IsPathRooted(options.OutputFilename)
+                ? Path.Combine(options.OutputFolder, options.OutputFilename)
+                : options.OutputFilename;
             // VobSubWriter derives the .idx path as Substring(0, length - 3) + "idx", so
             // a user-supplied --output-filename without ".sub" (e.g. "movie" or "movie.txt")
             // would produce a broken companion path like "vieidx" or "movie.tidx". Force
@@ -702,11 +738,40 @@ internal class SubtitleConverter
         return true;
     }
 
+    /// <summary>
+    /// The bitmap pass-through path writes the source items' timestamps verbatim - none of
+    /// the timing/deletion transforms run on it. Silently ignoring those options would make
+    /// a run look successful while producing something other than what was asked for, so
+    /// fail loudly instead (convert via a text/OCR format to apply them).
+    /// </summary>
+    private static void ThrowOnUnsupportedImagePassThroughOptions(ConversionOptions options)
+    {
+        var unsupported = new List<string>();
+        if (options.Offset.HasValue) { unsupported.Add("--offset"); }
+        if (options.ChangeSpeedPercent.HasValue) { unsupported.Add("--change-speed"); }
+        if (options.DeleteFirst.HasValue) { unsupported.Add("--delete-first"); }
+        if (options.DeleteLast.HasValue) { unsupported.Add("--delete-last"); }
+        if (options.DeleteContains != null) { unsupported.Add("--delete-contains"); }
+        if (options.Renumber.HasValue) { unsupported.Add("--renumber"); }
+        if (options.AdjustDurationMs.HasValue) { unsupported.Add("--adjust-duration"); }
+        if (options.BridgeGapsMaxMs.HasValue) { unsupported.Add("--bridge-gaps"); }
+        if (options.ApplyMinGapMs.HasValue) { unsupported.Add("--apply-min-gap"); }
+        if (options.TargetFps.HasValue) { unsupported.Add("--target-fps"); }
+
+        if (unsupported.Count > 0)
+        {
+            throw new InvalidOperationException(
+                $"Not supported when passing image subtitles straight through to an image format: {string.Join(", ", unsupported)}. " +
+                "Convert to a text format (OCR) to apply timing transforms, or drop the option(s).");
+        }
+    }
+
     private static void WritePreservedBitmaps(
         IReadOnlyList<BitmapSubtitleLoader.BitmapSubtitleItem> items,
         string outputFile,
         ConversionOptions options)
     {
+        ThrowOnUnsupportedImagePassThroughOptions(options);
         var handler = ImageOutputWriter.TryCreateHandler(LibSEIntegration.NormalizeFormatName(options.Format))
             ?? throw new InvalidOperationException($"No image handler for format '{options.Format}'");
         var outputDir = Path.GetDirectoryName(outputFile);
@@ -830,10 +895,15 @@ internal class SubtitleConverter
             subtitle.AddTimeToAllParagraphs(options.Offset.Value);
         }
 
-        // Apply target frame rate via libse (handles frame-based formats correctly)
-        if (options.Fps.HasValue && options.TargetFps.HasValue)
+        // Apply target frame rate via libse (handles frame-based formats correctly).
+        // --target-fps on its own used to be accepted and then silently ignored; SE4 converts from
+        // the current frame rate in that case, and the image path here already does the same.
+        if (options.TargetFps is > 0)
         {
-            subtitle.ChangeFrameRate(options.Fps.Value, options.TargetFps.Value);
+            // Whole milliseconds: scaling start and end independently leaves fractional times in
+            // everything seconv writes, and rounds two equal-length cues to different lengths.
+            // The Change frame rate dialog was fixed the same way for #14056.
+            subtitle.ChangeFrameRateWholeMilliseconds(options.Fps ?? Configuration.Settings.General.CurrentFrameRate, options.TargetFps.Value);
         }
 
         // Scale all times by 100/percent (matches Sync > Change Speed in the UI)
@@ -955,6 +1025,7 @@ internal class SubtitleConverter
         ISet<string>? usedNames = null)
     {
         string baseName;
+        string ext;
         if (!string.IsNullOrEmpty(options.OutputFilename))
         {
             // A relative --output-filename still lands in --output-folder; an absolute
@@ -962,6 +1033,7 @@ internal class SubtitleConverter
             baseName = !string.IsNullOrEmpty(options.OutputFolder) && !Path.IsPathRooted(options.OutputFilename)
                 ? Path.Combine(options.OutputFolder, options.OutputFilename)
                 : options.OutputFilename;
+            ext = Path.GetExtension(baseName);
         }
         else
         {
@@ -974,6 +1046,10 @@ internal class SubtitleConverter
                 ? fileName
                 : $"{fileName}.{languageSuffix}";
             baseName = Path.Combine(outputFolder, stemWithLang + extension);
+            // Track the real extension: for an extension-less format (BDN-XML writes a
+            // folder) Path.GetExtension(baseName) would mistake the language suffix for
+            // the extension and the collision names below would double it.
+            ext = extension;
         }
 
         if ((options.Overwrite || !File.Exists(baseName)) && usedNames?.Contains(baseName) != true)
@@ -983,8 +1059,10 @@ internal class SubtitleConverter
         }
 
         var dir = Path.GetDirectoryName(baseName) ?? string.Empty;
-        var stem = Path.GetFileNameWithoutExtension(baseName);
-        var ext = Path.GetExtension(baseName);
+        var baseFileName = Path.GetFileName(baseName);
+        var stem = ext.Length > 0 && baseFileName.EndsWith(ext, StringComparison.OrdinalIgnoreCase)
+            ? baseFileName.Substring(0, baseFileName.Length - ext.Length)
+            : baseFileName;
 
         // For container collisions, try inserting the track number first
         if (trackNumber.HasValue && !string.IsNullOrEmpty(languageSuffix))
@@ -1114,7 +1192,8 @@ internal record class ConversionOptions
     public string OcrEngine { get; init; } = "tesseract";
 
     /// <summary>Language code or human name passed to the OCR engine (Tesseract: ISO 639-2 like <c>eng</c>; Paddle: <c>en</c>; Ollama: human name like <c>English</c>).</summary>
-    public string OcrLanguage { get; init; } = "eng";
+    /// <summary>Null = let each OCR engine apply its own default code set.</summary>
+    public string? OcrLanguage { get; init; }
 
     /// <summary>Path to a <c>.nocr</c> database file (required when <c>OcrEngine == "nocr"</c>).</summary>
     public string? OcrDb { get; init; }
@@ -1165,6 +1244,12 @@ internal record class ConversionOptions
     /// <summary>llama.cpp OCR model: curated <c>.gguf</c> file name or full path (default: first installed OCR model).</summary>
     public string? OcrModel { get; init; }
 
+    /// <summary>
+    /// Prompt for the prompt-driven OCR engines (llamacpp, ollama); <c>{language}</c> is replaced
+    /// with <see cref="OcrLanguage"/>. Null = each engine's built-in default.
+    /// </summary>
+    public string? OcrPrompt { get; init; }
+
     /// <summary>Auto-translate target language (code or English name). Non-null enables translation.</summary>
     public string? TranslateTo { get; init; }
 
@@ -1179,6 +1264,13 @@ internal record class ConversionOptions
 
     /// <summary>Model: ollama/lmstudio model name, or llamacpp .gguf file name/path.</summary>
     public string? TranslateModel { get; init; }
+
+    /// <summary>
+    /// Prompt override for the LLM translate engines (llamacpp/ollama/lmstudio): inline text
+    /// (<c>\n</c> for a line break) or the path to a text file. See
+    /// <see cref="AutoTranslateRunner.ReadPromptOption"/>.
+    /// </summary>
+    public string? TranslatePrompt { get; init; }
 
     public bool TeletextOnly { get; init; }
     public bool SkipTeletext { get; init; }

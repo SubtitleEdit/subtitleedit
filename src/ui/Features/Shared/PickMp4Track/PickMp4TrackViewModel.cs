@@ -201,16 +201,22 @@ public partial class PickMp4TrackViewModel : ObservableObject
             {
                 var subPicture = subPictures[i];
                 var paragraph = paragraphs[i];
-                exportHandler.WriteParagraph(new ImageParameter
+                using var bitmap = subPicture.GetBitmap(palette, SKColors.Transparent, SKColors.Black, SKColors.White, SKColors.Black, false);
+                var ip = new ImageParameter
                 {
-                    Bitmap = subPicture.GetBitmap(palette, SKColors.Transparent, SKColors.Black, SKColors.White, SKColors.Black, false),
+                    Bitmap = bitmap,
                     StartTime = TimeSpan.FromMilliseconds(paragraph.StartTime.TotalMilliseconds),
                     EndTime = TimeSpan.FromMilliseconds(paragraph.EndTime.TotalMilliseconds),
                     ScreenWidth = screenWidth,
                     ScreenHeight = screenHeight,
                     Index = i + 1,
                     OverridePosition = new SKPointI(subPicture.ImageDisplayArea.Left, subPicture.ImageDisplayArea.Top),
-                });
+                };
+
+                // WriteParagraph only writes ImageParameter.Buffer, and CreateParagraph is what
+                // fills it - without this every cue wrote zero bytes and the .sup came out empty.
+                exportHandler.CreateParagraph(ip);
+                exportHandler.WriteParagraph(ip);
             }
 
             exportHandler.WriteFooter();
@@ -287,15 +293,22 @@ public partial class PickMp4TrackViewModel : ObservableObject
             i++;
             var cue = new Mp4SubtitleCueDisplay()
             {
-                Number = i + 1,
+                // i is already 1-based here (the Matroska picker's i is 0-based), so "+ 1" made
+                // the "#" column start at 2.
+                Number = i,
                 Show = item.StartTime.TimeSpan,
                 Hide = item.EndTime.TimeSpan,
                 Duration = TimeSpan.FromMilliseconds(item.EndTime.TotalMilliseconds - item.StartTime.TotalMilliseconds),
             };
 
-            if (selectedTrack.IsVobSubSubtitle && selectedTrack.Track is { } trackinfo)
+            // Export guards the same pairing with Math.Min, so the two lists demonstrably can
+            // differ in length - indexing blindly threw out of the selection-changed handler.
+            if (selectedTrack.IsVobSubSubtitle && selectedTrack.Track is { } trackinfo &&
+                i - 1 < trackinfo.Mdia.Minf.Stbl.SubPictures.Count)
             {
-                cue.Image = new Image { Source = trackinfo.Mdia.Minf.Stbl.SubPictures[i - 1].GetBitmap(trackinfo.Mdia.Minf.Stbl.VobSubPalette, SKColors.Transparent, SKColors.Black, SKColors.White, SKColors.Black, false).ToAvaloniaBitmap() };
+                using var subPictureBitmap = trackinfo.Mdia.Minf.Stbl.SubPictures[i - 1]
+                    .GetBitmap(trackinfo.Mdia.Minf.Stbl.VobSubPalette, SKColors.Transparent, SKColors.Black, SKColors.White, SKColors.Black, false);
+                cue.Image = new Image { Source = subPictureBitmap.ToAvaloniaBitmap() };
             }
             else
             {

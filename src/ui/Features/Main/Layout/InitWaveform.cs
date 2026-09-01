@@ -72,6 +72,10 @@ public class InitWaveform
                 FocusOnMouseOver = settings.FocusOnMouseOver,
                 IsReadOnly = Se.Settings.General.LockTimeCodes,
                 WaveformHeightPercentage = settings.SpectrogramCombinedWaveformHeight,
+                // The toggle may have been pressed in a layout without a waveform; a waveform
+                // built later must come up on the same side of it as the video preview, or the
+                // two previews show different texts (see SetOriginalTextInPreview).
+                ShowOriginalText = vm.ShowOriginalTextInPreview,
             };
 
             vm.AudioVisualizer.GetIsVideoPlaying = () => vm.GetVideoPlayerControl()?.IsPlaying == true;
@@ -698,6 +702,88 @@ public class InitWaveform
             av.StartPositionSeconds = e.NewValue - halfWidthInSeconds;
         };
 
+        // SE 4's editable video position box (#12266). The slider above is for scrubbing; this is
+        // the exact-time counterpart - type a time code to jump there, step it by one millisecond
+        // (or frame) with the spinner/Up-Down/wheel, and copy the current position out with Ctrl+C.
+        var settingPositionText = GetToolbarSettingFor(SeWaveformToolbarItemType.VideoPositionText);
+        var timeCodePosition = new TimeCodeUpDown
+        {
+            UseVideoOffset = true,
+            VerticalAlignment = VerticalAlignment.Center,
+            FontSize = settingPositionText.FontSize,
+            Margin = new Thickness(settingPositionText.LeftMargin, 0, settingPositionText.RightMargin, 0),
+            [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.VideoPositionTextBox, shortcuts),
+            [AutomationProperties.NameProperty] = Se.Language.General.VideoPosition,
+        };
+
+        // Guards for the two-way loop below: "updating" is set while the refresh timer writes the
+        // player's position into the box, so its ValueChanged is not mistaken for a user edit.
+        var positionTextUpdating = false;
+        var positionTextEditedTicks = 0L;
+
+        // The box holds still while it is being edited, so the refresh below can't overwrite what
+        // was typed and yank the caret. A running video moves on its own, so then the box keeps
+        // following even while focused (same rule as the point-sync dialog) - except for a moment
+        // after an actual edit, which covers stepping with the spinner buttons or the wheel, where
+        // focus never moves into the box at all.
+        bool IsEditingPositionText() =>
+            (timeCodePosition.IsKeyboardFocusWithin && vm.GetVideoPlayerControl()?.IsPlaying != true) ||
+            Environment.TickCount64 - positionTextEditedTicks < 500;
+
+        var positionTextTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
+        positionTextTimer.Tick += (_, _) =>
+        {
+            var vp = vm.GetVideoPlayerControl();
+            if (vp == null || IsEditingPositionText())
+            {
+                return;
+            }
+
+            positionTextUpdating = true;
+            timeCodePosition.Value = TimeSpan.FromSeconds(Math.Max(0, vp.Position));
+            positionTextUpdating = false;
+        };
+
+        // The item is hidden by default, so only pay for the timer once it is actually on the
+        // toolbar - and stop it again when a layout rebuild throws this control away.
+        timeCodePosition.AttachedToVisualTree += (_, _) => positionTextTimer.Start();
+        timeCodePosition.DetachedFromVisualTree += (_, _) => positionTextTimer.Stop();
+
+        timeCodePosition.ValueChanged += (_, value) =>
+        {
+            if (positionTextUpdating)
+            {
+                return;
+            }
+
+            positionTextEditedTicks = Environment.TickCount64;
+
+            var vp = vm.GetVideoPlayerControl();
+            if (vp == null)
+            {
+                return;
+            }
+
+            var seconds = Math.Max(0, value.TotalSeconds);
+            if (vp.Duration > 0 && seconds > vp.Duration)
+            {
+                seconds = vp.Duration;
+            }
+
+            // Flip the control's user-moving gate around the write so this counts as a user seek:
+            // that pins the waveform playhead to the target and centers on it, instead of letting
+            // the cursor lag behind on the not-yet-seeked position (see OnVideoPlayerUserSeeked).
+            vp.SetUserMovingPositionSlider(true);
+            try
+            {
+                vp.Position = seconds;
+            }
+            finally
+            {
+                vp.SetUserMovingPositionSlider(false);
+            }
+        };
+
         var settingSpeed = GetToolbarSettingFor(SeWaveformToolbarItemType.PlaybackSpeed);
         var labelSpeed = UiUtil.MakeLabel(Se.Language.General.Speed);
         var comboBoxSpeed = new ComboBox
@@ -929,6 +1015,7 @@ public class InitWaveform
             iconVertical,
             panelVerticalZoom,
             sliderPosition,
+            timeCodePosition,
             panelAudioTrack,
             panelSpeed,
             toggleButtonAutoSelectOnPlay,
@@ -979,6 +1066,7 @@ public class InitWaveform
         Icon iconVertical,
         StackPanel panelVerticalZoom,
         Slider sliderPosition,
+        TimeCodeUpDown timeCodePosition,
         StackPanel panelAudioTrack,
         StackPanel panelSpeed,
         ToggleButton toggleButtonAutoSelectOnPlay,
@@ -1046,6 +1134,9 @@ public class InitWaveform
                     break;
                 case SeWaveformToolbarItemType.VideoPositionSlider:
                     toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = sliderPosition });
+                    break;
+                case SeWaveformToolbarItemType.VideoPositionText:
+                    toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = timeCodePosition });
                     break;
                 case SeWaveformToolbarItemType.AudioTrackPicker:
                     toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = panelAudioTrack });

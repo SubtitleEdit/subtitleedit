@@ -836,7 +836,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                     sub.StartMilliseconds = (ulong)seconds * 1000UL;
                     if (pes.PageCompositions.Count > 0)
                     {
-                        seconds += pes.PageCompositions[0].PageTimeOut;
+                        // Only compute the end here - the shared clock is advanced once per PES by
+                        // the block after this loop body. Doing it in both places double-counted
+                        // the page time-out for every subtitle-bearing display set, so the start
+                        // times drifted further and further ahead over the file.
                         sub.EndMilliseconds = sub.StartMilliseconds + (ulong)pes.PageCompositions[0].PageTimeOut * 1000UL;
                     }
                     else

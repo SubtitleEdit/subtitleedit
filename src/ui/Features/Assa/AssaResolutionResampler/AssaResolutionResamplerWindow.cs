@@ -75,7 +75,7 @@ public class AssaResolutionResamplerWindow : Window
         Content = grid;
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
-        Activated += delegate { sourceWidthBox.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, sourceWidthBox);
         KeyDown += vm.KeyDown;
     }
 

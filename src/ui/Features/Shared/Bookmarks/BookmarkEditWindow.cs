@@ -58,7 +58,7 @@ public class BookmarkEditWindow : Window
 
         Content = grid;
 
-        Activated += delegate { textBox.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, textBox); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

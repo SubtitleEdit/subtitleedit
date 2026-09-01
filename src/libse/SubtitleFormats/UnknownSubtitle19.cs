@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string ToTimeCode(TimeCode time)
         {
-            return $"{time.TotalSeconds:0.0}";
+            return time.TotalSeconds.ToString("0.0", CultureInfo.InvariantCulture);
         }
 
         private static TimeCode DecodeTimeCode(string s)
@@ -61,10 +61,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
 
-            string allText = sb.ToString();
+            string allText = JoinLines(lines);
             if (!allText.Contains("</Subtitle>") || !allText.Contains("<Clip "))
             {
                 return;

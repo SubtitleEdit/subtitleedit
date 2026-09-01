@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
@@ -137,6 +137,11 @@ public static class InitMenu
                     Header = l.SaveAs,
                     Command = vm.CommandFileSaveAsCommand,
                 },
+                new MenuItem
+                {
+                    Header = Se.Language.General.SaveForcedLinesAs,
+                    Command = vm.SaveForcedLinesAsCommand,
+                },
                 new Separator(),
                 new MenuItem
                 {
@@ -254,6 +259,11 @@ public static class InitMenu
                         {
                             Header = Cavena890.NameOfFormat,
                             Command = vm.ExportCavena890Command,
+                        },
+                        new MenuItem
+                        {
+                            Header = Se.Language.File.Export.TitleExportDvbTeletext,
+                            Command = vm.ExportDvbTeletextCommand,
                         },
                         new MenuItem
                         {

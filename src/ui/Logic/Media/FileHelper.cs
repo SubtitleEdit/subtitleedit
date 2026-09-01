@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using Nikse.SubtitleEdit.Core.Common;
@@ -110,7 +110,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
             return files.Select(p => p.Path.LocalPath).ToArray();
         }
 
-        public async Task<string> PickOpenSubtitleFile(Visual sender, string title, bool includeVideoFiles = true, string? lastOpenedFilePath = null)
+        public async Task<string> PickOpenSubtitleFile(Visual sender, string title, bool includeVideoFiles = true, string? lastOpenedFilePath = null, bool includeSpreadsheets = false)
         {
             var topLevel = TopLevel.GetTopLevel(sender)!;
 
@@ -118,7 +118,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
             {
                 Title = title,
                 AllowMultiple = false,
-                FileTypeFilter = MakeOpenSubtitleFilter(includeVideoFiles),
+                FileTypeFilter = MakeOpenSubtitleFilter(includeVideoFiles, includeSpreadsheets),
             };
 
             if (!string.IsNullOrEmpty(lastOpenedFilePath))
@@ -185,7 +185,15 @@ namespace Nikse.SubtitleEdit.Logic.Media
             return files.Select(p => p.Path.LocalPath).ToArray();
         }
 
-        private static List<FilePickerFileType> MakeOpenSubtitleFilter(bool includeVideoFiles)
+        /// <summary>
+        /// The file types the "open subtitle" pickers offer. <paramref name="includeSpreadsheets"/>
+        /// adds an entry for the spreadsheets the main window can import (#14168): no
+        /// SubtitleFormat claims .xlsx/.ods, so they were not listed by any filter and looked
+        /// unsupported. Off by default because only the main window's open path has the
+        /// UnknownFormatImporter fallback that reads them - everywhere else (compare, join, batch
+        /// convert, ...) a spreadsheet would just fail to load.
+        /// </summary>
+        private static List<FilePickerFileType> MakeOpenSubtitleFilter(bool includeVideoFiles, bool includeSpreadsheets = false)
         {
             var fileTypes = new List<FilePickerFileType>
             {
@@ -197,11 +205,20 @@ namespace Nikse.SubtitleEdit.Logic.Media
                 {
                     Patterns = GetVideoExtensions(),
                 },
-                new FilePickerFileType(Se.Language.General.AllFiles)
-                {
-                    Patterns = new List<string> { "*" },
-                }
             };
+
+            if (includeSpreadsheets)
+            {
+                fileTypes.Add(new FilePickerFileType(Se.Language.General.SpreadsheetFiles)
+                {
+                    Patterns = new List<string> { "*.csv", "*.tsv", "*.xlsx", "*.ods" },
+                });
+            }
+
+            fileTypes.Add(new FilePickerFileType(Se.Language.General.AllFiles)
+            {
+                Patterns = new List<string> { "*" },
+            });
 
             return fileTypes;
         }
@@ -240,6 +257,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
             AddExt(existingTypes, extensions, ".pac");
             AddExt(existingTypes, extensions, ".890");
             AddExt(existingTypes, extensions, ".fpc");
+            AddExt(existingTypes, extensions, ".dvbttx");
 
             if (includeVideoFiles)
             {

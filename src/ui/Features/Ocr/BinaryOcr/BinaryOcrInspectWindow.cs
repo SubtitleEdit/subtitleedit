@@ -55,10 +55,10 @@ public class BinaryOcrInspectWindow : Window
 
         vm.TextBoxNew.KeyDown += vm.TextBoxNewOnKeyDown;
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             vm.TextBoxNew.Focus(); // hack to make OnKeyDown work
-        };
+        });
         KeyDown += (_, e) => vm.KeyDown(e);
         KeyUp += (_, e) => vm.KeyUp(e);
         Loaded += (_, _) => vm.OnLoaded();
@@ -124,7 +124,7 @@ public class BinaryOcrInspectWindow : Window
             .WithBindEnabled(nameof(vm.IsEditControlsEnabled));
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
         {
-            vm.TextBoxNew.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
+            vm.TextBoxNew.FontFamily = FontFamilyHelper.Make(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
         }
 
         var image = new Image

@@ -54,7 +54,7 @@ public class MergeShortLinesWindow : Window
 
         Content = grid;
 
-        Activated += delegate { _numericUpDownSingleLineMaxLength.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, _numericUpDownSingleLineMaxLength); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
         Loaded += delegate { vm.Loaded(); };
 

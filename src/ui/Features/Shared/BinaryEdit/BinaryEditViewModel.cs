@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
@@ -86,6 +86,9 @@ public partial class BinaryEditViewModel : ObservableObject
     private readonly IFileHelper _fileHelper;
     private readonly IFolderHelper _folderHelper;
     private readonly IWindowService _windowService;
+
+    /// <summary>For the shared image-preview background menu item (#14328).</summary>
+    internal IWindowService WindowService => _windowService;
     private readonly IShortcutManager _shortcutManager;
     private readonly IBluRayHelper _bluRayHelper;
 
@@ -467,41 +470,18 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        // Calculate and update the green rectangle
-        var videoPlayerWidth = VideoPlayerControl.Bounds.Width;
-        var videoPlayerHeight = VideoPlayerControl.Bounds.Height;
-
-        if (videoPlayerWidth <= 0 || videoPlayerHeight <= 0)
+        // The video surface, not the whole control: the player's controls row is Auto-sized, so
+        // its height moves with the UI scale and the platform. This used to subtract a
+        // hard-coded 55 px for it and scale the overlay against the rectangle that came out
+        // (#14328); ContentWidth/ContentHeight are the measured surface.
+        var contentRect = VideoContentRect.Calculate(
+            VideoPlayerControl.ContentWidth, VideoPlayerControl.ContentHeight, ScreenWidth, ScreenHeight);
+        if (contentRect == null)
         {
             return;
         }
 
-        const double controlsHeight = 55;
-        var availableHeight = videoPlayerHeight - controlsHeight;
-        if (availableHeight <= 0)
-        {
-            return;
-        }
-
-        var screenAspect = (double)ScreenWidth / ScreenHeight;
-        var availableAspect = videoPlayerWidth / availableHeight;
-
-        double rectWidth, rectHeight, rectX, rectY;
-
-        if (availableAspect > screenAspect)
-        {
-            rectHeight = availableHeight;
-            rectWidth = availableHeight * screenAspect;
-            rectX = (videoPlayerWidth - rectWidth) / 2;
-            rectY = 0;
-        }
-        else
-        {
-            rectWidth = videoPlayerWidth;
-            rectHeight = videoPlayerWidth / screenAspect;
-            rectX = 0;
-            rectY = (availableHeight - rectHeight) / 2;
-        }
+        var (rectX, rectY, rectWidth, rectHeight) = contentRect.Value;
 
         VideoContentBorder.Width = rectWidth;
         VideoContentBorder.Height = rectHeight;
@@ -803,7 +783,7 @@ public partial class BinaryEditViewModel : ObservableObject
             var subtitles = tsParser.GetDvbSubtitles(0);
             if (subtitles.Count > 0)
             {
-                return new OcrSubtitleTransportStream(tsParser, subtitles, fileName);
+                return new OcrSubtitleTransportStream(subtitles);
             }
 
             return null;
@@ -1964,9 +1944,15 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
+        // The new line ends one gap BEFORE the selected line starts (this used to ADD the gap,
+        // overlapping the selected line - and setting EndTime before StartTime let the
+        // duration-preserving property cascade shrink the new line to gap length). StartTime
+        // must be set first, like InsertAfter does.
         var newItem = new BinarySubtitleItem(selectedItem);
-        newItem.EndTime = TimeSpan.FromMilliseconds(selectedItem.StartTime.TotalMilliseconds + Se.Settings.General.MinimumBetweenLines.GetMilliseconds());
-        newItem.StartTime = TimeSpan.FromMilliseconds(newItem.EndTime.TotalMilliseconds - Se.Settings.General.NewEmptyDefaultMs);
+        var newEndMs = Math.Max(selectedItem.StartTime.TotalMilliseconds - Se.Settings.General.MinimumBetweenLines.GetMilliseconds(), 0);
+        var newStartMs = Math.Max(newEndMs - Se.Settings.General.NewEmptyDefaultMs, 0);
+        newItem.StartTime = TimeSpan.FromMilliseconds(newStartMs);
+        newItem.EndTime = TimeSpan.FromMilliseconds(newEndMs);
         var selectedIndex = SubtitleGrid.SelectedIndex;
         Subtitles.Insert(selectedIndex, newItem);
         Renumber();
@@ -2220,14 +2206,14 @@ public partial class BinaryEditViewModel : ObservableObject
         var imageSubtitle = await LoadImageSubtitle(fileName);
         if (imageSubtitle == null)
         {
-            await MessageBox.Show(Window, Se.Language.General.Error, "Image based subtitle format not found/supported.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Tools.ImageBasedEdit.ImageBasedFormatNotSupported, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
         var ocrItems = imageSubtitle.MakeOcrSubtitleItems();
         if (ocrItems.Count == 0)
         {
-            await MessageBox.Show(Window, Se.Language.General.Error, "No subtitles found in the file.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.General.NoSubtitlesFound, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
@@ -2598,12 +2584,15 @@ public partial class BinaryEditViewModel : ObservableObject
 
     private void PerformCleanup()
     {
+        // Always save the window position - it used to sit behind the video checks below,
+        // so closing without ever opening a video forgot the window placement.
+        UiUtil.SaveWindowPosition(Window);
+
         if (VideoPlayerControl == null)
             return;
         if (string.IsNullOrWhiteSpace(VideoPlayerControl.VideoPlayer.FileName))
             return;
         VideoPlayerControl.VideoPlayer.CloseFile();
-        UiUtil.SaveWindowPosition(Window);
     }
 
     public void Loaded()
@@ -2812,6 +2801,10 @@ public partial class BinaryEditViewModel : ObservableObject
                 }
             }
 
+            var firstRemovedIndex = itemsToRemove.Count > 0
+                ? itemsToRemove.Min(item => Subtitles.IndexOf(item))
+                : -1;
+
             foreach (var item in itemsToRemove)
             {
                 Subtitles.Remove(item);
@@ -2819,6 +2812,14 @@ public partial class BinaryEditViewModel : ObservableObject
             }
 
             Renumber();
+
+            // Keep a row selected after the delete (grid-removal invariant): the line that
+            // moved up into the gap, or the new last line when the tail was deleted.
+            if (Subtitles.Count > 0 && firstRemovedIndex >= 0)
+            {
+                SelectAndScrollToRow(Math.Min(firstRemovedIndex, Subtitles.Count - 1));
+            }
+
             RefreshStatusText();
 
             return;

@@ -91,6 +91,116 @@ public class EbuTtDTest
     }
 
     [Fact]
+    public void TeletextColorRoundTrip()
+    {
+        var input = "<font color=\"yellow\">Careful!</font>" + Environment.NewLine + "Second line.";
+        var sub = new Subtitle();
+        sub.Paragraphs.Add(new Paragraph(input, 0, 3000));
+
+        var result = RoundTrip(sub, out var raw);
+
+        // Coloured text is written via referential styles named after the teletext colours,
+        // never inline tts:color on the span.
+        Assert.Contains("<style xml:id=\"colorYellow\" tts:color=\"#ffff00\" />", raw);
+        Assert.Contains("<span style=\"textStyle colorYellow\">Careful!</span>", raw);
+        Assert.DoesNotContain("<span tts:color", raw);
+        Assert.Single(result.Paragraphs);
+        Assert.Equal(input, result.Paragraphs[0].Text);
+    }
+
+    [Fact]
+    public void HexColorRoundTrip()
+    {
+        var input = "<font color=\"#ff8800\">Orange text</font>";
+        var sub = new Subtitle();
+        sub.Paragraphs.Add(new Paragraph(input, 0, 3000));
+
+        var result = RoundTrip(sub, out var raw);
+
+        Assert.Contains("<style xml:id=\"colorFF8800\" tts:color=\"#ff8800\" />", raw);
+        Assert.Contains("<span style=\"textStyle colorFF8800\">Orange text</span>", raw);
+        Assert.Single(result.Paragraphs);
+        Assert.Equal(input, result.Paragraphs[0].Text);
+    }
+
+    [Fact]
+    public void ColorWithItalicRoundTrip()
+    {
+        var input = "<font color=\"cyan\"><i>whispering</i></font> and normal";
+        var sub = new Subtitle();
+        sub.Paragraphs.Add(new Paragraph(input, 0, 3000));
+
+        var result = RoundTrip(sub, out var raw);
+
+        Assert.Contains("<span style=\"textStyle italicStyle colorCyan\">whispering</span>", raw);
+        Assert.Single(result.Paragraphs);
+        Assert.Equal(input, result.Paragraphs[0].Text);
+    }
+
+    [Fact]
+    public void WhiteStaysUntagged()
+    {
+        // White is the textStyle default - explicitly white text must not produce a colour
+        // style or a font tag on read.
+        var input = "<font color=\"white\">Hello world!</font>";
+        var sub = new Subtitle();
+        sub.Paragraphs.Add(new Paragraph(input, 0, 3000));
+
+        var result = RoundTrip(sub, out var raw);
+
+        Assert.DoesNotContain("colorWhite", raw);
+        Assert.Contains("<span style=\"textStyle\">Hello world!</span>", raw);
+        Assert.Single(result.Paragraphs);
+        Assert.Equal("Hello world!", result.Paragraphs[0].Text);
+    }
+
+    [Fact]
+    public void ReadsCornerColorAsTeletextName()
+    {
+        // Exact RGB corners map back to the teletext colour names; other colours stay hex.
+        var raw = """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <tt xmlns="http://www.w3.org/ns/ttml" xmlns:tts="http://www.w3.org/ns/ttml#styling"
+                xmlns:ttp="http://www.w3.org/ns/ttml#parameter" xmlns:ebuttm="urn:ebu:tt:metadata"
+                xmlns:ebutts="urn:ebu:tt:style" ttp:timeBase="media" ttp:cellResolution="32 15" xml:lang="en">
+              <head>
+                <metadata>
+                  <ebuttm:documentMetadata>
+                    <ebuttm:conformsToStandard>urn:ebu:tt:distribution:2018-04</ebuttm:conformsToStandard>
+                  </ebuttm:documentMetadata>
+                </metadata>
+                <styling>
+                  <style xml:id="s1" tts:color="#FFFFFF" tts:backgroundColor="#000000c2" ebutts:linePadding="0.5c"/>
+                  <style xml:id="yellowText" tts:color="#FFFF00"/>
+                  <style xml:id="pinkText" tts:color="#FFC0CB"/>
+                </styling>
+                <layout>
+                  <region xml:id="r0" tts:origin="10% 10%" tts:extent="80% 80%" tts:displayAlign="after"/>
+                </layout>
+              </head>
+              <body>
+                <div>
+                  <p xml:id="sub0" begin="00:00:01.000" end="00:00:03.000" region="r0">
+                    <span style="s1 yellowText">Yellow here</span>
+                    <br/>
+                    <span style="s1 pinkText">pink there</span>
+                  </p>
+                </div>
+              </body>
+            </tt>
+            """;
+
+        var format = new EbuTtD();
+        var sub = new Subtitle();
+        format.LoadSubtitle(sub, raw.SplitToLines(), null);
+
+        Assert.Single(sub.Paragraphs);
+        Assert.Equal(
+            "<font color=\"yellow\">Yellow here</font>" + Environment.NewLine + "<font color=\"#ffc0cb\">pink there</font>",
+            sub.Paragraphs[0].Text);
+    }
+
+    [Fact]
     public void DetectsAsEbuTtDNotTimedText()
     {
         var sub = new Subtitle();

@@ -171,11 +171,17 @@ public partial class EditCustomTextFormatViewModel : ObservableObject, IClosingC
         }
     }
 
-    internal void Initialize(CustomFormatItem selected, string title, List<SubtitleLineViewModel> subtitles, string videoFileName)
+    /// <param name="title">The window caption.</param>
+    /// <param name="subtitleTitle">
+    /// The subtitle's own title, i.e. what "{title}" expands to. Without it the live preview here
+    /// rendered "{title}" as empty while the parent window's preview showed the real name.
+    /// </param>
+    internal void Initialize(CustomFormatItem selected, string title, List<SubtitleLineViewModel> subtitles, string subtitleTitle, string videoFileName)
     {
         SelectedCustomFormat = selected;
         Title = title;
         _subtitles = subtitles.Take(50).ToList();
+        _subtitleTitle = subtitleTitle;
         _videoFileName = videoFileName;
         _previewTimer.Start();
     }

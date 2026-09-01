@@ -14,6 +14,10 @@ public class SeFile
     public SeExportImages ExportImages { get; set; } = new();
     public SeExportPlainText ExportPlainText { get; set; } = new();
     public SeDCinemaSmpte DCinemaSmpte { get; set; } = new();
+    public SeEbuSaveOptions EbuSaveOptions { get; set; } = new();
+    public SeCompare Compare { get; set; } = new();
+    public int ExportDvbTeletextPageNumber { get; set; } = 888;
+    public string ExportDvbTeletextLanguageCode { get; set; } = "eng";
 
     public SeFile()
     {

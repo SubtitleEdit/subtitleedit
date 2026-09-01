@@ -97,7 +97,7 @@ public class DoNotBreakAfterListWindow : Window
 
         Content = grid;
 
-        Activated += delegate { comboLanguages.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, comboLanguages); // initial focus on an input, not an action button - a focused button clicks on bare Space
         Loaded += (_, _) => vm.SelectedLanguageChanged();
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };

@@ -50,7 +50,7 @@ public class FindDoubleWordsWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonCancel.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, buttonCancel); // hack to make OnKeyDown work
 
         KeyDown += (s, e) => vm.OnKeyDown(e);
 

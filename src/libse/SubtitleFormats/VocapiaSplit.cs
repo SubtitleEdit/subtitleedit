@@ -74,17 +74,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string ToTimeCode(double totalMilliseconds)
         {
-            return $"{totalMilliseconds / TimeCode.BaseUnit:0##}";
+            // Seconds with decimals, like real Vocapia XML (stime="2.35") - the old integer
+            // format mask rounded every time code to whole seconds on save.
+            return (totalMilliseconds / TimeCode.BaseUnit).ToString("0.0##", CultureInfo.InvariantCulture);
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
 
-            string xmlString = sb.ToString();
+            string xmlString = JoinLines(lines);
             if (!xmlString.Contains("<SpeechSegment"))
             {
                 return;

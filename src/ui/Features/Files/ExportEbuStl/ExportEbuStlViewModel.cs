@@ -1,11 +1,13 @@
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Media;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Files.ExportEbuStl;
+using Nikse.SubtitleEdit.Features.Shared.PickFontName;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
@@ -28,7 +30,10 @@ public partial class ExportEbuStlViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<string> _frameRates;
     [ObservableProperty] private string? _selectedFrameRate;
     [ObservableProperty] private ObservableCollection<string> _displayStandardCodes;
-    [ObservableProperty] private string? _selectedDisplayStandardCode;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsTeletext))]
+    private string? _selectedDisplayStandardCode;
     [ObservableProperty] private ObservableCollection<string> _characterTables;
     [ObservableProperty] private string? _selectedCharacterTable;
     [ObservableProperty] private ObservableCollection<LanguageItem> _languageCodes;
@@ -66,8 +71,19 @@ public partial class ExportEbuStlViewModel : ObservableObject
     [ObservableProperty] private int? _selectedRowsAddByNewLine;
     [ObservableProperty] private bool _useBox;
     [ObservableProperty] private bool _useDoubleHeight;
+    [ObservableProperty] private ObservableCollection<string> _previewFonts;
+    [ObservableProperty] private string? _selectedPreviewFont;
+    [ObservableProperty] private FontFamily _previewFontFamily;
+    [ObservableProperty] private string _previewFontSample;
     [ObservableProperty] private string _errorTitle;
     [ObservableProperty] private string _errorLog;
+
+    /// <summary>
+    /// The box and the double height are teletext control codes, so "0 Open subtitling" gets
+    /// neither - not in the saved file (see Ebu.Save) and not in the video preview. Without this
+    /// the two check boxes sat there enabled and did nothing at all.
+    /// </summary>
+    public bool IsTeletext => SelectedDisplayStandardCode?.Contains("teletext", StringComparison.OrdinalIgnoreCase) ?? false;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
@@ -82,12 +98,14 @@ public partial class ExportEbuStlViewModel : ObservableObject
     public double FrameRateFromSaveDialog => _header.FrameRateFromSaveDialog;
 
     private IFileHelper _fileHelper;
+    private readonly IWindowService _windowService;
     private Subtitle _subtitle = new Subtitle();
     private Ebu.EbuGeneralSubtitleInformation _header = new Ebu.EbuGeneralSubtitleInformation();
 
-    public ExportEbuStlViewModel(IFileHelper fileHelper)
+    public ExportEbuStlViewModel(IFileHelper fileHelper, IWindowService windowService)
     {
         _fileHelper = fileHelper;
+        _windowService = windowService;
 
         CodePages = new ObservableCollection<CodePageNumberItem>(CodePageNumberItem.GetCodePageNumberItems());
         SelectedCodePage = CodePages[0];
@@ -263,6 +281,14 @@ new("2F", "French - hearing impaired (VF-MAL)"),
             "Right-justified text",
         };
 
+        // Preview only - an STL file carries a character table, not a typeface, so nothing here is
+        // written to it. It is for someone with a teletext face installed who wants the preview to
+        // look like a decoder; the first entry means "leave the video preview font alone".
+        PreviewFonts = new ObservableCollection<string>(FontHelper.GetSystemFonts());
+        PreviewFonts.Insert(0, Se.Language.File.EbuSaveOptions.PreviewFontDefault);
+        PreviewFontSample = Se.Language.File.EbuSaveOptions.PreviewFontSample;
+        PreviewFontFamily = FontFamily.Default;
+
         RevisionNumbers = new ObservableCollection<int>(Enumerable.Range(0, 100).ToList());
         MaxCharactersPerRow = new ObservableCollection<int>(Enumerable.Range(0, 100).ToList());
         MaxRows = new ObservableCollection<int>(Enumerable.Range(0, 100).ToList());
@@ -294,17 +320,32 @@ new("2F", "French - hearing impaired (VF-MAL)"),
             SelectedCharacterTable = CharacterTables[0];
             SelectedLanguageCode = LanguageCodes.FirstOrDefault(p => p.Language == "English");
             SelectedTimeCodeStatus = TimeCodeStatusList[1];
-            SelectedJustification = Justifications[1];
             SelectedRevisionNumber = 1;
             SelectedMaxCharactersPerRow = 40;
             SelectedMaxRow = 23;
             SelectedDiscSequenceNumber = 1;
             SelectedTotalNumberOfDiscs = 1;
-            SelectedTopAlignment = 0;
-            SelectedBottomAlignment = 2;
-            SelectedRowsAddByNewLine = 2;
-            UseBox = Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox;
-            UseDoubleHeight = Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight;
+
+            // Text-and-timing options do not fit in the STL header the dialog stores on the
+            // subtitle, so they are restored from the last choice - without this every reopen
+            // fell back to left-justified text and default margins (user report). Justification
+            // comes from the persisted settings; the layout values come from libse's Configuration,
+            // which the persisted settings seed at startup and a loaded STL file may override
+            // (box/double height are read off the file).
+            var justification = Se.Settings.File.EbuSaveOptions.JustificationCode;
+            SelectedJustification = justification >= 0 && justification < Justifications.Count
+                ? Justifications[justification]
+                : Justifications[2];
+            var subtitleSettings = Configuration.Settings.SubtitleSettings;
+            SelectedTopAlignment = TopAlignments.Contains(subtitleSettings.EbuStlMarginTop) ? subtitleSettings.EbuStlMarginTop : 0;
+            SelectedBottomAlignment = BottomAlignments.Contains(subtitleSettings.EbuStlMarginBottom) ? subtitleSettings.EbuStlMarginBottom : 2;
+            SelectedRowsAddByNewLine = RowsAddByNewLine.Contains(subtitleSettings.EbuStlNewLineRows) ? subtitleSettings.EbuStlNewLineRows : 2;
+            UseBox = subtitleSettings.EbuStlTeletextUseBox;
+            UseDoubleHeight = subtitleSettings.EbuStlTeletextUseDoubleHeight;
+            var previewFont = Se.Settings.File.EbuSaveOptions.PreviewFontName;
+            SelectedPreviewFont = string.IsNullOrEmpty(previewFont)
+                ? PreviewFonts[0]
+                : PreviewFonts.FirstOrDefault(p => p == previewFont) ?? PreviewFonts[0];
 
             // Keep the settings the file was written with instead of resetting them to the
             // defaults above every time the export dialog is opened.
@@ -336,6 +377,61 @@ new("2F", "French - hearing impaired (VF-MAL)"),
 
             CheckErrors(_subtitle);
         });
+    }
+
+    /// <summary>
+    /// Keeps the sample label in the font that is picked. The default entry is not a font family,
+    /// so it previews the video preview font - that is what the preview will actually draw with.
+    /// </summary>
+    partial void OnSelectedPreviewFontChanged(string? value)
+    {
+        PreviewFontFamily = FontFamilyHelper.Make(IsDefaultPreviewFont(value)
+            ? Se.Settings.Video.MpvPreviewFontName
+            : value);
+    }
+
+    private bool IsDefaultPreviewFont(string? fontName)
+    {
+        return string.IsNullOrEmpty(fontName) || (PreviewFonts.Count > 0 && fontName == PreviewFonts[0]);
+    }
+
+    /// <summary>
+    /// The font picker from the ASSA styles and the OCR window - it lists the same installed fonts
+    /// as the drop-down, but with a search box and a real preview.
+    /// </summary>
+    [RelayCommand]
+    private async Task PickPreviewFont()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var currentFontName = SelectedPreviewFont;
+        var result = await _windowService.ShowDialogAsync<PickFontNameWindow, PickFontNameViewModel>(Window, vm =>
+        {
+            vm.Initialize();
+            if (!IsDefaultPreviewFont(currentFontName))
+            {
+                vm.SelectedFontName = currentFontName;
+            }
+        });
+
+        if (!result.OkPressed || string.IsNullOrEmpty(result.SelectedFontName))
+        {
+            return;
+        }
+
+        // A font from the "Collected fonts" tab is a file in SE's Fonts folder and need not be
+        // installed, so it need not be in the drop-down - add it rather than dropping the pick.
+        // The preview resolves it through the system font provider like any other name; one that
+        // is not installed falls back, and the sample label shows that before anything is saved.
+        if (!PreviewFonts.Contains(result.SelectedFontName))
+        {
+            PreviewFonts.Insert(1, result.SelectedFontName);
+        }
+
+        SelectedPreviewFont = result.SelectedFontName;
     }
 
     [RelayCommand]
@@ -409,11 +505,24 @@ new("2F", "French - hearing impaired (VF-MAL)"),
         _header.TotalNumberOfDisks = SelectedTotalNumberOfDiscs?.ToString(CultureInfo.InvariantCulture) ?? string.Empty;
 
         JustificationCode = (byte)Justifications.IndexOf(SelectedJustification ?? Justifications[0]);
+        Configuration.Settings.SubtitleSettings.EbuStlJustificationCode = JustificationCode;
         Configuration.Settings.SubtitleSettings.EbuStlMarginTop = SelectedTopAlignment ?? 0;
         Configuration.Settings.SubtitleSettings.EbuStlMarginBottom = SelectedBottomAlignment ?? 0;
         Configuration.Settings.SubtitleSettings.EbuStlNewLineRows = SelectedRowsAddByNewLine ?? 1;
         Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox = UseBox;
         Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight = UseDoubleHeight;
+
+        // The libse Configuration above only lives for this session; the persisted settings are
+        // what Initialize restores from and what UpdateLibSeSettings re-applies on the next start.
+        var ebuOptions = Se.Settings.File.EbuSaveOptions;
+        ebuOptions.JustificationCode = JustificationCode;
+        ebuOptions.MarginTop = SelectedTopAlignment ?? 0;
+        ebuOptions.MarginBottom = SelectedBottomAlignment ?? 0;
+        ebuOptions.NewLineRows = SelectedRowsAddByNewLine ?? 1;
+        ebuOptions.TeletextUseBox = UseBox;
+        ebuOptions.TeletextUseDoubleHeight = UseDoubleHeight;
+        ebuOptions.PreviewFontName = IsDefaultPreviewFont(SelectedPreviewFont) ? string.Empty : SelectedPreviewFont!;
+        Se.SaveSettings();
 
         if (_subtitle != null)
         {

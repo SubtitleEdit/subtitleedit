@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -325,6 +325,14 @@ public partial class BurnInViewModel : ObservableObject
 
         _timerAnalyze.Stop();
 
+        // A failed analyze pass writes no statistics file, so pass 2 could only fail too - it used
+        // to run anyway and report whatever was already at the output path.
+        if (_ffmpegProcess.ExitCode != 0)
+        {
+            ReportFfmpegFailure(JobItems[_jobItemIndex], "Two-pass analyze (pass 1) failed for");
+            return;
+        }
+
         Dispatcher.UIThread.Invoke(async () =>
         {
             var jobItem = JobItems[_jobItemIndex];
@@ -393,29 +401,18 @@ public partial class BurnInViewModel : ObservableObject
         var jobItem = JobItems[_jobItemIndex];
         Se.WriteToolsLog($"Burn-in ffmpeg finished with exit code {_ffmpegProcess.ExitCode} for \"{jobItem.OutputVideoFileName}\"");
 
+        // The output file existing is not proof that this run produced it: with an old file at the
+        // target path a refused or failed ffmpeg passed the check, and the job was reported as
+        // "Done" while the stale file was left untouched (issue #14210).
+        if (_ffmpegProcess.ExitCode != 0)
+        {
+            ReportFfmpegFailure(jobItem, "ffmpeg failed for");
+            return;
+        }
+
         if (!File.Exists(jobItem.OutputVideoFileName))
         {
-            Se.WriteToolsLog("Output video file not found: " + jobItem.OutputVideoFileName + Environment.NewLine +
-                             "ffmpeg: " + _ffmpegProcess.StartInfo.FileName + Environment.NewLine +
-                             "Parameters: " + _ffmpegProcess.StartInfo.Arguments + Environment.NewLine +
-                             "OS: " + Environment.OSVersion + Environment.NewLine +
-                             "64-bit: " + Environment.Is64BitOperatingSystem + Environment.NewLine +
-                             "ffmpeg exit code: " + _ffmpegProcess.ExitCode + Environment.NewLine +
-                             "ffmpeg log: " + _log);
-
-            Dispatcher.UIThread.Invoke(async () =>
-            {
-                await MessageBox.Show(Window!,
-                    "Unable to generate video",
-                    "Output video file not generated: " + jobItem.OutputVideoFileName + Environment.NewLine +
-                    "Parameters: " + _ffmpegProcess.StartInfo.Arguments,
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
-
-                IsGenerating = false;
-                ProgressValue = 0;
-            });
-
+            ReportFfmpegFailure(jobItem, "Output video file not generated:");
             return;
         }
 
@@ -461,6 +458,37 @@ public partial class BurnInViewModel : ObservableObject
         });
     }
 
+    /// <summary>
+    /// Tells the user that an ffmpeg run failed, and writes the full command line, exit code and
+    /// ffmpeg log to the tools log for bug reports.
+    /// </summary>
+    private void ReportFfmpegFailure(BurnInJobItem jobItem, string reason)
+    {
+        Se.WriteToolsLog(reason + " " + jobItem.OutputVideoFileName + Environment.NewLine +
+                         "ffmpeg: " + _ffmpegProcess!.StartInfo.FileName + Environment.NewLine +
+                         "Parameters: " + _ffmpegProcess.StartInfo.Arguments + Environment.NewLine +
+                         "OS: " + Environment.OSVersion + Environment.NewLine +
+                         "64-bit: " + Environment.Is64BitOperatingSystem + Environment.NewLine +
+                         "ffmpeg exit code: " + _ffmpegProcess.ExitCode + Environment.NewLine +
+                         "ffmpeg log: " + _log);
+
+        jobItem.Status = Se.Language.General.Error;
+
+        Dispatcher.UIThread.Invoke(async () =>
+        {
+            await MessageBox.Show(Window!,
+                "Unable to generate video",
+                reason + " " + jobItem.OutputVideoFileName + Environment.NewLine +
+                "ffmpeg exit code: " + _ffmpegProcess.ExitCode + Environment.NewLine +
+                "Parameters: " + _ffmpegProcess.StartInfo.Arguments,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+
+            IsGenerating = false;
+            ProgressValue = 0;
+        });
+    }
+
     private async Task InitAndStartJobItem(int index)
     {
         _startTicks = DateTime.UtcNow.Ticks;
@@ -469,12 +497,29 @@ public partial class BurnInViewModel : ObservableObject
         var mediaInfo = FfmpegMediaInfo.Parse(jobItem.InputVideoFileName);
         jobItem.TotalFrames = mediaInfo.GetTotalFrames();
         jobItem.TotalSeconds = mediaInfo.Duration.TotalSeconds;
-        if (mediaInfo.Dimension.Width > 0 && mediaInfo.Dimension.Height > 0)
+
+        // With "Cut" on, only the cut range is encoded (-ss/-t below). Measuring the full
+        // source made the target-file-size bit rate a fraction of what was asked for, and
+        // left the progress bar creeping to a few percent before jumping to Done.
+        if (IsCutActive && jobItem.TotalSeconds > 0)
+        {
+            var cutSeconds = (CutTo - CutFrom).TotalSeconds;
+            if (cutSeconds > 0 && cutSeconds < jobItem.TotalSeconds)
+            {
+                jobItem.TotalFrames = (long)Math.Round(jobItem.TotalFrames * (cutSeconds / jobItem.TotalSeconds));
+                jobItem.TotalSeconds = cutSeconds;
+            }
+        }
+        // Only adopt the source resolution when the user asked for it. Unconditionally copying it
+        // threw away an explicitly picked output resolution (e.g. 720p from a 4K source), so the
+        // job still encoded at the source size.
+        if (mediaInfo.Dimension.Width > 0 && mediaInfo.Dimension.Height > 0 &&
+            (UseSourceResolution || jobItem.Width <= 0 || jobItem.Height <= 0))
         {
             jobItem.Width = mediaInfo.Dimension.Width;
             jobItem.Height = mediaInfo.Dimension.Height;
         }
-        else
+        else if (mediaInfo.Dimension.Width <= 0 || mediaInfo.Dimension.Height <= 0)
         {
             // No video stream to read a resolution from - keep the resolution chosen in the
             // UI and burn the subtitles onto a generated black canvas (issue #11570).
@@ -837,7 +882,8 @@ public partial class BurnInViewModel : ObservableObject
             : _tempSubtitleFiles.Write(subtitle, new SubRip());
 
         _mediaInfo = FfmpegMediaInfo2.Parse(VideoFileName);
-        if (_mediaInfo.Dimension.Width > 0 && _mediaInfo.Dimension.Height > 0)
+        if (_mediaInfo.Dimension.Width > 0 && _mediaInfo.Dimension.Height > 0 &&
+            (UseSourceResolution || VideoWidth is null or <= 0 || VideoHeight is null or <= 0))
         {
             VideoWidth = _mediaInfo.Dimension.Width;
             VideoHeight = _mediaInfo.Dimension.Height;
@@ -868,12 +914,21 @@ public partial class BurnInViewModel : ObservableObject
         var isAssa = subtitleFileName.EndsWith(".ass", StringComparison.OrdinalIgnoreCase);
 
         var subtitle = Subtitle.Parse(subtitleFileName);
+        if (subtitle == null)
+        {
+            // Not a subtitle format we know: Parse returns null, and everything below
+            // dereferences it. TransparentSubtitlesViewModel skips the job the same way.
+            jobItem.Status = "Skipped";
+            return string.Empty;
+        }
+
         subtitle = GetSubtitleBasedOnCut(subtitle);
 
-        if (subtitle.OriginalFormat is NetflixImsc11Japanese)
+        if (subtitle.OriginalFormat is NetflixImsc11Japanese || NetflixImsc11JapaneseToAss.HasJapaneseMarkup(subtitle))
         {
             // Furigana, bouten and vertical writing become extra positioned render lines - burning
-            // in the raw tags would put them on screen as literal text (issue #13861).
+            // in the raw tags would put them on screen as literal text (issue #13861). Lambda Cap
+            // decodes to the same markup (issue #14165).
             var japaneseAssaFileName = _tempSubtitleFiles.GetFileName(".ass");
             File.WriteAllText(japaneseAssaFileName, NetflixImsc11JapaneseToAss.Convert(subtitle, jobItem.Width, jobItem.Height));
             return japaneseAssaFileName;
@@ -887,7 +942,10 @@ public partial class BurnInViewModel : ObservableObject
                 {
                     var fontSize = CalculateFontSize(jobItem.Width, jobItem.Height, FontFactor ?? 0);
                     var durationMs = (int)(s.Duration.TotalMilliseconds);
-                    s.Text = effect.ApplyEffect(s.Text, VideoWidth ?? 0, VideoHeight ?? 0, fontSize, durationMs);
+                    // This job's dimensions, not the UI's: the effects emit absolute ASSA
+                    // coordinates that are resolved against the PlayResX/Y written from
+                    // jobItem below, so a batch item of another size placed text wrongly.
+                    s.Text = effect.ApplyEffect(s.Text, jobItem.Width, jobItem.Height, fontSize, durationMs);
                 }
             }
 
@@ -1030,7 +1088,7 @@ public partial class BurnInViewModel : ObservableObject
 
         var result = await _windowService.ShowDialogAsync<BurnInLogoWindow, BurnInLogoViewModel>(Window!, vm =>
         {
-            vm.BurnInLogo = BurnInLogo;
+            vm.BurnInLogo = BurnInLogo.Clone();
             vm.Initialize(VideoFileName, VideoWidth.Value, VideoHeight.Value);
         });
 
@@ -1380,7 +1438,10 @@ public partial class BurnInViewModel : ObservableObject
         SelectedFontOutline = settings.OutlineWidth;
         SelectedFontShadowWidth = settings.ShadowWidth;
         SelectedFontSpacing = settings.NonAssaSpacing;
-        SelectedFontName = settings.FontName;
+        // Guard the fallback the way the constructor does: assigning a font that is not
+        // in FontNames nulls the ComboBox selection, and the TwoWay binding then writes
+        // that null back over the saved font name.
+        SelectedFontName = FontNames.FirstOrDefault(p => p == settings.FontName) ?? FontNames[0];
         FontTextColor = settings.NonAssaTextColor.FromHexToColor();
         FontOutlineColor = settings.NonAssaOutlineColor.FromHexToColor();
         FontBoxColor = settings.NonAssaBoxColor.FromHexToColor();
@@ -1422,7 +1483,7 @@ public partial class BurnInViewModel : ObservableObject
         UseTargetFileSize = settings.TargetFileSize;
         TargetFileSize = settings.TargetFileSizeMb;
         MatchSourceVideoSize = settings.TargetFileSizeMatchSource;
-        PromptForFfmpegParameters = settings.PromptFfmpegParameters;
+        PromptForFfmpegParameters = false; // one-shot, never restored from settings
 
         var effectsAsStringArray = settings.Effects?.Split(',') ?? [];
         _selectedEffects = BurnInEffectItem.List().Where(p => effectsAsStringArray.Contains(p.Name)).ToList();
@@ -1464,7 +1525,9 @@ public partial class BurnInViewModel : ObservableObject
         settings.TargetFileSize = UseTargetFileSize;
         settings.TargetFileSizeMb = TargetFileSize ?? 0;
         settings.TargetFileSizeMatchSource = MatchSourceVideoSize;
-        settings.PromptFfmpegParameters = PromptForFfmpegParameters;
+        // Deliberately not persisted: PromptForFfmpegParameters is a one-shot set by the
+        // "Prompt for ffmpeg params and generate" menu item. Saving it made the plain
+        // Generate button prompt forever, with no UI to turn it back off.
 
         settings.Effects = string.Join(",", _selectedEffects.Select(p => p.Name).Distinct());
 
@@ -1693,7 +1756,7 @@ public partial class BurnInViewModel : ObservableObject
 
     private void FillPreset(string videoCodec)
     {
-        VideoPresetText = "Preset";
+        VideoPresetText = Se.Language.Video.BurnIn.Preset;
         var previousPreset = SelectedVideoPreset;
         SelectedVideoPreset = null;
 
@@ -1806,7 +1869,7 @@ public partial class BurnInViewModel : ObservableObject
 
             defaultItem = "standard";
 
-            VideoPresetText = "Profile";
+            VideoPresetText = Se.Language.General.Profile;
         }
         else if (videoCodec.Contains("av1"))
         {
@@ -1849,7 +1912,7 @@ public partial class BurnInViewModel : ObservableObject
     {
         var previousCrf = SelectedVideoCrf;
         SelectedVideoCrf = null;
-        VideoCrfText = "CRF";
+        VideoCrfText = Se.Language.Video.BurnIn.Crf;
         VideoCrfHint = string.Empty;
 
         var items = new List<string> { " " };
@@ -1898,7 +1961,7 @@ public partial class BurnInViewModel : ObservableObject
                 items.Add(i.ToString(CultureInfo.InvariantCulture));
             }
 
-            VideoCrfText = "Quality";
+            VideoCrfText = Se.Language.General.Quality;
             VideoCrfHint = "0=best quality, 10=best speed";
             VideoCrf.Clear();
             VideoCrf.AddRange(items);
@@ -1915,7 +1978,7 @@ public partial class BurnInViewModel : ObservableObject
                 items.Add(i.ToString(CultureInfo.InvariantCulture));
             }
 
-            VideoCrfText = "Quality";
+            VideoCrfText = Se.Language.General.Quality;
             VideoCrfHint = "1=lowest quality, 100=best quality (Apple silicon only)";
             VideoCrf.Clear();
             VideoCrf.AddRange(items);
@@ -2355,7 +2418,7 @@ public partial class BurnInViewModel : ObservableObject
         var height = VideoHeight ?? _mediaInfo?.Dimension.Height ?? 1080;
 
         var subtitle = new Subtitle(_subtitle, false);
-        if (_subtitleFormat is NetflixImsc11Japanese)
+        if (_subtitleFormat is NetflixImsc11Japanese || NetflixImsc11JapaneseToAss.HasJapaneseMarkup(subtitle))
         {
             return NetflixImsc11JapaneseToAss.Convert(subtitle, width, height);
         }

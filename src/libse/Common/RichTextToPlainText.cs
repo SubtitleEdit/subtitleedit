@@ -146,13 +146,18 @@ namespace Nikse.SubtitleEdit.Core.Common
                         // Push state
                         stack.Push(new StackEntry(ucskip, ignorable));
                     }
-                    else
+                    else if (stack.Count > 0)
                     {
                         // Pop state
                         StackEntry entry = stack.Pop();
                         ucskip = entry.NumberOfCharactersToSkip;
                         ignorable = entry.Ignorable;
                     }
+
+                    // else: a '}' with no matching '{'. Popping an empty stack threw
+                    // InvalidOperationException, and because ~20 readers run their input through
+                    // FromRtf(), a single unbalanced brace anywhere aborted format detection for
+                    // the whole file instead of reporting an unknown format. Ignore the brace.
                 }
                 else if (character.Length > 0) // \x (not a letter)
                 {

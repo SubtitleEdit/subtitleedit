@@ -32,14 +32,22 @@ internal static class ImageOcrLoader
 
         if (options.TimeCodesOnly)
         {
-            AnsiConsole.MarkupLine($"[dim]Extracting time codes from {pcsList.Count} Blu-Ray sup image(s) (no OCR)...[/]");
+            if (!options.Quiet)
+            {
+                AnsiConsole.MarkupLine($"[dim]Extracting time codes from {pcsList.Count} Blu-Ray sup image(s) (no OCR)...[/]");
+            }
+
             return PcsListToSubtitle(pcsList, null);
         }
 
         using var ocr = OcrEngineFactory.Create(options);
         var isolationNote = options.PgsIsolateColors ? string.Empty : " (colour isolation off)";
-        AnsiConsole.MarkupLine($"[dim]Running {ocr.Name} OCR on {pcsList.Count} Blu-Ray sup image(s){isolationNote}...[/]");
-        return PcsListToSubtitle(pcsList, ocr, options.PgsIsolateColors);
+        if (!options.Quiet)
+        {
+            AnsiConsole.MarkupLine($"[dim]Running {ocr.Name} OCR on {pcsList.Count} Blu-Ray sup image(s){isolationNote}...[/]");
+        }
+
+        return PcsListToSubtitle(pcsList, ocr, options.PgsIsolateColors, options.Quiet);
     }
 
     /// <summary>
@@ -56,14 +64,22 @@ internal static class ImageOcrLoader
 
         if (options.TimeCodesOnly)
         {
-            AnsiConsole.MarkupLine($"[dim]Extracting time codes from {pcsList.Count} MKV PGS image(s) (track #{track.TrackNumber}, no OCR)...[/]");
+            if (!options.Quiet)
+            {
+                AnsiConsole.MarkupLine($"[dim]Extracting time codes from {pcsList.Count} MKV PGS image(s) (track #{track.TrackNumber}, no OCR)...[/]");
+            }
+
             return PcsListToSubtitle(pcsList, null);
         }
 
         using var ocr = OcrEngineFactory.Create(options);
         var isolationNote = options.PgsIsolateColors ? string.Empty : " (colour isolation off)";
-        AnsiConsole.MarkupLine($"[dim]Running {ocr.Name} OCR on {pcsList.Count} MKV PGS image(s) (track #{track.TrackNumber}){isolationNote}...[/]");
-        return PcsListToSubtitle(pcsList, ocr, options.PgsIsolateColors);
+        if (!options.Quiet)
+        {
+            AnsiConsole.MarkupLine($"[dim]Running {ocr.Name} OCR on {pcsList.Count} MKV PGS image(s) (track #{track.TrackNumber}){isolationNote}...[/]");
+        }
+
+        return PcsListToSubtitle(pcsList, ocr, options.PgsIsolateColors, options.Quiet);
     }
 
     /// <summary>
@@ -95,12 +111,28 @@ internal static class ImageOcrLoader
                     continue;
                 }
 
-                AnsiConsole.MarkupLine(ocr is null
-                    ? $"[dim]Extracting time codes from {dvbSubtitles.Count} DVB-sub image(s) (PID {pid}, no OCR)...[/]"
-                    : $"[dim]Running {ocr.Name} OCR on {dvbSubtitles.Count} DVB-sub image(s) (PID {pid})...[/]");
+                if (!options.Quiet)
+                {
+                    AnsiConsole.MarkupLine(ocr is null
+                        ? $"[dim]Extracting time codes from {dvbSubtitles.Count} DVB-sub image(s) (PID {pid}, no OCR)...[/]"
+                        : $"[dim]Running {ocr.Name} OCR on {dvbSubtitles.Count} DVB-sub image(s) (PID {pid})...[/]");
+                }
+
+                // Recognition is the slow part, so report it per image (issue #14267).
+                var showProgress = ocr is not null && !options.Quiet;
+                var done = 0;
                 var subtitle = new Subtitle();
                 foreach (var dvb in dvbSubtitles)
                 {
+                    // Reported before the image is recognised, so the count is images
+                    // *finished* - 100% must not show while the last one is still running.
+                    if (showProgress)
+                    {
+                        ProgressLine.Report("OCR", done, dvbSubtitles.Count);
+                    }
+
+                    done++;
+
                     var bitmap = dvb.GetBitmap();
                     if (bitmap is null)
                     {
@@ -134,6 +166,13 @@ internal static class ImageOcrLoader
                         bitmap.Dispose();
                     }
                 }
+
+                if (showProgress)
+                {
+                    ProgressLine.Report("OCR", dvbSubtitles.Count, dvbSubtitles.Count);
+                    ProgressLine.Finish();
+                }
+
                 subtitle.Renumber();
                 if (subtitle.Paragraphs.Count > 0)
                 {
@@ -225,14 +264,22 @@ internal static class ImageOcrLoader
         {
             if (options.TimeCodesOnly)
             {
-                AnsiConsole.MarkupLine($"[dim]Extracting time codes from {what} (no OCR)...[/]");
+                if (!options.Quiet)
+                {
+                    AnsiConsole.MarkupLine($"[dim]Extracting time codes from {what} (no OCR)...[/]");
+                }
+
                 return BitmapItemsToSubtitle(items, null);
             }
 
             using var ocr = OcrEngineFactory.Create(options);
             var isolationNote = options.VobSubIsolateColors ? string.Empty : " (colour isolation off)";
-            AnsiConsole.MarkupLine($"[dim]Running {ocr.Name} OCR on {what}{isolationNote}...[/]");
-            return BitmapItemsToSubtitle(items, ocr, options.VobSubIsolateColors);
+            if (!options.Quiet)
+            {
+                AnsiConsole.MarkupLine($"[dim]Running {ocr.Name} OCR on {what}{isolationNote}...[/]");
+            }
+
+            return BitmapItemsToSubtitle(items, ocr, options.VobSubIsolateColors, options.Quiet);
         }
         finally
         {
@@ -251,12 +298,24 @@ internal static class ImageOcrLoader
     /// in time-codes-only mode since no recognition happens there).
     /// </summary>
     private static Subtitle BitmapItemsToSubtitle(
-        IReadOnlyList<BitmapSubtitleLoader.BitmapSubtitleItem> items, IOcrEngine? ocr, bool isolateColors = false)
+        IReadOnlyList<BitmapSubtitleLoader.BitmapSubtitleItem> items, IOcrEngine? ocr, bool isolateColors = false,
+        bool quiet = false)
     {
         var subtitle = new Subtitle();
         var blankCount = 0;
+        // Time-codes-only mode is instant, so only a real OCR run reports progress (#14267).
+        var showProgress = ocr is not null && !quiet;
+        var done = 0;
         foreach (var item in items)
         {
+            // Reported before the image is recognised, so the count is images *finished*.
+            if (showProgress)
+            {
+                ProgressLine.Report("OCR", done, items.Count);
+            }
+
+            done++;
+
             string text;
             if (ocr is null)
             {
@@ -283,7 +342,13 @@ internal static class ImageOcrLoader
             }
         }
 
-        if (blankCount > 0)
+        if (showProgress)
+        {
+            ProgressLine.Report("OCR", items.Count, items.Count);
+            ProgressLine.Finish();
+        }
+
+        if (blankCount > 0 && !quiet)
         {
             // Issue #12772: these used to vanish without a trace, making it look like the
             // source had fewer subtitles than the GUI sees.
@@ -301,12 +366,24 @@ internal static class ImageOcrLoader
     /// kept with empty text so the output carries timing but no recognised characters.
     /// Entries whose bitmap is null (e.g. clear-screen commands) are skipped in both modes.
     /// </summary>
-    private static Subtitle PcsListToSubtitle(List<BluRaySupParser.PcsData> pcsList, IOcrEngine? ocr, bool isolateColors = false)
+    private static Subtitle PcsListToSubtitle(List<BluRaySupParser.PcsData> pcsList, IOcrEngine? ocr,
+        bool isolateColors = false, bool quiet = false)
     {
         var subtitle = new Subtitle();
+        // Time-codes-only mode is instant, so only a real OCR run reports progress (#14267).
+        var showProgress = ocr is not null && !quiet;
+        var done = 0;
 
         foreach (var pcs in pcsList)
         {
+            // Reported before the image is recognised, so the count is images *finished*.
+            if (showProgress)
+            {
+                ProgressLine.Report("OCR", done, pcsList.Count);
+            }
+
+            done++;
+
             var bitmap = pcs.GetBitmap();
             if (bitmap is null)
             {
@@ -340,6 +417,13 @@ internal static class ImageOcrLoader
                 bitmap.Dispose();
             }
         }
+
+        if (showProgress)
+        {
+            ProgressLine.Report("OCR", pcsList.Count, pcsList.Count);
+            ProgressLine.Finish();
+        }
+
         subtitle.Renumber();
         return subtitle;
     }

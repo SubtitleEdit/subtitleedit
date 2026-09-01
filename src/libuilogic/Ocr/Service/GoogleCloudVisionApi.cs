@@ -299,7 +299,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.Service
                             last = l;
                         }
 
-                        if (language == "fr")
+                        if (OcrHelper.UsesSpaceBeforeQuestionAndExclamationMark(language))
                         {
                             sb.AppendLine(sbLine.ToString().Trim());
                         }
@@ -451,7 +451,10 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.Service
                 var highChars = new[] { "'", "\"" };
                 var min = Vertices.Min(p => p.Y);
                 var max = Vertices.Max(p => p.Y);
-                var medium = max + min / 2.0;
+                // "/" binds tighter than "+": this returned max + min/2, not the midpoint, and the
+                // error grows with the glyph's own height - so the sort key and the line-grouping
+                // threshold below put words in the wrong lines and the wrong reading order.
+                var medium = (max + min) / 2.0;
 
                 if (lowChars.Contains(Text))
                 {

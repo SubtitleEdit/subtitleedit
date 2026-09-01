@@ -19,7 +19,7 @@ public class TransparentSettingsWindow : Window
 
         var checkBoxUseSourceFolder = new RadioButton
         {
-            Content = "Use source folder",
+            Content = Se.Language.General.UseSourceFolder,
             IsChecked = vm.UseSourceFolder,
             VerticalAlignment = VerticalAlignment.Center,
             [!Avalonia.Controls.Primitives.ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.UseSourceFolder)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
@@ -27,7 +27,7 @@ public class TransparentSettingsWindow : Window
 
         var checkBoxUseOutputFolder = new RadioButton
         {
-            Content = "Use output folder",
+            Content = Se.Language.General.UseOutputFolder,
             IsChecked = vm.UseOutputFolder,
             VerticalAlignment = VerticalAlignment.Center,
             [!Avalonia.Controls.Primitives.ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.UseOutputFolder)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
@@ -38,7 +38,10 @@ public class TransparentSettingsWindow : Window
             Text = vm.OutputFolder,
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBox.TextProperty] = new Binding(nameof(vm.OutputFolder)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
-            IsEnabled = vm.UseOutputFolder,
+
+            // Bound, not read once at construction: ticking "use output folder" has to enable the
+            // box, otherwise the path can only be set through Browse (the burn-in twin binds it).
+            [!Control.IsEnabledProperty] = new Binding(nameof(vm.UseOutputFolder)) { Mode = BindingMode.OneWay },
             Width = 400,
         };
 
@@ -87,7 +90,7 @@ public class TransparentSettingsWindow : Window
 
         Content = grid;
 
-        Activated += delegate { checkBoxUseSourceFolder.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, checkBoxUseSourceFolder); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

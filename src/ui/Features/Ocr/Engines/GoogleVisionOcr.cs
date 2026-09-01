@@ -276,7 +276,7 @@ public class GoogleVisionOcr
                         last = l;
                     }
 
-                    if (language == "fr")
+                    if (OcrHelper.UsesSpaceBeforeQuestionAndExclamationMark(language))
                     {
                         sb.AppendLine(sbLine.ToString().Trim());
                     }

@@ -18,6 +18,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => "CLQTT JSON";
 
+        // Carries the region of every paragraph.
+        public override bool HasPositionSupport => true;
+
         public override string ToText(Subtitle subtitle, string title)
         {
             return "Not implemented";

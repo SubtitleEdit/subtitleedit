@@ -56,6 +56,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             foreach (string line in lines)
             {
+                // A blank line (e.g. the trailing newline every saved file has) is not an
+                // error - charging it 10 made IsMine reject files with < 11 subtitles.
+                if (string.IsNullOrWhiteSpace(line))
+                {
+                    continue;
+                }
+
                 // line must contain atleast 24 characters (time-code)...
                 if (line.Length < 24)
                 {

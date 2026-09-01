@@ -38,7 +38,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.Append("\"from\":" + p.StartTime.TotalSeconds.ToString(CultureInfo.InvariantCulture) + ", ");
                 sb.Append("\"to\":" + p.EndTime.TotalSeconds.ToString(CultureInfo.InvariantCulture) + ", ");
                 sb.Append("\"location\": 2, ");
-                sb.Append("\"content\":\"" + Json.EncodeJsonText(p.Text.Replace(Environment.NewLine, "\\n")) + "\"");
+                // Line breaks are written as the JSON escape "\n" - as the encoder's newline
+                // placeholder, not via a pre-replace (escaping the pre-replaced text again
+                // turned every line break into a literal backslash-n in the loaded text).
+                sb.Append("\"content\":\"" + Json.EncodeJsonText(p.Text, "\\n") + "\"");
                 sb.Append(" }");
                 count++;
             }
@@ -78,7 +81,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     else
                     {
-                        var pText = texts[0].Replace("\\n", Environment.NewLine);
+                        // Full JSON decode (escaped quotes/backslashes too), not just the
+                        // newline placeholder ToText writes.
+                        var pText = Json.DecodeJsonText(texts[0]);
                         var p = new Paragraph(pText, startTime, endTime);
                         subtitle.Paragraphs.Add(p);
                     }

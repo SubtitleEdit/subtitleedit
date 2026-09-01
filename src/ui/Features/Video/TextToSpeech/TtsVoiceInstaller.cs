@@ -96,6 +96,17 @@ public static class TtsVoiceInstaller
             minVersionNote: null);
 
     /// <summary>
+    /// Ensures the CrispASR runtime that Pocket TTS (CrispASR) runs on is installed.
+    /// The pocket-tts backend is older, but the per-language backends and model routing SE
+    /// relies on (pocket-tts-de/es/it/pt/fr) ship in CrispASR v0.8.31+.
+    /// </summary>
+    public static Task<bool> EnsureCrispAsrForPocketTts(Window? window, IWindowService windowService, bool forceRedownload)
+        => EnsureCrispAsrAsync(window, windowService, forceRedownload,
+            engineDisplayName: "Pocket TTS (CrispASR)",
+            extraCapabilityCheck: null,
+            minVersionNote: "v0.8.31 or newer");
+
+    /// <summary>
     /// Ensures the CrispASR runtime that Zonos TTS (CrispASR) runs on is installed.
     /// The zonos-tts backend's GGUFs (transformer + DAC codec) are staged into SE's
     /// CrispAsr/models folder by
@@ -155,7 +166,7 @@ public static class TtsVoiceInstaller
 
     /// <summary>
     /// Ensures the CrispASR runtime that MOSS-TTS (CrispASR) runs on is installed.
-    /// The moss-tts backend ships in CrispASR v0.8.13 and newer (SE pins v0.8.29).
+    /// The moss-tts backend ships in CrispASR v0.8.13 and newer (SE pins v0.8.30).
     /// </summary>
     public static Task<bool> EnsureCrispAsrForMossTts(Window? window, IWindowService windowService, bool forceRedownload)
         => EnsureCrispAsrAsync(window, windowService, forceRedownload,
@@ -165,7 +176,7 @@ public static class TtsVoiceInstaller
 
     /// <summary>
     /// Ensures the CrispASR runtime that dots.tts (CrispASR) runs on is installed.
-    /// The dots-tts backend ships in CrispASR v0.8.25 and newer (SE pins v0.8.29); the version
+    /// The dots-tts backend ships in CrispASR v0.8.25 and newer (SE pins v0.8.30); the version
     /// note names that floor because older builds have no dots-tts backend at all and abort on
     /// the unknown --backend value.
     /// </summary>
@@ -388,6 +399,20 @@ public static class TtsVoiceInstaller
                 _ => "vulkan",
             };
 
+            if (crispVariant == "cuda")
+            {
+                // Upstream added a Windows CUDA 13 build alongside the CUDA 12 one in v0.8.31, so
+                // Windows gets the same follow-up Linux has (#14343) - without it a fresh install
+                // from here can only ever land on CUDA 12.
+                var cudaAnswer = await PromptCrispAsrCudaVersionAsync(window);
+                if (cudaAnswer == null)
+                {
+                    return false;
+                }
+
+                crispVariant = cudaAnswer;
+            }
+
             if (crispVariant == "cpu")
             {
                 var cpuAnswer = await PromptCrispAsrCpuFlavorAsync(window);
@@ -507,21 +532,7 @@ public static class TtsVoiceInstaller
 
         if (answer == MessageBoxResult.Custom3)
         {
-            var cudaAnswer = await MessageBox.Show(
-                window,
-                "CrispASR CUDA build",
-                $"{Environment.NewLine}CUDA 12 works with most current NVIDIA drivers.{Environment.NewLine}{Environment.NewLine}Pick CUDA 13 only if your driver stack is built for CUDA 13.",
-                MessageBoxButtons.Cancel,
-                MessageBoxIcon.Question,
-                "CUDA 12",
-                "CUDA 13");
-
-            return cudaAnswer switch
-            {
-                MessageBoxResult.Custom1 => "cuda",
-                MessageBoxResult.Custom2 => "cuda13",
-                _ => null,
-            };
+            return await PromptCrispAsrCudaVersionAsync(window);
         }
 
         return answer switch
@@ -529,6 +540,30 @@ public static class TtsVoiceInstaller
             MessageBoxResult.Custom1 => string.Empty,
             MessageBoxResult.Custom2 => "vulkan",
             MessageBoxResult.Custom4 => "hip",
+            _ => null,
+        };
+    }
+
+    /// <summary>
+    /// Follow-up prompt after the user picks "CUDA" in the CrispASR variant selector, on both
+    /// Windows and Linux - upstream ships a CUDA 12 and a CUDA 13 build for each.
+    /// Returns "cuda" (CUDA 12 build) or "cuda13", or null when the user cancels.
+    /// </summary>
+    private static async Task<string?> PromptCrispAsrCudaVersionAsync(Window window)
+    {
+        var cudaAnswer = await MessageBox.Show(
+            window,
+            "CrispASR CUDA build",
+            $"{Environment.NewLine}CUDA 12 works with most current NVIDIA drivers.{Environment.NewLine}{Environment.NewLine}Pick CUDA 13 only if your driver stack is built for CUDA 13.",
+            MessageBoxButtons.Cancel,
+            MessageBoxIcon.Question,
+            "CUDA 12",
+            "CUDA 13");
+
+        return cudaAnswer switch
+        {
+            MessageBoxResult.Custom1 => "cuda",
+            MessageBoxResult.Custom2 => "cuda13",
             _ => null,
         };
     }

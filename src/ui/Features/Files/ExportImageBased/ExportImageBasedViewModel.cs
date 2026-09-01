@@ -87,6 +87,13 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
     [ObservableProperty] private bool _isFullFrame;
     [ObservableProperty] private Color _fullFrameBackgroundColor;
     [ObservableProperty] private bool _isFullFrameVisible;
+    [ObservableProperty] private ObservableCollection<TextEffectDisplayItem> _textEffectItems = null!;
+    [ObservableProperty] private TextEffectDisplayItem? _selectedTextEffect;
+    [ObservableProperty] private bool _isTextEffectEnabled;
+    [ObservableProperty] private int _textEffectStrength = 100;
+    [ObservableProperty] private int _textEffectLetterSpacing;
+    [ObservableProperty] private int _textEffectArcBend;
+    [ObservableProperty] private int _textEffectWave;
     public ObservableCollection<int> BoxPaddingValues { get; } = new ObservableCollection<int>(Enumerable.Range(0, 100));
 
     private string _outlineColorText = string.Empty;
@@ -115,6 +122,11 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
     public TableView SubtitleGrid { get; set; }
 
     private List<SubtitleLineViewModel>? _selectedSubtitles;
+    // PlayResX/PlayResY from the subtitle's own header - "\pos" coordinates and
+    // "\bord"/"\shad" widths are relative to those, not to the export canvas. (0,0) when
+    // there is no header, which keeps everything at scale 1.0.
+    private int _scriptWidth;
+    private int _scriptHeight;
     private bool _dirty;
     private readonly Lock _generateLock;
     private bool _isCtrlDown;
@@ -190,6 +202,8 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         };
         SelectedBoxType = BoxTypes[0];
         UpdateBoxTypeLabels();
+        TextEffectItems = new ObservableCollection<TextEffectDisplayItem>(TextEffectDisplayItem.GetItems());
+        SelectedTextEffect = TextEffectItems[0];
 
         _generateLock = new Lock();
         _cancellationTokenSource = new CancellationTokenSource();
@@ -426,8 +440,9 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
 
                 var ip = imageParameters[i];
                 ip.Bitmap = GenerateBitmap(ip);
-                // "{\pos(x,y)}" anchors the rendered text, so it needs the bitmap size.
-                ExportTextTags.ApplyPositionTag(ip, Subtitles[i].Text);
+                // "{\pos(x,y)}" anchors the rendered text, so it needs the bitmap size - and
+                // the coordinates are in the script's own resolution, not the export canvas.
+                ExportTextTags.ApplyPositionTag(ip, Subtitles[i].Text, _scriptWidth, _scriptHeight);
                 _exportImageHandler.CreateParagraph(ip);
 
                 lock (_generateLock)
@@ -530,6 +545,10 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             Text = ExportTextTags.ToRenderableText(subtitle.Text),
             StartTime = subtitle.StartTime,
             EndTime = subtitle.EndTime,
+            // Carry the forced flag through: BDN XML writes it as Forced="..." and the
+            // Blu-ray sup writer puts it in the display set, so dropping it here silently
+            // un-forces every cue of a forced-caption track on export.
+            IsForced = subtitle.Forced,
             FontColor = FontColor.ToSKColor(),
             FontName = SelectedFontFamily ?? FontFamilies.First(),
             FontSize = SelectedFontSize,
@@ -559,10 +578,24 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             FramesPerSecond = SelectedFrameRate,
             IsFullFrame = IsFullFrameVisible && IsFullFrame,
             FullFrameBackgroundColor = FullFrameBackgroundColor.ToSKColor(),
+            TextEffects = TextEffectPresetFactory.Create(
+                IsTextEffectEnabled,
+                SelectedTextEffect?.Preset ?? TextEffectPreset.SoftShadow,
+                SelectedFontSize,
+                FontColor.ToSKColor(),
+                OutlineColor.ToSKColor(),
+                ShadowColor.ToSKColor(),
+                TextEffectStrength,
+                TextEffectLetterSpacing,
+                TextEffectArcBend,
+                TextEffectWave),
         };
 
-        // "{\fad(..)}" and "{\alpha&H..&}" change what is drawn, so unlike the position tag
-        // they have to be read before the bitmap is rendered.
+        // "{\3c..}"/"{\4c..}"/"{\bord..}"/"{\shad..}", "{\fad(..)}" and "{\alpha&H..&}"
+        // change what is drawn, so unlike the position tag they have to be read before the
+        // bitmap is rendered - overrides first, the transparencies fade whatever colours are
+        // on the parameter. The widths are in the script's own resolution, like "\pos".
+        ExportTextTags.ApplyStyleOverrideTags(imageParameter, subtitle.Text, _scriptHeight);
         ExportTextTags.ApplyTransparencyTags(imageParameter, subtitle.Text);
 
         return imageParameter;
@@ -620,7 +653,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
                 var ip = GetImageParameter(Subtitles.IndexOf(SelectedSubtitle));
                 var bitmap = GenerateBitmap(ip);
                 ip.Bitmap = bitmap;
-                ExportTextTags.ApplyPositionTag(ip, SelectedSubtitle.Text);
+                ExportTextTags.ApplyPositionTag(ip, SelectedSubtitle.Text, _scriptWidth, _scriptHeight);
                 var position = CalculatePosition(ip, bitmap.Width, bitmap.Height);
                 vm.Initialize(bitmap, ip.ScreenWidth, ip.ScreenHeight, position.X, position.Y);
             });
@@ -641,6 +674,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         ObservableCollection<SubtitleLineViewModel> subtitles,
         string? subtitleFileName,
         string? videoFileName,
+        string? subtitleHeader = null,
         bool hideExportButton = false)
     {
         Subtitles.Clear();
@@ -648,6 +682,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         IsExportButtonVisible = !hideExportButton;
         _exportImageHandler = exportHandler;
         _subtitleFileName = subtitleFileName;
+        (_scriptWidth, _scriptHeight) = ExportTextTags.GetScriptResolution(subtitleHeader);
         Title = exportHandler.Title;
 
         // Only the formats that can carry a frame-sized image: the editing timelines the images
@@ -699,7 +734,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         var ip = GetImageParameter(idx);
         ip.Bitmap = GenerateBitmap(ip);
         BitmapPreview = ip.Bitmap.ToAvaloniaBitmap();
-        ExportTextTags.ApplyPositionTag(ip, text);
+        ExportTextTags.ApplyPositionTag(ip, text, _scriptWidth, _scriptHeight);
         var position = CalculatePosition(ip, BitmapPreview.Size.Width, BitmapPreview.Size.Height);
 
         // With "full frame image" the exported png is the size of the video frame, not of the
@@ -771,6 +806,35 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
     }
 
     partial void OnFontColorChanged(Color value) => _dirty = true;
+    partial void OnSelectedTextEffectChanged(TextEffectDisplayItem? value) => _dirty = true;
+    partial void OnIsTextEffectEnabledChanged(bool value) => _dirty = true;
+    partial void OnTextEffectStrengthChanged(int value) => _dirty = true;
+    partial void OnTextEffectLetterSpacingChanged(int value) => _dirty = true;
+    partial void OnTextEffectArcBendChanged(int value) => _dirty = true;
+    partial void OnTextEffectWaveChanged(int value) => _dirty = true;
+
+    [RelayCommand]
+    private async Task ShowTextEffectSettings()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        // Turn the effect on while tuning so the preview shows what the sliders do; put it
+        // back on cancel. The settings window writes straight into this view model, so the
+        // preview underneath follows every change live.
+        var wasEnabled = IsTextEffectEnabled;
+        IsTextEffectEnabled = true;
+
+        var result = await _windowService.ShowDialogAsync<TextEffectWindow, TextEffectViewModel>(Window,
+            vm => vm.Initialize(this));
+
+        if (!result.OkPressed)
+        {
+            IsTextEffectEnabled = wasEnabled;
+        }
+    }
     partial void OnOutlineColorChanged(Color value) => _dirty = true;
     partial void OnShadowColorChanged(Color value) => _dirty = true;
     partial void OnBoxColorChanged(Color value) => _dirty = true;
@@ -933,6 +997,13 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             SelectedFrameRate = FrameRates.Contains(profile.FramesPerSecond) ? profile.FramesPerSecond : 25;
             IsFullFrame = profile.IsFullFrame;
             FullFrameBackgroundColor = profile.FullFrameBackgroundColor.FromHex().ToAvaloniaColor();
+            SelectedTextEffect = TextEffectItems.FirstOrDefault(t => t.Preset.ToString() == profile.TextEffect)
+                                 ?? TextEffectItems[0];
+            IsTextEffectEnabled = profile.TextEffectEnabled;
+            TextEffectStrength = profile.TextEffectStrength <= 0 ? 100 : profile.TextEffectStrength;
+            TextEffectLetterSpacing = profile.TextEffectLetterSpacing;
+            TextEffectArcBend = profile.TextEffectArcBend;
+            TextEffectWave = profile.TextEffectWave;
         }
     }
 
@@ -967,6 +1038,12 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             profile.FramesPerSecond = SelectedFrameRate;
             profile.IsFullFrame = IsFullFrame;
             profile.FullFrameBackgroundColor = FullFrameBackgroundColor.FromColorToHex(true);
+            profile.TextEffect = SelectedTextEffect?.Preset.ToString() ?? string.Empty;
+            profile.TextEffectEnabled = IsTextEffectEnabled;
+            profile.TextEffectStrength = TextEffectStrength;
+            profile.TextEffectLetterSpacing = TextEffectLetterSpacing;
+            profile.TextEffectArcBend = TextEffectArcBend;
+            profile.TextEffectWave = TextEffectWave;
         }
     }
 

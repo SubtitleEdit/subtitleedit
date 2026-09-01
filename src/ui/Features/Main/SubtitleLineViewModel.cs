@@ -53,6 +53,16 @@ public partial class SubtitleLineViewModel : ObservableObject
     [ObservableProperty]
     private string? _bookmark;
 
+    /// <summary>
+    /// The forced-narrative mark: a line that must also go into the separate forced subtitle
+    /// many clients ask for alongside the full file (#14322). Observable so the "Forced"
+    /// column follows the toggle, undo and reload. Kept in the same sidecar as the bookmarks
+    /// (<see cref="Nikse.SubtitleEdit.UiLogic.Common.SubtitleMarksPersistence"/>) - almost no subtitle format has
+    /// anywhere to put it, though the image formats do (Blu-ray sup, VobSub, BDN xml).
+    /// </summary>
+    [ObservableProperty]
+    private bool _forced;
+
     [ObservableProperty]
     private TimeSpan _startTime;
 
@@ -194,7 +204,6 @@ public partial class SubtitleLineViewModel : ObservableObject
     }
 
     public bool NewSection { get; set; }
-    public bool Forced { get; set; }
     public Guid Id { get; set; }
     public bool IsCpsColumnVisible { get; set; } = true;
     public bool IsDefault => Text == string.Empty && Number == 0 && Duration == TimeSpan.Zero && StartTime == TimeSpan.Zero;
@@ -259,7 +268,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         MarginR = p.MarginR;
         MarginV = p.MarginV;
         NewSection = p.NewSection;
-        Forced = p.Forced;
+        _forced = p.Forced;
         _bookmark = p.Bookmark;
         _isReferenceOnly = p.IsReferenceOnly;
         ReferenceParagraphId = p.ReferenceParagraphId;
@@ -529,6 +538,45 @@ public partial class SubtitleLineViewModel : ObservableObject
         }
     }
 
+    private string? _cpsOriginalCacheText;
+    private TimeSpan _cpsOriginalCacheStart;
+    private TimeSpan _cpsOriginalCacheEnd;
+    private double _cpsOriginalCacheValue;
+
+    /// <summary>
+    /// Characters per second of the original text - what the waveform footer shows while it draws
+    /// the original instead of the translation ("toggle translation and original in video/audio
+    /// preview", #14252). Memoized exactly like <see cref="CharactersPerSecond"/>: the footer reads
+    /// it for every visible paragraph on every painted frame.
+    /// </summary>
+    public double OriginalCharactersPerSecond
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(OriginalText))
+            {
+                return 0;
+            }
+
+            if (Duration.TotalMilliseconds <= 1.0)
+            {
+                return 999.0;
+            }
+
+            if (!ReferenceEquals(_cpsOriginalCacheText, OriginalText) ||
+                _cpsOriginalCacheStart != StartTime ||
+                _cpsOriginalCacheEnd != EndTime)
+            {
+                _cpsOriginalCacheText = OriginalText;
+                _cpsOriginalCacheStart = StartTime;
+                _cpsOriginalCacheEnd = EndTime;
+                _cpsOriginalCacheValue = SubtitleTextInfoHelper.GetCharactersPerSecond(OriginalText, StartTime, EndTime);
+            }
+
+            return _cpsOriginalCacheValue;
+        }
+    }
+
     public double WordsPerMinute // WPM
     {
         get
@@ -717,10 +765,15 @@ public partial class SubtitleLineViewModel : ObservableObject
         get
         {
             var general = Se.Settings.General;
-            if ((general.ColorDurationTooShort && Duration.TotalMilliseconds < general.SubtitleMinimumDisplayMilliseconds) ||
-                (general.ColorDurationTooLong && Duration.TotalMilliseconds > general.SubtitleMaximumDisplayMilliseconds) ||
+
+            // Rounded exactly as HasErrors/GetErrorList round - a cell tinted on the raw value
+            // while the error list rounds meant a red cell that "list errors" and error
+            // navigation could not see (CPS 20.004 against a maximum of 20).
+            var durMsRounded = Math.Round(Duration.TotalMilliseconds, 3, MidpointRounding.AwayFromZero);
+            if ((general.ColorDurationTooShort && durMsRounded < general.SubtitleMinimumDisplayMilliseconds) ||
+                (general.ColorDurationTooLong && durMsRounded > general.SubtitleMaximumDisplayMilliseconds) ||
                 // SE4 fallback: when the CPS column is hidden, surface CPS-too-high on the Duration cell instead
-                ((!general.ShowColumnCps || !IsCpsColumnVisible) && general.ColorCharactersPerSecond && CharactersPerSecond > general.SubtitleMaximumCharactersPerSeconds))
+                ((!general.ShowColumnCps || !IsCpsColumnVisible) && general.ColorCharactersPerSecond && CpsRounded > general.SubtitleMaximumCharactersPerSeconds))
             {
                 return _errorBrush;
             }
@@ -740,7 +793,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         get
         {
             if (Se.Settings.General.ColorCharactersPerSecond &&
-                CharactersPerSecond > Se.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                CpsRounded > Se.Settings.General.SubtitleMaximumCharactersPerSeconds)
             {
                 return _errorBrush;
             }
@@ -833,17 +886,18 @@ public partial class SubtitleLineViewModel : ObservableObject
                 Add("gap too short");
             }
 
-            if (general.ColorDurationTooShort && Duration.TotalMilliseconds < general.SubtitleMinimumDisplayMilliseconds)
+            var durMsRounded = Math.Round(Duration.TotalMilliseconds, 3, MidpointRounding.AwayFromZero);
+            if (general.ColorDurationTooShort && durMsRounded < general.SubtitleMinimumDisplayMilliseconds)
             {
                 Add("duration too short");
             }
 
-            if (general.ColorDurationTooLong && Duration.TotalMilliseconds > general.SubtitleMaximumDisplayMilliseconds)
+            if (general.ColorDurationTooLong && durMsRounded > general.SubtitleMaximumDisplayMilliseconds)
             {
                 Add("duration too long");
             }
 
-            if (general.ColorCharactersPerSecond && CharactersPerSecond > general.SubtitleMaximumCharactersPerSeconds)
+            if (general.ColorCharactersPerSecond && CpsRounded > general.SubtitleMaximumCharactersPerSeconds)
             {
                 Add("CPS " + Math.Round(CharactersPerSecond, 1));
             }
@@ -1188,12 +1242,17 @@ public partial class SubtitleLineViewModel : ObservableObject
     /// memoized verdict - the error scans (list errors, go to next/previous error) only need
     /// the yes/no answer, and they ask it for every line of the file.
     /// </summary>
+    /// <summary>
+    /// The CPS the error rules compare against. The cell tints have to use this too, or a row can
+    /// be painted red and still be invisible to "list errors" and to error navigation.
+    /// </summary>
+    private double CpsRounded => Math.Round(CharactersPerSecond, 2, MidpointRounding.AwayFromZero);
+
     public bool HasErrors(SubtitleLineViewModel? prev, SubtitleLineViewModel? next)
     {
         var general = Se.Settings.General;
 
-        if (general.ColorCharactersPerSecond &&
-            Math.Round(CharactersPerSecond, 2, MidpointRounding.AwayFromZero) > general.SubtitleMaximumCharactersPerSeconds)
+        if (general.ColorCharactersPerSecond && CpsRounded > general.SubtitleMaximumCharactersPerSeconds)
         {
             return true;
         }
@@ -1260,7 +1319,7 @@ public partial class SubtitleLineViewModel : ObservableObject
             }
         }
 
-        var cpsRounded = Math.Round(CharactersPerSecond, 2, MidpointRounding.AwayFromZero);
+        var cpsRounded = CpsRounded;
         if (cpsRounded > general.SubtitleMaximumCharactersPerSeconds && general.ColorCharactersPerSecond)
         {
             errors.Add(new LineError(LineErrorType.CharactersPerSecond, string.Format(l.DetailXGreaterThanY, cpsRounded, general.SubtitleMaximumCharactersPerSeconds)));
@@ -1359,5 +1418,6 @@ public partial class SubtitleLineViewModel : ObservableObject
         OnPropertyChanged(nameof(StartTime));
         OnPropertyChanged(nameof(EndTime));
         OnPropertyChanged(nameof(Duration));
+        OnPropertyChanged(nameof(Gap));
     }
 }

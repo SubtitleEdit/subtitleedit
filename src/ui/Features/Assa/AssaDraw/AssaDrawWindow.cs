@@ -406,7 +406,7 @@ public class AssaDrawWindow : Window
 
         var isEraserCheckBox = new CheckBox
         {
-            Content = "Use shape for erase (iclip)",
+            Content = Se.Language.Assa.DrawUseShapeForErase,
             [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.ShapeIsEraser)) { Mode = BindingMode.TwoWay },
             Margin = new Thickness(0, 5, 0, 0),
         };

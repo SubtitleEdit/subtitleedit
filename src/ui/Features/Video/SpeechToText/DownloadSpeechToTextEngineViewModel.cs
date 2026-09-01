@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -55,7 +55,7 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
     public ISpeechToTextEngine? Engine { get; internal set; }
 
     /// <summary>
-    /// CrispASR download variant. On Windows: "cpu", "cpu-legacy", "vulkan", or "cuda" (defaults to "vulkan").
+    /// CrispASR download variant. On Windows: "cpu", "cpu-legacy", "vulkan", "cuda" or "cuda13" (defaults to "vulkan").
     /// On Linux x86_64: "cuda", "cuda13", "vulkan", "hip", or null/empty for the default CPU build.
     /// Ignored on macOS / Linux ARM64.
     /// </summary>
@@ -67,6 +67,8 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
     /// </summary>
     public bool Qwen3AsrUseVulkan { get; set; }
 
+    /// <summary>The .7z being streamed to disk, so a cancel can remove the partial file.</summary>
+    private string? _tempArchiveFileName;
     private readonly IWhisperDownloadService _whisperDownloadService;
     private readonly IQwen3AsrCppDownloadService _qwen3AsrCppDownloadService;
     private readonly ICrispAsrDownloadService _crispAsrDownloadService;
@@ -293,6 +295,7 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
                             : CrispAsrWindowsVariant switch
                             {
                                 "cuda"       => "crispasr-windows-x86_64-cuda",
+                                "cuda13"     => "crispasr-windows-x86_64-cuda13",
                                 "cpu"        => "crispasr-windows-x86_64-cpu",
                                 "cpu-legacy" => "crispasr-windows-x86_64-cpu-legacy",
                                 "vulkan"     => "crispasr-windows-x86_64-vulkan",
@@ -567,6 +570,27 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
     {
         _cancellationTokenSource?.Cancel();
         StopIndeterminateProgress();
+
+        // The Faster-Whisper-XXL / WhisperX archives stream straight to disk (216 MB - 1.5 GB) and
+        // were deleted only on the success path, so cancelling stranded the partial file in the
+        // engine folder where nothing would ever clean it up or notice it.
+        var partialArchive = _tempArchiveFileName;
+        _tempArchiveFileName = null;
+        if (!string.IsNullOrEmpty(partialArchive))
+        {
+            try
+            {
+                if (File.Exists(partialArchive))
+                {
+                    File.Delete(partialArchive);
+                }
+            }
+            catch
+            {
+                // best-effort - it may still be open for writing
+            }
+        }
+
         Close();
     }
 
@@ -615,6 +639,7 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
             // the same way for the same reason.
             var whisperXDir = Engine.GetAndCreateWhisperFolder();
             var whisperXTempFileName = Path.Combine(whisperXDir, Engine.Name + ".7z");
+            _tempArchiveFileName = whisperXTempFileName;
             _downloadTask = _whisperDownloadService.DownloadWhisperX(whisperXTempFileName, downloadProgress, _cancellationTokenSource.Token);
         }
         else if (Engine is WhisperEngineConstMe)
@@ -625,6 +650,7 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
         {
             var dir = Engine.GetAndCreateWhisperFolder();
             var tempFileName = Path.Combine(dir, Engine.Name + ".7z");
+            _tempArchiveFileName = tempFileName;
             _downloadTask = _whisperDownloadService.DownloadWhisperPurfviewFasterWhisperXxl(tempFileName, downloadProgress, _cancellationTokenSource.Token);
         }
         else if (Engine is Qwen3AsrCppEngine)
@@ -639,6 +665,7 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
                 _downloadTask = CrispAsrWindowsVariant switch
                 {
                     "cuda"       => _crispAsrDownloadService.DownloadEngineWindowsCuda(_downloadStream, downloadProgress, _cancellationTokenSource.Token),
+                    "cuda13"     => _crispAsrDownloadService.DownloadEngineWindowsCuda13(_downloadStream, downloadProgress, _cancellationTokenSource.Token),
                     "cpu"        => _crispAsrDownloadService.DownloadEngineWindowsCpu(_downloadStream, downloadProgress, _cancellationTokenSource.Token),
                     "cpu-legacy" => _crispAsrDownloadService.DownloadEngineWindowsCpuLegacy(_downloadStream, downloadProgress, _cancellationTokenSource.Token),
                     _            => _crispAsrDownloadService.DownloadEngineWindowsVulkan(_downloadStream, downloadProgress, _cancellationTokenSource.Token),

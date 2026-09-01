@@ -119,7 +119,11 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     case Enums.DialogType.DashSecondLineWithoutSpace:
                         return line1 + Environment.NewLine + "-" + line2;
                     default:
-                        return (line1.StartsWith("- ") ? "" : "- ") + line1 + Environment.NewLine + "- " + line2;
+                        // Test for a leading dash regardless of the space after it, as the
+                        // DashBothLinesWithoutSpace case above does. Testing "- " missed a dash
+                        // written without one, so "-Hello" came back as "- -Hello" - and this is
+                        // the shipped default dialog style.
+                        return (line1.StartsWith("-") ? "" : "- ") + line1 + Environment.NewLine + "- " + line2;
                 }
             }
             else

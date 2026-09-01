@@ -1,5 +1,6 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Logic;
  
@@ -12,12 +13,16 @@ namespace Nikse.SubtitleEdit.Logic;
 /// </summary>
 public class UiEbuSaveHelper : Ebu.IEbuUiHelper
 {
-    private byte _justificationCode = 2;
+    private byte _justificationCode;
     private string? _frameRateHeader;
     private double _frameRate;
 
     public UiEbuSaveHelper()
     {
+        // A save that never went through the options dialog (e.g. Ctrl+S on a loaded STL file)
+        // still uses the justification the user last picked; 2 (centered) on a fresh install.
+        var justification = Se.Settings.File.EbuSaveOptions.JustificationCode;
+        _justificationCode = justification >= 0 && justification <= 3 ? (byte)justification : (byte)2;
     }
 
     /// <summary>

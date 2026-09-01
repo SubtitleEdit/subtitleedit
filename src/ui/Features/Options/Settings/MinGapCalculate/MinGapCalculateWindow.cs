@@ -62,7 +62,7 @@ public class MinGapCalculateWindow : Window
             },
         };
 
-        Activated += delegate { comboBoxFrameRate.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, comboBoxFrameRate);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

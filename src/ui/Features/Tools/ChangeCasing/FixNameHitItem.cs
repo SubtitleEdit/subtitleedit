@@ -16,7 +16,10 @@ public partial class FixNameHitItem : ObservableObject
     {
         Name = name;
         LineIndex = lineIndex;
-        LineIndexDisplay = lineIndex + 1;
+        // The producer passes Paragraph.Number, which is already 1-based (the apply path relies
+        // on that too, indexing Paragraphs[LineIndex - 1]) - adding one showed every hit against
+        // the following line, and the last line as a row number that does not exist.
+        LineIndexDisplay = lineIndex;
         Before = before;
         After = after;
         IsEnabled = isEnabled;

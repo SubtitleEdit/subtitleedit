@@ -126,7 +126,7 @@ public class SettingsResetWindow : Window
 
         Content = grid;
 
-        Activated += delegate { checkBoxResetAll.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, checkBoxResetAll); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
     }
 }

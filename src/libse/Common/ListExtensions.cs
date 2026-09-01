@@ -45,10 +45,16 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static double FirstOnOrAfter(this List<double> orderedList, double target, double maxDifference, double defaultValue)
         {
             int index = orderedList.BinarySearch(target);
-            if (index < 0)
+            if (index >= 0)
             {
-                index = ~index; // Get the bitwise complement to find the index of the first element greater than the target
+                // An exact hit is always the answer. The tolerance probe below used to run for it
+                // too and could return the PREVIOUS element - so with shot changes [9.98, 10.0]
+                // and a cue already snapped to 10.0, "the next shot change" came back as 9.98,
+                // 20 ms earlier. The generic overloads above only rewrite index when it is < 0.
+                return orderedList[index];
             }
+
+            index = ~index; // Get the bitwise complement to find the index of the first element greater than the target
 
             if ((index - 1) >= 0 && target - orderedList[index - 1] <= maxDifference)
             {
@@ -66,10 +72,14 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static double FirstOnOrBefore(this List<double> orderedList, double target, double maxDifference, double defaultValue)
         {
             int index = orderedList.BinarySearch(target);
-            if (index < 0)
+            if (index >= 0)
             {
-                index = ~index - 1; // Get the bitwise complement to find the index of the last element smaller than the target
+                // Exact hit wins - see the note in FirstOnOrAfter. Here the probe returned the
+                // element AFTER the target instead.
+                return orderedList[index];
             }
+
+            index = ~index - 1; // Get the bitwise complement to find the index of the last element smaller than the target
 
             if (index + 1 < orderedList.Count && orderedList[index + 1] - target <= maxDifference)
             {

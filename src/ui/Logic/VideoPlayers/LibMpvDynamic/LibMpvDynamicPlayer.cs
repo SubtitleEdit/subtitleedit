@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using System;
@@ -57,6 +57,14 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     private long _observedTimePosBits;
     private volatile bool _observedTimePosValid; // false = property unavailable (no file) -> Position reports 0, like the live read
     private long _lastPlaybackRestartTimestamp; // Stopwatch ticks of the last MPV_EVENT_PLAYBACK_RESTART
+
+    // Seek generations. The Position setter hands each async seek an id; the event loop records
+    // which ids mpv has acknowledged (MPV_EVENT_COMMAND_REPLY) and, for every playback restart,
+    // the id generation that restart followed. See HasPlaybackRestartedSince for why a plain
+    // timestamp comparison is not enough.
+    private long _lastSeekCommandId;         // newest id handed out by the Position setter
+    private long _ackedSeekCommandId;        // newest id mpv has replied to (event thread)
+    private long _restartAckedSeekCommandId; // _ackedSeekCommandId as of the last restart
 
     [StructLayout(LayoutKind.Sequential)]
     private struct MpvOpenGlInitParams
@@ -270,8 +278,14 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     private const int MPV_FORMAT_DOUBLE = 5;
 
     private const int MPV_EVENT_SHUTDOWN = 1;
+    private const int MPV_EVENT_COMMAND_REPLY = 5;
     private const int MPV_EVENT_PLAYBACK_RESTART = 21;
     private const int MPV_EVENT_PROPERTY_CHANGE = 22;
+
+    // reply_userdata base for the async seek commands (see the Position setter). Command
+    // replies and property-change events carry reply_userdata from separate namespaces, but
+    // keeping seek ids far clear of the ObserveId* values leaves nothing to confuse.
+    private const ulong SeekReplyIdBase = 1UL << 32;
 
     // reply_userdata ids for the observed properties (see StartEventLoop)
     private const ulong ObserveIdPause = 1;
@@ -362,35 +376,39 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
     private void LoadLibMpvMethods()
     {
-        _mpvCreate = (MpvCreate)GetDllType(typeof(MpvCreate), "mpv_create");
-        _mpvInitialize = (MpvInitialize)GetDllType(typeof(MpvInitialize), "mpv_initialize");
-        _mpvWaitEvent = (MpvWaitEvent)GetDllType(typeof(MpvWaitEvent), "mpv_wait_event");
-        _mpvObserveProperty = (MpvObserveProperty)GetDllType(typeof(MpvObserveProperty), "mpv_observe_property");
-        _mpvWakeup = (MpvWakeup)GetDllType(typeof(MpvWakeup), "mpv_wakeup");
-        _mpvCommand = (MpvCommand)GetDllType(typeof(MpvCommand), "mpv_command");
-        _mpvCommandAsync = (MpvCommandAsync)GetDllType(typeof(MpvCommandAsync), "mpv_command_async");
-        _mpvSetOption = (MpvSetOption)GetDllType(typeof(MpvSetOption), "mpv_set_option");
-        _mpvSetOptionString = (MpvSetOptionString)GetDllType(typeof(MpvSetOptionString), "mpv_set_option_string");
-        _mpvGetPropertyString = (MpvGetPropertyString)GetDllType(typeof(MpvGetPropertyString), "mpv_get_property");
-        _mpvGetPropertyDouble = (MpvGetPropertyDouble)GetDllType(typeof(MpvGetPropertyDouble), "mpv_get_property");
-        _mpvGetPropertyFlag = (MpvGetPropertyFlag)GetDllType(typeof(MpvGetPropertyFlag), "mpv_get_property");
-        _mpvSetProperty = (MpvSetProperty)GetDllType(typeof(MpvSetProperty), "mpv_set_property");
-        _mpvFree = (MpvFree)GetDllType(typeof(MpvFree), "mpv_free");
-        _mpvClientApiVersion = (MpvClientApiVersion)GetDllType(typeof(MpvClientApiVersion), "mpv_client_api_version");
-        _mpvErrorString = (MpvErrorString)GetDllType(typeof(MpvErrorString), "mpv_error_string");
-        _mpvTerminateDestroy = (MpvTerminateDestroy)GetDllType(typeof(MpvTerminateDestroy), "mpv_terminate_destroy");
+        _mpvCreate = (MpvCreate?)GetDllType(typeof(MpvCreate), "mpv_create");
+        _mpvInitialize = (MpvInitialize?)GetDllType(typeof(MpvInitialize), "mpv_initialize");
+        _mpvWaitEvent = (MpvWaitEvent?)GetDllType(typeof(MpvWaitEvent), "mpv_wait_event");
+        _mpvObserveProperty = (MpvObserveProperty?)GetDllType(typeof(MpvObserveProperty), "mpv_observe_property");
+        _mpvWakeup = (MpvWakeup?)GetDllType(typeof(MpvWakeup), "mpv_wakeup");
+        _mpvCommand = (MpvCommand?)GetDllType(typeof(MpvCommand), "mpv_command");
+        _mpvCommandAsync = (MpvCommandAsync?)GetDllType(typeof(MpvCommandAsync), "mpv_command_async");
+        _mpvSetOption = (MpvSetOption?)GetDllType(typeof(MpvSetOption), "mpv_set_option");
+        _mpvSetOptionString = (MpvSetOptionString?)GetDllType(typeof(MpvSetOptionString), "mpv_set_option_string");
+        _mpvGetPropertyString = (MpvGetPropertyString?)GetDllType(typeof(MpvGetPropertyString), "mpv_get_property");
+        _mpvGetPropertyDouble = (MpvGetPropertyDouble?)GetDllType(typeof(MpvGetPropertyDouble), "mpv_get_property");
+        _mpvGetPropertyFlag = (MpvGetPropertyFlag?)GetDllType(typeof(MpvGetPropertyFlag), "mpv_get_property");
+        _mpvSetProperty = (MpvSetProperty?)GetDllType(typeof(MpvSetProperty), "mpv_set_property");
+        _mpvFree = (MpvFree?)GetDllType(typeof(MpvFree), "mpv_free");
+        _mpvClientApiVersion = (MpvClientApiVersion?)GetDllType(typeof(MpvClientApiVersion), "mpv_client_api_version");
+        _mpvErrorString = (MpvErrorString?)GetDllType(typeof(MpvErrorString), "mpv_error_string");
+        _mpvTerminateDestroy = (MpvTerminateDestroy?)GetDllType(typeof(MpvTerminateDestroy), "mpv_terminate_destroy");
 
         // Load render API functions
-        _mpvRenderContextCreate = (MpvRenderContextCreate)GetDllType(typeof(MpvRenderContextCreate), "mpv_render_context_create");
-        _mpvRenderContextRender = (MpvRenderContextRender)GetDllType(typeof(MpvRenderContextRender), "mpv_render_context_render");
-        _mpvRenderContextFree = (MpvRenderContextFree)GetDllType(typeof(MpvRenderContextFree), "mpv_render_context_free");
-        _mpvRenderContextSetUpdateCallback = (MpvRenderContextSetUpdateCallback)GetDllType(typeof(MpvRenderContextSetUpdateCallback), "mpv_render_context_set_update_callback");
+        _mpvRenderContextCreate = (MpvRenderContextCreate?)GetDllType(typeof(MpvRenderContextCreate), "mpv_render_context_create");
+        _mpvRenderContextRender = (MpvRenderContextRender?)GetDllType(typeof(MpvRenderContextRender), "mpv_render_context_render");
+        _mpvRenderContextFree = (MpvRenderContextFree?)GetDllType(typeof(MpvRenderContextFree), "mpv_render_context_free");
+        _mpvRenderContextSetUpdateCallback = (MpvRenderContextSetUpdateCallback?)GetDllType(typeof(MpvRenderContextSetUpdateCallback), "mpv_render_context_set_update_callback");
     }
 
-    private object GetDllType(Type type, string name)
+    private object? GetDllType(Type type, string name)
     {
+        // null, not IntPtr.Zero, when the export is missing: every caller casts the result to a
+        // delegate type, so a boxed IntPtr threw InvalidCastException instead - which made the
+        // "== null" libvlc-4 fallbacks unreachable and turned one missing symbol into a failed
+        // load and a silent EmptyVideoPlayer.
         var address = NativeMethods.CrossGetProcAddress(_library, name);
-        return address != IntPtr.Zero ? Marshal.GetDelegateForFunctionPointer(address, type) : IntPtr.Zero;
+        return address != IntPtr.Zero ? Marshal.GetDelegateForFunctionPointer(address, type) : null;
     }
 
     private bool LoadLibraryInternal()
@@ -444,7 +462,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         }
 
         SetYtDlpPathOption();
-        SetAudioBufferOption();
+        SetPreInitAudioOptions();
 
         var err = _mpvInitialize(_mpv);
         if (err >= 0)
@@ -610,7 +628,20 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
             if (mpvEvent.eventId == MPV_EVENT_PLAYBACK_RESTART)
             {
+                // Timestamp first, generation second. HasPlaybackRestartedSince needs BOTH, so
+                // publishing the generation first would open a window where an old restart's
+                // timestamp is paired with this restart's generation - and the answer would then
+                // depend on the caller's timestamp rather than on one restart. In this order the
+                // half-published state fails the generation gate, i.e. reads as "not yet".
                 Interlocked.Exchange(ref _lastPlaybackRestartTimestamp, System.Diagnostics.Stopwatch.GetTimestamp());
+                Interlocked.Exchange(ref _restartAckedSeekCommandId, Interlocked.Read(ref _ackedSeekCommandId));
+            }
+            else if (mpvEvent.eventId == MPV_EVENT_COMMAND_REPLY && mpvEvent.replyUserdata >= SeekReplyIdBase)
+            {
+                // mpv ran one of our seeks. Its queue is FIFO and the reply is posted when the
+                // command runs, so every restart dequeued after this one can have been caused by
+                // this seek - and every restart dequeued before it cannot.
+                Interlocked.Exchange(ref _ackedSeekCommandId, (long)(mpvEvent.replyUserdata - SeekReplyIdBase));
             }
             else if (mpvEvent.eventId == MPV_EVENT_PROPERTY_CHANGE && mpvEvent.data != IntPtr.Zero)
             {
@@ -726,7 +757,21 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     /// </summary>
     public bool HasPlaybackRestartedSince(long stopwatchTimestamp)
     {
-        return Interlocked.Read(ref _lastPlaybackRestartTimestamp) > stopwatchTimestamp;
+        if (Interlocked.Read(ref _lastPlaybackRestartTimestamp) <= stopwatchTimestamp)
+        {
+            return false;
+        }
+
+        // A restart stamped after the caller's timestamp is not on its own proof that the seek
+        // the caller cares about has landed: the event thread stamps restarts when it PROCESSES
+        // them, so a restart mpv queued earlier - the one that starting playback fires, say -
+        // can be dequeued, and stamped, after a seek issued in the meantime. That made a fresh
+        // seek look already finished, and Pause() then discarded the target it was about to
+        // reach (#14187). mpv's event queue is FIFO, so the honest test is the seek generation:
+        // a restart that was dequeued before the newest seek's own MPV_EVENT_COMMAND_REPLY
+        // cannot have been caused by that seek.
+        var pending = Interlocked.Read(ref _lastSeekCommandId);
+        return pending == 0 || Interlocked.Read(ref _restartAckedSeekCommandId) >= pending;
     }
 
     private static byte[] GetUtf8Bytes(string s)
@@ -770,6 +815,28 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         var useMargins = Se.Settings.Video.MpvPreviewMarginIsPartOfSubtitleArea;
         SetOptionString("sub-use-margins", useMargins ? "yes" : "no");
         SetOptionString("sub-ass-force-margins", useMargins ? "yes" : "no");
+    }
+
+    /// <summary>
+    /// How the lines of a multi-line preview subtitle are justified inside the text block
+    /// (#14167) - not the same thing as the alignment, which moves the whole block and rides
+    /// along in the generated ASS style. Justification has no ASS style field: it is a player
+    /// option, and sub-justify reaches an ASS subtitle - which the preview is - only with
+    /// sub-ass-justify on, which mpv defaults to "no".
+    ///
+    /// Both options are written on every call, so picking "auto" again restores mpv's own
+    /// defaults instead of leaving the last value in place.
+    /// </summary>
+    public void ApplySubtitleJustify()
+    {
+        var justify = Se.Settings.Video.MpvPreviewJustify;
+        if (string.IsNullOrWhiteSpace(justify))
+        {
+            justify = "auto";
+        }
+
+        SetOptionString("sub-justify", justify);
+        SetOptionString("sub-ass-justify", justify == "auto" ? "no" : "yes");
     }
 
     public int SetOptionString(string name, string value)
@@ -926,6 +993,42 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         }
     }
 
+    /// <summary>
+    /// Every mpv audio option that has to be set before mpv_initialize, in one call so a new
+    /// init path cannot pick up half of them.
+    /// </summary>
+    private void SetPreInitAudioOptions()
+    {
+        SetAudioBufferOption();
+        SetAudioStreamSilenceOption();
+    }
+
+    /// <summary>
+    /// mpv's "audio-stream-silence". Normally mpv stops the audio device when playback pauses
+    /// (on Windows, IAudioClient::Stop) and resets it on every seek. Over HDMI to an A/V
+    /// receiver the link then goes idle - the receiver reports no signal - and restarting it
+    /// costs a re-handshake, heard as a second or two of missing audio on resume (#14330). With
+    /// the option set, mpv keeps the device running and writes silence while paused, seeking or
+    /// at end of file, so the link never drops.
+    /// <para>Left alone unless the setting asks for it: mpv's manual calls this option
+    /// "strongly discouraged" because it changes A/V-sync and underrun handling, and it only
+    /// helps that HDMI-receiver case.</para>
+    /// <para>Must be called before mpv_initialize.</para>
+    /// </summary>
+    private void SetAudioStreamSilenceOption()
+    {
+        if (!Se.Settings.Video.MpvAudioStreamSilence)
+        {
+            return; // mpv's own default: stop the device on pause
+        }
+
+        var err = SetOptionString("audio-stream-silence", "yes");
+        if (err < 0)
+        {
+            Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer could not set audio-stream-silence");
+        }
+    }
+
     private int _brightness;
 
     public int ToggleBrightness()
@@ -998,14 +1101,18 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     /// form) holds the caller until the core's dispatch accepts the command - during a scrub
     /// or slider-drag seek storm on a heavy file that stall lands on the UI thread, once per
     /// mouse move. mpv_command_async returns as soon as the command is copied into the queue;
-    /// the core posts an MPV_EVENT_COMMAND_REPLY back, which the event loop drains (and
-    /// ignores - matching the synchronous path, whose seek result was never acted on either).
+    /// the core posts an MPV_EVENT_COMMAND_REPLY back, which the event loop drains - for seeks
+    /// it also reads it, as the marker that orders a seek against the playback restarts around
+    /// it (see <see cref="HasPlaybackRestartedSince"/>).
     /// mpv copies the argument array before returning, so the buffers are freed right away
     /// exactly like in <see cref="DoMpvCommand"/>. Falls back to the synchronous path when
-    /// the event loop is not running, so the reply events cannot pile up unread.
+    /// the event loop is not running, so the reply events cannot pile up unread -
+    /// <paramref name="queuedAsync"/> says which path ran, because only the async one produces
+    /// the MPV_EVENT_COMMAND_REPLY the seek generations are tracked by.
     /// </summary>
-    private int DoMpvCommandFireAndForget(params string[] args)
+    private int DoMpvCommandFireAndForget(ulong replyUserdata, out bool queuedAsync, params string[] args)
     {
+        queuedAsync = false;
         if (_mpv == IntPtr.Zero)
         {
             return 0;
@@ -1016,8 +1123,9 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             return DoMpvCommand(args);
         }
 
+        queuedAsync = true;
         var mainPtr = AllocateUtf8IntPtrArrayWithSentinel(args, out var byteArrayPointers);
-        var result = _mpvCommandAsync(_mpv, 0, mainPtr);
+        var result = _mpvCommandAsync(_mpv, replyUserdata, mainPtr);
         foreach (var ptr in byteArrayPointers)
         {
             Marshal.FreeHGlobal(ptr);
@@ -1035,7 +1143,11 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
     public void InitializeWithOpenGL(GetProcAddress getProcAddress)
     {
-        LoadLibraryInternal();
+        // LoadLib(), not LoadLibraryInternal(): the latter always calls mpv_create() and
+        // overwrites _mpv. CanLoad() has already created a core by the time the render path gets
+        // here, so this created a second one and orphaned the first - its threads and allocations
+        // leaked for the process lifetime, on every player construction.
+        LoadLib();
         EnsureNotDisposed();
 
         if (_mpvInitialize == null || _mpvRenderContextCreate == null || _mpvRenderContextSetUpdateCallback == null)
@@ -1056,7 +1168,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         // so let mpv auto-detect from the context it receives.
 
         SetYtDlpPathOption();
-        SetAudioBufferOption();
+        SetPreInitAudioOptions();
 
         // Initialize mpv first
         var err = _mpvInitialize(_mpv);
@@ -1142,7 +1254,11 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     [System.Runtime.Versioning.SupportedOSPlatform("macos")]
     public void InitializeWithMetal(IntPtr mtlDevice, IntPtr metalLayer)
     {
-        LoadLibraryInternal();
+        // LoadLib(), not LoadLibraryInternal(): the latter always calls mpv_create() and
+        // overwrites _mpv. CanLoad() has already created a core by the time the render path gets
+        // here, so this created a second one and orphaned the first - its threads and allocations
+        // leaked for the process lifetime, on every player construction.
+        LoadLib();
         EnsureNotDisposed();
 
         if (_mpvInitialize == null || _mpvRenderContextCreate == null || _mpvRenderContextSetUpdateCallback == null)
@@ -1157,7 +1273,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         SetStartPausedOption();
 
         SetYtDlpPathOption();
-        SetAudioBufferOption();
+        SetPreInitAudioOptions();
 
         var err = _mpvInitialize(_mpv);
         if (err < 0)
@@ -1528,7 +1644,11 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         // that wants playback asks for it explicitly, but pause it here too: it is a user
         // property, so anything the user did to the previous file - or a play that ran while
         // this one was being picked - would otherwise carry over into this load.
-        DoMpvCommand("set", "pause", "yes");
+        if (DoMpvCommand("set", "pause", "yes") >= 0)
+        {
+            SetObservedPause(true);
+        }
+
         _pausedValue = null;
 
         // Before loadfile, not after: mpv applies "sid" when the file loads, and setting it
@@ -1559,6 +1679,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         SetOptionString("rebase-start-time", "no");
 
         ApplySubtitleMarginArea();
+        ApplySubtitleJustify();
 
         _fileName = path;
 
@@ -1643,6 +1764,10 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         if (err < 0)
         {
             Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer PlayOrPause");
+        }
+        else
+        {
+            RefreshObservedPause();
         }
     }
 
@@ -1742,7 +1867,57 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     }
 
 
+    /// <summary>
+    /// Writes the pause state we just commanded straight into the observed cache.
+    /// <see cref="IsPaused"/>/<see cref="IsPlaying"/> - and, through them, the paused-value
+    /// branch of the <see cref="Position"/> getter - read <c>_observedPause</c>, which only the
+    /// event thread updates when mpv's pause property-change event is dequeued. The pause
+    /// commands below are synchronous (mpv_command returns after the core has applied them), so
+    /// between the command returning and that event being processed the cache says the opposite
+    /// of the truth. A waveform click hits exactly that window: seek, then Pause(), then the
+    /// cursor reads Position - and with IsPaused still false the getter skipped the cached seek
+    /// target and served mpv's pre-seek time-pos (#14187).
+    ///
+    /// A pause change-event still queued from an earlier transition can briefly overwrite this
+    /// with its own (older) value, but the event for the command we just ran follows right
+    /// behind it and settles the cache again - and that is the same value we write here.
+    /// </summary>
+    private void SetObservedPause(bool paused)
+    {
+        _observedPause = paused;
+    }
+
+    /// <summary>
+    /// Re-reads mpv's pause property into the observed cache. Used after "cycle pause", where
+    /// the resulting state is the core's to decide rather than ours to predict.
+    /// </summary>
+    private void RefreshObservedPause()
+    {
+        if (_mpv == IntPtr.Zero || _mpvGetPropertyFlag == null)
+        {
+            return;
+        }
+
+        try
+        {
+            var pauseValue = 0;
+            if (_mpvGetPropertyFlag(_mpv, PropertyNamePause, MPV_FORMAT_FLAG, ref pauseValue) >= 0)
+            {
+                _observedPause = pauseValue != 0;
+            }
+        }
+        catch
+        {
+            // leave the cache to the event thread
+        }
+    }
+
     private double? _pausedValue;
+
+    // Stopwatch timestamp of the last seek issued through the Position setter; 0 = none yet.
+    // Fed to HasPlaybackRestartedSince so Pause() can tell a seek target that is still in
+    // flight (keep it) from one whose seek finished long ago (stale - clear it).
+    private long _lastSeekIssuedTimestamp;
 
     // Last raw time-pos seen by the Position getter/setter, used to gate the eof-reached
     // probe below. -1 = unknown (always probe).
@@ -1858,6 +2033,14 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         }
         set
         {
+            // mpv clamps a negative seek to the start, but the cached value below is what the
+            // getter reports while paused - so nudging back at 0:00 handed callers (set start
+            // time, waveform, position display) a negative time until real playback resumed.
+            if (value < 0)
+            {
+                value = 0;
+            }
+
             _pausedValue = value;
             _lastRawTimePos = value; // keep the eof-reached gate accurate across seeks
             EnsureNotDisposed();
@@ -1867,10 +2050,22 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             }
 
             // Fire-and-forget: seeks arrive in storms (scrubbing, slider drags, wheel steps -
-            // one per input event), every caller already treats the result as asynchronous
-            // (the playhead pin waits for the position to actually arrive), and the error
-            // result was never acted on here.
-            DoMpvCommandFireAndForget("seek", value.ToString(CultureInfo.InvariantCulture), "absolute");
+            // one per input event) and every caller already treats the result as asynchronous
+            // (the playhead pin waits for the position to actually arrive). The reply id is the
+            // seek's generation marker, so "has this seek restarted yet?" can be answered from
+            // mpv's own event order rather than from two independently taken clock readings.
+            var seekId = Interlocked.Increment(ref _lastSeekCommandId);
+            Interlocked.Exchange(ref _lastSeekIssuedTimestamp, System.Diagnostics.Stopwatch.GetTimestamp());
+            var seekResult = DoMpvCommandFireAndForget(SeekReplyIdBase + (ulong)seekId, out var queuedAsync,
+                "seek", value.ToString(CultureInfo.InvariantCulture), "absolute");
+            if (!queuedAsync || seekResult < 0)
+            {
+                // No MPV_EVENT_COMMAND_REPLY is coming for this one - it ran synchronously, or
+                // mpv refused it - so nothing would ever advance the acknowledged generation and
+                // the seek would look in flight forever. Retire the id here instead.
+                Interlocked.Exchange(ref _ackedSeekCommandId, seekId);
+                Interlocked.Exchange(ref _restartAckedSeekCommandId, seekId);
+            }
         }
     }
 
@@ -2026,6 +2221,10 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         {
             Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer Stop pause");
         }
+        else
+        {
+            SetObservedPause(true);
+        }
 
         // Seek back to position 0
         err = DoMpvCommand("seek", "0", "absolute");
@@ -2052,6 +2251,10 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         {
             Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer play");
         }
+        else
+        {
+            SetObservedPause(false);
+        }
     }
 
     public void Pause()
@@ -2062,10 +2265,36 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             return;
         }
 
+        // A finished seek's target is stale: pausing after a seek made minutes ago during
+        // playback made the Position getter keep returning that old target, so the slider,
+        // clock and playhead all jumped back to it - clear it, like the other state
+        // transitions do (LoadFile/PlayOrPause/CloseFile/Stop/Play/frame steps).
+        //
+        // But a seek still in flight is the opposite case: its target IS where playback is
+        // about to be, and the waveform click path depends on the getter reporting it. A
+        // click seeks first (pointer release) and pauses a moment later (tap), and the
+        // second Position assignment no-ops in Avalonia because the property already holds
+        // the value - so clearing here left the getter serving mpv's pre-seek position
+        // until the async seek landed, and the cursor jumped away from the click (#14187).
+        // "In flight" means the newest seek's own playback restart has not been observed yet -
+        // HasPlaybackRestartedSince checks the seek generation, not just the clock, so a restart
+        // left over from starting playback cannot pass for this seek's.
+        var seekInFlight = _eventLoopActive &&
+                           Interlocked.Read(ref _lastSeekIssuedTimestamp) != 0 &&
+                           !HasPlaybackRestartedSince(Interlocked.Read(ref _lastSeekIssuedTimestamp));
+        if (!seekInFlight)
+        {
+            _pausedValue = null;
+        }
+
         var err = DoMpvCommand("set", "pause", "yes");
         if (err < 0)
         {
             Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer pause");
+        }
+        else
+        {
+            SetObservedPause(true);
         }
     }
 
@@ -2293,7 +2522,11 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
     public void InitializeWithSoftwareRendering()
     {
-        LoadLibraryInternal();
+        // LoadLib(), not LoadLibraryInternal(): the latter always calls mpv_create() and
+        // overwrites _mpv. CanLoad() has already created a core by the time the render path gets
+        // here, so this created a second one and orphaned the first - its threads and allocations
+        // leaked for the process lifetime, on every player construction.
+        LoadLib();
         EnsureNotDisposed();
 
         // Set mpv to use software rendering
@@ -2306,7 +2539,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         }
 
         SetYtDlpPathOption();
-        SetAudioBufferOption();
+        SetPreInitAudioOptions();
 
         // Initialize mpv
         var err = _mpvInitialize(_mpv);

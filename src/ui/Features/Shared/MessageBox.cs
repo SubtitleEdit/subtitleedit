@@ -59,7 +59,6 @@ public class MessageBox : Window
     private readonly StackPanel _buttonPanel;
     private readonly KeyPressTracker _enterTracker = new();
     private readonly KeyPressTracker _spaceTracker = new();
-    private bool _initialFocusDone;
     private long _openedTimestamp;
 
     private bool IsInStartupGuardPeriod()
@@ -342,16 +341,12 @@ public class MessageBox : Window
         }, RoutingStrategies.Tunnel);
         Activated += delegate
         {
-            // Re-arm the guard on every activation (alt-tabbing back can bring a held key's
-            // auto-repeat along), but move focus only the first time so arrow-key navigation
-            // survives a focus round-trip to another window.
+            // Re-armed on every activation: alt-tabbing back can bring a held key's auto-repeat
+            // along. The initial focus below is deliberately not part of this - it must happen
+            // once, so arrow-key navigation survives a focus round-trip to another window.
             _openedTimestamp = Stopwatch.GetTimestamp();
-            if (!_initialFocusDone)
-            {
-                _initialFocusDone = true;
-                buttonPanel.Children[0].Focus();
-            }
         };
+        UiUtil.FocusOnFirstActivation(this, () => buttonPanel.Children[0].Focus());
         Deactivated += delegate
         {
             // Key releases go to the newly focused window, so presses counted here would

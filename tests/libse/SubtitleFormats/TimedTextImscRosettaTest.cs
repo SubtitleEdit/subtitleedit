@@ -71,6 +71,122 @@ public class TimedTextImscRosettaTest
     }
 
     [Fact]
+    public void Font_Color_Named_Yellow_Uses_Fixed_Style()
+    {
+        var sut = new TimedTextImscRosetta();
+
+        // make xml - EBU STL import emits capitalized color names like "Yellow"
+        var subtitle = new Subtitle();
+        var text = "This is <font color=\"Yellow\">yellow</font>.";
+        subtitle.Paragraphs.Add(new Paragraph(text, 0, 2000));
+        var xml = sut.ToText(subtitle, "test");
+
+        // Rosetta styling is referential only - no inline tts:color allowed in body
+        Assert.Contains("style=\"s_fg_yellow\"", xml);
+        Assert.DoesNotContain("tts:color=\"Yellow\"", xml);
+
+        // load xml
+        subtitle = new Subtitle();
+        sut.LoadSubtitle(subtitle, xml.SplitToLines(), "test.xml");
+        Assert.Equal("This is <font color=\"#FFFF00\">yellow</font>.", subtitle.Paragraphs[0].Text);
+    }
+
+    [Fact]
+    public void Font_Color_Hex_Snaps_To_Nearest_Palette_Style()
+    {
+        var sut = new TimedTextImscRosetta();
+
+        var subtitle = new Subtitle();
+        var text = "A <font color=\"#ffee00\">warm yellow</font> word.";
+        subtitle.Paragraphs.Add(new Paragraph(text, 0, 2000));
+        var xml = sut.ToText(subtitle, "test");
+
+        Assert.Contains("style=\"s_fg_yellow\"", xml);
+
+        subtitle = new Subtitle();
+        sut.LoadSubtitle(subtitle, xml.SplitToLines(), "test.xml");
+        Assert.Equal("A <font color=\"#FFFF00\">warm yellow</font> word.", subtitle.Paragraphs[0].Text);
+    }
+
+    [Fact]
+    public void Font_Color_White_Is_Default_And_Dropped()
+    {
+        var sut = new TimedTextImscRosetta();
+
+        var subtitle = new Subtitle();
+        subtitle.Paragraphs.Add(new Paragraph("<font color=\"White\">Hello there</font>", 0, 2000));
+        var xml = sut.ToText(subtitle, "test");
+
+        Assert.DoesNotContain("s_fg_white\"", xml.Substring(xml.IndexOf("<body>", StringComparison.Ordinal)));
+
+        subtitle = new Subtitle();
+        sut.LoadSubtitle(subtitle, xml.SplitToLines(), "test.xml");
+        Assert.Equal("Hello there", subtitle.Paragraphs[0].Text);
+    }
+
+    [Fact]
+    public void Font_Tag_Spanning_Line_Break_Is_Balanced()
+    {
+        var sut = new TimedTextImscRosetta();
+
+        var subtitle = new Subtitle();
+        var text = "<font color=\"#00ffff\">line one" + Environment.NewLine + "line two</font>";
+        subtitle.Paragraphs.Add(new Paragraph(text, 0, 2000));
+        var xml = sut.ToText(subtitle, "test");
+
+        // Both lines keep their color; nothing falls into the strip-all-tags fallback
+        Assert.Equal(2, xml.Split(new[] { "style=\"s_fg_cyan\"" }, StringSplitOptions.None).Length - 1);
+        Assert.DoesNotContain("font color", xml);
+
+        subtitle = new Subtitle();
+        sut.LoadSubtitle(subtitle, xml.SplitToLines(), "test.xml");
+        var expected = "<font color=\"#00FFFF\">line one</font>" + Environment.NewLine + "<font color=\"#00FFFF\">line two</font>";
+        Assert.Equal(expected, subtitle.Paragraphs[0].Text);
+    }
+
+    [Fact]
+    public void Font_Color_With_Nested_Italic()
+    {
+        var sut = new TimedTextImscRosetta();
+
+        var subtitle = new Subtitle();
+        var text = "<font color=\"Cyan\">this is <i>important</i></font>";
+        subtitle.Paragraphs.Add(new Paragraph(text, 0, 2000));
+        var xml = sut.ToText(subtitle, "test");
+
+        subtitle = new Subtitle();
+        sut.LoadSubtitle(subtitle, xml.SplitToLines(), "test.xml");
+        Assert.Equal("<font color=\"#00FFFF\">this is <i>important</i></font>", subtitle.Paragraphs[0].Text);
+    }
+
+    [Fact]
+    public void Load_Compliant_File_With_Redefined_Foreground_Shade()
+    {
+        // The spec allows adjusting the shade of an s_fg_xxx style in the header;
+        // a style used without a header declaration falls back to the default palette.
+        var sut = new TimedTextImscRosetta();
+
+        var xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
+                  "<tt xmlns=\"http://www.w3.org/ns/ttml\" xmlns:tts=\"http://www.w3.org/ns/ttml#styling\" xmlns:ttp=\"http://www.w3.org/ns/ttml#parameter\" xmlns:rosetta=\"https://github.com/imsc-rosetta/specification\" ttp:timeBase=\"media\" ttp:frameRate=\"25\" ttp:frameRateMultiplier=\"1 1\" xml:lang=\"en-US\">" +
+                  "<head>" +
+                  "<metadata><rosetta:format>imsc-rosetta</rosetta:format><rosetta:version>0.0.0</rosetta:version></metadata>" +
+                  "<styling><style xml:id=\"s_fg_yellow\" tts:color=\"#FEE100\"/></styling>" +
+                  "<layout><region xml:id=\"R0\" tts:origin=\"10% 10%\" tts:extent=\"80% 80%\" tts:displayAlign=\"after\" style=\"r_default\"/></layout>" +
+                  "</head>" +
+                  "<body>" +
+                  "<div xml:id=\"e_1\" region=\"R0\" begin=\"00:00:01.000\" end=\"00:00:02.000\" style=\"d_default\">" +
+                  "<p style=\"p_font1\"><span style=\"s_fg_yellow\">pale yellow</span> <span style=\"s_fg_green\">green</span></p>" +
+                  "</div>" +
+                  "</body></tt>";
+
+        var subtitle = new Subtitle();
+        sut.LoadSubtitle(subtitle, xml.SplitToLines(), "test.xml");
+
+        Assert.Single(subtitle.Paragraphs);
+        Assert.Equal("<font color=\"#FEE100\">pale yellow</font> <font color=\"#00FF00\">green</font>", subtitle.Paragraphs[0].Text);
+    }
+
+    [Fact]
     public void TopAlignment_An8()
     {
         var sut = new TimedTextImscRosetta();

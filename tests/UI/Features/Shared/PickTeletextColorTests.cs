@@ -68,6 +68,61 @@ public class PickTeletextColorTests
         }
     }
 
+    [Fact]
+    public void Initialize_Level25_DetectsHalfIntensityColor()
+    {
+        // The DVB teletext reader writes the CLUT 1 half intensity colors as hex tags.
+        var vm = new PickTeletextColorViewModel();
+        vm.Initialize("<font color=\"#770000\">Hallo</font>", level25: true);
+
+        Assert.Equal(Color.FromRgb(0x77, 0x00, 0x00), vm.CurrentColor);
+    }
+
+    [AvaloniaFact]
+    public void Window_Level25_AlsoOffersHalfIntensityColorsAndCustomColor()
+    {
+        var vm = new PickTeletextColorViewModel();
+        vm.Initialize(null, level25: true);
+        var window = new PickTeletextColorWindow(vm);
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            var buttons = window.GetLogicalDescendants().OfType<Button>().ToList();
+
+            // No color + 8 basic + 7 half intensity, and the free color choice.
+            Assert.Equal(16, buttons.Count(b => b.Command == vm.PickColorCommand || b.Command == vm.PickNoColorCommand));
+            Assert.Single(buttons, b => b.Command == vm.PickCustomColorCommand);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Window_Ebu_HasNoCustomColorButton()
+    {
+        // An EBU STL file cannot carry anything past the eight Level 1 colors.
+        var vm = new PickTeletextColorViewModel();
+        vm.Initialize(null);
+        var window = new PickTeletextColorWindow(vm);
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            var buttons = window.GetLogicalDescendants().OfType<Button>().ToList();
+
+            Assert.DoesNotContain(buttons, b => b.Command == vm.PickCustomColorCommand);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     [AvaloniaFact]
     public void PickingAColorTile_ConfirmsThatColor()
     {

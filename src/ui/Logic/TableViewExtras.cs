@@ -141,6 +141,23 @@ public sealed class TableViewHeaderSorter
         if (selectedSet.Count > 0)
         {
             _tableView.Selection.BeginBatchUpdate();
+
+            // Select the anchor FIRST - the first Select in the batch sets SelectedIndex, so the
+            // current row is restored without a later "SelectedItem =" assignment. That
+            // assignment routes to Selection.SelectedIndex, which REPLACES the selection, so
+            // clicking a column header collapsed a restored multi-row selection down to one row
+            // (contradicting this class's own "selection is preserved" contract).
+            // MoveSelectedRows below uses the same ordering and explains it.
+            if (selectedItem != null)
+            {
+                var anchorIndex = sorted.IndexOf(selectedItem);
+                if (anchorIndex >= 0)
+                {
+                    _tableView.Selection.Select(anchorIndex);
+                    selectedSet.Remove(selectedItem);
+                }
+            }
+
             for (var i = 0; i < sorted.Count && selectedSet.Count > 0; i++)
             {
                 if (selectedSet.Remove(sorted[i]))
@@ -151,8 +168,11 @@ public sealed class TableViewHeaderSorter
 
             _tableView.Selection.EndBatchUpdate();
         }
+        else
+        {
+            _tableView.SelectedItem = selectedItem;
+        }
 
-        _tableView.SelectedItem = selectedItem;
         if (selectedItem != null)
         {
             _tableView.ScrollIntoView(selectedItem);
@@ -207,6 +227,52 @@ public sealed class TableViewColumnManager
         Sync();
     }
 
+    /// <summary>
+    /// Reorders the managed columns to match <paramref name="keys"/> (matched against
+    /// <see cref="SeTableViewColumn.Tag"/>). Columns whose key is not in the list keep
+    /// their current position - a saved order from an older version must not hide or
+    /// displace columns added since. A null/empty list leaves the order untouched.
+    /// </summary>
+    public void ApplyOrder(IReadOnlyList<string>? keys)
+    {
+        if (keys == null || keys.Count == 0)
+        {
+            return;
+        }
+
+        var ordered = new List<TableViewColumn>();
+        foreach (var key in keys)
+        {
+            var column = _columns.FirstOrDefault(c => c is SeTableViewColumn se && se.Tag as string == key);
+            if (column != null && !ordered.Contains(column))
+            {
+                ordered.Add(column);
+            }
+        }
+
+        if (ordered.Count == 0)
+        {
+            return;
+        }
+
+        for (var i = 0; i < _columns.Count; i++)
+        {
+            var column = _columns[i];
+            if (!ordered.Contains(column))
+            {
+                ordered.Insert(Math.Min(i, ordered.Count), column);
+            }
+        }
+
+        _columns.Clear();
+        _columns.AddRange(ordered);
+
+        // Sync() can only insert missing columns, not permute existing ones, so clear the
+        // live list first and let it rebuild in the new order.
+        _tableView.Columns.Clear();
+        Sync();
+    }
+
     private void Sync()
     {
         var target = _columns.Where(c => c is not SeTableViewColumn se || se.IsVisible).ToList();
@@ -242,6 +308,16 @@ public sealed class TableViewColumnManager
 /// </summary>
 public static class TableViewExtras
 {
+    /// <summary>
+    /// The visual whose origin is the viewport's top-left corner. The TableView template keeps the
+    /// column header INSIDE the ScrollViewer (pinned above the rows), so the ScrollViewer's own
+    /// origin sits a header height above the viewport - measuring against it inflated every row
+    /// top while Viewport.Height excludes the header, so a row clipped under the header counted as
+    /// fully visible and page/centre targets were off by one row. Same helper as
+    /// TableViewScrollAnchor.ViewportOrigin and TableViewIndexScrollBar.
+    /// </summary>
+    private static Visual ViewportOrigin(ScrollViewer scrollViewer) => (Visual?)scrollViewer.Presenter ?? scrollViewer;
+
     private static readonly TextToFlowDirectionConverter TextToFlowDirection = new();
 
     /// <summary>
@@ -673,7 +749,7 @@ public static class TableViewExtras
                 continue;
             }
 
-            var top = ((Visual)row).TranslatePoint(new Point(0, 0), scrollViewer)?.Y;
+            var top = ((Visual)row).TranslatePoint(new Point(0, 0), ViewportOrigin(scrollViewer))?.Y;
             if (top == null || top.Value < -0.5 || top.Value + height > scrollViewer.Viewport.Height + 0.5)
             {
                 continue;
@@ -751,7 +827,7 @@ public static class TableViewExtras
             }
 
             var first = rows[0];
-            var firstTop = ((Visual)first.Row).TranslatePoint(new Point(0, 0), scrollViewer)?.Y;
+            var firstTop = ((Visual)first.Row).TranslatePoint(new Point(0, 0), ViewportOrigin(scrollViewer))?.Y;
             if (firstTop == null)
             {
                 return;
@@ -835,7 +911,7 @@ public static class TableViewExtras
             return false;
         }
 
-        var rowTop = row.TranslatePoint(new Point(0, 0), scrollViewer)?.Y;
+        var rowTop = row.TranslatePoint(new Point(0, 0), ViewportOrigin(scrollViewer))?.Y;
         if (rowTop == null)
         {
             return false;
@@ -864,7 +940,7 @@ public static class TableViewExtras
             }
 
             // Row top in viewport coordinates.
-            var rowTop = row.TranslatePoint(new Point(0, 0), scrollViewer)?.Y;
+            var rowTop = row.TranslatePoint(new Point(0, 0), ViewportOrigin(scrollViewer))?.Y;
             if (rowTop == null)
             {
                 return;

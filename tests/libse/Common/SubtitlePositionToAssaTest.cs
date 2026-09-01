@@ -112,6 +112,22 @@ public class SubtitlePositionToAssaTest
         Assert.Null(p.MarginV);
     }
 
+    // The header of the file a subtitle was read from stays on it when the format is switched in
+    // the toolbar, so a subtitle now shown as SubRip asks for the positioning to be left off - see
+    // SubtitleFormat.HasPositionSupport.
+    [Fact]
+    public void TtmlRegionIsIgnoredWhenPositionsAreOff()
+    {
+        var subtitle = SubtitleWith(ParagraphWithRegion("Hi there!", "top"));
+
+        Assert.False(SubtitlePositionToAssa.ApplyPositions(subtitle, TtmlHeader, false));
+
+        var p = subtitle.Paragraphs[0];
+        Assert.Equal("Hi there!", p.Text);
+        Assert.Null(p.MarginV);
+        Assert.Null(p.MarginL);
+    }
+
     [Fact]
     public void PacPercentageBecomesAMargin()
     {
@@ -163,6 +179,42 @@ public class SubtitlePositionToAssaTest
         var subtitle = SubtitleWith(new Paragraph("Hi there!", 1000, 3000) { MarginV = "20" });
 
         Assert.False(SubtitlePositionToAssa.ApplyPositions(subtitle, MakeEbuHeader(), false));
+
+        Assert.Null(subtitle.Paragraphs[0].MarginV);
+    }
+
+    [Fact]
+    public void DvbTeletextRowNearTheBottomLeavesTheRowsBelowItFree()
+    {
+        var subtitle = SubtitleWith(new Paragraph("Hi" + Environment.NewLine + "there!", 1000, 3000) { MarginV = "20" });
+
+        Assert.True(SubtitlePositionToAssa.ApplyPositions(subtitle, DvbTeletext.CreateHeader(888, "eng")));
+
+        var p = subtitle.Paragraphs[0];
+        Assert.StartsWith(@"{\an2}", p.Text, StringComparison.Ordinal);
+        Assert.Equal("13", p.MarginV); // one row of 23 left below the two lines (rows 20 and 22)
+    }
+
+    [Fact]
+    public void DvbTeletextWithoutARowLandsOnTheWritersDefaultRow()
+    {
+        // ManzanitaTeletextWriter puts a single line on row 22 (a double height row covers 22
+        // and 23) - the preview should show it there, not wherever the EBU margins point.
+        var subtitle = SubtitleWith(new Paragraph("Hi there!", 1000, 3000));
+
+        Assert.True(SubtitlePositionToAssa.ApplyPositions(subtitle, DvbTeletext.CreateHeader(888, "eng")));
+
+        var p = subtitle.Paragraphs[0];
+        Assert.StartsWith(@"{\an2}", p.Text, StringComparison.Ordinal);
+        Assert.Equal("13", p.MarginV); // row 22 of 23, one row left below
+    }
+
+    [Fact]
+    public void DvbTeletextRowIsNotLeftBehindAsAPixelMargin()
+    {
+        var subtitle = SubtitleWith(new Paragraph("Hi there!", 1000, 3000) { MarginV = "20" });
+
+        Assert.False(SubtitlePositionToAssa.ApplyPositions(subtitle, DvbTeletext.CreateHeader(888, "eng"), false));
 
         Assert.Null(subtitle.Paragraphs[0].MarginV);
     }

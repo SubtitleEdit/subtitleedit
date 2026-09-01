@@ -1230,14 +1230,17 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
 
         if (style.BorderStyle.Style == BorderStyleType.BoxPerLine)
         {
+            // The other two branches resolve the libass face name to a Skia family and pass
+            // (outlineColor, shadowColor) in that order; this one used the raw face name and had
+            // the two colors the wrong way round, so the shadow came out in the outline color.
             bitmap = TextToImageGenerator.GenerateImageWithPadding(
                 text,
-                style.FontName,
+                libAssFontName,
                 fontSize,
                 style.Bold,
                 style.ColorPrimary.ToSKColor(),
-                style.ColorShadow.ToSKColor(),
                 style.ColorOutline.ToSKColor(),
+                style.ColorShadow.ToSKColor(),
                 style.ColorOutline.ToSKColor(),
                 0,
                 (float)style.ShadowWidth,
@@ -1247,8 +1250,10 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
 
             if (style.ShadowWidth > 0)
             {
-                bitmap = TextToImageGenerator.AddShadowToBitmap(bitmap,
+                var withShadow = TextToImageGenerator.AddShadowToBitmap(bitmap,
                     (int)Math.Round(style.ShadowWidth, MidpointRounding.AwayFromZero), style.ColorShadow.ToSKColor());
+                bitmap.Dispose();
+                bitmap = withShadow;
             }
         }
         else if (style.BorderStyle.Style == BorderStyleType.OneBox)
@@ -1288,8 +1293,11 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
                 isStrikeout: style.Strikeout);
         }
 
-        var frame = TextToImageGenerator.ComposeOnPreviewFrame(bitmap, GetAlignment(style), style.MarginLeft, style.MarginRight, style.MarginVertical);
+        // A 500 ms timer re-renders this for as long as the dialog is open, and ToAvaloniaBitmap
+        // copies the pixels out, so both native bitmaps must go or the preview leaks ~1 MB a tick.
+        using var frame = TextToImageGenerator.ComposeOnPreviewFrame(bitmap, GetAlignment(style), style.MarginLeft, style.MarginRight, style.MarginVertical);
         ImagePreview = frame.ToAvaloniaBitmap();
+        bitmap.Dispose();
     }
 
     private static int GetPlayResY(string? header)

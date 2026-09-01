@@ -46,11 +46,14 @@ public static class DurationsBridgeGaps2
             var previousExtension = (gapToBridge * percentageForPrevious) / 100.0;
             var nextReduction = gapToBridge - previousExtension;
 
-            // Extend the current subtitle by the calculated amount
-            cur.EndTime = TimeSpan.FromMilliseconds(cur.EndTime.TotalMilliseconds + previousExtension);
+            // Round to a whole millisecond at the producer (#14056). previousExtension is
+            // fractional whenever the gap does not divide evenly - gap 101 ms, min 24, 50% for
+            // the left gives an end time of X.5 ms, which the grid truncates and the format
+            // writers then save a millisecond early.
+            cur.EndTime = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(cur.EndTime.TotalMilliseconds + previousExtension);
 
             // Move the next subtitle's start time backward by the calculated amount
-            next.SetStartTimeOnly(TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds - nextReduction));
+            next.SetStartTimeOnly(TimeSpanExtensions.FromMillisecondsWholeMilliseconds(next.StartTime.TotalMilliseconds - nextReduction));
 
             if (fixedIndexes != null)
             {

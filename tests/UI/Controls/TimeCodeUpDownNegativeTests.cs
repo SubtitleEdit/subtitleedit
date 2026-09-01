@@ -11,6 +11,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic.Config;
+using System.Collections.Generic;
 
 namespace UITests.Controls;
 
@@ -18,8 +19,23 @@ namespace UITests.Controls;
 // and the editor used to clamp any negative value to zero and write that back through its two-way
 // binding - so every line the user selected had its time code destroyed. The control now shows,
 // edits and steps negative time codes the way SE 4.x did.
-public partial class TimeCodeUpDownNegativeTests
+public partial class TimeCodeUpDownNegativeTests : IDisposable
 {
+    // A window left open outlives the test: it keeps the application-wide activation and focused
+    // element, so a later test's click or key press is delivered to it instead. Closing here rather
+    // than at the end of each test also covers the tests that stop early on a failed assertion.
+    private readonly List<Window> _windows = new();
+
+    public void Dispose()
+    {
+        foreach (var window in _windows)
+        {
+            window.Close();
+        }
+
+        _windows.Clear();
+    }
+
     public partial class Line : ObservableObject
     {
         [ObservableProperty] private TimeSpan _start = TimeSpan.Zero;
@@ -57,9 +73,10 @@ public partial class TimeCodeUpDownNegativeTests
 
     private static TimeCodeSettings FrameMode() => new(frameMode: true, stepMs: 100);
 
-    private static (Window window, TimeCodeUpDown control, TextBox textBox) Show(TimeCodeUpDown control)
+    private (Window window, TimeCodeUpDown control, TextBox textBox) Show(TimeCodeUpDown control)
     {
         var window = new Window { Content = control };
+        _windows.Add(window);
         window.Show();
         var textBox = control.GetVisualDescendants().OfType<TextBox>().Single();
         return (window, control, textBox);

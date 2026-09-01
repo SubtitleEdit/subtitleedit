@@ -79,7 +79,10 @@ namespace Nikse.SubtitleEdit.Core.CDG
             }
 
             var graphicData = GetGraphicData();
-            var bitmap = new SKBitmap(FullWidth, FullHeight, SKColorType.Rgba8888, SKAlphaType.Premul);
+            // Bgra8888, not Rgba8888: the loop below packs (a<<24)|(r<<16)|(g<<8)|b, which on
+            // a little-endian machine lands in memory as B,G,R,A. Declaring Rgba8888 made
+            // Skia read that back as R,G,B,A - i.e. red and blue swapped in every frame.
+            var bitmap = new SKBitmap(FullWidth, FullHeight, SKColorType.Bgra8888, SKAlphaType.Premul);
 
             // Copy pixel data into the bitmap
             var pixelData = bitmap.GetPixels();

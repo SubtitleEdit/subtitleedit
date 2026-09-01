@@ -1438,6 +1438,11 @@ public class SyntaxTextView : Control
             return;
         }
 
+        // The document normalizes every line break to its own NewLine, so pasting "a\nb" into a
+        // CRLF document grew it by 4 while the undo entry and the caret used the raw length 3 -
+        // undo then removed the wrong number of characters. Normalize first so the two agree.
+        insertText = NormalizeLineBreaks(insertText);
+
         var textLength = _document.TextLength;
         offset = Math.Clamp(offset, 0, textLength);
         removeLength = Math.Clamp(removeLength, 0, textLength - offset);
@@ -1464,6 +1469,20 @@ public class SyntaxTextView : Control
 
         SetCaret(offset + (insertText?.Length ?? 0), extendSelection: false);
         BringCaretIntoView();
+    }
+
+    /// <summary>
+    /// Rewrites every line break to the document's own <c>NewLine</c>, so a string's length matches
+    /// the number of characters the document will actually gain when it is inserted.
+    /// </summary>
+    private string NormalizeLineBreaks(string? text)
+    {
+        if (string.IsNullOrEmpty(text) || text.IndexOfAny(['\r', '\n']) < 0)
+        {
+            return text ?? string.Empty;
+        }
+
+        return text.Replace("\r\n", "\n").Replace('\r', '\n').Replace("\n", _document.NewLine);
     }
 
     private void PushUndo(UndoEntry entry)

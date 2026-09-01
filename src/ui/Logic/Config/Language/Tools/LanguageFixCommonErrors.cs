@@ -18,6 +18,7 @@ public class LanguageFixCommonErrors
     public string FixShortDisplayTimes { get; set; }
     public string FixLongDisplayTimes { get; set; }
     public string FixShortGaps { get; set; }
+    public string FixShortGap { get; set; }
     public string FixInvalidItalicTags { get; set; }
     public string RemoveUnneededSpaces { get; set; }
     public string RemoveUnneededPeriods { get; set; }
@@ -143,6 +144,7 @@ public class LanguageFixCommonErrors
         FixShortDisplayTimes = "Fix short display times";
         FixLongDisplayTimes = "Fix long display times";
         FixShortGaps = "Fix short gaps";
+        FixShortGap = "Fix short gap";
         FixInvalidItalicTags = "Fix invalid italic tags";
         RemoveUnneededSpaces = "Remove unneeded spaces";
         RemoveUnneededPeriods = "Remove unneeded periods";

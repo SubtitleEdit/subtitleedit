@@ -5,6 +5,7 @@ using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
 
@@ -36,7 +37,27 @@ public class SeGeneral
     public bool FixContinuationStyleIgnoreLyrics { get; set; }
 
 
-    public bool UseFrameMode { get; set; } = false;
+    /// <summary>
+    /// The user's persisted frame-mode choice, stored as "UseFrameMode" in the settings file.
+    /// Read <see cref="UseFrameMode"/> instead, so the temporary override is honored.
+    /// </summary>
+    [JsonPropertyName("UseFrameMode")]
+    public bool UseFrameModePersisted { get; set; }
+
+    /// <summary>
+    /// Session-only frame mode, forced while a frame-based format (EBU STL) is the active
+    /// format (#14076). Managed by the main view when the subtitle format changes; never saved.
+    /// </summary>
+    [JsonIgnore]
+    public bool? UseFrameModeOverride { get; set; }
+
+    [JsonIgnore]
+    public bool UseFrameMode
+    {
+        get => UseFrameModeOverride ?? UseFrameModePersisted;
+        set => UseFrameModePersisted = value;
+    }
+
     public double DefaultFrameRate { get; set; }
     public double CurrentFrameRate { get; set; }
     public string DefaultSubtitleFormat { get; set; }
@@ -137,10 +158,21 @@ public class SeGeneral
     public bool ShowColumnPixelWidth { get; set; }
     public bool ShowColumnLayer { get; set; }
 
+    /// <summary>
+    /// The forced-narrative column (#14322). Off by default - only dubbing/localization
+    /// workflows that have to deliver a separate forced file need it.
+    /// </summary>
+    public bool ShowColumnForced { get; set; }
+
     // Subtitle grid column widths (pixels) keyed by column key (DataGridColumn.Tag),
     // snapshotted on exit and restored on startup. The stretchy Text/OriginalText
     // columns are intentionally not stored so they keep filling the window (#11415).
     public Dictionary<string, double> SubtitleGridColumnWidths { get; set; } = new();
+
+    // Subtitle grid column order as column keys (DataGridColumn.Tag), set from the
+    // "Columns..." dialog (#14369). Empty = the built-in default order. Keys missing
+    // from the list (columns added in a later version) keep their default position.
+    public List<string> SubtitleGridColumnOrder { get; set; } = new();
 
     public bool SelectCurrentSubtitleWhilePlaying { get; set; }
     public bool WriteAn2Tag { get; set; }
@@ -154,6 +186,13 @@ public class SeGeneral
 
     public long CurrentVideoOffsetInMs = 0;
     public bool CurrentVideoIsSmpte = false;
+
+    /// <summary>
+    /// Video offsets the user has applied, most recently used first, so the "Set video offset"
+    /// dialog can offer them for one-click reuse instead of retyping the same time code every
+    /// time (SE 4 parity). Capped at ten entries by the dialog.
+    /// </summary>
+    public List<long> VideoOffsetHistoryInMs { get; set; } = new List<long>();
 
     public SeGeneral()
     {

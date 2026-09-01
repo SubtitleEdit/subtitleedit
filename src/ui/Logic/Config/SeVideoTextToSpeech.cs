@@ -38,6 +38,8 @@ public class SeVideoTextToSpeech
     public double VibeVoiceCrispAsrSpeed { get; set; }
     public string IndexTtsCrispAsrModel { get; set; }
     public double IndexTtsCrispAsrSpeed { get; set; }
+    public string PocketTtsCrispAsrModel { get; set; }
+    public double PocketTtsCrispAsrSpeed { get; set; }
     public string DotsTtsCrispAsrModel { get; set; }
     // Flow-matching Euler steps for dots.tts (8-32, default 16). Higher is better and slower;
     // there is no CLI flag for it, so the engine passes it as CRISPASR_DOTS_ODE_STEPS.
@@ -173,6 +175,8 @@ public class SeVideoTextToSpeech
         VibeVoiceCrispAsrSpeed = 1.1;
         IndexTtsCrispAsrModel = "Q8_0 (~870 MB)";
         IndexTtsCrispAsrSpeed = 1.0;
+        PocketTtsCrispAsrModel = "English F16 (~219 MB)";
+        PocketTtsCrispAsrSpeed = 1.0;
         DotsTtsCrispAsrModel = "Q8_0 (~3.5 GB)";
         DotsTtsCrispAsrOdeSteps = 16;
         IndexTts25AudioCppModel = "Q8_0 (~3.3 GB)";

@@ -52,4 +52,6 @@ Click **OK** to apply all checked conversions, or **Cancel** to discard all chan
 ## Notes
 
 - When converting from a bracketed inline format (e.g. `[]` or `()`) to the **Actor** property, a subtitle line that contains two differently labeled speakers on separate lines will be automatically split into two separate subtitle entries, each with its own Actor value.
+- A bracketed tag that a line splitter broke in half — `(Speaker` at the end of one line, `2)` at the start of the next — is recognized and read as one tag.
 - The selected settings (from/to type, color, casing, only names) are saved and restored between sessions.
+- For text-to-speech you do not have to convert the file first: the [Text to Speech](text-to-speech.md) window detects speaker names in the text when you generate, and offers to cast them on the fly without changing the subtitle itself. Convert actors is the tool for making the actors part of the file.

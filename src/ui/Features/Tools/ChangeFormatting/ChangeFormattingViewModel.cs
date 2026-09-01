@@ -84,30 +84,39 @@ public partial class ChangeFormattingViewModel : ObservableObject, IClosingClean
 
     private void UpdatePreview()
     {
+        Dispatcher.UIThread.Post(BuildPreview);
+    }
+
+    /// <summary>
+    /// Rebuilds the preview rows from the current from/to types and colour. Must run on the UI
+    /// thread; kept separate from <see cref="UpdatePreview"/> so <see cref="Ok"/> can build the
+    /// result it hands to the caller. Ok already runs on the UI thread, so posting the work from
+    /// there only queued it until after Ok had returned and the window had closed - the guard in
+    /// Ok then read an empty (just opened) or stale (setting just changed) collection.
+    /// </summary>
+    private void BuildPreview()
+    {
         if (SelectedFromType == null || SelectedToType == null)
         {
             return;
         }
 
-        var allSubtitles = new ObservableCollection<SubtitleLineViewModel>(AllSubtitles.Select(p => new SubtitleLineViewModel(p)));
+        var allSubtitles = AllSubtitles.Select(p => new SubtitleLineViewModel(p)).ToList();
         var fixedCount = 0;
-        Dispatcher.UIThread.Post(() =>
+        Subtitles.Clear();
+        foreach (var v in allSubtitles)
         {
-            Subtitles.Clear();
-            foreach (var v in allSubtitles)
+            var vm = new ChangeFormattingDisplayItem(v);
+            vm.NewText = FormattingReplacer.Replace(v.Text, SelectedFromType.Type, SelectedToType.Type, SelectedColor, _format);
+            if (vm.Text != vm.NewText)
             {
-                var vm = new ChangeFormattingDisplayItem(v);
-                vm.NewText = FormattingReplacer.Replace(v.Text, SelectedFromType.Type, SelectedToType.Type, SelectedColor, _format);
-                if (vm.Text != vm.NewText)
-                {
-                    vm.SubtitleLineViewModel.Text = vm.NewText;
-                    fixedCount++;
-                }
-                Subtitles.Add(vm);
+                vm.SubtitleLineViewModel.Text = vm.NewText;
+                fixedCount++;
             }
+            Subtitles.Add(vm);
+        }
 
-            StatusText = string.Format(Se.Language.General.LinesChangedX, fixedCount);
-        });
+        StatusText = string.Format(Se.Language.General.LinesChangedX, fixedCount);
     }
 
     public void Initialize(List<SubtitleLineViewModel> subtitles, SubtitleFormat format)
@@ -138,6 +147,23 @@ public partial class ChangeFormattingViewModel : ObservableObject, IClosingClean
     [RelayCommand]
     private void Ok()
     {
+        // Subtitles is only ever filled by the 500 ms preview timer, so before the first tick it
+        // is empty - and applying an empty result made the caller's count check fail and clear
+        // the whole grid. Build it now if a change is pending or nothing has been built yet.
+        // BuildPreview, not UpdatePreview: the latter posts to the UI thread we are already on.
+        if (_dirty || Subtitles.Count == 0)
+        {
+            _dirty = false;
+            BuildPreview();
+        }
+
+        if (Subtitles.Count == 0)
+        {
+            // Nothing to apply - close without touching the subtitle.
+            Window?.Close();
+            return;
+        }
+
         FixedSubtitle = Subtitles.Select(p => new SubtitleLineViewModel(p.SubtitleLineViewModel)).ToList();
         SaveSettings();
         OkPressed = true;

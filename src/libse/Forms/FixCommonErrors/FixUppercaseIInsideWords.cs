@@ -30,7 +30,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 Match match = ReAfterLowercaseLetter.Match(st.StrippedText);
                 while (match.Success)
                 {
-                    if (!(match.Index > 1 && st.StrippedText.Substring(match.Index - 1, 2) == "Mc") // irish names, McDonalds etc.
+                    // ">= 1", not "> 1": a line starting with "McIntyre" matches at index 1, so the
+                    // guard was skipped and the name was corrupted to "Mclntyre". The second loop
+                    // in this file already uses >= 1.
+                    if (!(match.Index >= 1 && st.StrippedText.Substring(match.Index - 1, 2) == "Mc") // irish names, McDonalds etc.
                         && st.StrippedText[match.Index + 1] == 'I'
                         && callbacks.AllowFix(p, fixAction))
                     {

@@ -24,6 +24,7 @@ public enum RuleType
     MoreThanTwoLines,
     Bookmarked,
     BookmarkContains,
+    Forced,
     BlankLines,
     HearingImpaired,
     Style,

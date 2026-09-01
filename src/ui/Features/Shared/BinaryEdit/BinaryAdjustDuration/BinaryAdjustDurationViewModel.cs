@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
@@ -96,6 +97,14 @@ public partial class BinaryAdjustDurationViewModel : ObservableObject
             var nextSubtitle = index + 1 < allSubtitles.Count ? allSubtitles[index + 1] : null;
             
             var newEndTime = subtitle.EndTime + TimeSpan.FromSeconds(AdjustSeconds);
+
+            // A negative adjustment must not push the end time before the start time
+            var minEndTime = subtitle.StartTime + TimeSpan.FromMilliseconds(100);
+            if (AdjustSeconds < 0 && newEndTime < minEndTime)
+            {
+                newEndTime = minEndTime;
+            }
+
             if (nextSubtitle != null && newEndTime <= nextSubtitle.StartTime || nextSubtitle == null)
             {
                 subtitle.EndTime = newEndTime;
@@ -125,7 +134,10 @@ public partial class BinaryAdjustDurationViewModel : ObservableObject
 
             if (nextSubtitle != null && newEndTime > nextSubtitle.StartTime)
             {
-                subtitle.EndTime = nextSubtitle.StartTime;
+                // Cap against the next cue, but never below this cue's own start: two images
+                // sharing a start time capped flat to a zero-length cue, and rows out of order
+                // to a negative one. The Seconds branch above already floors its result.
+                subtitle.EndTime = CapEndTime(subtitle, nextSubtitle);
             }
             else
             {
@@ -143,13 +155,16 @@ public partial class BinaryAdjustDurationViewModel : ObservableObject
             var index = allSubtitles.IndexOf(subtitle);
             var nextSubtitle = index + 1 < allSubtitles.Count ? allSubtitles[index + 1] : null;
 
+            // Set the duration TO the percentage of the original (110% = 10% longer), like the
+            // main "Adjust durations" dialog and SE4 - the two share the same saved setting,
+            // so they must not interpret it differently (this used to ADD the percentage).
             var originalDuration = subtitle.EndTime - subtitle.StartTime;
-            var adjustment = originalDuration.TotalSeconds * (AdjustPercent / 100.0);
-            var newEndTime = subtitle.EndTime + TimeSpan.FromSeconds(adjustment);
+            var newDuration = originalDuration.TotalSeconds * (AdjustPercent / 100.0);
+            var newEndTime = subtitle.StartTime + TimeSpan.FromSeconds(newDuration);
 
             if (nextSubtitle != null && newEndTime > nextSubtitle.StartTime)
             {
-                subtitle.EndTime = nextSubtitle.StartTime;
+                subtitle.EndTime = CapEndTime(subtitle, nextSubtitle);
             }
             else
             {
@@ -165,7 +180,16 @@ public partial class BinaryAdjustDurationViewModel : ObservableObject
         foreach (var subtitle in itemsToAdjust)
         {
             var index = allSubtitles.IndexOf(subtitle);
-            var charCount = subtitle.Text?.Length ?? 0;
+            // Strip tags/line breaks so the recalculated durations land at the requested CPS
+            var charCount = (double)(subtitle.Text ?? string.Empty).CountCharacters(true);
+
+            // Defence in depth: the window blocks Recalculate when any item in scope has no text
+            // (image subtitles carry none until they are OCR'd), but this method is public and a
+            // zero character count would otherwise collapse the cue to zero length.
+            if (charCount <= 0)
+            {
+                continue;
+            }
 
             var optimalDuration = TimeSpan.FromSeconds(charCount / AdjustRecalculateOptimalCharacterPerSecond);
             var maxDuration = TimeSpan.FromSeconds(charCount / AdjustRecalculateMaxCharacterPerSecond);
@@ -186,11 +210,27 @@ public partial class BinaryAdjustDurationViewModel : ObservableObject
             }
             else
             {
-                subtitle.EndTime = maxEndTime;
+                subtitle.EndTime = CapEndTime(subtitle, nextSubtitle);
             }
             
             subtitle.Duration = subtitle.EndTime - subtitle.StartTime;
         }
+    }
+
+    /// <summary>
+    /// The latest end time that still leaves this cue a real duration: just before the next cue,
+    /// and never at or before this cue's own start.
+    /// </summary>
+    private static TimeSpan CapEndTime(BinarySubtitleItem subtitle, BinarySubtitleItem? nextSubtitle)
+    {
+        if (nextSubtitle == null)
+        {
+            return subtitle.EndTime;
+        }
+
+        var capped = nextSubtitle.StartTime - TimeSpan.FromMilliseconds(10);
+        var minimumEndTime = subtitle.StartTime + TimeSpan.FromMilliseconds(10);
+        return capped < minimumEndTime ? minimumEndTime : capped;
     }
 
     private void LoadSettings()
@@ -257,26 +297,26 @@ public partial class BinaryAdjustDurationViewModel : ObservableObject
         {
             if (AdjustPercent <= 0)
             {
-                return string.Format(Se.Language.General.PleaseEnterAValidValueForX, "Percent");
+                return string.Format(Se.Language.General.PleaseEnterAValidValueForX, Se.Language.General.Percent);
             }
         }
         else if (SelectedAdjustType.Type == BinaryAdjustDurationType.Fixed)
         {
             if (AdjustFixed <= 0)
             {
-                return string.Format(Se.Language.General.PleaseEnterAValidValueForX, "Fixed value");
+                return string.Format(Se.Language.General.PleaseEnterAValidValueForX, Se.Language.General.FixedValue);
             }
         }
         else if (SelectedAdjustType.Type == BinaryAdjustDurationType.Recalculate)
         {
             if (AdjustRecalculateMaxCharacterPerSecond <= 1)
             {
-                return string.Format(Se.Language.General.PleaseEnterAValidValueForX, "Max character per second");
+                return string.Format(Se.Language.General.PleaseEnterAValidValueForX, Se.Language.General.MaxCharactersPerSecond);
             }
 
             if (AdjustRecalculateOptimalCharacterPerSecond <= 1)
             {
-                return string.Format(Se.Language.General.PleaseEnterAValidValueForX, "Optimal character per second");
+                return string.Format(Se.Language.General.PleaseEnterAValidValueForX, Se.Language.General.OptimalCharactersPerSecond);
             }
         }
 

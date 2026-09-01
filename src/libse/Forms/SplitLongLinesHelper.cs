@@ -93,7 +93,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
                 // build second paragraph
                 var newParagraph = new Paragraph(oldParagraph) { Text = lines[secondLine] };
-                newParagraph.StartTime.TotalMilliseconds = oldParagraph.EndTime.TotalMilliseconds + halfMinGapsMood;
+                // Measured from the split point, not from the already-reduced end - adding
+                // it to oldParagraph.EndTime made the resulting gap halfMinGapsMood alone,
+                // i.e. half the configured minimum.
+                newParagraph.StartTime.TotalMilliseconds = oldParagraph.EndTime.TotalMilliseconds + halfMinGaps + halfMinGapsMood;
                 newParagraph.EndTime.TotalMilliseconds = newParagraph.StartTime.TotalMilliseconds + millisecondsPerChar * HtmlUtil.RemoveHtmlTags(newParagraph.Text, true).Length;
 
                 // only remove dash (if dialog) if first line is fully closed and "Split removes dashes" is true

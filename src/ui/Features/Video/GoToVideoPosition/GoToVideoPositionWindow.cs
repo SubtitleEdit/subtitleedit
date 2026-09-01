@@ -67,7 +67,7 @@ public class GoToVideoPositionWindow : Window
 
         Content = contentPanel;
 
-        Activated += delegate { vm.Activated(); };
+        UiUtil.FocusOnFirstActivation(this, () => { vm.Activated(); });
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

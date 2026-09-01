@@ -120,7 +120,7 @@ public class WaveformToolbarItemsWindow : Window
 
         Content = grid;
 
-        Activated += delegate { listBox.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, listBox); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

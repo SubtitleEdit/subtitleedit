@@ -78,7 +78,7 @@ public class VoiceSettingsWindow : Window
         Closed += (_, _) => vm.PropertyChanged -= OnViewModelPropertyChanged;
         ApplyDropVisualState(vm.IsDragOver);
 
-        Activated += delegate { textBox.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, textBox); // hack to make OnKeyDown work
     }
 
     private Control BuildDropArea(VoiceSettingsViewModel vm)

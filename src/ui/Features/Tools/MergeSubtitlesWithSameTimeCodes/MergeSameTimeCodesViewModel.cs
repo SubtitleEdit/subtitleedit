@@ -106,10 +106,17 @@ public partial class MergeSameTimeCodesViewModel : ObservableObject, IClosingCle
         var mergedText = string.Empty;
         for (var i = 1; i < _subtitles.Count; i++)
         {
-            p = _subtitles[i - 1];
+            // Anchor on the FIRST cue of the current group. Reassigning every iteration compared
+            // each cue with its immediate predecessor, so a run of slowly drifting cues - each
+            // within tolerance of the last but far from the first - chained transitively into a
+            // single subtitle spanning the whole run.
+            if (singleMergeSubtitles.Count == 0)
+            {
+                p = _subtitles[i - 1];
+            }
 
             var next = _subtitles[i];
-            if (QualifiesForMerge(p, next, MaxMillisecondsDifference) && IsFixAllowed(p))
+            if (p != null && QualifiesForMerge(p, next, MaxMillisecondsDifference) && IsFixAllowed(p))
             {
                 if (!singleMergeSubtitles.Contains(p))
                 {
@@ -212,7 +219,11 @@ public partial class MergeSameTimeCodesViewModel : ObservableObject, IClosingCle
                 case Core.Enums.DialogType.DashSecondLineWithoutSpace:
                     return line1 + Environment.NewLine + "-" + line2;
                 default:
-                    return (line1.StartsWith("- ") ? "" : "- ") + line1 + Environment.NewLine + "- " + line2;
+                    // Test for a leading dash regardless of the space after it, as the
+                    // DashBothLinesWithoutSpace case above does. Testing "- " missed a dash
+                    // written without one, so "-Hello" came back as "- -Hello" - and this is
+                    // the shipped default dialog style.
+                    return (line1.StartsWith("-") ? "" : "- ") + line1 + Environment.NewLine + "- " + line2;
             }
         }
         else

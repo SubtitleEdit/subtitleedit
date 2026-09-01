@@ -97,6 +97,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         if (line.Length > 0)
                         {
                             string text = line.Trim();
+
+                            // The 0x14 control row is the "end of captions" marker ToText writes
+                            // after the last cue; its time code is that cue's real end time, not
+                            // the start of another caption. Treating it as a caption made the
+                            // final cue end one minimum-gap early, and the shift accumulated.
+                            if (text == "\u0014\u002C")
+                            {
+                                var lastParagraph = subtitle.Paragraphs.Count > 0
+                                    ? subtitle.Paragraphs[subtitle.Paragraphs.Count - 1]
+                                    : null;
+                                if (lastParagraph != null)
+                                {
+                                    lastParagraph.EndTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds;
+                                }
+
+                                expecting = ExpectingLine.TimeCodes;
+                                continue;
+                            }
+
                             paragraph.Text = (paragraph.Text + Environment.NewLine + text).Trim();
                             if (!subtitle.Paragraphs.Contains(paragraph))
                             {
@@ -118,6 +137,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     if (next.StartTime.TotalMilliseconds - p.StartTime.TotalMilliseconds <= MaxDurationMs)
                     {
+                        // A following entry with no text is the end-of-caption row ToText writes,
+                        // and it carries this cue's exact end time. Subtracting the minimum gap
+                        // from it made every cue slightly shorter on each save, accumulating.
                         p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                     }
                     else

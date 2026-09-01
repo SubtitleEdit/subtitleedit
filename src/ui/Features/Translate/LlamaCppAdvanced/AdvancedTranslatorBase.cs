@@ -53,9 +53,12 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
 
     public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
     {
-        var lines = new List<LlamaCppAdvancedProtocol.BatchLine> { new(1, text.Trim()) };
+        var stripped = StrippedLine.Strip(text.Trim());
+        var lines = new List<LlamaCppAdvancedProtocol.BatchLine> { new(1, stripped.Text) };
         var map = await TranslateLinesAsync(lines, new List<LlamaCppAdvancedProtocol.HistoryPair>(), sourceLanguageCode, targetLanguageCode, cancellationToken);
-        return map.TryGetValue(1, out var translation) ? translation : string.Empty;
+        return map.TryGetValue(1, out var translation) && translation.Length > 0
+            ? stripped.Restore(translation)
+            : string.Empty;
     }
 
     /// <summary>
@@ -74,10 +77,18 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
 
     private async Task<int> TranslateChunkAsync(ObservableCollection<TranslateRow> rows, int index, int count, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
     {
+        // This path deliberately skips MergeAndSplitHelper (its merge/split heuristics would
+        // break the alignment the reply schema guarantees), and with it the Formatting pass that
+        // takes ASSA override blocks off every other engine's input. Strip them here instead:
+        // they cost a lot of tokens, and small models "normalize" them into something that no
+        // longer matches the source (#13927). A pure override/drawing line strips to empty, and
+        // IsComplete then accepts the model's empty answer for it rather than failing the batch.
         var lines = new List<LlamaCppAdvancedProtocol.BatchLine>(count);
+        var stripped = new StrippedLine[count];
         for (var i = 0; i < count; i++)
         {
-            lines.Add(new LlamaCppAdvancedProtocol.BatchLine(i + 1, rows[index + i].Text));
+            stripped[i] = StrippedLine.Strip(rows[index + i].Text);
+            lines.Add(new LlamaCppAdvancedProtocol.BatchLine(i + 1, stripped[i].Text));
         }
 
         // Translation-tuned models (TranslateGemma) can echo history into a lone line's
@@ -93,7 +104,9 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
                 for (var i = 0; i < count; i++)
                 {
                     var translation = map[i + 1];
-                    rows[index + i].TranslatedText = translation.Length > 0 ? translation : rows[index + i].Text;
+                    rows[index + i].TranslatedText = translation.Length > 0
+                        ? stripped[i].Restore(translation)
+                        : rows[index + i].Text;
                 }
             });
 
@@ -172,10 +185,21 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
         var history = new List<LlamaCppAdvancedProtocol.HistoryPair>(maxPairs);
         for (var i = index - 1; i >= 0 && history.Count < maxPairs; i--)
         {
-            if (!string.IsNullOrEmpty(rows[i].TranslatedText))
+            if (string.IsNullOrEmpty(rows[i].TranslatedText))
             {
-                history.Add(new LlamaCppAdvancedProtocol.HistoryPair(rows[i].Text, rows[i].TranslatedText));
+                continue;
             }
+
+            // Same stripping as the batch itself: override blocks carry no context and would
+            // otherwise fill the window twice per pair - once on each side (#13927).
+            var source = StrippedLine.Strip(rows[i].Text).Text;
+            var target = StrippedLine.Strip(rows[i].TranslatedText).Text;
+            if (source.Length == 0 || target.Length == 0)
+            {
+                continue; // a pure override/drawing line is no use as an example pair
+            }
+
+            history.Add(new LlamaCppAdvancedProtocol.HistoryPair(source, target));
         }
 
         history.Reverse();

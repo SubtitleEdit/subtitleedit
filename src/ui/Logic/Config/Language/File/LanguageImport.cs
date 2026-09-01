@@ -87,10 +87,10 @@ Rules:
         ForcedAlignerSetupIntro = "A forced aligner matches the subtitle text you already have against the audio, without transcribing it first. Long videos are aligned in chunks, so any length works.";
         ForcedAlignerModel = "Aligner model";
         ForcedAlignerDownloadEngine = "Download / update engine...";
-        CsvXlsxCustomColumnsDotDotDot = "CSV/XLSX with custom columns...";
-        TitleImportCsvXlsxCustomColumns = "Import CSV/XLSX with custom columns";
+        CsvXlsxCustomColumnsDotDotDot = "CSV/XLSX/ODS with custom columns...";
+        TitleImportCsvXlsxCustomColumns = "Import CSV/XLSX/ODS with custom columns";
         DetectedSeparatorX = "Detected separator: {0}";
-        CsvXlsxFilterTitle = "CSV/XLSX";
+        CsvXlsxFilterTitle = "CSV/XLSX/ODS";
         SeparatorTab = "Tab";
         SeparatorSpace = "Space";
     }

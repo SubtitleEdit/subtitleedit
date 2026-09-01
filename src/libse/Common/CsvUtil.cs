@@ -66,8 +66,15 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static string[] CsvSplit(string line, bool quoteOn, out bool continuation, char separator = ',')
         {
             var lines = new List<string>();
-            var stringOn = false;
+            // A continuation line resumes inside the field the previous line left open, so it
+            // starts "in a string" too. Starting at false handed the first character of such a
+            // line to the not-in-a-string branches below: a line beginning with the closing
+            // quote appended it as literal text and never closed the field (swallowing the rest
+            // of the file), and a line beginning with the separator split a field that is
+            // inside quotes.
+            var stringOn = quoteOn;
             var item = new StringBuilder();
+            var sawSeparator = false;
             var index = 0;
             while (index < line.Length)
             {
@@ -82,21 +89,13 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     switch (ch)
                     {
-                        case ',' when !quoteOn && separator == ',':
+                        // Any separator, not just comma/semicolon/tab: the import window's
+                        // detection also picks '|', and an unhandled separator left the whole
+                        // row in the first field with every other column empty.
+                        case var _ when !quoteOn && ch == separator:
                             lines.Add(item.ToString());
                             item.Clear();
-                            index++;
-                            stringOn = false;
-                            continue;
-                        case ';' when !quoteOn && separator == ';':
-                            lines.Add(item.ToString());
-                            item.Clear();
-                            index++;
-                            stringOn = false;
-                            continue;
-                        case '\t' when !quoteOn && separator == '\t':
-                            lines.Add(item.ToString());
-                            item.Clear();
+                            sawSeparator = true;
                             index++;
                             stringOn = false;
                             continue;
@@ -135,6 +134,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     lines.Add(item.ToString());
                     item.Clear();
+                    sawSeparator = true;
                     index++;
                     continue;
                 }
@@ -149,7 +149,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                 index++;
             }
 
-            if (item.Length > 0)
+            // "sawSeparator" keeps a trailing empty field: "a," is two columns, the second one
+            // empty, and dropping it made every row that ends on an empty column one field short.
+            // A line with no separator and no content stays zero fields, as before.
+            if (item.Length > 0 || sawSeparator)
             {
                 lines.Add(item.ToString());
             }

@@ -31,6 +31,10 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (string.IsNullOrWhiteSpace(lines[0]) || lines[0].Trim() == "Dialogue List,,")
             {
+                // On a copy: the caller (UnknownFormatImporter) keeps using the list it passed in
+                // for the other parsers when this one finds nothing, and dropping a line from
+                // under it lost a subtitle.
+                lines = new List<string>(lines);
                 lines.RemoveAt(0);
             }
 
@@ -41,7 +45,13 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             var separator = DetectSeparator(lines);
 
-            var headers = lines[0].RemoveChar('"').ToLowerInvariant().Split(separator).ToList();
+            // Split the header exactly like the data rows (quote-aware) and trim each cell:
+            // a naive Split broke on a quoted separator inside a header name - skewing every
+            // column index - and an unpadded "Start, End, Text" failed to match at all.
+            var headers = CsvUtil.CsvSplitLines(new List<string> { lines[0] }, separator)
+                .FirstOrDefault()?
+                .Select(p => p.Trim().Trim('"').ToLowerInvariant())
+                .ToList() ?? new List<string>();
             if (!HasValidHeader(headers))
             {
                 return new Subtitle();
@@ -127,6 +137,14 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private void FixStartTimeWithoutMs(List<CsvLine> csvLines, bool isStartTimeFrames)
         {
+            if (csvLines.Count == 0)
+            {
+                // No data rows at all - e.g. an unterminated quote in the header line makes the
+                // header swallow the rest of the file. The averages below divide by this count,
+                // and the file-open path has no catch for the exception (DivideByZeroException).
+                return;
+            }
+
             var isEndTimeNull = csvLines.All(p => string.IsNullOrEmpty(p.End));
             if (isStartTimeFrames || !isEndTimeNull)
             {
@@ -147,7 +165,10 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             var startGaps = GetGaps(csvLines.Select(p => p.Start).ToArray());
             var avarageStartGap = startGaps.Sum() / startGaps.Length;
-            var avarageTextLength = csvLines.Select(p => p.Text.Length).Sum() / csvLines.Count;
+            // Text stays null when no text column was recognised (HasValidHeader only needs two
+            // hits across all five name lists, so a text column is not required) - dereferencing
+            // it threw straight out of the file-open path, which has no catch.
+            var avarageTextLength = csvLines.Select(p => p.Text?.Length ?? 0).Sum() / csvLines.Count;
             if (avarageStartGap >= 500 || avarageTextLength <= 90)
             {
                 return;
@@ -179,13 +200,19 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private bool DetectIsFrames(List<string> toList)
         {
+            // Blank values carry no information either way - a single empty cell, or the blank row
+            // a trailing newline produces, used to veto the whole column and silently reinterpret
+            // HH:MM:SS:FF as HH:MM:SS.ms (12 frames became 12 ms). Decide on the values that are
+            // actually present. Same rule as the import window's own detection.
+            var considered = 0;
             foreach (var s in toList)
             {
-                if (s == null)
+                if (string.IsNullOrWhiteSpace(s))
                 {
-                    return false;
+                    continue;
                 }
 
+                considered++;
                 var parts = s.Split(TimeCode.TimeSplitChars, StringSplitOptions.RemoveEmptyEntries);
                 if (parts.Length != 4 || parts[3].Trim().Length != 2)
                 {
@@ -193,7 +220,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
-            return true;
+            return considered > 0;
         }
 
         private List<CsvLine> ReadCsvLines(List<string> headers, List<string> lines, char separator)

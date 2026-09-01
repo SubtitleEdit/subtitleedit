@@ -73,10 +73,10 @@ public class NOcrCharacterAddWindow : Window
         CharactersFlyoutMenuHelper.MakeFlyoutLetters(menuFlyout, vm.InsertSpecialCharacterCommand);
         vm.TextBoxNew.ContextFlyout = menuFlyout;
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             vm.TextBoxNew.Focus(); // hack to make OnKeyDown work
-        };
+        });
         Loaded += vm.Onloaded;
         Closing += vm.OnClosing;
         PointerWheelChanged += vm.PointerWheelChanged;
@@ -106,7 +106,7 @@ public class NOcrCharacterAddWindow : Window
         vm.TextBoxNew = UiUtil.MakeTextBox(100, vm, nameof(vm.NewText));
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
         {
-            vm.TextBoxNew.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
+            vm.TextBoxNew.FontFamily = FontFamilyHelper.Make(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
         }
         vm.TextBoxNew.FontStyle = vm.IsNewTextItalic ? FontStyle.Italic : FontStyle.Normal;
 

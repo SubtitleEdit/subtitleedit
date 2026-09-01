@@ -54,10 +54,10 @@ public class BinaryOcrDbEditWindow : Window
 
         Content = grid;
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             buttonOk.Focus(); // hack to make OnKeyDown work
-        };
+        });
         KeyDown += (_, e) => vm.KeyDown(e);
         Loaded += (_, _) => Title = vm.Title;
     }
@@ -121,7 +121,7 @@ public class BinaryOcrDbEditWindow : Window
         vm.TextBoxItem = UiUtil.MakeTextBox(100, vm, nameof(vm.ItemText));
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
         {
-            vm.TextBoxItem.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
+            vm.TextBoxItem.FontFamily = FontFamilyHelper.Make(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
         }
         vm.TextBoxItem.Bind(TextBox.FontStyleProperty, new Binding(nameof(vm.IsItemItalic)) { Converter = new BoolToFontStyleConverter() });
 

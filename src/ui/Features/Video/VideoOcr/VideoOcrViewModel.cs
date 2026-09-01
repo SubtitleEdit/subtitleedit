@@ -10,6 +10,8 @@ using Nikse.SubtitleEdit.Features.Ocr.CrispEmbedSettings;
 using Nikse.SubtitleEdit.Features.Ocr.Download;
 using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.SpellCheck;
+using Nikse.SubtitleEdit.Features.SpellCheck.GetDictionaries;
 using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -28,6 +30,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 using Nikse.SubtitleEdit.UiLogic.Media;
+using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
+using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 namespace Nikse.SubtitleEdit.Features.Video.VideoOcr;
 
@@ -42,6 +46,9 @@ public partial class VideoOcrViewModel : ObservableObject
     [ObservableProperty] private bool _isCrispEmbedEngine;
     [ObservableProperty] private bool _isAppleVisionEngine;
     [ObservableProperty] private string _selectedEngineDescription;
+    [ObservableProperty] private ObservableCollection<SpellCheckDictionaryDisplay> _dictionaries;
+    [ObservableProperty] private SpellCheckDictionaryDisplay? _selectedDictionary;
+    [ObservableProperty] private bool _doFixOcrErrors;
     [ObservableProperty] private ObservableCollection<OcrLanguage2> _paddleLanguages;
     [ObservableProperty] private OcrLanguage2? _selectedPaddleLanguage;
     [ObservableProperty] private ObservableCollection<OcrLanguage2> _appleVisionLanguages;
@@ -90,7 +97,12 @@ public partial class VideoOcrViewModel : ObservableObject
     public CropAreaSelector? CropSelector { get; set; }
 
     private string _videoFileName = string.Empty;
+
+    /// <summary>The video being OCR'ed - the window shows its file name in the title.</summary>
+    public string VideoFileName => _videoFileName;
     private CancellationTokenSource _cancellationTokenSource = new();
+    private readonly ISpellCheckManager _spellCheckManager;
+    private readonly IOcrFixEngine _ocrFixEngine;
     private Process? _ffmpegProcess;
     private long _extractedFrames;
     private readonly DispatcherTimer _previewTimer;
@@ -107,9 +119,12 @@ public partial class VideoOcrViewModel : ObservableObject
 
     private readonly IWindowService _windowService;
 
-    public VideoOcrViewModel(IWindowService windowService)
+    public VideoOcrViewModel(IWindowService windowService, ISpellCheckManager spellCheckManager, IOcrFixEngine ocrFixEngine)
     {
         _windowService = windowService;
+        _spellCheckManager = spellCheckManager;
+        _ocrFixEngine = ocrFixEngine;
+        Dictionaries = new ObservableCollection<SpellCheckDictionaryDisplay>();
 
         Engines = new ObservableCollection<VideoOcrEngineItem>(VideoOcrEngineItem.GetEngines());
         SelectedEngine = Engines[0];
@@ -129,7 +144,19 @@ public partial class VideoOcrViewModel : ObservableObject
         LlamaCppModels = new ObservableCollection<LlamaCppModelDisplay>();
         LlamaCppLanguage = string.Empty;
         LlamaCppServerButtonText = Se.Language.General.StartServer;
-        CrispEmbedBackends = new ObservableCollection<CrispEmbedBackend>(CrispEmbedEngine.GetBackends());
+        // For burned-in video, only the backends that measured well are offered, best first
+        // (real-footage clips with burned real SRTs as ground truth, 2026-08-26): GLM-OCR
+        // 19/24 lines exact at ~1.1 s/frame; DeepSeek-OCR-2 was the close second in the
+        // 2026-08-12 frame corpus; PP-OCRv6 is the light option (79 MB, detector-based) and
+        // holds up on ordinary backgrounds. GOT-OCR2 (13/24, 27 phantom lines from textless
+        // frames) and Qwen3-VL-2B (18/24, 22 phantom lines, 1.7 s/frame) are left to the
+        // subtitle-bitmap OCR window, whose clean crops they were tuned for.
+        var videoBackendNames = new[] { "GLM-OCR", "DeepSeek-OCR-2", "PP-OCRv6" };
+        CrispEmbedBackends = new ObservableCollection<CrispEmbedBackend>(
+            videoBackendNames
+                .Select(name => CrispEmbedEngine.GetBackends().FirstOrDefault(p => p.Name == name))
+                .Where(p => p != null)
+                .Select(p => p!));
         CrispEmbedModels = new ObservableCollection<CrispEmbedModelDisplay>();
         ProgressText = string.Empty;
         PreviewPositionText = string.Empty;
@@ -235,7 +262,7 @@ public partial class VideoOcrViewModel : ObservableObject
         if (IsLlamaCppEngine && LlamaCppModels.Count == 0)
         {
             var savedModelName = Path.GetFileName(Se.Settings.Video.VideoOcr.LlamaCppModel);
-            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.OcrModels, savedModelName);
+            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.GetAllOcrModels(), savedModelName);
         }
 
         if (IsCrispEmbedEngine && SelectedCrispEmbedBackend == null)
@@ -355,7 +382,7 @@ public partial class VideoOcrViewModel : ObservableObject
         if (downloaded != null)
         {
             var selectName = string.IsNullOrEmpty(downloaded) ? model?.FileName : downloaded;
-            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.OcrModels, selectName);
+            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.GetAllOcrModels(), selectName);
             (Window as VideoOcrWindow)?.RefreshDownloadDots();
         }
     }
@@ -429,7 +456,7 @@ public partial class VideoOcrViewModel : ObservableObject
             }
         }
 
-        SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.OcrModels, model.FileName);
+        SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.GetAllOcrModels(), model.FileName);
         (Window as VideoOcrWindow)?.RefreshDownloadDots();
 
         try
@@ -540,6 +567,9 @@ public partial class VideoOcrViewModel : ObservableObject
             return;
         }
 
+        // Fresh token before preparing the engine - see StartOcr.
+        _cancellationTokenSource = new CancellationTokenSource();
+
         var engineOk = await EnsureEngineIsAvailable();
         if (!engineOk)
         {
@@ -548,13 +578,17 @@ public partial class VideoOcrViewModel : ObservableObject
 
         ClampSelection();
 
-        _cancellationTokenSource = new CancellationTokenSource();
         var cancellationToken = _cancellationTokenSource.Token;
 
         IsRunning = true;
         ProgressText = Se.Language.Video.VideoOcr.TestOcrRunning;
 
-        var frameFileName = Path.Combine(Path.GetTempPath(), "se_video_ocr_test_" + Guid.NewGuid() + ".jpg");
+        // Its own scratch folder, not the shared temp root: OcrGroups derives the masked-copy
+        // folder from the frame's directory, so a brightness minimum wrote full-resolution
+        // masked JPEGs straight into %TEMP%/masked, which nothing ever cleaned up.
+        var testFolder = Path.Combine(Path.GetTempPath(), "se_video_ocr_test_" + Guid.NewGuid());
+        Directory.CreateDirectory(testFolder);
+        var frameFileName = Path.Combine(testFolder, "frame.jpg");
         try
         {
             await ExtractSingleFrame(frameFileName, PreviewPositionSeconds, cancellationToken);
@@ -592,7 +626,7 @@ public partial class VideoOcrViewModel : ObservableObject
 
             try
             {
-                File.Delete(frameFileName);
+                Directory.Delete(testFolder, true);
             }
             catch
             {
@@ -603,17 +637,10 @@ public partial class VideoOcrViewModel : ObservableObject
 
     private async Task ExtractSingleFrame(string outputFileName, double positionSeconds, CancellationToken cancellationToken)
     {
-        var scale = string.Empty;
-        var maxImageWidth = Se.Settings.Video.VideoOcr.MaxImageWidth;
-        if (maxImageWidth > 0 && SelectionWidth > maxImageWidth)
-        {
-            scale = $",scale={maxImageWidth}:-2";
-        }
-
         // -ss before -i: seek in the demuxer, so a test frame late in a long video is still fast.
         var arguments = $"-nostdin -y -ss {positionSeconds.ToString("0.###", CultureInfo.InvariantCulture)} " +
                         $"-i \"{_videoFileName}\" " +
-                        $"-vf \"crop={SelectionWidth}:{SelectionHeight}:{SelectionX}:{SelectionY}{scale}\" " +
+                        $"-vf \"{GetCropAndScaleFilter()}\" " +
                         $"-frames:v 1 -q:v 2 \"{outputFileName}\"";
 
         Se.WriteToolsLog("Video OCR: extracting test frame - ffmpeg " + arguments);
@@ -655,6 +682,11 @@ public partial class VideoOcrViewModel : ObservableObject
             return;
         }
 
+        // Fresh token first: EnsureEngineIsAvailable passes _cancellationTokenSource.Token down
+        // to the llama.cpp server start, so after a cancel it threw immediately on the stale
+        // cancelled token and the scan could never be started again.
+        _cancellationTokenSource = new CancellationTokenSource();
+
         var engineOk = await EnsureEngineIsAvailable();
         if (!engineOk)
         {
@@ -664,7 +696,6 @@ public partial class VideoOcrViewModel : ObservableObject
         ClampSelection();
         SaveSettings();
 
-        _cancellationTokenSource = new CancellationTokenSource();
         var cancellationToken = _cancellationTokenSource.Token;
 
         IsRunning = true;
@@ -705,9 +736,38 @@ public partial class VideoOcrViewModel : ObservableObject
                 },
                 cancellationToken), cancellationToken);
 
+            InitializeOcrFixEngine(contextSubtitle: null);
+
             await RunOcr(groups, cancellationToken);
 
             var mergedLines = VideoOcrLineBuilder.Build(groups, FramesPerSecond, TextSimilarityPercent, MaxGapMs, MinDurationMs);
+
+            var lastRefineUpdate = 0L;
+            await VideoOcrTimingRefiner.RefineAsync(
+                mergedLines,
+                new VideoOcrTimingRefiner.Context
+                {
+                    VideoFileName = _videoFileName,
+                    FramesFolder = framesFolder,
+                    CoarseFps = FramesPerSecond,
+                    BrightnessMinimum = BrightnessMinimum,
+                    ImageSimilarityPercent = Se.Settings.Video.VideoOcr.ImageSimilarityPercent,
+                    CropAndScaleFilter = GetCropAndScaleFilter(),
+                },
+                (current, total) =>
+                {
+                    var now = Environment.TickCount64;
+                    if (now - lastRefineUpdate > 200 || current == total)
+                    {
+                        lastRefineUpdate = now;
+                        Dispatcher.UIThread.Post(() =>
+                        {
+                            ProgressText = string.Format(Se.Language.Video.VideoOcr.RefiningTimingXY, current, total);
+                            ProgressValue = total == 0 ? 0 : current * 100.0 / total;
+                        });
+                    }
+                },
+                cancellationToken);
 
             var positionTag = string.Empty;
             if (AddAssaPositionTag)
@@ -721,14 +781,18 @@ public partial class VideoOcrViewModel : ObservableObject
             var number = 1;
             foreach (var line in mergedLines)
             {
-                Lines.Add(new VideoOcrLineItem
+                var item = new VideoOcrLineItem
                 {
                     Number = number++,
                     StartTime = TimeSpan.FromMilliseconds(line.StartMs),
                     EndTime = TimeSpan.FromMilliseconds(line.EndMs),
                     Text = positionTag + line.Text,
-                });
+                };
+                item.PropertyChanged += LineItemPropertyChanged;
+                Lines.Add(item);
             }
+
+            ApplyOcrFixes();
 
             IsRunning = false;
             IsOkEnabled = Lines.Count > 0;
@@ -748,7 +812,11 @@ public partial class VideoOcrViewModel : ObservableObject
         catch (OperationCanceledException)
         {
             IsRunning = false;
-            IsOkEnabled = Lines.Count > 0;
+            // Lines still holds the raw per-frame-group preview rows - the merge/filter/tag/
+            // refine pipeline only rebuilds it on completion. Inserting those would produce
+            // near-duplicate paragraphs on the scan grid with no position tag, so a cancelled
+            // scan offers nothing to apply.
+            IsOkEnabled = false;
             ProgressValue = 0;
             ProgressText = string.Empty;
         }
@@ -780,7 +848,9 @@ public partial class VideoOcrViewModel : ObservableObject
         }
     }
 
-    private async Task ExtractFrames(string framesFolder, CancellationToken cancellationToken)
+    /// <summary>The crop (and optional downscale) part of the extraction filter - shared by
+    /// the scan, the test frame and the timing refinement so they all see the same pixels.</summary>
+    private string GetCropAndScaleFilter()
     {
         var scale = string.Empty;
         var maxImageWidth = Se.Settings.Video.VideoOcr.MaxImageWidth;
@@ -789,12 +859,17 @@ public partial class VideoOcrViewModel : ObservableObject
             scale = $",scale={maxImageWidth}:-2";
         }
 
+        return $"crop={SelectionWidth}:{SelectionHeight}:{SelectionX}:{SelectionY}{scale}";
+    }
+
+    private async Task ExtractFrames(string framesFolder, CancellationToken cancellationToken)
+    {
         // JPEG (near-lossless q=2) instead of PNG: a long video at 5 fps produces tens of
         // thousands of frames, and PNG would need gigabytes of temp disk space.
         var outputPattern = Path.Combine(framesFolder, "img%06d.jpg");
         var arguments = $"-nostdin -y -i \"{_videoFileName}\" " +
                         $"-vf \"fps={FramesPerSecond.ToString(CultureInfo.InvariantCulture)}," +
-                        $"crop={SelectionWidth}:{SelectionHeight}:{SelectionX}:{SelectionY}{scale}\" " +
+                        $"{GetCropAndScaleFilter()}\" " +
                         $"-q:v 2 -start_number 0 \"{outputPattern}\"";
 
         _extractedFrames = 0;
@@ -895,13 +970,15 @@ public partial class VideoOcrViewModel : ObservableObject
 
             Dispatcher.UIThread.Post(() =>
             {
-                Lines.Add(new VideoOcrLineItem
+                var item = new VideoOcrLineItem
                 {
                     Number = Lines.Count + 1,
                     StartTime = TimeSpan.FromMilliseconds(group.GetStartMs(FramesPerSecond)),
                     EndTime = TimeSpan.FromMilliseconds(group.GetEndMs(FramesPerSecond)),
                     Text = group.Text,
-                });
+                };
+                ApplyFixToItem(item, Lines.Count);
+                Lines.Add(item);
             });
         }
 
@@ -936,18 +1013,48 @@ public partial class VideoOcrViewModel : ObservableObject
                 if (group != null)
                 {
                     group.Text = VideoOcrLineBuilder.CleanOcrResult(p.Text);
+                    group.Confidence = p.Confidence;
                     reportProgress();
                     addPreviewLine(group);
                 }
             });
 
+            // Black out everything below the brightness minimum before recognition, like
+            // VideOCR does: Paddle's detector otherwise picks up darker scene text (shirt
+            // prints, credits) and prepends it to subtitles. Only for the Paddle path -
+            // vision/VLM engines measured better on the natural frames.
+            var ocrFileNames = ocrGroups.Select(g => g.RepresentativeFileName).ToList();
+            if (BrightnessMinimum > 0 && ocrGroups.Count > 0)
+            {
+                var maskedFolder = Path.Combine(
+                    Path.GetDirectoryName(ocrGroups[0].RepresentativeFileName) ?? string.Empty, "masked");
+                Directory.CreateDirectory(maskedFolder);
+                Parallel.For(0, ocrGroups.Count,
+                    new ParallelOptions { CancellationToken = cancellationToken, MaxDegreeOfParallelism = Environment.ProcessorCount },
+                    i =>
+                    {
+                        var source = ocrGroups[i].RepresentativeFileName;
+                        var target = Path.Combine(maskedFolder, Path.GetFileName(source));
+                        if (VideoOcrFrameGrouper.WriteMaskedCopy(source, target, BrightnessMinimum))
+                        {
+                            ocrFileNames[i] = target;
+                        }
+                    });
+            }
+
             // The frames are already image files on disk, so pass them by file name -
             // one batch, no per-image decode/encode, memory stays flat.
             var batch = ocrGroups
-                .Select((g, i) => new PaddleOcrBatchInput { Index = i, SourceFileName = g.RepresentativeFileName })
+                .Select((g, i) => new PaddleOcrBatchInput { Index = i, SourceFileName = ocrFileNames[i] })
                 .ToList();
 
-            var paddleOcr = new PaddleOcr();
+            var paddleOcr = new PaddleOcr
+            {
+                // Low-confidence regions in a video frame are nearly always background
+                // clutter (scene text, logos) rather than subtitle text - same cut VideOCR
+                // applies. Only for Video OCR; the subtitle-bitmap OCR window keeps everything.
+                MinConfidencePercent = 75,
+            };
             await paddleOcr.OcrBatch(engineType, batch, language, mode, progress, cancellationToken);
             if (!string.IsNullOrEmpty(paddleOcr.Error) && ocrGroups.All(p => string.IsNullOrEmpty(p.Text)))
             {
@@ -959,14 +1066,14 @@ public partial class VideoOcrViewModel : ObservableObject
             using var ollamaOcr = new OllamaOcr(Se.Settings.Ocr.OllamaOcrTimeoutMinutes);
             await RunLlmOcr(ocrGroups, group => OcrWithBitmap(group, bitmap =>
                     ollamaOcr.Ocr(bitmap, OllamaUrl, OllamaModel, OllamaLanguage, cancellationToken)),
-                () => ollamaOcr.Error, reportProgress, addPreviewLine, cancellationToken);
+                () => ollamaOcr.Error, reportProgress, addPreviewLine, cancellationToken, CountUnknownWords);
         }
         else if (engineType == OcrEngineType.Glm)
         {
             var glmOcr = new GlmOcr(GlmApiKey);
             await RunLlmOcr(ocrGroups, group =>
                     glmOcr.Ocr(group.RepresentativeFileName, GlmUrl, GlmModel, GlmLanguage, cancellationToken),
-                () => glmOcr.Error, reportProgress, addPreviewLine, cancellationToken);
+                () => glmOcr.Error, reportProgress, addPreviewLine, cancellationToken, CountUnknownWords);
         }
         else if (engineType == OcrEngineType.LlamaCpp)
         {
@@ -978,7 +1085,7 @@ public partial class VideoOcrViewModel : ObservableObject
             var prompt = Se.Settings.Ocr.LlamaCppOcrPrompt;
             await RunLlmOcr(ocrGroups, group => OcrWithBitmap(group, bitmap =>
                     llamaCppOcr.Ocr(bitmap, url, modelName, LlamaCppLanguage, prompt, cancellationToken)),
-                () => llamaCppOcr.Error, reportProgress, addPreviewLine, cancellationToken);
+                () => llamaCppOcr.Error, reportProgress, addPreviewLine, cancellationToken, CountUnknownWords);
         }
         else if (engineType == OcrEngineType.CrispEmbed)
         {
@@ -991,18 +1098,24 @@ public partial class VideoOcrViewModel : ObservableObject
             // scan. RunLlmOcr's fail-fast-on-first-frame check does nothing here (there is no
             // error string to report) but the loop, progress and preview are the same.
             var languageCode = SelectedAppleVisionLanguage?.Code ?? string.Empty;
+            var brightnessMinimum = BrightnessMinimum;
             await RunLlmOcr(ocrGroups,
-                group => Task.Run(() => OcrFrameWithAppleVision(group, languageCode, cancellationToken), cancellationToken),
-                () => string.Empty, reportProgress, addPreviewLine, cancellationToken);
+                group => Task.Run(() => OcrFrameWithAppleVision(group, languageCode, brightnessMinimum, cancellationToken), cancellationToken),
+                () => string.Empty, reportProgress, addPreviewLine, cancellationToken, CountUnknownWords);
         }
     }
 
-    private static string OcrFrameWithAppleVision(VideoOcrFrameGroup group, string languageCode, CancellationToken cancellationToken)
+    private static string OcrFrameWithAppleVision(VideoOcrFrameGroup group, string languageCode, int brightnessMinimum, CancellationToken cancellationToken)
     {
         using var bitmap = SKBitmap.Decode(group.RepresentativeFileName);
-        return bitmap == null
-            ? string.Empty
-            : AppleVisionOcr.Ocr(bitmap, languageCode, fast: false, cancellationToken);
+        if (bitmap == null)
+        {
+            return string.Empty;
+        }
+
+        var observations = AppleVisionOcr.OcrObservations(bitmap, languageCode, fast: false, cancellationToken);
+        var kept = VideoOcrObservationFilter.FilterByBrightness(observations, bitmap, brightnessMinimum);
+        return AppleVisionTextLayout.Compose(kept);
     }
 
     /// <summary>
@@ -1041,7 +1154,7 @@ public partial class VideoOcrViewModel : ObservableObject
         }
 
         await RunLlmOcr(ocrGroups, group => OcrWithBitmap(group, bitmap => engine.Ocr(bitmap, cancellationToken)),
-            () => engine.Error, reportProgress, addPreviewLine, cancellationToken);
+            () => engine.Error, reportProgress, addPreviewLine, cancellationToken, CountUnknownWords);
     }
 
     private static async Task<string> OcrWithBitmap(VideoOcrFrameGroup group, Func<SKBitmap, Task<string>> ocr)
@@ -1055,13 +1168,14 @@ public partial class VideoOcrViewModel : ObservableObject
         return await ocr(bitmap);
     }
 
-    private static async Task RunLlmOcr(
+    internal static async Task RunLlmOcr(
         List<VideoOcrFrameGroup> ocrGroups,
         Func<VideoOcrFrameGroup, Task<string>> ocr,
         Func<string> getError,
         Action reportProgress,
         Action<VideoOcrFrameGroup> addPreviewLine,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        Func<string, int>? countUnknownWords = null)
     {
         var isFirst = true;
         foreach (var group in ocrGroups)
@@ -1069,6 +1183,63 @@ public partial class VideoOcrViewModel : ObservableObject
             cancellationToken.ThrowIfCancellationRequested();
 
             group.Text = VideoOcrLineBuilder.CleanOcrResult(await ocr(group));
+
+            // An empty result on a group the mask says holds text is often just an unlucky
+            // representative frame - e.g. white text drifting over a white wall mid-group -
+            // so try frames from other parts of the group before giving up. Measured: the
+            // one subtitle a 21-minute episode lost was read perfectly from the frame at
+            // three quarters of its group.
+            if (string.IsNullOrEmpty(group.Text) && group.EndFrame - group.StartFrame >= 2)
+            {
+                var span = group.EndFrame - group.StartFrame;
+                foreach (var alternateIndex in new[] { group.StartFrame + span * 3 / 4, group.StartFrame + span / 4 })
+                {
+                    var alternateFileName = group.GetSiblingFrameFileName(alternateIndex);
+                    if (alternateFileName == group.RepresentativeFileName || !File.Exists(alternateFileName))
+                    {
+                        continue;
+                    }
+
+                    cancellationToken.ThrowIfCancellationRequested();
+                    group.RepresentativeFileName = alternateFileName;
+                    group.Text = VideoOcrLineBuilder.CleanOcrResult(await ocr(group));
+                    if (!string.IsNullOrEmpty(group.Text))
+                    {
+                        break;
+                    }
+                }
+            }
+            else if (!string.IsNullOrEmpty(group.Text) && group.EndFrame - group.StartFrame >= 2)
+            {
+                // Verify a non-empty read against a second frame of the group. Real subtitle
+                // text is stable across the group's frames, so the two reads agree apart from
+                // OCR jitter - while hallucinated ghosts (a vision model inventing text from a
+                // logo or scoreboard) come out different on every frame. On disagreement the
+                // longer read wins when it is substantial - a real line polluted by changing
+                // scene text (rolling credits) must survive, as must long text whose verify
+                // frame happened to be unreadable - and anything short is dropped as a ghost.
+                var verified = await OcrVerificationFrame(group, ocr, cancellationToken);
+                // An empty verification read carries no evidence of a ghost - the verify frame
+                // was simply unreadable (a fade in/out). Scoring it as a disagreement deleted
+                // correctly-read short lines outright; the retry path above already treats an
+                // empty read as bad luck rather than proof.
+                if (!string.IsNullOrWhiteSpace(verified))
+                {
+                    var similarity = VideoOcrLineBuilder.GetTextSimilarityPercent(group.Text, verified);
+                    if (similarity < TextSimilarityDefaultPercent)
+                    {
+                        var best = CountLettersAndDigits(verified) > CountLettersAndDigits(group.Text) ? verified : group.Text;
+                        group.Text = CountLettersAndDigits(best) >= 10 ? best : string.Empty;
+                    }
+                    else if (verified != group.Text && countUnknownWords != null &&
+                             countUnknownWords(verified) < countUnknownWords(group.Text))
+                    {
+                        // The two reads agree apart from OCR jitter ("I'think" / "I think") -
+                        // the spell check arbitrates: the read the dictionary knows more of wins.
+                        group.Text = verified;
+                    }
+                }
+            }
 
             // Fail fast on a broken engine (wrong API key/URL) instead of grinding
             // through the whole video and reporting "no subtitles found".
@@ -1082,6 +1253,51 @@ public partial class VideoOcrViewModel : ObservableObject
             reportProgress();
             addPreviewLine(group);
         }
+    }
+
+    // The verification threshold uses the default text similarity rather than the user's
+    // merge setting: verification compares two reads of the SAME frame content, where only
+    // OCR jitter separates them, so the bar is independent of how aggressively the user
+    // wants consecutive lines merged.
+    private const int TextSimilarityDefaultPercent = 80;
+
+    private static async Task<string?> OcrVerificationFrame(
+        VideoOcrFrameGroup group,
+        Func<VideoOcrFrameGroup, Task<string>> ocr,
+        CancellationToken cancellationToken)
+    {
+        var span = group.EndFrame - group.StartFrame;
+        foreach (var alternateIndex in new[] { group.StartFrame + span * 3 / 4, group.StartFrame + span / 4 })
+        {
+            var alternateFileName = group.GetSiblingFrameFileName(alternateIndex);
+            if (alternateFileName == group.RepresentativeFileName || !File.Exists(alternateFileName))
+            {
+                continue;
+            }
+
+            cancellationToken.ThrowIfCancellationRequested();
+            var original = group.RepresentativeFileName;
+            group.RepresentativeFileName = alternateFileName;
+            var text = VideoOcrLineBuilder.CleanOcrResult(await ocr(group));
+            group.RepresentativeFileName = original;
+            return text;
+        }
+
+        return null;
+    }
+
+    private static int CountLettersAndDigits(string text)
+    {
+        var count = 0;
+        foreach (var ch in text)
+        {
+            if (char.IsLetterOrDigit(ch))
+            {
+                count++;
+            }
+        }
+
+        return count;
     }
 
     private async Task<bool> EnsureEngineIsAvailable()
@@ -1155,6 +1371,93 @@ public partial class VideoOcrViewModel : ObservableObject
         MaxGapMs = Math.Clamp(settings.MaxGapMs, 0, 10_000);
         MinDurationMs = Math.Clamp(settings.MinDurationMs, 0, 10_000);
         AddAssaPositionTag = settings.AddAssaPositionTag;
+        DoFixOcrErrors = settings.FixOcrErrors;
+        LoadDictionaries(settings.DictionaryFileName);
+    }
+
+    /// <summary>
+    /// Fills the spell check dictionary combo: "- None -" first, then the downloaded
+    /// dictionaries. The saved pick wins; otherwise the first dictionary matching the
+    /// engine's OCR language is chosen, so post-processing works without any setup for
+    /// users who already have the dictionary.
+    /// </summary>
+    private void LoadDictionaries(string savedDictionaryFileName)
+    {
+        Dictionaries.Clear();
+        Dictionaries.Add(new SpellCheckDictionaryDisplay
+        {
+            Name = $"- {Se.Language.General.None} -",
+            DictionaryFileName = string.Empty,
+        });
+
+        List<SpellCheckDictionaryDisplay> languages;
+        try
+        {
+            languages = _spellCheckManager.GetDictionaryLanguages(Se.DictionariesFolder);
+        }
+        catch
+        {
+            languages = new List<SpellCheckDictionaryDisplay>();
+        }
+
+        Dictionaries.AddRange(LanguageFavoritesHelper.Order(languages, d => SpellCheckDictionaryDisplay.GetTwoLetterLanguageCode(d)));
+
+        if (!string.IsNullOrEmpty(savedDictionaryFileName))
+        {
+            SelectedDictionary = Dictionaries.FirstOrDefault(d => d.DictionaryFileName == savedDictionaryFileName);
+        }
+
+        SelectedDictionary ??= Dictionaries.FirstOrDefault(d =>
+                                   SpellCheckDictionaryDisplay.GetTwoLetterLanguageCode(d) == GetOcrTwoLetterLanguageCode())
+                               ?? Dictionaries[0];
+    }
+
+    [RelayCommand]
+    private async Task DownloadDictionary()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<GetDictionariesWindow, GetDictionariesViewModel>(Window);
+        if (result.OkPressed && result.SelectedDictionary != null)
+        {
+            LoadDictionaries(Se.Settings.Video.VideoOcr.DictionaryFileName);
+
+            // Select the just-downloaded dictionary by its file name - matching the display
+            // name fails on non-English UIs (the list shows the localized culture name).
+            var downloadedFileName = Path.GetFileName(result.SpellCheckDictionary?.DictionaryFileName ?? string.Empty);
+            SelectedDictionary =
+                (!string.IsNullOrEmpty(downloadedFileName)
+                    ? Dictionaries.FirstOrDefault(d => string.Equals(
+                        Path.GetFileName(d.DictionaryFileName), downloadedFileName, StringComparison.OrdinalIgnoreCase))
+                    : null)
+                ?? Dictionaries.FirstOrDefault(d =>
+                    d.Name.Contains(result.SelectedDictionary.EnglishName, StringComparison.OrdinalIgnoreCase) ||
+                    d.Name.Contains(result.SelectedDictionary.NativeName, StringComparison.OrdinalIgnoreCase))
+                ?? SelectedDictionary;
+        }
+    }
+
+    /// <summary>The current engine's OCR language as a two-letter code, for the dictionary auto-pick.</summary>
+    private string GetOcrTwoLetterLanguageCode()
+    {
+        var engineType = SelectedEngine?.EngineType;
+        if (engineType is OcrEngineType.PaddleOcrStandalone or OcrEngineType.PaddleOcrPython)
+        {
+            var code = SelectedPaddleLanguage?.Code ?? "en";
+            return code.Length >= 2 ? code[..2] : "en";
+        }
+
+        if (engineType == OcrEngineType.AppleVision)
+        {
+            var code = SelectedAppleVisionLanguage?.Code ?? "en";
+            return code.Length >= 2 ? code[..2] : "en";
+        }
+
+        // The VLM engines take a language name ("English"); default to English.
+        return "en";
     }
 
     private void SaveSettings()
@@ -1183,6 +1486,8 @@ public partial class VideoOcrViewModel : ObservableObject
         settings.MaxGapMs = MaxGapMs;
         settings.MinDurationMs = MinDurationMs;
         settings.AddAssaPositionTag = AddAssaPositionTag;
+        settings.FixOcrErrors = DoFixOcrErrors;
+        settings.DictionaryFileName = SelectedDictionary?.DictionaryFileName ?? string.Empty;
 
         if (VideoWidth > 0 && VideoHeight > 0)
         {
@@ -1240,6 +1545,208 @@ public partial class VideoOcrViewModel : ObservableObject
     }
 
     /// <summary>Moves the preview to the given line's start time (double-click in the grid).</summary>
+    /// <summary>
+    /// Runs the OCR fix engine (replace lists + spell check) over the result lines: each
+    /// line's text is replaced by the fixed text, and lines with words the dictionary does
+    /// not know are marked so the table can tint them. No per-word prompting here - a video
+    /// run produces hundreds of lines, so unknown words are marked for in-place fixing
+    /// instead.
+    /// </summary>
+    internal void ApplyOcrFixes()
+    {
+        if (!_ocrFixEngine.IsLoaded() && Lines.Count > 0)
+        {
+            InitializeOcrFixEngine(contextSubtitle: null);
+        }
+
+        if (!_ocrFixEngine.IsLoaded())
+        {
+            return;
+        }
+
+        // Re-initialize with the full result as context so the engine's name lists and
+        // word statistics see the whole subtitle, then fix each line.
+        var contextSubtitle = new Subtitle();
+        foreach (var line in Lines)
+        {
+            contextSubtitle.Paragraphs.Add(new Paragraph(line.Text, line.StartTime.TotalMilliseconds, line.EndTime.TotalMilliseconds));
+        }
+
+        InitializeOcrFixEngine(contextSubtitle);
+        for (var i = 0; i < Lines.Count; i++)
+        {
+            ApplyFixToItem(Lines[i], i);
+        }
+    }
+
+    /// <summary>Loads the OCR fix engine for the chosen dictionary (or unloads it when the
+    /// fix is off / no dictionary is chosen). Runs before OCR starts, so lines are fixed and
+    /// colored as they appear.</summary>
+    private void InitializeOcrFixEngine(Subtitle? contextSubtitle)
+    {
+        if (!DoFixOcrErrors ||
+            SelectedDictionary is not { } dictionary ||
+            string.IsNullOrEmpty(dictionary.DictionaryFileName))
+        {
+            _ocrFixEngine.Unload();
+            return;
+        }
+
+        try
+        {
+            _ocrFixEngine.Initialize(contextSubtitle ?? new Subtitle(), dictionary.GetThreeLetterCode(), dictionary);
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Video OCR: could not initialize the OCR fix engine");
+        }
+    }
+
+    /// <summary>Runs one line through the fix engine: the fixed text replaces the raw OCR
+    /// text and the per-word result drives the coloring.</summary>
+    private void ApplyFixToItem(VideoOcrLineItem item, int index)
+    {
+        if (!_ocrFixEngine.IsLoaded())
+        {
+            return;
+        }
+
+        try
+        {
+            OcrFixLineResult result;
+            lock (_ocrFixEngineLock)
+            {
+                result = _ocrFixEngine.FixOcrErrors(index, item.Text, doTryToGuessUnknownWords: false);
+            }
+
+            item.Text = result.GetText();
+            item.FixResult = result;
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Video OCR: fix engine failed on a line");
+        }
+    }
+
+    // The fix engine is used both from the OCR worker (spell-check arbitration between two
+    // frame reads) and from the UI thread (preview-line fixes), so its calls are serialized.
+    private readonly object _ocrFixEngineLock = new();
+
+    /// <summary>How many words of the text the spell check does not know - the tiebreak
+    /// between two nearly identical frame reads. 0 when no dictionary is loaded, so the
+    /// arbitration never favors either read without a spell check behind it.</summary>
+    private int CountUnknownWords(string text)
+    {
+        if (!_ocrFixEngine.IsLoaded())
+        {
+            return 0;
+        }
+
+        try
+        {
+            lock (_ocrFixEngineLock)
+            {
+                return _ocrFixEngine.FixOcrErrors(0, text, doTryToGuessUnknownWords: false)
+                    .Words.Count(w => w.IsSpellCheckedOk == false);
+            }
+        }
+        catch
+        {
+            return 0;
+        }
+    }
+
+    /// <summary>
+    /// Re-evaluates the coloring when a line's text changes (the Edit dialog, italic
+    /// toggle). Only the coloring is updated - the text is left exactly as written.
+    /// </summary>
+    private void LineItemPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName != nameof(VideoOcrLineItem.Text) ||
+            sender is not VideoOcrLineItem item ||
+            item.FixResult == null ||
+            !_ocrFixEngine.IsLoaded())
+        {
+            return;
+        }
+
+        try
+        {
+            OcrFixLineResult result;
+            lock (_ocrFixEngineLock)
+            {
+                result = _ocrFixEngine.FixOcrErrors(Lines.IndexOf(item), item.Text, doTryToGuessUnknownWords: false);
+            }
+
+            // Only keep the per-word coloring when the engine's view of the line matches the
+            // text exactly - the cell renders the result's words, and a mismatch (the user
+            // deliberately typed something the engine would "fix") would display stale text.
+            item.FixResult = result.GetText() == item.Text ? result : null;
+        }
+        catch
+        {
+            // ignore - coloring is best-effort
+        }
+    }
+
+    /// <summary>Wraps the lines in italic tags - or unwraps them when every line is already italic.</summary>
+    internal static void ToggleItalic(List<VideoOcrLineItem> items)
+    {
+        if (items.Count == 0)
+        {
+            return;
+        }
+
+        var allItalic = items.All(p => IsFullyItalic(p.Text));
+        foreach (var item in items)
+        {
+            if (allItalic)
+            {
+                var text = item.Text.Trim();
+                item.Text = text[3..^4].Trim();
+            }
+            else if (!IsFullyItalic(item.Text))
+            {
+                item.Text = "<i>" + item.Text.Trim() + "</i>";
+            }
+        }
+    }
+
+    private static bool IsFullyItalic(string text)
+    {
+        var trimmed = text.Trim();
+        return trimmed.StartsWith("<i>", StringComparison.OrdinalIgnoreCase) &&
+               trimmed.EndsWith("</i>", StringComparison.OrdinalIgnoreCase) &&
+
+               // "<i>a</i> b <i>c</i>" starts and ends with tags but is not fully italic.
+               trimmed.IndexOf("</i>", StringComparison.OrdinalIgnoreCase) == trimmed.Length - 4;
+    }
+
+    /// <summary>Opens the text of a line in a small edit window (multi-line texts do not
+    /// edit comfortably inside a table row).</summary>
+    internal async Task EditLine(VideoOcrLineItem item)
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<Features.Shared.PromptTextBox.PromptTextBoxWindow,
+            Features.Shared.PromptTextBox.PromptTextBoxViewModel>(Window, viewModel =>
+        {
+            viewModel.Initialize(
+                string.Format(Se.Language.Video.VideoOcr.EditLineX, item.Number),
+                item.Text,
+                500,
+                80);
+        });
+
+        if (result.OkPressed)
+        {
+            item.Text = result.Text.Trim().Replace("\r\n", "\n").Replace('\r', '\n');
+        }
+    }
+
     internal void SeekPreview(VideoOcrLineItem item)
     {
         PreviewPositionSeconds = Math.Clamp(item.StartTime.TotalSeconds, 0, DurationSeconds);

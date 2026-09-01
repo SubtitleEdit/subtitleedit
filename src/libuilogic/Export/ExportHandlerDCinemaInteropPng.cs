@@ -107,7 +107,10 @@ public class ExportHandlerDCinemaInteropPng : IExportHandler
     public void WriteFooter()
     {
         var doc = new XmlDocument();
-        string title = Path.GetFileNameWithoutExtension(_folderName);
+        // The folder name goes straight into XML, so an "&", "<" or ">" in it made LoadXml throw -
+        // in WriteFooter, i.e. after every PNG was already on disk, leaving a folder of images
+        // with no index.xml. The FCP handler escapes exactly this kind of value.
+        string title = System.Security.SecurityElement.Escape(Path.GetFileNameWithoutExtension(_folderName)) ?? string.Empty;
 
         string guid = Guid.NewGuid().ToString().RemoveChar('-').Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
         doc.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine +

@@ -60,7 +60,7 @@ public class PrePopulatedGridSelectionTests
     public void ErrorListWindow_HasASelectionAndAnEnabledGoToOnOpen()
     {
         var lines = MakeLines("First line", "Second line");
-        var vm = new ErrorListViewModel();
+        var vm = new ErrorListViewModel(new StubFileHelper(), new StubWindowService());
         vm.Initialize(new List<ErrorListItem>
         {
             new(lines[0], new LineError(LineErrorType.DurationTooShort, "200 < 1000")),

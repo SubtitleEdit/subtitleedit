@@ -5,6 +5,7 @@ public class LanguageAssa
     // ASSA Draw
     public string AssaDraw { get; set; }
     public string DrawSelectTool { get; set; }
+    public string DrawUseShapeForErase { get; set; }
     public string DrawLineTool { get; set; }
     public string DrawBezierTool { get; set; }
     public string DrawRectangleTool { get; set; }
@@ -246,6 +247,7 @@ public class LanguageAssa
         // ASSA Draw
         AssaDraw = "ASSA Draw";
         DrawSelectTool = "Select (move points)";
+        DrawUseShapeForErase = "Use shape for erase (iclip)";
         DrawLineTool = "Line Tool (F4)";
         DrawBezierTool = "Bezier Curve (F5)";
         DrawRectangleTool = "Rectangle (F6)";

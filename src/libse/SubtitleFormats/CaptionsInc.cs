@@ -243,7 +243,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     i++;
 
-                    if (buffer[i] == 0xfe)
+                    // The scan above stops at buffer.Length when the file has no trailing 0x0a, so
+                    // both the marker read and the eight byte time code can run past the end.
+                    if (i + 12 <= buffer.Length && buffer[i] == 0xfe)
                     {
                         string endTime = Encoding.ASCII.GetString(buffer, i + 4, 8);
                         if (Utilities.IsInteger(endTime))

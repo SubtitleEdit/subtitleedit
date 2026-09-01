@@ -181,7 +181,7 @@ public class AssaSetPositionWindow : Window
         Content = grid;
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
-        Activated += delegate { numericRotation.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, numericRotation);
         KeyDown += vm.KeyDown;
     }
 }

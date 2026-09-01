@@ -33,9 +33,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            string xmlAsString = sb.ToString().Trim();
+            string xmlAsString = JoinLinesTrimmed(lines);
             if (xmlAsString.Contains("</plist>") && xmlAsString.Contains("</dict>"))
             {
                 XmlDocument xml = new XmlDocument { XmlResolver = null };
@@ -74,7 +72,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 paragraph.AppendChild(keyNode);
 
                 XmlNode valueNode = xml.CreateElement("real");
-                valueNode.InnerText = $"{p.StartTime.TotalSeconds:0.0###############}"; // 3.1600000000000001
+                valueNode.InnerText = p.StartTime.TotalSeconds.ToString("0.0###############", CultureInfo.InvariantCulture); // 3.1600000000000001
                 paragraph.AppendChild(valueNode);
 
                 keyNode = xml.CreateElement("key");
@@ -82,7 +80,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 paragraph.AppendChild(keyNode);
 
                 valueNode = xml.CreateElement("real");
-                valueNode.InnerText = $"{p.EndTime.TotalSeconds:0.0###############}"; // 3.1600000000000001
+                valueNode.InnerText = p.EndTime.TotalSeconds.ToString("0.0###############", CultureInfo.InvariantCulture); // 3.1600000000000001
                 paragraph.AppendChild(valueNode);
 
                 int textNo = 0;
@@ -108,16 +106,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             return ToUtf8XmlString(xml).Replace("<plist>", "<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">" + Environment.NewLine +
-                             "<plist version=\"1.0\">;");
+                             "<plist version=\"1.0\">");
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
             XmlDocument xml = new XmlDocument { XmlResolver = null };
-            xml.LoadXml(sb.ToString().Trim());
+            xml.LoadXml(JoinLinesTrimmed(lines));
             string lastKey = string.Empty;
             var pText = new StringBuilder();
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("array/dict"))

@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// expecting a sibling &lt;name&gt;.txt with the reference transcript (omnivoice-tts requires
 /// --ref-text whenever --ref-wav is set).
 /// </summary>
-public class OmniVoiceTtsCpp : ITtsEngine
+public class OmniVoiceTtsCpp : ITtsEngine, IPerLineCloneEngine
 {
     public string Name => "OmniVoice TTS";
     public string Description => "646 languages, voice cloning, CPU/Vulkan/CUDA";
@@ -33,6 +33,28 @@ public class OmniVoiceTtsCpp : ITtsEngine
     // Each line is a fresh omnivoice-tts run taking --ref-wav/--ref-text, so a per-line
     // reference costs nothing beyond cutting the clip.
     public bool SupportsPerLineVoiceCloning => true;
+
+    /// <summary>
+    /// <see cref="IPerLineCloneEngine"/>: each line is a fresh omnivoice-tts run taking the
+    /// clip's own path as --ref-wav (with its sibling .txt as --ref-text), so the voice simply
+    /// points at the clip - nothing is staged into this engine's own folders.
+    /// </summary>
+    public Voice? MakePerLineCloneVoice(string clipFileName, string voiceName) =>
+        new Voice(new OmniVoice(voiceName, clipFileName));
+
+    /// <summary>The clip's own path, which is exactly what the voice carries.</summary>
+    public string? GetPerLineReferenceClip(Voice voice) =>
+        voice.EngineVoice is OmniVoice omniVoice && !string.IsNullOrEmpty(omniVoice.FilePath)
+            ? omniVoice.FilePath
+            : null;
+
+    /// <summary>
+    /// <see cref="IPerLineCloneEngine"/>: nothing is ever staged (the voice points straight at
+    /// the clip), so there is nothing to clear between runs.
+    /// </summary>
+    public void ResetStagedPerLineReferences()
+    {
+    }
 
     // Voice-design attribute keywords accepted by omnivoice-tts' --instruct flag (English set).
     // The CLI rejects free text - only these values, comma+space separated, are valid. Grouped
@@ -293,12 +315,24 @@ public class OmniVoiceTtsCpp : ITtsEngine
 
         // Voice cloning: omnivoice-tts requires both --ref-wav and --ref-text.
         // Pair each voices/<name>.wav with a sibling <name>.txt holding the transcript.
-        // The transcript is captured at import time; if it has been deleted out from under
-        // us we fail loudly so the user knows custom voice cloning isn't happening, rather
-        // than silently producing the default speaker.
-        var usingReference = !string.IsNullOrEmpty(omniVoice.FilePath) && File.Exists(omniVoice.FilePath);
+        // The transcript is captured at import time; if either it or the recording itself has
+        // been deleted out from under us we fail loudly so the user knows custom voice cloning
+        // isn't happening, rather than silently producing the default speaker.
+        var usingReference = !string.IsNullOrEmpty(omniVoice.FilePath);
         if (usingReference)
         {
+            // A missing recording used to fall through to the built-in speaker without a word.
+            // That hit hardest where the recording is a temporary clip - the per-line clone cuts
+            // its references into the run folder, which is swept when Subtitle Edit closes - so
+            // regenerating an imported session simply spoke in the wrong voice (#14095).
+            if (!File.Exists(omniVoice.FilePath))
+            {
+                throw new FileNotFoundException(
+                    $"OmniVoice TTS cannot clone \"{omniVoice.Voice}\": its reference recording "
+                    + $"{omniVoice.FilePath} is gone. Re-import the voice, or pick another one.",
+                    omniVoice.FilePath);
+            }
+
             var refTextPath = Path.ChangeExtension(omniVoice.FilePath, ".txt");
             if (!File.Exists(refTextPath))
             {

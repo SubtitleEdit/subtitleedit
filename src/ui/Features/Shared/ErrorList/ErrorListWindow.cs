@@ -65,8 +65,9 @@ public class ErrorListWindow : Window
         };
 
         var buttonGoTo = UiUtil.MakeButton(Se.Language.General.GoTo, vm.GoToCommand).WithBindIsEnabled(nameof(vm.HasErrors));
+        var buttonExport = MakeExportButton(vm);
         var buttonCancel = UiUtil.MakeButtonDone(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonGoTo, buttonCancel);
+        var panelButtons = UiUtil.MakeButtonBar(MakeExportStatusLabel(vm), buttonExport, buttonGoTo, buttonCancel);
 
         var grid = new Grid
         {
@@ -93,9 +94,59 @@ public class ErrorListWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonCancel.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, buttonCancel); // hack to make OnKeyDown work
 
         KeyDown += (s, e) => vm.OnKeyDown(e);
+    }
+
+    /// <summary>
+    /// "Export..." with the four targets from #14379 - the list used to be shareable only as a
+    /// screenshot. Every target exports the rows as shown, so an active card filter applies.
+    /// </summary>
+    private static Button MakeExportButton(ErrorListViewModel vm)
+    {
+        var l = Se.Language.ErrorList;
+        var button = UiUtil.MakeButton(Se.Language.General.ExportDotDotDot);
+        button.Flyout = new MenuFlyout
+        {
+            Items =
+            {
+                new MenuItem
+                {
+                    Header = Se.Language.General.CopyToClipboard,
+                    Command = vm.CopyToClipboardCommand,
+                },
+                new MenuItem
+                {
+                    Header = l.ExportAsText,
+                    Command = vm.ExportTextCommand,
+                },
+                new MenuItem
+                {
+                    Header = l.ExportAsExcel,
+                    Command = vm.ExportExcelCommand,
+                },
+                new MenuItem
+                {
+                    Header = l.ExportAsHtml,
+                    Command = vm.ExportHtmlCommand,
+                },
+            },
+        };
+
+        return button.WithBindIsEnabled(nameof(vm.CanExport));
+    }
+
+    /// <summary>Says "Copied to clipboard" next to the buttons - a clipboard copy has nothing else to show.</summary>
+    private static TextBlock MakeExportStatusLabel(ErrorListViewModel vm)
+    {
+        return new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 0, 10, 0),
+            Opacity = 0.75,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.ExportStatus)),
+        };
     }
 
     private static Border MakeErrorsGridView(ErrorListViewModel vm)

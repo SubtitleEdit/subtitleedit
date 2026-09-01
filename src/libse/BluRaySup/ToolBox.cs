@@ -29,15 +29,17 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
          */
         public static long[] MillisecondsToTime(double ms)
         {
+            // Each component must be truncated, not rounded: rounding one up makes the remainder
+            // negative and cascades, so 3500 ms came out as 0:0:4:-500 and 40 minutes as 1:-20:0:0.
             var time = new long[4];
             // time[0] = hours
-            time[0] = (long)Math.Round(ms / (60 * 60 * 1000), MidpointRounding.AwayFromZero);
+            time[0] = (long)(ms / (60.0 * 60.0 * 1000.0));
             ms -= time[0] * 60.0 * 60.0 * 1000.0;
             // time[1] = minutes
-            time[1] = (long)Math.Round(ms / (60.0 * 1000.0), MidpointRounding.AwayFromZero);
+            time[1] = (long)(ms / (60.0 * 1000.0));
             ms -= time[1] * 60 * 1000;
             // time[2] = seconds
-            time[2] = (long)Math.Round(ms / 1000.0, MidpointRounding.AwayFromZero);
+            time[2] = (long)(ms / 1000.0);
             ms -= time[2] * 1000.0;
             time[3] = (long)Math.Round(ms, MidpointRounding.AwayFromZero);
             return time;

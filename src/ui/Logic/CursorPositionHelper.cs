@@ -12,6 +12,13 @@ public static  class CursorPositionHelper
     [DllImport("user32.dll")]
     private static extern bool GetCursorPos(out POINT lpPoint);
 
+    [DllImport("user32.dll")]
+    private static extern short GetAsyncKeyState(int vKey);
+
+    private const int VkLButton = 0x01;
+    private const int VkRButton = 0x02;
+    private const int VkMButton = 0x04;
+
     [StructLayout(LayoutKind.Sequential)]
     private struct POINT
     {
@@ -26,6 +33,11 @@ public static  class CursorPositionHelper
 
     [DllImport(CoreGraphicsLib)]
     private static extern CGPoint CGEventSourceGetCursorPosition(uint source);
+
+    [DllImport(CoreGraphicsLib)]
+    private static extern bool CGEventSourceButtonState(int stateId, uint button);
+
+    private const int CGEventSourceStateCombinedSessionState = 0;
 
     [DllImport(CoreGraphicsLib)]
     private static extern IntPtr CGEventCreate(IntPtr source);
@@ -94,6 +106,58 @@ public static  class CursorPositionHelper
                     }
 
                     XCloseDisplay(display);
+                }
+            }
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception);
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Whether any mouse button is physically down right now, or null where the buttons cannot
+    /// be sampled (unsupported platform, or the query failed - e.g. no X11 under Wayland).
+    /// Used to tell a window activation the user clicked for apart from one the OS handed over
+    /// (undocked foreground steal, #14168): a click's activation is delivered while the button
+    /// is still down, an OS handover after another application's window closed is not.
+    /// </summary>
+    public static bool? IsAnyPointerButtonDown()
+    {
+        try
+        {
+            if (OperatingSystem.IsWindows())
+            {
+                // The high bit is "down now". VK_L/RBUTTON are physical buttons, so a swapped
+                // primary button still lands on one of the three.
+                return (((ushort)GetAsyncKeyState(VkLButton) |
+                         (ushort)GetAsyncKeyState(VkRButton) |
+                         (ushort)GetAsyncKeyState(VkMButton)) & 0x8000) != 0;
+            }
+
+            if (OperatingSystem.IsMacOS())
+            {
+                return CGEventSourceButtonState(CGEventSourceStateCombinedSessionState, 0) ||
+                       CGEventSourceButtonState(CGEventSourceStateCombinedSessionState, 1) ||
+                       CGEventSourceButtonState(CGEventSourceStateCombinedSessionState, 2);
+            }
+
+            if (OperatingSystem.IsLinux())
+            {
+                var display = XOpenDisplay(IntPtr.Zero);
+                if (display != IntPtr.Zero)
+                {
+                    var rootWindow = XDefaultRootWindow(display);
+                    var ok = XQueryPointer(display, rootWindow, out _, out _, out _, out _,
+                        out _, out _, out var mask);
+                    XCloseDisplay(display);
+                    if (ok)
+                    {
+                        // Button1Mask | Button2Mask | Button3Mask
+                        return (mask & 0x700) != 0;
+                    }
                 }
             }
         }

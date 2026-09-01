@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Globalization;
 using System.Text;
 
@@ -30,7 +31,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     start = $"{p.StartTime.Hours:00}:{start}";
                 }
 
-                sb.AppendLine($"      <a href='#' begin=\"{p.StartTime.TotalSeconds:0.000}\" end=\"{p.EndTime.TotalSeconds:0.000}\"><span class='ts'>{start}</span> {p.Text.Replace(Environment.NewLine, " <br />")}</a>");
+                var begin = p.StartTime.TotalSeconds.ToString("0.000", CultureInfo.InvariantCulture);
+                var end = p.EndTime.TotalSeconds.ToString("0.000", CultureInfo.InvariantCulture);
+                sb.AppendLine($"      <a href='#' begin=\"{begin}\" end=\"{end}\"><span class='ts'>{start}</span> {p.Text.Replace(Environment.NewLine, " <br />")}</a>");
             }
             sb.AppendLine("</div>");
             sb.AppendLine("</body>");
@@ -91,13 +94,24 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (index > 0 && index + 7 < line.Length)
                     {
                         text = line.Substring(index + 7).Trim().Replace("</p>", string.Empty);
-                        index = text.IndexOf("</", StringComparison.Ordinal);
-                        if (index > 0)
+
+                        // Only the trailing wrapper (</a>, </div>) is stripped. Cutting at the
+                        // FIRST "</" threw away everything after an inline closing tag, so a
+                        // line like "then <i>italic</i> here." lost "</i> here.".
+                        foreach (var wrapper in new[] { "</a>", "</div>", "</span>" })
                         {
-                            text = text.Substring(0, index);
+                            if (text.EndsWith(wrapper, StringComparison.OrdinalIgnoreCase))
+                            {
+                                text = text.Substring(0, text.Length - wrapper.Length).TrimEnd();
+                                break;
+                            }
                         }
 
-                        text = text.Replace("<br />", Environment.NewLine);
+                        // ToText writes " <br />" (with a leading space), so replacing the tag
+                        // alone left a trailing space on every line - and the next save added
+                        // another one, growing the indentation with each round trip.
+                        text = text.Replace(" <br />", Environment.NewLine).Replace("<br />", Environment.NewLine);
+                        text = string.Join(Environment.NewLine, text.SplitToLines().Select(l => l.Trim()));
                     }
 
                     double startSeconds;

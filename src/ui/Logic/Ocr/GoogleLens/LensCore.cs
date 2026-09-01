@@ -91,9 +91,16 @@ public class LensCore
         ParseCookies();
     }
 
-    protected byte[] CreateLensProtoRequest(byte[] imageBytes, int width, int height)
+    protected byte[] CreateLensProtoRequest(byte[] imageBytes, int width, int height, string? twoLetterLanguageCode = null)
     {
-        var targetLanguage = _config.GetValueOrDefault("targetLanguage") as string ?? "en";
+        // Prefer the language the caller was given. Nothing ever calls UpdateOptions and the Lens
+        // instance is constructed with no config, so the config value is always the "en" default -
+        // the request's LocaleContext.Language was pinned to English whatever OCR language the
+        // user picked, even though ScanByData already threads the code into the Accept-Language
+        // header.
+        var targetLanguage = !string.IsNullOrEmpty(twoLetterLanguageCode)
+            ? twoLetterLanguageCode
+            : _config.GetValueOrDefault("targetLanguage") as string ?? "en";
         var region = _config.GetValueOrDefault("region") as string ?? "US";
         var timeZone = _config.GetValueOrDefault("timeZone") as string ?? "America/New_York";
 
@@ -345,7 +352,7 @@ public class LensCore
 
         var actualDimensions = Helper.ImageDimensionsFromData(uint8Array);
 
-        var serializedRequest = CreateLensProtoRequest(uint8Array, actualDimensions.Width, actualDimensions.Height);
+        var serializedRequest = CreateLensProtoRequest(uint8Array, actualDimensions.Width, actualDimensions.Height, twoLetterLanguageCode);
         var serverResponse = await SendProtoRequest(serializedRequest, twoLetterLanguageCode);
 
         return ParseLensProtoResponse(serverResponse, originalDimensions ?? new[] { actualDimensions.Width, actualDimensions.Height });

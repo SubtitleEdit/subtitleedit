@@ -34,7 +34,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             foreach (string s in lines)
             {
-                sb.Append(s);
+                // AppendLine, not Append: a subtitle's own line break is a real newline in this
+                // format, and gluing the physical lines together ran the two lines into each
+                // other ("here,with a line break."). Leading/trailing whitespace of each cue is
+                // trimmed below, so this only preserves the breaks inside a cue.
+                sb.AppendLine(s);
             }
 
             var allText = sb.ToString();

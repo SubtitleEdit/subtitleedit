@@ -45,7 +45,7 @@ Automatically translate subtitles using various translation engines and AI servi
 - **thammegowda-nllb-serve** — Self-hosted NLLB (No Language Left Behind) server
 - **winstxnhdw-nllb-api** — NLLB (No Language Left Behind) API
 - **Baidu Translate** — Baidu translation (requires App ID and secret)
-- **CrispASR MADLAD** — Local MADLAD-based translation with downloadable models (shown with size and install status); also available in Batch Convert
+- **CrispASR MADLAD** — Local MADLAD-based translation with downloadable models (shown with size and install status); also available in Batch Convert. The language list is the 419 languages the MADLAD-400 model itself knows, so it is both longer and shorter than the usual one: it adds languages such as Iloko, Waray, Papiamento, Moroccan Arabic and Latin, and leaves out ones MADLAD cannot produce — including Cantonese, for which Google Translate, NLLB or any of the LLM engines are the alternatives. Quality varies a lot across that long tail — Google evaluated only about half of the languages the model claims
 
 ## llama.cpp: using your own model
 
@@ -93,6 +93,9 @@ The trailing `{1}:` cue is what makes such a model translate at all — without 
 the source. Set the model's temperature to 0 where the engine offers it. Curated MiLMMT models in
 the llama.cpp engine's download list carry this prompt already; for LM Studio, KoboldCpp, Ollama or
 your own OpenAI-compatible server, paste it into the engine's prompt field.
+
+Headless runs take the same prompt via `seconv --translate-prompt:<text|file>` — see
+[Auto-translate (command line)](../reference/command-line.md#custom-prompt).
 
 ## Engine Configuration
 

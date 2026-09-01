@@ -95,8 +95,19 @@ public partial class ChangeCasingViewModel : ObservableObject
             if (NormalCasingFixNames)
             {
                 var result = await ShowFixNames(_subtitle, fixCasing.NoOfLinesChanged);
-                Subtitle = result.Subtitle;
-                OkPressed = result.OkPressed;
+                if (result.OkPressed)
+                {
+                    Subtitle = result.Subtitle;
+                    Info = result.Info;
+                }
+                else
+                {
+                    // Cancelling the names step only skips the name fixes - the normal casing
+                    // was already confirmed with OK on this dialog, so it still applies (as in SE4)
+                    Subtitle = _subtitle;
+                }
+
+                OkPressed = true;
                 Window?.Close();
                 return;
             }
@@ -125,7 +136,7 @@ public partial class ChangeCasingViewModel : ObservableObject
     {
         var result = await _windowService.ShowDialogAsync<FixNamesWindow, FixNamesViewModel>(Window!, vm =>
         {
-            vm.Initialize(subtitle);
+            vm.Initialize(subtitle, noOfFixes);
         });
 
         return result;

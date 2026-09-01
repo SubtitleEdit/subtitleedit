@@ -57,7 +57,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 string startTime = $"{p.StartTime.Hours:00}:{p.StartTime.Minutes:00}:{p.StartTime.Seconds:00}:{startFrame:00}";
                 string timeOut = $"{p.EndTime.Hours:00}:{p.EndTime.Minutes:00}:{p.EndTime.Seconds:00}:{endFrame:00}";
-                string timeDuration = $"{durationCalc.Duration.Seconds:00}:{MillisecondsToFramesMaxFrameRate(durationCalc.Duration.Milliseconds):00}";
+                // Total seconds, not the 0-59 component: the reader prefers DURATION over
+                // TIMEOUT, so writing only the seconds part loses every whole minute.
+                string timeDuration = $"{(int)durationCalc.Duration.TotalSeconds:00}:{MillisecondsToFramesMaxFrameRate(durationCalc.Duration.Milliseconds):00}";
                 sb.AppendLine(string.Format(paragraphWriteFormat, startTime, timeDuration, timeOut, p.Text));
             }
             return sb.ToString().Trim();

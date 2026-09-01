@@ -32,6 +32,14 @@ public class LanguageGeneral
     public string Apply { get; set; }
     public string ApplyTo { get; set; }
     public string Ascending { get; set; }
+    public string AssistedMove { get; set; }
+    public string AssistedMoveChooseMove { get; set; }
+    public string AssistedMoveDotDotDot { get; set; }
+    public string AssistedMoveNoSuggestions { get; set; }
+    public string AssistedSplitNoSuggestions { get; set; }
+    public string AssistedSplit { get; set; }
+    public string AssistedSplitChooseSplitPoint { get; set; }
+    public string AssistedSplitDotDotDot { get; set; }
     public string Descending { get; set; }
     public string AttachDotDotDot { get; set; }
     public string AudioFileSaved { get; set; }
@@ -106,12 +114,21 @@ public class LanguageGeneral
     public string ColorBlue { get; set; }
     public string ColorCyan { get; set; }
     public string ColorDotDotDot { get; set; }
+    public string ColorGray { get; set; }
     public string ColorGreen { get; set; }
+    public string ColorHalfBlue { get; set; }
+    public string ColorHalfCyan { get; set; }
+    public string ColorHalfGreen { get; set; }
+    public string ColorHalfMagenta { get; set; }
+    public string ColorHalfRed { get; set; }
+    public string ColorHalfYellow { get; set; }
     public string ColorMagenta { get; set; }
     public string ColorRed { get; set; }
     public string ColorWhite { get; set; }
     public string ColorYellow { get; set; }
     public string Column { get; set; }
+    public string Columns { get; set; }
+    public string ColumnsDotDotDot { get; set; }
     public string ConsoleLog { get; set; }
     public string ContentAlignment { get; set; }
     public string ContinueFindTitle { get; set; }
@@ -180,6 +197,9 @@ public class LanguageGeneral
     public string Engine { get; set; }
     public string EnterProfileName { get; set; }
     public string Error { get; set; }
+    public string Start { get; set; }
+    public string VobSub { get; set; }
+    public string OutputFileCannotBeTheInputFile { get; set; }
     public string ErrorX { get; set; }
     public string Example { get; set; }
     public string ExampleX { get; set; }
@@ -303,6 +323,7 @@ public class LanguageGeneral
     public string LoadDefaults { get; set; }
     public string LockTimeCodes { get; set; }
     public string Logo { get; set; }
+    public string LookUpX { get; set; }
     public string Margin { get; set; }
     public string Match { get; set; }
     public string MaxCharactersPerSecond { get; set; }
@@ -432,8 +453,10 @@ public class LanguageGeneral
     public string PoweredBy { get; set; }
     public string Prefix { get; set; }
     public string Preview { get; set; }
+    public string PreviewAlignmentInListView { get; set; }
     public string Previous { get; set; }
     public string Profile { get; set; }
+    public string Quality { get; set; }
     public string ProfileName { get; set; }
     public string Profiles { get; set; }
     public string Property { get; set; }
@@ -441,6 +464,7 @@ public class LanguageGeneral
     public string ReDownloadX { get; set; }
     public string Reason { get; set; }
     public string RecentFiles { get; set; }
+    public string RecentlyUsedVideoOffsets { get; set; }
     public string Redo { get; set; }
     public string Redownload { get; set; }
     public string Release { get; set; }
@@ -526,6 +550,7 @@ public class LanguageGeneral
     public string SetStartAndKeepDuration { get; set; }
     public string SetStartAndOffsetTheRest { get; set; }
     public string SetUpLikeSubtitleEdit4 { get; set; }
+    public string ImageBackgroundColorDotDotDot { get; set; }
     public string SetVideoOffset { get; set; }
     public string Settings { get; set; }
     public string Shadow { get; set; }
@@ -539,6 +564,7 @@ public class LanguageGeneral
     public string ShowCpsColumn { get; set; }
     public string ShowDurationColumn { get; set; }
     public string ShowGapColumn { get; set; }
+    public string ShowForcedColumn { get; set; } = string.Empty;
     public string ShowStartColumn { get; set; }
     public string ShowHideColumn { get; set; }
     public string ShowHistory { get; set; }
@@ -570,8 +596,21 @@ public class LanguageGeneral
     public string SpeechToTextSelectedLinesPromptAlways { get; set; }
     public string SpeechToTextSelectedLinesPromptFirstTime { get; set; }
     public string Speed { get; set; }
+    public string BalanceWithNextSubtitle { get; set; }
+    public string BalanceWithPreviousSubtitle { get; set; }
+    public string FetchLastWordFromPreviousSubtitle { get; set; }
+    public string FetchRestOfSentenceFromNextSubtitle { get; set; }
+    public string FetchUnfinishedSentenceFromPreviousSubtitle { get; set; }
+    public string MoveFirstWordToPreviousSubtitle { get; set; }
+    public string MoveRestOfSentenceToPreviousSubtitle { get; set; }
+    public string MoveUnfinishedSentenceToNextSubtitle { get; set; }
+    public string SplitAtComma { get; set; }
+    public string SplitAtDialogDash { get; set; }
+    public string SplitAtLineBreak { get; set; }
+    public string SplitAtSentenceEnd { get; set; }
     public string SplitAtTextBoxCursorPosition { get; set; }
     public string SplitLine { get; set; }
+    public string SplitNearMiddle { get; set; }
     public string SplitLineAtTextBoxCursorPosition { get; set; }
     public string SplitLineAtVideoAndTextBoxPosition { get; set; }
     public string SplitLineAtVideoPosition { get; set; }
@@ -581,6 +620,7 @@ public class LanguageGeneral
     public string StartingDotDotDot { get; set; }
     public string Status { get; set; }
     public string Stereo { get; set; }
+    public string SpreadsheetFiles { get; set; }
     public string Stop { get; set; }
     public string Strikeout { get; set; }
     public string Style { get; set; }
@@ -618,6 +658,10 @@ public class LanguageGeneral
     public string ToggleCasing { get; set; }
     public string ToggleDirection { get; set; }
     public string ToggleForced { get; set; }
+    public string MarkedXLinesAsForced { get; set; } = string.Empty;
+    public string UnmarkedXLinesAsForced { get; set; } = string.Empty;
+    public string NoForcedLinesFound { get; set; } = string.Empty;
+    public string SaveForcedLinesAs { get; set; } = string.Empty;
     public string ToggleShotChangesAtVideoPosition { get; set; }
     public string Toolbar { get; set; }
     public string Tools { get; set; }
@@ -792,6 +836,22 @@ public class LanguageGeneral
         Apply = "Apply";
         ApplyTo = "Apply to";
         Ascending = "Ascending";
+        AssistedMove = "Assisted move";
+        AssistedMoveChooseMove = "Click an option or press its number to move words";
+        AssistedMoveDotDotDot = "Assisted move...";
+        AssistedMoveNoSuggestions = "No move suggestions - the sentence does not continue into the previous/next subtitle";
+        AssistedSplitNoSuggestions = "No split suggestions for this line";
+        BalanceWithNextSubtitle = "Balance with next subtitle";
+        BalanceWithPreviousSubtitle = "Balance with previous subtitle";
+        FetchLastWordFromPreviousSubtitle = "Fetch last word from previous subtitle";
+        FetchRestOfSentenceFromNextSubtitle = "Fetch rest of sentence from next subtitle";
+        FetchUnfinishedSentenceFromPreviousSubtitle = "Fetch unfinished sentence from previous subtitle";
+        MoveFirstWordToPreviousSubtitle = "Move first word to previous subtitle";
+        MoveRestOfSentenceToPreviousSubtitle = "Move rest of sentence to previous subtitle";
+        MoveUnfinishedSentenceToNextSubtitle = "Move unfinished sentence to next subtitle";
+        AssistedSplit = "Assisted split";
+        AssistedSplitChooseSplitPoint = "Click an option or press its number to split the line";
+        AssistedSplitDotDotDot = "Assisted split...";
         Descending = "Descending";
         AttachDotDotDot = "Attach...";
         AudioFileSaved = "Audio file saved";
@@ -866,12 +926,21 @@ public class LanguageGeneral
         ColorBlue = "Blue";
         ColorCyan = "Cyan";
         ColorDotDotDot = "Color...";
+        ColorGray = "Gray";
         ColorGreen = "Green";
+        ColorHalfBlue = "Half blue";
+        ColorHalfCyan = "Half cyan";
+        ColorHalfGreen = "Half green";
+        ColorHalfMagenta = "Half magenta";
+        ColorHalfRed = "Half red";
+        ColorHalfYellow = "Half yellow";
         ColorMagenta = "Magenta";
         ColorRed = "Red";
         ColorWhite = "White";
         ColorYellow = "Yellow";
         Column = "Column";
+        Columns = "Columns";
+        ColumnsDotDotDot = "Columns...";
         ConsoleLog = "Console log";
         ContentAlignment = "Content alignment";
         ContinueFindTitle = "Continue Find?";
@@ -940,6 +1009,9 @@ public class LanguageGeneral
         Engine = "Engine";
         EnterProfileName = "Enter profile name";
         Error = "Error";
+        Start = "Start";
+        VobSub = "VobSub";
+        OutputFileCannotBeTheInputFile = "The output file cannot be the same as the input file.";
         ErrorX = "Error; {0}";
         Example = "Example";
         ExampleX = "Example: {0}";
@@ -1063,6 +1135,7 @@ public class LanguageGeneral
         LoadDefaults = "Load defaults";
         LockTimeCodes = "Lock time codes";
         Logo = "Logo";
+        LookUpX = "Look up \"{0}\"";
         Margin = "Margin";
         Match = "Match";
         MaxCharactersPerSecond = "Max characters per second";
@@ -1192,8 +1265,10 @@ public class LanguageGeneral
         PoweredBy = "Powered by";
         Prefix = "Prefix";
         Preview = "Preview";
+        PreviewAlignmentInListView = "Preview alignment in list view";
         Previous = "Previous";
         Profile = "Profile";
+        Quality = "Quality";
         ProfileName = "Profile name";
         Profiles = "Profiles";
         Property = "Property";
@@ -1201,6 +1276,7 @@ public class LanguageGeneral
         ReDownloadX = "Re-download {0}";
         Reason = "Reason";
         RecentFiles = "Recent files";
+        RecentlyUsedVideoOffsets = "Recently used video offsets";
         Redo = "Redo";
         Redownload = "Re-download...";
         Release = "Release";
@@ -1286,6 +1362,7 @@ public class LanguageGeneral
         SetStartAndKeepDuration = "Set start and keep duration";
         SetStartAndOffsetTheRest = "Set start and offset the rest";
         SetUpLikeSubtitleEdit4 = "Set up like Subtitle Edit 4 (theme, shortcuts, replace rules)";
+        ImageBackgroundColorDotDotDot = "Image background color...";
         SetVideoOffset = "Set video offset";
         Settings = "Settings";
         Shadow = "Shadow";
@@ -1299,6 +1376,7 @@ public class LanguageGeneral
         ShowCpsColumn = "Show \"Chars/sec\" column";
         ShowDurationColumn = "Show \"Duration\" column";
         ShowGapColumn = "Show \"Gap\" column";
+        ShowForcedColumn = "Show \"Forced\" column";
         ShowStartColumn = "Show \"Start\" column";
         ShowHideColumn = "Show \"Hide\" column";
         ShowHistory = "Show history";
@@ -1306,7 +1384,7 @@ public class LanguageGeneral
         ShowPreview = "Show preview";
         ShowShotChangesList = "Show shot changes list";
         ShowStyleColumn = "Show \"Style\" column";
-        ShowTeletext = "Show TT";
+        ShowTeletext = "Show teletext column in list view";
         ShowTimeCodes = "Show time codes";
         ShowWpmColumn = "Show \"Words/min\" column";
         ShowPixelWidthColumn = "Show \"Pixel width\" column";
@@ -1330,8 +1408,13 @@ public class LanguageGeneral
         SpeechToTextSelectedLinesPromptAlways = "Speech to text selected lines (always prompt engine/language)";
         SpeechToTextSelectedLines = "Speech to text selected (see Options - Settings)";
         Speed = "Speed";
+        SplitAtComma = "Split at comma";
+        SplitAtDialogDash = "Split at dialog dash";
+        SplitAtLineBreak = "Split at line break";
+        SplitAtSentenceEnd = "Split at end of sentence";
         SplitAtTextBoxCursorPosition = "Split at text cursor position";
         SplitLine = "Split line";
+        SplitNearMiddle = "Split at space nearest the middle";
         SplitLineAtTextBoxCursorPosition = "Split line at cursor position";
         SplitLineAtVideoAndTextBoxPosition = "Split line at video and text box position";
         SplitLineAtVideoPosition = "Split line at video position";
@@ -1341,6 +1424,7 @@ public class LanguageGeneral
         StartingDotDotDot = "Starting...";
         Status = "Status";
         Stereo = "Stereo";
+        SpreadsheetFiles = "Spreadsheet files";
         Stop = "Stop";
         Strikeout = "Strikeout";
         Style = "Style";
@@ -1378,6 +1462,10 @@ public class LanguageGeneral
         ToggleCasing = "Toggle casing";
         ToggleDirection = "Toggle direction";
         ToggleForced = "Toggle forced";
+        MarkedXLinesAsForced = "Marked {0} line(s) as forced";
+        UnmarkedXLinesAsForced = "Unmarked {0} line(s) as forced";
+        NoForcedLinesFound = "No forced lines found";
+        SaveForcedLinesAs = "Save forced lines as...";
         ToggleShotChangesAtVideoPosition = "Toggle shot changes at video position";
         Toolbar = "Toolbar";
         Tools = "Tools";

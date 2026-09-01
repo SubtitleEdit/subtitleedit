@@ -652,6 +652,10 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
     partial void OnUseExactTimeCodesChanged(bool value)
     {
         Se.Settings.BeautifyTimeCodes.ExtractExactTimeCodes = value;
+        // Mirror into libse too: the profile dialog does
+        // Se.Settings.BeautifyTimeCodes.CopyFrom(Configuration.Settings.BeautifyTimeCodes),
+        // so leaving the libse copy stale let opening that dialog revert this tick.
+        Configuration.Settings.BeautifyTimeCodes.ExtractExactTimeCodes = value;
         UpdateTimeCodesStatus();
         _dirty = true; // re-run beautify against the other frame grid
     }

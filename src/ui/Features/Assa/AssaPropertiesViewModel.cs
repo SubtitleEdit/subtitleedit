@@ -308,7 +308,9 @@ public partial class AssaPropertiesViewModel : ObservableObject
             else if (s.StartsWith("wrapstyle:", StringComparison.Ordinal))
             {
                 var wrapStyle = line.Trim().Remove(0, 10).Trim();
-                SelectedWrapStyle = WrapStyles.First(p => ((int)p.Style).ToString().Equals(wrapStyle, StringComparison.OrdinalIgnoreCase));
+
+                // WrapStyles only holds 0-3; First() threw on a header with an empty or
+                // out-of-range WrapStyle. The loop below already does the same lookup safely.
                 foreach (var ws in WrapStyles)
                 {
                     if (((int)ws.Style).ToString().Equals(wrapStyle, StringComparison.OrdinalIgnoreCase))

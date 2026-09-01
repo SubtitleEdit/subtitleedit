@@ -13,6 +13,10 @@ public class AutoTranslateRunnerTest : IDisposable
 {
     private readonly string _fakeLlamaFolder = Path.Combine(AppContext.BaseDirectory, "llama.cpp");
 
+    private readonly string _defaultLlamaCppPrompt = Configuration.Settings.Tools.LlamaCppPrompt;
+    private readonly string _defaultOllamaPrompt = Configuration.Settings.Tools.OllamaPrompt;
+    private readonly string _defaultLmStudioPrompt = Configuration.Settings.Tools.LmStudioPrompt;
+
     public AutoTranslateRunnerTest()
     {
         LlamaCppServerManager.FolderOverride = null;
@@ -23,11 +27,17 @@ public class AutoTranslateRunnerTest : IDisposable
     {
         LlamaCppServerManager.FolderOverride = null;
         LlamaCppServerManager.ExecutableOverride = null;
+
+        // The prompt settings are process-wide; put them back for the next test.
+        Configuration.Settings.Tools.LlamaCppPrompt = _defaultLlamaCppPrompt;
+        Configuration.Settings.Tools.LlamaCppModelPrompt = string.Empty;
+        Configuration.Settings.Tools.OllamaPrompt = _defaultOllamaPrompt;
+        Configuration.Settings.Tools.LmStudioPrompt = _defaultLmStudioPrompt;
         if (Directory.Exists(_fakeLlamaFolder))
             Directory.Delete(_fakeLlamaFolder, recursive: true);
     }
 
-    private static ConversionOptions MakeOptions(string engine = "llamacpp", string? url = null, string? model = null, string to = "de")
+    private static ConversionOptions MakeOptions(string engine = "llamacpp", string? url = null, string? model = null, string to = "de", string? prompt = null)
     {
         return new ConversionOptions
         {
@@ -37,6 +47,7 @@ public class AutoTranslateRunnerTest : IDisposable
             TranslateEngine = engine,
             TranslateUrl = url,
             TranslateModel = model,
+            TranslatePrompt = prompt,
             Quiet = true,
         };
     }
@@ -223,6 +234,198 @@ public class AutoTranslateRunnerTest : IDisposable
 
         var ex = Assert.Throws<InvalidOperationException>(() => AutoTranslateRunner.Create(MakeOptions(model: "no-such-model")));
         Assert.Contains("not found", ex.Message);
+    }
+
+    [Theory]
+    [InlineData(null, "llamacpp")]
+    [InlineData("", "llamacpp")]
+    [InlineData("llama.cpp", "llamacpp")]
+    [InlineData("LlamaCpp", "llamacpp")]
+    [InlineData("ollama", "ollama")]
+    public void NormalizeEngine_ResolvesAliasesAndDefault(string? engine, string expected)
+    {
+        Assert.Equal(expected, AutoTranslateRunner.NormalizeEngine(engine));
+    }
+
+    [Theory]
+    [InlineData(null, true)] // default engine is llamacpp
+    [InlineData("llama.cpp", true)]
+    [InlineData("ollama", true)]
+    [InlineData("lmstudio", true)]
+    [InlineData("libretranslate", false)]
+    [InlineData("nllb-serve", false)]
+    [InlineData("nllb-api", false)]
+    public void SupportsPrompt_OnlyForLlmEngines(string? engine, bool expected)
+    {
+        Assert.Equal(expected, AutoTranslateRunner.SupportsPrompt(engine));
+    }
+
+    [Fact]
+    public void ReadPromptOption_NotGiven_ReturnsNull()
+    {
+        Assert.Null(AutoTranslateRunner.ReadPromptOption(null));
+    }
+
+    [Fact]
+    public void ReadPromptOption_InlineText_UnescapesLineBreaks()
+    {
+        var prompt = AutoTranslateRunner.ReadPromptOption("Translate this from {0} to {1}:\\n{0}: {2}\\n{1}:");
+
+        Assert.Equal("Translate this from {0} to {1}:\n{0}: {2}\n{1}:", prompt);
+    }
+
+    [Fact]
+    public void ReadPromptOption_KeepsUnknownEscapesAndBackslashes()
+    {
+        Assert.Equal("keep \\d and \\ here", AutoTranslateRunner.ReadPromptOption("keep \\d and \\\\ here"));
+    }
+
+    [Fact]
+    public void ReadPromptOption_Empty_Throws()
+    {
+        var ex = Assert.Throws<InvalidOperationException>(() => AutoTranslateRunner.ReadPromptOption("   "));
+        Assert.Contains("empty", ex.Message);
+    }
+
+    [Fact]
+    public void ReadPromptOption_File_IsReadFromDisk()
+    {
+        var path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".txt");
+        File.WriteAllText(path, "Translate this from {0} to {1}:\n{0}: {2}\n{1}:\n");
+        try
+        {
+            Assert.Equal("Translate this from {0} to {1}:\n{0}: {2}\n{1}:", AutoTranslateRunner.ReadPromptOption(path));
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    // A path-shaped value is a path even when it does not exist - saying so beats sending
+    // "prompts/mine.tmpl" to the model as the prompt, which would silently translate a whole
+    // batch under a garbage instruction.
+    [Theory]
+    [InlineData("no-such-prompt.txt")]      // prompt-file extension
+    [InlineData("prompts/mine.tmpl")]       // any extension, no spaces
+    [InlineData("./missing")]               // no extension at all
+    [InlineData("my prompts/milmmt.txt")]   // spaces in the path, prompt-file extension
+    public void ReadPromptOption_MissingPromptFile_Throws(string value)
+    {
+        var ex = Assert.Throws<InvalidOperationException>(() => AutoTranslateRunner.ReadPromptOption(value));
+        Assert.Contains("not found", ex.Message);
+    }
+
+    // ... while anything sentence-shaped stays inline text, placeholders included.
+    [Theory]
+    [InlineData("Translate from {0} to {1}:")]
+    [InlineData("{0}->{1}:")]                       // terse, no spaces, but has placeholders
+    [InlineData("Translate this. Keep line breaks.")]
+    public void ReadPromptOption_SentenceShapedValue_StaysInline(string value)
+    {
+        Assert.Equal(value, AutoTranslateRunner.ReadPromptOption(value));
+    }
+
+    [Fact]
+    public void ReadPromptOption_ExistingFile_WinsOverAnyShape()
+    {
+        // No extension and no spaces, but it exists - read it.
+        var path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName().Replace(".", string.Empty));
+        File.WriteAllText(path, "Translate from {0} to {1}:");
+        try
+        {
+            Assert.Equal("Translate from {0} to {1}:", AutoTranslateRunner.ReadPromptOption(path));
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [Fact]
+    public void ReadPromptOption_HugeFile_Throws()
+    {
+        var path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".txt");
+        using (var fs = File.Create(path))
+        {
+            fs.SetLength(300 * 1024); // e.g. --translate-prompt pointed at a data file by mistake
+        }
+
+        try
+        {
+            var ex = Assert.Throws<InvalidOperationException>(() => AutoTranslateRunner.ReadPromptOption(path));
+            Assert.Contains("too large", ex.Message);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [Fact]
+    public void Create_Ollama_AppliesPrompt()
+    {
+        AutoTranslateRunner.Create(MakeOptions(engine: "ollama", prompt: "Translate {0} to {1} like a pirate:"));
+
+        Assert.Equal("Translate {0} to {1} like a pirate:", Configuration.Settings.Tools.OllamaPrompt);
+    }
+
+    [Fact]
+    public void Create_LmStudio_AppliesPrompt()
+    {
+        AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio", prompt: "Translate {0} to {1} like a pirate:"));
+
+        Assert.Equal("Translate {0} to {1} like a pirate:", Configuration.Settings.Tools.LmStudioPrompt);
+    }
+
+    [Fact]
+    public void Create_LlamaCppRemote_AppliesPrompt()
+    {
+        AutoTranslateRunner.Create(MakeOptions(url: "http://myhost:8080", prompt: "Translate {0} to {1}:"));
+
+        Assert.Equal("Translate {0} to {1}:", Configuration.Settings.Tools.LlamaCppPrompt);
+        Assert.Equal("Translate {0} to {1}:", Configuration.Settings.Tools.LlamaCppModelPrompt);
+    }
+
+    // LlamaCppTranslate prefers the per-model template over the plain prompt, and the curated
+    // template is re-applied before every file - so an explicit --translate-prompt has to win
+    // there too, or it would silently do nothing for exactly the models people run headless.
+    [Fact]
+    public void ApplyPromptSettings_CustomPrompt_BeatsCuratedModelTemplate()
+    {
+        PlantFakeInstall("MiLMMT-46-4B-v1.0.Q4_K_M.gguf");
+
+        var runner = AutoTranslateRunner.Create(MakeOptions(prompt: "Translate {0} to {1}:"));
+        Assert.NotNull(runner.LlamaCppModel);
+        Assert.False(string.IsNullOrEmpty(runner.LlamaCppModel!.PromptTemplate));
+
+        runner.ApplyPromptSettings(); // what TranslateAsync does before each file
+
+        Assert.Equal("Translate {0} to {1}:", Configuration.Settings.Tools.LlamaCppModelPrompt);
+        Assert.Equal("Translate {0} to {1}:", Configuration.Settings.Tools.LlamaCppPrompt);
+        // The model's sampling recommendations still apply - only the prompt is overridden.
+        Assert.Equal(0, Configuration.Settings.Tools.LlamaCppModelTemperature);
+    }
+
+    [Fact]
+    public void ApplyPromptSettings_NoCustomPrompt_KeepsCuratedModelTemplate()
+    {
+        PlantFakeInstall("MiLMMT-46-4B-v1.0.Q4_K_M.gguf");
+
+        var runner = AutoTranslateRunner.Create(MakeOptions());
+        runner.ApplyPromptSettings();
+
+        Assert.Equal(runner.LlamaCppModel!.PromptTemplate, Configuration.Settings.Tools.LlamaCppModelPrompt);
+    }
+
+    [Fact]
+    public void Create_PromptWithEngineThatHasNone_Throws()
+    {
+        var ex = Assert.Throws<InvalidOperationException>(
+            () => AutoTranslateRunner.Create(MakeOptions(engine: "libretranslate", prompt: "Translate {0} to {1}:")));
+
+        Assert.Contains("--translate-prompt is not supported", ex.Message);
+        Assert.Contains("llamacpp, ollama, lmstudio", ex.Message);
     }
 
     [Fact]

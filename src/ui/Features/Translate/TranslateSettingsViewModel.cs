@@ -115,6 +115,10 @@ public partial class TranslateSettingsViewModel : ObservableObject
         Se.Settings.AutoTranslate.RequestDelaySeconds = ServerDelaySeconds ?? 0;
         Configuration.Settings.Tools.AutoTranslateDelaySeconds = (int)Math.Round(ServerDelaySeconds ?? 0, MidpointRounding.AwayFromZero);
         Se.Settings.AutoTranslate.RequestMaxBytes = MaxBytesRequest ?? 0;
+        // Mirror into the libse setting too, the way the delay above is: MergeAndSplitHelper
+        // reads only Configuration.Settings.Tools.AutoTranslateMaxBytes, so without this the
+        // value was persisted and redisplayed but never actually capped a request.
+        Configuration.Settings.Tools.AutoTranslateMaxBytes = MaxBytesRequest ?? 0;
         Se.Settings.AutoTranslate.EngineStrategies[AutoTranslator.Name] =
             SelectedMergeOptions == Se.Language.Translate.TranslateEachLineSeparately
                 ? nameof(TranslateStrategy.TranslateEachLineSeparately)

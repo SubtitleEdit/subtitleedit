@@ -115,7 +115,12 @@ public partial class AddToOcrReplaceListViewModel : ObservableObject
         else if (e.Key == Key.Enter)
         {
             e.Handled = true;
-            using var _ = Ok();
+            // Not "using": Task implements IDisposable and Task.Dispose() THROWS unless the task
+            // has already completed. Ok() only completes synchronously on its happy path - every
+            // error path awaits a MessageBox - so pressing Enter on e.g. an already-listed word
+            // threw InvalidOperationException out of the KeyDown handler. The OK button goes
+            // through OkCommand and was never affected.
+            _ = Ok();
         }
     }
 }
