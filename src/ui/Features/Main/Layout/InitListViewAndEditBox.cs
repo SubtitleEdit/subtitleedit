@@ -727,6 +727,7 @@ public static partial class InitListViewAndEditBox
             Source = vm,
         });
 
+        columnManager.ApplyOrder(Se.Settings.General.SubtitleGridColumnOrder);
         RestoreSubtitleGridColumnWidths(columnManager);
 
         vm.SubtitleGrid.DataContext = vm.Subtitles;
@@ -990,6 +991,21 @@ public static partial class InitListViewAndEditBox
         };
         showLayerMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowColumnLayerFlyoutMenuItem)) { Source = vm, Mode = BindingMode.TwoWay });
         flyout.Items.Add(showLayerMenuItem);
+
+        var columnsSeparator = new Separator { DataContext = vm };
+        columnsSeparator.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridFlyoutHeaderVisible)));
+        flyout.Items.Add(columnsSeparator);
+
+        // Show/hide plus reordering in one dialog (#14369) - the toggles above only cover
+        // visibility, and the TableView has no column dragging.
+        var columnsMenuItem = new MenuItem
+        {
+            Header = Se.Language.General.ColumnsDotDotDot,
+            Command = vm.ShowGridColumnsDialogCommand,
+            DataContext = vm,
+        };
+        columnsMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridFlyoutHeaderVisible)));
+        flyout.Items.Add(columnsMenuItem);
 
 
         var deleteMenuItem = new MenuItem { Header = Se.Language.General.Delete, DataContext = vm };

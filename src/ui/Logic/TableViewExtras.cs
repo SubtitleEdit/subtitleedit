@@ -227,6 +227,52 @@ public sealed class TableViewColumnManager
         Sync();
     }
 
+    /// <summary>
+    /// Reorders the managed columns to match <paramref name="keys"/> (matched against
+    /// <see cref="SeTableViewColumn.Tag"/>). Columns whose key is not in the list keep
+    /// their current position - a saved order from an older version must not hide or
+    /// displace columns added since. A null/empty list leaves the order untouched.
+    /// </summary>
+    public void ApplyOrder(IReadOnlyList<string>? keys)
+    {
+        if (keys == null || keys.Count == 0)
+        {
+            return;
+        }
+
+        var ordered = new List<TableViewColumn>();
+        foreach (var key in keys)
+        {
+            var column = _columns.FirstOrDefault(c => c is SeTableViewColumn se && se.Tag as string == key);
+            if (column != null && !ordered.Contains(column))
+            {
+                ordered.Add(column);
+            }
+        }
+
+        if (ordered.Count == 0)
+        {
+            return;
+        }
+
+        for (var i = 0; i < _columns.Count; i++)
+        {
+            var column = _columns[i];
+            if (!ordered.Contains(column))
+            {
+                ordered.Insert(Math.Min(i, ordered.Count), column);
+            }
+        }
+
+        _columns.Clear();
+        _columns.AddRange(ordered);
+
+        // Sync() can only insert missing columns, not permute existing ones, so clear the
+        // live list first and let it rebuild in the new order.
+        _tableView.Columns.Clear();
+        Sync();
+    }
+
     private void Sync()
     {
         var target = _columns.Where(c => c is not SeTableViewColumn se || se.IsVisible).ToList();

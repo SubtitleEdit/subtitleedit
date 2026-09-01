@@ -70,6 +70,7 @@ using Nikse.SubtitleEdit.Features.Files.RestoreAutoBackup;
 using Nikse.SubtitleEdit.Features.Files.Statistics;
 using Nikse.SubtitleEdit.Features.Help.About;
 using Nikse.SubtitleEdit.Features.Help.CheckForUpdates;
+using Nikse.SubtitleEdit.Features.Main.GridColumns;
 using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Features.Main.MainHelpers;
 using Nikse.SubtitleEdit.Features.Ocr;
@@ -13286,6 +13287,126 @@ public partial class MainViewModel :
         Se.Settings.General.ShowColumnLayer = ShowColumnLayer;
         ShowColumnLayer = Se.Settings.General.ShowColumnLayer;
         AutoFitColumns();
+    }
+
+    // The "Columns..." dialog (#14369): show/hide and reorder the grid columns in one place.
+    // The Style/WebVttStyle and Actor/WebVttVoice pairs are format-gated variants of the same
+    // logical column sharing one toggle, so each pair is one entry and moves as one.
+    [RelayCommand]
+    private async Task ShowGridColumnsDialog()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var entries = new List<GridColumnDisplay>
+        {
+            new(Se.Language.General.NumberSymbol, false, true, InitListViewAndEditBox.SubtitleGridColumnKeys.Number),
+            new(Se.Language.General.Show, true, ShowColumnStartTime, InitListViewAndEditBox.SubtitleGridColumnKeys.Start),
+            new(Se.Language.General.Hide, true, ShowColumnEndTime, InitListViewAndEditBox.SubtitleGridColumnKeys.End),
+            new(Se.Language.General.Duration, true, ShowColumnDuration, InitListViewAndEditBox.SubtitleGridColumnKeys.Duration),
+            new(Se.Language.File.EbuSaveOptions.Teletext, true, ShowColumnTeletext, InitListViewAndEditBox.SubtitleGridColumnKeys.Teletext),
+            new(Se.Language.General.Forced, true, ShowColumnForced, InitListViewAndEditBox.SubtitleGridColumnKeys.Forced),
+            new(Se.Language.General.Text, false, true, InitListViewAndEditBox.SubtitleGridColumnKeys.Text),
+            new(Se.Language.General.OriginalText, false, ShowColumnOriginalText, InitListViewAndEditBox.SubtitleGridColumnKeys.OriginalText),
+            new(Se.Language.General.Style, true, ShowColumnStyle, InitListViewAndEditBox.SubtitleGridColumnKeys.Style, InitListViewAndEditBox.SubtitleGridColumnKeys.WebVttStyle),
+            new(Se.Language.General.Gap, true, ShowColumnGap, InitListViewAndEditBox.SubtitleGridColumnKeys.Gap),
+            new(Se.Language.General.Actor, true, ShowColumnActor, InitListViewAndEditBox.SubtitleGridColumnKeys.Actor, InitListViewAndEditBox.SubtitleGridColumnKeys.WebVttVoice),
+            new(Se.Language.General.Cps, true, ShowColumnCps, InitListViewAndEditBox.SubtitleGridColumnKeys.Cps),
+            new(Se.Language.General.Wpm, true, ShowColumnWpm, InitListViewAndEditBox.SubtitleGridColumnKeys.Wpm),
+            new(Se.Language.General.PixelWidth, true, ShowColumnPixelWidth, InitListViewAndEditBox.SubtitleGridColumnKeys.PixelWidth),
+            new(Se.Language.General.Layer, true, ShowColumnLayer, InitListViewAndEditBox.SubtitleGridColumnKeys.Layer),
+        };
+
+        var result = await _windowService.ShowDialogAsync<GridColumnsWindow, GridColumnsViewModel>(Window, vm =>
+        {
+            vm.Initialize(entries, Se.Settings.General.SubtitleGridColumnOrder);
+        });
+
+        if (!result.OkPressed || !result.HasChanges)
+        {
+            return;
+        }
+
+        foreach (var entry in result.Columns)
+        {
+            if (entry.CanToggle)
+            {
+                SetColumnVisibility(entry.Keys[0], entry.IsVisible);
+            }
+        }
+
+        Se.Settings.General.SubtitleGridColumnOrder = result.ResultColumnOrder;
+        SubtitleGridColumnManager?.ApplyOrder(result.ResultColumnOrder);
+        AutoFitColumns();
+        Se.SaveSettings();
+
+        // Same post-layout refresh as ToggleShowColumnCps: AutoFitColumns() settles the visual
+        // tree before the property-change notifications can render, so post the brush refresh
+        // to run after the layout pass.
+        Dispatcher.UIThread.Post(() =>
+        {
+            foreach (var row in Subtitles)
+            {
+                row.RefreshAfterSettingsChanged();
+            }
+        });
+    }
+
+    private void SetColumnVisibility(string columnKey, bool isVisible)
+    {
+        switch (columnKey)
+        {
+            case InitListViewAndEditBox.SubtitleGridColumnKeys.Start:
+                Se.Settings.General.ShowColumnStartTime = isVisible;
+                ShowColumnStartTime = isVisible;
+                break;
+            case InitListViewAndEditBox.SubtitleGridColumnKeys.End:
+                Se.Settings.General.ShowColumnEndTime = isVisible;
+                ShowColumnEndTime = isVisible;
+                break;
+            case InitListViewAndEditBox.SubtitleGridColumnKeys.Duration:
+                Se.Settings.General.ShowColumnDuration = isVisible;
+                ShowColumnDuration = isVisible;
+                break;
+            case InitListViewAndEditBox.SubtitleGridColumnKeys.Teletext:
+                Se.Settings.General.ShowColumnTeletext = isVisible;
+                ShowColumnTeletext = isVisible;
+                break;
+            case InitListViewAndEditBox.SubtitleGridColumnKeys.Forced:
+                Se.Settings.General.ShowColumnForced = isVisible;
+                ShowColumnForced = isVisible;
+                break;
+            case InitListViewAndEditBox.SubtitleGridColumnKeys.Style:
+                Se.Settings.General.ShowColumnStyle = isVisible;
+                ShowColumnStyle = isVisible;
+                break;
+            case InitListViewAndEditBox.SubtitleGridColumnKeys.Gap:
+                Se.Settings.General.ShowColumnGap = isVisible;
+                ShowColumnGap = isVisible;
+                break;
+            case InitListViewAndEditBox.SubtitleGridColumnKeys.Actor:
+                Se.Settings.General.ShowColumnActor = isVisible;
+                ShowColumnActor = isVisible;
+                break;
+            case InitListViewAndEditBox.SubtitleGridColumnKeys.Cps:
+                Se.Settings.General.ShowColumnCps = isVisible;
+                ShowColumnCps = isVisible;
+                break;
+            case InitListViewAndEditBox.SubtitleGridColumnKeys.Wpm:
+                Se.Settings.General.ShowColumnWpm = isVisible;
+                ShowColumnWpm = isVisible;
+                break;
+            case InitListViewAndEditBox.SubtitleGridColumnKeys.PixelWidth:
+                Se.Settings.General.ShowColumnPixelWidth = isVisible;
+                ShowColumnPixelWidth = isVisible;
+                break;
+            case InitListViewAndEditBox.SubtitleGridColumnKeys.Layer:
+                Se.Settings.General.ShowColumnLayer = isVisible;
+                ShowColumnLayer = isVisible;
+                break;
+        }
     }
 
     // Cycle the grid's Text/Original text formatting mode (issue #12321): "show formatting"

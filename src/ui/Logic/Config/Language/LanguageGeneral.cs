@@ -127,6 +127,8 @@ public class LanguageGeneral
     public string ColorWhite { get; set; }
     public string ColorYellow { get; set; }
     public string Column { get; set; }
+    public string Columns { get; set; }
+    public string ColumnsDotDotDot { get; set; }
     public string ConsoleLog { get; set; }
     public string ContentAlignment { get; set; }
     public string ContinueFindTitle { get; set; }
@@ -937,6 +939,8 @@ public class LanguageGeneral
         ColorWhite = "White";
         ColorYellow = "Yellow";
         Column = "Column";
+        Columns = "Columns";
+        ColumnsDotDotDot = "Columns...";
         ConsoleLog = "Console log";
         ContentAlignment = "Content alignment";
         ContinueFindTitle = "Continue Find?";
