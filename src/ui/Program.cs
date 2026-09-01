@@ -421,6 +421,21 @@ namespace Nikse.SubtitleEdit
 
                 activatable.Activated += (sender, e) =>
                 {
+                    // Double-clicking the Dock icon while SE is already running delivers this
+                    // instead of a File activation. Every other platform's "open" gesture
+                    // (a second Windows process, a fresh Linux launch) hands the user a new,
+                    // empty window - match that here instead of just refocusing whatever
+                    // window already exists.
+                    if (e is ActivatedEventArgs reopenArgs && reopenArgs.Kind == ActivationKind.Reopen)
+                    {
+                        if (lifetime.MainWindow != null)
+                        {
+                            Dispatcher.UIThread.Post(Nikse.SubtitleEdit.Features.Main.Layout.MainWindowFactory.OpenNewWindow);
+                        }
+
+                        return;
+                    }
+
                     if (e is not FileActivatedEventArgs args || args.Kind != ActivationKind.File)
                     {
                         return;
@@ -432,19 +447,24 @@ namespace Nikse.SubtitleEdit
                         if (System.IO.File.Exists(filePath))
                         {
                             FileOpenedViaActivation = true;
-                            var mainView = lifetime.MainWindow == null
-                                ? null
-                                : UiTheme.GetUnscaledContent(lifetime.MainWindow) as MainView;
-                            if (mainView != null)
+                            if (lifetime.MainWindow == null)
                             {
-                                Dispatcher.UIThread.Post(async () =>
-                                {
-                                    await mainView.OpenFile(filePath);
-                                });
+                                // Still starting up - no window exists yet, so the primary
+                                // window about to be created will load this file itself.
+                                PendingFileToOpen = filePath;
                             }
                             else
                             {
-                                PendingFileToOpen = filePath;
+                                // Already running: macOS delivers this when a file is opened
+                                // from Finder while SE is running, or dropped on the Dock
+                                // icon. Open it in a new window instead of hijacking whichever
+                                // window happens to be lifetime.MainWindow - matches Windows,
+                                // where each Finder/Explorer open is a separate process and
+                                // never touches existing windows.
+                                Dispatcher.UIThread.Post(async () =>
+                                {
+                                    await Nikse.SubtitleEdit.Features.Main.Layout.MainWindowFactory.OpenNewWindowWithFile(filePath);
+                                });
                             }
 
                             break;

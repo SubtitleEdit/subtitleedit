@@ -638,16 +638,37 @@ namespace Nikse.SubtitleEdit.Logic.Media
             return fileTypes;
         }
 
-        public async Task<string> PickOpenVideoFile(Visual sender, string title)
+        public async Task<string> PickOpenVideoFile(Visual sender, string title, string? lastOpenedFilePath = null)
         {
             var topLevel = TopLevel.GetTopLevel(sender)!;
 
-            var files = await NativePickers.OpenFilePickerAsync(topLevel, new FilePickerOpenOptions
+            var options = new FilePickerOpenOptions
             {
                 Title = title,
                 AllowMultiple = false,
                 FileTypeFilter = MakeOpenVideoFilter(),
-            });
+            };
+
+            if (!string.IsNullOrEmpty(lastOpenedFilePath))
+            {
+                var lastDir = Path.GetDirectoryName(lastOpenedFilePath);
+                if (!string.IsNullOrEmpty(lastDir))
+                {
+                    try
+                    {
+                        var folder = await topLevel.StorageProvider.TryGetFolderFromPathAsync(lastDir);
+                        if (folder != null)
+                        {
+                            options.SuggestedStartLocation = folder;
+                        }
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+
+            var files = await NativePickers.OpenFilePickerAsync(topLevel, options);
 
             if (files.Count >= 1)
             {
