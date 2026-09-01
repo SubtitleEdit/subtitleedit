@@ -169,6 +169,11 @@ public class SeGeneral
     // columns are intentionally not stored so they keep filling the window (#11415).
     public Dictionary<string, double> SubtitleGridColumnWidths { get; set; } = new();
 
+    // Subtitle grid column order as column keys (DataGridColumn.Tag), set from the
+    // "Columns..." dialog (#14369). Empty = the built-in default order. Keys missing
+    // from the list (columns added in a later version) keep their default position.
+    public List<string> SubtitleGridColumnOrder { get; set; } = new();
+
     public bool SelectCurrentSubtitleWhilePlaying { get; set; }
     public bool WriteAn2Tag { get; set; }
     public bool AutoTrimWhiteSpace { get; set; }

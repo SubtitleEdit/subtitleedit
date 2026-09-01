@@ -127,6 +127,8 @@
     "colorWhite": "White",
     "colorYellow": "Yellow",
     "column": "Column",
+    "columns": "Columns",
+    "columnsDotDotDot": "Columns...",
     "consoleLog": "Console log",
     "contentAlignment": "Content alignment",
     "continueFindTitle": "Continue Find?",
