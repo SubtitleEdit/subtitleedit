@@ -25,10 +25,15 @@ public class BinaryEditFormatLoadTests
 
     private static void Export(IExportHandler handler, string fileOrFolderName)
     {
+        // Mirrors BinaryEditViewModel.DoExport: the VobSub/DVD sup writers need the CLUT colors
+        // and the D-Cinema SMPTE handler needs the frame rate.
         var imageParameter = new ImageParameter
         {
             ScreenWidth = 720,
             ScreenHeight = 576,
+            FontColor = SKColors.White,
+            OutlineColor = SKColors.Black,
+            FramesPerSecond = 25.0,
         };
 
         handler.WriteHeader(fileOrFolderName, imageParameter);
@@ -66,10 +71,41 @@ public class BinaryEditFormatLoadTests
             Assert.Equal(5000, ocrSubtitle.GetStartTime(1).TotalMilliseconds, 0);
             using var bitmap = ocrSubtitle.GetBitmap(0);
             Assert.True(bitmap.Width > 0 && bitmap.Height > 0);
+
+            // The white source rectangle must survive the four color quantization as white on the
+            // pattern index - with unset CLUT colors it used to come back as opaque black.
+            var center = bitmap.GetPixel(bitmap.Width / 2, bitmap.Height / 2);
+            Assert.True(center.Alpha > 200, $"center pixel should be opaque, got {center}");
+            Assert.True(center.Red > 200 && center.Green > 200 && center.Blue > 200,
+                $"center pixel should be white, got {center}");
         }
         finally
         {
             File.Delete(fileName);
+        }
+    }
+
+    [Fact]
+    public void DCinemaSmpte2014Export_DeclaresTheEditRateItWasGiven()
+    {
+        var folderName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+        Directory.CreateDirectory(folderName);
+        try
+        {
+            Export(new ExportHandlerDCinemaSmpte2014Png(), folderName);
+
+            var xmlFileName = Path.Combine(folderName, "index.xml");
+            Assert.True(File.Exists(xmlFileName));
+            var xml = File.ReadAllText(xmlFileName);
+
+            // 25 comes from the Export helper's FramesPerSecond - without it the handler fell
+            // back to its 23.976 default and declared 24 regardless of the project frame rate.
+            Assert.Contains("<EditRate>25 1</EditRate>", xml);
+            Assert.Contains("<TimeCodeRate>25</TimeCodeRate>", xml);
+        }
+        finally
+        {
+            Directory.Delete(folderName, true);
         }
     }
 
