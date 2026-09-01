@@ -1622,6 +1622,13 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             var indexMarginV = 7;
             var indexEffect = 8;
             var indexText = 9;
+
+            // True when the text field is the last field in the "Format:" line, i.e. every
+            // field after it is appended to the text verbatim. That is the case for every real
+            // ASSA/SSA file, and it lets an event line be parsed by walking commas over the
+            // line itself instead of allocating a string[] plus one string per field (and a
+            // second one per Trim) and then re-joining the text field's own commas.
+            var textIsTrailing = true;
             var errors = new StringBuilder();
             var lineNumber = 0;
 
@@ -1766,6 +1773,12 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                                     break;
                             }
                         }
+
+                        textIsTrailing = indexText >= 0 &&
+                                         indexText > indexLayer && indexText > indexStart && indexText > indexEnd &&
+                                         indexText > indexStyle && indexText > indexActor && indexText > indexName &&
+                                         indexText > indexMarginL && indexText > indexMarginR && indexText > indexMarginV &&
+                                         indexText > indexEffect;
                     }
                     else if (trimmedLine.Length > 0)
                     {
@@ -1780,75 +1793,107 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                         var effect = string.Empty;
                         var layer = 0;
 
-                        string[] splitLine;
+                        // Walk the fields over the line itself. Split(',') allocated a string[]
+                        // plus one string per field on every event line, Trim() allocated a
+                        // second one for each field that was kept, and the text field - by far
+                        // the longest - was split apart and re-joined comma by comma. Only the
+                        // fields this format actually uses are materialized now.
+                        ReadOnlySpan<char> fields;
                         if (trimmedLine.StartsWith("dialog:", StringComparison.OrdinalIgnoreCase))
                         {
-                            splitLine = line.Remove(0, 7).Split(',');
+                            fields = line.AsSpan(7);
                         }
                         else if (trimmedLine.StartsWith("dialogue:", StringComparison.OrdinalIgnoreCase))
                         {
-                            splitLine = line.Remove(0, 9).Split(',');
+                            fields = line.AsSpan(9);
                         }
                         else
                         {
-                            splitLine = line.Split(',');
+                            fields = line.AsSpan();
                         }
 
-                        for (var i = 0; i < splitLine.Length; i++)
+                        string text = null;
+                        var fieldStart = 0;
+                        for (var i = 0; ; i++)
                         {
+                            var comma = fields.Slice(fieldStart).IndexOf(',');
+                            var fieldEnd = comma < 0 ? fields.Length : fieldStart + comma;
+
+                            if (textIsTrailing && i == indexText)
+                            {
+                                // Everything from here on is the text, commas included.
+                                text = fields.Slice(fieldStart).ToString();
+                                break;
+                            }
+
+                            var field = fields.Slice(fieldStart, fieldEnd - fieldStart);
                             if (i == indexStart)
                             {
-                                start = splitLine[i].Trim();
+                                start = field.Trim().ToString();
                             }
                             else if (i == indexEnd)
                             {
-                                end = splitLine[i].Trim();
+                                end = field.Trim().ToString();
                             }
                             else if (i == indexStyle)
                             {
-                                style = splitLine[i].Trim();
+                                style = field.Trim().ToString();
                             }
                             else if (i == indexActor && indexName == -1)
                             {
-                                actor = splitLine[i].Trim();
+                                actor = field.Trim().ToString();
                             }
                             else if (i == indexName)
                             {
-                                actor = splitLine[i].Trim();
+                                actor = field.Trim().ToString();
                             }
                             else if (i == indexMarginL)
                             {
-                                marginL = splitLine[i].Trim();
+                                marginL = field.Trim().ToString();
                             }
                             else if (i == indexMarginR)
                             {
-                                marginR = splitLine[i].Trim();
+                                marginR = field.Trim().ToString();
                             }
                             else if (i == indexMarginV)
                             {
-                                marginV = splitLine[i].Trim();
+                                marginV = field.Trim().ToString();
                             }
                             else if (i == indexEffect)
                             {
-                                effect = splitLine[i].Trim();
+                                effect = field.Trim().ToString();
                             }
                             else if (i == indexLayer)
                             {
-                                int.TryParse(splitLine[i].Replace("Comment:", string.Empty).Trim(), out layer);
+                                if (field.IndexOf("Comment:".AsSpan(), StringComparison.Ordinal) >= 0)
+                                {
+                                    int.TryParse(field.ToString().Replace("Comment:", string.Empty).Trim(), out layer);
+                                }
+                                else
+                                {
+                                    int.TryParse(field.Trim(), NumberStyles.Integer, CultureInfo.CurrentCulture, out layer);
+                                }
                             }
                             else if (i == indexText)
                             {
-                                textBuilder.Append(splitLine[i]);
+                                textBuilder.Append(field);
                             }
                             else if (i > indexText)
                             {
                                 // The text field may itself contain commas; rebuild via the
                                 // pooled builder instead of O(commas^2) string concatenation.
-                                textBuilder.Append(',').Append(splitLine[i]);
+                                textBuilder.Append(',').Append(field);
                             }
+
+                            if (comma < 0)
+                            {
+                                break;
+                            }
+
+                            fieldStart = fieldEnd + 1;
                         }
 
-                        var text = textBuilder.ToString();
+                        text ??= textBuilder.ToString();
 
                         try
                         {

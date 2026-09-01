@@ -313,7 +313,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         XmlNode nodeTemp = xml.CreateElement("temp");
                         while (i < line.Length)
                         {
-                            if (!isItalic && line.Substring(i).StartsWith("<i>", StringComparison.Ordinal))
+                            if (!isItalic && line.AsSpan(i).StartsWith("<i>".AsSpan(), StringComparison.Ordinal))
                             {
                                 if (txt.Length > 0)
                                 {
@@ -324,7 +324,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 isItalic = true;
                                 i += 2;
                             }
-                            else if (!isBold && line.Substring(i).StartsWith("<b>", StringComparison.Ordinal))
+                            else if (!isBold && line.AsSpan(i).StartsWith("<b>".AsSpan(), StringComparison.Ordinal))
                             {
                                 if (txt.Length > 0)
                                 {
@@ -335,7 +335,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 isBold = true;
                                 i += 2;
                             }
-                            else if (isItalic && line.Substring(i).StartsWith("</i>", StringComparison.Ordinal))
+                            else if (isItalic && line.AsSpan(i).StartsWith("</i>".AsSpan(), StringComparison.Ordinal))
                             {
                                 if (txt.Length > 0)
                                 {
@@ -361,7 +361,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 isItalic = false;
                                 i += 3;
                             }
-                            else if (isBold && line.Substring(i).StartsWith("</b>", StringComparison.Ordinal))
+                            else if (isBold && line.AsSpan(i).StartsWith("</b>".AsSpan(), StringComparison.Ordinal))
                             {
                                 if (txt.Length > 0)
                                 {
@@ -387,7 +387,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 isBold = false;
                                 i += 3;
                             }
-                            else if (line.Substring(i).StartsWith("<font color=", StringComparison.Ordinal) && line.Substring(i + 3).Contains('>'))
+                            else if (line.AsSpan(i).StartsWith("<font color=".AsSpan(), StringComparison.Ordinal) && line.AsSpan(i + 3).IndexOf('>') >= 0)
                             {
                                 var endOfFont = line.IndexOf('>', i);
                                 if (txt.Length > 0)
@@ -401,7 +401,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 fontNo++;
                                 i = endOfFont;
                             }
-                            else if (fontNo > 0 && line.Substring(i).StartsWith("</font>", StringComparison.Ordinal))
+                            else if (fontNo > 0 && line.AsSpan(i).StartsWith("</font>".AsSpan(), StringComparison.Ordinal))
                             {
                                 if (txt.Length > 0)
                                 {

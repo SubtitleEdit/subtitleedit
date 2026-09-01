@@ -107,49 +107,67 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
 
             var newText = input;
-            const string endChars = ".?!";
             for (var i = 6; i < newText.Length; i++)
             {
-                var s = newText.Substring(i);
-                if (s.Length > 2 && endChars.Contains(s[0]))
+                // The tail past i used to be materialized with newText.Substring(i) on every
+                // character, and then sliced again two or three times - quadratic in time and
+                // allocation for every line this runs on. Everything below the sentence-ending
+                // character is index arithmetic now; the tail is only built once a candidate
+                // prefix has actually matched.
+                var ch = newText[i];
+                if (newText.Length - i <= 2 || (ch != '.' && ch != '?' && ch != '!'))
                 {
-                    var pre = string.Empty;
+                    continue;
+                }
 
-                    s = s.Remove(0, 1);
-                    if (s.StartsWith(' '))
-                    {
-                        pre = s.StartsWith(" <i>", StringComparison.Ordinal) ? " <i>" : " ";
-                    }
-                    else if (s.StartsWith("<i>", StringComparison.Ordinal))
-                    {
-                        pre = "<i>";
-                    }
-                    else if (s.StartsWith("</i>", StringComparison.Ordinal))
-                    {
-                        pre = "</i>";
-                    }
+                // "s" in the old code started here (the sentence-ending character removed).
+                var tail = i + 1;
+                var pre = string.Empty;
+                if (newText[tail] == ' ')
+                {
+                    pre = StartsWithAt(newText, tail, " <i>") ? " <i>" : " ";
+                }
+                else if (StartsWithAt(newText, tail, "<i>"))
+                {
+                    pre = "<i>";
+                }
+                else if (StartsWithAt(newText, tail, "</i>"))
+                {
+                    pre = "</i>";
+                }
 
-                    if (pre.Length > 0)
-                    {
-                        s = s.Remove(0, pre.Length);
-                        if (s.Length > 1 && s[0] == ' ')
-                        {
-                            pre += " ";
-                            s = s.Remove(0, 1);
-                        }
+                if (pre.Length == 0)
+                {
+                    continue;
+                }
 
-                        if (HasHearImpairedTagsAtStartOrEnd(s))
-                        {
-                            s = RemoveStartEndTags(s);
-                            newText = newText.Substring(0, i + 1) + pre + " " + s;
-                            newText = newText.Replace("<i></i>", string.Empty);
-                            newText = newText.Replace("<i> </i>", " ").FixExtraSpaces();
-                        }
-                    }
+                var rest = tail + pre.Length;
+                if (newText.Length - rest > 1 && newText[rest] == ' ')
+                {
+                    pre += " ";
+                    rest++;
+                }
+
+                var s = newText.Substring(rest);
+                if (HasHearImpairedTagsAtStartOrEnd(s))
+                {
+                    s = RemoveStartEndTags(s);
+                    newText = newText.Substring(0, i + 1) + pre + " " + s;
+                    newText = newText.Replace("<i></i>", string.Empty);
+                    newText = newText.Replace("<i> </i>", " ").FixExtraSpaces();
                 }
             }
 
             return newText;
+        }
+
+        /// <summary>
+        /// Ordinal <c>text.Substring(index).StartsWith(value)</c> without the substring.
+        /// </summary>
+        private static bool StartsWithAt(string text, int index, string value)
+        {
+            return text.Length - index >= value.Length &&
+                   string.CompareOrdinal(text, index, value, 0, value.Length) == 0;
         }
 
         private static readonly string[] ExpectedStrings = { ". ", "! ", "? " };
