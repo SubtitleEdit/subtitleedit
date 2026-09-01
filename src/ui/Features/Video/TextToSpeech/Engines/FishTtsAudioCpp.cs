@@ -189,19 +189,40 @@ public class FishTtsAudioCpp : ITtsEngine
             Directory.CreateDirectory(folder);
         }
 
-        SeedVoicesFromSiblingEnginesIfEmpty(folder);
+        SeedVoicesFromQwen3TtsCppIfEmpty(folder);
+        NormalizeVoiceTranscriptsOnce(folder);
         return folder;
     }
 
     private static bool _voiceSeedAttempted;
+    private static bool _voicesNormalized;
 
     /// <summary>
-    /// One-time best-effort seed of reference WAVs from voices another engine already has, so
-    /// the voice combo is not empty on first run — this engine clones only and has no built-in
-    /// voices. S2 Pro's codec runs at 44.1 kHz, so the references are resampled up on seed
-    /// rather than letting the server upsample per request.
+    /// One-time per session: drop unusable ref-text sidecars (the shared pack ships Wikimedia
+    /// attribution blurbs, not transcripts) and backfill missing transcriptions from the
+    /// sibling OmniVoice pack. This engine passes the .txt sidecar as reference_text, so a
+    /// blurb there would condition the clone on text nobody spoke — same cleanup CosyVoice3
+    /// and MOSS-TTS run.
     /// </summary>
-    private static void SeedVoicesFromSiblingEnginesIfEmpty(string voicesFolder)
+    private static void NormalizeVoiceTranscriptsOnce(string voicesFolder)
+    {
+        if (_voicesNormalized)
+        {
+            return;
+        }
+        _voicesNormalized = true;
+
+        Qwen3TtsCrispAsr.NormalizeVoiceTranscripts(voicesFolder);
+    }
+
+    /// <summary>
+    /// One-time best-effort seed of reference WAVs (plus their transcript sidecars) from the
+    /// shared Qwen3 voice pack, so the voice combo is not empty on first run — this engine
+    /// clones only and has no built-in voices. Transcripts matter more here than anywhere:
+    /// S2 Pro refuses to clone without reference_text. The pack ships at 16 kHz; the S2 Pro
+    /// codec runs at 44.1 kHz, so resample on seed.
+    /// </summary>
+    private static void SeedVoicesFromQwen3TtsCppIfEmpty(string voicesFolder)
     {
         if (_voiceSeedAttempted)
         {
@@ -217,12 +238,7 @@ public class FishTtsAudioCpp : ITtsEngine
                 return;
             }
 
-            var sourceFolder = Path.Combine(Se.TextToSpeechFolder, "IndexTts25AudioCpp", "voices");
-            if (!Directory.Exists(sourceFolder) || !Directory.EnumerateFiles(sourceFolder, "*.wav").Any())
-            {
-                sourceFolder = Qwen3TtsCpp.GetSetVoicesFolder();
-            }
-
+            var sourceFolder = Qwen3TtsCpp.GetSetVoicesFolder();
             if (!Directory.Exists(sourceFolder) || !Directory.EnumerateFiles(sourceFolder, "*.wav").Any())
             {
                 return;
@@ -232,11 +248,20 @@ public class FishTtsAudioCpp : ITtsEngine
             {
                 var dest = Path.Combine(voicesFolder, Path.GetFileName(src));
                 VoiceSeedHelper.CopyOrResample(src, dest, 44100, "Fish Audio S2 Pro (audio.cpp)");
+
+                // Bring the transcript along; NormalizeVoiceTranscriptsOnce then drops the
+                // attribution blurbs and backfills real transcripts where a sibling has them.
+                var sidecar = Path.ChangeExtension(src, ".txt");
+                var sidecarDest = Path.ChangeExtension(dest, ".txt");
+                if (File.Exists(sidecar) && !File.Exists(sidecarDest) && File.Exists(dest))
+                {
+                    File.Copy(sidecar, sidecarDest);
+                }
             }
         }
         catch (Exception ex)
         {
-            Se.LogError(ex, "Fish Audio S2 Pro (audio.cpp): voice seeding from sibling engines failed");
+            Se.LogError(ex, "Fish Audio S2 Pro (audio.cpp): voice seeding from the shared voice pack failed");
         }
     }
 
@@ -361,14 +386,22 @@ public class FishTtsAudioCpp : ITtsEngine
         // honoured per request — no server restart when the user switches voice.
         var options = new Dictionary<string, object>();
 
-        // The transcript of the reference WAV, when the shared .txt sidecar convention has
-        // one. Optional — S2 Pro clones from the audio alone — but a transcript improves clone
-        // fidelity, so pass it when it is there.
+        // The transcript of the reference WAV, from the shared .txt sidecar convention.
+        // NOT optional, whatever upstream's docs say: audio.cpp v0.7.1 answers a voice_ref
+        // without reference_text with HTTP 500 "Fish Audio prepare with inline reference
+        // audio requires reference_text option" (verified against the real server), and an
+        // empty string is refused the same way. Fail here with an actionable message instead
+        // of surfacing the server's error.
         var referenceText = ChatterboxTtsCpp.TryReadReferenceTranscript(indexVoice.FilePath);
-        if (!string.IsNullOrEmpty(referenceText))
+        if (string.IsNullOrWhiteSpace(referenceText))
         {
-            options["reference_text"] = referenceText;
+            throw new InvalidOperationException(
+                "Fish Audio S2 Pro requires the transcript of the reference recording. "
+                + $"Save the spoken text as \"{Path.ChangeExtension(indexVoice.FilePath, ".txt")}\", "
+                + "or re-import the voice and enter the transcript when asked.");
         }
+
+        options["reference_text"] = referenceText;
 
         var payload = new Dictionary<string, object>
         {
@@ -757,7 +790,14 @@ public class FishTtsAudioCpp : ITtsEngine
         return candidate;
     }
 
-    public bool ImportVoice(string fileName)
+    public bool ImportVoice(string fileName) => ImportVoice(fileName, string.Empty);
+
+    /// <summary>
+    /// Import with the reference transcript — the overload <see cref="VoiceCloneImporter"/>
+    /// routes to. S2 Pro cannot clone without the transcript, so getting it written as the
+    /// .txt sidecar at import time is what makes the voice usable at all.
+    /// </summary>
+    public bool ImportVoice(string fileName, string transcript)
     {
         if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
         {
@@ -786,6 +826,35 @@ public class FishTtsAudioCpp : ITtsEngine
             return false;
         }
 
-        return File.Exists(destinationFileName);
+        if (!File.Exists(destinationFileName))
+        {
+            return false;
+        }
+
+        // Caller-supplied transcript wins; otherwise fall back to a sibling .txt next to the
+        // source WAV. Either way the sidecar lands next to the imported voice, where Speak
+        // reads it back as reference_text.
+        try
+        {
+            var destSidecar = Path.ChangeExtension(destinationFileName, ".txt");
+            if (!string.IsNullOrWhiteSpace(transcript))
+            {
+                File.WriteAllText(destSidecar, transcript.Trim());
+            }
+            else
+            {
+                var sourceSidecar = Path.ChangeExtension(fileName, ".txt");
+                if (File.Exists(sourceSidecar) && !File.Exists(destSidecar))
+                {
+                    File.Copy(sourceSidecar, destSidecar);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Se.LogError(ex, "Fish Audio S2 Pro (audio.cpp) voice import: failed to write .txt sidecar");
+        }
+
+        return true;
     }
 }

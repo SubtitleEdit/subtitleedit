@@ -191,20 +191,39 @@ public class HiggsTtsAudioCpp : ITtsEngine
             Directory.CreateDirectory(folder);
         }
 
-        SeedVoicesFromSiblingEnginesIfEmpty(folder);
+        SeedVoicesFromQwen3TtsCppIfEmpty(folder);
+        NormalizeVoiceTranscriptsOnce(folder);
         return folder;
     }
 
     private static bool _voiceSeedAttempted;
+    private static bool _voicesNormalized;
 
     /// <summary>
-    /// One-time best-effort seed of reference WAVs from voices another engine already has, so
-    /// the voice combo is not empty on first run — this engine clones only and has no built-in
-    /// voices. IndexTTS 2.5 (audio.cpp) is preferred as the source since its references are
-    /// already 24 kHz mono, which is also what Higgs clones from; the shared Qwen3 voice pack
-    /// (16 kHz) is the fallback and is resampled on seed.
+    /// One-time per session: drop unusable ref-text sidecars (the shared pack ships Wikimedia
+    /// attribution blurbs, not transcripts) and backfill missing transcriptions from the
+    /// sibling OmniVoice pack. This engine passes the .txt sidecar as reference_text, so a
+    /// blurb there would condition the clone on text nobody spoke — same cleanup CosyVoice3
+    /// and MOSS-TTS run.
     /// </summary>
-    private static void SeedVoicesFromSiblingEnginesIfEmpty(string voicesFolder)
+    private static void NormalizeVoiceTranscriptsOnce(string voicesFolder)
+    {
+        if (_voicesNormalized)
+        {
+            return;
+        }
+        _voicesNormalized = true;
+
+        Qwen3TtsCrispAsr.NormalizeVoiceTranscripts(voicesFolder);
+    }
+
+    /// <summary>
+    /// One-time best-effort seed of reference WAVs (plus their transcript sidecars) from the
+    /// shared Qwen3 voice pack, so the voice combo is not empty on first run — this engine
+    /// clones only and has no built-in voices. The pack ships at 16 kHz; Higgs clones from
+    /// 24 kHz, so resample on seed rather than letting the server upsample per request.
+    /// </summary>
+    private static void SeedVoicesFromQwen3TtsCppIfEmpty(string voicesFolder)
     {
         if (_voiceSeedAttempted)
         {
@@ -220,12 +239,7 @@ public class HiggsTtsAudioCpp : ITtsEngine
                 return;
             }
 
-            var sourceFolder = Path.Combine(Se.TextToSpeechFolder, "IndexTts25AudioCpp", "voices");
-            if (!Directory.Exists(sourceFolder) || !Directory.EnumerateFiles(sourceFolder, "*.wav").Any())
-            {
-                sourceFolder = Qwen3TtsCpp.GetSetVoicesFolder();
-            }
-
+            var sourceFolder = Qwen3TtsCpp.GetSetVoicesFolder();
             if (!Directory.Exists(sourceFolder) || !Directory.EnumerateFiles(sourceFolder, "*.wav").Any())
             {
                 return;
@@ -235,11 +249,20 @@ public class HiggsTtsAudioCpp : ITtsEngine
             {
                 var dest = Path.Combine(voicesFolder, Path.GetFileName(src));
                 VoiceSeedHelper.CopyOrResample(src, dest, 24000, "Higgs Audio v3 (audio.cpp)");
+
+                // Bring the transcript along; NormalizeVoiceTranscriptsOnce then drops the
+                // attribution blurbs and backfills real transcripts where a sibling has them.
+                var sidecar = Path.ChangeExtension(src, ".txt");
+                var sidecarDest = Path.ChangeExtension(dest, ".txt");
+                if (File.Exists(sidecar) && !File.Exists(sidecarDest) && File.Exists(dest))
+                {
+                    File.Copy(sidecar, sidecarDest);
+                }
             }
         }
         catch (Exception ex)
         {
-            Se.LogError(ex, "Higgs Audio v3 (audio.cpp): voice seeding from sibling engines failed");
+            Se.LogError(ex, "Higgs Audio v3 (audio.cpp): voice seeding from the shared voice pack failed");
         }
     }
 
@@ -760,7 +783,14 @@ public class HiggsTtsAudioCpp : ITtsEngine
         return candidate;
     }
 
-    public bool ImportVoice(string fileName)
+    public bool ImportVoice(string fileName) => ImportVoice(fileName, string.Empty);
+
+    /// <summary>
+    /// Import with the reference transcript — the overload <see cref="VoiceCloneImporter"/>
+    /// routes to. Higgs clones from the audio alone, but a transcript improves clone fidelity,
+    /// so it is kept as the .txt sidecar Speak passes as reference_text.
+    /// </summary>
+    public bool ImportVoice(string fileName, string transcript)
     {
         if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
         {
@@ -789,6 +819,34 @@ public class HiggsTtsAudioCpp : ITtsEngine
             return false;
         }
 
-        return File.Exists(destinationFileName);
+        if (!File.Exists(destinationFileName))
+        {
+            return false;
+        }
+
+        // Caller-supplied transcript wins; otherwise fall back to a sibling .txt next to the
+        // source WAV.
+        try
+        {
+            var destSidecar = Path.ChangeExtension(destinationFileName, ".txt");
+            if (!string.IsNullOrWhiteSpace(transcript))
+            {
+                File.WriteAllText(destSidecar, transcript.Trim());
+            }
+            else
+            {
+                var sourceSidecar = Path.ChangeExtension(fileName, ".txt");
+                if (File.Exists(sourceSidecar) && !File.Exists(destSidecar))
+                {
+                    File.Copy(sourceSidecar, destSidecar);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Se.LogError(ex, "Higgs Audio v3 (audio.cpp) voice import: failed to write .txt sidecar");
+        }
+
+        return true;
     }
 }
