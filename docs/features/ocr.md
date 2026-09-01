@@ -37,6 +37,11 @@ Binary image comparison engine.
 - Fast and accurate for known fonts
 - Supports database editing, character history, max error percentage, and pixels-are-space tuning
 
+### Apple Vision
+Built-in OCR on macOS using Apple's Vision framework.
+- macOS only; nothing to download or configure
+- Good accuracy on clean subtitle images
+
 ### Google Lens Sharp / Google Lens Standalone
 Cloud-based OCR using Google Lens (free, but capped).
 - Requires internet connection.
