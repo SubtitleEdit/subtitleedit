@@ -8476,19 +8476,30 @@ public partial class MainViewModel :
     /// while the activation is delivered, whereas the OS handing the foreground over because
     /// another application's window went away does not. Where the buttons cannot be sampled the
     /// cursor resting over the window has to do - knowing that the closing application may have
-    /// merely exposed the tool window under the cursor. The Avalonia press event only covers the
-    /// client area and arrives after the activation, so the decision still waits a beat for it.
+    /// merely exposed the tool window under the cursor.
+    ///
+    /// Only the buttons can be sampled at activation time; every other signal arrives after it,
+    /// so the whole verdict is deferred a beat and then reached in one place. That beat is also
+    /// what keeps churn out of the decision: the evidence is read only while this window is still
+    /// the one in front, so a bounce leaves the claim exactly as it found it.
     ///
     /// Alt+Tab is keyboard-aimed - no button down, cursor anywhere - so the pointer rules read
     /// it as an OS handover and "corrected" it: the tool window flickered into the foreground
     /// and lost it a beat later, until a real click re-claimed it (#14354). The tool windows are
-    /// separate entries in the task switcher, so this is a gesture users actually make. On
-    /// Windows the switcher announces itself (TaskSwitchDetector's WinEvent hook), and an
-    /// activation while it is open or right after it commits is treated as aimed.
+    /// separate entries in the task switcher, so this is a gesture users actually make.
+    ///
+    /// What settles it is the foreground history rather than the gesture: the OS only has to pick
+    /// a new foreground window when the old one went away, so a previous foreground window that is
+    /// still alive and on screen means the user moved on deliberately, and one that was destroyed,
+    /// hidden, or minimized is the handover to correct. That covers every way of aiming at the
+    /// window - Alt+Tab, the taskbar button, Alt+Esc, Win+Tab - without any of them having to
+    /// announce itself, and it is why the first cut's reliance on the switcher's own
+    /// EVENT_SYSTEM_SWITCHSTART was not enough: Windows 11's XAML switcher was not seen raising it
+    /// (beta 31 feedback on #14354). See ForegroundWindowTracker.
     /// </summary>
     private void WatchUndockedForegroundSteal(Window undockedWindow)
     {
-        TaskSwitchDetector.EnsureStarted();
+        ForegroundWindowTracker.EnsureStarted();
 
         undockedWindow.AddHandler(
             InputElement.PointerPressedEvent,
@@ -8503,38 +8514,45 @@ public partial class MainViewModel :
                 return; // the user was already working in a tool window - leave it in front
             }
 
-            if (IsUndockedActivationAimedAtToolWindow(
-                    CursorPositionHelper.IsAnyPointerButtonDown(),
-                    undockedWindow.IsPointerOver,
-                    TaskSwitchDetector.TaskSwitchJustCommitted()))
-            {
-                _foregroundBelongsToMainWindow = false; // the user moved to the tool window
-                return;
-            }
-
+            // Sampled now, decided a beat later. The physical buttons are only down while the
+            // activation is being delivered, but every other piece of evidence arrives after it:
+            // Avalonia's press event (which is what a touch shows up as), and both WinEvents -
+            // the switcher's and the foreground history's callback are queued behind the very
+            // activation they describe.
+            var pointerButtonDown = CursorPositionHelper.IsAnyPointerButtonDown();
+            var pointerOverToolWindow = undockedWindow.IsPointerOver;
             _undockedWindowPointerPressed = false;
 
             DispatcherTimer.RunOnce(() =>
             {
-                if (_undockedWindowPointerPressed || TaskSwitchDetector.TaskSwitchJustCommitted())
+                if (!_foregroundBelongsToMainWindow || Window is not { } mainWindow)
                 {
-                    // A press the button sampling missed (e.g. touch), or a task-switch commit
-                    // whose WinEvent was still queued behind the activation - the user aimed here.
-                    _foregroundBelongsToMainWindow = false;
                     return;
                 }
 
-                // Re-checked because the beat is long enough for the state to move: the user may
-                // have clicked into the main window, or the foreground may have bounced
-                // to the other tool window - whose own Activated handler owns the decision then.
-                if (!_foregroundBelongsToMainWindow ||
-                    Window is not { } mainWindow ||
-                    !ShouldHandForegroundBackToMainWindow(
+                // Nothing is read - and above all nothing is decided - unless this window really
+                // is the one left in front. The beat is long enough for the state to move: the
+                // user may have clicked into the main window, the foreground may have bounced to
+                // the other tool window (whose own Activated handler owns the decision then), or
+                // this may be topmost churn while another application takes over. The claim has
+                // to survive all of those untouched, or a single churn activation disarms the
+                // correction for the whole round (#14168 beta 26).
+                if (!ShouldHandForegroundBackToMainWindow(
                         undockedWindow.IsActive,
                         mainWindow.IsActive,
                         mainWindow.WindowState == WindowState.Minimized,
                         WindowService.IsModalDialogOpen))
                 {
+                    return;
+                }
+
+                if (IsUndockedActivationAimedAtToolWindow(
+                        _undockedWindowPointerPressed ? true : pointerButtonDown,
+                        pointerOverToolWindow,
+                        ForegroundWindowTracker.TaskSwitchJustCommitted(),
+                        ForegroundWindowTracker.PreviousForegroundWindowStillUsable()))
+                {
+                    _foregroundBelongsToMainWindow = false; // the user moved to the tool window
                     return;
                 }
 
@@ -8551,13 +8569,31 @@ public partial class MainViewModel :
     internal static bool IsUndockedActivationAimedAtToolWindow(
         bool? pointerButtonDown,
         bool pointerOverToolWindow,
-        bool taskSwitchJustCommitted)
+        bool taskSwitchJustCommitted,
+        bool? previousForegroundWindowStillUsable)
     {
         // Picking the tool window in the task switcher (Alt+Tab) is aiming by keyboard - the
         // pointer rules below would misread it as an OS handover (#14354).
         if (taskSwitchJustCommitted)
         {
             return true;
+        }
+
+        // A button physically down while the activation is delivered is a click on this window,
+        // and the strongest evidence there is.
+        if (pointerButtonDown == true)
+        {
+            return true;
+        }
+
+        // What became of the window that held the foreground before this one. The OS only has to
+        // hand the foreground on when the old holder went away, so a previous window that is still
+        // there means the user aimed somewhere - however they aimed - and one that is gone, hidden,
+        // or minimized is the handover this watcher corrects. Null is "not known" (off Windows, no
+        // hook, or the history has not caught up yet), which falls through to the pointer rules.
+        if (previousForegroundWindowStillUsable.HasValue)
+        {
+            return previousForegroundWindowStillUsable.Value;
         }
 
         // The button state is authoritative when it can be sampled: the cursor merely resting
