@@ -10,7 +10,7 @@ Proofread the subtitle text with a local (or remote) large language model - typo
 
 ## Engines
 
-- **llama.cpp** — a managed local server. Pick a model from the curated list (Qwen 3.5, Gemma 3, Llama 3.1, EuroLLM, Phi-4 mini); Subtitle Edit downloads the engine and model on first use. A green dot marks models that are already downloaded. Custom `*.gguf` files placed in the llama.cpp models folder also appear.
+- **llama.cpp** — a managed local server. Pick a model from the curated list (Qwen 3.5, Qwen 3.6, Gemma 3, Gemma 4, Llama 3.1, EuroLLM, Phi-4 mini, Granite 4.1); Subtitle Edit downloads the engine and model on first use. A green dot marks models that are already downloaded. Custom `*.gguf` files placed in the llama.cpp models folder also appear.
 - **Ollama** — uses a running [Ollama](https://ollama.com) instance; type a model name or pick one from the server.
 - **OpenAI-compatible** — any endpoint that speaks the OpenAI chat API: LM Studio, KoboldCpp, vLLM, a llama.cpp server on another machine, or cloud APIs (OpenAI, Groq, OpenRouter, DeepSeek, Mistral, Gemini). Enter the URL, model name, and an API key if the service needs one.
 

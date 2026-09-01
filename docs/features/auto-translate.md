@@ -29,7 +29,7 @@ Automatically translate subtitles using various translation engines and AI servi
 - **LM Studio (local LLM)** — Local LLM translation
 - **Ollama (local LLM)** — Local LLM-based translation
 - **Ollama advanced (local LLM)** — Ollama translated in batches with surrounding context, a synopsis and a glossary; see [Advanced local engines](auto-translate-advanced.md)
-- **llama.cpp (local LLM)** — Server-managed local LLM translation; Subtitle Edit downloads llama.cpp and a curated model (TranslateGemma, Qwen or Aya Expanse) and runs a local `llama-server` for you. See [Using your own model](#llamacpp-using-your-own-model) to run a model we don't ship, such as TranslateGemma 27B
+- **llama.cpp (local LLM)** — Server-managed local LLM translation; Subtitle Edit downloads llama.cpp and a curated model (TranslateGemma, Gemma 4, Qwen, Aya Expanse, MiLMMT or Hy-MT2) and runs a local `llama-server` for you. See [Using your own model](#llamacpp-using-your-own-model) to run a model we don't ship, such as TranslateGemma 27B
 - **llama.cpp advanced (local LLM)** — The managed llama.cpp server translated in batches with surrounding context, a synopsis and a glossary; see [Advanced local engines](auto-translate-advanced.md)
 - **OpenAI Compatible API** — Generic engine for any service exposing an OpenAI-compatible `chat/completions` endpoint (vLLM, KoboldCpp, a llama.cpp server on another machine, cloud providers, ...); configure URL, model, prompt, and an optional API key
 - **Anthropic Claude** — AI translation (requires API key)
@@ -50,7 +50,7 @@ Automatically translate subtitles using various translation engines and AI servi
 ## llama.cpp: using your own model
 
 The models offered in the download list are deliberately kept small enough to run on an ordinary
-machine (around 8 GB or less). You are not limited to them — larger models such as TranslateGemma
+machine (mostly under 8 GB, the largest around 12 GB). You are not limited to them — larger models such as TranslateGemma
 27B work fine if your hardware can handle them.
 
 Two ways to use one:
@@ -70,7 +70,7 @@ choice and the jump to 27B buys less than the size difference suggests.
 
 ## Prompts: chat models and completion models
 
-Every local-LLM engine (LM Studio, Ollama, KoboldCpp, llama.cpp, OpenAI Compatible API) has a
+Every local-LLM engine (LM Studio, Ollama, llama.cpp, OpenAI Compatible API) has a
 **prompt** you can edit. `{0}` is replaced with the source language and `{1}` with the target
 language, both as English names.
 
@@ -91,8 +91,8 @@ Translate this from {0} to {1}:
 
 The trailing `{1}:` cue is what makes such a model translate at all — without it, it tends to echo
 the source. Set the model's temperature to 0 where the engine offers it. Curated MiLMMT models in
-the llama.cpp engine's download list carry this prompt already; for LM Studio, KoboldCpp, Ollama or
-your own OpenAI-compatible server, paste it into the engine's prompt field.
+the llama.cpp engine's download list carry this prompt already; for LM Studio, Ollama or
+your own OpenAI-compatible server (vLLM, KoboldCpp, ...), paste it into the engine's prompt field.
 
 Headless runs take the same prompt via `seconv --translate-prompt:<text|file>` — see
 [Auto-translate (command line)](../reference/command-line.md#custom-prompt).

@@ -15,12 +15,13 @@ Subtitle Edit can automatically transcribe audio to text using Whisper-based and
 | Purfview Faster Whisper XXL | Windows, Linux | Fast local engine, often used with NVIDIA CUDA |
 | Whisper CTranslate2 | Windows, Linux (x64), macOS (Apple Silicon) | CPU / NVIDIA CUDA depending on installation; CUDA requires [CUDA 12.x](https://developer.nvidia.com/cuda-12-0-0-download-archive) |
 | Whisper Const-me | Windows | DirectX-based engine |
+| WhisperX | Windows (x64), Linux (x64), macOS (Apple Silicon) | Faster-Whisper with wav2vec2 word-level alignment, packaged as a standalone build (no Python install needed) |
 | Whisper OpenAI | All | Python-based OpenAI Whisper workflow |
 | OpenAI Compatible Server | All | Connect to any OpenAI-compatible speech-to-text endpoint |
 | OpenRouter | All | Online. One API key routes to Whisper, gpt-4o-transcribe, Groq and Google Chirp |
 | Alibaba Qwen3-ASR | All | Online Qwen3-ASR via Alibaba Model Studio (DashScope) |
-| Qwen3 ASR CPP | Windows, Linux | Local Qwen3 ASR engine with downloadable GGUF models |
-| Crisp ASR | Windows, Linux, macOS | Single engine with selectable backends: Parakeet, Canary, Cohere, Fire Red, Fun-ASR Nano, Fun-ASR MLT Nano, GigaAM, GLM, Granite, Qwen3, Mega, MOSS Diarize, Omni, Kyutai, SenseVoice, ARK, Voxtral |
+| Qwen3 ASR CPP | Windows, Linux, macOS | Local Qwen3 ASR engine with downloadable GGUF models |
+| Crisp ASR | Windows, Linux, macOS | Single engine with selectable backends: Parakeet, Canary, Cohere, Fire Red, Fun-ASR Nano, GigaAM, GLM, Granite, Qwen3, Mega, MOSS Diarize, Omni, Kyutai, SenseVoice, ARK, Voxtral |
 
 Engines and models are downloaded automatically on first use.
 
@@ -28,7 +29,7 @@ Engines and models are downloaded automatically on first use.
 
 - **Whisper CPP** is shown as a single entry; the CPU / cuBLAS / Vulkan backends are selected from a secondary dropdown when Whisper CPP is selected.
 - **Qwen3 ASR CPP** includes 0.6B and 1.7B model options, plus a forced-aligner model used for timing workflows.
-- **Crisp ASR** is exposed as one engine that wraps multiple backends (Parakeet, Canary, Cohere, Fire Red, Fun-ASR Nano, Fun-ASR MLT Nano, GigaAM, GLM, Granite, Qwen3, Mega, MOSS Diarize, Omni, Kyutai, SenseVoice, ARK, Voxtral). Pick the backend from the Crisp ASR backend dropdown - see [Crisp ASR backends](#crisp-asr-backends) for what each one is good at.
+- **Crisp ASR** is exposed as one engine that wraps multiple backends (Parakeet, Canary, Cohere, Fire Red, Fun-ASR Nano, GigaAM, GLM, Granite, Qwen3, Mega, MOSS Diarize, Omni, Kyutai, SenseVoice, ARK, Voxtral). Pick the backend from the Crisp ASR backend dropdown - see [Crisp ASR backends](#crisp-asr-backends) for what each one is good at.
 - A **Forced aligner** option is shown for Crisp ASR backends and exposes the built-in aligner, Canary CTC, Qwen3, and the wav2vec2 zoo (12 language-specific CTC aligners that run on top of any Crisp ASR backend).
 - Several newer engines support automatic language selection.
 - Each engine can have separate advanced command-line parameters.
@@ -54,7 +55,6 @@ The languages column counts what the backend dropdown offers (an *auto* entry is
 | **GLM** | 17 | Needs aligner | 1.3 - 4.5 GB | GLM-ASR Nano, Chinese-first with a wide second tier of languages |
 | **SenseVoice** | 5 (zh, yue, en, ja, ko) | Needs aligner | 136 - 469 MB | Tiny and quick for CJK audio - useful on machines where the larger backends are too slow |
 | **Fun-ASR Nano** | 5 (en, zh, yue, ja, ko) | Needs aligner | 0.90 - 1.98 GB | CJK-focused Fun-ASR |
-| **Fun-ASR MLT Nano** | 31 | Needs aligner | 0.90 - 1.98 GB | The multilingual sibling of Fun-ASR Nano at the same size |
 | **Mega** | 2 (en, zh) | Needs aligner | 1.3 - 4.4 GB | Mega-ASR 1.7B. VAD is on by default (see the VAD section below) |
 | **Granite** | 6 (en, fr, de, es, pt, ja) | Needs aligner | 1.54 - 5.58 GB | IBM Granite Speech 4.1 2B. The `plus` models are the newer revision; `mini` and `f16enc` trade encoder precision for size |
 | **ARK** | 19 (European + zh, ja, ko) | Needs aligner | 3.52 - 7.51 GB | A 3B model - the heaviest backend here, so only worth it when the smaller ones fall short |
