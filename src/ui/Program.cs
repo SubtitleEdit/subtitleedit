@@ -33,6 +33,11 @@ namespace Nikse.SubtitleEdit
         public static string? PendingVideoToOpen { get; set; }
         public static bool FileOpenedViaActivation { get; set; }
 
+        // Distinguishes a genuine double-click on the Dock icon from the single-click
+        // activation AppKit sends on every Dock click - see the Reopen handling below.
+        private static long _lastReopenActivationTicks = long.MinValue / 2;
+        private const long DoubleClickIntervalMs = 500;
+
         [STAThread]
         public static void Main(string[] args)
         {
@@ -421,14 +426,21 @@ namespace Nikse.SubtitleEdit
 
                 activatable.Activated += (sender, e) =>
                 {
-                    // Double-clicking the Dock icon while SE is already running delivers this
-                    // instead of a File activation. Every other platform's "open" gesture
-                    // (a second Windows process, a fresh Linux launch) hands the user a new,
-                    // empty window - match that here instead of just refocusing whatever
-                    // window already exists.
+                    // Clicking the Dock icon while SE is already running delivers a Reopen
+                    // activation on every click, not just a double-click - AppKit uses the same
+                    // callback for "bring the running app to the front" as it does for "the user
+                    // wants a new window" (e.g. Finder, TextEdit). A single click must keep doing
+                    // the former (the OS already brings existing windows forward on its own); only
+                    // a second click landing within the standard double-click window counts as the
+                    // latter, matching every other platform's "open" gesture (a second Windows
+                    // process, a fresh Linux launch) handing the user a new, empty window.
                     if (e is ActivatedEventArgs reopenArgs && reopenArgs.Kind == ActivationKind.Reopen)
                     {
-                        if (lifetime.MainWindow != null)
+                        var now = Environment.TickCount64;
+                        var isDoubleClick = now - _lastReopenActivationTicks <= DoubleClickIntervalMs;
+                        _lastReopenActivationTicks = now;
+
+                        if (isDoubleClick && lifetime.MainWindow != null)
                         {
                             Dispatcher.UIThread.Post(Nikse.SubtitleEdit.Features.Main.Layout.MainWindowFactory.OpenNewWindow);
                         }
