@@ -1,10 +1,13 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 using System.Collections;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
@@ -15,6 +18,16 @@ namespace Nikse.SubtitleEdit.Features.Sync.PointSyncViaOther;
 
 public class PointSyncViaOtherWindow : Window
 {
+    /// <summary>
+    /// A line starting after at least this much silence is a likely reliable sync point -
+    /// two independently made subtitle files tend to truly align there (issue #10175).
+    /// </summary>
+    private const double SyncCandidateGapMs = 3000;
+
+    // A translucent tint over the row background, so it reads in both light and dark theme
+    // and the selection highlight still shows through.
+    private static readonly IBrush SyncCandidateBrush = new ImmutableSolidColorBrush(Color.FromRgb(76, 175, 80), 0.3);
+
     public PointSyncViaOtherWindow(PointSyncViaOtherViewModel vm)
     {
         vm.Window = this;
@@ -43,6 +56,7 @@ public class PointSyncViaOtherWindow : Window
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -59,7 +73,8 @@ public class PointSyncViaOtherWindow : Window
         grid.Add(subtitleViewView, 0);
         grid.Add(controlView, 0, 1);
         grid.Add(subtitleOtherView, 0, 2);
-        grid.Add(panelButtons, 1, 0, 1, 3);
+        grid.Add(MakeGapLegend(), 1, 0, 1, 3);
+        grid.Add(panelButtons, 2, 0, 1, 3);
 
         Content = grid;
 
@@ -70,6 +85,76 @@ public class PointSyncViaOtherWindow : Window
         };
         Closing += (_, _) => UiUtil.SaveWindowPosition(this);
         KeyDown += (_, e) => vm.OnKeyDown(e);
+    }
+
+    /// <summary>
+    /// Explains the green tint in the "Gap" columns - shown once, under the grids, instead of a
+    /// tooltip on every highlighted cell.
+    /// </summary>
+    private static Control MakeGapLegend()
+    {
+        var swatch = new Border
+        {
+            Width = 12,
+            Height = 12,
+            CornerRadius = new CornerRadius(2),
+            Background = SyncCandidateBrush,
+            BorderBrush = UiUtil.GetBorderBrush(),
+            BorderThickness = new Thickness(1),
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+
+        var text = new TextBlock
+        {
+            Text = string.Format(Se.Language.Sync.SyncPointCandidateInfo, (int)(SyncCandidateGapMs / 1000.0)),
+            Opacity = 0.75,
+            VerticalAlignment = VerticalAlignment.Center,
+            TextWrapping = TextWrapping.Wrap,
+        };
+
+        return new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 6,
+            Margin = new Thickness(0, 8, 0, 0),
+            Children = { swatch, text },
+        };
+    }
+
+    /// <summary>
+    /// The gap before a line's start (unlike the main grid's gap-to-next), tinted when big
+    /// enough to mark the line as a sync point candidate (issue #10175).
+    /// </summary>
+    private static SeTableViewColumn MakeGapColumn()
+    {
+        var gapConverter = new DoubleToDisplayShortConverter();
+        var candidateBrushConverter = new FuncValueConverter<double, IBrush>(gapMs =>
+            gapMs >= SyncCandidateGapMs ? SyncCandidateBrush : Brushes.Transparent);
+
+        return new SeTableViewColumn
+        {
+            Header = Se.Language.General.Gap,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Width = new GridLength(90),
+            CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((_, _) =>
+            {
+                var border = new Border
+                {
+                    Padding = new Thickness(4, 2),
+                    [!Border.BackgroundProperty] = new Binding(nameof(SubtitleLineViewModel.PreviousGap)) { Converter = candidateBrushConverter, Mode = BindingMode.OneWay },
+                };
+
+                var textBlock = new TextBlock
+                {
+                    VerticalAlignment = VerticalAlignment.Center,
+                    [!TextBlock.TextProperty] = new Binding(nameof(SubtitleLineViewModel.PreviousGap)) { Converter = gapConverter, Mode = BindingMode.OneWay },
+                };
+
+                border.Child = textBlock;
+                return border;
+            }),
+        };
     }
 
     private static Control MakeControlView(PointSyncViaOtherViewModel vm)
@@ -174,9 +259,17 @@ public class PointSyncViaOtherWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        var labelFileName = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.FileName));
-        labelFileName.VerticalAlignment = VerticalAlignment.Center;
-        var buttonFindText = UiUtil.MakeButton(Se.Language.Sync.FindText, vm.FindTextLeftCommand);
+        // TextBlock in a star column so a long file name shrinks with an ellipsis
+        // instead of pushing under the "Find text" button.
+        var labelFileName = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            Margin = new Thickness(5, 0, 5, 0),
+        };
+        labelFileName.Bind(TextBlock.TextProperty, new Binding(nameof(vm.FileName)) { Source = vm });
+        var buttonFindText = UiUtil.MakeButton(Se.Language.Sync.FindText, vm.FindTextLeftCommand)
+            .WithIconLeft(IconNames.Find);
         buttonFindText.HorizontalAlignment = HorizontalAlignment.Right;
         var panelHeader = new Grid
         {
@@ -217,6 +310,7 @@ public class PointSyncViaOtherWindow : Window
                 Binding = new Binding(nameof(SubtitleLineViewModel.StartTime)) { Converter = fullTimeConverter },
                 Width = new GridLength(115),
             },
+            MakeGapColumn(),
             new SeTableViewColumn
             {
                 Header = Se.Language.General.Text,
@@ -273,7 +367,8 @@ public class PointSyncViaOtherWindow : Window
         };
         panelOtherBrowse.Add(buttonBrowseOther, 0, 0);
         panelOtherBrowse.Add(labelOtherFileName, 0, 1);
-        var buttonFindTextOther = UiUtil.MakeButton(Se.Language.Sync.FindText, vm.FindTextOtherCommand);
+        var buttonFindTextOther = UiUtil.MakeButton(Se.Language.Sync.FindText, vm.FindTextOtherCommand)
+            .WithIconLeft(IconNames.Find);
         buttonFindTextOther.HorizontalAlignment = HorizontalAlignment.Right;
         var panelOtherHeader = new Grid
         {
@@ -310,6 +405,7 @@ public class PointSyncViaOtherWindow : Window
                 Binding = new Binding(nameof(SubtitleLineViewModel.StartTime)) { Converter = fullTimeConverter },
                 Width = new GridLength(115),
             },
+            MakeGapColumn(),
             new SeTableViewColumn
             {
                 Header = Se.Language.General.Text,

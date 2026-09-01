@@ -24,7 +24,8 @@ public class SyncPoint
         RightIndex = rightIndex;
         LeftStartTime = left.StartTime;
         RightStartTime = right.StartTime;
-        Text = new TimeCode(left.StartTime).ToShortDisplayString() + " -> "  +
+        Text = "#" + left.Number + ": " +
+               new TimeCode(left.StartTime).ToShortDisplayString() + " → " +
                new TimeCode(right.StartTime).ToShortDisplayString();
     }
 }
