@@ -2937,7 +2937,6 @@
       "showFullscreenButton": "전체 화면 버튼 표시",
       "fullscreenHideControls": "전체 화면에서 비디오 컨트롤 숨기기",
       "autoOpenVideoFile": "자막 파일을 열 때, 비디오 파일도 자동으로 열기",
-      "mpvAudioKeepOpen": "일시 정지 중에도 오디오 장치를 열어 두기 (mpv)",
       "downloadMpv": "mpv 다운로드",
       "downloadVlc": "VLC 다운로드",
       "allowSingleLetterShortcutsInTextbox": "입력칸에 단일 문자 단축키 허용",

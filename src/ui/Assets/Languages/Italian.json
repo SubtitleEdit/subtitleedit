@@ -2930,7 +2930,6 @@
       "showFullscreenButton": "Visualizza pulsante 'Schermo intero'",
       "fullscreenHideControls": "Nascondi controlli video a schermo intero",
       "autoOpenVideoFile": "All'apertura dei sottotitoli apri automaticamente file video",
-      "mpvAudioKeepOpen": "Mantieni aperto il dispositivo audio durante la pausa (mpv)",
       "downloadMpv": "Download mpv",
       "downloadVlc": "Download VLC",
       "allowSingleLetterShortcutsInTextbox": "Consenti nella casella di testo scorciatoie con una sola lettera",

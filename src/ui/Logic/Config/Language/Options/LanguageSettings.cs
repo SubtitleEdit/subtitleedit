@@ -202,7 +202,6 @@ public class LanguageSettings
     public string ShowFullscreenButton { get; set; }
     public string FullscreenHideControls { get; set; }
     public string AutoOpenVideoFile { get; set; }
-    public string MpvAudioKeepOpen { get; set; }
     public string DownloadMpv { get; set; }
     public string DownloadVlc { get; set; }
     public string AllowSingleLetterShortcutsInTextbox { get; set; }
@@ -537,7 +536,6 @@ public class LanguageSettings
         ShowFullscreenButton = "Show full-screen button";
         FullscreenHideControls = "Hide video controls in full-screen";
         AutoOpenVideoFile = "Auto-open video file when opening subtitle";
-        MpvAudioKeepOpen = "Keep the audio device open while paused (mpv)";
         DownloadMpv = "Download mpv";
         DownloadVlc = "Download VLC";
         AllowSingleLetterShortcutsInTextbox = "Allow single-letter shortcuts in text box";

@@ -76,13 +76,17 @@ public class SeVideo
     public double MpvAudioBufferSeconds { get; set; }
 
     /// <summary>
-    /// mpv's "audio-keep-open" option. mpv's own default is "no", which closes the audio device
-    /// every time playback pauses or stops. On a receiver reached over HDMI that shows up as a
-    /// dropped link on every pause and a second or two of missing audio on resume, while the
-    /// device is reopened and the link re-handshakes (#14330). Held open by default; turn it off
-    /// if you need mpv to release the audio device the moment it pauses.
+    /// mpv's "audio-stream-silence" option, applied when a player core is created. mpv normally
+    /// stops the audio device when playback pauses and resets it on every seek - on Windows that
+    /// is IAudioClient::Stop(). Over HDMI to an A/V receiver the link then goes idle (the receiver
+    /// reports no signal) and restarting it costs a re-handshake, heard as a second or two of
+    /// missing audio on resume (#14330). With this on, mpv keeps the device running and writes
+    /// silence instead, so the link never drops.
+    /// <para>Off by default, and deliberately not in the settings UI: mpv's own manual calls this
+    /// option "strongly discouraged" because it changes A/V-sync and underrun handling, and it
+    /// only helps the HDMI-receiver case. Set it by hand if that is your setup.</para>
     /// </summary>
-    public bool MpvAudioKeepOpen { get; set; }
+    public bool MpvAudioStreamSilence { get; set; }
 
     public SeVideo()
     {
@@ -125,6 +129,6 @@ public class SeVideo
         MpvPreviewUsePositionFromFile = true;
         MpvPreviewJustify = "auto";
         MpvAudioBufferSeconds = 0.05;
-        MpvAudioKeepOpen = true;
+        MpvAudioStreamSilence = false;
     }
 }
