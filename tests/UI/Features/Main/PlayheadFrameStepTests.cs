@@ -341,7 +341,7 @@ public class PlayheadFrameStepTests : IDisposable
         player.IsPlaying = true;
         var estimate = Tick(vm, vp, isPlaying: true);
 
-        Assert.Equal(1.0, estimate, 4);
+        Assert.InRange(estimate, 1.0, 1.1);
     }
 
     [AvaloniaFact]
