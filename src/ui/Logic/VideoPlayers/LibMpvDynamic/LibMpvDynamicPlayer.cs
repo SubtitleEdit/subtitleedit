@@ -75,6 +75,15 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     private long _scrubFollowUpSeekId;     // keyframe seek owing an exact landing, 0 if none
     private long _scrubFollowUpTargetBits; // that seek's target, as double bits
 
+    // Guards every publish and claim of the seek generation + follow-up debt (IssueSeek, the
+    // follow-up/settle/cancel paths). The id, target and debt slot are three separate fields, so
+    // without one region a follow-up on the event thread could pass its staleness check against
+    // a generation the UI thread was mid-way through replacing, claim the superseded debt, and
+    // send an exact seek to the old scrub target after the user's newer seek - and the follow-up's
+    // own IssueSeek could then overwrite the newer seek's just-published debt. Uncontended in
+    // practice: the UI thread seeks, the event thread pays at most one follow-up per settled burst.
+    private readonly object _seekStateLock = new();
+
     [StructLayout(LayoutKind.Sequential)]
     private struct MpvOpenGlInitParams
     {
@@ -819,41 +828,44 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             return;
         }
 
-        var followUpId = Interlocked.Read(ref _scrubFollowUpSeekId);
-        if (followUpId == 0)
+        // The whole decide-claim-issue sequence under the lock: checked against a generation the
+        // setter can no longer be mid-way through replacing, and a newer seek published while the
+        // follow-up is being decided waits at IssueSeek's lock instead of racing it. That newer
+        // seek then finds the debt already claimed and zeroed, records its own, and its own
+        // restart asks again.
+        lock (_seekStateLock)
         {
-            return;
+            var followUpId = Interlocked.Read(ref _scrubFollowUpSeekId);
+            if (followUpId == 0)
+            {
+                return;
+            }
+
+            var target = BitConverter.Int64BitsToDouble(Interlocked.Read(ref _scrubFollowUpTargetBits));
+
+            // The observed position, never the Position getter: that one answers with the pinned
+            // target while paused, so every deferred landing would look already reached.
+            double? reported = _observedTimePosValid
+                ? BitConverter.Int64BitsToDouble(Interlocked.Read(ref _observedTimePosBits))
+                : null;
+
+            if (!ScrubSeekPolicy.ShouldIssueFollowUp(
+                    followUpId,
+                    Interlocked.Read(ref _lastSeekCommandId),
+                    Interlocked.Read(ref _restartAckedSeekCommandId),
+                    target,
+                    reported))
+            {
+                return;
+            }
+
+            // Claim it, so one settled burst issues one follow-up.
+            Interlocked.Exchange(ref _scrubFollowUpSeekId, 0);
+
+            // Generation-tracked like every other seek, so the playhead pin holds for this landing
+            // rather than releasing on the keyframe one. Reentrant: IssueSeek takes the same lock.
+            IssueSeek(target, forceExact: true);
         }
-
-        var target = BitConverter.Int64BitsToDouble(Interlocked.Read(ref _scrubFollowUpTargetBits));
-
-        // The observed position, never the Position getter: that one answers with the pinned
-        // target while paused, so every deferred landing would look already reached.
-        double? reported = _observedTimePosValid
-            ? BitConverter.Int64BitsToDouble(Interlocked.Read(ref _observedTimePosBits))
-            : null;
-
-        if (!ScrubSeekPolicy.ShouldIssueFollowUp(
-                followUpId,
-                Interlocked.Read(ref _lastSeekCommandId),
-                Interlocked.Read(ref _restartAckedSeekCommandId),
-                target,
-                reported))
-        {
-            return;
-        }
-
-        // Claim it, so one settled burst issues one follow-up. Losing the claim means the setter
-        // replaced this id from another thread while we were deciding - that newer seek carries
-        // its own follow-up, and its own restart will ask again.
-        if (Interlocked.CompareExchange(ref _scrubFollowUpSeekId, 0, followUpId) != followUpId)
-        {
-            return;
-        }
-
-        // Generation-tracked like every other seek, so the playhead pin holds for this landing
-        // rather than releasing on the keyframe one.
-        IssueSeek(target, forceExact: true);
     }
 
     /// <summary>
@@ -864,13 +876,19 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     /// </summary>
     private void SettlePendingExactSeek()
     {
-        var followUpId = Interlocked.Exchange(ref _scrubFollowUpSeekId, 0);
-        if (followUpId == 0 || _disposed || _mpv == IntPtr.Zero)
+        // Locked so the claim and the target read are one step - unlocked, a concurrent seek
+        // could replace the target between them and the settle would land on the wrong burst's
+        // position.
+        lock (_seekStateLock)
         {
-            return;
-        }
+            var followUpId = Interlocked.Exchange(ref _scrubFollowUpSeekId, 0);
+            if (followUpId == 0 || _disposed || _mpv == IntPtr.Zero)
+            {
+                return;
+            }
 
-        IssueSeek(BitConverter.Int64BitsToDouble(Interlocked.Read(ref _scrubFollowUpTargetBits)), forceExact: true);
+            IssueSeek(BitConverter.Int64BitsToDouble(Interlocked.Read(ref _scrubFollowUpTargetBits)), forceExact: true);
+        }
     }
 
     /// <summary>
@@ -881,7 +899,13 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     /// </summary>
     private void CancelPendingExactSeek()
     {
-        Interlocked.Exchange(ref _scrubFollowUpSeekId, 0);
+        // Locked so a follow-up mid-decision on the event thread cannot issue the landing this
+        // cancel is dropping: it either finishes first (the cancel then clears nothing new) or
+        // waits and finds the debt gone.
+        lock (_seekStateLock)
+        {
+            Interlocked.Exchange(ref _scrubFollowUpSeekId, 0);
+        }
     }
 
     private static byte[] GetUtf8Bytes(string s)
@@ -2169,50 +2193,60 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     /// </param>
     private void IssueSeek(double value, bool forceExact)
     {
-        _pausedValue = value;
-        _lastRawTimePos = value; // keep the eof-reached gate accurate across seeks
         EnsureNotDisposed();
         if (_mpv == IntPtr.Zero)
         {
             return;
         }
 
-        // A seek arriving while an earlier one is still in flight is a burst - a waveform
-        // drag, a slider drag, a wheel spin, one seek per input event - and all but its last
-        // seek are about to be superseded. Those are served fast, at keyframes, and the exact
-        // landing is deferred to when the burst settles (ScrubSeekPolicy). An isolated seek,
-        // the common case, is exact right away as before.
-        var inBurst = !forceExact && IsSeekInFlight();
-        var seekFlags = ScrubSeekPolicy.FlagsFor(inBurst);
-
-        // Fire-and-forget: seeks arrive in storms (scrubbing, slider drags, wheel steps -
-        // one per input event) and every caller already treats the result as asynchronous
-        // (the playhead pin waits for the position to actually arrive). The reply id is the
-        // seek's generation marker, so "has this seek restarted yet?" can be answered from
-        // mpv's own event order rather than from two independently taken clock readings.
-        var seekId = Interlocked.Increment(ref _lastSeekCommandId);
-        Interlocked.Exchange(ref _lastSeekIssuedTimestamp, System.Diagnostics.Stopwatch.GetTimestamp());
-
-        // Target before id, and both before the command: the event thread reads the id first,
-        // so an id published without its target would point at the previous burst's position.
-        Interlocked.Exchange(ref _scrubFollowUpTargetBits, BitConverter.DoubleToInt64Bits(value));
-        Interlocked.Exchange(ref _scrubFollowUpSeekId, inBurst ? seekId : 0);
-
-        var seekResult = DoMpvCommandFireAndForget(SeekReplyIdBase + (ulong)seekId, out var queuedAsync,
-            "seek", value.ToString(CultureInfo.InvariantCulture), seekFlags);
-        if (!queuedAsync || seekResult < 0)
+        // Locked from the position pin through the command send: the pin, id, target and debt
+        // slot publish as one step against the event thread's follow-up claim, and the send
+        // inside the lock keeps mpv's FIFO command order matching generation order even when a
+        // follow-up and a fresh seek race. mpv_command_async only enqueues, so nothing slow
+        // runs here.
+        lock (_seekStateLock)
         {
-            // No MPV_EVENT_COMMAND_REPLY is coming for this one - it ran synchronously, or
-            // mpv refused it - so nothing would ever advance the acknowledged generation and
-            // the seek would look in flight forever. Retire the id here instead.
-            Interlocked.Exchange(ref _ackedSeekCommandId, seekId);
-            Interlocked.Exchange(ref _restartAckedSeekCommandId, seekId);
+            _pausedValue = value;
+            _lastRawTimePos = value; // keep the eof-reached gate accurate across seeks
 
-            // No restart event is coming either, so nothing would ever issue the deferred
-            // exact seek. (IsSeekInFlight is false without the event loop, so this is only
-            // reachable for a seek mpv refused - but an owed landing that can never be paid
-            // must not be left standing.)
-            Interlocked.Exchange(ref _scrubFollowUpSeekId, 0);
+            // A seek arriving while an earlier one is still in flight is a burst - a waveform
+            // drag, a slider drag, a wheel spin, one seek per input event - and all but its last
+            // seek are about to be superseded. Those are served fast, at keyframes, and the exact
+            // landing is deferred to when the burst settles (ScrubSeekPolicy). An isolated seek,
+            // the common case, is exact right away as before.
+            var inBurst = !forceExact && IsSeekInFlight();
+            var seekFlags = ScrubSeekPolicy.FlagsFor(inBurst);
+
+            // Fire-and-forget: seeks arrive in storms (scrubbing, slider drags, wheel steps -
+            // one per input event) and every caller already treats the result as asynchronous
+            // (the playhead pin waits for the position to actually arrive). The reply id is the
+            // seek's generation marker, so "has this seek restarted yet?" can be answered from
+            // mpv's own event order rather than from two independently taken clock readings.
+            var seekId = Interlocked.Increment(ref _lastSeekCommandId);
+            Interlocked.Exchange(ref _lastSeekIssuedTimestamp, System.Diagnostics.Stopwatch.GetTimestamp());
+
+            // Debt state before the command: mpv can serve a keyframe seek and post the restart
+            // while this thread is still in the setter, and a follow-up recorded after that would
+            // wait for a restart that has already been and gone.
+            Interlocked.Exchange(ref _scrubFollowUpTargetBits, BitConverter.DoubleToInt64Bits(value));
+            Interlocked.Exchange(ref _scrubFollowUpSeekId, inBurst ? seekId : 0);
+
+            var seekResult = DoMpvCommandFireAndForget(SeekReplyIdBase + (ulong)seekId, out var queuedAsync,
+                "seek", value.ToString(CultureInfo.InvariantCulture), seekFlags);
+            if (!queuedAsync || seekResult < 0)
+            {
+                // No MPV_EVENT_COMMAND_REPLY is coming for this one - it ran synchronously, or
+                // mpv refused it - so nothing would ever advance the acknowledged generation and
+                // the seek would look in flight forever. Retire the id here instead.
+                Interlocked.Exchange(ref _ackedSeekCommandId, seekId);
+                Interlocked.Exchange(ref _restartAckedSeekCommandId, seekId);
+
+                // No restart event is coming either, so nothing would ever issue the deferred
+                // exact seek. (IsSeekInFlight is false without the event loop, so this is only
+                // reachable for a seek mpv refused - but an owed landing that can never be paid
+                // must not be left standing.)
+                Interlocked.Exchange(ref _scrubFollowUpSeekId, 0);
+            }
         }
     }
 
