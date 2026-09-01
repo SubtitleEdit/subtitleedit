@@ -42,11 +42,6 @@ public static class WhisperEngineFactory
             return new WhisperEnginePurfviewFasterWhisperXxl();
         }
 
-        if (staticName == MlxWhisperMac.StaticName)
-        {
-            return new MlxWhisperMac();
-        }
-
         if (staticName == WhisperEngineWhisperX.StaticName)
         {
             return new WhisperEngineWhisperX();
