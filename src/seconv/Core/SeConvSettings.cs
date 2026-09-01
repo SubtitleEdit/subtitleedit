@@ -135,6 +135,8 @@ internal sealed class SeConvSettings
                 BoxPaddingTop = style.BoxPaddingTop,
                 BoxPaddingBottom = style.BoxPaddingBottom,
                 LineSpacingPercent = style.LineSpacingPercent,
+                IsFullFrame = style.IsFullFrame,
+                FullFrameBackgroundColor = ToHex(style.FullFrameBackgroundColor),
                 Alignment = style.Alignment.ToString(),
                 ContentAlignment = style.ContentAlignment.ToString(),
                 // BottomTopMargin / LeftRightMargin left unset: their default is "5% of the
@@ -406,6 +408,8 @@ internal sealed class SeConvSettings
         public int? BoxPaddingTop { get; set; }
         public int? BoxPaddingBottom { get; set; }
         public int? LineSpacingPercent { get; set; }
+        public bool? IsFullFrame { get; set; }
+        public string? FullFrameBackgroundColor { get; set; }
         public string? Alignment { get; set; }
         public string? ContentAlignment { get; set; }
         public int? BottomTopMargin { get; set; }
@@ -448,6 +452,10 @@ internal sealed class SeConvSettings
                 style.BoxPaddingBottom = BoxPaddingBottom.Value;
             if (LineSpacingPercent.HasValue)
                 style.LineSpacingPercent = LineSpacingPercent.Value;
+            if (IsFullFrame.HasValue)
+                style.IsFullFrame = IsFullFrame.Value;
+            if (!string.IsNullOrWhiteSpace(FullFrameBackgroundColor) && ImageExportStyle.TryParseColor(FullFrameBackgroundColor, out var fullFrameBackgroundColor))
+                style.FullFrameBackgroundColor = fullFrameBackgroundColor;
             if (!string.IsNullOrWhiteSpace(Alignment) && ImageExportStyle.TryParseAlignment(Alignment, out var alignment))
                 style.Alignment = alignment;
             if (!string.IsNullOrWhiteSpace(ContentAlignment) && ImageExportStyle.TryParseContentAlignment(ContentAlignment, out var contentAlignment))

@@ -183,8 +183,12 @@ When rendering a text subtitle to an image-based target (Blu-Ray `sup`, VobSub, 
 | `--content-alignment:<align>` | Multi-line text justification: `left` \| `center` (default) \| `right` \| `from-alignment` (follow the `{\anX}` tag) |
 | `--bottom-top-margin:<px>` | Vertical screen-edge margin (default: 5% of height) |
 | `--left-right-margin:<px>` | Horizontal screen-edge margin (default: 5% of width) |
+| `--full-frame` | Draw each subtitle onto a frame-sized image instead of one cropped to the text. Only `fcpimage` and `bluraysup` use it; other image targets warn and ignore it |
+| `--full-frame-background-color:<color>` | Background of the full frame image (default: `transparent`) |
 
 Colours accept hex (`#AARRGGBB`, `#RRGGBB`, with or without `#`) or a colour name (`white`, `black`, `yellow`, ...).
+
+**Full frame** (`--full-frame`) draws the subtitle onto a canvas the size of the video frame, using the alignment and margins to place it there, so every image can be dropped on an editing timeline at 0,0 instead of being positioned one by one. It matches the "Full frame image" checkbox in the export dialog, and applies to `fcpimage` and `bluraysup` only. The background is transparent unless `--full-frame-background-color` says otherwise, so the images sit on a track above the video.
 
 ```bash
 # SRT → UHD Blu-Ray sup with a semi-transparent black background box (SE4-style)
@@ -192,6 +196,9 @@ seconv movie.srt bluraysup --resolution:3840x2160 --background-color:"#B4000000"
 
 # Custom font, bold, box per line
 seconv movie.srt bluraysup --font-name:Verdana --font-size:60 --font-bold --box-type:box-per-line
+
+# Final Cut Pro + image, one frame-sized png per subtitle
+seconv movie.srt fcpimage --full-frame
 ```
 
 ### Containers / tracks
@@ -512,6 +519,8 @@ The keys and defaults below are exactly what `dump-settings` emits:
     "boxPaddingTop": 3,
     "boxPaddingBottom": 3,
     "lineSpacingPercent": 0,
+    "isFullFrame": false,
+    "fullFrameBackgroundColor": "#00FFFFFF",
     "alignment": "bottom-center",
     "contentAlignment": "center",
     "bottomTopMargin": 54,

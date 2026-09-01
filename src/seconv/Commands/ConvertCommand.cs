@@ -281,6 +281,14 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [Description("Image output: horizontal screen-edge margin in pixels (default: 5% of width)")]
         public int? LeftRightMargin { get; init; }
 
+        [CommandOption("--full-frame|--fullframe")]
+        [Description("Image output: draw each subtitle on a frame-sized image (place at 0,0 in an editing timeline). Only fcpimage and bluraysup use it")]
+        public bool FullFrame { get; init; }
+
+        [CommandOption("--full-frame-background-color|--fullframebackgroundcolor")]
+        [Description("Image output: background of the full frame image (default: transparent)")]
+        public string? FullFrameBackgroundColor { get; init; }
+
         [CommandOption("--teletext-only|--teletextonly")]
         [Description("Teletext only")]
         public bool TeletextOnly { get; init; }
@@ -1184,6 +1192,20 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         if (settings.LeftRightMargin.HasValue)
         {
             style.LeftRightMargin = settings.LeftRightMargin.Value;
+        }
+
+        if (settings.FullFrame)
+        {
+            style.IsFullFrame = true;
+        }
+
+        if (!string.IsNullOrWhiteSpace(settings.FullFrameBackgroundColor))
+        {
+            if (!ImageExportStyle.TryParseColor(settings.FullFrameBackgroundColor, out var fullFrameBackgroundColor))
+            {
+                return $"Unknown colour '{settings.FullFrameBackgroundColor}' for --full-frame-background-color.";
+            }
+            style.FullFrameBackgroundColor = fullFrameBackgroundColor;
         }
 
         return null;

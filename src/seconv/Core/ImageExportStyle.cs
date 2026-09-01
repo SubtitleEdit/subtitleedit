@@ -40,6 +40,20 @@ internal sealed class ImageExportStyle
     /// <summary>Extra gap between lines as percent of line height. 0 = single spacing (matches the GUI export default).</summary>
     public int LineSpacingPercent { get; set; }
 
+    /// <summary>
+    /// Draw each subtitle onto a frame-sized canvas instead of a bitmap cropped to the text,
+    /// so every image can be placed at 0,0 in an editing timeline. Only the FCP and Blu-Ray sup
+    /// handlers act on it (<see cref="FullFrameImage"/>); the other image formats ignore it.
+    /// </summary>
+    public bool IsFullFrame { get; set; }
+
+    /// <summary>
+    /// Background of the frame-sized image made when <see cref="IsFullFrame"/> is set. Separate
+    /// from <see cref="BackgroundColor"/>, which is the box behind the text - transparent by
+    /// default, because the images normally go on a track above the video.
+    /// </summary>
+    public SKColor FullFrameBackgroundColor { get; set; } = SKColors.Transparent;
+
     public ExportAlignment Alignment { get; set; } = ExportAlignment.BottomCenter;
     public ExportContentAlignment ContentAlignment { get; set; } = ExportContentAlignment.Center;
 
