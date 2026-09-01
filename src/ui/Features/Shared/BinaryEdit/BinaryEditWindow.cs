@@ -218,8 +218,23 @@ public class BinaryEditWindow : Window
                         },
                         new MenuItem
                         {
+                            Header = Se.Language.File.Export.TitleExportDCinemaInteropPng,
+                            Command = vm.ExportDCinemaInteropPngCommand,
+                        },
+                        new MenuItem
+                        {
+                            Header = Se.Language.File.Export.TitleExportDCinemaSmpte2014Png,
+                            Command = vm.ExportDCinemaSmpte2014PngCommand,
+                        },
+                        new MenuItem
+                        {
                             Header = Se.Language.File.Export.TitleExportDostPng,
                             Command = vm.ExportDostPngCommand,
+                        },
+                        new MenuItem
+                        {
+                            Header = Se.Language.File.Export.TitleExportDvdSup,
+                            Command = vm.ExportDvdSupCommand,
                         },
                         new MenuItem
                         {
