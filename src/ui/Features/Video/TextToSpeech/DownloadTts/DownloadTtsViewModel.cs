@@ -1052,6 +1052,10 @@ public partial class DownloadTtsViewModel : ObservableObject
                         _zipUnpacker.UnpackZipStream(_downloadStreamHiggsTtsAudioCppVoices, voicesFolder, string.Empty, false, new List<string>(), null);
                         // The pack ships at 16 kHz; Higgs clones from 24 kHz references.
                         ResampleVoicesTo24kHz(voicesFolder);
+                        // The pack's .txt files are attribution blurbs, not transcripts, and
+                        // this engine passes a .txt sidecar as reference_text — a blurb there
+                        // conditions the clone on text nobody spoke. Same cleanup as Qwen3.
+                        Qwen3TtsCrispAsr.NormalizeVoiceTranscripts(voicesFolder);
                     }
                     catch (Exception ex)
                     {
@@ -1154,6 +1158,10 @@ public partial class DownloadTtsViewModel : ObservableObject
                         _zipUnpacker.UnpackZipStream(_downloadStreamFishTtsAudioCppVoices, voicesFolder, string.Empty, false, new List<string>(), null);
                         // The pack ships at 16 kHz; the S2 Pro codec runs at 44.1 kHz.
                         ResampleVoicesTo44kHz(voicesFolder);
+                        // The pack's .txt files are attribution blurbs, not transcripts, and
+                        // this engine passes a .txt sidecar as reference_text — a blurb there
+                        // conditions the clone on text nobody spoke. Same cleanup as Qwen3.
+                        Qwen3TtsCrispAsr.NormalizeVoiceTranscripts(voicesFolder);
                     }
                     catch (Exception ex)
                     {
