@@ -9,14 +9,20 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.ContainerFormats;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
+using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryAdjustAllTimes;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryApplyDurationLimits;
 using Nikse.SubtitleEdit.Features.Shared.PickMatroskaTrack;
+using Nikse.SubtitleEdit.Features.Shared.PickMp4Track;
+using Nikse.SubtitleEdit.Features.Shared.PickTsTrack;
 using Nikse.SubtitleEdit.Features.Sync.ChangeFrameRate;
 using Nikse.SubtitleEdit.Features.Sync.ChangeSpeed;
 using Nikse.SubtitleEdit.Logic;
@@ -533,7 +539,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.General.OpenSubtitleFileTitle, Se.Language.General.ImageBasedSubtitles, "*.sup;*.sub;*.ts;*.xml;*.mkv;*.mks", Se.Language.General.AllFiles, "*.*");
+        var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.General.OpenSubtitleFileTitle, Se.Language.General.ImageBasedSubtitles, "*.sup;*.sub;*.ts;*.m2ts;*.mts;*.rec;*.mkv;*.mks;*.mp4;*.m4v;*.mov;*.3gp;*.avi;*.divx;*.xml;*.ttml;*.dfxp;*.vtt;*.webvtt", Se.Language.General.AllFiles, "*.*");
         if (string.IsNullOrEmpty(fileName))
         {
             return;
@@ -711,7 +717,7 @@ public partial class BinaryEditViewModel : ObservableObject
 
         if (imageSubtitle == null)
         {
-            await MessageBox.Show(Window, Se.Language.General.Error, "Image based subtitle format not found/supported.",
+            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Tools.ImageBasedEdit.ImageBasedFormatNotSupported,
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
@@ -747,6 +753,8 @@ public partial class BinaryEditViewModel : ObservableObject
 
     private async Task<IOcrSubtitle?> LoadImageSubtitle(string fileName)
     {
+        var ext = Path.GetExtension(fileName).ToLowerInvariant();
+
         // Blu-ray SUP
         if (FileUtil.IsBluRaySup(fileName))
         {
@@ -757,6 +765,13 @@ public partial class BinaryEditViewModel : ObservableObject
             }
 
             return null;
+        }
+
+        // DVD SUP (SP packets, e.g. demuxed with SubRip/Subtitle Processor)
+        if (FileUtil.IsSpDvdSup(fileName))
+        {
+            var spDvdSup = new OcrSubtitleSpDvdSupImages(fileName);
+            return spDvdSup.Count > 0 ? spDvdSup : null;
         }
 
         // VobSub (.sub + .idx)
@@ -775,18 +790,11 @@ public partial class BinaryEditViewModel : ObservableObject
             return null;
         }
 
-        // Transport Stream (.ts)
-        if (FileUtil.IsTransportStream(fileName))
+        // Transport Stream (.ts / .m2ts / .mts / .rec)
+        if (FileUtil.IsTransportStream(fileName) ||
+            (ext is ".m2ts" or ".mts" or ".ts" && FileUtil.IsM2TransportStream(fileName)))
         {
-            var tsParser = new TransportStreamParser();
-            tsParser.Parse(fileName, null);
-            var subtitles = tsParser.GetDvbSubtitles(0);
-            if (subtitles.Count > 0)
-            {
-                return new OcrSubtitleTransportStream(subtitles);
-            }
-
-            return null;
+            return await LoadTransportStreamImageSubtitle(fileName);
         }
 
         // Matroska (.mkv / .mks) - PGS / VobSub / DVB tracks
@@ -795,15 +803,168 @@ public partial class BinaryEditViewModel : ObservableObject
             return await LoadMatroskaImageSubtitle(fileName);
         }
 
-        // BDN XML
-        if (fileName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
+        // DivX/XSUB image subtitles muxed into .avi/.divx
+        if (ext is ".avi" or ".divx")
         {
-            var bdnXml = new Nikse.SubtitleEdit.Core.SubtitleFormats.BdnXml();
-            var subtitle = new Subtitle();
-            bdnXml.LoadSubtitle(subtitle, File.ReadAllLines(fileName).ToList(), fileName);
-            if (subtitle.Paragraphs.Count > 0)
+            var xSubList = XSubParser.ParseAviSubtitles(fileName);
+            return xSubList.Count > 0 ? new OcrSubtitleDivX(xSubList, fileName) : null;
+        }
+
+        // MP4 with VobSub image track(s)
+        if (ext is ".mp4" or ".m4v" or ".mov" or ".3gp")
+        {
+            return await LoadMp4ImageSubtitle(fileName);
+        }
+
+        // WebVTT with embedded base64 thumbnail images
+        if (ext is ".vtt" or ".webvtt")
+        {
+            var lines = File.ReadAllLines(fileName).ToList();
+            var webVttThumbnail = new Nikse.SubtitleEdit.Core.SubtitleFormats.WebVttThumbnail();
+            if (webVttThumbnail.IsMine(lines, fileName))
             {
-                return new OcrSubtitleBdn(subtitle, fileName, false);
+                var subtitle = new Subtitle();
+                webVttThumbnail.LoadSubtitle(subtitle, lines, fileName);
+                if (subtitle.Paragraphs.Count > 0)
+                {
+                    return new OcrSubtitleWebVttImages(subtitle, fileName);
+                }
+            }
+
+            return null;
+        }
+
+        // BDN XML, FCP image xmeml, SMPTE-TT/IMSC with base64 images
+        if (ext is ".xml" or ".ttml" or ".dfxp")
+        {
+            return LoadXmlImageSubtitle(fileName);
+        }
+
+        return null;
+    }
+
+    private async Task<IOcrSubtitle?> LoadTransportStreamImageSubtitle(string fileName)
+    {
+        if (Window == null)
+        {
+            return null;
+        }
+
+        var tsParser = new TransportStreamParser();
+        await Task.Run(() => tsParser.Parse(fileName, null));
+        if (tsParser.SubtitlePacketIds.Count == 0)
+        {
+            return null;
+        }
+
+        // The DVB subtitles live under their real packet ids - a fixed id 0 (the PAT) never
+        // matches, so the first/picked id must be used.
+        var packetId = tsParser.SubtitlePacketIds[0];
+        if (tsParser.SubtitlePacketIds.Count > 1)
+        {
+            var pickResult = await _windowService.ShowDialogAsync<PickTsTrackWindow, PickTsTrackViewModel>(
+                Window, vm => vm.Initialize(tsParser, fileName));
+            if (!pickResult.OkPressed || pickResult.SelectedTrack == null || pickResult.SelectedTrack.IsTeletext)
+            {
+                return null;
+            }
+
+            packetId = pickResult.SelectedTrack.TrackNumber;
+        }
+
+        var subtitles = tsParser.GetDvbSubtitles(packetId);
+        return subtitles is { Count: > 0 } ? new OcrSubtitleTransportStream(subtitles) : null;
+    }
+
+    private async Task<IOcrSubtitle?> LoadMp4ImageSubtitle(string fileName)
+    {
+        if (Window == null)
+        {
+            return null;
+        }
+
+        var mp4Parser = new MP4Parser(fileName);
+        var vobSubTracks = mp4Parser.GetSubtitleTracks().Where(t => t.Mdia.IsVobSubSubtitle).ToList();
+        if (vobSubTracks.Count == 0)
+        {
+            return null;
+        }
+
+        Trak selectedTrack;
+        if (vobSubTracks.Count == 1)
+        {
+            selectedTrack = vobSubTracks[0];
+        }
+        else
+        {
+            var pickResult = await _windowService.ShowDialogAsync<PickMp4TrackWindow, PickMp4TrackViewModel>(
+                Window, vm => vm.Initialize(vobSubTracks, fileName));
+            if (!pickResult.OkPressed || pickResult.SelectedMatroskaTrack?.Track == null)
+            {
+                return null;
+            }
+
+            selectedTrack = pickResult.SelectedMatroskaTrack.Track;
+        }
+
+        var paragraphs = selectedTrack.Mdia.Minf.Stbl.GetParagraphs();
+        return paragraphs.Count > 0 ? new OcrSubtitleMp4VobSub(selectedTrack, paragraphs) : null;
+    }
+
+    internal static IOcrSubtitle? LoadXmlImageSubtitle(string fileName)
+    {
+        var lines = File.ReadAllLines(fileName).ToList();
+
+        // BDN XML - references png files next to the xml
+        var bdnXml = new Nikse.SubtitleEdit.Core.SubtitleFormats.BdnXml();
+        var bdnSubtitle = new Subtitle();
+        bdnXml.LoadSubtitle(bdnSubtitle, lines, fileName);
+        if (bdnSubtitle.Paragraphs.Count > 0)
+        {
+            return new OcrSubtitleBdn(bdnSubtitle, fileName, false);
+        }
+
+        // Final Cut Pro image xmeml (SE's own "export image based" FCP output) - cheap content
+        // gate first, FinalCutProImage has no fast IsMine of its own.
+        if (lines.Any(l => l.Contains("<xmeml", StringComparison.Ordinal)) &&
+            lines.Any(l => l.Contains("<pathurl>", StringComparison.Ordinal)))
+        {
+            var fcpImage = new Nikse.SubtitleEdit.Core.SubtitleFormats.FinalCutProImage();
+            var fcpSubtitle = new Subtitle();
+            fcpImage.LoadSubtitle(fcpSubtitle, lines, fileName);
+            if (fcpSubtitle.Paragraphs.Count > 0)
+            {
+                return new OcrSubtitleBdn(fcpSubtitle, fileName, false);
+            }
+        }
+
+        // SMPTE-TT / IMSC with base64 png images - round-trips this window's own IMSC image export
+        var base64Format = new Nikse.SubtitleEdit.Core.SubtitleFormats.TimedTextBase64Image();
+        if (base64Format.IsMine(lines, fileName))
+        {
+            var base64Subtitle = new Subtitle();
+            base64Format.LoadSubtitle(base64Subtitle, lines, fileName);
+            IList<IBinaryParagraphWithPosition> list = new List<IBinaryParagraphWithPosition>();
+            foreach (var p in base64Subtitle.Paragraphs)
+            {
+                var image = new Nikse.SubtitleEdit.Core.SubtitleFormats.TimedTextBase64Image.Base64PngImage
+                {
+                    Text = p.Text,
+                    StartTimeCode = p.StartTime,
+                    EndTimeCode = p.EndTime,
+                };
+
+                using var bitmap = image.GetBitmap();
+                var nikseBitmap = new NikseBitmap(bitmap);
+                if (nikseBitmap.GetNonTransparentHeight() > 1)
+                {
+                    list.Add(image);
+                }
+            }
+
+            if (list.Count > 0)
+            {
+                return new OcrSubtitleIBinaryParagraph(list);
             }
         }
 
@@ -929,6 +1090,24 @@ public partial class BinaryEditViewModel : ObservableObject
     private async Task ExportVobSub()
     {
         await DoExport(new ExportHandlerVobSub(), ".sub");
+    }
+
+    [RelayCommand]
+    private async Task ExportDvdSup()
+    {
+        await DoExport(new ExportHandlerDvdSup(), ".sup");
+    }
+
+    [RelayCommand]
+    private async Task ExportDCinemaInteropPng()
+    {
+        await DoExport(new ExportHandlerDCinemaInteropPng(), string.Empty, false);
+    }
+
+    [RelayCommand]
+    private async Task ExportDCinemaSmpte2014Png()
+    {
+        await DoExport(new ExportHandlerDCinemaSmpte2014Png(), string.Empty, false);
     }
 
     [RelayCommand]
@@ -2185,7 +2364,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.General.OpenSubtitleFileTitle, Se.Language.General.ImageBasedSubtitles, "*.sup;*.sub;*.ts;*.xml;*.mkv;*.mks", Se.Language.General.AllFiles, "*.*");
+        var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.General.OpenSubtitleFileTitle, Se.Language.General.ImageBasedSubtitles, "*.sup;*.sub;*.ts;*.m2ts;*.mts;*.rec;*.mkv;*.mks;*.mp4;*.m4v;*.mov;*.3gp;*.avi;*.divx;*.xml;*.ttml;*.dfxp;*.vtt;*.webvtt", Se.Language.General.AllFiles, "*.*");
         if (string.IsNullOrEmpty(fileName))
         {
             return;
