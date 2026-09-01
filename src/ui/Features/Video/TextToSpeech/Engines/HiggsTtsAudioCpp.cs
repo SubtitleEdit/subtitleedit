@@ -1,3 +1,4 @@
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ModelLicense;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
@@ -5,7 +6,6 @@ using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -19,27 +19,28 @@ using System.Threading.Tasks;
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 
 /// <summary>
-/// IndexTTS-2.5 (IndexTeam / Bilibili) run through the audio.cpp runtime — a pure C++/ggml
-/// engine, no Python. Zero-shot voice cloning in Chinese, English, Japanese, Spanish and
-/// Arabic, with emotion control and speaking-rate control.
+/// Higgs Audio v3 TTS 4B (Boson AI) run through the audio.cpp runtime — the same pure C++/ggml
+/// install <see cref="IndexTts25AudioCpp"/> uses (see <see cref="AudioCppRuntime"/>), so the
+/// binaries are downloaded once and shared. Zero-shot voice cloning across 100+ languages —
+/// by far the broadest language coverage of SE's cloning engines — with inline control over
+/// emotion, style and prosody through the text itself. 24 kHz output.
 ///
-/// Unlike <see cref="IndexTtsCrispAsr"/> (IndexTTS-1.5 via CrispASR), audio.cpp's server
-/// honours a per-request <c>voice_ref</c>, so switching voice does NOT restart the server —
-/// only a model or backend change does. Everything else follows the same server-mode shape:
-/// one persistent process on a loopback port, OpenAI-style POST /v1/audio/speech.
+/// Like the IndexTTS 2.5 engine, the server honours a per-request <c>voice_ref</c>, so
+/// switching voice does NOT restart the server — only a model or backend change does. The
+/// model auto-detects the language of the input text, so there is no language combo. A
+/// <c>.txt</c> sidecar next to the reference WAV (the transcript convention the other cloning
+/// engines share) is passed as <c>reference_text</c>, which improves clone fidelity but is
+/// optional.
 ///
-/// The model is a single self-describing GGUF (the package spec is embedded), so no sidecar
-/// config/tokenizer files are needed next to it.
-///
-/// Licence note: the audio.cpp binaries are Apache-2.0, but the IndexTTS-2.5 *weights* are
-/// under the bilibili Model Use License, which is not OSI-approved and has to be accepted by
-/// the user before the first download — see <see cref="IsLicenseAccepted"/>.
+/// Licence note: the audio.cpp binaries are Apache-2.0, but the Higgs Audio v3 *weights* are
+/// under Boson AI's research and non-commercial licence, which has to be accepted by the user
+/// before the first download — see <see cref="IsLicenseAccepted"/>.
 /// </summary>
-public class IndexTts25AudioCpp : ITtsEngine
+public class HiggsTtsAudioCpp : ITtsEngine
 {
-    public string Name => "IndexTTS 2.5 (audio.cpp)";
-    public string Description => "IndexTTS-2.5 (Bilibili / IndexTeam) voice cloning in 5 languages, via audio.cpp";
-    public bool HasLanguageParameter => true;
+    public string Name => "Higgs Audio v3 (audio.cpp)";
+    public string Description => "Higgs Audio v3 (Boson AI) voice cloning in 100+ languages, via audio.cpp";
+    public bool HasLanguageParameter => false;
     public bool HasApiKey => false;
     public bool HasRegion => false;
     public bool HasModel => true;
@@ -47,61 +48,84 @@ public class IndexTts25AudioCpp : ITtsEngine
     public bool SupportsVoiceCloning => true;
     public bool SupportsPerLineVoiceCloning => false;
 
-    // The Q8_0 GGUF is the default: same 22.05 kHz output as F16 at 1 GB less on disk. The
-    // "orig" dtype build (7.3 GB) is deliberately not offered — it is a debugging artifact.
-    public const string ModelKeyQ8_0 = "Q8_0 (~3.3 GB)";
-    public const string ModelKeyF16 = "F16 (~4.2 GB)";
+    // Q8_0 is the default: same 24 kHz output as BF16 at 3.2 GB less on disk.
+    public const string ModelKeyQ8_0 = "Q8_0 (~4.7 GB)";
+    public const string ModelKeyBf16 = "BF16 (~7.9 GB)";
     public const string DefaultModelKey = ModelKeyQ8_0;
 
-    public const string ModelQ8_0FileName = "index-tts2_5-q8_0.gguf";
-    public const string ModelF16FileName = "index-tts2_5-f16.gguf";
+    public const string ModelQ8_0FileName = "higgs-audio-v3-tts-4b-q8_0.gguf";
+    public const string ModelBf16FileName = "higgs-audio-v3-tts-4b-bf16.gguf";
 
-    /// <summary>Family name audio.cpp registers IndexTTS2/2.5 under; 2.5 is a variant of it.</summary>
-    public const string FamilyName = "index_tts2";
+    /// <summary>Family name audio.cpp registers Higgs Audio v3 TTS under.</summary>
+    public const string FamilyName = "higgs_audio_tts";
 
     /// <summary>Model id used in the generated server config and in each request body.</summary>
-    private const string ServerModelId = "indextts25";
+    private const string ServerModelId = "higgstts3";
 
     /// <summary>
     /// Exact byte sizes on the audio-cpp/audio.cpp-gguf HuggingFace repo. A truncated GGUF is
-    /// the single most common failure here — a download that dies at 71% leaves a file the
+    /// the single most common failure here — a download that dies partway leaves a file the
     /// loader rejects with "GGUF tensor data range is out of bounds", so size is checked
-    /// before the server is ever started. Same guard as IndexTtsCrispAsr.ExpectedFileSizes.
+    /// before the server is ever started. Same guard as <see cref="IndexTts25AudioCpp"/>.
     /// </summary>
     private static readonly Dictionary<string, long> ExpectedFileSizes = new(StringComparer.OrdinalIgnoreCase)
     {
-        [ModelQ8_0FileName] = 3502955328L,
-        [ModelF16FileName] = 4547355072L,
+        [ModelQ8_0FileName] = 5095354048L,
+        [ModelBf16FileName] = 8501587648L,
     };
 
     /// <summary>
     /// Bumping this re-prompts every user with the licence window. Keep it in step with the
-    /// licence text shipped in the accept dialog.
+    /// summary text in <see cref="LicenseDefinition"/>.
     /// </summary>
-    public const string LicenseVersion = "bilibili-model-use-license-2026-08";
+    public const string LicenseVersion = "boson-higgs-tts3-nc-license-2026-09";
 
     public static bool IsLicenseAccepted() =>
         string.Equals(
-            Se.Settings.Video.TextToSpeech.IndexTts25AudioCppLicenseAccepted,
+            Se.Settings.Video.TextToSpeech.HiggsTtsAudioCppLicenseAccepted,
             LicenseVersion,
             StringComparison.Ordinal);
 
     public static void AcceptLicense() =>
-        Se.Settings.Video.TextToSpeech.IndexTts25AudioCppLicenseAccepted = LicenseVersion;
+        Se.Settings.Video.TextToSpeech.HiggsTtsAudioCppLicenseAccepted = LicenseVersion;
+
+    /// <summary>
+    /// What the first-run licence gate shows. The weights are research / non-commercial with a
+    /// carve-out for monetized creator content — meaningfully different terms from open source,
+    /// which is exactly why the gate exists.
+    /// </summary>
+    public static ModelLicenseDefinition LicenseDefinition { get; } = new(
+        DialogTitle: "Higgs Audio v3 - model license",
+        Header: "The Higgs Audio v3 model has its own license",
+        Intro: "The audio.cpp engine is Apache-2.0, but the Higgs Audio v3 model weights are "
+            + "licensed by Boson AI for research and non-commercial use. Please read the main "
+            + "points before downloading.",
+        SummaryPoints: new[]
+        {
+            "The model weights are licensed for research and non-commercial use. Production deployment, hosted APIs, embedding in a product, or reselling the model or fine-tunes of it needs a separate commercial license from Boson AI.",
+            "Digital creators may use the model in monetized content, provided Boson AI's Higgs Audio is credited prominently in the audio or in the accompanying text.",
+            "Voice cloning without the speaker's consent, impersonation, fraud, election deception, biometric surveillance, and any unlawful use are prohibited.",
+            "The model is provided as is, with no warranty, and Boson AI accepts no liability for what is generated.",
+            "You are responsible for having the right to clone any voice you use as a reference. The model does not check consent.",
+        },
+        LicenseUrl: "https://huggingface.co/bosonai/higgs-tts-3-4b/blob/main/LICENSE",
+        ModelPageUrl: "https://huggingface.co/bosonai/higgs-tts-3-4b",
+        AcceptCheckBoxText: "I have read and accept the Boson Higgs TTS 3 Research and Non-Commercial License",
+        Accept: AcceptLicense);
 
     public static string ResolveModelKey(string? modelKey)
     {
         if (string.IsNullOrEmpty(modelKey))
         {
-            var saved = Se.Settings.Video.TextToSpeech.IndexTts25AudioCppModel;
+            var saved = Se.Settings.Video.TextToSpeech.HiggsTtsAudioCppModel;
             return string.IsNullOrEmpty(saved) ? DefaultModelKey : ResolveModelKey(saved);
         }
 
-        return modelKey == ModelKeyF16 ? ModelKeyF16 : ModelKeyQ8_0;
+        return modelKey == ModelKeyBf16 ? ModelKeyBf16 : ModelKeyQ8_0;
     }
 
     public static string GetModelFileName(string? modelKey) =>
-        ResolveModelKey(modelKey) == ModelKeyF16 ? ModelF16FileName : ModelQ8_0FileName;
+        ResolveModelKey(modelKey) == ModelKeyBf16 ? ModelBf16FileName : ModelQ8_0FileName;
 
     private static readonly HttpClient HttpClient = new()
     {
@@ -120,19 +144,13 @@ public class IndexTts25AudioCpp : ITtsEngine
 
     private static string ServerBaseUrl => $"http://127.0.0.1:{_serverPort}";
 
-    public Task<bool> IsInstalled(string? region) => Task.FromResult(File.Exists(GetServerExecutable()));
+    public Task<bool> IsInstalled(string? region) => Task.FromResult(File.Exists(AudioCppRuntime.GetServerExecutable()));
 
     public override string ToString() => Name;
 
     /// <summary>
-    /// The shared audio.cpp install — see <see cref="AudioCppRuntime"/>. Kept as a local alias
-    /// because everything in this class reads it.
-    /// </summary>
-    public static string GetSetEngineFolder() => AudioCppRuntime.GetSetEngineFolder();
-
-    /// <summary>
-    /// Per-engine working folder under TextToSpeech (voices, synthesis output), matching where
-    /// <see cref="IndexTtsCrispAsr"/> keeps its own — the binaries are shared, this is not.
+    /// Per-engine working folder under TextToSpeech (voices, synthesis output). The audio.cpp
+    /// binaries are shared (<see cref="AudioCppRuntime"/>); this is not.
     /// </summary>
     public static string GetSetFolder()
     {
@@ -141,7 +159,7 @@ public class IndexTts25AudioCpp : ITtsEngine
             Directory.CreateDirectory(Se.TextToSpeechFolder);
         }
 
-        var folder = Path.Combine(Se.TextToSpeechFolder, "IndexTts25AudioCpp");
+        var folder = Path.Combine(Se.TextToSpeechFolder, "HiggsTtsAudioCpp");
         if (!Directory.Exists(folder))
         {
             Directory.CreateDirectory(folder);
@@ -152,11 +170,11 @@ public class IndexTts25AudioCpp : ITtsEngine
 
     /// <summary>
     /// audio.cpp is pointed at a directory, not a file, so the GGUF gets its own folder under
-    /// the shared models root: <c>&lt;data&gt;/audio.cpp/models/IndexTTS2.5-GGUF/</c>.
+    /// the shared models root: <c>&lt;data&gt;/audio.cpp/models/Higgs-Audio-v3-TTS-4B-GGUF/</c>.
     /// </summary>
     public static string GetSetModelsFolder()
     {
-        var folder = Path.Combine(GetSetEngineFolder(), "models", "IndexTTS2.5-GGUF");
+        var folder = Path.Combine(AudioCppRuntime.GetSetEngineFolder(), "models", "Higgs-Audio-v3-TTS-4B-GGUF");
         if (!Directory.Exists(folder))
         {
             Directory.CreateDirectory(folder);
@@ -174,15 +192,35 @@ public class IndexTts25AudioCpp : ITtsEngine
         }
 
         SeedVoicesFromQwen3TtsCppIfEmpty(folder);
+        NormalizeVoiceTranscriptsOnce(folder);
         return folder;
     }
 
     private static bool _voiceSeedAttempted;
+    private static bool _voicesNormalized;
 
     /// <summary>
-    /// One-time best-effort seed of reference WAVs from the shared voice pack another engine
-    /// already downloaded, so the voice combo is not empty on first run — this engine clones
-    /// only and has no built-in voices. The pack ships at 16 kHz and IndexTTS clones from
+    /// One-time per session: drop unusable ref-text sidecars (the shared pack ships Wikimedia
+    /// attribution blurbs, not transcripts) and backfill missing transcriptions from the
+    /// sibling OmniVoice pack. This engine passes the .txt sidecar as reference_text, so a
+    /// blurb there would condition the clone on text nobody spoke — same cleanup CosyVoice3
+    /// and MOSS-TTS run.
+    /// </summary>
+    private static void NormalizeVoiceTranscriptsOnce(string voicesFolder)
+    {
+        if (_voicesNormalized)
+        {
+            return;
+        }
+        _voicesNormalized = true;
+
+        Qwen3TtsCrispAsr.NormalizeVoiceTranscripts(voicesFolder);
+    }
+
+    /// <summary>
+    /// One-time best-effort seed of reference WAVs (plus their transcript sidecars) from the
+    /// shared Qwen3 voice pack, so the voice combo is not empty on first run — this engine
+    /// clones only and has no built-in voices. The pack ships at 16 kHz; Higgs clones from
     /// 24 kHz, so resample on seed rather than letting the server upsample per request.
     /// </summary>
     private static void SeedVoicesFromQwen3TtsCppIfEmpty(string voicesFolder)
@@ -210,16 +248,23 @@ public class IndexTts25AudioCpp : ITtsEngine
             foreach (var src in Directory.GetFiles(sourceFolder, "*.wav"))
             {
                 var dest = Path.Combine(voicesFolder, Path.GetFileName(src));
-                VoiceSeedHelper.CopyOrResample(src, dest, 24000, "IndexTTS 2.5 (audio.cpp)");
+                VoiceSeedHelper.CopyOrResample(src, dest, 24000, "Higgs Audio v3 (audio.cpp)");
+
+                // Bring the transcript along; NormalizeVoiceTranscriptsOnce then drops the
+                // attribution blurbs and backfills real transcripts where a sibling has them.
+                var sidecar = Path.ChangeExtension(src, ".txt");
+                var sidecarDest = Path.ChangeExtension(dest, ".txt");
+                if (File.Exists(sidecar) && !File.Exists(sidecarDest) && File.Exists(dest))
+                {
+                    File.Copy(sidecar, sidecarDest);
+                }
             }
         }
         catch (Exception ex)
         {
-            Se.LogError(ex, "IndexTTS 2.5 (audio.cpp): voice seeding from the shared voice pack failed");
+            Se.LogError(ex, "Higgs Audio v3 (audio.cpp): voice seeding from the shared voice pack failed");
         }
     }
-
-    public static string GetServerExecutable() => AudioCppRuntime.GetServerExecutable();
 
     public static string GetModelPath(string? modelKey = null) =>
         Path.Combine(GetSetModelsFolder(), GetModelFileName(modelKey));
@@ -241,7 +286,7 @@ public class IndexTts25AudioCpp : ITtsEngine
             var info = new FileInfo(path);
 
             // FileInfo.Length reports the size of the *link* for a symlink, not of its target,
-            // so a symlinked GGUF (a reasonable way to share a 3.3 GB model between apps or
+            // so a symlinked GGUF (a reasonable way to share a 4.7 GB model between apps or
             // put it on another disk) would look truncated — and the caller deletes files it
             // considers truncated. Resolve to the final target before measuring.
             var length = info.ResolveLinkTarget(returnFinalTarget: true) is FileInfo target
@@ -261,7 +306,7 @@ public class IndexTts25AudioCpp : ITtsEngine
 
     public static DownloadHashManager.UpdateStatus GetEngineUpdateStatus()
     {
-        var exe = GetServerExecutable();
+        var exe = AudioCppRuntime.GetServerExecutable();
         if (!File.Exists(exe))
         {
             return DownloadHashManager.UpdateStatus.Unknown;
@@ -272,12 +317,6 @@ public class IndexTts25AudioCpp : ITtsEngine
             ? DownloadHashManager.UpdateStatus.Unknown
             : DownloadHashManager.GetSidecarStatus(folder);
     }
-
-    /// <summary>
-    /// ggml backend the shared audio.cpp install was built for — see
-    /// <see cref="AudioCppRuntime.GetBackend"/>.
-    /// </summary>
-    public static string GetBackend() => AudioCppRuntime.GetBackend();
 
     public async Task<Voice[]> GetVoices(string language)
     {
@@ -301,25 +340,12 @@ public class IndexTts25AudioCpp : ITtsEngine
 
     public Task<string[]> GetRegions() => Task.FromResult(Array.Empty<string>());
 
-    public Task<string[]> GetModels() => Task.FromResult(new[] { ModelKeyQ8_0, ModelKeyF16 });
+    public Task<string[]> GetModels() => Task.FromResult(new[] { ModelKeyQ8_0, ModelKeyBf16 });
 
-    /// <summary>
-    /// The five languages IndexTTS-2.5 was trained on. audio.cpp defaults to "auto", which
-    /// only distinguishes Han-script (zh) from everything else (en) — so ja/es/ar have to be
-    /// selected explicitly or they are synthesised with the wrong language's phonology.
-    /// </summary>
-    public Task<TtsLanguage[]> GetLanguages(Voice voice, string? model) => Task.FromResult(new[]
-    {
-        // TtsLanguage is (name, code) - every other engine writes it that way. Reversed here, the
-        // combo listed "zh"/"en"/"ja" instead of language names and Speak sent language.Code, i.e.
-        // the literal "Chinese", to audio.cpp - so no explicit pick ever worked.
-        new TtsLanguage("Auto", "auto"),
-        new TtsLanguage("Chinese", "zh"),
-        new TtsLanguage("English", "en"),
-        new TtsLanguage("Japanese", "ja"),
-        new TtsLanguage("Spanish", "es"),
-        new TtsLanguage("Arabic", "ar"),
-    });
+    // Higgs auto-detects the language of the input text (100+ languages), so there is no
+    // language pick — unlike IndexTTS 2.5, where auto only separates Han script from English.
+    public Task<TtsLanguage[]> GetLanguages(Voice voice, string? model) =>
+        Task.FromResult(Array.Empty<TtsLanguage>());
 
     public Task<Voice[]> RefreshVoices(string language, CancellationToken cancellationToken) =>
         GetVoices(language);
@@ -341,7 +367,7 @@ public class IndexTts25AudioCpp : ITtsEngine
         if (string.IsNullOrEmpty(indexVoice.FilePath))
         {
             throw new InvalidOperationException(
-                "IndexTTS 2.5 (audio.cpp) requires a reference voice WAV. "
+                "Higgs Audio v3 (audio.cpp) requires a reference voice WAV. "
                 + "Import one via the voice settings, then pick it in the voice combo. "
                 + "3-10 s of clean speech works best.");
         }
@@ -349,7 +375,7 @@ public class IndexTts25AudioCpp : ITtsEngine
         if (!IsLicenseAccepted())
         {
             throw new InvalidOperationException(
-                "The IndexTTS-2.5 model licence (bilibili Model Use License) has not been accepted.");
+                "The Higgs Audio v3 model licence (Boson research and non-commercial license) has not been accepted.");
         }
 
         var modelKey = ResolveModelKey(model);
@@ -358,33 +384,16 @@ public class IndexTts25AudioCpp : ITtsEngine
         var outputFileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetFolder), Guid.NewGuid() + ".wav");
 
         // audio.cpp's OpenAI-style speech payload. Voice cloning goes through `voice_ref`,
-        // which accepts a server-side path object — and unlike CrispASR's indextts backend it
-        // is honoured per request, so no server restart when the user switches voice.
+        // honoured per request — no server restart when the user switches voice.
         var options = new Dictionary<string, object>();
 
-        var languageCode = language?.Code;
-        if (!string.IsNullOrEmpty(languageCode) && !string.Equals(languageCode, "auto", StringComparison.OrdinalIgnoreCase))
+        // The transcript of the reference WAV, when the shared .txt sidecar convention has
+        // one. Optional — Higgs clones from the audio alone — but a transcript improves clone
+        // fidelity, so pass it when it is there.
+        var referenceText = ChatterboxTtsCpp.TryReadReferenceTranscript(indexVoice.FilePath);
+        if (!string.IsNullOrEmpty(referenceText))
         {
-            options["language"] = languageCode;
-        }
-
-        // >1 slows down, <1 speeds up; the model's own duration control rather than a resample,
-        // so pitch is unaffected.
-        var durationFactor = Math.Clamp(Se.Settings.Video.TextToSpeech.IndexTts25AudioCppDurationFactor, 0.5, 2.0);
-        if (Math.Abs(durationFactor - 1.0) > 0.001)
-        {
-            options["duration_factor"] = durationFactor;
-        }
-
-        var emotion = Se.Settings.Video.TextToSpeech.IndexTts25AudioCppEmotion;
-        if (!string.IsNullOrEmpty(emotion) && !string.Equals(emotion, "none", StringComparison.OrdinalIgnoreCase))
-        {
-            var vector = GetEmotionVector(emotion);
-            if (vector != null)
-            {
-                options["emotion_vector"] = vector;
-                options["emotion_alpha"] = Math.Clamp(Se.Settings.Video.TextToSpeech.IndexTts25AudioCppEmotionAlpha, 0.0, 1.0);
-            }
+            options["reference_text"] = referenceText;
         }
 
         var payload = new Dictionary<string, object>
@@ -406,7 +415,7 @@ public class IndexTts25AudioCpp : ITtsEngine
 
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
-        Se.WriteToolsLog($"IndexTTS 2.5 (audio.cpp): POST {ServerBaseUrl}/v1/audio/speech (voice={indexVoice}, textLen={text.Length})");
+        Se.WriteToolsLog($"Higgs Audio v3 (audio.cpp): POST {ServerBaseUrl}/v1/audio/speech (voice={indexVoice}, textLen={text.Length})");
 
         HttpResponseMessage response;
         try
@@ -423,7 +432,7 @@ public class IndexTts25AudioCpp : ITtsEngine
                 StopServerInternal();
             }
 
-            var failMsg = $"IndexTTS 2.5 (audio.cpp) request failed — Voice: {indexVoice}, Text: {text}, "
+            var failMsg = $"Higgs Audio v3 (audio.cpp) request failed — Voice: {indexVoice}, Text: {text}, "
                 + $"RequestJson: {body}, ServerExited: {died}, ServerLog: {serverLog}"
                 + LaunchCmdSuffix(launchCommand);
             Se.LogError(ex, failMsg);
@@ -431,8 +440,8 @@ public class IndexTts25AudioCpp : ITtsEngine
 
             throw new InvalidOperationException(
                 (died
-                    ? "IndexTTS 2.5 (audio.cpp) — the audiocpp_server process crashed during synthesis."
-                    : "IndexTTS 2.5 (audio.cpp) request failed — the connection to audiocpp_server was dropped.")
+                    ? "Higgs Audio v3 (audio.cpp) — the audiocpp_server process crashed during synthesis."
+                    : "Higgs Audio v3 (audio.cpp) request failed — the connection to audiocpp_server was dropped.")
                 + (string.IsNullOrEmpty(serverLog) ? string.Empty : $"{Environment.NewLine}Server log:{Environment.NewLine}{serverLog}")
                 + LaunchCmdSuffix(launchCommand),
                 ex);
@@ -445,14 +454,14 @@ public class IndexTts25AudioCpp : ITtsEngine
                 var errorBody = await SafeReadErrorAsync(response, cancellationToken);
                 var serverLog = SnapshotServerLog();
                 var launchCommand = _serverLaunchCommand;
-                var errMsg = $"IndexTTS 2.5 (audio.cpp) server error {(int)response.StatusCode} {response.StatusCode} — "
+                var errMsg = $"Higgs Audio v3 (audio.cpp) server error {(int)response.StatusCode} {response.StatusCode} — "
                     + $"Voice: {indexVoice}, Text: {text}, RequestJson: {body}, "
                     + $"ResponseBody: {errorBody}, ServerLog: {serverLog}"
                     + LaunchCmdSuffix(launchCommand);
                 Se.LogError(errMsg);
                 Se.WriteToolsLog(errMsg);
                 throw new InvalidOperationException(
-                    $"IndexTTS 2.5 (audio.cpp) synthesis failed ({(int)response.StatusCode}): {errorBody}"
+                    $"Higgs Audio v3 (audio.cpp) synthesis failed ({(int)response.StatusCode}): {errorBody}"
                     + (string.IsNullOrEmpty(serverLog) ? string.Empty : $"{Environment.NewLine}Server log:{Environment.NewLine}{serverLog}")
                     + LaunchCmdSuffix(launchCommand));
             }
@@ -465,40 +474,9 @@ public class IndexTts25AudioCpp : ITtsEngine
         return new TtsResult(outputFileName, text);
     }
 
-    /// <summary>
-    /// The eight-slot emotion vector IndexTTS-2.5 takes, in the model's own order:
-    /// happy, angry, sad, afraid, disgusted, melancholic, surprised, calm.
-    /// </summary>
-    public static IReadOnlyList<string> EmotionNames { get; } = new[]
-    {
-        "happy", "angry", "sad", "afraid", "disgusted", "melancholic", "surprised", "calm",
-    };
-
-    private static double[]? GetEmotionVector(string emotion)
-    {
-        var index = -1;
-        for (var i = 0; i < EmotionNames.Count; i++)
-        {
-            if (string.Equals(EmotionNames[i], emotion, StringComparison.OrdinalIgnoreCase))
-            {
-                index = i;
-                break;
-            }
-        }
-
-        if (index < 0)
-        {
-            return null;
-        }
-
-        var vector = new double[EmotionNames.Count];
-        vector[index] = 1.0;
-        return vector;
-    }
-
     private static async Task EnsureServerRunningAsync(string modelKey, CancellationToken ct)
     {
-        var backend = GetBackend();
+        var backend = AudioCppRuntime.GetBackend();
 
         if (_serverProcess is { HasExited: false } && _serverPort != 0
             && string.Equals(_serverModelKey, modelKey, StringComparison.OrdinalIgnoreCase)
@@ -522,11 +500,11 @@ public class IndexTts25AudioCpp : ITtsEngine
                 StopServerInternal();
             }
 
-            var exe = GetServerExecutable();
+            var exe = AudioCppRuntime.GetServerExecutable();
             if (!File.Exists(exe))
             {
                 throw new FileNotFoundException(
-                    "audio.cpp server not found. Download the IndexTTS 2.5 engine first.", exe);
+                    "audio.cpp server not found. Download the Higgs Audio v3 engine first.", exe);
             }
 
             var modelFileName = GetModelFileName(modelKey);
@@ -535,19 +513,17 @@ public class IndexTts25AudioCpp : ITtsEngine
             {
                 throw new FileNotFoundException(
                     File.Exists(modelPath)
-                        ? $"The IndexTTS-2.5 model file is incomplete: {modelPath}. Delete it and download again."
-                        : $"The IndexTTS-2.5 model file is missing: {modelPath}",
+                        ? $"The Higgs Audio v3 model file is incomplete: {modelPath}. Delete it and download again."
+                        : $"The Higgs Audio v3 model file is missing: {modelPath}",
                     modelPath);
             }
 
-            // audio.cpp loads one GGUF per model directory, so a directory holding both quants
-            // would be ambiguous. Keep exactly the selected one in place.
             var port = FindFreeLoopbackPort();
             var configPath = WriteServerConfig(port, backend, modelKey);
 
             var psi = new ProcessStartInfo
             {
-                WorkingDirectory = Path.GetDirectoryName(exe) ?? GetSetEngineFolder(),
+                WorkingDirectory = Path.GetDirectoryName(exe) ?? AudioCppRuntime.GetSetEngineFolder(),
                 FileName = exe,
                 UseShellExecute = false,
                 CreateNoWindow = true,
@@ -563,11 +539,11 @@ public class IndexTts25AudioCpp : ITtsEngine
             psi.ArgumentList.Add(configPath);
 
             var process = Process.Start(psi)
-                ?? throw new InvalidOperationException("Failed to start audiocpp_server (index_tts2)");
+                ?? throw new InvalidOperationException("Failed to start audiocpp_server (higgs_audio_tts)");
 
             var launchCommand = FormatLaunchCommand(exe, psi.ArgumentList);
             _serverLaunchCommand = launchCommand;
-            Se.WriteToolsLog($"IndexTTS 2.5 (audio.cpp) server starting — PID: {process.Id}, Cmd: {launchCommand}");
+            Se.WriteToolsLog($"Higgs Audio v3 (audio.cpp) server starting — PID: {process.Id}, Cmd: {launchCommand}");
 
             lock (_serverLog) _serverLog.Clear();
             process.ErrorDataReceived += (_, e) =>
@@ -587,7 +563,7 @@ public class IndexTts25AudioCpp : ITtsEngine
             _serverBackend = backend;
             HookProcessExitOnce();
 
-            // The config uses lazy_load, so /health answers within a second or two — the 3.3 GB
+            // The config uses lazy_load, so /health answers within a second or two — the 4.7 GB
             // model is only read on the first synthesis request. A long deadline here would just
             // hide a crash-at-startup (e.g. a Vulkan build on a box with no Vulkan driver, which
             // dies in the loader with 0xC0000135 before printing anything).
@@ -607,7 +583,7 @@ public class IndexTts25AudioCpp : ITtsEngine
                     _serverBackend = null;
                     throw new InvalidOperationException(
                         $"audiocpp_server exited during startup (code {exitCode}). "
-                        + DescribeStartupExit(exitCode, backend)
+                        + AudioCppRuntime.DescribeStartupExit(exitCode, backend)
                         + $" Output: {tail}"
                         + LaunchCmdSuffix(exitedLaunchCommand));
                 }
@@ -633,9 +609,6 @@ public class IndexTts25AudioCpp : ITtsEngine
         }
     }
 
-    private static string DescribeStartupExit(int exitCode, string backend) =>
-        AudioCppRuntime.DescribeStartupExit(exitCode, backend);
-
     /// <summary>
     /// Writes the audio.cpp server config next to the binary. lazy_load keeps startup instant;
     /// the model is read on first use and then stays resident until the server is stopped.
@@ -656,19 +629,19 @@ public class IndexTts25AudioCpp : ITtsEngine
                     ["id"] = ServerModelId,
                     ["family"] = FamilyName,
                     ["path"] = GetSetModelsFolder(),
-                    ["task"] = "clon",
+                    ["task"] = "tts",
                     ["mode"] = "offline",
                 },
             },
         };
 
-        var configPath = Path.Combine(GetSetEngineFolder(), "index-tts25-server.json");
+        var configPath = Path.Combine(AudioCppRuntime.GetSetEngineFolder(), "higgs-tts-server.json");
         File.WriteAllText(
             configPath,
             JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true }),
             Encoding.UTF8);
 
-        Se.WriteToolsLog($"IndexTTS 2.5 (audio.cpp): server config written to {configPath} (model={modelKey}, backend={backend})");
+        Se.WriteToolsLog($"Higgs Audio v3 (audio.cpp): server config written to {configPath} (model={modelKey}, backend={backend})");
         return configPath;
     }
 
@@ -755,8 +728,9 @@ public class IndexTts25AudioCpp : ITtsEngine
     }
 
     /// <summary>
-    /// Stop the audio.cpp server if running, releasing its ~4.6 GB working set. audio.cpp never
-    /// unloads a model on its own once loaded, so this is the only way the memory comes back.
+    /// Stop the audio.cpp server if running, releasing the loaded model's working set.
+    /// audio.cpp never unloads a model on its own once loaded, so this is the only way the
+    /// memory comes back.
     /// </summary>
     public static void StopServer() => StopServerInternal();
 
@@ -809,7 +783,14 @@ public class IndexTts25AudioCpp : ITtsEngine
         return candidate;
     }
 
-    public bool ImportVoice(string fileName)
+    public bool ImportVoice(string fileName) => ImportVoice(fileName, string.Empty);
+
+    /// <summary>
+    /// Import with the reference transcript — the overload <see cref="VoiceCloneImporter"/>
+    /// routes to. Higgs clones from the audio alone, but a transcript improves clone fidelity,
+    /// so it is kept as the .txt sidecar Speak passes as reference_text.
+    /// </summary>
+    public bool ImportVoice(string fileName, string transcript)
     {
         if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
         {
@@ -821,7 +802,7 @@ public class IndexTts25AudioCpp : ITtsEngine
         var destinationFileName = GetUniqueDestinationFileName(voicesFolder, baseName);
 
         // audio.cpp resamples the reference itself, but importing at 24 kHz mono keeps the
-        // reference clean and matches what the other IndexTTS engine stores.
+        // reference clean and matches the model's own output rate.
         try
         {
             var process = FfmpegGenerator.ConvertToMono24kHzWav(fileName, destinationFileName);
@@ -834,10 +815,38 @@ public class IndexTts25AudioCpp : ITtsEngine
         }
         catch (Exception ex)
         {
-            Se.LogError(ex, "IndexTTS 2.5 (audio.cpp) voice import failed (ffmpeg conversion).");
+            Se.LogError(ex, "Higgs Audio v3 (audio.cpp) voice import failed (ffmpeg conversion).");
             return false;
         }
 
-        return File.Exists(destinationFileName);
+        if (!File.Exists(destinationFileName))
+        {
+            return false;
+        }
+
+        // Caller-supplied transcript wins; otherwise fall back to a sibling .txt next to the
+        // source WAV.
+        try
+        {
+            var destSidecar = Path.ChangeExtension(destinationFileName, ".txt");
+            if (!string.IsNullOrWhiteSpace(transcript))
+            {
+                File.WriteAllText(destSidecar, transcript.Trim());
+            }
+            else
+            {
+                var sourceSidecar = Path.ChangeExtension(fileName, ".txt");
+                if (File.Exists(sourceSidecar) && !File.Exists(destSidecar))
+                {
+                    File.Copy(sourceSidecar, destSidecar);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Se.LogError(ex, "Higgs Audio v3 (audio.cpp) voice import: failed to write .txt sidecar");
+        }
+
+        return true;
     }
 }

@@ -207,19 +207,21 @@ public static class TtsVoiceInstaller
     /// even when CrispASR itself looks up to date.
     /// </summary>
     /// <summary>
-    /// Ensures the audio.cpp runtime that IndexTTS 2.5 runs on is installed. Unlike the
-    /// CrispASR engines, these binaries are built by SubtitleEdit itself (upstream ships
-    /// Windows-only prebuilts), and the archive is per backend: Metal on Apple Silicon, and
-    /// CPU / Vulkan / CUDA on Windows and Linux x64.
+    /// Ensures the shared audio.cpp runtime is installed — the same binaries back IndexTTS
+    /// 2.5, Higgs Audio v3 and Fish Audio S2 Pro, so whichever engine asks first downloads
+    /// for all of them. Unlike the CrispASR engines, these binaries are built by SubtitleEdit
+    /// itself (upstream ships Windows-only prebuilts), and the archive is per backend: Metal
+    /// on Apple Silicon, and CPU / Vulkan / CUDA on Windows and Linux x64.
     /// </summary>
-    public static async Task<bool> EnsureAudioCppForIndexTts25(Window? window, IWindowService windowService, bool forceRedownload)
+    /// <param name="engineDisplayName">The engine that asked, for the prompts ("IndexTTS 2.5").</param>
+    public static async Task<bool> EnsureAudioCppRuntime(Window? window, IWindowService windowService, bool forceRedownload, string engineDisplayName)
     {
         if (window == null)
         {
             return false;
         }
 
-        var isInstalled = File.Exists(IndexTts25AudioCpp.GetServerExecutable());
+        var isInstalled = File.Exists(AudioCppRuntime.GetServerExecutable());
         if (!forceRedownload && isInstalled)
         {
             return true;
@@ -232,8 +234,8 @@ public static class TtsVoiceInstaller
             {
                 await MessageBox.Show(
                     window,
-                    "IndexTTS 2.5",
-                    $"{Environment.NewLine}IndexTTS 2.5 (audio.cpp) requires an Apple Silicon Mac.",
+                    engineDisplayName,
+                    $"{Environment.NewLine}\"{engineDisplayName}\" (audio.cpp) requires an Apple Silicon Mac.",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
                 return false;
@@ -242,7 +244,7 @@ public static class TtsVoiceInstaller
             var answer = await MessageBox.Show(
                 window,
                 "Download audio.cpp?",
-                $"{Environment.NewLine}\"IndexTTS 2.5\" runs through the audio.cpp runtime. Download and install now?",
+                $"{Environment.NewLine}\"{engineDisplayName}\" runs through the audio.cpp runtime. Download and install now?",
                 MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Question);
 
@@ -259,8 +261,8 @@ public static class TtsVoiceInstaller
             {
                 await MessageBox.Show(
                     window,
-                    "IndexTTS 2.5",
-                    $"{Environment.NewLine}IndexTTS 2.5 (audio.cpp) is only built for x86-64 on Windows and Linux.",
+                    engineDisplayName,
+                    $"{Environment.NewLine}\"{engineDisplayName}\" (audio.cpp) is only built for x86-64 on Windows and Linux.",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
                 return false;
@@ -269,7 +271,7 @@ public static class TtsVoiceInstaller
             var variantAnswer = await MessageBox.Show(
                 window,
                 "Download audio.cpp?",
-                $"{Environment.NewLine}\"IndexTTS 2.5\" runs through the audio.cpp runtime. Select a build to download:",
+                $"{Environment.NewLine}\"{engineDisplayName}\" runs through the audio.cpp runtime. Select a build to download:",
                 MessageBoxButtons.Cancel,
                 MessageBoxIcon.Question,
                 "CPU",
@@ -313,7 +315,7 @@ public static class TtsVoiceInstaller
         var dlResult = await windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(
             window, vm => vm.StartDownloadIndexTts25AudioCppEngine(backend));
 
-        if (!dlResult.OkPressed || !File.Exists(IndexTts25AudioCpp.GetServerExecutable()))
+        if (!dlResult.OkPressed || !File.Exists(AudioCppRuntime.GetServerExecutable()))
         {
             return false;
         }

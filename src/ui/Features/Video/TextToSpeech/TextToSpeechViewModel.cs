@@ -362,6 +362,14 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             Se.Settings.Video.TextToSpeech.IndexTts25AudioCppModel = SelectedModel ?? IndexTts25AudioCpp.DefaultModelKey;
         }
+        else if (SelectedEngine is HiggsTtsAudioCpp)
+        {
+            Se.Settings.Video.TextToSpeech.HiggsTtsAudioCppModel = SelectedModel ?? HiggsTtsAudioCpp.DefaultModelKey;
+        }
+        else if (SelectedEngine is FishTtsAudioCpp)
+        {
+            Se.Settings.Video.TextToSpeech.FishTtsAudioCppModel = SelectedModel ?? FishTtsAudioCpp.DefaultModelKey;
+        }
         else if (SelectedEngine is CosyVoice3CrispAsr)
         {
             Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrModel = SelectedModel ?? CosyVoice3CrispAsr.DefaultModelKey;
@@ -1317,6 +1325,14 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             IndexTts25AudioCpp.StopServer();
         }
+        if (keepAlive is not HiggsTtsAudioCpp)
+        {
+            HiggsTtsAudioCpp.StopServer();
+        }
+        if (keepAlive is not FishTtsAudioCpp)
+        {
+            FishTtsAudioCpp.StopServer();
+        }
         if (keepAlive is not CosyVoice3CrispAsr)
         {
             CosyVoice3CrispAsr.StopServer();
@@ -1610,6 +1626,12 @@ public partial class TextToSpeechViewModel : ObservableObject
             case IndexTts25AudioCpp:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadIndexTts25AudioCppModels(IndexTts25AudioCpp.ResolveModelKey(SelectedModel)));
                 break;
+            case HiggsTtsAudioCpp:
+                await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadHiggsTtsAudioCppModels(HiggsTtsAudioCpp.ResolveModelKey(SelectedModel)));
+                break;
+            case FishTtsAudioCpp:
+                await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadFishTtsAudioCppModels(FishTtsAudioCpp.ResolveModelKey(SelectedModel)));
+                break;
             case CosyVoice3CrispAsr:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadCosyVoice3CrispAsrModels(CosyVoice3CrispAsr.ResolveModelKey(SelectedModel)));
                 break;
@@ -1690,6 +1712,12 @@ public partial class TextToSpeechViewModel : ObservableObject
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
             IndexTts25AudioCpp => IndexTts25AudioCpp.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
+            HiggsTtsAudioCpp => HiggsTtsAudioCpp.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
+            FishTtsAudioCpp => FishTtsAudioCpp.AreModelsInstalled(modelKey)
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
             CosyVoice3CrispAsr => CosyVoice3CrispAsr.AreModelsInstalled(modelKey)
@@ -4116,6 +4144,26 @@ public partial class TextToSpeechViewModel : ObservableObject
             else if (SelectedEngine is IndexTts25AudioCpp)
             {
                 SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.IndexTts25AudioCppModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Models.FirstOrDefault();
+                }
+                IsEngineSettingsVisible = true;
+                IsModelDownloadVisible = true;
+            }
+            else if (SelectedEngine is HiggsTtsAudioCpp)
+            {
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.HiggsTtsAudioCppModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Models.FirstOrDefault();
+                }
+                IsEngineSettingsVisible = true;
+                IsModelDownloadVisible = true;
+            }
+            else if (SelectedEngine is FishTtsAudioCpp)
+            {
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.FishTtsAudioCppModel);
                 if (string.IsNullOrEmpty(SelectedModel))
                 {
                     SelectedModel = Models.FirstOrDefault();

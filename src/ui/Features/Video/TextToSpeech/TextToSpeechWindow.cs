@@ -192,6 +192,10 @@ public class TextToSpeechWindow : Window
                 return StatusDots.From(engine.IsInstalled(null).Result, Confucius4TtsCrispAsr.GetEngineUpdateStatus());
             case IndexTts25AudioCpp:
                 return StatusDots.From(engine.IsInstalled(null).Result, IndexTts25AudioCpp.GetEngineUpdateStatus());
+            case HiggsTtsAudioCpp:
+                return StatusDots.From(engine.IsInstalled(null).Result, HiggsTtsAudioCpp.GetEngineUpdateStatus());
+            case FishTtsAudioCpp:
+                return StatusDots.From(engine.IsInstalled(null).Result, FishTtsAudioCpp.GetEngineUpdateStatus());
             case CosyVoice3CrispAsr:
                 return StatusDots.From(engine.IsInstalled(null).Result, CosyVoice3CrispAsr.GetEngineUpdateStatus());
             case F5TtsCrispAsr:
