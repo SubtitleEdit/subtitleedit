@@ -83,10 +83,27 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
         FileName = fileName;
         _videoFileName = videoFileName;
         _previewContext = previewContext;
+        UpdateGaps(Subtitles);
 
         if (Subtitles.Count > 0)
         {
             SelectedSubtitle = Subtitles[0];
+        }
+    }
+
+    /// <summary>
+    /// Fills in the silence before each line's start, shown in the "Gap" column to point out
+    /// likely sync points (issue #10175). Unlike the main grid's gap-to-next, the gap here is
+    /// the one *before* a line - a line starting after silence is where two independently made
+    /// subtitle files are most likely to truly align. The first line's gap is measured from
+    /// 00:00, since it too starts after "silence".
+    /// </summary>
+    private static void UpdateGaps(IList<SubtitleLineViewModel> lines)
+    {
+        for (var i = 0; i < lines.Count; i++)
+        {
+            var previousEnd = i == 0 ? TimeSpan.Zero : lines[i - 1].EndTime;
+            lines[i].PreviousGap = (lines[i].StartTime - previousEnd).TotalMilliseconds;
         }
     }
 
@@ -188,6 +205,7 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
             Othersubtitles.Add(new SubtitleLineViewModel(p, subtitle.OriginalFormat));
         }
 
+        UpdateGaps(Othersubtitles);
         SelectedOtherSubtitle = Othersubtitles.FirstOrDefault();
 
         // Sync points reference lines in the replaced file, so they are no longer valid.
@@ -317,6 +335,8 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
             Subtitles[i].StartTime = synced[i].StartTime;
             Subtitles[i].EndTime = synced[i].EndTime;
         }
+
+        UpdateGaps(Subtitles);
     }
 
     [RelayCommand]
