@@ -1,6 +1,6 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.2.0-beta29",
+  "version": "v5.2.0-beta30",
   "translatedBy": "",
   "cultureName": "jp-JP",
   "general": {
@@ -1436,7 +1436,9 @@
     "compareTextOrTimeDifference": "テキストまたは時間の違い",
     "compareNumberDifference": "字幕番号の違い",
     "ignoreWhitespace": "空白を無視",
+    "ignoreWhitespaceHint": "スペース、タブ、改行だけの違いは無視します",
     "ignoreFormatting": "書式を無視",
+    "ignoreFormattingHint": "<i> や {\\an8} など、書式タグだけの違いは無視します",
     "showOnlyDifferencesInText": "テキスト差分のみ表示",
     "loadXFromFile": "ファイルから「{0}」を読み込み",
     "saveCompareHtmlTitle": "比較結果をHTMLで保存",
@@ -2777,6 +2779,7 @@
       "subtitleGridTextDisplayWrap": "折り返し表示",
       "subtitleGridTextDisplayEllipsis": "省略記号付き1行表示",
       "subtitleGridLiveSpellCheck": "一覧でスペルチェックを多重処理",
+      "subtitleGridCenterText": "字幕グリッド内の文字を中央揃え",
       "subtitleGridShowFormatting": "一覧にフォーマット済み（HTML/ASS）テキストを表示",
       "showUpDownStartTime": "開始時間に上下ボタンを表示",
       "showUpDownEndTime": "終了時間に上下ボタンを表示",
@@ -3796,5 +3799,5 @@
     "detailGapToNext": "次の字幕との間隔：{0} < {1} ms",
     "detail": "詳細",
     "tip": "行をダブルクリック（またはEnterキーを押す）すると、その行へ移動します。実行するチェック項目とその制限値は、「設定 > 一般」で設定できます。"
-      }
+  }
 }
