@@ -1992,6 +1992,8 @@ public partial class ReviewSpeechViewModel : ObservableObject
                               ?? Languages.FirstOrDefault(),
         Qwen3TtsCrispAsr => Languages.FirstOrDefault(p => p.Name == Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrLanguage)
                             ?? Languages.FirstOrDefault(),
+        Confucius4TtsCrispAsr => Languages.FirstOrDefault(p => p.Name == Se.Settings.Video.TextToSpeech.Confucius4TtsCrispAsrLanguage)
+                                 ?? Languages.FirstOrDefault(),
         _ => Languages.FirstOrDefault(p => p.Name == Se.Settings.Video.TextToSpeech.ElevenLabsLanguage)
              ?? Languages.FirstOrDefault(p => p.Code == "en")
              ?? Languages.FirstOrDefault(),
