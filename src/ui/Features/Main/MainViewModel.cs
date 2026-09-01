@@ -8264,7 +8264,10 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task CommandVideoOpen()
     {
-        var fileName = await _fileHelper.PickOpenVideoFile(Window!, Se.Language.General.OpenVideoFileTitle);
+        // Default to the open subtitle's own folder (e.g. clicking the empty waveform right
+        // after opening an SRT) instead of wherever a video was last picked from - matching
+        // the per-open-call folder that PickOpenSubtitleFile already uses.
+        var fileName = await _fileHelper.PickOpenVideoFile(Window!, Se.Language.General.OpenVideoFileTitle, lastOpenedFilePath: _subtitleFileName);
         if (!string.IsNullOrEmpty(fileName))
         {
             await VideoOpenFile(fileName);

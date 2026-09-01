@@ -32,7 +32,7 @@ public class SettingsImportExportShortcutSlotsTests
         public Task<string> PickSaveSubtitleFile(Visual sender, string extension, string suggestedFileName, string title) => throw new NotSupportedException();
         public Task<string> PickSaveFile(Visual sender, string extension, string extensionTitle, string suggestedFileName, string title) => throw new NotSupportedException();
         public Task<string> PickSaveFile(Visual sender, IReadOnlyList<(string Name, string Extension)> fileTypes, string suggestedFileName, string title) => throw new NotSupportedException();
-        public Task<string> PickOpenVideoFile(Visual sender, string title) => throw new NotSupportedException();
+        public Task<string> PickOpenVideoFile(Visual sender, string title, string? lastOpenedFilePath = null) => throw new NotSupportedException();
         public Task<string[]> PickOpenVideoFiles(Visual sender, string title) => throw new NotSupportedException();
         public Task<string> PickOpenImageFile(Visual sender, string title) => throw new NotSupportedException();
     }

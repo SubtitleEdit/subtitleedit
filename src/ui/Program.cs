@@ -33,6 +33,11 @@ namespace Nikse.SubtitleEdit
         public static string? PendingVideoToOpen { get; set; }
         public static bool FileOpenedViaActivation { get; set; }
 
+        // Distinguishes a genuine double-click on the Dock icon from the single-click
+        // activation AppKit sends on every Dock click - see the Reopen handling below.
+        private static long _lastReopenActivationTicks = long.MinValue / 2;
+        private const long DoubleClickIntervalMs = 500;
+
         [STAThread]
         public static void Main(string[] args)
         {
@@ -421,6 +426,28 @@ namespace Nikse.SubtitleEdit
 
                 activatable.Activated += (sender, e) =>
                 {
+                    // Clicking the Dock icon while SE is already running delivers a Reopen
+                    // activation on every click, not just a double-click - AppKit uses the same
+                    // callback for "bring the running app to the front" as it does for "the user
+                    // wants a new window" (e.g. Finder, TextEdit). A single click must keep doing
+                    // the former (the OS already brings existing windows forward on its own); only
+                    // a second click landing within the standard double-click window counts as the
+                    // latter, matching every other platform's "open" gesture (a second Windows
+                    // process, a fresh Linux launch) handing the user a new, empty window.
+                    if (e is ActivatedEventArgs reopenArgs && reopenArgs.Kind == ActivationKind.Reopen)
+                    {
+                        var now = Environment.TickCount64;
+                        var isDoubleClick = now - _lastReopenActivationTicks <= DoubleClickIntervalMs;
+                        _lastReopenActivationTicks = now;
+
+                        if (isDoubleClick && lifetime.MainWindow != null)
+                        {
+                            Dispatcher.UIThread.Post(Nikse.SubtitleEdit.Features.Main.Layout.MainWindowFactory.OpenNewWindow);
+                        }
+
+                        return;
+                    }
+
                     if (e is not FileActivatedEventArgs args || args.Kind != ActivationKind.File)
                     {
                         return;
@@ -432,19 +459,24 @@ namespace Nikse.SubtitleEdit
                         if (System.IO.File.Exists(filePath))
                         {
                             FileOpenedViaActivation = true;
-                            var mainView = lifetime.MainWindow == null
-                                ? null
-                                : UiTheme.GetUnscaledContent(lifetime.MainWindow) as MainView;
-                            if (mainView != null)
+                            if (lifetime.MainWindow == null)
                             {
-                                Dispatcher.UIThread.Post(async () =>
-                                {
-                                    await mainView.OpenFile(filePath);
-                                });
+                                // Still starting up - no window exists yet, so the primary
+                                // window about to be created will load this file itself.
+                                PendingFileToOpen = filePath;
                             }
                             else
                             {
-                                PendingFileToOpen = filePath;
+                                // Already running: macOS delivers this when a file is opened
+                                // from Finder while SE is running, or dropped on the Dock
+                                // icon. Open it in a new window instead of hijacking whichever
+                                // window happens to be lifetime.MainWindow - matches Windows,
+                                // where each Finder/Explorer open is a separate process and
+                                // never touches existing windows.
+                                Dispatcher.UIThread.Post(async () =>
+                                {
+                                    await Nikse.SubtitleEdit.Features.Main.Layout.MainWindowFactory.OpenNewWindowWithFile(filePath);
+                                });
                             }
 
                             break;

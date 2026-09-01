@@ -43,7 +43,7 @@ public class StubFileHelper : IFileHelper
     public virtual Task<string> PickSaveFile(Visual sender, IReadOnlyList<(string Name, string Extension)> fileTypes, string suggestedFileName, string title)
         => throw new NotSupportedException();
 
-    public virtual Task<string> PickOpenVideoFile(Visual sender, string title)
+    public virtual Task<string> PickOpenVideoFile(Visual sender, string title, string? lastOpenedFilePath = null)
         => throw new NotSupportedException();
 
     public virtual Task<string[]> PickOpenVideoFiles(Visual sender, string title)
