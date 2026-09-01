@@ -2428,7 +2428,7 @@ public static class DownloadHashManager
 
     /// <summary>
     /// Reverse of <see cref="ResolveCrispAsrKey"/> — returns the variant string matching the
-    /// given hash key. For Windows: "cuda" / "vulkan" / "cpu" / "cpu-legacy". For Linux x86_64:
+    /// given hash key. For Windows: "cuda" / "cuda13" / "vulkan" / "cpu" / "cpu-legacy". For Linux x86_64:
     /// "cuda" / "cuda13" / "vulkan" / "hip" for the GPU builds, empty string for the default CPU
     /// build. Returns null otherwise.
     /// </summary>
@@ -2652,9 +2652,10 @@ public static class DownloadHashManager
 
     /// <summary>
     /// Detects which Windows CrispASR variant is installed.
-    /// Returns "cuda" / "vulkan" / "cpu" / "cpu-legacy", or null if the folder doesn't look like a
-    /// CrispASR install. CUDA and Vulkan are identified by their backend DLLs; CPU vs CPU-legacy
-    /// is decided by sidecar or executable-hash match (CPU-legacy is the AVX2-less fallback).
+    /// Returns "cuda" / "cuda13" / "vulkan" / "cpu" / "cpu-legacy", or null if the folder doesn't
+    /// look like a CrispASR install. CUDA and Vulkan are identified by their backend DLLs; the
+    /// CUDA major version and CPU vs CPU-legacy are decided by sidecar or executable-hash match
+    /// (CPU-legacy is the AVX2-less fallback).
     /// </summary>
     public static string? DetectCrispAsrWindowsVariant(string installFolder)
     {
@@ -2665,7 +2666,26 @@ public static class DownloadHashManager
 
         if (File.Exists(Path.Combine(installFolder, "ggml-cuda.dll")))
         {
-            return "cuda";
+            // Upstream added a CUDA 13 build beside the CUDA 12 one in v0.8.31 and both ship the
+            // same ggml-cuda.dll name, so returning "cuda" for either would re-download the CUDA
+            // 12 archive over a CUDA 13 install (TtsVoiceInstaller re-downloads "the variant the
+            // user originally picked"). The sidecar written at install time is the direct answer;
+            // an install made before CUDA 13 existed has none, and is told apart by the cudart
+            // redistributable bundled alongside - the same discriminator
+            // DetectLlamaCppWindowsVariant uses. RemoveStaleCrispAsrBinaries wipes the binaries
+            // before every unpack, so no stale _13 runtime can be left behind by an earlier build.
+            var cudaSidecarKey = TryReadInstalledKey(installFolder);
+            if (cudaSidecarKey == CrispAsr.WindowsCuda13)
+            {
+                return "cuda13";
+            }
+
+            if (cudaSidecarKey == CrispAsr.WindowsCuda)
+            {
+                return "cuda";
+            }
+
+            return File.Exists(Path.Combine(installFolder, "cudart64_13.dll")) ? "cuda13" : "cuda";
         }
 
         if (File.Exists(Path.Combine(installFolder, "ggml-vulkan.dll")))

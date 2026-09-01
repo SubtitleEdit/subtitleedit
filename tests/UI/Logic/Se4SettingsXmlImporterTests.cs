@@ -233,6 +233,73 @@ public class Se4SettingsXmlImporterTests : IDisposable
         Assert.Equal(UiTheme.ThemeNameLight, Se.Settings.Appearance.Theme);
     }
 
+    [Fact]
+    public void ApplyAppearance_ReadsTheDarkThemeColorsSe4ActuallyWrites()
+    {
+        // SE 4 writes most colors as Color.ToArgb(), but the dark theme pair goes through its own
+        // ToHtml() - "#rrggbbaa", alpha last. Only accepting the integer form dropped both without
+        // a word, so an imported SE 4 dark theme came up in SE 5's default colors.
+        var file = Parse(
+            "<Settings><General>" +
+            "<UseDarkTheme>True</UseDarkTheme>" +
+            "<DarkThemeBackColor>#1e1f22ff</DarkThemeBackColor>" +
+            "<DarkThemeForeColor>#dfe1e5ff</DarkThemeForeColor>" +
+            "</General></Settings>");
+
+        Se4SettingsXmlImporter.ApplyAppearance(file);
+
+        var a = Se.Settings.Appearance;
+        Assert.Equal("#FF1E1F22", a.DarkModeBackgroundColor);
+        Assert.Equal("#FFDFE1E5", a.DarkModeForegroundColor);
+    }
+
+    [Fact]
+    public void ApplyAppearance_StillReadsTheLegacyIntegerDarkThemeColor()
+    {
+        // SE 4's own reader keeps a "-14803426" fallback for DarkThemeBackColor, so a file written
+        // by an older SE 4 has to keep working.
+        var file = Parse(
+            "<Settings><General><DarkThemeBackColor>-14803426</DarkThemeBackColor></General></Settings>");
+
+        Se4SettingsXmlImporter.ApplyAppearance(file);
+
+        Assert.Equal("#FF1E1E1E", Se.Settings.Appearance.DarkModeBackgroundColor);
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("   ")]
+    [InlineData("#12345")]
+    [InlineData("#nothex1")]
+    [InlineData("Control")]
+    public void TryParseSe4Color_RejectsWhatItCannotRead(string value)
+    {
+        Assert.False(Se4SettingsXmlImporter.TryParseSe4Color(value, out _));
+    }
+
+    [Fact]
+    public void TryParseSe4Color_TakesTheAlphaFromTheEndOfTheHexAndTheFrontOfTheInteger()
+    {
+        Assert.True(Se4SettingsXmlImporter.TryParseSe4Color("#11223380", out var fromHex));
+        AssertArgb(0x80, 0x11, 0x22, 0x33, fromHex);
+
+        // No alpha in the hex means opaque.
+        Assert.True(Se4SettingsXmlImporter.TryParseSe4Color("#112233", out var noAlpha));
+        AssertArgb(0xFF, 0x11, 0x22, 0x33, noAlpha);
+
+        // System.Drawing's ToArgb() is the other way round: "-2146360781" is 0x80112233 signed.
+        Assert.True(Se4SettingsXmlImporter.TryParseSe4Color("-2146360781", out var fromInt));
+        AssertArgb(0x80, 0x11, 0x22, 0x33, fromInt);
+    }
+
+    private static void AssertArgb(byte a, byte r, byte g, byte b, Avalonia.Media.Color color)
+    {
+        Assert.Equal(a, color.A);
+        Assert.Equal(r, color.R);
+        Assert.Equal(g, color.G);
+        Assert.Equal(b, color.B);
+    }
+
     // SE 4 prefixed several of these with "AutoTranslate" and SE 5 does not, so the renamed ones
     // are the ones worth pinning down.
     [Fact]

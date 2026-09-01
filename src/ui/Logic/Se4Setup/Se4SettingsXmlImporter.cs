@@ -515,22 +515,69 @@ public static class Se4SettingsXmlImporter
         }
     }
 
-    // SE 4 writes colors as System.Drawing's signed 32-bit ARGB (Color.ToArgb); SE 5 stores hex.
+    // SE 5 stores hex; SE 4 has two spellings, so both are accepted - see TryParseSe4Color.
     private static void SetColor(XElement parent, string name, Action<string> apply)
     {
-        var value = Value(parent, name);
-        if (!int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var argb))
+        if (TryParseSe4Color(Value(parent, name), out var color))
         {
-            return;
+            apply(color.FromColorToHex());
+        }
+    }
+
+    /// <summary>
+    /// A color as SE 4's Settings.xml spells it. Most are System.Drawing's signed 32-bit ARGB
+    /// (<c>Color.ToArgb()</c>), but the dark theme colors go through SE 4's own <c>ToHtml()</c> -
+    /// <c>Utilities.ColorToHexWithTransparency</c>, i.e. "#rrggbbaa" with the alpha *last*. Reading
+    /// only the integer form dropped DarkThemeBackColor and DarkThemeForeColor without a word, so
+    /// an imported SE 4 dark theme came up in SE 5's default colors.
+    /// </summary>
+    internal static bool TryParseSe4Color(string? value, out Color color)
+    {
+        color = default;
+        var text = value?.Trim();
+        if (string.IsNullOrEmpty(text))
+        {
+            return false;
+        }
+
+        if (text[0] == '#')
+        {
+            var hex = text.Substring(1);
+            if (hex.Length != 6 && hex.Length != 8)
+            {
+                return false;
+            }
+
+            foreach (var c in hex)
+            {
+                if (!Uri.IsHexDigit(c))
+                {
+                    return false;
+                }
+            }
+
+            var rgba = uint.Parse(hex.PadRight(8, 'f'), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+            color = Color.FromArgb(
+                (byte)(rgba & 0xFF),          // alpha last, unlike ToArgb
+                (byte)((rgba >> 24) & 0xFF),
+                (byte)((rgba >> 16) & 0xFF),
+                (byte)((rgba >> 8) & 0xFF));
+            return true;
+        }
+
+        // SE 4 itself still reads a bare integer here (its DarkThemeBackColor reader keeps a
+        // "-14803426" fallback), so a settings file written by an older SE 4 is accepted too.
+        if (!int.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out var argb))
+        {
+            return false;
         }
 
         var bytes = unchecked((uint)argb);
-        var color = Color.FromArgb(
+        color = Color.FromArgb(
             (byte)((bytes >> 24) & 0xFF),
             (byte)((bytes >> 16) & 0xFF),
             (byte)((bytes >> 8) & 0xFF),
             (byte)(bytes & 0xFF));
-
-        apply(color.FromColorToHex());
+        return true;
     }
 }
