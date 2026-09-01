@@ -260,6 +260,36 @@ public class SeConvSettingsTest : IDisposable
     }
 
     [Fact]
+    public void ApplyExportImages_FullFrameKeysApplied()
+    {
+        var path = WriteSettings("""
+            {
+              "exportImages": {
+                "isFullFrame": true,
+                "fullFrameBackgroundColor": "#FF0000FF"
+              }
+            }
+            """);
+
+        var style = new SeConv.Core.ImageExportStyle();
+        SeConvSettings.Load(path).ApplyExportImages(style);
+
+        Assert.True(style.IsFullFrame);
+        Assert.Equal(255, style.FullFrameBackgroundColor.Alpha);
+        Assert.Equal(255, style.FullFrameBackgroundColor.Blue);
+        // The box behind the text is a separate colour and must not follow the frame background.
+        Assert.Equal(SkiaSharp.SKColors.Transparent, style.BackgroundColor);
+    }
+
+    [Fact]
+    public void ApplyExportImages_FullFrameDefaultsAreOffAndTransparent()
+    {
+        var style = new SeConv.Core.ImageExportStyle();
+        Assert.False(style.IsFullFrame);
+        Assert.Equal(0, style.FullFrameBackgroundColor.Alpha);
+    }
+
+    [Fact]
     public void ApplyExportImages_ProfileOverlaysOnTopOfBase()
     {
         var path = WriteSettings("""

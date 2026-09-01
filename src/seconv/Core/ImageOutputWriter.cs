@@ -173,7 +173,8 @@ internal static class ImageOutputWriter
             FramesPerSecond = options.TargetFps ?? options.Fps ?? 25.0,
             IsRightToLeft = false,
             IsForced = false,
-            IsFullFrame = false,
+            IsFullFrame = style.IsFullFrame,
+            FullFrameBackgroundColor = style.FullFrameBackgroundColor,
             Error = string.Empty,
         };
     }
@@ -220,7 +221,10 @@ internal static class ImageOutputWriter
             FramesPerSecond = options.TargetFps ?? options.Fps ?? 25.0,
             IsRightToLeft = false,
             IsForced = false,
-            IsFullFrame = false,
+            // "Full frame" pads the cropped bitmap out to the video frame - only the FCP and
+            // Blu-Ray sup handlers act on it, the rest ignore it (SubtitleConverter warns).
+            IsFullFrame = style.IsFullFrame,
+            FullFrameBackgroundColor = style.FullFrameBackgroundColor,
             Error = string.Empty,
         };
 

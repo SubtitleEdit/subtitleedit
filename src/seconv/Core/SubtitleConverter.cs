@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.UiLogic.Export;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 using Spectre.Console;
 
@@ -17,6 +18,31 @@ internal class SubtitleConverter
     // one mkv would otherwise silently overwrite each other).
     private readonly HashSet<string> _usedOutputFileNames = new(StringComparer.OrdinalIgnoreCase);
 
+    /// <summary>
+    /// "Full frame" reaches only <see cref="ExportHandlerFcp"/> and
+    /// <see cref="ExportHandlerBluRaySup"/>; the other image handlers ignore
+    /// <see cref="ImageParameter.IsFullFrame"/> and write the cropped bitmap. Silently doing
+    /// nothing is worse on a command line than in the export dialog - the setting often comes
+    /// from a shared --settings profile - so say it was dropped (issue #14376). A text target
+    /// ignores every image styling option, not just this one, so it warns for image targets only.
+    /// </summary>
+    private static void WarnIfFullFrameIgnored(ConversionOptions options, ConversionResult result)
+    {
+        if (!options.ImageStyle.IsFullFrame)
+        {
+            return;
+        }
+
+        var handler = ImageOutputWriter.TryCreateHandler(LibSEIntegration.NormalizeFormatName(options.Format));
+        if (handler is null || handler.ExportImageType is ExportImageType.Fcp or ExportImageType.BluRaySup)
+        {
+            return;
+        }
+
+        result.Warnings.Add(
+            $"Full frame image is not supported by '{options.Format}' and was ignored - it applies to fcpimage and bluraysup.");
+    }
+
     public async Task<ConversionResult> ConvertAsync(ConversionOptions options)
     {
         var result = new ConversionResult();
@@ -28,6 +54,8 @@ internal class SubtitleConverter
             {
                 _translateRunner = AutoTranslateRunner.Create(options);
             }
+
+            WarnIfFullFrameIgnored(options, result);
 
             // Get input files
             var inputFiles = GetInputFiles(options);
