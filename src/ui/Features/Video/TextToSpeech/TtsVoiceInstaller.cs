@@ -187,6 +187,18 @@ public static class TtsVoiceInstaller
             minVersionNote: "v0.8.25 or newer");
 
     /// <summary>
+    /// Ensures the CrispASR runtime that Confucius4-TTS (CrispASR) runs on is installed.
+    /// The confucius4-tts backend ships in CrispASR v0.8.30 and newer; the version note names
+    /// that floor because older builds have no confucius4-tts backend at all and abort on the
+    /// unknown --backend value.
+    /// </summary>
+    public static Task<bool> EnsureCrispAsrForConfucius4Tts(Window? window, IWindowService windowService, bool forceRedownload)
+        => EnsureCrispAsrAsync(window, windowService, forceRedownload,
+            engineDisplayName: "Confucius4-TTS (CrispASR)",
+            extraCapabilityCheck: null,
+            minVersionNote: "v0.8.30 or newer");
+
+    /// <summary>
     /// Shared CrispASR install/update flow used by all TTS engines that sit on the
     /// CrispASR runtime. Prompts refer to <paramref name="engineDisplayName"/> so users
     /// see the right engine name. <paramref name="extraCapabilityCheck"/> lets the caller

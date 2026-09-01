@@ -878,6 +878,30 @@ public class FfmpegGenerator
     }
 
     /// <summary>
+    /// Resamples / mixes the input to mono PCM16 WAV at 22.05 kHz. Used by Confucius4-TTS
+    /// (CrispASR) for its voice-cloning reference WAV — the S2A/vocoder chain works at 22.05 kHz
+    /// (the reference-mel path reads the file at that rate) while the w2v-BERT/CAM++ encoders
+    /// downsample to 16 kHz internally.
+    /// </summary>
+    public static Process ConvertToMono22kHzWav(string inputFileName, string outputFileName, DataReceivedEventHandler? dataReceivedHandler = null)
+    {
+        var process = new Process
+        {
+            StartInfo =
+            {
+                FileName = GetFfmpegLocation(),
+                Arguments = $"-y -i \"{inputFileName}\" -ar 22050 -ac 1 -c:a pcm_s16le \"{outputFileName}\"",
+                UseShellExecute = false,
+                CreateNoWindow = true,
+            }
+        };
+
+        SetupDataReceiveHandler(dataReceivedHandler, process);
+
+        return process;
+    }
+
+    /// <summary>
     /// Resamples / mixes the input to mono PCM16 WAV at 16 kHz. Used by CosyVoice3 (CrispASR)
     /// for its zero-shot voice-cloning reference WAV — the s3tok speech tokenizer expects
     /// 16 kHz mono. Higher rates work but cause a lossy resample on every synth call.

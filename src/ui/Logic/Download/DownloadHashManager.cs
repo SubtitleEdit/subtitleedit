@@ -224,6 +224,19 @@ public static class DownloadHashManager
         public const string SpeakerEncoder = "DotsTtsCrispAsr.SpeakerEncoder";
     }
 
+    public static class Confucius4TtsCrispAsr
+    {
+        // SHA-256 of the Confucius4-TTS GGUFs on cstr/confucius4-tts-GGUF (HF LFS oid; the Q8_0
+        // pair, the vocoder and the w2v encoder were confirmed against a local sha256sum of the
+        // downloaded files).
+        public const string T2sQ8_0 = "Confucius4TtsCrispAsr.T2sQ8_0";
+        public const string T2sF16 = "Confucius4TtsCrispAsr.T2sF16";
+        public const string S2aQ8_0 = "Confucius4TtsCrispAsr.S2aQ8_0";
+        public const string S2aF16 = "Confucius4TtsCrispAsr.S2aF16";
+        public const string Vocoder = "Confucius4TtsCrispAsr.Vocoder";
+        public const string W2v = "Confucius4TtsCrispAsr.W2v";
+    }
+
     public static class IndexTts25AudioCpp
     {
         // SHA-256 of the IndexTTS-2.5 GGUFs on audio-cpp/audio.cpp-gguf (HF LFS oid, confirmed
@@ -1855,6 +1868,33 @@ public static class DownloadHashManager
             [DotsTtsCrispAsr.SpeakerEncoder] = new[]
             {
                 "6f6d41f1394273b0da5a7a9be8f15f0e59d3b4d5983cab7d1fac08630b912e7f", // dots-tts-soar-spk-f16.gguf
+            },
+
+            // Confucius4-TTS weights, from cstr/confucius4-tts-GGUF. Q8_0 pair, vocoder and w2v
+            // confirmed by local sha256sum of the downloaded files; T2S/S2A F16 are the HF LFS oids.
+            [Confucius4TtsCrispAsr.T2sQ8_0] = new[]
+            {
+                "c1ed6026f8959d6cbc639ae97ef450ed7b1399159af753e69e54c6d7aac5e9e0", // confucius4-tts-t2s-q8_0.gguf
+            },
+            [Confucius4TtsCrispAsr.T2sF16] = new[]
+            {
+                "b7dc5fdad32d90f5e303da226b69aa04eafe5331e93be6a0334e47e4ea534691", // confucius4-tts-t2s-f16.gguf
+            },
+            [Confucius4TtsCrispAsr.S2aQ8_0] = new[]
+            {
+                "55be5d58d1b7443af01ec7b3b96f347c3978728215346bd162753c36885ca7d3", // confucius4-tts-s2a-q8_0.gguf
+            },
+            [Confucius4TtsCrispAsr.S2aF16] = new[]
+            {
+                "ea259809ebafdff7bf7fd3955b68e0d0722a0ad792b8428d48fbfbdd1e361d0d", // confucius4-tts-s2a-f16.gguf
+            },
+            [Confucius4TtsCrispAsr.Vocoder] = new[]
+            {
+                "353d37d41f01152796e3a3b21d3740b0e38d7b0ba486a8df82744028d69dae69", // confucius4-tts-bigvgan-22k-f16.gguf
+            },
+            [Confucius4TtsCrispAsr.W2v] = new[]
+            {
+                "02ea34b6a0bc1f027f9c4325186368ddac8d51ded3dc6a90f565dce90a26c0ac", // confucius4-tts-w2v-f16.gguf
             },
 
             // IndexTTS-2.5 weights, from audio-cpp/audio.cpp-gguf. Q8_0 confirmed by local

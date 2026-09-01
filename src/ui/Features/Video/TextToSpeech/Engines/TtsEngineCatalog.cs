@@ -74,6 +74,12 @@ public static class TtsEngineCatalog
             // engines; clones from a CAM++ speaker embedding so no reference transcript is needed.
             new DotsTtsCrispAsr(),
 
+            // Confucius4-TTS (CrispASR) — NetEase Youdao's two-stage GPT-2/flow-matching model,
+            // 22.05 kHz, 14 languages, Apache-2.0. Zero-shot cloning is mandatory (no default
+            // voice exists); clones from w2v-BERT + CAM++ conditioning so no reference
+            // transcript is needed.
+            new Confucius4TtsCrispAsr(),
+
             // CosyVoice3 (CrispASR) sits immediately after IndexTtsCrispAsr to keep the CrispASR
             // engines grouped visually in the engine combo.
             new CosyVoice3CrispAsr(),
