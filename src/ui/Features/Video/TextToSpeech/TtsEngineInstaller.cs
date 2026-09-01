@@ -304,6 +304,45 @@ public static class TtsEngineInstaller
             return true;
         }
 
+        if (engine is Confucius4TtsCrispAsr)
+        {
+            if (!await TtsVoiceInstaller.EnsureCrispAsrForConfucius4Tts(window, windowService, forceRedownload: false))
+            {
+                return false;
+            }
+
+            var confuciusModelKey = Confucius4TtsCrispAsr.ResolveModelKey(model);
+            if (!Confucius4TtsCrispAsr.AreModelsInstalled(confuciusModelKey))
+            {
+                // Model key already carries the total download size, so no separate size here.
+                var answer = await MessageBox.Show(
+                    window,
+                    "Download Confucius4-TTS (CrispASR) models?",
+                    $"{Environment.NewLine}\"Confucius4-TTS (CrispASR)\" ({confuciusModelKey}) requires models.{Environment.NewLine}{Environment.NewLine}Download models?",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                if (answer != MessageBoxResult.Yes)
+                {
+                    return false;
+                }
+
+                var dlResult = await windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(window, vm => vm.StartDownloadConfucius4TtsCrispAsrModels(confuciusModelKey));
+                if (!dlResult.OkPressed || !Confucius4TtsCrispAsr.AreModelsInstalled(confuciusModelKey))
+                {
+                    return false;
+                }
+
+                await Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    await refreshVoices();
+                });
+                return true;
+            }
+
+            return true;
+        }
+
         if (engine is DotsTtsCrispAsr)
         {
             if (!await TtsVoiceInstaller.EnsureCrispAsrForDotsTts(window, windowService, forceRedownload: false))

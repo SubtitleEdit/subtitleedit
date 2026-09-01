@@ -353,6 +353,11 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             Se.Settings.Video.TextToSpeech.DotsTtsCrispAsrModel = SelectedModel ?? DotsTtsCrispAsr.DefaultModelKey;
         }
+        else if (SelectedEngine is Confucius4TtsCrispAsr)
+        {
+            Se.Settings.Video.TextToSpeech.Confucius4TtsCrispAsrModel = SelectedModel ?? Confucius4TtsCrispAsr.DefaultModelKey;
+            Se.Settings.Video.TextToSpeech.Confucius4TtsCrispAsrLanguage = SelectedLanguage?.Name ?? string.Empty;
+        }
         else if (SelectedEngine is IndexTts25AudioCpp)
         {
             Se.Settings.Video.TextToSpeech.IndexTts25AudioCppModel = SelectedModel ?? IndexTts25AudioCpp.DefaultModelKey;
@@ -1050,6 +1055,7 @@ public partial class TextToSpeechViewModel : ObservableObject
     {
         OmniVoiceCrispAsr => Se.Settings.Video.TextToSpeech.OmniVoiceCrispAsrLanguage,
         MossTtsCrispAsr => Se.Settings.Video.TextToSpeech.MossTtsCrispAsrLanguage,
+        Confucius4TtsCrispAsr => Se.Settings.Video.TextToSpeech.Confucius4TtsCrispAsrLanguage,
         CosyVoice3CrispAsr => Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrLanguage,
         Qwen3TtsCrispAsr => Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrLanguage,
         ChatterboxTtsCpp => Se.Settings.Video.TextToSpeech.ChatterboxCrispAsrLanguage,
@@ -1302,6 +1308,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         if (keepAlive is not DotsTtsCrispAsr)
         {
             DotsTtsCrispAsr.StopServer();
+        }
+        if (keepAlive is not Confucius4TtsCrispAsr)
+        {
+            Confucius4TtsCrispAsr.StopServer();
         }
         if (keepAlive is not IndexTts25AudioCpp)
         {
@@ -1594,6 +1604,9 @@ public partial class TextToSpeechViewModel : ObservableObject
             case DotsTtsCrispAsr:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadDotsTtsCrispAsrModels(DotsTtsCrispAsr.ResolveModelKey(SelectedModel)));
                 break;
+            case Confucius4TtsCrispAsr:
+                await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadConfucius4TtsCrispAsrModels(Confucius4TtsCrispAsr.ResolveModelKey(SelectedModel)));
+                break;
             case IndexTts25AudioCpp:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadIndexTts25AudioCppModels(IndexTts25AudioCpp.ResolveModelKey(SelectedModel)));
                 break;
@@ -1671,6 +1684,9 @@ public partial class TextToSpeechViewModel : ObservableObject
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
             DotsTtsCrispAsr => DotsTtsCrispAsr.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
+            Confucius4TtsCrispAsr => Confucius4TtsCrispAsr.AreModelsInstalled(modelKey)
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
             IndexTts25AudioCpp => IndexTts25AudioCpp.AreModelsInstalled(modelKey)
@@ -3956,6 +3972,8 @@ public partial class TextToSpeechViewModel : ObservableObject
                                          ?? Languages.FirstOrDefault(),
                     MossTtsCrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.MossTtsCrispAsrLanguage)
                                        ?? Languages.FirstOrDefault(),
+                    Confucius4TtsCrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.Confucius4TtsCrispAsrLanguage)
+                                             ?? Languages.FirstOrDefault(),
                     CosyVoice3CrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrLanguage)
                                           ?? Languages.FirstOrDefault(),
                     Qwen3TtsCrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrLanguage)
@@ -4078,6 +4096,16 @@ public partial class TextToSpeechViewModel : ObservableObject
             else if (SelectedEngine is DotsTtsCrispAsr)
             {
                 SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.DotsTtsCrispAsrModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Models.FirstOrDefault();
+                }
+                IsEngineSettingsVisible = true;
+                IsModelDownloadVisible = true;
+            }
+            else if (SelectedEngine is Confucius4TtsCrispAsr)
+            {
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.Confucius4TtsCrispAsrModel);
                 if (string.IsNullOrEmpty(SelectedModel))
                 {
                     SelectedModel = Models.FirstOrDefault();

@@ -44,6 +44,13 @@ public class SeVideoTextToSpeech
     // Flow-matching Euler steps for dots.tts (8-32, default 16). Higher is better and slower;
     // there is no CLI flag for it, so the engine passes it as CRISPASR_DOTS_ODE_STEPS.
     public int DotsTtsCrispAsrOdeSteps { get; set; }
+    public string Confucius4TtsCrispAsrModel { get; set; }
+    // Display name of the picked Confucius4-TTS target language (empty = English, the backend's
+    // implicit default — there is no auto-detection).
+    public string Confucius4TtsCrispAsrLanguage { get; set; }
+    // Flow-matching Euler steps for the Confucius4-TTS S2A stage (10-40, default 20). Higher is
+    // better and slower; passed as --tts-steps.
+    public int Confucius4TtsCrispAsrOdeSteps { get; set; }
     public string IndexTts25AudioCppModel { get; set; }
     // Licence version the user accepted for the IndexTTS-2.5 weights (bilibili Model Use
     // License, not OSI-approved). Empty until accepted; a version bump re-prompts.
@@ -179,6 +186,9 @@ public class SeVideoTextToSpeech
         PocketTtsCrispAsrSpeed = 1.0;
         DotsTtsCrispAsrModel = "Q8_0 (~3.5 GB)";
         DotsTtsCrispAsrOdeSteps = 16;
+        Confucius4TtsCrispAsrModel = "Q8_0 (~1.9 GB)";
+        Confucius4TtsCrispAsrLanguage = string.Empty;
+        Confucius4TtsCrispAsrOdeSteps = 20;
         IndexTts25AudioCppModel = "Q8_0 (~3.3 GB)";
         IndexTts25AudioCppLicenseAccepted = string.Empty;
         IndexTts25AudioCppBackend = string.Empty;

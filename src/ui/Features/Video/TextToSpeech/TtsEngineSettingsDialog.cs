@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ChatterboxTtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.CosyVoice3CrispAsrSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Confucius4TtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DotsTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ElevenLabsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
@@ -42,6 +43,7 @@ public static class TtsEngineSettingsDialog
         IndexTts25AudioCpp or
         IndexTtsCrispAsr or
         DotsTtsCrispAsr or
+        Confucius4TtsCrispAsr or
         CosyVoice3CrispAsr or
         PocketTtsCrispAsr or
         F5TtsCrispAsr or
@@ -82,6 +84,10 @@ public static class TtsEngineSettingsDialog
         else if (engine is DotsTtsCrispAsr)
         {
             await windowService.ShowDialogAsync<DotsTtsCrispAsrSettingsWindow, DotsTtsCrispAsrSettingsViewModel>(window, vm => vm.Initialize());
+        }
+        else if (engine is Confucius4TtsCrispAsr)
+        {
+            await windowService.ShowDialogAsync<Confucius4TtsCrispAsrSettingsWindow, Confucius4TtsCrispAsrSettingsViewModel>(window, vm => vm.Initialize());
         }
         else if (engine is CosyVoice3CrispAsr)
         {

@@ -58,6 +58,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     private Task? _downloadTaskVibeVoiceCrispAsrModels;
     private Task? _downloadTaskVibeVoiceCrispAsrVoices;
     private Task? _downloadTaskDotsTtsCrispAsrModels;
+    private Task? _downloadTaskConfucius4TtsCrispAsrModels;
     private Task? _downloadTaskIndexTtsCrispAsrModels;
     private Task? _downloadTaskIndexTtsCrispAsrVoices;
     private Task? _downloadTaskPocketTtsCrispAsrModels;
@@ -90,6 +91,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     private readonly IIndexTtsCrispAsrDownloadService _indexTtsCrispAsrDownloadService;
     private readonly IPocketTtsCrispAsrDownloadService _pocketTtsCrispAsrDownloadService;
     private readonly IDotsTtsCrispAsrDownloadService _dotsTtsCrispAsrDownloadService;
+    private readonly IConfucius4TtsCrispAsrDownloadService _confucius4TtsCrispAsrDownloadService;
     private readonly IIndexTts25AudioCppDownloadService _indexTts25AudioCppDownloadService;
     private Task? _downloadTaskIndexTts25AudioCppEngine;
     private Task? _downloadTaskIndexTts25AudioCppModels;
@@ -136,6 +138,7 @@ public partial class DownloadTtsViewModel : ObservableObject
         IIndexTtsCrispAsrDownloadService indexTtsCrispAsrDownloadService,
         IPocketTtsCrispAsrDownloadService pocketTtsCrispAsrDownloadService,
         IDotsTtsCrispAsrDownloadService dotsTtsCrispAsrDownloadService,
+        IConfucius4TtsCrispAsrDownloadService confucius4TtsCrispAsrDownloadService,
         IIndexTts25AudioCppDownloadService indexTts25AudioCppDownloadService,
         ICosyVoice3CrispAsrDownloadService cosyVoice3CrispAsrDownloadService,
         IF5TtsCrispAsrDownloadService f5TtsCrispAsrDownloadService,
@@ -154,6 +157,7 @@ public partial class DownloadTtsViewModel : ObservableObject
         _indexTtsCrispAsrDownloadService = indexTtsCrispAsrDownloadService;
         _pocketTtsCrispAsrDownloadService = pocketTtsCrispAsrDownloadService;
         _dotsTtsCrispAsrDownloadService = dotsTtsCrispAsrDownloadService;
+        _confucius4TtsCrispAsrDownloadService = confucius4TtsCrispAsrDownloadService;
         _indexTts25AudioCppDownloadService = indexTts25AudioCppDownloadService;
         _downloadStreamIndexTts25AudioCppEngine = new MemoryStream();
         _downloadStreamIndexTts25AudioCppVoices = new MemoryStream();
@@ -994,6 +998,18 @@ public partial class DownloadTtsViewModel : ObservableObject
                 return;
             }
 
+            if (_downloadTaskConfucius4TtsCrispAsrModels is { IsCompletedSuccessfully: true })
+            {
+                // Same as dots.tts: no voice pack to fetch afterwards — Confucius4-TTS clones
+                // from user-imported WAVs, and the engine seeds the voices folder from
+                // qwen3-tts.cpp on first use.
+                _timer.Stop();
+                _downloadTaskConfucius4TtsCrispAsrModels = null;
+                OkPressed = true;
+                Close();
+                return;
+            }
+
             if (_downloadTaskDotsTtsCrispAsrModels is { IsFaulted: true })
             {
                 _timer.Stop();
@@ -1008,6 +1024,24 @@ public partial class DownloadTtsViewModel : ObservableObject
                 {
                     ProgressText = Se.Language.General.DownloadFailed;
                     Error = dotsEx?.Message ?? Se.Language.General.UnknownError;
+                }
+                return;
+            }
+
+            if (_downloadTaskConfucius4TtsCrispAsrModels is { IsFaulted: true })
+            {
+                _timer.Stop();
+                var confuciusEx = _downloadTaskConfucius4TtsCrispAsrModels.Exception?.InnerException ?? _downloadTaskConfucius4TtsCrispAsrModels.Exception;
+                _downloadTaskConfucius4TtsCrispAsrModels = null;
+                if (confuciusEx is OperationCanceledException)
+                {
+                    ProgressText = Se.Language.General.DownloadCanceled;
+                    Close();
+                }
+                else
+                {
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = confuciusEx?.Message ?? Se.Language.General.UnknownError;
                 }
                 return;
             }
@@ -2264,6 +2298,29 @@ public partial class DownloadTtsViewModel : ObservableObject
 
         _downloadTaskDotsTtsCrispAsrModels =
             _dotsTtsCrispAsrDownloadService.DownloadModels(DotsTtsCrispAsr.GetSetModelsFolder(), resolved, downloadProgress, titleProgress, _cancellationTokenSource.Token);
+    }
+
+    public void StartDownloadConfucius4TtsCrispAsrModels(string? modelKey = null)
+    {
+        var resolved = Confucius4TtsCrispAsr.ResolveModelKey(modelKey);
+        var t2sFileName = Confucius4TtsCrispAsr.GetT2sFileName(resolved);
+        TitleText = string.Format(Se.Language.General.DownloadingX, $"Confucius4-TTS (CrispASR) models ({resolved}): {t2sFileName}");
+
+        var downloadProgress = new Progress<float>(number =>
+        {
+            var percentage = (int)Math.Round(number * 100.0, MidpointRounding.AwayFromZero);
+            var pctString = percentage.ToString(CultureInfo.InvariantCulture);
+            ProgressValue = percentage;
+            ProgressText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
+        });
+
+        var titleProgress = new Action<string>(title =>
+        {
+            Dispatcher.UIThread.Post(() => TitleText = title);
+        });
+
+        _downloadTaskConfucius4TtsCrispAsrModels =
+            _confucius4TtsCrispAsrDownloadService.DownloadModels(Confucius4TtsCrispAsr.GetSetModelsFolder(), resolved, downloadProgress, titleProgress, _cancellationTokenSource.Token);
     }
 
     public void StartDownloadIndexTtsCrispAsrModels(string? modelKey = null)
