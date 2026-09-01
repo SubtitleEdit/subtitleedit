@@ -1199,6 +1199,16 @@ public partial class BinaryEditViewModel : ObservableObject
         {
             ScreenWidth = ScreenWidth,
             ScreenHeight = ScreenHeight,
+            // The VobSub and DVD sup writers build their four color CLUT from these two; left at
+            // default(SKColor) every visible pixel quantizes onto the anti-alias index as opaque
+            // black. White text/black outline matches both the export dialog's defaults and what
+            // the loaded bitmaps in practice contain.
+            FontColor = SKColors.White,
+            OutlineColor = SKColors.Black,
+            // The D-Cinema SMPTE handler declares EditRate/TimeCodeRate from this, while the cue
+            // timecodes are converted with Configuration...CurrentFrameRate - read the same value
+            // so header and cues agree. The Dost and FCP handlers take their rate from it too.
+            FramesPerSecond = Configuration.Settings.General.CurrentFrameRate,
         };
 
         exportHandler.WriteHeader(fileOrFolderName, imageParameter);
