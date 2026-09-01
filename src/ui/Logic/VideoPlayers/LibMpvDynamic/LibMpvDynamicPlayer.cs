@@ -1000,25 +1000,32 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     private void SetPreInitAudioOptions()
     {
         SetAudioBufferOption();
-        SetAudioKeepOpenOption();
+        SetAudioStreamSilenceOption();
     }
 
     /// <summary>
-    /// mpv's "audio-keep-open". Its default is "no": the audio device is closed whenever
-    /// playback pauses or stops. Over HDMI to a receiver that drops the audio link on every
-    /// pause - the receiver reports no signal - and reopening it on resume costs a second or
-    /// two of re-handshake, which is heard as missing audio at the start of playback (#14330).
-    /// Holding the device open removes both. Off by setting, for anyone who needs mpv to hand
-    /// the device back the moment it pauses.
+    /// mpv's "audio-stream-silence". Normally mpv stops the audio device when playback pauses
+    /// (on Windows, IAudioClient::Stop) and resets it on every seek. Over HDMI to an A/V
+    /// receiver the link then goes idle - the receiver reports no signal - and restarting it
+    /// costs a re-handshake, heard as a second or two of missing audio on resume (#14330). With
+    /// the option set, mpv keeps the device running and writes silence while paused, seeking or
+    /// at end of file, so the link never drops.
+    /// <para>Left alone unless the setting asks for it: mpv's manual calls this option
+    /// "strongly discouraged" because it changes A/V-sync and underrun handling, and it only
+    /// helps that HDMI-receiver case.</para>
     /// <para>Must be called before mpv_initialize.</para>
     /// </summary>
-    private void SetAudioKeepOpenOption()
+    private void SetAudioStreamSilenceOption()
     {
-        var keepOpen = Se.Settings.Video.MpvAudioKeepOpen;
-        var err = SetOptionString("audio-keep-open", keepOpen ? "yes" : "no");
+        if (!Se.Settings.Video.MpvAudioStreamSilence)
+        {
+            return; // mpv's own default: stop the device on pause
+        }
+
+        var err = SetOptionString("audio-stream-silence", "yes");
         if (err < 0)
         {
-            Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer could not set audio-keep-open");
+            Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer could not set audio-stream-silence");
         }
     }
 

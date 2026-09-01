@@ -266,7 +266,6 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _showFullscreenButton;
     [ObservableProperty] private bool _fullscreenHideControls;
     [ObservableProperty] private bool _autoOpenVideoFile;
-    [ObservableProperty] private bool _mpvAudioKeepOpen;
 
     [ObservableProperty] private bool _waveformDrawGridLines;
     [ObservableProperty] private bool _waveformFocusOnMouseOver;
@@ -1072,7 +1071,6 @@ public partial class SettingsViewModel : ObservableObject
         ShowFullscreenButton = video.ShowFullscreenButton;
         FullscreenHideControls = video.FullscreenHideControls;
         AutoOpenVideoFile = video.AutoOpen;
-        MpvAudioKeepOpen = video.MpvAudioKeepOpen;
 
         MpvPreviewFontName = video.MpvPreviewFontName;
         MpvPreviewFontSize = video.MpvPreviewFontSize;
@@ -1915,7 +1913,6 @@ public partial class SettingsViewModel : ObservableObject
         video.ShowFullscreenButton = ShowFullscreenButton;
         video.FullscreenHideControls = FullscreenHideControls;
         video.AutoOpen = AutoOpenVideoFile;
-        video.MpvAudioKeepOpen = MpvAudioKeepOpen;
 
         video.MpvPreviewFontName = MpvPreviewFontName;
         video.MpvPreviewFontSize = MpvPreviewFontSize;

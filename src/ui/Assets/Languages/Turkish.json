@@ -2937,7 +2937,6 @@
       "showFullscreenButton": "Tam ekran butonunu göster",
       "fullscreenHideControls": "Tam ekranda video kontrollerini gizle",
       "autoOpenVideoFile": "Alt yazı açıldığında video dosyasını otomatik aç",
-	  "mpvAudioKeepOpen": "Duraklatıldığında ses aygıtını açık tut (mpv)",
       "downloadMpv": "mpv indir",
       "downloadVlc": "VLC indir",
       "allowSingleLetterShortcutsInTextbox": "Metin kutusunda tek harfli kısayollara izin ver",

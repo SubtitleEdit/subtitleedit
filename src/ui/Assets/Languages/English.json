@@ -2937,7 +2937,6 @@
       "showFullscreenButton": "Show full-screen button",
       "fullscreenHideControls": "Hide video controls in full-screen",
       "autoOpenVideoFile": "Auto-open video file when opening subtitle",
-      "mpvAudioKeepOpen": "Keep the audio device open while paused (mpv)",
       "downloadMpv": "Download mpv",
       "downloadVlc": "Download VLC",
       "allowSingleLetterShortcutsInTextbox": "Allow single-letter shortcuts in text box",
