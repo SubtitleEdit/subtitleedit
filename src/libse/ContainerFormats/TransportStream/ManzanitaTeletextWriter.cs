@@ -472,8 +472,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         }
 
         /// <summary>
-        /// Bottom aligned rows counted upwards, or the top of the screen for {\an7}-{\an9}. A
-        /// double height row occupies the row below it too, hence the gap of two.
+        /// The row of each line, counted down from the row the block starts on - MarginV when the
+        /// subtitle carries one, otherwise bottom anchored on <see cref="DefaultBottomRow"/>. Or
+        /// the top of the screen for {\an7}-{\an9}. A double height row occupies the row below it
+        /// too, hence the gap of two.
         /// </summary>
         private static List<int> GetRowNumbers(int lineCount, string marginV, bool topAligned, out bool doubleHeight)
         {
@@ -496,21 +498,52 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 rows.Clear();
             }
 
-            var bottom = IsTeletextRow(marginV) ? int.Parse(marginV, CultureInfo.InvariantCulture) : DefaultBottomRow;
             var spacing = 2;
-            if (bottom - (lineCount - 1) * spacing < 1)
+            var start = GetStartRow(lineCount, marginV, spacing);
+            if (start < 1)
             {
                 // Too many lines to fit at double height - fall back to single height rows.
                 spacing = 1;
                 doubleHeight = false;
+                start = GetStartRow(lineCount, marginV, spacing);
             }
+
+            // More lines than the page has rows even at single height - keep every row on the page
+            // rather than emitting one that no decoder can address.
+            start = Math.Max(1, start);
 
             for (var i = 0; i < lineCount; i++)
             {
-                rows.Add(Math.Max(1, bottom - (lineCount - 1 - i) * spacing));
+                rows.Add(Math.Min(LastRow, start + i * spacing));
             }
 
             return rows;
+        }
+
+        /// <summary>
+        /// The row the *first* line goes on. MarginV is the EBU STL vertical position: the row the
+        /// line starts on, with the rest of the block below it - the same meaning Ebu.Save,
+        /// TeletextRowHelper (the alignment picker and the TT column) and SubtitlePositionToAssa
+        /// (the video preview) all use. Reading it as the bottom row instead put every multi-line
+        /// subtitle two rows too high and one row out of step with the preview.
+        /// Without a MarginV the block is bottom anchored so its last row lands on
+        /// <see cref="DefaultBottomRow"/>.
+        /// </summary>
+        private static int GetStartRow(int lineCount, string marginV, int spacing)
+        {
+            var start = IsTeletextRow(marginV)
+                ? int.Parse(marginV, CultureInfo.InvariantCulture)
+                : DefaultBottomRow - (lineCount - 1) * spacing;
+
+            // The text may have been re-wrapped since the row was set, so a start row that no
+            // longer leaves room for every line would push the tail off the page - the same clamp
+            // Ebu.Save applies to the STL vertical position.
+            if (start + (lineCount - 1) * spacing > LastRow)
+            {
+                start = LastRow - (lineCount - 1) * spacing;
+            }
+
+            return start;
         }
 
         private static bool IsTeletextRow(string marginV)

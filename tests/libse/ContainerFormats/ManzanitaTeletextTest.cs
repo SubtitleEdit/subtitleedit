@@ -138,6 +138,71 @@ public class ManzanitaTeletextTest
     }
 
     [Fact]
+    public void TeletextRowIsTheFirstLineAndTheBlockGrowsDownwards()
+    {
+        // MarginV is the EBU STL vertical position - the row the *first* line goes on, with the
+        // rest of the block below it (Ebu.Save, TeletextRowHelper and SubtitlePositionToAssa all
+        // read it that way). Reading it as the bottom row instead put a two line subtitle two
+        // rows too high: row 5 became rows 3 and 5, and the reader - which reports {\an8} only
+        // when every used row is above row 6 - then called it top aligned.
+        var subtitle = MakeSubtitle(
+            new Paragraph("First line" + Environment.NewLine + "Second line", 1000, 3000)
+            {
+                MarginV = "5",
+            });
+
+        var paragraphs = WriteAndRead(subtitle)[888];
+
+        // Rows 5 and 7, so not top aligned.
+        Assert.Equal("First line" + Environment.NewLine + "Second line", paragraphs[0].Text);
+    }
+
+    [Fact]
+    public void TeletextRowAtTheTopOfThePageKeepsEveryLine()
+    {
+        // Counting upwards from row 1 left no room, and both rows clamped to 1 - the second line
+        // was written over the first and one line of the subtitle was simply lost.
+        var subtitle = MakeSubtitle(
+            new Paragraph("First line" + Environment.NewLine + "Second line", 1000, 3000)
+            {
+                MarginV = "1",
+            });
+
+        var paragraphs = WriteAndRead(subtitle)[888];
+
+        Assert.Equal("{\\an8}First line" + Environment.NewLine + "Second line", paragraphs[0].Text);
+    }
+
+    [Fact]
+    public void TeletextRowTooLowForEveryLineIsPulledUpToFit()
+    {
+        // Row 23 is the last row, so a two line block starting there cannot fit - the start row is
+        // clamped so the tail stays on the page, the same way Ebu.Save clamps it.
+        var subtitle = MakeSubtitle(
+            new Paragraph("First line" + Environment.NewLine + "Second line", 1000, 3000)
+            {
+                MarginV = "23",
+            });
+
+        var paragraphs = WriteAndRead(subtitle)[888];
+
+        Assert.Equal("First line" + Environment.NewLine + "Second line", paragraphs[0].Text);
+    }
+
+    [Fact]
+    public void WithoutATeletextRowTheBlockStaysBottomAnchored()
+    {
+        // The default placement must not move with the MarginV fix: no row means bottom anchored,
+        // which for the reader is anything but top aligned.
+        var subtitle = MakeSubtitle(
+            new Paragraph("First line" + Environment.NewLine + "Second line", 1000, 3000));
+
+        var paragraphs = WriteAndRead(subtitle)[888];
+
+        Assert.Equal("First line" + Environment.NewLine + "Second line", paragraphs[0].Text);
+    }
+
+    [Fact]
     public void WritesTheRequestedPage()
     {
         var subtitle = MakeSubtitle(new Paragraph("On page 801", 1000, 3000));

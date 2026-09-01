@@ -55,7 +55,7 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
     public ISpeechToTextEngine? Engine { get; internal set; }
 
     /// <summary>
-    /// CrispASR download variant. On Windows: "cpu", "cpu-legacy", "vulkan", or "cuda" (defaults to "vulkan").
+    /// CrispASR download variant. On Windows: "cpu", "cpu-legacy", "vulkan", "cuda" or "cuda13" (defaults to "vulkan").
     /// On Linux x86_64: "cuda", "cuda13", "vulkan", "hip", or null/empty for the default CPU build.
     /// Ignored on macOS / Linux ARM64.
     /// </summary>
