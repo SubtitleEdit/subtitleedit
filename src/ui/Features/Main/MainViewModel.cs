@@ -13010,7 +13010,7 @@ public partial class MainViewModel :
             }
         }
 
-        var result = await ShowDialogAsync<ErrorListWindow, ErrorListViewModel>(vm => { vm.Initialize(list, Subtitles.Count); });
+        var result = await ShowDialogAsync<ErrorListWindow, ErrorListViewModel>(vm => { vm.Initialize(list, Subtitles.Count, _subtitleFileName); });
 
         if (result.GoToPressed && result.SelectedSubtitle != null)
         {

@@ -31,6 +31,12 @@ public class LanguageErrorList
     public string DetailGapToNext { get; set; }
     public string Detail { get; set; }
     public string Tip { get; set; }
+    public string ExportAsText { get; set; }
+    public string ExportAsExcel { get; set; }
+    public string ExportAsHtml { get; set; }
+    public string ExportFileX { get; set; }
+    public string ExportGeneratedX { get; set; }
+    public string ExportMadeWithSubtitleEdit { get; set; }
 
     public LanguageErrorList()
     {
@@ -63,5 +69,11 @@ public class LanguageErrorList
         DetailGapToNext = "to next: {0} < {1} ms";
         Detail = "Detail";
         Tip = "Double-click a line (or press Enter) to go to it. Which checks run, and their limits, are set in Settings > General.";
+        ExportAsText = "Text file (.txt)...";
+        ExportAsExcel = "Excel file (.xlsx)...";
+        ExportAsHtml = "Web page (.html)...";
+        ExportFileX = "File: {0}";
+        ExportGeneratedX = "Generated: {0}";
+        ExportMadeWithSubtitleEdit = "Made with Subtitle Edit";
     }
 }
