@@ -338,6 +338,13 @@ public static class InitNativeMacMenu
         videoItems.Items.Add(Item(Clean(l.OpenVideoFromUrl), v => v.ShowVideoOpenFromUrlCommand));
         videoItems.Items.Add(Item(Clean(l.CloseVideoFile), v => v.CommandVideoCloseCommand));
 
+        // Same spot and wording as SE4's Video menu, so it can be found by anyone
+        // looking for it there (#14389). Only meaningful with a video to draw on.
+        videoItems.Items.Add(Conditional(Clean(Se.Language.Video.OpenSecondarySubtitleOnVideoPlayerDotDotDot), v => v.OpenSecondarySubtitleCommand,
+            v => v.IsVideoLoaded && !v.IsSubtitleSecondaryVisible, nameof(MainViewModel.IsVideoLoaded), nameof(MainViewModel.IsSubtitleSecondaryVisible)));
+        videoItems.Items.Add(Conditional(Clean(Se.Language.Video.RemoveSecondarySubtitleOnVideoPlayer), v => v.ClearSecondarySubtitleCommand,
+            v => v.IsVideoLoaded && v.IsSubtitleSecondaryVisible, nameof(MainViewModel.IsVideoLoaded), nameof(MainViewModel.IsSubtitleSecondaryVisible)));
+
         state.AudioTracksItem = new NativeMenuItem(Clean(l.AudioTracks)) { Menu = new NativeMenu() };
         state.Visibilities.Add((state.AudioTracksItem, v => v.IsAudioTracksVisible, [nameof(MainViewModel.IsAudioTracksVisible)]));
         videoItems.Items.Add(state.AudioTracksItem);
@@ -370,10 +377,6 @@ public static class InitNativeMacMenu
         var lVideo = Se.Language.Video;
         var videoMoreList = new List<NativeMenuItem>
         {
-            Conditional(Clean(lVideo.OpenSecondarySubtitleOnVideoPlayerDotDotDot), v => v.OpenSecondarySubtitleCommand,
-                v => !v.IsSubtitleSecondaryVisible, nameof(MainViewModel.IsSubtitleSecondaryVisible)),
-            Conditional(Clean(lVideo.RemoveSecondarySubtitleOnVideoPlayer), v => v.ClearSecondarySubtitleCommand,
-                v => v.IsSubtitleSecondaryVisible, nameof(MainViewModel.IsSubtitleSecondaryVisible)),
             Item(Clean(lVideo.ReEncodeVideoForBetterSubtitlingDotDotDot), v => v.VideoReEncodeCommand),
             Item(Clean(lVideo.CutVideoDotDotDot), v => v.VideoCutCommand),
 

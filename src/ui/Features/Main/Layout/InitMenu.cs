@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -639,18 +640,6 @@ public static class InitMenu
         {
             new MenuItem
             {
-                Header = Se.Language.Video.OpenSecondarySubtitleOnVideoPlayerDotDotDot,
-                Command = vm.OpenSecondarySubtitleCommand,
-                [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsSubtitleSecondaryVisible)) { Converter = new InverseBooleanConverter() },
-            },
-            new MenuItem
-            {
-                Header = Se.Language.Video.RemoveSecondarySubtitleOnVideoPlayer,
-                Command = vm.ClearSecondarySubtitleCommand,
-                [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsSubtitleSecondaryVisible)),
-            },
-            new MenuItem
-            {
                 Header = Se.Language.Video.Chapters.ChaptersDotDotDot,
                 Command = vm.ShowVideoChaptersCommand,
             },
@@ -731,6 +720,36 @@ public static class InitMenu
                 {
                     Header = l.CloseVideoFile,
                     Command = vm.CommandVideoCloseCommand,
+                },
+                // Same spot and wording as SE4's Video menu, so it can be found by anyone
+                // looking for it there (#14389). Only meaningful with a video to draw on.
+                new MenuItem
+                {
+                    Header = Se.Language.Video.OpenSecondarySubtitleOnVideoPlayerDotDotDot,
+                    Command = vm.OpenSecondarySubtitleCommand,
+                    [!Visual.IsVisibleProperty] = new MultiBinding
+                    {
+                        Converter = BoolConverters.And,
+                        Bindings =
+                        {
+                            new Binding(nameof(vm.IsVideoLoaded)),
+                            new Binding(nameof(vm.IsSubtitleSecondaryVisible)) { Converter = new InverseBooleanConverter() },
+                        },
+                    },
+                },
+                new MenuItem
+                {
+                    Header = Se.Language.Video.RemoveSecondarySubtitleOnVideoPlayer,
+                    Command = vm.ClearSecondarySubtitleCommand,
+                    [!Visual.IsVisibleProperty] = new MultiBinding
+                    {
+                        Converter = BoolConverters.And,
+                        Bindings =
+                        {
+                            new Binding(nameof(vm.IsVideoLoaded)),
+                            new Binding(nameof(vm.IsSubtitleSecondaryVisible)),
+                        },
+                    },
                 },
                 menuItemAudioTracks,
                 new Separator(),
