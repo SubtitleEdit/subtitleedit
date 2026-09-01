@@ -29138,7 +29138,15 @@ public partial class MainViewModel :
                         {
                             if (_playSelectionItem.HasGapOrIsFirst())
                             {
-                                vp.Position = p.StartTime.TotalSeconds;
+                                // Pin like every other seek: a loop wrap seeks backwards while mpv keeps
+                                // reporting the old position for ~100-200 ms, so an unpinned cursor
+                                // extrapolates past the selection end and then snaps back late (or, for a
+                                // selection shorter than the resync threshold, never snaps back at all).
+                                // The stale estimate could also re-trigger this end check on the next tick
+                                // and skip right past the line just wrapped to. SeekTo, not Position: the
+                                // styled property drops an assignment equal to the held value.
+                                vp.SeekTo(p.StartTime.TotalSeconds);
+                                PinPlayheadTo(p.StartTime.TotalSeconds);
                             }
 
                             Dispatcher.UIThread.Post(() => { SubtitleGrid.ScrollIntoView(p); });
