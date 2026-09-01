@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Features.Main.MainHelpers;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
@@ -280,6 +281,99 @@ public class PlayheadFrameStepTests : IDisposable
         Assert.Equal(7.5, GetField<double?>(vm, "_playheadSeekTarget") ?? -1, 4); // pinned
         Assert.Equal(7.5, player.Position, 4); // and the seek really reached the player
         Assert.Equal(7.5, Tick(vm, vp, isPlaying: false), 4); // cursor shows the target at once
+    }
+
+    [AvaloniaFact]
+    public void PlaybackSeek_CanMoveTheCursorBackwards()
+    {
+        var (vm, vp, player) = MakeViewModelWithPlayer(startSeconds: 5.0);
+        vp.Duration = 60;
+        vm.AudioVisualizer = new Nikse.SubtitleEdit.Controls.AudioVisualizerControl.AudioVisualizer();
+
+        typeof(MainViewModel)
+            .GetMethod("SetVideoPositionSeconds", BindingFlags.NonPublic | BindingFlags.Instance)!
+            .Invoke(vm, [2.0]);
+
+        Assert.Equal(2.0, player.Position, 4);
+        Assert.Equal(2.0, Tick(vm, vp, isPlaying: false), 4);
+    }
+
+    [AvaloniaFact]
+    public void RepeatPlayback_DoesNotSnapTheEstimateBackToAStaleRawPosition()
+    {
+        var (vm, vp, player) = MakeViewModelWithPlayer(startSeconds: 1.0);
+        player.IsPlaying = true;
+        player.Speed = 3.0;
+        player.Position = 1.1;
+        SetField(vm, "_playSelectionItem", new PlaySelectionItem([], TimeSpan.Zero, true));
+        SetField(vm, "_playheadWasPlaying", true);
+        SetField(vm, "_playheadEstimateSeconds", 1.6);
+        SetField(vm, "_playheadLastTimestamp", Stopwatch.GetTimestamp() - Stopwatch.Frequency / 20);
+
+        var estimate = Tick(vm, vp, isPlaying: true);
+
+        Assert.True(estimate >= 1.6, $"repeat playhead moved backwards to {estimate:0.000}");
+    }
+
+    [AvaloniaFact]
+    public void NormalPlayback_DoesNotSnapTheEstimateBackToAStaleRawPosition()
+    {
+        var (vm, vp, player) = MakeViewModelWithPlayer(startSeconds: 1.0);
+        player.IsPlaying = true;
+        player.Position = 1.1;
+        SetField(vm, "_playheadWasPlaying", true);
+        SetField(vm, "_playheadEstimateSeconds", 1.6);
+        SetField(vm, "_playheadLastTimestamp", Stopwatch.GetTimestamp() - Stopwatch.Frequency / 20);
+
+        var estimate = Tick(vm, vp, isPlaying: true);
+
+        Assert.True(estimate >= 1.6, $"normal playhead moved backwards to {estimate:0.000}");
+    }
+
+    [AvaloniaFact]
+    public void PlaybackRestart_ResetsThePlayheadFloor()
+    {
+        var (vm, vp, player) = MakeViewModelWithPlayer(startSeconds: 5.0);
+        player.IsPlaying = false;
+        Tick(vm, vp, isPlaying: false);
+
+        player.Position = 1.0;
+        player.IsPlaying = true;
+        var estimate = Tick(vm, vp, isPlaying: true);
+
+        Assert.Equal(1.0, estimate, 4);
+    }
+
+    [AvaloniaFact]
+    public void HighSpeedPlayback_CapsFrozenRawExtrapolationInMediaTime()
+    {
+        var (vm, vp, player) = MakeViewModelWithPlayer(startSeconds: 1.0);
+        player.IsPlaying = true;
+        player.Speed = 3.0;
+        var now = Stopwatch.GetTimestamp();
+        SetField(vm, "_playheadWasPlaying", true);
+        SetField(vm, "_playheadLastTimestamp", now - Stopwatch.Frequency / 20);
+        SetField(vm, "_playheadLastRawChangeTs", now - Stopwatch.Frequency / 20);
+
+        var estimate = Tick(vm, vp, isPlaying: true);
+
+        Assert.Equal(1.0, estimate, 3);
+    }
+
+    [AvaloniaFact]
+    public void MediaReplacement_ResetsThePlayheadFloor()
+    {
+        var (vm, vp, player) = MakeViewModelWithPlayer(startSeconds: 5.0);
+        SetField(vm, "_playheadWasPlaying", true);
+        SetField(vm, "_playheadEstimateSeconds", 5.0);
+
+        typeof(MainViewModel)
+            .GetMethod("ResetPlayheadForMediaChange", BindingFlags.NonPublic | BindingFlags.Instance)!
+            .Invoke(vm, null);
+
+        player.Position = 1.0;
+        player.IsPlaying = true;
+        Assert.Equal(1.0, Tick(vm, vp, isPlaying: true), 4);
     }
 
     private (MainViewModel Vm, VideoPlayerControl Vp, FakeVideoPlayer Player) MakeViewModelWithPlayer(double startSeconds)

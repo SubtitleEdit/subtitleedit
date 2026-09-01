@@ -24390,6 +24390,7 @@ public partial class MainViewModel :
         _videoOpenTokenSource?.Cancel();
         _audioTrack = null;
         await vp.Open(videoFileName, startPositionSeconds);
+        ResetPlayheadForMediaChange();
         _videoFileName = videoFileName;
         RefreshSubtitlePreview();
 
@@ -28736,6 +28737,11 @@ public partial class MainViewModel :
 
         if (isPlaying && !_pauseRequested && _playheadValid && _playheadLastRealSeconds >= 0)
         {
+            // Keep a continuously advancing playhead from visibly snapping back to a stale mpv
+            // position. Explicit seeks take the pin path above, and a playback restart re-seeds
+            // before this floor applies, so intentional position changes still take effect.
+            var playbackFloorSeconds = _playheadEstimateSeconds;
+            var preservePlaybackFloor = _playheadWasPlaying && !_playheadResyncOnPlay;
             var elapsedSeconds = (nowTimestamp - _playheadLastTimestamp) / (double)Stopwatch.Frequency;
             if (elapsedSeconds < 0)
             {
@@ -28802,7 +28808,7 @@ public partial class MainViewModel :
             // the same spot. Extrapolating through that freeze races the cursor ahead of the still-frozen
             // frame and then forces a visible sub-1x crawl to resync. Holding while frozen and gliding
             // once mpv resumes is seamless, since it resumes from where the cursor is held.
-            if (rawFrozenSeconds < PlayheadFreezeHoldSeconds)
+            if (rawFrozenSeconds < PlayheadFreezeHoldSeconds / speed)
             {
                 _playheadEstimateSeconds += elapsedSeconds * speed;
             }
@@ -28838,6 +28844,11 @@ public partial class MainViewModel :
                 }
 
                 _playheadEstimateSeconds += correction;
+            }
+
+            if (preservePlaybackFloor && _playheadEstimateSeconds < playbackFloorSeconds)
+            {
+                _playheadEstimateSeconds = playbackFloorSeconds;
             }
         }
         else
@@ -28954,6 +28965,15 @@ public partial class MainViewModel :
         {
             AudioVisualizer.CurrentVideoPositionSeconds = targetSeconds;
         }
+    }
+
+    private void ResetPlayheadForMediaChange()
+    {
+        _playheadValid = false;
+        _playheadLastRealSeconds = -1;
+        _playheadSeekTarget = null;
+        _playheadWasPlaying = false;
+        _playheadResyncOnPlay = false;
     }
 
     private void StartTimers()
@@ -29139,6 +29159,7 @@ public partial class MainViewModel :
                             if (_playSelectionItem.HasGapOrIsFirst())
                             {
                                 vp.Position = p.StartTime.TotalSeconds;
+                                PinPlayheadTo(p.StartTime.TotalSeconds);
                             }
 
                             Dispatcher.UIThread.Post(() => { SubtitleGrid.ScrollIntoView(p); });
