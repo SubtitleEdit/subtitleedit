@@ -3819,6 +3819,12 @@
     "detailGapToPrevious": "to previous: {0} < {1} ms",
     "detailGapToNext": "to next: {0} < {1} ms",
     "detail": "Detail",
-    "tip": "Double-click a line (or press Enter) to go to it. Which checks run, and their limits, are set in Settings > General."
+    "tip": "Double-click a line (or press Enter) to go to it. Which checks run, and their limits, are set in Settings > General.",
+    "exportAsText": "Text file (.txt)...",
+    "exportAsExcel": "Excel file (.xlsx)...",
+    "exportAsHtml": "Web page (.html)...",
+    "exportFileX": "File: {0}",
+    "exportGeneratedX": "Generated: {0}",
+    "exportMadeWithSubtitleEdit": "Made with Subtitle Edit"
   }
 }
