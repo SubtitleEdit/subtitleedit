@@ -8479,14 +8479,17 @@ public partial class MainViewModel :
     /// merely exposed the tool window under the cursor. The Avalonia press event only covers the
     /// client area and arrives after the activation, so the decision still waits a beat for it.
     ///
-    /// The one case this cannot tell apart from the OS handing over the foreground is the user
-    /// Alt+Tabbing straight back to a tool window (they are separate entries in the task
-    /// switcher): that lands in the main window instead. The tool windows stay visible on top
-    /// either way, so the cost is keyboard focus - which is where it belongs for everything but
-    /// the waveform's own shortcuts.
+    /// Alt+Tab is keyboard-aimed - no button down, cursor anywhere - so the pointer rules read
+    /// it as an OS handover and "corrected" it: the tool window flickered into the foreground
+    /// and lost it a beat later, until a real click re-claimed it (#14354). The tool windows are
+    /// separate entries in the task switcher, so this is a gesture users actually make. On
+    /// Windows the switcher announces itself (TaskSwitchDetector's WinEvent hook), and an
+    /// activation while it is open or right after it commits is treated as aimed.
     /// </summary>
     private void WatchUndockedForegroundSteal(Window undockedWindow)
     {
+        TaskSwitchDetector.EnsureStarted();
+
         undockedWindow.AddHandler(
             InputElement.PointerPressedEvent,
             (_, _) => _undockedWindowPointerPressed = true,
@@ -8502,7 +8505,8 @@ public partial class MainViewModel :
 
             if (IsUndockedActivationAimedAtToolWindow(
                     CursorPositionHelper.IsAnyPointerButtonDown(),
-                    undockedWindow.IsPointerOver))
+                    undockedWindow.IsPointerOver,
+                    TaskSwitchDetector.TaskSwitchJustCommitted()))
             {
                 _foregroundBelongsToMainWindow = false; // the user moved to the tool window
                 return;
@@ -8512,9 +8516,10 @@ public partial class MainViewModel :
 
             DispatcherTimer.RunOnce(() =>
             {
-                if (_undockedWindowPointerPressed)
+                if (_undockedWindowPointerPressed || TaskSwitchDetector.TaskSwitchJustCommitted())
                 {
-                    // A press the button sampling missed (e.g. touch) - the user aimed here.
+                    // A press the button sampling missed (e.g. touch), or a task-switch commit
+                    // whose WinEvent was still queued behind the activation - the user aimed here.
                     _foregroundBelongsToMainWindow = false;
                     return;
                 }
@@ -8545,8 +8550,16 @@ public partial class MainViewModel :
     /// </summary>
     internal static bool IsUndockedActivationAimedAtToolWindow(
         bool? pointerButtonDown,
-        bool pointerOverToolWindow)
+        bool pointerOverToolWindow,
+        bool taskSwitchJustCommitted)
     {
+        // Picking the tool window in the task switcher (Alt+Tab) is aiming by keyboard - the
+        // pointer rules below would misread it as an OS handover (#14354).
+        if (taskSwitchJustCommitted)
+        {
+            return true;
+        }
+
         // The button state is authoritative when it can be sampled: the cursor merely resting
         // over the tool window is NOT aiming - closing another application's window exposes the
         // tool window under a cursor that never moved (Windows even synthesizes the mouse-move
@@ -17591,7 +17604,16 @@ public partial class MainViewModel :
                 return;
             }
 
-            ActivateWindow(TopLevel.GetTopLevel(AudioVisualizer) as Window);
+            var window = TopLevel.GetTopLevel(AudioVisualizer) as Window;
+            if (window != null && !ReferenceEquals(window, Window))
+            {
+                // SE itself is sending the user to the undocked waveform window - no pointer
+                // button is down, so without this the foreground-steal watcher would read the
+                // activation as an OS handover and bounce it straight back (#14354).
+                _foregroundBelongsToMainWindow = false;
+            }
+
+            ActivateWindow(window);
             AudioVisualizer.Focus();
         });
     }

@@ -60,9 +60,9 @@ public class UndockedForegroundStealTests
         // A click that activates a window (client area or title bar, including a drag by the
         // title bar) still has the button physically down while the activation is delivered.
         Assert.True(MainViewModel.IsUndockedActivationAimedAtToolWindow(
-            pointerButtonDown: true, pointerOverToolWindow: false));
+            pointerButtonDown: true, pointerOverToolWindow: false, taskSwitchJustCommitted: false));
         Assert.True(MainViewModel.IsUndockedActivationAimedAtToolWindow(
-            pointerButtonDown: true, pointerOverToolWindow: true));
+            pointerButtonDown: true, pointerOverToolWindow: true, taskSwitchJustCommitted: false));
     }
 
     [Fact]
@@ -72,17 +72,30 @@ public class UndockedForegroundStealTests
         // moved (Windows synthesizes the mouse-move that flips IsPointerOver), so hover must not
         // veto the correction when the button state says no click happened - the beta 26 failure.
         Assert.False(MainViewModel.IsUndockedActivationAimedAtToolWindow(
-            pointerButtonDown: false, pointerOverToolWindow: true));
+            pointerButtonDown: false, pointerOverToolWindow: true, taskSwitchJustCommitted: false));
         Assert.False(MainViewModel.IsUndockedActivationAimedAtToolWindow(
-            pointerButtonDown: false, pointerOverToolWindow: false));
+            pointerButtonDown: false, pointerOverToolWindow: false, taskSwitchJustCommitted: false));
     }
 
     [Fact]
     public void HoverDecides_OnlyWhereTheButtonsCannotBeSampled()
     {
         Assert.True(MainViewModel.IsUndockedActivationAimedAtToolWindow(
-            pointerButtonDown: null, pointerOverToolWindow: true));
+            pointerButtonDown: null, pointerOverToolWindow: true, taskSwitchJustCommitted: false));
         Assert.False(MainViewModel.IsUndockedActivationAimedAtToolWindow(
-            pointerButtonDown: null, pointerOverToolWindow: false));
+            pointerButtonDown: null, pointerOverToolWindow: false, taskSwitchJustCommitted: false));
+    }
+
+    [Fact]
+    public void ActivationIsAimed_WhenTheTaskSwitcherJustCommittedASwitch()
+    {
+        // Alt+Tab aims by keyboard: no button is down and the cursor can be anywhere, so the
+        // pointer rules alone read it as an OS handover and bounced the tool window straight
+        // back to the main window (#14354). The task switcher's SWITCHSTART/SWITCHEND WinEvents
+        // override the pointer verdict.
+        Assert.True(MainViewModel.IsUndockedActivationAimedAtToolWindow(
+            pointerButtonDown: false, pointerOverToolWindow: false, taskSwitchJustCommitted: true));
+        Assert.True(MainViewModel.IsUndockedActivationAimedAtToolWindow(
+            pointerButtonDown: null, pointerOverToolWindow: false, taskSwitchJustCommitted: true));
     }
 }
