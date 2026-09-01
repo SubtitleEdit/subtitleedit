@@ -3,6 +3,29 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-beta31 (1st of September 2026)
+
+* New subtitle format: Csv Excel - thx matmaggi
+* Mark lines as forced narrative, with a "Forced" column and "Save forced lines as..." - thx matmaggi
+* New subtitle format: EBU-TT (Tech 3350), carrying teletext colors, boxing, rows and the GSI metadata
+* EBU-TT-D and IMSC Rosetta: read and write font colors - thx Scryper
+* DVB teletext (.dvbttx): write Level 2.5 colors, and make it a toolbar format with alignment picker, video preview and batch convert - thx René
+* Add Pocket TTS (CrispASR) voice cloning, and offer VibeVoice again
+* CrispASR: update to v0.8.31, and offer Windows CUDA 13
+* Subtitle image previews: a configurable background color, and a Blu-ray sup overlay that scales with the video - thx Lukewarm1141
+* Advanced TTS settings: hint icons instead of a wall of text, so the window fits the screen again - thx nielka98
+* Fix audio dropouts by keeping the mpv audio device open while paused - thx GrampaWildWilly
+* Fix Alt+Tab not bringing undocked windows to the foreground - thx GrampaWildWilly
+* Fix playing selected lines in repeat mode replaying a line at the cue boundary - thx marcpbailey
+* Fix the subtitle grid jumping to the end of the list after cut + auto-break - thx St0rmXtr00per
+* Fix the Matroska track picker opening twice on macOS - thx marcpbailey
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+* Update Korean translation - thx 12si27
+* Update Turkish translation - thx bilimiyorum
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-beta30 (31st of August 2026)
 
 * Read Wistia json, DVD Junior SPC, Sonic DVD Producer and YouTube srv3 (.ytt) subtitles
