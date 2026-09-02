@@ -3,6 +3,27 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-beta32 (2nd of September 2026)
+
+* Add a "Columns..." dialog to reorder and hide subtitle grid columns - thx m0ck69
+* Export the "List errors" report to clipboard, text file, Excel or web page - thx AuroraMartell
+* Binary edit: open DVD sup, XSUB (avi), MP4 VobSub, image based WebVTT/TTML and more transport streams, and export DVD sup and D-Cinema
+* ASSA: offer to resample the subtitle when the video resolution differs from the script resolution - thx hisui3393
+* Add Confucius4-TTS (CrispASR), Higgs Audio v3 and Fish Audio S2 Pro (audio.cpp) voice cloning TTS engines
+* "Point sync via other subtitle": a gap column that highlights likely sync points - thx alexchexes
+* Move "Open second subtitle file..." to SE 4's spot in the Video menu - thx m0ck69
+* macOS: open Finder files in a new window, and start the video picker in the subtitle's own folder - thx muaz978
+* seconv: add the full frame image export option - thx smt-joen
+* Faster waveform scrubbing on long-GOP video - thx GrampaWildWilly
+* Faster Sami and IMSC 1.1 reading, PAC/EBU STL/D-Cinema saving and Blu-ray image export
+* Fix audio dropouts when pausing or seeking - the beta 31 mpv option did nothing - thx GrampaWildWilly
+* Fix Alt+Tab still not bringing undocked windows to the foreground - thx GrampaWildWilly
+* Fix the playhead jumping when repeat playback wraps to the next line - thx marcpbailey
+* Fix the "Guess time codes" window losing its buttons at a high UI scale
+* Update Italian translation - thx bovirus
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-beta31 (1st of September 2026)
 
 * New subtitle format: Csv Excel - thx matmaggi
