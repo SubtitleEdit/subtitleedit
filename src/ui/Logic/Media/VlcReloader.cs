@@ -1,4 +1,4 @@
-﻿using Avalonia.Skia;
+using Avalonia.Skia;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -36,6 +36,7 @@ public class VlcReloader : IVlcReloader
         {
             var uiFormatType = uiFormat.GetType();
             subtitle = new Subtitle(subtitle, false);
+            subtitle.Paragraphs.RemoveAll(p => p.StartTime.TotalMilliseconds <= 0 && p.EndTime.TotalMilliseconds <= 0);
 
             if (SmpteMode)
             {

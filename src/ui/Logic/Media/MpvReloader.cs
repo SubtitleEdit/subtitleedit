@@ -1,4 +1,4 @@
-﻿using Avalonia.Skia;
+using Avalonia.Skia;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -180,6 +180,8 @@ public class MpvReloader : IMpvReloader
     // subtitle copy, read-only state and libse statics - never the memo fields.
     private (Subtitle Subtitle, string Text, int Hash, bool HashValid) BuildPreviewText(Subtitle subtitle, Subtitle? subtitleSecondary, Type uiFormatType, bool uiFormatHasPositions, int oldHash, string oldText)
     {
+        subtitle.Paragraphs.RemoveAll(p => p.StartTime.TotalMilliseconds <= 0 && p.EndTime.TotalMilliseconds <= 0);
+
         if (SmpteMode)
         {
             foreach (var paragraph in subtitle.Paragraphs)
