@@ -11607,8 +11607,7 @@ public partial class MainViewModel :
             Subtitles[i].ReferenceParagraphId = null;
         }
 
-        // The subtitle language just changed, so the cached detected language is stale (issue #12144).
-        _detectedLanguageCode = null;
+        OnSubtitleLanguageChanged();
 
         var targetLanguageCode = result.SelectedTargetLanguage?.TwoLetterIsoLanguageName;
         _subtitleFileNameOriginal = _subtitleFileName;
@@ -11736,8 +11735,7 @@ public partial class MainViewModel :
             }
         }
 
-        // The translated lines changed language, so the cached detected language is stale (issue #12144).
-        _detectedLanguageCode = null;
+        OnSubtitleLanguageChanged();
 
         _updateAudioVisualizer = true;
     }
@@ -11783,8 +11781,7 @@ public partial class MainViewModel :
 
         RemoveReferenceOnlyRows();
 
-        // The subtitle language just changed, so the cached detected language is stale (issue #12144).
-        _detectedLanguageCode = null;
+        OnSubtitleLanguageChanged();
 
         _subtitleFileNameOriginal = _subtitleFileName;
         _subtitleFileName = string.Empty;
@@ -21904,6 +21901,24 @@ public partial class MainViewModel :
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// Called after a translation rewrote the rows in another language. The cached detected
+    /// language is stale (issue #12144), and so is everything spell check remembered for the text
+    /// that was just replaced: the dictionary the spell check window ended on is stored as a pick
+    /// for the subtitle currently loaded, and the translate paths never reset, so the spell check
+    /// window opened on the source language after an English to Dutch translation and live spell
+    /// check kept underlining the Dutch text against the English dictionary (issue #14446). An
+    /// unfinished spell check run belongs to the old text as well, so the "continue from current
+    /// line?" prompt is dropped too.
+    /// </summary>
+    private void OnSubtitleLanguageChanged()
+    {
+        _detectedLanguageCode = null;
+        _currentSpellCheckDictionary = null;
+        _spellCheckSessionInProgress = false;
+        SetupLiveSpellCheck();
     }
 
     /// <summary>
