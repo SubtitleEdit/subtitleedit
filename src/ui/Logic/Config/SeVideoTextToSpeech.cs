@@ -96,6 +96,8 @@ public class SeVideoTextToSpeech
     public string ChatterboxModel { get; set; }
     public string ChatterboxCrispAsrLanguage { get; set; }
     public string ChatterboxCrispAsrSourceLanguage { get; set; }
+    // Display name of the picked Zonos output language (empty = backend default, English US).
+    public string ZonosTtsCrispAsrLanguage { get; set; }
     public string KokoroVoice { get; set; }
     public string GoogleApiKey { get; set; }
     public string GoogleKeyFile { get; set; }
@@ -227,6 +229,7 @@ public class SeVideoTextToSpeech
         ChatterboxModel = "Base";
         ChatterboxCrispAsrLanguage = string.Empty;
         ChatterboxCrispAsrSourceLanguage = string.Empty;
+        ZonosTtsCrispAsrLanguage = string.Empty;
         KokoroVoice = "af_maple";
         GoogleApiKey = string.Empty;
         GoogleKeyFile = string.Empty;
