@@ -402,6 +402,9 @@ public class SettingsPage : UserControl
             new SettingsItem(Se.Language.Options.Settings.FavoriteSubtitleFormats, () => MakeFavoritesGrid(_vm)),
             new SettingsItem(Se.Language.Options.Settings.FavoriteLanguages, () => MakeLanguageFavoritesGrid(_vm)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WebVttUseXTimestampMap, nameof(_vm.WebVttUseXTimestampMap)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.AssaAutoSetResolution, nameof(_vm.AssaAutoSetResolution)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.AssaAutoSetResolutionPrompt, nameof(_vm.AssaAutoSetResolutionPrompt),
+                new Binding(nameof(_vm.AssaAutoSetResolution)) { Source = _vm }),
         ]));
 
         sections.Add(new SettingsSection(Se.Language.General.SyntaxColoring, IconNames.Palette, "#d966a0",

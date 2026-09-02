@@ -197,6 +197,8 @@ public class LanguageSettings
     public string FavoriteSubtitleFormats { get; set; }
     public string FavoriteLanguages { get; set; }
     public string WebVttUseXTimestampMap { get; set; }
+    public string AssaAutoSetResolution { get; set; }
+    public string AssaAutoSetResolutionPrompt { get; set; }
 
     public string ShowStopButton { get; set; }
     public string ShowFullscreenButton { get; set; }
@@ -548,6 +550,8 @@ public class LanguageSettings
         DefaultSaveAsFormat = "Default \"Save as\" format";
         FavoriteSubtitleFormats = "Favorite subtitle formats";
         WebVttUseXTimestampMap = "WebVTT: use X-TIMESTAMP-MAP (offset time codes on load)";
+        AssaAutoSetResolution = "ASSA: set resolution (PlayResX/PlayResY) from the video when a video is opened";
+        AssaAutoSetResolutionPrompt = "ASSA: ask before changing the resolution to match the video (otherwise resample automatically)";
         FavoriteLanguages = "Favorite languages";
         FilesAndLogs = "Files and logs";
         ShowErrorLogFile = "Show error log file";

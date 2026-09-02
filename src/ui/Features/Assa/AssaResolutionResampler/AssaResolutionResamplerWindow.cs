@@ -23,13 +23,6 @@ public class AssaResolutionResamplerWindow : Window
 
         var grid = new Grid
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
@@ -40,6 +33,25 @@ public class AssaResolutionResamplerWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
+        void AddRow(Control control)
+        {
+            grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
+            Grid.SetRow(control, grid.RowDefinitions.Count - 1);
+            grid.Children.Add(control);
+        }
+
+        // Opened as the video-open prompt: say why the dialog appeared (#14367)
+        if (vm.IsVideoPrompt)
+        {
+            AddRow(new TextBlock
+            {
+                Text = vm.PromptText,
+                TextWrapping = TextWrapping.Wrap,
+                MaxWidth = 520,
+                HorizontalAlignment = HorizontalAlignment.Left,
+            });
+        }
+
         // Source resolution panel
         var sourcePanel = CreateResolutionPanel(
             Se.Language.Assa.ResolutionResamplerSourceRes,
@@ -47,8 +59,7 @@ public class AssaResolutionResamplerWindow : Window
             nameof(vm.SourceHeight),
             vm.SourceFromVideoCommand,
             out var sourceWidthBox);
-        Grid.SetRow(sourcePanel, 0);
-        grid.Children.Add(sourcePanel);
+        AddRow(sourcePanel);
 
         // Target resolution panel
         var targetPanel = CreateResolutionPanel(
@@ -57,20 +68,24 @@ public class AssaResolutionResamplerWindow : Window
             nameof(vm.TargetHeight),
             vm.TargetFromVideoCommand,
             out _);
-        Grid.SetRow(targetPanel, 1);
-        grid.Children.Add(targetPanel);
+        AddRow(targetPanel);
 
         // Options panel
-        var optionsPanel = CreateOptionsPanel(vm);
-        Grid.SetRow(optionsPanel, 2);
-        grid.Children.Add(optionsPanel);
+        AddRow(CreateOptionsPanel(vm));
+
+        if (vm.IsVideoPrompt)
+        {
+            AddRow(new CheckBox
+            {
+                Content = Se.Language.Assa.ResolutionResamplerAskOnVideoOpen,
+                [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.AskOnVideoOpen)) { Mode = BindingMode.TwoWay },
+            });
+        }
 
         // Buttons
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-        Grid.SetRow(panelButtons, 3);
-        grid.Children.Add(panelButtons);
+        AddRow(UiUtil.MakeButtonBar(buttonOk, buttonCancel));
 
         Content = grid;
 

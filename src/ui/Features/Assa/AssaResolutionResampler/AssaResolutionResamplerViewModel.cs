@@ -29,14 +29,36 @@ public partial class AssaResolutionResamplerViewModel : ObservableObject
     [ObservableProperty] private bool _changeFontSize = true;
     [ObservableProperty] private bool _changePositions = true;
     [ObservableProperty] private bool _changeDrawing = true;
+    [ObservableProperty] private bool _askOnVideoOpen = true;
 
     private Subtitle _subtitle = new();
     private string? _videoFileName;
 
     public Subtitle ResultSubtitle => _subtitle;
 
+    /// <summary>
+    /// True when the dialog was opened because an opened video's picture size differs from the
+    /// script resolution (not from the menu): the window then explains why it appeared
+    /// (<see cref="PromptText"/>) and offers to stop asking (<see cref="AskOnVideoOpen"/>).
+    /// </summary>
+    public bool IsVideoPrompt { get; private set; }
+
+    public string PromptText { get; private set; } = string.Empty;
+
     public AssaResolutionResamplerViewModel()
     {
+    }
+
+    /// <summary>
+    /// Sets the dialog up as the video-open prompt: source is the script's PlayResX/PlayResY,
+    /// target is the video's picture size (#14367).
+    /// </summary>
+    public void InitializeForVideoPrompt(Subtitle subtitle, string? videoFileName, int videoWidth, int videoHeight)
+    {
+        Initialize(subtitle, videoFileName, videoWidth, videoHeight);
+        IsVideoPrompt = true;
+        AskOnVideoOpen = Se.Settings.Assa.AutoSetResolutionPrompt;
+        PromptText = string.Format(Se.Language.Assa.ResolutionResamplerVideoDiffers, SourceWidth, SourceHeight, videoWidth, videoHeight);
     }
 
     public void Initialize(Subtitle subtitle, string? videoFileName, int? videoWidth, int? videoHeight)
@@ -188,6 +210,14 @@ public partial class AssaResolutionResamplerViewModel : ObservableObject
 
     private void Close()
     {
+        // "Ask when a video with a different resolution is opened" is honored whether the user
+        // confirms, cancels or presses Escape - unticking it means "leave it and stop asking".
+        if (IsVideoPrompt && Se.Settings.Assa.AutoSetResolutionPrompt != AskOnVideoOpen)
+        {
+            Se.Settings.Assa.AutoSetResolutionPrompt = AskOnVideoOpen;
+            Se.SaveSettings();
+        }
+
         Dispatcher.UIThread.Post(() =>
         {
             Window?.Close();
