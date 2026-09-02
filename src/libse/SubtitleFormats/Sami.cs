@@ -119,21 +119,24 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     bool tagOn = false;
                     for (int i = 0; i < text.Length; i++)
                     {
-                        string t = text.Substring(i);
-                        if (t.StartsWith('<') &&
-                            (t.StartsWith("<font", StringComparison.Ordinal) ||
-                             t.StartsWith("<div", StringComparison.Ordinal) ||
-                             t.StartsWith("<i", StringComparison.Ordinal) ||
-                             t.StartsWith("<b", StringComparison.Ordinal) ||
-                             t.StartsWith("<s", StringComparison.Ordinal) ||
-                             t.StartsWith("</", StringComparison.Ordinal)))
+                        // text.Substring(i) allocated the whole remaining line on every single
+                        // character just to test a handful of prefixes - quadratic on any line
+                        // carrying a tag. A span slice costs nothing.
+                        var t = text.AsSpan(i);
+                        if (t[0] == '<' &&
+                            (t.StartsWith("<font".AsSpan(), StringComparison.Ordinal) ||
+                             t.StartsWith("<div".AsSpan(), StringComparison.Ordinal) ||
+                             t.StartsWith("<i".AsSpan(), StringComparison.Ordinal) ||
+                             t.StartsWith("<b".AsSpan(), StringComparison.Ordinal) ||
+                             t.StartsWith("<s".AsSpan(), StringComparison.Ordinal) ||
+                             t.StartsWith("</".AsSpan(), StringComparison.Ordinal)))
                         {
                             totalLine.Append(EncodeText(partialLine.ToString()));
                             partialLine.Clear();
                             tagOn = true;
                             totalLine.Append('<');
                         }
-                        else if (t.StartsWith('>') && tagOn)
+                        else if (t[0] == '>' && tagOn)
                         {
                             tagOn = false;
                             totalLine.Append('>');
@@ -426,21 +429,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     bool tagOn = false;
                     for (int i = 0; i < text.Length && i < 999; i++)
                     {
-                        string tmp = text.Substring(i);
-                        if (tmp.StartsWith('<') &&
-                            (tmp.StartsWith("<font", StringComparison.Ordinal) ||
-                             tmp.StartsWith("<div", StringComparison.Ordinal) ||
-                             tmp.StartsWith("<i", StringComparison.Ordinal) ||
-                             tmp.StartsWith("<b", StringComparison.Ordinal) ||
-                             tmp.StartsWith("<s", StringComparison.Ordinal) ||
-                             tmp.StartsWith("</", StringComparison.Ordinal)))
+                        // Same quadratic Substring(i) scan as the writer above; slice instead.
+                        var tmp = text.AsSpan(i);
+                        if (tmp[0] == '<' &&
+                            (tmp.StartsWith("<font".AsSpan(), StringComparison.Ordinal) ||
+                             tmp.StartsWith("<div".AsSpan(), StringComparison.Ordinal) ||
+                             tmp.StartsWith("<i".AsSpan(), StringComparison.Ordinal) ||
+                             tmp.StartsWith("<b".AsSpan(), StringComparison.Ordinal) ||
+                             tmp.StartsWith("<s".AsSpan(), StringComparison.Ordinal) ||
+                             tmp.StartsWith("</".AsSpan(), StringComparison.Ordinal)))
                         {
                             total.Append(WebUtility.HtmlDecode(partial.ToString()));
                             partial.Clear();
                             tagOn = true;
                             total.Append('<');
                         }
-                        else if (text.Substring(i).StartsWith('>') && tagOn)
+                        else if (tmp[0] == '>' && tagOn)
                         {
                             tagOn = false;
                             total.Append('>');

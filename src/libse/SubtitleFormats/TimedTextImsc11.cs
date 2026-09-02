@@ -432,7 +432,87 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return null;
         }
 
-        private static string GetAssStyleFromRegion(string regionId, XmlDocument xml)
+        /// <summary>
+        /// The document's "//ttml:style" and "//ttml:region" elements grouped by id, built once
+        /// per load. <see cref="ReadParagraph"/> used to create an XmlNamespaceManager and run a
+        /// document-wide XPath for every style name of every span, and
+        /// <see cref="GetAssStyleFromRegion"/> did the same for every paragraph - so a file with
+        /// styled spans walked the whole document once per span per style name.
+        /// </summary>
+        private sealed class TtmlHeadIndex
+        {
+            private static readonly List<XmlNode> NoNodes = new List<XmlNode>();
+
+            private readonly Dictionary<string, List<XmlNode>> _styles = new Dictionary<string, List<XmlNode>>();
+            private readonly Dictionary<string, List<XmlNode>> _regions = new Dictionary<string, List<XmlNode>>();
+
+            /// <summary>
+            /// False when the document has no "ttml:head" - the scans this replaces either threw
+            /// (styles) or returned early (regions) in that case, so nothing may be resolved.
+            /// </summary>
+            public bool HasHead { get; private set; }
+
+            public static TtmlHeadIndex Build(XmlDocument xml)
+            {
+                var index = new TtmlHeadIndex();
+                try
+                {
+                    var nsmgr = new XmlNamespaceManager(xml.NameTable);
+                    nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
+                    var head = xml.DocumentElement?.SelectSingleNode("ttml:head", nsmgr);
+                    if (head == null)
+                    {
+                        return index;
+                    }
+
+                    index.HasHead = true;
+
+                    // "//ttml:style" is document-absolute even when evaluated from head, which is
+                    // what the replaced scans did - keep selecting from the document.
+                    AddAll(index._styles, xml.SelectNodes("//ttml:style", nsmgr));
+                    AddAll(index._regions, xml.SelectNodes("//ttml:region", nsmgr));
+                }
+                catch (Exception e)
+                {
+                    System.Diagnostics.Debug.WriteLine(e);
+                }
+
+                return index;
+            }
+
+            private static void AddAll(Dictionary<string, List<XmlNode>> target, XmlNodeList nodes)
+            {
+                if (nodes == null)
+                {
+                    return;
+                }
+
+                foreach (XmlNode node in nodes)
+                {
+                    var id = node.Attributes?["xml:id"]?.Value ?? node.Attributes?["id"]?.Value;
+                    if (id == null)
+                    {
+                        continue;
+                    }
+
+                    // Several elements may share an id; the replaced loops applied every match in
+                    // document order, so keep them all in that order.
+                    if (!target.TryGetValue(id, out var list))
+                    {
+                        list = new List<XmlNode>(1);
+                        target[id] = list;
+                    }
+
+                    list.Add(node);
+                }
+            }
+
+            public List<XmlNode> GetStyles(string id) => _styles.TryGetValue(id, out var list) ? list : NoNodes;
+
+            public List<XmlNode> GetRegions(string id) => _regions.TryGetValue(id, out var list) ? list : NoNodes;
+        }
+
+        private static string GetAssStyleFromRegion(string regionId, TtmlHeadIndex headIndex)
         {
             var nameResult = GetAssStyleFromRegionName(regionId);
             if (!string.IsNullOrEmpty(nameResult))
@@ -442,22 +522,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             try
             {
-                var nsmgr = new XmlNamespaceManager(xml.NameTable);
-                nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
-                var head = xml.DocumentElement.SelectSingleNode("ttml:head", nsmgr);
-                if (head == null)
+                if (!headIndex.HasHead)
                 {
                     return string.Empty;
                 }
 
-                foreach (XmlNode regionNode in head.SelectNodes("//ttml:region", nsmgr))
+                foreach (var regionNode in headIndex.GetRegions(regionId))
                 {
-                    var id = regionNode.Attributes["xml:id"]?.Value ?? regionNode.Attributes["id"]?.Value;
-                    if (id != regionId)
-                    {
-                        continue;
-                    }
-
                     var displayAlign = regionNode.Attributes["tts:displayAlign"]?.Value ?? "after";
                     var textAlign = regionNode.Attributes["tts:textAlign"]?.Value ?? "center";
                     var originY = ParseRegionPercent(regionNode.Attributes["tts:origin"]?.Value, useY: true) ?? 10.0;
@@ -608,6 +679,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var namespaceManager = new XmlNamespaceManager(xml.NameTable);
             namespaceManager.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
             var body = xml.DocumentElement.SelectSingleNode("ttml:body", namespaceManager);
+            var headIndex = TtmlHeadIndex.Build(xml);
             foreach (XmlNode node in body.SelectNodes("//ttml:p", namespaceManager))
             {
                 TimedText10.ExtractTimeCodes(node, subtitle, out var begin, out var end);
@@ -615,10 +687,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var region = node.Attributes?["region"];
                 if (region != null)
                 {
-                    assStyle = GetAssStyleFromRegion(region.InnerText, xml);
+                    assStyle = GetAssStyleFromRegion(region.InnerText, headIndex);
                 }
 
-                var text = assStyle + ReadParagraph(node, xml).TrimEnd();
+                var text = assStyle + ReadParagraph(node, headIndex).TrimEnd();
 
                 // Keep the region name: the alignment tag above only snaps to the screen thirds,
                 // the video preview positions the line from the region box itself.
@@ -629,7 +701,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        private static string ReadParagraph(XmlNode node, XmlDocument xml)
+        private static string ReadParagraph(XmlNode node, TtmlHeadIndex headIndex)
         {
             var pText = new StringBuilder();
             foreach (XmlNode child in node.ChildNodes)
@@ -666,47 +738,36 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             try
                             {
-                                var nsmgr = new XmlNamespaceManager(xml.NameTable);
-                                nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
-                                XmlNode head = xml.DocumentElement.SelectSingleNode("ttml:head", nsmgr);
-                                foreach (XmlNode styleNode in head.SelectNodes("//ttml:style", nsmgr))
+                                if (!headIndex.HasHead)
                                 {
-                                    string currentStyle = null;
-                                    if (styleNode.Attributes["xml:id"] != null)
+                                    continue;
+                                }
+
+                                foreach (var styleNode in headIndex.GetStyles(styleName))
+                                {
+                                    if (styleNode.Attributes["tts:fontStyle"] != null && styleNode.Attributes["tts:fontStyle"].Value == "italic")
                                     {
-                                        currentStyle = styleNode.Attributes["xml:id"].Value;
+                                        isItalic = true;
                                     }
-                                    else if (styleNode.Attributes["id"] != null)
+
+                                    if (styleNode.Attributes["tts:fontWeight"] != null && styleNode.Attributes["tts:fontWeight"].Value == "bold")
                                     {
-                                        currentStyle = styleNode.Attributes["id"].Value;
+                                        isBold = true;
                                     }
 
-                                    if (currentStyle == styleName)
+                                    if (styleNode.Attributes["tts:textDecoration"] != null && styleNode.Attributes["tts:textDecoration"].Value == "underline")
                                     {
-                                        if (styleNode.Attributes["tts:fontStyle"] != null && styleNode.Attributes["tts:fontStyle"].Value == "italic")
-                                        {
-                                            isItalic = true;
-                                        }
+                                        isUnderlined = true;
+                                    }
 
-                                        if (styleNode.Attributes["tts:fontWeight"] != null && styleNode.Attributes["tts:fontWeight"].Value == "bold")
-                                        {
-                                            isBold = true;
-                                        }
+                                    if (styleNode.Attributes["tts:fontFamily"] != null)
+                                    {
+                                        fontFamily = styleNode.Attributes["tts:fontFamily"].Value;
+                                    }
 
-                                        if (styleNode.Attributes["tts:textDecoration"] != null && styleNode.Attributes["tts:textDecoration"].Value == "underline")
-                                        {
-                                            isUnderlined = true;
-                                        }
-
-                                        if (styleNode.Attributes["tts:fontFamily"] != null)
-                                        {
-                                            fontFamily = styleNode.Attributes["tts:fontFamily"].Value;
-                                        }
-
-                                        if (styleNode.Attributes["tts:color"] != null)
-                                        {
-                                            color = styleNode.Attributes["tts:color"].Value;
-                                        }
+                                    if (styleNode.Attributes["tts:color"] != null)
+                                    {
+                                        color = styleNode.Attributes["tts:color"].Value;
                                     }
                                 }
                             }
@@ -790,7 +851,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         pText.Append(">");
                     }
 
-                    pText.Append(ReadParagraph(child, xml));
+                    pText.Append(ReadParagraph(child, headIndex));
 
                     if (!string.IsNullOrEmpty(fontFamily) || !string.IsNullOrEmpty(color))
                     {

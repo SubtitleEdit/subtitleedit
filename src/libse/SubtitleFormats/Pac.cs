@@ -1,6 +1,7 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -2241,7 +2242,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var extra = 0;
             while (i < text.Length)
             {
-                if (text.Substring(i).StartsWith(Environment.NewLine, StringComparison.Ordinal))
+                if (text.AsSpan(i).StartsWith(Environment.NewLine.AsSpan(), StringComparison.Ordinal))
                 {
                     buffer[i + extra] = 0xfe;
                     i++;
@@ -2336,7 +2337,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var extra = 0;
             while (i < text.Length)
             {
-                if (text.Substring(i).StartsWith(Environment.NewLine, StringComparison.Ordinal))
+                if (text.AsSpan(i).StartsWith(Environment.NewLine.AsSpan(), StringComparison.Ordinal))
                 {
                     buffer[i + extra] = 0xfe;
                     i++;
@@ -2794,9 +2795,49 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return new TimeCode();
         }
 
+        /// <summary>
+        /// Character-to-code lookups for the code tables, built once per table. The tables are
+        /// static and are keyed by code, so <see cref="Find"/> used to LINQ-scan all ~350
+        /// entries (allocating three enumerators) for every character of every line written -
+        /// twice per character in <see cref="GetLatinBytes"/>.
+        /// </summary>
+        private static readonly ConcurrentDictionary<Dictionary<int, SpecialCharacter>, Dictionary<string, KeyValuePair<int, SpecialCharacter>>> ReverseCodeLookups =
+            new ConcurrentDictionary<Dictionary<int, SpecialCharacter>, Dictionary<string, KeyValuePair<int, SpecialCharacter>>>();
+
+        private static Dictionary<string, KeyValuePair<int, SpecialCharacter>> GetReverseCodeLookup(Dictionary<int, SpecialCharacter> list)
+        {
+            return ReverseCodeLookups.GetOrAdd(list, source =>
+            {
+                // First entry wins, matching Where(...).FirstOrDefault() over the table's own
+                // enumeration order.
+                var lookup = new Dictionary<string, KeyValuePair<int, SpecialCharacter>>(source.Count, StringComparer.Ordinal);
+                foreach (var kvp in source)
+                {
+                    var character = kvp.Value.Character;
+                    if (character != null && !lookup.ContainsKey(character))
+                    {
+                        lookup.Add(character, kvp);
+                    }
+                }
+
+                return lookup;
+            });
+        }
+
         private static KeyValuePair<int, SpecialCharacter>? Find(Dictionary<int, SpecialCharacter> list, string letter)
         {
-            return list?.Where(c => c.Value.Character == letter).Cast<KeyValuePair<int, SpecialCharacter>?>().FirstOrDefault();
+            if (list == null)
+            {
+                return null;
+            }
+
+            if (letter == null)
+            {
+                // "c.Value.Character == null" never held: every table entry carries a character.
+                return null;
+            }
+
+            return GetReverseCodeLookup(list).TryGetValue(letter, out var found) ? found : (KeyValuePair<int, SpecialCharacter>?)null;
         }
 
         internal struct SpecialCharacter

@@ -128,6 +128,11 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 }
             }
 
+            // Cap on the approximate-match memo below. A caption repeats its anti-aliasing
+            // colours on every row, but a photographic source can hold millions of distinct
+            // ones - past the cap the linear scan simply runs again, as it always did.
+            const int maxCachedColors = 1 << 16;
+
             var transparentColor = (byte)palette[palette.Count - 1];
             var bytes = new List<byte>(bm.Width * 2);
             var reader = new BitmapRowReader(bm);
@@ -152,7 +157,15 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                     }
                     else
                     {
+                        // FindBestMatch is a linear scan over the (up to 255 entry) palette and
+                        // the palette does not change while encoding, so the answer for a color
+                        // is fixed. Anti-aliased edges hit this for the same handful of colors
+                        // on every row of the caption; remember them in the same lookup.
                         color = FindBestMatch(c, palette);
+                        if (lookup.Count < maxCachedColors)
+                        {
+                            lookup[c] = color;
+                        }
                     }
 
                     for (len = 1; x + len < bm.Width; len++)
@@ -368,6 +381,15 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             lookup = new HashSet<SKColor>();
             pal.Add(fontColor);
             lookup.Add(fontColor);
+
+            // Colors already known to have a close palette entry. HasCloseColor is a linear scan
+            // over the palette, and this pass reached it for every pixel of every anti-aliased
+            // edge - a 1920x200 caption ran it hundreds of thousands of times over a palette
+            // growing towards 254 entries. A rejection can never be undone: the palette only
+            // grows, and the tolerance only widens as it does (1 -> 5 -> 25), so a color that
+            // had a close entry once still has one later. Rejections take no palette slot, so
+            // caching one can never skip an insertion.
+            var rejected = new HashSet<SKColor>();
             for (var y = 0; y < bitmap.Height; y++)
             {
                 reader.ReadRow(y, row);
@@ -380,12 +402,20 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                         {
                             // exact color already exists
                         }
+                        else if (rejected.Contains(c))
+                        {
+                            // a close enough color already exists
+                        }
                         else if (pal.Count < 100)
                         {
                             if (!HasCloseColor(c, pal, 1))
                             {
                                 pal.Add(c);
                                 lookup.Add(c);
+                            }
+                            else
+                            {
+                                rejected.Add(c);
                             }
                         }
                         else if (pal.Count < 240)
@@ -395,13 +425,31 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                                 pal.Add(c);
                                 lookup.Add(c);
                             }
+                            else
+                            {
+                                rejected.Add(c);
+                            }
                         }
-                        else if (pal.Count < 254 && !HasCloseColor(c, pal, 25))
+                        else if (pal.Count < 254)
                         {
-                            pal.Add(c);
-                            lookup.Add(c);
+                            if (!HasCloseColor(c, pal, 25))
+                            {
+                                pal.Add(c);
+                                lookup.Add(c);
+                            }
+                            else
+                            {
+                                rejected.Add(c);
+                            }
                         }
                     }
+                }
+
+                // Every branch above requires pal.Count < 254, so a full palette freezes the
+                // result - the rest of the image only cost scans that could not change it.
+                if (pal.Count >= 254)
+                {
+                    break;
                 }
             }
 

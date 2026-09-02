@@ -71,6 +71,28 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0xfe, "ŋ" },
         };
 
+        /// <summary>
+        /// <see cref="SpecialAsciiCodes"/> keyed by its (always single-character) value. The
+        /// writer used to ask ContainsValue and then LINQ-First over all ~33 entries for every
+        /// character it encoded - two linear scans per character.
+        /// </summary>
+        private static readonly Dictionary<char, int> SpecialAsciiCodesByChar = BuildSpecialAsciiCodesByChar();
+
+        private static Dictionary<char, int> BuildSpecialAsciiCodesByChar()
+        {
+            var result = new Dictionary<char, int>();
+            foreach (var kvp in SpecialAsciiCodes)
+            {
+                // First entry wins, like the First(...) it replaces.
+                if (kvp.Value.Length == 1 && !result.ContainsKey(kvp.Value[0]))
+                {
+                    result.Add(kvp.Value[0], kvp.Key);
+                }
+            }
+
+            return result;
+        }
+
         public interface IEbuUiHelper
         {
             void Initialize(EbuGeneralSubtitleInformation header, byte justificationCode, string fileName, Subtitle subtitle);
@@ -580,8 +602,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var i = 0;
                     while (i < line.Length)
                     {
-                        var newStart = line.Substring(i);
-                        if (newStart.StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
+                        // Slicing instead of line.Substring(i): the old code allocated the whole
+                        // rest of the line for every character it stepped over, so a teletext page
+                        // of styled text copied itself once per character while being encoded.
+                        var newStart = line.AsSpan(i);
+                        if (newStart.StartsWith("<font ".AsSpan(), StringComparison.OrdinalIgnoreCase))
                         {
                             lastWasStartColor = true;
                             var end = line.IndexOf('>', i);
@@ -609,24 +634,24 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 i = end + 1;
                             }
                         }
-                        else if (newStart == "</font>")
+                        else if (newStart.SequenceEqual("</font>".AsSpan()))
                         {
                             i += "</font>".Length;
                             lastColor = null;
                             lastWasEndColor = true;
                         }
-                        else if (newStart.StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
+                        else if (newStart.StartsWith("</font>".AsSpan(), StringComparison.OrdinalIgnoreCase))
                         {
                             i += "</font>".Length;
 
                             if (displayStandardCode != "0" && line.Length > i + 1)
                             {
-                                var part = line.Substring(i);
-                                if (part.StartsWith(" <font "))
+                                var part = line.AsSpan(i);
+                                if (part.StartsWith(" <font ".AsSpan(), StringComparison.CurrentCulture))
                                 {
                                     i++;
                                 }
-                                else if (part.StartsWith("<font "))
+                                else if (part.StartsWith("<font ".AsSpan(), StringComparison.CurrentCulture))
                                 {
                                     // do nothing
                                 }
@@ -640,32 +665,32 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             lastWasEndColor = true;
                             lastColor = null;
                         }
-                        else if (newStart.StartsWith("<i>", StringComparison.Ordinal))
+                        else if (newStart.StartsWith("<i>".AsSpan(), StringComparison.Ordinal))
                         {
                             i += "<i>".Length;
                             textBytes.Add(italicOn);
                         }
-                        else if (newStart.StartsWith("</i>", StringComparison.Ordinal))
+                        else if (newStart.StartsWith("</i>".AsSpan(), StringComparison.Ordinal))
                         {
                             i += "</i>".Length;
                             textBytes.Add(italicOff);
                         }
-                        else if (newStart.StartsWith("<u>", StringComparison.Ordinal))
+                        else if (newStart.StartsWith("<u>".AsSpan(), StringComparison.Ordinal))
                         {
                             i += "<u>".Length;
                             textBytes.Add(underlineOn);
                         }
-                        else if (newStart.StartsWith("</u>", StringComparison.Ordinal))
+                        else if (newStart.StartsWith("</u>".AsSpan(), StringComparison.Ordinal))
                         {
                             i += "</u>".Length;
                             textBytes.Add(underlineOff);
                         }
-                        else if (newStart.StartsWith("<box>", StringComparison.Ordinal))
+                        else if (newStart.StartsWith("<box>".AsSpan(), StringComparison.Ordinal))
                         {
                             i += "<box>".Length;
                             textBytes.Add(boxingOn);
                         }
-                        else if (newStart.StartsWith("</box>", StringComparison.Ordinal))
+                        else if (newStart.StartsWith("</box>".AsSpan(), StringComparison.Ordinal))
                         {
                             i += "</box>".Length;
                             textBytes.Add(boxingOff);
@@ -674,35 +699,36 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             var ch = line[i];
 
-                            var nextCh = line.Substring(i, 1);
-                            if (nextCh == " " && lastWasEndColor)
+                            // The one-character string this used to build per character is gone;
+                            // every test below was a single-character comparison.
+                            if (ch == ' ' && lastWasEndColor)
                             {
                             }
-                            else if (nextCh == " " && lastWasStartColor)
+                            else if (ch == ' ' && lastWasStartColor)
                             {
                             }
                             else
                             {
-                                if (nextCh == "#")
+                                if (ch == '#')
                                 {
-                                    sb.Append(nextCh);
+                                    sb.Append(ch);
                                     textBytes.Add(0x23);
                                 }
-                                else if (nextCh == "Đ")
+                                else if (ch == 'Đ')
                                 {
-                                    sb.Append(nextCh);
+                                    sb.Append(ch);
                                     textBytes.Add(0xe2);
                                 }
-                                else if (nextCh == "–") // em dash
+                                else if (ch == '–') // em dash
                                 {
-                                    sb.Append(nextCh);
+                                    sb.Append(ch);
                                     textBytes.Add(0xd0);
                                 }
                                 else
                                 {
                                     if (characterCodeTableNumber == "00")
                                     {
-                                        if (newStart.Length > 1 && line[i + 1] == 'ı' && newStart.StartsWith("ı̂")) // extended unicode char - rewritten as simple 'î' - looks the same as "î" but it's not...)
+                                        if (newStart.Length > 1 && line[i + 1] == 'ı' && newStart.StartsWith("ı̂".AsSpan(), StringComparison.CurrentCulture)) // extended unicode char - rewritten as simple 'î' - looks the same as "î" but it's not...)
                                         {
                                             textBytes.AddRange(new byte[] { 0xc3, 0x69 }); // Ãi - simple î
                                             i++;
@@ -759,20 +785,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                         {
                                             textBytes.AddRange(ReplaceSpecialCharactersWithTwoByteEncoding(encoding, ch, 0xcf, "ČĎĚĽŇŘŠŤŽčďěľňřšťž", "CDELNRSTZcdelnrstz"));
                                         }
-                                        else if (SpecialAsciiCodes.ContainsValue(nextCh))
+                                        else if (SpecialAsciiCodesByChar.TryGetValue(ch, out var specialAsciiCode))
                                         {
-                                            textBytes.Add((byte)SpecialAsciiCodes.First(p => p.Value == nextCh).Key);
+                                            textBytes.Add((byte)specialAsciiCode);
                                         }
                                         else
                                         {
-                                            sb.Append(nextCh);
-                                            textBytes.AddRange(encoding.GetBytes(nextCh));
+                                            sb.Append(ch);
+                                            AddEncodedChar(textBytes, encoding, ch);
                                         }
                                     }
                                     else
                                     {
-                                        sb.Append(nextCh);
-                                        textBytes.AddRange(encoding.GetBytes(nextCh));
+                                        sb.Append(ch);
+                                        AddEncodedChar(textBytes, encoding, ch);
                                     }
                                 }
                             }
@@ -790,6 +816,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
+
+            /// <summary>
+            /// Appends one encoded character. This was encoding.GetBytes(line.Substring(i, 1)) -
+            /// a one-character string plus a byte array for every character written.
+            /// </summary>
+            private static void AddEncodedChar(List<byte> textBytes, Encoding encoding, char ch)
+            {
+                Span<char> chars = stackalloc char[1];
+                chars[0] = ch;
+                Span<byte> bytes = stackalloc byte[8];
+                var count = encoding.GetBytes(chars, bytes);
+                for (var k = 0; k < count; k++)
+                {
+                    textBytes.Add(bytes[k]);
+                }
+            }
 
             private static byte? GetColorByte(Encoding encoding, string line, int i)
             {
