@@ -358,6 +358,140 @@ public class LibMpvEventLoopTests
     }
 
     /// <summary>
+    /// Two-tier scrub seeking (#14441): a burst of seeks serves all but its first two at keyframes
+    /// and must then pay exactly one exact landing once it settles. The follow-up used to be
+    /// skipped when mpv's cached position looked close to the target - and it always did, because
+    /// mpv reports the seek target as time-pos while seeking - so the video stayed a GOP short.
+    /// </summary>
+    [Fact]
+    public async Task SeekBurst_PaysOneExactLandingOnceItSettles()
+    {
+        var player = CreatePlayer();
+        if (player == null)
+        {
+            return; // no libmpv on this machine
+        }
+
+        var wavFileName = WriteTempWav();
+        try
+        {
+            await player.LoadFile(wavFileName);
+            Assert.True(await WaitUntilAsync(() => player.Duration > 1.0, 5000), "file never loaded");
+
+            // A drag: seeks back to back until one is issued into an unfinished seek that was
+            // itself issued into an unfinished seek - a burst - and so is served at keyframes and
+            // owes an exact landing. On this tiny file mpv can land a seek in well under a
+            // millisecond, so how many it takes varies; a real drag delivers hundreds.
+            var target = 0.0;
+            for (var i = 0; i < 500 && !player.OwesExactLanding; i++)
+            {
+                target = 0.2 + (i % 8) * 0.2;
+                player.Position = target;
+            }
+
+            Assert.True(player.OwesExactLanding, "no seek burst could be formed - mpv landed every seek before the next one was issued");
+            var issued = player.IssuedSeekCount;
+
+            // The burst settles: the follow-up goes out as one more seek and clears the debt.
+            Assert.True(await WaitUntilAsync(() => !player.OwesExactLanding, 5000),
+                "the burst settled but the exact landing was never paid");
+            Assert.Equal(issued + 1, player.IssuedSeekCount);
+
+            // And it lands where the user pointed, with nothing left owing and no further seeks.
+            await Task.Delay(300, TestContext.Current.CancellationToken);
+            Assert.False(player.OwesExactLanding);
+            Assert.Equal(issued + 1, player.IssuedSeekCount);
+            Assert.Equal(target, player.Position, 2);
+        }
+        finally
+        {
+            player.Dispose();
+            TryDelete(wavFileName);
+        }
+    }
+
+    /// <summary>
+    /// The waveform click seeks twice in one input event (pointer release, then the tap with the
+    /// frame-snapped position). That pair is not a burst: both seeks stay exact, so no keyframe
+    /// frame flashes before the landing and nothing is left owing.
+    /// </summary>
+    [Fact]
+    public async Task ClickSeekPair_StaysExactAndOwesNothing()
+    {
+        var player = CreatePlayer();
+        if (player == null)
+        {
+            return; // no libmpv on this machine
+        }
+
+        var wavFileName = WriteTempWav();
+        try
+        {
+            await player.LoadFile(wavFileName);
+            Assert.True(await WaitUntilAsync(() => player.Duration > 1.0, 5000), "file never loaded");
+
+            player.Position = 1.3;
+            player.Pause();
+            player.Position = 1.32;
+
+            Assert.Equal(2, player.IssuedSeekCount);
+            Assert.False(player.OwesExactLanding, "the second seek of a click must not be a keyframe seek");
+
+            await Task.Delay(500, TestContext.Current.CancellationToken);
+            Assert.Equal(2, player.IssuedSeekCount);
+            Assert.False(player.OwesExactLanding);
+            Assert.Equal(1.32, player.Position, 2);
+        }
+        finally
+        {
+            player.Dispose();
+            TryDelete(wavFileName);
+        }
+    }
+
+    /// <summary>
+    /// Frame mode used to skip the paused seek-target cache, so after a waveform click the
+    /// reported position hopped from the click to the first decoded frame at or after it - a
+    /// visible one-frame jump forward on every click, in the mode SE forces on for EBU STL
+    /// (#14441). The seek target is where the user pointed, in either mode.
+    /// </summary>
+    [Fact]
+    public async Task PausedSeek_InFrameMode_KeepsReportingTheSeekTarget()
+    {
+        var player = CreatePlayer();
+        if (player == null)
+        {
+            return; // no libmpv on this machine
+        }
+
+        var wavFileName = WriteTempWav();
+        var originalOverride = Nikse.SubtitleEdit.Logic.Config.Se.Settings.General.UseFrameModeOverride;
+        Nikse.SubtitleEdit.Logic.Config.Se.Settings.General.UseFrameModeOverride = true;
+        try
+        {
+            await player.LoadFile(wavFileName);
+            Assert.True(await WaitUntilAsync(() => player.Duration > 1.0, 5000), "file never loaded");
+            Assert.True(player.IsPaused);
+
+            // A click on the waveform while paused: a target that is not on a frame boundary.
+            player.Position = 1.2345;
+
+            var end = Environment.TickCount64 + 800;
+            while (Environment.TickCount64 < end)
+            {
+                Assert.Equal(1.2345, player.Position, 4);
+                await Task.Delay(40, TestContext.Current.CancellationToken);
+            }
+        }
+        finally
+        {
+            Nikse.SubtitleEdit.Logic.Config.Se.Settings.General.UseFrameModeOverride = originalOverride;
+            player.Dispose();
+            TryDelete(wavFileName);
+        }
+    }
+
+    /// <summary>
     /// A render-free core, like the text-to-speech preview players: null video/audio outputs so
     /// nothing opens a window or touches an audio device, but the clock still runs in real time.
     /// </summary>

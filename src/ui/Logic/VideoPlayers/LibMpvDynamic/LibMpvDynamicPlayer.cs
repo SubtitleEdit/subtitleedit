@@ -74,6 +74,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     // has already been and gone.
     private long _scrubFollowUpSeekId;     // keyframe seek owing an exact landing, 0 if none
     private long _scrubFollowUpTargetBits; // that seek's target, as double bits
+    private bool _lastSeekIssuedInFlight;  // the newest seek was issued while a seek was in flight (under _seekStateLock)
 
     // Guards every publish and claim of the seek generation + follow-up debt (IssueSeek, the
     // follow-up/settle/cancel paths). The id, target and debt slot are three separate fields, so
@@ -817,6 +818,18 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     }
 
     /// <summary>
+    /// Number of seek commands sent to mpv so far, deferred exact landings included. Test
+    /// visibility for the two-tier scrub seeking: a settled burst must add exactly one.
+    /// </summary>
+    internal long IssuedSeekCount => Interlocked.Read(ref _lastSeekCommandId);
+
+    /// <summary>
+    /// Whether a keyframe seek still owes its exact landing. Test visibility: must be false once
+    /// a burst has settled, or the video is stranded on a keyframe.
+    /// </summary>
+    internal bool OwesExactLanding => Interlocked.Read(ref _scrubFollowUpSeekId) != 0;
+
+    /// <summary>
     /// Pays the exact landing a mid-burst keyframe seek deferred, once that seek has landed and
     /// nothing newer has replaced it. Runs on the event thread, from the restart event that says
     /// the seek finished.
@@ -843,18 +856,13 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
             var target = BitConverter.Int64BitsToDouble(Interlocked.Read(ref _scrubFollowUpTargetBits));
 
-            // The observed position, never the Position getter: that one answers with the pinned
-            // target while paused, so every deferred landing would look already reached.
-            double? reported = _observedTimePosValid
-                ? BitConverter.Int64BitsToDouble(Interlocked.Read(ref _observedTimePosBits))
-                : null;
-
+            // Never gated on mpv's reported position: during a seek mpv reports the target as
+            // time-pos, and the observed cache is what this thread refreshed last, so a "close
+            // enough" check here compared the target with itself and skipped the landing (#14441).
             if (!ScrubSeekPolicy.ShouldIssueFollowUp(
                     followUpId,
                     Interlocked.Read(ref _lastSeekCommandId),
-                    Interlocked.Read(ref _restartAckedSeekCommandId),
-                    target,
-                    reported))
+                    Interlocked.Read(ref _restartAckedSeekCommandId)))
             {
                 return;
             }
@@ -2121,7 +2129,12 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
                 return _audioEndBound.Value;
             }
 
-            if (_pausedValue.HasValue && IsPaused && !Se.Settings.General.UseFrameMode)
+            // In frame mode too: this used to fall through to mpv's decoded frame time, so a
+            // waveform click while paused landed the cursor on the click, then ~50 ms later on the
+            // first frame at or after it - a visible one-frame hop forward on every click, in a
+            // mode SE forces on for EBU STL (#14441). The seek target is where the user pointed;
+            // the frame steps that need the real frame position clear the cache themselves.
+            if (_pausedValue.HasValue && IsPaused)
             {
                 return _pausedValue.Value;
             }
@@ -2213,12 +2226,15 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             _pausedValue = value;
             _lastRawTimePos = value; // keep the eof-reached gate accurate across seeks
 
-            // A seek arriving while an earlier one is still in flight is a burst - a waveform
+            // Seeks arriving while earlier ones are still in flight are a burst - a waveform
             // drag, a slider drag, a wheel spin, one seek per input event - and all but its last
             // seek are about to be superseded. Those are served fast, at keyframes, and the exact
             // landing is deferred to when the burst settles (ScrubSeekPolicy). An isolated seek,
-            // the common case, is exact right away as before.
-            var inBurst = !forceExact && IsSeekInFlight();
+            // the common case, is exact right away as before - and so is the second seek of a
+            // pair, which is what a waveform click issues (ScrubSeekPolicy.JoinsBurst).
+            var seekInFlight = !forceExact && IsSeekInFlight();
+            var inBurst = ScrubSeekPolicy.JoinsBurst(seekInFlight, _lastSeekIssuedInFlight);
+            _lastSeekIssuedInFlight = seekInFlight;
             var seekFlags = ScrubSeekPolicy.FlagsFor(inBurst);
 
             // Fire-and-forget: seeks arrive in storms (scrubbing, slider drags, wheel steps -

@@ -13,12 +13,18 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 /// user is already moving away from is what makes scrubbing feel heavy.
 /// </para>
 /// <para>
-/// So a seek issued while an earlier one is still in flight - the signature of a burst - is served
-/// with "keyframes" instead, which skips that decode. Precision is not given up, only deferred:
-/// the keyframe seek is recorded as owing an exact landing, and when the burst settles (that seek
-/// lands and nothing newer has replaced it) one exact seek to the final target is issued. Isolated
-/// seeks never take that path - the first seek of a burst is exact, as before - so nothing that
-/// clicks once behaves differently.
+/// So a seek that joins a burst is served with "keyframes" instead, which skips that decode.
+/// Precision is not given up, only deferred: the keyframe seek is recorded as owing an exact
+/// landing, and when the burst settles (that seek lands and nothing newer has replaced it) one
+/// exact seek to the final target is issued. A burst takes three seeks to establish itself - see
+/// <see cref="JoinsBurst"/> - so a single click, and the click paths that seek twice in one input
+/// event (pointer release plus tap), behave exactly as before.
+/// </para>
+/// <para>
+/// A keyframe seek lands on the keyframe BEFORE the target (mpv's rule for absolute seeks), which
+/// on a long-GOP file can be many seconds back, so the deferred exact landing is never optional:
+/// a burst that ends without it leaves the video, and everything that reads mpv's position, a
+/// whole GOP away from where the user pointed.
 /// </para>
 /// </summary>
 public static class ScrubSeekPolicy
@@ -35,13 +41,6 @@ public static class ScrubSeekPolicy
     public const string KeyframeSeekFlags = "absolute+keyframes";
 
     /// <summary>
-    /// How close the keyframe landing has to be to the target to count as already exact. A seek
-    /// whose target happens to be a keyframe lands on it, and re-seeking there would cost a
-    /// decode for no movement.
-    /// </summary>
-    public const double FollowUpToleranceSeconds = 0.001;
-
-    /// <summary>
     /// How long a seek may be counted as still in flight. Every seek ends in a playback restart,
     /// but a seek mpv drops - on a core that has stopped, or a file that went away - never gets
     /// one, and "in flight" would then latch forever: every later seek served at keyframes, each
@@ -53,13 +52,32 @@ public static class ScrubSeekPolicy
     /// <summary>
     /// The flags for a seek issued now: fast if this one is joining a burst, precise otherwise.
     /// </summary>
-    public static string FlagsFor(bool seekInFlight)
+    public static string FlagsFor(bool joinsBurst)
     {
-        return seekInFlight ? KeyframeSeekFlags : ExactSeekFlags;
+        return joinsBurst ? KeyframeSeekFlags : ExactSeekFlags;
     }
 
     /// <summary>
-    /// Whether a seek SE issued is still on its way - the burst signal <see cref="FlagsFor"/>
+    /// Whether a seek issued now is the continuation of a burst, and so may be served fast.
+    /// <para>
+    /// One seek arriving while another is in flight is not enough: the waveform click path seeks
+    /// twice in the same input event (the pointer release seeks, the tap that follows seeks
+    /// again, to the frame-snapped position), and serving that second seek at keyframes would
+    /// flash a frame from the previous keyframe - seconds back on a long-GOP file - before the
+    /// exact landing was paid. So the fast path needs a sequence: the seek in flight must itself
+    /// have been issued while a seek was in flight. A drag or a wheel spin gets there on its third
+    /// event and pays two exact seeks instead of one at its start; a click never gets there.
+    /// </para>
+    /// </summary>
+    /// <param name="seekInFlight">A seek SE issued has not landed yet (<see cref="SeekIsInFlight"/>).</param>
+    /// <param name="previousSeekIssuedInFlight">That seek was itself issued while a seek was in flight.</param>
+    public static bool JoinsBurst(bool seekInFlight, bool previousSeekIssuedInFlight)
+    {
+        return seekInFlight && previousSeekIssuedInFlight;
+    }
+
+    /// <summary>
+    /// Whether a seek SE issued is still on its way - the burst signal <see cref="JoinsBurst"/>
     /// keys on.
     /// </summary>
     /// <param name="eventLoopActive">
@@ -89,19 +107,26 @@ public static class ScrubSeekPolicy
     }
 
     /// <summary>
-    /// Whether the exact seek owed by a keyframe seek should be issued now.
+    /// Whether the exact seek owed by a keyframe seek should be issued now: once that seek has
+    /// landed and nothing newer has replaced it, always.
+    /// <para>
+    /// This deliberately does not look at where mpv says it is. While a seek is in progress mpv
+    /// reports the seek TARGET as "time-pos", and the observed-property cache is refreshed only
+    /// after the event queue drains, so at the playback-restart event the cached position is the
+    /// target itself. A "close enough, skip the landing" check compares the target with the
+    /// target, passes, and the keyframe landing - a GOP short of it - stands for good (#14441:
+    /// wheel steps that kept landing on the same spot, clicks whose cursor and video ended up
+    /// elsewhere). An exact seek to a spot that is already a keyframe costs nothing to speak of,
+    /// so there is nothing worth saving by guessing.
+    /// </para>
     /// </summary>
     /// <param name="followUpSeekId">Id of the keyframe seek owing an exact landing, 0 if none.</param>
     /// <param name="lastSeekCommandId">Newest seek id handed out.</param>
     /// <param name="restartAckedSeekCommandId">Newest seek id mpv has finished a playback restart for.</param>
-    /// <param name="target">Position that keyframe seek was aiming at.</param>
-    /// <param name="reportedPosition">Where mpv says it is now, null if it has no position yet.</param>
     public static bool ShouldIssueFollowUp(
         long followUpSeekId,
         long lastSeekCommandId,
-        long restartAckedSeekCommandId,
-        double target,
-        double? reportedPosition)
+        long restartAckedSeekCommandId)
     {
         if (followUpSeekId == 0)
         {
@@ -113,16 +138,7 @@ public static class ScrubSeekPolicy
             return false; // a newer seek owns the position now, and carries its own follow-up
         }
 
-        if (restartAckedSeekCommandId < followUpSeekId)
-        {
-            return false; // the burst is still running - a later restart gets to ask again
-        }
-
-        if (reportedPosition == null)
-        {
-            return true; // cannot confirm the landing, so pay for it
-        }
-
-        return Math.Abs(reportedPosition.Value - target) > FollowUpToleranceSeconds;
+        // Its own restart has not arrived: the burst is still running, a later restart asks again.
+        return restartAckedSeekCommandId >= followUpSeekId;
     }
 }
