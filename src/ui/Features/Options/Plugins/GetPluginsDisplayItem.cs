@@ -1,4 +1,5 @@
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Plugins;
@@ -7,7 +8,7 @@ namespace Nikse.SubtitleEdit.Features.Options.Plugins;
 
 public partial class GetPluginsDisplayItem : ObservableObject
 {
-    private static readonly IBrush AccentBrush = new SolidColorBrush(Color.FromRgb(0x00, 0x78, 0xD4));
+    private static readonly IBrush AccentBrush = new ImmutableSolidColorBrush(Color.FromRgb(0x00, 0x78, 0xD4));
 
     [ObservableProperty] private bool _isBusy;
     [ObservableProperty] private string _statusText = string.Empty;

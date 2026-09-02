@@ -2,6 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Forms;
@@ -547,8 +548,8 @@ public class AudioVisualizer : Control
     /// </summary>
     public Func<SubtitleLineViewModel, double>? ParagraphAudioLengthProvider { get; set; }
 
-    private static readonly IBrush PaintAudioLengthFits = new SolidColorBrush(Color.FromArgb(190, 70, 190, 110));
-    private static readonly IBrush PaintAudioLengthOverrun = new SolidColorBrush(Color.FromArgb(220, 235, 70, 70));
+    private static readonly IBrush PaintAudioLengthFits = new ImmutableSolidColorBrush(Color.FromArgb(190, 70, 190, 110));
+    private static readonly IBrush PaintAudioLengthOverrun = new ImmutableSolidColorBrush(Color.FromArgb(220, 235, 70, 70));
 
     /// <summary>Raised when a primary-button press lands on an existing paragraph and starts a
     /// move/resize drag. Lets hosts select the paragraph the user grabbed before the drag
@@ -3620,8 +3621,8 @@ public class AudioVisualizer : Control
     // Chapter marks: a full-height line plus a labelled flag at the top. The color matches the
     // Chapters dialog accent so the two read as one feature.
     private static readonly Color ChapterColor = Color.FromRgb(0xC0, 0x8A, 0xDF);
-    private static readonly Pen _paintChapterPen = new Pen(new SolidColorBrush(ChapterColor, 0.85), 1.5);
-    private static readonly IBrush _paintChapterFlagBrush = new SolidColorBrush(ChapterColor, 0.9);
+    private static readonly IPen _paintChapterPen = new ImmutablePen(new ImmutableSolidColorBrush(ChapterColor, 0.85), 1.5);
+    private static readonly IBrush _paintChapterFlagBrush = new ImmutableSolidColorBrush(ChapterColor, 0.9);
     private static readonly IBrush _paintChapterFlagTextBrush = Brushes.Black;
     private const double ChapterFlagHeight = 15;
     private const double ChapterFlagMaxWidth = 170;
@@ -3720,10 +3721,9 @@ public class AudioVisualizer : Control
         }
     }
 
-    private static readonly Pen _paintPenCursorOnShotChange = new Pen(Brushes.LightCyan, 1.5)
-    {
-        DashStyle = DashStyle.Dash,
-    };
+    // Same dash pattern as DashStyle.Dash (2 on, 2 off, offset 1) in an immutable pen.
+    private static readonly IPen _paintPenCursorOnShotChange =
+        new ImmutablePen(Brushes.LightCyan, 1.5, new ImmutableDashStyle(new[] { 2.0, 2.0 }, 1));
 
     private void DrawCurrentVideoPosition(DrawingContext context, ref RenderContext renderCtx)
     {
