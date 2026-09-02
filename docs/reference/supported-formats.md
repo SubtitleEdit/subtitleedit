@@ -17,11 +17,12 @@ Subtitle Edit supports a wide range of subtitle formats for reading and writing.
 | EBU STL | .stl | |
 | Spruce STL | .stl | |
 | Scenarist Closed Captions (SCC) | .scc | |
-| DVD Studio Pro | .txt | |
+| DVD Studio Pro | .stl | |
 | Cavena 890 | .890 | |
 | PAC | .pac | |
 | Cheetah | .cap | |
-| Avid DS | .txt | |
+| Avid DVD, Avid Caption, Avid Caption Drop Frame, Avid Loc Markers | .txt | |
+| Avid STL | .stl | |
 | JSON (various) | .json | |
 | LRC (Lyrics) | .lrc | |
 | and many more... | | |
@@ -65,16 +66,25 @@ Import only — a spreadsheet with a header row naming start/end/text columns is
 | VobSub (DVD) | .sub/.idx |
 | BDN XML | .xml |
 | Timed Text Base64 Image (SMPTE-TT bitmap) | .xml |
+| Timed Text Image | .xml |
+| BDN XML 8-bit (palette-indexed PNGs, export) | .xml |
+| DOST | .dost |
+| Final Cut Pro Image (FCP/image) | .xml |
+| SPU Image | .xml |
+| D-Cinema interop/png, D-Cinema SMPTE 2014/png (export) | .xml |
+| Images with time codes in file name (export) | image files |
+| WebVTT Thumbnail (sprite sheet) | .vtt |
 
 ## Container Formats (with embedded subtitles)
 
 | Format | Extension(s) |
 |--------|--------------|
-| Matroska (MKV/MKS) | .mkv, .mks |
-| MP4 / MOV (text tracks, including fragmented MP4/DASH — wvtt, stpp, tx3g) | .mp4, .m4v, .m4s, .3gp |
+| Matroska (MKV/MKS/WebM) | .mkv, .mks, .webm |
+| MP4 / MOV (text tracks, including fragmented MP4/DASH — wvtt, stpp, tx3g) | .mp4, .m4v, .m4s, .3gp, .mov |
 | Transport Stream (teletext, DVB-sub) | .ts, .m2ts, .mts |
-| AVI (XSUB) | .avi |
+| AVI (XSUB) | .avi, .divx |
 | MacCaption | .mcc |
+| MXF (timed-text essences) | .mxf |
 
 ## Video Formats (for loading video)
 

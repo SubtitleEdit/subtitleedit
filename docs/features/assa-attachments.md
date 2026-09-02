@@ -11,15 +11,15 @@ Manage fonts and images embedded as attachments in an Advanced SubStation Alpha 
 1. Open a subtitle file in ASS/SSA format.
 2. Go to **ASSA tools** → **Attachments...** to open the attachments manager.
 3. View the list of currently embedded fonts and images.
-4. Use **Add** to attach new font or image files.
-5. Select an attachment and use **Delete** or **Delete All** to remove attachments.
+4. Use **Attach...** to attach new font or image files, or **Import...** to take the attachments from another .ass file.
+5. Right-click an attachment and use **Delete** or **Clear** to remove attachments.
 6. Select an image attachment to see a preview.
 7. Click **OK** to save changes.
 
 ## Features
 
 ### Font Attachments
-- Embed TrueType (.ttf) and OpenType (.otf) font files directly in the subtitle file.
+- Embed TrueType (.ttf) font files directly in the subtitle file (the file picker offers *.ttf).
 - Ensures the correct fonts are available regardless of the system fonts installed.
 
 ### Image Attachments
@@ -30,6 +30,9 @@ Manage fonts and images embedded as attachments in an Advanced SubStation Alpha 
 - Add one or more attachments at a time.
 - Delete individual attachments or clear all attachments.
 - View attachment names and sizes.
+- **Export...** saves the selected attachment to a file.
+- With a font selected, **Copy to clipboard** copies its font name and **Copy to font collector** copies the font file to Subtitle Edit's `Fonts` folder.
+- Reorder via the right-click menu: **Move up** (`Ctrl+Up`), **Move down** (`Ctrl+Down`), **Move to top**, **Move to bottom**.
 
 ### Trim Fonts to Used Characters
 - **Trim fonts to used characters...** rewrites each embedded TrueType font so that only the glyphs used by the subtitle's text keep their outlines - a full CJK font of many megabytes typically shrinks to a few hundred kilobytes.

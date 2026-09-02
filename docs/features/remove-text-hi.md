@@ -25,10 +25,10 @@ Remove hearing-impaired annotations such as speaker names, sound descriptions, a
 
 ### Other
 
-- **If line is uppercase** — Remove the whole line when it is entirely uppercase
+- **If line is uppercase** — Remove the whole line when it is entirely uppercase. The text box next to it is a whitelist: uppercase words listed there (e.g. `NASA FBI`) do not count as hearing-impaired text
 - **If line contains** — Remove the line when it contains a given substring
 - **If line only contains music symbols** — Remove lines that consist only of music symbols (e.g. `♪ Music ♪`)
-- **Remove interjections** — Remove common interjections like "hmm", "uh"; the dictionary used follows the selected **Language**
+- **Remove interjections** — Remove common interjections like "hmm", "uh"; the dictionary used follows the selected **Language**. **Only on separate lines** limits this to interjections that sit on a line of their own
 
 ## Interjections
 
@@ -39,7 +39,7 @@ Click **Edit** next to *Remove interjections* to modify the list of interjection
 
 ## Preview
 
-All proposed removals are shown in a preview list with **Before** and **After** columns. Uncheck individual items to exclude them before clicking **OK**.
+All proposed removals are shown in a preview list with **Before** and **After** columns. Uncheck individual items to exclude them before clicking **OK**. When the tool is opened from the main window, **Apply** applies the ticked rows without closing so you can run another pass with different options, and **Done** closes the window.
 
 Right-click the list to tick or untick many rows at once:
 

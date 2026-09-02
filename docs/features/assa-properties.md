@@ -11,7 +11,7 @@ Edit the script info header properties of an Advanced SubStation Alpha (ASS/SSA)
 1. Open a subtitle file in ASS/SSA format.
 2. Go to **ASSA tools** → **Properties...** to open the properties dialog.
 3. Edit the script info fields as needed.
-4. Set the video resolution (PlayResX / PlayResY) — use **Get resolution from current video** if a video is loaded.
+4. Set the video resolution (PlayResX / PlayResY) — the **...** button picks a standard resolution, and **Pick resolution from current video** is shown when a video is loaded.
 5. Choose a wrap style and border/shadow scaling mode.
 6. Click **OK** to save changes.
 
@@ -29,13 +29,15 @@ Edit the script info header properties of an Advanced SubStation Alpha (ASS/SSA)
 
 ### Video Resolution
 - **Video Width / Height:** Sets the PlayResX and PlayResY values used for style positioning.
-- **Get resolution from current video:** Automatically fills width and height from the currently loaded video.
+- **...** button: Pick from a list of standard resolutions (4K DCI, 4K UHD, Full HD 1080p, HD 720p, SD PAL, ...).
+- **Pick resolution from current video:** Fills width and height from the currently loaded video; only shown when a video is loaded.
 
 ### Wrap Style
 - Controls how long lines are word-wrapped (smart wrapping, end-of-line wrapping, no wrapping, or smart wrapping with wider lower line).
 
 ### Border and Shadow Scaling
 - Choose whether border and shadow sizes scale with the script resolution or the video resolution.
+- The dropdown offers **Yes**, **No** and **N/A** (not set).
 
 ## Keyboard Shortcuts
 

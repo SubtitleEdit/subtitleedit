@@ -32,6 +32,8 @@ Options:
 - Whole word (checkbox)
 - Search type (radio buttons): Case sensitive, Case insensitive, or Regular expression
 
+With **Regular expression** selected, right-click the search box for a helper flyout that inserts common regex building blocks.
+
 > **Matching a line break with a regular expression:** use `\n` between the words on the two lines (for example `ear\ntwice`). `\r\n` and `\r` are accepted too and are treated the same as `\n`, so a rule works regardless of how it was written or which platform created it.
 
 > **`^` and `$` in Find and Replace** match the start and the end of the whole subtitle text, so in a two-line subtitle `^-` only finds the dash on the first line. Write `(?m)` in front of the pattern - `(?m)^- ` - to make them match at every line break instead. (Multiple replace is the other way around, see below.)
@@ -115,6 +117,7 @@ Right-click a category node to open its context menu:
 - **New category** — add a sibling category
 - **New rule** — add a rule to this category
 - **Move up / Move down** — reorder categories
+- **Move to top / Move to bottom** — move the category to the first or last position
 - **Delete** — remove the category and all its rules
 - **Import** — load rules from a `.template` file (JSON or legacy SE4 XML), a `.csv` file, or a Subtitle Edit 4 `Settings.xml` (its multiple replace groups are imported directly)
 - **Export** — save selected categories to a `.template` (JSON) or `.csv` file
@@ -127,6 +130,7 @@ Right-click a rule node to open its context menu:
 - **Duplicate** — insert a copy of the rule above the current one
 - **Insert before / Insert after** — add a new rule relative to this one
 - **Move up / Move down** — reorder within the category
+- **Move to top / Move to bottom** — move the rule to the first or last position in the category
 - **Delete** — remove the rule
 
 Double-clicking a rule also opens the **Edit rule** dialog.
@@ -138,6 +142,8 @@ Double-clicking a rule also opens the **Edit rule** dialog.
 | `Ctrl+N` | Add a new rule to the selected category, or insert after the selected rule |
 | `Ctrl+D` | Duplicate the selected rule |
 | `Ctrl+F` | Find a rule by name / text |
+| `Ctrl+Up` / `Ctrl+Down` | Move the selected category or rule up / down (`Cmd` on macOS) |
+| `Ctrl+Home` / `Ctrl+End` | Move the selected category or rule to the top / bottom (`Cmd` on macOS) |
 | `Ctrl+Shift+-` | Collapse all categories |
 | `Ctrl+Shift++` | Expand all categories |
 | `Delete` | Delete the selected rule (focus must be in the rules tree) |
@@ -180,6 +186,13 @@ General,"hello, world","say ""hi""",greeting,true,CaseInsensitive
 Regex,\d+,#,strip numbers,true,RegularExpression
 ```
 
+## Go to Line Number
+
+Jump to a subtitle by its line number.
+
+- **Menu:** Edit → Go to line number...
+- **Shortcut:** `Ctrl+G`
+
 ## Modify Selection
 
 Select or deselect subtitle lines based on rules (e.g., text contains, duration, etc.).
@@ -201,3 +214,9 @@ Invert the current selection (select unselected lines, deselect selected ones).
 ## Toggle Right-to-Left
 
 Toggle right-to-left text direction for languages like Arabic and Hebrew.
+
+Three more right-to-left tools act on the selected lines:
+
+- **Fix RTL via Unicode control chars** — add Unicode right-to-left control characters to the text, for players that ignore the text direction
+- **Remove Unicode control chars** — strip those control characters again
+- **Reverse RTL start/end** — reverse the start and end of right-to-left lines (for punctuation that ended up on the wrong side)

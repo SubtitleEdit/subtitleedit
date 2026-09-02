@@ -14,7 +14,7 @@ The embedded subtitle editor edits subtitle tracks in Matroska containers:
 - `.mkv`
 - `.webm`
 
-Subtitle tracks can also be inspected from MP4-style containers (`.mp4`, `.m4v`, `.mov`), but the editor warns when the loaded file cannot be edited as a Matroska container.
+MP4-style containers (`.mp4`, `.m4v`, `.mov`) open a separate MP4 editor instead — see [MP4 Files](#mp4-files) below.
 
 Embedded subtitle reading supports a range of sources elsewhere in Subtitle Edit, including PGS/VobSub/DVB image tracks in Matroska, MP4-embedded VobSub/WebVTT, and CEA-708 (DTVCC) captions carried in H.264 SEI messages inside MP4.
 
@@ -61,6 +61,16 @@ Common text formats such as SRT, WebVTT, ASSA, and SSA can be embedded. Unsuppor
 
 Changes are applied only when you click **Generate** and create the new video file.
 
+## MP4 Files
+
+When the loaded video is `.mp4`, `.m4v` or `.mov`, **Video → Add/remove embedded subtitles...** opens the *Add/remove embedded subtitles (MP4)* window instead. It copies the video and audio streams and rewrites the subtitle track set as `mov_text` (MP4 timed text).
+
+- Existing subtitle tracks are listed with name, language, default/forced flags and codec.
+- **Add** picks an external subtitle file; its split-button menu has **Add current subtitle**. Both add a `mov_text` track with the auto-detected language.
+- `mov_text` is plain text, so the current subtitle and any non-SRT file (ASSA, SSA, WebVTT, ...) are converted to SubRip before muxing — styling tags are not kept.
+- **Edit**, **Delete** (toggles the deletion mark) and **Preview** work as in the Matroska editor. Preview extracts the track to SRT with FFmpeg, so it is not available for bitmap-based tracks.
+- **Generate** writes a new video file with the input file's extension.
+
 ## Keyboard Shortcuts
 
 | Key | Action |
@@ -73,5 +83,5 @@ Changes are applied only when you click **Generate** and create the new video fi
 ## Notes
 
 - The original video is not overwritten unless you explicitly choose the same output file name.
-- Track editing is intended for Matroska/WebM files. Other containers may expose embedded subtitles elsewhere in Subtitle Edit, but this editor warns when the loaded file cannot be edited as a Matroska container.
+- Track editing is intended for Matroska/WebM files; MP4-family files use the MP4 editor described above.
 - Output naming follows the same output-folder and suffix preferences used by the video generation tools.

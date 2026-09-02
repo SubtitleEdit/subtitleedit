@@ -18,10 +18,10 @@ The menu bar provides access to all features organized into categories:
 
 | Menu | Description |
 |------|-------------|
-| **File** | New, Open, Save, Import, Export, Compare, Statistics |
-| **Edit** | Undo, Redo, Find, Replace, Multiple Replace, Modify Selection |
+| **File** | New, New window, Open, Save, Save as, Save forced lines as, Close translation, format properties, Import, Export, Compare, Statistics |
+| **Edit** | Undo, Redo, Find, Replace, Multiple Replace, Go to line number, right-to-left tools (fix RTL via Unicode control chars, remove Unicode control chars, reverse RTL start/end), Modify Selection |
 | **Tools** | Fix Common Errors, Batch Convert, Change Casing, Merge/Split, etc. |
-| **Plugins** | Run installed plugins; manage installed plugins |
+| **Plugins** | Run installed plugins; manage installed plugins (only shown when **Options → Settings → Appearance → Show Plugins menu** is on) |
 | **Spell check** | Spell checking, dictionaries, find double words / lines |
 | **Video** | Open/close video, Speech to Text, Text to Speech, Burn-In, etc. |
 | **Sync** | Adjust All Times, Visual Sync, Point Sync, Change Frame Rate/Speed |
@@ -45,13 +45,27 @@ Available toolbar buttons include:
 |--------|--------|
 | **New** | Create a new subtitle |
 | **Open** | Open a subtitle file |
+| **Open video** | Open a video file |
 | **Save** | Save the current subtitle |
+| **Save as** | Save the subtitle to a new file or format |
 | **Find** | Open the Find dialog |
 | **Replace** | Open the Replace dialog |
-| **Fix Common Errors** | Open Fix Common Errors |
+| **Multiple replace** | Open Multiple Replace |
 | **Spell Check** | Run spell check |
-| **Help** | Show help / about |
-| *...and more* | Configurable in Settings |
+| **Fix Common Errors** | Open Fix Common Errors |
+| **Remove text for HI** | Open Remove text for hearing impaired |
+| **Visual sync** / **Point sync** | Open the sync tools |
+| **Beautify time codes** | Open Beautify time codes |
+| **Burn-in** | Open Generate video with burned-in subtitle |
+| **Auto-translate** | Open Auto-translate |
+| **Speech to text** | Open Speech to text |
+| **Settings** | Open Settings |
+| **Layout** | Choose a main window layout |
+| **Source view** | Open the [Source view](source-view.md) |
+| **Help** | Show help |
+| **Encoding** / **Frame rate** combos | Optional combo boxes next to the format combo (off by default) |
+
+Every button and combo can be shown or hidden in **Options → Settings → Toolbar**.
 
 Some buttons only appear for certain formats — the style manager, properties, attachments and ASSA draw buttons show up when an ASSA, SSA or WebVTT file is loaded. They can be hidden in **Options → Settings → Toolbar** like any other button.
 
@@ -98,7 +112,7 @@ Below (or beside) the subtitle grid is the text editor, where you edit the text 
 
 **Formatting shortcuts:**
 - **Ctrl+I** — Toggle italic
-- **Ctrl+B** — Toggle bold
+- Bold has no default key; assign one in **Options → Shortcuts**
 
 **Other shortcuts:**
 - **Ctrl+Z** — Undo
@@ -168,10 +182,10 @@ Two draw styles are available for the waveform: **Classic** (simple lines) and *
 | **Click** | Empty area | Set video position |
 | **Click** | Subtitle bar | Select subtitle and set video position |
 | **Double-click** | Subtitle bar | Select subtitle and set video position |
-| **Ctrl+Click** | Subtitle bar | Toggle subtitle in multi-selection |
-| **Shift+Click** | Subtitle bar | Set start time of selected subtitle |
-| **Ctrl+Click** | Empty area | Set end time of selected subtitle (macOS: Shift+Click) |
-| **Alt+Click** | Empty area | Set start time of selected subtitle |
+| **Shift+Click** | Anywhere | Set start time of selected subtitle |
+| **Ctrl+Click** | Anywhere | Set end time of selected subtitle |
+| **Ctrl+Shift+Click** | Anywhere | Set start time of selected subtitle and offset all following subtitles |
+| **Alt+Click** | Anywhere | Move selected subtitle so it starts here (duration kept) |
 | **Drag** | Left edge of subtitle | Resize start time |
 | **Drag** | Right edge of subtitle | Resize end time |
 | **Alt+Drag** | Left edge | Resize start and adjust previous subtitle's end simultaneously |
@@ -207,20 +221,25 @@ The context menu changes dynamically based on context (e.g., whether a new selec
 |-----------|-------------|
 | **Insert new selection** | Insert the drawn selection as a new subtitle |
 | **Paste new selection** | Paste subtitle from clipboard at current position |
+| **Speech to text for new selection...** | Transcribe the audio in the drawn selection |
 | **Insert at position** | Insert a new empty subtitle at the video position |
 | **Paste from clipboard** | Paste subtitle text from clipboard |
 | **Insert subtitle file at position** | Import an entire subtitle file at the current video position |
 | **Delete at position** | Delete the subtitle at the current position |
 | **Delete** | Delete the selected subtitle(s) |
 | **Insert before / Insert after** | Insert a new line before or after the selected subtitle |
-| **Split** | Split the selected subtitle at the video position |
+| **Copy subtitle / Copy (text only)** | Copy the selected subtitle, with or without time codes |
+| **Split line** | Split the selected subtitle |
+| **Split line at waveform head** | Split the selected subtitle at the waveform position |
 | **Merge before / Merge after** | Merge with the previous or next subtitle |
 | **Filter by layer** | Filter visible subtitles by ASSA layer (ASSA format only) |
 | **Guess time codes** | Auto-detect subtitle timing from audio silence |
 | **Toggle shot change** | Add or remove a shot change marker at the video position |
+| **Toggle chapter at video position** | Add or remove a [chapter](chapters.md) at the video position |
 | **Seek silence** | Find the next silent section in the audio |
 | **Extract audio** | Save the selected subtitle's audio to a file |
 | **Clone voice to** | Clone the voice heard in the selected subtitle into a text-to-speech engine that supports voice cloning |
+| **Speech to text selected lines...** | Transcribe the audio of the selected subtitle(s) |
 | **Show only waveform** | Switch to waveform-only display |
 | **Show only spectrogram** | Switch to spectrogram-only display |
 | **Show waveform and spectrogram** | Switch to combined display |
@@ -235,14 +254,22 @@ When enabled (toggle via shortcut or **Options → Shortcuts → Toggle waveform
 | **Play selection** | Play only the selected subtitle |
 | **Play selection (repeat)** | Play selected subtitle in a loop |
 | **Play next** | Play the next subtitle |
+| **Previous / Play current / Pause / Next** | SE 4 "translate tab" style text buttons: play a single line and stop at its end |
 | **New** | Insert a subtitle at the current position |
 | **Set start + offset rest** | Set start time and shift all following subtitles |
 | **Set start** | Set the start time of the selected subtitle |
 | **Set end** | Set the end time of the selected subtitle |
 | **Remove blank lines** | Remove empty subtitle lines |
-| **Horizontal zoom slider** | Adjust horizontal zoom (0.1× – 20×) |
-| **Vertical zoom slider** | Adjust vertical zoom (0.1× – 20×) |
+| **Horizontal zoom slider** | Adjust horizontal zoom (0.1× – 5×; Alt+Scroll zooms up to 20×) |
+| **Vertical zoom slider** | Adjust vertical zoom (0.1× – 5×; Shift+Scroll zooms up to 20×) |
 | **Position slider** | Scrub through the video |
+| **Video position** | Editable time code box: type, step or copy the current position |
+| **Audio track** | Pick the audio track the waveform is extracted from (only shown when the video has more than one) |
+| **Playback speed** | Speed slider |
+| **Auto-select on play** | Toggle selecting the current subtitle while playing |
+| **Center** | Toggle keeping the video position centered in the waveform |
+| **Video seek** | Seek back/forward buttons |
+| **More** | Menu: reset zoom and speed, configure toolbar items, hide the toolbar |
 
 <!-- Screenshot: Waveform toolbar -->
 ![Waveform Toolbar](../screenshots/main-waveform-toolbar.png)
@@ -278,9 +305,9 @@ See [Audio Visualizer / Waveform](audio-visualizer.md) for even more details.
 
 The status bar at the bottom shows:
 - Waveform generation progress (when generating)
-- Current subtitle format
-- Line/character count information
-- Other status messages
+- Status messages (left)
+- Line counter (right): `current/total`, or `X lines selected of Y` when several lines are selected
+- Indicators, shown when relevant: update available, time codes locked, layer filter on, SMPTE timing, video offset. Click one to open the related dialog (the padlock is display only)
 
 <!-- Screenshot: Status bar -->
 ![Status Bar](../screenshots/main-status-bar.png)
@@ -291,18 +318,18 @@ Subtitle Edit offers **12 predefined layouts** for arranging the main window are
 
 | Layout | Description |
 |--------|-------------|
-| 1 | Video right, grid left, waveform bottom |
-| 2 | Video right, grid and text left |
-| 3 | Video top-right, grid bottom |
-| 4 | Video left, grid right |
-| 5 | Grid only (no video) |
-| 6 | Video top, grid bottom |
-| 7 | Video bottom-right, grid left |
-| 8 | Video bottom, grid top |
-| 9 | Grid left, video and waveform right |
-| 10 | Video right, grid left (wide) |
-| 11 | Video top-right, stacked panels |
-| 12 | Minimal layout without video |
+| 1 | Grid and text editor left, video right, waveform bottom |
+| 2 | Video left, grid and text editor right, waveform bottom |
+| 3 | Grid and text editor top-left with the waveform below them, video right |
+| 4 | Video left; grid and text editor top-right with the waveform below them |
+| 5 | Video top, grid and text editor middle, waveform bottom |
+| 6 | Grid and text editor top, waveform bottom; the video player is hidden (the video stays loaded) |
+| 7 | Grid and text editor left, video right; no waveform |
+| 8 | Grid and text editor top, video bottom; no waveform |
+| 9 | Video top, grid and text editor bottom; no waveform |
+| 10 | Video top-left, waveform top-right with the text editor under it, grid bottom (SE 4 / Aegisub style) |
+| 11 | Video top, waveform middle, grid and text editor bottom |
+| 12 | Grid and text editor only; no video, no waveform |
 
 <!-- Screenshot: Layout chooser window showing thumbnails -->
 ![Layout Chooser](../screenshots/layout-chooser.png)
@@ -355,10 +382,10 @@ Subtitle Edit accepts a few command-line arguments at startup, useful for deskto
 | Argument | Description |
 |----------|-------------|
 | *(positional)* | Subtitle file to open. The first existing path on the command line is treated as the subtitle file. |
-| `/video:<path>` | Open the given video file alongside the subtitle. |
-| `/batchconvertui` | Launch directly into the standalone **Batch Convert** window instead of the full editor. |
+| `/video:<path>` | Open the given video file alongside the subtitle. `--video:<path>` and `--video <path>` are accepted too. |
+| `/batchconvertui` | Launch directly into the standalone **Batch Convert** window instead of the full editor. `--batchconvertui` is accepted too. |
 
-The video file is always loaded when supplied via `/video:`, even if **Options → Settings → Video → Auto-open** is disabled — a flag on the command line is treated as an explicit instruction.
+The video file is always loaded when supplied via `/video:` (or `--video`), even if **Options → Settings → Video → Auto-open** is disabled — a flag on the command line is treated as an explicit instruction.
 
 Examples (Windows shell):
 

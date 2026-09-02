@@ -16,7 +16,7 @@ Hardcode (burn-in) subtitles permanently into a video file using FFmpeg.
 4. Configure video encoding settings (encoder, preset, CRF, pixel format)
 5. Configure audio settings (encoder, sample rate, bit rate, stereo)
 6. Select an output folder
-7. Click **Generate** to start encoding
+7. Click **Generate** to start encoding (or use the **Generate** split-button item **Prompt for ffmpeg parameters and generate** to edit the FFmpeg command line first)
 
 ## Font Settings
 
@@ -31,7 +31,11 @@ Hardcode (burn-in) subtitles permanently into a video file using FFmpeg.
 - **Spacing** — Letter spacing, from -20 to 100. The preview is rendered by libass, so it shows the real spacing
 - **Alignment** — Subtitle alignment position
 - **Margins** — Horizontal and vertical margin offsets
-- **Fix RTL** — Fix right-to-left text rendering
+
+## Effect and Logo
+
+- **Effect** — Browse button opening a picker with one entry to apply to every line: **Fix right-to-left**, **Fade in/out**, **Slow font size change**, **Increase font kerning**, **Scroll up**, **Scroll down**, **Rotate in**, **Tilt bounce** and **Font size bounce in**. The selected effect is shown next to the button
+- **Logo** — Browse button opening a dialog to pick a PNG watermark and place it by dragging it over the video; the file name and position are shown next to the button
 
 ## Video Settings
 
@@ -102,9 +106,14 @@ builds all include VideoToolbox.
 - **Bit rate** — Audio bit rate
 - **Stereo** — Stereo or mono output
 
+## Cut and Target File Size
+
+- **Cut** — Encode only the part between **From time** and **To time** (the browse buttons pick the times from the video)
+- **Target file size (requires 2 pass encoding)** — Two-pass encode aimed at **File size in MB**; **Match source video size** takes the target from each input file's own size instead (also per file in batch mode)
+
 ## Batch Mode
 
-Multiple video/subtitle pairs can be queued as jobs for batch processing.
+Click **Batch mode** to queue several video/subtitle pairs (**Single mode** switches back). The list shows file name, size, subtitle file and status, with **Add...**, **Remove**, **Clear** and **Pick subtitle file...** buttons. **Output properties...** sets the output folder and naming; the chosen folder (or **Use source folder**) is shown next to it.
 
 ## Keyboard Shortcuts
 

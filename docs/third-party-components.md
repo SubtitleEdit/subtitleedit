@@ -56,7 +56,9 @@ Used for reading media info, extracting audio, and generating waveforms.
 *   **Alternative: Custom Path**
     *   You can point to an existing FFmpeg installation in `Settings.json` (located in the Data Folder):
     ```json
-    "FfmpegPath": "C:\\path\\to\\your\\ffmpeg.exe"
+    "General": {
+      "FfmpegPath": "C:\\path\\to\\your\\ffmpeg.exe"
+    }
     ```
     *   Use double backslashes (`\\`) for Windows paths in JSON.
 
@@ -149,7 +151,9 @@ Used for reading media info, extracting audio, and generating waveforms.
 *   **Alternative:** Place the `ffmpeg` binary in `[Data Folder]/ffmpeg`.
 *   **Custom Path:** You can specify a custom path in `Settings.json` (located in the Data Folder):
     ```json
-    "FfmpegPath": "/path/to/your/ffmpeg"
+    "General": {
+      "FfmpegPath": "/path/to/your/ffmpeg"
+    }
     ```
 
 ### MPV Media Player (libmpv)
@@ -206,7 +210,9 @@ Used for reading media info, extracting audio, and generating waveforms.
 *   **Alternative:** Place the `ffmpeg` binary in `[Data Folder]/ffmpeg`.
 *   **Custom Path:** You can specify a custom path in `Settings.json` (located in the Data Folder):
     ```json
-    "FfmpegPath": "/path/to/your/ffmpeg"
+    "General": {
+      "FfmpegPath": "/path/to/your/ffmpeg"
+    }
     ```
 
 ### MPV Media Player (libmpv)

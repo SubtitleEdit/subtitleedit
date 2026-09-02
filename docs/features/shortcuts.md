@@ -47,9 +47,11 @@ Independent of the thematic category, each command has a scope shown in the **Ac
 Some commands have additional configuration beyond the shortcut key:
 
 - **Set color 1–8** — Choose a color for each color shortcut
-- **Surround with 1–3** — Define the left/right text to surround selected text with (this replaces the *Shortcut toggle custom start/end* setting from Subtitle Edit 4)
+- **Surround with 1–8** — Define the left/right text to surround selected text with (this replaces the *Shortcut toggle custom start/end* setting from Subtitle Edit 4)
 - **Video move custom 1–4 back/forward** — Set the number of milliseconds to skip
 - **Set actor 1–10** — Define the actor name assigned by each actor shortcut
+- **Custom search 1–5** — Set the name and URL for each search slot
+- **Go to first line** / **Go to last line** — Whether the video position follows
 
 Select a configurable command and click the **gear icon** to adjust its settings. The gear sits in the shortcut assignment row below the list, between the key detection button and **Reset** — it is only shown while a configurable command is selected, so if you cannot see it, the selected command has no extra settings.
 

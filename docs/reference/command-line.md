@@ -75,13 +75,13 @@ seconv subs.srt subrip --offset:-2000 --renumber:1 --overwrite     # offset 2s b
 ## Subcommands
 
 ```bash
-seconv formats              # list all supported formats
-seconv list-encodings       # list text encodings
+seconv formats              # list all supported formats (also /formats, --formats)
+seconv list-encodings       # list text encodings (for --encoding and --input-encoding-fallback)
 seconv list-pac-codepages   # list PAC code pages
 seconv list-ocr-engines     # list OCR engines + installation status
 seconv list-fce-rules       # list FixCommonErrors rule IDs
-seconv list-rf-rules        # list remove-formatting rule IDs
-seconv dump-settings        # print a full --settings JSON with libse defaults
+seconv list-rf-rules        # list remove-formatting rule IDs (alias: list-remove-formatting-rules)
+seconv dump-settings        # print a full --settings JSON with libse defaults (alias: default-settings)
 seconv info <file>          # print format/encoding/duration/language for a file
 seconv lint <pattern>       # validate subtitle(s); exit 1 if issues found
 seconv --help               # show help (same text as -h, /? and /help)
@@ -134,8 +134,9 @@ seconv lint *.srt --json             # CI-friendly: exit 1 on any issue
 | `--output-folder:<path>` | Output folder (default: input file's directory) |
 | `--output-filename:<name>` | Output file name (single input only) |
 | `--overwrite` | Overwrite existing files (default: rotate to `name_2.ext`, `_3.ext`, ...) |
-| `--keep-timestamp` | Give output files the source file's modified/created date instead of the conversion time |
+| `--keep-timestamp` (also `--keep-timestamps`) | Give output files the source file's modified/created date instead of the conversion time |
 | `--encoding:<name>` | Encoding name or codepage. Special values: `utf-8`, `utf-8-no-bom` (also `utf-8-nobom`, `utf8-nobom`), a code page number, or `source` to keep the input file's detected encoding. Defaults: auto-detect on input, UTF-8 BOM on output |
+| `--input-encoding-fallback:<name>` | Encoding to assume when the input is not UTF-8 / has no BOM, instead of the ANSI auto-detection (names as in `seconv list-encodings`). Ignored when `--encoding` is set |
 
 ### Time / frame
 
@@ -207,12 +208,14 @@ seconv movie.srt fcpimage --full-frame
 
 | Extension | Sources |
 |---|---|
-| `.mkv`, `.mks` | Matroska text tracks (S_TEXT/UTF8, SSA, ASS, HDMV/TEXTST) and image tracks (S_HDMV/PGS via OCR) |
-| `.mp4`, `.m4v`, `.m4s`, `.3gp` | MP4 text tracks and WebVTT VTTC |
+| `.mkv`, `.mks`, `.webm` | Matroska text tracks (S_TEXT/UTF8, SSA, ASS, HDMV/TEXTST) and image tracks (S_HDMV/PGS via OCR) |
+| `.mp4`, `.m4v`, `.m4s`, `.3gp`, `.mov`, `.m4a`, `.m4b`, `.cmaf` | MP4 text tracks and WebVTT VTTC |
 | `.mcc` | MacCaption 1.0 |
 | `.ts`, `.m2ts`, `.mts` | Transport stream — teletext (no OCR) and DVB-sub (via OCR) |
 | `.sup` | Blu-Ray sup (via OCR) |
+| `.sub`, `.idx` | VobSub (via OCR) — pass either file of the pair; the companion is found automatically. A `.sub` with no `.idx` is read with its stream timing and a default palette |
 | `.avi`, `.divx` | XSUB / DivX subtitles (via OCR) |
+| `.mxf` | MXF timed-text essences (TTML, SRT, …; auto-detected per essence). Image essences are not extracted |
 
 When a container has multiple usable tracks, one output file is written per track with the track's language code as a suffix:
 
@@ -257,6 +260,7 @@ An AVI stream header carries no language, so a multi-stream `.avi` names its out
 | `--ocr-prompt:<text\|file>` | Prompt for the prompt-driven OCR engines (`llamacpp`, `ollama`); rejected for the others. `{language}` is replaced with `--ocr-language`. A value that names an existing file, or ends in `.txt`/`.prompt`/`.md`, is read from that file; inline text gets `\n`/`\r`/`\t` unescaped. Default: the same prompt as the SE OCR window. |
 | `--time-codes-only` | Image sources (`.sup`, VobSub `.sub`/`.idx`, MKV PGS/VobSub, MP4 VobSub, TS DVB-sub, AVI XSUB) → text format with time codes only and empty text. **Skips OCR entirely** — no OCR engine required. Ignored for text inputs and image output targets. |
 | `--no-vobsub-isolate-colors` | Disable VobSub OCR colour isolation, which is **on by default**. Isolation rebuilds each subpicture as a crisp black-on-white bitmap via histogram-based colour analysis — the most frequent opaque colour (the glyph fill) becomes black and the gray outline / anti-alias colours collapse into the white background, which helps on discs whose outlines otherwise melt adjacent characters together (`Yuri` → `Yurl`). Pass this flag to OCR the raw palette instead. Ignored for non-VobSub sources and with `--time-codes-only`. |
+| `--no-pgs-isolate-colors` | Disable PGS / DVB-sub OCR colour isolation, which is likewise **on by default**. |
 
 > **OCR database files are not bundled with `seconv`.** The `nocr` and `binaryocr` engines need a `.nocr` or `.db` file passed via `--ocr-db`. Sources:
 >
@@ -492,28 +496,50 @@ The keys and defaults below are exactly what `dump-settings` emits:
     "minimumMillisecondsBetweenLines": 24,
     "maxNumberOfLines": 2,
     "mergeLinesShorterThan": 33,
-    "subtitleMaximumCharactersPerSeconds": 25.0,
-    "subtitleOptimalCharactersPerSeconds": 15.0,
-    "subtitleMaximumWordsPerMinute": 400.0,
+    "subtitleMaximumCharactersPerSeconds": 25,
+    "subtitleOptimalCharactersPerSeconds": 15,
+    "subtitleMaximumWordsPerMinute": 400,
     "dialogStyle": "DashBothLinesWithSpace",
     "continuationStyle": "None"
   },
+  "tools": {
+    "mergeShortLinesMaxGap": 250,
+    "mergeShortLinesOnlyContinuous": true,
+    "llamaCppPrompt": "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:",
+    "ollamaPrompt": "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments or notes:",
+    "lmStudioPrompt": "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:"
+  },
   "removeTextForHearingImpaired": {
+    "removeTextBetweenBrackets": true,
+    "removeTextBetweenParentheses": true,
+    "removeTextBetweenCurlyBrackets": true,
+    "removeTextBetweenQuestionMarks": true,
+    "removeTextBetweenCustom": false,
+    "removeTextBetweenCustomBefore": "\u00B6",
+    "removeTextBetweenCustomAfter": "\u00B6",
+    "removeTextBetweenOnlySeparateLines": false,
     "removeTextBeforeColon": true,
-    "removeInterjections": false
+    "removeTextBeforeColonOnlyIfUppercase": true,
+    "removeTextBeforeColonOnlyOnSeparateLine": false,
+    "removeInterjections": false,
+    "removeInterjectionsOnlyOnSeparateLine": false,
+    "removeIfContains": false,
+    "removeIfAllUppercase": false,
+    "removeIfContainsText": "\u00B6",
+    "removeIfOnlyMusicSymbols": true
   },
   "exportImages": {
     "fontName": "Arial",
     "fontSize": 50,
-    "fontColor": "#FFFFFF",
+    "fontColor": "#FFFFFFFF",
     "isBold": false,
-    "outlineColor": "black",
+    "outlineColor": "#FF000000",
     "outlineWidth": 2.5,
-    "shadowColor": "black",
+    "shadowColor": "#FF000000",
     "shadowWidth": 0,
-    "backgroundColor": "#B4000000",
+    "backgroundColor": "#00FFFFFF",
     "backgroundCornerRadius": 0,
-    "boxType": "one-box",
+    "boxType": "None",
     "boxPaddingLeft": 5,
     "boxPaddingRight": 5,
     "boxPaddingTop": 3,
@@ -521,11 +547,20 @@ The keys and defaults below are exactly what `dump-settings` emits:
     "lineSpacingPercent": 0,
     "isFullFrame": false,
     "fullFrameBackgroundColor": "#00FFFFFF",
-    "alignment": "bottom-center",
-    "contentAlignment": "center",
-    "bottomTopMargin": 54,
-    "leftRightMargin": 96
-  },
+    "alignment": "BottomCenter",
+    "contentAlignment": "Center"
+  }
+}
+```
+
+The `exportImages` section styles text → image rendering (see [Image output styling](#image-output-styling) for the semantics); the equivalent CLI flags override it. Colours are emitted as `#AARRGGBB` (so `backgroundColor` / `fullFrameBackgroundColor` default to fully transparent, `#00FFFFFF`, and `boxType` to `None`); `boxType`, `alignment`, and `contentAlignment` are emitted as enum names but also accept the CLI spellings (`one-box`, `bottom-center`, …). Two optional `exportImages` keys are read but not emitted: `bottomTopMargin` and `leftRightMargin` (pixels; default 5% of the frame height / width). The `tools` section holds the merge-short-lines settings and the auto-translate prompts. The `general` section mirrors `Configuration.Settings.General`; any key left out keeps the libse default. The profile-shaping values (`minimumMillisecondsBetweenLines`, `maxNumberOfLines`, `mergeLinesShorterThan`, `subtitleMaximumCharactersPerSeconds`, `subtitleOptimalCharactersPerSeconds`, `subtitleMaximumWordsPerMinute`, `dialogStyle`, `continuationStyle`) feed Fix common errors and the split/merge operations, so set them to reproduce an SE4 profile. `dialogStyle` and `continuationStyle` take the enum names (case-insensitive): `dialogStyle` ∈ `DashBothLinesWithSpace`, `DashBothLinesWithoutSpace`, `DashSecondLineWithSpace`, `DashSecondLineWithoutSpace`; `continuationStyle` ∈ `None`, `NoneTrailingDots`, `NoneTrailingEllipsis`, `OnlyTrailingDots`, `LeadingTrailingDots`, `LeadingTrailingEllipsis`, `LeadingTrailingDash`, … (see the Fix common errors continuation styles).
+
+Keys that seconv does not recognize are ignored, so a settings file written for a newer version still applies everything this one understands — but they are listed in a warning, so a typo (or a key your seconv is too old to know) does not silently give you default output.
+
+A `profiles` map (not emitted by `dump-settings`) adds named overlays with the same sections, selected with `--profile`:
+
+```json
+{
   "profiles": {
     "broadcast": {
       "general": { "subtitleMaximumDisplayMilliseconds": 6000 },
@@ -537,10 +572,6 @@ The keys and defaults below are exactly what `dump-settings` emits:
   }
 }
 ```
-
-The `exportImages` section styles text → image rendering (see [Image output styling](#image-output-styling) for the semantics); the equivalent CLI flags override it. The `general` section mirrors `Configuration.Settings.General`; any key left out keeps the libse default. The profile-shaping values (`minimumMillisecondsBetweenLines`, `maxNumberOfLines`, `mergeLinesShorterThan`, `subtitleMaximumCharactersPerSeconds`, `subtitleOptimalCharactersPerSeconds`, `subtitleMaximumWordsPerMinute`, `dialogStyle`, `continuationStyle`) feed Fix common errors and the split/merge operations, so set them to reproduce an SE4 profile. `dialogStyle` and `continuationStyle` take the enum names (case-insensitive): `dialogStyle` ∈ `DashBothLinesWithSpace`, `DashBothLinesWithoutSpace`, `DashSecondLineWithSpace`, `DashSecondLineWithoutSpace`; `continuationStyle` ∈ `None`, `NoneTrailingDots`, `NoneTrailingEllipsis`, `OnlyTrailingDots`, `LeadingTrailingDots`, `LeadingTrailingEllipsis`, `LeadingTrailingDash`, … (see the Fix common errors continuation styles).
-
-Keys that seconv does not recognize are ignored, so a settings file written for a newer version still applies everything this one understands — but they are listed in a warning, so a typo (or a key your seconv is too old to know) does not silently give you default output.
 
 ```bash
 seconv *.srt subrip --settings:my.json --profile:broadcast --remove-text-for-hi
@@ -569,7 +600,7 @@ Operations run after the structural transforms (offset, fps, renumber, adjust-du
 | `--delete-first:<n>` | Delete first N entries |
 | `--delete-last:<n>` | Delete last N entries |
 | `--delete-contains:<word>` | Delete entries containing the given word |
-| `--fix-common-errors` | Fix common subtitle errors (all 39 rules) |
+| `--fix-common-errors` | Fix common subtitle errors (all 40 rules) |
 | `--fix-common-errors-rules:<list>` | Run a subset of FCE rules (CSV; supports `all,-RuleId`) |
 | `--fce-language:<code>` | Force the language for FCE language-gated rules (code or English name, e.g. `es` / `Spanish`); default: auto-detect from content |
 | `--fix-rtl-via-unicode-chars` | Fix RTL via Unicode characters |
@@ -601,7 +632,7 @@ In most batch pipelines `--apply-min-gap` is the better choice; reach for the FC
 
 ### FixCommonErrors rule selection
 
-`--fix-common-errors` (no value) runs all 39 rules. Pass `--fix-common-errors-rules:<list>` to pick a subset — supplying that option implies `--fix-common-errors`.
+`--fix-common-errors` (no value) runs all 40 rules (39 fixes plus the `FixCommonOcrErrors` pass). Pass `--fix-common-errors-rules:<list>` to pick a subset — supplying that option implies `--fix-common-errors`.
 
 ```bash
 seconv movie.srt subrip --fix-common-errors                                  # all rules
@@ -714,18 +745,19 @@ This mirrors the desktop app, where batch convert's *Remove formatting* function
 | `unipac`, `pacunicode` | PAC Unicode |
 | `ebu`, `ebustl`, `stl` | EBU STL — binary |
 | `cavena`, `cavena890` | Cavena 890 — binary |
-| `cheetahcaption` | CheetahCaption — binary |
-| `capmakerplus` | CapMakerPlus — binary |
+| `cheetah`, `cheetahcaption` | CheetahCaption — binary |
+| `capmaker`, `capmakerplus` | CapMakerPlus — binary |
 | `ayato` | Ayato — binary |
-| `bluraysup`, `sup` | Blu-Ray sup — image |
+| `bluraysup`, `blurayup`, `sup` | Blu-Ray sup — image |
 | `vobsub` | VobSub — image |
 | `bdnxml`, `bdn-xml` | BDN-XML — image (folder of PNGs + index.xml) |
 | `bdnxml8bit`, `bdn-xml8-bit` | BDN-XML with 8-bit palette-indexed PNGs — image |
 | `dost`, `dostimage` | DOST/image |
 | `fcpimage`, `fcp` | FCP/image |
-| `dcinemainterop` | D-Cinema interop/png |
-| `dcinemasmpte2014` | D-Cinema SMPTE 2014/png |
-| `imageswithtimecode` | Images with time codes in file name |
+| `dcinemainterop`, `dcinema-interop` | D-Cinema interop/png |
+| `dcinemasmpte2014`, `dcinema-smpte` | D-Cinema SMPTE 2014/png |
+| `imageswithtimecode`, `imagesintc` | Images with time codes in file name |
+| `webvttthumbnail`, `webvtt-thumbnail`, `vttthumb` | WebVTT Thumbnail — image (sprite sheet + `.vtt`) |
 | `plaintext`, `text`, `txt` | Plain text (HTML stripped) |
 | `customtext`, `customtextformat` | Custom-templated text (requires `--custom-format`) |
 
