@@ -25,7 +25,8 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 ///
 /// Unlike <see cref="IndexTtsCrispAsr"/> (IndexTTS-1.5 via CrispASR), audio.cpp's server
 /// honours a per-request <c>voice_ref</c>, so switching voice does NOT restart the server —
-/// only a model or backend change does. Everything else follows the same server-mode shape:
+/// only a model or backend change does — which is also what makes per-line cloning ("Clone
+/// from video") free here. Everything else follows the same server-mode shape:
 /// one persistent process on a loopback port, OpenAI-style POST /v1/audio/speech.
 ///
 /// The model is a single self-describing GGUF (the package spec is embedded), so no sidecar
@@ -35,7 +36,7 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// under the bilibili Model Use License, which is not OSI-approved and has to be accepted by
 /// the user before the first download — see <see cref="IsLicenseAccepted"/>.
 /// </summary>
-public class IndexTts25AudioCpp : ITtsEngine
+public class IndexTts25AudioCpp : ITtsEngine, IPerLineCloneEngine
 {
     public string Name => "IndexTTS 2.5 (audio.cpp)";
     public string Description => "IndexTTS-2.5 (Bilibili / IndexTeam) voice cloning in 5 languages, via audio.cpp";
@@ -45,7 +46,7 @@ public class IndexTts25AudioCpp : ITtsEngine
     public bool HasModel => true;
     public bool HasKeyFile => false;
     public bool SupportsVoiceCloning => true;
-    public bool SupportsPerLineVoiceCloning => false;
+    public bool SupportsPerLineVoiceCloning => true;
 
     // The Q8_0 GGUF is the default: same 22.05 kHz output as F16 at 1 GB less on disk. The
     // "orig" dtype build (7.3 GB) is deliberately not offered — it is a debugging artifact.
@@ -323,6 +324,28 @@ public class IndexTts25AudioCpp : ITtsEngine
 
     public Task<Voice[]> RefreshVoices(string language, CancellationToken cancellationToken) =>
         GetVoices(language);
+
+    /// <summary>
+    /// <see cref="IPerLineCloneEngine"/>: the server takes <c>voice_ref</c> as a path per request,
+    /// so the voice simply points at the cut clip - nothing is staged into this engine's own
+    /// folders. audio.cpp resamples the reference itself, so the 24 kHz clip is used as cut.
+    /// </summary>
+    public Voice? MakePerLineCloneVoice(string clipFileName, string voiceName) =>
+        new Voice(new IndexTtsVoice(voiceName, clipFileName));
+
+    /// <summary>The clip's own path, which is exactly what the voice carries.</summary>
+    public string? GetPerLineReferenceClip(Voice voice) =>
+        voice.EngineVoice is IndexTtsVoice indexVoice && !string.IsNullOrEmpty(indexVoice.FilePath)
+            ? indexVoice.FilePath
+            : null;
+
+    /// <summary>
+    /// <see cref="IPerLineCloneEngine"/>: nothing is ever staged (the voice points straight at
+    /// the clip), so there is nothing to clear between runs.
+    /// </summary>
+    public void ResetStagedPerLineReferences()
+    {
+    }
 
     public async Task<TtsResult> Speak(
         string text,
