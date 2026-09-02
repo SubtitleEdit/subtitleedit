@@ -12325,8 +12325,6 @@ public partial class MainViewModel :
 
         if (baselineSerialized != newSettingsSerialized)
         {
-            var firstSelectedIndex = SubtitleGrid.SelectedIndex;
-
             // Apply video-player visibility toggles directly on the existing
             // VideoPlayerControl. StopIsVisible / FullScreenIsVisible are plain
             // Avalonia styled properties, so writing to them updates the button
@@ -12354,11 +12352,7 @@ public partial class MainViewModel :
             // destroys and recreates the video player control (a native Win32 HWND on Windows
             // with mpv-wid/VLC). Doing that inside the ShowDialog continuation races the modal
             // dialog's teardown and can leave the main window disabled - a full UI freeze (#10815).
-            Dispatcher.UIThread.Post(() =>
-            {
-                ApplySettings();
-                SelectAndScrollToRow(firstSelectedIndex);
-            });
+            Dispatcher.UIThread.Post(ApplySettings);
         }
     }
 
@@ -12456,6 +12450,13 @@ public partial class MainViewModel :
 
     public void ApplySettings()
     {
+        // Restored at the very end, after the format list refresh below: SetLayout re-creates
+        // the grid (which silently auto-selects row 0), and re-filling SubtitleFormats then
+        // fires the format-combo handler, which read that row 0 back and scrolled to it. The
+        // scroll helper keeps one pending index, last writer wins - so the row the user was
+        // editing was lost on Apply and on OK after Apply (issue #14421).
+        var selectedIndex = SubtitleGrid.SelectedIndex;
+
         UiUtil.SetFontName(Se.Settings.Appearance.FontName);
         UiTheme.SetCurrentTheme();
 
@@ -12626,6 +12627,8 @@ public partial class MainViewModel :
         }
 
         RefreshSubtitlePreview();
+
+        SelectAndScrollToRow(selectedIndex);
     }
 
     public VideoPlayerControl? GetVideoPlayerControl()
@@ -31166,6 +31169,12 @@ public partial class MainViewModel :
 
         var idx = SubtitleGrid.SelectedIndex;
 
+        // Only put the selection back when the grid's selection is the view model's. A freshly
+        // built grid (ApplySettings/SetLayout) auto-selects row 0 without telling the view model,
+        // and the format list refresh that follows fired this handler with that row 0 - which
+        // then overrode the pending restore of the row the user was on (issue #14421).
+        var restoreSelection = idx >= 0 && ReferenceEquals(SubtitleGrid.SelectedItem, SelectedSubtitle);
+
         if (!_opening && !_changingFormatProgrammatically && e.RemovedItems.Count == 1 && e.AddedItems.Count == 1)
         {
             var format = e.AddedItems[0] as SubtitleFormat;
@@ -31275,7 +31284,10 @@ public partial class MainViewModel :
             }
         }
 
-        SelectAndScrollToRow(idx);
+        if (restoreSelection)
+        {
+            SelectAndScrollToRow(idx);
+        }
     }
 
     internal void AutoSelectOnPlayCheckedChanged()
