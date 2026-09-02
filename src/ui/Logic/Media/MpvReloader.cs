@@ -180,7 +180,10 @@ public class MpvReloader : IMpvReloader
     // subtitle copy, read-only state and libse statics - never the memo fields.
     private (Subtitle Subtitle, string Text, int Hash, bool HashValid) BuildPreviewText(Subtitle subtitle, Subtitle? subtitleSecondary, Type uiFormatType, bool uiFormatHasPositions, int oldHash, string oldText)
     {
-        SecondarySubtitleMerger.PreparePreviewSubtitle(subtitle, SmpteMode);
+        if (SmpteMode)
+        {
+            SmptePreviewStretch.Apply(subtitle);
+        }
 
         if (uiFormatType == typeof(NetflixImsc11Japanese) || NetflixImsc11JapaneseToAss.HasJapaneseMarkup(subtitle))
         {

@@ -35,7 +35,12 @@ public class VlcReloader : IVlcReloader
         try
         {
             var uiFormatType = uiFormat.GetType();
-            SecondarySubtitleMerger.PreparePreviewSubtitle(subtitle, SmpteMode);
+            subtitle = new Subtitle(subtitle, false);
+
+            if (SmpteMode)
+            {
+                SmptePreviewStretch.Apply(subtitle);
+            }
 
             SubtitleFormat format = _assFormat;
             string text;
