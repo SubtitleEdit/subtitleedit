@@ -3349,9 +3349,14 @@ public partial class MainViewModel :
             Renumber();
             _updateAudioVisualizer = true;
 
-            // The action may have deleted or merged rows that displayed original lines; the refresh
-            // brings those lines back (read-only) and re-syncs what is displayed.
-            ReapplyOriginalReference(capture: false);
+            // The action may have deleted or merged rows that displayed original lines. For a
+            // read-only original the refresh brings those lines back (the file is authoritative).
+            // An editable original is captured from the rows again first: a merge folded the
+            // second row's original text into the surviving row, so its line is consumed, not
+            // orphaned - refreshing against the pre-merge capture resurrected it as an extra
+            // display-only row under the merged line, showing that text twice (#14434). The
+            // capture is a no-op for a read-only original, so that path keeps its behavior.
+            ReapplyOriginalReference();
         }
     }
 

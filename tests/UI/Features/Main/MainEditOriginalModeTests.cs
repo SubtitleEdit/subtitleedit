@@ -190,6 +190,71 @@ public class MainEditOriginalModeTests
         method.Invoke(vm, new object?[] { 0, "reference.srt", reference, match, isReadOnly });
     }
 
+    /// <summary>
+    /// Merging two rows of an editable original merges their original texts too, so the second
+    /// row's original line is consumed - it must not come back as an extra display-only row under
+    /// the merged line, where it would show the same text twice (#14434).
+    /// </summary>
+    [AvaloniaFact]
+    public void MergeWithEditableOriginal_DoesNotBringTheMergedOriginalLineBack()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            ImportSampleReference(vm, isReadOnly: false);
+            Assert.True(vm.CanEditOriginal);
+            Assert.True(vm.IsShowingOriginalNonMatchingLines);
+
+            vm.SelectAndScrollToSubtitle(vm.Subtitles[0]);
+            vm.MergeWithLineAfterCommand.Execute(null);
+            Dispatcher.UIThread.RunJobs();
+
+            var working = vm.Subtitles.Where(p => !p.IsReferenceOnly).ToList();
+            var merged = Assert.Single(working);
+            Assert.Contains("Reference one", merged.OriginalText);
+            Assert.Contains("Reference two", merged.OriginalText);
+
+            // Only the line that never had a translation stays as a display-only row.
+            var referenceRow = Assert.Single(vm.Subtitles, p => p.IsReferenceOnly);
+            Assert.Equal("Reference only - no translation", referenceRow.OriginalText);
+
+            // The original the merge is saved from carries the merged line once, not twice.
+            var texts = vm.GetUpdateSubtitleOriginal().Paragraphs.Select(p => p.Text).ToList();
+            Assert.Equal(2, texts.Count);
+            Assert.DoesNotContain(texts, t => t == "Reference two");
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    /// <summary>
+    /// A read-only reference is the file's contents: merging two rows must still bring the second
+    /// row's original line back as a display-only row, nothing of the reference is ever lost.
+    /// </summary>
+    [AvaloniaFact]
+    public void MergeWithReadOnlyOriginal_StillBringsTheMergedOriginalLineBack()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            ImportSampleReference(vm, isReadOnly: true);
+
+            vm.SelectAndScrollToSubtitle(vm.Subtitles[0]);
+            vm.MergeWithLineAfterCommand.Execute(null);
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Single(vm.Subtitles, p => !p.IsReferenceOnly);
+            var referenceTexts = vm.Subtitles.Where(p => p.IsReferenceOnly).Select(p => p.OriginalText).ToList();
+            Assert.Equal(new[] { "Reference only - no translation", "Reference two" }, referenceTexts);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
     private static (Window Window, MainViewModel Vm) CreateMainViewModel()
     {
         var services = new ServiceCollection();
