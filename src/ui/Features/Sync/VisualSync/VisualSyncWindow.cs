@@ -48,7 +48,6 @@ public class VisualSyncWindow : Window
 
         vm.AudioVisualizerLeft = new AudioVisualizer
         {
-            Height = 80,
             Width = double.NaN,
             IsReadOnly = true,
             DrawGridLines = Se.Settings.Waveform.DrawGridLines,
@@ -65,7 +64,6 @@ public class VisualSyncWindow : Window
 
         vm.AudioVisualizerRight = new AudioVisualizer
         {
-            Height = 80,
             Width = double.NaN,
             IsReadOnly = true,
             DrawGridLines = Se.Settings.Waveform.DrawGridLines,
@@ -136,13 +134,25 @@ public class VisualSyncWindow : Window
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var buttonPanel = UiUtil.MakeButtonBar(labelInfo, buttonSync, buttonOk, buttonCancel);
 
+        // The waveforms used to be pinned at 80 px under the players, too little to pick a precise
+        // scene from; the drag handles mirror the main window and move together (issue #14414).
+        var splitLeft = new VideoWaveformSplitGrid(vm.VideoPlayerControlLeft, vm.AudioVisualizerLeft, Se.Settings.Synchronization.VisualSyncWaveformHeight)
+        {
+            IsWaveformVisible = vm.IsAudioVisualizerVisible,
+        };
+        var splitRight = new VideoWaveformSplitGrid(vm.VideoPlayerControlRight, vm.AudioVisualizerRight, Se.Settings.Synchronization.VisualSyncWaveformHeight)
+        {
+            IsWaveformVisible = vm.IsAudioVisualizerVisible,
+        };
+        splitLeft.WaveformHeightChanged += splitRight.SetWaveformHeight;
+        splitRight.WaveformHeightChanged += splitLeft.SetWaveformHeight;
+
         var gridLeft = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // label
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // video player
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // audio visualizer
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // video player over waveform
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // combo box
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // buttons
             },
@@ -157,18 +167,16 @@ public class VisualSyncWindow : Window
         };
 
         gridLeft.Add(UiUtil.MakeLabel(Se.Language.Sync.StartScene), 0);
-        gridLeft.Add(vm.VideoPlayerControlLeft, 1);
-        gridLeft.Add(vm.AudioVisualizerLeft, 2);
-        gridLeft.Add(comboBoxLeft, 3);
-        gridLeft.Add(panelLeftButtons, 4);
+        gridLeft.Add(splitLeft, 1);
+        gridLeft.Add(comboBoxLeft, 2);
+        gridLeft.Add(panelLeftButtons, 3);
 
         var gridRight = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // label
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // video player
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // audio visualizer
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // video player over waveform
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // combo box
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // buttons
             },
@@ -183,10 +191,9 @@ public class VisualSyncWindow : Window
         };
 
         gridRight.Add(UiUtil.MakeLabel(Se.Language.Sync.EndScene), 0);
-        gridRight.Add(vm.VideoPlayerControlRight, 1);
-        gridRight.Add(vm.AudioVisualizerRight, 2);
-        gridRight.Add(comboBoxRight, 3);
-        gridRight.Add(panelRightButtons, 4);
+        gridRight.Add(splitRight, 1);
+        gridRight.Add(comboBoxRight, 2);
+        gridRight.Add(panelRightButtons, 3);
 
         var grid = new Grid
         {
@@ -215,10 +222,25 @@ public class VisualSyncWindow : Window
 
         Content = grid;
 
+        // The lent waveform arrives a beat after construction, and goes away again when a
+        // different video is opened from the dialog.
+        vm.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(vm.IsAudioVisualizerVisible))
+            {
+                splitLeft.IsWaveformVisible = vm.IsAudioVisualizerVisible;
+                splitRight.IsWaveformVisible = vm.IsAudioVisualizerVisible;
+            }
+        };
+
         UiUtil.FocusOnFirstActivation(this, comboBoxLeft); // initial focus on an input, not an action button - a focused button clicks on bare Space
 
         AddHandler(KeyDownEvent, vm.OnKeyDownHandler, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);
         Loaded += (_, _) => vm.OnLoaded();
-        Closing += (_, e) => vm.OnClosing();
+        Closing += (_, e) =>
+        {
+            Se.Settings.Synchronization.VisualSyncWaveformHeight = splitLeft.WaveformHeight;
+            vm.OnClosing();
+        };
     }
 }
