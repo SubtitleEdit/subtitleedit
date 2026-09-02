@@ -1,7 +1,7 @@
 {
   "title": "SubtitleEdit",
-  "version": "v. 5.2.0-beta31",
-  "translatedBy": "v. 01.09.2026 di bovirus e GitGianluc",
+  "version": "v. 5.2.0-beta32",
+  "translatedBy": "v. 02.09.2026 di bovirus e GitGianluc",
   "cultureName": "it-IT",
   "general": {
     "abort": "Annulla",
@@ -2688,6 +2688,7 @@
     "syncPoints": "Punti sincronizzazione",
     "pointSync": "Sincronizza punti",
     "pointSyncViaOther": "Sincronizzazione punti tramite altri sottotitoli",
+    "syncPointCandidateInfo": "Sono evidenziate le righe che iniziano dopo {0}+ secondi di silenzio : spesso costituiscono punti di sincronizzazione affidabili",
     "adjustAllShortcuts": "Tasti rapidi:\r\n\r\n• Maiuscolo + sinistra/destra: sposta di 10 ms\r\n• Ctrl + sinistra/destra: sposta di 100 ms\r\n• Alt + sinistra/destra: sposta di 500 ms",
     "adjustAllShortcutsFrames": "Tasti rapidi:\r\n\r\n• Maiusc + sinistra/destra: sposta di 1 fotogramma\r\n• Ctrl + sinistra/destra: sposta di 10 fotogrammi\r\n• Alt + sinistra/destra: sposta di 1 secondo",
     "offsetInSeconds": "Offset in secondi",
@@ -2935,6 +2936,8 @@
       "favoriteSubtitleFormats": "Formati sottotitoli preferiti",
       "favoriteLanguages": "Lingue preferite",
       "webVttUseXTimestampMap": "WebVTT: usa X-TIMESTAMP-MAP (codici temporali offset caricamento)",
+      "assaAutoSetResolution": "ASSA: quando viene aperto un video imposta la risoluzione (PlayResX/PlayResY) dal video",
+      "assaAutoSetResolutionPrompt": "ASSA: chiedi prima di modificare la risoluzione per adattarla al video (altrimenti ricampiona automaticamente)",
       "showStopButton": "Visualizza pulsante 'Stop'",
       "showFullscreenButton": "Visualizza pulsante 'Schermo intero'",
       "fullscreenHideControls": "Nascondi controlli video a schermo intero",
@@ -3628,6 +3631,8 @@
     "resolutionResamplerFromVideo": "Dal video...",
     "resolutionResamplerSourceAndTargetEqual": "La risoluzione sorgente e destinazione è la stessa: niente da fare.",
     "resolutionResamplerNothingSelected": "Seleziona un'opzione da modificare.",
+    "resolutionResamplerVideoDiffers": "La risoluzione dei sottotitoli ({0}x{1}) è diversa dalla risoluzione del video ({2}x{3}).\r\nVuoi modificare il sottotitolo per adattarlo al video?",
+    "resolutionResamplerAskOnVideoOpen": "Chiedi quando viene aperto un video con una risoluzione diversa",
     "backgroundBoxGenerator": "Genera casella di sfondo",
     "backgroundBoxFillWidth": "Larghezza riempimento",
     "backgroundBoxRadius": "Raggio",
@@ -3819,6 +3824,12 @@
     "detailGapToPrevious": "al precedente: {0} < {1} ms",
     "detailGapToNext": "al successivo: {0} < {1} ms",
     "detail": "Dettagli",
-    "tip": "Fai doppio clic su una riga (o premi 'Invio') per accedervi. I controlli da eseguire e i relativi limiti vengono impostati in Impostazioni > Generali."
+    "tip": "Fai doppio clic su una riga (o premi 'Invio') per accedervi. I controlli da eseguire e i relativi limiti vengono impostati in Impostazioni > Generali.",
+    "exportAsText": "File testo (.txt)...",
+    "exportAsExcel": "File Excel (.xlsx)...",
+    "exportAsHtml": "Pagina web (.html)...",
+    "exportFileX": "File: {0}",
+    "exportGeneratedX": "Generato: {0}",
+    "exportMadeWithSubtitleEdit": "Creato con Subtitle Edit"
   }
 }
