@@ -49,28 +49,39 @@ The subtitle rules that drive error checking, the grid's warning colors, and too
 - **Default format** and **default save-as format**
 - **Favorite subtitle formats** and **favorite languages** — These float to the top of the pickers
 - **WebVTT: use X-TIMESTAMP-MAP** — Offset time codes on load
+- **ASSA: set resolution (PlayResX/PlayResY) from the video when a video is opened**, and **ASSA: ask before changing the resolution to match the video (otherwise resample automatically)**
 
 ## Syntax Coloring
 
-- **Color text if too wide (pixels)** — With its own settings for how the width is measured
+- **Color duration if too short**, **Color duration if too long**
+- **Color text if too long**, **Color text if too wide (pixels)** — the latter with its own settings for how the width is measured, **Color text if more than X lines**
+- **Color characters/sec if too high**, **Color words/min if too high**
+- **Color time code overlap**
+- **Color if gap is too short**
 - **Error background color**
 
 ## Video Player
 
 - **Video player** — Which player to use, plus **Download mpv** / **Download VLC** when the library is missing
+- **Show stop button**, **Show full-screen button**, **Hide video controls in full-screen**, **Auto-open video file when opening subtitle**
 - **Subtitle preview properties** — Font name, size and bold, primary/outline/shadow colors, border style and outline/shadow width for the subtitle drawn on the video
 
 ## Waveform / Spectrogram
 
-- **Waveform draw style** and **spectrogram mode**
-- **Toolbar items** — Which timing buttons the waveform toolbar shows, and in which order
+- **Waveform draw style**, **Auto-generate waveform when opening a video**, **Generate spectrogram**, **spectrogram mode** and **Waveform/spectrogram combined, waveform height %**
+- **Show toolbar** and **Toolbar items** — Which timing buttons the waveform toolbar shows, and in which order
 - **Waveform single-click / double-click action**
 - **Extract audio format, sample rate and bitrate** — What the audio Subtitle Edit extracts for the waveform looks like
+- **Select subtitle on right click**, **Allow overlap (when moving/resizing)**, **Set video position when moving start/end**
 - **Snap to shot changes (hold Shift to override)** and **Snap to frames**
 - **Snap distance when dragging (pixels)** — how close a dragged cue has to come to a shot change before it snaps; in pixels, so it feels the same at every zoom
 - **Snap to nearest shot change: max start / end distance (seconds)**, and the tighter **max end distance when start and end share a cut** — how far the *Snap selected lines to nearest shot change* shortcut looks for a cut. Where a snapped cue lands is set by the beautify profile's in/out cues gap (gear icon next to the snap toggle)
-- **Mouse-wheel video position step**
-- **Waveform text font size** and the full color set — text, waveform, subtitle background, background, selected subtitle background, selected, cursor/head, shot change, left/right border, fancy high color. Color themes can be imported and exported
+- **Shot changes auto-generate**
+- **Focus on mouse over**, **Focus text box after insert**
+- **Invert mouse-wheel**, **Mouse-wheel sets video position**, **Mouse-wheel video position step**
+- **Center video position also while paused**, **Draw grid lines**
+- **Waveform text font size**, **Waveform text font bold** and the full color set — text, waveform, subtitle background, background, selected subtitle background, selected, cursor/head, shot change, left/right border, fancy high color. Color themes can be imported and exported
+- **Auto-transcribe new waveform selection via speech-to-text**
 - **Download ffmpeg** and a **disk space** readout for the extracted audio
 
 ## Tools
@@ -86,6 +97,7 @@ The subtitle rules that drive error checking, the grid's warning colors, and too
 - **Multiple replace: show context menu buttons**
 - **Grid: focus text box after insert new subtitle**
 - **Text to speech: prompt to merge continuation lines**
+- **Text to speech: prompt to skip sound/music lines**, **Text to speech: prompt to detect speaker names in the text**
 - **Fix common errors: skip step 1 (choose fixes)**
 - **Music symbol** and **music symbols to replace**
 
@@ -105,7 +117,7 @@ One checkbox per toolbar button, so the main toolbar can be trimmed to what you 
 
 ## Network
 
-Proxy settings for every download and online engine: **address**, **username**, **password**, **domain**, **bypass proxy for**, and what to **notify about**.
+Proxy settings for every download and online engine: **address**, **username**, **password**, **domain**, **bypass proxy for**, and **Use system credentials**.
 
 ## Updates
 

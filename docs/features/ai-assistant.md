@@ -4,7 +4,8 @@ Get AI help with the current subtitle line — fix errors, shorten it to fit the
 
 - **Open:** The robot button in the text editor's button row, or right-click the text box → **AI assistant**
 
-<!-- Screenshot: AI assistant window (ai-assistant.png, not yet taken) -->
+<!-- Screenshot: AI assistant window -->
+![AI Assistant](../screenshots/ai-assistant.png)
 
 The assistant works on the **currently selected line only**. The three lines before and after are sent along as read-only context so the model understands the dialogue, but they are never changed.
 

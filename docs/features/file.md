@@ -16,6 +16,10 @@ Create a new empty subtitle.
 
 Create a new subtitle while keeping the currently loaded video.
 
+### New window
+
+Open another Subtitle Edit main window.
+
 ## Open
 
 Open an existing subtitle file.
@@ -49,9 +53,21 @@ Save the current subtitle to a new file or format.
 - **Menu:** File → Save as...
 - **Shortcut:** `Ctrl+Shift+S`
 
+## Save Forced Lines As
+
+Save only the lines marked as forced (see **Toggle forced** in the [subtitle grid](subtitle-grid.md#context-menu)) to a file.
+
 ## Close Original
 
 Close the secondary (original) subtitle file in translation mode.
+
+## Close Translation
+
+Shown while an editable original is open: discards the translation and makes the original the working subtitle (you are asked to save unsaved changes first). Not offered when the original is a read-only reference.
+
+## Format Properties
+
+Formats with their own settings (ASSA, EBU STL, PAC, ...) get a **<format> properties...** item here, opening the same dialog as the gear button next to the format combo box.
 
 ## Recent Files
 
@@ -105,7 +121,9 @@ Export subtitle text without time codes.
 
 Export using a customizable text template. A template has a header, a per-subtitle text part, and a footer.
 
-Placeholders for the text part include `{start}`, `{end}`, `{text}`, `{number}`, `{number-1}`, `{duration}`, `{gap}`, `{actor}`, `{text-line-1}`, `{text-line-2}`, `{text-length}`, `{cps-period}`, `{bookmark}`, `{media-file-name}`, `{text-csv}`, and `{tab}`.
+Placeholders for the text part include `{start}`, `{end}`, `{text}`, `{number}`, `{number-1}`, `{duration}`, `{gap}`, `{actor}`, `{text-line-1}`, `{text-line-2}`, `{text-length}`, `{cps-period}`, `{bookmark}`, `{text-csv}`, and `{tab}`.
+
+The header and footer take `{title}`, `{#lines}`, `{tab}`, `{media-file-name}`, `{media-file-name-full}` and `{media-file-name-with-ext}`.
 
 The time code format is built from these letters (anything else is kept as-is):
 
@@ -139,7 +157,7 @@ Export subtitles in Cavena 890 format.
 
 ### Export image-based
 
-Export subtitles as images (BDN XML, VobSub, Blu-ray SUP, Final Cut Pro + image, IMSC 1.1 image profile, etc.).
+Export subtitles as images. The Export submenu lists: Blu-ray (sup), BDN/xml, BDN/xml 8-bit, IMSC 1.1 image profile, CapMaker Plus, Cheetah Caption, Cheetah Caption Old, Cavena 890, DVB teletext (Manzanita), D-Cinema interop/png, D-Cinema SMPTE 2014/png, EBU STL, DOST/png, DVD sup (MuxMan/Scenarist), Final Cut Pro + image, Images with time code, PAC (Screen Electronics), PAC Unicode (UniPac), VobSub (sub/idx) and WebVTT png — followed by **Custom text formats...** and **Plain text...**.
 
 **BDN/xml** writes 32-bit PNGs; **BDN/xml 8-bit** writes the same index.xml with 8-bit palette-indexed PNGs, which is what most Blu-ray authoring tools expect.
 

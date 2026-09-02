@@ -10,24 +10,27 @@ View detailed statistics about the currently loaded subtitle file, including lin
 
 1. Open a subtitle file.
 2. Go to **File** → **Statistics...** to open the statistics dialog.
-3. View general statistics, most used words, and most used lines.
+3. Read the dashboard: totals at the top, timing/pacing ranges and checks in the middle, and the word/line lists at the bottom.
 4. Use **Export** to save the statistics to a text file.
 
 ## Features
 
-### General Statistics
-- Total number of lines.
-- Total number of words and characters.
-- Duration information (total duration, average duration per line).
-- Subtitle format information.
+### Totals
+- Number of subtitles, words, and characters.
+- Total duration.
 
-### Most Used Words
-- List of the most frequently used words in the subtitle.
-- Word count for each word.
+### Timing and Pacing
+- Minimum, average, and maximum for duration, characters per line, characters per second, words per minute, and gap between lines.
 
-### Most Used Lines
-- List of the most frequently repeated lines.
-- Helps identify duplicate or repeated content.
+### Checks
+- How many lines break the current profile's limits (line length, reading speed, duration, number of lines), so problems can be spotted before running the fix tools.
+
+### Characters/sec Histogram
+- A bar chart of how the reading speed is distributed across the subtitle.
+
+### Most Used Words / Most Used Lines
+- The most frequently used words and the most frequently repeated lines, with counts.
+- Each list has a **Copy to clipboard** button.
 
 ### Export
 - Save the full statistics report to a text file.

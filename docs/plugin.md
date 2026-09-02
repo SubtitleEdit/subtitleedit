@@ -16,7 +16,7 @@ compatible with SE5 and must be ported.
 > and removing plugins update the **Plugins** menu live (no restart needed). A startup
 > update notification is still to come.
 >
-> The **Plugins** menu is shown by default but can be hidden via
+> The **Plugins** menu is hidden by default; turn it on via
 > **Options → Settings → Appearance → Show Plugins menu**. The menu must be enabled
 > there to run or manage plugins from the main window.
 

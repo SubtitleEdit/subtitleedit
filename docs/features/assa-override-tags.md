@@ -21,6 +21,8 @@ Apply ASSA override tags to subtitle lines with a live video preview.
 ### Override Tag Selection
 - Browse a list of common ASSA override tags.
 - Select from predefined tags or build custom tag combinations.
+- **Use** replaces the tag field with the chosen tag, **Append** adds it to what is there, and **Clear** empties the field.
+- **History** — Shown once tags have been applied before; opens the list of previously used tags.
 - Remembers the last used override tag.
 
 ### Application Scope

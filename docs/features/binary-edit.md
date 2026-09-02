@@ -34,19 +34,23 @@ From the Tools menu (all lines) or the right-click menu (selected lines):
 - **Crop images** — Trim transparent borders
 - **Adjust brightness...** / **Adjust alpha (transparency)...** / **Adjust color...** — Image corrections with live preview
 - **Adjust durations...** / **Apply duration limits...** — Same duration tools as for text subtitles
-- **Set text** — Replace a line's image with newly rendered text (font, colors, outline, shadow, box)
 - **Append subtitle...** — Append another image-based file, keeping its time codes or offsetting them
-- **Sort by start time**, **Toggle forced**, **Select forced/non-forced lines**, **Import time codes...**
+- **Sort by start time**
 
-The Synchronization menu offers **Adjust all times**, **Change frame rate**, and **Change speed**.
+The right-click menu additionally offers **Insert before** / **Insert after** (a new line from an image file), **Toggle forced**, **Select forced/non-forced lines**, and **Show earlier/later...**.
+
+Under the image, **Set text** replaces the selected line's image with newly rendered text (font, colors, outline, shadow, box), **Import** replaces it with an image file, and **Export** saves it as a PNG.
+
+The File menu has **Import time codes...** (apply the timing of a text subtitle to the lines) next to Export, and the Synchronization menu offers **Adjust all times**, **Change frame rate**, and **Change speed**.
 
 ## Export
 
 There is no in-place save — use File → Export:
 
-- **Blu-ray (sup)**, **VobSub (sub/idx)**
+- **Blu-ray (sup)**, **DVD sup**, **VobSub (sub/idx)**
 - **BDN/xml**, **BDN/xml 8-bit**, **DOST/png**, **Final Cut Pro + image**
+- **D-Cinema interop png**, **D-Cinema SMPTE 2014 png**
 - **IMSC 1.1 image profile**, **WebVTT png**
 - **Images with HTML index**, **Images with time code**
 
-The **Export** button under the list saves the selected line's image as a PNG. Closing with unexported changes asks for confirmation.
+Closing with unexported changes asks for confirmation.

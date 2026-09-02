@@ -21,7 +21,7 @@ Check spelling of subtitle text and correct misspelled words.
    - **Add to names list (case sensitive)** — Add the word to the names/proper nouns list (matches the exact casing)
    - **Add to user dictionary** — Add the word to your personal dictionary
 5. The spell checker advances to the next unknown word automatically
-6. When all words have been checked, the window closes
+6. When all words have been checked, a **Spell check completed** summary shows how many words were changed, skipped and added — tick **Do not show this message again** to turn it off
 
 **Skip all is not saved.** It lasts until the window closes and is not carried over to the
 next run, so a mis-click never has lasting consequences. To accept a word permanently use
@@ -49,6 +49,9 @@ Spell check requires a dictionary to be installed. If no dictionary is found, yo
 
 - **Edit whole text** — Edit the full subtitle text for the current line
 - **Google it** — Search Google for the current word
+- **Undo** — Reverts the last change; the button only appears once there is something to undo
+- **Play current** — Plays the line in the main window's video player and pauses at its end; hidden when no video is loaded
+- **Show source images too...** — The image button next to **Done** attaches an image-based subtitle (sup, VobSub, BDN XML, TS, MKV, ...) so the original bitmap is shown for each line; after an OCR run the images are attached automatically
 - The current subtitle line is highlighted in the subtitle grid as you check
 
 ## Keyboard Shortcuts

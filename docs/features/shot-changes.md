@@ -5,7 +5,7 @@ Detect scene/shot changes in a video using FFmpeg, or import them from a file.
 - **Menu:** Video → Generate/import shot changes
 - **Shortcut:** Configurable
 
-A second menu item, **Show shot changes list**, appears under the Video menu once the loaded video has any shot changes.
+A second menu item, **Show shot changes list**, appears under the Video menu once the loaded video has any shot changes. It lists the current shot changes with **Go to** (also double-click), **Clear**, and a right-click **Delete** for the selected entry.
 
 <!-- Screenshot: Shot changes window -->
 ![Shot Changes](../screenshots/shot-changes.png)
@@ -20,17 +20,18 @@ A second menu item, **Show shot changes list**, appears under the Video menu onc
 
 ## Time Code Format
 
-Choose how shot change times are displayed and exported:
+Choose how imported shot change times are interpreted:
 
 - **Seconds** — Decimal seconds
 - **Frames** — Frame numbers
 - **Milliseconds** — Millisecond values
 - **HH:MM:SS.FFF** — Full time code format
 
-## Import / Export
+## Import
 
-- **Import** — Load shot changes from a text file (one time code per line)
-- **Export** — Save detected shot changes to a file
+The window has two tabs: **Generate shot changes** and **Import shot changes**.
+
+- **Import shot changes from file** — Load shot changes from a text file (one time code per line); the text box on the tab can also be edited or pasted into directly
 
 Shot changes are displayed as vertical lines on the audio visualizer waveform.
 

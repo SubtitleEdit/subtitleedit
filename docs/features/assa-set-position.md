@@ -23,9 +23,9 @@ Visually position subtitles on screen by dragging them over a video screenshot, 
 - Supports left, center, and right horizontal alignment.
 - Supports top, center, and bottom vertical alignment.
 
-### Resolution Handling
-- Source and target resolution settings.
-- Automatically scales positions between different video resolutions.
+### Rotation and Centering
+- **Center horizontally** / **Center vertically** buttons.
+- **Rotation** — Rotates the text with a \frz tag.
 
 ### Result
 - Generates ASSA \pos(x,y) override tags.

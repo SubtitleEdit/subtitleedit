@@ -75,12 +75,21 @@ Use [Embedded Subtitles](embedded-subtitles.md) to add, remove, preview, and edi
 ## Supported Video Players
 
 Configure the video player backend in **Options → Settings → Video player**:
-- **libmpv** — Recommended for best format support (default). The render mode can be set to **Auto**, **Native**, **OpenGL**, or **Software (slow)**.
-- **libVLC** — Alternative backend (Windows and Linux only).
+- **libmpv - OpenGL** — default on Linux and macOS
+- **libmpv - Native Window ID rendering** — default on Windows (not available on macOS)
+- **libmpv - Software rendering (slow)**
+- **libVLC - Native Window ID rendering** — alternative backend (Windows and Linux only)
+
+The same settings page also has:
+- **Show stop button** / **Show full-screen button**
+- **Hide video controls in full-screen**
+- **Auto-open video file when opening subtitle**
+- **Download mpv** / **Download VLC** — fetch the player library when it is not installed
+- **Subtitle preview properties** — how the subtitle is drawn on the video
 
 ## Video Info
 
-You can view detailed information about the video file by right-clicking the video player (or via the "Show media information" shortcut).
+You can view detailed information about the video file via the **Show media information** shortcut (assign a key in **Options → Shortcuts**).
 
 This displays:
 - Video codec, resolution, frame rate, and bitrate
@@ -100,5 +109,8 @@ If the video has multiple audio tracks, you can toggle between them via the vide
 The Video menu also includes:
 
 - **Toggle select subtitle while playing** - automatically select the current subtitle during playback.
-- **Set video offset** - shift video playback relative to the subtitle timing.
-- **SMPTE timing** - toggle SMPTE-style timing display when available.
+
+Under **Video → More** (shown while a video is loaded):
+
+- **Set video offset...** - shift video playback relative to the subtitle timing.
+- **SMPTE timing (non-integer frame rate)** - toggle SMPTE-style timing display when available.

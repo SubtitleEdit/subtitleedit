@@ -43,6 +43,7 @@ You can chain multiple conversion functions:
 - Sort by
 - Change resolution — the [ASSA resolution resampler](assa-resolution-resampler.md) applied to every file
 - Change style — swap one ASSA style for another, or import styles from a file, optionally trimming unused ones
+- Change style properties — set font, size, colors, outline and other properties of the ASSA styles in every file
 - Embed fonts — embed the fonts an ASSA file uses as attachments, optionally [trimmed](assa-attachments.md) to the characters actually used
 - Adjust image brightness/alpha/color — for image-based subtitles
 - Auto translate
@@ -77,6 +78,7 @@ Supported OCR engines in Batch Convert:
 - llama.cpp (curated OCR vision models, best-first — GLM-OCR, PaddleOCR-VL, HunyuanOCR 1.5, LightOnOCR; a local `llama-server` is started automatically)
 - CrispEmbed (local, multiple model backends — see [OCR](ocr.md#crispembed))
 - PaddleOCR (Windows and Linux only)
+- Apple Vision (macOS only — pick a language, nothing to download)
 
 Subtitle Edit 5 can auto-detect language and pixels-are-space settings for nOcr/BinaryOcr in many batch workflows. This reduces the amount of manual setup needed when converting many image-based subtitle files with similar fonts.
 
@@ -90,5 +92,7 @@ Speech-to-text batch mode can transcribe multiple media files and save the resul
 - **Output folder** — Where converted files are saved
 - **Overwrite existing** — Whether to overwrite files
 - **Encoding** — Text encoding for output files
+- **Keep source file timestamp** — Give the output file the modification time of the source file
+- **Language post fix** — Append the detected language code (2- or 3-letter) to the output file name, e.g. `movie.en.srt`
 
 For headless batch conversion, see [Command Line (seconv)](../reference/command-line.md).

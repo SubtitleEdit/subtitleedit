@@ -80,6 +80,8 @@ Inside the [source view](../features/source-view.md) window (F2), which edits th
 
 | Shortcut | Action |
 |----------|--------|
+| Ctrl+Z | Undo |
+| Ctrl+Shift+Z / Ctrl+Y | Redo |
 | Ctrl+F | Find in the source |
 | Ctrl+H | Replace in the source (Cmd+Alt+F also works on macOS) |
 | F3 / Shift+F3 | Find next / previous |

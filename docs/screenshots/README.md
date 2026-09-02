@@ -37,6 +37,7 @@ All listed files exist on disk. Filenames are stable and may be linked from `../
 - `multiple-replace.png` — Multiple replace window
 - `modify-selection.png` — Modify selection window
 - `show-history.png` — Show history window
+- `ai-assistant.png` — AI assistant window
 
 ## Tools
 
@@ -87,6 +88,8 @@ All listed files exist on disk. Filenames are stable and may be linked from `../
 - `blank-video.png` — Blank video window
 - `cut-video.png` — Cut video window
 - `re-encode-video.png` — Re-encode video window
+- `video-ocr.png` — Video OCR window
+- `chapters.png` — Chapters window
 
 ## Translation
 
@@ -157,6 +160,10 @@ Used by `../reference/assa-override-tags.md` to illustrate individual override t
 
 ## Counts
 
-- Top-level screenshots: **92**
+- Top-level screenshots: **95**
 - ASSA override-tag examples (`assa/`): **35**
-- Total: **127**
+- Total: **130**
+
+## How the dialog screenshots are made
+
+Most dialog screenshots are headless renders of the real windows (dark theme, English, sample subtitle loaded), captured with Avalonia's headless platform and real Skia drawing — the same setup the UI tests use (`UseHeadless(new AvaloniaHeadlessPlatformOptions { UseHeadlessDrawing = false }).UseSkia()`, see `tests/UI/Logic/Accessibility/EditBoxAccessibilityNameTests.cs`). A temporary `[AvaloniaFact]` resolves the view model from `AddSubtitleEditServices()`, calls its `Initialize(...)` with sample lines, constructs the window, runs `Dispatcher.UIThread.RunJobs()` and saves `window.CaptureRenderedFrame()`. Such renders have no OS title bar, and video/waveform areas stay black because libmpv does not run headlessly, so windows that are mostly video (main window, video player) are still real screenshots. PNGs are quantized to a 256-color palette before committing.

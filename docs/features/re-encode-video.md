@@ -2,7 +2,7 @@
 
 Re-encode a video file with a different frame rate or container format using FFmpeg.
 
-- **Menu:** Video → Re-encode video...
+- **Menu:** Video → More → Re-encode video for better subtitling...
 - **Shortcut:** Configurable
 
 <!-- Screenshot: Re-encode video window -->
@@ -10,9 +10,9 @@ Re-encode a video file with a different frame rate or container format using FFm
 
 ## How to Use
 
-1. Open **Video → Re-encode video...**
+1. Open **Video → More → Re-encode video for better subtitling...**
 2. Select the output frame rate
-3. Select the output container format (`.mkv`, `.mp4`, `.webm`)
+3. Select the output container format (`.mkv`, `.mp4`)
 4. Click **Generate** to start re-encoding (or use the **Generate** split-button menu to prompt for FFmpeg parameters before encoding)
 
 ## Options
