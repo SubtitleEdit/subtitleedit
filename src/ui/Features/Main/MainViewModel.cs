@@ -20190,7 +20190,17 @@ public partial class MainViewModel :
                 ShowStatus(string.Format(Se.Language.Main.FfmpegDownloadedAndInstalledToX, result.FfmpegFileName));
                 return true;
             }
+
+            return false;
         }
+
+        // No ffmpeg download on Linux - say what is missing instead of failing silently (#14390).
+        await MessageBox.Show(
+            Window!,
+            Se.Language.Title,
+            Se.Language.Main.FfmpegNotFoundInstallHint,
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Information);
 
         return false;
     }
@@ -24813,13 +24823,24 @@ public partial class MainViewModel :
         }
     }
 
-    // Kicks off ffmpeg waveform/spectrogram extraction (no-op if ffmpeg is missing or a
-    // generation for this peak file is already running). Shared by the auto-on-open path
-    // and the on-demand "click the empty waveform" path.
+    // Kicks off ffmpeg waveform/spectrogram extraction (no-op if a generation for this peak
+    // file is already running). Shared by the auto-on-open path and the on-demand "click the
+    // empty waveform" path.
     private void StartWaveformExtraction(string videoFileName, int trackNumber, string peakWaveFileName, string spectrogramFileName)
     {
         if (!FfmpegHelper.IsFfmpegInstalled())
         {
+            // Used to bail out silently, leaving an empty waveform with no clue why (#14390).
+            // The auto-on-open path must not pop a modal (session restore, drag/drop, CLI opens),
+            // so show the click-to-generate hint instead - clicking it runs RequireFfmpegOk,
+            // which offers the download (or explains how to install ffmpeg on Linux).
+            if (AudioVisualizer != null)
+            {
+                AudioVisualizer.ShowClickToGenerateHint = true;
+                AudioVisualizer.InvalidateVisual();
+            }
+
+            ShowStatus(Se.Language.Main.WaveformFfmpegNotFoundClickToSetUp);
             return;
         }
 
@@ -24859,10 +24880,17 @@ public partial class MainViewModel :
 #pragma warning restore CS4014
     }
 
-    // Handler for clicking the empty waveform when auto-generate is off.
-    internal void AudioVisualizerOnGenerateWaveformRequested(object? sender, EventArgs e)
+    // Handler for clicking the empty waveform (auto-generate off, or ffmpeg was missing when
+    // the video opened).
+    internal async void AudioVisualizerOnGenerateWaveformRequested(object? sender, EventArgs e)
     {
         if (string.IsNullOrEmpty(_videoFileName))
+        {
+            return;
+        }
+
+        // Explicit user action, so a modal "download ffmpeg?" prompt is fine here (#14390).
+        if (!await RequireFfmpegOk())
         {
             return;
         }
