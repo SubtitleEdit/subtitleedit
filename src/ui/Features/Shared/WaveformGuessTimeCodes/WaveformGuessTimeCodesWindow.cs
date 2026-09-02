@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -7,8 +8,17 @@ using System;
 
 namespace Nikse.SubtitleEdit.Features.Shared.WaveformGuessTimeCodes;
 
+/// <summary>
+/// The three option boxes used to be stacked in one column, which made the window tall enough
+/// that a high UI scale (or a small working area) pushed it past the screen - it is then clamped
+/// to the working area, and the clamp cut off the bottom options and the OK/Cancel buttons. The
+/// boxes are laid out in two columns so the window fits at a high scale, and the options scroll
+/// with the buttons pinned below them for the cases where it still does not.
+/// </summary>
 public class WaveformGuessTimeCodesWindow : Window
 {
+    internal const string OptionsScrollViewerName = "OptionsScrollViewer";
+
     public WaveformGuessTimeCodesWindow(WaveformGuessTimeCodesViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -22,13 +32,53 @@ public class WaveformGuessTimeCodesWindow : Window
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var grid = new Grid
+        // Two columns: the two short "which lines" boxes stacked on the left, the taller settings
+        // box on the right - about half the height of one stacked column, which is what keeps the
+        // window on screen at a high UI scale.
+        var panelLeft = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Spacing = 10,
+            VerticalAlignment = VerticalAlignment.Top,
+            Children =
+            {
+                MakeStartFromView(vm, out var radioStartFromVideoPosition),
+                MakeDeleteLinesView(vm),
+            },
+        };
+
+        var panelOptions = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+            },
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+            },
+            ColumnSpacing = 10,
+        };
+        panelOptions.Add(panelLeft, 0);
+        var borderDetectOptions = MakeDetectOptionsView(vm);
+        borderDetectOptions.VerticalAlignment = VerticalAlignment.Top;
+        panelOptions.Add(borderDetectOptions, 0, 1);
+
+        // Keeps the OK/Cancel buttons reachable when the window is clamped to the working area.
+        var scrollViewer = new ScrollViewer
+        {
+            Name = OptionsScrollViewerName,
+            Content = panelOptions,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Auto,
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+        };
+
+        var grid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
@@ -42,10 +92,8 @@ public class WaveformGuessTimeCodesWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(MakeStartFromView(vm, out var radioStartFromVideoPosition), 0);
-        grid.Add(MakeDeleteLinesView(vm), 1);
-        grid.Add(MakeDetectOptionsView(vm), 2);
-        grid.Add(panelButtons, 3);
+        grid.Add(scrollViewer, 0);
+        grid.Add(panelButtons, 1);
 
         Content = grid;
 
