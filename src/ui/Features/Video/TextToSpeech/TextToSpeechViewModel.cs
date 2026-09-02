@@ -408,6 +408,10 @@ public partial class TextToSpeechViewModel : ObservableObject
                 Se.Settings.Video.TextToSpeech.ChatterboxCrispAsrLanguage = SelectedLanguage?.Name ?? string.Empty;
             }
         }
+        else if (SelectedEngine is ZonosTtsCrispAsr)
+        {
+            Se.Settings.Video.TextToSpeech.ZonosTtsCrispAsrLanguage = SelectedLanguage?.Name ?? string.Empty;
+        }
         else if (SelectedEngine is KokoroTtsCpp)
         {
             if (SelectedVoice?.EngineVoice is Voices.KokoroVoice kokoroVoice && !string.IsNullOrEmpty(kokoroVoice.Voice))
@@ -1067,6 +1071,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         CosyVoice3CrispAsr => Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrLanguage,
         Qwen3TtsCrispAsr => Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrLanguage,
         ChatterboxTtsCpp => Se.Settings.Video.TextToSpeech.ChatterboxCrispAsrLanguage,
+        ZonosTtsCrispAsr => Se.Settings.Video.TextToSpeech.ZonosTtsCrispAsrLanguage,
         ElevenLabs => Se.Settings.Video.TextToSpeech.ElevenLabsLanguage,
         _ => null,
     };
@@ -4007,6 +4012,10 @@ public partial class TextToSpeechViewModel : ObservableObject
                     Qwen3TtsCrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrLanguage)
                                         ?? Languages.FirstOrDefault(),
                     ChatterboxTtsCpp => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.ChatterboxCrispAsrLanguage)
+                                        ?? Languages.FirstOrDefault(),
+                    // Zonos leads with English (US) rather than "Auto" (the backend cannot
+                    // detect a language), so the first-entry fallback is the backend default.
+                    ZonosTtsCrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.ZonosTtsCrispAsrLanguage)
                                         ?? Languages.FirstOrDefault(),
                     _ => Languages.FirstOrDefault(),
                 };

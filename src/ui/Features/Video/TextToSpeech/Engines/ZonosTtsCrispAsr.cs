@@ -32,12 +32,21 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// (eSpeak phonemisation), so unlike Qwen3 CustomVoice there is no .txt ref-text sidecar.
 /// This is a minimal engine: a single Q8_0 quant, no model dropdown, no per-engine settings
 /// dialog. Mirrors <see cref="IndexTtsCrispAsr"/>.
+///
+/// Unlike most cloning engines, Zonos is NOT language-agnostic: the input text goes through
+/// eSpeak G2P in whatever language the backend is told, and the model carries a language
+/// conditioner on top. CrispASR defaults both to en-us when the request has no
+/// <c>language</c> field, so a Czech line came out phonemised as English (#14433). The main
+/// window's language combo (<see cref="ZonosLanguages"/>) is passed as the server's startup
+/// <c>-l</c> flag: the zonos backend reads the language once at init, so - exactly like the
+/// voice - a language change restarts the server (verified against v0.8.31: the request body's
+/// <c>language</c> / <c>target_lang</c> fields leave zonos on en-us).
 /// </summary>
 public class ZonosTtsCrispAsr : ITtsEngine
 {
     public string Name => "Zonos TTS (CrispASR)";
     public string Description => "Zyphra Zonos-v0.1 with voice cloning, via CrispASR";
-    public bool HasLanguageParameter => false;
+    public bool HasLanguageParameter => true;
     public bool HasApiKey => false;
     public bool HasRegion => false;
     public bool HasModel => false;
@@ -94,6 +103,9 @@ public class ZonosTtsCrispAsr : ITtsEngine
     // reference audio from the startup --voice flag, so a voice change requires us to tear
     // down and restart the server. Same as IndexTTS — see PR #11210 discussion.
     private static string? _serverVoicePath;
+    // The -l language the running server was started with (empty = backend default en-us).
+    // Same story as the voice: zonos reads it at init only, so a change restarts the server.
+    private static string _serverLanguage = string.Empty;
     private static bool _processExitHooked;
     private static readonly StringBuilder _serverLog = new();
 
@@ -296,7 +308,11 @@ public class ZonosTtsCrispAsr : ITtsEngine
 
     public Task<string[]> GetModels() => Task.FromResult(Array.Empty<string>());
 
-    public Task<TtsLanguage[]> GetLanguages(Voice voice, string? model) => Task.FromResult(Array.Empty<TtsLanguage>());
+    /// <summary>
+    /// The eSpeak voice codes from the model's own language table; English (US) leads as the
+    /// backend default. See <see cref="ZonosLanguages"/>.
+    /// </summary>
+    public Task<TtsLanguage[]> GetLanguages(Voice voice, string? model) => Task.FromResult(ZonosLanguages.All);
 
     public Task<Voice[]> RefreshVoices(string language, CancellationToken cancellationToken) =>
         GetVoices(language);
@@ -323,7 +339,12 @@ public class ZonosTtsCrispAsr : ITtsEngine
                 + "Reference WAV should be 24 kHz mono (a few seconds of clean speech).");
         }
 
-        await EnsureServerRunningAsync(zonosVoice.FilePath, cancellationToken);
+        // The language to speak: picks the eSpeak G2P voice and the model's language
+        // conditioner. Nothing = the backend's en-us default, which is what every line got
+        // before #14433 - fine for English, English-phonemised gibberish for the rest.
+        var languageArg = ZonosLanguages.ResolveLanguageArg(language);
+
+        await EnsureServerRunningAsync(zonosVoice.FilePath, languageArg, cancellationToken);
 
         var outputFileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetFolder), Guid.NewGuid() + ".wav");
         var inputText = text;
@@ -341,13 +362,21 @@ public class ZonosTtsCrispAsr : ITtsEngine
             ["response_format"] = "wav",
         };
 
+        // Also sent per request, which is CrispASR's documented TTS API for the language to
+        // speak. The v0.8.31 zonos backend does not act on it (only the startup -l above does),
+        // but a server that learns to will then agree with the flag rather than fight it.
+        if (!string.IsNullOrEmpty(languageArg))
+        {
+            payload["language"] = languageArg;
+        }
+
         // Attests the user's own imported reference and the AI-disclosure duty; see
         // CrispAsrTtsProvenance. Skipped when voice cloning has not been accepted in settings.
         CrispAsrTtsProvenance.AddSpeechAttestations(payload);
 
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
-        Se.WriteToolsLog($"Zonos TTS (CrispASR): POST {ServerBaseUrl}/v1/audio/speech (voice={zonosVoice}, textLen={text.Length})");
+        Se.WriteToolsLog($"Zonos TTS (CrispASR): POST {ServerBaseUrl}/v1/audio/speech (voice={zonosVoice}, textLen={text.Length}, language={(string.IsNullOrEmpty(languageArg) ? "(default en-us)" : languageArg)})");
 
         HttpResponseMessage response;
         try
@@ -438,14 +467,19 @@ public class ZonosTtsCrispAsr : ITtsEngine
         }
     }
 
-    private static async Task EnsureServerRunningAsync(string voicePath, CancellationToken ct)
+    private static bool IsServerRunningWith(string voicePath, string languageArg) =>
+        _serverProcess is { HasExited: false } && _serverPort != 0
+        && string.Equals(_serverVoicePath, voicePath, StringComparison.OrdinalIgnoreCase)
+        && string.Equals(_serverLanguage, languageArg, StringComparison.OrdinalIgnoreCase);
+
+    private static async Task EnsureServerRunningAsync(string voicePath, string languageArg, CancellationToken ct)
     {
         // CrispASR's TTS server backends don't honour the per-request `voice` field — they
-        // only read the reference audio from the --voice path passed at server startup. So we
-        // restart the server every time the selected voice changes. Tracked next to
-        // _serverProcess so an already-running server with the matching voice is reused.
-        if (_serverProcess is { HasExited: false } && _serverPort != 0
-            && string.Equals(_serverVoicePath, voicePath, StringComparison.OrdinalIgnoreCase))
+        // only read the reference audio from the --voice path passed at server startup. The
+        // zonos backend reads its language (-l) at init the same way. So we restart the server
+        // every time the selected voice or language changes. Tracked next to _serverProcess so
+        // an already-running server with the matching pair is reused.
+        if (IsServerRunningWith(voicePath, languageArg))
         {
             return;
         }
@@ -453,8 +487,7 @@ public class ZonosTtsCrispAsr : ITtsEngine
         await ServerLock.WaitAsync(ct);
         try
         {
-            if (_serverProcess is { HasExited: false } && _serverPort != 0
-                && string.Equals(_serverVoicePath, voicePath, StringComparison.OrdinalIgnoreCase))
+            if (IsServerRunningWith(voicePath, languageArg))
             {
                 return;
             }
@@ -518,6 +551,13 @@ public class ZonosTtsCrispAsr : ITtsEngine
             // means the request's `voice` is ignored and the synth produces the wrong speaker.
             psi.ArgumentList.Add("--voice");
             psi.ArgumentList.Add(voicePath);
+            // The language to speak, as the eSpeak code from the model's own table (see
+            // ZonosLanguages). Omitted = the backend's en-us default. The CLI lowercases it.
+            if (!string.IsNullOrEmpty(languageArg))
+            {
+                psi.ArgumentList.Add("-l");
+                psi.ArgumentList.Add(languageArg);
+            }
             CrispAsrTtsProvenance.AddServerMarkingArgs(psi.ArgumentList, exe);
 
             var process = Process.Start(psi)
@@ -544,6 +584,7 @@ public class ZonosTtsCrispAsr : ITtsEngine
             _serverProcess = process;
             _serverPort = port;
             _serverVoicePath = voicePath;
+            _serverLanguage = languageArg;
             HookProcessExitOnce();
 
             // First-run auto-download (~1.8 GB total) needs a generous timeout.
@@ -560,6 +601,7 @@ public class ZonosTtsCrispAsr : ITtsEngine
                     _serverPort = 0;
                     _serverLaunchCommand = null;
                     _serverVoicePath = null;
+                    _serverLanguage = string.Empty;
                     throw new InvalidOperationException(
                         $"crispasr (zonos-tts) exited during startup (code {exitCode}). Output: {tail}"
                         + LaunchCmdSuffix(exitedLaunchCommand));
@@ -646,6 +688,7 @@ public class ZonosTtsCrispAsr : ITtsEngine
         _serverPort = 0;
         _serverLaunchCommand = null;
         _serverVoicePath = null;
+        _serverLanguage = string.Empty;
         if (p == null)
         {
             return;
