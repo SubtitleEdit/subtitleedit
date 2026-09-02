@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.UiLogic.Export;
+using Nikse.SubtitleEdit.UiLogic.Export;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -28091,6 +28091,21 @@ public partial class MainViewModel :
     {
         if (_setEndAtKeyUpLine != null)
         {
+            var vp = GetVideoPlayerControl();
+            if (vp != null && !string.IsNullOrEmpty(_videoFileName))
+            {
+                _setEndAtKeyUpLine.EndTime = TimeSpan.FromSeconds(vp.VideoPlayer.Position);
+            }
+
+            if (_setEndAtKeyUpLineGoToNext)
+            {
+                var idx = Subtitles.IndexOf(_setEndAtKeyUpLine);
+                if (idx >= 0)
+                {
+                    SelectAndScrollToRowCentered(idx + 1);
+                }
+            }
+
             _setEndAtKeyUpLine = null;
             _setEndAtKeyUpLineGoToNext = false;
         }
@@ -29118,22 +29133,6 @@ public partial class MainViewModel :
             if (vp != null && !string.IsNullOrEmpty(_videoFileName))
             {
                 var isAvScrolloing = av?.IsScrolling ?? false;
-
-                if (_setEndAtKeyUpLine != null)
-                {
-                    _setEndAtKeyUpLine.EndTime = TimeSpan.FromSeconds(vp.VideoPlayer.Position);
-                    if (_setEndAtKeyUpLineGoToNext)
-                    {
-                        var idx = Subtitles.IndexOf(_setEndAtKeyUpLine);
-                        if (idx >= 0)
-                        {
-                            SelectAndScrollToRowCentered(idx + 1);
-                        }
-
-                        _setEndAtKeyUpLine = null;
-                        _setEndAtKeyUpLineGoToNext = false;
-                    }
-                }
 
                 // Rebuild + re-sort the buffer only when its inputs changed since the last tick;
                 // an idle tick used to copy and order-check every line 20x a second (#13234).
