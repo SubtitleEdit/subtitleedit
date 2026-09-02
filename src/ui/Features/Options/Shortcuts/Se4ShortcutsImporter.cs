@@ -255,6 +255,8 @@ public static class Se4ShortcutsImporter
         ["MainTextBoxMoveFirstWordUpCurrent"] = nameof(MainViewModel.MoveFirstWordFromNextLineUpCurrentSubtitleCommand),
         ["MainTextBoxMoveFirstWordFromNextUp"] = nameof(MainViewModel.FetchFirstWordFromNextSubtitleCommand),
         ["MainTextBoxMoveFromCursorToNextAndGoToNext"] = nameof(MainViewModel.MoveTextFromCursorToNextAndGoToNextCommand),
+        ["MainTextBoxBreakAtPosition"] = nameof(MainViewModel.BreakAtFirstSpaceFromCursorCommand),
+        ["MainTextBoxBreakAtPositionAndGoToNext"] = nameof(MainViewModel.BreakAtFirstSpaceFromCursorAndGoToNextCommand),
         ["MainTextBoxSelectionToggleCasing"] = nameof(MainViewModel.ToggleCasingCommand),
         ["MainTextBoxSelectionToLower"] = nameof(MainViewModel.SelectionToLowerCommand),
         ["MainTextBoxSelectionToUpper"] = nameof(MainViewModel.SelectionToUpperCommand),
