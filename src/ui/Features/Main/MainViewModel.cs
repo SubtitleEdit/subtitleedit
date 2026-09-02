@@ -8,6 +8,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -747,8 +748,8 @@ public partial class MainViewModel :
     private readonly HashSet<string> _waveformsBeingGenerated = new(StringComparer.OrdinalIgnoreCase);
     private readonly Lock _waveformsBeingGeneratedLock = new();
     private VideoPlayerControl? _fullScreenVideoPlayerControl;
-    private static SolidColorBrush _transparentBrush = new SolidColorBrush(Colors.Transparent);
-    private static SolidColorBrush _errorBrush = new SolidColorBrush(_errorColor);
+    private static readonly IBrush _transparentBrush = new ImmutableSolidColorBrush(Colors.Transparent);
+    private static IBrush _errorBrush = new ImmutableSolidColorBrush(_errorColor);
     private SpellCheckDictionaryDisplay? _currentSpellCheckDictionary;
     private bool _spellCheckSessionInProgress;
     private bool _reDetectSpellCheckLanguage;
@@ -12558,7 +12559,7 @@ public partial class MainViewModel :
         ShowUpDownLabels = Se.Settings.Appearance.ShowUpDownLabels;
 
         _errorColor = Se.Settings.General.ErrorColor.FromHexToColor();
-        _errorBrush = new SolidColorBrush(_errorColor);
+        _errorBrush = new ImmutableSolidColorBrush(_errorColor);
         SubtitleTextInfoHelper.RefreshErrorBrush();
         if (AreVideoControlsUndocked)
         {

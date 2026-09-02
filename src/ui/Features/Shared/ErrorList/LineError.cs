@@ -1,4 +1,5 @@
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Shared.ErrorList;
@@ -68,15 +69,15 @@ public record LineError(LineErrorType Type, string Detail)
     private const string GapColor = "#1ABC9C";
     public const string AllColor = "#5D8AA8";
 
-    private static readonly IBrush TooManyLinesBrush = new SolidColorBrush(Color.Parse(TooManyLinesColor));
-    private static readonly IBrush CpsBrush = new SolidColorBrush(Color.Parse(CpsColor));
-    private static readonly IBrush TooShortBrush = new SolidColorBrush(Color.Parse(TooShortColor));
-    private static readonly IBrush TooLongBrush = new SolidColorBrush(Color.Parse(TooLongColor));
-    private static readonly IBrush LineTooLongBrush = new SolidColorBrush(Color.Parse(LineTooLongColor));
-    private static readonly IBrush LineTooWideBrush = new SolidColorBrush(Color.Parse(LineTooWideColor));
-    private static readonly IBrush OverlapBrush = new SolidColorBrush(Color.Parse(OverlapColor));
-    private static readonly IBrush GapBrush = new SolidColorBrush(Color.Parse(GapColor));
-    public static readonly IBrush AllBrush = new SolidColorBrush(Color.Parse(AllColor));
+    private static readonly IBrush TooManyLinesBrush = new ImmutableSolidColorBrush(Color.Parse(TooManyLinesColor));
+    private static readonly IBrush CpsBrush = new ImmutableSolidColorBrush(Color.Parse(CpsColor));
+    private static readonly IBrush TooShortBrush = new ImmutableSolidColorBrush(Color.Parse(TooShortColor));
+    private static readonly IBrush TooLongBrush = new ImmutableSolidColorBrush(Color.Parse(TooLongColor));
+    private static readonly IBrush LineTooLongBrush = new ImmutableSolidColorBrush(Color.Parse(LineTooLongColor));
+    private static readonly IBrush LineTooWideBrush = new ImmutableSolidColorBrush(Color.Parse(LineTooWideColor));
+    private static readonly IBrush OverlapBrush = new ImmutableSolidColorBrush(Color.Parse(OverlapColor));
+    private static readonly IBrush GapBrush = new ImmutableSolidColorBrush(Color.Parse(GapColor));
+    public static readonly IBrush AllBrush = new ImmutableSolidColorBrush(Color.Parse(AllColor));
 
     /// <summary>The dot colour as "#RRGGBB" - the html export paints the same palette as the window.</summary>
     public static string GetColor(LineErrorType type)
