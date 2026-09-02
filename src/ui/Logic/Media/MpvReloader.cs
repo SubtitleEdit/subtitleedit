@@ -180,14 +180,7 @@ public class MpvReloader : IMpvReloader
     // subtitle copy, read-only state and libse statics - never the memo fields.
     private (Subtitle Subtitle, string Text, int Hash, bool HashValid) BuildPreviewText(Subtitle subtitle, Subtitle? subtitleSecondary, Type uiFormatType, bool uiFormatHasPositions, int oldHash, string oldText)
     {
-        if (SmpteMode)
-        {
-            foreach (var paragraph in subtitle.Paragraphs)
-            {
-                paragraph.StartTime.TotalMilliseconds *= 1.001;
-                paragraph.EndTime.TotalMilliseconds *= 1.001;
-            }
-        }
+        SecondarySubtitleMerger.PreparePreviewSubtitle(subtitle, SmpteMode);
 
         if (uiFormatType == typeof(NetflixImsc11Japanese) || NetflixImsc11JapaneseToAss.HasJapaneseMarkup(subtitle))
         {
@@ -195,7 +188,7 @@ public class MpvReloader : IMpvReloader
             // exploded into separately positioned render lines, or the tags show up as literal
             // text on the video (issue #13861). Lambda Cap decodes to the same markup (issue #14165).
             subtitle = NetflixImsc11JapaneseToAss.ConvertToSubtitle(subtitle, VideoWidth, VideoHeight);
-            SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary);
+            SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary, SmpteMode);
             return (subtitle, subtitle.ToText(_assFormat), 0, false);
         }
 
@@ -206,7 +199,7 @@ public class MpvReloader : IMpvReloader
             // No extra copy here: "subtitle" is already RefreshMpv's private copy, and
             // Convert deep-copies its input again internally without mutating it.
             subtitle = WebVttToAssa.Convert(subtitle, defaultStyle, VideoWidth, VideoHeight);
-            SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary);
+            SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary, SmpteMode);
             // The WebVTT path never used the hash memo, so keep it untouched (HashValid false).
             return (subtitle, subtitle.ToText(_assFormat), 0, false);
         }
@@ -264,7 +257,7 @@ public class MpvReloader : IMpvReloader
             SubtitlePositionToAssa.ApplyPositions(subtitle, oldHeader, usePositions);
         }
 
-        SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary);
+        SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary, SmpteMode);
         var hash = subtitle.GetFastHashCode(null);
         if (hash != oldHash || string.IsNullOrEmpty(oldText))
         {

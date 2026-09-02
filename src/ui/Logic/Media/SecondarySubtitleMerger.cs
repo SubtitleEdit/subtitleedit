@@ -8,6 +8,34 @@ namespace Nikse.SubtitleEdit.Logic.Media;
 public static class SecondarySubtitleMerger
 {
     /// <summary>
+    /// Prepares a subtitle copy for video preview: filters out zero/negative-duration paragraphs,
+    /// clamps negative start times, and applies SMPTE timing stretch when enabled.
+    /// </summary>
+    public static void PreparePreviewSubtitle(Subtitle subtitle, bool smpteMode)
+    {
+        for (var i = subtitle.Paragraphs.Count - 1; i >= 0; i--)
+        {
+            var p = subtitle.Paragraphs[i];
+            if (p.StartTime.TotalMilliseconds < 0)
+            {
+                p.StartTime.TotalMilliseconds = 0;
+            }
+
+            if (p.Duration.TotalMilliseconds <= 0 || p.EndTime.TotalMilliseconds <= 0)
+            {
+                subtitle.Paragraphs.RemoveAt(i);
+                continue;
+            }
+
+            if (smpteMode)
+            {
+                p.StartTime.TotalMilliseconds *= 1.001;
+                p.EndTime.TotalMilliseconds *= 1.001;
+            }
+        }
+    }
+
+    /// <summary>
     /// Adds the secondary subtitle's paragraphs and style to a preview subtitle about
     /// to be pushed to the video player.
     /// The secondary style is sized against its own header's PlayRes (the real video
@@ -17,7 +45,7 @@ public static class SecondarySubtitleMerger
     /// for ASSA mains with a small PlayResY (issue #13425), so resample it to the
     /// target's scale first.
     /// </summary>
-    public static void AddSecondarySubtitle(Subtitle subtitle, Subtitle? subtitleSecondary)
+    public static void AddSecondarySubtitle(Subtitle subtitle, Subtitle? subtitleSecondary, bool smpteMode = false)
     {
         if (subtitleSecondary == null)
         {
@@ -49,7 +77,29 @@ public static class SecondarySubtitleMerger
         subtitle.Header = AdvancedSubStationAlpha.AddSsaStyle(style, subtitle.Header);
         foreach (var p in subtitleSecondary.Paragraphs)
         {
-            subtitle.Paragraphs.Add(p);
+            var startMs = p.StartTime.TotalMilliseconds;
+            if (startMs < 0)
+            {
+                startMs = 0;
+            }
+
+            var endMs = p.EndTime.TotalMilliseconds;
+            if (endMs <= startMs)
+            {
+                continue;
+            }
+
+            if (smpteMode)
+            {
+                startMs *= 1.001;
+                endMs *= 1.001;
+            }
+
+            subtitle.Paragraphs.Add(new Paragraph(p)
+            {
+                StartTime = { TotalMilliseconds = startMs },
+                EndTime = { TotalMilliseconds = endMs }
+            });
         }
     }
 
