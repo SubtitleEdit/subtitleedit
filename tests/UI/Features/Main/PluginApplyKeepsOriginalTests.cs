@@ -193,6 +193,10 @@ public class PluginApplyKeepsOriginalTests
 
     private static void CloseWindow(Window window, MainViewModel vm)
     {
+        // The apply and the import both post a select-and-scroll job; drain it while the window
+        // is still open, or it runs inside whichever test pumps the shared dispatcher next.
+        Dispatcher.UIThread.RunJobs();
+
         foreach (var ownedWindow in window.OwnedWindows.ToArray())
         {
             ownedWindow.Close();
