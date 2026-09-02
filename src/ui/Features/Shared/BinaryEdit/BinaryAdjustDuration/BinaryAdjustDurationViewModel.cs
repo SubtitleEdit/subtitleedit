@@ -191,8 +191,10 @@ public partial class BinaryAdjustDurationViewModel : ObservableObject
                 continue;
             }
 
-            var optimalDuration = TimeSpan.FromSeconds(charCount / AdjustRecalculateOptimalCharacterPerSecond);
-            var maxDuration = TimeSpan.FromSeconds(charCount / AdjustRecalculateMaxCharacterPerSecond);
+            // Whole milliseconds, rounded up: a fractional duration truncates to one ms short on
+            // save, which puts the line just over the CPS it was computed for (#14418).
+            var optimalDuration = CpsHelper.GetDurationForCps(charCount, AdjustRecalculateOptimalCharacterPerSecond);
+            var maxDuration = CpsHelper.GetDurationForCps(charCount, AdjustRecalculateMaxCharacterPerSecond);
 
             var nextSubtitle = index + 1 < allSubtitles.Count ? allSubtitles[index + 1] : null;
             var maxEndTime = nextSubtitle?.StartTime ?? TimeSpan.MaxValue;

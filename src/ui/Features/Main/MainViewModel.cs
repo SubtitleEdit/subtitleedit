@@ -6007,8 +6007,10 @@ public partial class MainViewModel :
             // Count like the grid's CPS column does (tags and line breaks stripped)
             var charCount = (double)(selectedLine.Text ?? string.Empty).CountCharacters(true);
 
-            var optimalDuration = TimeSpanExtensions.FromSecondsWholeMilliseconds(charCount / Se.Settings.General.SubtitleOptimalCharactersPerSeconds);
-            var maxDuration = TimeSpanExtensions.FromSecondsWholeMilliseconds(charCount / Se.Settings.General.SubtitleMaximumCharactersPerSeconds);
+            // Rounded up to the millisecond: rounding to nearest could land one ms short and put
+            // the line just over the CPS it was computed for (#14418).
+            var optimalDuration = CpsHelper.GetDurationForCps(charCount, Se.Settings.General.SubtitleOptimalCharactersPerSeconds);
+            var maxDuration = CpsHelper.GetDurationForCps(charCount, Se.Settings.General.SubtitleMaximumCharactersPerSeconds);
             var maxEndTime = TimeSpan.FromMilliseconds(selectedLine.StartTime.TotalMilliseconds + Se.Settings.General.SubtitleMaximumDisplayMilliseconds);
             if (nextSubtitle != null)
             {
@@ -6087,7 +6089,7 @@ public partial class MainViewModel :
                 continue;
             }
 
-            var newEndTime = selectedLine.StartTime + TimeSpanExtensions.FromSecondsWholeMilliseconds(charCount / maxCps);
+            var newEndTime = selectedLine.StartTime + CpsHelper.GetDurationForCps(charCount, maxCps);
             if (newEndTime < minEndTime)
             {
                 newEndTime = minEndTime;
@@ -28634,7 +28636,7 @@ public partial class MainViewModel :
         EditTextTotalLengthOriginal = string.Format(Se.Language.Main.TotalCharacters, totalLength);
 
         EditTextCharactersPerSecondBackgroundOriginal = Se.Settings.General.ColorCharactersPerSecond &&
-                                                        cps > Se.Settings.General.SubtitleMaximumCharactersPerSeconds
+                                                        CpsHelper.IsAboveMax(cps, Se.Settings.General.SubtitleMaximumCharactersPerSeconds)
             ? _errorBrush
             : _transparentBrush;
 

@@ -165,8 +165,10 @@ public partial class AdjustDurationViewModel : ObservableObject
             // recalculated durations actually land at the requested chars-per-second.
             var charCount = (double)(subtitle.Text ?? string.Empty).CountCharacters(true);
 
-            var optimalDuration = TimeSpan.FromSeconds(charCount / AdjustRecalculateOptimalCharacterPerSecond);
-            var maxDuration = TimeSpan.FromSeconds(charCount / AdjustRecalculateMaxCharacterPerSecond);
+            // Whole milliseconds, rounded up: a fractional duration truncates to one ms short on
+            // save, which puts the line just over the CPS it was computed for (#14418).
+            var optimalDuration = CpsHelper.GetDurationForCps(charCount, AdjustRecalculateOptimalCharacterPerSecond);
+            var maxDuration = CpsHelper.GetDurationForCps(charCount, AdjustRecalculateMaxCharacterPerSecond);
 
             var nextSubtitle = subtitles.GetOrNull(i + 1);
             var maxEndTime = nextSubtitle?.StartTime ?? TimeSpan.MaxValue;
