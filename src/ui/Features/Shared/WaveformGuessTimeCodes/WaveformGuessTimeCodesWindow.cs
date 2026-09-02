@@ -9,10 +9,11 @@ using System;
 namespace Nikse.SubtitleEdit.Features.Shared.WaveformGuessTimeCodes;
 
 /// <summary>
-/// Three stacked option boxes make this window tall enough that a high UI scale (or a small
-/// working area) pushes it past the screen - it is then clamped to the working area, and with
-/// a plain stacked layout the clamp cut off the bottom options and the OK/Cancel buttons. The
-/// options now scroll with the buttons pinned below them.
+/// The three option boxes used to be stacked in one column, which made the window tall enough
+/// that a high UI scale (or a small working area) pushed it past the screen - it is then clamped
+/// to the working area, and the clamp cut off the bottom options and the OK/Cancel buttons. The
+/// boxes are laid out in two columns so the window fits at a high scale, and the options scroll
+/// with the buttons pinned below them for the cases where it still does not.
 /// </summary>
 public class WaveformGuessTimeCodesWindow : Window
 {
@@ -31,24 +32,45 @@ public class WaveformGuessTimeCodesWindow : Window
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var panelOptions = new StackPanel
+        // Two columns: the two short "which lines" boxes stacked on the left, the taller settings
+        // box on the right - about half the height of one stacked column, which is what keeps the
+        // window on screen at a high UI scale.
+        var panelLeft = new StackPanel
         {
             Orientation = Orientation.Vertical,
             Spacing = 10,
+            VerticalAlignment = VerticalAlignment.Top,
             Children =
             {
                 MakeStartFromView(vm, out var radioStartFromVideoPosition),
                 MakeDeleteLinesView(vm),
-                MakeDetectOptionsView(vm),
             },
         };
+
+        var panelOptions = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+            },
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+            },
+            ColumnSpacing = 10,
+        };
+        panelOptions.Add(panelLeft, 0);
+        var borderDetectOptions = MakeDetectOptionsView(vm);
+        borderDetectOptions.VerticalAlignment = VerticalAlignment.Top;
+        panelOptions.Add(borderDetectOptions, 0, 1);
 
         // Keeps the OK/Cancel buttons reachable when the window is clamped to the working area.
         var scrollViewer = new ScrollViewer
         {
             Name = OptionsScrollViewerName,
             Content = panelOptions,
-            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Auto,
             VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
         };
 

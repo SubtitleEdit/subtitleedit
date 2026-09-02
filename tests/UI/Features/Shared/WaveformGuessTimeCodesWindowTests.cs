@@ -6,14 +6,17 @@ using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Features.Shared.WaveformGuessTimeCodes;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace UITests.Features.Shared;
 
 /// <summary>
-/// The guess-time-codes window builds its layout in code and sizes itself to its content. Three
-/// stacked option boxes make it tall, so a high UI scale (or a small working area) pushes it past
-/// the screen and <see cref="UiUtil"/> clamps it to the working area - which used to cut off the
-/// bottom options and the OK/Cancel buttons on a window that cannot be resized.
+/// The guess-time-codes window builds its layout in code and sizes itself to its content. Its
+/// three option boxes used to be stacked in one column, which made it tall enough that a high UI
+/// scale (or a small working area) pushed it past the screen - <see cref="UiUtil"/> then clamps it
+/// to the working area, which cut off the bottom options and the OK/Cancel buttons on a window
+/// that cannot be resized. Two columns keep it on screen, the scroll viewer keeps the buttons
+/// reachable when even that is not enough.
 /// </summary>
 public class WaveformGuessTimeCodesWindowTests : IDisposable
 {
@@ -60,7 +63,7 @@ public class WaveformGuessTimeCodesWindowTests : IDisposable
 
         // What UiUtil.ClampToWorkingArea does when the content is taller than the screen.
         window.SizeToContent = SizeToContent.Manual;
-        window.Height = 400;
+        window.Height = window.Bounds.Height / 2;
         Dispatcher.UIThread.RunJobs();
 
         var buttonOk = Assert.Single(
@@ -110,5 +113,48 @@ public class WaveformGuessTimeCodesWindowTests : IDisposable
             .Select(b => b.TranslatePoint(new Point(0, b.Bounds.Height), window)?.Y ?? 0)
             .Max();
         Assert.True(buttonBottom <= window.Bounds.Height, $"buttons at {buttonBottom} exceed window height {window.Bounds.Height}");
+    }
+
+    /// <summary>
+    /// The point of the two-column layout: the window has to fit a small working area even at a
+    /// high UI scale. 1280x720 is what a 1920x1080 screen leaves at 150% OS scaling.
+    /// </summary>
+    [AvaloniaFact]
+    public void Window_FitsASmallWorkingArea_AtAHighUiScale()
+    {
+        UiTheme.SetLayoutScale(1.5);
+
+        var window = BuildWindow();
+        UiTheme.ApplyScaleToWindow(window);
+        window.Show();
+        window.UpdateLayout();
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.True(window.Bounds.Width <= 1280, $"window width {window.Bounds.Width} does not fit 1280");
+        Assert.True(window.Bounds.Height <= 720, $"window height {window.Bounds.Height} does not fit 720");
+    }
+
+    /// <summary>
+    /// The settings box sits beside the two "which lines" boxes, not below them.
+    /// </summary>
+    [AvaloniaFact]
+    public void OptionBoxes_AreLaidOutInTwoColumns()
+    {
+        var window = BuildWindow();
+        window.Show();
+        window.UpdateLayout();
+        Dispatcher.UIThread.RunJobs();
+
+        var settings = Assert.Single(
+            window.GetLogicalDescendants().OfType<Label>(),
+            c => Equals(c.Content, Se.Language.General.Settings));
+        var startFrom = Assert.Single(
+            window.GetLogicalDescendants().OfType<Label>(),
+            c => Equals(c.Content, Se.Language.General.StartFrom));
+
+        var settingsLeft = settings.TranslatePoint(new Point(0, 0), window)!.Value.X;
+        var startFromRight = startFrom.TranslatePoint(new Point(startFrom.Bounds.Width, 0), window)!.Value.X;
+        Assert.True(settingsLeft > startFromRight,
+            $"the settings box at x={settingsLeft} is not to the right of the start-from box ending at x={startFromRight}");
     }
 }
