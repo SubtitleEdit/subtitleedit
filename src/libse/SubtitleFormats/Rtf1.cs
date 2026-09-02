@@ -97,17 +97,22 @@ TimeCode Format: " + Configuration.Settings.General.CurrentFrameRate + @" frames
                 {
                     p.Text = (p.Text + Environment.NewLine + s.TrimStart()).Trim();
                 }
-                else if (s.Length > 0)
+                else if (s.Length > 0 && subtitle.Paragraphs.Count > 0)
                 {
                     _errorCount++;
                 }
+                // else: the header block before the first time code ("[Header]", "Frame
+                // Rate: ..." - every file starts with it) - counting it as errors made
+                // IsMine (paragraphs > errors) reject files with only a few subtitles.
             }
             if (p != null)
             {
                 subtitle.Paragraphs.Add(p);
             }
 
-            if (subtitle.Paragraphs.Count > 0)
+            // Only fill in a MISSING end time (as Rtf2 does) - unconditionally recomputing
+            // overwrote the real end time the last time-code line supplied.
+            if (subtitle.Paragraphs.Count > 0 && subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].DurationTotalMilliseconds < 0.01)
             {
                 p = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1];
                 p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(p.Text);

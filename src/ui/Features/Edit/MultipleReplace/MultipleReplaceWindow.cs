@@ -95,7 +95,7 @@ public class MultipleReplaceWindow : Window
 
         Content = grid;
 
-        Activated += delegate { rulesTreeView.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, rulesTreeView); // initial focus on an input, not an action button - a focused button clicks on bare Space
         Closing += (_, _) => vm.OnClosing();
         Loaded += (_, _) => vm.OnLoaded();
         KeyDown += vm.OnKeyDown;

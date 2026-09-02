@@ -64,7 +64,7 @@ public class AssaTagHistoryWindow : Window
         Content = grid;
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
-        Activated += delegate { listBox.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, listBox);
         KeyDown += vm.KeyDown;
     }
 }

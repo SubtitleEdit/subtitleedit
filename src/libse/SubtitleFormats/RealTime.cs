@@ -208,7 +208,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
 
                 total += value * factor;
-                factor *= i >= parts.Length - 3 ? 60 : 24; // s -> min -> hours -> days
+                factor *= i >= parts.Length - 2 ? 60 : 24; // s -> min -> hours -> days
             }
 
             milliseconds = total;

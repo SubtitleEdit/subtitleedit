@@ -28,9 +28,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return false;
             }
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            if (!sb.ToString().Contains(">Netflix Subtitle"))
+            if (!JoinLines(lines).Contains(">Netflix Subtitle"))
             {
                 return false;
             }

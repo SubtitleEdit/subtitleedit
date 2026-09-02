@@ -32,6 +32,7 @@ public class EbuSaveOptionsPersistenceTests
         "File.EbuSaveOptions.NewLineRows",
         "File.EbuSaveOptions.TeletextUseBox",
         "File.EbuSaveOptions.TeletextUseDoubleHeight",
+        "File.EbuSaveOptions.PreviewFontName",
     };
 
     /// <summary>
@@ -41,6 +42,7 @@ public class EbuSaveOptionsPersistenceTests
     /// </summary>
     private sealed class LibSeEbuScope : IDisposable
     {
+        private readonly int _justification = Configuration.Settings.SubtitleSettings.EbuStlJustificationCode;
         private readonly int _marginTop = Configuration.Settings.SubtitleSettings.EbuStlMarginTop;
         private readonly int _marginBottom = Configuration.Settings.SubtitleSettings.EbuStlMarginBottom;
         private readonly int _newLineRows = Configuration.Settings.SubtitleSettings.EbuStlNewLineRows;
@@ -49,6 +51,7 @@ public class EbuSaveOptionsPersistenceTests
 
         public void Dispose()
         {
+            Configuration.Settings.SubtitleSettings.EbuStlJustificationCode = _justification;
             Configuration.Settings.SubtitleSettings.EbuStlMarginTop = _marginTop;
             Configuration.Settings.SubtitleSettings.EbuStlMarginBottom = _marginBottom;
             Configuration.Settings.SubtitleSettings.EbuStlNewLineRows = _newLineRows;
@@ -66,7 +69,7 @@ public class EbuSaveOptionsPersistenceTests
 
     private static ExportEbuStlViewModel OpenDialog(Subtitle subtitle)
     {
-        var viewModel = new ExportEbuStlViewModel(new FileHelper());
+        var viewModel = new ExportEbuStlViewModel(new FileHelper(), new StubWindowService());
         viewModel.Initialize(subtitle);
         Dispatcher.UIThread.RunJobs();
         return viewModel;
@@ -190,5 +193,143 @@ public class EbuSaveOptionsPersistenceTests
                 File.Delete(fileName);
             }
         }
+    }
+
+    // The box and the double height are teletext control codes - Ebu.Save writes neither when the
+    // display standard is open subtitling, and the video preview shows neither. The two check
+    // boxes have to say so instead of promising a box nothing ever draws (user report on PR #14228).
+    [AvaloniaFact]
+    public void TeletextOptions_AreOnlyEnabledForTeletext()
+    {
+        using var scope = new SettingsScope(ScopePaths);
+        using var libSeScope = new LibSeEbuScope();
+
+        var viewModel = OpenDialog(MakeSubtitle());
+
+        Assert.Equal(viewModel.DisplayStandardCodes[0], viewModel.SelectedDisplayStandardCode); // 0 = open subtitling
+        Assert.False(viewModel.IsTeletext);
+
+        viewModel.SelectedDisplayStandardCode = viewModel.DisplayStandardCodes[1]; // 1 = level-1 teletext
+        Assert.True(viewModel.IsTeletext);
+
+        viewModel.SelectedDisplayStandardCode = viewModel.DisplayStandardCodes[2]; // 2 = level-2 teletext
+        Assert.True(viewModel.IsTeletext);
+
+        viewModel.SelectedDisplayStandardCode = viewModel.DisplayStandardCodes[3]; // undefined
+        Assert.False(viewModel.IsTeletext);
+    }
+
+    // The video preview reads the justification off the libse settings, next to the margins and the
+    // teletext flags. It used to read Ebu.EbuUiHelper, which is the carrier that takes the code to
+    // the writer and does not exist until a save or this dialog creates one - so the preview showed
+    // everything centered until then, and followed batch convert's job code after (PR #14229).
+    [AvaloniaFact]
+    public void Justification_ReachesTheLibSeSettingsForThePreview()
+    {
+        using var scope = new SettingsScope(ScopePaths);
+        using var libSeScope = new LibSeEbuScope();
+
+        var viewModel = OpenDialog(MakeSubtitle());
+        viewModel.SelectedJustification = viewModel.Justifications[1]; // left-justified
+        viewModel.OkCommand.Execute(null);
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal(1, Configuration.Settings.SubtitleSettings.EbuStlJustificationCode);
+    }
+
+    // A save that never opens the dialog still has to preview and write the persisted pick, so the
+    // settings sync has to carry it over like every other EBU STL option.
+    [AvaloniaFact]
+    public void Justification_IsMirroredIntoLibSeBySettingsSync()
+    {
+        using var scope = new SettingsScope(ScopePaths);
+        using var libSeScope = new LibSeEbuScope();
+        Se.Settings.File.EbuSaveOptions.JustificationCode = 3;
+        Configuration.Settings.SubtitleSettings.EbuStlJustificationCode = 0;
+
+        Se.UpdateLibSeSettings();
+
+        Assert.Equal(3, Configuration.Settings.SubtitleSettings.EbuStlJustificationCode);
+    }
+
+    // Preview only - nothing about it is written to the STL file, so it lives in the persisted
+    // settings alone and the first list entry means "leave the video preview font alone".
+    [AvaloniaFact]
+    public void PreviewFont_DefaultsToTheVideoPreviewFont()
+    {
+        using var scope = new SettingsScope(ScopePaths);
+        using var libSeScope = new LibSeEbuScope();
+        Se.Settings.File.EbuSaveOptions.PreviewFontName = string.Empty;
+
+        var viewModel = OpenDialog(MakeSubtitle());
+
+        Assert.Equal(viewModel.PreviewFonts[0], viewModel.SelectedPreviewFont);
+
+        viewModel.OkCommand.Execute(null);
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal(string.Empty, Se.Settings.File.EbuSaveOptions.PreviewFontName);
+    }
+
+    [AvaloniaFact]
+    public void PreviewFont_SurvivesReopeningTheDialog()
+    {
+        using var scope = new SettingsScope(ScopePaths);
+        using var libSeScope = new LibSeEbuScope();
+        var subtitle = MakeSubtitle();
+
+        var viewModel = OpenDialog(subtitle);
+        var font = viewModel.PreviewFonts.Last();
+        viewModel.SelectedPreviewFont = font;
+        viewModel.OkCommand.Execute(null);
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal(font, Se.Settings.File.EbuSaveOptions.PreviewFontName);
+
+        var reopened = OpenDialog(subtitle);
+
+        Assert.Equal(font, reopened.SelectedPreviewFont);
+    }
+
+    // A font that is no longer installed must not leave the combo box blank.
+    [AvaloniaFact]
+    public void PreviewFont_FallsBackWhenTheFontIsGone()
+    {
+        using var scope = new SettingsScope(ScopePaths);
+        using var libSeScope = new LibSeEbuScope();
+        Se.Settings.File.EbuSaveOptions.PreviewFontName = "A font nobody has installed";
+
+        var viewModel = OpenDialog(MakeSubtitle());
+
+        Assert.Equal(viewModel.PreviewFonts[0], viewModel.SelectedPreviewFont);
+    }
+
+    // The sample label next to the drop-down: the first entry is not a font family, so it has to
+    // show the font the preview will really use rather than a family named "(use the ...)".
+    [AvaloniaFact]
+    public void PreviewFontSample_UsesTheVideoPreviewFontForTheDefaultEntry()
+    {
+        using var scope = new SettingsScope(ScopePaths);
+        using var libSeScope = new LibSeEbuScope();
+        Se.Settings.File.EbuSaveOptions.PreviewFontName = string.Empty;
+
+        var viewModel = OpenDialog(MakeSubtitle());
+
+        Assert.Equal(
+            FontFamilyHelper.Make(Se.Settings.Video.MpvPreviewFontName),
+            viewModel.PreviewFontFamily);
+    }
+
+    [AvaloniaFact]
+    public void PreviewFontSample_FollowsThePickedFont()
+    {
+        using var scope = new SettingsScope(ScopePaths);
+        using var libSeScope = new LibSeEbuScope();
+
+        var viewModel = OpenDialog(MakeSubtitle());
+        var font = viewModel.PreviewFonts.Last();
+        viewModel.SelectedPreviewFont = font;
+
+        Assert.Equal(FontFamilyHelper.Make(font), viewModel.PreviewFontFamily);
     }
 }

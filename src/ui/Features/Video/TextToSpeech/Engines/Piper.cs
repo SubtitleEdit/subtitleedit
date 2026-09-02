@@ -242,11 +242,26 @@ public class Piper : ITtsEngine
         }
 
         var fileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetPiperFolder), Guid.NewGuid() + ".wav");
-        var process = StartPiperProcess(piperVoice, text, fileName);
+        // Speak runs once per subtitle line, so without the using a long dub leaked one Process
+        // (plus its redirected stderr pipe) per line. And WaitForExitAsync returning on cancel
+        // leaves piper running with a half-written .wav behind - OmniVoiceTtsCpp.Speak documents
+        // and handles exactly this.
+        using var process = StartPiperProcess(piperVoice, text, fileName);
         Se.WriteToolsLog($"Piper: {process.StartInfo.FileName} {process.StartInfo.Arguments} (voice={piperVoice}, textLen={text.Length})");
-        var stderrTask = process.StandardError.ReadToEndAsync(cancellationToken);
-        await process.WaitForExitAsync(cancellationToken);
-        var stderrOutput = await stderrTask;
+
+        string stderrOutput;
+        try
+        {
+            var stderrTask = process.StandardError.ReadToEndAsync(cancellationToken);
+            await process.WaitForExitAsync(cancellationToken);
+            stderrOutput = await stderrTask;
+        }
+        catch (OperationCanceledException)
+        {
+            TryKill(process);
+            TryDelete(fileName);
+            throw;
+        }
 
         if (process.ExitCode != 0)
         {
@@ -274,6 +289,39 @@ public class Piper : ITtsEngine
         }
 
         return new TtsResult(fileName, text);
+    }
+
+
+    private static void TryKill(Process process)
+    {
+        try
+        {
+            if (!process.HasExited)
+            {
+#pragma warning disable CA1416
+                process.Kill(entireProcessTree: true);
+#pragma warning restore CA1416
+            }
+        }
+        catch
+        {
+            // best-effort - it may have exited in between
+        }
+    }
+
+    private static void TryDelete(string path)
+    {
+        try
+        {
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+        }
+        catch
+        {
+            // best-effort
+        }
     }
 
     private Process StartPiperProcess(PiperVoice voice, string inputText, string outputFileName)

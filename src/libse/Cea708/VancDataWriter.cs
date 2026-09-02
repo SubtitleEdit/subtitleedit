@@ -76,12 +76,49 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 }
                 bytes.AddRange(c1.GetBytes());
 
-                var c2 = new SetText(line);
-                if (c2.GetBytes().Length + bytes.Count > 32)
+                // Split the line across packets instead of appending it whole: a cc_data
+                // section holds at most 16 byte-pairs, so a single SetText longer than the
+                // remaining room made CcDataSection throw "Too many bytes for CCData!" and the
+                // whole save failed on any line of ~34 characters or more.
+                var remaining = line;
+                while (remaining.Length > 0)
                 {
-                    counter = FlushCommands(counter, bytes, results);
+                    var room = 32 - bytes.Count;
+                    if (room <= 0)
+                    {
+                        counter = FlushCommands(counter, bytes, results);
+                        room = 32 - bytes.Count;
+                    }
+
+                    // Count whole characters: a G2 character encodes as EXT1 + code, and
+                    // splitting that pair apart would emit a stray escape.
+                    var take = 0;
+                    var used = 0;
+                    while (take < remaining.Length)
+                    {
+                        var charLength = new SetText(remaining[take].ToString()).GetBytes().Length;
+                        if (used + charLength > room)
+                        {
+                            break;
+                        }
+
+                        used += charLength;
+                        take++;
+                    }
+
+                    if (take == 0)
+                    {
+                        counter = FlushCommands(counter, bytes, results);
+                        continue;
+                    }
+
+                    bytes.AddRange(new SetText(remaining.Substring(0, take)).GetBytes());
+                    remaining = remaining.Substring(take);
+                    if (remaining.Length > 0)
+                    {
+                        counter = FlushCommands(counter, bytes, results);
+                    }
                 }
-                bytes.AddRange(c2.GetBytes());
             }
 
             FlushCommands(counter, bytes, results);

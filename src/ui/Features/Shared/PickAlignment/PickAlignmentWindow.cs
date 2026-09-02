@@ -69,7 +69,7 @@ public class PickAlignmentWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonAn2.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, buttonAn2); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

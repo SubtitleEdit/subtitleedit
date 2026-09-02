@@ -162,7 +162,7 @@ public class TextToSpeechWindow : Window
 
         Content = grid;
 
-        Activated += delegate { _comboBoxEngines?.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, () => { _comboBoxEngines?.Focus(); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
     }
 
     // Install-status dot for the engine combo: green = ready, amber = a newer build is available,
@@ -184,10 +184,18 @@ public class TextToSpeechWindow : Window
                 return StatusDots.From(engine.IsInstalled(null).Result, VibeVoiceCrispAsr.GetEngineUpdateStatus());
             case IndexTtsCrispAsr:
                 return StatusDots.From(engine.IsInstalled(null).Result, IndexTtsCrispAsr.GetEngineUpdateStatus());
+            case PocketTtsCrispAsr:
+                return StatusDots.From(engine.IsInstalled(null).Result, PocketTtsCrispAsr.GetEngineUpdateStatus());
             case DotsTtsCrispAsr:
                 return StatusDots.From(engine.IsInstalled(null).Result, DotsTtsCrispAsr.GetEngineUpdateStatus());
+            case Confucius4TtsCrispAsr:
+                return StatusDots.From(engine.IsInstalled(null).Result, Confucius4TtsCrispAsr.GetEngineUpdateStatus());
             case IndexTts25AudioCpp:
                 return StatusDots.From(engine.IsInstalled(null).Result, IndexTts25AudioCpp.GetEngineUpdateStatus());
+            case HiggsTtsAudioCpp:
+                return StatusDots.From(engine.IsInstalled(null).Result, HiggsTtsAudioCpp.GetEngineUpdateStatus());
+            case FishTtsAudioCpp:
+                return StatusDots.From(engine.IsInstalled(null).Result, FishTtsAudioCpp.GetEngineUpdateStatus());
             case CosyVoice3CrispAsr:
                 return StatusDots.From(engine.IsInstalled(null).Result, CosyVoice3CrispAsr.GetEngineUpdateStatus());
             case F5TtsCrispAsr:

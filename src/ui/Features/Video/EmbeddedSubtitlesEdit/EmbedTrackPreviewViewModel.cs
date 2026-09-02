@@ -54,6 +54,17 @@ public partial class EmbedTrackPreviewViewModel : ObservableObject
         Dispatcher.UIThread.Post(() => { Window?.Close(); });
     }
 
+    /// <summary>
+    /// The MatroskaFile handed to <see cref="Initialize"/> holds an open FileStream on the video
+    /// and this view model owns it for its lifetime; without this every Preview click left a
+    /// handle on a possibly multi-GB file behind.
+    /// </summary>
+    internal void OnClosing()
+    {
+        _matroskaFile?.Dispose();
+        _matroskaFile = null;
+    }
+
     [RelayCommand]
     private void Ok()
     {

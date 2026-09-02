@@ -297,9 +297,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            var x = sb.ToString();
+            var x = JoinLines(lines);
             if (!x.Contains("<fcpxml version="))
             {
                 return;

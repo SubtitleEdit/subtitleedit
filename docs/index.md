@@ -14,6 +14,7 @@ Subtitle Edit is a free, open-source editor for video subtitles. This is the doc
 ### File Operations
 - [File Menu](features/file.md) — New, Open, Save, Import, Export
 - [Import Plain Text](features/import-plain-text.md) — Create subtitles from text, with forced-aligner timing
+- [Import Spreadsheets](features/import-csv-xlsx.md) — Import CSV, XLSX and ODS files, with custom column mapping
 - [Edit Image-based Subtitle](features/binary-edit.md) — Edit Blu-ray SUP/VobSub/DVB subtitles without OCR
 
 ### Editing
@@ -84,7 +85,7 @@ Subtitle Edit is a free, open-source editor for video subtitles. This is the doc
 - [Find Double Lines](features/find-double-lines.md) — Find consecutive duplicate subtitle lines
 
 ### OCR (Optical Character Recognition)
-- [OCR](features/ocr.md) — Convert image-based subtitles to text (nOCR, Binary OCR, Tesseract)
+- [OCR](features/ocr.md) — Convert image-based subtitles to text (nOCR, Binary OCR, Tesseract, PaddleOCR, CrispEmbed, LLM-based and cloud engines)
 
 ### ASSA (Advanced SubStation Alpha)
 - [ASSA Styles](features/assa-styles.md) — Manage ASS/SSA styles

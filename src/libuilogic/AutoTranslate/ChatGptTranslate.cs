@@ -49,11 +49,6 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
         public static string RemovePreamble(string original, string input)
         {
-            if (original.Contains(":") && input.IndexOf("<think>") < 0)
-            {
-                return input;
-            }
-
             var translation = input;
             var indexOfStartThink = translation.IndexOf("<think>");
             var indexOfEndThink = translation.IndexOf("</think>");
@@ -71,6 +66,15 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                     // retry-on-no-progress logic (DoAutoTranslate) instead of shipping it.
                     return string.Empty;
                 }
+            }
+
+            // The colon guard has to be applied to the text left AFTER the think block is removed.
+            // It used to be "&&"-ed with "there is no <think>", so a reasoning model's answer
+            // skipped it entirely and PreambleRegex ate the real translation up to its first colon
+            // ("Anmerkung: Das ist wichtig." -> "this is important.").
+            if (original.Contains(':'))
+            {
+                return translation;
             }
 
             var match = PreambleRegex.Match(translation);

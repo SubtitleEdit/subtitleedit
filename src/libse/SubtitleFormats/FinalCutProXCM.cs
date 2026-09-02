@@ -89,13 +89,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             FrameRate = Configuration.Settings.General.CurrentFrameRate;
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument { XmlResolver = null };
             xml.PreserveWhitespace = true;
             try
             {
-                xml.LoadXml(sb.ToString().Trim());
+                xml.LoadXml(JoinLinesTrimmed(lines));
 
                 foreach (XmlNode node in xml.SelectNodes("fcpxml/project/sequence/spine/clip/chapter-marker"))
                 {

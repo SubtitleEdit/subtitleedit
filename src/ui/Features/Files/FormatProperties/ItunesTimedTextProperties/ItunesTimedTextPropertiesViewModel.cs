@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Files.FormatProperties.ItunesTimedTextProperties;
 
@@ -391,13 +392,14 @@ public partial class ItunesTimedTextPropertiesViewModel : ObservableObject
         }
 
         // Save settings
-        Configuration.Settings.SubtitleSettings.TimedTextItunesLanguage = SelectedLanguage;
-        Configuration.Settings.SubtitleSettings.TimedTextItunesStyleAttribute = SelectedStyleAttribute;
-        Configuration.Settings.SubtitleSettings.TimedTextItunesTimeCodeFormat = SelectedTimeCodeFormat;
-        Configuration.Settings.SubtitleSettings.TimedTextItunesTopOrigin = TopOrigin;
-        Configuration.Settings.SubtitleSettings.TimedTextItunesTopExtent = TopExtent;
-        Configuration.Settings.SubtitleSettings.TimedTextItunesBottomOrigin = BottomOrigin;
-        Configuration.Settings.SubtitleSettings.TimedTextItunesBottomExtent = BottomExtent;
+        var formats = Se.Settings.Formats;
+        formats.TimedTextItunesLanguage = SelectedLanguage ?? string.Empty;
+        formats.TimedTextItunesStyleAttribute = SelectedStyleAttribute;
+        formats.TimedTextItunesTimeCodeFormat = SelectedTimeCodeFormat;
+        formats.TimedTextItunesTopOrigin = TopOrigin;
+        formats.TimedTextItunesTopExtent = TopExtent;
+        formats.TimedTextItunesBottomOrigin = BottomOrigin;
+        formats.TimedTextItunesBottomExtent = BottomExtent;
     }
 
     private static void SetOrRemoveAttribute(XElement element, XName name, string? value)
@@ -423,12 +425,19 @@ public partial class ItunesTimedTextPropertiesViewModel : ObservableObject
 
     private void SaveSettings()
     {
-        Configuration.Settings.SubtitleSettings.TimedTextItunesTopOrigin = TopOrigin;
-        Configuration.Settings.SubtitleSettings.TimedTextItunesTopExtent = TopExtent;
-        Configuration.Settings.SubtitleSettings.TimedTextItunesBottomOrigin = BottomOrigin;
-        Configuration.Settings.SubtitleSettings.TimedTextItunesBottomExtent = BottomExtent;
-        Configuration.Settings.SubtitleSettings.TimedTextItunesTimeCodeFormat = SelectedTimeCodeFormat;
-        Configuration.Settings.SubtitleSettings.TimedTextItunesStyleAttribute = SelectedStyleAttribute;
+        // These used to be written onto the libse Configuration singleton only, which SE5 never
+        // persists - the regions, time code format and style attribute were back at their defaults
+        // after every restart.
+        var formats = Se.Settings.Formats;
+        formats.TimedTextItunesTopOrigin = TopOrigin;
+        formats.TimedTextItunesTopExtent = TopExtent;
+        formats.TimedTextItunesBottomOrigin = BottomOrigin;
+        formats.TimedTextItunesBottomExtent = BottomExtent;
+        formats.TimedTextItunesTimeCodeFormat = SelectedTimeCodeFormat;
+        formats.TimedTextItunesStyleAttribute = SelectedStyleAttribute;
+        formats.TimedTextItunesLanguage = SelectedLanguage ?? string.Empty;
+
+        Se.SaveSettings();
     }
 
     [RelayCommand]

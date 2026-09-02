@@ -402,6 +402,9 @@ public class SettingsPage : UserControl
             new SettingsItem(Se.Language.Options.Settings.FavoriteSubtitleFormats, () => MakeFavoritesGrid(_vm)),
             new SettingsItem(Se.Language.Options.Settings.FavoriteLanguages, () => MakeLanguageFavoritesGrid(_vm)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WebVttUseXTimestampMap, nameof(_vm.WebVttUseXTimestampMap)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.AssaAutoSetResolution, nameof(_vm.AssaAutoSetResolution)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.AssaAutoSetResolutionPrompt, nameof(_vm.AssaAutoSetResolutionPrompt),
+                new Binding(nameof(_vm.AssaAutoSetResolution)) { Source = _vm }),
         ]));
 
         sections.Add(new SettingsSection(Se.Language.General.SyntaxColoring, IconNames.Palette, "#d966a0",
@@ -779,6 +782,7 @@ public class SettingsPage : UserControl
             new SettingsItem(Se.Language.Options.Settings.SubtitleGridTextDisplay, () => UiUtil.MakeComboBox(_vm.SubtitleGridTextDisplayModes, _vm, nameof(_vm.SelectedSubtitleGridTextDisplayMode))),
             new SettingsItem(Se.Language.Options.Settings.SubtitleGridShowFormatting, () => UiUtil.MakeComboBox(_vm.SubtitleGridFormattings, _vm, nameof(_vm.SubtitleGridFormatting))),
             MakeCheckboxSetting(Se.Language.Options.Settings.SubtitleGridLiveSpellCheck, nameof(_vm.SubtitleGridLiveSpellCheck)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.SubtitleGridCenterText, nameof(_vm.SubtitleGridCenterText)),
             MakeNumericSetting(Se.Language.Options.Settings.TextBoxFontSize, nameof(_vm.TextBoxFontSize)),
             MakeCheckboxSetting(Se.Language.Options.Settings.TextBoxFontBold, nameof(_vm.TextBoxFontBold)),
             MakeCheckboxSetting(Se.Language.Options.Settings.TextBoxColorTags, nameof(_vm.TextBoxColorTags)),
@@ -1045,6 +1049,9 @@ public class SettingsPage : UserControl
         var labelAlignment = UiUtil.MakeLabel(Se.Language.General.Alignment);
         var comboBoxAlignment = UiUtil.MakeComboBox(vm.MpvPreviewFontAlignments, vm, nameof(vm.MpvPreviewSelectedFontAlignment));
 
+        var labelJustify = UiUtil.MakeLabel(Se.Language.Options.Settings.TextJustify);
+        var comboBoxJustify = UiUtil.MakeComboBox(vm.MpvPreviewJustifyItems, vm, nameof(vm.MpvPreviewSelectedJustify));
+
         var checkBoxUsePositionFromFile = UiUtil.MakeCheckBox(Se.Language.Options.Settings.UsePositionFromSubtitleFile, vm, nameof(vm.MpvPreviewUsePositionFromFile));
 
         var labelMargin = UiUtil.MakeLabel(Se.Language.General.Margin);
@@ -1078,6 +1085,7 @@ public class SettingsPage : UserControl
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -1100,23 +1108,26 @@ public class SettingsPage : UserControl
         grid.Add(labelAlignment, 3);
         grid.Add(comboBoxAlignment, 3, 1);
 
-        grid.Add(checkBoxUsePositionFromFile, 4, 0, 1, 2);
+        grid.Add(labelJustify, 4);
+        grid.Add(comboBoxJustify, 4, 1);
 
-        grid.Add(labelMargin, 5);
-        grid.Add(numericUpDownMargin, 5, 1);
+        grid.Add(checkBoxUsePositionFromFile, 5, 0, 1, 2);
 
-        grid.Add(checkBoxMarginIsPartOfSubtitleArea, 6, 0, 1, 2);
+        grid.Add(labelMargin, 6);
+        grid.Add(numericUpDownMargin, 6, 1);
 
-        grid.Add(labelColorPrimary, 7);
-        grid.Add(colorPickerPrimary, 7, 1);
+        grid.Add(checkBoxMarginIsPartOfSubtitleArea, 7, 0, 1, 2);
 
-        grid.Add(labelColorOutline, 8);
-        grid.Add(colorPickerOutline, 8, 1);
+        grid.Add(labelColorPrimary, 8);
+        grid.Add(colorPickerPrimary, 8, 1);
 
-        grid.Add(labelColorShadow, 9);
-        grid.Add(colorPickerShadow, 9, 1);
+        grid.Add(labelColorOutline, 9);
+        grid.Add(colorPickerOutline, 9, 1);
 
-        grid.Add(MakeBorderView(vm), 10, 0, 1, 2);
+        grid.Add(labelColorShadow, 10);
+        grid.Add(colorPickerShadow, 10, 1);
+
+        grid.Add(MakeBorderView(vm), 11, 0, 1, 2);
 
         return UiUtil.MakeBorderForControl(grid);
     }

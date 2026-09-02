@@ -60,6 +60,16 @@ public partial class GetKeyViewModel : ObservableObject
             return;
         }
 
+        // Return is both a bindable key and the natural way to confirm the dialog: the first
+        // bare Return (nothing captured yet) is captured like any other key, a bare Return
+        // after a capture accepts it. Any modified Return is always a capture (#14401).
+        if (e.Key == Key.Return && e.KeyModifiers == KeyModifiers.None && !string.IsNullOrEmpty(PressedKey))
+        {
+            e.Handled = true;
+            Ok();
+            return;
+        }
+
         if (e.Key is Key.LWin or Key.RWin)
         {
             e.Handled = true;
@@ -128,14 +138,23 @@ public partial class GetKeyViewModel : ObservableObject
         infoText += keyName;
 
         InfoText = string.Format(Se.Language.Options.Shortcuts.PressedKeyX, infoText);
+
+        // The captured key must not also reach the focused OK button (Return/Space click it).
+        e.Handled = true;
     }
 
-    public void KeyUp(object? sender, KeyEventArgs e)
+    public void KeyUp(KeyEventArgs e)
     {
         if (e.Key is Key.LWin or Key.RWin)
         {
             e.Handled = true;
             _isWinDown = false;
+        }
+        else if (e.Key == Key.Space)
+        {
+            // Button clicks on Space *release* (ClickMode.Release) even when it never saw the
+            // press, so a captured Space chord would still click OK on the way up.
+            e.Handled = true;
         }
     }
 }

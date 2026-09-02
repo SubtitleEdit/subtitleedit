@@ -14,9 +14,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            string xmlAsString = sb.ToString().Trim();
+            string xmlAsString = JoinLinesTrimmed(lines);
             if (xmlAsString.Contains("<w:tc>"))
             {
                 return base.IsMine(lines, fileName);
@@ -211,9 +209,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
             var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument { XmlResolver = null };
-            xml.LoadXml(sb.ToString().Trim());
+            try
+            {
+                xml.LoadXml(JoinLinesTrimmed(lines));
+            }
+            catch (Exception exception)
+            {
+                // Damaged/truncated xml is "not mine", not an exception out of the reader.
+                System.Diagnostics.Debug.WriteLine(exception.Message);
+                _errorCount = 1;
+                return;
+            }
             var nsmgr = new XmlNamespaceManager(xml.NameTable);
             nsmgr.AddNamespace("w", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("//w:tr", nsmgr))
@@ -258,7 +265,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 subtitle.Paragraphs[i].EndTime.TotalMilliseconds = subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds;
             }
-            subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.TotalMilliseconds = 2500;
+            if (subtitle.Paragraphs.Count > 0)
+            {
+                // The last row has no following time code; give it a default duration
+                // (this used to assign an ABSOLUTE 2500 ms, putting the last line's end
+                // before its start - and crashed on documents with no rows at all).
+                var last = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1];
+                last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + 2500;
+            }
+
             subtitle.RemoveEmptyLines();
             for (int i = 0; i < subtitle.Paragraphs.Count - 1; i++)
             {

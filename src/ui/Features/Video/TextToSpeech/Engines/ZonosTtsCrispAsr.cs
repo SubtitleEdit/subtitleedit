@@ -205,30 +205,11 @@ public class ZonosTtsCrispAsr : ITtsEngine
             foreach (var src in Directory.GetFiles(sourceFolder, "*.wav"))
             {
                 var dest = Path.Combine(voicesFolder, Path.GetFileName(src));
-                if (File.Exists(dest))
-                {
-                    continue;
-                }
-
-                try
-                {
-                    var ffmpeg = FfmpegGenerator.ConvertToMono24kHzWav(src, dest);
-                    if (!ffmpeg.Start())
-                    {
-                        // ffmpeg unavailable — better to seed at 16 kHz than skip the voice.
-                        File.Copy(src, dest);
-                        continue;
-                    }
-                    ffmpeg.WaitForExit();
-                }
-                catch (Exception ex)
-                {
-                    Se.LogError(ex, $"Zonos TTS (CrispASR): resample seed '{src}' failed; falling back to plain copy");
-                    try { if (!File.Exists(dest))
-                    {
-                        File.Copy(src, dest);
-                    } } catch { }
-                }
+                // Go through the shared helper like the other ten CrispASR engines. The
+                // hand-rolled loop here checked no exit code (so a failed ffmpeg left a truncated
+                // WAV that the File.Exists skip above made permanent), waited without a timeout,
+                // and leaked one Process per voice.
+                VoiceSeedHelper.CopyOrResample(src, dest, 24000, "Zonos TTS (CrispASR)");
             }
         }
         catch (Exception ex)

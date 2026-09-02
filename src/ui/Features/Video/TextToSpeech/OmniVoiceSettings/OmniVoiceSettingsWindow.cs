@@ -33,7 +33,7 @@ public class OmniVoiceSettingsWindow : Window
         Content = BuildContent(vm);
 
         var ok = UiUtil.MakeButtonOk(vm.OkCommand);
-        Activated += delegate { ok.Focus(); }; // ensure OnKeyDown fires
+        UiUtil.FocusOnFirstActivation(this, ok); // ensure OnKeyDown fires
     }
 
     private Border BuildContent(OmniVoiceSettingsViewModel vm)

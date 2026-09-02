@@ -184,6 +184,14 @@ namespace Nikse.SubtitleEdit.Core.Common
         public double DiffFromAveragePixel()
         {
             var pixels = LengthPixels;
+            // With "auto break by pixel width" off no pixel lengths are measured, so this used
+            // to score every candidate 0 and the "best" selectors just kept the first one.
+            // Fall back to the character-based diff so the most balanced split still wins.
+            if (pixels.Count == 0)
+            {
+                return DiffFromAverage();
+            }
+
             var avg = (double)(SumPixels(pixels) - SpaceLengthPixels) / Lines.Count;
             double diff = 0;
             for (var i = 0; i < pixels.Count; i++)

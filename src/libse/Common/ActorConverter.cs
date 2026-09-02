@@ -120,7 +120,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
 
                 var actor = s.Substring(0, startIdx).Trim(' ', '-', '"');
-                selectFix = IsActor(actor);
+                // AND, not assignment: selectFix is declared outside the per-line loop, so a later line's valid speaker used to mask an earlier line whose "actor" was really a clock ("It's 12:30 now.") - pre-checking a fix that destroys text.
+                selectFix &= IsActor(actor);
                 if (changeCasing.HasValue)
                 {
                     actor = SetCasing(_subtitleFormat, changeCasing, actor);
@@ -240,7 +241,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 if (startIdx != -1 && endIdx > startIdx)
                 {
                     var actor = s.Substring(startIdx + 1, endIdx - startIdx - 1).Trim(' ', '-', '"');
-                    selectFix = IsActor(actor);
+                    // AND, not assignment: selectFix is declared outside the per-line loop, so a later line's valid speaker used to mask an earlier line whose "actor" was really a clock ("It's 12:30 now.") - pre-checking a fix that destroys text.
+                    selectFix &= IsActor(actor);
                     if (changeCasing.HasValue)
                     {
                         actor = SetCasing(_subtitleFormat, changeCasing, actor);

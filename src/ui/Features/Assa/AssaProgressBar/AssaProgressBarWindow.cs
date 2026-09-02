@@ -63,7 +63,7 @@ public class AssaProgressBarWindow : Window
         Content = mainGrid;
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
-        Activated += delegate { firstInput.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, firstInput);
         Loaded += (_, __) => vm.LoadVideoAndSubtitle();
         KeyDown += vm.KeyDown;
     }

@@ -108,7 +108,7 @@ public class BinaryAdjustAllTimesWindow : Window
 
         Content = grid;
 
-        Activated += delegate { timeCodeUpDown.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, timeCodeUpDown); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

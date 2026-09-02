@@ -93,6 +93,19 @@ public static class DownloadHelper
                     throw new FileNotFoundException($"The requested URL was not found: {url}");
                 }
 
+                // A Range request must be answered with 206. Proxies and CDNs that advertise
+                // range support but ignore the header answer 200 with the whole body, which was
+                // appended after the partial bytes - silently corrupting the file whenever the
+                // response was chunked and the length check below could not catch it.
+                if (request.Headers.Range != null &&
+                    response.StatusCode != System.Net.HttpStatusCode.PartialContent &&
+                    destination.CanSeek)
+                {
+                    destination.Seek(startPosition, SeekOrigin.Begin);
+                    destination.SetLength(startPosition);
+                    currentPosition = startPosition;
+                }
+
                 response.EnsureSuccessStatusCode();
 
                 // Get total size from headers
@@ -154,10 +167,13 @@ public static class DownloadHelper
             {
                 lastException = ex;
 
-                // If cancellation was requested by user, don't retry
+                // If cancellation was requested by user, don't retry - and surface it as a
+                // cancellation. Falling through to the "failed after N attempts" throw below
+                // meant every caller's catch (OperationCanceledException) was skipped and Cancel
+                // was reported to the user as a download error.
                 if (cancellationToken.IsCancellationRequested)
                 {
-                    break;
+                    throw new OperationCanceledException(cancellationToken);
                 }
 
                 // If this was the last retry, don't wait

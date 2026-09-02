@@ -1163,7 +1163,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                         else if (current == 'ẁ')
                         {
-                            AddTwo(buffer, ref index, 0x81, 0x75);
+                            // 0x77 = 'w'; 0x75 is 'u', which made this round-trip as "ù"
+                            AddTwo(buffer, ref index, 0x81, 0x77);
                         }
 
                         // capitals with accent aigu

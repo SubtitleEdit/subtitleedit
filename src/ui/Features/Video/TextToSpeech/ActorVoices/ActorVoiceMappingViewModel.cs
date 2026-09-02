@@ -512,7 +512,8 @@ public partial class ActorVoiceMappingViewModel : ObservableObject
             .Where(m => !string.IsNullOrEmpty(m.EngineName) && !string.IsNullOrEmpty(m.VoiceName))
             .ToList();
 
-        Se.Settings.Video.TextToSpeech.LastActorVoiceMappings = MergeWithPersistedMappings(Mappings);
+        Se.Settings.Video.TextToSpeech.LastActorVoiceMappings =
+            MergeWithPersistedMappings(Mappings, Rows.Select(r => r.Actor));
         Se.SaveSettings();
 
         OkPressed = true;
@@ -522,13 +523,26 @@ public partial class ActorVoiceMappingViewModel : ObservableObject
     // Keep mappings for actors not in this subtitle so a user who jumps between projects keeps
     // their full cast remembered. New/updated rows from this dialog overwrite anything saved
     // under the same actor name.
-    private static List<ActorVoiceMapping> MergeWithPersistedMappings(List<ActorVoiceMapping> current)
+    private static List<ActorVoiceMapping> MergeWithPersistedMappings(
+        List<ActorVoiceMapping> current,
+        IEnumerable<string> actorsInDialog)
     {
         var previous = Se.Settings.Video.TextToSpeech.LastActorVoiceMappings ?? new List<ActorVoiceMapping>();
         var byActor = previous
             .Where(m => !string.IsNullOrWhiteSpace(m.Actor))
             .GroupBy(m => m.Actor.Trim(), StringComparer.OrdinalIgnoreCase)
             .ToDictionary(g => g.Key, g => g.First(), StringComparer.OrdinalIgnoreCase);
+
+        // Drop every actor this dialog showed, then re-add the ones that ended up with a
+        // voice. Merging only by overwrite meant a row the user deliberately cleared (or
+        // "Clear all") kept its old saved entry and came back on the next session.
+        foreach (var actor in actorsInDialog)
+        {
+            if (!string.IsNullOrWhiteSpace(actor))
+            {
+                byActor.Remove(actor.Trim());
+            }
+        }
 
         foreach (var m in current)
         {

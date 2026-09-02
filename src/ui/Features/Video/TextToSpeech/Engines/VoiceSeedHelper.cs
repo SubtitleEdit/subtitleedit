@@ -29,7 +29,10 @@ public static class VoiceSeedHelper
     /// not produce a usable file. Does nothing when <paramref name="dest"/> already exists.
     /// Never throws: seeding is best-effort and must not take the voice list down with it.
     /// </summary>
-    /// <param name="sampleRateHz">24000 for most backends, 16000 for CosyVoice3's s3tok.</param>
+    /// <param name="sampleRateHz">
+    /// 24000 for most backends, 16000 for CosyVoice3's s3tok, 22050 for Confucius4's S2A mel,
+    /// 44100 for Fish S2 Pro's codec. Anything else resamples to 24000.
+    /// </param>
     /// <param name="enginePrefix">Engine name used in log lines, e.g. "OmniVoice (CrispASR)".</param>
     /// <param name="copyOnFailure">
     /// False for backends that reject a reference at any other sample rate (Qwen3 Base), where a
@@ -85,9 +88,13 @@ public static class VoiceSeedHelper
 
     private static bool TryConvert(string src, string dest, int sampleRateHz, string enginePrefix)
     {
-        using var ffmpeg = sampleRateHz == 16000
-            ? FfmpegGenerator.ConvertToMono16kHzWav(src, dest)
-            : FfmpegGenerator.ConvertToMono24kHzWav(src, dest);
+        using var ffmpeg = sampleRateHz switch
+        {
+            16000 => FfmpegGenerator.ConvertToMono16kHzWav(src, dest),
+            22050 => FfmpegGenerator.ConvertToMono22kHzWav(src, dest),
+            44100 => FfmpegGenerator.ConvertToMono44kHzWav(src, dest),
+            _ => FfmpegGenerator.ConvertToMono24kHzWav(src, dest),
+        };
         if (!ffmpeg.Start())
         {
             // ffmpeg unavailable - the caller's plain copy seeds the voice at its original rate.

@@ -78,9 +78,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            var allText = sb.ToString().Trim();
+            var allText = JoinLinesTrimmed(lines);
 
             var startRemove = 5;
             while (allText.Length > 0 && allText[0] != '<' && startRemove > 0)

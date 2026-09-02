@@ -629,6 +629,23 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
     internal void OnClosing()
     {
         UiUtil.SaveWindowPosition(Window);
+
+        // Stop the poll timer and any still-running encode - closing the window used to
+        // leave the ffmpeg process muxing to completion in the background.
+        _timerGenerate.StopAndDispose(TimerGenerateElapsed);
+        if (_ffmpegProcess != null && !_ffmpegProcess.HasExited)
+        {
+            try
+            {
+#pragma warning disable CA1416
+                _ffmpegProcess.Kill(true);
+#pragma warning restore CA1416
+            }
+            catch
+            {
+                // ignore - it may have exited in between
+            }
+        }
     }
 
     internal void OnLoaded()

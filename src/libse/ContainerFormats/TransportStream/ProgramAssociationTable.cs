@@ -35,7 +35,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             ProgramNumbers = new List<int>();
             ProgramIds = new List<int>();
             index = index + 8;
-            for (int i = 0; i < (SectionLength - 5) / 8; i++)
+            // Each PAT entry is 4 bytes (program_number 16 + reserved 3 + program_map_PID 13), and
+            // section_length covers the 5 header bytes read above, 4*N and a 4-byte CRC - so
+            // N = (SectionLength - 9) / 4. The loop used to step 8 bytes while reading only 4,
+            // which is right by accident for a single-program stream (the common capture) but
+            // dropped every second program otherwise: their PMTs were never parsed, so their
+            // subtitle tracks did not exist as far as SE was concerned.
+            for (int i = 0; i < (SectionLength - 9) / 4; i++)
             {
                 if (index + 3 < packetBuffer.Length)
                 {
@@ -43,7 +49,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                     int programId = (packetBuffer[index + 2] & 0b00011111) * 256 + packetBuffer[index + 3];
                     ProgramNumbers.Add(programNumber);
                     ProgramIds.Add(programId);
-                    index += 8;
+                    index += 4;
                 }
             }
         }

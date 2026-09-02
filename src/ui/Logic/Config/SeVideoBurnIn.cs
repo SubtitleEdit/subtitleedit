@@ -23,11 +23,8 @@ public class SeVideoBurnIn
     public bool TargetFileSize { get; set; }
     public int TargetFileSizeMb { get; set; }
     public bool TargetFileSizeMatchSource { get; set; }
-    public bool PromptFfmpegParameters { get; set; }
     public int NonAssaBoxType { get; set; }
     public bool NonAssaBox { get; set; }
-    public bool GenTransparentVideoNonAssaBox { get; set; }
-    public bool GenTransparentVideoNonAssaBoxPerLine { get; set; }
     public string GenTransparentVideoExtension { get; set; }
     public string NonAssaBoxColor { get; set; }
     public string NonAssaTextColor { get; set; }
@@ -41,7 +38,6 @@ public class SeVideoBurnIn
     public string EmbedOutputExt { get; set; }
     public string EmbedOutputSuffix { get; set; }
     public string EmbedOutputReplace { get; set; }
-    public bool DeleteInputVideoFile { get; set; }
     public bool UseOutputFolder { get; set; }
     public string OutputFolder { get; set; }
     public string BurnInSuffix { get; set; }

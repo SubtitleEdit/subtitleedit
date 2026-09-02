@@ -692,7 +692,6 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
 
     public List<string> ReloadNames()
     {
-        var names = _spellCheckWordLists.GetAllNames();
         try
         {
             _spellCheckWordLists = new SpellCheckWordLists(_fiveLetterName, this);
@@ -702,7 +701,11 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
             SpellCheckConfig.LogError("Error loading names for OCR fix engine: " + exception.Message);
             _spellCheckWordLists = new SpellCheckWordLists(string.Empty, this);
         }
-        
-        return names;
+
+        // Read the names *after* rebuilding for _fiveLetterName. Reading first returned the
+        // previous language's names (or none at all on the first run), and Initialize feeds
+        // this list into the word-split list - so run-together words containing a proper
+        // name were split against the wrong language's name set.
+        return _spellCheckWordLists.GetAllNames();
     }
 }

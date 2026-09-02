@@ -77,7 +77,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            return ToDescriptionText(ChapterHelper.FromSubtitle(subtitle));
+            var chapters = ChapterHelper.FromSubtitle(subtitle);
+
+            // YouTube only accepts a chapter list whose first entry is at 0:00 (LoadSubtitle
+            // below enforces the same rule) - so a subtitle that does not start at zero used to
+            // be exported as a list YouTube rejects, and that SE itself could not read back.
+            if (chapters.Count > 0 && chapters[0].StartMilliseconds > 0)
+            {
+                chapters.Insert(0, new Chapter(0, chapters[0].Title));
+            }
+
+            return ToDescriptionText(chapters);
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

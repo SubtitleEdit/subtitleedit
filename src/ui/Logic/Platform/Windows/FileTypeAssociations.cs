@@ -30,10 +30,14 @@ internal static class FileTypeAssociationsHelper
             // This key is read-only for apps, but we can read it to see who won the 'war'.
             using (var userChoice = Registry.CurrentUser.OpenSubKey($@"Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\{ext}\UserChoice"))
             {
+                // UserChoice is authoritative when present: it is what Explorer's "Always open
+                // with" writes. Only falling through on a MATCH meant that after the user
+                // reassigned the extension to another app, the legacy Software\Classes default -
+                // which SE wrote itself when it registered - still answered "yes, SE is default".
                 var progIdValue = userChoice?.GetValue("Progid") as string;
-                if (progIdValue == progId)
+                if (!string.IsNullOrEmpty(progIdValue))
                 {
-                    return true;
+                    return progIdValue == progId;
                 }
             }
 

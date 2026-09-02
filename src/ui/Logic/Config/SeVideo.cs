@@ -60,12 +60,33 @@ public class SeVideo
     public bool MpvPreviewMarginIsPartOfSubtitleArea { get; set; }
 
     /// <summary>
+    /// How the lines of a multi-line preview subtitle are justified inside the text block:
+    /// mpv's "sub-justify" - "auto", "left", "center" or "right" (#14167). This is not the same
+    /// as <see cref="MpvPreviewAlignment"/>, which moves the whole block: justify keeps the block
+    /// where the alignment put it and only decides where the shorter lines sit within it.
+    /// </summary>
+    public string MpvPreviewJustify { get; set; }
+
+    /// <summary>
     /// mpv's "audio-buffer" option in seconds, applied when a player core is created. mpv's
     /// own default is 0.2 s, and that buffer is why pause/resume/seek take effect ~200 ms
     /// late - the residual the waveform playhead code has to mask. Kept small here; raise it
     /// (or set 0 to use mpv's default) if audio stutters on slow hardware or Bluetooth audio.
     /// </summary>
     public double MpvAudioBufferSeconds { get; set; }
+
+    /// <summary>
+    /// mpv's "audio-stream-silence" option, applied when a player core is created. mpv normally
+    /// stops the audio device when playback pauses and resets it on every seek - on Windows that
+    /// is IAudioClient::Stop(). Over HDMI to an A/V receiver the link then goes idle (the receiver
+    /// reports no signal) and restarting it costs a re-handshake, heard as a second or two of
+    /// missing audio on resume (#14330). With this on, mpv keeps the device running and writes
+    /// silence instead, so the link never drops.
+    /// <para>Off by default, and deliberately not in the settings UI: mpv's own manual calls this
+    /// option "strongly discouraged" because it changes A/V-sync and underrun handling, and it
+    /// only helps the HDMI-receiver case. Set it by hand if that is your setup.</para>
+    /// </summary>
+    public bool MpvAudioStreamSilence { get; set; }
 
     public SeVideo()
     {
@@ -106,6 +127,8 @@ public class SeVideo
         MpvPreviewColorShadow = Color.FromRgb(0, 0, 0).FromColorToHex();
         MpvPreviewBorderType = (int)BorderStyleType.Outline;
         MpvPreviewUsePositionFromFile = true;
+        MpvPreviewJustify = "auto";
         MpvAudioBufferSeconds = 0.05;
+        MpvAudioStreamSilence = false;
     }
 }

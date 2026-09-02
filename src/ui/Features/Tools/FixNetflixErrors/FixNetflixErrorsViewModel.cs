@@ -197,7 +197,19 @@ public partial class FixNetflixErrorsViewModel : ObservableObject, IClosingClean
             var fixedParagraph = Fixes.FirstOrDefault(ri => ri.Index == index);
             if (fixedParagraph != null && fixedParagraph.Apply)
             {
-                p.Text = fixedParagraph.After;
+                // Apply the whole fixed paragraph, not just its text: writing only Text left
+                // every timing fix (minimum duration, gaps, shot changes) with no effect at all.
+                var fixedFrom = fixedParagraph.Record?.FixedParagraph;
+                if (fixedFrom != null)
+                {
+                    p.Text = fixedFrom.Text;
+                    p.StartTime.TotalMilliseconds = fixedFrom.StartTime.TotalMilliseconds;
+                    p.EndTime.TotalMilliseconds = fixedFrom.EndTime.TotalMilliseconds;
+                }
+                else
+                {
+                    p.Text = fixedParagraph.After;
+                }
             }
 
             FixedSubtitle.Paragraphs.Add(p);
@@ -314,13 +326,37 @@ public partial class FixNetflixErrorsViewModel : ObservableObject, IClosingClean
                 continue;
             }
 
-            var before = r.OriginalParagraph.Text;
-            var after = r.FixedParagraph?.Text;
-            if (!string.IsNullOrEmpty(after) && !string.Equals(before, after, StringComparison.Ordinal))
+            if (r.FixedParagraph == null)
             {
-                // If multiple fixes affect the same paragraph, keep last suggestion
-                fixMap[idx] = (before, after, r.OriginalParagraph, r);
+                continue;
             }
+
+            var before = r.OriginalParagraph.Text;
+            var after = r.FixedParagraph.Text;
+            var textChanged = !string.IsNullOrEmpty(after) && !string.Equals(before, after, StringComparison.Ordinal);
+
+            // Several checks (minimum duration, two-frames gap, maximum duration, bridge gaps,
+            // shot changes) produce a fix that only moves the times - comparing text alone meant
+            // those never became a fixable row at all, so the tool could report them but never
+            // correct them.
+            var timesChanged =
+                Math.Abs(r.OriginalParagraph.StartTime.TotalMilliseconds - r.FixedParagraph.StartTime.TotalMilliseconds) > 0.5 ||
+                Math.Abs(r.OriginalParagraph.EndTime.TotalMilliseconds - r.FixedParagraph.EndTime.TotalMilliseconds) > 0.5;
+
+            if (!textChanged && !timesChanged)
+            {
+                continue;
+            }
+
+            if (!textChanged)
+            {
+                // Nothing to show in a text diff - show the timing change instead.
+                before = r.OriginalParagraph.StartTime.ToDisplayString() + " --> " + r.OriginalParagraph.EndTime.ToDisplayString();
+                after = r.FixedParagraph.StartTime.ToDisplayString() + " --> " + r.FixedParagraph.EndTime.ToDisplayString();
+            }
+
+            // If multiple fixes affect the same paragraph, keep last suggestion
+            fixMap[idx] = (before, after, r.OriginalParagraph, r);
         }
 
         if (fixMap.Count == 0)

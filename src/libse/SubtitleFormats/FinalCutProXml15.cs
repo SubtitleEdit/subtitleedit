@@ -320,6 +320,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         styles.Add(newStyle);
                         i += 6;
                     }
+                    else
+                    {
+                        // Any other tag - <u> has no FCP style equivalent, and unknown markup
+                        // must not be mangled: skip the whole tag. Falling through here used
+                        // to consume only the '<', leaving "u>underline/u>" in the text.
+                        var tagEnd = subIText.IndexOf('>');
+                        if (tagEnd > 0 && tagEnd <= 20 && subIText.IndexOf('<', 1) is var nextOpen && (nextOpen < 0 || nextOpen > tagEnd))
+                        {
+                            i += tagEnd;
+                        }
+                        else
+                        {
+                            sb.Append(ch); // a stray '<' that is not a tag
+                        }
+                    }
                 }
                 AddTextAndStyle(styles, sb, styleTextPairs);
                 WriteCurrentTextSegment(styles, styleTextPairs, video, number++, sbTrimmedTitle.ToString(), xml);
@@ -431,9 +446,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             FrameRate = Configuration.Settings.General.CurrentFrameRate;
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            var x = sb.ToString();
+            var x = JoinLines(lines);
             if (!IsVersionMatch(x))
             {
                 return;

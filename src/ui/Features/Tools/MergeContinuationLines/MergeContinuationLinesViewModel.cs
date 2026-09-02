@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Tools.MergeContinuationLines;
 
@@ -112,7 +113,21 @@ public partial class MergeContinuationLinesViewModel : ObservableObject, IClosin
     [RelayCommand]
     private void Ok()
     {
-        AllSubtitlesFixed = MergeContinuationLinesHelper.Apply(_allSubtitles, Candidates, _language);
+        // Recompute the candidates from the current settings instead of applying the preview
+        // collection: the preview is filled by a 250 ms timer, so it is empty when OK comes
+        // right after opening and stale when it comes right after a settings change. The
+        // user's deselections in the shown list are carried over by first-line index.
+        var deselected = new HashSet<int>(Candidates.Where(c => !c.IsSelected).Select(c => c.Index));
+        var candidates = MergeContinuationLinesHelper.Detect(_allSubtitles, _language, MaxMillisecondsBetweenLines, MaxCharacters);
+        foreach (var candidate in candidates)
+        {
+            if (deselected.Contains(candidate.Index))
+            {
+                candidate.IsSelected = false;
+            }
+        }
+
+        AllSubtitlesFixed = MergeContinuationLinesHelper.Apply(_allSubtitles, candidates, _language);
         OkPressed = true;
         Window?.Close();
     }

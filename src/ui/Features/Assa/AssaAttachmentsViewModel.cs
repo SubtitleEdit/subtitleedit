@@ -170,8 +170,12 @@ public partial class AssaAttachmentsViewModel : ObservableObject
             return;
         }
 
+        // Parse returns null when the picked file is not Advanced Sub Station Alpha (an empty
+        // file, a renamed .ssa, a broken header) - dereferencing it crashed the dialog.
         var subtitle = Subtitle.Parse(fileName, new AdvancedSubStationAlpha());
-        var attachments = ListAttachments(subtitle.Footer.SplitToLines() ?? []);
+        var attachments = subtitle == null
+            ? new List<AssaAttachmentItem>()
+            : ListAttachments(subtitle.Footer.SplitToLines() ?? []);
         if (attachments.Count == 0)
         {
             await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Assa.NoAttachmentsFound, MessageBoxButtons.OK, MessageBoxIcon.Error);

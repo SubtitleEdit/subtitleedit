@@ -38,6 +38,53 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         protected static readonly char[] SplitCharColon = { ':' };
 
+        // Auto-detection hands the same List<string> to every candidate format in turn
+        // (60 formats claim ".xml" alone), and most of them join all lines into one string
+        // before a cheap marker test rejects the file - allocating roughly the file size in
+        // garbage per format. Memoize the last join per thread; the key is the list
+        // reference plus its count (no caller mutates the list between joins).
+        [ThreadStatic] private static List<string> _joinedLinesKey;
+        [ThreadStatic] private static int _joinedLinesKeyCount;
+        [ThreadStatic] private static string _joinedLines;
+        [ThreadStatic] private static string _joinedLinesTrimmed;
+
+        /// <summary>
+        /// All lines joined with <see cref="Environment.NewLine"/> after each line -
+        /// same result as appending every line to a StringBuilder with AppendLine.
+        /// </summary>
+        protected static string JoinLines(List<string> lines)
+        {
+            if (!ReferenceEquals(lines, _joinedLinesKey) || lines.Count != _joinedLinesKeyCount)
+            {
+                var capacity = 0;
+                var newLineLength = Environment.NewLine.Length;
+                foreach (var line in lines)
+                {
+                    capacity += line.Length + newLineLength;
+                }
+
+                var sb = new StringBuilder(capacity);
+                foreach (var line in lines)
+                {
+                    sb.AppendLine(line);
+                }
+
+                _joinedLines = sb.ToString();
+                _joinedLinesTrimmed = null;
+                _joinedLinesKey = lines;
+                _joinedLinesKeyCount = lines.Count;
+            }
+
+            return _joinedLines;
+        }
+
+        /// <summary>Same as <see cref="JoinLines"/> followed by Trim().</summary>
+        protected static string JoinLinesTrimmed(List<string> lines)
+        {
+            var joined = JoinLines(lines);
+            return _joinedLinesTrimmed ??= joined.Trim();
+        }
+
         /// <summary>
         /// Builds the format cache on a worker thread so the ~330 type loads and constructor JITs
         /// overlap with other start-up work instead of blocking the first window. Purely an
@@ -115,6 +162,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new Csv4(),
                     new Csv5(),
                     new CsvDaVinci(),
+                    new CsvExcel(),
                     new CsvNuendo(),
                     new DCinemaInterop(),
                     new DCinemaSmpte2007(),
@@ -130,6 +178,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new DvdSubtitle(),
                     new DvdSubtitleSystem(),
                     new DvSubtitle(),
+                    new DvbTeletext(),
                     new Ebu(),
                     new Edius4Frames(),
                     new Edius4Ms(),
@@ -182,6 +231,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new ImageLogicAutocaption(),
                     new InqScribe(),
                     new IssXml(),
+                    new EbuTt(), // before EbuTtD - a Part 1 document also carries the urn:ebu:tt:style namespace EbuTtD sniffs for
                     new EbuTtD(), // before iTunes/TimedText10 - their generic TTML detection would otherwise claim EBU-TT-D files
                     new ItunesTimedText(),
                     new JacoSub(),
@@ -211,6 +261,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new JsonType21(),
                     new JsonType22(),
                     new JsonType23(),
+                    new WistiaJson(),
+                    new JsonType24(),
                     new KanopyHtml(),
                     new LambdaCap(),
                     new Lrc(),
@@ -267,6 +319,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new SonyDVDArchitectLineDurationLength(),
                     new SonyDVDArchitectTabs(),
                     new SonyDVDArchitectWithLineNumbers(),
+                    new SonicDvdProducer(), // after Adobe Encore w. line# - same layout, this one only takes the column-padded files
+                    new Spc(), // before TMPlayer - TMPlayer reads "00:00:05:25&..." as its own "h:mm:ss:text" and keeps the rest as text
                     new Speechmatics(),
                     new Spruce(),
                     new SpruceWithSpace(),
@@ -405,7 +459,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new UnknownSubtitle79(),
                     new UnknownSubtitle80(),
                     new UnknownSubtitle81(),
-                    new UnknownSubtitle82(),
+                    new YouTubeTimedText(),
                     new UnknownSubtitle83(),
                     new UnknownSubtitle84(),
                     new UnknownSubtitle85(),
@@ -503,6 +557,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public virtual List<string> AlternateExtensions => new List<string>();
 
+        /// <summary>
+        /// Names this format used to be called. Settings store formats by name
+        /// (DefaultSubtitleFormat, FavoriteSubtitleFormats), so renaming a format would
+        /// otherwise silently drop it from an existing user's default and favorites.
+        /// </summary>
+        public virtual List<string> AlternateNames => new List<string>();
+
         public static int MillisecondsToFrames(double milliseconds)
         {
             return MillisecondsToFrames(milliseconds, Configuration.Settings.General.CurrentFrameRate);
@@ -559,6 +620,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         }
 
         public virtual bool HasStyleSupport => false;
+
+        /// <summary>
+        /// True when the format says where a line sits on the video - TTML regions, EBU STL teletext
+        /// rows or PAC's vertical percentage - and keeps it on the paragraphs (Region, Effect or
+        /// MarginV) and in the header.
+        /// </summary>
+        /// <remarks>
+        /// The video preview asks before it turns any of that into ASSA alignment and margins (see
+        /// <see cref="Common.SubtitlePositionToAssa"/>): the header and the paragraph fields of the
+        /// file a subtitle was read from survive a format change in the toolbar, so a subtitle now
+        /// shown as SubRip would otherwise keep the layout of a format it has left.
+        /// </remarks>
+        public virtual bool HasPositionSupport => false;
 
         /// <summary>
         /// Hard limits the format enforces when writing (e.g. CEA-608's 32 columns x 4 rows). A format
@@ -710,6 +784,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return new SubtitleFormat[]
             {
                 new Ebu { BatchMode = batchMode },
+                new DvbTeletext(),
                 new Pac { BatchMode = batchMode },
                 new PacUnicode(),
                 new Cavena890 { BatchMode = batchMode },
@@ -781,6 +856,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     format.FriendlyName.Trim().Equals(trimmedFormatName, StringComparison.OrdinalIgnoreCase))
                 {
                     return format;
+                }
+            }
+
+            foreach (var format in AllSubtitleFormats)
+            {
+                foreach (var alternateName in format.AlternateNames)
+                {
+                    if (alternateName.Trim().Equals(trimmedFormatName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return format;
+                    }
                 }
             }
 

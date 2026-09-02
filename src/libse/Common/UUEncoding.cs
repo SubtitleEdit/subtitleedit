@@ -50,10 +50,20 @@ namespace Nikse.SubtitleEdit.Core.Common
                 dest[2] += 33;
                 dest[3] += 33;
 
-                sb.Append(Encoding.ASCII.GetString(dest));
+                // The final group emits only as many characters as it carries data for -
+                // min(remaining + 1, 4), per the ASS/Aegisub convention that UUDecode below
+                // already implements. Always writing 4 made every embedded font/attachment
+                // 1-2 bytes longer than the original, decoding back with padding zeros.
+                var charsToWrite = 4;
+                if (i + 3 > length)
+                {
+                    charsToWrite = Math.Min(length - i + 1, 4);
+                }
 
-                lineElements += 4;
-                if (lineElements == 80)
+                sb.Append(Encoding.ASCII.GetString(dest, 0, charsToWrite));
+
+                lineElements += charsToWrite;
+                if (lineElements >= 80)
                 {
                     sb.AppendLine();
                     lineElements = 0;
@@ -82,7 +92,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 for (var i = 0; i < 4 && pos < len; ++pos)
                 {
                     var c = text[pos];
-                    if (c != '\n' && c != '\r')
+                    // Encoded data is always ASCII (a 6-bit value plus 33, so 33..96). Anything
+                    // above U+00FF cannot be part of it, and Convert.ToByte threw OverflowException
+                    // on it - a single stray non-ASCII character in an [Fonts]/[Graphics] block
+                    // took down the attachments dialog. Skip it like a line break.
+                    if (c != '\n' && c != '\r' && c <= byte.MaxValue)
                     {
                         src[i++] = (byte)(Convert.ToByte(c) - 33);
                         bytes++;

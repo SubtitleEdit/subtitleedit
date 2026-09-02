@@ -49,7 +49,7 @@ public class NOcrTrainWindow : Window
         // static values would go stale. Uniform row height keeps scroll extent estimation sane
         // despite wildly varying font line heights.
         var fontNameToFontFamily = new FuncValueConverter<string?, FontFamily>(name =>
-            string.IsNullOrWhiteSpace(name) ? FontFamily.Default : new FontFamily(name));
+            string.IsNullOrWhiteSpace(name) ? FontFamily.Default : FontFamilyHelper.Make(name));
         var fontsListBox = new ListBox
         {
             Height = 260,
@@ -123,10 +123,10 @@ public class NOcrTrainWindow : Window
 
         Content = grid;
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             buttonTrain.Focus(); // hack to make OnKeyDown work
-        };
+        });
         KeyDown += (_, e) => vm.KeyDown(e);
         Closing += (_, _) => vm.OnClosing();
     }

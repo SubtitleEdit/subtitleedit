@@ -99,20 +99,44 @@ public static class AssaResamplerHelper
         // Resample paragraphs
         foreach (var p in subtitle.Paragraphs)
         {
-            if (changeFontSize)
-            {
-                p.Text = AssaResampler.ResampleOverrideTagsFont(sourceWidth, targetWidth, sourceHeight, targetHeight, p.Text);
-            }
-
-            if (changePositions)
-            {
-                p.Text = AssaResampler.ResampleOverrideTagsPosition(sourceWidth, targetWidth, sourceHeight, targetHeight, p.Text);
-            }
-
-            if (changeDrawing)
-            {
-                p.Text = AssaResampler.ResampleOverrideTagsDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, p.Text, null);
-            }
+            p.Text = ResampleText(p.Text, sourceWidth, sourceHeight, targetWidth, targetHeight, changeFontSize, changePositions, changeDrawing);
         }
+    }
+
+    /// <summary>
+    /// Scales the override tags of one line's text between two script resolutions: font-related
+    /// tags, position tags (\pos, \move, \org, rectangular \clip) and drawings / vector clips.
+    /// </summary>
+    public static string ResampleText(
+        string text,
+        decimal sourceWidth,
+        decimal sourceHeight,
+        decimal targetWidth,
+        decimal targetHeight,
+        bool changeFontSize = true,
+        bool changePositions = true,
+        bool changeDrawing = true)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return text;
+        }
+
+        if (changeFontSize)
+        {
+            text = AssaResampler.ResampleOverrideTagsFont(sourceWidth, targetWidth, sourceHeight, targetHeight, text);
+        }
+
+        if (changePositions)
+        {
+            text = AssaResampler.ResampleOverrideTagsPosition(sourceWidth, targetWidth, sourceHeight, targetHeight, text);
+        }
+
+        if (changeDrawing)
+        {
+            text = AssaResampler.ResampleOverrideTagsDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, text, null);
+        }
+
+        return text;
     }
 }

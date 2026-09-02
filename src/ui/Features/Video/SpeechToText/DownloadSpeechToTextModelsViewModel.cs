@@ -111,52 +111,67 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject, ICl
 
             _timer.Stop();
 
-            // IsCompletedSuccessfully, not the broader IsCompleted (also true for
-            // Faulted/Canceled), so a failed download falls through to the IsFaulted
-            // branch below instead of proceeding as if it had succeeded.
-            if (_downloadTask is { IsCompletedSuccessfully: true })
+            try
             {
-                CompleteDownload();
-                StartNextOrFinish();
 
-                return;
-            }
-
-            if (_downloadTask is { IsFaulted: true })
-            {
-                var ex = _downloadTask.Exception?.InnerException ?? _downloadTask.Exception;
-                if (ex is OperationCanceledException)
+                // IsCompletedSuccessfully, not the broader IsCompleted (also true for
+                // Faulted/Canceled), so a failed download falls through to the IsFaulted
+                // branch below instead of proceeding as if it had succeeded.
+                if (_downloadTask is { IsCompletedSuccessfully: true })
                 {
-                    ProgressText = Se.Language.General.DownloadCanceled;
-                    Cancel();
-
-                    return;
-                }
-
-                // A 404 (FileNotFoundException) on an optional file isn't fatal: the URL list is
-                // the union of file names across all models, so every model 404s on some of them.
-                // Skip those and continue, like faster-whisper-xxl.exe does - only model.bin is
-                // required. (#12133 follow-up, #8703)
-                if (ex is FileNotFoundException && IsOptionalFile(_downloadUrls[_downloadIndex]))
-                {
-                    DeletePartialDownload();
+                    CompleteDownload();
                     StartNextOrFinish();
 
                     return;
                 }
 
-                ProgressText = Se.Language.General.DownloadFailed;
-                Error = ex?.Message ?? Se.Language.General.UnknownError;
+                if (_downloadTask is { IsFaulted: true })
+                {
+                    var ex = _downloadTask.Exception?.InnerException ?? _downloadTask.Exception;
+                    if (ex is OperationCanceledException)
+                    {
+                        ProgressText = Se.Language.General.DownloadCanceled;
+                        Cancel();
 
-                return;
+                        return;
+                    }
+
+                    // A 404 (FileNotFoundException) on an optional file isn't fatal: the URL list is
+                    // the union of file names across all models, so every model 404s on some of them.
+                    // Skip those and continue, like faster-whisper-xxl.exe does - only model.bin is
+                    // required. (#12133 follow-up, #8703)
+                    if (ex is FileNotFoundException && IsOptionalFile(_downloadUrls[_downloadIndex]))
+                    {
+                        DeletePartialDownload();
+                        StartNextOrFinish();
+
+                        return;
+                    }
+
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
+
+                    return;
+                }
+
+                // Guard the restart: OnClosingCleanup may have disposed the timer while this
+                // handler ran, and Start() on a disposed timer throws ObjectDisposedException,
+                // crashing the app from a thread-pool thread. (#12739)
+                if (!_isClosing)
+                {
+                    _timer.Start();
+                }
             }
-
-            // Guard the restart: OnClosingCleanup may have disposed the timer while this
-            // handler ran, and Start() on a disposed timer throws ObjectDisposedException,
-            // crashing the app from a thread-pool thread. (#12739)
-            if (!_isClosing)
+            catch (Exception exception)
             {
-                _timer.Start();
+                // An exception thrown from a timer callback is swallowed silently, and the timer
+                // was already stopped above - so without this catch the dialog hangs forever at
+                // 100% with no error shown (CompleteDownload throws on a bad credential response,
+                // and File.Move fails when model.bin is locked by a running whisper). The engine
+                // download dialog has carried this catch since #12127.
+                Se.LogError(exception, "Speech-to-text model download/unpack failed");
+                ProgressText = Se.Language.General.DownloadFailed;
+                Error = exception.Message;
             }
         }
     }

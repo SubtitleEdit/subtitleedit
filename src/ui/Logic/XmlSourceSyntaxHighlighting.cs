@@ -99,7 +99,10 @@ public class XmlSourceSyntaxHighlighting : ISourceSyntaxHighlighter, ISourceSynt
                 sb.Append(c);
                 if (c == '-' && i + 2 < xml.Length && xml[i + 1] == '-' && xml[i + 2] == '>')
                 {
-                    sb.Append("-->");
+                    // sb.Append(c) above already emitted the first '-', so only the remaining
+                    // two characters belong here - appending "-->" turned every comment's
+                    // terminator into "--->".
+                    sb.Append("->");
                     i += 3;
                     inComment = false;
                     afterCloseTag = true;
@@ -172,9 +175,11 @@ public class XmlSourceSyntaxHighlighting : ISourceSyntaxHighlighter, ISourceSynt
 
                 afterCloseTag = true;
             }
-            else if (!inTag && char.IsWhiteSpace(c))
+            else if (!inTag && afterCloseTag && char.IsWhiteSpace(c))
             {
-                // Skip whitespace between tags
+                // Skip whitespace BETWEEN tags only. afterCloseTag is cleared as soon as real
+                // character data is emitted, so without it this also ate the spaces inside text -
+                // "<p>Hello world</p>" was previewed as "<p>Helloworld</p>".
                 i++;
                 continue;
             }

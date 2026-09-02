@@ -38,8 +38,13 @@ Resample ASSA subtitle styles and positions from one video resolution to another
 | F1 | Show help |
 | Escape | Close dialog |
 
-## Resolution set automatically from the video
+## Resolution set from the video
 
-With *Options → Settings → ASSA* set to update the resolution automatically, loading a video (or converting to ASS/SSA) writes the video's dimensions into PlayResX / PlayResY, and the styles are resampled to match.
+When a video is opened and the subtitle's PlayResX / PlayResY differ from the video's picture size, this dialog opens by itself, pre-filled with the subtitle resolution as source and the video resolution as target - the same check Aegisub makes when loading a video. Press **OK** to resample the subtitle to the video, or **Cancel** to leave it as it is. Untick *Ask when a video with a different resolution is opened* to stop the prompt; the subtitle is then resampled to the video automatically.
 
-That resampling only applies to a subtitle whose header already named a resolution - a file authored for another picture size. A header without PlayResX / PlayResY is the built-in one, or your default style storage written into it (an OCR result takes that route): there, only the small built-in font sizes (25 and below) are lifted to the video height, and your font size, margins, outline and shadow are kept exactly as configured.
+Both behaviours can be changed under *Options → Settings → Subtitle formats*:
+
+- **ASSA: set resolution (PlayResX/PlayResY) from the video when a video is opened** - turn off to never touch the resolution on video load.
+- **ASSA: ask before changing the resolution to match the video** - turn off to resample automatically instead of showing the dialog.
+
+The resampling only applies to a subtitle whose header already names a resolution - a file authored for another picture size. A header without PlayResX / PlayResY is the built-in one, or your default style storage written into it (an OCR result takes that route): there the video's dimensions are written into the header silently, only the small built-in font sizes (25 and below) are lifted to the video height, and your font size, margins, outline and shadow are kept exactly as configured.

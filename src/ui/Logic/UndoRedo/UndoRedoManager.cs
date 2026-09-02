@@ -395,6 +395,7 @@ public sealed class UndoRedoManager : IUndoRedoManager
                 o.Extra != n.Extra ||
                 o.Actor != n.Actor ||
                 o.Layer != n.Layer ||
+                o.MarginV != n.MarginV ||
                 o.Number != n.Number;
 
             if (!textChanged && !timingChanged && !bookmarkChanged && !metadataChanged)

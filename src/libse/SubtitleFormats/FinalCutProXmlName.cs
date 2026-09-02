@@ -104,9 +104,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
             FrameRate = Configuration.Settings.General.CurrentFrameRate;
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            var x = sb.ToString();
+            var x = JoinLines(lines);
             var xml = new XmlDocument();
             try
             {

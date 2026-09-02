@@ -65,7 +65,7 @@ public class WebVttStylesWindow : Window
         Content = grid;
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
-        Activated += delegate { TableViewExtras.FocusRow(vm.StyleGrid); };
+        UiUtil.FocusOnFirstActivation(this, () => { TableViewExtras.FocusRow(vm.StyleGrid); });
         KeyDown += vm.KeyDown;
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };

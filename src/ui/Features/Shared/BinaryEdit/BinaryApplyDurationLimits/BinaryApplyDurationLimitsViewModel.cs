@@ -83,7 +83,27 @@ public partial class BinaryApplyDurationLimitsViewModel : ObservableObject
 
             if (durationMs < MinimumDurationMs)
             {
-                item.Duration = System.TimeSpan.FromMilliseconds(MinimumDurationMs);
+                // Extending blindly put this image on screen while the next one was already
+                // showing - two overlapping images is not a rendering nuisance in Blu-ray SUP or
+                // VobSub, it is invalid. The Apply duration limits dialog clips to the next start
+                // (minus the minimum gap) and reports the cue as only partially fixed; do the same
+                // here, minus the reporting this window has no room for.
+                var next = index + 1 < subtitles.Count ? subtitles[index + 1] : null;
+                var wantedMs = (double)MinimumDurationMs;
+                if (next != null)
+                {
+                    var allowedMs = (next.StartTime - item.StartTime).TotalMilliseconds -
+                                    Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
+                    if (allowedMs < wantedMs)
+                    {
+                        wantedMs = allowedMs;
+                    }
+                }
+
+                if (wantedMs > durationMs)
+                {
+                    item.Duration = System.TimeSpan.FromMilliseconds(wantedMs);
+                }
             }
             else if (durationMs > MaximumDurationMs)
             {

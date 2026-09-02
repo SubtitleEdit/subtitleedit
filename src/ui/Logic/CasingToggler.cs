@@ -96,7 +96,11 @@ namespace Nikse.SubtitleEdit.Logic
                                || input[index + 1] == 'n'
                                || input[index + 1] == 'h'))
                 {
-                    tags.Add(new KeyValuePair<int, string>(index, input.Substring(index, 2)));
+                    // sb.Length, not index: every other tag records its position in the
+                    // stripped text, and RestoreSavedAndRemovedTags inserts into that text.
+                    // Using the raw input offset pushed the break past the end whenever a tag
+                    // preceded it, so "{\an8}Hello\NWorld" came back as "{\an8}HELLOWORLD\N".
+                    tags.Add(new KeyValuePair<int, string>(sb.Length, input.Substring(index, 2)));
                     skipNext = true;
                     continue;
                 }

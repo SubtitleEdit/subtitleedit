@@ -168,9 +168,11 @@ public static class ViewAdjustDuration
 
     private static StackPanel MakeAdjustFixed(BatchConvertViewModel vm)
     {
+        // The bound value is stored and applied as milliseconds
+        // (AdjustDurationFixedMilliseconds -> BatchConvertConfig.FixedMilliseconds).
         var textBlockSeconds = new TextBlock
         {
-            Text = Se.Language.General.Seconds,
+            Text = Se.Language.General.Milliseconds,
             VerticalAlignment = VerticalAlignment.Center,
             MinWidth = LabelMinWidth,
         };

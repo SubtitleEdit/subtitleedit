@@ -110,7 +110,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (next == null || next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > 100)
                 {
                     var tc = new TimeCode(p.EndTime.TotalMilliseconds);
-                    sb.AppendLine(string.Format(timeCodeFormat, tc.Hours * 60 + tc.Minutes, tc.Seconds, (int)Math.Round(tc.Milliseconds / 10.0), string.Empty));
+
+                    // Same carry the start time above does: rounding 999 ms gives 100, and the
+                    // ":00" format printed all three digits ("[01:04.100]") - a line RegexTimeCodes
+                    // rejects, so the end marker was lost on reload and malformed for LRC players.
+                    var endFraction = (int)Math.Round(tc.Milliseconds / 10.0);
+                    if (endFraction >= 100)
+                    {
+                        tc = new TimeCode(new TimeCode(tc.Hours, tc.Minutes, tc.Seconds, 0).TotalMilliseconds + 1000);
+                        endFraction = 0;
+                    }
+
+                    sb.AppendLine(string.Format(timeCodeFormat, tc.Hours * 60 + tc.Minutes, tc.Seconds, endFraction, string.Empty));
                 }
             }
 

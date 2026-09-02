@@ -25,7 +25,11 @@ public class VideoOcrWindow : Window
     public VideoOcrWindow(VideoOcrViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Video.VideoOcr.Title;
+        // The view model is initialized with the video before the window is built, so the
+        // file being OCR'ed can go straight into the title.
+        Title = string.IsNullOrEmpty(vm.VideoFileName)
+            ? Se.Language.Video.VideoOcr.Title
+            : $"{Se.Language.Video.VideoOcr.Title} - {System.IO.Path.GetFileName(vm.VideoFileName)}";
         CanResize = true;
         Width = 1100;
         Height = 800;
@@ -76,7 +80,9 @@ public class VideoOcrWindow : Window
 
         Content = grid;
 
-        Activated += delegate { _comboEngine?.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, () => { _comboEngine?.Focus(); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Loaded += (s, e) => vm.OnLoaded();
         Closing += (s, e) => vm.OnClosing();
         AddHandler(KeyDownEvent, vm.OnKeyDownHandler, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);
@@ -160,10 +166,20 @@ public class VideoOcrWindow : Window
                 UiUtil.MakeButton(Se.Language.Video.VideoOcr.BottomThird, vm.SetScanAreaBottomThirdCommand),
                 UiUtil.MakeButton(Se.Language.Video.VideoOcr.BottomHalf, vm.SetScanAreaBottomHalfCommand),
                 UiUtil.MakeButton(Se.Language.Video.VideoOcr.FullFrame, vm.SetScanAreaFullFrameCommand),
-                UiUtil.MakeButton(Se.Language.Video.VideoOcr.TestOcr, vm.TestOcrCommand)
-                    .WithBindEnabled(nameof(vm.IsRunning), new InverseBooleanConverter())
-                    .WithMarginLeft(10),
                 scanAreaText,
+            },
+        };
+
+        // On its own row: sharing the scan-area row squeezed that row's buttons once the
+        // preview column narrowed.
+        var testRow = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 5,
+            Children =
+            {
+                UiUtil.MakeButton(Se.Language.Video.VideoOcr.TestOcr, vm.TestOcrCommand)
+                    .WithBindEnabled(nameof(vm.IsRunning), new InverseBooleanConverter()),
             },
         };
 
@@ -174,12 +190,14 @@ public class VideoOcrWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             RowSpacing = 5,
         };
         grid.Add(imageArea, 0, 0);
         grid.Add(sliderRow, 1, 0);
         grid.Add(scanAreaRow, 2, 0);
+        grid.Add(testRow, 3, 0);
 
         return UiUtil.MakeBorderForControl(grid);
     }
@@ -196,7 +214,11 @@ public class VideoOcrWindow : Window
         {
             Orientation = Orientation.Vertical,
             Spacing = 4,
-            Width = 350,
+            Width = 390,
+
+            // Gutter between the controls and the scrollbar - without it the bar sits
+            // flush against the numeric up/downs.
+            Margin = new Thickness(0, 0, 12, 0),
         };
 
         // The engine picker, plus a settings button for the one engine here with something to
@@ -303,28 +325,59 @@ public class VideoOcrWindow : Window
         panel.Children.Add(MakeHeader(Se.Language.Video.VideoOcr.Scan));
         panel.Children.Add(MakeSettingRow(
             Se.Language.Video.VideoOcr.FramesPerSecond,
-            UiUtil.MakeNumericUpDownInt(1, 30, 5, 120, vm, nameof(vm.FramesPerSecond))));
+            UiUtil.MakeNumericUpDownInt(1, 30, 5, 120, vm, nameof(vm.FramesPerSecond)),
+            Se.Language.Video.VideoOcr.FramesPerSecondHint));
         panel.Children.Add(MakeSettingRow(
             Se.Language.Video.VideoOcr.TextBrightnessMinimum,
-            UiUtil.MakeNumericUpDownInt(0, 255, 190, 120, vm, nameof(vm.BrightnessMinimum))));
+            UiUtil.MakeNumericUpDownInt(0, 255, 190, 120, vm, nameof(vm.BrightnessMinimum)),
+            Se.Language.Video.VideoOcr.TextBrightnessMinimumHint));
 
         // Post-processing settings
         panel.Children.Add(MakeHeader(Se.Language.Video.VideoOcr.PostProcessing));
         panel.Children.Add(MakeSettingRow(
             Se.Language.Video.VideoOcr.TextSimilarityPercent,
-            UiUtil.MakeNumericUpDownInt(0, 100, 80, 120, vm, nameof(vm.TextSimilarityPercent))));
+            UiUtil.MakeNumericUpDownInt(0, 100, 80, 120, vm, nameof(vm.TextSimilarityPercent)),
+            Se.Language.Video.VideoOcr.TextSimilarityPercentHint));
         panel.Children.Add(MakeSettingRow(
             Se.Language.Video.VideoOcr.MaxGapMs,
-            UiUtil.MakeNumericUpDownInt(0, 10_000, 250, 120, vm, nameof(vm.MaxGapMs))));
+            UiUtil.MakeNumericUpDownInt(0, 10_000, 250, 120, vm, nameof(vm.MaxGapMs)),
+            Se.Language.Video.VideoOcr.MaxGapHint));
         panel.Children.Add(MakeSettingRow(
             Se.Language.Video.VideoOcr.MinDurationMs,
-            UiUtil.MakeNumericUpDownInt(0, 10_000, 250, 120, vm, nameof(vm.MinDurationMs))));
+            UiUtil.MakeNumericUpDownInt(0, 10_000, 250, 120, vm, nameof(vm.MinDurationMs)),
+            Se.Language.Video.VideoOcr.MinDurationHint));
         panel.Children.Add(UiUtil.MakeCheckBox(Se.Language.Video.VideoOcr.AddAssaPositionTag, vm, nameof(vm.AddAssaPositionTag)));
+        panel.Children.Add(UiUtil.MakeCheckBox(Se.Language.Video.VideoOcr.FixOcrErrors, vm, nameof(vm.DoFixOcrErrors)));
+        var buttonDownloadDictionary = UiUtil.MakeButton("...", vm.DownloadDictionaryCommand)
+            .WithBindEnabled(nameof(vm.DoFixOcrErrors));
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(buttonDownloadDictionary, Se.Language.Video.VideoOcr.DownloadDictionaryHint);
+        }
+
+        panel.Children.Add(MakeSettingRow(
+            Se.Language.Video.VideoOcr.Dictionary,
+            new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Spacing = 3,
+                Children =
+                {
+                    UiUtil.MakeComboBox(vm.Dictionaries, vm, nameof(vm.SelectedDictionary)).WithWidth(190)
+                        .WithBindEnabled(nameof(vm.DoFixOcrErrors)),
+                    buttonDownloadDictionary,
+                },
+            },
+            Se.Language.Video.VideoOcr.DictionaryHint));
 
         var scrollViewer = new ScrollViewer
         {
             Content = panel,
             HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled,
+
+            // Give the scrollbar its own layout lane: as an auto-hiding overlay it is drawn
+            // on top of the content and covered the rightmost controls.
+            AllowAutoHide = false,
         };
 
         return UiUtil.MakeBorderForControl(scrollViewer);
@@ -415,7 +468,7 @@ public class VideoOcrWindow : Window
         };
     }
 
-    private static Grid MakeSettingRow(string label, Control control)
+    private static Grid MakeSettingRow(string label, Control control, string? hint = null)
     {
         var grid = new Grid
         {
@@ -427,6 +480,12 @@ public class VideoOcrWindow : Window
         };
         grid.Add(UiUtil.MakeLabel(label), 0, 0);
         grid.Add(control, 0, 1);
+
+        if (hint != null && Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(grid, hint);
+        }
+
         return grid;
     }
 
@@ -471,35 +530,71 @@ public class VideoOcrWindow : Window
             Width = new GridLength(90),
         });
 
-        // TableView has no cell editing, so the editable text column (OCR mistakes must stay
-        // fixable in place) becomes a borderless in-cell TextBox bound two-way.
+        // Text is edited in a dialog (context menu "Edit..." - multi-line texts do not edit
+        // comfortably inside a table row). The cell renders the item's FormattedText: the
+        // fix engine's per-word coloring (green = word known, red = unknown, same palette as
+        // the subtitle-bitmap OCR window) as lines arrive during OCR, plain themed text
+        // before that. Everything is bound (never captured), so container recycling stays
+        // safe - see the FuncDataTemplate recycling notes in NOcrTrainFontListTests.
         tableView.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Text,
-            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Width = new GridLength(1, GridUnitType.Star),
-            CellTemplate = new Avalonia.Controls.Templates.FuncDataTemplate<VideoOcrLineItem>((item, _) =>
-            {
-                if (item == null)
+            CellTemplate = new Avalonia.Controls.Templates.FuncDataTemplate<VideoOcrLineItem>((_, _) =>
+                new ContentControl
                 {
-                    return new TextBlock();
-                }
-
-                var textBox = new TextBox
-                {
-                    Background = Brushes.Transparent,
-                    BorderThickness = new Thickness(0),
                     VerticalContentAlignment = VerticalAlignment.Center,
-                    [!TextBox.TextProperty] = new Binding(nameof(VideoOcrLineItem.Text)) { Mode = BindingMode.TwoWay },
-                };
-
-                // Clicking into a cell to edit should also make it the current row, so the
-                // double-tap preview seek and Delete act on the line being edited.
-                textBox.GotFocus += (_, _) => tableView.SelectedItem = item;
-                return textBox;
-            }),
+                    [!ContentControl.ContentProperty] = new Binding(nameof(VideoOcrLineItem.FormattedText)),
+                }, supportsRecycling: true),
         });
+
+        var flyout = new MenuFlyout();
+        var menuItemEdit = new MenuItem
+        {
+            Header = Se.Language.General.EditDotDotDot,
+            InputGesture = new Avalonia.Input.KeyGesture(Avalonia.Input.Key.Enter),
+        };
+        menuItemEdit.Click += async (_, _) =>
+        {
+            if (tableView.SelectedItem is VideoOcrLineItem item)
+            {
+                await vm.EditLine(item);
+            }
+        };
+        flyout.Items.Add(menuItemEdit);
+
+        var menuItemItalic = new MenuItem
+        {
+            Header = Se.Language.General.Italic,
+        };
+        menuItemItalic.Click += (_, _) =>
+        {
+            var selected = tableView.SelectedItems?.OfType<VideoOcrLineItem>().ToList();
+            if (selected != null)
+            {
+                VideoOcrViewModel.ToggleItalic(selected);
+            }
+        };
+        flyout.Items.Add(menuItemItalic);
+
+        var menuItemDelete = new MenuItem
+        {
+            Header = Se.Language.General.Delete,
+        };
+        menuItemDelete.Click += (_, _) =>
+        {
+            var selected = tableView.SelectedItems?.OfType<VideoOcrLineItem>().ToList();
+            if (selected != null)
+            {
+                vm.DeleteLines(selected);
+            }
+        };
+        flyout.Items.Add(menuItemDelete);
+
+        tableView.ContextFlyout = flyout;
+        UiUtil.AttachMacContextFlyoutHandler(tableView);
 
         // Double-click a line to see the frame it came from in the preview.
         tableView.DoubleTapped += (s, e) =>
@@ -525,6 +620,19 @@ public class VideoOcrWindow : Window
             }
         };
 
+        // Tunnel phase: the TableView handles Enter internally (see #12734), so a bubbling
+        // KeyDown never sees it - the edit shortcut must run before the control's own handling.
+        tableView.AddHandler(KeyDownEvent, (s, e) =>
+        {
+            if (e.Key is Avalonia.Input.Key.Enter or Avalonia.Input.Key.F2 &&
+                e.Source is not TextBox &&
+                tableView.SelectedItem is VideoOcrLineItem editItem)
+            {
+                e.Handled = true;
+                _ = vm.EditLine(editItem);
+            }
+        }, RoutingStrategies.Tunnel);
+
         return UiUtil.MakeBorderForControl(tableView);
     }
 
@@ -537,22 +645,26 @@ public class VideoOcrWindow : Window
 
         var statusText = new TextBlock
         {
-            Margin = new Thickness(5, 20, 0, 0),
+            Margin = new Thickness(5, 0, 0, 0),
             DataContext = vm,
         };
         statusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ProgressText)));
 
+        // Bar and text each get their own row - overlaying them in one cell with a fixed
+        // top margin on the text made the two collide.
         var grid = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // progress bar
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // status text
             },
+            RowSpacing = 3,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
         grid.Add(progressBar, 0, 0);
-        grid.Add(statusText, 0, 0);
+        grid.Add(statusText, 1, 0);
 
         return grid;
     }

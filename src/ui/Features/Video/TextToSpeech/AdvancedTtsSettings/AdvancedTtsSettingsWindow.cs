@@ -1,5 +1,7 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
@@ -10,6 +12,12 @@ using System.IO;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.AdvancedTtsSettings;
 
+/// <summary>
+/// Every option used to carry its explanation as a paragraph of wrapped text underneath it, which
+/// made the window several screens tall - on a laptop it was clamped to the working area and the
+/// OK/Cancel buttons ended up off-screen (#14331). The explanations now live in hover hints, the
+/// options are grouped, and the content scrolls with the buttons pinned below it.
+/// </summary>
 public class AdvancedTtsSettingsWindow : Window
 {
     private readonly AdvancedTtsSettingsViewModel _vm;
@@ -18,266 +26,260 @@ public class AdvancedTtsSettingsWindow : Window
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Video.TextToSpeech.AdvancedTtsSettings;
-        SizeToContent = SizeToContent.WidthAndHeight;
+
+        // Explicit width + height-only auto sizing: SizeToContent.WidthAndHeight renders far too
+        // wide on macOS.
+        Width = 560;
+        SizeToContent = SizeToContent.Height;
         CanResize = false;
-        MaxWidth = 550;
 
         _vm = vm;
         vm.Window = this;
         DataContext = vm;
 
-        var sectionProAudio = MakeSection(vm,
-            Se.Language.Video.TextToSpeech.ProAudioPostProcessing,
-            nameof(vm.DoProAudioChain),
-            Se.Language.Video.TextToSpeech.ProAudioPostProcessingDescription);
+        var l = Se.Language.Video.TextToSpeech;
+
+        var checkBoxProAudio = MakeCheckBox(l.ProAudioPostProcessing, nameof(vm.DoProAudioChain));
+        var checkBoxDucking = MakeCheckBox(l.AudioDucking, nameof(vm.DoAudioDucking));
+        var checkBoxVad = MakeCheckBox(l.VadSilenceCompression, nameof(vm.DoVadSilenceCompression));
+        var checkBoxTimeStretch = MakeCheckBox(l.HighQualityTimeStretch, nameof(vm.DoHighQualityTimeStretch));
+        var checkBoxDeleteTempFiles = MakeCheckBox(l.DeleteTempFiles, nameof(vm.DoDeleteTempFiles));
+
+        var groupAudio = MakeGroupBox(l.AdvancedTtsAudioProcessing, new StackPanel
+        {
+            Spacing = 6,
+            Children =
+            {
+                MakeRow(checkBoxProAudio, l.ProAudioPostProcessingDescription),
+
+                MakeRow(checkBoxDucking, l.AudioDuckingDescription,
+                    MakeField(l.OriginalVolumePercent,
+                        UiUtil.MakeNumericUpDownInt(0, 100, 15, 110, vm, nameof(vm.AudioDuckingVolume)),
+                        nameof(vm.DoAudioDucking))),
+
+                MakeRow(checkBoxVad, l.VadSilenceCompressionDescription,
+                    MakeField(l.MaxSilenceMs,
+                        UiUtil.MakeNumericUpDownInt(0, 5000, 150, 110, vm, nameof(vm.VadMaxSilenceMs)),
+                        nameof(vm.DoVadSilenceCompression))),
+
+                MakeRow(checkBoxTimeStretch, l.HighQualityTimeStretchDescription,
+                    status: MakeStatusLabel(nameof(vm.RubberbandStatus))),
+            }
+        });
+
+        var groupOutput = MakeGroupBox(l.AdvancedTtsOutput, new StackPanel
+        {
+            Spacing = 6,
+            Children =
+            {
+                MakeRow(UiUtil.MakeLabel(l.SilencePaddingMs), l.SilencePaddingMsDescription,
+                    UiUtil.MakeNumericUpDownInt(0, 10000, 0, 110, vm, nameof(vm.SilencePaddingMs))),
+
+                MakeRow(UiUtil.MakeLabel(l.OutputSampleRate), l.OutputSampleRateDescription,
+                    UiUtil.MakeNumericUpDownInt(0, 192000, 0, 120, vm, nameof(vm.OutputSampleRate))),
+            }
+        });
+
+        var groupFolder = MakeGroupBox(l.GenerationFolder, MakeGenerationFolderContent(vm, checkBoxDeleteTempFiles));
+
+        var groupEdgeTts = MakeGroupBox("Edge-TTS", new StackPanel
+        {
+            Spacing = 6,
+            Children =
+            {
+                MakeRow(UiUtil.MakeLabel(l.EdgeTtsRate), l.EdgeTtsRateDescription,
+                    UiUtil.MakeTextBox(110, vm, nameof(vm.EdgeTtsRate))),
+
+                MakeRow(UiUtil.MakeLabel(l.EdgeTtsPitch), l.EdgeTtsPitchDescription,
+                    UiUtil.MakeTextBox(110, vm, nameof(vm.EdgeTtsPitch))),
+
+                MakeRow(UiUtil.MakeLabel(l.EdgeTtsVolume), l.EdgeTtsVolumeDescription,
+                    UiUtil.MakeTextBox(110, vm, nameof(vm.EdgeTtsVolume))),
+            }
+        });
+        groupEdgeTts[!IsVisibleProperty] = new Binding(nameof(vm.IsEdgeTtsEngine)) { Mode = BindingMode.OneWay };
 
         var content = new StackPanel
         {
-            Margin = UiUtil.MakeWindowMargin(),
-            Spacing = 5,
-            Children =
-            {
-                sectionProAudio,
+            Spacing = 10,
+            Children = { groupAudio, groupOutput, groupFolder, groupEdgeTts },
+        };
 
-                MakeSection(vm,
-                    Se.Language.Video.TextToSpeech.AudioDucking,
-                    nameof(vm.DoAudioDucking),
-                    Se.Language.Video.TextToSpeech.AudioDuckingDescription,
-                    Se.Language.Video.TextToSpeech.OriginalVolumePercent,
-                    nameof(vm.AudioDuckingVolume),
-                    50),
-
-                MakeSection(vm,
-                    Se.Language.Video.TextToSpeech.VadSilenceCompression,
-                    nameof(vm.DoVadSilenceCompression),
-                    Se.Language.Video.TextToSpeech.VadSilenceCompressionDescription,
-                    Se.Language.Video.TextToSpeech.MaxSilenceMs,
-                    nameof(vm.VadMaxSilenceMs),
-                    50),
-
-                MakeSectionWithStatus(vm,
-                    Se.Language.Video.TextToSpeech.HighQualityTimeStretch,
-                    nameof(vm.DoHighQualityTimeStretch),
-                    nameof(vm.RubberbandStatus),
-                    Se.Language.Video.TextToSpeech.HighQualityTimeStretchDescription),
-
-                MakeFieldRow(vm, Se.Language.Video.TextToSpeech.SilencePaddingMs, nameof(vm.SilencePaddingMs), 50,
-                    Se.Language.Video.TextToSpeech.SilencePaddingMsDescription),
-
-                MakeFieldRow(vm, Se.Language.Video.TextToSpeech.OutputSampleRate, nameof(vm.OutputSampleRate), 60,
-                    Se.Language.Video.TextToSpeech.OutputSampleRateDescription),
-
-                MakeGenerationFolderSection(vm),
-
-                MakeFieldRow(vm, Se.Language.Video.TextToSpeech.EdgeTtsRate, nameof(vm.EdgeTtsRate), 120,
-                    Se.Language.Video.TextToSpeech.EdgeTtsRateDescription,
-                    nameof(vm.IsEdgeTtsEngine)),
-
-                MakeFieldRow(vm, Se.Language.Video.TextToSpeech.EdgeTtsPitch, nameof(vm.EdgeTtsPitch), 120,
-                    Se.Language.Video.TextToSpeech.EdgeTtsPitchDescription,
-                    nameof(vm.IsEdgeTtsEngine)),
-
-                MakeFieldRow(vm, Se.Language.Video.TextToSpeech.EdgeTtsVolume, nameof(vm.EdgeTtsVolume), 120,
-                    Se.Language.Video.TextToSpeech.EdgeTtsVolumeDescription,
-                    nameof(vm.IsEdgeTtsEngine)),
-            }
+        // Keeps OK/Cancel reachable when the window is clamped to a small working area (#14331).
+        var scrollViewer = new ScrollViewer
+        {
+            Content = content,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
         };
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var mainPanel = new StackPanel
+        var grid = new Grid
         {
-            Children =
+            Margin = UiUtil.MakeWindowMargin(),
+            RowSpacing = 10,
+            RowDefinitions =
             {
-                content,
-                panelButtons,
-            }
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = GridLength.Auto },
+            },
         };
+        grid.Add(scrollViewer, 0);
+        grid.Add(panelButtons, 1);
 
-        Content = mainPanel;
+        Content = grid;
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
-        Activated += delegate { (sectionProAudio.Children[0] as CheckBox)?.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, () => checkBoxProAudio.Focus());
     }
 
-    private static StackPanel MakeSection(AdvancedTtsSettingsViewModel vm, string title, string checkBoxBinding, string description,
-        string? fieldLabel = null, string? fieldBinding = null, int fieldWidth = 50)
+    private static CheckBox MakeCheckBox(string title, string binding)
     {
-        var checkBox = new CheckBox
+        return new CheckBox
         {
-            Content = title,
-            FontWeight = FontWeight.SemiBold,
-            [!CheckBox.IsCheckedProperty] = new Binding(checkBoxBinding) { Mode = BindingMode.TwoWay },
+            // A TextBlock (not a bare string) so long translations wrap instead of widening the row.
+            Content = new TextBlock { Text = title, TextWrapping = TextWrapping.Wrap },
+            VerticalAlignment = VerticalAlignment.Center,
+            [!CheckBox.IsCheckedProperty] = new Binding(binding) { Mode = BindingMode.TwoWay },
+        };
+    }
+
+    private static Label MakeStatusLabel(string statusBinding)
+    {
+        return new Label
+        {
+            Opacity = 0.6,
+            FontStyle = FontStyle.Italic,
+            VerticalAlignment = VerticalAlignment.Center,
+            Padding = new Thickness(0),
+            [!ContentControl.ContentProperty] = new Binding(statusBinding) { Mode = BindingMode.OneWay },
+        };
+    }
+
+    /// <summary>
+    /// One option: its label/check box plus hint icon on the left, its input right-aligned so the
+    /// inputs of a group line up.
+    /// </summary>
+    private static Grid MakeRow(Control label, string hint, Control? input = null, Control? status = null)
+    {
+        var leftPanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 5,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { label },
         };
 
-        var descBlock = new TextBlock
+        if (status != null)
         {
-            Text = description,
-            TextWrapping = TextWrapping.Wrap,
-            Opacity = 0.7,
-            Margin = new Thickness(26, 0, 0, 0),
-        };
-
-        var section = new StackPanel
-        {
-            Spacing = 2,
-            Margin = new Thickness(0, 0, 0, 10),
-            Children = { checkBox, descBlock },
-        };
-
-        if (fieldLabel != null && fieldBinding != null)
-        {
-            var fieldRow = new StackPanel
-            {
-                Orientation = Orientation.Horizontal,
-                Margin = new Thickness(26, 4, 0, 0),
-                Children =
-                {
-                    new Label { Content = fieldLabel, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 5, 0) },
-                    UiUtil.MakeTextBox(fieldWidth, vm, fieldBinding),
-                }
-            };
-            section.Children.Add(fieldRow);
+            leftPanel.Children.Add(status);
         }
 
-        return section;
+        // Screen readers get the hint as help text on the control it belongs to: the check box when
+        // the option is a toggle, otherwise the input the label names.
+        leftPanel.Children.Add(UiUtil.MakeHintIcon(hint, label is CheckBox ? label : input ?? label));
+
+        var grid = new Grid
+        {
+            ColumnSpacing = 10,
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = GridLength.Auto },
+            },
+        };
+        grid.Add(leftPanel, 0);
+
+        if (input != null)
+        {
+            input.HorizontalAlignment = HorizontalAlignment.Right;
+            grid.Add(input, 0, 1);
+        }
+
+        return grid;
+    }
+
+    /// <summary>
+    /// A sub-label plus input, greyed out while the option it belongs to is off.
+    /// </summary>
+    private static Control MakeField(string label, Control input, string isEnabledBinding)
+    {
+        var panel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 5,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children =
+            {
+                new Label { Content = label, VerticalAlignment = VerticalAlignment.Center, Padding = new Thickness(0) },
+                input,
+            },
+            [!IsEnabledProperty] = new Binding(isEnabledBinding) { Mode = BindingMode.OneWay },
+        };
+
+        return panel;
     }
 
     /// <summary>
     /// Where the per-line clips are written during a run, and whether they are swept when the
     /// window closes. Before #13332 they went loose into the system temp folder and stayed there.
     /// </summary>
-    private static StackPanel MakeGenerationFolderSection(AdvancedTtsSettingsViewModel vm)
+    private static Control MakeGenerationFolderContent(AdvancedTtsSettingsViewModel vm, CheckBox checkBoxDeleteTempFiles)
     {
+        var l = Se.Language.Video.TextToSpeech;
+
         var textBoxFolder = new TextBox
         {
             VerticalAlignment = VerticalAlignment.Center,
-            Width = 330,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
             PlaceholderText = Path.GetTempPath(),
             [!TextBox.TextProperty] = new Binding(nameof(vm.GenerationFolder)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
         };
+        AutomationProperties.SetName(textBoxFolder, l.GenerationFolder);
 
-        var buttonBrowse = UiUtil.MakeButtonBrowse(vm.BrowseGenerationFolderCommand,
-            accessibleName: Se.Language.Video.TextToSpeech.GenerationFolder);
+        var buttonBrowse = UiUtil.MakeButtonBrowse(vm.BrowseGenerationFolderCommand, accessibleName: l.GenerationFolder);
 
-        var deleteCheckBox = new CheckBox
+        var folderRow = new Grid
         {
-            Content = Se.Language.Video.TextToSpeech.DeleteTempFiles,
-            Margin = new Thickness(0, 6, 0, 0),
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.DoDeleteTempFiles)) { Mode = BindingMode.TwoWay },
+            ColumnSpacing = 5,
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = GridLength.Auto },
+                new ColumnDefinition { Width = GridLength.Auto },
+            },
         };
+        folderRow.Add(textBoxFolder, 0);
+        folderRow.Add(buttonBrowse, 0, 1);
+        folderRow.Add(UiUtil.MakeHintIcon(l.GenerationFolderDescription, textBoxFolder), 0, 2);
 
         return new StackPanel
         {
-            Spacing = 2,
-            Margin = new Thickness(0, 0, 0, 10),
+            Spacing = 6,
             Children =
             {
-                new Label
-                {
-                    Content = Se.Language.Video.TextToSpeech.GenerationFolder,
-                    FontWeight = FontWeight.SemiBold,
-                },
-                new StackPanel
-                {
-                    Orientation = Orientation.Horizontal,
-                    Spacing = 5,
-                    Children = { textBoxFolder, buttonBrowse },
-                },
-                new TextBlock
-                {
-                    Text = Se.Language.Video.TextToSpeech.GenerationFolderDescription,
-                    TextWrapping = TextWrapping.Wrap,
-                    Opacity = 0.7,
-                    Margin = new Thickness(26, 0, 0, 0),
-                },
-                deleteCheckBox,
-                new TextBlock
-                {
-                    Text = Se.Language.Video.TextToSpeech.DeleteTempFilesDescription,
-                    TextWrapping = TextWrapping.Wrap,
-                    Opacity = 0.7,
-                    Margin = new Thickness(26, 0, 0, 0),
-                },
+                folderRow,
+                MakeRow(checkBoxDeleteTempFiles, l.DeleteTempFilesDescription),
             }
         };
     }
 
-    private static StackPanel MakeSectionWithStatus(AdvancedTtsSettingsViewModel vm, string title, string checkBoxBinding, string statusBinding, string description)
+    private static Border MakeGroupBox(string title, Control content)
     {
-        var checkBox = new CheckBox
+        var header = new TextBlock
         {
-            Content = title,
+            Text = title,
             FontWeight = FontWeight.SemiBold,
-            [!CheckBox.IsCheckedProperty] = new Binding(checkBoxBinding) { Mode = BindingMode.TwoWay },
+            Margin = new Thickness(0, 0, 0, 6),
         };
 
-        var statusLabel = new Label
+        return UiUtil.MakeBorderForControl(new StackPanel
         {
-            Opacity = 0.6,
-            FontStyle = FontStyle.Italic,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(5, 0, 0, 0),
-            [!Label.ContentProperty] = new Binding(statusBinding) { Mode = BindingMode.OneWay },
-        };
-
-        var headerRow = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Children = { checkBox, statusLabel },
-        };
-
-        var descBlock = new TextBlock
-        {
-            Text = description,
-            TextWrapping = TextWrapping.Wrap,
-            Opacity = 0.7,
-            Margin = new Thickness(26, 0, 0, 0),
-        };
-
-        return new StackPanel
-        {
-            Spacing = 2,
-            Margin = new Thickness(0, 0, 0, 10),
-            Children = { headerRow, descBlock },
-        };
-    }
-
-    private static StackPanel MakeFieldRow(AdvancedTtsSettingsViewModel vm, string label, string binding, int fieldWidth, string description, string? isVisibleBinding = null)
-    {
-        var panel = new StackPanel
-        {
-            Spacing = 2,
-            Margin = new Thickness(0, 0, 0, 10),
-            Children =
-            {
-                new StackPanel
-                {
-                    Orientation = Orientation.Horizontal,
-                    Children =
-                    {
-                        new Label { Content = label, VerticalAlignment = VerticalAlignment.Center, FontWeight = FontWeight.SemiBold, Margin = new Thickness(0, 0, 5, 0) },
-                        UiUtil.MakeTextBox(fieldWidth, vm, binding),
-                    }
-                },
-                new TextBlock
-                {
-                    Text = description,
-                    TextWrapping = TextWrapping.Wrap,
-                    Opacity = 0.7,
-                    Margin = new Thickness(26, 0, 0, 0),
-                },
-            }
-        };
-
-        if (isVisibleBinding != null)
-        {
-            panel[!StackPanel.IsVisibleProperty] = new Binding(isVisibleBinding) { Mode = BindingMode.OneWay };
-        }
-
-        return panel;
+            Children = { header, content },
+        });
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

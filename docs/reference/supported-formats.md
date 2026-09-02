@@ -47,6 +47,16 @@ Formats used to move captions and markers between Subtitle Edit and video editor
 | Adobe Premiere PrProj Xml | .xml |
 | Adobe Encore (tabs) | .txt |
 
+## Spreadsheets
+
+Import only — a spreadsheet with a header row naming start/end/text columns is read directly, and any layout can be mapped by hand in *File → Import → CSV/XLSX/ODS with custom columns*. See [Import Spreadsheets](../features/import-csv-xlsx.md).
+
+| Format | Extension(s) |
+|--------|--------------|
+| Excel workbook (Office Open XML) | .xlsx |
+| OpenDocument spreadsheet | .ods |
+| Delimited text (comma, semicolon, tab, pipe) | .csv, .tsv, .txt |
+
 ## Image-Based Formats
 
 | Format | Extension(s) |

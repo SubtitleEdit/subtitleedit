@@ -125,20 +125,10 @@ public class IndexTts25AudioCpp : ITtsEngine
     public override string ToString() => Name;
 
     /// <summary>
-    /// Where the audio.cpp binaries live: <c>&lt;data&gt;/audio.cpp/</c>, a top-level folder like
-    /// CrispASR and llama.cpp. audio.cpp is a whole runtime rather than one model's engine, so
-    /// a second audio.cpp-backed engine reuses this install instead of downloading its own.
+    /// The shared audio.cpp install — see <see cref="AudioCppRuntime"/>. Kept as a local alias
+    /// because everything in this class reads it.
     /// </summary>
-    public static string GetSetEngineFolder()
-    {
-        var folder = Se.AudioCppFolder;
-        if (!Directory.Exists(folder))
-        {
-            Directory.CreateDirectory(folder);
-        }
-
-        return folder;
-    }
+    public static string GetSetEngineFolder() => AudioCppRuntime.GetSetEngineFolder();
 
     /// <summary>
     /// Per-engine working folder under TextToSpeech (voices, synthesis output), matching where
@@ -229,8 +219,7 @@ public class IndexTts25AudioCpp : ITtsEngine
         }
     }
 
-    public static string GetServerExecutable() =>
-        Path.Combine(GetSetEngineFolder(), OperatingSystem.IsWindows() ? "audiocpp_server.exe" : "audiocpp_server");
+    public static string GetServerExecutable() => AudioCppRuntime.GetServerExecutable();
 
     public static string GetModelPath(string? modelKey = null) =>
         Path.Combine(GetSetModelsFolder(), GetModelFileName(modelKey));
@@ -285,20 +274,10 @@ public class IndexTts25AudioCpp : ITtsEngine
     }
 
     /// <summary>
-    /// ggml backend the installed archive was built for. Stored at install time by
-    /// <see cref="AudioCppDownloadService"/>; falls back to the only backend that can be
-    /// assumed per platform when the marker is missing.
+    /// ggml backend the shared audio.cpp install was built for — see
+    /// <see cref="AudioCppRuntime.GetBackend"/>.
     /// </summary>
-    public static string GetBackend()
-    {
-        var saved = Se.Settings.Video.TextToSpeech.IndexTts25AudioCppBackend;
-        if (!string.IsNullOrEmpty(saved))
-        {
-            return saved;
-        }
-
-        return OperatingSystem.IsMacOS() ? "metal" : "cpu";
-    }
+    public static string GetBackend() => AudioCppRuntime.GetBackend();
 
     public async Task<Voice[]> GetVoices(string language)
     {
@@ -331,12 +310,15 @@ public class IndexTts25AudioCpp : ITtsEngine
     /// </summary>
     public Task<TtsLanguage[]> GetLanguages(Voice voice, string? model) => Task.FromResult(new[]
     {
-        new TtsLanguage("auto", "Auto"),
-        new TtsLanguage("zh", "Chinese"),
-        new TtsLanguage("en", "English"),
-        new TtsLanguage("ja", "Japanese"),
-        new TtsLanguage("es", "Spanish"),
-        new TtsLanguage("ar", "Arabic"),
+        // TtsLanguage is (name, code) - every other engine writes it that way. Reversed here, the
+        // combo listed "zh"/"en"/"ja" instead of language names and Speak sent language.Code, i.e.
+        // the literal "Chinese", to audio.cpp - so no explicit pick ever worked.
+        new TtsLanguage("Auto", "auto"),
+        new TtsLanguage("Chinese", "zh"),
+        new TtsLanguage("English", "en"),
+        new TtsLanguage("Japanese", "ja"),
+        new TtsLanguage("Spanish", "es"),
+        new TtsLanguage("Arabic", "ar"),
     });
 
     public Task<Voice[]> RefreshVoices(string language, CancellationToken cancellationToken) =>
@@ -651,28 +633,8 @@ public class IndexTts25AudioCpp : ITtsEngine
         }
     }
 
-    /// <summary>
-    /// Turns the exit codes that mean "this build cannot run on this machine" into an
-    /// actionable message, since the process dies in the loader before it can print anything
-    /// useful of its own:
-    ///  - Windows 0xC0000135 / -1073741515 (STATUS_DLL_NOT_FOUND): a GPU build without its
-    ///    runtime. The Vulkan binaries import vulkan-1.dll (from the GPU driver) at load time.
-    ///  - Linux 127: the dynamic loader could not find a shared library. The Linux CUDA
-    ///    archive does NOT bundle libcudart.so.12 / libcublas.so.12 the way the Windows CUDA
-    ///    zip bundles its DLLs, so it needs a system CUDA 12 runtime.
-    /// </summary>
-    private static string DescribeStartupExit(int exitCode, string backend) => exitCode switch
-    {
-        -1073741515 => $"The {backend} build could not load its GPU runtime library. "
-            + "Re-download the engine and pick the CPU variant.",
-        -1073741795 => "The CPU build uses instructions this processor does not have.",
-        127 when string.Equals(backend, "cuda", StringComparison.OrdinalIgnoreCase) =>
-            "The Linux CUDA build needs the CUDA 12 runtime (libcudart.so.12 and libcublas.so.12) "
-            + "installed on this system. Install the CUDA 12 runtime, or re-download the engine "
-            + "and pick the CPU or Vulkan variant.",
-        127 => $"The {backend} build could not load a shared library it needs.",
-        _ => string.Empty,
-    };
+    private static string DescribeStartupExit(int exitCode, string backend) =>
+        AudioCppRuntime.DescribeStartupExit(exitCode, backend);
 
     /// <summary>
     /// Writes the audio.cpp server config next to the binary. lazy_load keeps startup instant;

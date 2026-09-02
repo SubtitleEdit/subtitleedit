@@ -121,7 +121,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             var doc = new XmlDocument { XmlResolver = null };
-            doc.LoadXml(xml);
+            try
+            {
+                doc.LoadXml(xml);
+            }
+            catch (Exception exception)
+            {
+                // A truncated or damaged file must read as "not mine", not throw out of the
+                // reader (and out of IsMine, which runs for every format when opening a file).
+                System.Diagnostics.Debug.WriteLine(exception.Message);
+                _errorCount = 1;
+                return;
+            }
             var subtitles = doc.DocumentElement.SelectSingleNode("Subtitles");
             if (subtitles == null)
             {

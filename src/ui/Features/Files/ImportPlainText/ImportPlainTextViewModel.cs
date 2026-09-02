@@ -47,6 +47,10 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
     private readonly IFileHelper _fileHelper;
     private readonly IWindowService _windowService;
     private static readonly string[] TextFileExtensions = { ".txt", ".rtf" };
+
+    // What Se.Settings.Tools.ImportTextSplitting stores - a stable token per SplitAtOptions entry,
+    // in the same order, so the remembered choice does not depend on the UI language.
+    private static readonly string[] SplitAtOptionKeys = { "auto", "blankLines", "oneLineIsOneSubtitle", "twoLinesAreOneSubtitle" };
     private static readonly List<string> TextFilePatterns = TextFileExtensions.Select(e => "*" + e).ToList();
     private bool _dirty;
     private TaskCompletionSource? _previewFlushed;
@@ -66,11 +70,15 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
             Se.Language.File.Import.OneLineIsOneSubtitle,
             Se.Language.File.Import.TwoLinesAreOneSubtitle,
         };
-        SelectedSplitAtOption = SplitAtOptions[0];
+        var splitIndex = Array.IndexOf(SplitAtOptionKeys, Se.Settings.Tools.ImportTextSplitting);
+        SelectedSplitAtOption = SplitAtOptions[splitIndex > 0 && splitIndex < SplitAtOptions.Count ? splitIndex : 0];
         PlainText = string.Empty;
         MinGapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
         AlignProgress = string.Empty;
-        FixedDurationMs = (int)Math.Round(Se.Settings.Tools.AdjustDurations.AdjustDurationFixed * 1000.0, MidpointRounding.AwayFromZero);
+        UseFixedDuration = !Se.Settings.Tools.ImportTextDurationAuto;
+        FixedDurationMs = Se.Settings.Tools.ImportTextFixedDuration > 0
+            ? Se.Settings.Tools.ImportTextFixedDuration
+            : (int)Math.Round(Se.Settings.Tools.AdjustDurations.AdjustDurationFixed * 1000.0, MidpointRounding.AwayFromZero);
 
         _timerUpdatePreview = new Timer();
         _timerUpdatePreview.Interval = 250;
@@ -259,6 +267,17 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
     [RelayCommand]
     private void Ok()
     {
+        // Remember what was picked - reopening the dialog used to come back at "Auto" and the
+        // global default duration every time, while Settings.json carried a dozen SE4-shaped
+        // import keys that nothing read.
+        var splitIndex = SplitAtOptions.IndexOf(SelectedSplitAtOption);
+        Se.Settings.Tools.ImportTextSplitting = splitIndex >= 0 && splitIndex < SplitAtOptionKeys.Length
+            ? SplitAtOptionKeys[splitIndex]
+            : SplitAtOptionKeys[0];
+        Se.Settings.Tools.ImportTextDurationAuto = !UseFixedDuration;
+        Se.Settings.Tools.ImportTextFixedDuration = FixedDurationMs;
+        Se.SaveSettings();
+
         OkPressed = true;
         Close();
     }

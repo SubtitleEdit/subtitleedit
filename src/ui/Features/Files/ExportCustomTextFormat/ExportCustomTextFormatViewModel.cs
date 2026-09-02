@@ -63,9 +63,23 @@ public partial class ExportCustomTextFormatViewModel : ObservableObject
             return;
         }
 
+        // Edit a copy: the dialog binds TwoWay straight onto the item it is given, so passing
+        // the live one meant every keystroke mutated the stored format and Cancel kept the edits.
+        // OK swaps this copy into the list below, so nothing is lost when the user confirms.
+        var editCopy = new CustomFormatItem
+        {
+            Name = selected.Name,
+            Extension = selected.Extension,
+            FormatHeader = selected.FormatHeader,
+            FormatParagraph = selected.FormatParagraph,
+            FormatFooter = selected.FormatFooter,
+            FormatTimeCode = selected.FormatTimeCode,
+            FormatNewLine = selected.FormatNewLine,
+        };
+
         var result = await _windowService.ShowDialogAsync<EditCustomTextFormatWindow, EditCustomTextFormatViewModel>(Window!, vm =>
         {
-            vm.Initialize(selected, Se.Language.File.Export.EditCustomFormat, _subtitles, _videoFileName ?? string.Empty);
+            vm.Initialize(editCopy, Se.Language.File.Export.EditCustomFormat, _subtitles, _title, _videoFileName ?? string.Empty);
         });
 
         if (result.OkPressed && result.SelectedCustomFormat != null)
@@ -128,7 +142,7 @@ public partial class ExportCustomTextFormatViewModel : ObservableObject
 
         var result = await _windowService.ShowDialogAsync<EditCustomTextFormatWindow, EditCustomTextFormatViewModel>(Window!, vm =>
         {
-            vm.Initialize(selected, Se.Language.File.Export.NewCustomFormat, _subtitles, _videoFileName ?? string.Empty);
+            vm.Initialize(selected, Se.Language.File.Export.NewCustomFormat, _subtitles, _title, _videoFileName ?? string.Empty);
         });
 
         if (result.OkPressed && result.SelectedCustomFormat != null)

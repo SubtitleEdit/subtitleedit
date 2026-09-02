@@ -17,9 +17,14 @@ public class TeletextAlignmentPreviewConverter : IMultiValueConverter
         object? parameter,
         CultureInfo culture)
     {
+        // When the teletext preview is not driving the alignment, fall back to whatever the
+        // caller passes as the parameter - the grid's own "center text" setting (#14316) -
+        // rather than assuming left.
+        var fallback = parameter is TextAlignment defaultAlignment ? defaultAlignment : TextAlignment.Start;
+
         if (values.Count < 2 || values[0] is not true)
         {
-            return TextAlignment.Start;
+            return fallback;
         }
 
         if (values[1] is TextAlignment alignment)
@@ -27,7 +32,7 @@ public class TeletextAlignmentPreviewConverter : IMultiValueConverter
             return alignment;
         }
 
-        return TextAlignment.Start;
+        return fallback;
     }
 
     public object[] ConvertBack(

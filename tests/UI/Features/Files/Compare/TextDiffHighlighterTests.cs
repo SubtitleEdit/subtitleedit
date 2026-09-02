@@ -207,6 +207,137 @@ public class TextDiffHighlighterTests
         }
     }
 
+    [Fact]
+    public void Compare_AppendedSuffix_HighlightsTheAddedTail()
+    {
+        // The whole of text1 is the common prefix, so commonStart == text1.Length and
+        // commonEnd == 0 - the old hasDifferences derivation concluded "identical" and the
+        // appended tail was rendered with no highlighting at all.
+        var (left, right) = TextDiffHighlighter.Compare("Hello", "Hello world");
+
+        Assert.Equal("Hello", JoinRuns(left.Inlines));
+        Assert.Equal("Hello world", JoinRuns(right.Inlines));
+
+        var rightRuns = right.Inlines!.Cast<Run>().ToArray();
+        Assert.Contains(rightRuns, r => r.Text == " world" && r.Foreground != null);
+    }
+
+    [Fact]
+    public void CompareReplacement_AppendedSuffix_HighlightsTheAddedTail()
+    {
+        var (before, after) = TextDiffHighlighter.CompareReplacement("Hello", "Hello world");
+
+        Assert.Equal("Hello", JoinRuns(before.Inlines));
+        Assert.Equal("Hello world", JoinRuns(after.Inlines));
+
+        var afterRuns = after.Inlines!.Cast<Run>().ToArray();
+        Assert.Contains(afterRuns, r => r.Text == " world" && r.Foreground != null);
+    }
+
+    [Fact]
+    public void Compare_IgnoreWhiteSpace_LeavesTheExtraSpaceUnmarked()
+    {
+        // With "Ignore whitespace" on, the row coloring already drops the line - but the cell
+        // kept the pink mark on the extra space and washed the whole text in the "this line
+        // differs" green, so an ignored difference still read as a difference (#14299).
+        var (left, right) = TextDiffHighlighter.Compare(
+            "Same text  not everywhere.",
+            "Same text not everywhere.",
+            ignoreWhiteSpace: true,
+            ignoreFormatting: false);
+
+        var leftRun = Assert.IsType<Run>(Assert.Single(left.Inlines!));
+        var rightRun = Assert.IsType<Run>(Assert.Single(right.Inlines!));
+
+        Assert.Null(leftRun.Background);
+        Assert.Null(rightRun.Background);
+    }
+
+    [Fact]
+    public void Compare_IgnoreFormatting_LeavesAssaTagsUnmarked()
+    {
+        var (left, right) = TextDiffHighlighter.Compare(
+            @"{\b1}Test bold{\b0}",
+            "Test bold",
+            ignoreWhiteSpace: false,
+            ignoreFormatting: true);
+
+        var leftRun = Assert.IsType<Run>(Assert.Single(left.Inlines!));
+        var rightRun = Assert.IsType<Run>(Assert.Single(right.Inlines!));
+
+        Assert.Equal(@"{\b1}Test bold{\b0}", leftRun.Text);
+        Assert.Null(leftRun.Background);
+        Assert.Null(rightRun.Background);
+    }
+
+    [Fact]
+    public void Compare_IgnoreFormatting_LeavesHtmlTagsUnmarked()
+    {
+        var (left, right) = TextDiffHighlighter.Compare(
+            "<i>Hello</i>",
+            "Hello",
+            ignoreWhiteSpace: false,
+            ignoreFormatting: true);
+
+        Assert.Null(Assert.IsType<Run>(Assert.Single(left.Inlines!)).Background);
+        Assert.Null(Assert.IsType<Run>(Assert.Single(right.Inlines!)).Background);
+    }
+
+    [Fact]
+    public void Compare_IgnoreFormatting_StillMarksARealDifferenceButNotTheTag()
+    {
+        // A line can hold both an ignored and a real difference - only the real one is marked.
+        var (left, right) = TextDiffHighlighter.Compare(
+            @"{\an8}Hello there",
+            "Hello world",
+            ignoreWhiteSpace: false,
+            ignoreFormatting: true);
+
+        var leftRuns = left.Inlines!.Cast<Run>().ToArray();
+        Assert.Equal(@"{\an8}Hello there", JoinRuns(left.Inlines));
+        Assert.DoesNotContain(leftRuns, r => r.Text!.Contains(@"{\an8}") && r.IsSet(TextElement.ForegroundProperty));
+        Assert.Contains(right.Inlines!.Cast<Run>(), r => r.Text == "world" && r.IsSet(TextElement.ForegroundProperty));
+    }
+
+    [Fact]
+    public void Compare_IgnoreFormatting_BracesWithoutATagAreStillCompared()
+    {
+        // "{...}" only opens an ASSA override block when a tag follows - spoken text in braces
+        // must keep counting as a difference.
+        var (left, right) = TextDiffHighlighter.Compare(
+            "Look at {this}",
+            "Look at {that}",
+            ignoreWhiteSpace: false,
+            ignoreFormatting: true);
+
+        Assert.Contains(left.Inlines!.Cast<Run>(), r => r.IsSet(TextElement.ForegroundProperty));
+        Assert.Contains(right.Inlines!.Cast<Run>(), r => r.IsSet(TextElement.ForegroundProperty));
+    }
+
+    [Fact]
+    public void Compare_IgnoreOptionsOff_KeepsMarkingWhitespaceAndTags()
+    {
+        var (left, right) = TextDiffHighlighter.Compare("Same text  not", "Same text not");
+
+        Assert.Contains(left.Inlines!.Cast<Run>(), r => r.IsSet(TextElement.ForegroundProperty));
+        Assert.Contains(right.Inlines!.Cast<Run>(), r => r.Background != null);
+    }
+
+    [Fact]
+    public void MakePlainText_AddsOneUncoloredRunPerSide()
+    {
+        var (left, right) = TextDiffHighlighter.MakePlainText("First\r\nSecond", "Something else");
+
+        var leftRun = Assert.IsType<Run>(Assert.Single(left.Inlines!));
+        var rightRun = Assert.IsType<Run>(Assert.Single(right.Inlines!));
+
+        Assert.Equal("First\nSecond", leftRun.Text);
+        Assert.Equal("Something else", rightRun.Text);
+        Assert.Null(leftRun.Background);
+        Assert.Null(rightRun.Background);
+        Assert.False(leftRun.IsSet(TextElement.ForegroundProperty));
+    }
+
     private static void AssertNoRunSplitsAWord(InlineCollection? inlines)
     {
         var isWordChar = typeof(TextDiffHighlighter).GetMethod(

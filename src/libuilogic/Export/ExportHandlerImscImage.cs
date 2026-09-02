@@ -99,35 +99,39 @@ public class ExportHandlerImscImage : IExportHandler
     {
         x = (_width - param.Bitmap.Width) / 2;
         y = _height - (param.Bitmap.Height + param.BottomTopMargin);
+        // Honour the user's margins for the left/right/top placements too - the bitmap is
+        // the trimmed glyph box, so a literal 0 glues the line to the frame edge.
+        var border = param.LeftRightMargin;
+        var topBorder = param.BottomTopMargin;
         switch (param.Alignment)
         {
             case ExportAlignment.BottomLeft:
-                x = 0;
+                x = border;
                 break;
             case ExportAlignment.BottomRight:
-                x = _width - param.Bitmap.Width;
+                x = _width - param.Bitmap.Width - border;
                 break;
             case ExportAlignment.MiddleCenter:
                 y = (_height - param.Bitmap.Height) / 2;
                 break;
             case ExportAlignment.MiddleLeft:
-                x = 0;
+                x = border;
                 y = (_height - param.Bitmap.Height) / 2;
                 break;
             case ExportAlignment.MiddleRight:
-                x = _width - param.Bitmap.Width;
+                x = _width - param.Bitmap.Width - border;
                 y = (_height - param.Bitmap.Height) / 2;
                 break;
             case ExportAlignment.TopCenter:
-                y = 0;
+                y = topBorder;
                 break;
             case ExportAlignment.TopLeft:
-                x = 0;
-                y = 0;
+                x = border;
+                y = topBorder;
                 break;
             case ExportAlignment.TopRight:
-                x = _width - param.Bitmap.Width;
-                y = 0;
+                x = _width - param.Bitmap.Width - border;
+                y = topBorder;
                 break;
         }
 

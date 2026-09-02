@@ -29,8 +29,24 @@ namespace UITests.Controls;
 /// in or out. A whole-paragraph drag preserves its duration, so whichever cue the cut captures,
 /// the other one moves with it.
 /// </summary>
-public class AudioVisualizerShotChangeSnapTests
+public class AudioVisualizerShotChangeSnapTests : IDisposable
 {
+    // A window left open outlives the test: it keeps the application-wide activation and focused
+    // element, so a later test's click or key press is delivered to it instead. The tests close
+    // their window on the last line, which leaks one whenever an assertion above it fails - and one
+    // stranded window is enough to take the rest of the class down with it.
+    private readonly List<Window> _windows = new();
+
+    public void Dispose()
+    {
+        foreach (var window in _windows)
+        {
+            window.Close();
+        }
+
+        _windows.Clear();
+    }
+
     private const int SampleRate = 126; // px per second at zoom 1
     private const double WidthPx = 800;
     private const double HeightPx = 200;
@@ -108,7 +124,7 @@ public class AudioVisualizerShotChangeSnapTests
         EndTime = TimeSpan.FromSeconds(endSeconds),
     };
 
-    private static (Window Window, AudioVisualizer Av) Open(List<double> shotChanges, params SubtitleLineViewModel[] lines)
+    private (Window Window, AudioVisualizer Av) Open(List<double> shotChanges, params SubtitleLineViewModel[] lines)
     {
         var av = new AudioVisualizer
         {
@@ -121,6 +137,7 @@ public class AudioVisualizerShotChangeSnapTests
         av.ShotChanges = shotChanges;
 
         var window = new Window { Width = WidthPx, Height = HeightPx, Content = av };
+        _windows.Add(window);
         window.Show();
         Dispatcher.UIThread.RunJobs();
         window.UpdateLayout();

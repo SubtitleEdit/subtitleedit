@@ -43,7 +43,7 @@ public class ExportEbuStlHeaderTests
     /// </summary>
     private static byte[] SaveViaDialog(Subtitle subtitle, Action<ExportEbuStlViewModel> fillIn)
     {
-        var viewModel = new ExportEbuStlViewModel(new FileHelper());
+        var viewModel = new ExportEbuStlViewModel(new FileHelper(), new StubWindowService());
         viewModel.Initialize(subtitle);
         Dispatcher.UIThread.RunJobs();
 
@@ -213,7 +213,7 @@ public class ExportEbuStlHeaderTests
         };
         subtitle.Paragraphs.Add(new Paragraph("Hello world", 1000, 3000));
 
-        var viewModel = new ExportEbuStlViewModel(new FileHelper());
+        var viewModel = new ExportEbuStlViewModel(new FileHelper(), new StubWindowService());
         viewModel.Initialize(subtitle);
         Dispatcher.UIThread.RunJobs();
 
@@ -223,7 +223,7 @@ public class ExportEbuStlHeaderTests
         Ebu.EbuUiHelper = new UiEbuSaveHelper();
         SaveViaDialog(subtitle, vm => { vm.SelectedFrameRate = "23.976"; });
 
-        var reopened = new ExportEbuStlViewModel(new FileHelper());
+        var reopened = new ExportEbuStlViewModel(new FileHelper(), new StubWindowService());
         reopened.Initialize(subtitle);
         Dispatcher.UIThread.RunJobs();
 

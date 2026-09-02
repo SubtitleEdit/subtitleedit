@@ -146,6 +146,11 @@ public static class Unpacker
 
             process.Start();
 
+            // Drain stderr concurrently: 7-zip writes one line per problem file, and once it
+            // exceeds the 4 KB pipe buffer the child blocks on the write, stdout's EndOfStream
+            // never returns, and the dialog hangs with no way out.
+            var errorReader = process.StandardError.ReadToEndAsync();
+
             while (!process.StandardOutput.EndOfStream)
             {
                 if (cancellationTokenSource.IsCancellationRequested)
@@ -158,7 +163,12 @@ public static class Unpacker
                     {
                         // Ignore if already exited
                     }
-                    return;
+
+                    // Throw rather than return: a bare return was indistinguishable from a
+                    // completed unpack, so callers reported the install as successful, deleted
+                    // the archive, and left a half-extracted folder that passes their
+                    // "is it installed?" file check.
+                    throw new OperationCanceledException(cancellationTokenSource.Token);
                 }
 
                 var line = process.StandardOutput.ReadLine();
@@ -176,7 +186,7 @@ public static class Unpacker
 
             if (process.ExitCode != 0)
             {
-                var error = process.StandardError.ReadToEnd();
+                var error = errorReader.Result;
                 throw new Exception($"7zz extraction failed with exit code {process.ExitCode} (command: \"{sevenZipPath}\" x \"{tempFileName}\" -o\"{extractPath}\" -y): {error}");
             }
 
@@ -257,6 +267,9 @@ public static class Unpacker
                 throw new Exception($"Could not start 7-zip (command: \"{sevenZipPath}\" x \"{tempFileName}\" -o\"{extractPath}\" -y)", exception);
             }
 
+            // See the note above: stderr must be drained while 7-zip is still running.
+            var errorReader = process.StandardError.ReadToEndAsync();
+
             while (!process.StandardOutput.EndOfStream)
             {
                 if (cancellationTokenSource.IsCancellationRequested)
@@ -269,7 +282,12 @@ public static class Unpacker
                     {
                         // Ignore if already exited
                     }
-                    return;
+
+                    // Throw rather than return: a bare return was indistinguishable from a
+                    // completed unpack, so callers reported the install as successful, deleted
+                    // the archive, and left a half-extracted folder that passes their
+                    // "is it installed?" file check.
+                    throw new OperationCanceledException(cancellationTokenSource.Token);
                 }
 
                 var line = process.StandardOutput.ReadLine();
@@ -287,7 +305,7 @@ public static class Unpacker
 
             if (process.ExitCode != 0)
             {
-                var error = process.StandardError.ReadToEnd();
+                var error = errorReader.Result;
                 throw new Exception($"7zip extraction failed with exit code {process.ExitCode} (command: \"{sevenZipPath}\" x \"{tempFileName}\" -o\"{extractPath}\" -y): {error}");
             }
 
@@ -338,7 +356,10 @@ public static class Unpacker
         {
             if (cancellationTokenSource.IsCancellationRequested)
             {
-                return;
+                // Throw, as every other cancellation point here does: a bare return made a
+                // cancelled move look like a finished one, so the caller reported success and
+                // its finally block deleted the temp folder with the un-moved files still in it.
+                throw new OperationCanceledException(cancellationTokenSource.Token);
             }
 
             var fileName = Path.GetFileName(file);
@@ -363,7 +384,10 @@ public static class Unpacker
         {
             if (cancellationTokenSource.IsCancellationRequested)
             {
-                return;
+                // Throw, as every other cancellation point here does: a bare return made a
+                // cancelled move look like a finished one, so the caller reported success and
+                // its finally block deleted the temp folder with the un-moved files still in it.
+                throw new OperationCanceledException(cancellationTokenSource.Token);
             }
 
             var dirName = Path.GetFileName(subDir);
@@ -385,7 +409,9 @@ public static class Unpacker
         {
             if (cancellationTokenSource.IsCancellationRequested)
             {
-                return;
+                // See the process-based paths above: a cancelled unpack must not look like a
+                // completed one to the caller.
+                throw new OperationCanceledException(cancellationTokenSource.Token);
             }
 
             if (!string.IsNullOrEmpty(reader.Entry.Key))

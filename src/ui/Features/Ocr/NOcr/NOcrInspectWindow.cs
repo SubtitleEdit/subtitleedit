@@ -61,10 +61,10 @@ public class NOcrInspectWindow : Window
 
         vm.TextBoxNew.KeyDown += vm.TextBoxNewOnKeyDown;
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             vm.TextBoxNew.Focus(); // hack to make OnKeyDown work
-        };
+        });
 
         PointerWheelChanged += vm.PointerWheelChanged;
     }
@@ -130,7 +130,7 @@ public class NOcrInspectWindow : Window
             .WithBindEnabled(nameof(vm.IsEditControlsEnabled));
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
         {
-            vm.TextBoxNew.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
+            vm.TextBoxNew.FontFamily = FontFamilyHelper.Make(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
         }
 
         var image = new Image

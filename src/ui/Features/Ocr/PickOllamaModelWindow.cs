@@ -65,7 +65,7 @@ public class PickOllamaModelWindow : Window
         Content = grid;
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
-        Activated += delegate { listBox.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, listBox);
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

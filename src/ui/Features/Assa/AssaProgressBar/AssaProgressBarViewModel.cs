@@ -116,7 +116,10 @@ public partial class AssaProgressBarViewModel : ObservableObject, IClosingCleanu
         _videoFileName = videoFileName;
 
         LoadExistingSettings();
-        _subtitle.Paragraphs.Clear();
+
+        // _subtitle is both the working copy and the dialog's result, and ApplyProgressBar already
+        // removes just the previous bar paragraphs by style name. Clearing here threw away every
+        // dialogue line, so pressing OK replaced the subtitle with the progress bar alone.
         GeneratePreview();
         
         Dispatcher.UIThread.Post(() =>

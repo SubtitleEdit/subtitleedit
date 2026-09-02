@@ -151,20 +151,34 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return xmlAsText;
         }
 
+        /// <summary>
+        /// A Final Cut rate is a whole "timebase" plus an "ntsc" flag: timebase 24 with ntsc
+        /// TRUE means 23.976. Ignoring the flag read every NTSC file 0.1% too fast and flipped
+        /// the flag to FALSE on the next save.
+        /// </summary>
+        private static double ApplyNtsc(double timebase, XmlNode rateNode)
+        {
+            var ntsc = rateNode?.SelectSingleNode("ntsc")?.InnerText;
+            if (!string.IsNullOrEmpty(ntsc) && ntsc.Trim().Equals("TRUE", StringComparison.OrdinalIgnoreCase))
+            {
+                return timebase * 1000.0 / 1001.0;
+            }
+
+            return timebase;
+        }
+
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
             var frameRate = Configuration.Settings.General.CurrentFrameRate;
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument { XmlResolver = null };
             try
             {
-                xml.LoadXml(sb.ToString().Trim());
+                xml.LoadXml(JoinLinesTrimmed(lines));
 
                 var header = new XmlDocument { XmlResolver = null };
-                header.LoadXml(sb.ToString());
+                header.LoadXml(JoinLines(lines));
                 if (header.SelectSingleNode("sequence/media/video/track") != null)
                 {
                     header.RemoveChild(header.SelectSingleNode("sequence/media/video/track"));
@@ -176,7 +190,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     try
                     {
-                        frameRate = double.Parse(xml.DocumentElement.SelectSingleNode("sequence/rate/timebase").InnerText, CultureInfo.InvariantCulture);
+                        frameRate = ApplyNtsc(
+                            double.Parse(xml.DocumentElement.SelectSingleNode("sequence/rate/timebase").InnerText, CultureInfo.InvariantCulture),
+                            xml.DocumentElement.SelectSingleNode("sequence/rate"));
                     }
                     catch
                     {
@@ -194,7 +210,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             XmlNode timebase = rate?.SelectSingleNode("timebase");
                             if (timebase != null)
                             {
-                                frameRate = double.Parse(timebase.InnerText, CultureInfo.InvariantCulture);
+                                frameRate = ApplyNtsc(double.Parse(timebase.InnerText, CultureInfo.InvariantCulture), rate);
                             }
 
                             double startFrame = 0;

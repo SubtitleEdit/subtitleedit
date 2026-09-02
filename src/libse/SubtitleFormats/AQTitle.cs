@@ -127,7 +127,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string EncodeTimeCode(TimeCode time)
         {
-            int frames = MillisecondsToFrames(time.TotalMilliseconds) + 1;
+            // No "+ 1" here: DecodeTimeCode does not subtract one again, so every save shifted
+            // the whole file one frame later - and the shift accumulated with each save.
+            int frames = MillisecondsToFrames(time.TotalMilliseconds);
             return frames.ToString(CultureInfo.InvariantCulture);
         }
 

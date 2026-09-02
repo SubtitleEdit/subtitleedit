@@ -20,7 +20,10 @@ public static class InitNativeMacMenuBinaryEdit
         Add(exportMenu, Se.Language.General.BdnXml, vm.ExportBdnXmlCommand);
         Add(exportMenu, Se.Language.General.BdnXml8Bit, vm.ExportBdnXml8BitCommand);
         Add(exportMenu, Se.Language.File.Export.TitleExportImscImage, vm.ExportImscImageCommand);
+        Add(exportMenu, Se.Language.File.Export.TitleExportDCinemaInteropPng, vm.ExportDCinemaInteropPngCommand);
+        Add(exportMenu, Se.Language.File.Export.TitleExportDCinemaSmpte2014Png, vm.ExportDCinemaSmpte2014PngCommand);
         Add(exportMenu, Se.Language.File.Export.TitleExportDostPng, vm.ExportDostPngCommand);
+        Add(exportMenu, Se.Language.File.Export.TitleExportDvdSup, vm.ExportDvdSupCommand);
         Add(exportMenu, Se.Language.File.Export.TitleExportFcpImage, vm.ExportFcpPngCommand);
         Add(exportMenu, Se.Language.General.ImagesWithHtmlIndex, vm.ExportHtmlIndexCommand);
         Add(exportMenu, Se.Language.General.ImagesWithTimeCode, vm.ExportImagesWithTimeCodeCommand);

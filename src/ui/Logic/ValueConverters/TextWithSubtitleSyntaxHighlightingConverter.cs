@@ -110,7 +110,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             return fontFamily;
         }
 
-        fontFamily = new FontFamily(name);
+        fontFamily = FontFamilyHelper.Make(name);
         if (FontFamilyCache.Count < FontFamilyCacheLimit)
         {
             FontFamilyCache[name] = fontFamily;
@@ -177,7 +177,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         if (formattingType == (int)SubtitleGridFormattingTypes.ShowTags)
         {
             var lines = MakeShowTags(str);
-            return SpellCheckLines(lines);
+            return SpellCheckLines(lines, skipColouredRuns: true);
         }
 
         // No formatting (default) - walk the line breaks directly instead of SplitToLines(),
@@ -212,7 +212,13 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         return SpellCheckLines(inlines);
     }
 
-    private InlineCollection SpellCheckLines(InlineCollection lines)
+    /// <param name="skipColouredRuns">
+    /// Set for the "show tags" layout, where markup is split into its own coloured runs and only
+    /// the subtitle's own text is left with no brush. IsBetweenAssaTags/IsInsideHtmlTag look for
+    /// braces and brackets in the run they are given, and a tag-name run is bare ("pos"), so both
+    /// guards returned false and every tag name and attribute value got a red squiggle.
+    /// </param>
+    private InlineCollection SpellCheckLines(InlineCollection lines, bool skipColouredRuns = false)
     {
         if (_spellCheckManager == null || !Se.Settings.Appearance.SubtitleGridLiveSpellCheck)
         {
@@ -228,6 +234,12 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                 if (inline is not Run run || string.IsNullOrWhiteSpace(run.Text))
                 {
                     newInlines.Add(inline);
+                    continue;
+                }
+
+                if (skipColouredRuns && run.Foreground != null)
+                {
+                    newInlines.Add(run);
                     continue;
                 }
 
@@ -1184,7 +1196,12 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             }
 
             // Primary color: \c&HBBGGRR& or \1c&HBBGGRR& or \c (reset color)
-            if (firstChar == 'c' && (tagLen == 1 || !char.IsDigit(trimmedTag[1])))
+            // Exclude a LETTER after the "c" as well as a digit: "\clip" passed the digit-only
+            // test, so a block like "{\clip(0,0,100,100)}" was treated as a colour tag with no
+            // parseable colour and the fall-through then cleared state.Color - the rest of the
+            // line lost its colour in the grid while libass and SE's own preview kept it.
+            // SubtitleSyntaxTokenizer.IsAssColorTag does the exact-name comparison.
+            if (firstChar == 'c' && (tagLen == 1 || !char.IsLetterOrDigit(trimmedTag[1])))
             {
                 if (tagLen == 1)
                 {

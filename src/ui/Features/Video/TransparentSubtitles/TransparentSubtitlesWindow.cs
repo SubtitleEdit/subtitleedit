@@ -151,7 +151,7 @@ public class TransparentSubtitlesWindow : Window
         };
         UpdateGrowAreas();
 
-        Activated += delegate { _comboBoxFontName?.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, () => { _comboBoxFontName?.Focus(); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
         Loaded += (_, _) => vm.Loaded();
 
         Opened += (_, _) => LockMinimumToContentSize();

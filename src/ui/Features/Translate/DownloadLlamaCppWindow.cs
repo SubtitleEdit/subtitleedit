@@ -59,7 +59,7 @@ public class DownloadLlamaCppWindow : Window
             }
         };
 
-        Activated += delegate { buttonCancel.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, buttonCancel);
         KeyDown += (s, e) => vm.OnKeyDown(e);
     }
 }

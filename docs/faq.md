@@ -76,10 +76,11 @@ Subtitle Edit supports several local and downloadable speech-to-text engines:
 - **Purfview's Faster-Whisper-XXL** — Fast GPU/CPU-based (Windows, Linux)
 - **CTranslate2** — Fast CPU/GPU-based
 - **Const-me's Whisper** — DirectX-based (Windows)
+- **WhisperX** — Faster-Whisper with wav2vec2 word-level alignment, standalone build (Windows x64, Linux x64, macOS Apple Silicon)
 - **OpenAI Whisper** — Original Python implementation
 - **OpenAI-compatible STT** — Send audio to any OpenAI-compatible speech endpoint
-- **Qwen3 ASR CPP** — Local GGUF-based engine (Windows, Linux)
-- **Crisp ASR** — Local engine with multiple backends (Parakeet, Canary, Cohere, Fire Red, GLM, Granite, Qwen3, Mega, Omni, Kyutai) and a Forced-aligner picker (built-in / Canary CTC / Qwen3 / 12 wav2vec2 language aligners) for word-level timestamps
+- **Qwen3 ASR CPP** — Local GGUF-based engine (Windows, Linux, macOS)
+- **Crisp ASR** — Local engine with multiple backends (Parakeet, Canary, Cohere, Fire Red, Fun-ASR Nano, GigaAM, GLM, Granite, Qwen3, Mega, MOSS Diarize, Omni, Kyutai, SenseVoice, ARK, Voxtral) and a Forced-aligner picker (built-in / Canary CTC / Qwen3 / 12 wav2vec2 language aligners) for word-level timestamps
 
 ### How do I use Speech to Text?
 1. Open a video file
@@ -111,11 +112,14 @@ Use **Synchronization → Change frame rate...** and select the source and targe
 - **Tesseract** — Open-source OCR engine with language packs
 - **nOCR** — Nikse's built-in OCR with trainable databases
 - **Binary OCR** — For binary image comparison
+- **PaddleOCR** — Local OCR (standalone build for Windows/Linux, or the pip-installed Python engine)
+- **CrispEmbed** — Local OCR with downloadable model backends (PP-OCRv6, GLM-OCR, GOT-OCR2, Qwen3-VL, DeepSeek-OCR-2)
+- **llama.cpp** — Local vision-LLM OCR with a managed server and curated models
+- **Ollama OCR** — Local LLM-based
+- **Apple Vision** — Built-in OCR on macOS
 - **Google Lens OCR** — Cloud-based
 - **Google Vision OCR** — Cloud-based
-- **Ollama OCR** — Local LLM-based
 - **Mistral OCR** — Cloud-based
-- **PaddleOCR** — Local OCR
 
 ### How do I OCR Blu-ray subtitles?
 1. Open the `.sup` file via **File → Open**

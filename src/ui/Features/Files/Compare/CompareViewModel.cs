@@ -46,11 +46,16 @@ public partial class CompareViewModel : ObservableObject
     public TableView? LeftGrid { get; set; } = new();
     public TableView? RightGrid { get; set; } = new();
 
+    /// <summary>Keeps the two grids showing the same rows while either one scrolls (#13504).</summary>
+    public TableViewScrollSync? ScrollSync { get; set; }
+
     private IFileHelper _fileHelper;
     private IFolderHelper _folderHelper;
     private List<SubtitleLineViewModel> _leftLines = new();
     private List<SubtitleLineViewModel> _rightLines = new();
     private string _language = string.Empty;
+    private bool _languageDirty = true;
+    private bool _mirroringSelection;
 
     // Theme aware - the light pastels are unreadable under the dark theme's near-white text (#13435).
     private static IBrush ListViewRed => CompareColors.OnlyInOneFileRow;
@@ -65,6 +70,41 @@ public partial class CompareViewModel : ObservableObject
 
         CompareVisuals = new ObservableCollection<CompareVisual>(CompareVisual.GetCompareVisuals());
         SelectedCompareVisual = CompareVisuals[0];
+
+        LoadSettings();
+    }
+
+    /// <summary>
+    /// The "Show" choice and the two ignore options are remembered between sessions, like SE4
+    /// did through Configuration.Settings.Compare (#14299).
+    /// </summary>
+    private void LoadSettings()
+    {
+        var settings = Se.Settings.File.Compare;
+
+        if (Enum.TryParse<CompareVisualType>(settings.Show, out var show))
+        {
+            var visual = CompareVisuals.FirstOrDefault(p => p.Type == show);
+            if (visual != null)
+            {
+                SelectedCompareVisual = visual;
+            }
+        }
+
+        IgnoreWhiteSpace = settings.IgnoreWhitespace;
+        IgnoreFormatting = settings.IgnoreFormatting;
+    }
+
+    /// <summary>
+    /// Only updates the in-memory settings, like Find/Replace do - the main window writes
+    /// Settings.json when the application closes.
+    /// </summary>
+    internal void SaveSettings()
+    {
+        var settings = Se.Settings.File.Compare;
+        settings.Show = SelectedCompareVisual.Type.ToString();
+        settings.IgnoreWhitespace = IgnoreWhiteSpace;
+        settings.IgnoreFormatting = IgnoreFormatting;
     }
 
     internal void Initialize(
@@ -88,11 +128,14 @@ public partial class CompareViewModel : ObservableObject
 
         IsReloadFromFileVisible = !string.IsNullOrEmpty(LeftFileName);
 
+        _languageDirty = true;
         Dispatcher.UIThread.Post(Compare);
     }
 
     private void Compare()
     {
+        DetectLanguageIfNeeded();
+
         LeftSubtitles.Clear();
         foreach (var l in _leftLines)
         {
@@ -124,7 +167,11 @@ public partial class CompareViewModel : ObservableObject
         {
             var left = LeftSubtitles[i];
             var right = RightSubtitles[i];
-            var (leftBlock, rightBlock) = TextDiffHighlighter.Compare(left.Text, right.Text);
+            // A pair the options count as equal gets no markup whatsoever - the same call the row
+            // coloring makes, so the cell can never mark a difference the row has dropped (#14299).
+            var (leftBlock, rightBlock) = AreTextsEqual(left, right)
+                ? TextDiffHighlighter.MakePlainText(left.Text, right.Text)
+                : TextDiffHighlighter.Compare(left.Text, right.Text, IgnoreWhiteSpace, IgnoreFormatting);
             left.TextPanel.Children.Clear();
             left.TextPanel.Children.Add(leftBlock);
             right.TextPanel.Children.Clear();
@@ -378,6 +425,28 @@ public partial class CompareViewModel : ObservableObject
 
     private bool ShouldBreakToLetter() => _language != null && (_language == "ja" || _language == "zh");
 
+    // The word/letter diff choice needs the subtitle language (letters for ja/zh). Detection
+    // is whole-file work, so it only runs when one of the sides was (re)loaded.
+    private void DetectLanguageIfNeeded()
+    {
+        if (!_languageDirty)
+        {
+            return;
+        }
+
+        _languageDirty = false;
+        var lines = _leftLines.Count > 0 ? _leftLines : _rightLines;
+        var subtitle = new Subtitle();
+        foreach (var line in lines)
+        {
+            subtitle.Paragraphs.Add(new Paragraph(line.Text, line.StartTime.TotalMilliseconds, line.EndTime.TotalMilliseconds));
+        }
+
+        _language = subtitle.Paragraphs.Count > 0
+            ? LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle)
+            : string.Empty;
+    }
+
     private void InsertMissingLines()
     {
         if (LeftSubtitles.Count == 0 || RightSubtitles.Count == 0)
@@ -421,9 +490,12 @@ public partial class CompareViewModel : ObservableObject
             right = GetRightItemOrNull(index);
         }
 
-        // insert rest
+        // insert rest - pad to the max of the *current* collection counts: the alignment
+        // above inserts blanks, so one side may already have grown past the raw-line max,
+        // and every consumer of the two lists assumes equal lengths
+        var maxNow = Math.Max(LeftSubtitles.Count, RightSubtitles.Count);
         var minSub = LeftSubtitles.Count < RightSubtitles.Count ? LeftSubtitles : RightSubtitles;
-        for (var idx = minSub.Count; idx < max; idx++)
+        for (var idx = minSub.Count; idx < maxNow; idx++)
         {
             minSub.Insert(idx, new CompareItem());
         }
@@ -477,10 +549,23 @@ public partial class CompareViewModel : ObservableObject
 
     private bool AreTextsEqual(CompareItem p1, CompareItem p2)
     {
-        return p1.Text.Trim() == p2.Text.Trim() ||
-                    IgnoreFormatting && HtmlUtil.RemoveHtmlTags(p1.Text.Trim()) == HtmlUtil.RemoveHtmlTags(p2.Text.Trim()) ||
-                    IgnoreWhiteSpace && RemoveWhiteSpace(p1.Text) == RemoveWhiteSpace(p2.Text) ||
-                    IgnoreFormatting && IgnoreWhiteSpace && RemoveWhiteSpace(HtmlUtil.RemoveHtmlTags(p1.Text)) == RemoveWhiteSpace(HtmlUtil.RemoveHtmlTags(p2.Text));
+        return NormalizeForCompare(p1.Text) == NormalizeForCompare(p2.Text);
+    }
+
+    /// <summary>
+    /// Strips whatever the two ignore options say to ignore, so one place decides what counts as
+    /// a difference - the row coloring, the word statistics and the in-cell highlighting all go
+    /// through this. RemoveHtmlTags must be told to take the ASSA tags too, or "Ignore formatting"
+    /// does nothing at all on an .ass/.ssa file, where every tag is {\an8}-style (#14299).
+    /// </summary>
+    internal string NormalizeForCompare(string text)
+    {
+        if (IgnoreFormatting)
+        {
+            text = HtmlUtil.RemoveHtmlTags(text, true);
+        }
+
+        return IgnoreWhiteSpace ? RemoveWhiteSpace(text) : text.Trim();
     }
 
     public static string RemoveWhiteSpace(string text)
@@ -563,6 +648,7 @@ public partial class CompareViewModel : ObservableObject
         LeftFileNameHasChanges = false;
         LeftFileName = fileName;
 
+        _languageDirty = true;
         Dispatcher.UIThread.Post(Compare);
     }
 
@@ -590,6 +676,7 @@ public partial class CompareViewModel : ObservableObject
         RightFileName = fileName;
         IsReloadFromFileVisible = false;
 
+        _languageDirty = true;
         Dispatcher.UIThread.Post(Compare);
     }
 
@@ -617,6 +704,7 @@ public partial class CompareViewModel : ObservableObject
         RightFileName = fileName;
         IsReloadFromFileVisible = false;
 
+        _languageDirty = true;
         Dispatcher.UIThread.Post(Compare);
     }
 
@@ -712,7 +800,9 @@ public partial class CompareViewModel : ObservableObject
         sb.AppendLine("      <th>&nbsp;</th>");
         sb.AppendLine("      <th colspan='4' style='text-align:left'>" + GetFileName(RightFileName) + "</th>");
         sb.AppendLine("    </tr>");
-        for (var i = 0; i < LeftSubtitles.Count; i++)
+        // Belt and braces alongside the button guard: only the padded rows are pairs.
+        var rowCount = Math.Min(LeftSubtitles.Count, RightSubtitles.Count);
+        for (var i = 0; i < rowCount; i++)
         {
             var itemLeft = LeftSubtitles[i];
             var itemRight = RightSubtitles[i];
@@ -851,41 +941,60 @@ public partial class CompareViewModel : ObservableObject
 
     internal void LeftGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (e.AddedItems.Count == 0)
-        {
-            return;
-        }
-
-        var selection = e.AddedItems[0] as CompareItem;
-        if (selection == null)
-        {
-            return;
-        }
-
-        var idx = LeftSubtitles.IndexOf(selection);
-        Dispatcher.UIThread.Post(() =>
-        {
-            SelectAndScrollToRow(RightGrid, idx);
-        });
+        MirrorSelection(e, LeftSubtitles, LeftGrid, RightGrid);
     }
 
     internal void RightGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (e.AddedItems.Count == 0)
+        MirrorSelection(e, RightSubtitles, RightGrid, LeftGrid);
+    }
+
+    /// <summary>
+    /// Selects the same row on the other side and lines the two views up again. SE4 assigned the
+    /// other list view's TopItem here (Compare.SelectLinesInBothListViews); ScrollIntoView only
+    /// promises the row is somewhere in view, so the two sides could keep the same row selected
+    /// while showing ranges a page apart (#13504).
+    /// </summary>
+    private void MirrorSelection(
+        SelectionChangedEventArgs e,
+        ObservableCollection<CompareItem> sourceItems,
+        TableView? source,
+        TableView? target)
+    {
+        if (_mirroringSelection || source == null || target == null || e.AddedItems.Count == 0)
         {
             return;
         }
 
-        var selection = e.AddedItems[0] as CompareItem;
-        if (selection == null)
+        if (e.AddedItems[0] is not CompareItem selection)
         {
             return;
         }
 
-        var idx = RightSubtitles.IndexOf(selection);
+        var idx = sourceItems.IndexOf(selection);
+        if (idx < 0)
+        {
+            return;
+        }
+
         Dispatcher.UIThread.Post(() =>
         {
-            SelectAndScrollToRow(LeftGrid, idx);
+            // Mirroring the selection raises SelectionChanged on the other grid, which would
+            // mirror it straight back and re-align from the wrong side.
+            _mirroringSelection = true;
+            try
+            {
+                if (idx < target.ItemCount && target.SelectedIndex != idx)
+                {
+                    target.SelectedIndex = idx;
+                }
+
+                ScrollSync?.SyncFrom(source);
+            }
+            finally
+            {
+                _mirroringSelection = false;
+            }
         });
     }
 
@@ -970,6 +1079,7 @@ public partial class CompareViewModel : ObservableObject
                     LeftFileNameHasChanges = false;
                     LeftFileName = path;
 
+                    _languageDirty = true;
                     Dispatcher.UIThread.Post(Compare);
                     break;
                 }
@@ -1006,6 +1116,7 @@ public partial class CompareViewModel : ObservableObject
 
                     RightFileName = path;
 
+                    _languageDirty = true;
                     Dispatcher.UIThread.Post(Compare);
                     break;
                 }

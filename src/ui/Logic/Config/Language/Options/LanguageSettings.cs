@@ -54,6 +54,7 @@ public class LanguageSettings
     public string SubtitleGridTextDisplayWrap { get; set; }
     public string SubtitleGridTextDisplayEllipsis { get; set; }
     public string SubtitleGridLiveSpellCheck { get; set; }
+    public string SubtitleGridCenterText { get; set; }
     public string SubtitleGridShowFormatting { get; set; }
     public string ShowUpDownStartTime { get; set; }
     public string ShowUpDownEndTime { get; set; }
@@ -196,6 +197,8 @@ public class LanguageSettings
     public string FavoriteSubtitleFormats { get; set; }
     public string FavoriteLanguages { get; set; }
     public string WebVttUseXTimestampMap { get; set; }
+    public string AssaAutoSetResolution { get; set; }
+    public string AssaAutoSetResolutionPrompt { get; set; }
 
     public string ShowStopButton { get; set; }
     public string ShowFullscreenButton { get; set; }
@@ -331,6 +334,7 @@ public class LanguageSettings
     public string SubtitlePreviewProperties { get; set; }
     public string UsePositionFromSubtitleFile { get; set; }
     public string MarginIsPartOfSubtitleArea { get; set; }
+    public string TextJustify { get; set; }
     public string PixelWidthInfo { get; set; }
     public string SpellCheckEngineHunSpelll { get; set; }
     public string SpellCheckEngineMsWord { get; set; }
@@ -391,6 +395,7 @@ public class LanguageSettings
         SubtitleGridTextDisplayWrap = "Wrap to fit window";
         SubtitleGridTextDisplayEllipsis = "Single line with ellipsis";
         SubtitleGridLiveSpellCheck = "Live spell check in subtitle grid";
+        SubtitleGridCenterText = "Center text in subtitle grid";
         SubtitleGridShowFormatting = "Show formatted (HTML/ASSA) text in subtitle grid";
         ShowUpDownStartTime = "Show up/down control for \"Show\"";
         ShowUpDownEndTime = "Show up/down control for \"Hide\"";
@@ -545,6 +550,8 @@ public class LanguageSettings
         DefaultSaveAsFormat = "Default \"Save as\" format";
         FavoriteSubtitleFormats = "Favorite subtitle formats";
         WebVttUseXTimestampMap = "WebVTT: use X-TIMESTAMP-MAP (offset time codes on load)";
+        AssaAutoSetResolution = "ASSA: set resolution (PlayResX/PlayResY) from the video when a video is opened";
+        AssaAutoSetResolutionPrompt = "ASSA: ask before changing the resolution to match the video (otherwise resample automatically)";
         FavoriteLanguages = "Favorite languages";
         FilesAndLogs = "Files and logs";
         ShowErrorLogFile = "Show error log file";
@@ -667,6 +674,7 @@ public class LanguageSettings
         SubtitlePreviewProperties = "Subtitle preview properties";
         UsePositionFromSubtitleFile = "Use position from subtitle file (TTML/PAC/EBU STL)";
         MarginIsPartOfSubtitleArea = "Margin is part of the subtitle area";
+        TextJustify = "Justify lines";
         PixelWidthInfo = "Green lines = max-width limit   |   Red area = text exceeds limit";
         SpellCheckEngineHunSpelll = "Hunspell";
         SpellCheckEngineMsWord = "MS Word";

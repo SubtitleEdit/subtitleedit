@@ -495,7 +495,7 @@ public class SpeechToTextWindow : Window
 
         Content = grid;
 
-        Activated += delegate { Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, () => { Focus(); }); // hack to make OnKeyDown work
         Loaded += (s, e) => vm.OnWindowLoaded();
         Closing += (s, e) => vm.OnWindowClosing(e);
         KeyDown += (s, e) => vm.OnKeyDown(e);

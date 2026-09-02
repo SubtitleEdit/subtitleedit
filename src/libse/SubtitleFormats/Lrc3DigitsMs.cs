@@ -279,7 +279,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         var minutes = int.Parse(parts[0]);
                         var seconds = int.Parse(parts[1]);
-                        var milliseconds = int.Parse(parts[2]) * 10;
+                        var milliseconds = int.Parse(parts[2]);
                         var text = GetTextAfterTimeCodes(p.Text);
                         var start = new TimeCode(0, minutes, seconds, milliseconds);
                         var newParagraph = new Paragraph(start, new TimeCode(), text);

@@ -82,7 +82,7 @@ public class RemoveTextForHearingImpairedWindow : Window
 
         Content = grid;
 
-        Activated += delegate { (vm.IsApplyVisible ? buttonDone : buttonOk).Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, () => { (vm.IsApplyVisible ? buttonDone : buttonOk).Focus(); }); // hack to make OnKeyDown work
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };

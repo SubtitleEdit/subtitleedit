@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
@@ -21,6 +22,38 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string Extension => ".xml";
 
         private const string TtmlNamespace = "http://www.w3.org/ns/ttml";
+        private const string TtmlStylingNamespace = "http://www.w3.org/ns/ttml#styling";
+
+        // The eight teletext colours (the RGB corners). Coloured text is written as referential
+        // styles named after these; the reader maps exact corner values back to the names so a
+        // round trip keeps <font color="yellow"> instead of degrading to hex.
+        private static readonly (string Name, byte R, byte G, byte B)[] TeletextColors =
+        {
+            ("black", 0, 0, 0),
+            ("red", 255, 0, 0),
+            ("green", 0, 255, 0),
+            ("yellow", 255, 255, 0),
+            ("blue", 0, 0, 255),
+            ("magenta", 255, 0, 255),
+            ("cyan", 0, 255, 255),
+            ("white", 255, 255, 255),
+        };
+
+        // The eight names above mean the teletext corners here, not the CSS palette (CSS "green"
+        // is #008000), so resolve them before the generic parser gets a say.
+        private static SkiaSharp.SKColor ParseColor(string colorValue)
+        {
+            var trimmed = colorValue.Trim();
+            foreach (var (name, r, g, b) in TeletextColors)
+            {
+                if (string.Equals(trimmed, name, StringComparison.OrdinalIgnoreCase))
+                {
+                    return new SkiaSharp.SKColor(r, g, b);
+                }
+            }
+
+            return HtmlUtil.GetColorFromString(trimmed); // white if unparsable
+        }
 
         private static string GetXmlStructure()
         {
@@ -60,9 +93,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return false;
             }
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            var text = sb.ToString();
+            var text = JoinLines(lines);
 
             // "urn:ebu:tt:distribution" (the conformsToStandard urn) and ebutts:linePadding are
             // EBU-TT-D specific; plain "urn:ebu:tt" also appears in Netflix Japanese IMSC docs,
@@ -95,17 +126,34 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             namespaceManager.AddNamespace("ttml", TtmlNamespace);
 
             var div = xml.DocumentElement.SelectSingleNode("ttml:body", namespaceManager).SelectSingleNode("ttml:div", namespaceManager);
+            var colorStyles = new WriterColorStyles();
             var count = 1;
             foreach (var p in subtitle.Paragraphs)
             {
-                div.AppendChild(MakeParagraph(xml, p, count));
+                div.AppendChild(MakeParagraph(xml, p, count, colorStyles));
                 count++;
+            }
+
+            if (colorStyles.Styles.Count > 0)
+            {
+                var styling = xml.DocumentElement.SelectSingleNode("ttml:head/ttml:styling", namespaceManager);
+                foreach (var kvp in colorStyles.Styles)
+                {
+                    var styleNode = xml.CreateElement("style", TtmlNamespace);
+                    var idAttribute = xml.CreateAttribute("xml:id");
+                    idAttribute.InnerText = kvp.Key;
+                    styleNode.Attributes.Append(idAttribute);
+                    var colorAttribute = xml.CreateAttribute("tts", "color", TtmlStylingNamespace);
+                    colorAttribute.InnerText = kvp.Value;
+                    styleNode.Attributes.Append(colorAttribute);
+                    styling.AppendChild(styleNode);
+                }
             }
 
             return ToUtf8XmlString(xml).Replace(" xmlns=\"\"", string.Empty);
         }
 
-        private static XmlNode MakeParagraph(XmlDocument xml, Paragraph p, int count)
+        private static XmlNode MakeParagraph(XmlDocument xml, Paragraph p, int count, WriterColorStyles colorStyles)
         {
             XmlNode paragraph = xml.CreateElement("p", TtmlNamespace);
 
@@ -143,13 +191,24 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     var span = xml.CreateElement("span", TtmlNamespace);
                     var style = xml.CreateAttribute("style");
-                    style.InnerText = segment.Italic && segment.Bold
-                        ? "textStyle italicStyle boldStyle"
-                        : segment.Italic
-                            ? "textStyle italicStyle"
-                            : segment.Bold
-                                ? "textStyle boldStyle"
-                                : "textStyle";
+                    var styleValue = "textStyle";
+                    if (segment.Italic)
+                    {
+                        styleValue += " italicStyle";
+                    }
+
+                    if (segment.Bold)
+                    {
+                        styleValue += " boldStyle";
+                    }
+
+                    var colorStyleId = segment.Color == null ? null : colorStyles.GetStyleId(segment.Color);
+                    if (colorStyleId != null)
+                    {
+                        styleValue += " " + colorStyleId;
+                    }
+
+                    style.InnerText = styleValue;
                     span.Attributes.Append(style);
                     span.AppendChild(xml.CreateTextNode(segment.Text));
                     paragraph.AppendChild(span);
@@ -163,26 +222,90 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private readonly struct StyledSegment
         {
-            public StyledSegment(string text, bool italic, bool bold)
+            public StyledSegment(string text, bool italic, bool bold, string color)
             {
                 Text = text;
                 Italic = italic;
                 Bold = bold;
+                Color = color;
             }
 
             public string Text { get; }
             public bool Italic { get; }
             public bool Bold { get; }
+            public string Color { get; }
         }
 
         private class TagState
         {
             public int Italic;
             public int Bold;
+
+            // One entry per open <font>; null for font tags without a color attribute so the
+            // matching </font> still pops correctly.
+            public readonly List<string> FontColors = new List<string>();
+
+            public string CurrentColor
+            {
+                get
+                {
+                    for (var i = FontColors.Count - 1; i >= 0; i--)
+                    {
+                        if (FontColors[i] != null)
+                        {
+                            return FontColors[i];
+                        }
+                    }
+
+                    return null;
+                }
+            }
         }
 
-        // Splits one line into plain/italic/bold segments; any other tags (font/underline) are
-        // dropped, keeping their inner text.
+        private static readonly Regex FontColorRegex = new Regex("color\\s*=\\s*(?:\"([^\"]*)\"|'([^']*)'|([^\\s>]+))", RegexOptions.Compiled);
+
+        // Collects the referential colour styles used by a document being written; the eight
+        // teletext colours get their names as style ids, anything else a hex id. White is the
+        // textStyle default, so all-white text stays untagged (GetStyleId returns null).
+        private class WriterColorStyles
+        {
+            public readonly List<KeyValuePair<string, string>> Styles = new List<KeyValuePair<string, string>>();
+            private readonly HashSet<string> _defined = new HashSet<string>(StringComparer.Ordinal);
+
+            public string GetStyleId(string colorValue)
+            {
+                var color = ParseColor(colorValue);
+                string styleId = null;
+                foreach (var (name, r, g, b) in TeletextColors)
+                {
+                    if (color.Red == r && color.Green == g && color.Blue == b)
+                    {
+                        if (name == "white")
+                        {
+                            return null;
+                        }
+
+                        styleId = "color" + char.ToUpperInvariant(name[0]) + name.Substring(1);
+                        break;
+                    }
+                }
+
+                if (styleId == null)
+                {
+                    styleId = $"color{color.Red:X2}{color.Green:X2}{color.Blue:X2}";
+                }
+
+                if (_defined.Add(styleId))
+                {
+                    Styles.Add(new KeyValuePair<string, string>(styleId, $"#{color.Red:x2}{color.Green:x2}{color.Blue:x2}"));
+                }
+
+                return styleId;
+            }
+        }
+
+        // Splits one line into styled segments (italic/bold/font color); other tags (underline,
+        // font size/face) are dropped, keeping their inner text.
         private static List<StyledSegment> SplitToStyledSegments(string line, TagState state)
         {
             var segments = new List<StyledSegment>();
@@ -193,7 +316,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 if (sb.Length > 0)
                 {
-                    segments.Add(new StyledSegment(sb.ToString(), state.Italic > 0, state.Bold > 0));
+                    segments.Add(new StyledSegment(sb.ToString(), state.Italic > 0, state.Bold > 0, state.CurrentColor));
                     sb.Clear();
                 }
             }
@@ -217,8 +340,24 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 case "/b": state.Bold = Math.Max(0, state.Bold - 1); break;
                             }
                         }
-                        else if (!tag.StartsWith("font", StringComparison.Ordinal) && tag != "/font" &&
-                                 tag != "u" && tag != "/u")
+                        else if (tag.StartsWith("font", StringComparison.Ordinal))
+                        {
+                            Flush();
+                            var match = FontColorRegex.Match(tag);
+                            var color = match.Success
+                                ? (match.Groups[1].Success ? match.Groups[1].Value : match.Groups[2].Success ? match.Groups[2].Value : match.Groups[3].Value)
+                                : null;
+                            state.FontColors.Add(string.IsNullOrWhiteSpace(color) ? null : color);
+                        }
+                        else if (tag == "/font")
+                        {
+                            Flush();
+                            if (state.FontColors.Count > 0)
+                            {
+                                state.FontColors.RemoveAt(state.FontColors.Count - 1);
+                            }
+                        }
+                        else if (tag != "u" && tag != "/u")
                         {
                             sb.Append(line, i, endTag - i + 1); // not a tag we know - keep as text
                         }
@@ -235,7 +374,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Flush();
             if (segments.Count == 0)
             {
-                segments.Add(new StyledSegment(string.Empty, false, false));
+                segments.Add(new StyledSegment(string.Empty, false, false, null));
             }
 
             return segments;
@@ -263,25 +402,36 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument { XmlResolver = null, PreserveWhitespace = true };
             try
             {
-                xml.LoadXml(sb.ToString().RemoveControlCharactersButWhiteSpace().Trim());
+                xml.LoadXml(JoinLines(lines).RemoveControlCharactersButWhiteSpace().Trim());
             }
             catch
             {
-                xml.LoadXml(sb.ToString().Replace(" & ", " &amp; ").RemoveControlCharactersButWhiteSpace().Trim());
+                try
+                {
+                    xml.LoadXml(JoinLines(lines).Replace(" & ", " &amp; ").RemoveControlCharactersButWhiteSpace().Trim());
+                }
+                catch (Exception exception)
+                {
+                    // The retry is the last chance to make sense of the file; a truncated or
+                    // damaged one must read as "not mine", not throw out of the reader (and out
+                    // of IsMine, which runs for every format when a file is opened).
+                    System.Diagnostics.Debug.WriteLine(exception.Message);
+                    _errorCount = 1;
+                    return;
+                }
             }
 
-            subtitle.Header = sb.ToString();
+            subtitle.Header = JoinLines(lines);
 
             var namespaceManager = new XmlNamespaceManager(xml.NameTable);
             namespaceManager.AddNamespace("ttml", TtmlNamespace);
 
             var italicStyles = new HashSet<string>(StringComparer.Ordinal);
             var boldStyles = new HashSet<string>(StringComparer.Ordinal);
+            var colorStyles = new Dictionary<string, string>(StringComparer.Ordinal);
             foreach (XmlNode styleNode in xml.DocumentElement.SelectNodes("//ttml:style", namespaceManager))
             {
                 var id = styleNode.Attributes?["xml:id"]?.Value ?? styleNode.Attributes?["id"]?.Value;
@@ -298,6 +448,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (styleNode.Attributes?["tts:fontWeight"]?.Value == "bold")
                 {
                     boldStyles.Add(id);
+                }
+
+                var colorValue = styleNode.Attributes?["tts:color"]?.Value;
+                if (!string.IsNullOrEmpty(colorValue))
+                {
+                    // Null value = explicit white; a span referencing it resets an inherited
+                    // colour back to the default (and gets no font tag).
+                    colorStyles[id] = GetFontColorTag(colorValue);
                 }
             }
 
@@ -326,7 +484,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (XmlNode node in body.SelectNodes("//ttml:p", namespaceManager))
             {
                 TimedText10.ExtractTimeCodes(node, subtitle, out var begin, out var end);
-                var text = ReadParagraph(node, italicStyles, boldStyles);
+                var text = ReadParagraph(node, italicStyles, boldStyles, colorStyles);
 
                 var region = node.Attributes?["region"]?.Value;
                 if (region != null && topRegions.Contains(region))
@@ -340,24 +498,163 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        private static string ReadParagraph(XmlNode node, HashSet<string> italicStyles, HashSet<string> boldStyles)
+        /// <summary>
+        /// Maps a tts:color value to the font tag colour SE should show: a teletext colour name
+        /// for the exact RGB corners, lowercase #rrggbb for anything else, null for white (the
+        /// document default - no tag) and for unparsable values.
+        /// </summary>
+        private static string GetFontColorTag(string ttsColorValue)
         {
-            var pText = new StringBuilder();
-            ReadNode(node, pText, italicStyles, boldStyles, inheritedItalic: false, inheritedBold: false);
+            if (string.IsNullOrWhiteSpace(ttsColorValue))
+            {
+                return null;
+            }
 
-            var text = pText.ToString()
+            var color = ParseColor(ttsColorValue);
+            foreach (var (name, r, g, b) in TeletextColors)
+            {
+                if (color.Red == r && color.Green == g && color.Blue == b)
+                {
+                    return name == "white" ? null : name;
+                }
+            }
+
+            return $"#{color.Red:x2}{color.Green:x2}{color.Blue:x2}";
+        }
+
+        private readonly struct TextRun
+        {
+            public TextRun(string text, bool italic, bool bold, string color, bool isBreak)
+            {
+                Text = text;
+                Italic = italic;
+                Bold = bold;
+                Color = color;
+                IsBreak = isBreak;
+            }
+
+            public string Text { get; }
+            public bool Italic { get; }
+            public bool Bold { get; }
+            public string Color { get; }
+            public bool IsBreak { get; }
+        }
+
+        private static string ReadParagraph(XmlNode node, HashSet<string> italicStyles, HashSet<string> boldStyles, Dictionary<string, string> colorStyles)
+        {
+            var runs = new List<TextRun>();
+            ReadNode(node, runs, italicStyles, boldStyles, colorStyles, inheritedItalic: false, inheritedBold: false, inheritedColor: null);
+
+            var text = BuildText(runs)
                 .Replace("   ", " ")
                 .Replace("  ", " ")
                 .Replace("  ", " ")
                 .Replace(Environment.NewLine + " ", Environment.NewLine)
-                .Replace(" " + Environment.NewLine, Environment.NewLine)
-                .Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine)
-                .Replace("</b>" + Environment.NewLine + "<b>", Environment.NewLine);
+                .Replace(" " + Environment.NewLine, Environment.NewLine);
 
             return text.Trim();
         }
 
-        private static void ReadNode(XmlNode node, StringBuilder pText, HashSet<string> italicStyles, HashSet<string> boldStyles, bool inheritedItalic, bool inheritedBold)
+        // Turns the flat run list into tagged text. Tags nest font > i > b and stay open across
+        // runs (and line breaks) with the same formatting, so two italic lines come out as one
+        // <i>...</i> block. Whitespace-only runs (XML indentation, spaces between spans) carry
+        // no formatting of their own - they are buffered and emitted after any closing tags but
+        // before any opening ones, keeping tags tight around the visible text.
+        private static string BuildText(List<TextRun> runs)
+        {
+            var sb = new StringBuilder();
+            var pending = new StringBuilder();
+            var fontOpen = false;
+            var italicOpen = false;
+            var boldOpen = false;
+            string openColor = null;
+
+            foreach (var run in runs)
+            {
+                if (run.IsBreak)
+                {
+                    pending.Append(Environment.NewLine);
+                    continue;
+                }
+
+                if (string.IsNullOrWhiteSpace(run.Text))
+                {
+                    pending.Append(run.Text);
+                    continue;
+                }
+
+                var fontChange = openColor != run.Color;
+                var italicChange = italicOpen != run.Italic;
+                var boldChange = boldOpen != run.Bold;
+
+                if (boldOpen && (boldChange || italicChange || fontChange))
+                {
+                    sb.Append("</b>");
+                    boldOpen = false;
+                }
+
+                if (italicOpen && (italicChange || fontChange))
+                {
+                    sb.Append("</i>");
+                    italicOpen = false;
+                }
+
+                if (fontOpen && fontChange)
+                {
+                    sb.Append("</font>");
+                    fontOpen = false;
+                    openColor = null;
+                }
+
+                if (pending.Length > 0)
+                {
+                    sb.Append(pending);
+                    pending.Clear();
+                }
+
+                if (run.Color != null && !fontOpen)
+                {
+                    sb.Append("<font color=\"").Append(run.Color).Append("\">");
+                    fontOpen = true;
+                    openColor = run.Color;
+                }
+
+                if (run.Italic && !italicOpen)
+                {
+                    sb.Append("<i>");
+                    italicOpen = true;
+                }
+
+                if (run.Bold && !boldOpen)
+                {
+                    sb.Append("<b>");
+                    boldOpen = true;
+                }
+
+                sb.Append(run.Text);
+            }
+
+            if (boldOpen)
+            {
+                sb.Append("</b>");
+            }
+
+            if (italicOpen)
+            {
+                sb.Append("</i>");
+            }
+
+            if (fontOpen)
+            {
+                sb.Append("</font>");
+            }
+
+            sb.Append(pending); // trailing whitespace stays outside the tags; Trim removes it
+
+            return sb.ToString();
+        }
+
+        private static void ReadNode(XmlNode node, List<TextRun> runs, HashSet<string> italicStyles, HashSet<string> boldStyles, Dictionary<string, string> colorStyles, bool inheritedItalic, bool inheritedBold, string inheritedColor)
         {
             foreach (XmlNode child in node.ChildNodes)
             {
@@ -369,27 +666,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         value = " ";
                     }
 
-                    if (inheritedItalic)
-                    {
-                        pText.Append("<i>").Append(value).Append("</i>");
-                    }
-                    else if (inheritedBold)
-                    {
-                        pText.Append("<b>").Append(value).Append("</b>");
-                    }
-                    else
-                    {
-                        pText.Append(value);
-                    }
+                    runs.Add(new TextRun(value, inheritedItalic, inheritedBold, inheritedColor, isBreak: false));
                 }
                 else if (child.LocalName == "br")
                 {
-                    pText.AppendLine();
+                    runs.Add(new TextRun(string.Empty, false, false, null, isBreak: true));
                 }
                 else if (child.LocalName == "span")
                 {
                     var italic = inheritedItalic;
                     var bold = inheritedBold;
+                    var color = inheritedColor;
 
                     var styleRefs = child.Attributes?["style"]?.Value;
                     if (!string.IsNullOrEmpty(styleRefs))
@@ -398,6 +685,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             italic = italic || italicStyles.Contains(styleRef);
                             bold = bold || boldStyles.Contains(styleRef);
+                            if (colorStyles.TryGetValue(styleRef, out var styleColor))
+                            {
+                                color = styleColor; // last colour-bearing ref wins, per TTML
+                            }
                         }
                     }
 
@@ -411,11 +702,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         bold = true;
                     }
 
-                    ReadNode(child, pText, italicStyles, boldStyles, italic, bold);
+                    var inlineColor = child.Attributes?["tts:color"]?.Value;
+                    if (!string.IsNullOrEmpty(inlineColor))
+                    {
+                        color = GetFontColorTag(inlineColor);
+                    }
+
+                    ReadNode(child, runs, italicStyles, boldStyles, colorStyles, italic, bold, color);
                 }
                 else
                 {
-                    ReadNode(child, pText, italicStyles, boldStyles, inheritedItalic, inheritedBold);
+                    ReadNode(child, runs, italicStyles, boldStyles, colorStyles, inheritedItalic, inheritedBold, inheritedColor);
                 }
             }
         }

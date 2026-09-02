@@ -202,6 +202,7 @@ public partial class SpeechToTextEngineSettingsViewModel : ObservableObject
             return winVariant switch
             {
                 "cuda" => "Windows x64 (CUDA)",
+                "cuda13" => "Windows x64 (CUDA 13)",
                 "vulkan" => "Windows x64 (Vulkan)",
                 "cpu-legacy" => "Windows x64 (CPU, legacy)",
                 "cpu" => "Windows x64 (CPU)",

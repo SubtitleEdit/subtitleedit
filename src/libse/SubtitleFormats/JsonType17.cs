@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
@@ -74,7 +75,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     if (long.TryParse(startTimeObject, out var startMs) && long.TryParse(endTimeObject, out var endMs))
                     {
-                        var p = new Paragraph(string.Join(Environment.NewLine, texts), startMs, endMs);
+                        // ToText escapes with Json.EncodeJsonText, so decode on the way in.
+                        var p = new Paragraph(string.Join(Environment.NewLine, texts.Select(Json.DecodeJsonText)), startMs, endMs);
                         subtitle.Paragraphs.Add(p);
                     }
                     else

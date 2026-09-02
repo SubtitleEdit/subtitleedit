@@ -16,6 +16,7 @@ using Nikse.SubtitleEdit.Logic.Media;
 using SkiaSharp;
 using System;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -194,12 +195,30 @@ public partial class AssaSetPositionViewModel : ObservableObject
 
         var previewSubtitle = MakePreviewSubtitle(_subtitle, line);
         var previewScreenshotFileName = FfmpegGenerator.GetScreenShotWithSubtitle(previewSubtitle, _renderWidth, _renderHeight);
-        var skBitmap = SKBitmap.Decode(previewScreenshotFileName);
-        var trimResult = skBitmap.TrimTransparentPixels();
 
-        ScreenshotOverlayText = trimResult.TrimmedBitmap.ToAvaloniaBitmap();
-        ScreenshotX = trimResult.Left;
-        ScreenshotY = trimResult.Top;
+        // ffmpeg can fail to produce the frame (missing/blocked binary, odd filter input): decoding
+        // a null file name threw and took the whole dialog down. The png and both bitmaps are ours
+        // to clean up.
+        if (!string.IsNullOrEmpty(previewScreenshotFileName))
+        {
+            using var skBitmap = SKBitmap.Decode(previewScreenshotFileName);
+            try
+            {
+                File.Delete(previewScreenshotFileName);
+            }
+            catch
+            {
+                // ignore cleanup errors
+            }
+
+            if (skBitmap != null)
+            {
+                using var trimResult = skBitmap.TrimTransparentPixels();
+                ScreenshotOverlayText = trimResult.TrimmedBitmap.ToAvaloniaBitmap();
+                ScreenshotX = trimResult.Left;
+                ScreenshotY = trimResult.Top;
+            }
+        }
 
         // Set target resolution from video if available
         if (videoWidth.HasValue && videoWidth.Value > 0)
@@ -222,7 +241,7 @@ public partial class AssaSetPositionViewModel : ObservableObject
 
         if (TargetWidth <= 0 || TargetHeight <= 0)
         {
-            TargetWidth = 1820;
+            TargetWidth = 1920;
             TargetHeight = 1080;
         }
 

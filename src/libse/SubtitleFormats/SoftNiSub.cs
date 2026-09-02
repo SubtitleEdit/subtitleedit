@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.AppendLine(string.Format(writeFormat, text, Environment.NewLine, p.StartTime.ToHHMMSSPeriodFF(), p.EndTime.ToHHMMSSPeriodFF()));
             }
 
-            var last = subtitle.Paragraphs.Last();
+            var last = subtitle.Paragraphs.LastOrDefault();
             if (last == null)
             {
                 sb.AppendLine("*END*");

@@ -107,6 +107,10 @@ public class ModifySelectionRule
                 RuleType = RuleType.RegEx,
                 Name = g.RegularExpression,
                 HasText = true,
+                // Without this the match-case box is hidden and "HasMatchCase && MatchCase" can
+                // never be true, so every pattern was compiled IgnoreCase - unlike find/replace
+                // and SE 4, where regex is case-sensitive.
+                HasMatchCase = true,
             },
             new()
             {
@@ -238,6 +242,11 @@ public class ModifySelectionRule
                 Name = l.BookmarkContains,
                 HasText = true,
                 HasMatchCase = true,
+            },
+            new()
+            {
+                RuleType = RuleType.Forced,
+                Name = l.Forced,
             },
             new()
             {
@@ -423,6 +432,9 @@ public class ModifySelectionRule
                 }
 
                 return HasMatchCase && MatchCase ? item.Bookmark.Contains(Text) : item.Bookmark.IndexOf(Text, StringComparison.OrdinalIgnoreCase) >= 0;
+
+            case RuleType.Forced:
+                return item.Forced;
 
             case RuleType.BlankLines:
                 return string.IsNullOrWhiteSpace(text);

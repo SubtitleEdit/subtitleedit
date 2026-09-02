@@ -106,6 +106,8 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _mpvPreviewFontBold;
     [ObservableProperty] private ObservableCollection<AlignmentItem> __mpvPreviewFontAlignments;
     [ObservableProperty] private AlignmentItem _mpvPreviewSelectedFontAlignment;
+    [ObservableProperty] private ObservableCollection<MpvJustifyDisplay> _mpvPreviewJustifyItems;
+    [ObservableProperty] private MpvJustifyDisplay _mpvPreviewSelectedJustify;
     [ObservableProperty] private int _mpvPreviewMargin;
     [ObservableProperty] private bool _mpvPreviewUsePositionFromFile;
     [ObservableProperty] private bool _mpvPreviewMarginIsPartOfSubtitleArea;
@@ -148,6 +150,8 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string? _selectedFavoriteSubtitleFormat;
 
     [ObservableProperty] private bool _webVttUseXTimestampMap;
+    [ObservableProperty] private bool _assaAutoSetResolution;
+    [ObservableProperty] private bool _assaAutoSetResolutionPrompt;
 
     [ObservableProperty] private ObservableCollection<PickLanguageDisplay> _favoriteLanguages;
     [ObservableProperty] private PickLanguageDisplay? _selectedFavoriteLanguage;
@@ -389,6 +393,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _textBoxColorTags;
     [ObservableProperty] private bool _textBoxLiveSpellCheck;
     [ObservableProperty] private bool _subtitleGridLiveSpellCheck;
+    [ObservableProperty] private bool _subtitleGridCenterText;
     [ObservableProperty] private bool _textBoxCenterText;
     [ObservableProperty] private bool _showButtonHints;
     [ObservableProperty] private bool _gridCompactMode;
@@ -436,6 +441,14 @@ public partial class SettingsViewModel : ObservableObject
     };
 
     public bool OkPressed { get; set; }
+
+    /// <summary>
+    /// The settings as they stood after the last Apply, or null when Apply was never pressed.
+    /// The caller compares the settings at OK against this so that an Apply followed by OK does
+    /// not apply - and rebuild - everything twice (issue #14218).
+    /// </summary>
+    public string? AppliedSettingsSnapshot { get; private set; }
+
     public Window? Window { get; internal set; }
     public ScrollViewer ScrollView { get; internal set; }
     public List<SettingsSection> Sections { get; internal set; }
@@ -465,6 +478,8 @@ public partial class SettingsViewModel : ObservableObject
         MpvPreviewBorderTypes = new ObservableCollection<BorderStyleItem>(BorderStyleItem.List());
         MpvPreviewFontAlignments = new ObservableCollection<AlignmentItem>(AlignmentItem.Alignments);
         MpvPreviewSelectedFontAlignment = MpvPreviewFontAlignments[7];
+        MpvPreviewJustifyItems = new ObservableCollection<MpvJustifyDisplay>(MpvJustifyDisplay.GetAll());
+        MpvPreviewSelectedJustify = MpvPreviewJustifyItems[0];
         LibVlcStatus = string.Empty;
 
         UpdateChannels =
@@ -802,11 +817,16 @@ public partial class SettingsViewModel : ObservableObject
         }
 
         WebVttUseXTimestampMap = Se.Settings.Formats.WebVttUseXTimestampMap;
+        AssaAutoSetResolution = Se.Settings.Assa.AutoSetResolution;
+        AssaAutoSetResolutionPrompt = Se.Settings.Assa.AutoSetResolutionPrompt;
 
+        // Clear unconditionally, the way FavoriteLanguages does below: LoadSettings runs again
+        // after importing a settings file, so with the Clear() inside the guard an import that
+        // has no favorites left the old ones in place - and OK wrote them straight back.
+        FavoriteSubtitleFormats.Clear();
         if (!string.IsNullOrEmpty(general.FavoriteSubtitleFormats))
         {
             var favoriteFormats = general.FavoriteSubtitleFormats.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-            FavoriteSubtitleFormats.Clear();
             foreach (var format in favoriteFormats)
             {
                 if (SaveSubtitleFormats.Contains(format))
@@ -894,6 +914,7 @@ public partial class SettingsViewModel : ObservableObject
         SubtitleGridTextSingleLineSeparator = appearance.SubtitleGridTextSingleLineSeparator;
         SubtitleGridFormatting = MapGridFormattingToText(appearance.SubtitleGridFormattingType);
         SubtitleGridLiveSpellCheck = appearance.SubtitleGridLiveSpellCheck;
+        SubtitleGridCenterText = appearance.SubtitleGridCenterText;
         SubtitleTextBoxAndGridFontName = appearance.SubtitleTextBoxAndGridFontName;
         TextBoxFontSize = appearance.SubtitleTextBoxFontSize;
         TextBoxFontBold = appearance.SubtitleTextBoxFontBold;
@@ -1062,6 +1083,7 @@ public partial class SettingsViewModel : ObservableObject
         MpvPreviewUsePositionFromFile = video.MpvPreviewUsePositionFromFile;
         MpvPreviewMarginIsPartOfSubtitleArea = video.MpvPreviewMarginIsPartOfSubtitleArea;
         MpvPreviewSelectedFontAlignment = MpvPreviewFontAlignments.FirstOrDefault(p => p.Code == video.MpvPreviewAlignment) ?? MpvPreviewFontAlignments[7];
+        MpvPreviewSelectedJustify = MpvPreviewJustifyItems.FirstOrDefault(p => p.Code == video.MpvPreviewJustify) ?? MpvPreviewJustifyItems[0];
         MpvPreviewOutlineWidth = video.MpvPreviewOutlineWidth;
         MpvPreviewShadowWidth = video.MpvPreviewShadowWidth;
         MpvPreviewColorPrimary = video.MpvPreviewColorPrimary.FromHexToColor();
@@ -1264,7 +1286,10 @@ public partial class SettingsViewModel : ObservableObject
             return Se.Language.Options.Settings.SaveAsBehaviorUseSubtitleFileName;
         }
 
-        return Se.Language.General.Default;
+        // The remaining value is New, whose combo box entry is "Name". Returning "Default" - a
+        // string not in SaveAsBehaviorTypes - left the dropdown blank after reopening Settings,
+        // and the two-way binding then wrote the cleared selection back.
+        return Se.Language.General.Name;
     }
 
     private static string MapFromDefaultSaveLocation(string defaultSaveLocation)
@@ -1482,14 +1507,17 @@ public partial class SettingsViewModel : ObservableObject
 
     public static string MapToSelectedSubtitleEnterKeyAction(string text)
     {
+        // SubtitleEnterKeyActionType has no None member (this was copy/pasted from the
+        // single-click mapper above), so falling back to it persisted a token nothing can map
+        // back, leaving the dropdown blank. Fall back to the setting's own default instead.
         if (string.IsNullOrEmpty(text))
         {
-            return SubtitleSingleClickActionType.None.ToString();
+            return nameof(SubtitleEnterKeyActionType.GoToSubtitleAndSetVideoPosition);
         }
 
         return KeyEnterTextToActionMap.TryGetValue(text, out var action)
             ? action
-            : SubtitleSingleClickActionType.None.ToString();
+            : nameof(SubtitleEnterKeyActionType.GoToSubtitleAndSetVideoPosition);
     }
 
     private static readonly Dictionary<string, string> _singleClickActionToTextMap = BuildSingleClickActionToTextMap();
@@ -1670,6 +1698,8 @@ public partial class SettingsViewModel : ObservableObject
         general.DefaultSaveAsFormat = SelectedSaveSubtitleFormat;
 
         Se.Settings.Formats.WebVttUseXTimestampMap = WebVttUseXTimestampMap;
+        Se.Settings.Assa.AutoSetResolution = AssaAutoSetResolution;
+        Se.Settings.Assa.AutoSetResolutionPrompt = AssaAutoSetResolutionPrompt;
 
         var sbFavorites = new StringBuilder();
         foreach (var format in FavoriteSubtitleFormats)
@@ -1751,6 +1781,7 @@ public partial class SettingsViewModel : ObservableObject
         appearance.SubtitleGridTextSingleLineSeparator = SubtitleGridTextSingleLineSeparator;
         appearance.SubtitleGridFormattingType = MapGridFormattingToCode(SubtitleGridFormatting);
         appearance.SubtitleGridLiveSpellCheck = SubtitleGridLiveSpellCheck;
+        appearance.SubtitleGridCenterText = SubtitleGridCenterText;
         appearance.SubtitleTextBoxAndGridFontName = string.IsNullOrEmpty(SubtitleTextBoxAndGridFontName) ? new Label().FontFamily.Name : SubtitleTextBoxAndGridFontName;
         appearance.SubtitleTextBoxFontSize = TextBoxFontSize;
         appearance.SubtitleTextBoxFontBold = TextBoxFontBold;
@@ -1897,6 +1928,7 @@ public partial class SettingsViewModel : ObservableObject
         video.MpvPreviewMarginIsPartOfSubtitleArea = MpvPreviewMarginIsPartOfSubtitleArea;
         video.MpvPreviewOutlineWidth = MpvPreviewOutlineWidth;
         video.MpvPreviewAlignment = MpvPreviewSelectedFontAlignment.Code;
+        video.MpvPreviewJustify = (MpvPreviewSelectedJustify ?? MpvPreviewJustifyItems[0]).Code;
         video.MpvPreviewShadowWidth = MpvPreviewShadowWidth;
         video.MpvPreviewColorPrimary = MpvPreviewColorPrimary.FromColorToHex();
         video.MpvPreviewColorOutline = MpvPreviewColorOutline.FromColorToHex();
@@ -2744,6 +2776,11 @@ public partial class SettingsViewModel : ObservableObject
 
         await FileTypeAssociationsManager.SaveFileTypeAssociationsAsync(FileTypeAssociations, Window);
         _mainViewModel?.ApplySettings();
+
+        // Everything up to here is now applied, so this is the baseline the OK press must be
+        // compared against - without it OK re-applies every change this Apply already made and
+        // rebuilds the layout (and the video player) a second time (issue #14218).
+        AppliedSettingsSnapshot = SettingsChangeSnapshot.Take();
     }
 
     [RelayCommand]

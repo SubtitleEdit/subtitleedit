@@ -157,7 +157,7 @@ public partial class PickFontNameViewModel : ObservableObject, IClosingCleanup
         var fontName = GetActiveFontName();
         if (string.IsNullOrWhiteSpace(fontName))
         {
-            ImagePreview = new SKBitmap(1, 1, true).ToAvaloniaBitmap();
+            SetPreview(new SKBitmap(1, 1, true).ToAvaloniaBitmap());
             return;
         }
 
@@ -178,11 +178,9 @@ public partial class PickFontNameViewModel : ObservableObject, IClosingCleanup
         skTypeface ??= SKTypeface.FromFamilyName(fontName);
         if (skTypeface == null)
         {
-            ImagePreview = new SKBitmap(1, 1, true).ToAvaloniaBitmap();
+            SetPreview(new SKBitmap(1, 1, true).ToAvaloniaBitmap());
             return;
         }
-
-        ImagePreview?.Dispose();
 
         var imageInfo = new SKImageInfo(previewWidth, previewHeight, SKColorType.Bgra8888, SKAlphaType.Premul);
         using var surface = SKSurface.Create(imageInfo);
@@ -216,7 +214,25 @@ public partial class PickFontNameViewModel : ObservableObject, IClosingCleanup
         // Convert to Avalonia bitmap
         using var skImage = surface.Snapshot();
         var skBitmap = SKBitmap.FromImage(skImage);
-        ImagePreview = skBitmap.ToAvaloniaBitmap();
+        SetPreview(skBitmap.ToAvaloniaBitmap());
+    }
+
+    /// <summary>
+    /// Publishes the new preview before releasing the old one. This runs on the update timer's
+    /// thread, so disposing first left the bound Image pointing at a disposed bitmap for as long
+    /// as the render took - and a render pass in that gap crashed. The early-return paths went
+    /// the other way and leaked the previous bitmap; both go through here now.
+    /// </summary>
+    private void SetPreview(Bitmap newPreview)
+    {
+        var old = ImagePreview;
+        ImagePreview = newPreview;
+        if (!ReferenceEquals(old, newPreview) && old != null)
+        {
+            // Queued behind the binding update this assignment triggers, so the old bitmap
+            // outlives the last render pass that can still reference it.
+            Dispatcher.UIThread.Post(() => old.Dispose(), DispatcherPriority.Background);
+        }
     }
 
     [RelayCommand]

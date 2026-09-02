@@ -149,8 +149,11 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
 
             // Build word with tags
+            // A Stack enumerates top-to-bottom, i.e. already innermost-first, so Insert(0, ...)
+            // reversed it again and produced crossed tags ("<i><b>Hello</i></b>"). Enumerate
+            // bottom-to-top and append, the way MoveWordDown does.
             var closingTags = new StringBuilder();
-            foreach (var (opening, closing) in openTags)
+            foreach (var (opening, closing) in openTags.Reverse())
             {
                 if (!string.IsNullOrEmpty(closing))
                 {

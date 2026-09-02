@@ -72,6 +72,10 @@ public class InitWaveform
                 FocusOnMouseOver = settings.FocusOnMouseOver,
                 IsReadOnly = Se.Settings.General.LockTimeCodes,
                 WaveformHeightPercentage = settings.SpectrogramCombinedWaveformHeight,
+                // The toggle may have been pressed in a layout without a waveform; a waveform
+                // built later must come up on the same side of it as the video preview, or the
+                // two previews show different texts (see SetOriginalTextInPreview).
+                ShowOriginalText = vm.ShowOriginalTextInPreview,
             };
 
             vm.AudioVisualizer.GetIsVideoPlaying = () => vm.GetVideoPlayerControl()?.IsPlaying == true;

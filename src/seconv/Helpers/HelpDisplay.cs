@@ -65,6 +65,7 @@ internal static class HelpDisplay
         ShowParameter(console, "--ocr-language:<lang>", "Language for OCR (e.g. eng, deu, spa)");
         ShowParameter(console, "--ocr-db:<path>", ".nocr (--ocr-engine=nocr) or .db (--ocr-engine=binaryocr)");
         ShowParameter(console, "--ocr-model:<model>", "llamacpp OCR .gguf file name/path (default: first downloaded OCR model)");
+        ShowParameter(console, "--ocr-prompt:<text|file>", "prompt for llamacpp/ollama OCR; {language} = --ocr-language (default: same as the OCR window)");
         ShowParameter(console, "--ocr-url:<url>", "Endpoint of an already-running llama-server for OCR (skips the auto-start)");
         ShowParameter(console, "--time-codes-only", "Image sources (.sup/VobSub/PGS/DVB/XSUB) -> text with time codes only; skips OCR");
         ShowParameter(console, "--no-vobsub-isolate-colors", "Disable VobSub OCR colour isolation (on by default; isolation binarises to black-on-white, dropping outline colours)");
@@ -106,9 +107,11 @@ internal static class HelpDisplay
         ShowParameter(console, "--box-padding:<px>", "Box padding in pixels; one value for all sides or left,right,top,bottom (default: 5,5,3,3)");
         ShowParameter(console, "--line-spacing:<percent>", "Extra gap between lines as percent of line height (default: 0)");
         ShowParameter(console, "--alignment:<position>", "Screen position, e.g. bottom-center (default), top-left, middle-right");
-        ShowParameter(console, "--content-alignment:<mode>", "Multi-line text justification: left | center (default) | right");
+        ShowParameter(console, "--content-alignment:<mode>", "Multi-line text justification: left | center (default) | right | from-alignment");
         ShowParameter(console, "--bottom-top-margin:<px>", "Vertical screen-edge margin in pixels (default: 5% of height)");
         ShowParameter(console, "--left-right-margin:<px>", "Horizontal screen-edge margin in pixels (default: 5% of width)");
+        ShowParameter(console, "--full-frame", "Draw each subtitle on a frame-sized image (place at 0,0 in an editing timeline); only fcpimage and bluraysup");
+        ShowParameter(console, "--full-frame-background-color:<colour>", "Background of the full frame image (default: transparent)");
 
         console.WriteLine();
         console.MarkupLine("[bold cyan]Operations:[/]");

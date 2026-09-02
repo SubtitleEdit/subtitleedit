@@ -110,7 +110,7 @@ public class OpenOriginalMismatchWindow : Window
             },
         };
 
-        Activated += delegate { radioMatching.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, radioMatching); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 

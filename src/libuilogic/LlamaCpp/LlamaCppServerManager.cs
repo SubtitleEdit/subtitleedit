@@ -287,6 +287,12 @@ public static class LlamaCppServerManager
     /// subtitles; HunyuanOCR 12/14 recognized (0.6%) with the same merging; LightOnOCR 9/14
     /// recognized (2.53%) at 18.5 s/image - weakest and ~7x slower, hence last.
     /// </summary>
+    // DeepSeek-OCR-2 was evaluated for this list and rejected (2026-08-26): through
+    // mainline llama.cpp with the OCR prompt it captions the image ("The image displays a
+    // scene from...") instead of extracting text - 2/24 subtitle lines exact at 11 s/image
+    // on a burned-in video clip where GLM-OCR scored 21/24 at 4 s. Its strong results come
+    // from CrispEmbed's fork, which drives the model's own crop/prompt modes, so that is
+    // where SE offers it.
     public static readonly IReadOnlyList<LlamaCppModel> OcrModels = new[]
     {
         new LlamaCppModel("GLM-OCR 0.9B (Q8_0)", "GLM-OCR-Q8_0.gguf", "1.4 GB",

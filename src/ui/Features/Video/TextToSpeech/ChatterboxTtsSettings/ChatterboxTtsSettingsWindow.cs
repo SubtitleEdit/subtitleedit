@@ -34,7 +34,7 @@ public class ChatterboxTtsSettingsWindow : Window
         Content = BuildContent(vm);
 
         var ok = UiUtil.MakeButtonOk(vm.OkCommand);
-        Activated += delegate { ok.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, ok);
     }
 
     private Border BuildContent(ChatterboxTtsSettingsViewModel vm)
@@ -112,9 +112,8 @@ public class ChatterboxTtsSettingsWindow : Window
         grid.Add(MakeLabel(Se.Language.General.Engine), 0, 0);
         var enginePanel = MakeStatusPanel(nameof(vm.EngineBrush), nameof(vm.EngineLabel));
         var engineButton = UiUtil.MakeButton(string.Empty, vm.RedownloadEngineCommand)
-            .WithIconLeft(IconNames.Download)
+            .WithIconLeftBindText(IconNames.Download, nameof(vm.EngineDownloadButtonText))
             .WithMarginLeft(12);
-        engineButton.Bind(ContentControl.ContentProperty, new Binding(nameof(vm.EngineDownloadButtonText)));
         enginePanel.Children.Add(engineButton);
         grid.Add(enginePanel, 0, 1);
 
@@ -133,7 +132,9 @@ public class ChatterboxTtsSettingsWindow : Window
             FontSize = 12,
             [!TextBox.TextProperty] = new Binding(nameof(vm.ModelsFolder)),
         };
-        grid.Add(folderText, 3, 1);
+        // Row 2, beside its own label - every sibling settings window pairs (N,0) with (N,1).
+        // At row 3 the "Install folder" caption sat alone and the path appeared a row lower.
+        grid.Add(folderText, 2, 1);
 
         // Language spoken in imported reference WAVs — sent as `source_lang` so cross-lingual
         // cloning engages when the target language differs. Chatterbox clones from the WAV alone
@@ -187,9 +188,7 @@ public class ChatterboxTtsSettingsWindow : Window
                     nameof(ChatterboxModelStatusViewModel.StatusLabel));
                 status.Width = 110;
                 var button = UiUtil.MakeButton(string.Empty)
-                    .WithIconLeft(IconNames.Download);
-                button.Bind(ContentControl.ContentProperty,
-                    new Binding(nameof(ChatterboxModelStatusViewModel.DownloadButtonText)));
+                    .WithIconLeftBindText(IconNames.Download, nameof(ChatterboxModelStatusViewModel.DownloadButtonText));
                 button.Bind(Button.CommandProperty,
                     new Binding(nameof(ChatterboxModelStatusViewModel.DownloadCommand)));
 

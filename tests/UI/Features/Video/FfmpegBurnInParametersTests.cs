@@ -68,4 +68,20 @@ public class FfmpegBurnInParametersTests
         Assert.Contains("\"output.webm\"", parameters);
         Assert.DoesNotContain("-pass ", parameters);
     }
+
+    /// <summary>
+    /// Without "-y" ffmpeg refuses to touch an existing output file ("File ... already exists.
+    /// Exiting.") - and with the old file still in place the burn-in reported success while
+    /// nothing had been re-encoded (issue #14210).
+    /// </summary>
+    [Theory]
+    [InlineData("", "")]
+    [InlineData("1", "500k")]
+    [InlineData("2", "500k")]
+    public void Overwrite_IsAlwaysAllowed(string pass, string twoPassBitRate)
+    {
+        var parameters = Generate("libx264", "aac", "output.mp4", pass, twoPassBitRate);
+
+        Assert.StartsWith("-y ", parameters);
+    }
 }

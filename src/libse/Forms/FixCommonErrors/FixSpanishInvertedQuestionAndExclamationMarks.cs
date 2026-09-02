@@ -187,7 +187,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                 }
                             }
                         }
-                        else if (last != null && !isLastLineClosed && inverseMarkIndex == p.Text.IndexOf(mark) && !last.Text.Contains(inverseMark))
+                        // "inverseMarkIndex == p.Text.IndexOf(mark)" asked whether one position
+                        // holds both the inverse mark and the mark, which is impossible, so this
+                        // whole "the sentence started in the previous subtitle" branch was dead.
+                        // The test is the same one the isLastLineClosed branch above uses.
+                        else if (last != null && !isLastLineClosed && (inverseMarkIndex < 0 || inverseMarkIndex > markIndex) && !last.Text.Contains(inverseMark))
                         {
                             int idx = last.Text.Length - 2;
                             while (idx > 0 && last.Text.Substring(idx, 2) != ". " && last.Text.Substring(idx, 2) != "! " && last.Text.Substring(idx, 2) != "? ")

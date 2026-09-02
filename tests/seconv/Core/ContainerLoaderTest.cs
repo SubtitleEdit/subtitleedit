@@ -161,8 +161,10 @@ public class ContainerLoaderTest : IDisposable
             TrackNumbers = [9999],
         });
 
-        // No track matched — no failure, no success
-        Assert.True(result.Success, string.Join("; ", result.Errors));
+        // The file has subtitle tracks but none matched the filter — that is an error,
+        // not a silent zero-file success (matches the MP4/TS/MXF loaders).
+        Assert.False(result.Success);
         Assert.Equal(0, result.SuccessfulFiles);
+        Assert.Contains(result.Errors, e => e.Contains("--track-number"));
     }
 }

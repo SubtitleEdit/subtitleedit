@@ -18,7 +18,7 @@ public static class OcrFixLineResultExtensions
         var textBlock = new TextBlock();
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
         {
-            textBlock.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
+            textBlock.FontFamily = FontFamilyHelper.Make(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
         }
 
         // LightPink/LightGreen read well on a dark grid but wash out on a light background,
@@ -38,7 +38,7 @@ public static class OcrFixLineResultExtensions
                     var run = new Run(displayText);
                     if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
                     {
-                        run.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
+                        run.FontFamily = FontFamilyHelper.Make(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
                     }
                     textBlock.Inlines.Add(run);
                 }
@@ -50,7 +50,7 @@ public static class OcrFixLineResultExtensions
                     };
                     if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
                     {
-                        run.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
+                        run.FontFamily = FontFamilyHelper.Make(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
                     }
                     textBlock.Inlines.Add(run);
                 }

@@ -45,6 +45,10 @@ public class LanguageBatchConvert
     public string AssaChangeStyleToStyle { get; set; }
     public string AssaChangeStyleImportStyle { get; set; }
     public string AssaChangeStyleTrimUnusedStyles { get; set; }
+    public string AssaChangeStylePropertiesTitle { get; set; }
+    public string AssaChangeStylePropertiesInfo { get; set; }
+    public string AssaChangeStylePropertiesSetSpacing { get; set; }
+    public string AssaChangeStylePropertiesSetAlignment { get; set; }
     public string ConvertColorsToDialogTitle { get; set; }
     public string ConvertColorsToDialogRemoveColorTags { get; set; }
     public string ConvertColorsToDialogAddNewLines { get; set; }
@@ -97,6 +101,10 @@ public class LanguageBatchConvert
         AssaChangeStyleToStyle = "to";
         AssaChangeStyleImportStyle = "Import style...";
         AssaChangeStyleTrimUnusedStyles = "Trim unused styles";
+        AssaChangeStylePropertiesTitle = "Change style properties";
+        AssaChangeStylePropertiesInfo = "Changes the chosen fields in every style in the file, leaving the styles themselves alone.";
+        AssaChangeStylePropertiesSetSpacing = "Set spacing to";
+        AssaChangeStylePropertiesSetAlignment = "Set alignment to";
         AssaSource = "ASSA source";
         ConvertColorsToDialogTitle = "Convert colors to dialog";
         ConvertColorsToDialogRemoveColorTags = "Remove color tags";

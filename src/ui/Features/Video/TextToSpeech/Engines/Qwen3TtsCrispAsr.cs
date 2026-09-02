@@ -281,6 +281,9 @@ public class Qwen3TtsCrispAsr : ITtsEngine, IPerLineCloneEngine
     }
 
     private static bool _voiceSeedAttempted;
+    /// <summary>A reference WAV is a few seconds; past this ffmpeg is stuck.</summary>
+    private const int ResampleTimeoutMs = 60_000;
+
     private static bool _voiceSampleRatesNormalized;
     private static bool _voiceTranscriptsNormalized;
     private static bool _stagedPerLineReferencesCleared;
@@ -559,17 +562,26 @@ public class Qwen3TtsCrispAsr : ITtsEngine, IPerLineCloneEngine
             var consumed = false;
             try
             {
-                var process = FfmpegGenerator.ConvertToMono24kHzWav(wav, temp);
+                using var process = FfmpegGenerator.ConvertToMono24kHzWav(wav, temp);
                 if (!process.Start())
                 {
                     continue;
                 }
 
-                process.WaitForExit();
-                if (File.Exists(temp) && new FileInfo(temp).Length > 0)
+                // Require a clean exit, and never delete the original first. ffmpeg writes the
+                // 44-byte RIFF header before it encodes, so a run that starts and then fails
+                // leaves a non-empty stub - "exists and non-empty" passed, the user's reference
+                // WAV was deleted, and the stub took its place permanently. VoiceSeedHelper
+                // spells out exactly this rule; every other engine goes through it.
+                if (!process.WaitForExit(ResampleTimeoutMs))
                 {
-                    File.Delete(wav);
-                    File.Move(temp, wav);
+                    try { process.Kill(true); } catch { /* best-effort */ }
+                    continue;
+                }
+
+                if (process.ExitCode == 0 && File.Exists(temp) && new FileInfo(temp).Length > 0)
+                {
+                    File.Move(temp, wav, overwrite: true);
                     consumed = true;
                 }
             }

@@ -82,6 +82,12 @@ public class OcrSubtitleSpDvdSupImages : IOcrSubtitle
 
     public SKSizeI GetScreenSize(int index)
     {
-        return new SKSizeI(_spList[index].Picture.ImageDisplayArea.Width, _spList[index].Picture.ImageDisplayArea.Height);
+        // The video frame, not the subtitle image's own rectangle: GetPosition returns that
+        // rectangle's offset, and the alignment capture divides one by the other - returning the
+        // image size made every line score as right/top and prepend a bogus {\anN}.
+        // DVD is 720x480 (NTSC) or 720x576 (PAL); pick by the display area we were given.
+        var picture = _spList[index].Picture;
+        var height = picture.ImageDisplayArea.Bottom > 480 ? 576 : 480;
+        return new SKSizeI(720, height);
     }
 }

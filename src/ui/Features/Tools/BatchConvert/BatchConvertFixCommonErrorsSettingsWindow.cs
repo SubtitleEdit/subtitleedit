@@ -58,7 +58,7 @@ public class BatchConvertFixCommonErrorsSettingsWindow : Window
         grid.Add(panelButtons, 1, 0);
         Content = grid;
 
-        Activated += delegate { comboProfile.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, comboProfile); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 

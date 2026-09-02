@@ -49,8 +49,15 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 DataOffset = GetUInt(0);
             }
 
-            var sampleLength = Math.Min(sampleCount * 16 + 24, maximumLength);
-            Buffer = new byte[sampleLength];
+            // maximumLength is the box's END POSITION in the file (Box.Position), not a byte count,
+            // so capping the sample table against it was inert - the size came entirely from the
+            // file's own sample_count, and a corrupt trun declaring 100M samples asked for 1.6 GB.
+            // Cap by the bytes actually left in the stream (never smaller than the real table, so
+            // valid files are unaffected) and do the multiply in 64-bit so it cannot wrap.
+            var bytesLeftInFile = fs.Length > fs.Position ? (ulong)(fs.Length - fs.Position) : 0UL;
+            var sampleLength = Math.Min((ulong)sampleCount * 16UL + 24UL, bytesLeftInFile);
+            sampleLength = Math.Min(sampleLength, int.MaxValue);
+            Buffer = new byte[(int)sampleLength];
             readCount = fs.Read(Buffer, 0, Buffer.Length);
             if (readCount < 4)
             {

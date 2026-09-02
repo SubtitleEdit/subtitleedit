@@ -184,8 +184,19 @@ namespace Nikse.SubtitleEdit.Core.Cea608
                 return;
             }
 
+            // Reuse the row that scrolled off the top, cleared - a plain `new CcRow()` is NOT
+            // empty: its chars start with a null foreground/background pen state, so IsEmpty()
+            // (and with it CaptionScreen.IsEmpty and Serialize) reported a blank row as content
+            // for the rest of the file once a roll-up had happened.
+            var topRow = rows[removeIndex];
             rows.RemoveAt(removeIndex);
-            rows.Add(new CcRow());
+            topRow.Clear();
+
+            // It goes back at the roll-up base row, not at the bottom of the screen. Appending
+            // only happens to be right when the base row IS the bottom row - with a roll-up
+            // window placed higher up (a PAC can put it anywhere) appending scrolled every row
+            // below the window along with it.
+            rows.Insert(Math.Min(CurrentRow, rows.Count), topRow);
             Rows = rows.ToArray();
         }
     }

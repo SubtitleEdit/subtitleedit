@@ -83,6 +83,11 @@ public partial class MergeShortLinesViewModel : ObservableObject, IClosingCleanu
     {
         Dispatcher.UIThread.Post(() =>
         {
+            if (_isClosing)
+            {
+                return; // must not overwrite the final result Ok() just computed
+            }
+
             Subtitles.Clear();
             AllSubtitlesFixed.Clear();
             Fixes.Clear();
@@ -155,6 +160,24 @@ public partial class MergeShortLinesViewModel : ObservableObject, IClosingCleanu
         if (Window == null)
         {
             return;
+        }
+
+        // Always recompute the real merge from the current settings instead of handing back
+        // what the 250 ms preview timer last produced: the preview is empty when OK comes
+        // right after opening, stale when it comes right after a settings change, and in
+        // "highlight parts" mode it is not the real merge at all.
+        {
+            var gapThresholdMs = Se.Settings.Tools.BridgeGaps.BridgeGapsSmallerThanMs;
+            var unbreakLinesShorterThan = Se.Settings.General.UnbreakLinesShorterThan;
+            var mergeResult = MergeShortLinesHelper.Merge(
+                _allSubtitles,
+                _shotChanges,
+                SingleLineMaxLength,
+                MaxNumberOfLines,
+                gapThresholdMs,
+                unbreakLinesShorterThan);
+            AllSubtitlesFixed.Clear();
+            AllSubtitlesFixed.AddRange(mergeResult.MergedSubtitles);
         }
 
         SaveSettings();

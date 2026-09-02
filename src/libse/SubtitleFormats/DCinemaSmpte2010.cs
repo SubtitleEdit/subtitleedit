@@ -49,9 +49,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            string xmlAsString = sb.ToString().Trim();
+            string xmlAsString = JoinLinesTrimmed(lines);
 
             if (xmlAsString.Contains("http://www.smpte-ra.org/schemas/428-7/2007/DCST") ||
                 xmlAsString.Contains("http://www.smpte-ra.org/schemas/428-7/2014/DCST"))
@@ -146,7 +144,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             xml.DocumentElement.SelectSingleNode("dcst:Language", nsmgr).InnerText = ss.CurrentDCinemaLanguage;
-            if (ss.CurrentDCinemaEditRate == null && ss.CurrentDCinemaTimeCodeRate == null)
+            // Empty, not just null: SE5 mirrors its settings onto this singleton and pushes
+            // string.Empty for a rate never set in File > Properties, so a "== null" guard could
+            // never fire there and the file got <EditRate></EditRate> - invalid D-Cinema XML.
+            if (string.IsNullOrEmpty(ss.CurrentDCinemaEditRate) && string.IsNullOrEmpty(ss.CurrentDCinemaTimeCodeRate))
             {
                 if (Math.Abs(Configuration.Settings.General.CurrentFrameRate - 24) < 0.01)
                 {
@@ -312,7 +313,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         XmlNode nodeTemp = xml.CreateElement("temp");
                         while (i < line.Length)
                         {
-                            if (!isItalic && line.Substring(i).StartsWith("<i>", StringComparison.Ordinal))
+                            if (!isItalic && line.AsSpan(i).StartsWith("<i>".AsSpan(), StringComparison.Ordinal))
                             {
                                 if (txt.Length > 0)
                                 {
@@ -323,7 +324,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 isItalic = true;
                                 i += 2;
                             }
-                            else if (!isBold && line.Substring(i).StartsWith("<b>", StringComparison.Ordinal))
+                            else if (!isBold && line.AsSpan(i).StartsWith("<b>".AsSpan(), StringComparison.Ordinal))
                             {
                                 if (txt.Length > 0)
                                 {
@@ -334,7 +335,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 isBold = true;
                                 i += 2;
                             }
-                            else if (isItalic && line.Substring(i).StartsWith("</i>", StringComparison.Ordinal))
+                            else if (isItalic && line.AsSpan(i).StartsWith("</i>".AsSpan(), StringComparison.Ordinal))
                             {
                                 if (txt.Length > 0)
                                 {
@@ -360,7 +361,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 isItalic = false;
                                 i += 3;
                             }
-                            else if (isBold && line.Substring(i).StartsWith("</b>", StringComparison.Ordinal))
+                            else if (isBold && line.AsSpan(i).StartsWith("</b>".AsSpan(), StringComparison.Ordinal))
                             {
                                 if (txt.Length > 0)
                                 {
@@ -386,7 +387,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 isBold = false;
                                 i += 3;
                             }
-                            else if (line.Substring(i).StartsWith("<font color=", StringComparison.Ordinal) && line.Substring(i + 3).Contains('>'))
+                            else if (line.AsSpan(i).StartsWith("<font color=".AsSpan(), StringComparison.Ordinal) && line.AsSpan(i + 3).IndexOf('>') >= 0)
                             {
                                 var endOfFont = line.IndexOf('>', i);
                                 if (txt.Length > 0)
@@ -400,7 +401,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 fontNo++;
                                 i = endOfFont;
                             }
-                            else if (fontNo > 0 && line.Substring(i).StartsWith("</font>", StringComparison.Ordinal))
+                            else if (fontNo > 0 && line.AsSpan(i).StartsWith("</font>".AsSpan(), StringComparison.Ordinal))
                             {
                                 if (txt.Length > 0)
                                 {
@@ -629,10 +630,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument { XmlResolver = null };
-            xml.LoadXml(sb.ToString().Replace("<dcst:", "<").Replace("</dcst:", "</").Replace("xmlns=\"http://www.smpte-ra.org/schemas/428-7/2010/DCST\"", string.Empty)); // tags might be prefixed with namespace (or not)... so we just remove them
+            xml.LoadXml(JoinLines(lines).Replace("<dcst:", "<").Replace("</dcst:", "</").Replace("xmlns=\"http://www.smpte-ra.org/schemas/428-7/2010/DCST\"", string.Empty)); // tags might be prefixed with namespace (or not)... so we just remove them
 
             var ss = Configuration.Settings.SubtitleSettings;
             try

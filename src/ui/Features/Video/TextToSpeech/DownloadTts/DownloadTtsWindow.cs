@@ -38,6 +38,20 @@ public sealed class DownloadTtsWindow : Window
         var statusText = new TextBlock();
         statusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ProgressText)));
 
+        // The view models set Error on every failure path, but nothing rendered it - the user saw
+        // only the generic "Download failed" while the real cause was written to a property no
+        // window bound. DownloadVideoFromUrlWindow and DownloadCrispEmbedWindow show it this way.
+        var errorText = new TextBlock
+        {
+            Foreground = new SolidColorBrush(Color.FromRgb(0xC0, 0x39, 0x2B)),
+            TextWrapping = TextWrapping.Wrap,
+        };
+        errorText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.Error)));
+        errorText.Bind(IsVisibleProperty, new Binding(nameof(vm.Error))
+        {
+            Converter = new Avalonia.Data.Converters.FuncValueConverter<string?, bool>(s => !string.IsNullOrEmpty(s)),
+        });
+
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var buttonBar = UiUtil.MakeButtonBar(buttonCancel);
 
@@ -50,14 +64,15 @@ public sealed class DownloadTtsWindow : Window
                 titleText,
                 progressBar,
                 statusText,
+                errorText,
                 buttonBar,
             }
         };
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             buttonCancel.Focus(); // hack to make OnKeyDown work
-        };
+        });
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

@@ -1,4 +1,4 @@
-using Avalonia.Threading;
+﻿using Avalonia.Threading;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
@@ -121,14 +121,36 @@ public partial class AutoBackupService : IAutoBackupService
 
         var fileName = Path.Combine(folder,
             $"{DateTime.Now.Year:0000}-{DateTime.Now.Month:00}-{DateTime.Now.Day:00}_{DateTime.Now.Hour:00}-{DateTime.Now.Minute:00}-{DateTime.Now.Second:00}{title}{saveFormat.Extension}");
+        // IsTextBased only rules out binary formats; the read-only text formats (WSB, FTE,
+        // DlDd, SPU image...) are "text based" but their ToText throws, and the catch below
+        // then swallowed it - leaving the user with auto-backup silently doing nothing.
+        var format = saveFormat.IsTextBased ? saveFormat : new SubRip();
+        string text;
         try
         {
-            var format = saveFormat.IsTextBased ? saveFormat : new SubRip();
-            File.WriteAllText(fileName, format.ToText(subtitle, string.Empty));
+            text = format.ToText(subtitle, string.Empty);
         }
         catch
         {
-            // ignore
+            try
+            {
+                format = new SubRip();
+                fileName = Path.ChangeExtension(fileName, format.Extension);
+                text = format.ToText(subtitle, string.Empty);
+            }
+            catch
+            {
+                return;
+            }
+        }
+
+        try
+        {
+            File.WriteAllText(fileName, text);
+        }
+        catch
+        {
+            // ignore - a backup that cannot be written must not disturb editing
         }
     }
 

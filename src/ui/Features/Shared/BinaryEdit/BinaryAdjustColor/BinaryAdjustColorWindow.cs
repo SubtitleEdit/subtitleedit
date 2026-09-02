@@ -56,7 +56,7 @@ public class BinaryAdjustColorWindow : Window
 
         Content = mainGrid;
 
-        Activated += delegate { buttonCancel.Focus(); }; // initial focus on a safe button, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, buttonCancel); // initial focus on a safe button, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 

@@ -24,7 +24,9 @@ public class LanguageFile
     public string CompareTextOrTimeDifference { get; set; }
     public string CompareNumberDifference { get; set; }
     public string IgnoreWhitespace { get; set; }
+    public string IgnoreWhitespaceHint { get; set; }
     public string IgnoreFormatting { get; set; }
+    public string IgnoreFormattingHint { get; set; }
     public string ShowOnlyDifferencesInText { get; set; }
     public string LoadXFromFile { get; set; }
     public string SaveCompareHtmlTitle { get; set; }
@@ -33,6 +35,18 @@ public class LanguageFile
     public string PickMp4TrackX { get; set; }
     public string RosettaProperties { get; set; }
     public string RosettaFontSize { get; set; }
+    public string PropertyTimeBase { get; set; }
+    public string PropertyFrameRateMultiplier { get; set; }
+    public string PropertyDropMode { get; set; }
+    public string PropertyDefaultStyle { get; set; }
+    public string PropertyDefaultRegion { get; set; }
+    public string PropertyStyleAttributeName { get; set; }
+    public string PropertyTimeCodeFormat { get; set; }
+    public string PropertyFileExtension { get; set; }
+    public string PropertyTopOrigin { get; set; }
+    public string PropertyTopExtent { get; set; }
+    public string PropertyBottomOrigin { get; set; }
+    public string PropertyBottomExtent { get; set; }
     public string XProperties { get; set; }
 
     public LanguageFile()
@@ -50,7 +64,9 @@ public class LanguageFile
         CompareNumberDifference = "Number difference";
         ShowOnlyDifferencesInText = "Only differences in text";
         IgnoreWhitespace = "Ignore whitespace";
+        IgnoreWhitespaceHint = "Lines that differ only in spaces, tabs or line breaks do not count as different";
         IgnoreFormatting = "Ignore formatting";
+        IgnoreFormattingHint = "Lines that differ only in formatting tags, like <i> or {\\an8}, do not count as different";
         LoadXFromFile = "Load \"{0}\" from file";
         SaveCompareHtmlTitle = "Save compare HTML file";
         PickMatroskaTrackX = "Pick Matroska track - {0}";
@@ -58,6 +74,18 @@ public class LanguageFile
         PickMp4TrackX = "Pick MP4 track - {0}";
         RosettaProperties = "Timed Text Rosetta IMSC properties";
         RosettaFontSize = "Font size (row height)";
+        PropertyTimeBase = "Time base";
+        PropertyFrameRateMultiplier = "Frame rate multiplier";
+        PropertyDropMode = "Drop mode";
+        PropertyDefaultStyle = "Default style";
+        PropertyDefaultRegion = "Default region";
+        PropertyStyleAttributeName = "Style attribute name";
+        PropertyTimeCodeFormat = "Time code format";
+        PropertyFileExtension = "File extension";
+        PropertyTopOrigin = "Top origin";
+        PropertyTopExtent = "Top extent";
+        PropertyBottomOrigin = "Bottom origin";
+        PropertyBottomExtent = "Bottom extent";
         XProperties = "{0} properties";
     }
 }

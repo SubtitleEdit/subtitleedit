@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
+﻿using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 
 namespace UITests.Features.Video.TextToSpeech.Engines;
 
@@ -49,13 +49,21 @@ public class TtsEngineCatalogTests
     {
         var engines = TtsEngineCatalog.CreateAll(null!);
 
-        // Both can clone, and both are disabled on purpose - F5-TTS has no GPU backend, and
-        // VibeVoice's output quality is unusable (#11223). Offering them from the waveform menu
-        // would be re-enabling them by accident.
+        // F5-TTS can clone but has no GPU backend, so it is disabled on purpose - offering it
+        // from the waveform menu would be re-enabling it by accident.
         Assert.DoesNotContain(engines, e => e is F5TtsCrispAsr);
-        Assert.DoesNotContain(engines, e => e is VibeVoiceCrispAsr);
         Assert.DoesNotContain(TtsEngineCatalog.CreateVoiceCloningEngines(), e => e is F5TtsCrispAsr);
-        Assert.DoesNotContain(TtsEngineCatalog.CreateVoiceCloningEngines(), e => e is VibeVoiceCrispAsr);
+    }
+
+    [Fact]
+    public void VibeVoiceIsOffered()
+    {
+        // Hidden while its output quality was judged unusable on the CrispASR build of the time;
+        // re-checked on v0.8.31 and re-enabled. Pinned so a stray comment-out is caught: the
+        // engine is fully wired (DI, settings dialog, installer, status dots) and the only thing
+        // that ever gated it was this one line in the catalog.
+        Assert.Contains(TtsEngineCatalog.CreateAll(null!), e => e is VibeVoiceCrispAsr);
+        Assert.Contains(TtsEngineCatalog.CreateVoiceCloningEngines(), e => e is VibeVoiceCrispAsr);
     }
 
     [Fact]

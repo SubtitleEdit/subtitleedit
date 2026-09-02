@@ -23,8 +23,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 XmlNode paragraph = xml.CreateElement("SubtitleItem");
 
                 var text = HtmlUtil.RemoveHtmlTags(p.Text, true);
-                paragraph.InnerText = text;
-                paragraph.InnerXml = "<Text><![CDATA[" + paragraph.InnerXml.Replace(Environment.NewLine, "\\n") + "\\n]]></Text>";
+                // Build the CDATA from the RAW text: going through InnerText first escaped it
+                // ("Tom &amp; Jerry"), and since CDATA content is not parsed that escaping was
+                // read back as literal text and escaped AGAIN on the next save - so an ampersand
+                // grew an "amp;" every time the file was saved.
+                var cdataText = text.Replace(Environment.NewLine, "\\n") + "\\n";
+                if (cdataText.Contains("]]>", StringComparison.Ordinal))
+                {
+                    paragraph.InnerText = cdataText; // cannot be expressed in one CDATA section
+                }
+                else
+                {
+                    paragraph.InnerXml = "<Text><![CDATA[" + cdataText + "]]></Text>";
+                }
 
                 XmlAttribute layoutIndex = xml.CreateAttribute("layoutindex");
                 var layoutIndexValue = GetLayoutIndexFromAssAlignment(p.Text);
@@ -56,9 +67,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            string xmlAsString = sb.ToString().Trim();
+            string xmlAsString = JoinLinesTrimmed(lines);
             if ((xmlAsString.Contains("<TMPGEncVMESubtitleTextFormat>") || xmlAsString.Contains("<SubtitleItem ")) && (xmlAsString.Contains("<Subtitle")))
             {
                 return base.IsMine(lines, fileName);

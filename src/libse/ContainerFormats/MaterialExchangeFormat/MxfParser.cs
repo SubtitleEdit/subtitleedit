@@ -52,6 +52,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
                         var buffer = new byte[klv.DataSize];
                         var bytesRead = stream.Read(buffer, 0, buffer.Length);
 
+                        // A zero- or short-length value is legal MXF (an empty fill/local set),
+                        // so the magic test needs four bytes to actually be there.
+                        if (bytesRead < 4)
+                        {
+                            continue;
+                        }
+
                         if (buffer[0] == 0x89 && buffer[1] == 0x50 && buffer[2] == 0x4E && buffer[3] == 0x47) // PNG header
                         {
                             _images.Add(buffer);

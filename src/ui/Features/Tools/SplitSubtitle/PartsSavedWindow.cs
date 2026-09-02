@@ -53,7 +53,7 @@ public class PartsSavedWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, buttonOk); // hack to make OnKeyDown work
     }
 
 

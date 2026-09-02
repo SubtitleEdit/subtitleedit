@@ -93,14 +93,31 @@ public partial class RestoreAutoBackupViewModel : ObservableObject
             return;
         }
 
+        // A single locked/read-only file must not abort the sweep and leave the list
+        // claiming everything was deleted - keep what could not be removed.
+        var remaining = new List<DisplayFile>();
         foreach (var file in Files)
         {
-            File.Delete(file.FullPath);
+            try
+            {
+                File.Delete(file.FullPath);
+            }
+            catch (System.Exception exception)
+            {
+                Se.LogError(exception, "Could not delete auto-backup file " + file.FullPath);
+                remaining.Add(file);
+            }
         }
 
         Files.Clear();
-        IsEmptyFilesVisible = false;
-        IsOkButtonEnabled = false;
+        foreach (var file in remaining)
+        {
+            Files.Add(file);
+        }
+
+        IsEmptyFilesVisible = Files.Count > 0;
+        SelectedFile = Files.FirstOrDefault();
+        IsOkButtonEnabled = SelectedFile != null;
     }
 
     [RelayCommand]
@@ -166,8 +183,18 @@ public partial class RestoreAutoBackupViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Follows the selection itself instead of only the grid's SelectionChanged event: the
+    /// row the grid picks on its own (AlwaysSelected) raises no event, which left Restore
+    /// disabled while row 0 looked selected.
+    /// </summary>
+    partial void OnSelectedFileChanged(DisplayFile? value)
+    {
+        IsOkButtonEnabled = value != null;
+    }
+
     public void GridSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        IsOkButtonEnabled = e.AddedItems.Count > 0;
+        IsOkButtonEnabled = SelectedFile != null;
     }
 }

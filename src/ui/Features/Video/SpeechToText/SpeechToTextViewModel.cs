@@ -401,9 +401,26 @@ public partial class SpeechToTextViewModel : ObservableObject
         var engine = GetEffectiveSelectedEngine();
         engine.CommandLineParameter = Parameters;
         Se.Settings.Tools.AudioToText.WhisperChoice = engine.Choice;
-        Se.Settings.Tools.AudioToText.WhisperModel = SelectedModel?.Model.Name ?? string.Empty;
-        Se.Settings.Tools.AudioToText.WhisperLanguageCode = SelectedLanguage?.Code ?? string.Empty;
-        Se.Settings.Tools.AudioToText.CrispAsrForcedAligner = SelectedForcedAligner?.Choice ?? ForcedAlignerOption.BuiltInChoice;
+        // Keep the remembered model/language when the current engine simply doesn't show
+        // those pickers (online STT engines null them out): overwriting with empty strings
+        // lost the user's choice for good, so switching back fell to tiny/English.
+        if (SelectedModel != null || IsModelSelectionVisible)
+        {
+            Se.Settings.Tools.AudioToText.WhisperModel = SelectedModel?.Model.Name ?? string.Empty;
+        }
+
+        if (SelectedLanguage != null || IsLanguageSelectionVisible)
+        {
+            Se.Settings.Tools.AudioToText.WhisperLanguageCode = SelectedLanguage?.Code ?? string.Empty;
+        }
+        // Only write when this window actually has an aligner selected. SaveSettings runs on
+        // every EngineChanged, so with a non-CrispASR engine (SelectedForcedAligner == null) the
+        // "?? built-in" fallback overwrote the aligner the user had chosen in Import plain text >
+        // Forced aligner setup - the only place that reads this key back.
+        if (SelectedForcedAligner != null)
+        {
+            Se.Settings.Tools.AudioToText.CrispAsrForcedAligner = SelectedForcedAligner.Choice;
+        }
 
         Se.Settings.Tools.OpenAiCompatibleSttUrl = OpenAiCompatibleSttUrl ?? string.Empty;
         Se.Settings.Tools.OpenAiCompatibleSttApiKey = OpenAiCompatibleSttApiKey ?? string.Empty;
@@ -527,7 +544,10 @@ public partial class SpeechToTextViewModel : ObservableObject
             ? ForcedAlignerOption.BuiltInChoice
             : (crispEngine is CrispAsrQwen3 or CrispAsrMega or CrispAsrFunAsrNano ? ForcedAlignerOption.Qwen3Choice : ForcedAlignerOption.CanaryCtcChoice);
 
-        var match = ForcedAligners.FirstOrDefault(p => p.Choice == preferredChoice)
+        // Prefer what was saved - otherwise this window could never restore the user's own pick
+        // either, since nothing here ever read the setting back.
+        var match = ForcedAligners.FirstOrDefault(p => p.Choice == Se.Settings.Tools.AudioToText.CrispAsrForcedAligner)
+                    ?? ForcedAligners.FirstOrDefault(p => p.Choice == preferredChoice)
                     ?? ForcedAligners.FirstOrDefault();
         if (!ReferenceEquals(SelectedForcedAligner, match))
         {
@@ -801,9 +821,13 @@ public partial class SpeechToTextViewModel : ObservableObject
                         "The model is incomplete. Please download the full model.");
                     hasError = true;
                 }
-                else if (_unknownArgument && !string.IsNullOrEmpty(settings.WhisperCustomCommandLineArguments))
+                else if (_unknownArgument)
                 {
-                    await MessageBox.Show(Window!, $"Unknown argument: {settings.WhisperCustomCommandLineArguments}",
+                    // Report the parameters the engine actually ran with. This used to be
+                    // gated on a global setting nothing ever writes, so a mistyped flag made
+                    // the run fail with no message at all.
+                    var badArgs = GetEffectiveSelectedEngine()?.CommandLineParameter ?? string.Empty;
+                    await MessageBox.Show(Window!, $"Unknown argument: {badArgs}",
                         "Unknown argument. Please check the advanced settings.");
                     hasError = true;
                 }
@@ -909,7 +933,10 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// subtitles and said so, which is all the user was told in #14038. The concrete case there
     /// was the crispasr v0.8.29 GPU packages, built with AVX-512 against a CI runner that had it
     /// (CrispASR #374) - every CPU without AVX-512 got this on the CUDA/Vulkan build while the CPU
-    /// build ran fine, so naming the installed package is most of the answer.
+    /// build ran fine, so naming the installed package is most of the answer. That build flaw is
+    /// fixed from v0.8.30 (the current pin), but the message still earns its keep: a pre-AVX2 CPU
+    /// hits the same silent death on the AVX2 CPU package, and an install predating the pin bump
+    /// keeps the broken GPU binary until the user downloads the engine again.
     /// </summary>
     /// <param name="exitCode">The engine process exit code, or null when it could not be read.</param>
     /// <param name="variant">
@@ -1137,9 +1164,10 @@ public partial class SpeechToTextViewModel : ObservableObject
                     return;
                 }
 
-                if (_unknownArgument && !string.IsNullOrEmpty(settings.WhisperCustomCommandLineArguments))
+                if (_unknownArgument)
                 {
-                    await MessageBox.Show(Window!, $"Unknown argument: {settings.WhisperCustomCommandLineArguments}",
+                    var badArgs = GetEffectiveSelectedEngine()?.CommandLineParameter ?? string.Empty;
+                    await MessageBox.Show(Window!, $"Unknown argument: {badArgs}",
                         "Unknown argument. Please check the advanced settings.");
                 }
                 LogToConsole($"Speech to text: Could not find output JSON file ({exitCodeText}){Environment.NewLine}");
@@ -1338,7 +1366,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 await MessageBox.Show(Window!,
                     Se.Language.General.ConfigurationRequired,
                     configError ?? Se.Language.General.OpenAiCompatibleSttUrlMissing);
-                IsTranscribeEnabled = true;
+                FailCurrentOnlineSttJob();
             });
             return;
         }
@@ -1379,7 +1407,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 await MessageBox.Show(Window!,
                     Se.Language.General.TranscriptionError,
                     string.Format(Se.Language.General.OpenAiCompatibleSttUrlNotResponding, probeError));
-                IsTranscribeEnabled = true;
+                FailCurrentOnlineSttJob();
             });
             return;
         }
@@ -1484,7 +1512,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             {
                 await Dispatcher.UIThread.InvokeAsync(() =>
                 {
-                    IsTranscribeEnabled = true;
+                    FailCurrentOnlineSttJob();
                     HideProgressBar();
                 });
             }
@@ -1522,7 +1550,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
                 await MessageBox.Show(Window!, Se.Language.General.TranscriptionError, message);
-                IsTranscribeEnabled = true;
+                FailCurrentOnlineSttJob();
             });
         }
         catch (TimeoutException ex)
@@ -1564,7 +1592,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
                 await MessageBox.Show(Window!, Se.Language.General.TranscriptionError, $"{Se.Language.General.TranscriptionFailed}: {ex.Message}");
-                IsTranscribeEnabled = true;
+                FailCurrentOnlineSttJob();
             });
         }
         finally
@@ -2075,6 +2103,9 @@ public partial class SpeechToTextViewModel : ObservableObject
             ParagraphMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * 2,
             RemoveNonSpeechLines = Se.Settings.Tools.AudioToText.WhisperPostProcessingRemoveNonSpeechLines,
             RemoveRepeatedLines = Se.Settings.Tools.AudioToText.WhisperPostProcessingRemoveRepeatedLines,
+            // The engine's own parameters, so word-highlighted output is left alone by the
+            // merge/split steps (they are stored per engine, not in one global setting).
+            EngineCommandLineArguments = GetEffectiveSelectedEngine()?.CommandLineParameter ?? string.Empty,
         };
 
         WavePeakData2? wavePeaks = null;
@@ -2209,7 +2240,9 @@ public partial class SpeechToTextViewModel : ObservableObject
         _filesToDelete.Add(targetFile);
         try
         {
-            var process = GetFfmpegProcess(_videoFileName, _audioTrackNumber, targetFile);
+            // One ffmpeg per batch item; the sibling _whisperProcess is disposed, and the
+            // text-to-speech twin uses "using var" for the same call.
+            using var process = GetFfmpegProcess(_videoFileName, _audioTrackNumber, targetFile);
             if (process == null)
             {
                 return null;
@@ -2809,8 +2842,6 @@ public partial class SpeechToTextViewModel : ObservableObject
                model.Name == "distil-large-v3";
     }
 
-
-
     [RelayCommand]
     private void ShowWebLink()
     {
@@ -2962,6 +2993,13 @@ public partial class SpeechToTextViewModel : ObservableObject
             _ => "vulkan",
         };
 
+        if (crispVariant == "cuda")
+        {
+            // Upstream added a Windows CUDA 13 build alongside the CUDA 12 one in v0.8.31, so
+            // Windows now gets the same follow-up Linux has had since v0.8.30 (#14343).
+            return await PromptCrispAsrCudaVersionAsync();
+        }
+
         if (crispVariant == "cpu")
         {
             return await PromptCrispAsrCpuFlavorAsync();
@@ -3011,7 +3049,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         if (answer == MessageBoxResult.Custom3)
         {
-            return await PromptCrispAsrLinuxCudaVersionAsync();
+            return await PromptCrispAsrCudaVersionAsync();
         }
 
         return answer switch
@@ -3024,10 +3062,11 @@ public partial class SpeechToTextViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Follow-up prompt after the user picks "CUDA" in the Linux CrispASR variant selector.
+    /// Follow-up prompt after the user picks "CUDA" in the CrispASR variant selector, on both
+    /// Windows and Linux - upstream ships a CUDA 12 and a CUDA 13 build for each.
     /// Returns "cuda" (CUDA 12 build) or "cuda13", or null when the user cancels.
     /// </summary>
-    private async Task<string?> PromptCrispAsrLinuxCudaVersionAsync()
+    private async Task<string?> PromptCrispAsrCudaVersionAsync()
     {
         var answer = await MessageBox.Show(
             Window!,
@@ -3238,7 +3277,6 @@ public partial class SpeechToTextViewModel : ObservableObject
             Se.Settings.Tools.AudioToText.WhisperPostProcessingChangeUnderlineToColorColor = vm.ChangeUnderlineToColorColor.FromColorToHex();
         }
     }
-
 
     [RelayCommand]
     private async Task DownloadModel()
@@ -3669,7 +3707,6 @@ public partial class SpeechToTextViewModel : ObservableObject
             });
         }
 
-
         _videoFileName = _jobItems[0].InputVideoFileName;
         _videoInfo.TotalMilliseconds = _jobItems[0].MediaInfo.Duration.TotalMilliseconds;
         _videoInfo.TotalSeconds = _jobItems[0].MediaInfo.Duration.TotalSeconds;
@@ -3689,17 +3726,43 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Fails the online-STT job that is currently running. In batch mode the item is marked
+    /// failed and the batch moves on, the same contract the ffmpeg-failure path uses - every
+    /// online error path used to just re-enable the window, which stopped the batch dead at
+    /// that file with no item marked and no summary.
+    /// </summary>
+    private void FailCurrentOnlineSttJob()
+    {
+        if (IsBatchMode && !_abort)
+        {
+            if (_batchIndex >= 0 && _batchIndex < _jobItems.Count)
+            {
+                _jobItems[_batchIndex].Status = Se.Language.General.Error;
+            }
+
+            StartNext(null);
+            return;
+        }
+
+        IsTranscribeEnabled = true;
+    }
+
     [RelayCommand]
     private void Cancel()
     {
         if (!IsTranscribeEnabled)
         {
+            // Always set _abort, online engines included: during the audio-extraction phase
+            // _openAiCts does not exist yet (it is created once ffmpeg has exited), so
+            // cancelling did nothing at all and the upload started anyway. _abort is also
+            // what MakeResult checks to stop a whole batch rather than skip one item.
+            _abort = true;
             if (GetEffectiveSelectedEngine() is IOnlineSttEngine)
             {
                 _openAiCts?.Cancel();
-                return;
             }
-            _abort = true;
+
             return;
         }
 

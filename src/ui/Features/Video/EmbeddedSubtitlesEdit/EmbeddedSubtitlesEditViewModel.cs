@@ -47,6 +47,7 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
     private long _processedFrames;
     private Process? _ffmpegProcess;
     private readonly Timer _timerGenerate;
+    private bool _loaded;
     private bool _doAbort;
     private SubtitleFormat? _subtitleFormat;
     private DispatcherTimer _positionTimer = new DispatcherTimer();
@@ -161,7 +162,6 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
         _timerGenerate.Stop();
         ProgressValue = 100;
         ProgressText = string.Empty;
-        Se.LogError(_log.ToString());
 
         if (!File.Exists(_outputFileName))
         {
@@ -271,18 +271,24 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
         var nameNoExt = Path.GetFileNameWithoutExtension(videoFileName);
         var ext = Path.GetExtension(VideoFileName) ?? ".mkv";
         var suffix = Se.Settings.Video.BurnIn.BurnInSuffix;
-        var fileName = Path.Combine(Path.GetDirectoryName(videoFileName)!, nameNoExt + suffix + ext);
-        if (Se.Settings.Video.BurnIn.UseOutputFolder &&
-            !string.IsNullOrEmpty(Se.Settings.Video.BurnIn.OutputFolder) &&
-            Directory.Exists(Se.Settings.Video.BurnIn.OutputFolder))
-        {
-            fileName = Path.Combine(Se.Settings.Video.BurnIn.OutputFolder, nameNoExt + suffix + ext);
-        }
+
+        // Decide the folder once: the collision loop below used to combine with
+        // BurnIn.OutputFolder unconditionally, so with the default (empty, unused) folder
+        // the second file of a run got a bare relative name resolved against the process
+        // working directory instead of the video's folder.
+        var useOutputFolder = Se.Settings.Video.BurnIn.UseOutputFolder &&
+                              !string.IsNullOrEmpty(Se.Settings.Video.BurnIn.OutputFolder) &&
+                              Directory.Exists(Se.Settings.Video.BurnIn.OutputFolder);
+        var outputFolder = useOutputFolder
+            ? Se.Settings.Video.BurnIn.OutputFolder
+            : Path.GetDirectoryName(videoFileName) ?? Path.GetTempPath();
+
+        var fileName = Path.Combine(outputFolder, nameNoExt + suffix + ext);
 
         var i = 2;
         while (File.Exists(fileName))
         {
-            fileName = Path.Combine(Se.Settings.Video.BurnIn.OutputFolder, $"{nameNoExt}{suffix}_{i}{ext}");
+            fileName = Path.Combine(outputFolder, $"{nameNoExt}{suffix}_{i}{ext}");
             i++;
         }
 
@@ -499,7 +505,10 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
             VideoFileName = fileName;
             _ = Task.Run(() =>
             {
+                // Parse once, off the UI thread - this used to also parse synchronously on the
+                // UI thread after starting the task, freezing the window for the probe.
                 var mediaInfo = FfmpegMediaInfo2.Parse(fileName);
+                _mediaInfo = mediaInfo;
                 Dispatcher.UIThread.Invoke(() =>
                 {
                     Tracks.Clear();
@@ -513,7 +522,6 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
                     SelectAndScrollToRow(0);
                 });
             });
-            _mediaInfo = FfmpegMediaInfo2.Parse(fileName);
         }
     }
 
@@ -598,10 +606,37 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
     internal void OnClosing()
     {
         UiUtil.SaveWindowPosition(Window);
+
+        // Stop the poll timer and any still-running encode - closing the window used to
+        // leave the ffmpeg process muxing to completion in the background.
+        _timerGenerate.StopAndDispose(TimerGenerateElapsed);
+        if (_ffmpegProcess != null && !_ffmpegProcess.HasExited)
+        {
+            try
+            {
+#pragma warning disable CA1416
+                _ffmpegProcess.Kill(true);
+#pragma warning restore CA1416
+            }
+            catch
+            {
+                // ignore - it may have exited in between
+            }
+        }
     }
 
     internal void OnLoaded()
     {
+        // Avalonia's Window.Loaded can fire more than once (re-attach to visual tree, layout
+        // pass), and the scan below APPENDS without clearing - so a second fire listed every
+        // existing subtitle track twice and Generate then mapped each kept stream twice into the
+        // output. The mp4 twin already guards this.
+        if (_loaded)
+        {
+            return;
+        }
+
+        _loaded = true;
         StartTitleTimer();
         UiUtil.RestoreWindowPosition(Window);
         Task.Run(() =>
@@ -647,7 +682,9 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
 
         if (FileUtil.IsMatroskaFileFast(videoFileName))
         {
-            var matroskaFile = new MatroskaFile(videoFileName);
+            // MatroskaFile opens a FileStream on the video in its constructor, so without the
+            // using every window open and every Browse left a handle on a multi-GB file behind.
+            using var matroskaFile = new MatroskaFile(videoFileName);
             if (matroskaFile.IsValid)
             {
                 var tracks = matroskaFile.GetTracks();

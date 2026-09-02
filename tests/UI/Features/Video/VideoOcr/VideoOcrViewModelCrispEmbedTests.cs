@@ -69,7 +69,7 @@ public class VideoOcrViewModelCrispEmbedTests
             Assert.Equal("GLM-OCR", viewModel.SelectedCrispEmbedBackend?.Name);
             Assert.Equal("glm-ocr-q4_k.gguf", viewModel.SelectedCrispEmbedModel?.Model.Name);
 
-            var otherBackend = viewModel.CrispEmbedBackends.First(p => p.Name == "GOT-OCR2");
+            var otherBackend = viewModel.CrispEmbedBackends.First(p => p.Name == "PP-OCRv6");
             viewModel.SelectedCrispEmbedBackend = otherBackend;
 
             Assert.All(viewModel.CrispEmbedModels, m => Assert.Equal(otherBackend, m.Backend));
@@ -80,7 +80,7 @@ public class VideoOcrViewModelCrispEmbedTests
             Assert.Equal("GLM-OCR", settings.CrispEmbedBackend);
 
             Invoke(viewModel, "SaveSettings");
-            Assert.Equal("GOT-OCR2", settings.CrispEmbedBackend);
+            Assert.Equal("PP-OCRv6", settings.CrispEmbedBackend);
             Assert.Equal(viewModel.SelectedCrispEmbedModel?.Model.Name, settings.CrispEmbedModel);
         }
         finally
@@ -104,12 +104,12 @@ public class VideoOcrViewModelCrispEmbedTests
         try
         {
             Se.Settings.Ocr.CrispEmbedBackend = "GLM-OCR";
-            videoSettings.CrispEmbedBackend = "GOT-OCR2";
+            videoSettings.CrispEmbedBackend = "PP-OCRv6";
 
             var viewModel = MakeViewModel();
             viewModel.SelectedEngine = viewModel.Engines.First(p => p.EngineType == OcrEngineType.CrispEmbed);
 
-            Assert.Equal("GOT-OCR2", viewModel.SelectedCrispEmbedBackend?.Name);
+            Assert.Equal("PP-OCRv6", viewModel.SelectedCrispEmbedBackend?.Name);
             Assert.Equal("GLM-OCR", Se.Settings.Ocr.CrispEmbedBackend);
         }
         finally

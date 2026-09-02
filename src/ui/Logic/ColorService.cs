@@ -1,6 +1,7 @@
 ﻿using Avalonia.Media;
 using Avalonia.Skia;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using System;
@@ -123,7 +124,7 @@ public class ColorService : IColorService
             return text;
         }
 
-        if (subtitleFormat is WebVTT)
+        if (subtitleFormat is WebVTT or WebVTTFileWithLineNumber)
         {
             try
             {
@@ -152,6 +153,24 @@ public class ColorService : IColorService
             return text;
         }
 
+        // An STL file carries eight teletext colours, and Ebu.Save snaps whatever it finds to the
+        // nearest of them - so a shortcut colour like orange was shown orange in the grid and in
+        // the video preview and came out yellow in the file. Snap when the tag is written instead:
+        // grid, preview and file then agree. Written as the colour name the STL reader itself
+        // produces, so the shortcut also toggles off a colour that came from a file.
+        var colorText = ToHex(color);
+        if (subtitleFormat is Ebu)
+        {
+            colorText = Ebu.GetNearestColorName(colorText) ?? colorText;
+        }
+        else if (subtitleFormat is DvbTeletext)
+        {
+            // A .dvbttx colour map entry holds four bits per component (Level 2.5), so snap the
+            // tag to that grid - grid, preview and the written file then agree, and the tag
+            // matches what the teletext reader produces so ContainsColor can toggle it off.
+            colorText = TeletextTables.ColorToHtml(TeletextColorMap.QuantizeRgb(color.R, color.G, color.B));
+        }
+
         string pre = string.Empty;
         if (text.StartsWith("{\\", StringComparison.Ordinal) && text.IndexOf('}') >= 0)
         {
@@ -171,7 +190,7 @@ public class ColorService : IColorService
                 if (f.Contains(" face=", StringComparison.OrdinalIgnoreCase) && !f.Contains(" color=", StringComparison.OrdinalIgnoreCase))
                 {
                     var start = s.IndexOf(" face=", StringComparison.OrdinalIgnoreCase);
-                    s = s.Insert(start, string.Format(" color=\"{0}\"", ToHex(color)));
+                    s = s.Insert(start, string.Format(" color=\"{0}\"", colorText));
                     text = pre + s;
                     return text;
                 }
@@ -179,19 +198,35 @@ public class ColorService : IColorService
                 var colorStart = f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
                 if (colorStart >= 0)
                 {
-                    if (s.IndexOf('"', colorStart + 8) > 0)
+                    var valueStart = colorStart + " color=".Length;
+                    var quoteEnd = s.IndexOf('"', valueStart);
+                    if (quoteEnd > 0)
                     {
-                        end = s.IndexOf('"', colorStart + 8);
+                        // Quoted value: the closing quote comes from the tail we keep.
+                        s = s.Substring(0, colorStart) + string.Format(" color=\"{0}", colorText) + s.Substring(quoteEnd);
+                    }
+                    else
+                    {
+                        // Unquoted value ("<font color=red>"). "end" is the '>' here, so the old
+                        // code emitted an opening quote and then kept the rest of the tag,
+                        // producing the broken '<font color="#0000FF>'. Replace the whole
+                        // unquoted value with a properly quoted one instead.
+                        var valueEnd = valueStart;
+                        while (valueEnd < end && !char.IsWhiteSpace(s[valueEnd]))
+                        {
+                            valueEnd++;
+                        }
+
+                        s = s.Substring(0, colorStart) + string.Format(" color=\"{0}\"", colorText) + s.Substring(valueEnd);
                     }
 
-                    s = s.Substring(0, colorStart) + string.Format(" color=\"{0}", ToHex(color)) + s.Substring(end);
                     text = pre + s;
                     return text;
                 }
             }
         }
 
-        return $"{pre}<font color=\"{ToHex(color)}\">{text}</font>";
+        return $"{pre}<font color=\"{colorText}\">{text}</font>";
     }
 
     public string RemoveColorTag(string input, Color color, Subtitle subtitle, SubtitleFormat subtitleFormat)
@@ -216,7 +251,7 @@ public class ColorService : IColorService
             return text;
         }
 
-        if (subtitleFormat is WebVTT)
+        if (subtitleFormat is WebVTT or WebVTTFileWithLineNumber)
         {
             try
             {

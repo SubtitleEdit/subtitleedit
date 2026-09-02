@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
@@ -122,18 +122,11 @@ public class OpenFromUrlWindow : Window
         // the Loaded + Input-priority post this used to do never stuck on macOS. Guarded so
         // re-activating the window later doesn't yank focus back out of whatever the user
         // was on.
-        var focused = false;
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
-            if (focused)
-            {
-                return;
-            }
-
-            focused = true;
             _urlTextBox.Focus();
             _urlTextBox.CaretIndex = _urlTextBox.Text?.Length ?? 0;
-        };
+        });
     }
 
     private Button BuildCard(string iconGlyph, string title, string description, string note, IRelayCommand command, bool isRecommended)

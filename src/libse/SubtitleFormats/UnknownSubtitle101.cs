@@ -19,7 +19,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var sb = new StringBuilder();
             const string writeFormat = "{0} ===> {1}                    {4}{2}{3}{2}";
-            var last = subtitle.Paragraphs.Last();
+            // LastOrDefault, not Last: an empty subtitle threw "Sequence contains no
+            // elements" out of the writer (the null check right below shows null was
+            // always the intended empty case).
+            var last = subtitle.Paragraphs.LastOrDefault();
             for (var index = 0; index < subtitle.Paragraphs.Count; index++)
             {
                 var p = subtitle.Paragraphs[index];

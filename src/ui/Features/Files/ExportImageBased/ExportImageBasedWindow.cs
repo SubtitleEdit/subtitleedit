@@ -99,7 +99,7 @@ public class ExportImageBasedWindow : Window
 
         Content = grid;
 
-        Activated += delegate { TableViewExtras.FocusRow(vm.SubtitleGrid); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, () => { TableViewExtras.FocusRow(vm.SubtitleGrid); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
         KeyUp += (_, e) => vm.OnKeyUp(e);
         Loaded += (_, e) => vm.OnLoaded();
@@ -561,7 +561,9 @@ public class ExportImageBasedWindow : Window
 
         var statusText = new TextBlock
         {
-            Margin = new Thickness(5, 20, 0, 0),
+            // The bar and the text shared one grid cell, with this top margin as the only
+            // thing keeping them apart - so they ended up touching. Own row, own breathing room.
+            Margin = new Thickness(5, 8, 0, 0),
         };
         statusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ProgressText)));
         statusText.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.IsGenerating)));
@@ -570,7 +572,8 @@ public class ExportImageBasedWindow : Window
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -581,7 +584,7 @@ public class ExportImageBasedWindow : Window
         };
 
         grid.Add(progressBar, 0, 0);
-        grid.Add(statusText, 0, 0);
+        grid.Add(statusText, 1, 0);
 
         return grid;
     }

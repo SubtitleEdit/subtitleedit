@@ -24,8 +24,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             foreach (var p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format(writeFormat, p.StartTime.TotalSeconds, MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds),
-                    p.EndTime.TotalSeconds, MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds),
+                // Truncate the seconds: "{0:0000}" rounds the raw double, so the seconds field
+                // carried the sub-second part that the frames field then repeated - 00:00:05,600
+                // was written "0006:15" and read back a whole second late.
+                sb.AppendLine(string.Format(writeFormat, (int)p.StartTime.TotalSeconds, MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds),
+                    (int)p.EndTime.TotalSeconds, MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds),
                     p.Text));
             }
             return sb.ToString().Trim();

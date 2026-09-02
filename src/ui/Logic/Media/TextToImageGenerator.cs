@@ -1,5 +1,7 @@
 using SkiaSharp;
 using System;
+using System.Collections.Generic;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Logic.Media;
 
@@ -124,31 +126,57 @@ public static class TextToImageGenerator
             font.SkewX = -0.25f; // synthetic slant so italic shows even when the font has no italic face
         }
 
-        font.MeasureText(text, out var textBounds, paint);
+        // MeasureText and GetTextPath are single-run APIs with no notion of a line break - a "\n"
+        // became a .notdef glyph and every line was drawn side by side on one baseline. The Set
+        // text dialog feeds this user text from a multi-line TextBox and writes the result straight
+        // into a VobSub/Blu-ray subtitle, so a normal two-line caption came out as one long line.
+        var lines = (text ?? string.Empty).SplitToLines();
+        if (lines.Count == 0)
+        {
+            lines = new List<string> { string.Empty };
+        }
 
-        var width = (int)(textBounds.Width + padding * 2 + outlineWidth * 2 + shadowWidth);
-        var height = (int)(textBounds.Height + padding * 2 + outlineWidth * 2 + shadowWidth);
+        var lineBounds = new SKRect[lines.Count];
+        var maxLineWidth = 0f;
+        for (var i = 0; i < lines.Count; i++)
+        {
+            font.MeasureText(lines[i], out lineBounds[i], paint);
+            maxLineWidth = Math.Max(maxLineWidth, lineBounds[i].Width);
+        }
+
+        var metrics = font.Metrics;
+        var lineHeight = Math.Abs(metrics.Ascent) + Math.Abs(metrics.Descent);
+        var lineStep = lineHeight + Math.Abs(metrics.Leading);
+
+        var width = (int)(maxLineWidth + padding * 2 + outlineWidth * 2 + shadowWidth);
+        var height = (int)(lineHeight + (lines.Count - 1) * lineStep + padding * 2 + outlineWidth * 2 + shadowWidth);
 
         var bitmap = new SKBitmap(width, height);
         using var canvas = new SKCanvas(bitmap);
         canvas.Clear(backgroundColor);
 
         var x = padding + outlineWidth;
-        var y = height - padding - outlineWidth;
+        var firstBaseline = padding + outlineWidth + Math.Abs(metrics.Ascent);
+        var y = firstBaseline;
 
-        // Create a path for the text
-        using var textPath = font.GetTextPath(text, new SKPoint(x, y));
-
-        // Draw shadow (includes both text and outline with rounded corners)
-        if (shadowWidth > 0)
+        for (var i = 0; i < lines.Count; i++)
         {
-            DrawTextWithRoundedOutline(x + shadowWidth, y + shadowWidth, shadowColor, shadowColor, textPath, x, y, cornerRadius, outlineWidth, paint, canvas);
+            y = firstBaseline + i * lineStep;
+
+            // Create a path for the line
+            using var textPath = font.GetTextPath(lines[i], new SKPoint(x, y));
+
+            // Draw shadow (includes both text and outline with rounded corners)
+            if (shadowWidth > 0)
+            {
+                DrawTextWithRoundedOutline(x + shadowWidth, y + shadowWidth, shadowColor, shadowColor, textPath, x, y, cornerRadius, outlineWidth, paint, canvas);
+            }
+
+            // Draw main text with rounded outline
+            DrawTextWithRoundedOutline(x, y, textColor, outlineColor, textPath, x, y, cornerRadius, outlineWidth, paint, canvas);
+
+            DrawUnderlineAndStrikeout(canvas, font, textColor, x, y, lineBounds[i].Width, fontSize, isUnderline, isStrikeout);
         }
-
-        // Draw main text with rounded outline
-        DrawTextWithRoundedOutline(x, y, textColor, outlineColor, textPath, x, y, cornerRadius, outlineWidth, paint, canvas);
-
-        DrawUnderlineAndStrikeout(canvas, font, textColor, x, y, textBounds.Width, fontSize, isUnderline, isStrikeout);
 
         return bitmap;
     }

@@ -42,7 +42,7 @@ public class BatchConvertTransportStreamSplitter : IBatchConvertItemSplitter
                     Format = item.Format,
                     FileName = item.FileName,
                     LanguageCode = language,
-                    ImageSubtitle = new OcrSubtitleTransportStream(tsParser, subtitles, item.FileName),
+                    ImageSubtitle = new OcrSubtitleTransportStream(subtitles),
                 });
             }
         }

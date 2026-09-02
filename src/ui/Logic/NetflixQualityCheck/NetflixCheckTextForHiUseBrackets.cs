@@ -41,7 +41,10 @@ public class NetflixCheckTextForHiUseBrackets : INetflixQualityChecker
             {
                 if ((arr[0].StartsWith("-(", StringComparison.Ordinal) && arr[0].EndsWith(')')) || (arr[0].StartsWith("-{", StringComparison.Ordinal) && arr[0].EndsWith('}') && !IsAssaOverride(arr[0].Substring(1))))
                 {
-                    arr[0] = "-[" + newText.Substring(2, newText.Length - 3) + "]";
+                    // arr[0], not newText: newText is still the whole two-line paragraph here, so
+                    // the offered fix came out as a mangled, duplicated three-line string. The
+                    // arr[1] branch just below is the correct shape.
+                    arr[0] = "-[" + arr[0].Substring(2, arr[0].Length - 3) + "]";
                 }
                 if ((arr[1].StartsWith("-(", StringComparison.Ordinal) && arr[1].EndsWith(')')) || (arr[1].StartsWith("-{", StringComparison.Ordinal) && arr[1].EndsWith('}') && !IsAssaOverride(arr[1].Substring(1))))
                 {

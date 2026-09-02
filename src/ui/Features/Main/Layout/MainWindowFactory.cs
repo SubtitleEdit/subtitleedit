@@ -87,4 +87,22 @@ public static class MainWindowFactory
         var window = Create(isPrimary: false);
         window.Show();
     }
+
+    /// <summary>
+    /// Opens another independent editor window and loads the given file into it. Used when
+    /// macOS delivers a file-open activation while Subtitle Edit is already running (a
+    /// Finder double-click, or a file dropped on the Dock icon) so it behaves like every
+    /// other platform's per-launch-new-window semantics instead of hijacking whichever
+    /// window happens to be the app's primary one.
+    /// </summary>
+    public static async System.Threading.Tasks.Task OpenNewWindowWithFile(string filePath)
+    {
+        var window = Create(isPrimary: false);
+        window.Show();
+
+        if (UiTheme.GetUnscaledContent(window) is MainView mainView)
+        {
+            await mainView.OpenFile(filePath);
+        }
+    }
 }

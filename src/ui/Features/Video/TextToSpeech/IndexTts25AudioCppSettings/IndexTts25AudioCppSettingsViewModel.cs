@@ -201,7 +201,7 @@ public partial class IndexTts25AudioCppSettingsViewModel : ObservableObject
             return;
         }
 
-        await TtsVoiceInstaller.EnsureAudioCppForIndexTts25(Window, _windowService, forceRedownload: true);
+        await TtsVoiceInstaller.EnsureAudioCppRuntime(Window, _windowService, forceRedownload: true, "IndexTTS 2.5");
         Refresh();
     }
 

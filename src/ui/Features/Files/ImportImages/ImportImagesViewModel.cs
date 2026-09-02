@@ -192,8 +192,13 @@ public partial class ImportImagesViewModel : ObservableObject
                     var path = file.Path?.LocalPath;
                     if (path != null && File.Exists(path))
                     {
+                        // Compare the extension exactly. GetExtension returns "" for a file with
+                        // no dot in its name, and "*.png".EndsWith("") is true - so every
+                        // extension-less file passed the filter and ended up as a blank OCR line.
+                        // The plain-text import dialog's drop handler gets this right.
                         var ext = Path.GetExtension(path).ToLowerInvariant();
-                        if (!_imageExtensions.Any(x => x.EndsWith(ext)))
+                        if (string.IsNullOrEmpty(ext) ||
+                            !_imageExtensions.Any(x => string.Equals(x.TrimStart('*'), ext, StringComparison.OrdinalIgnoreCase)))
                         {
                             continue;
                         }

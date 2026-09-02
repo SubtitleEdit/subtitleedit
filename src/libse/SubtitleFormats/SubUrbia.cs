@@ -38,14 +38,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 sb.Append(",\"text\":\"");
                 sb.Append(Json.EncodeJsonText(p.Text));
-                sb.Append("\"}");
+                sb.Append('"');
 
                 if (!string.IsNullOrWhiteSpace(p.Extra))
                 {
                     sb.Append(",\"comment\":\"");
                     sb.Append(Json.EncodeJsonText(p.Extra));
-                    sb.Append("\"}");
+                    sb.Append('"');
                 }
+
+                sb.Append('}');
 
                 count++;
             }

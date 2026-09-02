@@ -21,9 +21,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            var xmlAsString = sb.ToString().Trim();
+            var xmlAsString = JoinLinesTrimmed(lines);
             return xmlAsString.Contains("urn:schemas-microsoft-com:office:excel") && base.IsMine(lines, fileName);
         }
 
@@ -149,16 +147,26 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument { XmlResolver = null, PreserveWhitespace = true };
             try
             {
-                xml.LoadXml(sb.ToString().RemoveControlCharactersButWhiteSpace().Trim());
+                xml.LoadXml(JoinLines(lines).RemoveControlCharactersButWhiteSpace().Trim());
             }
             catch
             {
-                xml.LoadXml(sb.ToString());
+                try
+                {
+                    xml.LoadXml(JoinLines(lines));
+                }
+                catch (Exception exception)
+                {
+                    // The retry is the last chance to make sense of the file; a truncated or
+                    // damaged one must read as "not mine", not throw out of the reader (and out
+                    // of IsMine, which runs for every format when a file is opened).
+                    System.Diagnostics.Debug.WriteLine(exception.Message);
+                    _errorCount = 1;
+                    return;
+                }
             }
 
             var xmlNamespaceManager = MakeNamespaceManager(xml);
@@ -178,6 +186,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var text = cells[2].SelectSingleNode("ss:Data", xmlNamespaceManager)?.InnerText;
                     var alignment = cells[7].SelectSingleNode("ss:Data", xmlNamespaceManager)?.InnerText;
 
+                    // The writer puts the actor in the ninth column ("Actors" in the header row),
+                    // but the reader never read it back, so the actor was lost on every load.
+                    var actor = cells.Count > 8
+                        ? cells[8].SelectSingleNode("ss:Data", xmlNamespaceManager)?.InnerText
+                        : null;
+
                     try
                     {
                         text = string.Join(Environment.NewLine, text.SplitToLines().ToArray());
@@ -185,6 +199,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             DecodeTimeCodeFrames(start, new[] { ':' }),
                             DecodeTimeCodeFrames(end, new[] { ':' }),
                             GetAlignment(alignment) + text);
+                        if (!string.IsNullOrWhiteSpace(actor))
+                        {
+                            p.Actor = actor;
+                        }
+
                         subtitle.Paragraphs.Add(p);
                     }
                     catch

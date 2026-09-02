@@ -26,6 +26,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoxCPM2CrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.MossTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DotsTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTtsCrispAsrSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.PocketTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTts25AudioCppSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DetectSpeakers;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.KokoroTtsSettings;
@@ -344,13 +345,30 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             Se.Settings.Video.TextToSpeech.IndexTtsCrispAsrModel = SelectedModel ?? IndexTtsCrispAsr.DefaultModelKey;
         }
+        else if (SelectedEngine is PocketTtsCrispAsr)
+        {
+            Se.Settings.Video.TextToSpeech.PocketTtsCrispAsrModel = SelectedModel ?? PocketTtsCrispAsr.DefaultModelKey;
+        }
         else if (SelectedEngine is DotsTtsCrispAsr)
         {
             Se.Settings.Video.TextToSpeech.DotsTtsCrispAsrModel = SelectedModel ?? DotsTtsCrispAsr.DefaultModelKey;
         }
+        else if (SelectedEngine is Confucius4TtsCrispAsr)
+        {
+            Se.Settings.Video.TextToSpeech.Confucius4TtsCrispAsrModel = SelectedModel ?? Confucius4TtsCrispAsr.DefaultModelKey;
+            Se.Settings.Video.TextToSpeech.Confucius4TtsCrispAsrLanguage = SelectedLanguage?.Name ?? string.Empty;
+        }
         else if (SelectedEngine is IndexTts25AudioCpp)
         {
             Se.Settings.Video.TextToSpeech.IndexTts25AudioCppModel = SelectedModel ?? IndexTts25AudioCpp.DefaultModelKey;
+        }
+        else if (SelectedEngine is HiggsTtsAudioCpp)
+        {
+            Se.Settings.Video.TextToSpeech.HiggsTtsAudioCppModel = SelectedModel ?? HiggsTtsAudioCpp.DefaultModelKey;
+        }
+        else if (SelectedEngine is FishTtsAudioCpp)
+        {
+            Se.Settings.Video.TextToSpeech.FishTtsAudioCppModel = SelectedModel ?? FishTtsAudioCpp.DefaultModelKey;
         }
         else if (SelectedEngine is CosyVoice3CrispAsr)
         {
@@ -1035,6 +1053,24 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
     }
 
+
+    /// <summary>
+    /// The language name saved for <paramref name="engine"/>, or null when that engine keeps no
+    /// per-engine language. Each engine has its own settings key, so reading one engine's key
+    /// from another engine's code path silently drops the user's choice.
+    /// </summary>
+    private static string? GetSavedLanguageName(ITtsEngine? engine) => engine switch
+    {
+        OmniVoiceCrispAsr => Se.Settings.Video.TextToSpeech.OmniVoiceCrispAsrLanguage,
+        MossTtsCrispAsr => Se.Settings.Video.TextToSpeech.MossTtsCrispAsrLanguage,
+        Confucius4TtsCrispAsr => Se.Settings.Video.TextToSpeech.Confucius4TtsCrispAsrLanguage,
+        CosyVoice3CrispAsr => Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrLanguage,
+        Qwen3TtsCrispAsr => Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrLanguage,
+        ChatterboxTtsCpp => Se.Settings.Video.TextToSpeech.ChatterboxCrispAsrLanguage,
+        ElevenLabs => Se.Settings.Video.TextToSpeech.ElevenLabsLanguage,
+        _ => null,
+    };
+
     [RelayCommand]
     private async Task ShowCast()
     {
@@ -1273,13 +1309,29 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             IndexTtsCrispAsr.StopServer();
         }
+        if (keepAlive is not PocketTtsCrispAsr)
+        {
+            PocketTtsCrispAsr.StopServer();
+        }
         if (keepAlive is not DotsTtsCrispAsr)
         {
             DotsTtsCrispAsr.StopServer();
         }
+        if (keepAlive is not Confucius4TtsCrispAsr)
+        {
+            Confucius4TtsCrispAsr.StopServer();
+        }
         if (keepAlive is not IndexTts25AudioCpp)
         {
             IndexTts25AudioCpp.StopServer();
+        }
+        if (keepAlive is not HiggsTtsAudioCpp)
+        {
+            HiggsTtsAudioCpp.StopServer();
+        }
+        if (keepAlive is not FishTtsAudioCpp)
+        {
+            FishTtsAudioCpp.StopServer();
         }
         if (keepAlive is not CosyVoice3CrispAsr)
         {
@@ -1562,11 +1614,23 @@ public partial class TextToSpeechViewModel : ObservableObject
             case IndexTtsCrispAsr:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadIndexTtsCrispAsrModels(IndexTtsCrispAsr.ResolveModelKey(SelectedModel)));
                 break;
+            case PocketTtsCrispAsr:
+                await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadPocketTtsCrispAsrModels(PocketTtsCrispAsr.ResolveModelKey(SelectedModel)));
+                break;
             case DotsTtsCrispAsr:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadDotsTtsCrispAsrModels(DotsTtsCrispAsr.ResolveModelKey(SelectedModel)));
                 break;
+            case Confucius4TtsCrispAsr:
+                await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadConfucius4TtsCrispAsrModels(Confucius4TtsCrispAsr.ResolveModelKey(SelectedModel)));
+                break;
             case IndexTts25AudioCpp:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadIndexTts25AudioCppModels(IndexTts25AudioCpp.ResolveModelKey(SelectedModel)));
+                break;
+            case HiggsTtsAudioCpp:
+                await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadHiggsTtsAudioCppModels(HiggsTtsAudioCpp.ResolveModelKey(SelectedModel)));
+                break;
+            case FishTtsAudioCpp:
+                await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadFishTtsAudioCppModels(FishTtsAudioCpp.ResolveModelKey(SelectedModel)));
                 break;
             case CosyVoice3CrispAsr:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadCosyVoice3CrispAsrModels(CosyVoice3CrispAsr.ResolveModelKey(SelectedModel)));
@@ -1638,10 +1702,22 @@ public partial class TextToSpeechViewModel : ObservableObject
             IndexTtsCrispAsr => IndexTtsCrispAsr.AreModelsInstalled(modelKey)
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
+            PocketTtsCrispAsr => PocketTtsCrispAsr.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
             DotsTtsCrispAsr => DotsTtsCrispAsr.AreModelsInstalled(modelKey)
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
+            Confucius4TtsCrispAsr => Confucius4TtsCrispAsr.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
             IndexTts25AudioCpp => IndexTts25AudioCpp.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
+            HiggsTtsAudioCpp => HiggsTtsAudioCpp.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
+            FishTtsAudioCpp => FishTtsAudioCpp.AreModelsInstalled(modelKey)
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
             CosyVoice3CrispAsr => CosyVoice3CrispAsr.AreModelsInstalled(modelKey)
@@ -2982,11 +3058,17 @@ public partial class TextToSpeechViewModel : ObservableObject
     {
         try
         {
-            return await TtsInstructionSwap.RunAsync(
+            var result = await TtsInstructionSwap.RunAsync(
                 resolution.Engine,
                 resolution.Instruction,
                 () => resolution.Engine.Speak(resolution.Text, _waveFolder, resolution.Voice,
                     language, region, model, cancellationToken));
+
+            // The counter tracks failures *in a row*, so a line that succeeds first time
+            // clears it. Without this it accumulated over the whole run and retries were
+            // switched off permanently after the second failure, however far apart.
+            _speakRetryFailures = 0;
+            return result;
         }
         catch (OperationCanceledException)
         {
@@ -3009,7 +3091,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                     resolution.Instruction,
                     () => resolution.Engine.Speak(resolution.Text, _waveFolder, resolution.Voice,
                         language, region, model, cancellationToken));
-                _speakRetryFailures = 0;
+                _speakRetryFailures = 0; // see the reset on first-attempt success below too
                 Se.WriteToolsLog("TTS generation: the segment succeeded on retry");
                 return retried;
             }
@@ -3126,7 +3208,9 @@ public partial class TextToSpeechViewModel : ObservableObject
             clipFolder,
             videoDurationSeconds,
             audioTrackFfIndex: -1,
-            progress: (done, total) => ProgressValue = total == 0 ? 0 : (double)done / total,
+            // The progress bar is 0-100, like every other stage reports (a raw 0-1 fraction
+            // left it pinned at 0 for the whole clip-cutting phase).
+            progress: (done, total) => ProgressValue = total == 0 ? 0 : (double)done / total * 100.0,
             cancellationToken);
 
         if (_perLineCloneClips.Count > 0)
@@ -3771,12 +3855,35 @@ public partial class TextToSpeechViewModel : ObservableObject
     // once enough progress exists for it not to jump around.
     private readonly Stopwatch _generateStopwatch = new();
 
+    // ProgressValue is driven 0->100 once per stage (generate, fix speed, post-process,
+    // merge), so the whole-run elapsed cannot be projected against it - that read "18:00
+    // left" seconds before finishing. Time each stage separately for the projection and
+    // keep the run stopwatch for the elapsed figure.
+    private readonly Stopwatch _stageStopwatch = new();
+    private double _lastProgressValue;
+
     partial void OnProgressValueChanged(double value)
     {
         if (!IsGenerating || value <= 0)
         {
+            _stageStopwatch.Restart(); // a stage boundary resets the bar to 0
+            _lastProgressValue = 0;
             return;
         }
+
+        // The import/merge path enters the generating state without starting the run
+        // stopwatch, which would otherwise still hold a previous run's elapsed.
+        if (!_generateStopwatch.IsRunning)
+        {
+            _generateStopwatch.Restart();
+        }
+
+        if (value < _lastProgressValue)
+        {
+            _stageStopwatch.Restart();
+        }
+
+        _lastProgressValue = value;
 
         ProgressPercentText = $"{Math.Clamp((int)Math.Round(value), 0, 100)}%";
 
@@ -3786,9 +3893,10 @@ public partial class TextToSpeechViewModel : ObservableObject
             return;
         }
 
-        if (value >= 3 && value <= 100)
+        var stageElapsed = _stageStopwatch.IsRunning ? _stageStopwatch.Elapsed : elapsed;
+        if (value >= 3 && value <= 100 && stageElapsed.TotalSeconds >= 1)
         {
-            var remaining = TimeSpan.FromSeconds(elapsed.TotalSeconds * (100 - value) / value);
+            var remaining = TimeSpan.FromSeconds(stageElapsed.TotalSeconds * (100 - value) / value);
             ProgressEtaText = string.Format(Se.Language.Video.TextToSpeech.XElapsedYLeft, FormatProgressDuration(elapsed), FormatProgressDuration(remaining));
         }
         else
@@ -3892,6 +4000,8 @@ public partial class TextToSpeechViewModel : ObservableObject
                                          ?? Languages.FirstOrDefault(),
                     MossTtsCrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.MossTtsCrispAsrLanguage)
                                        ?? Languages.FirstOrDefault(),
+                    Confucius4TtsCrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.Confucius4TtsCrispAsrLanguage)
+                                             ?? Languages.FirstOrDefault(),
                     CosyVoice3CrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrLanguage)
                                           ?? Languages.FirstOrDefault(),
                     Qwen3TtsCrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrLanguage)
@@ -4001,6 +4111,16 @@ public partial class TextToSpeechViewModel : ObservableObject
                 IsEngineSettingsVisible = true;
                 IsModelDownloadVisible = true;
             }
+            else if (SelectedEngine is PocketTtsCrispAsr)
+            {
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.PocketTtsCrispAsrModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Models.FirstOrDefault();
+                }
+                IsEngineSettingsVisible = true;
+                IsModelDownloadVisible = true;
+            }
             else if (SelectedEngine is DotsTtsCrispAsr)
             {
                 SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.DotsTtsCrispAsrModel);
@@ -4011,9 +4131,39 @@ public partial class TextToSpeechViewModel : ObservableObject
                 IsEngineSettingsVisible = true;
                 IsModelDownloadVisible = true;
             }
+            else if (SelectedEngine is Confucius4TtsCrispAsr)
+            {
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.Confucius4TtsCrispAsrModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Models.FirstOrDefault();
+                }
+                IsEngineSettingsVisible = true;
+                IsModelDownloadVisible = true;
+            }
             else if (SelectedEngine is IndexTts25AudioCpp)
             {
                 SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.IndexTts25AudioCppModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Models.FirstOrDefault();
+                }
+                IsEngineSettingsVisible = true;
+                IsModelDownloadVisible = true;
+            }
+            else if (SelectedEngine is HiggsTtsAudioCpp)
+            {
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.HiggsTtsAudioCppModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Models.FirstOrDefault();
+                }
+                IsEngineSettingsVisible = true;
+                IsModelDownloadVisible = true;
+            }
+            else if (SelectedEngine is FishTtsAudioCpp)
+            {
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.FishTtsAudioCppModel);
                 if (string.IsNullOrEmpty(SelectedModel))
                 {
                     SelectedModel = Models.FirstOrDefault();
@@ -4286,8 +4436,14 @@ public partial class TextToSpeechViewModel : ObservableObject
 
                 // Keep the language the user already picked when it survives the model switch -
                 // otherwise a MOSS-TTS quant change (Q4_K <-> F16) silently re-selects English.
+                // Ask for THIS engine's saved language. Consulting the ElevenLabs key here meant
+                // that e.g. Chatterbox Base -> Turbo -> Base landed on "Auto" instead of the saved
+                // German, and the next Generate then persisted "Auto" over it.
+                var savedLanguageName = GetSavedLanguageName(SelectedEngine);
                 SelectedLanguage = Languages.FirstOrDefault(p => p.Name == previousLanguageName)
-                                   ?? Languages.FirstOrDefault(p => p.Name == Se.Settings.Video.TextToSpeech.ElevenLabsLanguage);
+                                   ?? (string.IsNullOrEmpty(savedLanguageName)
+                                       ? null
+                                       : Languages.FirstOrDefault(p => p.Name == savedLanguageName));
                 if (SelectedLanguage == null)
                 {
                     // Fall back to the list's first entry so the combo is never left empty -

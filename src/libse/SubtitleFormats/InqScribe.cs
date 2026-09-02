@@ -18,6 +18,23 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
+            // The template declares "timecode.fps=30" and readers (including LoadSubtitle
+            // below) decode the HH:MM:SS.FF frames at that declared rate - so the frames
+            // must also be written at 30 fps, not at whatever video happens to be open.
+            var savedFrameRate = Configuration.Settings.General.CurrentFrameRate;
+            Configuration.Settings.General.CurrentFrameRate = 30;
+            try
+            {
+                return ToTextAtDeclaredFrameRate(subtitle);
+            }
+            finally
+            {
+                Configuration.Settings.General.CurrentFrameRate = savedFrameRate;
+            }
+        }
+
+        private static string ToTextAtDeclaredFrameRate(Subtitle subtitle)
+        {
             var template = @"app=InqScribe
 cache.mediastart=[START]
 cache.mediaend=[END]
@@ -64,6 +81,13 @@ version=1.1
                         {
                             sb.Append($"[{EncodeTimeCode(paragraph.EndTime)}]\\r\\r");
                         }
+                    }
+                    else
+                    {
+                        // The last paragraph has no following start time to imply its end,
+                        // so it needs an explicit end stamp - without one, readers (including
+                        // LoadSubtitle below) can only guess a duration.
+                        sb.Append($"[{EncodeTimeCode(paragraph.EndTime)}]\\r");
                     }
                 }
 

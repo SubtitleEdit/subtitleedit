@@ -52,6 +52,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var p = new Paragraph();
             subtitle.Paragraphs.Clear();
             _errorCount = 0;
+            bool entryStartsWithNumber = false;
             foreach (string line in lines)
             {
                 string s = line.Trim();
@@ -70,7 +71,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
                             else
                             {
-                                if (p.EndTime.TotalMilliseconds < 0.01)
+                                // An end time is only unexpected when one was ALREADY read for this
+                                // entry. The old check was inverted (it flagged the normal "end not
+                                // set yet" case), so every well-formed entry counted as an error and
+                                // IsMine (paragraphs > errors) could never detect the format.
+                                if (p.EndTime.TotalMilliseconds > 0.01)
                                 {
                                     _errorCount++;
                                 }
@@ -101,6 +106,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else
                 {
                     expectStartTime = true;
+
+                    // "1 / 00:00:32:07 / 00:00:38:04 / text" files (Unknown 64) fit this reader too, but the
+                    // counter line ends up glued in front of the text - count those entries as errors so the
+                    // format that reads them properly wins instead.
+                    if (p.Text.Length == 0)
+                    {
+                        entryStartsWithNumber = Utilities.IsInteger(s) && s.Length <= 5;
+                    }
+                    else if (entryStartsWithNumber)
+                    {
+                        entryStartsWithNumber = false;
+                        _errorCount++;
+                    }
+
                     p.Text = (p.Text + Environment.NewLine + line).Trim();
                     if (p.Text.Length > 500)
                     {

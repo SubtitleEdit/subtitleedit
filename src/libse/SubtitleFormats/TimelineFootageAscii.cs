@@ -47,6 +47,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return false;
             }
 
+            // LoadSubtitle reads the bytes straight from disk, so detection on content that is
+            // not on disk under this name (clipboard, batch conversion, a not-yet-saved file)
+            // threw FileNotFoundException out of IsMine - which format detection calls for every
+            // format when opening a file.
+            if (!File.Exists(fileName))
+            {
+                return false;
+            }
+
             return base.IsMine(lines, fileName);
         }
 

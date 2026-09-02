@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
@@ -75,7 +76,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (decimal.TryParse(startTime, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var startSeconds) &&
                     decimal.TryParse(endTime, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var endSeconds))
                 {
-                    var text = string.Join(Environment.NewLine, texts);
+                    // ToText escapes with Json.EncodeJsonText, so decode on the way in -
+                    // otherwise quotes/backslashes come back escaped ("She said \\"hello\\"").
+                    var text = string.Join(Environment.NewLine, texts.Select(Json.DecodeJsonText));
                     var p = new Paragraph(text, (double)startSeconds * 1000.0, (double)endSeconds * 1000.0);
                     subtitle.Paragraphs.Add(p);
                 }

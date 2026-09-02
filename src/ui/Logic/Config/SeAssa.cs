@@ -9,6 +9,13 @@ public class SeAssa
 {
     public bool AutoSetResolution { get; set; }
     public bool AutoSetResolutionConvert { get; set; }
+
+    /// <summary>
+    /// When an opened video's picture size differs from the script's PlayResX/PlayResY, show the
+    /// resolution resampler pre-filled with both instead of resampling silently (#14367).
+    /// </summary>
+    public bool AutoSetResolutionPrompt { get; set; }
+
     public List<SeAssaStyle> StoredStyles { get; set; }
     public string LastOverrideTag { get; set; }
     public List<string> LastOverrideTags { get; set; }
@@ -37,6 +44,7 @@ public class SeAssa
     {
         AutoSetResolution = true;
         AutoSetResolutionConvert = true;
+        AutoSetResolutionPrompt = true;
 
         // Seed the storage so a fresh install (and a settings reset) has a default style to
         // apply to new/converted ASSA subtitles instead of an empty "Styles saved" list.

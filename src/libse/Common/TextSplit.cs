@@ -195,7 +195,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             for (var i = 0; i < numberOfParts - 1; i++)
             {
-                var endIndex = FindNearestSpaceIndex(text, startIndex + partLength);
+                var endIndex = FindNearestSpaceIndex(text, startIndex + partLength, startIndex);
 
                 if (endIndex == -1)
                 {
@@ -227,10 +227,62 @@ namespace Nikse.SubtitleEdit.Core.Common
             return parts;
         }
 
-        static int FindNearestSpaceIndex(string text, int startIndex)
+        /// <summary>
+        /// A space to break this chunk on: the last one at or before <paramref name="targetIndex"/>,
+        /// but never one belonging to an already-consumed chunk. Returning such a space made the
+        /// computed length non-positive, which appended an empty part and swallowed the rest of
+        /// the text into the following one.
+        /// </summary>
+        static int FindNearestSpaceIndex(string text, int targetIndex, int minIndex)
         {
-            var spaceIndex = text.LastIndexOf(' ', Math.Min(startIndex, text.Length - 1));
-            return spaceIndex;
+            var clamped = Math.Min(targetIndex, text.Length - 1);
+            var spaceIndex = text.LastIndexOf(' ', clamped);
+            if (spaceIndex > minIndex)
+            {
+                return spaceIndex;
+            }
+
+            // No space inside this chunk - take the next one after it rather than break early.
+            return text.IndexOf(' ', clamped);
+        }
+
+        /// <summary>
+        /// A period between two digits ("04.00 uur", "1.500 euro") is a decimal/time separator, not a
+        /// sentence ending - treating it as one broke a subtitle mid-number (issue #14230).
+        /// </summary>
+        private static bool IsSentenceEndingAt(string text, int index)
+        {
+            return text[index] != '.' ||
+                   index <= 0 ||
+                   index >= text.Length - 1 ||
+                   !char.IsDigit(text[index - 1]) ||
+                   !char.IsDigit(text[index + 1]);
+        }
+
+        private static int LastSentenceEndingIndex(string text)
+        {
+            for (var i = text.Length - 1; i >= 0; i--)
+            {
+                if (Array.IndexOf(PeriodQuestionExclamation, text[i]) >= 0 && IsSentenceEndingAt(text, i))
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        private static int FirstSentenceEndingIndex(string text)
+        {
+            for (var i = 0; i < text.Length; i++)
+            {
+                if (Array.IndexOf(PeriodQuestionExclamation, text[i]) >= 0 && IsSentenceEndingAt(text, i))
+                {
+                    return i;
+                }
+            }
+
+            return -1;
         }
 
         public static Subtitle TryForWholeSentences(Subtitle inputSubtitle, string language, int lineMaxLength)
@@ -246,7 +298,10 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 if (p == null ||
                     next == null ||
-                    p.EndTime.TotalMilliseconds - next.StartTime.TotalMilliseconds > 100 ||
+                    // The gap is next.Start - p.End; written the other way round it is positive
+                    // only when the two overlap, so the "don't move a word across a long pause"
+                    // guard never fired and a word could jump a minute of silence.
+                    next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > 100 ||
                     p.Text.Contains('<') ||
                     next.Text.Contains('<') ||
                     !(p.Text.Contains('.') || p.Text.Contains('?') || p.Text.Contains('!') || next.Text.Contains('.') || next.Text.Contains('?') || next.Text.Contains('!')) ||
@@ -263,7 +318,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
 
                 // check for period in last part of current
-                var lastPeriodIdx = p.Text.LastIndexOfAny(PeriodQuestionExclamation);
+                var lastPeriodIdx = LastSentenceEndingIndex(p.Text);
                 if (lastPeriodIdx > 3 && lastPeriodIdx > p.Text.Length - maxMoveChunkSize)
                 {
                     var newCurrentText = p.Text.Substring(0, lastPeriodIdx + 1).Trim();
@@ -304,7 +359,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
 
                 // check for period in beginning of next
-                var firstPeriodIdx = next.Text.IndexOfAny(PeriodQuestionExclamation);
+                var firstPeriodIdx = FirstSentenceEndingIndex(next.Text);
                 if (firstPeriodIdx >= 3 && firstPeriodIdx < maxMoveChunkSize)
                 {
                     var newCurrentText = next.Text.Substring(0, firstPeriodIdx + 1).Trim();

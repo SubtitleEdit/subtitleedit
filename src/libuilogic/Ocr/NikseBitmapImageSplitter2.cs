@@ -638,6 +638,12 @@ public class NikseBitmapImageSplitter2
         var bmpHeight = bmp.Height;
         var minLineHeightDiv2 = minLineHeight / 2;
 
+        // "started" latches across scan lines, as it does in SE4. Declared inside the loop it was
+        // reset every y, and since every "started = true" breaks out of the x loop before the
+        // "if (started)" below, points was ALWAYS empty - so this splitter returned the image
+        // unsplit every single time and the whole "allows for up/down" path was dead.
+        var started = false;
+
         for (var y = minLineHeight; y < bmpHeight - minLineHeight; y++)
         {
             if (startY == y && bmp.IsLineTransparent(y))
@@ -652,7 +658,6 @@ public class NikseBitmapImageSplitter2
             var backJump = 0;
             var x = 0;
             var maxUp = Math.Min(10, minLineHeightDiv2);
-            var started = false;
 
             while (x < bmpWidth)
             {

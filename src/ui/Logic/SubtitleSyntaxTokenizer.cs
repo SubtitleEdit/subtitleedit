@@ -258,6 +258,13 @@ public static class SubtitleSyntaxTokenizer
 
         colorValue = colorValue.Trim();
 
+        // Inside a "\t(..)" transition the colour tag is followed by the transition's closing
+        // paren, which lands on the colour fragment when the block is split on '\'
+        // ({\c&HFFFFFF&\t(20,1000,\c&H29F2FF&)} - #10955). The grid's ParseAssaColor trims it;
+        // without the same trim here the EndsWith("&") test failed and the edit box painted the
+        // transition's colour in the generic values colour instead.
+        colorValue = colorValue.TrimEnd(')');
+
         // ASS/SSA color format: &HBBGGRR& or &HAABBGGRR&
         if (colorValue.StartsWith("&H", StringComparison.OrdinalIgnoreCase) && colorValue.EndsWith("&"))
         {

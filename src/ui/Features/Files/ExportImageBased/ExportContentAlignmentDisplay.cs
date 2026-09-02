@@ -26,6 +26,7 @@ public class ExportContentAlignmentDisplay
             new ExportContentAlignmentDisplay(ExportContentAlignment.Left, "Left"),
             new ExportContentAlignmentDisplay(ExportContentAlignment.Center, "Center"),
             new ExportContentAlignmentDisplay(ExportContentAlignment.Right, "Right"),
+            new ExportContentAlignmentDisplay(ExportContentAlignment.FromAlignment, "From alignment"),
         };
     }
 }

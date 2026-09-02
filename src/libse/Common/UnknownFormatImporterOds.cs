@@ -70,22 +70,24 @@ namespace Nikse.SubtitleEdit.Core.Common
             foreach (var row in table.Elements(TableNs + "table-row"))
             {
                 var cells = new List<string>();
-                foreach (var cell in row.Elements(TableNs + "table-cell"))
+
+                // covered-table-cell too, not just table-cell: a merged cell is written as one
+                // table-cell plus one covered-table-cell per column it swallows, and skipping the
+                // placeholders pulled every later column one to the left - so the text column of
+                // a row with a merge was read as the end time.
+                foreach (var cell in row.Elements().Where(e => e.Name == TableNs + "table-cell" || e.Name == TableNs + "covered-table-cell"))
                 {
-                    var value = GetCellValue(cell);
+                    var value = cell.Name == TableNs + "covered-table-cell" ? string.Empty : GetCellValue(cell);
                     var repeat = ParseRepeat(cell.Attribute(TableNs + "number-columns-repeated")?.Value);
 
-                    if (string.IsNullOrEmpty(value))
+                    // Honour the repeat count for empty cells too: LibreOffice writes an
+                    // *interior* run of blanks that way, and collapsing it to one cell shifted
+                    // every following column left, so a row with a gap lost its text column.
+                    // Trailing blank runs are still handled by the trim below, and ParseRepeat
+                    // already caps the count, so this cannot blow up on a "blank to column 1024" row.
+                    for (var i = 0; i < repeat; i++)
                     {
-                        // Trailing empties with huge repeat counts are common — only emit a single empty cell
-                        cells.Add(string.Empty);
-                    }
-                    else
-                    {
-                        for (var i = 0; i < repeat; i++)
-                        {
-                            cells.Add(value);
-                        }
+                        cells.Add(value ?? string.Empty);
                     }
                 }
 

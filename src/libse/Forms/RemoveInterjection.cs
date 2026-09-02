@@ -79,7 +79,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
                             }
                             if (doSkip)
                             {
-                                break;
+                                // Next interjection, not "give up on this paragraph": breaking
+                                // here left doRepeat false, so the enclosing while ended too and
+                                // one skip-listed hit suppressed every other removal in the line.
+                                continue;
                             }
 
                             var removeAfter = true;

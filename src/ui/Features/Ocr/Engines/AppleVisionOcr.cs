@@ -242,6 +242,16 @@ public static class AppleVisionOcr
     /// <returns>The recognized text, or an empty string when Vision found none.</returns>
     public static string Ocr(SKBitmap? bitmap, string? languageCode, bool fast, CancellationToken cancellationToken)
     {
+        return AppleVisionTextLayout.Compose(OcrObservations(bitmap, languageCode, fast, cancellationToken));
+    }
+
+    /// <summary>
+    /// Like <see cref="Ocr"/>, but returns the raw observations with their (normalized,
+    /// bottom-left-origin) bounding boxes, so callers can filter on position before
+    /// composing - Video OCR drops observations whose box holds no bright pixels.
+    /// </summary>
+    public static List<AppleVisionObservation> OcrObservations(SKBitmap? bitmap, string? languageCode, bool fast, CancellationToken cancellationToken)
+    {
         // Cancellation first: a caller that has already cancelled wants to hear about it whatever
         // the state of the engine, and checking it after the availability gate made the method
         // behave differently by platform - off macOS it returned empty for a cancelled token
@@ -250,13 +260,13 @@ public static class AppleVisionOcr
 
         if (bitmap == null || bitmap.Width < 1 || bitmap.Height < 1 || !IsAvailable())
         {
-            return string.Empty;
+            return new List<AppleVisionObservation>();
         }
 
         var png = EncodePng(bitmap);
         if (png == null || png.Length == 0)
         {
-            return string.Empty;
+            return new List<AppleVisionObservation>();
         }
 
         // Every NSString / NSArray / NSData below is autoreleased. Nothing drains the thread's
@@ -270,7 +280,7 @@ public static class AppleVisionOcr
             request = NewRequest();
             if (request == IntPtr.Zero)
             {
-                return string.Empty;
+                return new List<AppleVisionObservation>();
             }
 
             SendVoidLong(request, Sel("setRecognitionLevel:"), fast ? RecognitionLevelFast : RecognitionLevelAccurate);
@@ -288,26 +298,27 @@ public static class AppleVisionOcr
             var data = SendPtrBytesLong(Cls("NSData"), Sel("dataWithBytes:length:"), png, png.Length);
             if (data == IntPtr.Zero)
             {
-                return string.Empty;
+                return new List<AppleVisionObservation>();
             }
 
             handler = SendPtrPtrPtr(SendPtr(Cls("VNImageRequestHandler"), Sel("alloc")),
                 Sel("initWithData:options:"), data, IntPtr.Zero);
             if (handler == IntPtr.Zero)
             {
-                return string.Empty;
+                return new List<AppleVisionObservation>();
             }
 
             var requests = SendPtrPtr(Cls("NSArray"), Sel("arrayWithObject:"), request);
             SendPtrPtrPtr(handler, Sel("performRequests:error:"), requests, IntPtr.Zero);
 
-            return AppleVisionTextLayout.Compose(ReadObservations(request));
+            // Materialized inside the try: the finally releases the request the enumerator reads.
+            return ReadObservations(request).ToList();
         }
         catch
         {
             // One unreadable image must not stop a run of thousands: an empty result reads as
             // "nothing recognized here", which is what the caller already handles.
-            return string.Empty;
+            return new List<AppleVisionObservation>();
         }
         finally
         {

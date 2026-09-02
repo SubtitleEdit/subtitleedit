@@ -291,7 +291,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var ext = Path.GetExtension(fileName).ToLowerInvariant();
             foreach (var subtitleFormat in SubtitleFormat.AllSubtitleFormats.Where(p => p.Extension.Equals(ext, StringComparison.OrdinalIgnoreCase) && !p.Name.StartsWith("Unknown", StringComparison.Ordinal)))
             {
-                if (subtitleFormat.IsMine(lines, fileName))
+                if (IsFormatMine(subtitleFormat, lines, fileName))
                 {
                     return FinalizeFormat(fileName, batchMode, sourceFrameRate, lines, subtitleFormat, loadSubtitle);
                 }
@@ -299,7 +299,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             foreach (var subtitleFormat in SubtitleFormat.AllSubtitleFormats.Where(p => !p.Extension.Equals(ext, StringComparison.OrdinalIgnoreCase) || p.Name.StartsWith("Unknown", StringComparison.Ordinal)))
             {
-                if (subtitleFormat.IsMine(lines, fileName))
+                if (IsFormatMine(subtitleFormat, lines, fileName))
                 {
                     return FinalizeFormat(fileName, batchMode, sourceFrameRate, lines, subtitleFormat, loadSubtitle);
                 }
@@ -311,6 +311,25 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Asks one format whether the lines are its own. A damaged or truncated file can make a
+        /// reader throw (an unclosed xml element, a json string with no end quote, ...), and this
+        /// runs for EVERY format when a file is opened - so a throw here used to take down the
+        /// whole open instead of moving on to the next format.
+        /// </summary>
+        private static bool IsFormatMine(SubtitleFormat subtitleFormat, List<string> lines, string fileName)
+        {
+            try
+            {
+                return subtitleFormat.IsMine(lines, fileName);
+            }
+            catch (Exception exception)
+            {
+                System.Diagnostics.Debug.WriteLine($"{subtitleFormat.Name}.IsMine failed: {exception.Message}");
+                return false;
+            }
         }
 
         private static List<string> ReadLinesFromFile(string fileName, Encoding useThisEncoding, out Encoding encoding)
@@ -383,6 +402,43 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Frame-rate conversion that lands on whole milliseconds. Scales the start and the
+        /// duration rather than the start and the end independently, so two cues of equal length
+        /// keep equal lengths afterwards - scaling both ends separately rounds them apart (#14056).
+        /// <see cref="ChangeFrameRate(double,double)"/> keeps the fractional result for callers
+        /// that want it.
+        /// </summary>
+        public void ChangeFrameRateWholeMilliseconds(double oldFrameRate, double newFrameRate)
+        {
+            var factor = SubtitleFormat.GetFrameForCalculation(oldFrameRate) / SubtitleFormat.GetFrameForCalculation(newFrameRate);
+            Paragraph previous = null;
+            var previousOriginalEndMs = 0d;
+            foreach (var p in Paragraphs)
+            {
+                var originalStartMs = p.StartTime.TotalMilliseconds;
+                var originalEndMs = p.EndTime.TotalMilliseconds;
+
+                var newStartMs = Math.Round(originalStartMs * factor, MidpointRounding.AwayFromZero);
+                var newDurationMs = Math.Round((originalEndMs - originalStartMs) * factor, MidpointRounding.AwayFromZero);
+                p.StartTime.TotalMilliseconds = newStartMs;
+                p.EndTime.TotalMilliseconds = newStartMs + newDurationMs;
+
+                // The two roundings can push the previous end one millisecond past this start,
+                // turning a clean join into an overlap the source never had. Overlaps that were
+                // already in the source are left as they were.
+                if (previous != null &&
+                    previousOriginalEndMs <= originalStartMs &&
+                    previous.EndTime.TotalMilliseconds > p.StartTime.TotalMilliseconds)
+                {
+                    previous.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
+                }
+
+                previous = p;
+                previousOriginalEndMs = originalEndMs;
+            }
+        }
+
         public void AdjustDisplayTimeUsingPercent(double percent, List<int> selectedIndexes, List<double> shotChanges = null, bool enforceDurationLimits = true)
         {
             // List.Contains per paragraph made this O(paragraphs * selection) - quadratic with
@@ -412,8 +468,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                         }
                     }
 
-                    // handle overlap with next
-                    if (newEndMilliseconds > nextStartMilliseconds)
+                    // handle overlap with next - measured against the minimum gap, the way
+                    // AdjustDisplayTimeUsingMilliseconds does. Testing only for a hard overlap
+                    // let a new end land inside the gap (or exactly on the next start).
+                    if (newEndMilliseconds > nextStartMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines)
                     {
                         newEndMilliseconds = nextStartMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                     }

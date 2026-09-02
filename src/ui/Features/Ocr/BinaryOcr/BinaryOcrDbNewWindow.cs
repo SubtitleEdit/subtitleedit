@@ -48,10 +48,10 @@ public class BinaryOcrDbNewWindow : Window
 
         Content = grid;
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             textBoxDatabaseName.Focus(); // hack to make OnKeyDown work
-        };
+        });
 
         textBoxDatabaseName.KeyDown += vm.TextBoxDatabaseNameKeyDown;
         KeyDown += (_, e) => vm.KeyDown(e);

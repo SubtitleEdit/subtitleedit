@@ -258,7 +258,9 @@ public partial class WaveformThemesViewModel : ObservableObject
         {
             Title = Se.Language.Options.Settings.WaveformExportThemeDotDotDot,
             SuggestedFileName = suggestedName,
-            DefaultExtension = "seTheme",
+            // The load picker filters on *.seWaveformTheme, so exporting as .seTheme produced a
+            // file that could not be selected again.
+            DefaultExtension = "seWaveformTheme",
             FileTypeChoices = new List<FilePickerFileType>
             {
                 new FilePickerFileType("Subtitle Edit theme (*.seWaveformTheme)")

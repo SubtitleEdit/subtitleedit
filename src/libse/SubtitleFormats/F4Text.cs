@@ -82,17 +82,26 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 if (RegexTimeCodes.IsMatch(line))
                 {
+                    if (p == null && currentText.Length > 0)
+                    {
+                        // Text before the first time stamp: the stamp is that utterance's END
+                        // time (this used to add the paragraph with 0 -> 0 times and leave the
+                        // text in the buffer, so it was repeated in the following paragraph).
+                        p = new Paragraph();
+                        p.Text = currentText.ToString().Trim().Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+                        p.Text = p.Text.Trim('\n', '\r');
+                        p.EndTime = DecodeTimeCode(line.Split(new[] { ':', '-' }, StringSplitOptions.RemoveEmptyEntries));
+                        subtitle.Paragraphs.Add(p);
+                        p = null;
+                        currentText.Clear();
+                        continue;
+                    }
+
                     if (p == null)
                     {
                         p = new Paragraph();
-                        if (currentText.Length > 0)
-                        {
-                            p.Text = currentText.ToString().Trim().Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-                            p.Text = p.Text.Trim('\n', '\r');
-                            subtitle.Paragraphs.Add(p);
-                            p = new Paragraph();
-                        }
                     }
+
                     if (Math.Abs(p.StartTime.TotalMilliseconds) < 0.01 || currentText.Length == 0)
                     {
                         p.StartTime = DecodeTimeCode(line.Split(new[] { ':', '-' }, StringSplitOptions.RemoveEmptyEntries));

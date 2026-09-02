@@ -31,7 +31,12 @@ public static class InitVideoPlayer
         if (vm.VideoPlayerControl != null)
         {
             mediaFile = vm.VideoPlayerControl.VideoPlayer.FileName;
-            position = vm.VideoPlayerControl.VideoPlayer.Position;
+
+            // Not VideoPlayer.Position: the outgoing control may still be restoring a position
+            // itself (Options/Apply rebuilt it moments ago), and a player that has not finished
+            // loading reports 0 - which would be carried forward here as a rewind to the start
+            // of the video (issue #14218).
+            position = vm.VideoPlayerControl.PositionForRestore;
 
             // The old control is replaced by the one built below and never used again, so tear
             // it down completely. Closing the file alone left its 50 ms position timer running
@@ -61,6 +66,11 @@ public static class InitVideoPlayer
         };
         if (!string.IsNullOrEmpty(mediaFile))
         {
+            // Announced before the open so a rebuild that lands while this restore is still
+            // running gets the position it is heading for rather than the 0 of a player that
+            // has not loaded yet (issue #14218).
+            control.BeginPositionRestore(position);
+
             Dispatcher.UIThread.Post(async () =>
             {
                 await control.Open(mediaFile);
@@ -78,6 +88,11 @@ public static class InitVideoPlayer
 
                     control.Position = position;
                 }
+
+                // Only if the player really got there - the loop above is a fixed 100 ms of
+                // seeks, so a player still loading when it runs out would otherwise be handed
+                // back as the truth while it still reports 0 (issue #14218).
+                control.EndPositionRestoreIfArrived();
             });
         }
 
@@ -89,6 +104,7 @@ public static class InitVideoPlayer
         control.VideoFileNamePointerPressed += vm.VideoPlayerControlPointerPressed;
         control.SurfacePointerPressed += (_, _) => vm.VideoPlayerAreaPointerPressed();
         control.UserSeeked += vm.OnVideoPlayerUserSeeked;
+        control.PositionChanged += vm.OnVideoPlayerPositionSet;
         // Freeze the interpolated waveform cursor the instant a pause is requested from the
         // player itself (toolbar button / click on the video); without this the cursor keeps
         // gliding until mpv's IsPlaying flips ~100 ms later (issue #12233).

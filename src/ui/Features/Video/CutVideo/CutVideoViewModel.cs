@@ -51,7 +51,6 @@ public partial class CutVideoViewModel : ObservableObject
     [ObservableProperty] private bool _isAudioVisualizerVisible;
     [ObservableProperty] private ObservableCollection<SubtitleLineViewModel> _segments;
     [ObservableProperty] private SubtitleLineViewModel? _selectedSegment;
-    [ObservableProperty] private int _selectedSegmentIndex;
     [ObservableProperty] private ObservableCollection<CutTypeDisplay> _cutTypes;
     [ObservableProperty] private CutTypeDisplay _selectedCutType;
     [ObservableProperty] private bool _isSetStartEnabled;
@@ -80,6 +79,15 @@ public partial class CutVideoViewModel : ObservableObject
     private SubtitleFormat? _subtitleFormat;
     private string _inputVideoFileName;
     private bool _updateAudioVisualizer;
+
+    // ffmpeg's stdout and stderr readers both call OutputHandlerKeyFrames, on two thread pool
+    // threads, while the waveform render thread walks AudioVisualizer.ShotChanges every frame.
+    // List<T>.Add publishes the grown array and the new size non-atomically, so adding straight
+    // into the live list could throw IndexOutOfRangeException out of Render. Collect here under a
+    // lock and hand the visualizer a finished list on the UI thread instead - what every other
+    // shot-change writer does - coalescing the publishes so a long file cannot flood the queue.
+    private readonly List<double> _keyFrameSeconds = new List<double>();
+    private bool _keyFramePublishPending;
     private DispatcherTimer _positionTimer = new DispatcherTimer();
     private string _importFileName;
     private Subtitle _currentSubtitle;
@@ -107,11 +115,12 @@ public partial class CutVideoViewModel : ObservableObject
         FrameRates = new ObservableCollection<double> { 23.976, 24, 25, 29.97, 30, 50, 59.94, 60 };
         SelectedFrameRate = FrameRates[0];
 
+        // No .webm: the video path always encodes libx264, which the WebM muxer cannot carry.
+        // (.mp3/.wav take the audio-only branch and are fine.)
         VideoExtensions = new ObservableCollection<string>
         {
             ".mkv",
             ".mp4",
-            ".webm",
             ".mp3",
             ".wav",
         };
@@ -214,7 +223,10 @@ public partial class CutVideoViewModel : ObservableObject
         _positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(150) };
         _positionTimer.Tick += (s, e) =>
         {
-            UpdateAudioVisualizer(VideoPlayer.VideoPlayer, AudioVisualizer, SelectedSegmentIndex);
+            // Derive the index from the row the grid actually binds. SelectedSegmentIndex is
+            // written nowhere in the repo and is not bound, so it stayed 0 and the waveform
+            // always highlighted the first segment no matter which row was selected.
+            UpdateAudioVisualizer(VideoPlayer.VideoPlayer, AudioVisualizer, SelectedSegment == null ? -1 : Segments.IndexOf(SelectedSegment));
 
             if (_updateAudioVisualizer)
             {
@@ -288,8 +300,29 @@ public partial class CutVideoViewModel : ObservableObject
 
             if (double.TryParse(ptsValue, NumberStyles.Float, CultureInfo.InvariantCulture, out double seconds))
             {
-                AudioVisualizer.ShotChanges.Add(seconds);
-                _updateAudioVisualizer = true;
+                lock (_keyFrameSeconds)
+                {
+                    _keyFrameSeconds.Add(seconds);
+                    if (_keyFramePublishPending)
+                    {
+                        return;
+                    }
+
+                    _keyFramePublishPending = true;
+                }
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    List<double> snapshot;
+                    lock (_keyFrameSeconds)
+                    {
+                        _keyFramePublishPending = false;
+                        snapshot = new List<double>(_keyFrameSeconds);
+                    }
+
+                    AudioVisualizer.ShotChanges = snapshot;
+                    _updateAudioVisualizer = true;
+                }, DispatcherPriority.Background);
             }
         }
     }
@@ -360,7 +393,7 @@ public partial class CutVideoViewModel : ObservableObject
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
 
-                IsGenerating = true;
+                IsGenerating = false;
                 ProgressValue = 0;
             });
 
@@ -565,18 +598,24 @@ public partial class CutVideoViewModel : ObservableObject
         var nameNoExt = Path.GetFileNameWithoutExtension(videoFileName);
         var ext = SelectedVideoExtension;
         var suffix = Se.Settings.Video.BurnIn.BurnInSuffix;
-        var fileName = Path.Combine(Path.GetDirectoryName(videoFileName)!, nameNoExt + suffix + ext);
-        if (Se.Settings.Video.BurnIn.UseOutputFolder &&
-            !string.IsNullOrEmpty(Se.Settings.Video.BurnIn.OutputFolder) &&
-            Directory.Exists(Se.Settings.Video.BurnIn.OutputFolder))
-        {
-            fileName = Path.Combine(Se.Settings.Video.BurnIn.OutputFolder, nameNoExt + suffix + ext);
-        }
+
+        // Decide the folder once - the collision loop below used to combine with
+        // BurnIn.OutputFolder unconditionally, so with the default (empty, unused) output
+        // folder the "_2" fallback became a bare relative name resolved against the process
+        // working directory instead of the video's folder.
+        var useOutputFolder = Se.Settings.Video.BurnIn.UseOutputFolder &&
+                              !string.IsNullOrEmpty(Se.Settings.Video.BurnIn.OutputFolder) &&
+                              Directory.Exists(Se.Settings.Video.BurnIn.OutputFolder);
+        var outputFolder = useOutputFolder
+            ? Se.Settings.Video.BurnIn.OutputFolder
+            : Path.GetDirectoryName(videoFileName) ?? Path.GetTempPath();
+
+        var fileName = Path.Combine(outputFolder, nameNoExt + suffix + ext);
 
         var i = 2;
         while (File.Exists(fileName))
         {
-            fileName = Path.Combine(Se.Settings.Video.BurnIn.OutputFolder, $"{nameNoExt}{suffix}_{i}{ext}");
+            fileName = Path.Combine(outputFolder, $"{nameNoExt}{suffix}_{i}{ext}");
             i++;
         }
 

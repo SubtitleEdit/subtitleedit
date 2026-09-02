@@ -60,7 +60,7 @@ public class FindRuleWindow : Window
 
         Content = grid;
 
-        Activated += delegate { textBoxSearch.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, textBoxSearch);
         KeyDown += vm.OnKeyDown;
     }
 

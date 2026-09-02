@@ -18,6 +18,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string Extension => ".xml";
         public override string Name => "Netflix IMSC 1.1 Japanese";
 
+        // Carries the region of every paragraph, and the regions themselves in the header.
+        public override bool HasPositionSupport => true;
+
         private static string GetXmlStructure()
         {
             return @"<?xml version='1.0' encoding='UTF-8' standalone='no'?>
@@ -86,9 +89,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return false;
             }
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            var text = sb.ToString();
+            var text = JoinLines(lines);
             if (!text.Contains("lang=\"ja\"", StringComparison.Ordinal) || !ContainsJapaneseProfileStyling(text))
             {
                 return false;
@@ -99,20 +100,33 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            var xml = new XmlDocument { XmlResolver = null };
-            xml.LoadXml(GetXmlStructure());
-            var namespaceManager = new XmlNamespaceManager(xml.NameTable);
-            namespaceManager.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
-            var div = xml.DocumentElement.SelectSingleNode("ttml:body", namespaceManager).SelectSingleNode("ttml:div", namespaceManager);
-            foreach (var p in subtitle.Paragraphs)
+            // The fixed template header declares ttp:frameRate 24 with multiplier 1000/1001,
+            // and readers (including SE's own) parse the HH:MM:SS:FF frames part at that
+            // declared 23.976 - so the frames must also be WRITTEN at 23.976, not at whatever
+            // video happens to be open (a 29.97 video shifted every written time code).
+            var savedFrameRate = Configuration.Settings.General.CurrentFrameRate;
+            Configuration.Settings.General.CurrentFrameRate = 23.976;
+            try
             {
-                var paragraphNode = MakeParagraph(xml, p);
-                div.AppendChild(paragraphNode);
-            }
+                var xml = new XmlDocument { XmlResolver = null };
+                xml.LoadXml(GetXmlStructure());
+                var namespaceManager = new XmlNamespaceManager(xml.NameTable);
+                namespaceManager.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
+                var div = xml.DocumentElement.SelectSingleNode("ttml:body", namespaceManager).SelectSingleNode("ttml:div", namespaceManager);
+                foreach (var p in subtitle.Paragraphs)
+                {
+                    var paragraphNode = MakeParagraph(xml, p);
+                    div.AppendChild(paragraphNode);
+                }
 
-            var xmlString = ToUtf8XmlString(xml).Replace(" xmlns=\"\"", string.Empty);
-            subtitle.Header = xmlString;
-            return xmlString;
+                var xmlString = ToUtf8XmlString(xml).Replace(" xmlns=\"\"", string.Empty);
+                subtitle.Header = xmlString;
+                return xmlString;
+            }
+            finally
+            {
+                Configuration.Settings.General.CurrentFrameRate = savedFrameRate;
+            }
         }
 
         private static XmlNode MakeParagraph(XmlDocument xml, Paragraph p)
@@ -402,16 +416,26 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument { XmlResolver = null, PreserveWhitespace = true };
             try
             {
-                xml.LoadXml(sb.ToString().RemoveControlCharactersButWhiteSpace().Trim());
+                xml.LoadXml(JoinLines(lines).RemoveControlCharactersButWhiteSpace().Trim());
             }
             catch
             {
-                xml.LoadXml(sb.ToString().Replace(" & ", " &amp; ").Replace("Q&A", "Q&amp;A").RemoveControlCharactersButWhiteSpace().Trim());
+                try
+                {
+                    xml.LoadXml(JoinLines(lines).Replace(" & ", " &amp; ").Replace("Q&A", "Q&amp;A").RemoveControlCharactersButWhiteSpace().Trim());
+                }
+                catch (Exception exception)
+                {
+                    // The retry is the last chance to make sense of the file; a truncated or
+                    // damaged one must read as "not mine", not throw out of the reader (and out
+                    // of IsMine, which runs for every format when a file is opened).
+                    System.Diagnostics.Debug.WriteLine(exception.Message);
+                    _errorCount = 1;
+                    return;
+                }
             }
 
             var frameRateAttr = xml.DocumentElement.Attributes["ttp:frameRate"];
@@ -457,7 +481,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = null;
-            subtitle.Header = sb.ToString();
+            subtitle.Header = JoinLines(lines);
 
             var namespaceManager = new XmlNamespaceManager(xml.NameTable);
             namespaceManager.AddNamespace("ttml", "http://www.w3.org/ns/ttml");

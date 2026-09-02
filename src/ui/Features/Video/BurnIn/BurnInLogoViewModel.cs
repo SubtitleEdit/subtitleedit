@@ -6,6 +6,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using System;
@@ -45,10 +46,9 @@ public partial class BurnInLogoViewModel : ObservableObject
     {
         PositionInSeconds = VideoPlayerControl?.Position ?? 0;
 
-        // Save logo settings
+        // Save logo settings - the caller adopts BurnInLogo only when OkPressed, and it is its own
+        // copy, so X/Y/Alpha/Size edited in the window are committed here and dropped on Cancel.
         BurnInLogo.LogoFileName = LogoFileName;
-        BurnInLogo.X = BurnInLogo.X;
-        BurnInLogo.Y = BurnInLogo.Y;
 
         OkPressed = true;
         Window?.Close();
@@ -123,43 +123,15 @@ public partial class BurnInLogoViewModel : ObservableObject
             return;
         }
 
-        // Use the actual content dimensions from the video player
-        var contentWidth = VideoPlayerControl.ContentWidth;
-        var contentHeight = VideoPlayerControl.ContentHeight;
-
-        if (contentWidth <= 0 || contentHeight <= 0)
+        // Where the picture actually sits inside the measured surface.
+        var contentRect = VideoContentRect.Calculate(
+            VideoPlayerControl.ContentWidth, VideoPlayerControl.ContentHeight, VideoWidth, VideoHeight);
+        if (contentRect == null)
         {
             return;
         }
 
-        // Calculate the actual video display area based on aspect ratio
-        var screenAspect = (double)VideoWidth / VideoHeight;
-        var contentAspect = (double)contentWidth / contentHeight;
-
-        double rectWidth, rectHeight, rectX, rectY;
-
-        if (contentAspect > screenAspect)
-        {
-            // Video is narrower than content space - pillarboxed
-            rectHeight = contentHeight;
-            rectWidth = rectHeight * screenAspect;
-            rectX = (contentWidth - rectWidth) / 2;
-            rectY = 0;
-        }
-        else
-        {
-            // Video is wider than content space - letterboxed
-            rectWidth = contentWidth;
-            rectHeight = rectWidth / screenAspect;
-            rectX = 0;
-            rectY = (contentHeight - rectHeight) / 2;
-        }
-
-        // Round to avoid sub-pixel rendering issues
-        rectWidth = Math.Round(rectWidth);
-        rectHeight = Math.Round(rectHeight);
-        rectX = Math.Round(rectX);
-        rectY = Math.Round(rectY);
+        var (rectX, rectY, rectWidth, rectHeight) = contentRect.Value;
 
         // Update the green border
         Dispatcher.UIThread.Post(() =>

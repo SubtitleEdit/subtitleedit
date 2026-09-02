@@ -38,10 +38,19 @@ public class SeVideoTextToSpeech
     public double VibeVoiceCrispAsrSpeed { get; set; }
     public string IndexTtsCrispAsrModel { get; set; }
     public double IndexTtsCrispAsrSpeed { get; set; }
+    public string PocketTtsCrispAsrModel { get; set; }
+    public double PocketTtsCrispAsrSpeed { get; set; }
     public string DotsTtsCrispAsrModel { get; set; }
     // Flow-matching Euler steps for dots.tts (8-32, default 16). Higher is better and slower;
     // there is no CLI flag for it, so the engine passes it as CRISPASR_DOTS_ODE_STEPS.
     public int DotsTtsCrispAsrOdeSteps { get; set; }
+    public string Confucius4TtsCrispAsrModel { get; set; }
+    // Display name of the picked Confucius4-TTS target language (empty = English, the backend's
+    // implicit default — there is no auto-detection).
+    public string Confucius4TtsCrispAsrLanguage { get; set; }
+    // Flow-matching Euler steps for the Confucius4-TTS S2A stage (10-40, default 20). Higher is
+    // better and slower; passed as --tts-steps.
+    public int Confucius4TtsCrispAsrOdeSteps { get; set; }
     public string IndexTts25AudioCppModel { get; set; }
     // Licence version the user accepted for the IndexTTS-2.5 weights (bilibili Model Use
     // License, not OSI-approved). Empty until accepted; a version bump re-prompts.
@@ -54,6 +63,15 @@ public class SeVideoTextToSpeech
     // One of IndexTts25AudioCpp.EmotionNames, or empty/"none" for no emotion conditioning.
     public string IndexTts25AudioCppEmotion { get; set; }
     public double IndexTts25AudioCppEmotionAlpha { get; set; }
+
+    // Higgs Audio v3 (audio.cpp). The runtime backend is shared with IndexTTS 2.5 —
+    // see AudioCppRuntime.GetBackend — so only model choice and licence live here.
+    public string HiggsTtsAudioCppModel { get; set; }
+    public string HiggsTtsAudioCppLicenseAccepted { get; set; }
+
+    // Fish Audio S2 Pro (audio.cpp). Same sharing as above.
+    public string FishTtsAudioCppModel { get; set; }
+    public string FishTtsAudioCppLicenseAccepted { get; set; }
     public string CosyVoice3CrispAsrModel { get; set; }
     public double CosyVoice3CrispAsrSpeed { get; set; }
     // Display name of the picked CosyVoice3 target language ("Auto" = plain zero-shot cloning).
@@ -173,14 +191,23 @@ public class SeVideoTextToSpeech
         VibeVoiceCrispAsrSpeed = 1.1;
         IndexTtsCrispAsrModel = "Q8_0 (~870 MB)";
         IndexTtsCrispAsrSpeed = 1.0;
+        PocketTtsCrispAsrModel = "English F16 (~219 MB)";
+        PocketTtsCrispAsrSpeed = 1.0;
         DotsTtsCrispAsrModel = "Q8_0 (~3.5 GB)";
         DotsTtsCrispAsrOdeSteps = 16;
+        Confucius4TtsCrispAsrModel = "Q8_0 (~1.9 GB)";
+        Confucius4TtsCrispAsrLanguage = string.Empty;
+        Confucius4TtsCrispAsrOdeSteps = 20;
         IndexTts25AudioCppModel = "Q8_0 (~3.3 GB)";
         IndexTts25AudioCppLicenseAccepted = string.Empty;
         IndexTts25AudioCppBackend = string.Empty;
         IndexTts25AudioCppDurationFactor = 1.0;
         IndexTts25AudioCppEmotion = string.Empty;
         IndexTts25AudioCppEmotionAlpha = 0.8;
+        HiggsTtsAudioCppModel = "Q8_0 (~4.7 GB)";
+        HiggsTtsAudioCppLicenseAccepted = string.Empty;
+        FishTtsAudioCppModel = "Q8_0 (~5.9 GB)";
+        FishTtsAudioCppLicenseAccepted = string.Empty;
         CosyVoice3CrispAsrModel = "Q4_K (~1.6 GB total)";
         CosyVoice3CrispAsrSpeed = 1.0;
         CosyVoice3CrispAsrLanguage = string.Empty;

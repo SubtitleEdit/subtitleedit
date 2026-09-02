@@ -37,7 +37,11 @@ public static partial class MergeAndSplitHelper
         var noSentenceEndingTarget = IsNonMergeLanguage(target);
 
         var tempSubtitle = CreateTempSubtitle(rows);
-        var formattingList = HandleFormatting(tempSubtitle, index, target.Code);
+        // source.Code, not target.Code: HandleFormatting feeds this to PreTranslate (whose
+        // rules are guarded by source == "en") and to Formatting.SetTagsAndReturnTrimmed,
+        // which decides un-breaking from LanguagesAllowingLineMerging - both are properties
+        // of the text being sent, not of the language being requested.
+        var formattingList = HandleFormatting(tempSubtitle, index, source.Code);
         var maxChars = CalculateMaxChars(autoTranslator, forceSingleLineMode);
 
         var mergeResult = TryMergeLines(tempSubtitle, index, maxChars, ref noSentenceEndingSource, noSentenceEndingTarget);
@@ -88,6 +92,7 @@ public static partial class MergeAndSplitHelper
         {
             Number = p.Number,
             Show = p.Show,
+            Hide = p.Hide,
             Duration = p.Duration,
             Text = p.Text
         }).ToArray();
@@ -149,7 +154,9 @@ public static partial class MergeAndSplitHelper
         string mergedTranslation,
         Action<Action> applyRowUpdate)
     {
-        if (index < rows.Count && formattingList.Count > 0)
+        // An engine that returns nothing has not translated the line: reporting 1 reset the
+        // caller's no-progress counter, so the retry never fired and the row was left blank.
+        if (index < rows.Count && formattingList.Count > 0 && !string.IsNullOrWhiteSpace(mergedTranslation))
         {
             applyRowUpdate(() => rows[index].TranslatedText = formattingList[0].ReAddFormatting(mergedTranslation));
             return 1;

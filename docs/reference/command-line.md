@@ -180,11 +180,15 @@ When rendering a text subtitle to an image-based target (Blu-Ray `sup`, VobSub, 
 | `--box-padding:<px>` | Box padding: one value for all sides, or `left,right,top,bottom` (default: `5,5,3,3`) |
 | `--line-spacing:<percent>` | Extra gap between lines as percent of line height (default: `0`) |
 | `--alignment:<pos>` | Screen position: `bottom-center` (default), `top-left`, `middle-right`, ... |
-| `--content-alignment:<align>` | Multi-line text justification: `left` \| `center` (default) \| `right` |
+| `--content-alignment:<align>` | Multi-line text justification: `left` \| `center` (default) \| `right` \| `from-alignment` (follow the `{\anX}` tag) |
 | `--bottom-top-margin:<px>` | Vertical screen-edge margin (default: 5% of height) |
 | `--left-right-margin:<px>` | Horizontal screen-edge margin (default: 5% of width) |
+| `--full-frame` | Draw each subtitle onto a frame-sized image instead of one cropped to the text. Only `fcpimage` and `bluraysup` use it; other image targets warn and ignore it |
+| `--full-frame-background-color:<color>` | Background of the full frame image (default: `transparent`) |
 
 Colours accept hex (`#AARRGGBB`, `#RRGGBB`, with or without `#`) or a colour name (`white`, `black`, `yellow`, ...).
+
+**Full frame** (`--full-frame`) draws the subtitle onto a canvas the size of the video frame, using the alignment and margins to place it there, so every image can be dropped on an editing timeline at 0,0 instead of being positioned one by one. It matches the "Full frame image" checkbox in the export dialog, and applies to `fcpimage` and `bluraysup` only. The background is transparent unless `--full-frame-background-color` says otherwise, so the images sit on a track above the video.
 
 ```bash
 # SRT → UHD Blu-Ray sup with a semi-transparent black background box (SE4-style)
@@ -192,6 +196,9 @@ seconv movie.srt bluraysup --resolution:3840x2160 --background-color:"#B4000000"
 
 # Custom font, bold, box per line
 seconv movie.srt bluraysup --font-name:Verdana --font-size:60 --font-bold --box-type:box-per-line
+
+# Final Cut Pro + image, one frame-sized png per subtitle
+seconv movie.srt fcpimage --full-frame
 ```
 
 ### Containers / tracks
@@ -247,6 +254,7 @@ An AVI stream header carries no language, so a multi-stream `.avi` names its out
 | `--ollama-model:<model>` | Default `llama3.2-vision` |
 | `--ocr-model:<model>` | llama.cpp OCR model: the file name of a model in the llama.cpp models folder - curated (e.g. `GLM-OCR-Q8_0.gguf`) or your own vision model with its `mmproj` sidecar next to it - or a full path to a `.gguf` with its `mmproj` sidecar next to it. Default: the first downloaded OCR model. |
 | `--ocr-url:<url>` | llama.cpp: endpoint of an already-running `llama-server` (a bare `host:port` is completed to `/v1/chat/completions`); skips the local auto-start. |
+| `--ocr-prompt:<text\|file>` | Prompt for the prompt-driven OCR engines (`llamacpp`, `ollama`); rejected for the others. `{language}` is replaced with `--ocr-language`. A value that names an existing file, or ends in `.txt`/`.prompt`/`.md`, is read from that file; inline text gets `\n`/`\r`/`\t` unescaped. Default: the same prompt as the SE OCR window. |
 | `--time-codes-only` | Image sources (`.sup`, VobSub `.sub`/`.idx`, MKV PGS/VobSub, MP4 VobSub, TS DVB-sub, AVI XSUB) → text format with time codes only and empty text. **Skips OCR entirely** — no OCR engine required. Ignored for text inputs and image output targets. |
 | `--no-vobsub-isolate-colors` | Disable VobSub OCR colour isolation, which is **on by default**. Isolation rebuilds each subpicture as a crisp black-on-white bitmap via histogram-based colour analysis — the most frequent opaque colour (the glyph fill) becomes black and the gray outline / anti-alias colours collapse into the white background, which helps on discs whose outlines otherwise melt adjacent characters together (`Yuri` → `Yurl`). Pass this flag to OCR the raw palette instead. Ignored for non-VobSub sources and with `--time-codes-only`. |
 
@@ -257,6 +265,12 @@ An AVI stream header carries no language, so a multi-stream `.avi` names its out
 > - Other languages: download from the SE UI (Tools → "OCR with nOCR" / BinaryOCR → download).
 
 Run `seconv list-ocr-engines` for the per-engine installation-status table.
+
+Long OCR runs report progress as images *finished* of the current source (per PID for TS
+DVB-sub, per track for MKV). On a terminal this rewrites a single line - `  OCR 42/345 (12%)...`;
+when stdout is a pipe or a file it prints one plain line per 10% instead, so a log of a
+5000-image run holds ten lines rather than one endless one. Auto-translate reports the same way
+(`  Translated 42/345 (12%)...`). Both are suppressed by `--quiet` and `--json`.
 
 ```bash
 # Tesseract
@@ -272,6 +286,11 @@ seconv movie.sup subrip --ocr-engine:binaryocr --ocr-db:"C:\Users\me\AppData\Roa
 seconv movie.sup subrip --ocr-engine:llamacpp
 seconv movie.sup subrip --ocr-engine:llamacpp --ocr-model:GLM-OCR-Q8_0.gguf
 seconv movie.sup subrip --ocr-engine:llamacpp --ocr-url:http://127.0.0.1:8080
+
+# Override the OCR prompt (inline or from a file); {language} = --ocr-language
+seconv movie.sup subrip --ocr-engine:llamacpp --ocr-language:German \
+  --ocr-prompt:"Identify the number of lines, then extract the text of each line exactly as written. The language is {language}."
+seconv movie.sup subrip --ocr-engine:llamacpp --ocr-prompt:my-ocr-prompt.txt
 
 # MKV with image (PGS or VobSub) tracks — OCR runs automatically
 seconv movie.mkv subrip --ocr-engine:tesseract --ocr-language:eng
@@ -500,6 +519,8 @@ The keys and defaults below are exactly what `dump-settings` emits:
     "boxPaddingTop": 3,
     "boxPaddingBottom": 3,
     "lineSpacingPercent": 0,
+    "isFullFrame": false,
+    "fullFrameBackgroundColor": "#00FFFFFF",
     "alignment": "bottom-center",
     "contentAlignment": "center",
     "bottomTopMargin": 54,
@@ -529,7 +550,7 @@ seconv *.srt subrip --settings:my.json --profile:broadcast --remove-text-for-hi
 
 | Option | Description |
 |---|---|
-| `--quiet` / `-q` | Suppress per-file progress and the parameters table; only print the final summary |
+| `--quiet` / `-q` | Suppress per-file progress, the parameters table, and the OCR/translate progress lines; only print the final summary |
 | `--verbose` / `-v` | Print extra diagnostic information, including full exception details (stack traces) on errors |
 | `--json` | Emit per-file results as JSON to stdout (suppresses Spectre output). Also accepted by every subcommand. Failures use the same envelope, so stdout is always one JSON document |
 

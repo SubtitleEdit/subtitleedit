@@ -23,6 +23,7 @@ public class LanguageImageBasedEdit
     public string ResizeImages { get; set; }
     public string Percentage { get; set; }
     public string ResizeImagesInfo { get; set; }
+    public string OriginalSizeXNewSizeY { get; set; }
     public string AdjustColorDotDotDot { get; set; }
     public string AdjustColor { get; set; }
     public string ColorAdjustmentInfo { get; set; }
@@ -43,6 +44,7 @@ public class LanguageImageBasedEdit
     public string XInTopBar { get; set; }
     public string XInBottomBar { get; set; }
     public string NoImageSubtitlesLoaded { get; set; }
+    public string ImageBasedFormatNotSupported { get; set; }
 
     public LanguageImageBasedEdit()
     {
@@ -67,6 +69,7 @@ public class LanguageImageBasedEdit
         ResizeImages = "Resize images";
         Percentage = "Percentage";
         ResizeImagesInfo = "Enter the percentage to resize images.\nPreview updates automatically.";
+        OriginalSizeXNewSizeY = "Original: {0} \u00d7 {1} px\nNew: {2} \u00d7 {3} px";
         AdjustColorDotDotDot = "Adjust color...";
         AdjustColor = "Adjust color";
         ColorAdjustmentInfo = "Click the color swatch to pick a color. Bright subtitle pixels shift toward the chosen hue; dark outlines and shadows are preserved.\nPreview shows the first selected subtitle.";
@@ -87,5 +90,6 @@ public class LanguageImageBasedEdit
         XInTopBar = "{0} in top bar";
         XInBottomBar = "{0} in bottom bar";
         NoImageSubtitlesLoaded = "No image subtitles loaded";
+        ImageBasedFormatNotSupported = "Image based subtitle format not found/supported.";
     }
 }

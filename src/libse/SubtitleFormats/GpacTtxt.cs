@@ -65,10 +65,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
             Paragraph last = null;
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
 
-            if (!sb.ToString().Contains("<TextStream"))
+            if (!JoinLines(lines).Contains("<TextStream"))
             {
                 return;
             }
@@ -76,7 +74,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var xml = new XmlDocument { XmlResolver = null };
             try
             {
-                xml.LoadXml(sb.ToString().Trim());
+                xml.LoadXml(JoinLinesTrimmed(lines));
 
                 foreach (XmlNode node in xml.DocumentElement.SelectNodes("TextSample"))
                 {

@@ -91,7 +91,9 @@ public class WhisperEngineCppVulkan : ISpeechToTextEngine
 
         if (!File.Exists(fullPath) && OperatingSystem.IsLinux())
         {
-            string[] paths = ["/usr/bin/whisper-cli", "usr/local/bin/"];
+            // "usr/local/bin/" was relative and a directory, so File.Exists never matched it and
+            // a /usr/local/bin build was never found.
+            string[] paths = ["/usr/bin/whisper-cli", "/usr/local/bin/whisper-cli"];
             foreach (var path in paths)
             {
                 if (File.Exists(path))

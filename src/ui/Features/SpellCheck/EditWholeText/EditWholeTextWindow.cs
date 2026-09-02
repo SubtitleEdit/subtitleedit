@@ -39,7 +39,7 @@ public class EditWholeTextWindow : Window
         };
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
         {
-            textBoxWholeText.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
+            textBoxWholeText.FontFamily = FontFamilyHelper.Make(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
         }
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
@@ -69,7 +69,7 @@ public class EditWholeTextWindow : Window
 
         Content = grid;
 
-        Activated += delegate { textBoxWholeText.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, textBoxWholeText); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

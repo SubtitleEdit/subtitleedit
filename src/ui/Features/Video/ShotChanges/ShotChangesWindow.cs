@@ -75,14 +75,14 @@ public class ShotChangesWindow : Window
 
         Content = grid;
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             // initial focus on an input, not an action button - a focused button clicks on bare Space
             if (vm.FfmpegLinesGrid != null)
             {
                 TableViewExtras.FocusRow(vm.FfmpegLinesGrid);
             }
-        };
+        });
     }
 
     private static Grid MakeGenerateView(ShotChangesViewModel vm)

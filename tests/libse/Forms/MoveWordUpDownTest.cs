@@ -280,7 +280,9 @@ public class MoveWordUpDownTest
         var mover = new MoveWordUpDown("Hello", "<i><b>world today</b></i>");
         mover.MoveWordUp();
 
-        Assert.Equal("Hello <i><b>world</i></b>", mover.S1);
+        // Was "<i><b>world</i></b>": this test had locked in the crossed-tag defect, while the
+        // MoveWordDown twin below always asserted proper nesting.
+        Assert.Equal("Hello <i><b>world</b></i>", mover.S1);
         Assert.Equal("<i><b>today</b></i>", mover.S2);
     }
 

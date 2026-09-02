@@ -47,7 +47,9 @@ public partial class ChangeSpeedViewModel : ObservableObject
     [RelayCommand]
     private void SetToDropFrameValue()
     {
-        SpeedPercent = 99.9889;
+        // Inverse of the from-drop-frame preset under the factor = 100 / percent
+        // convention: 100 / 99.9001 = 1.001001, so From -> To round-trips.
+        SpeedPercent = 99.9001;
     }
 
     [RelayCommand]

@@ -120,16 +120,33 @@ public class FixCommonErrorsRunnerTest
     }
 
     [Fact]
-    public void Run_WithEmptyList_RunsAllRules()
+    public void Run_WithNullList_RunsAllRules()
     {
+        var sub = new Subtitle();
+        sub.Paragraphs.Add(new Paragraph("hello,world.", 0, 2000));
+        sub.Renumber();
+
+        FixCommonErrorsRunner.Run(sub, null);
+
+        // Same outcome as RunAll: capitalised + space inserted
+        Assert.Equal("Hello, world.", sub.Paragraphs[0].Text);
+    }
+
+    [Fact]
+    public void Run_WithEmptyList_RunsNothing()
+    {
+        // An empty list is what "--fix-common-errors-rules:-all" resolves to, so it must select
+        // NO rules. This used to fall through to "run everything" - the exact opposite - because
+        // the runner tested Count > 0 instead of null. RemoveFormattingRunner.ToTypes documents
+        // the same null-vs-empty contract, and ResolveRuleIds(null) already returns every id, so
+        // nothing depends on empty meaning "all".
         var sub = new Subtitle();
         sub.Paragraphs.Add(new Paragraph("hello,world.", 0, 2000));
         sub.Renumber();
 
         FixCommonErrorsRunner.Run(sub, Array.Empty<string>());
 
-        // Same outcome as RunAll: capitalised + space inserted
-        Assert.Equal("Hello, world.", sub.Paragraphs[0].Text);
+        Assert.Equal("hello,world.", sub.Paragraphs[0].Text);
     }
 
     [Fact]
@@ -346,9 +363,24 @@ public class FixCommonErrorsRunnerTest
     [InlineData("")]
     [InlineData("   ")]
     [InlineData("spanihs")]
+    // A plausible two-letter typo for Spanish (the real code is "es"). This used to be returned
+    // verbatim by an unchecked "length == 2" shortcut: being non-null it suppressed the warning
+    // and the auto-detect fallback, then matched no language gate, and left the OCR-fix pass -
+    // which needs a valid three-letter code - silently doing nothing.
+    [InlineData("sp")]
+    [InlineData("zz")]
     public void NormalizeLanguageOverride_BlankOrUnknown_ReturnsNull(string? input)
     {
         Assert.Null(FixCommonErrorsRunner.NormalizeLanguageOverride(input));
+    }
+
+    [Theory]
+    [InlineData("es", "es")]
+    [InlineData("ES", "es")]
+    [InlineData("da", "da")]
+    public void NormalizeLanguageOverride_RealTwoLetterCode_StillResolves(string input, string expected)
+    {
+        Assert.Equal(expected, FixCommonErrorsRunner.NormalizeLanguageOverride(input));
     }
 
     [Fact]

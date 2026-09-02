@@ -111,9 +111,9 @@ public class LanguageVideo
         GenerateBlankVideoDotDotDot = "Generate blank video...";
         ReEncodeVideoForBetterSubtitlingTitle = "Re-encode video for better subtitling";
         ReEncodeVideoForBetterSubtitlingDotDotDot = "Re-encode video for better subtitling...";
-        OpenSecondarySubtitleOnVideoPlayer = "Secondary subtitle (on video player)";
-        OpenSecondarySubtitleOnVideoPlayerDotDotDot = "Secondary subtitle on video player, open...";
-        RemoveSecondarySubtitleOnVideoPlayer = "Secondary subtitle on video player, remove";
+        OpenSecondarySubtitleOnVideoPlayer = "Second subtitle file (on video player)";
+        OpenSecondarySubtitleOnVideoPlayerDotDotDot = "Open second subtitle file...";
+        RemoveSecondarySubtitleOnVideoPlayer = "Remove second subtitle file";
         CutVideoTitle = "Cut video";
         CutVideoDotDotDot = "Cut video...";
         EmbedSubtitlesDotDotDot = "Add/remove embedded subtitles...";

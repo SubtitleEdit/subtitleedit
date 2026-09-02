@@ -14,9 +14,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            string xmlAsString = sb.ToString().Trim();
+            string xmlAsString = JoinLinesTrimmed(lines);
             if (xmlAsString.Contains("OpenDVT"))
             {
                 try
@@ -129,9 +127,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
 
             var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument { XmlResolver = null };
-            xml.LoadXml(sb.ToString().Trim());
+            xml.LoadXml(JoinLinesTrimmed(lines));
 
             XmlNode div = xml.DocumentElement.SelectSingleNode("Lines");
             foreach (XmlNode node in div.ChildNodes)

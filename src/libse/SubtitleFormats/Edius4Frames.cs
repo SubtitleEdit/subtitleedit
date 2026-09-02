@@ -74,9 +74,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            if (!sb.ToString().Contains("<edius:markerLists"))
+            if (!JoinLines(lines).Contains("<edius:markerLists"))
             {
                 _errorCount++;
                 return;
@@ -85,7 +83,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var xml = new XmlDocument { XmlResolver = null };
             try
             {
-                xml.LoadXml(sb.ToString().Trim());
+                xml.LoadXml(JoinLinesTrimmed(lines));
                 var namespaceManager = new XmlNamespaceManager(xml.NameTable);
                 namespaceManager.AddNamespace("edius", xml.DocumentElement.NamespaceURI);
                 foreach (XmlNode node in xml.SelectNodes("//edius:marker", namespaceManager))

@@ -652,7 +652,11 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 case BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingShotChangeBehaviorEnum.ExtendUntilShotChange:
                                     // Put the right in cue on the shot change, plus gap
                                     newLeftOutCueFrame = bestLeftOutCueFrame;
-                                    newRightInCueFrame = lastShotChangeInBetween.Value + Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesGap;
+                                    // An IN cue takes InCuesGap - every other in-cue placement
+                                    // uses it, and IsCueOnShotChange tests in cues against it. With
+                                    // the Netflix profile (in 0, out 2) this started the next
+                                    // subtitle two frames late, failing that profile's own check.
+                                    newRightInCueFrame = lastShotChangeInBetween.Value + Configuration.Settings.BeautifyTimeCodes.Profile.InCuesGap;
                                     break;
                             }
                         }

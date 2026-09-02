@@ -87,6 +87,7 @@ public static class SpeakerReferenceBuilder
         Directory.CreateDirectory(partsFolder);
 
         var parts = new List<string>();
+        var partTexts = new List<string>();
         for (var i = 0; i < picked.Count; i++)
         {
             // Exactly the line, with no growing into the gaps around it: these lines are far
@@ -102,6 +103,9 @@ public static class SpeakerReferenceBuilder
             if (cut)
             {
                 parts.Add(partFileName);
+                // Keep the text beside the clip it belongs to: the transcript has to describe the
+                // audio that actually ends up in the reference, not every line we tried to cut.
+                partTexts.Add(Utilities.UnbreakLine(HtmlUtil.RemoveHtmlTags(picked[i].Text ?? string.Empty, alsoSsaTags: true)));
             }
         }
 
@@ -111,20 +115,24 @@ public static class SpeakerReferenceBuilder
         }
 
         var referenceFileName = Path.Combine(outputFolder, safeName + ".wav");
+        var referenceTexts = partTexts;
         if (parts.Count == 1)
         {
             File.Move(parts[0], referenceFileName, overwrite: true);
         }
         else if (!await ConcatAsync(parts, referenceFileName, partsFolder, cancellationToken))
         {
-            // Joining failed - one good part is still a usable reference.
+            // Joining failed - one good part is still a usable reference, but then the transcript
+            // must shrink to that one part too. Describing eight lines beside ~2 seconds of audio
+            // is exactly the ref-text/ref-audio mismatch that makes a clone come out garbled.
             File.Move(parts[0], referenceFileName, overwrite: true);
+            referenceTexts = partTexts.Take(1).ToList();
         }
 
         // The transcript of what the joined audio says, in the same order.
         await File.WriteAllTextAsync(
             Path.ChangeExtension(referenceFileName, ".txt"),
-            string.Join(' ', picked.Select(p => Utilities.UnbreakLine(HtmlUtil.RemoveHtmlTags(p.Text ?? string.Empty, alsoSsaTags: true))).Where(t => t.Length > 0)),
+            string.Join(' ', referenceTexts.Where(t => t.Length > 0)),
             cancellationToken);
 
         TryDeleteFolder(partsFolder);

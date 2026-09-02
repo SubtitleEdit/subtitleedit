@@ -32,7 +32,7 @@ public class LlamaCppEngineSettingsWindow : Window
         Content = BuildContent(vm);
 
         var ok = UiUtil.MakeButtonOk(vm.OkCommand);
-        Activated += delegate { ok.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, ok);
     }
 
     private static Border BuildContent(LlamaCppEngineSettingsViewModel vm)

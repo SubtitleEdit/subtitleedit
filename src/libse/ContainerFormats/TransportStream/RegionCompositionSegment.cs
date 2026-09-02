@@ -32,7 +32,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             Region4BitPixelCode = buffer[index + 9] >> 4;
             Region2BitPixelCode = (buffer[index + 9] & 0b00001100) >> 2;
             int i = 0;
-            while (i < regionLength && i + index < buffer.Length)
+
+            // One object record spans buffer[index + i + 10 .. index + i + 15]. The old guard only
+            // tested the first of those six bytes against the buffer, and the caller guarantees no
+            // more than index + regionLength + 9, so a segment whose length is not 10 + 6k - a
+            // truncated or corrupt one - read up to five bytes past the end and threw.
+            while (i + 6 <= regionLength && index + i + 15 < buffer.Length)
             {
                 var regionCompositionSegmentObject = new RegionCompositionSegmentObject { ObjectId = Helper.GetEndianWord(buffer, i + index + 10) };
                 i += 2;

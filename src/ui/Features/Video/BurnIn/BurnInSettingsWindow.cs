@@ -92,7 +92,7 @@ public class BurnInSettingsWindow : Window
 
         Content = grid;
         
-        Activated += delegate { checkBoxUseSourceFolder.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, checkBoxUseSourceFolder); // initial focus on an input, not an action button - a focused button clicks on bare Space
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

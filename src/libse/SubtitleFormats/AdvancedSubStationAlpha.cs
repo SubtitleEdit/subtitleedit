@@ -84,9 +84,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var subtitle = new Subtitle();
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            var all = sb.ToString();
+            var all = JoinLines(lines);
             if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".ass", StringComparison.OrdinalIgnoreCase) && !all.Contains("[V4 Styles]"))
             {
             }
@@ -288,7 +286,11 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 // Appending directly skips AppendFormat's per-call format parsing, the object[10]
                 // and the boxed layer, plus the two intermediate time-code strings.
                 sb.Append(p.IsComment ? "Comment: " : "Dialogue: ");
-                sb.Append(p.Layer).Append(',');
+                // InvariantCulture: StringBuilder.Append(int) uses the current culture, and
+                // sv-SE/nb-NO/fi-FI/lt-LT render the negative sign as U+2212, which libass and
+                // VSFilter parse as layer 0 - breaking SE's own Layer = -1000 background boxes
+                // and Layer = -1 progress bars. Every other number on the line is already invariant.
+                sb.Append(p.Layer.ToString(CultureInfo.InvariantCulture)).Append(',');
                 AppendTimeCode(sb, p.StartTime).Append(',');
                 AppendTimeCode(sb, p.EndTime).Append(',');
                 sb.Append(style).Append(',');
@@ -1620,6 +1622,13 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             var indexMarginV = 7;
             var indexEffect = 8;
             var indexText = 9;
+
+            // True when the text field is the last field in the "Format:" line, i.e. every
+            // field after it is appended to the text verbatim. That is the case for every real
+            // ASSA/SSA file, and it lets an event line be parsed by walking commas over the
+            // line itself instead of allocating a string[] plus one string per field (and a
+            // second one per Trim) and then re-joining the text field's own commas.
+            var textIsTrailing = true;
             var errors = new StringBuilder();
             var lineNumber = 0;
 
@@ -1764,6 +1773,12 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                                     break;
                             }
                         }
+
+                        textIsTrailing = indexText >= 0 &&
+                                         indexText > indexLayer && indexText > indexStart && indexText > indexEnd &&
+                                         indexText > indexStyle && indexText > indexActor && indexText > indexName &&
+                                         indexText > indexMarginL && indexText > indexMarginR && indexText > indexMarginV &&
+                                         indexText > indexEffect;
                     }
                     else if (trimmedLine.Length > 0)
                     {
@@ -1778,75 +1793,107 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                         var effect = string.Empty;
                         var layer = 0;
 
-                        string[] splitLine;
+                        // Walk the fields over the line itself. Split(',') allocated a string[]
+                        // plus one string per field on every event line, Trim() allocated a
+                        // second one for each field that was kept, and the text field - by far
+                        // the longest - was split apart and re-joined comma by comma. Only the
+                        // fields this format actually uses are materialized now.
+                        ReadOnlySpan<char> fields;
                         if (trimmedLine.StartsWith("dialog:", StringComparison.OrdinalIgnoreCase))
                         {
-                            splitLine = line.Remove(0, 7).Split(',');
+                            fields = line.AsSpan(7);
                         }
                         else if (trimmedLine.StartsWith("dialogue:", StringComparison.OrdinalIgnoreCase))
                         {
-                            splitLine = line.Remove(0, 9).Split(',');
+                            fields = line.AsSpan(9);
                         }
                         else
                         {
-                            splitLine = line.Split(',');
+                            fields = line.AsSpan();
                         }
 
-                        for (var i = 0; i < splitLine.Length; i++)
+                        string text = null;
+                        var fieldStart = 0;
+                        for (var i = 0; ; i++)
                         {
+                            var comma = fields.Slice(fieldStart).IndexOf(',');
+                            var fieldEnd = comma < 0 ? fields.Length : fieldStart + comma;
+
+                            if (textIsTrailing && i == indexText)
+                            {
+                                // Everything from here on is the text, commas included.
+                                text = fields.Slice(fieldStart).ToString();
+                                break;
+                            }
+
+                            var field = fields.Slice(fieldStart, fieldEnd - fieldStart);
                             if (i == indexStart)
                             {
-                                start = splitLine[i].Trim();
+                                start = field.Trim().ToString();
                             }
                             else if (i == indexEnd)
                             {
-                                end = splitLine[i].Trim();
+                                end = field.Trim().ToString();
                             }
                             else if (i == indexStyle)
                             {
-                                style = splitLine[i].Trim();
+                                style = field.Trim().ToString();
                             }
                             else if (i == indexActor && indexName == -1)
                             {
-                                actor = splitLine[i].Trim();
+                                actor = field.Trim().ToString();
                             }
                             else if (i == indexName)
                             {
-                                actor = splitLine[i].Trim();
+                                actor = field.Trim().ToString();
                             }
                             else if (i == indexMarginL)
                             {
-                                marginL = splitLine[i].Trim();
+                                marginL = field.Trim().ToString();
                             }
                             else if (i == indexMarginR)
                             {
-                                marginR = splitLine[i].Trim();
+                                marginR = field.Trim().ToString();
                             }
                             else if (i == indexMarginV)
                             {
-                                marginV = splitLine[i].Trim();
+                                marginV = field.Trim().ToString();
                             }
                             else if (i == indexEffect)
                             {
-                                effect = splitLine[i].Trim();
+                                effect = field.Trim().ToString();
                             }
                             else if (i == indexLayer)
                             {
-                                int.TryParse(splitLine[i].Replace("Comment:", string.Empty).Trim(), out layer);
+                                if (field.IndexOf("Comment:".AsSpan(), StringComparison.Ordinal) >= 0)
+                                {
+                                    int.TryParse(field.ToString().Replace("Comment:", string.Empty).Trim(), out layer);
+                                }
+                                else
+                                {
+                                    int.TryParse(field.Trim(), NumberStyles.Integer, CultureInfo.CurrentCulture, out layer);
+                                }
                             }
                             else if (i == indexText)
                             {
-                                textBuilder.Append(splitLine[i]);
+                                textBuilder.Append(field);
                             }
                             else if (i > indexText)
                             {
                                 // The text field may itself contain commas; rebuild via the
                                 // pooled builder instead of O(commas^2) string concatenation.
-                                textBuilder.Append(',').Append(splitLine[i]);
+                                textBuilder.Append(',').Append(field);
                             }
+
+                            if (comma < 0)
+                            {
+                                break;
+                            }
+
+                            fieldStart = fieldEnd + 1;
                         }
 
-                        var text = textBuilder.ToString();
+                        text ??= textBuilder.ToString();
 
                         try
                         {
@@ -2117,7 +2164,12 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 }
             }
 
-            var p0Index = s.IndexOf("{\\p0}", StringComparison.Ordinal);
+            // The drawing can be closed by "\p0" inside a multi-tag block ("{\p0\fs20}"), not
+            // just by the literal "{\p0}" - searching only for the literal left p0Index at -1
+            // and the else branch below then truncated the whole rest of the line.
+            var p0Match = Regex.Match(s, @"\{[^}]*\\p0(?![0-9])[^}]*\}");
+            var p0Index = p0Match.Success ? p0Match.Index : -1;
+            var p0Length = p0Match.Success ? p0Match.Length : 0;
             if (p1Index > 0 && (p0Index > p1Index || p0Index == -1))
             {
                 var startTagIndex = s.Substring(0, p1Index).LastIndexOf('{');
@@ -2125,7 +2177,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 {
                     if (p0Index > p1Index)
                     {
-                        s = s.Remove(startTagIndex, p0Index - startTagIndex + "{\\p0}".Length);
+                        s = s.Remove(startTagIndex, p0Index - startTagIndex + p0Length);
                     }
                     else
                     {
@@ -2142,12 +2194,20 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             int indexOfTag = s.IndexOf(@"\" + tag, StringComparison.Ordinal);
             if (indexOfTag > 0)
             {
-                var endIndex1 = s.IndexOf('\\', indexOfTag + 1);
-                var endIndex2 = s.IndexOf('}', indexOfTag + 1);
-                endIndex1 = Math.Min(endIndex1, endIndex2);
-                if (endIndex1 > 0)
+                // The tag ends at whichever comes first: the next tag in the block or the
+                // closing brace. -1 is IndexOf's "not found" sentinel, not a position, so
+                // Math.Min would pick it and the tag was never removed - which is the common
+                // case of a tag that is the only/last one in its block ("{\pos(1,2)}").
+                var nextTagIndex = s.IndexOf('\\', indexOfTag + 1);
+                var closingBraceIndex = s.IndexOf('}', indexOfTag + 1);
+                var endIndex = nextTagIndex < 0
+                    ? closingBraceIndex
+                    : closingBraceIndex < 0
+                        ? nextTagIndex
+                        : Math.Min(nextTagIndex, closingBraceIndex);
+                if (endIndex > 0)
                 {
-                    return s.Remove(indexOfTag, endIndex1 - indexOfTag);
+                    return s.Remove(indexOfTag, endIndex - indexOfTag);
                 }
             }
             return s;

@@ -112,7 +112,11 @@ namespace Nikse.SubtitleEdit.UiLogic.AudioToText
                 return Directory.Exists(path) ? path : null;
             }
 
-            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CppCuBlas)
+            // Test the PARAMETER, not the saved engine: every other branch in this method does.
+            // Reading the global meant that with "CPP cuBLAS" saved in settings, asking for any
+            // other engine's folder (OpenAi, DashScope, OpenAiCompatible, OpenRouter) returned the
+            // cuBLAS folder - and asking for cuBLAS itself never resolved through the parameter.
+            if (whisperChoice == WhisperChoice.CppCuBlas)
             {
                 var path = Path.Combine(Configuration.DataDirectory, "SpeechToText", WhisperChoice.CppCuBlas);
                 return Directory.Exists(path) ? path : null;
@@ -185,11 +189,8 @@ namespace Nikse.SubtitleEdit.UiLogic.AudioToText
                     return Directory.Exists(path) ? path : null;
                 }
 
-                if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CppCuBlas)
-                {
-                    var path = Path.Combine(Configuration.DataDirectory, "SpeechToText", WhisperChoice.CppCuBlas);
-                    return Directory.Exists(path) ? path : null;
-                }
+                // (The CppCuBlas case is handled by the parameter test near the top of the method,
+                // which returns before this point on every platform.)
 
                 if (whisperChoice == WhisperChoice.WhisperX && !string.IsNullOrEmpty(Configuration.Settings.Tools.WhisperXLocation))
                 {
@@ -306,7 +307,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AudioToText
             var whisperFolder = GetWhisperFolder(whisperChoice);
             if (string.IsNullOrEmpty(whisperFolder))
             {
-                if (whisperChoice == WhisperChoice.Cpp || Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CppCuBlas)
+                if (whisperChoice == WhisperChoice.Cpp || whisperChoice == WhisperChoice.CppCuBlas)
                 {
                     return "whisper-cli.exe";
                 }
@@ -379,7 +380,10 @@ namespace Nikse.SubtitleEdit.UiLogic.AudioToText
                 return "whisper.exe";
             }
 
-            if (Configuration.IsRunningOnLinux && whisperChoice == WhisperChoice.Cpp || Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CppCuBlas)
+            // "&&" binds tighter than "||", so the saved-engine clause was evaluated on its own:
+            // on Windows, with "CPP cuBLAS" saved, GetExecutableFileNameNoPath(CTranslate2) - and
+            // every other engine - returned "main" instead of its own executable.
+            if (Configuration.IsRunningOnLinux && (whisperChoice == WhisperChoice.Cpp || whisperChoice == WhisperChoice.CppCuBlas))
             {
                 return "main";
             }

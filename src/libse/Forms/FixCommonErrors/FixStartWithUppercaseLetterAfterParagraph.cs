@@ -331,7 +331,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                         text.StartsWith("ls") || text.StartsWith("ldiot", StringComparison.Ordinal) || text.StartsWith("ln", StringComparison.Ordinal) ||
                                         text.StartsWith("lm", StringComparison.Ordinal) || text.StartsWith("lt", StringComparison.Ordinal) ||
                                         text.StartsWith("lf ", StringComparison.Ordinal) || text.StartsWith("lc", StringComparison.Ordinal) ||
-                                        text.StartsWith("l'm ", StringComparison.Ordinal)) || text.StartsWith("l've ", StringComparison.Ordinal);
+                                        text.StartsWith("l'm ", StringComparison.Ordinal) ||
+                                        // This one sat outside the "language == en" group, so a
+                                        // Danish line starting "l've" was rewritten to "I've".
+                                        text.StartsWith("l've ", StringComparison.Ordinal));
         }
     }
 }

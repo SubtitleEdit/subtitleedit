@@ -28,8 +28,24 @@ namespace UITests.Controls;
 /// is set. These tests pin the two facts that guard depends on: the flag is already true when the
 /// scrub fires, and a consumer that does scroll mid-drag really does amplify the drag.
 /// </summary>
-public class AudioVisualizerScrubFeedbackTests
+public class AudioVisualizerScrubFeedbackTests : IDisposable
 {
+    // A window left open outlives the test: it keeps the application-wide activation and focused
+    // element, so a later test's click or key press is delivered to it instead. The tests close
+    // their window on the last line, which leaks one whenever an assertion above it fails - and one
+    // stranded window is enough to take the rest of the class down with it.
+    private readonly List<Window> _windows = new();
+
+    public void Dispose()
+    {
+        foreach (var window in _windows)
+        {
+            window.Close();
+        }
+
+        _windows.Clear();
+    }
+
     private const int SampleRate = 126; // px per second at zoom 1
     private const double WidthPx = 800;
     private const double LineStart = 100;
@@ -51,7 +67,7 @@ public class AudioVisualizerScrubFeedbackTests
         return new WavePeakData2(SampleRate, peaks);
     }
 
-    private static (Window Window, AudioVisualizer Av) Open()
+    private (Window Window, AudioVisualizer Av) Open()
     {
         var av = new AudioVisualizer { WavePeaks = MakePeaks(200), Width = WidthPx, Height = 200 };
         var line = new SubtitleLineViewModel
@@ -64,6 +80,7 @@ public class AudioVisualizerScrubFeedbackTests
         av.SetPosition(ViewStart, new List<SubtitleLineViewModel> { line }, 0, 0, new List<SubtitleLineViewModel>());
 
         var window = new Window { Width = WidthPx, Height = 200, Content = av };
+        _windows.Add(window);
         window.Show();
         Dispatcher.UIThread.RunJobs();
         window.UpdateLayout();

@@ -62,7 +62,7 @@ public class AddToUserDictionaryWindow : Window
 
         Content = grid;
 
-        Activated += delegate { textBoxWord.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, textBoxWord); // hack to make OnKeyDown work
         KeyDown += vm.KeyDown;
     }
 }

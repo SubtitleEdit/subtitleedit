@@ -1,12 +1,15 @@
 using Nikse.SubtitleEdit.Features.Video.VideoOcr;
+using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Linq;
 
 namespace UITests.Features;
 
 public class VideoOcrTests
 {
-    private static VideoOcrFrameGroup MakeGroup(int startFrame, int endFrame, string text, bool isBlank = false)
+    private static VideoOcrFrameGroup MakeGroup(int startFrame, int endFrame, string text, bool isBlank = false, double confidence = 1.0)
     {
         return new VideoOcrFrameGroup
         {
@@ -14,7 +17,270 @@ public class VideoOcrTests
             EndFrame = endFrame,
             Text = text,
             IsBlank = isBlank,
+            Confidence = confidence,
         };
+    }
+
+    [Fact]
+    public void Build_ConfidenceWeightsTheVote_ConfidentShortReadBeatsHesitantLongOne()
+    {
+        // "worng" was on screen longer, but the engine hesitated; the short confident
+        // observation must win the majority vote.
+        var groups = new List<VideoOcrFrameGroup>
+        {
+            MakeGroup(0, 5, "Hello worng", confidence: 0.4),
+            MakeGroup(6, 9, "Hello world", confidence: 0.99),
+        };
+
+        var lines = VideoOcrLineBuilder.Build(groups, 5, 80, 250, 250);
+
+        Assert.Single(lines);
+        Assert.Equal("Hello world", lines[0].Text);
+    }
+
+    [Fact]
+    public void Build_JunkBlipBetweenCleanReads_DoesNotSeverTheLine()
+    {
+        // Scene text (a jersey number) flashes into one observation of a short subtitle.
+        // The chain must resume, or all three 200ms fragments die below MinDuration.
+        var groups = new List<VideoOcrFrameGroup>
+        {
+            MakeGroup(0, 0, "Wait."),
+            MakeGroup(1, 1, "14 Wait."),
+            MakeGroup(2, 2, "Wait."),
+        };
+
+        var lines = VideoOcrLineBuilder.Build(groups, 5, 80, 250, 250);
+
+        Assert.Single(lines);
+        Assert.Equal("Wait.", lines[0].Text);
+        Assert.Equal(0, lines[0].StartMs);
+        Assert.Equal(600, lines[0].EndMs);
+    }
+
+    [Fact]
+    public void Build_RealSubtitleChange_NotBridged()
+    {
+        // A long line followed by another long line: no blip in between, no bridging.
+        var groups = new List<VideoOcrFrameGroup>
+        {
+            MakeGroup(0, 9, "First subtitle text here"),
+            MakeGroup(10, 19, "Completely different words now"),
+        };
+
+        var lines = VideoOcrLineBuilder.Build(groups, 5, 80, 250, 250);
+
+        Assert.Equal(2, lines.Count);
+    }
+
+    [Fact]
+    public async Task RunLlmOcr_EmptyResultOnLongGroup_RetriesOtherFramesOfTheGroup()
+    {
+        // The representative (middle) frame reads empty; the frame at 3/4 of the group
+        // reads fine - the group must end up with that text.
+        var folder = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "vocr_retry_" + Guid.NewGuid().ToString("N"));
+        System.IO.Directory.CreateDirectory(folder);
+        try
+        {
+            for (var i = 0; i <= 12; i++)
+            {
+                System.IO.File.WriteAllBytes(System.IO.Path.Combine(folder, $"img{i:000000}.jpg"), new byte[] { 1 });
+            }
+
+            var group = new VideoOcrFrameGroup
+            {
+                StartFrame = 0,
+                EndFrame = 12,
+                RepresentativeFileName = System.IO.Path.Combine(folder, "img000006.jpg"),
+            };
+
+            var asked = new List<string>();
+            await VideoOcrViewModel.RunLlmOcr(
+                new List<VideoOcrFrameGroup> { group },
+                g =>
+                {
+                    asked.Add(System.IO.Path.GetFileName(g.RepresentativeFileName));
+                    return Task.FromResult(g.RepresentativeFileName.EndsWith("img000009.jpg") ? "Found it" : string.Empty);
+                },
+                () => string.Empty,
+                () => { },
+                _ => { },
+                CancellationToken.None);
+
+            Assert.Equal("Found it", group.Text);
+            Assert.Equal(new[] { "img000006.jpg", "img000009.jpg" }, asked);
+        }
+        finally
+        {
+            System.IO.Directory.Delete(folder, true);
+        }
+    }
+
+    [Fact]
+    public async Task RunLlmOcr_EmptyResultOnShortGroup_NoRetry()
+    {
+        var group = new VideoOcrFrameGroup
+        {
+            StartFrame = 5,
+            EndFrame = 6, // one coarse step - nothing else to try
+            RepresentativeFileName = "img000005.jpg",
+        };
+
+        var calls = 0;
+        await VideoOcrViewModel.RunLlmOcr(
+            new List<VideoOcrFrameGroup> { group },
+            _ => { calls++; return Task.FromResult(string.Empty); },
+            () => string.Empty,
+            () => { },
+            _ => { },
+            CancellationToken.None);
+
+        Assert.Equal(1, calls);
+        Assert.Equal(string.Empty, group.Text);
+    }
+
+    private static (string Folder, VideoOcrFrameGroup Group) MakeFrameGroup()
+    {
+        var folder = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "vocr_verify_" + Guid.NewGuid().ToString("N"));
+        System.IO.Directory.CreateDirectory(folder);
+        for (var i = 0; i <= 8; i++)
+        {
+            System.IO.File.WriteAllBytes(System.IO.Path.Combine(folder, $"img{i:000000}.jpg"), new byte[] { 1 });
+        }
+
+        var group = new VideoOcrFrameGroup
+        {
+            StartFrame = 0,
+            EndFrame = 8,
+            RepresentativeFileName = System.IO.Path.Combine(folder, "img000004.jpg"),
+        };
+        return (folder, group);
+    }
+
+    [Fact]
+    public async Task RunLlmOcr_HallucinatedShortGhost_ClearedByVerificationFrame()
+    {
+        // A vision model inventing text from a logo produces a different reading on every
+        // frame - two dissimilar short reads mean ghost, and the group ends up empty.
+        var (folder, group) = MakeFrameGroup();
+        try
+        {
+            await VideoOcrViewModel.RunLlmOcr(
+                new List<VideoOcrFrameGroup> { group },
+                g => Task.FromResult(g.RepresentativeFileName.EndsWith("img000004.jpg") ? "NIKE GO" : "NKE WIN"),
+                () => string.Empty,
+                () => { },
+                _ => { },
+                CancellationToken.None);
+
+            Assert.Equal(string.Empty, group.Text);
+        }
+        finally
+        {
+            System.IO.Directory.Delete(folder, true);
+        }
+    }
+
+    [Fact]
+    public async Task RunLlmOcr_DissimilarButLongRead_KeptNotCleared()
+    {
+        // Long text must survive a disagreeing verification frame: a real line polluted by
+        // rolling credits reads differently per frame, and a real line can sit in a group
+        // whose verify frame is unreadable - the longer read wins.
+        var (folder, group) = MakeFrameGroup();
+        try
+        {
+            await VideoOcrViewModel.RunLlmOcr(
+                new List<VideoOcrFrameGroup> { group },
+                g => Task.FromResult(g.RepresentativeFileName.EndsWith("img000004.jpg")
+                    ? "Clean up your house. It's hopeless."
+                    : string.Empty),
+                () => string.Empty,
+                () => { },
+                _ => { },
+                CancellationToken.None);
+
+            Assert.Equal("Clean up your house. It's hopeless.", group.Text);
+        }
+        finally
+        {
+            System.IO.Directory.Delete(folder, true);
+        }
+    }
+
+    [Fact]
+    public async Task RunLlmOcr_NearIdenticalReads_SpellCheckPicksTheBetterOne()
+    {
+        var (folder, group) = MakeFrameGroup();
+        try
+        {
+            await VideoOcrViewModel.RunLlmOcr(
+                new List<VideoOcrFrameGroup> { group },
+                g => Task.FromResult(g.RepresentativeFileName.EndsWith("img000004.jpg")
+                    ? "OK, I'think we can have pizza again."
+                    : "OK, I think we can have pizza again."),
+                () => string.Empty,
+                () => { },
+                _ => { },
+                CancellationToken.None,
+                countUnknownWords: text => text.Contains("I'think") ? 1 : 0);
+
+            Assert.Equal("OK, I think we can have pizza again.", group.Text);
+        }
+        finally
+        {
+            System.IO.Directory.Delete(folder, true);
+        }
+    }
+
+    [Theory]
+    [InlineData("Hello", "<i>Hello</i>")]                 // plain -> wrapped
+    [InlineData("<i>Hello</i>", "Hello")]                 // fully italic -> unwrapped
+    public void ToggleItalic_SingleLine(string text, string expected)
+    {
+        var item = new VideoOcrLineItem { Text = text };
+
+        VideoOcrViewModel.ToggleItalic(new List<VideoOcrLineItem> { item });
+
+        Assert.Equal(expected, item.Text);
+    }
+
+    [Fact]
+    public void ToggleItalic_MixedSelection_MakesEverythingItalic()
+    {
+        // Partially italic selection: the un-italic line gets wrapped, the italic one is kept.
+        var plain = new VideoOcrLineItem { Text = "Plain" };
+        var italic = new VideoOcrLineItem { Text = "<i>Already</i>" };
+
+        VideoOcrViewModel.ToggleItalic(new List<VideoOcrLineItem> { plain, italic });
+
+        Assert.Equal("<i>Plain</i>", plain.Text);
+        Assert.Equal("<i>Already</i>", italic.Text);
+    }
+
+    [Fact]
+    public void ToggleItalic_PartiallyItalicText_IsNotTreatedAsFullyItalic()
+    {
+        var item = new VideoOcrLineItem { Text = "<i>a</i> b <i>c</i>" };
+
+        VideoOcrViewModel.ToggleItalic(new List<VideoOcrLineItem> { item });
+
+        Assert.Equal("<i><i>a</i> b <i>c</i></i>", item.Text);
+    }
+
+    [Fact]
+    public void Build_EqualConfidence_DurationStillDecides()
+    {
+        var groups = new List<VideoOcrFrameGroup>
+        {
+            MakeGroup(0, 5, "Hello world"),
+            MakeGroup(6, 9, "Hello worng"),
+        };
+
+        var lines = VideoOcrLineBuilder.Build(groups, 5, 80, 250, 250);
+
+        Assert.Single(lines);
+        Assert.Equal("Hello world", lines[0].Text);
     }
 
     [Theory]

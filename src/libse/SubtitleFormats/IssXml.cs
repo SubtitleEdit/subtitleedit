@@ -116,9 +116,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            if (!sb.ToString().Contains("<StTextList"))
+            if (!JoinLines(lines).Contains("<StTextList"))
             {
                 _errorCount++;
                 return;
@@ -127,7 +125,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var xml = new XmlDocument { XmlResolver = null };
             try
             {
-                xml.LoadXml(sb.ToString().Trim());
+                xml.LoadXml(JoinLinesTrimmed(lines));
 
                 XmlNode use2997DropFrame = xml.DocumentElement.SelectSingleNode("TrackList/Track/FcpProperty");
                 if (use2997DropFrame != null && use2997DropFrame.Attributes["Use2997DropFrame"] != null && use2997DropFrame.Attributes["Use2997DropFrame"].InnerText == "1")

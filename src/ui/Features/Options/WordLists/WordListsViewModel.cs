@@ -193,7 +193,10 @@ public partial class WordListsViewModel : ObservableObject
             return;
         }
 
-        if (Names.Contains(word) || !SaveUserWord(SelectedLanguage, word))
+        // UserWords, not Names: this guard was copy-pasted from AddName, so a word that merely
+        // happened to be in the names list could never be added as a user word - and because ||
+        // short-circuits, SaveUserWord was never even called.
+        if (UserWords.Contains(word) || !SaveUserWord(SelectedLanguage, word))
         {
             await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Options.WordLists.UnableToAddItem, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
@@ -428,6 +431,16 @@ public partial class WordListsViewModel : ObservableObject
         {
             result.Add(new OcrFixItem(item.Key, item.Value));
         }
+
+        // AddWordOrPartial routes any "find" containing a space into the partial-line list, so
+        // reading only the whole-word list left those entries invisible here - saved, but
+        // impossible to see or remove from this window.
+        foreach (var item in list.PartialLineWordBoundaryReplaceList)
+        {
+            result.Add(new OcrFixItem(item.Key, item.Value));
+        }
+
+        result.Sort((a, b) => string.Compare(a.Find, b.Find, StringComparison.OrdinalIgnoreCase));
 
         return result;
     }

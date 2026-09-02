@@ -17,6 +17,7 @@ internal class IconNames
     public const string ArrowUpDownBold = "mdi-arrow-up-down-bold";
     public const string ArrowUpThin = "mdi-arrow-up-thin";
     public const string Bold = "mdi-format-bold";
+    public const string BookAlphabet = "mdi-book-alphabet";
     public const string Bookmark = "mdi-bookmark";
     public const string CardRemoveOutline = "mdi-card-remove-outline";
     public const string CaseSensitiveAlt = "mdi-case-sensitive-alt";

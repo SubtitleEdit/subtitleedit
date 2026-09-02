@@ -102,7 +102,12 @@ public partial class BinaryResizeImagesViewModel : ObservableObject, IDisposable
         PreviewBitmap = resizedBitmap.ToAvaloniaBitmap();
         old?.Dispose();
         
-        ImageSizeText = $"Original: {_originalWidth} × {_originalHeight} px\nNew: {newWidth} × {newHeight} px";
+        ImageSizeText = string.Format(
+            Se.Language.Tools.ImageBasedEdit.OriginalSizeXNewSizeY,
+            _originalWidth,
+            _originalHeight,
+            newWidth,
+            newHeight);
     }
 
     public void ApplyResize()
@@ -128,6 +133,12 @@ public partial class BinaryResizeImagesViewModel : ObservableObject, IDisposable
 
     private static SKBitmap ResizeBitmap(SKBitmap originalBitmap, int width, int height)
     {
+        // The percentage goes down to 1, so a short or narrow image - and SUP files are full of
+        // them - rounded a dimension to 0 and SKCanvas refused the empty bitmap. One pixel is the
+        // smallest image there is.
+        width = Math.Max(1, width);
+        height = Math.Max(1, height);
+
         var resizedBitmap = new SKBitmap(width, height, originalBitmap.ColorType, originalBitmap.AlphaType);
         using var canvas = new SKCanvas(resizedBitmap);
         canvas.Clear(SKColors.Transparent);
@@ -166,7 +177,7 @@ public partial class BinaryResizeImagesViewModel : ObservableObject, IDisposable
 
         if (Percentage <= 0)
         {
-            return "Percentage must be greater than 0";
+            return string.Format(Se.Language.General.PleaseEnterAValidValueForX, Se.Language.Tools.ImageBasedEdit.Percentage);
         }
 
         return string.Empty;

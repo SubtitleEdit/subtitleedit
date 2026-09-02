@@ -283,6 +283,14 @@ public static class ExportTextTags
             return;
         }
 
+        // Same reason ApplyStyleOverrideTags bails out on "\t(": inside a transition these tags are
+        // an animation target, not the line's look. Freezing at the end value made the common
+        // fade-out "{\t(0,300,\alpha&HFF&)}" export as a fully invisible subtitle.
+        if (text.Contains("\\t(", StringComparison.Ordinal))
+        {
+            return;
+        }
+
         int? all = null;
         int? primary = null;
         int? outline = null;

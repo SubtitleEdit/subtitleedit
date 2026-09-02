@@ -43,6 +43,7 @@ public class BatchConvertConfig
     public SplitBreakLongLinesSettings SplitBreakLongLines { get; set; }
     public AssaChangeResolutionSettings AssaChangeResolution { get; set; }
     public AssaChangeStyleSettings AssaChangeStyle { get; set; }
+    public AssaChangeStylePropertiesSettings AssaChangeStyleProperties { get; set; }
     public AssaEmbedFontsSettings AssaEmbedFonts { get; set; }
     public MergeShortLinesSettings MergeShortLines { get; set; }
     public ApplyDurationLimitsSettings ApplyDurationLimits { get; set; }
@@ -85,6 +86,7 @@ public class BatchConvertConfig
         SplitBreakLongLines = new SplitBreakLongLinesSettings();
         AssaChangeResolution = new AssaChangeResolutionSettings();
         AssaChangeStyle = new AssaChangeStyleSettings();
+        AssaChangeStyleProperties = new AssaChangeStylePropertiesSettings();
         AssaEmbedFonts = new AssaEmbedFontsSettings();
         MergeShortLines = new MergeShortLinesSettings();
         ApplyDurationLimits = new ApplyDurationLimitsSettings();
@@ -324,6 +326,27 @@ public class BatchConvertConfig
             FromStyle = string.Empty;
             ToStyle = string.Empty;
             ImportedStyleHeader = string.Empty;
+        }
+    }
+
+    /// <summary>
+    /// Sets fields on every style in the ASSA header, keeping the styles themselves. Requested for
+    /// translated Arabic subtitles, where a source style with letter spacing makes the text hard to
+    /// read and the block should sit on the right (issue #14150).
+    /// </summary>
+    public class AssaChangeStylePropertiesSettings
+    {
+        public bool IsActive { get; set; }
+        public bool SetSpacing { get; set; }
+        public decimal Spacing { get; set; }
+        public bool SetAlignment { get; set; }
+        public string Alignment { get; set; }
+
+        public AssaChangeStylePropertiesSettings()
+        {
+            SetSpacing = true;
+            Spacing = 0;
+            Alignment = "an2";
         }
     }
 

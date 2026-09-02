@@ -48,10 +48,10 @@ public class VlcReloader : IVlcReloader
 
             SubtitleFormat format = _assFormat;
             string text;
-            if (uiFormatType == typeof(NetflixImsc11Japanese))
+            if (uiFormatType == typeof(NetflixImsc11Japanese) || NetflixImsc11JapaneseToAss.HasJapaneseMarkup(subtitle))
             {
                 // See MpvReloader - the furigana/bouten/vertical markup has to become positioned
-                // render lines before libass sees it (issue #13861).
+                // render lines before libass sees it (issue #13861, issue #14165).
                 subtitle = NetflixImsc11JapaneseToAss.ConvertToSubtitle(subtitle, VideoWidth, VideoHeight);
                 SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary);
                 text = subtitle.ToText(_assFormat);
@@ -98,48 +98,18 @@ public class VlcReloader : IVlcReloader
                         subtitle.Header = MpvPreviewStyleHeader;
                     }
 
-                    if (oldSub.Header != null && oldSub.Header.Length > 20 && oldSub.Header.AsSpan(3, 3).SequenceEqual("STL"))
+                    // See MpvReloader - the GSI block survives a format change in the toolbar, so
+                    // an STL header alone does not mean the subtitle is still EBU STL.
+                    if (EbuStlPreviewStyler.IsTeletextPreview(oldSub.Header, uiFormatType))
                     {
-                        var previewFontName = Configuration.IsRunningOnLinux ? Configuration.DefaultLinuxFontName : "Tahoma";
-                        var boxStyle = $"Style: Box,{previewFontName},12,&H00FFFFFF,&H0300FFFF,&H00000000,&H02000000,-1,0,0,0,100,100,0,0,3,2,0,2,10,10,10,1{Environment.NewLine}Style: Default,";
-                        subtitle.Header = subtitle.Header.Replace("Style: Default,", boxStyle, StringComparison.Ordinal);
-
-                        var useBox = false;
-                        if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox)
-                        {
-                            try
-                            {
-                                var encoding = Ebu.GetEncoding(oldSub.Header[..3]);
-                                var buffer = encoding.GetBytes(oldSub.Header);
-                                var header = Ebu.ReadHeader(buffer);
-                                if (header.DisplayStandardCode != "0")
-                                {
-                                    useBox = true;
-                                }
-                            }
-                            catch
-                            {
-                                // ignore
-                            }
-                        }
-
-                        for (var index = 0; index < subtitle.Paragraphs.Count; index++)
-                        {
-                            var p = subtitle.Paragraphs[index];
-
-                            p.Extra = useBox ? "Box" : "Default";
-
-                            if (p.Text.Contains("<box>", StringComparison.Ordinal))
-                            {
-                                p.Extra = "Box";
-                                p.Text = p.Text.Replace("<box>", string.Empty).Replace("</box>", string.Empty);
-                            }
-                        }
+                        EbuStlPreviewStyler.Apply(subtitle, oldSub.Header, GetMpvPreviewStyle(Se.Settings.Video), MpvPreviewTitle);
                     }
 
                     // See MpvReloader - the position the source format carries beats the one fixed
-                    // preview alignment (discussion #13857).
-                    SubtitlePositionToAssa.ApplyPositions(subtitle, oldSub.Header, Se.Settings.Video.MpvPreviewUsePositionFromFile);
+                    // preview alignment (discussion #13857), but only while the format still carries
+                    // it. With the positioning off the call strips what the old format left behind.
+                    var usePositions = Se.Settings.Video.MpvPreviewUsePositionFromFile && uiFormat.HasPositionSupport;
+                    SubtitlePositionToAssa.ApplyPositions(subtitle, oldSub.Header, usePositions);
                 }
 
                 SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary);
@@ -198,10 +168,12 @@ public class VlcReloader : IVlcReloader
         set => _mpvPreviewStyleHeader = value;
     }
 
+    private const string MpvPreviewTitle = "MPV preview file";
+
     public void UpdateMpvStyle()
     {
         var mpvStyle = GetMpvPreviewStyle(Se.Settings.Video);
-        MpvPreviewStyleHeader = string.Format(AdvancedSubStationAlpha.HeaderNoStyles, "MPV preview file", mpvStyle.ToRawAss(SsaStyle.DefaultAssStyleFormat));
+        MpvPreviewStyleHeader = string.Format(AdvancedSubStationAlpha.HeaderNoStyles, MpvPreviewTitle, mpvStyle.ToRawAss(SsaStyle.DefaultAssStyleFormat));
     }
 
     private static SsaStyle GetMpvPreviewStyle(SeVideo gs)

@@ -75,7 +75,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                         int version = Buffer[0];
                         var totalEntries = GetUInt(4);
 
-                        var entries = ClampEntries(totalEntries, 8, 4);
+                        // Entry 0 is GetUInt(8), i.e. bytes 8..11 - the helper wants the LAST byte
+                        // of the first entry (the other call sites pass it correctly). With 8 the
+                        // clamp allowed one entry too many and a short/truncated stco threw.
+                        var entries = ClampEntries(totalEntries, 11, 4);
                         ChunkOffsets.Capacity = ChunkOffsets.Count + entries;
                         for (var i = 0; i < entries; i++)
                         {
@@ -93,7 +96,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                         int version = Buffer[0];
                         var totalEntries = GetUInt(4);
 
-                        var entries = ClampEntries(totalEntries, 8, 8);
+                        // Entry 0 is GetUInt64(8), i.e. bytes 8..15 - see the stco note above.
+                        var entries = ClampEntries(totalEntries, 15, 8);
                         ChunkOffsets.Capacity = ChunkOffsets.Count + entries;
                         for (var i = 0; i < entries; i++)
                         {

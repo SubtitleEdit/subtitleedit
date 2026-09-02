@@ -57,7 +57,7 @@ public class EditCategoryWindow : Window
 
         Content = grid;
 
-        Activated += delegate { textBoxCategoryName.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, textBoxCategoryName); // hack to make OnKeyDown work
         KeyDown += vm.OnKeyDown;
         Loaded += (_, _) => { Title = vm.Title; };
     }

@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.BluRaySup;
+﻿using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.VobSub;
 
@@ -33,7 +33,13 @@ public class ExportHandlerVobSub : IExportHandler
             throw new InvalidOperationException("VobSubWriter is not initialized. Call WriteHeader first.");
         }
 
-        var p = new Paragraph(param.Text, param.StartTime.TotalMilliseconds, param.EndTime.TotalMilliseconds);
+        var p = new Paragraph(param.Text, param.StartTime.TotalMilliseconds, param.EndTime.TotalMilliseconds)
+        {
+            // VobSubWriter turns this into display control command 0 (forced start display)
+            // instead of 1; without it a forced-narrative line exported to VobSub came out
+            // as an ordinary subtitle (#14322).
+            Forced = param.IsForced,
+        };
         var alignment = MapAlignment(param);
 
         // "{\pos(x,y)}" (ExportTextTags.ApplyPositionTag) wins over the alignment, as in the

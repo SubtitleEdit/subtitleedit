@@ -103,15 +103,53 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public void SetPixel(int x, int y, SKColor color, int length)
         {
-            var data = (PixelData*)(_pBase + y * _width + x * sizeof(PixelData));
-            for (int i = 0; i < length; i++)
+            if (length <= 0)
             {
-                data->Alpha = color.Alpha;
-                data->Red = color.Red;
-                data->Green = color.Green;
-                data->Blue = color.Blue;
-                data++;
+                return;
             }
+
+            // Bgra8888 in memory is B,G,R,A at increasing addresses; as a little-endian
+            // uint that is B | G<<8 | R<<16 | A<<24. A span Fill vectorizes the run.
+            var value = color.Blue | ((uint)color.Green << 8) | ((uint)color.Red << 16) | ((uint)color.Alpha << 24);
+            var data = (uint*)(_pBase + y * _width + x * sizeof(PixelData));
+            new Span<uint>(data, length).Fill(value);
+        }
+
+        /// <summary>
+        /// True when every pixel in row <paramref name="y"/> has alpha below
+        /// <paramref name="alphaLimit"/>. Reads only the alpha byte of each pixel -
+        /// used by crop scans that would otherwise build an SKColor per pixel.
+        /// </summary>
+        public bool IsRowTransparent(int y, byte alphaLimit)
+        {
+            var p = _pBase + y * _width + 3;
+            for (var x = 0; x < Width; x++, p += sizeof(PixelData))
+            {
+                if (*p >= alphaLimit)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// True when every pixel in column <paramref name="x"/> from row
+        /// <paramref name="startY"/> down has alpha below <paramref name="alphaLimit"/>.
+        /// </summary>
+        public bool IsColumnTransparent(int x, int startY, byte alphaLimit)
+        {
+            var p = _pBase + startY * _width + x * sizeof(PixelData) + 3;
+            for (var y = startY; y < Height; y++, p += _width)
+            {
+                if (*p >= alphaLimit)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public SKBitmap GetBitmap()

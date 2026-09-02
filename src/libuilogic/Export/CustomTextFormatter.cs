@@ -45,9 +45,11 @@ public static partial class CustomTextFormatter
             var text = p.Text;
             if (isXml)
             {
-                text = text.Replace("<", "&lt;")
-                           .Replace(">", "&gt;")
-                           .Replace("&", "&amp;");
+                // "&" first: escaping it last re-escaped the ampersands that the "<" and ">"
+                // passes had just introduced, so every tag came out as "&amp;lt;i&amp;gt;".
+                text = text.Replace("&", "&amp;")
+                           .Replace("<", "&lt;")
+                           .Replace(">", "&gt;");
             }
             text = GetText(text, formatNewLine);
 

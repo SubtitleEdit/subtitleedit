@@ -95,7 +95,7 @@ public class EditRuleWindow : Window
         RegexContextFlyout.Attach(textBoxFindWhat, vm, () => vm.IsRegularExpression);
         RegexContextFlyout.Attach(textBoxReplaceWith, vm, () => vm.IsRegularExpression, isReplaceBox: true);
 
-        Activated += delegate { textBoxFindWhat.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, textBoxFindWhat); // hack to make OnKeyDown work
         KeyDown += vm.OnKeyDown;
         Loaded += (s, e) =>
         {

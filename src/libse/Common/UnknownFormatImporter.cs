@@ -55,6 +55,16 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
+            var firstNonEmptyLine = lines.FirstOrDefault(l => !string.IsNullOrWhiteSpace(l));
+            if (firstNonEmptyLine != null && firstNonEmptyLine.TrimStart('﻿', ' ', '\t').StartsWith('<'))
+            {
+                var xmlSubtitle = new UnknownFormatImporterXml().AutoGuessImport(lines);
+                if (xmlSubtitle.Paragraphs.Count >= 2)
+                {
+                    return xmlSubtitle;
+                }
+            }
+
             var subtitle = ImportTimeCodesOnSameSeparateLine(lines);
             if (subtitle.Paragraphs.Count < 2)
             {

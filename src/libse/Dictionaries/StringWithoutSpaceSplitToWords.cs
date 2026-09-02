@@ -59,9 +59,12 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 {
                     // Allow split if the first letter is "I" (e.g. Iam)
                 }
-                else if (input[0] == 'a' && threeLetterIsoLanguageName == "eng")
+                else if (input[0] == 'A' && threeLetterIsoLanguageName == "eng")
                 {
-                    // Allow split if the first letter is "a" (e.g. acat)
+                    // Allow split if the first letter is "A" (e.g. Acat -> "A cat"). Testing the
+                    // lowercase 'a' could never match: the enclosing guard only admits words whose
+                    // first character already equals its own uppercase form. The 'I' sibling above
+                    // uses the uppercase letter and works.
                 }
                 else
                 {

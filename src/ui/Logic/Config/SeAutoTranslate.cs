@@ -62,7 +62,6 @@ public class SeAutoTranslate
     public string OpenRouterPrompt { get; set; }
     public string OpenRouterApiKey { get; set; }
     public string OpenRouterModel { get; set; }
-    public string NnlbServeUrl { get; set; }
     public string LibreTranslateApiKey { get; set; }
     public string LibreTranslateUrl { get; set; }
     public string DeepLApiKey { get; set; }
@@ -189,8 +188,6 @@ public class SeAutoTranslate
         NllbApiUrl = "http://localhost:7860/api/v4/";
         NllbServeModel = string.Empty;
         NllbServeUrl = "http://127.0.0.1:6060/";
-        NnlbServeUrl = "http://127.0.0.1:6060/";
-        NnlbServeUrl = string.Empty;
         OllamaModel = string.Empty;
         OllamaModels = "llama3.2,llama3.2:1b,phi3,gemma2,qwen2,mistral";
         OllamaPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments or notes:";

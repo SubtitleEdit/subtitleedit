@@ -209,10 +209,15 @@ internal sealed class ShellStub : IDisposable
 
         // Generate the payload rather than embedding it, so the script stays small and the byte
         // count exact. Nothing is written to stdout - that is the half of the shape that matters.
+        // A kilobyte at a time, not a byte at a time: the one-printf-per-byte version spent about
+        // seven seconds inside awk, which made this the slowest test in the suite by a wide margin.
         File.WriteAllText(
             Path,
             "#!/bin/sh\n"
-            + $"awk 'BEGIN {{ for (i = 0; i < {stdErrBytes}; i++) printf \"x\" }}' 1>&2\n");
+            + $"awk -v n={stdErrBytes} 'BEGIN {{ "
+            + "chunk = sprintf(\"%1024s\", \"\"); gsub(/ /, \"x\", chunk); "
+            + "while (n >= 1024) { printf \"%s\", chunk; n -= 1024 } "
+            + "if (n > 0) printf \"%s\", substr(chunk, 1, n) }' 1>&2\n");
         if (!OperatingSystem.IsWindows())
         {
             File.SetUnixFileMode(

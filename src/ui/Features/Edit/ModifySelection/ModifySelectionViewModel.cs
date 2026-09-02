@@ -176,11 +176,21 @@ public partial class ModifySelectionViewModel : ObservableObject, IClosingCleanu
     [RelayCommand]
     private void Ok()
     {
-        foreach (var s in Subtitles)
+        // Recompute the matches from the current rule instead of reading the preview list:
+        // the preview is filled by a 250 ms debounce timer, so it is empty when OK comes
+        // right after opening and stale when it comes right after editing the rule. Rows the
+        // user unticked in the (shown) preview stay excluded - they are matched up by line.
+        var rule = SelectedRule;
+        if (rule != null)
         {
-            if (s.Apply)
+            var excluded = new HashSet<SubtitleLineViewModel>(
+                Subtitles.Where(s => !s.Apply).Select(s => s.Subtitle));
+            foreach (var item in _allSubtitles)
             {
-                Selection.Add(s.Subtitle);
+                if (rule.IsMatch(item) && !excluded.Contains(item))
+                {
+                    Selection.Add(item);
+                }
             }
         }
 

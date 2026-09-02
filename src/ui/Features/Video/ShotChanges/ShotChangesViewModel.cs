@@ -133,7 +133,17 @@ public partial class ShotChangesViewModel : ObservableObject, IClosingCleanup
         if (FfmpegLines.Count > 0)
         {
             Ok();
+            return;
         }
+
+        // ffmpeg found nothing. Without clearing this the OK, Generate and sensitivity controls
+        // stay disabled for good, and Cancel only sets _doAbort for a timer that no longer runs.
+        Dispatcher.UIThread.Post(() =>
+        {
+            IsGenerating = false;
+            ProgressValue = 0;
+            ProgressText = string.Empty;
+        });
     }
 
     [RelayCommand]
@@ -263,8 +273,10 @@ public partial class ShotChangesViewModel : ObservableObject, IClosingCleanup
                     continue;
                 }
 
+                // Parse the comma-normalized copy, not the raw line: a list written with decimal
+                // commas ("1,5") otherwise failed to parse and every line was silently dropped.
                 s = s.Replace(",", ".");
-                if (double.TryParse(line, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var d))
+                if (double.TryParse(s, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var d))
                 {
                     if (TimeCodeFrames)
                     {
@@ -338,7 +350,7 @@ public partial class ShotChangesViewModel : ObservableObject, IClosingCleanup
         return null;
     }
 
-    private async Task LoadTextFile(string fileName)
+    internal async Task LoadTextFile(string fileName)
     {
         try
         {
@@ -431,7 +443,11 @@ public partial class ShotChangesViewModel : ObservableObject, IClosingCleanup
                         }
 
                         var ts = new TimeSpan(0, Convert.ToInt32(timeParts[0]), Convert.ToInt32(timeParts[1]), Convert.ToInt32(timeParts[2]), Convert.ToInt32(timeParts[3]));
-                        sb.AppendLine(new TimeCode(ts).ToShortStringHHMMSSFF());
+
+                        // HH:MM:SS,FFF - the caller selects the "hours:minutes:seconds:milliseconds"
+                        // parser, so the last field must be milliseconds. ToShortStringHHMMSSFF()
+                        // wrote FRAMES there, and frame 12 was then read back as 12 ms.
+                        sb.AppendLine(new TimeCode(ts).ToString());
                     }
                 }
             }
@@ -489,10 +505,12 @@ public partial class ShotChangesViewModel : ObservableObject, IClosingCleanup
                 }
             }
 
+            // Plain seconds: the caller selects the "seconds" parser, which cannot read a
+            // HH:MM:SS:FF string at all - every line was dropped and the import came back empty.
             var sb = new StringBuilder();
             foreach (var ms in list.OrderBy(p => p))
             {
-                sb.AppendLine(new TimeCode(ms).ToShortStringHHMMSSFF());
+                sb.AppendLine((ms / TimeCode.BaseUnit).ToString(CultureInfo.InvariantCulture));
             }
 
             return sb.ToString();

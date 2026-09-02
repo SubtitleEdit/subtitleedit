@@ -19,6 +19,7 @@ namespace UITests.Features;
 public class SourceViewRegexTimeoutTests : IDisposable
 {
     private readonly List<Window> _windows = new();
+    private readonly ShortRegexTimeout _shortRegexTimeout = new();
 
     public void Dispose()
     {
@@ -28,6 +29,7 @@ public class SourceViewRegexTimeoutTests : IDisposable
         }
 
         _windows.Clear();
+        _shortRegexTimeout.Dispose();
     }
 
     private sealed class NoWindowService : IWindowService

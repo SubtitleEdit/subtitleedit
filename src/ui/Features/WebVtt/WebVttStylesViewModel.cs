@@ -474,7 +474,8 @@ public partial class WebVttStylesViewModel : ObservableObject, IClosingCleanup
 
     private static string ToRawStyle(WebVttStyleDisplay style)
     {
-        return "::cue(." + style.Name.TrimStart('.') + ") { " + style.Css + " }";
+        var selector = (style.IsClassSelector ? "." : string.Empty) + style.Name.TrimStart('.');
+        return "::cue(" + selector + ") { " + style.Css + " }";
     }
 
     [RelayCommand]
@@ -501,25 +502,60 @@ public partial class WebVttStylesViewModel : ObservableObject, IClosingCleanup
             header = "WEBVTT";
         }
 
+        // Only "::cue(...)" blocks are parsed into Styles, so a STYLE block the reader ignored -
+        // a global "::cue { color: yellow }", an @import, a keyframes rule - has no entry to be
+        // regenerated from. Those are kept verbatim instead of being dropped on OK.
         var styleOn = false;
         var sb = new StringBuilder();
+        var currentStyleBlock = new StringBuilder();
+        var keptStyleBlocks = new StringBuilder();
+
+        void FlushStyleBlock()
+        {
+            var block = currentStyleBlock.ToString();
+            currentStyleBlock.Clear();
+            if (block.Trim().Length == 0 || block.Contains("::cue(", StringComparison.Ordinal))
+            {
+                return;
+            }
+
+            keptStyleBlocks.AppendLine("STYLE");
+            keptStyleBlocks.Append(block);
+            keptStyleBlocks.AppendLine();
+        }
+
         foreach (var line in header.SplitToLines())
         {
             if (line.Trim().Equals("STYLE", StringComparison.OrdinalIgnoreCase))
             {
+                FlushStyleBlock();
                 styleOn = true;
             }
             else if (line.Trim().Length == 0 && styleOn)
             {
+                FlushStyleBlock();
                 styleOn = false;
             }
-            else if (!styleOn)
+            else if (styleOn)
+            {
+                currentStyleBlock.AppendLine(line);
+            }
+            else
             {
                 sb.AppendLine(line);
             }
         }
 
+        FlushStyleBlock();
+
         var result = new StringBuilder(sb.ToString().Trim());
+        if (keptStyleBlocks.Length > 0)
+        {
+            result.AppendLine();
+            result.AppendLine();
+            result.Append(keptStyleBlocks.ToString().TrimEnd());
+        }
+
         if (Styles.Count > 0)
         {
             result.AppendLine();

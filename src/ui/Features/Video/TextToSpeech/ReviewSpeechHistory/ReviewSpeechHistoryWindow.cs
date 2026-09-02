@@ -53,14 +53,14 @@ public class ReviewSpeechHistoryWindow : Window
 
         Content = grid;
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             // initial focus on an input, not an action button - a focused button clicks on bare Space
             if (_tableView != null)
             {
                 TableViewExtras.FocusRow(_tableView);
             }
-        };
+        });
         KeyDown += (s, e) => vm.OnKeyDown(e);
         Closing += (s, e) => vm.OnWindowClosing(e); 
         Loaded += (s, e) => vm.OnWindowLoaded();

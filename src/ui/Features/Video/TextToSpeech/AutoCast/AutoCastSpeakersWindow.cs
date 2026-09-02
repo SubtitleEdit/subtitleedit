@@ -61,6 +61,10 @@ public class AutoCastSpeakersWindow : Window
         Content = root;
 
         KeyDown += (_, e) => vm.OnKeyDown(e);
+        // SaveWindowPosition is the only writer of the stored position, so without this the
+        // Restore above could never find anything: this resizable table dialog reopened at its
+        // hard-coded default every run. The select-lines dialogs pair the two handlers.
+        Closing += (_, _) => UiUtil.SaveWindowPosition(this);
         Loaded += (_, _) => UiUtil.RestoreWindowPosition(this);
     }
 

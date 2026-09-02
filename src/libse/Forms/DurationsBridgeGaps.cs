@@ -31,10 +31,13 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     continue;
                 }
 
-                // next paragraph start-time will be pull to try to meet the current paragraph
+                // next paragraph start-time will be pull to try to meet the current paragraph.
+                // Split what is left after the minimum gap, not the raw gap: taking the whole
+                // minimum out of the left side afterwards otherwise made the current subtitle
+                // *shorter* whenever the gap was under twice the minimum.
                 if (divideEven)
                 {
-                    next.StartTime.TotalMilliseconds -= currentGap / 2.0;
+                    next.StartTime.TotalMilliseconds -= (currentGap - minMsBetweenLines) / 2.0;
                 }
 
                 cur.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - minMsBetweenLines;

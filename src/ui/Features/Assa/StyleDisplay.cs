@@ -278,6 +278,7 @@ public partial class StyleDisplay : ObservableObject
             Italic = Italic,
             Bold = Bold,
             Strikeout = Strikeout,
+            Underline = Underline, // read in from both sources above, but never written back
             Primary = ColorPrimary.ToSKColor(),
             Secondary = ColorSecondary.ToSKColor(),
             Tertiary = ColorShadow.ToSKColor(),

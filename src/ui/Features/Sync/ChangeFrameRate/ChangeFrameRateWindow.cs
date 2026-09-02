@@ -93,7 +93,7 @@ public class ChangeFrameRateWindow : Window
 
         Content = grid;
         
-        Activated += delegate { comboFromFrameRate.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, comboFromFrameRate); // initial focus on an input, not an action button - a focused button clicks on bare Space
         Loaded += (_, _) => UiUtil.RestoreWindowPosition(this);
         Closing += (_, _) => UiUtil.SaveWindowPosition(this);
         KeyDown += (_, e) => vm.OnKeyDown(e);

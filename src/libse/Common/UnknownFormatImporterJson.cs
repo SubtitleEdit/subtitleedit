@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -9,6 +9,56 @@ namespace Nikse.SubtitleEdit.Core.Common
 {
     public class UnknownFormatImporterJson
     {
+        private static readonly string[] StartTags =
+        {
+            "start", "in", "begin",
+            "startTime", "start_time", "starttime",
+            "startMillis", "start_Millis", "startmillis",
+            "startMs", "start_ms", "startms",
+            "startMilliseconds", "start_millisesonds", "startmilliseconds",
+            "from", "fromTime", "from_ms","fromms", "fromMilliseconds", "from_milliseconds", "show",
+            "tStartMs", "displayTimeOffset", "milliseconds", "timestamp", "timestamp_begin", "time",
+            "t1", "st", "s"
+        };
+
+        private static readonly string[] EndTags =
+        {
+            "end", "out", "stop",
+            "endTime", "end_time", "endtime",
+            "endMillis", "end_Millis", "endmillis",
+            "endMs", "end_ms", "endms",
+            "endMilliseconds", "end_millisesonds", "endmilliseconds",
+            "to", "toTime", "to_ms", "toms", "toMilliseconds", "to_milliseconds", "hide",
+            "tEndMs", "timestamp_end",
+            "t2", "et", "e"
+        };
+
+        private static readonly string[] DurationTags =
+        {
+            "duration",
+            "durationMs",
+            "dDurationMs",
+            "dur",
+            "d",
+        };
+
+        private static readonly string[] TextTags =
+        {
+            "text", "content", "value", "caption", "sentence", "dialog", "dialogue",
+            "line", "utf8", "tt", "t", "n"
+        };
+
+        private class Fields
+        {
+            public string Start { get; set; }
+            public string End { get; set; }
+            public string Duration { get; set; }
+            public string Text { get; set; }
+            public string Source { get; set; }
+
+            public bool HasTimes => Start != null && (End != null || Duration != null);
+        }
+
         public Subtitle AutoGuessImport(List<string> lines)
         {
             var sb = new StringBuilder();
@@ -23,43 +73,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return new Subtitle();
             }
 
-            var subtitle1 = new Subtitle();
-            try
-            {
-                var count = 0;
-                foreach (var line in allText.Split('{', '}', '[', ']'))
-                {
-                    count++;
-                    ReadParagraph(line, subtitle1);
-                    if (count > 20 && subtitle1.Paragraphs.Count == 0)
-                    {
-                        break;
-                    }
-                }
-            }
-            catch
-            {
-                // ignored
-            }
-
-            var subtitle2 = new Subtitle();
-            try
-            {
-                var count = 0;
-                foreach (var line in allText.Split('{', '}'))
-                {
-                    count++;
-                    ReadParagraph(line, subtitle2);
-                    if (count > 20 && subtitle2.Paragraphs.Count == 0)
-                    {
-                        break;
-                    }
-                }
-            }
-            catch
-            {
-                // ignored
-            }
+            var subtitle1 = ImportFromSegments(allText.Split('{', '}', '[', ']'));
+            var subtitle2 = ImportFromSegments(allText.Split('{', '}'));
 
             var subtitle3 = new Subtitle();
             try
@@ -83,51 +98,135 @@ namespace Nikse.SubtitleEdit.Core.Common
             if (subtitle1.Paragraphs.Count >= subtitle2.Paragraphs.Count && subtitle1.Paragraphs.Count >= subtitle3.Paragraphs.Count)
             {
                 subtitle1.Renumber();
-                return FixTimeCodeMsOrSeconds(subtitle1);
+                return FixTimeCodeMsOrSeconds(FixMissingEndTimes(subtitle1));
             }
 
             if (subtitle2.Paragraphs.Count >= subtitle1.Paragraphs.Count && subtitle2.Paragraphs.Count >= subtitle3.Paragraphs.Count)
             {
                 subtitle2.Renumber();
-                return FixTimeCodeMsOrSeconds(subtitle2);
+                return FixTimeCodeMsOrSeconds(FixMissingEndTimes(subtitle2));
             }
 
             subtitle3.Renumber();
-            return FixTimeCodeMsOrSeconds(subtitle3);
+            return FixTimeCodeMsOrSeconds(FixMissingEndTimes(subtitle3));
+        }
+
+        private static Subtitle ImportFromSegments(string[] segments)
+        {
+            var subtitle = new Subtitle();
+            try
+            {
+                var count = 0;
+                Fields pendingTimes = null;
+                var pendingAge = 0;
+                foreach (var segment in segments)
+                {
+                    count++;
+                    var fields = ReadFields(segment);
+                    if (fields == null)
+                    {
+                        if (count > 20 && subtitle.Paragraphs.Count == 0)
+                        {
+                            break;
+                        }
+
+                        continue;
+                    }
+
+                    if (fields.Start != null && fields.Text != null)
+                    {
+                        AddParagraph(subtitle, fields, fields.Text);
+                        pendingTimes = null;
+                    }
+                    else if (fields.HasTimes && fields.Text == null)
+                    {
+                        // nested object layout: the time codes and the text live in different
+                        // segments after splitting (e.g. {"start":..,"end":..,"metadata":{"text":..}})
+                        pendingTimes = fields;
+                        pendingAge = 0;
+                    }
+                    else if (fields.Text != null && fields.Start == null && pendingTimes != null)
+                    {
+                        AddParagraph(subtitle, pendingTimes, fields.Text);
+                        pendingTimes = null;
+                    }
+
+                    if (pendingTimes != null)
+                    {
+                        pendingAge++;
+                        if (pendingAge > 3)
+                        {
+                            pendingTimes = null;
+                        }
+                    }
+
+                    if (count > 20 && subtitle.Paragraphs.Count == 0)
+                    {
+                        break;
+                    }
+                }
+            }
+            catch
+            {
+                // ignored
+            }
+
+            return subtitle;
+        }
+
+        private static Subtitle FixMissingEndTimes(Subtitle subtitle)
+        {
+            if (subtitle.Paragraphs.Count < 2 ||
+                !subtitle.Paragraphs.All(p => Math.Abs(p.EndTime.TotalMilliseconds) < 0.001))
+            {
+                return subtitle;
+            }
+
+            // start-time-only format (e.g. {"milliseconds":1500,"line":"..."})
+            for (var index = 0; index < subtitle.Paragraphs.Count; index++)
+            {
+                var paragraph = subtitle.Paragraphs[index];
+                var next = subtitle.GetParagraphOrDefault(index + 1);
+                if (next != null)
+                {
+                    paragraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                }
+                else
+                {
+                    paragraph.EndTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(paragraph.Text);
+                }
+            }
+
+            return subtitle;
         }
 
         private static Subtitle FixTimeCodeMsOrSeconds(Subtitle subtitle)
         {
-            if (subtitle == null || subtitle.Paragraphs.Count < 5)
+            if (subtitle == null || subtitle.Paragraphs.Count < 2)
             {
                 return subtitle;
             }
+
+            var msKeys = new[]
+            {
+                "start", "startMs", "start_ms", "startMillis", "start_millis",
+                "startMilliseconds", "start_millisecondsMs", "tStartMs", "milliseconds",
+                "fromMs", "from_ms", "fromms", "fromMillis", "fromMilliseconds", "from_milliseconds", "show"
+            };
 
             double totalDuration = 0;
             var msFound = 0;
             foreach (var p in subtitle.Paragraphs)
             {
                 totalDuration += p.DurationTotalMilliseconds;
-                if (p.Style.Contains("\"start\"") ||
-                    p.Style.Contains("\"startMs\"") ||
-                    p.Style.Contains("\"start_ms\"") ||
-                    p.Style.Contains("\"startMillis\"") ||
-                    p.Style.Contains("\"start_millis\"") ||
-                    p.Style.Contains("\"startMilliseconds\"") ||
-                    p.Style.Contains("\"start_millisecondsMs\"") ||
-                    p.Style.Contains("\"fromMs\"") ||
-                    p.Style.Contains("\"from_ms\"") ||
-                    p.Style.Contains("\"fromms\"") ||
-                    p.Style.Contains("\"fromMillis\"") ||
-                    p.Style.Contains("\"fromMilliseconds\"") ||
-                    p.Style.Contains("\"from_milliseconds\"") ||
-                    p.Style.Contains("\"show\""))
+                if (msKeys.Any(key => ReadKeyValue(p.Style, key, out _) != null))
                 {
                     msFound++;
                 }
             }
 
-            if (totalDuration / subtitle.Paragraphs.Count > 1000000 || msFound == subtitle.Paragraphs.Count)
+            var averageDuration = totalDuration / subtitle.Paragraphs.Count;
+            if (averageDuration > 1000000 || msFound == subtitle.Paragraphs.Count && averageDuration > 100000)
             {
                 // Time codes were read as seconds, but they are actually milliseconds,
                 // so all time codes are divided by 1000.
@@ -143,10 +242,21 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static void ReadParagraph(string s, Subtitle subtitle)
         {
-            s = s.Trim();
-            if (s.Length < 7)
+            var fields = ReadFields(s);
+            if (fields?.Start == null || fields.Text == null)
             {
                 return;
+            }
+
+            AddParagraph(subtitle, fields, fields.Text);
+        }
+
+        private static Fields ReadFields(string s)
+        {
+            s = s.Trim();
+            if (s.Length < 5)
+            {
+                return null;
             }
 
             if (!s.EndsWith('}'))
@@ -154,52 +264,73 @@ namespace Nikse.SubtitleEdit.Core.Common
                 s += '}';
             }
 
-            var start = ReadStartTag(s);
-            var end = ReadEndTag(s);
-            var duration = ReadDurationTag(s);
+            var start = NormalizeTime(ReadFirstTimeTag(s, StartTags));
+            var end = NormalizeTime(ReadFirstTimeTag(s, EndTags));
+            var duration = ReadFirstTimeTag(s, DurationTags);
             var text = ReadTextTag(s);
-            var originalStart = start;
-
-            if (start != null && start.Contains(":") && start.Length >= 11 && start.Length <= 12 && start.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries).Length == 4)
+            if (start == null && end == null && duration == null && text == null)
             {
-                start = DecodeFormatToSeconds(start);
-            }
-            else if (start != null && start.Contains(":") && start.Length == 8 && start.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries).Length == 3)
-            {
-                start = DecodeFormatHourMinuteSecondsToSeconds(start);
+                return null;
             }
 
-            if (end != null && end.Contains(":") && end.Length >= 11 && end.Length <= 12 && end.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries).Length == 4)
+            return new Fields { Start = start, End = end, Duration = duration, Text = text, Source = s };
+        }
+
+        private static void AddParagraph(Subtitle subtitle, Fields times, string text)
+        {
+            var start = times.Start?.TrimEnd('s');
+            var end = times.End?.TrimEnd('s');
+            var duration = times.Duration?.TrimEnd('s');
+
+            if (start == null)
             {
-                end = DecodeFormatToSeconds(end);
-            }
-            else if (end != null && end.Contains(":") && end.Length == 8 && end.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries).Length == 3)
-            {
-                end = DecodeFormatHourMinuteSecondsToSeconds(end);
+                return;
             }
 
-            if (start != null && end != null && text != null)
+            if (!double.TryParse(start, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var startSeconds))
             {
-                start = start.TrimEnd('s');
-                end = end.TrimEnd('s');
-                if (double.TryParse(start, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var startSeconds) &&
-                    double.TryParse(end, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var endSeconds))
-                {
-                    var p = new Paragraph(Json.DecodeJsonText(text), startSeconds * TimeCode.BaseUnit, endSeconds * TimeCode.BaseUnit) { Extra = originalStart, Style = s };
-                    subtitle.Paragraphs.Add(p);
-                }
+                return;
             }
-            else if (start != null && duration != null && text != null)
+
+            if (end != null &&
+                double.TryParse(end, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var endSeconds))
             {
-                start = start.TrimEnd('s');
-                duration = duration.TrimEnd('s');
-                if (double.TryParse(start, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out double startSeconds) &&
-                    double.TryParse(duration, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out double durationSeconds))
-                {
-                    var p = new Paragraph(Json.DecodeJsonText(text), startSeconds * TimeCode.BaseUnit, (startSeconds + durationSeconds) * TimeCode.BaseUnit) { Extra = originalStart, Style = s };
-                    subtitle.Paragraphs.Add(p);
-                }
+                subtitle.Paragraphs.Add(new Paragraph(Json.DecodeJsonText(text), startSeconds * TimeCode.BaseUnit, endSeconds * TimeCode.BaseUnit) { Extra = times.Start, Style = times.Source });
+                return;
             }
+
+            if (duration != null &&
+                double.TryParse(duration, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var durationSeconds))
+            {
+                subtitle.Paragraphs.Add(new Paragraph(Json.DecodeJsonText(text), startSeconds * TimeCode.BaseUnit, (startSeconds + durationSeconds) * TimeCode.BaseUnit) { Extra = times.Start, Style = times.Source });
+                return;
+            }
+
+            if (end == null && duration == null)
+            {
+                // start-time-only - end times are computed at the end of the import
+                subtitle.Paragraphs.Add(new Paragraph(Json.DecodeJsonText(text), startSeconds * TimeCode.BaseUnit, 0) { Extra = times.Start, Style = times.Source });
+            }
+        }
+
+        private static string NormalizeTime(string value)
+        {
+            if (value == null)
+            {
+                return null;
+            }
+
+            if (value.Contains(":") && value.Length >= 11 && value.Length <= 12 && value.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries).Length == 4)
+            {
+                return DecodeFormatToSeconds(value);
+            }
+
+            if (value.Contains(":") && value.Length == 8 && value.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries).Length == 3)
+            {
+                return DecodeFormatHourMinuteSecondsToSeconds(value);
+            }
+
+            return value;
         }
 
         private static string DecodeFormatToSeconds(string s)
@@ -213,140 +344,245 @@ namespace Nikse.SubtitleEdit.Core.Common
             return DecodeFormatToSeconds(s + ":00");
         }
 
-        private static string ReadStartTag(string s)
-        {
-            return ReadFirstMultiTag(s, new[]
-            {
-                "start", "in", "begin",
-                "startTime", "start_time", "starttime",
-                "startMillis", "start_Millis", "startmillis",
-                "startMs", "start_ms", "startms",
-                "startMilliseconds", "start_Millisesonds", "startmilliseconds",
-                "from", "fromTime", "from_ms","fromms", "fromMilliseconds", "from_milliseconds", "show"
-            });
-        }
-
-        private static string ReadEndTag(string s)
-        {
-            return ReadFirstMultiTag(s, new[]
-            {
-                "end", "out", "stop",
-                "endTime", "end_time", "endtime",
-                "endMillis", "end_Millis", "endmillis",
-                "endMs", "end_ms", "endms",
-                "endMilliseconds", "end_Millisesonds", "endmilliseconds",
-                "to", "toTime", "to_ms", "toms", "toMilliseconds", "to_milliseconds", "hide"
-            });
-        }
-
-        private static string ReadDurationTag(string s)
-        {
-            return ReadFirstMultiTag(s, new[]
-            {
-                "duration",
-                "durationMs",
-                "dur",
-            });
-        }
-
-        private static string ReadTextTag(string s)
-        {
-            var idx = s.IndexOf("\"text", StringComparison.OrdinalIgnoreCase);
-            if (idx < 0)
-            {
-                idx = s.IndexOf("\"content", StringComparison.OrdinalIgnoreCase);
-            }
-            if (idx < 0)
-            {
-                idx = s.IndexOf("\"value", StringComparison.OrdinalIgnoreCase);
-            }
-            if (idx < 0)
-            {
-                idx = s.IndexOf("\"caption", StringComparison.OrdinalIgnoreCase);
-            }
-            if (idx < 0)
-            {
-                idx = s.IndexOf("\"sentence", StringComparison.OrdinalIgnoreCase);
-            }
-
-            if (idx < 0)
-            {
-                return null;
-            }
-
-            s = s.Substring(idx);
-            idx = s.IndexOf(']');
-            if (idx > 0)
-            {
-                s = s.Substring(0, idx + 1);
-            }
-
-            var text = Json.ReadTag(s, "text");
-            if (text == null)
-            {
-                text = Json.ReadTag(s, "content");
-            }
-            if (text == null)
-            {
-                text = Json.ReadTag(s, "value");
-            }
-            if (text == null)
-            {
-                text = Json.ReadTag(s, "caption");
-            }
-            if (text == null)
-            {
-                text = Json.ReadTag(s, "sentence");
-            }
-            if (text == null)
-            {
-                text = Json.ReadTag(s, "dialog");
-            }
-
-            if (text != null)
-            {
-                text = Json.DecodeJsonText(text);
-            }
-
-            var textLines = Json.ReadArray(s, "text");
-            if (textLines == null || textLines.Count == 0)
-            {
-                textLines = Json.ReadArray(s, "content");
-            }
-
-            var isArray = s.Contains("[");
-            if (isArray && textLines.Any(p => p == "end_time" || p == "endTime" || p == "end" || p == "endMs" || p == "endMilliseconds" || p == "end_ms" || p == "endms" || p == "to" || p == "to_ms" || p == "toms" || p == "from" || p == "from_ms" | p == "hide"))
-            {
-                isArray = false;
-            }
-
-            if (!isArray && !string.IsNullOrEmpty(text))
-            {
-                return text
-                    .Replace("&#039;", "'")
-                    .Replace("<br />", Environment.NewLine)
-                    .Replace("<br \\/>", Environment.NewLine)
-                    ;
-            }
-
-            if (textLines != null && textLines.Count > 0)
-            {
-                return string.Join(Environment.NewLine, textLines);
-            }
-
-            return ReadFirstMultiTag(s, new[] { "text", "content" });
-        }
-
-        private static string ReadFirstMultiTag(string s, string[] tags)
+        private static string ReadFirstTimeTag(string s, string[] tags)
         {
             foreach (var tag in tags)
             {
-                var res = Json.ReadTag(s, tag);
-                if (!string.IsNullOrEmpty(res))
+                var res = ReadKeyValue(s, tag, out var isStringValue);
+                if (!string.IsNullOrEmpty(res) && IsTimeLikeValue(res))
                 {
                     return res;
                 }
             }
+
+            return null;
+        }
+
+        private static bool IsTimeLikeValue(string value)
+        {
+            var v = value.Trim().TrimEnd('s');
+            if (v.Length == 0 || v.Length > 20)
+            {
+                return false;
+            }
+
+            var hasDigit = false;
+            foreach (var ch in v)
+            {
+                if (char.IsDigit(ch))
+                {
+                    hasDigit = true;
+                }
+                else if (ch != ':' && ch != '.' && ch != ',' && ch != ';' && ch != '-')
+                {
+                    return false;
+                }
+            }
+
+            return hasDigit;
+        }
+
+        /// <summary>
+        /// Reads a key whose value is an array of strings; null when the key is missing,
+        /// the value is not an array, or the array holds anything but strings.
+        /// </summary>
+        private static List<string> ReadStringArrayValue(string s, string tag)
+        {
+            var from = 0;
+            while (from < s.Length)
+            {
+                var idx = s.IndexOf("\"" + tag + "\"", from, StringComparison.OrdinalIgnoreCase);
+                if (idx < 0)
+                {
+                    return null;
+                }
+
+                var i = idx + tag.Length + 2;
+                while (i < s.Length && char.IsWhiteSpace(s[i]))
+                {
+                    i++;
+                }
+
+                if (i >= s.Length || s[i] != ':')
+                {
+                    from = idx + 1;
+                    continue;
+                }
+
+                i++;
+                while (i < s.Length && char.IsWhiteSpace(s[i]))
+                {
+                    i++;
+                }
+
+                if (i >= s.Length || s[i] != '[')
+                {
+                    return null;
+                }
+
+                i++;
+                var list = new List<string>();
+                while (i < s.Length)
+                {
+                    while (i < s.Length && (char.IsWhiteSpace(s[i]) || s[i] == ','))
+                    {
+                        i++;
+                    }
+
+                    if (i >= s.Length)
+                    {
+                        return null; // unterminated
+                    }
+
+                    if (s[i] == ']')
+                    {
+                        return list;
+                    }
+
+                    if (s[i] != '"')
+                    {
+                        return null; // not an array of strings
+                    }
+
+                    i++;
+                    var sb = new StringBuilder();
+                    while (i < s.Length && s[i] != '"')
+                    {
+                        if (s[i] == '\\' && i + 1 < s.Length)
+                        {
+                            sb.Append(s[i]);
+                            sb.Append(s[i + 1]);
+                            i += 2;
+                            continue;
+                        }
+
+                        sb.Append(s[i]);
+                        i++;
+                    }
+
+                    if (i >= s.Length)
+                    {
+                        return null;
+                    }
+
+                    i++; // closing quote
+                    list.Add(sb.ToString());
+                }
+
+                return null;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Reads the value of a json key. Unlike a plain IndexOf, the tag must actually be in
+        /// key position (followed by a colon) - otherwise string VALUES that happen to match a
+        /// tag name hijack the lookup (e.g. "lineAlign":"start" matching the tag "start").
+        /// </summary>
+        private static string ReadKeyValue(string s, string tag, out bool isStringValue)
+        {
+            isStringValue = false;
+            var from = 0;
+            while (from < s.Length)
+            {
+                var idx = s.IndexOf("\"" + tag + "\"", from, StringComparison.OrdinalIgnoreCase);
+                if (idx < 0)
+                {
+                    return null;
+                }
+
+                var i = idx + tag.Length + 2;
+                while (i < s.Length && char.IsWhiteSpace(s[i]))
+                {
+                    i++;
+                }
+
+                if (i >= s.Length || s[i] != ':')
+                {
+                    from = idx + 1;
+                    continue;
+                }
+
+                i++;
+                while (i < s.Length && char.IsWhiteSpace(s[i]))
+                {
+                    i++;
+                }
+
+                if (i >= s.Length)
+                {
+                    return null;
+                }
+
+                if (s[i] == '"')
+                {
+                    isStringValue = true;
+                    var sb = new StringBuilder();
+                    i++;
+                    while (i < s.Length)
+                    {
+                        var ch = s[i];
+                        if (ch == '\\' && i + 1 < s.Length)
+                        {
+                            sb.Append(ch);
+                            sb.Append(s[i + 1]);
+                            i += 2;
+                            continue;
+                        }
+
+                        if (ch == '"')
+                        {
+                            break;
+                        }
+
+                        sb.Append(ch);
+                        i++;
+                    }
+
+                    return sb.ToString();
+                }
+
+                var end = i;
+                while (end < s.Length && s[end] != ',' && s[end] != '}' && s[end] != ']')
+                {
+                    end++;
+                }
+
+                return s.Substring(i, end - i).Trim();
+            }
+
+            return null;
+        }
+
+        private static string ReadTextTag(string s)
+        {
+            // text as an array of lines, e.g. "text": ["line 1", "line 2"]
+            foreach (var arrayTag in new[] { "text", "content", "lines" })
+            {
+                var textLines = ReadStringArrayValue(s, arrayTag);
+                if (textLines != null && textLines.Count > 0)
+                {
+                    var joined = string.Join(Environment.NewLine, textLines.Where(p => !string.IsNullOrEmpty(p)));
+                    if (!string.IsNullOrWhiteSpace(joined))
+                    {
+                        return joined;
+                    }
+                }
+            }
+
+            foreach (var tag in TextTags)
+            {
+                var res = ReadKeyValue(s, tag, out var isStringValue);
+                if (isStringValue && !string.IsNullOrEmpty(res))
+                {
+                    return res
+                        .Replace("&#039;", "'")
+                        .Replace("<br />", Environment.NewLine)
+                        .Replace("<br \\/>", Environment.NewLine);
+                }
+            }
+
             return null;
         }
     }

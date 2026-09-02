@@ -262,6 +262,56 @@ public partial class VoiceSettingsViewModel : ObservableObject
                 ? omniCrispEngine.ImportVoice(fileName, (result.Text ?? string.Empty).Trim())
                 : omniCrispEngine.ImportVoice(fileName);
         }
+        else if (_engine is FishTtsAudioCpp fishEngine)
+        {
+            // Fish Audio S2 Pro REQUIRES the transcript at synth time — audio.cpp answers a
+            // voice_ref without reference_text with a server error. Always prompt (matching
+            // CosyVoice3's flow), with the sibling-text autofill so existing .txt sidecars
+            // don't force a re-type.
+            var transcript = TryReadSiblingTranscript(fileName) ?? string.Empty;
+            var audioFileName = fileName;
+            var result = await _windowService.ShowDialogAsync<PromptTextBoxWindow, PromptTextBoxViewModel>(Window!, vm =>
+            {
+                vm.Initialize(
+                    Se.Language.Video.TextToSpeech.VoiceCloneTranscriptTitle,
+                    transcript,
+                    500,
+                    150);
+                vm.ConfigureExtraButton(
+                    Se.Language.Video.TextToSpeech.UseSpeechToTextDotDotDot,
+                    () => RunSpeechToTextAsync(audioFileName));
+            });
+
+            if (!result.OkPressed || string.IsNullOrWhiteSpace(result.Text))
+            {
+                return;
+            }
+
+            ok = fishEngine.ImportVoice(fileName, result.Text.Trim());
+        }
+        else if (_engine is HiggsTtsAudioCpp higgsEngine)
+        {
+            // Higgs clones zero-shot from audio alone; a transcription (reference_text) is
+            // optional but improves quality, so prompt like VoxCPM2 while allowing an empty
+            // answer.
+            var transcript = TryReadSiblingTranscript(fileName) ?? string.Empty;
+            var audioFileName = fileName;
+            var result = await _windowService.ShowDialogAsync<PromptTextBoxWindow, PromptTextBoxViewModel>(Window!, vm =>
+            {
+                vm.Initialize(
+                    Se.Language.Video.TextToSpeech.VoiceCloneTranscriptTitle,
+                    transcript,
+                    500,
+                    150);
+                vm.ConfigureExtraButton(
+                    Se.Language.Video.TextToSpeech.UseSpeechToTextDotDotDot,
+                    () => RunSpeechToTextAsync(audioFileName));
+            });
+
+            ok = result.OkPressed
+                ? higgsEngine.ImportVoice(fileName, (result.Text ?? string.Empty).Trim())
+                : higgsEngine.ImportVoice(fileName);
+        }
         else if (_engine is MossTtsCrispAsr mossEngine)
         {
             // MOSS-TTS clones zero-shot from audio alone; a transcription (ref-text) is optional

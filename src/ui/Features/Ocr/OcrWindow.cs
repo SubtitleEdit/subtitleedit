@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
@@ -428,6 +428,9 @@ public class OcrWindow : Window
 
     private static Border MakeSubtitleView(OcrViewModel vm)
     {
+        // One brush for every preview cell in this window, so recolouring repaints them all.
+        var previewBackground = ImagePreviewBackground.CreateBrush();
+
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
 
@@ -539,13 +542,14 @@ public class OcrWindow : Window
                             image.Bind(Image.MaxWidthProperty, new Binding(nameof(vm.ImageMaxWidth)) { Source = vm });
 
                             // Subtitle bitmaps are usually light text on a transparent background, which
-                            // is invisible on a light grid - give them a dark backdrop so they show.
-                            // A checkerboard was tried here (issue #12692) but the tiling competes with
-                            // the glyphs at thumbnail size and makes the grid harder to read; it is kept
-                            // only in the pre-processing preview, where the image is large enough for it.
+                            // is invisible on a light grid - give them a backdrop so they show. A
+                            // checkerboard was tried here (issue #12692) but the tiling competes with the
+                            // glyphs at thumbnail size; it is kept only in the pre-processing preview,
+                            // where the image is large enough for it. The colour is shared with the
+                            // binary-edit grid and configurable from either (#14328).
                             var imageContainer = new Border
                             {
-                                Background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.FromRgb(0x2D, 0x2D, 0x30)),
+                                Background = previewBackground,
                                 CornerRadius = new CornerRadius(3),
                                 Padding = new Thickness(3),
                                 Child = image,
@@ -744,6 +748,9 @@ public class OcrWindow : Window
         };
         menuItemSaveAllImagesWithHtmlIndex.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.TwoWay });
         flyout.Items.Add(menuItemSaveAllImagesWithHtmlIndex);
+
+        flyout.Items.Add(new Separator());
+        flyout.Items.Add(ImagePreviewBackground.MakeMenuItem(vm.WindowService, () => vm.Window, previewBackground));
 
         vm.SubtitleGrid.ContextFlyout = flyout;
 

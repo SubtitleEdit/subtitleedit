@@ -90,10 +90,13 @@ TimeCode Format: " + Configuration.Settings.General.CurrentFrameRate + @" frames
                 {
                     p.Text = (p.Text + Environment.NewLine + s.TrimStart()).Trim();
                 }
-                else if (s.Length > 0)
+                else if (s.Length > 0 && subtitle.Paragraphs.Count > 0)
                 {
                     _errorCount++;
                 }
+                // else: the header block before the first time code ("[Header]", "Frame
+                // Rate: ..." - every file starts with it) - counting it as errors made
+                // IsMine (paragraphs > errors) reject files with only a few subtitles.
             }
             if (p != null)
             {

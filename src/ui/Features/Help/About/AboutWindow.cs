@@ -187,7 +187,7 @@ public class AboutWindow : Window
             }
         };
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, buttonOk); // hack to make OnKeyDown work
         KeyDown += vm.OnKeyDown;
     }
 }

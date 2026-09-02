@@ -134,7 +134,11 @@ public partial class DownloadYtDlpViewModel : ObservableObject, IClosingCleanup
             StatusText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
         });
 
-        var folder = Se.FfmpegFolder;
+        // Se.DataFolder, not Se.FfmpegFolder: this downloads into the data folder (see
+        // GetLibMpvFileName / YtDlpDownloadService.GetFullFileName). Copy/paste from the ffmpeg
+        // downloader meant the guard protected the wrong directory and created a stray empty
+        // "ffmpeg" folder. DownloadLibVlcViewModel gets this right.
+        var folder = Se.DataFolder;
         if (!Directory.Exists(folder))
         {
             Directory.CreateDirectory(folder);

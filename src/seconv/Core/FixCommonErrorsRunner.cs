@@ -134,8 +134,12 @@ internal static class FixCommonErrorsRunner
             return;
         }
 
+        // An EMPTY list means "no rules" - that is exactly what "-all" resolves to (RuleIdSpec
+        // clears the set). Treating empty as null made "--fix-common-errors-rules:-all" run every
+        // rule plus the OCR-fix pass, i.e. the maximum instead of nothing. RemoveFormattingRunner
+        // documents the same distinction.
         HashSet<string>? wanted = null;
-        if (ruleIds != null && ruleIds.Count > 0)
+        if (ruleIds != null)
         {
             wanted = new HashSet<string>(ruleIds, StringComparer.OrdinalIgnoreCase);
         }
@@ -301,11 +305,12 @@ internal static class FixCommonErrorsRunner
         }
 
         var v = value.Trim();
-        if (v.Length == 2)
-        {
-            return v.ToLowerInvariant();
-        }
 
+        // No unchecked two-letter shortcut: the lookup below already matches a real
+        // TwoLetterISOLanguageName, so "es" still resolves, while a plausible typo like "sp"
+        // used to be accepted verbatim. Being non-null it suppressed the warning and the
+        // auto-detect fallback, then matched no language gate and left the OCR-fix pass -
+        // which needs a valid three-letter code - silently doing nothing.
         var culture = CultureInfo.GetCultures(CultureTypes.NeutralCultures)
             .FirstOrDefault(c =>
                 c.TwoLetterISOLanguageName.Equals(v, StringComparison.OrdinalIgnoreCase)

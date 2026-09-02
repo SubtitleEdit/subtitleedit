@@ -32,9 +32,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            string xmlAsString = sb.ToString().Trim();
+            string xmlAsString = JoinLinesTrimmed(lines);
             if ((xmlAsString.Contains("<TMPGEncVMESubtitleTextFormat>") || xmlAsString.Contains("<SubtitleItem ")) && (xmlAsString.Contains("<Subtitle")))
             {
                 return base.IsMine(lines, fileName);
@@ -422,8 +420,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 XmlNode paragraph = xml.CreateElement("SubtitleItem");
 
                 var text = HtmlUtil.RemoveHtmlTags(p.Text, true);
-                paragraph.InnerText = text;
-                paragraph.InnerXml = "<Text><![CDATA[" + paragraph.InnerXml.Replace(Environment.NewLine, "\\n") + "]]></Text>";
+                // See TmpegEncAW5: the CDATA must be built from the RAW text, or the XML
+                // escaping is read back as literal text and escaped again on every save.
+                var cdataText = text.Replace(Environment.NewLine, "\\n");
+                if (cdataText.Contains("]]>", StringComparison.Ordinal))
+                {
+                    paragraph.InnerText = cdataText;
+                }
+                else
+                {
+                    paragraph.InnerXml = "<Text><![CDATA[" + cdataText + "]]></Text>";
+                }
 
                 XmlAttribute layoutIndex = xml.CreateAttribute("layoutindex");
                 var layoutIndexValue = GetLayoutIndexFromAssAlignment(p.Text);
@@ -463,10 +470,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             double startSeconds = 0;
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument { XmlResolver = null };
-            xml.LoadXml(sb.ToString().Trim());
+            try
+            {
+                xml.LoadXml(JoinLinesTrimmed(lines));
+            }
+            catch (Exception exception)
+            {
+                // Damaged/truncated xml is "not mine", not an exception out of the reader.
+                System.Diagnostics.Debug.WriteLine(exception.Message);
+                _errorCount = 1;
+                return;
+            }
             var italicStyles = new List<bool>();
             var positionCodes = new List<int>();
 

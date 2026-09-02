@@ -1,6 +1,7 @@
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 
 namespace Nikse.SubtitleEdit.Features.Video.VideoOcr;
@@ -15,6 +16,14 @@ namespace Nikse.SubtitleEdit.Features.Video.VideoOcr;
 public static class VideoOcrFrameGrouper
 {
     private const int ThumbnailWidth = 96;
+
+    // The brightness mask is thresholded at this width, then max-pooled down to
+    // ThumbnailWidth. Thresholding a 96px thumbnail directly destroys the mask: at that
+    // scale the anti-aliased blend of white glyphs and their dark outlines averages below
+    // any sensible brightness minimum, so whole subtitles read as "blank" and the frames
+    // are never OCR'ed. At ~360px the glyph cores survive thresholding, and max-pooling
+    // the binary mask keeps thin strokes visible to the group comparison.
+    private const int MaskSourceWidth = 360;
 
     // Less than this fraction of bright pixels counts as "no text on screen".
     private const double BlankFraction = 0.002;
@@ -98,7 +107,7 @@ public static class VideoOcrFrameGrouper
         groups.Add(group);
     }
 
-    private static bool IsBlank(byte[] thumbnail)
+    internal static bool IsBlank(byte[] thumbnail)
     {
         var bright = 0;
         foreach (var b in thumbnail)
@@ -165,14 +174,19 @@ public static class VideoOcrFrameGrouper
         return (int)Math.Round(100.0 - meanDiff * 100.0 / 255.0);
     }
 
-    private static byte[]? MakeThumbnail(string fileName, int brightnessMinimum)
+    internal static byte[]? MakeThumbnail(string fileName, int brightnessMinimum)
     {
         try
         {
-            using var bitmap = DecodeScaledDown(fileName);
+            using var bitmap = DecodeScaledDown(fileName, brightnessMinimum > 0 ? MaskSourceWidth : ThumbnailWidth);
             if (bitmap == null || bitmap.Width == 0 || bitmap.Height == 0)
             {
                 return null;
+            }
+
+            if (brightnessMinimum > 0)
+            {
+                return MakePooledMask(bitmap, brightnessMinimum);
             }
 
             var height = Math.Max(1, (int)Math.Round(bitmap.Height * ThumbnailWidth / (double)bitmap.Width));
@@ -187,15 +201,7 @@ public static class VideoOcrFrameGrouper
             for (var i = 0; i < pixels.Length; i++)
             {
                 var c = pixels[i];
-                var luma = (byte)((c.Red * 299 + c.Green * 587 + c.Blue * 114) / 1000);
-                if (brightnessMinimum > 0)
-                {
-                    result[i] = luma >= brightnessMinimum ? (byte)255 : (byte)0;
-                }
-                else
-                {
-                    result[i] = luma;
-                }
+                result[i] = (byte)((c.Red * 299 + c.Green * 587 + c.Blue * 114) / 1000);
             }
 
             return result;
@@ -207,10 +213,117 @@ public static class VideoOcrFrameGrouper
     }
 
     /// <summary>
+    /// Thresholds the bitmap at its own (working) resolution and max-pools the resulting
+    /// binary mask down to a ThumbnailWidth-wide grid: a grid cell is bright when any pixel
+    /// in its source block clears the brightness minimum, so thin glyph strokes survive.
+    /// </summary>
+    private static byte[] MakePooledMask(SKBitmap bitmap, int brightnessMinimum)
+    {
+        var width = bitmap.Width;
+        var height = bitmap.Height;
+        var thumbHeight = Math.Max(1, (int)Math.Round(height * ThumbnailWidth / (double)width));
+        var result = new byte[ThumbnailWidth * thumbHeight];
+        var pixels = bitmap.Pixels;
+
+        for (var y = 0; y < height; y++)
+        {
+            var thumbRow = Math.Min(thumbHeight - 1, y * thumbHeight / height) * ThumbnailWidth;
+            var sourceRow = y * width;
+            for (var x = 0; x < width; x++)
+            {
+                var c = pixels[sourceRow + x];
+                var luma = (c.Red * 299 + c.Green * 587 + c.Blue * 114) / 1000;
+                if (luma >= brightnessMinimum)
+                {
+                    result[thumbRow + Math.Min(ThumbnailWidth - 1, x * ThumbnailWidth / width)] = 255;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Writes a copy of a video frame with everything below the brightness minimum blacked
+    /// out - the same input filtering VideOCR applies before recognition. Detector-based
+    /// OCR (PaddleOCR) then only sees the bright subtitle text, not darker scene text like
+    /// shirt prints or credits, which its detector otherwise picks up and prepends to
+    /// subtitles. The keep-mask is dilated a little so anti-aliased glyph edges survive.
+    /// Vision/VLM engines are better off with the natural frame - measured: masking cost
+    /// Apple Vision accuracy while it clearly helped PaddleOCR - so only the Paddle path
+    /// uses this.
+    /// </summary>
+    public static bool WriteMaskedCopy(string sourceFileName, string targetFileName, int brightnessMinimum)
+    {
+        try
+        {
+            using var bitmap = SKBitmap.Decode(sourceFileName);
+            if (bitmap == null || bitmap.Width == 0 || bitmap.Height == 0)
+            {
+                return false;
+            }
+
+            var width = bitmap.Width;
+            var height = bitmap.Height;
+            var pixels = bitmap.Pixels;
+            var keep = new bool[pixels.Length];
+            for (var i = 0; i < pixels.Length; i++)
+            {
+                var c = pixels[i];
+                keep[i] = (c.Red * 299 + c.Green * 587 + c.Blue * 114) / 1000 >= brightnessMinimum;
+            }
+
+            const int dilate = 2;
+            var keepDilated = new bool[pixels.Length];
+            for (var y = 0; y < height; y++)
+            {
+                var row = y * width;
+                for (var x = 0; x < width; x++)
+                {
+                    if (!keep[row + x])
+                    {
+                        continue;
+                    }
+
+                    var yEnd = Math.Min(height - 1, y + dilate);
+                    var xEnd = Math.Min(width - 1, x + dilate);
+                    for (var yy = Math.Max(0, y - dilate); yy <= yEnd; yy++)
+                    {
+                        var rowOut = yy * width;
+                        for (var xx = Math.Max(0, x - dilate); xx <= xEnd; xx++)
+                        {
+                            keepDilated[rowOut + xx] = true;
+                        }
+                    }
+                }
+            }
+
+            var black = new SKColor(0, 0, 0);
+            for (var i = 0; i < pixels.Length; i++)
+            {
+                if (!keepDilated[i])
+                {
+                    pixels[i] = black;
+                }
+            }
+
+            bitmap.Pixels = pixels;
+            using var image = SKImage.FromBitmap(bitmap);
+            using var data = image.Encode(SKEncodedImageFormat.Jpeg, 92);
+            File.WriteAllBytes(targetFileName, data.ToArray());
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
     /// Decodes an image at reduced size when the codec supports it (JPEG decodes natively
     /// at 1/2, 1/4, 1/8 scale) - much cheaper than a full decode for thumbnail use.
     /// </summary>
-    private static SKBitmap? DecodeScaledDown(string fileName)
+    private static SKBitmap? DecodeScaledDown(string fileName, int targetWidth)
     {
         try
         {
@@ -220,7 +333,7 @@ public static class VideoOcrFrameGrouper
                 return SKBitmap.Decode(fileName);
             }
 
-            var scaled = codec.GetScaledDimensions(ThumbnailWidth / (float)codec.Info.Width);
+            var scaled = codec.GetScaledDimensions(targetWidth / (float)codec.Info.Width);
             var info = new SKImageInfo(scaled.Width, scaled.Height);
             return SKBitmap.Decode(codec, info) ?? SKBitmap.Decode(fileName);
         }

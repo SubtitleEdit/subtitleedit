@@ -145,7 +145,7 @@ public class PromptFileSavedWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonDone.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, buttonDone); // hack to make OnKeyDown work
         KeyDown += (s, e) => vm.OnKeyDown(e);
     }
 

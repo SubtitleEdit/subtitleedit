@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.VisualTree;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Nikse.SubtitleEdit.Logic;
@@ -39,10 +40,12 @@ public sealed class TableViewScrollAnchor
     private readonly TableView _tableView;
     private ScrollViewer? _scrollViewer;
 
-    // The row at the top of the viewport: the item itself (so an insert above it does not
-    // shift the view by a row), its index as a fallback, the item count that index was valid
-    // for, and its top edge in viewport coordinates - negative while scrolled into.
-    private object? _anchorItem;
+    // The visible rows, top first: each row's item (so an insert above it does not shift
+    // the view by a row) and its top edge in viewport coordinates - negative while
+    // scrolled into. The first entry is the anchor proper; the rest are fallbacks, so a
+    // removal of the top row (cutting the selected line, issue #14231) migrates the
+    // anchor to the nearest surviving neighbor instead of abandoning the restore.
+    private readonly List<(object Item, double Top)> _anchorCandidates = new();
     private int _anchorIndex = -1;
     private int _anchorItemCount = -1;
     private double _anchorTop;
@@ -164,71 +167,81 @@ public sealed class TableViewScrollAnchor
             return;
         }
 
-        var top = double.MaxValue;
-        Control? anchorRow = null;
+        // Every row intersecting the viewport, with its top edge, ordered top first.
+        var visible = new List<(int Index, double Top)>();
         foreach (var row in _tableView.GetRealizedContainers().OfType<TableViewRow>())
         {
             if (row.Bounds.Height <= 0 ||
                 ((Visual)row).TranslatePoint(new Point(0, 0), viewportOrigin)?.Y is not { } rowTop ||
                 rowTop + row.Bounds.Height <= 0.5 ||
-                rowTop >= top)
+                rowTop >= _scrollViewer.Viewport.Height - 0.5)
             {
                 continue;
             }
 
-            top = rowTop;
-            anchorRow = row;
+            var index = _tableView.IndexFromContainer(row);
+            if (index >= 0)
+            {
+                visible.Add((index, rowTop));
+            }
         }
 
-        if (anchorRow == null)
+        visible.Sort((a, b) => a.Top.CompareTo(b.Top));
+
+        if (visible.Count == 0)
         {
-            _anchorItem = null;
+            _anchorCandidates.Clear();
             _anchorIndex = -1;
             _anchorItemCount = -1;
             return;
         }
 
-        var index = _tableView.IndexFromContainer(anchorRow);
-        if (index < 0)
-        {
-            return;
-        }
-
-        _anchorIndex = index;
-        _anchorTop = top;
+        _anchorIndex = visible[0].Index;
+        _anchorTop = visible[0].Top;
         _anchorItemCount = _tableView.ItemCount;
-        _anchorItem = index < _tableView.ItemsView.Count ? _tableView.ItemsView[index] : null;
+        _anchorCandidates.Clear();
+        var itemsView = _tableView.ItemsView;
+        foreach (var (index, top) in visible)
+        {
+            if (index < itemsView.Count && itemsView[index] is { } item)
+            {
+                _anchorCandidates.Add((item, top));
+            }
+        }
     }
 
     /// <summary>
-    /// Where the anchored row lives now, or -1 when there is nothing safe to restore to.
-    /// The item wins over the index so an insert above the anchor keeps the same content in
-    /// view; the index is only trusted when the list is still the same length, so a reload
+    /// Where the anchored row lives now - its index plus the viewport top it should get
+    /// back - or null when there is nothing safe to restore to. The items win over the
+    /// index so an insert above the anchor keeps the same content in view, and when the
+    /// top row itself is gone (cut/delete of the selected line, issue #14231) the anchor
+    /// migrates to the next remembered row that survived, restored to its own old top.
+    /// The index is only trusted when the list is still the same length, so a reload
     /// (every item replaced) leaves the view alone instead of jumping to a stale row.
     /// </summary>
-    private int ResolveAnchorIndex()
+    private (int Index, double Top)? ResolveAnchor()
     {
         var count = _tableView.ItemCount;
         if (count == 0)
         {
-            return -1;
+            return null;
         }
 
-        if (_anchorItem != null)
+        foreach (var (item, top) in _anchorCandidates)
         {
-            var index = _tableView.ItemsView.IndexOf(_anchorItem);
+            var index = _tableView.ItemsView.IndexOf(item);
             if (index >= 0)
             {
-                return index;
+                return (index, top);
             }
         }
 
         if (_anchorIndex >= 0 && _anchorIndex < count && count == _anchorItemCount)
         {
-            return _anchorIndex;
+            return (_anchorIndex, _anchorTop);
         }
 
-        return -1;
+        return null;
     }
 
     private void Restore()
@@ -238,8 +251,7 @@ public sealed class TableViewScrollAnchor
             return;
         }
 
-        var index = ResolveAnchorIndex();
-        if (index < 0)
+        if (ResolveAnchor() is not var (index, anchorTop))
         {
             return;
         }
@@ -269,7 +281,7 @@ public sealed class TableViewScrollAnchor
                 }
 
                 var newY = Math.Clamp(
-                    _scrollViewer.Offset.Y + (rowTop - _anchorTop),
+                    _scrollViewer.Offset.Y + (rowTop - anchorTop),
                     0, Math.Max(0, _scrollViewer.Extent.Height - _scrollViewer.Viewport.Height));
                 if (Math.Abs(newY - _scrollViewer.Offset.Y) < 0.5)
                 {

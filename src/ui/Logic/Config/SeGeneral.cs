@@ -158,10 +158,21 @@ public class SeGeneral
     public bool ShowColumnPixelWidth { get; set; }
     public bool ShowColumnLayer { get; set; }
 
+    /// <summary>
+    /// The forced-narrative column (#14322). Off by default - only dubbing/localization
+    /// workflows that have to deliver a separate forced file need it.
+    /// </summary>
+    public bool ShowColumnForced { get; set; }
+
     // Subtitle grid column widths (pixels) keyed by column key (DataGridColumn.Tag),
     // snapshotted on exit and restored on startup. The stretchy Text/OriginalText
     // columns are intentionally not stored so they keep filling the window (#11415).
     public Dictionary<string, double> SubtitleGridColumnWidths { get; set; } = new();
+
+    // Subtitle grid column order as column keys (DataGridColumn.Tag), set from the
+    // "Columns..." dialog (#14369). Empty = the built-in default order. Keys missing
+    // from the list (columns added in a later version) keep their default position.
+    public List<string> SubtitleGridColumnOrder { get; set; } = new();
 
     public bool SelectCurrentSubtitleWhilePlaying { get; set; }
     public bool WriteAn2Tag { get; set; }
@@ -175,6 +186,13 @@ public class SeGeneral
 
     public long CurrentVideoOffsetInMs = 0;
     public bool CurrentVideoIsSmpte = false;
+
+    /// <summary>
+    /// Video offsets the user has applied, most recently used first, so the "Set video offset"
+    /// dialog can offer them for one-click reuse instead of retyping the same time code every
+    /// time (SE 4 parity). Capped at ten entries by the dialog.
+    /// </summary>
+    public List<long> VideoOffsetHistoryInMs { get; set; } = new List<long>();
 
     public SeGeneral()
     {

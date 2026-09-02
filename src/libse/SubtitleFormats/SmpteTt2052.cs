@@ -25,9 +25,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return false;
             }
 
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            if (!sb.ToString().Contains("http://www.smpte-ra.org/schemas/2052-1/2010/smpte-tt#cea608"))
+            if (!JoinLines(lines).Contains("http://www.smpte-ra.org/schemas/2052-1/2010/smpte-tt#cea608"))
             {
                 return false;
             }

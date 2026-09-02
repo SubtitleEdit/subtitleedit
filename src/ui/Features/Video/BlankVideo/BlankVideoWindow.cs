@@ -64,7 +64,7 @@ public class BlankVideoWindow : Window
 
         Content = grid;
 
-        Activated += delegate { _numericUpDownDuration?.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, () => { _numericUpDownDuration?.Focus(); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
     }
 
     private Border MakeVideoSettingsView(BlankVideoViewModel vm)

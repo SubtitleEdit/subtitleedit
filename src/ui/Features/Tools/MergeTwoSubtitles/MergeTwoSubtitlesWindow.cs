@@ -77,14 +77,14 @@ public class MergeTwoSubtitlesWindow : Window
 
         Content = grid;
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             // initial focus on an input, not an action button - a focused button clicks on bare Space
             if (_tableViewSubtitle1 != null)
             {
                 TableViewExtras.FocusRow(_tableViewSubtitle1);
             }
-        };
+        });
         KeyDown += vm.KeyDown;
     }
 

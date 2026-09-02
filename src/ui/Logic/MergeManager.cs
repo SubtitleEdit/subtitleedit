@@ -44,6 +44,18 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             var subtitle = new Subtitle(inputSubtitle, false);
+
+            // Only a contiguous ascending selection can be merged. Validate up front: the
+            // loop below rewrites continuation marks as it goes, so refusing mid-loop would
+            // leave the first lines (and the unselected line after them) already mutated.
+            for (var i = 1; i < selectedIndices.Length; i++)
+            {
+                if (selectedIndices[i] != selectedIndices[0] + i)
+                {
+                    return subtitle;
+                }
+            }
+
             var sb = new StringBuilder();
             var deleteIndices = new List<int>();
             var first = true;
@@ -160,7 +172,19 @@ namespace Nikse.SubtitleEdit.Logic
                 return;
             }
 
-           // var subtitle = new Subtitle(inputSubtitle, false);
+            // Only a contiguous ascending selection can be merged. Validate up front: the
+            // loop below rewrites continuation marks in the live view-models as it goes, so
+            // refusing mid-loop would leave the first lines (and the unselected line right
+            // after them) already mutated.
+            var selectedGridIndices = selectedItems.Select(inputSubtitle.IndexOf).ToList();
+            for (var i = 0; i < selectedGridIndices.Count; i++)
+            {
+                if (selectedGridIndices[i] < 0 || (i > 0 && selectedGridIndices[i] != selectedGridIndices[0] + i))
+                {
+                    return;
+                }
+            }
+
             var sb = new StringBuilder();
             var sbOriginal = new StringBuilder();
             var deleteIndices = new List<int>();

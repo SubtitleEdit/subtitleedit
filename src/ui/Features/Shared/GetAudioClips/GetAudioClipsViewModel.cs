@@ -70,7 +70,9 @@ public partial class GetAudioClipsViewModel : ObservableObject
             ReportProgress(count);
 
             var outputFileName = Path.Combine(Path.GetTempPath(), $"se_audioclip_{Guid.NewGuid()}.wav");
-            var process = GetExtractProcess(_videoFileName, line, outputFileName);
+            // One process per line - without the using, extracting clips for a long subtitle
+            // leaves a handle per line behind.
+            using var process = GetExtractProcess(_videoFileName, line, outputFileName);
             process.Start();
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
