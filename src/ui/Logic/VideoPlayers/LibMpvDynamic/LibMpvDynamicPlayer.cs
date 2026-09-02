@@ -1793,7 +1793,11 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         // without ever undoing a sub-add that got in first.
         SetOptionString("sid", "no");
 
-        var err = await Task.Run(() => DoMpvCommand("loadfile", path));
+        // Long local paths get the "\\?\" prefix on Windows: mpv opens the file with the path
+        // as given, and a plain path past MAX_PATH fails silently - no error, duration 0:00,
+        // Play does nothing (#14407). _fileName keeps the path the caller knows.
+        var loadPath = NativeMediaPath.ForMpv(path);
+        var err = await Task.Run(() => DoMpvCommand("loadfile", loadPath));
         if (_disposed)
         {
             return;
@@ -1866,7 +1870,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         // buttons in the text-to-speech windows, which load a file and expect to hear it.
         // Those windows build their own core via Initialize(), which - unlike the three
         // rendering Initialize* methods - deliberately leaves mpv's pause default alone.
-        var err = await Task.Run(() => DoMpvCommand("loadfile", path));
+        var err = await Task.Run(() => DoMpvCommand("loadfile", NativeMediaPath.ForMpv(path)));
         if (_disposed)
         {
             return;
@@ -1874,7 +1878,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
         if (err < 0)
         {
-            Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer LoadFile");
+            Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer LoadAudio");
         }
 
         SetOptionString("keep-open", "always");
