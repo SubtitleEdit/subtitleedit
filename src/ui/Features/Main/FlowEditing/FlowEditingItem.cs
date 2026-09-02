@@ -56,6 +56,7 @@ public sealed class FlowEditingItem : INotifyPropertyChanged, IDisposable
                 return;
             }
 
+            var oldText = _text;
             _text = value;
 
             PropertyChanged?.Invoke(
@@ -65,16 +66,123 @@ public sealed class FlowEditingItem : INotifyPropertyChanged, IDisposable
 
             if (!_updatingFromSource)
             {
-                Source.Text =
+                var originalProjection =
                     FlowInlineColorProjection
-                        .Parse(Source.Text)
-                        .ApplyVisibleEdit(value)
-                        .Serialize();
+                        .Parse(Source.Text);
+
+                var editedProjection =
+                    originalProjection
+                        .ApplyVisibleEdit(value);
+
+                if (TryGetPureInsertion(
+                        oldText,
+                        value,
+                        out var insertionStart,
+                        out var insertionLength))
+                {
+                    string? inheritedColor = null;
+
+                    // A newly created EBU Flow subtitle can already carry its
+                    // default colour as an empty font tag, e.g.
+                    // <font color="yellow"></font>. Because there are no
+                    // visible characters yet, the projection has no colour run
+                    // from which the first typed character could inherit.
+                    if (oldText.Length == 0 &&
+                        insertionStart == 0)
+                    {
+                        inheritedColor =
+                            FlowTextParser
+                                .Parse(Source.Text)
+                                .ColorToken;
+                    }
+                    else if (insertionStart > 0)
+                    {
+                        var leftOffset =
+                            insertionStart - 1;
+
+                        foreach (var run in originalProjection.ColorRuns)
+                        {
+                            if (leftOffset >= run.Start &&
+                                leftOffset < run.End)
+                            {
+                                inheritedColor =
+                                    run.Color;
+
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(
+                            inheritedColor))
+                    {
+                        editedProjection =
+                            editedProjection.ApplyColor(
+                                insertionStart,
+                                insertionLength,
+                                inheritedColor);
+                    }
+                }
+
+                Source.Text =
+                    editedProjection.Serialize();
             }
         }
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
+
+    private static bool TryGetPureInsertion(
+        string oldText,
+        string newText,
+        out int insertionStart,
+        out int insertionLength)
+    {
+        insertionStart = 0;
+        insertionLength = 0;
+
+        if (newText.Length <= oldText.Length)
+        {
+            return false;
+        }
+
+        var prefixLength = 0;
+
+        while (prefixLength < oldText.Length &&
+               prefixLength < newText.Length &&
+               oldText[prefixLength] == newText[prefixLength])
+        {
+            prefixLength++;
+        }
+
+        var oldSuffixIndex =
+            oldText.Length - 1;
+
+        var newSuffixIndex =
+            newText.Length - 1;
+
+        while (oldSuffixIndex >= prefixLength &&
+               newSuffixIndex >= prefixLength &&
+               oldText[oldSuffixIndex] == newText[newSuffixIndex])
+        {
+            oldSuffixIndex--;
+            newSuffixIndex--;
+        }
+
+        if (oldSuffixIndex >= prefixLength)
+        {
+            return false;
+        }
+
+        insertionStart =
+            prefixLength;
+
+        insertionLength =
+            newText.Length -
+            oldText.Length;
+
+        return insertionLength > 0;
+    }
 
     private static string FormatFrameTimeCode(
         TimeSpan time)

@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Documents;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Input.Platform;
@@ -262,13 +263,11 @@ public sealed class FlowEditingView : Border
                 Mode = BindingMode.TwoWay,
             });
 
-        textBox.Bind(
-            TextBox.ForegroundProperty,
-            new Binding(nameof(FlowEditingItem.Foreground))
-            {
-                Source = item,
-                Mode = BindingMode.OneWay,
-            });
+        // The native TextBox remains the only editor/input owner. Its glyphs are
+        // transparent so the read-only inline-colour overlay can draw the visible
+        // text without changing caret, selection, Return, Backspace or bindings.
+        textBox.Foreground = Brushes.Transparent;
+        textBox.CaretBrush = item.Foreground;
 
         _lastValidTeletextText[item] =
             item.Text ?? string.Empty;
@@ -355,9 +354,42 @@ public sealed class FlowEditingView : Border
                 Source = item,
             });
 
+        var colorOverlay = new TextBlock
+        {
+            IsHitTestVisible = false,
+            Focusable = false,
+            TextWrapping = TextWrapping.Wrap,
+            Margin = new Thickness(5, 3),
+            FontSize = textBox.FontSize,
+            FontWeight = textBox.FontWeight,
+            FontFamily = textBox.FontFamily,
+            VerticalAlignment = VerticalAlignment.Stretch,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+        };
+
+        UpdateFlowInlineColorOverlay(
+            colorOverlay,
+            item,
+            textBox);
+
+        // Refresh the overlay after the normal TwoWay TextBox binding has had a
+        // chance to update Source.Text. Posting avoids changing the established
+        // synchronous editor lifecycle.
+        textBox.TextChanged +=
+            (_, _) => Dispatcher.UIThread.Post(
+                () => UpdateFlowInlineColorOverlay(
+                    colorOverlay,
+                    item,
+                    textBox),
+                DispatcherPriority.Background);
+
+        var editorLayers = new Grid();
+        editorLayers.Children.Add(textBox);
+        editorLayers.Children.Add(colorOverlay);
+
         var content = new StackPanel();
 
-        content.Children.Add(textBox);
+        content.Children.Add(editorLayers);
         content.Children.Add(timeCode);
 
         var grid = new Grid
@@ -406,6 +438,147 @@ public sealed class FlowEditingView : Border
 
         return rowBorder;
     }
+
+    private static void UpdateFlowInlineColorOverlay(
+        TextBlock overlay,
+        FlowEditingItem item,
+        TextBox textBox)
+    {
+        overlay.Inlines?.Clear();
+
+        var visibleText =
+            textBox.Text ??
+            string.Empty;
+
+        // Render the colour runs exactly as they are stored in the canonical
+        // subtitle. Do not reflow the projection merely for display: reflow is
+        // editing logic and can collapse/reassign the run boundaries.
+        var projection =
+            FlowInlineColorProjection
+                .Parse(item.Source.Text);
+
+        // Normally both strings are identical. While a TextBox edit is still
+        // propagating through its TwoWay binding, prefer the projection's visible
+        // text so its run offsets and the rendered characters stay in lock-step.
+        if (!string.Equals(
+                projection.VisibleText,
+                visibleText,
+                StringComparison.Ordinal))
+        {
+            visibleText =
+                projection.VisibleText;
+        }
+
+        var runs =
+            projection.ColorRuns
+                .OrderBy(run => run.Start)
+                .ToList();
+
+        // TEMPORARY DEBUG: write exactly what the Flow renderer receives for
+        // the sample subtitle containing "Teletext-2" to a file. This avoids
+        // relying on stdout from the macOS GUI process.
+        if (visibleText.Contains("Teletext-2", StringComparison.Ordinal))
+        {
+            var debug = new System.Text.StringBuilder();
+            debug.AppendLine("=== FLOW COLOR DEBUG ===");
+            debug.AppendLine($"VisibleText: [{projection.VisibleText}]");
+            debug.AppendLine($"Canonical : [{item.Source.Text}]");
+            debug.AppendLine($"ColorRuns : {runs.Count}");
+
+            for (var i = 0; i < runs.Count; i++)
+            {
+                var debugRun = runs[i];
+                var debugStart = Math.Clamp(debugRun.Start, 0, projection.VisibleText.Length);
+                var debugEnd = Math.Clamp(debugRun.End, debugStart, projection.VisibleText.Length);
+                var debugText = projection.VisibleText[debugStart..debugEnd];
+
+                debug.AppendLine(
+                    $"Run {i}: Start={debugRun.Start}, Length={debugRun.Length}, End={debugRun.End}, Color={debugRun.Color}, Text=[{debugText}]");
+            }
+
+            debug.AppendLine("========================");
+            System.IO.File.WriteAllText("/tmp/flow-color-debug.txt", debug.ToString());
+        }
+
+        var position = 0;
+
+        foreach (var colorRun in runs)
+        {
+            var start =
+                Math.Clamp(
+                    colorRun.Start,
+                    0,
+                    visibleText.Length);
+
+            var end =
+                Math.Clamp(
+                    colorRun.End,
+                    start,
+                    visibleText.Length);
+
+            if (start > position)
+            {
+                overlay.Inlines?.Add(
+                    new Run(
+                        visibleText[position..start])
+                    {
+                        Foreground = item.Foreground,
+                    });
+            }
+
+            if (end > start)
+            {
+                overlay.Inlines?.Add(
+                    new Run(
+                        visibleText[start..end])
+                    {
+                        Foreground =
+                            GetFlowTeletextColorBrush(
+                                colorRun.Color,
+                                item.Foreground),
+                    });
+            }
+
+            position =
+                Math.Max(
+                    position,
+                    end);
+        }
+
+        if (position < visibleText.Length)
+        {
+            overlay.Inlines?.Add(
+                new Run(
+                    visibleText[position..])
+                {
+                    Foreground = item.Foreground,
+                });
+        }
+
+        if (visibleText.Length == 0)
+        {
+            overlay.Text = string.Empty;
+        }
+    }
+
+    private static IBrush GetFlowTeletextColorBrush(
+        string? colorName,
+        IBrush fallback)
+    {
+        return colorName?.Trim().ToLowerInvariant() switch
+        {
+            "black" => new SolidColorBrush(Color.FromRgb(0x00, 0x00, 0x00)),
+            "red" => new SolidColorBrush(Color.FromRgb(0xFF, 0x00, 0x00)),
+            "green" => new SolidColorBrush(Color.FromRgb(0x00, 0xFF, 0x00)),
+            "yellow" => new SolidColorBrush(Color.FromRgb(0xFF, 0xFF, 0x00)),
+            "blue" => new SolidColorBrush(Color.FromRgb(0x00, 0x00, 0xFF)),
+            "magenta" => new SolidColorBrush(Color.FromRgb(0xFF, 0x00, 0xFF)),
+            "cyan" => new SolidColorBrush(Color.FromRgb(0x00, 0xFF, 0xFF)),
+            "white" => new SolidColorBrush(Color.FromRgb(0xFF, 0xFF, 0xFF)),
+            _ => fallback,
+        };
+    }
+
 
     private ContextMenu CreateFlowContextMenu(
         FlowEditingItem item,
@@ -1850,19 +2023,22 @@ public sealed class FlowEditingView : Border
                 textBox.Text ??
                 string.Empty);
 
-        var parsed =
-            FlowTextParser.Parse(
-                item.Source.Text);
+        // Capture the actual editing position. The live Teletext rule must move
+        // the word at the caret, not automatically the final word of the line.
+        var caretIndex =
+            Math.Clamp(
+                textBox.CaretIndex,
+                0,
+                visibleText.Length);
 
-        var maxCharacters =
-            string.IsNullOrWhiteSpace(
-                parsed.ColorToken)
-                ? 37
-                : 36;
+        var projection =
+            FlowInlineColorProjection
+                .Parse(item.Source.Text)
+                .ReflowVisibleText(visibleText);
 
         if (IsValidTeletextTypingText(
                 visibleText,
-                maxCharacters))
+                projection))
         {
             _lastValidTeletextText[item] =
                 visibleText;
@@ -1871,11 +2047,12 @@ public sealed class FlowEditingView : Border
         }
 
         // Live typing is deliberately NOT a rebalance operation. Previously
-        // written words must stay where the user put them. Only the word that
-        // currently crosses a Teletext boundary may move.
+        // written words must stay where the user put them. Only the word at the
+        // current caret position, plus text following it, may move.
         if (TryWrapOverflowingFirstLine(
                 visibleText,
-                maxCharacters,
+                projection,
+                caretIndex,
                 out var wrappedText))
         {
             _applyingLiveTeletextRule = true;
@@ -1890,7 +2067,7 @@ public sealed class FlowEditingView : Border
 
                 // If a bottom-anchored one-line EBU subtitle (TT 22 in
                 // double-height mode) is automatically wrapped back to two
-                // lines by the live 36/37 rule, restore the correct bottom
+                // lines by the live Teletext rule, restore the correct bottom
                 // two-line start row (TT 20). Deliberately higher positions
                 // are not changed.
                 if (_vm.IsFormatEbu)
@@ -1934,13 +2111,15 @@ public sealed class FlowEditingView : Border
 
         if (!TryMoveOverflowingSecondLineWord(
                 visibleText,
-                maxCharacters,
+                projection,
+                caretIndex,
                 out var currentText,
-                out var overflowWord))
+                out var overflowWord,
+                out var overflowStart))
         {
-            // A single word can itself be longer than the Teletext width.
-            // Never cut such a word in the middle. Keep it intact; validation
-            // can flag the exceptional overlong word later.
+            // A single word can itself be longer than the allowed Teletext
+            // width. Never cut such a word in the middle. Keep it intact;
+            // validation can flag the exceptional overlong word later.
             _lastValidTeletextText[item] =
                 visibleText;
 
@@ -1954,15 +2133,13 @@ public sealed class FlowEditingView : Border
                 ? remembered
                 : currentText;
 
-        var overflowingProjection = FlowInlineColorProjection
-            .Parse(item.Source.Text)
-            .ReflowVisibleText(visibleText);
-        var overflowStart = visibleText.LastIndexOf(
-            overflowWord,
-            StringComparison.Ordinal);
-        var overflowColors = overflowStart >= 0
-            ? overflowingProjection.Extract(overflowStart, overflowWord.Length)
-            : FlowInlineColorProjection.Parse(overflowWord);
+        var overflowColors =
+            overflowStart >= 0
+                ? projection.Extract(
+                    overflowStart,
+                    overflowWord.Length)
+                : FlowInlineColorProjection.Parse(
+                    overflowWord);
 
         _applyingLiveTeletextRule = true;
 
@@ -1999,7 +2176,9 @@ public sealed class FlowEditingView : Border
                     previousValid;
 
                 textBox.CaretIndex =
-                    previousValid.Length;
+                    Math.Min(
+                        caretIndex,
+                        previousValid.Length);
 
                 _lastValidTeletextText[item] =
                     previousValid;
@@ -2027,21 +2206,31 @@ public sealed class FlowEditingView : Border
             _vm.Subtitles[
                 updatedSourceIndex + 1];
 
+        // Each explicit Teletext colour control consumes one character cell on
+        // the line where it is used: 37 with no colour, 36 with one colour,
+        // 35 with two colours, and so on.
+        var overflowMaxCharacters =
+            GetTeletextLineMaxCharacters(
+                overflowWord,
+                overflowColors,
+                0);
+
+        var rebalancedOverflow =
+            RebalanceTeletextVisibleText(
+                overflowWord,
+                overflowMaxCharacters);
+
         // CreateSubtitleAfterAsync already gives a new EBU Flow subtitle the
-        // correct colour/alignment/TT position. Put the COMPLETE overflowing
-        // word into it; never just the last character that crossed the limit.
+        // correct alignment/TT position. Transfer the COMPLETE overflowing text
+        // and all of its inline colours into the new subtitle.
         newSubtitle.Text =
             overflowColors
                 .ReflowVisibleText(
-                    RebalanceTeletextVisibleText(
-                        overflowWord,
-                        maxCharacters))
+                    rebalancedOverflow)
                 .TransferColorsTo(
                     FlowTextParser.ApplyEditedText(
                         newSubtitle.Text,
-                        RebalanceTeletextVisibleText(
-                            overflowWord,
-                            maxCharacters)))
+                        rebalancedOverflow))
                 .Serialize();
 
         ApplySeOptimalDurationKeepingStart(
@@ -2075,7 +2264,7 @@ public sealed class FlowEditingView : Border
                     targetTextBox.Text ??
                     string.Empty;
 
-                // Cursor must continue directly behind the word that Flow moved
+                // Cursor must continue directly behind the text that Flow moved
                 // into the new subtitle.
                 targetTextBox.CaretIndex =
                     targetText.Length;
@@ -2108,7 +2297,8 @@ public sealed class FlowEditingView : Border
 
     private static bool TryWrapOverflowingFirstLine(
         string text,
-        int maxCharacters,
+        FlowInlineColorProjection projection,
+        int caretIndex,
         out string wrappedText)
     {
         wrappedText =
@@ -2121,8 +2311,18 @@ public sealed class FlowEditingView : Border
         var lines =
             normalized.Split('\n');
 
-        if (lines.Length != 1 ||
-            lines[0].Length <= maxCharacters)
+        if (lines.Length != 1)
+        {
+            return false;
+        }
+
+        var maxCharacters =
+            GetTeletextLineMaxCharacters(
+                normalized,
+                projection,
+                0);
+
+        if (lines[0].Length <= maxCharacters)
         {
             return false;
         }
@@ -2130,11 +2330,10 @@ public sealed class FlowEditingView : Border
         var line =
             lines[0];
 
-        // The word currently being typed is everything after the final space.
-        // Move that whole word to line two. Do not rebalance older words.
         var wordStart =
-            FindCurrentWordStart(
-                line);
+            FindWordStartAtCaret(
+                line,
+                caretIndex);
 
         if (wordStart <= 0)
         {
@@ -2146,11 +2345,11 @@ public sealed class FlowEditingView : Border
             line[..wordStart]
                 .TrimEnd();
 
-        var currentWord =
+        var movedText =
             line[wordStart..]
                 .TrimStart();
 
-        if (currentWord.Length == 0)
+        if (movedText.Length == 0)
         {
             return false;
         }
@@ -2158,22 +2357,27 @@ public sealed class FlowEditingView : Border
         wrappedText =
             firstLine +
             Environment.NewLine +
-            currentWord;
+            movedText;
 
         return true;
     }
 
     private static bool TryMoveOverflowingSecondLineWord(
         string text,
-        int maxCharacters,
+        FlowInlineColorProjection projection,
+        int caretIndex,
         out string currentText,
-        out string overflowWord)
+        out string overflowWord,
+        out int overflowStart)
     {
         currentText =
             text;
 
         overflowWord =
             string.Empty;
+
+        overflowStart =
+            -1;
 
         var normalized =
             NormalizeFlowTypingText(
@@ -2182,8 +2386,18 @@ public sealed class FlowEditingView : Border
         var lines =
             normalized.Split('\n');
 
-        if (lines.Length != 2 ||
-            lines[1].Length <= maxCharacters)
+        if (lines.Length != 2)
+        {
+            return false;
+        }
+
+        var maxCharacters =
+            GetTeletextLineMaxCharacters(
+                normalized,
+                projection,
+                1);
+
+        if (lines[1].Length <= maxCharacters)
         {
             return false;
         }
@@ -2191,18 +2405,40 @@ public sealed class FlowEditingView : Border
         var secondLine =
             lines[1];
 
+        var secondLineStart =
+            lines[0].Length + 1;
+
         if (FlowSentenceBoundaryHelper.IsPreferredBoundary(
                 lines[0],
                 secondLine))
         {
-            currentText = lines[0].TrimEnd();
-            overflowWord = secondLine.TrimStart();
+            currentText =
+                lines[0].TrimEnd();
+
+            overflowWord =
+                secondLine.TrimStart();
+
+            var preferredBoundaryLeadingWhitespace =
+                secondLine.Length -
+                secondLine.TrimStart().Length;
+
+            overflowStart =
+                secondLineStart +
+                preferredBoundaryLeadingWhitespace;
+
             return overflowWord.Length > 0;
         }
 
+        var caretInSecondLine =
+            Math.Clamp(
+                caretIndex - secondLineStart,
+                0,
+                secondLine.Length);
+
         var wordStart =
-            FindCurrentWordStart(
-                secondLine);
+            FindWordStartAtCaret(
+                secondLine,
+                caretInSecondLine);
 
         if (wordStart <= 0)
         {
@@ -2215,14 +2451,25 @@ public sealed class FlowEditingView : Border
             secondLine[..wordStart]
                 .TrimEnd();
 
+        var movedText =
+            secondLine[wordStart..];
+
+        var leadingWhitespace =
+            movedText.Length -
+            movedText.TrimStart().Length;
+
         overflowWord =
-            secondLine[wordStart..]
-                .TrimStart();
+            movedText.TrimStart();
 
         if (overflowWord.Length == 0)
         {
             return false;
         }
+
+        overflowStart =
+            secondLineStart +
+            wordStart +
+            leadingWhitespace;
 
         currentText =
             lines[0];
@@ -2237,8 +2484,9 @@ public sealed class FlowEditingView : Border
         return true;
     }
 
-    private static int FindCurrentWordStart(
-        string line)
+    private static int FindWordStartAtCaret(
+        string line,
+        int caretIndex)
     {
         if (string.IsNullOrEmpty(
                 line))
@@ -2246,33 +2494,91 @@ public sealed class FlowEditingView : Border
             return 0;
         }
 
-        var index =
-            line.Length - 1;
+        var position =
+            Math.Clamp(
+                caretIndex,
+                0,
+                line.Length);
 
-        while (index >= 0 &&
+        // TextChanged normally leaves the caret immediately after the inserted
+        // character. Start with that character so editing in the middle of an
+        // existing line identifies the word actually being edited.
+        var index =
+            Math.Min(
+                Math.Max(
+                    position - 1,
+                    0),
+                line.Length - 1);
+
+        if (char.IsWhiteSpace(
+                line[index]) &&
+            position < line.Length &&
+            !char.IsWhiteSpace(
+                line[position]))
+        {
+            index =
+                position;
+        }
+
+        while (index > 0 &&
                !char.IsWhiteSpace(
-                   line[index]))
+                   line[index - 1]))
         {
             index--;
         }
 
-        return index + 1;
+        return index;
     }
 
+    private static int GetTeletextLineMaxCharacters(
+        string text,
+        FlowInlineColorProjection projection,
+        int lineIndex)
+    {
+        var normalized =
+            NormalizeFlowTypingText(
+                text);
+
+        var lines =
+            normalized.Split('\n');
+
+        if (lineIndex < 0 ||
+            lineIndex >= lines.Length)
+        {
+            return 37;
+        }
+
+        var lineStart =
+            0;
+
+        for (var i = 0; i < lineIndex; i++)
+        {
+            lineStart +=
+                lines[i].Length + 1;
+        }
+
+        var lineEnd =
+            lineStart +
+            lines[lineIndex].Length;
+
+        var colorCodeCount =
+            projection.ColorRuns.Count(
+                run =>
+                    run.Start < lineEnd &&
+                    run.End > lineStart);
+
+        return Math.Max(
+            0,
+            37 - colorCodeCount);
+    }
 
     private static bool IsValidTeletextTypingText(
         string text,
-        int maxCharacters)
+        FlowInlineColorProjection projection)
     {
         var normalized =
-            (text ?? string.Empty)
-                .Replace(
-                    "\r\n",
-                    "\n",
-                    StringComparison.Ordinal)
-                .Replace(
-                    '\r',
-                    '\n');
+            NormalizeFlowTypingText(
+                text);
 
         var lines =
             normalized.Split('\n');
@@ -2282,11 +2588,23 @@ public sealed class FlowEditingView : Border
             return false;
         }
 
-        return lines.All(
-            line =>
-                line.Length <=
-                maxCharacters);
+        for (var i = 0; i < lines.Length; i++)
+        {
+            var maxCharacters =
+                GetTeletextLineMaxCharacters(
+                    normalized,
+                    projection,
+                    i);
+
+            if (lines[i].Length > maxCharacters)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
+
 
     private void ShowPasteWarning(
         FlowEditingItem item,
@@ -2512,10 +2830,16 @@ public sealed class FlowEditingView : Border
                 }
             }
 
+            var returnColor =
+                GetActiveFlowColorAtCaret(
+                    originalSourceText,
+                    caretIndex);
+
             var created =
                 await CreateSubtitleAfterAsync(
                     item,
-                    focusAtStart: true);
+                    focusAtStart: true,
+                    initialColor: returnColor);
 
             if (!created)
             {
@@ -2548,6 +2872,56 @@ public sealed class FlowEditingView : Border
         SplitAtCaret(
             item,
             textBox);
+    }
+
+    private static string? GetActiveFlowColorAtCaret(
+        string sourceText,
+        int caretIndex)
+    {
+        var projection =
+            FlowInlineColorProjection.Parse(
+                sourceText);
+
+        var probeOffset =
+            Math.Max(
+                0,
+                caretIndex - 1);
+
+        for (var i =
+                 projection.ColorRuns.Count - 1;
+             i >= 0;
+             i--)
+        {
+            var run =
+                projection.ColorRuns[i];
+
+            if (probeOffset >= run.Start &&
+                probeOffset < run.End)
+            {
+                return run.Color;
+            }
+        }
+
+        // At a run boundary (or for an empty visible projection), Teletext
+        // colour remains active until another colour code appears. Use the
+        // nearest colour to the left of the caret.
+        for (var i =
+                 projection.ColorRuns.Count - 1;
+             i >= 0;
+             i--)
+        {
+            var run =
+                projection.ColorRuns[i];
+
+            if (run.End <= caretIndex)
+            {
+                return run.Color;
+            }
+        }
+
+        return FlowTextParser
+            .Parse(sourceText)
+            .ColorToken;
     }
 
     private SubtitleLineViewModel GetLowestTeletextTemplate(
@@ -2896,7 +3270,8 @@ public sealed class FlowEditingView : Border
 
     private async System.Threading.Tasks.Task<bool> CreateSubtitleAfterAsync(
         FlowEditingItem currentItem,
-        bool focusAtStart = true)
+        bool focusAtStart = true,
+        string? initialColor = null)
     {
         var source =
             currentItem.Source;
@@ -3008,6 +3383,16 @@ public sealed class FlowEditingView : Border
                 positionTemplate,
                 source,
                 string.Empty);
+
+            // A subtitle created explicitly with Return continues with the
+            // Teletext colour that is active at the caret. Other creation
+            // paths keep the normal EBU Flow default (yellow).
+            if (!string.IsNullOrWhiteSpace(
+                    initialColor))
+            {
+                newSubtitle.Text =
+                    $"<font color=\"{initialColor}\"></font>";
+            }
         }
 
         newSubtitle.SetStartTimeOnly(
