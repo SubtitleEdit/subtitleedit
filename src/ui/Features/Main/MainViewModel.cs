@@ -7568,8 +7568,11 @@ public partial class MainViewModel :
             return;
         }
 
+        // Indices and counts are in working-subtitle terms: a read-only reference showing its
+        // non-matching lines adds display-only rows to the grid that the plugin never receives.
         var selectedIndices = GetSelectedSubtitleIndices();
-        if (selectedIndices.Count > 0 && selectedIndices.Count < Subtitles.Count)
+        var lineCount = Subtitles.Count(p => !p.IsReferenceOnly);
+        if (selectedIndices.Count > 0 && selectedIndices.Count < lineCount)
         {
             var choice = await MessageBox.Show(
                 Window,
@@ -7578,7 +7581,7 @@ public partial class MainViewModel :
                 MessageBoxButtons.Cancel,
                 MessageBoxIcon.Question,
                 custom1: string.Format(Se.Language.Plugins.ApplyToSelectedLinesX, selectedIndices.Count),
-                custom2: string.Format(Se.Language.Plugins.ApplyToAllLinesX, Subtitles.Count));
+                custom2: string.Format(Se.Language.Plugins.ApplyToAllLinesX, lineCount));
 
             if (choice == MessageBoxResult.Cancel || choice == MessageBoxResult.None)
             {
@@ -7644,19 +7647,31 @@ public partial class MainViewModel :
             : response.Message!);
     }
 
+    /// <summary>
+    /// The selected rows as indices into the working subtitle the plugin is given - the one
+    /// <see cref="GetUpdateSubtitle"/> builds, which skips the display-only reference rows. Grid
+    /// positions would be off by one for every reference row above the selection (#14445).
+    /// </summary>
     private List<int> GetSelectedSubtitleIndices()
     {
+        var selected = new HashSet<SubtitleLineViewModel>(SubtitleGridSelectedItems);
         var selectedIndices = new List<int>();
-        foreach (var item in SubtitleGridSelectedItems)
+        var index = 0;
+        foreach (var row in Subtitles)
         {
-            var index = Subtitles.IndexOf(item);
-            if (index >= 0)
+            if (row.IsReferenceOnly)
+            {
+                continue;
+            }
+
+            if (selected.Contains(row))
             {
                 selectedIndices.Add(index);
             }
+
+            index++;
         }
 
-        selectedIndices.Sort();
         return selectedIndices;
     }
 
@@ -7762,7 +7777,10 @@ public partial class MainViewModel :
         }
 
         var idx = SelectedSubtitleIndex ?? 0;
-        SetSubtitles(subtitle);
+
+        // Not the plain rebuild: that blanks the original column, and with an original captured
+        // from a translation the user then saw the source text vanish for every line (#14445).
+        SetSubtitlesKeepingOriginal(subtitle);
         SelectAndScrollToRow(Math.Min(idx, Math.Max(0, Subtitles.Count - 1)));
         return true;
     }
@@ -23271,6 +23289,42 @@ public partial class MainViewModel :
         _updateAudioVisualizer = true;
 
         ReDetectSpellCheckLanguageIfPending();
+    }
+
+    /// <summary>
+    /// <see cref="SetSubtitles(Subtitle, Subtitle?)"/> for a tool that rebuilt the working subtitle
+    /// while an original is open: keeps the original column instead of blanking it. The plain
+    /// rebuild leaves every row's original text empty, and an original captured from a translation
+    /// is re-filled from nowhere else - so the column went blank and the original was then reported
+    /// as changed (#14445). Same recipe as the format change: fold an editable original back from
+    /// the rows first, hand it to the rebuild, and let a reference showing its non-matching lines
+    /// re-match by time code.
+    /// </summary>
+    private void SetSubtitlesKeepingOriginal(Subtitle subtitle)
+    {
+        if (!ShowColumnOriginalText)
+        {
+            SetSubtitles(subtitle);
+            return;
+        }
+
+        if (!IsOriginalReadOnly && !IsShowingOriginalNonMatchingLines)
+        {
+            _subtitleOriginal = GetUpdateSubtitleOriginal();
+        }
+
+        // Fold an editable original back while the rows still hold it - after the rebuild they no
+        // longer do, and the capture inside the re-apply would rebuild it from empty rows.
+        if (IsShowingOriginalNonMatchingLines)
+        {
+            CaptureOriginalFromRows();
+        }
+
+        // A read-only original that is not showing its non-matching lines is the 1:1 projection the
+        // rows were filled from, so it re-fills them by index just like an editable one. With the
+        // non-matching lines on screen the fresh rows are re-matched by time code below instead.
+        SetSubtitles(subtitle, IsShowingOriginalNonMatchingLines ? null : _subtitleOriginal);
+        ReapplyOriginalReference(capture: false);
     }
 
     private void SetSubtitles(List<SubtitleLineViewModel> subtitles)
