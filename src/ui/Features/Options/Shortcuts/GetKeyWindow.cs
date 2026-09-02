@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Logic;
@@ -68,12 +69,12 @@ public class GetKeyWindow : Window
             Activate();
             Dispatcher.UIThread.Post(() => buttonOk.Focus(), DispatcherPriority.Input);
         };
-        KeyUp += vm.KeyUp;
-    }
 
-    protected override void OnKeyDown(KeyEventArgs e)
-    {
-        base.OnKeyDown(e);
-        _vm.OnKeyDown(e);
+        // Capture in the tunnel phase, before the focused OK button sees the key: Button's own
+        // key handling clicks on any Return chord (no modifier check) and on Space, and marks
+        // the event handled, so a bubbling window handler never saw those keys - Alt+Return,
+        // Ctrl+Space and friends silently closed the dialog with nothing captured (#14401).
+        AddHandler(KeyDownEvent, (_, e) => _vm.OnKeyDown(e), RoutingStrategies.Tunnel);
+        AddHandler(KeyUpEvent, (_, e) => _vm.KeyUp(e), RoutingStrategies.Tunnel);
     }
 }
