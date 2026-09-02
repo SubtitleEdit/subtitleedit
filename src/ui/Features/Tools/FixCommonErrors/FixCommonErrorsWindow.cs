@@ -51,11 +51,20 @@ public class FixCommonErrorsWindow : Window
         labelStep2.Bind(Label.ContentProperty, new Binding(nameof(vm.Step2Title)));
         labelStep2.Bind(IsVisibleProperty, new Binding(nameof(vm.Step2IsVisible)));
 
-        var textBoxSearch = UiUtil.MakeTextBox(250, vm, nameof(vm.SearchText)).WithMarginRight(25)
+        var textBoxSearch = UiUtil.MakeTextBox(200, vm, nameof(vm.SearchText)).WithMarginRight(25)
             .WithAccessibleName(Se.Language.Tools.FixCommonErrors.SearchRulesDotDotDot);
         textBoxSearch.PlaceholderText = Se.Language.Tools.FixCommonErrors.SearchRulesDotDotDot;
         textBoxSearch.Bind(IsVisibleProperty, new Binding(nameof(vm.Step1IsVisible)));
-        textBoxSearch.TextChanged += vm.TextBoxSearch_TextChanged;
+
+        // Narrows the rules grid to one FixType; combined with the search text in the view model.
+        var labelFixType = UiUtil.MakeTextBlock(Se.Language.General.Type).WithMarginRight(5);
+        labelFixType.Bind(IsVisibleProperty, new Binding(nameof(vm.Step1IsVisible)));
+        var comboFixType = UiUtil.MakeComboBox(vm.FixTypes, vm, nameof(vm.SelectedFixType))
+            .WithMinWidth(120)
+            .WithMarginRight(25);
+        comboFixType.Bind(IsVisibleProperty, new Binding(nameof(vm.Step1IsVisible)));
+        AutomationProperties.SetLabeledBy(comboFixType, labelFixType);
+
         // Off by default (#12441) - keep it reachable here, next to the language it depends on,
         // instead of only in the OCR window where a Fix-common-errors user would never look.
         var checkBoxGuessUnknownWords = UiUtil.MakeCheckBox(Se.Language.Ocr.TryToGuessUnknownWords, vm, nameof(vm.TryToGuessUnknownWords))
@@ -69,6 +78,9 @@ public class FixCommonErrorsWindow : Window
             HorizontalAlignment = HorizontalAlignment.Right,
             Children =
             {
+                textBoxSearch,
+                labelFixType,
+                comboFixType,
                 checkBoxGuessUnknownWords,
                 UiUtil.MakeTextBlock(Se.Language.General.Language).WithMarginRight(5),
                 UiUtil.MakeComboBox(vm.Languages, vm, nameof(vm.SelectedLanguage))

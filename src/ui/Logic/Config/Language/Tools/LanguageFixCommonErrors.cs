@@ -1,4 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Logic.Config.Language.Tools;
+﻿using Nikse.SubtitleEdit.Core.Enums;
+
+namespace Nikse.SubtitleEdit.Logic.Config.Language.Tools;
 
 public class LanguageFixCommonErrors
 {
@@ -125,6 +127,10 @@ public class LanguageFixCommonErrors
     public string FixText { get; set; }
     public string RemoveSpaceBetweenNumbers { get; set; }
     public string FixDialogsOnOneLine { get; set; }
+    public string FixTypeFormatting { get; set; }
+    public string FixTypeDialog { get; set; }
+    public string FixTypePunctuation { get; set; }
+    public string FixTypeOcr { get; set; }
 
     public LanguageFixCommonErrors()
     {
@@ -253,5 +259,25 @@ public class LanguageFixCommonErrors
         FixText = "Fix text";
         RemoveSpaceBetweenNumbers = "Remove space between numbers";
         FixDialogsOnOneLine = "Fix dialogs on one line";
+        FixTypeFormatting = "Formatting";
+        FixTypeDialog = "Dialog";
+        FixTypePunctuation = "Punctuation";
+        FixTypeOcr = "OCR";
+    }
+
+    public string GetFixTypeName(FixType fixType)
+    {
+        return fixType switch
+        {
+            Core.Enums.FixType.Time => Se.Language.General.Time,
+            Core.Enums.FixType.Formatting => FixTypeFormatting,
+            Core.Enums.FixType.Dialog => FixTypeDialog,
+            Core.Enums.FixType.Punctuation => FixTypePunctuation,
+            Core.Enums.FixType.Casing => Se.Language.General.Casing,
+            Core.Enums.FixType.Spacing => Se.Language.General.Spacing,
+            Core.Enums.FixType.Characters => Se.Language.General.Characters,
+            Core.Enums.FixType.Ocr => FixTypeOcr,
+            _ => fixType.ToString(),
+        };
     }
 }

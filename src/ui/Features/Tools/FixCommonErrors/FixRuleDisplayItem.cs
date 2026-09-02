@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -19,6 +20,23 @@ public partial class FixRuleDisplayItem : ObservableObject
 
     public string FixCommonErrorFunctionName { get; set; }
 
+    /// <summary>
+    /// The kind of fix the rule performs, taken from the fix class itself so the category
+    /// has one source of truth. Null when <see cref="FixCommonErrorFunctionName"/> does not
+    /// name a known fix - such a rule is only listed under "All" in the type filter.
+    /// </summary>
+    public FixType? FixType { get; private set; }
+
+    // Built once: GetFixCommonErrorItems() news up every fix class, and the copy-ctor runs
+    // per rule per profile.
+    private static readonly Lazy<Dictionary<string, FixType>> FixTypesByFunctionName = new(() =>
+        GetFixCommonErrorItems().ToDictionary(p => p.GetType().Name, p => p.FixType, StringComparer.Ordinal));
+
+    public static bool TryResolveFixType(string fixCommonErrorFunctionName, out FixType fixType)
+    {
+        return FixTypesByFunctionName.Value.TryGetValue(fixCommonErrorFunctionName, out fixType);
+    }
+
     public FixRuleDisplayItem()
     {
         Name = string.Empty;
@@ -33,6 +51,7 @@ public partial class FixRuleDisplayItem : ObservableObject
         IsSelected = item.IsSelected;
         SortOrder = item.SortOrder;
         FixCommonErrorFunctionName = item.FixCommonErrorFunctionName;
+        FixType = item.FixType;
     }
 
     public FixRuleDisplayItem(string name, string example, int sortOrder, bool isSelected, string fixCommonErrorFunctionName)
@@ -42,6 +61,7 @@ public partial class FixRuleDisplayItem : ObservableObject
         SortOrder = sortOrder;
         IsSelected = isSelected;
         FixCommonErrorFunctionName = fixCommonErrorFunctionName;
+        FixType = TryResolveFixType(fixCommonErrorFunctionName, out var fixType) ? fixType : null;
     }
 
     public IFixCommonError GetFixCommonErrorFunction()
