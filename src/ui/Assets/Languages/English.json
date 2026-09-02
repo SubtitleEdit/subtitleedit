@@ -2545,6 +2545,8 @@
     "openSecondarySubtitleOnVideoPlayerDotDotDot": "Open second subtitle file...",
     "openSecondarySubtitleOnVideoPlayer": "Second subtitle file (on video player)",
     "removeSecondarySubtitleOnVideoPlayer": "Remove second subtitle file",
+    "openRecentVideo": "Open recent video",
+    "clearRecentVideos": "Clear recent videos",
     "cutVideoTitle": "Cut video",
     "cutVideoDotDotDot": "Cut video...",
     "embedSubtitlesDotDotDot": "Add/remove embedded subtitles...",

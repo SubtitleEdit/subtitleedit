@@ -54,6 +54,7 @@ public static class InitNativeMacMenu
         public PropertyChangedEventHandler? Handler;
 
         public NativeMenuItem? ReopenItem;
+        public NativeMenuItem? RecentVideosItem;
         public NativeMenuItem? PluginsItem;
         public NativeMenuItem? AudioTracksItem;
         public NativeMenuItem? WindowListItem;
@@ -336,6 +337,10 @@ public static class InitNativeMacMenu
         var videoItems = new NativeMenu();
         videoItems.Items.Add(Item(Clean(l.OpenVideo), v => v.CommandVideoOpenCommand));
         videoItems.Items.Add(Item(Clean(l.OpenVideoFromUrl), v => v.ShowVideoOpenFromUrlCommand));
+
+        state.RecentVideosItem = new NativeMenuItem(Clean(Se.Language.Video.OpenRecentVideo)) { Menu = new NativeMenu() };
+        videoItems.Items.Add(state.RecentVideosItem);
+
         videoItems.Items.Add(Item(Clean(l.CloseVideoFile), v => v.CommandVideoCloseCommand));
 
         // Same spot and wording as SE4's Video menu, so it can be found by anyone
@@ -641,6 +646,7 @@ public static class InitNativeMacMenu
         state.Vm = vm;
 
         vm.NativeMenuReopen = state.ReopenItem;
+        vm.NativeMenuRecentVideos = state.RecentVideosItem;
         vm.NativeMenuPlugins = state.PluginsItem;
         vm.NativeMenuAudioTracks = state.AudioTracksItem;
 
@@ -687,56 +693,94 @@ public static class InitNativeMacMenu
         vm.PropertyChanged += state.Handler;
 
         UpdateRecentFiles(vm);
+        UpdateRecentVideos(vm);
         UpdatePluginsMenu(vm);
     }
 
     // ── Dynamic submenu updaters ──────────────────────────────────────────────
 
-    public static void UpdateRecentFiles(MainViewModel vm)
+    private static void PopulateRecentNativeMenu<T>(
+        NativeMenuItem? parentItem,
+        IReadOnlyList<T> items,
+        Func<T, (string Header, Action ClickAction)> itemFactory,
+        string clearHeader,
+        Action clearAction)
     {
-        if (vm.NativeMenuReopen?.Menu is not NativeMenu menu)
+        if (parentItem?.Menu is not NativeMenu menu)
         {
             return;
         }
 
         menu.Items.Clear();
+        parentItem.IsEnabled = items.Count > 0;
 
-        var files = Se.Settings.File.RecentFiles
-            .Where(p => !string.IsNullOrEmpty(p.SubtitleFileName) && System.IO.File.Exists(p.SubtitleFileName))
-            .ToList();
-
-        vm.NativeMenuReopen.IsEnabled = files.Count > 0;
-
-        if (files.Count == 0)
+        if (items.Count == 0)
         {
             return;
         }
 
-        foreach (var file in files)
+        foreach (var item in items)
         {
-            var header = file.SubtitleFileName ?? string.Empty;
-            if (!string.IsNullOrEmpty(file.SubtitleFileNameOriginal) && System.IO.File.Exists(file.SubtitleFileNameOriginal))
-            {
-                header += " + ";
-                header += System.IO.Path.GetDirectoryName(file.SubtitleFileName) == System.IO.Path.GetDirectoryName(file.SubtitleFileNameOriginal)
-                    ? System.IO.Path.GetFileName(file.SubtitleFileNameOriginal)
-                    : file.SubtitleFileNameOriginal;
-            }
+            var (header, clickAction) = itemFactory(item);
             if (header.Length > 80)
             {
                 header = "…" + header[^77..];
             }
 
             var recentItem = new NativeMenuItem(header);
-            var captured = file;
-            recentItem.Click += (_, _) => vm.CommandFileReopenCommand.Execute(captured);
+            recentItem.Click += (_, _) => clickAction();
             menu.Items.Add(recentItem);
         }
 
         menu.Items.Add(new NativeMenuItemSeparator());
-        var clearItem = new NativeMenuItem(Clean(Se.Language.Main.Menu.ClearRecentFiles));
-        clearItem.Click += (_, _) => vm.CommandFileClearRecentFilesCommand.Execute(null);
+        var clearItem = new NativeMenuItem(Clean(clearHeader));
+        clearItem.Click += (_, _) => clearAction();
         menu.Items.Add(clearItem);
+    }
+
+    public static void UpdateRecentFiles(MainViewModel vm)
+    {
+        var files = Se.Settings.File.RecentFiles
+            .Where(p => !string.IsNullOrEmpty(p.SubtitleFileName) && System.IO.File.Exists(p.SubtitleFileName))
+            .ToList();
+
+        PopulateRecentNativeMenu(
+            vm.NativeMenuReopen,
+            files,
+            file =>
+            {
+                var header = file.SubtitleFileName ?? string.Empty;
+                if (!string.IsNullOrEmpty(file.SubtitleFileNameOriginal) && System.IO.File.Exists(file.SubtitleFileNameOriginal))
+                {
+                    header += " + ";
+                    header += System.IO.Path.GetDirectoryName(file.SubtitleFileName) == System.IO.Path.GetDirectoryName(file.SubtitleFileNameOriginal)
+                        ? System.IO.Path.GetFileName(file.SubtitleFileNameOriginal)
+                        : file.SubtitleFileNameOriginal;
+                }
+                var captured = file;
+                return (header, () => vm.CommandFileReopenCommand.Execute(captured));
+            },
+            Se.Language.Main.Menu.ClearRecentFiles,
+            () => vm.CommandFileClearRecentFilesCommand.Execute(null));
+    }
+
+    public static void UpdateRecentVideos(MainViewModel vm)
+    {
+        var files = Se.Settings.Video.RecentFiles
+            .Where(f => !string.IsNullOrWhiteSpace(f))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        PopulateRecentNativeMenu(
+            vm.NativeMenuRecentVideos,
+            files,
+            file =>
+            {
+                var captured = file;
+                return (captured, () => vm.CommandVideoReopenCommand.Execute(captured));
+            },
+            Se.Language.Video.ClearRecentVideos,
+            () => vm.CommandVideoClearRecentFilesCommand.Execute(null));
     }
 
     public static void UpdatePluginsMenu(MainViewModel vm)
