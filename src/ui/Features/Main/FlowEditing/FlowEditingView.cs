@@ -1953,6 +1953,16 @@ public sealed class FlowEditingView : Border
                 ? remembered
                 : currentText;
 
+        var overflowingProjection = FlowInlineColorProjection
+            .Parse(item.Source.Text)
+            .ReflowVisibleText(visibleText);
+        var overflowStart = visibleText.LastIndexOf(
+            overflowWord,
+            StringComparison.Ordinal);
+        var overflowColors = overflowStart >= 0
+            ? overflowingProjection.Extract(overflowStart, overflowWord.Length)
+            : FlowInlineColorProjection.Parse(overflowWord);
+
         _applyingLiveTeletextRule = true;
 
         try
@@ -2020,11 +2030,18 @@ public sealed class FlowEditingView : Border
         // correct colour/alignment/TT position. Put the COMPLETE overflowing
         // word into it; never just the last character that crossed the limit.
         newSubtitle.Text =
-            FlowTextParser.ApplyEditedText(
-                newSubtitle.Text,
-                RebalanceTeletextVisibleText(
-                    overflowWord,
-                    maxCharacters));
+            overflowColors
+                .ReflowVisibleText(
+                    RebalanceTeletextVisibleText(
+                        overflowWord,
+                        maxCharacters))
+                .TransferColorsTo(
+                    FlowTextParser.ApplyEditedText(
+                        newSubtitle.Text,
+                        RebalanceTeletextVisibleText(
+                            overflowWord,
+                            maxCharacters)))
+                .Serialize();
 
         ApplySeOptimalDurationKeepingStart(
             newSubtitle);
@@ -2473,9 +2490,10 @@ public sealed class FlowEditingView : Border
                     normalizedText;
 
                 item.Source.Text =
-                    FlowTextParser.ApplyEditedText(
-                        item.Source.Text,
-                        normalizedText);
+                    FlowInlineColorProjection
+                        .Parse(item.Source.Text)
+                        .ApplyVisibleEdit(normalizedText)
+                        .Serialize();
 
                 if (_vm.IsFormatEbu)
                 {
@@ -3205,29 +3223,31 @@ public sealed class FlowEditingView : Border
 
         // Keep the hidden EBU/HTML colour tag when synchronizing the visible
         // Flow text back to the source subtitle.
+        var sourceProjection =
+            FlowInlineColorProjection
+                .Parse(source.Text)
+                .ApplyVisibleEdit(text);
+
+        var beforeRaw = text[..caretIndex];
+        var afterRaw = text[caretIndex..];
+        var beforeStart = beforeRaw.Length - beforeRaw.TrimStart().Length;
+        var beforeEnd = beforeRaw.TrimEnd().Length;
+        var afterLeadingWhitespace = afterRaw.Length - afterRaw.TrimStart().Length;
+        var afterEnd = afterRaw.TrimEnd().Length;
+        var beforeColors = sourceProjection.Extract(
+            beforeStart,
+            beforeEnd - beforeStart);
+        var afterColors = sourceProjection.Extract(
+            caretIndex + afterLeadingWhitespace,
+            afterEnd - afterLeadingWhitespace);
+
         var sourceText =
-            FlowTextParser.ApplyEditedText(
-                source.Text,
-                text);
+            sourceProjection.Serialize();
 
         source.Text = sourceText;
 
-        // The Flow caret index belongs to the visible text (font tags stripped),
-        // while SplitManager expects an index in Source.Text. After
-        // ApplyEditedText the visible text occurs as one contiguous substring,
-        // so translate the caret into the tagged source string.
-        var visibleTextStart =
-            sourceText.IndexOf(
-                text,
-                StringComparison.Ordinal);
-
-        if (visibleTextStart < 0)
-        {
-            return false;
-        }
-
         var sourceCaretIndex =
-            visibleTextStart + caretIndex;
+            sourceProjection.GetCanonicalOffset(caretIndex);
 
         var originalMarginV = source.MarginV;
         var originalLineCount = GetPlainLineCount(source.Text);
@@ -3253,6 +3273,9 @@ public sealed class FlowEditingView : Border
         {
             return false;
         }
+
+        source.Text = beforeColors.TransferColorsTo(source.Text).Serialize();
+        newSubtitle.Text = afterColors.TransferColorsTo(newSubtitle.Text).Serialize();
 
         if (_vm.IsFormatEbu)
         {
@@ -3372,9 +3395,10 @@ public sealed class FlowEditingView : Border
         }
 
         subtitle.Text =
-            FlowTextParser.ApplyEditedText(
-                subtitle.Text,
-                rebalanced);
+            FlowInlineColorProjection
+                .Parse(subtitle.Text)
+                .ReflowVisibleText(rebalanced)
+                .Serialize();
     }
 
     private static string RebalanceTeletextVisibleText(
@@ -3451,8 +3475,7 @@ public sealed class FlowEditingView : Border
             return normalized;
         }
 
-        // Rebalance only the visible text. Colour tags are restored afterwards
-        // by FlowTextParser.ApplyEditedText.
+        // Rebalance only the visible text. The projection restores each color run afterwards.
         var words =
             normalized
                 .Split(
@@ -4127,6 +4150,23 @@ public sealed class FlowEditingView : Border
             return true;
         }
 
+        var mergeSeparator = preserveSentenceBoundary
+            ? Environment.NewLine
+            : " ";
+        var previousColors = FlowInlineColorProjection.Parse(previous.Text);
+        var currentColors = FlowInlineColorProjection.Parse(currentItem.Source.Text);
+        var mergedColors = previousColors
+            .Insert(previousColors.VisibleText.Length, mergeSeparator, inheritColor: false)
+            .Insert(
+                previousColors.VisibleText.Length + mergeSeparator.Length,
+                currentColors)
+            .ReflowVisibleText(
+                preserveSentenceBoundary
+                    ? previousParsed.Text.TrimEnd() + Environment.NewLine +
+                      currentParsed.Text.TrimStart()
+                    : (previousParsed.Text.TrimEnd() + " " +
+                       currentParsed.Text.TrimStart()).Trim());
+
         var previousVisibleText =
             previousParsed.Text;
 
@@ -4207,14 +4247,16 @@ public sealed class FlowEditingView : Border
                 maxCharacters)
             {
                 previous.Text =
-                    FlowTextParser.ApplyEditedText(
-                        previous.Text,
-                        previousParsed.Text.TrimEnd());
+                    FlowInlineColorProjection
+                        .Parse(previous.Text)
+                        .ReflowVisibleText(previousParsed.Text.TrimEnd())
+                        .Serialize();
 
                 currentItem.Source.Text =
-                    FlowTextParser.ApplyEditedText(
-                        currentItem.Source.Text,
-                        currentParsed.Text.TrimStart());
+                    FlowInlineColorProjection
+                        .Parse(currentItem.Source.Text)
+                        .ReflowVisibleText(currentParsed.Text.TrimStart())
+                        .Serialize();
             }
         }
 
@@ -4250,6 +4292,8 @@ public sealed class FlowEditingView : Border
         {
             return false;
         }
+
+        previous.Text = mergedColors.TransferColorsTo(previous.Text).Serialize();
 
         // The text structure has changed, so recalculate the merged subtitle
         // with the same optimal reading-speed timing used by SE5 plain-text
@@ -4474,15 +4518,64 @@ public sealed class FlowEditingView : Border
                 remainingText,
                 maxCharacters);
 
+        var normalizedWords = string.Join(" ", words);
+        FlowInlineColorProjection wordColors;
+        if (preserveSentenceBoundary)
+        {
+            wordColors = FlowInlineColorProjection
+                .Parse(current.Text)
+                .ReflowVisibleText(normalizedWords);
+        }
+        else
+        {
+            var previousProjection = FlowInlineColorProjection.Parse(previous.Text);
+            wordColors = previousProjection
+                .Insert(previousProjection.VisibleText.Length, " ", inheritColor: false)
+                .Insert(
+                    previousProjection.VisibleText.Length + 1,
+                    FlowInlineColorProjection.Parse(current.Text))
+                .ReflowVisibleText(normalizedWords);
+        }
+
+        var prefixText = string.Join(" ", words.Take(bestPrefixWordCount));
+        var prefixColors = wordColors
+            .Extract(0, prefixText.Length)
+            .ReflowVisibleText(bestPreviousText);
+        if (preserveSentenceBoundary)
+        {
+            var previousProjection = FlowInlineColorProjection.Parse(previous.Text);
+            prefixColors = previousProjection
+                .ReflowVisibleText(previousParsed.Text.TrimEnd())
+                .Insert(
+                    previousParsed.Text.TrimEnd().Length,
+                    Environment.NewLine,
+                    inheritColor: false)
+                .Insert(
+                    previousParsed.Text.TrimEnd().Length + Environment.NewLine.Length,
+                    wordColors.Extract(0, prefixText.Length))
+                .ReflowVisibleText(bestPreviousText);
+        }
+
+        var remainingStart = Math.Min(normalizedWords.Length, prefixText.Length + 1);
+        var remainingColors = wordColors
+            .Extract(remainingStart, normalizedWords.Length - remainingStart)
+            .ReflowVisibleText(currentText);
+
         previous.Text =
-            FlowTextParser.ApplyEditedText(
-                previous.Text,
-                bestPreviousText);
+            prefixColors
+                .TransferColorsTo(
+                    FlowTextParser.ApplyEditedText(
+                        previous.Text,
+                        bestPreviousText))
+                .Serialize();
 
         current.Text =
-            FlowTextParser.ApplyEditedText(
-                current.Text,
-                currentText);
+            remainingColors
+                .TransferColorsTo(
+                    FlowTextParser.ApplyEditedText(
+                        current.Text,
+                        currentText))
+                .Serialize();
 
         // Keep both subtitles bottom-anchored after their line counts change.
         var doubleHeight =

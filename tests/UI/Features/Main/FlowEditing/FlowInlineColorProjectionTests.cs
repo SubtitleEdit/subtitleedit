@@ -1,5 +1,8 @@
 using System.Linq;
+using System.Collections.ObjectModel;
+using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Main.FlowEditing;
+using Nikse.SubtitleEdit.Logic;
 
 namespace UITests.Features.Main.FlowEditing;
 
@@ -184,6 +187,135 @@ public class FlowInlineColorProjectionTests
         Assert.Equal("Cyan", ColorAt(projection, 2));
         Assert.Equal("Yellow", ColorAt(projection, 3));
         AssertSemanticEqual(projection, FlowInlineColorProjection.Parse(projection.Serialize()));
+    }
+
+    [Fact]
+    public void OrdinaryInsertionInsideColoredWordKeepsItsColor()
+    {
+        var projection = FlowInlineColorProjection
+            .Parse("<font color=\"Yellow\">Hello</font> <font color=\"Cyan\">world</font>")
+            .ApplyVisibleEdit("HelXlo world");
+
+        Assert.Equal("HelXlo world", projection.VisibleText);
+        Assert.Equal("Yellow", ColorAt(projection, 3));
+        Assert.Equal("Cyan", ColorAt(projection, 7));
+    }
+
+    [Fact]
+    public void FlowEditingItemSynchronizesOrdinaryEditWithoutFlatteningColors()
+    {
+        var source = new SubtitleLineViewModel
+        {
+            Text = "{\\an8}<font color=\"Yellow\">Hello</font> <font color=\"Cyan\">world</font>",
+        };
+        using var item = new FlowEditingItem(source);
+
+        item.Text = "HelXlo world";
+
+        var projection = FlowInlineColorProjection.Parse(source.Text);
+        Assert.Equal("HelXlo world", projection.VisibleText);
+        Assert.Equal("Yellow", ColorAt(projection, 3));
+        Assert.Equal("Cyan", ColorAt(projection, 7));
+        Assert.StartsWith("{\\an8}", projection.Serialize());
+    }
+
+    [Fact]
+    public void OrdinaryDeletionInsideColoredRunKeepsRemainingRun()
+    {
+        var projection = FlowInlineColorProjection
+            .Parse("<font color=\"Yellow\">Hello</font> <font color=\"Cyan\">world</font>")
+            .ApplyVisibleEdit("Hlo world");
+
+        Assert.Equal("Hlo world", projection.VisibleText);
+        Assert.Equal("Yellow", ColorAt(projection, 0));
+        Assert.Equal("Yellow", ColorAt(projection, 2));
+        Assert.Equal("Cyan", ColorAt(projection, 4));
+    }
+
+    [Fact]
+    public void SplitFragmentsCarryTheirOwnColors()
+    {
+        var projection = FlowInlineColorProjection.Parse(
+            "{\\an8}<font color=\"Yellow\">Hello</font> <font color=\"Cyan\">world</font>");
+
+        var before = projection.Extract(0, 5).TransferColorsTo("{\\an8}Hello");
+        var after = projection.Extract(6, 5).TransferColorsTo("{\\an8}world");
+
+        Assert.Equal("Yellow", ColorAt(before, 0));
+        Assert.Equal("Cyan", ColorAt(after, 0));
+        Assert.StartsWith("{\\an8}", before.Serialize());
+        Assert.StartsWith("{\\an8}", after.Serialize());
+    }
+
+    [Fact]
+    public void ReturnSplitKeepsColorsAroundExistingSplitManagerResult()
+    {
+        var source = new SubtitleLineViewModel
+        {
+            Text = "{\\an8}<font color=\"Yellow\">Hello</font> <font color=\"Cyan\">world</font>",
+            StartTime = System.TimeSpan.FromSeconds(1),
+            EndTime = System.TimeSpan.FromSeconds(4),
+        };
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { source };
+        var projection = FlowInlineColorProjection.Parse(source.Text);
+        var before = projection.Extract(0, 5);
+        var after = projection.Extract(6, 5);
+
+        new SplitManager().Split(subtitles, source, projection.GetCanonicalOffset(6), string.Empty);
+        source.Text = before.TransferColorsTo(source.Text).Serialize();
+        subtitles[1].Text = after.TransferColorsTo(subtitles[1].Text).Serialize();
+
+        var firstResult = FlowInlineColorProjection.Parse(source.Text);
+        var secondResult = FlowInlineColorProjection.Parse(subtitles[1].Text);
+        Assert.Equal("Hello", firstResult.VisibleText);
+        Assert.Equal("world", secondResult.VisibleText);
+        Assert.Equal("Yellow", ColorAt(firstResult, 0));
+        Assert.Equal("Cyan", ColorAt(secondResult, 0));
+    }
+
+    [Fact]
+    public void MergeKeepsDifferentWordColorsAndUncoloredSeparator()
+    {
+        var previous = FlowInlineColorProjection.Parse("{\\an8}<font color=\"Yellow\">Hello</font>");
+        var current = FlowInlineColorProjection.Parse("<font color=\"Cyan\">world</font>");
+        var merged = previous
+            .Insert(previous.VisibleText.Length, " ", inheritColor: false)
+            .Insert(previous.VisibleText.Length + 1, current)
+            .TransferColorsTo("{\\an8}Hello world");
+
+        Assert.Equal("Hello world", merged.VisibleText);
+        Assert.Equal("Yellow", ColorAt(merged, 0));
+        Assert.Null(ColorAt(merged, 5));
+        Assert.Equal("Cyan", ColorAt(merged, 6));
+        Assert.StartsWith("{\\an8}", merged.Serialize());
+    }
+
+    [Fact]
+    public void WordMovementKeepsTwoColorsAndUncoloredRegion()
+    {
+        var source = FlowInlineColorProjection.Parse(
+            "<font color=\"Yellow\">one</font> <font color=\"Cyan\">two</font> three");
+        var moved = source.Extract(0, 7).ReflowVisibleText("one\ntwo");
+        var remaining = source.Extract(8, 5);
+
+        Assert.Equal("one\ntwo", moved.VisibleText);
+        Assert.Equal("Yellow", ColorAt(moved, 0));
+        Assert.Equal("Cyan", ColorAt(moved, 4));
+        Assert.Equal("three", remaining.VisibleText);
+        Assert.Empty(remaining.ColorRuns);
+    }
+
+    [Fact]
+    public void ReflowChangesOnlyWhitespaceAndPreservesVisibleCharactersAndColors()
+    {
+        var projection = FlowInlineColorProjection
+            .Parse("<font color=\"Yellow\">Hello</font> <font color=\"Cyan\">world</font>")
+            .ReflowVisibleText("Hello\nworld");
+
+        Assert.Equal("Helloworld", string.Concat(projection.VisibleText.Where(p => !char.IsWhiteSpace(p))));
+        Assert.Equal("Yellow", ColorAt(projection, 0));
+        Assert.Null(ColorAt(projection, 5));
+        Assert.Equal("Cyan", ColorAt(projection, 6));
     }
 
     private static string? ColorAt(FlowInlineColorProjection projection, int offset) => projection.ColorRuns

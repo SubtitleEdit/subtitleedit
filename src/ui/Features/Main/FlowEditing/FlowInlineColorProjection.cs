@@ -141,6 +141,75 @@ internal sealed class FlowInlineColorProjection
             : new FlowInlineColorProjection(VisibleText, RemoveColorFromRuns(start, length), _hiddenTokens);
     }
 
+    /// <summary>
+    /// Applies one ordinary text-box edit while retaining metadata on the unchanged prefix and
+    /// suffix. A replacement wholly inside one color run inherits that run's color.
+    /// </summary>
+    public FlowInlineColorProjection ApplyVisibleEdit(string editedText)
+    {
+        ArgumentNullException.ThrowIfNull(editedText);
+        if (editedText == VisibleText)
+        {
+            return this;
+        }
+
+        var prefixLength = 0;
+        while (prefixLength < VisibleText.Length &&
+               prefixLength < editedText.Length &&
+               VisibleText[prefixLength] == editedText[prefixLength])
+        {
+            prefixLength++;
+        }
+
+        var suffixLength = 0;
+        while (suffixLength < VisibleText.Length - prefixLength &&
+               suffixLength < editedText.Length - prefixLength &&
+               VisibleText[VisibleText.Length - suffixLength - 1] ==
+               editedText[editedText.Length - suffixLength - 1])
+        {
+            suffixLength++;
+        }
+
+        var removedLength = VisibleText.Length - prefixLength - suffixLength;
+        var insertedLength = editedText.Length - prefixLength - suffixLength;
+        var replacementColor = removedLength > 0 && insertedLength > 0
+            ? _colorRuns.FirstOrDefault(p =>
+                p.Start < prefixLength && p.End > prefixLength + removedLength)?.Color
+            : null;
+
+        var result = Delete(prefixLength, removedLength);
+        if (insertedLength == 0)
+        {
+            return result;
+        }
+
+        result = result.Insert(
+            prefixLength,
+            editedText.Substring(prefixLength, insertedLength));
+        return replacementColor == null
+            ? result
+            : result.ApplyColor(prefixLength, insertedLength, replacementColor);
+    }
+
+    /// <summary>
+    /// Transfers this projection's colors to canonical text whose non-whitespace characters are
+    /// unchanged and in the same order. This covers Flow wrapping, trimming and line-break
+    /// changes while retaining the target's alignment and unrelated hidden tokens.
+    /// </summary>
+    public FlowInlineColorProjection TransferColorsTo(string canonicalTarget)
+    {
+        ArgumentNullException.ThrowIfNull(canonicalTarget);
+        var target = Parse(canonicalTarget);
+        var remappedRuns = RemapColorRuns(target.VisibleText);
+        return new FlowInlineColorProjection(target.VisibleText, remappedRuns, target._hiddenTokens);
+    }
+
+    public FlowInlineColorProjection ReflowVisibleText(string visibleText)
+    {
+        ArgumentNullException.ThrowIfNull(visibleText);
+        return new FlowInlineColorProjection(visibleText, RemapColorRuns(visibleText), _hiddenTokens);
+    }
+
     public FlowInlineColorProjection Insert(int offset, string text, bool inheritColor = true)
     {
         ArgumentNullException.ThrowIfNull(text);
@@ -301,6 +370,27 @@ internal sealed class FlowInlineColorProjection
         return result.ToString();
     }
 
+    public int GetCanonicalOffset(int visibleOffset)
+    {
+        ValidateOffset(visibleOffset);
+        var canonical = Serialize();
+        var canonicalIndex = 0;
+        var currentVisibleOffset = 0;
+        foreach (Match match in HiddenTokenRegex.Matches(canonical))
+        {
+            var visibleLength = match.Index - canonicalIndex;
+            if (visibleOffset <= currentVisibleOffset + visibleLength && visibleLength > 0)
+            {
+                return canonicalIndex + visibleOffset - currentVisibleOffset;
+            }
+
+            currentVisibleOffset += visibleLength;
+            canonicalIndex = match.Index + match.Length;
+        }
+
+        return canonicalIndex + visibleOffset - currentVisibleOffset;
+    }
+
     private List<FlowInlineColorRun> RemoveColorFromRuns(int start, int length)
     {
         var end = start + length;
@@ -330,6 +420,107 @@ internal sealed class FlowInlineColorProjection
     private string? GetColorStrictlyInside(int offset) => _colorRuns
         .FirstOrDefault(p => p.Start < offset && p.End > offset)
         ?.Color;
+
+    private List<FlowInlineColorRun> RemapColorRuns(string targetText)
+    {
+        if (targetText == VisibleText)
+        {
+            return _colorRuns.ToList();
+        }
+
+        var sourceCharacters = Enumerable.Range(0, VisibleText.Length)
+            .Where(p => !char.IsWhiteSpace(VisibleText[p]))
+            .ToArray();
+        var targetCharacters = Enumerable.Range(0, targetText.Length)
+            .Where(p => !char.IsWhiteSpace(targetText[p]))
+            .ToArray();
+
+        if (sourceCharacters.Length != targetCharacters.Length ||
+            sourceCharacters.Where((p, i) => VisibleText[p] != targetText[targetCharacters[i]]).Any())
+        {
+            return ApplyVisibleEdit(targetText)._colorRuns.ToList();
+        }
+
+        var sourceColors = GetColorsByOffset(VisibleText.Length);
+        var targetColors = new string?[targetText.Length];
+        for (var i = 0; i < sourceCharacters.Length; i++)
+        {
+            targetColors[targetCharacters[i]] = sourceColors[sourceCharacters[i]];
+        }
+
+        for (var gap = 0; gap <= sourceCharacters.Length; gap++)
+        {
+            var sourceStart = gap == 0 ? 0 : sourceCharacters[gap - 1] + 1;
+            var sourceEnd = gap == sourceCharacters.Length ? VisibleText.Length : sourceCharacters[gap];
+            var targetStart = gap == 0 ? 0 : targetCharacters[gap - 1] + 1;
+            var targetEnd = gap == targetCharacters.Length ? targetText.Length : targetCharacters[gap];
+            var sourceLength = sourceEnd - sourceStart;
+            var targetLength = targetEnd - targetStart;
+            if (sourceLength == targetLength)
+            {
+                for (var i = 0; i < sourceLength; i++)
+                {
+                    targetColors[targetStart + i] = sourceColors[sourceStart + i];
+                }
+            }
+            else if (sourceLength > 0)
+            {
+                var color = sourceColors[sourceStart];
+                var isUniform = Enumerable.Range(sourceStart, sourceLength)
+                    .All(p => string.Equals(sourceColors[p], color, StringComparison.OrdinalIgnoreCase));
+                if (isUniform)
+                {
+                    for (var i = targetStart; i < targetEnd; i++)
+                    {
+                        targetColors[i] = color;
+                    }
+                }
+            }
+        }
+
+        return MakeRuns(targetColors);
+    }
+
+    private string?[] GetColorsByOffset(int length)
+    {
+        var colors = new string?[length];
+        foreach (var run in _colorRuns)
+        {
+            for (var i = run.Start; i < run.End; i++)
+            {
+                colors[i] = run.Color;
+            }
+        }
+
+        return colors;
+    }
+
+    private static List<FlowInlineColorRun> MakeRuns(IReadOnlyList<string?> colors)
+    {
+        var runs = new List<FlowInlineColorRun>();
+        var start = 0;
+        while (start < colors.Count)
+        {
+            var color = colors[start];
+            if (color == null)
+            {
+                start++;
+                continue;
+            }
+
+            var end = start + 1;
+            while (end < colors.Count &&
+                   string.Equals(colors[end], color, StringComparison.OrdinalIgnoreCase))
+            {
+                end++;
+            }
+
+            runs.Add(new FlowInlineColorRun(start, end - start, color));
+            start = end;
+        }
+
+        return runs;
+    }
 
     private void ValidateOffset(int offset)
     {

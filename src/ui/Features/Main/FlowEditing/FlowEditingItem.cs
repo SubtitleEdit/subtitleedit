@@ -66,9 +66,10 @@ public sealed class FlowEditingItem : INotifyPropertyChanged, IDisposable
             if (!_updatingFromSource)
             {
                 Source.Text =
-                    FlowTextParser.ApplyEditedText(
-                        Source.Text,
-                        value);
+                    FlowInlineColorProjection
+                        .Parse(Source.Text)
+                        .ApplyVisibleEdit(value)
+                        .Serialize();
             }
         }
     }
