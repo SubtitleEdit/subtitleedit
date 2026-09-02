@@ -11,6 +11,7 @@ Subtitle Edit includes an integrated video player for previewing subtitles with 
 - **Shortcut:** Configurable via Options → Shortcuts
 - **Drag and drop** a video file onto the Subtitle Edit window
 - You can also open video from a URL: **Video → Open video from URL...**
+- Recently opened videos are listed under **Video → Open recent video**; the submenu's **Clear recent videos** item empties the list
 
 ## Playback Controls
 

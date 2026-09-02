@@ -8373,7 +8373,12 @@ public partial class MainViewModel :
         }
         else
         {
-            await MessageBox.Show(Window!, Se.Language.General.Error, videoFileName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            // Entries are only validated on click (no File.Exists sweep on every menu rebuild),
+            // so a video that has since been moved or deleted is pruned from the list here.
+            Se.Settings.Video.RecentFiles.RemoveAll(f => string.Equals(f, videoFileName, StringComparison.OrdinalIgnoreCase));
+            Se.SaveSettings();
+            UpdateRecentVideoMenus();
+            await MessageBox.Show(Window!, Se.Language.General.Error, string.Format(Se.Language.General.XNotFound, videoFileName), MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
         _shortcutManager.ClearKeys();
     }
@@ -8383,12 +8388,17 @@ public partial class MainViewModel :
     {
         Se.Settings.Video.RecentFiles.Clear();
         Se.SaveSettings();
+        UpdateRecentVideoMenus();
+        _shortcutManager.ClearKeys();
+    }
+
+    private void UpdateRecentVideoMenus()
+    {
         InitMenu.UpdateRecentVideos(this);
         if (OperatingSystem.IsMacOS())
         {
             Layout.InitNativeMacMenu.UpdateRecentVideos(this);
         }
-        _shortcutManager.ClearKeys();
     }
 
     [RelayCommand]
@@ -24723,11 +24733,7 @@ public partial class MainViewModel :
             Se.Settings.Video.RecentFiles.RemoveAt(Se.Settings.Video.RecentFiles.Count - 1);
         }
 
-        InitMenu.UpdateRecentVideos(this);
-        if (OperatingSystem.IsMacOS())
-        {
-            Layout.InitNativeMacMenu.UpdateRecentVideos(this);
-        }
+        UpdateRecentVideoMenus();
     }
 
     private void LoadWaveformAndSpectrogram(string videoFileName)
