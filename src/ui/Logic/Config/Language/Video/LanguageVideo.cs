@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Nikse.SubtitleEdit.Logic.Config.Language.Tools;
 
@@ -20,6 +20,8 @@ public class LanguageVideo
     public string OpenSecondarySubtitleOnVideoPlayerDotDotDot { get; set; }
     public string OpenSecondarySubtitleOnVideoPlayer { get; set; }
     public string RemoveSecondarySubtitleOnVideoPlayer { get; set; }
+    public string OpenRecentVideo { get; set; }
+    public string ClearRecentVideos { get; set; }
     public string CutVideoTitle { get; set; }
     public string CutVideoDotDotDot { get; set; }
     public string EmbedSubtitlesDotDotDot { get; set; }
@@ -114,6 +116,8 @@ public class LanguageVideo
         OpenSecondarySubtitleOnVideoPlayer = "Second subtitle file (on video player)";
         OpenSecondarySubtitleOnVideoPlayerDotDotDot = "Open second subtitle file...";
         RemoveSecondarySubtitleOnVideoPlayer = "Remove second subtitle file";
+        OpenRecentVideo = "Open recent video";
+        ClearRecentVideos = "Clear recent videos";
         CutVideoTitle = "Cut video";
         CutVideoDotDotDot = "Cut video...";
         EmbedSubtitlesDotDotDot = "Add/remove embedded subtitles...";

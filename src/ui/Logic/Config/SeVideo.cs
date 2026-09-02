@@ -1,6 +1,7 @@
-﻿using Avalonia.Media;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Features.Assa;
 using System;
+using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
 
@@ -17,6 +18,8 @@ public class SeVideo
     public bool FullscreenHideControls { get; set; }
     public bool AutoOpen { get; set; }
     public bool OpenSearchParentFolder { get; set; }
+    public int RecentFilesMaximum { get; set; } = 25;
+    public List<string> RecentFiles { get; set; } = new();
     public string CutType { get; set; }
     public string ShowChangesFFmpegArguments { get; set; }
     public bool VideoPlayerDisplayTimeLeft { get; set; }

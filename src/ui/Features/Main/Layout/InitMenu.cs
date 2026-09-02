@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
@@ -33,6 +33,13 @@ public static class InitMenu
         };
 
         UpdateRecentFiles(vm);
+
+        vm.MenuRecentVideos = new MenuItem
+        {
+            Header = Se.Language.Video.OpenRecentVideo,
+        };
+
+        UpdateRecentVideos(vm);
 
         var menu = vm.Menu;
         menu.DataContext = vm;
@@ -751,6 +758,7 @@ public static class InitMenu
                         },
                     },
                 },
+                vm.MenuRecentVideos!,
                 menuItemAudioTracks,
                 new Separator(),
                 new MenuItem
@@ -1107,6 +1115,56 @@ public static class InitMenu
         else
         {
             vm.MenuReopen.IsVisible = false;
+        }
+    }
+
+    public static void UpdateRecentVideos(MainViewModel vm)
+    {
+        if (vm.MenuRecentVideos == null)
+        {
+            return;
+        }
+
+        var files = Se.Settings.Video.RecentFiles
+            .Where(f => !string.IsNullOrEmpty(f) && (System.IO.File.Exists(f) || MainViewModel.IsValidUrl(f)))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        vm.MenuRecentVideos.Items.Clear();
+        if (files.Count > 0)
+        {
+            foreach (var file in files)
+            {
+                var header = file;
+                var item = new MenuItem
+                {
+                    Header = new TextBlock
+                    {
+                        Text = header,
+                        TextTrimming = TextTrimming.PrefixCharacterEllipsis,
+                        MaxWidth = 600,
+                    },
+                    Command = vm.CommandVideoReopenCommand,
+                    CommandParameter = file,
+                    [ToolTip.TipProperty] = header,
+                };
+                vm.MenuRecentVideos.Items.Add(item);
+            }
+
+            vm.MenuRecentVideos.Items.Add(new Separator());
+
+            var clearItem = new MenuItem
+            {
+                Header = Se.Language.Video.ClearRecentVideos,
+                Command = vm.CommandVideoClearRecentFilesCommand,
+            };
+            vm.MenuRecentVideos.Items.Add(clearItem);
+
+            vm.MenuRecentVideos.IsVisible = true;
+        }
+        else
+        {
+            vm.MenuRecentVideos.IsVisible = false;
         }
     }
 

@@ -2235,6 +2235,8 @@
     "openSecondarySubtitleOnVideoPlayerDotDotDot": "Phụ đề phụ trên trình phát video, mở...",
     "openSecondarySubtitleOnVideoPlayer": "Phụ đề phụ (trên trình phát video)",
     "removeSecondarySubtitleOnVideoPlayer": "Phụ đề phụ trên trình phát video, xóa",
+    "openRecentVideo": "Mở video gần đây",
+    "clearRecentVideos": "Xóa danh sách video gần đây",
     "cutVideoTitle": "Cắt video",
     "cutVideoDotDotDot": "Cắt video...",
     "embedSubtitlesDotDotDot": "Thêm/xóa phụ đề nhúng...",

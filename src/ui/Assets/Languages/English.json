@@ -1,4 +1,4 @@
-﻿{
+{
   "title": "Subtitle Edit",
   "version": "v5.2.0-beta32",
   "translatedBy": "",
@@ -2545,6 +2545,8 @@
     "openSecondarySubtitleOnVideoPlayerDotDotDot": "Open second subtitle file...",
     "openSecondarySubtitleOnVideoPlayer": "Second subtitle file (on video player)",
     "removeSecondarySubtitleOnVideoPlayer": "Remove second subtitle file",
+    "openRecentVideo": "Open recent video",
+    "clearRecentVideos": "Clear recent videos",
     "cutVideoTitle": "Cut video",
     "cutVideoDotDotDot": "Cut video...",
     "embedSubtitlesDotDotDot": "Add/remove embedded subtitles...",
