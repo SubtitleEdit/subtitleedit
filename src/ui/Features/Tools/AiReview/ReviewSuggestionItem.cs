@@ -1,4 +1,5 @@
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -66,17 +67,17 @@ public partial class ReviewSuggestionItem : ObservableObject
 
     private static class CategoryBrushes
     {
-        public static readonly IBrush Spelling = new SolidColorBrush(Color.FromRgb(0xe8, 0xb0, 0x4c));
-        public static readonly IBrush Grammar = new SolidColorBrush(Color.FromRgb(0xb4, 0x8c, 0xe8));
-        public static readonly IBrush Punctuation = new SolidColorBrush(Color.FromRgb(0x5f, 0xc6, 0xd8));
-        public static readonly IBrush Casing = new SolidColorBrush(Color.FromRgb(0xe8, 0x8c, 0xb0));
-        public static readonly IBrush Other = new SolidColorBrush(Color.FromRgb(0x9a, 0xa3, 0xad));
-        public static readonly IBrush Warning = new SolidColorBrush(Color.FromRgb(0xf0, 0xa6, 0x3c));
-        public static readonly IBrush SpellingBackground = new SolidColorBrush(Color.FromArgb(0x20, 0xe8, 0xb0, 0x4c));
-        public static readonly IBrush GrammarBackground = new SolidColorBrush(Color.FromArgb(0x20, 0xb4, 0x8c, 0xe8));
-        public static readonly IBrush PunctuationBackground = new SolidColorBrush(Color.FromArgb(0x20, 0x5f, 0xc6, 0xd8));
-        public static readonly IBrush CasingBackground = new SolidColorBrush(Color.FromArgb(0x20, 0xe8, 0x8c, 0xb0));
-        public static readonly IBrush OtherBackground = new SolidColorBrush(Color.FromArgb(0x20, 0x9a, 0xa3, 0xad));
+        public static readonly IBrush Spelling = new ImmutableSolidColorBrush(Color.FromRgb(0xe8, 0xb0, 0x4c));
+        public static readonly IBrush Grammar = new ImmutableSolidColorBrush(Color.FromRgb(0xb4, 0x8c, 0xe8));
+        public static readonly IBrush Punctuation = new ImmutableSolidColorBrush(Color.FromRgb(0x5f, 0xc6, 0xd8));
+        public static readonly IBrush Casing = new ImmutableSolidColorBrush(Color.FromRgb(0xe8, 0x8c, 0xb0));
+        public static readonly IBrush Other = new ImmutableSolidColorBrush(Color.FromRgb(0x9a, 0xa3, 0xad));
+        public static readonly IBrush Warning = new ImmutableSolidColorBrush(Color.FromRgb(0xf0, 0xa6, 0x3c));
+        public static readonly IBrush SpellingBackground = new ImmutableSolidColorBrush(Color.FromArgb(0x20, 0xe8, 0xb0, 0x4c));
+        public static readonly IBrush GrammarBackground = new ImmutableSolidColorBrush(Color.FromArgb(0x20, 0xb4, 0x8c, 0xe8));
+        public static readonly IBrush PunctuationBackground = new ImmutableSolidColorBrush(Color.FromArgb(0x20, 0x5f, 0xc6, 0xd8));
+        public static readonly IBrush CasingBackground = new ImmutableSolidColorBrush(Color.FromArgb(0x20, 0xe8, 0x8c, 0xb0));
+        public static readonly IBrush OtherBackground = new ImmutableSolidColorBrush(Color.FromArgb(0x20, 0x9a, 0xa3, 0xad));
     }
 }
 

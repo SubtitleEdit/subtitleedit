@@ -13,7 +13,7 @@ namespace UITests.Features.Main;
 /// </summary>
 public class SubtitleLineViewModelCacheTests
 {
-    private static Color ColorOf(IBrush brush) => Assert.IsType<SolidColorBrush>(brush).Color;
+    private static Color ColorOf(IBrush brush) => Assert.IsAssignableFrom<ISolidColorBrush>(brush).Color;
 
     [AvaloniaFact]
     public void TextBackgroundBrush_FollowsMaxLineLengthChange()

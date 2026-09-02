@@ -4,6 +4,7 @@ using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Optris.Icons.Avalonia;
@@ -12,7 +13,7 @@ namespace Nikse.SubtitleEdit.Features.Options.Plugins;
 
 public class GetPluginsWindow : Window
 {
-    private static readonly IBrush AccentBrush = new SolidColorBrush(Color.FromRgb(0x00, 0x78, 0xD4));
+    private static readonly IBrush AccentBrush = new ImmutableSolidColorBrush(Color.FromRgb(0x00, 0x78, 0xD4));
 
     public GetPluginsWindow(GetPluginsViewModel vm)
     {

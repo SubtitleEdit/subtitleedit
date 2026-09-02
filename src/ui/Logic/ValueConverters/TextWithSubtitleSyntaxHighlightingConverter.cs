@@ -41,25 +41,25 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
     // Reuse brushes instead of creating new ones each time. The scheme colors from
     // SubtitleSyntaxTokenizer are theme-dependent, so the brushes are resolved per render and
     // cached per color (the cache stays tiny: both palettes together are 12 colors).
-    private static readonly Dictionary<Color, SolidColorBrush> BrushCache = new();
+    private static readonly Dictionary<Color, ImmutableSolidColorBrush> BrushCache = new();
 
-    private static SolidColorBrush GetBrush(Color color)
+    private static ImmutableSolidColorBrush GetBrush(Color color)
     {
         if (!BrushCache.TryGetValue(color, out var brush))
         {
-            brush = new SolidColorBrush(color);
+            brush = new ImmutableSolidColorBrush(color);
             BrushCache[color] = brush;
         }
 
         return brush;
     }
 
-    private static SolidColorBrush ElementBrush => GetBrush(SubtitleSyntaxTokenizer.ElementColor);
-    private static SolidColorBrush AttributeBrush => GetBrush(SubtitleSyntaxTokenizer.AttributeColor);
-    private static SolidColorBrush CommentBrush => GetBrush(SubtitleSyntaxTokenizer.CommentColor);
-    private static SolidColorBrush CharsBrush => GetBrush(SubtitleSyntaxTokenizer.CharsColor);
-    private static SolidColorBrush ValuesBrush => GetBrush(SubtitleSyntaxTokenizer.ValuesColor);
-    private static SolidColorBrush StyleBrush => GetBrush(SubtitleSyntaxTokenizer.StyleColor);
+    private static ImmutableSolidColorBrush ElementBrush => GetBrush(SubtitleSyntaxTokenizer.ElementColor);
+    private static ImmutableSolidColorBrush AttributeBrush => GetBrush(SubtitleSyntaxTokenizer.AttributeColor);
+    private static ImmutableSolidColorBrush CommentBrush => GetBrush(SubtitleSyntaxTokenizer.CommentColor);
+    private static ImmutableSolidColorBrush CharsBrush => GetBrush(SubtitleSyntaxTokenizer.CharsColor);
+    private static ImmutableSolidColorBrush ValuesBrush => GetBrush(SubtitleSyntaxTokenizer.ValuesColor);
+    private static ImmutableSolidColorBrush StyleBrush => GetBrush(SubtitleSyntaxTokenizer.StyleColor);
 
     // One shared wavy-red underline for all misspelled words - a brush + decoration +
     // collection used to be allocated per misspelled word on every cell repaint.

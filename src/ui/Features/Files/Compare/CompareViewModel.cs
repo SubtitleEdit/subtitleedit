@@ -3,6 +3,7 @@ using Avalonia.Input;
 using Nikse.SubtitleEdit.Logic;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -61,7 +62,7 @@ public partial class CompareViewModel : ObservableObject
     private static IBrush ListViewRed => CompareColors.OnlyInOneFileRow;
     private static IBrush ListViewGreen => CompareColors.TextOrTimeDifferenceRow;
     private static IBrush ListViewOrange => CompareColors.NumberDifferenceRow;
-    private static readonly IBrush TransparentBrush = new SolidColorBrush(Colors.Transparent);
+    private static readonly IBrush TransparentBrush = new ImmutableSolidColorBrush(Colors.Transparent);
 
     public CompareViewModel(IFileHelper fileHelper, IFolderHelper folderHelper)
     {

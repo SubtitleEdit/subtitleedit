@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using Avalonia.Media.Immutable;
 
 namespace Nikse.SubtitleEdit.Features.Main;
 
@@ -211,15 +212,15 @@ public partial class SubtitleLineViewModel : ObservableObject
 
     private bool _skipUpdate = false;
 
-    private static SolidColorBrush _errorBrush = new SolidColorBrush(Se.Settings.General.ErrorColor.FromHexToColor());
-    private static SolidColorBrush _transparentBrush = new SolidColorBrush(Colors.Transparent);
+    private static IBrush _errorBrush = new ImmutableSolidColorBrush(Se.Settings.General.ErrorColor.FromHexToColor());
+    private static readonly IBrush _transparentBrush = new ImmutableSolidColorBrush(Colors.Transparent);
     public static Color ErrorColor
     {
         get => field;
         set
         {
             field = value;
-            _errorBrush = new SolidColorBrush(value);
+            _errorBrush = new ImmutableSolidColorBrush(value);
         }
     } = Se.Settings.General.ErrorColor.FromHexToColor();
 
