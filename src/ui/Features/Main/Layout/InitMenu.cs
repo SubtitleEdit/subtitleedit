@@ -14,6 +14,7 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Input;
 
 namespace Nikse.SubtitleEdit.Features.Main.Layout;
 
@@ -32,7 +33,13 @@ public static class InitMenu
             Command = vm.CommandFileReopenCommand,
         };
 
+        vm.MenuRecentVideos = new MenuItem
+        {
+            Header = Se.Language.Video.OpenRecentVideo,
+        };
+
         UpdateRecentFiles(vm);
+        UpdateRecentVideos(vm);
 
         var menu = vm.Menu;
         menu.DataContext = vm;
@@ -716,6 +723,7 @@ public static class InitMenu
                     Header = l.OpenVideoFromUrl,
                     Command = vm.ShowVideoOpenFromUrlCommand,
                 },
+                vm.MenuRecentVideos,
                 new MenuItem
                 {
                     Header = l.CloseVideoFile,
@@ -1053,16 +1061,63 @@ public static class InitMenu
         menu.Items.Add(menuItemSsaTools);
     }
 
+    private static void PopulateRecentMenu<T>(
+        MenuItem? menu,
+        IReadOnlyList<T> items,
+        Func<T, (string Header, string ToolTip, ICommand Command, object? Parameter)> itemFactory,
+        string clearHeader,
+        ICommand clearCommand)
+    {
+        if (menu == null)
+        {
+            return;
+        }
+
+        menu.Items.Clear();
+        if (items.Count > 0)
+        {
+            foreach (var item in items)
+            {
+                var (header, tooltip, command, parameter) = itemFactory(item);
+                var menuItem = new MenuItem
+                {
+                    Header = new TextBlock
+                    {
+                        Text = header,
+                        TextTrimming = TextTrimming.PrefixCharacterEllipsis,
+                        MaxWidth = 600,
+                    },
+                    Command = command,
+                    CommandParameter = parameter,
+                    [ToolTip.TipProperty] = tooltip,
+                };
+                menu.Items.Add(menuItem);
+            }
+
+            menu.Items.Add(new Separator());
+            var clearItem = new MenuItem
+            {
+                Header = clearHeader,
+                Command = clearCommand,
+            };
+            menu.Items.Add(clearItem);
+            menu.IsVisible = true;
+        }
+        else
+        {
+            menu.IsVisible = false;
+        }
+    }
+
     public static void UpdateRecentFiles(MainViewModel vm)
     {
         var files = Se.Settings.File.RecentFiles.Where(p => !string.IsNullOrEmpty(p.SubtitleFileName) && System.IO.File.Exists(p.SubtitleFileName)).ToList();
-        vm.MenuReopen.Items.Clear();
-        if (files.Count > 0)
-        {
-            foreach (var file in files)
+        PopulateRecentMenu(
+            vm.MenuReopen,
+            files,
+            file =>
             {
                 var header = file.SubtitleFileName;
-
                 if (!string.IsNullOrEmpty(file.SubtitleFileNameOriginal) && System.IO.File.Exists(file.SubtitleFileNameOriginal))
                 {
                     header += " + ";
@@ -1075,39 +1130,25 @@ public static class InitMenu
                         header += file.SubtitleFileNameOriginal;
                     }
                 }
+                return (header, header, vm.CommandFileReopenCommand, file);
+            },
+            Se.Language.Main.Menu.ClearRecentFiles,
+            vm.CommandFileClearRecentFilesCommand);
+    }
 
-                // Trim the directory prefix with "…" when the path is too long so
-                // the filename stays visible. Full path is still available via tooltip.
-                var item = new MenuItem
-                {
-                    Header = new TextBlock
-                    {
-                        Text = header,
-                        TextTrimming = TextTrimming.PrefixCharacterEllipsis,
-                        MaxWidth = 600,
-                    },
-                    Command = vm.CommandFileReopenCommand,
-                    CommandParameter = file,
-                    [ToolTip.TipProperty] = header,
-                };
-                vm.MenuReopen.Items.Add(item);
-            }
+    public static void UpdateRecentVideos(MainViewModel vm)
+    {
+        var files = Se.Settings.Video.RecentFiles
+            .Where(f => !string.IsNullOrWhiteSpace(f))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
 
-            vm.MenuReopen.Items.Add(new Separator());
-
-            var clearItem = new MenuItem
-            {
-                Header = Se.Language.Main.Menu.ClearRecentFiles,
-                Command = vm.CommandFileClearRecentFilesCommand,
-            };
-            vm.MenuReopen.Items.Add(clearItem);
-
-            vm.MenuReopen.IsVisible = true;
-        }
-        else
-        {
-            vm.MenuReopen.IsVisible = false;
-        }
+        PopulateRecentMenu(
+            vm.MenuRecentVideos,
+            files,
+            file => (file, file, vm.CommandVideoReopenCommand, file),
+            Se.Language.Video.ClearRecentVideos,
+            vm.CommandVideoClearRecentFilesCommand);
     }
 
     /// <summary>

@@ -2649,6 +2649,7 @@ public partial class SettingsViewModel : ObservableObject
             if (result.ResetRecentFiles)
             {
                 Se.Settings.File.RecentFiles = new List<RecentFile>();
+                Se.Settings.Video.RecentFiles = new List<string>();
             }
 
             if (result.ResetWindowPositionAndSize)

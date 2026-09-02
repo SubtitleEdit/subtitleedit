@@ -585,8 +585,10 @@ public partial class MainViewModel :
     public MainView? MainView { get; set; }
     public TextBlock StatusTextLeftLabel { get; set; }
     public MenuItem MenuReopen { get; set; }
+    public MenuItem? MenuRecentVideos { get; set; }
     public MenuItem MenuPlugins { get; set; }
     public NativeMenuItem? NativeMenuReopen { get; set; }
+    public NativeMenuItem? NativeMenuRecentVideos { get; set; }
     public NativeMenuItem? NativeMenuPlugins { get; set; }
     public NativeMenuItem? NativeMenuAudioTracks { get; set; }
     public AudioVisualizer? AudioVisualizer { get; set; }
@@ -8357,6 +8359,48 @@ public partial class MainViewModel :
         }
 
         _shortcutManager.ClearKeys();
+    }
+
+    [RelayCommand]
+    private async Task CommandVideoReopen(string videoFileName)
+    {
+        if (string.IsNullOrEmpty(videoFileName))
+        {
+            return;
+        }
+
+        if (File.Exists(videoFileName))
+        {
+            await VideoOpenFile(videoFileName);
+        }
+        else
+        {
+            // Entries are only validated on click (no File.Exists sweep on every menu rebuild),
+            // so a video that has since been moved or deleted is pruned from the list here.
+            Se.Settings.Video.RecentFiles.RemoveAll(f => string.Equals(f, videoFileName, StringComparison.OrdinalIgnoreCase));
+            Se.SaveSettings();
+            UpdateRecentVideoMenus();
+            await MessageBox.Show(Window!, Se.Language.General.Error, string.Format(Se.Language.General.XNotFound, videoFileName), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+        _shortcutManager.ClearKeys();
+    }
+
+    [RelayCommand]
+    private void CommandVideoClearRecentFiles()
+    {
+        Se.Settings.Video.RecentFiles.Clear();
+        Se.SaveSettings();
+        UpdateRecentVideoMenus();
+        _shortcutManager.ClearKeys();
+    }
+
+    private void UpdateRecentVideoMenus()
+    {
+        InitMenu.UpdateRecentVideos(this);
+        if (OperatingSystem.IsMacOS())
+        {
+            Layout.InitNativeMacMenu.UpdateRecentVideos(this);
+        }
     }
 
     [RelayCommand]
@@ -24645,6 +24689,11 @@ public partial class MainViewModel :
             }
         }
 
+        if (vp.VideoPlayer != null && vp.VideoPlayer.Duration > 0)
+        {
+            AddToRecentVideoFiles(videoFileName);
+        }
+
         // Persist the media association as soon as the file opens so reopening this subtitle
         // reloads the same video/audio even if the app is force-quit before OnClosing runs.
         // Guarded by a known subtitle name so opening media without a subtitle doesn't create
@@ -24653,6 +24702,10 @@ public partial class MainViewModel :
         {
             AddToRecentFiles(false);
         }
+        else
+        {
+            Se.SaveSettings();
+        }
 
         var _ = Task.Run(() =>
         {
@@ -24660,6 +24713,29 @@ public partial class MainViewModel :
             GetMediaInformation(videoFileName);
             LoadAudioTrackMenuItems();
         });
+    }
+
+    private void AddToRecentVideoFiles(string videoFileName)
+    {
+        if (string.IsNullOrEmpty(videoFileName) || IsValidUrl(videoFileName))
+        {
+            return;
+        }
+
+        var vp = GetVideoPlayerControl();
+        if (vp?.VideoPlayer == null || vp.VideoPlayer.Duration <= 0)
+        {
+            return;
+        }
+
+        Se.Settings.Video.RecentFiles.RemoveAll(f => string.Equals(f, videoFileName, StringComparison.OrdinalIgnoreCase));
+        Se.Settings.Video.RecentFiles.Insert(0, videoFileName);
+        while (Se.Settings.Video.RecentFiles.Count > Se.Settings.Video.RecentFilesMaximum)
+        {
+            Se.Settings.Video.RecentFiles.RemoveAt(Se.Settings.Video.RecentFiles.Count - 1);
+        }
+
+        UpdateRecentVideoMenus();
     }
 
     private void LoadWaveformAndSpectrogram(string videoFileName)
