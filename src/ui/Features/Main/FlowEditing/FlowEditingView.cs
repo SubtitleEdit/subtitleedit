@@ -44,6 +44,7 @@ public sealed class FlowEditingView : Border
 
     private SubtitleLineViewModel? _pendingFocusSource;
     private bool _pendingFocusAtStart;
+    private int? _pendingLogicalBoundaryCharacterCount;
 
     // Batch tools can raise many collection changes in a very short time.
     // Coalesce those notifications into one Flow rebuild instead of rebuilding
@@ -4261,11 +4262,8 @@ public sealed class FlowEditingView : Border
         }
 
         var visibleCharactersBeforeJoin =
-            preserveSentenceBoundary
-                ? CountCharactersWithoutLineBreaks(
-                    previousParsed.Text + currentParsed.Text)
-                : CountCharactersWithoutLineBreaks(
-                    previousVisibleText);
+            CountNonWhitespaceCharacters(
+                previousVisibleText);
 
          // Make sure the Flow row is also the selected subtitle in MainViewModel.
         // The normal SE merge command operates on SelectedSubtitle.
@@ -4334,36 +4332,9 @@ public sealed class FlowEditingView : Border
                     previous);
             });
 
-        _pendingFocusSource = previous;
-        _pendingFocusAtStart = false;
-
-        Dispatcher.UIThread.Post(() =>
-        {
-            var targetItem =
-                _items.FirstOrDefault(
-                    x => ReferenceEquals(
-                        x.Source,
-                        previous));
-
-            if (targetItem == null ||
-                !_textBoxes.TryGetValue(
-                    targetItem,
-                    out var mergedTextBox))
-            {
-                Refresh();
-
-                Dispatcher.UIThread.Post(() =>
-                    FocusMergedTextAtJoin(
-                        previous,
-                        visibleCharactersBeforeJoin));
-
-                return;
-            }
-
-            FocusMergedTextAtJoin(
-                previous,
-                visibleCharactersBeforeJoin);
-        });
+        RefreshAndFocusLogicalBoundary(
+            previous,
+            visibleCharactersBeforeJoin);
 
         return true;
     }
@@ -4606,6 +4577,22 @@ public sealed class FlowEditingView : Border
         ApplySeOptimalDurationKeepingStart(
             current);
 
+        var charactersBeforeOriginalBoundary =
+            CountNonWhitespaceCharacters(
+                previousParsed.Text);
+        var boundaryMovedIntoPrevious =
+            CountNonWhitespaceCharacters(
+                FlowTextParser.Parse(previous.Text).Text) >
+            charactersBeforeOriginalBoundary;
+        var caretTarget =
+            boundaryMovedIntoPrevious
+                ? previous
+                : current;
+        var charactersBeforeCaret =
+            boundaryMovedIntoPrevious
+                ? charactersBeforeOriginalBoundary
+                : 0;
+
         // The previous subtitle may now run into the current subtitle, and
         // the current subtitle may run into its follower. Reuse Flow's normal
         // user-confirmed ripple handling for both boundaries.
@@ -4619,48 +4606,9 @@ public sealed class FlowEditingView : Border
                     current);
             });
 
-        _pendingFocusSource =
-            previous;
-
-        _pendingFocusAtStart =
-            false;
-
-        _vm.SelectedSubtitle =
-            previous;
-
-        Refresh();
-
-        Dispatcher.UIThread.Post(() =>
-        {
-            var targetItem =
-                _items.FirstOrDefault(
-                    x => ReferenceEquals(
-                        x.Source,
-                        previous));
-
-            if (targetItem != null &&
-                _textBoxes.TryGetValue(
-                    targetItem,
-                    out var targetTextBox))
-            {
-                var targetText =
-                    targetTextBox.Text ??
-                    string.Empty;
-
-                targetTextBox.CaretIndex =
-                    targetText.Length;
-
-                targetTextBox.SelectionStart =
-                    targetText.Length;
-
-                targetTextBox.SelectionEnd =
-                    targetText.Length;
-
-                targetTextBox.Focus();
-            }
-
-            CenterSelectedSubtitleInFlow();
-        });
+        RefreshAndFocusLogicalBoundary(
+            caretTarget,
+            charactersBeforeCaret);
 
         return true;
     }
@@ -4737,83 +4685,72 @@ public sealed class FlowEditingView : Border
             TimeSpan.FromSeconds(2.5));
     }
 
-    private void FocusMergedTextAtJoin(
+    private void RefreshAndFocusLogicalBoundary(
         SubtitleLineViewModel source,
-        int visibleCharactersBeforeJoin)
+        int nonWhitespaceCharactersBeforeBoundary)
     {
-        var targetItem =
-            _items.FirstOrDefault(
-                x => ReferenceEquals(
-                    x.Source,
-                    source));
+        _selectedSources.Clear();
+        _selectedSources.Add(source);
+        _selectionAnchorSource = source;
+        // SelectedSubtitle raises synchronously. Update it before arming the
+        // pending request so VmOnPropertyChanged cannot consume that request
+        // against the TextBox which is about to be discarded by Refresh().
+        _vm.SelectedSubtitle = source;
+        _pendingFocusSource = source;
+        _pendingFocusAtStart = false;
+        _pendingLogicalBoundaryCharacterCount =
+            nonWhitespaceCharactersBeforeBoundary;
 
-        if (targetItem == null ||
-            !_textBoxes.TryGetValue(
-                targetItem,
-                out var textBox))
-        {
-            return;
-        }
-
-        textBox.Focus();
-
-        var text =
-            textBox.Text ?? string.Empty;
-
-        var caretIndex =
-            GetCaretIndexForVisibleCharacterCount(
-                text,
-                visibleCharactersBeforeJoin);
-
-        textBox.CaretIndex = caretIndex;
-        textBox.SelectionStart = caretIndex;
-        textBox.SelectionEnd = caretIndex;
+        // Rebuild now so any collection-change refresh queued by a merge is
+        // superseded, then let ApplyPendingFocus focus the newly created row.
+        Refresh();
+        CenterSelectedSubtitleInFlow();
     }
 
-    private static int CountCharactersWithoutLineBreaks(
-        string text)
+    private static void FocusTextBoxAtLogicalBoundary(
+        TextBox textBox,
+        int nonWhitespaceCharactersBeforeBoundary)
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            textBox.Focus();
+
+            var caretIndex =
+                GetCaretIndexForLogicalBoundary(
+                    textBox.Text ?? string.Empty,
+                    nonWhitespaceCharactersBeforeBoundary);
+
+            textBox.CaretIndex = caretIndex;
+            textBox.SelectionStart = caretIndex;
+            textBox.SelectionEnd = caretIndex;
+        });
+    }
+
+    internal static int GetCaretIndexForLogicalBoundary(
+        string visibleText,
+        int nonWhitespaceCharactersBeforeBoundary)
     {
         var count = 0;
-
-        foreach (var ch in text)
+        for (var index = 0; index < visibleText.Length; index++)
         {
-            if (ch != '\r' &&
-                ch != '\n')
+            if (char.IsWhiteSpace(visibleText[index]))
             {
-                count++;
+                continue;
             }
+
+            if (count == nonWhitespaceCharactersBeforeBoundary)
+            {
+                return index;
+            }
+
+            count++;
         }
 
-        return count;
+        return visibleText.Length;
     }
 
-    private static int GetCaretIndexForVisibleCharacterCount(
-        string text,
-        int visibleCharacterCount)
-    {
-        if (visibleCharacterCount <= 0)
-        {
-            return 0;
-        }
-
-        var count = 0;
-
-        for (var i = 0; i < text.Length; i++)
-        {
-            if (text[i] != '\r' &&
-                text[i] != '\n')
-            {
-                count++;
-            }
-
-            if (count >= visibleCharacterCount)
-            {
-                return i + 1;
-            }
-        }
-
-        return text.Length;
-    }
+    private static int CountNonWhitespaceCharacters(string text) =>
+        text.Count(ch => !char.IsWhiteSpace(ch));
 
     private static int GetPlainLineCount(
         string? sourceText)
@@ -4939,8 +4876,20 @@ public sealed class FlowEditingView : Border
 
         var focusAtStart =
             _pendingFocusAtStart;
+        var logicalBoundaryCharacterCount =
+            _pendingLogicalBoundaryCharacterCount;
 
         _pendingFocusSource = null;
+        _pendingLogicalBoundaryCharacterCount = null;
+
+        if (logicalBoundaryCharacterCount.HasValue &&
+            _textBoxes.TryGetValue(targetItem, out var textBox))
+        {
+            FocusTextBoxAtLogicalBoundary(
+                textBox,
+                logicalBoundaryCharacterCount.Value);
+            return;
+        }
 
         FocusTextBox(
             targetItem,

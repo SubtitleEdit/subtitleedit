@@ -318,6 +318,36 @@ public class FlowInlineColorProjectionTests
         Assert.Equal("Cyan", ColorAt(projection, 6));
     }
 
+    [Theory]
+    [InlineData("controls, empty-document", 9, 10)]
+    [InlineData("controls,\nempty-document", 9, 10)]
+    [InlineData("empty-document", 0, 0)]
+    public void BackspaceCaretFollowsLogicalVisibleBoundary(
+        string visibleText,
+        int charactersBeforeBoundary,
+        int expectedCaretIndex)
+    {
+        var actual = FlowEditingView.GetCaretIndexForLogicalBoundary(
+            visibleText,
+            charactersBeforeBoundary);
+
+        Assert.Equal(expectedCaretIndex, actual);
+    }
+
+    [Fact]
+    public void BackspaceCaretDoesNotCountInlineColorTags()
+    {
+        var projection = FlowInlineColorProjection.Parse(
+            "<font color=\"Yellow\">controls,</font> <font color=\"Cyan\">empty-document</font>");
+
+        var caretIndex = FlowEditingView.GetCaretIndexForLogicalBoundary(
+            projection.VisibleText,
+            9);
+
+        Assert.Equal(10, caretIndex);
+        Assert.Equal('e', projection.VisibleText[caretIndex]);
+    }
+
     private static string? ColorAt(FlowInlineColorProjection projection, int offset) => projection.ColorRuns
         .SingleOrDefault(p => p.Start <= offset && p.End > offset)
         ?.Color;
