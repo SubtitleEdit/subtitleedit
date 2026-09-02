@@ -87,6 +87,8 @@ public class LanguageAssa
     public string ResolutionResamplerFromVideo { get; set; }
     public string ResolutionResamplerSourceAndTargetEqual { get; set; }
     public string ResolutionResamplerNothingSelected { get; set; }
+    public string ResolutionResamplerVideoDiffers { get; set; }
+    public string ResolutionResamplerAskOnVideoOpen { get; set; }
 
     // Background Box Generator
     public string BackgroundBoxGenerator { get; set; }
@@ -325,6 +327,8 @@ public class LanguageAssa
         ResolutionResamplerFromVideo = "From video...";
         ResolutionResamplerSourceAndTargetEqual = "Source and target resolution are the same - nothing to do.";
         ResolutionResamplerNothingSelected = "Please select at least one option to change.";
+        ResolutionResamplerVideoDiffers = "The subtitle resolution ({0}x{1}) differs from the video resolution ({2}x{3}).\nChange the subtitle to match the video?";
+        ResolutionResamplerAskOnVideoOpen = "Ask when a video with a different resolution is opened";
 
         // Background Box Generator
         BackgroundBoxGenerator = "ASSA background box generator";

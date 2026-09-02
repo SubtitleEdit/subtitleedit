@@ -2382,6 +2382,11 @@ public partial class MainViewModel :
             vm.Initialize(GetUpdateSubtitle(), _videoFileName, _mediaInfo?.Dimension.Width, _mediaInfo?.Dimension.Height);
         });
 
+        ApplyAssaResolutionResamplerResult(result);
+    }
+
+    private void ApplyAssaResolutionResamplerResult(AssaResolutionResamplerViewModel result)
+    {
         if (!result.OkPressed)
         {
             return;
@@ -2391,6 +2396,68 @@ public partial class MainViewModel :
         _subtitle.Header = result.ResultSubtitle.Header;
         ShowStatus(Se.Language.Main.AssaResolutionResamplerDone);
         RefreshSubtitlePreview();
+    }
+
+    /// <summary>
+    /// A video just opened: bring the ASSA script resolution in line with its picture size.
+    /// <para>
+    /// A header that names no resolution is set silently (see <see cref="SetAssaResolution"/>).
+    /// One authored for another picture size - PlayResX/PlayResY present and different from the
+    /// video - gets the resampler dialog pre-filled with both resolutions, the way SE 4 and
+    /// Aegisub ask, so the user sees what is about to change and can decline (#14367). With the
+    /// prompt setting off the file is resampled automatically, as before.
+    /// </para>
+    /// </summary>
+    private async Task SetAssaResolutionFromVideoAsync()
+    {
+        if (!IsFormatAssa || !Se.Settings.Assa.AutoSetResolution ||
+            _mediaInfo == null || _mediaInfo.Dimension.Width <= 0 || _mediaInfo.Dimension.Height <= 0)
+        {
+            return;
+        }
+
+        var videoWidth = _mediaInfo.Dimension.Width;
+        var videoHeight = _mediaInfo.Dimension.Height;
+
+        var header = _subtitle.Header;
+        if (string.IsNullOrEmpty(header) || !header.Contains("[V4+ Styles]", StringComparison.OrdinalIgnoreCase))
+        {
+            header = AdvancedSubStationAlpha.DefaultHeader;
+        }
+
+        if (!TryGetPlayRes(header, "PlayResX", out var scriptWidth) ||
+            !TryGetPlayRes(header, "PlayResY", out var scriptHeight))
+        {
+            SetAssaResolution(true);
+            return;
+        }
+
+        if (scriptWidth == videoWidth && scriptHeight == videoHeight)
+        {
+            return;
+        }
+
+        // Nothing to ask about when there are no lines to position (a new file whose stored
+        // header names a resolution) - SE 4 resampled the styles silently there too.
+        var hasLines = Subtitles.Any(row => !row.IsReferenceOnly);
+        if (!Se.Settings.Assa.AutoSetResolutionPrompt || !hasLines)
+        {
+            SetAssaResolution(true);
+            RefreshSubtitlePreview();
+            return;
+        }
+
+        if (Window == null)
+        {
+            return;
+        }
+
+        var result = await ShowDialogAsync<AssaResolutionResamplerWindow, AssaResolutionResamplerViewModel>(vm =>
+        {
+            vm.InitializeForVideoPrompt(GetUpdateSubtitle(), _videoFileName, videoWidth, videoHeight);
+        });
+
+        ApplyAssaResolutionResamplerResult(result);
     }
 
     [RelayCommand]
@@ -24673,10 +24740,9 @@ public partial class MainViewModel :
                 _updateAudioVisualizer = true;
             }
 
-            if (IsFormatAssa)
-            {
-                SetAssaResolution(true);
-            }
+            // The resolution check touches the header, the grid rows and possibly shows a dialog:
+            // UI-thread work (this runs on a worker thread from VideoOpenFile).
+            Dispatcher.UIThread.Post(() => _ = SetAssaResolutionFromVideoAsync());
         }
         catch
         {
@@ -24722,6 +24788,19 @@ public partial class MainViewModel :
         }
 
         AssaResamplerHelper.ApplyResampling(_subtitle, oldWidth, oldHeight, _mediaInfo.Dimension.Width, _mediaInfo.Dimension.Height, true, true, true, true);
+
+        // The grid rows are the working text - _subtitle.Paragraphs is rebuilt from them by
+        // GetUpdateSubtitle - so the override tags (\pos, \move, drawings...) have to be scaled
+        // in the rows too, or only the header changes and every positioned line lands wrong.
+        foreach (var row in Subtitles)
+        {
+            if (row.IsReferenceOnly)
+            {
+                continue;
+            }
+
+            row.Text = AssaResamplerHelper.ResampleText(row.Text, oldWidth, oldHeight, _mediaInfo.Dimension.Width, _mediaInfo.Dimension.Height);
+        }
     }
 
     /// <summary>

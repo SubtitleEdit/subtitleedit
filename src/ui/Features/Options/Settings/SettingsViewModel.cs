@@ -150,6 +150,8 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string? _selectedFavoriteSubtitleFormat;
 
     [ObservableProperty] private bool _webVttUseXTimestampMap;
+    [ObservableProperty] private bool _assaAutoSetResolution;
+    [ObservableProperty] private bool _assaAutoSetResolutionPrompt;
 
     [ObservableProperty] private ObservableCollection<PickLanguageDisplay> _favoriteLanguages;
     [ObservableProperty] private PickLanguageDisplay? _selectedFavoriteLanguage;
@@ -815,6 +817,8 @@ public partial class SettingsViewModel : ObservableObject
         }
 
         WebVttUseXTimestampMap = Se.Settings.Formats.WebVttUseXTimestampMap;
+        AssaAutoSetResolution = Se.Settings.Assa.AutoSetResolution;
+        AssaAutoSetResolutionPrompt = Se.Settings.Assa.AutoSetResolutionPrompt;
 
         // Clear unconditionally, the way FavoriteLanguages does below: LoadSettings runs again
         // after importing a settings file, so with the Clear() inside the guard an import that
@@ -1694,6 +1698,8 @@ public partial class SettingsViewModel : ObservableObject
         general.DefaultSaveAsFormat = SelectedSaveSubtitleFormat;
 
         Se.Settings.Formats.WebVttUseXTimestampMap = WebVttUseXTimestampMap;
+        Se.Settings.Assa.AutoSetResolution = AssaAutoSetResolution;
+        Se.Settings.Assa.AutoSetResolutionPrompt = AssaAutoSetResolutionPrompt;
 
         var sbFavorites = new StringBuilder();
         foreach (var format in FavoriteSubtitleFormats)
