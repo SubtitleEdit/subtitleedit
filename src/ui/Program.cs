@@ -33,6 +33,16 @@ namespace Nikse.SubtitleEdit
         public static string? PendingVideoToOpen { get; set; }
         public static bool FileOpenedViaActivation { get; set; }
 
+        // Set once the first editor window has made its startup file decision - after the
+        // activation grace delay in MainViewModel.OnLoaded. Until then a macOS File
+        // activation belongs to that window (routed via PendingFileToOpen); afterwards it
+        // means "opened while running" and gets a window of its own. lifetime.MainWindow
+        // cannot serve as this test: it is assigned before Start() pumps the run loop that
+        // delivers activations, so it is already non-null when a cold-launch Finder
+        // double-click's activation arrives - which used to send the file to a second
+        // window while the primary one started up empty.
+        public static bool StartupFileDecisionDone { get; set; }
+
         // Distinguishes a genuine double-click on the Dock icon from the single-click
         // activation AppKit sends on every Dock click - see the Reopen handling below.
         private static long _lastReopenActivationTicks = long.MinValue / 2;
@@ -240,6 +250,10 @@ namespace Nikse.SubtitleEdit
                 // Setup main window (Batch Convert standalone if requested via CLI)
                 if (HasBatchConvertUiArg(args))
                 {
+                    // No editor window will run OnLoaded to consume PendingFileToOpen, so
+                    // route any macOS File activation straight to a new editor window.
+                    StartupFileDecisionDone = true;
+
                     SetupBatchConvertOnlyWindow(lifetime);
 
                     // Force-terminate the process once the window closes. Under
@@ -459,10 +473,12 @@ namespace Nikse.SubtitleEdit
                         if (System.IO.File.Exists(filePath))
                         {
                             FileOpenedViaActivation = true;
-                            if (lifetime.MainWindow == null)
+                            if (!StartupFileDecisionDone)
                             {
-                                // Still starting up - no window exists yet, so the primary
-                                // window about to be created will load this file itself.
+                                // Still starting up - the primary window's startup file
+                                // decision (MainViewModel.OnLoaded) has not run its
+                                // activation grace delay yet, so it will load this file
+                                // itself instead of leaving its window empty.
                                 PendingFileToOpen = filePath;
                             }
                             else

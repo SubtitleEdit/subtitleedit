@@ -24087,6 +24087,77 @@ public partial class MainViewModel :
         });
     }
 
+    /// <summary>
+    /// Opens the startup files handed over via <see cref="Program.PendingFileToOpen"/> /
+    /// <see cref="Program.PendingVideoToOpen"/> (CLI arguments, or a macOS File activation
+    /// from a Finder launch) into this window, restoring the saved layout first.
+    /// </summary>
+    private async Task OpenPendingStartupFilesAsync(bool delayForLayout)
+    {
+        if (Se.Settings.General.RememberPositionAndSize)
+        {
+            if (Se.Settings.General.UndockVideoControls)
+            {
+                VideoUndockControls();
+            }
+
+            InitLayout.RestoreLayoutPositions(Se.Settings.Appearance.CurrentLayoutPositions, ContentGrid.Children.FirstOrDefault() as Grid);
+        }
+
+        if (delayForLayout)
+        {
+            await Task.Delay(100);
+        }
+
+        var hasCliVideo = !string.IsNullOrEmpty(Program.PendingVideoToOpen);
+        if (!string.IsNullOrEmpty(Program.PendingFileToOpen))
+        {
+            // skipLoadVideo when a CLI video is given so SubtitleOpen does not
+            // auto-guess and load a different one before we open the explicit path.
+            await SubtitleOpen(Program.PendingFileToOpen, skipLoadVideo: hasCliVideo);
+        }
+        if (hasCliVideo && File.Exists(Program.PendingVideoToOpen!))
+        {
+            await VideoOpenFile(Program.PendingVideoToOpen!);
+        }
+        Program.PendingFileToOpen = null;
+        Program.PendingVideoToOpen = null;
+    }
+
+    /// <summary>
+    /// macOS delivers the File activation for a cold Finder launch asynchronously, usually
+    /// only after OnLoaded has already run, so even a window with nothing to open yet must
+    /// wait out the activation grace period before the startup file routing is final -
+    /// Program.cs sends activations to a new window only once StartupFileDecisionDone is
+    /// set, and routes them here via PendingFileToOpen before that.
+    /// </summary>
+    private void PostDeferredStartupActivationCheck()
+    {
+        if (Program.StartupFileDecisionDone)
+        {
+            return; // not the primary window's startup - nothing pending to wait for
+        }
+
+        Dispatcher.UIThread.Post(async void () =>
+        {
+            try
+            {
+                await Task.Delay(100);
+                Program.StartupFileDecisionDone = true;
+
+                if (!string.IsNullOrEmpty(Program.PendingFileToOpen) ||
+                    !string.IsNullOrEmpty(Program.PendingVideoToOpen))
+                {
+                    await OpenPendingStartupFilesAsync(delayForLayout: false);
+                }
+            }
+            catch (Exception e)
+            {
+                Se.LogError(e);
+            }
+        });
+    }
+
     internal void OnLoaded()
     {
         if (OperatingSystem.IsMacOS())
@@ -24136,32 +24207,12 @@ public partial class MainViewModel :
         if (Program.FileOpenedViaActivation &&
             (!string.IsNullOrEmpty(Program.PendingFileToOpen) || !string.IsNullOrEmpty(Program.PendingVideoToOpen)))
         {
+            // CLI args, or a macOS File activation delivered before OnLoaded. The startup
+            // file decision is made: later activations open their own window (Program.cs).
+            Program.StartupFileDecisionDone = true;
             Dispatcher.UIThread.Post(async void () =>
             {
-                if (Se.Settings.General.RememberPositionAndSize)
-                {
-                    if (Se.Settings.General.UndockVideoControls)
-                    {
-                        VideoUndockControls();
-                    }
-
-                    InitLayout.RestoreLayoutPositions(Se.Settings.Appearance.CurrentLayoutPositions, ContentGrid.Children.FirstOrDefault() as Grid);
-                }
-
-                await Task.Delay(100);
-                var hasCliVideo = !string.IsNullOrEmpty(Program.PendingVideoToOpen);
-                if (!string.IsNullOrEmpty(Program.PendingFileToOpen))
-                {
-                    // skipLoadVideo when a CLI video is given so SubtitleOpen does not
-                    // auto-guess and load a different one before we open the explicit path.
-                    await SubtitleOpen(Program.PendingFileToOpen, skipLoadVideo: hasCliVideo);
-                }
-                if (hasCliVideo && File.Exists(Program.PendingVideoToOpen!))
-                {
-                    await VideoOpenFile(Program.PendingVideoToOpen!);
-                }
-                Program.PendingFileToOpen = null;
-                Program.PendingVideoToOpen = null;
+                await OpenPendingStartupFilesAsync(delayForLayout: true);
             });
         }
         else if (Se.Settings.File.OpenLastFileOnStart)
@@ -24176,6 +24227,17 @@ public partial class MainViewModel :
                         // Delay to allow Activated event to set FileOpenedViaActivation flag, the Activated event fires asynchronously during startup
                         // and may not have completed by the time OnLoaded runs so wait and recheck the flag
                         await Task.Delay(100);
+                        Program.StartupFileDecisionDone = true;
+
+                        if (!string.IsNullOrEmpty(Program.PendingFileToOpen) ||
+                            !string.IsNullOrEmpty(Program.PendingVideoToOpen))
+                        {
+                            // A macOS File activation landed during the grace delay (cold
+                            // launch via a Finder double-click): open that file in this
+                            // still-empty window instead of the last-used one.
+                            await OpenPendingStartupFilesAsync(delayForLayout: false);
+                            return;
+                        }
 
                         // Check if file was opened via activation (e.g., from Finder on macOS)
                         if (Program.FileOpenedViaActivation)
@@ -24236,6 +24298,8 @@ public partial class MainViewModel :
                 Se.Settings.File.RecentFiles = Se.Settings.File.RecentFiles
                     .Where(p => File.Exists(p.SubtitleFileName))
                     .ToList();
+
+                PostDeferredStartupActivationCheck();
             }
         }
         else
@@ -24253,6 +24317,8 @@ public partial class MainViewModel :
                     InitLayout.RestoreLayoutPositions(Se.Settings.Appearance.CurrentLayoutPositions, ContentGrid.Children.FirstOrDefault() as Grid);
                 }, DispatcherPriority.Loaded);
             }
+
+            PostDeferredStartupActivationCheck();
         }
 
         ComboBoxSubtitleFormatChanged(null, new SelectionChangedEventArgs(Avalonia.Controls.Primitives.SelectingItemsControl.SelectionChangedEvent, Array.Empty<object>(), Array.Empty<object>()));
