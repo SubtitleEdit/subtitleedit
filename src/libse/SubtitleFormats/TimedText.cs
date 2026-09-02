@@ -54,7 +54,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             if (Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource == "hh:mm:ss.ms-two-digits")
             {
-                return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}.{(int)Math.Round(time.Milliseconds / 10.0):0}";
+                // round on the total so 995-999 ms carries into the second (was ".100"), and always
+                // write two digits - the reader only recognizes the 11-char "hh:mm:ss.ff" shape
+                var hundredths = new TimeCode(Math.Round(time.TotalMilliseconds / 10.0) * 10.0);
+                return $"{hundredths.Hours:00}:{hundredths.Minutes:00}:{hundredths.Seconds:00}.{hundredths.Milliseconds / 10:00}";
             }
 
             return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}.{time.Milliseconds:000}";

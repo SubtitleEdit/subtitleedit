@@ -4,6 +4,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.GoogleLens;
 
 internal class HeaderData
 {
+    // The request's "vpw"/"vph" query values. Kept as two ints: the int[] "viewport" config
+    // entry was being stringified with ToString(), which sent "System.Int32[]" for both.
+    public const int ViewportWidth = 1920;
+    public const int ViewportHeight = 1080;
+
     public static Dictionary<string, object> Config = [];
     public static Dictionary<string, dynamic> Cookies = [];
     public static Dictionary<string, string> GenerateHeaders()
@@ -46,7 +51,7 @@ internal class HeaderData
             { "sbisrc", $"Google Chrome {chromeVersion} (Official) Windows" },
             { "userAgent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36" },
             { "endpoint", Constants.LENS_ENDPOINT },
-            { "viewport", new int[] { 1920, 1080 } },
+            { "viewport", new int[] { ViewportWidth, ViewportHeight } },
             { "headers", new Dictionary<string, string>() },
             { "fetchOptions", new Dictionary<string, string>() }
         };

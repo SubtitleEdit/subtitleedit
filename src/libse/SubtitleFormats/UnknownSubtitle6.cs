@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -56,9 +57,17 @@ SRPSKI
                 sb.AppendLine(string.Format(" {0}          {1} " + Environment.NewLine +
                                             "1    0    0    0    0    0" + Environment.NewLine +
                                             "{2}" + Environment.NewLine +
-                                            "{3}", p.StartTime.TotalMilliseconds / 10, p.EndTime.TotalMilliseconds / 10, firstLine, secondLine));
+                                            "{3}", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), firstLine, secondLine));
             }
             return sb.ToString().Trim();
+        }
+
+        private static string EncodeTimeCode(TimeCode time)
+        {
+            // whole centiseconds, invariant: the raw double wrote "612,3" under a comma-decimal
+            // locale (and "612.3" elsewhere), which the reader's integer regex rejects - the cue
+            // then merged into the previous one on reload
+            return ((long)Math.Round(time.TotalMilliseconds / 10.0)).ToString(CultureInfo.InvariantCulture);
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

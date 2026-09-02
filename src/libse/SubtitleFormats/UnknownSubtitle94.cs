@@ -40,7 +40,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var s = line.Trim();
                 if (RegexTimeCodes.IsMatch(s))
                 {
-                    var arr = s.Split('\t');
+                    // the regex accepts "\t+" between the time codes, so a doubled tab produced an
+                    // empty column that threw in double.Parse and the file failed to open
+                    var arr = s.Split('\t', StringSplitOptions.RemoveEmptyEntries);
+                    if (arr.Length < 3)
+                    {
+                        _errorCount++;
+                        continue;
+                    }
+
                     string start = arr[0];
                     string end = arr[1];
                     var text = arr[2];
