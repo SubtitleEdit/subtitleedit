@@ -16849,7 +16849,10 @@ public partial class MainViewModel :
         }
 
         var startMs = Math.Round(vp.Position * 1000.0, MidpointRounding.AwayFromZero);
-        selectedSubtitle.StartTime = TimeSpan.FromMilliseconds(startMs);
+        // Move the whole line (SE4 SetStartTime with adjustEndTime): the end is only rewritten once
+        // the playhead is 100 ms past the new start, so a quick tap on a line whose old end lies before
+        // the new start must not leave it with a negative duration.
+        selectedSubtitle.SetStartTimeKeepDuration(TimeSpan.FromMilliseconds(startMs));
         _setEndAtKeyUpLine = selectedSubtitle;
         _setEndAtKeyUpLineGoToNext = true;
         _updateAudioVisualizer = true;
