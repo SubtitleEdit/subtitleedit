@@ -17381,7 +17381,7 @@ public partial class MainViewModel :
         var countBefore = Subtitles.Count;
         RunWithoutChangeDetection(() =>
         {
-            _splitManager.Split(Subtitles, s, vm.SelectedCandidate.TextIndex, language);
+            _splitManager.Split(Subtitles, s, -1, vm.SelectedCandidate.TextIndex, language, GetOriginalSplit(s, language, -1));
             Renumber();
         });
 
@@ -19981,26 +19981,21 @@ public partial class MainViewModel :
         }
 
         var language = LanguageAutoDetect.AutoDetectGoogleLanguage(GetUpdateSubtitle());
+
+        // "Split at cursor" takes the caret from whichever text box has focus (SE4 parity,
+        // #14434): the original box splits the original at its caret and lets the translation
+        // auto-split, the translation box does the reverse. The natural split point differs
+        // between the two languages, so the caret is never shared. A read-only original can
+        // hold focus but is never rewritten, so its caret is ignored.
+        var originalHasFocus = atTextBoxPosition && EditTextBoxOriginal.IsFocused && CanEditOriginal;
+        var textIndex = atTextBoxPosition && !originalHasFocus ? EditTextBox.SelectionStart : -1;
+        var videoPositionSeconds = atVideoPosition && vp != null ? vp.Position : -1;
+        var originalSplit = GetOriginalSplit(s, language, originalHasFocus ? EditTextBoxOriginal.SelectionStart : -1);
+
         var countBefore = Subtitles.Count;
         RunWithoutChangeDetection(() =>
         {
-            if (atVideoPosition && atTextBoxPosition && vp != null)
-            {
-                _splitManager.Split(Subtitles, s, vp.Position, EditTextBox.SelectionStart, language);
-            }
-            else if (atVideoPosition && vp != null)
-            {
-                _splitManager.Split(Subtitles, s, vp.Position, language);
-            }
-            else if (atTextBoxPosition)
-            {
-                _splitManager.Split(Subtitles, s, EditTextBox.SelectionStart, language);
-            }
-            else
-            {
-                _splitManager.Split(Subtitles, s, language);
-            }
-
+            _splitManager.Split(Subtitles, s, videoPositionSeconds, textIndex, language, originalSplit);
             Renumber();
         });
 
@@ -20018,6 +20013,28 @@ public partial class MainViewModel :
         }
 
         _updateAudioVisualizer = true;
+    }
+
+    /// <summary>
+    /// How a split should treat the row's original text: split it along with the translation
+    /// when the original is editable, so the two columns stay structurally in sync (#14434).
+    /// A read-only reference is left untouched - its file is authoritative and the sticky
+    /// refresh re-syncs the displayed text from it.
+    /// </summary>
+    /// <param name="originalTextIndex">Caret in the original text box, or -1 to auto-split the original.</param>
+    private OriginalSplit? GetOriginalSplit(SubtitleLineViewModel s, string language, int originalTextIndex)
+    {
+        if (!CanEditOriginal || string.IsNullOrEmpty(s.OriginalText))
+        {
+            return null;
+        }
+
+        // The loaded original may lag the rows' edits, but its language does not change.
+        var originalLanguage = _subtitleOriginal.Paragraphs.Count > 0
+            ? LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleOriginal)
+            : language;
+
+        return new OriginalSplit(originalTextIndex, originalLanguage);
     }
 
     /// <summary>Scrolls minimally so <paramref name="row"/> is fully on screen; no selection change.</summary>

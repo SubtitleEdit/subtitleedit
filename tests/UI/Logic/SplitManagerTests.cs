@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
@@ -585,5 +585,94 @@ public class SplitManagerTests
         Assert.Equal(1900.0, subtitles[0].EndTime.TotalMilliseconds, 1);
         var gapMs = subtitles[1].StartTime.TotalMilliseconds - subtitles[0].EndTime.TotalMilliseconds;
         Assert.Equal(100.0, gapMs, 1);
+    }
+
+    // #14434: with an editable original loaded, a split used to copy the complete original
+    // onto both halves. The original is now split by the same rules as the translation.
+
+    [Fact]
+    public void Split_WithOriginal_AutoSplitsOriginalOnItsOwnLineBreak()
+    {
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
+        var manager = new SplitManager();
+        var subtitle = MakeSubtitle($"First line{Environment.NewLine}Second line", 1, 3);
+        subtitle.OriginalText = $"Første linje{Environment.NewLine}Anden linje";
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        manager.Split(subtitles, subtitle, -1, -1, "en", new OriginalSplit(-1, "da"));
+
+        Assert.Equal(2, subtitles.Count);
+        Assert.Equal("First line", subtitles[0].Text);
+        Assert.Equal("Second line", subtitles[1].Text);
+        Assert.Equal("Første linje", subtitles[0].OriginalText);
+        Assert.Equal("Anden linje", subtitles[1].OriginalText);
+    }
+
+    [Fact]
+    public void Split_WithOriginalTextIndex_SplitsOriginalAtItsOwnCaret()
+    {
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
+        var manager = new SplitManager();
+        var subtitle = MakeSubtitle($"First line{Environment.NewLine}Second line", 1, 3);
+        subtitle.OriginalText = "Første del og anden del";
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        // The original box has focus: its caret splits the original, the translation auto-splits.
+        manager.Split(subtitles, subtitle, -1, -1, "en", new OriginalSplit("Første del".Length, "da"));
+
+        Assert.Equal(2, subtitles.Count);
+        Assert.Equal("First line", subtitles[0].Text);
+        Assert.Equal("Second line", subtitles[1].Text);
+        Assert.Equal("Første del", subtitles[0].OriginalText);
+        Assert.Equal("og anden del", subtitles[1].OriginalText);
+    }
+
+    [Fact]
+    public void Split_WithTranslationTextIndexAndOriginal_OriginalDoesNotShareTheCaret()
+    {
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
+        var manager = new SplitManager();
+        var subtitle = MakeSubtitle("Hello there my friend", 1, 3);
+        subtitle.OriginalText = $"Hej der{Environment.NewLine}min ven";
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        manager.Split(subtitles, subtitle, -1, "Hello there".Length, "en", new OriginalSplit(-1, "da"));
+
+        Assert.Equal("Hello there", subtitles[0].Text);
+        Assert.Equal("my friend", subtitles[1].Text);
+        Assert.Equal("Hej der", subtitles[0].OriginalText);
+        Assert.Equal("min ven", subtitles[1].OriginalText);
+    }
+
+    [Fact]
+    public void Split_WithOriginal_UnbreakableOriginalStaysOnFirstHalf()
+    {
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
+        var manager = new SplitManager();
+        var subtitle = MakeSubtitle($"First line{Environment.NewLine}Second line", 1, 3);
+        subtitle.OriginalText = "Hej";
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        manager.Split(subtitles, subtitle, -1, -1, "en", new OriginalSplit(-1, "da"));
+
+        Assert.Equal("Hej", subtitles[0].OriginalText);
+        Assert.Equal(string.Empty, subtitles[1].OriginalText);
+    }
+
+    [Fact]
+    public void Split_WithoutOriginalSplit_LeavesOriginalOnBothHalves()
+    {
+        // A read-only reference is not split: the file is authoritative and both halves keep
+        // displaying the original line they overlap.
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
+        var manager = new SplitManager();
+        var subtitle = MakeSubtitle($"First line{Environment.NewLine}Second line", 1, 3);
+        subtitle.OriginalText = $"Første linje{Environment.NewLine}Anden linje";
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        manager.Split(subtitles, subtitle, "en");
+
+        Assert.Equal($"Første linje{Environment.NewLine}Anden linje", subtitles[0].OriginalText);
+        Assert.Equal($"Første linje{Environment.NewLine}Anden linje", subtitles[1].OriginalText);
     }
 }
