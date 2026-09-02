@@ -1246,7 +1246,7 @@ public partial class SubtitleLineViewModel : ObservableObject
     /// The CPS the error rules compare against. The cell tints have to use this too, or a row can
     /// be painted red and still be invisible to "list errors" and to error navigation.
     /// </summary>
-    private double CpsRounded => Math.Round(CharactersPerSecond, 2, MidpointRounding.AwayFromZero);
+    private double CpsRounded => CpsHelper.Round(CharactersPerSecond);
 
     public bool HasErrors(SubtitleLineViewModel? prev, SubtitleLineViewModel? next)
     {
