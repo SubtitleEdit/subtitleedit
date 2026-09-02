@@ -28157,6 +28157,25 @@ public partial class MainViewModel :
     {
         if (_setEndAtKeyUpLine != null)
         {
+            var vp = GetVideoPlayerControl();
+            if (vp != null && !string.IsNullOrEmpty(_videoFileName))
+            {
+                var endMs = Math.Round(vp.Position * 1000.0, MidpointRounding.AwayFromZero);
+                if (_setEndAtKeyUpLine.StartTime.TotalMilliseconds + 100 < endMs)
+                {
+                    _setEndAtKeyUpLine.EndTime = TimeSpan.FromMilliseconds(endMs);
+                }
+            }
+
+            if (_setEndAtKeyUpLineGoToNext)
+            {
+                var idx = Subtitles.IndexOf(_setEndAtKeyUpLine);
+                if (idx >= 0)
+                {
+                    SelectAndScrollToRowCentered(idx + 1);
+                }
+            }
+
             _setEndAtKeyUpLine = null;
             _setEndAtKeyUpLineGoToNext = false;
         }
@@ -29187,17 +29206,10 @@ public partial class MainViewModel :
 
                 if (_setEndAtKeyUpLine != null)
                 {
-                    _setEndAtKeyUpLine.EndTime = TimeSpan.FromSeconds(vp.VideoPlayer.Position);
-                    if (_setEndAtKeyUpLineGoToNext)
+                    var posMs = Math.Round(vp.Position * 1000.0, MidpointRounding.AwayFromZero);
+                    if (_setEndAtKeyUpLine.StartTime.TotalMilliseconds + 100 < posMs)
                     {
-                        var idx = Subtitles.IndexOf(_setEndAtKeyUpLine);
-                        if (idx >= 0)
-                        {
-                            SelectAndScrollToRowCentered(idx + 1);
-                        }
-
-                        _setEndAtKeyUpLine = null;
-                        _setEndAtKeyUpLineGoToNext = false;
+                        _setEndAtKeyUpLine.EndTime = TimeSpan.FromMilliseconds(posMs);
                     }
                 }
 
