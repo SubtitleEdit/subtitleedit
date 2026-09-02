@@ -39,11 +39,7 @@ public class VlcReloader : IVlcReloader
 
             if (SmpteMode)
             {
-                foreach (var paragraph in subtitle.Paragraphs)
-                {
-                    paragraph.StartTime.TotalMilliseconds *= 1.001;
-                    paragraph.EndTime.TotalMilliseconds *= 1.001;
-                }
+                SmptePreviewStretch.Apply(subtitle);
             }
 
             SubtitleFormat format = _assFormat;
@@ -53,7 +49,7 @@ public class VlcReloader : IVlcReloader
                 // See MpvReloader - the furigana/bouten/vertical markup has to become positioned
                 // render lines before libass sees it (issue #13861, issue #14165).
                 subtitle = NetflixImsc11JapaneseToAss.ConvertToSubtitle(subtitle, VideoWidth, VideoHeight);
-                SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary);
+                SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary, SmpteMode);
                 text = subtitle.ToText(_assFormat);
             }
             else if (uiFormatType == typeof(WebVTT) || uiFormatType == typeof(WebVTTFileWithLineNumber))
@@ -62,7 +58,7 @@ public class VlcReloader : IVlcReloader
                 defaultStyle.BorderStyle = "3";
                 subtitle = new Subtitle(subtitle);
                 subtitle = WebVttToAssa.Convert(subtitle, defaultStyle, VideoWidth, VideoHeight);
-                SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary);
+                SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary, SmpteMode);
                 text = subtitle.ToText(_assFormat);
             }
             else
@@ -112,7 +108,7 @@ public class VlcReloader : IVlcReloader
                     SubtitlePositionToAssa.ApplyPositions(subtitle, oldSub.Header, usePositions);
                 }
 
-                SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary);
+                SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary, SmpteMode);
                 var hash = subtitle.GetFastHashCode(null);
                 if (hash != _mpvSubOldHash || string.IsNullOrEmpty(_mpvTextOld))
                 {
