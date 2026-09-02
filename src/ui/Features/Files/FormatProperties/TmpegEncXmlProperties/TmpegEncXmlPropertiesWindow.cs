@@ -21,7 +21,7 @@ public class TmpegEncXmlPropertiesWindow : Window
 
         var labelWidth = 200;
 
-        var labelFontName = UiUtil.MakeLabel(Se.Language.General.Language).WithMinWidth(labelWidth);
+        var labelFontName = UiUtil.MakeLabel(Se.Language.General.FontName).WithMinWidth(labelWidth);
         var comboBoxFontName = UiUtil.MakeComboBox(vm.FontNames, vm, nameof(vm.SelectedFontName));
         var panelFontName = new StackPanel
         {

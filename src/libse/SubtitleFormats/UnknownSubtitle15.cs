@@ -14,14 +14,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string ToTimeCode(TimeCode tc)
         {
-            int last = (int)Math.Round(tc.Milliseconds / 10.0D + 0.5D);
-            return tc.ToString().Substring(0, 8) + ":" + string.Format("{0:0#}", last);
+            // last field is hundredths; round on the total so 995 ms carries instead of writing "100"
+            var rounded = new TimeCode(Math.Round(tc.TotalMilliseconds / 10.0) * 10.0);
+            return $"{rounded.Hours:00}:{rounded.Minutes:00}:{rounded.Seconds:00}:{rounded.Milliseconds / 10:00}";
         }
 
         private static TimeCode DecodeTimeCode(string s)
         {
             var parts = s.Split(new[] { ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
-            return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]) * 100);
+            return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]) * 10); // hundredths, not tenths - "* 100" loaded 4.67 s as 10.8 s
         }
 
         public override string ToText(Subtitle subtitle, string title)
