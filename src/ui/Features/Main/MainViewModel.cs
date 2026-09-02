@@ -2551,15 +2551,7 @@ public partial class MainViewModel :
         // interprets the \pos below in the same space the dialog measured in.
         _subtitle.Header = result.ResultSubtitle.Header;
 
-        var x = result.ResultX;
-        var y = result.ResultY;
-        var tags = $"\\pos({x},{y})";
-        if (result.ResultRotation != 0)
-        {
-            tags += "\\frz" + result.ResultRotation.ToString(CultureInfo.InvariantCulture);
-        }
-
-        selectedItem.Text = "{" + tags + "}" + RemovePositionTags(selectedItem.Text);
+        selectedItem.Text = "{" + result.ResultTags + "}" + RemovePositionTags(selectedItem.Text);
         RefreshSubtitlePreview();
     }
 

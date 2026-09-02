@@ -43,8 +43,18 @@ public partial class AssaSetPositionViewModel : ObservableObject
     [ObservableProperty] private decimal _rotation;
 
     private static readonly Regex FrzRegex = new(@"\\frz\(?(-?\d+(\.\d+)?)\)?", RegexOptions.Compiled);
+    private static readonly Regex InlineAlignmentRegex = new(@"\\an([1-9])", RegexOptions.Compiled);
 
     public decimal ResultRotation => Rotation;
+
+    /// <summary>
+    /// The override tags OK writes in front of the line: \pos plus, when the text is rotated, \frz.
+    /// </summary>
+    public string ResultTags => BuildPositionTags(ResultX, ResultY, Rotation, _styleAngle);
+
+    // Angle of the line's style. \frz overrides it, so the spinner starts from it when the text has
+    // no \frz of its own and OK pins \frz whenever it is non-zero (a spinner at 0 must give 0°).
+    private decimal _styleAngle;
 
     private Subtitle _subtitle = new();
 
@@ -53,6 +63,7 @@ public partial class AssaSetPositionViewModel : ObservableObject
     private int _renderWidth = 1920;
     private int _renderHeight = 1080;
 
+    private string _alignment = "2";
     private bool _isLeftAligned = false;
     private bool _isHorizontalCentered = true;
     private bool _isRightAligned = false;
@@ -153,12 +164,6 @@ public partial class AssaSetPositionViewModel : ObservableObject
     {
         _subtitle = new Subtitle(subtitle, false);
 
-        var frzMatch = FrzRegex.Match(line.Text ?? string.Empty);
-        if (frzMatch.Success && decimal.TryParse(frzMatch.Groups[1].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var frz))
-        {
-            Rotation = frz;
-        }
-
         if (string.IsNullOrEmpty(_subtitle.Header))
         {
             _subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
@@ -174,16 +179,13 @@ public partial class AssaSetPositionViewModel : ObservableObject
 
         var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(_subtitle.Header);
         var style = styles.FirstOrDefault(s => s.Name.Equals(line.Style, StringComparison.OrdinalIgnoreCase));
-        if (style != null)
-        {
-            _isLeftAligned = style.Alignment == "1" || style.Alignment == "4" || style.Alignment == "7";
-            _isHorizontalCentered = style.Alignment == "2" || style.Alignment == "5" || style.Alignment == "8";
-            _isRightAligned = style.Alignment == "3" || style.Alignment == "6" || style.Alignment == "9";
+        _styleAngle = style?.Angle ?? 0;
+        ApplyAlignment(ResolveAlignment(style?.Alignment, line.Text));
 
-            _isTopAligned = style.Alignment == "7" || style.Alignment == "8" || style.Alignment == "9";
-            _isVerticalCentered = style.Alignment == "4" || style.Alignment == "5" || style.Alignment == "6";
-            _isBottomAligned = style.Alignment == "1" || style.Alignment == "2" || style.Alignment == "3";
-        }
+        var frzMatch = FrzRegex.Match(line.Text ?? string.Empty);
+        Rotation = frzMatch.Success && decimal.TryParse(frzMatch.Groups[1].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var frz)
+            ? frz
+            : _styleAngle;
 
         // Without a video, render at the script's own resolution so PlayRes aspect is honored and
         // render space equals script space. GetScreenShotWithSubtitle bumps odd sizes to even for
@@ -285,9 +287,64 @@ public partial class AssaSetPositionViewModel : ObservableObject
         var previewParagraph = line.ToParagraph(new AdvancedSubStationAlpha());
         previewParagraph.StartTime.TotalSeconds = 0;
         previewParagraph.EndTime.TotalSeconds = 10;
+
+        // The overlay must be the unrotated text: the dialog rotates it itself around the anchor
+        // by the spinner value. Rendering the line's own \frz (or the style's Angle) into the bitmap
+        // rotated it twice - \frz25 previewed at 50° and its trimmed box no longer matched the
+        // anchor libass places \pos at (#14440). \pos is kept so the overlay starts where the line is.
+        previewParagraph.Text = "{\\frz0}" + FrzRegex.Replace(previewParagraph.Text, string.Empty).Replace("{}", string.Empty);
         previewSubtitle.Paragraphs.Add(previewParagraph);
 
         return previewSubtitle;
+    }
+
+    /// <summary>
+    /// The effective \an alignment (1-9) of the line: an inline \an tag wins over the style, and
+    /// bottom-center is the ASS default.
+    /// </summary>
+    internal static string ResolveAlignment(string? styleAlignment, string? text)
+    {
+        var inline = InlineAlignmentRegex.Match(text ?? string.Empty);
+        if (inline.Success)
+        {
+            return inline.Groups[1].Value;
+        }
+
+        return styleAlignment is { Length: 1 } && styleAlignment[0] is >= '1' and <= '9' ? styleAlignment : "2";
+    }
+
+    private void ApplyAlignment(string alignment)
+    {
+        _alignment = alignment;
+        _isLeftAligned = alignment == "1" || alignment == "4" || alignment == "7";
+        _isHorizontalCentered = alignment == "2" || alignment == "5" || alignment == "8";
+        _isRightAligned = alignment == "3" || alignment == "6" || alignment == "9";
+
+        _isTopAligned = alignment == "7" || alignment == "8" || alignment == "9";
+        _isVerticalCentered = alignment == "4" || alignment == "5" || alignment == "6";
+        _isBottomAligned = alignment == "1" || alignment == "2" || alignment == "3";
+    }
+
+    /// <summary>
+    /// Where libass rotates the text: \org defaults to the \pos point, which is the alignment
+    /// anchor of the text box - not its center.
+    /// </summary>
+    internal static RelativePoint GetRotationOrigin(string alignment)
+    {
+        var x = alignment is "1" or "4" or "7" ? 0.0 : alignment is "3" or "6" or "9" ? 1.0 : 0.5;
+        var y = alignment is "7" or "8" or "9" ? 0.0 : alignment is "4" or "5" or "6" ? 0.5 : 1.0;
+        return new RelativePoint(x, y, RelativeUnit.Relative);
+    }
+
+    internal static string BuildPositionTags(int x, int y, decimal rotation, decimal styleAngle)
+    {
+        var tags = $"\\pos({x},{y})";
+        if (rotation != 0 || styleAngle != 0)
+        {
+            tags += "\\frz" + rotation.ToString("0.##", CultureInfo.InvariantCulture);
+        }
+
+        return tags;
     }
 
     /// <summary>
@@ -401,8 +458,9 @@ public partial class AssaSetPositionViewModel : ObservableObject
             0,
             0);
 
-        // ASSA \frz rotates counter-clockwise; Avalonia RotateTransform is clockwise, so negate.
-        ScreenshotOverlayImage.RenderTransformOrigin = RelativePoint.Center;
+        // ASSA \frz rotates counter-clockwise around the anchor (\org defaults to \pos);
+        // Avalonia RotateTransform is clockwise, so negate.
+        ScreenshotOverlayImage.RenderTransformOrigin = GetRotationOrigin(_alignment);
         ScreenshotOverlayImage.RenderTransform = new RotateTransform(-(double)Rotation);
 
         // Show the script-space anchor that OK writes into \pos, not the render-space top-left.
