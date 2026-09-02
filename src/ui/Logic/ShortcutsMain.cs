@@ -425,6 +425,8 @@ public static class ShortcutsMain
         { nameof(MainViewModel.MoveFirstWordFromNextLineUpCurrentSubtitleCommand), Se.Language.Options.Shortcuts.MoveFirstWordFromNextLineUpCurrentSubtitle },
         { nameof(MainViewModel.MoveTextFromCursorToNextAndGoToNextCommand), Se.Language.Options.Shortcuts.MoveTextFromCursorToNextAndGoToNext },
         { nameof(MainViewModel.MoveTextFromCursorToNextAndGoToNextAndPlayCommand), Se.Language.Options.Shortcuts.MoveTextFromCursorToNextAndGoToNextAndPlay },
+        { nameof(MainViewModel.BreakAtFirstSpaceFromCursorCommand), Se.Language.Options.Shortcuts.BreakAtFirstSpaceFromCursor },
+        { nameof(MainViewModel.BreakAtFirstSpaceFromCursorAndGoToNextCommand), Se.Language.Options.Shortcuts.BreakAtFirstSpaceFromCursorAndGoToNext },
         { nameof(MainViewModel.ToggleFocusGridAndWaveformCommand), Se.Language.Options.Shortcuts.ToggleFocusGridAndWaveform },
         { nameof(MainViewModel.ToggleFocusTextBoxAndWaveformCommand), Se.Language.Options.Shortcuts.ToggleFocusTextBoxAndWaveform },
         { nameof(MainViewModel.ToggleFocusTextBoxAndSubtitleGridCommand), Se.Language.Options.Shortcuts.ToggleFocusTextBoxAndGrid },
@@ -707,6 +709,8 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.TextBoxItalicCommand, nameof(vm.TextBoxItalicCommand), ShortcutCategory.TextBox);
         AddShortcut(shortcuts, vm.TextBoxBoldCommand, nameof(vm.TextBoxBoldCommand), ShortcutCategory.TextBox);
         AddShortcut(shortcuts, vm.TextBoxUnderlineCommand, nameof(vm.TextBoxUnderlineCommand), ShortcutCategory.TextBox);
+        AddShortcut(shortcuts, vm.BreakAtFirstSpaceFromCursorCommand, nameof(vm.BreakAtFirstSpaceFromCursorCommand), ShortcutCategory.TextBox);
+        AddShortcut(shortcuts, vm.BreakAtFirstSpaceFromCursorAndGoToNextCommand, nameof(vm.BreakAtFirstSpaceFromCursorAndGoToNextCommand), ShortcutCategory.TextBox);
 
         // Tools
         AddShortcut(shortcuts, vm.ShowBridgeGapsCommand, nameof(vm.ShowBridgeGapsCommand), ShortcutCategory.General, ShortcutGroup.Tools);

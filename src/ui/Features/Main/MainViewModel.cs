@@ -18709,6 +18709,72 @@ public partial class MainViewModel :
         _updateAudioVisualizer = true;
     }
 
+    [RelayCommand]
+    private void BreakAtFirstSpaceFromCursor()
+    {
+        BreakAtFirstSpaceFromCursor(goToNext: false);
+    }
+
+    [RelayCommand]
+    private void BreakAtFirstSpaceFromCursorAndGoToNext()
+    {
+        BreakAtFirstSpaceFromCursor(goToNext: true);
+    }
+
+    /// <summary>
+    /// SE 4's "Break at first space from cursor position" (#14420): flattens the existing line
+    /// breaks and puts a single break at the first space at (or right before) the caret, so a
+    /// manual two-liner is one keystroke. Works on whichever text box has focus. The plain variant
+    /// leaves the caret at the end of the new first line; the go-to-next variant moves on to the
+    /// next row like SE 4 did, whether or not the text changed.
+    /// </summary>
+    private void BreakAtFirstSpaceFromCursor(bool goToNext)
+    {
+        var s = SelectedSubtitle;
+        if (s == null || s.IsReferenceOnly)
+        {
+            return;
+        }
+
+        var tb = GetFocusedTextBoxWrapper() ?? EditTextBox;
+        var isOriginal = ReferenceEquals(tb, EditTextBoxOriginal);
+        if (tb.IsReadOnly || (isOriginal && !CanEditOriginal))
+        {
+            return;
+        }
+
+        var text = tb.Text ?? string.Empty;
+        var caret = Math.Clamp(tb.CaretIndex, 0, text.Length);
+        var newText = Utilities.ReSplit(text, caret);
+        if (newText != text)
+        {
+            if (isOriginal)
+            {
+                s.OriginalText = newText;
+            }
+            else
+            {
+                s.Text = newText;
+            }
+
+            // The row is the working text; the box follows through its binding, but the caret
+            // must be measured against the new text, so make sure the box shows it first.
+            if (tb.Text != newText)
+            {
+                tb.Text = newText;
+            }
+
+            var lines = newText.SplitToLines();
+            tb.CaretIndex = lines.Count > 0 ? lines[0].Length : newText.Length;
+            _updateAudioVisualizer = true;
+        }
+
+        if (goToNext)
+        {
+            GoToNextLine();
+        }
+    }
+
     private List<string> NormalizeToTwoLines(string text)
     {
         var lines = text.SplitToLines();
