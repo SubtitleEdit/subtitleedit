@@ -155,11 +155,24 @@ public static class UiTheme
 
     private static void OnActualThemeVariantChanged(object? sender, EventArgs e)
     {
-        if (Se.Settings.Appearance.Theme == ThemeNameSystem && Application.Current != null)
+        if (Se.Settings.Appearance.Theme != ThemeNameSystem || Application.Current == null)
         {
-            SetCurrentTheme();
-            SystemThemeChangedCallback?.Invoke();
+            return;
         }
+
+        // Follow the variant that just became active; do not re-enter SetCurrentTheme here.
+        // That reset RequestedThemeVariant to Default, which is a no-op while the OS drives
+        // the variant but silently undoes any explicit RequestedThemeVariant assignment made
+        // while this handler is subscribed (the headless tests do that - the subscription
+        // outlives the ApplySettings call that made it and turned an unrelated theme test
+        // order-dependent).
+        RemoveLighterDark();
+        if (ThemeName == ThemeNameDark)
+        {
+            ApplyLighterDark();
+        }
+
+        SystemThemeChangedCallback?.Invoke();
     }
 
     public const double ScaleStep = 0.1;
