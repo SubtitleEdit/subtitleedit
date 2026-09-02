@@ -90,6 +90,8 @@ public static class VoiceCloningConsent
     /// type — a preset, a designed voice or a built-in speaker leaves it empty. The types share no
     /// interface, hence the list; a cloning engine added later has to be added here too, and until
     /// it is, its clones simply are not gated at synthesis (the import gate still covers them).
+    /// <c>VoiceCloningConsentTests.IsCloneVoice_RecognisesEveryCloningEngineInTheCatalog</c> fails
+    /// for any engine in <see cref="TtsEngineCatalog.CreateVoiceCloningEngines"/> that is missing.
     ///
     /// This is what catches reference WAVs that never went through the import dialog — dropped into
     /// the voices folder by hand from the settings dialogs' "open voices folder", or seeded from a
@@ -102,6 +104,7 @@ public static class VoiceCloningConsent
         // Clones every speaker in the video, one per line - the most cloning any single pick does.
         PerLineCloneVoice => true,
         ChatterboxVoice v => !string.IsNullOrEmpty(v.FilePath),
+        Confucius4TtsVoice v => !string.IsNullOrEmpty(v.FilePath),
         CosyVoice3Voice v => !string.IsNullOrEmpty(v.FilePath),
         DotsTtsVoice v => !string.IsNullOrEmpty(v.FilePath),
         F5TtsVoice v => !string.IsNullOrEmpty(v.FilePath),
@@ -109,6 +112,7 @@ public static class VoiceCloningConsent
         MossTtsVoice v => !string.IsNullOrEmpty(v.FilePath),
         OmniVoice v => !string.IsNullOrEmpty(v.FilePath),
         OmniVoiceCrispAsrVoice v => !string.IsNullOrEmpty(v.FilePath),
+        PocketTtsVoice v => !string.IsNullOrEmpty(v.FilePath),
         Qwen3TtsVoice v => !string.IsNullOrEmpty(v.FilePath),
         VibeVoice v => !string.IsNullOrEmpty(v.FilePath),
         VoxCPM2Voice v => !string.IsNullOrEmpty(v.FilePath),
