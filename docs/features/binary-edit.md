@@ -43,6 +43,8 @@ Under the image, **Set text** replaces the selected line's image with newly rend
 
 The File menu has **Import time codes...** (apply the timing of a text subtitle to the lines) next to Export, and the Synchronization menu offers **Adjust all times**, **Change frame rate**, and **Change speed**.
 
+**File → Generate video with burned-in subtitles...** burns the images into a video as they are, through the [burn-in](burn-in.md) dialog - the video in the player, or the one next to the subtitle file, or one you pick.
+
 ## Export
 
 There is no in-place save — use File → Export:

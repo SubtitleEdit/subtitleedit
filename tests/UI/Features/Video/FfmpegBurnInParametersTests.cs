@@ -1,4 +1,5 @@
 using Nikse.SubtitleEdit.Core.Common;
+using System.IO;
 using Nikse.SubtitleEdit.Logic.Media;
 
 namespace UITests.Features.Video;
@@ -83,5 +84,116 @@ public class FfmpegBurnInParametersTests
         var parameters = Generate("libx264", "aac", "output.mp4", pass, twoPassBitRate);
 
         Assert.StartsWith("-y ", parameters);
+    }
+
+    /// <summary>
+    /// A Blu-ray sup (from the image-based editor, or a batch item's subtitle) is a second input
+    /// laid over the frames, scaled to the output size like the video - libass' "ass" filter
+    /// renders text only. Overlapping lines are shown together this way (issue #14456).
+    /// </summary>
+    private static string GenerateImage(string cutStart = "", bool inputIsAudioOnly = false, Nikse.SubtitleEdit.Features.Video.BurnIn.BurnInLogo? logo = null)
+    {
+        return FfmpegGenerator.GenerateHardcodedVideoFile(
+            "input.mp4",
+            "/tmp/subs.sup",
+            "output.mp4",
+            320,
+            240,
+            "libx264",
+            string.Empty,
+            "yuv420p",
+            string.Empty,
+            "aac",
+            false,
+            "48000",
+            string.Empty,
+            "128k",
+            string.Empty,
+            string.Empty,
+            cutStart,
+            string.Empty,
+            string.Empty,
+            logo,
+            inputIsAudioOnly,
+            subtitleIsImage: true);
+    }
+
+    [Fact]
+    public void ImageSubtitle_IsASecondInputOverlaidAfterScaling()
+    {
+        var parameters = GenerateImage();
+
+        Assert.Contains("-y -i \"input.mp4\" -i \"/tmp/subs.sup\"", parameters);
+        Assert.Contains("-filter_complex \"[0:v]scale=320:240[video];[1:s]scale=320:240[subs];[video][subs]overlay\"", parameters);
+        Assert.DoesNotContain("ass=", parameters);
+        Assert.DoesNotContain("-vf", parameters);
+    }
+
+    /// <summary>
+    /// "-ss" before the video input restarts its timestamps at zero, and the sup demuxer cannot
+    /// seek, so the subtitle input is shifted back by the same time to stay in step.
+    /// </summary>
+    [Fact]
+    public void ImageSubtitle_WithCut_ShiftsTheSubtitleInputBackByTheCut()
+    {
+        var parameters = GenerateImage(cutStart: "-ss 00:01:02.500");
+
+        Assert.Contains("-y -ss 00:01:02.500 -i \"input.mp4\" -itsoffset -00:01:02.500 -i \"/tmp/subs.sup\"", parameters);
+    }
+
+    [Fact]
+    public void ImageSubtitle_WithoutCut_HasNoOffset()
+    {
+        Assert.DoesNotContain("-itsoffset", GenerateImage());
+    }
+
+    [Fact]
+    public void ImageSubtitle_AudioOnlyInput_OverlaysOnTheCanvasAndNumbersTheInputsAfterIt()
+    {
+        var parameters = GenerateImage(inputIsAudioOnly: true);
+
+        Assert.Contains("-i \"input.mp4\" -f lavfi -i color=c=black:s=320x240:r=25 -i \"/tmp/subs.sup\"", parameters);
+        Assert.Contains("[1:v]scale=320:240[video];[2:s]scale=320:240[subs];[video][subs]overlay", parameters);
+    }
+
+    [Fact]
+    public void ImageSubtitle_WithLogo_PutsTheLogoOverTheSubtitledFrames()
+    {
+        var logoFileName = Path.GetTempFileName();
+        try
+        {
+            var logo = new Nikse.SubtitleEdit.Features.Video.BurnIn.BurnInLogo
+            {
+                LogoFileName = logoFileName,
+                X = 10,
+                Y = 20,
+                Size = 100,
+                Alpha = 100,
+            };
+
+            var parameters = GenerateImage(logo: logo);
+
+            Assert.Contains($"-i \"input.mp4\" -i \"/tmp/subs.sup\" -i \"{logoFileName}\"", parameters);
+            Assert.Contains("[0:v]scale=320:240[video];[1:s]scale=320:240[subs];[video][subs]overlay[withsubs];[2:v]scale=", parameters);
+            Assert.Contains("[withsubs][logo]overlay=10:20", parameters);
+        }
+        finally
+        {
+            File.Delete(logoFileName);
+        }
+    }
+
+    /// <summary>
+    /// The text path is what every existing user runs; the image switch must not touch it.
+    /// </summary>
+    [Fact]
+    public void TextSubtitle_StillUsesTheAssFilter()
+    {
+        var parameters = Generate("libx264", "aac", "output.mp4");
+
+        Assert.Contains("-y -i \"input.mp4\" ", parameters);
+        Assert.Contains("-vf \"scale=320:240,ass=subtitle.ass\"", parameters);
+        Assert.DoesNotContain("-filter_complex", parameters);
+        Assert.DoesNotContain("overlay", parameters);
     }
 }

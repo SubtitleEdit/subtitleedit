@@ -20404,67 +20404,12 @@ public partial class MainViewModel :
         _updateAudioVisualizer = true;
     }
 
-    private async Task<bool> RequireFfmpegOk()
+    private Task<bool> RequireFfmpegOk()
     {
-        if (FfmpegHelper.IsFfmpegInstalled())
-        {
-            return true;
-        }
-
-        if (File.Exists(DownloadFfmpegViewModel.GetFfmpegFileName()))
-        {
-            FfmpegHelper.SetFfmpegPath(DownloadFfmpegViewModel.GetFfmpegFileName());
-            return true;
-        }
-
-        // Use an ffmpeg on the system PATH before prompting to (re)download - issue #11760.
-        var systemFfmpeg = FfmpegHelper.GetSystemFfmpegPath();
-        if (!string.IsNullOrEmpty(systemFfmpeg))
-        {
-            FfmpegHelper.SetFfmpegPath(systemFfmpeg);
-            return true;
-        }
-
-        if (!OperatingSystem.IsWindows() && File.Exists("/usr/local/bin/ffmpeg"))
-        {
-            FfmpegHelper.SetFfmpegPath("/usr/local/bin/ffmpeg");
-            return true;
-        }
-
-        if (OperatingSystem.IsWindows() || OperatingSystem.IsMacOS())
-        {
-            var answer = await MessageBox.Show(
-                Window!,
-                Se.Language.Main.DownloadFfmpegTitle,
-                Se.Language.Main.DownloadFfmpegQuestion,
-                MessageBoxButtons.YesNoCancel,
-                MessageBoxIcon.Question);
-
-            if (answer != MessageBoxResult.Yes)
-            {
-                return false;
-            }
-
-            var result = await ShowDialogAsync<DownloadFfmpegWindow, DownloadFfmpegViewModel>();
-            if (!string.IsNullOrEmpty(result.FfmpegFileName))
-            {
-                FfmpegHelper.SetFfmpegPath(result.FfmpegFileName);
-                ShowStatus(string.Format(Se.Language.Main.FfmpegDownloadedAndInstalledToX, result.FfmpegFileName));
-                return true;
-            }
-
-            return false;
-        }
-
-        // No ffmpeg download on Linux - say what is missing instead of failing silently (#14390).
-        await MessageBox.Show(
+        return FfmpegRequirement.EnsureAsync(
             Window!,
-            Se.Language.Title,
-            Se.Language.Main.FfmpegNotFoundInstallHint,
-            MessageBoxButtons.OK,
-            MessageBoxIcon.Information);
-
-        return false;
+            async () => (await ShowDialogAsync<DownloadFfmpegWindow, DownloadFfmpegViewModel>()).FfmpegFileName,
+            message => ShowStatus(message));
     }
 
     private void PerformUndo()
