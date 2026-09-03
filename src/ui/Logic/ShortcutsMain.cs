@@ -375,6 +375,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.SeekSilenceBackCommand),  Se.Language.Options.Shortcuts.SeekSilenceBack },
         { nameof(MainViewModel.SeekSilenceForwardCommand),  Se.Language.Options.Shortcuts.SeekSilenceForward },
         { nameof(MainViewModel.WaveformGuessStartCommand),  Se.Language.Options.Shortcuts.WaveformGuessStart },
+        { nameof(MainViewModel.WaveformGuessEndCommand),  Se.Language.Options.Shortcuts.WaveformGuessEnd },
         { nameof(MainViewModel.ShowShotChangesListCommand),  Se.Language.General.ShowShotChangesList },
         { nameof(MainViewModel.VideoUndockControlsCommand),  Se.Language.Options.Shortcuts.UndockVideoControls },
         { nameof(MainViewModel.VideoRedockControlsCommand),  Se.Language.Options.Shortcuts.RedockVideoControls },
@@ -809,7 +810,12 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.ShowWaveformSeekSilenceCommand, nameof(vm.ShowWaveformSeekSilenceCommand), ShortcutCategory.Waveform);
         AddShortcut(shortcuts, vm.SeekSilenceBackCommand, nameof(vm.SeekSilenceBackCommand), ShortcutCategory.Waveform);
         AddShortcut(shortcuts, vm.SeekSilenceForwardCommand, nameof(vm.SeekSilenceForwardCommand), ShortcutCategory.Waveform);
-        AddShortcut(shortcuts, vm.WaveformGuessStartCommand, nameof(vm.WaveformGuessStartCommand), ShortcutCategory.Waveform);
+        // General, not Waveform: "guess start/end" act on the selected line, not on a waveform
+        // selection, and as Waveform shortcuts they only fired while the waveform had keyboard
+        // focus - which it rarely has, so the shortcut seemed to work "one time in ten" (#14472).
+        // SE 4 dispatched "guess start" from the main form regardless of focus.
+        AddShortcut(shortcuts, vm.WaveformGuessStartCommand, nameof(vm.WaveformGuessStartCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
+        AddShortcut(shortcuts, vm.WaveformGuessEndCommand, nameof(vm.WaveformGuessEndCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
         AddShortcut(shortcuts, vm.GoToPreviousShotChangeCommand, nameof(vm.GoToPreviousShotChangeCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.GoToNextShotChangeCommand, nameof(vm.GoToNextShotChangeCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.ShowVideoChaptersCommand, nameof(vm.ShowVideoChaptersCommand), ShortcutCategory.General, ShortcutGroup.Video);

@@ -4314,6 +4314,98 @@ public class AudioVisualizer : Control
     }
 
     /// <summary>
+    /// "Guess end" counterpart of <see cref="FindDataBelowThresholdBackForStart"/>: finds the moment
+    /// the speech around <paramref name="endSeconds"/> stops, i.e. where the silence after it begins.
+    /// <list type="bullet">
+    /// <item>The end cue sits in real silence (a quiet run at least <paramref name="durationInSeconds"/>
+    /// long): the boundary is the last loud sample before that run, looked for up to 1 s back.</item>
+    /// <item>The end cue sits inside speech, or in a pause too short to count as silence: the boundary
+    /// is the first quiet run of <paramref name="durationInSeconds"/> after it, looked for up to 1 s
+    /// ahead.</item>
+    /// </list>
+    /// Like the start variant the result is padded by 10 ms away from the speech and the search gives up
+    /// when the audio around the cue is all about the same level (nothing to detect).
+    /// </summary>
+    /// <returns>video position in seconds, -1 if not found</returns>
+    public double FindDataBelowThresholdForwardForEnd(double thresholdPercent, double durationInSeconds, double endSeconds)
+    {
+        if (WavePeaks == null || WavePeaks.Peaks.Count == 0)
+        {
+            return -1;
+        }
+
+        var count = WavePeaks.Peaks.Count;
+        var min = Math.Max(0, SecondsToSampleIndex(endSeconds - 1));
+        var max = Math.Min(count, SecondsToSampleIndex(endSeconds + 1));
+        var end = SecondsToSampleIndex(endSeconds);
+        if (end < 0 || end >= count || max <= min)
+        {
+            return -1;
+        }
+
+        var length = SecondsToSampleIndex(durationInSeconds);
+        var threshold = thresholdPercent / 100.0 * WavePeaks.HighestPeak;
+
+        var minMax = GetMinAndMax(min, max);
+        const int lowPeakDifference = 4_000;
+        if (minMax.Max - minMax.Min < lowPeakDifference)
+        {
+            return -1; // all audio about the same
+        }
+
+        var peaks = WavePeaks.Peaks;
+        var searchForwardFrom = end;
+        if (peaks[end].Abs <= threshold)
+        {
+            // The cue is in a quiet stretch - measure it.
+            var runStart = end;
+            while (runStart > min && peaks[runStart - 1].Abs <= threshold)
+            {
+                runStart--;
+            }
+
+            var runEnd = end + 1;
+            while (runEnd < max && peaks[runEnd].Abs <= threshold)
+            {
+                runEnd++;
+            }
+
+            if (runEnd - runStart >= length)
+            {
+                if (runStart <= min)
+                {
+                    return -1; // no speech within reach before the cue
+                }
+
+                // runStart - 1 is the last loud sample: the speech ends there.
+                return SampleIndexToSeconds(runStart) + 0.01;
+            }
+
+            // Just a short pause inside the speech - keep looking for the real silence after it.
+            searchForwardFrom = runEnd;
+        }
+
+        var hitCount = 0;
+        for (var index = searchForwardFrom; index < max; index++)
+        {
+            if (peaks[index].Abs <= threshold)
+            {
+                hitCount++;
+                if (hitCount >= length)
+                {
+                    return SampleIndexToSeconds(index - hitCount + 1) + 0.01;
+                }
+            }
+            else
+            {
+                hitCount = 0;
+            }
+        }
+
+        return -1;
+    }
+
+    /// <summary>
     /// The lowest peak in a time range, as a percentage of the highest peak in the file.
     /// Used by "guess start" to find the noise floor around a cue (SE 4 parity).
     /// </summary>

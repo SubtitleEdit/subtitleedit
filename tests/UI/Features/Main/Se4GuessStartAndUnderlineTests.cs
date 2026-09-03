@@ -5,11 +5,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Features.Options.Shortcuts;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace UITests.Features.Main;
@@ -22,10 +24,14 @@ public class Se4GuessStartAndUnderlineTests : IDisposable
 {
     private readonly List<Window> _windows = new();
     private readonly bool _timeCodesLocked = Se.Settings.General.LockTimeCodes;
+    private readonly int _guessStartOffsetMs = Se.Settings.Waveform.GuessStartOffsetMs;
+    private readonly int _guessEndOffsetMs = Se.Settings.Waveform.GuessEndOffsetMs;
 
     public void Dispose()
     {
         Se.Settings.General.LockTimeCodes = _timeCodesLocked;
+        Se.Settings.Waveform.GuessStartOffsetMs = _guessStartOffsetMs;
+        Se.Settings.Waveform.GuessEndOffsetMs = _guessEndOffsetMs;
         foreach (var window in _windows)
         {
             window.Close();
@@ -109,6 +115,127 @@ public class Se4GuessStartAndUnderlineTests : IDisposable
         var line = vm.Subtitles[0];
         Assert.InRange(line.StartTime.TotalMilliseconds, 2400, 2500);
         Assert.Equal(3800, line.EndTime.TotalMilliseconds, 0);
+    }
+
+    /// <summary>
+    /// #14472: the guessed start "feels too close to the waveform" for some users - the offset
+    /// setting pads the detected boundary by moving the start earlier.
+    /// </summary>
+    [AvaloniaFact]
+    public void GuessStartHonorsTheOffsetSetting()
+    {
+        Se.Settings.General.LockTimeCodes = false;
+        Se.Settings.Waveform.GuessStartOffsetMs = 100;
+
+        var (window, vm) = CreateMainViewModel();
+        vm.Subtitles.Add(new SubtitleLineViewModel(new Paragraph("Hello", 2200, 3800), null!) { Number = 1 });
+        Dispatcher.UIThread.RunJobs();
+
+        var av = vm.AudioVisualizer!;
+        av.WavePeaks = MakePeaks(sampleRate: 100, seconds: 6, speechFromSeconds: 2.5, speechToSeconds: 4.0);
+        Select(vm, vm.Subtitles[0]);
+        window.UpdateLayout();
+        Dispatcher.UIThread.RunJobs();
+
+        vm.WaveformGuessStartCommand.Execute(null);
+
+        Assert.InRange(vm.Subtitles[0].StartTime.TotalMilliseconds, 2300, 2400);
+    }
+
+    /// <summary>
+    /// "Guess end" (#14472): a cue that ends inside the silence after the speech is pulled back to
+    /// just after the speech stops.
+    /// </summary>
+    [AvaloniaFact]
+    public void GuessEndMovesTheEndCueToJustAfterTheSpeech()
+    {
+        Se.Settings.General.LockTimeCodes = false;
+        Se.Settings.Waveform.GuessEndOffsetMs = 0;
+
+        var (window, vm) = CreateMainViewModel();
+        vm.Subtitles.Add(new SubtitleLineViewModel(new Paragraph("Hello", 2500, 4600), null!) { Number = 1 });
+        Dispatcher.UIThread.RunJobs();
+
+        var av = vm.AudioVisualizer!;
+        av.WavePeaks = MakePeaks(sampleRate: 100, seconds: 7, speechFromSeconds: 2.5, speechToSeconds: 4.0);
+        Select(vm, vm.Subtitles[0]);
+        window.UpdateLayout();
+        Dispatcher.UIThread.RunJobs();
+
+        vm.WaveformGuessEndCommand.Execute(null);
+
+        var line = vm.Subtitles[0];
+        Assert.Equal(2500, line.StartTime.TotalMilliseconds, 0);
+        Assert.InRange(line.EndTime.TotalMilliseconds, 4000, 4100);
+    }
+
+    /// <summary>
+    /// A cue that ends while the speech is still going is extended to the silence after it.
+    /// </summary>
+    [AvaloniaFact]
+    public void GuessEndExtendsAnEndCueThatCutsTheSpeechShort()
+    {
+        Se.Settings.General.LockTimeCodes = false;
+        Se.Settings.Waveform.GuessEndOffsetMs = 0;
+
+        var (window, vm) = CreateMainViewModel();
+        vm.Subtitles.Add(new SubtitleLineViewModel(new Paragraph("Hello", 2500, 3500), null!) { Number = 1 });
+        Dispatcher.UIThread.RunJobs();
+
+        var av = vm.AudioVisualizer!;
+        av.WavePeaks = MakePeaks(sampleRate: 100, seconds: 7, speechFromSeconds: 2.5, speechToSeconds: 4.0);
+        Select(vm, vm.Subtitles[0]);
+        window.UpdateLayout();
+        Dispatcher.UIThread.RunJobs();
+
+        vm.WaveformGuessEndCommand.Execute(null);
+
+        Assert.InRange(vm.Subtitles[0].EndTime.TotalMilliseconds, 4000, 4100);
+    }
+
+    /// <summary>
+    /// The end never runs into the next line: it stops the minimum gap before it.
+    /// </summary>
+    [AvaloniaFact]
+    public void GuessEndStopsAtTheNextLine()
+    {
+        Se.Settings.General.LockTimeCodes = false;
+        Se.Settings.Waveform.GuessEndOffsetMs = 0;
+
+        var (window, vm) = CreateMainViewModel();
+        vm.Subtitles.Add(new SubtitleLineViewModel(new Paragraph("Hello", 2500, 3500), null!) { Number = 1 });
+        vm.Subtitles.Add(new SubtitleLineViewModel(new Paragraph("World", 3800, 5000), null!) { Number = 2 });
+        Dispatcher.UIThread.RunJobs();
+
+        var av = vm.AudioVisualizer!;
+        av.WavePeaks = MakePeaks(sampleRate: 100, seconds: 7, speechFromSeconds: 2.5, speechToSeconds: 4.0);
+        Select(vm, vm.Subtitles[0]);
+        window.UpdateLayout();
+        Dispatcher.UIThread.RunJobs();
+
+        vm.WaveformGuessEndCommand.Execute(null);
+
+        var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
+        Assert.Equal(3800 - gapMs, vm.Subtitles[0].EndTime.TotalMilliseconds, 0);
+    }
+
+    /// <summary>
+    /// #14472: as Waveform-category shortcuts "guess start/end" only fired while the waveform had
+    /// keyboard focus, which it rarely has - they must dispatch from anywhere like in SE 4.
+    /// </summary>
+    [AvaloniaFact]
+    public void GuessStartAndEndAreGeneralShortcuts()
+    {
+        var (_, vm) = CreateMainViewModel();
+
+        var all = ShortcutsMain.GetAllShortcuts(vm);
+        var start = all.Single(s => s.Name == nameof(MainViewModel.WaveformGuessStartCommand));
+        var end = all.Single(s => s.Name == nameof(MainViewModel.WaveformGuessEndCommand));
+
+        Assert.Equal(ShortcutCategory.General, start.Category);
+        Assert.Equal(ShortcutCategory.General, end.Category);
+        Assert.Equal(ShortcutGroup.Waveform, start.Group);
+        Assert.Equal(ShortcutGroup.Waveform, end.Group);
     }
 
     [AvaloniaFact]

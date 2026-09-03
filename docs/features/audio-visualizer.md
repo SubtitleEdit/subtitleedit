@@ -59,6 +59,8 @@ What a single click and a double-click do is configurable: **Waveform single-cli
 | Insert at position (focus text) | Insert a new subtitle at video position and focus the text editor |
 | Insert at position (no focus) | Insert a new subtitle at video position |
 | Seek silence | Find the next silent section |
+| Guess start time from waveform | Move the selected line's start to just before the speech begins (no default key) |
+| Guess end time from waveform | Move the selected line's end to just after the speech stops (no default key) |
 
 > **Note:** Actual key bindings depend on your shortcut configuration. See **Options → Shortcuts** to view or change them.
 

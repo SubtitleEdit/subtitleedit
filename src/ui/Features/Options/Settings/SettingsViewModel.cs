@@ -326,6 +326,8 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private decimal _waveformSnapToShotChangeStartMaxSeconds;
     [ObservableProperty] private decimal _waveformSnapToShotChangeEndMaxSeconds;
     [ObservableProperty] private decimal _waveformSnapToShotChangeSameShotEndMaxSeconds;
+    [ObservableProperty] private int _waveformGuessStartOffsetMs;
+    [ObservableProperty] private int _waveformGuessEndOffsetMs;
     [ObservableProperty] private bool _waveformShotChangesAutoGenerate;
     [ObservableProperty] private bool _waveformAllowOverlap;
     [ObservableProperty] private bool _waveformSetVideoPositionOnMoveStartEnd;
@@ -1031,6 +1033,8 @@ public partial class SettingsViewModel : ObservableObject
         WaveformSnapToShotChangeStartMaxSeconds = (decimal)Se.Settings.Waveform.SnapToShotChangeStartMaxSeconds;
         WaveformSnapToShotChangeEndMaxSeconds = (decimal)Se.Settings.Waveform.SnapToShotChangeEndMaxSeconds;
         WaveformSnapToShotChangeSameShotEndMaxSeconds = (decimal)Se.Settings.Waveform.SnapToShotChangeSameShotEndMaxSeconds;
+        WaveformGuessStartOffsetMs = Se.Settings.Waveform.GuessStartOffsetMs;
+        WaveformGuessEndOffsetMs = Se.Settings.Waveform.GuessEndOffsetMs;
         WaveformShotChangesAutoGenerate = Se.Settings.Waveform.ShotChangesAutoGenerate;
         WaveformAllowOverlap = Se.Settings.Waveform.AllowOverlap;
         WaveformSetVideoPositionOnMoveStartEnd = Se.Settings.Waveform.SetVideoPositionOnMoveStartEnd;
@@ -1882,6 +1886,8 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Waveform.SnapToShotChangeStartMaxSeconds = (double)WaveformSnapToShotChangeStartMaxSeconds;
         Se.Settings.Waveform.SnapToShotChangeEndMaxSeconds = (double)WaveformSnapToShotChangeEndMaxSeconds;
         Se.Settings.Waveform.SnapToShotChangeSameShotEndMaxSeconds = (double)WaveformSnapToShotChangeSameShotEndMaxSeconds;
+        Se.Settings.Waveform.GuessStartOffsetMs = WaveformGuessStartOffsetMs;
+        Se.Settings.Waveform.GuessEndOffsetMs = WaveformGuessEndOffsetMs;
         Se.Settings.Waveform.ShotChangesAutoGenerate = WaveformShotChangesAutoGenerate;
         Se.Settings.Waveform.AllowOverlap = WaveformAllowOverlap;
         Se.Settings.Waveform.SetVideoPositionOnMoveStartEnd = WaveformSetVideoPositionOnMoveStartEnd;
