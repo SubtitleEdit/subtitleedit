@@ -614,18 +614,47 @@ public class FfmpegGenerator
         return processMakeVideo;
     }
 
-    public static Process TrimSilenceStartAndEnd(string inputFileName, string outputFileName, DataReceivedEventHandler? dataReceivedHandler = null)
+    /// <summary>
+    /// Runs ffmpeg's volumedetect over the file; the peak arrives on stderr as
+    /// "max_volume: -2.8 dB" (parse it with <c>TtsSilenceThreshold.ParsePeakDbfs</c>).
+    /// </summary>
+    public static Process MeasurePeakVolume(string inputFileName, DataReceivedEventHandler dataReceivedHandler)
+    {
+        var process = new Process
+        {
+            StartInfo =
+            {
+                FileName = GetFfmpegLocation(),
+                Arguments = $"-nostdin -hide_banner -i \"{inputFileName}\" -vn -af volumedetect -f null -",
+                UseShellExecute = false,
+                CreateNoWindow = true
+            }
+        };
+
+        SetupDataReceiveHandler(dataReceivedHandler, process);
+
+        return process;
+    }
+
+    /// <param name="silenceThreshold">
+    /// Linear amplitude (0..1) under which a sample counts as silence. Derive it from the clip's
+    /// peak via <c>TtsSilenceThreshold.Amplitude</c>: the old fixed 0.01 (-40 dBFS) trimmed the
+    /// soft final consonant off quiet voice-clone output, cutting the last word (#14480).
+    /// </param>
+    public static Process TrimSilenceStartAndEnd(string inputFileName, string outputFileName, double silenceThreshold = 0.01, DataReceivedEventHandler? dataReceivedHandler = null)
     {
         // silenceremove keeps up to start_silence (100 ms) of the detected silence as padding.
         // No unconditional atrim cuts here: a fixed atrim=start=0.1 ahead of the detection used
         // to chop 100 ms off both ends whether or not it was silence, clipping the first/last
         // phoneme for engines that start speaking immediately (e.g. Piper).
+        var threshold = Math.Clamp(silenceThreshold, 0.000001, 1.0).ToString("0.########", CultureInfo.InvariantCulture);
+        var silenceRemove = $"silenceremove=start_periods=1:start_silence=0.1:start_threshold={threshold}";
         var processMakeVideo = new Process
         {
             StartInfo =
             {
                 FileName = GetFfmpegLocation(),
-                Arguments = $"-nostdin -y -i \"{inputFileName}\" -af \"areverse,silenceremove=start_periods=1:start_silence=0.1:start_threshold=0.01,areverse,silenceremove=start_periods=1:start_silence=0.1:start_threshold=0.01\" \"{outputFileName}\"",
+                Arguments = $"-nostdin -y -i \"{inputFileName}\" -af \"areverse,{silenceRemove},areverse,{silenceRemove}\" \"{outputFileName}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true
             }
@@ -643,13 +672,17 @@ public class FfmpegGenerator
     /// without affecting phonemes at all.
     /// </summary>
     /// <param name="maxSilenceSeconds">Maximum allowed silence duration between words (e.g. 0.15 for 150ms)</param>
-    public static Process CompressInternalSilence(string inputFileName, string outputFileName, double maxSilenceSeconds = 0.15, DataReceivedEventHandler? dataReceivedHandler = null)
+    /// <param name="silenceThresholdDb">
+    /// ffmpeg dB literal (e.g. "-52.3dB") under which a sample counts as silence - relative to the
+    /// clip's peak via <c>TtsSilenceThreshold.DbLiteral</c>, for the same reason as the trim (#14480).
+    /// </param>
+    public static Process CompressInternalSilence(string inputFileName, string outputFileName, double maxSilenceSeconds = 0.15, string silenceThresholdDb = "-40dB", DataReceivedEventHandler? dataReceivedHandler = null)
     {
         var maxSilence = maxSilenceSeconds.ToString("0.00", CultureInfo.InvariantCulture);
         // silenceremove: stop_periods=-1 processes ALL silence gaps (not just first)
         // stop_duration = max allowed silence length; stop_threshold = silence detection level
         // This keeps all speech intact and only compresses pauses between words
-        var filter = $"silenceremove=stop_periods=-1:stop_duration={maxSilence}:stop_threshold=-40dB";
+        var filter = $"silenceremove=stop_periods=-1:stop_duration={maxSilence}:stop_threshold={silenceThresholdDb}";
 
         var processMakeVideo = new Process
         {
@@ -762,14 +795,20 @@ public class FfmpegGenerator
     /// <summary>
     /// Apply pro audio post-processing chain: low-pass, EQ warmth, compression, loudness normalization, noise gate, and fade in/out.
     /// </summary>
-    public static Process ApplyProAudioChain(string inputFileName, string outputFileName, DataReceivedEventHandler? dataReceivedHandler = null)
+    /// <param name="gateThreshold">
+    /// Noise-gate threshold as a linear amplitude, relative to the clip's peak via
+    /// <c>TtsSilenceThreshold.Amplitude</c> - a fixed 0.01 gated the soft word endings of quiet
+    /// voice-clone output (#14480).
+    /// </param>
+    public static Process ApplyProAudioChain(string inputFileName, string outputFileName, double gateThreshold = 0.01, DataReceivedEventHandler? dataReceivedHandler = null)
     {
+        var gate = Math.Clamp(gateThreshold, 0.000001, 1.0).ToString("0.########", CultureInfo.InvariantCulture);
         // Chain: low-pass 2400Hz → bass warmth +6dB@200Hz → treble reduce -5dB@2500Hz → noise gate → compression → loudness normalization → tiny fade in/out
         var filters = string.Join(",",
             "lowpass=f=2400",
             "equalizer=f=200:t=h:width=100:g=6",
             "equalizer=f=2500:t=h:width=500:g=-5",
-            "agate=threshold=0.01:ratio=2:attack=5:release=50",
+            $"agate=threshold={gate}:ratio=2:attack=5:release=50",
             "compand=attacks=0.3:decays=0.8:points=-80/-80|-45/-45|-27/-15|0/-3:soft-knee=6:gain=3",
             "loudnorm=I=-16:LRA=11:TP=-1.5",
             "afade=t=in:d=0.015",
