@@ -15,6 +15,7 @@ using Avalonia.Styling;
 using Avalonia.VisualTree;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Controls.SyntaxTextEditorControl;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Platform.Windows;
@@ -3040,6 +3041,17 @@ public static class UiUtil
             Setters =
             {
                 new Setter(ComboBox.FontFamilyProperty, FontFamilyHelper.Make(fontName)),
+            }
+        });
+
+        // The source editor (source view, batch convert ASSA) draws its own text, so it is not
+        // covered by the TextBox style above and would stay in Avalonia's default sans (#14457).
+        // The format preview sets a monospace family locally, which wins over this style.
+        Application.Current.Styles.Add(new Style(x => x.OfType<SyntaxTextEditor>())
+        {
+            Setters =
+            {
+                new Setter(SyntaxTextEditor.FontFamilyProperty, FontFamilyHelper.Make(fontName)),
             }
         });
     }

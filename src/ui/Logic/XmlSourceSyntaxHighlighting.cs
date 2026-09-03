@@ -10,11 +10,22 @@ namespace Nikse.SubtitleEdit.Logic;
 /// </summary>
 public class XmlSourceSyntaxHighlighting : ISourceSyntaxHighlighter, ISourceSyntaxDocumentFormatter
 {
-    // Color scheme
-    private static readonly Color XmlTagColor = Color.Parse("#569CD6");
-    private static readonly Color XmlAttributeColor = Color.Parse("#9CDCFE");
-    private static readonly Color XmlValueColor = Color.Parse("#CE9178");
-    private static readonly Color CommentColor = Color.Parse("#6A9955");
+    // Color scheme - the dark set is the VS Code dark palette, which is washed out on white, so
+    // light mode gets the same hues a few shades darker (#14457).
+    private static readonly Color XmlTagColorDark = Color.Parse("#569CD6");
+    private static readonly Color XmlTagColorLight = Color.Parse("#1565C0");
+    private static readonly Color XmlAttributeColorDark = Color.Parse("#9CDCFE");
+    private static readonly Color XmlAttributeColorLight = Color.Parse("#006C9B");
+    private static readonly Color XmlValueColorDark = Color.Parse("#CE9178");
+    private static readonly Color XmlValueColorLight = Color.Parse("#A0522D");
+    private static readonly Color CommentColorDark = Color.Parse("#6A9955");
+    private static readonly Color CommentColorLight = Color.Parse("#2E7D32");
+
+    // Resolved per use so a theme switch is picked up
+    private static Color XmlTagColor => UiTheme.IsDarkThemeEnabled() ? XmlTagColorDark : XmlTagColorLight;
+    private static Color XmlAttributeColor => UiTheme.IsDarkThemeEnabled() ? XmlAttributeColorDark : XmlAttributeColorLight;
+    private static Color XmlValueColor => UiTheme.IsDarkThemeEnabled() ? XmlValueColorDark : XmlValueColorLight;
+    private static Color CommentColor => UiTheme.IsDarkThemeEnabled() ? CommentColorDark : CommentColorLight;
 
     /// <summary>
     /// Reflows XML that arrives (almost) all on one line - unreadable to scroll through, and slow
