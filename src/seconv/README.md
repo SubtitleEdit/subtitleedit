@@ -57,6 +57,21 @@ An unrecognised option is an error, never a silent no-op: `seconv` exits 1 and n
 real option rather than converting the file without the operation that was asked for. Exit codes
 are only ever 0 (success) or 1 (any failure).
 
+## MCP server
+
+`seconv mcp` runs the same engine as a [Model Context Protocol](https://modelcontextprotocol.io) server
+over stdio, so an AI client (Claude Desktop, Claude Code, Cursor, ...) can inspect and convert subtitles
+without a shell. Register it as a stdio server:
+
+```json
+{ "mcpServers": { "seconv": { "command": "seconv", "args": ["mcp"] } } }
+```
+
+Tools: `list_formats`, `subtitle_info`, `read_subtitle` (paged paragraphs of any format), `lint_subtitle`,
+`convert_subtitle` (format, encoding, offset, fps, operations such as FixCommonErrors, ...),
+`list_fix_common_errors_rules`, `list_remove_formatting_rules`. Logs go to stderr; add `--verbose` for
+debug output.
+
 ## Full reference
 
 ➡ **[Command Line (seconv) — full reference](../../docs/reference/command-line.md)**

@@ -373,6 +373,7 @@ internal static class CliSchema
                 new { name = "dump-settings", json = true, description = "Print a full --settings JSON with libse defaults. Always JSON; redirect to a file." },
                 new { name = "info", json = true, description = "Print format / encoding / duration / language for one file. Usage: seconv info <file>" },
                 new { name = "lint", json = true, description = "Validate subtitles; exit 1 if any issues found. Usage: seconv lint <pattern>..." },
+                new { name = "mcp", json = false, description = "Run seconv as a Model Context Protocol server over stdio. Tools: list_formats, subtitle_info, read_subtitle, lint_subtitle, convert_subtitle, list_fix_common_errors_rules, list_remove_formatting_rules. Usage: seconv mcp [--verbose]" },
                 new { name = "--help-json", json = true, description = "Print this schema." },
                 new { name = "--version", json = false, description = "Print the seconv version and exit." },
             },

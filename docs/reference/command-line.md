@@ -84,6 +84,7 @@ seconv list-rf-rules        # list remove-formatting rule IDs (alias: list-remov
 seconv dump-settings        # print a full --settings JSON with libse defaults (alias: default-settings)
 seconv info <file>          # print format/encoding/duration/language for a file
 seconv lint <pattern>       # validate subtitle(s); exit 1 if issues found
+seconv mcp                  # run as a Model Context Protocol server over stdio
 seconv --help               # show help (same text as -h, /? and /help)
 seconv --help-json          # print the whole command-line schema as JSON
 seconv --version            # print version and exit
@@ -123,6 +124,28 @@ seconv info movie.srt --json         # machine-parseable
 seconv lint *.srt                    # check overlaps, line lengths, tags, ...
 seconv lint *.srt --json             # CI-friendly: exit 1 on any issue
 ```
+
+### MCP server
+
+`seconv mcp` exposes the engine to AI clients as a [Model Context Protocol](https://modelcontextprotocol.io) server over stdio. Register it as a stdio server in the client's configuration — for Claude Desktop / Cursor:
+
+```json
+{ "mcpServers": { "seconv": { "command": "seconv", "args": ["mcp"] } } }
+```
+
+For Claude Code: `claude mcp add seconv -- seconv mcp`.
+
+| Tool | What it does |
+|---|---|
+| `list_formats` | Formats with `id` (the `format` value for `convert_subtitle`), extension, `inputOnly`. Optional substring filter. |
+| `subtitle_info` | Detect format, encoding, paragraph count, first/last time code, duration, language. |
+| `read_subtitle` | The paragraphs (number, start/end, text) of a file in any supported format, paged (`start`, `count`, max 1000). |
+| `lint_subtitle` | The same checks as `seconv lint`, as a per-paragraph issue list. |
+| `convert_subtitle` | Convert inputs/patterns to a format; supports output folder/name, encoding, overwrite, offset, fps/targetFps, renumber, duration/gap adjustments, delete first/last/contains, `operations`, FixCommonErrors and RemoveFormatting rule selection, container track numbers, OCR engine/language, `timeCodesOnly`, resolution. |
+| `list_fix_common_errors_rules` | Rule ids for `fixCommonErrorsRules`, with GUI label and language gate. |
+| `list_remove_formatting_rules` | Rule ids for `removeFormattingRules`. |
+
+Results are compact JSON with the same field names as the `--json` output of the corresponding subcommand. A failure comes back as an MCP tool error carrying the message (unknown operation, missing file, unsupported format, ...), never as a silent no-op. Stdout is reserved for the protocol; logs go to stderr (`--verbose` for debug level).
 
 ## Options
 
