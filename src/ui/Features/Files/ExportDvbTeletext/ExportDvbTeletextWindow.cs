@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -23,6 +23,7 @@ public class ExportDvbTeletextWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -42,6 +43,10 @@ public class ExportDvbTeletextWindow : Window
         var labelLanguage = UiUtil.MakeLabel(Se.Language.General.Language);
         var textBoxLanguage = UiUtil.MakeTextBox(120, vm, nameof(vm.LanguageCode));
 
+        var labelSubtitleType = UiUtil.MakeLabel(Se.Language.File.Export.ExportDvbTeletextSubtitleType);
+        var comboBoxSubtitleType = UiUtil.MakeComboBox(vm.SubtitleTypes, vm, nameof(vm.SelectedSubtitleType));
+        comboBoxSubtitleType.MinWidth = 120;
+
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
@@ -50,7 +55,9 @@ public class ExportDvbTeletextWindow : Window
         grid.Add(numericPageNumber, 0, 1);
         grid.Add(labelLanguage, 1, 0);
         grid.Add(textBoxLanguage, 1, 1);
-        grid.Add(panelButtons, 2, 0, 1, 2);
+        grid.Add(labelSubtitleType, 2, 0);
+        grid.Add(comboBoxSubtitleType, 2, 1);
+        grid.Add(panelButtons, 3, 0, 1, 2);
 
         Content = grid;
 
