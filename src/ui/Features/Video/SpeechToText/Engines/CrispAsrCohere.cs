@@ -20,6 +20,7 @@ public class CrispAsrCohere : CrispAsrEngineBase
     public override List<WhisperLanguage> Languages =>
        new()
        {
+            new WhisperLanguage("auto", "Auto detect"),
             new WhisperLanguage("en", "english"),
             new WhisperLanguage("fr", "french"),
             new WhisperLanguage("de", "german"),

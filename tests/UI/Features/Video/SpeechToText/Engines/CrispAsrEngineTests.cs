@@ -54,4 +54,29 @@ public class CrispAsrEngineTests
             Se.Settings.Tools.AudioToText.CommandLineParameterCrispAsrOmni = originalOmni;
         }
     }
+
+    /// <summary>
+    /// crispasr's <c>-l auto</c> is a backend-agnostic flag (issue #14483): non-native backends
+    /// pick a language-detect provider via <c>--lid-backend</c> (whisper/silero/probe/...), so
+    /// every multi-language backend can offer "Auto detect" in its language dropdown. The lone
+    /// documented exception is GigaAM, which is Russian-only and for which CrispASR explicitly
+    /// skips language detection - see the comment on <see cref="CrispAsrGigaAm"/>.
+    /// </summary>
+    [Fact]
+    public void Languages_OfferAutoDetectAsFirstEntry_ForEveryMultiLanguageBackend()
+    {
+        var engine = new CrispAsrEngine();
+
+        foreach (var backend in engine.Backends)
+        {
+            if (backend is CrispAsrGigaAm || !backend.IncludeLanguage || backend.Languages.Count == 0)
+            {
+                continue;
+            }
+
+            var first = backend.Languages[0];
+            Assert.True(first.Code == "auto", $"{backend.Name} is missing a leading \"auto\" language entry.");
+            Assert.Equal("Auto Detect", first.Name);
+        }
+    }
 }

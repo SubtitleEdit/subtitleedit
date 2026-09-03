@@ -20,6 +20,7 @@ public class CrispAsrCanary : CrispAsrEngineBase
     public override List<WhisperLanguage> Languages =>
        new()
        {
+            new WhisperLanguage("auto", "Auto detect"),
             new WhisperLanguage("bg", "bulgarian"),
             new WhisperLanguage("hr", "croatian"),
             new WhisperLanguage("cs", "czech"),
