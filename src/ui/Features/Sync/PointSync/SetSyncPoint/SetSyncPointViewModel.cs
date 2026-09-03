@@ -591,6 +591,41 @@ public partial class SetSyncPointViewModel : ObservableObject
             e.Handled = true;
             SetVideoPosition(CurrentPositionSeconds + 0.5);
         }
+        else if (e.Key == Key.Add && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+        {
+            e.Handled = true;
+            WaveformVerticalZoomIn();
+        }
+        else if (e.Key == Key.Subtract && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+        {
+            e.Handled = true;
+            WaveformVerticalZoomOut();
+        }
+    }
+
+    /// <summary>
+    /// Mirrors the main window's waveform vertical zoom (Shift +/-): scales the waveform's
+    /// amplitude in place instead of resizing the split panel, so zooming in does not eat into
+    /// the video area (#14419 comment).
+    /// </summary>
+    private void WaveformVerticalZoomIn()
+    {
+        if (!IsAudioVisualizerVisible)
+        {
+            return;
+        }
+
+        AudioVisualizer.VerticalZoomFactor = Math.Max(Math.Min(AudioVisualizer.VerticalZoomFactor - 0.1, AudioVisualizer.MaxZoomFactor), AudioVisualizer.MinZoomFactor);
+    }
+
+    private void WaveformVerticalZoomOut()
+    {
+        if (!IsAudioVisualizerVisible)
+        {
+            return;
+        }
+
+        AudioVisualizer.VerticalZoomFactor = Math.Max(Math.Min(AudioVisualizer.VerticalZoomFactor + 0.1, AudioVisualizer.MaxZoomFactor), AudioVisualizer.MinZoomFactor);
     }
 
     /// <summary>
