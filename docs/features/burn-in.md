@@ -39,7 +39,7 @@ Hardcode (burn-in) subtitles permanently into a video file using FFmpeg.
 
 ## Image-based subtitles
 
-A Blu-ray sup can be burned in as it is. Open it in **Edit image-based subtitle** and choose **File → Generate video with burned-in subtitles...**, or add a `.sup` file as the subtitle of a batch item (a `.sup` next to the video is picked up automatically, after `.srt` and `.ass`). The bitmaps are laid over the video with FFmpeg's overlay filter and scaled with it, so the result matches the exported file - lines that overlap in time are shown together, the way a Blu-ray shows them. The font settings do not apply to bitmaps and are hidden; the logo, resolution, cut and encoding settings work as for text.
+A Blu-ray sup can be burned in as it is. Open it in **Edit image-based subtitle** and choose **Video → Generate video with burned-in subtitles...**, or add a `.sup` file as the subtitle of a batch item (a `.sup` next to the video is picked up automatically, after `.srt` and `.ass`). The bitmaps are laid over the video with FFmpeg's overlay filter and scaled with it, so the result matches the exported file - lines that overlap in time are shown together, the way a Blu-ray shows them. The font settings do not apply to bitmaps and are hidden; the logo, resolution, cut and encoding settings work as for text.
 
 ## Video Settings
 
