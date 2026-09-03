@@ -727,6 +727,16 @@ public partial class VisualSyncViewModel : ObservableObject
                 VideoPlayerControlLeft.Position += 0.5;
                 _updateAudioVisualizer = true;
             }
+            else if (e.Key == Key.Add && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+            {
+                e.Handled = true;
+                WaveformVerticalZoomIn(AudioVisualizerLeft);
+            }
+            else if (e.Key == Key.Subtract && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+            {
+                e.Handled = true;
+                WaveformVerticalZoomOut(AudioVisualizerLeft);
+            }
         }
         else if (IsRightFocused())
         {
@@ -759,6 +769,41 @@ public partial class VisualSyncViewModel : ObservableObject
                 VideoPlayerControlRight.Position += 0.5;
                 _updateAudioVisualizer = true;
             }
+            else if (e.Key == Key.Add && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+            {
+                e.Handled = true;
+                WaveformVerticalZoomIn(AudioVisualizerRight);
+            }
+            else if (e.Key == Key.Subtract && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+            {
+                e.Handled = true;
+                WaveformVerticalZoomOut(AudioVisualizerRight);
+            }
         }
+    }
+
+    /// <summary>
+    /// Mirrors the main window's waveform vertical zoom (Shift +/-) for whichever pane has focus:
+    /// scales that waveform's amplitude in place instead of resizing the split panel, so zooming
+    /// in does not eat into the video area (#14419 comment).
+    /// </summary>
+    private void WaveformVerticalZoomIn(AudioVisualizer audioVisualizer)
+    {
+        if (!IsAudioVisualizerVisible)
+        {
+            return;
+        }
+
+        audioVisualizer.VerticalZoomFactor = Math.Max(Math.Min(audioVisualizer.VerticalZoomFactor - 0.1, AudioVisualizer.MaxZoomFactor), AudioVisualizer.MinZoomFactor);
+    }
+
+    private void WaveformVerticalZoomOut(AudioVisualizer audioVisualizer)
+    {
+        if (!IsAudioVisualizerVisible)
+        {
+            return;
+        }
+
+        audioVisualizer.VerticalZoomFactor = Math.Max(Math.Min(audioVisualizer.VerticalZoomFactor + 0.1, AudioVisualizer.MaxZoomFactor), AudioVisualizer.MinZoomFactor);
     }
 }
