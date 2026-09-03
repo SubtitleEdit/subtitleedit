@@ -31,13 +31,11 @@ public partial class JsonSourceSyntaxHighlighting : ISourceSyntaxHighlighter
     private static Color BraceColor => UiTheme.IsDarkThemeEnabled() ? BraceColorDark : BraceColorLight;
     private static Color ColonCommaColor => UiTheme.IsDarkThemeEnabled() ? ColonCommaColorDark : ColonCommaColorLight;
 
-    // JSON property names (e.g., "start": or "text":)
-    [GeneratedRegex(@"""([^""\\]*(\\.[^""\\]*)*)""(?=\s*:)", RegexOptions.Compiled)]
-    private static partial Regex JsonPropertyNameRegex();
-
-    // JSON string values (not followed by colon)
-    [GeneratedRegex(@"""([^""\\]*(\\.[^""\\]*)*)""(?!\s*:)", RegexOptions.Compiled)]
-    private static partial Regex JsonStringValueRegex();
+    // Every JSON string on the line, in one pass; the optional trailing colon (group "colon")
+    // tells a property name (e.g. "start":) apart from a string value. Scanning strings once and
+    // in order means a property name's closing quote is never mistaken for the start of a value.
+    [GeneratedRegex(@"""([^""\\]*(\\.[^""\\]*)*)""(?<colon>\s*:)?", RegexOptions.Compiled)]
+    private static partial Regex JsonStringRegex();
 
     // JSON numbers (integers and decimals, including negative)
     [GeneratedRegex(@"-?\d+\.?\d*", RegexOptions.Compiled)]
@@ -64,44 +62,29 @@ public partial class JsonSourceSyntaxHighlighting : ISourceSyntaxHighlighter
 
         // Order matters: we need to colorize in the right sequence to avoid overlaps
 
-        // 1. Colorize property names first (strings followed by colon)
-        ColorizePropertyNames(lineText, styler);
+        // 1. Colorize strings (property names when followed by a colon, values otherwise)
+        ColorizeStrings(lineText, styler);
 
-        // 2. Colorize string values (strings not followed by colon)
-        ColorizeStringValues(lineText, styler);
-
-        // 3. Colorize booleans and null
+        // 2. Colorize booleans and null
         ColorizeBooleanNull(lineText, styler);
 
-        // 4. Colorize numbers
+        // 3. Colorize numbers
         ColorizeNumbers(lineText, styler);
 
-        // 5. Colorize structural characters (braces, brackets)
+        // 4. Colorize structural characters (braces, brackets)
         ColorizeBraces(lineText, styler);
 
-        // 6. Colorize delimiters (colons, commas)
+        // 5. Colorize delimiters (colons, commas)
         ColorizeDelimiters(lineText, styler);
     }
 
-    private static void ColorizePropertyNames(string lineText, SourceSyntaxLineStyler styler)
+    private static void ColorizeStrings(string lineText, SourceSyntaxLineStyler styler)
     {
-        foreach (Match match in JsonPropertyNameRegex().Matches(lineText))
+        foreach (Match match in JsonStringRegex().Matches(lineText))
         {
-            styler.Apply(match.Index, match.Length, PropertyNameColor);
-        }
-    }
-
-    private static void ColorizeStringValues(string lineText, SourceSyntaxLineStyler styler)
-    {
-        foreach (Match match in JsonStringValueRegex().Matches(lineText))
-        {
-            // Skip if this is already colored as a property name
-            if (IsAlreadyColored(lineText, match.Index))
-            {
-                continue;
-            }
-
-            styler.Apply(match.Index, match.Length, StringColor);
+            var colon = match.Groups["colon"];
+            var stringLength = match.Length - colon.Length;
+            styler.Apply(match.Index, stringLength, colon.Success ? PropertyNameColor : StringColor);
         }
     }
 
@@ -187,19 +170,6 @@ public partial class JsonSourceSyntaxHighlighting : ISourceSyntaxHighlighter
         }
 
         return quoteCount % 2 == 1;
-    }
-
-    private static bool IsAlreadyColored(string lineText, int position)
-    {
-        // Check if this position is part of a property name (followed by colon)
-        var colonIndex = lineText.IndexOf(':', position);
-        if (colonIndex == -1)
-        {
-            return false;
-        }
-
-        var textBetween = lineText.Substring(position, colonIndex - position);
-        return textBetween.Contains('"') && textBetween.Trim().EndsWith('"');
     }
 
     private static bool IsValidJsonNumber(string lineText, int position, int length)
