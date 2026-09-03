@@ -3285,8 +3285,91 @@ public partial class MainViewModel :
     }
 
     /// <summary>
-    /// Runs <paramref name="action"/> with the display-only reference rows pulled out of the grid,
-    /// then re-derives them.
+    /// The stretch of rows <see cref="WithoutReferenceOnlyRows"/> has to clear of display-only
+    /// reference rows: the selected rows, plus the runs of reference rows immediately before and
+    /// after them. The structural commands reach exactly one row beyond the selection - merge with
+    /// the line before/after, "move text to next line" splitting into the following row - so
+    /// clearing those runs is what makes <c>Subtitles[index - 1]</c> and <c>Subtitles[index + 1]</c>
+    /// the working rows they are meant to be, and the selection itself contiguous.
+    ///
+    /// Returns the whole grid when nothing is selected, so a caller without a selection keeps the
+    /// old clear-everything behavior rather than silently running against reference rows.
+    /// </summary>
+    private (int Start, int End) GetReferenceDetachWindow()
+    {
+        if (Subtitles.Count == 0)
+        {
+            return (0, Subtitles.Count - 1);
+        }
+
+        // Both sources: the multi-row commands read the grid's selection, the single-row ones
+        // (merge with the line before/after, move text to the next line) read SelectedSubtitle,
+        // and the two can disagree - the grid has not necessarily pushed a programmatic selection
+        // into SelectedItems yet. Taking the union keeps the window over whatever the command is
+        // about to touch.
+        var selected = SubtitleGrid.SelectedItems;
+        var count = selected?.Count ?? 0;
+        var wanted = new HashSet<SubtitleLineViewModel>(count + 1);
+        for (var i = 0; i < count; i++)
+        {
+            if (selected![i] is SubtitleLineViewModel line)
+            {
+                wanted.Add(line);
+            }
+        }
+
+        if (SelectedSubtitle is { } current)
+        {
+            wanted.Add(current);
+        }
+
+        if (wanted.Count == 0)
+        {
+            return (0, Subtitles.Count - 1);
+        }
+
+        var first = -1;
+        var last = -1;
+        var found = 0;
+        for (var i = 0; i < Subtitles.Count && found < wanted.Count; i++)
+        {
+            if (!wanted.Contains(Subtitles[i]))
+            {
+                continue;
+            }
+
+            found++;
+            if (first < 0)
+            {
+                first = i;
+            }
+
+            last = i;
+        }
+
+        if (first < 0)
+        {
+            return (0, Subtitles.Count - 1);
+        }
+
+        // Widen over the reference rows hugging the selection - a run, not a single row: several
+        // original lines can sit between two translated ones.
+        while (first > 0 && Subtitles[first - 1].IsReferenceOnly)
+        {
+            first--;
+        }
+
+        while (last + 1 < Subtitles.Count && Subtitles[last + 1].IsReferenceOnly)
+        {
+            last++;
+        }
+
+        return (first, last);
+    }
+
+    /// <summary>
+    /// Runs <paramref name="action"/> with the display-only reference rows around the selection
+    /// pulled out of the grid, then re-derives them.
     ///
     /// Structural commands walk Subtitles by index and assume every row is a line of the working
     /// subtitle - merge in particular requires the selected rows to sit at consecutive indexes, so a
@@ -3294,6 +3377,10 @@ public partial class MainViewModel :
     /// reference row would have swallowed it and stretched the surviving line over its span. Taking
     /// the reference rows out for the duration means none of those commands has to know that the
     /// reference exists (#13449).
+    ///
+    /// Only the rows in <see cref="GetReferenceDetachWindow"/> come out - the ones the command can
+    /// reach. The reference rows elsewhere in the file are invisible to it either way (its indexes
+    /// never go near them), and moving them is what made merging slow (#14003, #14468).
     /// </summary>
     private void WithoutReferenceOnlyRows(Action action)
     {
@@ -3306,11 +3393,21 @@ public partial class MainViewModel :
         // Capture before the rows go: an editable original keeps its non-matching lines only in them.
         CaptureOriginalFromRows();
 
+        // Taking a reference row out is not free: the removal and the re-insert are two change
+        // notifications each on the collection the grid is bound to, and the grid answers them by
+        // re-estimating its extent and chasing its selection anchor with a ScrollIntoView that
+        // walks row by row. A read-only original gains one display-only row per merge - the line
+        // the merged-away row displayed comes back - so clearing all of them cost twice their
+        // number of notifications on every merge and got worse with every merge the user made:
+        // the grid crawling up and back down that #14003 re-reported against 5.2.0-rc1 as #14468.
+        // Only the ones the command can actually reach come out.
+        var (windowStart, windowEnd) = GetReferenceDetachWindow();
+
         // Detach the row instances rather than dropping them: they carry the user's edits (editable
         // original) and their sticky link to the original line, and putting the same instances back
         // means the reference does not visibly rebuild after every merge (#13594).
         var detached = new List<SubtitleLineViewModel>();
-        for (var i = Subtitles.Count - 1; i >= 0; i--)
+        for (var i = windowEnd; i >= windowStart; i--)
         {
             if (Subtitles[i].IsReferenceOnly)
             {
@@ -20720,8 +20817,25 @@ public partial class MainViewModel :
             _pendingScrollItem = row;
         }
 
+        // From here until the scroll below has run, this scroll owns the offset: the row it names
+        // is what the view is going to show, so nothing else may move the view in the meantime.
+        // What otherwise does is TableViewScrollAnchor. The callers that post a scroll are the ones
+        // that just restructured the grid, and the layout that settles those row changes runs in
+        // this very gap - the anchor sees the panel re-estimate its extent, reads it as "the panel
+        // moved under the view", and hauls the view back to whatever row was on top before,
+        // realizing rows one by one on the way (its restore ends in a ScrollIntoView, and a
+        // virtualizing panel walks when the estimate has drifted). The scroll below then sets off
+        // for the target from wherever that left it. That tug of war is the grid scrolling up and
+        // then down again after a merge with a read-only original open, and it gets longer with
+        // every display-only reference row the merges leave behind (#13962, #14003, #14468).
+        // Suspending leaves the anchor following the view, it just stops it moving it, and it is
+        // live again for the next edit - which is what it exists for (#13619).
+        var anchorSuspension = SubtitleGrid is { } grid ? TableViewScrollAnchor.GetFor(grid)?.Suspend() : null;
+
         Dispatcher.UIThread.Post(() =>
         {
+            using var heldAnchor = anchorSuspension;
+
             int indexToScroll;
             SubtitleLineViewModel? itemToResolve;
             lock (_scrollLock)
