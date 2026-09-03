@@ -522,7 +522,7 @@ public sealed class FlowEditingView : Border
                     new Run(
                         visibleText[position..start])
                     {
-                        Foreground = item.Foreground,
+                        Foreground = Brushes.White,
                     });
             }
 
@@ -551,7 +551,7 @@ public sealed class FlowEditingView : Border
                 new Run(
                     visibleText[position..])
                 {
-                    Foreground = item.Foreground,
+                    Foreground = Brushes.White,
                 });
         }
 
