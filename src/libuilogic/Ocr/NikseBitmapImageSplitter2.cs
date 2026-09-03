@@ -506,7 +506,12 @@ public class NikseBitmapImageSplitter2
 
             lineBitmaps = splitOld.Count > splitBlankLines.Count ? splitOld : splitBlankLines;
 
-            if (lineBitmaps.Count == 1 && lineBitmaps[0].NikseBitmap?.Height > minLineHeight * 2.2)
+            // Gate on the height of the actual content, not the bitmap: the VobSub decoder
+            // leaves up to seven transparent rows under the text, and one DVD-sized line plus
+            // that margin clears 2.2 x minLineHeight - which sent one-line images through the
+            // up/down splitter, whose cut then eroded the leftmost glyph and left its crumbs
+            // as a bogus second line (#14292).
+            if (lineBitmaps.Count == 1 && lineBitmaps[0].NikseBitmap?.GetNonTransparentHeight() > minLineHeight * 2.2)
             {
                 lineBitmaps = SplitToLinesNew(lineBitmaps[0], minLineHeight, averageLineHeight);
             }
