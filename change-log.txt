@@ -3,6 +3,41 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-rc1 (3rd of September 2026)
+
+* Add "Open recent video" to the Video menu - thx ghostminhtoan
+* Add "Break at first space from cursor position" text box shortcuts - thx saltarob
+* Text to speech: per-line voice cloning on the audio.cpp engines (IndexTTS 2.5, Higgs Audio v3, Fish Audio S2 Pro) - thx invio-a11y
+* Text to speech: a language picker for Zonos (CrispASR) - thx subof
+* Ask before the first voice clone in Confucius4-TTS and Pocket TTS too
+* Blu-ray sup export: render overlapping subtitles together instead of dropping one - thx josemorgado107
+* Sync dialogs: make the waveform under the video drag-resizable - thx perkesfurmah-collab
+* Waveform: offer the ffmpeg download instead of failing silently when ffmpeg is missing - thx Marethyu2000
+* Source view: use the appearance font and readable light-mode syntax colors - thx GrampaWildWilly
+* JSON syntax highlighting: color string values that follow a property name
+* Update llama.cpp to b10760
+* Fix the waveform cursor landing a GOP away and hopping a frame forward on click and mouse wheel - thx bichitoxxx
+* Fix "Set position" previewing rotation differently from libass - thx bichitoxxx
+* Fix split and merge not keeping an editable original in sync - thx saltarob
+* Fix closing Settings jumping back to the first subtitle - thx saltarob
+* Fix recalculate duration landing just over max CPS, and the CPS readouts disagreeing - thx saltarob
+* Fix a plugin result dropping the original column - thx fraternl
+* Fix the spell check staying on the old language after a translation - thx fraternl
+* Fix the video player not opening files on Windows paths longer than MAX_PATH - thx HindiAnimeVerse
+* Fix the beautify time codes profile editor clipping its numeric fields - thx matmaggi
+* Fix Compare lining the two grids up before the mirrored selection had scrolled
+* Fix "set end time and go to next" firing on key down instead of key up - thx ghostminhtoan
+* Fix the SMPTE preview stretch not reaching the VLC reloader and the secondary subtitle - thx ghostminhtoan
+* Fix the theme not following OS light/dark changes after the first switch
+* Fix 16 bugs found in a random-file hunt (subtitle formats, Google Lens, speech to text, TMPGEnc)
+* Minor performance improvements from immutable brushes and pens for every static color
+* Update French translation - thx Need74
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+* Update Portuguese (Brazil) translation - thx igorruckert
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-beta32 (2nd of September 2026)
 
 * Add a "Columns..." dialog to reorder and hide subtitle grid columns - thx m0ck69
