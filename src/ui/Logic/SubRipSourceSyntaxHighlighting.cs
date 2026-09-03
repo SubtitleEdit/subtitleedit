@@ -9,10 +9,20 @@ namespace Nikse.SubtitleEdit.Logic;
 /// </summary>
 public partial class SubRipSourceSyntaxHighlighting : ISourceSyntaxHighlighter
 {
-    // SubRip-specific colors
-    private static readonly Color NumberColor = Color.FromRgb(140, 170, 0);
-    private static readonly Color TimeColor = Color.FromArgb(128, 80, 160, 210); // half transparent, so it reads as softer
-    private static readonly Color TimeSeparatorColor = Color.FromRgb(170, 110, 180);
+    // SubRip-specific colors. Unlike the tag pastels below these mark the structure of the file,
+    // not de-emphasized markup, so they get a darker variant for a white background: the
+    // half-transparent time code was barely there in light mode (#14457).
+    private static readonly Color NumberColorDark = Color.FromRgb(140, 170, 0);
+    private static readonly Color NumberColorLight = Color.FromRgb(96, 128, 0);
+    private static readonly Color TimeColorDark = Color.FromArgb(128, 80, 160, 210); // half transparent, so it reads as softer
+    private static readonly Color TimeColorLight = Color.FromRgb(36, 110, 168);
+    private static readonly Color TimeSeparatorColorDark = Color.FromRgb(170, 110, 180);
+    private static readonly Color TimeSeparatorColorLight = Color.FromRgb(140, 70, 150);
+
+    // Resolved per use so a theme switch is picked up
+    private static Color NumberColor => UiTheme.IsDarkThemeEnabled() ? NumberColorDark : NumberColorLight;
+    private static Color TimeColor => UiTheme.IsDarkThemeEnabled() ? TimeColorDark : TimeColorLight;
+    private static Color TimeSeparatorColor => UiTheme.IsDarkThemeEnabled() ? TimeSeparatorColorDark : TimeSeparatorColorLight;
 
     // HTML/ASS syntax highlighting colors (the shared, theme-dependent scheme from
     // SubtitleSyntaxTokenizer) - resolved per use so a theme switch is picked up.

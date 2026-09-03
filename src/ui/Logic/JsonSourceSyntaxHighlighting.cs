@@ -8,13 +8,28 @@ namespace Nikse.SubtitleEdit.Logic;
 /// </summary>
 public partial class JsonSourceSyntaxHighlighting : ISourceSyntaxHighlighter
 {
-    // Color scheme (VS Code-like JSON colors)
-    private static readonly Color PropertyNameColor = Color.Parse("#9CDCFE"); // Light blue for property names
-    private static readonly Color StringColor = Color.Parse("#CE9178"); // Orange for string values
-    private static readonly Color NumberColor = Color.Parse("#B5CEA8"); // Light green for numbers
-    private static readonly Color BooleanColor = Color.Parse("#569CD6"); // Blue for true/false/null
-    private static readonly Color BraceColor = Color.Parse("#FFD700"); // Gold for braces and brackets
-    private static readonly Color ColonCommaColor = Color.Parse("#D4D4D4"); // Light gray for : and ,
+    // Color scheme (VS Code-like JSON colors). The dark set is built for a dark background; light
+    // mode gets the same hues a few shades darker so they are readable on white (#14457).
+    private static readonly Color PropertyNameColorDark = Color.Parse("#9CDCFE"); // Light blue for property names
+    private static readonly Color PropertyNameColorLight = Color.Parse("#006C9B");
+    private static readonly Color StringColorDark = Color.Parse("#CE9178"); // Orange for string values
+    private static readonly Color StringColorLight = Color.Parse("#A0522D");
+    private static readonly Color NumberColorDark = Color.Parse("#B5CEA8"); // Light green for numbers
+    private static readonly Color NumberColorLight = Color.Parse("#33691E");
+    private static readonly Color BooleanColorDark = Color.Parse("#569CD6"); // Blue for true/false/null
+    private static readonly Color BooleanColorLight = Color.Parse("#1565C0");
+    private static readonly Color BraceColorDark = Color.Parse("#FFD700"); // Gold for braces and brackets
+    private static readonly Color BraceColorLight = Color.Parse("#8D6E00");
+    private static readonly Color ColonCommaColorDark = Color.Parse("#D4D4D4"); // Light gray for : and ,
+    private static readonly Color ColonCommaColorLight = Color.Parse("#616161");
+
+    // Resolved per use so a theme switch is picked up
+    private static Color PropertyNameColor => UiTheme.IsDarkThemeEnabled() ? PropertyNameColorDark : PropertyNameColorLight;
+    private static Color StringColor => UiTheme.IsDarkThemeEnabled() ? StringColorDark : StringColorLight;
+    private static Color NumberColor => UiTheme.IsDarkThemeEnabled() ? NumberColorDark : NumberColorLight;
+    private static Color BooleanColor => UiTheme.IsDarkThemeEnabled() ? BooleanColorDark : BooleanColorLight;
+    private static Color BraceColor => UiTheme.IsDarkThemeEnabled() ? BraceColorDark : BraceColorLight;
+    private static Color ColonCommaColor => UiTheme.IsDarkThemeEnabled() ? ColonCommaColorDark : ColonCommaColorLight;
 
     // JSON property names (e.g., "start": or "text":)
     [GeneratedRegex(@"""([^""\\]*(\\.[^""\\]*)*)""(?=\s*:)", RegexOptions.Compiled)]

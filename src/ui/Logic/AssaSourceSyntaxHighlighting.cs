@@ -9,18 +9,31 @@ namespace Nikse.SubtitleEdit.Logic;
 /// </summary>
 public partial class AssaSourceSyntaxHighlighting : ISourceSyntaxHighlighter
 {
-    // Color scheme
-    private static readonly Color SectionColor = Color.Parse("#569CD6"); // Blue for [Section] headers
-    private static readonly Color KeywordColor = Color.Parse("#C586C0"); // Purple for keywords (Dialogue:, Comment:, Style:, Format:)
-    private static readonly Color TimeColor = Color.Parse("#4EC9B0"); // Cyan for timecodes
+    // Color scheme - the dark set is the VS Code dark palette, which is washed out on white, so
+    // light mode gets the same hues a few shades darker (#14457).
+    private static readonly Color SectionColorDark = Color.Parse("#569CD6"); // Blue for [Section] headers
+    private static readonly Color SectionColorLight = Color.Parse("#1565C0");
+    private static readonly Color KeywordColorDark = Color.Parse("#C586C0"); // Purple for keywords (Dialogue:, Comment:, Style:, Format:)
+    private static readonly Color KeywordColorLight = Color.Parse("#8E24AA");
+    private static readonly Color TimeColorDark = Color.Parse("#4EC9B0"); // Cyan for timecodes
+    private static readonly Color TimeColorLight = Color.Parse("#00796B");
     private static readonly Color PropertyColorDark = Color.Parse("#9CDCFE"); // Light blue for property names
-    private static readonly Color PropertyColorLight = Color.Parse("#1565C0"); // Darker blue - light blue is barely readable on white
-    private static readonly Color ValueColor = Color.Parse("#CE9178"); // Orange for values
-    private static readonly Color CommentColor = Color.Parse("#6A9955"); // Green for comments
-    private static readonly Color NumberColor = Color.Parse("#B5CEA8"); // Light green for numbers
+    private static readonly Color PropertyColorLight = Color.Parse("#1565C0");
+    private static readonly Color ValueColorDark = Color.Parse("#CE9178"); // Orange for values
+    private static readonly Color ValueColorLight = Color.Parse("#A0522D");
+    private static readonly Color CommentColorDark = Color.Parse("#6A9955"); // Green for comments
+    private static readonly Color CommentColorLight = Color.Parse("#2E7D32");
+    private static readonly Color NumberColorDark = Color.Parse("#B5CEA8"); // Light green for numbers
+    private static readonly Color NumberColorLight = Color.Parse("#33691E");
 
     // Resolved per use so a theme switch is picked up
+    private static Color SectionColor => UiTheme.IsDarkThemeEnabled() ? SectionColorDark : SectionColorLight;
+    private static Color KeywordColor => UiTheme.IsDarkThemeEnabled() ? KeywordColorDark : KeywordColorLight;
+    private static Color TimeColor => UiTheme.IsDarkThemeEnabled() ? TimeColorDark : TimeColorLight;
     private static Color PropertyColor => UiTheme.IsDarkThemeEnabled() ? PropertyColorDark : PropertyColorLight;
+    private static Color ValueColor => UiTheme.IsDarkThemeEnabled() ? ValueColorDark : ValueColorLight;
+    private static Color CommentColor => UiTheme.IsDarkThemeEnabled() ? CommentColorDark : CommentColorLight;
+    private static Color NumberColor => UiTheme.IsDarkThemeEnabled() ? NumberColorDark : NumberColorLight;
 
     // Section headers like [Script Info], [V4+ Styles], [Events]
     [GeneratedRegex(@"^\s*\[[^\]]+\]\s*$", RegexOptions.Multiline)]
