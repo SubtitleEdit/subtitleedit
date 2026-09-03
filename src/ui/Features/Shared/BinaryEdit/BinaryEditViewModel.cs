@@ -18,6 +18,7 @@ using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
+using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryAdjustAllTimes;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryApplyDurationLimits;
 using Nikse.SubtitleEdit.Features.Shared.PickMatroskaTrack;
@@ -25,6 +26,7 @@ using Nikse.SubtitleEdit.Features.Shared.PickMp4Track;
 using Nikse.SubtitleEdit.Features.Shared.PickTsTrack;
 using Nikse.SubtitleEdit.Features.Sync.ChangeFrameRate;
 using Nikse.SubtitleEdit.Features.Sync.ChangeSpeed;
+using Nikse.SubtitleEdit.Features.Video.BurnIn;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
@@ -1074,6 +1076,69 @@ public partial class BinaryEditViewModel : ObservableObject
         await DoExport(new ExportHandlerBluRaySup(), ".sup");
     }
 
+    /// <summary>
+    /// Burns the loaded images into a video. They are written to a temporary Blu-ray sup that the
+    /// burn-in dialog overlays through ffmpeg, so the video gets the exported look - overlapping
+    /// lines included (issue #14456). The text settings mean nothing for bitmaps, so the dialog
+    /// hides them. The video is the one in the player, else the one next to the subtitle, else
+    /// asked for.
+    /// </summary>
+    [RelayCommand]
+    private async Task GenerateBurnIn()
+    {
+        if (Window == null || Subtitles.Count == 0)
+        {
+            return;
+        }
+
+        var ffmpegOk = await FfmpegRequirement.EnsureAsync(
+            Window,
+            async () => (await _windowService.ShowDialogAsync<DownloadFfmpegWindow, DownloadFfmpegViewModel>(Window)).FfmpegFileName);
+        if (!ffmpegOk)
+        {
+            return;
+        }
+
+        var videoFileName = VideoPlayerControl?.VideoPlayer.FileName ?? string.Empty;
+        if (string.IsNullOrEmpty(videoFileName) || !File.Exists(videoFileName))
+        {
+            videoFileName = string.IsNullOrEmpty(_sourceFileName) ? null : TryGetVideoFileName(_sourceFileName);
+        }
+
+        if (string.IsNullOrEmpty(videoFileName))
+        {
+            videoFileName = await _fileHelper.PickOpenVideoFile(Window, Se.Language.General.OpenVideoFileTitle);
+            if (string.IsNullOrEmpty(videoFileName))
+            {
+                return;
+            }
+        }
+
+        var supFileName = Path.Combine(Path.GetTempPath(), "se-sub-" + Guid.NewGuid().ToString("N") + ".sup");
+        try
+        {
+            WriteExport(new ExportHandlerBluRaySup(), supFileName);
+            await _windowService.ShowDialogAsync<BurnInWindow, BurnInViewModel>(Window, vm =>
+            {
+                vm.InitializeImageSubtitle(videoFileName, supFileName);
+            });
+        }
+        finally
+        {
+            try
+            {
+                if (File.Exists(supFileName))
+                {
+                    File.Delete(supFileName);
+                }
+            }
+            catch (Exception e)
+            {
+                Se.LogError(e, $"Could not delete the temporary subtitle file \"{supFileName}\"");
+            }
+        }
+    }
+
     [RelayCommand]
     private async Task ExportBdnXml()
     {
@@ -1195,6 +1260,13 @@ public partial class BinaryEditViewModel : ObservableObject
             return false;
         }
 
+        WriteExport(exportHandler, fileOrFolderName);
+        _isDirty = false;
+        return true;
+    }
+
+    private void WriteExport(IExportHandler exportHandler, string fileOrFolderName)
+    {
         var imageParameter = new ImageParameter()
         {
             ScreenWidth = ScreenWidth,
@@ -1230,8 +1302,6 @@ public partial class BinaryEditViewModel : ObservableObject
         }
 
         exportHandler.WriteFooter();
-        _isDirty = false;
-        return true;
     }
 
     [RelayCommand]

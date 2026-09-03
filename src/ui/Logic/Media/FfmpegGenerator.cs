@@ -69,7 +69,7 @@ public class FfmpegGenerator
     /// <summary>
     /// Generate ffmpeg parameters for a video with a burned-in Advanced Sub Station Alpha subtitle.
     /// </summary>
-    public static string GenerateHardcodedVideoFile(string inputVideoFileName, string assaSubtitleFileName, string outputVideoFileName, int width, int height, string videoEncoding, string preset, string pixelFormat, string crf, string audioEncoding, bool forceStereo, string sampleRate, string tune, string audioBitRate, string pass, string twoPassBitRate, string? cutStart = null, string? cutEnd = null, string audioCutTrack = "", Features.Video.BurnIn.BurnInLogo? burnInLogo = null, bool inputIsAudioOnly = false)
+    public static string GenerateHardcodedVideoFile(string inputVideoFileName, string assaSubtitleFileName, string outputVideoFileName, int width, int height, string videoEncoding, string preset, string pixelFormat, string crf, string audioEncoding, bool forceStereo, string sampleRate, string tune, string audioBitRate, string pass, string twoPassBitRate, string? cutStart = null, string? cutEnd = null, string audioCutTrack = "", Features.Video.BurnIn.BurnInLogo? burnInLogo = null, bool inputIsAudioOnly = false, bool subtitleIsImage = false)
     {
         if (width % 2 == 1)
         {
@@ -249,23 +249,44 @@ public class FfmpegGenerator
         // encoding when the audio ends (the lavfi color source runs forever).
         var canvasInput = string.Empty;
         var shortestParameter = string.Empty;
+        var inputCount = 1;
         var mainVideoStream = "[0:v]";
-        var logoVideoStream = "[1:v]";
         if (inputIsAudioOnly)
         {
             canvasInput = $" -f lavfi -i color=c=black:s={width}x{height}:r=25";
             shortestParameter = " -shortest";
-            mainVideoStream = "[1:v]";
-            logoVideoStream = "[2:v]";
+            mainVideoStream = $"[{inputCount}:v]";
+            inputCount++;
+        }
+
+        // Text is rendered by libass (the "ass" filter). A Blu-ray sup is a second input instead:
+        // its bitmaps are scaled to the output size like the video and laid over it, so the
+        // exported look - overlapping lines included - ends up on the frames (issue #14456).
+        // A cut seeks the video input ("-ss" before "-i" restarts its timestamps at zero) and the
+        // sup demuxer cannot seek, so the subtitle input is shifted back by the cut instead.
+        var imageSubtitleInput = string.Empty;
+        string withSubtitles;
+        if (subtitleIsImage)
+        {
+            imageSubtitleInput = $"{GetImageSubtitleOffset(cutStart)} -i \"{assaSubtitleFileName}\"";
+            withSubtitles = $"{mainVideoStream}scale={width}:{height}[video];[{inputCount}:s]scale={width}:{height}[subs];[video][subs]overlay";
+            inputCount++;
+        }
+        else
+        {
+            withSubtitles = $"{mainVideoStream}scale={width}:{height},ass={Path.GetFileName(assaSubtitleFileName)}";
         }
 
         // Add logo overlay if specified
         var logoInput = string.Empty;
-        var filterParameter = $"-vf \"scale={width}:{height},ass={Path.GetFileName(assaSubtitleFileName)}\"";
+        var filterParameter = subtitleIsImage
+            ? $"-filter_complex \"{withSubtitles}\""
+            : $"-vf \"scale={width}:{height},ass={Path.GetFileName(assaSubtitleFileName)}\"";
 
         if (burnInLogo != null && !string.IsNullOrEmpty(burnInLogo.LogoFileName) && File.Exists(burnInLogo.LogoFileName))
         {
             logoInput = $" -i \"{burnInLogo.LogoFileName}\"";
+            var logoVideoStream = $"[{inputCount}:v]";
 
             // Convert alpha percentage (0-100) to 0.0-1.0
             var alphaValue = (burnInLogo.Alpha / 100.0).ToString(CultureInfo.InvariantCulture);
@@ -275,7 +296,7 @@ public class FfmpegGenerator
             // 1. Scale main video (or the generated canvas for audio-only input) and apply subtitles
             // 2. Scale logo by size percentage and apply alpha transparency
             // 3. Overlay logo at specified X, Y position
-            var filterComplex = $"{mainVideoStream}scale={width}:{height},ass={Path.GetFileName(assaSubtitleFileName)}[withsubs];" +
+            var filterComplex = $"{withSubtitles}[withsubs];" +
                                $"{logoVideoStream}scale=iw*{sizePercent}/100:ih*{sizePercent}/100,format=rgba,colorchannelmixer=aa={alphaValue}[logo];" +
                                $"[withsubs][logo]overlay={burnInLogo.X}:{burnInLogo.Y}";
 
@@ -287,7 +308,23 @@ public class FfmpegGenerator
         // Without it ffmpeg hits "File ... already exists. Exiting." and writes nothing - and as
         // the old file is still there, the burn-in looked like it succeeded (issue #14210).
         return
-            $"-y{cutStart}-i \"{inputVideoFileName}\"{canvasInput}{logoInput}{cutEnd} {filterParameter} -g 30 -bf 2 -s {width}x{height} {videoEncodingSettings} {passSettings} {presetSettings} {crfSettings} {pixelFormat} {audioSettings}{tuneParameter} -use_editlist 0 -movflags +faststart{shortestParameter} {outputVideoFileName}";
+            $"-y{cutStart}-i \"{inputVideoFileName}\"{canvasInput}{imageSubtitleInput}{logoInput}{cutEnd} {filterParameter} -g 30 -bf 2 -s {width}x{height} {videoEncodingSettings} {passSettings} {presetSettings} {crfSettings} {pixelFormat} {audioSettings}{tuneParameter} -use_editlist 0 -movflags +faststart{shortestParameter} {outputVideoFileName}";
+    }
+
+    /// <summary>
+    /// The "-itsoffset" that keeps an image subtitle input in step with a video input that was
+    /// seeked with "-ss": the same time, negated. Empty when there is no cut.
+    /// </summary>
+    private static string GetImageSubtitleOffset(string? cutStart)
+    {
+        var seek = (cutStart ?? string.Empty).Trim();
+        if (!seek.StartsWith("-ss ", StringComparison.Ordinal))
+        {
+            return string.Empty;
+        }
+
+        var time = seek.Substring(4).Trim();
+        return string.IsNullOrEmpty(time) ? string.Empty : $" -itsoffset -{time}";
     }
 
     private static Process GetFFmpegProcess(string imageFileName, string outputFileName, int videoWidth, int videoHeight, int seconds, decimal frameRate, bool addTimeCode = false, string addTimeColor = "white")

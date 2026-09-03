@@ -292,4 +292,25 @@ public class BurnInWindowTests : IDisposable
         Avalonia.Threading.Dispatcher.UIThread.RunJobs();
         Assert.Equal(lockedMinWidth, window.MinWidth);
     }
+
+    /// <summary>
+    /// An image subtitle (a Blu-ray sup from the image-based editor) is burned in as it is, so the
+    /// font/color/box/effect settings mean nothing and go away - the logo still applies.
+    /// </summary>
+    [AvaloniaFact]
+    public void ImageSubtitle_HidesTheTextSettingsAndKeepsTheLogo()
+    {
+        var window = BuildWindow();
+        var vm = Assert.IsType<BurnInViewModel>(window.DataContext);
+        var textSettings = window.GetLogicalDescendants().OfType<Grid>().Single(p => p.Name == BurnInWindow.TextSettingsName);
+        var logoButton = window.GetLogicalDescendants().OfType<Button>().Single(p => ReferenceEquals(p.Command, vm.ShowLogoCommand));
+        Assert.True(textSettings.IsVisible);
+
+        vm.InitializeImageSubtitle(string.Empty, "subs.sup");
+        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+
+        Assert.False(textSettings.IsVisible);
+        Assert.True(logoButton.IsVisible);
+        Assert.True(vm.IsImageSubtitle);
+    }
 }

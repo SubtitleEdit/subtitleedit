@@ -7,6 +7,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
+using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main.Layout;
@@ -105,6 +106,12 @@ public partial class BurnInViewModel : ObservableObject
     [ObservableProperty] private string _logoInfo;
     [ObservableProperty] private bool _promptForFfmpegParameters;
 
+    /// <summary>
+    /// The subtitle is a Blu-ray sup (from the image-based editor) burned in as it is: the text
+    /// settings do not apply, so the window hides them, and the preview shows the sup itself.
+    /// </summary>
+    [ObservableProperty] private bool _isImageSubtitle;
+
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
     public TableView? BatchGrid { get; internal set; }
@@ -124,6 +131,7 @@ public partial class BurnInViewModel : ObservableObject
     private FfmpegMediaInfo2? _mediaInfo;
     private SubtitleFormat? _subtitleFormat;
     private string _inputVideoFileName;
+    private string _imageSubtitleFileName = string.Empty;
     private List<BurnInEffectItem> _selectedEffects;
 
     public VideoPlayerControl? VideoPlayerControl { get; set; }
@@ -247,10 +255,28 @@ public partial class BurnInViewModel : ObservableObject
 
     public void Initialize(string videoFileName, Subtitle subtitle, SubtitleFormat subtitleFormat)
     {
-        VideoFileName = videoFileName;
-        _inputVideoFileName = videoFileName;
         _subtitle = new Subtitle(subtitle, false);
         _subtitleFormat = subtitleFormat;
+        SetVideo(videoFileName);
+    }
+
+    /// <summary>
+    /// Burns a Blu-ray sup into the video instead of text - the bitmaps as they are, overlapping
+    /// lines included (issue #14456). Batch mode takes sup files the same way, per job.
+    /// </summary>
+    public void InitializeImageSubtitle(string videoFileName, string bluRaySupFileName)
+    {
+        IsImageSubtitle = true;
+        _imageSubtitleFileName = bluRaySupFileName;
+        _subtitle = new Subtitle();
+        _subtitleFormat = null;
+        SetVideo(videoFileName);
+    }
+
+    private void SetVideo(string videoFileName)
+    {
+        VideoFileName = videoFileName;
+        _inputVideoFileName = videoFileName;
 
         var fileExists = !string.IsNullOrWhiteSpace(videoFileName) && File.Exists(videoFileName);
         if (fileExists)
@@ -807,7 +833,8 @@ public partial class BurnInViewModel : ObservableObject
             cutEnd,
             audioCutTracks,
             BurnInLogo,
-            jobItem.InputIsAudioOnly);
+            jobItem.InputIsAudioOnly,
+            jobItem.SubtitleIsImage);
 
         if (PromptForFfmpegParameters)
         {
@@ -877,9 +904,11 @@ public partial class BurnInViewModel : ObservableObject
         // Tracked so the file is swept when the window closes - and not GetTempFileName() plus an
         // extension, which leaked the empty tmpXXXX.tmp it creates on top of the file written
         // (#13332).
-        var subtitleFileName = _subtitleFormat is { Name: AdvancedSubStationAlpha.NameOfFormat }
-            ? _tempSubtitleFiles.Write(subtitle, new AdvancedSubStationAlpha())
-            : _tempSubtitleFiles.Write(subtitle, new SubRip());
+        var subtitleFileName = IsImageSubtitle
+            ? _imageSubtitleFileName
+            : _subtitleFormat is { Name: AdvancedSubStationAlpha.NameOfFormat }
+                ? _tempSubtitleFiles.Write(subtitle, new AdvancedSubStationAlpha())
+                : _tempSubtitleFiles.Write(subtitle, new SubRip());
 
         _mediaInfo = FfmpegMediaInfo2.Parse(VideoFileName);
         if (_mediaInfo.Dimension.Width > 0 && _mediaInfo.Dimension.Height > 0 &&
@@ -909,6 +938,14 @@ public partial class BurnInViewModel : ObservableObject
         {
             jobItem.Status = "Skipped";
             return string.Empty;
+        }
+
+        jobItem.SubtitleIsImage = FileUtil.IsBluRaySup(subtitleFileName);
+        if (jobItem.SubtitleIsImage)
+        {
+            // The bitmaps are overlaid as they are (see FfmpegGenerator): nothing to style or
+            // convert, and a cut is applied by offsetting the input rather than rewriting the file.
+            return subtitleFileName;
         }
 
         var isAssa = subtitleFileName.EndsWith(".ass", StringComparison.OrdinalIgnoreCase);
@@ -1242,7 +1279,10 @@ public partial class BurnInViewModel : ObservableObject
             return;
         }
 
-        var fileName = await _fileHelper.PickOpenSubtitleFile(Window!, Se.Language.General.OpenSubtitleFileTitle, false);
+        // The text formats plus Blu-ray sup, whose bitmaps are burned in as they are.
+        var patterns = FileHelper.GetOpenSubtitleExtensions(false).Select(p => "*" + p).Append("*.sup").ToList();
+        var fileNames = await _fileHelper.PickOpenFiles(Window!, Se.Language.General.OpenSubtitleFileTitle, Se.Language.General.SubtitleFiles, patterns, Se.Language.General.AllFiles, ["*"]);
+        var fileName = fileNames.FirstOrDefault();
         if (!string.IsNullOrEmpty(fileName))
         {
             SelectedJobItem.SubtitleFileName = fileName;
@@ -1677,6 +1717,12 @@ public partial class BurnInViewModel : ObservableObject
             return assa;
         }
 
+        var sup = Path.ChangeExtension(fileName, ".sup");
+        if (File.Exists(sup))
+        {
+            return sup;
+        }
+
         var dir = Path.GetDirectoryName(fileName);
         if (string.IsNullOrEmpty(dir))
         {
@@ -2064,7 +2110,7 @@ public partial class BurnInViewModel : ObservableObject
 
     private void UpdateNonAssaPreview()
     {
-        if (_loading || !string.IsNullOrEmpty(GetValidationError()))
+        if (_loading || IsImageSubtitle || !string.IsNullOrEmpty(GetValidationError()))
         {
             return;
         }
@@ -2458,6 +2504,14 @@ public partial class BurnInViewModel : ObservableObject
             await VideoPlayerControl.WaitForPlayersReadyAsync();
             SetActivePreviewPlayer(VideoPlayerControl.VideoPlayer as LibMpvDynamicPlayer, alreadyHasSubtitle: false);
 
+            if (IsImageSubtitle)
+            {
+                // mpv shows the sup as it is - there are no settings to restyle it with, so no
+                // preview timer either.
+                LoadImageSubtitlePreview(VideoPlayerControl);
+                return;
+            }
+
             // Seek to the first subtitle so the user immediately sees styled text.
             if (_subtitle.Paragraphs.Count > 0)
             {
@@ -2469,6 +2523,24 @@ public partial class BurnInViewModel : ObservableObject
         catch (Exception exception)
         {
             Se.LogError(exception, "Failed to start burn-in video preview");
+        }
+    }
+
+    private void LoadImageSubtitlePreview(VideoPlayerControl control)
+    {
+        if (_mpvPreviewPlayer == null || !File.Exists(_imageSubtitleFileName))
+        {
+            return;
+        }
+
+        _mpvPreviewPlayer.SubAdd(_imageSubtitleFileName);
+        _isPreviewSubtitleLoaded = true;
+
+        // Seek to the first subtitle so the user immediately sees it, as the text preview does.
+        var first = BluRaySupParser.ParseBluRaySup(_imageSubtitleFileName, new StringBuilder()).FirstOrDefault();
+        if (first != null)
+        {
+            control.SetPosition(first.StartTimeCode.TotalSeconds + 0.05);
         }
     }
 
@@ -2573,6 +2645,10 @@ public partial class BurnInViewModel : ObservableObject
             if (_fullScreenVideoPlayerControl == fsControl) // still fullscreen (not closed in the meantime)
             {
                 SetActivePreviewPlayer(fsControl.VideoPlayer as LibMpvDynamicPlayer, alreadyHasSubtitle: false);
+                if (IsImageSubtitle)
+                {
+                    LoadImageSubtitlePreview(fsControl);
+                }
             }
         });
     }

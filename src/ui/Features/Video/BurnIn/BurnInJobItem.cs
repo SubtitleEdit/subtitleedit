@@ -31,6 +31,12 @@ public partial class BurnInJobItem : ObservableObject
     /// </summary>
     public bool InputIsAudioOnly { get; set; }
 
+    /// <summary>
+    /// The subtitle is a Blu-ray sup: burned in by overlaying its bitmaps rather than by rendering
+    /// text, so <see cref="AssaSubtitleFileName"/> is the sup itself.
+    /// </summary>
+    public bool SubtitleIsImage { get; set; }
+
     [ObservableProperty] private string _size;
 
     [ObservableProperty] private string _status;

@@ -20,6 +20,13 @@ public class BurnInWindow : Window
     private readonly BurnInViewModel _vm;
     private ComboBox? _comboBoxFontName;
 
+    /// <summary>
+    /// The grid of text settings (font, colors, box, alignment, effect) - hidden for image
+    /// subtitles, which are burned in as they are.
+    /// </summary>
+    internal const string TextSettingsName = "BurnInTextSettings";
+    private const string LabelColumnGroup = "BurnInSettingsLabels";
+
     public BurnInWindow(BurnInViewModel vm)
     {
         _vm = vm;
@@ -498,7 +505,6 @@ public class BurnInWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -567,10 +573,40 @@ public class BurnInWindow : Window
         }.WithBindVisible(vm, nameof(vm.ShowAssaOnlyBox));
         grid.Add(panel, 0, 0, 9, 2);
 
-        grid.Add(labelLogo, 10, 0);
-        grid.Add(panelLogo, 10, 1);
+        // The text settings mean nothing for an image subtitle (a Blu-ray sup burned in as it
+        // is), so they go away then; the logo still applies. The shared column keeps the logo
+        // label aligned with the text rows when both are shown.
+        grid.Name = TextSettingsName;
+        grid.ColumnDefinitions[0].SharedSizeGroup = LabelColumnGroup;
+        grid.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsImageSubtitle)) { Converter = new InverseBooleanConverter() });
 
-        return UiUtil.MakeBorderForControl(grid).WithMarginBottom(5).WithMarginRight(5);
+        var logoGrid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+            },
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto), SharedSizeGroup = LabelColumnGroup },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+            },
+            ColumnSpacing = 5,
+            Width = double.NaN,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+        };
+        logoGrid.Add(labelLogo, 0, 0);
+        logoGrid.Add(panelLogo, 0, 1);
+
+        var settings = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Spacing = 5,
+            Children = { grid, logoGrid },
+        };
+        Grid.SetIsSharedSizeScope(settings, true);
+
+        return UiUtil.MakeBorderForControl(settings).WithMarginBottom(5).WithMarginRight(5);
     }
 
     private static Border MakeVideoSettingsView(BurnInViewModel vm)

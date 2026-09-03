@@ -263,6 +263,11 @@ public class BinaryEditWindow : Window
                         },
                     }
                 },
+                new MenuItem
+                {
+                    Header = l.GenerateBurnIn,
+                    Command = vm.GenerateBurnInCommand,
+                },
                 new Separator(),
                 new MenuItem
                 {
