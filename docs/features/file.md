@@ -181,6 +181,8 @@ Anything else is removed before rendering.
 
 **Fading (Blu-ray SUP).** A subtitle with `{\fad(400,400)}` is written the way a Blu-ray disc does it: the image is encoded once and the fade follows as palette updates, one per video frame, which cost about a kilobyte each instead of a whole new image. Long fades are sampled coarser so a single subtitle never adds more than 60 of them. The other image formats have no way to animate a subtitle and ignore the tag - the image is written fully opaque.
 
+**Overlapping subtitles (Blu-ray SUP).** Subtitles that are on screen at the same time - a line at the bottom and a `{\an8}` line at the top, say - are shown together. A Blu-ray display set can compose two images in two windows, so the export cuts the timeline wherever a subtitle starts or ends and writes one display set per slice with everything on screen in it. Subtitles that would be drawn over each other, and a third one at the same time, are drawn into one image, the later one on top - the same as the preview shows. A fade on one of the lines still fades that line only.
+
 <!-- Screenshot: Export image-based window -->
 ![Export Image Based](../screenshots/export-image-based.png)
 
