@@ -1,7 +1,7 @@
 {
   "title": "SubtitleEdit",
   "version": "v. 5.2.0-beta32",
-  "translatedBy": "v. 02.09.2026 di bovirus e GitGianluc",
+  "translatedBy": "v. 03.09.2026 di bovirus e GitGianluc",
   "cultureName": "it-IT",
   "general": {
     "abort": "Annulla",
@@ -2545,6 +2545,8 @@
     "openSecondarySubtitleOnVideoPlayerDotDotDot": "Apri sottotitoli secondari nel lettore video...",
     "openSecondarySubtitleOnVideoPlayer": "Sottotitoli secondari (lettore video)",
     "removeSecondarySubtitleOnVideoPlayer": "Rimuovi sottotitoli secondari nel lettore video",
+    "openRecentVideo": "Apri video recente",
+    "clearRecentVideos": "Cancella video recenti",
     "cutVideoTitle": "Taglia video",
     "cutVideoDotDotDot": "Taglia video...",
     "embedSubtitlesDotDotDot": "Aggiungi/rimuovi sottotitoli incorporati...",
