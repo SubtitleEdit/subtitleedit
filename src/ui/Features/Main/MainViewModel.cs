@@ -627,6 +627,7 @@ public partial class MainViewModel :
     private string? _saveAsFileNameSuggestion;
     private Subtitle _subtitle;
     private Subtitle? _subtitleSecondary;
+    private string? _subtitleSecondaryFileName;
     private Subtitle _subtitleOriginal;
     private SubtitleFormat? _lastOpenSaveFormat;
     private string? _videoFileName;
@@ -3779,7 +3780,9 @@ public partial class MainViewModel :
             return;
         }
 
-        var fileName = await _fileHelper.PickOpenSubtitleFile(Window!, Se.Language.General.OpenSubtitleFileTitle, lastOpenedFilePath: _subtitleFileName);
+        // Start the picker at the current second subtitle when there is one: re-opening it
+        // is how its style gets adjusted (#13492).
+        var fileName = await _fileHelper.PickOpenSubtitleFile(Window!, Se.Language.General.OpenSubtitleFileTitle, lastOpenedFilePath: _subtitleSecondaryFileName ?? _subtitleFileName);
         if (string.IsNullOrEmpty(fileName))
         {
             return;
@@ -3802,6 +3805,7 @@ public partial class MainViewModel :
         }
 
         _subtitleSecondary = result.ResultSubtitle;
+        _subtitleSecondaryFileName = fileName;
         IsSubtitleSecondaryVisible = true;
 
         var vp = GetVideoPlayerControl();
@@ -3831,6 +3835,7 @@ public partial class MainViewModel :
     {
         IsSubtitleSecondaryVisible = false;
         _subtitleSecondary = null;
+        _subtitleSecondaryFileName = null;
         RefreshSubtitlePreview(); // push the removal, or the cleared secondary stays on the video
     }
 

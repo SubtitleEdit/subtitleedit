@@ -345,8 +345,9 @@ public static class InitNativeMacMenu
 
         // Same spot and wording as SE4's Video menu, so it can be found by anyone
         // looking for it there (#14389). Only meaningful with a video to draw on.
+        // Stays available while a second subtitle is shown: opening again replaces it (#13492).
         videoItems.Items.Add(Conditional(Clean(Se.Language.Video.OpenSecondarySubtitleOnVideoPlayerDotDotDot), v => v.OpenSecondarySubtitleCommand,
-            v => v.IsVideoLoaded && !v.IsSubtitleSecondaryVisible, nameof(MainViewModel.IsVideoLoaded), nameof(MainViewModel.IsSubtitleSecondaryVisible)));
+            v => v.IsVideoLoaded, nameof(MainViewModel.IsVideoLoaded)));
         videoItems.Items.Add(Conditional(Clean(Se.Language.Video.RemoveSecondarySubtitleOnVideoPlayer), v => v.ClearSecondarySubtitleCommand,
             v => v.IsVideoLoaded && v.IsSubtitleSecondaryVisible, nameof(MainViewModel.IsVideoLoaded), nameof(MainViewModel.IsSubtitleSecondaryVisible)));
 
