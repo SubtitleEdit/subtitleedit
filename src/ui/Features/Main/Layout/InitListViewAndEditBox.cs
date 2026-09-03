@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Windows.Input;
 using Avalonia;
@@ -2115,19 +2115,34 @@ public static partial class InitListViewAndEditBox
             }
         }
 
-        flowGapBeforeUpDown.ValueChanged +=
-            async (_, _) =>
-            {
-                if (updatingFlowGapControls)
-                {
-                    return;
-                }
+        var flowGapBeforeDirty = false;
+        var flowGapAfterDirty = false;
+        SubtitleLineViewModel? flowGapBeforeEditedSubtitle = null;
+        SubtitleLineViewModel? flowGapAfterEditedSubtitle = null;
+        var committingFlowGapBefore = false;
+        var committingFlowGapAfter = false;
 
+        async System.Threading.Tasks.Task CommitFlowGapBeforeAsync()
+        {
+            if (!flowGapBeforeDirty ||
+                committingFlowGapBefore)
+            {
+                return;
+            }
+
+            flowGapBeforeDirty = false;
+            committingFlowGapBefore = true;
+
+            try
+            {
                 var selected =
-                    vm.SelectedSubtitle;
+                    flowGapBeforeEditedSubtitle;
+
+                flowGapBeforeEditedSubtitle = null;
 
                 if (selected == null)
                 {
+                    RefreshFlowGapDisplay();
                     return;
                 }
 
@@ -2137,6 +2152,7 @@ public static partial class InitListViewAndEditBox
 
                 if (selectedIndex <= 0)
                 {
+                    RefreshFlowGapDisplay();
                     return;
                 }
 
@@ -2162,6 +2178,7 @@ public static partial class InitListViewAndEditBox
 
                 if (shift == TimeSpan.Zero)
                 {
+                    RefreshFlowGapDisplay();
                     return;
                 }
 
@@ -2217,21 +2234,34 @@ public static partial class InitListViewAndEditBox
 
                 Dispatcher.UIThread.Post(
                     RefreshFlowGapDisplay);
-            };
-
-        flowGapAfterUpDown.ValueChanged +=
-            async (_, _) =>
+            }
+            finally
             {
-                if (updatingFlowGapControls)
-                {
-                    return;
-                }
+                committingFlowGapBefore = false;
+            }
+        }
 
+        async System.Threading.Tasks.Task CommitFlowGapAfterAsync()
+        {
+            if (!flowGapAfterDirty ||
+                committingFlowGapAfter)
+            {
+                return;
+            }
+
+            flowGapAfterDirty = false;
+            committingFlowGapAfter = true;
+
+            try
+            {
                 var selected =
-                    vm.SelectedSubtitle;
+                    flowGapAfterEditedSubtitle;
+
+                flowGapAfterEditedSubtitle = null;
 
                 if (selected == null)
                 {
+                    RefreshFlowGapDisplay();
                     return;
                 }
 
@@ -2243,6 +2273,7 @@ public static partial class InitListViewAndEditBox
                     selectedIndex >=
                     vm.Subtitles.Count - 1)
                 {
+                    RefreshFlowGapDisplay();
                     return;
                 }
 
@@ -2268,6 +2299,7 @@ public static partial class InitListViewAndEditBox
 
                 if (shift == TimeSpan.Zero)
                 {
+                    RefreshFlowGapDisplay();
                     return;
                 }
 
@@ -2323,7 +2355,84 @@ public static partial class InitListViewAndEditBox
 
                 Dispatcher.UIThread.Post(
                     RefreshFlowGapDisplay);
+            }
+            finally
+            {
+                committingFlowGapAfter = false;
+            }
+        }
+
+        flowGapBeforeUpDown.ValueChanged +=
+            (_, _) =>
+            {
+                if (updatingFlowGapControls)
+                {
+                    return;
+                }
+
+                flowGapBeforeDirty = true;
+                flowGapBeforeEditedSubtitle =
+                    vm.SelectedSubtitle;
             };
+
+        flowGapAfterUpDown.ValueChanged +=
+            (_, _) =>
+            {
+                if (updatingFlowGapControls)
+                {
+                    return;
+                }
+
+                flowGapAfterDirty = true;
+                flowGapAfterEditedSubtitle =
+                    vm.SelectedSubtitle;
+            };
+
+        flowGapBeforeUpDown.KeyDown +=
+            async (_, e) =>
+            {
+                if (e.Key == Key.Escape)
+                {
+                    flowGapBeforeDirty = false;
+                    flowGapBeforeEditedSubtitle = null;
+                    RefreshFlowGapDisplay();
+                    e.Handled = true;
+                    return;
+                }
+
+                if (e.Key == Key.Enter)
+                {
+                    e.Handled = true;
+                    await CommitFlowGapBeforeAsync();
+                }
+            };
+
+        flowGapAfterUpDown.KeyDown +=
+            async (_, e) =>
+            {
+                if (e.Key == Key.Escape)
+                {
+                    flowGapAfterDirty = false;
+                    flowGapAfterEditedSubtitle = null;
+                    RefreshFlowGapDisplay();
+                    e.Handled = true;
+                    return;
+                }
+
+                if (e.Key == Key.Enter)
+                {
+                    e.Handled = true;
+                    await CommitFlowGapAfterAsync();
+                }
+            };
+
+        flowGapBeforeUpDown.LostFocus +=
+            async (_, _) =>
+                await CommitFlowGapBeforeAsync();
+
+        flowGapAfterUpDown.LostFocus +=
+            async (_, _) =>
+                await CommitFlowGapAfterAsync();
 
         // Update the two Flow gaps immediately after timing edits.
         flowShowUpDown.ValueChanged +=
