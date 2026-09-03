@@ -57,8 +57,11 @@ public class SyntaxTextEditor : Decorator
             [Grid.ColumnProperty] = 1,
         };
 
+        // Line numbers stay in the platform default font: they are UI, not subtitle text, and a
+        // text face with old-style numerals makes them hard to scan.
         _gutter = new LineNumberGutter
         {
+            FontFamily = FontFamily.Default,
             [Grid.RowProperty] = 0,
             [Grid.ColumnProperty] = 0,
         };

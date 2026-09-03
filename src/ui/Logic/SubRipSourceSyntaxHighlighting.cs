@@ -64,7 +64,7 @@ public partial class SubRipSourceSyntaxHighlighting : ISourceSyntaxHighlighter
         var numberMatch = SubRipNumberRegex().Match(lineText);
         if (numberMatch.Success && numberMatch.Value == lineText.Trim())
         {
-            styler.Apply(0, lineText.Length, NumberColor, bold: true);
+            styler.Apply(0, lineText.Length, NumberColor, bold: true, defaultFont: true);
             return true;
         }
 
@@ -78,7 +78,7 @@ public partial class SubRipSourceSyntaxHighlighting : ISourceSyntaxHighlighter
             if (separatorIndex >= 0)
             {
                 // Colorize the start timecode (before "-->")
-                styler.Apply(timecodeMatch.Index, separatorIndex, TimeColor, bold: true);
+                styler.Apply(timecodeMatch.Index, separatorIndex, TimeColor, bold: true, defaultFont: true);
 
                 // Colorize the separator "-->" with a different color
                 var separatorStart = timecodeMatch.Index + separatorIndex;
@@ -96,19 +96,19 @@ public partial class SubRipSourceSyntaxHighlighting : ISourceSyntaxHighlighter
                     separatorEnd++;
                 }
 
-                styler.Apply(separatorStart, separatorEnd - separatorStart, TimeSeparatorColor, bold: true);
+                styler.Apply(separatorStart, separatorEnd - separatorStart, TimeSeparatorColor, bold: true, defaultFont: true);
 
                 // Colorize the end timecode (after "-->")
                 var endTimecodeEnd = timecodeMatch.Index + timecodeMatch.Length;
                 if (endTimecodeEnd > separatorEnd)
                 {
-                    styler.Apply(separatorEnd, endTimecodeEnd - separatorEnd, TimeColor, bold: true);
+                    styler.Apply(separatorEnd, endTimecodeEnd - separatorEnd, TimeColor, bold: true, defaultFont: true);
                 }
             }
             else
             {
                 // Fallback: colorize the entire match as timecode
-                styler.Apply(timecodeMatch.Index, timecodeMatch.Length, TimeColor, bold: true);
+                styler.Apply(timecodeMatch.Index, timecodeMatch.Length, TimeColor, bold: true, defaultFont: true);
             }
 
             return true;

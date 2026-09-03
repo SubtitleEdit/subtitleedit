@@ -159,7 +159,7 @@ public partial class AssaSourceSyntaxHighlighting : ISourceSyntaxHighlighter
     {
         foreach (Match match in AssaTimecodeRegex().Matches(lineText))
         {
-            styler.Apply(match.Index, match.Length, TimeColor, bold: true);
+            styler.Apply(match.Index, match.Length, TimeColor, bold: true, defaultFont: true);
         }
     }
 
