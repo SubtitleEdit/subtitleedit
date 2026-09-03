@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows.Input;
 using Avalonia;
@@ -1188,6 +1188,17 @@ public static partial class InitListViewAndEditBox
         mergeSelectedMenuItem.Command = vm.MergeSelectedLinesCommand;
         flyout.Items.Add(mergeSelectedMenuItem);
         vm.MenuItemMerge = mergeSelectedMenuItem;
+
+        var fitSelectedToTimeRangeMenuItem = new MenuItem
+        {
+            Header = "Fit selected subtitles to time range...",
+            DataContext = vm,
+            Command = vm.FitSelectedSubtitlesToTimeRangeCommand,
+        };
+        fitSelectedToTimeRangeMenuItem.Bind(
+            Visual.IsVisibleProperty,
+            new Binding(nameof(vm.HasMultipleLinesSelected)));
+        flyout.Items.Add(fitSelectedToTimeRangeMenuItem);
 
         var mergeSelectedAsDialogMenuItem = new MenuItem { Header = Se.Language.General.MergeSelectedAsDialog, DataContext = vm };
         mergeSelectedAsDialogMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridDataMenuVisible)));

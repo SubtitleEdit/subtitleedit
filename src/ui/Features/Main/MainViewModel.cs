@@ -14027,6 +14027,306 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private async Task FitSelectedSubtitlesToTimeRange()
+    {
+        if (Window == null || AreTimeCodesLocked)
+        {
+            return;
+        }
+
+        var selectedItems = SubtitleGridSelectedItems;
+        if (selectedItems.Count < 2)
+        {
+            return;
+        }
+
+        var frameRate = Se.Settings.General.CurrentFrameRate;
+        if (frameRate < 1)
+        {
+            frameRate = 25;
+        }
+
+        var startTimeCode = new TimeCodeUpDown
+        {
+            Value = selectedItems[0].StartTime,
+            MinWidth = 150,
+        };
+
+        var endTimeCode = new TimeCodeUpDown
+        {
+            Value = selectedItems[^1].EndTime,
+            MinWidth = 150,
+        };
+
+        var gapTimeCode = new TimeCodeUpDown
+        {
+            Value = TimeSpan.FromSeconds(5.0 / frameRate),
+            MinWidth = 150,
+        };
+
+        var selectedCountLabel = new TextBlock
+        {
+            Text = selectedItems.Count.ToString(CultureInfo.InvariantCulture),
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+
+        var availableDurationLabel = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+
+        var validationLabel = new TextBlock
+        {
+            TextWrapping = TextWrapping.Wrap,
+            MaxWidth = 420,
+            IsVisible = false,
+        };
+
+        var applyButton = new Button
+        {
+            Content = "Apply",
+            MinWidth = 90,
+            IsDefault = true,
+        };
+
+        var cancelButton = new Button
+        {
+            Content = "Cancel",
+            MinWidth = 90,
+            IsCancel = true,
+        };
+
+        static long ToFrame(TimeSpan time, double fps) =>
+            (long)Math.Round(time.TotalSeconds * fps, MidpointRounding.AwayFromZero);
+
+        static TimeSpan FromFrame(long frame, double fps) =>
+            TimeSpan.FromSeconds(frame / fps);
+
+        string FormatFrames(long frames)
+        {
+            if (frames < 0)
+            {
+                return "—";
+            }
+
+            var totalSeconds = frames / frameRate;
+            var frame = frames % (long)Math.Round(frameRate, MidpointRounding.AwayFromZero);
+            var hours = totalSeconds / 3600;
+            var minutes = totalSeconds % 3600 / 60;
+            var seconds = totalSeconds % 60;
+            return $"{hours:00}:{minutes:00}:{seconds:00}:{frame:00}";
+        }
+
+        bool TryGetRange(out long startFrame, out long endFrame, out long gapFrames, out long subtitleFrames)
+        {
+            startFrame = ToFrame(startTimeCode.Value, frameRate);
+            endFrame = ToFrame(endTimeCode.Value, frameRate);
+            gapFrames = Math.Max(0, ToFrame(gapTimeCode.Value, frameRate));
+            subtitleFrames = endFrame - startFrame - gapFrames * (selectedItems.Count - 1);
+            return endFrame > startFrame && subtitleFrames >= selectedItems.Count;
+        }
+
+        void RefreshDialogState()
+        {
+            if (TryGetRange(out _, out _, out _, out var subtitleFrames))
+            {
+                availableDurationLabel.Text = FormatFrames(subtitleFrames);
+                validationLabel.IsVisible = false;
+                applyButton.IsEnabled = true;
+            }
+            else
+            {
+                availableDurationLabel.Text = "—";
+                validationLabel.Text =
+                    "The selected time range is too short for the subtitles and the requested gaps.";
+                validationLabel.IsVisible = true;
+                applyButton.IsEnabled = false;
+            }
+        }
+
+        startTimeCode.ValueChanged += (_, _) => RefreshDialogState();
+        endTimeCode.ValueChanged += (_, _) => RefreshDialogState();
+        gapTimeCode.ValueChanged += (_, _) => RefreshDialogState();
+
+        var fields = new Grid
+        {
+            ColumnDefinitions = new ColumnDefinitions("Auto,*"),
+            RowDefinitions = new RowDefinitions("Auto,Auto,Auto,Auto,Auto"),
+            ColumnSpacing = 14,
+            RowSpacing = 10,
+        };
+
+        void AddField(int row, string label, Control control)
+        {
+            var text = new TextBlock
+            {
+                Text = label,
+                VerticalAlignment = VerticalAlignment.Center,
+            };
+            Grid.SetRow(text, row);
+            Grid.SetColumn(text, 0);
+            fields.Children.Add(text);
+
+            Grid.SetRow(control, row);
+            Grid.SetColumn(control, 1);
+            fields.Children.Add(control);
+        }
+
+        AddField(0, "Start time code:", startTimeCode);
+        AddField(1, "End time code:", endTimeCode);
+        AddField(2, "Gap:", gapTimeCode);
+        AddField(3, "Selected subtitles:", selectedCountLabel);
+        AddField(4, "Available duration:", availableDurationLabel);
+
+        var buttons = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            Spacing = 8,
+            Children =
+            {
+                cancelButton,
+                applyButton,
+            },
+        };
+
+        var content = new StackPanel
+        {
+            Margin = new Thickness(18),
+            Spacing = 14,
+            Children =
+            {
+                fields,
+                validationLabel,
+                buttons,
+            },
+        };
+
+        var dialog = new Window
+        {
+            Title = "Fit selected subtitles to time range",
+            Content = content,
+            SizeToContent = SizeToContent.WidthAndHeight,
+            CanResize = false,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+        };
+
+        var applyPressed = false;
+        applyButton.Click += (_, _) =>
+        {
+            applyPressed = true;
+            dialog.Close();
+        };
+        cancelButton.Click += (_, _) => dialog.Close();
+
+        RefreshDialogState();
+        await dialog.ShowDialog(Window);
+
+        if (!applyPressed ||
+            !TryGetRange(out var rangeStartFrame, out var rangeEndFrame, out var fixedGapFrames,
+                out var subtitleBudgetFrames))
+        {
+            return;
+        }
+
+        var originalDurations = selectedItems
+            .Select(item => Math.Max(1L, ToFrame(item.EndTime, frameRate) - ToFrame(item.StartTime, frameRate)))
+            .ToArray();
+
+        var totalOriginalDuration = originalDurations.Sum();
+        var allocations = new long[selectedItems.Count];
+        var remainders = new double[selectedItems.Count];
+
+        long allocated = 0;
+        for (var i = 0; i < selectedItems.Count; i++)
+        {
+            var exact = subtitleBudgetFrames * (double)originalDurations[i] / totalOriginalDuration;
+            allocations[i] = (long)Math.Floor(exact);
+            remainders[i] = exact - allocations[i];
+            allocated += allocations[i];
+        }
+
+        // Every subtitle must retain at least one frame. If proportional rounding produced
+        // a zero-frame subtitle, borrow from the largest subtitle that still has > 1 frame.
+        for (var i = 0; i < allocations.Length; i++)
+        {
+            if (allocations[i] > 0)
+            {
+                continue;
+            }
+
+            var donor = -1;
+            for (var j = 0; j < allocations.Length; j++)
+            {
+                if (allocations[j] <= 1)
+                {
+                    continue;
+                }
+
+                if (donor < 0 || allocations[j] > allocations[donor])
+                {
+                    donor = j;
+                }
+            }
+
+            if (donor >= 0)
+            {
+                allocations[donor]--;
+                allocations[i]++;
+            }
+        }
+
+        allocated = allocations.Sum();
+        var framesLeft = subtitleBudgetFrames - allocated;
+
+        foreach (var index in Enumerable.Range(0, selectedItems.Count)
+                     .OrderByDescending(i => remainders[i])
+                     .ThenBy(i => i))
+        {
+            if (framesLeft <= 0)
+            {
+                break;
+            }
+
+            allocations[index]++;
+            framesLeft--;
+        }
+
+        // Defensive exactness: the largest-remainder pass normally consumes everything.
+        // Any residue caused by future changes goes to the last subtitle so the requested
+        // end time code remains exact.
+        if (framesLeft != 0)
+        {
+            allocations[^1] += framesLeft;
+        }
+
+        RunWithoutChangeDetection(() =>
+        {
+            var cursorFrame = rangeStartFrame;
+            for (var i = 0; i < selectedItems.Count; i++)
+            {
+                var item = selectedItems[i];
+                var endFrame = i == selectedItems.Count - 1
+                    ? rangeEndFrame
+                    : cursorFrame + allocations[i];
+
+                item.SetStartTimeOnly(FromFrame(cursorFrame, frameRate));
+                item.EndTime = FromFrame(endFrame, frameRate);
+                cursorFrame = endFrame + fixedGapFrames;
+            }
+        });
+
+        _updateAudioVisualizer = true;
+        RefreshSubtitlePreview();
+
+        if (SelectedSubtitle != null)
+        {
+            MakeSubtitleTextInfo(SelectedSubtitle.Text, SelectedSubtitle);
+            MakeSubtitleTextInfoOriginal(SelectedSubtitle.OriginalText, SelectedSubtitle);
+        }
+    }
+
+    [RelayCommand]
     private void MergeSelectedLines()
     {
         RunWithoutChangeDetection(() => WithoutReferenceOnlyRows(() => MergeLinesSelected()));
