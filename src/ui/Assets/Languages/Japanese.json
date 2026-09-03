@@ -2545,6 +2545,8 @@
     "openSecondarySubtitleOnVideoPlayerDotDotDot": "動画プレーヤー上のセカンダリ字幕を開く",
     "openSecondarySubtitleOnVideoPlayer": "動画プレーヤー上のセカンダリ字幕",
     "removeSecondarySubtitleOnVideoPlayer": "動画プレーヤー上のセカンダリ字幕を削除",
+    "openRecentVideo": "最近使用したビデオを開く",
+    "clearRecentVideos": "最近使用したビデオの履歴を消去",
     "cutVideoTitle": "動画をカット",
     "cutVideoDotDotDot": "動画をカット...",
     "embedSubtitlesDotDotDot": "埋め込み字幕の追加/削除",
@@ -3830,5 +3832,6 @@
     "exportAsHtml": "Webページ（.html）...",
     "exportFileX": "ファイル: {0}",
     "exportGeneratedX": "生成日時: {0}",
-    "exportMadeWithSubtitleEdit": "Subtitle Editで作成"  }
-}
+    "exportMadeWithSubtitleEdit": "Subtitle Editで作成"
+  }
+}  
