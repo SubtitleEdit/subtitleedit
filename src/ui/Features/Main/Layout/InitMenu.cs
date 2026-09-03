@@ -731,19 +731,13 @@ public static class InitMenu
                 },
                 // Same spot and wording as SE4's Video menu, so it can be found by anyone
                 // looking for it there (#14389). Only meaningful with a video to draw on.
+                // Stays available while a second subtitle is shown: opening again replaces
+                // it, so its style can be adjusted without removing it first (#13492).
                 new MenuItem
                 {
                     Header = Se.Language.Video.OpenSecondarySubtitleOnVideoPlayerDotDotDot,
                     Command = vm.OpenSecondarySubtitleCommand,
-                    [!Visual.IsVisibleProperty] = new MultiBinding
-                    {
-                        Converter = BoolConverters.And,
-                        Bindings =
-                        {
-                            new Binding(nameof(vm.IsVideoLoaded)),
-                            new Binding(nameof(vm.IsSubtitleSecondaryVisible)) { Converter = new InverseBooleanConverter() },
-                        },
-                    },
+                    [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsVideoLoaded)),
                 },
                 new MenuItem
                 {
