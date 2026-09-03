@@ -5529,7 +5529,9 @@ public partial class MainViewModel :
                 pos = pos2;
             }
 
-            var newStartMs = pos * TimeCode.BaseUnit;
+            // The detected boundary sits right against the speech; users who want a little air
+            // in front of it pad it here (#14472). A shot change snap below replaces it.
+            var newStartMs = Math.Max(0, pos * TimeCode.BaseUnit - Se.Settings.Waveform.GuessStartOffsetMs);
             if (prev != null && prev.EndTime.TotalMilliseconds + gapMs >= newStartMs)
             {
                 newStartMs = prev.EndTime.TotalMilliseconds + gapMs;
@@ -5549,7 +5551,11 @@ public partial class MainViewModel :
                     .ToList();
                 if (nearestShotChange.Count > 0)
                 {
-                    newStartMs = nearestShotChange[0] * TimeCode.BaseUnit;
+                    var shotChangeMs = nearestShotChange[0] * TimeCode.BaseUnit;
+                    if (prev == null || prev.EndTime.TotalMilliseconds + gapMs <= shotChangeMs)
+                    {
+                        newStartMs = shotChangeMs;
+                    }
                 }
             }
 
@@ -5580,6 +5586,127 @@ public partial class MainViewModel :
                 TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newStartMs),
                 TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newEndMs));
 
+            _updateAudioVisualizer = true;
+            break;
+        }
+    }
+
+    /// <summary>
+    /// "Guess end": the mirror of <see cref="WaveformGuessStart"/> (#14472). Looks for the silence
+    /// right after the speech that ends the selected line and moves the end cue there, landing the
+    /// out-cue gap before a nearby shot change when there is one. The threshold sweep is the same
+    /// as for the start. Shortening the line never breaks the minimum duration/maximum CPS rules:
+    /// the end is pulled in only as far as those allow. Lengthening stops at the next line's gap.
+    /// </summary>
+    [RelayCommand]
+    private void WaveformGuessEnd()
+    {
+        var selected = SelectedSubtitle;
+        if (selected == null || AreTimeCodesLocked || AudioVisualizer?.WavePeaks == null)
+        {
+            return;
+        }
+
+        var index = Subtitles.IndexOf(selected);
+        if (index < 0)
+        {
+            return;
+        }
+
+        const double silenceLengthInSeconds = 0.08;
+        var startMs = selected.StartTime.TotalMilliseconds;
+        var endMs = selected.EndTime.TotalMilliseconds;
+        var endSeconds = selected.EndTime.TotalSeconds;
+        // The noise floor is read over the whole stretch the end can move in: a cue that cuts the
+        // speech short has nothing but speech right around it.
+        var lowPercent = AudioVisualizer.FindLowPercentage(endSeconds - 0.3, endSeconds + 1.0);
+        var highPercent = AudioVisualizer.FindHighPercentage(endSeconds - 0.4, endSeconds + 0.3);
+        var add = 5.0;
+        if (highPercent > 40)
+        {
+            add = 8;
+        }
+        else if (highPercent < 5)
+        {
+            add = highPercent - lowPercent - 0.3;
+        }
+
+        var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
+        var next = GetNextWorkingRow(index);
+
+        for (var volume = lowPercent + add; volume < 14; volume += 0.3)
+        {
+            var pos = AudioVisualizer.FindDataBelowThresholdForwardForEnd(volume, silenceLengthInSeconds, endSeconds);
+            if (pos < 0 || pos >= endSeconds + 1)
+            {
+                continue;
+            }
+
+            // A slightly higher threshold that still lands inside the same silence is the
+            // better guess - it sits closer to the speech.
+            var pos2 = AudioVisualizer.FindDataBelowThresholdForwardForEnd(volume + 0.3, silenceLengthInSeconds, endSeconds);
+            if (pos2 >= 0 && pos2 < pos && pos2 * TimeCode.BaseUnit > startMs)
+            {
+                pos = pos2;
+            }
+
+            var newEndMs = pos * TimeCode.BaseUnit + Se.Settings.Waveform.GuessEndOffsetMs;
+            if (next != null && newEndMs + gapMs > next.StartTime.TotalMilliseconds)
+            {
+                newEndMs = next.StartTime.TotalMilliseconds - gapMs;
+                if (newEndMs <= endMs)
+                {
+                    break; // cannot move the end time
+                }
+            }
+
+            var shotChanges = AudioVisualizer.ShotChanges;
+            if (shotChanges.Count > 0)
+            {
+                var nearestShotChange = shotChanges
+                    .Where(sc => sc > endSeconds - 0.2 && sc < endSeconds + 0.3)
+                    .OrderBy(sc => Math.Abs(sc - endSeconds))
+                    .Take(1)
+                    .ToList();
+                if (nearestShotChange.Count > 0)
+                {
+                    var shotChangeEndMs = nearestShotChange[0] * TimeCode.BaseUnit - TimeCodesBeautifierUtils.GetOutCuesGapMs();
+                    if (shotChangeEndMs > startMs &&
+                        (next == null || shotChangeEndMs + gapMs <= next.StartTime.TotalMilliseconds))
+                    {
+                        newEndMs = shotChangeEndMs;
+                    }
+                }
+            }
+
+            if (newEndMs < endMs)
+            {
+                // Shorten only as far as the minimum duration and maximum CPS allow.
+                var minEndMs = startMs + Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
+                var maxCps = Se.Settings.General.SubtitleMaximumCharactersPerSeconds;
+                if (maxCps > 0)
+                {
+                    var newEnd = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newEndMs);
+                    var cps = SubtitleTextInfoHelper.GetCharactersPerSecond(selected.Text, selected.StartTime, newEnd);
+                    if (cps > maxCps)
+                    {
+                        var characters = cps * (newEndMs - startMs) / TimeCode.BaseUnit;
+                        minEndMs = Math.Max(minEndMs, startMs + characters / maxCps * TimeCode.BaseUnit);
+                    }
+                }
+
+                if (newEndMs < minEndMs)
+                {
+                    newEndMs = Math.Min(minEndMs, endMs);
+                }
+            }
+
+            if (newEndMs <= startMs || Math.Abs(endMs - newEndMs) < 10)
+            {
+                break; // nothing sensible to do / difference too small
+            }
+
+            selected.EndTime = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newEndMs);
             _updateAudioVisualizer = true;
             break;
         }

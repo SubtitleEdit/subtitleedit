@@ -138,6 +138,8 @@ public class LanguageSettings
     public string WaveformSnapToShotChangeStartMaxSeconds { get; set; }
     public string WaveformSnapToShotChangeEndMaxSeconds { get; set; }
     public string WaveformSnapToShotChangeSameShotEndMaxSeconds { get; set; }
+    public string WaveformGuessStartOffsetMs { get; set; }
+    public string WaveformGuessEndOffsetMs { get; set; }
     public string WaveformShotChangesAutoGenerate { get; set; }
     public string WaveformTextFontSize { get; set; }
     public string WaveformTextFontBold { get; set; }
@@ -480,6 +482,8 @@ public class LanguageSettings
         WaveformSnapToShotChangeStartMaxSeconds = "Snap to nearest shot change: max start distance (seconds)";
         WaveformSnapToShotChangeEndMaxSeconds = "Snap to nearest shot change: max end distance (seconds)";
         WaveformSnapToShotChangeSameShotEndMaxSeconds = "Snap to nearest shot change: max end distance when start and end share a cut (seconds)";
+        WaveformGuessStartOffsetMs = "Guess start time from waveform: place start earlier by (ms)";
+        WaveformGuessEndOffsetMs = "Guess end time from waveform: place end later by (ms)";
         WaveformShotChangesAutoGenerate = "Shot changes auto-generate";
         WaveformTextFontSize = "Waveform text font size";
         WaveformTextFontBold = "Waveform text font bold";

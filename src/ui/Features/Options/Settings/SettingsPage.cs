@@ -573,6 +573,10 @@ public class SettingsPage : UserControl
                 0, 10, 120, _vm, nameof(_vm.WaveformSnapToShotChangeEndMaxSeconds), defaultValue: 1.5m)),
             new SettingsItem(Se.Language.Options.Settings.WaveformSnapToShotChangeSameShotEndMaxSeconds, () => UiUtil.MakeNumericUpDownOneDecimal(
                 0, 10, 120, _vm, nameof(_vm.WaveformSnapToShotChangeSameShotEndMaxSeconds), defaultValue: 0.5m)),
+            new SettingsItem(Se.Language.Options.Settings.WaveformGuessStartOffsetMs, () => UiUtil.MakeNumericUpDownInt(
+                0, 1000, 0, 120, _vm, nameof(_vm.WaveformGuessStartOffsetMs))),
+            new SettingsItem(Se.Language.Options.Settings.WaveformGuessEndOffsetMs, () => UiUtil.MakeNumericUpDownInt(
+                0, 1000, 0, 120, _vm, nameof(_vm.WaveformGuessEndOffsetMs))),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformShotChangesAutoGenerate, nameof(_vm.WaveformShotChangesAutoGenerate)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformFocusOnMouseOver, nameof(_vm.WaveformFocusOnMouseOver)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformFocusTextboxAfterInsertNew, nameof(_vm.WaveformFocusTextboxAfterInsertNew)),

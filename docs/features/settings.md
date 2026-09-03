@@ -76,6 +76,7 @@ The subtitle rules that drive error checking, the grid's warning colors, and too
 - **Snap to shot changes (hold Shift to override)** and **Snap to frames**
 - **Snap distance when dragging (pixels)** — how close a dragged cue has to come to a shot change before it snaps; in pixels, so it feels the same at every zoom
 - **Snap to nearest shot change: max start / end distance (seconds)**, and the tighter **max end distance when start and end share a cut** — how far the *Snap selected lines to nearest shot change* shortcut looks for a cut. Where a snapped cue lands is set by the beautify profile's in/out cues gap (gear icon next to the snap toggle)
+- **Guess start time from waveform: place start earlier by (ms)** / **Guess end time from waveform: place end later by (ms)** — padding added to the speech boundary the *Guess start/end time from waveform* shortcuts detect, for when the guess feels too tight against the audio. A nearby shot change still wins over the padded position
 - **Shot changes auto-generate**
 - **Focus on mouse over**, **Focus text box after insert**
 - **Invert mouse-wheel**, **Mouse-wheel sets video position**, **Mouse-wheel video position step**
