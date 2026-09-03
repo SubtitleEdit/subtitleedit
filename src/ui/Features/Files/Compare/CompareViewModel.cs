@@ -989,13 +989,19 @@ public partial class CompareViewModel : ObservableObject
                 {
                     target.SelectedIndex = idx;
                 }
-
-                ScrollSync?.SyncFrom(source);
             }
             finally
             {
                 _mirroringSelection = false;
             }
+
+            // Setting SelectedIndex makes the target grid *post* its own ScrollIntoView
+            // (SelectingItemsControl.AutoScrollToSelectedItemIfNecessary), and that scroll is
+            // computed from the panel's estimated row height, so a sync done here would be
+            // undone a frame later - the two sides ended one row apart on CI whenever the
+            // estimate put the selected row on the viewport's bottom edge. Queue the sync
+            // behind that scroll instead: same priority, so it runs after it.
+            Dispatcher.UIThread.Post(() => ScrollSync?.SyncFrom(source));
         });
     }
 
