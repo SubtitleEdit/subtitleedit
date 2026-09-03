@@ -220,7 +220,13 @@ public static class CrispAsrTtsProvenance
         }
     }
 
-    private const int HelpProbeTimeoutMs = 15_000;
+    /// <summary>
+    /// How long the --help probe waits for the child to exit. Settable so a test that exercises
+    /// the real probe with a large stderr flood can lift it: on a loaded machine the pipe drain
+    /// can stall past 15 s, and the probe then returns null, which is indistinguishable from the
+    /// deadlock the test is looking for.
+    /// </summary>
+    internal static int HelpProbeTimeoutMs { get; set; } = 15_000;
 
     private static void TryKill(Process process)
     {
