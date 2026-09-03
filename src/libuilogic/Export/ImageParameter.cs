@@ -72,6 +72,14 @@ public class ImageParameter
     /// </summary>
     public TextEffects? TextEffects { get; set; }
 
+    /// <summary>
+    /// Multiplier for the sizes in "&lt;font size=..&gt;" tags. 1 for SRT-like input, where the
+    /// size is in the same unit as <see cref="FontSize"/>. ASSA "{\fs..}" is in the script's
+    /// resolution, so <see cref="ExportTextTags.ApplyStyleOverrideTags"/> sets this to
+    /// ScreenHeight / PlayResY (discussion #14476).
+    /// </summary>
+    public float TagFontSizeScale { get; set; } = 1f;
+
     public ImageParameter()
     {
         Bitmap = new SKBitmap(1, 1, true);
