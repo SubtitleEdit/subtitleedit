@@ -51,6 +51,11 @@ public class OpenSecondarySubtitleWindow : Window
         var numericFontSize = UiUtil.MakeNumericUpDownInt(6, 200, 46, 120, vm, nameof(vm.FontSize));
         var panelFontSize = UiUtil.MakeHorizontalPanel(labelFontSize, numericFontSize);
 
+        // Bold row
+        var labelBold = UiUtil.MakeLabel(string.Empty).WithMinWidth(labelWidth);
+        var checkBoxBold = UiUtil.MakeCheckBox(Se.Language.General.Bold, vm, nameof(vm.FontBold));
+        var panelBold = UiUtil.MakeHorizontalPanel(labelBold, checkBoxBold);
+
         // Border style row
         var labelBorderStyle = UiUtil.MakeLabel(Se.Language.General.BorderStyle).WithMinWidth(labelWidth);
         var comboBoxBorderStyle = UiUtil.MakeComboBox(vm.FontBoxTypes, vm, nameof(vm.SelectedFontBoxType)).WithMinWidth(160);
@@ -69,6 +74,7 @@ public class OpenSecondarySubtitleWindow : Window
             {
                 panelColor,
                 panelFontSize,
+                panelBold,
                 panelBorderStyle,
                 panelAlignment,
             },
