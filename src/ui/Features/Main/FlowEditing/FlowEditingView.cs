@@ -760,11 +760,271 @@ public sealed class FlowEditingView : Border
         items.Add(
             deleteSelectedMenuItem);
 
+        if (_vm.IsFormatEbu &&
+            includeTextEditingItems)
+        {
+            items.Add(
+                new Separator());
+
+            items.Add(
+                CreateFlowColorMenuItem(
+                    item,
+                    textBox));
+        }
+
         return new ContextMenu
         {
             ItemsSource =
                 items,
         };
+    }
+
+
+    private MenuItem CreateFlowColorMenuItem(
+        FlowEditingItem item,
+        TextBox textBox)
+    {
+        var colorItems = new List<object>();
+
+        AddFlowColorMenuItem(colorItems, item, textBox, "Black", "black");
+        AddFlowColorMenuItem(colorItems, item, textBox, "Red", "red");
+        AddFlowColorMenuItem(colorItems, item, textBox, "Green", "green");
+        AddFlowColorMenuItem(colorItems, item, textBox, "Yellow", "yellow");
+        AddFlowColorMenuItem(colorItems, item, textBox, "Blue", "blue");
+        AddFlowColorMenuItem(colorItems, item, textBox, "Magenta", "magenta");
+        AddFlowColorMenuItem(colorItems, item, textBox, "Cyan", "cyan");
+        AddFlowColorMenuItem(colorItems, item, textBox, "White", "white");
+
+        colorItems.Add(new Separator());
+
+        var removeColorMenuItem = new MenuItem
+        {
+            Header = Se.Language.General.RemoveColor,
+        };
+
+        removeColorMenuItem.Click +=
+            (_, _) => ApplyFlowColorToSelection(item, textBox, colorName: null);
+
+        colorItems.Add(removeColorMenuItem);
+
+        return new MenuItem
+        {
+            Header = Se.Language.General.ColorDotDotDot,
+            ItemsSource = colorItems,
+        };
+    }
+
+    private void AddFlowColorMenuItem(
+        ICollection<object> items,
+        FlowEditingItem item,
+        TextBox textBox,
+        string header,
+        string colorName)
+    {
+        var colorBrush =
+            GetFlowTeletextColorBrush(
+                colorName,
+                Brushes.White);
+
+        var colorSwatch =
+            new Border
+            {
+                Width = 16,
+                Height = 16,
+                Margin = new Thickness(
+                    0,
+                    0,
+                    8,
+                    0),
+                Background = colorBrush,
+                BorderBrush = Brushes.Gray,
+                BorderThickness = new Thickness(1),
+                CornerRadius = new CornerRadius(2),
+            };
+
+        var headerPanel =
+            new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                VerticalAlignment = VerticalAlignment.Center,
+            };
+
+        headerPanel.Children.Add(
+            colorSwatch);
+
+        headerPanel.Children.Add(
+            new TextBlock
+            {
+                Text = header,
+                VerticalAlignment = VerticalAlignment.Center,
+            });
+
+        var menuItem = new MenuItem
+        {
+            Header = headerPanel,
+        };
+
+        menuItem.Click +=
+            (_, _) => ApplyFlowColorToSelection(item, textBox, colorName);
+
+        items.Add(menuItem);
+    }
+
+    private void ApplyFlowColorToSelection(
+        FlowEditingItem item,
+        TextBox textBox,
+        string? colorName)
+    {
+        var selectedItems =
+            _items
+                .Where(
+                    candidate =>
+                        _selectedSources.Contains(
+                            candidate.Source))
+                .ToList();
+
+        var isMultiSelection =
+            selectedItems.Count > 1;
+
+        if (isMultiSelection)
+        {
+            foreach (var selectedItem in selectedItems)
+            {
+                ApplyFlowColorToWholeSubtitle(
+                    selectedItem,
+                    colorName);
+            }
+
+            _pendingFocusSource =
+                item.Source;
+
+            _pendingFocusAtStart =
+                false;
+
+            Refresh();
+            return;
+        }
+
+        var visibleText =
+            textBox.Text ??
+            string.Empty;
+
+        if (visibleText.Length == 0)
+        {
+            return;
+        }
+
+        var selectionStart =
+            Math.Clamp(
+                Math.Min(
+                    textBox.SelectionStart,
+                    textBox.SelectionEnd),
+                0,
+                visibleText.Length);
+
+        var selectionEnd =
+            Math.Clamp(
+                Math.Max(
+                    textBox.SelectionStart,
+                    textBox.SelectionEnd),
+                selectionStart,
+                visibleText.Length);
+
+        if (selectionStart == selectionEnd)
+        {
+            selectionStart = 0;
+            selectionEnd = visibleText.Length;
+        }
+
+        var projection =
+            FlowInlineColorProjection
+                .Parse(item.Source.Text)
+                .ReflowVisibleText(
+                    visibleText);
+
+        var length =
+            selectionEnd -
+            selectionStart;
+
+        projection =
+            string.IsNullOrWhiteSpace(colorName)
+                ? projection.RemoveColor(
+                    selectionStart,
+                    length)
+                : projection.ApplyColor(
+                    selectionStart,
+                    length,
+                    colorName);
+
+        item.Source.Text =
+            projection.Serialize();
+
+        var overlay =
+            FindFlowColorOverlay(
+                textBox);
+
+        UpdateFlowInlineColorOverlay(
+            overlay,
+            item,
+            textBox);
+
+        textBox.SelectionStart =
+            selectionStart;
+
+        textBox.SelectionEnd =
+            selectionEnd;
+
+        textBox.CaretIndex =
+            selectionEnd;
+
+        textBox.Focus();
+    }
+
+    private static void ApplyFlowColorToWholeSubtitle(
+        FlowEditingItem item,
+        string? colorName)
+    {
+        var projection =
+            FlowInlineColorProjection
+                .Parse(item.Source.Text);
+
+        var visibleText =
+            projection.VisibleText;
+
+        if (visibleText.Length == 0)
+        {
+            return;
+        }
+
+        projection =
+            string.IsNullOrWhiteSpace(colorName)
+                ? projection.RemoveColor(
+                    0,
+                    visibleText.Length)
+                : projection.ApplyColor(
+                    0,
+                    visibleText.Length,
+                    colorName);
+
+        item.Source.Text =
+            projection.Serialize();
+    }
+
+    private static TextBlock FindFlowColorOverlay(TextBox textBox)
+    {
+        if (textBox.Parent is Grid editorLayers)
+        {
+            var overlay = editorLayers.Children
+                .OfType<TextBlock>()
+                .FirstOrDefault();
+
+            if (overlay != null)
+            {
+                return overlay;
+            }
+        }
+
+        throw new InvalidOperationException("Flow color overlay not found.");
     }
 
 
@@ -2117,6 +2377,57 @@ public sealed class FlowEditingView : Border
                 out var overflowWord,
                 out var overflowStart))
         {
+            // If the subtitle already has two lines, the edited word can make
+            // the FIRST line illegal while the second line is still legal.
+            // In that case neither normal overflow helper can move anything:
+            // first-line wrapping only handles a one-line subtitle, while the
+            // second-line helper correctly sees no overflow on line two.
+            //
+            // Reject only this latest illegal edit and restore the last legal
+            // visible text. This keeps the established two-line layout intact
+            // and, importantly, never allows Flow to continue beyond the
+            // Teletext width merely because the caret is on line one.
+            var normalizedLines =
+                NormalizeFlowTypingText(
+                    visibleText)
+                    .Split('\n');
+
+            var firstLineIsIllegal =
+                normalizedLines.Length == 2 &&
+                normalizedLines[0].Length >
+                    GetTeletextLineMaxCharacters(
+                        visibleText,
+                        projection,
+                        0);
+
+            if (firstLineIsIllegal &&
+                _lastValidTeletextText.TryGetValue(
+                    item,
+                    out var lastValidText))
+            {
+                _applyingLiveTeletextRule = true;
+
+                try
+                {
+                    textBox.Text =
+                        lastValidText;
+
+                    textBox.CaretIndex =
+                        Math.Min(
+                            caretIndex,
+                            lastValidText.Length);
+
+                    _lastValidTeletextText[item] =
+                        lastValidText;
+                }
+                finally
+                {
+                    _applyingLiveTeletextRule = false;
+                }
+
+                return;
+            }
+
             // A single word can itself be longer than the allowed Teletext
             // width. Never cut such a word in the middle. Keep it intact;
             // validation can flag the exceptional overlong word later.
