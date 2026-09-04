@@ -1752,12 +1752,65 @@ public partial class MainViewModel :
     // is held frozen at the pause spot, which would stall the first ~100 ms of playback.
     // Every play request in the app funnels through here (PlayVideo, the play half of
     // TogglePlayPause, and the player control's own PlayPauseRequested wiring), so this is also
-    // where the play-start gate is armed.
+    // where the play-start gate is armed and where a resume is redirected to the visible cursor.
     internal void CancelPausePlayheadFreeze()
     {
         CancelFrameStepPlayBlip(); // playback the user started must not be stopped by a stale blip
+        SeekPausedPlayerToVisibleCursor();
         _pauseRequested = false;
         _playStartGate.PlayRequested(Stopwatch.GetTimestamp());
+    }
+
+    /// <summary>
+    /// Play is about to resume a paused player. While paused the waveform cursor deliberately
+    /// holds the spot where the user paused, while mpv settles a wind-down further on - #12740
+    /// keeps that residual off the cursor, and it grew from sub-visible back to up to ~0.2 s
+    /// when the audio buffer returned to mpv's default for #14523. Left alone, play resumes
+    /// from mpv's settled spot: the audio starts past the cursor and the on-play resync then
+    /// yanks the cursor forward to meet it - so a play command visibly does not start from the
+    /// cursor the user aimed by. Make the drawn cursor authoritative instead: seek the paused
+    /// player onto it, so playback (and, on outputs that keep their device buffer across a
+    /// hardware pause, the audio actually heard - the seek flushes it) starts at what is on
+    /// screen. Seek-then-play paths (play line, play next, grid click-to-play...) pin the
+    /// playhead to their own target first; the pin guard leaves those untouched.
+    /// </summary>
+    private void SeekPausedPlayerToVisibleCursor()
+    {
+        if (!_playheadValid || _playheadSeekTarget.HasValue)
+        {
+            return;
+        }
+
+        var vp = GetVideoPlayerControl();
+        if (vp == null || string.IsNullOrEmpty(_videoFileName))
+        {
+            return;
+        }
+
+        if (vp.VideoPlayer.IsPlaying)
+        {
+            return; // already running (or a blip/pause is mid-flight) - nothing settled to reconcile
+        }
+
+        var rawPosition = vp.VideoPlayer.Position;
+        if (IsSmpteTimingEnabled)
+        {
+            rawPosition = rawPosition * 1000.0 / 1001.0;
+        }
+
+        var residualSeconds = Math.Abs(_playheadEstimateSeconds - rawPosition);
+        if (residualSeconds <= PlayheadResyncOnPlayThresholdSeconds ||
+            residualSeconds >= PlayheadResyncThresholdSeconds)
+        {
+            // Below: within a frame - not worth a seek (the on-play resync leaves such a
+            // residual alone too). Above: the paused branch snaps a discontinuity this big to
+            // mpv's position within a tick, so the estimate is not what is standing on screen -
+            // this also shields any unpinned foreign seek still in flight from being undone.
+            return;
+        }
+
+        vp.SeekTo(_playheadEstimateSeconds);
+        PinPlayheadTo(_playheadEstimateSeconds);
     }
 
     // The player's Stop button pauses and seeks to 0; freeze the cursor immediately and pin it to
@@ -17030,6 +17083,9 @@ public partial class MainViewModel :
         }
 
         vp.VideoPlayer.Stop();
+        // Stop seeks to 0; pin the cursor there like the stop button does, and so the
+        // resume-from-cursor seek in PlayVideo can't pull playback back to the old spot.
+        PinPlayheadTo(0);
         PlayVideo(vp);
         _updateAudioVisualizer = true;
     }
@@ -30983,6 +31039,7 @@ public partial class MainViewModel :
             if (Se.Settings.General.SubtitleDoubleClickAction == SubtitleDoubleClickActionType.GoToSubtitleAndPlay.ToString())
             {
                 vp.Position = seconds;
+                PinPlayheadTo(seconds);
                 PlayVideo(vp);
                 AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
                 return;
@@ -31000,6 +31057,7 @@ public partial class MainViewModel :
             if (Se.Settings.General.SubtitleDoubleClickAction == SubtitleDoubleClickActionType.GoToSubtitleAndPlayAndFocusTextBox.ToString())
             {
                 vp.Position = seconds;
+                PinPlayheadTo(seconds);
                 PlayVideo(vp);
                 AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
                 FocusEditTextBox();
@@ -31035,6 +31093,7 @@ public partial class MainViewModel :
             {
                 seconds = Math.Max(0, seconds - 1.0);
                 vp.Position = seconds;
+                PinPlayheadTo(seconds);
                 PlayVideo(vp);
                 AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
                 return;
@@ -31156,6 +31215,7 @@ public partial class MainViewModel :
             if (Se.Settings.General.SubtitleSingleClickAction == SubtitleSingleClickActionType.GoToSubtitleAndPlay.ToString())
             {
                 vp.Position = seconds;
+                PinPlayheadTo(seconds);
                 PlayVideo(vp);
                 AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
                 return;
@@ -31173,6 +31233,7 @@ public partial class MainViewModel :
             if (Se.Settings.General.SubtitleSingleClickAction == SubtitleSingleClickActionType.GoToSubtitleAndPlayAndFocusTextBox.ToString())
             {
                 vp.Position = seconds;
+                PinPlayheadTo(seconds);
                 PlayVideo(vp);
                 AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
                 FocusEditTextBox();
