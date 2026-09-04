@@ -3,6 +3,28 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-rc2 (4th of September 2026)
+
+* Add waveform vertical zoom shortcuts to the Point sync and Visual sync dialogs - thx perkesfurmah-collab
+* Add "Auto detect" language to the remaining Crisp ASR backends (Ark, Canary, Cohere, FireRed, Fun-ASR Nano, Granite, Kyutai) - thx subof
+* Add "Guess end time from waveform", and offsets for both guess commands - thx m0ck69
+* Add the subtitle type (normal / hearing impaired) to the DVB teletext export
+* Burn in Blu-ray sup subtitles from the image-based editor and in batch convert - thx josemorgado107
+* Export image: honor inline <font face> and <font size> per segment - thx Victory61
+* Second subtitle: follow the preview font and add a Bold option - thx GrampaWildWilly
+* Keep "Open second subtitle file..." available while a second subtitle is shown - thx GrampaWildWilly
+* Text to speech: judge silence relative to the clip's peak so quiet voice clones keep their last word - thx invio-a11y
+* Fix "guess start time from waveform" only firing while the waveform had focus - thx m0ck69
+* Fix the subtitle grid churning and slowing down when merging with a read-only original - thx torvchen
+* Fix the grid selection and view jumping after merging lines with the same text / time codes
+* Fix an extra character from DVD OCR when the leftmost glyph has a descender - thx FunkyKnilch
+* Update Catalan translation - thx jmontane
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+* Update Korean translation - thx 12si27
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-rc1 (3rd of September 2026)
 
 * Add "Open recent video" to the Video menu - thx ghostminhtoan
