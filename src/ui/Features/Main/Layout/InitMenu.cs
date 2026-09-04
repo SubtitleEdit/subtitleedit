@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
@@ -499,6 +499,11 @@ public static class InitMenu
             {
                 Header = l.FixCommonErrors,
                 Command = vm.ShowToolsFixCommonErrorsCommand,
+            },
+            new MenuItem
+            {
+                Header = "Check and fix ARTE errors...",
+                Command = vm.ShowToolsCheckArteErrorsCommand,
             },
             new MenuItem
             {

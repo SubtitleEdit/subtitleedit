@@ -2272,8 +2272,13 @@ public sealed class FlowEditingView : Border
         FlowEditingItem item,
         TextBox textBox)
     {
+        // This rule belongs to interactive Flow editing only. TextChanged can
+        // also be raised while Flow is rebuilt after loading/importing a file.
+        // Never rebalance, create subtitles, or offer ripple shifts unless the
+        // user is actually editing this TextBox.
         if (_applyingLiveTeletextRule ||
-            !_vm.IsFormatEbu)
+            !_vm.IsFormatEbu ||
+            !textBox.IsKeyboardFocusWithin)
         {
             return;
         }

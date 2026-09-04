@@ -297,6 +297,7 @@ public static class InitNativeMacMenu
             Item(Clean(l.ChangeCasing), v => v.ShowToolsChangeCasingCommand),
             Item(Clean(l.ChangeFormatting), v => v.ShowToolsChangeFormattingCommand),
             Item(Clean(l.FixCommonErrors), v => v.ShowToolsFixCommonErrorsCommand),
+            Item("Check and fix ARTE errors...", v => v.ShowToolsCheckArteErrorsCommand),
             Item(Clean(l.CheckAndFixNetflixErrors), v => v.ShowToolsFixNetflixErrorsCommand),
             Item(Clean(l.ListErrors), v => v.ListErrorsCommand),
             Item(Clean(l.AiReview), v => v.ShowToolsAiReviewCommand),
