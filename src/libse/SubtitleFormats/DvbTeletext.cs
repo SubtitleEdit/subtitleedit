@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         /// <summary>
         /// The teletext page the subtitles ride on - kept from the loaded file (or the save
-        /// options dialog) via the subtitle header, see <see cref="CreateHeader"/>.
+        /// options dialog) via the subtitle header, see <see cref="CreateHeader(int, string, bool)"/>.
         /// </summary>
         public int PageNumber { get; set; } = 888;
 
