@@ -7253,6 +7253,8 @@ public partial class MainViewModel :
             return;
         }
 
+        var selectedBefore = SelectedSubtitle;
+        var idsBefore = Subtitles.Select(p => p.Id).ToList();
         var result = await ShowDialogAsync<MergeSameTextWindow, MergeSameTextViewModel>(vm => { vm.Initialize(Subtitles.Select(p => new SubtitleLineViewModel(p)).ToList()); });
 
         if (!result.OkPressed)
@@ -7260,9 +7262,7 @@ public partial class MainViewModel :
             return;
         }
 
-        ReplaceSubtitles(result.ResultSubtitles.Select(p => new SubtitleLineViewModel(p)));
-        Renumber();
-        SelectAndScrollToRow(0);
+        ApplyMergeDialogResult(result.ResultSubtitles, selectedBefore, idsBefore);
     }
 
     [RelayCommand]
@@ -7279,6 +7279,8 @@ public partial class MainViewModel :
             return;
         }
 
+        var selectedBefore = SelectedSubtitle;
+        var idsBefore = Subtitles.Select(p => p.Id).ToList();
         var result = await ShowDialogAsync<MergeSameTimeCodesWindow, MergeSameTimeCodesViewModel>(vm =>
         {
             vm.Initialize(Subtitles.Select(p => new SubtitleLineViewModel(p)).ToList(), GetUpdateSubtitle());
@@ -7289,9 +7291,7 @@ public partial class MainViewModel :
             return;
         }
 
-        ReplaceSubtitles(result.ResultSubtitles.Select(p => new SubtitleLineViewModel(p)));
-        Renumber();
-        SelectAndScrollToRow(0);
+        ApplyMergeDialogResult(result.ResultSubtitles, selectedBefore, idsBefore);
     }
 
     [RelayCommand]
@@ -21232,6 +21232,140 @@ public partial class MainViewModel :
             SetSubtitles(fixedSubtitles);
             SelectAndScrollToRow(Math.Min(selectedIndex, Subtitles.Count - 1));
         }
+    }
+
+    /// <summary>
+    /// Puts the lines a merge dialog (same text / same time codes) returns into the grid without
+    /// losing the user's place. The dialog works on copies that keep the row ids, and a merged
+    /// line keeps the id of the first line it was built from - so every line that survived maps
+    /// back to the row it came from. Those rows are updated in place and reused, and the row
+    /// that was current is selected again; when that row was one of the lines merged away, the
+    /// nearest line above it that survived is the merged line, so that one becomes current. The
+    /// grid stayed on row 0 before this, which threw away the position on every merge.
+    /// </summary>
+    /// <param name="mergedLines">The dialog's result, in order.</param>
+    /// <param name="selectedBefore">The current row when the dialog opened, if any.</param>
+    /// <param name="idsBefore">The row ids in grid order when the dialog opened.</param>
+    private void ApplyMergeDialogResult(
+        List<SubtitleLineViewModel> mergedLines,
+        SubtitleLineViewModel? selectedBefore,
+        IReadOnlyList<Guid> idsBefore)
+    {
+        // Capture before the rebuild: removing rows drops focus out of the grid, and the check
+        // inside SelectAndScrollToRow would then say no (see its restoreGridFocus). Focus being
+        // nowhere counts as the grid's, as for delete - the dialog that just closed took it.
+        var gridHadFocus = IsSubtitleGridFocusedOrFocusDropped();
+
+        var rowById = new Dictionary<Guid, SubtitleLineViewModel>(Subtitles.Count);
+        foreach (var row in Subtitles)
+        {
+            rowById.TryAdd(row.Id, row);
+        }
+
+        var rows = new List<SubtitleLineViewModel>(mergedLines.Count);
+        var kept = new HashSet<SubtitleLineViewModel>();
+        foreach (var line in mergedLines)
+        {
+            if (rowById.TryGetValue(line.Id, out var row) && kept.Add(row))
+            {
+                row.UpdateFrom(line);
+                rows.Add(row);
+            }
+            else
+            {
+                rows.Add(new SubtitleLineViewModel(line));
+            }
+        }
+
+        var target = rows.Count == 0 ? null : FindSurvivingRow(rows, selectedBefore, idsBefore) ?? rows[0];
+
+        // A merge only ever takes rows away, so the result is normally the current rows minus the
+        // merged-away ones, in the same order. Then the rows to drop are removed one by one, the
+        // way delete does it: the grid keeps its items, its scroll offset and (via the survivor
+        // hand-over inside) its selection, so the view does not move at all.
+        var removed = Subtitles.Where(row => !kept.Contains(row)).ToList();
+        if (rows.Count + removed.Count == Subtitles.Count && Subtitles.Where(kept.Contains).SequenceEqual(rows))
+        {
+            RemoveRowsAndSelectSurvivor(removed, target, gridHadFocus);
+            UpdateGaps();
+            return;
+        }
+
+        // Re-attaching the items keeps the grid's old selected *index*, which after a merge is
+        // some other row, and the TwoWay binding would write that row into SelectedSubtitle.
+        // Hand the grid the target itself right after the swap, with the selection-changed
+        // handler silenced for the swap, as RemoveRowsAndSelectSurvivor does.
+        var wasSkipping = _subtitleGridSelectionChangedSkip;
+        _subtitleGridSelectionChangedSkip = true;
+        try
+        {
+            ReplaceSubtitles(rows);
+            if (target != null)
+            {
+                SubtitleGrid.SelectedItem = target;
+            }
+        }
+        finally
+        {
+            _subtitleGridSelectionChangedSkip = wasSkipping;
+        }
+
+        Renumber();
+        UpdateGaps();
+
+        if (target != null)
+        {
+            SubtitleGridSelectionChanged();
+            SelectAndScrollToRow(target, gridHadFocus);
+        }
+    }
+
+    /// <summary>
+    /// The row to make current after a merge: <paramref name="selectedBefore"/> itself when it is
+    /// among <paramref name="rows"/>, otherwise the closest row above it (by the pre-merge order in
+    /// <paramref name="idsBefore"/>) that is - which for a line merged away is the line it was
+    /// merged into. Null when nothing above it survived either.
+    /// </summary>
+    private static SubtitleLineViewModel? FindSurvivingRow(
+        IReadOnlyList<SubtitleLineViewModel> rows,
+        SubtitleLineViewModel? selectedBefore,
+        IReadOnlyList<Guid> idsBefore)
+    {
+        if (selectedBefore == null)
+        {
+            return null;
+        }
+
+        var rowById = new Dictionary<Guid, SubtitleLineViewModel>(rows.Count);
+        foreach (var row in rows)
+        {
+            rowById.TryAdd(row.Id, row);
+        }
+
+        if (rowById.TryGetValue(selectedBefore.Id, out var same))
+        {
+            return same;
+        }
+
+        var index = -1;
+        for (var i = 0; i < idsBefore.Count; i++)
+        {
+            if (idsBefore[i] == selectedBefore.Id)
+            {
+                index = i;
+                break;
+            }
+        }
+
+        for (var i = index - 1; i >= 0; i--)
+        {
+            if (rowById.TryGetValue(idsBefore[i], out var above))
+            {
+                return above;
+            }
+        }
+
+        return null;
     }
 
     public void SelectAndScrollToSubtitle(SubtitleLineViewModel subtitle)
