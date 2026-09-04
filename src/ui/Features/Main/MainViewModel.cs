@@ -7177,7 +7177,29 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task ShowToolsBatchConvert()
     {
-        await ShowDialogAsync<BatchConvertWindow, BatchConvertViewModel>();
+        // As in SE4, the editor gets out of the way while Batch convert is open: the main window
+        // (and the undocked video/waveform windows) are hidden and only the tool window is on
+        // screen, then everything comes back when it closes (#14502). A full-screen main window
+        // is left where it is - hiding one leaves an empty space on macOS - so that case keeps
+        // the plain modal dialog.
+        if (Window == null || Window.WindowState == WindowState.FullScreen)
+        {
+            await ShowDialogAsync<BatchConvertWindow, BatchConvertViewModel>();
+            return;
+        }
+
+        var videoPlayerControl = GetVideoPlayerControl();
+        if (videoPlayerControl != null)
+        {
+            PauseVideoAndFreezePlayhead(videoPlayerControl);
+        }
+
+        await _windowService.ShowWithOwnerHiddenAsync<BatchConvertWindow, BatchConvertViewModel>(
+            Window,
+            [_videoPlayerUndockedViewModel?.Window, _audioVisualizerUndockedViewModel?.Window]);
+
+        _shortcutManager.ClearKeys();
+        RestoreFocusIfLost();
     }
 
     [RelayCommand]
