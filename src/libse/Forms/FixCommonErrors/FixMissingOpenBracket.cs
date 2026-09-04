@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
 using System.Linq;
@@ -11,6 +12,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         {
             public static string FixMissingOpenBracket { get; set; } = "Fix missing [ or ( in line";
         }
+
+        public FixType FixType => FixType.Punctuation;
 
         private static bool IsIgnorable(char ch) => char.IsWhiteSpace(ch) || ch == '-';
 

@@ -1756,7 +1756,11 @@
       "unbreakShortLine": "Unbreak short line",
       "fixText": "Fix text",
       "removeSpaceBetweenNumbers": "Remove space between numbers",
-      "fixDialogsOnOneLine": "Fix dialogs on one line"
+      "fixDialogsOnOneLine": "Fix dialogs on one line",
+      "fixTypeFormatting": "Formatting",
+      "fixTypeDialog": "Dialog",
+      "fixTypePunctuation": "Punctuation",
+      "fixTypeOcr": "OCR"
     },
     "adjustDurations": {
       "title": "Adjust durations",

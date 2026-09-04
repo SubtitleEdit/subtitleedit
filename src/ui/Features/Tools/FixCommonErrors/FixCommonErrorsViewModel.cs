@@ -36,6 +36,8 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     private const int AnalysingPaintDelayMilliseconds = 20;
 
     [ObservableProperty] private string _searchText;
+    [ObservableProperty] private ObservableCollection<FixTypeDisplayItem> _fixTypes;
+    [ObservableProperty] private FixTypeDisplayItem? _selectedFixType;
     [ObservableProperty] private ObservableCollection<LanguageDisplayItem> _languages;
     [ObservableProperty] private LanguageDisplayItem? _selectedLanguage;
     [ObservableProperty] private ObservableCollection<FixDisplayItem> _fixes;
@@ -116,6 +118,13 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
 
         GridSubtitles = new TableView();
         SearchText = string.Empty;
+        FixTypes = new ObservableCollection<FixTypeDisplayItem> { new() };
+        foreach (var fixType in Enum.GetValues<FixType>())
+        {
+            FixTypes.Add(new FixTypeDisplayItem(fixType));
+        }
+
+        SelectedFixType = FixTypes[0];
         Languages = new ObservableCollection<LanguageDisplayItem>();
         Language = new string(' ', 0);
         Fixes = new ObservableCollection<FixDisplayItem>();
@@ -961,7 +970,28 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         }
     }
 
-    internal void TextBoxSearch_TextChanged(object? sender, TextChangedEventArgs e)
+    partial void OnSearchTextChanged(string value)
+    {
+        RebuildVisibleRules();
+    }
+
+    partial void OnSelectedFixTypeChanged(FixTypeDisplayItem? value)
+    {
+        RebuildVisibleRules();
+    }
+
+    // Runs before PropertyChanged is raised, so the grid rebinds to an already filtered
+    // collection - a search text or type filter carries over to the newly picked profile.
+    partial void OnSelectedProfileChanged(ProfileDisplayItem? value)
+    {
+        RebuildVisibleRules();
+    }
+
+    /// <summary>
+    /// Narrows the step 1 rules grid to the rules matching both the search text and the
+    /// selected fix type.
+    /// </summary>
+    internal void RebuildVisibleRules()
     {
         if (SelectedProfile == null)
         {
@@ -975,10 +1005,13 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             SelectedProfile.AllFixRules = SelectedProfile.FixRules.ToList();
         }
 
+        var fixType = SelectedFixType?.FixType;
         SelectedProfile.FixRules.Clear();
         foreach (var rule in SelectedProfile.AllFixRules)
         {
-            if (string.IsNullOrEmpty(SearchText) || rule.Name.ToLowerInvariant().Contains(SearchText.ToLowerInvariant()))
+            var typeMatches = fixType == null || rule.FixType == fixType;
+            var searchMatches = string.IsNullOrEmpty(SearchText) || rule.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase);
+            if (typeMatches && searchMatches)
             {
                 SelectedProfile.FixRules.Add(rule);
             }

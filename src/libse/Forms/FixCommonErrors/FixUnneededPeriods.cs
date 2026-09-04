@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
 using System.Text;
@@ -12,6 +13,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             public static string UnneededPeriod { get; set; } = "Unneeded period";
             public static string RemoveUnneededPeriods { get; set; } = "Remove unneeded periods";
         }
+
+        public FixType FixType => FixType.Punctuation;
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {

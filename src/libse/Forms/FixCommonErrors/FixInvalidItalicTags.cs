@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
@@ -10,6 +11,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             public static string FixInvalidItalicTag { get; set; } = "Fix invalid italic tag";
             public static string FixInvalidItalicTags { get; set; } = "Fix invalid italic tags";
         }
+
+        public FixType FixType => FixType.Formatting;
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {

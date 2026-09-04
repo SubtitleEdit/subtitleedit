@@ -1,4 +1,5 @@
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
@@ -9,6 +10,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         {
             public static string RemoveDialogFirstInNonDialogs { get; set; } = "Remove start dash in non dialogs";
         }
+
+        public FixType FixType => FixType.Dialog;
 
         /// <summary>
         /// Dash characters that can be used as dialog marker - see issue #12748.

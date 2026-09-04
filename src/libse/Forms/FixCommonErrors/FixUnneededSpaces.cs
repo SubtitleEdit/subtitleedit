@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
 
@@ -11,6 +12,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             public static string UnneededSpace { get; set; } = "Unneeded space";
             public static string RemoveUnneededSpaces { get; set; } = "Remove unneeded spaces";
         }
+
+        public FixType FixType => FixType.Spacing;
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {

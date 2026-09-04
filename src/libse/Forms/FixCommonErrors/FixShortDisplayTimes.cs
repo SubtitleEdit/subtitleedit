@@ -1,5 +1,6 @@
 ﻿using System;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
@@ -12,6 +13,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             public static string FixShortDisplayTimes { get; set; } = "Fix short display times";
             public static string UnableToFixTextXY { get; set; } = "Unable to fix text number {0}: {1}";
         }
+
+        public FixType FixType => FixType.Time;
 
         private IFixCallbacks _callbacks;
 
