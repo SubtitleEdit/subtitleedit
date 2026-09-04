@@ -71,10 +71,14 @@ public class SeVideo
     public string MpvPreviewJustify { get; set; }
 
     /// <summary>
-    /// mpv's "audio-buffer" option in seconds, applied when a player core is created. mpv's
-    /// own default is 0.2 s, and that buffer is why pause/resume/seek take effect ~200 ms
-    /// late - the residual the waveform playhead code has to mask. Kept small here; raise it
-    /// (or set 0 to use mpv's default) if audio stutters on slow hardware or Bluetooth audio.
+    /// mpv's "audio-buffer" option in seconds, applied when a player core is created. Zero (the
+    /// default) leaves mpv's own 0.2 s buffer alone. SE shipped 0.05 for a while: with a buffer
+    /// that small any hiccup on mpv's audio thread empties the device, mpv stops the output,
+    /// waits for the buffer to refill and restarts it - and mpv's clock (time-pos) stands still
+    /// meanwhile, so the waveform cursor and the time display froze for up to a second or two,
+    /// worst right after pause/resume (#14523). mpv's manual marks the option as for testing
+    /// only. Pause and resume are hardware pause/unpause on the device (WASAPI, CoreAudio) and
+    /// do not wait for the buffer, so a small value bought nothing there.
     /// </summary>
     public double MpvAudioBufferSeconds { get; set; }
 
@@ -131,7 +135,7 @@ public class SeVideo
         MpvPreviewBorderType = (int)BorderStyleType.Outline;
         MpvPreviewUsePositionFromFile = true;
         MpvPreviewJustify = "auto";
-        MpvAudioBufferSeconds = 0.05;
+        MpvAudioBufferSeconds = 0;
         MpvAudioStreamSilence = false;
     }
 }
