@@ -3989,16 +3989,6 @@ public sealed class FlowEditingView : Border
             originalStartMs,
             originalEndMs);
 
-        // The SE reading-speed duration may need more room than the old subtitle
-        // window provided. Keep the new Flow structure and, if necessary, ask
-        // whether all following existing subtitles should be shifted together.
-        Dispatcher.UIThread.Post(
-            async () =>
-            {
-                await OfferShiftFollowingSubtitlesAsync(
-                    newSubtitle);
-            });
-
         RenumberSubtitles();
 
         if (_vm.IsFormatEbu)
@@ -4331,37 +4321,79 @@ public sealed class FlowEditingView : Border
         double originalStartMs,
         double originalEndMs)
     {
-        // Re-use the same optimal-CPS timing calculation as SE5's
-        // "Import plain text" workflow. Flow only decides where the two
-        // subtitles start; SE5 decides how long each one should be displayed.
-        var firstDurationMs =
-            CalculateSeOptimalDurationMilliseconds(
-                first);
+        // A text split/rebalance must stay inside the original subtitle window.
+        // Use SE's optimal durations only as proportional weights; never extend
+        // the outer TC In/Out and never turn this operation into a ripple shift.
+        var firstWeight =
+            Math.Max(
+                1.0,
+                CalculateSeOptimalDurationMilliseconds(
+                    first));
 
-        var secondDurationMs =
-            CalculateSeOptimalDurationMilliseconds(
-                second);
+        var secondWeight =
+            Math.Max(
+                1.0,
+                CalculateSeOptimalDurationMilliseconds(
+                    second));
 
-        var gapMs =
+        var totalWindowMs =
+            Math.Max(
+                0.0,
+                originalEndMs - originalStartMs);
+
+        var requestedGapMs =
             Math.Max(
                 0.0,
                 Se.Settings.General.MinimumBetweenLines
                     .GetMilliseconds());
 
+        // Keep at least 1 ms for each subtitle when the original window allows it.
+        var gapMs =
+            Math.Min(
+                requestedGapMs,
+                Math.Max(
+                    0.0,
+                    totalWindowMs - 2.0));
+
+        var availableSubtitleMs =
+            Math.Max(
+                0.0,
+                totalWindowMs - gapMs);
+
+        double firstDurationMs;
+        if (availableSubtitleMs >= 2.0)
+        {
+            var proportionalFirst =
+                availableSubtitleMs *
+                firstWeight /
+                (firstWeight + secondWeight);
+
+            firstDurationMs =
+                Math.Clamp(
+                    proportionalFirst,
+                    1.0,
+                    availableSubtitleMs - 1.0);
+        }
+        else
+        {
+            firstDurationMs =
+                availableSubtitleMs / 2.0;
+        }
+
+        var secondDurationMs =
+            availableSubtitleMs - firstDurationMs;
+
         var firstStartMs =
             originalStartMs;
 
         var firstEndMs =
-            firstStartMs +
-            firstDurationMs;
+            firstStartMs + firstDurationMs;
 
         var secondStartMs =
-            firstEndMs +
-            gapMs;
+            firstEndMs + gapMs;
 
         var secondEndMs =
-            secondStartMs +
-            secondDurationMs;
+            originalEndMs;
 
         first.SetStartTimeOnly(
             TimeSpan.FromMilliseconds(
