@@ -7253,8 +7253,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var selectedBefore = SelectedSubtitle;
-        var idsBefore = Subtitles.Select(p => p.Id).ToList();
+        var before = CaptureGridPosition();
         var result = await ShowDialogAsync<MergeSameTextWindow, MergeSameTextViewModel>(vm => { vm.Initialize(Subtitles.Select(p => new SubtitleLineViewModel(p)).ToList()); });
 
         if (!result.OkPressed)
@@ -7262,7 +7261,7 @@ public partial class MainViewModel :
             return;
         }
 
-        ApplyMergeDialogResult(result.ResultSubtitles, selectedBefore, idsBefore);
+        ApplyDialogRows(result.ResultSubtitles, before);
     }
 
     [RelayCommand]
@@ -7279,8 +7278,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var selectedBefore = SelectedSubtitle;
-        var idsBefore = Subtitles.Select(p => p.Id).ToList();
+        var before = CaptureGridPosition();
         var result = await ShowDialogAsync<MergeSameTimeCodesWindow, MergeSameTimeCodesViewModel>(vm =>
         {
             vm.Initialize(Subtitles.Select(p => new SubtitleLineViewModel(p)).ToList(), GetUpdateSubtitle());
@@ -7291,7 +7289,7 @@ public partial class MainViewModel :
             return;
         }
 
-        ApplyMergeDialogResult(result.ResultSubtitles, selectedBefore, idsBefore);
+        ApplyDialogRows(result.ResultSubtitles, before);
     }
 
     [RelayCommand]
@@ -7613,12 +7611,12 @@ public partial class MainViewModel :
             return;
         }
 
+        var before = CaptureGridPosition();
         var result = await ShowDialogAsync<BridgeGapsWindow, BridgeGapsViewModel>(vm => { vm.Initialize(Subtitles.Select(p => new SubtitleLineViewModel(p)).ToList()); });
 
         if (result.OkPressed)
         {
-            ReplaceSubtitles(result.Subtitles.Select(p => new SubtitleLineViewModel(p.SubtitleLineViewModel)));
-            SelectAndScrollToRow(0);
+            ApplyDialogRows(result.Subtitles.Select(p => p.SubtitleLineViewModel), before);
             _updateAudioVisualizer = true;
         }
     }
@@ -7638,12 +7636,12 @@ public partial class MainViewModel :
             return;
         }
 
+        var before = CaptureGridPosition();
         var result = await ShowDialogAsync<ApplyMinGapWindow, ApplyMinGapViewModel>(vm => { vm.Initialize(Subtitles.Select(p => new SubtitleLineViewModel(p)).ToList()); });
 
         if (result.OkPressed)
         {
-            ReplaceSubtitles(result.FixedSubtitles);
-            SelectAndScrollToRow(0);
+            ApplyDialogRows(result.FixedSubtitles, before);
             _updateAudioVisualizer = true;
         }
     }
@@ -8288,14 +8286,13 @@ public partial class MainViewModel :
             return;
         }
 
+        var before = CaptureGridPosition();
         var result = await ShowDialogAsync<SplitBreakLongLinesWindow, SplitBreakLongLinesViewModel>(
             vm => { vm.Initialize(Subtitles.ToList(), IsFormatTeletext); });
 
         if (result.OkPressed && result.AllSubtitlesFixed.Count > 0)
         {
-            ReplaceSubtitles(result.AllSubtitlesFixed);
-            Renumber();
-            SelectAndScrollToRow(0);
+            ApplyDialogRows(result.AllSubtitlesFixed, before);
             _updateAudioVisualizer = true;
             RefreshSubtitlePreview();
         }
@@ -8315,13 +8312,13 @@ public partial class MainViewModel :
             return;
         }
 
+        var before = CaptureGridPosition();
         var result = await ShowDialogAsync<MergeShortLinesWindow, MergeShortLinesViewModel>(
             vm => { vm.Initialize(Subtitles.ToList(), AudioVisualizer?.ShotChanges ?? new List<double>()); });
 
         if (result.OkPressed && result.AllSubtitlesFixed.Count > 0)
         {
-            ReplaceSubtitles(result.AllSubtitlesFixed);
-            SelectAndScrollToRow(0);
+            ApplyDialogRows(result.AllSubtitlesFixed, before);
             _updateAudioVisualizer = true;
             RefreshSubtitlePreview();
         }
@@ -8396,13 +8393,13 @@ public partial class MainViewModel :
         }
 
         var language = Subtitles.AutoDetectGoogleLanguage();
+        var before = CaptureGridPosition();
         var result = await ShowDialogAsync<MergeContinuationLinesWindow, MergeContinuationLinesViewModel>(
             vm => { vm.Initialize(Subtitles.ToList(), language); });
 
         if (result.OkPressed)
         {
-            ReplaceSubtitles(result.AllSubtitlesFixed);
-            SelectAndScrollToRow(0);
+            ApplyDialogRows(result.AllSubtitlesFixed, before);
             _updateAudioVisualizer = true;
             RefreshSubtitlePreview();
         }
@@ -8422,14 +8419,18 @@ public partial class MainViewModel :
             return;
         }
 
+        // The dialog's Apply may run more than once; every apply maps the lines back onto the
+        // rows by paragraph id, so the rows (and with them the selection, the scroll position and
+        // the original-text column) are kept rather than rebuilt.
+        var idx = SelectedSubtitleIndex ?? 0;
+        var subtitle = GetUpdateSubtitleWithRowMap(out var rowByParagraphId);
         void ApplyToGrid(Subtitle applied)
         {
             // Stop change detection during the rewrite so the background undo snapshotter can't
             // race the Subtitles Clear/AddRange (matches every other bulk grid operation).
             RunWithoutChangeDetection(() =>
             {
-                ReplaceSubtitles(applied.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
-                SelectAndScrollToRow(0);
+                ApplyFixedSubtitle(applied, rowByParagraphId, idx, SelectedSubtitleFormat);
                 _updateAudioVisualizer = true;
             });
         }
@@ -8437,7 +8438,7 @@ public partial class MainViewModel :
         // Menu mode uses Apply + Done: the change is applied live via the ApplyToGrid callback,
         // so there is nothing to commit when the dialog closes.
         await ShowDialogAsync<RemoveTextForHearingImpairedWindow, RemoveTextForHearingImpairedViewModel>(
-            vm => { vm.Initialize(GetUpdateSubtitle(), ApplyToGrid); });
+            vm => { vm.Initialize(subtitle, ApplyToGrid); });
     }
 
     [RelayCommand]
@@ -11614,6 +11615,7 @@ public partial class MainViewModel :
             return;
         }
 
+        var before = CaptureGridPosition();
         var result = await ShowDialogAsync<VisualSyncWindow, VisualSyncViewModel>(vm =>
         {
             var paragraphs = Subtitles.Select(p => new SubtitleLineViewModel(p)).ToList();
@@ -11622,9 +11624,7 @@ public partial class MainViewModel :
 
         if (result.OkPressed)
         {
-            ReplaceSubtitles(result.Paragraphs.Select(p => p.Subtitle));
-
-            SelectAndScrollToRow(0);
+            ApplyDialogRows(result.Paragraphs.Select(p => p.Subtitle), before);
         }
     }
 
@@ -11745,6 +11745,7 @@ public partial class MainViewModel :
             return;
         }
 
+        var before = CaptureGridPosition();
         var result = await ShowDialogAsync<PointSyncWindow, PointSyncViewModel>(vm =>
         {
             var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
@@ -11754,9 +11755,7 @@ public partial class MainViewModel :
 
         if (result.OkPressed)
         {
-            ReplaceSubtitles(result.SyncedSubtitles);
-
-            SelectAndScrollToRow(0);
+            ApplyDialogRows(result.SyncedSubtitles, before);
         }
 
         // Point sync can open a video of its own - take it over here too (issue #13341).
@@ -11780,6 +11779,7 @@ public partial class MainViewModel :
             return;
         }
 
+        var before = CaptureGridPosition();
         var result = await ShowDialogAsync<PointSyncViaOtherWindow, PointSyncViaOtherViewModel>(vm =>
         {
             var paragraphs = Subtitles.Select(p => new SubtitleLineViewModel(p)).ToList();
@@ -11788,9 +11788,7 @@ public partial class MainViewModel :
 
         if (result.OkPressed)
         {
-            ReplaceSubtitles(result.SyncedSubtitles);
-
-            SelectAndScrollToRow(0);
+            ApplyDialogRows(result.SyncedSubtitles, before);
         }
 
         // "Set sync point via video" can open a video of its own - take it over here too (issue #13341).
@@ -21187,13 +21185,12 @@ public partial class MainViewModel :
             return;
         }
 
-        ReplaceSubtitles(result);
-        Renumber();
-        UpdateGaps();
-        if (Subtitles.Count > 0)
-        {
-            SelectAndScrollToRow(Math.Clamp(selectedIndex, 0, Subtitles.Count - 1));
-        }
+        // Rows were removed or added: keep the current row current (or the nearest surviving
+        // row above it) rather than whatever row now sits at the old index.
+        var before = new GridPosition(
+            selectedIndex >= 0 && selectedIndex < Subtitles.Count ? Subtitles[selectedIndex] : SelectedSubtitle,
+            Subtitles.Select(p => p.Id).ToList());
+        ApplyDialogRows(result, before);
     }
 
     private bool SameRows(List<SubtitleLineViewModel> rows)
@@ -21235,21 +21232,26 @@ public partial class MainViewModel :
     }
 
     /// <summary>
-    /// Puts the lines a merge dialog (same text / same time codes) returns into the grid without
-    /// losing the user's place. The dialog works on copies that keep the row ids, and a merged
-    /// line keeps the id of the first line it was built from - so every line that survived maps
-    /// back to the row it came from. Those rows are updated in place and reused, and the row
-    /// that was current is selected again; when that row was one of the lines merged away, the
-    /// nearest line above it that survived is the merged line, so that one becomes current. The
-    /// grid stayed on row 0 before this, which threw away the position on every merge.
+    /// Where the user is in the grid before a dialog runs: the current row and the row ids in
+    /// grid order, for <see cref="ApplyDialogRows"/> to put the selection back afterwards.
     /// </summary>
-    /// <param name="mergedLines">The dialog's result, in order.</param>
-    /// <param name="selectedBefore">The current row when the dialog opened, if any.</param>
-    /// <param name="idsBefore">The row ids in grid order when the dialog opened.</param>
-    private void ApplyMergeDialogResult(
-        List<SubtitleLineViewModel> mergedLines,
-        SubtitleLineViewModel? selectedBefore,
-        IReadOnlyList<Guid> idsBefore)
+    private readonly record struct GridPosition(SubtitleLineViewModel? SelectedRow, IReadOnlyList<Guid> RowIds);
+
+    private GridPosition CaptureGridPosition() => new(SelectedSubtitle, Subtitles.Select(p => p.Id).ToList());
+
+    /// <summary>
+    /// Puts the lines a tool dialog returns (merge same text / time codes, merge short or
+    /// continuation lines, split long lines, bridge gaps, minimum gap, visual and point sync)
+    /// into the grid without losing the user's place. The dialogs work on copies that keep the
+    /// row ids, and a merged line keeps the id of the first line it was built from - so every
+    /// line that survived maps back to the row it came from. Those rows are updated in place and
+    /// reused, and the row that was current is selected again; when that row was one of the
+    /// lines merged away, the nearest line above it that survived is the merged line, so that
+    /// one becomes current. The grid jumped to row 0 after every one of these before.
+    /// </summary>
+    /// <param name="lines">The dialog's result, in order. May contain the live rows themselves.</param>
+    /// <param name="before">The grid position captured before the dialog opened.</param>
+    private void ApplyDialogRows(IEnumerable<SubtitleLineViewModel> lines, GridPosition before)
     {
         // Capture before the rebuild: removing rows drops focus out of the grid, and the check
         // inside SelectAndScrollToRow would then say no (see its restoreGridFocus). Focus being
@@ -21262,13 +21264,17 @@ public partial class MainViewModel :
             rowById.TryAdd(row.Id, row);
         }
 
-        var rows = new List<SubtitleLineViewModel>(mergedLines.Count);
+        var rows = new List<SubtitleLineViewModel>();
         var kept = new HashSet<SubtitleLineViewModel>();
-        foreach (var line in mergedLines)
+        foreach (var line in lines)
         {
             if (rowById.TryGetValue(line.Id, out var row) && kept.Add(row))
             {
-                row.UpdateFrom(line);
+                if (!ReferenceEquals(row, line))
+                {
+                    row.UpdateFrom(line);
+                }
+
                 rows.Add(row);
             }
             else
@@ -21277,12 +21283,12 @@ public partial class MainViewModel :
             }
         }
 
-        var target = rows.Count == 0 ? null : FindSurvivingRow(rows, selectedBefore, idsBefore) ?? rows[0];
+        var target = rows.Count == 0 ? null : FindSurvivingRow(rows, before.SelectedRow, before.RowIds) ?? rows[0];
 
-        // A merge only ever takes rows away, so the result is normally the current rows minus the
-        // merged-away ones, in the same order. Then the rows to drop are removed one by one, the
-        // way delete does it: the grid keeps its items, its scroll offset and (via the survivor
-        // hand-over inside) its selection, so the view does not move at all.
+        // Most of these dialogs only edit lines or take rows away, so the result is normally the
+        // current rows minus the merged-away ones, in the same order. Then the rows to drop are
+        // removed one by one, the way delete does it: the grid keeps its items, its scroll offset
+        // and (via the survivor hand-over inside) its selection, so the view does not move at all.
         var removed = Subtitles.Where(row => !kept.Contains(row)).ToList();
         if (rows.Count + removed.Count == Subtitles.Count && Subtitles.Where(kept.Contains).SequenceEqual(rows))
         {
@@ -21321,7 +21327,7 @@ public partial class MainViewModel :
     }
 
     /// <summary>
-    /// The row to make current after a merge: <paramref name="selectedBefore"/> itself when it is
+    /// The row to make current after a dialog: <paramref name="selectedBefore"/> itself when it is
     /// among <paramref name="rows"/>, otherwise the closest row above it (by the pre-merge order in
     /// <paramref name="idsBefore"/>) that is - which for a line merged away is the line it was
     /// merged into. Null when nothing above it survived either.

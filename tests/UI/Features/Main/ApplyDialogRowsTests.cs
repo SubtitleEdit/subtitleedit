@@ -11,11 +11,12 @@ using Nikse.SubtitleEdit.Logic;
 namespace UITests.Features.Main;
 
 /// <summary>
-/// The lines "Merge lines with same text" / "Merge lines with same time codes" return go back
-/// onto the rows they came from, and the row that was current stays current - the grid used to
-/// jump to row 0 after every merge, losing the user's place in the file.
+/// The lines a tool dialog returns (merge same text / time codes, merge short or continuation
+/// lines, split long lines, bridge gaps, minimum gap, visual and point sync) go back onto the
+/// rows they came from, and the row that was current stays current - the grid used to jump to
+/// row 0 after every one of them, losing the user's place in the file.
 /// </summary>
-public class ApplyMergeDialogResultTests
+public class ApplyDialogRowsTests
 {
     [AvaloniaFact]
     public async Task SelectedLineSurvives_StaysCurrentOnTheSameRow()
@@ -34,7 +35,7 @@ public class ApplyMergeDialogResultTests
             var selectedBefore = vm.SelectedSubtitle;
             var idsBefore = vm.Subtitles.Select(p => p.Id).ToList();
             var merged = MergeFirstTwo(rows);
-            ApplyMergeDialogResult(vm, merged, selectedBefore, idsBefore);
+            ApplyDialogRows(vm, merged, selectedBefore, idsBefore);
             await SettleAsync(window);
 
             Assert.Equal(new[] { "Same", "Three", "Four" }, vm.Subtitles.Select(p => p.Text));
@@ -78,7 +79,7 @@ public class ApplyMergeDialogResultTests
                 new(rows[1]) { EndTime = rows[2].EndTime },
                 new(rows[3]),
             };
-            ApplyMergeDialogResult(vm, merged, selectedBefore, idsBefore);
+            ApplyDialogRows(vm, merged, selectedBefore, idsBefore);
             await SettleAsync(window);
 
             Assert.Equal(new[] { "One", "Same", "Four" }, vm.Subtitles.Select(p => p.Text));
@@ -105,7 +106,7 @@ public class ApplyMergeDialogResultTests
             Settle(window);
 
             var idsBefore = vm.Subtitles.Select(p => p.Id).ToList();
-            ApplyMergeDialogResult(vm, MergeFirstTwo(rows), null, idsBefore);
+            ApplyDialogRows(vm, MergeFirstTwo(rows), null, idsBefore);
             await SettleAsync(window);
 
             Assert.Equal(2, vm.Subtitles.Count);
@@ -140,7 +141,7 @@ public class ApplyMergeDialogResultTests
 
             var selectedBefore = vm.SelectedSubtitle;
             var idsBefore = vm.Subtitles.Select(p => p.Id).ToList();
-            ApplyMergeDialogResult(vm, MergeFirstTwo(rows), selectedBefore, idsBefore);
+            ApplyDialogRows(vm, MergeFirstTwo(rows), selectedBefore, idsBefore);
             await SettleAsync(window);
 
             Assert.Equal(299, vm.Subtitles.Count);
@@ -179,7 +180,7 @@ public class ApplyMergeDialogResultTests
                 new(rows[0], generateNewId: true) { EndTime = rows[1].EndTime },
                 new(rows[2]),
             };
-            ApplyMergeDialogResult(vm, merged, selectedBefore, idsBefore);
+            ApplyDialogRows(vm, merged, selectedBefore, idsBefore);
             await SettleAsync(window);
 
             Assert.Equal(new[] { "Same", "Three" }, vm.Subtitles.Select(p => p.Text));
@@ -187,6 +188,49 @@ public class ApplyMergeDialogResultTests
             Assert.Same(rows[2], vm.Subtitles[1]);
             Assert.Same(rows[2], vm.SelectedSubtitle);
             Assert.Same(rows[2], vm.SubtitleGrid.SelectedItem);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    /// <summary>
+    /// Bridge gaps, minimum gap and the sync dialogs change only times: every row survives, so
+    /// the rows are updated in place and neither the selection nor the view moves.
+    /// </summary>
+    [AvaloniaFact]
+    public async Task TimesOnlyChanged_UpdatesRowsInPlaceAndKeepsTheCurrentRow()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            for (var i = 0; i < 300; i++)
+            {
+                AddLine(vm, $"Line {i + 1}", i * 2000, i * 2000 + 1500);
+            }
+
+            Settle(window);
+            var rows = vm.Subtitles.ToList();
+            vm.SelectAndScrollToSubtitle(rows[200]);
+            await SettleAsync(window);
+
+            var selectedBefore = vm.SelectedSubtitle;
+            var idsBefore = vm.Subtitles.Select(p => p.Id).ToList();
+            var shifted = rows.Select(r => new SubtitleLineViewModel(r)
+            {
+                StartTime = r.StartTime + TimeSpan.FromSeconds(1),
+                EndTime = r.EndTime + TimeSpan.FromSeconds(1),
+            }).ToList();
+            ApplyDialogRows(vm, shifted, selectedBefore, idsBefore);
+            await SettleAsync(window);
+
+            Assert.Equal(300, vm.Subtitles.Count);
+            Assert.True(rows.Zip(vm.Subtitles).All(pair => ReferenceEquals(pair.First, pair.Second)));
+            Assert.Equal(401000, vm.Subtitles[200].StartTime.TotalMilliseconds);
+            Assert.Same(rows[200], vm.SelectedSubtitle);
+            Assert.Equal(200, vm.SubtitleGrid.SelectedIndex);
+            Assert.True(TableViewExtras.IsRowFullyVisible(vm.SubtitleGrid, rows[200]));
         }
         finally
         {
@@ -203,15 +247,17 @@ public class ApplyMergeDialogResultTests
         return result;
     }
 
-    private static void ApplyMergeDialogResult(
+    private static void ApplyDialogRows(
         MainViewModel vm,
-        List<SubtitleLineViewModel> mergedLines,
+        List<SubtitleLineViewModel> lines,
         SubtitleLineViewModel? selectedBefore,
         IReadOnlyList<Guid> idsBefore)
     {
+        var positionType = typeof(MainViewModel).GetNestedType("GridPosition", BindingFlags.NonPublic)!;
+        var before = Activator.CreateInstance(positionType, selectedBefore, idsBefore);
         typeof(MainViewModel)
-            .GetMethod("ApplyMergeDialogResult", BindingFlags.Instance | BindingFlags.NonPublic)!
-            .Invoke(vm, new object?[] { mergedLines, selectedBefore, idsBefore });
+            .GetMethod("ApplyDialogRows", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .Invoke(vm, new[] { lines, before });
     }
 
     // Assigning SelectedSubtitle alone leaves SubtitleGrid.SelectedItems empty.
