@@ -198,6 +198,30 @@ public class MergeAndSplitHelperTests
         Assert.Equal(["Who is this Mrs. Meier?", "He wanted a woman."], rows.Select(r => r.TranslatedText));
     }
 
+    // Issue #14484, second report: a row ending in a closing quote anchored the split on the
+    // quote character, so one stray or curly quote in the reply shifted every later row by a
+    // sentence while the period counts still matched. The anchor is the punctuation inside.
+    [Theory]
+    [InlineData("\"NCK1 to Central.\" - \"\"Central, go ahead.\" \"The motorhome operation in Filderstadt has failed.\" \"The suspects have swapped plates.\"",
+        "\"NCK1 to Central.\" - \"\"Central, go ahead.\"")]
+    [InlineData("\u201cNCK1 to Central.\u201d - \u201cCentral, go ahead.\u201d \u201cThe motorhome operation in Filderstadt has failed.\u201d \u201cThe suspects have swapped plates.\u201d",
+        "\u201cNCK1 to Central.\u201d - \u201cCentral, go ahead.\u201d")]
+    public async Task MergeAndTranslateIfPossible_QuotedRowsSplitOnThePunctuationInsideTheQuotes(string reply, string expectedFirstRow)
+    {
+        using var _ = new FixedAbbreviations(NoAbbreviations);
+        var rows = MakeRows(
+            "\"NCK1 an Zentrale.\"" + Environment.NewLine + "- \"Zentrale hört.\"",
+            "\"Wohnmobileinsatz in Filderstadt fehlgeschlagen.\"",
+            "\"Gesuchte haben Kennzeichen ausgetauscht.\"");
+
+        var count = await TranslateGermanToEnglish(rows, reply);
+
+        Assert.Equal(3, count);
+        Assert.Equal(expectedFirstRow, rows[0].TranslatedText.Replace(Environment.NewLine, " "));
+        Assert.EndsWith("has failed." + reply[^1], rows[1].TranslatedText);
+        Assert.EndsWith("swapped plates." + reply[^1], rows[2].TranslatedText);
+    }
+
     // Ellipsis periods keep counting on both sides, so a row ending in "..." still splits.
     [Fact]
     public async Task MergeAndTranslateIfPossible_EllipsisRowStillSplits()

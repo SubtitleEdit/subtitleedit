@@ -746,7 +746,7 @@ public static partial class MergeAndSplitHelper
     {
         if (context.CurrentItem != null && result.Text.Length > 0)
         {
-            var endChar = result.Text[^1];
+            var endChar = GetEndChar(result.Text);
             context.CurrentItem.TextIndexStart = result.Text.Length;
             context.CurrentItem.TextIndexEnd = result.Text.Length;
             context.CurrentItem.EndChar = endChar;
@@ -779,7 +779,7 @@ public static partial class MergeAndSplitHelper
             }
             else
             {
-                var endChar = result.Text[^1];
+                var endChar = GetEndChar(result.Text);
                 context.CurrentItem.EndChar = endChar;
                 context.CurrentItem.EndCharOccurrences = context.CountEndChar(endChar);
                 context.CurrentItem.TextIndexEnd = result.Text.Length;
@@ -839,7 +839,7 @@ public static partial class MergeAndSplitHelper
 
             if (result.Text.Length > 0 && result.Text.HasSentenceEnding())
             {
-                var endChar = result.Text[^1];
+                var endChar = GetEndChar(result.Text);
                 context.CurrentItem.EndChar = endChar;
                 context.CurrentItem.EndCharOccurrences = context.CountEndChar(endChar);
             }
@@ -932,10 +932,38 @@ public static partial class MergeAndSplitHelper
         var part = FindPartByEndChar(text, item.EndChar, item.EndCharOccurrences, abbreviations);
         if (!string.IsNullOrEmpty(part))
         {
-            text = text[part.Length..].Trim();
+            // The anchor sits inside a closing quote ("hört."), so the quote itself follows the
+            // cut and belongs to this row.
+            var end = part.Length;
+            while (end < text.Length && IsClosingQuote(text[end]))
+            {
+                end++;
+            }
+
+            part = text[..end];
+            text = text[end..].Trim();
         }
 
         return part;
+    }
+
+    private static bool IsClosingQuote(char c) => c == '"' || c == '”';
+
+    /// <summary>
+    /// The character the split anchors on: the sentence-ending punctuation, looking past a
+    /// closing quote so "hört." anchors on the period. Quotes are a poor anchor - engines add,
+    /// drop and curl them freely, and each stray one shifted every later row by a sentence
+    /// while the period counts still matched (#14484).
+    /// </summary>
+    private static char GetEndChar(string text)
+    {
+        var i = text.Length - 1;
+        while (i > 0 && IsClosingQuote(text[i]))
+        {
+            i--;
+        }
+
+        return i < text.Length - 1 && text[..(i + 1)].HasSentenceEnding() ? text[i] : text[^1];
     }
 
     /// <summary>
