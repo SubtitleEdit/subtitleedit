@@ -940,6 +940,22 @@ public partial class CutVideoViewModel : ObservableObject
             {
                 keyEventArgs.Handled = true;
                 rc.Execute(null);
+                return;
+            }
+
+            // The main window's default vertical zoom binding is Shift+Add/Subtract, which only the
+            // numeric keypad produces. Let the main-row plus and minus keys (OemPlus/OemMinus on
+            // every layout, a laptop or a Spanish keyboard has no other) zoom too, as the sync
+            // dialogs do (#14419 comment).
+            if (keyEventArgs.Key == Key.OemPlus && keyEventArgs.KeyModifiers.HasFlag(KeyModifiers.Shift))
+            {
+                keyEventArgs.Handled = true;
+                WaveformVerticalZoomIn();
+            }
+            else if (keyEventArgs.Key == Key.OemMinus && keyEventArgs.KeyModifiers.HasFlag(KeyModifiers.Shift))
+            {
+                keyEventArgs.Handled = true;
+                WaveformVerticalZoomOut();
             }
         }
     }

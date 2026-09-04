@@ -727,12 +727,12 @@ public partial class VisualSyncViewModel : ObservableObject
                 VideoPlayerControlLeft.Position += 0.5;
                 _updateAudioVisualizer = true;
             }
-            else if (e.Key == Key.Add && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+            else if ((e.Key == Key.Add || e.Key == Key.OemPlus) && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
             {
                 e.Handled = true;
                 WaveformVerticalZoomIn(AudioVisualizerLeft);
             }
-            else if (e.Key == Key.Subtract && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+            else if ((e.Key == Key.Subtract || e.Key == Key.OemMinus) && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
             {
                 e.Handled = true;
                 WaveformVerticalZoomOut(AudioVisualizerLeft);
@@ -769,12 +769,12 @@ public partial class VisualSyncViewModel : ObservableObject
                 VideoPlayerControlRight.Position += 0.5;
                 _updateAudioVisualizer = true;
             }
-            else if (e.Key == Key.Add && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+            else if ((e.Key == Key.Add || e.Key == Key.OemPlus) && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
             {
                 e.Handled = true;
                 WaveformVerticalZoomIn(AudioVisualizerRight);
             }
-            else if (e.Key == Key.Subtract && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+            else if ((e.Key == Key.Subtract || e.Key == Key.OemMinus) && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
             {
                 e.Handled = true;
                 WaveformVerticalZoomOut(AudioVisualizerRight);

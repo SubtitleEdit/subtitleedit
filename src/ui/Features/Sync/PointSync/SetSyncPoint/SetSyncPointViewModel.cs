@@ -591,12 +591,12 @@ public partial class SetSyncPointViewModel : ObservableObject
             e.Handled = true;
             SetVideoPosition(CurrentPositionSeconds + 0.5);
         }
-        else if (e.Key == Key.Add && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+        else if ((e.Key == Key.Add || e.Key == Key.OemPlus) && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
         {
             e.Handled = true;
             WaveformVerticalZoomIn();
         }
-        else if (e.Key == Key.Subtract && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+        else if ((e.Key == Key.Subtract || e.Key == Key.OemMinus) && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
         {
             e.Handled = true;
             WaveformVerticalZoomOut();
