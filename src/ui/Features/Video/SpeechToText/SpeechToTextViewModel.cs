@@ -2385,7 +2385,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         return true;
     }
 
-    private static List<string> GetResultFileCandidates(string ext, string waveFileName, string videoFileName, string whisperFolder, ConcurrentQueue<string> outputText, string? sttTempFolder = null)
+    internal static List<string> GetResultFileCandidates(string ext, string waveFileName, string videoFileName, string whisperFolder, ConcurrentQueue<string> outputText, string? sttTempFolder = null)
     {
         var candidates = new List<string>
         {
@@ -2411,8 +2411,12 @@ public partial class SpeechToTextViewModel : ObservableObject
         {
             // A pre-extracted 16 kHz WAV skips extraction, so the engines' contained output lands
             // in the per-run folder under the USER'S file name - no other candidate covers that.
-            candidates.Add(Path.Combine(sttTempFolder, Path.GetFileNameWithoutExtension(videoFileName) + ext));
-            candidates.Add(Path.Combine(sttTempFolder, Path.GetFileNameWithoutExtension(waveFileName) + ext));
+            // The per-run folder is where SE told the engine to write, so it must be probed BEFORE
+            // the folder of the user's own file: with the wave-dir candidate first, a stale
+            // "<name>.srt" already sitting next to the user's WAV was picked up as the result and
+            // then deleted as one of SE's temp files.
+            candidates.Insert(0, Path.Combine(sttTempFolder, Path.GetFileNameWithoutExtension(waveFileName) + ext));
+            candidates.Insert(0, Path.Combine(sttTempFolder, Path.GetFileNameWithoutExtension(videoFileName) + ext));
         }
 
         if (!string.IsNullOrEmpty(whisperFolder))

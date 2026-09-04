@@ -32,7 +32,7 @@ Built-in trainable OCR engine.
 - Best for consistent fonts (like DVD/Blu-ray subtitles)
 
 ### Binary OCR
-Binary image comparison engine.
+Binary image comparison engine, listed as **Binary image compare** in the engine dropdown.
 - Compares against a database of known character images
 - Fast and accurate for known fonts
 - Supports database editing, character history, max error percentage, and pixels-are-space tuning
@@ -96,6 +96,33 @@ Local OCR engine.
 5. Click **Start OCR**
 6. Review and correct any errors
 7. Click **OK** to import the text subtitles
+
+## Options
+
+Checkboxes below the engine settings:
+
+- **Fix OCR errors**, **Prompt for unknown words**, **Try to guess unknown words** — Shown once a dictionary is loaded
+- **Auto break if more than X lines** — X is the *Max number of lines* rule from Settings
+
+Toggle buttons above the image:
+
+- **Auto-detect ASSA alignment** — Capture top alignment
+- **Image pre-processing** — Opens the [pre-processing](#pre-processing) settings
+- **VobSub/DVD colors...** — VobSub/DVD input only
+- **Fallback OCR database** — nOCR and Binary image compare only
+- **Show only forced subtitles** — Only when the file has forced subtitles
+
+## Subtitle List Menu
+
+Right-click the subtitle list for:
+
+- **OCR selected lines**
+- **Inspect line...** — nOCR and Binary image compare only
+- **Show image**, **Save image as...**, **Copy image to clipboard**
+- **Delete**, and **Fill selected lines with clipboard text** when several lines are selected
+- **Italic**, **Bold**
+- **Edit/export...**, **Import text from subtitle...**, **Export text as subtitle...**
+- **Save all images with HTML index...** — See [Saving the Images](#saving-the-images)
 
 ## Saving the Images
 
@@ -167,6 +194,8 @@ When the OCR engine encounters uncertain characters, you can:
 - Choose from suggested alternatives
 - Type the correct text
 - Add to the OCR fix dictionary for automatic correction
+
+The unknown-words list in the OCR window has buttons for the selected word: **Add to names list (case sensitive)**, **Add to user dictionary**, **Add to OCR replace pairs** and **Google it**.
 
 ### What is remembered
 

@@ -80,6 +80,8 @@ Inside the [source view](../features/source-view.md) window (F2), which edits th
 
 | Shortcut | Action |
 |----------|--------|
+| Ctrl+Z | Undo |
+| Ctrl+Shift+Z / Ctrl+Y | Redo |
 | Ctrl+F | Find in the source |
 | Ctrl+H | Replace in the source (Cmd+Alt+F also works on macOS) |
 | F3 / Shift+F3 | Find next / previous |
@@ -145,7 +147,7 @@ wins over the menu activation.
 | Ctrl+Alt+Shift+D | Open data folder |
 | Ctrl+Alt+Shift+L | Save language file |
 
-> **Note:** Several actions (Bold, Underline, shot-change snapping/extending, green-zone in/out cues, "Go to next empty line", "Waveform paste clipboard text to new selection", etc.) ship without a default key. Open **Options** → **Shortcuts** to assign them, or use **Import from SE 4.x** to bring over a familiar set.
+> **Note:** Several actions (Bold, Underline, shot-change snapping/extending, green-zone in/out cues, "Guess start time from waveform" / "Guess end time from waveform", "Go to next empty line", "Waveform paste clipboard text to new selection", etc.) ship without a default key. Open **Options** → **Shortcuts** to assign them, or use **Import from SE 4.x** to bring over a familiar set.
 
 ## Fix Lists in Dialogs
 

@@ -3,7 +3,7 @@
 Snap subtitle in- and out-cues to shot changes, frame boundaries, and minimum-gap / duration rules in one pass, using a fully configurable profile.
 
 - **Menu:** Tools → Beautify time codes…
-- **Profile editor:** Options → Settings → Waveform → gear icon next to *Snap to shot changes*, or *Edit beautify time codes profile…* button inside the tool window.
+- **Profile editor:** Options → Settings → Waveform → gear icon next to *Snap to shot changes*, or the **Edit profile...** button inside the tool window.
 
 <!-- Screenshot: Beautify time codes window with Original/Beautified visualizers -->
 ![Beautify time codes](../screenshots/beautify-time-codes.png)
@@ -18,6 +18,8 @@ The window shows the loaded subtitle in two stacked waveform visualizers:
 Above the visualizers a stats line summarises the run:
 
 > Subtitles: N · Changed: M · Frame rate: 25 · Shot changes: K
+
+By default the frame boundaries are calculated from the video frame rate. Tick **Use exact time codes** and click **Extract time codes** to read the real frame time codes from the video file instead (a progress bar shows the extraction); the stats line then says *use exact time codes*. This matters for variable-frame-rate video, where calculated frames drift from the actual ones.
 
 Below the visualizers, the **change navigator** lets you step through every cue the beautify pass moved:
 

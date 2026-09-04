@@ -17,4 +17,6 @@ The Visual sync window shows two video player panes ("Start scene" and "End scen
 4. Click **Sync** to apply (or use **Manual sync...** from the Sync split-button for a manual offset/speed adjustment)
 5. Click **OK** to keep the result
 
+An **Open video file...** button at the top loads a video if none is open. Each pane has **One second back** / **One second forward** arrow buttons, **Play 2 secs & back**, **Go to sub pos** (jump to the selected line's position) and **Find text** to search for a line.
+
 The timing of all subtitles is linearly adjusted to match the two sync points. The window remembers its size and position between sessions.

@@ -35,9 +35,9 @@ Subtitle Edit supports over 380 subtitle formats including SubRip (.srt), WebVTT
 For batch conversion, use **Tools → Batch convert...**.
 
 ### How do I import image-based subtitles?
-Use **File → Import image subtitle for OCR...** to import Blu-ray SUP, VobSub, or other image-based subtitles and convert them to text using OCR.
+Use **File → Import → Image-based subtitle for OCR...** to import Blu-ray SUP, VobSub, or other image-based subtitles and convert them to text using OCR.
 
-You can use **File → Import image subtitle for edit...** to work/export the images.
+You can use **File → Import → Image-based subtitle for edit...** to work/export the images.
 
 
 ---

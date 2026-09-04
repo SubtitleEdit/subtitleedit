@@ -3,6 +3,7 @@ using Avalonia.Input;
 using Nikse.SubtitleEdit.Logic;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -61,7 +62,7 @@ public partial class CompareViewModel : ObservableObject
     private static IBrush ListViewRed => CompareColors.OnlyInOneFileRow;
     private static IBrush ListViewGreen => CompareColors.TextOrTimeDifferenceRow;
     private static IBrush ListViewOrange => CompareColors.NumberDifferenceRow;
-    private static readonly IBrush TransparentBrush = new SolidColorBrush(Colors.Transparent);
+    private static readonly IBrush TransparentBrush = new ImmutableSolidColorBrush(Colors.Transparent);
 
     public CompareViewModel(IFileHelper fileHelper, IFolderHelper folderHelper)
     {
@@ -988,13 +989,19 @@ public partial class CompareViewModel : ObservableObject
                 {
                     target.SelectedIndex = idx;
                 }
-
-                ScrollSync?.SyncFrom(source);
             }
             finally
             {
                 _mirroringSelection = false;
             }
+
+            // Setting SelectedIndex makes the target grid *post* its own ScrollIntoView
+            // (SelectingItemsControl.AutoScrollToSelectedItemIfNecessary), and that scroll is
+            // computed from the panel's estimated row height, so a sync done here would be
+            // undone a frame later - the two sides ended one row apart on CI whenever the
+            // estimate put the selected row on the viewport's bottom edge. Queue the sync
+            // behind that scroll instead: same priority, so it runs after it.
+            Dispatcher.UIThread.Post(() => ScrollSync?.SyncFrom(source));
         });
     }
 

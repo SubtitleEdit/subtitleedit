@@ -37,7 +37,7 @@ Follow these simple steps to begin working with subtitles in Subtitle Edit:
    Download and install the latest version from the official website.
 
 2. **Open a video file**  
-   Go to **Video → Open video file...** and select your video.  
+   Go to **Video → Open video...** and select your video.  
    This allows you to preview and sync subtitles accurately.
 
 3. **Open, create, or generate a subtitle file**  
@@ -71,7 +71,7 @@ The main window consists of several key areas:
 - **Video Player** — Preview video with subtitles
 - **Audio Visualizer** — Waveform/spectrogram for precise timing adjustments
 
-Subtitle Edit offers **12 different layouts** for arranging these areas. You can choose and customize the layout via **Options → Choose layout**.
+Subtitle Edit offers **12 different layouts** for arranging these areas. Choose one with the **Layout** button on the toolbar or its configurable shortcut.
 
 For a detailed guide to each area, mouse interactions, and keyboard shortcuts, see the **[Main Window](features/main-window.md)** documentation.
 

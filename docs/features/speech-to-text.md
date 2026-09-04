@@ -90,13 +90,12 @@ The general `qwen3-asr-1.7b` and Whisper `large-v3-turbo` models are also strong
 
 1. Open a video file in Subtitle Edit
 2. Go to **Video → Speech to text...**
-3. Select an **Engine** from the dropdown
+3. Select an **Engine** from the dropdown. Next to it are buttons for the engine website, engine download (when it is not installed yet) and engine settings (backend and update status, for installed local engines). A **Backend** dropdown appears below for Whisper CPP and Crisp ASR
 4. Select a **Model** (larger models usually improve accuracy but take more time and disk space)
 5. Select the **Language** of the audio, or use auto-language when the selected engine supports it
 6. Optionally enable:
    - **Translate to English** — Translate non-English audio to English
-   - **Adjust timings** — Post-process timing using waveform data
-   - **Post-processing** — Fix casing, merge lines, add periods, etc.
+   - **Post-processing** — Adjust timings, fix casing, merge lines, add periods, etc. (the settings button next to it opens the options)
 7. Click **Transcribe**
 
 ## Models
@@ -117,6 +116,8 @@ Transcribe multiple video files at once:
 2. Add video files
 3. Click **Transcribe**
 4. Results are saved as `.srt` files next to the video files
+
+**Add language code to file name** names the output `video.en.srt` instead of `video.srt`.
 
 ## Advanced Settings
 
@@ -144,6 +145,9 @@ Click the **Post-processing** button to configure:
 - Add periods
 - Merge short lines
 - Split long lines
+- Remove non-speech lines (lines that only describe sound, like "[Music]")
+- Remove repeated lines (lines that repeat the previous line word for word)
+- Show quality report after transcription
 - Change underline to color (useful for highlight spoken words)
 
 ## Console Log
@@ -155,6 +159,6 @@ The console log at the bottom shows real-time output from the Whisper process, u
 - For NVIDIA GPU users, use the **Whisper CPP** cuBLAS backend or **Purfview Faster Whisper XXL** for fastest transcription
 - If you get "CUDA out of memory" errors, try a smaller model
 - The `--standard` parameter is automatically added for Purfview Faster Whisper XXL
-- You can re-download an engine by right-clicking the engine area
+- Right-click the window for **View tools log file** and, for downloadable engines, a re-download item
 - If an engine executable has gone missing (typically quarantined by antivirus software), Subtitle Edit detects it when transcription starts, names the missing file, and offers to re-download the engine
 - If a new engine has no model installed yet, let Subtitle Edit download both the engine and the selected model before starting transcription

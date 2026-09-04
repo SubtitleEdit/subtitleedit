@@ -35,9 +35,9 @@ public class BeautifyTimeCodesProfileWindow : Window
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = _l.Title;
         CanResize = true;
-        Width = 1100;
+        Width = 1220;
         Height = 760;
-        MinWidth = 980;
+        MinWidth = 1180;
         MinHeight = 640;
         vm.Window = this;
         DataContext = vm;
@@ -509,7 +509,7 @@ public class BeautifyTimeCodesProfileWindow : Window
     {
         return new NumericUpDown
         {
-            Width = 100,
+            Width = 115,
             Minimum = 0,
             Maximum = 100,
             Increment = 1,
@@ -537,7 +537,7 @@ public class BeautifyTimeCodesProfileWindow : Window
     {
         var nud = MakeFrameNud(bindingPath);
         nud.Background = new SolidColorBrush(isGreen ? Color.FromArgb(80, 0, 160, 0) : Color.FromArgb(80, 200, 30, 30));
-        nud.Width = 95;
+        nud.Width = 110;
         return nud;
     }
 

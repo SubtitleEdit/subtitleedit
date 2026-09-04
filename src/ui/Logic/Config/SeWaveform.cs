@@ -68,6 +68,11 @@ public class SeWaveform
     public int GuessTimeCodeScanBlockAverageMin { get; set; }
     public int GuessTimeCodeScanBlockAverageMax { get; set; }
     public int GuessTimeCodeSplitLongSubtitlesAtMs { get; set; }
+    // "Guess start/end time from waveform": how far from the detected speech boundary the cue is
+    // placed - start moved earlier, end moved later - so users who feel the guess sits too tight
+    // against the audio can pad it (#14472). A shot change snap replaces the padded position.
+    public int GuessStartOffsetMs { get; set; }
+    public int GuessEndOffsetMs { get; set; }
     public double SeekSilenceMinDurationSeconds { get; set; }
     public double SeekSilenceMaxVolume { get; set; }
     public bool SeekSilenceSeekForward { get; set; }
@@ -153,6 +158,8 @@ public class SeWaveform
         GuessTimeCodeScanBlockAverageMax = 70;
         GuessTimeCodeSplitLongSubtitlesAtMs = 3500;
 
+        GuessStartOffsetMs = 0;
+        GuessEndOffsetMs = 0;
         SeekSilenceSeekForward = true;
         SeekSilenceMinDurationSeconds = 0.3;
         SeekSilenceMaxVolume = 0.1;

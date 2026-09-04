@@ -49,6 +49,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -407,6 +408,10 @@ public partial class TextToSpeechViewModel : ObservableObject
             {
                 Se.Settings.Video.TextToSpeech.ChatterboxCrispAsrLanguage = SelectedLanguage?.Name ?? string.Empty;
             }
+        }
+        else if (SelectedEngine is ZonosTtsCrispAsr)
+        {
+            Se.Settings.Video.TextToSpeech.ZonosTtsCrispAsrLanguage = SelectedLanguage?.Name ?? string.Empty;
         }
         else if (SelectedEngine is KokoroTtsCpp)
         {
@@ -1067,6 +1072,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         CosyVoice3CrispAsr => Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrLanguage,
         Qwen3TtsCrispAsr => Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrLanguage,
         ChatterboxTtsCpp => Se.Settings.Video.TextToSpeech.ChatterboxCrispAsrLanguage,
+        ZonosTtsCrispAsr => Se.Settings.Video.TextToSpeech.ZonosTtsCrispAsrLanguage,
         ElevenLabs => Se.Settings.Video.TextToSpeech.ElevenLabsLanguage,
         _ => null,
     };
@@ -3444,9 +3450,15 @@ public partial class TextToSpeechViewModel : ObservableObject
                 // same policy as the generation step. Cancellation still aborts the run.
                 try
                 {
+                    // Silence is judged relative to this clip's own peak: a fixed -40 dBFS trimmed
+                    // the soft final consonant off quiet voice-clone output, cutting the last word
+                    // of the line (#14480). Null (unreadable file) falls back to the old threshold.
+                    var peakDbfs = await TtsSilenceThreshold.MeasurePeakDbfsAsync(item.CurrentFileName, cancellationToken, segmentOperationTimeout);
+                    Se.WriteToolsLog($"TTS FixSpeed: segment {index + 1} peak {FormatDb(peakDbfs)} - silence threshold {TtsSilenceThreshold.DbLiteral(peakDbfs)}");
+
                     // Step 1: Trim silence from start and end
                     var outputFileName1 = Path.Combine(Path.GetDirectoryName(item.CurrentFileName)!, Guid.NewGuid() + ".wav");
-                    var trimProcess = FfmpegGenerator.TrimSilenceStartAndEnd(item.CurrentFileName, outputFileName1);
+                    var trimProcess = FfmpegGenerator.TrimSilenceStartAndEnd(item.CurrentFileName, outputFileName1, TtsSilenceThreshold.Amplitude(peakDbfs));
                     await trimProcess.StartAndWaitAsync(cancellationToken, segmentOperationTimeout);
 
                     var currentFile = outputFileName1;
@@ -3457,7 +3469,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                     if (doVad)
                     {
                         var vadOutput = Path.Combine(Path.GetDirectoryName(item.CurrentFileName)!, $"vad_{Guid.NewGuid()}.wav");
-                        var vadProcess = FfmpegGenerator.CompressInternalSilence(currentFile, vadOutput, vadMaxSilence);
+                        var vadProcess = FfmpegGenerator.CompressInternalSilence(currentFile, vadOutput, vadMaxSilence, TtsSilenceThreshold.DbLiteral(peakDbfs));
                         await vadProcess.StartAndWaitAsync(cancellationToken, segmentOperationTimeout);
 
                         if (File.Exists(vadOutput) && new FileInfo(vadOutput).Length > 0)
@@ -3811,6 +3823,11 @@ public partial class TextToSpeechViewModel : ObservableObject
     // The compact cloud-engine descriptions ("pay/fast/good") read like debug output - expand
     // them into words; free-form descriptions (the CrispASR engines) are shown as-is. The
     // source strings are hardcoded English in the engines, so this map matches that.
+    private static string FormatDb(double? dbfs)
+    {
+        return dbfs == null ? "(unknown)" : dbfs.Value.ToString("0.0", CultureInfo.InvariantCulture) + " dBFS";
+    }
+
     // Middle-truncates a file name so the tail (and thus the extension) stays visible.
     private static string CapFileName(string fileName, int maxLength)
     {
@@ -4007,6 +4024,10 @@ public partial class TextToSpeechViewModel : ObservableObject
                     Qwen3TtsCrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrLanguage)
                                         ?? Languages.FirstOrDefault(),
                     ChatterboxTtsCpp => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.ChatterboxCrispAsrLanguage)
+                                        ?? Languages.FirstOrDefault(),
+                    // Zonos leads with English (US) rather than "Auto" (the backend cannot
+                    // detect a language), so the first-entry fallback is the backend default.
+                    ZonosTtsCrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.ZonosTtsCrispAsrLanguage)
                                         ?? Languages.FirstOrDefault(),
                     _ => Languages.FirstOrDefault(),
                 };

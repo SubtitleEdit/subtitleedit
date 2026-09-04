@@ -21,10 +21,18 @@ Automatically detect and fix common subtitle errors.
 
 1. Open **Tools → Fix common errors...**
 2. Select the language for language-specific rules
-3. Check/uncheck the rules you want to apply
-4. Click **Go to apply fixes** to see the proposed fixes
-5. Review each fix and check/uncheck individual items
-6. Click **Apply selected fixes**
+3. Check/uncheck the rules you want to apply. The search box filters the rule list, and **Select all** / **Invert selection** flip many rules at once
+4. Optionally tick **Try to guess unknown words** to let the OCR fix engine correct words it does not know
+5. Click **Go to apply fixes** to see the proposed fixes
+6. Review each fix and check/uncheck individual items
+7. Click **Apply selected fixes**, then **Done** to close the window
+
+### Step 2 controls
+
+- **Refresh available fixes** re-scans the subtitle after you have applied some fixes or edited text in the preview
+- The **filter chips** above the list show one chip per rule that found something; click a chip to show only that rule's fixes
+- Right-click a fix for **Rule details...** (what the rule does and an example) or **Show only this rule**
+- The **Log** link opens a window with everything the run changed, plus errors that were found but could not be fixed automatically
 
 ## Available Fixes
 
@@ -58,6 +66,7 @@ Common fixes include:
 - Remove space between numbers
 - Remove dialog dash on first line of non-dialog
 - Normalize strings (Unicode normalization)
+- Remove leading `...` (only offered when the continuation style in Settings → General is *None*)
 
 Additional language-specific rules are added when applicable (e.g. lowercase `i` → uppercase `I` for English, Turkish ANSI → Unicode, Danish letter `i`, inverted `¿`/`¡` for Spanish).
 
@@ -66,5 +75,5 @@ Additional language-specific rules are added when applicable (e.g. lowercase `i`
 You can save different sets of fix rules as profiles for different workflows (e.g., broadcast, streaming, fansubbing).
 
 - Pick the active profile from the **Profile** combo box at the top of the window
-- Click the **...** button next to the combo box to add, rename, delete, import, or export profiles
+- Click the **...** button next to the combo box to add, rename, or delete profiles
 

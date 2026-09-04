@@ -9,6 +9,6 @@ Set a minimum time gap between consecutive subtitles.
 
 ## Options
 
-- **Min. ms between lines / Min. frames between lines** — The minimum time between subtitles. The unit (milliseconds or frames) follows the global *Use time format HH:MM:SS:FF* setting.
+- **Min. ms between lines / Min. frames between lines** — The minimum time between subtitles. The unit (milliseconds or frames) follows the global *Use frame mode (hh.mm.ss.ff)* setting.
 
 The preview list updates live and the status text shows the number of gaps that were fixed.

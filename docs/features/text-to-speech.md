@@ -13,10 +13,12 @@ Generate speech audio from subtitle text using various TTS engines.
 1. Open **Video → Text to speech...**
 2. Select a TTS engine from the dropdown
 3. Select a language and voice
-4. Optionally enable **Review audio clips** to review each generated clip
-5. Optionally enable **Generate video file** to create a video with the audio
-6. Click **Generate** to start
+4. Optionally enable **Review audio segments** to check each line before the final mix
+5. Optionally enable **Add audio to video file** to mux the result into a new video file (the settings button next to it opens the encoding settings); **Advanced...** below opens further TTS settings
+6. Click **Generate speech from text** to start
 7. Close the window with **OK** to apply the session's subtitle changes (lines merged before generation, text edits made in the review window) to the subtitle in the main window — or **Cancel** to discard them
+
+The bottom bar holds **Set up cast** (when speakers are present), **Import...**, **OK**, **Cancel** and **Generate speech from text**. OK is hidden while generating, and Cancel then stops the generation.
 
 ## Set Up Cast: One Voice per Speaker
 
@@ -26,7 +28,7 @@ If the speaker names are written into the text instead (an SDH subtitle), see th
 
 ## Prompts Before Generation
 
-Clicking **Generate** runs up to three quick checks on the subtitle before any audio is made. Each one only appears when it has something to show, each opens a review dialog where every proposed change is a checkbox, and each can be turned off in **Options → Settings** (search for "Text to speech: prompt").
+Clicking **Generate speech from text** runs up to three quick checks on the subtitle before any audio is made. Each one only appears when it has something to show, each opens a review dialog where every proposed change is a checkbox, and each can be turned off in **Options → Settings** (search for "Text to speech: prompt").
 
 ### Speaker names in the text
 
@@ -88,7 +90,7 @@ Several of the local engines above are different models on the same CrispASR run
 | **IndexTTS (CrispASR)** | 24 kHz | Follows the text | Zero-shot | 24 kHz mono | ~600 MB - 2.4 GB |
 | **CosyVoice3 (CrispASR)** | 24 kHz | 9, plus 18 Mandarin dialects as voices | 8 baked-in presets + zero-shot | 16 kHz mono + a transcript sidecar | ~1.6 - 2.5 GB |
 | **MOSS-TTS (CrispASR)** | 24 kHz | 20 | Zero-shot | 24 kHz mono | ~10.5 - 20.5 GB incl. codec |
-| **Zonos TTS (CrispASR)** | 44.1 kHz | Follows the text | From a reference recording | 24 kHz mono | ~1.8 GB |
+| **Zonos TTS (CrispASR)** | 44.1 kHz | 100+ via the language picker (trained on English, Japanese, Chinese, French and German; the rest rely on eSpeak pronunciation) | From a reference recording | 24 kHz mono | ~1.8 GB |
 | **VoxCPM2 (CrispASR)** | 48 kHz | ~30 | Zero-shot | 24 kHz mono (upsampled internally) | ~1.7 - 5 GB |
 | **dots.tts (CrispASR)** | 48 kHz | Follows the text | Zero-shot | 24 kHz mono | ~2.4 - 5 GB |
 | **VibeVoice (CrispASR)** | 24 kHz | Follows the text | Zero-shot | 24 kHz mono | ~1.6 - 5 GB |
@@ -104,7 +106,7 @@ Notes on picking one:
 - **Highest output rate:** VoxCPM2 and dots.tts at 48 kHz, then Zonos at 44.1 kHz.
 - **MOSS-TTS is by far the largest** because its Qwen3-8B backbone needs a ~3.5 GB codec companion on top of the backbone quant. Check free disk space before selecting it.
 - Quantized engines follow the same rule as the speech-to-text models: `Q4_K` is the small fast default, `Q8_0` is close to full precision, and `F16` is rarely worth the extra gigabytes.
-- **Most of the CrispASR engines load their reference voice at server start**, so switching voice reloads the model. The exceptions are **Pocket TTS** (per-request reference) and **Qwen3 TTS** with the Voice clone model — those, plus the standalone OmniVoice TTS engine, are what [Clone From Video (Voice of Each Line)](#clone-from-video-voice-of-each-line) can use.
+- **Most of the CrispASR engines load their reference voice at server start**, so switching voice reloads the model. The exceptions are **Pocket TTS** (per-request reference) and **Qwen3 TTS** with the Voice clone model — those, the three audio.cpp engines (**IndexTTS 2.5**, **Higgs Audio v3**, **Fish Audio S2 Pro**) and the standalone OmniVoice TTS engine are what [Clone From Video (Voice of Each Line)](#clone-from-video-voice-of-each-line) can use.
 
 ## Engine Settings
 
@@ -161,7 +163,7 @@ For dubbing a video with several speakers there is a faster way than cloning eac
 
 Before generating, Subtitle Edit cuts one short reference clip per line out of the video's audio. Lines shorter than about three seconds are grown into the silence around them, but never into the neighbouring line — a reference with two speakers in it would clone the wrong person.
 
-- **Supported engines:** OmniVoice TTS, Pocket TTS (CrispASR), and Qwen3 TTS (CrispASR) with the Voice clone model. The entry only appears for engines that accept a reference for each line; engines that load their reference when their server starts would have to reload the model for every line.
+- **Supported engines:** OmniVoice TTS, Pocket TTS (CrispASR), Qwen3 TTS (CrispASR) with the Voice clone model, and the audio.cpp engines IndexTTS 2.5, Higgs Audio v3 and Fish Audio S2 Pro. The entry only appears for engines that accept a reference for each line; engines that load their reference when their server starts would have to reload the model for every line.
 - **Reference text:** if you have the original subtitle loaded next to the translation, its lines are used as the transcript of the clips — that is what the video actually says, and it makes cloning noticeably better. Without an original loaded, the line's own text is used.
 - **Test voice** previews the clone taken from the longest line of the subtitle.
 - Quality depends on the source audio. Loud music or two people talking over each other in a line makes that line's clone worse. Longer subtitle lines clone better than very short ones, so a subtitle segmented into full sentences gives the best result.
@@ -218,7 +220,7 @@ Behavior depends on the selected model:
 
 ## Review Audio Clips
 
-When **Review audio clips** is enabled, a dedicated review window opens after generation. This window lets you inspect, play, and regenerate audio for every subtitle line before the result is used. A 120px waveform of the original video audio is shown above the grid as a reference. The session (clips, per-line voice and engine, includes, text edits) can be written to `SubtitleEditTts.json` and imported again later — see [Continuing a Session Later](#continuing-a-session-later). Regeneration history is kept for the current session only and is not part of the export.
+When **Review audio segments** is enabled, a dedicated review window opens after generation. This window lets you inspect, play, and regenerate audio for every subtitle line before the result is used. A 120px waveform of the original video audio is shown above the grid as a reference. The session (clips, per-line voice and engine, includes, text edits) can be written to `SubtitleEditTts.json` and imported again later — see [Continuing a Session Later](#continuing-a-session-later). Regeneration history is kept for the current session only and is not part of the export.
 
 ### The Review Grid
 
@@ -226,7 +228,7 @@ Each subtitle line is shown as a row with the following columns:
 
 | Column | Description |
 |--------|-------------|
-| **Include** | Checkbox to include or exclude the line from the final output |
+| **Enabled** | Checkbox to include or exclude the line from the final output |
 | **#** | Subtitle line number |
 | **Text** | The subtitle text (editable — double-click to modify before regenerating). Text edits are applied to the subtitle in the main window when the Text to speech window is closed with **OK** |
 | **Voice** | The voice used for that line |
@@ -239,13 +241,15 @@ Each subtitle line is shown as a row with the following columns:
 - **Stop** — Stops playback
 - **Auto-continue** — When enabled, playback automatically advances to the next line as soon as the current clip finishes
 
+Right-click a line in the waveform for **Play line**, **Regenerate audio**, **Show history** and two timing fixes: **Fit duration to generated audio** ends the line where the generated speech ends, and **Reset timing** restores the times the line had when the window opened.
+
 ### Regenerating a Clip
 
 You can regenerate the audio for any individual line:
 
 1. Select the line in the grid
 2. Choose the desired engine, voice, language, model, or style from the dropdowns
-3. Click **Regenerate** or press **Ctrl+R**
+3. Click **Regenerate** or press **R** (or **Ctrl+R**)
 
 The new clip is trimmed for silence and automatically speed-adjusted to fit the subtitle timing. After regeneration the new clip plays back immediately for review.
 
@@ -257,7 +261,7 @@ Every time a clip is regenerated, the previous version is saved. To review the h
 
 ### Including / Excluding Lines
 
-Uncheck the **Include** checkbox on any row to exclude that line's audio from the final output. Excluded lines are skipped when the video file is assembled.
+Uncheck the **Enabled** checkbox on any row to exclude that line's audio from the final output. Excluded lines are skipped when the video file is assembled.
 
 ### Exporting Clips
 
@@ -275,7 +279,7 @@ What comes back with the session:
 
 - Every line's generated clip, text and timing
 - The engine, model, voice, instruction and speed factor each line was generated with
-- The **Include** checkboxes
+- The **Enabled** checkboxes
 - The actor/voice **cast** mapping, so regenerating uses the same voices
 - The video the session was made from — you do not have to open it first
 
@@ -285,6 +289,7 @@ From there you can play, edit text, regenerate single lines, and finish the sess
 
 | Key | Action |
 |-----|--------|
-| Ctrl+R | Regenerate selected line |
+| R / Ctrl+R | Regenerate selected line |
+| Space | Play / pause the selected line |
 | Escape | Close / Cancel |
 | F1 | Open help |

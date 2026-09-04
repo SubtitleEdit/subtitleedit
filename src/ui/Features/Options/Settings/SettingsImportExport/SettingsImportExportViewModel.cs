@@ -369,8 +369,21 @@ public partial class SettingsImportExportViewModel : ObservableObject
 
         // Video was never assigned, so an "all settings" file carried a default Video block
         // that the importer applied - silently resetting the player choice, the mpv preview
-        // style and the custom seek amounts.
-        exportData.Video = ExportImportAll ? currentSettings.Video : null!;
+        // style and the custom seek amounts. Exclude RecentFiles so local recent video paths are not exported.
+        if (ExportImportAll && currentSettings.Video != null)
+        {
+            var videoJson = JsonSerializer.Serialize(currentSettings.Video);
+            var videoExport = JsonSerializer.Deserialize<SeVideo>(videoJson);
+            if (videoExport != null)
+            {
+                videoExport.RecentFiles.Clear();
+                exportData.Video = videoExport;
+            }
+        }
+        else
+        {
+            exportData.Video = null!;
+        }
 
         var json = JsonSerializer.Serialize(exportData, new JsonSerializerOptions { WriteIndented = true });
         var jsonWithSource = InjectExportMarkers(json, GetCurrentOsName(), exportShortcuts);
@@ -433,7 +446,9 @@ public partial class SettingsImportExportViewModel : ObservableObject
         {
             if (importData.Video != null)
             {
+                var existingRecentFiles = Se.Settings.Video.RecentFiles;
                 Se.Settings.Video = importData.Video;
+                Se.Settings.Video.RecentFiles = existingRecentFiles;
             }
 
             if (importData.Tools != null)

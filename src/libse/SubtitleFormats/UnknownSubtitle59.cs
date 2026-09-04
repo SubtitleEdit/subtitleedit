@@ -29,7 +29,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (var p in subtitle.Paragraphs)
             {
                 var lines = HtmlUtil.RemoveHtmlTags(p.Text).SplitToLines();
-                sb.AppendLine(EncodeTimeCode(p.StartTime) + "\t" + lines[0].Trim());
+                // the end time is part of the format (see the header comment and RegexTimeCodes);
+                // without it every cue reloaded with EndTime 0
+                sb.AppendLine(EncodeTimeCode(p.StartTime) + "\t" + lines[0].Trim() + "\t" + EncodeTimeCode(p.EndTime));
                 for (int i = 1; i < lines.Count; i++)
                 {
                     sb.AppendLine("\t" + lines[i].Trim());

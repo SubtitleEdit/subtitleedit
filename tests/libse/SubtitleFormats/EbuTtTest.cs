@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
@@ -406,6 +406,29 @@ public class EbuTtTest
         // Non EBU-TT headers say no.
         Assert.False(EbuTt.TryGetTeletextPageAndLanguage(DvbTeletext.CreateHeader(150, "ger"), out _, out _));
         Assert.False(EbuTt.TryGetTeletextPageAndLanguage(null, out _, out _));
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void DvbTeletextSubtitleTypeTravelsThroughEbuTt(bool hearingImpaired)
+    {
+        var sub = new Subtitle { Header = DvbTeletext.CreateHeader(188, "fre", hearingImpaired) };
+        sub.Paragraphs.Add(new Paragraph("Bonjour", 0, 2000));
+
+        var format = new EbuTt();
+        var raw = sub.ToText(format);
+        Assert.Equal(hearingImpaired, raw.Contains("type=\"hearing-impaired\""));
+
+        var loaded = new Subtitle();
+        format.LoadSubtitle(loaded, raw.SplitToLines(), null);
+        Assert.True(EbuTt.TryGetTeletextPageAndLanguage(loaded.Header, out var page, out _, out var loadedHearingImpaired));
+        Assert.Equal(188, page);
+        Assert.Equal(hearingImpaired, loadedHearingImpaired);
+
+        // And back to a .dvbttx header via the format's Save path metadata.
+        var resaved = loaded.ToText(format);
+        Assert.Equal(hearingImpaired, resaved.Contains("type=\"hearing-impaired\""));
     }
 
     [Fact]

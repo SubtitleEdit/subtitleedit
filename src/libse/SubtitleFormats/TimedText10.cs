@@ -137,7 +137,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 case "hh:mm:ss.ms":
                     return string.Format(CultureInfo.InvariantCulture, "{0:00}:{1:00}:{2:00}.{3:000}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
                 case "hh:mm:ss.ms-two-digits":
-                    return string.Format(CultureInfo.InvariantCulture, "{0:00}:{1:00}:{2:00}.{3:00}", time.Hours, time.Minutes, time.Seconds, (int)Math.Round(time.Milliseconds / 10.0));
+                    {
+                        // round on the total so 995-999 ms carries into the second instead of
+                        // writing a three-digit ".100" that reloads 0.9 s early
+                        var hundredths = new TimeCode(Math.Round(time.TotalMilliseconds / 10.0) * 10.0);
+                        return string.Format(CultureInfo.InvariantCulture, "{0:00}:{1:00}:{2:00}.{3:00}", hundredths.Hours, hundredths.Minutes, hundredths.Seconds, hundredths.Milliseconds / 10);
+                    }
                 case "hh:mm:ss,ms":
                     return string.Format(CultureInfo.InvariantCulture, "{0:00}:{1:00}:{2:00},{3:000}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
                 default:
@@ -500,7 +505,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 if (text.StartsWith("{\\an5}", StringComparison.Ordinal) && AddDefaultRegionIfNotExists(xml, "centerCenter"))
                 {
-                    region = "centerСenter";
+                    region = "centerCenter";
                 }
 
                 if (text.StartsWith("{\\an6}", StringComparison.Ordinal) && AddDefaultRegionIfNotExists(xml, "centerRight"))
@@ -1042,7 +1047,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             else if (subtitle.Paragraphs.Count > 0)
             {
-                begin = new TimeCode(subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.Milliseconds);
+                begin = new TimeCode(subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.TotalMilliseconds);
             }
 
             end = new TimeCode(begin.TotalMilliseconds + 3000);

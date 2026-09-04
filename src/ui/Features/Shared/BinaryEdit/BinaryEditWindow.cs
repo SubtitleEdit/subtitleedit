@@ -397,6 +397,14 @@ public class BinaryEditWindow : Window
                     Header = l.CloseVideoFile,
                     Command = vm.CloseVideoCommand,
                 },
+                new Separator(),
+                new MenuItem
+                {
+                    // Where the main window has it too (its Video menu).
+                    Header = l.GenerateBurnIn,
+                    Command = vm.GenerateBurnInCommand,
+                },
+                new Separator(),
                 new MenuItem
                 {
                     Header = l.ToggleSelectSubtitleWhilePlayingCurrentlyOn,

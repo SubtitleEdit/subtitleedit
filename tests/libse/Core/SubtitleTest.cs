@@ -6,6 +6,24 @@ public class SubtitleTest
 {
 
     [Fact]
+    public void RecalculateDisplayTime_MaxCps_RoundsUpToWholeMillisecondWithinLimit()
+    {
+        // Issue #14418: 20 chars at 15 CPS is 1333.33 ms; that fractional end time truncates to
+        // 1333 ms on save, which is 15.004 CPS - over the maximum this branch enforces.
+        var sub = new Subtitle();
+        sub.Paragraphs.Add(new Paragraph("It is not like that.", 0, 10000));
+
+        // An optimal of 40 CPS gives 500 ms (onlyOptimal skips the reading-speed factors), so
+        // the max-CPS branch is what sets the end time; enforceDurationLimits false keeps the
+        // min/max duration settings out of it.
+        sub.RecalculateDisplayTime(15, 0, 40, onlyOptimal: true, enforceDurationLimits: false);
+
+        var p = sub.Paragraphs[0];
+        Assert.Equal(1334, p.DurationTotalMilliseconds);
+        Assert.True(p.GetCharactersPerSecond() <= 15);
+    }
+
+    [Fact]
     public void TestRemoveParagraphsByIds1()
     {
         var sub = new Subtitle();

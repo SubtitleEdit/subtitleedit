@@ -1,6 +1,6 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.2.0-beta30",
+  "version": "v5.2.0-beta32",
   "translatedBy": "Hack茶ん, 12시27분(@12si27)",
   "cultureName": "ko-KR",
   "general": {
@@ -127,6 +127,8 @@
     "colorWhite": "하양",
     "colorYellow": "노랑",
     "column": "칼럼",
+    "columns": "열",
+    "columnsDotDotDot": "열...",
     "consoleLog": "콘솔 로그",
     "contentAlignment": "콘텐츠 정렬",
     "continueFindTitle": "계속 검색하시겠습니까?",
@@ -2543,6 +2545,8 @@
     "openSecondarySubtitleOnVideoPlayerDotDotDot": "비디오 플레이어에 보조 자막 표시...",
     "openSecondarySubtitleOnVideoPlayer": "보조 자막 (비디오 플레이어에 표시)",
     "removeSecondarySubtitleOnVideoPlayer": "비디오 플레이어의 보조 자막 제거",
+    "openRecentVideo": "최근 비디오 열기",
+    "clearRecentVideos": "최근 비디오 목록 지우기",
     "cutVideoTitle": "비디오 잘라내기",
     "cutVideoDotDotDot": "비디오 잘라내기...",
     "embedSubtitlesDotDotDot": "내장 자막 추가/제거...",
@@ -2686,6 +2690,7 @@
     "syncPoints": "동기화 지점",
     "pointSync": "지점 동기화",
     "pointSyncViaOther": "다른 자막을 통한 지점 동기화",
+    "syncPointCandidateInfo": "{0}초 이상의 무음 뒤에 시작되는 줄은 강조 표시됩니다. 이러한 줄은 동기화 지점으로 사용하기 좋습니다",
     "adjustAllShortcuts": "키보드 단축키 :\n\n• Shift + ←/→: 0.01초 이동\n• Ctrl + ←/→: 0.1초 이동\n• Alt + ←/→: 0.5초 이동",
     "adjustAllShortcutsFrames": "키보드 단축키:\r\n\r\n• Shift + ←/→: 1 프레임 이동\r\n• Ctrl + ←/→: 10 프레임 이동\r\n• Alt + ←/→: 1초 이동",
     "offsetInSeconds": "초 단위 오프셋",
@@ -2933,6 +2938,8 @@
       "favoriteSubtitleFormats": "선호하는 자막 형식",
       "favoriteLanguages": "선호하는 언어",
       "webVttUseXTimestampMap": "WebVTT: X-TIMESTAMP-MAP 사용 (로드 시 오프셋 시간 코드)",
+      "assaAutoSetResolution": "ASSA: 비디오를 열 때 비디오에서 해상도(PlayResX/PlayResY) 설정",
+      "assaAutoSetResolutionPrompt": "ASSA: 비디오에 맞게 해상도를 변경하기 전에 확인 (해제시 자동으로 리샘플링)",
       "showStopButton": "중지 버튼 표시",
       "showFullscreenButton": "전체 화면 버튼 표시",
       "fullscreenHideControls": "전체 화면에서 비디오 컨트롤 숨기기",
@@ -3626,6 +3633,8 @@
     "resolutionResamplerFromVideo": "비디오에서...",
     "resolutionResamplerSourceAndTargetEqual": "원본 해상도와 목표 해상도가 동일하므로 별도의 조치가 필요하지 않습니다.",
     "resolutionResamplerNothingSelected": "변경할 옵션을 하나 이상 선택해 주세요.",
+    "resolutionResamplerVideoDiffers": "자막 해상도({0}x{1})가 비디오 해상도({2}x{3})와 다릅니다.\n\n비디오에 맞게 자막 해상도를 변경하시겠습니까?",
+    "resolutionResamplerAskOnVideoOpen": "해상도가 다른 비디오를 열 때 확인",
     "backgroundBoxGenerator": "배경 상자 생성",
     "backgroundBoxFillWidth": "너비 채우기",
     "backgroundBoxRadius": "반지름",
@@ -3817,6 +3826,12 @@
     "detailGapToPrevious": "이전 자막까지: {0} < {1} ms",
     "detailGapToNext": "다음 자막까지: {0} < {1} ms",
     "detail": "상세 정보",
-    "tip": "자막 줄을 두 번 클릭하거나 엔터 키를 눌러 해당 위치로 이동합니다. 실행되는 검사 항목과 그 제한은 설정 > 일반에서 지정됩니다."
+    "tip": "자막 줄을 두 번 클릭하거나 엔터 키를 눌러 해당 위치로 이동합니다. 실행되는 검사 항목과 그 제한은 설정 > 일반에서 지정됩니다.",
+    "exportAsText": "텍스트 파일 (.txt)...",
+    "exportAsExcel": "Excel 파일 (.xlsx)...",
+    "exportAsHtml": "웹 페이지 (.html)...",
+    "exportFileX": "파일: {0}",
+    "exportGeneratedX": "생성: {0}",
+    "exportMadeWithSubtitleEdit": "Subtitle Edit로 생성됨"
   }
 }

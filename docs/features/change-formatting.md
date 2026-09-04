@@ -1,6 +1,6 @@
 # Change Formatting
 
-Add or remove formatting (bold, italic, underline, etc.) from subtitle text.
+Convert one kind of formatting (bold, italic, underline, color) in the subtitle text into another.
 
 - **Menu:** Tools → Change formatting...
 

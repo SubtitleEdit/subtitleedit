@@ -122,8 +122,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static bool IsNearleWholeNumber(double number)
         {
-            double rest = number - Convert.ToInt64(number);
-            return rest < 0.001;
+            // Convert.ToInt64 rounds to nearest, so 1.6 - 2 = -0.4 passed the "< 0.001" test and the
+            // writer emitted the rounded whole second - every cue with a fraction >= .5 s shifted.
+            return Math.Abs(number - Math.Round(number)) < 0.001;
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

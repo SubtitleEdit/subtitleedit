@@ -172,23 +172,35 @@ public class CrispAsrTtsProvenanceTests
         // freezing the app on every CrispASR TTS generation. Every other test here stubs
         // HelpTextProvider, which is exactly why this went unnoticed; this one runs the real thing.
         //
-        // 1 MB is past any platform's pipe buffer (4 KB on Windows, 64 KB on Unix), so the old
+        // 256 KB is past any platform's pipe buffer (4 KB on Windows, 64 KB on Unix), so the old
         // sequential read deadlocks here regardless of where the suite runs.
         if (OperatingSystem.IsWindows())
         {
             Assert.Skip("Needs a shebang stub; Process.Start cannot launch a .cmd with UseShellExecute=false.");
         }
 
-        const int payloadBytes = 1024 * 1024;
+        const int payloadBytes = 256 * 1024;
         using var stub = ShellStub.WritingToStdErr(payloadBytes);
 
-        var probe = Task.Run(() => CrispAsrTtsProvenance.HelpTextProvider(stub.Path));
-        var finished = await Task.WhenAny(
-            probe,
-            Task.Delay(TimeSpan.FromSeconds(30), TestContext.Current.CancellationToken));
+        // The probe's own timeout would turn a slow drain on a loaded machine into a null result,
+        // which looks exactly like the deadlock (flaked locally at 15 s). The 30 s guard below is
+        // the deadlock detector here, so keep the product timeout out of its way.
+        var savedTimeout = CrispAsrTtsProvenance.HelpProbeTimeoutMs;
+        CrispAsrTtsProvenance.HelpProbeTimeoutMs = 120_000;
+        try
+        {
+            var probe = Task.Run(() => CrispAsrTtsProvenance.HelpTextProvider(stub.Path));
+            var finished = await Task.WhenAny(
+                probe,
+                Task.Delay(TimeSpan.FromSeconds(30), TestContext.Current.CancellationToken));
 
-        Assert.True(ReferenceEquals(finished, probe), "the --help probe deadlocked");
-        Assert.Equal(payloadBytes, (await probe)?.Length);
+            Assert.True(ReferenceEquals(finished, probe), "the --help probe deadlocked");
+            Assert.Equal(payloadBytes, (await probe)?.Length);
+        }
+        finally
+        {
+            CrispAsrTtsProvenance.HelpProbeTimeoutMs = savedTimeout;
+        }
     }
 }
 

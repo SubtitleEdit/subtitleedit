@@ -9,17 +9,40 @@ using System.Linq;
 
 namespace Nikse.SubtitleEdit.Logic;
 
+/// <summary>
+/// How to split the editable original text of a row along with its translation (#14434).
+/// </summary>
+/// <param name="TextIndex">
+/// Caret position in the original text, or -1 to auto-split the original on its own line break
+/// (or auto-break). The original never shares the translation's caret: the natural split point
+/// differs between the two languages.
+/// </param>
+/// <param name="LanguageCode">Two-letter language of the original; dialog-dash and auto-break rules depend on it.</param>
+public sealed record OriginalSplit(int TextIndex, string LanguageCode);
+
 public interface ISplitManager
 {
     void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, string languageCode);
     void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, double videoPositionSeconds, string languageCode);
     void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, double videoPositionSeconds, int textIndex, string languageCode);
     void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, int textIndex, string languageCode);
+
+    /// <summary>
+    /// Splits <paramref name="subtitle"/> and, when <paramref name="original"/> is given, its
+    /// <see cref="SubtitleLineViewModel.OriginalText"/> too. With null the original is copied
+    /// whole onto both halves, which is what a read-only reference wants.
+    /// </summary>
+    void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, double videoPositionSeconds, int textIndex, string languageCode, OriginalSplit? original);
 }
 
 public class SplitManager : ISplitManager
 {
     public void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, double videoPositionSeconds, int textIndex, string languageCode)
+    {
+        Split(subtitles, subtitle, videoPositionSeconds, textIndex, languageCode, original: null);
+    }
+
+    public void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, double videoPositionSeconds, int textIndex, string languageCode, OriginalSplit? original)
     {
         var idx = subtitles.IndexOf(subtitle);
         if (idx < 0 || idx >= subtitles.Count)
@@ -36,118 +59,19 @@ public class SplitManager : ISplitManager
             && videoPositionSeconds > subtitle.StartTime.TotalSeconds
             && videoPositionSeconds < subtitle.EndTime.TotalSeconds;
 
-        var text = subtitle.Text;
-        var lines = text.SplitToLines();
-        if (textIndex > 0 && textIndex <= subtitle.Text.Length)
+        var (firstText, secondText) = SplitText(subtitle.Text, textIndex, languageCode);
+        subtitle.Text = firstText;
+        newSubtitle.Text = secondText;
+
+        // An editable original is split by the same rules, at its own caret or on its own line
+        // break. Before #14434 the copy constructor above left the complete original on both
+        // halves, so every split desynchronized the two columns.
+        if (original != null && !string.IsNullOrEmpty(subtitle.OriginalText))
         {
-            subtitle.Text = text.Substring(0, textIndex).Trim();
-            newSubtitle.Text = text.Substring(textIndex).Trim();
-
-            if (lines.Count == 2)
-            {
-                var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, TwoLetterLanguageCode = languageCode };
-                if (dialogHelper.IsDialog(lines))
-                {
-                    subtitle.Text = DialogSplitMerge.RemoveStartDash(subtitle.Text);
-                    newSubtitle.Text = DialogSplitMerge.RemoveStartDash(newSubtitle.Text);
-                }
-            }
-
-            // SE 4 parity (#11245 follow-up): if either half ends up with a single line
-            // longer than the configured max, auto-break it. Cursor-split at the middle
-            // of a long single-line subtitle would otherwise leave a too-wide line.
-            subtitle.Text = AutoBreakIfTooLong(subtitle.Text, languageCode);
-            newSubtitle.Text = AutoBreakIfTooLong(newSubtitle.Text, languageCode);
+            var (firstOriginal, secondOriginal) = SplitText(subtitle.OriginalText, original.TextIndex, original.LanguageCode);
+            subtitle.OriginalText = firstOriginal;
+            newSubtitle.OriginalText = secondOriginal;
         }
-        else if (lines.Count == 2)
-        {
-            var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, TwoLetterLanguageCode = languageCode };
-            if (dialogHelper.IsDialog(lines))
-            {
-                newSubtitle.Text = lines[1].TrimStart(' ', DialogSplitMerge.GetDashChar(), DialogSplitMerge.GetAlternateDashChar()).Trim();
-                subtitle.Text = lines[0].TrimStart(' ', DialogSplitMerge.GetDashChar(), DialogSplitMerge.GetAlternateDashChar()).Trim();
-            }
-            else
-            {
-                newSubtitle.Text = lines[1].Trim();
-                subtitle.Text = lines[0].Trim();
-            }
-        }
-        else if (lines.Count > 2)
-        {
-            var splitIndex = lines.Count / 2;
-
-            if (lines.Count % 2 == 1) // odd number of lines
-            {
-                if (Se.Settings.Tools.SplitOddLinesAction == nameof(SplitOddLinesActionType.WeightTop))
-                {
-                    splitIndex = splitIndex + 1;
-                }
-                else if (Se.Settings.Tools.SplitOddLinesAction == nameof(SplitOddLinesActionType.WeightBottom))
-                {
-                    // no changes
-                }
-                else // SplitUnevenLineActionType.Smart
-                {
-                    var try1First = string.Join(Environment.NewLine, lines.GetRange(0, splitIndex + 1)).Trim();
-                    var try1Second = string.Join(Environment.NewLine, lines.GetRange(splitIndex + 1, lines.Count - (splitIndex + 1))).Trim();
-
-                    var try2First = string.Join(Environment.NewLine, lines.GetRange(0, splitIndex)).Trim();
-                    var try2Second = string.Join(Environment.NewLine, lines.GetRange(splitIndex, lines.Count - splitIndex)).Trim();
-
-                    if (try1First.EndsWith('.') && !try2First.EndsWith('.'))
-                    {
-                        splitIndex = splitIndex + 1;
-                    }
-                    else if (!try1First.EndsWith(".") && try2First.EndsWith('.'))
-                    {
-                        // no changes
-                    }
-                    else if (Math.Abs(try1First.Length - try1Second.Length) < Math.Abs(try2First.Length - try2Second.Length))
-                    {
-                        splitIndex = splitIndex + 1;
-                    }
-                }
-            }
-
-            subtitle.Text = string.Join(Environment.NewLine, lines.GetRange(0, splitIndex)).Trim();
-            newSubtitle.Text = string.Join(Environment.NewLine, lines.GetRange(splitIndex, lines.Count - splitIndex)).Trim();
-        }
-        else
-        {
-            var brokenLines = Utilities.AutoBreakLine(text, Se.Settings.General.SubtitleLineMaximumLength, 0, languageCode).SplitToLines();
-            if (brokenLines.Count == 2)
-            {
-                subtitle.Text = brokenLines[0].Trim();
-                newSubtitle.Text = brokenLines[1].Trim();
-            }
-            else
-            {
-                subtitle.Text = text;
-                newSubtitle.Text = string.Empty;
-            }
-        }
-
-        // SE 4 parity (#12195): "Split line at cursor" applies the configured continuation
-        // style (e.g. "Ellipses (trailing only)") to the halves - a trailing ellipsis on
-        // the first line, and a leading marker on the second for leading styles - instead
-        // of a clean cut.
-        if (!string.IsNullOrWhiteSpace(subtitle.Text)
-            && !string.IsNullOrWhiteSpace(newSubtitle.Text)
-            && Enum.TryParse<ContinuationStyle>(Se.Settings.General.ContinuationStyle, out var continuationStyle)
-            && continuationStyle != ContinuationStyle.None)
-        {
-            var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
-            if (ContinuationUtilities.ShouldAddSuffix(subtitle.Text, continuationProfile))
-            {
-                subtitle.Text = ContinuationUtilities.AddSuffixIfNeeded(subtitle.Text, continuationProfile, false);
-                newSubtitle.Text = ContinuationUtilities.AddPrefixIfNeeded(newSubtitle.Text, continuationProfile, false);
-            }
-        }
-
-        var (s1, s2) = FixTags(subtitle.Text, newSubtitle.Text);
-        subtitle.Text = s1;
-        newSubtitle.Text = s2;
 
         // Time split — done AFTER the text split so we can weight the divide point
         // by the resulting text-length ratio when no user video position was given.
@@ -229,6 +153,127 @@ public class SplitManager : ISplitManager
         newSubtitle.SetStartTimeOnly(TimeSpan.FromMilliseconds(newSubtitleStartMs));
 
         subtitles.Insert(idx + 1, newSubtitle);
+    }
+
+    /// <summary>
+    /// Splits one text into two halves: at <paramref name="textIndex"/> when it is inside the
+    /// text, otherwise on the line break (two lines), a weighted line count (more), or an
+    /// auto-break (one line). Dialog dashes, continuation style and tag balancing are applied
+    /// the same way for the translation and the original.
+    /// </summary>
+    private static (string First, string Second) SplitText(string text, int textIndex, string languageCode)
+    {
+        var first = text;
+        var second = string.Empty;
+        var lines = text.SplitToLines();
+        if (textIndex > 0 && textIndex <= text.Length)
+        {
+            first = text.Substring(0, textIndex).Trim();
+            second = text.Substring(textIndex).Trim();
+
+            if (lines.Count == 2)
+            {
+                var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, TwoLetterLanguageCode = languageCode };
+                if (dialogHelper.IsDialog(lines))
+                {
+                    first = DialogSplitMerge.RemoveStartDash(first);
+                    second = DialogSplitMerge.RemoveStartDash(second);
+                }
+            }
+
+            // SE 4 parity (#11245 follow-up): if either half ends up with a single line
+            // longer than the configured max, auto-break it. Cursor-split at the middle
+            // of a long single-line subtitle would otherwise leave a too-wide line.
+            first = AutoBreakIfTooLong(first, languageCode);
+            second = AutoBreakIfTooLong(second, languageCode);
+        }
+        else if (lines.Count == 2)
+        {
+            var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, TwoLetterLanguageCode = languageCode };
+            if (dialogHelper.IsDialog(lines))
+            {
+                second = lines[1].TrimStart(' ', DialogSplitMerge.GetDashChar(), DialogSplitMerge.GetAlternateDashChar()).Trim();
+                first = lines[0].TrimStart(' ', DialogSplitMerge.GetDashChar(), DialogSplitMerge.GetAlternateDashChar()).Trim();
+            }
+            else
+            {
+                second = lines[1].Trim();
+                first = lines[0].Trim();
+            }
+        }
+        else if (lines.Count > 2)
+        {
+            var splitIndex = lines.Count / 2;
+
+            if (lines.Count % 2 == 1) // odd number of lines
+            {
+                if (Se.Settings.Tools.SplitOddLinesAction == nameof(SplitOddLinesActionType.WeightTop))
+                {
+                    splitIndex = splitIndex + 1;
+                }
+                else if (Se.Settings.Tools.SplitOddLinesAction == nameof(SplitOddLinesActionType.WeightBottom))
+                {
+                    // no changes
+                }
+                else // SplitUnevenLineActionType.Smart
+                {
+                    var try1First = string.Join(Environment.NewLine, lines.GetRange(0, splitIndex + 1)).Trim();
+                    var try1Second = string.Join(Environment.NewLine, lines.GetRange(splitIndex + 1, lines.Count - (splitIndex + 1))).Trim();
+
+                    var try2First = string.Join(Environment.NewLine, lines.GetRange(0, splitIndex)).Trim();
+                    var try2Second = string.Join(Environment.NewLine, lines.GetRange(splitIndex, lines.Count - splitIndex)).Trim();
+
+                    if (try1First.EndsWith('.') && !try2First.EndsWith('.'))
+                    {
+                        splitIndex = splitIndex + 1;
+                    }
+                    else if (!try1First.EndsWith(".") && try2First.EndsWith('.'))
+                    {
+                        // no changes
+                    }
+                    else if (Math.Abs(try1First.Length - try1Second.Length) < Math.Abs(try2First.Length - try2Second.Length))
+                    {
+                        splitIndex = splitIndex + 1;
+                    }
+                }
+            }
+
+            first = string.Join(Environment.NewLine, lines.GetRange(0, splitIndex)).Trim();
+            second = string.Join(Environment.NewLine, lines.GetRange(splitIndex, lines.Count - splitIndex)).Trim();
+        }
+        else
+        {
+            var brokenLines = Utilities.AutoBreakLine(text, Se.Settings.General.SubtitleLineMaximumLength, 0, languageCode).SplitToLines();
+            if (brokenLines.Count == 2)
+            {
+                first = brokenLines[0].Trim();
+                second = brokenLines[1].Trim();
+            }
+            else
+            {
+                first = text;
+                second = string.Empty;
+            }
+        }
+
+        // SE 4 parity (#12195): "Split line at cursor" applies the configured continuation
+        // style (e.g. "Ellipses (trailing only)") to the halves - a trailing ellipsis on
+        // the first line, and a leading marker on the second for leading styles - instead
+        // of a clean cut.
+        if (!string.IsNullOrWhiteSpace(first)
+            && !string.IsNullOrWhiteSpace(second)
+            && Enum.TryParse<ContinuationStyle>(Se.Settings.General.ContinuationStyle, out var continuationStyle)
+            && continuationStyle != ContinuationStyle.None)
+        {
+            var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
+            if (ContinuationUtilities.ShouldAddSuffix(first, continuationProfile))
+            {
+                first = ContinuationUtilities.AddSuffixIfNeeded(first, continuationProfile, false);
+                second = ContinuationUtilities.AddPrefixIfNeeded(second, continuationProfile, false);
+            }
+        }
+
+        return FixTags(first, second);
     }
 
     // Strip HTML/ASSA tags and ALL line-break variants for length measurement.

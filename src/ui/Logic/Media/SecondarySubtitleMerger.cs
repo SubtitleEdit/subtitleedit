@@ -16,8 +16,11 @@ public static class SecondarySubtitleMerger
     /// the secondary subtitle tiny for WebVTT mains (PlayResY = video height) and huge
     /// for ASSA mains with a small PlayResY (issue #13425), so resample it to the
     /// target's scale first.
+    /// The secondary subtitle is shared between refreshes and is only ever read, so its
+    /// paragraphs are added by reference - except in SMPTE mode, where the stretch the main
+    /// subtitle already got has to apply to them too, and so goes onto a copy.
     /// </summary>
-    public static void AddSecondarySubtitle(Subtitle subtitle, Subtitle? subtitleSecondary)
+    public static void AddSecondarySubtitle(Subtitle subtitle, Subtitle? subtitleSecondary, bool smpteMode)
     {
         if (subtitleSecondary == null)
         {
@@ -49,7 +52,7 @@ public static class SecondarySubtitleMerger
         subtitle.Header = AdvancedSubStationAlpha.AddSsaStyle(style, subtitle.Header);
         foreach (var p in subtitleSecondary.Paragraphs)
         {
-            subtitle.Paragraphs.Add(p);
+            subtitle.Paragraphs.Add(smpteMode ? SmptePreviewStretch.Stretched(p) : p);
         }
     }
 

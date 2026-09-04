@@ -15,4 +15,13 @@
       <supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}" />
     </application>
   </compatibility>
+
+  <!-- Opt in to Windows long paths (> 260 chars). The native players (libmpv, libvlc) open
+       media through the Win32 file APIs, which honor long paths only when the host exe
+       declares this and the LongPathsEnabled registry value is set (#14407). -->
+  <application xmlns="urn:schemas-microsoft-com:asm.v3">
+    <windowsSettings xmlns:ws2="http://schemas.microsoft.com/SMI/2016/WindowsSettings">
+      <ws2:longPathAware>true</ws2:longPathAware>
+    </windowsSettings>
+  </application>
 </assembly>

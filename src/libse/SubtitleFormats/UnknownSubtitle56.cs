@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -19,9 +20,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var sb = new StringBuilder();
             const string format = "{0:0000}\t{1}\t{2}";
+            var count = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format(format, 1, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime)));
+                sb.AppendLine(string.Format(CultureInfo.InvariantCulture, format, count, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime)));
+                count++;
                 sb.AppendLine(HtmlUtil.RemoveHtmlTags(p.Text));
                 sb.AppendLine();
             }

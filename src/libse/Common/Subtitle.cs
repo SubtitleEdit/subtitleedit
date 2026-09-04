@@ -612,7 +612,16 @@ namespace Nikse.SubtitleEdit.Core.Common
             if (p.GetCharactersPerSecond() > maxCharactersPerSecond)
             {
                 var numberOfCharacters = (double)p.Text.CountCharacters(true);
-                var maxDurationMilliseconds = (numberOfCharacters / maxCharactersPerSecond) * 1000.0;
+                // Whole milliseconds, rounded up: the fractional value truncates on save to one ms
+                // short, which is just over the maximum this branch exists to enforce (#14418).
+                // Verified with the same division GetCharactersPerSecond performs rather than a
+                // plain Math.Ceiling, so binary-fraction noise does not add a needless millisecond.
+                var maxDurationMilliseconds = Math.Floor(numberOfCharacters / maxCharactersPerSecond * 1000.0);
+                if (numberOfCharacters / (maxDurationMilliseconds / 1000.0) > maxCharactersPerSecond)
+                {
+                    maxDurationMilliseconds += 1;
+                }
+
                 p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + maxDurationMilliseconds;
             }
 

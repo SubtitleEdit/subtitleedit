@@ -29,9 +29,12 @@ public static class TtsPostProcessor
             if (doProChain)
             {
                 var proChainOutput = Path.Combine(waveFolder, $"pro_{Guid.NewGuid()}.wav");
+                // The chain's noise gate opens relative to the clip's peak, not at a fixed
+                // -40 dBFS that gated the word endings of quiet voice-clone output (#14480).
+                var peakDbfs = await TtsSilenceThreshold.MeasurePeakDbfsAsync(currentFile, cancellationToken);
                 // One ffmpeg per stage per LINE - a 900-line dub with every stage on created
                 // thousands of undisposed processes. PerLineVoiceClone uses "using var" too.
-                using var proProcess = FfmpegGenerator.ApplyProAudioChain(currentFile, proChainOutput);
+                using var proProcess = FfmpegGenerator.ApplyProAudioChain(currentFile, proChainOutput, TtsSilenceThreshold.Amplitude(peakDbfs));
                 await proProcess.StartAndWaitAsync(cancellationToken);
 
                 currentFile = AdoptStageOutput(currentFile, proChainOutput, "pro audio chain");

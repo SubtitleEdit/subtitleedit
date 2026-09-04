@@ -32,6 +32,7 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
     [ObservableProperty] private Color _subtitleColor;
     [ObservableProperty] private FontBoxItem _selectedFontBoxType;
     [ObservableProperty] private int _fontSize;
+    [ObservableProperty] private bool _fontBold;
     [ObservableProperty] private ObservableCollection<SubtitleDisplayItem> _paragraphs;
     [ObservableProperty] private int _selectedParagraphIndex = -1;
     [ObservableProperty] private AlignmentItem _selectedFontAlignment;
@@ -67,6 +68,7 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
         _windowService = windowService;
 
         SubtitleColor = Colors.White;
+        FontBold = Se.Settings.Video.MpvPreviewFontBold;
         FontBoxTypes = new ObservableCollection<FontBoxItem>
         {
             new(FontBoxType.None, Se.Language.General.None),
@@ -285,8 +287,11 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
         var style = new SsaStyle
         {
             Name = _styleName,
-            FontName = "Arial",
+            // Follow the main preview's font (issue #13492): a hardcoded Arial showed a
+            // sans-serif secondary under a serif main whenever the preview font was changed.
+            FontName = Se.Settings.Video.MpvPreviewFontName,
             FontSize = FontSize,
+            Bold = FontBold,
             Primary = SubtitleColor.ToSKColor(),
             Outline = Colors.Black.ToSKColor(),
             Background = Colors.Black.ToSKColor(),
@@ -334,6 +339,7 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
             else
             {
                 var defaultStyle = AdvancedSubStationAlpha.GetSsaStyle("Default", result.Header);
+                defaultStyle.FontName = Se.Settings.Video.MpvPreviewFontName;
                 defaultStyle.FontSize = AssaResampler.Resample(AdvancedSubStationAlpha.DefaultHeight, height, Se.Settings.Video.MpvPreviewFontSize);
                 defaultStyle.Bold = Se.Settings.Video.MpvPreviewFontBold;
                 result.Header = AdvancedSubStationAlpha.UpdateOrAddStyle(result.Header, defaultStyle);

@@ -126,15 +126,63 @@ public class VoiceCloningConsentTests
         Assert.False(VoiceCloningConsent.IsCloneVoice(null));
     }
 
+    [Fact]
+    public void IsCloneVoice_RecognisesEveryCloningEngineInTheCatalog()
+    {
+        // The voice types share no interface, so IsCloneVoice is a hand-kept list. An engine
+        // whose voice type is missing from it clones silently: import still asks, but a reference
+        // WAV dropped into the voices folder by hand, or imported before the gate existed, is
+        // never asked about at synthesis. Confucius4-TTS and Pocket TTS shipped that way.
+        foreach (var engine in TtsEngineCatalog.CreateVoiceCloningEngines())
+        {
+            Assert.True(
+                CloneVoiceByEngine.TryGetValue(engine.GetType(), out var makeCloneVoice),
+                $"{engine.GetType().Name} is a cloning engine with no entry in {nameof(CloneVoiceByEngine)} - add its voice type there and to VoiceCloningConsent.IsCloneVoice");
+
+            var engineVoice = makeCloneVoice();
+            Assert.True(
+                VoiceCloningConsent.IsCloneVoice(new Voice(engineVoice)),
+                $"{engine.GetType().Name}'s clone voice type {engineVoice.GetType().Name} is not recognised by VoiceCloningConsent.IsCloneVoice");
+        }
+    }
+
+    /// <summary>
+    /// How each engine in <see cref="TtsEngineCatalog.CreateVoiceCloningEngines"/> represents a
+    /// voice cloned from a reference recording - the same constructor call its GetVoices makes
+    /// for a WAV found in its voices folder.
+    /// </summary>
+    private static readonly Dictionary<Type, Func<object>> CloneVoiceByEngine = new()
+    {
+        [typeof(ChatterboxTtsCpp)] = () => new ChatterboxVoice("Ada", "/voices/ada.wav"),
+        [typeof(Confucius4TtsCrispAsr)] = () => new Confucius4TtsVoice("Ada", "/voices/ada.wav"),
+        [typeof(CosyVoice3CrispAsr)] = () => new CosyVoice3Voice("Ada", "/voices/ada.wav", string.Empty),
+        [typeof(DotsTtsCrispAsr)] = () => new DotsTtsVoice("Ada", "/voices/ada.wav"),
+        [typeof(FishTtsAudioCpp)] = () => new IndexTtsVoice("Ada", "/voices/ada.wav"),
+        [typeof(HiggsTtsAudioCpp)] = () => new IndexTtsVoice("Ada", "/voices/ada.wav"),
+        [typeof(IndexTts25AudioCpp)] = () => new IndexTtsVoice("Ada", "/voices/ada.wav"),
+        [typeof(IndexTtsCrispAsr)] = () => new IndexTtsVoice("Ada", "/voices/ada.wav"),
+        [typeof(MossTtsCrispAsr)] = () => new MossTtsVoice("Ada", "/voices/ada.wav"),
+        [typeof(OmniVoiceCrispAsr)] = () => new OmniVoiceCrispAsrVoice("Ada", "/voices/ada.wav"),
+        [typeof(OmniVoiceTtsCpp)] = () => new OmniVoice("Ada", "/voices/ada.wav"),
+        [typeof(PocketTtsCrispAsr)] = () => new PocketTtsVoice("Ada", "/voices/ada.wav"),
+        [typeof(Qwen3TtsCrispAsr)] = () => new Qwen3TtsVoice("Ada", "/voices/ada.wav"),
+        [typeof(VibeVoiceCrispAsr)] = () => new VibeVoice("Ada", "/voices/ada.wav"),
+        [typeof(VoxCPM2CrispAsr)] = () => new VoxCPM2Voice("Ada", "/voices/ada.wav"),
+        [typeof(ZonosTtsCrispAsr)] = () => new ZonosTtsVoice("Ada", "/voices/ada.wav"),
+    };
+
     public static TheoryData<object> CloneVoices() => new()
     {
         new ChatterboxVoice("Ada", "/voices/ada.wav"),
+        new Confucius4TtsVoice("Ada", "/voices/ada.wav"),
         new CosyVoice3Voice("Ada", "/voices/ada.wav", string.Empty),
+        new DotsTtsVoice("Ada", "/voices/ada.wav"),
         new F5TtsVoice("Ada", "/voices/ada.wav"),
         new IndexTtsVoice("Ada", "/voices/ada.wav"),
         new MossTtsVoice("Ada", "/voices/ada.wav"),
         new OmniVoice("Ada", "/voices/ada.wav"),
         new OmniVoiceCrispAsrVoice("Ada", "/voices/ada.wav"),
+        new PocketTtsVoice("Ada", "/voices/ada.wav"),
         new Qwen3TtsVoice("Ada", "/voices/ada.wav"),
         new VibeVoice("Ada", "/voices/ada.wav"),
         new VoxCPM2Voice("Ada", "/voices/ada.wav"),
@@ -144,12 +192,15 @@ public class VoiceCloningConsentTests
     public static TheoryData<object> PresetVoices() => new()
     {
         new ChatterboxVoice(),
+        new Confucius4TtsVoice(),
         new CosyVoice3Voice(),
+        new DotsTtsVoice(),
         new F5TtsVoice(),
         new IndexTtsVoice(),
         new MossTtsVoice(),
         new OmniVoice(),
         new OmniVoiceCrispAsrVoice(),
+        new PocketTtsVoice(),
         new Qwen3TtsVoice(),
         new VibeVoice(),
         new VoxCPM2Voice(),

@@ -92,6 +92,8 @@ public class LanguageSettingsShortcuts
     public string MoveFirstWordFromNextLineUpCurrentSubtitle { get; set; }
     public string MoveTextFromCursorToNextAndGoToNext { get; set; }
     public string MoveTextFromCursorToNextAndGoToNextAndPlay { get; set; }
+    public string BreakAtFirstSpaceFromCursor { get; set; }
+    public string BreakAtFirstSpaceFromCursorAndGoToNext { get; set; }
     public string ToggleFocusGridAndWaveform { get; set; }
     public string ToggleFocusTextBoxAndWaveform { get; set; }
     public string ToggleFocusTextBoxAndGrid { get; set; }
@@ -183,6 +185,7 @@ public class LanguageSettingsShortcuts
     public string SeekSilenceBack { get; set; }
     public string SeekSilenceForward { get; set; }
     public string WaveformGuessStart { get; set; }
+    public string WaveformGuessEnd { get; set; }
     public string SetVideoPositionCurrentSubtitleStart { get; set; }
     public string GoToSubtitlePositionAndPause { get; set; }
     public string SetVideoPositionCurrentSubtitleEnd { get; set; }
@@ -369,6 +372,8 @@ public class LanguageSettingsShortcuts
         MoveFirstWordFromNextLineUpCurrentSubtitle = "Move first word from next line up (current subtitle)";
         MoveTextFromCursorToNextAndGoToNext = "Move text after cursor position to next subtitle and go to next";
         MoveTextFromCursorToNextAndGoToNextAndPlay = "Move text after cursor position to next subtitle, go to next and play";
+        BreakAtFirstSpaceFromCursor = "Break at first space from cursor position";
+        BreakAtFirstSpaceFromCursorAndGoToNext = "Break at first space from cursor position and go to next";
         ToggleFocusGridAndWaveform = "Toggle focus between subtitle grid and waveform/spectrogram";
         ToggleFocusTextBoxAndWaveform = "Toggle focus between text box and waveform/spectrogram";
         ToggleFocusTextBoxAndGrid = "Toggle focus between text box and subtitle grid";
@@ -460,6 +465,7 @@ public class LanguageSettingsShortcuts
         SeekSilenceBack = "Seek silence back";
         SeekSilenceForward = "Seek silence forward";
         WaveformGuessStart = "Guess start time from waveform";
+        WaveformGuessEnd = "Guess end time from waveform";
         SetVideoPositionCurrentSubtitleStart = "Set video position to current line start";
         GoToSubtitlePositionAndPause = "Go to sub position and pause";
         SetVideoPositionCurrentSubtitleEnd = "Set video position to current line end";

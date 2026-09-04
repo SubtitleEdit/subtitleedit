@@ -21,6 +21,7 @@ public class CrispAsrArk : CrispAsrEngineBase
     public override List<WhisperLanguage> Languages =>
         new()
         {
+            new WhisperLanguage("auto", "Auto detect"),
             new WhisperLanguage("zh", "chinese"),
             new WhisperLanguage("en", "english"),
             new WhisperLanguage("de", "german"),

@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace LibSETests.SubtitleFormats;
@@ -51,6 +51,46 @@ public class DvbTeletextTest
         {
             File.Delete(fileName);
         }
+    }
+
+    [Fact]
+    public void SaveAndLoadRoundTripsTheHearingImpairedType()
+    {
+        var subtitle = new Subtitle();
+        subtitle.Paragraphs.Add(new Paragraph("Hello", 1000, 3000));
+        subtitle.Header = DvbTeletext.CreateHeader(777, "fre", hearingImpaired: true);
+
+        var format = new DvbTeletext();
+        var fileName = WriteTempFile(subtitle, format);
+        try
+        {
+            var loaded = new Subtitle();
+            new DvbTeletext().LoadSubtitle(loaded, null, fileName);
+
+            Assert.True(DvbTeletext.TryParseHeader(loaded.Header, out var page, out var language, out var hearingImpaired));
+            Assert.Equal(777, page);
+            Assert.Equal("fre", language);
+            Assert.True(hearingImpaired);
+        }
+        finally
+        {
+            File.Delete(fileName);
+        }
+    }
+
+    [Fact]
+    public void PlainSubtitleHeaderKeepsItsOldShape()
+    {
+        // Headers written before the subtitle type existed have no type attribute - and a
+        // plain subtitle page still writes none, so old and new headers stay byte-identical.
+        Assert.Equal(DvbTeletext.CreateHeader(888, "eng"), DvbTeletext.CreateHeader(888, "eng", hearingImpaired: false));
+        Assert.Equal("<dvbteletext page=\"888\" language=\"eng\" />", DvbTeletext.CreateHeader(888, "eng"));
+
+        Assert.True(DvbTeletext.TryParseHeader("<dvbteletext page=\"888\" language=\"eng\" />", out _, out _, out var hearingImpaired));
+        Assert.False(hearingImpaired);
+
+        Assert.True(DvbTeletext.TryParseHeader(DvbTeletext.CreateHeader(888, "eng", hearingImpaired: true), out _, out _, out hearingImpaired));
+        Assert.True(hearingImpaired);
     }
 
     [Fact]

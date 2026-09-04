@@ -4,6 +4,9 @@ Extract hardcoded (burned-in) subtitles from a video into editable text lines us
 
 - **Menu:** Video → OCR burned-in subtitle...
 
+<!-- Screenshot: Video OCR window -->
+![Video OCR](../screenshots/video-ocr.png)
+
 ## How to Use
 
 1. Open **Video → OCR burned-in subtitle...** (a video file is required)

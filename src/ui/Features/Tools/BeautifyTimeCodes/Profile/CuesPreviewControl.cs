@@ -3,6 +3,7 @@ using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
@@ -30,12 +31,12 @@ public sealed class CuesPreviewControl : Control
 
     // Render() is called on every NUD change; cache the brushes / typeface
     // once instead of allocating fresh ones each draw.
-    private static readonly IBrush BackgroundBrush = new SolidColorBrush(Color.FromRgb(168, 168, 168));
-    private static readonly IBrush GreenBrush = new SolidColorBrush(Color.FromRgb(0, 110, 0));
-    private static readonly IBrush RedBrush = new SolidColorBrush(Color.FromRgb(178, 34, 34));
-    private static readonly IBrush ParagraphBrush = new SolidColorBrush(Color.FromArgb(180, 0, 0, 0));
-    private static readonly IBrush TextBrush = new SolidColorBrush(Colors.White);
-    private static readonly IBrush ShotChangeBrush = new SolidColorBrush(Color.FromRgb(152, 251, 152));
+    private static readonly IBrush BackgroundBrush = new ImmutableSolidColorBrush(Color.FromRgb(168, 168, 168));
+    private static readonly IBrush GreenBrush = new ImmutableSolidColorBrush(Color.FromRgb(0, 110, 0));
+    private static readonly IBrush RedBrush = new ImmutableSolidColorBrush(Color.FromRgb(178, 34, 34));
+    private static readonly IBrush ParagraphBrush = new ImmutableSolidColorBrush(Color.FromArgb(180, 0, 0, 0));
+    private static readonly IBrush TextBrush = new ImmutableSolidColorBrush(Colors.White);
+    private static readonly IBrush ShotChangeBrush = new ImmutableSolidColorBrush(Color.FromRgb(152, 251, 152));
     private static readonly Typeface LabelTypeface = new Typeface(FontFamily.Default);
 
     public double FrameRate { get => _frameRate; set { _frameRate = value; InvalidateVisual(); } }

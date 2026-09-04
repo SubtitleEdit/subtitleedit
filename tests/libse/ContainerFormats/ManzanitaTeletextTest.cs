@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 
 namespace LibSETests.ContainerFormats;
@@ -210,6 +210,70 @@ public class ManzanitaTeletextTest
         var pages = WriteAndRead(subtitle, 801);
 
         Assert.Equal(new[] { 801 }, pages.Keys.ToArray());
+    }
+
+    [Theory]
+    [InlineData(false, ManzanitaTransportStreamParser.TeletextTypeSubtitle)]
+    [InlineData(true, ManzanitaTransportStreamParser.TeletextTypeHearingImpaired)]
+    public void SubtitleTypeIsWrittenToTheDescriptorAndReadBack(bool hearingImpaired, string expectedType)
+    {
+        var subtitle = MakeSubtitle(new Paragraph("Typed", 1000, 3000));
+        var writer = new ManzanitaTeletextWriter { PageNumber = 888, LanguageCode = "fre", HearingImpaired = hearingImpaired, Date = new DateTime(2026, 1, 1) };
+        var bytes = writer.GetBytes(subtitle);
+
+        var preamble = System.Text.Encoding.ASCII.GetString(bytes, 0, Math.Min(bytes.Length, 3000));
+        Assert.Contains("teletext_type=\"" + expectedType + "\"", preamble);
+
+        var parser = new ManzanitaTransportStreamParser();
+        using var ms = new MemoryStream(bytes);
+        parser.Parse(ms);
+
+        Assert.Equal(hearingImpaired, parser.IsHearingImpaired);
+        Assert.Equal("fre", parser.LanguageCode);
+        var entry = Assert.Single(parser.TeletextDescriptors);
+        Assert.Equal(888, entry.PageNumber);
+        Assert.Equal(hearingImpaired, entry.IsHearingImpaired);
+        Assert.Equal(hearingImpaired, parser.GetTeletextDescriptor(888)!.IsHearingImpaired);
+    }
+
+    [Fact]
+    public void DescriptorEntriesAreReadPerPage()
+    {
+        // The shape of a broadcaster's dump carrying a subtitle page and a hearing impaired page
+        // in one file: magazine 1, BCD page bytes 0x89 (137 decimal) and 0x88 (136) - pages 189 and 188.
+        const string preamble = "<private_stream_1\n" +
+            "  xmlns=\"http://www.manzanitasystems.com/schema/v1.03/private_stream_1\"\n" +
+            "  version=\"1.03\"\n" +
+            "  type=\"dvb_teletext\">\n" +
+            "  <preamble>\n" +
+            "    <descriptors>\n" +
+            "      <dvb_teletext_descriptor>\n" +
+            "        <dvb_teletext_content ISO_639_language_code=\"fre\" teletext_type=\"subtitle\" teletext_magazine_number=\"1\" teletext_page_number=\"137\" />\n" +
+            "        <dvb_teletext_content ISO_639_language_code=\"fre\" teletext_type=\"subtitle_for_hearing_impaired\" teletext_magazine_number=\"1\" teletext_page_number=\"136\" />\n" +
+            "      </dvb_teletext_descriptor>\n" +
+            "    </descriptors>\n" +
+            "  </preamble>\n" +
+            "  <data_index>\n" +
+            "  </data_index>\n" +
+            "</private_stream_1>\n";
+
+        var parser = new ManzanitaTransportStreamParser();
+        using var ms = new MemoryStream(System.Text.Encoding.ASCII.GetBytes(preamble));
+        parser.Parse(ms);
+
+        Assert.Equal(2, parser.TeletextDescriptors.Count);
+        Assert.Equal(189, parser.TeletextDescriptors[0].PageNumber);
+        Assert.False(parser.TeletextDescriptors[0].IsHearingImpaired);
+        Assert.Equal(188, parser.TeletextDescriptors[1].PageNumber);
+        Assert.True(parser.TeletextDescriptors[1].IsHearingImpaired);
+        Assert.Equal("fre", parser.TeletextDescriptors[1].LanguageCode);
+
+        Assert.True(parser.GetTeletextDescriptor(188)!.IsHearingImpaired);
+        Assert.False(parser.GetTeletextDescriptor(189)!.IsHearingImpaired);
+
+        // A page no entry names falls back to the first entry, like the language always did.
+        Assert.Equal(189, parser.GetTeletextDescriptor(888)!.PageNumber);
+        Assert.False(parser.IsHearingImpaired);
     }
 
     [Fact]

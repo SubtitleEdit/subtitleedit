@@ -1045,6 +1045,11 @@ public class PerfHuntRound17Benchmarks
     private static List<byte> NewEbuEncode(string[] lines, Encoding encoding)
     {
         var textBytes = new List<byte>();
+
+        // Allocated once outside the loops - a stackalloc per character would grow the frame
+        // for every character in the file (CA2014).
+        Span<char> chars = stackalloc char[1];
+        Span<byte> bytes = stackalloc byte[8];
         foreach (var line in lines)
         {
             var i = 0;
@@ -1107,9 +1112,7 @@ public class PerfHuntRound17Benchmarks
                     }
                     else
                     {
-                        Span<char> chars = stackalloc char[1];
                         chars[0] = ch;
-                        Span<byte> bytes = stackalloc byte[8];
                         var count = encoding.GetBytes(chars, bytes);
                         for (var k = 0; k < count; k++)
                         {

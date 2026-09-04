@@ -46,6 +46,7 @@ Metadata rules:
 
 - **Bookmarked** — Line has a bookmark
 - **Bookmark contains** — Bookmark text contains the entered string
+- **Forced** — Line is marked as forced narrative
 - **Style** — Line uses one of the checked styles (list built from the styles present in the file; ASSA subtitles)
 - **Actor** — Line has one of the checked actors
 

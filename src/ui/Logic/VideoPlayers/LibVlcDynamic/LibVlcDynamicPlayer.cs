@@ -659,7 +659,10 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayer
                 return;
             }
 
-            var media = _libvlc_media_new_path(_libVlc, GetUtf8Bytes(path));
+            // libvlc opens the file with the path as given, so a plain path past MAX_PATH
+            // fails silently on Windows (#14407). VLC cannot take the "\\?\" prefix (it
+            // reads it as a UNC host), so long paths are handed over in 8.3 short form.
+            var media = _libvlc_media_new_path(_libVlc, GetUtf8Bytes(NativeMediaPath.ForVlc(path)));
 
             // Parse media to get duration and metadata (0x00 = parse local, timeout in ms)
             try

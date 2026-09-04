@@ -26,7 +26,8 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// output.
 ///
 /// Like the other audio.cpp engines, the server honours a per-request <c>voice_ref</c>, so
-/// switching voice does NOT restart the server — only a model or backend change does. The
+/// switching voice does NOT restart the server — only a model or backend change does — which
+/// is also what makes per-line cloning ("Clone from video") free here. The
 /// model auto-handles the language of the input text, so there is no language combo. A
 /// <c>.txt</c> sidecar next to the reference WAV (the transcript convention the other cloning
 /// engines share) is passed as <c>reference_text</c>, which improves clone fidelity but is
@@ -36,7 +37,7 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// the Fish Audio Research License (research and non-commercial), which has to be accepted by
 /// the user before the first download — see <see cref="IsLicenseAccepted"/>.
 /// </summary>
-public class FishTtsAudioCpp : ITtsEngine
+public class FishTtsAudioCpp : ITtsEngine, IPerLineCloneEngine
 {
     public string Name => "Fish Audio S2 Pro (audio.cpp)";
     public string Description => "Fish Audio S2 Pro voice cloning in 80+ languages, via audio.cpp";
@@ -46,7 +47,7 @@ public class FishTtsAudioCpp : ITtsEngine
     public bool HasModel => true;
     public bool HasKeyFile => false;
     public bool SupportsVoiceCloning => true;
-    public bool SupportsPerLineVoiceCloning => false;
+    public bool SupportsPerLineVoiceCloning => true;
 
     // Q8_0 is the default: same 44.1 kHz output as BF16 at 3.6 GB less on disk.
     public const string ModelKeyQ8_0 = "Q8_0 (~5.9 GB)";
@@ -348,6 +349,33 @@ public class FishTtsAudioCpp : ITtsEngine
 
     public Task<Voice[]> RefreshVoices(string language, CancellationToken cancellationToken) =>
         GetVoices(language);
+
+    /// <summary>
+    /// <see cref="IPerLineCloneEngine"/>: the server takes <c>voice_ref</c> as a path per request,
+    /// so the voice simply points at the cut clip - nothing is staged into this engine's own
+    /// folders. audio.cpp resamples the reference itself, so the 24 kHz clip is used as cut.
+    /// S2 Pro refuses to clone without <c>reference_text</c> (see <see cref="Speak"/>), so a clip
+    /// with no transcript beside it is no reference at all: null, and the caller falls back to
+    /// an ordinary voice for that line instead of the run failing on it.
+    /// </summary>
+    public Voice? MakePerLineCloneVoice(string clipFileName, string voiceName) =>
+        string.IsNullOrWhiteSpace(ChatterboxTtsCpp.TryReadReferenceTranscript(clipFileName))
+            ? null
+            : new Voice(new IndexTtsVoice(voiceName, clipFileName));
+
+    /// <summary>The clip's own path, which is exactly what the voice carries.</summary>
+    public string? GetPerLineReferenceClip(Voice voice) =>
+        voice.EngineVoice is IndexTtsVoice indexVoice && !string.IsNullOrEmpty(indexVoice.FilePath)
+            ? indexVoice.FilePath
+            : null;
+
+    /// <summary>
+    /// <see cref="IPerLineCloneEngine"/>: nothing is ever staged (the voice points straight at
+    /// the clip), so there is nothing to clear between runs.
+    /// </summary>
+    public void ResetStagedPerLineReferences()
+    {
+    }
 
     public async Task<TtsResult> Speak(
         string text,

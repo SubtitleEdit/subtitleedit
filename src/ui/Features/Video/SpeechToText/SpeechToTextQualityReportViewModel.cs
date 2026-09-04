@@ -1,6 +1,7 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic;
@@ -47,13 +48,13 @@ public partial class SpeechToTextQualityReportViewModel : ObservableObject
 
     private readonly List<QualityReportDisplayItem> _allItems = new();
 
-    public static readonly IBrush TooShortBrush = new SolidColorBrush(Color.Parse("#E8912D"));
-    public static readonly IBrush TooLongBrush = new SolidColorBrush(Color.Parse("#9B59B6"));
-    public static readonly IBrush OverlapBrush = new SolidColorBrush(Color.Parse("#E74C3C"));
-    public static readonly IBrush NonSpeechBrush = new SolidColorBrush(Color.Parse("#3498DB"));
-    public static readonly IBrush RepeatedBrush = new SolidColorBrush(Color.Parse("#1ABC9C"));
-    public static readonly IBrush RemovedBrush = new SolidColorBrush(Color.Parse("#7F8C8D"));
-    public static readonly IBrush AllBrush = new SolidColorBrush(Color.Parse("#5D8AA8"));
+    public static readonly IBrush TooShortBrush = new ImmutableSolidColorBrush(Color.Parse("#E8912D"));
+    public static readonly IBrush TooLongBrush = new ImmutableSolidColorBrush(Color.Parse("#9B59B6"));
+    public static readonly IBrush OverlapBrush = new ImmutableSolidColorBrush(Color.Parse("#E74C3C"));
+    public static readonly IBrush NonSpeechBrush = new ImmutableSolidColorBrush(Color.Parse("#3498DB"));
+    public static readonly IBrush RepeatedBrush = new ImmutableSolidColorBrush(Color.Parse("#1ABC9C"));
+    public static readonly IBrush RemovedBrush = new ImmutableSolidColorBrush(Color.Parse("#7F8C8D"));
+    public static readonly IBrush AllBrush = new ImmutableSolidColorBrush(Color.Parse("#5D8AA8"));
 
     public static IBrush GetBrush(SpeechToTextQualityIssueType type)
     {

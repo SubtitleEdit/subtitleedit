@@ -12,7 +12,7 @@ Automatically translate subtitles using various translation engines and AI servi
 
 1. Open **Translate → Auto-translate...**
 2. Select a translation engine
-3. Select the source and target languages
+3. Select the source and target languages (the button between them swaps the two)
 4. Click **Translate** to start
 5. Review the translations in the grid
 6. Click **OK** to apply
@@ -22,7 +22,7 @@ Automatically translate subtitles using various translation engines and AI servi
 - **Google Translate V1 API** — Free Google Translate
 - **Google Translate V2 API** — Google Cloud Translation (requires API key)
 - **Bing Microsoft Translator** — Azure Cognitive Services (requires API key)
-- **DeepL V2 translate** — DeepL translation (requires API key)
+- **DeepL V2 translate** — DeepL translation (requires API key). A **Formality** dropdown — Default, More formal, Less formal, More formal (fall back to default), Less formal (fall back to default) — appears for target languages that support it
 - **LibreTranslate** — Open-source, self-hosted translation
 - **MyMemory Translate** — Free translation memory
 - **ChatGPT** — OpenAI AI translation (requires API key)
@@ -71,7 +71,7 @@ choice and the jump to 27B buys less than the size difference suggests.
 ## Prompts: chat models and completion models
 
 Every local-LLM engine (LM Studio, Ollama, llama.cpp, OpenAI Compatible API) has a
-**prompt** you can edit. `{0}` is replaced with the source language and `{1}` with the target
+**prompt** you can edit in the engine's Settings dialog (gear button). `{0}` is replaced with the source language and `{1}` with the target
 language, both as English names.
 
 By default the prompt is an instruction and Subtitle Edit appends the subtitle text after it — what
@@ -104,6 +104,8 @@ Depending on the selected engine, you may need to provide:
 - **API Key** — Authentication key for cloud services
 - **API URL** — Custom endpoint URL (for self-hosted services)
 - **Model** — Specific model to use (for AI engines)
+
+The gear button opens the engine's **Settings** dialog with **Line merge**, **Delay in seconds between requests**, **Max bytes per request** and, for engines that have one, the **Prompt text** with a reset-to-default button.
 
 The **llama.cpp advanced** and **Ollama advanced** engines translate in batches with context, synopsis, and glossary support — see [Advanced Local Engines](auto-translate-advanced.md).
 

@@ -40,6 +40,27 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
     public class BluRaySupPicture
     {
         /// <summary>
+        /// Composition objects one display set can show at the same time - the PCS has room for
+        /// two, each in a window of its own.
+        /// </summary>
+        public const int MaxCompositionObjects = 2;
+
+        /// <summary>
+        /// Palette entries a display set can define. Index 255 is never defined: a decoder keeps
+        /// an undefined entry fully transparent, and that is the index transparent pixels are
+        /// encoded with (<see cref="TransparentIndex"/>).
+        /// </summary>
+        public const int MaxPaletteEntries = 255;
+
+        /// <summary>
+        /// Colours <see cref="GetBitmapPalette"/> collects for one bitmap, before the transparent
+        /// entry it always adds at the end.
+        /// </summary>
+        private const int MaxPaletteColors = 254;
+
+        private const byte TransparentIndex = 0xff;
+
+        /// <summary>
         /// screen width
         /// </summary>
         public int Width { get; set; }
@@ -72,6 +93,19 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         /// composition number - increased at start and end PCS
         /// </summary>
         public int CompositionNumber { get; set; }
+
+        /// <summary>
+        /// Set by <see cref="CreateSupFrame(BluRaySupPicture, IList{BluRaySupCompositionObject}, double, bool)"/>:
+        /// the composition number the display set following the ones it wrote should use.
+        /// </summary>
+        public int NextCompositionNumber { get; set; }
+
+        /// <summary>
+        /// The caption as it went into the stream, set by
+        /// <see cref="CreateSupFrame(BluRaySupPicture, SKBitmap, SKColor, double, int, int, BluRayContentAlignment, BluRayPoint)"/>.
+        /// A caller that lets the bitmap go can still compose the caption with others from this.
+        /// </summary>
+        public BluRaySupEncodedBitmap EncodedBitmap { get; set; }
 
         /// <summary>
         /// width of subtitle window (might be larger than image)
@@ -115,8 +149,9 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         /// </summary>
         /// <param name="bm">Bitmap to compress</param>
         /// <param name="palette">Palette used for bitmap encoding</param>
+        /// <param name="indexOffset">Where <paramref name="palette"/> starts in the palette the display set defines - the RLE references that one, so every index is shifted by this</param>
         /// <returns>RLE buffer</returns>
-        private static byte[] EncodeImage(SKBitmap bm, List<SKColor> palette)
+        private static byte[] EncodeImage(SKBitmap bm, List<SKColor> palette, int indexOffset)
         {
             var lookup = new Dictionary<SKColor, int>();
             for (var i = 0; i < palette.Count; i++)
@@ -133,7 +168,9 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             // ones - past the cap the linear scan simply runs again, as it always did.
             const int maxCachedColors = 1 << 16;
 
-            var transparentColor = (byte)palette[palette.Count - 1];
+            // Transparent pixels use the one index no palette defines, whatever range of the
+            // palette this bitmap has.
+            const byte transparentColor = TransparentIndex;
             var bytes = new List<byte>(bm.Width * 2);
             var reader = new BitmapRowReader(bm);
             var row = new SKColor[bm.Width];
@@ -153,7 +190,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                     }
                     else if (lookup.TryGetValue(c, out var intC))
                     {
-                        color = (byte)intC;
+                        color = (byte)(intC + indexOffset);
                     }
                     else
                     {
@@ -161,11 +198,13 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                         // the palette does not change while encoding, so the answer for a color
                         // is fixed. Anti-aliased edges hit this for the same handful of colors
                         // on every row of the caption; remember them in the same lookup.
-                        color = FindBestMatch(c, palette);
+                        var best = FindBestMatch(c, palette);
                         if (lookup.Count < maxCachedColors)
                         {
-                            lookup[c] = color;
+                            lookup[c] = best;
                         }
+
+                        color = (byte)(best + indexOffset);
                     }
 
                     for (len = 1; x + len < bm.Width; len++)
@@ -327,7 +366,12 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             return false;
         }
 
-        private static List<SKColor> GetBitmapPalette(SKBitmap bitmap, SKColor fontColor)
+        /// <summary>
+        /// The colours of the bitmap, <paramref name="fontColor"/> first and a transparent entry
+        /// last, at most <paramref name="maxColors"/> of them before the transparent one. A
+        /// bitmap with more distinct colours than that is reduced by merging close ones.
+        /// </summary>
+        private static List<SKColor> GetBitmapPalette(SKBitmap bitmap, SKColor fontColor, int maxColors)
         {
             var pal = new List<SKColor>(255);
             var lookup = new HashSet<SKColor>(255);
@@ -357,19 +401,19 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                             lookup.Add(c);
                         }
 
-                        if (pal.Count >= 254)
+                        if (pal.Count >= maxColors)
                         {
                             break;
                         }
                     }
                 }
-                if (pal.Count >= 254)
+                if (pal.Count >= maxColors)
                 {
                     break;
                 }
             }
 
-            if (pal.Count < 254)
+            if (pal.Count < maxColors)
             {
                 pal.Add(SKColors.Transparent); // last entry must be transparent
                 return pal;
@@ -377,6 +421,10 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
 
             // get close colors (image has probably been processed in SE)
+            // The tolerance widens as the palette fills: 1 for the first part, 5 for the next,
+            // 25 for the rest.
+            var exactLimit = maxColors * 100 / MaxPaletteColors;
+            var closeLimit = maxColors * 240 / MaxPaletteColors;
             pal = new List<SKColor>();
             lookup = new HashSet<SKColor>();
             pal.Add(fontColor);
@@ -406,7 +454,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                         {
                             // a close enough color already exists
                         }
-                        else if (pal.Count < 100)
+                        else if (pal.Count < exactLimit)
                         {
                             if (!HasCloseColor(c, pal, 1))
                             {
@@ -418,7 +466,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                                 rejected.Add(c);
                             }
                         }
-                        else if (pal.Count < 240)
+                        else if (pal.Count < closeLimit)
                         {
                             if (!HasCloseColor(c, pal, 5))
                             {
@@ -430,7 +478,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                                 rejected.Add(c);
                             }
                         }
-                        else if (pal.Count < 254)
+                        else if (pal.Count < maxColors)
                         {
                             if (!HasCloseColor(c, pal, 25))
                             {
@@ -445,9 +493,9 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                     }
                 }
 
-                // Every branch above requires pal.Count < 254, so a full palette freezes the
+                // Every branch above requires pal.Count < maxColors, so a full palette freezes the
                 // result - the rest of the image only cost scans that could not change it.
-                if (pal.Count >= 254)
+                if (pal.Count >= maxColors)
                 {
                     break;
                 }
@@ -499,22 +547,41 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
         private static long _lastEndTimeForWrite = -1000;
 
+        // PG segment types
+        private const byte PdsSegment = 0x14;
+        private const byte OdsSegment = 0x15;
+        private const byte PcsSegment = 0x16;
+        private const byte WdsSegment = 0x17;
+        private const byte EndSegment = 0x80;
+
+        // composition_state of a PCS
+        private const byte CompositionStateNormal = 0x00;
+        private const byte CompositionStateEpochStart = 0x80;
+
+        // For some obscure reason, a packet can be a maximum 0xfffc bytes. Since 13 bytes are
+        // needed for the header ("PG", PTS, DTS, ID, SIZE) there are only 0xffef bytes available
+        // for the packet; the first ODS packet needs an additional 11 bytes for info and the
+        // following ODS packets 4 additional bytes, so the first package can store only 0xffe4
+        // RLE buffer bytes and the following packets 0xffeb RLE buffer bytes.
+        private const int FirstOdsPayload = 0xffe4;
+        private const int NextOdsPayload = 0xffeb;
+
         /// <summary>
-        /// Splits <see cref="FadeSteps"/> into the alpha the caption appears with (part of the
-        /// epoch's own palette) and the steps that follow it as palette update display sets.
-        /// Steps outside the caption, and steps that do not change the alpha, are dropped - each
-        /// one would cost a display set for nothing.
+        /// Splits fade steps into the alpha the object appears with (part of the epoch's own
+        /// palette) and the steps that follow it as palette update display sets. Steps outside
+        /// the display set, and steps that do not change the alpha, are dropped - each one would
+        /// cost a display set for nothing.
         /// </summary>
-        private static List<BluRaySupFadeStep> GetFadeSteps(BluRaySupPicture pic, out int startAlphaPercent)
+        private static List<BluRaySupFadeStep> GetFadeSteps(IList<BluRaySupFadeStep> fadeSteps, long startTime, long endTime, out int startAlphaPercent)
         {
             startAlphaPercent = 100;
             var updates = new List<BluRaySupFadeStep>();
-            if (pic.FadeSteps == null || pic.FadeSteps.Count == 0)
+            if (fadeSteps == null || fadeSteps.Count == 0)
             {
                 return updates;
             }
 
-            var sorted = new List<BluRaySupFadeStep>(pic.FadeSteps);
+            var sorted = new List<BluRaySupFadeStep>(fadeSteps);
             sorted.Sort((a, b) => a.TimeMs.CompareTo(b.TimeMs));
 
             var lastAlpha = 100;
@@ -522,14 +589,14 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             foreach (var step in sorted)
             {
                 var alpha = Math.Min(100, Math.Max(0, step.AlphaPercent));
-                if (step.TimeMs <= pic.StartTime)
+                if (step.TimeMs <= startTime)
                 {
                     startAlphaPercent = alpha;
                     lastAlpha = alpha;
                     continue;
                 }
 
-                if (step.TimeMs >= pic.EndTime || alpha == lastAlpha || step.TimeMs == lastTime)
+                if (step.TimeMs >= endTime || alpha == lastAlpha || step.TimeMs == lastTime)
                 {
                     continue;
                 }
@@ -543,32 +610,323 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         }
 
         /// <summary>
-        /// Writes a Palette Definition Segment with every alpha scaled by
-        /// <paramref name="alphaPercent"/> - the whole of a Blu-ray fade is this one number
-        /// changing between display sets.
+        /// One composition object of a display set, encoded against its own range of the shared
+        /// palette.
         /// </summary>
-        private static int WritePds(byte[] buf, int index, byte[] packetHeader, BluRaySupPalette pal, int palSize, int paletteVersion, int alphaPercent)
+        private sealed class EncodedObject
         {
-            packetHeader[10] = 0x14;                                      // ID (keep PTS & DTS)
-            ToolBox.SetWord(packetHeader, 11, 2 + palSize * 5);      // size
-            for (var i = 0; i < packetHeader.Length; i++)
+            /// <summary>
+            /// The object's colours, ending with the transparent entry
+            /// <see cref="GetBitmapPalette"/> always adds.
+            /// </summary>
+            public List<SKColor> Palette;
+
+            /// <summary>
+            /// Index of the first of those colours in the shared palette.
+            /// </summary>
+            public int PaletteOffset;
+
+            public byte[] Rle;
+            public int Width;
+            public int Height;
+            public int X;
+            public int Y;
+            public bool IsForced;
+            public int StartAlphaPercent;
+            public List<BluRaySupFadeStep> Updates;
+        }
+
+        /// <summary>
+        /// The alpha of every composition object at one palette update display set.
+        /// </summary>
+        private sealed class PaletteUpdate
+        {
+            public long TimeMs;
+            public int[] AlphaPercents;
+
+            public long TimeForWrite => (long)Math.Round(TimeMs * 90.0, MidpointRounding.AwayFromZero);
+        }
+
+        /// <summary>
+        /// Interleaves the fade steps of all objects into one schedule. A palette update carries
+        /// the whole palette, so at every step time the alpha of every object is needed - the
+        /// ones without a step of their own keep the alpha they had.
+        /// </summary>
+        private static List<PaletteUpdate> MergeFadeSteps(IList<EncodedObject> objects)
+        {
+            var times = new SortedSet<long>();
+            foreach (var obj in objects)
             {
-                buf[index++] = packetHeader[i];
+                foreach (var step in obj.Updates)
+                {
+                    times.Add(step.TimeMs);
+                }
             }
 
-            buf[index++] = 0;                                             // palette_id
-            buf[index++] = (byte)paletteVersion;                          // palette_version_number
+            var current = new int[objects.Count];
+            for (var k = 0; k < objects.Count; k++)
+            {
+                current[k] = objects[k].StartAlphaPercent;
+            }
+
+            var updates = new List<PaletteUpdate>(times.Count);
+            foreach (var time in times)
+            {
+                for (var k = 0; k < objects.Count; k++)
+                {
+                    foreach (var step in objects[k].Updates)
+                    {
+                        if (step.TimeMs == time)
+                        {
+                            current[k] = step.AlphaPercent;
+                        }
+                    }
+                }
+
+                updates.Add(new PaletteUpdate { TimeMs = time, AlphaPercents = (int[])current.Clone() });
+            }
+
+            return updates;
+        }
+
+        private static int ClampY(BluRaySupPicture pic, int y)
+        {
+            var yOfs = y - Core.CropOfsY;
+            if (yOfs < 0)
+            {
+                return 0;
+            }
+
+            var yMax = pic.Height - pic.WindowHeight - 2 * Core.CropOfsY;
+            return yOfs > yMax ? yMax : yOfs;
+        }
+
+        /// <summary>
+        /// Builds the palettes and RLE data of the objects. Every object of a display set reads
+        /// from the one palette the PCS names, so each gets a range of it: the palettes are laid
+        /// end to end and the RLE of an object references its own range. That also keeps the
+        /// fades apart - a palette update scales the entries of one object and leaves the
+        /// others alone.
+        /// </summary>
+        private static List<EncodedObject> EncodeObjects(BluRaySupPicture pic, IList<BluRaySupCompositionObject> objects)
+        {
+            var palettes = new List<List<SKColor>>(objects.Count);
+            var total = 0;
+            foreach (var obj in objects)
+            {
+                var palette = GetBitmapPalette(obj.Bitmap, obj.FontColor, MaxPaletteColors);
+                palettes.Add(palette);
+                total += palette.Count;
+            }
+
+            if (total > MaxPaletteEntries)
+            {
+                // Together they do not fit; give every object an equal share instead.
+                var maxColors = MaxPaletteEntries / objects.Count - 1;
+                for (var k = 0; k < objects.Count; k++)
+                {
+                    palettes[k] = GetBitmapPalette(objects[k].Bitmap, objects[k].FontColor, maxColors);
+                }
+            }
+
+            var encoded = new List<EncodedObject>(objects.Count);
+            var offset = 0;
+            for (var k = 0; k < objects.Count; k++)
+            {
+                var obj = objects[k];
+                var updates = GetFadeSteps(obj.FadeSteps, pic.StartTime, pic.EndTime, out var startAlphaPercent);
+                encoded.Add(new EncodedObject
+                {
+                    Palette = palettes[k],
+                    PaletteOffset = offset,
+                    Rle = EncodeImage(obj.Bitmap, palettes[k], offset),
+                    Width = obj.Bitmap.Width,
+                    Height = obj.Bitmap.Height,
+                    X = obj.X,
+                    Y = ClampY(pic, obj.Y),
+                    IsForced = obj.IsForced,
+                    StartAlphaPercent = startAlphaPercent,
+                    Updates = updates,
+                });
+                offset += palettes[k].Count;
+            }
+
+            return encoded;
+        }
+
+        /// <summary>
+        /// Presentation Composition Segment: the frame, the composition number and state, and
+        /// which objects are shown where. A PCS with no objects clears the screen.
+        /// </summary>
+        private static byte[] BuildPcs(int width, int height, int fpsId, int compositionNumber, byte compositionState, bool paletteUpdate, IList<EncodedObject> objects)
+        {
+            var buf = new byte[11 + objects.Count * 8];
+            ToolBox.SetWord(buf, 0, width);                                 // video_width
+            ToolBox.SetWord(buf, 2, height);                                // video_height (cropped)
+            ToolBox.SetByte(buf, 4, fpsId);                                 // hi nibble: frame_rate, lo nibble: reserved
+            ToolBox.SetWord(buf, 5, compositionNumber);                     // composition_number
+            buf[7] = compositionState;                                      // 0x80: epoch start, 0x40: acquisition point, 0x00: normal
+            buf[8] = (byte)(paletteUpdate ? 0x80 : 0x00);                   // palette_update_flag, 7 bit reserved
+            buf[9] = 0;                                                     // palette_id_ref (0..7)
+            buf[10] = (byte)objects.Count;                                  // number_of_composition_objects (0..2)
+            for (var k = 0; k < objects.Count; k++)
+            {
+                var obj = objects[k];
+                var i = 11 + k * 8;
+                ToolBox.SetWord(buf, i, k);                                 // object_id_ref
+                buf[i + 2] = (byte)k;                                       // window_id_ref (0..1)
+                buf[i + 3] = (byte)(obj.IsForced ? 0x40 : 0x00);            // object_cropped_flag: 0x80, forced_on_flag: 0x40, 6 bit reserved
+                ToolBox.SetWord(buf, i + 4, obj.X);                         // composition_object_horizontal_position
+                ToolBox.SetWord(buf, i + 6, obj.Y);                         // composition_object_vertical_position
+            }
+
+            return buf;
+        }
+
+        /// <summary>
+        /// Window Definition Segment: one window per object, sized to it.
+        /// </summary>
+        private static byte[] BuildWds(IList<EncodedObject> objects)
+        {
+            var buf = new byte[1 + objects.Count * 9];
+            buf[0] = (byte)objects.Count;                                   // number_of_windows (0..2)
+            for (var k = 0; k < objects.Count; k++)
+            {
+                var obj = objects[k];
+                var i = 1 + k * 9;
+                buf[i] = (byte)k;                                           // window_id
+                ToolBox.SetWord(buf, i + 1, obj.X);                         // window_horizontal_position
+                ToolBox.SetWord(buf, i + 3, obj.Y);                         // window_vertical_position
+                ToolBox.SetWord(buf, i + 5, obj.Width);                     // window_width
+                ToolBox.SetWord(buf, i + 7, obj.Height);                    // window_height
+            }
+
+            return buf;
+        }
+
+        /// <summary>
+        /// Palette Definition Segment with the alpha of every entry scaled by the percentage of
+        /// the object the entry belongs to - the whole of a Blu-ray fade is these numbers
+        /// changing between display sets.
+        /// </summary>
+        private static byte[] BuildPds(BluRaySupPalette pal, int palSize, int paletteVersion, IList<EncodedObject> objects, int[] alphaPercents)
+        {
+            var entryAlphaPercent = new int[palSize];
+            for (var k = 0; k < objects.Count; k++)
+            {
+                var obj = objects[k];
+                for (var i = 0; i < obj.Palette.Count; i++)
+                {
+                    entryAlphaPercent[obj.PaletteOffset + i] = alphaPercents[k];
+                }
+            }
+
+            var buf = new byte[2 + palSize * 5];
+            var index = 0;
+            buf[index++] = 0;                                               // palette_id
+            buf[index++] = (byte)paletteVersion;                            // palette_version_number
             var alpha = pal.GetAlpha();
             for (var i = 0; i < palSize; i++)
             {
-                buf[index++] = (byte)i;                                   // index
-                buf[index++] = pal.GetY()[i];                             // Y
-                buf[index++] = pal.GetCr()[i];                            // Cr
-                buf[index++] = pal.GetCb()[i];                            // Cb
-                buf[index++] = (byte)(alpha[i] * alphaPercent / 100);     // Alpha
+                buf[index++] = (byte)i;                                     // palette_entry_id
+                buf[index++] = pal.GetY()[i];                               // Y
+                buf[index++] = pal.GetCr()[i];                              // Cr
+                buf[index++] = pal.GetCb()[i];                              // Cb
+                buf[index++] = (byte)(alpha[i] * entryAlphaPercent[i] / 100); // T (alpha)
             }
 
-            return index;
+            return buf;
+        }
+
+        /// <summary>
+        /// Object Definition Segments of one object: the RLE data, split over as many segments
+        /// as the 16 bit segment length requires. Only the final fragment carries
+        /// last_in_sequence.
+        /// </summary>
+        private static void WriteOds(SegmentWriter writer, long pts, int objectId, EncodedObject obj)
+        {
+            var rle = obj.Rle;
+            var numAddPackets = 0;
+            if (rle.Length > FirstOdsPayload)
+            {
+                // round up, but without an extra empty packet when the rest divides evenly
+                numAddPackets = (rle.Length - FirstOdsPayload + NextOdsPayload - 1) / NextOdsPayload;
+            }
+
+            var first = new byte[11];
+            ToolBox.SetWord(first, 0, objectId);                            // object_id
+            first[2] = 0;                                                   // object_version_number
+            var marker = numAddPackets == 0 ? 0xC0000000 : 0x80000000;      // first_in_sequence (0x80), last_in_sequence (0x40)
+            ToolBox.SetDWord(first, 3, (uint)(marker | (uint)(rle.Length + 4))); // flags + object_data_length (RLE plus its 4 byte size info)
+            ToolBox.SetWord(first, 7, obj.Width);                           // object_width
+            ToolBox.SetWord(first, 9, obj.Height);                          // object_height
+
+            var bufSize = Math.Min(rle.Length, FirstOdsPayload);
+            writer.Write(OdsSegment, pts, first, rle, 0, bufSize);
+
+            var rleIndex = bufSize;
+            var remaining = rle.Length - bufSize;
+            for (var p = 0; p < numAddPackets; p++)
+            {
+                var packetSize = Math.Min(remaining, NextOdsPayload);
+                var next = new byte[4];
+                ToolBox.SetWord(next, 0, objectId);                         // object_id
+                next[2] = 0;                                                // object_version_number
+                next[3] = (byte)(p == numAddPackets - 1 ? 0x40 : 0x00);     // last_in_sequence on the final fragment only
+                writer.Write(OdsSegment, pts, next, rle, rleIndex, packetSize);
+                rleIndex += packetSize;
+                remaining -= packetSize;
+            }
+        }
+
+        /// <summary>
+        /// Writes PG segments: "PG", PTS, DTS, type and size, then the payload.
+        /// <para>
+        /// Timestamps: every segment of a display set carries the display set's presentation
+        /// time as PTS, and DTS is left at 0 ("unset"). This mirrors how .sup files extracted
+        /// from retail discs look, and is what the common consumers expect: ffmpeg's sup demuxer
+        /// explicitly treats DTS 0 as unset, SupMover shifts the PTS of every segment (so they
+        /// must all carry the real presentation time), and muxers like tsMuxeR re-derive decode
+        /// timing from the PCS when authoring an m2ts. The previous writer put decode-model
+        /// values into DTS and zeroed the ODS/END PTS, producing segments with DTS > PTS
+        /// (issue #10219).
+        /// </para>
+        /// </summary>
+        private sealed class SegmentWriter
+        {
+            private readonly System.IO.MemoryStream _stream = new System.IO.MemoryStream();
+            private readonly byte[] _header =
+            {
+                0x50, 0x47,             // 0:  "PG"
+                0x00, 0x00, 0x00, 0x00, // 2:  PTS - presentation time stamp
+                0x00, 0x00, 0x00, 0x00, // 6:  DTS - decoding time stamp
+                0x00,                   // 10: segment_type
+                0x00, 0x00              // 11: segment_length (bytes following till next PG)
+            };
+
+            public void Write(byte type, long pts, byte[] payload)
+            {
+                Write(type, pts, payload, null, 0, 0);
+            }
+
+            public void Write(byte type, long pts, byte[] payload, byte[] data, int dataOffset, int dataLength)
+            {
+                ToolBox.SetDWord(_header, 2, (uint)pts);
+                ToolBox.SetDWord(_header, 6, 0);
+                _header[10] = type;
+                ToolBox.SetWord(_header, 11, payload.Length + dataLength);
+                _stream.Write(_header, 0, _header.Length);
+                _stream.Write(payload, 0, payload.Length);
+                if (data != null)
+                {
+                    _stream.Write(data, dataOffset, dataLength);
+                }
+            }
+
+            public byte[] ToArray()
+            {
+                return _stream.ToArray();
+            }
         }
 
         /// <summary>
@@ -585,131 +943,30 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         /// <returns>Byte buffer containing the binary stream representation of one caption</returns>
         public static byte[] CreateSupFrame(BluRaySupPicture pic, SKBitmap bmp, SKColor fontColor, double fps, int bottomMargin, int leftOrRightMargin, BluRayContentAlignment alignment, BluRayPoint overridePosition = null)
         {
-            var bm = bmp.Copy();
-            var colorPalette = GetBitmapPalette(bm, fontColor);
-            var pal = new BluRaySupPalette(colorPalette.Count);
-            for (var i = 0; i < colorPalette.Count; i++)
-            {
-                pal.SetColor(i, colorPalette[i]);
-            }
-
-            var rleBuf = EncodeImage(bm, colorPalette);
-
-            // for some obscure reason, a packet can be a maximum 0xfffc bytes
-            // since 13 bytes are needed for the header("PG", PTS, DTS, ID, SIZE)
-            // there are only 0xffef bytes available for the packet
-            // since the first ODS packet needs an additional 11 bytes for info
-            // and the following ODS packets need 4 additional bytes, the
-            // first package can store only 0xffe4 RLE buffer bytes and the
-            // following packets can store 0xffeb RLE buffer bytes
-            int numAddPackets;
-            if (rleBuf.Length <= 0xffe4)
-            {
-                numAddPackets = 0; // no additional packets needed
-            }
-            else
-            {
-                // round up, but without an extra empty packet when the rest divides evenly
-                numAddPackets = (rleBuf.Length - 0xffe4 + 0xffeb - 1) / 0xffeb;
-            }
-
-            // a typical frame consists of 8 packets. It can be elongated by additional object frames
-            var palSize = colorPalette.Count;
-
-            var packetHeader = new byte[]
-            {
-                0x50, 0x47,             // 0:  "PG"
-                0x00, 0x00, 0x00, 0x00, // 2:  PTS - presentation time stamp
-                0x00, 0x00, 0x00, 0x00, // 6:  DTS - decoding time stamp
-                0x00,                   // 10: segment_type
-                0x00, 0x00              // 11: segment_length (bytes following till next PG)
-            };
-            var headerPcsStart = new byte[]
-            {
-                0x00, 0x00, 0x00, 0x00, // 0: video_width, video_height
-                0x10,                   // 4: hi nibble: frame_rate (0x10=24p), lo nibble: reserved
-                0x00, 0x00,             // 5: composition_number (increased by start and end header)
-                0x80,                   // 7: composition_state (0x80: epoch start)
-                                        //      0x00: Normal
-                                        //      0x40: Acquisition Point
-                                        //      0x80: Epoch Start
-                0x00,                   // 8: palette_update_flag (0x80==true, 0x00==false), 7bit reserved
-                0x00,                   // 9: palette_id_ref (0..7)
-                0x01,                   // 10: number_of_composition_objects (0..2)
-                0x00, 0x00,             // 11: 16bit object_id_ref
-                0x00,                   // 13: window_id_ref (0..1)
-                0x00,                   // 14: object_cropped_flag: 0x80, forced_on_flag = 0x040, 6bit reserved
-                0x00, 0x00, 0x00, 0x00  // 15: composition_object_horizontal_position, composition_object_vertical_position
-            };
-            var headerPcsEnd = new byte[]
-            {
-                0x00, 0x00, 0x00, 0x00, // 0: video_width, video_height
-                0x10,                   // 4: hi nibble: frame_rate (0x10=24p), lo nibble: reserved
-                0x00, 0x00,             // 5: composition_number (increased by start and end header)
-                0x00,                   // 7: composition_state (0x00: normal)
-                0x00,                   // 8: palette_update_flag (0x80), 7bit reserved
-                0x00,                   // 9: palette_id_ref (0..7)
-                0x00                    // 10: number_of_composition_objects (0..2)
-            };
-            var headerWds = new byte[]
-            {
-                0x01,                   // 0 : number of windows (currently assumed 1, 0..2 is legal)
-                0x00,                   // 1 : window id (0..1)
-                0x00, 0x00, 0x00, 0x00, // 2 : x-ofs, y-ofs
-                0x00, 0x00, 0x00, 0x00  // 6 : width, height
-            };
-            var headerOdsFirst = new byte[]
-            {
-                0x00, 0x00,             // 0: object_id
-                0x00,                   // 2: object_version_number
-                0xC0,                   // 3: first_in_sequence (0x80), last_in_sequence (0x40), 6bits reserved
-                0x00, 0x00, 0x00,       // 4: object_data_length - full RLE buffer length (including 4 bytes size info)
-                0x00, 0x00, 0x00, 0x00  // 7: object_width, object_height
-            };
-            var headerOdsNext = new byte[]
-            {
-                0x00, 0x00,             // 0: object_id
-                0x00,                   // 2: object_version_number
-                0x00                    // 3: first_in_sequence (0x80), last_in_sequence (0x40), 6bits reserved
-                                        //    set per packet below - only the final one is last_in_sequence
-            };
-
-            // Fade steps ride along as palette update display sets (PCS + PDS + END) between the
-            // caption and the screen clear - same object, only the palette alpha changes.
-            var fadeSteps = GetFadeSteps(pic, out var startAlphaPercent);
-
-            var size = packetHeader.Length * (8 + numAddPackets + fadeSteps.Count * 3);
-            size += headerPcsStart.Length + headerPcsEnd.Length;
-            size += 2 * headerWds.Length + headerOdsFirst.Length;
-            size += numAddPackets * headerOdsNext.Length;
-            size += (2 + palSize * 5) /* PDS */;
-            size += fadeSteps.Count * (headerPcsStart.Length + 2 + palSize * 5);
-            size += rleBuf.Length;
-
             switch (alignment)
             {
                 case BluRayContentAlignment.BottomLeft:
                     pic.WindowXOffset = leftOrRightMargin;
-                    pic.WindowYOffset = pic.Height - (bm.Height + bottomMargin);
+                    pic.WindowYOffset = pic.Height - (bmp.Height + bottomMargin);
                     break;
                 case BluRayContentAlignment.BottomRight:
-                    pic.WindowXOffset = pic.Width - bm.Width - leftOrRightMargin;
-                    pic.WindowYOffset = pic.Height - (bm.Height + bottomMargin);
+                    pic.WindowXOffset = pic.Width - bmp.Width - leftOrRightMargin;
+                    pic.WindowYOffset = pic.Height - (bmp.Height + bottomMargin);
                     break;
                 case BluRayContentAlignment.MiddleCenter:
-                    pic.WindowXOffset = (pic.Width - bm.Width) / 2;
-                    pic.WindowYOffset = (pic.Height - bm.Height) / 2;
+                    pic.WindowXOffset = (pic.Width - bmp.Width) / 2;
+                    pic.WindowYOffset = (pic.Height - bmp.Height) / 2;
                     break;
                 case BluRayContentAlignment.MiddleLeft:
                     pic.WindowXOffset = leftOrRightMargin;
-                    pic.WindowYOffset = (pic.Height - bm.Height) / 2;
+                    pic.WindowYOffset = (pic.Height - bmp.Height) / 2;
                     break;
                 case BluRayContentAlignment.MiddleRight:
-                    pic.WindowXOffset = pic.Width - bm.Width - leftOrRightMargin;
-                    pic.WindowYOffset = (pic.Height - bm.Height) / 2;
+                    pic.WindowXOffset = pic.Width - bmp.Width - leftOrRightMargin;
+                    pic.WindowYOffset = (pic.Height - bmp.Height) / 2;
                     break;
                 case BluRayContentAlignment.TopCenter:
-                    pic.WindowXOffset = (pic.Width - bm.Width) / 2;
+                    pic.WindowXOffset = (pic.Width - bmp.Width) / 2;
                     pic.WindowYOffset = bottomMargin;
                     break;
                 case BluRayContentAlignment.TopLeft:
@@ -717,12 +974,12 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                     pic.WindowYOffset = bottomMargin;
                     break;
                 case BluRayContentAlignment.TopRight:
-                    pic.WindowXOffset = pic.Width - bm.Width - leftOrRightMargin;
+                    pic.WindowXOffset = pic.Width - bmp.Width - leftOrRightMargin;
                     pic.WindowYOffset = bottomMargin;
                     break;
                 default: // ContentAlignment.BottomCenter:
-                    pic.WindowXOffset = (pic.Width - bm.Width) / 2;
-                    pic.WindowYOffset = pic.Height - (bm.Height + bottomMargin);
+                    pic.WindowXOffset = (pic.Width - bmp.Width) / 2;
+                    pic.WindowYOffset = pic.Height - (bmp.Height + bottomMargin);
                     break;
             }
 
@@ -734,38 +991,72 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 pic.WindowYOffset = overridePosition.Y;
             }
 
-            var yOfs = pic.WindowYOffset - Core.CropOfsY;
-            if (yOfs < 0)
+            var obj = new BluRaySupCompositionObject
             {
-                yOfs = 0;
+                Bitmap = bmp,
+                FontColor = fontColor,
+                X = pic.WindowXOffset,
+                Y = pic.WindowYOffset,
+                IsForced = pic.IsForced,
+                FadeSteps = pic.FadeSteps,
+            };
+
+            var buffer = CreateSupFrame(pic, new[] { obj }, fps, true, out var encoded);
+            pic.EncodedBitmap = new BluRaySupEncodedBitmap(encoded[0].Palette, encoded[0].Rle, encoded[0].Width, encoded[0].Height);
+            return buffer;
+        }
+
+        /// <summary>
+        /// Create the binary stream representation of one display set showing
+        /// <paramref name="objects"/> together - up to <see cref="MaxCompositionObjects"/> of
+        /// them, each in a window of its own, sharing one palette. The display set is an epoch
+        /// start at <see cref="StartTime"/>; the fades of the objects follow as palette update
+        /// display sets and, when <paramref name="writeClear"/> is set, a screen clear at
+        /// <see cref="EndTime"/> ends it. Leave <paramref name="writeClear"/> off when another
+        /// epoch starts right at <see cref="EndTime"/> - an epoch start replaces everything on
+        /// screen, so a clear before it would only cost a display set.
+        /// </summary>
+        /// <param name="pic">Frame size, times, forced flag and the composition number of the first display set. <see cref="NextCompositionNumber"/> is set on return.</param>
+        /// <param name="objects">The captions to show, one or two. Their windows may not overlap.</param>
+        /// <param name="fps">Frames per second</param>
+        /// <param name="writeClear">Whether to end with a display set that clears the screen</param>
+        /// <returns>Byte buffer containing the binary stream representation of the display sets</returns>
+        public static byte[] CreateSupFrame(BluRaySupPicture pic, IList<BluRaySupCompositionObject> objects, double fps, bool writeClear = true)
+        {
+            return CreateSupFrame(pic, objects, fps, writeClear, out _);
+        }
+
+        private static byte[] CreateSupFrame(BluRaySupPicture pic, IList<BluRaySupCompositionObject> objects, double fps, bool writeClear, out List<EncodedObject> encoded)
+        {
+            if (objects == null || objects.Count == 0)
+            {
+                throw new ArgumentException("A display set needs at least one composition object", nameof(objects));
             }
-            else
+
+            if (objects.Count > MaxCompositionObjects)
             {
-                var yMax = pic.Height - pic.WindowHeight - 2 * Core.CropOfsY;
-                if (yOfs > yMax)
+                throw new ArgumentException($"A Blu-ray display set can compose at most {MaxCompositionObjects} objects", nameof(objects));
+            }
+
+            encoded = EncodeObjects(pic, objects);
+            var palSize = 0;
+            foreach (var obj in encoded)
+            {
+                palSize += obj.Palette.Count;
+            }
+
+            var pal = new BluRaySupPalette(palSize);
+            foreach (var obj in encoded)
+            {
+                for (var i = 0; i < obj.Palette.Count; i++)
                 {
-                    yOfs = yMax;
+                    pal.SetColor(obj.PaletteOffset + i, obj.Palette[i]);
                 }
             }
 
             var h = pic.Height - 2 * Core.CropOfsY;
-
-            var buf = new byte[size];
-            var index = 0;
-
             var fpsId = GetFpsId(fps);
-
-            // Timestamps: every segment of a display set carries the display set's
-            // presentation time as PTS, and DTS is left at 0 ("unset"). This mirrors how
-            // .sup files extracted from retail discs look, and is what the common consumers
-            // expect: ffmpeg's sup demuxer explicitly treats DTS 0 as unset, SupMover shifts
-            // the PTS of every segment (so they must all carry the real presentation time),
-            // and muxers like tsMuxeR re-derive decode timing from the PCS when authoring
-            // an m2ts. The previous writer put decode-model values into DTS and zeroed the
-            // ODS/END PTS, producing segments with DTS > PTS (issue #10219).
-
-            // write PCS start - Presentation Composition Segment (also called the Control Segment)
-            packetHeader[10] = 0x16; // ID
+            var writer = new SegmentWriter();
 
             var pts = pic.StartTimeForWrite;
             if (Configuration.Settings.Tools.ExportBluRayRemoveSmallGaps && Math.Abs(_lastEndTimeForWrite - pts) < 100)
@@ -774,201 +1065,57 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             }
 
             _lastEndTimeForWrite = pic.EndTimeForWrite;
-
-            ToolBox.SetDWord(packetHeader, 2, (uint)pts);                     // PTS
-            ToolBox.SetDWord(packetHeader, 6, 0);                             // DTS (0 = unset)
-            ToolBox.SetWord(packetHeader, 11, headerPcsStart.Length);     // size
-            for (var i = 0; i < packetHeader.Length; i++)
-            {
-                buf[index++] = packetHeader[i];
-            }
-
-            ToolBox.SetWord(headerPcsStart, 0, pic.Width);
-            ToolBox.SetWord(headerPcsStart, 2, h);                      // cropped height
-            ToolBox.SetByte(headerPcsStart, 4, fpsId);
-            ToolBox.SetWord(headerPcsStart, 5, pic.CompositionNumber);
-            headerPcsStart[14] = (byte)(pic.IsForced ? 0x40 : 0);
-            ToolBox.SetWord(headerPcsStart, 15, pic.WindowXOffset);
-            ToolBox.SetWord(headerPcsStart, 17, yOfs);
-            for (var i = 0; i < headerPcsStart.Length; i++)
-            {
-                buf[index++] = headerPcsStart[i];
-            }
-
-            // write WDS
-            packetHeader[10] = 0x17;                                            // ID (keep PTS & DTS)
-            ToolBox.SetWord(packetHeader, 11, headerWds.Length);       // size
-            for (var i = 0; i < packetHeader.Length; i++)
-            {
-                buf[index++] = packetHeader[i];
-            }
-
-            ToolBox.SetWord(headerWds, 2, pic.WindowXOffset);
-            ToolBox.SetWord(headerWds, 4, yOfs);
-            ToolBox.SetWord(headerWds, 6, bm.Width);
-            ToolBox.SetWord(headerWds, 8, bm.Height);
-            for (var i = 0; i < headerWds.Length; i++)
-            {
-                buf[index++] = headerWds[i];
-            }
-
-            // write PDS - Palette Definition Segment
-            index = WritePds(buf, index, packetHeader, pal, palSize, 0, startAlphaPercent);
-
-            // write first OBJ
-            var bufSize = rleBuf.Length;
-            var rleIndex = 0;
-            if (bufSize > 0xffe4)
-            {
-                bufSize = 0xffe4;
-            }
-
-            packetHeader[10] = 0x15;                                                    // ID (keep PTS & DTS)
-            ToolBox.SetWord(packetHeader, 11, headerOdsFirst.Length + bufSize); // size
-            for (var i = 0; i < packetHeader.Length; i++)
-            {
-                buf[index++] = packetHeader[i];
-            }
-
-            var marker = (int)((numAddPackets == 0) ? 0xC0000000 : 0x80000000);
-            ToolBox.SetDWord(headerOdsFirst, 3, (uint)(marker | (rleBuf.Length + 4)));
-            ToolBox.SetWord(headerOdsFirst, 7, bm.Width);
-            ToolBox.SetWord(headerOdsFirst, 9, bm.Height);
-            for (var i = 0; i < headerOdsFirst.Length; i++)
-            {
-                buf[index++] = headerOdsFirst[i];
-            }
-
-            Buffer.BlockCopy(rleBuf, rleIndex, buf, index, bufSize);
-            index += bufSize;
-            rleIndex += bufSize;
-
-            // write additional OBJ packets
-            bufSize = rleBuf.Length - bufSize; // remaining bytes to write
-            for (var p = 0; p < numAddPackets; p++)
-            {
-                var psize = bufSize;
-                if (psize > 0xffeb)
-                {
-                    psize = 0xffeb;
-                }
-
-                packetHeader[10] = 0x15;                                         // ID (keep DTS & PTS)
-                ToolBox.SetWord(packetHeader, 11, headerOdsNext.Length + psize); // size
-                for (var i = 0; i < packetHeader.Length; i++)
-                {
-                    buf[index++] = packetHeader[i];
-                }
-
-                // only the final fragment carries last_in_sequence - middle ones must be 0x00
-                headerOdsNext[3] = (byte)(p == numAddPackets - 1 ? 0x40 : 0x00);
-                for (var i = 0; i < headerOdsNext.Length; i++)
-                {
-                    buf[index++] = headerOdsNext[i];
-                }
-
-                for (var i = 0; i < psize; i++)
-                {
-                    buf[index++] = rleBuf[rleIndex++];
-                }
-
-                bufSize -= psize;
-            }
-
-            // write END
-            packetHeader[10] = 0x80;                                             // ID (keep PTS & DTS)
-            ToolBox.SetWord(packetHeader, 11, 0);                       // size
-            for (var i = 0; i < packetHeader.Length; i++)
-            {
-                buf[index++] = packetHeader[i];
-            }
-
-            // write the fade steps - one palette update display set each (PCS + PDS + END). The
-            // PCS repeats the composition of the epoch start with palette_update_flag set, which
-            // tells the decoder to keep the object it already has and only take the new palette.
             var endPts = pic.EndTimeForWrite;
             var compositionNumber = pic.CompositionNumber;
-            headerPcsStart[7] = 0x00;                                            // composition_state: normal case
-            headerPcsStart[8] = 0x80;                                            // palette_update_flag
-            for (var step = 0; step < fadeSteps.Count; step++)
+
+            // The caption: PCS (also called the Control Segment), WDS, PDS, the ODS of every
+            // object, END.
+            writer.Write(PcsSegment, pts, BuildPcs(pic.Width, h, fpsId, compositionNumber, CompositionStateEpochStart, false, encoded));
+            writer.Write(WdsSegment, pts, BuildWds(encoded));
+            var startAlphaPercents = new int[encoded.Count];
+            for (var k = 0; k < encoded.Count; k++)
+            {
+                startAlphaPercents[k] = encoded[k].StartAlphaPercent;
+            }
+
+            writer.Write(PdsSegment, pts, BuildPds(pal, palSize, 0, encoded, startAlphaPercents));
+            for (var k = 0; k < encoded.Count; k++)
+            {
+                WriteOds(writer, pts, k, encoded[k]);
+            }
+
+            writer.Write(EndSegment, pts, Array.Empty<byte>());
+
+            // The fade steps - one palette update display set each (PCS + PDS + END). The PCS
+            // repeats the composition of the epoch start with palette_update_flag set, which
+            // tells the decoder to keep the objects it already has and only take the new palette.
+            var updates = MergeFadeSteps(encoded);
+            for (var step = 0; step < updates.Count; step++)
             {
                 // A step may only be scheduled after the caption is up and before it is taken
                 // down; the start PTS can have been nudged by the small gap removal above.
-                var stepPts = Math.Min(Math.Max(fadeSteps[step].TimeForWrite, pts + 1), endPts - 1);
+                var stepPts = Math.Min(Math.Max(updates[step].TimeForWrite, pts + 1), endPts - 1);
 
                 compositionNumber++;
-                packetHeader[10] = 0x16;                                         // ID
-                ToolBox.SetDWord(packetHeader, 2, (uint)stepPts);           // PTS
-                ToolBox.SetDWord(packetHeader, 6, 0);                       // DTS (0 = unset)
-                ToolBox.SetWord(packetHeader, 11, headerPcsStart.Length);   // size
-                for (var i = 0; i < packetHeader.Length; i++)
-                {
-                    buf[index++] = packetHeader[i];
-                }
-
-                ToolBox.SetWord(headerPcsStart, 5, compositionNumber);
-                for (var i = 0; i < headerPcsStart.Length; i++)
-                {
-                    buf[index++] = headerPcsStart[i];
-                }
+                writer.Write(PcsSegment, stepPts, BuildPcs(pic.Width, h, fpsId, compositionNumber, CompositionStateNormal, true, encoded));
 
                 // The palette version has to move for the decoder to take the update; it is a
                 // byte, so it wraps on captions with more than 255 steps.
-                index = WritePds(buf, index, packetHeader, pal, palSize, (step + 1) & 0xff, fadeSteps[step].AlphaPercent);
-
-                packetHeader[10] = 0x80;                                         // END (keep PTS & DTS)
-                ToolBox.SetWord(packetHeader, 11, 0);                       // size
-                for (var i = 0; i < packetHeader.Length; i++)
-                {
-                    buf[index++] = packetHeader[i];
-                }
+                writer.Write(PdsSegment, stepPts, BuildPds(pal, palSize, (step + 1) & 0xff, encoded, updates[step].AlphaPercents));
+                writer.Write(EndSegment, stepPts, Array.Empty<byte>());
             }
 
-            // write PCS end
-            packetHeader[10] = 0x16;                                            // ID
-            ToolBox.SetDWord(packetHeader, 2, (uint)pic.EndTimeForWrite);        // PTS
-            ToolBox.SetDWord(packetHeader, 6, 0);                          // DTS (0 = unset)
-            ToolBox.SetWord(packetHeader, 11, headerPcsEnd.Length);     // size
-            for (var i = 0; i < packetHeader.Length; i++)
+            if (writeClear)
             {
-                buf[index++] = packetHeader[i];
+                // PCS with no objects, the windows again, END
+                compositionNumber++;
+                writer.Write(PcsSegment, endPts, BuildPcs(pic.Width, h, fpsId, compositionNumber, CompositionStateNormal, false, Array.Empty<EncodedObject>()));
+                writer.Write(WdsSegment, endPts, BuildWds(encoded));
+                writer.Write(EndSegment, endPts, Array.Empty<byte>());
             }
 
-            ToolBox.SetWord(headerPcsEnd, 0, pic.Width);
-            ToolBox.SetWord(headerPcsEnd, 2, h);                                // cropped height
-            ToolBox.SetByte(headerPcsEnd, 4, fpsId);
-            ToolBox.SetWord(headerPcsEnd, 5, compositionNumber + 1);
-            for (var i = 0; i < headerPcsEnd.Length; i++)
-            {
-                buf[index++] = headerPcsEnd[i];
-            }
-
-            // write WDS - Window Definition Segment
-            packetHeader[10] = 0x17;                                                     // ID (keep PTS & DTS)
-            ToolBox.SetWord(packetHeader, 11, headerWds.Length);                // size
-            for (var i = 0; i < packetHeader.Length; i++)
-            {
-                buf[index++] = packetHeader[i];
-            }
-
-            ToolBox.SetWord(headerWds, 2, pic.WindowXOffset);
-            ToolBox.SetWord(headerWds, 4, yOfs);
-            ToolBox.SetWord(headerWds, 6, bm.Width);
-            ToolBox.SetWord(headerWds, 8, bm.Height);
-            for (var i = 0; i < headerWds.Length; i++)
-            {
-                buf[index++] = headerWds[i];
-            }
-
-            // write END
-            packetHeader[10] = 0x80;                                            // ID (keep PTS & DTS)
-            ToolBox.SetWord(packetHeader, 11, 0);                       // size
-            for (var i = 0; i < packetHeader.Length; i++)
-            {
-                buf[index++] = packetHeader[i];
-            }
-
-            return buf;
+            pic.NextCompositionNumber = compositionNumber + 1;
+            return writer.ToArray();
         }
     }
 }

@@ -6,6 +6,7 @@ Edit the chapter marks of the loaded video: add them at the video position, impo
 - **Shortcut:** Configurable
 
 <!-- Screenshot: Chapters window -->
+![Chapters](../screenshots/chapters.png)
 
 Chapters belong to the video, not to the subtitle, so a video must be loaded. Chapters are drawn on the [audio visualizer](audio-visualizer.md) as labelled marks, which makes them useful as landmarks while subtitling even if you never write them back to the video.
 

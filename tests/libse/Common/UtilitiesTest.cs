@@ -7,6 +7,36 @@ namespace LibSETests.Common;
 
 public class UtilitiesTest
 {
+    // ReSplit backs "Break at first space from cursor position" (#14420): one break at the
+    // first space at or after the caret, existing breaks flattened first.
+    [Fact]
+    public void ReSplitBreaksAtFirstSpaceAfterCaret()
+    {
+        var s = Utilities.ReSplit("Hello world foo bar", 8);
+        Assert.Equal("Hello world" + Environment.NewLine + "foo bar", s);
+    }
+
+    [Fact]
+    public void ReSplitBreaksAtSpaceRightBeforeCaret()
+    {
+        var s = Utilities.ReSplit("Hello world foo bar", 6);
+        Assert.Equal("Hello" + Environment.NewLine + "world foo bar", s);
+    }
+
+    [Fact]
+    public void ReSplitReplacesExistingLineBreak()
+    {
+        var s = Utilities.ReSplit("Hello" + Environment.NewLine + "world foo bar", 8);
+        Assert.Equal("Hello world" + Environment.NewLine + "foo bar", s);
+    }
+
+    [Fact]
+    public void ReSplitLeavesTextWithoutSpaceAfterCaretAlone()
+    {
+        Assert.Equal("Hello world", Utilities.ReSplit("Hello world", 8));
+        Assert.Equal("Hello world", Utilities.ReSplit("Hello world", 0));
+    }
+
     // SplitEndTags walks the line right-to-left, so each stripped tag must be prepended to
     // "post" to preserve the original suffix order - it used to append, so nested closing
     // tags came back reversed ("</font></i>") when callers rebuilt "pre + text + post".

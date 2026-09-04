@@ -22,6 +22,8 @@ The spectrogram can be generated and toggled independently of the waveform. If y
 | **Alt+Scroll wheel** | Horizontal zoom in/out |
 | **Shift+Scroll wheel** | Vertical zoom in/out |
 
+With **Mouse-wheel sets video position** on (**Options → Settings → Waveform**), the plain scroll wheel steps the video position instead of scrolling the view; **Mouse-wheel video position step** sets the step size (a frame, or a number of milliseconds). Ctrl (Cmd on macOS) + wheel keeps its scroll behavior.
+
 ### Subtitle Timing
 
 | Mouse Action | Effect |
@@ -32,6 +34,8 @@ The spectrogram can be generated and toggled independently of the waveform. If y
 | **Click** on empty area | Set video position |
 | **Click** on subtitle | Select the subtitle |
 | **Double-click** on subtitle | Set video position and select subtitle |
+
+What a single click and a double-click do is configurable: **Waveform single-click action** (set video position, pause, select subtitle, center, or combinations) and **Waveform double-click action** (none, select subtitle, center, pause, play) in **Options → Settings → Waveform**.
 | **Drag** subtitle left/right edge | Adjust start/end time |
 | **Drag** subtitle body | Move entire subtitle |
 | **Right-click** | Context menu |
@@ -55,17 +59,20 @@ The spectrogram can be generated and toggled independently of the waveform. If y
 | Insert at position (focus text) | Insert a new subtitle at video position and focus the text editor |
 | Insert at position (no focus) | Insert a new subtitle at video position |
 | Seek silence | Find the next silent section |
+| Guess start time from waveform | Move the selected line's start to just before the speech begins (no default key) |
+| Guess end time from waveform | Move the selected line's end to just after the speech stops (no default key) |
 
 > **Note:** Actual key bindings depend on your shortcut configuration. See **Options → Shortcuts** to view or change them.
 
 ## Toolbar
 
-The waveform toolbar (when visible) provides buttons for:
-- Zoom in/out (horizontal and vertical)
-- Toggle waveform/spectrogram mode
-- Toggle grid lines
-- Navigate to previous/next shot change
-- Apply common subtitle timing actions
+The waveform toolbar (when visible) provides:
+- Play/pause, play selection (once or repeated), play next, and SE 4 style previous / play current / pause / next text buttons
+- New, set start, set end, set start and offset the rest, remove blank lines
+- Horizontal and vertical zoom sliders, video position slider and editable position box
+- Playback speed, auto-select on play, center, video seek, audio track picker, and a **More** menu
+
+Switching between waveform and spectrogram is done from the right-click menu, and grid lines are turned on in **Options → Settings → Waveform**; neither is a toolbar button. See [Waveform Toolbar](main-window.md#waveform-toolbar) for the full list.
 
 The toolbar can be toggled from **Video → More → Toggle waveform toolbar**. Subtitle Edit 5 also supports waveform toolbar customization, including button visibility/order and import/export of toolbar settings.
 

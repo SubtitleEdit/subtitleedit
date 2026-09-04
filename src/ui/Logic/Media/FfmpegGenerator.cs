@@ -69,7 +69,7 @@ public class FfmpegGenerator
     /// <summary>
     /// Generate ffmpeg parameters for a video with a burned-in Advanced Sub Station Alpha subtitle.
     /// </summary>
-    public static string GenerateHardcodedVideoFile(string inputVideoFileName, string assaSubtitleFileName, string outputVideoFileName, int width, int height, string videoEncoding, string preset, string pixelFormat, string crf, string audioEncoding, bool forceStereo, string sampleRate, string tune, string audioBitRate, string pass, string twoPassBitRate, string? cutStart = null, string? cutEnd = null, string audioCutTrack = "", Features.Video.BurnIn.BurnInLogo? burnInLogo = null, bool inputIsAudioOnly = false)
+    public static string GenerateHardcodedVideoFile(string inputVideoFileName, string assaSubtitleFileName, string outputVideoFileName, int width, int height, string videoEncoding, string preset, string pixelFormat, string crf, string audioEncoding, bool forceStereo, string sampleRate, string tune, string audioBitRate, string pass, string twoPassBitRate, string? cutStart = null, string? cutEnd = null, string audioCutTrack = "", Features.Video.BurnIn.BurnInLogo? burnInLogo = null, bool inputIsAudioOnly = false, bool subtitleIsImage = false)
     {
         if (width % 2 == 1)
         {
@@ -249,23 +249,44 @@ public class FfmpegGenerator
         // encoding when the audio ends (the lavfi color source runs forever).
         var canvasInput = string.Empty;
         var shortestParameter = string.Empty;
+        var inputCount = 1;
         var mainVideoStream = "[0:v]";
-        var logoVideoStream = "[1:v]";
         if (inputIsAudioOnly)
         {
             canvasInput = $" -f lavfi -i color=c=black:s={width}x{height}:r=25";
             shortestParameter = " -shortest";
-            mainVideoStream = "[1:v]";
-            logoVideoStream = "[2:v]";
+            mainVideoStream = $"[{inputCount}:v]";
+            inputCount++;
+        }
+
+        // Text is rendered by libass (the "ass" filter). A Blu-ray sup is a second input instead:
+        // its bitmaps are scaled to the output size like the video and laid over it, so the
+        // exported look - overlapping lines included - ends up on the frames (issue #14456).
+        // A cut seeks the video input ("-ss" before "-i" restarts its timestamps at zero) and the
+        // sup demuxer cannot seek, so the subtitle input is shifted back by the cut instead.
+        var imageSubtitleInput = string.Empty;
+        string withSubtitles;
+        if (subtitleIsImage)
+        {
+            imageSubtitleInput = $"{GetImageSubtitleOffset(cutStart)} -i \"{assaSubtitleFileName}\"";
+            withSubtitles = $"{mainVideoStream}scale={width}:{height}[video];[{inputCount}:s]scale={width}:{height}[subs];[video][subs]overlay";
+            inputCount++;
+        }
+        else
+        {
+            withSubtitles = $"{mainVideoStream}scale={width}:{height},ass={Path.GetFileName(assaSubtitleFileName)}";
         }
 
         // Add logo overlay if specified
         var logoInput = string.Empty;
-        var filterParameter = $"-vf \"scale={width}:{height},ass={Path.GetFileName(assaSubtitleFileName)}\"";
+        var filterParameter = subtitleIsImage
+            ? $"-filter_complex \"{withSubtitles}\""
+            : $"-vf \"scale={width}:{height},ass={Path.GetFileName(assaSubtitleFileName)}\"";
 
         if (burnInLogo != null && !string.IsNullOrEmpty(burnInLogo.LogoFileName) && File.Exists(burnInLogo.LogoFileName))
         {
             logoInput = $" -i \"{burnInLogo.LogoFileName}\"";
+            var logoVideoStream = $"[{inputCount}:v]";
 
             // Convert alpha percentage (0-100) to 0.0-1.0
             var alphaValue = (burnInLogo.Alpha / 100.0).ToString(CultureInfo.InvariantCulture);
@@ -275,7 +296,7 @@ public class FfmpegGenerator
             // 1. Scale main video (or the generated canvas for audio-only input) and apply subtitles
             // 2. Scale logo by size percentage and apply alpha transparency
             // 3. Overlay logo at specified X, Y position
-            var filterComplex = $"{mainVideoStream}scale={width}:{height},ass={Path.GetFileName(assaSubtitleFileName)}[withsubs];" +
+            var filterComplex = $"{withSubtitles}[withsubs];" +
                                $"{logoVideoStream}scale=iw*{sizePercent}/100:ih*{sizePercent}/100,format=rgba,colorchannelmixer=aa={alphaValue}[logo];" +
                                $"[withsubs][logo]overlay={burnInLogo.X}:{burnInLogo.Y}";
 
@@ -287,7 +308,23 @@ public class FfmpegGenerator
         // Without it ffmpeg hits "File ... already exists. Exiting." and writes nothing - and as
         // the old file is still there, the burn-in looked like it succeeded (issue #14210).
         return
-            $"-y{cutStart}-i \"{inputVideoFileName}\"{canvasInput}{logoInput}{cutEnd} {filterParameter} -g 30 -bf 2 -s {width}x{height} {videoEncodingSettings} {passSettings} {presetSettings} {crfSettings} {pixelFormat} {audioSettings}{tuneParameter} -use_editlist 0 -movflags +faststart{shortestParameter} {outputVideoFileName}";
+            $"-y{cutStart}-i \"{inputVideoFileName}\"{canvasInput}{imageSubtitleInput}{logoInput}{cutEnd} {filterParameter} -g 30 -bf 2 -s {width}x{height} {videoEncodingSettings} {passSettings} {presetSettings} {crfSettings} {pixelFormat} {audioSettings}{tuneParameter} -use_editlist 0 -movflags +faststart{shortestParameter} {outputVideoFileName}";
+    }
+
+    /// <summary>
+    /// The "-itsoffset" that keeps an image subtitle input in step with a video input that was
+    /// seeked with "-ss": the same time, negated. Empty when there is no cut.
+    /// </summary>
+    private static string GetImageSubtitleOffset(string? cutStart)
+    {
+        var seek = (cutStart ?? string.Empty).Trim();
+        if (!seek.StartsWith("-ss ", StringComparison.Ordinal))
+        {
+            return string.Empty;
+        }
+
+        var time = seek.Substring(4).Trim();
+        return string.IsNullOrEmpty(time) ? string.Empty : $" -itsoffset -{time}";
     }
 
     private static Process GetFFmpegProcess(string imageFileName, string outputFileName, int videoWidth, int videoHeight, int seconds, decimal frameRate, bool addTimeCode = false, string addTimeColor = "white")
@@ -577,18 +614,47 @@ public class FfmpegGenerator
         return processMakeVideo;
     }
 
-    public static Process TrimSilenceStartAndEnd(string inputFileName, string outputFileName, DataReceivedEventHandler? dataReceivedHandler = null)
+    /// <summary>
+    /// Runs ffmpeg's volumedetect over the file; the peak arrives on stderr as
+    /// "max_volume: -2.8 dB" (parse it with <c>TtsSilenceThreshold.ParsePeakDbfs</c>).
+    /// </summary>
+    public static Process MeasurePeakVolume(string inputFileName, DataReceivedEventHandler dataReceivedHandler)
+    {
+        var process = new Process
+        {
+            StartInfo =
+            {
+                FileName = GetFfmpegLocation(),
+                Arguments = $"-nostdin -hide_banner -i \"{inputFileName}\" -vn -af volumedetect -f null -",
+                UseShellExecute = false,
+                CreateNoWindow = true
+            }
+        };
+
+        SetupDataReceiveHandler(dataReceivedHandler, process);
+
+        return process;
+    }
+
+    /// <param name="silenceThreshold">
+    /// Linear amplitude (0..1) under which a sample counts as silence. Derive it from the clip's
+    /// peak via <c>TtsSilenceThreshold.Amplitude</c>: the old fixed 0.01 (-40 dBFS) trimmed the
+    /// soft final consonant off quiet voice-clone output, cutting the last word (#14480).
+    /// </param>
+    public static Process TrimSilenceStartAndEnd(string inputFileName, string outputFileName, double silenceThreshold = 0.01, DataReceivedEventHandler? dataReceivedHandler = null)
     {
         // silenceremove keeps up to start_silence (100 ms) of the detected silence as padding.
         // No unconditional atrim cuts here: a fixed atrim=start=0.1 ahead of the detection used
         // to chop 100 ms off both ends whether or not it was silence, clipping the first/last
         // phoneme for engines that start speaking immediately (e.g. Piper).
+        var threshold = Math.Clamp(silenceThreshold, 0.000001, 1.0).ToString("0.########", CultureInfo.InvariantCulture);
+        var silenceRemove = $"silenceremove=start_periods=1:start_silence=0.1:start_threshold={threshold}";
         var processMakeVideo = new Process
         {
             StartInfo =
             {
                 FileName = GetFfmpegLocation(),
-                Arguments = $"-nostdin -y -i \"{inputFileName}\" -af \"areverse,silenceremove=start_periods=1:start_silence=0.1:start_threshold=0.01,areverse,silenceremove=start_periods=1:start_silence=0.1:start_threshold=0.01\" \"{outputFileName}\"",
+                Arguments = $"-nostdin -y -i \"{inputFileName}\" -af \"areverse,{silenceRemove},areverse,{silenceRemove}\" \"{outputFileName}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true
             }
@@ -606,13 +672,17 @@ public class FfmpegGenerator
     /// without affecting phonemes at all.
     /// </summary>
     /// <param name="maxSilenceSeconds">Maximum allowed silence duration between words (e.g. 0.15 for 150ms)</param>
-    public static Process CompressInternalSilence(string inputFileName, string outputFileName, double maxSilenceSeconds = 0.15, DataReceivedEventHandler? dataReceivedHandler = null)
+    /// <param name="silenceThresholdDb">
+    /// ffmpeg dB literal (e.g. "-52.3dB") under which a sample counts as silence - relative to the
+    /// clip's peak via <c>TtsSilenceThreshold.DbLiteral</c>, for the same reason as the trim (#14480).
+    /// </param>
+    public static Process CompressInternalSilence(string inputFileName, string outputFileName, double maxSilenceSeconds = 0.15, string silenceThresholdDb = "-40dB", DataReceivedEventHandler? dataReceivedHandler = null)
     {
         var maxSilence = maxSilenceSeconds.ToString("0.00", CultureInfo.InvariantCulture);
         // silenceremove: stop_periods=-1 processes ALL silence gaps (not just first)
         // stop_duration = max allowed silence length; stop_threshold = silence detection level
         // This keeps all speech intact and only compresses pauses between words
-        var filter = $"silenceremove=stop_periods=-1:stop_duration={maxSilence}:stop_threshold=-40dB";
+        var filter = $"silenceremove=stop_periods=-1:stop_duration={maxSilence}:stop_threshold={silenceThresholdDb}";
 
         var processMakeVideo = new Process
         {
@@ -725,14 +795,20 @@ public class FfmpegGenerator
     /// <summary>
     /// Apply pro audio post-processing chain: low-pass, EQ warmth, compression, loudness normalization, noise gate, and fade in/out.
     /// </summary>
-    public static Process ApplyProAudioChain(string inputFileName, string outputFileName, DataReceivedEventHandler? dataReceivedHandler = null)
+    /// <param name="gateThreshold">
+    /// Noise-gate threshold as a linear amplitude, relative to the clip's peak via
+    /// <c>TtsSilenceThreshold.Amplitude</c> - a fixed 0.01 gated the soft word endings of quiet
+    /// voice-clone output (#14480).
+    /// </param>
+    public static Process ApplyProAudioChain(string inputFileName, string outputFileName, double gateThreshold = 0.01, DataReceivedEventHandler? dataReceivedHandler = null)
     {
+        var gate = Math.Clamp(gateThreshold, 0.000001, 1.0).ToString("0.########", CultureInfo.InvariantCulture);
         // Chain: low-pass 2400Hz → bass warmth +6dB@200Hz → treble reduce -5dB@2500Hz → noise gate → compression → loudness normalization → tiny fade in/out
         var filters = string.Join(",",
             "lowpass=f=2400",
             "equalizer=f=200:t=h:width=100:g=6",
             "equalizer=f=2500:t=h:width=500:g=-5",
-            "agate=threshold=0.01:ratio=2:attack=5:release=50",
+            $"agate=threshold={gate}:ratio=2:attack=5:release=50",
             "compand=attacks=0.3:decays=0.8:points=-80/-80|-45/-45|-27/-15|0/-3:soft-knee=6:gain=3",
             "loudnorm=I=-16:LRA=11:TP=-1.5",
             "afade=t=in:d=0.015",

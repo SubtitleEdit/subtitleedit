@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder("{" +
-               Environment.NewLine + "  \"version\": \"1.0.0\"" +
+               Environment.NewLine + "  \"version\": \"1.0.0\"," +
                Environment.NewLine + "  \"segments\": [");
             var count = 0;
             foreach (var p in subtitle.Paragraphs)
@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 if (!string.IsNullOrEmpty(p.Actor))
                 {
-                    sb.AppendLine($"      \"speaker\": \"{p.Actor}\"");
+                    sb.AppendLine($"      \"speaker\": \"{Json.EncodeJsonText(p.Actor)}\",");
                 }
 
                 sb.AppendLine($"      \"startTime\": {p.StartTime.TotalSeconds.ToString(CultureInfo.InvariantCulture)},");

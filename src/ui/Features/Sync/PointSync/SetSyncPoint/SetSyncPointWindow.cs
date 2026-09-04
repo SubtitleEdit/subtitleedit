@@ -64,7 +64,6 @@ public class SetSyncPointWindow : Window
 
         vm.AudioVisualizer = new AudioVisualizer
         {
-            Height = 80,
             Width = double.NaN,
             IsReadOnly = true,
             DrawGridLines = Se.Settings.Waveform.DrawGridLines,
@@ -131,11 +130,19 @@ public class SetSyncPointWindow : Window
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
+        // The waveform used to be pinned at 80 px under the player, too little to pick a precise
+        // sync point from; the drag handle between them mirrors the main window (issue #14414).
+        var split = new VideoWaveformSplitGrid(vm.VideoPlayerControl, vm.AudioVisualizer, Se.Settings.Synchronization.SetSyncPointWaveformHeight)
+        {
+            IsVideoVisible = vm.IsVideoVisible,
+            IsWaveformVisible = vm.IsAudioVisualizerVisible,
+        };
+
         // A Star row keeps its share of the height even when its child is hidden, so the row itself
         // has to collapse - otherwise the videoless dialog is mostly empty space.
         var rowVideoPlayer = new RowDefinition
         {
-            Height = vm.IsVideoVisible ? new GridLength(1, GridUnitType.Star) : new GridLength(0),
+            Height = vm.IsVideoVisible || vm.IsAudioVisualizerVisible ? new GridLength(1, GridUnitType.Star) : new GridLength(0),
         };
 
         vm.VideoPlayerControl.WithBindIsVisible(nameof(vm.IsVideoVisible));
@@ -144,8 +151,7 @@ public class SetSyncPointWindow : Window
         {
             RowDefinitions =
             {
-                rowVideoPlayer,                                                       // video player
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // audio visualizer
+                rowVideoPlayer,                                                       // video player over waveform
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // combo box
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // sync point time code
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // buttons
@@ -160,11 +166,10 @@ public class SetSyncPointWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        gridLeft.Add(vm.VideoPlayerControl, 0);
-        gridLeft.Add(vm.AudioVisualizer, 1);
-        gridLeft.Add(comboBoxLeft, 2);
-        gridLeft.Add(panelTimeCode, 3);
-        gridLeft.Add(panelLeftButtons, 4);
+        gridLeft.Add(split, 0);
+        gridLeft.Add(comboBoxLeft, 1);
+        gridLeft.Add(panelTimeCode, 2);
+        gridLeft.Add(panelLeftButtons, 3);
 
         var grid = new Grid
         {
@@ -193,17 +198,32 @@ public class SetSyncPointWindow : Window
 
         // "Open video file..." can bring a video in after the videoless dialog is already up: give
         // the player its row back and grow the window, which is otherwise too short to show it.
+        // The waveform lent by the main window arrives a beat after construction and shares the row.
         vm.PropertyChanged += (_, e) =>
         {
-            if (e.PropertyName != nameof(vm.IsVideoVisible) || !vm.IsVideoVisible)
+            if (e.PropertyName != nameof(vm.IsVideoVisible) && e.PropertyName != nameof(vm.IsAudioVisualizerVisible))
             {
                 return;
             }
 
-            rowVideoPlayer.Height = new GridLength(1, GridUnitType.Star);
-            MaxHeight = double.PositiveInfinity;
-            MinHeight = 650;
-            Height = Math.Max(Height, 800);
+            split.IsVideoVisible = vm.IsVideoVisible;
+            split.IsWaveformVisible = vm.IsAudioVisualizerVisible;
+            rowVideoPlayer.Height = vm.IsVideoVisible || vm.IsAudioVisualizerVisible ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
+
+            if (vm.IsVideoVisible)
+            {
+                MaxHeight = double.PositiveInfinity;
+                MinHeight = 650;
+                Height = Math.Max(Height, 800);
+            }
+            else if (vm.IsAudioVisualizerVisible)
+            {
+                // No player, but a waveform to show: it fills whatever height the user gives the
+                // window, so the videoless cap has to go.
+                MaxHeight = double.PositiveInfinity;
+                MinHeight = VideolessMinHeight + VideoWaveformSplitGrid.DefaultWaveformHeight;
+                Height = Math.Max(Height, VideolessHeight + 2 * VideoWaveformSplitGrid.DefaultWaveformHeight);
+            }
         };
 
         // Focus the time code box, not a button, so the window receives key events without arming
@@ -218,6 +238,10 @@ public class SetSyncPointWindow : Window
         // not enough to keep a focused button from clicking on Space release.
         AddHandler(KeyUpEvent, vm.OnKeyUpHandler, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: true);
         Loaded += (_, e) => vm.OnLoaded();
-        Closing += (_, e) => vm.OnClosing();
+        Closing += (_, e) =>
+        {
+            Se.Settings.Synchronization.SetSyncPointWaveformHeight = split.WaveformHeight;
+            vm.OnClosing();
+        };
     }
 }

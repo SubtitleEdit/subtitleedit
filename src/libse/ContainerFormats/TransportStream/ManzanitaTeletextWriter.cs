@@ -30,6 +30,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         /// </summary>
         public string LanguageCode { get; set; } = "eng";
 
+        /// <summary>
+        /// Announces the page as subtitles for the hearing impaired in the DVB teletext
+        /// descriptor (EN 300 468 teletext_type 0x05) instead of plain subtitles (0x02) - the
+        /// only difference is the descriptor, the pages themselves are transmitted the same way.
+        /// </summary>
+        public bool HearingImpaired { get; set; }
+
         public double FrameRate { get; set; } = 25.0;
 
         public string Creator { get; set; } = "Subtitle Edit";
@@ -221,7 +228,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             sb.Append("      <dvb_teletext_descriptor>\n");
             sb.Append("        <dvb_teletext_content\n");
             sb.Append("          ISO_639_language_code=\"").Append(XmlEscape(GetLanguageCode())).Append("\"\n");
-            sb.Append("          teletext_type=\"subtitle\"\n");
+            sb.Append("          teletext_type=\"").Append(HearingImpaired ? ManzanitaTransportStreamParser.TeletextTypeHearingImpaired : ManzanitaTransportStreamParser.TeletextTypeSubtitle).Append("\"\n");
             sb.Append("          teletext_magazine_number=\"").Append(magazine.ToString(CultureInfo.InvariantCulture)).Append("\"\n");
             sb.Append("          teletext_page_number=\"").Append(pageBcd.ToString(CultureInfo.InvariantCulture)).Append("\"\n");
             sb.Append("        />\n");

@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -194,6 +194,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             public string EditorsContactDetails;
             public int? TeletextPage;
             public string TeletextLanguage;
+            public bool TeletextHearingImpaired;
 
             public static DocumentMetadata FromHeader(string header)
             {
@@ -208,10 +209,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
 
                 var metadata = new DocumentMetadata();
-                if (DvbTeletext.TryParseHeader(header, out var page, out var language))
+                if (DvbTeletext.TryParseHeader(header, out var page, out var language, out var hearingImpaired))
                 {
                     metadata.TeletextPage = page;
                     metadata.TeletextLanguage = language;
+                    metadata.TeletextHearingImpaired = hearingImpaired;
                 }
 
                 return metadata;
@@ -297,6 +299,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             metadata.TeletextPage = page;
                             metadata.TeletextLanguage = node.Attributes?["language"]?.Value;
+                            metadata.TeletextHearingImpaired = string.Equals(node.Attributes?["type"]?.Value, DvbTeletext.HeaderTypeHearingImpaired, StringComparison.OrdinalIgnoreCase);
                         }
                     }
                 }
@@ -356,6 +359,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         teletext.Attributes.Append(languageAttribute);
                     }
 
+                    if (TeletextHearingImpaired)
+                    {
+                        var typeAttribute = xml.CreateAttribute("type");
+                        typeAttribute.InnerText = DvbTeletext.HeaderTypeHearingImpaired;
+                        teletext.Attributes.Append(typeAttribute);
+                    }
+
                     metadataNode.AppendChild(teletext);
                 }
             }
@@ -404,8 +414,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         /// </summary>
         public static bool TryGetTeletextPageAndLanguage(string header, out int pageNumber, out string languageCode)
         {
+            return TryGetTeletextPageAndLanguage(header, out pageNumber, out languageCode, out _);
+        }
+
+        /// <summary>
+        /// Same as <see cref="TryGetTeletextPageAndLanguage(string, out int, out string)"/>, also
+        /// reporting whether the page was announced as subtitles for the hearing impaired.
+        /// </summary>
+        public static bool TryGetTeletextPageAndLanguage(string header, out int pageNumber, out string languageCode, out bool hearingImpaired)
+        {
             pageNumber = 0;
             languageCode = string.Empty;
+            hearingImpaired = false;
             if (!IsEbuTtHeader(header))
             {
                 return false;
@@ -419,6 +439,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             pageNumber = metadata.TeletextPage.Value;
             languageCode = metadata.TeletextLanguage ?? string.Empty;
+            hearingImpaired = metadata.TeletextHearingImpaired;
             return true;
         }
 

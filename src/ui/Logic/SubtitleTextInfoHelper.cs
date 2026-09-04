@@ -56,7 +56,9 @@ internal static class SubtitleTextInfoHelper
 
         var cps = GetCharactersPerSecond(text, item.StartTime, item.EndTime);
         cpsText = string.Format(Se.Language.Main.CharactersPerSecond, $"{cps:0.0}");
-        cpsBackground = Se.Settings.General.ColorCharactersPerSecond && cps > maxCps ? _errorBrush : _transparentBrush;
+        // Same rounded comparison as the grid row, so the label cannot read "15.0" in red while
+        // the row for the same line is not flagged (#14418).
+        cpsBackground = Se.Settings.General.ColorCharactersPerSecond && CpsHelper.IsAboveMax(cps, maxCps) ? _errorBrush : _transparentBrush;
         totalText = info.TotalText;
         totalBackground = info.TotalBackground;
     }

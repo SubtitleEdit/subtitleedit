@@ -1,8 +1,8 @@
 using Avalonia;
-using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
@@ -36,35 +36,31 @@ public class PositionMonitorControl : Control
     private static readonly Color ZoneRed = Color.FromRgb(0xEF, 0x44, 0x44);
 
     // Shared with the grid's zone-dot column and the summary chips.
-    public static readonly IBrush ZoneGreenBrush = new SolidColorBrush(ZoneGreen);
-    public static readonly IBrush ZoneAmberBrush = new SolidColorBrush(ZoneAmber);
-    public static readonly IBrush ZoneRedBrush = new SolidColorBrush(ZoneRed);
+    public static readonly ImmutableSolidColorBrush ZoneGreenBrush = new(ZoneGreen);
+    public static readonly ImmutableSolidColorBrush ZoneAmberBrush = new(ZoneAmber);
+    public static readonly ImmutableSolidColorBrush ZoneRedBrush = new(ZoneRed);
 
-    private static readonly IBrush FrameBrush = new SolidColorBrush(Color.FromRgb(0x0D, 0x0D, 0x0D));
-    private static readonly IBrush BarBrush = new SolidColorBrush(Color.FromArgb(0x14, 0xFF, 0xFF, 0xFF));
-    private static readonly Pen FrameBorderPen = new(new SolidColorBrush(Color.FromArgb(0x50, 0xFF, 0xFF, 0xFF)), 1);
-    private static readonly Pen BarSeparatorPen = new(new SolidColorBrush(Color.FromArgb(0x60, 0xFF, 0xFF, 0xFF)), 1)
-    {
-        DashStyle = new DashStyle(new AvaloniaList<double> { 4, 4 }, 0),
-    };
-    private static readonly Pen TitleSafePen = new(new SolidColorBrush(Color.FromArgb(0x48, 0xFF, 0xFF, 0xFF)), 1)
-    {
-        DashStyle = new DashStyle(new AvaloniaList<double> { 2, 4 }, 0),
-    };
-    private static readonly Pen SelectedPen = new(Brushes.White, 2);
+    private static readonly IBrush FrameBrush = new ImmutableSolidColorBrush(Color.FromRgb(0x0D, 0x0D, 0x0D));
+    private static readonly IBrush BarBrush = new ImmutableSolidColorBrush(Color.FromArgb(0x14, 0xFF, 0xFF, 0xFF));
+    private static readonly IPen FrameBorderPen = new ImmutablePen(new ImmutableSolidColorBrush(Color.FromArgb(0x50, 0xFF, 0xFF, 0xFF)), 1);
+    private static readonly IPen BarSeparatorPen = new ImmutablePen(
+        new ImmutableSolidColorBrush(Color.FromArgb(0x60, 0xFF, 0xFF, 0xFF)), 1, new ImmutableDashStyle(new[] { 4.0, 4.0 }, 0));
+    private static readonly IPen TitleSafePen = new ImmutablePen(
+        new ImmutableSolidColorBrush(Color.FromArgb(0x48, 0xFF, 0xFF, 0xFF)), 1, new ImmutableDashStyle(new[] { 2.0, 4.0 }, 0));
+    private static readonly IPen SelectedPen = new ImmutablePen(Brushes.White, 2);
 
     // Cached per-zone brushes/pens - Render runs over every subtitle in the file,
     // so avoid per-item allocations. Green (the norm) is deliberately dim so the
     // amber/red problem subtitles stand out at a glance.
-    private static readonly IBrush GreenFill = new SolidColorBrush(ZoneGreen, 0.13);
-    private static readonly IBrush AmberFill = new SolidColorBrush(ZoneAmber, 0.45);
-    private static readonly IBrush RedFill = new SolidColorBrush(ZoneRed, 0.45);
-    private static readonly Pen GreenPen = new(new SolidColorBrush(ZoneGreen, 0.45), 1);
-    private static readonly Pen AmberPen = new(new SolidColorBrush(ZoneAmber), 1.5);
-    private static readonly Pen RedPen = new(new SolidColorBrush(ZoneRed), 1.5);
-    private static readonly Pen GreenSelectedPen = new(ZoneGreenBrush, 1);
-    private static readonly Pen AmberSelectedPen = new(ZoneAmberBrush, 1);
-    private static readonly Pen RedSelectedPen = new(ZoneRedBrush, 1);
+    private static readonly IBrush GreenFill = new ImmutableSolidColorBrush(ZoneGreen, 0.13);
+    private static readonly IBrush AmberFill = new ImmutableSolidColorBrush(ZoneAmber, 0.45);
+    private static readonly IBrush RedFill = new ImmutableSolidColorBrush(ZoneRed, 0.45);
+    private static readonly IPen GreenPen = new ImmutablePen(new ImmutableSolidColorBrush(ZoneGreen, 0.45), 1);
+    private static readonly IPen AmberPen = new ImmutablePen(new ImmutableSolidColorBrush(ZoneAmber), 1.5);
+    private static readonly IPen RedPen = new ImmutablePen(new ImmutableSolidColorBrush(ZoneRed), 1.5);
+    private static readonly IPen GreenSelectedPen = new ImmutablePen(ZoneGreenBrush, 1);
+    private static readonly IPen AmberSelectedPen = new ImmutablePen(ZoneAmberBrush, 1);
+    private static readonly IPen RedSelectedPen = new ImmutablePen(ZoneRedBrush, 1);
 
     public PositionMonitorControl()
     {

@@ -16,5 +16,12 @@ Convert subtitle timings from one frame rate to another.
 - 30
 - 50 (PAL interlaced)
 - 59.94 (NTSC interlaced)
+- 60
+
+## Options
+
+- **From frame rate** / **To frame rate** — Pick from the list, or click the browse button next to either to choose a video file; its frame rate is read and selected
+- The swap button exchanges the from and to values
+- **OK** applies the conversion; **Cancel** closes without changes
 
 The window remembers its size and position between sessions.

@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
 
                 sb.Append('{');
-                sb.AppendFormat("\"content\":\"{0}\",\"start_time\":{1},\"end_time\":{2}", p.Text.Replace(Environment.NewLine, " <br> "), ((long)(Math.Round(p.StartTime.TotalMilliseconds))).ToString(CultureInfo.InvariantCulture), ((long)(Math.Round(p.EndTime.TotalMilliseconds))).ToString(CultureInfo.InvariantCulture));
+                sb.AppendFormat("\"content\":\"{0}\",\"start_time\":{1},\"end_time\":{2}", Json.EncodeJsonText(p.Text, " <br> "), ((long)(Math.Round(p.StartTime.TotalMilliseconds))).ToString(CultureInfo.InvariantCulture), ((long)(Math.Round(p.EndTime.TotalMilliseconds))).ToString(CultureInfo.InvariantCulture));
                 sb.Append('}');
                 i++;
             }
@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         indexEndText = indexEndTime;
                     }
 
-                    string text = line.Substring(0, indexEndText - 1).Trim().TrimEnd('\"');
+                    string text = Json.DecodeJsonText(line.Substring(0, indexEndText - 1).Trim().TrimEnd('\"'));
                     text = text.Replace("<br>", Environment.NewLine).Replace("<BR>", Environment.NewLine);
                     text = text.Replace("<br/>", Environment.NewLine).Replace("<BR/>", Environment.NewLine);
                     text = text.Replace(Environment.NewLine + " ", Environment.NewLine);

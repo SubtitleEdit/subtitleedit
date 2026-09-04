@@ -217,6 +217,10 @@ public static class ExportTextTags
             return;
         }
 
+        // "{\fs..}" becomes "<font size=..>" for the renderer, and like "\pos" and "\bord" its
+        // value is in the script's resolution.
+        ip.TagFontSizeScale = scriptHeight > 0 && ip.ScreenHeight > 0 ? ip.ScreenHeight / (float)scriptHeight : 1f;
+
         // Inside a "\t(..)" block these tags are an animation target, not the line's look -
         // leave the whole line alone rather than freezing it at its final state.
         if (text.Contains("\\t(", StringComparison.Ordinal))

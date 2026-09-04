@@ -24,8 +24,22 @@ namespace UITests.Features.Main;
 /// fix and was reported again as #14003. The rebuild therefore suspends the anchor for its whole
 /// run: it keeps following the view, it just stops moving it, so the burst settles once at the end.
 /// </summary>
-public class ReferenceRebuildScrollAnchorTests
+public class ReferenceRebuildScrollAnchorTests : IDisposable
 {
+    // Closed in Dispose, not on the last line of each test: a close after a failed assertion
+    // never runs, and a stranded MainView window holds the app-wide focus for every later test.
+    private readonly List<Window> _windows = new();
+
+    public void Dispose()
+    {
+        foreach (var window in _windows)
+        {
+            window.Close();
+        }
+
+        _windows.Clear();
+    }
+
     [AvaloniaFact]
     public void ReferenceRebuild_SuspendsTheScrollAnchorWhileTheRowsChurn()
     {
@@ -145,19 +159,26 @@ public class ReferenceRebuildScrollAnchorTests
         return line;
     }
 
-    private static (Window Window, MainViewModel Vm) CreateMainViewModel()
+    private (Window Window, MainViewModel Vm) CreateMainViewModel()
     {
         var services = new ServiceCollection();
         services.AddSubtitleEditServices();
         Locator.Services = services.BuildServiceProvider();
 
         var window = new Window { Width = 1200, Height = 800 };
+        _windows.Add(window);
         MainView.NextHostWindow = window;
         var view = new MainView();
         window.Content = view;
         window.Show();
         Dispatcher.UIThread.RunJobs();
 
-        return (window, (MainViewModel)view.DataContext!);
+        // Every test here edits the subtitle, so closing the window would otherwise cancel the
+        // close and open the "Save changes?" box - which nothing answers, and which then keeps
+        // yanking keyboard focus for the rest of the process (the ArrowDown grid-centering
+        // test failed on CI whenever it ran a few classes after this one).
+        var vm = (MainViewModel)view.DataContext!;
+        window.SuppressSaveChangesPromptOnClose(vm);
+        return (window, vm);
     }
 }

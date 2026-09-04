@@ -58,7 +58,7 @@ Near the top of the JSON file, update these fields:
 ```json
 {
   "title": "Subtitle Edit",
-  "version": null,
+  "version": "v5.2.0-beta32",
   "translatedBy": "Your Name (or email / homepage)",
   "cultureName": "de-DE",
   ...
@@ -76,7 +76,7 @@ The `cultureName` value **must** be a valid .NET culture identifier.
 
 ## Step 4 — Save and Install the File
 
-Save your translated file as **`{CultureName}.json`** (e.g., `de-DE.json`) and place it in the **`Languages`** subfolder inside Subtitle Edit's data folder:
+Save your translated file as **`{English language name}.json`** (e.g., `German.json` — the file name is what the language list shows, and the shipped translations are named the same way) and place it in the **`Languages`** subfolder inside Subtitle Edit's data folder:
 
 | Platform | Languages folder path |
 |----------|-----------------------|

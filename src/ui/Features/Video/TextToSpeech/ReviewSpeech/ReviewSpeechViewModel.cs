@@ -1585,9 +1585,11 @@ public partial class ReviewSpeechViewModel : ObservableObject
         // Step 1: Trim silence from start and end. A failed trim (misconfigured/failing ffmpeg)
         // must fall back to the untrimmed audio - adopting the missing output blindly made
         // FfmpegMediaInfo.Parse below return a null Duration and the factor math NRE'd.
+        // Silence threshold relative to the clip's peak - same as the main pipeline (#14480).
+        var peakDbfs = await TtsSilenceThreshold.MeasurePeakDbfsAsync(item.CurrentFileName, _cancellationToken);
         var outputFileNameTrim = Path.Combine(_waveFolder, Guid.NewGuid() + ".wav");
         _tempAudioFiles.Add(outputFileNameTrim);
-        var trimProcess = FfmpegGenerator.TrimSilenceStartAndEnd(item.CurrentFileName, outputFileNameTrim);
+        var trimProcess = FfmpegGenerator.TrimSilenceStartAndEnd(item.CurrentFileName, outputFileNameTrim, TtsSilenceThreshold.Amplitude(peakDbfs));
         await trimProcess.StartAndWaitAsync(_cancellationToken);
 
         var currentFile = File.Exists(outputFileNameTrim) && new FileInfo(outputFileNameTrim).Length > 0
@@ -1599,7 +1601,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
         {
             var vadOutput = Path.Combine(_waveFolder, $"vad_{Guid.NewGuid()}.wav");
             _tempAudioFiles.Add(vadOutput);
-            var vadProcess = FfmpegGenerator.CompressInternalSilence(currentFile, vadOutput, vadMaxSilence);
+            var vadProcess = FfmpegGenerator.CompressInternalSilence(currentFile, vadOutput, vadMaxSilence, TtsSilenceThreshold.DbLiteral(peakDbfs));
             await vadProcess.StartAndWaitAsync(_cancellationToken);
 
             if (File.Exists(vadOutput) && new FileInfo(vadOutput).Length > 0)
