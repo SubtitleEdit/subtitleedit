@@ -89,6 +89,45 @@ public class ApplyFixedSubtitleRowMappingTests
         }
     }
 
+    /// <summary>
+    /// A removal above the current row shifts the indexes: the row that was current must stay
+    /// current, not whichever row now sits at its old index (Remove text for hearing impaired
+    /// drops emptied lines this way).
+    /// </summary>
+    [AvaloniaFact]
+    public async Task DeletedLineAboveTheCurrentRow_KeepsTheCurrentRow()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            AddLine(vm, "One", "Original one", 0, 2000);
+            AddLine(vm, "Two", "Original two", 2000, 4000);
+            AddLine(vm, "Three", "Original three", 4000, 6000);
+            AddLine(vm, "Four", "Original four", 6000, 8000);
+            var rows = vm.Subtitles.ToList();
+            vm.SubtitleGrid.SelectedItems?.Clear();
+            vm.SubtitleGrid.SelectedItem = rows[2];
+            Settle(window);
+
+            var fixedSubtitle = OpenDialogWith(vm, out var rowMap);
+            fixedSubtitle.Paragraphs.RemoveAt(0);
+            ApplyFixedSubtitle(vm, fixedSubtitle, rowMap, selectedIndex: 2);
+
+            // The selection is posted, so give the dispatcher a real tick as well.
+            Settle(window);
+            await Task.Delay(50);
+            Settle(window);
+
+            Assert.Equal(new[] { "Two", "Three", "Four" }, vm.Subtitles.Select(p => p.Text));
+            Assert.Same(rows[2], vm.SelectedSubtitle);
+            Assert.Same(rows[2], vm.SubtitleGrid.SelectedItem);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
     [AvaloniaFact]
     public void AddedLine_ComesInAsANewRow()
     {
@@ -278,7 +317,7 @@ public class ApplyFixedSubtitleRowMappingTests
     }
 
     private static void ApplyFixedSubtitle(
-        MainViewModel vm, Subtitle fixedSubtitle, IReadOnlyDictionary<Guid, SubtitleLineViewModel> rowMap)
+        MainViewModel vm, Subtitle fixedSubtitle, IReadOnlyDictionary<Guid, SubtitleLineViewModel> rowMap, int selectedIndex = 0)
     {
         var method = typeof(MainViewModel).GetMethod(
                          "ApplyFixedSubtitle",
@@ -294,8 +333,17 @@ public class ApplyFixedSubtitleRowMappingTests
                          null)
                      ?? throw new InvalidOperationException("ApplyFixedSubtitle not found");
 
-        method.Invoke(vm, new object?[] { fixedSubtitle, rowMap, 0, null });
+        method.Invoke(vm, new object?[] { fixedSubtitle, rowMap, selectedIndex, null });
         Dispatcher.UIThread.RunJobs();
+    }
+
+    private static void Settle(Window window)
+    {
+        for (var pump = 0; pump < 8; pump++)
+        {
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+        }
     }
 
     private static (Window Window, MainViewModel Vm) CreateMainViewModel()
