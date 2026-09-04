@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
@@ -41,6 +41,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         /// Three letter ISO 639-2 language code for the teletext descriptor.
         /// </summary>
         public string LanguageCode { get; set; } = "eng";
+
+        /// <summary>
+        /// Announce the page as subtitles for the hearing impaired (DVB teletext_type 0x05)
+        /// rather than plain subtitles (0x02) in the file's teletext descriptor.
+        /// </summary>
+        public bool HearingImpaired { get; set; }
 
         /// <summary>
         /// Drops what only teletext can carry when converting away: the teletext row in MarginV,
@@ -86,23 +92,27 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var page = pages.OrderByDescending(p => p.Value.Count).First();
             subtitle.Paragraphs.AddRange(page.Value);
             subtitle.Renumber();
-            subtitle.Header = CreateHeader(page.Key, parser.LanguageCode);
+            var descriptor = parser.GetTeletextDescriptor(page.Key);
+            subtitle.Header = CreateHeader(page.Key, descriptor?.LanguageCode ?? string.Empty, descriptor?.IsHearingImpaired ?? false);
         }
 
         public bool Save(string fileName, Stream stream, Subtitle subtitle, bool batchMode)
         {
             var pageNumber = PageNumber;
             var languageCode = LanguageCode;
-            if (TryParseHeader(subtitle.Header, out var headerPage, out var headerLanguage))
+            var hearingImpaired = HearingImpaired;
+            if (TryParseHeader(subtitle.Header, out var headerPage, out var headerLanguage, out var headerHearingImpaired))
             {
                 pageNumber = headerPage;
                 languageCode = headerLanguage;
+                hearingImpaired = headerHearingImpaired;
             }
-            else if (EbuTt.TryGetTeletextPageAndLanguage(subtitle.Header, out var ebuTtPage, out var ebuTtLanguage))
+            else if (EbuTt.TryGetTeletextPageAndLanguage(subtitle.Header, out var ebuTtPage, out var ebuTtLanguage, out var ebuTtHearingImpaired))
             {
-                // An EBU-TT document written from a .dvbttx source carries the page and language
-                // in its metadata - the trip through EBU-TT must not reset them to the defaults.
+                // An EBU-TT document written from a .dvbttx source carries the page, language and
+                // subtitle type in its metadata - the trip through EBU-TT must not reset them.
                 pageNumber = ebuTtPage;
+                hearingImpaired = ebuTtHearingImpaired;
                 if (!string.IsNullOrEmpty(ebuTtLanguage))
                 {
                     languageCode = ebuTtLanguage;
@@ -113,6 +123,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 PageNumber = pageNumber,
                 LanguageCode = languageCode,
+                HearingImpaired = hearingImpaired,
                 FrameRate = Configuration.Settings.General.CurrentFrameRate,
             };
 
@@ -128,6 +139,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         /// </summary>
         public static string CreateHeader(int pageNumber, string languageCode)
         {
+            return CreateHeader(pageNumber, languageCode, hearingImpaired: false);
+        }
+
+        /// <summary>
+        /// Same as <see cref="CreateHeader(int, string)"/>; the subtitle type attribute is only
+        /// written for the hearing impaired, so a plain subtitle header keeps its old shape.
+        /// </summary>
+        public static string CreateHeader(int pageNumber, string languageCode, bool hearingImpaired)
+        {
             var language = (languageCode ?? string.Empty).Trim().ToLowerInvariant();
             if (language.Length != 3)
             {
@@ -135,8 +155,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             return "<dvbteletext page=\"" + pageNumber.ToString(CultureInfo.InvariantCulture) +
-                   "\" language=\"" + language + "\" />";
+                   "\" language=\"" + language + "\"" +
+                   (hearingImpaired ? " type=\"" + HeaderTypeHearingImpaired + "\"" : string.Empty) +
+                   " />";
         }
+
+        /// <summary>
+        /// Value of the header's "type" attribute for a hearing impaired page; absent (or any
+        /// other value) means a plain subtitle page.
+        /// </summary>
+        public const string HeaderTypeHearingImpaired = "hearing-impaired";
 
         public static bool IsDvbTeletextHeader(string header)
         {
@@ -145,8 +173,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static bool TryParseHeader(string header, out int pageNumber, out string languageCode)
         {
+            return TryParseHeader(header, out pageNumber, out languageCode, out _);
+        }
+
+        public static bool TryParseHeader(string header, out int pageNumber, out string languageCode, out bool hearingImpaired)
+        {
             pageNumber = 0;
             languageCode = string.Empty;
+            hearingImpaired = false;
             if (header == null || !header.StartsWith("<dvbteletext ", StringComparison.Ordinal))
             {
                 return false;
@@ -166,6 +200,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
 
                 languageCode = language;
+                hearingImpaired = string.Equals(xml.DocumentElement?.Attributes?["type"]?.Value, HeaderTypeHearingImpaired, StringComparison.OrdinalIgnoreCase);
                 return true;
             }
             catch

@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Core.VobSub;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -19,6 +20,31 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         /// "dvb_subtitle", which carries the bitmap subtitles handled by <see cref="GetDvbSup"/>).
         /// </summary>
         public const string TeletextStreamType = "dvb_teletext";
+
+        /// <summary>
+        /// The "teletext_type" values of a dvb_teletext_content descriptor entry that carry
+        /// subtitles: EN 300 468 teletext_type 0x02 (subtitle page) and 0x05 (subtitle page for
+        /// the hearing impaired), spelled the way Manzanita's XML preamble does.
+        /// </summary>
+        public const string TeletextTypeSubtitle = "subtitle";
+        public const string TeletextTypeHearingImpaired = "subtitle_for_hearing_impaired";
+
+        /// <summary>
+        /// One dvb_teletext_content entry of the XML preamble's teletext descriptor - a file
+        /// carrying several pages (say a subtitle page and a hearing impaired page in the same
+        /// language) lists one entry per page.
+        /// </summary>
+        public class TeletextDescriptorEntry
+        {
+            /// <summary>
+            /// Decimal page number (e.g. 888), or 0 when the entry does not name a valid page.
+            /// </summary>
+            public int PageNumber { get; set; }
+
+            public string LanguageCode { get; set; } = string.Empty;
+
+            public bool IsHearingImpaired { get; set; }
+        }
 
         // Teletext state in Teletext.cs is keyed by the transport stream packet id; a Manzanita
         // dump holds a single elementary stream, so any fixed id will do.
@@ -48,11 +74,32 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         /// </summary>
         public string LanguageCode { get; private set; } = string.Empty;
 
+        /// <summary>
+        /// True when the (first) teletext descriptor entry announces the page as subtitles for
+        /// the hearing impaired. For a multi page file use <see cref="GetTeletextDescriptor"/>.
+        /// </summary>
+        public bool IsHearingImpaired { get; private set; }
+
+        /// <summary>
+        /// Every dvb_teletext_content entry of the XML preamble, in file order.
+        /// </summary>
+        public List<TeletextDescriptorEntry> TeletextDescriptors { get; }
+
         public ManzanitaTransportStreamParser()
         {
             _dvbSubs = new List<DvbSubPes>();
             _teletextPes = new List<DvbSubPes>();
             TeletextPages = new List<int>();
+            TeletextDescriptors = new List<TeletextDescriptorEntry>();
+        }
+
+        /// <summary>
+        /// The descriptor entry for a page, falling back to the first entry when no entry names
+        /// the page (a single page file usually lists only one) - null when the preamble has none.
+        /// </summary>
+        public TeletextDescriptorEntry GetTeletextDescriptor(int pageNumber)
+        {
+            return TeletextDescriptors.FirstOrDefault(d => d.PageNumber == pageNumber) ?? TeletextDescriptors.FirstOrDefault();
         }
 
         public void Parse(string fileName)
@@ -69,8 +116,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         /// <param name="ms">Input stream</param>
         public void Parse(Stream ms)
         {
-            var dataIndices = GetDataIndicesAndPesStart(ms, out var dvbPesStartIndex, out var streamType, out var languageCode);
-            LanguageCode = languageCode;
+            var dataIndices = GetDataIndicesAndPesStart(ms, out var dvbPesStartIndex, out var streamType, out var descriptors);
+            TeletextDescriptors.Clear();
+            TeletextDescriptors.AddRange(descriptors);
+            var first = descriptors.Count > 0 ? descriptors[0] : null;
+            LanguageCode = first?.LanguageCode ?? string.Empty;
+            IsHearingImpaired = first?.IsHearingImpaired ?? false;
             if (dvbPesStartIndex <= 0)
             {
                 return;
@@ -131,6 +182,30 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             }
         }
 
+        /// <summary>
+        /// Reads one dvb_teletext_content entry. The page number is written the way the writer
+        /// does it: the magazine (8 transmitted as 0) and the decimal value of the BCD page byte,
+        /// so page 888 is magazine 0, page number 136 (0x88).
+        /// </summary>
+        private static TeletextDescriptorEntry ReadTeletextDescriptor(XmlNode node)
+        {
+            var entry = new TeletextDescriptorEntry
+            {
+                LanguageCode = node.Attributes?["ISO_639_language_code"]?.Value ?? string.Empty,
+                IsHearingImpaired = string.Equals(node.Attributes?["teletext_type"]?.Value?.Trim(), TeletextTypeHearingImpaired, StringComparison.OrdinalIgnoreCase),
+            };
+
+            if (int.TryParse(node.Attributes?["teletext_magazine_number"]?.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var magazine) &&
+                int.TryParse(node.Attributes?["teletext_page_number"]?.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var pageBcd) &&
+                magazine >= 0 && magazine <= 7 && pageBcd >= 0 && pageBcd <= 0x99 &&
+                (pageBcd & 0x0f) <= 9 && (pageBcd >> 4) <= 9)
+            {
+                entry.PageNumber = (magazine == 0 ? 8 : magazine) * 100 + Teletext.BcdToDec((ulong)pageBcd);
+            }
+
+            return entry;
+        }
+
         public static IEnumerable<ManzanitaDataIndex> GetDataIndicesAndPesStart(Stream ms, out int startIndex)
         {
             return GetDataIndicesAndPesStart(ms, out startIndex, out _);
@@ -145,11 +220,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             return GetDataIndicesAndPesStart(ms, out startIndex, out streamType, out _);
         }
 
-        private static IEnumerable<ManzanitaDataIndex> GetDataIndicesAndPesStart(Stream ms, out int startIndex, out string streamType, out string languageCode)
+        private static IEnumerable<ManzanitaDataIndex> GetDataIndicesAndPesStart(Stream ms, out int startIndex, out string streamType, out List<TeletextDescriptorEntry> descriptors)
         {
             startIndex = 0;
             streamType = string.Empty;
-            languageCode = string.Empty;
+            descriptors = new List<TeletextDescriptorEntry>();
             ms.Position = 0;
             var buffer = ReadPreamble(ms, out var bytesRead, out var endIndex);
             if (endIndex < 0)
@@ -174,8 +249,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
             streamType = xmlDoc.DocumentElement.Attributes?["type"]?.Value ?? string.Empty;
 
-            var teletextContentNode = xmlDoc.DocumentElement.SelectSingleNode("//ns:dvb_teletext_content", namespaceManager);
-            languageCode = teletextContentNode?.Attributes?["ISO_639_language_code"]?.Value ?? string.Empty;
+            foreach (XmlNode teletextContentNode in xmlDoc.DocumentElement.SelectNodes("//ns:dvb_teletext_content", namespaceManager))
+            {
+                descriptors.Add(ReadTeletextDescriptor(teletextContentNode));
+            }
 
             var dataIndexNode = xmlDoc.DocumentElement.SelectSingleNode("ns:data_index", namespaceManager);
             if (dataIndexNode == null)

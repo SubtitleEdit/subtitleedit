@@ -4833,7 +4833,7 @@ public partial class MainViewModel :
         }
 
         var result = await ShowDialogAsync<ExportDvbTeletextWindow, ExportDvbTeletextViewModel>(vm =>
-            vm.Initialize(Se.Settings.File.ExportDvbTeletextPageNumber, Se.Settings.File.ExportDvbTeletextLanguageCode));
+            vm.Initialize(Se.Settings.File.ExportDvbTeletextPageNumber, Se.Settings.File.ExportDvbTeletextLanguageCode, Se.Settings.File.ExportDvbTeletextHearingImpaired));
         if (!result.OkPressed)
         {
             return;
@@ -4841,6 +4841,7 @@ public partial class MainViewModel :
 
         Se.Settings.File.ExportDvbTeletextPageNumber = result.PageNumber;
         Se.Settings.File.ExportDvbTeletextLanguageCode = result.LanguageCode;
+        Se.Settings.File.ExportDvbTeletextHearingImpaired = result.HearingImpaired;
 
         var fileName = await _fileHelper.PickSaveFile(
             Window!,
@@ -4856,6 +4857,7 @@ public partial class MainViewModel :
         {
             PageNumber = result.PageNumber,
             LanguageCode = result.LanguageCode,
+            HearingImpaired = result.HearingImpaired,
             FrameRate = Configuration.Settings.General.CurrentFrameRate,
         };
         await File.WriteAllBytesAsync(fileName, writer.GetBytes(GetUpdateSubtitle()));
@@ -4976,15 +4978,18 @@ public partial class MainViewModel :
     {
         var currentPage = Se.Settings.File.ExportDvbTeletextPageNumber;
         var currentLanguage = Se.Settings.File.ExportDvbTeletextLanguageCode;
-        if (DvbTeletext.TryParseHeader(_subtitle.Header, out var headerPage, out var headerLanguage))
+        var currentHearingImpaired = Se.Settings.File.ExportDvbTeletextHearingImpaired;
+        if (DvbTeletext.TryParseHeader(_subtitle.Header, out var headerPage, out var headerLanguage, out var headerHearingImpaired))
         {
             currentPage = headerPage;
             currentLanguage = headerLanguage;
+            currentHearingImpaired = headerHearingImpaired;
         }
-        else if (EbuTt.TryGetTeletextPageAndLanguage(_subtitle.Header, out var ebuTtPage, out var ebuTtLanguage))
+        else if (EbuTt.TryGetTeletextPageAndLanguage(_subtitle.Header, out var ebuTtPage, out var ebuTtLanguage, out var ebuTtHearingImpaired))
         {
-            // An EBU-TT document from a .dvbttx source carries the page and language in its metadata.
+            // An EBU-TT document from a .dvbttx source carries the page, language and subtitle type in its metadata.
             currentPage = ebuTtPage;
+            currentHearingImpaired = ebuTtHearingImpaired;
             if (!string.IsNullOrEmpty(ebuTtLanguage))
             {
                 currentLanguage = ebuTtLanguage;
@@ -4992,7 +4997,7 @@ public partial class MainViewModel :
         }
 
         var result = await ShowDialogAsync<ExportDvbTeletextWindow, ExportDvbTeletextViewModel>(vm =>
-            vm.Initialize(currentPage, currentLanguage));
+            vm.Initialize(currentPage, currentLanguage, currentHearingImpaired));
         if (!result.OkPressed)
         {
             return false;
@@ -5000,7 +5005,8 @@ public partial class MainViewModel :
 
         Se.Settings.File.ExportDvbTeletextPageNumber = result.PageNumber;
         Se.Settings.File.ExportDvbTeletextLanguageCode = result.LanguageCode;
-        _subtitle.Header = DvbTeletext.CreateHeader(result.PageNumber, result.LanguageCode);
+        Se.Settings.File.ExportDvbTeletextHearingImpaired = result.HearingImpaired;
+        _subtitle.Header = DvbTeletext.CreateHeader(result.PageNumber, result.LanguageCode, result.HearingImpaired);
         return true;
     }
 
@@ -22534,7 +22540,8 @@ public partial class MainViewModel :
         ResetSubtitle(dvbTeletextFormat);
         _subtitle = new Subtitle(paragraphs);
         _subtitle.Renumber();
-        _subtitle.Header = DvbTeletext.CreateHeader(pageNumber, parser.LanguageCode);
+        var descriptor = parser.GetTeletextDescriptor(pageNumber);
+        _subtitle.Header = DvbTeletext.CreateHeader(pageNumber, descriptor?.LanguageCode ?? string.Empty, descriptor?.IsHearingImpaired ?? false);
         ReplaceSubtitles(_subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
         SelectAndScrollToRow(0);
         _subtitleFileName = fileName;

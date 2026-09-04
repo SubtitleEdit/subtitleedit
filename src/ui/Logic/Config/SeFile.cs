@@ -18,6 +18,7 @@ public class SeFile
     public SeCompare Compare { get; set; } = new();
     public int ExportDvbTeletextPageNumber { get; set; } = 888;
     public string ExportDvbTeletextLanguageCode { get; set; } = "eng";
+    public bool ExportDvbTeletextHearingImpaired { get; set; }
 
     public SeFile()
     {
