@@ -4079,7 +4079,22 @@ public partial class SpeechToTextViewModel : ObservableObject
             // and the Python UTF-8/unbuffered variables - without them Windows decodes piped
             // output with the ANSI code page (mojibake, or a UnicodeEncodeError killing the run)
             // and stdout block-buffers so the log sits empty until the process exits.
-            EnsureExecutableStackCleared(whisperX, whisperX.GetAndCreateWhisperFolder());
+            var whisperXFolder = whisperX.GetAndCreateWhisperFolder();
+            EnsureExecutableStackCleared(whisperX, whisperXFolder);
+
+            // Matplotlib (pulled in by pyannote) builds a font cache on first run and, when
+            // it cannot find one, prints "building the font cache" and writes it next to the
+            // user's home config. Point it at a folder inside the engine install so the cache
+            // is built once in a known place and removed together with the engine.
+            var matplotlibCacheFolder = Path.Combine(whisperXFolder, "matplotlib-cache");
+            try
+            {
+                Directory.CreateDirectory(matplotlibCacheFolder);
+            }
+            catch
+            {
+                matplotlibCacheFolder = string.Empty;
+            }
 
             Se.WriteToolsLog($"{exe} {parametersX}");
             return StartEngineProcess(exe, parametersX, dataReceivedHandler, startInfo =>
@@ -4088,6 +4103,17 @@ public partial class SpeechToTextViewModel : ObservableObject
                 startInfo.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
                 startInfo.EnvironmentVariables["PYTHONUTF8"] = "1";
                 startInfo.EnvironmentVariables["PYTHONUNBUFFERED"] = "1";
+
+                // pyannote warns that torchcodec is missing on every run, but WhisperX never
+                // uses pyannote's decoder (it feeds ffmpeg-decoded audio in memory), so the
+                // warning is pure noise in the log. Only UserWarning is silenced; real errors
+                // and the whisperx INFO lines still come through.
+                startInfo.EnvironmentVariables["PYTHONWARNINGS"] = "ignore::UserWarning";
+
+                if (!string.IsNullOrEmpty(matplotlibCacheFolder))
+                {
+                    startInfo.EnvironmentVariables["MPLCONFIGDIR"] = matplotlibCacheFolder;
+                }
             });
         }
 
