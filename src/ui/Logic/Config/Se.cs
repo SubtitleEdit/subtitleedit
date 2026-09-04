@@ -651,6 +651,24 @@ public class Se
     }
 
     /// <summary>
+    /// Resets a persisted mpv "audio-buffer" of 0.05 s - the default SE shipped from 5.2.0
+    /// beta 20 through rc2 - back to "use mpv's default". A buffer that small let ordinary
+    /// audio-thread hiccups underrun the device; mpv then stops audio, refills, restarts, and
+    /// its clock stands still meanwhile, seen as the waveform cursor and time display freezing
+    /// for up to a second or two, worst around pause/resume (#14523). The value is persisted
+    /// with the rest of the settings, so without this only fresh installs would get the fix.
+    /// Matched to the shipped value only: anyone who set a different buffer keeps it.
+    /// </summary>
+    internal static void MigrateMpvAudioBuffer(SeVideo video)
+    {
+        const double legacyDefault = 0.05;
+        if (Math.Abs(video.MpvAudioBufferSeconds - legacyDefault) < 0.0001)
+        {
+            video.MpvAudioBufferSeconds = 0;
+        }
+    }
+
+    /// <summary>
     /// Loads the UI translation named in <see cref="Settings"/>.General.Language into the global
     /// <see cref="Language"/>. Must run before the main window is built: on macOS the native menu
     /// bar is constructed at startup and reads <see cref="Language"/> directly, so the translation
@@ -795,6 +813,7 @@ public class Se
         }
 
         MigrateShotChangesFfmpegArguments(Settings.Video);
+        MigrateMpvAudioBuffer(Settings.Video);
 
         if (Settings.Waveform == null)
         {
