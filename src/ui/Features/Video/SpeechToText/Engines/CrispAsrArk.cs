@@ -103,7 +103,7 @@ public class CrispAsrArk : CrispAsrEngineBase
     public override string GetAndCreateWhisperModelFolder(WhisperModel? whisperModel)
     {
         var folder = GetAndCreateWhisperFolder();
-        var modelsFolder = Path.Combine(folder, "models");
+        var modelsFolder = Se.CrispAsrModelsFolder;
         if (!Directory.Exists(modelsFolder))
         {
             Directory.CreateDirectory(modelsFolder);

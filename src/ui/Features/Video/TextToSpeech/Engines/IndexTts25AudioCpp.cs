@@ -157,7 +157,7 @@ public class IndexTts25AudioCpp : ITtsEngine, IPerLineCloneEngine
     /// </summary>
     public static string GetSetModelsFolder()
     {
-        var folder = Path.Combine(GetSetEngineFolder(), "models", "IndexTTS2.5-GGUF");
+        var folder = Path.Combine(Se.AudioCppModelsFolder, "IndexTTS2.5-GGUF");
         if (!Directory.Exists(folder))
         {
             Directory.CreateDirectory(folder);

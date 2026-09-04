@@ -368,6 +368,17 @@ public class SettingsPage : UserControl
                 }
             }),
 
+            new SettingsItem(Se.Language.Options.Settings.ModelsFolder, () => new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Spacing = 5,
+                Children =
+                {
+                    UiUtil.MakeTextBox(250, _vm, nameof(_vm.ModelsFolder)),
+                    UiUtil.MakeButtonBrowse(_vm.BrowseModelsFolderCommand, accessibleName: Se.Language.Options.Settings.ModelsFolder),
+                }
+            }),
+
             MakeSeparator(),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoSave, nameof(_vm.AutoSave)),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoBackupOn, nameof(_vm.AutoBackupOn)),

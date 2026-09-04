@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config.Language;
+using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
 using System;
 using System.Collections.Generic;
@@ -192,6 +193,58 @@ public class Se
     // level like CrispASR and llama.cpp rather than under a single feature's folder — the
     // binaries are shared the moment a second audio.cpp-backed engine is added.
     public static string AudioCppFolder => Path.Combine(DataFolder, "audio.cpp");
+
+    /// <summary>
+    /// Root for downloaded AI models. Empty <see cref="SeGeneral.ModelsFolder"/> preserves the
+    /// existing per-user layout. The configured path is normalized so a relative value from an
+    /// older hand-edited Settings.json cannot make model paths relative to the process folder.
+    /// </summary>
+    public static string ModelsFolder
+    {
+        get
+        {
+            var configured = Settings?.General?.ModelsFolder;
+            if (string.IsNullOrWhiteSpace(configured))
+            {
+                return DataFolder;
+            }
+
+            try
+            {
+                return Path.GetFullPath(configured);
+            }
+            catch
+            {
+                // A malformed hand-edited value must not prevent Subtitle Edit from starting.
+                // The settings page always writes a path returned by the folder picker.
+                return DataFolder;
+            }
+        }
+    }
+
+    public static bool HasCustomModelsFolder => !string.Equals(ModelsFolder, DataFolder, StringComparison.Ordinal);
+
+    /// <summary>
+    /// Resolves a model directory while retaining the exact historical path when no custom root
+    /// is configured. This lets every engine opt in without migrating or hiding existing models.
+    /// </summary>
+    public static string ResolveModelsFolder(string legacyFolder, params string[] relativePath)
+    {
+        if (!HasCustomModelsFolder)
+        {
+            return legacyFolder;
+        }
+
+        return Path.Combine(new[] { ModelsFolder }.Concat(relativePath).ToArray());
+    }
+
+    public static string CrispAsrModelsFolder => Path.Combine(ModelsFolder, "CrispASR", "models");
+    public static string LlamaCppModelsFolder => Path.Combine(ModelsFolder, "llama.cpp", "models");
+    public static string AudioCppModelsFolder => Path.Combine(ModelsFolder, "audio.cpp", "models");
+    public static string Qwen3AsrModelsFolder => Path.Combine(ModelsFolder, "Qwen3ASR", "models");
+    public static string Qwen3TtsCppModelsFolder => ResolveModelsFolder(Path.Combine(TextToSpeechFolder, "Qwen3TtsCpp", "models"), "TextToSpeech", "Qwen3TtsCpp", "models");
+    public static string KokoroTtsCppModelsFolder => ResolveModelsFolder(Path.Combine(TextToSpeechFolder, "KokoroTtsCpp", "models"), "TextToSpeech", "KokoroTtsCpp", "models");
+    public static string OmniVoiceTtsCppModelsFolder => ResolveModelsFolder(Path.Combine(TextToSpeechFolder, "OmniVoice", "models"), "TextToSpeech", "OmniVoice", "models");
     public static string WaveformsFolder => Path.Combine(DataFolder, "Waveforms");
     public static string SpectrogramsFolder => Path.Combine(DataFolder, "Spectrograms");
     public static string ShotChangesFolder => Path.Combine(DataFolder, "ShotChanges");
@@ -214,7 +267,7 @@ public class Se
     // devanagari PP-OCRv5 or el/ta/te/th/ka models at all). A new folder means engine and
     // models always come from the same release.
     public static string PaddleOcrFolder => Path.Combine(OcrFolder, "PaddleOCR3-7");
-    public static string PaddleOcrModelsFolder => Path.Combine(PaddleOcrFolder, "models");
+    public static string PaddleOcrModelsFolder => ResolveModelsFolder(Path.Combine(PaddleOcrFolder, "models"), "OCR", "PaddleOCR3-7", "models");
 
     /// <summary>Install folders of superseded PaddleOCR versions, deleted after a new install succeeds.</summary>
     public static IReadOnlyList<string> PaddleOcrLegacyFolders => new[]
@@ -224,6 +277,7 @@ public class Se
     };
     public static string GoogleLensOcrFolder => Path.Combine(OcrFolder, "Google-Lens");
     public static string CrispEmbedFolder => Path.Combine(OcrFolder, "CrispEmbed");
+    public static string CrispEmbedModelsFolder => ResolveModelsFolder(Path.Combine(CrispEmbedFolder, "models"), "OCR", "CrispEmbed", "models");
     public static string VlcFolder => Path.Combine(DataFolder, "VLC");
     public static string SevenZipFolder => Path.Combine(DataFolder, "7Zip");
     private const string TesseractFolderName = "Tesseract";
@@ -298,7 +352,9 @@ public class Se
     }
 
     private static readonly Lazy<string> _tesseractModelFolder = new(ResolveTesseractModelFolder);
-    public static string TesseractModelFolder => _tesseractModelFolder.Value;
+    public static string TesseractModelFolder => HasCustomModelsFolder
+        ? Path.Combine(ModelsFolder, "OCR", "Tesseract", "tessdata")
+        : _tesseractModelFolder.Value;
 
     private static string ResolveTesseractModelFolder()
     {
@@ -527,6 +583,7 @@ public class Se
         }
 
         UpdateLibSeSettings();
+        LlamaCppServerManager.ModelsFolderOverride = LlamaCppModelsFolder;
     }
 
     public static void LoadSettings()
@@ -863,6 +920,7 @@ public class Se
 
     internal static void UpdateLibSeSettings()
     {
+        Configuration.ModelsDirectory = HasCustomModelsFolder ? ModelsFolder : string.Empty;
         Configuration.Settings.General.FFmpegLocation = Settings.General.FfmpegPath;
         Configuration.Settings.General.UseTimeFormatHHMMSSFF = Settings.General.UseFrameMode;
         if (Settings.General.CurrentFrameRate > 0)

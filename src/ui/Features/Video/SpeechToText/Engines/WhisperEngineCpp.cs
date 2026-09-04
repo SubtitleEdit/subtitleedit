@@ -67,7 +67,7 @@ public class WhisperEngineCpp : ISpeechToTextEngine
     {
         var baseFolder = GetAndCreateWhisperFolder();
 
-        var folder = Path.Combine(baseFolder, "Models");
+        var folder = new WhisperCppModel().ModelFolder;
         if (!Directory.Exists(folder))
         {
             Directory.CreateDirectory(folder);
@@ -100,7 +100,7 @@ public class WhisperEngineCpp : ISpeechToTextEngine
     public bool IsModelInstalled(WhisperModel model)
     {
         var baseFolder = GetAndCreateWhisperFolder();
-        var folder = Path.Combine(baseFolder, "Models");
+        var folder = new WhisperCppModel().ModelFolder;
         if (!Directory.Exists(folder))
         {
             return false;

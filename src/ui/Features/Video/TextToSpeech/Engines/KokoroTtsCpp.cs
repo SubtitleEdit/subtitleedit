@@ -135,7 +135,7 @@ public class KokoroTtsCpp : ITtsEngine
 
     public static string GetSetModelsFolder()
     {
-        var modelsFolder = Path.Combine(GetSetFolder(), "models");
+        var modelsFolder = Se.KokoroTtsCppModelsFolder;
         if (!Directory.Exists(modelsFolder))
         {
             Directory.CreateDirectory(modelsFolder);

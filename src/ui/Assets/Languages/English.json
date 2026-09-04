@@ -3022,6 +3022,7 @@
       "defaultSaveLocationVideoFileFolder": "Video file folder",
       "defaultSaveLocationSubtitleFileFolder": "Subtitle file folder",
       "defaultSaveLocationCustomFolder": "Custom folder",
+      "modelsFolder": "AI models folder",
       "saveAsAppendLanguageCode": "\"Save as\" append language code",
       "gridGoToSubtitleAndSetVideoPosition": "Go to subtitle and set video position",
       "gridGoToNextLine": "Go to next line",

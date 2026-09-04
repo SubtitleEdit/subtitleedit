@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.UiLogic.AudioToText
 {
@@ -19,22 +20,12 @@ namespace Nikse.SubtitleEdit.UiLogic.AudioToText
 
         private readonly string[] _fileNames = { "model.bin", "config.json", "vocabulary.txt", "tokenizer.json" };
 
-        public string ModelFolder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".cache", "huggingface", "hub");
+        public string ModelFolder => Configuration.ResolveModelsFolder(
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".cache", "huggingface", "hub"),
+            "SpeechToText", "HuggingFace", "hub");
 
         public void CreateModelFolder()
         {
-            var cacheFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".cache");
-            if (!Directory.Exists(cacheFolder))
-            {
-                Directory.CreateDirectory(cacheFolder);
-            }
-
-            cacheFolder = Path.Combine(cacheFolder, "hub");
-            if (!Directory.Exists(cacheFolder))
-            {
-                Directory.CreateDirectory(cacheFolder);
-            }
-
             if (!Directory.Exists(ModelFolder))
             {
                 Directory.CreateDirectory(ModelFolder);

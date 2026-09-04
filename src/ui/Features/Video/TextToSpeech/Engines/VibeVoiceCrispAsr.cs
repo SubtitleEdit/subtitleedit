@@ -180,7 +180,7 @@ public class VibeVoiceCrispAsr : ITtsEngine
         // VibeVoice is driven by the CrispASR binary, so its GGUF lives alongside the
         // CrispASR speech-to-text models in CrispASR/models/ rather than under
         // TextToSpeech/VibeVoiceCrispAsr/. Matches the Qwen3 (CrispASR) layout.
-        var modelsFolder = Path.Combine(Se.CrispAsrFolder, "models");
+        var modelsFolder = Se.CrispAsrModelsFolder;
         if (!Directory.Exists(modelsFolder))
         {
             Directory.CreateDirectory(modelsFolder);

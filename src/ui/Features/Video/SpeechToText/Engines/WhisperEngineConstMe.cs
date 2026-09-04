@@ -62,7 +62,7 @@ public class WhisperEngineConstMe : ISpeechToTextEngine
     {
         var baseFolder = GetAndCreateWhisperFolder();
 
-        var folder = Path.Combine(baseFolder, "Models");
+        var folder = new WhisperConstMeModel().ModelFolder;
         if (!Directory.Exists(folder))
         {
             Directory.CreateDirectory(folder);
@@ -80,7 +80,7 @@ public class WhisperEngineConstMe : ISpeechToTextEngine
     public bool IsModelInstalled(WhisperModel model)
     {
         var baseFolder = GetAndCreateWhisperFolder();
-        var folder = Path.Combine(baseFolder, "Models");
+        var folder = new WhisperConstMeModel().ModelFolder;
         if (!Directory.Exists(folder))
         {
             return false;

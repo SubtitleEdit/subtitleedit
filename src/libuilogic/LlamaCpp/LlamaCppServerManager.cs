@@ -337,6 +337,13 @@ public static class LlamaCppServerManager
     public static string? FolderOverride { get; set; }
 
     /// <summary>
+    /// Optional model-only folder. When unset, models remain under <see cref="FolderOverride"/>
+    /// for backwards compatibility, while the executable can continue to live in the normal
+    /// Subtitle Edit data folder.
+    /// </summary>
+    public static string? ModelsFolderOverride { get; set; }
+
+    /// <summary>
     /// Optional info-level log sink. The UI wires this to the tools log
     /// (<c>Se.WriteToolsLog</c>); seconv wires it to --verbose console output.
     /// </summary>
@@ -391,7 +398,9 @@ public static class LlamaCppServerManager
 
     public static string GetAndCreateModelsFolder()
     {
-        var folder = Path.Combine(GetAndCreateFolder(), "models");
+        var folder = string.IsNullOrEmpty(ModelsFolderOverride)
+            ? Path.Combine(GetAndCreateFolder(), "models")
+            : ModelsFolderOverride;
         if (!Directory.Exists(folder))
         {
             Directory.CreateDirectory(folder);

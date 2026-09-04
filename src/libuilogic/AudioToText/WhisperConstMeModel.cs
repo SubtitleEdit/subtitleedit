@@ -15,7 +15,9 @@ namespace Nikse.SubtitleEdit.UiLogic.AudioToText
                     return Configuration.Settings.Tools.WhisperCppModelLocation;
                 }
 
-                return Path.Combine(Configuration.DataDirectory, "SpeechToText", "Const-Me", "Models");
+                return Configuration.ResolveModelsFolder(
+                    Path.Combine(Configuration.DataDirectory, "SpeechToText", "Const-Me", "Models"),
+                    "SpeechToText", "Const-Me", "Models");
             }
         }
 

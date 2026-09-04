@@ -167,7 +167,7 @@ public class OmniVoiceTtsCpp : ITtsEngine, IPerLineCloneEngine
 
     public static string GetSetModelsFolder()
     {
-        var modelsFolder = Path.Combine(GetSetFolder(), "models");
+        var modelsFolder = Se.OmniVoiceTtsCppModelsFolder;
         if (!Directory.Exists(modelsFolder))
         {
             Directory.CreateDirectory(modelsFolder);

@@ -69,7 +69,7 @@ public static class CrispEmbedEngine
 
     public static string GetAndCreateModelFolder()
     {
-        var folder = Path.Combine(GetAndCreateFolder(), "models");
+        var folder = Se.CrispEmbedModelsFolder;
         if (!Directory.Exists(folder))
         {
             Directory.CreateDirectory(folder);
