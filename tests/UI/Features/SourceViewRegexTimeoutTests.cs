@@ -54,6 +54,13 @@ public class SourceViewRegexTimeoutTests : IDisposable
             Action<TWindow>? configureWindow = null)
             where TWindow : Window where TViewModel : class
             => throw new NotSupportedException();
+
+        public Task<TViewModel> ShowWithOwnerHiddenAsync<TWindow, TViewModel>(
+            Window owner,
+            IReadOnlyList<Window?> companions,
+            Action<TViewModel>? configureViewModel = null)
+            where TWindow : Window where TViewModel : class
+            => throw new NotSupportedException();
     }
 
     // 30 a's and no "b": "(a+)+b" has to try every way of splitting them before giving up.

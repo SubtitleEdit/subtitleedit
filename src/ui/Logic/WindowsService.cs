@@ -73,6 +73,27 @@ namespace Nikse.SubtitleEdit.Logic
             Action<TViewModel>? configureViewModel = null, Action<TWindow>? configureWindow = null)
             where TWindow : Window
             where TViewModel : class;
+
+        /// <summary>
+        /// Shows a window of type TWindow as a stand-alone top-level window while
+        /// <paramref name="owner"/> - and any of <paramref name="companions"/> currently on
+        /// screen - are hidden, and brings them back once it closes. This is how SE4 ran
+        /// Batch convert: the editor disappears and only the tool window remains (#14502).
+        ///
+        /// It can't be a modal dialog: Avalonia's <see cref="Window.Hide"/> cascades to every
+        /// owned window (the dialog would vanish with its owner) and
+        /// <see cref="Window.ShowDialog(Window)"/> refuses a hidden owner. Minimizing the owner
+        /// is no better - on Windows an owner's owned windows go with it.
+        /// </summary>
+        /// <param name="owner">The window to hide for the tool window's lifetime.</param>
+        /// <param name="companions">Further windows to hide along with the owner when they are
+        /// visible (the undocked video/waveform tool windows); hidden ones stay hidden.</param>
+        Task<TViewModel> ShowWithOwnerHiddenAsync<TWindow, TViewModel>(
+            Window owner,
+            IReadOnlyList<Window?> companions,
+            Action<TViewModel>? configureViewModel = null)
+            where TWindow : Window
+            where TViewModel : class;
     }
 
     /// <summary>
@@ -208,6 +229,90 @@ namespace Nikse.SubtitleEdit.Logic
             await ShowModalAsync(owner, window);
 
             return viewModel;
+        }
+
+        /// <inheritdoc />
+        public async Task<TViewModel> ShowWithOwnerHiddenAsync<TWindow, TViewModel>(
+            Window owner,
+            IReadOnlyList<Window?> companions,
+            Action<TViewModel>? configureViewModel = null)
+            where TWindow : Window
+            where TViewModel : class
+        {
+            var viewModel = _serviceProvider.GetRequiredService<TViewModel>();
+            configureViewModel?.Invoke(viewModel);
+
+            var w = Activator.CreateInstance(typeof(TWindow), viewModel);
+            if (w == null)
+            {
+                throw new InvalidOperationException($"Failed to create window of type {typeof(TWindow).Name} with constructor param {typeof(TViewModel).Name}");
+            }
+
+            var window = (TWindow)w;
+
+            // No owner to center on; a remembered position (RestoreWindowPosition in the
+            // window's Loaded handler) still wins over this.
+            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
+            // Must run before Show() - see the note in ShowWindow<T>. (#12665)
+            ApplyRightToLeftSettings(window);
+            UiTheme.ApplyScaleToWindow(window);
+
+            var windowsToHide = new List<Window?>(companions.Count + 1) { owner };
+            windowsToHide.AddRange(companions);
+            await ShowWithWindowsHiddenAsync(window, windowsToHide, activateAfterwards: owner);
+
+            return viewModel;
+        }
+
+        /// <summary>
+        /// Shows <paramref name="window"/> as a top-level window with every visible window in
+        /// <paramref name="windowsToHide"/> hidden until it closes, then re-shows them in the
+        /// given order and activates <paramref name="activateAfterwards"/>. Windows that were
+        /// not visible to begin with are left alone. Restoration runs even if showing the
+        /// window throws, so the hidden windows can never be lost.
+        /// </summary>
+        public static async Task ShowWithWindowsHiddenAsync(Window window, IReadOnlyList<Window?> windowsToHide, Window? activateAfterwards)
+        {
+            var hidden = new List<Window>();
+            foreach (var candidate in windowsToHide)
+            {
+                if (candidate is { IsVisible: true } && !hidden.Contains(candidate))
+                {
+                    hidden.Add(candidate);
+                }
+            }
+
+            var closed = new TaskCompletionSource();
+            window.Closed += (_, _) => closed.TrySetResult();
+
+            foreach (var w in hidden)
+            {
+                w.Hide();
+            }
+
+            try
+            {
+                window.Show();
+                await closed.Task;
+            }
+            finally
+            {
+                foreach (var w in hidden)
+                {
+                    w.Show();
+                }
+
+                if (activateAfterwards != null)
+                {
+                    if (activateAfterwards.WindowState == WindowState.Minimized)
+                    {
+                        activateAfterwards.WindowState = WindowState.Normal;
+                    }
+
+                    activateAfterwards.Activate();
+                }
+            }
         }
 
         /// <summary>
