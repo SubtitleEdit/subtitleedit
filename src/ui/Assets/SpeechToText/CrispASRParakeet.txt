@@ -4,4 +4,5 @@
 Type: FastConformer + TDT (transducer-style)
 Focus: ⚡ Speed + efficiency
 Strengths: Very fast
+Languages: the tdt-0.6b-v3 models cover 25 European languages; the -ja models are Japanese only and the ctc-0.6b-vi models Vietnamese only
 

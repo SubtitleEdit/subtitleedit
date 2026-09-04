@@ -44,7 +44,7 @@ The languages column counts what the backend dropdown offers (an *auto* entry is
 
 | Backend | Languages | Output | Model size range | Good for |
 |---------|-----------|------------|------------------|----------|
-| **Parakeet** | 13 (European + zh, ja, ko) | Native timings | 75 MB - 2.14 GB | The fast default. NVIDIA Parakeet TDT/RNN-T in 0.6B, 1.1B and a 110M tdt_ctc model - the smallest Crisp ASR model of all. Has a Japanese fine-tune |
+| **Parakeet** | 14 (European + zh, ja, ko, vi) | Native timings | 75 MB - 2.14 GB | The fast default. NVIDIA Parakeet TDT/RNN-T in 0.6B, 1.1B and a 110M tdt_ctc model - the smallest Crisp ASR model of all. Has a Japanese fine-tune and a Vietnamese CTC model |
 | **Canary** | 25 (European) | Native timings | 705 MB - 1.97 GB | NVIDIA Canary 1B v2. Broad European coverage with its own timings; also usable as a CTC forced aligner for other backends |
 | **Cohere** | 14 | Native timings | 1.51 - 4.14 GB | Cohere Transcribe. Separate Arabic and Japanese fine-tunes. VAD is on by default (see the VAD section below) |
 | **GigaAM** | 1 (Russian) | Native timings; punctuation + casing on `e2e` only | 151 - 452 MB | Russian only, and very small. Use an `e2e` revision - those emit punctuation and capitalisation, the plain `ctc` / `rnnt` heads return bare lowercase text |
@@ -85,6 +85,8 @@ These models live under the **Crisp ASR** engine, not under the standalone Qwen3
 | Crisp ASR Parakeet | `parakeet-tdt-0.6b-ja-q8_0.gguf` (also q4_k / unquantized) | Fast Japanese model |
 
 The general `qwen3-asr-1.7b` and Whisper `large-v3-turbo` models are also strong on Japanese if you prefer a single model for mixed content.
+
+For Vietnamese, the Crisp ASR Parakeet backend has NVIDIA's `parakeet-ctc-0.6b-vi` model (`-q8_0.gguf` recommended; also q4_k / q5_0 / unquantized). It is Vietnamese only, outputs punctuation and casing, and keeps Parakeet's native timings. Pick *vietnamese* as the language and one of the `-vi` models - the other Parakeet models do not know Vietnamese.
 
 ## How to Use
 

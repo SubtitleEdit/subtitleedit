@@ -2069,6 +2069,16 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     private Subtitle PostProcess(Subtitle transcript)
     {
+        if (GetEffectiveSelectedEngine() is ICrispAsrEngine &&
+            SelectedModel is SpeechToTextModelDisplay { Model.Name: { } modelName } &&
+            CrispAsrParakeet.IsPureCtcModel(modelName))
+        {
+            // The Vietnamese Parakeet CTC tokenizer has a space-prefixed "▁," / "▁." piece that the
+            // model prefers over the bare one, so its transcripts read "gần xe , và ... dàng ." -
+            // a training-text habit, not a decode bug, and not optional post-processing either.
+            transcript = SpeechToTextPostProcessor.RemoveSpaceBeforePunctuation(transcript);
+        }
+
         var languageCode = SelectedLanguage?.Code;
         if (string.IsNullOrWhiteSpace(languageCode))
         {
@@ -4151,13 +4161,20 @@ public partial class SpeechToTextViewModel : ObservableObject
             // VAD - only the latter is worth re-running without it (#13911).
             _crispAsrVadWasUsed = vadPart.Length > 0;
 
+            // Both are per model, not per backend: Parakeet's pure-CTC models run on a different
+            // crispasr backend than its transducer models and need crispasr's punctuation
+            // restoration kept off (see CrispAsrParakeet.GetBackendName / GetModelArguments).
+            var backendName = crispAsrEngine.GetBackendName(model);
+            var modelArgs = crispAsrEngine.GetModelArguments(model, crispArgs);
+            var modelArgsPart = modelArgs.Length > 0 ? $" {modelArgs}" : string.Empty;
+
             // --print-progress: crispasr streams "crispasr: progress = NN% (i/n slices)" lines
             // in real time (parsed in OutputHandler), while the transcript segments only print
             // once the whole file is done - without this the progress bar sat idle for the
             // entire run and jumped straight to 100%.
             var crispParams = string.IsNullOrWhiteSpace(crispArgs)
-                ? $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart} -f \"{waveFileName}\" --output-srt --print-progress"
-                : $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart} -f \"{waveFileName}\" --output-srt --print-progress {crispArgs}";
+                ? $"--backend {backendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart}{modelArgsPart} -f \"{waveFileName}\" --output-srt --print-progress"
+                : $"--backend {backendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart}{modelArgsPart} -f \"{waveFileName}\" --output-srt --print-progress {crispArgs}";
 
             Se.WriteToolsLog($"{exe} {crispParams}");
 
