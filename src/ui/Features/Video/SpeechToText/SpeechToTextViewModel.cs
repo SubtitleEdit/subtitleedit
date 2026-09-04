@@ -2644,7 +2644,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
 
         var vm = await _windowService.ShowDialogAsync<SpeechToTextQualityReportWindow, SpeechToTextQualityReportViewModel>(
-            Window, viewModel => viewModel.Initialize(report));
+            Window, viewModel => viewModel.Initialize(report, _videoFileName));
 
         if (vm.DoNotShowAgain)
         {
