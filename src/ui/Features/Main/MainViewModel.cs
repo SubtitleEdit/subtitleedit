@@ -1809,9 +1809,31 @@ public partial class MainViewModel :
             return;
         }
 
+        // TogglePlayPause funnels through CancelPausePlayheadFreeze twice (the view model
+        // command and the control's PlayPauseRequested wiring); the second pass still reads
+        // the pre-seek position, so it would issue the same seek again.
+        var nowTs = Stopwatch.GetTimestamp();
+        var sinceLastMs = (nowTs - _resumeSeekIssuedTs) * 1000.0 / Stopwatch.Frequency;
+        if (sinceLastMs < 500 && Math.Abs(_resumeSeekTargetSeconds - _playheadEstimateSeconds) < 0.001)
+        {
+            return;
+        }
+
+        _resumeSeekIssuedTs = nowTs;
+        _resumeSeekTargetSeconds = _playheadEstimateSeconds;
+
+        // Deliberately no PinPlayheadTo here. The pin's arrive tolerance (0.15 s) is wider
+        // than the typical pause residual, so the not-yet-seeked player already read as
+        // "arrived": the pin released on the first playing tick and seeded the cursor from
+        // the stale position - a jump forward onto mpv's settled spot, then back when the
+        // seek landed. The estimate is already standing on the target, the paused branch
+        // holds it there (settled), and once playing the freeze-hold keeps it from chasing
+        // the stale clock until the seek lands right where the cursor is.
         vp.SeekTo(_playheadEstimateSeconds);
-        PinPlayheadTo(_playheadEstimateSeconds);
     }
+
+    private long _resumeSeekIssuedTs; // when SeekPausedPlayerToVisibleCursor last issued a seek
+    private double _resumeSeekTargetSeconds; // ...and to where (dedupe for double-funneled toggles)
 
     // The player's Stop button pauses and seeks to 0; freeze the cursor immediately and pin it to
     // the start so it jumps there at once instead of lingering until mpv reports the new position.
@@ -29766,10 +29788,14 @@ public partial class MainViewModel :
                 // desync. Gated on a live raw clock so a paused-seek re-prime freeze can't trigger it.
                 _playheadEstimateSeconds = rawPosition;
             }
-            else if (drift > 0)
+            else if (drift > 0 && rawFrozenSeconds < PlayheadFreezeHoldSeconds)
             {
                 // Only ever nudge forward to close a lag (e.g. after a starved tick); never pull the
-                // cursor backward, which is what showed up as the sub-1x "slow" after the rush. Cap the
+                // cursor backward, which is what showed up as the sub-1x "slow" after the rush. Gated
+                // on a live raw clock like the snap above: while mpv's clock stands still (an hr-seek
+                // re-priming - e.g. the resume-from-cursor seek) the reported position is stale, and
+                // crawling toward it walks the cursor off the spot playback is about to start from,
+                // with no backward correction to ever undo it. Cap the
                 // per-tick correction against real elapsed time so the catch-up tops out around ~1.2x
                 // wall clock even when the timer is running slow - sizing it against the capped step
                 // (or only correcting on ticks where raw moved) throttled repayment to ~1.05x exactly
