@@ -35,6 +35,20 @@ public static class PerLineVoiceClone
     /// </summary>
     internal const double PreferredReferenceSeconds = 3.0;
 
+    /// <summary>
+    /// The shortest reference clip handed to an engine, in seconds. A line that is shorter and
+    /// has no silence to grow into (neighbouring lines on both sides) is padded with trailing
+    /// silence up to this instead of being sent as cut.
+    /// </summary>
+    /// <remarks>
+    /// Higgs Audio v3's reference encoder in audio.cpp (higgs_audio_tts/codec.cpp) pads its
+    /// 24 kHz acoustic branch up to one second but not its 16 kHz semantic branch, so every
+    /// reference under roughly 965 ms fails the "frame counts do not match" check with a 500
+    /// and the line goes missing from the dub (#14480). One second of audio clears it for all
+    /// lengths; the added silence is inaudible in the clone.
+    /// </remarks>
+    internal const double MinimumReferenceSeconds = 1.0;
+
     /// <summary>Reference clips are cut at the rate the cloning models work at.</summary>
     private const int ReferenceSampleRate = 24000;
 
@@ -139,7 +153,7 @@ public static class PerLineVoiceClone
 
             var range = GetReferenceRange(paragraphs, index, videoDurationSeconds);
             var clipFileName = Path.Combine(outputFolder, $"line-{index + 1:0000}.wav");
-            if (!await CutClipAsync(videoFileName, range.StartSeconds, range.DurationSeconds, clipFileName, audioTrackFfIndex, cancellationToken))
+            if (!await CutClipAsync(videoFileName, range.StartSeconds, range.DurationSeconds, clipFileName, audioTrackFfIndex, cancellationToken, MinimumReferenceSeconds))
             {
                 return null;
             }
@@ -165,6 +179,11 @@ public static class PerLineVoiceClone
     /// <summary>
     /// Cuts exactly the given range out of the video as a cloning-ready mono clip.
     /// </summary>
+    /// <param name="minimumSeconds">
+    /// Pad the clip with trailing silence up to this length when the range is shorter; zero
+    /// keeps the range as is. The per-line references pass <see cref="MinimumReferenceSeconds"/>;
+    /// the auto-cast parts do not, since they are joined into one long reference anyway.
+    /// </param>
     /// <returns>False when ffmpeg failed or produced no audio; the caller decides what that means.</returns>
     public static async Task<bool> CutClipAsync(
         string videoFileName,
@@ -172,7 +191,8 @@ public static class PerLineVoiceClone
         double durationSeconds,
         string outputFileName,
         int audioTrackFfIndex,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        double minimumSeconds = 0)
     {
         var arguments = FfmpegGenerator.ExtractCloneReferenceClipParameters(
             videoFileName,
@@ -180,7 +200,8 @@ public static class PerLineVoiceClone
             durationSeconds,
             outputFileName,
             audioTrackFfIndex,
-            ReferenceSampleRate);
+            ReferenceSampleRate,
+            minimumSeconds);
 
         try
         {
