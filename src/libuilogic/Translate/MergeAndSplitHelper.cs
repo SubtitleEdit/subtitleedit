@@ -1,8 +1,10 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Concurrent;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Text.RegularExpressions;
 using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.Settings;
 using Nikse.SubtitleEdit.UiLogic.Translate;
 
@@ -13,10 +15,30 @@ public static partial class MergeAndSplitHelper
     private const int MinCharsForHalving = 500;
     private const int MaxGapBetweenContinuousLinesMs = 1000;
     private const char PeriodPlaceholder = '¤';
+    private static readonly char[] SentenceEndChars = ['.', '?', '!'];
 
     private static DateTime _lastTranslateCompletedUtc = DateTime.MinValue;
 
     public static bool MergeSplitProblems { get; set; }
+
+    /// <summary>
+    /// Abbreviations ("Mrs.", "Dr.", "usw.") for a language code, each with its trailing period.
+    /// A period that closes one of them ends a word, not a sentence, so the merge/split
+    /// bookkeeping skips it: an engine that renders "Frau Meier." as "Mrs. Meier." otherwise
+    /// cuts that row off at "Mrs." and shifts every following row by a sentence (#14484).
+    /// Replaceable so tests can supply a fixed list instead of the dictionary folder.
+    /// </summary>
+    public static Func<string, HashSet<string>> AbbreviationsForLanguage { get; set; } = LoadAbbreviations;
+
+    private static readonly ConcurrentDictionary<string, HashSet<string>> AbbreviationCache = new();
+
+    private static HashSet<string> LoadAbbreviations(string languageCode)
+    {
+        // AbbreviationList.Load takes the first two letters for the base list, so "en",
+        // "eng_Latn" and "en-US" all map to en_abbreviations.xml.
+        var key = languageCode ?? string.Empty;
+        return AbbreviationCache.GetOrAdd(key, code => AbbreviationList.Load(Configuration.DictionariesDirectory, code));
+    }
 
     /// <param name="applyRowUpdate">Optional marshaller invoked around every write to the
     /// UI-bound rows. The Avalonia caller passes a dispatcher invoke so bindings update on
@@ -44,7 +66,7 @@ public static partial class MergeAndSplitHelper
         var formattingList = HandleFormatting(tempSubtitle, index, source.Code);
         var maxChars = CalculateMaxChars(autoTranslator, forceSingleLineMode);
 
-        var mergeResult = TryMergeLines(tempSubtitle, index, maxChars, ref noSentenceEndingSource, noSentenceEndingTarget);
+        var mergeResult = TryMergeLines(tempSubtitle, index, maxChars, ref noSentenceEndingSource, noSentenceEndingTarget, source.TwoLetterIsoLanguageName ?? source.Code);
         if (mergeResult.HasError)
         {
             return 0;
@@ -129,9 +151,10 @@ public static partial class MergeAndSplitHelper
         int index,
         int maxChars,
         ref bool noSentenceEndingSource,
-        bool noSentenceEndingTarget)
+        bool noSentenceEndingTarget,
+        string sourceLanguage)
     {
-        var mergeResult = MergeMultipleLines(tempSubtitle, index, maxChars, noSentenceEndingSource, noSentenceEndingTarget);
+        var mergeResult = MergeMultipleLines(tempSubtitle, index, maxChars, noSentenceEndingSource, noSentenceEndingTarget, sourceLanguage);
 
         if (mergeResult.HasError)
         {
@@ -140,7 +163,7 @@ public static partial class MergeAndSplitHelper
             if (!noSentenceEndingSource)
             {
                 noSentenceEndingSource = true;
-                mergeResult = MergeMultipleLines(tempSubtitle, index, maxChars, noSentenceEndingSource, noSentenceEndingTarget);
+                mergeResult = MergeMultipleLines(tempSubtitle, index, maxChars, noSentenceEndingSource, noSentenceEndingTarget, sourceLanguage);
             }
         }
 
@@ -176,11 +199,13 @@ public static partial class MergeAndSplitHelper
     {
         var sourceTexts = tempSubtitle.Select(p => p.Text).ToList();
         var mergeCount = mergeResult.ParagraphCount;
+        var sourceAbbreviations = AbbreviationsForLanguage(mergeResult.SourceLanguage);
+        var targetAbbreviations = AbbreviationsForLanguage(target.TwoLetterIsoLanguageName ?? target.Code);
 
         // Strategy 1: Split by line ending chars where period count matches
         var splitResult = SplitMultipleLines(mergeResult, mergedTranslation, target.Code);
         if (IsSplitValid(splitResult, mergeCount, sourceTexts, index) &&
-            HasMatchingPeriodCount(mergeResult.Text, mergedTranslation))
+            HasMatchingPeriodCount(mergeResult.Text, mergedTranslation, sourceAbbreviations, targetAbbreviations))
         {
             return ApplySplitResult(rows, index, formattingList, splitResult, applyRowUpdate);
         }
@@ -196,14 +221,20 @@ public static partial class MergeAndSplitHelper
         var noPeriodsInNumbersTranslation = FixPeriodInNumbers(mergedTranslation);
         splitResult = SplitMultipleLines(mergeResult, noPeriodsInNumbersTranslation, target.Code);
         if (IsSplitValid(splitResult, mergeCount, sourceTexts, index) &&
-            HasMatchingPeriodCount(mergeResult.Text, noPeriodsInNumbersTranslation))
+            HasMatchingPeriodCount(mergeResult.Text, noPeriodsInNumbersTranslation, sourceAbbreviations, targetAbbreviations))
         {
             return ApplySplitResult(rows, index, formattingList, splitResult, applyRowUpdate, restorePeriodPlaceholder: true);
         }
 
-        // Strategy 4: Split by line ending chars (relaxed - no period count check)
+        // Strategy 4: Split by line ending chars (relaxed - no period count check). Without
+        // that check a stray period the engine introduced (an abbreviation not in the list)
+        // shifts every following row by a sentence, and when the block ends in a rarer
+        // character like '?' the final row swallows the rest so the split still "succeeds"
+        // (#14484). The proportion check catches that shape: a row cut off at "Mrs." is far
+        // shorter than its source, and the final row is far longer.
         splitResult = SplitMultipleLines(mergeResult, mergedTranslation, target.Code);
-        if (IsSplitValid(splitResult, mergeCount, sourceTexts, index))
+        if (IsSplitValid(splitResult, mergeCount, sourceTexts, index) &&
+            HasPlausibleProportions(mergeResult, splitResult))
         {
             return ApplySplitResult(rows, index, formattingList, splitResult, applyRowUpdate);
         }
@@ -217,9 +248,132 @@ public static partial class MergeAndSplitHelper
         return splitResult.Count == expectedCount && HasSameEmptyLines(splitResult, sourceTexts, index);
     }
 
-    private static bool HasMatchingPeriodCount(string source, string translation)
+    private static bool HasMatchingPeriodCount(string source, string translation, HashSet<string> sourceAbbreviations, HashSet<string> targetAbbreviations)
     {
-        return Utilities.CountTagInText(source, '.') == Utilities.CountTagInText(translation, '.');
+        return CountSentencePeriods(source, sourceAbbreviations) == CountSentencePeriods(translation, targetAbbreviations);
+    }
+
+    /// <summary>
+    /// Counts the periods in <paramref name="text"/> that can end a sentence: a period closing a
+    /// known abbreviation ("Mrs." in "Mrs. Meier") is skipped, unless it is also the last thing
+    /// in the text, where it ends the row whatever the word ("Apples, pears, etc.").
+    /// </summary>
+    public static int CountSentencePeriods(string text, HashSet<string> abbreviations)
+    {
+        var count = 0;
+        for (var i = 0; i < text.Length; i++)
+        {
+            if (text[i] == '.' && !IsAbbreviationPeriod(text, i, abbreviations))
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    private static bool IsAbbreviationPeriod(string text, int periodIndex, HashSet<string> abbreviations)
+    {
+        // Only a period followed by more text on the same line can be an abbreviation's:
+        // at the end of the text or before a line break it ends the row either way.
+        if (periodIndex + 1 >= text.Length)
+        {
+            return false;
+        }
+
+        // A period between two letters is an inner abbreviation period ("p.m.", "e.g.").
+        if (periodIndex > 0 && char.IsLetter(text[periodIndex - 1]) && char.IsLetter(text[periodIndex + 1]))
+        {
+            return true;
+        }
+
+        if (text[periodIndex + 1] != ' ')
+        {
+            return false;
+        }
+
+        var start = periodIndex;
+        while (start > 0 && (char.IsLetter(text[start - 1]) || text[start - 1] == '.'))
+        {
+            start--;
+        }
+
+        var word = text.Substring(start, periodIndex - start + 1);
+        if (word.Length == 1 || word.Contains("..", StringComparison.Ordinal))
+        {
+            return false; // a lone period, or an ellipsis "Wait..." - both end a sentence
+        }
+
+        // "a.m.", "e.g.", "U.S.": an inner period marks an abbreviation without a list entry.
+        return word.IndexOf('.') < word.Length - 1 || abbreviations.Contains(word);
+    }
+
+    private const int MinSourceLengthForProportionCheck = 10;
+    private const double MinPlausibleProportion = 0.5;
+    private const double MaxPlausibleProportion = 3.0;
+
+    /// <summary>
+    /// A row's share of the reply should be roughly its share of the request. Short source rows
+    /// are exempt ("Wer?" may legitimately come back as "Who is that?"), and the band is wide
+    /// because engines rephrase freely; the shape this rejects is a row reduced to a fragment or
+    /// a row that swallowed its neighbours' sentences.
+    /// </summary>
+    private static bool HasPlausibleProportions(MergeResult mergeResult, List<string> splitResult)
+    {
+        var pairs = new List<(int SourceLength, int ReplyLength)>();
+        var lineIndex = 0;
+        foreach (var item in mergeResult.MergeResultItems)
+        {
+            var rowCount = item.IsEmpty ? 1 : item.EndIndex - item.StartIndex + 1;
+            var replyLength = 0;
+            for (var i = 0; i < rowCount && lineIndex < splitResult.Count; i++, lineIndex++)
+            {
+                replyLength += CountNonWhiteSpace(splitResult[lineIndex]);
+            }
+
+            if (!item.IsEmpty)
+            {
+                pairs.Add((CountNonWhiteSpace(item.Text), replyLength));
+            }
+        }
+
+        var sourceTotal = pairs.Sum(p => p.SourceLength);
+        var replyTotal = pairs.Sum(p => p.ReplyLength);
+        if (sourceTotal == 0 || replyTotal == 0)
+        {
+            return true;
+        }
+
+        var overallRatio = (double)replyTotal / sourceTotal;
+        foreach (var (sourceLength, replyLength) in pairs)
+        {
+            if (sourceLength < MinSourceLengthForProportionCheck)
+            {
+                continue;
+            }
+
+            var proportion = replyLength / (sourceLength * overallRatio);
+            if (proportion < MinPlausibleProportion || proportion > MaxPlausibleProportion)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static int CountNonWhiteSpace(string text)
+    {
+        var count = 0;
+        foreach (var ch in text)
+        {
+            if (!char.IsWhiteSpace(ch))
+            {
+                count++;
+            }
+        }
+
+        return count;
     }
 
     private static int ApplySplitResult(
@@ -318,8 +472,11 @@ public static partial class MergeAndSplitHelper
 
     private static string AutoBreakIfNeeded(string text, string language)
     {
+        // Any sentence ending inside the text earns a break attempt, not only a period: a row
+        // holding "Who? Kira Dorn." was kept on one line while "I told you so. Kira Dorn." was
+        // broken (#14484).
         if (text.Contains('\n') ||
-            text.TrimEnd('.').Contains('.') ||
+            text.TrimEnd(SentenceEndChars).IndexOfAny(SentenceEndChars) >= 0 ||
             text.Length >= Configuration.Settings.General.SubtitleLineMaximumLength)
         {
             return Utilities.AutoBreakLine(
@@ -411,16 +568,17 @@ public static partial class MergeAndSplitHelper
         return formattingList;
     }
 
-    public static MergeResult MergeMultipleLines(TranslateRow[] sourceSubtitle, int index, int maxTextSize, bool noSentenceEndingSource, bool noSentenceEndingTarget)
+    public static MergeResult MergeMultipleLines(TranslateRow[] sourceSubtitle, int index, int maxTextSize, bool noSentenceEndingSource, bool noSentenceEndingTarget, string sourceLanguage = "")
     {
         var result = new MergeResult
         {
             MergeResultItems = new List<MergeResultItem>(),
             NoSentenceEndingSource = noSentenceEndingSource,
             NoSentenceEndingTarget = noSentenceEndingTarget,
+            SourceLanguage = sourceLanguage ?? string.Empty,
         };
 
-        var context = new MergeContext(sourceSubtitle, index);
+        var context = new MergeContext(sourceSubtitle, index, AbbreviationsForLanguage(result.SourceLanguage));
 
         // Initialize with the first subtitle line
         InitializeFirstItem(result, context);
@@ -458,12 +616,26 @@ public static partial class MergeAndSplitHelper
         // which re-encoded the whole accumulated text every iteration (O(N^2) over a run).
         public string? EncodedLengthTextRef { get; set; }
         public int EncodedLengthValue { get; set; }
+        public HashSet<string> Abbreviations { get; }
 
-        public MergeContext(TranslateRow[] sourceSubtitle, int index)
+        public MergeContext(TranslateRow[] sourceSubtitle, int index, HashSet<string> abbreviations)
         {
             StartIndex = index;
             PreviousRow = sourceSubtitle[index];
             TextBuilder = new StringBuilder();
+            Abbreviations = abbreviations;
+        }
+
+        /// <summary>
+        /// How many times the item's end character occurs in its text - the split later cuts
+        /// the reply at that occurrence. Abbreviation periods are not sentence ends and are
+        /// not counted, on either side.
+        /// </summary>
+        public int CountEndChar(char endChar)
+        {
+            return endChar == '.'
+                ? CountSentencePeriods(TextBuilder.ToString(), Abbreviations)
+                : TextBuilder.CountChar(endChar);
         }
     }
 
@@ -578,7 +750,7 @@ public static partial class MergeAndSplitHelper
             context.CurrentItem.TextIndexStart = result.Text.Length;
             context.CurrentItem.TextIndexEnd = result.Text.Length;
             context.CurrentItem.EndChar = endChar;
-            context.CurrentItem.EndCharOccurrences = context.TextBuilder.CountChar(endChar);
+            context.CurrentItem.EndCharOccurrences = context.CountEndChar(endChar);
             result.MergeResultItems.Add(context.CurrentItem);
         }
 
@@ -609,7 +781,7 @@ public static partial class MergeAndSplitHelper
             {
                 var endChar = result.Text[^1];
                 context.CurrentItem.EndChar = endChar;
-                context.CurrentItem.EndCharOccurrences = context.TextBuilder.CountChar(endChar);
+                context.CurrentItem.EndCharOccurrences = context.CountEndChar(endChar);
                 context.CurrentItem.TextIndexEnd = result.Text.Length;
             }
 
@@ -669,7 +841,7 @@ public static partial class MergeAndSplitHelper
             {
                 var endChar = result.Text[^1];
                 context.CurrentItem.EndChar = endChar;
-                context.CurrentItem.EndCharOccurrences = context.TextBuilder.CountChar(endChar);
+                context.CurrentItem.EndCharOccurrences = context.CountEndChar(endChar);
             }
         }
 
@@ -691,6 +863,7 @@ public static partial class MergeAndSplitHelper
             return SplitByPeriodMarkers(text);
         }
 
+        var abbreviations = AbbreviationsForLanguage(language);
         var lines = new List<string>();
         foreach (var item in mergeResult.MergeResultItems)
         {
@@ -700,7 +873,7 @@ public static partial class MergeAndSplitHelper
                 continue;
             }
 
-            var part = ExtractPartForItem(ref text, item);
+            var part = ExtractPartForItem(ref text, item, abbreviations);
             if (string.IsNullOrEmpty(part) && !item.IsEmpty)
             {
                 return []; // Failed to extract part
@@ -747,7 +920,7 @@ public static partial class MergeAndSplitHelper
         return lines;
     }
 
-    private static string ExtractPartForItem(ref string text, MergeResultItem item)
+    private static string ExtractPartForItem(ref string text, MergeResultItem item, HashSet<string> abbreviations)
     {
         if (item.EndChar == '\0')
         {
@@ -756,7 +929,7 @@ public static partial class MergeAndSplitHelper
             return result;
         }
 
-        var part = FindPartByEndChar(text, item.EndChar, item.EndCharOccurrences);
+        var part = FindPartByEndChar(text, item.EndChar, item.EndCharOccurrences, abbreviations);
         if (!string.IsNullOrEmpty(part))
         {
             text = text[part.Length..].Trim();
@@ -765,27 +938,29 @@ public static partial class MergeAndSplitHelper
         return part;
     }
 
-    private static string FindPartByEndChar(string input, char endChar, int targetOccurrence)
+    /// <summary>
+    /// Cuts <paramref name="input"/> after the n-th occurrence of the end character; a period
+    /// closing a known abbreviation does not count. Fewer occurrences than asked for return the
+    /// whole input, so the last row of a block absorbs an engine's merged sentences.
+    /// </summary>
+    private static string FindPartByEndChar(string input, char endChar, int targetOccurrence, HashSet<string> abbreviations)
     {
-        var idx = input.IndexOf(endChar);
-        if (idx < 0)
+        var count = 0;
+        for (var i = 0; i < input.Length; i++)
         {
-            return string.Empty;
-        }
-
-        var count = 1;
-        while (idx >= 0 && idx < input.Length - 1)
-        {
-            if (count == targetOccurrence)
+            if (input[i] != endChar || (endChar == '.' && IsAbbreviationPeriod(input, i, abbreviations)))
             {
-                return input[..(idx + 1)];
+                continue;
             }
 
-            idx = input.IndexOf(endChar, idx + 1);
             count++;
+            if (count == targetOccurrence)
+            {
+                return input[..(i + 1)];
+            }
         }
 
-        return input;
+        return count == 0 ? string.Empty : input;
     }
 
     private static string AutoBreakIfTooLong(string text)
