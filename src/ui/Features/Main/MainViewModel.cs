@@ -12731,6 +12731,10 @@ public partial class MainViewModel :
         RebuildToolbar();
 
         MenuPlugins.IsVisible = Se.Settings.Appearance.ShowPluginsMenu;
+        if (OperatingSystem.IsMacOS())
+        {
+            Layout.InitNativeMacMenu.UpdatePluginsMenuVisibility(this);
+        }
 
         LockTimeCodes = Se.Settings.General.LockTimeCodes;
         IsWaveformToolbarVisible = Se.Settings.Waveform.ShowToolbar;

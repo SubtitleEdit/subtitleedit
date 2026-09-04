@@ -664,10 +664,7 @@ public static class InitNativeMacMenu
         foreach (var (item, getHeader, _) in state.DynamicHeaders)
             item.Header = getHeader(vm);
 
-        if (state.PluginsItem != null)
-        {
-            state.PluginsItem.IsEnabled = Se.Settings.Appearance.ShowPluginsMenu;
-        }
+        UpdatePluginsMenuVisibility(vm);
 
         state.Handler = (s, e) =>
         {
@@ -782,6 +779,19 @@ public static class InitNativeMacMenu
             },
             Se.Language.Video.ClearRecentVideos,
             () => vm.CommandVideoClearRecentFilesCommand.Execute(null));
+    }
+
+    /// <summary>
+    /// Show/hide the top-level Plugins menu from the "Show Plugins menu" setting. Must be
+    /// IsVisible, not IsEnabled: macOS ignores the enabled state of a top-level title that
+    /// carries a submenu, so a disabled item stayed on the menu bar (issue #14524).
+    /// </summary>
+    public static void UpdatePluginsMenuVisibility(MainViewModel vm)
+    {
+        if (vm.NativeMenuPlugins != null)
+        {
+            vm.NativeMenuPlugins.IsVisible = Se.Settings.Appearance.ShowPluginsMenu;
+        }
     }
 
     public static void UpdatePluginsMenu(MainViewModel vm)
