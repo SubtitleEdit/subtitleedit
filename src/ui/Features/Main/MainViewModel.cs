@@ -1809,31 +1809,18 @@ public partial class MainViewModel :
             return;
         }
 
-        // TogglePlayPause funnels through CancelPausePlayheadFreeze twice (the view model
-        // command and the control's PlayPauseRequested wiring); the second pass still reads
-        // the pre-seek position, so it would issue the same seek again.
-        var nowTs = Stopwatch.GetTimestamp();
-        var sinceLastMs = (nowTs - _resumeSeekIssuedTs) * 1000.0 / Stopwatch.Frequency;
-        if (sinceLastMs < 500 && Math.Abs(_resumeSeekTargetSeconds - _playheadEstimateSeconds) < 0.001)
-        {
-            return;
-        }
-
-        _resumeSeekIssuedTs = nowTs;
-        _resumeSeekTargetSeconds = _playheadEstimateSeconds;
-
-        // Deliberately no PinPlayheadTo here. The pin's arrive tolerance (0.15 s) is wider
-        // than the typical pause residual, so the not-yet-seeked player already read as
-        // "arrived": the pin released on the first playing tick and seeded the cursor from
-        // the stale position - a jump forward onto mpv's settled spot, then back when the
-        // seek landed. The estimate is already standing on the target, the paused branch
-        // holds it there (settled), and once playing the freeze-hold keeps it from chasing
-        // the stale clock until the seek lands right where the cursor is.
+        // Pin so the cursor cannot follow Position's contortions across the resume: mpv's
+        // paused-value cache makes it read as the seek target while paused, flip back to the
+        // stale settled clock the instant the unpause clears the cache, and land on the target
+        // only when the seek completes - and the paused branch would follow each flip as "a
+        // seek while paused" (the double jump on every resume). The pin's arrival is gated on
+        // the player's seek-restart signal, so none of those intermediate readings can release
+        // it early. The pin also makes a second pass through this funnel a no-op
+        // (TogglePlayPause funnels twice: the view model command and the control's
+        // PlayPauseRequested wiring).
         vp.SeekTo(_playheadEstimateSeconds);
+        PinPlayheadTo(_playheadEstimateSeconds);
     }
-
-    private long _resumeSeekIssuedTs; // when SeekPausedPlayerToVisibleCursor last issued a seek
-    private double _resumeSeekTargetSeconds; // ...and to where (dedupe for double-funneled toggles)
 
     // The player's Stop button pauses and seeks to 0; freeze the cursor immediately and pin it to
     // the start so it jumps there at once instead of lingering until mpv reports the new position.
@@ -29648,22 +29635,33 @@ public partial class MainViewModel :
         if (_playheadSeekTarget.HasValue)
         {
             var target = _playheadSeekTarget.Value;
-            var arrived = Math.Abs(rawPosition - target) < PlayheadSeekArriveToleranceSeconds;
 
             // The 600 ms timeout is a guess at "the seek must have landed by now", and for a
             // slow seek (network share, cold spinning disk, heavy 4K hr-seek) it guesses wrong:
             // the pin expired mid-seek, the cursor snapped back to the old position, then jumped
             // again when the seek finally landed. When the player reports seek completion
             // exactly (mpv's MPV_EVENT_PLAYBACK_RESTART), don't give up while the seek is still
-            // in flight - hold the pin up to a hard cap instead. The restart signal is only ever
-            // used to extend the hold, never to release the pin early: a restart from an older
-            // seek in a scrub burst would otherwise release a newer pin onto a stale position.
+            // in flight - hold the pin up to a hard cap instead. A restart alone never releases
+            // the pin (a restart from an older seek in a scrub burst would release a newer pin
+            // onto a stale position); the position must be at the target too.
             var pinElapsedMs = (nowTimestamp - _playheadSeekTargetTs) * 1000.0 / Stopwatch.Frequency;
             var player = vp.VideoPlayer;
             var seekStillInFlight = player.SupportsPlaybackRestartEvents &&
                                     !player.HasPlaybackRestartedSince(_playheadSeekTargetTs);
             var timedOut = pinElapsedMs > PlayheadSeekPinTimeoutMs &&
                            (!seekStillInFlight || pinElapsedMs > PlayheadSeekPinMaxMs);
+
+            // "Arrived" needs more than the position reading near the target: while the pin's seek
+            // is in flight, Position is unreliable for this exact purpose - mpv's paused-value
+            // cache returns the seek target itself while paused, then flips back to the stale
+            // observed clock the moment an unpause clears it, then to the landed position (the
+            // resume-from-cursor seek showed all three within ~100 ms). A residual smaller than
+            // the tolerance also means the pre-seek position already reads as "arrived". So when
+            // the player reports seek completion exactly, arrival additionally requires that a
+            // restart has been observed since the pin was set - mpv's own word that the seek
+            // landed - and the timeout still bounds a seek whose restart never comes.
+            var arrived = Math.Abs(rawPosition - target) < PlayheadSeekArriveToleranceSeconds &&
+                          !seekStillInFlight;
 
             // A pause was requested but mpv still reports playing: it keeps decoding for ~100-200 ms and
             // its position runs on past the pinned spot, which is within the arrive tolerance, so "arrived"

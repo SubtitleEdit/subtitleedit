@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
+using System.Diagnostics;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -43,22 +44,31 @@ public class PlayheadResumeFromCursorTests : IDisposable
         }
     }
 
-    /// <summary>Seeks are recorded but only reach the reported position on <see cref="LandSeek"/>,
-    /// like mpv's async hr-seek. Everything the resume logic reads mid-flight is the old clock.</summary>
+    /// <summary>Models the LibMpv player's seek semantics, which are what broke the first two
+    /// attempts at this fix: a seek is asynchronous (the observed clock keeps the old value until
+    /// <see cref="LandSeek"/>), the paused-value cache makes Position read as the seek target
+    /// while paused, Play/PlayOrPause clear that cache (so Position flips back to the stale
+    /// observed clock mid-resume), and seek completion is reported via the playback-restart
+    /// signal. A synchronous fake could never see the phantom pin arrival or the flip.</summary>
     private sealed class FakeVideoPlayer : IVideoPlayer
     {
-        private double _position;
+        private double _observedPosition;
+        private double? _pausedSeekTarget; // mirrors LibMpvDynamicPlayer._pausedValue
+        private long? _restartTimestamp;
 
-        public FakeVideoPlayer(double startSeconds) => _position = startSeconds;
+        public FakeVideoPlayer(double startSeconds) => _observedPosition = startSeconds;
 
         public double? SeekTarget { get; private set; }
         public int SeekCount { get; private set; }
 
+        /// <summary>The async seek completes: the observed clock lands on the target and mpv
+        /// posts MPV_EVENT_PLAYBACK_RESTART.</summary>
         public void LandSeek()
         {
             if (SeekTarget is { } t)
             {
-                _position = t;
+                _observedPosition = t;
+                _restartTimestamp = Stopwatch.GetTimestamp();
             }
         }
 
@@ -70,15 +80,23 @@ public class PlayheadResumeFromCursorTests : IDisposable
         public Task LoadFile(string fileName, double startPositionSeconds = 0)
         {
             FileName = fileName;
-            _position = startPositionSeconds;
+            _observedPosition = startPositionSeconds;
             return Task.CompletedTask;
         }
 
         public void CloseFile() => FileName = string.Empty;
 
-        public void Play() => IsPlaying = true;
+        public void Play()
+        {
+            _pausedSeekTarget = null;
+            IsPlaying = true;
+        }
 
-        public void PlayOrPause() => IsPlaying = !IsPlaying;
+        public void PlayOrPause()
+        {
+            _pausedSeekTarget = null;
+            IsPlaying = !IsPlaying;
+        }
 
         public void Pause() => IsPlaying = false;
 
@@ -91,11 +109,12 @@ public class PlayheadResumeFromCursorTests : IDisposable
 
         public double Position
         {
-            get => _position;
+            get => !IsPlaying && _pausedSeekTarget.HasValue ? _pausedSeekTarget.Value : _observedPosition;
             set
             {
                 SeekTarget = value;
                 SeekCount++;
+                _pausedSeekTarget = value;
             }
         }
 
@@ -103,8 +122,9 @@ public class PlayheadResumeFromCursorTests : IDisposable
         public int VolumeMaximum => 100;
         public double Volume { get; set; } = 50;
         public double Speed { get; set; } = 1.0;
-        public bool SupportsPlaybackRestartEvents => false;
-        public bool HasPlaybackRestartedSince(long stopwatchTimestamp) => false;
+        public bool SupportsPlaybackRestartEvents => true;
+        public bool HasPlaybackRestartedSince(long stopwatchTimestamp) =>
+            _restartTimestamp is { } ts && ts >= stopwatchTimestamp;
     }
 
     [AvaloniaFact]
@@ -117,18 +137,42 @@ public class PlayheadResumeFromCursorTests : IDisposable
         vm.CancelPausePlayheadFreeze(); // what every play path does just before playing
 
         Assert.Equal(1.0, player.SeekTarget ?? -1, 4); // playback will start at the drawn cursor
-        Assert.Null(GetField<double?>(vm, "_playheadSeekTarget")); // and no pin that could phantom-arrive
+        Assert.Equal(1.0, GetField<double?>(vm, "_playheadSeekTarget") ?? -1, 4); // pinned there
 
-        // The cursor holds the spot through the whole async resume:
-        Assert.Equal(1.0, Tick(vm, vp, isPlaying: false), 3); // seek still in flight, still paused
+        // While paused-with-seek-in-flight, Position reads as the seek target (paused-value
+        // cache); the restart gate keeps the pin from treating that echo as arrival.
+        Assert.Equal(1.0, Tick(vm, vp, isPlaying: false), 3);
 
-        // mpv unpauses before the hr-seek lands and briefly still reports the stale clock. The
-        // pinned first fix seeded the cursor from exactly this tick - the reported jump.
-        player.IsPlaying = true;
-        Assert.Equal(1.0, Tick(vm, vp, isPlaying: true), 2);
+        // The unpause clears the paused-value cache: Position flips back to the stale observed
+        // clock until the hr-seek lands. Following this flip was the double jump of the second
+        // attempt; releasing the pin onto it was the jump of the first.
+        player.PlayOrPause();
+        Assert.Equal(1.18, player.Position, 4); // the flip is really being exercised
+        Assert.Equal(1.0, Tick(vm, vp, isPlaying: true), 3);
 
-        player.LandSeek(); // raw arrives right where the cursor is held
-        Assert.Equal(1.0, Tick(vm, vp, isPlaying: true), 2);
+        player.LandSeek(); // mpv's restart: the seek landed right where the cursor is held
+        Assert.Equal(1.0, Tick(vm, vp, isPlaying: true), 3);
+        Assert.Null(GetField<double?>(vm, "_playheadSeekTarget")); // released cleanly onto the target
+    }
+
+    [AvaloniaFact]
+    public void ResumeAfterPause_ResidualInsideArriveTolerance_PinHoldsUntilTheSeekLands()
+    {
+        // The typical wind-down residual (~0.05-0.15 s) is smaller than the pin's arrive
+        // tolerance, so the stale clock after the unpause flip already reads as "arrived" -
+        // the phantom arrival that seeded the cursor from the stale position and made the
+        // first fix jump. Only mpv's restart signal may release the pin.
+        var (vm, vp, player) = MakeViewModelWithPlayer(cursorSeconds: 1.0, rawSeconds: 1.1);
+
+        vm.CancelPausePlayheadFreeze();
+        player.PlayOrPause(); // flip: Position reads 1.1 again, within tolerance of the 1.0 pin
+
+        Assert.Equal(1.1, player.Position, 4);
+        Assert.Equal(1.0, Tick(vm, vp, isPlaying: true), 3); // held - no restart yet
+        Assert.Equal(1.0, GetField<double?>(vm, "_playheadSeekTarget") ?? -1, 4);
+
+        player.LandSeek();
+        Assert.Equal(1.0, Tick(vm, vp, isPlaying: true), 3);
     }
 
     [AvaloniaFact]
@@ -173,8 +217,8 @@ public class PlayheadResumeFromCursorTests : IDisposable
     public void SecondFunnelPass_DoesNotSeekAgain()
     {
         // TogglePlayPause funnels through CancelPausePlayheadFreeze twice (the view model command
-        // and the control's PlayPauseRequested wiring); the second pass still reads the pre-seek
-        // clock, so without the dedupe it would issue the same seek again.
+        // and the control's PlayPauseRequested wiring); the pin set by the first pass makes the
+        // second a no-op, else it would issue the same seek again.
         var (vm, vp, player) = MakeViewModelWithPlayer(cursorSeconds: 1.0, rawSeconds: 1.18);
 
         vm.CancelPausePlayheadFreeze();
