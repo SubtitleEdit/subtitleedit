@@ -256,8 +256,11 @@ public partial class WordListsViewModel : ObservableObject
             return;
         }
 
-        if (OcrFixes.Any(f => f.Find.Equals(fixFind, StringComparison.OrdinalIgnoreCase)))
+        // The OCR fix list is case-sensitive (both storage and lookup), so
+        // "word", "Word" and "WORD" are distinct entries and must all be allowed.
+        if (OcrFixes.Any(f => f.Find.Equals(fixFind, StringComparison.Ordinal)))
         {
+            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Options.WordLists.UnableToAddItem, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
