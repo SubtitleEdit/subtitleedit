@@ -648,6 +648,13 @@ public class FishTtsAudioCpp : ITtsEngine, IPerLineCloneEngine
     /// Writes the audio.cpp server config next to the binary. lazy_load keeps startup instant;
     /// the model is read on first use and then stays resident until the server is stopped.
     /// </summary>
+    /// <remarks>
+    /// The model entry names the GGUF file, not its folder. Given a folder, audio.cpp picks
+    /// model.gguf or the sole *.gguf and refuses a folder holding several - so a user who had
+    /// downloaded both quantizations could not start the server until one was moved out of
+    /// sight (#14480). The file path is unambiguous, and auxiliary paths still resolve against
+    /// its parent.
+    /// </remarks>
     private static string WriteServerConfig(int port, string backend, string modelKey)
     {
         var config = new Dictionary<string, object>
@@ -663,7 +670,7 @@ public class FishTtsAudioCpp : ITtsEngine, IPerLineCloneEngine
                 {
                     ["id"] = ServerModelId,
                     ["family"] = FamilyName,
-                    ["path"] = GetSetModelsFolder(),
+                    ["path"] = GetModelPath(modelKey),
                     ["task"] = "tts",
                     ["mode"] = "offline",
                 },
