@@ -892,6 +892,41 @@ public static class TableViewExtras
     }
 
     /// <summary>
+    /// Where <paramref name="item"/>'s row sits right now: its top edge in viewport coordinates
+    /// (negative while scrolled into), or null when the row is not realized. Pair with
+    /// <see cref="PlaceRowAtViewportTop"/> to put a row back where the user saw it after the
+    /// grid has been rebuilt from scratch.
+    /// </summary>
+    public static double? GetRowViewportTop(TableView tableView, object item)
+    {
+        var scrollViewer = tableView.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault();
+        if (scrollViewer == null || scrollViewer.Viewport.Height <= 0)
+        {
+            return null;
+        }
+
+        if (tableView.ContainerFromItem(item) is not { } row || row.Bounds.Height <= 0)
+        {
+            return null;
+        }
+
+        return row.TranslatePoint(new Point(0, 0), ViewportOrigin(scrollViewer))?.Y;
+    }
+
+    /// <summary>
+    /// Scrolls so <paramref name="item"/>'s row has its top edge at <paramref name="top"/>
+    /// viewport pixels - the position <see cref="GetRowViewportTop"/> reported for the row that
+    /// stood there before. Undo/redo replace every row object (and detach the ItemsSource on the
+    /// way, which drops the offset to 0), so nothing else can keep the view still across them;
+    /// this puts the restored row back at the same height instead of letting ScrollIntoView
+    /// park it at the viewport edge (#14517).
+    /// </summary>
+    public static void PlaceRowAtViewportTop(TableView tableView, object item, double top)
+    {
+        AdjustScrollForRow(tableView, item, (rowTop, _, _) => rowTop - top);
+    }
+
+    /// <summary>
     /// Whether <paramref name="item"/>'s row is realized and entirely inside the viewport right
     /// now. Callers use it to leave the scroll offset alone when the row they are about to select
     /// is already on screen - deleting a line, for example, makes the next line current, and that
