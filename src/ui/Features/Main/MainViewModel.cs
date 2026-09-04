@@ -20448,6 +20448,7 @@ public partial class MainViewModel :
         RunWithoutChangeDetection(() =>
         {
             var preIndex = SelectedSubtitleIndex ?? 0;
+            var preRowTop = GetSelectedRowViewportTop();
 
             var undoRedoObject = _undoRedoManager.Undo()!;
             if (undoRedoObject?.Subtitles == null)
@@ -20455,8 +20456,8 @@ public partial class MainViewModel :
                 return;
             }
 
-            RestoreUndoRedoState(undoRedoObject);
-            RestoreSelectionToPreviousIndex(preIndex);
+            RestoreUndoRedoState(undoRedoObject, scrollToSelected: false);
+            RestoreSelectionToPreviousIndex(preIndex, preRowTop);
             ShowUndoStatus();
         });
     }
@@ -20495,6 +20496,7 @@ public partial class MainViewModel :
         RunWithoutChangeDetection(() =>
         {
             var preIndex = SelectedSubtitleIndex ?? 0;
+            var preRowTop = GetSelectedRowViewportTop();
 
             var undoRedoObject = _undoRedoManager.Redo();
             if (undoRedoObject?.Subtitles == null)
@@ -20502,20 +20504,43 @@ public partial class MainViewModel :
                 return;
             }
 
-            RestoreUndoRedoState(undoRedoObject);
-            RestoreSelectionToPreviousIndex(preIndex);
+            RestoreUndoRedoState(undoRedoObject, scrollToSelected: false);
+            RestoreSelectionToPreviousIndex(preIndex, preRowTop);
             ShowRedoStatus();
         });
     }
 
-    private void RestoreSelectionToPreviousIndex(int preIndex)
+    /// <summary>
+    /// Where the current row sits in the grid's viewport, captured before undo/redo rebuild the
+    /// rows, so <see cref="RestoreSelectionToPreviousIndex"/> can put the restored row back at
+    /// the same height. Null when the row is off screen (or there is no grid yet).
+    /// </summary>
+    private double? GetSelectedRowViewportTop()
+    {
+        if (SubtitleGrid is not { } grid || SelectedSubtitle is not { } row)
+        {
+            return null;
+        }
+
+        return TableViewExtras.GetRowViewportTop(grid, row);
+    }
+
+    /// <summary>
+    /// Re-selects the row at <paramref name="preIndex"/> after undo/redo. With
+    /// <paramref name="preRowTop"/> given, the row is placed at that viewport height rather than
+    /// scrolled to the edge: the rebuild in <see cref="ReplaceSubtitles"/> detaches the
+    /// ItemsSource and so drops the scroll offset to 0, after which a plain ScrollIntoView parked
+    /// the current line at the top of the grid on every Undo - disorienting when the user was
+    /// working near the bottom of the view (#14517).
+    /// </summary>
+    private void RestoreSelectionToPreviousIndex(int preIndex, double? preRowTop = null)
     {
         if (Subtitles.Count == 0)
         {
             return;
         }
 
-        SelectAndScrollToRow(Math.Clamp(preIndex, 0, Subtitles.Count - 1));
+        SelectAndScrollToRow(Math.Clamp(preIndex, 0, Subtitles.Count - 1), null, keepRowViewportTop: preRowTop);
     }
 
     public UndoRedoItem MakeUndoRedoObject(string description)
@@ -20547,8 +20572,17 @@ public partial class MainViewModel :
         };
     }
 
-    private void RestoreUndoRedoState(UndoRedoItem undoRedoObject)
+    /// <param name="scrollToSelected">
+    /// Select and scroll to the snapshot's own selected line afterwards. Undo/redo pass false and
+    /// restore the pre-command row at its old viewport height themselves; the history dialog
+    /// (which restores several steps in a row) keeps the default.
+    /// </param>
+    private void RestoreUndoRedoState(UndoRedoItem undoRedoObject, bool scrollToSelected = true)
     {
+        // The rebuild below swaps the ItemsSource and refills the collection; the scroll anchor
+        // must not try to "restore" the view in the middle of that (see SelectAndScrollToRow).
+        using var anchorSuspended = SubtitleGrid is { } grid ? TableViewScrollAnchor.GetFor(grid)?.Suspend() : null;
+
         ReplaceSubtitles(undoRedoObject.Subtitles);
 
         _subtitleFileName = undoRedoObject.SubtitleFileName;
@@ -20572,7 +20606,10 @@ public partial class MainViewModel :
         _subtitleOriginal.Header = undoRedoObject.SubtitleHeaderOriginal;
         _subtitleOriginal.Footer = undoRedoObject.SubtitleFooterOriginal;
 
-        SelectAndScrollToRow(undoRedoObject.SelectedLines.First());
+        if (scrollToSelected)
+        {
+            SelectAndScrollToRow(undoRedoObject.SelectedLines.First());
+        }
     }
 
     public void AutoFitColumns()
@@ -20771,7 +20808,12 @@ public partial class MainViewModel :
     /// the scroll offset is left alone for a visible row (see <paramref name="row"/> callers such
     /// as delete/insert, which must not move the rows out from under the user).
     /// </param>
-    private void SelectAndScrollToRow(int index, SubtitleLineViewModel? row, bool? restoreGridFocus = null, bool centerEvenIfVisible = false)
+    /// <param name="keepRowViewportTop">
+    /// Put the target row's top edge at this viewport height instead of the usual "leave it if
+    /// visible, else scroll into view / center" - for callers that just rebuilt the grid from new
+    /// row objects (undo/redo) and captured where the row stood before (#14517).
+    /// </param>
+    private void SelectAndScrollToRow(int index, SubtitleLineViewModel? row, bool? restoreGridFocus = null, bool centerEvenIfVisible = false, double? keepRowViewportTop = null)
     {
         _shiftSelectAnchorIndex = -1;
         _shiftSelectCurrentIndex = -1;
@@ -20885,7 +20927,11 @@ public partial class MainViewModel :
                     EditTextBoxOriginal.CaretIndex = 0;
                 }
 
-                if (Se.Settings.General.SubtitleGridCenterSelectedRow && (!alreadyVisible || centerEvenIfVisible))
+                if (keepRowViewportTop is { } rowTop)
+                {
+                    TableViewExtras.PlaceRowAtViewportTop(SubtitleGrid, itemToScroll, rowTop);
+                }
+                else if (Se.Settings.General.SubtitleGridCenterSelectedRow && (!alreadyVisible || centerEvenIfVisible))
                 {
                     CenterSelectedRowInSubtitleGrid(itemToScroll);
                 }
