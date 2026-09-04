@@ -176,6 +176,30 @@ public class PlayheadResumeFromCursorTests : IDisposable
     }
 
     [AvaloniaFact]
+    public void PauseWindDown_OnceSettled_AlignsThePlayerWithTheCursor()
+    {
+        // The preferred moment for the alignment seek is the pause settle, not the play: aligned
+        // while paused, mpv has the whole pause to re-prime and play stays a hot, instant
+        // unpause. Seeking at play time started the audio output starved - a brief stutter,
+        // then a forward hop when the clock recovered.
+        var (vm, vp, player) = MakeViewModelWithPlayer(cursorSeconds: 1.0, rawSeconds: 1.18);
+        SetField(vm, "_playheadPausedSettled", false); // the wind-down has just come to rest
+
+        Assert.Equal(1.0, Tick(vm, vp, isPlaying: false), 3); // the settle tick holds the cursor...
+        Assert.Equal(1, player.SeekCount); // ...and moves mpv onto it instead (#12740 intact)
+        Assert.Equal(1.0, player.SeekTarget ?? -1, 4);
+
+        player.LandSeek();
+        Assert.Equal(1.0, Tick(vm, vp, isPlaying: false), 3); // pin releases onto the cursor spot
+
+        // Play much later: everything is already aligned, so no seek and no cold start.
+        vm.CancelPausePlayheadFreeze();
+        Assert.Equal(1, player.SeekCount);
+        player.PlayOrPause();
+        Assert.Equal(1.0, Tick(vm, vp, isPlaying: true), 3);
+    }
+
+    [AvaloniaFact]
     public void ResumeAfterPause_WithinAFrame_DoesNotSeek()
     {
         // A residual too small to see is not worth an hr-seek on every resume.

@@ -680,7 +680,7 @@ public partial class MainViewModel :
     private HashSet<int>? _waveformBufferVisibleLayers;
     private DispatcherTimer _positionTimer = new();
     private DispatcherTimer _slowTimer = new();
-    private DispatcherTimer _cursorTimer = new(); // ~60 fps; drives only the waveform/video playhead cursor
+    private UiTickPump? _cursorTimer; // ~60 fps; drives only the waveform/video playhead cursor (a posted tick, not a DispatcherTimer - see UiTickPump)
 
     // Playhead interpolation state. When mpv resumes after a paused seek its time-pos stalls
     // for ~one audio-buffer interval (~200 ms) and then resyncs forward, which makes the
@@ -1756,25 +1756,27 @@ public partial class MainViewModel :
     internal void CancelPausePlayheadFreeze()
     {
         CancelFrameStepPlayBlip(); // playback the user started must not be stopped by a stale blip
-        SeekPausedPlayerToVisibleCursor();
+        AlignPausedPlayerWithCursor();
         _pauseRequested = false;
         _playStartGate.PlayRequested(Stopwatch.GetTimestamp());
     }
 
     /// <summary>
-    /// Play is about to resume a paused player. While paused the waveform cursor deliberately
-    /// holds the spot where the user paused, while mpv settles a wind-down further on - #12740
-    /// keeps that residual off the cursor, and it grew from sub-visible back to up to ~0.2 s
-    /// when the audio buffer returned to mpv's default for #14523. Left alone, play resumes
-    /// from mpv's settled spot: the audio starts past the cursor and the on-play resync then
-    /// yanks the cursor forward to meet it - so a play command visibly does not start from the
-    /// cursor the user aimed by. Make the drawn cursor authoritative instead: seek the paused
-    /// player onto it, so playback (and, on outputs that keep their device buffer across a
-    /// hardware pause, the audio actually heard - the seek flushes it) starts at what is on
-    /// screen. Seek-then-play paths (play line, play next, grid click-to-play...) pin the
+    /// Moves a paused mpv onto the drawn waveform cursor, so the next play starts from what is
+    /// on screen. While paused the cursor deliberately holds the spot where the user paused,
+    /// while mpv settles a wind-down further on - #12740 keeps that residual off the cursor,
+    /// and it grew from sub-visible back to up to ~0.2 s when the audio buffer returned to
+    /// mpv's default for #14523. Left alone, play resumed from mpv's settled spot: the audio
+    /// started past the cursor and the on-play resync yanked the cursor forward to meet it.
+    /// Called from the pause-settle branch of <see cref="UpdatePlayheadEstimate"/> - aligning
+    /// while paused gives mpv the whole pause to re-prime, so play stays a hot, instant
+    /// unpause (seeking at play time instead started the audio output starved: a brief
+    /// stutter, then a forward hop when the clock recovered) - and again from every play path
+    /// via <see cref="CancelPausePlayheadFreeze"/> as a fallback for a play pressed before the
+    /// settle ran. Seek-then-play paths (play line, play next, grid click-to-play...) pin the
     /// playhead to their own target first; the pin guard leaves those untouched.
     /// </summary>
-    private void SeekPausedPlayerToVisibleCursor()
+    private void AlignPausedPlayerWithCursor()
     {
         if (!_playheadValid || _playheadSeekTarget.HasValue)
         {
@@ -24854,7 +24856,7 @@ public partial class MainViewModel :
     private void CleanUp()
     {
         _positionTimer.Stop();
-        _cursorTimer.Stop();
+        _cursorTimer?.Stop();
         _slowTimer.Stop();
 
         if (_findViewModel != null)
@@ -29876,8 +29878,18 @@ public partial class MainViewModel :
                 // mpv's clock has come to rest after the pause wind-down. Hold the cursor at the frozen
                 // keypress spot rather than snapping to mpv's settled frame: the video stopped where the
                 // cursor already is, and snapping here showed as the cursor shifting slightly after the
-                // numeric time display had already stopped (#12740). Just mark settled so we stop watching.
+                // numeric time display had already stopped (#12740).
                 _playheadPausedSettled = true;
+
+                // Then move mpv, not the cursor: seek the paused core back onto the cursor's spot
+                // now, while there is a whole pause ahead to absorb it. Doing this seek at play
+                // time instead meant unpausing onto a freshly flushed audio pipeline - the output
+                // started starved (heard as a brief stutter) and the cursor hopped forward when
+                // mpv's clock recovered. Aligned here, play is a plain hot unpause from exactly
+                // where the cursor stands; the restart-gated pin keeps the cursor still through
+                // the alignment, and the play paths keep the same call as a fallback for a play
+                // pressed before this settle ran.
+                AlignPausedPlayerWithCursor();
             }
             // else: still winding down, or settled with a standing residual and raw at rest -> hold frozen
             // (no easing, no delayed snap => no post-pause drift).
@@ -30176,8 +30188,15 @@ public partial class MainViewModel :
         // leaving the play-start lag-then-rush. Running at Normal (above Render) keeps the cursor timer
         // firing on time through the burst so the line glides smoothly. Its per-tick work is ~0.2 ms, so
         // it doesn't disturb video rendering.
-        _cursorTimer = new DispatcherTimer(DispatcherPriority.Normal) { Interval = TimeSpan.FromMilliseconds(16) };
-        _cursorTimer.Tick += (s, e) =>
+        // Not a DispatcherTimer any more: with mpv embedded through its own native window (the
+        // Windows default), the platform timer message that a DispatcherTimer rides on stopped
+        // waking the message loop for 100-1000 ms around every play/pause - the UI thread sat idle
+        // in GetMessage with the tick overdue - while a posted message woke it at once. The cursor
+        // jumped ahead at every play and the time display froze (#14523 follow-up). UiTickPump
+        // posts each tick from its own thread, and executing a posted tick also promotes the
+        // dispatcher's other due timers, so the 50 ms position/display timers stop freezing too.
+        _cursorTimer?.Stop();
+        _cursorTimer = new UiTickPump(TimeSpan.FromMilliseconds(16), () =>
         {
             // Fast settle for the on-video subtitle preview: waiting for the 400 ms _slowTimer
             // added up to 400 ms of tick alignment on top of the settle window, so the preview
@@ -30260,7 +30279,7 @@ public partial class MainViewModel :
 
                 _pausedCenterLastSeconds = est;
             }
-        };
+        }, DispatcherPriority.Normal);
         _cursorTimer.Start();
 
         _slowTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(400) };
