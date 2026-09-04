@@ -150,6 +150,7 @@ public class SpeechToTextQualityReportWindow : Window
         var checkDoNotShowAgain = UiUtil.MakeCheckBox(l.QualityReportDoNotShowAgain, vm, nameof(vm.DoNotShowAgain));
         checkDoNotShowAgain.VerticalAlignment = VerticalAlignment.Center;
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        var buttonExport = MakeExportButton(vm);
         var footer = new Grid
         {
             ColumnDefinitions =
@@ -159,7 +160,7 @@ public class SpeechToTextQualityReportWindow : Window
             },
         };
         footer.Add(checkDoNotShowAgain, 0, 0);
-        footer.Add(UiUtil.MakeButtonBar(buttonOk), 0, 1);
+        footer.Add(UiUtil.MakeButtonBar(MakeExportStatusLabel(vm), buttonExport, buttonOk), 0, 1);
 
         var grid = new Grid
         {
@@ -186,6 +187,56 @@ public class SpeechToTextQualityReportWindow : Window
         Content = grid;
 
         UiUtil.FocusOnFirstActivation(this, buttonOk); // hack to make OnKeyDown work
+    }
+
+    /// <summary>
+    /// The same "Export..." as in List errors (discussion #12929 asked for the report as a text
+    /// file). Every target exports the rows as shown, so an active card filter applies.
+    /// </summary>
+    private static Button MakeExportButton(SpeechToTextQualityReportViewModel vm)
+    {
+        var l = Se.Language.ErrorList;
+        var button = UiUtil.MakeButton(Se.Language.General.ExportDotDotDot);
+        button.Flyout = new MenuFlyout
+        {
+            Items =
+            {
+                new MenuItem
+                {
+                    Header = Se.Language.General.CopyToClipboard,
+                    Command = vm.CopyToClipboardCommand,
+                },
+                new MenuItem
+                {
+                    Header = l.ExportAsText,
+                    Command = vm.ExportTextCommand,
+                },
+                new MenuItem
+                {
+                    Header = l.ExportAsExcel,
+                    Command = vm.ExportExcelCommand,
+                },
+                new MenuItem
+                {
+                    Header = l.ExportAsHtml,
+                    Command = vm.ExportHtmlCommand,
+                },
+            },
+        };
+
+        return button.WithBindIsEnabled(nameof(vm.CanExport));
+    }
+
+    /// <summary>Says "Copied to clipboard" next to the buttons - a clipboard copy has nothing else to show.</summary>
+    private static TextBlock MakeExportStatusLabel(SpeechToTextQualityReportViewModel vm)
+    {
+        return new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 0, 10, 0),
+            Opacity = 0.75,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.ExportStatus)),
+        };
     }
 
     protected override void OnKeyDown(KeyEventArgs e)
