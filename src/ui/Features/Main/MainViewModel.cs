@@ -18844,8 +18844,36 @@ public partial class MainViewModel :
         }
     }
 
-    [RelayCommand]
-    private void FetchFirstWordFromNextSubtitle()
+    /// <summary>
+    /// The word-moving shortcuts follow the focused text box, as in SE 4: with the caret in
+    /// an editable original they move words in the original text, otherwise in the working
+    /// (translation) text. A read-only original can still hold focus but is never rewritten (#14515).
+    /// </summary>
+    private bool WordMoveTargetsOriginal => EditTextBoxOriginal.IsFocused && CanEditOriginal;
+
+    private static string GetWordMoveText(SubtitleLineViewModel row, bool original)
+    {
+        return (original ? row.OriginalText : row.Text) ?? string.Empty;
+    }
+
+    private static void SetWordMoveText(SubtitleLineViewModel row, bool original, string text)
+    {
+        if (original)
+        {
+            row.OriginalText = text;
+        }
+        else
+        {
+            row.Text = text;
+        }
+    }
+
+    /// <summary>
+    /// Moves one word between the current row and its next working row. <paramref name="up"/>
+    /// fetches the next row's first word into the current row; otherwise the current row's last
+    /// word goes down to the next row.
+    /// </summary>
+    private void MoveWordBetweenCurrentAndNext(bool up)
     {
         var s = SelectedSubtitle;
         if (s == null)
@@ -18860,20 +18888,77 @@ public partial class MainViewModel :
             return;
         }
 
-        var currentText = s.Text.Trim();
-        var nextText = next.Text.Trim();
+        var original = WordMoveTargetsOriginal;
+        var upDown = new MoveWordUpDown(GetWordMoveText(s, original).Trim(), GetWordMoveText(next, original).Trim());
+        if (up)
+        {
+            upDown.MoveWordUp();
+        }
+        else
+        {
+            upDown.MoveWordDown();
+        }
 
-        var upDown = new MoveWordUpDown(currentText, nextText);
-        upDown.MoveWordUp();
+        SetWordMoveText(s, original, upDown.S1);
+        SetWordMoveText(next, original, upDown.S2);
 
-        s.Text = upDown.S1;
-        next.Text = upDown.S2;
+        _updateAudioVisualizer = true;
+    }
+
+    /// <summary>
+    /// Moves one word between the two lines of the current row. <paramref name="up"/> pulls the
+    /// second line's first word up; otherwise the first line's last word goes down.
+    /// </summary>
+    private void MoveWordBetweenLinesOfCurrent(bool up)
+    {
+        var s = SelectedSubtitle;
+        if (s == null)
+        {
+            return;
+        }
+
+        var original = WordMoveTargetsOriginal;
+        var text = GetWordMoveText(s, original);
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return;
+        }
+
+        var lines = NormalizeToTwoLines(text);
+        if (lines.Count != 2)
+        {
+            return;
+        }
+
+        var upDown = new MoveWordUpDown(lines[0].Trim(), lines[1].Trim());
+        if (up)
+        {
+            upDown.MoveWordUp();
+        }
+        else
+        {
+            upDown.MoveWordDown();
+        }
+
+        SetWordMoveText(s, original, JoinAndCapAtTwoLines(upDown.S1, upDown.S2));
 
         _updateAudioVisualizer = true;
     }
 
     [RelayCommand]
+    private void FetchFirstWordFromNextSubtitle()
+    {
+        MoveWordBetweenCurrentAndNext(up: true);
+    }
+
+    [RelayCommand]
     private void MoveLastWordToNextSubtitle()
+    {
+        MoveWordBetweenCurrentAndNext(up: false);
+    }
+
+    [RelayCommand]
+    private void MoveFirstWordToPreviousSubtitle()
     {
         var s = SelectedSubtitle;
         if (s == null)
@@ -18882,20 +18967,18 @@ public partial class MainViewModel :
         }
 
         var idx = Subtitles.IndexOf(s);
-        var next = GetNextWorkingRow(idx);
-        if (next == null)
+        var prev = GetPreviousWorkingRow(idx);
+        if (prev == null)
         {
             return;
         }
 
-        var currentText = s.Text.Trim();
-        var nextText = next.Text.Trim();
+        var original = WordMoveTargetsOriginal;
+        var upDown = new MoveWordUpDown(GetWordMoveText(prev, original).Trim(), GetWordMoveText(s, original).Trim());
+        upDown.MoveWordUp();
 
-        var upDown = new MoveWordUpDown(currentText, nextText);
-        upDown.MoveWordDown();
-
-        s.Text = upDown.S1;
-        next.Text = upDown.S2;
+        SetWordMoveText(prev, original, upDown.S1);
+        SetWordMoveText(s, original, upDown.S2);
 
         _updateAudioVisualizer = true;
     }
@@ -18903,47 +18986,13 @@ public partial class MainViewModel :
     [RelayCommand]
     private void MoveLastWordFromFirstLineDownCurrentSubtitle()
     {
-        var s = SelectedSubtitle;
-        if (s == null || string.IsNullOrWhiteSpace(s.Text))
-        {
-            return;
-        }
-
-        var lines = NormalizeToTwoLines(s.Text);
-        if (lines.Count != 2)
-        {
-            return;
-        }
-
-        var upDown = new MoveWordUpDown(lines[0].Trim(), lines[1].Trim());
-        upDown.MoveWordDown();
-
-        s.Text = JoinAndCapAtTwoLines(upDown.S1, upDown.S2);
-
-        _updateAudioVisualizer = true;
+        MoveWordBetweenLinesOfCurrent(up: false);
     }
 
     [RelayCommand]
     private void MoveFirstWordFromNextLineUpCurrentSubtitle()
     {
-        var s = SelectedSubtitle;
-        if (s == null || string.IsNullOrWhiteSpace(s.Text))
-        {
-            return;
-        }
-
-        var lines = NormalizeToTwoLines(s.Text);
-        if (lines.Count != 2)
-        {
-            return;
-        }
-
-        var upDown = new MoveWordUpDown(lines[0].Trim(), lines[1].Trim());
-        upDown.MoveWordUp();
-
-        s.Text = JoinAndCapAtTwoLines(upDown.S1, upDown.S2);
-
-        _updateAudioVisualizer = true;
+        MoveWordBetweenLinesOfCurrent(up: true);
     }
 
     [RelayCommand]
