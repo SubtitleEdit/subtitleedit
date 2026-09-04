@@ -12,6 +12,7 @@ public class LanguageTools
     public LanguageBeautifyTimeCodesProfile BeautifyTimeCodesProfile { get; set; } = new();
     public LanguageBridgeGaps BridgeGaps { get; set; } = new();
     public LanguageRenumber Renumber { get; set; } = new();
+    public LanguageRomanize Romanize { get; set; } = new();
     public LanguageSortBy SortBy { get; set; } = new();
     public LanguageBatchConvert BatchConvert { get; set; } = new();
     public LanguageChangeCasing ChangeCasing { get; set; } = new();
