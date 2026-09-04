@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
@@ -12,6 +13,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             public static string BreakLongLines { get; set; } = "Break long lines";
             public static string UnableToFixTextXY { get; set; } = "Unable to fix text number {0}: {1}";
         }
+
+        public FixType FixType => FixType.Formatting;
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {

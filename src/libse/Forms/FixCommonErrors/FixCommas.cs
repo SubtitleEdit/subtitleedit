@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Core.Interfaces;
 using System.Text.RegularExpressions;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
@@ -11,6 +12,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         {
             public static string FixCommas { get; set; } = "Fix commas";
         }
+
+        public FixType FixType => FixType.Punctuation;
 
         // Hoisted out of Fix() so each Fix() call reuses the same compiled NFA instead of
         // recompiling per-call. The Arabic variants below used to be re-allocated *per

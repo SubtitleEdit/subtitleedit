@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
@@ -11,6 +12,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         {
             public static string StartWithUppercaseLetterAfterColon { get; set; } = "Start with uppercase letter after colon/semicolon";
         }
+
+        public FixType FixType => FixType.Casing;
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {

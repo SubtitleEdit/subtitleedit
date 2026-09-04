@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Features.Ocr.FixEngine;
 using Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
@@ -18,6 +19,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         {
             public static string FixText { get; set; } = "Fix common OCR errors";
         }
+
+        public FixType FixType => FixType.Ocr;
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {

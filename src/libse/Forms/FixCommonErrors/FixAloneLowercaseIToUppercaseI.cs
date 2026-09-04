@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
 using System.Text.RegularExpressions;
@@ -11,6 +12,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         {
             public static string FixLowercaseIToUppercaseI { get; set; } = "Fix alone lowercase 'i' to 'I' (English)";
         }
+
+        public FixType FixType => FixType.Casing;
 
         // Every needle below embeds Environment.NewLine or the target character, so none of them
         // can be a compile-time constant: written inline they were ten fresh strings allocated

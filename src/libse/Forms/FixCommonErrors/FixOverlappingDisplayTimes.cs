@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
@@ -16,6 +17,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             public static string XFixedToYZ { get; set; } = "{0} fixed to: {1}{2}";
             public static string UnableToFixTextXY { get; set; } = "Unable to fix text number {0}: {1}";
         }
+
+        public FixType FixType => FixType.Time;
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {

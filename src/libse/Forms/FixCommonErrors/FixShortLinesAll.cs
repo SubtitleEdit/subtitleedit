@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
 
@@ -11,6 +12,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             public static string MergeShortLineAll { get; set; } = "Merge short line (all except dialogs)";
             public static string RemoveLineBreaks { get; set; } = "Remove line breaks in short texts with only one sentence";
         }
+
+        public FixType FixType => FixType.Formatting;
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {

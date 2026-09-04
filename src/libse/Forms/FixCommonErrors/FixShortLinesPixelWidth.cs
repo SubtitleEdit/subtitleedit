@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
 
@@ -11,6 +12,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             public static string UnbreakShortLine { get; set; } = "Unbreak short line (pixel width)";
             public static string RemoveLineBreaks { get; set; } = "Unbreak subtitles that can fit on one line (pixel width)";
         }
+
+        public FixType FixType => FixType.Formatting;
         
         private readonly Func<string, int> _calcPixelWidth;
 

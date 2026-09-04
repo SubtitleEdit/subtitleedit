@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
@@ -9,6 +10,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         {
             public static string FixHyphensInDialogs { get; set; } = "Fix dash in dialogs via style: {0}";
         }
+
+        public FixType FixType => FixType.Dialog;
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {

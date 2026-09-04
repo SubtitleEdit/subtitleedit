@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
 
@@ -10,6 +11,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         {
             public static string FixMusicNotation { get; set; } = "Replace music symbols (e.g. âTª) with preferred symbol";
         }
+
+        public FixType FixType => FixType.Characters;
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {

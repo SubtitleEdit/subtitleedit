@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
 
@@ -16,6 +17,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             public static string RemovedEmptyLineInMiddle { get; set; } = "Remove empty line in middle";
             public static string RemovedEmptyLinesUnusedLineBreaks { get; set; } = "Remove empty lines/unused line breaks";
         }
+
+        public FixType FixType => FixType.Formatting;
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
