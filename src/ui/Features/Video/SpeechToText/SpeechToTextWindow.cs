@@ -207,6 +207,7 @@ public class SpeechToTextWindow : Window
         var openAiRows = MakeOpenAiCompatibleSttRows(vm);
         var openRouterRows = MakeOpenRouterSttRows(vm);
         var dashScopeRows = MakeDashScopeSttRows(vm);
+        var googleCloudRows = MakeGoogleCloudSttRows(vm);
 
         var labelAdvancedSettings = UiUtil.MakeTextBlock(Se.Language.General.AdvancedSettings).WithMarginTop(15)
             .BindIsVisible(vm, nameof(vm.IsAdvancedSettingsVisible));
@@ -464,7 +465,7 @@ public class SpeechToTextWindow : Window
         grid.Add(panelForcedAlignerControls, row, 1);
         row++;
 
-        foreach (var (label, control) in openAiRows.Concat(openRouterRows).Concat(dashScopeRows))
+        foreach (var (label, control) in openAiRows.Concat(openRouterRows).Concat(dashScopeRows).Concat(googleCloudRows))
         {
             // Link each online-STT input to its visible label so a screen reader announces the
             // label as the control's name instead of a bare "edit"/"combo box" (#11745). Only the
@@ -861,6 +862,52 @@ public class SpeechToTextWindow : Window
             (MakeLabel(Se.Language.General.DashScopeSttRegion), comboRegion),
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttLanguage), MakeText(nameof(vm.DashScopeSttLanguage), 150)),
             (MakeLabel(Se.Language.General.DashScopeSttEnableWords), checkEnableWords),
+            (MakeLabel(Se.Language.General.OpenAiCompatibleSttTimeout), numericTimeout),
+        };
+    }
+
+    private static (Control Label, Control Control)[] MakeGoogleCloudSttRows(SpeechToTextViewModel vm)
+    {
+        Control MakeLabel(string text) => UiUtil.MakeTextBlock(text).WithMarginTop(10)
+            .BindIsVisible(vm, nameof(vm.IsGoogleCloudSttVisible));
+
+        TextBox MakeText(string property, double width) => new TextBox
+        {
+            DataContext = vm,
+            Width = width,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 10, 0, 0),
+            [!TextBox.TextProperty] = new Binding(property) { Mode = BindingMode.TwoWay }
+        };
+
+        var buttonBrowse = UiUtil.MakeButtonBrowse(vm.BrowseGoogleCloudSttKeyFileCommand, accessibleName: Se.Language.General.KeyFile);
+        buttonBrowse.Margin = new Thickness(5, 10, 0, 0);
+        var keyFilePanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Children = { MakeText(nameof(vm.GoogleCloudSttKeyFile), 400), buttonBrowse }
+        }.BindIsVisible(vm, nameof(vm.IsGoogleCloudSttVisible));
+
+        var numericTimeout = new NumericUpDown
+        {
+            DataContext = vm,
+            Width = 120,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 10, 0, 0),
+            Minimum = 30,
+            Maximum = 21600,
+            FormatString = "F0",
+            [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.GoogleCloudSttTimeoutSeconds)) { Mode = BindingMode.TwoWay }
+        }.BindIsVisible(vm, nameof(vm.IsGoogleCloudSttVisible));
+
+        return new (Control, Control)[]
+        {
+            (MakeLabel(Se.Language.General.KeyFile), keyFilePanel),
+            (MakeLabel(Se.Language.General.Region), MakeText(nameof(vm.GoogleCloudSttRegion), 150).BindIsVisible(vm, nameof(vm.IsGoogleCloudSttVisible))),
+            (MakeLabel(Se.Language.General.Model), MakeText(nameof(vm.GoogleCloudSttModel), 250).BindIsVisible(vm, nameof(vm.IsGoogleCloudSttVisible))),
+            (MakeLabel(Se.Language.General.OpenAiCompatibleSttLanguage), MakeText(nameof(vm.GoogleCloudSttLanguage), 150).BindIsVisible(vm, nameof(vm.IsGoogleCloudSttVisible))),
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttTimeout), numericTimeout),
         };
     }

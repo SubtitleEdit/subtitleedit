@@ -160,6 +160,13 @@ public class SeTools
     public bool DashScopeSttEnableWords { get; set; }
     public int DashScopeSttTimeoutSeconds { get; set; } = 3600;
 
+    public string GoogleCloudSttKeyFile { get; set; } = string.Empty;
+    public string GoogleCloudSttRegion { get; set; } = "us";
+    public string GoogleCloudSttModel { get; set; } = "chirp_3";
+    public string GoogleCloudSttLanguage { get; set; } = string.Empty;
+    public string GoogleCloudSttBucketName { get; set; } = string.Empty;
+    public int GoogleCloudSttTimeoutSeconds { get; set; } = 3600;
+
     public List<string> FindHistory { get; set; } = new List<string>();
     public bool AllowSingleLetterShortcutsInTextbox { get; set; }
 

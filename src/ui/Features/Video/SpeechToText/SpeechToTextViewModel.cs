@@ -127,6 +127,13 @@ public partial class SpeechToTextViewModel : ObservableObject
     [ObservableProperty] private int _dashScopeSttTimeoutSeconds;
     public ObservableCollection<string> DashScopeSttRegions { get; } = new(new[] { "international", "china" });
 
+    [ObservableProperty] private bool _isGoogleCloudSttVisible;
+    [ObservableProperty] private string? _googleCloudSttKeyFile;
+    [ObservableProperty] private string? _googleCloudSttRegion;
+    [ObservableProperty] private string? _googleCloudSttModel;
+    [ObservableProperty] private string? _googleCloudSttLanguage;
+    [ObservableProperty] private int _googleCloudSttTimeoutSeconds;
+
     public Window? Window { get; set; }
 
     public bool OkPressed { get; private set; }
@@ -274,6 +281,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         // Online STT services reachable on all platforms
         Engines.Add(new OpenRouterSttEngine());
         Engines.Add(new DashScopeQwen3SttEngine());
+        Engines.Add(new GoogleCloudSttEngine());
 
         if (OperatingSystem.IsWindows() ||
             OperatingSystem.IsLinux() ||
@@ -369,6 +377,12 @@ public partial class SpeechToTextViewModel : ObservableObject
         DashScopeSttEnableWords = Se.Settings.Tools.DashScopeSttEnableWords;
         DashScopeSttTimeoutSeconds = Se.Settings.Tools.DashScopeSttTimeoutSeconds;
 
+        GoogleCloudSttKeyFile = Se.Settings.Tools.GoogleCloudSttKeyFile;
+        GoogleCloudSttRegion = Se.Settings.Tools.GoogleCloudSttRegion;
+        GoogleCloudSttModel = Se.Settings.Tools.GoogleCloudSttModel;
+        GoogleCloudSttLanguage = Se.Settings.Tools.GoogleCloudSttLanguage;
+        GoogleCloudSttTimeoutSeconds = Se.Settings.Tools.GoogleCloudSttTimeoutSeconds;
+
         var savedChoice = Se.Settings.Tools.AudioToText.WhisperChoice;
         var whisperCppEngine = Engines.OfType<WhisperCppEngine>().FirstOrDefault();
         var crispAsrEngine = Engines.OfType<CrispAsrEngine>().FirstOrDefault();
@@ -447,6 +461,12 @@ public partial class SpeechToTextViewModel : ObservableObject
         Se.Settings.Tools.DashScopeSttRegion = DashScopeSttRegion ?? "international";
         Se.Settings.Tools.DashScopeSttEnableWords = DashScopeSttEnableWords;
         Se.Settings.Tools.DashScopeSttTimeoutSeconds = DashScopeSttTimeoutSeconds;
+
+        Se.Settings.Tools.GoogleCloudSttKeyFile = GoogleCloudSttKeyFile ?? string.Empty;
+        Se.Settings.Tools.GoogleCloudSttRegion = GoogleCloudSttRegion ?? "us";
+        Se.Settings.Tools.GoogleCloudSttModel = GoogleCloudSttModel ?? "chirp_3";
+        Se.Settings.Tools.GoogleCloudSttLanguage = GoogleCloudSttLanguage ?? string.Empty;
+        Se.Settings.Tools.GoogleCloudSttTimeoutSeconds = GoogleCloudSttTimeoutSeconds;
 
         Se.SaveSettings();
     }
@@ -1446,7 +1466,8 @@ public partial class SpeechToTextViewModel : ObservableObject
             });
 
             var audioSizeBytes = new FileInfo(audioFileName).Length;
-            if (audioSizeBytes > engine.UploadThresholdBytes && _videoInfo.TotalSeconds > 0)
+            var exceedsDurationCap = engine.MaxChunkSeconds > 0 && _videoInfo.TotalSeconds > engine.MaxChunkSeconds;
+            if ((audioSizeBytes > engine.UploadThresholdBytes || exceedsDurationCap) && _videoInfo.TotalSeconds > 0)
             {
                 LogToConsole($"Audio file is {audioSizeBytes / (1024 * 1024)} MB — splitting into chunks to stay under the upload cap");
                 await TranscribeInChunksAsync(service, engine, audioFileName, language, subtitle, segmentProgress, cancellationToken);
@@ -1744,6 +1765,10 @@ public partial class SpeechToTextViewModel : ObservableObject
         var totalSeconds = _videoInfo.TotalSeconds;
         var fileSize = new FileInfo(audioFileName).Length;
         var chunkCount = OpenAiSttChunker.ComputeChunkCount(fileSize, engine.ChunkSizeBytes);
+        if (engine.MaxChunkSeconds > 0)
+        {
+            chunkCount = Math.Max(chunkCount, (int)Math.Ceiling(totalSeconds / engine.MaxChunkSeconds));
+        }
 
         var ffmpegPath = Se.Settings.General.FfmpegPath;
         if (!File.Exists(ffmpegPath))
@@ -2156,6 +2181,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         {
             OpenRouterSttEngine => Se.Settings.Tools.OpenRouterSttLanguage,
             DashScopeQwen3SttEngine => Se.Settings.Tools.DashScopeSttLanguage,
+            GoogleCloudSttEngine => Se.Settings.Tools.GoogleCloudSttLanguage,
             OpenAiCompatibleSttEngine => Se.Settings.Tools.OpenAiCompatibleSttLanguage,
             _ => null,
         };
@@ -2176,6 +2202,16 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// "en" — so a full name is mapped back to its whisper language code. The
     /// first non-empty value wins; later chunks don't overwrite it.
     /// </summary>
+    [RelayCommand]
+    private async Task BrowseGoogleCloudSttKeyFile()
+    {
+        var fileName = await _fileHelper.PickOpenFile(Window!, Se.Language.General.KeyFile, "json files", "*.json");
+        if (!string.IsNullOrEmpty(fileName))
+        {
+            GoogleCloudSttKeyFile = fileName;
+        }
+    }
+
     private void RememberDetectedLanguage(OpenAiCompatibleSttResponse response)
     {
         if (!string.IsNullOrEmpty(_onlineDetectedLanguage) || string.IsNullOrWhiteSpace(response.Language))
@@ -4908,6 +4944,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         IsOpenAiCompatibleSttVisible = engine is OpenAiCompatibleSttEngine;
         IsOpenRouterSttVisible = engine is OpenRouterSttEngine;
         IsDashScopeSttVisible = engine is DashScopeQwen3SttEngine;
+        IsGoogleCloudSttVisible = engine is GoogleCloudSttEngine;
         IsAdvancedSettingsVisible = !isOnlineSttEngine;
 
         IsTranslateVisible = IsTranslateAvailable(engine);
