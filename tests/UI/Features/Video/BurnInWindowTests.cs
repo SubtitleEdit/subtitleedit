@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Headless.XUnit;
+using Avalonia.Layout;
 using Avalonia.LogicalTree;
 using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Features.Video.BurnIn;
@@ -85,6 +86,14 @@ public class BurnInWindowTests : IDisposable
         return (scroller, settingsGrid);
     }
 
+    /// <summary>Returns the middle column grid (cut / preview / audio / video info / filler rows).</summary>
+    private static Grid FindMiddleColumn(Grid settingsGrid)
+    {
+        var middleColumn = settingsGrid.Children.OfType<Grid>().FirstOrDefault(g => Grid.GetColumn(g) == 1);
+        Assert.NotNull(middleColumn);
+        return middleColumn;
+    }
+
     private static Grid FindProgressView(Grid rootGrid)
     {
         var progressView = rootGrid.Children.OfType<Grid>().FirstOrDefault(g => Grid.GetRow(g) == 1);
@@ -108,7 +117,7 @@ public class BurnInWindowTests : IDisposable
     }
 
     [AvaloniaFact]
-    public void PreviewRow_HasMinimumHeight_KeepingPanelAboveProgressBar()
+    public void PreviewRow_HugsFixedHeightPlayer_KeepingPanelAboveProgressBar()
     {
         var window = BuildWindow();
         var vm = window.DataContext as BurnInViewModel;
@@ -118,15 +127,18 @@ public class BurnInWindowTests : IDisposable
 
         var rootGrid = FindRootGrid(window);
 
-        // The preview row (row 1, star) must carry a MinHeight: without it the window can be
-        // shrunk (or restored) below the content height, the preview box gets shorter than its
-        // label + player and the player spills over the audio settings box below it.
-        var previewRow = FindSettingsGrid(rootGrid).SettingsGrid.RowDefinitions[1];
-        Assert.Equal(GridUnitType.Star, previewRow.Height.GridUnitType);
-        Assert.True(previewRow.MinHeight >= 350, $"Preview row MinHeight is only {previewRow.MinHeight:0.#}.");
+        // The preview row (row 1) is an Auto row sized by a fixed-height player, and the star
+        // filler row at the bottom takes any extra height: a stretching player made the middle
+        // column taller than the settings column (forcing the window to scroll) and a centred
+        // one left empty bands above and below the video.
+        var middleColumn = FindMiddleColumn(FindSettingsGrid(rootGrid).SettingsGrid);
+        Assert.Equal(GridUnitType.Auto, middleColumn.RowDefinitions[1].Height.GridUnitType);
+        Assert.Equal(GridUnitType.Star, middleColumn.RowDefinitions[^1].Height.GridUnitType);
+        Assert.Equal(360, vm.VideoPlayerControl.Height);
+        Assert.Equal(VerticalAlignment.Top, vm.VideoPlayerControl!.VerticalAlignment);
 
-        // The left column is one panel spanning rows 0-3. With the row minimum in place it
-        // must fit entirely above the progress view - the regression this guards against drew
+        // The left column is one panel in the settings grid's single row. It must fit entirely
+        // above the progress view - the regression this guards against drew
         // the progress bar through the "File size in MB" field while generating.
         AssertSettingsColumnStaysAboveProgressView(window, rootGrid);
     }
@@ -158,7 +170,7 @@ public class BurnInWindowTests : IDisposable
     private static void AssertSettingsColumnStaysAboveProgressView(BurnInWindow window, Grid rootGrid)
     {
         var (scroller, settingsGrid) = FindSettingsGrid(rootGrid);
-        var settingsColumn = settingsGrid.Children.FirstOrDefault(c => Grid.GetColumn(c) == 0 && Grid.GetRowSpan(c) == 4);
+        var settingsColumn = settingsGrid.Children.FirstOrDefault(c => Grid.GetColumn(c) == 0);
         Assert.NotNull(settingsColumn);
         var progressView = FindProgressView(rootGrid);
 
@@ -207,8 +219,8 @@ public class BurnInWindowTests : IDisposable
         window.Height = 400;
         window.UpdateLayout();
 
-        var settingsGrid = FindSettingsGrid(FindRootGrid(window)).SettingsGrid;
-        var audioSettingsView = settingsGrid.Children.OfType<Border>().FirstOrDefault(b => Grid.GetRow(b) == 2 && Grid.GetColumn(b) == 1);
+        var middleColumn = FindMiddleColumn(FindSettingsGrid(FindRootGrid(window)).SettingsGrid);
+        var audioSettingsView = middleColumn.Children.OfType<Border>().FirstOrDefault(b => Grid.GetRow(b) == 2);
         Assert.NotNull(audioSettingsView);
 
         // The player is the bottom-most element of the preview box; its bottom must never
@@ -284,22 +296,26 @@ public class BurnInWindowTests : IDisposable
         Assert.True(
             scroller.Extent.Height > scroller.Viewport.Height + 1.5,
             $"Settings area does not scroll (extent {scroller.Extent.Height:0.#}, viewport {scroller.Viewport.Height:0.#}).");
-        Assert.True(settingsGrid.RowDefinitions[1].MinHeight >= 350, "Preview row lost its minimum height.");
+        Assert.Equal(GridUnitType.Star, FindMiddleColumn(settingsGrid).RowDefinitions[^1].Height.GridUnitType);
     }
 
     [AvaloniaFact]
-    public void PreviewRow_FillsTheWindow_WhenThereIsRoom()
+    public void SettingsGrid_FillsTheWindow_WhenThereIsRoom()
     {
         var window = BuildWindow();
+        var vm = window.DataContext as BurnInViewModel;
+        Assert.NotNull(vm);
         window.Show();
         Avalonia.Threading.Dispatcher.UIThread.RunJobs();
         window.UpdateLayout();
 
         // Inside a ScrollViewer a star row would otherwise collapse to its minimum; the settings
-        // grid must keep filling the viewport so the preview grows with the window.
+        // grid must keep filling the viewport (extra height goes to the filler row, not the
+        // player) so nothing scrolls while the window is tall enough.
         var rootGrid = FindRootGrid(window);
         var (scroller, settingsGrid) = FindSettingsGrid(rootGrid);
         var before = settingsGrid.Bounds.Height;
+        var playerHeightBefore = vm.VideoPlayerControl!.Bounds.Height;
 
         window.SizeToContent = SizeToContent.Manual;
         window.Height = window.ClientSize.Height + 200;
@@ -308,10 +324,11 @@ public class BurnInWindowTests : IDisposable
 
         Assert.True(
             settingsGrid.Bounds.Height >= before + 190,
-            $"Settings grid did not grow with the window ({before:0.#} -> {settingsGrid.Bounds.Height:0.#}).");
+            $"Settings grid did not grow with the window ({before:0.#} -> {settingsGrid.Bounds.Height:0.#}); client {window.ClientSize.Height:0.#}, viewport {scroller.Viewport.Height:0.#}, extent {scroller.Extent.Height:0.#}).");
         Assert.True(
             scroller.Extent.Height <= scroller.Viewport.Height + 1.5,
             $"Settings area scrolls although the window is tall enough (extent {scroller.Extent.Height:0.#}, viewport {scroller.Viewport.Height:0.#}).");
+        Assert.Equal(playerHeightBefore, vm.VideoPlayerControl.Bounds.Height, 0.5);
     }
 
     // The extension list is only correct if both combo boxes are wired up: the encoder box
