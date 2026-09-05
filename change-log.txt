@@ -3,6 +3,37 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.2.0-rc3 (5th of September 2026)
+
+* Add text drag-and-drop in the subtitle text boxes (e.g. from original to working text) - thx bichitoxxx
+* Add "Move first word to previous subtitle" shortcut, and make the word-moving shortcuts follow the focused text box - thx saltarob
+* Add "Export..." to the transcription quality report - thx andor1999
+* Add the Vietnamese Parakeet model to Crisp ASR speech to text - thx ruonghieu
+* Add LFM2.5-VL 3B to the llama.cpp OCR model list
+* Accept OpenRouter transcription models that reject verbose_json - thx muaz978
+* Batch convert: hide the main window while the tool window is open - thx m0ck69
+* Let a user-assigned Alt+Space shortcut beat the Windows system menu - thx kadrimarzouki
+* macOS: change the default "Open Subtitle Edit folder" shortcut to Ctrl+Option+Shift+Cmd+D - thx GitGianluc
+* Sync/Cut video: zoom the waveform on Shift + main-row plus/minus too - thx perkesfurmah-collab
+* Text to speech: per-line voice clone pads short references, and audio.cpp engines can share a models folder - thx invio-a11y
+* Fix waveform cursor and time display freezing during playback, and play starting away from the cursor - thx Davanix
+* Fix undo/redo scrolling the current subtitle to the top of the grid - thx saltarob
+* Fix auto-translate rows shifting when an abbreviation period is added to a merged row - thx claudemartin
+* Fix "Show Plugins menu" not toggling the native macOS Plugins menu - thx GitGianluc
+* Fix OCR fix word list rejecting case variants of an existing word - thx Pemicope
+* Fix Generate button unreachable in burn-in/transparent video dialogs on short screens - thx sukuna0322
+* Fix audio.cpp TTS server not restarting after an engine update
+* Update whisper.cpp to v1.9.3
+* Update Crisp ASR to v0.8.32
+* Update audio.cpp TTS runtime (Higgs Audio v3 end-of-clip hiss fix)
+* Update French translation - thx Need74
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+* Update Portuguese (Brazil) translation - thx igorruckert
+* Update Turkish translation - thx bilimiyorum
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0-rc2 (4th of September 2026)
 
 * Add waveform vertical zoom shortcuts to the Point sync and Visual sync dialogs - thx perkesfurmah-collab
