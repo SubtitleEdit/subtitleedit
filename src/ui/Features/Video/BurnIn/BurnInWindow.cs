@@ -54,11 +54,10 @@ public class BurnInWindow : Window
 
         // The left column (subtitle + video settings + target size) is taller than the middle
         // column's cut/preview/audio/video-info rows. Keeping all three boxes in one packed
-        // panel preserves the v5.1.0 look (no gaps), and the preview row's MinHeight below
-        // guarantees the panel fits in rows 0-3 of the settings grid - so it can never overflow
-        // into the progress-bar row (which used to draw the bar through the "File size in MB"
-        // field) - and the preview box never gets shorter than its label + player, so the player
-        // cannot spill over the audio settings box.
+        // panel preserves the v5.1.0 look (no gaps), and the star filler row below takes any
+        // extra height, so the panel can never overflow into the progress-bar row (which used
+        // to draw the bar through the "File size in MB" field). The player has a fixed height,
+        // so the preview box hugs it and cannot spill over the audio settings box.
         var leftPanel = new StackPanel
         {
             Orientation = Orientation.Vertical,
@@ -112,9 +111,10 @@ public class BurnInWindow : Window
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // cut
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star), MinHeight = 320 }, // preview + batch list (never smaller than the preview box needs)
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // preview + batch list (sized by the player; the batch list spans into the filler row)
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // audio
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // video info + target file size
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // filler: takes the extra height so the preview box hugs the player
             },
             ColumnDefinitions =
             {
@@ -126,12 +126,12 @@ public class BurnInWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        settingsGrid.Add(leftPanel, 0, 0, 4, 1);  // rows 0-3 (cut + preview + audio + video info)
+        settingsGrid.Add(leftPanel, 0, 0, 5, 1);  // rows 0-4 (cut + preview + audio + video info + filler)
         settingsGrid.Add(cutView, 0, 1);
         settingsGrid.Add(previewView, 1, 1);
         settingsGrid.Add(audioSettingsView, 2, 1);
         settingsGrid.Add(videoInfoView, 3, 1);
-        settingsGrid.Add(batchView, 0, 2, 4, 1);
+        settingsGrid.Add(batchView, 0, 2, 5, 1);
 
         // The settings area is taller than what a small or scaled screen can show (a maximized
         // window on a 1366x768 laptop leaves about 700 DIPs; the preview row alone needs 400).
@@ -208,11 +208,11 @@ public class BurnInWindow : Window
             else
             {
                 player.Width = double.NaN;
-                player.Height = double.NaN;
+                player.Height = SinglePlayerHeight;
                 player.MinWidth = 400;
-                player.MinHeight = 225;
+                player.MinHeight = 0;
                 player.HorizontalAlignment = HorizontalAlignment.Stretch;
-                player.VerticalAlignment = VerticalAlignment.Stretch;
+                player.VerticalAlignment = VerticalAlignment.Top;
             }
         }
 
@@ -807,6 +807,8 @@ public class BurnInWindow : Window
         return UiUtil.MakeBorderForControl(grid).WithMarginBottom(5).WithMarginRight(5);
     }
 
+    private const double SinglePlayerHeight = 360;
+
     private static Border MakePreviewView(BurnInViewModel vm)
     {
 
@@ -818,17 +820,21 @@ public class BurnInWindow : Window
         vm.VideoPlayerControl = InitVideoPlayer.MakeVideoPlayer();
         vm.VideoPlayerControl.FullScreenIsVisible = true;
         vm.VideoPlayerControl.FullScreenCommand = vm.PreviewFullScreenCommand;
+        // Fixed height, stretched width: a stretching player made the preview box taller than
+        // the settings column (forcing the window to scroll), and a capped-but-centred one left
+        // empty bands above and below the video.
         vm.VideoPlayerControl.MinWidth = 400;
-        vm.VideoPlayerControl.MinHeight = 225;
+        vm.VideoPlayerControl.MinHeight = 0;
+        vm.VideoPlayerControl.Height = SinglePlayerHeight;
         vm.VideoPlayerControl.HorizontalAlignment = HorizontalAlignment.Stretch;
-        vm.VideoPlayerControl.VerticalAlignment = VerticalAlignment.Stretch;
+        vm.VideoPlayerControl.VerticalAlignment = VerticalAlignment.Top;
 
         var grid = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // video player grows
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // video player (fixed height)
             },
             ColumnDefinitions =
             {
