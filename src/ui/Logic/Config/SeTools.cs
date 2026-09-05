@@ -167,6 +167,13 @@ public class SeTools
     public string GoogleCloudSttBucketName { get; set; } = string.Empty;
     public int GoogleCloudSttTimeoutSeconds { get; set; } = 3600;
 
+    /// <summary>
+    /// Bills at roughly a fifth of the normal rate ($0.003 vs $0.016 per minute) in
+    /// exchange for no latency guarantee, so it is off by default. Measured at 13.6x
+    /// realtime on a 140 minute episode, but Google promises nothing.
+    /// </summary>
+    public bool GoogleCloudSttDynamicBatching { get; set; }
+
     public List<string> FindHistory { get; set; } = new List<string>();
     public bool AllowSingleLetterShortcutsInTextbox { get; set; }
 
