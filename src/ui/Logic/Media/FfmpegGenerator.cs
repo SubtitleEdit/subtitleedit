@@ -1433,6 +1433,59 @@ public class FfmpegGenerator
     }
 
     /// <summary>
+    /// Prepares a voice-cloning reference for an in-context TTS model (Higgs Audio v3): trailing
+    /// silence and noise under <paramref name="silenceThreshold"/> are trimmed off, the last
+    /// <paramref name="fadeOutSeconds"/> are faded out and <paramref name="silencePadSeconds"/> of
+    /// digital silence are appended, written as mono PCM16 at <paramref name="sampleRate"/>.
+    /// See <c>CloneReferenceTail</c> for why: the model ends its clip the way the reference ends.
+    /// </summary>
+    public static Process PrepareCloneReferenceTail(
+        string inputFileName,
+        string outputFileName,
+        double silenceThreshold,
+        double fadeOutSeconds,
+        double silencePadSeconds,
+        int sampleRate = 24000,
+        DataReceivedEventHandler? dataReceivedHandler = null)
+    {
+        var process = new Process
+        {
+            StartInfo =
+            {
+                FileName = GetFfmpegLocation(),
+                Arguments = PrepareCloneReferenceTailParameters(inputFileName, outputFileName, silenceThreshold, fadeOutSeconds, silencePadSeconds, sampleRate),
+                UseShellExecute = false,
+                CreateNoWindow = true,
+            }
+        };
+
+        SetupDataReceiveHandler(dataReceivedHandler, process);
+
+        return process;
+    }
+
+    /// <summary>
+    /// Build the parameters for <see cref="PrepareCloneReferenceTail"/>. The trim runs on the
+    /// reversed signal (silenceremove only trims the start), the fade is applied while still
+    /// reversed (afade=in on a reversed signal is a fade-out that needs no duration), and the
+    /// pad goes on last so it is never trimmed or faded.
+    /// </summary>
+    internal static string PrepareCloneReferenceTailParameters(
+        string inputFileName,
+        string outputFileName,
+        double silenceThreshold,
+        double fadeOutSeconds,
+        double silencePadSeconds,
+        int sampleRate)
+    {
+        var threshold = Math.Clamp(silenceThreshold, 0.000001, 1.0).ToString("0.########", CultureInfo.InvariantCulture);
+        var fade = Math.Max(0, fadeOutSeconds).ToString("0.###", CultureInfo.InvariantCulture);
+        var pad = Math.Max(0, silencePadSeconds).ToString("0.###", CultureInfo.InvariantCulture);
+        var filter = $"areverse,silenceremove=start_periods=1:start_silence=0:start_threshold={threshold},afade=t=in:d={fade},areverse,apad=pad_dur={pad}";
+        return $"-nostdin -y -i \"{inputFileName}\" -vn -af \"{filter}\" -ar {sampleRate} -ac 1 -c:a pcm_s16le \"{outputFileName}\"";
+    }
+
+    /// <summary>
     /// Build ffmpeg parameters for joining clips cut by
     /// <see cref="ExtractCloneReferenceClipParameters"/> into one file, in the order listed in
     /// <paramref name="concatListFileName"/> (an ffmpeg concat demuxer list).
