@@ -180,7 +180,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         private readonly Button _buttonFullScreen;
         private readonly Button _buttonFullScreenCollapse;
         private readonly Icon _iconVolume;
-        private DispatcherTimer? _positionTimer;
+        private UiTickPump? _positionTimer; // posted ticks, not a DispatcherTimer - see UiTickPump
         private int _slowPollCounter;
         private IVideoPlayer _videoPlayerInstance;
         private string _videoFileName;
@@ -1075,7 +1075,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
         private void StartPositionTimer()
         {
-            _positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(50) };
+            _positionTimer = new UiTickPump(TimeSpan.FromMilliseconds(50));
             _positionTimer.Tick += (s, e) =>
             {
                 // Duration and IsPlaying change infrequently — poll every 5th tick (~250 ms)
