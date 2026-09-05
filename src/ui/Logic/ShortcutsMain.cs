@@ -1047,7 +1047,11 @@ public static class ShortcutsMain
             new(nameof(vm.FindPreviousCommand), ["Shift", nameof(Avalonia.Input.Key.F3)], ShortcutCategory.General),
             new(nameof(vm.ShowReplaceCommand), [cmd, "H"], ShortcutCategory.General),
             new(nameof(vm.ShowMultipleReplaceCommand), [cmd, "Shift", "R"], ShortcutCategory.General),
-            new(nameof(vm.OpenDataFolderCommand), [cmd, "Alt", "Shift", "D"], ShortcutCategory.General),
+            // On macOS the plain Option+Shift+Cmd+D chord never reaches the app (#14508), so add
+            // Control there; on Windows/Linux the three-modifier default stays as before.
+            new(nameof(vm.OpenDataFolderCommand), OperatingSystem.IsMacOS()
+                ? ["Ctrl", cmd, "Alt", "Shift", "D"]
+                : [cmd, "Alt", "Shift", "D"], ShortcutCategory.General),
             new(nameof(vm.SaveLanguageFileCommand), [cmd, "Alt", "Shift", "L"], ShortcutCategory.General),
             new(nameof(vm.CommandFileNewCommand), [cmd, "N"], ShortcutCategory.General),
             new(nameof(vm.CommandFileOpenCommand), [cmd, "O"], ShortcutCategory.General),
