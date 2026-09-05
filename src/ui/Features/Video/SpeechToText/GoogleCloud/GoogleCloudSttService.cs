@@ -486,7 +486,14 @@ public class GoogleCloudSttService : ISttTranscriber
                 {
                     foreach (var w in wordArray.EnumerateArray())
                     {
-                        var start = w.TryGetProperty("startOffset", out var s) ? ParseDuration(s) : -1;
+                        // A word starting at 0.000s arrives with NO startOffset field at all:
+                        // proto3 JSON omits zero-valued fields, and the REST API follows that.
+                        // Reading the absence as -1 makes the range check below discard it, so
+                        // the first word of every result was being dropped. Verified against the
+                        // live API: in a 160 word response exactly one word, the first, has no
+                        // startOffset. An absent endOffset stays invalid, because a word ending
+                        // at zero is meaningless.
+                        var start = w.TryGetProperty("startOffset", out var s) ? ParseDuration(s) : 0.0;
                         var end = w.TryGetProperty("endOffset", out var e) ? ParseDuration(e) : -1;
                         var word = w.TryGetProperty("word", out var wt) ? wt.GetString() ?? string.Empty : string.Empty;
                         if (start < 0 || end < start || (bound > 0 && end > bound + 1))

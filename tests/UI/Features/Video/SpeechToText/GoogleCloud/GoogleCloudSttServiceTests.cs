@@ -231,4 +231,51 @@ public class GoogleCloudSttServiceTests
         Assert.Equal(1.0, segment.Start, 3);
         Assert.Equal(1079.6, segment.End, 3);
     }
+
+    /// <summary>
+    /// proto3 JSON omits zero-valued fields, so a word starting at 0.000s arrives with no
+    /// startOffset at all. Verified against the live API: in a 160 word response exactly
+    /// one word, the first, has no startOffset. Treating that absence as an invalid offset
+    /// silently dropped the first word of every result.
+    /// </summary>
+    [Fact]
+    public void ParseResponse_KeepsAWordWhoseStartOffsetIsOmittedBecauseItIsZero()
+    {
+        const string json = """
+        {
+          "response": {
+            "totalBilledDuration": "65s",
+            "results": {
+              "gs://b/o.flac": {
+                "inlineResult": {
+                  "transcript": {
+                    "results": [
+                      {
+                        "alternatives": [
+                          {
+                            "transcript": "Ay vay",
+                            "words": [
+                              { "word": "Ay", "endOffset": "1.560s" },
+                              { "word": "vay", "startOffset": "1.560s", "endOffset": "1.800s" }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+        """;
+
+        var response = GoogleCloudSttService.ParseResponse(json);
+
+        var segment = Assert.Single(response.Segments!);
+        Assert.Equal(2, segment.Words!.Count);
+        Assert.Equal("Ay", segment.Words[0].Word);
+        Assert.Equal(0.0, segment.Words[0].Start, 3);
+        Assert.Equal(0.0, segment.Start, 3);
+    }
 }
