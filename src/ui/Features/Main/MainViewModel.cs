@@ -680,7 +680,7 @@ public partial class MainViewModel :
     private HashSet<int>? _waveformBufferVisibleLayers;
     private DispatcherTimer _positionTimer = new();
     private DispatcherTimer _slowTimer = new();
-    private DispatcherTimer _cursorTimer = new(); // ~60 fps; drives only the waveform/video playhead cursor
+    private UiTickPump? _cursorTimer; // ~60 fps; drives only the waveform/video playhead cursor (a posted tick, not a DispatcherTimer - see UiTickPump)
 
     // Playhead interpolation state. When mpv resumes after a paused seek its time-pos stalls
     // for ~one audio-buffer interval (~200 ms) and then resyncs forward, which makes the
@@ -1752,12 +1752,76 @@ public partial class MainViewModel :
     // is held frozen at the pause spot, which would stall the first ~100 ms of playback.
     // Every play request in the app funnels through here (PlayVideo, the play half of
     // TogglePlayPause, and the player control's own PlayPauseRequested wiring), so this is also
-    // where the play-start gate is armed.
+    // where the play-start gate is armed and where a resume is redirected to the visible cursor.
     internal void CancelPausePlayheadFreeze()
     {
         CancelFrameStepPlayBlip(); // playback the user started must not be stopped by a stale blip
+        AlignPausedPlayerWithCursor();
         _pauseRequested = false;
         _playStartGate.PlayRequested(Stopwatch.GetTimestamp());
+    }
+
+    /// <summary>
+    /// Moves a paused mpv onto the drawn waveform cursor, so the next play starts from what is
+    /// on screen. While paused the cursor deliberately holds the spot where the user paused,
+    /// while mpv settles a wind-down further on - #12740 keeps that residual off the cursor,
+    /// and it grew from sub-visible back to up to ~0.2 s when the audio buffer returned to
+    /// mpv's default for #14523. Left alone, play resumed from mpv's settled spot: the audio
+    /// started past the cursor and the on-play resync yanked the cursor forward to meet it.
+    /// Called from the pause-settle branch of <see cref="UpdatePlayheadEstimate"/> - aligning
+    /// while paused gives mpv the whole pause to re-prime, so play stays a hot, instant
+    /// unpause (seeking at play time instead started the audio output starved: a brief
+    /// stutter, then a forward hop when the clock recovered) - and again from every play path
+    /// via <see cref="CancelPausePlayheadFreeze"/> as a fallback for a play pressed before the
+    /// settle ran. Seek-then-play paths (play line, play next, grid click-to-play...) pin the
+    /// playhead to their own target first; the pin guard leaves those untouched.
+    /// </summary>
+    private void AlignPausedPlayerWithCursor()
+    {
+        if (!_playheadValid || _playheadSeekTarget.HasValue)
+        {
+            return;
+        }
+
+        var vp = GetVideoPlayerControl();
+        if (vp == null || string.IsNullOrEmpty(_videoFileName))
+        {
+            return;
+        }
+
+        if (vp.VideoPlayer.IsPlaying)
+        {
+            return; // already running (or a blip/pause is mid-flight) - nothing settled to reconcile
+        }
+
+        var rawPosition = vp.VideoPlayer.Position;
+        if (IsSmpteTimingEnabled)
+        {
+            rawPosition = rawPosition * 1000.0 / 1001.0;
+        }
+
+        var residualSeconds = Math.Abs(_playheadEstimateSeconds - rawPosition);
+        if (residualSeconds <= PlayheadResyncOnPlayThresholdSeconds ||
+            residualSeconds >= PlayheadResyncThresholdSeconds)
+        {
+            // Below: within a frame - not worth a seek (the on-play resync leaves such a
+            // residual alone too). Above: the paused branch snaps a discontinuity this big to
+            // mpv's position within a tick, so the estimate is not what is standing on screen -
+            // this also shields any unpinned foreign seek still in flight from being undone.
+            return;
+        }
+
+        // Pin so the cursor cannot follow Position's contortions across the resume: mpv's
+        // paused-value cache makes it read as the seek target while paused, flip back to the
+        // stale settled clock the instant the unpause clears the cache, and land on the target
+        // only when the seek completes - and the paused branch would follow each flip as "a
+        // seek while paused" (the double jump on every resume). The pin's arrival is gated on
+        // the player's seek-restart signal, so none of those intermediate readings can release
+        // it early. The pin also makes a second pass through this funnel a no-op
+        // (TogglePlayPause funnels twice: the view model command and the control's
+        // PlayPauseRequested wiring).
+        vp.SeekTo(_playheadEstimateSeconds);
+        PinPlayheadTo(_playheadEstimateSeconds);
     }
 
     // The player's Stop button pauses and seeks to 0; freeze the cursor immediately and pin it to
@@ -17030,6 +17094,9 @@ public partial class MainViewModel :
         }
 
         vp.VideoPlayer.Stop();
+        // Stop seeks to 0; pin the cursor there like the stop button does, and so the
+        // resume-from-cursor seek in PlayVideo can't pull playback back to the old spot.
+        PinPlayheadTo(0);
         PlayVideo(vp);
         _updateAudioVisualizer = true;
     }
@@ -24789,7 +24856,7 @@ public partial class MainViewModel :
     private void CleanUp()
     {
         _positionTimer.Stop();
-        _cursorTimer.Stop();
+        _cursorTimer?.Stop();
         _slowTimer.Stop();
 
         if (_findViewModel != null)
@@ -29570,22 +29637,33 @@ public partial class MainViewModel :
         if (_playheadSeekTarget.HasValue)
         {
             var target = _playheadSeekTarget.Value;
-            var arrived = Math.Abs(rawPosition - target) < PlayheadSeekArriveToleranceSeconds;
 
             // The 600 ms timeout is a guess at "the seek must have landed by now", and for a
             // slow seek (network share, cold spinning disk, heavy 4K hr-seek) it guesses wrong:
             // the pin expired mid-seek, the cursor snapped back to the old position, then jumped
             // again when the seek finally landed. When the player reports seek completion
             // exactly (mpv's MPV_EVENT_PLAYBACK_RESTART), don't give up while the seek is still
-            // in flight - hold the pin up to a hard cap instead. The restart signal is only ever
-            // used to extend the hold, never to release the pin early: a restart from an older
-            // seek in a scrub burst would otherwise release a newer pin onto a stale position.
+            // in flight - hold the pin up to a hard cap instead. A restart alone never releases
+            // the pin (a restart from an older seek in a scrub burst would release a newer pin
+            // onto a stale position); the position must be at the target too.
             var pinElapsedMs = (nowTimestamp - _playheadSeekTargetTs) * 1000.0 / Stopwatch.Frequency;
             var player = vp.VideoPlayer;
             var seekStillInFlight = player.SupportsPlaybackRestartEvents &&
                                     !player.HasPlaybackRestartedSince(_playheadSeekTargetTs);
             var timedOut = pinElapsedMs > PlayheadSeekPinTimeoutMs &&
                            (!seekStillInFlight || pinElapsedMs > PlayheadSeekPinMaxMs);
+
+            // "Arrived" needs more than the position reading near the target: while the pin's seek
+            // is in flight, Position is unreliable for this exact purpose - mpv's paused-value
+            // cache returns the seek target itself while paused, then flips back to the stale
+            // observed clock the moment an unpause clears it, then to the landed position (the
+            // resume-from-cursor seek showed all three within ~100 ms). A residual smaller than
+            // the tolerance also means the pre-seek position already reads as "arrived". So when
+            // the player reports seek completion exactly, arrival additionally requires that a
+            // restart has been observed since the pin was set - mpv's own word that the seek
+            // landed - and the timeout still bounds a seek whose restart never comes.
+            var arrived = Math.Abs(rawPosition - target) < PlayheadSeekArriveToleranceSeconds &&
+                          !seekStillInFlight;
 
             // A pause was requested but mpv still reports playing: it keeps decoding for ~100-200 ms and
             // its position runs on past the pinned spot, which is within the arrive tolerance, so "arrived"
@@ -29710,10 +29788,14 @@ public partial class MainViewModel :
                 // desync. Gated on a live raw clock so a paused-seek re-prime freeze can't trigger it.
                 _playheadEstimateSeconds = rawPosition;
             }
-            else if (drift > 0)
+            else if (drift > 0 && rawFrozenSeconds < PlayheadFreezeHoldSeconds)
             {
                 // Only ever nudge forward to close a lag (e.g. after a starved tick); never pull the
-                // cursor backward, which is what showed up as the sub-1x "slow" after the rush. Cap the
+                // cursor backward, which is what showed up as the sub-1x "slow" after the rush. Gated
+                // on a live raw clock like the snap above: while mpv's clock stands still (an hr-seek
+                // re-priming - e.g. the resume-from-cursor seek) the reported position is stale, and
+                // crawling toward it walks the cursor off the spot playback is about to start from,
+                // with no backward correction to ever undo it. Cap the
                 // per-tick correction against real elapsed time so the catch-up tops out around ~1.2x
                 // wall clock even when the timer is running slow - sizing it against the capped step
                 // (or only correcting on ticks where raw moved) throttled repayment to ~1.05x exactly
@@ -29796,8 +29878,18 @@ public partial class MainViewModel :
                 // mpv's clock has come to rest after the pause wind-down. Hold the cursor at the frozen
                 // keypress spot rather than snapping to mpv's settled frame: the video stopped where the
                 // cursor already is, and snapping here showed as the cursor shifting slightly after the
-                // numeric time display had already stopped (#12740). Just mark settled so we stop watching.
+                // numeric time display had already stopped (#12740).
                 _playheadPausedSettled = true;
+
+                // Then move mpv, not the cursor: seek the paused core back onto the cursor's spot
+                // now, while there is a whole pause ahead to absorb it. Doing this seek at play
+                // time instead meant unpausing onto a freshly flushed audio pipeline - the output
+                // started starved (heard as a brief stutter) and the cursor hopped forward when
+                // mpv's clock recovered. Aligned here, play is a plain hot unpause from exactly
+                // where the cursor stands; the restart-gated pin keeps the cursor still through
+                // the alignment, and the play paths keep the same call as a fallback for a play
+                // pressed before this settle ran.
+                AlignPausedPlayerWithCursor();
             }
             // else: still winding down, or settled with a standing residual and raw at rest -> hold frozen
             // (no easing, no delayed snap => no post-pause drift).
@@ -30096,8 +30188,15 @@ public partial class MainViewModel :
         // leaving the play-start lag-then-rush. Running at Normal (above Render) keeps the cursor timer
         // firing on time through the burst so the line glides smoothly. Its per-tick work is ~0.2 ms, so
         // it doesn't disturb video rendering.
-        _cursorTimer = new DispatcherTimer(DispatcherPriority.Normal) { Interval = TimeSpan.FromMilliseconds(16) };
-        _cursorTimer.Tick += (s, e) =>
+        // Not a DispatcherTimer any more: with mpv embedded through its own native window (the
+        // Windows default), the platform timer message that a DispatcherTimer rides on stopped
+        // waking the message loop for 100-1000 ms around every play/pause - the UI thread sat idle
+        // in GetMessage with the tick overdue - while a posted message woke it at once. The cursor
+        // jumped ahead at every play and the time display froze (#14523 follow-up). UiTickPump
+        // posts each tick from its own thread, and executing a posted tick also promotes the
+        // dispatcher's other due timers, so the 50 ms position/display timers stop freezing too.
+        _cursorTimer?.Stop();
+        _cursorTimer = new UiTickPump(TimeSpan.FromMilliseconds(16), () =>
         {
             // Fast settle for the on-video subtitle preview: waiting for the 400 ms _slowTimer
             // added up to 400 ms of tick alignment on top of the settle window, so the preview
@@ -30180,7 +30279,7 @@ public partial class MainViewModel :
 
                 _pausedCenterLastSeconds = est;
             }
-        };
+        }, DispatcherPriority.Normal);
         _cursorTimer.Start();
 
         _slowTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(400) };
@@ -30983,6 +31082,7 @@ public partial class MainViewModel :
             if (Se.Settings.General.SubtitleDoubleClickAction == SubtitleDoubleClickActionType.GoToSubtitleAndPlay.ToString())
             {
                 vp.Position = seconds;
+                PinPlayheadTo(seconds);
                 PlayVideo(vp);
                 AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
                 return;
@@ -31000,6 +31100,7 @@ public partial class MainViewModel :
             if (Se.Settings.General.SubtitleDoubleClickAction == SubtitleDoubleClickActionType.GoToSubtitleAndPlayAndFocusTextBox.ToString())
             {
                 vp.Position = seconds;
+                PinPlayheadTo(seconds);
                 PlayVideo(vp);
                 AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
                 FocusEditTextBox();
@@ -31035,6 +31136,7 @@ public partial class MainViewModel :
             {
                 seconds = Math.Max(0, seconds - 1.0);
                 vp.Position = seconds;
+                PinPlayheadTo(seconds);
                 PlayVideo(vp);
                 AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
                 return;
@@ -31156,6 +31258,7 @@ public partial class MainViewModel :
             if (Se.Settings.General.SubtitleSingleClickAction == SubtitleSingleClickActionType.GoToSubtitleAndPlay.ToString())
             {
                 vp.Position = seconds;
+                PinPlayheadTo(seconds);
                 PlayVideo(vp);
                 AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
                 return;
@@ -31173,6 +31276,7 @@ public partial class MainViewModel :
             if (Se.Settings.General.SubtitleSingleClickAction == SubtitleSingleClickActionType.GoToSubtitleAndPlayAndFocusTextBox.ToString())
             {
                 vp.Position = seconds;
+                PinPlayheadTo(seconds);
                 PlayVideo(vp);
                 AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
                 FocusEditTextBox();
