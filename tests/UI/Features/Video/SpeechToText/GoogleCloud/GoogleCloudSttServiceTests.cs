@@ -93,10 +93,11 @@ public class GoogleCloudSttServiceTests
         Assert.NotNull(response.Segments);
         Assert.Equal(2, response.Segments!.Count);
 
+        // Segments are now cut from the word timings rather than emitted one per result,
+        // so the words are consumed by the split instead of being carried on the segment.
         Assert.Equal("Hello there.", response.Segments[0].Text);
         Assert.Equal(0.5, response.Segments[0].Start, 3);
         Assert.Equal(1.4, response.Segments[0].End, 3);
-        Assert.Equal(2, response.Segments[0].Words!.Count);
 
         // Both words fail the range check, so the segment falls back to the
         // previous end and Google's resultEndOffset.
@@ -185,10 +186,10 @@ public class GoogleCloudSttServiceTests
 
         var response = GoogleCloudSttService.ParseResponse(json);
 
+        // Only the plausible word survives, so only its text reaches the cue.
         var segment = Assert.Single(response.Segments!);
-        Assert.NotNull(segment.Words);
-        var word = Assert.Single(segment.Words!);
-        Assert.Equal("bir", word.Word);
+        Assert.Equal("bir", segment.Text);
+        Assert.Equal(1.0, segment.Start, 3);
     }
 
     [Fact]
@@ -226,10 +227,11 @@ public class GoogleCloudSttServiceTests
 
         var response = GoogleCloudSttService.ParseResponse(json);
 
-        var segment = Assert.Single(response.Segments!);
-        Assert.Equal(2, segment.Words!.Count);
-        Assert.Equal(1.0, segment.Start, 3);
-        Assert.Equal(1079.6, segment.End, 3);
+        // Both words are kept, and the 1,077 second silence between them correctly
+        // becomes a cue boundary rather than one cue spanning the whole chunk.
+        Assert.Equal(2, response.Segments!.Count);
+        Assert.Equal(1.0, response.Segments[0].Start, 3);
+        Assert.Equal(1079.6, response.Segments[^1].End, 3);
     }
 
     /// <summary>
@@ -273,9 +275,60 @@ public class GoogleCloudSttServiceTests
         var response = GoogleCloudSttService.ParseResponse(json);
 
         var segment = Assert.Single(response.Segments!);
-        Assert.Equal(2, segment.Words!.Count);
-        Assert.Equal("Ay", segment.Words[0].Word);
-        Assert.Equal(0.0, segment.Words[0].Start, 3);
+        Assert.Equal("Ay vay", segment.Text);
+
+        // The word starting at zero must survive, and the cue must start at zero with it.
         Assert.Equal(0.0, segment.Start, 3);
+    }
+
+    /// <summary>
+    /// Chirp returns a whole file as one result. Verified against the live API: 3 minutes
+    /// of continuous dialogue came back as a single result carrying 322 words. Emitting one
+    /// segment per result would make one subtitle line span the entire chunk, so the word
+    /// timings have to be used to cut it where speech pauses.
+    /// </summary>
+    [Fact]
+    public void ParseResponse_SplitsOneLongResultIntoCuesUsingWordTimings()
+    {
+        const string json = """
+        {
+          "response": {
+            "totalBilledDuration": "30s",
+            "results": {
+              "gs://b/o.flac": {
+                "inlineResult": {
+                  "transcript": {
+                    "results": [
+                      {
+                        "alternatives": [
+                          {
+                            "transcript": "bir iki uc dort",
+                            "words": [
+                              { "word": "bir", "startOffset": "1.0s", "endOffset": "1.4s" },
+                              { "word": "iki", "startOffset": "1.4s", "endOffset": "1.8s" },
+                              { "word": "uc", "startOffset": "20.0s", "endOffset": "20.4s" },
+                              { "word": "dort", "startOffset": "20.4s", "endOffset": "20.9s" }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+        """;
+
+        var response = GoogleCloudSttService.ParseResponse(json);
+
+        // The 18 second silence must break the line rather than being swallowed by one cue.
+        Assert.Equal(2, response.Segments!.Count);
+        Assert.Equal("bir iki", response.Segments[0].Text);
+        Assert.Equal(1.0, response.Segments[0].Start, 3);
+        Assert.Equal(1.8, response.Segments[0].End, 3);
+        Assert.Equal("uc dort", response.Segments[1].Text);
+        Assert.Equal(20.0, response.Segments[1].Start, 3);
     }
 }

@@ -507,16 +507,34 @@ public class GoogleCloudSttService : ISttTranscriber
                 }
 
                 var resultEnd = result.TryGetProperty("resultEndOffset", out var re) ? ParseDuration(re) : previousEnd;
-                var segment = new OpenAiCompatibleSegment
+
+                if (words.Count > 0)
                 {
-                    Id = response.Segments.Count,
-                    Start = words.Count > 0 ? words[0].Start : previousEnd,
-                    End = words.Count > 0 ? words[^1].End : resultEnd,
-                    Text = segmentText,
-                    Words = words.Count > 0 ? words : null,
-                };
-                previousEnd = segment.End;
-                response.Segments.Add(segment);
+                    // Chirp returns the whole file as a single result: measured against the
+                    // live API, 3 minutes of continuous dialogue came back as one result of
+                    // 322 words. One segment per result would therefore become one subtitle
+                    // line spanning the entire chunk, so the word timings are used to cut it
+                    // where speech actually pauses. Same helper the OpenAI and OpenRouter
+                    // paths use, so the cue shape stays consistent across engines.
+                    foreach (var built in OpenAiSttService.BuildSegmentsFromWords(words))
+                    {
+                        built.Id = response.Segments.Count;
+                        previousEnd = built.End;
+                        response.Segments.Add(built);
+                    }
+                }
+                else
+                {
+                    response.Segments.Add(new OpenAiCompatibleSegment
+                    {
+                        Id = response.Segments.Count,
+                        Start = previousEnd,
+                        End = resultEnd,
+                        Text = segmentText,
+                    });
+                    previousEnd = resultEnd;
+                }
+
                 text.Append(segmentText).Append(' ');
             }
         }
