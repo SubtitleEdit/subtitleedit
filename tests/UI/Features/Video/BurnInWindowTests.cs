@@ -21,8 +21,9 @@ namespace UITests.Features.Video;
 /// "File size in MB" field) and keeps the preview box taller than its label + player (so the
 /// player can never spill over the audio settings box when the window is shrunk). A window
 /// shorter than its own content minimum - which UiUtil produces on screens too short for the
-/// dialog - still leaves rows 0-3 short of the panel, so the panel scrolls rather than draws its
-/// overflow through the progress bar (issue #13904).
+/// dialog - no longer clips anything: the settings grid (rows 0-3) sits in a ScrollViewer while the
+/// progress bar and the button row stay outside it, so on a short screen the settings scroll and
+/// "Generate" remains reachable (issues #13904, #14360).
 /// </summary>
 public class BurnInWindowTests : IDisposable
 {
@@ -62,7 +63,7 @@ public class BurnInWindowTests : IDisposable
         return window;
     }
 
-    /// <summary>Returns the window's root grid (the one holding the progress view).</summary>
+    /// <summary>Returns the window's root grid (the one holding the progress view and the buttons).</summary>
     private static Grid FindRootGrid(BurnInWindow window)
     {
         var progressBar = window.GetLogicalDescendants().OfType<ProgressBar>().FirstOrDefault();
@@ -72,6 +73,30 @@ public class BurnInWindowTests : IDisposable
         var rootGrid = progressView.Parent as Grid;
         Assert.NotNull(rootGrid);
         return rootGrid;
+    }
+
+    /// <summary>Returns the scroll viewer in row 0 of the root grid and the settings grid inside it.</summary>
+    private static (ScrollViewer Scroller, Grid SettingsGrid) FindSettingsGrid(Grid rootGrid)
+    {
+        var scroller = rootGrid.Children.OfType<ScrollViewer>().FirstOrDefault(s => Grid.GetRow(s) == 0);
+        Assert.NotNull(scroller);
+        var settingsGrid = scroller.Content as Grid;
+        Assert.NotNull(settingsGrid);
+        return (scroller, settingsGrid);
+    }
+
+    private static Grid FindProgressView(Grid rootGrid)
+    {
+        var progressView = rootGrid.Children.OfType<Grid>().FirstOrDefault(g => Grid.GetRow(g) == 1);
+        Assert.NotNull(progressView);
+        return progressView;
+    }
+
+    private static StackPanel FindButtonPanel(Grid rootGrid)
+    {
+        var buttonPanel = rootGrid.Children.OfType<StackPanel>().FirstOrDefault(s => Grid.GetRow(s) == 2);
+        Assert.NotNull(buttonPanel);
+        return buttonPanel;
     }
 
     [AvaloniaFact]
@@ -96,7 +121,7 @@ public class BurnInWindowTests : IDisposable
         // The preview row (row 1, star) must carry a MinHeight: without it the window can be
         // shrunk (or restored) below the content height, the preview box gets shorter than its
         // label + player and the player spills over the audio settings box below it.
-        var previewRow = rootGrid.RowDefinitions[1];
+        var previewRow = FindSettingsGrid(rootGrid).SettingsGrid.RowDefinitions[1];
         Assert.Equal(GridUnitType.Star, previewRow.Height.GridUnitType);
         Assert.True(previewRow.MinHeight >= 350, $"Preview row MinHeight is only {previewRow.MinHeight:0.#}.");
 
@@ -132,12 +157,14 @@ public class BurnInWindowTests : IDisposable
 
     private static void AssertSettingsColumnStaysAboveProgressView(BurnInWindow window, Grid rootGrid)
     {
-        var settingsColumn = rootGrid.Children.FirstOrDefault(c => Grid.GetColumn(c) == 0 && Grid.GetRowSpan(c) == 4);
+        var (scroller, settingsGrid) = FindSettingsGrid(rootGrid);
+        var settingsColumn = settingsGrid.Children.FirstOrDefault(c => Grid.GetColumn(c) == 0 && Grid.GetRowSpan(c) == 4);
         Assert.NotNull(settingsColumn);
-        var progressView = rootGrid.Children.OfType<Grid>().FirstOrDefault(g => Grid.GetRow(g) == 4);
-        Assert.NotNull(progressView);
+        var progressView = FindProgressView(rootGrid);
 
-        var panelBottom = PaintedBottom(settingsColumn, window);
+        // The column is clipped by the scroll viewer around the settings grid, so measure from
+        // there: anything the column paints past the viewport is scrolled, not drawn over the bar.
+        var panelBottom = PaintedBottom(scroller, window);
         var progressTop = progressView.TranslatePoint(new Point(0, 0), window)?.Y;
         Assert.NotNull(progressTop);
         Assert.True(
@@ -180,8 +207,8 @@ public class BurnInWindowTests : IDisposable
         window.Height = 400;
         window.UpdateLayout();
 
-        var rootGrid = FindRootGrid(window);
-        var audioSettingsView = rootGrid.Children.OfType<Border>().FirstOrDefault(b => Grid.GetRow(b) == 2 && Grid.GetColumn(b) == 1);
+        var settingsGrid = FindSettingsGrid(FindRootGrid(window)).SettingsGrid;
+        var audioSettingsView = settingsGrid.Children.OfType<Border>().FirstOrDefault(b => Grid.GetRow(b) == 2 && Grid.GetColumn(b) == 1);
         Assert.NotNull(audioSettingsView);
 
         // The player is the bottom-most element of the preview box; its bottom must never
@@ -214,12 +241,9 @@ public class BurnInWindowTests : IDisposable
         window.UpdateLayout();
 
         var rootGrid = FindRootGrid(window);
-        Assert.True(
-            rootGrid.Children.OfType<Grid>().Any(g => Grid.GetRow(g) == 4 && g.IsVisible),
-            "Progress view is not visible while generating.");
+        Assert.True(FindProgressView(rootGrid).IsVisible, "Progress view is not visible while generating.");
 
-        var buttonPanel = rootGrid.Children.OfType<StackPanel>().FirstOrDefault(s => Grid.GetRow(s) == 5);
-        Assert.NotNull(buttonPanel);
+        var buttonPanel = FindButtonPanel(rootGrid);
         var buttonsBottom = buttonPanel.TranslatePoint(new Point(0, buttonPanel.Bounds.Height), window)?.Y;
         Assert.NotNull(buttonsBottom);
         Assert.True(
@@ -228,6 +252,66 @@ public class BurnInWindowTests : IDisposable
         Assert.True(
             window.ClientSize.Height >= before,
             $"Window shrank when generating started ({before:0.#} -> {window.ClientSize.Height:0.#}).");
+    }
+
+    [AvaloniaFact]
+    public void ButtonRow_StaysReachable_OnAShortScreen()
+    {
+        var window = BuildWindow();
+        window.Show();
+        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+        window.UpdateLayout();
+
+        // A maximized window on a 1366x768 laptop (taskbar + title bar) leaves about 700 DIPs of
+        // client height, less than the settings area needs. The reporter of issue #14360 saw the
+        // "Generate" row clipped off the bottom of the screen with no way to reach it.
+        window.SizeToContent = SizeToContent.Manual;
+        window.MinHeight = 0;
+        window.Height = 697;
+        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+        window.UpdateLayout();
+
+        var rootGrid = FindRootGrid(window);
+        var buttonPanel = FindButtonPanel(rootGrid);
+        var buttonsBottom = buttonPanel.TranslatePoint(new Point(0, buttonPanel.Bounds.Height), window)?.Y;
+        Assert.NotNull(buttonsBottom);
+        Assert.True(
+            buttonsBottom.Value <= window.ClientSize.Height + 1.5,
+            $"Buttons bottom ({buttonsBottom.Value:0.#}) is clipped by the window height ({window.ClientSize.Height:0.#}).");
+
+        // The settings area itself is what gives way: it scrolls instead of being clipped.
+        var (scroller, settingsGrid) = FindSettingsGrid(rootGrid);
+        Assert.True(
+            scroller.Extent.Height > scroller.Viewport.Height + 1.5,
+            $"Settings area does not scroll (extent {scroller.Extent.Height:0.#}, viewport {scroller.Viewport.Height:0.#}).");
+        Assert.True(settingsGrid.RowDefinitions[1].MinHeight >= 350, "Preview row lost its minimum height.");
+    }
+
+    [AvaloniaFact]
+    public void PreviewRow_FillsTheWindow_WhenThereIsRoom()
+    {
+        var window = BuildWindow();
+        window.Show();
+        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+        window.UpdateLayout();
+
+        // Inside a ScrollViewer a star row would otherwise collapse to its minimum; the settings
+        // grid must keep filling the viewport so the preview grows with the window.
+        var rootGrid = FindRootGrid(window);
+        var (scroller, settingsGrid) = FindSettingsGrid(rootGrid);
+        var before = settingsGrid.Bounds.Height;
+
+        window.SizeToContent = SizeToContent.Manual;
+        window.Height = window.ClientSize.Height + 200;
+        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+        window.UpdateLayout();
+
+        Assert.True(
+            settingsGrid.Bounds.Height >= before + 190,
+            $"Settings grid did not grow with the window ({before:0.#} -> {settingsGrid.Bounds.Height:0.#}).");
+        Assert.True(
+            scroller.Extent.Height <= scroller.Viewport.Height + 1.5,
+            $"Settings area scrolls although the window is tall enough (extent {scroller.Extent.Height:0.#}, viewport {scroller.Viewport.Height:0.#}).");
     }
 
     // The extension list is only correct if both combo boxes are wired up: the encoder box
