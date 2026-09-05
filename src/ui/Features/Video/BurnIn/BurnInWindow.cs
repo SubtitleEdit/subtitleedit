@@ -54,10 +54,10 @@ public class BurnInWindow : Window
 
         // The left column (subtitle + video settings + target size) is taller than the middle
         // column's cut/preview/audio/video-info rows. Keeping all three boxes in one packed
-        // panel preserves the v5.1.0 look (no gaps), and the star filler row below takes any
-        // extra height, so the panel can never overflow into the progress-bar row (which used
-        // to draw the bar through the "File size in MB" field). The player has a fixed height,
-        // so the preview box hugs it and cannot spill over the audio settings box.
+        // panel preserves the v5.1.0 look (no gaps); the settings grid has a single star row, so
+        // the panel can never overflow into the progress-bar row (which used to draw the bar
+        // through the "File size in MB" field). The player has a fixed height, so the preview
+        // box hugs it and cannot spill over the audio settings box.
         var leftPanel = new StackPanel
         {
             Orientation = Orientation.Vertical,
@@ -106,15 +106,36 @@ public class BurnInWindow : Window
         var previewColumn = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
         var batchColumn = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) };
 
-        var settingsGrid = new Grid
+        // The middle column has its own grid: the left panel must not span rows of a grid with
+        // a star row, since a spanning child's whole height is pushed into the star row, making
+        // the grid (and the window) as tall as the auto rows PLUS the left panel.
+        var middleColumn = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // cut
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // preview + batch list (sized by the player; the batch list spans into the filler row)
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // preview (sized by the fixed-height player)
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // audio
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // video info + target file size
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // video info
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // filler: takes the extra height so the preview box hugs the player
+            },
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+            },
+            Width = double.NaN,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+        };
+        middleColumn.Add(cutView, 0, 0);
+        middleColumn.Add(previewView, 1, 0);
+        middleColumn.Add(audioSettingsView, 2, 0);
+        middleColumn.Add(videoInfoView, 3, 0);
+
+        var settingsGrid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
             },
             ColumnDefinitions =
             {
@@ -126,12 +147,9 @@ public class BurnInWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        settingsGrid.Add(leftPanel, 0, 0, 5, 1);  // rows 0-4 (cut + preview + audio + video info + filler)
-        settingsGrid.Add(cutView, 0, 1);
-        settingsGrid.Add(previewView, 1, 1);
-        settingsGrid.Add(audioSettingsView, 2, 1);
-        settingsGrid.Add(videoInfoView, 3, 1);
-        settingsGrid.Add(batchView, 0, 2, 5, 1);
+        settingsGrid.Add(leftPanel, 0, 0);
+        settingsGrid.Add(middleColumn, 0, 1);
+        settingsGrid.Add(batchView, 0, 2);
 
         // The settings area is taller than what a small or scaled screen can show (a maximized
         // window on a 1366x768 laptop leaves about 700 DIPs; the preview row alone needs 400).
