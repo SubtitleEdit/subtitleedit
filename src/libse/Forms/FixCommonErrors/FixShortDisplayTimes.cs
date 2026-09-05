@@ -31,16 +31,15 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     Paragraph prev = subtitle.GetParagraphOrDefault(i - 1);
                     if (next == null || (p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines) < next.StartTime.TotalMilliseconds)
                     {
-                        var temp = new Paragraph(p) { EndTime = { TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds } };
-                        if (temp.GetCharactersPerSecond() <= Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                        // Extending only ever lowers chars/sec, so no cps gate here - if the
+                        // line is still too fast at the minimum duration, the cps pass below
+                        // extends it further.
+                        if (callbacks.AllowFix(p, fixAction))
                         {
-                            if (callbacks.AllowFix(p, fixAction))
-                            {
-                                string oldCurrent = p.ToString();
-                                p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
-                                noOfShortDisplayTimes++;
-                                callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());
-                            }
+                            string oldCurrent = p.ToString();
+                            p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
+                            noOfShortDisplayTimes++;
+                            callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                         }
                     }
                     else if (Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && p.StartTime.TotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds &&
@@ -61,6 +60,18 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                     else
                     {
+                        // Not enough room for the full minimum - still take what the
+                        // gap to the next line allows, a shorter shortfall is better
+                        // than none (back-to-back speech-to-text output hits this a lot).
+                        var improvedEndMs = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                        if (improvedEndMs > p.EndTime.TotalMilliseconds && callbacks.AllowFix(p, fixAction))
+                        {
+                            string oldCurrent = p.ToString();
+                            p.EndTime.TotalMilliseconds = improvedEndMs;
+                            noOfShortDisplayTimes++;
+                            callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());
+                        }
+
                         callbacks.LogStatus(Language.FixShortDisplayTimes, string.Format(Language.UnableToFixTextXY, i + 1, p));
                         callbacks.AddToTotalErrors(1);
                         skip = true;

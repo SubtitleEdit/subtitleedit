@@ -1,4 +1,4 @@
-using Avalonia.Headless.XUnit;
+﻿using Avalonia.Headless.XUnit;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
@@ -37,15 +37,15 @@ public class FixCommonErrorsUnfixableErrorsTests : IDisposable
     }
 
     /// <summary>
-    /// A 300 ms line (below the 1000 ms minimum) that starts at zero and is followed 200 ms later:
-    /// it cannot be made longer (no room before the next line) and cannot be started earlier
-    /// (it starts at zero), which is the branch that logs "Unable to fix text number...".
+    /// A 300 ms line (below the 1000 ms minimum) that starts at zero and is followed immediately
+    /// (within the minimum gap): it cannot be made longer at all, not even partially, and cannot
+    /// be started earlier (it starts at zero), which is the branch that logs "Unable to fix text number...".
     /// </summary>
     private static FixCommonErrorsViewModel BuildViewModelWithUnfixableShortDisplayTime()
     {
         var subtitle = new Subtitle();
         subtitle.Paragraphs.Add(new Paragraph("Hello there", 0, 300));
-        subtitle.Paragraphs.Add(new Paragraph("Goodbye there", 500, 3000));
+        subtitle.Paragraphs.Add(new Paragraph("Goodbye there", 320, 3000));
         subtitle.Renumber();
 
         var vm = new FixCommonErrorsViewModel(new FakeNamesList(), null!, null!);
