@@ -609,7 +609,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
 
             foreach (var format in SubtitleFormat.AllSubtitleFormats)
             {
-                if (format.IsTextBased && format.Name != currentFormat.Name)
+                if ((format.IsTextBased || format is Ebu) && format.Name != currentFormat.Name)
                 {
                     var patterns = new List<string>
                     {

@@ -1,10 +1,28 @@
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Avalonia.Platform.Storage;
 using System.Reflection;
 
 namespace UITests.Logic.Media;
 
 public class FileHelperTests
 {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void SaveAs_OffersEbuStlExactlyOnce(bool ebuSelected)
+    {
+        SubtitleFormat current = ebuSelected ? new Ebu() : new SubRip();
+        var method = typeof(FileHelper).GetMethod("MakeSaveFilePickerAllFileTypes", BindingFlags.NonPublic | BindingFlags.Static);
+        Assert.NotNull(method);
+        var choices = Assert.IsType<List<FilePickerFileType>>(method!.Invoke(null, [current]));
+
+        Assert.Equal(current.Name, choices[0].Name);
+        var ebu = Assert.Single(choices, choice => choice.Name == new Ebu().Name);
+        Assert.Contains("*.stl", ebu.Patterns!);
+        Assert.Contains(choices, choice => choice.Name == new SubRip().Name);
+    }
+
     [Theory]
     // Bare filename -> append chosen extension.
     [InlineData("subtitle", ".srt", "subtitle.srt")]

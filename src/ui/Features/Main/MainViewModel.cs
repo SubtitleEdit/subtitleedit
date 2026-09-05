@@ -24829,7 +24829,8 @@ public partial class MainViewModel :
         }
 
         var subtitleFormat = SelectedSubtitleFormat;
-        if (!_formatChangedByUser)
+        // Keep EBU STL selected even when a text format is configured as the Save As default.
+        if (!_formatChangedByUser && subtitleFormat is not Ebu)
         {
             subtitleFormat = SubtitleFormats.FirstOrDefault(p => p.FriendlyName == Se.Settings.General.DefaultSaveAsFormat)
                              ?? SelectedSubtitleFormat;
