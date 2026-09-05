@@ -730,7 +730,7 @@ public class InitWaveform
             (timeCodePosition.IsKeyboardFocusWithin && vm.GetVideoPlayerControl()?.IsPlaying != true) ||
             Environment.TickCount64 - positionTextEditedTicks < 500;
 
-        var positionTextTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
+        var positionTextTimer = new UiTickPump(TimeSpan.FromMilliseconds(100)); // posted ticks, not a DispatcherTimer - see UiTickPump
         positionTextTimer.Tick += (_, _) =>
         {
             var vp = vm.GetVideoPlayerControl();

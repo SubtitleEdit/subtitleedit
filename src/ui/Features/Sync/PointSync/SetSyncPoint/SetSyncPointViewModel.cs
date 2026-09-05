@@ -68,7 +68,7 @@ public partial class SetSyncPointViewModel : ObservableObject
     // starts on the file's default track, so it has to be re-applied here or a dubbed track plays
     // while the user syncs against the original (issue #13995).
     private int _audioTrackId = -1;
-    private DispatcherTimer _positionTimer = new DispatcherTimer();
+    private UiTickPump _positionTimer = new(TimeSpan.FromMilliseconds(150)); // posted ticks, not a DispatcherTimer - see UiTickPump
     private List<SubtitleLineViewModel> _subtitleLines = new List<SubtitleLineViewModel>();
     private VideoPreviewSubtitleContext _previewContext = VideoPreviewSubtitleContext.Default;
     private bool _updateAudioVisualizer;
@@ -199,7 +199,7 @@ public partial class SetSyncPointViewModel : ObservableObject
 
     private void StartTitleTimer()
     {
-        _positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(150) };
+        _positionTimer = new UiTickPump(TimeSpan.FromMilliseconds(150));
         _positionTimer.Tick += (s, e) =>
         {
             UpdateAudioVisualizer(VideoPlayerControl.VideoPlayer, AudioVisualizer, SelectedParagraphIndex);

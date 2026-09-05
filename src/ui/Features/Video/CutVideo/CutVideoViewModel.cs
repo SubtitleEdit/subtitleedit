@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -88,7 +88,7 @@ public partial class CutVideoViewModel : ObservableObject
     // shot-change writer does - coalescing the publishes so a long file cannot flood the queue.
     private readonly List<double> _keyFrameSeconds = new List<double>();
     private bool _keyFramePublishPending;
-    private DispatcherTimer _positionTimer = new DispatcherTimer();
+    private UiTickPump _positionTimer = new(TimeSpan.FromMilliseconds(150)); // posted ticks, not a DispatcherTimer - see UiTickPump
     private string _importFileName;
     private Subtitle _currentSubtitle;
     private long _lastKeyPressedMs;
@@ -220,7 +220,7 @@ public partial class CutVideoViewModel : ObservableObject
 
     private void StartTitleTimer()
     {
-        _positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(150) };
+        _positionTimer = new UiTickPump(TimeSpan.FromMilliseconds(150));
         _positionTimer.Tick += (s, e) =>
         {
             // Derive the index from the row the grid actually binds. SelectedSegmentIndex is

@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -53,7 +53,7 @@ public partial class VisualSyncViewModel : ObservableObject
 
     private string? _videoFileName;
     private string? _wavePeaksVideoFileName;
-    private DispatcherTimer _positionTimer = new DispatcherTimer();
+    private UiTickPump _positionTimer = new(TimeSpan.FromMilliseconds(150)); // posted ticks, not a DispatcherTimer - see UiTickPump
     private List<SubtitleLineViewModel> _subtitleLines = new List<SubtitleLineViewModel>();
     private VideoPreviewSubtitleContext _previewContext = VideoPreviewSubtitleContext.Default;
     private bool _updateAudioVisualizer;
@@ -200,7 +200,7 @@ public partial class VisualSyncViewModel : ObservableObject
 
     private void StartTitleTimer()
     {
-        _positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(150) };
+        _positionTimer = new UiTickPump(TimeSpan.FromMilliseconds(150));
         _positionTimer.Tick += (s, e) =>
         {
             UpdateAudioVisualizer(VideoPlayerControlLeft.VideoPlayer, AudioVisualizerLeft, SelectedParagraphLeftIndex);

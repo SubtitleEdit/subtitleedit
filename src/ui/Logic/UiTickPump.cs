@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Logic;
 public sealed class UiTickPump : IDisposable
 {
     private readonly TimeSpan _interval;
-    private readonly Action _tick;
+    private Action _tick;
     private readonly DispatcherPriority _priority;
     private readonly Action _postedTick;
     private Thread? _thread;
@@ -31,13 +31,29 @@ public sealed class UiTickPump : IDisposable
 
     public UiTickPump(TimeSpan interval, Action tick, DispatcherPriority priority)
     {
-        _interval = interval;
+        _interval = interval < TimeSpan.FromMilliseconds(1) ? TimeSpan.FromMilliseconds(1) : interval;
         _tick = tick;
         _priority = priority;
         _postedTick = RunTick;
     }
 
+    /// <summary>
+    /// DispatcherTimer-shaped constructor: subscribe <see cref="Tick"/>, then <see cref="Start"/>.
+    /// Lets the position timers of the waveform dialogs swap in without restructuring.
+    /// </summary>
+    public UiTickPump(TimeSpan interval)
+        : this(interval, () => { }, DispatcherPriority.Normal)
+    {
+        _tick = () => Tick?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>Raised on the UI thread once per interval while running.</summary>
+    public event EventHandler? Tick;
+
     public bool IsRunning => _running;
+
+    /// <summary>DispatcherTimer-style alias for <see cref="IsRunning"/>.</summary>
+    public bool IsEnabled => _running;
 
     public void Start()
     {

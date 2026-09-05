@@ -678,7 +678,7 @@ public partial class MainViewModel :
     private bool _reapplyingReadOnlyReference;
     private bool _waveformBufferNoLayers;
     private HashSet<int>? _waveformBufferVisibleLayers;
-    private DispatcherTimer _positionTimer = new();
+    private UiTickPump _positionTimer = new(TimeSpan.FromMilliseconds(50)); // posted ticks, not a DispatcherTimer - see UiTickPump
     private DispatcherTimer _slowTimer = new();
     private UiTickPump? _cursorTimer; // ~60 fps; drives only the waveform/video playhead cursor (a posted tick, not a DispatcherTimer - see UiTickPump)
 
@@ -29941,7 +29941,7 @@ public partial class MainViewModel :
         Subtitles.CollectionChanged += OnSubtitlesCollectionChangedForMpv;
         foreach (var item in Subtitles)
             item.PropertyChanged += OnSubtitleItemChangedForMpv;
-        _positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(50) };
+        _positionTimer = new UiTickPump(TimeSpan.FromMilliseconds(50));
         _positionTimer.Tick += (s, e) =>
         {
             // update audio visualizer position if available
