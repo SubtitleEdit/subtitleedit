@@ -1469,7 +1469,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         var url = LlamaCppServerManager.ApiUrl;
         var modelName = Path.GetFileNameWithoutExtension(model.FileName);
         var language = Se.Settings.Ocr.OllamaLanguage;
-        var prompt = Se.Settings.Ocr.LlamaCppOcrPrompt;
+        var prompt = LlamaCppServerManager.ResolveOcrPrompt(model, Se.Settings.Ocr.LlamaCppOcrPrompt);
         item.Subtitle = new Subtitle();
         var cancelled = false;
         for (var i = 0; i < imageSubtitles.Count; i++)

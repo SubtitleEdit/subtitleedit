@@ -35,8 +35,9 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
         _model = model;
         _modelName = modelName;
         _language = string.IsNullOrWhiteSpace(language) ? "English" : language;
-        // Shared with the UI's default so the two cannot drift; --ocr-prompt overrides it.
-        _promptTemplate = string.IsNullOrWhiteSpace(prompt) ? SeOcrDefaults.LlamaCppOcrPrompt : prompt;
+        // Shared with the UI's default so the two cannot drift; --ocr-prompt overrides it, and a
+        // curated model with its own tuned prompt (LFM2.5-VL) gets that unless --ocr-prompt is set.
+        _promptTemplate = LlamaCppServerManager.ResolveOcrPrompt(model, prompt);
         _quiet = quiet;
         _httpClient = new HttpClient
         {
@@ -68,7 +69,12 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
             var modelName = string.IsNullOrWhiteSpace(options.OcrModel)
                 ? "glmocr"
                 : Path.GetFileNameWithoutExtension(options.OcrModel.Trim());
-            return new LlamaCppOcrEngine(fullUrl, null, modelName, options.OcrLanguage, options.OcrPrompt, options.Quiet);
+            // Only for the prompt: a curated model named by file/stem still gets its own tuned
+            // prompt against a user-managed server. The engine itself stays in URL mode.
+            var curated = LlamaCppServerManager.OcrModels.FirstOrDefault(m =>
+                Path.GetFileNameWithoutExtension(m.FileName).Equals(modelName, StringComparison.OrdinalIgnoreCase));
+            var promptTemplate = LlamaCppServerManager.ResolveOcrPrompt(curated, options.OcrPrompt);
+            return new LlamaCppOcrEngine(fullUrl, null, modelName, options.OcrLanguage, promptTemplate, options.Quiet);
         }
 
         LlamaCppLocal.EnsureServerBinary("the OCR window > llama.cpp", "--ocr-url");

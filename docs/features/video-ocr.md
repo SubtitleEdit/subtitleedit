@@ -29,7 +29,7 @@ Engines are listed best-first for burned-in subtitles:
 - **Apple Vision** (macOS) — the OCR built into macOS: local, fast, and nothing to download. Recommended on macOS.
 - **Paddle OCR** (Windows/Linux) — local, fast and accurate; downloaded automatically. Recommended on Windows and Linux.
 - **CrispEmbed** — local OCR engine with several model backends, downloaded automatically. For video the offered backends are GLM-OCR (default), DeepSeek-OCR-2 and PP-OCRv6 (see [OCR](ocr.md#crispembed)).
-- **llama.cpp** — local vision model via a managed llama.cpp server; the engine and models are downloaded automatically. Available models, listed best-first for subtitles: GLM-OCR 0.9B (the default), PaddleOCR-VL 1.6 (109 languages), HunyuanOCR 1.5 and LightOnOCR 1B. A green dot marks models that are already downloaded; custom vision models in the llama.cpp models folder also appear, as long as the `mmproj` vision projector sits next to the `*.gguf` (see [OCR](ocr.md#llamacpp)).
+- **llama.cpp** — local vision model via a managed llama.cpp server; the engine and models are downloaded automatically. Available models, listed best-first for subtitles: GLM-OCR 0.9B (the default), LFM2.5-VL 3B, PaddleOCR-VL 1.6 (109 languages), HunyuanOCR 1.5 and LightOnOCR 1B. A green dot marks models that are already downloaded; custom vision models in the llama.cpp models folder also appear, as long as the `mmproj` vision projector sits next to the `*.gguf` (see [OCR](ocr.md#llamacpp)).
 - **Ollama vision** — local vision model via a self-managed [Ollama](https://ollama.com) installation, e.g. `glm-ocr`
 - **GLM API** — GLM vision model via the Z.ai / bigmodel.cn cloud API (requires an API key)
 

@@ -4313,7 +4313,7 @@ public partial class OcrViewModel : ObservableObject
         // grid fills with blank lines (#13633).
         var engine = new LlamaCppOcr(Se.Settings.Ocr.LlamaCppOcrTimeoutMinutes);
         var selectedModel = SelectedLlamaCppOcrModel?.Model;
-        var prompt = Se.Settings.Ocr.LlamaCppOcrPrompt;
+        var prompt = LlamaCppServerManager.ResolveOcrPrompt(selectedModel, Se.Settings.Ocr.LlamaCppOcrPrompt);
 
         _ = Task.Run(async () =>
         {
