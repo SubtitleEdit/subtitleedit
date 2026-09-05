@@ -67,6 +67,11 @@ public static class WhisperEngineFactory
             return new DashScopeQwen3SttEngine();
         }
 
+        if (staticName == GoogleCloudSttEngine.StaticName)
+        {
+            return new GoogleCloudSttEngine();
+        }
+
         throw new NotImplementedException();
     }
 }

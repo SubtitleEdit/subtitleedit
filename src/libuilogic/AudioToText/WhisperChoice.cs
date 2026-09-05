@@ -35,5 +35,6 @@
         public const string OpenAiCompatible = "OpenAI Compatible";
         public const string OpenRouter = "OpenRouter";
         public const string DashScopeQwen3 = "Alibaba Qwen3-ASR";
+        public const string GoogleCloud = "Google Cloud Speech-to-Text";
     }
 }

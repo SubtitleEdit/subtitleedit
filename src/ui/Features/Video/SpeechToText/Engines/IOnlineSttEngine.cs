@@ -55,4 +55,10 @@ public interface IOnlineSttEngine : ISpeechToTextEngine
     /// Target size (bytes) for each chunk when splitting.
     /// </summary>
     long ChunkSizeBytes { get; }
+
+    /// <summary>
+    /// Longest audio (seconds) one request may carry, for providers that cap by
+    /// duration rather than bytes. 0 means no duration cap.
+    /// </summary>
+    double MaxChunkSeconds => 0;
 }
