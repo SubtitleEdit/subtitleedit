@@ -3564,6 +3564,25 @@ public static class UiUtil
                string.Equals(ShortcutManager.GetShortcutKey(e).ToString(), keyName, StringComparison.OrdinalIgnoreCase);
     }
 
+    private static readonly ConditionalWeakTable<Window, Func<bool>> WindowSystemMenuOverrides = new();
+
+    /// <summary>
+    /// Lets a window claim Alt+Space for itself: while <paramref name="isOverridden"/> returns
+    /// true, <see cref="TryHandleWindowSystemMenu"/> leaves the key event alone instead of
+    /// opening the Windows system menu. The main window uses this so a user-assigned Alt+Space
+    /// shortcut wins over the Windows convention (#14536), mirroring the F10 rule; the shortcut
+    /// key-capture window uses it so the chord can be recorded at all.
+    /// </summary>
+    internal static void SetWindowSystemMenuOverride(Window window, Func<bool> isOverridden)
+    {
+        WindowSystemMenuOverrides.AddOrUpdate(window, isOverridden);
+    }
+
+    internal static bool IsWindowSystemMenuOverridden(Window window)
+    {
+        return WindowSystemMenuOverrides.TryGetValue(window, out var isOverridden) && isOverridden();
+    }
+
     internal static bool TryHandleWindowSystemMenu(KeyEventArgs e, Window? window)
     {
         if (!OperatingSystem.IsWindows() || window == null)
@@ -3573,6 +3592,12 @@ public static class UiUtil
 
         if (e.Key == Key.Space && e.KeyModifiers == KeyModifiers.Alt)
         {
+            if (IsWindowSystemMenuOverridden(window))
+            {
+                return false;
+            }
+
+
             SystemMenu.Show(window);
             e.Handled = true;
             return true;

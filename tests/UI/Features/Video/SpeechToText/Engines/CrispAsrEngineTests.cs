@@ -79,4 +79,74 @@ public class CrispAsrEngineTests
             Assert.Equal("Auto Detect", first.Name);
         }
     }
+
+    /// <summary>
+    /// crispasr's parakeet backend is the transducer runtime and refuses a pure-CTC GGUF; the
+    /// Vietnamese model (#14496) is one, so it has to go to fastconformer-ctc while the
+    /// tdt_ctc hybrids (TDT head present) stay put.
+    /// </summary>
+    [Theory]
+    [InlineData("parakeet-tdt-0.6b-v3-q4_k.gguf", "parakeet")]
+    [InlineData("parakeet-tdt_ctc-110m-q8_0.gguf", "parakeet")]
+    [InlineData("parakeet-tdt_ctc-1.1b.gguf", "parakeet")]
+    [InlineData("parakeet-rnnt-0.6b-q4_k.gguf", "parakeet")]
+    [InlineData("parakeet-ctc-0.6b-vi-q8_0.gguf", "fastconformer-ctc")]
+    [InlineData("parakeet-ctc-0.6b-vi.gguf", "fastconformer-ctc")]
+    public void Parakeet_GetBackendName_RoutesPureCtcModelsToTheCtcRuntime(string modelName, string expectedBackend)
+    {
+        var parakeet = new CrispAsrParakeet();
+        var engine = new CrispAsrEngine();
+        Assert.True(engine.TrySelectBackendChoice(WhisperChoice.CrispAsrParakeet));
+
+        Assert.Equal(expectedBackend, parakeet.GetBackendName(modelName));
+        Assert.Equal(expectedBackend, engine.GetBackendName(modelName));
+    }
+
+    [Fact]
+    public void Parakeet_EveryCatalogModelRoutesByItsOwnName()
+    {
+        var parakeet = new CrispAsrParakeet();
+
+        foreach (var model in parakeet.Models)
+        {
+            var isCtcOnly = model.Name.Contains("-ctc-") && !model.Name.Contains("tdt");
+            Assert.Equal(isCtcOnly ? CrispAsrParakeet.CtcBackendName : "parakeet", parakeet.GetBackendName(model.Name));
+        }
+    }
+
+    /// <summary>
+    /// crispasr auto-enables FireRedPunc for fastconformer-ctc, which mangles Vietnamese spacing;
+    /// the model punctuates by itself. The user's own punctuation flag always wins.
+    /// </summary>
+    [Theory]
+    [InlineData("parakeet-ctc-0.6b-vi-q8_0.gguf", null, "--punc-model none")]
+    [InlineData("parakeet-ctc-0.6b-vi-q8_0.gguf", "--max-len 50 --split-on-punct", "--punc-model none")]
+    [InlineData("parakeet-ctc-0.6b-vi-q8_0.gguf", "--punc-model firered", "")]
+    [InlineData("parakeet-ctc-0.6b-vi-q8_0.gguf", "--max-len 50 --no-punctuation", "")]
+    [InlineData("parakeet-tdt-0.6b-v3-q4_k.gguf", null, "")]
+    [InlineData("parakeet-tdt_ctc-1.1b-q8_0.gguf", null, "")]
+    public void Parakeet_GetModelArguments_KeepsPunctuationRestorationOffForCtcModels(string modelName, string? userArgs, string expected)
+    {
+        var parakeet = new CrispAsrParakeet();
+        var engine = new CrispAsrEngine();
+        Assert.True(engine.TrySelectBackendChoice(WhisperChoice.CrispAsrParakeet));
+
+        Assert.Equal(expected, parakeet.GetModelArguments(modelName, userArgs));
+        Assert.Equal(expected, engine.GetModelArguments(modelName, userArgs));
+    }
+
+    [Fact]
+    public void OtherBackends_DoNotOverridePerModelBackendOrArguments()
+    {
+        var engine = new CrispAsrEngine();
+
+        foreach (var backend in engine.Backends.Where(p => p is not CrispAsrParakeet))
+        {
+            foreach (var model in backend.Models)
+            {
+                Assert.Equal(backend.BackendName, backend.GetBackendName(model.Name));
+                Assert.Equal(string.Empty, backend.GetModelArguments(model.Name, null));
+            }
+        }
+    }
 }

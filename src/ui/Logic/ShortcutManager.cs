@@ -328,6 +328,44 @@ public class ShortcutManager : IShortcutManager
         return false;
     }
 
+    /// <summary>
+    /// True when any registered shortcut is bound to exactly this chord (order-insensitive,
+    /// modifier tokens as stored: "Control", "Alt", "Shift", "Win"), regardless of which
+    /// control the shortcut is scoped to.
+    /// </summary>
+    public bool HasShortcut(params string[] keys)
+    {
+        if (keys.Length == 0)
+        {
+            return false;
+        }
+
+        foreach (var shortcut in _shortcuts)
+        {
+            if (shortcut.Keys.Count != keys.Length)
+            {
+                continue;
+            }
+
+            var all = true;
+            foreach (var key in keys)
+            {
+                if (!shortcut.Keys.Contains(key, StringComparer.OrdinalIgnoreCase))
+                {
+                    all = false;
+                    break;
+                }
+            }
+
+            if (all)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public void ClearShortcuts()
     {
         _shortcuts.Clear();

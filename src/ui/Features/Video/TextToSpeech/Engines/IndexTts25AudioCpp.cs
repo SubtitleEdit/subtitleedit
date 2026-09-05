@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
+﻿using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Media;
@@ -116,6 +116,7 @@ public class IndexTts25AudioCpp : ITtsEngine, IPerLineCloneEngine
     // Only the model and the backend are baked into the running server — voice is per request.
     private static string? _serverModelKey;
     private static string? _serverBackend;
+    private static string? _serverExeStamp;
     private static bool _processExitHooked;
     private static readonly StringBuilder _serverLog = new();
 
@@ -522,10 +523,12 @@ public class IndexTts25AudioCpp : ITtsEngine, IPerLineCloneEngine
     private static async Task EnsureServerRunningAsync(string modelKey, CancellationToken ct)
     {
         var backend = GetBackend();
+        var exeStamp = AudioCppRuntime.GetServerExecutableStamp();
 
         if (_serverProcess is { HasExited: false } && _serverPort != 0
             && string.Equals(_serverModelKey, modelKey, StringComparison.OrdinalIgnoreCase)
-            && string.Equals(_serverBackend, backend, StringComparison.OrdinalIgnoreCase))
+            && string.Equals(_serverBackend, backend, StringComparison.OrdinalIgnoreCase)
+            && string.Equals(_serverExeStamp, exeStamp, StringComparison.Ordinal))
         {
             return;
         }
@@ -535,7 +538,8 @@ public class IndexTts25AudioCpp : ITtsEngine, IPerLineCloneEngine
         {
             if (_serverProcess is { HasExited: false } && _serverPort != 0
                 && string.Equals(_serverModelKey, modelKey, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(_serverBackend, backend, StringComparison.OrdinalIgnoreCase))
+                && string.Equals(_serverBackend, backend, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(_serverExeStamp, exeStamp, StringComparison.Ordinal))
             {
                 return;
             }
@@ -608,6 +612,7 @@ public class IndexTts25AudioCpp : ITtsEngine, IPerLineCloneEngine
             _serverPort = port;
             _serverModelKey = modelKey;
             _serverBackend = backend;
+            _serverExeStamp = AudioCppRuntime.GetServerExecutableStamp();
             HookProcessExitOnce();
 
             // The config uses lazy_load, so /health answers within a second or two — the 3.3 GB
@@ -628,6 +633,7 @@ public class IndexTts25AudioCpp : ITtsEngine, IPerLineCloneEngine
                     _serverLaunchCommand = null;
                     _serverModelKey = null;
                     _serverBackend = null;
+                    _serverExeStamp = null;
                     throw new InvalidOperationException(
                         $"audiocpp_server exited during startup (code {exitCode}). "
                         + DescribeStartupExit(exitCode, backend)
@@ -663,6 +669,13 @@ public class IndexTts25AudioCpp : ITtsEngine, IPerLineCloneEngine
     /// Writes the audio.cpp server config next to the binary. lazy_load keeps startup instant;
     /// the model is read on first use and then stays resident until the server is stopped.
     /// </summary>
+    /// <remarks>
+    /// The model entry names the GGUF file, not its folder. Given a folder, audio.cpp picks
+    /// model.gguf or the sole *.gguf and refuses a folder holding several - so a user who had
+    /// downloaded both quantizations could not start the server until one was moved out of
+    /// sight (#14480). The file path is unambiguous, and auxiliary paths still resolve against
+    /// its parent.
+    /// </remarks>
     private static string WriteServerConfig(int port, string backend, string modelKey)
     {
         var config = new Dictionary<string, object>
@@ -678,7 +691,7 @@ public class IndexTts25AudioCpp : ITtsEngine, IPerLineCloneEngine
                 {
                     ["id"] = ServerModelId,
                     ["family"] = FamilyName,
-                    ["path"] = GetSetModelsFolder(),
+                    ["path"] = GetModelPath(modelKey),
                     ["task"] = "clon",
                     ["mode"] = "offline",
                 },
@@ -791,6 +804,7 @@ public class IndexTts25AudioCpp : ITtsEngine, IPerLineCloneEngine
         _serverLaunchCommand = null;
         _serverModelKey = null;
         _serverBackend = null;
+        _serverExeStamp = null;
         if (p == null)
         {
             return;

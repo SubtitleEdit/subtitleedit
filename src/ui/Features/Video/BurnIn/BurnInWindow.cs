@@ -55,29 +55,15 @@ public class BurnInWindow : Window
         // The left column (subtitle + video settings + target size) is taller than the middle
         // column's cut/preview/audio/video-info rows. Keeping all three boxes in one packed
         // panel preserves the v5.1.0 look (no gaps), and the preview row's MinHeight below
-        // guarantees the panel fits in rows 0-3 - so it can never overflow into the
-        // progress-bar row (which used to draw the bar through the "File size in MB" field)
-        // - and the preview box never gets shorter than its label + player, so the player
+        // guarantees the panel fits in rows 0-3 of the settings grid - so it can never overflow
+        // into the progress-bar row (which used to draw the bar through the "File size in MB"
+        // field) - and the preview box never gets shorter than its label + player, so the player
         // cannot spill over the audio settings box.
         var leftPanel = new StackPanel
         {
             Orientation = Orientation.Vertical,
             VerticalAlignment = VerticalAlignment.Top,
             Children = { subtitleSettingsView, videoSettingsView, targetFileSizeView },
-        };
-
-        // Rows 0-3 hold the panel at any size the window can normally reach, but not when the
-        // window ends up shorter than its own content minimum - which happens on screens too
-        // short for the dialog, where UiUtil lowers the minimum to keep the window on the working
-        // area. A StackPanel draws its overflow straight through whatever is below it, so the
-        // last box ("File size in MB") ended up under the progress bar (issue #13904). The scroll
-        // viewer keeps that overflow inside the cell and still reachable; it measures exactly like
-        // the panel, so at every normal size the layout is unchanged and no scroll bar appears.
-        var leftPanelScroller = new ScrollViewer
-        {
-            Content = leftPanel,
-            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
-            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
         };
 
         var buttonGenerate = new SplitButton
@@ -121,7 +107,7 @@ public class BurnInWindow : Window
         var previewColumn = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
         var batchColumn = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) };
 
-        var grid = new Grid
+        var settingsGrid = new Grid
         {
             RowDefinitions =
             {
@@ -129,8 +115,6 @@ public class BurnInWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star), MinHeight = 400 }, // preview + batch list (never smaller than the preview box needs)
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // audio
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // video info + target file size
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // progress bar
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // buttons
             },
             ColumnDefinitions =
             {
@@ -138,19 +122,64 @@ public class BurnInWindow : Window
                 previewColumn, // cut/preview/audio settings
                 batchColumn, // batch mode
             },
+            Width = double.NaN,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+        };
+
+        settingsGrid.Add(leftPanel, 0, 0, 4, 1);  // rows 0-3 (cut + preview + audio + video info)
+        settingsGrid.Add(cutView, 0, 1);
+        settingsGrid.Add(previewView, 1, 1);
+        settingsGrid.Add(audioSettingsView, 2, 1);
+        settingsGrid.Add(videoInfoView, 3, 1);
+        settingsGrid.Add(batchView, 0, 2, 4, 1);
+
+        // The settings area is taller than what a small or scaled screen can show (a maximized
+        // window on a 1366x768 laptop leaves about 700 DIPs; the preview row alone needs 400).
+        // UiUtil lowers the window minimum to the working area, so the rows below the fold - the
+        // "Generate" button row above all - were simply clipped off and unreachable (issues
+        // #13904, #14360). Scrolling the settings area, with the progress bar and the buttons
+        // kept outside the scroll viewer, keeps every control reachable on any screen.
+        //
+        // A ScrollViewer measures its content with unbounded height, which would turn the star
+        // preview row into an auto row and stop the preview from growing with the window. Pinning
+        // the content's MinHeight to the viewport height restores the fill: when the window is
+        // tall enough the grid fills it exactly like before (no scroll bar), and only when the
+        // viewport is shorter than the content minimum does the area scroll.
+        var settingsScroller = new ScrollViewer
+        {
+            Content = settingsGrid,
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+        };
+        settingsScroller.SizeChanged += (_, e) =>
+        {
+            var viewportHeight = Math.Max(0, e.NewSize.Height);
+            if (Math.Abs(settingsGrid.MinHeight - viewportHeight) > 0.5)
+            {
+                settingsGrid.MinHeight = viewportHeight;
+            }
+        };
+
+        var grid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // settings + preview (scrolls when the window is too short)
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // progress bar
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // buttons
+            },
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+            },
             Margin = UiUtil.MakeWindowMargin(),
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(leftPanelScroller, 0, 0, 4, 1);  // rows 0-3 (cut + preview + audio + video info)
-        grid.Add(cutView, 0, 1);
-        grid.Add(previewView, 1, 1);
-        grid.Add(audioSettingsView, 2, 1);
-        grid.Add(videoInfoView, 3, 1);
-        grid.Add(batchView, 0, 2, 4, 1);
-        grid.Add(progressView, 4, 0, 1, 3);
-        grid.Add(buttonPanel, 5, 0, 1, 3);
+        grid.Add(settingsScroller, 0, 0);
+        grid.Add(progressView, 1, 0);
+        grid.Add(buttonPanel, 2, 0);
 
         Content = grid;
 

@@ -3342,6 +3342,10 @@ RestoreRememberedFlowEditingDeferred();
         // breaks must be SE's own - see TextBoxPasteNormalizer (#13591).
         TextBoxPasteNormalizer.NormalizeLineBreaksOnPaste(textBox);
 
+        // Drag a selection out of one edit box and drop it into the other, or move it within
+        // the same box - as SE4's edit boxes allowed (#14534).
+        TextBoxTextDragDrop.Attach(textBox);
+
         if (appearance.SubtitleTextBoxCenterText)
         {
             textBox.TextAlignment = TextAlignment.Center;

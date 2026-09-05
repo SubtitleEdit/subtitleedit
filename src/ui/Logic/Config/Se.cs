@@ -18,9 +18,9 @@ namespace Nikse.SubtitleEdit.Logic.Config;
 public class Se
 {
     internal const int CurrentMacOsFontMigrationVersion = 1;
-    internal const int CurrentShortcutsMigrationVersion = 2;
+    internal const int CurrentShortcutsMigrationVersion = 3;
 
-    public static string Version { get; set; } = "v5.2.0-rc2";
+    public static string Version { get; set; } = "v5.2.0-rc3";
 
     public SeGeneral General { get; set; } = new();
     public List<SeShortCut> Shortcuts { get; set; } = new();
@@ -489,6 +489,27 @@ public class Se
                 }
             }
         }
+
+        if (fromVersion < 3 && OperatingSystem.IsMacOS())
+        {
+            // The old macOS default Option+Shift+Cmd+D never reached the app (#14508); the default
+            // gained Control, so move users who still sit on the dead chord onto the new one.
+            foreach (var shortcut in Shortcuts)
+            {
+                if (shortcut.ActionName == nameof(MainViewModel.OpenDataFolderCommand) &&
+                    IsSameKeys(shortcut.Keys, ["Win", "Alt", "Shift", "D"]))
+                {
+                    shortcut.Keys = ["Ctrl", "Win", "Alt", "Shift", "D"];
+                }
+            }
+        }
+    }
+
+    private static bool IsSameKeys(List<string> keys, string[] expected)
+    {
+        return keys.Count == expected.Length &&
+               !keys.Except(expected, StringComparer.OrdinalIgnoreCase).Any() &&
+               !expected.Except(keys, StringComparer.OrdinalIgnoreCase).Any();
     }
 
     public static void SaveSettings()
@@ -651,6 +672,24 @@ public class Se
     }
 
     /// <summary>
+    /// Resets a persisted mpv "audio-buffer" of 0.05 s - the default SE shipped from 5.2.0
+    /// beta 20 through rc2 - back to "use mpv's default". A buffer that small let ordinary
+    /// audio-thread hiccups underrun the device; mpv then stops audio, refills, restarts, and
+    /// its clock stands still meanwhile, seen as the waveform cursor and time display freezing
+    /// for up to a second or two, worst around pause/resume (#14523). The value is persisted
+    /// with the rest of the settings, so without this only fresh installs would get the fix.
+    /// Matched to the shipped value only: anyone who set a different buffer keeps it.
+    /// </summary>
+    internal static void MigrateMpvAudioBuffer(SeVideo video)
+    {
+        const double legacyDefault = 0.05;
+        if (Math.Abs(video.MpvAudioBufferSeconds - legacyDefault) < 0.0001)
+        {
+            video.MpvAudioBufferSeconds = 0;
+        }
+    }
+
+    /// <summary>
     /// Loads the UI translation named in <see cref="Settings"/>.General.Language into the global
     /// <see cref="Language"/>. Must run before the main window is built: on macOS the native menu
     /// bar is constructed at startup and reads <see cref="Language"/> directly, so the translation
@@ -795,6 +834,7 @@ public class Se
         }
 
         MigrateShotChangesFfmpegArguments(Settings.Video);
+        MigrateMpvAudioBuffer(Settings.Video);
 
         if (Settings.Waveform == null)
         {

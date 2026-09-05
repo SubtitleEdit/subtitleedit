@@ -23,6 +23,9 @@ public class GetKeyWindow : Window
 
         _vm = vm;
         vm.Window = this;
+
+        // The capture window must see every chord, including Alt+Space (#14536).
+        UiUtil.SetWindowSystemMenuOverride(this, () => true);
         DataContext = vm;
 
         var labelShortcutName = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.ShortCutName));

@@ -25,18 +25,18 @@ public class CrispAsrDownloadService : ICrispAsrDownloadService
 {
     private readonly HttpClient _httpClient;
 
-    private const string WindowsCudaUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.31/crispasr-windows-x86_64-cuda.zip";
+    private const string WindowsCudaUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.32/crispasr-windows-x86_64-cuda.zip";
     /// <summary>
     /// The CUDA 13 build, added upstream in v0.8.31 next to the CUDA 12 one rather than
     /// replacing it. Offered as its own option because CUDA 13 needs a newer NVIDIA driver than
     /// CUDA 12 - repointing <see cref="WindowsCudaUrl"/> at it would have broken everyone still
     /// on an older driver. Mirrors the Linux pair, which has had both since v0.8.30.
     /// </summary>
-    private const string WindowsCuda13Url = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.31/crispasr-windows-x86_64-cuda13.zip";
-    private const string WindowsVulkanUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.31/crispasr-windows-x86_64-vulkan.zip";
-    private const string WindowsCpuUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.31/crispasr-windows-x86_64-cpu.zip";
-    private const string WindowsCpuLegacyUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.31/crispasr-windows-x86_64-cpu-legacy.zip";
-    private const string MacUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.31/crispasr-macos.tar.gz";
+    private const string WindowsCuda13Url = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.32/crispasr-windows-x86_64-cuda13.zip";
+    private const string WindowsVulkanUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.32/crispasr-windows-x86_64-vulkan.zip";
+    private const string WindowsCpuUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.32/crispasr-windows-x86_64-cpu.zip";
+    private const string WindowsCpuLegacyUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.32/crispasr-windows-x86_64-cpu-legacy.zip";
+    private const string MacUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.32/crispasr-macos.tar.gz";
 
     /// <summary>
     /// Intel Macs. Upstream's crispasr-macos.tar.gz is arm64-only - its build job runs on
@@ -49,13 +49,13 @@ public class CrispAsrDownloadService : ICrispAsrDownloadService
     /// Macs) and targets macOS 12, and the archive's inner folder matches upstream's so the
     /// unpack path is shared.
     /// </summary>
-    private const string MacIntelUrl = "https://github.com/SubtitleEdit/support-files/releases/download/crispasr-0831-macos-x64/crispasr-macos-x86_64.tar.gz";
-    private const string LinuxUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.31/crispasr-linux-x86_64.tar.gz";
-    private const string LinuxCudaUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.31/crispasr-linux-x86_64-cuda.tar.gz";
-    private const string LinuxCuda13Url = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.31/crispasr-linux-x86_64-cuda13.tar.gz";
-    private const string LinuxVulkanUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.31/crispasr-linux-x86_64-vulkan.tar.gz";
-    private const string LinuxHipUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.31/crispasr-linux-x86_64-hip.tar.gz";
-    private const string LinuxArmUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.31/crispasr-linux-arm64.tar.gz";
+    private const string MacIntelUrl = "https://github.com/SubtitleEdit/support-files/releases/download/crispasr-0832-macos-x64/crispasr-macos-x86_64.tar.gz";
+    private const string LinuxUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.32/crispasr-linux-x86_64.tar.gz";
+    private const string LinuxCudaUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.32/crispasr-linux-x86_64-cuda.tar.gz";
+    private const string LinuxCuda13Url = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.32/crispasr-linux-x86_64-cuda13.tar.gz";
+    private const string LinuxVulkanUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.32/crispasr-linux-x86_64-vulkan.tar.gz";
+    private const string LinuxHipUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.32/crispasr-linux-x86_64-hip.tar.gz";
+    private const string LinuxArmUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.32/crispasr-linux-arm64.tar.gz";
 
     public CrispAsrDownloadService(HttpClient httpClient)
     {

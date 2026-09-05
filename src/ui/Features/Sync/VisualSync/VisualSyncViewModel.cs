@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -53,7 +53,7 @@ public partial class VisualSyncViewModel : ObservableObject
 
     private string? _videoFileName;
     private string? _wavePeaksVideoFileName;
-    private DispatcherTimer _positionTimer = new DispatcherTimer();
+    private UiTickPump _positionTimer = new(TimeSpan.FromMilliseconds(150)); // posted ticks, not a DispatcherTimer - see UiTickPump
     private List<SubtitleLineViewModel> _subtitleLines = new List<SubtitleLineViewModel>();
     private VideoPreviewSubtitleContext _previewContext = VideoPreviewSubtitleContext.Default;
     private bool _updateAudioVisualizer;
@@ -200,7 +200,7 @@ public partial class VisualSyncViewModel : ObservableObject
 
     private void StartTitleTimer()
     {
-        _positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(150) };
+        _positionTimer = new UiTickPump(TimeSpan.FromMilliseconds(150));
         _positionTimer.Tick += (s, e) =>
         {
             UpdateAudioVisualizer(VideoPlayerControlLeft.VideoPlayer, AudioVisualizerLeft, SelectedParagraphLeftIndex);
@@ -727,12 +727,12 @@ public partial class VisualSyncViewModel : ObservableObject
                 VideoPlayerControlLeft.Position += 0.5;
                 _updateAudioVisualizer = true;
             }
-            else if (e.Key == Key.Add && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+            else if ((e.Key == Key.Add || e.Key == Key.OemPlus) && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
             {
                 e.Handled = true;
                 WaveformVerticalZoomIn(AudioVisualizerLeft);
             }
-            else if (e.Key == Key.Subtract && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+            else if ((e.Key == Key.Subtract || e.Key == Key.OemMinus) && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
             {
                 e.Handled = true;
                 WaveformVerticalZoomOut(AudioVisualizerLeft);
@@ -769,12 +769,12 @@ public partial class VisualSyncViewModel : ObservableObject
                 VideoPlayerControlRight.Position += 0.5;
                 _updateAudioVisualizer = true;
             }
-            else if (e.Key == Key.Add && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+            else if ((e.Key == Key.Add || e.Key == Key.OemPlus) && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
             {
                 e.Handled = true;
                 WaveformVerticalZoomIn(AudioVisualizerRight);
             }
-            else if (e.Key == Key.Subtract && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+            else if ((e.Key == Key.Subtract || e.Key == Key.OemMinus) && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
             {
                 e.Handled = true;
                 WaveformVerticalZoomOut(AudioVisualizerRight);

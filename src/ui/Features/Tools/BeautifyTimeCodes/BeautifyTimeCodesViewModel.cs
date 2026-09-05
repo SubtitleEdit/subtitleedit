@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -24,7 +24,7 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
     public bool OkPressed { get; private set; }
 
     private readonly System.Timers.Timer _timerUpdatePreview;
-    private Avalonia.Threading.DispatcherTimer? _positionTimer;
+    private UiTickPump? _positionTimer; // posted ticks, not a DispatcherTimer - see UiTickPump
     private volatile bool _dirty;
     private volatile bool _updateInProgress;
     private readonly Lock _timerLock = new Lock();
@@ -599,7 +599,7 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
 
     private void StartPositionTimer()
     {
-        _positionTimer = new Avalonia.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
+        _positionTimer = new UiTickPump(TimeSpan.FromMilliseconds(100));
         _positionTimer.Tick += (s, e) =>
         {
             if (AudioVisualizerOriginal != null && AudioVisualizerBeautified != null)

@@ -1,5 +1,10 @@
+using System;
+using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenRouter;
 
 namespace UITests.Features.Video.SpeechToText.OpenRouter;
@@ -79,6 +84,19 @@ public class OpenRouterSttServiceTests
         Assert.True(root.TryGetProperty("timestamp_granularities", out _));
     }
 
+    [Theory]
+    [InlineData("google/chirp-3", true)]
+    [InlineData("google/chirp-3-preview", true)] // matched by name shape, not an exact list
+    [InlineData("GOOGLE/CHIRP-3", true)] // case-insensitive
+    [InlineData("openai/whisper-1", false)]
+    [InlineData("openai/gpt-4o-transcribe", false)]
+    [InlineData(null, false)]
+    [InlineData("", false)]
+    public void RequiresWavAudio_MatchesOnlyChirpModels(string? model, bool expected)
+    {
+        Assert.Equal(expected, OpenRouterSttService.RequiresWavAudio(model));
+    }
+
     [Fact]
     public void BuildRequestBody_OmitsEmptyLanguageAndZeroTemperature()
     {
@@ -138,5 +156,169 @@ public class OpenRouterSttServiceTests
     {
         var result = OpenRouterSttService.ParseResponse("just some text");
         Assert.Equal("just some text", result.Text);
+    }
+
+    [Fact]
+    public async Task TranscribeAsync_ModelRejectsVerboseJson_RetriesOnceWithPlainJson()
+    {
+        // Google's Chirp models (and presumably others OpenRouter hosts under non-OpenAI
+        // names) reject verbose_json the same way gpt-*-transcribe models do, but
+        // IsJsonOnlyModel only recognizes the latter by name - this is exactly the #14028
+        // follow-up bug: "chirp-3" doesn't match "gpt-*-transcribe" so the first request
+        // still asks for verbose_json and gets rejected.
+        var requestBodies = new System.Collections.Generic.List<string>();
+        using var handler = new StubHandler(async (req, ct) =>
+        {
+            var body = await req.Content!.ReadAsStringAsync(ct);
+            requestBodies.Add(body);
+
+            if (requestBodies.Count == 1)
+            {
+                return new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new StringContent(
+                        """{"error":{"message":"The selected model does not support response_format \"verbose_json\". Use \"json\" instead.","code":400}}""",
+                        Encoding.UTF8, "application/json"),
+                };
+            }
+
+            return new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent("""{"text":"hello from chirp"}""", Encoding.UTF8, "application/json"),
+            };
+        });
+        using var client = new HttpClient(handler);
+        var service = new OpenRouterSttService(client, MakeSettings("google/chirp-3"));
+
+        var result = await service.TranscribeAsync(Encoding.UTF8.GetBytes("audio"), "wav", "ar", CancellationToken.None);
+
+        Assert.Equal("hello from chirp", result.Text);
+        Assert.Equal(2, requestBodies.Count);
+
+        using var firstDoc = JsonDocument.Parse(requestBodies[0]);
+        Assert.Equal("verbose_json", firstDoc.RootElement.GetProperty("response_format").GetString());
+
+        using var secondDoc = JsonDocument.Parse(requestBodies[1]);
+        Assert.Equal("json", secondDoc.RootElement.GetProperty("response_format").GetString());
+        Assert.False(secondDoc.RootElement.TryGetProperty("timestamp_granularities", out _));
+    }
+
+    [Fact]
+    public async Task TranscribeAsync_ModelRejectsVerboseJsonWithGenericError_StillRetriesWithPlainJson()
+    {
+        // OpenRouter doesn't always forward the provider's specific complaint - some
+        // providers' rejections come through as an opaque "Provider returned 400" with no
+        // mention of response_format or verbose_json at all. Pattern-matching the message
+        // text would miss this, so the retry triggers on any 400 to the first (verbose_json)
+        // attempt regardless of what the body says.
+        var requestBodies = new System.Collections.Generic.List<string>();
+        using var handler = new StubHandler(async (req, ct) =>
+        {
+            var body = await req.Content!.ReadAsStringAsync(ct);
+            requestBodies.Add(body);
+
+            if (requestBodies.Count == 1)
+            {
+                return new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new StringContent("""{"error":{"message":"Provider returned 400","code":400}}""", Encoding.UTF8, "application/json"),
+                };
+            }
+
+            return new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent("""{"text":"hello from chirp"}""", Encoding.UTF8, "application/json"),
+            };
+        });
+        using var client = new HttpClient(handler);
+        var service = new OpenRouterSttService(client, MakeSettings("google/chirp-3"));
+
+        var result = await service.TranscribeAsync(Encoding.UTF8.GetBytes("audio"), "wav", "ar", CancellationToken.None);
+
+        Assert.Equal("hello from chirp", result.Text);
+        Assert.Equal(2, requestBodies.Count);
+    }
+
+    [Fact]
+    public async Task TranscribeAsync_BothFormatsRejected_ThrowsAfterOneRetry()
+    {
+        // If the plain-json retry also fails, the retry must not loop again - the second
+        // failure (whatever it is) is the one that surfaces to the caller.
+        var callCount = 0;
+        using var handler = new StubHandler((req, ct) =>
+        {
+            callCount++;
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.BadRequest)
+            {
+                Content = new StringContent("""{"error":{"message":"Provider returned 400","code":400}}""", Encoding.UTF8, "application/json"),
+            });
+        });
+        using var client = new HttpClient(handler);
+        var service = new OpenRouterSttService(client, MakeSettings("google/chirp-3"));
+
+        await Assert.ThrowsAsync<HttpRequestException>(() =>
+            service.TranscribeAsync(Encoding.UTF8.GetBytes("audio"), "wav", "ar", CancellationToken.None));
+
+        Assert.Equal(2, callCount); // one retry, then give up
+    }
+
+    [Fact]
+    public async Task TranscribeAsync_NonBadRequestStatus_DoesNotRetryAndThrows()
+    {
+        // A 401 means the request never got far enough to be a format complaint - retrying
+        // with a different response_format won't fix an auth failure, so don't waste a call.
+        var callCount = 0;
+        using var handler = new StubHandler((req, ct) =>
+        {
+            callCount++;
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.Unauthorized)
+            {
+                Content = new StringContent("""{"error":{"message":"Invalid API key","code":401}}""", Encoding.UTF8, "application/json"),
+            });
+        });
+        using var client = new HttpClient(handler);
+        var service = new OpenRouterSttService(client, MakeSettings("google/chirp-3"));
+
+        await Assert.ThrowsAsync<HttpRequestException>(() =>
+            service.TranscribeAsync(Encoding.UTF8.GetBytes("audio"), "wav", "ar", CancellationToken.None));
+
+        Assert.Equal(1, callCount); // no retry for a non-400 status
+    }
+
+    [Fact]
+    public async Task TranscribeAsync_GptTranscribeModelRejectsRequest_DoesNotRetry()
+    {
+        // Already asking for plain json on the first try (IsJsonOnlyModel matched by name), so
+        // a rejection here is a real failure, not the response-format mismatch this fix covers -
+        // must not loop.
+        var callCount = 0;
+        using var handler = new StubHandler((req, ct) =>
+        {
+            callCount++;
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.BadRequest)
+            {
+                Content = new StringContent("""{"error":{"message":"Invalid API key","code":400}}""", Encoding.UTF8, "application/json"),
+            });
+        });
+        using var client = new HttpClient(handler);
+        var service = new OpenRouterSttService(client, MakeSettings("openai/gpt-4o-transcribe"));
+
+        await Assert.ThrowsAsync<HttpRequestException>(() =>
+            service.TranscribeAsync(Encoding.UTF8.GetBytes("audio"), "wav", "ar", CancellationToken.None));
+
+        Assert.Equal(1, callCount);
+    }
+
+    private sealed class StubHandler : HttpMessageHandler
+    {
+        private readonly Func<HttpRequestMessage, CancellationToken, Task<HttpResponseMessage>> _send;
+
+        public StubHandler(Func<HttpRequestMessage, CancellationToken, Task<HttpResponseMessage>> send)
+        {
+            _send = send;
+        }
+
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+            => _send(request, cancellationToken);
     }
 }

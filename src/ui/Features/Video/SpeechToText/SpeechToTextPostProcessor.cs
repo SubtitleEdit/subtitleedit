@@ -10,6 +10,7 @@ using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
 {
@@ -267,6 +268,23 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
         {
             return text.Length > 0 && LineTerminationChars.Contains(text[text.Length - 1]);
         }
+
+        /// <summary>
+        /// Drops the space in "word , word" and "word ." - the mark must be followed by whitespace
+        /// or end the line, so decimals ("1.5"), ellipses and time codes are left alone.
+        /// </summary>
+        public static Subtitle RemoveSpaceBeforePunctuation(Subtitle inputSubtitle)
+        {
+            var subtitle = new Subtitle(inputSubtitle, false);
+            foreach (var paragraph in subtitle.Paragraphs)
+            {
+                paragraph.Text = SpaceBeforePunctuationRegex.Replace(paragraph.Text, "$1");
+            }
+
+            return subtitle;
+        }
+
+        private static readonly Regex SpaceBeforePunctuationRegex = new(@"(?<=\S) +([,.!?;:])(?=\s|$)", RegexOptions.Multiline | RegexOptions.Compiled);
 
         public Subtitle AddPeriods(Subtitle inputSubtitle, string language)
         {

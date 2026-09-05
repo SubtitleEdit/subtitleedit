@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Logic.Config;
+﻿using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.IO;
 
@@ -29,6 +29,25 @@ public static class AudioCppRuntime
 
     public static string GetServerExecutable() =>
         Path.Combine(GetSetEngineFolder(), OperatingSystem.IsWindows() ? "audiocpp_server.exe" : "audiocpp_server");
+
+    /// <summary>
+    /// Identity of the server binary on disk (size + last write), or empty when it is missing.
+    /// The engines record it when they launch a server and restart when it changes: an engine
+    /// update extracts a new binary while the old process keeps running, and reusing that
+    /// process means the new build (and any family it adds) is never actually used.
+    /// </summary>
+    public static string GetServerExecutableStamp()
+    {
+        try
+        {
+            var fi = new FileInfo(GetServerExecutable());
+            return fi.Exists ? $"{fi.Length}:{fi.LastWriteTimeUtc.Ticks}" : string.Empty;
+        }
+        catch
+        {
+            return string.Empty;
+        }
+    }
 
     /// <summary>
     /// ggml backend the installed archive was built for, stored at install time. The setting

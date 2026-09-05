@@ -25,6 +25,38 @@ public class MpvAudioOptionTests
     }
 
     /// <summary>
+    /// Issue #14523: SE set mpv's audio-buffer to 0.05 s (mpv default 0.2 s). Any hiccup on mpv's
+    /// audio thread then emptied the device, mpv stopped the output until the buffer refilled and
+    /// its clock stood still meanwhile - the waveform cursor and time display froze for up to a
+    /// second or two, worst around pause/resume. Zero means "leave mpv's default alone".
+    /// </summary>
+    [Fact]
+    public void AudioBuffer_LeavesMpvsDefaultAlone()
+    {
+        Assert.Equal(0, new SeVideo().MpvAudioBufferSeconds);
+    }
+
+    /// <summary>
+    /// The 0.05 s value is persisted in every settings file written between 5.2.0 beta 20 and rc2,
+    /// so the default change alone would only reach fresh installs.
+    /// </summary>
+    [Theory]
+    [InlineData(0.05, 0)]
+    [InlineData(0.0500001, 0)]
+    [InlineData(0, 0)]
+    [InlineData(0.1, 0.1)]
+    [InlineData(0.2, 0.2)]
+    [InlineData(0.04, 0.04)]
+    public void AudioBufferMigration_ResetsOnlyTheShippedValue(double persisted, double expected)
+    {
+        var video = new SeVideo { MpvAudioBufferSeconds = persisted };
+
+        Se.MigrateMpvAudioBuffer(video);
+
+        Assert.Equal(expected, video.MpvAudioBufferSeconds);
+    }
+
+    /// <summary>
     /// The option only takes effect when it is set before mpv_initialize, and the player has four
     /// init paths (software, OpenGL, Metal, and the preview core). Missing the call on one of them
     /// would leave that path silently on mpv's default, which is exactly the reported bug - so

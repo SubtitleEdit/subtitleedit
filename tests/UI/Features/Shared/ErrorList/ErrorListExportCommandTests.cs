@@ -57,6 +57,12 @@ public class ErrorListExportCommandTests
             Action<TViewModel>? configureViewModel = null,
             Action<TWindow>? configureWindow = null)
             where TWindow : Window where TViewModel : class => Task.FromResult<TViewModel>(null!);
+
+        public Task<TViewModel> ShowWithOwnerHiddenAsync<TWindow, TViewModel>(
+            Window owner,
+            IReadOnlyList<Window?> companions,
+            Action<TViewModel>? configureViewModel = null)
+            where TWindow : Window where TViewModel : class => throw new NotSupportedException();
     }
 
     private static List<ErrorListItem> MakeItems()

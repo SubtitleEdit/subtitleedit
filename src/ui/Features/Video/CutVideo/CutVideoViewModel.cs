@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -88,7 +88,7 @@ public partial class CutVideoViewModel : ObservableObject
     // shot-change writer does - coalescing the publishes so a long file cannot flood the queue.
     private readonly List<double> _keyFrameSeconds = new List<double>();
     private bool _keyFramePublishPending;
-    private DispatcherTimer _positionTimer = new DispatcherTimer();
+    private UiTickPump _positionTimer = new(TimeSpan.FromMilliseconds(150)); // posted ticks, not a DispatcherTimer - see UiTickPump
     private string _importFileName;
     private Subtitle _currentSubtitle;
     private long _lastKeyPressedMs;
@@ -220,7 +220,7 @@ public partial class CutVideoViewModel : ObservableObject
 
     private void StartTitleTimer()
     {
-        _positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(150) };
+        _positionTimer = new UiTickPump(TimeSpan.FromMilliseconds(150));
         _positionTimer.Tick += (s, e) =>
         {
             // Derive the index from the row the grid actually binds. SelectedSegmentIndex is
@@ -940,6 +940,22 @@ public partial class CutVideoViewModel : ObservableObject
             {
                 keyEventArgs.Handled = true;
                 rc.Execute(null);
+                return;
+            }
+
+            // The main window's default vertical zoom binding is Shift+Add/Subtract, which only the
+            // numeric keypad produces. Let the main-row plus and minus keys (OemPlus/OemMinus on
+            // every layout, a laptop or a Spanish keyboard has no other) zoom too, as the sync
+            // dialogs do (#14419 comment).
+            if (keyEventArgs.Key == Key.OemPlus && keyEventArgs.KeyModifiers.HasFlag(KeyModifiers.Shift))
+            {
+                keyEventArgs.Handled = true;
+                WaveformVerticalZoomIn();
+            }
+            else if (keyEventArgs.Key == Key.OemMinus && keyEventArgs.KeyModifiers.HasFlag(KeyModifiers.Shift))
+            {
+                keyEventArgs.Handled = true;
+                WaveformVerticalZoomOut();
             }
         }
     }

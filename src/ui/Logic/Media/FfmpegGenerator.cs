@@ -1457,13 +1457,19 @@ public class FfmpegGenerator
     /// read by a model, and every engine that clones wants one mono channel - handing it a stereo
     /// clip means each engine resamples it again, or worse, clones from a downmix it made itself.
     /// </remarks>
+    /// <param name="minimumSeconds">
+    /// When positive, a clip shorter than this is padded with trailing silence up to it (apad
+    /// with whole_dur; a longer clip is left alone). Some reference encoders reject inputs
+    /// under a fixed length - see <c>PerLineVoiceClone.MinimumReferenceSeconds</c>.
+    /// </param>
     internal static string ExtractCloneReferenceClipParameters(
         string videoFileName,
         double startSeconds,
         double durationSeconds,
         string outputFileName,
         int audioTrackFfIndex = -1,
-        int sampleRate = 24000)
+        int sampleRate = 24000,
+        double minimumSeconds = 0)
     {
         var start = $"{startSeconds:0.000}".Replace(",", ".");
         var duration = $"{durationSeconds:0.000}".Replace(",", ".");
@@ -1472,6 +1478,12 @@ public class FfmpegGenerator
         if (audioTrackFfIndex >= 0)
         {
             args += $" -map 0:{audioTrackFfIndex}";
+        }
+
+        if (minimumSeconds > 0)
+        {
+            var minimum = minimumSeconds.ToString("0.###", CultureInfo.InvariantCulture);
+            args += $" -af apad=whole_dur={minimum}";
         }
 
         args += $" -vn -ar {sampleRate} -ac 1 -c:a pcm_s16le \"{outputFileName}\"";

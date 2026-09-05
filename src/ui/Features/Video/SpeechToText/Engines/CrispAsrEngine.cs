@@ -77,6 +77,8 @@ public class CrispAsrEngine : CrispAsrEngineBase
     public override string Choice => SelectedBackend.Choice;
     public override string Url => SelectedBackend.Url;
     public override string BackendName => SelectedBackend.BackendName;
+    public override string GetBackendName(string modelName) => SelectedBackend.GetBackendName(modelName);
+    public override string GetModelArguments(string modelName, string? userArguments) => SelectedBackend.GetModelArguments(modelName, userArguments);
     public override string DefaultLanguage => SelectedBackend.DefaultLanguage;
     public override bool IncludeLanguage => SelectedBackend.IncludeLanguage;
     public override bool HasNativeTimestamps => SelectedBackend.HasNativeTimestamps;

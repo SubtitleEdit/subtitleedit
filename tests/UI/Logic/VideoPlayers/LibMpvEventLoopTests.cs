@@ -495,6 +495,44 @@ public class LibMpvEventLoopTests
     /// A render-free core, like the text-to-speech preview players: null video/audio outputs so
     /// nothing opens a window or touches an audio device, but the clock still runs in real time.
     /// </summary>
+    /// <summary>
+    /// #14523: the report behind it ("cursor and time display freeze for a second, worst after
+    /// pause/resume") was mpv's "Audio device underrun detected." - a warning mpv printed and SE
+    /// threw away. The event loop now forwards mpv's warnings and errors to the error log, so the
+    /// next such report carries the core's own diagnosis. A file that cannot be opened is the
+    /// simplest reliable way to make the core log at error level.
+    /// </summary>
+    [Fact]
+    public async Task EventLoop_ForwardsMpvWarningsAndErrors()
+    {
+        var player = CreatePlayer();
+        if (player == null)
+        {
+            return; // no libmpv on this machine
+        }
+
+        try
+        {
+            var missing = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".wav");
+            try
+            {
+                await player.LoadFile(missing);
+            }
+            catch
+            {
+                // a failed open may surface as an exception on some builds; the log line is what counts
+            }
+
+            Assert.True(await WaitUntilAsync(() => player.ForwardedMpvLogMessageCount > 0, 5000),
+                "mpv's error for the missing file never reached the log forwarder");
+            Assert.StartsWith("mpv [", player.LastForwardedMpvLogMessage);
+        }
+        finally
+        {
+            player.Dispose();
+        }
+    }
+
     private static LibMpvDynamicPlayer? CreatePlayer()
     {
         var player = new LibMpvDynamicPlayer();

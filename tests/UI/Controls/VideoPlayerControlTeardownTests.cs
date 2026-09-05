@@ -1,6 +1,7 @@
-using Avalonia.Headless.XUnit;
+﻿using Avalonia.Headless.XUnit;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
@@ -69,8 +70,8 @@ public class VideoPlayerControlTeardownTests
         public void Dispose() => DisposeCount++;
     }
 
-    private static DispatcherTimer? GetPositionTimer(VideoPlayerControl control) =>
-        (DispatcherTimer?)typeof(VideoPlayerControl)
+    private static UiTickPump? GetPositionTimer(VideoPlayerControl control) =>
+        (UiTickPump?)typeof(VideoPlayerControl)
             .GetField("_positionTimer", BindingFlags.NonPublic | BindingFlags.Instance)!
             .GetValue(control);
 
@@ -96,7 +97,7 @@ public class VideoPlayerControlTeardownTests
 
         control.CloseAndDisposePlayer();
 
-        // A running DispatcherTimer keeps the control (and through it the player) alive for
+        // A running tick pump keeps the control (and through it the player) alive for
         // the rest of the session, so leaving it enabled is the leak, not just wasted work.
         Assert.False(GetPositionTimer(control)?.IsEnabled);
     }

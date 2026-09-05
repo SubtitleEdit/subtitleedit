@@ -12,6 +12,7 @@ using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.GetAudioClips;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.EngineSettings;
+using Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenRouter;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -934,7 +935,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// was the crispasr v0.8.29 GPU packages, built with AVX-512 against a CI runner that had it
     /// (CrispASR #374) - every CPU without AVX-512 got this on the CUDA/Vulkan build while the CPU
     /// build ran fine, so naming the installed package is most of the answer. That build flaw is
-    /// fixed from v0.8.30 (the current pin), but the message still earns its keep: a pre-AVX2 CPU
+    /// fixed from v0.8.30 (SE now pins v0.8.32), but the message still earns its keep: a pre-AVX2 CPU
     /// hits the same silent death on the AVX2 CPU package, and an install predating the pin bump
     /// keeps the broken GPU binary until the user downloads the engine again.
     /// </summary>
@@ -2069,6 +2070,16 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     private Subtitle PostProcess(Subtitle transcript)
     {
+        if (GetEffectiveSelectedEngine() is ICrispAsrEngine &&
+            SelectedModel is SpeechToTextModelDisplay { Model.Name: { } modelName } &&
+            CrispAsrParakeet.IsPureCtcModel(modelName))
+        {
+            // The Vietnamese Parakeet CTC tokenizer has a space-prefixed "▁," / "▁." piece that the
+            // model prefers over the bare one, so its transcripts read "gần xe , và ... dàng ." -
+            // a training-text habit, not a decode bug, and not optional post-processing either.
+            transcript = SpeechToTextPostProcessor.RemoveSpaceBeforePunctuation(transcript);
+        }
+
         var languageCode = SelectedLanguage?.Code;
         if (string.IsNullOrWhiteSpace(languageCode))
         {
@@ -2634,7 +2645,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
 
         var vm = await _windowService.ShowDialogAsync<SpeechToTextQualityReportWindow, SpeechToTextQualityReportViewModel>(
-            Window, viewModel => viewModel.Initialize(report));
+            Window, viewModel => viewModel.Initialize(report, _videoFileName));
 
         if (vm.DoNotShowAgain)
         {
@@ -4069,7 +4080,22 @@ public partial class SpeechToTextViewModel : ObservableObject
             // and the Python UTF-8/unbuffered variables - without them Windows decodes piped
             // output with the ANSI code page (mojibake, or a UnicodeEncodeError killing the run)
             // and stdout block-buffers so the log sits empty until the process exits.
-            EnsureExecutableStackCleared(whisperX, whisperX.GetAndCreateWhisperFolder());
+            var whisperXFolder = whisperX.GetAndCreateWhisperFolder();
+            EnsureExecutableStackCleared(whisperX, whisperXFolder);
+
+            // Matplotlib (pulled in by pyannote) builds a font cache on first run and, when
+            // it cannot find one, prints "building the font cache" and writes it next to the
+            // user's home config. Point it at a folder inside the engine install so the cache
+            // is built once in a known place and removed together with the engine.
+            var matplotlibCacheFolder = Path.Combine(whisperXFolder, "matplotlib-cache");
+            try
+            {
+                Directory.CreateDirectory(matplotlibCacheFolder);
+            }
+            catch
+            {
+                matplotlibCacheFolder = string.Empty;
+            }
 
             Se.WriteToolsLog($"{exe} {parametersX}");
             return StartEngineProcess(exe, parametersX, dataReceivedHandler, startInfo =>
@@ -4078,6 +4104,17 @@ public partial class SpeechToTextViewModel : ObservableObject
                 startInfo.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
                 startInfo.EnvironmentVariables["PYTHONUTF8"] = "1";
                 startInfo.EnvironmentVariables["PYTHONUNBUFFERED"] = "1";
+
+                // pyannote warns that torchcodec is missing on every run, but WhisperX never
+                // uses pyannote's decoder (it feeds ffmpeg-decoded audio in memory), so the
+                // warning is pure noise in the log. Only UserWarning is silenced; real errors
+                // and the whisperx INFO lines still come through.
+                startInfo.EnvironmentVariables["PYTHONWARNINGS"] = "ignore::UserWarning";
+
+                if (!string.IsNullOrEmpty(matplotlibCacheFolder))
+                {
+                    startInfo.EnvironmentVariables["MPLCONFIGDIR"] = matplotlibCacheFolder;
+                }
             });
         }
 
@@ -4151,13 +4188,20 @@ public partial class SpeechToTextViewModel : ObservableObject
             // VAD - only the latter is worth re-running without it (#13911).
             _crispAsrVadWasUsed = vadPart.Length > 0;
 
+            // Both are per model, not per backend: Parakeet's pure-CTC models run on a different
+            // crispasr backend than its transducer models and need crispasr's punctuation
+            // restoration kept off (see CrispAsrParakeet.GetBackendName / GetModelArguments).
+            var backendName = crispAsrEngine.GetBackendName(model);
+            var modelArgs = crispAsrEngine.GetModelArguments(model, crispArgs);
+            var modelArgsPart = modelArgs.Length > 0 ? $" {modelArgs}" : string.Empty;
+
             // --print-progress: crispasr streams "crispasr: progress = NN% (i/n slices)" lines
             // in real time (parsed in OutputHandler), while the transcript segments only print
             // once the whole file is done - without this the progress bar sat idle for the
             // entire run and jumped straight to 100%.
             var crispParams = string.IsNullOrWhiteSpace(crispArgs)
-                ? $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart} -f \"{waveFileName}\" --output-srt --print-progress"
-                : $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart} -f \"{waveFileName}\" --output-srt --print-progress {crispArgs}";
+                ? $"--backend {backendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart}{modelArgsPart} -f \"{waveFileName}\" --output-srt --print-progress"
+                : $"--backend {backendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart}{modelArgsPart} -f \"{waveFileName}\" --output-srt --print-progress {crispArgs}";
 
             Se.WriteToolsLog($"{exe} {crispParams}");
 
@@ -4428,10 +4472,22 @@ public partial class SpeechToTextViewModel : ObservableObject
         // 2-hour WAV blows past that. When an online engine is selected,
         // transcode to a compressed format so the upload stays under the limit;
         // the OpenAI-compatible engine honors the user's chosen format, the
-        // others default to mp3. Local engines (whisper.cpp, faster-whisper, ...)
-        // keep getting WAV because they read the file locally and expect PCM.
+        // others default to mp3 - except OpenRouter's Chirp models, which reject
+        // mp3 outright (see OpenRouterSttService.RequiresWavAudio) and need wav
+        // instead. Local engines (whisper.cpp, faster-whisper, ...) keep getting
+        // WAV because they read the file locally and expect PCM.
+        //
+        // Reads the ViewModel's own OpenRouterSttModel property, not
+        // Se.Settings.Tools.OpenRouterSttModel - Transcribe() runs SaveSettings()
+        // only later, inside ProcessOnlineSttTranscription, after this extraction
+        // has already started, so the settings object is still stale here.
+        var effectiveEngine = GetEffectiveSelectedEngine();
         var sttAudioFormat = isOpenAiEngine
-            ? (GetEffectiveSelectedEngine() is OpenAiCompatibleSttEngine ? OpenAiCompatibleSttAudioFormat : "mp3")
+            ? (effectiveEngine is OpenAiCompatibleSttEngine
+                ? OpenAiCompatibleSttAudioFormat
+                : effectiveEngine is OpenRouterSttEngine && OpenRouterSttService.RequiresWavAudio(OpenRouterSttModel)
+                    ? "wav"
+                    : "mp3")
             : "wav";
         var extension = OpenAiSttService.GetFileExtensionForFormat(sttAudioFormat);
         // Place the extracted audio in a dedicated per-run subfolder. Engines like

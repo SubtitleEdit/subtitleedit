@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Nikse.SubtitleEdit.Logic;
@@ -30,6 +31,13 @@ public sealed class StubWindowService : IWindowService
         Window owner,
         Action<TViewModel>? configureViewModel = null,
         Action<TWindow>? configureWindow = null)
+        where TWindow : Window where TViewModel : class
+        => throw new NotSupportedException();
+
+    public Task<TViewModel> ShowWithOwnerHiddenAsync<TWindow, TViewModel>(
+        Window owner,
+        IReadOnlyList<Window?> companions,
+        Action<TViewModel>? configureViewModel = null)
         where TWindow : Window where TViewModel : class
         => throw new NotSupportedException();
 }

@@ -179,6 +179,30 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         public IntPtr data;
     }
 
+    /// <summary>Matches <c>mpv_event_log_message</c> in client.h.</summary>
+    [StructLayout(LayoutKind.Sequential)]
+    private struct MpvEventLogMessage
+    {
+        public IntPtr prefix;
+        public IntPtr level;
+        public IntPtr text;
+        public int logLevel;
+    }
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate int MpvRequestLogMessages(IntPtr mpvHandle, byte[] minLevel);
+
+    private MpvRequestLogMessages? _mpvRequestLogMessages;
+
+    // mpv warnings/errors forwarded to SE's error log by the event thread (see RunEventLoop),
+    // capped per core so a repeating condition cannot flood the log.
+    private const int MaxForwardedMpvLogMessages = 50;
+    private int _forwardedMpvLogMessages;
+
+    /// <summary>Test hooks: how many mpv warnings/errors reached the error log, and the last one.</summary>
+    internal int ForwardedMpvLogMessageCount => _forwardedMpvLogMessages;
+    internal string? LastForwardedMpvLogMessage { get; private set; }
+
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate int MpvSetOption(IntPtr mpvHandle, byte[] name, int format, ref ulong data);
 
@@ -297,6 +321,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     private const int MPV_FORMAT_DOUBLE = 5;
 
     private const int MPV_EVENT_SHUTDOWN = 1;
+    private const int MPV_EVENT_LOG_MESSAGE = 2;
     private const int MPV_EVENT_COMMAND_REPLY = 5;
     private const int MPV_EVENT_PLAYBACK_RESTART = 21;
     private const int MPV_EVENT_PROPERTY_CHANGE = 22;
@@ -400,6 +425,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         _mpvWaitEvent = (MpvWaitEvent?)GetDllType(typeof(MpvWaitEvent), "mpv_wait_event");
         _mpvObserveProperty = (MpvObserveProperty?)GetDllType(typeof(MpvObserveProperty), "mpv_observe_property");
         _mpvWakeup = (MpvWakeup?)GetDllType(typeof(MpvWakeup), "mpv_wakeup");
+        _mpvRequestLogMessages = (MpvRequestLogMessages?)GetDllType(typeof(MpvRequestLogMessages), "mpv_request_log_messages");
         _mpvCommand = (MpvCommand?)GetDllType(typeof(MpvCommand), "mpv_command");
         _mpvCommandAsync = (MpvCommandAsync?)GetDllType(typeof(MpvCommandAsync), "mpv_command_async");
         _mpvSetOption = (MpvSetOption?)GetDllType(typeof(MpvSetOption), "mpv_set_option");
@@ -603,6 +629,19 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             }
         }
 
+        // mpv's warnings name the playback problems SE can otherwise only guess at from the
+        // outside - "Audio device underrun detected." is the one behind a frozen cursor and
+        // time display (#14523). Forwarded to the error log from the event thread; failing to
+        // enable them costs nothing but that diagnostic.
+        try
+        {
+            _mpvRequestLogMessages?.Invoke(handle, GetUtf8Bytes("warn"));
+        }
+        catch
+        {
+            // diagnostics only
+        }
+
         _eventLoopStop = false;
         _eventLoopHandle = handle;
         _eventThread = new Thread(() => RunEventLoop(handle))
@@ -658,6 +697,10 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
                 // A restart is "a seek finished", which is the only honest moment to ask whether
                 // a scrub burst has stopped and a deferred exact landing is now due.
                 IssueScrubFollowUpSeekIfSettled();
+            }
+            else if (mpvEvent.eventId == MPV_EVENT_LOG_MESSAGE && mpvEvent.data != IntPtr.Zero)
+            {
+                ForwardMpvLogMessage(mpvEvent.data);
             }
             else if (mpvEvent.eventId == MPV_EVENT_COMMAND_REPLY && mpvEvent.replyUserdata >= SeekReplyIdBase)
             {
@@ -771,6 +814,43 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     /// carries real information.
     /// </summary>
     public bool SupportsPlaybackRestartEvents => _eventLoopActive;
+
+    /// <summary>
+    /// Writes one mpv warning/error line to SE's error log, so a playback problem inside the
+    /// core (an audio device underrun, a failing output, a decoder complaint) shows up next to
+    /// the symptom a user reports instead of being lost. Capped per core.
+    /// </summary>
+    private void ForwardMpvLogMessage(IntPtr data)
+    {
+        if (_forwardedMpvLogMessages >= MaxForwardedMpvLogMessages)
+        {
+            return;
+        }
+
+        try
+        {
+            var message = Marshal.PtrToStructure<MpvEventLogMessage>(data);
+            var text = message.text == IntPtr.Zero ? null : Marshal.PtrToStringUTF8(message.text)?.Trim();
+            if (string.IsNullOrEmpty(text))
+            {
+                return;
+            }
+
+            var prefix = message.prefix == IntPtr.Zero ? string.Empty : Marshal.PtrToStringUTF8(message.prefix);
+            var level = message.level == IntPtr.Zero ? string.Empty : Marshal.PtrToStringUTF8(message.level);
+            _forwardedMpvLogMessages++;
+            var suffix = _forwardedMpvLogMessages == MaxForwardedMpvLogMessages
+                ? " (further mpv messages from this player are not logged)"
+                : string.Empty;
+            var line = $"mpv [{level}] {prefix}: {text}{suffix}";
+            LastForwardedMpvLogMessage = line;
+            Se.LogError(line);
+        }
+        catch
+        {
+            // diagnostics only - never let logging disturb the event loop
+        }
+    }
 
     /// <summary>
     /// Whether mpv has reported MPV_EVENT_PLAYBACK_RESTART - "seek finished, output resumed
@@ -1112,12 +1192,15 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
     /// <summary>
     /// Shrinks mpv's audio output buffer (its default is 0.2 s). That buffer is why pause,
-    /// resume and seeks during playback take effect ~200 ms late: a pause only goes quiet once
-    /// the buffered audio has played out, and resume/seek only sound once it has been refilled.
-    /// Those latencies are the residuals the waveform playhead estimate exists to mask
-    /// (#12740, discussion #10824), so keep the buffer short. A zero or negative setting
-    /// leaves mpv's default alone - the escape hatch for machines where a small buffer
-    /// causes audio dropouts (slow hardware, Bluetooth audio).
+    /// resume and seeks during playback take effect ~200 ms late. SE shipped 0.05 s on that
+    /// reasoning (5.2.0 beta 20 - rc2), but pause and resume are hardware pause/unpause on the
+    /// device (mpv's ao_set_paused: WASAPI IAudioClient::Stop/Start, CoreAudio likewise) and
+    /// never wait for the buffer, while a buffer that small underruns on any audio-thread
+    /// hiccup: mpv then stops the output, waits until the buffer is full again and restarts
+    /// it, and its clock stands still in between - the waveform cursor and time display froze
+    /// for up to a second or two, worst right after pause/resume (#14523). mpv's manual marks
+    /// the option "for testing only". A zero or negative setting (the default) leaves mpv's
+    /// default alone; the setting stays as a knob for experiments.
     /// <para>Must be called before mpv_initialize.</para>
     /// </summary>
     private void SetAudioBufferOption()
