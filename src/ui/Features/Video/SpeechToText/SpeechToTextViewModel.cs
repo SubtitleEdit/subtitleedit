@@ -12,6 +12,7 @@ using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.GetAudioClips;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.EngineSettings;
+using Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenRouter;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -4471,10 +4472,22 @@ public partial class SpeechToTextViewModel : ObservableObject
         // 2-hour WAV blows past that. When an online engine is selected,
         // transcode to a compressed format so the upload stays under the limit;
         // the OpenAI-compatible engine honors the user's chosen format, the
-        // others default to mp3. Local engines (whisper.cpp, faster-whisper, ...)
-        // keep getting WAV because they read the file locally and expect PCM.
+        // others default to mp3 - except OpenRouter's Chirp models, which reject
+        // mp3 outright (see OpenRouterSttService.RequiresWavAudio) and need wav
+        // instead. Local engines (whisper.cpp, faster-whisper, ...) keep getting
+        // WAV because they read the file locally and expect PCM.
+        //
+        // Reads the ViewModel's own OpenRouterSttModel property, not
+        // Se.Settings.Tools.OpenRouterSttModel - Transcribe() runs SaveSettings()
+        // only later, inside ProcessOnlineSttTranscription, after this extraction
+        // has already started, so the settings object is still stale here.
+        var effectiveEngine = GetEffectiveSelectedEngine();
         var sttAudioFormat = isOpenAiEngine
-            ? (GetEffectiveSelectedEngine() is OpenAiCompatibleSttEngine ? OpenAiCompatibleSttAudioFormat : "mp3")
+            ? (effectiveEngine is OpenAiCompatibleSttEngine
+                ? OpenAiCompatibleSttAudioFormat
+                : effectiveEngine is OpenRouterSttEngine && OpenRouterSttService.RequiresWavAudio(OpenRouterSttModel)
+                    ? "wav"
+                    : "mp3")
             : "wav";
         var extension = OpenAiSttService.GetFileExtensionForFormat(sttAudioFormat);
         // Place the extracted audio in a dedicated per-run subfolder. Engines like
