@@ -23,7 +23,7 @@ By default the frame boundaries are calculated from the video frame rate. Tick *
 
 Below the visualizers, the **change navigator** lets you step through every cue the beautify pass moved:
 
-- **▲ / ▼** — previous / next change. Both visualizers center on the change.
+- **▲ / ▼** — previous / next change. Both visualizers center on the change. The keyboard works too: **Up** / **Down** (or **Left** / **Right**, **PageUp** / **PageDown**) step one change, **Home** / **End** jump to the first / last change.
 - **Change X of Y** — position counter.
 - **Detail line** — `#15   Start: 00:01:23,456 → 00:01:23,400  (−56 ms / −1.4 f)    End: …`
 - **Reason line** — italic, dimmed: explains *why* the cue moved, per side:

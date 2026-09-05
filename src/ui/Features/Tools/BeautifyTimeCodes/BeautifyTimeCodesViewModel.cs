@@ -777,6 +777,25 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
         }
     }
 
+    private void FirstChange()
+    {
+        if (_changedIndices.Count > 0 && _currentChangeIndex != 0)
+        {
+            _currentChangeIndex = 0;
+            UpdateChangeView();
+        }
+    }
+
+    private void LastChange()
+    {
+        var last = _changedIndices.Count - 1;
+        if (last >= 0 && _currentChangeIndex != last)
+        {
+            _currentChangeIndex = last;
+            UpdateChangeView();
+        }
+    }
+
     [RelayCommand]
     private void Ok()
     {
@@ -853,6 +872,34 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
         {
             e.Handled = true;
             UiUtil.ShowHelp("features/beautify-time-codes");
+        }
+        else if (e.KeyModifiers == KeyModifiers.None)
+        {
+            // Keyboard navigation between changes - the window has no text input, so the plain
+            // arrow/paging keys are free. Mirrors the ▲/▼ buttons in the change navigator.
+            switch (e.Key)
+            {
+                case Key.Up:
+                case Key.Left:
+                case Key.PageUp:
+                    e.Handled = true;
+                    PreviousChange();
+                    break;
+                case Key.Down:
+                case Key.Right:
+                case Key.PageDown:
+                    e.Handled = true;
+                    NextChange();
+                    break;
+                case Key.Home:
+                    e.Handled = true;
+                    FirstChange();
+                    break;
+                case Key.End:
+                    e.Handled = true;
+                    LastChange();
+                    break;
+            }
         }
     }
 
