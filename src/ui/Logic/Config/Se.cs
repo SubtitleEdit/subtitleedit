@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Logic.Config;
 public class Se
 {
     internal const int CurrentMacOsFontMigrationVersion = 1;
-    internal const int CurrentShortcutsMigrationVersion = 2;
+    internal const int CurrentShortcutsMigrationVersion = 3;
 
     public static string Version { get; set; } = "v5.2.0-rc2";
 
@@ -489,6 +489,27 @@ public class Se
                 }
             }
         }
+
+        if (fromVersion < 3 && OperatingSystem.IsMacOS())
+        {
+            // The old macOS default Option+Shift+Cmd+D never reached the app (#14508); the default
+            // gained Control, so move users who still sit on the dead chord onto the new one.
+            foreach (var shortcut in Shortcuts)
+            {
+                if (shortcut.ActionName == nameof(MainViewModel.OpenDataFolderCommand) &&
+                    IsSameKeys(shortcut.Keys, ["Win", "Alt", "Shift", "D"]))
+                {
+                    shortcut.Keys = ["Ctrl", "Win", "Alt", "Shift", "D"];
+                }
+            }
+        }
+    }
+
+    private static bool IsSameKeys(List<string> keys, string[] expected)
+    {
+        return keys.Count == expected.Length &&
+               !keys.Except(expected, StringComparer.OrdinalIgnoreCase).Any() &&
+               !expected.Except(keys, StringComparer.OrdinalIgnoreCase).Any();
     }
 
     public static void SaveSettings()
