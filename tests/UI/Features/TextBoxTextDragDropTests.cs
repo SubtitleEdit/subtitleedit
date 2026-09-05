@@ -27,12 +27,16 @@ public class TextBoxTextDragDropTests
         return (window, textBox);
     }
 
-    /// <summary>Window-space point at the middle of character <paramref name="index"/>.</summary>
+    /// <summary>
+    /// Window-space point just inside the left edge of character <paramref name="index"/> -
+    /// the left edge, not the middle, so the hit test resolves to that index on every
+    /// platform's font metrics (a mid-glyph point rounded to the trailing edge on CI).
+    /// </summary>
     private static Point PointAt(Window window, TextBox textBox, int index)
     {
         var presenter = textBox.GetVisualDescendants().OfType<TextPresenter>().First();
         var rect = presenter.TextLayout.HitTestTextPosition(index);
-        var local = new Point(rect.X + Math.Max(rect.Width / 2, 1), rect.Y + rect.Height / 2);
+        var local = new Point(rect.X + 1, rect.Y + rect.Height / 2);
         return presenter.TranslatePoint(local, window)!.Value;
     }
 
