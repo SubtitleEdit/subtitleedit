@@ -285,6 +285,29 @@ public class CheckArteErrorsWindow : Window
                 }
             });
 
+        var noErrorsText = new TextBlock
+        {
+            Text = "No ARTE errors detected.",
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            FontSize = 18,
+            Opacity = 0.75,
+            IsVisible = vm.Fixes.Count == 0,
+        };
+
+        void UpdateEmptyState()
+        {
+            noErrorsText.IsVisible = vm.Fixes.Count == 0;
+            dataGrid.IsVisible = vm.Fixes.Count > 0;
+        }
+
+        vm.Fixes.CollectionChanged += (_, _) => UpdateEmptyState();
+        UpdateEmptyState();
+
+        var resultsGrid = new Grid();
+        resultsGrid.Children.Add(dataGrid);
+        resultsGrid.Children.Add(noErrorsText);
+
         var fixesSelectPanel = UiUtil.MakeButtonBar(
             UiUtil.MakeButton(Se.Language.General.SelectAll, vm.FixesSelectAllCommand),
             UiUtil.MakeButton(Se.Language.General.InvertSelection, vm.FixesInverseSelectionCommand)
@@ -301,7 +324,7 @@ public class CheckArteErrorsWindow : Window
         };
 
         grid.Add(fixesSelectPanel, 0, 0);
-        grid.Add(dataGrid, 1, 0);
+        grid.Add(resultsGrid, 1, 0);
 
         return UiUtil.MakeBorderForControlNoPadding(grid);
     }
