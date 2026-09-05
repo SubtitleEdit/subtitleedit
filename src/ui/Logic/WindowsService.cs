@@ -1055,7 +1055,7 @@ namespace Nikse.SubtitleEdit.Logic
                         return;
                     }
 
-                    child.Topmost = suppress?.Invoke() != true && (owner.IsActive || child.IsActive);
+                    SetTopmost(child, suppress?.Invoke() != true && (owner.IsActive || child.IsActive), owner);
                 });
             }
 
@@ -1071,8 +1071,125 @@ namespace Nikse.SubtitleEdit.Logic
                 child.Deactivated -= OnFocusChanged;
             };
 
-            child.Topmost = suppress?.Invoke() != true && (owner.IsActive || child.IsActive);
+            SetTopmost(child, suppress?.Invoke() != true && (owner.IsActive || child.IsActive), owner);
         }
+
+        /// <summary>
+        /// Applies <paramref name="topmost"/> to <paramref name="window"/> - and, when dropping it
+        /// because another application took the foreground, keeps the window beneath that
+        /// application's window.
+        ///
+        /// Avalonia's Win32 backend implements Topmost=false as SetWindowPos(HWND_NOTOPMOST),
+        /// which Windows defines as "above all non-topmost windows": the demoted window lands at
+        /// the top of the normal band. The drop is posted from Deactivated, so it usually runs
+        /// after Windows has already raised the window the user clicked - and re-inserts ours
+        /// right above it. The other application is active but covered, and clicking its
+        /// taskbar button now minimizes it; only minimizing SE gets it out of the way (#14564,
+        /// the "some always on top setting?" half of #14283 - the TTS dialog is simply the
+        /// modal users leave open long enough to notice). The same band re-insertion is why
+        /// flyouts suspend the undocked topmost at Opening rather than Opened (#13493).
+        ///
+        /// So after the drop, when the foreground window belongs to another process and already
+        /// sits above <paramref name="owner"/> in the z-order, ours is moved directly beneath it.
+        /// The "already above" check keeps the race benign in the other order: if the foreign
+        /// window has not been raised yet, its own raise puts it on top, and re-ordering early
+        /// would drop the unowned undocked tool windows behind the main window. A topmost
+        /// foreign window is left alone - inserting after a topmost window makes the inserted
+        /// window topmost too, and it is above us anyway. Without SWP_NOOWNERZORDER an owned
+        /// dialog takes its owner along, so the whole SE stack ends up below the other
+        /// application in the order it had. No-op off Windows, where Topmost maps to a window
+        /// level and ordering between applications is the OS's own.
+        /// </summary>
+        internal static void SetTopmost(Window window, bool topmost, Window? owner)
+        {
+            window.Topmost = topmost;
+            if (!topmost)
+            {
+                KeepBelowForeignForegroundWindow(window, owner ?? window);
+            }
+        }
+
+        private static void KeepBelowForeignForegroundWindow(Window window, Window reference)
+        {
+            if (!OperatingSystem.IsWindows())
+            {
+                return;
+            }
+
+            var handle = window.TryGetPlatformHandle()?.Handle ?? IntPtr.Zero;
+            var referenceHandle = reference.TryGetPlatformHandle()?.Handle ?? IntPtr.Zero;
+            var foreground = GetForegroundWindow();
+            if (handle == IntPtr.Zero || referenceHandle == IntPtr.Zero ||
+                foreground == IntPtr.Zero || foreground == handle || foreground == referenceHandle)
+            {
+                return;
+            }
+
+            GetWindowThreadProcessId(foreground, out var foregroundProcessId);
+            if (foregroundProcessId == Environment.ProcessId)
+            {
+                return; // an SE window (a dialog, a tool window) - the normal in-app churn
+            }
+
+            if ((GetWindowLongW(foreground, GwlExStyle) & WsExTopmost) != 0)
+            {
+                return; // stays above us on its own; inserting after it would make us topmost
+            }
+
+            if (!IsAboveInZOrder(foreground, referenceHandle))
+            {
+                return; // not raised (yet) - its own raise puts it on top
+            }
+
+            SetWindowPos(handle, foreground, 0, 0, 0, 0, SwpNoSize | SwpNoMove | SwpNoActivate);
+        }
+
+        /// <summary>
+        /// True when <paramref name="hwnd"/> is above <paramref name="below"/> in the z-order,
+        /// walking upwards from <paramref name="below"/>. Bounded, since the desktop's window
+        /// list includes every hidden top-level window of every process.
+        /// </summary>
+        private static bool IsAboveInZOrder(IntPtr hwnd, IntPtr below)
+        {
+            var current = below;
+            for (var i = 0; i < 4096; i++)
+            {
+                current = GetWindow(current, GwHwndPrev);
+                if (current == IntPtr.Zero)
+                {
+                    return false;
+                }
+
+                if (current == hwnd)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private const int GwlExStyle = -20;
+        private const int WsExTopmost = 0x0008;
+        private const uint GwHwndPrev = 3;
+        private const uint SwpNoSize = 0x0001;
+        private const uint SwpNoMove = 0x0002;
+        private const uint SwpNoActivate = 0x0010;
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern int GetWindowLongW(IntPtr hWnd, int nIndex);
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern IntPtr GetWindow(IntPtr hWnd, uint uCmd);
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy, uint uFlags);
 
         /// <summary>
         /// Creates a window instance using the service provider.
