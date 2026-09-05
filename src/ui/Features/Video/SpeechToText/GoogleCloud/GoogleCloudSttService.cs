@@ -25,6 +25,7 @@ public class GoogleCloudSttSettings
     public string Language { get; set; } = string.Empty;
     public string BucketName { get; set; } = string.Empty;
     public int TimeoutSeconds { get; set; } = 3600;
+    public bool DynamicBatching { get; set; }
     public Action<string>? Logger { get; set; }
 
     public static GoogleCloudSttSettings FromConfiguration() => new()
@@ -35,6 +36,7 @@ public class GoogleCloudSttSettings
         Language = Se.Settings.Tools.GoogleCloudSttLanguage,
         BucketName = Se.Settings.Tools.GoogleCloudSttBucketName,
         TimeoutSeconds = Se.Settings.Tools.GoogleCloudSttTimeoutSeconds,
+        DynamicBatching = Se.Settings.Tools.GoogleCloudSttDynamicBatching,
         Logger = message => Se.WriteToolsLog(message),
     };
 }
@@ -117,7 +119,8 @@ public class GoogleCloudSttService : ISttTranscriber
                 var operationName = await SubmitAsync(projectId, gcsUri, language, ct);
                 progress?.Report("Waiting for transcription to complete...");
                 var json = await PollAsync(operationName, ct);
-                return ParseResponse(json, _settings.Logger);
+                var response = ParseResponse(json, _settings.Logger);
+                return await RecoverTruncationAsync(response, projectId, bucket, audioFilePath, language, progress, ct);
             }
             finally
             {
@@ -127,6 +130,157 @@ public class GoogleCloudSttService : ISttTranscriber
         catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
         {
             throw new TimeoutException($"Google Cloud transcription timed out after {_settings.TimeoutSeconds} seconds.");
+        }
+    }
+
+    /// <summary>
+    /// Re-transcribes the tail when Google stopped part way through and still reported
+    /// success. This has been observed on real media: an 18 minute chunk returned words
+    /// only up to 398 s and silently discarded the remaining 11.4 minutes. Logging that is
+    /// not enough, because the user is handed a subtitle that looks complete and only turns
+    /// out to have a hole in it while watching.
+    ///
+    /// One attempt only. If the tail truncates as well there is nothing further to try
+    /// automatically, and the log line still records it.
+    /// </summary>
+    private async Task<OpenAiCompatibleSttResponse> RecoverTruncationAsync(
+        OpenAiCompatibleSttResponse response,
+        string projectId,
+        string bucket,
+        string audioFilePath,
+        string? language,
+        IProgress<string>? progress,
+        CancellationToken ct)
+    {
+        var billed = response.Duration ?? 0.0;
+        var covered = response.Segments is { Count: > 0 } segments ? segments[^1].End : 0.0;
+        if (billed <= 60 || covered >= billed * 0.9)
+        {
+            return response;
+        }
+
+        // Start a second early so a word straddling the cut is not lost between the passes.
+        var resumeAt = Math.Max(0.0, covered - 1.0);
+        _settings.Logger?.Invoke($"Google Cloud: re-transcribing from {resumeAt:0.#} s to recover the missing audio");
+        progress?.Report("Recovering the part Google stopped transcribing...");
+
+        var remainderPath = await CutRemainderAsync(audioFilePath, resumeAt, ct);
+        if (remainderPath == null)
+        {
+            return response;
+        }
+
+        var objectName = $"subtitle-edit/{Guid.NewGuid():N}{Path.GetExtension(remainderPath)}";
+        try
+        {
+            await UploadAsync(bucket, objectName, remainderPath, ct);
+            var operationName = await SubmitAsync(projectId, $"gs://{bucket}/{objectName}", language, ct);
+            var json = await PollAsync(operationName, ct);
+            var tail = ParseResponse(json, _settings.Logger);
+
+            var text = new StringBuilder(response.Text ?? string.Empty);
+            foreach (var segment in tail.Segments)
+            {
+                // The tail's timings restart at zero, so they need the resume point back.
+                var start = segment.Start + resumeAt;
+                if (start <= covered - 0.5)
+                {
+                    continue; // Overlap with what the first pass already produced.
+                }
+
+                segment.Id = response.Segments.Count;
+                segment.Start = start;
+                segment.End = segment.End + resumeAt;
+                if (segment.Words != null)
+                {
+                    foreach (var word in segment.Words)
+                    {
+                        word.Start += resumeAt;
+                        word.End += resumeAt;
+                    }
+                }
+
+                response.Segments.Add(segment);
+                text.Append(' ').Append(segment.Text);
+            }
+
+            response.Text = text.ToString().Trim();
+            _settings.Logger?.Invoke(
+                $"Google Cloud: recovery added {response.Segments.Count} segments in total, now covering to {(response.Segments.Count > 0 ? response.Segments[^1].End : 0):0.#} s");
+            return response;
+        }
+        finally
+        {
+            await DeleteObjectAsync(bucket, objectName);
+            TryDelete(remainderPath);
+        }
+    }
+
+    /// <summary>
+    /// Cuts from <paramref name="fromSeconds"/> to the end of the audio. Re-encodes rather
+    /// than stream copies so the cut is sample accurate, and passes -sample_fmt explicitly:
+    /// without it ffmpeg produces 24-bit flac, which is larger than the raw PCM it replaces.
+    /// </summary>
+    private async Task<string?> CutRemainderAsync(string audioFilePath, double fromSeconds, CancellationToken ct)
+    {
+        var ffmpeg = Se.Settings.General.FfmpegPath;
+        if (!File.Exists(ffmpeg))
+        {
+            ffmpeg = "ffmpeg";
+        }
+
+        var extension = Path.GetExtension(audioFilePath);
+        var outputPath = Path.Combine(Path.GetDirectoryName(audioFilePath) ?? Path.GetTempPath(),
+            Path.GetFileNameWithoutExtension(audioFilePath) + "-tail" + extension);
+
+        var codec = extension.Equals(".flac", StringComparison.OrdinalIgnoreCase)
+            ? "-c:a flac -sample_fmt s16"
+            : extension.Equals(".wav", StringComparison.OrdinalIgnoreCase)
+                ? "-c:a pcm_s16le"
+                : "-c:a copy";
+
+        var arguments =
+            $"-hide_banner -nostdin -y -ss {fromSeconds.ToString("0.###", CultureInfo.InvariantCulture)} " +
+            $"-i \"{audioFilePath}\" -vn {codec} \"{outputPath}\"";
+
+        try
+        {
+            using var process = new System.Diagnostics.Process
+            {
+                StartInfo = new System.Diagnostics.ProcessStartInfo(ffmpeg, arguments)
+                {
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    RedirectStandardError = true,
+                },
+            };
+
+            process.Start();
+            await process.WaitForExitAsync(ct);
+            if (process.ExitCode == 0 && File.Exists(outputPath) && new FileInfo(outputPath).Length > 0)
+            {
+                return outputPath;
+            }
+
+            _settings.Logger?.Invoke($"Google Cloud: could not cut the remaining audio for recovery (ffmpeg exit {process.ExitCode})");
+        }
+        catch (Exception exception)
+        {
+            _settings.Logger?.Invoke("Google Cloud: could not cut the remaining audio for recovery: " + exception.Message);
+        }
+
+        return null;
+    }
+
+    private static void TryDelete(string path)
+    {
+        try
+        {
+            File.Delete(path);
+        }
+        catch
+        {
+            // Left in the run's temp folder, which SE cleans up afterwards.
         }
     }
 
@@ -231,18 +385,22 @@ public class GoogleCloudSttService : ISttTranscriber
     internal static string BuildRequestBody(GoogleCloudSttSettings settings, string gcsUri, string? language)
     {
         var lang = string.IsNullOrWhiteSpace(language) ? settings.Language : language;
-        return JsonSerializer.Serialize(new
+        var config = new
         {
-            config = new
-            {
-                autoDecodingConfig = new { },
-                languageCodes = new[] { string.IsNullOrWhiteSpace(lang) ? "auto" : lang.Trim() },
-                model = string.IsNullOrWhiteSpace(settings.Model) ? "chirp_3" : settings.Model.Trim(),
-                features = new { enableWordTimeOffsets = true, enableAutomaticPunctuation = true },
-            },
-            files = new[] { new { uri = gcsUri } },
-            recognitionOutputConfig = new { inlineResponseConfig = new { } },
-        });
+            autoDecodingConfig = new { },
+            languageCodes = new[] { string.IsNullOrWhiteSpace(lang) ? "auto" : lang.Trim() },
+            model = string.IsNullOrWhiteSpace(settings.Model) ? "chirp_3" : settings.Model.Trim(),
+            features = new { enableWordTimeOffsets = true, enableAutomaticPunctuation = true },
+        };
+
+        var files = new[] { new { uri = gcsUri } };
+        var output = new { inlineResponseConfig = new { } };
+
+        // DYNAMIC_BATCHING is billed at about a fifth of the normal rate. Only sent when
+        // asked for: it carries no latency guarantee, and the default timeout is an hour.
+        return settings.DynamicBatching
+            ? JsonSerializer.Serialize(new { config, files, recognitionOutputConfig = output, processingStrategy = "DYNAMIC_BATCHING" })
+            : JsonSerializer.Serialize(new { config, files, recognitionOutputConfig = output });
     }
 
     private async Task<string> PollAsync(string operationName, CancellationToken ct)
@@ -281,6 +439,13 @@ public class GoogleCloudSttService : ISttTranscriber
         }
 
         var billed = batch.TryGetProperty("totalBilledDuration", out var b) ? ParseDuration(b) : 0.0;
+
+        // totalBilledDuration is the natural bound for the range check below, but it is not
+        // guaranteed to be present. Without a fallback the check degrades to "not negative
+        // and not inverted", which lets through exactly the kind of value it exists to
+        // catch: a word claiming 6,324 s inside a 1,080 s chunk. resultEndOffset is reported
+        // per result and serves as an upper bound when the billed duration is missing.
+        var bound = billed > 0 ? billed : LargestResultEndOffset(files);
         var text = new StringBuilder();
         var previousEnd = 0.0;
         foreach (var file in files.EnumerateObject())
@@ -324,7 +489,7 @@ public class GoogleCloudSttService : ISttTranscriber
                         var start = w.TryGetProperty("startOffset", out var s) ? ParseDuration(s) : -1;
                         var end = w.TryGetProperty("endOffset", out var e) ? ParseDuration(e) : -1;
                         var word = w.TryGetProperty("word", out var wt) ? wt.GetString() ?? string.Empty : string.Empty;
-                        if (start < 0 || end < start || (billed > 0 && end > billed + 1))
+                        if (start < 0 || end < start || (bound > 0 && end > bound + 1))
                         {
                             logger?.Invoke($"Google Cloud: dropped word '{word}' with impossible timing {start:0.###}-{end:0.###} s");
                             continue;
@@ -358,6 +523,31 @@ public class GoogleCloudSttService : ISttTranscriber
         }
 
         return response;
+    }
+
+    /// <summary>Largest resultEndOffset in the response, used when no billed duration is reported.</summary>
+    private static double LargestResultEndOffset(JsonElement files)
+    {
+        var largest = 0.0;
+        foreach (var file in files.EnumerateObject())
+        {
+            if (!file.Value.TryGetProperty("inlineResult", out var inline) ||
+                !inline.TryGetProperty("transcript", out var transcript) ||
+                !transcript.TryGetProperty("results", out var results))
+            {
+                continue;
+            }
+
+            foreach (var result in results.EnumerateArray())
+            {
+                if (result.TryGetProperty("resultEndOffset", out var re))
+                {
+                    largest = Math.Max(largest, ParseDuration(re));
+                }
+            }
+        }
+
+        return largest;
     }
 
     /// <summary>REST encodes proto Durations as strings like "1.500s".</summary>

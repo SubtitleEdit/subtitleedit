@@ -126,4 +126,109 @@ public class GoogleCloudSttServiceTests
         Assert.Equal(12, GoogleCloudSttService.ParseDuration(doc.RootElement[1]));
         Assert.Equal(-1, GoogleCloudSttService.ParseDuration(doc.RootElement[2]));
     }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void BuildRequestBody_SendsProcessingStrategyOnlyWhenAsked(bool dynamicBatching)
+    {
+        var body = GoogleCloudSttService.BuildRequestBody(
+            new GoogleCloudSttSettings { Model = "chirp_3", DynamicBatching = dynamicBatching }, "gs://b/o.flac", "tr-TR");
+
+        using var doc = JsonDocument.Parse(body);
+        var present = doc.RootElement.TryGetProperty("processingStrategy", out var strategy);
+
+        Assert.Equal(dynamicBatching, present);
+        if (dynamicBatching)
+        {
+            // Bills at roughly a fifth of the standard rate.
+            Assert.Equal("DYNAMIC_BATCHING", strategy.GetString());
+        }
+    }
+
+    /// <summary>
+    /// totalBilledDuration is the natural bound for the word range check, but it is not
+    /// guaranteed to be present. Without a fallback the check lets through exactly what it
+    /// exists to catch. The offset here is a real one: 6,324 s inside an 1,080 s chunk.
+    /// </summary>
+    [Fact]
+    public void ParseResponse_DropsImpossibleWordsWhenNoBilledDurationIsReported()
+    {
+        const string json = """
+        {
+          "response": {
+            "results": {
+              "gs://b/o.flac": {
+                "inlineResult": {
+                  "transcript": {
+                    "results": [
+                      {
+                        "alternatives": [
+                          {
+                            "transcript": "bir iki",
+                            "words": [
+                              { "word": "bir", "startOffset": "1.0s", "endOffset": "1.4s" },
+                              { "word": "iki", "startOffset": "6324.0s", "endOffset": "6324.5s" }
+                            ]
+                          }
+                        ],
+                        "resultEndOffset": "1080s"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+        """;
+
+        var response = GoogleCloudSttService.ParseResponse(json);
+
+        var segment = Assert.Single(response.Segments!);
+        Assert.NotNull(segment.Words);
+        var word = Assert.Single(segment.Words!);
+        Assert.Equal("bir", word.Word);
+    }
+
+    [Fact]
+    public void ParseResponse_KeepsWordsWithinTheReportedDuration()
+    {
+        const string json = """
+        {
+          "response": {
+            "totalBilledDuration": "1080s",
+            "results": {
+              "gs://b/o.flac": {
+                "inlineResult": {
+                  "transcript": {
+                    "results": [
+                      {
+                        "alternatives": [
+                          {
+                            "transcript": "bir iki",
+                            "words": [
+                              { "word": "bir", "startOffset": "1.0s", "endOffset": "1.4s" },
+                              { "word": "iki", "startOffset": "1079.0s", "endOffset": "1079.6s" }
+                            ]
+                          }
+                        ],
+                        "resultEndOffset": "1080s"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+        """;
+
+        var response = GoogleCloudSttService.ParseResponse(json);
+
+        var segment = Assert.Single(response.Segments!);
+        Assert.Equal(2, segment.Words!.Count);
+        Assert.Equal(1.0, segment.Start, 3);
+        Assert.Equal(1079.6, segment.End, 3);
+    }
 }
