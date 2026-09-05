@@ -5641,6 +5641,30 @@ public partial class MainViewModel :
     }
 
     /// <summary>
+    /// The volume threshold sweep of <see cref="WaveformGuessStart"/> and <see cref="WaveformGuessEnd"/>,
+    /// as percentages of the file's loudest peak, from the local noise floor <paramref name="lowPercent"/>
+    /// and the local peak <paramref name="highPercent"/> around the cue. The searches try each
+    /// threshold in turn and take the first boundary found, so the sweep must start above the
+    /// floor and below the speech.
+    /// <list type="bullet">
+    /// <item>Start (SE 4): a margin above the floor, bigger when the speech is loud. SE 4 capped
+    /// the margin at the local range only below 5%; quiet dialogue just above that got a sweep
+    /// starting above the speech itself, which then counted as silence and the cue snapped to a
+    /// spot right next to where it was (#14555). The cap now applies at every level.</item>
+    /// <item>End: SE 4 stopped at a fixed 14%, fine at normal levels but no sweep at all in a
+    /// file that is quiet overall, where the floor plus the margin is already above it (#14555).
+    /// The sweep now always spans at least 8 points - what 14 amounts to at normal levels.</item>
+    /// </list>
+    /// </summary>
+    private static (double Start, double End) GetGuessVolumeSweep(double lowPercent, double highPercent)
+    {
+        var add = highPercent > 40 ? 8.0 : 5.0;
+        add = Math.Min(add, highPercent - lowPercent - 0.3);
+        var start = lowPercent + add;
+        return (start, Math.Max(14, start + 8));
+    }
+
+    /// <summary>
     /// SE 4 parity ("guess start"): looks for the silence right before the speech that starts the
     /// selected line and moves the start cue there, snapping to a nearby shot change when there is
     /// one. Raising the volume threshold step by step finds the quietest boundary that still reads
@@ -5666,21 +5690,13 @@ public partial class MainViewModel :
         var startSeconds = selected.StartTime.TotalSeconds;
         var lowPercent = AudioVisualizer.FindLowPercentage(startSeconds - 0.3, startSeconds + 0.1);
         var highPercent = AudioVisualizer.FindHighPercentage(startSeconds - 0.3, startSeconds + 0.4);
-        var add = 5.0;
-        if (highPercent > 40)
-        {
-            add = 8;
-        }
-        else if (highPercent < 5)
-        {
-            add = highPercent - lowPercent - 0.3;
-        }
+        var sweep = GetGuessVolumeSweep(lowPercent, highPercent);
 
         var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
         var prev = GetPreviousWorkingRow(index);
         var next = GetNextWorkingRow(index);
 
-        for (var startVolume = lowPercent + add; startVolume < 14; startVolume += 0.3)
+        for (var startVolume = sweep.Start; startVolume < sweep.End; startVolume += 0.3)
         {
             var pos = AudioVisualizer.FindDataBelowThresholdBackForStart(startVolume, silenceLengthInSeconds, startSeconds);
             if (pos < 0 || pos <= startSeconds - 1)
@@ -5788,20 +5804,12 @@ public partial class MainViewModel :
         // speech short has nothing but speech right around it.
         var lowPercent = AudioVisualizer.FindLowPercentage(endSeconds - 0.3, endSeconds + 1.0);
         var highPercent = AudioVisualizer.FindHighPercentage(endSeconds - 0.4, endSeconds + 0.3);
-        var add = 5.0;
-        if (highPercent > 40)
-        {
-            add = 8;
-        }
-        else if (highPercent < 5)
-        {
-            add = highPercent - lowPercent - 0.3;
-        }
+        var sweep = GetGuessVolumeSweep(lowPercent, highPercent);
 
         var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
         var next = GetNextWorkingRow(index);
 
-        for (var volume = lowPercent + add; volume < 14; volume += 0.3)
+        for (var volume = sweep.Start; volume < sweep.End; volume += 0.3)
         {
             var pos = AudioVisualizer.FindDataBelowThresholdForwardForEnd(volume, silenceLengthInSeconds, endSeconds);
             if (pos < 0 || pos >= endSeconds + 1)

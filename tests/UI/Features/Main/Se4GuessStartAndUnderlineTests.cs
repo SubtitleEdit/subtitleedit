@@ -254,6 +254,99 @@ public class Se4GuessStartAndUnderlineTests : IDisposable
         Assert.Equal(3800, vm.Subtitles[0].EndTime.TotalMilliseconds, 0);
     }
 
+    /// <summary>
+    /// #14555: the shortcuts did nothing on quiet passages. The searches rejected any window whose
+    /// peak range was under a fixed 4000 (about 12% of full scale), so dialogue at 10% of the
+    /// file's loudest peak - normal for a film with loud music elsewhere - never moved a cue, and
+    /// a file that is quiet overall had no threshold sweep at all. Speech from 2.5 s to 4.0 s at
+    /// <paramref name="speechLevel"/> over a floor of <paramref name="floorLevel"/>, with a
+    /// full-scale burst elsewhere when <paramref name="loudElsewhere"/>.
+    /// </summary>
+    [AvaloniaTheory]
+    [InlineData(3300, 500, true)]  // 10% of the loudest peak, the level in the issue's video
+    [InlineData(1600, 300, true)]  // 5%
+    [InlineData(2000, 200, false)] // quiet file: the loudest peak in the file is this speech
+    public void GuessStartAndEndWorkOnQuietSpeech(int speechLevel, int floorLevel, bool loudElsewhere)
+    {
+        Se.Settings.General.LockTimeCodes = false;
+        Se.Settings.Waveform.GuessStartOffsetMs = 0;
+        Se.Settings.Waveform.GuessEndOffsetMs = 0;
+
+        var (window, vm) = CreateMainViewModel();
+        vm.Subtitles.Add(new SubtitleLineViewModel(new Paragraph("Hello", 2200, 4600), null!) { Number = 1 });
+        Dispatcher.UIThread.RunJobs();
+
+        var av = vm.AudioVisualizer!;
+        av.WavePeaks = MakeQuietPeaks((short)speechLevel, (short)floorLevel, loudElsewhere);
+        Select(vm, vm.Subtitles[0]);
+        window.UpdateLayout();
+        Dispatcher.UIThread.RunJobs();
+
+        vm.WaveformGuessStartCommand.Execute(null);
+        vm.WaveformGuessEndCommand.Execute(null);
+
+        var line = vm.Subtitles[0];
+        Assert.InRange(line.StartTime.TotalMilliseconds, 2400, 2500);
+        Assert.InRange(line.EndTime.TotalMilliseconds, 4000, 4100);
+    }
+
+    /// <summary>
+    /// The "nothing to detect" guard still holds: a passage that is only noise, with no boundary
+    /// in it, leaves the cue alone rather than snapping it to a random spot in the noise.
+    /// </summary>
+    [AvaloniaFact]
+    public void GuessStartAndEndLeaveFlatAudioAlone()
+    {
+        Se.Settings.General.LockTimeCodes = false;
+        Se.Settings.Waveform.GuessStartOffsetMs = 0;
+        Se.Settings.Waveform.GuessEndOffsetMs = 0;
+
+        var (window, vm) = CreateMainViewModel();
+        vm.Subtitles.Add(new SubtitleLineViewModel(new Paragraph("Hello", 2200, 4600), null!) { Number = 1 });
+        Dispatcher.UIThread.RunJobs();
+
+        var av = vm.AudioVisualizer!;
+        var peaks = new WavePeak2[1000];
+        for (var i = 0; i < peaks.Length; i++)
+        {
+            var v = (short)(i % 2 == 0 ? 450 : 550); // noise wobbling around 500, nothing else
+            peaks[i] = new WavePeak2(v, (short)-v);
+        }
+
+        av.WavePeaks = new WavePeakData2(100, peaks);
+        Select(vm, vm.Subtitles[0]);
+        window.UpdateLayout();
+        Dispatcher.UIThread.RunJobs();
+
+        vm.WaveformGuessStartCommand.Execute(null);
+        vm.WaveformGuessEndCommand.Execute(null);
+
+        Assert.Equal(2200, vm.Subtitles[0].StartTime.TotalMilliseconds, 0);
+        Assert.Equal(4600, vm.Subtitles[0].EndTime.TotalMilliseconds, 0);
+    }
+
+    private static WavePeakData2 MakeQuietPeaks(short speechLevel, short floorLevel, bool loudElsewhere)
+    {
+        const int sampleRate = 100;
+        var peaks = new WavePeak2[sampleRate * 10];
+        for (var i = 0; i < peaks.Length; i++)
+        {
+            var v = floorLevel;
+            if (i >= 250 && i < 400)
+            {
+                v = speechLevel;
+            }
+            else if (loudElsewhere && i >= 800 && i < 900)
+            {
+                v = 32000;
+            }
+
+            peaks[i] = new WavePeak2(v, (short)-v);
+        }
+
+        return new WavePeakData2(sampleRate, peaks);
+    }
+
     private static WavePeakData2 MakePeaks(int sampleRate, int seconds, double speechFromSeconds, double speechToSeconds)
     {
         var peaks = new WavePeak2[sampleRate * seconds];

@@ -4252,10 +4252,9 @@ public class AudioVisualizer : Control
         var threshold = thresholdPercent / 100.0 * WavePeaks.HighestPeak;
 
         var minMax = GetMinAndMax(min, max);
-        const int lowPeakDifference = 4_000;
-        if (minMax.Max - minMax.Min < lowPeakDifference)
+        if (IsAllAudioAboutTheSame(minMax))
         {
-            return -1; // all audio about the same
+            return -1;
         }
 
         // look for start silence in the beginning of subtitle
@@ -4347,10 +4346,9 @@ public class AudioVisualizer : Control
         var threshold = thresholdPercent / 100.0 * WavePeaks.HighestPeak;
 
         var minMax = GetMinAndMax(min, max);
-        const int lowPeakDifference = 4_000;
-        if (minMax.Max - minMax.Min < lowPeakDifference)
+        if (IsAllAudioAboutTheSame(minMax))
         {
-            return -1; // all audio about the same
+            return -1;
         }
 
         var peaks = WavePeaks.Peaks;
@@ -4403,6 +4401,21 @@ public class AudioVisualizer : Control
         }
 
         return -1;
+    }
+
+    /// <summary>
+    /// "Nothing to detect" test for the guess start/end searches: there is no speech boundary to
+    /// find when the loudest peak around the cue is not clearly above the quietest. SE 4 used a
+    /// fixed 4000 (about 12% of full scale), which rejected every quiet passage - dialogue at 10%
+    /// of the file's loudest peak, common in films with loud music elsewhere, made the shortcuts
+    /// do nothing (#14555). The range that counts as flat now shrinks with the level: the loudest
+    /// peak must be at least double the quietest (with a small floor for digital silence), and
+    /// the old 4000 stays as the cap for loud audio.
+    /// </summary>
+    private static bool IsAllAudioAboutTheSame(MinMax minMax)
+    {
+        var lowPeakDifference = Math.Min(4_000, Math.Max(200, minMax.Min));
+        return minMax.Max - minMax.Min < lowPeakDifference;
     }
 
     /// <summary>
