@@ -443,6 +443,8 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<Features.Tools.AiReview.AiReviewViewModel>();
         collection.AddTransient<Features.Main.AiAssistant.AiAssistantViewModel>();
         collection.AddTransient<Features.Tools.AiReview.AiReviewPromptViewModel>();
+        collection.AddTransient<Features.Tools.GrammarCheck.GrammarCheckViewModel>();
+        collection.AddTransient<Features.Tools.GrammarCheck.GrammarCheckSettingsViewModel>();
         collection.AddTransient<FixCommonErrorsViewModel>();
         collection.AddTransient<FixNamesViewModel>();
         collection.AddTransient<FixNetflixErrorsViewModel>();

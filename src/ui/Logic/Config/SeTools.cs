@@ -9,6 +9,7 @@ public class SeTools
     public SeAiReview AiReview { get; set; } = new();
     public SeAudioToText AudioToText { get; set; } = new();
     public SeConvertActors ConvertActors { get; set; } = new();
+    public SeGrammarCheck GrammarCheck { get; set; } = new();
     public SeFixCommonErrors FixCommonErrors { get; set; } = new();
     public SeFixNetflixErrors FixNetflixErrors { get; set; } = new();
     public SeAdjustDisplayDurations AdjustDurations { get; set; } = new();
