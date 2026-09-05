@@ -33,10 +33,11 @@ public class IndexTts25AudioCppDownloadService : IIndexTts25AudioCppDownloadServ
 {
     private readonly HttpClient _httpClient;
 
-    // 2026-09-04: upstream main @ ad4bd574 (v0.7.1 + 22 commits, incl. the Higgs Audio codec
-    // decode seam fix, #436), compiled with the index_tts2 + higgs_audio_tts +
-    // fish_audio families — the same archives back all three audio.cpp engines.
-    private const string ReleaseTag = "audiocpp-indextts25-2026-09-04";
+    // 2026-09-05: upstream main @ a8fccb47 (incl. the Higgs Audio end-of-stream codec fix,
+    // #454, which removes the rising hiss at the end of every clip), compiled with the
+    // index_tts2 + higgs_audio_tts + fish_audio families — the same archives back all
+    // three audio.cpp engines.
+    private const string ReleaseTag = "audiocpp-indextts25-2026-09-05";
     private const string ReleaseBase =
         "https://github.com/SubtitleEdit/support-files/releases/download/" + ReleaseTag + "/";
 
