@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// fetched lazily by <c>--auto-download</c> into <c>~/.cache/crispasr/</c> on first synth. Keeping
 /// a single primary file mirrors VibeVoice's layout and avoids a 6-file download-progress UI.
 /// </summary>
-public class CosyVoice3CrispAsr : ITtsEngine
+public class CosyVoice3CrispAsr : ITtsEngine, IPerLineCloneEngine
 {
     public string Name => "CosyVoice3 (CrispASR)";
     public string Description => "Alibaba CosyVoice3 0.5B with 9 languages + 18 zh dialects, via CrispASR";
@@ -62,7 +62,11 @@ public class CosyVoice3CrispAsr : ITtsEngine
     public bool HasModel => true;
     public bool HasKeyFile => false;
     public bool SupportsVoiceCloning => true;
-    public bool SupportsPerLineVoiceCloning => false;
+    // Per-line clones are sent as a per-request `voice` file name (plus `ref_text`), which the
+    // cosyvoice3-tts backend opens relative to the server's working directory - the voices
+    // folder - and clones from without a restart. Ordinary imported voices stay on the startup
+    // --voice flag; see Speak and EnsureServerRunningAsync.
+    public bool SupportsPerLineVoiceCloning => true;
 
     // Two LLM quants — Q4_K is the lightweight default (~1.6 GB total), F16 the reference (~2.5 GB).
     // The label total covers every required companion (flow / hift / s3tok / campplus / voices).
@@ -207,6 +211,9 @@ public class CosyVoice3CrispAsr : ITtsEngine
     // change to either triggers a teardown + restart — same trade-off IndexTTS made.
     private static string? _serverVoiceArg;
     private static string? _serverRefText;
+    // True when the running server was started for a per-line clone run: every line then sends
+    // its own reference in the request, so a new staged clip is not a restart.
+    private static bool _serverPerLine;
     private static bool _processExitHooked;
     private static readonly StringBuilder _serverLog = new();
 
@@ -434,6 +441,13 @@ public class CosyVoice3CrispAsr : ITtsEngine
         {
             foreach (var file in Directory.GetFiles(voicesFolder, "*.wav"))
             {
+                // The per-line clone's own references live here too; they belong to one line of
+                // one run, not in a combo.
+                if (PerLineReferenceStaging.IsStaged(file))
+                {
+                    continue;
+                }
+
                 var name = Path.GetFileNameWithoutExtension(file).Replace('_', ' ');
                 var refText = TryReadRefText(file);
                 result.Add(new Voice(new CosyVoice3Voice(name, file, refText), $"{CloneLabel}: {name}"));
@@ -442,6 +456,55 @@ public class CosyVoice3CrispAsr : ITtsEngine
 
         return result.ToArray();
     }
+
+    /// <summary>
+    /// <see cref="IPerLineCloneEngine"/>: the clip is staged into the voices folder, which is the
+    /// server's working directory, so its bare file name is what <see cref="Speak"/> sends as the
+    /// request's <c>voice</c>. The talker is conditioned on the (transcript, speech) pair, so a
+    /// clip without a usable transcript beside it is not a reference at all - null, and that line
+    /// falls back to an ordinary voice rather than failing the run.
+    /// </summary>
+    public Voice? MakePerLineCloneVoice(string clipFileName, string voiceName)
+    {
+        var staged = StagePerLineReference(clipFileName);
+        if (staged == null)
+        {
+            return null;
+        }
+
+        var refText = TryReadRefText(staged);
+        if (string.IsNullOrWhiteSpace(refText))
+        {
+            Se.WriteToolsLog($"CosyVoice3 (CrispASR): no usable transcript beside '{clipFileName}' - not cloning this line");
+            return null;
+        }
+
+        return new Voice(new CosyVoice3Voice(voiceName, staged, refText));
+    }
+
+    /// <summary>
+    /// The staged copy in the voices folder, which is the only reference this engine ever
+    /// speaks from - exporting it (with its .txt sidecar) is what lets an imported session be
+    /// re-dubbed on a machine that no longer has the video.
+    /// </summary>
+    public string? GetPerLineReferenceClip(Voice voice) =>
+        voice.EngineVoice is CosyVoice3Voice cosyVoice && !string.IsNullOrEmpty(cosyVoice.FilePath)
+            ? cosyVoice.FilePath
+            : null;
+
+    /// <summary>
+    /// <see cref="IPerLineCloneEngine"/>: see <see cref="ClearStagedPerLineReferences"/>.
+    /// </summary>
+    public void ResetStagedPerLineReferences() => ClearStagedPerLineReferences();
+
+    public static string? StagePerLineReference(string clipFileName) =>
+        PerLineReferenceStaging.Stage(clipFileName, GetSetVoicesFolder(), "CosyVoice3 (CrispASR)");
+
+    /// <summary>
+    /// Removes every staged per-line reference, leaving the user's imported voices alone.
+    /// </summary>
+    public static void ClearStagedPerLineReferences() =>
+        PerLineReferenceStaging.Clear(Path.Combine(GetSetFolder(), "voices"), "CosyVoice3 (CrispASR)");
 
     private static string TryReadRefText(string wavPath)
     {
@@ -516,23 +579,17 @@ public class CosyVoice3CrispAsr : ITtsEngine
         }
 
         var modelKey = ResolveModelKey(model);
-        await EnsureServerRunningAsync(modelKey, voiceArg, cosyVoice.RefText, cancellationToken);
+        // A per-line clone's reference is sent per request, so the server is keyed on the model
+        // only for those; an ordinary voice keeps the startup flags and their restart-on-change.
+        var isPerLineClone = isClone && PerLineReferenceStaging.IsStaged(cosyVoice.FilePath);
+        await EnsureServerRunningAsync(modelKey, voiceArg, cosyVoice.RefText, isPerLineClone, cancellationToken);
 
         var outputFileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetFolder), Guid.NewGuid() + ".wav");
 
         var speed = Math.Clamp(Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrSpeed, 0.25, 4.0);
-        // Deliberately NO `voice` / `ref_text` field: for cloning, voiceArg is an absolute WAV
-        // path, which the server rejects outright (HTTP 400, "'voice' must not contain … path
-        // separators" — path-traversal guard), so every clone synthesis failed. The backend gets
-        // both voice (preset name or WAV path) and ref-text from the startup --voice/--ref-text
-        // flags instead, and the server restarts on (voiceArg, ref-text) change — see
-        // EnsureServerRunningAsync. Same bug family as MOSS-TTS #12757.
-        var payload = new Dictionary<string, object>
-        {
-            ["input"] = text,
-            ["response_format"] = "wav",
-            ["speed"] = speed,
-        };
+        var payload = BuildSpeakPayload(text, speed,
+            isPerLineClone ? Path.GetFileName(cosyVoice.FilePath) : null,
+            isPerLineClone ? cosyVoice.RefText : null);
         if (isClone)
         {
             // Attests the user's own imported reference and the AI-disclosure duty; see
@@ -672,16 +729,65 @@ public class CosyVoice3CrispAsr : ITtsEngine
         }
     }
 
-    private static async Task EnsureServerRunningAsync(string modelKey, string voiceArg, string refText, CancellationToken ct)
+    /// <summary>
+    /// Builds the <c>/v1/audio/speech</c> JSON payload without the language fields, which
+    /// <see cref="Speak"/> adds per voice. Extracted so the voice-field rules are unit-testable
+    /// without a running crispasr server.
+    /// </summary>
+    /// <param name="perLineVoiceFileName">
+    /// The bare file name (with <c>.wav</c>) of a staged per-line reference to send as the
+    /// request's <c>voice</c>, or null for an ordinary voice. The backend takes the clone path
+    /// only for a name ending in <c>.wav</c> and opens it relative to its working directory,
+    /// which <see cref="EnsureServerRunningAsync"/> sets to the voices folder; the server rejects
+    /// anything with a path separator (HTTP 400), so it cannot be the full path.
+    /// </param>
+    /// <param name="perLineRefText">
+    /// The clip's transcript, sent as <c>ref_text</c> beside it - the talker is conditioned on
+    /// the (transcript, speech) pair, and a per-request value is what keeps the pair together
+    /// when the reference changes every line.
+    /// </param>
+    /// <remarks>
+    /// For ordinary voices, deliberately sends NO <c>voice</c> / <c>ref_text</c> field: voiceArg
+    /// is then an absolute WAV path, which the server rejects outright (HTTP 400, "'voice' must
+    /// not contain … path separators" — path-traversal guard), so every clone synthesis failed.
+    /// The backend gets both voice (preset name or WAV path) and ref-text from the startup
+    /// --voice/--ref-text flags instead, and the server restarts on (voiceArg, ref-text) change —
+    /// see <see cref="EnsureServerRunningAsync"/>. Same bug family as MOSS-TTS #12757.
+    /// </remarks>
+    internal static Dictionary<string, object> BuildSpeakPayload(string text, double speed, string? perLineVoiceFileName, string? perLineRefText)
+    {
+        var payload = new Dictionary<string, object>
+        {
+            ["input"] = text,
+            ["response_format"] = "wav",
+            ["speed"] = speed,
+        };
+
+        if (!string.IsNullOrEmpty(perLineVoiceFileName))
+        {
+            payload["voice"] = perLineVoiceFileName;
+            if (!string.IsNullOrWhiteSpace(perLineRefText))
+            {
+                payload["ref_text"] = perLineRefText;
+            }
+        }
+
+        return payload;
+    }
+
+    private static async Task EnsureServerRunningAsync(string modelKey, string voiceArg, string refText, bool perLine, CancellationToken ct)
     {
         // Server is keyed by (model, voice, ref-text) since all three are baked in at process
         // start. A switch from preset → clone, clone → different clone, or refText edit all
-        // require a fresh server.
+        // require a fresh server. A per-line clone run is the exception: each line carries its
+        // own reference and transcript in the request, so within such a run the server is keyed
+        // on the model alone. The first clip still goes on the startup flags, which is harmless.
         bool MatchesCurrent() =>
             _serverProcess is { HasExited: false } && _serverPort != 0
             && string.Equals(_serverModelKey, modelKey, StringComparison.OrdinalIgnoreCase)
-            && string.Equals(_serverVoiceArg, voiceArg, StringComparison.OrdinalIgnoreCase)
-            && string.Equals(_serverRefText, refText, StringComparison.Ordinal);
+            && ((perLine && _serverPerLine)
+                || (string.Equals(_serverVoiceArg, voiceArg, StringComparison.OrdinalIgnoreCase)
+                    && string.Equals(_serverRefText, refText, StringComparison.Ordinal)));
 
         if (MatchesCurrent())
         {
@@ -721,7 +827,12 @@ public class CosyVoice3CrispAsr : ITtsEngine
             var port = FindFreeLoopbackPort();
             var psi = new ProcessStartInfo
             {
-                WorkingDirectory = Path.GetDirectoryName(exe) ?? GetSetFolder(),
+                // Run in the voices folder: the backend opens a per-request `voice` as a literal
+                // path relative to its working directory (it does not resolve it against
+                // --voice-dir), and the server rejects a `voice` with path separators - so this is
+                // what lets a per-line clone's staged clip be found by its bare file name. Every
+                // path passed below is absolute, so nothing else depends on the working directory.
+                WorkingDirectory = GetSetVoicesFolder(),
                 FileName = exe,
                 UseShellExecute = false,
                 CreateNoWindow = true,
@@ -792,6 +903,7 @@ public class CosyVoice3CrispAsr : ITtsEngine
             _serverModelKey = modelKey;
             _serverVoiceArg = voiceArg;
             _serverRefText = refText;
+            _serverPerLine = perLine;
             HookProcessExitOnce();
 
             // Local startup is fast; first-run --auto-download (~921 MB minimum, ~2.5 GB for F16)
@@ -811,6 +923,7 @@ public class CosyVoice3CrispAsr : ITtsEngine
                     _serverModelKey = null;
                     _serverVoiceArg = null;
                     _serverRefText = null;
+                    _serverPerLine = false;
                     throw new InvalidOperationException(
                         $"crispasr (cosyvoice3-tts) exited during startup (code {exitCode}). Output: {tail}"
                         + LaunchCmdSuffix(exitedLaunchCommand));
@@ -894,6 +1007,7 @@ public class CosyVoice3CrispAsr : ITtsEngine
         _serverModelKey = null;
         _serverVoiceArg = null;
         _serverRefText = null;
+        _serverPerLine = false;
         if (p == null)
         {
             return;
