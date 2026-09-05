@@ -2311,8 +2311,9 @@ public static class DownloadHashManager
             },
             [WhisperCpp.LinuxCudaExecutable] = new[]
             {
-                "9c93f819e170d0f00a08c256ac2299f819a8e94f3a6f116bac2657c6ab8de62a", // whispercpp-193 / v1.9.3 (current download URL)
-                "9c93f819e170d0f00a08c256ac2299f819a8e94f3a6f116bac2657c6ab8de62a", // whispercpp-192 / v1.9.2
+                // whisper-cli is byte-identical in whispercpp-192 and -193; the v1.9.3 changes live in
+                // libggml-cuda.so, so the archive hash above is what tells the two apart.
+                "9c93f819e170d0f00a08c256ac2299f819a8e94f3a6f116bac2657c6ab8de62a", // whispercpp-193 / v1.9.3 (current download URL) and whispercpp-192 / v1.9.2
                 "3a4d717745c2d8cf19ca7a954c29c0349a7f158d93a6597bb86e155f0735474a", // whispercpp-191-r2 / v1.9.1
                 "16a838ae67e248020b9bc65b8584fcc113cf18167c9cfc0a2d98e194fa52cf95", // whispercpp-191 / v1.9.1 (missing shared libraries)
                 "330ff60cbabd8e77137000d05905cabca90e299c455a3282948c9edddf28bcd7", // whispercpp-186 / v1.8.6 (missing shared libraries)
