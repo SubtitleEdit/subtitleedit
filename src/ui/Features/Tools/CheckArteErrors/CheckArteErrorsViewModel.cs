@@ -129,6 +129,18 @@ public partial class CheckArteErrorsViewModel : ObservableObject
 
     public void Initialize(Subtitle subtitle)
     {
+        // ARTE UT Norm: minimum gap is five frames at 25 fps. Keep both stored
+        // representations in sync because Subtitle Edit can use frame or ms mode.
+        // This is intentionally persisted as the global Subtitle Edit setting.
+        const int arteGapFrames = 5;
+
+        var minimumGap = Se.Settings.General.MinimumBetweenLines;
+        if (minimumGap.Frames != arteGapFrames)
+        {
+            minimumGap.Frames = arteGapFrames;
+            Se.SaveSettings();
+        }
+
         // Keep an independent copy for every analysis pass. The live subtitle in
         // MainViewModel is deliberately not exposed to this tool.
         _sourceSnapshot = new Subtitle(subtitle, generateNewId: false);
@@ -276,17 +288,19 @@ public partial class CheckArteErrorsViewModel : ObservableObject
 
     private void AnalyzeMinimumGaps(Subtitle subtitle)
     {
-        var minimumGapMs = Math.Max(
-            0.0,
-            Se.Settings.General.MinimumBetweenLines.GetMilliseconds());
+        const double arteFrameRate = 25.0;
+        const int minimumGapFrames = 5;
 
         for (var i = 1; i < subtitle.Paragraphs.Count; i++)
         {
             var previous = subtitle.Paragraphs[i - 1];
             var current = subtitle.Paragraphs[i];
             var gapMs = current.StartTime.TotalMilliseconds - previous.EndTime.TotalMilliseconds;
+            var gapFrames = (int)Math.Round(
+                gapMs * arteFrameRate / 1000.0,
+                MidpointRounding.AwayFromZero);
 
-            if (gapMs >= minimumGapMs)
+            if (gapFrames >= minimumGapFrames)
             {
                 continue;
             }
@@ -294,61 +308,90 @@ public partial class CheckArteErrorsViewModel : ObservableObject
             Fixes.Add(new ArteFixItem(
                 false,
                 i + 1,
-                $"{gapMs:0} ms",
-                $"{minimumGapMs:0} ms minimum",
-                gapMs < 0
+                $"{gapFrames} frame{(Math.Abs(gapFrames) == 1 ? string.Empty : "s")}",
+                $"{minimumGapFrames} frames minimum",
+                gapFrames < 0
                     ? $"Overlap with subtitle {i}; minimum gap is not met."
-                    : $"Gap after subtitle {i} is below the configured minimum."));
+                    : $"Gap after subtitle {i} is below the ARTE minimum of {minimumGapFrames} frames."));
         }
     }
 
     private void AnalyzeTeletextLinePosition(Subtitle subtitle)
     {
-        for (var i = 0; i < subtitle.Paragraphs.Count; i++)
-        {
-            var paragraph = subtitle.Paragraphs[i];
+        var correctBottomCount = 0;
+        var oneRowHighBottomCount = 0;
 
+        foreach (var paragraph in subtitle.Paragraphs)
+        {
             if (string.IsNullOrWhiteSpace(paragraph.Text))
             {
                 continue;
             }
 
-            var lineCount = paragraph.Text
-                .Replace("\r\n", "\n")
-                .Replace('\r', '\n')
-                .Split('\n')
-                .Length;
+            var lineCount = paragraph.Text.Replace("\r\n", "\n").Replace('\r', '\n').Split('\n').Length;
+            if (lineCount is < 1 or > 2 ||
+                !int.TryParse(paragraph.MarginV, out var row))
+            {
+                continue;
+            }
 
+            var expectedBottomRow = lineCount == 1 ? 22 : 20;
+            if (row == expectedBottomRow)
+            {
+                correctBottomCount++;
+            }
+            else if (row == expectedBottomRow - 1)
+            {
+                oneRowHighBottomCount++;
+            }
+        }
+
+        var shiftWholeFileOneRow =
+            oneRowHighBottomCount > 0 &&
+            oneRowHighBottomCount > correctBottomCount;
+
+        for (var i = 0; i < subtitle.Paragraphs.Count; i++)
+        {
+            var paragraph = subtitle.Paragraphs[i];
+            if (string.IsNullOrWhiteSpace(paragraph.Text))
+            {
+                continue;
+            }
+
+            var lineCount = paragraph.Text.Replace("\r\n", "\n").Replace('\r', '\n').Split('\n').Length;
             if (lineCount is < 1 or > 2)
             {
                 continue;
             }
 
-            // ARTE Teletext uses the established double-height bottom layout:
-            // one visible line = technical row 22 (displayed as 23),
-            // two visible lines = technical start row 20 (displayed as 21).
-            var expectedRow = lineCount == 1 ? 22 : 20;
+            var expectedBottomRow = lineCount == 1 ? 22 : 20;
+            var hasRow = int.TryParse(paragraph.MarginV, out var currentRow);
 
-            if (int.TryParse(
-                    paragraph.MarginV,
-                    System.Globalization.NumberStyles.Integer,
-                    System.Globalization.CultureInfo.InvariantCulture,
-                    out var currentRow) &&
-                currentRow == expectedRow)
+            if (shiftWholeFileOneRow && hasRow)
+            {
+                Fixes.Add(new ArteFixItem(
+                    true,
+                    i + 1,
+                    currentRow.ToString(),
+                    (currentRow + 1).ToString(),
+                    "File appears vertically shifted by one Teletext row; relative position is preserved.",
+                    ArteFixKind.TeletextLinePosition));
+                continue;
+            }
+
+            // In an otherwise correctly positioned Teletext file, deliberate higher
+            // positions (for example an on-screen title) remain untouched.
+            if (hasRow)
             {
                 continue;
             }
 
-            var displayedRow = expectedRow + 1;
-
             Fixes.Add(new ArteFixItem(
                 true,
                 i + 1,
-                string.IsNullOrWhiteSpace(paragraph.MarginV)
-                    ? "Not set"
-                    : paragraph.MarginV,
-                expectedRow.ToString(System.Globalization.CultureInfo.InvariantCulture),
-                $"Bottom Teletext position expected; displayed TT line is {displayedRow}.",
+                "Not set",
+                expectedBottomRow.ToString(),
+                $"No Teletext position is set; propose bottom position for {lineCount}-line subtitle.",
                 ArteFixKind.TeletextLinePosition));
         }
     }
