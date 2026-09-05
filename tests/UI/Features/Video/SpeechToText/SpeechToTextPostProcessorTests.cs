@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using System.Linq;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 
@@ -211,5 +211,41 @@ public class SpeechToTextQualityReportTests
         Assert.Equal(2, pp.QualityReport.TotalLines);
         Assert.Equal(1, pp.QualityReport.Count(SpeechToTextQualityIssueType.TooShort));
         Assert.Equal(1, pp.QualityReport.Count(SpeechToTextQualityIssueType.NonSpeech));
+    }
+
+    // Splitting a long line divides its time; the short-duration fix must run after
+    // split/merge so the halves it creates are fixed too (discussion #12929).
+    [Fact]
+    public void Fix_FixShortDuration_RunsAfterSplitLines()
+    {
+        var oldMin = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
+        var oldMaxLen = Configuration.Settings.General.SubtitleLineMaximumLength;
+        var oldMaxLines = Configuration.Settings.General.MaxNumberOfLines;
+        try
+        {
+            Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds = 1000;
+            Configuration.Settings.General.SubtitleLineMaximumLength = 43;
+            Configuration.Settings.General.MaxNumberOfLines = 2;
+
+            // Long enough to be split into two lines, short enough that each half is < 1 s.
+            var text = "This is the first sentence of the line. This is the second sentence of the line. And a third sentence too.";
+            var subtitle = Make((text, 0, 1500), ("Far away.", 20000, 22000));
+
+            var pp = new SpeechToTextPostProcessor("en");
+            var result = pp.Fix(SpeechToTextPostProcessor.Engine.Whisper, subtitle, true, false, false, false, true, true, false, Avalonia.Media.Colors.Red);
+
+            Assert.True(result.Paragraphs.Count > 1, "expected the line to be split");
+            foreach (var p in result.Paragraphs.Take(result.Paragraphs.Count - 1))
+            {
+                Assert.True(p.DurationTotalMilliseconds >= 1000 || p.EndTime.TotalMilliseconds >= result.Paragraphs[result.Paragraphs.IndexOf(p) + 1].StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines,
+                    $"#{p.Number} '{p.Text}' {p.StartTime.TotalMilliseconds}-{p.EndTime.TotalMilliseconds} was left short");
+            }
+        }
+        finally
+        {
+            Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds = oldMin;
+            Configuration.Settings.General.SubtitleLineMaximumLength = oldMaxLen;
+            Configuration.Settings.General.MaxNumberOfLines = oldMaxLines;
+        }
     }
 }
