@@ -23,19 +23,21 @@ public interface IWhisperDownloadService
 public class WhisperDownloadService : IWhisperDownloadService
 {
     private readonly HttpClient _httpClient;
-    private const string WindowsUrl = "https://github.com/ggml-org/whisper.cpp/releases/download/v1.9.2/whisper-blas-bin-x64.zip";
-    private const string MacArmUrl = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-192/whisper-mac.zip";
-    private const string MacX64Url = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-192/whisper-mac.zip";
+    // Upstream now tags nightly builds llama.cpp style (b4938) and only attaches binaries to
+    // those; the semantic v1.9.3 tag points at the same commit but carries no assets.
+    private const string WindowsUrl = "https://github.com/ggml-org/whisper.cpp/releases/download/b4938/whisper-blas-bin-x64.zip";
+    private const string MacArmUrl = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-193/whisper-mac.zip";
+    private const string MacX64Url = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-193/whisper-mac.zip";
     // The Linux archives are SE rebuilds (upstream ships no Linux binaries). They must carry
     // libwhisper.so.1 / libggml.so.0 next to whisper-cli, staged under their SONAMEs with
     // $ORIGIN RPATHs - whispercpp-184 through -191 shipped without them and the engine died on
     // startup with "error while loading shared libraries" (issue #13680). The build workflow in
-    // SubtitleEdit/support-files verifies this now, so plain whispercpp-192 is fine here.
-    private const string LinuxUrl = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-192/whisper-vulkan-linux64.zip";
+    // SubtitleEdit/support-files verifies this now, so plain whispercpp-193 is fine here.
+    private const string LinuxUrl = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-193/whisper-vulkan-linux64.zip";
 
-    private const string WindowsUrlCuBlass = "https://github.com/ggml-org/whisper.cpp/releases/download/v1.9.2/whisper-cublas-12.4.0-bin-x64.zip";
-    private const string WindowsUrlCppVulkan = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-192/whisper-vulkan-x64.zip";
-    private const string LinuxUrlCuBlass = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-192/whisper-cuda-linux64.zip";
+    private const string WindowsUrlCuBlass = "https://github.com/ggml-org/whisper.cpp/releases/download/b4938/whisper-cublas-12.4.0-bin-x64.zip";
+    private const string WindowsUrlCppVulkan = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-193/whisper-vulkan-x64.zip";
+    private const string LinuxUrlCuBlass = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-193/whisper-cuda-linux64.zip";
     
     private const string DownloadUrlConstMe = "https://github.com/Const-me/Whisper/releases/download/1.12.0/cli.zip";
     private const string SileroVadUrl = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-184/ggml-silero-v6.2.0.zip";
