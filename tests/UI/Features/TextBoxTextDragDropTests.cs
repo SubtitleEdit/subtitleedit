@@ -76,6 +76,60 @@ public class TextBoxTextDragDropTests
     }
 
     [AvaloniaFact]
+    public void SmallMoveInsideSelection_KeepsTheSelectionIntact()
+    {
+        // #14568: Avalonia captures the pointer to the presenter on the press even though the box
+        // never handled it, and the box's move handler then drags SelectionEnd along with the
+        // pointer - so a hand that wobbles before the drag threshold used to lose characters.
+        var (window, textBox) = Show("hello brave world");
+        try
+        {
+            textBox.SelectionStart = 6;
+            textBox.SelectionEnd = 11; // "brave"
+            var point = PointAt(window, textBox, 10);
+
+            window.MouseDown(point, MouseButton.Left);
+            window.MouseMove(new Point(point.X - 2, point.Y), RawInputModifiers.LeftMouseButton);
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal("brave", textBox.SelectedText);
+
+            window.MouseMove(new Point(point.X - 30, point.Y), RawInputModifiers.LeftMouseButton);
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal("brave", textBox.SelectedText);
+
+            window.MouseUp(new Point(point.X - 30, point.Y), MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void PressAtTheEndOfTheSelection_CountsAsInside()
+    {
+        var (window, textBox) = Show("hello brave world");
+        try
+        {
+            textBox.SelectionStart = 6;
+            textBox.SelectionEnd = 11;
+            var point = PointAt(window, textBox, 11); // hit-tests to selectionEnd
+
+            window.MouseDown(point, MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal("brave", textBox.SelectedText);
+
+            window.MouseUp(point, MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void ClickOutsideSelection_IsLeftToTheTextBox()
     {
         var (window, textBox) = Show("hello brave world");
@@ -117,6 +171,109 @@ public class TextBoxTextDragDropTests
         }
         finally
         {
+            window.Close();
+        }
+    }
+
+    [Theory]
+    // Between two words: a space is added on the side that lacks one.
+    [InlineData("hello world", 5, "brave", "hello brave world", "brave")]
+    [InlineData("hello world", 6, "brave", "hello brave world", "brave")]
+    // Spaces the text carries are kept where needed and dropped at a boundary; what is kept
+    // stays part of the selection, the added padding does not.
+    [InlineData("hello world", 6, " brave ", "hello brave world", "brave ")]
+    [InlineData("hello world", 11, " brave ", "hello world brave", " brave")]
+    [InlineData("hello world", 0, " brave ", "brave hello world", "brave ")]
+    // No space in front of closing punctuation (SE4's list plus the comma).
+    [InlineData("hello.", 5, "brave", "hello brave.", "brave")]
+    [InlineData("hello, world", 5, "brave", "hello brave, world", "brave")]
+    [InlineData("hello<i>x</i>", 5, "brave", "hello brave<i>x</i>", "brave")]
+    // A line break is a boundary: no space after it, none before it.
+    [InlineData("hello\nworld", 6, "brave", "hello\nbrave world", "brave")]
+    [InlineData("hello\nworld", 5, "brave", "hello brave\nworld", "brave")]
+    [InlineData("hello\nworld", 6, " brave ", "hello\nbrave world", "brave ")]
+    [InlineData("hello\nworld", 5, " brave ", "hello brave\nworld", " brave")]
+    // Into an empty box: nothing to pad.
+    [InlineData("", 0, "brave", "brave", "brave")]
+    public void FitSpacing_FollowsSe4Rules(string current, int index, string dropped, string expected, string expectedSelected)
+    {
+        var fitted = TextBoxTextDragDrop.FitSpacing(current, index, dropped);
+
+        Assert.Equal(expected, current.Insert(index, fitted.Text));
+        Assert.Equal(expectedSelected, fitted.Text.Substring(fitted.Skip, fitted.Length));
+    }
+
+    [AvaloniaFact]
+    public void DropFromElsewhere_BetweenTwoWords_AddsTheMissingSpace()
+    {
+        var (window, textBox) = Show("hello world");
+        try
+        {
+            TextBoxTextDragDrop.SetDragSourceForTest(null, 0, 0);
+            var point = PointAt(window, textBox, 5); // right after "hello"
+
+            window.DragDrop(point, RawDragEventType.DragOver, Text("brave"), DragDropEffects.Copy, RawInputModifiers.None);
+            window.DragDrop(point, RawDragEventType.Drop, Text("brave"), DragDropEffects.Copy, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Equal("hello brave world", textBox.Text);
+            Assert.Equal("brave", textBox.SelectedText);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void DropWithinTheSameBox_LiftingAWordBeforePunctuation_LeavesNoStraySpace()
+    {
+        var (window, textBox) = Show("hello brave." + Environment.NewLine + "world");
+        try
+        {
+            // Dragging "brave" (6..11) to the very end.
+            textBox.SelectionStart = 6;
+            textBox.SelectionEnd = 11;
+            TextBoxTextDragDrop.SetDragSourceForTest(textBox, 6, 5);
+            var end = textBox.Text!.Length;
+            var point = PointAt(window, textBox, end);
+
+            window.DragDrop(point, RawDragEventType.DragOver, Text("brave"), DragDropEffects.Copy | DragDropEffects.Move, RawInputModifiers.None);
+            window.DragDrop(point, RawDragEventType.Drop, Text("brave"), DragDropEffects.Copy | DragDropEffects.Move, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Equal("hello." + Environment.NewLine + "world brave", textBox.Text);
+            Assert.Equal("brave", textBox.SelectedText);
+        }
+        finally
+        {
+            TextBoxTextDragDrop.SetDragSourceForTest(null, 0, 0);
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void DropWithinTheSameBox_LiftingTheLastWordOfALine_LeavesNoTrailingSpace()
+    {
+        var (window, textBox) = Show("hello brave" + Environment.NewLine + "world");
+        try
+        {
+            // Dragging "brave" (6..11) to the start of the text.
+            textBox.SelectionStart = 6;
+            textBox.SelectionEnd = 11;
+            TextBoxTextDragDrop.SetDragSourceForTest(textBox, 6, 5);
+            var point = PointAt(window, textBox, 0);
+
+            window.DragDrop(point, RawDragEventType.DragOver, Text("brave"), DragDropEffects.Copy | DragDropEffects.Move, RawInputModifiers.None);
+            window.DragDrop(point, RawDragEventType.Drop, Text("brave"), DragDropEffects.Copy | DragDropEffects.Move, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Equal("brave hello" + Environment.NewLine + "world", textBox.Text);
+            Assert.Equal("brave", textBox.SelectedText);
+        }
+        finally
+        {
+            TextBoxTextDragDrop.SetDragSourceForTest(null, 0, 0);
             window.Close();
         }
     }
@@ -178,8 +335,10 @@ public class TextBoxTextDragDropTests
             window.DragDrop(point, RawDragEventType.DragOver, Text("brave "), DragDropEffects.Copy | DragDropEffects.Move, RawInputModifiers.None);
             window.DragDrop(point, RawDragEventType.Drop, Text("brave "), DragDropEffects.Copy | DragDropEffects.Move, RawInputModifiers.None);
             Dispatcher.UIThread.RunJobs();
-            Assert.Equal("hello worldbrave ", textBox.Text);
-            Assert.Equal("brave ", textBox.SelectedText);
+            // The trailing space it carried is dropped at the end of the text and a space is
+            // put in front of it instead.
+            Assert.Equal("hello world brave", textBox.Text);
+            Assert.Equal("brave", textBox.SelectedText);
         }
         finally
         {
