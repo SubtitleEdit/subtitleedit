@@ -137,7 +137,7 @@ public partial class PromptUnknownWordViewModel : ObservableObject
         {
             Text = w,
             FontWeight = FontWeight.Bold,
-            Foreground = Brushes.Red
+            Foreground = new SolidColorBrush(Se.Settings.Appearance.SpellCheckHighlightColor.FromHexToColor())
         };
         if (!string.IsNullOrEmpty(fontName))
         {
