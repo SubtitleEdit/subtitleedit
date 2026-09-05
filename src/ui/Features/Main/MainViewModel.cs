@@ -28446,6 +28446,15 @@ public partial class MainViewModel :
         return true;
     }
 
+    /// <summary>
+    /// Alt+Space normally opens the Windows system menu (see UiUtil.TryHandleWindowSystemMenu),
+    /// but a shortcut the user bound to that chord must run instead (#14536).
+    /// </summary>
+    internal bool HasAltSpaceShortcut()
+    {
+        return _shortcutManager.HasShortcut("Alt", nameof(Key.Space));
+    }
+
     internal void OnKeyDownHandler(object? sender, KeyEventArgs keyEventArgs)
     {
         lock (_onKeyDownHandlerLock)
