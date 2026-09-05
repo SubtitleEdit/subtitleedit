@@ -112,7 +112,7 @@ public class BurnInWindow : Window
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // cut
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star), MinHeight = 400 }, // preview + batch list (never smaller than the preview box needs)
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star), MinHeight = 320 }, // preview + batch list (never smaller than the preview box needs)
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // audio
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // video info + target file size
             },
@@ -209,8 +209,8 @@ public class BurnInWindow : Window
             {
                 player.Width = double.NaN;
                 player.Height = double.NaN;
-                player.MinWidth = 480;
-                player.MinHeight = 270;
+                player.MinWidth = 400;
+                player.MinHeight = 225;
                 player.HorizontalAlignment = HorizontalAlignment.Stretch;
                 player.VerticalAlignment = VerticalAlignment.Stretch;
             }
@@ -818,8 +818,8 @@ public class BurnInWindow : Window
         vm.VideoPlayerControl = InitVideoPlayer.MakeVideoPlayer();
         vm.VideoPlayerControl.FullScreenIsVisible = true;
         vm.VideoPlayerControl.FullScreenCommand = vm.PreviewFullScreenCommand;
-        vm.VideoPlayerControl.MinWidth = 480;
-        vm.VideoPlayerControl.MinHeight = 270;
+        vm.VideoPlayerControl.MinWidth = 400;
+        vm.VideoPlayerControl.MinHeight = 225;
         vm.VideoPlayerControl.HorizontalAlignment = HorizontalAlignment.Stretch;
         vm.VideoPlayerControl.VerticalAlignment = VerticalAlignment.Stretch;
 
