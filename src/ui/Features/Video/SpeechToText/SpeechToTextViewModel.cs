@@ -197,6 +197,11 @@ public partial class SpeechToTextViewModel : ObservableObject
         new(@"^\[\d\d:\d\d:\d\d[\.,]\d\d\d --> \d\d:\d\d:\d\d[\.,]\d\d\d]", RegexOptions.Compiled);
 
     private readonly Regex _pctWhisper = new(@"^\d+%\|", RegexOptions.Compiled);
+
+    // WhisperX (verbose, its default) prints one "Transcript: [1101.31 --> 1130.774]  text" line
+    // per VAD chunk as it is decoded, with plain seconds rather than a time code.
+    private static readonly Regex WhisperXTranscriptRegex =
+        new(@"^Transcript: \[(\d+(?:\.\d+)?) --> (\d+(?:\.\d+)?)\]", RegexOptions.Compiled);
     private readonly Regex _pctWhisperFaster = new(@"^\s*\d+%\s*\|", RegexOptions.Compiled);
 
     // Sentence chunks with trailing terminator (+ closing quotes/brackets), or a
@@ -4601,6 +4606,20 @@ public partial class SpeechToTextViewModel : ObservableObject
                 // "[hh:mm:ss.mmm --> hh:mm:ss.mmm]  text"
                 AddResultTextFromLine(line, startIndex: 1, timeLength: 12, endIndex: 18, textIndex: 31, language.Code);
             }
+            else if (TryParseWhisperXTranscriptEndSeconds(line, out var whisperXEndSeconds))
+            {
+                // WhisperX streams no percentage unless --print_progress is set, and even then it
+                // restarts at 0% for the alignment pass, so the chunk end time is the usable live
+                // signal: it drives the progress bar and the time estimate the same way the
+                // "[mm:ss.mmm --> mm:ss.mmm]" segment lines of the other engines do. The chunks
+                // are not added to the result list - the SRT WhisperX writes has the aligned,
+                // sentence-split segments, and these ~30 s VAD chunks would only get in the way
+                // of that.
+                if (_showProgressPct < 0 && whisperXEndSeconds > _endSeconds)
+                {
+                    _endSeconds = whisperXEndSeconds;
+                }
+            }
             else if (line.StartsWith("whisper_full: progress =", StringComparison.OrdinalIgnoreCase))
             {
                 var arr = line.Split('=');
@@ -4676,6 +4695,17 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
 
         _resultList.Add(rt);
+    }
+
+    /// <summary>
+    /// Reads the chunk end time from a WhisperX "Transcript: [start --> end]  text" line.
+    /// </summary>
+    internal static bool TryParseWhisperXTranscriptEndSeconds(string line, out double endSeconds)
+    {
+        endSeconds = 0;
+        var match = WhisperXTranscriptRegex.Match(line);
+        return match.Success &&
+               double.TryParse(match.Groups[2].Value, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out endSeconds);
     }
 
     private void LogToConsole(string s, bool skipOutputText = false)
