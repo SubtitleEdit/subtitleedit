@@ -9108,7 +9108,7 @@ public partial class MainViewModel :
         {
             if (undockedWindow != null)
             {
-                undockedWindow.Topmost = topmost && (Window?.IsActive == true || undockedWindow.IsActive);
+                WindowService.SetTopmost(undockedWindow, topmost && (Window?.IsActive == true || undockedWindow.IsActive), Window);
             }
         }
     }
