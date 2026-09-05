@@ -1082,7 +1082,7 @@ public partial class VideoOcrViewModel : ObservableObject
             var modelName = SelectedLlamaCppModel?.Model.FileName is { } fileName
                 ? Path.GetFileNameWithoutExtension(fileName)
                 : "glmocr";
-            var prompt = Se.Settings.Ocr.LlamaCppOcrPrompt;
+            var prompt = LlamaCppServerManager.ResolveOcrPrompt(SelectedLlamaCppModel?.Model, Se.Settings.Ocr.LlamaCppOcrPrompt);
             await RunLlmOcr(ocrGroups, group => OcrWithBitmap(group, bitmap =>
                     llamaCppOcr.Ocr(bitmap, url, modelName, LlamaCppLanguage, prompt, cancellationToken)),
                 () => llamaCppOcr.Error, reportProgress, addPreviewLine, cancellationToken, CountUnknownWords);
