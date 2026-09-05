@@ -411,6 +411,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _useFocusedButtonBackgroundColor;
     [ObservableProperty] private Color _focusedButtonBackgroundColor;
     [ObservableProperty] private Color _bookmarkColor;
+    [ObservableProperty] private Color _spellCheckHighlightColor;
     [ObservableProperty] private Color _gridAlternatingRowColor;
     [ObservableProperty] private Color _gridAlternatingRowColorDark;
     [ObservableProperty] private bool _isEditCustomContinuationStyleVisible;
@@ -941,6 +942,7 @@ public partial class SettingsViewModel : ObservableObject
         UseFocusedButtonBackgroundColor = appearance.UseFocusedButtonBackgroundColor;
         FocusedButtonBackgroundColor = appearance.FocusedButtonBackgroundColor.FromHexToColor();
         BookmarkColor = appearance.BookmarkColor.FromHexToColor();
+        SpellCheckHighlightColor = appearance.SpellCheckHighlightColor.FromHexToColor();
         GridAlternatingRowColor = appearance.GridAlternatingRowColor.FromHexToColor();
         GridAlternatingRowColorDark = appearance.GridAlternatingRowColorDark.FromHexToColor();
         ShowUpDownStartTime = appearance.ShowUpDownStartTime;
@@ -1804,6 +1806,7 @@ public partial class SettingsViewModel : ObservableObject
         appearance.UseFocusedButtonBackgroundColor = UseFocusedButtonBackgroundColor;
         appearance.FocusedButtonBackgroundColor = FocusedButtonBackgroundColor.FromColorToHex();
         appearance.BookmarkColor = BookmarkColor.FromColorToHex();
+        appearance.SpellCheckHighlightColor = SpellCheckHighlightColor.FromColorToHex();
         appearance.GridAlternatingRowColor = GridAlternatingRowColor.FromColorToHex();
         appearance.GridAlternatingRowColorDark = GridAlternatingRowColorDark.FromColorToHex();
         appearance.ShowUpDownStartTime = ShowUpDownStartTime;
