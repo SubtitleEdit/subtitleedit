@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// rendering path (group subtitles by Actor + submit a multi-speaker script) and is
 /// intentionally out of scope here.
 /// </summary>
-public class VibeVoiceCrispAsr : ITtsEngine
+public class VibeVoiceCrispAsr : ITtsEngine, IPerLineCloneEngine
 {
     public string Name => "VibeVoice (CrispASR)";
     public string Description => "Microsoft VibeVoice 1.5B with voice cloning, via CrispASR";
@@ -39,7 +39,10 @@ public class VibeVoiceCrispAsr : ITtsEngine
     public bool HasModel => true;
     public bool HasKeyFile => false;
     public bool SupportsVoiceCloning => true;
-    public bool SupportsPerLineVoiceCloning => false;
+    // The vibevoice backend resolves the request's `voice` stem against --voice-dir and loads
+    // the WAV clone path per request (see Speak), so a different reference per line costs no
+    // server restart - the clip only has to be staged into the voices folder first.
+    public bool SupportsPerLineVoiceCloning => true;
 
     // Three quants of the same backend — user picks size vs. quality. Q8_0 is the README
     // recommended default; Q4_K is the lightest option for 8 GB GPUs; F16 is the reference.
@@ -309,6 +312,13 @@ public class VibeVoiceCrispAsr : ITtsEngine
         {
             foreach (var file in Directory.GetFiles(voicesFolder, "*.wav"))
             {
+                // The per-line clone's own references live here too (the backend resolves bare
+                // stems against --voice-dir); they belong to one line of one run, not in a combo.
+                if (PerLineReferenceStaging.IsStaged(file))
+                {
+                    continue;
+                }
+
                 var name = Path.GetFileNameWithoutExtension(file).Replace('_', ' ');
                 result.Add(new Voice(new VibeVoice(name, file)));
             }
@@ -316,6 +326,42 @@ public class VibeVoiceCrispAsr : ITtsEngine
 
         return result.ToArray();
     }
+
+    /// <summary>
+    /// <see cref="IPerLineCloneEngine"/>: the vibevoice backend reads references from its own
+    /// --voice-dir and nowhere else, so the clip is staged in there first and the voice's
+    /// FilePath points at the copy - that is the lookup key, since <see cref="Speak"/> sends the
+    /// file's bare stem as the request's <c>voice</c>. Cloning is audio-only, so a clip without
+    /// a transcript sidecar is as good as one with; staging only fails on a missing clip.
+    /// </summary>
+    public Voice? MakePerLineCloneVoice(string clipFileName, string voiceName) =>
+        StagePerLineReference(clipFileName) is { } staged
+            ? new Voice(new VibeVoice(voiceName, staged))
+            : null;
+
+    /// <summary>
+    /// The staged copy in the voices folder, which is the only reference this engine ever
+    /// speaks from - exporting it is what lets an imported session be re-dubbed on a machine
+    /// that no longer has the video.
+    /// </summary>
+    public string? GetPerLineReferenceClip(Voice voice) =>
+        voice.EngineVoice is VibeVoice vibeVoice && !string.IsNullOrEmpty(vibeVoice.FilePath)
+            ? vibeVoice.FilePath
+            : null;
+
+    /// <summary>
+    /// <see cref="IPerLineCloneEngine"/>: see <see cref="ClearStagedPerLineReferences"/>.
+    /// </summary>
+    public void ResetStagedPerLineReferences() => ClearStagedPerLineReferences();
+
+    public static string? StagePerLineReference(string clipFileName) =>
+        PerLineReferenceStaging.Stage(clipFileName, GetSetVoicesFolder(), "VibeVoice (CrispASR)");
+
+    /// <summary>
+    /// Removes every staged per-line reference, leaving the user's imported voices alone.
+    /// </summary>
+    public static void ClearStagedPerLineReferences() =>
+        PerLineReferenceStaging.Clear(Path.Combine(GetSetFolder(), "voices"), "VibeVoice (CrispASR)");
 
     public bool IsVoiceInstalled(Voice voice) => true;
 

@@ -106,7 +106,7 @@ Notes on picking one:
 - **Highest output rate:** VoxCPM2 and dots.tts at 48 kHz, then Zonos at 44.1 kHz.
 - **MOSS-TTS is by far the largest** because its Qwen3-8B backbone needs a ~3.5 GB codec companion on top of the backbone quant. Check free disk space before selecting it.
 - Quantized engines follow the same rule as the speech-to-text models: `Q4_K` is the small fast default, `Q8_0` is close to full precision, and `F16` is rarely worth the extra gigabytes.
-- **Most of the CrispASR engines load their reference voice at server start**, so switching voice reloads the model. The exceptions are **Pocket TTS** (per-request reference) and **Qwen3 TTS** with the Voice clone model — those, the three audio.cpp engines (**IndexTTS 2.5**, **Higgs Audio v3**, **Fish Audio S2 Pro**) and the standalone OmniVoice TTS engine are what [Clone From Video (Voice of Each Line)](#clone-from-video-voice-of-each-line) can use.
+- **Most of the CrispASR engines load their reference voice at server start**, so switching voice reloads the model. The exceptions are **Pocket TTS**, **VibeVoice** and **MOSS-TTS** (per-request reference) and **Qwen3 TTS** with the Voice clone model — those, the three audio.cpp engines (**IndexTTS 2.5**, **Higgs Audio v3**, **Fish Audio S2 Pro**) and the standalone OmniVoice TTS engine are what [Clone From Video (Voice of Each Line)](#clone-from-video-voice-of-each-line) can use.
 
 ## Engine Settings
 
@@ -163,7 +163,7 @@ For dubbing a video with several speakers there is a faster way than cloning eac
 
 Before generating, Subtitle Edit cuts one short reference clip per line out of the video's audio. Lines shorter than about three seconds are grown into the silence around them, but never into the neighbouring line — a reference with two speakers in it would clone the wrong person.
 
-- **Supported engines:** OmniVoice TTS, Pocket TTS (CrispASR), Qwen3 TTS (CrispASR) with the Voice clone model, and the audio.cpp engines IndexTTS 2.5, Higgs Audio v3 and Fish Audio S2 Pro. The entry only appears for engines that accept a reference for each line; engines that load their reference when their server starts would have to reload the model for every line.
+- **Supported engines:** OmniVoice TTS, Pocket TTS (CrispASR), VibeVoice (CrispASR), MOSS-TTS (CrispASR), Qwen3 TTS (CrispASR) with the Voice clone model, and the audio.cpp engines IndexTTS 2.5, Higgs Audio v3 and Fish Audio S2 Pro. The entry only appears for engines that accept a reference for each line; engines that load their reference when their server starts would have to reload the model for every line.
 - **Reference text:** if you have the original subtitle loaded next to the translation, its lines are used as the transcript of the clips — that is what the video actually says, and it makes cloning noticeably better. Without an original loaded, the line's own text is used.
 - **Test voice** previews the clone taken from the longest line of the subtitle.
 - Quality depends on the source audio. Loud music or two people talking over each other in a line makes that line's clone worse. Longer subtitle lines clone better than very short ones, so a subtitle segmented into full sentences gives the best result.
