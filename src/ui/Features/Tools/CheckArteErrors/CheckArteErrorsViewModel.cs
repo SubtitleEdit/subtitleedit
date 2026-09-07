@@ -10,6 +10,14 @@ using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Nikse.SubtitleEdit.Features.Files.ExportEbuStl;
+using Nikse.SubtitleEdit.Features.Sync.ChangeFrameRate;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
 
 namespace Nikse.SubtitleEdit.Features.Tools.CheckArteErrors;
 
@@ -20,9 +28,20 @@ public partial class CheckArteErrorsViewModel : ObservableObject
         None,
         TeletextLinePosition,
         UnneededSpaces,
+        Rebalance,
+        RemoveItalic,
+        MinimumGap,
+        Header,
+        Split,
+        TeletextColor,
+        FrameAccurateTimeCode,
+        DisplayDuration,
+        CreateBlankSubtitle,
+        ShiftStartTimeCode,
     }
 
     private Subtitle? _sourceSnapshot;
+    private string _languageCode = "en";
     public sealed class ArteProfileItem
     {
         public string Code { get; }
@@ -40,6 +59,9 @@ public partial class CheckArteErrorsViewModel : ObservableObject
     public sealed partial class ArteCheckItem : ObservableObject
     {
         public string Name { get; }
+        public bool IsImplemented => Name is "ARTE blank subtitle" or "Minimum gaps" or "Maximum two lines" or "Teletext line position" or
+            "Frame-accurate time codes" or "Display duration" or "Teletext line length / control codes" or "Teletext colors" or "Unneeded spaces" or "Italic formatting (not allowed)";
+        public string DisplayName => IsImplemented ? Name : Name + " (not implemented)";
 
         [ObservableProperty]
         private bool _isSelected = true;
@@ -47,6 +69,7 @@ public partial class CheckArteErrorsViewModel : ObservableObject
         public ArteCheckItem(string name)
         {
             Name = name;
+            _isSelected = IsImplemented;
         }
     }
 
@@ -58,7 +81,19 @@ public partial class CheckArteErrorsViewModel : ObservableObject
         public string Before { get; }
         public string After { get; }
         public string Reason { get; }
+        public string GroupName { get; internal set; } = string.Empty;
+        public bool ShowTiming { get; internal set; }
+        public string TimingNote { get; internal set; } = string.Empty;
+        public string TimeRange { get; internal set; } = string.Empty;
+        public string BeforePreview => !ShowTiming || string.IsNullOrEmpty(TimeRange) ? Before : TimeRange + Environment.NewLine + Before;
+        public string AfterPreview => !ShowTiming || string.IsNullOrEmpty(TimeRange) || FixKind == ArteFixKind.Split || string.IsNullOrEmpty(After)
+            ? After : TimeRange + Environment.NewLine + After;
         internal ArteFixKind FixKind { get; }
+        internal string? ProposedHeader { get; set; }
+        internal double? ProposedStartMs { get; set; }
+        internal double? ProposedEndMs { get; set; }
+        internal Paragraph? ProposedParagraph { get; set; }
+        internal List<Paragraph>? SplitParagraphs { get; set; }
 
         [ObservableProperty]
         private bool _apply;
@@ -69,7 +104,8 @@ public partial class CheckArteErrorsViewModel : ObservableObject
             string before,
             string after,
             string reason,
-            ArteFixKind fixKind = ArteFixKind.None)
+            ArteFixKind fixKind = ArteFixKind.None,
+            bool applyByDefault = true)
         {
             CanBeFixed = canBeFixed;
             Index = index;
@@ -77,7 +113,8 @@ public partial class CheckArteErrorsViewModel : ObservableObject
             After = after;
             Reason = reason;
             FixKind = fixKind;
-            _apply = canBeFixed;
+            ShowTiming = fixKind is ArteFixKind.Split or ArteFixKind.Rebalance;
+            _apply = canBeFixed && applyByDefault;
         }
     }
 
@@ -89,6 +126,102 @@ public partial class CheckArteErrorsViewModel : ObservableObject
 
     [ObservableProperty]
     private string _fixesSummaryText = "No ARTE checks have been run yet.";
+
+    public ObservableCollection<LanguageItem> Languages { get; } = LanguageItem.CreateAll();
+
+    [ObservableProperty] private LanguageItem? _selectedLanguage;
+    [ObservableProperty] private bool _isSdh;
+    private bool _syncingSdhLanguage;
+
+    public ObservableCollection<double> SourceFrameRates { get; } =
+        new(ChangeFrameRateViewModel.StandardFrameRates);
+
+    [ObservableProperty] private double _selectedSourceFrameRate = 25.0;
+    [ObservableProperty] private bool _shiftWholeFileToStartTimeCode;
+    [ObservableProperty] private TimeSpan _targetStartTimeCode;
+
+    partial void OnShiftWholeFileToStartTimeCodeChanged(bool value)
+    {
+        if (_sourceSnapshot != null)
+        {
+            Analyze();
+        }
+    }
+
+    partial void OnTargetStartTimeCodeChanged(TimeSpan value)
+    {
+        if (_sourceSnapshot != null && ShiftWholeFileToStartTimeCode)
+        {
+            Analyze();
+        }
+    }
+
+    partial void OnIsSdhChanged(bool value)
+    {
+        if (!_syncingSdhLanguage)
+        {
+            var targetCode = SelectedLanguage?.Code switch
+            {
+                "08" when value => "2D",
+                "0F" when value => "2F",
+                "2D" when !value => "08",
+                "2F" when !value => "0F",
+                _ => null,
+            };
+
+            if (targetCode != null)
+            {
+                _syncingSdhLanguage = true;
+                SelectedLanguage = Languages.FirstOrDefault(language => language.Code == targetCode);
+                _syncingSdhLanguage = false;
+            }
+        }
+
+        if (_sourceSnapshot != null)
+        {
+            Analyze();
+        }
+    }
+
+    partial void OnSelectedLanguageChanged(LanguageItem? value)
+    {
+        if (!_syncingSdhLanguage && value?.Code is "2D" or "2F")
+        {
+            _syncingSdhLanguage = true;
+            IsSdh = true;
+            _syncingSdhLanguage = false;
+        }
+
+        if (_sourceSnapshot != null)
+        {
+            Analyze();
+        }
+    }
+
+    partial void OnSelectedSourceFrameRateChanged(double value)
+    {
+        if (_sourceSnapshot != null)
+        {
+            Analyze();
+        }
+    }
+
+    private void SetSourceFrameRateWithoutAnalysis(double value)
+    {
+        if (Math.Abs(_selectedSourceFrameRate - value) <= 0.001)
+        {
+            return;
+        }
+
+        _selectedSourceFrameRate = value;
+        OnPropertyChanged(nameof(SelectedSourceFrameRate));
+    }
+
+    public Action<Subtitle>? ApplyToMainSubtitle { get; set; }
+    public Func<Task<Subtitle?>>? OpenEbuOptionsDialog { get; set; }
+    private readonly Stack<(Subtitle Subtitle, int AppliedCount, List<string> Notes, double SourceFrameRate)> _undoHistory = new();
+    private readonly List<string> _appliedNotes = new();
+    private bool CanUndo => _undoHistory.Count > 0;
 
     public bool OkPressed { get; private set; }
     public Subtitle? FixedSubtitle { get; private set; }
@@ -106,11 +239,8 @@ public partial class CheckArteErrorsViewModel : ObservableObject
 
     public ObservableCollection<ArteCheckItem> Checks { get; } =
     [
-        new("EBU STL / 25 fps"),
-        new("Header / language data"),
         new("ARTE blank subtitle"),
         new("Frame-accurate time codes"),
-        new("Overlapping display times"),
         new("Minimum gaps"),
         new("Display duration"),
         new("Maximum two lines"),
@@ -118,13 +248,63 @@ public partial class CheckArteErrorsViewModel : ObservableObject
         new("Teletext line length / control codes"),
         new("Teletext colors"),
         new("Unneeded spaces"),
+        new("Italic formatting (not allowed)"),
     ];
 
     public ObservableCollection<ArteFixItem> Fixes { get; } = new();
 
+    public sealed partial class ArteFixGroup : ObservableObject
+    {
+        public string Name { get; }
+        public IReadOnlyList<ArteFixItem> Items { get; }
+        public string Header => $"{Name} ({Items.Count})";
+        [ObservableProperty]
+        private bool _isExpanded;
+
+        [RelayCommand]
+        private void SelectAll()
+        {
+            foreach (var item in Items.Where(item => item.CanBeFixed))
+            {
+                item.Apply = true;
+            }
+        }
+
+        [RelayCommand]
+        private void InvertSelection()
+        {
+            foreach (var item in Items.Where(item => item.CanBeFixed))
+            {
+                item.Apply = !item.Apply;
+            }
+        }
+
+        public ArteFixGroup(string name, IReadOnlyList<ArteFixItem> items, bool expanded)
+        {
+            Name = name;
+            Items = items;
+            _isExpanded = expanded;
+        }
+    }
+
+    public ObservableCollection<ArteFixGroup> FixGroups { get; } = new();
+    private readonly Dictionary<string, bool> _expandedGroups = new();
+
+
     public CheckArteErrorsViewModel()
     {
         SelectedProfile = Profiles.FirstOrDefault();
+        SelectedLanguage = Languages.FirstOrDefault(language => language.Code == "08");
+        foreach (var check in Checks)
+        {
+            check.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(ArteCheckItem.IsSelected) && _sourceSnapshot != null)
+                {
+                    Analyze();
+                }
+            };
+        }
     }
 
     public void Initialize(Subtitle subtitle)
@@ -141,9 +321,33 @@ public partial class CheckArteErrorsViewModel : ObservableObject
             Se.SaveSettings();
         }
 
+        // Every ARTE target session starts neutral: source 25 fps to target 25 fps.
+        // A different source rate is selected explicitly by the user.
+        SetSourceFrameRateWithoutAnalysis(25.0);
+
         // Keep an independent copy for every analysis pass. The live subtitle in
         // MainViewModel is deliberately not exposed to this tool.
         _sourceSnapshot = new Subtitle(subtitle, generateNewId: false);
+        if (_sourceSnapshot.Paragraphs.Count > 0)
+        {
+            var first = _sourceSnapshot.Paragraphs[0];
+            var hasLeadingBlank = string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(first.Text, true));
+            var referenceMs = hasLeadingBlank
+                ? first.StartTime.TotalMilliseconds
+                : Math.Floor(first.StartTime.TotalMilliseconds / 3_600_000.0) * 3_600_000.0;
+            _targetStartTimeCode = TimeSpan.FromMilliseconds(referenceMs);
+            OnPropertyChanged(nameof(TargetStartTimeCode));
+        }
+        if (Ebu.IsStlHeader(subtitle.Header))
+        {
+            var header = Ebu.ReadHeader(Ebu.GetEncoding(subtitle.Header.Substring(0, 3)).GetBytes(subtitle.Header));
+            IsSdh = header.LanguageCode is "2D" or "2F";
+            SelectedLanguage = Languages.FirstOrDefault(language => language.Code == header.LanguageCode) ?? SelectedLanguage;
+        }
+        _languageCode = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle) ?? "en";
+        _undoHistory.Clear();
+        _appliedNotes.Clear();
+        UndoCommand.NotifyCanExecuteChanged();
         FixedSubtitle = null;
         OkPressed = false;
         AppliedFixCount = 0;
@@ -151,12 +355,61 @@ public partial class CheckArteErrorsViewModel : ObservableObject
         FixesSummaryText = $"{_sourceSnapshot.Paragraphs.Count} subtitle(s) loaded for ARTE analysis.";
     }
 
+    private void SyncLanguageSelectionFromHeader(string headerText)
+    {
+        if (!Ebu.IsStlHeader(headerText))
+        {
+            return;
+        }
+
+        var header = Ebu.ReadHeader(Ebu.GetEncoding(headerText.Substring(0, 3)).GetBytes(headerText));
+        var isSdh = header.LanguageCode is "2D" or "2F";
+        var languageCode = header.LanguageCode switch
+        {
+            "2D" => "08",
+            "2F" => "0F",
+            _ => header.LanguageCode,
+        };
+        var language = Languages.FirstOrDefault(item => item.Code == languageCode);
+
+        if (_isSdh != isSdh)
+        {
+            _isSdh = isSdh;
+            OnPropertyChanged(nameof(IsSdh));
+        }
+
+        if (language != null && !ReferenceEquals(_selectedLanguage, language))
+        {
+            _selectedLanguage = language;
+            OnPropertyChanged(nameof(SelectedLanguage));
+        }
+    }
+
+    [RelayCommand]
+    private async Task OpenEbuOptions()
+    {
+        if (OpenEbuOptionsDialog == null || _sourceSnapshot == null)
+        {
+            return;
+        }
+
+        var updatedSubtitle = await OpenEbuOptionsDialog();
+        if (updatedSubtitle == null)
+        {
+            return;
+        }
+
+        _sourceSnapshot.Header = updatedSubtitle.Header;
+        SyncLanguageSelectionFromHeader(updatedSubtitle.Header);
+        Analyze();
+    }
+
     [RelayCommand]
     private void ChecksSelectAll()
     {
         foreach (var check in Checks)
         {
-            check.IsSelected = true;
+            check.IsSelected = check.IsImplemented;
         }
     }
 
@@ -165,7 +418,7 @@ public partial class CheckArteErrorsViewModel : ObservableObject
     {
         foreach (var check in Checks)
         {
-            check.IsSelected = !check.IsSelected;
+            check.IsSelected = check.IsImplemented && !check.IsSelected;
         }
     }
 
@@ -196,6 +449,11 @@ public partial class CheckArteErrorsViewModel : ObservableObject
     [RelayCommand]
     private void Analyze()
     {
+        foreach (var group in FixGroups)
+        {
+            _expandedGroups[group.Name] = group.IsExpanded;
+        }
+        FixGroups.Clear();
         Fixes.Clear();
 
         if (SelectedProfile == null)
@@ -211,60 +469,150 @@ public partial class CheckArteErrorsViewModel : ObservableObject
         }
 
         var selectedChecks = Checks
-            .Where(c => c.IsSelected)
+            .Where(c => c.IsSelected && c.IsImplemented)
             .Select(c => c.Name)
             .ToHashSet();
-
-        if (selectedChecks.Count == 0)
-        {
-            FixesSummaryText = "No ARTE checks selected.";
-            return;
-        }
 
         // Analyze another detached copy so even future rule implementations cannot
         // accidentally change the snapshot supplied by MainViewModel.
         var subtitle = new Subtitle(_sourceSnapshot, generateNewId: false);
 
+        // ARTE always targets 25 fps. Convert only this detached analysis copy so
+        // GAP, overlap and split timing proposals are calculated on the same target
+        // timeline that Start correction will apply later.
+        if (Math.Abs(SelectedSourceFrameRate - 25.0) > 0.001)
+        {
+            subtitle.ChangeFrameRate(SelectedSourceFrameRate, 25.0);
+        }
+
+        // ARTE target header/language is mandatory setup, not an optional checklist item.
+        RunCheck("Header / language data", () => AnalyzeHeader(subtitle));
+
+        if (ShiftWholeFileToStartTimeCode)
+        {
+            RunCheck("Start time code", () => AnalyzeStartTimeCodeShift(subtitle));
+        }
+
         if (selectedChecks.Contains("ARTE blank subtitle"))
         {
-            AnalyzeBlankSubtitle(subtitle);
+            RunCheck("ARTE blank subtitle", () => AnalyzeBlankSubtitle(subtitle));
+        }
+
+        if (selectedChecks.Contains("Frame-accurate time codes"))
+        {
+            RunCheck("Frame-accurate time codes", () => AnalyzeFrameAccurateTimeCodes(subtitle));
+        }
+
+        if (selectedChecks.Contains("Display duration"))
+        {
+            RunCheck("Display duration", () => AnalyzeDisplayDurations(subtitle));
         }
 
         // Text structure and Teletext layout are analyzed before gaps. Future
         // split/rebalance fixes can therefore run before gap normalization.
         if (selectedChecks.Contains("Maximum two lines"))
         {
-            AnalyzeMaximumTwoLines(subtitle);
+            RunCheck("Split / Rebalance", () => AnalyzeMaximumTwoLines(subtitle));
         }
 
         if (selectedChecks.Contains("Teletext line position"))
         {
-            AnalyzeTeletextLinePosition(subtitle);
+            RunCheck("Teletext line position", () => AnalyzeTeletextLinePosition(subtitle));
         }
 
         if (selectedChecks.Contains("Teletext line length / control codes"))
         {
-            AnalyzeTeletextLineLength(subtitle);
+            RunCheck("Split / Rebalance", () => AnalyzeTeletextLineLength(subtitle));
+        }
+
+        if (selectedChecks.Contains("Teletext colors"))
+        {
+            RunCheck("Teletext colors", () => AnalyzeTeletextColors(subtitle));
+        }
+
+        if (selectedChecks.Contains("Italic formatting (not allowed)"))
+        {
+            RunCheck("Italic formatting", () => AnalyzeItalic(subtitle));
         }
 
         if (selectedChecks.Contains("Unneeded spaces"))
         {
-            AnalyzeUnneededSpaces(subtitle);
+            RunCheck("Unneeded spaces", () => AnalyzeUnneededSpaces(subtitle));
         }
 
         if (selectedChecks.Contains("Minimum gaps"))
         {
-            AnalyzeMinimumGaps(subtitle);
+            RunCheck("Minimum gaps", () => AnalyzeMinimumGaps(subtitle));
         }
 
-        if (selectedChecks.Contains("Overlapping display times"))
+
+        foreach (var fix in Fixes.Where(f => f.Index > 0 && f.Index <= subtitle.Paragraphs.Count))
         {
-            AnalyzeOverlaps(subtitle);
+            fix.TimeRange = FormatTimeRange(subtitle.Paragraphs[fix.Index - 1]);
+        }
+
+        foreach (var group in Fixes.GroupBy(f => f.GroupName))
+        {
+            FixGroups.Add(new ArteFixGroup(group.Key, group.ToList(),
+                _expandedGroups.GetValueOrDefault(group.Key)));
         }
 
         FixesSummaryText = Fixes.Count == 0
-            ? $"No issues found by the {selectedChecks.Count} selected check(s) currently implemented."
-            : $"{Fixes.Count} issue(s) found. Analysis did not modify the subtitle.";
+            ? selectedChecks.Count == 0
+                ? "ARTE target header is valid; no optional checks are selected."
+                : $"No issues found by the {selectedChecks.Count} selected check(s) currently implemented."
+            : $"{Fixes.Count(f => f.CanBeFixed)} correction(s), {Fixes.Count(f => !f.CanBeFixed)} unresolved issue(s)/alarm(s).";
+    }
+
+    private void RunCheck(string groupName, Action analyze)
+    {
+        var first = Fixes.Count;
+        analyze();
+        for (var i = first; i < Fixes.Count; i++)
+        {
+            Fixes[i].GroupName = groupName;
+        }
+    }
+
+    private void AnalyzeHeader(Subtitle subtitle)
+    {
+        var targetLanguageCode = SelectedLanguage?.Code switch
+        {
+            "2D" or "2F" => SelectedLanguage.Code,
+            "08" when IsSdh => "2D",
+            "0F" when IsSdh => "2F",
+            _ when !IsSdh => SelectedLanguage?.Code,
+            _ => null,
+        };
+        if (targetLanguageCode == null)
+        {
+            Fixes.Add(new ArteFixItem(false, 0, SelectedLanguage?.Language ?? "No language", string.Empty,
+                "SDH language code is not configured for this language."));
+            return;
+        }
+        var hasStlHeader = Ebu.IsStlHeader(subtitle.Header);
+        var header = hasStlHeader
+            ? Ebu.ReadHeader(Ebu.GetEncoding(subtitle.Header.Substring(0, 3)).GetBytes(subtitle.Header))
+            : new Ebu.EbuGeneralSubtitleInformation();
+        static string Describe(Ebu.EbuGeneralSubtitleInformation h) =>
+            $"Code page: {h.CodePageNumber}\nDisk format: {h.DiskFormatCode}\nDisplay standard: {h.DisplayStandardCode}\nCharacter table: {h.CharacterCodeTableNumber}\nLanguage: {h.LanguageCode}\nCharacters per row: {h.MaximumNumberOfDisplayableCharactersInAnyTextRow}\nRows: {h.MaximumNumberOfDisplayableRows}";
+        var before = hasStlHeader ? Describe(header) : "Source subtitle has no EBU STL header.";
+        header.CodePageNumber = "850";
+        header.DiskFormatCode = "STL25.01";
+        header.DisplayStandardCode = "2";
+        header.CharacterCodeTableNumber = "00";
+        header.LanguageCode = targetLanguageCode;
+        header.MaximumNumberOfDisplayableCharactersInAnyTextRow = "40";
+        header.MaximumNumberOfDisplayableRows = "23";
+        var after = Describe(header);
+        if (before != after)
+        {
+            Fixes.Add(new ArteFixItem(true, 0, before, after,
+                hasStlHeader
+                    ? "Apply ARTE target header. Programme start and informative fields are preserved; timecodes are not converted."
+                    : "Create an ARTE EBU STL target header from this subtitle. Timecodes and text are retained.",
+                ArteFixKind.Header) { ProposedHeader = header.ToString() });
+        }
     }
 
     private void AnalyzeBlankSubtitle(Subtitle subtitle)
@@ -275,14 +623,147 @@ public partial class CheckArteErrorsViewModel : ObservableObject
         }
 
         var first = subtitle.Paragraphs[0];
-        if (!string.IsNullOrWhiteSpace(first.Text))
+        if (!string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(first.Text, true)))
         {
+            var firstFrame = Math.Max(0L, (long)Math.Floor(first.StartTime.TotalMilliseconds / 40.0));
+            var firstHourFrame = firstFrame / (25 * 60 * 60) * (25 * 60 * 60);
+            var blank = new Paragraph(string.Empty, firstHourFrame * 40.0, (firstHourFrame + 5) * 40.0)
+            {
+                MarginV = "0",
+            };
             Fixes.Add(new ArteFixItem(
-                false,
+                true,
                 0,
                 "Missing",
-                "Create ARTE blank subtitle",
-                "Required ARTE blank/control subtitle is missing before the first normal subtitle. Exact control data/time position is not guessed by this analysis step."));
+                FormatTimeRange(blank),
+                "Create a five-frame blank/control subtitle at the full hour before the first normal subtitle.",
+                ArteFixKind.CreateBlankSubtitle)
+            {
+                ProposedParagraph = blank,
+            });
+        }
+    }
+
+    private static double GetStartTimeCodeReference(Subtitle subtitle)
+    {
+        if (subtitle.Paragraphs.Count == 0)
+        {
+            return 0;
+        }
+
+        var first = subtitle.Paragraphs[0];
+        if (string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(first.Text, true)))
+        {
+            return first.StartTime.TotalMilliseconds;
+        }
+
+        return Math.Floor(first.StartTime.TotalMilliseconds / 3_600_000.0) * 3_600_000.0;
+    }
+
+    private void AnalyzeStartTimeCodeShift(Subtitle subtitle)
+    {
+        var current = GetStartTimeCodeReference(subtitle);
+        var target = RoundToArteFrame(TargetStartTimeCode.TotalMilliseconds);
+        if (Math.Abs(target - current) < 0.01)
+        {
+            return;
+        }
+
+        var before = new Paragraph(string.Empty, current, current + 200);
+        var after = new Paragraph(string.Empty, target, target + 200);
+        Fixes.Add(new ArteFixItem(true, 0, FormatTimeRange(before), FormatTimeRange(after),
+            "Shift all subtitle timecodes to the requested start time code.", ArteFixKind.ShiftStartTimeCode)
+        {
+            ProposedStartMs = target - current,
+        });
+    }
+
+    private static double RoundToArteFrame(double milliseconds) =>
+        Math.Round(milliseconds / 40.0, MidpointRounding.AwayFromZero) * 40.0;
+
+    private static string FormatFrames(double milliseconds)
+    {
+        var frames = (long)Math.Round(milliseconds / 40.0, MidpointRounding.AwayFromZero);
+        return $"{frames / 25} s {frames % 25:00} fr";
+    }
+
+    private void AnalyzeFrameAccurateTimeCodes(Subtitle subtitle)
+    {
+        for (var i = 0; i < subtitle.Paragraphs.Count; i++)
+        {
+            var paragraph = subtitle.Paragraphs[i];
+            var start = paragraph.StartTime.TotalMilliseconds;
+            var end = paragraph.EndTime.TotalMilliseconds;
+            var fixedStart = RoundToArteFrame(start);
+            var fixedEnd = RoundToArteFrame(end);
+            if (Math.Abs(start - fixedStart) < 0.01 && Math.Abs(end - fixedEnd) < 0.01)
+            {
+                continue;
+            }
+
+            if (fixedEnd <= fixedStart)
+            {
+                Fixes.Add(new ArteFixItem(false, i + 1, FormatTimeRange(paragraph), string.Empty,
+                    "ALARM: Rounding to 25-fps frames would remove the subtitle duration."));
+                continue;
+            }
+
+            var after = new Paragraph(paragraph, true)
+            {
+                StartTime = new TimeCode(fixedStart),
+                EndTime = new TimeCode(fixedEnd),
+            };
+            Fixes.Add(new ArteFixItem(true, i + 1, FormatTimeRange(paragraph), FormatTimeRange(after),
+                "TC In and TC Out are rounded to whole 25-fps frames.", ArteFixKind.FrameAccurateTimeCode)
+            {
+                ProposedStartMs = fixedStart,
+                ProposedEndMs = fixedEnd,
+            });
+        }
+    }
+
+    private void AnalyzeDisplayDurations(Subtitle subtitle)
+    {
+        var minimumMs = Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
+        var maximumMs = Se.Settings.General.SubtitleMaximumDisplayMilliseconds;
+        var maximumCps = Se.Settings.General.SubtitleMaximumCharactersPerSeconds;
+
+        for (var i = 0; i < subtitle.Paragraphs.Count; i++)
+        {
+            var paragraph = subtitle.Paragraphs[i];
+            if (string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(paragraph.Text, true)))
+            {
+                continue;
+            }
+            var duration = paragraph.EndTime.TotalMilliseconds - paragraph.StartTime.TotalMilliseconds;
+            var characters = HtmlUtil.RemoveHtmlTags(paragraph.Text, true).Count(character => character is not '\r' and not '\n');
+            var readingMinimum = maximumCps > 0 ? characters * 1000.0 / maximumCps : 0;
+            var requiredMinimum = Math.Max(minimumMs, readingMinimum);
+            var isTooShort = duration < requiredMinimum;
+            var isTooLong = maximumMs > 0 && duration > maximumMs;
+            if (!isTooShort && !isTooLong)
+            {
+                continue;
+            }
+
+            var desiredEnd = isTooShort
+                ? RoundToArteFrame(paragraph.StartTime.TotalMilliseconds + requiredMinimum)
+                : RoundToArteFrame(paragraph.StartTime.TotalMilliseconds + maximumMs);
+            var nextStart = i + 1 < subtitle.Paragraphs.Count
+                ? subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds - 200
+                : double.PositiveInfinity;
+            var canFix = desiredEnd > paragraph.StartTime.TotalMilliseconds && desiredEnd <= nextStart &&
+                         (!isTooLong || desiredEnd >= requiredMinimum + paragraph.StartTime.TotalMilliseconds);
+            var issue = isTooShort
+                ? $"Duration {FormatFrames(duration)} is below the required {FormatFrames(requiredMinimum)}."
+                : $"Duration {FormatFrames(duration)} exceeds the configured maximum {FormatFrames(maximumMs)}.";
+            Fixes.Add(new ArteFixItem(canFix, i + 1, FormatFrames(duration),
+                canFix ? FormatFrames(desiredEnd - paragraph.StartTime.TotalMilliseconds) : string.Empty,
+                canFix ? issue + " Optional TC Out adjustment." : issue + " ALARM: No safe TC Out adjustment is possible.",
+                ArteFixKind.DisplayDuration, applyByDefault: false)
+            {
+                ProposedEndMs = canFix ? desiredEnd : null,
+            });
         }
     }
 
@@ -305,14 +786,26 @@ public partial class CheckArteErrorsViewModel : ObservableObject
                 continue;
             }
 
-            Fixes.Add(new ArteFixItem(
-                false,
-                i + 1,
+            var newEndMs = Math.Round(current.StartTime.TotalMilliseconds / 40,
+                MidpointRounding.AwayFromZero) * 40 - 200;
+            var split = Fixes.FirstOrDefault(f => f.Index == i && f.SplitParagraphs != null);
+            var lastStart = split?.SplitParagraphs![^1].StartTime.TotalMilliseconds ?? previous.StartTime.TotalMilliseconds;
+            var lastText = split?.SplitParagraphs![^1].Text ?? previous.Text;
+            var canFix = newEndMs - lastStart >= 40;
+            var duration = newEndMs - lastStart;
+            var cps = duration > 0 ? HtmlUtil.RemoveHtmlTags(lastText, true).Count(c => c != '\r' && c != '\n') * 1000.0 / duration : double.PositiveInfinity;
+            var tight = canFix && (duration < Se.Settings.General.SubtitleMinimumDisplayMilliseconds ||
+                (Se.Settings.General.SubtitleMaximumCharactersPerSeconds > 0 && cps > Se.Settings.General.SubtitleMaximumCharactersPerSeconds));
+            Fixes.Add(new ArteFixItem(canFix, i,
                 $"{gapFrames} frame{(Math.Abs(gapFrames) == 1 ? string.Empty : "s")}",
-                $"{minimumGapFrames} frames minimum",
-                gapFrames < 0
-                    ? $"Overlap with subtitle {i}; minimum gap is not met."
-                    : $"Gap after subtitle {i} is below the ARTE minimum of {minimumGapFrames} frames."));
+                canFix ? "5 frames" : string.Empty,
+                canFix ? $"Shorten TC Out of UT {i} to leave five frames before UT {i + 1}." :
+                    $"ALARM: Cannot create five-frame gap before UT {i + 1} without eliminating the previous subtitle.",
+                ArteFixKind.MinimumGap)
+            {
+                ProposedEndMs = canFix ? newEndMs : null,
+                TimingNote = tight ? "Zeitlich knappe Darstellung nach GAP-Korrektur." : string.Empty,
+            });
         }
     }
 
@@ -408,7 +901,7 @@ public partial class CheckArteErrorsViewModel : ObservableObject
             }
 
             var projection =
-                FlowInlineColorProjection.Parse(paragraph.Text);
+                FlowInlineColorProjection.Parse(RemoveItalicTags(paragraph.Text));
 
             var visibleText = projection.VisibleText
                 .Replace("\r\n", "\n")
@@ -430,12 +923,9 @@ public partial class CheckArteErrorsViewModel : ObservableObject
 
                 if (line.Length > maximum)
                 {
-                    Fixes.Add(new ArteFixItem(
-                        false,
-                        i + 1,
-                        $"Line {lineIndex + 1}: {line.Length} chars",
-                        $"Maximum {maximum} chars",
-                        $"Teletext line exceeds the available width ({colorCodeCount} color control code(s))."));
+                    AddTextLayoutProposal(paragraph, i + 1,
+                        $"Line {lineIndex + 1}: {line.Length} chars.");
+                    break;
                 }
 
                 lineStart += line.Length + 1;
@@ -475,14 +965,202 @@ public partial class CheckArteErrorsViewModel : ObservableObject
 
             if (lineCount > 2)
             {
-                Fixes.Add(new ArteFixItem(
-                    false,
-                    i + 1,
-                    paragraph.Text,
-                    string.Empty,
-                    $"Maximum two lines exceeded ({lineCount} lines)."));
+                AddTextLayoutProposal(paragraph, i + 1,
+                    $"Maximum two lines exceeded ({lineCount} lines).");
             }
         }
+    }
+
+    private static bool FitsTeletext(string text)
+    {
+        var projection = FlowInlineColorProjection.Parse(RemoveItalicTags(text).Replace("\r\n", "\n").Replace('\r', '\n'));
+        var lines = projection.VisibleText.Split('\n');
+        if (lines.Length > 2)
+        {
+            return false;
+        }
+
+        var start = 0;
+        foreach (var line in lines)
+        {
+            var controls = projection.ColorRuns.Count(run => run.Start < start + line.Length && run.End > start);
+            if (line.Length + controls > 37)
+            {
+                return false;
+            }
+            start += line.Length + 1;
+        }
+        return true;
+    }
+
+    private void AddTextLayoutProposal(Paragraph paragraph, int index, string reason)
+    {
+        // A paragraph can fail both line-count and line-width checks; offer one coherent fix.
+        if (Fixes.Any(f => f.Index == index && f.Before == paragraph.Text))
+        {
+            return;
+        }
+
+        string? proposed = null;
+        for (var width = 37; width >= 1; width--)
+        {
+            var candidate = Utilities.AutoBreakLine(paragraph.Text, width, width + 1, _languageCode);
+            if (candidate != paragraph.Text && FitsTeletext(candidate))
+            {
+                proposed = candidate;
+                break;
+            }
+        }
+
+        if (proposed != null)
+        {
+            Fixes.Add(new ArteFixItem(true, index, paragraph.Text, proposed,
+                reason + " Rebalance line breaks.", ArteFixKind.Rebalance));
+        }
+        else if (!AddSplitProposals(paragraph, index, reason))
+        {
+            Fixes.Add(new ArteFixItem(false, index, paragraph.Text, string.Empty,
+                reason + " No valid automatic split found; edit manually."));
+        }
+    }
+
+    private static string RemoveItalicTags(string text) =>
+        Regex.Replace(text, @"</?i\s*>", string.Empty, RegexOptions.IgnoreCase);
+
+    private static readonly Regex FontColorAttributeRegex = new(
+        "\\bcolor\\s*=\\s*(?:\\\"(?<quoted>[^\\\"]+)\\\"|'(?<single>[^']+)'|(?<bare>[^\\s>]+))",
+        RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+    private static readonly HashSet<string> TeletextColorNames = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "Black", "Red", "Green", "Yellow", "Blue", "Magenta", "Cyan", "White",
+    };
+
+    private static string NormalizeTeletextColors(string text, out bool hasUnsupportedColor)
+    {
+        var unsupportedColorFound = false;
+        var normalized = FontColorAttributeRegex.Replace(text, match =>
+        {
+            var color = match.Groups["quoted"].Success ? match.Groups["quoted"].Value :
+                match.Groups["single"].Success ? match.Groups["single"].Value : match.Groups["bare"].Value;
+            if (TeletextColorNames.Contains(color))
+            {
+                return match.Value;
+            }
+            var standardColor = Ebu.GetNearestColorName(color);
+            if (standardColor == null)
+            {
+                unsupportedColorFound = true;
+                return match.Value;
+            }
+
+            return "color=\"" + standardColor + "\"";
+        });
+        hasUnsupportedColor = unsupportedColorFound;
+        return normalized;
+    }
+
+    private void AnalyzeTeletextColors(Subtitle subtitle)
+    {
+        for (var i = 0; i < subtitle.Paragraphs.Count; i++)
+        {
+            var text = subtitle.Paragraphs[i].Text;
+            var normalized = NormalizeTeletextColors(text, out var hasUnsupportedColor);
+            if (normalized != text)
+            {
+                Fixes.Add(new ArteFixItem(true, i + 1, text, normalized,
+                    "Color is mapped to the nearest Teletext standard color.", ArteFixKind.TeletextColor));
+            }
+            if (hasUnsupportedColor)
+            {
+                Fixes.Add(new ArteFixItem(false, i + 1, text, string.Empty,
+                    "Color is not a hexadecimal or Teletext standard color and cannot be mapped automatically."));
+            }
+        }
+    }
+
+    private void AnalyzeItalic(Subtitle subtitle)
+    {
+        for (var i = 0; i < subtitle.Paragraphs.Count; i++)
+        {
+            var text = subtitle.Paragraphs[i].Text;
+            var cleaned = RemoveItalicTags(text);
+            if (cleaned != text)
+            {
+                Fixes.Add(new ArteFixItem(true, i + 1, text, cleaned,
+                    "Italic is not allowed. Remove italic tags.", ArteFixKind.RemoveItalic));
+            }
+        }
+    }
+
+    private string? RebalanceToTeletext(string text)
+    {
+        if (FitsTeletext(text))
+        {
+            return text;
+        }
+        for (var width = 37; width >= 1; width--)
+        {
+            var candidate = Utilities.AutoBreakLine(text, width, width + 1, _languageCode);
+            if (FitsTeletext(candidate))
+            {
+                return candidate;
+            }
+        }
+        return null;
+    }
+
+    private bool AddSplitProposals(Paragraph paragraph, int index, string reason)
+    {
+        bool Alarm(string message)
+        {
+            Fixes.Add(new ArteFixItem(false, index, paragraph.Text, string.Empty,
+                reason + " ALARM: " + message) { ShowTiming = true });
+            return true;
+        }
+
+        if (Regex.IsMatch(paragraph.Text, @"<font\b", RegexOptions.IgnoreCase))
+        {
+            return Alarm("Automatic split cannot preserve color tags yet.");
+        }
+        var source = new Paragraph(paragraph) { Text = RemoveItalicTags(paragraph.Text) };
+        // Method 1: use existing line boundaries, then rebalance each resulting subtitle.
+        var parts = SplitBreakLongLinesViewModel.Split(
+            new SubtitleLineViewModel(source, new Ebu()), 74, 37,
+            new SplitBreakLongLinesViewModel.SplitOptions { MinimumGapMs = 200 });
+        if (parts.Count < 2)
+        {
+            return Alarm("No valid split found.");
+        }
+        var proposals = new List<Paragraph>();
+        foreach (var part in parts)
+        {
+            var text = RebalanceToTeletext(part.Text);
+            if (text == null)
+            {
+                return Alarm("The split text cannot be rebalanced within the line limits.");
+            }
+            proposals.Add(new Paragraph(paragraph, true) { Text = text });
+        }
+        static string Words(string value) => Regex.Replace(HtmlUtil.RemoveHtmlTags(value, true), @"\s+", " ").Trim();
+        if (Words(string.Join(" ", proposals.Select(p => p.Text))) != Words(paragraph.Text))
+        {
+            return Alarm("The split would change the subtitle text.");
+        }
+        if (!ArteSplitTiming.TryFit(proposals, paragraph.StartTime.TotalMilliseconds,
+                paragraph.EndTime.TotalMilliseconds, Se.Settings.General.SubtitleMinimumDisplayMilliseconds,
+                Se.Settings.General.SubtitleMaximumDisplayMilliseconds,
+                Se.Settings.General.SubtitleMaximumCharactersPerSeconds, out var timingError))
+        {
+            return Alarm(timingError);
+        }
+        var preview = string.Join(Environment.NewLine + Environment.NewLine,
+            proposals.Select((p, n) => $"{n + 1}. {FormatTimeRange(p)}{Environment.NewLine}{p.Text}"));
+        Fixes.Add(new ArteFixItem(true, index, paragraph.Text, preview,
+            reason + " Split and rebalance (method 1); fitted inside the original time range." +
+            (RemoveItalicTags(paragraph.Text) != paragraph.Text ? " Removes forbidden italic tags." : string.Empty),
+            ArteFixKind.Split) { SplitParagraphs = proposals, TimingNote = timingError });
+        return true;
     }
 
     private void AnalyzeUnneededSpaces(Subtitle subtitle)
@@ -490,6 +1168,11 @@ public partial class CheckArteErrorsViewModel : ObservableObject
         for (var i = 0; i < subtitle.Paragraphs.Count; i++)
         {
             var paragraph = subtitle.Paragraphs[i];
+            if (Fixes.Any(f => f.Index == i + 1 && f.FixKind == ArteFixKind.Rebalance))
+            {
+                continue;
+            }
+
             var lines = paragraph.Text
                 .Replace("\r\n", "\n")
                 .Replace('\r', '\n')
@@ -515,17 +1198,44 @@ public partial class CheckArteErrorsViewModel : ObservableObject
         }
     }
 
-    private static string FormatTimeRange(Paragraph paragraph)
+    internal static string FormatTimeRange(Paragraph paragraph)
     {
-        return $"{paragraph.StartTime} -> {paragraph.EndTime}";
+        static string FrameTime(double milliseconds)
+        {
+            var frames = (long)Math.Round(milliseconds / 40);
+            return $"{frames / 90000:00}:{frames / 1500 % 60:00}:{frames / 25 % 60:00}:{frames % 25:00}";
+        }
+        var durationFrames = (long)Math.Round((paragraph.EndTime.TotalMilliseconds - paragraph.StartTime.TotalMilliseconds) / 40);
+        return $"{FrameTime(paragraph.StartTime.TotalMilliseconds)} → {FrameTime(paragraph.EndTime.TotalMilliseconds)} | {durationFrames / 25} s {durationFrames % 25:00} fr";
     }
 
     [RelayCommand]
     private void GenerateReport()
     {
-        FixesSummaryText = Fixes.Count == 0
-            ? "Nothing to report yet."
-            : $"{Fixes.Count} ARTE result(s) ready for report.";
+        ShowTimingReport(false);
+    }
+
+    private void ShowTimingReport(bool appliedOnly)
+    {
+        var entries = _appliedNotes.Concat(Fixes.Where(f => !appliedOnly || f.Apply || !f.CanBeFixed)
+            .Where(f => !string.IsNullOrEmpty(f.TimingNote) || !f.CanBeFixed)
+            .Select(f => $"UT {f.IndexDisplay} | {f.TimeRange}: " +
+                         (!string.IsNullOrEmpty(f.TimingNote) ? f.TimingNote : f.Reason))).Distinct().ToList();
+        var report = new Window
+        {
+            Title = "ARTE – Abschlussprotokoll (ursprüngliche UT-Nummern)",
+            Width = 900,
+            Height = 500,
+            Content = new TextBox
+            {
+                Text = entries.Count == 0 ? "Keine zeitlich knappen Darstellungen oder offenen Meldungen." : string.Join(Environment.NewLine + Environment.NewLine, entries),
+                IsReadOnly = true,
+                AcceptsReturn = true,
+                TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+                Margin = new Avalonia.Thickness(12),
+            },
+        };
+        report.Show();
     }
 
     [RelayCommand]
@@ -536,11 +1246,28 @@ public partial class CheckArteErrorsViewModel : ObservableObject
             return;
         }
 
+        var sourceFrameRate = SelectedSourceFrameRate;
+        var convertFrameRate = Math.Abs(sourceFrameRate - 25.0) > 0.001;
         var fixedSubtitle = new Subtitle(_sourceSnapshot, generateNewId: false);
         var applied = 0;
 
-        foreach (var fix in Fixes.Where(f => f.CanBeFixed && f.Apply))
+        // Analyze() created all timing proposals on a detached 25 fps target copy.
+        // Apply the same conversion first so those proposals match this correction copy.
+        if (convertFrameRate)
         {
+            fixedSubtitle.ChangeFrameRate(sourceFrameRate, 25.0);
+            applied++;
+        }
+
+        foreach (var fix in Fixes.Where(f => f.CanBeFixed && f.Apply)
+                     .OrderBy(f => f.FixKind == ArteFixKind.TeletextLinePosition ? 0 : f.FixKind == ArteFixKind.RemoveItalic ? 2 : 1))
+        {
+            if (fix.FixKind == ArteFixKind.Header)
+            {
+                fixedSubtitle.Header = fix.ProposedHeader!;
+                applied++;
+                continue;
+            }
             if (fix.Index <= 0 || fix.Index > fixedSubtitle.Paragraphs.Count)
             {
                 continue;
@@ -550,8 +1277,39 @@ public partial class CheckArteErrorsViewModel : ObservableObject
 
             switch (fix.FixKind)
             {
+                case ArteFixKind.FrameAccurateTimeCode:
+                    paragraph.StartTime = new TimeCode(fix.ProposedStartMs!.Value);
+                    paragraph.EndTime = new TimeCode(fix.ProposedEndMs!.Value);
+                    applied++;
+                    break;
+
+                case ArteFixKind.DisplayDuration:
+                    paragraph.EndTime = new TimeCode(fix.ProposedEndMs!.Value);
+                    applied++;
+                    break;
+
+                case ArteFixKind.MinimumGap:
+                    paragraph.EndTime = new TimeCode(fix.ProposedEndMs!.Value);
+                    applied++;
+                    break;
+
                 case ArteFixKind.TeletextLinePosition:
                     paragraph.MarginV = fix.After;
+                    applied++;
+                    break;
+
+                case ArteFixKind.Rebalance:
+                    paragraph.MarginV = TeletextRowHelper.GetRowKeepingBottomEdge(
+                        paragraph.MarginV,
+                        paragraph.Text.Replace("\r\n", "\n").Replace('\r', '\n').Split('\n').Length,
+                        fix.After.Replace("\r\n", "\n").Replace('\r', '\n').Split('\n').Length,
+                        Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight)?.ToString() ?? paragraph.MarginV;
+                    paragraph.Text = fix.After;
+                    applied++;
+                    break;
+
+                case ArteFixKind.RemoveItalic:
+                    paragraph.Text = RemoveItalicTags(paragraph.Text);
                     applied++;
                     break;
 
@@ -559,13 +1317,134 @@ public partial class CheckArteErrorsViewModel : ObservableObject
                     paragraph.Text = fix.After;
                     applied++;
                     break;
+
+                case ArteFixKind.TeletextColor:
+                    paragraph.Text = NormalizeTeletextColors(paragraph.Text, out _);
+                    applied++;
+                    break;
             }
         }
 
-        FixedSubtitle = fixedSubtitle;
-        AppliedFixCount = applied;
+        // Split only after all original-index edits. Work backwards so later indices stay valid.
+        foreach (var fix in Fixes.Where(f => f.Apply && f.FixKind == ArteFixKind.Split)
+                     .OrderByDescending(f => f.Index))
+        {
+            var original = fixedSubtitle.Paragraphs[fix.Index - 1];
+            var removeItalic = Fixes.Any(f => f.Index == fix.Index && f.Apply && f.FixKind == ArteFixKind.RemoveItalic);
+            var trimSpaces = Fixes.Any(f => f.Index == fix.Index && f.Apply && f.FixKind == ArteFixKind.UnneededSpaces);
+            var replacements = fix.SplitParagraphs!.Select(part =>
+            {
+                var result = new Paragraph(original, true)
+                {
+                    Text = removeItalic ? RemoveItalicTags(part.Text) : part.Text,
+                    StartTime = new TimeCode(part.StartTime.TotalMilliseconds),
+                    EndTime = new TimeCode(part.EndTime.TotalMilliseconds),
+                };
+                if (trimSpaces)
+                {
+                    result.Text = string.Join(Environment.NewLine, result.Text.SplitToLines().Select(line => line.Trim()));
+                }
+                result.MarginV = TeletextRowHelper.GetRowKeepingBottomEdge(original.MarginV,
+                    original.Text.SplitToLines().Count, result.Text.SplitToLines().Count,
+                    Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight)?.ToString() ?? original.MarginV;
+                return result;
+            }).ToList();
+            // A selected GAP correction may have shortened the original end before splitting.
+            replacements[^1].EndTime = new TimeCode(original.EndTime.TotalMilliseconds);
+            fixedSubtitle.Paragraphs.RemoveAt(fix.Index - 1);
+            fixedSubtitle.Paragraphs.InsertRange(fix.Index - 1, replacements);
+            applied++;
+        }
+
+        // Insert after all original-index based corrections and splits, so adding the
+        // leading control subtitle cannot shift any correction target.
+        foreach (var fix in Fixes.Where(f => f.Apply && f.FixKind == ArteFixKind.CreateBlankSubtitle))
+        {
+            fixedSubtitle.Paragraphs.Insert(0, new Paragraph(fix.ProposedParagraph!, true));
+            applied++;
+        }
+
+        foreach (var fix in Fixes.Where(f => f.Apply && f.FixKind == ArteFixKind.ShiftStartTimeCode))
+        {
+            var offset = fix.ProposedStartMs!.Value;
+            foreach (var paragraph in fixedSubtitle.Paragraphs)
+            {
+                paragraph.StartTime = new TimeCode(paragraph.StartTime.TotalMilliseconds + offset);
+                paragraph.EndTime = new TimeCode(paragraph.EndTime.TotalMilliseconds + offset);
+            }
+            if (Ebu.IsStlHeader(fixedSubtitle.Header))
+            {
+                var header = Ebu.ReadHeader(Ebu.GetEncoding(fixedSubtitle.Header.Substring(0, 3)).GetBytes(fixedSubtitle.Header));
+                var startFrames = Math.Max(0L, (long)Math.Round(GetStartTimeCodeReference(fixedSubtitle) / 40.0));
+                header.TimeCodeStartOfProgramme = $"{startFrames / 90000:00}{startFrames / 1500 % 60:00}{startFrames / 25 % 60:00}{startFrames % 25:00}";
+                fixedSubtitle.Header = header.ToString();
+            }
+            applied++;
+        }
+
+        if (applied == 0)
+        {
+            Analyze();
+            return;
+        }
+
+        fixedSubtitle.Renumber();
+
+        // Capture the complete pre-correction state, including the source frame-rate
+        // selection, so Undo can restore both the subtitle and the ARTE setup.
+        _undoHistory.Push((
+            new Subtitle(_sourceSnapshot, generateNewId: false),
+            AppliedFixCount,
+            new List<string>(_appliedNotes),
+            sourceFrameRate));
+
+        _appliedNotes.AddRange(Fixes.Where(f => f.Apply && !string.IsNullOrEmpty(f.TimingNote))
+            .Select(f => $"UT {f.IndexDisplay} | {f.TimeRange}: {f.TimingNote}"));
+        if (convertFrameRate)
+        {
+            _appliedNotes.Add($"Frame rate converted from {sourceFrameRate:0.###} to 25 fps.");
+        }
+
+        // Publish only the complete correction pass.
+        ApplyToMainSubtitle?.Invoke(new Subtitle(fixedSubtitle, generateNewId: false));
+        FixedSubtitle = new Subtitle(fixedSubtitle, generateNewId: false);
+        _sourceSnapshot = new Subtitle(fixedSubtitle, generateNewId: false);
+        AppliedFixCount += applied;
         OkPressed = true;
-        Window?.Close();
+
+        // The published subtitle is now on the 25 fps target timeline. Reset the
+        // selector without triggering an intermediate analysis pass.
+        if (convertFrameRate)
+        {
+            SetSourceFrameRateWithoutAnalysis(25.0);
+        }
+
+        UndoCommand.NotifyCanExecuteChanged();
+        Analyze();
+        FixesSummaryText = convertFrameRate
+            ? $"Frame rate {sourceFrameRate:0.###} → 25 fps and {applied - 1} ARTE correction(s) applied."
+            : $"{applied} correction(s) applied.";
+    }
+
+    [RelayCommand(CanExecute = nameof(CanUndo))]
+    private void Undo()
+    {
+        if (_undoHistory.Count == 0)
+        {
+            return;
+        }
+
+        var previous = _undoHistory.Pop();
+        ApplyToMainSubtitle?.Invoke(new Subtitle(previous.Subtitle, generateNewId: false));
+        _sourceSnapshot = new Subtitle(previous.Subtitle, generateNewId: false);
+        FixedSubtitle = new Subtitle(previous.Subtitle, generateNewId: false);
+        AppliedFixCount = previous.AppliedCount;
+        _appliedNotes.Clear();
+        _appliedNotes.AddRange(previous.Notes);
+        SetSourceFrameRateWithoutAnalysis(previous.SourceFrameRate);
+        UndoCommand.NotifyCanExecuteChanged();
+        Analyze();
+        FixesSummaryText = "Last correction pass undone.";
     }
 
     [RelayCommand]

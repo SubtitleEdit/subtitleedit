@@ -24,8 +24,8 @@ public partial class ChangeFrameRateViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<double> _toFrameRates;
     [ObservableProperty] private double _selectedToFrameRate;
 
-    private static readonly List<double> StandardFrameRates = new List<double> { 23.976, 24, 25, 29.97, 30, 50, 59.94, 60 };
-
+    public static IReadOnlyList<double> StandardFrameRates { get; } =
+    new List<double> { 23.976, 24, 25, 29.97, 30, 50, 59.94, 60 };
     private double _autoFromRate = double.NaN;
     private double _autoToRate = double.NaN;
 
