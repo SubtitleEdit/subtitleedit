@@ -1,7 +1,6 @@
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic;
 
@@ -34,7 +33,7 @@ namespace Nikse.SubtitleEdit.Logic;
 /// the caller on its pointer-only rules. The hooks must be installed from a thread that pumps
 /// messages (the UI thread) and live for the process lifetime.
 /// </summary>
-public static class ForegroundWindowTracker
+public static partial class ForegroundWindowTracker
 {
     private const uint EventSystemForeground = 0x0003;
     private const uint EventSystemSwitchStart = 0x0014;
@@ -54,25 +53,28 @@ public static class ForegroundWindowTracker
     private delegate void WinEventDelegate(IntPtr hWinEventHook, uint eventType, IntPtr hwnd,
         int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
 
-    [DllImport("user32.dll")]
-    private static extern IntPtr SetWinEventHook(uint eventMin, uint eventMax,
+    [LibraryImport("user32.dll")]
+    private static partial IntPtr SetWinEventHook(uint eventMin, uint eventMax,
         IntPtr hmodWinEventProc, WinEventDelegate pfnWinEventProc, uint idProcess, uint idThread,
         uint dwFlags);
 
-    [DllImport("user32.dll")]
-    private static extern IntPtr GetForegroundWindow();
+    [LibraryImport("user32.dll")]
+    private static partial IntPtr GetForegroundWindow();
 
-    [DllImport("user32.dll")]
-    private static extern bool IsWindow(IntPtr hWnd);
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool IsWindow(IntPtr hWnd);
 
-    [DllImport("user32.dll")]
-    private static extern bool IsWindowVisible(IntPtr hWnd);
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool IsWindowVisible(IntPtr hWnd);
 
-    [DllImport("user32.dll")]
-    private static extern bool IsIconic(IntPtr hWnd);
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool IsIconic(IntPtr hWnd);
 
-    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-    private static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
+    [LibraryImport("user32.dll", EntryPoint = "GetClassNameW", StringMarshalling = StringMarshalling.Utf16)]
+    private static partial int GetClassName(IntPtr hWnd, [Out] char[] lpClassName, int nMaxCount);
 
     // Keeps the delegate alive for the lifetime of the hooks - the GC must not collect it while
     // user32 still holds the callback pointer.
@@ -169,13 +171,14 @@ public static class ForegroundWindowTracker
 
     private static bool IsTaskSwitcherWindow(IntPtr hwnd)
     {
-        var className = new StringBuilder(64);
-        if (GetClassName(hwnd, className, className.Capacity) == 0)
+        var className = new char[64];
+        var length = GetClassName(hwnd, className, className.Length);
+        if (length == 0)
         {
             return false;
         }
 
-        var name = className.ToString();
+        var name = new string(className, 0, length);
         foreach (var switcherClass in TaskSwitcherWindowClasses)
         {
             if (string.Equals(name, switcherClass, StringComparison.Ordinal))

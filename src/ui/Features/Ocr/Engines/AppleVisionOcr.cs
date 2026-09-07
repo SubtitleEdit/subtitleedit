@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Features.Ocr.Engines;
 /// reports "unavailable" rather than throwing, so a macOS that ever lacks the framework simply
 /// does not offer the engine.
 /// </summary>
-public static class AppleVisionOcr
+public static partial class AppleVisionOcr
 {
     public const string StaticName = "Apple Vision";
 
@@ -35,47 +35,47 @@ public static class AppleVisionOcr
     private const long RecognitionLevelAccurate = 0;
     private const long RecognitionLevelFast = 1;
 
-    [DllImport(LibSystem)]
-    private static extern IntPtr dlopen(string path, int mode);
+    [LibraryImport(LibSystem, StringMarshalling = StringMarshalling.Utf8)]
+    private static partial IntPtr dlopen(string path, int mode);
 
-    [DllImport(LibObjC)]
-    private static extern IntPtr objc_getClass(string name);
+    [LibraryImport(LibObjC, StringMarshalling = StringMarshalling.Utf8)]
+    private static partial IntPtr objc_getClass(string name);
 
-    [DllImport(LibObjC)]
-    private static extern IntPtr sel_registerName(string name);
+    [LibraryImport(LibObjC, StringMarshalling = StringMarshalling.Utf8)]
+    private static partial IntPtr sel_registerName(string name);
 
-    [DllImport(LibObjC, EntryPoint = "objc_msgSend")]
-    private static extern IntPtr SendPtr(IntPtr receiver, IntPtr sel);
+    [LibraryImport(LibObjC, EntryPoint = "objc_msgSend")]
+    private static partial IntPtr SendPtr(IntPtr receiver, IntPtr sel);
 
-    [DllImport(LibObjC, EntryPoint = "objc_msgSend")]
-    private static extern IntPtr SendPtrPtr(IntPtr receiver, IntPtr sel, IntPtr a);
+    [LibraryImport(LibObjC, EntryPoint = "objc_msgSend")]
+    private static partial IntPtr SendPtrPtr(IntPtr receiver, IntPtr sel, IntPtr a);
 
-    [DllImport(LibObjC, EntryPoint = "objc_msgSend")]
-    private static extern IntPtr SendPtrPtrPtr(IntPtr receiver, IntPtr sel, IntPtr a, IntPtr b);
+    [LibraryImport(LibObjC, EntryPoint = "objc_msgSend")]
+    private static partial IntPtr SendPtrPtrPtr(IntPtr receiver, IntPtr sel, IntPtr a, IntPtr b);
 
-    [DllImport(LibObjC, EntryPoint = "objc_msgSend")]
-    private static extern IntPtr SendPtrBytesLong(IntPtr receiver, IntPtr sel, byte[] bytes, long length);
+    [LibraryImport(LibObjC, EntryPoint = "objc_msgSend")]
+    private static partial IntPtr SendPtrBytesLong(IntPtr receiver, IntPtr sel, byte[] bytes, long length);
 
-    [DllImport(LibObjC, EntryPoint = "objc_msgSend")]
-    private static extern IntPtr SendPtrUtf8(IntPtr receiver, IntPtr sel, string a);
+    [LibraryImport(LibObjC, StringMarshalling = StringMarshalling.Utf8, EntryPoint = "objc_msgSend")]
+    private static partial IntPtr SendPtrUtf8(IntPtr receiver, IntPtr sel, string a);
 
-    [DllImport(LibObjC, EntryPoint = "objc_msgSend")]
-    private static extern IntPtr SendPtrLong(IntPtr receiver, IntPtr sel, long a);
+    [LibraryImport(LibObjC, EntryPoint = "objc_msgSend")]
+    private static partial IntPtr SendPtrLong(IntPtr receiver, IntPtr sel, long a);
 
-    [DllImport(LibObjC, EntryPoint = "objc_msgSend")]
-    private static extern long SendLong(IntPtr receiver, IntPtr sel);
+    [LibraryImport(LibObjC, EntryPoint = "objc_msgSend")]
+    private static partial long SendLong(IntPtr receiver, IntPtr sel);
 
-    [DllImport(LibObjC, EntryPoint = "objc_msgSend")]
-    private static extern void SendVoid(IntPtr receiver, IntPtr sel);
+    [LibraryImport(LibObjC, EntryPoint = "objc_msgSend")]
+    private static partial void SendVoid(IntPtr receiver, IntPtr sel);
 
-    [DllImport(LibObjC, EntryPoint = "objc_msgSend")]
-    private static extern void SendVoidLong(IntPtr receiver, IntPtr sel, long a);
+    [LibraryImport(LibObjC, EntryPoint = "objc_msgSend")]
+    private static partial void SendVoidLong(IntPtr receiver, IntPtr sel, long a);
 
-    [DllImport(LibObjC, EntryPoint = "objc_msgSend")]
-    private static extern void SendVoidBool(IntPtr receiver, IntPtr sel, byte a);
+    [LibraryImport(LibObjC, EntryPoint = "objc_msgSend")]
+    private static partial void SendVoidBool(IntPtr receiver, IntPtr sel, byte a);
 
-    [DllImport(LibObjC, EntryPoint = "objc_msgSend")]
-    private static extern void SendVoidPtr(IntPtr receiver, IntPtr sel, IntPtr a);
+    [LibraryImport(LibObjC, EntryPoint = "objc_msgSend")]
+    private static partial void SendVoidPtr(IntPtr receiver, IntPtr sel, IntPtr a);
 
     /// <summary>
     /// CGPoint. Read the corners rather than <c>boundingBox</c> on purpose: a CGRect is four
@@ -91,8 +91,8 @@ public static class AppleVisionOcr
         public double Y;
     }
 
-    [DllImport(LibObjC, EntryPoint = "objc_msgSend")]
-    private static extern CGPoint SendPoint(IntPtr receiver, IntPtr sel);
+    [LibraryImport(LibObjC, EntryPoint = "objc_msgSend")]
+    private static partial CGPoint SendPoint(IntPtr receiver, IntPtr sel);
 
     private static readonly object AvailabilityLock = new();
     private static bool _availabilityChecked;

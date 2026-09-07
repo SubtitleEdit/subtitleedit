@@ -5,26 +5,29 @@ using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Logic.Platform.Windows;
 
-public static class SystemMenu
+public static partial class SystemMenu
 {
     private const uint WM_SYSCOMMAND = 0x0112;
     private const uint TPM_LEFTALIGN = 0x0000;
     private const uint TPM_RETURNCMD = 0x0100;
 
-    [DllImport("user32.dll")]
-    private static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
+    [LibraryImport("user32.dll")]
+    private static partial IntPtr GetSystemMenu(IntPtr hWnd, [MarshalAs(UnmanagedType.Bool)] bool bRevert);
 
-    [DllImport("user32.dll")]
-    private static extern bool GetCursorPos(out POINT lpPoint);
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool GetCursorPos(out POINT lpPoint);
 
-    [DllImport("user32.dll")]
-    private static extern uint TrackPopupMenu(IntPtr hMenu, uint uFlags, int x, int y, int nReserved, IntPtr hWnd, IntPtr prcRect);
+    [LibraryImport("user32.dll")]
+    private static partial uint TrackPopupMenu(IntPtr hMenu, uint uFlags, int x, int y, int nReserved, IntPtr hWnd, IntPtr prcRect);
 
-    [DllImport("user32.dll")]
-    private static extern bool SetForegroundWindow(IntPtr hWnd);
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool SetForegroundWindow(IntPtr hWnd);
 
-    [DllImport("user32.dll")]
-    private static extern bool PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+    [LibraryImport("user32.dll", EntryPoint = "PostMessageW")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
     [StructLayout(LayoutKind.Sequential)]
     private struct POINT

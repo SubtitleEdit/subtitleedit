@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -99,7 +100,7 @@ namespace Nikse.SubtitleEdit.Logic
     /// <summary>
     /// Implementation of the window service that uses dependency injection to create windows.
     /// </summary>
-    public class WindowService : IWindowService
+    public partial class WindowService : IWindowService
     {
         private readonly IServiceProvider _serviceProvider;
 
@@ -979,8 +980,9 @@ namespace Nikse.SubtitleEdit.Logic
             return handle == IntPtr.Zero ? window.IsVisible : IsWindowVisible(handle);
         }
 
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        private static extern bool IsWindowVisible(IntPtr hWnd);
+        [LibraryImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static partial bool IsWindowVisible(IntPtr hWnd);
 
         /// <summary>
         /// Hands the foreground and the keyboard back to <paramref name="dialog"/> after the
@@ -1312,20 +1314,21 @@ namespace Nikse.SubtitleEdit.Logic
         private const uint SwpNoMove = 0x0002;
         private const uint SwpNoActivate = 0x0010;
 
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        private static extern IntPtr GetForegroundWindow();
+        [LibraryImport("user32.dll")]
+        private static partial IntPtr GetForegroundWindow();
 
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+        [LibraryImport("user32.dll")]
+        private static partial uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
 
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        private static extern int GetWindowLongW(IntPtr hWnd, int nIndex);
+        [LibraryImport("user32.dll")]
+        private static partial int GetWindowLongW(IntPtr hWnd, int nIndex);
 
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        private static extern IntPtr GetWindow(IntPtr hWnd, uint uCmd);
+        [LibraryImport("user32.dll")]
+        private static partial IntPtr GetWindow(IntPtr hWnd, uint uCmd);
 
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy, uint uFlags);
+        [LibraryImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static partial bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy, uint uFlags);
 
         /// <summary>
         /// Creates a window instance using the service provider.

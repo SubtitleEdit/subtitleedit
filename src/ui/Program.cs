@@ -25,7 +25,7 @@ using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 namespace Nikse.SubtitleEdit
 {
-    internal class Program
+    internal partial class Program
     {
         private const string AppName = "Subtitle Edit";
 
@@ -290,8 +290,8 @@ namespace Nikse.SubtitleEdit
             }
         }
 
-        [DllImport("libc", SetLastError = true)]
-        private static extern int setenv(string name, string value, int overwrite);
+        [LibraryImport("libc", StringMarshalling = StringMarshalling.Utf8, SetLastError = true)]
+        private static partial int setenv(string name, string value, int overwrite);
 
         /// <summary>
         /// Makes dead-key accents (á, ê, õ, ...) work on Linux. Avalonia's ibus D-Bus client
