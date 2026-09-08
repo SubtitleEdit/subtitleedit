@@ -13,4 +13,20 @@ internal interface IOcrEngine : IDisposable
 
     /// <summary>Recognises a single subtitle bitmap.</summary>
     string Recognize(SKBitmap bitmap);
+
+    /// <summary>
+    /// Recognises multiple subtitle bitmaps. The default implementation calls
+    /// <see cref="Recognize(SKBitmap)"/> once per bitmap and reports completed images.
+    /// </summary>
+    IReadOnlyList<string> Recognize(IReadOnlyList<SKBitmap> bitmaps, Action<int>? progress = null)
+    {
+        var results = new List<string>(bitmaps.Count);
+        for (var i = 0; i < bitmaps.Count; i++)
+        {
+            results.Add(Recognize(bitmaps[i]));
+            progress?.Invoke(i + 1);
+        }
+
+        return results;
+    }
 }
