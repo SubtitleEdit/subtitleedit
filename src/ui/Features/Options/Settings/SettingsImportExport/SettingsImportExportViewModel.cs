@@ -171,7 +171,7 @@ public partial class SettingsImportExportViewModel : ObservableObject
 
         try
         {
-            var json = File.ReadAllText(_importFilePath);
+            var json = await File.ReadAllTextAsync(_importFilePath);
 
             if (Se4SettingsXmlImporter.LooksLikeXml(json))
             {
@@ -387,7 +387,7 @@ public partial class SettingsImportExportViewModel : ObservableObject
 
         var json = JsonSerializer.Serialize(exportData, new JsonSerializerOptions { WriteIndented = true });
         var jsonWithSource = InjectExportMarkers(json, GetCurrentOsName(), exportShortcuts);
-        File.WriteAllText(fileName, jsonWithSource);
+        await File.WriteAllTextAsync(fileName, jsonWithSource);
     }
 
     private void ImportSettings()

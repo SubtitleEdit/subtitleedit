@@ -75,7 +75,10 @@ public partial class PluginManagerViewModel : ObservableObject
     /// <summary>Fetch the online catalog and mark installed plugins that have a newer version.</summary>
     private async Task CheckForUpdatesAsync()
     {
-        _checkCts?.Cancel();
+        if (_checkCts != null)
+        {
+            await _checkCts.CancelAsync();
+        }
         _checkCts = new CancellationTokenSource();
         var token = _checkCts.Token;
 

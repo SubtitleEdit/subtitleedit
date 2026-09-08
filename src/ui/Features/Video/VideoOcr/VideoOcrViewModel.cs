@@ -1766,7 +1766,7 @@ public partial class VideoOcrViewModel : ObservableObject
 
             if (answer == MessageBoxResult.Yes)
             {
-                _cancellationTokenSource.Cancel();
+                await _cancellationTokenSource.CancelAsync();
             }
 
             return;

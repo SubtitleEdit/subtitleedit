@@ -850,7 +850,7 @@ public partial class CompareViewModel : ObservableObject
         sb.AppendLine("    </table>");
         sb.AppendLine("  </body>");
         sb.AppendLine("</html>");
-        System.IO.File.WriteAllText(fileName, sb.ToString());
+        await System.IO.File.WriteAllTextAsync(fileName, sb.ToString());
         await _folderHelper.OpenFolderWithFileSelected(Window!, fileName);
     }
 

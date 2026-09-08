@@ -152,7 +152,7 @@ https://github.com/SubtitleEdit/subtitleedit
         }
 
         var statistic = string.Format(WriteFormat, TextGeneral, TextMostUsedWords, TextMostUsedLines);
-        System.IO.File.WriteAllText(textFileName, statistic);
+        await System.IO.File.WriteAllTextAsync(textFileName, statistic);
 
         _ = await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window!, vm =>
         {

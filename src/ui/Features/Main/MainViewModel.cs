@@ -4792,7 +4792,7 @@ public partial class MainViewModel :
 
         if (!string.IsNullOrEmpty(fileName))
         {
-            File.WriteAllBytes(fileName, ms.ToArray());
+            await File.WriteAllBytesAsync(fileName, ms.ToArray());
             ShowStatus(string.Format(Se.Language.Main.FileExportedInFormatXToY, format.Name, fileName));
         }
     }
@@ -4823,7 +4823,7 @@ public partial class MainViewModel :
 
         if (!string.IsNullOrEmpty(fileName))
         {
-            File.WriteAllBytes(fileName, ms.ToArray());
+            await File.WriteAllBytesAsync(fileName, ms.ToArray());
             ShowStatus(string.Format(Se.Language.Main.FileExportedInFormatXToY, format.Name, fileName));
         }
     }
@@ -4854,7 +4854,7 @@ public partial class MainViewModel :
 
         if (!string.IsNullOrEmpty(fileName))
         {
-            File.WriteAllBytes(fileName, ms.ToArray());
+            await File.WriteAllBytesAsync(fileName, ms.ToArray());
             ShowStatus(string.Format(Se.Language.Main.FileExportedInFormatXToY, format.Name, fileName));
         }
     }
@@ -4904,7 +4904,7 @@ public partial class MainViewModel :
         {
             cavena.Save(fileName, ms, GetUpdateSubtitle(), false);
             ms.Position = 0;
-            File.WriteAllBytes(fileName, ms.ToArray());
+            await File.WriteAllBytesAsync(fileName, ms.ToArray());
         }
 
         ShowStatus(string.Format(Se.Language.Main.FileExportedInFormatXToY, cavena.Name, fileName));
@@ -25146,7 +25146,10 @@ public partial class MainViewModel :
     private async Task ShowStatusWithWaitAsync(string message, int delayMs = 3000)
     {
         // Cancel any previous animation
-        _statusFadeCts?.Cancel();
+        if (_statusFadeCts != null)
+        {
+            await _statusFadeCts.CancelAsync();
+        }
         _statusFadeCts = new CancellationTokenSource();
         var token = _statusFadeCts.Token;
 
@@ -25170,7 +25173,10 @@ public partial class MainViewModel :
 
     internal async void OnClosing(object? sender, WindowClosingEventArgs e)
     {
-        _videoOpenTokenSource?.Cancel();
+        if (_videoOpenTokenSource != null)
+        {
+            await _videoOpenTokenSource.CancelAsync();
+        }
         AddToRecentFiles(false);
 
         if (Window != null)
@@ -25672,7 +25678,10 @@ public partial class MainViewModel :
             }
         }
 
-        _videoOpenTokenSource?.Cancel();
+        if (_videoOpenTokenSource != null)
+        {
+            await _videoOpenTokenSource.CancelAsync();
+        }
         _audioTrack = null;
         await vp.Open(videoFileName, startPositionSeconds);
         _videoFileName = videoFileName;
@@ -31751,7 +31760,10 @@ public partial class MainViewModel :
 
     internal async void OnSubtitleGridSingleTapped(object? sender, TappedEventArgs e)
     {
-        _singleTapCancellationTokenSource?.Cancel();
+        if (_singleTapCancellationTokenSource != null)
+        {
+            await _singleTapCancellationTokenSource.CancelAsync();
+        }
         var cts = _singleTapCancellationTokenSource = new CancellationTokenSource();
 
         try

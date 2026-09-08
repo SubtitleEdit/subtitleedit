@@ -625,7 +625,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
         List<RuleTreeNode>? imported = null;
         try
         {
-            var content = System.IO.File.ReadAllText(fileName);
+            var content = await System.IO.File.ReadAllTextAsync(fileName);
 
             CategoryImportExportItem? temp;
 
@@ -756,12 +756,12 @@ public partial class MultipleReplaceViewModel : ObservableObject
         if (fileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
         {
             // UTF-8 with BOM so Excel opens non-ASCII rules correctly.
-            System.IO.File.WriteAllText(fileName, CsvExporter.Export(export), new System.Text.UTF8Encoding(true));
+            await System.IO.File.WriteAllTextAsync(fileName, CsvExporter.Export(export), new System.Text.UTF8Encoding(true));
         }
         else
         {
             var json = JsonSerializer.Serialize(export, new JsonSerializerOptions { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
-            System.IO.File.WriteAllText(fileName, json);
+            await System.IO.File.WriteAllTextAsync(fileName, json);
         }
 
         _ = await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window,

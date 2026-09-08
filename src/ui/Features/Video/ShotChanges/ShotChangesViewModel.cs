@@ -387,7 +387,7 @@ public partial class ShotChangesViewModel : ObservableObject, IClosingCleanup
             }
 
             var encoding = LanguageAutoDetect.GetEncodingFromFile(fileName);
-            var s = System.IO.File.ReadAllText(fileName, encoding).Trim();
+            var s = (await System.IO.File.ReadAllTextAsync(fileName, encoding)).Trim();
             if (s.Contains('.'))
             {
                 TimeCodeSeconds = true;

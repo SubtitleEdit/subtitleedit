@@ -5423,7 +5423,7 @@ public partial class OcrViewModel : ObservableObject
             // The engine loops only stop through this token: without cancelling here a
             // close mid-run kept OCRing every remaining line against a closed window.
             _isWindowClosed = true;
-            _cancellationTokenSource.Cancel();
+            await _cancellationTokenSource.CancelAsync();
             SaveSettings();
             UiUtil.SaveWindowPosition(Window);
             return;
@@ -5463,7 +5463,7 @@ public partial class OcrViewModel : ObservableObject
         }
 
         _isWindowClosed = true;
-        _cancellationTokenSource.Cancel();
+        await _cancellationTokenSource.CancelAsync();
         SaveSettings();
         UiUtil.SaveWindowPosition(Window);
     }

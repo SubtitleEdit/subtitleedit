@@ -737,7 +737,7 @@ public partial class RosettaPropertiesViewModel : ObservableObject
             return;
         }
 
-        ReadValuesFromXml(File.ReadAllText(fileName));
+        ReadValuesFromXml(await File.ReadAllTextAsync(fileName));
     }
 
     [RelayCommand]
