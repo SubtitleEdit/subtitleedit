@@ -1,6 +1,6 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.2.0-rc2",
+  "version": "v5.2.0-rc5",
   "translatedBy": "",
   "cultureName": "jp-JP",
   "general": {
@@ -1000,7 +1000,21 @@
       "textPreviousHint": "前の字幕を再生し、終端で停止 {0}",
       "textPlayHint": "現在の字幕を再生し、終端で停止 {0}",
       "textPauseHint": "再生を一時停止 {0}",
-      "textNextHint": "次の字幕を再生し、終端で停止 {0}"
+      "textNextHint": "次の字幕を再生し、終端で停止 {0}",
+      "guessStartNoLineSelected": "開始を推測：行が選択されていません",
+      "guessStartTimeCodesLocked": "開始を推測：タイムコードがロックされています",
+      "guessStartNoWaveform": "開始を推測：波形がありません",
+      "guessStartNoRoomBeforePreviousLineX": "開始を推測：{0}行目は前の行より前に空きがありません",
+      "guessStartLineXAlreadyAtBoundary": "開始を推測：{0}行目はすでに発話の開始位置です",
+      "guessStartNoSilenceFoundNearLineX": "開始を推測：{0}行目の近くに無音部分が見つかりません",
+      "guessStartMovedLineXByYMs": "開始を推測：{0}行目の開始位置を{1}ms移動しました",
+      "guessEndNoLineSelected": "終了を推測：行が選択されていません",
+      "guessEndTimeCodesLocked": "終了を推測：タイムコードがロックされています",
+      "guessEndNoWaveform": "終了を推測：波形がありません",
+      "guessEndNoRoomBeforeNextLineX": "終了を推測：{0}行目は次の行までの空きがありません",
+      "guessEndLineXAlreadyAtBoundary": "終了を推測：{0}行目はすでに発話の終了位置です",
+      "guessEndNoSilenceFoundNearLineX": "終了を推測：{0}行目の近くに無音部分が見つかりません",
+      "guessEndMovedLineXByYMs": "終了を推測：{0}行目の終了位置を{1}ms移動しました"
     },
     "audioTrackIsNowX": "オーディオトラックは現在 \"{0}\"です",
     "audioTrackX": "オーディオトラック {0}",
