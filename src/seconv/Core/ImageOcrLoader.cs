@@ -306,54 +306,75 @@ internal static class ImageOcrLoader
         // Time-codes-only mode is instant, so only a real OCR run reports progress (#14267).
         var showProgress = ocr is not null && !quiet;
         var done = 0;
-        foreach (var item in items)
+        if (ocr is null)
         {
-            // Reported before the image is recognised, so the count is images *finished*.
-            if (showProgress)
-            {
-                ProgressLine.Report("OCR", done, items.Count);
-            }
-
-            done++;
-
-            string text;
-            if (ocr is null)
-            {
-                text = string.Empty;
-            }
-            else if (isolateColors)
-            {
-                using var isolated = VobSubColorIsolation.Isolate(item.Bitmap);
-                text = ocr.Recognize(isolated);
-            }
-            else
-            {
-                text = ocr.Recognize(item.Bitmap);
-            }
-
-            if (ocr is null || !string.IsNullOrWhiteSpace(text))
+            foreach (var item in items)
             {
                 subtitle.Paragraphs.Add(new LibSeParagraph(
-                    text, item.StartTime.TotalMilliseconds, item.EndTime.TotalMilliseconds));
+                    string.Empty, item.StartTime.TotalMilliseconds, item.EndTime.TotalMilliseconds));
             }
-            else
+
+            subtitle.Renumber();
+            return subtitle;
+        }
+
+        var bitmaps = new List<SKBitmap>(items.Count);
+        var isolatedBitmaps = new List<SKBitmap>();
+        try
+        {
+            foreach (var item in items)
             {
-                blankCount++;
+                if (isolateColors)
+                {
+                    isolatedBitmaps.Add(VobSubColorIsolation.Isolate(item.Bitmap));
+                    bitmaps.Add(isolatedBitmaps[^1]);
+                }
+                else
+                {
+                    bitmaps.Add(item.Bitmap);
+                }
+            }
+
+            if (showProgress) { ProgressLine.Report("OCR", 0, items.Count); }
+
+            var texts = ocr.Recognize(bitmaps, done => {
+                if (showProgress) { ProgressLine.Report("OCR", done, items.Count); }
+            });
+
+            for (var i = 0; i < items.Count; i++)
+            {
+                var text = texts[i];
+
+                if (!string.IsNullOrWhiteSpace(text))
+                {
+                    subtitle.Paragraphs.Add(new LibSeParagraph(
+                        text, items[i].StartTime.TotalMilliseconds, items[i].EndTime.TotalMilliseconds));
+                }
+                else
+                {
+                    blankCount++;
+                }
+            }
+
+            if (showProgress)
+            {
+                ProgressLine.Report("OCR", items.Count, items.Count);
+                ProgressLine.Finish();
+            }
+            if (blankCount > 0 && !quiet)
+            {
+                // Issue #12772: these used to vanish without a trace, making it look like the
+                // source had fewer subtitles than the GUI sees.
+                AnsiConsole.MarkupLine(
+                    $"[yellow]Note: {blankCount} image(s) produced no OCR text and were dropped.[/]");
             }
         }
-
-        if (showProgress)
+        finally
         {
-            ProgressLine.Report("OCR", items.Count, items.Count);
-            ProgressLine.Finish();
-        }
-
-        if (blankCount > 0 && !quiet)
-        {
-            // Issue #12772: these used to vanish without a trace, making it look like the
-            // source had fewer subtitles than the GUI sees.
-            AnsiConsole.MarkupLine(
-                $"[yellow]Note: {blankCount} image(s) produced no OCR text and were dropped.[/]");
+            foreach (var bitmap in isolatedBitmaps)
+            {
+                bitmap.Dispose();
+            }
         }
 
         subtitle.Renumber();
@@ -373,55 +394,70 @@ internal static class ImageOcrLoader
         // Time-codes-only mode is instant, so only a real OCR run reports progress (#14267).
         var showProgress = ocr is not null && !quiet;
         var done = 0;
+        if (ocr is null)
+        {
+            foreach (var pcs in pcsList)
+            {
+                var bitmap = pcs.GetBitmap();
+                if (bitmap is null) { continue; }
+                bitmap.Dispose();
+                subtitle.Paragraphs.Add(new LibSeParagraph(
+                    string.Empty, pcs.StartTime / 90.0, pcs.EndTime / 90.0));
+            }
+            subtitle.Renumber();
+            return subtitle;
+        }
+
+        var entries = new List<(BluRaySupParser.PcsData Pcs, SKBitmap Bitmap)>();
+        var bitmaps = new List<SKBitmap>();
 
         foreach (var pcs in pcsList)
         {
-            // Reported before the image is recognised, so the count is images *finished*.
-            if (showProgress)
-            {
-                ProgressLine.Report("OCR", done, pcsList.Count);
-            }
-
-            done++;
-
             var bitmap = pcs.GetBitmap();
-            if (bitmap is null)
+            if (bitmap is null) { continue; }
+            if (isolateColors)
             {
-                continue;
-            }
-            try
-            {
-                string text;
-                if (ocr is null)
-                {
-                    text = string.Empty;
-                }
-                else if (isolateColors)
-                {
-                    // PGS glyphs are white fill + black outline on transparency; binarise so
-                    // the fill survives the opaque white OCR canvas (issue #12291).
-                    using var isolated = VobSubColorIsolation.BinarizeForOcr(bitmap);
-                    text = ocr.Recognize(isolated);
-                }
-                else
-                {
-                    text = ocr.Recognize(bitmap);
-                }
-                if (ocr is null || !string.IsNullOrWhiteSpace(text))
-                {
-                    subtitle.Paragraphs.Add(new LibSeParagraph(text, pcs.StartTime / 90.0, pcs.EndTime / 90.0));
-                }
-            }
-            finally
-            {
+                var isolated = VobSubColorIsolation.BinarizeForOcr(bitmap);
                 bitmap.Dispose();
+                entries.Add((pcs, isolated));
+                bitmaps.Add(isolated);
+            }
+            else
+            {
+                entries.Add((pcs, bitmap));
+                bitmaps.Add(bitmap);
             }
         }
 
-        if (showProgress)
+        try
         {
-            ProgressLine.Report("OCR", pcsList.Count, pcsList.Count);
-            ProgressLine.Finish();
+            if (showProgress) { ProgressLine.Report("OCR", 0, bitmaps.Count); }
+
+            var texts = ocr.Recognize(bitmaps, done => {
+                if (showProgress) { ProgressLine.Report("OCR", done, bitmaps.Count); }
+            });
+
+            for (var i = 0; i < entries.Count; i++)
+            {
+                var text = texts[i];
+
+                if (!string.IsNullOrWhiteSpace(text))
+                {
+                    var pcs = entries[i].Pcs;
+                    subtitle.Paragraphs.Add(new LibSeParagraph(
+                        text, pcs.StartTime / 90.0, pcs.EndTime / 90.0));
+                }
+            }
+
+            if (showProgress)
+            {
+                ProgressLine.Report("OCR", bitmaps.Count, bitmaps.Count);
+                ProgressLine.Finish();
+            }
+        }
+        finally
+        {
+            foreach (var bitmap in bitmaps) { bitmap.Dispose(); }
         }
 
         subtitle.Renumber();
