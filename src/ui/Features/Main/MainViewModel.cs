@@ -25146,10 +25146,7 @@ public partial class MainViewModel :
     private async Task ShowStatusWithWaitAsync(string message, int delayMs = 3000)
     {
         // Cancel any previous animation
-        if (_statusFadeCts != null)
-        {
-            await _statusFadeCts.CancelAsync();
-        }
+        _statusFadeCts?.Cancel();
         _statusFadeCts = new CancellationTokenSource();
         var token = _statusFadeCts.Token;
 
@@ -25173,10 +25170,7 @@ public partial class MainViewModel :
 
     internal async void OnClosing(object? sender, WindowClosingEventArgs e)
     {
-        if (_videoOpenTokenSource != null)
-        {
-            await _videoOpenTokenSource.CancelAsync();
-        }
+        _videoOpenTokenSource?.Cancel();
         AddToRecentFiles(false);
 
         if (Window != null)
@@ -25678,10 +25672,7 @@ public partial class MainViewModel :
             }
         }
 
-        if (_videoOpenTokenSource != null)
-        {
-            await _videoOpenTokenSource.CancelAsync();
-        }
+        _videoOpenTokenSource?.Cancel();
         _audioTrack = null;
         await vp.Open(videoFileName, startPositionSeconds);
         _videoFileName = videoFileName;
@@ -31760,10 +31751,7 @@ public partial class MainViewModel :
 
     internal async void OnSubtitleGridSingleTapped(object? sender, TappedEventArgs e)
     {
-        if (_singleTapCancellationTokenSource != null)
-        {
-            await _singleTapCancellationTokenSource.CancelAsync();
-        }
+        _singleTapCancellationTokenSource?.Cancel();
         var cts = _singleTapCancellationTokenSource = new CancellationTokenSource();
 
         try
