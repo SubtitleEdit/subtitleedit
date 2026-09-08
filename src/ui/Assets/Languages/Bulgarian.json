@@ -3660,7 +3660,7 @@
     "resolutionResamplerFromVideo": "От видеото...",
     "resolutionResamplerSourceAndTargetEqual": "Изходната и целевата резолюция са еднакви - няма какво да се прави.",
     "resolutionResamplerNothingSelected": "Моля, изберете поне една опция за промяна.",
-    "resolutionResamplerVideoDiffers": "Разделителната способност на субтитрите (0}x{1}) се различава от разделителната способност на видеото ({2}x{3}).\nДа се променят ли субтитрите, за да съответстват на видеото?",
+    "resolutionResamplerVideoDiffers": "Разделителната способност на субтитрите ({0}x{1}) се различава от разделителната способност на видеото ({2}x{3}).\nДа се променят ли субтитрите, за да съответстват на видеото?",
     "resolutionResamplerAskOnVideoOpen": "Попитай, когато се отвори видеоклип с различна резолюция",
     "backgroundBoxGenerator": "Генериране на фоново поле",
     "backgroundBoxFillWidth": "Ширина на запълване",
