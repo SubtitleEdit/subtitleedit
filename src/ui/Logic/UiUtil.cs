@@ -399,9 +399,17 @@ public static class UiUtil
     {
         var (displayText, accessKey) = ParseAccessKey(text);
 
+        // Keep the `_` marker in the rendered label so the access letter is underlined while Alt is
+        // held (#14716): the HotKey below fires the command, but with plain-string content nothing
+        // ever told the user that Alt+F / Alt+R existed. AccessText owns the underline; it is not
+        // handed the access key itself, so the chord keeps firing exactly once through the HotKey.
+        object content = accessKey.HasValue
+            ? new AccessText { Text = text, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center }
+            : displayText;
+
         var button = new Button
         {
-            Content = displayText,
+            Content = content,
             Margin = new Thickness(4, 0),
             Padding = new Thickness(12, 6),
             MinWidth = 80,
