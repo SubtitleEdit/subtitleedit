@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,12 @@ public partial class MergeDisplayItem : ObservableObject
     [ObservableProperty] private string _mergedGroup;
 
     public List<SubtitleLineViewModel> LinesToMerge { get; set; } = new List<SubtitleLineViewModel>();
+
+    /// <summary>
+    /// Set for roll-up (scrolling) caption chains, which merge into several re-chunked
+    /// paragraphs rather than one paragraph with <see cref="MergedText"/>.
+    /// </summary>
+    public List<Paragraph>? ResultParagraphs { get; set; }
 
     public MergeDisplayItem(bool apply, List<SubtitleLineViewModel> linesToMerge, string mergedText, string mergeGroup)
     {

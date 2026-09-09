@@ -8,6 +8,16 @@ namespace Nikse.SubtitleEdit.Core.Common
     {
         public static Subtitle MergeLinesWithSameTextInSubtitle(Subtitle subtitle, bool fixIncrementing, int maxMsBetween)
         {
+            return MergeLinesWithSameTextInSubtitle(subtitle, fixIncrementing, maxMsBetween, false);
+        }
+
+        public static Subtitle MergeLinesWithSameTextInSubtitle(Subtitle subtitle, bool fixIncrementing, int maxMsBetween, bool includeRollUp)
+        {
+            if (includeRollUp)
+            {
+                subtitle = MergeRollUpCaptions(subtitle, maxMsBetween);
+            }
+
             var mergedIndexes = new HashSet<int>();
             var removed = new HashSet<int>();
             var mergedSubtitle = new Subtitle();
@@ -71,6 +81,176 @@ namespace Nikse.SubtitleEdit.Core.Common
             return mergedSubtitle;
         }
 
+
+        /// <summary>
+        /// Rewrites roll-up (scrolling) caption chains - where each caption shows the tail of the
+        /// previous one plus new lines, e.g. "A", "A/B", "A/B/C", "B/C/D", "C/D/E" - so every line
+        /// appears once, timed from when it first scrolled in and re-chunked into paragraphs of
+        /// <see cref="GeneralSettings.MaxNumberOfLines"/> lines. Non-roll-up paragraphs are copied as is.
+        /// </summary>
+        public static Subtitle MergeRollUpCaptions(Subtitle subtitle, int maxMsBetween)
+        {
+            var maxLines = Math.Max(1, Configuration.Settings.General.MaxNumberOfLines);
+            var result = new Subtitle(subtitle);
+            result.Paragraphs.Clear();
+            var i = 0;
+            while (i < subtitle.Paragraphs.Count)
+            {
+                if (TryGetRollUpChain(subtitle.Paragraphs, i, maxMsBetween, maxLines, out var endIndex, out var merged))
+                {
+                    result.Paragraphs.AddRange(merged);
+                    i = endIndex + 1;
+                }
+                else
+                {
+                    result.Paragraphs.Add(new Paragraph(subtitle.Paragraphs[i]));
+                    i++;
+                }
+            }
+
+            result.Renumber();
+            return result;
+        }
+
+        /// <summary>
+        /// Detects a roll-up chain starting at <paramref name="startIndex"/>. A chain step is a
+        /// paragraph whose lines begin with a non-empty suffix of the previous paragraph's lines,
+        /// optionally followed by new lines. The chain must contain at least one real scroll (a
+        /// top line dropping off), otherwise it is a plain incrementing sequence handled by
+        /// <see cref="QualifiesForMergeIncrement"/>.
+        /// </summary>
+        public static bool TryGetRollUpChain(List<Paragraph> paragraphs, int startIndex, int maxMsBetween, int maxLines, out int endIndex, out List<Paragraph> merged)
+        {
+            endIndex = startIndex;
+            merged = new List<Paragraph>();
+            if (paragraphs == null || startIndex < 0 || startIndex >= paragraphs.Count)
+            {
+                return false;
+            }
+
+            var first = paragraphs[startIndex];
+            var prevLines = GetComparableLines(first);
+            if (prevLines.Count == 0)
+            {
+                return false;
+            }
+
+            // Every distinct line, with its raw (tagged) text and the time it first scrolled in.
+            var lineTexts = new List<string>(first.Text.SplitToLines());
+            var lineStarts = new List<double>();
+            for (var k = 0; k < lineTexts.Count; k++)
+            {
+                lineStarts.Add(first.StartTime.TotalMilliseconds);
+            }
+
+            var chainEndMs = first.EndTime.TotalMilliseconds;
+            var sawScroll = false;
+            var lastIndex = startIndex;
+            for (var j = startIndex + 1; j < paragraphs.Count; j++)
+            {
+                var next = paragraphs[j];
+                if (next.StartTime.TotalMilliseconds - chainEndMs > maxMsBetween)
+                {
+                    break;
+                }
+
+                var nextLines = GetComparableLines(next);
+                var overlap = GetRollUpOverlap(prevLines, nextLines);
+                if (overlap <= 0)
+                {
+                    break;
+                }
+
+                if (overlap < prevLines.Count)
+                {
+                    sawScroll = true;
+                }
+
+                var nextRawLines = next.Text.SplitToLines();
+                for (var k = overlap; k < nextLines.Count; k++)
+                {
+                    lineTexts.Add(k < nextRawLines.Count ? nextRawLines[k] : nextLines[k]);
+                    lineStarts.Add(next.StartTime.TotalMilliseconds);
+                }
+
+                chainEndMs = Math.Max(chainEndMs, next.EndTime.TotalMilliseconds);
+                prevLines = nextLines;
+                lastIndex = j;
+            }
+
+            if (!sawScroll || lastIndex == startIndex)
+            {
+                return false;
+            }
+
+            for (var k = 0; k < lineTexts.Count; k += maxLines)
+            {
+                var count = Math.Min(maxLines, lineTexts.Count - k);
+                var text = string.Join(Environment.NewLine, lineTexts.GetRange(k, count));
+                var start = lineStarts[k];
+                var end = k + maxLines < lineTexts.Count ? lineStarts[k + maxLines] : chainEndMs;
+                if (end < start)
+                {
+                    end = start;
+                }
+
+                var p = new Paragraph(first) { Text = text };
+                p.StartTime.TotalMilliseconds = start;
+                p.EndTime.TotalMilliseconds = end;
+                merged.Add(p);
+            }
+
+            endIndex = lastIndex;
+            return true;
+        }
+
+        private static List<string> GetComparableLines(Paragraph p)
+        {
+            var lines = new List<string>();
+            if (p?.Text == null)
+            {
+                return lines;
+            }
+
+            foreach (var line in HtmlUtil.RemoveHtmlTags(p.Text, true).SplitToLines())
+            {
+                var trimmed = line.Trim();
+                if (trimmed.Length > 0)
+                {
+                    lines.Add(trimmed);
+                }
+            }
+
+            return lines;
+        }
+
+        /// <summary>
+        /// Returns the number of leading lines in <paramref name="next"/> that equal a suffix of
+        /// <paramref name="prev"/> (the longest such suffix), or 0 when the captions do not chain.
+        /// </summary>
+        private static int GetRollUpOverlap(List<string> prev, List<string> next)
+        {
+            if (prev.Count == 0 || next.Count == 0)
+            {
+                return 0;
+            }
+
+            for (var overlap = Math.Min(prev.Count, next.Count); overlap > 0; overlap--)
+            {
+                var matches = true;
+                for (var k = 0; k < overlap && matches; k++)
+                {
+                    matches = string.Equals(prev[prev.Count - overlap + k], next[k], StringComparison.OrdinalIgnoreCase);
+                }
+
+                if (matches)
+                {
+                    return overlap;
+                }
+            }
+
+            return 0;
+        }
 
         public static bool QualifiesForMerge(Paragraph p, Paragraph next, int maxMsBetween)
         {

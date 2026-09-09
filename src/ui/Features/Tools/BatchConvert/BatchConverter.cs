@@ -3392,6 +3392,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         var removed = new HashSet<int>();
         var maxMsBetween = _config.MergeLinesWithSameTexts.MaxMillisecondsBetweenLines;
         var fixIncrementing = _config.MergeLinesWithSameTexts.IncludeIncrementingLines;
+        if (_config.MergeLinesWithSameTexts.IncludeRollUpCaptions)
+        {
+            subtitle = MergeLinesSameTextUtils.MergeRollUpCaptions(subtitle, maxMsBetween);
+        }
 
         for (var i = 0; i < subtitle.Paragraphs.Count - 1; i++)
         {

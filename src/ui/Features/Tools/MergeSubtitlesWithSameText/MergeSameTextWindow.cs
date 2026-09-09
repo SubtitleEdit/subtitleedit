@@ -74,7 +74,9 @@ public class MergeSameTextWindow : Window
         numericUpDownGap.ValueChanged += (s, e) => { vm.SetDirty(); };
         var checkBoxIncludeIncrementText = UiUtil.MakeCheckBox(Se.Language.Tools.MergeLinesWithSameText.IncludeIncrementingLines, vm, nameof(vm.IncludeIncrementingLines));
         checkBoxIncludeIncrementText.IsCheckedChanged += (s, e) => { vm.SetDirty(); };
-        var panelGap = UiUtil.MakeHorizontalPanel(labelGap, numericUpDownGap, checkBoxIncludeIncrementText);
+        var checkBoxIncludeRollUp = UiUtil.MakeCheckBox(Se.Language.Tools.MergeLinesWithSameText.IncludeRollUpCaptions, vm, nameof(vm.IncludeRollUpCaptions));
+        checkBoxIncludeRollUp.IsCheckedChanged += (s, e) => { vm.SetDirty(); };
+        var panelGap = UiUtil.MakeHorizontalPanel(labelGap, numericUpDownGap, checkBoxIncludeIncrementText, checkBoxIncludeRollUp);
 
         return panelGap;
     }
