@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
@@ -24,8 +24,11 @@ public class VoiceSettingsWindow : Window
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Video.TextToSpeech.VoiceSettings;
-        SizeToContent = SizeToContent.WidthAndHeight;
-        CanResize = false;
+        Width = 520;
+        Height = 360;
+        MinWidth = 400;
+        MinHeight = 280;
+        CanResize = true;
 
         _vm = vm;
         vm.Window = this;
@@ -38,6 +41,8 @@ public class VoiceSettingsWindow : Window
         };
 
         var textBox = UiUtil.MakeTextBox(250, vm, nameof(vm.VoiceTestText));
+        textBox.Width = double.NaN;
+        textBox.HorizontalAlignment = HorizontalAlignment.Stretch;
 
         var dropArea = BuildDropArea(vm);
 
@@ -53,12 +58,12 @@ public class VoiceSettingsWindow : Window
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
             Margin = UiUtil.MakeWindowMargin(),
             ColumnSpacing = 10,
@@ -76,6 +81,8 @@ public class VoiceSettingsWindow : Window
 
         vm.PropertyChanged += OnViewModelPropertyChanged;
         Closed += (_, _) => vm.PropertyChanged -= OnViewModelPropertyChanged;
+        Closing += (_, _) => UiUtil.SaveWindowPosition(this);
+        Loaded += (_, _) => UiUtil.RestoreWindowPosition(this);
         ApplyDropVisualState(vm.IsDragOver);
 
         UiUtil.FocusOnFirstActivation(this, textBox); // hack to make OnKeyDown work
@@ -143,6 +150,7 @@ public class VoiceSettingsWindow : Window
             CornerRadius = new CornerRadius(8),
             Padding = new Thickness(16),
             MinHeight = 96,
+            VerticalAlignment = VerticalAlignment.Stretch,
             Child = inner,
         };
         _dropBorder = border;
