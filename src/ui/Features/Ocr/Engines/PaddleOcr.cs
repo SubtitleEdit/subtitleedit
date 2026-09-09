@@ -77,6 +77,9 @@ public partial class PaddleOcr
         };
     }
 
+    // Maximum time to wait for a single PaddleOCR result file.
+    private const int PaddleOcrResultTimeoutSeconds = 20;
+
     // The engine archives all wrap their content in a folder named after the archive itself,
     // so the root folder is derived rather than repeated; the models archive is the one that
     // does not follow that rule (".VideOCR" is in the file name only) and passes it in.
@@ -302,7 +305,7 @@ public partial class PaddleOcr
         // that OutputHandlerBatch parses. So for the Python engine we let it write one
         // "<index>_res.json" per image with --save_path and read those instead.
         string? saveFolder = null;
-        if (engineType == OcrEngineType.PaddleOcrPython)
+        if (engineType == OcrEngineType.PaddleOcrStandalone || engineType == OcrEngineType.PaddleOcrPython)
         {
             saveFolder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             Directory.CreateDirectory(saveFolder);
@@ -312,7 +315,10 @@ public partial class PaddleOcr
             // PP-OCRv5 models (NotImplementedError: ConvertPirAttribute2RuntimeAttribute ...).
             // The bundled standalone build is known-good and faster with MKL-DNN, so only
             // disable it for the Python engine.
-            parameters += " --enable_mkldnn False";
+            if (engineType == OcrEngineType.PaddleOcrPython)
+            {
+                parameters += " --enable_mkldnn False";
+            }
         }
 
         var process = new Process
@@ -341,7 +347,10 @@ public partial class PaddleOcr
         // We always pass explicit local model dirs, so skip PaddleX's online model-source
         // connectivity check - otherwise it can hang the OCR run at "Initializing...".
         process.StartInfo.EnvironmentVariables["PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK"] = "True";
-        process.OutputDataReceived += OutputHandlerBatch;
+        if (saveFolder == null)
+        {
+            process.OutputDataReceived += OutputHandlerBatch;
+        }
         process.ErrorDataReceived += ErrorHandler;
         _textDetectionResults.Clear();
         lock (_errorLock)
@@ -373,35 +382,87 @@ public partial class PaddleOcr
         var reportedStems = new HashSet<string>();
         if (saveFolder != null)
         {
-            var roundsSinceProgress = 0;
-            while (reportedStems.Count < _batchFileNames.Count && !cancellationToken.IsCancellationRequested)
+            var orderedInputs = _batchFileNames
+                .OrderBy(p => p.Index)
+                .ToList();
+
+            for (var nextIndex = 0;
+                 nextIndex < orderedInputs.Count && !cancellationToken.IsCancellationRequested;
+                 nextIndex++)
             {
-                try
+                var input = orderedInputs[nextIndex];
+                var stem = Path.GetFileNameWithoutExtension(input.FileName);
+                var jsonPath = Path.Combine(saveFolder, stem + "_res.json");
+
+                string json = string.Empty;
+
+                var waitStopwatch = Stopwatch.StartNew();
+
+                while (!cancellationToken.IsCancellationRequested)
                 {
-                    await Task.Delay(400, cancellationToken);
+                    if (File.Exists(jsonPath))
+                    {
+                        try
+                        {
+                            json = File.ReadAllText(jsonPath);
+                            var trimmed = json.TrimEnd();
+
+                            if (trimmed.Length > 0 && trimmed[^1] == '}')
+                            {
+                                break;
+                            }
+                        }
+                        catch
+                        {
+                            // file is probably still written to
+                        }
+                    }
+                    if (waitStopwatch.Elapsed >= TimeSpan.FromSeconds(PaddleOcrResultTimeoutSeconds))
+                    {
+                        json = string.Empty;
+                        break;
+                    }
+                    await Task.Delay(5, cancellationToken);
                 }
-                catch (TaskCanceledException)
+
+                if (cancellationToken.IsCancellationRequested)
                 {
                     break;
                 }
 
-                var before = reportedStems.Count;
-                ReportNewPaddleOcrPythonResults(saveFolder, reportedStems);
-
-                if (reportedStems.Count > before)
+                if (string.IsNullOrEmpty(json))
                 {
-                    roundsSinceProgress = 0;
+                    reportedStems.Add(stem);
+
+                    _batchProgress?.Report(new PaddleOcrBatchProgress
+                    {
+                        Index = input.Index,
+                        Item = input.Item,
+                        Text = "[OCR TIMEOUT]",
+                        Confidence = 0,
+                    });
+
                     continue;
                 }
 
-                // No new results this round - stop once they have clearly stopped arriving:
-                // a short grace once the launcher exited, a long safety-net otherwise.
-                roundsSinceProgress++;
-                var maxIdleRounds = process.HasExited ? 150 : 750; // ~60s after exit, ~5 min otherwise
-                if (roundsSinceProgress >= maxIdleRounds)
+                reportedStems.Add(stem);
+
+                var results = ParsePaddleOcrJsonContent(json, jsonPath);
+                Se.WriteToolsLog(
+                    $"Paddle OCR result {reportedStems.Count} (line index {input.Index}) ready at {_batchStopwatch.Elapsed.TotalSeconds:F1}s");
+
+                var resultConfidence = 0.0;
+                var text = results.Count > 0
+                    ? MakeResult(results, out resultConfidence)
+                    : string.Empty;
+
+                _batchProgress?.Report(new PaddleOcrBatchProgress
                 {
-                    break;
-                }
+                    Index = input.Index,
+                    Item = input.Item,
+                    Text = text,
+                    Confidence = resultConfidence,
+                });
             }
         }
 
@@ -438,12 +499,7 @@ public partial class PaddleOcr
             return;
         }
 
-        if (saveFolder != null)
-        {
-            // Final sweep - report any files written after the last poll.
-            ReportNewPaddleOcrPythonResults(saveFolder, reportedStems);
-        }
-        else if (_textDetectionResults.Count > 0)
+        if ((saveFolder == null) && (_textDetectionResults.Count > 0))
         {
             var input = _batchFileNames.First(p => p.FileName == _batchFileName);
             var p = new PaddleOcrBatchProgress
@@ -485,59 +541,6 @@ public partial class PaddleOcr
     {
         _batchFileNames = inputs;
         _batchProgress = progress;
-    }
-
-    // Reports any "<index>_res.json" files (written by the PaddleOCR 3.x Python CLI via
-    // --save_path) that haven't been reported yet. Skips files still being written.
-    internal void ReportNewPaddleOcrPythonResults(string saveFolder, HashSet<string> reportedStems)
-    {
-        foreach (var input in _batchFileNames.OrderBy(p => p.Index))
-        {
-            var stem = Path.GetFileNameWithoutExtension(input.FileName);
-            if (reportedStems.Contains(stem))
-            {
-                continue;
-            }
-
-            var jsonPath = Path.Combine(saveFolder, stem + "_res.json");
-            if (!File.Exists(jsonPath))
-            {
-                continue;
-            }
-
-            string json;
-            try
-            {
-                json = File.ReadAllText(jsonPath);
-            }
-            catch
-            {
-                continue; // locked / mid-write - try again on the next poll
-            }
-
-            // A complete result file ends with the closing brace; if not, it is still
-            // being written, so skip it for now and pick it up on the next poll.
-            var trimmed = json.TrimEnd();
-            if (trimmed.Length == 0 || trimmed[^1] != '}')
-            {
-                continue;
-            }
-
-            reportedStems.Add(stem);
-
-            var results = ParsePaddleOcrJsonContent(json, jsonPath);
-            Se.WriteToolsLog(
-                $"Paddle OCR result {reportedStems.Count} (line index {input.Index}) ready at {_batchStopwatch.Elapsed.TotalSeconds:F1}s");
-            var resultConfidence = 0.0;
-            var text = results.Count > 0 ? MakeResult(results, out resultConfidence) : string.Empty;
-            _batchProgress?.Report(new PaddleOcrBatchProgress
-            {
-                Index = input.Index,
-                Item = input.Item,
-                Text = text,
-                Confidence = resultConfidence,
-            });
-        }
     }
 
     private void ErrorHandler(object sendingProcess, DataReceivedEventArgs outLine)
