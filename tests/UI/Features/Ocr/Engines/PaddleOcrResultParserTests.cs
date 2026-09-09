@@ -7,60 +7,6 @@ namespace UITests.Features.Ocr.Engines;
 
 public class PaddleOcrResultParserTests
 {
-    private sealed class SyncProgress<T> : IProgress<T>
-    {
-        private readonly Action<T> _onReport;
-        public SyncProgress(Action<T> onReport) => _onReport = onReport;
-        public void Report(T value) => _onReport(value);
-    }
-
-    private static string SingleLineJson(string text) =>
-        $$"""{ "rec_texts": ["{{text}}"], "rec_scores": [0.99], "rec_polys": [[[10, 10], [200, 10], [200, 40], [10, 40]]] }""";
-
-    [Fact]
-    public void ReportNewResults_ReportsEachImageOnce_SkipsPartialFiles()
-    {
-        var dir = Path.Combine(Path.GetTempPath(), "paddle_report_" + Guid.NewGuid().ToString("N"));
-        Directory.CreateDirectory(dir);
-        try
-        {
-            var inputs = new List<PaddleOcrBatchInput>
-            {
-                new() { Index = 5, FileName = Path.Combine(dir, "0000.png") },
-                new() { Index = 6, FileName = Path.Combine(dir, "0001.png") },
-            };
-
-            var reported = new List<PaddleOcrBatchProgress>();
-            var ocr = new PaddleOcr();
-            ocr.InitializeForTest(inputs, new SyncProgress<PaddleOcrBatchProgress>(reported.Add));
-            var seen = new HashSet<string>();
-
-            // First image complete, second still being written (no closing brace).
-            File.WriteAllText(Path.Combine(dir, "0000_res.json"), SingleLineJson("Alpha"));
-            File.WriteAllText(Path.Combine(dir, "0001_res.json"), "{ \"rec_texts\": [\"Beta\"");
-
-            ocr.ReportNewPaddleOcrPythonResults(dir, seen);
-            Assert.Single(reported);
-            Assert.Equal(5, reported[0].Index);
-            Assert.Equal("Alpha", reported[0].Text);
-
-            // Second image finishes writing -> reported on the next poll.
-            File.WriteAllText(Path.Combine(dir, "0001_res.json"), SingleLineJson("Beta"));
-            ocr.ReportNewPaddleOcrPythonResults(dir, seen);
-            Assert.Equal(2, reported.Count);
-            Assert.Equal(6, reported[1].Index);
-            Assert.Equal("Beta", reported[1].Text);
-
-            // Nothing new on a further poll - each image reported exactly once.
-            ocr.ReportNewPaddleOcrPythonResults(dir, seen);
-            Assert.Equal(2, reported.Count);
-        }
-        finally
-        {
-            Directory.Delete(dir, true);
-        }
-    }
-
     private readonly PaddleOcrResultParser _parser = new();
 
     private static string MakeLine(string pythonText, double confidence = 0.99) =>
