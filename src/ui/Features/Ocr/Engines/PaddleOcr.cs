@@ -302,7 +302,7 @@ public partial class PaddleOcr
         // that OutputHandlerBatch parses. So for the Python engine we let it write one
         // "<index>_res.json" per image with --save_path and read those instead.
         string? saveFolder = null;
-        if (engineType == OcrEngineType.PaddleOcrPython)
+        if (engineType == OcrEngineType.PaddleOcrStandalone || engineType == OcrEngineType.PaddleOcrPython)
         {
             saveFolder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             Directory.CreateDirectory(saveFolder);
@@ -312,7 +312,10 @@ public partial class PaddleOcr
             // PP-OCRv5 models (NotImplementedError: ConvertPirAttribute2RuntimeAttribute ...).
             // The bundled standalone build is known-good and faster with MKL-DNN, so only
             // disable it for the Python engine.
-            parameters += " --enable_mkldnn False";
+            if (engineType == OcrEngineType.PaddleOcrPython)
+            {
+                parameters += " --enable_mkldnn False";
+            }
         }
 
         var process = new Process
@@ -341,7 +344,10 @@ public partial class PaddleOcr
         // We always pass explicit local model dirs, so skip PaddleX's online model-source
         // connectivity check - otherwise it can hang the OCR run at "Initializing...".
         process.StartInfo.EnvironmentVariables["PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK"] = "True";
-        process.OutputDataReceived += OutputHandlerBatch;
+        if (saveFolder == null)
+        {
+            process.OutputDataReceived += OutputHandlerBatch;
+        }
         process.ErrorDataReceived += ErrorHandler;
         _textDetectionResults.Clear();
         lock (_errorLock)
