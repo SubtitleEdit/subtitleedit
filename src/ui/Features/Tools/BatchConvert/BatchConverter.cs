@@ -1368,6 +1368,14 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             }
         }
 
+        for (var i = 0; i < numberOfImages; i++)
+        {
+            item.Subtitle.Paragraphs.Add(new Paragraph(
+                string.Empty,
+                imageSubtitles.GetStartTime(i).TotalMilliseconds,
+                imageSubtitles.GetEndTime(i).TotalMilliseconds));
+        }
+
         var ocrProgress = new Progress<PaddleOcrBatchProgress>(p =>
         {
             if (cancellationToken.IsCancellationRequested)
@@ -1382,8 +1390,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 var percentage = numberOfImages > 0 ? ocrCount * 100 / numberOfImages : 0;
                 item.Status = string.Format(Se.Language.General.OcrPercentX, percentage);
 
-                var paragraph = new Paragraph(p.Text, imageSubtitles.GetStartTime(number).TotalMilliseconds, imageSubtitles.GetEndTime(number).TotalMilliseconds);
-                item.Subtitle.Paragraphs.Add(paragraph);
+                item.Subtitle.Paragraphs[number].Text = p.Text;
             }
         });
 
