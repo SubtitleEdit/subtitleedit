@@ -1360,7 +1360,7 @@
       "singleLineLengthExceedingMaximum": "单行长度 - 超过最大值 ({0} 个字符): {1} ({2:0.00}%)",
       "singleLineWidthMinimum": "单行宽度（最短）: {0} 像素",
       "singleLineWidthMaximum": "单行宽度（最长）: {0} 像素",
-      "singleLineWidthAverage": "单行宽度（平均）: {0} 像素",
+      "singleLineWidthAverage": "单行宽度（平均）: {0:#.###} 像素",
       "singleLineWidthExceedingMaximum": "单行宽度 - 超过最大值 ({0} 像素): {1} ({2:0.00}%)",
       "durationMinimum": "时长（最短）: {0:0.000} 秒",
       "durationMaximum": "时长（最长）: {0:0.000} 秒",

@@ -1021,7 +1021,7 @@
     "audioTrackIsNowX": "A faixa de áudio agora é \"{0}",
     "audioTrackX": "Faixa de áudio {0}",
     "autoBreakHint": "Quebra automática de linhas selecionadas",
-    "charactersPerSecond": "Caracteres/seg: {0:0.00}",
+    "charactersPerSecond": "Caracteres/seg: {0}",
     "chooseColumn": "Escolha a coluna",
     "columnPaste": "Antes de colar coluna",
     "createdEmptyTranslation": "Criada uma tradução vazia da legenda atual",
