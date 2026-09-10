@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.UiLogic.Ocr.Paddle;
 using SkiaSharp;
 using System;
 using System.Collections.Concurrent;
@@ -10,7 +11,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -219,7 +219,7 @@ public partial class PaddleOcr
             {
                 bitmap = input.Bitmap?.Copy() ?? new SKBitmap(1, 1, true);
                 // bitmap = MakeTransparentBlack(bitmap);
-                borderedBitmap = CreateDoubleBorder(bitmap, 10, SKColors.Black, new SKColor(0, 0, 0, 0));
+                borderedBitmap = PaddleOcrImagePrep.PrepareForOcr(bitmap);
                 var tempImage = Path.Combine(folder, input.Index.ToString("0000") + ".png");
                 input.FileName = tempImage;
                 batchFileNamesList.Add(input);
@@ -369,37 +369,8 @@ public partial class PaddleOcr
         // actual OCR and can exit (or block) long before that worker finishes. So we poll
         // until results stop arriving, NOT until the launcher exits - otherwise only the
         // first couple of lines get reported while the worker keeps running in the background.
-        var reportedStems = new HashSet<string>();
-        var roundsSinceProgress = 0;
-        while (reportedStems.Count < _batchFileNames.Count && !cancellationToken.IsCancellationRequested)
-        {
-            try
-            {
-                await Task.Delay(400, cancellationToken);
-            }
-            catch (TaskCanceledException)
-            {
-                break;
-            }
-
-            var before = reportedStems.Count;
-            ReportNewPaddleOcrResults(saveFolder, reportedStems);
-
-            if (reportedStems.Count > before)
-            {
-                roundsSinceProgress = 0;
-                continue;
-            }
-
-            // No new results this round - stop once they have clearly stopped arriving:
-            // a short grace once the launcher exited, a long safety-net otherwise.
-            roundsSinceProgress++;
-            var maxIdleRounds = process.HasExited ? 150 : 750; // ~60s after exit, ~5 min otherwise
-            if (roundsSinceProgress >= maxIdleRounds)
-            {
-                break;
-            }
-        }
+        var poller = CreatePoller(saveFolder);
+        await poller.PollUntilDoneAsync(() => process.HasExited, ReportResult, LogParseError, cancellationToken);
 
         try
         {
@@ -424,7 +395,7 @@ public partial class PaddleOcr
 
         // Final sweep - report any files written after the last poll. Done before the failure
         // check below so a run that produced results but exited non-zero still delivers them.
-        ReportNewPaddleOcrResults(saveFolder, reportedStems);
+        poller.ReportNew(ReportResult, LogParseError);
 
         try
         {
@@ -449,7 +420,7 @@ public partial class PaddleOcr
         // --save_path, a worker killed mid-run. Both have to surface as an error: the callers
         // only show one when Error is set, so staying quiet here hands the user an empty
         // subtitle that looks like a successful OCR.
-        if (reportedStems.Count == 0 && _batchFileNames.Count > 0)
+        if (poller.ReportedCount == 0 && _batchFileNames.Count > 0)
         {
             lock (_errorLock)
             {
@@ -464,87 +435,49 @@ public partial class PaddleOcr
     }
 
     // Test seam: wires up the batch inputs and progress sink used by
-    // ReportNewPaddleOcrResults so the polling/reporting logic can be tested.
+    // the shared result poller, so the polling/reporting logic can be tested.
     internal void InitializeForTest(List<PaddleOcrBatchInput> inputs, IProgress<PaddleOcrBatchProgress> progress)
     {
         _batchFileNames = inputs;
         _batchProgress = progress;
     }
 
-    private const string ResultFileSuffix = "_res.json";
-
-    // Reports any "<index>_res.json" files (written by the PaddleOCR CLI via --save_path) that
-    // haven't been reported yet, in line order. Skips files still being written.
-    internal void ReportNewPaddleOcrResults(string saveFolder, HashSet<string> reportedStems)
+    /// <summary>
+    /// Builds the poller over the batch's inputs. Results come back by position in this list,
+    /// which is the batch sorted by line index, so a result maps straight to its input.
+    /// </summary>
+    internal PaddleOcrResultPoller CreatePoller(string saveFolder)
     {
-        // One directory listing per poll instead of a File.Exists per outstanding image: at a
-        // 400 ms poll over a feature-length subtitle the per-image form is thousands of stat
-        // calls a second, nearly all of them for files that are not there yet.
-        string[] resultFiles;
-        try
+        _pollOrder = _batchFileNames.OrderBy(p => p.Index).ToList();
+        var stems = _pollOrder.Select(p => Path.GetFileNameWithoutExtension(p.FileName)).ToList();
+        return new PaddleOcrResultPoller(saveFolder, stems);
+    }
+
+    private List<PaddleOcrBatchInput> _pollOrder = new();
+
+    internal void ReportResult(int position, List<PaddleOcrTextRegion> regions)
+    {
+        var input = _pollOrder[position];
+        Se.WriteToolsLog(
+            $"Paddle OCR result (line index {input.Index}) ready at {_batchStopwatch.Elapsed.TotalSeconds:F1}s");
+
+        var confidence = 0.0;
+        var text = regions.Count > 0
+            ? PaddleOcrTextLayout.BuildText(regions, MinConfidencePercent, _batchRightToLeft, out confidence)
+            : string.Empty;
+
+        _batchProgress?.Report(new PaddleOcrBatchProgress
         {
-            resultFiles = Directory.GetFiles(saveFolder, "*" + ResultFileSuffix);
-        }
-        catch
-        {
-            return; // folder gone or not created yet - try again on the next poll
-        }
+            Index = input.Index,
+            Item = input.Item,
+            Text = text,
+            Confidence = confidence,
+        });
+    }
 
-        if (resultFiles.Length <= reportedStems.Count)
-        {
-            return; // nothing new on disk since the last poll
-        }
-
-        var writtenStems = new HashSet<string>(resultFiles.Length);
-        foreach (var resultFile in resultFiles)
-        {
-            var name = Path.GetFileName(resultFile);
-            writtenStems.Add(name.Substring(0, name.Length - ResultFileSuffix.Length));
-        }
-
-        foreach (var input in _batchFileNames.OrderBy(p => p.Index))
-        {
-            var stem = Path.GetFileNameWithoutExtension(input.FileName);
-            if (reportedStems.Contains(stem) || !writtenStems.Contains(stem))
-            {
-                continue;
-            }
-
-            var jsonPath = Path.Combine(saveFolder, stem + ResultFileSuffix);
-
-            string json;
-            try
-            {
-                json = File.ReadAllText(jsonPath);
-            }
-            catch
-            {
-                continue; // locked / mid-write - try again on the next poll
-            }
-
-            // A complete result file ends with the closing brace; if not, it is still
-            // being written, so skip it for now and pick it up on the next poll.
-            var trimmed = json.TrimEnd();
-            if (trimmed.Length == 0 || trimmed[^1] != '}')
-            {
-                continue;
-            }
-
-            reportedStems.Add(stem);
-
-            var results = ParsePaddleOcrJsonContent(json, jsonPath);
-            Se.WriteToolsLog(
-                $"Paddle OCR result {reportedStems.Count} (line index {input.Index}) ready at {_batchStopwatch.Elapsed.TotalSeconds:F1}s");
-            var resultConfidence = 0.0;
-            var text = results.Count > 0 ? MakeResult(results, out resultConfidence) : string.Empty;
-            _batchProgress?.Report(new PaddleOcrBatchProgress
-            {
-                Index = input.Index,
-                Item = input.Item,
-                Text = text,
-                Confidence = resultConfidence,
-            });
-        }
+    private static void LogParseError(string stem, string message)
+    {
+        Se.LogError($"Failed to parse PaddleOCR result JSON for {stem}: {message}");
     }
 
     private void ErrorHandler(object sendingProcess, DataReceivedEventArgs outLine)
@@ -577,69 +510,6 @@ public partial class PaddleOcr
         {
             // ignore - best effort
         }
-    }
-
-    internal static List<PaddleOcrResultParser.TextDetectionResult> ParsePaddleOcrJsonContent(string json, string sourceName = "")
-    {
-        var results = new List<PaddleOcrResultParser.TextDetectionResult>();
-        try
-        {
-            using var doc = JsonDocument.Parse(json);
-            var root = doc.RootElement;
-            if (!root.TryGetProperty("rec_texts", out var texts) || texts.ValueKind != JsonValueKind.Array)
-            {
-                return results;
-            }
-
-            root.TryGetProperty("rec_scores", out var scores);
-            root.TryGetProperty("rec_polys", out var polys);
-
-            for (var i = 0; i < texts.GetArrayLength(); i++)
-            {
-                var text = texts[i].GetString() ?? string.Empty;
-
-                var confidence = 0.0;
-                if (scores.ValueKind == JsonValueKind.Array && i < scores.GetArrayLength())
-                {
-                    confidence = scores[i].GetDouble();
-                }
-
-                var box = new PaddleOcrResultParser.BoundingBox(
-                    new PaddleOcrResultParser.Point(0, 0),
-                    new PaddleOcrResultParser.Point(0, 0),
-                    new PaddleOcrResultParser.Point(0, 0),
-                    new PaddleOcrResultParser.Point(0, 0));
-
-                if (polys.ValueKind == JsonValueKind.Array && i < polys.GetArrayLength() &&
-                    polys[i].ValueKind == JsonValueKind.Array && polys[i].GetArrayLength() >= 4)
-                {
-                    var poly = polys[i];
-                    box = new PaddleOcrResultParser.BoundingBox(
-                        ReadJsonPoint(poly[0]),
-                        ReadJsonPoint(poly[1]),
-                        ReadJsonPoint(poly[2]),
-                        ReadJsonPoint(poly[3]));
-                }
-
-                results.Add(new PaddleOcrResultParser.TextDetectionResult
-                {
-                    Text = text,
-                    Confidence = confidence,
-                    BoundingBox = box,
-                });
-            }
-        }
-        catch (Exception exception)
-        {
-            Se.LogError(exception, $"Failed to parse PaddleOCR result JSON: {sourceName}");
-        }
-
-        return results;
-    }
-
-    private static PaddleOcrResultParser.Point ReadJsonPoint(JsonElement point)
-    {
-        return new PaddleOcrResultParser.Point(point[0].GetDouble(), point[1].GetDouble());
     }
 
     private static string GetPaddleOcrPytonPath()
@@ -850,29 +720,6 @@ public partial class PaddleOcr
         return false;
     }
 
-    private static SKBitmap CreateDoubleBorder(SKBitmap source, int borderSize, SKColor innerColor, SKColor outerColor)
-    {
-        var totalBorder = borderSize * 2;
-        var finalWidth = source.Width + totalBorder * 2;
-        var finalHeight = source.Height + totalBorder * 2;
-
-        var result = new SKBitmap(finalWidth, finalHeight);
-        using var canvas = new SKCanvas(result);
-
-        // Clear with outer border color
-        canvas.Clear(outerColor);
-
-        // Draw inner border rectangle
-        using var paint = new SKPaint { Color = innerColor };
-        canvas.DrawRect(borderSize, borderSize,
-            finalWidth - borderSize * 2, finalHeight - borderSize * 2, paint);
-
-        // Draw original bitmap in center
-        canvas.DrawBitmap(source, totalBorder, totalBorder);
-
-        return result;
-    }
-
     public static SKBitmap AddBorder(SKBitmap originalBitmap, int borderWidth, SKColor color)
     {
         // Calculate new dimensions
@@ -894,115 +741,6 @@ public partial class PaddleOcr
         }
 
         return borderedBitmap;
-    }
-
-    internal string MakeResult(List<PaddleOcrResultParser.TextDetectionResult> textDetectionResults, out double confidence)
-    {
-        var kept = textDetectionResults;
-        if (MinConfidencePercent > 0)
-        {
-            // A confidence of 0 means "not reported" (older output formats) - never drop those.
-            kept = textDetectionResults
-                .Where(p => p.Confidence <= 0 || p.Confidence * 100.0 >= MinConfidencePercent)
-                .ToList();
-
-            // The cut removes low-confidence clutter *next to* confident text. When nothing
-            // clears the bar there is no confident text to prefer - dropping everything would
-            // erase a short real subtitle ("Wait.") that the engine merely hesitated on, so
-            // keep the frame's regions and let the low average confidence weigh the vote down.
-            if (kept.Count == 0)
-            {
-                kept = textDetectionResults;
-            }
-        }
-
-        if (kept.Count == 0)
-        {
-            confidence = 0;
-            return string.Empty;
-        }
-
-        confidence = kept.Average(p => p.Confidence <= 0 ? 1.0 : p.Confidence);
-
-        var sb = new StringBuilder();
-        var lines = MakeLines(kept, _batchRightToLeft);
-        foreach (var line in lines)
-        {
-            var text = string.Join(' ', line.Select(p => p.Text));
-            sb.AppendLine(text);
-        }
-
-        return sb.ToString().Trim().Replace(" " + Environment.NewLine, Environment.NewLine);
-    }
-
-    /// <summary>
-    /// Groups the detected text boxes into visual lines by vertical overlap (two boxes
-    /// share a line when either box's vertical midpoint falls inside the other), then
-    /// orders lines top-to-bottom and the words within a line left-to-right - or
-    /// right-to-left for Arabic-script languages, where the first word of the sentence
-    /// is the rightmost box.
-    /// </summary>
-    internal static List<List<PaddleOcrResultParser.TextDetectionResult>> MakeLines(
-        List<PaddleOcrResultParser.TextDetectionResult> input, bool rightToLeft)
-    {
-        var lines = new List<List<PaddleOcrResultParser.TextDetectionResult>>();
-        foreach (var element in input)
-        {
-            List<PaddleOcrResultParser.TextDetectionResult>? home = null;
-            foreach (var line in lines)
-            {
-                if (IsOnSameLine(line[0].BoundingBox, element.BoundingBox))
-                {
-                    home = line;
-                    break;
-                }
-            }
-
-            if (home == null)
-            {
-                lines.Add(new List<PaddleOcrResultParser.TextDetectionResult> { element });
-            }
-            else
-            {
-                home.Add(element);
-            }
-        }
-
-        foreach (var line in lines)
-        {
-            line.Sort((a, b) => rightToLeft
-                ? b.BoundingBox.TopLeft.X.CompareTo(a.BoundingBox.TopLeft.X)
-                : a.BoundingBox.TopLeft.X.CompareTo(b.BoundingBox.TopLeft.X));
-        }
-
-        lines.Sort((a, b) => MinY(a).CompareTo(MinY(b)));
-        return lines;
-    }
-
-    private static double MinY(List<PaddleOcrResultParser.TextDetectionResult> line)
-    {
-        var min = double.MaxValue;
-        foreach (var element in line)
-        {
-            var y = Math.Min(element.BoundingBox.TopLeft.Y, element.BoundingBox.TopRight.Y);
-            if (y < min)
-            {
-                min = y;
-            }
-        }
-
-        return min;
-    }
-
-    private static bool IsOnSameLine(PaddleOcrResultParser.BoundingBox a, PaddleOcrResultParser.BoundingBox b)
-    {
-        var aMin = Math.Min(a.TopLeft.Y, a.TopRight.Y);
-        var aMax = Math.Max(a.BottomLeft.Y, a.BottomRight.Y);
-        var bMin = Math.Min(b.TopLeft.Y, b.TopRight.Y);
-        var bMax = Math.Max(b.BottomLeft.Y, b.BottomRight.Y);
-        var aMid = (aMin + aMax) / 2.0;
-        var bMid = (bMin + bMax) / 2.0;
-        return (aMin < bMid && bMid < aMax) || (bMin < aMid && aMid < bMax);
     }
 
     // Every language PaddleOCR 3.7 supports with a recognition model that ships in the

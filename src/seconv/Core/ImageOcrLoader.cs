@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
+using Nikse.SubtitleEdit.UiLogic.Ocr.Paddle;
 using SkiaSharp;
 using Spectre.Console;
 using System.Text;
@@ -120,51 +121,29 @@ internal static class ImageOcrLoader
 
                 // Recognition is the slow part, so report it per image (issue #14267).
                 var showProgress = ocr is not null && !options.Quiet;
-                var done = 0;
                 var subtitle = new Subtitle();
-                foreach (var dvb in dvbSubtitles)
+
+                // ocr == null → time-codes-only: keep every entry that has an image, with
+                // empty text, without decoding a bitmap for recognition.
+                // Same antialiased binarisation as the PGS path (issue #12291).
+                Func<SKBitmap, SKBitmap>? isolate =
+                    options.PgsIsolateColors ? (b => VobSubColorIsolation.BinarizeForOcr(b)) : null;
+                var texts = ocr is null
+                    ? TimeCodesOnlyTexts(dvbSubtitles.Count, i => dvbSubtitles[i].GetBitmap())
+                    : RecognizeAll(
+                        ocr, dvbSubtitles.Count, i => dvbSubtitles[i].GetBitmap(),
+                        callerOwnsBitmap: false, isolate, quiet: !showProgress);
+
+                for (var i = 0; i < dvbSubtitles.Count; i++)
                 {
-                    // Reported before the image is recognised, so the count is images
-                    // *finished* - 100% must not show while the last one is still running.
-                    if (showProgress)
-                    {
-                        ProgressLine.Report("OCR", done, dvbSubtitles.Count);
-                    }
-
-                    done++;
-
-                    var bitmap = dvb.GetBitmap();
-                    if (bitmap is null)
+                    var text = texts[i];
+                    if (text is null || (ocr is not null && string.IsNullOrWhiteSpace(text)))
                     {
                         continue;
                     }
-                    try
-                    {
-                        // ocr == null → time-codes-only: keep the entry with empty text.
-                        string text;
-                        if (ocr is null)
-                        {
-                            text = string.Empty;
-                        }
-                        else if (options.PgsIsolateColors)
-                        {
-                            // Same antialiased binarisation as the PGS path (issue #12291).
-                            using var isolated = VobSubColorIsolation.BinarizeForOcr(bitmap);
-                            text = ocr.Recognize(isolated);
-                        }
-                        else
-                        {
-                            text = ocr.Recognize(bitmap);
-                        }
-                        if (ocr is null || !string.IsNullOrWhiteSpace(text))
-                        {
-                            subtitle.Paragraphs.Add(new LibSeParagraph(text, dvb.StartMilliseconds, dvb.EndMilliseconds));
-                        }
-                    }
-                    finally
-                    {
-                        bitmap.Dispose();
-                    }
+
+                    subtitle.Paragraphs.Add(new LibSeParagraph(
+                        text, dvbSubtitles[i].StartMilliseconds, dvbSubtitles[i].EndMilliseconds));
                 }
 
                 if (showProgress)
@@ -291,6 +270,152 @@ internal static class ImageOcrLoader
     }
 
     /// <summary>
+    /// Recognises a whole subtitle's worth of images and returns the text per index -
+    /// <c>null</c> for an index that had no usable bitmap, which the caller drops entirely.
+    /// <para>
+    /// Paddle OCR spends roughly twenty seconds loading its models per process, so the whole
+    /// set goes through one batched run; other engines stay one call per image. Bitmaps are
+    /// fetched one at a time and released immediately, so a feature-length subtitle never has
+    /// more than one decoded frame in memory.
+    /// </para>
+    /// </summary>
+    /// <param name="rentBitmap">Decodes the image for an index, or returns null if there is none.</param>
+    /// <param name="callerOwnsBitmap">
+    /// True when <paramref name="rentBitmap"/> hands back a bitmap owned by someone else (an
+    /// item that is disposed later); false when it decodes a fresh one we have to release.
+    /// </param>
+    /// <param name="isolate">Optional colour isolation applied before recognition.</param>
+    /// <param name="quiet">Suppresses progress and the engine's warnings.</param>
+    private static string?[] RecognizeAll(
+        IOcrEngine ocr,
+        int count,
+        Func<int, SKBitmap?> rentBitmap,
+        bool callerOwnsBitmap,
+        Func<SKBitmap, SKBitmap>? isolate,
+        bool quiet)
+    {
+        var texts = new string?[count];
+        var showProgress = !quiet;
+
+        if (ocr is PaddleOcrEngine paddle)
+        {
+            // An index with no bitmap still needs a slot in the batch, or every later result
+            // would be attributed to the wrong line; it is marked here and dropped afterwards.
+            var missing = new bool[count];
+
+            var results = paddle.RecognizeBatch(
+                count,
+                (index, path) =>
+                {
+                    var bitmap = rentBitmap(index);
+                    if (bitmap is null)
+                    {
+                        missing[index] = true;
+                        PaddleOcrImagePrep.WriteBlankPng(path);
+                        return;
+                    }
+
+                    try
+                    {
+                        if (isolate is null)
+                        {
+                            PaddleOcrImagePrep.WritePreparedPng(bitmap, path);
+                        }
+                        else
+                        {
+                            using var isolated = isolate(bitmap);
+                            PaddleOcrImagePrep.WritePreparedPng(isolated, path);
+                        }
+                    }
+                    finally
+                    {
+                        if (!callerOwnsBitmap)
+                        {
+                            bitmap.Dispose();
+                        }
+                    }
+                },
+                // Stop one short of the total: each caller prints the closing 100% itself,
+                // and in a redirected log a second one would show up as a duplicate line.
+                showProgress
+                    ? (done, total) => { if (done < total) { ProgressLine.Report("OCR", done, total); } }
+                    : null);
+
+            for (var i = 0; i < count; i++)
+            {
+                texts[i] = missing[i] ? null : results[i];
+            }
+
+            if (!quiet)
+            {
+                foreach (var warning in paddle.Warnings)
+                {
+                    AnsiConsole.MarkupLine($"[yellow]Note: {warning.EscapeMarkup()}[/]");
+                }
+            }
+
+            return texts;
+        }
+
+        for (var i = 0; i < count; i++)
+        {
+            // Reported before the image is recognised, so the count is images *finished* -
+            // 100% must not show while the last one is still running.
+            if (showProgress)
+            {
+                ProgressLine.Report("OCR", i, count);
+            }
+
+            var bitmap = rentBitmap(i);
+            if (bitmap is null)
+            {
+                continue;
+            }
+
+            try
+            {
+                if (isolate is null)
+                {
+                    texts[i] = ocr.Recognize(bitmap);
+                }
+                else
+                {
+                    using var isolated = isolate(bitmap);
+                    texts[i] = ocr.Recognize(isolated);
+                }
+            }
+            finally
+            {
+                if (!callerOwnsBitmap)
+                {
+                    bitmap.Dispose();
+                }
+            }
+        }
+
+        return texts;
+    }
+
+    /// <summary>
+    /// Time-codes-only: empty text for every index that has an image, null for the rest, so
+    /// the entries that survive are exactly the ones a real OCR run would have kept.
+    /// </summary>
+    private static string?[] TimeCodesOnlyTexts(int count, Func<int, SKBitmap?> rentBitmap)
+    {
+        var texts = new string?[count];
+        for (var i = 0; i < count; i++)
+        {
+            using var bitmap = rentBitmap(i);
+            if (bitmap is not null)
+            {
+                texts[i] = string.Empty;
+            }
+        }
+
+        return texts;
+    }
+
+    /// <summary>
     /// Turns pre-decoded bitmap events into a Subtitle. <paramref name="ocr"/> null =
     /// time-codes-only (empty text kept); non-null = recognise each bitmap and drop blanks.
     /// When <paramref name="isolateColors"/> is set, each bitmap is binarised via
@@ -305,36 +430,20 @@ internal static class ImageOcrLoader
         var blankCount = 0;
         // Time-codes-only mode is instant, so only a real OCR run reports progress (#14267).
         var showProgress = ocr is not null && !quiet;
-        var done = 0;
-        foreach (var item in items)
+
+        Func<SKBitmap, SKBitmap>? isolate = isolateColors ? (b => VobSubColorIsolation.Isolate(b)) : null;
+        var texts = ocr is null
+            ? new string?[items.Count]
+            : RecognizeAll(
+                ocr, items.Count, i => items[i].Bitmap, callerOwnsBitmap: true, isolate, quiet: !showProgress);
+
+        for (var i = 0; i < items.Count; i++)
         {
-            // Reported before the image is recognised, so the count is images *finished*.
-            if (showProgress)
-            {
-                ProgressLine.Report("OCR", done, items.Count);
-            }
-
-            done++;
-
-            string text;
-            if (ocr is null)
-            {
-                text = string.Empty;
-            }
-            else if (isolateColors)
-            {
-                using var isolated = VobSubColorIsolation.Isolate(item.Bitmap);
-                text = ocr.Recognize(isolated);
-            }
-            else
-            {
-                text = ocr.Recognize(item.Bitmap);
-            }
-
+            var text = texts[i] ?? string.Empty;
             if (ocr is null || !string.IsNullOrWhiteSpace(text))
             {
                 subtitle.Paragraphs.Add(new LibSeParagraph(
-                    text, item.StartTime.TotalMilliseconds, item.EndTime.TotalMilliseconds));
+                    text, items[i].StartTime.TotalMilliseconds, items[i].EndTime.TotalMilliseconds));
             }
             else
             {
@@ -372,50 +481,25 @@ internal static class ImageOcrLoader
         var subtitle = new Subtitle();
         // Time-codes-only mode is instant, so only a real OCR run reports progress (#14267).
         var showProgress = ocr is not null && !quiet;
-        var done = 0;
 
-        foreach (var pcs in pcsList)
+        // PGS glyphs are white fill + black outline on transparency; binarise so the fill
+        // survives the opaque white OCR canvas (issue #12291).
+        Func<SKBitmap, SKBitmap>? isolate = isolateColors ? (b => VobSubColorIsolation.BinarizeForOcr(b)) : null;
+        var texts = ocr is null
+            ? TimeCodesOnlyTexts(pcsList.Count, i => pcsList[i].GetBitmap())
+            : RecognizeAll(
+                ocr, pcsList.Count, i => pcsList[i].GetBitmap(),
+                callerOwnsBitmap: false, isolate, quiet: !showProgress);
+
+        for (var i = 0; i < pcsList.Count; i++)
         {
-            // Reported before the image is recognised, so the count is images *finished*.
-            if (showProgress)
-            {
-                ProgressLine.Report("OCR", done, pcsList.Count);
-            }
-
-            done++;
-
-            var bitmap = pcs.GetBitmap();
-            if (bitmap is null)
+            var text = texts[i];
+            if (text is null || (ocr is not null && string.IsNullOrWhiteSpace(text)))
             {
                 continue;
             }
-            try
-            {
-                string text;
-                if (ocr is null)
-                {
-                    text = string.Empty;
-                }
-                else if (isolateColors)
-                {
-                    // PGS glyphs are white fill + black outline on transparency; binarise so
-                    // the fill survives the opaque white OCR canvas (issue #12291).
-                    using var isolated = VobSubColorIsolation.BinarizeForOcr(bitmap);
-                    text = ocr.Recognize(isolated);
-                }
-                else
-                {
-                    text = ocr.Recognize(bitmap);
-                }
-                if (ocr is null || !string.IsNullOrWhiteSpace(text))
-                {
-                    subtitle.Paragraphs.Add(new LibSeParagraph(text, pcs.StartTime / 90.0, pcs.EndTime / 90.0));
-                }
-            }
-            finally
-            {
-                bitmap.Dispose();
-            }
+
+            subtitle.Paragraphs.Add(new LibSeParagraph(text, pcsList[i].StartTime / 90.0, pcsList[i].EndTime / 90.0));
         }
 
         if (showProgress)

@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Text;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.UiLogic.Ocr.Paddle;
 using SkiaSharp;
 
 namespace SeConv.Core;
@@ -111,6 +112,12 @@ internal sealed class PaddleOcrEngine : IOcrEngine
         return new PaddleOcrEngine(path, language, workDir);
     }
 
+    /// <summary>
+    /// One image, through the same batch machinery. Kept for <see cref="IOcrEngine"/> and the
+    /// odd single-image caller: paying one process start for one image is what
+    /// <see cref="RecognizeBatch"/> exists to avoid, so nothing that OCRs a whole subtitle
+    /// should come through here.
+    /// </summary>
     public string Recognize(SKBitmap bitmap)
     {
         if (bitmap is null || bitmap.Width == 0 || bitmap.Height == 0)
@@ -118,14 +125,76 @@ internal sealed class PaddleOcrEngine : IOcrEngine
             return string.Empty;
         }
 
-        var pngPath = Path.Combine(_workDir, "in_" + Guid.NewGuid().ToString("N") + ".png");
+        return RecognizeBatch(new[] { bitmap })[0];
+    }
+
+    /// <summary>
+    /// OCRs every image in one paddleocr run and returns the text per image, by index.
+    /// <para>
+    /// This is the whole performance story of image-subtitle conversion: paddleocr spends
+    /// roughly twenty seconds loading its models and about a second on the actual image, so
+    /// starting it per image made a feature-length subtitle take hours. One run for the lot
+    /// pays that load once.
+    /// </para>
+    /// </summary>
+    /// <param name="bitmaps">Images in subtitle order; each is prepared and written to disk.</param>
+    /// <param name="progress">Called with (finished, total) as results come in.</param>
+    public IReadOnlyList<string> RecognizeBatch(
+        IReadOnlyList<SKBitmap> bitmaps, Action<int, int>? progress = null)
+    {
+        return RecognizeBatch(
+            bitmaps.Count,
+            (index, path) => PaddleOcrImagePrep.WritePreparedPng(bitmaps[index], path),
+            progress);
+    }
+
+    /// <summary>
+    /// The streaming form: instead of holding every bitmap, the caller is asked to write each
+    /// prepared image as the batch is assembled, so only one decoded frame is alive at a time.
+    /// </summary>
+    /// <param name="count">How many images the batch has.</param>
+    /// <param name="writePreparedImage">
+    /// Writes the prepared PNG for an index to the given path. It must write a file for every
+    /// index - see <see cref="PaddleOcrImagePrep.WriteBlankPng"/> for one that has no image -
+    /// or the results after it would be attributed to the wrong lines.
+    /// </param>
+    /// <param name="progress">Called with (finished, total) as results come in.</param>
+    public IReadOnlyList<string> RecognizeBatch(
+        int count, Action<int, string> writePreparedImage, Action<int, int>? progress = null)
+    {
+        var results = new string[count];
+        for (var i = 0; i < results.Length; i++)
+        {
+            results[i] = string.Empty;
+        }
+
+        if (count == 0)
+        {
+            return results;
+        }
+
+        Warnings.Clear();
+
+        var runDir = Path.Combine(_workDir, "run_" + Guid.NewGuid().ToString("N"));
+        var inputDir = Path.Combine(runDir, "in");
+        var outputDir = Path.Combine(runDir, "out");
+        Directory.CreateDirectory(inputDir);
+        Directory.CreateDirectory(outputDir);
+
         try
         {
-            using (var image = SKImage.FromBitmap(bitmap))
-            using (var data = image.Encode(SKEncodedImageFormat.Png, 90))
-            using (var fs = File.Create(pngPath))
+            var stems = new List<string>(count);
+            for (var i = 0; i < count; i++)
             {
-                data.SaveTo(fs);
+                stems.Add(PaddleOcrImagePrep.InputStem(i));
+                var inputPath = Path.Combine(inputDir, PaddleOcrImagePrep.InputFileName(i));
+                writePreparedImage(i, inputPath);
+                if (!File.Exists(inputPath))
+                {
+                    // The callback owes us a file for every index; without one the numbering
+                    // goes sparse and every later result lands on the wrong line.
+                    PaddleOcrImagePrep.WriteBlankPng(inputPath);
+                }
             }
 
             var psi = new ProcessStartInfo(ExecutablePath)
@@ -139,7 +208,7 @@ internal sealed class PaddleOcrEngine : IOcrEngine
                 // The tool may write relative to its current directory; make sure that is writable.
                 WorkingDirectory = _workDir,
             };
-            foreach (var arg in BuildArguments(pngPath))
+            foreach (var arg in BuildArguments(inputDir, outputDir))
             {
                 psi.ArgumentList.Add(arg);
             }
@@ -157,10 +226,29 @@ internal sealed class PaddleOcrEngine : IOcrEngine
 
             using var proc = Process.Start(psi)
                 ?? throw new InvalidOperationException("Failed to start paddleocr process.");
-            // Drain stderr concurrently — paddleocr is chatty on stderr, and reading stdout
-            // to completion while stderr fills the pipe buffer would deadlock.
-            var stderrTask = proc.StandardError.ReadToEndAsync();
+
+            // Drain both streams concurrently - paddleocr is chatty on both, and a full pipe
+            // buffer blocks the process mid-run.
             var stdoutTask = proc.StandardOutput.ReadToEndAsync();
+            var stderrTask = proc.StandardError.ReadToEndAsync();
+
+            var rightToLeft = PaddleOcrModels.IsArabicScript(Language);
+            var poller = new PaddleOcrResultPoller(outputDir, stems);
+            var parseErrors = new List<string>();
+
+            poller.PollUntilDoneAsync(
+                    () => proc.HasExited,
+                    (position, regions) =>
+                    {
+                        results[position] = regions.Count > 0
+                            ? PaddleOcrTextLayout.BuildText(regions, 0, rightToLeft, out _)
+                            : string.Empty;
+                        progress?.Invoke(poller!.ReportedCount, count);
+                    },
+                    (stem, message) => parseErrors.Add(stem + ": " + message),
+                    CancellationToken.None)
+                .GetAwaiter().GetResult();
+
             // Never wait forever: a wedged run (missing model, stuck initialisation, a worker
             // process that never returns) used to hang seconv with no output at all.
             if (!proc.WaitForExit(ProcessTimeout))
@@ -169,32 +257,58 @@ internal sealed class PaddleOcrEngine : IOcrEngine
                 throw new InvalidOperationException(
                     $"paddleocr did not finish within {ProcessTimeout.TotalMinutes:0} minutes and was killed.");
             }
+
             proc.WaitForExit(); // flush the redirected streams
-            var stdout = stdoutTask.GetAwaiter().GetResult();
-            if (proc.ExitCode != 0)
+            stdoutTask.GetAwaiter().GetResult();
+            var stderr = stderrTask.GetAwaiter().GetResult();
+
+            // Nothing at all came back: the run failed, however it exited. A short count is a
+            // different matter - those lines come back blank and are reported like any other
+            // blank image, rather than throwing away the hundreds that did work.
+            if (poller.ReportedCount == 0)
             {
-                var err = stderrTask.GetAwaiter().GetResult();
-                throw new InvalidOperationException($"paddleocr exited with code {proc.ExitCode}: {err}");
+                throw new InvalidOperationException(
+                    $"paddleocr produced no results for {count} image(s) (exit code {proc.ExitCode}). {stderr}");
             }
-            return ParseStdout(stdout);
+
+            if (poller.ReportedCount < count)
+            {
+                Warnings.Add(
+                    $"paddleocr returned {poller.ReportedCount} of {count} results; the rest are blank.");
+            }
+
+            if (parseErrors.Count > 0)
+            {
+                Warnings.Add($"paddleocr wrote {parseErrors.Count} unreadable result file(s): {parseErrors[0]}");
+            }
+
+            return results;
         }
         finally
         {
-            try { File.Delete(pngPath); } catch { /* best-effort */ }
+            try { Directory.Delete(runDir, recursive: true); } catch { /* best-effort */ }
         }
     }
 
-    /// <summary>Upper bound for one paddleocr run (model load + one image).</summary>
+    /// <summary>
+    /// Non-fatal problems from the last run - a short result count, an unreadable result file.
+    /// The caller surfaces these; they are not worth losing a finished conversion over.
+    /// </summary>
+    public List<string> Warnings { get; } = new();
+
+    /// <summary>Upper bound for the paddleocr process to exit once its results are in.</summary>
     internal static readonly TimeSpan ProcessTimeout = TimeSpan.FromMinutes(10);
 
     /// <summary>
-    /// Command line for one image. The standalone install gets the GUI's full argument set
+    /// Command line for one run. The standalone install gets the GUI's full argument set
     /// with explicit model folders (it has no model download of its own); a PATH install
     /// keeps the plain invocation and lets paddleocr resolve models itself.
     /// </summary>
-    internal List<string> BuildArguments(string imagePath)
+    /// <param name="inputPath">A single image, or the folder of images for a batch run.</param>
+    /// <param name="savePath">Where PaddleOCR writes its "&lt;stem&gt;_res.json" result files.</param>
+    internal List<string> BuildArguments(string inputPath, string savePath)
     {
-        var args = new List<string> { "ocr", "-i", imagePath, "--lang", Language };
+        var args = new List<string> { "ocr", "-i", inputPath, "--lang", Language, "--save_path", savePath };
 
         var modelsFolder = GetModelsFolder(ExecutablePath);
         if (modelsFolder == null)
@@ -219,38 +333,6 @@ internal sealed class PaddleOcrEngine : IOcrEngine
             "--textline_orientation_model_name", PaddleOcrModels.TextlineOrientationModelName,
         });
         return args;
-    }
-
-    /// <summary>
-    /// Parses paddleocr's stdout. The CLI prints one or more <c>[bbox], (text, conf)</c>
-    /// records; we extract just the recognised text from each, joining with newlines in
-    /// vertical order.
-    /// </summary>
-    internal static string ParseStdout(string stdout)
-    {
-        // Match: ('text', 0.95)  -- the recognised text is before the comma in single quotes.
-        var sb = new StringBuilder();
-        var lines = stdout.Replace("\r\n", "\n").Split('\n');
-        foreach (var line in lines)
-        {
-            var startIdx = line.IndexOf("('", StringComparison.Ordinal);
-            if (startIdx < 0)
-            {
-                continue;
-            }
-            var endIdx = line.IndexOf("',", startIdx + 2, StringComparison.Ordinal);
-            if (endIdx < 0)
-            {
-                continue;
-            }
-            var text = line[(startIdx + 2)..endIdx];
-            if (sb.Length > 0)
-            {
-                sb.AppendLine();
-            }
-            sb.Append(text);
-        }
-        return sb.ToString().Trim();
     }
 
     public void Dispose()
