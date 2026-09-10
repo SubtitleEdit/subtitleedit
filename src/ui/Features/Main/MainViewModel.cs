@@ -1879,7 +1879,11 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task ShowSourceView()
     {
-        var oldSelectedIndex = SelectedSubtitleIndex ?? 0;
+        // Source view indexes working cues only, excluding extra original rows.
+        // For an extra original row, select the preceding working cue (or the first if none).
+        var gridIndex = SelectedSubtitleIndex ?? 0;
+        var oldSelectedIndex = Math.Max(0,
+            Subtitles.Take(gridIndex + 1).Count(line => !line.IsReferenceOnly) - 1);
         var result = await ShowDialogAsync<SourceViewWindow, SourceViewViewModel>(vm =>
         {
             var subtitle = GetUpdateSubtitle();
