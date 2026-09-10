@@ -342,9 +342,16 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static readonly string[] AutoDetectWordsTurkish =
         {
             "için", "Tamam", "Hayır", "benim", "daha", "deðil", "önce", "lazým", "çalýþýyor", "Aldırma",
-            "burada", "efendim", "şey", "çok", "Çok", "için", "Merhaba", "Evet", "kötü", "musun",
+            "burada", "efendim", "şey", "çok", "Merhaba", "Evet", "kötü", "musun",
             "güzel", "çünkü", "büyük", "Bebeğim", "olduğunu", "istiyorum", "değilsin", "bilmiyorum",
-            "otursana", "Selam", "Tabii","konuda","istiyor","Tetekkürler", "istemiyorum", "Gerçekte"
+            "otursana", "Selam", "Tabii", "konuda", "istiyor", "Teşekkürler", "istemiyorum", "Gerçekte",
+            "değil", "değildi", "değilim", "değiller", "mı", "mısın", "mıyım", "mıydı", "mıyız",
+            "şu", "şimdi", "şey", "şeyi", "şeyler", "işte", "eğer", "artık", "yardım", "yalnız", "yalnızca",
+            "nasıl", "başka", "doğru", "karşı", "dışarı", "sanırım", "yarın", "kızım", "oğlum", "canım",
+            "tanrım", "hayatım", "aşkım", "yapıyorsun", "yapacağım", "lütfen", "kadın", "adamı", "bakalım",
+            "bırak", "dışında", "hiçbir", "ışık", "kız", "sığ", "şans", "şöyle", "yaşam", "başladı",
+            "olmalı", "bunları", "onları", "kızı", "sana", "seni", "beni", "bana", "hadi", "olur",
+            "gerçekten", "kesinlikle", "biliyorum", "olduğum", "ölmüş", "öldü", "gidiyorum", "kalsın"
         };
 
         private static readonly string[] AutoDetectWordsCroatianAndSerbian =
@@ -1853,6 +1860,17 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var encoding1252 = Encoding.GetEncoding(1252); // Latin - English and some other Western languages
                 var textEnc1252 = encoding1252.GetString(buffer);
                 var counts1252 = CountWords(textEnc1252);
+
+                // Turkish: the dotless ı, ş and ğ (bytes 0xFD, 0xFE, 0xF0 in 1254) decode as ý, þ, ð in 1252,
+                // so a text whose Turkish word count grows when read as 1254 is Turkish. Checked before the
+                // Western European 1252 languages so their shared short words cannot steal it.
+                var encoding1254 = Encoding.GetEncoding(1254);
+                var turkishText = encoding1254.GetString(buffer);
+                var turkish1254Count = GetCount(turkishText, AutoDetectWordsTurkish);
+                if (turkish1254Count > wordMinCount / 2 && turkish1254Count > counts1252.Get(AutoDetectWordsTurkish))
+                {
+                    return encoding1254;
+                }
                 var pol1252Count = counts1252.Get(AutoDetectWordsPolish);
                 var pol1250Count = counts1250.Get(AutoDetectWordsPolish);
                 var encoding28592 = Encoding.GetEncoding(28592);
@@ -1960,9 +1978,6 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return portugueseCount28591 > portugueseCount1252 ? encoding28591 : encoding1252;
                 }
 
-                var encoding1254 = Encoding.GetEncoding(1254);
-                var turkishText = encoding1254.GetString(buffer);
-                var turkish1254Count = GetCount(turkishText, AutoDetectWordsTurkish);
                 if (turkish1254Count > wordMinCount)
                 {
                     return encoding1254;
