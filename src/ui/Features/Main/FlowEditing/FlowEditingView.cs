@@ -14,6 +14,7 @@ using Avalonia.Input.Platform;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Files.ImportPlainText;
@@ -269,6 +270,23 @@ public sealed class FlowEditingView : Border
         // text without changing caret, selection, Return, Backspace or bindings.
         textBox.Foreground = Brushes.Transparent;
         textBox.CaretBrush = GetFlowCaretBrush(item.Source.Text, item.Foreground ?? Brushes.White);
+
+        // The app theme paints the TextBox template's border directly on hover
+        // and focus. In Flow that would cover the visual-only colour/boxing
+        // layer behind the editor. A local value survives those theme states.
+        void KeepEditorBackgroundTransparent()
+        {
+            var editorBorder = textBox.GetVisualDescendants()
+                .OfType<Border>()
+                .FirstOrDefault(border => border.Name == "PART_BorderElement");
+            if (editorBorder != null)
+            {
+                editorBorder.Background = Brushes.Transparent;
+            }
+        }
+
+        textBox.AttachedToVisualTree += (_, _) =>
+            Dispatcher.UIThread.Post(KeepEditorBackgroundTransparent, DispatcherPriority.Loaded);
 
         _lastValidTeletextText[item] =
             item.Text ?? string.Empty;
