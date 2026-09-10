@@ -2726,6 +2726,12 @@ public partial class SettingsViewModel : ObservableObject
         // compared against - without it OK re-applies every change this Apply already made and
         // rebuilds the layout (and the video player) a second time (issue #14218).
         AppliedSettingsSnapshot = SettingsChangeSnapshot.Take();
+
+        // Icon theme and recoloring can change without changing the actual theme variant.
+        if (Window?.Content is SettingsPage page)
+        {
+            page.RefreshSections();
+        }
     }
 
     [RelayCommand]

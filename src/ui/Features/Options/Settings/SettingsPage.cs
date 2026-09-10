@@ -131,6 +131,12 @@ public class SettingsPage : UserControl
         UpdateVisibleSections(string.Empty);
 
         _searchBox.TextChanged += (_, e) => UpdateVisibleSections(_searchBox.Text ?? string.Empty);
+        ActualThemeVariantChanged += (_, _) => Dispatcher.UIThread.Post(RefreshSections);
+    }
+
+    public void RefreshSections()
+    {
+        UpdateVisibleSections(_searchBox.Text ?? string.Empty);
     }
 
     public void FocusSearchBox()
