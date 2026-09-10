@@ -24,6 +24,26 @@ public class LanguageVideo
     public string ClearRecentVideos { get; set; }
     public string CutVideoTitle { get; set; }
     public string CutVideoDotDotDot { get; set; }
+    public string RemuxVideoTitle { get; set; }
+    public string RemuxVideoDotDotDot { get; set; }
+    public string RemuxVideoInputVideo { get; set; }
+    public string RemuxVideoInputAudio { get; set; }
+    public string RemuxVideoInputSubtitle { get; set; }
+    public string RemuxVideoSoftSubtitlesNotice { get; set; }
+    public string RemuxVideoMultipleTracksRequiresMkv { get; set; }
+    public string RemuxVideoOutputFormat { get; set; }
+    public string RemuxVideoOutputFile { get; set; }
+    public string RemuxVideoRemuxing { get; set; }
+    public string RemuxVideoCompleted { get; set; }
+    public string RemuxVideoFailed { get; set; }
+    public string RemuxVideoPleaseSelectBoth { get; set; }
+    public string RemuxVideoAudioTrack { get; set; }
+    public string RemuxVideoAssRequiresMkv { get; set; }
+    public string RemuxVideoSelectAudioTrack { get; set; }
+    public string RemuxVideoSelectAudioTrackFor { get; set; }
+    public string RemuxVideoSelectAudioTrackPrompt { get; set; }
+    public string RemuxVideoVideoFile { get; set; }
+    public string RemuxVideoAudioFile { get; set; }
     public string EmbedSubtitlesDotDotDot { get; set; }
     public string GenerateTimeCodes { get; set; }
     public string CheckeredImage { get; set; }
@@ -120,6 +140,26 @@ public class LanguageVideo
         ClearRecentVideos = "Clear recent videos";
         CutVideoTitle = "Cut video";
         CutVideoDotDotDot = "Cut video...";
+        RemuxVideoTitle = "Remux video";
+        RemuxVideoDotDotDot = "Remux video...";
+        RemuxVideoInputVideo = "Input video:";
+        RemuxVideoInputAudio = "Input audio:";
+        RemuxVideoInputSubtitle = "Input subtitle (optional):";
+        RemuxVideoSoftSubtitlesNotice = "Soft subtitles only (No burn-in / Not hardcoded)";
+        RemuxVideoMultipleTracksRequiresMkv = "Multiple audio or subtitle tracks require the MKV container. Output format has been automatically switched to .mkv.";
+        RemuxVideoOutputFormat = "Output format:";
+        RemuxVideoOutputFile = "Output file:";
+        RemuxVideoRemuxing = "Remuxing video and audio...";
+        RemuxVideoCompleted = "Video remuxed successfully.";
+        RemuxVideoFailed = "Failed to remux video.";
+        RemuxVideoPleaseSelectBoth = "Please select both video and audio files.";
+        RemuxVideoAudioTrack = "Audio track:";
+        RemuxVideoAssRequiresMkv = "ASS/SSA subtitles require the MKV container to preserve all formatting and styles.";
+        RemuxVideoSelectAudioTrack = "Select audio track";
+        RemuxVideoSelectAudioTrackFor = "Select audio track for {0}";
+        RemuxVideoSelectAudioTrackPrompt = "The file '{0}' contains {1} audio tracks. Please select the audio track to remux:";
+        RemuxVideoVideoFile = "video";
+        RemuxVideoAudioFile = "audio";
         EmbedSubtitlesDotDotDot = "Add/remove embedded subtitles...";
         GenerateTimeCodes = "Generate time codes";
         CheckeredImage = "Checkered image";

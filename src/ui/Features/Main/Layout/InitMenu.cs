@@ -773,6 +773,11 @@ public static class InitMenu
                 },
                 new MenuItem
                 {
+                    Header = Se.Language.Video.RemuxVideoDotDotDot,
+                    Command = vm.ShowVideoRemuxVideoCommand,
+                },
+                new MenuItem
+                {
                     Header = l.VideoOcr,
                     Command = vm.ShowVideoOcrCommand,
                 },

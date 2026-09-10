@@ -160,6 +160,7 @@ using Nikse.SubtitleEdit.Features.Video.GoToVideoPosition;
 using Nikse.SubtitleEdit.Features.Video.OpenFromUrl;
 using Nikse.SubtitleEdit.Features.Video.OpenFromUrl.PickOnlineSubtitle;
 using Nikse.SubtitleEdit.Features.Video.ReEncodeVideo;
+using Nikse.SubtitleEdit.Features.Video.RemuxVideo;
 using Nikse.SubtitleEdit.Features.Video.Chapters;
 using Nikse.SubtitleEdit.Features.Video.ShotChanges;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
@@ -11037,6 +11038,38 @@ public partial class MainViewModel :
                 Se.WriteToolsLog("TTS: applying subtitle changes after OK failed: " + ex, true);
             }
         }
+    }
+
+    private Window? _remuxVideoWindow;
+
+    [RelayCommand]
+    private async Task ShowVideoRemuxVideo()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var ffmpegOk = await RequireFfmpegOk();
+        if (!ffmpegOk)
+        {
+            return;
+        }
+
+        if (_remuxVideoWindow != null)
+        {
+            _remuxVideoWindow.Activate();
+            _remuxVideoWindow.Focus();
+            return;
+        }
+
+        _windowService.ShowWindow<RemuxVideoWindow, RemuxVideoViewModel>(Window, (window, vm) =>
+        {
+            _remuxVideoWindow = window;
+            window.Closed += (_, _) => _remuxVideoWindow = null;
+            WindowService.KeepTopmostWhileOwnerActive(window, Window);
+            vm.Initialize(_videoFileName);
+        });
     }
 
     /// <summary>
