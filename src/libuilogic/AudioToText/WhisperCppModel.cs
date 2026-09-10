@@ -288,6 +288,19 @@ namespace Nikse.SubtitleEdit.UiLogic.AudioToText
                 Size = "3.1 GB Swedish",
                 Urls = new []{ "https://huggingface.co/KBLab/kb-whisper-large/resolve/main/ggml-model.bin" },
             },
+
+            // litagin/anime-whisper (MIT) - a kotoba-whisper-v2.0 fine-tune for Japanese anime/visual
+            // novel dialogue (#14656). It has the stock large-v3 vocab (51866), so whisper.cpp loads it
+            // on the normal multilingual path, and its "is_distil" check is
+            // "n_text_layer == 2 && n_vocab != 51866" - false here - so timestamps are not disabled
+            // even though the model has only 2 decoder layers.
+            new WhisperModel
+            {
+                Name = "anime.ja",
+                Rename = true,
+                Size = "538 MB Japanese",
+                Urls = new []{ "https://huggingface.co/Aratako/anime-whisper-ggml/resolve/main/ggml-anime-whisper-q5_0.bin" },
+            },
         };
     }
 }

@@ -262,6 +262,18 @@ namespace Nikse.SubtitleEdit.UiLogic.AudioToText
                 Urls = MakeUrls("https://huggingface.co/NbAiLab/nb-whisper-large/resolve/main"),
                 Folder = "faster-whisper-large.nb",
             },
+
+            // litagin/anime-whisper (MIT) - a kotoba-whisper-v2.0 fine-tune for Japanese anime/visual
+            // novel dialogue (#14656), here as the int8 CTranslate2 conversion. The repo ships
+            // "vocabulary.json" but no "vocabulary.txt"; that 404 is expected and handled by
+            // DownloadSpeechToTextModelsViewModel.OptionalFileNames.
+            new WhisperModel
+            {
+                Name = "anime.ja",
+                Size = "768 MB Japanese",
+                Urls = MakeUrls("https://huggingface.co/quantumcookie/anime-whisper-ct2-int8/resolve/main"),
+                Folder = "faster-whisper-anime.ja",
+            },
         };
 
         private string[] MakeUrls(string baseUrl)
