@@ -402,8 +402,10 @@ public sealed class FlowEditingView : Border
             };
 
         var editorLayers = new Grid();
-        editorLayers.Children.Add(textBox);
+        // The colour/boxing overlay is visual-only. It must stay behind the
+        // native editor so a coloured background cannot paint over its caret.
         editorLayers.Children.Add(colorOverlay);
+        editorLayers.Children.Add(textBox);
 
         var content = new StackPanel();
 
