@@ -3149,7 +3149,7 @@
       "fileExportEbuStl": "Export EBU STL",
       "fileExportPac": "Export PAC",
       "fileExit": "Exit",
-      "openSeDataFolder": "Open Subtitle Edit folder",
+      "openSeDataFolder": "Open Subtitle Edit data folder",
       "editFindPrevious": "Find previous",
       "fillSelectedLinesWithClipboard": "Fill selected lines with clipboard text",
       "listInverseSelection": "Inverse selection",
