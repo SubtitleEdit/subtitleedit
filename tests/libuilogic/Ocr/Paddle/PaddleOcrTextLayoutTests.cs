@@ -1,77 +1,74 @@
-using System.Collections.Generic;
-using System.Linq;
-using Nikse.SubtitleEdit.Features.Ocr;
+using Nikse.SubtitleEdit.UiLogic.Ocr.Paddle;
 
-namespace UITests.Features.Ocr.Engines;
+namespace LibUiLogicTests.Ocr.Paddle;
 
-public class PaddleOcrMakeResultTests
+public class PaddleOcrTextLayoutTests
 {
-    private static PaddleOcrResultParser.TextDetectionResult Box(string text, double confidence, double x, double y, double width = 100, double height = 30)
+    /// <summary>The cut Video OCR runs with; subtitle-bitmap OCR passes 0 and keeps everything.</summary>
+    private const int MinConfidencePercent = 75;
+
+    private static PaddleOcrTextRegion Box(string text, double confidence, double x, double y, double width = 100, double height = 30)
     {
-        return new PaddleOcrResultParser.TextDetectionResult
+        return new PaddleOcrTextRegion
         {
             Text = text,
             Confidence = confidence,
-            BoundingBox = new PaddleOcrResultParser.BoundingBox(
-                new PaddleOcrResultParser.Point(x, y),
-                new PaddleOcrResultParser.Point(x + width, y),
-                new PaddleOcrResultParser.Point(x + width, y + height),
-                new PaddleOcrResultParser.Point(x, y + height)),
+            BoundingBox = new PaddleOcrBoundingBox(
+                new PaddleOcrPoint(x, y),
+                new PaddleOcrPoint(x + width, y),
+                new PaddleOcrPoint(x + width, y + height),
+                new PaddleOcrPoint(x, y + height)),
         };
     }
 
     [Fact]
-    public void MakeResult_NoThreshold_KeepsEverything()
+    public void BuildText_NoThreshold_KeepsEverything()
     {
-        var ocr = new PaddleOcr();
-        var text = ocr.MakeResult(new List<PaddleOcrResultParser.TextDetectionResult>
+        var text = PaddleOcrTextLayout.BuildText(new List<PaddleOcrTextRegion>
         {
             Box("Hello", 0.99, 10, 10),
             Box("junk", 0.30, 400, 10),
-        }, out var confidence);
+        }, 0, rightToLeft: false, out var confidence);
 
         Assert.Equal("Hello junk", text);
         Assert.Equal((0.99 + 0.30) / 2, confidence, 3);
     }
 
     [Fact]
-    public void MakeResult_Threshold_DropsLowConfidenceRegions()
+    public void BuildText_Threshold_DropsLowConfidenceRegions()
     {
-        var ocr = new PaddleOcr { MinConfidencePercent = 75 };
-        var text = ocr.MakeResult(new List<PaddleOcrResultParser.TextDetectionResult>
+        var text = PaddleOcrTextLayout.BuildText(new List<PaddleOcrTextRegion>
         {
             Box("Hello", 0.99, 10, 10),
             Box("junk", 0.30, 400, 10),
-        }, out var confidence);
+        }, MinConfidencePercent, rightToLeft: false, out var confidence);
 
         Assert.Equal("Hello", text);
         Assert.Equal(0.99, confidence, 3);
     }
 
     [Fact]
-    public void MakeResult_Threshold_KeepsUnknownConfidence()
+    public void BuildText_Threshold_KeepsUnknownConfidence()
     {
         // Confidence 0 means "not reported" (older output formats) - never drop those.
-        var ocr = new PaddleOcr { MinConfidencePercent = 75 };
-        var text = ocr.MakeResult(new List<PaddleOcrResultParser.TextDetectionResult>
+        var text = PaddleOcrTextLayout.BuildText(new List<PaddleOcrTextRegion>
         {
             Box("Hello", 0, 10, 10),
-        }, out var confidence);
+        }, MinConfidencePercent, rightToLeft: false, out var confidence);
 
         Assert.Equal("Hello", text);
         Assert.Equal(1.0, confidence, 3);
     }
 
     [Fact]
-    public void MakeResult_AllBelowThreshold_KeptWithLowConfidence()
+    public void BuildText_AllBelowThreshold_KeptWithLowConfidence()
     {
         // When nothing clears the bar the cut has no confident text to prefer - dropping
         // everything would erase short real subtitles the engine hesitated on ("Wait.").
-        var ocr = new PaddleOcr { MinConfidencePercent = 75 };
-        var text = ocr.MakeResult(new List<PaddleOcrResultParser.TextDetectionResult>
+        var text = PaddleOcrTextLayout.BuildText(new List<PaddleOcrTextRegion>
         {
             Box("Wait.", 0.60, 10, 10),
-        }, out var confidence);
+        }, MinConfidencePercent, rightToLeft: false, out var confidence);
 
         Assert.Equal("Wait.", text);
         Assert.Equal(0.60, confidence, 3);
@@ -81,14 +78,14 @@ public class PaddleOcrMakeResultTests
     public void MakeLines_VerticalOverlap_GroupsWordsOnSameLine()
     {
         // Two words with slightly different Y but overlapping vertically, plus a second line.
-        var input = new List<PaddleOcrResultParser.TextDetectionResult>
+        var input = new List<PaddleOcrTextRegion>
         {
             Box("world", 0.9, 130, 14),
             Box("Second", 0.9, 10, 50),
             Box("Hello", 0.9, 10, 10),
         };
 
-        var lines = PaddleOcr.MakeLines(input, rightToLeft: false);
+        var lines = PaddleOcrTextLayout.MakeLines(input, rightToLeft: false);
 
         Assert.Equal(2, lines.Count);
         Assert.Equal(new[] { "Hello", "world" }, lines[0].Select(p => p.Text));
@@ -100,13 +97,13 @@ public class PaddleOcrMakeResultTests
     {
         // A short box (no descenders) next to a taller one - midpoint overlap holds; the
         // old "average height" rule split these when heights varied.
-        var input = new List<PaddleOcrResultParser.TextDetectionResult>
+        var input = new List<PaddleOcrTextRegion>
         {
             Box("nano", 0.9, 130, 18, height: 16),
             Box("Big", 0.9, 10, 10, height: 34),
         };
 
-        var lines = PaddleOcr.MakeLines(input, rightToLeft: false);
+        var lines = PaddleOcrTextLayout.MakeLines(input, rightToLeft: false);
 
         Assert.Single(lines);
         Assert.Equal(new[] { "Big", "nano" }, lines[0].Select(p => p.Text));
@@ -115,13 +112,13 @@ public class PaddleOcrMakeResultTests
     [Fact]
     public void MakeLines_RightToLeft_OrdersWordsRightFirst()
     {
-        var input = new List<PaddleOcrResultParser.TextDetectionResult>
+        var input = new List<PaddleOcrTextRegion>
         {
             Box("left", 0.9, 10, 10),
             Box("right", 0.9, 300, 10),
         };
 
-        var lines = PaddleOcr.MakeLines(input, rightToLeft: true);
+        var lines = PaddleOcrTextLayout.MakeLines(input, rightToLeft: true);
 
         Assert.Single(lines);
         Assert.Equal(new[] { "right", "left" }, lines[0].Select(p => p.Text));
@@ -130,14 +127,14 @@ public class PaddleOcrMakeResultTests
     [Fact]
     public void MakeLines_LinesSortedTopToBottom()
     {
-        var input = new List<PaddleOcrResultParser.TextDetectionResult>
+        var input = new List<PaddleOcrTextRegion>
         {
             Box("Bottom", 0.9, 10, 90),
             Box("Top", 0.9, 10, 10),
             Box("Middle", 0.9, 10, 50),
         };
 
-        var lines = PaddleOcr.MakeLines(input, rightToLeft: false);
+        var lines = PaddleOcrTextLayout.MakeLines(input, rightToLeft: false);
 
         Assert.Equal(3, lines.Count);
         Assert.Equal("Top", lines[0][0].Text);
