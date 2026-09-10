@@ -662,6 +662,11 @@ public static class InitMenu
             },
             new MenuItem
             {
+                Header = Se.Language.Video.RemuxVideoDotDotDot,
+                Command = vm.ShowVideoRemuxVideoCommand,
+            },
+            new MenuItem
+            {
                 // Finds who speaks in the video, clones each of them and assigns the cast, so the
                 // whole thing can be dubbed in its own voices (#13698).
                 Header = Se.Language.Video.TextToSpeech.AutoCastMenuItem,
@@ -770,11 +775,6 @@ public static class InitMenu
                 {
                     Header = l.TextToSpeech,
                     Command = vm.ShowVideoTextToSpeechCommand,
-                },
-                new MenuItem
-                {
-                    Header = Se.Language.Video.RemuxVideoDotDotDot,
-                    Command = vm.ShowVideoRemuxVideoCommand,
                 },
                 new MenuItem
                 {

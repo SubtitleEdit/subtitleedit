@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -12,6 +13,7 @@ using Nikse.SubtitleEdit.UiLogic.Media;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -40,21 +42,28 @@ public partial class RemuxVideoViewModel : ObservableObject
 
     [ObservableProperty] private string _videoFileName = string.Empty;
     [ObservableProperty] private string _videoFileSize = string.Empty;
-    [ObservableProperty] private string _audioFileName = string.Empty;
-    [ObservableProperty] private string _audioFileSize = string.Empty;
-    [ObservableProperty] private string _subtitleFileName = string.Empty;
-    [ObservableProperty] private string _subtitleFileSize = string.Empty;
-    [ObservableProperty] private ObservableCollection<AudioTrackOption> _audioFileTracks = new();
-    [ObservableProperty] private AudioTrackOption? _selectedAudioFileTrack;
-    [ObservableProperty] private bool _hasMultipleAudioTracks;
+    [ObservableProperty] private ObservableCollection<RemuxFileItem> _audioFiles = new();
+    [ObservableProperty] private RemuxFileItem? _selectedAudioFile;
+    [ObservableProperty] private string _audioFilesInfo = string.Empty;
+    [ObservableProperty] private ObservableCollection<RemuxFileItem> _subtitleFiles = new();
+    [ObservableProperty] private RemuxFileItem? _selectedSubtitleFile;
+    [ObservableProperty] private string _subtitleFilesInfo = string.Empty;
     [ObservableProperty] private ObservableCollection<string> _outputFormats;
     [ObservableProperty] private string _selectedOutputFormat = ".mp4";
     [ObservableProperty] private string _outputFileName = string.Empty;
     [ObservableProperty] private string _progressText = string.Empty;
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private bool _isRemuxing;
+    [ObservableProperty] private bool _isNotRemuxing = true;
     [ObservableProperty] private bool _canRemux;
     [ObservableProperty] private bool _isCompleted;
+    [ObservableProperty] private bool _isAudioRemoveEnabled;
+    [ObservableProperty] private bool _isAudioMoveUpEnabled;
+    [ObservableProperty] private bool _isAudioMoveDownEnabled;
+    [ObservableProperty] private bool _isAudioSelectTrackVisible;
+    [ObservableProperty] private bool _isSubtitleRemoveEnabled;
+    [ObservableProperty] private bool _isSubtitleMoveUpEnabled;
+    [ObservableProperty] private bool _isSubtitleMoveDownEnabled;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
@@ -65,7 +74,6 @@ public partial class RemuxVideoViewModel : ObservableObject
     private Process? _ffmpegProcess;
     private readonly StringBuilder _log = new();
     private FfmpegProgressTracker? _progressTracker;
-    private bool _suppressAudioPrompt;
     private bool _isCancelled;
 
     public RemuxVideoViewModel(IFileHelper fileHelper, IFolderHelper folderHelper, IWindowService windowService)
@@ -75,6 +83,9 @@ public partial class RemuxVideoViewModel : ObservableObject
         _windowService = windowService;
         OutputFormats = new ObservableCollection<string> { ".mp4", ".mkv" };
         SelectedOutputFormat = OutputFormats[0];
+
+        AudioFiles.CollectionChanged += AudioFilesOnCollectionChanged;
+        SubtitleFiles.CollectionChanged += SubtitleFilesOnCollectionChanged;
     }
 
     public void Initialize(string? currentVideoFileName)
@@ -84,18 +95,8 @@ public partial class RemuxVideoViewModel : ObservableObject
             var ext = Path.GetExtension(currentVideoFileName);
             if (AllowedVideoExtensions.Contains(ext))
             {
+                SelectedOutputFormat = string.Equals(ext, ".mkv", StringComparison.OrdinalIgnoreCase) ? ".mkv" : ".mp4";
                 VideoFileName = currentVideoFileName;
-                UpdateVideoInfo();
-
-                if (string.Equals(ext, ".mkv", StringComparison.OrdinalIgnoreCase))
-                {
-                    SelectedOutputFormat = ".mkv";
-                }
-                else
-                {
-                    SelectedOutputFormat = ".mp4";
-                }
-
                 OutputFileName = MakeOutputFileName(VideoFileName, SelectedOutputFormat);
             }
         }
@@ -123,64 +124,24 @@ public partial class RemuxVideoViewModel : ObservableObject
         }
     }
 
-    public List<string> GetAudioFiles()
-    {
-        return ParseFileList(AudioFileName);
-    }
-
-    public List<string> GetSubtitleFiles()
-    {
-        return ParseFileList(SubtitleFileName);
-    }
-
-    private static List<string> ParseFileList(string? input)
-    {
-        if (string.IsNullOrWhiteSpace(input))
-        {
-            return new List<string>();
-        }
-
-        return input
-            .Split(new[] { ';', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
-            .Select(p => p.Trim().Trim('\"', '\''))
-            .Where(p => !string.IsNullOrWhiteSpace(p))
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .ToList();
-    }
-
     private bool RequiresMkv(out string reason)
     {
-        var audioFiles = GetAudioFiles();
-        var subFiles = GetSubtitleFiles();
-
-        if (audioFiles.Count > 1)
+        if (AudioFiles.Count > 1 || SubtitleFiles.Count > 1)
         {
-            reason = string.IsNullOrWhiteSpace(Se.Language.Video.RemuxVideoMultipleTracksRequiresMkv)
-                ? "Multiple audio tracks require the MKV container. Output format has been automatically switched to .mkv."
-                : Se.Language.Video.RemuxVideoMultipleTracksRequiresMkv;
+            reason = Se.Language.Video.RemuxVideoMultipleTracksRequiresMkv;
             return true;
         }
 
-        if (subFiles.Count > 1)
+        var hasAss = SubtitleFiles.Any(f =>
         {
-            reason = string.IsNullOrWhiteSpace(Se.Language.Video.RemuxVideoMultipleTracksRequiresMkv)
-                ? "Multiple subtitle tracks require the MKV container. Output format has been automatically switched to .mkv."
-                : Se.Language.Video.RemuxVideoMultipleTracksRequiresMkv;
-            return true;
-        }
-
-        var hasAss = subFiles.Any(f =>
-        {
-            var ext = Path.GetExtension(f);
+            var ext = Path.GetExtension(f.FileName);
             return string.Equals(ext, ".ass", StringComparison.OrdinalIgnoreCase) ||
                    string.Equals(ext, ".ssa", StringComparison.OrdinalIgnoreCase);
         });
 
         if (hasAss)
         {
-            reason = string.IsNullOrWhiteSpace(Se.Language.Video.RemuxVideoAssRequiresMkv)
-                ? "ASS/SSA subtitles require the MKV container to preserve all formatting and styles."
-                : Se.Language.Video.RemuxVideoAssRequiresMkv;
+            reason = Se.Language.Video.RemuxVideoAssRequiresMkv;
             return true;
         }
 
@@ -188,84 +149,18 @@ public partial class RemuxVideoViewModel : ObservableObject
         return false;
     }
 
-    private void UpdateAudioInfo()
+    private static string MakeFilesInfo(ObservableCollection<RemuxFileItem> files)
     {
-        var audioFiles = GetAudioFiles();
-        if (audioFiles.Count == 0)
+        if (files.Count == 0)
         {
-            AudioFileSize = string.Empty;
-            return;
+            return string.Empty;
         }
 
-        long totalBytes = 0;
-        int validCount = 0;
-        foreach (var file in audioFiles)
-        {
-            if (File.Exists(file))
-            {
-                try
-                {
-                    totalBytes += new FileInfo(file).Length;
-                    validCount++;
-                }
-                catch
-                {
-                }
-            }
-        }
-
-        if (validCount == 0)
-        {
-            AudioFileSize = string.Empty;
-        }
-        else if (audioFiles.Count == 1)
-        {
-            AudioFileSize = Utilities.FormatBytesToDisplayFileSize(totalBytes);
-        }
-        else
-        {
-            AudioFileSize = $"{validCount} tracks ({Utilities.FormatBytesToDisplayFileSize(totalBytes)})";
-        }
-    }
-
-    private void UpdateSubtitleInfo()
-    {
-        var subFiles = GetSubtitleFiles();
-        if (subFiles.Count == 0)
-        {
-            SubtitleFileSize = string.Empty;
-            return;
-        }
-
-        long totalBytes = 0;
-        int validCount = 0;
-        foreach (var file in subFiles)
-        {
-            if (File.Exists(file))
-            {
-                try
-                {
-                    totalBytes += new FileInfo(file).Length;
-                    validCount++;
-                }
-                catch
-                {
-                }
-            }
-        }
-
-        if (validCount == 0)
-        {
-            SubtitleFileSize = string.Empty;
-        }
-        else if (subFiles.Count == 1)
-        {
-            SubtitleFileSize = Utilities.FormatBytesToDisplayFileSize(totalBytes);
-        }
-        else
-        {
-            SubtitleFileSize = $"{validCount} tracks ({Utilities.FormatBytesToDisplayFileSize(totalBytes)})";
-        }
+        var totalBytes = files.Sum(f => f.SizeBytes);
+        var size = Utilities.FormatBytesToDisplayFileSize(totalBytes);
+        return files.Count == 1
+            ? size
+            : $"{string.Format(Se.Language.Video.RemuxVideoFilesX, files.Count)} ({size})";
     }
 
     private void UpdateCanRemux()
@@ -274,22 +169,85 @@ public partial class RemuxVideoViewModel : ObservableObject
                          File.Exists(VideoFileName) &&
                          AllowedVideoExtensions.Contains(Path.GetExtension(VideoFileName));
 
-        var audioFiles = GetAudioFiles();
-        var audioValid = audioFiles.Count > 0 &&
-                         audioFiles.All(f => File.Exists(f) && AllowedAudioExtensions.Contains(Path.GetExtension(f)));
+        var audioValid = AudioFiles.Count > 0 &&
+                         AudioFiles.All(f => File.Exists(f.FileName) && AllowedAudioExtensions.Contains(Path.GetExtension(f.FileName)));
 
-        var subFiles = GetSubtitleFiles();
-        var subValid = subFiles.Count == 0 ||
-                       subFiles.All(f => File.Exists(f) && AllowedSubtitleExtensions.Contains(Path.GetExtension(f)));
+        var subValid = SubtitleFiles.All(f => File.Exists(f.FileName) && AllowedSubtitleExtensions.Contains(Path.GetExtension(f.FileName)));
 
         CanRemux = videoValid && audioValid && subValid && !IsRemuxing;
     }
 
-    private async Task<AudioTrackOption?> PromptSelectAudioTrack(string fileName, List<AudioTrackOption> trackOptions, string fileTypeLabel)
+    private void EnforceMkvIfRequired()
     {
-        if (Window == null || trackOptions == null || trackOptions.Count <= 1)
+        if (RequiresMkv(out _) && !string.Equals(SelectedOutputFormat, ".mkv", StringComparison.OrdinalIgnoreCase))
         {
-            return trackOptions?.FirstOrDefault();
+            SelectedOutputFormat = ".mkv";
+        }
+    }
+
+    private void AudioFilesOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        AudioFilesInfo = MakeFilesInfo(AudioFiles);
+        IsCompleted = false;
+        UpdateCanRemux();
+        EnforceMkvIfRequired();
+        UpdateAudioListState();
+    }
+
+    private void SubtitleFilesOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        SubtitleFilesInfo = MakeFilesInfo(SubtitleFiles);
+        IsCompleted = false;
+        UpdateCanRemux();
+        EnforceMkvIfRequired();
+        UpdateSubtitleListState();
+    }
+
+    private void UpdateAudioListState()
+    {
+        var index = SelectedAudioFile == null ? -1 : AudioFiles.IndexOf(SelectedAudioFile);
+        IsAudioRemoveEnabled = index >= 0;
+        IsAudioMoveUpEnabled = index > 0;
+        IsAudioMoveDownEnabled = index >= 0 && index < AudioFiles.Count - 1;
+        IsAudioSelectTrackVisible = SelectedAudioFile?.HasMultipleTracks == true;
+    }
+
+    private void UpdateSubtitleListState()
+    {
+        var index = SelectedSubtitleFile == null ? -1 : SubtitleFiles.IndexOf(SelectedSubtitleFile);
+        IsSubtitleRemoveEnabled = index >= 0;
+        IsSubtitleMoveUpEnabled = index > 0;
+        IsSubtitleMoveDownEnabled = index >= 0 && index < SubtitleFiles.Count - 1;
+    }
+
+    partial void OnSelectedAudioFileChanged(RemuxFileItem? value)
+    {
+        UpdateAudioListState();
+    }
+
+    partial void OnSelectedSubtitleFileChanged(RemuxFileItem? value)
+    {
+        UpdateSubtitleListState();
+    }
+
+    private static List<AudioTrackOption> ReadAudioTracks(FfmpegMediaInfo2 mediaInfo)
+    {
+        return mediaInfo.Tracks
+            .Where(t => t.TrackType == FfmpegTrackType.Audio)
+            .Select((t, index) => new AudioTrackOption
+            {
+                Index = index,
+                Language = t.Language,
+                Details = t.TrackInfo
+            })
+            .ToList();
+    }
+
+    private async Task<AudioTrackOption?> PromptSelectAudioTrack(string fileName, List<AudioTrackOption> trackOptions, string fileTypeLabel, AudioTrackOption? current = null)
+    {
+        if (Window == null || trackOptions.Count <= 1)
+        {
+            return trackOptions.FirstOrDefault();
         }
 
         var dialogVm = await _windowService.ShowDialogAsync<PickAudioTrackWindow, PickAudioTrackViewModel>(Window, vm =>
@@ -297,7 +255,8 @@ public partial class RemuxVideoViewModel : ObservableObject
             var name = Path.GetFileName(fileName);
             var title = string.Format(Se.Language.Video.RemuxVideoSelectAudioTrackFor, fileTypeLabel);
             var prompt = string.Format(Se.Language.Video.RemuxVideoSelectAudioTrackPrompt, name, trackOptions.Count);
-            vm.Initialize(title, prompt, trackOptions);
+            var defaultIndex = current == null ? 0 : Math.Max(0, trackOptions.IndexOf(current));
+            vm.Initialize(title, prompt, trackOptions, defaultIndex);
         });
 
         if (dialogVm != null && dialogVm.OkPressed && dialogVm.SelectedTrack != null)
@@ -305,7 +264,7 @@ public partial class RemuxVideoViewModel : ObservableObject
             return dialogVm.SelectedTrack;
         }
 
-        return trackOptions.FirstOrDefault();
+        return current ?? trackOptions.FirstOrDefault();
     }
 
     async partial void OnVideoFileNameChanged(string value)
@@ -318,155 +277,63 @@ public partial class RemuxVideoViewModel : ObservableObject
         IsCompleted = false;
         UpdateCanRemux();
 
-        if (!string.IsNullOrWhiteSpace(value) && File.Exists(value))
-        {
-            try
-            {
-                var mediaInfo = await Task.Run(() => FfmpegMediaInfo2.Parse(value));
-                if (value != VideoFileName)
-                {
-                    return;
-                }
-
-                var audioTracks = mediaInfo.Tracks
-                    .Where(t => t.TrackType == FfmpegTrackType.Audio)
-                    .Select((t, index) => new AudioTrackOption
-                    {
-                        Index = index,
-                        Language = t.Language,
-                        Details = t.TrackInfo
-                    })
-                    .ToList();
-
-                if (audioTracks.Count > 0)
-                {
-                    AudioTrackOption? selectedTrack = null;
-                    if (audioTracks.Count > 1)
-                    {
-                        selectedTrack = await PromptSelectAudioTrack(value, audioTracks, Se.Language.Video.RemuxVideoVideoFile);
-                    }
-
-                    if (value != VideoFileName)
-                    {
-                        return;
-                    }
-
-                    if (string.IsNullOrWhiteSpace(AudioFileName) || string.Equals(AudioFileName, value, StringComparison.OrdinalIgnoreCase))
-                    {
-                        _suppressAudioPrompt = true;
-                        try
-                        {
-                            AudioFileName = value;
-                            AudioFileTracks = new ObservableCollection<AudioTrackOption>(audioTracks);
-                            SelectedAudioFileTrack = selectedTrack ?? audioTracks[0];
-                            HasMultipleAudioTracks = audioTracks.Count > 1;
-                        }
-                        finally
-                        {
-                            _suppressAudioPrompt = false;
-                        }
-                    }
-                }
-            }
-            catch
-            {
-                // Fallback
-            }
-        }
-    }
-
-    async partial void OnAudioFileNameChanged(string value)
-    {
-        UpdateAudioInfo();
-        IsCompleted = false;
-        UpdateCanRemux();
-
-        var audioFiles = GetAudioFiles();
-        if (audioFiles.Count > 1)
-        {
-            if (!string.Equals(SelectedOutputFormat, ".mkv", StringComparison.OrdinalIgnoreCase))
-            {
-                SelectedOutputFormat = ".mkv";
-            }
-            AudioFileTracks.Clear();
-            SelectedAudioFileTrack = null;
-            HasMultipleAudioTracks = false;
-            return;
-        }
-
-        if (_suppressAudioPrompt)
+        if (string.IsNullOrWhiteSpace(value) || !File.Exists(value))
         {
             return;
         }
 
-        AudioFileTracks.Clear();
-        SelectedAudioFileTrack = null;
-        HasMultipleAudioTracks = false;
-
-        var singleFile = audioFiles.FirstOrDefault();
-        if (!string.IsNullOrWhiteSpace(singleFile) && File.Exists(singleFile))
+        // The video's own audio is the default audio source, so offer it as the first
+        // audio entry when the list is empty (or only holds the previous video).
+        var onlyVideoAudio = AudioFiles.Count == 0 ||
+                             (AudioFiles.Count == 1 && string.Equals(AudioFiles[0].FileName, _lastVideoAudioFileName, StringComparison.OrdinalIgnoreCase));
+        _lastVideoAudioFileName = value;
+        if (!onlyVideoAudio)
         {
-            try
-            {
-                var mediaInfo = await Task.Run(() => FfmpegMediaInfo2.Parse(singleFile));
-                if (singleFile != GetAudioFiles().FirstOrDefault())
-                {
-                    return;
-                }
+            return;
+        }
 
-                var audioTracks = mediaInfo.Tracks
-                    .Where(t => t.TrackType == FfmpegTrackType.Audio)
-                    .Select((t, index) => new AudioTrackOption
-                    {
-                        Index = index,
-                        Language = t.Language,
-                        Details = t.TrackInfo
-                    })
-                    .ToList();
-
-                if (audioTracks.Count > 0)
-                {
-                    AudioFileTracks = new ObservableCollection<AudioTrackOption>(audioTracks);
-                    if (audioTracks.Count > 1)
-                    {
-                        HasMultipleAudioTracks = true;
-                        var selected = await PromptSelectAudioTrack(singleFile, audioTracks, Se.Language.Video.RemuxVideoAudioFile);
-                        if (singleFile != GetAudioFiles().FirstOrDefault())
-                        {
-                            return;
-                        }
-                        SelectedAudioFileTrack = selected ?? audioTracks[0];
-                    }
-                    else
-                    {
-                        SelectedAudioFileTrack = audioTracks[0];
-                    }
-                }
-            }
-            catch
+        try
+        {
+            var mediaInfo = await Task.Run(() => FfmpegMediaInfo2.Parse(value));
+            if (value != VideoFileName)
             {
-                // Fallback if media info parsing fails
+                return;
             }
+
+            var audioTracks = ReadAudioTracks(mediaInfo);
+            if (audioTracks.Count == 0)
+            {
+                return;
+            }
+
+            var selectedTrack = audioTracks[0];
+            if (audioTracks.Count > 1)
+            {
+                selectedTrack = await PromptSelectAudioTrack(value, audioTracks, Se.Language.Video.RemuxVideoVideoFile) ?? audioTracks[0];
+            }
+
+            if (value != VideoFileName)
+            {
+                return;
+            }
+
+            AudioFiles.Clear();
+            var item = new RemuxFileItem(value);
+            item.SetTracks(audioTracks, selectedTrack);
+            AudioFiles.Add(item);
+            SelectedAudioFile = item;
+        }
+        catch
+        {
+            // media info parsing failed - the user can still add audio files by hand
         }
     }
 
-    partial void OnSubtitleFileNameChanged(string value)
-    {
-        UpdateSubtitleInfo();
-        IsCompleted = false;
-        UpdateCanRemux();
-
-        if (RequiresMkv(out _))
-        {
-            if (!string.Equals(SelectedOutputFormat, ".mkv", StringComparison.OrdinalIgnoreCase))
-            {
-                SelectedOutputFormat = ".mkv";
-            }
-        }
-    }
+    private string? _lastVideoAudioFileName;
 
     partial void OnIsRemuxingChanged(bool value)
     {
+        IsNotRemuxing = !value;
         UpdateCanRemux();
     }
 
@@ -540,7 +407,7 @@ public partial class RemuxVideoViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task BrowseAudio()
+    private async Task AddAudio()
     {
         if (Window == null)
         {
@@ -555,15 +422,90 @@ public partial class RemuxVideoViewModel : ObservableObject
             Se.Language.General.AllFiles,
             new List<string> { "*.*" });
 
-        if (selectedFiles != null && selectedFiles.Length > 0)
+        foreach (var fileName in selectedFiles ?? Array.Empty<string>())
         {
-            AudioFileName = string.Join("; ", selectedFiles);
+            await AddAudioFile(fileName);
+        }
+    }
+
+    public async Task AddAudioFile(string fileName)
+    {
+        if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName) ||
+            AudioFiles.Any(f => string.Equals(f.FileName, fileName, StringComparison.OrdinalIgnoreCase)))
+        {
+            return;
+        }
+
+        var item = new RemuxFileItem(fileName);
+        try
+        {
+            var mediaInfo = await Task.Run(() => FfmpegMediaInfo2.Parse(fileName));
+            var audioTracks = ReadAudioTracks(mediaInfo);
+            AudioTrackOption? selected = null;
+            if (audioTracks.Count > 1)
+            {
+                selected = await PromptSelectAudioTrack(fileName, audioTracks, Se.Language.Video.RemuxVideoAudioFile);
+            }
+            item.SetTracks(audioTracks, selected);
+        }
+        catch
+        {
+            // media info parsing failed - map the first audio stream
+        }
+
+        AudioFiles.Add(item);
+        SelectedAudioFile = item;
+    }
+
+    [RelayCommand]
+    private void RemoveAudio()
+    {
+        RemoveSelected(AudioFiles, SelectedAudioFile, item => SelectedAudioFile = item);
+    }
+
+    [RelayCommand]
+    private void ClearAudio()
+    {
+        AudioFiles.Clear();
+        SelectedAudioFile = null;
+    }
+
+    [RelayCommand]
+    private void MoveAudioUp()
+    {
+        MoveSelected(AudioFiles, SelectedAudioFile, ListMoveDirection.Up);
+        UpdateAudioListState();
+    }
+
+    [RelayCommand]
+    private void MoveAudioDown()
+    {
+        MoveSelected(AudioFiles, SelectedAudioFile, ListMoveDirection.Down);
+        UpdateAudioListState();
+    }
+
+    [RelayCommand]
+    private async Task SelectAudioTrack()
+    {
+        var item = SelectedAudioFile;
+        if (item == null || item.Tracks.Count <= 1)
+        {
+            return;
+        }
+
+        var label = string.Equals(item.FileName, VideoFileName, StringComparison.OrdinalIgnoreCase)
+            ? Se.Language.Video.RemuxVideoVideoFile
+            : Se.Language.Video.RemuxVideoAudioFile;
+        var selected = await PromptSelectAudioTrack(item.FileName, item.Tracks, label, item.SelectedTrack);
+        if (selected != null)
+        {
+            item.SelectedTrack = selected;
             IsCompleted = false;
         }
     }
 
     [RelayCommand]
-    private async Task BrowseSubtitle()
+    private async Task AddSubtitle()
     {
         if (Window == null)
         {
@@ -578,10 +520,114 @@ public partial class RemuxVideoViewModel : ObservableObject
             Se.Language.General.AllFiles,
             new List<string> { "*.*" });
 
-        if (selectedFiles != null && selectedFiles.Length > 0)
+        foreach (var fileName in selectedFiles ?? Array.Empty<string>())
         {
-            SubtitleFileName = string.Join("; ", selectedFiles);
-            IsCompleted = false;
+            AddSubtitleFile(fileName);
+        }
+    }
+
+    public void AddSubtitleFile(string fileName)
+    {
+        if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName) ||
+            SubtitleFiles.Any(f => string.Equals(f.FileName, fileName, StringComparison.OrdinalIgnoreCase)))
+        {
+            return;
+        }
+
+        var item = new RemuxFileItem(fileName);
+        SubtitleFiles.Add(item);
+        SelectedSubtitleFile = item;
+    }
+
+    [RelayCommand]
+    private void RemoveSubtitle()
+    {
+        RemoveSelected(SubtitleFiles, SelectedSubtitleFile, item => SelectedSubtitleFile = item);
+    }
+
+    [RelayCommand]
+    private void ClearSubtitle()
+    {
+        SubtitleFiles.Clear();
+        SelectedSubtitleFile = null;
+    }
+
+    [RelayCommand]
+    private void MoveSubtitleUp()
+    {
+        MoveSelected(SubtitleFiles, SelectedSubtitleFile, ListMoveDirection.Up);
+        UpdateSubtitleListState();
+    }
+
+    [RelayCommand]
+    private void MoveSubtitleDown()
+    {
+        MoveSelected(SubtitleFiles, SelectedSubtitleFile, ListMoveDirection.Down);
+        UpdateSubtitleListState();
+    }
+
+    private static void RemoveSelected(ObservableCollection<RemuxFileItem> items, RemuxFileItem? selected, Action<RemuxFileItem?> setSelected)
+    {
+        if (selected == null)
+        {
+            return;
+        }
+
+        var index = items.IndexOf(selected);
+        if (index < 0)
+        {
+            return;
+        }
+
+        items.RemoveAt(index);
+        if (items.Count == 0)
+        {
+            setSelected(null);
+            return;
+        }
+
+        setSelected(items[Math.Min(index, items.Count - 1)]);
+    }
+
+    private static void MoveSelected(ObservableCollection<RemuxFileItem> items, RemuxFileItem? selected, ListMoveDirection direction)
+    {
+        if (selected == null)
+        {
+            return;
+        }
+
+        var index = items.IndexOf(selected);
+        if (index < 0)
+        {
+            return;
+        }
+
+        ListReorder.Move(items, new[] { index }, direction);
+    }
+
+    /// <summary>
+    /// Ctrl+Up/Ctrl+Down reorder, Delete removes - for both lists; the sender tells which one.
+    /// </summary>
+    internal void AudioListKeyDown(object? sender, KeyEventArgs e) => ListKeyDown(e, MoveAudioUpCommand, MoveAudioDownCommand, RemoveAudioCommand);
+
+    internal void SubtitleListKeyDown(object? sender, KeyEventArgs e) => ListKeyDown(e, MoveSubtitleUpCommand, MoveSubtitleDownCommand, RemoveSubtitleCommand);
+
+    private static void ListKeyDown(KeyEventArgs e, IRelayCommand moveUp, IRelayCommand moveDown, IRelayCommand remove)
+    {
+        if (e.KeyModifiers == KeyModifiers.Control && e.Key == Key.Up)
+        {
+            e.Handled = true;
+            moveUp.Execute(null);
+        }
+        else if (e.KeyModifiers == KeyModifiers.Control && e.Key == Key.Down)
+        {
+            e.Handled = true;
+            moveDown.Execute(null);
+        }
+        else if (e.Key == Key.Delete && e.KeyModifiers == KeyModifiers.None)
+        {
+            e.Handled = true;
+            remove.Execute(null);
         }
     }
 
@@ -660,7 +706,7 @@ public partial class RemuxVideoViewModel : ObservableObject
             return;
         }
 
-        var audioFiles = GetAudioFiles();
+        var audioFiles = AudioFiles.ToList();
         if (audioFiles.Count == 0)
         {
             await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Video.RemuxVideoPleaseSelectBoth, MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -669,13 +715,13 @@ public partial class RemuxVideoViewModel : ObservableObject
 
         foreach (var audioFile in audioFiles)
         {
-            if (!File.Exists(audioFile))
+            if (!File.Exists(audioFile.FileName))
             {
-                await MessageBox.Show(Window, Se.Language.General.Error, $"Audio file '{audioFile}' does not exist.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                await MessageBox.Show(Window, Se.Language.General.Error, $"Audio file '{audioFile.FileName}' does not exist.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            var audioExt = Path.GetExtension(audioFile);
+            var audioExt = Path.GetExtension(audioFile.FileName);
             if (!AllowedAudioExtensions.Contains(audioExt))
             {
                 await MessageBox.Show(Window, Se.Language.General.Error, $"Audio format '{audioExt}' is not supported (allowed: mp3, aac, ac3, wav, mkv, mka, mp4).", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -683,16 +729,16 @@ public partial class RemuxVideoViewModel : ObservableObject
             }
         }
 
-        var subFiles = GetSubtitleFiles();
+        var subFiles = SubtitleFiles.ToList();
         foreach (var subFile in subFiles)
         {
-            if (!File.Exists(subFile))
+            if (!File.Exists(subFile.FileName))
             {
-                await MessageBox.Show(Window, Se.Language.General.Error, $"Subtitle file '{subFile}' does not exist.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                await MessageBox.Show(Window, Se.Language.General.Error, $"Subtitle file '{subFile.FileName}' does not exist.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            var subExt = Path.GetExtension(subFile);
+            var subExt = Path.GetExtension(subFile.FileName);
             if (!AllowedSubtitleExtensions.Contains(subExt))
             {
                 await MessageBox.Show(Window, Se.Language.General.Error, $"Subtitle format '{subExt}' is not supported (allowed: srt, ass, ssa, vtt, sub).", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -700,7 +746,7 @@ public partial class RemuxVideoViewModel : ObservableObject
             }
         }
 
-        if (RequiresMkv(out var mkvReason) && string.Equals(SelectedOutputFormat, ".mp4", StringComparison.OrdinalIgnoreCase))
+        if (RequiresMkv(out _) && string.Equals(SelectedOutputFormat, ".mp4", StringComparison.OrdinalIgnoreCase))
         {
             SelectedOutputFormat = ".mkv";
             OutputFileName = MakeOutputFileName(VideoFileName, SelectedOutputFormat);
@@ -713,8 +759,8 @@ public partial class RemuxVideoViewModel : ObservableObject
 
         var fullOutput = Path.GetFullPath(OutputFileName);
         if (string.Equals(fullOutput, Path.GetFullPath(VideoFileName), StringComparison.OrdinalIgnoreCase) ||
-            audioFiles.Any(a => string.Equals(fullOutput, Path.GetFullPath(a), StringComparison.OrdinalIgnoreCase)) ||
-            subFiles.Any(s => string.Equals(fullOutput, Path.GetFullPath(s), StringComparison.OrdinalIgnoreCase)))
+            audioFiles.Any(a => string.Equals(fullOutput, Path.GetFullPath(a.FileName), StringComparison.OrdinalIgnoreCase)) ||
+            subFiles.Any(s => string.Equals(fullOutput, Path.GetFullPath(s.FileName), StringComparison.OrdinalIgnoreCase)))
         {
             await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.General.OutputFileCannotBeTheInputFile, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
@@ -753,6 +799,7 @@ public partial class RemuxVideoViewModel : ObservableObject
             _progressTracker = new FfmpegProgressTracker(durationSeconds);
 
             var isMkv = string.Equals(SelectedOutputFormat, ".mkv", StringComparison.OrdinalIgnoreCase);
+            var videoFullPath = Path.GetFullPath(VideoFileName);
 
             var inputArgs = new StringBuilder();
             var mapArgs = new StringBuilder();
@@ -762,58 +809,43 @@ public partial class RemuxVideoViewModel : ObservableObject
             inputArgs.Append($"-i \"{VideoFileName}\" ");
             mapArgs.Append("-map 0:v:0 ");
 
-            // 2. Audio inputs
-            int currentInputIndex = 1;
-            var isSameAudioVideo = audioFiles.Count == 1 &&
-                string.Equals(Path.GetFullPath(audioFiles[0]), Path.GetFullPath(VideoFileName), StringComparison.OrdinalIgnoreCase);
-
-            if (isSameAudioVideo)
+            // 2. Audio inputs - the video's own audio is mapped from input 0, every other
+            //    file becomes its own input; the selected track decides the stream index.
+            var currentInputIndex = 1;
+            for (var k = 0; k < audioFiles.Count; k++)
             {
-                var audioStreamIndex = SelectedAudioFileTrack?.Index ?? 0;
-                mapArgs.Append($"-map 0:a:{audioStreamIndex} ");
-                if (SelectedAudioFileTrack != null && !string.IsNullOrWhiteSpace(SelectedAudioFileTrack.DisplayName))
+                var audioFile = audioFiles[k];
+                var streamIndex = audioFile.SelectedTrack?.Index ?? 0;
+                var isVideoAudio = string.Equals(Path.GetFullPath(audioFile.FileName), videoFullPath, StringComparison.OrdinalIgnoreCase);
+                if (isVideoAudio)
                 {
-                    metadataArgs.Append($"-metadata:s:a:0 title=\"{EscapeFfmpegMetadata(SelectedAudioFileTrack.DisplayName)}\" ");
-                    if (!string.IsNullOrWhiteSpace(SelectedAudioFileTrack.Language) && SelectedAudioFileTrack.Language != "und")
-                    {
-                        metadataArgs.Append($"-metadata:s:a:0 language=\"{SelectedAudioFileTrack.Language}\" ");
-                    }
+                    mapArgs.Append($"-map 0:a:{streamIndex} ");
                 }
-            }
-            else if (audioFiles.Count == 1)
-            {
-                var audioFile = audioFiles[0];
-                inputArgs.Append($"-i \"{audioFile}\" ");
-                var audioStreamIndex = SelectedAudioFileTrack?.Index ?? 0;
-                mapArgs.Append($"-map {currentInputIndex}:a:{audioStreamIndex} ");
-                var trackTitle = Path.GetFileNameWithoutExtension(audioFile);
-                metadataArgs.Append($"-metadata:s:a:0 title=\"{EscapeFfmpegMetadata(trackTitle)}\" ");
-                if (SelectedAudioFileTrack != null && !string.IsNullOrWhiteSpace(SelectedAudioFileTrack.Language) && SelectedAudioFileTrack.Language != "und")
+                else
                 {
-                    metadataArgs.Append($"-metadata:s:a:0 language=\"{SelectedAudioFileTrack.Language}\" ");
-                }
-                currentInputIndex++;
-            }
-            else
-            {
-                for (int k = 0; k < audioFiles.Count; k++)
-                {
-                    var audioFile = audioFiles[k];
-                    inputArgs.Append($"-i \"{audioFile}\" ");
-                    mapArgs.Append($"-map {currentInputIndex}:a:0 ");
-                    var trackTitle = Path.GetFileNameWithoutExtension(audioFile);
-                    metadataArgs.Append($"-metadata:s:a:{k} title=\"{EscapeFfmpegMetadata(trackTitle)}\" ");
+                    inputArgs.Append($"-i \"{audioFile.FileName}\" ");
+                    mapArgs.Append($"-map {currentInputIndex}:a:{streamIndex} ");
                     currentInputIndex++;
+                }
+
+                var track = audioFile.SelectedTrack;
+                var trackTitle = track != null && audioFile.Tracks.Count > 1
+                    ? track.DisplayName
+                    : Path.GetFileNameWithoutExtension(audioFile.FileName);
+                metadataArgs.Append($"-metadata:s:a:{k} title=\"{EscapeFfmpegMetadata(trackTitle)}\" ");
+                if (track != null && !string.IsNullOrWhiteSpace(track.Language) && track.Language != "und")
+                {
+                    metadataArgs.Append($"-metadata:s:a:{k} language=\"{track.Language}\" ");
                 }
             }
 
             // 3. Subtitle inputs
-            for (int j = 0; j < subFiles.Count; j++)
+            for (var j = 0; j < subFiles.Count; j++)
             {
                 var subFile = subFiles[j];
-                inputArgs.Append($"-i \"{subFile}\" ");
+                inputArgs.Append($"-i \"{subFile.FileName}\" ");
                 mapArgs.Append($"-map {currentInputIndex}:s:0 ");
-                var subTitle = Path.GetFileNameWithoutExtension(subFile);
+                var subTitle = Path.GetFileNameWithoutExtension(subFile.FileName);
                 metadataArgs.Append($"-metadata:s:s:{j} title=\"{EscapeFfmpegMetadata(subTitle)}\" ");
                 currentInputIndex++;
             }
@@ -828,11 +860,11 @@ public partial class RemuxVideoViewModel : ObservableObject
             }
             else
             {
-                var hasWav = audioFiles.Any(f => string.Equals(Path.GetExtension(f), ".wav", StringComparison.OrdinalIgnoreCase));
+                var hasWav = audioFiles.Any(f => string.Equals(Path.GetExtension(f.FileName), ".wav", StringComparison.OrdinalIgnoreCase));
                 audioCodec = hasWav ? "-c:a aac -b:a 192k" : "-c:a copy";
             }
 
-            string subCodec = string.Empty;
+            var subCodec = string.Empty;
             if (subFiles.Count > 0)
             {
                 subCodec = isMkv ? "-c:s copy" : "-c:s mov_text";
@@ -889,7 +921,6 @@ public partial class RemuxVideoViewModel : ObservableObject
                 ProgressText = Se.Language.Video.RemuxVideoCompleted;
                 IsCompleted = true;
 
-                // Show standard PromptFileSaved dialog with Play, Open folder, and Done buttons
                 await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window, vm =>
                 {
                     vm.Initialize(
@@ -987,5 +1018,14 @@ public partial class RemuxVideoViewModel : ObservableObject
     {
         OkPressed = true;
         Window?.Close();
+    }
+
+    internal void KeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Escape && !IsRemuxing)
+        {
+            e.Handled = true;
+            Window?.Close();
+        }
     }
 }
