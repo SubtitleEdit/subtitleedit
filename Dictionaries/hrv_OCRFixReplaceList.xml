@@ -5732,7 +5732,7 @@
     <RegEx find="([te]|ku|pi|no)riše" replaceWith="$1rira" />
     <RegEx find="(?&lt;![Pp]r|[Nn])adje(?!(v|n(e|u[olt]))\b)" replaceWith="ađe" />
     <RegEx find="par nedj?elja" replaceWith="par tjedana" />
-    <RegEx find="pfo" replaceWith="pro" />
+    <RegEx find="pf([oi])" replaceWith="pr$1" />
     <RegEx find="pbo" replaceWith="pno" />
     <RegEx find="pdg" replaceWith="odg" />
     <RegEx find="pendov" replaceWith="pendir" />
@@ -5818,6 +5818,7 @@
     <RegEx find="sj([pv])" replaceWith="s$1j" />
     <RegEx find="smeva" replaceWith="smijava" />
     <RegEx find="sovj(?!e)" replaceWith="svoj" />
+    <RegEx find="spb" replaceWith="sob" />
     <RegEx find="stać(?!i)" replaceWith="stat ć" />
     <RegEx find="(?&lt;!star)aćemo" replaceWith="at ćemo" />
     <RegEx find="\bstaral" replaceWith="brinul" />
