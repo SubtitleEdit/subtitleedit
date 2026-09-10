@@ -4795,7 +4795,7 @@ public partial class MainViewModel :
 
         if (!string.IsNullOrEmpty(fileName))
         {
-            File.WriteAllBytes(fileName, ms.ToArray());
+            await File.WriteAllBytesAsync(fileName, ms.ToArray());
             ShowStatus(string.Format(Se.Language.Main.FileExportedInFormatXToY, format.Name, fileName));
         }
     }
@@ -4826,7 +4826,7 @@ public partial class MainViewModel :
 
         if (!string.IsNullOrEmpty(fileName))
         {
-            File.WriteAllBytes(fileName, ms.ToArray());
+            await File.WriteAllBytesAsync(fileName, ms.ToArray());
             ShowStatus(string.Format(Se.Language.Main.FileExportedInFormatXToY, format.Name, fileName));
         }
     }
@@ -4857,7 +4857,7 @@ public partial class MainViewModel :
 
         if (!string.IsNullOrEmpty(fileName))
         {
-            File.WriteAllBytes(fileName, ms.ToArray());
+            await File.WriteAllBytesAsync(fileName, ms.ToArray());
             ShowStatus(string.Format(Se.Language.Main.FileExportedInFormatXToY, format.Name, fileName));
         }
     }
@@ -4907,7 +4907,7 @@ public partial class MainViewModel :
         {
             cavena.Save(fileName, ms, GetUpdateSubtitle(), false);
             ms.Position = 0;
-            File.WriteAllBytes(fileName, ms.ToArray());
+            await File.WriteAllBytesAsync(fileName, ms.ToArray());
         }
 
         ShowStatus(string.Format(Se.Language.Main.FileExportedInFormatXToY, cavena.Name, fileName));

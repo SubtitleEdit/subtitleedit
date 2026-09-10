@@ -209,7 +209,7 @@ public partial class AssaAttachmentsViewModel : ObservableObject
         var bytes = selected.Bytes;
         try
         {
-            File.WriteAllBytes(fileName, bytes);
+            await File.WriteAllBytesAsync(fileName, bytes);
         }
         catch (Exception exception)
         {

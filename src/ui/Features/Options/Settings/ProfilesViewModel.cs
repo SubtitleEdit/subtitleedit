@@ -89,7 +89,7 @@ public partial class ProfilesViewModel : ObservableObject
 
         var export = new ProfileImportExport(toExport);
         var json = JsonSerializer.Serialize(export, new JsonSerializerOptions { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
-        System.IO.File.WriteAllText(fileName, json);
+        await System.IO.File.WriteAllTextAsync(fileName, json);
 
         await MessageBox.Show(
             Window!,

@@ -292,7 +292,7 @@ public partial class WaveformThemesViewModel : ObservableObject
         try
         {
             var json = JsonSerializer.Serialize(dto, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(file.Path.LocalPath, json);
+            await File.WriteAllTextAsync(file.Path.LocalPath, json);
         }
         catch (Exception exception)
         {

@@ -176,7 +176,7 @@ public partial class FixNetflixErrorsViewModel : ObservableObject, IClosingClean
             return;
         }
 
-        System.IO.File.WriteAllText(fileName, csvBuilder.ToString());
+        await System.IO.File.WriteAllTextAsync(fileName, csvBuilder.ToString());
 
         _ = await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window, vm =>
         {

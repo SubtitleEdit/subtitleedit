@@ -341,7 +341,7 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
         {
             var assFormat = new AdvancedSubStationAlpha();
             var tempFileName = Path.Combine(Path.GetTempPath(), "EmbeddedSubtitleEdit_" + Guid.NewGuid() + assFormat.Extension);
-            File.WriteAllText(tempFileName, assFormat.ToText(subtitle, string.Empty));
+            await File.WriteAllTextAsync(tempFileName, assFormat.ToText(subtitle, string.Empty));
             fileName = tempFileName;
         }
 

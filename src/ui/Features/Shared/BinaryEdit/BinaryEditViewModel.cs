@@ -821,7 +821,7 @@ public partial class BinaryEditViewModel : ObservableObject
         // WebVTT with embedded base64 thumbnail images
         if (ext is ".vtt" or ".webvtt")
         {
-            var lines = File.ReadAllLines(fileName).ToList();
+            var lines = (await File.ReadAllLinesAsync(fileName)).ToList();
             var webVttThumbnail = new Nikse.SubtitleEdit.Core.SubtitleFormats.WebVttThumbnail();
             if (webVttThumbnail.IsMine(lines, fileName))
             {
@@ -2234,7 +2234,7 @@ public partial class BinaryEditViewModel : ObservableObject
 
         using var skBitmap = selectedItem.Bitmap.ToSkBitmap();
         var pngBytes = skBitmap.ToPngArray();
-        System.IO.File.WriteAllBytes(fileName, pngBytes);
+        await System.IO.File.WriteAllBytesAsync(fileName, pngBytes);
     }
 
     [RelayCommand]
