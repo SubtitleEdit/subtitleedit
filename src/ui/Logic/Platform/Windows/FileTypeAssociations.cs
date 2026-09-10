@@ -5,15 +5,15 @@ using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Logic.Platform.Windows;
 
-internal static class FileTypeAssociationsHelper
+internal static partial class FileTypeAssociationsHelper
 {
     // Shell notification constants
     private const int SHCNE_ASSOCCHANGED = 0x08000000;
     private const uint SHCNF_IDLIST = 0x0000;
     private const uint SHCNF_FLUSH = 0x1000;
 
-    [DllImport("Shell32.dll", SetLastError = true)]
-    private static extern void SHChangeNotify(int eventId, uint flags, nint item1, nint item2);
+    [LibraryImport("Shell32.dll", SetLastError = true)]
+    private static partial void SHChangeNotify(int eventId, uint flags, nint item1, nint item2);
 
     /// <summary>
     /// Checks if the app is currently the default handler for a specific extension.

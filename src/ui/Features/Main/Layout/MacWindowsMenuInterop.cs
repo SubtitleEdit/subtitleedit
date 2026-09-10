@@ -18,33 +18,33 @@ namespace Nikse.SubtitleEdit.Features.Main.Layout;
 /// window list from InitNativeMacMenu as the fallback, so the worst case is the
 /// pre-existing behavior.
 /// </summary>
-internal static class MacWindowsMenuInterop
+internal static partial class MacWindowsMenuInterop
 {
     private const string LibObjC = "/usr/lib/libobjc.A.dylib";
 
-    [DllImport(LibObjC)]
-    private static extern IntPtr objc_getClass(string name);
+    [LibraryImport(LibObjC, StringMarshalling = StringMarshalling.Utf8)]
+    private static partial IntPtr objc_getClass(string name);
 
-    [DllImport(LibObjC)]
-    private static extern IntPtr sel_registerName(string name);
+    [LibraryImport(LibObjC, StringMarshalling = StringMarshalling.Utf8)]
+    private static partial IntPtr sel_registerName(string name);
 
-    [DllImport(LibObjC, EntryPoint = "objc_msgSend")]
-    private static extern IntPtr SendPtr(IntPtr receiver, IntPtr sel);
+    [LibraryImport(LibObjC, EntryPoint = "objc_msgSend")]
+    private static partial IntPtr SendPtr(IntPtr receiver, IntPtr sel);
 
-    [DllImport(LibObjC, EntryPoint = "objc_msgSend")]
-    private static extern IntPtr SendPtrPtr(IntPtr receiver, IntPtr sel, IntPtr arg);
+    [LibraryImport(LibObjC, EntryPoint = "objc_msgSend")]
+    private static partial IntPtr SendPtrPtr(IntPtr receiver, IntPtr sel, IntPtr arg);
 
-    [DllImport(LibObjC, EntryPoint = "objc_msgSend")]
-    private static extern IntPtr SendPtrLong(IntPtr receiver, IntPtr sel, long arg);
+    [LibraryImport(LibObjC, EntryPoint = "objc_msgSend")]
+    private static partial IntPtr SendPtrLong(IntPtr receiver, IntPtr sel, long arg);
 
-    [DllImport(LibObjC, EntryPoint = "objc_msgSend")]
-    private static extern long SendLong(IntPtr receiver, IntPtr sel);
+    [LibraryImport(LibObjC, EntryPoint = "objc_msgSend")]
+    private static partial long SendLong(IntPtr receiver, IntPtr sel);
 
-    [DllImport(LibObjC, EntryPoint = "objc_msgSend")]
-    private static extern IntPtr SendPtrUtf8(IntPtr receiver, IntPtr sel, string arg);
+    [LibraryImport(LibObjC, StringMarshalling = StringMarshalling.Utf8, EntryPoint = "objc_msgSend")]
+    private static partial IntPtr SendPtrUtf8(IntPtr receiver, IntPtr sel, string arg);
 
-    [DllImport(LibObjC, EntryPoint = "objc_msgSend")]
-    private static extern void SendVoidPtrPtrBool(IntPtr receiver, IntPtr sel, IntPtr arg1, IntPtr arg2, sbyte arg3);
+    [LibraryImport(LibObjC, EntryPoint = "objc_msgSend")]
+    private static partial void SendVoidPtrPtrBool(IntPtr receiver, IntPtr sel, IntPtr arg1, IntPtr arg2, sbyte arg3);
 
     private static readonly IntPtr SelSharedApplication = sel_registerName("sharedApplication");
     private static readonly IntPtr SelMainMenu = sel_registerName("mainMenu");

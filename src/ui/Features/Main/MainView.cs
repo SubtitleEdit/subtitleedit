@@ -9,6 +9,7 @@ using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Main;
@@ -18,7 +19,7 @@ public static class Locator
     public static IServiceProvider Services { get; set; } = default!;
 }
 
-public class MainView : ViewBase
+public partial class MainView : ViewBase
 {
     private MainViewModel? _vm;
 
@@ -239,8 +240,8 @@ public class MainView : ViewBase
         return IntPtr.Zero;
     }
 
-    [System.Runtime.InteropServices.DllImport("user32.dll")]
-    private static extern short GetKeyState(int keyCode);
+    [LibraryImport("user32.dll")]
+    private static partial short GetKeyState(int keyCode);
 
     internal async Task OpenFile(string fileName)
     {

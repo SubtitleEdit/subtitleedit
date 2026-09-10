@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 
-internal static class NativeMethods
+internal static partial class NativeMethods
 {
     private static IntPtr _libdlHandle;
     private static IntPtr _libcHandle;
@@ -109,32 +109,32 @@ internal static class NativeMethods
     }
 
     // Windows
-    [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Ansi)]
-    internal static extern IntPtr LoadLibrary(string dllToLoad);
+    [LibraryImport("kernel32.dll", EntryPoint = "LoadLibraryA", SetLastError = true)]
+    internal static partial IntPtr LoadLibrary([MarshalAs(UnmanagedType.LPStr)] string dllToLoad);
 
-    [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-    internal static extern IntPtr LoadLibraryW(string dllToLoad);
+    [LibraryImport("kernel32.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+    internal static partial IntPtr LoadLibraryW(string dllToLoad);
 
     // Unicode (LoadLibraryExW) so paths with non-ASCII characters (e.g. Chinese user/install
     // folders) are passed through correctly - the ANSI variant mangles them and the load fails (#12001).
-    [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-    internal static extern IntPtr LoadLibraryEx(string lpFileName, IntPtr hReservedNull, uint dwFlags);
+    [LibraryImport("kernel32.dll", EntryPoint = "LoadLibraryExW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+    internal static partial IntPtr LoadLibraryEx(string lpFileName, IntPtr hReservedNull, uint dwFlags);
 
-    [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Ansi)]
-    internal static extern IntPtr GetProcAddress(IntPtr hModule, string procedureName);
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    internal static partial IntPtr GetProcAddress(IntPtr hModule, [MarshalAs(UnmanagedType.LPStr)] string procedureName);
 
-    [DllImport("kernel32.dll")]
+    [LibraryImport("kernel32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
-    internal static extern bool FreeLibrary(IntPtr hModule);
+    internal static partial bool FreeLibrary(IntPtr hModule);
 
     // Unicode (SetDllDirectoryW) so a non-ASCII dependency directory (e.g. a Chinese path) is set
     // correctly; the ANSI variant mangles it so libvlccore.dll / plugins are not found (#12001).
-    [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+    [LibraryImport("kernel32.dll", EntryPoint = "SetDllDirectoryW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    internal static extern bool SetDllDirectory(string lpPathName);
+    internal static partial bool SetDllDirectory(string lpPathName);
 
-    [DllImport("kernel32.dll")]
-    internal static extern uint GetLastError();
+    [LibraryImport("kernel32.dll")]
+    internal static partial uint GetLastError();
 
     // LoadLibraryEx flags
     internal const uint LOAD_WITH_ALTERED_SEARCH_PATH = 0x00000008;

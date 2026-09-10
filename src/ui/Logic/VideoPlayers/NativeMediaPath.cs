@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers;
 /// is what made the symptom look like a broken container (#14407).
 /// </para>
 /// </summary>
-public static class NativeMediaPath
+public static partial class NativeMediaPath
 {
     /// <summary>Win32 MAX_PATH, counting the terminating NUL - so 259 chars is the longest plain path.</summary>
     public const int WindowsMaxPath = 260;
@@ -165,6 +165,6 @@ public static class NativeMediaPath
         }
     }
 
-    [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-    private static extern uint GetShortPathNameW(string lpszLongPath, [Out] char[] lpszShortPath, uint cchBuffer);
+    [LibraryImport("kernel32.dll", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+    private static partial uint GetShortPathNameW(string lpszLongPath, [Out] char[] lpszShortPath, uint cchBuffer);
 }

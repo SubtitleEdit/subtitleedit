@@ -6,14 +6,15 @@ using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Logic;
 
-public static  class CursorPositionHelper
+public static partial class CursorPositionHelper
 {
     // Windows API for getting cursor position
-    [DllImport("user32.dll")]
-    private static extern bool GetCursorPos(out POINT lpPoint);
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool GetCursorPos(out POINT lpPoint);
 
-    [DllImport("user32.dll")]
-    private static extern short GetAsyncKeyState(int vKey);
+    [LibraryImport("user32.dll")]
+    private static partial short GetAsyncKeyState(int vKey);
 
     private const int VkLButton = 0x01;
     private const int VkRButton = 0x02;
@@ -31,22 +32,23 @@ public static  class CursorPositionHelper
     private const string ApplicationServicesLib = "/System/Library/Frameworks/ApplicationServices.framework/ApplicationServices";
 
 
-    [DllImport(CoreGraphicsLib)]
-    private static extern CGPoint CGEventSourceGetCursorPosition(uint source);
+    [LibraryImport(CoreGraphicsLib)]
+    private static partial CGPoint CGEventSourceGetCursorPosition(uint source);
 
-    [DllImport(CoreGraphicsLib)]
-    private static extern bool CGEventSourceButtonState(int stateId, uint button);
+    [LibraryImport(CoreGraphicsLib)]
+    [return: MarshalAs(UnmanagedType.U1)]
+    private static partial bool CGEventSourceButtonState(int stateId, uint button);
 
     private const int CGEventSourceStateCombinedSessionState = 0;
 
-    [DllImport(CoreGraphicsLib)]
-    private static extern IntPtr CGEventCreate(IntPtr source);
+    [LibraryImport(CoreGraphicsLib)]
+    private static partial IntPtr CGEventCreate(IntPtr source);
 
-    [DllImport(ApplicationServicesLib)]
-    private static extern CGPoint CGEventGetLocation(IntPtr eventRef);
+    [LibraryImport(ApplicationServicesLib)]
+    private static partial CGPoint CGEventGetLocation(IntPtr eventRef);
 
-    [DllImport(CoreGraphicsLib)]
-    private static extern void CFRelease(IntPtr cf);
+    [LibraryImport(CoreGraphicsLib)]
+    private static partial void CFRelease(IntPtr cf);
 
     [StructLayout(LayoutKind.Sequential)]
     private struct CGPoint
@@ -56,18 +58,19 @@ public static  class CursorPositionHelper
     }
 
     // Linux X11 API for getting cursor position
-    [DllImport("libX11.so.6")]
-    private static extern IntPtr XOpenDisplay(IntPtr display);
+    [LibraryImport("libX11.so.6")]
+    private static partial IntPtr XOpenDisplay(IntPtr display);
 
-    [DllImport("libX11.so.6")]
-    private static extern int XCloseDisplay(IntPtr display);
+    [LibraryImport("libX11.so.6")]
+    private static partial int XCloseDisplay(IntPtr display);
 
-    [DllImport("libX11.so.6")]
-    private static extern bool XQueryPointer(IntPtr display, IntPtr window, out IntPtr root, out IntPtr child,
+    [LibraryImport("libX11.so.6")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool XQueryPointer(IntPtr display, IntPtr window, out IntPtr root, out IntPtr child,
         out int rootX, out int rootY, out int winX, out int winY, out uint mask);
 
-    [DllImport("libX11.so.6")]
-    private static extern IntPtr XDefaultRootWindow(IntPtr display);
+    [LibraryImport("libX11.so.6")]
+    private static partial IntPtr XDefaultRootWindow(IntPtr display);
 
     public static (int X, int Y)? GetCursorPosition()
     {
