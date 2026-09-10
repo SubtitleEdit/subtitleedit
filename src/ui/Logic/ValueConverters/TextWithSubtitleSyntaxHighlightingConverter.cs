@@ -797,6 +797,10 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                             state.FontName = null;
                             state.FontSize = null;
                         }
+                        else if (tagName.Equals("box", StringComparison.OrdinalIgnoreCase))
+                        {
+                            state.BackgroundColor = null;
+                        }
                     }
                     else
                     {
@@ -816,6 +820,12 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                         else if (tagName.Equals("font", StringComparison.OrdinalIgnoreCase))
                         {
                             ParseFontTag(str.AsSpan(contentStart, contentEnd - contentStart), state);
+                        }
+                        else if (tagName.Equals("box", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var boxState = new FormattingState();
+                            ParseFontTag(str.AsSpan(contentStart, contentEnd - contentStart), boxState);
+                            state.BackgroundColor = boxState.Color;
                         }
                     }
                     i = tagEnd + 1;
@@ -931,6 +941,11 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             run.Foreground = CreateBrush(state.Color.Value);
         }
 
+        if (state.BackgroundColor.HasValue)
+        {
+            run.Background = CreateBrush(state.BackgroundColor.Value);
+        }
+
         // Apply font name
         if (!string.IsNullOrEmpty(state.FontName))
         {
@@ -988,7 +1003,9 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         {
             // Same readability guard as the ASSA path (#13824): a <font> color that vanishes
             // into the grid background falls back to the default foreground.
-            state.Color = IsColorVisible(values.Color.Value) ? values.Color : null;
+            state.Color = state.BackgroundColor.HasValue || IsColorVisible(values.Color.Value)
+                ? values.Color
+                : null;
         }
 
         if (values.FontName != null)
@@ -1463,6 +1480,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         public bool Bold { get; set; }
         public bool Underline { get; set; }
         public Color? Color { get; set; }
+        public Color? BackgroundColor { get; set; }
         public string? FontName { get; set; }
         public double? FontSize { get; set; }
 
@@ -1472,6 +1490,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             Bold = false;
             Underline = false;
             Color = null;
+            BackgroundColor = null;
             FontName = null;
             FontSize = null;
         }

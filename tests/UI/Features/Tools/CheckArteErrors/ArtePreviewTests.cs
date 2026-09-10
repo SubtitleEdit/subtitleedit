@@ -171,6 +171,8 @@ public class ArtePreviewTests
         var source = new Subtitle();
         source.Paragraphs.Add(new Paragraph("<font color=\"f02030\">Red</font> <font color=\"blue\">blue</font>", 1000, 4000));
         var vm = Create(source, "Teletext colors");
+        vm.IsSdh = true;
+        vm.AnalyzeCommand.Execute(null);
 
         var fix = Assert.Single(vm.Fixes.Where(item => item.Reason.Contains("nearest Teletext standard color")));
         Assert.True(fix.CanBeFixed);
@@ -178,6 +180,51 @@ public class ArtePreviewTests
 
         vm.OkCommand.Execute(null);
         Assert.Equal(fix.After, vm.FixedSubtitle!.Paragraphs[0].Text);
+    }
+
+    [AvaloniaFact]
+    public void TeletextLinePosition_CorrectsInvalidBottomStartsForDoubleHeight()
+    {
+        var source = new Subtitle();
+        source.Paragraphs.Add(new Paragraph(string.Empty, 0, 200) { MarginV = "23" });
+        source.Paragraphs.Add(new Paragraph("One line", 1000, 4000) { MarginV = "23" });
+        source.Paragraphs.Add(new Paragraph("First line\nSecond line", 5000, 8000) { MarginV = "22" });
+        var vm = Create(source, "Teletext line position");
+
+        Assert.Collection(vm.Fixes,
+            blank => Assert.Equal("22", blank.After),
+            oneLine => Assert.Equal("22", oneLine.After),
+            twoLines => Assert.Equal("20", twoLines.After));
+
+        vm.OkCommand.Execute(null);
+        Assert.Equal("22", vm.FixedSubtitle!.Paragraphs[0].MarginV);
+        Assert.Equal("22", vm.FixedSubtitle.Paragraphs[1].MarginV);
+        Assert.Equal("20", vm.FixedSubtitle.Paragraphs[2].MarginV);
+    }
+
+    [AvaloniaFact]
+    public void NormalArteSubtitle_ConvertsTeletextColorsToYellow()
+    {
+        var source = new Subtitle();
+        source.Paragraphs.Add(new Paragraph("<font color=\"Blue\">Hello</font>", 1000, 4000));
+        var vm = Create(source, "Teletext colors");
+
+        var fix = Assert.Single(vm.Fixes);
+        Assert.Equal("<font color=\"Yellow\">Hello</font>", fix.After);
+        vm.OkCommand.Execute(null);
+        Assert.Equal(fix.After, vm.FixedSubtitle!.Paragraphs[0].Text);
+    }
+
+    [AvaloniaFact]
+    public void NormalArteSubtitle_UsesYellowConsistentlyWhenTheFileUsesColor()
+    {
+        var source = new Subtitle();
+        source.Paragraphs.Add(new Paragraph("<font color=\"Red\">Red</font>", 1000, 4000));
+        source.Paragraphs.Add(new Paragraph("No color", 5000, 8000));
+        var vm = Create(source, "Teletext colors");
+
+        Assert.Equal("<font color=\"Yellow\">Red</font>", vm.Fixes.Single(item => item.Index == 1).After);
+        Assert.Equal("<font color=\"Yellow\">No color</font>", vm.Fixes.Single(item => item.Index == 2).After);
     }
 
     [AvaloniaFact]
@@ -208,6 +255,7 @@ public class ArtePreviewTests
         vm.OkCommand.Execute(null);
 
         Assert.Equal(string.Empty, vm.FixedSubtitle!.Paragraphs[0].Text);
+        Assert.Equal("22", vm.FixedSubtitle.Paragraphs[0].MarginV);
         Assert.Equal(10 * 60 * 60 * 1000, vm.FixedSubtitle.Paragraphs[0].StartTime.TotalMilliseconds);
         Assert.Equal(10 * 60 * 60 * 1000 + 200, vm.FixedSubtitle.Paragraphs[0].EndTime.TotalMilliseconds);
     }

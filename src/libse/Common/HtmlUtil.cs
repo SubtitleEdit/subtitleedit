@@ -476,6 +476,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                     next = s[i + 2];
                 }
 
+                next = char.ToLowerInvariant(next);
+
                 if (next == 'b')
                 {
                     hasBTag = true;
@@ -492,7 +494,11 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (hasBTag)
             {
-                s = s.Replace("<box>", string.Empty).Replace("</box>", string.Empty);
+                // Teletext boxing can carry a colour attribute, e.g.
+                // <box color="White">. It is formatting metadata, never visible
+                // subtitle text. Treat both forms identically so all length and
+                // preview consumers see the same character count.
+                s = Regex.Replace(s, @"</?box\b[^>]*>", string.Empty, RegexOptions.IgnoreCase);
             }
 
             // v tag from WebVTT

@@ -520,14 +520,16 @@ public partial class CheckArteErrorsViewModel : ObservableObject
             RunCheck("Teletext line position", () => AnalyzeTeletextLinePosition(subtitle));
         }
 
-        if (selectedChecks.Contains("Teletext line length / control codes"))
-        {
-            RunCheck("Split / Rebalance", () => AnalyzeTeletextLineLength(subtitle));
-        }
-
+        // Colour codes consume one Teletext character. Normalize colours first, so
+        // the following layout pass evaluates the actual text that will be written.
         if (selectedChecks.Contains("Teletext colors"))
         {
             RunCheck("Teletext colors", () => AnalyzeTeletextColors(subtitle));
+        }
+
+        if (selectedChecks.Contains("Teletext line length / control codes"))
+        {
+            RunCheck("Split / Rebalance", () => AnalyzeTeletextLineLength(subtitle));
         }
 
         if (selectedChecks.Contains("Italic formatting (not allowed)"))
@@ -848,6 +850,10 @@ public partial class CheckArteErrorsViewModel : ObservableObject
             var paragraph = subtitle.Paragraphs[i];
             if (string.IsNullOrWhiteSpace(paragraph.Text))
             {
+                if (!string.Equals(paragraph.MarginV, "22", StringComparison.Ordinal))
+                {
+                    Fixes.Add(new ArteFixItem(true, i + 1, string.IsNullOrWhiteSpace(paragraph.MarginV) ? "Not set" : paragraph.MarginV, "22", "ARTE blank/control subtitle starts on Teletext row 22 (occupying rows 22+23).", ArteFixKind.TeletextLinePosition));
+                }
                 continue;
             }
 
@@ -868,6 +874,25 @@ public partial class CheckArteErrorsViewModel : ObservableObject
                     currentRow.ToString(),
                     (currentRow + 1).ToString(),
                     "File appears vertically shifted by one Teletext row; relative position is preserved.",
+                    ArteFixKind.TeletextLinePosition));
+                continue;
+            }
+
+            // ARTE Teletext is double height: the stored row is the first physical row.
+            // A one-line subtitle on row 23 would extend below the page; it belongs on
+            // rows 22+23. Two lines must start on row 20, occupying 20+21 and 22+23.
+            // Only correct these invalid bottom placements, leaving deliberate titles
+            // higher on the screen untouched.
+            if (hasRow &&
+                ((lineCount == 1 && currentRow == TeletextRowHelper.BottomRow) ||
+                 (lineCount == 2 && currentRow == TeletextRowHelper.BottomRow - 1)))
+            {
+                Fixes.Add(new ArteFixItem(
+                    true,
+                    i + 1,
+                    currentRow.ToString(),
+                    expectedBottomRow.ToString(),
+                    $"ARTE double-height Teletext starts on row {expectedBottomRow}: {lineCount}-line subtitle occupies the bottom rows.",
                     ArteFixKind.TeletextLinePosition));
                 continue;
             }
@@ -900,8 +925,18 @@ public partial class CheckArteErrorsViewModel : ObservableObject
                 continue;
             }
 
+            // A proposed colour normalization can turn a 37-character visible line
+            // into a 36-character coloured line. Evaluate that proposed canonical
+            // text here, not the pre-correction paragraph.
+            var colorNormalizedText = Fixes
+                .LastOrDefault(f => f.Index == i + 1 && f.FixKind == ArteFixKind.TeletextColor)
+                ?.After ?? paragraph.Text;
+            var layoutParagraph = colorNormalizedText == paragraph.Text
+                ? paragraph
+                : new Paragraph(paragraph, true) { Text = colorNormalizedText };
+
             var projection =
-                FlowInlineColorProjection.Parse(RemoveItalicTags(paragraph.Text));
+                FlowInlineColorProjection.Parse(RemoveItalicTags(layoutParagraph.Text));
 
             var visibleText = projection.VisibleText
                 .Replace("\r\n", "\n")
@@ -909,6 +944,9 @@ public partial class CheckArteErrorsViewModel : ObservableObject
 
             var lines = visibleText.Split('\n');
             var lineStart = 0;
+            // In the ARTE delivery profile a coloured box occupies one teletext
+            // control position for line-capacity purposes.
+            var coloredBoxControlCount = ColoredBoxRegex.IsMatch(layoutParagraph.Text) ? 1 : 0;
 
             for (var lineIndex = 0; lineIndex < lines.Length; lineIndex++)
             {
@@ -919,11 +957,11 @@ public partial class CheckArteErrorsViewModel : ObservableObject
                         run.Start < lineStart + line.Length &&
                         run.End > lineStart);
 
-                var maximum = Math.Max(1, 37 - colorCodeCount);
+                var maximum = Math.Max(1, 37 - colorCodeCount - coloredBoxControlCount);
 
                 if (line.Length > maximum)
                 {
-                    AddTextLayoutProposal(paragraph, i + 1,
+                    AddTextLayoutProposal(layoutParagraph, i + 1,
                         $"Line {lineIndex + 1}: {line.Length} chars.");
                     break;
                 }
@@ -981,10 +1019,11 @@ public partial class CheckArteErrorsViewModel : ObservableObject
         }
 
         var start = 0;
+        var coloredBoxControlCount = ColoredBoxRegex.IsMatch(text) ? 1 : 0;
         foreach (var line in lines)
         {
             var controls = projection.ColorRuns.Count(run => run.Start < start + line.Length && run.End > start);
-            if (line.Length + controls > 37)
+            if (line.Length + controls + coloredBoxControlCount > 37)
             {
                 return false;
             }
@@ -996,7 +1035,8 @@ public partial class CheckArteErrorsViewModel : ObservableObject
     private void AddTextLayoutProposal(Paragraph paragraph, int index, string reason)
     {
         // A paragraph can fail both line-count and line-width checks; offer one coherent fix.
-        if (Fixes.Any(f => f.Index == index && f.Before == paragraph.Text))
+        if (Fixes.Any(f => f.Index == index && f.Before == paragraph.Text &&
+                           (f.FixKind == ArteFixKind.Rebalance || f.FixKind == ArteFixKind.Split)))
         {
             return;
         }
@@ -1031,21 +1071,42 @@ public partial class CheckArteErrorsViewModel : ObservableObject
         "\\bcolor\\s*=\\s*(?:\\\"(?<quoted>[^\\\"]+)\\\"|'(?<single>[^']+)'|(?<bare>[^\\s>]+))",
         RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
+    private static readonly Regex ColoredBoxRegex = new(
+        @"<box\b[^>]*\bcolor\s*=",
+        RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
     private static readonly HashSet<string> TeletextColorNames = new(StringComparer.OrdinalIgnoreCase)
     {
         "Black", "Red", "Green", "Yellow", "Blue", "Magenta", "Cyan", "White",
     };
 
-    private static string NormalizeTeletextColors(string text, out bool hasUnsupportedColor)
+    private static string NormalizeTeletextColors(string text, bool isSdh, out bool hasUnsupportedColor)
     {
         var unsupportedColorFound = false;
         var normalized = FontColorAttributeRegex.Replace(text, match =>
         {
             var color = match.Groups["quoted"].Success ? match.Groups["quoted"].Value :
                 match.Groups["single"].Success ? match.Groups["single"].Value : match.Groups["bare"].Value;
+            if (!isSdh)
+            {
+                if (string.Equals(color, "Yellow", StringComparison.OrdinalIgnoreCase))
+                {
+                    return "color=\"Yellow\"";
+                }
+
+                var normalSubtitleColor = Ebu.GetNearestColorName(color);
+                if (normalSubtitleColor == null)
+                {
+                    unsupportedColorFound = true;
+                    return match.Value;
+                }
+
+                return "color=\"Yellow\"";
+            }
+
             if (TeletextColorNames.Contains(color))
             {
-                return match.Value;
+                return "color=\"" + color + "\"";
             }
             var standardColor = Ebu.GetNearestColorName(color);
             if (standardColor == null)
@@ -1062,14 +1123,25 @@ public partial class CheckArteErrorsViewModel : ObservableObject
 
     private void AnalyzeTeletextColors(Subtitle subtitle)
     {
+        // A normal ARTE file which deliberately uses a colour must use yellow consistently.
+        // A completely uncoloured file remains uncoloured.
+        var useYellowForNormalSubtitles = !IsSdh && subtitle.Paragraphs.Any(paragraph => FontColorAttributeRegex.IsMatch(paragraph.Text));
+
         for (var i = 0; i < subtitle.Paragraphs.Count; i++)
         {
             var text = subtitle.Paragraphs[i].Text;
-            var normalized = NormalizeTeletextColors(text, out var hasUnsupportedColor);
+            var normalized = NormalizeTeletextColors(text, IsSdh, out var hasUnsupportedColor);
+            if (useYellowForNormalSubtitles && !string.IsNullOrWhiteSpace(text))
+            {
+                // A colour can begin on a later line. Remove the individual colour spans
+                // and apply one Yellow run to the complete subtitle instead.
+                normalized = Regex.Replace(normalized, @"<font\b[^>]*\bcolor\s*=[^>]*>(?<text>.*?)</font\s*>", "${text}", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                normalized = "<font color=\"Yellow\">" + normalized + "</font>";
+            }
             if (normalized != text)
             {
                 Fixes.Add(new ArteFixItem(true, i + 1, text, normalized,
-                    "Color is mapped to the nearest Teletext standard color.", ArteFixKind.TeletextColor));
+                    IsSdh ? "Color is mapped to the nearest Teletext standard color." : "Normal ARTE subtitles use yellow or no color; color is changed to Yellow.", ArteFixKind.TeletextColor));
             }
             if (hasUnsupportedColor)
             {
@@ -1319,7 +1391,7 @@ public partial class CheckArteErrorsViewModel : ObservableObject
                     break;
 
                 case ArteFixKind.TeletextColor:
-                    paragraph.Text = NormalizeTeletextColors(paragraph.Text, out _);
+                    paragraph.Text = fix.After;
                     applied++;
                     break;
             }

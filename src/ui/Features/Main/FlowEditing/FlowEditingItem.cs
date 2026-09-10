@@ -23,6 +23,11 @@ public sealed class FlowEditingItem : INotifyPropertyChanged, IDisposable
 
     public SubtitleLineViewModel Source { get; }
 
+    // Changes when the canonical text changes even if the visible text stays the same.
+    // Inline-colour changes are represented by tags and therefore need this separate
+    // notification for Flow's colour overlay.
+    public string CanonicalText => Source.Text;
+
     public int Number => Source.Number;
 
     public string TimeCode =>
@@ -269,6 +274,11 @@ public sealed class FlowEditingItem : INotifyPropertyChanged, IDisposable
 
             Foreground =
                 parsed.Foreground;
+
+            PropertyChanged?.Invoke(
+                this,
+                new PropertyChangedEventArgs(
+                    nameof(CanonicalText)));
 
             _updatingFromSource = false;
         }

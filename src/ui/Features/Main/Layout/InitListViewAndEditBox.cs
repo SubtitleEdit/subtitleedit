@@ -1303,6 +1303,25 @@ public static partial class InitListViewAndEditBox
         colorMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridDataMenuVisible)));
         flyout.Items.Add(colorMenuItem);
 
+        var teletextBoxMenuItem = new MenuItem
+        {
+            Header = "Force Teletext box color (SDH)",
+            DataContext = vm,
+        };
+        foreach (var boxColor in new[] { "White", "Red", "Green", "Yellow", "Blue", "Magenta", "Cyan" })
+        {
+            teletextBoxMenuItem.Items.Add(new MenuItem
+            {
+                Header = boxColor,
+                Command = vm.ForceTeletextBoxCommand,
+                CommandParameter = boxColor,
+                DataContext = vm,
+            });
+        }
+        teletextBoxMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsFormatEbu)));
+        flyout.Items.Add(teletextBoxMenuItem);
+        flyout.Opening += (_, _) => teletextBoxMenuItem.IsVisible = vm.IsCurrentEbuSdh();
+
         var fontNameMenuItem = new MenuItem
         {
             Header = Se.Language.General.FontNameDotDotDot,

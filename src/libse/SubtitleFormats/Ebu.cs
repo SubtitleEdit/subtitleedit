@@ -545,6 +545,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
 
                 byte? lastColor = null;
+                var coloredBoxOpen = false;
                 var sb = new StringBuilder();
 
                 // remove tags except "font", "italic", "underline" and "box"
@@ -567,7 +568,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = text.Replace("</u>", endUnderline);
                 text = text.Replace("<U>", startUnderline);
                 text = text.Replace("</U>", endUnderline);
-                text = text.Replace("<box>", startBox);
+                text = Regex.Replace(text, @"<box(?=\s|>)", startBox, RegexOptions.IgnoreCase);
                 text = text.Replace("</box>", endBox);
                 text = text.Replace("<BOX>", startBox);
                 text = text.Replace("</BOX>", endBox);
@@ -578,7 +579,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = text.Replace(endItalic, "</i>");
                 text = text.Replace(startUnderline, "<u>");
                 text = text.Replace(endUnderline, "</u>");
-                text = text.Replace(startBox, "<box>");
+                text = text.Replace(startBox, "<box");
                 text = text.Replace(endBox, "</box>");
 
                 text = text.Replace(" </font>", "</font> ");
@@ -690,10 +691,32 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             i += "<box>".Length;
                             textBytes.Add(boxingOn);
                         }
+                        else if (newStart.StartsWith("<box ".AsSpan(), StringComparison.OrdinalIgnoreCase))
+                        {
+                            var end = line.IndexOf('>', i);
+                            if (end > i)
+                            {
+                                var background = GetColorByte(encoding, line, i);
+                                if (displayStandardCode != "0" && background != null)
+                                {
+                                    // EN 300 706: 1/D adopts the currently selected foreground
+                                    // colour as the new background colour.
+                                    textBytes.Add(background.Value);
+                                    textBytes.Add(0x1d);
+                                    coloredBoxOpen = true;
+                                }
+                                i = end + 1;
+                            }
+                            else
+                            {
+                                i += "<box".Length;
+                            }
+                        }
                         else if (newStart.StartsWith("</box>".AsSpan(), StringComparison.Ordinal))
                         {
                             i += "</box>".Length;
-                            textBytes.Add(boxingOff);
+                            textBytes.Add(coloredBoxOpen && displayStandardCode != "0" ? (byte)0x1c : boxingOff);
+                            coloredBoxOpen = false;
                         }
                         else
                         {
@@ -1904,6 +1927,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var max = i + 112;
                 sb.Clear();
                 var lastWasNewLine = false;
+                byte? currentTeletextForeground = null;
+                var coloredBoxOpen = false;
                 while (i < max)
                 {
                     var b = buffer[i];
@@ -1911,10 +1936,26 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         if (closed)
                         {
-                            var tag = GetColorOrTag(b);
-                            if (!string.IsNullOrEmpty(tag))
+                            if (b <= 0x07)
                             {
-                                CloseFontTagIfNewColor(sb, tag);
+                                currentTeletextForeground = b;
+                                var tag = GetColorOrTag(b);
+                                if (!string.IsNullOrEmpty(tag))
+                                {
+                                    CloseFontTagIfNewColor(sb, tag);
+                                }
+                            }
+                            else if (b == 0x1d && currentTeletextForeground != null)
+                            {
+                                sb.Append("<box color=\"");
+                                sb.Append(GetColorName(currentTeletextForeground.Value));
+                                sb.Append("\">");
+                                coloredBoxOpen = true;
+                            }
+                            else if (b == 0x1c && coloredBoxOpen)
+                            {
+                                sb.Append("</box>");
+                                coloredBoxOpen = false;
                             }
                         }
                     }

@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
@@ -383,6 +384,23 @@ public sealed class FlowEditingView : Border
                     textBox),
                 DispatcherPriority.Background);
 
+        // A correction can change only colour tags while leaving the visible text
+        // unchanged. In that case TextBox.TextChanged does not fire, so refresh
+        // the overlay from the canonical subtitle explicitly.
+        item.PropertyChanged +=
+            (_, e) =>
+            {
+                if (e.PropertyName == nameof(FlowEditingItem.CanonicalText))
+                {
+                    Dispatcher.UIThread.Post(
+                        () => UpdateFlowInlineColorOverlay(
+                            colorOverlay,
+                            item,
+                            textBox),
+                        DispatcherPriority.Background);
+                }
+            };
+
         var editorLayers = new Grid();
         editorLayers.Children.Add(textBox);
         editorLayers.Children.Add(colorOverlay);
@@ -474,6 +492,35 @@ public sealed class FlowEditingView : Border
                 .OrderBy(run => run.Start)
                 .ToList();
 
+        IBrush? boxBrush = null;
+        var boxMatch = Regex.Match(item.Source.Text,
+            "<box\\b[^>]*\\bcolor\\s*=\\s*(?:\\\"(?<c>[^\\\"]+)\\\"|'(?<c>[^']+)'|(?<c>[^\\s>]+))",
+            RegexOptions.IgnoreCase);
+        if (boxMatch.Success)
+        {
+            boxBrush = GetFlowTeletextColorBrush(boxMatch.Groups["c"].Value, Brushes.Black);
+        }
+
+        void AddOverlayText(string text, IBrush? foreground)
+        {
+            var lines = text.Replace("\r\n", "\n").Replace('\r', '\n').Split('\n');
+            for (var lineIndex = 0; lineIndex < lines.Length; lineIndex++)
+            {
+                if (lines[lineIndex].Length > 0)
+                {
+                    overlay.Inlines?.Add(new Run(lines[lineIndex])
+                    {
+                        Foreground = foreground,
+                        Background = boxBrush,
+                    });
+                }
+                if (lineIndex < lines.Length - 1)
+                {
+                    overlay.Inlines?.Add(new LineBreak());
+                }
+            }
+        }
+
         // TEMPORARY DEBUG: write exactly what the Flow renderer receives for
         // the sample subtitle containing "Teletext-2" to a file. This avoids
         // relying on stdout from the macOS GUI process.
@@ -518,25 +565,14 @@ public sealed class FlowEditingView : Border
 
             if (start > position)
             {
-                overlay.Inlines?.Add(
-                    new Run(
-                        visibleText[position..start])
-                    {
-                        Foreground = Brushes.White,
-                    });
+                AddOverlayText(visibleText[position..start], Brushes.White);
             }
 
             if (end > start)
             {
-                overlay.Inlines?.Add(
-                    new Run(
-                        visibleText[start..end])
-                    {
-                        Foreground =
-                            GetFlowTeletextColorBrush(
-                                colorRun.Color,
-                                item.Foreground),
-                    });
+                AddOverlayText(
+                    visibleText[start..end],
+                    GetFlowTeletextColorBrush(colorRun.Color, item.Foreground));
             }
 
             position =
@@ -547,12 +583,7 @@ public sealed class FlowEditingView : Border
 
         if (position < visibleText.Length)
         {
-            overlay.Inlines?.Add(
-                new Run(
-                    visibleText[position..])
-                {
-                    Foreground = Brushes.White,
-                });
+            AddOverlayText(visibleText[position..], Brushes.White);
         }
 
         if (visibleText.Length == 0)

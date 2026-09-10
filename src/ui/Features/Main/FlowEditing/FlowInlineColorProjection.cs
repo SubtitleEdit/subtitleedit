@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Features.Main.FlowEditing;
 internal sealed class FlowInlineColorProjection
 {
     private static readonly Regex HiddenTokenRegex = new(
-        "(?<alignment>\\{\\\\an[1-9]\\})|(?<fontOpen><font\\b[^>]*>)|(?<fontClose></font\\s*>)",
+        "(?<alignment>\\{\\\\an[1-9]\\})|(?<boxOpen><box\\b[^>]*>)|(?<boxClose></box\\s*>)|(?<fontOpen><font\\b[^>]*>)|(?<fontClose></font\\s*>)",
         RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
     private static readonly Regex ColorAttributeRegex = new(
@@ -65,6 +65,14 @@ internal sealed class FlowInlineColorProjection
                     match.Value,
                     tokenOrder++,
                     BeforeColorTransition: true));
+            }
+            else if (match.Groups["boxOpen"].Success || match.Groups["boxClose"].Success)
+            {
+                tokens.Add(new FlowInlineHiddenToken(
+                    visible.Length,
+                    match.Value,
+                    tokenOrder++,
+                    BeforeColorTransition: match.Groups["boxOpen"].Success));
             }
             else if (match.Groups["fontOpen"].Success)
             {

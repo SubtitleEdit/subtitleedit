@@ -16,6 +16,10 @@ public static partial class FlowTextParser
         "</?font\\b[^>]*>",
         RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
+    private static readonly Regex BoxTagRegex = new(
+        "</?box\\b[^>]*>",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
     private static readonly Regex AlignmentTagRegex = new(
         "\\{\\\\an[1-9]\\}",
         RegexOptions.IgnoreCase | RegexOptions.Compiled);
@@ -47,6 +51,8 @@ public static partial class FlowTextParser
             FontTagRegex.Replace(
                 source,
                 string.Empty);
+
+        cleanText = BoxTagRegex.Replace(cleanText, string.Empty);
 
         cleanText =
             AlignmentTagRegex.Replace(

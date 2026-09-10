@@ -348,6 +348,17 @@ public class FlowInlineColorProjectionTests
         Assert.Equal('e', projection.VisibleText[caretIndex]);
     }
 
+    [Fact]
+    public void BoxingTagsStayOutsideTheVisibleTextAndCaretOffsets()
+    {
+        var projection = FlowInlineColorProjection.Parse(
+            "<box color=\"White\"><font color=\"Black\">one</font> two</box>");
+
+        Assert.Equal("one two", projection.VisibleText);
+        Assert.Equal("Black", ColorAt(projection, 0));
+        Assert.Equal(4, FlowEditingView.GetCaretIndexForLogicalBoundary(projection.VisibleText, 4));
+    }
+
     private static string? ColorAt(FlowInlineColorProjection projection, int offset) => projection.ColorRuns
         .SingleOrDefault(p => p.Start <= offset && p.End > offset)
         ?.Color;

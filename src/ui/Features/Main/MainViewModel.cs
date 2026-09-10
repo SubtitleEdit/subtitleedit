@@ -33,6 +33,7 @@ using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Features.Assa;
+using Nikse.SubtitleEdit.Features.Main.FlowEditing;
 using Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect;
 using Nikse.SubtitleEdit.Features.Assa.AssaApplyCustomOverrideTags;
 using Nikse.SubtitleEdit.Features.Assa.AssaDraw;
@@ -27365,6 +27366,69 @@ public partial class MainViewModel :
 
         var merged = string.Join(Environment.NewLine, resultLines);
         return HtmlUtil.FixInvalidItalicTags(merged);
+    }
+
+    [RelayCommand]
+    private void ForceTeletextBox(string? boxColor)
+    {
+        if (!IsFormatEbu || !IsCurrentEbuSdh() || string.IsNullOrWhiteSpace(boxColor))
+        {
+            return;
+        }
+
+        var complement = boxColor switch
+        {
+            "White" => "Black", "Red" => "Cyan", "Green" => "Magenta",
+            "Yellow" => "Blue", "Blue" => "Yellow", "Magenta" => "Green",
+            "Cyan" => "Red", _ => "White",
+        };
+
+        foreach (var item in SubtitleGridSelectedItems)
+        {
+            var text = Regex.Replace(item.Text, @"</?box(?:\s+[^>]*)?>", string.Empty, RegexOptions.IgnoreCase);
+            var projection = FlowInlineColorProjection.Parse(text);
+            var position = 0;
+            foreach (var run in projection.ColorRuns.OrderBy(run => run.Start).ToList())
+            {
+                if (run.Start > position)
+                {
+                    projection = projection.ApplyColor(position, run.Start - position, complement);
+                }
+                if (string.Equals(run.Color, boxColor, StringComparison.OrdinalIgnoreCase))
+                {
+                    projection = projection.ApplyColor(run.Start, run.Length, complement);
+                }
+                position = Math.Max(position, run.End);
+            }
+
+            if (position < projection.VisibleText.Length)
+            {
+                projection = projection.ApplyColor(position, projection.VisibleText.Length - position, complement);
+            }
+
+            text = projection.Serialize();
+
+            item.Text = $"<box color=\"{boxColor}\">{text}</box>";
+        }
+    }
+
+    public bool IsCurrentEbuSdh()
+    {
+        try
+        {
+            if (!IsFormatEbu || string.IsNullOrWhiteSpace(_subtitle.Header) || _subtitle.Header.Length < 3)
+            {
+                return false;
+            }
+
+            var encoding = Ebu.GetEncoding(_subtitle.Header[..3]);
+            var header = Ebu.ReadHeader(encoding.GetBytes(_subtitle.Header));
+            return header.LanguageCode is "2D" or "2F";
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     private void ToggleItalic()
