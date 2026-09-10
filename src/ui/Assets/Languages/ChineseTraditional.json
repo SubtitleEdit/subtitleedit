@@ -1,6 +1,6 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.2.0-rc5",
+  "version": "v5.2.0-rc7",
   "translatedBy": "昇 | BAWAN | 風逸蘭 | Jackie Lam | SiderealArt",
   "cultureName": "zh-Hant",
   "general": {
@@ -402,6 +402,8 @@
     "openVideoFileTitle": "開啟視訊檔案...",
     "optimalCharactersPerSecond": "最佳字元數/秒",
     "options": "選項",
+    "originalSubtitleClosed": "已關閉原始字幕",
+    "originalSubtitleLoadedX": "已載入原始字幕：{0}",
     "originalText": "原件文字",
     "outline": "描邊",
     "outlineColor": "描邊顏色",
@@ -2366,6 +2368,7 @@
       "cloneVoicePerLinePreparing": "正在從視訊中擷取每行的語音……",
       "cloneVoicePerLineNeedsVideo": "要仿造每行的語音，需要該字幕所屬的視訊。請開啟視訊後再試一次。",
       "cloneVoicePerLineNoClips": "無法從視訊中擷取任何音訊，因此沒有可供仿造的內容。請確認視訊包含音軌。",
+      "cloneVoicePerLineNeedsOriginalSubtitleX": "{0} 只有在知道影片中該行說了什麼時才能複製該行的語音，而這需要原始語言的字幕。目前未載入原始字幕，因此每一行都會使用第一個匯入的語音來朗讀，而不是影片中的語音。\n\n請在翻譯字幕旁開啟原始字幕（檔案 > 開啟原件...），然後重新產生。",
       "voiceCloneConsentTitle": "進行語音仿造 - 開始前請注意",
       "voiceCloneConsentHeader": "您即將仿造一個語音",
       "voiceCloneConsentIntro": "仿造會複製真人的語音。大多數地區對此都有相關規範，而在歐盟，您本人須承擔相關法律義務，Subtitle Edit 不負責。請先閱讀以下內容。",
@@ -2668,6 +2671,7 @@
     "cloneVoiceExtractFailed": "無法擷取已選取行的音訊。",
     "toggleShotChange": "標記場景變更線",
     "resetWaveformZoomAndSpeed": "重置波形縮放＆速度",
+    "showOriginalSubtitle": "顯示原始字幕",
     "showOnlyWaveform": "僅顯示波形",
     "showOnlySpectrogram": "僅顯示頻譜圖",
     "showWaveformAndSpectrogram": "顯示波形和頻譜圖",

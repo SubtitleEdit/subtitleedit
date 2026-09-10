@@ -1,6 +1,6 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.2.0-rc5",
+  "version": "v5.2.0-rc7",
   "translatedBy": "Zityi's Translator Te@m",
   "cultureName": "hu-HU",
   "general": {
@@ -402,6 +402,8 @@
     "openVideoFileTitle": "Videófájl megnyitása",
     "optimalCharactersPerSecond": "Optimális karakter másodpercenként",
     "options": "Beállítások",
+    "originalSubtitleClosed": "Az eredeti felirat bezárva",
+    "originalSubtitleLoadedX": "Az eredeti felirat betöltve: {0}",
     "originalText": "Eredeti szöveg",
     "outline": "Körvonal",
     "outlineColor": "Körvonal színe",
@@ -2366,6 +2368,7 @@
       "cloneVoicePerLinePreparing": "Minden sor hangjának átvétele a videóból...",
       "cloneVoicePerLineNeedsVideo": "Minden sor hangjának klónozásához szükség van a videóra, amelyhez a felirat tartozik. Nyissa meg a videót, és próbálja újra.",
       "cloneVoicePerLineNoClips": "Nem sikerült hangot kinyerni a videóból, így nincs miből klónozni. Ellenőrizze, hogy a videó rendelkezik-e hangsávval.",
+      "cloneVoicePerLineNeedsOriginalSubtitleX": "A(z) {0} csak akkor tud egy sort klónozni, ha tudja, mi hangzik el a videóban az adott sornál – ez az eredeti nyelvű feliratból derül ki. Nincs betöltve eredeti felirat, ezért minden sort az elsőként importált hang mondana el a videóban hallható hang helyett.\n\nNyissa meg az eredeti feliratot a fordítás mellett (Fájl > Eredeti megnyitása...), majd készítse el újra.",
       "voiceCloneConsentTitle": "Hangklónozás - mielőtt elkezdené",
       "voiceCloneConsentHeader": "Ön egy hang klónozására készül",
       "voiceCloneConsentIntro": "A klónozás egy valós személy hangját másolja. Ez legtöbb helyen szabályokkal jár, az EU-ban pedig olyan jogi kötelezettségekkel, amelyek Önre hárulnak, nem a Subtitle Edit-re. Kérjük, olvassa el ezt egyszer.",
@@ -2668,6 +2671,7 @@
     "cloneVoiceExtractFailed": "Nem sikerült a hang kinyerése a kiválasztott sorhoz.",
     "toggleShotChange": "Vágásváltás ki-/bekapcsolása",
     "resetWaveformZoomAndSpeed": "Hullámforma nagyítás és sebesség visszaállítása",
+    "showOriginalSubtitle": "Eredeti felirat megjelenítése",
     "showOnlyWaveform": "Csak a hullámforma megjelenítése",
     "showOnlySpectrogram": "Csak a spektrogram megjelenítése",
     "showWaveformAndSpectrogram": "Hullámforma és spektrogram megjelenítése",

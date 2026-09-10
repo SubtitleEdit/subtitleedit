@@ -1,6 +1,6 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.2.0-rc6",
+  "version": "v5.2.0-rc7",
   "translatedBy": "igorruckert",
   "cultureName": "pt-BR",
   "general": {
@@ -1094,7 +1094,7 @@
     "videoAndWaveformPreviewTextX": "Prévia do vídeo/forma de onda: {0}",
     "xLinesCopiedFromOriginal": "{0} linhas copiadas da legenda original",
     "xLinesCopiedToOriginal": "{0} linhas copiadas para a legenda original",
-    "xLinesMerged": "Linhas combinadas",
+    "xLinesMerged": "{0} linhas combinadas",
     "xLinesSelectedOfY": "{0} linhas selecionadas de {1}",
     "xLinesSwitched": "{0} linhas trocadas",
     "xShotChangedLoaded": "{0} mudanças de cena carregadas",
@@ -2857,7 +2857,7 @@
       "minGapCalculateFrames": "Intervalo mínimo em quadros",
       "minGapCalculateXFramesAtYGivesZMs": "{0} quadros a uma taxa de quadros de {1} fornecem {2} milissegundos.",
       "minGapCalculateUseXAsNewGap": "Use \"{0}\" milissegundos como novo intervalo mínimo?",
-      "maxLines": "Colorir texto se tiver mais de {0} linhas",
+      "maxLines": "Número máximo de linhas",
       "unbreakSubtitlesShortThan": "Unir legendas menores que",
       "autoBreakLineEndingEarly": "Quebra automática antecipada para final de frase (.!?)",
       "autoBreakCommaBreakEarly": "Quebra automática antecipada para vírgula",

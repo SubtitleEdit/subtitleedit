@@ -1,6 +1,6 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.2.0-rc5",
+  "version": "v5.2.0-rc7",
   "translatedBy": "",
   "cultureName": "ru-RU",
   "general": {
@@ -1094,7 +1094,7 @@
     "videoAndWaveformPreviewTextX": "Предварительный просмотр видео/волновой формы: {0}",
     "xLinesCopiedFromOriginal": "{0} строк, скопированных из оригинального субтитра",
     "xLinesCopiedToOriginal": "{0} строк скопировано в исходный субтитр",
-    "xLinesMerged": "Линии X объединены",
+    "xLinesMerged": "Объединено строк: {0}",
     "xLinesSelectedOfY": "{0} строк выбрано из {1}",
     "xLinesSwitched": "{0} строк переключены",
     "xShotChangedLoaded": "{0} изменения кадра загружены",
@@ -2671,6 +2671,7 @@
     "cloneVoiceExtractFailed": "Не удалось извлечь аудио для выбранной строки.",
     "toggleShotChange": "Переключить смену кадра",
     "resetWaveformZoomAndSpeed": "Сбросить масштабирование и скорость отображения осциллограммы",
+    "showOriginalSubtitle": "Показывать оригинальные субтитры",
     "showOnlyWaveform": "Показать только осциллограмму",
     "showOnlySpectrogram": "Показать только спектрограмму",
     "showWaveformAndSpectrogram": "Отобразить осциллограмму и спектрограмму",

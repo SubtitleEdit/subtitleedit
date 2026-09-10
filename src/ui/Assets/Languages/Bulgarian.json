@@ -1,6 +1,6 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.2.0-rc5",
+  "version": "v5.2.0-rc7",
   "translatedBy": "",
   "cultureName": "bg-BG",
   "general": {
@@ -2671,6 +2671,7 @@
     "cloneVoiceExtractFailed": "Не можа да се извлече аудио за избрания ред.",
     "toggleShotChange": "Превключви за промяната на кадъра",
     "resetWaveformZoomAndSpeed": "Нулиране мащабирането и скоростта на вълновата форма",
+    "showOriginalSubtitle": "Показвай оригиналните субтитри",
     "showOnlyWaveform": "Показване само на вълнова форма",
     "showOnlySpectrogram": "Показване само на спектрограма",
     "showWaveformAndSpectrogram": "Показване на форма на вълната и спектрограма",
