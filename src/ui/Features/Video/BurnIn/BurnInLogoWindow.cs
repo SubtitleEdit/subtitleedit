@@ -73,11 +73,14 @@ public class BurnInLogoWindow : Window
         };
         sliderAlpha.ValueChanged += (_, _) => vm.UpdateOverlayOpacity();
 
-        var labelAlphaValue = UiUtil.MakeLabel();
-        labelAlphaValue.VerticalAlignment = VerticalAlignment.Center;
-        labelAlphaValue.Margin = new Thickness(5, 0, 0, 0);
-        labelAlphaValue.MinWidth = 35;
-        labelAlphaValue[!TextBlock.TextProperty] = new Binding($"{nameof(vm.BurnInLogo)}.{nameof(vm.BurnInLogo.Alpha)}") { StringFormat = "{0}%" };
+        // TextBlock, not UiUtil.MakeLabel: a Label is a ContentControl, so a TextBlock.Text binding on it never shows
+        var labelAlphaValue = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(5, 0, 0, 0),
+            MinWidth = 35,
+            [!TextBlock.TextProperty] = new Binding($"{nameof(vm.BurnInLogo)}.{nameof(vm.BurnInLogo.Alpha)}") { StringFormat = "{0}%" },
+        };
 
         // Logo size slider
         var labelSize = UiUtil.MakeLabel(Se.Language.General.Size);
@@ -94,11 +97,14 @@ public class BurnInLogoWindow : Window
         };
         sliderSize.ValueChanged += (_, _) => vm.UpdateLogoSize();
 
-        var labelSizeValue = UiUtil.MakeLabel();
-        labelSizeValue.VerticalAlignment = VerticalAlignment.Center;
-        labelSizeValue.Margin = new Thickness(5, 0, 0, 0);
-        labelSizeValue.MinWidth = 35;
-        labelSizeValue[!TextBlock.TextProperty] = new Binding($"{nameof(vm.BurnInLogo)}.{nameof(vm.BurnInLogo.Size)}") { StringFormat = "{0}%" };
+        // TextBlock, not UiUtil.MakeLabel: a Label is a ContentControl, so a TextBlock.Text binding on it never shows
+        var labelSizeValue = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(5, 0, 0, 0),
+            MinWidth = 35,
+            [!TextBlock.TextProperty] = new Binding($"{nameof(vm.BurnInLogo)}.{nameof(vm.BurnInLogo.Size)}") { StringFormat = "{0}%" },
+        };
 
         topPanel.Children.Add(buttonPickLogo);
         topPanel.Children.Add(labelLogoPosition);
