@@ -46,6 +46,9 @@ public class LanguageImageBasedEdit
     public string MoveCaptionsIntoPicture { get; set; }
     public string MoveCaptionsOffset { get; set; }
     public string LetterboxBarHeightXPxYOfZCaptionsWillMove { get; set; }
+    public string RemoveFadeInOut { get; set; }
+    public string RemoveFadeInOutXLinesRemoved { get; set; }
+    public string RemoveFadeInOutNothingFound { get; set; }
     public string PositionSummary { get; set; }
     public string XInActivePicture { get; set; }
     public string XInTopBar { get; set; }
@@ -99,6 +102,9 @@ public class LanguageImageBasedEdit
         MoveCaptionsIntoPicture = "Inside the picture (out of the bars)";
         MoveCaptionsOffset = "Offset from edge (px)";
         LetterboxBarHeightXPxYOfZCaptionsWillMove = "Bar height: {0} px - {1} of {2} captions will move";
+        RemoveFadeInOut = "Remove fade in/out";
+        RemoveFadeInOutXLinesRemoved = "{0} fade lines merged into the lines they belong to";
+        RemoveFadeInOutNothingFound = "No fade in/out lines found";
         PositionSummary = "{0}×{1} - {2} subtitles - bar height: {3} px";
         XInActivePicture = "{0} in picture";
         XInTopBar = "{0} in top bar";

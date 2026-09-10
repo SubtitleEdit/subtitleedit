@@ -56,6 +56,7 @@ public static class InitNativeMacMenuBinaryEdit
         Add(toolsMenu, l.ApplyDurationLimits, vm.ApplyDurationLimitsCommand);
         toolsMenu.Items.Add(new NativeMenuItemSeparator());
         Add(toolsMenu, Se.Language.Tools.ImageBasedEdit.SortByStartTime, vm.SortByStartTimeCommand);
+        Add(toolsMenu, Se.Language.Tools.ImageBasedEdit.RemoveFadeInOut, vm.RemoveFadesCommand);
         Add(toolsMenu, Se.Language.Tools.ImageBasedEdit.AppendSubtitleDotDotDot, vm.AppendSubtitleCommand);
         root.Items.Add(new NativeMenuItem(Clean(l.Tools)) { Menu = toolsMenu });
 

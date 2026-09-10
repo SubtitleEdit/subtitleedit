@@ -360,6 +360,11 @@ public class BinaryEditWindow : Window
                 },
                 new MenuItem
                 {
+                    Header = Se.Language.Tools.ImageBasedEdit.RemoveFadeInOut,
+                    Command = vm.RemoveFadesCommand,
+                },
+                new MenuItem
+                {
                     Header = Se.Language.Tools.ImageBasedEdit.AppendSubtitleDotDotDot,
                     Command = vm.AppendSubtitleCommand,
                 },
