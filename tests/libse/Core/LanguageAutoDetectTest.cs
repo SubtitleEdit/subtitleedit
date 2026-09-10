@@ -45,6 +45,14 @@ public class LanguageAutoDetectTest
     }
 
     [Fact]
+    public void AutoDetectCodePage1254()
+    {
+        // Issue #10095: Turkish subtitle saved as Windows-1254 was reopened as 1252.
+        var encoding = DetectAnsiEncoding("auto_detect_windows-1254.srt");
+        Assert.Equal(1254, encoding.CodePage);
+    }
+
+    [Fact]
     public void AutoDetectCodePage1251()
     {
         var encoding = DetectAnsiEncoding("auto_detect_windows-1251.srt");
