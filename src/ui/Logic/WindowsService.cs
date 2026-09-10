@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia;
@@ -1169,12 +1169,31 @@ namespace Nikse.SubtitleEdit.Logic
             owner.Deactivated += OnFocusChanged;
             child.Activated += OnFocusChanged;
             child.Deactivated += OnFocusChanged;
+            // A topmost owned window promotes its owner chain to WS_EX_TOPMOST on Windows, and
+            // the promotion outlives the child: closing it while it is still topmost - the normal
+            // end of any dialog the user finishes with SE in the foreground - leaves the main
+            // window above every other application until a minimize/restore rebuilds its z-order
+            // state (#14736, the close-time half of #14564). Demote at Closing, not Closed: by
+            // Closed the child's HWND is gone and the owner can no longer be demoted through it.
+            // Windows makes the owners of a window that is made non-topmost non-topmost too, so
+            // this hands the whole stack back.
+            child.Closing += (_, _) =>
+            {
+                if (child.Topmost)
+                {
+                    SetTopmost(child, false, owner);
+                }
+            };
             child.Closed += (_, _) =>
             {
                 owner.Activated -= OnFocusChanged;
                 owner.Deactivated -= OnFocusChanged;
                 child.Activated -= OnFocusChanged;
                 child.Deactivated -= OnFocusChanged;
+
+                // Backstop for a child closed without Closing ever being raised, and for nested
+                // modals, where the promotion can come from more than one level of the chain.
+                ClearStrayTopmost(owner);
             };
 
             SetTopmost(child, suppress?.Invoke() != true && (owner.IsActive || child.IsActive), owner);
@@ -1245,6 +1264,30 @@ namespace Nikse.SubtitleEdit.Logic
             window.Topmost = true;
         }
 
+        /// <summary>
+        /// Drops a stray WS_EX_TOPMOST the OS put on <paramref name="window"/> behind Avalonia's
+        /// back. Windows promotes the owner of a topmost window to topmost as well, and when the
+        /// owned window is destroyed rather than demoted first, that promotion simply stays -
+        /// with Avalonia's own Topmost still false, so nothing in the managed layer clears it,
+        /// and SE floats above every other application for the rest of the session (#14736).
+        /// No-op when the window is meant to be topmost, and off Windows.
+        /// </summary>
+        private static void ClearStrayTopmost(Window window)
+        {
+            if (!OperatingSystem.IsWindows() || window.Topmost)
+            {
+                return;
+            }
+
+            var handle = window.TryGetPlatformHandle()?.Handle ?? IntPtr.Zero;
+            if (handle == IntPtr.Zero || (GetWindowLongW(handle, GwlExStyle) & WsExTopmost) == 0)
+            {
+                return;
+            }
+
+            SetWindowPos(handle, HwndNoTopmost, 0, 0, 0, 0, SwpNoSize | SwpNoMove | SwpNoActivate);
+        }
+
         private static void KeepBelowForeignForegroundWindow(Window window, Window reference)
         {
             if (!OperatingSystem.IsWindows())
@@ -1311,6 +1354,7 @@ namespace Nikse.SubtitleEdit.Logic
         private const uint SwpNoSize = 0x0001;
         private const uint SwpNoMove = 0x0002;
         private const uint SwpNoActivate = 0x0010;
+        private static readonly IntPtr HwndNoTopmost = new IntPtr(-2);
 
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         private static extern IntPtr GetForegroundWindow();
