@@ -39,6 +39,13 @@ public class LanguageImageBasedEdit
     public string LetterboxCustom { get; set; }
     public string BarHeightPx { get; set; }
     public string TitleSafePercent { get; set; }
+    public string MoveCaptions { get; set; }
+    public string MoveCaptionsDotDotDot { get; set; }
+    public string MoveCaptionsTo { get; set; }
+    public string MoveCaptionsIntoBars { get; set; }
+    public string MoveCaptionsIntoPicture { get; set; }
+    public string MoveCaptionsOffset { get; set; }
+    public string LetterboxBarHeightXPxYOfZCaptionsWillMove { get; set; }
     public string PositionSummary { get; set; }
     public string XInActivePicture { get; set; }
     public string XInTopBar { get; set; }
@@ -85,6 +92,13 @@ public class LanguageImageBasedEdit
         LetterboxCustom = "Custom bar height";
         BarHeightPx = "Bar height (px)";
         TitleSafePercent = "Title-safe (%)";
+        MoveCaptions = "Move captions";
+        MoveCaptionsDotDotDot = "Move captions...";
+        MoveCaptionsTo = "Move captions";
+        MoveCaptionsIntoBars = "Into the letterbox bars (outside the picture)";
+        MoveCaptionsIntoPicture = "Inside the picture (out of the bars)";
+        MoveCaptionsOffset = "Offset from edge (px)";
+        LetterboxBarHeightXPxYOfZCaptionsWillMove = "Bar height: {0} px - {1} of {2} captions will move";
         PositionSummary = "{0}×{1} - {2} subtitles - bar height: {3} px";
         XInActivePicture = "{0} in picture";
         XInTopBar = "{0} in top bar";

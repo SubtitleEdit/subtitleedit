@@ -1640,6 +1640,60 @@ public partial class BinaryEditViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task MoveCaptions()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        if (Subtitles.Count == 0)
+        {
+            await MessageBox.Show(Window, Se.Language.General.Information,
+                Se.Language.Tools.ImageBasedEdit.NoImageSubtitlesLoaded,
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        await ShowMoveCaptions(Subtitles.ToList());
+    }
+
+    [RelayCommand]
+    private async Task MoveCaptionsSelectedLines()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var selectedItems = GetSelectedItems();
+        if (selectedItems.Count == 0)
+        {
+            return;
+        }
+
+        await ShowMoveCaptions(selectedItems);
+        ApplyGridSelection(selectedItems);
+    }
+
+    private async Task ShowMoveCaptions(List<BinarySubtitleItem> items)
+    {
+        // Open on the letterbox the position monitor already shows.
+        var ratioKey = SelectedLetterboxRatio.SettingsKey;
+        var barHeight = _currentLetterboxBarHeight;
+        var result = await _windowService.ShowDialogAsync<BinaryMoveCaptions.BinaryMoveCaptionsWindow, BinaryMoveCaptions.BinaryMoveCaptionsViewModel>(
+            Window!, vm => vm.Initialize(items, ScreenWidth, ScreenHeight, ratioKey, barHeight));
+
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        UpdateOverlayPosition();
+        RefreshPositionMonitor();
+    }
+
+    [RelayCommand]
     private async Task ResizeImagesSelectedLines()
     {
         if (Window == null)
