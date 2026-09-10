@@ -6389,12 +6389,7 @@ public partial class MainViewModel :
         var spectrogramFileName = WavePeakGenerator2.SpectrogramDrawer.GetSpectrogramFileName(_videoFileName, _audioTrack?.FfIndex ?? -1);
         if (File.Exists(spectrogramFileName))
         {
-            var spectrogram = SpectrogramData2.FromDisk(spectrogramFileName);
-            if (spectrogram != null)
-            {
-                spectrogram.Load();
-                AudioVisualizer.SetSpectrogram(spectrogram);
-            }
+            AudioVisualizer.SetSpectrogram(TryLoadCachedSpectrogram(spectrogramFileName));
 
             AudioVisualizer.ResetCache();
             _updateAudioVisualizer = true;
@@ -10520,7 +10515,12 @@ public partial class MainViewModel :
             return;
         }
 
-        var wavePeaks = WavePeakData2.FromDisk(peakWaveFileName);
+        var wavePeaks = TryLoadCachedPeaks(peakWaveFileName);
+        if (wavePeaks == null)
+        {
+            return;
+        }
+
         if (AudioVisualizer != null)
         {
             AudioVisualizer.WavePeaks = wavePeaks;
@@ -10533,12 +10533,7 @@ public partial class MainViewModel :
             var spectrogramFileName = WavePeakGenerator2.SpectrogramDrawer.GetSpectrogramFileName(_videoFileName, _audioTrack?.FfIndex ?? -1);
             if (File.Exists(spectrogramFileName))
             {
-                var spectrogram = SpectrogramData2.FromDisk(spectrogramFileName);
-                if (spectrogram != null)
-                {
-                    spectrogram.Load();
-                    AudioVisualizer.SetSpectrogram(spectrogram);
-                }
+                AudioVisualizer.SetSpectrogram(TryLoadCachedSpectrogram(spectrogramFileName));
             }
 
             InitializeWaveformDisplayMode();
@@ -25802,7 +25797,24 @@ public partial class MainViewModel :
         else if (File.Exists(peakWaveFileName))
         {
             ShowStatus(Se.Language.Main.LoadingWaveInfoFromCache);
-            var wavePeaks = WavePeakData2.FromDisk(peakWaveFileName);
+            var wavePeaks = TryLoadCachedPeaks(peakWaveFileName);
+            if (wavePeaks == null)
+            {
+                // The cache file was corrupt and has now been thrown away, so extraction can
+                // produce a good one - which is the whole point of deleting it. With
+                // auto-generate off, the hint lets the user start that extraction.
+                if (Se.Settings.Waveform.WaveformAutoGenerate)
+                {
+                    StartWaveformExtraction(videoFileName, trackNumber, peakWaveFileName, spectrogramFileName);
+                }
+                else
+                {
+                    ShowClickToGenerateWaveformHint();
+                }
+
+                return;
+            }
+
             if (AudioVisualizer != null)
             {
                 Dispatcher.UIThread.Post(() =>
@@ -25815,12 +25827,9 @@ public partial class MainViewModel :
                         AudioVisualizer.UseSmpteDropFrameTime();
                     }
 
-                    var spectrogram = SpectrogramData2.FromDisk(spectrogramFileName);
-                    if (spectrogram != null)
-                    {
-                        spectrogram.Load();
-                        AudioVisualizer.SetSpectrogram(spectrogram);
-                    }
+                    // Always set it, null included: that is what clears the previously opened
+                    // video's spectrogram when this one has none.
+                    AudioVisualizer.SetSpectrogram(TryLoadCachedSpectrogram(spectrogramFileName));
 
                     InitializeWaveformDisplayMode();
 
@@ -25841,14 +25850,85 @@ public partial class MainViewModel :
                 });
             }
         }
-        else if (AudioVisualizer != null)
+        else
         {
             // No cached waveform and auto-generate is off: show the click-to-generate hint.
-            Dispatcher.UIThread.Post(() =>
-            {
-                AudioVisualizer.ShowClickToGenerateHint = true;
-                AudioVisualizer.InvalidateVisual();
-            });
+            ShowClickToGenerateWaveformHint();
+        }
+    }
+
+    private void ShowClickToGenerateWaveformHint()
+    {
+        var audioVisualizer = AudioVisualizer;
+        if (audioVisualizer == null)
+        {
+            return;
+        }
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            audioVisualizer.ShowClickToGenerateHint = true;
+            audioVisualizer.InvalidateVisual();
+        });
+    }
+
+    /// <summary>
+    /// Reads cached wave peaks, discarding the cache file when it cannot be read.
+    /// </summary>
+    /// <remarks>
+    /// A cache file left half-written by a crash (#14751) is not a one-off annoyance: nothing on
+    /// this path looks past File.Exists, so the same ruined file is re-read on every open of that
+    /// video and the failure repeats forever. Deleting it lets the next extraction replace it.
+    /// </remarks>
+    private static WavePeakData2? TryLoadCachedPeaks(string peakWaveFileName)
+    {
+        try
+        {
+            return WavePeakData2.FromDisk(peakWaveFileName);
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, $"Discarding unreadable waveform cache file: {peakWaveFileName}");
+            DeleteCorruptCacheFile(peakWaveFileName);
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Reads a cached spectrogram, discarding the cache file when it cannot be read. Returns null
+    /// when there is no spectrogram to show - which is also the normal case for a video whose
+    /// peaks were extracted with the spectrogram setting off.
+    /// </summary>
+    private static SpectrogramData2? TryLoadCachedSpectrogram(string spectrogramFileName)
+    {
+        if (!File.Exists(spectrogramFileName))
+        {
+            return null;
+        }
+
+        var spectrogram = SpectrogramData2.FromDisk(spectrogramFileName);
+        if (spectrogram.Load())
+        {
+            return spectrogram;
+        }
+
+        // The file was there a moment ago but would not load. Drop it, so the missing
+        // spectrogram makes the next open of this video extract a fresh one.
+        Se.LogError($"Discarding unreadable spectrogram cache file: {spectrogramFileName}");
+        spectrogram.Dispose();
+        DeleteCorruptCacheFile(spectrogramFileName);
+        return null;
+    }
+
+    private static void DeleteCorruptCacheFile(string fileName)
+    {
+        try
+        {
+            File.Delete(fileName);
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, $"Unable to delete corrupt cache file: {fileName}");
         }
     }
 
