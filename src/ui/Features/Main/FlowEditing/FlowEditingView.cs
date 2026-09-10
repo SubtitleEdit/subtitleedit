@@ -268,7 +268,7 @@ public sealed class FlowEditingView : Border
         // transparent so the read-only inline-colour overlay can draw the visible
         // text without changing caret, selection, Return, Backspace or bindings.
         textBox.Foreground = Brushes.Transparent;
-        textBox.CaretBrush = item.Foreground;
+        textBox.CaretBrush = GetFlowCaretBrush(item.Source.Text, item.Foreground ?? Brushes.White);
 
         _lastValidTeletextText[item] =
             item.Text ?? string.Empty;
@@ -501,6 +501,10 @@ public sealed class FlowEditingView : Border
             boxBrush = GetFlowTeletextColorBrush(boxMatch.Groups["c"].Value, Brushes.Black);
         }
 
+        // The native editor owns the caret, while the overlay owns the coloured
+        // glyphs. Make the caret contrast with a forced box colour as well.
+        textBox.CaretBrush = GetFlowCaretBrush(item.Source.Text, item.Foreground ?? Brushes.White);
+
         void AddOverlayText(string text, IBrush? foreground)
         {
             var lines = text.Replace("\r\n", "\n").Replace('\r', '\n').Split('\n');
@@ -519,32 +523,6 @@ public sealed class FlowEditingView : Border
                     overlay.Inlines?.Add(new LineBreak());
                 }
             }
-        }
-
-        // TEMPORARY DEBUG: write exactly what the Flow renderer receives for
-        // the sample subtitle containing "Teletext-2" to a file. This avoids
-        // relying on stdout from the macOS GUI process.
-        if (visibleText.Contains("Teletext-2", StringComparison.Ordinal))
-        {
-            var debug = new System.Text.StringBuilder();
-            debug.AppendLine("=== FLOW COLOR DEBUG ===");
-            debug.AppendLine($"VisibleText: [{projection.VisibleText}]");
-            debug.AppendLine($"Canonical : [{item.Source.Text}]");
-            debug.AppendLine($"ColorRuns : {runs.Count}");
-
-            for (var i = 0; i < runs.Count; i++)
-            {
-                var debugRun = runs[i];
-                var debugStart = Math.Clamp(debugRun.Start, 0, projection.VisibleText.Length);
-                var debugEnd = Math.Clamp(debugRun.End, debugStart, projection.VisibleText.Length);
-                var debugText = projection.VisibleText[debugStart..debugEnd];
-
-                debug.AppendLine(
-                    $"Run {i}: Start={debugRun.Start}, Length={debugRun.Length}, End={debugRun.End}, Color={debugRun.Color}, Text=[{debugText}]");
-            }
-
-            debug.AppendLine("========================");
-            System.IO.File.WriteAllText("/tmp/flow-color-debug.txt", debug.ToString());
         }
 
         var position = 0;
@@ -572,7 +550,7 @@ public sealed class FlowEditingView : Border
             {
                 AddOverlayText(
                     visibleText[start..end],
-                    GetFlowTeletextColorBrush(colorRun.Color, item.Foreground));
+                    GetFlowTeletextColorBrush(colorRun.Color, item.Foreground ?? Brushes.White));
             }
 
             position =
@@ -608,6 +586,31 @@ public sealed class FlowEditingView : Border
             "white" => new SolidColorBrush(Color.FromRgb(0xFF, 0xFF, 0xFF)),
             _ => fallback,
         };
+    }
+
+    private static IBrush GetFlowCaretBrush(string canonicalText, IBrush fallback)
+    {
+        var boxMatch = Regex.Match(canonicalText,
+            "<box\\b[^>]*\\bcolor\\s*=\\s*(?:\\\"(?<c>[^\\\"]+)\\\"|'(?<c>[^']+)'|(?<c>[^\\s>]+))",
+            RegexOptions.IgnoreCase);
+        if (!boxMatch.Success)
+        {
+            return fallback;
+        }
+
+        var contrastingColor = boxMatch.Groups["c"].Value.Trim().ToLowerInvariant() switch
+        {
+            "black" => "White",
+            "white" => "Black",
+            "red" => "Cyan",
+            "green" => "Magenta",
+            "yellow" => "Blue",
+            "blue" => "Yellow",
+            "magenta" => "Green",
+            "cyan" => "Red",
+            _ => "White",
+        };
+        return GetFlowTeletextColorBrush(contrastingColor, fallback);
     }
 
 
