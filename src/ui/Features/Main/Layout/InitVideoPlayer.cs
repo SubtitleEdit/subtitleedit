@@ -76,23 +76,12 @@ public static class InitVideoPlayer
                 await control.Open(mediaFile);
                 await control.WaitForPlayersReadyAsync();
 
-                // A second rebuild within the ready wait (Options/OK, dock/undock) disposes
-                // this control's player via the block above - stop restoring into it (#13083).
-                for (var i = 0; i < 10; i++)
-                {
-                    await System.Threading.Tasks.Task.Delay(10);
-                    if (control.IsDisposed)
-                    {
-                        return;
-                    }
-
-                    control.Position = position;
-                }
-
-                // Only if the player really got there - the loop above is a fixed 100 ms of
-                // seeks, so a player still loading when it runs out would otherwise be handed
-                // back as the truth while it still reports 0 (issue #14218).
-                control.EndPositionRestoreIfArrived();
+                // Seeks until the player reports it arrived, and bails out when a second rebuild
+                // within the ready wait (Options/OK, dock/undock) disposes this control's player
+                // via the block above (#13083). Doing this by hand here - ten assignments to
+                // Position - is what left the video, and with it the waveform, at 0:00 after a
+                // settings change on a long file (issue #14741).
+                await control.RestorePositionAsync(position);
             });
         }
 
