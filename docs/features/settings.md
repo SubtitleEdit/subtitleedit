@@ -114,7 +114,7 @@ The subtitle rules that drive error checking, the grid's warning colors, and too
 
 ## Toolbar
 
-One checkbox per toolbar button, so the main toolbar can be trimmed to what you use: new, open, open video, save, save as, find, replace, multiple replace, spell check, fix common errors, remove text for hearing impaired, visual sync, point sync, beautify time codes, burn-in, auto-translate, speech to text, settings, layout, source view, help, encoding, frame rate, and the format-specific icons (style manager, properties, attachments, ASSA draw) that only appear for ASSA/SSA/WebVTT files.
+Toggle the icon tiles to choose which buttons appear on the main toolbar: new, open, open video, save, save as, find, replace, multiple replace, spell check, fix common errors, remove text for hearing impaired, visual sync, point sync, beautify time codes, burn-in, auto-translate, speech to text, settings, layout, source view, help, and the format-specific icons (style manager, properties, attachments, ASSA draw) that only appear for ASSA/SSA/WebVTT files. Selected tiles show a check mark. Separate checkboxes control the encoding and frame rate selectors.
 
 ## Network
 
