@@ -2517,6 +2517,21 @@ public partial class SettingsViewModel : ObservableObject
     {
         if (Directory.Exists(Se.WaveformsFolder))
         {
+            // Cache files are written through a "<name>.tmp" file next to the destination, so a
+            // crashed extraction can leave one behind; sweep those too, or "Delete" would leave
+            // the folder holding files the size info below still counts.
+            foreach (var file in Directory.GetFiles(Se.WaveformsFolder, "*.wav" + WaveCacheFile.TempSuffix).ToList())
+            {
+                try
+                {
+                    File.Delete(file);
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
+
             foreach (var file in Directory.GetFiles(Se.WaveformsFolder, "*.wav").ToList())
             {
                 try
@@ -2532,6 +2547,18 @@ public partial class SettingsViewModel : ObservableObject
 
         if (Directory.Exists(Se.SpectrogramsFolder))
         {
+            foreach (var file in Directory.GetFiles(Se.SpectrogramsFolder, "*.spectrogram" + WaveCacheFile.TempSuffix).ToList())
+            {
+                try
+                {
+                    File.Delete(file);
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
+
             foreach (var file in Directory.GetFiles(Se.SpectrogramsFolder, "*.spectrogram").ToList())
             {
                 try
@@ -2552,10 +2579,12 @@ public partial class SettingsViewModel : ObservableObject
         if (Directory.Exists(Se.WaveformsFolder))
         {
             files.AddRange(Directory.GetFiles(Se.WaveformsFolder, "*.wav"));
+            files.AddRange(Directory.GetFiles(Se.WaveformsFolder, "*.wav" + WaveCacheFile.TempSuffix));
         }
         if (Directory.Exists(Se.SpectrogramsFolder))
         {
             files.AddRange(Directory.GetFiles(Se.SpectrogramsFolder, "*.spectrogram", SearchOption.AllDirectories));
+            files.AddRange(Directory.GetFiles(Se.SpectrogramsFolder, "*.spectrogram" + WaveCacheFile.TempSuffix, SearchOption.AllDirectories));
         }
         return files;
     }
