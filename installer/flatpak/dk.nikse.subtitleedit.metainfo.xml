@@ -74,6 +74,18 @@
   </screenshots>
 
   <releases>
+    <release version="5.2.0" date="2026-09-10">
+      <url>https://github.com/SubtitleEdit/subtitleedit/releases/tag/v5.2.0</url>
+      <description>
+        <p>Assisted split/move, a chapter editor, editable original subtitles, voice cloning from the video, new text to speech, speech to text and OCR engines, many new subtitle formats, SE 4 parity features, and around 600 bug fixes.</p>
+      </description>
+    </release>
+    <release version="5.1.0" date="2026-07-29">
+      <url>https://github.com/SubtitleEdit/subtitleedit/releases/tag/v5.1.0</url>
+      <description>
+        <p>AI review and AI assistant, new auto-translate, speech to text and text to speech engines, EBU-TT-D, multi-window support on macOS, and a large performance and stability pass.</p>
+      </description>
+    </release>
     <release version="5.0.0" date="2026-06-22">
       <url>https://github.com/SubtitleEdit/subtitleedit/releases/tag/v5.0.0</url>
       <description>
