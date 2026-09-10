@@ -15,10 +15,7 @@ build-options:
     PKG_CONFIG_PATH: /app/lib/pkgconfig:/app/share/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig:/usr/lib/sdk/dotnet10/lib/pkgconfig
 
 finish-args:
-  # Display. Avalonia on Linux has no Wayland backend: the app always talks X11
-  # (XWayland on Wayland desktops), so only the X11 socket is requested.
-  # Flathub's linter rejects x11+wayland together, and fallback-x11 would drop
-  # the X11 socket on Wayland sessions and leave the app unable to start.
+  # Display
   - --share=ipc
   - --socket=x11
   # Hardware acceleration
