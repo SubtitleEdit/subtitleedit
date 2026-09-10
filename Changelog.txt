@@ -1,5 +1,100 @@
 Subtitle Edit Changelog
 
+5.2.0 (10th of September 2026)
+
+  Subtitle Edit 5.2 collects the work of 32 betas and 7 release candidates.
+  A summary of the changes since 5.1.0:
+
+New features:
+* Assisted split and Assisted move - ranked one-click suggestions with full previews
+* Chapter editor with Matroska/MP4/OGM chapter formats (Video > More > Chapters)
+* Edit original - edit the original reference rows in place, open a non-matching original as a read-only reference, and show the original subtitle on the waveform
+* Forced narrative lines - a "Forced" column and "Save forced lines as..."
+* Error list with summary cards (Tools > List errors..., batch convert) - export to clipboard, text, Excel or web page
+* Statistics dashboard with tiles, meters, checks and a CPS histogram
+* Subtitle grid: "Columns..." dialog to reorder/hide columns, "Hide tags" formatting mode, and type-to-search in all combo boxes
+* Text boxes: drag-and-drop text (e.g. original to working text), configurable "Search via" shortcuts, "Google it", macOS "Look up", "Sentence case" and more "Surround with" slots
+* Waveform: guess start/end time from the waveform, snap to shot changes, editable video position box, per-track audio picker, and copy/paste at the video/waveform position
+* Beautify time codes using the video's real frame times, and in batch convert
+* Video offset remembers recent offsets; "Open recent video" and "Go to video position..." in the Video menu
+* Multiple replace: import/export rule categories, select all/none/invert, move shortcuts and regex match timeouts
+* Image-based subtitle editor: open DVD sup, XSUB, MP4 VobSub and more, "Video resolution..." scaling, and burn in Blu-ray sup
+* Update check settings with a stable/beta channel and a startup notification
+* Default save location, auto-break "do not break after" lists with an editor, and cut the subtitle with "Cut video"
+
+SE 4 parity:
+* Train nOCR, the minimum gap frame rate calculator, and "Remove/replace Unicode characters" (SE 4 plugin port)
+* WebVTT style manager, voices and browser preview, and configurable WebVTT cue settings
+* Import an SE 4 Settings.xml, and 22 more SE 4 shortcuts on shortcut import
+* Shortcuts: go to next empty line, go to first/last line, bookmarks, underline, toggle custom tags, recalculate duration, go to next/prev subtitle (play translate), move first word to previous subtitle, break at first space from cursor
+* Layout 10 (edit box under the waveform), "Center text in subtitle grid", the four grid double-click actions, and a toolbar frame rate that works like SE 4's
+* "Set up like Subtitle Edit 4" also arranges the waveform toolbar; "Open second subtitle file..." is back in SE 4's Video menu spot
+* Remove blank lines when opening a subtitle, full frame image export, regex snippet context menu in Find/replace, and Alt+F/Alt+R in Replace
+* Tesseract OCR: SE 4's 10 px margin and resize retry passes
+* Copy-to-clipboard grid menu items and plain text column paste are back
+
+Auto-translate and AI:
+* New "llama.cpp advanced" and "Ollama advanced" engines with batch context, system prompt and schema-forced output - also in batch convert and seconv (--translate-prompt)
+* MiLMMT-46 translation models; DeepL offers every API language; Google Translate retries via a fallback endpoint when the free service is blocked
+* Re-break translated rows that break the line profile, keep the chosen languages when the engine changes, and the original text is no longer lost after translating
+* AI review: in the grid context menu, apply suggestions in passes, Play current, start/stop the llama.cpp server, delay between requests, and new models (Gemma 4 E2B, EuroLLM, Granite 4.1)
+
+Speech to text:
+* New engines and models: WhisperX (standalone, no Python), Google Cloud Speech-to-Text v2, Voxtral (Crisp ASR) and anime-whisper for Japanese
+* Transcription quality report with non-speech and repeated-line removal
+* Crisp ASR: "Auto detect" language on all backends, a VAD off switch and a retry without VAD; live progress for WhisperX
+* The MLX Whisper engine was removed
+
+Text to speech:
+* New engines: IndexTTS 2.5, Higgs Audio v3, Fish Audio S2 Pro and FireRedTTS3 (audio.cpp), dots.tts, Confucius4-TTS and Pocket TTS (Crisp ASR), plus VibeVoice again, CosyVoice3 RL models and multilingual Chatterbox V3 (23 languages)
+* Voice cloning from the video - "Find voices in video and clone them all", and per-line cloning on Qwen3, audio.cpp, VibeVoice, MOSS-TTS, CosyVoice3 and VoxCPM2 - with a consent prompt before the first clone
+* Speaker-name detection, "leave sound/music lines silent", a Zonos language picker and custom Piper voice models
+
+OCR:
+* New engines and models: Apple Vision OCR (macOS), Paddle OCR 3.7 (PP-OCRv6), CrispEmbed PP-OCRv6 and DeepSeek-OCR-2, and llama.cpp HunyuanOCR 1.5, LFM2.5-VL 3B and custom vision models
+* Video OCR (burned-in subtitles): far more subtitles read, better text and start times, CrispEmbed engine, OCR fix engine and spell check coloring
+* OCR fix engine: new Spanish/Portuguese/Italian and Cyrillic rules, around 115 repaired replace list entries, and apostrophe straightening
+* Auto-detect the OCR language, open the matching video after OCR, "Save all images with HTML index", and faster nOCR matching
+
+Subtitle formats:
+* New: EBU-TT (Tech 3350), Manzanita DVB teletext (.dvbttx), Csv Excel, CANVASs SSTG1 (.sdb), Wistia json, DVD Junior SPC, Sonic DVD Producer, YouTube srv3 (.ytt), DaVinci Resolve marker EDL and Adobe Premiere markers
+* New exports: Final Cut Pro Xml Captions, BDN/xml 8-bit and Audacity/Tenacity labels
+* Read subtitles from fragmented MP4 (DASH/CMAF), ARIB STD-B24 captions from transport streams, and SMPTE-TT bitmap captions
+* Much better import of unknown formats (generic XML importer), "Import plain text" from the unknown format prompt, and spreadsheets from File > Open
+* EBU STL/teletext: color picker, alignment dialog, TT column, video preview with box/justification/double height, and frame-based time codes
+* SCC: colors as CEA-608 mid-row codes, a line length warning, and frame-accurate import timing
+* ASSA: embed and trim fonts, offer resampling on a resolution mismatch, new advanced effects, and "Change ASSA style properties" in batch convert
+* Ruby and emphasis in Lambda Cap and Netflix IMSC 1.1 Japanese; font colors in EBU-TT-D and IMSC Rosetta
+
+Video and image export:
+* Image-based export: advanced text effects (gradient, neon glow, 3D extrude), per-line ASSA colors and outlines, inline font face/size, and Blu-ray sup fades and overlapping subtitles
+* Burn-in: VideoToolbox hardware encoders on macOS, .webm/.ts output, letter spacing and libass style previews
+* Sync dialogs: subtitle on the video, resizable waveform, and the selected audio track
+* Smoother waveform/video cursor with mpv, faster scrubbing on long-GOP video, and fixed audio dropouts when pausing or seeking
+
+Batch convert and seconv:
+* Batch convert: Beautify time codes, convert colors to dialog, snap time codes to frames, "Add folder...", translation progress, keep the source file date/time, and every teletext page per PID
+* seconv: --json output and --help-json, --ocr-prompt, --translate-prompt, --override-position, --output-filename-append, full frame image export, .avi/XSUB reading and batched Paddle OCR
+
+Platforms and accessibility:
+* macOS: standard Window menu, open Finder files in a new window, and Apple Vision OCR
+* Linux: dead keys with ibus, Whisper XXL on glibc 2.41+, and OpenBLAS in the Flathub package
+* Keyboard-navigable dialogs (initial focus, Tab, Enter on the default button), screen reader value announcements, and undocked windows no longer stealing the foreground or staying on top
+
+Stability and performance:
+* Around 600 bugs fixed in code sweeps and random-file bug hunts - subtitle formats, dialogs, settings, OCR, batch convert and seconv
+* Faster format detection, Matroska reading on network shares, waveform generation, SCC export and grid rendering, and fixed memory leaks in several dialogs - thx ivandrofly, hisui3393
+* WSB is now import only
+
+Translations and engines:
+* New UI languages: Central Kurdish and Azerbaijani - and all language files synced with English
+* Updated engines: Crisp ASR v0.8.32, llama.cpp b10840, whisper.cpp v1.9.3, CrispEmbed v0.17.9, Paddle OCR 3.7, Tesseract 5.5.3, ffmpeg 9.0.1 (Windows), libmpv 20260814 (Windows) and yt-dlp 2026.08.19
+
+  A big thank you to everyone who tested the pre-releases, reported issues and
+  contributed code and translations - and a special thanks to Anthropic for
+  sponsoring a Claude subscription used in the development of this release :)
+
+
 5.1.0 (29th of July 2026)
 
   Subtitle Edit 5.1 is the first feature release after 5.0. A summary of the
