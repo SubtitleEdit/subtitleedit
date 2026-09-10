@@ -287,9 +287,10 @@ public class SettingsPage : UserControl
                 Mode = BindingMode.TwoWay,
             });
 
-            var accent = new SolidColorBrush(Color.Parse("#3285D8"));
+            var accent = UiUtil.GetAccentBrush();
+            var accentColor = accent is ISolidColorBrush accentSolid ? accentSolid.Color : Colors.DodgerBlue;
             var background = new SolidColorBrush(Color.Parse("#3f808080"));
-            var selectedBackground = new SolidColorBrush(Color.Parse("#263285D8"));
+            var selectedBackground = new SolidColorBrush(accentColor, 0x26 / 255.0);
             var lightResources = new ResourceDictionary();
             var darkResources = new ResourceDictionary();
             toggle.Resources.ThemeDictionaries[ThemeVariant.Light] = lightResources;
