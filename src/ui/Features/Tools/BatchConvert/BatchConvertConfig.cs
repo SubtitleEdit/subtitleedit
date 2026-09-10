@@ -249,6 +249,7 @@ public class BatchConvertConfig
         public bool IsActive { get; set; }
         public int MaxMillisecondsBetweenLines { get; set; }
         public bool IncludeIncrementingLines { get; set; }
+        public bool IncludeRollUpCaptions { get; set; }
 
         public MergeLinesWithSameTextsSettings()
         {
