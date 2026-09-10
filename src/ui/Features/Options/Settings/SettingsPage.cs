@@ -275,8 +275,12 @@ public class SettingsPage : UserControl
                 VerticalContentAlignment = VerticalAlignment.Stretch,
                 Content = new Grid { Children = { content, check } },
                 [AutomationProperties.NameProperty] = item.Name,
-                [ToolTip.TipProperty] = item.Name,
             };
+            if (Se.Settings.Appearance.ShowHints)
+            {
+                ToolTip.SetTip(toggle, item.Name);
+            }
+
             toggle.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(item.IsVisible))
             {
                 Source = item,
