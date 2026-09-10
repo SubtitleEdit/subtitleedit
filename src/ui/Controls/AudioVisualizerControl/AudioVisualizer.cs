@@ -1713,8 +1713,9 @@ public class AudioVisualizer : Control
 
                 if (previous != null && newStart < previous.EndTime.TotalSeconds + MinGapSeconds)
                 {
-                    newStart = previous.EndTime.TotalSeconds + MinGapSeconds + 0.001;
-                    newStart = SnapToFrameCeil(newStart);
+                    // Exactly the gap, no "strictly after" nudge: a 1 ms nudge here rolled the
+                    // ceiling over to the next frame, so a 2-frame minimum gap dragged to 3.
+                    newStart = SnapToFrameCeil(previous.EndTime.TotalSeconds + MinGapSeconds);
                 }
 
                 if (newStart < _activeParagraph.EndTime.TotalSeconds - 0.1)
@@ -1739,8 +1740,9 @@ public class AudioVisualizer : Control
 
                 if (next != null && newEnd > next.StartTime.TotalSeconds - MinGapSeconds)
                 {
-                    newEnd = next.StartTime.TotalSeconds - 0.001 - MinGapSeconds;
-                    newEnd = SnapToFrameFloor(newEnd);
+                    // Exactly the gap - see the ResizingLeft clamp: minus 1 ms then floor landed
+                    // one frame early, so a 2-frame minimum gap could never be dragged to 2 frames.
+                    newEnd = SnapToFrameFloor(next.StartTime.TotalSeconds - MinGapSeconds);
                 }
 
                 if (newEnd > _activeParagraph.StartTime.TotalSeconds + 0.1)
@@ -1795,6 +1797,17 @@ public class AudioVisualizer : Control
         return Math.Round(seconds / frameDur, MidpointRounding.AwayFromZero) * frameDur;
     }
 
+    /// <summary>
+    /// Earliest frame time at or after <paramref name="seconds"/>, compared in whole milliseconds -
+    /// the resolution subtitle times are stored at (<see cref="TimeSpanExtensions.FromSecondsWholeMilliseconds"/>).
+    /// <para>
+    /// The bounds fed in here are built from stored times (a neighbour's cue plus the minimum gap),
+    /// so at a non-integer frame rate they sit up to half a millisecond off the exact frame: at
+    /// 29.97 fps frame 101 is stored as 3370 ms, not 3370.03. A plain Math.Ceiling of 3370 / 33.37
+    /// would move such a bound to frame 102 and open the gap by a frame; comparing the candidate
+    /// frames' whole-ms times against the whole-ms bound keeps it on frame 101.
+    /// </para>
+    /// </summary>
     private static double SnapToFrameCeil(double seconds)
     {
         if (!TryGetFrameDuration(out var frameDur))
@@ -1802,9 +1815,24 @@ public class AudioVisualizer : Control
             return seconds;
         }
 
-        return Math.Ceiling(seconds / frameDur) * frameDur;
+        var boundMs = Math.Round(seconds * TimeCode.BaseUnit, MidpointRounding.AwayFromZero);
+        var frame = Math.Ceiling(seconds / frameDur);
+        if (FrameToWholeMs(frame - 1, frameDur) >= boundMs)
+        {
+            frame--;
+        }
+        else if (FrameToWholeMs(frame, frameDur) < boundMs)
+        {
+            frame++;
+        }
+
+        return frame * frameDur;
     }
 
+    /// <summary>
+    /// Latest frame time at or before <paramref name="seconds"/>, compared in whole milliseconds -
+    /// the mirror of <see cref="SnapToFrameCeil"/>.
+    /// </summary>
     private static double SnapToFrameFloor(double seconds)
     {
         if (!TryGetFrameDuration(out var frameDur))
@@ -1812,7 +1840,25 @@ public class AudioVisualizer : Control
             return seconds;
         }
 
-        return Math.Floor(seconds / frameDur) * frameDur;
+        var boundMs = Math.Round(seconds * TimeCode.BaseUnit, MidpointRounding.AwayFromZero);
+        var frame = Math.Floor(seconds / frameDur);
+        if (FrameToWholeMs(frame + 1, frameDur) <= boundMs)
+        {
+            frame++;
+        }
+        else if (FrameToWholeMs(frame, frameDur) > boundMs)
+        {
+            frame--;
+        }
+
+        return frame * frameDur;
+    }
+
+    /// <summary>The whole-millisecond time a frame is stored at (the same rounding as
+    /// <see cref="TimeSpanExtensions.FromSecondsWholeMilliseconds"/>).</summary>
+    private static double FrameToWholeMs(double frame, double frameDur)
+    {
+        return Math.Round(frame * frameDur * TimeCode.BaseUnit, MidpointRounding.AwayFromZero);
     }
 
     private static bool TryGetFrameDuration(out double frameDur)
