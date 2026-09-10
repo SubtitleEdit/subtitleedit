@@ -603,6 +603,9 @@ public partial class MainViewModel :
     Control? _focusBeforeMainMenu;
     Control? _focusBeforeWindowDeactivated;
     bool _altClosesMainMenuOnKeyUp;
+    bool _altChordCancelsMainMenuActivation;
+    bool _mainMenuActiveBeforeAltRelease;
+    Control? _focusBeforeAltChord;
     readonly AltMenuActivationGuard _altMenuActivationGuard = new();
     bool _findClosingProgrammatically;
     ReplaceViewModel? _replaceViewModel;
@@ -28435,6 +28438,8 @@ public partial class MainViewModel :
         _shortcutManager.ClearKeys();
         _altMenuActivationGuard.Reset();
         _altClosesMainMenuOnKeyUp = false; // the matching Alt release will never arrive
+        _altChordCancelsMainMenuActivation = false;
+        _focusBeforeAltChord = null;
 
         // A task switch (Alt+Tab) must also drop any active menu-bar state. Otherwise Avalonia leaves
         // the access-key underlines / selection armed and they reappear when the window is re-activated,
@@ -28927,6 +28932,21 @@ public partial class MainViewModel :
                 // Alt+<key> is a shortcut or access key, not a toggle - releasing Alt afterwards
                 // must leave the menu alone (mirrors the built-in "ignore Alt up" bookkeeping).
                 _altClosesMainMenuOnKeyUp = false;
+
+                // Avalonia's AccessKeyHandler does the same bookkeeping ("Alt was part of a chord,
+                // so its release must not open the menu bar") in its own tunnelling key-down
+                // handler - but it registers that handler in the TopLevel constructor with
+                // handledEventsToo:false, and tunnel handlers on one element run in *reverse*
+                // registration order. Our window handler therefore runs first, and the moment it
+                // marks an Alt shortcut handled (Alt+Down = "go to next line" out of the box) the
+                // built-in handler never sees the chord key: releasing Alt then opens the menu bar,
+                // which swallows every following shortcut - Ctrl+Left/Right walked the menu items
+                // instead of moving the start time (#14743). Arm the cancellation here and undo the
+                // activation on the Alt release (see OnKeyUpHandler).
+                if (keyEventArgs.KeyModifiers.HasFlag(KeyModifiers.Alt))
+                {
+                    _altChordCancelsMainMenuActivation = true;
+                }
             }
 
             if (UiUtil.TryHandleWindowSystemMenu(keyEventArgs, Window))
@@ -29342,11 +29362,49 @@ public partial class MainViewModel :
             _setEndAtKeyUpLineGoToNext = false;
         }
 
+        // This handler is registered for both routing strategies, so every key-up runs it twice.
+        // Avalonia's AccessKeyHandler opens the menu bar from its own tunnelling key-up handler,
+        // which - tunnel handlers on one element running in reverse registration order - comes
+        // after ours: in the tunnel pass the bar is still closed, in the bubble pass it is open.
+        // Both undo paths below must therefore act in the bubble pass only. Remember here whether
+        // the bar was already active before the release, so an Alt+<access key> that opened it on
+        // the key *down* (Alt+F) is left alone and only a release-triggered activation is undone -
+        // and which control held focus, since that is the last moment before Avalonia takes it.
+        if (e.Key is Key.LeftAlt or Key.RightAlt && e.Route == RoutingStrategies.Tunnel)
+        {
+            _mainMenuActiveBeforeAltRelease = Menu is { IsOpen: true } || IsMainMenuFocused();
+            _focusBeforeAltChord = Window?.FocusManager?.GetFocusedElement() as Control;
+        }
+
+        // Undo the menu-bar activation Avalonia performs when Alt is released after an Alt+<key>
+        // shortcut it never saw (see the arming site in OnKeyDownHandler for why it misses it).
+        if (e.Key is Key.LeftAlt or Key.RightAlt &&
+            e.Route == RoutingStrategies.Bubble &&
+            _altChordCancelsMainMenuActivation)
+        {
+            _altChordCancelsMainMenuActivation = false;
+            var focusAfterChord = _focusBeforeAltChord;
+            _focusBeforeAltChord = null;
+
+            if (!_mainMenuActiveBeforeAltRelease && (Menu is { IsOpen: true } || IsMainMenuFocused()))
+            {
+                if (focusAfterChord is { IsEffectivelyVisible: true })
+                {
+                    _focusBeforeMainMenu = focusAfterChord;
+                }
+
+                DeactivateMainMenu();
+            }
+        }
+
         // Undo the menu-bar activation Avalonia performs when Alt is released after an Alt+click/drag.
         // Its AccessKeyHandler runs in the window's tunnel phase, so the menu is already open and
         // focused by the time we get here - without this, IsMainMenuFocused() in OnKeyDownHandler
-        // swallows every shortcut until the user clicks something (discussion #11744).
-        if (_altMenuActivationGuard.TryConsumeAltRelease(e.Key, out var focusToRestore) &&
+        // swallows every shortcut until the user clicks something (discussion #11744). The guard is
+        // consumed in the bubble pass only: consuming it in the tunnel pass disarmed it while the
+        // bar was still closed, so the undo never ran at all.
+        if (e.Route != RoutingStrategies.Tunnel &&
+            _altMenuActivationGuard.TryConsumeAltRelease(e.Key, out var focusToRestore) &&
             (Menu is { IsOpen: true } || IsMainMenuFocused()))
         {
             if (focusToRestore is { IsEffectivelyVisible: true })
