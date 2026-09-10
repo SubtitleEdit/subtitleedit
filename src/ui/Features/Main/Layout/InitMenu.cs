@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
@@ -770,6 +770,11 @@ public static class InitMenu
                 {
                     Header = l.TextToSpeech,
                     Command = vm.ShowVideoTextToSpeechCommand,
+                },
+                new MenuItem
+                {
+                    Header = Se.Language.Video.RemuxVideoDotDotDot,
+                    Command = vm.ShowVideoRemuxVideoCommand,
                 },
                 new MenuItem
                 {

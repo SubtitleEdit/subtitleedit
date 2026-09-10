@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.Input;
@@ -360,6 +360,7 @@ public static class InitNativeMacMenu
         videoItems.Items.Add(new NativeMenuItemSeparator());
         videoItems.Items.Add(Item(Clean(l.SpeechToText), v => v.ShowSpeechToTextWhisperCommand));
         videoItems.Items.Add(Item(Clean(l.TextToSpeech), v => v.ShowVideoTextToSpeechCommand));
+        videoItems.Items.Add(Item(Clean(Se.Language.Video.RemuxVideoDotDotDot), v => v.ShowVideoRemuxVideoCommand));
         videoItems.Items.Add(Item(Clean(l.VideoOcr), v => v.ShowVideoOcrCommand));
         videoItems.Items.Add(new NativeMenuItemSeparator());
         videoItems.Items.Add(Item(Clean(l.GenerateBurnIn), v => v.ShowVideoBurnInCommand));
