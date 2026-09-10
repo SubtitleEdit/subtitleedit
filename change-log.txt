@@ -93,22 +93,6 @@ Translations and engines:
 * New UI languages: Central Kurdish and Azerbaijani - and all language files synced with English
 * Updated engines: Crisp ASR v0.8.32, llama.cpp b10840, whisper.cpp v1.9.3, CrispEmbed v0.17.9, Paddle OCR 3.7, Tesseract 5.5.3, ffmpeg 9.0.1 (Windows), libmpv 20260814 (Windows) and yt-dlp 2026.08.19
 
-Changes since v5.2.0-rc7:
-* Add litagin/anime-whisper as a Japanese speech-to-text model - thx Mafuyu0
-* Waveform: sync the video frame preview and auto play/pause while Ctrl+Shift dragging a subtitle - thx ghostminhtoan
-* Show the logo alpha and size values in the burn-in logo window - thx rosilucia-hub
-* Find/replace: underline the button access keys, and fire Alt+F/Alt+R on the bare letter - thx DexKen
-* Make the text to speech voice settings window resizable and remember its position/size
-* Paddle OCR: read results from json, batch every seconv image, and keep batch convert cues in order
-* Fix a corrupt waveform cache hanging instead of being rebuilt - thx shamefulCake1
-* Fix an Alt shortcut activating the menu bar - thx kadrimarzouki
-* Fix applying settings jumping the video position - thx kadrimarzouki
-* Fix Subtitle Edit floating on top of other applications after closing a dialog - thx cvrle77
-* Rename the shortcut label to "Open Subtitle Edit data folder"
-* Sync all language files with English.json
-* Update French translation - thx Need74
-* Update Korean translation - thx 12si27
-
 A big thank you to everyone who tested the pre-releases, reported issues and
 contributed code and translations - and a special thanks to Anthropic for
 sponsoring a Claude subscription used in the development of this release :)
