@@ -380,7 +380,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             }
             else if (Se.Settings.Tools.BatchConvert.OcrEngine.Equals("PaddleOCR", StringComparison.OrdinalIgnoreCase))
             {
-                await RunPaddleOcr(imageSubtitle, item, cancellationToken);
+                if (!await RunPaddleOcr(imageSubtitle, item, cancellationToken))
+                {
+                    return;
+                }
             }
             else if (Se.Settings.Tools.BatchConvert.OcrEngine.Equals("Ollama", StringComparison.OrdinalIgnoreCase))
             {
@@ -1342,7 +1345,8 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
     private readonly Lock _paddleLock = new Lock();
 
-    private async Task RunPaddleOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
+    /// <inheritdoc cref="RunOllamaOcr"/>
+    private async Task<bool> RunPaddleOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
     {
         var numberOfImages = imageSubtitles.Count;
         var ocrEngine = new PaddleOcr();
@@ -1364,8 +1368,22 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
             if (cancellationToken.IsCancellationRequested)
             {
-                return;
+                return false;
             }
+        }
+
+        // Paddle OCR hands results back as they finish, and the engine's worker pool does not
+        // finish them in order. Appending on arrival scrambled the subtitle (#14723), so the
+        // cues are created up front and each result fills its own slot; whatever never comes
+        // back is dropped below rather than left behind as a blank cue.
+        var filled = new bool[numberOfImages];
+        var trimmed = false;
+        for (var i = 0; i < numberOfImages; i++)
+        {
+            item.Subtitle.Paragraphs.Add(new Paragraph(
+                string.Empty,
+                imageSubtitles.GetStartTime(i).TotalMilliseconds,
+                imageSubtitles.GetEndTime(i).TotalMilliseconds));
         }
 
         var ocrProgress = new Progress<PaddleOcrBatchProgress>(p =>
@@ -1377,24 +1395,79 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
             lock (_paddleLock)
             {
+                // Progress is posted, so a straggler can still be delivered after the unfilled
+                // cues have been dropped - by then the indexes no longer line up.
+                if (trimmed)
+                {
+                    return;
+                }
+
                 ocrCount++;
                 var number = p.Index;
                 var percentage = numberOfImages > 0 ? ocrCount * 100 / numberOfImages : 0;
                 item.Status = string.Format(Se.Language.General.OcrPercentX, percentage);
 
-                var paragraph = new Paragraph(p.Text, imageSubtitles.GetStartTime(number).TotalMilliseconds, imageSubtitles.GetEndTime(number).TotalMilliseconds);
-                item.Subtitle.Paragraphs.Add(paragraph);
+                if (number >= 0 && number < numberOfImages)
+                {
+                    item.Subtitle.Paragraphs[number].Text = p.Text;
+                    filled[number] = true;
+                }
             }
         });
 
         item.Status = Se.Language.General.OcrDotDotDot;
-        await ocrEngine.OcrBatch(OcrEngineType.PaddleOcrStandalone, batchImages, language, mode, ocrProgress, cancellationToken);
-        var checkCount = 0;
-        while (ocrCount < numberOfImages && checkCount < 100)
+        var cancelled = false;
+        try
         {
-            await Task.Delay(100);
-            checkCount++;
+            await ocrEngine.OcrBatch(OcrEngineType.PaddleOcrStandalone, batchImages, language, mode, ocrProgress, cancellationToken);
+
+            var checkCount = 0;
+            while (ocrCount < numberOfImages && checkCount < 100)
+            {
+                await Task.Delay(100);
+                checkCount++;
+            }
         }
+        catch (OperationCanceledException)
+        {
+            // Still trim below, so a cancelled run leaves the lines it did OCR rather than a
+            // subtitle padded out with empty cues.
+            cancelled = true;
+        }
+
+        lock (_paddleLock)
+        {
+            trimmed = true;
+            for (var i = numberOfImages - 1; i >= 0; i--)
+            {
+                if (!filled[i])
+                {
+                    item.Subtitle.Paragraphs.RemoveAt(i);
+                }
+            }
+        }
+
+        if (cancelled || cancellationToken.IsCancellationRequested)
+        {
+            item.Status = Se.Language.General.Cancelled;
+            return false;
+        }
+
+        // Nothing came back at all - the engine failed to start, crashed, or produced no
+        // result files. Saving now would write a file with zero cues and report "Converted",
+        // so stop here and leave the reason on the row instead (#14723).
+        if (item.Subtitle.Paragraphs.Count == 0 && numberOfImages > 0)
+        {
+            // Error is the captured stderr, which can be tens of kilobytes of Paddle chatter.
+            // The last line is the one that carries the reason, and a status cell fits nothing more.
+            var reason = ocrEngine.Error
+                .Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .LastOrDefault() ?? "PaddleOCR returned no results";
+            item.Status = string.Format(Se.Language.General.ErrorX, reason);
+            return false;
+        }
+
+        return true;
     }
     
     /// <returns>

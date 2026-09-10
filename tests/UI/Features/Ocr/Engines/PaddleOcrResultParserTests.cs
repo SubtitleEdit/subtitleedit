@@ -39,21 +39,95 @@ public class PaddleOcrResultParserTests
             File.WriteAllText(Path.Combine(dir, "0000_res.json"), SingleLineJson("Alpha"));
             File.WriteAllText(Path.Combine(dir, "0001_res.json"), "{ \"rec_texts\": [\"Beta\"");
 
-            ocr.ReportNewPaddleOcrPythonResults(dir, seen);
+            ocr.ReportNewPaddleOcrResults(dir, seen);
             Assert.Single(reported);
             Assert.Equal(5, reported[0].Index);
             Assert.Equal("Alpha", reported[0].Text);
 
             // Second image finishes writing -> reported on the next poll.
             File.WriteAllText(Path.Combine(dir, "0001_res.json"), SingleLineJson("Beta"));
-            ocr.ReportNewPaddleOcrPythonResults(dir, seen);
+            ocr.ReportNewPaddleOcrResults(dir, seen);
             Assert.Equal(2, reported.Count);
             Assert.Equal(6, reported[1].Index);
             Assert.Equal("Beta", reported[1].Text);
 
             // Nothing new on a further poll - each image reported exactly once.
-            ocr.ReportNewPaddleOcrPythonResults(dir, seen);
+            ocr.ReportNewPaddleOcrResults(dir, seen);
             Assert.Equal(2, reported.Count);
+        }
+        finally
+        {
+            Directory.Delete(dir, true);
+        }
+    }
+
+    [Fact]
+    public void ReportNewResults_OutOfOrderCompletion_ReportsInLineOrder()
+    {
+        var dir = Path.Combine(Path.GetTempPath(), "paddle_order_" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(dir);
+        try
+        {
+            var inputs = new List<PaddleOcrBatchInput>();
+            for (var i = 0; i < 4; i++)
+            {
+                inputs.Add(new PaddleOcrBatchInput { Index = i, FileName = Path.Combine(dir, i.ToString("0000") + ".png") });
+            }
+
+            var reported = new List<PaddleOcrBatchProgress>();
+            var ocr = new PaddleOcr();
+            ocr.InitializeForTest(inputs, new SyncProgress<PaddleOcrBatchProgress>(reported.Add));
+
+            // Paddle's worker pool does not finish images in order; three land before the first
+            // poll, so a single poll has to hand them back sorted by line, not by arrival.
+            foreach (var i in new[] { 2, 0, 3 })
+            {
+                File.WriteAllText(Path.Combine(dir, i.ToString("0000") + "_res.json"), SingleLineJson("Line " + i));
+            }
+
+            var seen = new HashSet<string>();
+            ocr.ReportNewPaddleOcrResults(dir, seen);
+            Assert.Equal(new[] { 0, 2, 3 }, reported.Select(r => r.Index).ToArray());
+
+            // The straggler is reported on its own, and nothing is reported twice.
+            File.WriteAllText(Path.Combine(dir, "0001_res.json"), SingleLineJson("Line 1"));
+            ocr.ReportNewPaddleOcrResults(dir, seen);
+            Assert.Equal(new[] { 0, 2, 3, 1 }, reported.Select(r => r.Index).ToArray());
+            Assert.Equal(new[] { "Line 0", "Line 2", "Line 3", "Line 1" }, reported.Select(r => r.Text).ToArray());
+        }
+        finally
+        {
+            Directory.Delete(dir, true);
+        }
+    }
+
+    [Fact]
+    public void ReportNewResults_IgnoresTheAnnotatedImagesSavedAlongsideTheJson()
+    {
+        // --save_path runs save_all, so every image also gets a "<stem>_ocr_res_img.png" next to
+        // its json. The poll must not mistake one for a result.
+        var dir = Path.Combine(Path.GetTempPath(), "paddle_img_" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(dir);
+        try
+        {
+            var inputs = new List<PaddleOcrBatchInput>
+            {
+                new() { Index = 0, FileName = Path.Combine(dir, "0000.png") },
+            };
+
+            var reported = new List<PaddleOcrBatchProgress>();
+            var ocr = new PaddleOcr();
+            ocr.InitializeForTest(inputs, new SyncProgress<PaddleOcrBatchProgress>(reported.Add));
+            var seen = new HashSet<string>();
+
+            File.WriteAllText(Path.Combine(dir, "0000_ocr_res_img.png"), "not json");
+            ocr.ReportNewPaddleOcrResults(dir, seen);
+            Assert.Empty(reported);
+
+            File.WriteAllText(Path.Combine(dir, "0000_res.json"), SingleLineJson("Alpha"));
+            ocr.ReportNewPaddleOcrResults(dir, seen);
+            Assert.Single(reported);
+            Assert.Equal("Alpha", reported[0].Text);
         }
         finally
         {

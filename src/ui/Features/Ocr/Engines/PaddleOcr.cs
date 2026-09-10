@@ -11,7 +11,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -30,15 +29,12 @@ public partial class PaddleOcr
     public int MinConfidencePercent { get; set; }
 
     private bool _batchRightToLeft;
-    private List<PaddleOcrResultParser.TextDetectionResult> _textDetectionResults = new();
     private IProgress<PaddleOcrBatchProgress>? _batchProgress;
-    private string _batchFileName = string.Empty;
     private List<PaddleOcrBatchInput> _batchFileNames = new List<PaddleOcrBatchInput>();
     private string _paddingOcrPath;
     private string _clsPath;
     private string _detPath;
     private string _recPath;
-    private CancellationToken _cancellationToken;
     private readonly Stopwatch _batchStopwatch = new();
     private readonly StringBuilder _errorOutput = new();
     private readonly Lock _errorLock = new();
@@ -105,8 +101,6 @@ public partial class PaddleOcr
         _clsPath = Path.Combine(_paddingOcrPath, "cls");
         _detPath = Path.Combine(_paddingOcrPath, "det");
         _recPath = Path.Combine(_paddingOcrPath, "rec");
-
-        _cancellationToken = new CancellationToken();
     }
 
     internal static string GetRecName(string language, string mode) => PaddleOcrModels.GetRecName(language, mode);
@@ -297,17 +291,23 @@ public partial class PaddleOcr
                          $"--textline_orientation_model_dir \"{_clsPath + Path.DirectorySeparatorChar + TextlineOrientationModelName}\" " +
                          $"--textline_orientation_model_name \"{TextlineOrientationModelName}\"";
 
-        // The PaddleOCR 3.x Python CLI prints results as a (truncated) Python dict to
-        // stderr instead of the old "ppocr INFO: [[...],('text',score)]" stdout format
-        // that OutputHandlerBatch parses. So for the Python engine we let it write one
-        // "<index>_res.json" per image with --save_path and read those instead.
-        string? saveFolder = null;
+        // Both engines report through result files rather than stdout. --save_path makes the
+        // CLI write one "<index>_res.json" per image (plus a box-annotated
+        // "<index>_ocr_res_img.png" we ignore - save_all writes every registered output and
+        // there is no json-only flag), which we poll for below.
+        //
+        // The two builds print very differently, which is why parsing stdout is not an option
+        // for one shared path: upstream PaddleOCR 3.x logs a *truncated* Python dict to stderr
+        // under the logger name "paddleocr", while the bundled standalone build restores the
+        // 2.x format - full "[[...],('text',score)]" records on stdout under "ppocr". Reading
+        // the json keeps both engines on one protocol, and gives structured polys/confidences
+        // instead of a regex over a log line.
+        var saveFolder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+        Directory.CreateDirectory(saveFolder);
+        parameters += $" --save_path \"{saveFolder}\"";
+
         if (engineType == OcrEngineType.PaddleOcrPython)
         {
-            saveFolder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-            Directory.CreateDirectory(saveFolder);
-            parameters += $" --save_path \"{saveFolder}\"";
-
             // A stock pip "paddlepaddle" build can crash inside the oneDNN/PIR executor on
             // PP-OCRv5 models (NotImplementedError: ConvertPirAttribute2RuntimeAttribute ...).
             // The bundled standalone build is known-good and faster with MKL-DNN, so only
@@ -341,9 +341,7 @@ public partial class PaddleOcr
         // We always pass explicit local model dirs, so skip PaddleX's online model-source
         // connectivity check - otherwise it can hang the OCR run at "Initializing...".
         process.StartInfo.EnvironmentVariables["PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK"] = "True";
-        process.OutputDataReceived += OutputHandlerBatch;
         process.ErrorDataReceived += ErrorHandler;
-        _textDetectionResults.Clear();
         lock (_errorLock)
         {
             _errorOutput.Clear();
@@ -357,51 +355,49 @@ public partial class PaddleOcr
         process.Start();
 #pragma warning restore CA1416 // Validate platform compatibility;
 
+        // Both streams have to be drained continuously even though we parse neither: PaddleOCR
+        // is very chatty on stderr (and the standalone build logs every result to stdout), so
+        // letting an OS pipe fill up blocks the process mid-run.
         process.BeginOutputReadLine();
-        // Drain stderr continuously: PaddleOCR is very chatty on stderr and if we let the
-        // OS pipe fill up the process blocks mid-run. (We read it once at the end before.)
         process.BeginErrorReadLine();
 
-        // For the Python engine PaddleOCR writes one "<index>_res.json" per image as it
-        // goes, so poll the folder and report each result as soon as it appears - that
-        // gives progress for every line instead of a single update at the very end.
+        // PaddleOCR writes one "<index>_res.json" per image as it goes, so poll the folder and
+        // report each result as soon as it appears - that gives progress for every line instead
+        // of a single update at the very end.
         //
-        // Important: the "paddleocr" launcher spawns a separate worker process to do the
+        // Important: the pip "paddleocr" launcher spawns a separate worker process to do the
         // actual OCR and can exit (or block) long before that worker finishes. So we poll
         // until results stop arriving, NOT until the launcher exits - otherwise only the
         // first couple of lines get reported while the worker keeps running in the background.
         var reportedStems = new HashSet<string>();
-        if (saveFolder != null)
+        var roundsSinceProgress = 0;
+        while (reportedStems.Count < _batchFileNames.Count && !cancellationToken.IsCancellationRequested)
         {
-            var roundsSinceProgress = 0;
-            while (reportedStems.Count < _batchFileNames.Count && !cancellationToken.IsCancellationRequested)
+            try
             {
-                try
-                {
-                    await Task.Delay(400, cancellationToken);
-                }
-                catch (TaskCanceledException)
-                {
-                    break;
-                }
+                await Task.Delay(400, cancellationToken);
+            }
+            catch (TaskCanceledException)
+            {
+                break;
+            }
 
-                var before = reportedStems.Count;
-                ReportNewPaddleOcrPythonResults(saveFolder, reportedStems);
+            var before = reportedStems.Count;
+            ReportNewPaddleOcrResults(saveFolder, reportedStems);
 
-                if (reportedStems.Count > before)
-                {
-                    roundsSinceProgress = 0;
-                    continue;
-                }
+            if (reportedStems.Count > before)
+            {
+                roundsSinceProgress = 0;
+                continue;
+            }
 
-                // No new results this round - stop once they have clearly stopped arriving:
-                // a short grace once the launcher exited, a long safety-net otherwise.
-                roundsSinceProgress++;
-                var maxIdleRounds = process.HasExited ? 150 : 750; // ~60s after exit, ~5 min otherwise
-                if (roundsSinceProgress >= maxIdleRounds)
-                {
-                    break;
-                }
+            // No new results this round - stop once they have clearly stopped arriving:
+            // a short grace once the launcher exited, a long safety-net otherwise.
+            roundsSinceProgress++;
+            var maxIdleRounds = process.HasExited ? 150 : 750; // ~60s after exit, ~5 min otherwise
+            if (roundsSinceProgress >= maxIdleRounds)
+            {
+                break;
             }
         }
 
@@ -426,36 +422,9 @@ public partial class PaddleOcr
             // ignore
         }
 
-        if (process.ExitCode != 0 && reportedStems.Count == 0)
-        {
-            lock (_errorLock)
-            {
-                Error = _errorOutput.ToString();
-            }
-
-            Se.LogError($"PaddleOCR failed with exit code {process.ExitCode} and error: {Error}");
-            Se.WriteToolsLog($"Paddle OCR ({engineType}) failed with exit code {process.ExitCode}: {Error}");
-            return;
-        }
-
-        if (saveFolder != null)
-        {
-            // Final sweep - report any files written after the last poll.
-            ReportNewPaddleOcrPythonResults(saveFolder, reportedStems);
-        }
-        else if (_textDetectionResults.Count > 0)
-        {
-            var input = _batchFileNames.First(p => p.FileName == _batchFileName);
-            var p = new PaddleOcrBatchProgress
-            {
-                Index = input.Index,
-                Text = MakeResult(_textDetectionResults, out var resultConfidence),
-                Confidence = resultConfidence,
-                Item = input.Item,
-            };
-            _batchProgress?.Report(p);
-            _textDetectionResults.Clear();
-        }
+        // Final sweep - report any files written after the last poll. Done before the failure
+        // check below so a run that produced results but exited non-zero still delivers them.
+        ReportNewPaddleOcrResults(saveFolder, reportedStems);
 
         try
         {
@@ -466,44 +435,82 @@ public partial class PaddleOcr
             // ignore
         }
 
-        if (saveFolder != null)
+        try
         {
-            try
+            Directory.Delete(saveFolder, true);
+        }
+        catch
+        {
+            // ignore
+        }
+
+        // Not a single result file. Either the run failed outright (non-zero exit, stderr
+        // carries the reason) or it "succeeded" without writing anything - a rejected
+        // --save_path, a worker killed mid-run. Both have to surface as an error: the callers
+        // only show one when Error is set, so staying quiet here hands the user an empty
+        // subtitle that looks like a successful OCR.
+        if (reportedStems.Count == 0 && _batchFileNames.Count > 0)
+        {
+            lock (_errorLock)
             {
-                Directory.Delete(saveFolder, true);
+                Error = _errorOutput.Length > 0
+                    ? _errorOutput.ToString()
+                    : $"PaddleOCR wrote no results and exited with code {process.ExitCode}.";
             }
-            catch
-            {
-                // ignore
-            }
+
+            Se.LogError($"PaddleOCR failed with exit code {process.ExitCode} and error: {Error}");
+            Se.WriteToolsLog($"Paddle OCR ({engineType}) failed with exit code {process.ExitCode}: {Error}");
         }
     }
 
     // Test seam: wires up the batch inputs and progress sink used by
-    // ReportNewPaddleOcrPythonResults so the polling/reporting logic can be tested.
+    // ReportNewPaddleOcrResults so the polling/reporting logic can be tested.
     internal void InitializeForTest(List<PaddleOcrBatchInput> inputs, IProgress<PaddleOcrBatchProgress> progress)
     {
         _batchFileNames = inputs;
         _batchProgress = progress;
     }
 
-    // Reports any "<index>_res.json" files (written by the PaddleOCR 3.x Python CLI via
-    // --save_path) that haven't been reported yet. Skips files still being written.
-    internal void ReportNewPaddleOcrPythonResults(string saveFolder, HashSet<string> reportedStems)
+    private const string ResultFileSuffix = "_res.json";
+
+    // Reports any "<index>_res.json" files (written by the PaddleOCR CLI via --save_path) that
+    // haven't been reported yet, in line order. Skips files still being written.
+    internal void ReportNewPaddleOcrResults(string saveFolder, HashSet<string> reportedStems)
     {
+        // One directory listing per poll instead of a File.Exists per outstanding image: at a
+        // 400 ms poll over a feature-length subtitle the per-image form is thousands of stat
+        // calls a second, nearly all of them for files that are not there yet.
+        string[] resultFiles;
+        try
+        {
+            resultFiles = Directory.GetFiles(saveFolder, "*" + ResultFileSuffix);
+        }
+        catch
+        {
+            return; // folder gone or not created yet - try again on the next poll
+        }
+
+        if (resultFiles.Length <= reportedStems.Count)
+        {
+            return; // nothing new on disk since the last poll
+        }
+
+        var writtenStems = new HashSet<string>(resultFiles.Length);
+        foreach (var resultFile in resultFiles)
+        {
+            var name = Path.GetFileName(resultFile);
+            writtenStems.Add(name.Substring(0, name.Length - ResultFileSuffix.Length));
+        }
+
         foreach (var input in _batchFileNames.OrderBy(p => p.Index))
         {
             var stem = Path.GetFileNameWithoutExtension(input.FileName);
-            if (reportedStems.Contains(stem))
+            if (reportedStems.Contains(stem) || !writtenStems.Contains(stem))
             {
                 continue;
             }
 
-            var jsonPath = Path.Combine(saveFolder, stem + "_res.json");
-            if (!File.Exists(jsonPath))
-            {
-                continue;
-            }
+            var jsonPath = Path.Combine(saveFolder, stem + ResultFileSuffix);
 
             string json;
             try
@@ -889,11 +896,6 @@ public partial class PaddleOcr
         return borderedBitmap;
     }
 
-    private string MakeResult(List<PaddleOcrResultParser.TextDetectionResult> textDetectionResults)
-    {
-        return MakeResult(textDetectionResults, out _);
-    }
-
     internal string MakeResult(List<PaddleOcrResultParser.TextDetectionResult> textDetectionResults, out double confidence)
     {
         var kept = textDetectionResults;
@@ -1002,101 +1004,6 @@ public partial class PaddleOcr
         var bMid = (bMin + bMax) / 2.0;
         return (aMin < bMid && bMid < aMax) || (bMin < aMid && aMid < bMax);
     }
-
-    private void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
-    {
-        if (string.IsNullOrWhiteSpace(outLine.Data) || _cancellationToken.IsCancellationRequested)
-        {
-            return;
-        }
-
-        if (!outLine.Data.Contains("ppocr INFO:"))
-        {
-            return;
-        }
-
-        var arr = outLine.Data.Split("ppocr INFO: ");
-        if (arr.Length < 2)
-        {
-            return;
-        }
-
-        var data = arr[1];
-
-        string pattern =
-            @"\[\[\[\d+\.\d+,\s*\d+\.\d+],\s*\[\d+\.\d+,\s*\d+\.\d+],\s*\[\d+\.\d+,\s*\d+\.\d+],\s*\[\d+\.\d+,\s*\d+\.\d+]],\s*\(['""].*['""],\s*\d+\.\d+\)\]";
-        var match = Regex.Match(data, pattern);
-        if (match.Success)
-        {
-            var parser = new PaddleOcrResultParser();
-            var x = parser.Parse(data);
-            _textDetectionResults.Add(x);
-        }
-
-        // Example: [[[92.0, 56.0], [735.0, 60.0], [734.0, 118.0], [91.0, 113.0]], ('My mommy always said', 0.9907816052436829)]
-    }
-
-    private Lock _lock = new Lock();
-
-    private void OutputHandlerBatch(object sendingProcess, DataReceivedEventArgs outLine)
-    {
-        if (string.IsNullOrWhiteSpace(outLine.Data) || _cancellationToken.IsCancellationRequested)
-        {
-            return;
-        }
-
-        if (!outLine.Data.Contains("ppocr INFO:"))
-        {
-            return;
-        }
-
-        lock (_lock)
-        {
-            foreach (var fileName in _batchFileNames)
-            {
-                if (outLine.Data.Contains(fileName.FileName))
-                {
-                    if (_textDetectionResults.Count > 0)
-                    {
-                        var old = _batchFileNames.First(p => p.FileName == _batchFileName);
-                        var progress = new PaddleOcrBatchProgress
-                        {
-                            Index = old.Index,
-                            Item = old.Item,
-                            Text = MakeResult(_textDetectionResults, out var resultConfidence),
-                            Confidence = resultConfidence,
-                        };
-                        _textDetectionResults.Clear();
-                        _batchProgress?.Report(progress);
-                    }
-
-                    _batchFileName = fileName.FileName;
-                    return;
-                }
-            }
-
-            var arr = outLine.Data.Split("ppocr INFO: ");
-            if (arr.Length < 2)
-            {
-                return;
-            }
-
-            var data = arr[1];
-
-            string pattern =
-                @"\[\[\[\d+\.\d+,\s*\d+\.\d+],\s*\[\d+\.\d+,\s*\d+\.\d+],\s*\[\d+\.\d+,\s*\d+\.\d+],\s*\[\d+\.\d+,\s*\d+\.\d+]],\s*\(['""].*['""],\s*\d+\.\d+\)\]";
-            var match = Regex.Match(data, pattern);
-            if (match.Success)
-            {
-                var parser = new PaddleOcrResultParser();
-                var x = parser.Parse(data);
-                _textDetectionResults.Add(x);
-            }
-        }
-
-        // Example: [[[92.0, 56.0], [735.0, 60.0], [734.0, 118.0], [91.0, 113.0]], ('My mommy always said', 0.9907816052436829)]
-    }
-
 
     // Every language PaddleOCR 3.7 supports with a recognition model that ships in the
     // bundled support files. Adding a code here is enough to offer it - as long as the
