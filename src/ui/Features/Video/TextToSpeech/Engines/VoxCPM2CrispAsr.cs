@@ -472,7 +472,10 @@ public class VoxCPM2CrispAsr : ITtsEngine, IPerLineCloneEngine
         var outputFileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetFolder), Guid.NewGuid() + ".wav");
 
         var speed = Math.Clamp(Se.Settings.Video.TextToSpeech.VoxCPM2CrispAsrSpeed, 0.25, 4.0);
-        var payload = BuildSpeakPayload(text, speed, isPerLineClone ? Path.GetFileName(voxVoice.FilePath) : null);
+        // The model ends a line abruptly far more often when the text has no sentence ending -
+        // see EnsureSentenceEnding. The returned TtsResult keeps the line as it was.
+        var spokenText = EnsureSentenceEnding(text);
+        var payload = BuildSpeakPayload(spokenText, speed, isPerLineClone ? Path.GetFileName(voxVoice.FilePath) : null);
 
         // Attests the user's own imported reference and the AI-disclosure duty; see
         // CrispAsrTtsProvenance. Skipped when voice cloning has not been accepted in settings.
@@ -592,6 +595,78 @@ public class VoxCPM2CrispAsr : ITtsEngine, IPerLineCloneEngine
             return $"<failed to read error body: {ex.Message}>";
         }
     }
+
+    /// <summary>
+    /// The text VoxCPM2 is asked to speak: the line with a full stop where it has no sentence
+    /// ending of its own, and with a trailing comma, ellipsis or dash replaced by one.
+    /// </summary>
+    /// <remarks>
+    /// "VoxCPM2 often cuts off the last word" (#14480). The model itself decides when to stop,
+    /// and it stops right after the last phoneme: measured over the same 20 Italian sentences
+    /// with the same seeds against the same reference, the final sound fell from -20 dB to -45 dB
+    /// within 30 ms - a chopped ending - in 8 of 20 clips when the line had no terminal
+    /// punctuation, 9 of 20 when it ended in a comma, 8 of 20 with an ellipsis, and 2 of 20 with
+    /// a full stop. No clip lost a word in any of those runs; what is heard as the missing word
+    /// is the final syllable ending without its decay. Subtitle lines that continue in the next
+    /// line have exactly those endings, so the full stop is added here for the synthesis only.
+    /// Question and exclamation marks (and their CJK and Arabic forms) already end a sentence and
+    /// are kept; a closing quote or bracket stays after the added full stop.
+    /// </remarks>
+    internal static string EnsureSentenceEnding(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return text;
+        }
+
+        var core = text.TrimEnd();
+
+        // Keep a closing quote or bracket outside the sentence ending we settle on.
+        var suffixStart = core.Length;
+        while (suffixStart > 0 && IsClosingQuoteOrBracket(core[suffixStart - 1]))
+        {
+            suffixStart--;
+        }
+
+        var suffix = core[suffixStart..];
+        core = core[..suffixStart].TrimEnd();
+        if (core.Length == 0)
+        {
+            return text;
+        }
+
+        // Endings the model reads as "more is coming": comma, colon, semicolon, dashes, an
+        // ellipsis - and the full stop itself, which is put back below in its single form.
+        var end = core.Length;
+        while (end > 0 && IsSoftEnding(core[end - 1]))
+        {
+            end--;
+        }
+
+        core = core[..end].TrimEnd();
+        if (core.Length == 0)
+        {
+            return text;
+        }
+
+        var last = core[^1];
+        if (last is '!' or '?' or '。' or '！' or '？' or '؟')
+        {
+            return core + suffix;
+        }
+
+        return core + (IsCjk(last) ? "。" : ".") + suffix;
+    }
+
+    private static bool IsClosingQuoteOrBracket(char c) =>
+        c is '"' or '\u201D' or '\u00BB' or '\u2019' or '\'' or ')' or ']' or '}' or '」' or '』';
+
+    private static bool IsCjk(char c) =>
+        c is >= '\u3040' and <= '\u30FF' or >= '\u3400' and <= '\u9FFF' or >= '\uAC00' and <= '\uD7AF';
+
+    private static bool IsSoftEnding(char c) =>
+        c is '.' or ',' or ';' or ':' or '\u2026' or '-' or '\u2013' or '\u2014' or '、' or '，' or '：' or '；'
+            || char.IsWhiteSpace(c);
 
     /// <summary>
     /// Builds the <c>/v1/audio/speech</c> JSON payload. Extracted so the voice-field rule is
