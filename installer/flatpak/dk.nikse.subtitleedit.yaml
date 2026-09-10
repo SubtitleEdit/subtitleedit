@@ -17,6 +17,7 @@ build-options:
 finish-args:
   # Display
   - --share=ipc
+  - --socket=wayland
   - --socket=x11
   # Hardware acceleration
   - --device=dri
