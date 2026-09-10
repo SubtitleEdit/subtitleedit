@@ -79,16 +79,6 @@ Batch convert and seconv:
 * Batch convert: Beautify time codes, convert colors to dialog, snap time codes to frames, "Add folder...", translation progress, keep the source file date/time, and every teletext page per PID
 * seconv: --json output and --help-json, --ocr-prompt, --translate-prompt, --override-position, --output-filename-append, full frame image export, .avi/XSUB reading and batched Paddle OCR
 
-Platforms and accessibility:
-* macOS: standard Window menu, open Finder files in a new window, and Apple Vision OCR
-* Linux: dead keys with ibus, Whisper XXL on glibc 2.41+, and OpenBLAS in the Flathub package
-* Keyboard-navigable dialogs (initial focus, Tab, Enter on the default button), screen reader value announcements, and undocked windows no longer stealing the foreground or staying on top
-
-Stability and performance:
-* Around 600 bugs fixed in code sweeps and random-file bug hunts - subtitle formats, dialogs, settings, OCR, batch convert and seconv
-* Faster format detection, Matroska reading on network shares, waveform generation, SCC export and grid rendering, and fixed memory leaks in several dialogs - thx ivandrofly, hisui3393
-* WSB is now import only
-
 Translations and engines:
 * New UI languages: Central Kurdish and Azerbaijani - and all language files synced with English
 * Updated engines: Crisp ASR v0.8.32, llama.cpp b10840, whisper.cpp v1.9.3, CrispEmbed v0.17.9, Paddle OCR 3.7, Tesseract 5.5.3, ffmpeg 9.0.1 (Windows), libmpv 20260814 (Windows) and yt-dlp 2026.08.19
