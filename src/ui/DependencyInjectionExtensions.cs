@@ -156,6 +156,7 @@ using Nikse.SubtitleEdit.Features.Video.GoToVideoPosition;
 using Nikse.SubtitleEdit.Features.Video.OpenFromUrl;
 using Nikse.SubtitleEdit.Features.Video.OpenFromUrl.PickOnlineSubtitle;
 using Nikse.SubtitleEdit.Features.Video.ReEncodeVideo;
+using Nikse.SubtitleEdit.Features.Video.RemuxVideo;
 using Nikse.SubtitleEdit.Features.Video.ShotChanges;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ActorVoices;
@@ -552,6 +553,9 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<PromptTextBoxViewModel>();
         collection.AddTransient<PromptUnknownWordViewModel>();
         collection.AddTransient<ReEncodeVideoViewModel>();
+        collection.AddTransient<RemuxVideoViewModel>();
+        collection.AddTransient<PickAudioTrackViewModel>();
+        collection.AddTransient<PickAudioTrackWindow>();
         collection.AddTransient<RemoveTextForHearingImpairedViewModel>();
         collection.AddTransient<RemoveUnicodeCharactersViewModel>();
         collection.AddTransient<RenumberViewModel>();
