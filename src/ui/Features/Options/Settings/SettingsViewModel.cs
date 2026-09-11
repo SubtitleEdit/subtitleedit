@@ -2728,7 +2728,8 @@ public partial class SettingsViewModel : ObservableObject
         AppliedSettingsSnapshot = SettingsChangeSnapshot.Take();
 
         // Icon theme and recoloring can change without changing the actual theme variant.
-        if (Window?.Content is SettingsPage page)
+        if (Window != null &&
+            UiTheme.GetUnscaledContent(Window) is SettingsPage page)
         {
             page.RefreshSections();
         }
