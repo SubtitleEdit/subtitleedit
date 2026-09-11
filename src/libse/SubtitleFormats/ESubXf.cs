@@ -114,43 +114,43 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 int i = 0;
                 while (i < line.Length)
                 {
-                    if (line.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
+                    if (line.StartsWithAt(i, "<i>", StringComparison.OrdinalIgnoreCase))
                     {
                         AppendText(currentText, italicOn, boldOn, underlineOn, currentColor, xml, lineNode);
                         italicOn = true;
                         i += 3;
                     }
-                    else if (line.Substring(i).StartsWith("</i>", StringComparison.OrdinalIgnoreCase))
+                    else if (line.StartsWithAt(i, "</i>", StringComparison.OrdinalIgnoreCase))
                     {
                         AppendText(currentText, italicOn, boldOn, underlineOn, currentColor, xml, lineNode);
                         italicOn = false;
                         i += 4;
                     }
-                    else if (line.Substring(i).StartsWith("<b>", StringComparison.OrdinalIgnoreCase))
+                    else if (line.StartsWithAt(i, "<b>", StringComparison.OrdinalIgnoreCase))
                     {
                         AppendText(currentText, italicOn, boldOn, underlineOn, currentColor, xml, lineNode);
                         boldOn = true;
                         i += 3;
                     }
-                    else if (line.Substring(i).StartsWith("</b>", StringComparison.OrdinalIgnoreCase))
+                    else if (line.StartsWithAt(i, "</b>", StringComparison.OrdinalIgnoreCase))
                     {
                         AppendText(currentText, italicOn, boldOn, underlineOn, currentColor, xml, lineNode);
                         boldOn = false;
                         i += 4;
                     }
-                    else if (line.Substring(i).StartsWith("<u>", StringComparison.OrdinalIgnoreCase))
+                    else if (line.StartsWithAt(i, "<u>", StringComparison.OrdinalIgnoreCase))
                     {
                         AppendText(currentText, italicOn, boldOn, underlineOn, currentColor, xml, lineNode);
                         underlineOn = true;
                         i += 3;
                     }
-                    else if (line.Substring(i).StartsWith("</u>", StringComparison.OrdinalIgnoreCase))
+                    else if (line.StartsWithAt(i, "</u>", StringComparison.OrdinalIgnoreCase))
                     {
                         AppendText(currentText, italicOn, boldOn, underlineOn, currentColor, xml, lineNode);
                         underlineOn = false;
                         i += 4;
                     }
-                    else if (line.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
+                    else if (line.StartsWithAt(i, "<font ", StringComparison.OrdinalIgnoreCase))
                     {
                         AppendText(currentText, italicOn, boldOn, underlineOn, currentColor, xml, lineNode);
                         currentColor = string.Empty;
@@ -178,7 +178,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             i = int.MaxValue;
                         }
                     }
-                    else if (line.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
+                    else if (line.StartsWithAt(i, "</font>", StringComparison.OrdinalIgnoreCase))
                     {
                         AppendText(currentText, italicOn, boldOn, underlineOn, currentColor, xml, lineNode);
                         currentColor = string.Empty;

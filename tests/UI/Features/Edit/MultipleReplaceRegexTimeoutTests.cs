@@ -47,6 +47,7 @@ public class MultipleReplaceRegexTimeoutTests : IDisposable
     private static MultipleReplaceViewModel NewViewModel()
     {
         var vm = new MultipleReplaceViewModel(new WindowService(new NullServiceProvider()), new FileHelper());
+        vm.PreviewIntervalMs = 25; // the tests wait for the preview timer; see PreviewIntervalMs
         vm.Nodes.Clear();
         return vm;
     }

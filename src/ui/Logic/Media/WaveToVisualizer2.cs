@@ -88,7 +88,7 @@ public class WaveHeader2
         int bytesRead = stream.Read(buffer);
         if (bytesRead < buffer.Length)
         {
-            throw new ArgumentException("Stream is too small");
+            throw new InvalidDataException("Stream is too small");
         }
 
         // Parse constant header - use Span slicing to avoid array indexing
@@ -97,6 +97,17 @@ public class WaveHeader2
         Format = Encoding.UTF8.GetString(buffer.Slice(8, 4));
         FmtId = Encoding.UTF8.GetString(buffer.Slice(12, 4));
         FmtChunkSize = BitConverter.ToInt32(buffer.Slice(16));
+
+        // Every size in this header comes straight off disk, and a waveform cache file left
+        // half-written by a crash (#14751) has garbage in it. Sizing an allocation from an
+        // unchecked field is how a corrupt cache turns into a multi-hundred-megabyte array and
+        // a frozen UI, so each one is bounded by the bytes the file actually has before it is
+        // used. 16 is the smallest legal fmt chunk and the last field read below sits at 14..15.
+        if (FmtChunkSize < 16 || ConstantHeaderSize + (long)FmtChunkSize + 8 > stream.Length)
+        {
+            throw new InvalidDataException(
+                $"Invalid wave header: fmt chunk size {FmtChunkSize} does not fit in a {stream.Length} byte stream.");
+        }
 
         // Read fmt chunk - allocate only if needed (usually 16-18 bytes, max ~40)
         Span<byte> fmtBuffer = FmtChunkSize <= 128
@@ -146,6 +157,25 @@ public class WaveHeader2
             DataId = Encoding.UTF8.GetString(dataHeader.Slice(0, 4));
             DataChunkSize = BitConverter.ToUInt32(dataHeader.Slice(4));
             DataStartPosition = (int)currentPos + 8;
+        }
+
+        // A truncated file still declares the full data size - the peak writer emits the header
+        // with the final sample count up front and streams the samples after it, so a crash
+        // mid-write leaves a header promising bytes that never landed. Cap the promise at what
+        // is really there: the peaks that survived still load, and nothing sizes an array from
+        // a number the file cannot back.
+        var availableDataBytes = Math.Max(0, stream.Length - DataStartPosition);
+        if (DataChunkSize > availableDataBytes)
+        {
+            DataChunkSize = (uint)availableDataBytes;
+        }
+
+        // BlockAlign below divides LengthInSamples, and LengthInSeconds divides by BytesPerSecond;
+        // a zeroed-out fmt chunk would make both a divide-by-zero deep inside a peak load.
+        if (NumberOfChannels <= 0 || BitsPerSample <= 0)
+        {
+            throw new InvalidDataException(
+                $"Invalid wave header: {NumberOfChannels} channel(s), {BitsPerSample} bits per sample.");
         }
 
         // Recalculate BlockAlign (older versions wrote incorrect values)
@@ -243,6 +273,62 @@ public struct WavePeak2
     public int Abs
     {
         get { return Math.Max(Math.Abs((int)Max), Math.Abs((int)Min)); }
+    }
+}
+
+/// <summary>
+/// Writes a waveform/spectrogram cache file through a temp file in the same folder, so the
+/// destination only ever exists complete.
+/// </summary>
+/// <remarks>
+/// Both cache formats put their length up front and stream the payload after it, so writing
+/// straight to the destination means a crash (or a full disk, or a killed process) leaves a
+/// file whose header promises far more than it holds - and since the load path only checks
+/// that the file *exists*, that ruin is then re-read on every single open of the same video,
+/// forever (#14751). Renaming a finished temp file over the destination is atomic on both
+/// NTFS and POSIX, so an interrupted write leaves the old cache - or no cache - but never a
+/// half-written one.
+/// </remarks>
+internal static class WaveCacheFile
+{
+    /// <summary>Suffix of the in-progress file; the cleanup in settings globs it away too.</summary>
+    internal const string TempSuffix = ".tmp";
+
+    internal static void Write(string filePath, Action<Stream> writeContent)
+    {
+        var dir = Path.GetDirectoryName(filePath);
+        if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+        {
+            Directory.CreateDirectory(dir);
+        }
+
+        // Deliberately deterministic rather than unique: a crash can only ever strand one temp
+        // file per cached video, and the next extraction of that video reuses the same name.
+        // It also keeps the temp file beside the destination, which is what lets the move be a
+        // rename instead of a cross-volume copy.
+        var tempFilePath = filePath + TempSuffix;
+        try
+        {
+            using (var stream = File.Create(tempFilePath))
+            {
+                writeContent(stream);
+            }
+
+            File.Move(tempFilePath, filePath, true);
+        }
+        catch
+        {
+            try
+            {
+                File.Delete(tempFilePath);
+            }
+            catch
+            {
+                // ignore - a stranded temp file is overwritten by the next run
+            }
+
+            throw;
+        }
     }
 }
 
@@ -366,6 +452,10 @@ public class WavePeakData2
 
 public class SpectrogramData2 : IDisposable
 {
+    // Sanity bounds for the metadata read back from a cache file - see LoadFromBinaryFile.
+    private const int MaxFftSize = 65536;
+    private const int MaxImageWidth = 65536;
+
     private string? _loadFromFilePath;
     private float[]? _rawSamples;
 
@@ -410,14 +500,20 @@ public class SpectrogramData2 : IDisposable
         get { return _loadFromFilePath == null && _rawSamples == null; }
     }
 
-    public void Load()
+    /// <summary>
+    /// Materializes the spectrogram images. Returns false when there was nothing usable to load -
+    /// the file is missing, or it is there but unreadable. Callers that know the file existed can
+    /// treat false as "this cache file is corrupt" and discard it (#14751); before, the failure
+    /// was logged and swallowed here, so a ruined file was silently re-read on every open.
+    /// </summary>
+    public bool Load()
     {
         // Load from raw data if available
         if (_rawSamples != null)
         {
             GenerateImagesFromRawData();
             _rawSamples = null;
-            return;
+            return true;
         }
 
         // Load from binary file if path is set
@@ -430,7 +526,7 @@ public class SpectrogramData2 : IDisposable
             {
                 if (!File.Exists(filePath))
                 {
-                    return;
+                    return false;
                 }
 
                 LoadFromBinaryFile(filePath);
@@ -438,8 +534,11 @@ public class SpectrogramData2 : IDisposable
             catch (Exception exception)
             {
                 Se.LogError(exception, $"Unable to load spectrogram from {filePath}");
+                return false;
             }
         }
+
+        return true;
     }
 
     private void LoadFromBinaryFile(string filePath)
@@ -447,13 +546,32 @@ public class SpectrogramData2 : IDisposable
         using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
         using var br = new BinaryReader(fs);
 
+        const int metadataSize = 16; // 2 ints (8 bytes) + 1 double (8 bytes), matching SaveToBinaryFile
+        if (fs.Length < metadataSize)
+        {
+            throw new InvalidDataException($"Spectrogram file is too small ({fs.Length} bytes).");
+        }
+
         // Read metadata
         FftSize = br.ReadInt32();
         ImageWidth = br.ReadInt32();
         SampleDuration = br.ReadDouble();
 
+        // GenerateImagesFromRawData divides the sample count by FftSize * ImageWidth to get the
+        // number of images to build, so corrupt metadata is not merely wrong output: a stored
+        // 1 x 1 turns one file into millions of SKBitmap allocations and the app never comes
+        // back (#14751). The writer only ever stores 256 x 1024; the bounds here stay wide
+        // enough that changing those constants needs no change to this check.
+        if (FftSize < 2 || FftSize > MaxFftSize || FftSize % 2 != 0 ||
+            ImageWidth < 1 || ImageWidth > MaxImageWidth ||
+            !double.IsFinite(SampleDuration) || SampleDuration <= 0)
+        {
+            throw new InvalidDataException(
+                $"Invalid spectrogram metadata: fft size {FftSize}, image width {ImageWidth}, sample duration {SampleDuration}.");
+        }
+
         // Read raw samples
-        var sampleCount = (int)((fs.Length - 16) / sizeof(float)); // 16 bytes = 2 ints (8 bytes) + 1 double (8 bytes), matching SaveToBinaryFile
+        var sampleCount = (int)((fs.Length - metadataSize) / sizeof(float));
         _rawSamples = new float[sampleCount];
 
         var byteSpan = MemoryMarshal.AsBytes(_rawSamples.AsSpan());
@@ -544,23 +662,20 @@ public class SpectrogramData2 : IDisposable
 
     public static void SaveToBinaryFile(string filePath, int fftSize, int imageWidth, double sampleDuration, float[] samples)
     {
-        var dir = Path.GetDirectoryName(filePath);
-        if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+        WaveCacheFile.Write(filePath, fs =>
         {
-            Directory.CreateDirectory(dir);
-        }
+            var bw = new BinaryWriter(fs);
 
-        using var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write);
-        using var bw = new BinaryWriter(fs);
+            // Write metadata
+            bw.Write(fftSize);
+            bw.Write(imageWidth);
+            bw.Write(sampleDuration);
 
-        // Write metadata
-        bw.Write(fftSize);
-        bw.Write(imageWidth);
-        bw.Write(sampleDuration);
-
-        // Write raw samples
-        ReadOnlySpan<byte> byteSpan = MemoryMarshal.AsBytes(samples.AsSpan());
-        fs.Write(byteSpan);
+            // Write raw samples
+            ReadOnlySpan<byte> byteSpan = MemoryMarshal.AsBytes(samples.AsSpan());
+            fs.Write(byteSpan);
+            bw.Flush();
+        });
     }
 }
 
@@ -771,10 +886,7 @@ public class WavePeakGenerator2 : IDisposable
         // save results to file
         if (!string.IsNullOrWhiteSpace(peakFileName))
         {
-            using (var stream = File.Create(peakFileName))
-            {
-                WriteWaveformData(stream, peaksPerSecond, peaks);
-            }
+            WaveCacheFile.Write(peakFileName, stream => WriteWaveformData(stream, peaksPerSecond, peaks));
         }
 
         return new WavePeakData2(peaksPerSecond, peaks);
@@ -800,20 +912,10 @@ public class WavePeakGenerator2 : IDisposable
         }
         peaks.Add(new WavePeak2(1000, -1000));
 
-        // save results to file
-        var dir = Path.GetDirectoryName(peakFileName);
-        if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
-        {
-            Directory.CreateDirectory(dir);
-        }
-
-        // One bulk write of the (Max, Min) short pairs - byte-identical to the old 4-bytes-per-
-        // peak loop (a WavePeak2 is exactly the two little-endian shorts the loop wrote), ~16x
-        // faster on a multi-hour file.
-        using (var stream = File.Create(peakFileName))
-        {
-            WriteWaveformData(stream, peaksPerSecond, peaks);
-        }
+        // Save results to file. One bulk write of the (Max, Min) short pairs - byte-identical to
+        // the old 4-bytes-per-peak loop (a WavePeak2 is exactly the two little-endian shorts the
+        // loop wrote), ~16x faster on a multi-hour file.
+        WaveCacheFile.Write(peakFileName, stream => WriteWaveformData(stream, peaksPerSecond, peaks));
 
         return new WavePeakData2(peaksPerSecond, peaks);
     }
@@ -982,6 +1084,13 @@ public class WavePeakGenerator2 : IDisposable
         if (Header.NumberOfChannels != 1 && Header.NumberOfChannels != 2)
         {
             throw new Exception("Peaks file must have 1 or 2 channels.");
+        }
+
+        // The sample rate is the peaks-per-second the whole waveform time base is built on;
+        // a corrupt 0 would silently yield an infinite length rather than an error.
+        if (Header.SampleRate <= 0)
+        {
+            throw new InvalidDataException($"Peaks file has an invalid sample rate ({Header.SampleRate}).");
         }
 
         // load data

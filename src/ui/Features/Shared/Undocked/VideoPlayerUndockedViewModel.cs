@@ -203,13 +203,14 @@ public partial class VideoPlayerUndockedViewModel : ObservableObject
                 }
 
                 videoPlayerControl.Volume = _originalVolume;
-                videoPlayerControl.Position = _originalPosition;
 
-                // The player is where it belongs - a rebuild from here on can read the live
-                // position again (issue #14218). If it is not there yet (mpv still loading), the
-                // target stays until the position tick sees the player arrive; handing a rebuild
-                // the 0 of a player that never got there is the rewind this guards against.
-                videoPlayerControl.EndPositionRestoreIfArrived();
+                // Seeks until the player is where it belongs, and only then lets a rebuild read
+                // the live position again (issue #14218). If it never gets there (mpv still
+                // loading), the target stays - handing a rebuild the 0 of a player that never
+                // arrived is the rewind this guards against. Assigning Position instead, as this
+                // did, reaches the player through the position slider, which clamps the write to
+                // a duration that may not be published yet (issue #14741).
+                await videoPlayerControl.RestorePositionAsync(_originalPosition);
 
                 // Undocking opens the video in a new player, which starts on mpv's default audio
                 // track - re-apply the track the user picked in the main window (issue #12844).

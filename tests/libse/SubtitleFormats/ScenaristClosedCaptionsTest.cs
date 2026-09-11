@@ -22,6 +22,136 @@ public class ScenaristClosedCaptionsTest
         return subtitle;
     }
 
+    private static Subtitle LoadSccDropFrame(params string[] timedRows)
+    {
+        var lines = new List<string> { "Scenarist_SCC V1.0", "" };
+        foreach (var row in timedRows)
+        {
+            lines.Add(row);
+            lines.Add(string.Empty);
+        }
+
+        var subtitle = new Subtitle();
+        new ScenaristClosedCaptionsDropFrame().LoadSubtitle(subtitle, lines, "test.scc");
+        return subtitle;
+    }
+
+    private static void WithFrameRate(double frameRate, Action action)
+    {
+        var savedRate = Configuration.Settings.General.CurrentFrameRate;
+        try
+        {
+            Configuration.Settings.General.CurrentFrameRate = frameRate;
+            action();
+        }
+        finally
+        {
+            Configuration.Settings.General.CurrentFrameRate = savedRate;
+        }
+    }
+
+    // Lines from the #14703 sample: a whole pop-on caption packed onto one line, the display
+    // code (942f) 25 byte pairs in. One pair is sent per frame, so the caption shows at
+    // 01:02:40:02, not at the line's 01:02:39:07 - which is what Telestream Switch shows.
+    private const string ChatterLine = "01:02:37:14\t9420 9420 94f2 94f2 97a2 97a2 5be9 6e64 e973 f4e9 6ee3 f420 e368 61f4 f4e5 f25d 942c 942c 942f 942f";
+    private const string HorsesLine = "01:02:39:07\t9420 9420 94d0 94d0 c2f2 e96e 6720 f468 e520 68ef f273 e573 20f2 ef75 6e64 2c80 9470 9470 f7ef 75ec 6420 79ef 75bf 942c 942c 942f 942f";
+    private const string LaughsLine = "01:02:41:10\t9420 9420 9476 9476 5bec 6175 6768 735d 942c 942c 942f 942f";
+
+    [Fact]
+    public void PackedPopOnLineDisplaysAtTheEndOfCaptionFrame()
+    {
+        WithFrameRate(29.97, () =>
+        {
+            var subtitle = LoadScc(ChatterLine, HorsesLine, LaughsLine, "01:02:42:21\t942c 942c 8080 8080");
+
+            Assert.Equal(3, subtitle.Paragraphs.Count);
+            Assert.Equal("01:02:40:02", subtitle.Paragraphs[1].StartTime.ToHHMMSSFF());
+            Assert.Contains("Bring the horses", subtitle.Paragraphs[1].Text);
+        });
+    }
+
+    [Fact]
+    public void ClearBeforeDisplayOnTheSameLineEndsThePreviousCaptionAtTheClearFrame()
+    {
+        WithFrameRate(29.97, () =>
+        {
+            var subtitle = LoadScc(ChatterLine, HorsesLine, LaughsLine, "01:02:42:21\t942c 942c 8080 8080");
+
+            // 942c is pair 23 of the horses line: 01:02:39:07 + 23 frames.
+            Assert.Equal("01:02:40:00", subtitle.Paragraphs[0].EndTime.ToHHMMSSFF());
+        });
+    }
+
+    [Fact]
+    public void StandaloneClearLineEndsTheDisplayedCaption()
+    {
+        WithFrameRate(29.97, () =>
+        {
+            var subtitle = LoadScc(
+                "01:02:26:20\t9420 9420 94f2 94f2 9723 9723 57e5 a7f2 e520 64ef e96e 6720 61ec f2e9 6768 f42c 2068 7568 bf80 942c 942c 942f 942f",
+                "01:02:29:11\t942c 942c 8080 8080",
+                "01:02:30:16\t9420 9420 94f2 94f2 9723 9723 d9ef 7520 6861 76e5 20f4 68e5 2067 68f4 2068 ef75 73e5 ae80 942c 942c 942f 942f");
+
+            Assert.Equal(2, subtitle.Paragraphs.Count);
+            Assert.Equal("01:02:29:11", subtitle.Paragraphs[0].EndTime.ToHHMMSSFF());
+        });
+    }
+
+    [Fact]
+    public void DoubledControlCodeCountsOnce()
+    {
+        WithFrameRate(29.97, () =>
+        {
+            // 942f is pair 5; its redundancy copy at pair 6 must not start a second caption or move the time.
+            var subtitle = LoadScc("00:00:10:00\t94ae 94ae 9420 9420 9470 9470 4fcb 942f 942f", "00:00:12:00\t942c 942c");
+
+            Assert.Single(subtitle.Paragraphs);
+            Assert.Equal("00:00:10:07", subtitle.Paragraphs[0].StartTime.ToHHMMSSFF());
+            Assert.Equal("00:00:12:00", subtitle.Paragraphs[0].EndTime.ToHHMMSSFF());
+        });
+    }
+
+    [Fact]
+    public void FrameOffsetRollsOverAtTheFrameRate()
+    {
+        WithFrameRate(29.97, () =>
+        {
+            var subtitle = LoadScc("00:00:59:27\t9420 9420 9470 9470 4fcb 942f 942f", "00:01:05:00\t942c 942c");
+
+            Assert.Equal("00:01:00:02", subtitle.Paragraphs[0].StartTime.ToHHMMSSFF());
+        });
+
+        WithFrameRate(25, () =>
+        {
+            var subtitle = LoadScc("00:00:59:22\t9420 9420 9470 9470 4fcb 942f 942f", "00:01:05:00\t942c 942c");
+
+            Assert.Equal("00:01:00:02", subtitle.Paragraphs[0].StartTime.ToHHMMSSFF());
+        });
+    }
+
+    [Fact]
+    public void DropFrameOffsetSkipsTheTwoDroppedFrameNumbers()
+    {
+        WithFrameRate(29.97, () =>
+        {
+            var subtitle = LoadSccDropFrame("00:00:59;27\t9420 9420 9470 9470 4fcb 942f 942f", "00:01:05;00\t942c 942c");
+
+            Assert.Equal("00:01:00:04", subtitle.Paragraphs[0].StartTime.ToHHMMSSFF());
+        });
+    }
+
+    [Fact]
+    public void FrameFieldIsNotCappedAt999Milliseconds()
+    {
+        // A 29.97 file loaded at 23.976: frame 28 is a real time past the second, not 999 ms.
+        WithFrameRate(23.976, () =>
+        {
+            var subtitle = LoadScc("00:00:00:00\t9420 9420 9470 9470 4fcb", "00:00:00:28\t942f 942f", "00:00:04:00\t942c 942c");
+
+            Assert.Equal(1168, subtitle.Paragraphs[0].StartTime.TotalMilliseconds, 0);
+        });
+    }
+
     [Fact]
     public void ImportValidCaption()
     {

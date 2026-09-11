@@ -243,22 +243,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
-            var allBelow100 = true;
+            // GetTimeCode already scales a fraction of any digit count, so the old "every cue has
+            // ms < 100, multiply by 10" pass could only corrupt correct times (1.050 s -> 1.500 s).
             foreach (var p in subtitle.Paragraphs)
             {
                 p.Text = Utilities.RemoveUnneededSpaces(p.Text, null).Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-                if (p.StartTime.Milliseconds >= 100 || p.EndTime.Milliseconds >= 100)
-                {
-                    allBelow100 = false;
-                }
-            }
-            if (allBelow100)
-            {
-                foreach (var p in subtitle.Paragraphs)
-                {
-                    p.StartTime.Milliseconds *= 10;
-                    p.EndTime.Milliseconds *= 10;
-                }
             }
 
             if (fixOverlap)

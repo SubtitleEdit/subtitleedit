@@ -50,6 +50,7 @@ internal static class HelpDisplay
         ShowParameter(console, "--input-folder:<folder name>", "Input folder path");
         ShowParameter(console, "--offset:hh:mm:ss:ms", "Time offset");
         ShowParameter(console, "--output-filename:<file name>", "Output file name (for single file only)");
+        ShowParameter(console, "--output-filename-append:<text>", "Text appended to the output file name stem, e.g. _fixed (ignored with --output-filename)");
         ShowParameter(console, "--output-folder:<folder name>", "Output folder path");
         ShowParameter(console, "--overwrite", "Overwrite existing files");
         ShowParameter(console, "--keep-timestamp", "Give output files the source file's modified/created date instead of the conversion time");
@@ -110,6 +111,7 @@ internal static class HelpDisplay
         ShowParameter(console, "--content-alignment:<mode>", "Multi-line text justification: left | center (default) | right | from-alignment");
         ShowParameter(console, "--bottom-top-margin:<px>", "Vertical screen-edge margin in pixels (default: 5% of height)");
         ShowParameter(console, "--left-right-margin:<px>", "Horizontal screen-edge margin in pixels (default: 5% of width)");
+        ShowParameter(console, "--override-position:<x|y|xy>", "Image → image: ignore the source bitmap position on that axis and place it by --alignment and margins");
         ShowParameter(console, "--full-frame", "Draw each subtitle on a frame-sized image (place at 0,0 in an editing timeline); only fcpimage and bluraysup");
         ShowParameter(console, "--full-frame-background-color:<colour>", "Background of the full frame image (default: transparent)");
 

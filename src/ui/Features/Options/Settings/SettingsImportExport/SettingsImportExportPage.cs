@@ -52,7 +52,7 @@ public class SettingsImportExportPage : UserControl
             Content = Se.Language.General.SyntaxColoring,
             Margin = new Thickness(20, 0, 55, 0),
             [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.ExportImportSyntaxColoring)) { Mode = BindingMode.TwoWay },
-        }.WithBindEnabled(nameof(vm.ExportImportAll), new InverseBooleanConverter());
+        }.WithBindEnabled(nameof(vm.ExportImportAll), InverseBooleanConverter.Instance);
 
         var checkBoxExportImportShortcuts = new CheckBox
         {

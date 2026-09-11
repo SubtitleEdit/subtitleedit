@@ -187,4 +187,38 @@ public class OutputFileNameTest : IDisposable
         Assert.Equal(Path.Combine(_tempRoot, "video.eng.vtt"), full);
         Assert.Equal(Path.Combine(_tempRoot, "video.eng.forced.vtt"), forced);
     }
+
+    [Fact]
+    public void Resolve_OutputFilenameAppend_IsAddedToStem()
+    {
+        var input = Path.Combine(_tempRoot, "movie.ts");
+        File.WriteAllText(input, "");
+        var opts = new ConversionOptions
+        {
+            Patterns = [input],
+            Format = "WebVTT",
+            OutputFolder = _tempRoot,
+            OutputFilenameAppend = "_fixed",
+        };
+
+        Assert.Equal(Path.Combine(_tempRoot, "movie_fixed.vtt"), SubtitleConverter.ResolveOutputFileName(input, opts));
+        Assert.Equal(Path.Combine(_tempRoot, "movie_fixed.eng.vtt"), SubtitleConverter.ResolveOutputFileName(input, opts, languageSuffix: "eng"));
+    }
+
+    [Fact]
+    public void Resolve_OutputFilenameAppend_IgnoredWithExplicitOutputFilename()
+    {
+        var input = Path.Combine(_tempRoot, "movie.ts");
+        File.WriteAllText(input, "");
+        var opts = new ConversionOptions
+        {
+            Patterns = [input],
+            Format = "WebVTT",
+            OutputFolder = _tempRoot,
+            OutputFilename = "out.vtt",
+            OutputFilenameAppend = "_fixed",
+        };
+
+        Assert.Equal(Path.Combine(_tempRoot, "out.vtt"), SubtitleConverter.ResolveOutputFileName(input, opts));
+    }
 }

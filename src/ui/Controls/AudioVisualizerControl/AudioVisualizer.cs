@@ -223,6 +223,37 @@ public class AudioVisualizer : Control
     // video/audio preview" (#14252). Only the main window sets it, and only while an original
     // subtitle is loaded; the dialogs that host a waveform keep showing the text they were given.
     public bool ShowOriginalText { get; set; }
+    public bool ShowOriginalSubtitleOverlay { get; set; }
+
+    private readonly List<WaveformOriginalSubtitleCue> _originalSubtitleCues = new();
+
+    /// <summary>
+    /// Running maximum of <see cref="WaveformOriginalSubtitleCue.EndSeconds"/> over the cues in
+    /// file order. Cues overlap (SDH music lines spanning dialogue, signs), so their end times are
+    /// not monotonic and cannot be binary-searched directly; the running maximum is.
+    /// </summary>
+    private readonly List<double> _originalSubtitleCueMaxEnds = new();
+    private const double OriginalSubtitleOpacity = 0.5;
+    private bool IsOriginalSubtitleOverlayVisible => ShowOriginalSubtitleOverlay && _originalSubtitleCues.Count > 0;
+    private bool ShowOriginalTextInWaveform => ShowOriginalText && !IsOriginalSubtitleOverlayVisible;
+
+    public void SetOriginalSubtitleCues(IReadOnlyList<WaveformOriginalSubtitleCue>? cues)
+    {
+        _originalSubtitleCues.Clear();
+        _originalSubtitleCueMaxEnds.Clear();
+        if (cues != null)
+        {
+            _originalSubtitleCues.AddRange(cues);
+            var maxEnd = double.MinValue;
+            foreach (var cue in cues)
+            {
+                maxEnd = Math.Max(maxEnd, cue.EndSeconds);
+                _originalSubtitleCueMaxEnds.Add(maxEnd);
+            }
+        }
+
+        InvalidateVisual();
+    }
 
     // Lets the wheel handler ask the host whether the video is playing, so a plain scroll in
     // "center video position" mode can turn into a seek that keeps the play-head centered
@@ -513,6 +544,7 @@ public class AudioVisualizer : Control
     public class PositionEventArgs : EventArgs
     {
         public double PositionInSeconds { get; set; }
+        public bool IsCtrlShift { get; set; }
     }
 
     public class ContextEventArgs : EventArgs
@@ -555,6 +587,7 @@ public class AudioVisualizer : Control
     /// move/resize drag. Lets hosts select the paragraph the user grabbed before the drag
     /// mutates it (#14000) - a click is delivered via <see cref="OnPrimarySingleClicked"/> instead.</summary>
     public event ParagraphEventHandler? OnDragStarted;
+    public event EventHandler? OnDragEnded;
 
     /// <summary>Raised when the user clicks the empty waveform to generate it on demand
     /// (shown only when auto-generate is off and there are no cached peaks).</summary>
@@ -927,10 +960,12 @@ public class AudioVisualizer : Control
 
     private void OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        // Cleared up front: every path out of this method ends the drag, and several of them
-        // return early. The 500 ms tail in IsEditingWithPointer takes over from here, so the
-        // settled times still get one - and only one - undo snapshot.
+        var wasDragging = _pointerDragActive;
         _pointerDragActive = false;
+        if (wasDragging)
+        {
+            OnDragEnded?.Invoke(this, EventArgs.Empty);
+        }
 
         _isCtrlDown = e.KeyModifiers.HasFlag(KeyModifiers.Control);
         _isShiftDown = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
@@ -1238,7 +1273,7 @@ public class AudioVisualizer : Control
         else
         {
             // Not near an edge, so it's a move operation
-            if (_isCtrlDown || _isAltDown)
+            if ((_isCtrlDown && !_isShiftDown) || _isAltDown)
             {
                 _interactionMode = InteractionMode.None;
                 return;
@@ -1276,7 +1311,12 @@ public class AudioVisualizer : Control
     /// </summary>
     private void OnPointerCaptureLost(object? sender, PointerCaptureLostEventArgs e)
     {
+        var wasDragging = _pointerDragActive;
         _pointerDragActive = false;
+        if (wasDragging)
+        {
+            OnDragEnded?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     private void OnPointerExited(object? sender, PointerEventArgs e)
@@ -1716,18 +1756,28 @@ public class AudioVisualizer : Control
         _lastPointerEditMs = Environment.TickCount64;
 
         // SE 4 parity: scrub the video to the edge being dragged so the user sees the
-        // exact frame at the new start/end while resizing (whole-paragraph moves are excluded).
-        if (Se.Settings.Waveform.SetVideoPositionOnMoveStartEnd && OnVideoPositionChanged != null && _activeParagraph != null)
+        // exact frame at the new start/end while resizing (whole-paragraph moves are excluded unless Ctrl+Shift is held).
+        var isCtrlShift = _isCtrlDown && _isShiftDown;
+        if ((isCtrlShift || Se.Settings.Waveform.SetVideoPositionOnMoveStartEnd) && OnVideoPositionChanged != null && _activeParagraph != null)
         {
             switch (_interactionMode)
             {
                 case InteractionMode.ResizingLeft:
                 case InteractionMode.ResizeLeftAnd:
-                    OnVideoPositionChanged.Invoke(this, new PositionEventArgs { PositionInSeconds = _activeParagraph.StartTime.TotalSeconds });
+                    OnVideoPositionChanged.Invoke(this, new PositionEventArgs { PositionInSeconds = _activeParagraph.StartTime.TotalSeconds, IsCtrlShift = isCtrlShift });
+                    break;
+                case InteractionMode.Moving:
+                case InteractionMode.MovingSelection:
+                    // Whole-paragraph moves only scrub in the Ctrl+Shift preview mode, never
+                    // from the SetVideoPositionOnMoveStartEnd setting alone.
+                    if (isCtrlShift)
+                    {
+                        OnVideoPositionChanged.Invoke(this, new PositionEventArgs { PositionInSeconds = _activeParagraph.StartTime.TotalSeconds, IsCtrlShift = true });
+                    }
                     break;
                 case InteractionMode.ResizingRight:
                 case InteractionMode.ResizeRightAnd:
-                    OnVideoPositionChanged.Invoke(this, new PositionEventArgs { PositionInSeconds = _activeParagraph.EndTime.TotalSeconds });
+                    OnVideoPositionChanged.Invoke(this, new PositionEventArgs { PositionInSeconds = _activeParagraph.EndTime.TotalSeconds, IsCtrlShift = isCtrlShift });
                     break;
             }
         }
@@ -3236,12 +3286,21 @@ public class AudioVisualizer : Control
             }
         }
 
+        var showOriginalSubtitle = IsOriginalSubtitleOverlayVisible;
+        var workingTextHeight = showOriginalSubtitle ? renderCtx.Height / 2.0 : renderCtx.Height;
+
         foreach (var p in paragraphs)
         {
             if (p.EndTime.TotalMilliseconds >= startPositionMilliseconds && p.StartTime.TotalMilliseconds <= endPositionMilliseconds)
             {
-                DrawParagraph(p, context, ref renderCtx);
+                DrawParagraph(p, context, ref renderCtx, 0, workingTextHeight);
             }
+        }
+
+        if (showOriginalSubtitle)
+        {
+            var originalSubtitleTop = renderCtx.Height / 2.0;
+            DrawOriginalSubtitleParagraphs(context, ref renderCtx, originalSubtitleTop, renderCtx.Height - originalSubtitleTop);
         }
     }
 
@@ -3364,7 +3423,8 @@ public class AudioVisualizer : Control
         return prepared;
     }
 
-    private void DrawParagraph(SubtitleLineViewModel paragraph, DrawingContext context, ref RenderContext renderCtx)
+    private void DrawParagraph(SubtitleLineViewModel paragraph, DrawingContext context, ref RenderContext renderCtx,
+        double contentTop = 0, double contentHeight = -1)
     {
         var currentRegionLeft = SecondsToXPositionOptimized(paragraph.StartTime.TotalSeconds - renderCtx.StartPositionSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
         var currentRegionRight = SecondsToXPositionOptimized(paragraph.EndTime.TotalSeconds - renderCtx.StartPositionSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
@@ -3375,50 +3435,119 @@ public class AudioVisualizer : Control
             return;
         }
 
-        var height = renderCtx.Height;
+        if (contentHeight < 0)
+        {
+            contentHeight = renderCtx.Height;
+        }
 
-        // Draw background rectangle
+        // Keep the editable paragraph background and timing borders full-height.
         context.FillRectangle(_selectedParagraphsRenderSet.Contains(paragraph) ? _paintParagraphSelectedBackground : _paintParagraphBackground,
-            new Rect(currentRegionLeft, 0, currentRegionWidth, height));
+            new Rect(currentRegionLeft, 0, currentRegionWidth, renderCtx.Height));
 
         // Draw left and right borders
-        context.DrawLine(_paintLeft, new Point(currentRegionLeft, 0), new Point(currentRegionLeft, height));
-        context.DrawLine(_paintRight, new Point(currentRegionRight - 1, 0), new Point(currentRegionRight - 1, height));
+        context.DrawLine(_paintLeft, new Point(currentRegionLeft, 0), new Point(currentRegionLeft, renderCtx.Height));
+        context.DrawLine(_paintRight, new Point(currentRegionRight - 1, 0), new Point(currentRegionRight - 1, renderCtx.Height));
 
         // Draw clipped text (prepared text + shaped FormattedText are cached; see GetCachedParagraphText).
         // With "toggle translation and original in video/audio preview" on, the waveform shows the
         // original text like SE4 did (#14252).
-        var prepared = GetPreparedParagraphText(ShowOriginalText ? paragraph.OriginalText : paragraph.Text);
+        var text = ShowOriginalTextInWaveform ? paragraph.OriginalText : paragraph.Text;
 
-        var textBounds = new Rect(currentRegionLeft + 1, 0, currentRegionWidth - 3, height);
+        var textBounds = new Rect(currentRegionLeft + 1, contentTop, currentRegionWidth - 3, contentHeight);
 
         using (context.PushClip(textBounds))
         {
-            if (Se.Settings.Waveform.WaveformUnwrapText)
+            DrawParagraphText(context, text, currentRegionLeft + 3, contentTop + 14);
+        }
+
+        // Keep CPS and number/duration at the bottom of the full paragraph region.
+        using (context.PushClip(new Rect(currentRegionLeft + 1, 0, currentRegionWidth - 3, renderCtx.Height)))
+        {
+            DrawParagraphFooter(context, paragraph, currentRegionLeft, currentRegionWidth, ref renderCtx);
+        }
+
+        DrawParagraphAudioLength(context, paragraph, currentRegionLeft, currentRegionRight, contentTop, contentHeight, ref renderCtx);
+    }
+
+    private void DrawOriginalSubtitleParagraphs(DrawingContext context, ref RenderContext renderCtx, double top, double height)
+    {
+        var start = renderCtx.StartPositionSeconds;
+        var end = RelativeXPositionToSecondsOptimized(renderCtx.Width, renderCtx.SampleRate, start, renderCtx.ZoomFactor);
+        // A long cue overlapped by a shorter one ends after its successor, so searching the raw
+        // end times from the viewport start would skip it whenever the view begins inside it.
+        var startIndex = FindFirstIndexAfterTime(_originalSubtitleCueMaxEnds, start, static maxEnd => maxEnd);
+        var lastStart = -1d;
+        var count = 0;
+
+        for (var i = startIndex; i < _originalSubtitleCues.Count; i++)
+        {
+            var cue = _originalSubtitleCues[i];
+            if (cue.StartSeconds > end)
             {
-                var formattedText = GetCachedParagraphText(prepared.Unwrapped, prepared.RightToLeft);
-                context.DrawText(formattedText, new Point(currentRegionLeft + 3, 14));
+                break;
             }
-            else
+
+            if (cue.EndSeconds < start)
             {
-                double addY = 0;
-                foreach (var line in prepared.Lines)
+                continue;
+            }
+
+            var isTooShortOrDense = count > 200 &&
+                                    (cue.EndSeconds - cue.StartSeconds < 0.00001 || cue.StartSeconds - lastStart < 0.09);
+            if (isTooShortOrDense)
+            {
+                continue;
+            }
+
+            lastStart = cue.StartSeconds;
+            count++;
+
+            var left = SecondsToXPositionOptimized(cue.StartSeconds - start, renderCtx.SampleRate, renderCtx.ZoomFactor);
+            var right = SecondsToXPositionOptimized(cue.EndSeconds - start, renderCtx.SampleRate, renderCtx.ZoomFactor);
+            if (right - left <= 5)
+            {
+                continue;
+            }
+
+            // Draw original subtitle cues with the waveform theme at half opacity.
+            using (context.PushOpacity(OriginalSubtitleOpacity))
+            {
+                context.FillRectangle(_paintParagraphBackground, new Rect(left, top, right - left, height));
+                context.DrawLine(_paintLeft, new Point(left, top), new Point(left, top + height));
+                context.DrawLine(_paintRight, new Point(right - 1, top), new Point(right - 1, top + height));
+                using (context.PushClip(new Rect(left + 1, top, right - left - 3, height)))
                 {
-                    var formattedText = GetCachedParagraphText(line, prepared.RightToLeft);
-                    context.DrawText(formattedText, new Point(currentRegionLeft + 3, 14 + addY));
-                    addY += formattedText.Height;
+                    DrawParagraphText(context, cue.Text, left + 3, top + 14);
                 }
             }
 
-            DrawParagraphFooter(context, paragraph, currentRegionLeft, currentRegionWidth, height, ref renderCtx);
+            if (count >= 250)
+            {
+                break;
+            }
+        }
+    }
+
+    private void DrawParagraphText(DrawingContext context, string text, double x, double y)
+    {
+        var prepared = GetPreparedParagraphText(text);
+        if (Se.Settings.Waveform.WaveformUnwrapText)
+        {
+            context.DrawText(GetCachedParagraphText(prepared.Unwrapped, prepared.RightToLeft), new Point(x, y));
+            return;
         }
 
-        DrawParagraphAudioLength(context, paragraph, currentRegionLeft, currentRegionRight, height, ref renderCtx);
+        foreach (var line in prepared.Lines)
+        {
+            var formattedText = GetCachedParagraphText(line, prepared.RightToLeft);
+            context.DrawText(formattedText, new Point(x, y));
+            y += formattedText.Height;
+        }
     }
 
     // Drawn outside the text clip on purpose: the overrun part extends past the right border.
     private void DrawParagraphAudioLength(DrawingContext context, SubtitleLineViewModel paragraph,
-        double currentRegionLeft, double currentRegionRight, double height, ref RenderContext renderCtx)
+        double currentRegionLeft, double currentRegionRight, double top, double height, ref RenderContext renderCtx)
     {
         var provider = ParagraphAudioLengthProvider;
         if (provider == null)
@@ -3434,7 +3563,7 @@ public class AudioVisualizer : Control
 
         var audioRight = SecondsToXPositionOptimized(paragraph.StartTime.TotalSeconds + audioSeconds - renderCtx.StartPositionSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
         const double barHeight = 4;
-        var y = height - barHeight - 1;
+        var y = top + height - barHeight - 1;
         var fitsRight = Math.Min(audioRight, currentRegionRight - 1);
         if (fitsRight > currentRegionLeft + 1)
         {
@@ -3456,7 +3585,7 @@ public class AudioVisualizer : Control
     //   51 < n <= 99                                                   → "#NUMBER  DURATION"
     //   n > 99                                                         → add CPS line above
     private void DrawParagraphFooter(DrawingContext context, SubtitleLineViewModel paragraph,
-        double currentRegionLeft, double currentRegionWidth, double height, ref RenderContext renderCtx)
+        double currentRegionLeft, double currentRegionWidth, ref RenderContext renderCtx)
     {
         if (!Se.Settings.Waveform.WaveformShowNumberAndDuration && !Se.Settings.Waveform.WaveformShowCps)
         {
@@ -3502,7 +3631,7 @@ public class AudioVisualizer : Control
         {
             // Counts the text that is actually on screen: with the original drawn, a CPS taken
             // from the hidden translation reads as the original's and would be wrong (#14252).
-            cpsLine = GetCachedCpsLabel(ShowOriginalText
+            cpsLine = GetCachedCpsLabel(ShowOriginalTextInWaveform
                 ? paragraph.OriginalCharactersPerSecond
                 : paragraph.CharactersPerSecond);
         }
@@ -3513,7 +3642,7 @@ public class AudioVisualizer : Control
         }
 
         // Layout from the bottom up so the optional CPS line stacks above the base line.
-        var bottomY = height - 14;
+        var bottomY = renderCtx.Height - 14;
         var x = currentRegionLeft + padding;
 
         if (baseLine != null)
@@ -3976,7 +4105,8 @@ public class AudioVisualizer : Control
         var maxTime = TimeCode.MaxTimeTotalMilliseconds;
 
         // 1. Use Binary Search to find the first potential subtitle in the time range O(log N)
-        var startIndex = FindFirstIndexAfterTime(subtitle, startThreshold);
+        var startIndex = FindFirstIndexAfterTime(subtitle, startThreshold,
+            static paragraph => paragraph.EndTime.TotalMilliseconds);
 
         var lastStartTime = -1d;
         var count = 0;
@@ -4036,15 +4166,15 @@ public class AudioVisualizer : Control
     }
 
     // Helper for Binary Search
-    private static int FindFirstIndexAfterTime(IReadOnlyList<SubtitleLineViewModel> subtitle, double timeMs)
+    private static int FindFirstIndexAfterTime<T>(IReadOnlyList<T> items, double time, Func<T, double> getEndTime)
     {
-        int low = 0, high = subtitle.Count - 1;
+        int low = 0, high = items.Count - 1;
         var result = 0;
 
         while (low <= high)
         {
             int mid = low + (high - low) / 2;
-            if (subtitle[mid].EndTime.TotalMilliseconds >= timeMs)
+            if (getEndTime(items[mid]) >= time)
             {
                 result = mid;
                 high = mid - 1;
@@ -4235,31 +4365,37 @@ public class AudioVisualizer : Control
     }
 
     /// <summary>
-    /// Seeks silence in volume
+    /// "Guess start": finds the moment the speech around <paramref name="startSeconds"/> begins,
+    /// i.e. where the silence before it ends. A cue that sits in silence is moved forward to the
+    /// first speech within <paramref name="maxForwardSeconds"/>; a cue that sits in speech is
+    /// moved back to the silence before it, up to 1 s back. SE 4 always looked 0.8 s ahead, so a
+    /// start cue more than that early gave up (#14596); callers now pass how far the start may
+    /// move, and the audio right after the cue is judged over that whole stretch.
     /// </summary>
     /// <returns>video position in seconds, -1 if not found</returns>
-    public double FindDataBelowThresholdBackForStart(double thresholdPercent, double durationInSeconds, double startSeconds)
+    public double FindDataBelowThresholdBackForStart(double thresholdPercent, double durationInSeconds, double startSeconds, double maxForwardSeconds = 0.8)
     {
         if (WavePeaks == null || WavePeaks.Peaks.Count == 0)
         {
             return -1;
         }
 
+        maxForwardSeconds = Math.Max(0.8, maxForwardSeconds);
         var min = Math.Max(0, SecondsToSampleIndex(startSeconds - 1));
         var maxShort = Math.Min(WavePeaks.Peaks.Count, SecondsToSampleIndex(startSeconds + durationInSeconds + 0.01));
-        var max = Math.Min(WavePeaks.Peaks.Count, SecondsToSampleIndex(startSeconds + durationInSeconds + 0.8));
+        var max = Math.Min(WavePeaks.Peaks.Count, SecondsToSampleIndex(startSeconds + durationInSeconds + maxForwardSeconds));
         var length = SecondsToSampleIndex(durationInSeconds);
         var threshold = thresholdPercent / 100.0 * WavePeaks.HighestPeak;
 
         var minMax = GetMinAndMax(min, max);
-        const int lowPeakDifference = 4_000;
-        if (minMax.Max - minMax.Min < lowPeakDifference)
+        if (IsAllAudioAboutTheSame(minMax))
         {
-            return -1; // all audio about the same
+            return -1;
         }
 
         // look for start silence in the beginning of subtitle
         min = SecondsToSampleIndex(startSeconds);
+        var currentMinMax = GetMinAndMax(min, max);
         var hitCount = 0;
         int index;
         for (index = min; index < max; index++)
@@ -4271,8 +4407,7 @@ public class AudioVisualizer : Control
             else
             {
                 minMax = GetMinAndMax(min, index);
-                var currentMinMax = GetMinAndMax(SecondsToSampleIndex(startSeconds), SecondsToSampleIndex(startSeconds + 0.8));
-                if (currentMinMax.Avg > minMax.Avg + 300 || currentMinMax.Avg < 1000 && minMax.Avg < 1000 && Math.Abs(currentMinMax.Avg - minMax.Avg) < 500)
+                if (IsSilenceRunFollowedBySpeech(minMax, currentMinMax))
                 {
                     break;
                 }
@@ -4284,8 +4419,7 @@ public class AudioVisualizer : Control
         if (hitCount > length)
         {
             minMax = GetMinAndMax(min, index);
-            var currentMinMax = GetMinAndMax(SecondsToSampleIndex(startSeconds), SecondsToSampleIndex(startSeconds + 0.8));
-            if (currentMinMax.Avg > minMax.Avg + 300 || currentMinMax.Avg < 1000 && minMax.Avg < 1000 && Math.Abs(currentMinMax.Avg - minMax.Avg) < 500)
+            if (IsSilenceRunFollowedBySpeech(minMax, currentMinMax))
             {
                 return Math.Max(0, SampleIndexToSeconds(index - 1) - 0.01);
             }
@@ -4325,9 +4459,11 @@ public class AudioVisualizer : Control
     /// </list>
     /// Like the start variant the result is padded by 10 ms away from the speech and the search gives up
     /// when the audio around the cue is all about the same level (nothing to detect).
+    /// <paramref name="maxBackSeconds"/> is how far back the speech may end: an end cue left
+    /// hanging longer than the fixed 1 s of the first version found nothing (#14596).
     /// </summary>
     /// <returns>video position in seconds, -1 if not found</returns>
-    public double FindDataBelowThresholdForwardForEnd(double thresholdPercent, double durationInSeconds, double endSeconds)
+    public double FindDataBelowThresholdForwardForEnd(double thresholdPercent, double durationInSeconds, double endSeconds, double maxBackSeconds = 1)
     {
         if (WavePeaks == null || WavePeaks.Peaks.Count == 0)
         {
@@ -4335,7 +4471,7 @@ public class AudioVisualizer : Control
         }
 
         var count = WavePeaks.Peaks.Count;
-        var min = Math.Max(0, SecondsToSampleIndex(endSeconds - 1));
+        var min = Math.Max(0, SecondsToSampleIndex(endSeconds - Math.Max(1, maxBackSeconds)));
         var max = Math.Min(count, SecondsToSampleIndex(endSeconds + 1));
         var end = SecondsToSampleIndex(endSeconds);
         if (end < 0 || end >= count || max <= min)
@@ -4347,10 +4483,9 @@ public class AudioVisualizer : Control
         var threshold = thresholdPercent / 100.0 * WavePeaks.HighestPeak;
 
         var minMax = GetMinAndMax(min, max);
-        const int lowPeakDifference = 4_000;
-        if (minMax.Max - minMax.Min < lowPeakDifference)
+        if (IsAllAudioAboutTheSame(minMax))
         {
-            return -1; // all audio about the same
+            return -1;
         }
 
         var peaks = WavePeaks.Peaks;
@@ -4403,6 +4538,32 @@ public class AudioVisualizer : Control
         }
 
         return -1;
+    }
+
+    /// <summary>
+    /// SE 4's test that a quiet run <paramref name="run"/> starting at a cue is the silence in
+    /// front of the speech: the stretch after the cue <paramref name="ahead"/> is clearly louder
+    /// than the run, or both are quiet and about the same (the cue sits in plain silence).
+    /// </summary>
+    private static bool IsSilenceRunFollowedBySpeech(MinMax run, MinMax ahead)
+    {
+        return ahead.Avg > run.Avg + 300 ||
+               ahead.Avg < 1000 && run.Avg < 1000 && Math.Abs(ahead.Avg - run.Avg) < 500;
+    }
+
+    /// <summary>
+    /// "Nothing to detect" test for the guess start/end searches: there is no speech boundary to
+    /// find when the loudest peak around the cue is not clearly above the quietest. SE 4 used a
+    /// fixed 4000 (about 12% of full scale), which rejected every quiet passage - dialogue at 10%
+    /// of the file's loudest peak, common in films with loud music elsewhere, made the shortcuts
+    /// do nothing (#14555). The range that counts as flat now shrinks with the level: the loudest
+    /// peak must be at least double the quietest (with a small floor for digital silence), and
+    /// the old 4000 stays as the cap for loud audio.
+    /// </summary>
+    private static bool IsAllAudioAboutTheSame(MinMax minMax)
+    {
+        var lowPeakDifference = Math.Min(4_000, Math.Max(200, minMax.Min));
+        return minMax.Max - minMax.Min < lowPeakDifference;
     }
 
     /// <summary>

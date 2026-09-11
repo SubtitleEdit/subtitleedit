@@ -22,6 +22,7 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -139,6 +140,7 @@ public partial class BurnInViewModel : ObservableObject
     private VideoPlayerControl? _fullScreenVideoPlayerControl;
     private DispatcherTimer? _previewTimer;
     private string _oldPreviewAssa = string.Empty;
+    private bool _previewDirty = true; // true = preview ASSA must be regenerated on the next timer tick
     private readonly string _tempPreviewAssaFileName;
     private bool _isPreviewSubtitleLoaded;
 
@@ -236,6 +238,7 @@ public partial class BurnInViewModel : ObservableObject
         _selectedEffects = new List<BurnInEffectItem>();
         _log = new StringBuilder();
         _loading = false;
+        _previewDirty = true;
         _inputVideoFileName = string.Empty;
 
         _timerGenerate = new();
@@ -257,6 +260,7 @@ public partial class BurnInViewModel : ObservableObject
     {
         _subtitle = new Subtitle(subtitle, false);
         _subtitleFormat = subtitleFormat;
+        _previewDirty = true;
         SetVideo(videoFileName);
     }
 
@@ -270,6 +274,7 @@ public partial class BurnInViewModel : ObservableObject
         _imageSubtitleFileName = bluRaySupFileName;
         _subtitle = new Subtitle();
         _subtitleFormat = null;
+        _previewDirty = true;
         SetVideo(videoFileName);
     }
 
@@ -286,6 +291,7 @@ public partial class BurnInViewModel : ObservableObject
             _ = Task.Run(() =>
             {
                 _mediaInfo = FfmpegMediaInfo2.Parse(videoFileName);
+                _previewDirty = true;
                 Dispatcher.UIThread.Post(() =>
                 {
                     // Audio-only files have no video stream (0x0) - keep the configured
@@ -911,6 +917,8 @@ public partial class BurnInViewModel : ObservableObject
                 : _tempSubtitleFiles.Write(subtitle, new SubRip());
 
         _mediaInfo = FfmpegMediaInfo2.Parse(VideoFileName);
+
+        _previewDirty = true;
         if (_mediaInfo.Dimension.Width > 0 && _mediaInfo.Dimension.Height > 0 &&
             (UseSourceResolution || VideoWidth is null or <= 0 || VideoHeight is null or <= 0))
         {
@@ -1527,6 +1535,7 @@ public partial class BurnInViewModel : ObservableObject
 
         var effectsAsStringArray = settings.Effects?.Split(',') ?? [];
         _selectedEffects = BurnInEffectItem.List().Where(p => effectsAsStringArray.Contains(p.Name)).ToList();
+        _previewDirty = true;
         DisplayEffect = string.Join(", ", _selectedEffects.Select(p => p.Name));
     }
 
@@ -1627,6 +1636,8 @@ public partial class BurnInViewModel : ObservableObject
         }
 
         _selectedEffects = result.SelectedEffects.ToList();
+
+        _previewDirty = true;
         DisplayEffect = string.Join(", ", _selectedEffects.Select(p => p.Name));
     }
 
@@ -2554,6 +2565,13 @@ public partial class BurnInViewModel : ObservableObject
                 return;
             }
 
+            if (!_previewDirty)
+            {
+                return;
+            }
+
+            _previewDirty = false;
+
             string? assaText;
             try
             {
@@ -2561,6 +2579,7 @@ public partial class BurnInViewModel : ObservableObject
             }
             catch
             {
+                _previewDirty = true;
                 return; // ignore transient errors while the user is editing settings
             }
 
@@ -2594,7 +2613,36 @@ public partial class BurnInViewModel : ObservableObject
         _mpvPreviewPlayer = mpv;
         _isPreviewSubtitleLoaded = alreadyHasSubtitle;
         _oldPreviewAssa = string.Empty;
+        _previewDirty = true;
     }
+
+    /// <summary>
+    /// Any view-model property may feed the styled preview (font, colors, margins, effects,
+    /// video size, subtitle format ...), so every change marks it dirty except the pure
+    /// output/progress properties that the generate/analyze timers write themselves.
+    /// </summary>
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+
+        if (!PreviewNeutralProperties.Contains(e.PropertyName ?? string.Empty))
+        {
+            _previewDirty = true;
+        }
+    }
+
+    private static readonly HashSet<string> PreviewNeutralProperties =
+    [
+        nameof(ProgressText),
+        nameof(ProgressValue),
+        nameof(IsGenerating),
+        nameof(ImagePreview),
+        nameof(SelectedJobItem),
+        nameof(JobItems),
+        nameof(VideoFileSize),
+        nameof(TargetVideoBitRateInfo),
+        nameof(VideoCrfHint),
+    ];
 
     [RelayCommand]
     private void PreviewFullScreen()
@@ -2665,7 +2713,7 @@ public partial class BurnInViewModel : ObservableObject
 
         try
         {
-            VideoPlayerControl?.Close();
+            VideoPlayerControl?.CloseAndDisposePlayer();
         }
         catch
         {

@@ -1,4 +1,5 @@
 using Nikse.SubtitleEdit.Core.Common;
+using SkiaSharp;
 using Nikse.SubtitleEdit.UiLogic.Export;
 
 namespace SeConv.Core;
@@ -119,6 +120,40 @@ internal static class ImageOutputWriter
         handler.WriteFooter();
     }
 
+    /// <summary>
+    /// SE4's transport-stream "override original X/Y position": replace one or both axes of the
+    /// source position with the spot <see cref="ImageExportStyle.Alignment"/> and the margins
+    /// would put the bitmap at. An axis that is not overridden keeps the source value; when
+    /// there is no usable source position, that axis is placed by alignment as well.
+    /// </summary>
+    internal static SKPointI? ApplyPositionOverride(SKPointI? sourcePosition, SKBitmap bitmap, int screenWidth, int screenHeight, ImageExportStyle style)
+    {
+        if (!style.OverridePositionX && !style.OverridePositionY)
+        {
+            return sourcePosition;
+        }
+
+        var leftRightMargin = style.LeftRightMargin ?? (int)(screenWidth * 0.05);
+        var bottomTopMargin = style.BottomTopMargin ?? (int)(screenHeight * 0.05);
+
+        var alignedX = style.Alignment switch
+        {
+            ExportAlignment.TopLeft or ExportAlignment.MiddleLeft or ExportAlignment.BottomLeft => leftRightMargin,
+            ExportAlignment.TopRight or ExportAlignment.MiddleRight or ExportAlignment.BottomRight => screenWidth - leftRightMargin - bitmap.Width,
+            _ => (screenWidth - bitmap.Width) / 2,
+        };
+        var alignedY = style.Alignment switch
+        {
+            ExportAlignment.TopLeft or ExportAlignment.TopCenter or ExportAlignment.TopRight => bottomTopMargin,
+            ExportAlignment.MiddleLeft or ExportAlignment.MiddleCenter or ExportAlignment.MiddleRight => (screenHeight - bitmap.Height) / 2,
+            _ => screenHeight - bottomTopMargin - bitmap.Height,
+        };
+
+        var x = style.OverridePositionX || sourcePosition is null ? alignedX : sourcePosition.Value.X;
+        var y = style.OverridePositionY || sourcePosition is null ? alignedY : sourcePosition.Value.Y;
+        return new SKPointI(Math.Max(0, x), Math.Max(0, y));
+    }
+
     private static ImageParameter BuildPreservedParameter(
         BitmapSubtitleLoader.BitmapSubtitleItem item,
         int index,
@@ -140,6 +175,7 @@ internal static class ImageOutputWriter
         }
 
         var style = options.ImageStyle;
+        position = ApplyPositionOverride(position, item.Bitmap, screenWidth, screenHeight, style);
         return new ImageParameter
         {
             Index = index,

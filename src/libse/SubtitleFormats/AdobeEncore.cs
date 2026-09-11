@@ -19,13 +19,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var subtitle = new Subtitle();
 
-            var sb = new StringBuilder();
-            foreach (string line in lines)
-            {
-                sb.AppendLine(line);
-            }
+            var allText = JoinLines(lines);
 
-            if (sb.ToString().Contains("#INPOINT OUTPOINT PATH"))
+            if (allText.Contains("#INPOINT OUTPOINT PATH"))
             {
                 return false; // Pinnacle Impression
             }
@@ -38,9 +34,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (p.Text.Contains(Environment.NewLine))
                 {
                     containsNewLine = true;
+                    break;
                 }
             }
-            if (sb.ToString().Contains("//") && !containsNewLine)
+            if (!containsNewLine && allText.Contains("//"))
             {
                 return false; // "DVD Subtitle System" format
             }

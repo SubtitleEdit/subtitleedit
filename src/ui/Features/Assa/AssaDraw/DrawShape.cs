@@ -63,30 +63,25 @@ public class DrawShape
         // Start with move command using the first point
         sb.Append(CultureInfo.InvariantCulture, $"m {first.X:0.##} {first.Y:0.##} ");
 
-        // Determine if this is a bezier shape by checking if first point or any following points are bezier type
-        var isBezierShape = Points.Any(p => p.DrawType == DrawCoordinateType.BezierCurve || 
-                                             p.DrawType == DrawCoordinateType.BezierCurveSupport1 || 
-                                             p.DrawType == DrawCoordinateType.BezierCurveSupport2);
+        // A shape can mix line and bezier segments (the importer appends "l" and "b" runs to
+        // the same shape, and switching tools mid-shape does too). Emit each point under the
+        // command its type calls for: a "b" run takes triplets (Support1, Support2, BezierCurve)
+        // and an "l" run takes single points. Serializing a mixed shape as one "b" run turned
+        // the straight points into bezier control points and shifted every later triplet.
+        var currentCommand = ' ';
+        for (var i = 1; i < Points.Count; i++)
+        {
+            var point = Points[i];
+            var command = point.DrawType is DrawCoordinateType.BezierCurve or DrawCoordinateType.BezierCurveSupport1 or DrawCoordinateType.BezierCurveSupport2
+                ? 'b'
+                : 'l';
+            if (command != currentCommand)
+            {
+                sb.Append(command).Append(' ');
+                currentCommand = command;
+            }
 
-        if (isBezierShape)
-        {
-            // Bezier shape: output as "b x1 y1 x2 y2 x3 y3 ..."
-            // The coordinates after index 0 should be in triplets: (Support1, Support2, BezierCurve)
-            sb.Append("b ");
-            
-            for (var i = 1; i < Points.Count; i++)
-            {
-                sb.Append(CultureInfo.InvariantCulture, $"{Points[i].X:0.##} {Points[i].Y:0.##} ");
-            }
-        }
-        else
-        {
-            // Line shape: output each point with "l" command
-            for (var i = 1; i < Points.Count; i++)
-            {
-                var point = Points[i];
-                sb.Append(CultureInfo.InvariantCulture, $"l {point.X:0.##} {point.Y:0.##} ");
-            }
+            sb.Append(CultureInfo.InvariantCulture, $"{point.X:0.##} {point.Y:0.##} ");
         }
 
         return sb.ToString().Trim();

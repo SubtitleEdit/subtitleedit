@@ -32,6 +32,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             callbacks.UpdateFixStatus(iFixes, Language.RemoveHyphensSingleLine);
         }
 
+        private static readonly Regex DialogDashRegex = new Regex("-.*[/?/.!]-[A-Z]", RegexOptions.Compiled);
+        private static readonly Regex DialogDashItalicRegex = new Regex("-.*[/?/.!]<i>-[A-Z]", RegexOptions.Compiled);
+
         private static bool IsDialogInOneLine(string text)
         {
             if (Utilities.CountTagInText(text, '-') == 1)
@@ -40,8 +43,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             }
 
             var textNoSpace = text.RemoveChar(' ');
-            return Regex.IsMatch(textNoSpace, "-.*[/?/.!]-[A-Z]") ||
-                   Regex.IsMatch(textNoSpace, "-.*[/?/.!]<i>-[A-Z]");
+            return DialogDashRegex.IsMatch(textNoSpace) || DialogDashItalicRegex.IsMatch(textNoSpace);
         }
     }
 }

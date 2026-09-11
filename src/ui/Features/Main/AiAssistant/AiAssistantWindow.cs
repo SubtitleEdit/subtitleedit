@@ -167,7 +167,7 @@ public class AiAssistantWindow : Window
         };
         var askButton = UiUtil.MakeButton(l.Ask, vm.AskCommand)
             .WithIconLeft("mdi-send")
-            .WithBindEnabled(nameof(vm.IsNotBusy));
+            .WithBindEnabled("!" + nameof(vm.IsBusy));
         var questionRow = new Grid
         {
             ColumnDefinitions = new ColumnDefinitions("*,Auto"),
@@ -331,7 +331,7 @@ public class AiAssistantWindow : Window
     {
         var button = UiUtil.MakeButton(text, command)
             .WithIconLeft(iconName)
-            .WithBindEnabled(nameof(vm.IsNotBusy))
+            .WithBindEnabled("!" + nameof(vm.IsBusy))
             .Compact();
         button.Margin = new Thickness(0, 0, 6, 6);
         return button;

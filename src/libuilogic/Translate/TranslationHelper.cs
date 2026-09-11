@@ -51,34 +51,46 @@ namespace Nikse.SubtitleEdit.UiLogic.Translate
             .Replace("</ i>", "</i>");
         }
 
+        private static readonly (Regex Regex, string Replacement)[] EnglishContractions =
+        {
+            (new Regex(@"\bI'm ", RegexOptions.Compiled), "I am "),
+            (new Regex(@"\bI've ", RegexOptions.Compiled), "I have "),
+            (new Regex(@"\bI'll ", RegexOptions.Compiled), "I will "),
+            (new Regex(@"\b(I|i)t's ", RegexOptions.Compiled), "$1t is "),
+            (new Regex(@"\b(Y|y)ou're ", RegexOptions.Compiled), "$1ou are "),
+            (new Regex(@"\b(Y|y)ou've ", RegexOptions.Compiled), "$1ou have "),
+            (new Regex(@"\b(Y|y)ou'll ", RegexOptions.Compiled), "$1ou will "),
+            (new Regex(@"\b(H|h)e's ", RegexOptions.Compiled), "$1e is "),
+            (new Regex(@"\b(S|s)he's ", RegexOptions.Compiled), "$1he is "),
+            (new Regex(@"\b(W|w)e're ", RegexOptions.Compiled), "$1e are "),
+            (new Regex(@"\bwon't ", RegexOptions.Compiled), "will not "),
+            (new Regex(@"\bdon't ", RegexOptions.Compiled), "do not "),
+            (new Regex(@"\bDon't ", RegexOptions.Compiled), "Do not "),
+            (new Regex(@"\b(W|w)e're ", RegexOptions.Compiled), "$1e are "),
+            (new Regex(@"\b(T|t)hey're ", RegexOptions.Compiled), "$1hey are "),
+            (new Regex(@"\b(W|w)ho's ", RegexOptions.Compiled), "$1ho is "),
+            (new Regex(@"\b(T|t)hat's ", RegexOptions.Compiled), "$1hat is "),
+            (new Regex(@"\b(W|w)hat's ", RegexOptions.Compiled), "$1hat is "),
+            (new Regex(@"\b(W|w)here's ", RegexOptions.Compiled), "$1here is "),
+            (new Regex(@"\b(W|w)ho's ", RegexOptions.Compiled), "$1ho is "),
+            (new Regex(@"\B'(C|c)ause ", RegexOptions.Compiled), "$1ecause "),
+        };
+
         public static string PreTranslate(string input, string source)
         {
             string s = FixInvalidCarriageReturnLineFeedCharacters(input);
 
-            if (source == "en")
+            if (source == "en" && s.IndexOf('\'') >= 0)
             {
-                s = Regex.Replace(s, @"\bI'm ", "I am ");
-                s = Regex.Replace(s, @"\bI've ", "I have ");
-                s = Regex.Replace(s, @"\bI'll ", "I will ");
-                s = Regex.Replace(s, @"\b(I|i)t's ", "$1t is ");
-                s = Regex.Replace(s, @"\b(Y|y)ou're ", "$1ou are ");
-                s = Regex.Replace(s, @"\b(Y|y)ou've ", "$1ou have ");
-                s = Regex.Replace(s, @"\b(Y|y)ou'll ", "$1ou will ");
-                s = Regex.Replace(s, @"\b(H|h)e's ", "$1e is ");
-                s = Regex.Replace(s, @"\b(S|s)he's ", "$1he is ");
-                s = Regex.Replace(s, @"\b(W|w)e're ", "$1e are ");
-                s = Regex.Replace(s, @"\bwon't ", "will not ");
-                s = Regex.Replace(s, @"\bdon't ", "do not ");
-                s = Regex.Replace(s, @"\bDon't ", "Do not ");
-                s = Regex.Replace(s, @"\b(W|w)e're ", "$1e are ");
-                s = Regex.Replace(s, @"\b(T|t)hey're ", "$1hey are ");
-                s = Regex.Replace(s, @"\b(W|w)ho's ", "$1ho is ");
-                s = Regex.Replace(s, @"\b(T|t)hat's ", "$1hat is ");
-                s = Regex.Replace(s, @"\b(W|w)hat's ", "$1hat is ");
-                s = Regex.Replace(s, @"\b(W|w)here's ", "$1here is ");
-                s = Regex.Replace(s, @"\b(W|w)ho's ", "$1ho is ");
-                s = Regex.Replace(s, @"\B'(C|c)ause ", "$1ecause "); // \b (word boundry) does not work with '
+                // Every pattern needs an apostrophe, so lines without one skip the whole table.
+                // These were 21 static Regex.Replace calls per line - more distinct patterns than
+                // Regex.CacheSize (15) holds, so the cache thrashed and re-parsed them.
+                foreach (var (regex, replacement) in EnglishContractions)
+                {
+                    s = regex.Replace(s, replacement);
+                }
             }
+
             return s;
         }
 

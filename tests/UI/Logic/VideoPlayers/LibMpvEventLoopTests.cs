@@ -513,7 +513,9 @@ public class LibMpvEventLoopTests
 
         try
         {
-            var missing = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".wav");
+            // A video extension: for an audio extension LoadFile polls the duration for up to
+            // 2.5 s after the (failed) open, which is all this test used to spend.
+            var missing = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".mp4");
             try
             {
                 await player.LoadFile(missing);

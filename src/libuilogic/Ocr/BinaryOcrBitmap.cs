@@ -19,12 +19,52 @@ public class BinaryOcrBitmap
     //text len bytes=text (UTF-8)
     //w*h bytes / 8=pixels as bits(byte aligned)
 
-    public int Width { get; set; }
-    public int Height { get; set; }
+    private int _width;
+    public int Width
+    {
+        get => _width;
+        set
+        {
+            _width = value;
+            _key = null;
+        }
+    }
+
+    private int _height;
+    public int Height
+    {
+        get => _height;
+        set
+        {
+            _height = value;
+            _key = null;
+        }
+    }
+
     public int X { get; set; }
     public int Y { get; set; }
-    public int NumberOfColoredPixels { get; set; }
-    public uint Hash { get; set; }
+
+    private int _numberOfColoredPixels;
+    public int NumberOfColoredPixels
+    {
+        get => _numberOfColoredPixels;
+        set
+        {
+            _numberOfColoredPixels = value;
+            _key = null;
+        }
+    }
+
+    private uint _hash;
+    public uint Hash
+    {
+        get => _hash;
+        set
+        {
+            _hash = value;
+            _key = null;
+        }
+    }
 
     private byte[] _colors = [];
     public byte[] Colors
@@ -39,10 +79,23 @@ public class BinaryOcrBitmap
     public bool Italic { get; set; }
     public int ExpandCount { get; set; }
     public bool LoadedOk { get; }
-    public string? Text { get; set; }
+    private string? _text;
+    public string? Text
+    {
+        get => _text;
+        set
+        {
+            _text = value;
+            _key = null;
+        }
+    }
+
     public List<BinaryOcrBitmap> ExpandedList { get; set; } = new List<BinaryOcrBitmap>();
 
-    public string Key => Text + "|#|" + Hash + "_" + Width + "x" + Height + "_" + NumberOfColoredPixels;
+    // Cached: the key is built from five properties and read repeatedly during matching; every
+    // setter that feeds it resets the cache.
+    private string? _key;
+    public string Key => _key ??= Text + "|#|" + Hash + "_" + Width + "x" + Height + "_" + NumberOfColoredPixels;
 
     public override string ToString()
     {

@@ -195,7 +195,8 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
             var subtitle = new Subtitle();
             Utilities.LoadMatroskaTextSubtitle(trackInfo, _matroskaFile, subtitles, subtitle);
             Utilities.ParseMatroskaTextSt(trackInfo, subtitles, subtitle);
-            await WriteTextSubtitleFile(Window, trackInfo, subtitles, new SubRip());
+            // pass the decoded cues - the helper's own load has no TextST branch and wrote the raw payload as text
+            await WriteTextSubtitleFile(Window, trackInfo, subtitles, new SubRip(), subtitle);
         }
         else if (trackInfo.CodecId.Equals(MatroskaTrackType.VobSub, StringComparison.OrdinalIgnoreCase) && subtitles != null)
         {
@@ -282,10 +283,13 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
         return new SKPointI(left, top);
     }
 
-    private async Task WriteTextSubtitleFile(Window window, MatroskaTrackInfo trackInfo, List<MatroskaSubtitle> subtitles, SubtitleFormat format)
+    private async Task WriteTextSubtitleFile(Window window, MatroskaTrackInfo trackInfo, List<MatroskaSubtitle> subtitles, SubtitleFormat format, Subtitle? decoded = null)
     {
-        var sub = new Subtitle();
-        Utilities.LoadMatroskaTextSubtitle(trackInfo, _matroskaFile, subtitles, sub);
+        var sub = decoded ?? new Subtitle();
+        if (decoded == null)
+        {
+            Utilities.LoadMatroskaTextSubtitle(trackInfo, _matroskaFile, subtitles, sub);
+        }
         var rawText = format.ToText(sub, string.Empty);
         var suggestedFileName = Utilities.GetPathAndFileNameWithoutExtension(_fileName);
         var fileName = await _fileHelper.PickSaveSubtitleFile(window, format.Extension, suggestedFileName, Se.Language.General.SaveFileAsTitle);

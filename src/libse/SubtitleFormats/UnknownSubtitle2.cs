@@ -38,8 +38,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string startTime = string.Format("{0:00}:{1:00}:{2:00},{3:00}:0000000000", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds / 10);
-                string timeOut = string.Format("{0:00}:{1:00}:{2:00},{3:00}:0000000000", p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds / 10);
+                string startTime = string.Format("{0:00}:{1:00}:{2:00},{3:000}:0000000000", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds);
+                string timeOut = string.Format("{0:00}:{1:00}:{2:00},{3:000}:0000000000", p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds);
                 sb.AppendLine(string.Format(paragraphWriteFormat, p.Number, startTime, timeOut, p.Text.Replace(Environment.NewLine, "|")));
             }
             return sb.ToString().Trim();

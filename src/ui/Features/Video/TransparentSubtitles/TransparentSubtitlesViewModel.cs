@@ -23,6 +23,7 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -110,6 +111,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
     private LibMpvDynamicPlayer? _mpvPreviewPlayer;
     private DispatcherTimer? _previewTimer;
     private string _oldPreviewAssa = string.Empty;
+    private bool _previewDirty = true; // true = preview ASSA must be regenerated on the next timer tick
     private readonly string _tempPreviewAssaFileName;
     private bool _isPreviewSubtitleLoaded;
 
@@ -180,6 +182,8 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         _timerAnalyze.Interval = 100;
 
         _loading = false;
+
+        _previewDirty = true;
         _inputVideoFileName = string.Empty;
         LoadSettings();
         BoxTypeChanged();
@@ -192,6 +196,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         _inputVideoFileName = videoFileName;
         _subtitle = new Subtitle(subtitle, false);
         _subtitleFormat = subtitleFormat;
+        _previewDirty = true;
 
         var fileExists = !string.IsNullOrWhiteSpace(videoFileName) && File.Exists(videoFileName);
         if (fileExists)
@@ -1032,6 +1037,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
 
         var effectsAsStringArray = settings.Effects?.Split(',') ?? [];
         _selectedEffects = BurnInEffectItem.List().Where(p => effectsAsStringArray.Contains(p.Name)).ToList();
+        _previewDirty = true;
         DisplayEffect = string.Join(", ", _selectedEffects.Select(p => p.Name));
 
         // The frame rate is a real encoding parameter and the extension picks the container, but
@@ -1117,6 +1123,8 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         }
 
         _selectedEffects = result.SelectedEffects.ToList();
+
+        _previewDirty = true;
         DisplayEffect = string.Join(", ", _selectedEffects.Select(p => p.Name));
     }
 
@@ -1443,6 +1451,13 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
                 return;
             }
 
+            if (!_previewDirty)
+            {
+                return;
+            }
+
+            _previewDirty = false;
+
             string? assaText;
             try
             {
@@ -1450,6 +1465,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
             }
             catch
             {
+                _previewDirty = true;
                 return; // ignore transient errors while the user is editing settings
             }
 
@@ -1483,7 +1499,34 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         _mpvPreviewPlayer = mpv;
         _isPreviewSubtitleLoaded = alreadyHasSubtitle;
         _oldPreviewAssa = string.Empty;
+        _previewDirty = true;
     }
+
+    /// <summary>
+    /// Any view-model property may feed the styled preview (font, colors, margins, effects,
+    /// video size, subtitle format ...), so every change marks it dirty except the pure
+    /// output/progress properties that the generate/analyze timers write themselves.
+    /// </summary>
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+
+        if (!PreviewNeutralProperties.Contains(e.PropertyName ?? string.Empty))
+        {
+            _previewDirty = true;
+        }
+    }
+
+    private static readonly HashSet<string> PreviewNeutralProperties =
+    [
+        nameof(ProgressText),
+        nameof(ProgressValue),
+        nameof(IsGenerating),
+        nameof(ImagePreview),
+        nameof(SelectedJobItem),
+        nameof(JobItems),
+        nameof(VideoFileSize),
+    ];
 
     [RelayCommand]
     private void PreviewFullScreen()
@@ -1550,7 +1593,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
 
         try
         {
-            VideoPlayerControl?.Close();
+            VideoPlayerControl?.CloseAndDisposePlayer();
         }
         catch
         {

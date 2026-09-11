@@ -7,8 +7,21 @@ using System.Collections.ObjectModel;
 
 namespace UITests.Logic;
 
-public class SplitManagerTests
+public class SplitManagerTests : IDisposable
 {
+    // Nearly every test below zeroes the minimum gap and none of them put it back, so the whole
+    // rest of the run inherited gap 0 - and the next MainView host mirrored it into libse's
+    // Configuration.Settings, where FixShortDisplayTimes (Fix common errors, speech-to-text post
+    // processing) then extended lines it must not touch (CI flake, order-dependent).
+    private readonly int _minimumBetweenLinesMs = Se.Settings.General.MinimumBetweenLines.Milliseconds;
+    private readonly int _minimumBetweenLinesFrames = Se.Settings.General.MinimumBetweenLines.Frames;
+
+    public void Dispose()
+    {
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = _minimumBetweenLinesMs;
+        Se.Settings.General.MinimumBetweenLines.Frames = _minimumBetweenLinesFrames;
+    }
+
     private static SubtitleLineViewModel MakeSubtitle(string text, double startSec, double endSec) =>
         new()
         {

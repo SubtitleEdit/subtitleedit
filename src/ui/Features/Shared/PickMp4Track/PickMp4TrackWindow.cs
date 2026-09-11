@@ -28,6 +28,8 @@ public class PickMp4TrackWindow : Window
         MinHeight = 600;
         CanResize = true;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         DataContext = vm;
 
         var tracksView = MakeTracksView(vm);

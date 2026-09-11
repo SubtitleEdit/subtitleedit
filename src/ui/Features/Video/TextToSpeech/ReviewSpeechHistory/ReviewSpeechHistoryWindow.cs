@@ -99,7 +99,7 @@ public class ReviewSpeechHistoryWindow : Window
             CellTemplate = new FuncDataTemplate<ReviewHistoryRow>((item, _) =>
             {
                 var buttonPlay = UiUtil.MakeButton(vm.PlayItemCommand,"fa-solid fa-play")
-                    .WithBindIsVisible(nameof(item.IsPlaying), new InverseBooleanConverter())
+                    .WithBindIsVisible(nameof(item.IsPlaying), InverseBooleanConverter.Instance)
                     .WithBindEnabled(nameof(item.IsPlayingEnabled));
                 buttonPlay.CommandParameter = item;
 

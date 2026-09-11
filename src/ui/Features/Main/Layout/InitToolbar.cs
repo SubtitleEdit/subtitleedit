@@ -374,12 +374,7 @@ public static class InitToolbar
                 var assaSeparator = MakeSeparator();
                 stackPanelLeft.Children.Add(assaSeparator);
                 assaSeparator.DataContext = vm;
-                assaSeparator.Bind(
-                    Visual.IsVisibleProperty,
-                    new Binding(nameof(vm.IsFormatAssa))
-                    {
-                        Mode = BindingMode.TwoWay,
-                    });
+                assaSeparator.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsFormatAssa)) { Mode = BindingMode.OneWay });
             }
 
             if (showSsaIcons)
@@ -387,12 +382,7 @@ public static class InitToolbar
                 var ssaSeparator = MakeSeparator();
                 stackPanelLeft.Children.Add(ssaSeparator);
                 ssaSeparator.DataContext = vm;
-                ssaSeparator.Bind(
-                    Visual.IsVisibleProperty,
-                    new Binding(nameof(vm.IsFormatSsa))
-                    {
-                        Mode = BindingMode.TwoWay,
-                    });
+                ssaSeparator.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsFormatSsa)) { Mode = BindingMode.OneWay });
             }
 
             if (showWebVttIcons)
@@ -400,12 +390,7 @@ public static class InitToolbar
                 var webVttSeparator = MakeSeparator();
                 stackPanelLeft.Children.Add(webVttSeparator);
                 webVttSeparator.DataContext = vm;
-                webVttSeparator.Bind(
-                    Visual.IsVisibleProperty,
-                    new Binding(nameof(vm.IsFormatWebVtt))
-                    {
-                        Mode = BindingMode.TwoWay,
-                    });
+                webVttSeparator.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsFormatWebVtt)) { Mode = BindingMode.OneWay });
             }
 
             isLastSeparator = true;

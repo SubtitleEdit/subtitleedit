@@ -30,10 +30,10 @@ namespace Nikse.SubtitleEdit.Features.Tools.FixCommonErrors;
 public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
 {
     // A scan often takes only a frame or two, so "Analyzing..." has to be held for a moment to be seen at all.
-    private const int AnalysingMinimumVisibleMilliseconds = 250;
+    internal static int AnalysingMinimumVisibleMilliseconds = 250; // static, not const: tests zero it
 
     // Long enough for the dispatcher to get a frame out before the scan blocks the UI thread again.
-    private const int AnalysingPaintDelayMilliseconds = 20;
+    internal static int AnalysingPaintDelayMilliseconds = 20;
 
     [ObservableProperty] private string _searchText;
     [ObservableProperty] private ObservableCollection<LanguageDisplayItem> _languages;

@@ -153,6 +153,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             // from a field delimiter - so quoted words came back with their quotes eaten.
             var sb = new StringBuilder();
             csv = csv.Trim();
+            if (csv == "\"\",\"\"")
+            {
+                return string.Empty; // two empty cells - the walk below read them back as the literal ","
+            }
+
             if (csv.StartsWith('"'))
             {
                 csv = csv.Remove(0, 1);
@@ -179,7 +184,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         isBreak = false;
                     }
-                    else if (i == 0 || i == csv.Length - 1 || sb.ToString().EndsWith(Environment.NewLine, StringComparison.Ordinal))
+                    else if (i == 0 || i == csv.Length - 1 || sb.EndsWith(Environment.NewLine))
                     {
                         sb.Append('"');
                     }

@@ -212,11 +212,17 @@ public class MainMenuKeyboardActivationTests : IDisposable
         PressAndRelease(window, PhysicalKey.AltLeft, RawInputModifiers.Alt);
         await WaitUntil(() => vm.Menu.IsOpen, "bare Alt should open the menu bar");
 
+        // Opening the bar and focusing its first header are two steps; a Down delivered between
+        // them goes to the grid and opens nothing (CI flake: "Down should focus the first
+        // drop-down item"). Wait for the header to hold focus before sending the next key.
+        await WaitUntil(() => IsFocusOnMenuItem(window), "bare Alt should focus the first top-level menu item");
+        var header = window.FocusManager?.GetFocusedElement();
+
         // Down opens the File drop-down and focuses its first item. (The headless platform hosts
         // drop-downs in the window's overlay layer, so this cannot reproduce the desktop bug
         // where they live in a separate popup top-level - the test below covers that part.)
         PressAndRelease(window, PhysicalKey.ArrowDown, RawInputModifiers.None);
-        await WaitUntil(() => IsFocusOnMenuItem(window), "Down should focus the first drop-down item");
+        await WaitUntil(() => IsFocusOnMenuItem(window) && !ReferenceEquals(header, window.FocusManager?.GetFocusedElement()), "Down should focus the first drop-down item");
 
         PressAndRelease(window, PhysicalKey.AltLeft, RawInputModifiers.Alt);
 

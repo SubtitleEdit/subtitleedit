@@ -48,7 +48,6 @@ public partial class AiReviewViewModel : ObservableObject
     [NotifyCanExecuteChangedFor(nameof(PlayCurrentLineCommand))]
     private ReviewSuggestionItem? _selectedSuggestion;
     [ObservableProperty] private bool _isReviewing;
-    [ObservableProperty] private bool _isNotReviewing = true;
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private string _statusText;
     [ObservableProperty] private string _reasonText;
@@ -186,11 +185,6 @@ public partial class AiReviewViewModel : ObservableObject
     partial void OnSelectedEngineChanged(string value)
     {
         UpdateEngineVisibility();
-    }
-
-    partial void OnIsReviewingChanged(bool value)
-    {
-        IsNotReviewing = !value;
     }
 
     partial void OnReasonTextChanged(string value)

@@ -28,6 +28,20 @@ public class LanguageMainWaveform
     public string TextPlayHint { get; set; }
     public string TextPauseHint { get; set; }
     public string TextNextHint { get; set; }
+    public string GuessStartNoLineSelected { get; set; }
+    public string GuessStartTimeCodesLocked { get; set; }
+    public string GuessStartNoWaveform { get; set; }
+    public string GuessStartNoRoomBeforePreviousLineX { get; set; }
+    public string GuessStartLineXAlreadyAtBoundary { get; set; }
+    public string GuessStartNoSilenceFoundNearLineX { get; set; }
+    public string GuessStartMovedLineXByYMs { get; set; }
+    public string GuessEndNoLineSelected { get; set; }
+    public string GuessEndTimeCodesLocked { get; set; }
+    public string GuessEndNoWaveform { get; set; }
+    public string GuessEndNoRoomBeforeNextLineX { get; set; }
+    public string GuessEndLineXAlreadyAtBoundary { get; set; }
+    public string GuessEndNoSilenceFoundNearLineX { get; set; }
+    public string GuessEndMovedLineXByYMs { get; set; }
 
     public LanguageMainWaveform()
     {
@@ -57,5 +71,19 @@ public class LanguageMainWaveform
         TextPlayHint = "Play current subtitle and stop at end {0}";
         TextPauseHint = "Pause playback {0}";
         TextNextHint = "Play next subtitle and stop at end {0}";
+        GuessStartNoLineSelected = "Guess start: no line selected";
+        GuessStartTimeCodesLocked = "Guess start: time codes are locked";
+        GuessStartNoWaveform = "Guess start: no waveform";
+        GuessStartNoRoomBeforePreviousLineX = "Guess start: line {0} has no room before the previous line";
+        GuessStartLineXAlreadyAtBoundary = "Guess start: line {0} already starts where the speech begins";
+        GuessStartNoSilenceFoundNearLineX = "Guess start: no silence found near line {0}";
+        GuessStartMovedLineXByYMs = "Guess start: line {0} start moved {1} ms";
+        GuessEndNoLineSelected = "Guess end: no line selected";
+        GuessEndTimeCodesLocked = "Guess end: time codes are locked";
+        GuessEndNoWaveform = "Guess end: no waveform";
+        GuessEndNoRoomBeforeNextLineX = "Guess end: line {0} has no room before the next line";
+        GuessEndLineXAlreadyAtBoundary = "Guess end: line {0} already ends where the speech stops";
+        GuessEndNoSilenceFoundNearLineX = "Guess end: no silence found near line {0}";
+        GuessEndMovedLineXByYMs = "Guess end: line {0} end moved {1} ms";
     }
 }

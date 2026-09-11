@@ -89,7 +89,7 @@ public class ManualChosenEncodingWindow : Window
             Header = Se.Language.File.ManualChosenEncoding.CodePage,
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding("Encoding.CodePage"),
+            Binding = new Binding($"{nameof(TextEncoding.Encoding)}.{nameof(System.Text.Encoding.CodePage)}"),
             // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
             Width = new GridLength(100),
         };
@@ -106,7 +106,7 @@ public class ManualChosenEncodingWindow : Window
             Header = Se.Language.General.Group,
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding("Encoding.BodyName"),
+            Binding = new Binding($"{nameof(TextEncoding.Encoding)}.{nameof(System.Text.Encoding.BodyName)}"),
             Width = new GridLength(180),
         };
         dataGrid.Columns.AddRange(new TableViewColumn[] { columnCodePage, columnName, columnGroup });

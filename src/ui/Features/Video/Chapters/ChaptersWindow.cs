@@ -301,7 +301,7 @@ public class ChaptersWindow : Window
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
             IsHitTestVisible = false,
-            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.HasChapters)) { Converter = new InverseBooleanConverter() },
+            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.HasChapters)) { Converter = InverseBooleanConverter.Instance },
         };
 
         return UiUtil.MakeBorderForControl(new Panel { Children = { tableView, emptyHint } });

@@ -69,7 +69,7 @@ public class ImageBasedProfileWindow : Window
                             CommandParameter = profile,
                             DataContext = vm,
                         };
-                        deleteButton.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.IsProfileDeleteEnabled)) { Mode = BindingMode.TwoWay });
+                        deleteButton.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.IsProfileDeleteEnabled)) { Mode = BindingMode.OneWay });
                         Attached.SetIcon(deleteButton, "fa-solid fa-trash");
                         Grid.SetColumn(deleteButton, 1);
                         grid.Children.Add(deleteButton);

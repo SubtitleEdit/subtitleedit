@@ -18,7 +18,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return false;
             }
 
-            return base.IsMine(lines, fileName);
+            // UnknownSubtitle36.IsMine rejects RTF input outright, so this RTF-wrapped sibling
+            // could never be detected: unwrap first and run the plain reader on the result.
+            var rtf = string.Join(Environment.NewLine, lines).Trim();
+            if (!rtf.StartsWith("{\\rtf", StringComparison.Ordinal))
+            {
+                return false;
+            }
+
+            var subtitle = new Subtitle();
+            base.LoadSubtitle(subtitle, rtf.FromRtf().SplitToLines(), fileName);
+            return subtitle.Paragraphs.Count > _errorCount;
         }
 
         public override string ToText(Subtitle subtitle, string title)

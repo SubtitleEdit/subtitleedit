@@ -126,6 +126,12 @@ public class FishTtsAudioCpp : ITtsEngine, IPerLineCloneEngine
     public static string GetModelFileName(string? modelKey) =>
         ResolveModelKey(modelKey) == ModelKeyBf16 ? ModelBf16FileName : ModelQ8_0FileName;
 
+    /// <summary>
+    /// What goes in <c>reference_text</c> when the reference clip's transcript is unknown: the
+    /// server refuses a missing or empty transcript, accepts this, and clones from it well.
+    /// </summary>
+    internal const string UnknownReferenceTextPlaceholder = " ";
+
     private static readonly HttpClient HttpClient = new()
     {
         Timeout = TimeSpan.FromMinutes(10),
@@ -355,14 +361,12 @@ public class FishTtsAudioCpp : ITtsEngine, IPerLineCloneEngine
     /// <see cref="IPerLineCloneEngine"/>: the server takes <c>voice_ref</c> as a path per request,
     /// so the voice simply points at the cut clip - nothing is staged into this engine's own
     /// folders. audio.cpp resamples the reference itself, so the 24 kHz clip is used as cut.
-    /// S2 Pro refuses to clone without <c>reference_text</c> (see <see cref="Speak"/>), so a clip
-    /// with no transcript beside it is no reference at all: null, and the caller falls back to
-    /// an ordinary voice for that line instead of the run failing on it.
+    /// A clip with no transcript beside it (no original-language subtitle loaded, so what the
+    /// video says is unknown) is still a usable reference: <see cref="Speak"/> sends the blank
+    /// placeholder transcript for it, which clones fine.
     /// </summary>
     public Voice? MakePerLineCloneVoice(string clipFileName, string voiceName) =>
-        string.IsNullOrWhiteSpace(ChatterboxTtsCpp.TryReadReferenceTranscript(clipFileName))
-            ? null
-            : new Voice(new IndexTtsVoice(voiceName, clipFileName));
+        new Voice(new IndexTtsVoice(voiceName, clipFileName));
 
     /// <summary>The clip's own path, which is exactly what the voice carries.</summary>
     public string? GetPerLineReferenceClip(Voice voice) =>
@@ -415,19 +419,22 @@ public class FishTtsAudioCpp : ITtsEngine, IPerLineCloneEngine
         // honoured per request — no server restart when the user switches voice.
         var options = new Dictionary<string, object>();
 
-        // The transcript of the reference WAV, from the shared .txt sidecar convention.
-        // NOT optional, whatever upstream's docs say: audio.cpp v0.7.1 answers a voice_ref
-        // without reference_text with HTTP 500 "Fish Audio prepare with inline reference
-        // audio requires reference_text option" (verified against the real server), and an
-        // empty string is refused the same way. Fail here with an actionable message instead
-        // of surfacing the server's error.
+        // The transcript of the reference WAV, from the shared .txt sidecar convention. The
+        // option itself is NOT optional, whatever upstream's docs say: audio.cpp answers a
+        // voice_ref without reference_text, or with an empty string, with HTTP 500 "Fish Audio
+        // prepare with inline reference audio requires reference_text option" (verified
+        // against the real server). A single space passes that check and the clone comes out
+        // fine, so an unknown transcript - a per-line clip cut from the video with no
+        // original-language subtitle loaded - is sent as that placeholder. What must NEVER be
+        // sent in its place is the text being spoken: the transcript and the target text share
+        // one prompt, and when they are the same line the model concludes the clip already
+        // says it and replays the clip instead of speaking the line (#14480, Polish subtitles
+        // dubbed as the video's own language).
         var referenceText = ChatterboxTtsCpp.TryReadReferenceTranscript(indexVoice.FilePath);
         if (string.IsNullOrWhiteSpace(referenceText))
         {
-            throw new InvalidOperationException(
-                "Fish Audio S2 Pro requires the transcript of the reference recording. "
-                + $"Save the spoken text as \"{Path.ChangeExtension(indexVoice.FilePath, ".txt")}\", "
-                + "or re-import the voice and enter the transcript when asked.");
+            referenceText = UnknownReferenceTextPlaceholder;
+            Se.WriteToolsLog($"Fish Audio S2 Pro (audio.cpp): no transcript beside reference '{indexVoice.FilePath}', cloning with a blank reference_text");
         }
 
         options["reference_text"] = referenceText;

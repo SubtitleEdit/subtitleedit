@@ -97,7 +97,6 @@ public partial class TextToSpeechViewModel : ObservableObject
     [ObservableProperty] private bool _doGenerateVideoFile;
     [ObservableProperty] private bool _isEdgeTtsEngine;
     [ObservableProperty] private bool _isGenerating;
-    [ObservableProperty] private bool _isNotGenerating;
     [ObservableProperty] private bool _isEngineSettingsVisible;
     [ObservableProperty] private bool _isModelDownloadVisible;
     [ObservableProperty] private string _progressText;
@@ -187,7 +186,6 @@ public partial class TextToSpeechViewModel : ObservableObject
         IsVoiceTestEnabled = true;
         IsVoiceComboEnabled = true;
         IsGenerating = false;
-        IsNotGenerating = true;
         KeyFile = string.Empty;
         Instruction = string.Empty;
         CastButtonText = Se.Language.Video.TextToSpeech.SetupCast;
@@ -370,6 +368,11 @@ public partial class TextToSpeechViewModel : ObservableObject
         else if (SelectedEngine is FishTtsAudioCpp)
         {
             Se.Settings.Video.TextToSpeech.FishTtsAudioCppModel = SelectedModel ?? FishTtsAudioCpp.DefaultModelKey;
+        }
+        else if (SelectedEngine is FireRedTts3AudioCpp)
+        {
+            Se.Settings.Video.TextToSpeech.FireRedTts3AudioCppModel = SelectedModel ?? FireRedTts3AudioCpp.DefaultModelKey;
+            Se.Settings.Video.TextToSpeech.FireRedTts3AudioCppLanguage = SelectedLanguage?.Name ?? string.Empty;
         }
         else if (SelectedEngine is CosyVoice3CrispAsr)
         {
@@ -607,6 +610,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         bool isOmniVoiceCrispAsr = false;
         bool isMossTts = false;
         bool isQwen3Clone = false;
+        bool isFireRedTts3 = false;
         if (voice.EngineVoice is CosyVoice3Voice cosy && !string.IsNullOrEmpty(cosy.FilePath) && string.IsNullOrEmpty(cosy.RefText))
         {
             wavPath = cosy.FilePath;
@@ -648,6 +652,21 @@ public partial class TextToSpeechViewModel : ObservableObject
                 isMossTts = true;
             }
         }
+        else if (voice.EngineVoice is IndexTtsVoice audioCppVoice
+                 && !string.IsNullOrEmpty(audioCppVoice.FilePath)
+                 && SelectedEngine is FireRedTts3AudioCpp)
+        {
+            // IndexTtsVoice is shared by the four audio.cpp engines, and only FireRedTTS3 cannot
+            // clone without the transcript (its prompt pairs the reference audio with its text;
+            // without it the model returns noise - #14480). The others clone from the audio
+            // alone, so the engine decides, not the voice type.
+            var existing = Qwen3TtsCrispAsr.TryReadUsableTranscript(audioCppVoice.FilePath);
+            if (string.IsNullOrEmpty(existing))
+            {
+                wavPath = audioCppVoice.FilePath;
+                isFireRedTts3 = true;
+            }
+        }
         else if (voice.EngineVoice is Voices.Qwen3TtsVoice qwen3 && !string.IsNullOrEmpty(qwen3.FilePath))
         {
             // Only the Voice clone (Base) model carries a FilePath; CustomVoice/VoiceDesign leave
@@ -674,7 +693,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             // transcript (the sibling engines keep their type-or-click-STT prompt). The result is
             // still shown for a quick review/correction since clone quality is sensitive to it.
             var initialText = string.Empty;
-            if (isQwen3Clone)
+            if (isQwen3Clone || isFireRedTts3)
             {
                 initialText = await RunSpeechToTextForRefTextAsync(audioFileName) ?? string.Empty;
             }
@@ -714,7 +733,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             {
                 written = MossTtsCrispAsr.TryWriteRefTextSidecar(wavPath, result.Text);
             }
-            else if (isQwen3Clone)
+            else if (isQwen3Clone || isFireRedTts3)
             {
                 written = Qwen3TtsCrispAsr.TryWriteRefTextSidecar(wavPath, result.Text);
             }
@@ -991,7 +1010,6 @@ public partial class TextToSpeechViewModel : ObservableObject
         _cancellationTokenSource = new CancellationTokenSource();
         _cancellationToken = _cancellationTokenSource.Token;
         IsGenerating = false;
-        IsNotGenerating = true;
         IsEngineSettingsVisible = false;
         IsModelDownloadVisible = false;
         ProgressText = string.Empty;
@@ -1073,6 +1091,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         Qwen3TtsCrispAsr => Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrLanguage,
         ChatterboxTtsCpp => Se.Settings.Video.TextToSpeech.ChatterboxCrispAsrLanguage,
         ZonosTtsCrispAsr => Se.Settings.Video.TextToSpeech.ZonosTtsCrispAsrLanguage,
+        FireRedTts3AudioCpp => Se.Settings.Video.TextToSpeech.FireRedTts3AudioCppLanguage,
         ElevenLabs => Se.Settings.Video.TextToSpeech.ElevenLabsLanguage,
         _ => null,
     };
@@ -1339,6 +1358,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             FishTtsAudioCpp.StopServer();
         }
+        if (keepAlive is not FireRedTts3AudioCpp)
+        {
+            FireRedTts3AudioCpp.StopServer();
+        }
         if (keepAlive is not CosyVoice3CrispAsr)
         {
             CosyVoice3CrispAsr.StopServer();
@@ -1444,7 +1467,6 @@ public partial class TextToSpeechViewModel : ObservableObject
         ProgressEtaText = string.Empty;
         _generateStopwatch.Restart();
         IsGenerating = true;
-        IsNotGenerating = false;
         ProgressOpacity = 1.0;
         SaveSettings();
 
@@ -1545,7 +1567,6 @@ public partial class TextToSpeechViewModel : ObservableObject
         ProgressPercentText = string.Empty;
         ProgressEtaText = string.Empty;
         IsGenerating = false;
-        IsNotGenerating = true;
         ProgressOpacity = 0;
     }
 
@@ -1638,6 +1659,9 @@ public partial class TextToSpeechViewModel : ObservableObject
             case FishTtsAudioCpp:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadFishTtsAudioCppModels(FishTtsAudioCpp.ResolveModelKey(SelectedModel)));
                 break;
+            case FireRedTts3AudioCpp:
+                await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadFireRedTts3AudioCppModels(FireRedTts3AudioCpp.ResolveModelKey(SelectedModel)));
+                break;
             case CosyVoice3CrispAsr:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadCosyVoice3CrispAsrModels(CosyVoice3CrispAsr.ResolveModelKey(SelectedModel)));
                 break;
@@ -1724,6 +1748,9 @@ public partial class TextToSpeechViewModel : ObservableObject
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
             FishTtsAudioCpp => FishTtsAudioCpp.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
+            FireRedTts3AudioCpp => FireRedTts3AudioCpp.AreModelsInstalled(modelKey)
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
             CosyVoice3CrispAsr => CosyVoice3CrispAsr.AreModelsInstalled(modelKey)
@@ -2169,7 +2196,6 @@ public partial class TextToSpeechViewModel : ObservableObject
             ProgressPercentText = string.Empty;
             ProgressEtaText = string.Empty;
             IsGenerating = true;
-            IsNotGenerating = false;
             ProgressOpacity = 1.0;
 
             try
@@ -2375,7 +2401,6 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
 
         IsGenerating = false;
-        IsNotGenerating = true;
         ProgressOpacity = 0;
         OkPressed = true;
 
@@ -2404,7 +2429,6 @@ public partial class TextToSpeechViewModel : ObservableObject
             }
 
             IsGenerating = false;
-            IsNotGenerating = true;
             ProgressOpacity = 0;
             return;
         }
@@ -3186,6 +3210,21 @@ public partial class TextToSpeechViewModel : ObservableObject
             return false;
         }
 
+        // FireRedTTS3 refuses a clip without a transcript (MakePerLineCloneVoice returns null),
+        // and the transcripts come from the original-language subtitle. Without one loaded every
+        // line would silently fall back to the first imported voice - a run that "does not
+        // clone" (#14480). Say so up front instead of after minutes of generation.
+        if (engine is FireRedTts3AudioCpp && (_originalSubtitle == null || _originalSubtitle.Paragraphs.Count == 0))
+        {
+            await MessageBox.Show(
+                Window!,
+                Se.Language.General.Error,
+                string.Format(Se.Language.Video.TextToSpeech.CloneVoicePerLineNeedsOriginalSubtitleX, engine.Name),
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return false;
+        }
+
         // A fresh folder per run: the clips of a previous run belong to whatever the subtitle
         // looked like then, and the review window still points at the current run's files. The
         // same goes for the copies an engine keeps in its own voices folder.
@@ -3263,21 +3302,24 @@ public partial class TextToSpeechViewModel : ObservableObject
     }
 
     /// <summary>
-    /// What the video says during <paramref name="paragraph"/> - the reference clip's transcript.
+    /// What the video says during <paramref name="paragraph"/> - the reference clip's transcript -
+    /// or null when that is not known.
     /// </summary>
     /// <remarks>
     /// The source-language line when a subtitle in the video's own language is loaded next to the
     /// translation, matched by start time rather than by index so a translation with merged or
-    /// split lines still lines up. Without an original loaded the line's own text is the best
-    /// guess left; that is right when dubbing a subtitle in the video's language, and merely
-    /// unhelpful (not harmful) when the text has already been translated.
+    /// split lines still lines up. Without an original loaded the answer is null, NOT the line's
+    /// own text: the cloning engines put that transcript in the same prompt as the text to speak,
+    /// and when the "transcript" is the translation of what the clip says, they are told the clip
+    /// already contains the target text - and Fish Audio S2 Pro then replays the clip (the
+    /// original-language audio) instead of speaking the line (#14480). A missing transcript
+    /// merely costs some clone fidelity on the engines that use it; a wrong one costs the dub.
     /// </remarks>
-    private string GetSpokenTextInVideo(Paragraph paragraph)
+    private string? GetSpokenTextInVideo(Paragraph paragraph)
     {
-        var fallback = HtmlUtil.RemoveHtmlTags(paragraph.Text ?? string.Empty, alsoSsaTags: true);
         if (_originalSubtitle == null || _originalSubtitle.Paragraphs.Count == 0)
         {
-            return Utilities.UnbreakLine(fallback);
+            return null;
         }
 
         // Exact start time is the normal case (a translation keeps the original's timings); the
@@ -3296,11 +3338,11 @@ public partial class TextToSpeechViewModel : ObservableObject
 
         if (Math.Abs(best.StartTime.TotalMilliseconds - paragraph.StartTime.TotalMilliseconds) > 500)
         {
-            return Utilities.UnbreakLine(fallback);
+            return null;
         }
 
         var original = HtmlUtil.RemoveHtmlTags(best.Text ?? string.Empty, alsoSsaTags: true);
-        return Utilities.UnbreakLine(string.IsNullOrWhiteSpace(original) ? fallback : original);
+        return string.IsNullOrWhiteSpace(original) ? null : Utilities.UnbreakLine(original);
     }
 
     /// <summary>
@@ -4029,6 +4071,10 @@ public partial class TextToSpeechViewModel : ObservableObject
                     // detect a language), so the first-entry fallback is the backend default.
                     ZonosTtsCrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.ZonosTtsCrispAsrLanguage)
                                         ?? Languages.FirstOrDefault(),
+                    // FireRedTTS3 leads with English too: no detection, and audio.cpp's own
+                    // fallback for an unset tag is Chinese.
+                    FireRedTts3AudioCpp => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.FireRedTts3AudioCppLanguage)
+                                           ?? Languages.FirstOrDefault(),
                     _ => Languages.FirstOrDefault(),
                 };
             }
@@ -4185,6 +4231,16 @@ public partial class TextToSpeechViewModel : ObservableObject
             else if (SelectedEngine is FishTtsAudioCpp)
             {
                 SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.FishTtsAudioCppModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Models.FirstOrDefault();
+                }
+                IsEngineSettingsVisible = true;
+                IsModelDownloadVisible = true;
+            }
+            else if (SelectedEngine is FireRedTts3AudioCpp)
+            {
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.FireRedTts3AudioCppModel);
                 if (string.IsNullOrEmpty(SelectedModel))
                 {
                     SelectedModel = Models.FirstOrDefault();

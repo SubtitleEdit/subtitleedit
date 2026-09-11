@@ -34,15 +34,15 @@ internal static class InfoLintReporter
         table.AddColumn("[yellow]Field[/]");
         table.AddColumn("[green]Value[/]");
 
-        table.AddRow("Format", info.Format);
-        table.AddRow("Extension", info.Extension);
-        table.AddRow("Encoding", info.Encoding);
+        table.AddRow(new Text("Format"), new Text(info.Format));
+        table.AddRow(new Text("Extension"), new Text(info.Extension));
+        table.AddRow(new Text("Encoding"), new Text(info.Encoding));
         table.AddRow("File size", FormatBytes(info.FileSizeBytes));
         table.AddRow("Paragraphs", info.ParagraphCount.ToString());
         if (info.FirstStartMs.HasValue) table.AddRow("First start", FormatMs(info.FirstStartMs.Value));
         if (info.LastEndMs.HasValue) table.AddRow("Last end", FormatMs(info.LastEndMs.Value));
         if (info.DurationMs.HasValue) table.AddRow("Duration", FormatMs(info.DurationMs.Value));
-        if (!string.IsNullOrEmpty(info.Language)) table.AddRow("Language", info.Language);
+        if (!string.IsNullOrEmpty(info.Language)) table.AddRow(new Text("Language"), new Text(info.Language));
 
         AnsiConsole.Write(table);
     }

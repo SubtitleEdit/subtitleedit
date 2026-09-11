@@ -21,7 +21,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 //[13.560 23.900] Heute geht es...
-                sb.AppendLine($"[{EncodeTimeCode(p.StartTime)} {EncodeTimeCode(p.EndTime)}] {HtmlUtil.RemoveHtmlTags(p.Text, true).Replace(Environment.NewLine, "\r")}");
+                // A bare "\r" inside the line was split off as its own line on read, and the
+                // second line of every cue was lost; the reader now takes continuation lines.
+                sb.AppendLine($"[{EncodeTimeCode(p.StartTime)} {EncodeTimeCode(p.EndTime)}] {HtmlUtil.RemoveHtmlTags(p.Text, true)}");
             }
             return sb.ToString();
         }
@@ -50,6 +52,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     text = text.Replace("\r", Environment.NewLine);
                     p = new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), text);
                     subtitle.Paragraphs.Add(p);
+                }
+                else if (p != null && s.Length > 0)
+                {
+                    p.Text = (p.Text + Environment.NewLine + s).Trim();
                 }
                 else
                 {

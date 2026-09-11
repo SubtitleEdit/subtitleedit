@@ -102,11 +102,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 if (indexOfI == 0 || pre.Contains(text[indexOfI - 1]))
                 {
-                    if (text.Substring(indexOfI).StartsWith("i-i ", StringComparison.Ordinal))
+                    if (text.AsSpan(indexOfI).StartsWith("i-i ".AsSpan(), StringComparison.Ordinal))
                     {
                         text = text.Remove(indexOfI, 3).Insert(indexOfI, "I-I");
                     }
-                    else if (text.Substring(indexOfI).StartsWith("i-if ", StringComparison.Ordinal))
+                    else if (text.AsSpan(indexOfI).StartsWith("i-if ".AsSpan(), StringComparison.Ordinal))
                     {
                         text = text.Remove(indexOfI, 4).Insert(indexOfI, "I-If");
                     }
@@ -123,7 +123,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     text = text.Remove(indexOfI, 1).Insert(indexOfI, "I");
                 }
-                else if (indexOfI > 1 && "\r\n ".Contains(text[indexOfI - 1]) && text.Substring(indexOfI).StartsWith("i-i ", StringComparison.Ordinal))
+                else if (indexOfI > 1 && "\r\n ".Contains(text[indexOfI - 1]) && text.AsSpan(indexOfI).StartsWith("i-i ".AsSpan(), StringComparison.Ordinal))
                 {
                     text = text.Remove(indexOfI, 3).Insert(indexOfI, "I-I");
                 }
@@ -131,27 +131,27 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     text = text.Remove(indexOfI, 1).Insert(indexOfI, "I");
                 }
-                else if (indexOfI > 2 && text.Substring(indexOfI - 2).StartsWith("I-i ", StringComparison.Ordinal))
+                else if (indexOfI > 2 && text.AsSpan(indexOfI - 2).StartsWith("I-i ".AsSpan(), StringComparison.Ordinal))
                 {
                     text = text.Remove(indexOfI - 2, 3).Insert(indexOfI - 2, "I-I");
                 }
-                else if (indexOfI > 2 && text.Substring(indexOfI - 2).StartsWith("I-it's ", StringComparison.Ordinal))
+                else if (indexOfI > 2 && text.AsSpan(indexOfI - 2).StartsWith("I-it's ".AsSpan(), StringComparison.Ordinal))
                 {
                     text = text.Remove(indexOfI - 2, 3).Insert(indexOfI - 2, "I-I");
                 }
-                else if (text.Substring(indexOfI).StartsWith("i'll ", StringComparison.Ordinal))
+                else if (text.AsSpan(indexOfI).StartsWith("i'll ".AsSpan(), StringComparison.Ordinal))
                 {
                     text = text.Remove(indexOfI, 1).Insert(indexOfI, "I");
                 }
-                else if (text.Substring(indexOfI).StartsWith("i've ", StringComparison.Ordinal))
+                else if (text.AsSpan(indexOfI).StartsWith("i've ".AsSpan(), StringComparison.Ordinal))
                 {
                     text = text.Remove(indexOfI, 1).Insert(indexOfI, "I");
                 }
-                else if (text.Substring(indexOfI).StartsWith("i'm ", StringComparison.Ordinal))
+                else if (text.AsSpan(indexOfI).StartsWith("i'm ".AsSpan(), StringComparison.Ordinal))
                 {
                     text = text.Remove(indexOfI, 1).Insert(indexOfI, "I");
                 }
-                else if (text.Substring(indexOfI).StartsWith("i'd ", StringComparison.Ordinal))
+                else if (text.AsSpan(indexOfI).StartsWith("i'd ".AsSpan(), StringComparison.Ordinal))
                 {
                     text = text.Remove(indexOfI, 1).Insert(indexOfI, "I");
                 }
@@ -161,6 +161,20 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static readonly string[] CasingTitles = { "Mrs.", "Miss.", "Mr.", "Ms.", "Dr." };
         private static readonly string[] CasingNotChangeWords = { "does", "has", "will", "is", "and", "for", "but", "or", "of" };
+        private static readonly char[] TitleWordDelimiters = { ' ', '\r', '\n', ',', '"', '?', '!', '.', '\'' };
+
+        private static bool IsCasingNotChangeWord(ReadOnlySpan<char> word)
+        {
+            foreach (var w in CasingNotChangeWords)
+            {
+                if (word.SequenceEqual(w.AsSpan()))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
 
         private string FixCasingAfterTitles(string input)
         {
@@ -181,8 +195,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                         if (idx < text.Length - 1 && text[idx] == ' ')
                         {
                             idx++;
-                            var words = text.Substring(idx).Split(' ', '\r', '\n', ',', '"', '?', '!', '.', '\'');
-                            if (words.Length > 0 && !CasingNotChangeWords.Contains(words[0]))
+                            // First word only - splitting the whole rest of the line allocated an array per title hit.
+                            var wordEnd = text.IndexOfAny(TitleWordDelimiters, idx);
+                            var firstWord = wordEnd < 0 ? text.AsSpan(idx) : text.AsSpan(idx, wordEnd - idx);
+                            if (!IsCasingNotChangeWord(firstWord))
                             {
                                 var upper = char.ToUpperInvariant(text[idx]).ToString();
                                 text = text.Remove(idx, 1).Insert(idx, upper);

@@ -75,7 +75,10 @@ public static class PerLineVoiceClone
     /// </summary>
     /// <param name="referenceTextOf">
     /// What is spoken in the video for a paragraph - the original-language line when a source
-    /// subtitle is loaded, which is what the reference clip actually contains.
+    /// subtitle is loaded, which is what the reference clip actually contains - or null when
+    /// that is unknown. Unknown gets no sidecar; the line's own (possibly translated) text is
+    /// never written as a stand-in, because a transcript that is the translation of the clip
+    /// makes the engines replay the clip instead of speaking the line (#14480).
     /// </param>
     /// <returns>
     /// The clip per paragraph. Paragraphs whose cut failed are absent rather than mapped to a
@@ -84,7 +87,7 @@ public static class PerLineVoiceClone
     public static async Task<Dictionary<Paragraph, string>> CutReferenceClipsAsync(
         string videoFileName,
         IReadOnlyList<Paragraph> paragraphs,
-        Func<Paragraph, string> referenceTextOf,
+        Func<Paragraph, string?> referenceTextOf,
         string outputFolder,
         double videoDurationSeconds,
         int audioTrackFfIndex,
@@ -134,14 +137,15 @@ public static class PerLineVoiceClone
     }
 
     /// <summary>
-    /// Cuts the reference clip for one paragraph and writes its transcript sidecar. Returns null
-    /// when the clip could not be produced - the caller decides what that line falls back to.
+    /// Cuts the reference clip for one paragraph and writes its transcript sidecar when
+    /// <paramref name="referenceText"/> is known. Returns null when the clip could not be
+    /// produced - the caller decides what that line falls back to.
     /// </summary>
     public static async Task<string?> CutReferenceClipAsync(
         string videoFileName,
         IReadOnlyList<Paragraph> paragraphs,
         int index,
-        string referenceText,
+        string? referenceText,
         string outputFolder,
         double videoDurationSeconds,
         int audioTrackFfIndex,
@@ -159,9 +163,19 @@ public static class PerLineVoiceClone
             }
 
             // The engines that clone from a recording read what is spoken in it from a sibling
-            // .txt (omnivoice-tts refuses --ref-wav without one). We know it exactly here, so
-            // nobody has to type it or run speech-to-text over the clip.
-            await File.WriteAllTextAsync(Path.ChangeExtension(clipFileName, ".txt"), referenceText, cancellationToken);
+            // .txt. When the caller knows it (an original-language subtitle is loaded) nobody
+            // has to type it or run speech-to-text over the clip; when it does not, no sidecar
+            // is written and each engine decides what an unknown transcript means to it - a
+            // stale .txt from an earlier cut into the same folder must not survive either.
+            var sidecar = Path.ChangeExtension(clipFileName, ".txt");
+            if (!string.IsNullOrWhiteSpace(referenceText))
+            {
+                await File.WriteAllTextAsync(sidecar, referenceText, cancellationToken);
+            }
+            else if (File.Exists(sidecar))
+            {
+                File.Delete(sidecar);
+            }
 
             return clipFileName;
         }

@@ -233,14 +233,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
 
                             italics = false;
-                            if (!sb.ToString().EndsWith(Environment.NewLine, StringComparison.Ordinal))
+                            if (!sb.EndsWith(Environment.NewLine))
                             {
                                 sb.AppendLine();
                             }
                         }
-                        else if (DicCodeLatin.ContainsKey(buffer[index]))
+                        else if (DicCodeLatin.TryGetValue(buffer[index], out var latin))
                         {
-                            sb.Append(DicCodeLatin[buffer[index]]);
+                            sb.Append(latin);
                         }
                         else if (buffer[index] >= 0xC0 || buffer[index] <= 0x1F) // codes/styles (0x15-0x1F are not text in cp1252 either - e.g. the 0x1E right-align style byte)
                         {

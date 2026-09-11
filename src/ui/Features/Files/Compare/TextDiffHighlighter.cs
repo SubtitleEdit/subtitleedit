@@ -127,40 +127,111 @@ public static class TextDiffHighlighter
     /// </summary>
     public static (TextBlock left, TextBlock right) Compare(string text1, string text2, bool ignoreWhiteSpace, bool ignoreFormatting)
     {
-        text1 = NormalizeNewLines(text1);
-        text2 = NormalizeNewLines(text2);
+        var (t1, t2, isDiff1, isDiff2) = ComputeDiffMasks(text1, text2, ignoreWhiteSpace, ignoreFormatting);
 
-        var left = MakeTextBlock(text1);
-        var right = MakeTextBlock(text2);
+        var left = MakeTextBlock(t1);
+        var right = MakeTextBlock(t2);
 
         if (left.Inlines == null || right.Inlines == null)
         {
             return (left, right);
         }
 
+        if (isDiff1 == null || isDiff2 == null)
+        {
+            // Nothing to mark - don't set Foreground to allow theme color inheritance
+            if (t1.Length > 0)
+            {
+                left.Inlines.Add(new Run(t1));
+            }
+
+            if (t2.Length > 0)
+            {
+                right.Inlines.Add(new Run(t2));
+            }
+
+            return (left, right);
+        }
+
+        // Build the visual representation
+        var redFg = GetForegroundDifferenceColor();
+        var redBg = GetBackDifferenceColor();
+        AddDiffRuns(left, t1, isDiff1, redFg, redBg);
+        AddDiffRuns(right, t2, isDiff2, redFg, redBg);
+
+        return (left, right);
+    }
+
+    // Light-palette colors of the marked-up text, as CSS: the exported page is white with black
+    // text whatever theme the window uses (same reasoning as CompareColors.GetExportColor).
+    private const string HtmlDifferenceStyle = "color:#B71C1C;background-color:#FFEBEE";
+    private const string HtmlCommonStyle = "background-color:#E6FFED";
+
+    /// <summary>
+    /// The same markup as <see cref="Compare(string, string, bool, bool)"/> as HTML for the
+    /// compare export: differing runs in red on pink, the rest of a differing line on the pale
+    /// green the window uses. Text is HTML-encoded and line breaks become &lt;br /&gt;.
+    /// </summary>
+    public static (string left, string right) CompareToHtml(string text1, string text2, bool ignoreWhiteSpace, bool ignoreFormatting)
+    {
+        var (t1, t2, isDiff1, isDiff2) = ComputeDiffMasks(text1, text2, ignoreWhiteSpace, ignoreFormatting);
+        if (isDiff1 == null || isDiff2 == null)
+        {
+            return (ToHtml(t1), ToHtml(t2));
+        }
+
+        return (DiffRunsToHtml(t1, isDiff1), DiffRunsToHtml(t2, isDiff2));
+    }
+
+    private static string ToHtml(string text)
+    {
+        return HtmlUtil.EncodeNamed(text).Replace("\n", "<br />");
+    }
+
+    private static string DiffRunsToHtml(string text, bool[] isDiff)
+    {
+        var sb = new System.Text.StringBuilder();
+        var pos = 0;
+        while (pos < text.Length)
+        {
+            var diff = isDiff[pos];
+            var end = pos + 1;
+            while (end < text.Length && isDiff[end] == diff)
+            {
+                end++;
+            }
+
+            sb.Append("<span style=\"").Append(diff ? HtmlDifferenceStyle : HtmlCommonStyle).Append("\">")
+              .Append(ToHtml(text.Substring(pos, end - pos)))
+              .Append("</span>");
+            pos = end;
+        }
+
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// Newline-normalized texts plus one "this character differs" mask per side, or null masks
+    /// when there is nothing to mark - both empty, or every difference falls under an ignore
+    /// option. A one-sided text is marked whole.
+    /// </summary>
+    private static (string text1, string text2, bool[]? isDiff1, bool[]? isDiff2) ComputeDiffMasks(string text1, string text2, bool ignoreWhiteSpace, bool ignoreFormatting)
+    {
+        text1 = NormalizeNewLines(text1);
+        text2 = NormalizeNewLines(text2);
+
         if (string.IsNullOrEmpty(text1) && string.IsNullOrEmpty(text2))
         {
-            return (left, right);
+            return (text1, text2, null, null);
         }
 
-        if (string.IsNullOrEmpty(text1))
+        if (string.IsNullOrEmpty(text1) || string.IsNullOrEmpty(text2))
         {
-            right.Inlines.Add(new Run(text2)
-            {
-                Foreground = GetForegroundDifferenceColor(),
-                Background = GetBackDifferenceColor()
-            });
-            return (left, right);
-        }
-
-        if (string.IsNullOrEmpty(text2))
-        {
-            left.Inlines.Add(new Run(text1)
-            {
-                Foreground = GetForegroundDifferenceColor(),
-                Background = GetBackDifferenceColor()
-            });
-            return (left, right);
+            var only1 = new bool[text1.Length];
+            var only2 = new bool[text2.Length];
+            Array.Fill(only1, true);
+            Array.Fill(only2, true);
+            return (text1, text2, only1, only2);
         }
 
         // Use longest common substring to find the best match
@@ -176,23 +247,12 @@ public static class TextDiffHighlighter
         // on, two texts can be unequal and still have nothing left worth marking. It also covers
         // the pure-append case ("Hello" vs "Hello world"), where the whole of text1 is the common
         // prefix - deriving this from commonStart/commonEnd left the appended tail unhighlighted.
-        var hasDifferences = HasAnyDifference(isDiff1) || HasAnyDifference(isDiff2);
-
-        if (!hasDifferences)
+        if (!HasAnyDifference(isDiff1) && !HasAnyDifference(isDiff2))
         {
-            // Nothing to mark - don't set Foreground to allow theme color inheritance
-            left.Inlines.Add(new Run(text1));
-            right.Inlines.Add(new Run(text2));
-            return (left, right);
+            return (text1, text2, null, null);
         }
 
-        // Build the visual representation
-        var redFg = GetForegroundDifferenceColor();
-        var redBg = GetBackDifferenceColor();
-        AddDiffRuns(left, text1, isDiff1, redFg, redBg);
-        AddDiffRuns(right, text2, isDiff2, redFg, redBg);
-
-        return (left, right);
+        return (text1, text2, isDiff1, isDiff2);
     }
 
     /// <summary>

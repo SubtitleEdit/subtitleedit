@@ -270,6 +270,8 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _autoOpenVideoFile;
 
     [ObservableProperty] private bool _waveformDrawGridLines;
+    [ObservableProperty] private bool _waveformShowNumberAndDuration;
+    [ObservableProperty] private bool _waveformShowCps;
     [ObservableProperty] private bool _waveformFocusOnMouseOver;
     [ObservableProperty] private bool _waveformCenterVideoPosition;
     [ObservableProperty] private bool _waveformCenterVideoPositionAlsoWhenPaused;
@@ -285,6 +287,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private int _waveformSpectrogramCombinedWaveformHeight;
 
     [ObservableProperty] private bool _waveformShowToolbar;
+    [ObservableProperty] private bool _waveformShowOriginalSubtitle;
 
     [ObservableProperty] private bool _waveformFocusTextboxAfterInsertNew;
     [ObservableProperty] private string _waveformSpaceInfo;
@@ -949,10 +952,13 @@ public partial class SettingsViewModel : ObservableObject
         ShowUpDownLabels = appearance.ShowUpDownLabels;
 
         WaveformDrawGridLines = Se.Settings.Waveform.DrawGridLines;
+        WaveformShowNumberAndDuration = Se.Settings.Waveform.WaveformShowNumberAndDuration;
+        WaveformShowCps = Se.Settings.Waveform.WaveformShowCps;
         WaveformFocusOnMouseOver = Se.Settings.Waveform.FocusOnMouseOver;
         WaveformCenterVideoPosition = Se.Settings.Waveform.CenterVideoPosition;
         WaveformCenterVideoPositionAlsoWhenPaused = Se.Settings.Waveform.CenterVideoPositionAlsoWhenPaused;
         WaveformShowToolbar = Se.Settings.Waveform.ShowToolbar;
+        WaveformShowOriginalSubtitle = Se.Settings.Waveform.ShowOriginalSubtitle;
 
         if (Se.Settings.Waveform.WaveformDrawStyle == WaveformDrawStyle.Classic.ToString())
         {
@@ -1818,6 +1824,8 @@ public partial class SettingsViewModel : ObservableObject
         appearance.ShowHorizontalLineAboveToolbar = ShowHorizontalLineAboveToolbar;
 
         Se.Settings.Waveform.DrawGridLines = WaveformDrawGridLines;
+        Se.Settings.Waveform.WaveformShowNumberAndDuration = WaveformShowNumberAndDuration;
+        Se.Settings.Waveform.WaveformShowCps = WaveformShowCps;
         Se.Settings.Waveform.FocusOnMouseOver = WaveformFocusOnMouseOver;
         Se.Settings.Waveform.CenterVideoPosition = WaveformCenterVideoPosition;
         Se.Settings.Waveform.CenterVideoPositionAlsoWhenPaused = WaveformCenterVideoPositionAlsoWhenPaused;
@@ -1862,6 +1870,7 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Waveform.SpectrogramCombinedWaveformHeight = WaveformSpectrogramCombinedWaveformHeight;
 
         Se.Settings.Waveform.ShowToolbar = WaveformShowToolbar;
+        Se.Settings.Waveform.ShowOriginalSubtitle = WaveformShowOriginalSubtitle;
         Se.Settings.Waveform.ToolbarItems = _waveformToolbarItems;
 
         Se.Settings.Waveform.WaveformTextFontSize = WaveformTextFontSize;
@@ -2508,6 +2517,21 @@ public partial class SettingsViewModel : ObservableObject
     {
         if (Directory.Exists(Se.WaveformsFolder))
         {
+            // Cache files are written through a "<name>.tmp" file next to the destination, so a
+            // crashed extraction can leave one behind; sweep those too, or "Delete" would leave
+            // the folder holding files the size info below still counts.
+            foreach (var file in Directory.GetFiles(Se.WaveformsFolder, "*.wav" + WaveCacheFile.TempSuffix).ToList())
+            {
+                try
+                {
+                    File.Delete(file);
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
+
             foreach (var file in Directory.GetFiles(Se.WaveformsFolder, "*.wav").ToList())
             {
                 try
@@ -2523,6 +2547,18 @@ public partial class SettingsViewModel : ObservableObject
 
         if (Directory.Exists(Se.SpectrogramsFolder))
         {
+            foreach (var file in Directory.GetFiles(Se.SpectrogramsFolder, "*.spectrogram" + WaveCacheFile.TempSuffix).ToList())
+            {
+                try
+                {
+                    File.Delete(file);
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
+
             foreach (var file in Directory.GetFiles(Se.SpectrogramsFolder, "*.spectrogram").ToList())
             {
                 try
@@ -2543,10 +2579,12 @@ public partial class SettingsViewModel : ObservableObject
         if (Directory.Exists(Se.WaveformsFolder))
         {
             files.AddRange(Directory.GetFiles(Se.WaveformsFolder, "*.wav"));
+            files.AddRange(Directory.GetFiles(Se.WaveformsFolder, "*.wav" + WaveCacheFile.TempSuffix));
         }
         if (Directory.Exists(Se.SpectrogramsFolder))
         {
             files.AddRange(Directory.GetFiles(Se.SpectrogramsFolder, "*.spectrogram", SearchOption.AllDirectories));
+            files.AddRange(Directory.GetFiles(Se.SpectrogramsFolder, "*.spectrogram" + WaveCacheFile.TempSuffix, SearchOption.AllDirectories));
         }
         return files;
     }

@@ -329,7 +329,7 @@ public class FfmpegGenerator
 
     private static Process GetFFmpegProcess(string imageFileName, string outputFileName, int videoWidth, int videoHeight, int seconds, decimal frameRate, bool addTimeCode = false, string addTimeColor = "white")
     {
-        var drawText = MakeDrawText(addTimeCode, frameRate, addTimeColor);
+        var drawText = MakeDrawText(addTimeCode, frameRate, addTimeColor, videoHeight);
 
         return new Process
         {
@@ -357,7 +357,7 @@ public class FfmpegGenerator
 
         var htmlColor = $"#{(color.R.ToString("X2") + color.G.ToString("X2") + color.B.ToString("X2")).ToUpperInvariant()}";
 
-        var drawText = MakeDrawText(addTimeCode, frameRate, addTimeColor);
+        var drawText = MakeDrawText(addTimeCode, frameRate, addTimeColor, videoHeight);
 
         return new Process
         {
@@ -371,12 +371,15 @@ public class FfmpegGenerator
         };
     }
 
-    private static string MakeDrawText(bool addTimeCode, decimal frameRate, string addTimeColor)
+    private static string MakeDrawText(bool addTimeCode, decimal frameRate, string addTimeColor, int videoHeight)
     {
         var drawText = string.Empty;
         if (addTimeCode)
         {
-            drawText = $" -vf \"drawtext=timecode='00\\:00\\:00\\:00':r={frameRate.ToString(CultureInfo.InvariantCulture)}:x=10:y=10:fontsize=34:fontcolor={addTimeColor}\"";
+            // Scale with the video height (1080p -> 60 px); a fixed 34 px was tiny at HD sizes.
+            var fontSize = Math.Max(34, videoHeight / 18);
+            var boxColor = addTimeColor == "black" ? "white@0.5" : "black@0.5";
+            drawText = $" -vf \"drawtext=timecode='00\\:00\\:00\\:00':r={frameRate.ToString(CultureInfo.InvariantCulture)}:x=10:y=10:fontsize={fontSize}:fontcolor={addTimeColor}:box=1:boxcolor={boxColor}:boxborderw={Math.Max(4, fontSize / 8)}\"";
         }
 
         return drawText;
@@ -1433,6 +1436,59 @@ public class FfmpegGenerator
     }
 
     /// <summary>
+    /// Prepares a voice-cloning reference for an in-context TTS model (Higgs Audio v3): trailing
+    /// silence and noise under <paramref name="silenceThreshold"/> are trimmed off, the last
+    /// <paramref name="fadeOutSeconds"/> are faded out and <paramref name="silencePadSeconds"/> of
+    /// digital silence are appended, written as mono PCM16 at <paramref name="sampleRate"/>.
+    /// See <c>CloneReferenceTail</c> for why: the model ends its clip the way the reference ends.
+    /// </summary>
+    public static Process PrepareCloneReferenceTail(
+        string inputFileName,
+        string outputFileName,
+        double silenceThreshold,
+        double fadeOutSeconds,
+        double silencePadSeconds,
+        int sampleRate = 24000,
+        DataReceivedEventHandler? dataReceivedHandler = null)
+    {
+        var process = new Process
+        {
+            StartInfo =
+            {
+                FileName = GetFfmpegLocation(),
+                Arguments = PrepareCloneReferenceTailParameters(inputFileName, outputFileName, silenceThreshold, fadeOutSeconds, silencePadSeconds, sampleRate),
+                UseShellExecute = false,
+                CreateNoWindow = true,
+            }
+        };
+
+        SetupDataReceiveHandler(dataReceivedHandler, process);
+
+        return process;
+    }
+
+    /// <summary>
+    /// Build the parameters for <see cref="PrepareCloneReferenceTail"/>. The trim runs on the
+    /// reversed signal (silenceremove only trims the start), the fade is applied while still
+    /// reversed (afade=in on a reversed signal is a fade-out that needs no duration), and the
+    /// pad goes on last so it is never trimmed or faded.
+    /// </summary>
+    internal static string PrepareCloneReferenceTailParameters(
+        string inputFileName,
+        string outputFileName,
+        double silenceThreshold,
+        double fadeOutSeconds,
+        double silencePadSeconds,
+        int sampleRate)
+    {
+        var threshold = Math.Clamp(silenceThreshold, 0.000001, 1.0).ToString("0.########", CultureInfo.InvariantCulture);
+        var fade = Math.Max(0, fadeOutSeconds).ToString("0.###", CultureInfo.InvariantCulture);
+        var pad = Math.Max(0, silencePadSeconds).ToString("0.###", CultureInfo.InvariantCulture);
+        var filter = $"areverse,silenceremove=start_periods=1:start_silence=0:start_threshold={threshold},afade=t=in:d={fade},areverse,apad=pad_dur={pad}";
+        return $"-nostdin -y -i \"{inputFileName}\" -vn -af \"{filter}\" -ar {sampleRate} -ac 1 -c:a pcm_s16le \"{outputFileName}\"";
+    }
+
+    /// <summary>
     /// Build ffmpeg parameters for joining clips cut by
     /// <see cref="ExtractCloneReferenceClipParameters"/> into one file, in the order listed in
     /// <paramref name="concatListFileName"/> (an ffmpeg concat demuxer list).
@@ -1471,8 +1527,8 @@ public class FfmpegGenerator
         int sampleRate = 24000,
         double minimumSeconds = 0)
     {
-        var start = $"{startSeconds:0.000}".Replace(",", ".");
-        var duration = $"{durationSeconds:0.000}".Replace(",", ".");
+        var start = startSeconds.ToString("0.000", CultureInfo.InvariantCulture);
+        var duration = durationSeconds.ToString("0.000", CultureInfo.InvariantCulture);
 
         var args = $"-y -ss {start} -t {duration} -i \"{videoFileName}\"";
         if (audioTrackFfIndex >= 0)
@@ -1512,8 +1568,8 @@ public class FfmpegGenerator
        int sampleRate = 16000,
        string audioBitRate = "32k")
     {
-        var start = $"{startSeconds:0.000}".Replace(",", ".");
-        var duration = $"{durationSeconds:0.000}".Replace(",", ".");
+        var start = startSeconds.ToString("0.000", CultureInfo.InvariantCulture);
+        var duration = durationSeconds.ToString("0.000", CultureInfo.InvariantCulture);
 
         // Base parameters
         var args = $"-y -ss {start} -t {duration} -i \"{videoFileName}\"";

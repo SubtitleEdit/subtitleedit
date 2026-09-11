@@ -78,7 +78,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                         if (!string.IsNullOrEmpty(actorObject))
                         {
-                            p.Actor = actorObject;
+                            p.Actor = Json.DecodeJsonText(actorObject); // ToText encodes it, like "body"
                         }
 
                         subtitle.Paragraphs.Add(p);

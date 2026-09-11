@@ -9,7 +9,8 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// (arXiv 2608.11650): Chinese, English, Japanese, Korean, German, French, Spanish, Indonesian,
 /// Italian, Thai, Portuguese, Russian, Malay and Vietnamese.
 ///
-/// crispasr's confucius4-tts backend maps the <c>-l</c> ISO code onto the Chinese-language
+/// crispasr's confucius4-tts backend maps the ISO code (sent per request as <c>language</c>,
+/// the same value the CLI takes via <c>-l</c>) onto the Chinese-language
 /// prompt template the model was trained with ("请用X语朗读接下来的文字",
 /// src/confucius4_tts.cpp) — an invented prompt string derails the T2S stage, which is why the
 /// codes are passed through verbatim rather than spelled out. The backend's map actually
@@ -25,8 +26,8 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// </summary>
 internal static class Confucius4TtsLanguages
 {
-    /// <summary>ISO-639-1 codes passed to crispasr's <c>-l</c> verbatim. English first — it is
-    /// the combo's default when nothing is saved, and no <c>-l</c> flag also means English.</summary>
+    /// <summary>ISO-639-1 codes passed to crispasr verbatim. English first — it is the combo's
+    /// default when nothing is saved, and no language also means English.</summary>
     private static readonly string[] Supported =
     {
         "en", "zh", "ja", "ko", "de", "fr", "es", "id", "it", "th", "pt", "ru", "ms", "vi",
@@ -52,8 +53,8 @@ internal static class Confucius4TtsLanguages
     }
 
     /// <summary>
-    /// The value to pass to crispasr's <c>-l</c> for <paramref name="language"/>, or an empty
-    /// string when no flag should be passed (which the backend reads as English).
+    /// The language code to send to crispasr for <paramref name="language"/>, or an empty string
+    /// when there is nothing to send (which the backend reads as English).
     /// </summary>
     public static string ResolveLanguageArg(TtsLanguage? language)
     {

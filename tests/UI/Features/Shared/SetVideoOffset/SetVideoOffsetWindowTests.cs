@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Headless.XUnit;
 using Avalonia.LogicalTree;
 using Nikse.SubtitleEdit.Features.Shared.SetVideoOffset;
@@ -64,10 +65,11 @@ public class SetVideoOffsetWindowTests : IDisposable
         var window = Open(NewViewModel());
 
         var buttonTexts = window.GetLogicalDescendants().OfType<Button>()
-            .Select(b => b.Content as string ?? string.Empty)
+            .Select(b => b.Content is AccessText accessText ? accessText.Text ?? string.Empty : b.Content as string ?? string.Empty)
+            .Select(t => t.Replace("_", string.Empty))
             .ToList();
 
-        // The OK/Cancel texts carry an access-key underscore that never reaches the button.
+        // The OK/Cancel texts carry an access-key underscore; it is rendered as an underline.
         Assert.Contains(Se.Language.General.Ok.Replace("_", string.Empty), buttonTexts);
         Assert.Contains(Se.Language.General.Apply, buttonTexts);
         Assert.Contains(Se.Language.General.Reset, buttonTexts);

@@ -925,16 +925,29 @@ public class NikseBitmapImageSplitter2
             }
             else if (width > 0 && newStartX > startX + 1)
             {
-                var bmp0 = new NikseBitmap2(bmp);
-                // Remove pixels after current
-                for (var index = 0; index < points.Count; index++)
-                {
-                    var p = points[index];
-                    bmp0.MakeVerticalLinePartTransparent(p.X, p.X + index, p.Y);
-                }
                 width = FindMaxX(points, x) - startX - 1;
                 startX++;
-                var b1 = bmp0.CopyRectangle(new NikseRectangle(startX, 0, width, bmpHeight));
+                // Copy only the glyph rectangle and blank the trailing pixels inside it - blanking
+                // outside the copied rectangle never affected the result, so a full clone of the
+                // line bitmap was wasted work per glyph.
+                var b1 = bmp.CopyRectangle(new NikseRectangle(startX, 0, width, bmpHeight));
+                var b1Width = b1.Width;
+                if (b1Width > 0)
+                {
+                    // Remove pixels after current
+                    for (var index = 0; index < points.Count; index++)
+                    {
+                        var p = points[index];
+                        var xStart = p.X - startX;
+                        var xEnd = p.X + index - startX;
+                        if (xEnd < 0 || xStart >= b1Width)
+                        {
+                            continue;
+                        }
+
+                        b1.MakeVerticalLinePartTransparent(xStart, xEnd, p.Y);
+                    }
+                }
 
                 b1 = CropTopAndBottom(b1, out var addY);
 
@@ -1005,7 +1018,7 @@ public class NikseBitmapImageSplitter2
         var leftCount = 0;
         var rightCount = 0;
         clean = true;
-        var points = new List<NiksePoint>();
+        List<NiksePoint>? points = null;
         var y = 0;
         var bmpHeight = bmp.Height;
         var bmpWidth = bmp.Width;
@@ -1063,7 +1076,7 @@ public class NikseBitmapImageSplitter2
                     y--;
                     left = true;
                     // Remove points with Y > current Y
-                    while (points.Count > 0 && points[^1].Y > y)
+                    while (points != null && points.Count > 0 && points[^1].Y > y)
                     {
                         points.RemoveAt(points.Count - 1);
                     }
@@ -1074,7 +1087,7 @@ public class NikseBitmapImageSplitter2
                     y -= 2;
                     left = true;
                     // Remove points with Y > current Y
-                    while (points.Count > 0 && points[^1].Y > y)
+                    while (points != null && points.Count > 0 && points[^1].Y > y)
                     {
                         points.RemoveAt(points.Count - 1);
                     }
@@ -1101,12 +1114,13 @@ public class NikseBitmapImageSplitter2
             }
             else
             {
+                points ??= new List<NiksePoint>();
                 points.Add(new NiksePoint(x, y));
                 y++;
             }
         }
 
-        return points;
+        return points ?? new List<NiksePoint>();
     }
 
     //internal static int IsBitmapsAlike(ManagedBitmap2 bmp1, NikseBitmap2 bmp2)

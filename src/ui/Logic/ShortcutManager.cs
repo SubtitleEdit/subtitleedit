@@ -262,6 +262,11 @@ public class ShortcutManager : IShortcutManager
             Key.LeftAlt or Key.RightAlt or
             Key.LWin or Key.RWin or Key.NumLock))
         {
+            // Only the most recent non-modifier key counts: a key-up can be lost when a
+            // shortcut moves focus (e.g. undo reloading the grid), and a stale key would
+            // otherwise block every following chord until the user releases everything.
+            _activeKeys.Clear();
+            _activeKeyNames.Clear();
             _activeKeys.Add(key);
             _activeKeyNames.Add(GetShortcutKeyName(e));
         }

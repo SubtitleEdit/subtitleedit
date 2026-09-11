@@ -65,15 +65,15 @@ public class TransparentSubtitlesWindow : Window
                 }
             }
         };
-        buttonGenerate.Bind(SplitButton.IsEnabledProperty, new Binding(nameof(vm.IsGenerating)) { Converter = new InverseBooleanConverter() });
+        buttonGenerate.Bind(SplitButton.IsEnabledProperty, new Binding(nameof(vm.IsGenerating)) { Converter = InverseBooleanConverter.Instance });
 
         var buttonBatchMode = UiUtil.MakeButton(Se.Language.General.BatchMode, vm.BatchModeCommand)
-            .WithBindIsVisible(nameof(vm.IsBatchMode), new InverseBooleanConverter())
-            .WithBindEnabled(nameof(vm.IsGenerating), new InverseBooleanConverter());
+            .WithBindIsVisible(nameof(vm.IsBatchMode), InverseBooleanConverter.Instance)
+            .WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
         var buttonSingleMode = UiUtil.MakeButton(Se.Language.General.SingleMode, vm.SingleModeCommand)
             .WithBindIsVisible(nameof(vm.IsSingleModeVisible))
-            .WithBindEnabled(nameof(vm.IsGenerating), new InverseBooleanConverter());
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindEnabled(nameof(vm.IsGenerating), new InverseBooleanConverter());
+            .WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
         var buttonPanel = UiUtil.MakeButtonBar(
             buttonGenerate,
             buttonBatchMode,
@@ -408,7 +408,7 @@ public class TransparentSubtitlesWindow : Window
                 textBoxHeight,
                 buttonResolution,
             }
-        }.WithBindVisible(vm, nameof(vm.UseSourceResolution), new InverseBooleanConverter());
+        }.WithBindVisible(vm, nameof(vm.UseSourceResolution), InverseBooleanConverter.Instance);
 
         var labelSourceResolution = UiUtil.MakeLabel("Use source resolution").WithBindVisible(vm, nameof(vm.UseSourceResolution));
         var buttonResolutionSource = UiUtil.MakeButtonBrowse(vm.BrowseResolutionCommand, accessibleName: Se.Language.General.Resolution);
@@ -535,7 +535,7 @@ public class TransparentSubtitlesWindow : Window
         vm.VideoPlayerControl.HorizontalAlignment = HorizontalAlignment.Stretch;
         vm.VideoPlayerControl.VerticalAlignment = VerticalAlignment.Stretch;
         vm.VideoPlayerControl.Bind(Visual.IsVisibleProperty,
-            new Binding(nameof(vm.IsBatchMode)) { Source = vm, Converter = new InverseBooleanConverter() });
+            new Binding(nameof(vm.IsBatchMode)) { Source = vm, Converter = InverseBooleanConverter.Instance });
 
         // Batch mode fallback: batch items are separate files (possibly with no video at
         // all), so show a static image rendered from the current style settings instead.
@@ -726,7 +726,7 @@ public class TransparentSubtitlesWindow : Window
         grid.Add(labelVideoSizeValue, 1, 1);
 
         return UiUtil.MakeBorderForControl(grid)
-            .WithBindIsVisible(nameof(vm.IsBatchMode), new InverseBooleanConverter())
+            .WithBindIsVisible(nameof(vm.IsBatchMode), InverseBooleanConverter.Instance)
             .WithMarginRight(5);
     }
 

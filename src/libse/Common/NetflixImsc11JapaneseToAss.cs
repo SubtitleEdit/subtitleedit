@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
+﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -189,7 +189,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var i = 0;
                 while (i < line.Length)
                 {
-                    if (line.Substring(i).StartsWith("{\\", StringComparison.Ordinal))
+                    if (line.StartsWithAt(i, "{\\", StringComparison.Ordinal))
                     {
                         var end = line.IndexOf('}', i);
                         if (end < 0)
@@ -211,17 +211,17 @@ namespace Nikse.SubtitleEdit.Core.Common
                         i += 4;
                         italicOn = false;
                     }
-                    else if (line.Substring(i).StartsWith("<horizontalDigit>", StringComparison.Ordinal))
+                    else if (line.StartsWithAt(i, "<horizontalDigit>", StringComparison.Ordinal))
                     {
                         // Tate-chu-yoko only means something in a vertical column - horizontal digits
                         // are already horizontal, so just drop the tags (issue #14165).
                         i += "<horizontalDigit>".Length;
                     }
-                    else if (line.Substring(i).StartsWith("</horizontalDigit>", StringComparison.Ordinal))
+                    else if (line.StartsWithAt(i, "</horizontalDigit>", StringComparison.Ordinal))
                     {
                         i += "</horizontalDigit>".Length;
                     }
-                    else if (line.Substring(i).StartsWith("<bouten-", StringComparison.Ordinal))
+                    else if (line.StartsWithAt(i, "<bouten-", StringComparison.Ordinal))
                     {
                         var end = line.IndexOf('>', i);
                         if (end < 0 || end + 1 >= line.Length)
@@ -257,7 +257,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                         i = endTagEnd + 1;
                     }
-                    else if (line.Substring(i).StartsWith("<ruby-container>", StringComparison.Ordinal))
+                    else if (line.StartsWithAt(i, "<ruby-container>", StringComparison.Ordinal))
                     {
                         if (!TryReadRuby(line, i, out var baseText, out var rubyText, out var rubyTextAfter, out var next))
                         {
@@ -360,7 +360,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 while (i < line.Length)
                 {
-                    if (line.Substring(i).StartsWith("{\\", StringComparison.Ordinal))
+                    if (line.StartsWithAt(i, "{\\", StringComparison.Ordinal))
                     {
                         var end = line.IndexOf('}', i);
                         if (end < 0)
@@ -382,7 +382,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         i += 4;
                         italicOn = false;
                     }
-                    else if (line.Substring(i).StartsWith("<horizontalDigit>", StringComparison.Ordinal))
+                    else if (line.StartsWithAt(i, "<horizontalDigit>", StringComparison.Ordinal))
                     {
                         // Tate-chu-yoko: the digits stay side by side inside the vertical column.
                         var end = line.IndexOf('>', i);
@@ -401,11 +401,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                         actual.AppendLine();
                         i = endTagStart + "</horizontalDigit>".Length;
                     }
-                    else if (line.Substring(i).StartsWith("</horizontalDigit>", StringComparison.Ordinal))
+                    else if (line.StartsWithAt(i, "</horizontalDigit>", StringComparison.Ordinal))
                     {
                         i += "</horizontalDigit>".Length;
                     }
-                    else if (line.Substring(i).StartsWith("<bouten-", StringComparison.Ordinal))
+                    else if (line.StartsWithAt(i, "<bouten-", StringComparison.Ordinal))
                     {
                         var end = line.IndexOf('>', i);
                         if (end < 0 || end + 1 >= line.Length)
@@ -447,7 +447,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                         i = endTagEnd + 1;
                     }
-                    else if (line.Substring(i).StartsWith("<ruby-container>", StringComparison.Ordinal))
+                    else if (line.StartsWithAt(i, "<ruby-container>", StringComparison.Ordinal))
                     {
                         if (!TryReadRuby(line, i, out var baseText, out var rubyText, out var rubyTextAfter, out var next))
                         {

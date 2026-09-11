@@ -20,6 +20,7 @@ public class LanguageWaveform
     public string CloneVoiceExtractFailed { get; set; }
     public string ToggleShotChange { get; set; }
     public string ResetWaveformZoomAndSpeed { get; set; }
+    public string ShowOriginalSubtitle { get; set; }
     public object ShowOnlyWaveform { get; set; }
     public object ShowOnlySpectrogram { get; set; }
     public object ShowWaveformAndSpectrogram { get; set; }
@@ -56,6 +57,7 @@ public class LanguageWaveform
         MaxSilenceVolume = "Max. silence volume (0.0 - 1.0):";
         ToggleShotChange = "Toggle shot change";
         ResetWaveformZoomAndSpeed = "Reset waveform zoom & speed";
+        ShowOriginalSubtitle = "Show original subtitle";
         ShowOnlyWaveform = "Show only waveform";
         ShowOnlySpectrogram = "Show only spectrogram";
         ShowWaveformAndSpectrogram = "Show waveform and spectrogram";

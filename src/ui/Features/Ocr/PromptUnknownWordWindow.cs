@@ -121,7 +121,7 @@ public class PromptUnknownWordWindow : Window
         };
         scrollViewerWholeText.Bind(Border.IsVisibleProperty, new Binding(nameof(vm.DoEditWholeText))
         {
-            Converter = new InverseBooleanConverter(),
+            Converter = InverseBooleanConverter.Instance,
         });
 
         var buttonEditWholeText = new ToggleButton
@@ -170,7 +170,7 @@ public class PromptUnknownWordWindow : Window
 
         vm.TextBoxWord
             .WithHorizontalAlignmentStretch()
-            .WithBindEnabled(nameof(vm.DoEditWholeText), new InverseBooleanConverter())
+            .WithBindEnabled(nameof(vm.DoEditWholeText), InverseBooleanConverter.Instance)
             .Bind(TextBox.TextProperty, new Binding(nameof(vm.Word)) { Mode = BindingMode.TwoWay });
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
         {
@@ -178,23 +178,23 @@ public class PromptUnknownWordWindow : Window
         }
         var buttonChangeAll = UiUtil.MakeButton(Se.Language.General.ChangeAll, vm.ChangeAllCommand)
             .WithHorizontalAlignmentStretch()
-            .WithBindIsVisible(nameof(vm.DoEditWholeText), new InverseBooleanConverter());
+            .WithBindIsVisible(nameof(vm.DoEditWholeText), InverseBooleanConverter.Instance);
         var buttonChangeOnce = UiUtil.MakeButton(Se.Language.General.ChangeOnce, vm.ChangeOnceCommand)
             .WithHorizontalAlignmentStretch();
         var buttonSkipOne = UiUtil.MakeButton(Se.Language.General.SkipOnce, vm.SkipOnceCommand)
             .WithHorizontalAlignmentStretch();
         var buttonGoogleIt = UiUtil.MakeButton(Se.Language.General.GoogleIt, vm.GoogleItCommand)
             .WithHorizontalAlignmentStretch()
-            .WithBindIsVisible(nameof(vm.DoEditWholeText), new InverseBooleanConverter());
+            .WithBindIsVisible(nameof(vm.DoEditWholeText), InverseBooleanConverter.Instance);
         var buttonSkipAll = UiUtil.MakeButton(Se.Language.General.SkipAll, vm.SkipAllCommand)
             .WithHorizontalAlignmentStretch()
-            .WithBindIsVisible(nameof(vm.DoEditWholeText), new InverseBooleanConverter());
+            .WithBindIsVisible(nameof(vm.DoEditWholeText), InverseBooleanConverter.Instance);
         var buttonAddToNameList = UiUtil.MakeButton(Se.Language.General.AddToNamesListCaseSensitive, vm.AddToNamesListCommand)
             .WithHorizontalAlignmentStretch()
-            .WithBindIsVisible(nameof(vm.DoEditWholeText), new InverseBooleanConverter());
+            .WithBindIsVisible(nameof(vm.DoEditWholeText), InverseBooleanConverter.Instance);
         var buttonAddToUserDictionary = UiUtil.MakeButton(Se.Language.General.AddToUserDictionary, vm.AddToUserDictionaryCommand)
             .WithHorizontalAlignmentStretch()
-            .WithBindIsVisible(nameof(vm.DoEditWholeText), new InverseBooleanConverter());
+            .WithBindIsVisible(nameof(vm.DoEditWholeText), InverseBooleanConverter.Instance);
 
         grid.Add(vm.TextBoxWord, 0, 0, 1, 2);
         grid.Add(buttonChangeAll, 1, 0, 1, 2);

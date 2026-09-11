@@ -91,7 +91,7 @@ public class AiReviewWindow : Window
         // model's VRAM) could only be released by closing Subtitle Edit (#13969).
         var buttonLlamaCppServer = UiUtil.MakeButton(string.Empty, vm.ToggleLlamaCppServerCommand);
         buttonLlamaCppServer.Bind(Button.ContentProperty, new Binding(nameof(vm.LlamaCppServerButtonText)));
-        buttonLlamaCppServer.Bind(IsEnabledProperty, new Binding(nameof(vm.IsNotReviewing)));
+        buttonLlamaCppServer.Bind(IsEnabledProperty, new Binding("!" + nameof(vm.IsReviewing)));
 
         var panelLlamaCpp = new StackPanel
         {
@@ -463,7 +463,7 @@ public class AiReviewWindow : Window
 
         var buttonReview = UiUtil.MakeButton(l.Review, vm.ReviewCommand)
             .WithIconLeft("fa-solid fa-robot");
-        buttonReview.Bind(IsVisibleProperty, new Binding(nameof(vm.IsNotReviewing)));
+        buttonReview.Bind(IsVisibleProperty, new Binding("!" + nameof(vm.IsReviewing)));
 
         var buttonStop = UiUtil.MakeButton(Se.Language.General.Stop, vm.StopReviewCommand)
             .WithIconLeft("fa-solid fa-stop");

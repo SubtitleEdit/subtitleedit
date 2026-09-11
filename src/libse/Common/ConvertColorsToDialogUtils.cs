@@ -30,8 +30,8 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 while (index < p.Text.Length)
                 {
-                    bool isHtmlColor = index + "<font color".Length <= p.Text.Length && p.Text.SafeSubstring(index, "<font color".Length).ToLowerInvariant() == "<font color";
-                    bool isVttColor = index + "<c.".Length <= p.Text.Length && p.Text.SafeSubstring(index, "<c.".Length).ToLowerInvariant() == "<c.";
+                    bool isHtmlColor = IsAt(p.Text, index, "<font color", StringComparison.OrdinalIgnoreCase);
+                    bool isVttColor = IsAt(p.Text, index, "<c.", StringComparison.OrdinalIgnoreCase);
 
                     if (isHtmlColor || isVttColor)
                     {
@@ -52,8 +52,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                         else if (currentColor != newColor)
                         {
                             // Don't insert dash if there is already a dash, but DO insert a dash if it is an interruption
-                            if (p.Text.SafeSubstring(index, 1) != "-" && p.Text.SafeSubstring(index - 1, 1) != "-"
-                                && (p.Text.SafeSubstring(index - 2, 2) != "- " || p.Text.SafeSubstring(index - 3, 3) == "-- "))
+                            if (!CharAt(p.Text, index, '-') && !CharAt(p.Text, index - 1, '-')
+                                && (!IsAt(p.Text, index - 2, "- ", StringComparison.Ordinal) || IsAt(p.Text, index - 3, "-- ", StringComparison.Ordinal)))
                             {
                                 if (dashFirstLine && !firstLineAdded)
                                 {
@@ -75,12 +75,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                                     firstLineAdded = true;
                                 }
 
-                                if (!addNewLines && p.Text.SafeSubstring(index - 1, 1) != " " && p.Text.SafeSubstring(index - 1, 1) != "\r" && p.Text.SafeSubstring(index - 1, 1) != "\n")
+                                if (!addNewLines && !CharAt(p.Text, index - 1, ' ') && !CharAt(p.Text, index - 1, '\r') && !CharAt(p.Text, index - 1, '\n'))
                                 {
                                     p.Text = p.Text.SafeSubstring(0, index) + " " + p.Text.SafeSubstring(index);
                                     index += 1;
                                 }
-                                else if (addNewLines && p.Text.SafeSubstring(index - 1, 1) != "\r" && p.Text.SafeSubstring(index - 1, 1) != "\n")
+                                else if (addNewLines && !CharAt(p.Text, index - 1, '\r') && !CharAt(p.Text, index - 1, '\n'))
                                 {
                                     p.Text = p.Text.SafeSubstring(0, index) + Environment.NewLine + p.Text.SafeSubstring(index);
                                     index += Environment.NewLine.Length;
@@ -106,21 +106,21 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                         endOfColor = false;
                     }
-                    else if (index + "</font>".Length <= p.Text.Length && p.Text.SafeSubstring(index, "</font>".Length).ToLowerInvariant() == "</font>")
+                    else if (IsAt(p.Text, index, "</font>", StringComparison.OrdinalIgnoreCase))
                     {
                         // End of HTML color
                         endOfColor = true;
 
                         index += "</font>".Length;
                     }
-                    else if (index + "</c>".Length <= p.Text.Length && p.Text.SafeSubstring(index, "</c>".Length).ToLowerInvariant() == "</c>")
+                    else if (IsAt(p.Text, index, "</c>", StringComparison.OrdinalIgnoreCase))
                     {
                         // End of VTT color
                         endOfColor = true;
 
                         index += "</c>".Length;
                     }
-                    else if (index + "{".Length <= p.Text.Length && p.Text.SafeSubstring(index, "{".Length) == "{")
+                    else if (CharAt(p.Text, index, '{'))
                     {
                         // ASS tag, jump over. Same trap as the '>' search above: an unclosed
                         // '{' has no '}', and "-1 + 1" restarted the scan at 0 forever.
@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                         index = assaTagEnd + 1;
                     }
-                    else if (index + 1 <= p.Text.Length && p.Text.SafeSubstring(index, 1) == " " || p.Text.SafeSubstring(index, 1) == "\r" || p.Text.SafeSubstring(index, 1) == "\n")
+                    else if (CharAt(p.Text, index, ' ') || CharAt(p.Text, index, '\r') || CharAt(p.Text, index, '\n'))
                     {
                         // Whitespace, ignore
                         index += 1;
@@ -153,8 +153,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                                 if (currentColor != newColor)
                                 {
                                     // Don't insert dash if there is already a dash, but DO insert a dash if it is an interruption
-                                    if (p.Text.SafeSubstring(index, 1) != "-" && p.Text.SafeSubstring(index - 1, 1) != "-"
-                                        && (p.Text.SafeSubstring(index - 2, 2) != "- " || p.Text.SafeSubstring(index - 3, 3) == "-- "))
+                                    if (!CharAt(p.Text, index, '-') && !CharAt(p.Text, index - 1, '-')
+                                        && (!IsAt(p.Text, index - 2, "- ", StringComparison.Ordinal) || IsAt(p.Text, index - 3, "-- ", StringComparison.Ordinal)))
                                     {
                                         if (dashFirstLine && !firstLineAdded)
                                         {
@@ -173,9 +173,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                                             firstLineAdded = true;
                                         }
 
-                                        if (!addNewLines && p.Text.SafeSubstring(index - 1, 1) != " " && p.Text.SafeSubstring(index - 1, 1) != "\r" && p.Text.SafeSubstring(index - 1, 1) != "\n")
+                                        if (!addNewLines && !CharAt(p.Text, index - 1, ' ') && !CharAt(p.Text, index - 1, '\r') && !CharAt(p.Text, index - 1, '\n'))
                                         {
-                                            if (p.Text.SafeSubstring(index, 1) == ".")
+                                            if (CharAt(p.Text, index, '.'))
                                             {
                                                 index++;
                                             }
@@ -183,9 +183,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                                             p.Text = p.Text.SafeSubstring(0, index) + " " + p.Text.SafeSubstring(index);
                                             index += 1;
                                         }
-                                        else if (addNewLines && p.Text.SafeSubstring(index - 1, 1) != "\r" && p.Text.SafeSubstring(index - 1, 1) != "\n")
+                                        else if (addNewLines && !CharAt(p.Text, index - 1, '\r') && !CharAt(p.Text, index - 1, '\n'))
                                         {
-                                            if (p.Text.SafeSubstring(index + 1, 1) != "\r" && p.Text.SafeSubstring(index + 1, 1) != "\n" &&
+                                            if (!CharAt(p.Text, index + 1, '\r') && !CharAt(p.Text, index + 1, '\n') &&
                                                 index < p.Text.Length-1)
                                             {
                                                 p.Text = p.Text.SafeSubstring(0, index) + Environment.NewLine + p.Text.SafeSubstring(index);
@@ -193,7 +193,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                                             }
                                         }
 
-                                        if (p.Text.SafeSubstring(index + 1, 1) != "\r" && p.Text.SafeSubstring(index + 1, 1) != "\n" &&
+                                        if (!CharAt(p.Text, index + 1, '\r') && !CharAt(p.Text, index + 1, '\n') &&
                                                 index < p.Text.Length - 1)
                                         {
                                             p.Text = p.Text.SafeSubstring(0, index) + dash + p.Text.SafeSubstring(index);
@@ -235,6 +235,26 @@ namespace Nikse.SubtitleEdit.Core.Common
                     p.Text = Utilities.AutoBreakLine(p.Text, language);
                 }
             }
+        }
+
+        /// <summary>
+        /// True when <paramref name="value"/> has <paramref name="c"/> at <paramref name="index"/>;
+        /// false when the index is out of range, which is what the one-char SafeSubstring probes
+        /// it replaces answered ("" never equals a one-char string). No string per probe - the
+        /// scan probes every position of every paragraph.
+        /// </summary>
+        private static bool CharAt(string value, int index, char c)
+        {
+            return index >= 0 && index < value.Length && value[index] == c;
+        }
+
+        /// <summary>
+        /// True when <paramref name="prefix"/> occurs at <paramref name="index"/>; false when the
+        /// window falls outside the string, matching the SafeSubstring-equals probes it replaces.
+        /// </summary>
+        private static bool IsAt(string value, int index, string prefix, StringComparison comparison)
+        {
+            return index >= 0 && index <= value.Length && value.AsSpan(index).StartsWith(prefix.AsSpan(), comparison);
         }
 
         private static string SafeSubstring(this string value, int startIndex, int length = -1, string defaultValue = "")

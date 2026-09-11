@@ -280,6 +280,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         private static readonly string[] EndPlusDashList = { ". -", "! -", "? -", "— -", "-- -", ") -", "] -", "> -", ".\" -", "!\" -", "?\" -", ")\" -", "]\" -" };
         private static readonly string[] EndPlusDashListShort = { ". -", "! -", "? -", "— -" };
+        // EndPlusDashList with "<i>" before the dash (". <i>-"); was rebuilt with LINQ per call.
+        private static readonly string[] EndPlusDashItalicList = EndPlusDashList.Select(p => p.Insert(p.Length - 1, "<i>")).ToArray();
 
         public static string FixDialogsOnOneLine(string text, string language)
         {
@@ -312,8 +314,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             var idx = text.IndexOfAny(EndPlusDashList, StringComparison.Ordinal);
             if (idx < 0)
             {
-                var endPlusDashItalicList = EndPlusDashList.Select(p => p.Insert(p.Length - 1, "<i>")).ToArray();
-                idx = text.IndexOfAny(endPlusDashItalicList, StringComparison.Ordinal);
+                idx = text.IndexOfAny(EndPlusDashItalicList, StringComparison.Ordinal);
             }
 
             if (idx >= 0)

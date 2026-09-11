@@ -31,8 +31,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
+                // The format carries the start time only (see the sample above). Writing the end
+                // time as a second time code line made the reader start a new cue at the end time.
                 sb.AppendLine(EncodeTimeCode(p.StartTime));
-                sb.AppendLine(EncodeTimeCode(p.EndTime));
                 if (!string.IsNullOrEmpty(p.Actor))
                 {
                     sb.AppendLine(p.Actor.ToUpperInvariant());

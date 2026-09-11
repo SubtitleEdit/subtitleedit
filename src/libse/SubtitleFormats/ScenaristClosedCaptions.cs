@@ -1321,63 +1321,76 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 var s = line.Trim();
                 var match = RegexTimeCodes.Match(s);
-                if (match.Success)
+                if (!match.Success)
                 {
-                    var startTime = ParseTimeCode(s.Substring(0, match.Length - 1));
-                    var payload = s.Substring(match.Length).Trim().ToLowerInvariant();
-                    var parts = payload.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
-                    var text = GetSccText(payload, ref _errorCount);
+                    continue;
+                }
 
-                    // Reject rows that are raw CEA-608 data words rendered as text instead of
-                    // valid captions (#11341). Real caption text is positioned with a Preamble
-                    // Address Code and is at most 32 columns wide, so a row with no PAC that
-                    // decodes to an over-long line is garbage and must not be emitted as a cue.
-                    if (!string.IsNullOrWhiteSpace(text) && !HasPreambleAddressCode(parts) && AnyLineTooLong(text))
+                var lineTimeCode = s.Substring(0, match.Length - 1);
+                var payload = s.Substring(match.Length).Trim().ToLowerInvariant();
+                var parts = payload.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                var text = GetSccText(payload, ref _errorCount);
+
+                // Reject rows that are raw CEA-608 data words rendered as text instead of
+                // valid captions (#11341). Real caption text is positioned with a Preamble
+                // Address Code and is at most 32 columns wide, so a row with no PAC that
+                // decodes to an over-long line is garbage and must not be emitted as a cue.
+                if (!string.IsNullOrWhiteSpace(text) && !HasPreambleAddressCode(parts) && AnyLineTooLong(text))
+                {
+                    _errorCount++;
+                    text = string.Empty;
+                }
+
+                if (!string.IsNullOrWhiteSpace(text))
+                {
+                    loadedText = text;
+                }
+
+                // A line's timecode is the time of its first byte pair only: CEA-608 carries one
+                // pair per frame, so a control code takes effect at the line time plus its index
+                // in the line. Files that pack a whole pop-on caption onto one line put the
+                // display code 20-30 pairs in, which is where broadcast decoders show it (#14703).
+                // Codes are applied in line order - a clear before a display ends the previous
+                // caption first - and the doubled code is the 608 redundancy copy, which a
+                // decoder ignores, so only the first of a pair counts.
+                var hasDisplay = false;
+                for (var i = 0; i < parts.Length; i++)
+                {
+                    var part = parts[i];
+                    var isRepeat = i > 0 && parts[i - 1] == part;
+                    if (part == "942f" && !isRepeat)
                     {
-                        _errorCount++;
-                        text = string.Empty;
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(text))
-                    {
-                        loadedText = text;
-                    }
-
-                    var hasDisplay = ContainsSccCommand(parts, "942f");
-                    var hasClear = ContainsSccCommand(parts, "942c");
-                    var hasEraseNonDisplayedMemory = ContainsSccCommand(parts, "94ae");
-
-                    if (hasDisplay)
-                    {
+                        hasDisplay = true;
+                        var displayTime = ParseTimeCode(lineTimeCode, i);
                         if (p != null && p.EndTime.TotalMilliseconds <= p.StartTime.TotalMilliseconds)
                         {
-                            p.EndTime.TotalMilliseconds = startTime.TotalMilliseconds;
+                            p.EndTime.TotalMilliseconds = displayTime.TotalMilliseconds;
                         }
 
                         if (!string.IsNullOrWhiteSpace(loadedText))
                         {
-                            p = new Paragraph(startTime, new TimeCode(startTime.TotalMilliseconds), loadedText);
+                            p = new Paragraph(displayTime, new TimeCode(displayTime.TotalMilliseconds), loadedText);
                             subtitle.Paragraphs.Add(p);
                         }
 
                         loadedText = null;
                     }
-
-                    if (hasClear)
+                    else if (part == "942c" && !isRepeat)
                     {
                         if (p != null)
                         {
-                            p.EndTime.TotalMilliseconds = startTime.TotalMilliseconds;
+                            p.EndTime.TotalMilliseconds = ParseTimeCode(lineTimeCode, i).TotalMilliseconds;
                             p = null;
                         }
                     }
+                }
 
-                    if (hasEraseNonDisplayedMemory && !hasDisplay && string.IsNullOrWhiteSpace(text))
-                    {
-                        loadedText = null;
-                    }
+                if (!hasDisplay && string.IsNullOrWhiteSpace(text) && ContainsSccCommand(parts, "94ae"))
+                {
+                    loadedText = null;
                 }
             }
+
             for (int i = subtitle.Paragraphs.Count - 2; i >= 0; i--)
             {
                 p = subtitle.GetParagraphOrDefault(i);
@@ -1556,7 +1569,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         var cp = GetColorAndPosition(part);
                         if (cp != null)
                         {
-                            if (!string.IsNullOrWhiteSpace(sb.ToString()) && cp.Y > 0 && y >= 0 && cp.Y > y && !sb.ToString().EndsWith(Environment.NewLine, StringComparison.Ordinal))
+                            if (!sb.IsNullOrWhiteSpace() && cp.Y > 0 && y >= 0 && cp.Y > y && !sb.EndsWith(Environment.NewLine))
                             {
                                 sb.AppendLine();
                             }
@@ -1669,7 +1682,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                     break;
                                 case "9440":
                                 case "94e0":
-                                    if (!sb.ToString().EndsWith(Environment.NewLine, StringComparison.Ordinal))
+                                    if (!sb.EndsWith(Environment.NewLine))
                                     {
                                         sb.AppendLine();
                                     }
@@ -1724,7 +1737,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                         // Unrecognized Preamble Address Code: it repositions the
                                         // cursor onto a new row, so emit a line break instead of
                                         // decoding its bytes as stray letters (e.g. "n"/"N"). (#9803)
-                                        if (sb.Length > 0 && !sb.ToString().EndsWith(Environment.NewLine, StringComparison.Ordinal))
+                                        if (sb.Length > 0 && !sb.EndsWith(Environment.NewLine))
                                         {
                                             sb.AppendLine();
                                         }
@@ -1875,10 +1888,50 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return alignment + HtmlUtil.FixInvalidItalicTags(res);
         }
 
-        private static TimeCode ParseTimeCode(string start)
+        /// <summary>
+        /// Time of the byte pair <paramref name="frameOffset"/> frames after the line timecode.
+        /// The frame field follows the current frame rate like the other frame-based formats
+        /// (SCC is 29.97 by spec, but 23.976/25 fps files exist), and it is not capped at
+        /// 999 ms: frame 29 of a 29.97 file loaded at 23.976 is still a real time.
+        /// </summary>
+        private TimeCode ParseTimeCode(string start, int frameOffset)
         {
             var arr = start.Split(new[] { ':', ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
-            return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), FramesToMillisecondsMax999(int.Parse(arr[3])));
+            var hours = int.Parse(arr[0]);
+            var minutes = int.Parse(arr[1]);
+            var seconds = int.Parse(arr[2]);
+            var frames = int.Parse(arr[3]);
+            var framesPerSecond = Math.Max(1, (int)Math.Round(Configuration.Settings.General.CurrentFrameRate));
+            for (var i = 0; i < frameOffset; i++)
+            {
+                frames++;
+                if (frames < framesPerSecond)
+                {
+                    continue;
+                }
+
+                frames = 0;
+                seconds++;
+                if (seconds >= 60)
+                {
+                    seconds = 0;
+                    minutes++;
+                    if (minutes >= 60)
+                    {
+                        minutes = 0;
+                        hours++;
+                    }
+
+                    // Drop-frame labels skip 00 and 01 at the start of every minute except every tenth.
+                    if (DropFrame && minutes % 10 != 0)
+                    {
+                        frames = 2;
+                    }
+                }
+            }
+
+            var totalMilliseconds = hours * 3600000.0 + minutes * 60000.0 + seconds * 1000.0 + FramesToMilliseconds(frames);
+            return new TimeCode(totalMilliseconds);
         }
 
         private static int CalculatePreRollMilliseconds(string loadData)

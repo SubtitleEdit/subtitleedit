@@ -191,6 +191,8 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 _namesList.Remove(name);
                 _namesMultiList.Remove(name);
                 _namesMultiListParts = null;
+                _namesListCaseInsensitive = null;
+                _namesMultiListCaseInsensitive = null;
 
                 var fileName = GetLocalNamesUserFileName();
                 var nameListXml = CreateDocument(fileName);
@@ -271,6 +273,8 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             if (name.Contains(" "))
             {
                 _namesMultiListParts = null;
+                _namesListCaseInsensitive = null;
+                _namesMultiListCaseInsensitive = null;
                 return _namesMultiList.Add(name);
             }
 
@@ -365,6 +369,27 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             return index;
         }
 
+        // Case-insensitive views of the two name sets, built on first use and dropped whenever
+        // the sets change (same lifetime as _namesMultiListParts). The lookup used to walk the
+        // whole set with OrdinalIgnoreCase Equals per name candidate per line.
+        private Dictionary<string, string> _namesListCaseInsensitive;
+        private Dictionary<string, string> _namesMultiListCaseInsensitive;
+
+        private static Dictionary<string, string> BuildCaseInsensitiveIndex(HashSet<string> names)
+        {
+            var index = new Dictionary<string, string>(names.Count, StringComparer.OrdinalIgnoreCase);
+            foreach (var n in names)
+            {
+                // First entry in set order wins, as the replaced foreach did.
+                if (!index.ContainsKey(n))
+                {
+                    index.Add(n, n);
+                }
+            }
+
+            return index;
+        }
+
         public bool ContainsCaseInsensitive(string name, out string newName)
         {
             newName = null;
@@ -373,13 +398,20 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 return false;
             }
 
-            foreach (var n in name.IndexOf(' ') >= 0 ? _namesMultiList : _namesList)
+            Dictionary<string, string> index;
+            if (name.IndexOf(' ') >= 0)
             {
-                if (name.Equals(n, StringComparison.OrdinalIgnoreCase))
-                {
-                    newName = n;
-                    return true;
-                }
+                index = _namesMultiListCaseInsensitive ?? (_namesMultiListCaseInsensitive = BuildCaseInsensitiveIndex(_namesMultiList));
+            }
+            else
+            {
+                index = _namesListCaseInsensitive ?? (_namesListCaseInsensitive = BuildCaseInsensitiveIndex(_namesList));
+            }
+
+            if (index.TryGetValue(name, out var found))
+            {
+                newName = found;
+                return true;
             }
 
             return false;

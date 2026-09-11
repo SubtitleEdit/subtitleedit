@@ -207,6 +207,7 @@ public class SpeechToTextWindow : Window
         var openAiRows = MakeOpenAiCompatibleSttRows(vm);
         var openRouterRows = MakeOpenRouterSttRows(vm);
         var dashScopeRows = MakeDashScopeSttRows(vm);
+        var googleCloudRows = MakeGoogleCloudSttRows(vm);
 
         var labelAdvancedSettings = UiUtil.MakeTextBlock(Se.Language.General.AdvancedSettings).WithMarginTop(15)
             .BindIsVisible(vm, nameof(vm.IsAdvancedSettingsVisible));
@@ -352,47 +353,20 @@ public class SpeechToTextWindow : Window
         );
         buttonPanel.Margin = new Thickness(10, 0, 10, 10);
 
+        // Rows: 0 console log label, 1 console log (Star), 2-6 engine/backend/language/model/forced aligner,
+        // then one row per online-STT setting (OpenAI-compatible, OpenRouter, DashScope, Google Cloud; only the
+        // selected engine's rows are visible, the rest collapse to zero height), then translate-to-English,
+        // post processing, advanced settings label + button, advanced parameters text box, and finally the
+        // progress panel + buttons. The count is derived from the engine row arrays so adding an online engine
+        // cannot leave trailing rows clamped onto the last row (which made the labels overlap the progress text).
+        const int fixedRowsBeforeOnlineStt = 7;
+        const int fixedRowsAfterOnlineStt = 5;
+        var onlineSttRowCount = openAiRows.Length + openRouterRows.Length + dashScopeRows.Length + googleCloudRows.Length;
+        var totalRowCount = fixedRowsBeforeOnlineStt + onlineSttRowCount + fixedRowsAfterOnlineStt;
+        var progressRow = totalRowCount - 1;
+
         var grid = new Grid
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 0: Console log label
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // 1: Console log (right) — Star fills remaining
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 2: Engine
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 3: Backend
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 4: Language
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 5: Model
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 6: Forced aligner
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 7: OpenAI STT - Endpoint URL
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 8: OpenAI STT - API Key
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 9: OpenAI STT - Model
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 10: OpenAI STT - Language
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 11: OpenAI STT - Timeout
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 12: OpenAI STT - Temperature
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 13: OpenAI STT - Prompt
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 14: OpenAI STT - Extra Headers
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 15: OpenAI STT - Audio Format
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 16: OpenAI STT - Stream
-                // OpenRouter STT rows (6) — only visible when OpenRouter is selected, else collapse to 0.
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 17: OpenRouter - API Key
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 18: OpenRouter - Model
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 19: OpenRouter - Language
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 20: OpenRouter - Timeout
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 21: OpenRouter - Temperature
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 22: OpenRouter - Prompt
-                // Alibaba Qwen3-ASR (DashScope) STT rows (6).
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 23: DashScope - API Key
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 24: DashScope - Model
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 25: DashScope - Region
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 26: DashScope - Language
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 27: DashScope - Word timestamps
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 28: DashScope - Timeout
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 29: Translate to English
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 30: Post processing
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 31: Advanced settings label + button
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 32: textBoxAdvancedSettings (parameters)
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 33: panelProgress + OK/Cancel (same row)
-            },
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
@@ -405,6 +379,10 @@ public class SpeechToTextWindow : Window
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
+        for (var i = 0; i < totalRowCount; i++)
+        {
+            grid.RowDefinitions.Add(new RowDefinition { Height = i == 1 ? new GridLength(1, GridUnitType.Star) : new GridLength(1, GridUnitType.Auto) });
+        }
 
         var flyout = new MenuFlyout();
         flyout.Opening += vm.WindowContextMenuOpening;
@@ -438,9 +416,10 @@ public class SpeechToTextWindow : Window
 
         // Row span must reach the row just above the progress/buttons row so the
         // console log fills the full height of the settings column. It covers every
-        // settings row including the OpenAI/OpenRouter/DashScope online-STT rows.
-        grid.Add(consoleLogAndBatchView, row, 2, 32);
-        grid.Add(consoleLogOnlyView, row, 2, 32);
+        // settings row including the online-STT rows.
+        var consoleLogRowSpan = progressRow - row;
+        grid.Add(consoleLogAndBatchView, row, 2, consoleLogRowSpan);
+        grid.Add(consoleLogOnlyView, row, 2, consoleLogRowSpan);
         row++;
 
         grid.Add(labelEngine, row, 0);
@@ -464,7 +443,7 @@ public class SpeechToTextWindow : Window
         grid.Add(panelForcedAlignerControls, row, 1);
         row++;
 
-        foreach (var (label, control) in openAiRows.Concat(openRouterRows).Concat(dashScopeRows))
+        foreach (var (label, control) in openAiRows.Concat(openRouterRows).Concat(dashScopeRows).Concat(googleCloudRows))
         {
             // Link each online-STT input to its visible label so a screen reader announces the
             // label as the control's name instead of a bare "edit"/"combo box" (#11745). Only the
@@ -490,6 +469,7 @@ public class SpeechToTextWindow : Window
         grid.Add(textBoxAdvancedSettings, row, 0, 1, 2);
         row++;
 
+        System.Diagnostics.Debug.Assert(row == progressRow, "SpeechToTextWindow grid row count is out of sync with the rows added");
         grid.Add(panelProgress, row, 0, 1, 3);
         grid.Add(buttonPanel, row, 0, 1, 3);
 
@@ -655,7 +635,7 @@ public class SpeechToTextWindow : Window
             Source = vm,
             UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
         });
-        textBoxConsoleLog.WithBindIsVisible(nameof(vm.IsBatchMode), new InverseBooleanConverter());
+        textBoxConsoleLog.WithBindIsVisible(nameof(vm.IsBatchMode), InverseBooleanConverter.Instance);
         vm.TextBoxConsoleLogSingle = textBoxConsoleLog;
 
         return textBoxConsoleLog;
@@ -861,6 +841,52 @@ public class SpeechToTextWindow : Window
             (MakeLabel(Se.Language.General.DashScopeSttRegion), comboRegion),
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttLanguage), MakeText(nameof(vm.DashScopeSttLanguage), 150)),
             (MakeLabel(Se.Language.General.DashScopeSttEnableWords), checkEnableWords),
+            (MakeLabel(Se.Language.General.OpenAiCompatibleSttTimeout), numericTimeout),
+        };
+    }
+
+    private static (Control Label, Control Control)[] MakeGoogleCloudSttRows(SpeechToTextViewModel vm)
+    {
+        Control MakeLabel(string text) => UiUtil.MakeTextBlock(text).WithMarginTop(10)
+            .BindIsVisible(vm, nameof(vm.IsGoogleCloudSttVisible));
+
+        TextBox MakeText(string property, double width) => new TextBox
+        {
+            DataContext = vm,
+            Width = width,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 10, 0, 0),
+            [!TextBox.TextProperty] = new Binding(property) { Mode = BindingMode.TwoWay }
+        };
+
+        var buttonBrowse = UiUtil.MakeButtonBrowse(vm.BrowseGoogleCloudSttKeyFileCommand, accessibleName: Se.Language.General.KeyFile);
+        buttonBrowse.Margin = new Thickness(5, 10, 0, 0);
+        var keyFilePanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Children = { MakeText(nameof(vm.GoogleCloudSttKeyFile), 400), buttonBrowse }
+        }.BindIsVisible(vm, nameof(vm.IsGoogleCloudSttVisible));
+
+        var numericTimeout = new NumericUpDown
+        {
+            DataContext = vm,
+            Width = 120,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 10, 0, 0),
+            Minimum = 30,
+            Maximum = 21600,
+            FormatString = "F0",
+            [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.GoogleCloudSttTimeoutSeconds)) { Mode = BindingMode.TwoWay }
+        }.BindIsVisible(vm, nameof(vm.IsGoogleCloudSttVisible));
+
+        return new (Control, Control)[]
+        {
+            (MakeLabel(Se.Language.General.KeyFile), keyFilePanel),
+            (MakeLabel(Se.Language.General.Region), MakeText(nameof(vm.GoogleCloudSttRegion), 150).BindIsVisible(vm, nameof(vm.IsGoogleCloudSttVisible))),
+            (MakeLabel(Se.Language.General.Model), MakeText(nameof(vm.GoogleCloudSttModel), 250).BindIsVisible(vm, nameof(vm.IsGoogleCloudSttVisible))),
+            (MakeLabel(Se.Language.General.OpenAiCompatibleSttLanguage), MakeText(nameof(vm.GoogleCloudSttLanguage), 150).BindIsVisible(vm, nameof(vm.IsGoogleCloudSttVisible))),
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttTimeout), numericTimeout),
         };
     }

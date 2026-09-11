@@ -403,7 +403,7 @@ public static class TtsEngineInstaller
                 }
             }
 
-            if (!await TtsVoiceInstaller.EnsureAudioCppRuntime(window, windowService, forceRedownload: false, "IndexTTS 2.5"))
+            if (!await TtsVoiceInstaller.EnsureAudioCppRuntime(window, windowService, forceRedownload: false, "IndexTTS 2.5", IndexTts25AudioCpp.FamilyName))
             {
                 return false;
             }
@@ -445,6 +445,7 @@ public static class TtsEngineInstaller
             return await EnsureAudioCppEngineWithLicense(
                 window, windowService, refreshVoices,
                 engineDisplayName: "Higgs Audio v3",
+                requiredFamily: HiggsTtsAudioCpp.FamilyName,
                 licenseDefinition: HiggsTtsAudioCpp.LicenseDefinition,
                 isLicenseAccepted: HiggsTtsAudioCpp.IsLicenseAccepted,
                 modelKey: HiggsTtsAudioCpp.ResolveModelKey(model),
@@ -457,11 +458,26 @@ public static class TtsEngineInstaller
             return await EnsureAudioCppEngineWithLicense(
                 window, windowService, refreshVoices,
                 engineDisplayName: "Fish Audio S2 Pro",
+                requiredFamily: FishTtsAudioCpp.FamilyName,
                 licenseDefinition: FishTtsAudioCpp.LicenseDefinition,
                 isLicenseAccepted: FishTtsAudioCpp.IsLicenseAccepted,
                 modelKey: FishTtsAudioCpp.ResolveModelKey(model),
                 areModelsInstalled: FishTtsAudioCpp.AreModelsInstalled,
                 startDownloadModels: (vm, key) => vm.StartDownloadFishTtsAudioCppModels(key));
+        }
+
+        if (engine is FireRedTts3AudioCpp)
+        {
+            // Apache-2.0 weights: no licence gate, otherwise the same runtime + model flow.
+            return await EnsureAudioCppEngineWithLicense(
+                window, windowService, refreshVoices,
+                engineDisplayName: "FireRedTTS3",
+                requiredFamily: FireRedTts3AudioCpp.FamilyName,
+                licenseDefinition: null,
+                isLicenseAccepted: () => true,
+                modelKey: FireRedTts3AudioCpp.ResolveModelKey(model),
+                areModelsInstalled: FireRedTts3AudioCpp.AreModelsInstalled,
+                startDownloadModels: (vm, key) => vm.StartDownloadFireRedTts3AudioCppModels(key));
         }
 
         if (engine is ZonosTtsCrispAsr)
@@ -1000,13 +1016,15 @@ public static class TtsEngineInstaller
         IWindowService windowService,
         Func<Task> refreshVoices,
         string engineDisplayName,
-        ModelLicenseDefinition licenseDefinition,
+        string requiredFamily,
+        ModelLicenseDefinition? licenseDefinition,
         Func<bool> isLicenseAccepted,
         string modelKey,
         Func<string?, bool> areModelsInstalled,
         Action<DownloadTtsViewModel, string> startDownloadModels)
     {
-        if (!isLicenseAccepted())
+        // A null definition means the weights need no acceptance (Apache-2.0 FireRedTTS3).
+        if (licenseDefinition != null && !isLicenseAccepted())
         {
             var licenseResult = await windowService.ShowDialogAsync<ModelLicenseWindow, ModelLicenseViewModel>(
                 window, vm => vm.Initialize(licenseDefinition));
@@ -1022,7 +1040,7 @@ public static class TtsEngineInstaller
             }
         }
 
-        if (!await TtsVoiceInstaller.EnsureAudioCppRuntime(window, windowService, forceRedownload: false, engineDisplayName))
+        if (!await TtsVoiceInstaller.EnsureAudioCppRuntime(window, windowService, forceRedownload: false, engineDisplayName, requiredFamily))
         {
             return false;
         }

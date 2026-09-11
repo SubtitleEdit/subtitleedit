@@ -67,11 +67,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         {
                             var index = match.Index;
 
-                            var fromIndexPart = text.Substring(match.Index);
                             var doSkip = false;
                             foreach (var skipIfStartsWith in context.InterjectionsSkipIfStartsWith)
                             {
-                                if (fromIndexPart.StartsWith(skipIfStartsWith, StringComparison.OrdinalIgnoreCase))
+                                if (text.AsSpan(index).StartsWith(skipIfStartsWith.AsSpan(), StringComparison.OrdinalIgnoreCase))
                                 {
                                     doSkip = true;
                                     break;

@@ -797,7 +797,7 @@ public partial class AssSetBackgroundViewModel : ObservableObject
     {
         _positionTimer.Stop();
         _cancellationTokenSource.Cancel();
-        VideoPlayerControl.VideoPlayer.CloseFile();
+        VideoPlayerControl.CloseAndDisposePlayer();
         try
         {
             File.Delete(_tempSubtitleFileName);

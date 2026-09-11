@@ -1,9 +1,11 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Text.RegularExpressions;
 using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
 using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.Settings;
 using Nikse.SubtitleEdit.UiLogic.Translate;
@@ -78,7 +80,7 @@ public static partial class MergeAndSplitHelper
 
         if (forceSingleLineMode || mergeResult.ParagraphCount == 1)
         {
-            return ApplySingleLineTranslation(rows, index, formattingList, mergedTranslation, applyRowUpdate);
+            return ApplySingleLineTranslation(rows, target, index, formattingList, mergedTranslation, applyRowUpdate);
         }
 
         return TrySplitStrategies(rows, target, index, tempSubtitle, formattingList, mergeResult, mergedTranslation, applyRowUpdate);
@@ -172,6 +174,7 @@ public static partial class MergeAndSplitHelper
 
     private static int ApplySingleLineTranslation(
         ObservableCollection<TranslateRow> rows,
+        TranslationPair target,
         int index,
         List<Formatting> formattingList,
         string mergedTranslation,
@@ -181,7 +184,7 @@ public static partial class MergeAndSplitHelper
         // caller's no-progress counter, so the retry never fired and the row was left blank.
         if (index < rows.Count && formattingList.Count > 0 && !string.IsNullOrWhiteSpace(mergedTranslation))
         {
-            applyRowUpdate(() => rows[index].TranslatedText = formattingList[0].ReAddFormatting(mergedTranslation));
+            applyRowUpdate(() => rows[index].TranslatedText = RebalanceLines(formattingList[0].ReAddFormatting(mergedTranslation), target));
             return 1;
         }
         return 0;
@@ -207,7 +210,7 @@ public static partial class MergeAndSplitHelper
         if (IsSplitValid(splitResult, mergeCount, sourceTexts, index) &&
             HasMatchingPeriodCount(mergeResult.Text, mergedTranslation, sourceAbbreviations, targetAbbreviations))
         {
-            return ApplySplitResult(rows, index, formattingList, splitResult, applyRowUpdate);
+            return ApplySplitResult(rows, target, index, formattingList, splitResult, applyRowUpdate);
         }
 
         // Strategy 2: Split per number of lines
@@ -223,7 +226,7 @@ public static partial class MergeAndSplitHelper
         if (IsSplitValid(splitResult, mergeCount, sourceTexts, index) &&
             HasMatchingPeriodCount(mergeResult.Text, noPeriodsInNumbersTranslation, sourceAbbreviations, targetAbbreviations))
         {
-            return ApplySplitResult(rows, index, formattingList, splitResult, applyRowUpdate, restorePeriodPlaceholder: true);
+            return ApplySplitResult(rows, target, index, formattingList, splitResult, applyRowUpdate, restorePeriodPlaceholder: true);
         }
 
         // Strategy 4: Split by line ending chars (relaxed - no period count check). Without
@@ -236,7 +239,7 @@ public static partial class MergeAndSplitHelper
         if (IsSplitValid(splitResult, mergeCount, sourceTexts, index) &&
             HasPlausibleProportions(mergeResult, splitResult))
         {
-            return ApplySplitResult(rows, index, formattingList, splitResult, applyRowUpdate);
+            return ApplySplitResult(rows, target, index, formattingList, splitResult, applyRowUpdate);
         }
 
         MergeSplitProblems = true;
@@ -378,6 +381,7 @@ public static partial class MergeAndSplitHelper
 
     private static int ApplySplitResult(
         ObservableCollection<TranslateRow> rows,
+        TranslationPair target,
         int index,
         List<Formatting> formattingList,
         List<string> splitResult,
@@ -397,7 +401,7 @@ public static partial class MergeAndSplitHelper
                 }
 
                 var text = restorePeriodPlaceholder ? line.Replace(PeriodPlaceholder, '.') : line;
-                rows[index].TranslatedText = formattingList[idx].ReAddFormatting(text);
+                rows[index].TranslatedText = RebalanceLines(formattingList[idx].ReAddFormatting(text), target);
                 index++;
                 linesTranslated++;
                 idx++;
@@ -453,7 +457,7 @@ public static partial class MergeAndSplitHelper
                 }
             });
 
-            return ApplyFormattingToExistingTranslations(rows, index, formattingList, mergeResult.ParagraphCount, applyRowUpdate);
+            return ApplyFormattingToExistingTranslations(rows, target, index, formattingList, mergeResult.ParagraphCount, applyRowUpdate);
         }
 
         return 0;
@@ -490,6 +494,7 @@ public static partial class MergeAndSplitHelper
 
     private static int ApplyFormattingToExistingTranslations(
         ObservableCollection<TranslateRow> rows,
+        TranslationPair target,
         int index,
         List<Formatting> formattingList,
         int count,
@@ -506,7 +511,7 @@ public static partial class MergeAndSplitHelper
                     break;
                 }
 
-                rows[index].TranslatedText = formattingList[i].ReAddFormatting(rows[index].TranslatedText);
+                rows[index].TranslatedText = RebalanceLines(formattingList[i].ReAddFormatting(rows[index].TranslatedText), target);
                 index++;
                 linesTranslated++;
             }
@@ -1275,6 +1280,73 @@ public static partial class MergeAndSplitHelper
         public double Cps2 { get; init; }
         public SplitStrategy Strategy { get; init; }
         public double Score { get; set; }
+    }
+
+    /// <summary>
+    /// Re-breaks a translated row that violates the active profile: more lines than
+    /// "maximum number of lines", or a line longer than "single line maximum length".
+    /// Engines keep the source's line breaks and add their own, so a two-line French source
+    /// came back as three short Dutch lines that no tool would fix, since none of them was
+    /// too long on its own (#14673). A result that already fits is left untouched so
+    /// intentional breaks and dialog layouts survive; CJK targets are never re-broken.
+    /// </summary>
+    public static string RebalanceLines(string text, TranslationPair target)
+    {
+        if (string.IsNullOrWhiteSpace(text) || IsNonMergeLanguage(target) || IsCjkTarget(target) || ContainsCjk(text))
+        {
+            return text;
+        }
+
+        // Lyrics keep one line per phrase; AutoBreakLine's own ♪ guard only fires on text that
+        // still holds line breaks, which the UnbreakLine below removes, so guard here.
+        if (text.IndexOf('♪') >= 0 || text.IndexOf('♫') >= 0)
+        {
+            return text;
+        }
+
+        var maxLines = Configuration.Settings.General.MaxNumberOfLines;
+        var maxLineLength = Configuration.Settings.General.SubtitleLineMaximumLength;
+        var lines = HtmlUtil.RemoveHtmlTags(text, true).SplitToLines();
+        if (lines.Count <= maxLines && lines.All(l => l.Length <= maxLineLength))
+        {
+            return text;
+        }
+
+        var language = target.TwoLetterIsoLanguageName ?? target.Code;
+        var rebalanced = Utilities.AutoBreakLine(Utilities.UnbreakLine(text), language);
+        return string.IsNullOrWhiteSpace(rebalanced) ? text : rebalanced;
+    }
+
+    /// <summary>
+    /// CJK targets by code: the engines emit many variants ("zh-Hans", "zh-HK", "yue", "kor",
+    /// "th") beyond the handful <see cref="IsNonMergeLanguage"/> knows, and re-breaking any of
+    /// them inserts ASCII spaces into text that has none.
+    /// </summary>
+    private static bool IsCjkTarget(TranslationPair language)
+    {
+        var code = (language.TwoLetterIsoLanguageName ?? language.Code ?? string.Empty).ToLowerInvariant();
+        return code.StartsWith("zh", StringComparison.Ordinal) ||
+               code.StartsWith("zho", StringComparison.Ordinal) ||
+               code.StartsWith("yue", StringComparison.Ordinal) ||
+               code.StartsWith("ja", StringComparison.Ordinal) ||
+               code.StartsWith("jpn", StringComparison.Ordinal) ||
+               code.StartsWith("ko", StringComparison.Ordinal) ||
+               code.StartsWith("kor", StringComparison.Ordinal) ||
+               code.StartsWith("th", StringComparison.Ordinal) ||
+               code.StartsWith("tha", StringComparison.Ordinal);
+    }
+
+    private static bool ContainsCjk(string text)
+    {
+        foreach (var c in text)
+        {
+            if (CalcCjk.IsCjk(c))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static bool IsNonMergeLanguage(TranslationPair language)

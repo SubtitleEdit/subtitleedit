@@ -33,6 +33,9 @@ namespace Nikse.SubtitleEdit.UiLogic.Translate
             "eu", "eus_Latn"
         };
 
+        // Contains() on the 44-entry list ran per translated line.
+        private static readonly HashSet<string> LanguagesAllowingLineMergingSet = new HashSet<string>(LanguagesAllowingLineMerging, StringComparer.Ordinal);
+
         private bool Italic { get; set; }
         private string Font { get; set; } = string.Empty;
         private bool ItalicTwoLines { get; set; }
@@ -157,7 +160,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Translate
             }
 
             // Un-break line
-            if (LanguagesAllowingLineMerging.Contains(sourceLanguage))
+            if (sourceLanguage != null && LanguagesAllowingLineMergingSet.Contains(sourceLanguage))
             {
                 var lines = HtmlUtil.RemoveHtmlTags(text).SplitToLines();
                 if (lines.Count == 2 && !string.IsNullOrEmpty(lines[0]) && !string.IsNullOrEmpty(lines[1]) &&

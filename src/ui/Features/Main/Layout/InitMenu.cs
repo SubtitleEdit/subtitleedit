@@ -104,7 +104,7 @@ public static class InitMenu
                 {
                     Header = l.OpenOriginal,
                     Command = vm.FileOpenOriginalCommand,
-                    [!MenuItem.IsVisibleProperty] = new Binding(nameof(vm.ShowColumnOriginalText)) { Converter = new InverseBooleanConverter() }
+                    [!MenuItem.IsVisibleProperty] = new Binding(nameof(vm.ShowColumnOriginalText)) { Converter = InverseBooleanConverter.Instance }
                 },
                 new MenuItem
                 {
@@ -412,7 +412,7 @@ public static class InitMenu
                 {
                     Header = l.RightToLeftMode,
                     Command = vm.RightToLeftToggleCommand,
-                    [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsRightToLeftEnabled)) { Converter = new InverseBooleanConverter() },
+                    [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsRightToLeftEnabled)) { Converter = InverseBooleanConverter.Instance },
                 },
                 new MenuItem
                 {
@@ -819,7 +819,7 @@ public static class InitMenu
                 {
                     Header = l.UndockVideoControls,
                     Command = vm.VideoUndockControlsCommand,
-                    [!MenuItem.IsVisibleProperty] = new Binding(nameof(vm.AreVideoControlsUndocked)) {  Converter = new InverseBooleanConverter() },
+                    [!MenuItem.IsVisibleProperty] = new Binding(nameof(vm.AreVideoControlsUndocked)) {  Converter = InverseBooleanConverter.Instance },
                 },
                 new MenuItem
                 {
@@ -831,7 +831,7 @@ public static class InitMenu
                 {
                     Header = l.ToggleSelectSubtitleWhilePlayingCurrentlyOff,
                     Command = vm.ToggleCurrentSubtitleWhilePlayingCommand,
-                    [!MenuItem.IsVisibleProperty] = new Binding(nameof(vm.SelectCurrentSubtitleWhilePlaying)) {  Converter = new InverseBooleanConverter() },
+                    [!MenuItem.IsVisibleProperty] = new Binding(nameof(vm.SelectCurrentSubtitleWhilePlaying)) {  Converter = InverseBooleanConverter.Instance },
                 },
                 new MenuItem
                 {

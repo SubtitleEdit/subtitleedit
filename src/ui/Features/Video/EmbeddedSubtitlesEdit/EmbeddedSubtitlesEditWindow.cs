@@ -52,6 +52,7 @@ public class EmbeddedSubtitlesEditWindow : Window
         var buttonGenerate = UiUtil.MakeButton(Se.Language.General.Generate, vm.GenerateCommand)
             .WithBindEnabled(nameof(vm.CanGenerate))
             .WithBindIsVisible(nameof(vm.HasVideoFileName));
+        buttonGenerate.IsDefault = true; // the dialog's accept button - Enter runs it (#14586)
         var buttonConfig = UiUtil.MakeButton(vm.OkCommand, IconNames.Settings, Se.Language.General.Settings)
             .WithMarginRight(5)
             .WithBindEnabled(nameof(vm.CanGenerate))

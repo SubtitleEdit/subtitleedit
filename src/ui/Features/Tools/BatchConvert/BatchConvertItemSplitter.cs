@@ -47,20 +47,23 @@ public class BatchConvertTransportStreamSplitter : IBatchConvertItemSplitter
             }
         }
 
-        foreach (var i in tsParser.TeletextSubtitlesLookup.Keys)
+        // One PID can carry several teletext subtitle pages (e.g. 888 + 889 for a second
+        // language); every page is its own subtitle, so do not stop at the first one.
+        foreach (var pages in tsParser.TeletextSubtitlesLookup.Values)
         {
-            var pid = tsParser.TeletextSubtitlesLookup[i];
-            var paragraphs = pid.Values.First();
-            if (paragraphs.Count > 0)
+            foreach (var paragraphs in pages.Values)
             {
-                result.Add(new BatchConvertItem
+                if (paragraphs.Count > 0)
                 {
-                    Size = item.Size,
-                    Format = item.Format,
-                    FileName = item.FileName,
-                    Subtitle = new Subtitle(paragraphs),
-                    LanguageCode = string.Empty,
-                });
+                    result.Add(new BatchConvertItem
+                    {
+                        Size = item.Size,
+                        Format = item.Format,
+                        FileName = item.FileName,
+                        Subtitle = new Subtitle(paragraphs),
+                        LanguageCode = string.Empty,
+                    });
+                }
             }
         }
 

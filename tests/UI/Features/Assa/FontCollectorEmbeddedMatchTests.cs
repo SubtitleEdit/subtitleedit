@@ -86,7 +86,9 @@ public class FontCollectorEmbeddedMatchTests
 
         Assert.Single(embedded);
         Assert.True(embedded[0].Bytes.Length >= bytes.Length, $"decoded {embedded[0].Bytes.Length} < original {bytes.Length}");
-        Assert.Equal(bytes, embedded[0].Bytes.Take(bytes.Length));
+        // Span compare, not Assert.Equal over the enumerable: xUnit walks a real font file
+        // (Arial is ~1 MB) byte by byte through IEnumerable, which took ~3 s on its own.
+        Assert.True(embedded[0].Bytes.AsSpan(0, bytes.Length).SequenceEqual(bytes), "decoded bytes differ from the original font");
 
         using var typeface = SKTypeface.FromData(SKData.CreateCopy(embedded[0].Bytes));
         Assert.NotNull(typeface);

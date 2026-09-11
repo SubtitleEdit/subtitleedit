@@ -77,7 +77,7 @@ public class WriteChaptersToVideoWindow : Window
 
         var buttonWrite = UiUtil.MakeButton(language.WriteToVideo, vm.WriteCommand)
             .WithIconLeft(IconNames.Export)
-            .WithBindIsEnabled(nameof(vm.IsWriting), new InverseBooleanConverter());
+            .WithBindIsEnabled(nameof(vm.IsWriting), InverseBooleanConverter.Instance);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonWrite, buttonCancel);
 

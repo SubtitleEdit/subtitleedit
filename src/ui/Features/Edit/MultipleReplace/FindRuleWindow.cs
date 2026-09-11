@@ -74,7 +74,7 @@ public class FindRuleWindow : Window
             Header = Se.Language.General.Category,
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding("Parent.CategoryName"),
+            Binding = new Binding($"{nameof(RuleTreeNode.Parent)}.{nameof(RuleTreeNode.CategoryName)}"),
             Width = new GridLength(1, GridUnitType.Star),
         };
         var columnFind = new SeTableViewColumn

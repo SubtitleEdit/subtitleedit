@@ -20,7 +20,7 @@ public class ImageBasedPreviewWindow : Window
 
         var image = new Image
         {
-            [!Image.SourceProperty] = new Binding(nameof(vm.BitmapPreview)) { Mode = BindingMode.TwoWay },
+            [!Image.SourceProperty] = new Binding(nameof(vm.BitmapPreview)) { Mode = BindingMode.OneWay },
         };
         vm.ImagePreview = image;
 

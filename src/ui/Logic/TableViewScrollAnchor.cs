@@ -149,9 +149,24 @@ public sealed class TableViewScrollAnchor
         // An extent change with no offset change is the panel re-estimating under the view;
         // anything else is a scroll, which is the user's (or ScrollIntoView's) business.
         // At the very top there is nothing to correct - offset 0 always shows row 0.
+        //
+        // One re-estimate does move the offset: when the estimate shrinks below the current
+        // offset plus viewport, the ScrollViewer coerces the offset down to the new maximum in
+        // the same pass, so the offset change arrives together with the extent change without
+        // anyone having scrolled. Near the end of the file that is the whole story of the grid
+        // "jumping to the bottom" after an auto-break (#14231): the panel re-anchors from
+        // offset / average row height, the short last rows pull the average down, the index
+        // runs past the end and is clamped to the last row, and the coerced offset then kept
+        // this anchor from restoring. An offset that lands exactly on the new maximum, moving
+        // down in step with a shrinking extent, is that coerce and not a scroll.
+        var maxOffset = Math.Max(0, _scrollViewer.Extent.Height - _scrollViewer.Viewport.Height);
+        var offsetUnchanged = Math.Abs(e.OffsetDelta.Y) < 0.5;
+        var offsetCoercedToEnd = e.ExtentDelta.Y < -0.5 &&
+                                 e.OffsetDelta.Y < -0.5 &&
+                                 Math.Abs(_scrollViewer.Offset.Y - maxOffset) < 0.5;
         if (_suspendCount == 0 &&
             Math.Abs(e.ExtentDelta.Y) > 0.5 &&
-            Math.Abs(e.OffsetDelta.Y) < 0.5 &&
+            (offsetUnchanged || offsetCoercedToEnd) &&
             _scrollViewer.Offset.Y > 0.5)
         {
             Restore();

@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             sb.AppendLine(string.Format(format, Separator, "Start time in milliseconds", "End time in milliseconds", "Text"));
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format(format, Separator, (long)Math.Round(p.StartTime.TotalMilliseconds, MidpointRounding.AwayFromZero) , (long)Math.Round(p.EndTime.TotalMilliseconds, MidpointRounding.AwayFromZero), p.Text.Replace(Environment.NewLine, " ")));
+                sb.AppendLine(string.Format(format, Separator, (long)Math.Round(p.StartTime.TotalMilliseconds, MidpointRounding.AwayFromZero) , (long)Math.Round(p.EndTime.TotalMilliseconds, MidpointRounding.AwayFromZero), p.Text.Replace(Environment.NewLine, " ").Replace('\t', ' '))); // a tab is the field separator
             }
             return sb.ToString().Trim();
         }
@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 if (CsvLine.IsMatch(line))
                 {
-                    var parts = line.Split(Separator.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    var parts = line.Split(Separator.ToCharArray(), 3, StringSplitOptions.None); // the text is the rest of the line (may be empty or hold tabs)
                     if (parts.Length == 3)
                     {
                         try

@@ -135,7 +135,7 @@ public class OcrWindow : Window
             ResizeDirection = GridResizeDirection.Rows,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
-        splitter.Bind(GridSplitter.IsVisibleProperty, new Binding(nameof(vm.IsOcrRunning)) { Source = vm, Converter = new InverseBooleanConverter() });
+        splitter.Bind(GridSplitter.IsVisibleProperty, new Binding(nameof(vm.IsOcrRunning)) { Source = vm, Converter = InverseBooleanConverter.Instance });
 
         grid.Add(topControlsView, 0, 0);
         grid.Add(subtitleView, 1, 0);
@@ -206,7 +206,7 @@ public class OcrWindow : Window
         ToolTip.SetTip(toggleButtonShowOnlyForced, Se.Language.Ocr.ShowOnlyForcedSubtitles);
         toggleButtonShowOnlyForced.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(vm.ShowOnlyForced)));
         toggleButtonShowOnlyForced.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.HasForcedSubtitles)));
-        toggleButtonShowOnlyForced.Bind(InputElement.IsEnabledProperty, new Binding(nameof(vm.IsOcrRunning)) { Converter = new InverseBooleanConverter() });
+        toggleButtonShowOnlyForced.Bind(InputElement.IsEnabledProperty, new Binding(nameof(vm.IsOcrRunning)) { Converter = InverseBooleanConverter.Instance });
 
         var panelRight = new StackPanel
         {
@@ -224,7 +224,7 @@ public class OcrWindow : Window
 
         var comboBoxEngines = UiUtil.MakeComboBox(vm.OcrEngines, vm, nameof(vm.SelectedOcrEngine))
             .WithMarginRight(10)
-            .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter());
+            .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance);
         comboBoxEngines.SelectionChanged += vm.EngineSelectionChanged;
         comboBoxEngines.ItemTemplate = MakeOcrEngineItemTemplate();
         vm.RefreshEngineCombo = () => comboBoxEngines.ItemTemplate = MakeOcrEngineItemTemplate();
@@ -233,7 +233,7 @@ public class OcrWindow : Window
                 nameof(vm.IsCrispEmbedVisible))
             .WithMinWidth(220)
             .WithMarginRight(5)
-            .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter());
+            .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance);
         comboBoxCrispEmbedModels.ItemTemplate = MakeCrispEmbedModelItemTemplate();
         vm.RefreshCrispEmbedModelCombo = () => comboBoxCrispEmbedModels.ItemTemplate = MakeCrispEmbedModelItemTemplate();
 
@@ -241,7 +241,7 @@ public class OcrWindow : Window
                 nameof(vm.IsLlamaCppVisible))
             .WithWidth(220)
             .WithMarginRight(5)
-            .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter());
+            .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance);
         comboBoxLlamaCppModels.ItemTemplate = LlamaCppDownloadHelper.ModelItemTemplate();
         vm.RefreshLlamaCppOcrModelCombo = () => comboBoxLlamaCppModels.ItemTemplate = LlamaCppDownloadHelper.ModelItemTemplate();
 
@@ -261,57 +261,57 @@ public class OcrWindow : Window
                 UiUtil.MakeLabel<OcrViewModel>(Se.Language.Ocr.Database, vm => vm.IsNOcrVisible),
                 UiUtil.MakeComboBox(vm.NOcrDatabases, vm, nameof(vm.SelectedNOcrDatabase), nameof(vm.IsNOcrVisible))
                     .WithMarginRight(0)
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
                 UiUtil.MakeButton(vm.ShowNOcrSettingsCommand, IconNames.Settings, Se.Language.General.Settings)
                     .WithMarginRight(20)
                     .WithMarginBottom(2)
                     .WithBottomAlignment()
                     .WithBindIsVisible(nameof(vm.IsNOcrVisible))
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
                 UiUtil.MakeLabel<OcrViewModel>(Se.Language.Ocr.MaxWrongPixels, vm => vm.IsNOcrVisible),
                 UiUtil.MakeComboBox(vm.NOcrMaxWrongPixelsList, vm, nameof(vm.SelectedNOcrMaxWrongPixels),
                         nameof(vm.IsNOcrVisible))
                     .WithMarginRight(10)
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
                 UiUtil.MakeLabel<OcrViewModel>(Se.Language.Ocr.NumberOfPixelsIsSpace, vm => vm.IsNOcrVisible),
                 UiUtil.MakeComboBox(vm.NOcrPixelsAreSpaceList, vm, nameof(vm.SelectedNOcrPixelsAreSpace),
                         nameof(vm.IsNOcrVisible))
                     .WithMarginRight(10)
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
 
                 // Image Compare settings
                 UiUtil.MakeLabel<OcrViewModel>(Se.Language.Ocr.Database, vm => vm.IsBinaryImageCompareVisible),
                 UiUtil.MakeComboBox(vm.ImageCompareDatabases, vm, nameof(vm.SelectedImageCompareDatabase), nameof(vm.IsBinaryImageCompareVisible))
                     .WithMarginRight(0)
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
                 UiUtil.MakeButton(vm.ShowBinaryOcrSettingsCommand, IconNames.Settings, Se.Language.General.Settings)
                     .WithMarginRight(20)
                     .WithMarginBottom(2)
                     .WithBottomAlignment()
                     .WithBindIsVisible(nameof(vm.IsBinaryImageCompareVisible))
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
                 UiUtil.MakeLabel<OcrViewModel>(Se.Language.Ocr.NumberOfPixelsIsSpace, vm => vm.IsBinaryImageCompareVisible),
                 UiUtil.MakeComboBox(vm.BinaryOcrPixelsAreSpaceList, vm, nameof(vm.SelectedBinaryOcrPixelsAreSpace),
                         nameof(vm.IsBinaryImageCompareVisible))
                     .WithMarginRight(10)
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
                 UiUtil.MakeLabel<OcrViewModel>(Se.Language.Ocr.MaxErrorPct, vm => vm.IsBinaryImageCompareVisible),
                 UiUtil.MakeNumericUpDownOneDecimal(0, 50, 120, vm, nameof(vm.BinaryOcrMaxErrorPercent), nameof(vm.IsBinaryImageCompareVisible))
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
 
                 // Tesseract settings
                 UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Language, vm => vm.IsTesseractVisible),
                 UiUtil.MakeComboBox(vm.TesseractDictionaryItems, vm, nameof(vm.SelectedTesseractDictionaryItem),
                         nameof(vm.IsTesseractVisible))
                     .WithWidth(100)
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
                 UiUtil.MakeBrowseButton(vm.PickTesseractModelCommand).BindIsVisible(vm, nameof(vm.IsTesseractVisible))
-                    .BindIsEnabled(vm, nameof(vm.IsOcrRunning), new InverseBooleanConverter()),
+                    .BindIsEnabled(vm, nameof(vm.IsOcrRunning), InverseBooleanConverter.Instance),
                 UiUtil.MakeLabel<OcrViewModel>(Se.Language.Ocr.TesseractEngineMode, vm => vm.IsTesseractVisible)
                     .WithMarginLeft(10),
                 UiUtil.MakeComboBox(vm.TesseractEngineModes, vm, nameof(vm.SelectedTesseractEngineMode),
                         nameof(vm.IsTesseractVisible))
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
 
                 // Ollama settings
                 UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Language, vm => vm.IsOllamaVisible),
@@ -319,18 +319,18 @@ public class OcrWindow : Window
                         nameof(vm.IsOllamaVisible))
                     .WithWidth(100)
                     .WithMarginRight(10)
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
                 UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Model, vm => vm.IsOllamaVisible),
                 UiUtil.MakeTextBox(160, vm, nameof(vm.OllamaModel))
                     .BindIsVisible(vm, nameof(vm.IsOllamaVisible))
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
                 UiUtil.MakeBrowseButton(vm.PickOllamaModelCommand)
                     .BindIsVisible(vm, nameof(vm.IsOllamaVisible))
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
                 UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Url, vm => vm.IsOllamaVisible),
                 UiUtil.MakeTextBox(220, vm, nameof(vm.OllamaUrl))
                     .BindIsVisible(vm, nameof(vm.IsOllamaVisible))
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
 
                 // llama.cpp settings
                 UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Language, vm => vm.IsLlamaCppVisible),
@@ -338,34 +338,34 @@ public class OcrWindow : Window
                         nameof(vm.IsLlamaCppVisible))
                     .WithWidth(100)
                     .WithMarginRight(10)
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
                 UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Model, vm => vm.IsLlamaCppVisible),
                 comboBoxLlamaCppModels,
                 UiUtil.MakeButton(vm.DownloadLlamaCppOcrCommand, IconNames.Download, Se.Language.General.Download)
                     .WithMarginRight(5)
                     .BindIsVisible(vm, nameof(vm.IsLlamaCppVisible))
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
                 MakeLlamaCppOcrToggleServerButton(vm)
                     .WithMarginRight(5)
                     .BindIsVisible(vm, nameof(vm.IsLlamaCppVisible))
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
                 UiUtil.MakeButton(vm.ShowLlamaCppOcrSettingsCommand, IconNames.Settings, Se.Language.General.Settings)
                     .WithMarginRight(10)
                     .BindIsVisible(vm, nameof(vm.IsLlamaCppVisible))
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
 
                 // CrispEmbed settings
                 UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Backend, vm => vm.IsCrispEmbedVisible),
                 UiUtil.MakeComboBox(vm.CrispEmbedBackends, vm, nameof(vm.SelectedCrispEmbedBackend),
                         nameof(vm.IsCrispEmbedVisible))
                     .WithMarginRight(10)
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
                 UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Model, vm => vm.IsCrispEmbedVisible),
                 comboBoxCrispEmbedModels,
                 UiUtil.MakeButton(vm.DownloadCrispEmbedCommand, IconNames.Download, Se.Language.General.Download)
                     .WithMarginRight(5)
                     .BindIsVisible(vm, nameof(vm.IsCrispEmbedVisible))
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
                 // Separate from the download button above, which fetches the selected *model*:
                 // this one re-fetches the engine binaries and re-asks CPU/Vulkan/CUDA, the only
                 // way to change hardware build after the first install (issue #13400).
@@ -373,7 +373,7 @@ public class OcrWindow : Window
                         string.Format(Se.Language.General.ReDownloadX, CrispEmbedEngine.StaticName))
                     .WithMarginRight(10)
                     .BindIsVisible(vm, nameof(vm.IsCrispEmbedVisible))
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
 
                 // Apple Vision settings - language only: the engine ships with macOS, so there is
                 // nothing to download, no key to enter and no model to pick.
@@ -382,7 +382,7 @@ public class OcrWindow : Window
                         nameof(vm.IsAppleVisionVisible))
                     .WithWidth(180)
                     .WithMarginRight(10)
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
 
                 // Google vision settings
                 UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Language, vm => vm.IsGoogleVisionVisible),
@@ -390,11 +390,11 @@ public class OcrWindow : Window
                         nameof(vm.IsGoogleVisionVisible))
                     .WithWidth(100)
                     .WithMarginRight(10)
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
                 UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.ApiKey, vm => vm.IsGoogleVisionVisible),
                 UiUtil.MakeTextBox(200, vm, nameof(vm.GoogleVisionApiKey))
                     .BindIsVisible(vm, nameof(vm.IsGoogleVisionVisible))
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
 
                 // Google Lens settings
                 UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Language, vm => vm.IsGoogleLensVisible),
@@ -402,7 +402,7 @@ public class OcrWindow : Window
                         nameof(vm.IsGoogleLensVisible))
                     .WithWidth(100)
                     .WithMarginRight(10)
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
 
                 // Paddle OCR settings
                 UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Language, vm => vm.IsPaddleOcrVisible),
@@ -410,13 +410,13 @@ public class OcrWindow : Window
                         nameof(vm.IsPaddleOcrVisible))
                     .WithWidth(100)
                     .WithMarginRight(10)
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
 
                 // Mistral OCR settings
                 UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.ApiKey, vm => vm.IsMistralOcrVisible),
                 UiUtil.MakeTextBox(200, vm, nameof(vm.MistralApiKey))
                     .BindIsVisible(vm, nameof(vm.IsMistralOcrVisible))
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
             }
         };
 
@@ -632,7 +632,7 @@ public class OcrWindow : Window
             DataContext = vm,
             Command = vm.StartOcrSelectedLinesCommand,
         };
-        menuItemOcrSelectedLines.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.TwoWay });
+        menuItemOcrSelectedLines.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.OneWay });
         flyout.Items.Add(menuItemOcrSelectedLines);
 
         var menuItemInspectMatchesForLine = new MenuItem
@@ -641,7 +641,7 @@ public class OcrWindow : Window
             DataContext = vm,
             Command = vm.InspectLineCommand,
         };
-        menuItemInspectMatchesForLine.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsInspectLineVisible)) { Mode = BindingMode.TwoWay });
+        menuItemInspectMatchesForLine.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsInspectLineVisible)) { Mode = BindingMode.OneWay });
         flyout.Items.Add(menuItemInspectMatchesForLine);
 
         var menuItemShowImage = new MenuItem
@@ -650,7 +650,7 @@ public class OcrWindow : Window
             DataContext = vm,
             Command = vm.ViewSelectedImageCommand,
         };
-        menuItemShowImage.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.TwoWay });
+        menuItemShowImage.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.OneWay });
         flyout.Items.Add(menuItemShowImage);
 
         var menuItemSaveImage = new MenuItem
@@ -659,7 +659,7 @@ public class OcrWindow : Window
             DataContext = vm,
             Command = vm.SaveImageAsCommand,
         };
-        menuItemSaveImage.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.TwoWay });
+        menuItemSaveImage.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.OneWay });
         flyout.Items.Add(menuItemSaveImage);
 
         var menuItemCopyImageToClipboard = new MenuItem
@@ -668,7 +668,7 @@ public class OcrWindow : Window
             DataContext = vm,
             Command = vm.CopyImageToClipboardCommand,
         };
-        menuItemCopyImageToClipboard.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.TwoWay });
+        menuItemCopyImageToClipboard.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.OneWay });
         flyout.Items.Add(menuItemCopyImageToClipboard);
 
         flyout.Items.Add(new Separator());
@@ -679,7 +679,7 @@ public class OcrWindow : Window
             DataContext = vm,
             Command = vm.DeleteSelectedLinesCommand,
         };
-        menuItemDelete.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.TwoWay });
+        menuItemDelete.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.OneWay });
         flyout.Items.Add(menuItemDelete);
 
         var menuItemFillSelectedLinesWithClipboard = new MenuItem
@@ -688,7 +688,7 @@ public class OcrWindow : Window
             DataContext = vm,
             Command = vm.FillSelectedLinesWithClipboardCommand,
         };
-        menuItemFillSelectedLinesWithClipboard.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.HasMultipleLinesSelected)) { Mode = BindingMode.TwoWay });
+        menuItemFillSelectedLinesWithClipboard.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.HasMultipleLinesSelected)) { Mode = BindingMode.OneWay });
         flyout.Items.Add(menuItemFillSelectedLinesWithClipboard);
 
         flyout.Items.Add(new Separator());
@@ -699,7 +699,7 @@ public class OcrWindow : Window
             DataContext = vm,
             Command = vm.ToggleItalicCommand,
         };
-        menuItemItalic.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.TwoWay });
+        menuItemItalic.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.OneWay });
         flyout.Items.Add(menuItemItalic);
 
         var menuItemBold = new MenuItem
@@ -708,7 +708,7 @@ public class OcrWindow : Window
             DataContext = vm,
             Command = vm.ToggleBoldCommand,
         };
-        menuItemBold.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.TwoWay });
+        menuItemBold.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.OneWay });
         flyout.Items.Add(menuItemBold);
 
         flyout.Items.Add(new Separator());
@@ -719,7 +719,7 @@ public class OcrWindow : Window
             DataContext = vm,
             Command = vm.ExportCurrentOcrItemsCommand,
         };
-        menuItemExport.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.TwoWay });
+        menuItemExport.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.OneWay });
         flyout.Items.Add(menuItemExport);
 
         var menuItemImportTextFromSubtitle = new MenuItem
@@ -728,7 +728,7 @@ public class OcrWindow : Window
             DataContext = vm,
             Command = vm.ImportTextFromSubtitleCommand,
         };
-        menuItemImportTextFromSubtitle.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.TwoWay });
+        menuItemImportTextFromSubtitle.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.OneWay });
         flyout.Items.Add(menuItemImportTextFromSubtitle);
 
         var menuItemExportTextAsSubtitle = new MenuItem
@@ -737,7 +737,7 @@ public class OcrWindow : Window
             DataContext = vm,
             Command = vm.ExportTextAsSubtitleCommand,
         };
-        menuItemExportTextAsSubtitle.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.TwoWay });
+        menuItemExportTextAsSubtitle.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.OneWay });
         flyout.Items.Add(menuItemExportTextAsSubtitle);
 
         var menuItemSaveAllImagesWithHtmlIndex = new MenuItem
@@ -746,7 +746,7 @@ public class OcrWindow : Window
             DataContext = vm,
             Command = vm.SaveAllImagesWithHtmlIndexCommand,
         };
-        menuItemSaveAllImagesWithHtmlIndex.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.TwoWay });
+        menuItemSaveAllImagesWithHtmlIndex.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.OneWay });
         flyout.Items.Add(menuItemSaveAllImagesWithHtmlIndex);
 
         flyout.Items.Add(new Separator());
@@ -912,7 +912,7 @@ public class OcrWindow : Window
 
         var border = UiUtil.MakeBorderForControl(grid).WithMarginBottom(5);
         border.ClipToBounds = true; // Prevent content from pushing the parent row larger
-        border.Bind(Border.IsVisibleProperty, new Binding(nameof(vm.IsOcrRunning)) { Source = vm, Converter = new InverseBooleanConverter() });
+        border.Bind(Border.IsVisibleProperty, new Binding(nameof(vm.IsOcrRunning)) { Source = vm, Converter = InverseBooleanConverter.Instance });
 
         return border;
     }
@@ -1121,19 +1121,19 @@ public class OcrWindow : Window
         statusText.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.IsOcrRunning)) { Source = vm });
 
         var buttonStart = UiUtil.MakeButton(Se.Language.Ocr.StartOcr, vm.StartOcrCommand)
-            .WithBindIsVisible(nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()).WithBottomAlignment();
+            .WithBindIsVisible(nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance).WithBottomAlignment();
         var buttonPause = UiUtil.MakeButton(Se.Language.Ocr.PauseOcr, vm.PauseOcrCommand)
             .WithBindIsVisible(nameof(OcrViewModel.IsOcrRunning)).WithBottomAlignment();
         var buttonInspect = UiUtil.MakeButton(Se.Language.Ocr.InspectLine, vm.InspectLineCommand)
             .WithBindIsVisible(nameof(OcrViewModel.IsInspectLineVisible))
-            .WithBindIsEnabled(nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter())
+            .WithBindIsEnabled(nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance)
             .WithBottomAlignment();
         var buttonInspectAdditions = UiUtil.MakeButton(Se.Language.General.InspectAdditions, vm.InspectAdditionsCommand)
             .WithBindIsVisible(nameof(vm.IsInspectAdditionsVisible))
-            .WithBindIsEnabled(nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter())
+            .WithBindIsEnabled(nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance)
             .WithBottomAlignment();
         var buttonExport = UiUtil.MakeButton(Se.Language.Ocr.EditExportDotDotDot, vm.EditExportCommand)
-            .WithBindIsEnabled(nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()).WithBottomAlignment();
+            .WithBindIsEnabled(nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance).WithBottomAlignment();
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBottomAlignment();
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand).WithBottomAlignment();
 
@@ -1165,7 +1165,7 @@ public class OcrWindow : Window
             Margin = new Thickness(5, 0, 0, 0),
         };
         subtitleCountText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.SelectionStatus)) { Source = vm });
-        subtitleCountText.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.IsOcrRunning)) { Source = vm, Converter = new InverseBooleanConverter() });
+        subtitleCountText.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.IsOcrRunning)) { Source = vm, Converter = InverseBooleanConverter.Instance });
 
         grid.Add(progressBar, 0, 0);
         grid.Add(statusText, 0, 0);

@@ -105,6 +105,12 @@ public static class TtsEngineCatalog
             // under the Fish Audio Research License (first-run accept window).
             new FishTtsAudioCpp(),
 
+            // FireRedTTS3-Base (audio.cpp) — cloning across 24 languages with the best published
+            // speaker similarity of the open models (arXiv 2608.17492). Same shared runtime;
+            // weights are Apache-2.0, so no licence gate. Needs an explicit language pick
+            // (no detection; audio.cpp defaults to Chinese).
+            new FireRedTts3AudioCpp(),
+
             // F5-TTS (CrispASR) hidden: CrispASR 0.6.12 has no GPU backend for f5-tts, so
             // synthesis runs the fixed 32-step Euler ODE through a 22-layer DiT + Vocos on
             // CPU only. That's 3-8 minutes per short utterance on Mac CPU — unusable for the

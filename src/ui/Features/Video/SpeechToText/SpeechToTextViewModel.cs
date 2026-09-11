@@ -127,6 +127,13 @@ public partial class SpeechToTextViewModel : ObservableObject
     [ObservableProperty] private int _dashScopeSttTimeoutSeconds;
     public ObservableCollection<string> DashScopeSttRegions { get; } = new(new[] { "international", "china" });
 
+    [ObservableProperty] private bool _isGoogleCloudSttVisible;
+    [ObservableProperty] private string? _googleCloudSttKeyFile;
+    [ObservableProperty] private string? _googleCloudSttRegion;
+    [ObservableProperty] private string? _googleCloudSttModel;
+    [ObservableProperty] private string? _googleCloudSttLanguage;
+    [ObservableProperty] private int _googleCloudSttTimeoutSeconds;
+
     public Window? Window { get; set; }
 
     public bool OkPressed { get; private set; }
@@ -190,6 +197,11 @@ public partial class SpeechToTextViewModel : ObservableObject
         new(@"^\[\d\d:\d\d:\d\d[\.,]\d\d\d --> \d\d:\d\d:\d\d[\.,]\d\d\d]", RegexOptions.Compiled);
 
     private readonly Regex _pctWhisper = new(@"^\d+%\|", RegexOptions.Compiled);
+
+    // WhisperX (verbose, its default) prints one "Transcript: [1101.31 --> 1130.774]  text" line
+    // per VAD chunk as it is decoded, with plain seconds rather than a time code.
+    private static readonly Regex WhisperXTranscriptRegex =
+        new(@"^Transcript: \[(\d+(?:\.\d+)?) --> (\d+(?:\.\d+)?)\]", RegexOptions.Compiled);
     private readonly Regex _pctWhisperFaster = new(@"^\s*\d+%\s*\|", RegexOptions.Compiled);
 
     // Sentence chunks with trailing terminator (+ closing quotes/brackets), or a
@@ -274,6 +286,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         // Online STT services reachable on all platforms
         Engines.Add(new OpenRouterSttEngine());
         Engines.Add(new DashScopeQwen3SttEngine());
+        Engines.Add(new GoogleCloudSttEngine());
 
         if (OperatingSystem.IsWindows() ||
             OperatingSystem.IsLinux() ||
@@ -369,6 +382,12 @@ public partial class SpeechToTextViewModel : ObservableObject
         DashScopeSttEnableWords = Se.Settings.Tools.DashScopeSttEnableWords;
         DashScopeSttTimeoutSeconds = Se.Settings.Tools.DashScopeSttTimeoutSeconds;
 
+        GoogleCloudSttKeyFile = Se.Settings.Tools.GoogleCloudSttKeyFile;
+        GoogleCloudSttRegion = Se.Settings.Tools.GoogleCloudSttRegion;
+        GoogleCloudSttModel = Se.Settings.Tools.GoogleCloudSttModel;
+        GoogleCloudSttLanguage = Se.Settings.Tools.GoogleCloudSttLanguage;
+        GoogleCloudSttTimeoutSeconds = Se.Settings.Tools.GoogleCloudSttTimeoutSeconds;
+
         var savedChoice = Se.Settings.Tools.AudioToText.WhisperChoice;
         var whisperCppEngine = Engines.OfType<WhisperCppEngine>().FirstOrDefault();
         var crispAsrEngine = Engines.OfType<CrispAsrEngine>().FirstOrDefault();
@@ -447,6 +466,12 @@ public partial class SpeechToTextViewModel : ObservableObject
         Se.Settings.Tools.DashScopeSttRegion = DashScopeSttRegion ?? "international";
         Se.Settings.Tools.DashScopeSttEnableWords = DashScopeSttEnableWords;
         Se.Settings.Tools.DashScopeSttTimeoutSeconds = DashScopeSttTimeoutSeconds;
+
+        Se.Settings.Tools.GoogleCloudSttKeyFile = GoogleCloudSttKeyFile ?? string.Empty;
+        Se.Settings.Tools.GoogleCloudSttRegion = GoogleCloudSttRegion ?? "us";
+        Se.Settings.Tools.GoogleCloudSttModel = GoogleCloudSttModel ?? "chirp_3";
+        Se.Settings.Tools.GoogleCloudSttLanguage = GoogleCloudSttLanguage ?? string.Empty;
+        Se.Settings.Tools.GoogleCloudSttTimeoutSeconds = GoogleCloudSttTimeoutSeconds;
 
         Se.SaveSettings();
     }
@@ -1203,52 +1228,22 @@ public partial class SpeechToTextViewModel : ObservableObject
             // still get a result.
             var jsonText = JsonRepair.FixCommaDecimalSeparators(JsonRepair.EscapeControlCharsInStrings(rawJson));
             var jsonDoc = JsonDocument.Parse(jsonText);
-            var words = jsonDoc.RootElement.GetProperty("words");
-
-            var subtitle = new Subtitle();
-            var currentText = new StringBuilder();
-            var startTime = 0.0;
-            var endTime = 0.0;
-            var first = true;
-
-            foreach (var word in words.EnumerateArray())
+            var words = new List<Qwen3AsrWord>();
+            foreach (var word in jsonDoc.RootElement.GetProperty("words").EnumerateArray())
             {
-                var text = word.GetProperty("word").GetString() ?? string.Empty;
-                var start = word.GetProperty("start").GetDouble();
-                var end = word.GetProperty("end").GetDouble();
-
-                if (first)
-                {
-                    startTime = start;
-                    first = false;
-                }
-
-                var newParagraph = false;
-                if (currentText.Length > 0 && (start - endTime > 0.5 || currentText.Length + text.Length > 80))
-                {
-                    newParagraph = true;
-                }
-
-                if (newParagraph)
-                {
-                    subtitle.Paragraphs.Add(new Paragraph(currentText.ToString().Trim(), startTime * 1000.0, endTime * 1000.0));
-                    currentText.Clear();
-                    startTime = start;
-                }
-
-                if (currentText.Length > 0)
-                {
-                    currentText.Append(' ');
-                }
-
-                currentText.Append(text);
-                endTime = end;
+                words.Add(new Qwen3AsrWord(
+                    word.GetProperty("word").GetString() ?? string.Empty,
+                    word.GetProperty("start").GetDouble(),
+                    word.GetProperty("end").GetDouble()));
             }
 
-            if (currentText.Length > 0)
-            {
-                subtitle.Paragraphs.Add(new Paragraph(currentText.ToString().Trim(), startTime * 1000.0, endTime * 1000.0));
-            }
+            // Sentence-aware cue building (issue #14631): the old loop split only on a 0.5 s
+            // gap or 80 chars and joined every token with a space, which turned Chinese
+            // output into one space-riddled blob cut mid-sentence.
+            var subtitle = Qwen3AsrWordSegmenter.BuildSubtitle(
+                words,
+                Configuration.Settings.General.SubtitleLineMaximumLength * 2,
+                Qwen3AsrWordSegmenter.DefaultMaxCharsCjk);
 
             FixNegativeDuration(subtitle);
             var postProcessedSubtitle = PostProcess(subtitle);
@@ -1446,7 +1441,8 @@ public partial class SpeechToTextViewModel : ObservableObject
             });
 
             var audioSizeBytes = new FileInfo(audioFileName).Length;
-            if (audioSizeBytes > engine.UploadThresholdBytes && _videoInfo.TotalSeconds > 0)
+            var exceedsDurationCap = engine.MaxChunkSeconds > 0 && _videoInfo.TotalSeconds > engine.MaxChunkSeconds;
+            if ((audioSizeBytes > engine.UploadThresholdBytes || exceedsDurationCap) && _videoInfo.TotalSeconds > 0)
             {
                 LogToConsole($"Audio file is {audioSizeBytes / (1024 * 1024)} MB — splitting into chunks to stay under the upload cap");
                 await TranscribeInChunksAsync(service, engine, audioFileName, language, subtitle, segmentProgress, cancellationToken);
@@ -1744,6 +1740,10 @@ public partial class SpeechToTextViewModel : ObservableObject
         var totalSeconds = _videoInfo.TotalSeconds;
         var fileSize = new FileInfo(audioFileName).Length;
         var chunkCount = OpenAiSttChunker.ComputeChunkCount(fileSize, engine.ChunkSizeBytes);
+        if (engine.MaxChunkSeconds > 0)
+        {
+            chunkCount = Math.Max(chunkCount, (int)Math.Ceiling(totalSeconds / engine.MaxChunkSeconds));
+        }
 
         var ffmpegPath = Se.Settings.General.FfmpegPath;
         if (!File.Exists(ffmpegPath))
@@ -2070,16 +2070,6 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     private Subtitle PostProcess(Subtitle transcript)
     {
-        if (GetEffectiveSelectedEngine() is ICrispAsrEngine &&
-            SelectedModel is SpeechToTextModelDisplay { Model.Name: { } modelName } &&
-            CrispAsrParakeet.IsPureCtcModel(modelName))
-        {
-            // The Vietnamese Parakeet CTC tokenizer has a space-prefixed "▁," / "▁." piece that the
-            // model prefers over the bare one, so its transcripts read "gần xe , và ... dàng ." -
-            // a training-text habit, not a decode bug, and not optional post-processing either.
-            transcript = SpeechToTextPostProcessor.RemoveSpaceBeforePunctuation(transcript);
-        }
-
         var languageCode = SelectedLanguage?.Code;
         if (string.IsNullOrWhiteSpace(languageCode))
         {
@@ -2166,6 +2156,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         {
             OpenRouterSttEngine => Se.Settings.Tools.OpenRouterSttLanguage,
             DashScopeQwen3SttEngine => Se.Settings.Tools.DashScopeSttLanguage,
+            GoogleCloudSttEngine => Se.Settings.Tools.GoogleCloudSttLanguage,
             OpenAiCompatibleSttEngine => Se.Settings.Tools.OpenAiCompatibleSttLanguage,
             _ => null,
         };
@@ -2186,6 +2177,16 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// "en" — so a full name is mapped back to its whisper language code. The
     /// first non-empty value wins; later chunks don't overwrite it.
     /// </summary>
+    [RelayCommand]
+    private async Task BrowseGoogleCloudSttKeyFile()
+    {
+        var fileName = await _fileHelper.PickOpenFile(Window!, Se.Language.General.KeyFile, "json files", "*.json");
+        if (!string.IsNullOrEmpty(fileName))
+        {
+            GoogleCloudSttKeyFile = fileName;
+        }
+    }
+
     private void RememberDetectedLanguage(OpenAiCompatibleSttResponse response)
     {
         if (!string.IsNullOrEmpty(_onlineDetectedLanguage) || string.IsNullOrWhiteSpace(response.Language))
@@ -4188,20 +4189,13 @@ public partial class SpeechToTextViewModel : ObservableObject
             // VAD - only the latter is worth re-running without it (#13911).
             _crispAsrVadWasUsed = vadPart.Length > 0;
 
-            // Both are per model, not per backend: Parakeet's pure-CTC models run on a different
-            // crispasr backend than its transducer models and need crispasr's punctuation
-            // restoration kept off (see CrispAsrParakeet.GetBackendName / GetModelArguments).
-            var backendName = crispAsrEngine.GetBackendName(model);
-            var modelArgs = crispAsrEngine.GetModelArguments(model, crispArgs);
-            var modelArgsPart = modelArgs.Length > 0 ? $" {modelArgs}" : string.Empty;
-
             // --print-progress: crispasr streams "crispasr: progress = NN% (i/n slices)" lines
             // in real time (parsed in OutputHandler), while the transcript segments only print
             // once the whole file is done - without this the progress bar sat idle for the
             // entire run and jumped straight to 100%.
             var crispParams = string.IsNullOrWhiteSpace(crispArgs)
-                ? $"--backend {backendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart}{modelArgsPart} -f \"{waveFileName}\" --output-srt --print-progress"
-                : $"--backend {backendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart}{modelArgsPart} -f \"{waveFileName}\" --output-srt --print-progress {crispArgs}";
+                ? $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart} -f \"{waveFileName}\" --output-srt --print-progress"
+                : $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart} -f \"{waveFileName}\" --output-srt --print-progress {crispArgs}";
 
             Se.WriteToolsLog($"{exe} {crispParams}");
 
@@ -4487,7 +4481,13 @@ public partial class SpeechToTextViewModel : ObservableObject
                 ? OpenAiCompatibleSttAudioFormat
                 : effectiveEngine is OpenRouterSttEngine && OpenRouterSttService.RequiresWavAudio(OpenRouterSttModel)
                     ? "wav"
-                    : "mp3")
+                    // Google Cloud uploads to a Cloud Storage bucket rather than through a
+                    // request body, so OpenAI's 25 MB limit (the reason the other online
+                    // engines compress to ~32 kbit/s) does not apply. Send it lossless: an
+                    // 18 minute chunk is about 20 MB as flac, which is nothing for a bucket.
+                    : effectiveEngine is GoogleCloudSttEngine
+                        ? "flac"
+                        : "mp3")
             : "wav";
         var extension = OpenAiSttService.GetFileExtensionForFormat(sttAudioFormat);
         // Place the extracted audio in a dedicated per-run subfolder. Engines like
@@ -4582,6 +4582,20 @@ public partial class SpeechToTextViewModel : ObservableObject
                 // "[hh:mm:ss.mmm --> hh:mm:ss.mmm]  text"
                 AddResultTextFromLine(line, startIndex: 1, timeLength: 12, endIndex: 18, textIndex: 31, language.Code);
             }
+            else if (TryParseWhisperXTranscriptEndSeconds(line, out var whisperXEndSeconds))
+            {
+                // WhisperX streams no percentage unless --print_progress is set, and even then it
+                // restarts at 0% for the alignment pass, so the chunk end time is the usable live
+                // signal: it drives the progress bar and the time estimate the same way the
+                // "[mm:ss.mmm --> mm:ss.mmm]" segment lines of the other engines do. The chunks
+                // are not added to the result list - the SRT WhisperX writes has the aligned,
+                // sentence-split segments, and these ~30 s VAD chunks would only get in the way
+                // of that.
+                if (_showProgressPct < 0 && whisperXEndSeconds > _endSeconds)
+                {
+                    _endSeconds = whisperXEndSeconds;
+                }
+            }
             else if (line.StartsWith("whisper_full: progress =", StringComparison.OrdinalIgnoreCase))
             {
                 var arr = line.Split('=');
@@ -4657,6 +4671,17 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
 
         _resultList.Add(rt);
+    }
+
+    /// <summary>
+    /// Reads the chunk end time from a WhisperX "Transcript: [start --> end]  text" line.
+    /// </summary>
+    internal static bool TryParseWhisperXTranscriptEndSeconds(string line, out double endSeconds)
+    {
+        endSeconds = 0;
+        var match = WhisperXTranscriptRegex.Match(line);
+        return match.Success &&
+               double.TryParse(match.Groups[2].Value, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out endSeconds);
     }
 
     private void LogToConsole(string s, bool skipOutputText = false)
@@ -4794,6 +4819,13 @@ public partial class SpeechToTextViewModel : ObservableObject
         return normalized switch
         {
             "mp3" => "-i \"{0}\" -vn -ar 16000 " + channelArgs + " -c:a libmp3lame -b:a 32k -f mp3 {2} \"{1}\"",
+            // Lossless, and about 40% smaller than the equivalent wav. For engines that
+            // upload to their own storage rather than through a request body there is no
+            // upload cap to design around, so there is nothing to buy by compressing.
+            // "-sample_fmt s16" is not optional: without it ffmpeg encodes 24-bit flac from
+            // an AAC source, which is 78% larger than the 16-bit file and larger than the
+            // raw PCM it replaces (measured on ffmpeg 8.1 and 9.0.1).
+            "flac" => "-i \"{0}\" -vn -ar 16000 " + channelArgs + " -c:a flac -sample_fmt s16 -compression_level 8 -f flac {2} \"{1}\"",
             "m4a" => "-i \"{0}\" -vn -ar 16000 " + channelArgs + " -c:a aac -b:a 32k -f ipod {2} \"{1}\"",
             "webm" => "-i \"{0}\" -vn -ar 16000 " + channelArgs + " -c:a libopus -b:a 28k -f webm {2} \"{1}\"",
             // pcm_s16le is already ffmpeg's default for wav, but spell it out: SE's own peak reader
@@ -4925,6 +4957,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         IsOpenAiCompatibleSttVisible = engine is OpenAiCompatibleSttEngine;
         IsOpenRouterSttVisible = engine is OpenRouterSttEngine;
         IsDashScopeSttVisible = engine is DashScopeQwen3SttEngine;
+        IsGoogleCloudSttVisible = engine is GoogleCloudSttEngine;
         IsAdvancedSettingsVisible = !isOnlineSttEngine;
 
         IsTranslateVisible = IsTranslateAvailable(engine);

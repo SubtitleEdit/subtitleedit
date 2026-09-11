@@ -76,11 +76,13 @@ public class InitWaveform
                 // built later must come up on the same side of it as the video preview, or the
                 // two previews show different texts (see SetOriginalTextInPreview).
                 ShowOriginalText = vm.ShowOriginalTextInPreview,
+                ShowOriginalSubtitleOverlay = settings.ShowOriginalSubtitle,
             };
 
             vm.AudioVisualizer.GetIsVideoPlaying = () => vm.GetVideoPlayerControl()?.IsPlaying == true;
             vm.AudioVisualizer.OnNewSelectionInsert += vm.AudioVisualizerOnNewSelectionInsert;
             vm.AudioVisualizer.OnVideoPositionChanged += vm.AudioVisualizerOnVideoPositionChanged;
+            vm.AudioVisualizer.OnDragEnded += vm.AudioVisualizerOnDragEnded;
             vm.AudioVisualizer.OnToggleSelection += vm.AudioVisualizerOnToggleSelection;
             //vm.AudioVisualizer.OnParagraphDoubleTapped += vm.OnWaveformDoubleTapped;
             vm.AudioVisualizer.OnPrimarySingleClicked += vm.AudioVisualizerOnPrimarySingleClicked;
@@ -315,6 +317,20 @@ public class InitWaveform
             };
             flyout.Items.Add(menuItemSpeechToTextSelectedLines);
             vm.MenuItemAudioVisualizerSpeechToTextSelectedLines = menuItemSpeechToTextSelectedLines;
+
+            var showOriginalSubtitleMenuItem = new MenuItem
+            {
+                Header = Se.Language.Waveform.ShowOriginalSubtitle,
+                ToggleType = MenuItemToggleType.CheckBox,
+                IsChecked = settings.ShowOriginalSubtitle,
+            }.BindIsVisible(vm, nameof(vm.ShowColumnOriginalText));
+            showOriginalSubtitleMenuItem.Click += (_, _) =>
+            {
+                settings.ShowOriginalSubtitle = showOriginalSubtitleMenuItem.IsChecked;
+                vm.AudioVisualizer.ShowOriginalSubtitleOverlay = showOriginalSubtitleMenuItem.IsChecked;
+                vm.UpdateWaveformOriginalSubtitleCues(vm.AudioVisualizer);
+            };
+            flyout.Items.Add(showOriginalSubtitleMenuItem);
 
             var separatorDisplayMode = new Separator();
             separatorDisplayMode.DataContext = vm;

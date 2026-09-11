@@ -13,6 +13,13 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             public static string AddPeriods { get; set; } = "Add missing period at end of line";
         }
 
+        // Split(WordSplitChars)[0] materialized every word of the next paragraph to read one.
+        private static string FirstWord(string text)
+        {
+            var end = text.IndexOfAny(WordSplitChars);
+            return end < 0 ? text : text.Substring(0, end);
+        }
+
         private static readonly char[] WordSplitChars = { ' ', '.', ',', '-', '?', '!', ':', ';', '"', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n' };
 
         private static bool IsOneLineUrl(string s)
@@ -97,7 +104,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             if (callbacks.AllowFix(p, fixAction))
                             {
                                 string oldText = p.Text;
-                                if (callbacks.IsName(next.Text.Split(WordSplitChars)[0]))
+                                if (callbacks.IsName(FirstWord(next.Text)))
                                 {
                                     if (next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > 2000)
                                     {

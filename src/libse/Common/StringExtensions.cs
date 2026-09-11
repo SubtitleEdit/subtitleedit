@@ -86,6 +86,25 @@ namespace Nikse.SubtitleEdit.Core.Common
             return false;
         }
 
+        /// <summary>
+        /// "Does the text at <paramref name="index"/> start with <paramref name="value"/>" without
+        /// allocating the remainder - the <c>s.Substring(index).StartsWith(value)</c> the tag-walking
+        /// writer loops used copied the whole rest of the line for every probe of every character.
+        /// </summary>
+        public static bool StartsWithAt(this string s, int index, string value, StringComparison comparison)
+        {
+            return s.AsSpan(index).StartsWith(value.AsSpan(), comparison);
+        }
+
+        /// <summary>
+        /// "Does the text before <paramref name="endExclusive"/> end with <paramref name="value"/>"
+        /// without allocating the prefix (<c>s.Substring(0, end).EndsWith(value)</c>).
+        /// </summary>
+        public static bool EndsWithAt(this string s, int endExclusive, string value, StringComparison comparison)
+        {
+            return s.AsSpan(0, endExclusive).EndsWith(value.AsSpan(), comparison);
+        }
+
         public static bool StartsWith(this string s, char c)
         {
             return s.Length > 0 && s[0] == c;

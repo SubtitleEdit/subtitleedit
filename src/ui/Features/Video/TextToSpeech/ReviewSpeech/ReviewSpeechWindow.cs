@@ -151,7 +151,7 @@ public class ReviewSpeechWindow : Window
                 buttonHistory.Bind(Button.OpacityProperty, new Binding(nameof(ReviewRow.HistoryButtonOpacity)));
 
                 var buttonPlay = UiUtil.MakeButton(vm.PlayRowCommand,"fa-solid fa-play")
-                .WithBindIsVisible(nameof(item.IsPlaying), new InverseBooleanConverter())
+                .WithBindIsVisible(nameof(item.IsPlaying), InverseBooleanConverter.Instance)
                 .WithBindEnabled(nameof(item.IsPlayingEnabled));
                 buttonPlay.CommandParameter = item;
 

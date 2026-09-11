@@ -312,6 +312,29 @@ public partial class VoiceSettingsViewModel : ObservableObject
                 ? higgsEngine.ImportVoice(fileName, (result.Text ?? string.Empty).Trim())
                 : higgsEngine.ImportVoice(fileName);
         }
+        else if (_engine is FireRedTts3AudioCpp fireRedEngine)
+        {
+            // FireRedTTS3 clones zero-shot from audio alone; a transcription (reference_text) is
+            // optional but improves quality, so prompt like VoxCPM2 while allowing an empty
+            // answer.
+            var transcript = TryReadSiblingTranscript(fileName) ?? string.Empty;
+            var audioFileName = fileName;
+            var result = await _windowService.ShowDialogAsync<PromptTextBoxWindow, PromptTextBoxViewModel>(Window!, vm =>
+            {
+                vm.Initialize(
+                    Se.Language.Video.TextToSpeech.VoiceCloneTranscriptTitle,
+                    transcript,
+                    500,
+                    150);
+                vm.ConfigureExtraButton(
+                    Se.Language.Video.TextToSpeech.UseSpeechToTextDotDotDot,
+                    () => RunSpeechToTextAsync(audioFileName));
+            });
+
+            ok = result.OkPressed
+                ? fireRedEngine.ImportVoice(fileName, (result.Text ?? string.Empty).Trim())
+                : fireRedEngine.ImportVoice(fileName);
+        }
         else if (_engine is MossTtsCrispAsr mossEngine)
         {
             // MOSS-TTS clones zero-shot from audio alone; a transcription (ref-text) is optional

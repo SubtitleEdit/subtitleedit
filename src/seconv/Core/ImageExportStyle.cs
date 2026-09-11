@@ -63,6 +63,19 @@ internal sealed class ImageExportStyle
     /// <summary>Horizontal screen-edge margin in pixels. Null = 5% of screen width.</summary>
     public int? LeftRightMargin { get; set; }
 
+    /// <summary>
+    /// Image → image only (DVB-sub, PGS, VobSub pass-through): discard the source bitmap's
+    /// horizontal position and place it from <see cref="Alignment"/> + <see cref="LeftRightMargin"/>.
+    /// Matches SE4's "override original X position" transport-stream setting.
+    /// </summary>
+    public bool OverridePositionX { get; set; }
+
+    /// <summary>
+    /// Image → image only: discard the source bitmap's vertical position and place it from
+    /// <see cref="Alignment"/> + <see cref="BottomTopMargin"/>. Matches SE4's "override original Y position".
+    /// </summary>
+    public bool OverridePositionY { get; set; }
+
     public ExportBoxType EffectiveBoxType =>
         BoxType ?? (BackgroundColor.Alpha > 0 ? ExportBoxType.OneBox : ExportBoxType.None);
 

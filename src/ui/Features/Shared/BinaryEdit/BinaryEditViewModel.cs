@@ -1267,7 +1267,10 @@ public partial class BinaryEditViewModel : ObservableObject
 
     private void WriteExport(IExportHandler exportHandler, string fileOrFolderName)
     {
-        var imageParameter = new ImageParameter()
+        // One parameter object per line, like every other export caller: the Blu-ray sup
+        // handler holds a line back while the next may still overlap it, so a shared object
+        // mutated per line lost the first line and wrote the last twice (issue #14666).
+        ImageParameter MakeImageParameter() => new()
         {
             ScreenWidth = ScreenWidth,
             ScreenHeight = ScreenHeight,
@@ -1283,12 +1286,13 @@ public partial class BinaryEditViewModel : ObservableObject
             FramesPerSecond = Configuration.Settings.General.CurrentFrameRate,
         };
 
-        exportHandler.WriteHeader(fileOrFolderName, imageParameter);
+        exportHandler.WriteHeader(fileOrFolderName, MakeImageParameter());
         for (var i = 0; i < Subtitles.Count; i++)
         {
             // ToSkBitmap allocates a new SKBitmap each call; dispose it per iteration so the
             // export of a large file doesn't accumulate one undisposed native bitmap per line.
             using var skBitmap = Subtitles[i].Bitmap!.ToSkBitmap();
+            var imageParameter = MakeImageParameter();
             imageParameter.Bitmap = skBitmap;
             imageParameter.Text = Subtitles[i].Text;
             imageParameter.StartTime = Subtitles[i].StartTime;
@@ -1589,6 +1593,50 @@ public partial class BinaryEditViewModel : ObservableObject
         }
 
         UpdateOverlayPosition();
+    }
+
+    [RelayCommand]
+    private async Task ChangeResolution()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        if (Subtitles.Count == 0)
+        {
+            await MessageBox.Show(Window, Se.Language.General.Information,
+                Se.Language.Tools.ImageBasedEdit.NoImageSubtitlesLoaded,
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        var items = Subtitles.ToList();
+        var fromWidth = ScreenWidth;
+        var fromHeight = ScreenHeight;
+        using var result = await _windowService.ShowDialogAsync<BinaryChangeResolution.BinaryChangeResolutionWindow, BinaryChangeResolution.BinaryChangeResolutionViewModel>(
+            Window, vm => vm.Initialize(items, fromWidth, fromHeight));
+
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        // The dialog scaled bitmaps and positions; the canvas size is ours (the setters push
+        // it to every item and refresh the overlay and position monitor).
+        ScreenWidth = result.NewWidth;
+        ScreenHeight = result.NewHeight;
+
+        if (SubtitleGrid != null)
+        {
+            var currentIndex = SubtitleGrid.SelectedIndex;
+            SubtitleGrid.ItemsSource = null;
+            SubtitleGrid.ItemsSource = Subtitles;
+            SubtitleGrid.SelectedIndex = currentIndex;
+        }
+
+        UpdateOverlayPosition();
+        RefreshStatusText();
     }
 
     [RelayCommand]
@@ -2847,11 +2895,9 @@ public partial class BinaryEditViewModel : ObservableObject
         // so closing without ever opening a video forgot the window placement.
         UiUtil.SaveWindowPosition(Window);
 
-        if (VideoPlayerControl == null)
-            return;
-        if (string.IsNullOrWhiteSpace(VideoPlayerControl.VideoPlayer.FileName))
-            return;
-        VideoPlayerControl.VideoPlayer.CloseFile();
+        // Dispose the player core even when no video was ever opened - MakeVideoPlayer already
+        // created the mpv core and the position pump, and only CloseAndDisposePlayer frees them.
+        VideoPlayerControl?.CloseAndDisposePlayer();
     }
 
     public void Loaded()

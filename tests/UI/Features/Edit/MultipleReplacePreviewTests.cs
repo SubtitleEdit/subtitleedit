@@ -36,6 +36,7 @@ public class MultipleReplacePreviewTests
     private static MultipleReplaceViewModel NewViewModel()
     {
         var vm = new MultipleReplaceViewModel(new WindowService(new NullServiceProvider()), new FileHelper());
+        vm.PreviewIntervalMs = 25; // the tests wait for the preview timer; see PreviewIntervalMs
         vm.Nodes.Clear();
         return vm;
     }
@@ -88,7 +89,7 @@ public class MultipleReplacePreviewTests
 
     // Unconditional wait - used where the preview must be given the chance to pick up a state it
     // is expected to reject, so waiting for a fix count would return before the timer ever ticked.
-    private static void Settle(int ms = 800)
+    private static void Settle(int ms = 200) // eight 25 ms preview intervals
     {
         var end = Environment.TickCount64 + ms;
         while (Environment.TickCount64 < end)
@@ -425,6 +426,7 @@ public class MultipleReplaceCategoryActiveTests
     {
         SeedSettings();
         var vm = new MultipleReplaceViewModel(new WindowService(new NullServiceProvider()), new FileHelper());
+        vm.PreviewIntervalMs = 25; // the tests wait for the preview timer; see PreviewIntervalMs
         vm.Initialize(MakeSubtitle());
         var window = new MultipleReplaceWindow(vm);
         try
@@ -469,6 +471,7 @@ public class MultipleReplaceCategoryActiveTests
         try
         {
             var vm = new MultipleReplaceViewModel(new WindowService(new NullServiceProvider()), new FileHelper());
+        vm.PreviewIntervalMs = 25; // the tests wait for the preview timer; see PreviewIntervalMs
             var window = new MultipleReplaceWindow(vm);
             window.Show();
             Dispatcher.UIThread.RunJobs();
@@ -480,6 +483,7 @@ public class MultipleReplaceCategoryActiveTests
             Assert.False(Se.Settings.Edit.MultipleReplace.Categories.First(c => c.Name == "English").IsActive);
 
             var reopened = new MultipleReplaceViewModel(new WindowService(new NullServiceProvider()), new FileHelper());
+        reopened.PreviewIntervalMs = 25; // the tests wait for the preview timer; see PreviewIntervalMs
             Assert.False(reopened.Nodes.First(n => n.CategoryName == "English").IsActive);
             Assert.True(reopened.Nodes.First(n => n.CategoryName == "Dutch").IsActive);
         }

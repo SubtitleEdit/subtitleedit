@@ -1034,6 +1034,75 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             });
         }
 
+        /// <summary>
+        /// Seeks a freshly opened player back to <paramref name="seconds"/> and keeps at it until
+        /// it reports it is actually there, then ends the restore announced by
+        /// <see cref="BeginPositionRestore"/>.
+        /// <para>
+        /// Every rebuild path (layout rebuild, dock/undock, fullscreen) used to do this by hand,
+        /// by assigning <see cref="Position"/> ten times over 100 ms. Both halves of that were
+        /// wrong. The property reaches the player only through the bound position slider, whose
+        /// Maximum is this control's <see cref="Duration"/> - published from the position tick,
+        /// not by <see cref="WaitForPlayersReadyAsync"/>, which waits on the core's duration - so
+        /// a write landing in that gap is clamped and seeks the video to the start instead. And
+        /// once the duration is published the repeats stop happening at all: the property already
+        /// holds the value, so the styled-property layer drops the rest and they never reach the
+        /// slider - a 100 ms budget that is really one seek. mpv swallows seeks while it is still
+        /// loading, which a 43 minute file does for far longer than that, and nothing re-seeked
+        /// afterwards: the video stayed at 0:00 after Options/OK, and the waveform, which follows
+        /// the play-head, sat on the first line of the file (issue #14741).
+        /// </para>
+        /// <para>
+        /// Uses <see cref="SeekTo"/>, which writes the player directly and so is immune to both,
+        /// and gives up only after <paramref name="timeoutMs"/> - keeping the pending target when
+        /// it does, so a rebuild is still handed where the video should be rather than the 0 of a
+        /// player that never got there (issue #14218).
+        /// </para>
+        /// </summary>
+        internal async Task RestorePositionAsync(double seconds, int timeoutMs = 5000)
+        {
+            if (seconds <= 0)
+            {
+                EndPositionRestore();
+                return;
+            }
+
+            var end = Environment.TickCount64 + timeoutMs;
+            var delayMs = 10;
+            while (true)
+            {
+                if (IsDisposed)
+                {
+                    return;
+                }
+
+                SeekTo(seconds);
+                await Task.Delay(delayMs);
+
+                // A control torn down while this was awaiting has nothing left to seek, and its
+                // player throws rather than reporting a position (issue #13083).
+                if (IsDisposed)
+                {
+                    return;
+                }
+
+                if (Math.Abs(_videoPlayerInstance.Position - seconds) < PositionRestoreArrivedToleranceSeconds)
+                {
+                    EndPositionRestore();
+                    return;
+                }
+
+                if (Environment.TickCount64 >= end)
+                {
+                    return;
+                }
+
+                // Back off: the first few tries cover a player that is merely settling, the
+                // slower ones a file still loading, without polling it flat out for seconds.
+                delayMs = Math.Min(delayMs * 2, 200);
+            }
+        }
+
         internal async Task WaitForPlayersReadyAsync(int timeoutMs = 2500)
         {
             var end = DateTime.UtcNow.AddMilliseconds(timeoutMs);

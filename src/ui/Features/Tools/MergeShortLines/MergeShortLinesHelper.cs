@@ -23,13 +23,19 @@ public class MergeShortLinesResult
 
 public static class MergeShortLinesHelper
 {
+    /// <param name="excludedLineIds">
+    /// Lines the user has unticked: such a line is not merged into the line before it and
+    /// starts a group of its own instead. A refused merge is still reported as an unticked
+    /// fix so it stays in the list and can be ticked again.
+    /// </param>
     public static MergeShortLinesResult Merge(
         List<SubtitleLineViewModel> subtitles,
         List<double> shotChanges,
         int singleLineMaxLength,
         int maxNumberOfLines,
         int gapThresholdMs,
-        int unbreakLinesShorterThan)
+        int unbreakLinesShorterThan,
+        ISet<Guid>? excludedLineIds = null)
     {
         var fixes = new List<MergeShortLinesItem>();
         var mergeCount = 0;
@@ -87,6 +93,21 @@ public static class MergeShortLinesHelper
                     break;
                 }
 
+                var fixText = string.Format(Se.Language.Tools.MergeShortLines.MergedLineInfo, j + 1, index + 1, wrapped.Replace(Environment.NewLine, " ⏎ "));
+
+                if (excludedLineIds != null && excludedLineIds.Contains(next.Id))
+                {
+                    // Unticked by the user: keep the candidate visible, but leave `next` alone
+                    // so it heads the next group.
+                    var refused = new SubtitleLineViewModel(current) { Text = wrapped, EndTime = next.EndTime };
+                    refused.UpdateDuration();
+                    fixes.Add(new MergeShortLinesItem(Se.Language.Tools.MergeShortLines.Title, index + 1, fixText, refused, next.Id)
+                    {
+                        Apply = false,
+                    });
+                    break;
+                }
+
                 // Merge
                 current.Text = wrapped;
                 current.EndTime = next.EndTime;
@@ -94,12 +115,7 @@ public static class MergeShortLinesHelper
                 mergeCount++;
 
                 // fix item for this merge step
-                var fix = new MergeShortLinesItem(
-                    Se.Language.Tools.MergeShortLines.Title,
-                    index + 1,
-                    string.Format(Se.Language.Tools.MergeShortLines.MergedLineInfo, j + 1, index + 1, current.Text.Replace(Environment.NewLine, " ⏎ ")),
-                    new SubtitleLineViewModel(current));
-                fixes.Add(fix);
+                fixes.Add(new MergeShortLinesItem(Se.Language.Tools.MergeShortLines.Title, index + 1, fixText, new SubtitleLineViewModel(current), next.Id));
 
                 j++;
             }
@@ -112,13 +128,15 @@ public static class MergeShortLinesHelper
         return new MergeShortLinesResult(result, fixes, mergeCount);
     }
 
+    /// <param name="excludedLineIds">See <see cref="Merge"/>.</param>
     public static MergeShortLinesResult MergeWithHighlights(
         List<SubtitleLineViewModel> subtitles,
         List<double> shotChanges,
         int singleLineMaxLength,
         int maxNumberOfLines,
         int gapThresholdMs,
-        int unbreakLinesShorterThan)
+        int unbreakLinesShorterThan,
+        ISet<Guid>? excludedLineIds = null)
     {
         var fixes = new List<MergeShortLinesItem>();
         var mergeCount = 0;
@@ -133,6 +151,7 @@ public static class MergeShortLinesHelper
             // Collect all lines that can be merged together
             var mergeGroup = new List<SubtitleLineViewModel> { new SubtitleLineViewModel(baseVm) };
             var combinedText = (baseVm.Text ?? string.Empty).TrimEnd();
+            SubtitleLineViewModel? refused = null;
 
             var j = index + 1;
             while (j < subtitles.Count)
@@ -177,6 +196,12 @@ public static class MergeShortLinesHelper
                 var anyLineTooLong = lines.Any(line => HtmlUtil.RemoveHtmlTags(line, true).Length > singleLineMaxLength);
                 if (anyLineTooLong)
                 {
+                    break;
+                }
+
+                if (excludedLineIds != null && excludedLineIds.Contains(next.Id))
+                {
+                    refused = next;
                     break;
                 }
 
@@ -225,17 +250,36 @@ public static class MergeShortLinesHelper
 
                     result.Add(highlightedVm);
 
+                    // The first line of a group is merged into by the others, not merged
+                    // itself, so its row carries no checkbox.
                     fixes.Add(new MergeShortLinesItem(
                         Se.Language.Tools.MergeShortLines.Title,
                         index + k + 1,
                         $"Line {index + k + 1} - {highlightedVm.Text.Replace(Environment.NewLine, " ⏎ ")}",
-                        highlightedVm));
+                        highlightedVm,
+                        originalVm.Id,
+                        canToggle: k > 0));
                 }
             }
             else
             {
                 // No merge, just add the original line
                 result.Add(mergeGroup[0]);
+            }
+
+            if (refused != null)
+            {
+                // Unticked by the user: keep the candidate visible, but leave the line alone so
+                // it heads the next group.
+                fixes.Add(new MergeShortLinesItem(
+                    Se.Language.Tools.MergeShortLines.Title,
+                    j + 1,
+                    $"Line {j + 1} - {(refused.Text ?? string.Empty).Replace(Environment.NewLine, " ⏎ ")}",
+                    new SubtitleLineViewModel(refused),
+                    refused.Id)
+                {
+                    Apply = false,
+                });
             }
 
             // Skip the lines we processed

@@ -8,6 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.Config;
 public class SeWaveform
 {
     public bool ShowToolbar { get; set; }
+    public bool ShowOriginalSubtitle { get; set; }
     public bool CenterVideoPosition { get; set; }
 
     // SE 4 parity for the "Center" toggle: keep the play-head centered (and keep
@@ -113,6 +114,7 @@ public class SeWaveform
     public SeWaveform()
     {
         ShowToolbar = true;
+        ShowOriginalSubtitle = false;
         DrawGridLines = false;
         FocusTextBoxAfterInsertNew = true;
         SpectrogramCombinedWaveformHeight = 50;

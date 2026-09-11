@@ -2372,39 +2372,34 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
-        var selectedIndices = new List<int>();
-        foreach (var selectedItem in selectedItems)
+        var itemsToRemove = selectedItems
+            .OfType<OcrSubtitleItem>()
+            .Where(item => OcrSubtitleItems.Contains(item))
+            .ToList();
+        if (itemsToRemove.Count == 0)
         {
-            if (selectedItem is OcrSubtitleItem item)
-            {
-                var idx = OcrSubtitleItems.IndexOf(item);
-                if (idx >= 0)
-                {
-                    selectedIndices.Add(idx);
-
-                    var remov = UnknownWords.Where(uw => uw.Item == item).ToList();
-                    foreach (var unknownWord in remov)
-                    {
-                        UnknownWords.Remove(unknownWord);
-                    }
-                }
-            }
+            return;
         }
 
-        var itemsToRemove = selectedIndices
-            .Select(idx => OcrSubtitleItems[idx])
-            .ToList();
+        // Removing the focused row's container drops keyboard focus to null synchronously,
+        // so decide whether the grid should get it back before anything is removed.
+        var gridHadFocus = IsSubtitleGridFocusedOrFocusDropped();
+        var survivor = PickRowToSelectAfterRemoval(itemsToRemove);
+
+        // Hand the selection to the survivor before the rows go (#14708). Removing the selected
+        // rows first emptied the selection, which the TwoWay SelectedItem binding wrote back as
+        // null - the row highlight vanished and the grid scrolled to wherever its own fallback
+        // landed. With the survivor already the single selected row, the selection never empties.
+        if (survivor != null)
+        {
+            SubtitleGrid.SelectedItem = survivor;
+        }
 
         foreach (var item in itemsToRemove)
         {
             OcrSubtitleItems.Remove(item);
             _allOcrSubtitleItems.Remove(item);
         }
-
-        //foreach (var index in selectedIndices.OrderByDescending(p => p))
-        //{
-        //    _ocrSubtitle?.Delete(index);
-        //}
 
         Renumber();
 
@@ -2421,6 +2416,81 @@ public partial class OcrViewModel : ObservableObject
         {
             UnknownWords.Remove(item);
         }
+
+        if (survivor != null)
+        {
+            SelectedOcrSubtitleItem = survivor;
+            SubtitleGrid.SelectedItem = survivor;
+            SelectAndScrollToRow(OcrSubtitleItems.IndexOf(survivor));
+        }
+        else
+        {
+            SelectedOcrSubtitleItem = null;
+            SubtitleGrid.SelectedItem = null;
+        }
+
+        if (gridHadFocus)
+        {
+            Dispatcher.UIThread.Post(() => TableViewExtras.FocusRow(SubtitleGrid), DispatcherPriority.Background);
+        }
+    }
+
+    /// <summary>
+    /// The row that becomes current once <paramref name="rowsToRemove"/> are gone: the first
+    /// surviving row below the first removed one (the line that visually takes its place),
+    /// else the last surviving row above it. Null when nothing is left to select.
+    /// </summary>
+    private OcrSubtitleItem? PickRowToSelectAfterRemoval(IReadOnlyCollection<OcrSubtitleItem> rowsToRemove)
+    {
+        var removeSet = new HashSet<OcrSubtitleItem>(rowsToRemove);
+
+        var firstIndex = -1;
+        for (var i = 0; i < OcrSubtitleItems.Count; i++)
+        {
+            if (removeSet.Contains(OcrSubtitleItems[i]))
+            {
+                firstIndex = i;
+                break;
+            }
+        }
+
+        if (firstIndex < 0)
+        {
+            return null;
+        }
+
+        for (var i = firstIndex + 1; i < OcrSubtitleItems.Count; i++)
+        {
+            if (!removeSet.Contains(OcrSubtitleItems[i]))
+            {
+                return OcrSubtitleItems[i];
+            }
+        }
+
+        for (var i = firstIndex - 1; i >= 0; i--)
+        {
+            if (!removeSet.Contains(OcrSubtitleItems[i]))
+            {
+                return OcrSubtitleItems[i];
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// True when keyboard focus is on the subtitle grid (or one of its rows), or on nothing
+    /// in particular (the window root), which is where focus lands after a row removal.
+    /// </summary>
+    private bool IsSubtitleGridFocusedOrFocusDropped()
+    {
+        var focused = Window?.FocusManager?.GetFocusedElement();
+        if (focused == null || ReferenceEquals(focused, Window))
+        {
+            return true;
+        }
+
+        return SubtitleGrid.IsFocused || SubtitleGrid.IsKeyboardFocusWithin;
     }
 
     private void Renumber()
@@ -4139,6 +4209,8 @@ public partial class OcrViewModel : ObservableObject
                         return;
                     }
 
+                    text = await RetryTesseractIfNeededAsync(tesseractOcr, bitmap, i, text, language, tessDataFolder, engineMode, cancellationToken);
+
                     processedCount++;
                     if (!string.IsNullOrWhiteSpace(text))
                     {
@@ -4185,6 +4257,104 @@ public partial class OcrViewModel : ObservableObject
                 PauseOcr();
             }
         });
+    }
+
+    /// <summary>
+    /// SE4's Tesseract retry (VobSubOcr.TesseractResizeAndRetry): when the first pass is blank or
+    /// leaves unknown words, run again on the image stretched 3x/2x with automatic layout, and if
+    /// that is still blank on 4x/2x as a single line. The retry is kept only when the dictionary
+    /// rates it better and it does not invent a digit (discussion #12929: "Yeanh" → "Yeah",
+    /// "houir" → "hour", a blank "I..." line recovered; "18 months" must not become "718 months").
+    /// </summary>
+    private async Task<string> RetryTesseractIfNeededAsync(TesseractOcr tesseractOcr, SKBitmap bitmap, int index, string text, string language, string tessDataFolder, int engineMode, CancellationToken cancellationToken)
+    {
+        var blank = string.IsNullOrWhiteSpace(text);
+        var score = blank ? null : CountTesseractWords(index, text);
+        if (!blank && (score == null || (score.Value.unknown == 0 && score.Value.correct > 0)))
+        {
+            return text;
+        }
+
+        var retry = await tesseractOcr.Ocr(bitmap, language, tessDataFolder, cancellationToken, engineMode, TesseractOcr.PsmAuto, 3, 2);
+        if (string.IsNullOrWhiteSpace(retry))
+        {
+            retry = await tesseractOcr.Ocr(bitmap, language, tessDataFolder, cancellationToken, engineMode, TesseractOcr.PsmSingleLine, 4, 2);
+        }
+
+        if (string.IsNullOrWhiteSpace(retry))
+        {
+            return text;
+        }
+
+        if (blank)
+        {
+            return retry;
+        }
+
+        var retryScore = CountTesseractWords(index, retry);
+        if (retryScore == null)
+        {
+            return text;
+        }
+
+        if (retryScore.Value.unknown < score!.Value.unknown &&
+            retryScore.Value.correct >= score.Value.correct &&
+            !TesseractOcr.RetryIntroducesDigit(text, retry))
+        {
+            return retry;
+        }
+
+        // The retry as a whole was worse or suspicious - still take its reading of the words the
+        // first pass got wrong, if it lines up word for word ("diedq," → "died," while the "18"
+        // the retry read as "718" stays).
+        var merged = TesseractOcr.MergeRetryUnknownWords(text, retry, score.Value.unknownWords);
+        if (merged != null)
+        {
+            var mergedScore = CountTesseractWords(index, merged);
+            if (mergedScore != null &&
+                mergedScore.Value.unknown < score.Value.unknown &&
+                mergedScore.Value.correct >= score.Value.correct)
+            {
+                return merged;
+            }
+        }
+
+        return text;
+    }
+
+    /// <summary>
+    /// Dictionary verdict on one OCR pass: how many words the fix engine still flags as unknown
+    /// and how many it accepts. Null when no dictionary is in use, in which case nothing can be
+    /// compared and the first pass stands.
+    /// </summary>
+    private (int unknown, int correct, List<string> unknownWords)? CountTesseractWords(int index, string text)
+    {
+        if (SelectedDictionary == null || SelectedDictionary.Name == GetDictionaryNameNone() || !_ocrFixEngine.IsLoaded() || !DoFixOcrErrors)
+        {
+            return null;
+        }
+
+        var result = _ocrFixEngine.FixOcrErrors(index, text, DoTryToGuessUnknownWords);
+        var unknownWords = new List<string>();
+        var correct = 0;
+        foreach (var word in result.Words)
+        {
+            if (word.LinePartType != OcrFixLinePartType.Word)
+            {
+                continue;
+            }
+
+            if (word.IsSpellCheckedOk == false)
+            {
+                unknownWords.Add(word.Word);
+            }
+            else if (word.IsSpellCheckedOk == true)
+            {
+                correct++;
+            }
+        }
+
+        return (unknownWords.Count, correct, unknownWords);
     }
 
     private async Task ShowTesseractErrorAsync(string error)

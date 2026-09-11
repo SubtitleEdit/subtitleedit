@@ -32,6 +32,7 @@ public class ExportCustomTextFormatWindow : Window
 
         var buttonSaveAs = UiUtil.MakeButton(Se.Language.General.SaveDotDotDot, vm.SaveAsCommand)
             .WithBindIsVisible(vm, nameof(vm.IsSaveButtonVisible));
+        buttonSaveAs.IsDefault = true; // the dialog's accept button - Enter runs it (#14586)
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);

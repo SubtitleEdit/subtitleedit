@@ -19,6 +19,7 @@ Subtitle Edit supports a wide range of subtitle formats for reading and writing.
 | Scenarist Closed Captions (SCC) | .scc | |
 | DVD Studio Pro | .stl | |
 | Cavena 890 | .890 | |
+| CANVASs SSTG1 project (SSTG1Pro/Lite, import only) | .sdb | |
 | PAC | .pac | |
 | Cheetah | .cap | |
 | Avid DVD, Avid Caption, Avid Caption Drop Frame, Avid Loc Markers | .txt | |

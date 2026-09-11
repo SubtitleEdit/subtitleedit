@@ -59,7 +59,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     if (RegexTimeCodes.IsMatch(s) || RegexTimeCodes2.IsMatch(s))
                     {
-                        if (RegexTimeCodes2.IsMatch(s))
+                        // RegexTimeCodes2 is a superset of RegexTimeCodes, so every well-formed line counted
+                        // as an error and the format could never be detected (errors == cues).
+                        if (!RegexTimeCodes.IsMatch(s) && RegexTimeCodes2.IsMatch(s))
                         {
                             _errorCount++;
                         }

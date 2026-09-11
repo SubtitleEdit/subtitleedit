@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 ///   valid 24 kHz WAV at RTF≈1.7; `voice` resolves as the file stem inside --voice-dir
 ///   (same name-not-path rule as VoxCPM2)
 /// </summary>
-public class MossTtsCrispAsr : ITtsEngine
+public class MossTtsCrispAsr : ITtsEngine, IPerLineCloneEngine
 {
     public string Name => "MOSS-TTS (CrispASR)";
     public string Description => "MOSS-TTS v1.5 24 kHz TTS with zero-shot voice cloning, via CrispASR";
@@ -69,7 +69,11 @@ public class MossTtsCrispAsr : ITtsEngine
     public bool HasModel => true;
     public bool HasKeyFile => false;
     public bool SupportsVoiceCloning => true;
-    public bool SupportsPerLineVoiceCloning => false;
+    // Per-line clones are sent as a per-request `voice` stem, which the moss-tts backend resolves
+    // against --voice-dir and re-encodes only when it changes (CrispASR v0.8.30+, #384) - no
+    // server restart per line. See Speak and EnsureServerRunningAsync for the split between
+    // this and the ordinary imported voices, which stay on the startup --voice flag.
+    public bool SupportsPerLineVoiceCloning => true;
 
     // Four backbone quants — Q4_K is the default (~7 GB), F16 the reference (~17 GB), with
     // Q6_K/Q8_0 in between (added upstream 2026-07-27, TTS round-trip validated; #12905). All
@@ -175,6 +179,9 @@ public class MossTtsCrispAsr : ITtsEngine
     // restart so the new --voice path takes effect.
     private static string? _serverVoicePath;
     private static string? _serverRefText;
+    // True when the running server was started for a per-line clone run: every line then sends
+    // its own reference as a per-request `voice`, so a new staged clip is not a restart.
+    private static bool _serverPerLine;
     // Value of the startup -l flag (empty = Auto / no flag); part of the server key.
     private static string? _serverLanguageArg;
     private static bool _processExitHooked;
@@ -398,6 +405,13 @@ public class MossTtsCrispAsr : ITtsEngine
         {
             foreach (var file in Directory.GetFiles(voicesFolder, "*.wav"))
             {
+                // The per-line clone's own references live here too (the backend resolves bare
+                // stems against --voice-dir); they belong to one line of one run, not in a combo.
+                if (PerLineReferenceStaging.IsStaged(file))
+                {
+                    continue;
+                }
+
                 var name = Path.GetFileNameWithoutExtension(file).Replace('_', ' ');
                 result.Add(new Voice(new MossTtsVoice(name, file)));
             }
@@ -405,6 +419,42 @@ public class MossTtsCrispAsr : ITtsEngine
 
         return result.ToArray();
     }
+
+    /// <summary>
+    /// <see cref="IPerLineCloneEngine"/>: the moss-tts backend reads a per-request <c>voice</c>
+    /// as a bare stem inside its own --voice-dir, so the clip is staged in there first and the
+    /// voice's FilePath points at the copy - that is the lookup key <see cref="Speak"/> sends.
+    /// Cloning is zero-shot from audio alone, so a clip without a transcript sidecar is as good
+    /// as one with; staging only fails on a missing clip.
+    /// </summary>
+    public Voice? MakePerLineCloneVoice(string clipFileName, string voiceName) =>
+        StagePerLineReference(clipFileName) is { } staged
+            ? new Voice(new MossTtsVoice(voiceName, staged))
+            : null;
+
+    /// <summary>
+    /// The staged copy in the voices folder, which is the only reference this engine ever
+    /// speaks from - exporting it is what lets an imported session be re-dubbed on a machine
+    /// that no longer has the video.
+    /// </summary>
+    public string? GetPerLineReferenceClip(Voice voice) =>
+        voice.EngineVoice is MossTtsVoice mossVoice && !string.IsNullOrEmpty(mossVoice.FilePath)
+            ? mossVoice.FilePath
+            : null;
+
+    /// <summary>
+    /// <see cref="IPerLineCloneEngine"/>: see <see cref="ClearStagedPerLineReferences"/>.
+    /// </summary>
+    public void ResetStagedPerLineReferences() => ClearStagedPerLineReferences();
+
+    public static string? StagePerLineReference(string clipFileName) =>
+        PerLineReferenceStaging.Stage(clipFileName, GetSetVoicesFolder(), "MOSS-TTS (CrispASR)");
+
+    /// <summary>
+    /// Removes every staged per-line reference, leaving the user's imported voices alone.
+    /// </summary>
+    public static void ClearStagedPerLineReferences() =>
+        PerLineReferenceStaging.Clear(Path.Combine(GetSetFolder(), "voices"), "MOSS-TTS (CrispASR)");
 
     public bool IsVoiceInstalled(Voice voice) => true;
 
@@ -443,12 +493,17 @@ public class MossTtsCrispAsr : ITtsEngine
         var refText = TryReadRefText(mossVoice.FilePath);
         var modelKey = ResolveModelKey(model);
         var languageArg = MossTtsLanguages.ResolveLanguageArg(language);
-        await EnsureServerRunningAsync(modelKey, mossVoice.FilePath, refText, languageArg, cancellationToken);
+        // A per-line clone's reference is sent per request (bare stem inside --voice-dir), so the
+        // server is keyed on (model, language) only for those; an ordinary imported voice keeps
+        // the startup --voice flag and its restart-on-change - see BuildSpeakPayload.
+        var isPerLineClone = PerLineReferenceStaging.IsStaged(mossVoice.FilePath);
+        await EnsureServerRunningAsync(modelKey, mossVoice.FilePath, refText, languageArg, isPerLineClone, cancellationToken);
 
         var outputFileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetFolder), Guid.NewGuid() + ".wav");
 
         var speed = Math.Clamp(Se.Settings.Video.TextToSpeech.MossTtsCrispAsrSpeed, 0.25, 4.0);
-        var payload = BuildSpeakPayload(text, speed);
+        var payload = BuildSpeakPayload(text, speed,
+            isPerLineClone ? Path.GetFileNameWithoutExtension(mossVoice.FilePath) : null);
 
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
@@ -515,8 +570,16 @@ public class MossTtsCrispAsr : ITtsEngine
     /// Builds the <c>/v1/audio/speech</c> JSON payload. Extracted so the #12757 fix (no per-request
     /// <c>voice</c> field) is unit-testable without a running crispasr server.
     /// </summary>
+    /// <param name="perLineVoiceName">
+    /// The bare stem of a staged per-line reference to send as the request's <c>voice</c>, or
+    /// null for an ordinary imported voice. Since CrispASR v0.8.30 (#384) the moss-tts backend
+    /// resolves a bare name against --voice-dir and re-encodes the reference only when it
+    /// changes, which is what makes a different clip per line affordable. Ordinary voices stay
+    /// on the startup flag below: on an older runtime a per-request name is exactly the #12757
+    /// failure, and the update dot on the engine flags such a runtime for the new mode.
+    /// </param>
     /// <remarks>
-    /// Deliberately sends NO <c>voice</c> or <c>ref_text</c> field. The crispasr <c>moss-tts</c>
+    /// For ordinary voices, deliberately sends NO <c>voice</c> or <c>ref_text</c> field. The crispasr <c>moss-tts</c>
     /// backend loads the clone reference from the server's startup <c>--voice &lt;path&gt;</c>
     /// (and <c>--ref-text</c>) flags — which <see cref="EnsureServerRunningAsync"/> always passes,
     /// restarting the server whenever the selected voice changes. A per-request <c>voice</c> value
@@ -533,7 +596,7 @@ public class MossTtsCrispAsr : ITtsEngine
     /// (MOSS-TTS Q4_K sometimes rushes the words + trails silence) comes out clean on regenerate —
     /// a fixed seed would lock that bad render in permanently.
     /// </remarks>
-    internal static Dictionary<string, object> BuildSpeakPayload(string text, double speed)
+    internal static Dictionary<string, object> BuildSpeakPayload(string text, double speed, string? perLineVoiceName = null)
     {
         var payload = new Dictionary<string, object>
         {
@@ -541,6 +604,11 @@ public class MossTtsCrispAsr : ITtsEngine
             ["response_format"] = "wav",
             ["speed"] = speed,
         };
+
+        if (!string.IsNullOrEmpty(perLineVoiceName))
+        {
+            payload["voice"] = perLineVoiceName;
+        }
 
         // Voice cloning is gated behind a consent attestation and, since CrispASR v0.8.22, a
         // marking attestation when the spoken disclaimer is skipped. The user supplies their own
@@ -605,16 +673,20 @@ public class MossTtsCrispAsr : ITtsEngine
         }
     }
 
-    private static async Task EnsureServerRunningAsync(string modelKey, string voicePath, string refText, string languageArg, CancellationToken ct)
+    private static async Task EnsureServerRunningAsync(string modelKey, string voicePath, string refText, string languageArg, bool perLine, CancellationToken ct)
     {
         // Language joins (model, voice, ref-text) in the server key: /v1/audio/speech has no
         // per-request `language` field, so the only way to reach moss-tts with one is the startup
         // -l flag — which means switching language needs a fresh server, same as switching voice.
+        // A per-line clone run is the exception to the voice half: each line carries its own
+        // reference in the request, so within such a run the server is keyed on (model,
+        // language) alone. The first clip still goes on the startup flag, which is harmless.
         bool MatchesCurrent() =>
             _serverProcess is { HasExited: false } && _serverPort != 0
             && string.Equals(_serverModelKey, modelKey, StringComparison.OrdinalIgnoreCase)
             && string.Equals(_serverLanguageArg, languageArg, StringComparison.OrdinalIgnoreCase)
             && (!UseStartupVoiceFlags
+                || (perLine && _serverPerLine)
                 || (string.Equals(_serverVoicePath, voicePath, StringComparison.OrdinalIgnoreCase)
                     && string.Equals(_serverRefText, refText, StringComparison.Ordinal)));
 
@@ -730,6 +802,7 @@ public class MossTtsCrispAsr : ITtsEngine
             _serverModelKey = modelKey;
             _serverVoicePath = voicePath;
             _serverRefText = refText;
+            _serverPerLine = perLine;
             _serverLanguageArg = languageArg;
             HookProcessExitOnce();
 
@@ -750,6 +823,7 @@ public class MossTtsCrispAsr : ITtsEngine
                     _serverModelKey = null;
                     _serverVoicePath = null;
                     _serverRefText = null;
+                    _serverPerLine = false;
                     _serverLanguageArg = null;
                     throw new InvalidOperationException(
                         $"crispasr (moss-tts) exited during startup (code {exitCode}). Output: {tail}"
@@ -834,6 +908,7 @@ public class MossTtsCrispAsr : ITtsEngine
         _serverModelKey = null;
         _serverVoicePath = null;
         _serverRefText = null;
+        _serverPerLine = false;
         _serverLanguageArg = null;
         if (p == null)
         {

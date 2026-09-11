@@ -324,7 +324,7 @@ public class MergeTwoSubtitlesWindow : Window
         {
             Source = vm,
             Mode = BindingMode.TwoWay,
-            Converter = new InverseBooleanConverter(),
+            Converter = InverseBooleanConverter.Instance,
         });
         var alignPanel = new StackPanel
         {

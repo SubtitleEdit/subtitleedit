@@ -66,6 +66,13 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return sb.ToString();
         }
 
+        /// <summary>SerializeExportImageSub writes every value JSON-escaped; reading them back raw left a \ or " doubled.</summary>
+        private static string Read(SeJsonParser jp, string json, string key)
+        {
+            var value = jp.GetFirstObject(json, key);
+            return value == null ? null : Json.DecodeJsonText(value);
+        }
+
         public bool Load(string fileName)
         {
             if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
@@ -77,21 +84,21 @@ namespace Nikse.SubtitleEdit.Core.Forms
             {
                 var json = File.ReadAllText(fileName, Encoding.UTF8);
                 var jp = new SeJsonParser();
-                GenerateIdAuto = jp.GetFirstObject(json, "generateIdAuto");
-                ReelNumber = jp.GetFirstObject(json, "reelNumber");
-                Language = jp.GetFirstObject(json, "language");
-                EditRate = jp.GetFirstObject(json, "editRate");
-                TimeCodeRate = jp.GetFirstObject(json, "timeCodeRate");
-                StartTime = jp.GetFirstObject(json, "startTime");
-                FontId = jp.GetFirstObject(json, "fontId");
-                FontUri = jp.GetFirstObject(json, "fontUri");
-                FontColor = jp.GetFirstObject(json, "fontColor");
-                Effect = jp.GetFirstObject(json, "effect");
-                EffectColor = jp.GetFirstObject(json, "effectColor");
-                FontSize = jp.GetFirstObject(json, "fontSize");
-                TopBottomMargin = jp.GetFirstObject(json, "topBottomMargin");
-                FadeUpTime = jp.GetFirstObject(json, "fadeUpTime");
-                FadeDownTime = jp.GetFirstObject(json, "fadeDownTime");
+                GenerateIdAuto = Read(jp, json, "generateIdAuto");
+                ReelNumber = Read(jp, json, "reelNumber");
+                Language = Read(jp, json, "language");
+                EditRate = Read(jp, json, "editRate");
+                TimeCodeRate = Read(jp, json, "timeCodeRate");
+                StartTime = Read(jp, json, "startTime");
+                FontId = Read(jp, json, "fontId");
+                FontUri = Read(jp, json, "fontUri");
+                FontColor = Read(jp, json, "fontColor");
+                Effect = Read(jp, json, "effect");
+                EffectColor = Read(jp, json, "effectColor");
+                FontSize = Read(jp, json, "fontSize");
+                TopBottomMargin = Read(jp, json, "topBottomMargin");
+                FadeUpTime = Read(jp, json, "fadeUpTime");
+                FadeDownTime = Read(jp, json, "fadeDownTime");
             }
             catch
             {

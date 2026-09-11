@@ -6,6 +6,7 @@ using Avalonia.Data;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Nikse.SubtitleEdit.Controls;
@@ -73,6 +74,15 @@ public partial class TimeCodeUpDownNegativeTests : IDisposable
 
     private static TimeCodeSettings FrameMode() => new(frameMode: true, stepMs: 100);
 
+    // Focus() alone can leave the caret placement (and with it the part the arrow keys step)
+    // a dispatcher frame behind on a loaded runner; the first key then lands before the control
+    // has settled on the millisecond part (CI flake: Up from -100 ms left the value unchanged).
+    private static void FocusAndSettle(TextBox textBox)
+    {
+        textBox.Focus();
+        Dispatcher.UIThread.RunJobs();
+    }
+
     private (Window window, TimeCodeUpDown control, TextBox textBox) Show(TimeCodeUpDown control)
     {
         var window = new Window { Content = control };
@@ -135,7 +145,7 @@ public partial class TimeCodeUpDownNegativeTests : IDisposable
         var control = new TimeCodeUpDown { Value = TimeSpan.FromMilliseconds(-1500) };
         var (window, _, textBox) = Show(control);
 
-        textBox.Focus();
+        FocusAndSettle(textBox);
         textBox.CaretIndex = 8; // the seconds part of "-00:00:01,500"
         window.KeyTextInput("7");
 
@@ -153,7 +163,7 @@ public partial class TimeCodeUpDownNegativeTests : IDisposable
         var control = new TimeCodeUpDown { Value = TimeSpan.FromMilliseconds(-1500) };
         var (window, _, textBox) = Show(control);
 
-        textBox.Focus();
+        FocusAndSettle(textBox);
         window.KeyPress(Key.Down, RawInputModifiers.None, PhysicalKey.ArrowDown, null);
         Assert.Equal(-1600, control.Value.TotalMilliseconds); // milliseconds, not hours
 
@@ -171,7 +181,7 @@ public partial class TimeCodeUpDownNegativeTests : IDisposable
         var control = new TimeCodeUpDown { Value = TimeSpan.FromMilliseconds(-100) };
         var (window, _, textBox) = Show(control);
 
-        textBox.Focus();
+        FocusAndSettle(textBox);
         var caretOnMilliseconds = textBox.CaretIndex;
         Assert.Equal(10, caretOnMilliseconds); // "-00:00:00,100"
 
@@ -195,7 +205,7 @@ public partial class TimeCodeUpDownNegativeTests : IDisposable
         var control = new TimeCodeUpDown { Value = TimeSpan.FromMilliseconds(-1500) };
         var (window, _, textBox) = Show(control);
 
-        textBox.Focus();
+        FocusAndSettle(textBox);
         textBox.CaretIndex = 1; // first hour digit of "-00:00:01,500"
         window.KeyPress(Key.Left, RawInputModifiers.None, PhysicalKey.ArrowLeft, null);
 

@@ -324,6 +324,45 @@ public class ExportHandlerBluRaySupOverlapTests : IDisposable
     }
 
     [Fact]
+    public void OneParameterObjectReusedForEveryLine_WritesEveryLineOnce()
+    {
+        // The binary edit window mutates a single ImageParameter per line. With the pending
+        // group holding that object, every deferred write read the *next* line's buffer: the
+        // first line vanished and the last was written twice (issue #14666).
+        var fileName = Path.Combine(_dir, "reused.sup");
+        var handler = new ExportHandlerBluRaySup();
+        var parameter = Cue(0, 1, 2, ExportAlignment.BottomCenter, SKColors.White);
+        handler.WriteHeader(fileName, parameter);
+        for (var i = 0; i < 3; i++)
+        {
+            using var bitmap = new SKBitmap(CueWidth, CueHeight + i * 10);
+            using (var canvas = new SKCanvas(bitmap))
+            {
+                canvas.Clear(SKColors.White);
+            }
+
+            parameter.Bitmap = bitmap;
+            parameter.Index = i;
+            parameter.StartTime = TimeSpan.FromSeconds(1 + i * 2);
+            parameter.EndTime = TimeSpan.FromSeconds(2 + i * 2);
+            handler.CreateParagraph(parameter);
+            handler.WriteParagraph(parameter);
+        }
+
+        handler.WriteFooter();
+
+        var subtitles = BluRaySupParser.ParseBluRaySup(fileName, new StringBuilder());
+        Assert.Equal(3, subtitles.Count);
+        for (var i = 0; i < 3; i++)
+        {
+            Assert.Equal((1 + i * 2) * 1000, subtitles[i].StartTimeCode.TotalMilliseconds, 1);
+            Assert.Equal((2 + i * 2) * 1000, subtitles[i].EndTimeCode.TotalMilliseconds, 1);
+            using var bitmap = subtitles[i].GetBitmap();
+            Assert.Equal(CueHeight + i * 10, bitmap.Height);
+        }
+    }
+
+    [Fact]
     public void ReadyMadeBuffers_AreWrittenAsTheyAre()
     {
         // A cue that never went through CreateParagraph (a track copied out of a container)

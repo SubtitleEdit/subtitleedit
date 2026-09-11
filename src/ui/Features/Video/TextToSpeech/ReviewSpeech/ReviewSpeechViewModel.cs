@@ -121,7 +121,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
     // ResolvePerLineCloneVoiceAsync). Supplied by the TTS window, which knows the original-language
     // subtitle a translation was dubbed from; null when it does not, and the line's own text is
     // then the best guess left.
-    public Func<Paragraph, string>? ReferenceTextOf { get; set; }
+    public Func<Paragraph, string?>? ReferenceTextOf { get; set; }
 
     public bool OkPressed { get; private set; }
 
@@ -1124,20 +1124,16 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
     /// <summary>
     /// What the video says during a line - the transcript a freshly cut reference clip needs. The
-    /// original-language text when the TTS window supplied a lookup for it (a dub is generated
-    /// from a translation, and the clip holds what was said, not its translation), otherwise the
-    /// line's own text as it entered this window.
+    /// original-language text when the TTS window supplied a lookup for it and it knows (a dub
+    /// is generated from a translation, and the clip holds what was said, not its translation),
+    /// otherwise null. The line's own text is deliberately not a fallback: handing an engine the
+    /// translation as the clip's transcript makes it replay the clip instead of speaking the
+    /// line (#14480).
     /// </summary>
-    private string SpokenTextInVideo(ReviewRow line)
+    private string? SpokenTextInVideo(ReviewRow line)
     {
         var fromOriginal = ReferenceTextOf?.Invoke(line.StepResult.Paragraph);
-        if (!string.IsNullOrWhiteSpace(fromOriginal))
-        {
-            return fromOriginal;
-        }
-
-        var text = string.IsNullOrWhiteSpace(line.OriginalText) ? line.Text : line.OriginalText;
-        return Utilities.UnbreakLine(HtmlUtil.RemoveHtmlTags(text ?? string.Empty, alsoSsaTags: true));
+        return string.IsNullOrWhiteSpace(fromOriginal) ? null : fromOriginal;
     }
 
     /// <summary>

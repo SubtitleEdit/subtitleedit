@@ -339,6 +339,40 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return sb.ToString().Trim();
         }
 
+        /// <summary>
+        /// Same lines as string.Join(NewLine, lines).TrimEnd().SplitToLines(): trailing
+        /// whitespace-only lines are dropped and the last kept line is end-trimmed - without
+        /// materializing and re-splitting the whole file. Lines that themselves contain a line
+        /// break would split differently, so those fall back to the join/split.
+        /// </summary>
+        private static List<string> GetEndTrimmedLines(List<string> lines)
+        {
+            var last = lines.Count - 1;
+            while (last >= 0 && string.IsNullOrWhiteSpace(lines[last]))
+            {
+                last--;
+            }
+
+            var result = new List<string>(last + 2);
+            for (var i = 0; i <= last; i++)
+            {
+                var line = lines[i] ?? string.Empty;
+                if (line.AsSpan().IndexOfAny('\r', '\n', '\u2028') >= 0)
+                {
+                    return string.Join(Environment.NewLine, lines).TrimEnd().SplitToLines();
+                }
+
+                result.Add(i == last ? line.TrimEnd() : line);
+            }
+
+            if (result.Count == 0)
+            {
+                result.Add(string.Empty);
+            }
+
+            return result;
+        }
+
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
@@ -348,7 +382,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var lineSb = new StringBuilder();
             var pre = new StringBuilder();
             char[] splitChar = { '|' };
-            var endTrimmedLines = string.Join(Environment.NewLine, lines).TrimEnd().SplitToLines();
+            var endTrimmedLines = GetEndTrimmedLines(lines);
             foreach (string line in endTrimmedLines)
             {
                 _lineNumber++;

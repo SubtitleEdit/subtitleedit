@@ -1469,10 +1469,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             if (File.Exists(userWordListXmlFileName))
             {
                 userWordDictionary.Load(userWordListXmlFileName);
+                var seen = new HashSet<string>(); // List.Contains per word was quadratic in the user dictionary
                 foreach (XmlNode node in userWordDictionary.DocumentElement.SelectNodes("word"))
                 {
                     string s = NormalizeUserDictionaryWord(node.InnerText);
-                    if (s.Length > 0 && !userWordList.Contains(s))
+                    if (s.Length > 0 && seen.Add(s))
                     {
                         userWordList.Add(s);
                     }
@@ -1822,18 +1823,18 @@ namespace Nikse.SubtitleEdit.Core.Common
                 post.Clear();
                 int i = 0;
                 while (i < s2.Length && PrePostStringsToReverse.Contains(s2[i]) && s2[i] != '{' &&
-                       !s2.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase) &&
-                       !s2.Substring(i).StartsWith("<b>", StringComparison.OrdinalIgnoreCase) &&
-                       !s2.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
+                       !s2.StartsWithAt(i, "<i>", StringComparison.OrdinalIgnoreCase) &&
+                       !s2.StartsWithAt(i, "<b>", StringComparison.OrdinalIgnoreCase) &&
+                       !s2.StartsWithAt(i, "<font ", StringComparison.OrdinalIgnoreCase))
                 {
                     pre.Append(s2[i]);
                     i++;
                 }
                 int j = s2.Length - 1;
                 while (j > i && PrePostStringsToReverse.Contains(s2[j]) && s2[j] != '}' &&
-                       !s2.Substring(0, j + 1).EndsWith("</i>", StringComparison.OrdinalIgnoreCase) &&
-                       !s2.Substring(0, j + 1).EndsWith("</b>", StringComparison.OrdinalIgnoreCase) &&
-                       !s2.Substring(0, j + 1).EndsWith("</font>", StringComparison.OrdinalIgnoreCase))
+                       !s2.EndsWithAt(j + 1, "</i>", StringComparison.OrdinalIgnoreCase) &&
+                       !s2.EndsWithAt(j + 1, "</b>", StringComparison.OrdinalIgnoreCase) &&
+                       !s2.EndsWithAt(j + 1, "</font>", StringComparison.OrdinalIgnoreCase))
                 {
                     post.Append(s2[j]);
                     j--;
@@ -3593,19 +3594,23 @@ namespace Nikse.SubtitleEdit.Core.Common
             "複製",       // zh-TW - Traditional Chinese
         };
 
+        // CopyWords is constant, but the ~400-char alternation was escaped, joined and
+        // interpolated (twice per loop) on every call - once per candidate file in a folder scan.
+        private static readonly Regex CopySuffixRegex = new Regex($@"(\s*[-_]?\s*({string.Join("|", CopyWords.Select(Regex.Escape))})(?:\s*\(\d+\))?)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex NumberSuffixRegex = new Regex(@"\s*\(\d+\)$", RegexOptions.Compiled);
+
         public static string GetLenientPathAndFileNameWithoutExtension(string fileName)
         {
             var strictName = GetPathAndFileNameWithoutExtension(fileName);
-            var copyPattern = string.Join("|", CopyWords.Select(Regex.Escape));
 
             // Remove common suffixes like " - Copy", " - Copy (2)"
-            while (Regex.IsMatch(strictName, $@"(\s*[-_]?\s*({copyPattern})(?:\s*\(\d+\))?)$", RegexOptions.IgnoreCase))
+            while (CopySuffixRegex.IsMatch(strictName))
             {
-                strictName = Regex.Replace(strictName, $@"(\s*[-_]?\s*({copyPattern})(?:\s*\(\d+\))?)$", "", RegexOptions.IgnoreCase);
+                strictName = CopySuffixRegex.Replace(strictName, "");
             }
 
             // Remove common suffixes like "(2)", "(3)", etc.
-            strictName = Regex.Replace(strictName, @"\s*\(\d+\)$", "");
+            strictName = NumberSuffixRegex.Replace(strictName, "");
 
             return strictName;
         }

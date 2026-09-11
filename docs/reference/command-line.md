@@ -133,6 +133,7 @@ seconv lint *.srt --json             # CI-friendly: exit 1 on any issue
 | `--input-folder:<path>` | Input folder; relative patterns resolve against it |
 | `--output-folder:<path>` | Output folder (default: input file's directory) |
 | `--output-filename:<name>` | Output file name (single input only) |
+| `--output-filename-append:<text>` | Text appended to the output file name stem, before any language/track suffix: `movie.ts` → `movie_fixed.eng.srt`. Ignored with `--output-filename` |
 | `--overwrite` | Overwrite existing files (default: rotate to `name_2.ext`, `_3.ext`, ...) |
 | `--keep-timestamp` (also `--keep-timestamps`) | Give output files the source file's modified/created date instead of the conversion time |
 | `--encoding:<name>` | Encoding name or codepage. Special values: `utf-8`, `utf-8-no-bom` (also `utf-8-nobom`, `utf8-nobom`), a code page number, or `source` to keep the input file's detected encoding. Defaults: auto-detect on input, UTF-8 BOM on output |
@@ -184,6 +185,7 @@ When rendering a text subtitle to an image-based target (Blu-Ray `sup`, VobSub, 
 | `--content-alignment:<align>` | Multi-line text justification: `left` \| `center` (default) \| `right` \| `from-alignment` (follow the `{\anX}` tag) |
 | `--bottom-top-margin:<px>` | Vertical screen-edge margin (default: 5% of height) |
 | `--left-right-margin:<px>` | Horizontal screen-edge margin (default: 5% of width) |
+| `--override-position:<x\|y\|xy>` | Image → image only (DVB-sub, PGS, VobSub pass-through): ignore the source bitmap position on that axis and place it by `--alignment` and the margins instead. The other axis keeps the source position. Matches SE4's transport-stream "override original X/Y position" |
 | `--full-frame` | Draw each subtitle onto a frame-sized image instead of one cropped to the text. Only `fcpimage` and `bluraysup` use it; other image targets warn and ignore it |
 | `--full-frame-background-color:<color>` | Background of the full frame image (default: `transparent`) |
 

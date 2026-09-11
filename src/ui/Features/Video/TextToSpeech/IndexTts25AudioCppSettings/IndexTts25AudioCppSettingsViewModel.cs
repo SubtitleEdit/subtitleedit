@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -201,7 +201,7 @@ public partial class IndexTts25AudioCppSettingsViewModel : ObservableObject
             return;
         }
 
-        await TtsVoiceInstaller.EnsureAudioCppRuntime(Window, _windowService, forceRedownload: true, "IndexTTS 2.5");
+        await TtsVoiceInstaller.EnsureAudioCppRuntime(Window, _windowService, forceRedownload: true, "IndexTTS 2.5", IndexTts25AudioCpp.FamilyName);
         Refresh();
     }
 

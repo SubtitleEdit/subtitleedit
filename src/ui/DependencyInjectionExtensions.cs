@@ -75,6 +75,7 @@ using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryAdjustColor;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryAdjustDuration;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryApplyDurationLimits;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryAppendSubtitle;
+using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryChangeResolution;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryResizeImages;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinarySettings;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.SetText;
@@ -305,6 +306,7 @@ public static class DependencyInjectionExtensions
         collection.AddHttpClientWithProxy<IIndexTts25AudioCppDownloadService, IndexTts25AudioCppDownloadService>();
         collection.AddHttpClientWithProxy<IHiggsTtsAudioCppDownloadService, HiggsTtsAudioCppDownloadService>();
         collection.AddHttpClientWithProxy<IFishTtsAudioCppDownloadService, FishTtsAudioCppDownloadService>();
+        collection.AddHttpClientWithProxy<IFireRedTts3AudioCppDownloadService, FireRedTts3AudioCppDownloadService>();
         collection.AddHttpClientWithProxy<ICosyVoice3CrispAsrDownloadService, CosyVoice3CrispAsrDownloadService>();
         collection.AddHttpClientWithProxy<IF5TtsCrispAsrDownloadService, F5TtsCrispAsrDownloadService>();
         collection.AddHttpClientWithProxy<IOmniVoiceCrispAsrDownloadService, OmniVoiceCrispAsrDownloadService>();
@@ -363,6 +365,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<BinaryAdjustDurationViewModel>();
         collection.AddTransient<BinaryApplyDurationLimitsViewModel>();
         collection.AddTransient<BinaryAppendSubtitleViewModel>();
+        collection.AddTransient<BinaryChangeResolutionViewModel>();
         collection.AddTransient<BinaryEditViewModel>();
         collection.AddTransient<BinaryOcrCharacterAddViewModel>();
         collection.AddTransient<BinaryOcrCharacterHistoryViewModel>();

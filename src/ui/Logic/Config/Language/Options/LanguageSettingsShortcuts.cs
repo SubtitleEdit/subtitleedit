@@ -322,7 +322,7 @@ public class LanguageSettingsShortcuts
         FileExportEbuStl = "Export EBU STL";
         FileExportPac = "Export PAC";
         FileExit = "Exit";
-        OpenSeDataFolder = "Open Subtitle Edit folder";
+        OpenSeDataFolder = "Open Subtitle Edit data folder";
 
         EditFindPrevious = "Find previous";
         FillSelectedLinesWithClipboard = "Fill selected lines with clipboard text";

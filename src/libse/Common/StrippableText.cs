@@ -13,28 +13,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// </summary>
         private static readonly string NameEndChars = @" ,.!?:;')]- <”""" + Environment.NewLine;
 
-        /// <summary>
-        /// Suffix test that does not copy the whole builder - the casing loop below asks this
-        /// once per character, and sb.ToString() there allocated the accumulated line each time.
-        /// </summary>
-        private static bool EndsWith(StringBuilder sb, string value)
-        {
-            if (sb.Length < value.Length)
-            {
-                return false;
-            }
-
-            var offset = sb.Length - value.Length;
-            for (var i = 0; i < value.Length; i++)
-            {
-                if (sb[offset + i] != value[i])
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
+        /// <summary>A line break followed by a dash - the dialog marker tested in the casing loop below.</summary>
+        private static readonly string NewLineDash = Environment.NewLine + "-";
 
         public string Pre { get; set; }
         public string Post { get; set; }
@@ -305,7 +285,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         {
                             sb.Append(s);
                         }
-                        else if ((sb.EndsWith('<') || EndsWith(sb, "</")) && i + 1 < StrippedText.Length && StrippedText[i + 1] == '>')
+                        else if ((sb.EndsWith('<') || sb.EndsWith("</")) && i + 1 < StrippedText.Length && StrippedText[i + 1] == '>')
                         { // tags
                             sb.Append(s);
                         }
@@ -313,7 +293,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         { // tags
                             sb.Append(s);
                         }
-                        else if (EndsWith(sb, "... "))
+                        else if (sb.EndsWith("... "))
                         {
                             sb.Append(s);
                             lastWasBreak = false;
@@ -391,9 +371,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                         }
                         else if (s == '-' && Pre.IndexOf('-') >= 0)
                         {
-                            if (sb.ToString().EndsWith(Environment.NewLine + "-"))
+                            if (sb.EndsWith(NewLineDash))
                             {
-                                var prevLine = HtmlUtil.RemoveHtmlTags(sb.ToString().Substring(0, sb.Length - 2).TrimEnd());
+                                var prevLine = HtmlUtil.RemoveHtmlTags(sb.ToString(0, sb.Length - 2).TrimEnd());
                                 if (prevLine.EndsWith('.') ||
                                     prevLine.EndsWith('!') ||
                                     prevLine.EndsWith('?') ||

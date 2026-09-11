@@ -34,6 +34,7 @@ public static class VoiceCloneImporter
         {
             CosyVoice3CrispAsr e => e.ImportVoice(fileName, text),
             F5TtsCrispAsr e => e.ImportVoice(fileName, text),
+            FireRedTts3AudioCpp e => e.ImportVoice(fileName, text),
             FishTtsAudioCpp e => e.ImportVoice(fileName, text),
             HiggsTtsAudioCpp e => e.ImportVoice(fileName, text),
             MossTtsCrispAsr e => e.ImportVoice(fileName, text),

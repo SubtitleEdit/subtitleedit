@@ -24,12 +24,21 @@ public class ExportHandlerBluRaySup : IExportHandler
     private readonly ConcurrentDictionary<ImageParameter, BluRaySupPicture> _pictures = new(ReferenceEqualityComparer.Instance);
 
     /// <summary>
+    /// What <see cref="WriteParagraph"/> keeps of a subtitle until it is written. A copy, not
+    /// the caller's <see cref="ImageParameter"/>: the binary edit window reuses one parameter
+    /// object for every line, so by the time a deferred line was written its buffer and times
+    /// had been overwritten with the next line's - the first line vanished and the last was
+    /// written twice (issue #14666).
+    /// </summary>
+    private sealed record PendingCue(byte[] Buffer, BluRaySupPicture Picture, SKColor FontColor, bool IsForced, double FramesPerSecond);
+
+    /// <summary>
     /// Subtitles waiting to be written because they overlap in time. A Blu-ray shows one
     /// display set at a time, so overlapping subtitles have to go into the same display sets
     /// to be seen together (issue #14456) - the group is written when the next subtitle does
     /// not overlap it, or at the end.
     /// </summary>
-    private readonly List<ImageParameter> _pending = [];
+    private readonly List<PendingCue> _pending = [];
     private long _pendingStartMs;
     private long _pendingEndMs;
 
@@ -49,7 +58,9 @@ public class ExportHandlerBluRaySup : IExportHandler
 
     public void WriteParagraph(ImageParameter param)
     {
-        if (!_pictures.TryGetValue(param, out var picture))
+        // Remove rather than look up: the same parameter object may come back with the next
+        // line, and a later ready-made buffer on it must not be taken for this picture.
+        if (!_pictures.TryRemove(param, out var picture))
         {
             FlushPending();
             _fileStream!.Write(param.Buffer, 0, param.Buffer.Length);
@@ -73,7 +84,7 @@ public class ExportHandlerBluRaySup : IExportHandler
             _pendingEndMs = Math.Max(_pendingEndMs, picture.EndTime);
         }
 
-        _pending.Add(param);
+        _pending.Add(new PendingCue(param.Buffer, picture, param.FontColor, param.IsForced, param.FramesPerSecond));
     }
 
     public void WriteFooter()
@@ -170,9 +181,9 @@ public class ExportHandlerBluRaySup : IExportHandler
     /// same time. Only the last slice clears the screen; before that, the next epoch start
     /// replaces the previous one.
     /// </summary>
-    private void WriteOverlapping(List<ImageParameter> cues)
+    private void WriteOverlapping(List<PendingCue> cues)
     {
-        var pictures = cues.Select(c => _pictures[c]).ToList();
+        var pictures = cues.Select(c => c.Picture).ToList();
         var times = pictures.SelectMany(p => new[] { p.StartTime, p.EndTime }).Distinct().OrderBy(t => t).ToList();
         var compositionNumber = pictures[0].CompositionNumber;
         var fps = cues[0].FramesPerSecond;
@@ -243,7 +254,7 @@ public class ExportHandlerBluRaySup : IExportHandler
         }
     }
 
-    private static PlacedCaption Place(ImageParameter cue, BluRaySupPicture picture)
+    private static PlacedCaption Place(PendingCue cue, BluRaySupPicture picture)
     {
         // Not the cue's bitmap: callers may dispose that right after WriteParagraph (seconv
         // and the container track exports do), and the full frame image was let go as soon as

@@ -607,6 +607,7 @@ public class OpenAiSttService : ISttTranscriber
             "mp3" => "mp3",
             "m4a" => "m4a",
             "webm" => "webm",
+            "flac" => "flac",
             _ => "wav",
         };
     }

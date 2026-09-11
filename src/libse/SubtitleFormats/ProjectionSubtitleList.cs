@@ -85,9 +85,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static int GetUnicodeNumber(char character)
         {
-            var encoding = new UTF32Encoding();
-            var bytes = encoding.GetBytes(character.ToString().ToCharArray());
-            return BitConverter.ToInt32(bytes, 0);
+            // A lone surrogate is what UTF32Encoding's replacement fallback turned into U+FFFD;
+            // anything else is its own code point. The old code allocated four objects per character.
+            return char.IsSurrogate(character) ? 0xFFFD : character;
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

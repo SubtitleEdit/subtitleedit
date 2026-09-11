@@ -44,7 +44,7 @@ public class VideoOcrWindow : Window
         var progressView = MakeProgressView(vm);
 
         var buttonStart = UiUtil.MakeButton(Se.Language.Video.VideoOcr.StartOcr, vm.StartOcrCommand)
-            .WithBindEnabled(nameof(vm.IsRunning), new InverseBooleanConverter());
+            .WithBindEnabled(nameof(vm.IsRunning), InverseBooleanConverter.Instance);
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand)
             .WithBindEnabled(nameof(vm.IsOkEnabled));
         var buttonPanel = UiUtil.MakeButtonBar(
@@ -179,7 +179,7 @@ public class VideoOcrWindow : Window
             Children =
             {
                 UiUtil.MakeButton(Se.Language.Video.VideoOcr.TestOcr, vm.TestOcrCommand)
-                    .WithBindEnabled(nameof(vm.IsRunning), new InverseBooleanConverter()),
+                    .WithBindEnabled(nameof(vm.IsRunning), InverseBooleanConverter.Instance),
             },
         };
 

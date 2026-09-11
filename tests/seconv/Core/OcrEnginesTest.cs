@@ -1,4 +1,5 @@
 using SeConv.Core;
+using SkiaSharp;
 using Xunit;
 
 namespace SeConvTests.Core;
@@ -119,23 +120,38 @@ public class OcrEnginesTest : IDisposable
         Assert.Equal("ollama", engine.Name);
     }
 
+    // Results are read from the "<stem>_res.json" files PaddleOCR writes under --save_path,
+    // so every run needs that flag - a run without it produces no results at all.
     [Fact]
-    public void Paddle_ParseStdout_ExtractsTextLines()
+    public void Paddle_BuildArguments_AlwaysAsksForResultFiles()
     {
-        // Real paddleocr output sample
-        var stdout = """
-            [[10, 20], [100, 20], [100, 40], [10, 40]] ('Hello world', 0.95)
-            [[10, 50], [100, 50], [100, 70], [10, 70]] ('second line', 0.91)
-            """;
-        var text = PaddleOcrEngine.ParseStdout(stdout);
-        Assert.Contains("Hello world", text);
-        Assert.Contains("second line", text);
+        if (PaddleOcrEngine.Detect() is null)
+        {
+            Assert.Skip("PaddleOCR not installed");
+        }
+
+        using var engine = PaddleOcrEngine.Create("en");
+        var args = engine.BuildArguments(@"C:\in", @"C:\out");
+
+        var savePath = args.IndexOf("--save_path");
+        Assert.True(savePath >= 0, "--save_path missing: " + string.Join(' ', args));
+        Assert.Equal(@"C:\out", args[savePath + 1]);
+
+        var input = args.IndexOf("-i");
+        Assert.True(input >= 0);
+        Assert.Equal(@"C:\in", args[input + 1]);
     }
 
     [Fact]
-    public void Paddle_ParseStdout_NoMatches_ReturnsEmpty()
+    public void Paddle_RecognizeBatch_NoImages_DoesNotStartTheEngine()
     {
-        Assert.Equal(string.Empty, PaddleOcrEngine.ParseStdout("no recognized text here"));
-        Assert.Equal(string.Empty, PaddleOcrEngine.ParseStdout(""));
+        if (PaddleOcrEngine.Detect() is null)
+        {
+            Assert.Skip("PaddleOCR not installed");
+        }
+
+        // Nothing to do must not cost a process start - the whole point of batching.
+        using var engine = PaddleOcrEngine.Create("en");
+        Assert.Empty(engine.RecognizeBatch(Array.Empty<SKBitmap>()));
     }
 }

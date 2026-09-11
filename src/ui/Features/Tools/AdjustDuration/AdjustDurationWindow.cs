@@ -137,7 +137,7 @@ public class AdjustDurationWindow : Window
         {
             Path = $"{nameof(vm.SelectedAdjustType)}.{nameof(AdjustDurationDisplay.IsSecondsVisible)}",
             Source = vm,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return panel;
@@ -181,7 +181,7 @@ public class AdjustDurationWindow : Window
         {
             Path = $"{nameof(vm.SelectedAdjustType)}.{nameof(AdjustDurationDisplay.IsPercentVisible)}",
             Source = vm,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return panel;
@@ -226,7 +226,7 @@ public class AdjustDurationWindow : Window
         {
             Path = $"{nameof(vm.SelectedAdjustType)}.{nameof(AdjustDurationDisplay.IsFixedVisible)}",
             Source = vm,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
         return panel;
     }
@@ -327,7 +327,7 @@ public class AdjustDurationWindow : Window
         {
             Path = $"{nameof(vm.SelectedAdjustType)}.{nameof(AdjustDurationDisplay.IsRecalculateVisible)}",
             Source = vm,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return grid;

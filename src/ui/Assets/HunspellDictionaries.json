@@ -697,6 +697,33 @@
     "Description": "Spanish spell checker (LibreOffice)"
   },
   {
+    "EnglishName": "Spanish (Argentina)",
+    "NativeName": "Español (Argentina)",
+    "Files": [
+      "https://raw.githubusercontent.com/LibreOffice/dictionaries/master/es/es_AR.aff",
+      "https://raw.githubusercontent.com/LibreOffice/dictionaries/master/es/es_AR.dic"
+    ],
+    "Description": "Spanish (Argentina) spell checker (LibreOffice)"
+  },
+  {
+    "EnglishName": "Spanish (Latin America / US)",
+    "NativeName": "Español (Latinoamérica / EE. UU.)",
+    "Files": [
+      "https://raw.githubusercontent.com/LibreOffice/dictionaries/master/es/es_US.aff",
+      "https://raw.githubusercontent.com/LibreOffice/dictionaries/master/es/es_US.dic"
+    ],
+    "Description": "Spanish (Latin America / United States) spell checker (LibreOffice)"
+  },
+  {
+    "EnglishName": "Spanish (Mexico)",
+    "NativeName": "Español (México)",
+    "Files": [
+      "https://raw.githubusercontent.com/LibreOffice/dictionaries/master/es/es_MX.aff",
+      "https://raw.githubusercontent.com/LibreOffice/dictionaries/master/es/es_MX.dic"
+    ],
+    "Description": "Spanish (Mexico) spell checker (LibreOffice)"
+  },
+  {
     "EnglishName": "Swahili",
     "NativeName": "Kiswahili",
     "Files": [

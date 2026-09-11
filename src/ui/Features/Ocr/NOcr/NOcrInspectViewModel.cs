@@ -474,6 +474,7 @@ public partial class NOcrInspectViewModel : ObservableObject
     {
         if (e.Key == Key.Enter)
         {
+            e.Handled = true; // the OK button is IsDefault and would run OK again on the same Enter
             Ok();
         }
     }

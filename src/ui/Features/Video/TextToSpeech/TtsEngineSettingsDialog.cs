@@ -44,6 +44,7 @@ public static class TtsEngineSettingsDialog
         IndexTts25AudioCpp or
         HiggsTtsAudioCpp or
         FishTtsAudioCpp or
+        FireRedTts3AudioCpp or
         IndexTtsCrispAsr or
         DotsTtsCrispAsr or
         Confucius4TtsCrispAsr or
@@ -87,6 +88,10 @@ public static class TtsEngineSettingsDialog
         else if (engine is FishTtsAudioCpp)
         {
             await windowService.ShowDialogAsync<AudioCppTtsSettingsWindow, AudioCppTtsSettingsViewModel>(window, vm => vm.Initialize(AudioCppTtsSettingsAdapters.Fish));
+        }
+        else if (engine is FireRedTts3AudioCpp)
+        {
+            await windowService.ShowDialogAsync<AudioCppTtsSettingsWindow, AudioCppTtsSettingsViewModel>(window, vm => vm.Initialize(AudioCppTtsSettingsAdapters.FireRedTts3));
         }
         else if (engine is IndexTtsCrispAsr)
         {

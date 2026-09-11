@@ -33,36 +33,36 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
-            for (int i = 0; i < lines.Count; i++)
+            // The text line(s) after a time code used to be counted as errors (and only the first
+            // one was read), so errors always matched cues and the format could never be detected.
+            Paragraph paragraph = null;
+            foreach (var rawLine in lines)
             {
-                string line = lines[i].TrimEnd();
-                string next = string.Empty;
-                if (i + 1 < lines.Count)
+                var line = rawLine.TrimEnd();
+                if (RegexTimeCodes.IsMatch(line))
                 {
-                    next = lines[i + 1];
-                }
-
-                if (line.Contains(':') && !next.Contains(':') && RegexTimeCodes.IsMatch(line) && !RegexTimeCodes.IsMatch(next))
-                {
-                    var paragraph = new Paragraph();
-                    if (TryReadTimeCodesLine(line, paragraph))
-                    {
-                        paragraph.Text = next;
-                        if (!string.IsNullOrWhiteSpace(paragraph.Text))
-                        {
-                            subtitle.Paragraphs.Add(paragraph);
-                        }
-                    }
-                    else if (!string.IsNullOrWhiteSpace(line))
+                    AddIfText(subtitle, paragraph);
+                    paragraph = new Paragraph();
+                    if (!TryReadTimeCodesLine(line, paragraph))
                     {
                         _errorCount++;
+                        paragraph = null;
                     }
                 }
-                else
+                else if (paragraph != null)
+                {
+                    if (!string.IsNullOrWhiteSpace(line))
+                    {
+                        paragraph.Text = (paragraph.Text + Environment.NewLine + line).Trim();
+                    }
+                }
+                else if (!string.IsNullOrWhiteSpace(line))
                 {
                     _errorCount++;
                 }
             }
+
+            AddIfText(subtitle, paragraph);
 
             foreach (Paragraph p in subtitle.Paragraphs)
             {
@@ -87,6 +87,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             subtitle.Renumber();
+        }
+
+        private static void AddIfText(Subtitle subtitle, Paragraph paragraph)
+        {
+            if (paragraph != null && !string.IsNullOrWhiteSpace(paragraph.Text))
+            {
+                subtitle.Paragraphs.Add(paragraph);
+            }
         }
 
         private static bool TryReadTimeCodesLine(string line, Paragraph paragraph)

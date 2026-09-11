@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using SkiaSharp;
 using SkiaSharp.HarfBuzz;
 using Nikse.SubtitleEdit.Core.BluRaySup;
@@ -525,36 +525,11 @@ public static class ImageRenderer
 
             // Calculate X position based on content alignment, relative to the widest line.
             // This keeps all lines within [textStartX, textStartX + maxLineWidth].
-            if (ip.IsRightToLeft)
-            {
-                if (ip.ResolvedContentAlignment == ExportContentAlignment.Center)
-                {
-                    currentX = textStartX + (maxLineWidth - lineWidth) / 2;
-                }
-                else if (ip.ResolvedContentAlignment == ExportContentAlignment.Left)
-                {
-                    currentX = textStartX + maxLineWidth - lineWidth;
-                }
-                else // Right (natural/default for RTL)
-                {
-                    currentX = textStartX;
-                }
-            }
-            else
-            {
-                if (ip.ResolvedContentAlignment == ExportContentAlignment.Center)
-                {
-                    currentX = textStartX + (maxLineWidth - lineWidth) / 2;
-                }
-                else if (ip.ResolvedContentAlignment == ExportContentAlignment.Right)
-                {
-                    currentX = textStartX + maxLineWidth - lineWidth;
-                }
-                else // Left (default)
-                {
-                    currentX = textStartX;
-                }
-            }
+            // "Right" is the visual right edge for right-to-left text too: DrawShapedText
+            // always draws from x rightwards, so the RTL flag changes the segment order
+            // but not which edge the lines share - and the box behind the text already
+            // used the visual edge (issue #14696).
+            currentX = GetLineStartX(ip.ResolvedContentAlignment, textStartX, maxLineWidth, lineWidth);
 
             for (var i = 0; i < segmentsToRender.Count; i++)
             {
@@ -706,20 +681,7 @@ public static class ImageRenderer
             var lineWidth = lineWidths[li];
             var currentY = baselines[li];
 
-            float currentX;
-            if (ip.ResolvedContentAlignment == ExportContentAlignment.Center)
-            {
-                currentX = textStartX + (maxLineWidth - lineWidth) / 2;
-            }
-            else if ((ip.ResolvedContentAlignment == ExportContentAlignment.Right && !ip.IsRightToLeft) ||
-                     (ip.ResolvedContentAlignment == ExportContentAlignment.Left && ip.IsRightToLeft))
-            {
-                currentX = textStartX + maxLineWidth - lineWidth;
-            }
-            else
-            {
-                currentX = textStartX;
-            }
+            var currentX = GetLineStartX(ip.ResolvedContentAlignment, textStartX, maxLineWidth, lineWidth);
 
             for (var i = 0; i < segmentsToRender.Count; i++)
             {
@@ -824,20 +786,7 @@ public static class ImageRenderer
         for (var li = 0; li < lineGlyphs.Count; li++)
         {
             var lineWidth = lineWidths[li];
-            float lineLeft;
-            if (ip.ResolvedContentAlignment == ExportContentAlignment.Center)
-            {
-                lineLeft = textStartX + (maxLineWidth - lineWidth) / 2;
-            }
-            else if ((ip.ResolvedContentAlignment == ExportContentAlignment.Right && !ip.IsRightToLeft) ||
-                     (ip.ResolvedContentAlignment == ExportContentAlignment.Left && ip.IsRightToLeft))
-            {
-                lineLeft = textStartX + maxLineWidth - lineWidth;
-            }
-            else
-            {
-                lineLeft = textStartX;
-            }
+            var lineLeft = GetLineStartX(ip.ResolvedContentAlignment, textStartX, maxLineWidth, lineWidth);
 
             var baseline = textStartY + baselines[li];
 
@@ -1105,18 +1054,49 @@ public static class ImageRenderer
             (byte)(a.Alpha + (b.Alpha - a.Alpha) * t));
     }
 
+    /// <summary>
+    /// The x where a line starts so the lines of one subtitle share the chosen edge, relative
+    /// to the widest line. The edge is the visual one for every script: shaped text is drawn
+    /// from x rightwards whatever its direction (issue #14696).
+    /// </summary>
+    private static float GetLineStartX(ExportContentAlignment alignment, float textStartX, float maxLineWidth, float lineWidth)
+    {
+        return alignment switch
+        {
+            ExportContentAlignment.Center => textStartX + (maxLineWidth - lineWidth) / 2,
+            ExportContentAlignment.Right => textStartX + maxLineWidth - lineWidth,
+            _ => textStartX,
+        };
+    }
+
     // Helper method to measure text with HarfBuzz shaping via SKShaper
     private static float MeasureTextWithShaping(string text, SKFont font)
     {
         using var shaper = new SKShaper(font.Typeface);
         var result = shaper.Shape(text, font);
 
-        // Measure visual bounds to account for glyph overhang (important for italic text)
-        var bounds = new SKRect();
-        font.MeasureText(text, out bounds);
+        // The visual right edge (glyph overhang, e.g. italics) comes from the SHAPED glyphs.
+        // SKFont.MeasureText on the string measures the unshaped, isolated forms - for
+        // Arabic that is up to 40% wider than what is drawn, so right/center aligned lines
+        // ended at different edges (issue #14696).
+        var visualRight = 0f;
+        if (result.Codepoints.Length > 0)
+        {
+            var glyphs = new ushort[result.Codepoints.Length];
+            for (var i = 0; i < glyphs.Length; i++)
+            {
+                glyphs[i] = (ushort)result.Codepoints[i];
+            }
+
+            font.GetGlyphWidths(glyphs, out var glyphBounds);
+            for (var i = 0; i < glyphs.Length; i++)
+            {
+                visualRight = Math.Max(visualRight, result.Points[i].X + glyphBounds[i].Right);
+            }
+        }
 
         // Use the maximum of advance width and visual right edge
-        return Math.Max(result.Width, bounds.Right);
+        return Math.Max(result.Width, visualRight);
     }
 
     // Helper method to draw shaped text using SKShaper

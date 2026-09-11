@@ -27,6 +27,7 @@ public class ExportPlainTextWindow : Window
             .WithMinWidth(180)
             .WithMarginRight(10);
         var buttonSaveAs = UiUtil.MakeButton(Se.Language.General.SaveDotDotDot, vm.SaveAsCommand);
+        buttonSaveAs.IsDefault = true; // the dialog's accept button - Enter runs it (#14586)
         var buttonDone = UiUtil.MakeButtonDone(vm.CancelCommand);
         var panelButtons = UiUtil.MakeButtonBar( labelEncoding, comboBoxEncoding, buttonSaveAs, buttonDone);
 

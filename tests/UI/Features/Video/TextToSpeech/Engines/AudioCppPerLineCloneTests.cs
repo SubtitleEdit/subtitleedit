@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech;
+﻿using Nikse.SubtitleEdit.Features.Video.TextToSpeech;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 
@@ -6,13 +6,15 @@ namespace UITests.Features.Video.TextToSpeech.Engines;
 
 /// <summary>
 /// Per-line voice cloning on the audio.cpp engines (IndexTTS 2.5, Higgs Audio v3, Fish Audio
-/// S2 Pro). Their server takes the reference as a per-request path, so nothing is staged: the
+/// S2 Pro, FireRedTTS3). Their server takes the reference as a per-request path, so nothing is staged: the
 /// voice for a line is the cut clip itself.
 /// </summary>
 /// <remarks>
-/// The one engine-specific rule is Fish's: S2 Pro refuses a reference without a transcript, so
-/// a clip with no .txt sidecar must not become a voice at all - the line falls back to an
-/// ordinary voice instead of the whole run failing on it.
+/// The engine-specific rules are about the transcript. Fish S2 Pro takes a blank placeholder
+/// when there is none; Higgs and IndexTTS clone from the audio alone; FireRedTTS3 cannot - its
+/// prompt pairs the reference audio with its transcript and without one the model returns
+/// noise (#14480) - so a clip with no usable .txt sidecar must not become a FireRed voice at
+/// all, and the line falls back to an ordinary voice instead of the run producing garbage.
 /// </remarks>
 public class AudioCppPerLineCloneTests
 {
@@ -21,6 +23,7 @@ public class AudioCppPerLineCloneTests
         yield return new object[] { new IndexTts25AudioCpp() };
         yield return new object[] { new HiggsTtsAudioCpp() };
         yield return new object[] { new FishTtsAudioCpp() };
+        yield return new object[] { new FireRedTts3AudioCpp() };
     }
 
     [Theory]
@@ -63,14 +66,35 @@ public class AudioCppPerLineCloneTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
-    public void FishWithoutATranscriptFallsBackInsteadOfCloning(string? transcript)
+    // The shared voice pack's Wikimedia attribution blurb is a sidecar, not a transcript.
+    [InlineData("Wikimedia Commons, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Speech.ogg")]
+    public void FireRedWithoutAUsableTranscriptDoesNotCloneTheLine(string? transcript)
     {
-        // audio.cpp answers a Fish voice_ref without reference_text with an HTTP 500, and Speak
-        // throws on an empty sidecar - so the clip must not be handed out as a voice.
+        // With no text to pair the reference audio with, FireRedTTS3 produced a second or two
+        // of noise on every seed (#14480) - so the clip is refused and the line falls back to
+        // an ordinary voice.
+        using var clips = new TempFolder();
+        var clip = clips.WriteClip("line-0010", transcript);
+
+        Assert.Null(PerLineVoiceClone.MakeVoiceForClip(new FireRedTts3AudioCpp(), clip));
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void FishWithoutATranscriptStillClones(string? transcript)
+    {
+        // A per-line clip has no transcript when no original-language subtitle is loaded. That
+        // used to drop the clip (Speak threw on an empty sidecar); now Speak sends a blank
+        // placeholder reference_text instead, which the server accepts and clones from fine -
+        // whereas writing the (translated) line as the transcript made the model replay the
+        // clip instead of speaking the line (#14480). So the clip is a voice.
         using var clips = new TempFolder();
         var clip = clips.WriteClip("line-0009", transcript);
 
-        Assert.Null(PerLineVoiceClone.MakeVoiceForClip(new FishTtsAudioCpp(), clip));
+        Assert.NotNull(PerLineVoiceClone.MakeVoiceForClip(new FishTtsAudioCpp(), clip));
+        Assert.Equal(" ", FishTtsAudioCpp.UnknownReferenceTextPlaceholder);
     }
 
     [Fact]

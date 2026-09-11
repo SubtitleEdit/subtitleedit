@@ -137,7 +137,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             int frames = MillisecondsToFrames(time.TotalMilliseconds);
             int footage = frames / 16;
-            int rest = (int)Math.Round(frames % 16.0 / 16.0 * Configuration.Settings.General.CurrentFrameRate);
+            int rest = frames % 16; // frames within the 16-frame foot - the reader adds them straight to 16 * footage
             return $"{footage}.{rest:00}";
         }
 

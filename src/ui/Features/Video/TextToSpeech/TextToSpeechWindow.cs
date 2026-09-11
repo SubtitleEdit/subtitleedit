@@ -91,7 +91,7 @@ public class TextToSpeechWindow : Window
         // checkboxes are read once after generation, and toggling them mid-run is useful
         // (e.g. remembering to enable review during a long run).
         var engineLayout = MakeEngineControls(vm);
-        engineLayout.Bind(InputElement.IsEnabledProperty, new Binding(nameof(vm.IsNotGenerating)));
+        engineLayout.Bind(InputElement.IsEnabledProperty, new Binding("!" + nameof(vm.IsGenerating)));
 
         var settingsLayout = MakeSettingsControls(vm);
 
@@ -101,12 +101,12 @@ public class TextToSpeechWindow : Window
 
         // OK accepts the session (the main window applies merged lines and review text edits);
         // Cancel stops a running generation, or - when idle - closes discarding those changes.
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindIsVisible(nameof(vm.IsNotGenerating));
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindIsVisible("!" + nameof(vm.IsGenerating));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var buttonCast = UiUtil.MakeButton(string.Empty, vm.ShowCastCommand)
             .WithIconLeftBindText(IconNames.PoliceBadge, nameof(vm.CastButtonText))
             .WithBindIsVisible(nameof(vm.HasCast))
-            .WithBindIsEnabled(nameof(vm.IsNotGenerating));
+            .WithBindIsEnabled("!" + nameof(vm.IsGenerating));
         if (Se.Settings.Appearance.ShowHints)
         {
             ToolTip.SetTip(buttonCast, Se.Language.Video.TextToSpeech.SetupCastHint);
@@ -115,12 +115,12 @@ public class TextToSpeechWindow : Window
         // all buttons had identical weight and Generate sat first in the row.
         var buttonGenerate = UiUtil.MakeButton(Se.Language.Video.TextToSpeech.GenerateSpeechFromText, vm.GenerateTtsCommand)
             .WithIconLeft(IconNames.Waveform)
-            .WithBindIsEnabled(nameof(vm.IsNotGenerating));
+            .WithBindIsEnabled("!" + nameof(vm.IsGenerating));
         buttonGenerate.Classes.Add("accent");
 
         var buttonPanel = UiUtil.MakeButtonBar(
             buttonCast,
-            UiUtil.MakeButton(Se.Language.General.ImportDotDotDot, vm.ImportCommand).WithBindIsEnabled(nameof(vm.IsNotGenerating)),
+            UiUtil.MakeButton(Se.Language.General.ImportDotDotDot, vm.ImportCommand).WithBindIsEnabled("!" + nameof(vm.IsGenerating)),
             buttonOk,
             buttonCancel,
             buttonGenerate
@@ -196,6 +196,8 @@ public class TextToSpeechWindow : Window
                 return StatusDots.From(engine.IsInstalled(null).Result, HiggsTtsAudioCpp.GetEngineUpdateStatus());
             case FishTtsAudioCpp:
                 return StatusDots.From(engine.IsInstalled(null).Result, FishTtsAudioCpp.GetEngineUpdateStatus());
+            case FireRedTts3AudioCpp:
+                return StatusDots.From(engine.IsInstalled(null).Result, FireRedTts3AudioCpp.GetEngineUpdateStatus());
             case CosyVoice3CrispAsr:
                 return StatusDots.From(engine.IsInstalled(null).Result, CosyVoice3CrispAsr.GetEngineUpdateStatus());
             case F5TtsCrispAsr:

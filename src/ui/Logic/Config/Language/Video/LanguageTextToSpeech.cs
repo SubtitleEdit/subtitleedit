@@ -67,6 +67,7 @@ public class LanguageTextToSpeech
     public string CloneVoicePerLinePreparing { get; set; }
     public string CloneVoicePerLineNeedsVideo { get; set; }
     public string CloneVoicePerLineNoClips { get; set; }
+    public string CloneVoicePerLineNeedsOriginalSubtitleX { get; set; }
 
     // First-clone consent dialog
     public string VoiceCloneConsentTitle { get; set; }
@@ -227,6 +228,7 @@ public class LanguageTextToSpeech
         CloneVoicePerLinePreparing = "Taking the voice of each line from the video...";
         CloneVoicePerLineNeedsVideo = "Cloning the voice of each line needs the video the subtitle belongs to. Open the video and try again.";
         CloneVoicePerLineNoClips = "No audio could be taken from the video, so there is nothing to clone from. Check that the video has an audio track.";
+        CloneVoicePerLineNeedsOriginalSubtitleX = "{0} can only clone a line when it knows what is said in the video at that line, which comes from the original-language subtitle. No original subtitle is loaded, so every line would be spoken by the first imported voice instead of the voice in the video.\n\nOpen the original subtitle (File > Open original...) next to the translation, then generate again.";
         VoiceCloneConsentTitle = "Voice cloning - before you start";
         VoiceCloneConsentHeader = "You are about to clone a voice";
         VoiceCloneConsentIntro = "Cloning copies a real person's voice. That comes with rules in most places, and in the EU with legal duties that fall on you, not on Subtitle Edit. Please read this once.";

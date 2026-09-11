@@ -454,9 +454,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return null;
         }
 
+        // The template's style ids never change; this used to re-parse the whole header
+        // template (XmlDocument.LoadXml + XPath) for every paragraph and every nested span.
+        private static readonly Lazy<List<string>> TemplateStyles = new Lazy<List<string>>(() => TimedText10.GetStylesFromHeader(GetXmlStructure()));
+
         private static List<string> GetStyles()
         {
-            return TimedText10.GetStylesFromHeader(GetXmlStructure());
+            return TemplateStyles.Value;
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -553,6 +557,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
+            var headIndex = TtmlHeadIndex.Build(xml);
             var textBuilder = new StringBuilder();
             foreach (XmlNode divNode in body.SelectNodes("ttml:div", namespaceManager))
             {
@@ -580,7 +585,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             textBuilder.AppendLine();
                         }
-                        textBuilder.Append(ReadParagraph(pNodes[i], xml));
+                        textBuilder.Append(ReadParagraph(pNodes[i], headIndex));
                     }
                     var text = textBuilder.ToString();
                     
@@ -779,7 +784,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         }
 
 
-        private static string ReadParagraph(XmlNode node, XmlDocument xml)
+        private static string ReadParagraph(XmlNode node, TtmlHeadIndex headIndex)
         {
             var pText = new StringBuilder();
             var styles = GetStyles();
@@ -827,55 +832,36 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
                             else if (styles.Contains(style))
                             {
-                                try
+                                if (headIndex.HasHead)
                                 {
-                                    var nsmgr = new XmlNamespaceManager(xml.NameTable);
-                                    nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
-                                    XmlNode head = xml.DocumentElement.SelectSingleNode("ttml:head", nsmgr);
-                                    foreach (XmlNode styleNode in head.SelectNodes("//ttml:style", nsmgr))
+                                    // Indexed once per load - this used to run a document-wide XPath per style name per span.
+                                    foreach (var styleNode in headIndex.GetStyles(style))
                                     {
-                                        string currentStyle = null;
-                                        if (styleNode.Attributes["xml:id"] != null)
+                                        if (styleNode.Attributes["tts:fontStyle"] != null && styleNode.Attributes["tts:fontStyle"].Value == "italic")
                                         {
-                                            currentStyle = styleNode.Attributes["xml:id"].Value;
-                                        }
-                                        else if (styleNode.Attributes["id"] != null)
-                                        {
-                                            currentStyle = styleNode.Attributes["id"].Value;
+                                            isItalic = true;
                                         }
 
-                                        if (currentStyle == style)
+                                        if (styleNode.Attributes["tts:fontWeight"] != null && styleNode.Attributes["tts:fontWeight"].Value == "bold")
                                         {
-                                            if (styleNode.Attributes["tts:fontStyle"] != null && styleNode.Attributes["tts:fontStyle"].Value == "italic")
-                                            {
-                                                isItalic = true;
-                                            }
+                                            isBold = true;
+                                        }
 
-                                            if (styleNode.Attributes["tts:fontWeight"] != null && styleNode.Attributes["tts:fontWeight"].Value == "bold")
-                                            {
-                                                isBold = true;
-                                            }
+                                        if (styleNode.Attributes["tts:textDecoration"] != null && styleNode.Attributes["tts:textDecoration"].Value == "underline")
+                                        {
+                                            isUnderlined = true;
+                                        }
 
-                                            if (styleNode.Attributes["tts:textDecoration"] != null && styleNode.Attributes["tts:textDecoration"].Value == "underline")
-                                            {
-                                                isUnderlined = true;
-                                            }
+                                        if (styleNode.Attributes["tts:fontFamily"] != null)
+                                        {
+                                            fontFamily = styleNode.Attributes["tts:fontFamily"].Value;
+                                        }
 
-                                            if (styleNode.Attributes["tts:fontFamily"] != null)
-                                            {
-                                                fontFamily = styleNode.Attributes["tts:fontFamily"].Value;
-                                            }
-
-                                            if (styleNode.Attributes["tts:color"] != null)
-                                            {
-                                                color = styleNode.Attributes["tts:color"].Value;
-                                            }
+                                        if (styleNode.Attributes["tts:color"] != null)
+                                        {
+                                            color = styleNode.Attributes["tts:color"].Value;
                                         }
                                     }
-                                }
-                                catch (Exception e)
-                                {
-                                    System.Diagnostics.Debug.WriteLine(e);
                                 }
 
                                 if (color == null && style.StartsWith("s_fg_", StringComparison.Ordinal))
@@ -945,7 +931,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         pText.Append(">");
                     }
 
-                    pText.Append(ReadParagraph(child, xml));
+                    pText.Append(ReadParagraph(child, headIndex));
 
                     if (!string.IsNullOrEmpty(fontFamily) || !string.IsNullOrEmpty(color))
                     {

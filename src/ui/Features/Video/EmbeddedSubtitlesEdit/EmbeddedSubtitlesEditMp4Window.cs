@@ -50,6 +50,7 @@ public class EmbeddedSubtitlesEditMp4Window : Window
         var buttonGenerate = UiUtil.MakeButton(Se.Language.General.Generate, vm.GenerateCommand)
             .WithBindEnabled(nameof(vm.CanGenerate))
             .WithBindIsVisible(nameof(vm.HasVideoFileName));
+        buttonGenerate.IsDefault = true; // the dialog's accept button - Enter runs it (#14586)
         var buttonPanel = UiUtil.MakeButtonBar(
             buttonGenerate,
             UiUtil.MakeButtonCancel(vm.CancelCommand)

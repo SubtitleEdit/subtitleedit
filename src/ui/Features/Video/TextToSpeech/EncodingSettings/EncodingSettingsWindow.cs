@@ -41,7 +41,7 @@ public class EncodingSettingsWindow : Window
             IsChecked = vm.IsStereo,
             VerticalAlignment = VerticalAlignment.Center,
             [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.IsStereo)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
-            [!CheckBox.IsEnabledProperty] = new Binding(nameof(vm.SelectedEncoding) + "." + nameof(EncodingDisplayItem.IsStereoEnabled)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
+            [!CheckBox.IsEnabledProperty] = new Binding(nameof(vm.SelectedEncoding) + "." + nameof(EncodingDisplayItem.IsStereoEnabled)) { Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
         };
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);

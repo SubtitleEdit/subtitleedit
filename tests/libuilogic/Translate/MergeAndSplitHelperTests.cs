@@ -1,4 +1,5 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using Nikse.SubtitleEdit.UiLogic.Translate;
 
@@ -269,5 +270,130 @@ public class MergeAndSplitHelperTests
         Assert.Equal(2, count);
         Assert.Equal("A city runabout?" + Environment.NewLine + "Really, I mean it.", rows[0].TranslatedText);
         Assert.Equal("Yes, Mr. Smith.", rows[1].TranslatedText);
+    }
+
+    [Fact]
+    public async Task MergeAndTranslateIfPossible_ThreeLineReplyIsRebalancedToProfile()
+    {
+        // #14673: a two-line source whose first line ends in a comma is not un-broken, the
+        // engine keeps the break and adds one of its own, and the 47-char result sat on
+        // three lines that no long-line tool would touch.
+        var previousMaxLines = Configuration.Settings.General.MaxNumberOfLines;
+        var previousMaxLength = Configuration.Settings.General.SubtitleLineMaximumLength;
+        Configuration.Settings.General.MaxNumberOfLines = 2;
+        Configuration.Settings.General.SubtitleLineMaximumLength = 42;
+        try
+        {
+            var rows = MakeRows("Comme vous le savez," + Environment.NewLine + "personne ne peut aller au-delà du récif.");
+            var translator = new FixedResultTranslator { Result = "Zoals je weet," + Environment.NewLine + "kan niemand" + Environment.NewLine + "voorbij het rif komen." };
+
+            var count = await MergeAndSplitHelper.MergeAndTranslateIfPossible(
+                rows,
+                new TranslationPair("French", "fr"),
+                new TranslationPair("Dutch", "nl"),
+                0,
+                translator,
+                false,
+                CancellationToken.None);
+
+            Assert.Equal(1, count);
+            Assert.Equal("Zoals je weet, kan niemand" + Environment.NewLine + "voorbij het rif komen.", rows[0].TranslatedText);
+        }
+        finally
+        {
+            Configuration.Settings.General.MaxNumberOfLines = previousMaxLines;
+            Configuration.Settings.General.SubtitleLineMaximumLength = previousMaxLength;
+        }
+    }
+
+    [Theory]
+    [InlineData("Zoals je weet, kan niemand\nvoorbij het rif komen.")]
+    [InlineData("- Ga je mee?\n- Nee, ik blijf hier.")]
+    [InlineData("<i>Zoals je weet,</i>\nkan niemand het.")]
+    public void RebalanceLines_LeavesResultsThatFitTheProfileAlone(string text)
+    {
+        var previousMaxLines = Configuration.Settings.General.MaxNumberOfLines;
+        var previousMaxLength = Configuration.Settings.General.SubtitleLineMaximumLength;
+        Configuration.Settings.General.MaxNumberOfLines = 2;
+        Configuration.Settings.General.SubtitleLineMaximumLength = 42;
+        try
+        {
+            var input = text.Replace("\n", Environment.NewLine);
+            Assert.Equal(input, MergeAndSplitHelper.RebalanceLines(input, new TranslationPair("Dutch", "nl")));
+        }
+        finally
+        {
+            Configuration.Settings.General.MaxNumberOfLines = previousMaxLines;
+            Configuration.Settings.General.SubtitleLineMaximumLength = previousMaxLength;
+        }
+    }
+
+    [Theory]
+    [InlineData("zh-Hans")]
+    [InlineData("zh-HK")]
+    [InlineData("yue")]
+    [InlineData("ko")]
+    [InlineData("th")]
+    public void RebalanceLines_SkipsEveryCjkTargetCode(string code)
+    {
+        var previousMaxLines = Configuration.Settings.General.MaxNumberOfLines;
+        Configuration.Settings.General.MaxNumberOfLines = 2;
+        try
+        {
+            var input = "abc" + Environment.NewLine + "def" + Environment.NewLine + "ghi";
+            Assert.Equal(input, MergeAndSplitHelper.RebalanceLines(input, new TranslationPair("X", code)));
+        }
+        finally
+        {
+            Configuration.Settings.General.MaxNumberOfLines = previousMaxLines;
+        }
+    }
+
+    [Fact]
+    public void RebalanceLines_SkipsCjkTextWhateverTheCode()
+    {
+        var previousMaxLines = Configuration.Settings.General.MaxNumberOfLines;
+        Configuration.Settings.General.MaxNumberOfLines = 2;
+        try
+        {
+            var input = "你好世界" + Environment.NewLine + "我很好" + Environment.NewLine + "谢谢你";
+            Assert.Equal(input, MergeAndSplitHelper.RebalanceLines(input, new TranslationPair("Dutch", "nl")));
+        }
+        finally
+        {
+            Configuration.Settings.General.MaxNumberOfLines = previousMaxLines;
+        }
+    }
+
+    [Fact]
+    public void RebalanceLines_LeavesLyricsAlone()
+    {
+        var previousMaxLines = Configuration.Settings.General.MaxNumberOfLines;
+        Configuration.Settings.General.MaxNumberOfLines = 2;
+        try
+        {
+            var input = "♪ La la la ♪" + Environment.NewLine + "♪ La la ♪" + Environment.NewLine + "♪ La ♪";
+            Assert.Equal(input, MergeAndSplitHelper.RebalanceLines(input, new TranslationPair("French", "fr")));
+        }
+        finally
+        {
+            Configuration.Settings.General.MaxNumberOfLines = previousMaxLines;
+        }
+    }
+
+    [Fact]
+    public void RebalanceLines_SkipsCjkTargets()
+    {
+        var previousMaxLines = Configuration.Settings.General.MaxNumberOfLines;
+        Configuration.Settings.General.MaxNumberOfLines = 2;
+        try
+        {
+            var input = "一" + Environment.NewLine + "二" + Environment.NewLine + "三";
+            Assert.Equal(input, MergeAndSplitHelper.RebalanceLines(input, new TranslationPair("Chinese", "zh")));
+        }
+        finally
+        {
+            Configuration.Settings.General.MaxNumberOfLines = previousMaxLines;
+        }
     }
 }

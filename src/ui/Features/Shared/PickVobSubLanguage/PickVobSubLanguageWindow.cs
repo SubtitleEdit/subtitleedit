@@ -22,6 +22,8 @@ public class PickVobSubLanguageWindow : Window
         MinHeight = 500;
         CanResize = true;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         DataContext = vm;
 
         var languagesView = MakeLanguagesView(vm);

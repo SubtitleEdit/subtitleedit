@@ -1,12 +1,14 @@
 ﻿using Nikse.SubtitleEdit.Logic.Config;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 
 /// <summary>
 /// The pieces of the audio.cpp install shared by every engine that runs on it (IndexTTS 2.5,
-/// Higgs Audio v3, Fish Audio S2 Pro): one binaries folder, one server executable, and one
+/// Higgs Audio v3, Fish Audio S2 Pro, FireRedTTS3): one binaries folder, one server executable, and one
 /// backend marker. The binaries are downloaded once and reused by all of them; each engine
 /// still runs its own server process on its own loopback port with its own model.
 /// </summary>
@@ -47,6 +49,59 @@ public static class AudioCppRuntime
         {
             return string.Empty;
         }
+    }
+
+    /// <summary>
+    /// Model families compiled into the installed runtime, read from the <c>models</c> line of
+    /// the <c>BUILD-INFO.txt</c> our support-files workflow puts at the archive root
+    /// (<c>models      : index_tts2,higgs_audio_tts,fish_audio,fireredtts3</c>). Null when the
+    /// file is missing or has no such line — every archive we have shipped carries it, so that
+    /// means a hand-installed build we know nothing about.
+    /// </summary>
+    public static IReadOnlyCollection<string>? GetBuiltModelFamilies()
+    {
+        try
+        {
+            var buildInfo = Path.Combine(GetSetEngineFolder(), "BUILD-INFO.txt");
+            return File.Exists(buildInfo) ? ParseBuiltModelFamilies(File.ReadAllText(buildInfo)) : null;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    public static IReadOnlyCollection<string>? ParseBuiltModelFamilies(string buildInfoText)
+    {
+        foreach (var rawLine in buildInfoText.Split('\n'))
+        {
+            var line = rawLine.Trim();
+            var colon = line.IndexOf(':');
+            if (colon <= 0 || !line[..colon].Trim().Equals("models", StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            return line[(colon + 1)..]
+                .Split(new[] { ',', ' ', ';' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .ToArray();
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Whether the installed runtime was built with <paramref name="family"/> (an engine's
+    /// <c>FamilyName</c>). The binary is shared by every audio.cpp engine, so a user who
+    /// downloaded it for IndexTTS 2.5 in August has one that rejects every family added since
+    /// ("unsupported model family hint") until it is re-downloaded — the installer uses this to
+    /// ask for that update instead of failing at synthesis time. An unknown build (no
+    /// BUILD-INFO.txt) is trusted rather than nagged about.
+    /// </summary>
+    public static bool SupportsFamily(string family)
+    {
+        var families = GetBuiltModelFamilies();
+        return families == null || families.Contains(family, StringComparer.OrdinalIgnoreCase);
     }
 
     /// <summary>

@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -1146,6 +1146,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static string ColorHtmlToWebVtt(string text)
         {
             var res = text.Replace("</font>", "</c>");
+            if (res.IndexOf("<font", StringComparison.Ordinal) < 0)
+            {
+                return res;
+            }
 
             for (var i = 0; i < 2; i++)
             {
@@ -1155,7 +1159,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var fontString = "<c." + match.Value.Substring(13, match.Value.Length - 15) + ">";
                     fontString = fontString.Trim('"').Trim('\'');
                     res = res.Remove(match.Index, match.Length).Insert(match.Index, fontString);
-                    match = RegexHtmlColor.Match(res);
+                    // Continue after the replacement - restarting at 0 rescanned the whole cue per tag.
+                    match = RegexHtmlColor.Match(res, match.Index + fontString.Length);
                 }
 
                 match = RegexHtmlColor2.Match(res);
@@ -1164,7 +1169,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var fontString = "<c." + match.Value.Substring(12, match.Value.Length - 13) + ">";
                     fontString = fontString.Trim('"').Trim('\'');
                     res = res.Remove(match.Index, match.Length).Insert(match.Index, fontString);
-                    match = RegexHtmlColor2.Match(res);
+                    // Continue after the replacement - restarting at 0 rescanned the whole cue per tag.
+                    match = RegexHtmlColor2.Match(res, match.Index + fontString.Length);
                 }
 
                 match = RegexHtmlColor3.Match(res);
@@ -1179,7 +1185,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     fontString = fontString.Trim('"').Trim('\'');
                     res = res.Remove(match.Index, match.Length).Insert(match.Index, fontString);
-                    match = RegexHtmlColor3.Match(res);
+                    // Continue after the replacement - restarting at 0 rescanned the whole cue per tag.
+                    match = RegexHtmlColor3.Match(res, match.Index + fontString.Length);
                 }
 
                 match = RegexHtmlColor4.Match(res);
@@ -1197,7 +1204,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     fontString = fontString.Trim('"').Trim('\'');
                     res = res.Remove(match.Index, match.Length).Insert(match.Index, fontString);
-                    match = RegexHtmlColor4.Match(res);
+                    // Continue after the replacement - restarting at 0 rescanned the whole cue per tag.
+                    match = RegexHtmlColor4.Match(res, match.Index + fontString.Length);
                 }
             }
 

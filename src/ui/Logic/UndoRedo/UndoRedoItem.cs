@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Features.Main;
+﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Features.Main;
 using System;
 using System.Linq;
 
@@ -20,6 +21,16 @@ public class UndoRedoItem
     public string? SubtitleFileNameOriginal { get; set; }
     public string? SubtitleHeaderOriginal { get; set; }
     public string? SubtitleFooterOriginal { get; set; }
+
+    // The rest of the original's state. The rows carry the original text, but not whether an
+    // original is loaded at all, how it is shown, or whether it may be edited - so undoing past
+    // "open original" left an original column and edit box with nothing behind them (#14634).
+    public bool IsOriginalLoaded { get; set; }
+    public bool ShowColumnOriginalText { get; set; }
+    public bool IsOriginalReadOnly { get; set; }
+    public bool IsShowingOriginalNonMatchingLines { get; set; }
+    public bool IsEditOriginalMode { get; set; }
+    public SubtitleFormat? SubtitleOriginalFormat { get; set; }
     public int[] SelectedLines { get; set; }
     public int CaretIndex { get; set; }
     public int SelectionLength { get; set; }
@@ -67,6 +78,12 @@ public class UndoRedoItem
             SubtitleFileNameOriginal = item.SubtitleFileNameOriginal,
             SubtitleHeaderOriginal = item.SubtitleHeaderOriginal,
             SubtitleFooterOriginal = item.SubtitleFooterOriginal,
+            IsOriginalLoaded = item.IsOriginalLoaded,
+            ShowColumnOriginalText = item.ShowColumnOriginalText,
+            IsOriginalReadOnly = item.IsOriginalReadOnly,
+            IsShowingOriginalNonMatchingLines = item.IsShowingOriginalNonMatchingLines,
+            IsEditOriginalMode = item.IsEditOriginalMode,
+            SubtitleOriginalFormat = item.SubtitleOriginalFormat,
             // Preserve the original timestamp — every Clone() used to overwrite
             // Created with DateTime.Now via the constructor, so any UI that
             // displays Created (or any logic that relies on the chronological

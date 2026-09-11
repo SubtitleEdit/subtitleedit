@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
+﻿using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -157,6 +157,7 @@ public class VoiceCloningConsentTests
         [typeof(Confucius4TtsCrispAsr)] = () => new Confucius4TtsVoice("Ada", "/voices/ada.wav"),
         [typeof(CosyVoice3CrispAsr)] = () => new CosyVoice3Voice("Ada", "/voices/ada.wav", string.Empty),
         [typeof(DotsTtsCrispAsr)] = () => new DotsTtsVoice("Ada", "/voices/ada.wav"),
+        [typeof(FireRedTts3AudioCpp)] = () => new IndexTtsVoice("Ada", "/voices/ada.wav"),
         [typeof(FishTtsAudioCpp)] = () => new IndexTtsVoice("Ada", "/voices/ada.wav"),
         [typeof(HiggsTtsAudioCpp)] = () => new IndexTtsVoice("Ada", "/voices/ada.wav"),
         [typeof(IndexTts25AudioCpp)] = () => new IndexTtsVoice("Ada", "/voices/ada.wav"),

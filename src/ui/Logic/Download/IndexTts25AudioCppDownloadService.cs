@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
+﻿using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.UiLogic;
 using System;
 using System.Collections.Generic;
@@ -33,11 +33,10 @@ public class IndexTts25AudioCppDownloadService : IIndexTts25AudioCppDownloadServ
 {
     private readonly HttpClient _httpClient;
 
-    // 2026-09-05: upstream main @ a8fccb47 (incl. the Higgs Audio end-of-stream codec fix,
-    // #454, which removes the rising hiss at the end of every clip), compiled with the
-    // index_tts2 + higgs_audio_tts + fish_audio families — the same archives back all
-    // three audio.cpp engines.
-    private const string ReleaseTag = "audiocpp-indextts25-2026-09-05";
+    // 2026-09-06: upstream main @ b0757573, compiled with the index_tts2 + higgs_audio_tts +
+    // fish_audio + fireredtts3 families — the same archives back all four audio.cpp engines.
+    // The new family is the reason for the bump: FireRedTTS3 is only compiled into this build.
+    private const string ReleaseTag = "audiocpp-indextts25-2026-09-06";
     private const string ReleaseBase =
         "https://github.com/SubtitleEdit/support-files/releases/download/" + ReleaseTag + "/";
 

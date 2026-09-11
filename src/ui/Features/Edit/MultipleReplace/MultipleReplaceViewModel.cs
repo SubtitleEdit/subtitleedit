@@ -59,6 +59,16 @@ public partial class MultipleReplaceViewModel : ObservableObject
     // compiled cache: see GetRegexError.
     private readonly ConcurrentDictionary<string, string?> _regExErrors;
     private readonly Timer _timerReplace;
+
+    /// <summary>
+    /// The preview debounce (250 ms). Internal so the headless tests, which can only observe the
+    /// preview by waiting for this timer, can shorten it instead of sleeping through it.
+    /// </summary>
+    internal double PreviewIntervalMs
+    {
+        get => _timerReplace.Interval;
+        set => _timerReplace.Interval = value;
+    }
     private readonly object _previewLock = new();
     private volatile bool _dirty;
     private volatile bool _closed;
@@ -1069,6 +1079,15 @@ public partial class MultipleReplaceViewModel : ObservableObject
         {
             e.Handled = true;
             Window?.Close();
+        }
+        else if (e.Key == Key.Enter && e.KeyModifiers == KeyModifiers.None)
+        {
+            // Initial focus is on the rules tree, not the OK button (a focused button clicks on bare
+            // Space), so Enter has to reach OK from the window - the rules tree and preview grid do
+            // not use Enter themselves. A focused Cancel/Apply button consumes Enter before it bubbles
+            // here, so those keep their own meaning (#14586).
+            e.Handled = true;
+            Ok();
         }
         else if (e.Key == Key.N && e.KeyModifiers == KeyModifiers.Control)
         {

@@ -72,6 +72,8 @@ public class SeVideoTextToSpeech
     // Fish Audio S2 Pro (audio.cpp). Same sharing as above.
     public string FishTtsAudioCppModel { get; set; }
     public string FishTtsAudioCppLicenseAccepted { get; set; }
+    public string FireRedTts3AudioCppModel { get; set; }
+    public string FireRedTts3AudioCppLanguage { get; set; }
     public string CosyVoice3CrispAsrModel { get; set; }
     public double CosyVoice3CrispAsrSpeed { get; set; }
     // Display name of the picked CosyVoice3 target language ("Auto" = plain zero-shot cloning).
@@ -210,6 +212,8 @@ public class SeVideoTextToSpeech
         HiggsTtsAudioCppLicenseAccepted = string.Empty;
         FishTtsAudioCppModel = "Q8_0 (~5.9 GB)";
         FishTtsAudioCppLicenseAccepted = string.Empty;
+        FireRedTts3AudioCppModel = "Q8_0 (~3.9 GB)";
+        FireRedTts3AudioCppLanguage = string.Empty;
         CosyVoice3CrispAsrModel = "Q4_K (~1.6 GB total)";
         CosyVoice3CrispAsrSpeed = 1.0;
         CosyVoice3CrispAsrLanguage = string.Empty;

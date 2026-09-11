@@ -621,15 +621,27 @@ public class UndoRedoManagerTests
         manager.SetupChangeDetection(client, TimeSpan.FromHours(1));
         manager.StartChangeDetection();
 
-        var firstTick = Task.Run(() => manager.CheckForChanges(null), cancellationToken);
-        Assert.True(client.HashEntered.Wait(TimeSpan.FromSeconds(10), cancellationToken));
+        // A dedicated thread, not Task.Run: the first tick must be inside the client before the
+        // overlapping one is issued, and a queued thread-pool work item can sit behind blocked
+        // pool threads left by earlier tests for longer than the wait below (CI flake: HashEntered
+        // never set within 10 s while the tick had not even started).
+        var firstTick = new Thread(() => manager.CheckForChanges(null)) { IsBackground = true, Name = "undo-first-tick" };
+        firstTick.Start();
+        try
+        {
+            Assert.True(client.HashEntered.Wait(TimeSpan.FromSeconds(10), cancellationToken), "the first tick never reached the client");
 
-        manager.CheckForChanges(null); // overlapping tick while the first is blocked
+            manager.CheckForChanges(null); // overlapping tick while the first is blocked
 
-        Assert.Equal(1, Volatile.Read(ref client.HashCalls));
+            Assert.Equal(1, Volatile.Read(ref client.HashCalls));
+        }
+        finally
+        {
+            client.ReleaseHash.Set();
+            Assert.True(firstTick.Join(TimeSpan.FromSeconds(10)), "the first tick did not finish after release");
+        }
 
-        client.ReleaseHash.Set();
-        await firstTick.WaitAsync(TimeSpan.FromSeconds(10), cancellationToken);
+        await Task.CompletedTask;
     }
 
     // -----------------------------------------------------------------------

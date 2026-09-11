@@ -15,18 +15,30 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var sb = new StringBuilder();
             var seconds = 0d;
+            var first = subtitle.GetParagraphOrDefault(0);
+            if (first != null && first.StartTime.TotalMilliseconds > 100)
+            {
+                // the timeline is a chain of waits from zero - an empty wait carries the first cue's offset
+                sb.AppendLine("<br>");
+                sb.AppendLine($"{EncodeTime(first.StartTime.TotalSeconds)}");
+            }
+
             for (var index = 0; index < subtitle.Paragraphs.Count; index++)
             {
                 var p = subtitle.Paragraphs[index];
-                sb.AppendLine($"{EncodeTime(p.DurationTotalSeconds)}");
+
+                // The reader shows the text ACCUMULATED BEFORE a [WAIT] line for that wait's
+                // duration, so the text goes first and its duration follows. Writing the wait
+                // first paired every text with the next cue's duration and shifted all cues.
                 sb.AppendLine(p.Text);
+                sb.AppendLine($"{EncodeTime(p.DurationTotalSeconds)}");
 
                 seconds += p.DurationTotalSeconds;
                 var next = subtitle.GetParagraphOrDefault(index + 1);
                 if (next != null && (next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds) > 100)
                 {
-                    sb.AppendLine($"{EncodeTime(next.StartTime.TotalSeconds - p.EndTime.TotalSeconds)}");
                     sb.AppendLine("<br>");
+                    sb.AppendLine($"{EncodeTime(next.StartTime.TotalSeconds - p.EndTime.TotalSeconds)}");
                 }
             }
 

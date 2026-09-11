@@ -29,7 +29,7 @@ public class ShotChangesWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).BindIsEnabled(vm, nameof(vm.IsGenerating), new InverseBooleanConverter());
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).BindIsEnabled(vm, nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
@@ -144,12 +144,12 @@ public class ShotChangesWindow : Window
         });
         sliderSensitivity.Bind(Slider.IsEnabledProperty, new Binding(nameof(vm.IsGenerating))
         {
-            Converter = new InverseBooleanConverter(),
+            Converter = InverseBooleanConverter.Instance,
             Source = vm,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
         var labelSensitivityValue = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(ShotChangesViewModel.Sensitivity), new DoubleToTwoDecimalConverter());
-        var buttonGenerate = UiUtil.MakeButton(Se.Language.Video.ShotChanges.GenerateShotChangesWithFfmpeg, vm.GenerateShotChangesFfmpegCommand).WithBindEnabled(nameof(vm.IsGenerating), new InverseBooleanConverter());
+        var buttonGenerate = UiUtil.MakeButton(Se.Language.Video.ShotChanges.GenerateShotChangesWithFfmpeg, vm.GenerateShotChangesFfmpegCommand).WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
         var panelSensitivity = new StackPanel
         {
             Orientation = Orientation.Horizontal,

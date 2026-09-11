@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// DiT + WaveNet S2A model renders them into mel frames conditioned on a w2v-BERT embedding plus
 /// a CAM++ style vector from the reference audio, and a BigVGAN vocoder outputs <b>22.05 kHz</b>
 /// mono — the only 22 kHz TTS engine SE ships. Officially trained on 14 languages
-/// (<see cref="Confucius4TtsLanguages"/>), passed as the startup <c>-l</c> flag.
+/// (<see cref="Confucius4TtsLanguages"/>), sent as the per-request <c>language</c> field.
 ///
 /// Four GGUFs are needed:
 ///  - confucius4-tts-t2s-{q8_0,f16}.gguf  : the T2S core (passed as -m)
@@ -50,9 +50,11 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// path reads them untouched and the encoder path downsamples cleanly.
 ///
 /// Like indextts/dots-tts, the backend applies the reference only at init from the startup
-/// <c>--voice</c> flag (crispasr_backend_confucius4_tts.cpp), and <c>/v1/audio/speech</c> has no
-/// per-request language field, so a change of voice, quant, language or step count restarts the
-/// server. No <c>ref-text</c> either: conditioning is from audio alone, so imported WAVs need no
+/// <c>--voice</c> flag (crispasr_backend_confucius4_tts.cpp), so a change of voice, quant or step
+/// count restarts the server. Language does NOT: the server copies the request's <c>language</c>
+/// into the per-request params and the adapter's synthesize() reads it on every call (both since
+/// the backend landed in v0.8.30), so it travels in the body and the startup <c>-l</c> flag is not
+/// used. No <c>ref-text</c> either: conditioning is from audio alone, so imported WAVs need no
 /// .txt sidecar.
 ///
 /// CLI shape (verified on v0.8.31, macOS/Metal, 2026-09-01):
@@ -189,10 +191,10 @@ public class Confucius4TtsCrispAsr : ITtsEngine
     private static string? _serverLaunchCommand;
     // Same startup-flag cloning as indextts/dots-tts: the reference is read from the --voice path
     // at server start, never from the request body, so a voice change means tear down and restart.
-    // Tracked alongside the quant, language and ODE steps, which are equally baked in.
+    // Tracked alongside the quant and ODE steps, which are equally baked in. Language is not: it
+    // goes in every request body, so switching it never costs a model reload.
     private static string? _serverVoicePath;
     private static string? _serverModelKey;
-    private static string? _serverLanguageArg;
     private static int _serverOdeSteps;
     private static bool _processExitHooked;
     private static readonly StringBuilder _serverLog = new();
@@ -423,7 +425,7 @@ public class Confucius4TtsCrispAsr : ITtsEngine
 
         var modelKey = ResolveModelKey(model);
         var languageArg = Confucius4TtsLanguages.ResolveLanguageArg(language);
-        await EnsureServerRunningAsync(modelKey, confuciusVoice.FilePath, languageArg, cancellationToken);
+        await EnsureServerRunningAsync(modelKey, confuciusVoice.FilePath, cancellationToken);
 
         var outputFileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetFolder), Guid.NewGuid() + ".wav");
 
@@ -439,6 +441,12 @@ public class Confucius4TtsCrispAsr : ITtsEngine
         {
             ["input"] = text,
             ["response_format"] = "wav",
+            // Target language for the Chinese prompt template, per request rather than as a
+            // startup -l flag so a language change does not restart the server. The server seeds
+            // each request from the startup params and overwrites language from the body, and the
+            // adapter reads it on every synthesize(). An empty resolution means English (what the
+            // backend also falls back to), sent explicitly so the request is self-describing.
+            ["language"] = string.IsNullOrEmpty(languageArg) ? "en" : languageArg,
         };
 
         // Attests the user's own imported reference and the AI-disclosure duty; see
@@ -538,14 +546,13 @@ public class Confucius4TtsCrispAsr : ITtsEngine
         }
     }
 
-    private static async Task EnsureServerRunningAsync(string modelKey, string voicePath, string languageArg, CancellationToken ct)
+    private static async Task EnsureServerRunningAsync(string modelKey, string voicePath, CancellationToken ct)
     {
         var odeSteps = ResolveOdeSteps();
 
         if (_serverProcess is { HasExited: false } && _serverPort != 0
             && string.Equals(_serverVoicePath, voicePath, StringComparison.OrdinalIgnoreCase)
             && string.Equals(_serverModelKey, modelKey, StringComparison.OrdinalIgnoreCase)
-            && string.Equals(_serverLanguageArg, languageArg, StringComparison.OrdinalIgnoreCase)
             && _serverOdeSteps == odeSteps)
         {
             return;
@@ -557,7 +564,6 @@ public class Confucius4TtsCrispAsr : ITtsEngine
             if (_serverProcess is { HasExited: false } && _serverPort != 0
                 && string.Equals(_serverVoicePath, voicePath, StringComparison.OrdinalIgnoreCase)
                 && string.Equals(_serverModelKey, modelKey, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(_serverLanguageArg, languageArg, StringComparison.OrdinalIgnoreCase)
                 && _serverOdeSteps == odeSteps)
             {
                 return;
@@ -627,13 +633,8 @@ public class Confucius4TtsCrispAsr : ITtsEngine
             // next to the T2S GGUF is picked up automatically when this is set.
             psi.ArgumentList.Add("--voice");
             psi.ArgumentList.Add(voicePath);
-            // Target language for the Chinese prompt template. Empty = no flag, which the backend
-            // reads as English.
-            if (!string.IsNullOrEmpty(languageArg))
-            {
-                psi.ArgumentList.Add("-l");
-                psi.ArgumentList.Add(languageArg);
-            }
+            // No -l here: the target language is sent with every request (see Speak) so a change
+            // of language does not tear the server down.
             psi.ArgumentList.Add("--tts-steps");
             psi.ArgumentList.Add(odeSteps.ToString(CultureInfo.InvariantCulture));
             CrispAsrTtsProvenance.AddServerMarkingArgs(psi.ArgumentList, exe);
@@ -663,7 +664,6 @@ public class Confucius4TtsCrispAsr : ITtsEngine
             _serverPort = port;
             _serverVoicePath = voicePath;
             _serverModelKey = modelKey;
-            _serverLanguageArg = languageArg;
             _serverOdeSteps = odeSteps;
             HookProcessExitOnce();
 
@@ -684,7 +684,6 @@ public class Confucius4TtsCrispAsr : ITtsEngine
                     _serverLaunchCommand = null;
                     _serverVoicePath = null;
                     _serverModelKey = null;
-                    _serverLanguageArg = null;
                     _serverOdeSteps = 0;
                     throw new InvalidOperationException(
                         $"crispasr (confucius4-tts) exited during startup (code {exitCode}). Output: {tail}"
@@ -773,7 +772,6 @@ public class Confucius4TtsCrispAsr : ITtsEngine
         _serverLaunchCommand = null;
         _serverVoicePath = null;
         _serverModelKey = null;
-        _serverLanguageArg = null;
         _serverOdeSteps = 0;
         if (p == null)
         {

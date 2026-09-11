@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     public class Tsv1 : SubtitleFormat
     {
         private const string Separator = "\t";
-        private static readonly Regex CsvLine = new Regex(@"^""?\d+""?" + Separator + @"""?\d+""?" + Separator + @"""?\d+""?" + Separator + @"""?[^""]*""?$", RegexOptions.Compiled);
+        private static readonly Regex CsvLine = new Regex(@"^""?\d+""?" + Separator + @"""?\d+""?" + Separator + @"""?\d+""?" + Separator + @".*$", RegexOptions.Compiled); // the text may hold quotes
 
         public override string Extension => ".tsv";
 

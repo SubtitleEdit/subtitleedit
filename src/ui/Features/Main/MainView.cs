@@ -62,6 +62,9 @@ public class MainView : ViewBase
             {
                 _vm.OnLoaded();
             };
+            _vm.Window.Closed += (_, _) => _vm.StopBackgroundWork();
+
+            AttachKeyHandlers(hostWindow, _vm);
 
             // Clipboard-manager compatibility (Ditto, CopyQ, ClipClip, ...) - see the
             // hook for what it intercepts and why (#13822).
@@ -128,15 +131,22 @@ public class MainView : ViewBase
 
         root.Children.Add(_vm.ContentGrid);
 
-        AddHandler(KeyDownEvent, _vm.OnKeyDownHandler, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);
-        AddHandler(KeyUpEvent, _vm.OnKeyUpHandler, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: true);
+        return root;
+    }
+
+    /// <summary>
+    /// Key and pointer handlers live on the window rather than on this control so shortcuts
+    /// keep working when focus lands outside the user control (window root, layout host).
+    /// </summary>
+    private static void AttachKeyHandlers(Window window, MainViewModel vm)
+    {
+        window.AddHandler(KeyDownEvent, vm.OnKeyDownHandler, RoutingStrategies.Tunnel, handledEventsToo: false);
+        window.AddHandler(KeyUpEvent, vm.OnKeyUpHandler, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: true);
 
         // Tunnelling, and handledEventsToo since controls like the waveform mark their presses handled:
         // needed to see that Alt was held for a mouse gesture and cancel the menu-bar activation that
         // would otherwise fire on the Alt release (discussion #11744).
-        AddHandler(PointerPressedEvent, _vm.OnPointerPressedHandler, RoutingStrategies.Tunnel, handledEventsToo: true);
-
-        return root;
+        window.AddHandler(PointerPressedEvent, vm.OnPointerPressedHandler, RoutingStrategies.Tunnel, handledEventsToo: true);
     }
 
     // Whether the window has seen (and passed through) an Alt key-down whose release is still

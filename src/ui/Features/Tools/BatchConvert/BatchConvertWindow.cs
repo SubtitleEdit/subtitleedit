@@ -50,7 +50,7 @@ public class BatchConvertWindow : Window
                 labelBatchItemsInfo,
             }
         };
-        panelInfo.WithBindVisible(vm, nameof(vm.IsConverting), new InverseBooleanConverter());
+        panelInfo.WithBindVisible(vm, nameof(vm.IsConverting), InverseBooleanConverter.Instance);
 
         var buttonConvert = new SplitButton
         {
@@ -73,9 +73,9 @@ public class BatchConvertWindow : Window
                 }
             }
         };
-        buttonConvert.Bind(SplitButton.IsEnabledProperty, new Binding(nameof(vm.IsConverting)) { Converter = new InverseBooleanConverter() });
+        buttonConvert.Bind(SplitButton.IsEnabledProperty, new Binding(nameof(vm.IsConverting)) { Converter = InverseBooleanConverter.Instance });
 
-        var buttonDone = UiUtil.MakeButtonDone(vm.DoneCommand).WithBindIsVisible(nameof(vm.IsConverting), new InverseBooleanConverter());
+        var buttonDone = UiUtil.MakeButtonDone(vm.DoneCommand).WithBindIsVisible(nameof(vm.IsConverting), InverseBooleanConverter.Instance);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand).WithBindIsVisible(vm, nameof(vm.IsConverting));
         var buttonPanel = UiUtil.MakeButtonBar(
             buttonConvert,
@@ -296,7 +296,7 @@ public class BatchConvertWindow : Window
         menuItemRemove.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsRemoveVisible)) { Source = vm });
         menuItemRemove.Bind(MenuItem.IsEnabledProperty, new Binding(nameof(vm.IsConverting))
         {
-            Converter = new InverseBooleanConverter(),
+            Converter = InverseBooleanConverter.Instance,
             Source = vm,
         });
         flyout.Items.Add(menuItemRemove);
@@ -310,7 +310,7 @@ public class BatchConvertWindow : Window
         menuItemOpenContainingFolder.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsOpenContainingFolderVisible)) { Source = vm });
         menuItemOpenContainingFolder.Bind(MenuItem.IsEnabledProperty, new Binding(nameof(vm.IsConverting))
         {
-            Converter = new InverseBooleanConverter(),
+            Converter = InverseBooleanConverter.Instance,
             Source = vm,
         });
         flyout.Items.Add(menuItemOpenContainingFolder);

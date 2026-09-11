@@ -652,8 +652,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     int i = 0;
                     while (i < line.Length)
                     {
-                        string s = line.Substring(i);
-                        if (s.StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
+                        // Probe the tags in place - this used to copy the rest of the line for
+                        // every character, and then a one-char string for the character itself.
+                        if (line.StartsWithAt(i, "<i>", StringComparison.OrdinalIgnoreCase))
                         {
                             italic = true;
                             if (content.Count > 0 && content[content.Count - 1] is SubtitleRegionContentChangeFontStyle)
@@ -668,7 +669,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             });
                             i += 3;
                         }
-                        else if (s.StartsWith("</i>", StringComparison.OrdinalIgnoreCase))
+                        else if (line.StartsWithAt(i, "</i>", StringComparison.OrdinalIgnoreCase))
                         {
                             italic = false;
                             AddText(sb, content);
@@ -679,7 +680,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             content.Add(new SubtitleRegionContentEndOfInlineStyle());
                             i += 4;
                         }
-                        else if (s.StartsWith("<b>", StringComparison.OrdinalIgnoreCase))
+                        else if (line.StartsWithAt(i, "<b>", StringComparison.OrdinalIgnoreCase))
                         {
                             bold = true;
                             if (content.Count > 0 && content[content.Count - 1] is SubtitleRegionContentChangeFontStyle)
@@ -694,7 +695,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             });
                             i += 3;
                         }
-                        else if (s.StartsWith("</b>", StringComparison.OrdinalIgnoreCase))
+                        else if (line.StartsWithAt(i, "</b>", StringComparison.OrdinalIgnoreCase))
                         {
                             bold = false;
                             AddText(sb, content);
@@ -707,8 +708,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                         else
                         {
+                            sb.Append(line[i]);
                             i++;
-                            sb.Append(s.Substring(0, 1));
                         }
                     }
                     AddText(sb, content);

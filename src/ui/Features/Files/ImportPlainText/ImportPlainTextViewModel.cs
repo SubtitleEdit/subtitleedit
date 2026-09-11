@@ -700,6 +700,25 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
         _videoFileName = videoFileName ?? string.Empty;
     }
 
+    /// <summary>
+    /// Opens the dialog with the text of a file the main window could not parse as a subtitle
+    /// (the "Import plain text" button on the unknown-format prompt, issue #14605).
+    /// </summary>
+    internal void Initialize(Subtitle subtitle, string? videoFileName, string plainTextFileName)
+    {
+        Initialize(subtitle, videoFileName);
+
+        try
+        {
+            PlainText = FileUtil.ReadAllTextShared(plainTextFileName, LanguageAutoDetect.GetEncodingFromFile(plainTextFileName));
+            MarkDirty();
+        }
+        catch
+        {
+            // unreadable file - the user can still pick another one from the dialog
+        }
+    }
+
     internal void GapChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
         MarkDirty();

@@ -256,6 +256,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
             AddExt(existingTypes, extensions, ".mks");
             AddExt(existingTypes, extensions, ".pac");
             AddExt(existingTypes, extensions, ".890");
+            AddExt(existingTypes, extensions, ".sdb");
             AddExt(existingTypes, extensions, ".fpc");
             AddExt(existingTypes, extensions, ".dvbttx");
 

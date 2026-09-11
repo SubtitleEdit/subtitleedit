@@ -985,7 +985,7 @@ public partial class CutVideoViewModel : ObservableObject
 
         _positionTimer.Stop();
         _timerGenerate.StopAndDispose(TimerGenerateElapsed);
-        VideoPlayer.VideoPlayer.CloseFile();
+        VideoPlayer.CloseAndDisposePlayer();
 
         if (_ffmpegListKeyFramesProcess != null && !_ffmpegListKeyFramesProcess.HasExited)
         {

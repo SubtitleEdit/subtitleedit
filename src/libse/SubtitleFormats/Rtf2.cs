@@ -27,8 +27,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {\colortbl ;\red0\green0\blue0;}
 \viewkind4\uc1\pard\b\f0\fs24 [Header]\par
 Max Characters Per Line: 36\par
-Frame Rate: " + Configuration.Settings.General.CurrentFrameRate + @" fps\par
-TimeCode Format: " + Configuration.Settings.General.CurrentFrameRate + @" frames/sec\par
+Frame Rate: " + Configuration.Settings.General.CurrentFrameRate.ToString(System.Globalization.CultureInfo.InvariantCulture) + @" fps\par
+TimeCode Format: " + Configuration.Settings.General.CurrentFrameRate.ToString(System.Globalization.CultureInfo.InvariantCulture) + @" frames/sec\par
 [/Header]\par
 \par
 \par");

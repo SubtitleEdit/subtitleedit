@@ -214,7 +214,12 @@ public static class TtsVoiceInstaller
     /// on Apple Silicon, and CPU / Vulkan / CUDA on Windows and Linux x64.
     /// </summary>
     /// <param name="engineDisplayName">The engine that asked, for the prompts ("IndexTTS 2.5").</param>
-    public static async Task<bool> EnsureAudioCppRuntime(Window? window, IWindowService windowService, bool forceRedownload, string engineDisplayName)
+    /// <param name="requiredFamily">
+    /// The audio.cpp model family that engine needs (its <c>FamilyName</c>). An installed runtime
+    /// that predates the family is not "installed" for this engine: the user is asked to update
+    /// it, since the old binary would only fail later with "unsupported model family hint".
+    /// </param>
+    public static async Task<bool> EnsureAudioCppRuntime(Window? window, IWindowService windowService, bool forceRedownload, string engineDisplayName, string requiredFamily)
     {
         if (window == null)
         {
@@ -222,9 +227,29 @@ public static class TtsVoiceInstaller
         }
 
         var isInstalled = File.Exists(AudioCppRuntime.GetServerExecutable());
-        if (!forceRedownload && isInstalled)
+        var isCapable = isInstalled && AudioCppRuntime.SupportsFamily(requiredFamily);
+        if (!forceRedownload && isCapable)
         {
             return true;
+        }
+
+        // Installed but built before this engine's family existed: confirm the update and keep
+        // the backend the user picked the first time — no reason to ask CPU/Vulkan/CUDA again.
+        var isUpdateRequired = isInstalled && !isCapable && !forceRedownload;
+        var savedBackend = Se.Settings.Video.TextToSpeech.IndexTts25AudioCppBackend;
+        if (isUpdateRequired)
+        {
+            var updateAnswer = await MessageBox.Show(
+                window,
+                "audio.cpp update required",
+                $"{Environment.NewLine}\"{engineDisplayName}\" needs a newer audio.cpp runtime than the one installed. Re-download it now?",
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question);
+
+            if (updateAnswer != MessageBoxResult.Yes)
+            {
+                return false;
+            }
         }
 
         string backend;
@@ -241,7 +266,7 @@ public static class TtsVoiceInstaller
                 return false;
             }
 
-            var answer = await MessageBox.Show(
+            var answer = isUpdateRequired ? MessageBoxResult.Yes : await MessageBox.Show(
                 window,
                 "Download audio.cpp?",
                 $"{Environment.NewLine}\"{engineDisplayName}\" runs through the audio.cpp runtime. Download and install now?",
@@ -268,7 +293,9 @@ public static class TtsVoiceInstaller
                 return false;
             }
 
-            var variantAnswer = await MessageBox.Show(
+            var variantAnswer = isUpdateRequired && !string.IsNullOrEmpty(savedBackend)
+                ? MessageBoxResult.None
+                : await MessageBox.Show(
                 window,
                 "Download audio.cpp?",
                 $"{Environment.NewLine}\"{engineDisplayName}\" runs through the audio.cpp runtime. Select a build to download:",
@@ -278,17 +305,23 @@ public static class TtsVoiceInstaller
                 "Vulkan",
                 "CUDA");
 
-            if (variantAnswer == MessageBoxResult.None || variantAnswer == MessageBoxResult.Cancel)
+            if (isUpdateRequired && !string.IsNullOrEmpty(savedBackend))
+            {
+                backend = savedBackend;
+            }
+            else if (variantAnswer == MessageBoxResult.None || variantAnswer == MessageBoxResult.Cancel)
             {
                 return false;
             }
-
-            backend = variantAnswer switch
+            else
             {
-                MessageBoxResult.Custom2 => IndexTts25AudioCppDownloadService.BackendVulkan,
-                MessageBoxResult.Custom3 => IndexTts25AudioCppDownloadService.BackendCuda,
-                _ => IndexTts25AudioCppDownloadService.BackendCpu,
-            };
+                backend = variantAnswer switch
+                {
+                    MessageBoxResult.Custom2 => IndexTts25AudioCppDownloadService.BackendVulkan,
+                    MessageBoxResult.Custom3 => IndexTts25AudioCppDownloadService.BackendCuda,
+                    _ => IndexTts25AudioCppDownloadService.BackendCpu,
+                };
+            }
 
             // The GPU builds import their runtime at load time, so a missing driver is not a
             // slow fallback — the process dies in the loader before printing anything.
@@ -312,13 +345,14 @@ public static class TtsVoiceInstaller
             return false;
         }
 
-        // The three audio.cpp engines share this binary. A server started from the old build
+        // The four audio.cpp engines share this binary. A server started from the old build
         // must go before the archive is extracted: on Windows the running exe cannot be
         // overwritten at all, and elsewhere the stale process would keep answering requests
         // (and reject any model family the new build added) until Subtitle Edit restarts.
         IndexTts25AudioCpp.StopServer();
         HiggsTtsAudioCpp.StopServer();
         FishTtsAudioCpp.StopServer();
+        FireRedTts3AudioCpp.StopServer();
 
         var dlResult = await windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(
             window, vm => vm.StartDownloadIndexTts25AudioCppEngine(backend));

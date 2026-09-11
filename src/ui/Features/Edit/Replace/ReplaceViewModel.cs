@@ -188,6 +188,10 @@ public partial class ReplaceViewModel : ObservableObject
             e.Handled = true;
             UiUtil.ShowHelp("features/edit", "replace");
         }
+        else
+        {
+            UiUtil.TryInvokeBareAccessKey(Window, e);
+        }
     }
 
     internal void RefreshSubtitles(List<string> subs, List<string>? originalSubs = null, bool canEditOriginal = false)

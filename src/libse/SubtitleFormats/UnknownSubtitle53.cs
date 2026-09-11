@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -76,6 +77,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (s.Length == 11 && RegexTimeCodesEnd.IsMatch(line) && p != null)
                 {
                     p.EndTime = DecodeTimeCodeFramesFourParts(s.Split(':'));
+                }
+                else if (s.Length > 0 && p != null)
+                {
+                    // continuation line (ToText writes a two-line cue as two lines) - was an error and lost
+                    p.Text = (p.Text + Environment.NewLine + s).Trim();
                 }
                 else if (s.Length > 0)
                 {

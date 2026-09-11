@@ -507,7 +507,7 @@ public partial class SetSyncPointViewModel : ObservableObject
     {
         UiUtil.SaveWindowPosition(Window);
         _positionTimer.Stop();
-        VideoPlayerControl.VideoPlayer.CloseFile();
+        VideoPlayerControl.CloseAndDisposePlayer();
 
         // Deletes the temp subtitle file handed to the player.
         _previewSubtitle.Reset();

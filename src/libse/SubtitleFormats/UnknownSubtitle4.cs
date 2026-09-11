@@ -57,6 +57,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return rounded;
         }
 
+        /// <summary>
+        /// The fraction is written with two digits (hundredths, see the sample and ToText); it was
+        /// read back as whole milliseconds, so "00:00:22.50" reloaded as 22.050 s.
+        /// </summary>
+        private static int ParseFraction(string s)
+        {
+            var value = int.Parse(s);
+            return s.Length switch
+            {
+                1 => value * 100,
+                2 => value * 10,
+                _ => value,
+            };
+        }
+
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             var paragraph = new Paragraph();
@@ -77,11 +92,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             int startHours = int.Parse(parts[0]);
                             int startMinutes = int.Parse(parts[1]);
                             int startSeconds = int.Parse(parts[2]);
-                            int startMilliseconds = int.Parse(parts[3]);
+                            int startMilliseconds = ParseFraction(parts[3]);
                             int endHours = int.Parse(parts[4]);
                             int endMinutes = int.Parse(parts[5]);
                             int endSeconds = int.Parse(parts[6]);
-                            int endMilliseconds = int.Parse(parts[7]);
+                            int endMilliseconds = ParseFraction(parts[7]);
                             paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
                             paragraph.EndTime = new TimeCode(endHours, endMinutes, endSeconds, endMilliseconds);
                             expecting = ExpectingLine.Text;

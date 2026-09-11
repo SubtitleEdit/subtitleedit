@@ -55,7 +55,7 @@ public class DownloadTesseractModelWindow : Window
                 UiUtil.MakeButton(Se.Language.General.Download, vm.DownloadCommand),
             }
         };
-        panelPickDictionary.Bind(Panel.IsVisibleProperty, new Binding(nameof(vm.IsProgressVisible)) { Converter = new InverseBooleanConverter() });
+        panelPickDictionary.Bind(Panel.IsVisibleProperty, new Binding(nameof(vm.IsProgressVisible)) { Converter = InverseBooleanConverter.Instance });
 
         var progressBar = UiUtil.MakeProgressBar();
         progressBar.MinWidth = 400;

@@ -14,8 +14,6 @@ public abstract class CrispAsrEngineBase : ICrispAsrEngine
     public abstract string Choice { get; }
     public abstract string Url { get; }
     public abstract string BackendName { get; }
-    public virtual string GetBackendName(string modelName) => BackendName;
-    public virtual string GetModelArguments(string modelName, string? userArguments) => string.Empty;
     public abstract string DefaultLanguage { get; }
     public abstract bool IncludeLanguage { get; }
     public virtual bool HasNativeTimestamps => false;

@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using SkiaSharp;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Numerics;
@@ -56,18 +57,171 @@ public class TesseractOcr
         return "tesseract";
     }
 
-    public async Task<string> Ocr(SKBitmap bitmap, string language, string tessDataFolder, CancellationToken cancellationToken, int engineMode = 3)
+    /// <summary>
+    /// Margin of white added around the text before it is handed to Tesseract. SE4 added the same
+    /// 10 px (VobSubOcr.GetSubtitleBitmap → AddMargin(10)); without it glyphs touch the image edge
+    /// and Tesseract misreads them (discussion #12929: "In"/"Is" for "in"/"is", "\What", "(o").
+    /// </summary>
+    public const int Margin = 10;
+
+    /// <summary>Page segmentation mode for the normal pass: a single uniform block of text.</summary>
+    public const int PsmSingleBlock = 6;
+
+    /// <summary>Page segmentation mode for the resized retry: let Tesseract find the layout.</summary>
+    public const int PsmAuto = 3;
+
+    /// <summary>Page segmentation mode for the last-resort retry: a single text line.</summary>
+    public const int PsmSingleLine = 7;
+
+    /// <summary>
+    /// Builds the image Tesseract is fed: a white margin around the subtitle, binarized to black
+    /// text on white, and optionally stretched (SE4 retried unknown words with 3x width / 2x
+    /// height, and blank results with 4x / 2x). Keys on brightness so coloured text (e.g. yellow)
+    /// is kept rather than blanked the way the blue-only MakeOneColor did.
+    /// </summary>
+    internal static SKBitmap PrepareImage(SKBitmap bitmap, int scaleX = 1, int scaleY = 1)
+    {
+        var nbmp = new NikseBitmap(bitmap);
+        nbmp.AddMargin(Margin);
+        nbmp.MakeBlackAndWhiteForOcr();
+        var prepared = nbmp.GetBitmap();
+        if (scaleX <= 1 && scaleY <= 1)
+        {
+            return prepared;
+        }
+
+        using (prepared)
+        {
+            var info = new SKImageInfo(prepared.Width * scaleX, prepared.Height * scaleY, prepared.ColorType, prepared.AlphaType);
+            return prepared.Resize(info, new SKSamplingOptions(SKCubicResampler.Mitchell)) ?? prepared.Copy();
+        }
+    }
+
+    /// <summary>
+    /// A retry pass is only taken when it does not invent a digit the first pass did not see:
+    /// the stretched image tends to read a stray outline pixel as "7" ("18 months" → "718 months").
+    /// Same guard as SE4 used when choosing between Tesseract passes.
+    /// </summary>
+    internal static bool RetryIntroducesDigit(string firstPass, string retry)
+    {
+        foreach (var c in retry)
+        {
+            if (char.IsDigit(c) && !firstPass.Contains(c))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static readonly System.Text.RegularExpressions.Regex WhitespaceSplit = new(@"(\s+)", System.Text.RegularExpressions.RegexOptions.Compiled);
+
+    /// <summary>
+    /// Word-wise merge of a retry pass into the first pass: only tokens the dictionary flagged as
+    /// unknown in the first pass are taken from the retry, every other token is kept. The stretched
+    /// retry tends to fix the unknown word but damage a known one ("diedq," → "died," but
+    /// "18 months" → "718 months"), so taking it whole is rejected and taking it word-wise is not.
+    /// Null when the two passes do not line up token for token or no unknown word changed.
+    /// </summary>
+    internal static string? MergeRetryUnknownWords(string firstPass, string retry, IReadOnlyCollection<string> unknownWords)
+    {
+        if (unknownWords.Count == 0)
+        {
+            return null;
+        }
+
+        var first = WhitespaceSplit.Split(firstPass);
+        var second = WhitespaceSplit.Split(retry);
+        if (first.Length != second.Length)
+        {
+            return null;
+        }
+
+        var changed = false;
+        for (var i = 0; i < first.Length; i++)
+        {
+            if (first[i] == second[i])
+            {
+                continue;
+            }
+
+            if (i % 2 == 1)
+            {
+                return null; // whitespace differs - the passes do not line up
+            }
+
+            if (!ContainsUnknownWord(first[i], unknownWords))
+            {
+                continue; // a word the dictionary accepted: keep the first pass' reading
+            }
+
+            first[i] = second[i];
+            changed = true;
+        }
+
+        return changed ? string.Concat(first) : null;
+    }
+
+    /// <summary>
+    /// Whole-word match: the token is unknown when one of its words (the runs between punctuation
+    /// and tags, e.g. "diedq" in "diedq,") equals a flagged word. A substring test would let a lone
+    /// unknown "l" claim nearly every English token and replace words the dictionary accepted.
+    /// </summary>
+    private static bool ContainsUnknownWord(string token, IReadOnlyCollection<string> unknownWords)
+    {
+        var start = -1;
+        for (var i = 0; i <= token.Length; i++)
+        {
+            // Same word characters as OcrFixEngine.SplitLine, which produced the unknown words.
+            var isWordChar = i < token.Length && (char.IsLetterOrDigit(token[i]) || token[i] == '\'' || token[i] == '’' || token[i] == '-');
+            if (isWordChar)
+            {
+                if (start < 0)
+                {
+                    start = i;
+                }
+
+                continue;
+            }
+
+            if (start >= 0)
+            {
+                var word = token.AsSpan(start, i - start);
+                if (IsUnknownWord(word, unknownWords) || IsUnknownWord(word.Trim("'’-"), unknownWords))
+                {
+                    return true;
+                }
+
+                start = -1;
+            }
+        }
+
+        return false;
+    }
+
+    private static bool IsUnknownWord(ReadOnlySpan<char> word, IReadOnlyCollection<string> unknownWords)
+    {
+        foreach (var unknown in unknownWords)
+        {
+            if (word.Length > 0 && word.Equals(unknown.AsSpan(), StringComparison.Ordinal))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public async Task<string> Ocr(SKBitmap bitmap, string language, string tessDataFolder, CancellationToken cancellationToken, int engineMode = 3, int psm = PsmSingleBlock, int scaleX = 1, int scaleY = 1)
     {
         if (string.IsNullOrEmpty(_executablePath))
         {
             _executablePath = GetExecutablePath();
         }
 
-        // Preprocess image: binarize to black text on white. Keys on brightness so coloured text
-        // (e.g. yellow) is kept rather than blanked the way the blue-only MakeOneColor did.
-        var nbmp = new NikseBitmap(bitmap);
-        nbmp.MakeBlackAndWhiteForOcr();
-        using var oneColorBitmap = nbmp.GetBitmap();
+        Error = string.Empty;
+        using var oneColorBitmap = PrepareImage(bitmap, scaleX, scaleY);
 
         var tempImage = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.png");
         var tempTextFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
@@ -77,8 +231,8 @@ public class TesseractOcr
         // a copy of the exact image, so blank output can be diagnosed without guessing.
         if (Se.Settings.Tools.WriteToolsLog)
         {
-            var inkPercent = GetInkPercent(nbmp);
-            Se.WriteToolsLog($"Tesseract OCR: input {oneColorBitmap.Width}x{oneColorBitmap.Height}, ink={inkPercent:0.0}% (0% = preprocessing blanked the text), lang={language}, oem={engineMode}");
+            var inkPercent = GetInkPercent(new NikseBitmap(oneColorBitmap));
+            Se.WriteToolsLog($"Tesseract OCR: input {oneColorBitmap.Width}x{oneColorBitmap.Height}, ink={inkPercent:0.0}% (0% = preprocessing blanked the text), lang={language}, oem={engineMode}, psm={psm}");
             try
             {
                 var logDir = Path.GetDirectoryName(Se.GetToolsLogFilePath()) ?? Path.GetTempPath();
@@ -113,7 +267,7 @@ public class TesseractOcr
             psi.ArgumentList.Add("-l");
             psi.ArgumentList.Add(language);
             psi.ArgumentList.Add("--psm");
-            psi.ArgumentList.Add("6");
+            psi.ArgumentList.Add(psm.ToString(System.Globalization.CultureInfo.InvariantCulture));
             psi.ArgumentList.Add("--oem");
             psi.ArgumentList.Add(engineMode.ToString(System.Globalization.CultureInfo.InvariantCulture));
             psi.ArgumentList.Add("-c");

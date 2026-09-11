@@ -44,7 +44,8 @@ public class BeautifyTimeCodesWindow : Window
         Grid.SetRow(c.Children[2], 2);
         Grid.SetRow(c.Children[3], 3);
 
-        Activated += delegate { /* leave focus on the visualizer for keyboard nav */ };
+        // Change navigation keys (arrows, PageUp/Down, Home/End) are handled at window level, so
+        // they work whichever control has focus - nothing here needs to own them.
         KeyDown += (_, e) => vm.OnKeyDown(e);
         Closing += (_, __) => vm.Dispose();
     }
@@ -191,10 +192,12 @@ public class BeautifyTimeCodesWindow : Window
     {
         var l = Se.Language.Tools.BeautifyTimeCodes;
 
-        var buttonPrev = UiUtil.MakeButton(vm.PreviousChangeCommand, IconNames.ArrowUpThin, l.PreviousChange);
+        // The same steps are on the keyboard (see BeautifyTimeCodesViewModel.OnKeyDown); the
+        // tooltips are the only place that advertises it, so name the keys there.
+        var buttonPrev = UiUtil.MakeButton(vm.PreviousChangeCommand, IconNames.ArrowUpThin, $"{l.PreviousChange} (Up / PageUp)");
         buttonPrev.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.CanGoPrevious)) { Source = vm });
 
-        var buttonNext = UiUtil.MakeButton(vm.NextChangeCommand, IconNames.ArrowDownThin, l.NextChange);
+        var buttonNext = UiUtil.MakeButton(vm.NextChangeCommand, IconNames.ArrowDownThin, $"{l.NextChange} (Down / PageDown)");
         buttonNext.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.CanGoNext)) { Source = vm });
 
         var labelPosition = new TextBlock

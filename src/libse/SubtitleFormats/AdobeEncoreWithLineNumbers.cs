@@ -16,18 +16,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            var sb = new StringBuilder();
-            foreach (var line in lines)
-            {
-                sb.AppendLine(line);
-            }
+            var allText = JoinLines(lines);
 
-            if (sb.ToString().Contains("#INPOINT OUTPOINT PATH"))
+            if (allText.Contains("#INPOINT OUTPOINT PATH"))
             {
                 return false; // Pinnacle Impression
             }
 
-            if (sb.ToString().StartsWith("{\\rtf1", StringComparison.Ordinal))
+            if (allText.StartsWith("{\\rtf1", StringComparison.Ordinal))
             {
                 return false;
             }

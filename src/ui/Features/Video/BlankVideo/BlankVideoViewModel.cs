@@ -239,8 +239,10 @@ public partial class BlankVideoViewModel : ObservableObject
         var ts = TimeSpan.FromMilliseconds(totalMs + 2000);
         var timeCode = string.Format($"{ts.Hours:00}\\\\:{ts.Minutes:00}\\\\:{ts.Seconds:00}");
 
+        // The checkerboard follows the app theme: light squares in light theme, dark squares
+        // in dark theme. Black text on the dark-theme checkerboard was nearly invisible.
         var addTimeColor = "white";
-        if (UseCheckedImage)
+        if (UseCheckedImage && !UiUtil.IsDarkTheme())
         {
             addTimeColor = "black";
         }

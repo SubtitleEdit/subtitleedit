@@ -249,4 +249,37 @@ public class ShortcutManagerTests
 
         Assert.Same(command, manager.CheckShortcuts(control, category.ToString()));
     }
+
+    [Fact]
+    public void ContinuousShortcutsWhileHoldingModifierWorkFluently()
+    {
+        var manager = new ShortcutManager();
+        var category = ShortcutCategory.General;
+        var undo = new RelayCommand(() => { });
+        var redo = new RelayCommand(() => { });
+        manager.RegisterShortcut(new ShortCut("Undo", ["Control", "Z"], category, undo));
+        manager.RegisterShortcut(new ShortCut("Redo", ["Control", "Y"], category, redo));
+
+        // 1. Hold Ctrl
+        var ctrl = KeyEvent(Key.LeftCtrl, PhysicalKey.ControlLeft, KeyModifiers.Control);
+        manager.OnKeyPressed(null, ctrl);
+
+        // 2. Press Z -> Undo
+        var z = KeyEvent(Key.Z, PhysicalKey.Z, KeyModifiers.Control);
+        manager.OnKeyPressed(null, z);
+        Assert.Same(undo, manager.CheckShortcuts(z, category.ToString()));
+
+        // 3. While still holding Ctrl, press Y -> Redo (even if Z key-up wasn't fired yet)
+        var y = KeyEvent(Key.Y, PhysicalKey.Y, KeyModifiers.Control);
+        manager.OnKeyPressed(null, y);
+        Assert.Same(redo, manager.CheckShortcuts(y, category.ToString()));
+
+        // 4. While still holding Ctrl, press Z again -> Undo
+        manager.OnKeyPressed(null, z);
+        Assert.Same(undo, manager.CheckShortcuts(z, category.ToString()));
+
+        // 5. Key auto-repeat: pressing Z again without key-up
+        manager.OnKeyPressed(null, z);
+        Assert.Same(undo, manager.CheckShortcuts(z, category.ToString()));
+    }
 }

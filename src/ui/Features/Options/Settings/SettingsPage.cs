@@ -522,6 +522,7 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformShowToolbar, nameof(_vm.WaveformShowToolbar)),
             new SettingsItem(Se.Language.Options.Settings.WaveformShowToolbarEditLabel,
                 () => UiUtil.MakeButton(Se.Language.Options.Settings.WaveformShowToolbarEdit, _vm.EditWaveformToolbarPropertiesCommand)),
+            MakeCheckboxSetting(Se.Language.Waveform.ShowOriginalSubtitle, nameof(_vm.WaveformShowOriginalSubtitle)),
 
             new SettingsItem(Se.Language.Options.Settings.WaveformSingleClickAction, () => new ComboBox
             {
@@ -586,6 +587,11 @@ public class SettingsPage : UserControl
                 () => UiUtil.MakeComboBox(_vm.WaveformMouseWheelVideoPositionSteps, _vm, nameof(_vm.SelectedWaveformMouseWheelVideoPositionStep))),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformCenterVideoPositionAlsoWhenPaused, nameof(_vm.WaveformCenterVideoPositionAlsoWhenPaused)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformDrawGridLines, nameof(_vm.WaveformDrawGridLines)),
+            // SE 4 parity: the per-paragraph footer in the waveform ("#43  01:10" and the
+            // chars/sec line above it) can be turned off - some users find it noisy (#14707).
+            // Composed from existing strings so no new translatable text is needed.
+            MakeCheckboxSetting($"{Se.Language.General.Show} {Se.Language.General.NumberSymbol} + {Se.Language.General.Duration}", nameof(_vm.WaveformShowNumberAndDuration)),
+            MakeCheckboxSetting($"{Se.Language.General.Show} {Se.Language.General.CharsPerSec}", nameof(_vm.WaveformShowCps)),
             new SettingsItem(Se.Language.Options.Settings.WaveformTextFontSize, () => UiUtil.MakeNumericUpDownInt(
                 10 ,
                 100,
@@ -1329,7 +1335,7 @@ public class SettingsPage : UserControl
         textBox[!Control.IsEnabledProperty] = new Binding(nameof(_vm.ProxyUseDefaultCredentials))
         {
             Source = _vm,
-            Converter = new InverseBooleanConverter(),
+            Converter = InverseBooleanConverter.Instance,
         };
 
         return textBox;

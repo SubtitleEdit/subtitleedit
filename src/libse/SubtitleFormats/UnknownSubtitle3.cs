@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format(paragraphWriteFormat, MillisecondsToFrames(p.StartTime.TotalMilliseconds), MillisecondsToFrames(p.EndTime.TotalMilliseconds), p.Text.Replace(Environment.NewLine, "\\~")));
+                sb.AppendLine(string.Format(paragraphWriteFormat, (long)Math.Round(p.StartTime.TotalMilliseconds), (long)Math.Round(p.EndTime.TotalMilliseconds), p.Text.Replace(Environment.NewLine, "\\~")));
             }
             return sb.ToString().Trim();
         }

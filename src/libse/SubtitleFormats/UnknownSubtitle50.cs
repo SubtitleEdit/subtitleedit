@@ -164,8 +164,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 int endMinutes = int.Parse(parts[5]);
                 int endSeconds = int.Parse(parts[6]);
                 int endMilliseconds = int.Parse(parts[7]);
-                paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
-                paragraph.EndTime = new TimeCode(endHours, endMinutes, endSeconds, endMilliseconds);
+                // the last field is frames (00-29 in the sample header), which FormatTime also writes
+                paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, FramesToMillisecondsMax999(startMilliseconds));
+                paragraph.EndTime = new TimeCode(endHours, endMinutes, endSeconds, FramesToMillisecondsMax999(endMilliseconds));
                 return true;
             }
             catch

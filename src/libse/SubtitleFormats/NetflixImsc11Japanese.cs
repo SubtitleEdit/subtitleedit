@@ -155,10 +155,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 paragraphContent.LoadXml($"<root>{text.Replace("&", "&amp;")}</root>");
                 ConvertParagraphNodeToTtmlNode(paragraphContent.DocumentElement, xml, paragraph);
             }
-            catch // Wrong markup, clear it
+            catch // Wrong markup (e.g. a literal "5 < 6"): keep the words and line breaks, drop the tags
             {
-                text = Regex.Replace(text, "[<>]", "");
-                paragraph.AppendChild(xml.CreateTextNode(text));
+                // Stripping every < and > turned the tags into text and lost the line break (see TimedText10).
+                var fallbackLines = text.Split(new[] { "<br/>" }, StringSplitOptions.None);
+                for (var i = 0; i < fallbackLines.Length; i++)
+                {
+                    if (i > 0)
+                    {
+                        paragraph.AppendChild(xml.CreateElement("br"));
+                    }
+
+                    paragraph.AppendChild(xml.CreateTextNode(HtmlUtil.RemoveHtmlTags(fallbackLines[i], true)));
+                }
             }
 
             return paragraph;
@@ -249,7 +258,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         /// Subtitle Edit itself use the names above. Fall back to the region attributes so vertical
         /// (tbrl/tblr) and top/middle placement survive documents written by anything else (issue #13861).
         /// </summary>
-        private static string GetAssStyleFromRegion(string regionId, XmlDocument xml)
+        private static string GetAssStyleFromRegion(string regionId, TtmlNodeIndex index)
         {
             var byName = GetAssStyleFromRegionName(regionId);
             if (byName != null)
@@ -257,14 +266,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return byName;
             }
 
-            var regionNode = FindNodeById(xml, "region", regionId);
+            var regionNode = index.Region(regionId);
             if (regionNode == null)
             {
                 return string.Empty;
             }
 
-            var displayAlign = GetTtmlStyleValue(xml, regionNode, "tts:displayAlign", includeInitial: true) ?? "after";
-            var writingMode = GetTtmlStyleValue(xml, regionNode, "tts:writingMode", includeInitial: true) ?? "lrtb";
+            var displayAlign = GetTtmlStyleValue(index, regionNode, "tts:displayAlign", includeInitial: true) ?? "after";
+            var writingMode = GetTtmlStyleValue(index, regionNode, "tts:writingMode", includeInitial: true) ?? "lrtb";
 
             if (writingMode.StartsWith("tb", StringComparison.Ordinal))
             {
@@ -277,8 +286,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return rightToLeft == atStart ? @"{\an9}" : @"{\an7}";
             }
 
-            var originY = ParseRegionPercentY(GetTtmlStyleValue(xml, regionNode, "tts:origin", includeInitial: true)) ?? 10.0;
-            var extentY = ParseRegionPercentY(GetTtmlStyleValue(xml, regionNode, "tts:extent", includeInitial: true)) ?? 80.0;
+            var originY = ParseRegionPercentY(GetTtmlStyleValue(index, regionNode, "tts:origin", includeInitial: true)) ?? 10.0;
+            var extentY = ParseRegionPercentY(GetTtmlStyleValue(index, regionNode, "tts:extent", includeInitial: true)) ?? 80.0;
             double anchorY;
             switch (displayAlign)
             {
@@ -324,32 +333,61 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 : (double?)null;
         }
 
-        private static XmlNode FindNodeById(XmlDocument xml, string localName, string id)
+        /// <summary>
+        /// The document's style / region elements by id and its "initial" elements, built once per
+        /// load. Every attribute lookup used to create an XmlNamespaceManager and run a
+        /// document-wide XPath - about ten per span, more per paragraph for the region.
+        /// </summary>
+        private sealed class TtmlNodeIndex
         {
-            if (string.IsNullOrEmpty(id) || xml.DocumentElement == null)
+            private readonly Dictionary<string, XmlNode> _styles = new Dictionary<string, XmlNode>();
+            private readonly Dictionary<string, XmlNode> _regions = new Dictionary<string, XmlNode>();
+
+            public List<XmlNode> Initials { get; } = new List<XmlNode>();
+
+            public static TtmlNodeIndex Build(XmlDocument xml)
             {
-                return null;
+                var index = new TtmlNodeIndex();
+                if (xml.DocumentElement == null)
+                {
+                    return index;
+                }
+
+                try
+                {
+                    var nsmgr = new XmlNamespaceManager(xml.NameTable);
+                    nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
+                    AddFirstById(index._styles, xml.DocumentElement.SelectNodes("//ttml:style", nsmgr));
+                    AddFirstById(index._regions, xml.DocumentElement.SelectNodes("//ttml:region", nsmgr));
+                    foreach (XmlNode initial in xml.DocumentElement.SelectNodes("//ttml:initial", nsmgr))
+                    {
+                        index.Initials.Add(initial);
+                    }
+                }
+                catch (Exception e)
+                {
+                    System.Diagnostics.Debug.WriteLine(e);
+                }
+
+                return index;
             }
 
-            try
+            private static void AddFirstById(Dictionary<string, XmlNode> target, XmlNodeList nodes)
             {
-                var nsmgr = new XmlNamespaceManager(xml.NameTable);
-                nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
-                foreach (XmlNode node in xml.DocumentElement.SelectNodes("//ttml:" + localName, nsmgr))
+                foreach (XmlNode node in nodes)
                 {
-                    var nodeId = node.Attributes?["xml:id"]?.Value ?? node.Attributes?["id"]?.Value;
-                    if (nodeId == id)
+                    var id = node.Attributes?["xml:id"]?.Value ?? node.Attributes?["id"]?.Value;
+                    // The replaced scan returned the first match in document order.
+                    if (id != null && !target.ContainsKey(id))
                     {
-                        return node;
+                        target[id] = node;
                     }
                 }
             }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine(e);
-            }
 
-            return null;
+            public XmlNode Style(string id) => id != null && _styles.TryGetValue(id, out var node) ? node : null;
+
+            public XmlNode Region(string id) => id != null && _regions.TryGetValue(id, out var node) ? node : null;
         }
 
         /// <summary>
@@ -359,7 +397,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         /// Layout attributes want the initial fallback; presentation attributes must not have it, or
         /// the document-wide default color and font would end up on a &lt;font&gt; tag around every span.
         /// </summary>
-        private static string GetTtmlStyleValue(XmlDocument xml, XmlNode node, string attributeName, bool includeInitial = false, int depth = 0)
+        private static string GetTtmlStyleValue(TtmlNodeIndex index, XmlNode node, string attributeName, bool includeInitial = false, int depth = 0)
         {
             if (node == null || depth > 5)
             {
@@ -378,7 +416,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var ids = styleRef.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 for (var i = ids.Length - 1; i >= 0; i--)
                 {
-                    var value = GetTtmlStyleValue(xml, FindNodeById(xml, "style", ids[i]), attributeName, includeInitial, depth + 1);
+                    var value = GetTtmlStyleValue(index, index.Style(ids[i]), attributeName, includeInitial, depth + 1);
                     if (!string.IsNullOrEmpty(value))
                     {
                         return value;
@@ -391,22 +429,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return null;
             }
 
-            try
+            foreach (var initial in index.Initials)
             {
-                var nsmgr = new XmlNamespaceManager(xml.NameTable);
-                nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
-                foreach (XmlNode initial in xml.DocumentElement.SelectNodes("//ttml:initial", nsmgr))
+                var value = initial.Attributes?[attributeName]?.Value;
+                if (!string.IsNullOrEmpty(value))
                 {
-                    var value = initial.Attributes?[attributeName]?.Value;
-                    if (!string.IsNullOrEmpty(value))
-                    {
-                        return value;
-                    }
+                    return value;
                 }
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine(e);
             }
 
             return null;
@@ -486,6 +515,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var namespaceManager = new XmlNamespaceManager(xml.NameTable);
             namespaceManager.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
             var body = xml.DocumentElement.SelectSingleNode("ttml:body", namespaceManager);
+            var index = TtmlNodeIndex.Build(xml);
             foreach (XmlNode node in body.SelectNodes("//ttml:p", namespaceManager))
             {
                 TimedText10.ExtractTimeCodes(node, subtitle, out var begin, out var end);
@@ -493,14 +523,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var region = node.Attributes?["region"];
                 if (region != null)
                 {
-                    assStyle = GetAssStyleFromRegion(region.InnerText, xml);
+                    assStyle = GetAssStyleFromRegion(region.InnerText, index);
                 }
 
                 // Netflix puts the shear (their italic) for a whole cue on the <p> itself, not on a
                 // span, so a paragraph-level style has to be read too - see issue #13861. It is
                 // inherited by the content instead of wrapping it, so it survives the line breaks.
-                var paragraphStyle = ReadSpanStyle(node, xml);
-                var text = assStyle + ReadParagraph(node, xml, paragraphStyle.IsItalic);
+                var paragraphStyle = ReadSpanStyle(node, index);
+                var text = assStyle + ReadParagraph(node, index, paragraphStyle.IsItalic);
                 var p = new Paragraph(begin, end, text);
                 subtitle.Paragraphs.Add(p);
             }
@@ -571,7 +601,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         /// style nodes. The named ids are still honored first so our own files keep round-tripping
         /// even when their style definitions are missing (issue #13861).
         /// </summary>
-        private static JapaneseSpanStyle ReadSpanStyle(XmlNode node, XmlDocument xml)
+        private static JapaneseSpanStyle ReadSpanStyle(XmlNode node, TtmlNodeIndex index)
         {
             var style = new JapaneseSpanStyle();
 
@@ -584,7 +614,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
-            var ruby = GetTtmlStyleValue(xml, node, "tts:ruby");
+            var ruby = GetTtmlStyleValue(index, node, "tts:ruby");
             if (ruby == "container")
             {
                 style.RubyContainer = true;
@@ -596,7 +626,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             else if (ruby == "text")
             {
                 style.RubyText = true;
-                if (GetTtmlStyleValue(xml, node, "tts:rubyPosition") == "after")
+                if (GetTtmlStyleValue(index, node, "tts:rubyPosition") == "after")
                 {
                     style.RubyTextAfter = true;
                 }
@@ -606,40 +636,40 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 // Grouping wrappers with no text of their own - nothing to mark up.
             }
 
-            var textEmphasis = BoutenStyleNameFromTextEmphasis(GetTtmlStyleValue(xml, node, "tts:textEmphasis"));
+            var textEmphasis = BoutenStyleNameFromTextEmphasis(GetTtmlStyleValue(index, node, "tts:textEmphasis"));
             if (textEmphasis != null)
             {
                 style.Bouten = textEmphasis;
             }
 
-            if (GetTtmlStyleValue(xml, node, "tts:textCombine") == "all")
+            if (GetTtmlStyleValue(index, node, "tts:textCombine") == "all")
             {
                 style.HorizontalDigit = true;
             }
 
             // Netflix's Japanese profile has no tts:fontStyle - a slanted cue is expressed as a shear.
-            if (GetTtmlStyleValue(xml, node, "tts:fontStyle") == "italic" || IsShearSet(GetTtmlStyleValue(xml, node, "tts:shear")))
+            if (GetTtmlStyleValue(index, node, "tts:fontStyle") == "italic" || IsShearSet(GetTtmlStyleValue(index, node, "tts:shear")))
             {
                 style.IsItalic = true;
             }
 
-            if (GetTtmlStyleValue(xml, node, "tts:fontWeight") == "bold")
+            if (GetTtmlStyleValue(index, node, "tts:fontWeight") == "bold")
             {
                 style.IsBold = true;
             }
 
-            if (GetTtmlStyleValue(xml, node, "tts:textDecoration") == "underline")
+            if (GetTtmlStyleValue(index, node, "tts:textDecoration") == "underline")
             {
                 style.IsUnderlined = true;
             }
 
-            var fontFamily = GetTtmlStyleValue(xml, node, "tts:fontFamily");
+            var fontFamily = GetTtmlStyleValue(index, node, "tts:fontFamily");
             if (!string.IsNullOrEmpty(fontFamily))
             {
                 style.FontFamily = fontFamily;
             }
 
-            var color = GetTtmlStyleValue(xml, node, "tts:color");
+            var color = GetTtmlStyleValue(index, node, "tts:color");
             if (!string.IsNullOrEmpty(color))
             {
                 style.Color = color;
@@ -688,7 +718,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-        private static string ReadParagraph(XmlNode node, XmlDocument xml, bool inheritedItalic)
+        private static string ReadParagraph(XmlNode node, TtmlNodeIndex index, bool inheritedItalic)
         {
             var pText = new StringBuilder();
             foreach (XmlNode child in node.ChildNodes)
@@ -707,13 +737,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (child.Name == "span" || child.Name == "tt:span")
                 {
-                    var style = ReadSpanStyle(child, xml);
+                    var style = ReadSpanStyle(child, index);
                     if (inheritedItalic)
                     {
                         style.IsItalic = true;
                     }
 
-                    AppendSpan(pText, child, xml, style);
+                    AppendSpan(pText, child, index, style);
                 }
             }
 
@@ -731,7 +761,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             pText.Append(text);
         }
 
-        private static void AppendSpan(StringBuilder pText, XmlNode child, XmlDocument xml, JapaneseSpanStyle style)
+        private static void AppendSpan(StringBuilder pText, XmlNode child, TtmlNodeIndex index, JapaneseSpanStyle style)
         {
             // A sheared ruby base/text has its own style name, so it must not also get an <i> around it.
             var italicViaRubyTag = style.IsItalic && (style.RubyBase || style.RubyText);
@@ -802,7 +832,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             // Italic already emitted here must not be repeated by the children; a sheared ruby
             // *container* has no tag of its own, so that one does keep inheriting.
-            pText.Append(ReadParagraph(child, xml, style.IsItalic && !italicTag && !italicViaRubyTag));
+            pText.Append(ReadParagraph(child, index, style.IsItalic && !italicTag && !italicViaRubyTag));
 
             if (hasFont)
             {

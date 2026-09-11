@@ -402,6 +402,8 @@ public class LanguageGeneral
     public string OpenVideoFileTitle { get; set; }
     public string OptimalCharactersPerSecond { get; set; }
     public string Options { get; set; }
+    public string OriginalSubtitleClosed { get; set; }
+    public string OriginalSubtitleLoadedX { get; set; }
     public string OriginalText { get; set; }
     public string Outline { get; set; }
     public string OutlineColor { get; set; }
@@ -1214,6 +1216,8 @@ public class LanguageGeneral
         OpenVideoFileTitle = "Open video file";
         OptimalCharactersPerSecond = "Optimal characters per second";
         Options = "Options";
+        OriginalSubtitleClosed = "Original subtitle closed";
+        OriginalSubtitleLoadedX = "Original subtitle loaded: {0}";
         OriginalText = "Original text";
         Outline = "Outline";
         OutlineColor = "Outline color";

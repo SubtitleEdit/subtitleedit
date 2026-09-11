@@ -152,7 +152,7 @@ public class BinaryAdjustDurationWindow : Window
         {
             Path = $"{nameof(vm.SelectedAdjustType)}.{nameof(BinaryAdjustDurationDisplay.IsSecondsVisible)}",
             Source = vm,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return panel;
@@ -196,7 +196,7 @@ public class BinaryAdjustDurationWindow : Window
         {
             Path = $"{nameof(vm.SelectedAdjustType)}.{nameof(BinaryAdjustDurationDisplay.IsPercentVisible)}",
             Source = vm,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return panel;
@@ -241,7 +241,7 @@ public class BinaryAdjustDurationWindow : Window
         {
             Path = $"{nameof(vm.SelectedAdjustType)}.{nameof(BinaryAdjustDurationDisplay.IsFixedVisible)}",
             Source = vm,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
         return panel;
     }

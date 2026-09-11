@@ -8,9 +8,20 @@ namespace Nikse.SubtitleEdit.Core.Common
     {
         public static Subtitle MergeLinesWithSameTextInSubtitle(Subtitle subtitle, bool fixIncrementing, int maxMsBetween)
         {
-            var mergedIndexes = new List<int>();
-            var removed = new List<int>();
+            var mergedIndexes = new HashSet<int>();
+            var removed = new HashSet<int>();
             var mergedSubtitle = new Subtitle();
+
+            // With start times in order, once a candidate starts more than maxMsBetween after the
+            // current end nothing later can qualify either (both predicates reject on that gap
+            // first, and the end only moves on a merge) - so the inner scan can stop there. The
+            // old scan went to the end of the subtitle for every paragraph.
+            var startTimesInOrder = true;
+            for (var i = 1; i < subtitle.Paragraphs.Count && startTimesInOrder; i++)
+            {
+                startTimesInOrder = subtitle.Paragraphs[i].StartTime.TotalMilliseconds >= subtitle.Paragraphs[i - 1].StartTime.TotalMilliseconds;
+            }
+
             for (var i = 1; i < subtitle.Paragraphs.Count; i++)
             {
                 if (removed.Contains(i - 1))
@@ -29,6 +40,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
 
                     var next = subtitle.GetParagraphOrDefault(j);
+                    if (startTimesInOrder && next != null && next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > maxMsBetween)
+                    {
+                        break;
+                    }
+
                     var incrementText = string.Empty;
                     if (QualifiesForMerge(p, next, maxMsBetween) || fixIncrementing && QualifiesForMergeIncrement(p, next, maxMsBetween, out incrementText))
                     {
@@ -40,15 +56,8 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                         p.EndTime.TotalMilliseconds = next.EndTime.TotalMilliseconds;
                         removed.Add(j);
-                        if (!mergedIndexes.Contains(j))
-                        {
-                            mergedIndexes.Add(j);
-                        }
-
-                        if (!mergedIndexes.Contains(i - 1))
-                        {
-                            mergedIndexes.Add(i - 1);
-                        }
+                        mergedIndexes.Add(j);
+                        mergedIndexes.Add(i - 1);
                     }
                 }
             }

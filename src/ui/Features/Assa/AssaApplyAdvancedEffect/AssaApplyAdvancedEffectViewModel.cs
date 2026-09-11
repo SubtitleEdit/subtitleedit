@@ -314,7 +314,7 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
     internal void OnClosing()
     {
         _positionTimer.Stop();
-        VideoPlayerControl.VideoPlayer.CloseFile();
+        VideoPlayerControl.CloseAndDisposePlayer();
         try
         {
             if (File.Exists(_tempSubtitleFileName))

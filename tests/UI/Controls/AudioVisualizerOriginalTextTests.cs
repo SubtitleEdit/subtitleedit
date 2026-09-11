@@ -39,35 +39,44 @@ public class AudioVisualizerOriginalTextTests
         window.Show();
         window.UpdateLayout();
 
-        var line = new SubtitleLineViewModel
+        try
         {
-            // Deliberately different lengths: the footer's CPS follows the drawn text, so the
-            // frames below can only match if it swapped too.
-            Text = "Vertaalde regel",
-            OriginalText = "Source line",
-            StartTime = TimeSpan.FromSeconds(LineStartSeconds),
-            EndTime = TimeSpan.FromSeconds(LineStartSeconds + 3),
-        };
+            var line = new SubtitleLineViewModel
+            {
+                // Deliberately different lengths: the footer's CPS follows the drawn text, so the
+                // frames below can only match if it swapped too.
+                Text = "Vertaalde regel",
+                OriginalText = "Source line",
+                StartTime = TimeSpan.FromSeconds(LineStartSeconds),
+                EndTime = TimeSpan.FromSeconds(LineStartSeconds + 3),
+            };
 
-        var lines = new List<SubtitleLineViewModel> { line };
-        var noSelection = new List<SubtitleLineViewModel>();
+            var lines = new List<SubtitleLineViewModel> { line };
+            var noSelection = new List<SubtitleLineViewModel>();
 
-        av.SetPosition(LineStartSeconds - 1, lines, 0, -1, noSelection);
-        var translation = Capture(window);
+            av.SetPosition(LineStartSeconds - 1, lines, 0, -1, noSelection);
+            var translation = Capture(window);
 
-        av.ShowOriginalText = true;
-        av.InvalidateVisual();
-        var original = Capture(window);
+            av.ShowOriginalText = true;
+            av.InvalidateVisual();
+            var original = Capture(window);
 
-        Assert.NotEqual(translation, original);
+            Assert.NotEqual(translation, original);
 
-        // ... and it is the original text that was drawn, not merely something else: the same
-        // waveform with the original text in the ordinary Text property paints the same frame -
-        // text, and the CPS in the paragraph footer with it.
-        av.ShowOriginalText = false;
-        line.Text = "Source line";
-        av.InvalidateVisual();
-        Assert.Equal(original, Capture(window));
+            // ... and it is the original text that was drawn, not merely something else: the same
+            // waveform with the original text in the ordinary Text property paints the same frame -
+            // text, and the CPS in the paragraph footer with it.
+            av.ShowOriginalText = false;
+            line.Text = "Source line";
+            av.InvalidateVisual();
+            Assert.Equal(original, Capture(window));
+        }
+        finally
+        {
+            // A window left open keeps the app-wide activation and focused element for the rest
+            // of the run, so a later test's key press or click lands here instead.
+            window.Close();
+        }
     }
 
     private static WavePeakData2 MakePeaks(int seconds)

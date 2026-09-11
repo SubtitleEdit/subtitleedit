@@ -566,8 +566,8 @@ public partial class VisualSyncViewModel : ObservableObject
     {
         UiUtil.SaveWindowPosition(Window);
         _positionTimer.Stop();
-        VideoPlayerControlLeft.VideoPlayer.CloseFile();
-        VideoPlayerControlRight.VideoPlayer.CloseFile();
+        VideoPlayerControlLeft.CloseAndDisposePlayer();
+        VideoPlayerControlRight.CloseAndDisposePlayer();
 
         // Deletes the temp subtitle files handed to the two players.
         _previewSubtitleLeft.Reset();

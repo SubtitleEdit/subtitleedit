@@ -27,6 +27,18 @@ public class MossTtsCrispAsrTests
     }
 
     [Fact]
+    public void BuildSpeakPayload_ForAPerLineClone_SendsTheStagedStemAsVoice()
+    {
+        // A per-line clone changes reference every line; since CrispASR v0.8.30 (#384) the
+        // moss-tts backend resolves a bare stem against --voice-dir per request, so this is what
+        // makes a new clip per line cost a reference encode instead of a server restart.
+        var payload = MossTtsCrispAsr.BuildSpeakPayload("hello", 1.0, "se-per-line-line-0007");
+
+        Assert.Equal("se-per-line-line-0007", payload["voice"]);
+        Assert.False(payload.ContainsKey("ref_text"));
+    }
+
+    [Fact]
     public void BuildSpeakPayload_DoesNotSendSeed()
     {
         // No seed: the reference conditioning keeps the speaker consistent, and letting the server

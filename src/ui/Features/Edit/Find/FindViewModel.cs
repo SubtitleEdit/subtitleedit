@@ -143,6 +143,10 @@ public partial class FindViewModel : ObservableObject
             e.Handled = true;
             UiUtil.ShowHelp("features/edit", "find");
         }
+        else
+        {
+            UiUtil.TryInvokeBareAccessKey(Window, e);
+        }
     }
 
     internal async void FindTextBoxKeyDown(object? sender, KeyEventArgs e)

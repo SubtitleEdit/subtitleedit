@@ -1037,7 +1037,7 @@ internal class SubtitleConverter
         }
         else
         {
-            var fileName = Path.GetFileNameWithoutExtension(inputFile);
+            var fileName = Path.GetFileNameWithoutExtension(inputFile) + options.OutputFilenameAppend;
             var extension = LibSEIntegration.GetExtensionForFormat(options.Format);
             var outputFolder = string.IsNullOrEmpty(options.OutputFolder)
                 ? Path.GetDirectoryName(inputFile) ?? Directory.GetCurrentDirectory()
@@ -1067,7 +1067,7 @@ internal class SubtitleConverter
         // For container collisions, try inserting the track number first
         if (trackNumber.HasValue && !string.IsNullOrEmpty(languageSuffix))
         {
-            var fileName = Path.GetFileNameWithoutExtension(inputFile);
+            var fileName = Path.GetFileNameWithoutExtension(inputFile) + options.OutputFilenameAppend;
             var withTrack = Path.Combine(dir, $"{fileName}.#{trackNumber.Value}.{languageSuffix}{ext}");
             if ((options.Overwrite || !File.Exists(withTrack)) && usedNames?.Contains(withTrack) != true)
             {
@@ -1180,6 +1180,9 @@ internal record class ConversionOptions
     /// Resolved from defaults + the settings JSON's <c>exportImages</c> section + CLI flags.
     /// </summary>
     public ImageExportStyle ImageStyle { get; init; } = new();
+
+    /// <summary>Appended to the output file name stem (before any language/track suffix). Ignored with <see cref="OutputFilename"/>.</summary>
+    public string? OutputFilenameAppend { get; init; }
     public string? AssaStyleFile { get; init; }
     public int? PacCodePage { get; init; }
     public string? EbuHeaderFile { get; init; }
