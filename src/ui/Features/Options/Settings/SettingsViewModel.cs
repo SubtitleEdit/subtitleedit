@@ -186,6 +186,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string _selectedSaveAsAppendLanguageCode;
 
     [ObservableProperty] private bool _allowSingleLetterShortcutsInTextbox;
+    [ObservableProperty] private bool _allowTextNavigationShortcutsInTextbox;
     [ObservableProperty] private bool _goToLineNumberAlsoSetVideoPosition;
     [ObservableProperty] private bool _adjustAllTimesRememberLineSelectionChoice;
     [ObservableProperty] private bool _mergeKeepEndTime;
@@ -830,6 +831,7 @@ public partial class SettingsViewModel : ObservableObject
         }
 
         AllowSingleLetterShortcutsInTextbox = Se.Settings.Tools.AllowSingleLetterShortcutsInTextbox;
+        AllowTextNavigationShortcutsInTextbox = Se.Settings.Tools.AllowTextNavigationShortcutsInTextbox;
         SpellCheckEnglishTreatInApostropheAsIng = Se.Settings.Tools.SpellCheckEnglishTreatInApostropheAsIng;
         GoToLineNumberAlsoSetVideoPosition = Se.Settings.Tools.GoToLineNumberAlsoSetVideoPosition;
         AdjustAllTimesRememberLineSelectionChoice = Se.Settings.Synchronization.AdjustAllTimesRememberLineSelectionChoice;
@@ -1675,6 +1677,7 @@ public partial class SettingsViewModel : ObservableObject
         general.FavoriteLanguages = string.Join(";", FavoriteLanguages.Select(l => l.Code));
 
         Se.Settings.Tools.AllowSingleLetterShortcutsInTextbox = AllowSingleLetterShortcutsInTextbox;
+        Se.Settings.Tools.AllowTextNavigationShortcutsInTextbox = AllowTextNavigationShortcutsInTextbox;
         Se.Settings.Tools.SpellCheckEnglishTreatInApostropheAsIng = SpellCheckEnglishTreatInApostropheAsIng;
         Se.Settings.Tools.GoToLineNumberAlsoSetVideoPosition = GoToLineNumberAlsoSetVideoPosition;
         Se.Settings.Synchronization.AdjustAllTimesRememberLineSelectionChoice = AdjustAllTimesRememberLineSelectionChoice;

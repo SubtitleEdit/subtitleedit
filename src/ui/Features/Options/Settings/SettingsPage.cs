@@ -774,6 +774,7 @@ public class SettingsPage : UserControl
         sections.Add(new SettingsSection(Se.Language.General.Tools, IconNames.Tools, "#f0885a",
         [
             MakeCheckboxSetting(Se.Language.Options.Settings.AllowSingleLetterShortcutsInTextbox, nameof(_vm.AllowSingleLetterShortcutsInTextbox)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.AllowTextNavigationShortcutsInTextbox, nameof(_vm.AllowTextNavigationShortcutsInTextbox)),
             MakeCheckboxSetting(Se.Language.Options.Settings.GoToLineNumberSetsVideoPosition, nameof(_vm.GoToLineNumberAlsoSetVideoPosition)),
             MakeCheckboxSetting(Se.Language.Options.Settings.AdjustAllTimesRememberLineSelectionChoice, nameof(_vm.AdjustAllTimesRememberLineSelectionChoice)),
             MakeCheckboxSetting(Se.Language.Options.Settings.MergeKeepEndTime, nameof(_vm.MergeKeepEndTime)),

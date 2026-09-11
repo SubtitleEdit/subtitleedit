@@ -881,12 +881,19 @@ public class SpeechToTextWindow : Window
             [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.GoogleCloudSttTimeoutSeconds)) { Mode = BindingMode.TwoWay }
         }.BindIsVisible(vm, nameof(vm.IsGoogleCloudSttVisible));
 
+        var checkDynamicBatching = UiUtil.MakeCheckBox(vm, nameof(vm.GoogleCloudSttDynamicBatching))
+            .WithMarginTop(10)
+            .BindIsVisible(vm, nameof(vm.IsGoogleCloudSttVisible));
+
         return new (Control, Control)[]
         {
             (MakeLabel(Se.Language.General.KeyFile), keyFilePanel),
+            (MakeLabel(Se.Language.General.GoogleCloudSttProjectId), MakeText(nameof(vm.GoogleCloudSttProjectId), 250).BindIsVisible(vm, nameof(vm.IsGoogleCloudSttVisible))),
             (MakeLabel(Se.Language.General.Region), MakeText(nameof(vm.GoogleCloudSttRegion), 150).BindIsVisible(vm, nameof(vm.IsGoogleCloudSttVisible))),
             (MakeLabel(Se.Language.General.Model), MakeText(nameof(vm.GoogleCloudSttModel), 250).BindIsVisible(vm, nameof(vm.IsGoogleCloudSttVisible))),
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttLanguage), MakeText(nameof(vm.GoogleCloudSttLanguage), 150).BindIsVisible(vm, nameof(vm.IsGoogleCloudSttVisible))),
+            (MakeLabel(Se.Language.General.GoogleCloudSttBucketName), MakeText(nameof(vm.GoogleCloudSttBucketName), 250).BindIsVisible(vm, nameof(vm.IsGoogleCloudSttVisible))),
+            (MakeLabel(Se.Language.General.GoogleCloudSttDynamicBatching), checkDynamicBatching),
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttTimeout), numericTimeout),
         };
     }

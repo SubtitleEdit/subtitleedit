@@ -788,6 +788,9 @@ public class LanguageGeneral
     public string DashScopeSttRegion { get; set; }
     public string DashScopeSttEnableWords { get; set; }
     public string DashScopeSttRegionKeyHint { get; set; }
+    public string GoogleCloudSttProjectId { get; set; }
+    public string GoogleCloudSttBucketName { get; set; }
+    public string GoogleCloudSttDynamicBatching { get; set; }
     public string OnlineSttApiKeyMissing { get; set; }
     public string OpenAiCompatibleSttAutoTranscribeOnAudioSelection { get; set; }
     public string OpenAiCompatibleSttStream { get; set; }
@@ -1593,6 +1596,9 @@ public class LanguageGeneral
         OpenAiCompatibleSttModelRejectedHint = "The server rejected the model name. Not every OpenAI compatible endpoint takes a model - xAI's https://api.x.ai/v1/stt, for one, has no 'model' parameter at all. Try clearing the Model field.";
         DashScopeSttRegion = "Region";
         DashScopeSttEnableWords = "Word-level timestamps";
+        GoogleCloudSttProjectId = "Project ID (only for Application Default Credentials)";
+        GoogleCloudSttBucketName = "Storage bucket (empty = auto)";
+        GoogleCloudSttDynamicBatching = "Dynamic batching (about 5x cheaper, no latency guarantee)";
         DashScopeSttRegionKeyHint = "Note: Alibaba Cloud Model Studio API keys are region-specific - make sure the selected region matches the region where the API key was created (China vs. International).";
         OnlineSttApiKeyMissing = "An API key is required. Please enter your API key and try again.";
         OpenAiCompatibleSttAutoTranscribeOnAudioSelection = "Auto-transcribe new waveform selection via speech-to-text";
