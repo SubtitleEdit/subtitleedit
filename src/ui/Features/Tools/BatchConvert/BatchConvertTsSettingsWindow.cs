@@ -17,8 +17,11 @@ public class BatchConvertTsSettingsWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var labelInfo = UiUtil.MakeLabel(Se.Language.Tools.BatchConvert.TransportStreamSettingsInfo).WithOpacity(0.7);
-        labelInfo.MaxWidth = 520;
+        var labelInfo = UiUtil.MakeTextBlock(Se.Language.Tools.BatchConvert.TransportStreamSettingsInfo);
+        labelInfo.TextWrapping = Avalonia.Media.TextWrapping.Wrap;
+        labelInfo.MaxWidth = 560;
+        labelInfo.Opacity = 0.7;
+        labelInfo.Margin = new Avalonia.Thickness(0, 0, 0, 6);
 
         // X position
         var checkBoxOverrideX = UiUtil.MakeCheckBox(Se.Language.Tools.BatchConvert.TransportStreamOverrideXPosition, vm, nameof(vm.OverrideXPosition));
