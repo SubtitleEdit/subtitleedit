@@ -5929,6 +5929,7 @@
     <RegEx find="vapt" replaceWith="vašt" />
     <RegEx find="vašlji" replaceWith="ušlji" />
     <RegEx find="(?&lt;!kr|m)užić" replaceWith="užit ć" />
+    <RegEx find="vbi" replaceWith="vni" />
     <RegEx find="vdr" replaceWith="vrd" />
     <RegEx find="vekovj?e[čć]" replaceWith="vjekovječ" />
     <RegEx find="veri([lt])" replaceWith="vjeri$1" />
