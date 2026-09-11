@@ -338,7 +338,7 @@ public class GoogleCloudSttService : ISttTranscriber
         }
 
         throw new HttpRequestException(
-            "No Google Cloud project could be determined. Either pick a service account key file, which carries its own project, or set GoogleCloudSttProjectId in Settings.json.");
+            "No Google Cloud project could be determined. Either pick a service account key file, which carries its own project, or fill in the project ID in the Google Cloud settings.");
     }
 
     internal static string ReadProjectId(string keyFile)

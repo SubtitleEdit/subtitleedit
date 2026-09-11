@@ -72,13 +72,13 @@ public class GoogleCloudSttEngine : IOnlineSttEngine
         " 2. Create a service account with the roles 'Cloud Speech Client' and 'Storage Admin'.\n" +
         " 3. Add a JSON key to the service account, download it, and pick it as the key file.\n\n" +
         "If your organisation does not allow service account keys, leave the key file empty and run " +
-        "'gcloud auth application-default login' instead. Those credentials rarely name a project, so also set " +
-        "GoogleCloudSttProjectId in Settings.json.\n\n" +
+        "'gcloud auth application-default login' instead. Those credentials rarely name a project, so also fill " +
+        "in the project ID.\n\n" +
         "Long audio must be read from a Cloud Storage bucket, so one named <project>-subtitle-edit-stt is created " +
-        "on first use (another name can be set as GoogleCloudSttBucketName in Settings.json). Uploaded audio is " +
+        "on first use (another name can be set in the storage bucket field). Uploaded audio is " +
         "deleted after each run.\n\n" +
         "Cost: about $0.003 per minute of audio, because dynamic batching is used by default. Google gives no " +
-        "latency guarantee for it, so set GoogleCloudSttDynamicBatching to false in Settings.json to transcribe " +
+        "latency guarantee for it, so turn dynamic batching off to transcribe " +
         "at the normal rate of about $0.016 per minute instead.\n\n" +
         "Region: 'us' or 'eu' for chirp_3, or a specific region for other models. " +
         "Model: chirp_3, chirp_2, long, latest_long... " +
