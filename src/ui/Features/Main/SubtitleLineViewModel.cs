@@ -168,8 +168,9 @@ public partial class SubtitleLineViewModel : ObservableObject
     }
 
     /// <summary>
-    /// True while an EBU STL subtitle is open, so a row wider than a teletext page counts as a
-    /// "text too long" error. Set from MainViewModel when the format changes.
+    /// True while a teletext subtitle is open (DVB teletext, or EBU STL whose header says teletext
+    /// rather than open subtitling), so a row wider than a teletext page counts as a "text too long"
+    /// error. Set from MainViewModel when the format, the file or the EBU header changes.
     /// </summary>
     public static bool UseTeletextLineLength { get; set; }
 

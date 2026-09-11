@@ -330,6 +330,7 @@ public class SplitManager : ISplitManager
         ("<b>", "</b>"),
         ("<i>", "</i>"),
         ("<u>", "</u>"),
+        ("<box>", "</box>"), // EBU STL teletext boxing
     ];
 
     private static readonly string[] CompoundHtmlOpenPrefixes = ["<font", "<color"];
@@ -345,7 +346,7 @@ public class SplitManager : ISplitManager
         var closingToAppend = new List<string>();
         var openingToPrepend = new List<string>();
 
-        // Handle simple HTML tags: <b>, <i>, <u>
+        // Handle simple HTML tags: <b>, <i>, <u>, <box>
         foreach (var (open, close) in SimpleHtmlTags)
         {
             var openCount = CountOccurrences(text1, open);

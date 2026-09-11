@@ -36,6 +36,7 @@ public class LanguageSettingsShortcuts
     public string GeneralToggleItalic { get; set; }
     public string GeneralToggleBold { get; set; }
     public string GeneralToggleUnderline { get; set; }
+    public string GeneralToggleBox { get; set; }
 
     public string FileOpen { get; set; }
     public string FileOpenKeepVideo { get; set; }
@@ -175,6 +176,7 @@ public class LanguageSettingsShortcuts
     public string TextBoxItalic { get; set; }
     public string TextBoxBold { get; set; }
     public string TextBoxUnderline { get; set; }
+    public string TextBoxBox { get; set; }
     public string ResetWaveformZoomAndSpeed { get; set; }
     public string TogglePlaybackSpeed { get; set; }
     public string PlaybackSpeedSlower { get; set; }
@@ -311,6 +313,7 @@ public class LanguageSettingsShortcuts
         GeneralToggleItalic = "Toggle italic";
         GeneralToggleBold = "Toggle bold";
         GeneralToggleUnderline = "Toggle underline";
+        GeneralToggleBox = "Toggle box (EBU STL)";
 
         FileOpen = "Open";
         FileOpenKeepVideo = "Open (keep video)";
@@ -455,6 +458,7 @@ public class LanguageSettingsShortcuts
         TextBoxItalic = "Text box italic";
         TextBoxBold = "Text box bold";
         TextBoxUnderline = "Text box underline";
+        TextBoxBox = "Text box box (EBU STL)";
         ResetWaveformZoomAndSpeed = "Reset waveform zoom and playback speed (play rate)";
         TogglePlaybackSpeed = "Toggle playback speed (play rate)";
         PlaybackSpeedSlower = "Playback speed slower (play rate)";

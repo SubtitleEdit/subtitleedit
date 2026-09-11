@@ -96,6 +96,43 @@ public class Se4GuessStartAndUnderlineTests : IDisposable
     }
 
     /// <summary>
+    /// SE4's "Box" toggle (teletext boxing, the EBU STL 0x84/0x85 codes): wraps and unwraps the
+    /// selected lines in &lt;box&gt; - but only while the toolbar format is EBU STL. In any other
+    /// format the command is a no-op and the grid menu item stays hidden.
+    /// </summary>
+    [AvaloniaFact]
+    public void ToggleBoxWrapsSelectedLinesOnlyForEbuStl()
+    {
+        var (_, vm) = CreateMainViewModel();
+        vm.Subtitles.Add(new SubtitleLineViewModel(new Paragraph("Hello", 1000, 3000), null!) { Number = 1 });
+        vm.Subtitles.Add(new SubtitleLineViewModel(new Paragraph("World", 4000, 6000), null!) { Number = 2 });
+        Dispatcher.UIThread.RunJobs();
+
+        Select(vm, vm.Subtitles[0], vm.Subtitles[1]);
+
+        // Default format (SubRip): nothing happens, item hidden.
+        Assert.False(vm.IsFormatEbu);
+        vm.ToggleLinesBoxOrSelectedTextCommand.Execute(null);
+        Assert.Equal("Hello", vm.Subtitles[0].Text);
+        Assert.Equal("World", vm.Subtitles[1].Text);
+        Assert.False(vm.IsBoxMenuItemVisible);
+
+        vm.SelectedSubtitleFormat = vm.SubtitleFormats.First(f => f is Nikse.SubtitleEdit.Core.SubtitleFormats.Ebu);
+        Dispatcher.UIThread.RunJobs();
+        Assert.True(vm.IsFormatEbu);
+        Select(vm, vm.Subtitles[0], vm.Subtitles[1]);
+
+        vm.ToggleLinesBoxOrSelectedTextCommand.Execute(null);
+        Assert.Equal("<box>Hello</box>", vm.Subtitles[0].Text);
+        Assert.Equal("<box>World</box>", vm.Subtitles[1].Text);
+
+        // Second press removes it again - the first selected line decides for the whole selection.
+        vm.ToggleLinesBoxOrSelectedTextCommand.Execute(null);
+        Assert.Equal("Hello", vm.Subtitles[0].Text);
+        Assert.Equal("World", vm.Subtitles[1].Text);
+    }
+
+    /// <summary>
     /// A cue that starts inside the silence in front of the speech: "guess start" moves the start
     /// cue up to just before the speech begins instead of leaving the dead air in the line.
     /// </summary>
