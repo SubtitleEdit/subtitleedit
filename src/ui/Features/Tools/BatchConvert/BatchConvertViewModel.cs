@@ -78,6 +78,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     [ObservableProperty] private double _progressMaxValue;
     [ObservableProperty] private string _actionsSelected;
     [ObservableProperty] private bool _isTargetFormatSettingsVisible;
+    [ObservableProperty] private bool _isTransportStreamSettingsVisible;
     [ObservableProperty] private ObservableCollection<string> _filterItems;
     [ObservableProperty] private string? _selectedFilterItem;
     [ObservableProperty] private string _filterText;
@@ -2416,6 +2417,8 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         var total = _allBatchItems.Count;
         var shown = BatchItems.Count;
 
+        IsTransportStreamSettingsVisible = _allBatchItems.Any(p => p.Format != null && p.Format.StartsWith("Transport Stream", StringComparison.Ordinal));
+
         if (total == 0)
         {
             BatchItemsInfo = string.Empty;
@@ -2622,6 +2625,12 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     {
         await _windowService.ShowDialogAsync<BatchConvertSettingsWindow, BatchConvertSettingsViewModel>(Window!);
         UpdateOutputProperties();
+    }
+
+    [RelayCommand]
+    private async Task ShowTransportStreamSettings()
+    {
+        await _windowService.ShowDialogAsync<BatchConvertTsSettingsWindow, BatchConvertTsSettingsViewModel>(Window!);
     }
 
     [RelayCommand]

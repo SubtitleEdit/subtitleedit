@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
+using Nikse.SubtitleEdit.UiLogic.BatchConvert;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
 
@@ -151,6 +152,35 @@ public class SeBatchConvert
     public double ImageAdjustAlphaThreshold { get; set; }
     public bool ImageAdjustColorOn { get; set; }
     public string ImageAdjustColorValue { get; set; } = "#FFFFFFFF";
+
+    // Transport Stream output settings (SE4's "TS settings..."), see TransportStreamExportSettings.
+    public bool TsOverrideXPosition { get; set; }
+    public string TsOverrideHAlign { get; set; } = TransportStreamExportSettings.HAlignCenter;
+    public int TsOverrideHMargin { get; set; } = 5; // percent
+    public bool TsOverrideYPosition { get; set; }
+    public int TsOverrideBottomMargin { get; set; } = 5; // percent
+    public bool TsOverrideScreenSize { get; set; }
+    public int TsScreenWidth { get; set; } = 1920;
+    public int TsScreenHeight { get; set; } = 1080;
+    public string TsFileNameAppend { get; set; } = "." + TransportStreamExportSettings.PlaceholderTwoLetter;
+    public bool TsOnlyTeletext { get; set; }
+
+    public TransportStreamExportSettings GetTransportStreamExportSettings()
+    {
+        return new TransportStreamExportSettings
+        {
+            OverrideXPosition = TsOverrideXPosition,
+            HAlign = TsOverrideHAlign ?? TransportStreamExportSettings.HAlignCenter,
+            HMarginPercent = TsOverrideHMargin,
+            OverrideYPosition = TsOverrideYPosition,
+            BottomMarginPercent = TsOverrideBottomMargin,
+            OverrideScreenSize = TsOverrideScreenSize,
+            ScreenWidth = TsScreenWidth,
+            ScreenHeight = TsScreenHeight,
+            FileNameAppend = TsFileNameAppend ?? string.Empty,
+            OnlyTeletext = TsOnlyTeletext,
+        };
+    }
 
     public SeBatchConvert()
     {

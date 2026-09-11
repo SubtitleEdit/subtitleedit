@@ -15,6 +15,13 @@ public partial class BatchConvertItem : ObservableObject
     public string LanguageCode { get; set; }
     public string TrackNumber { get; set; }
 
+    /// <summary>
+    /// True when <see cref="OutputFileName"/> already carries the track's language/track
+    /// token (Transport Stream file name ending template), so the converter must not append
+    /// its regular language post fix on top of it.
+    /// </summary>
+    public bool OutputFileNameIncludesLanguage { get; set; }
+
     // Typed as object? so this assembly does not pull in the UI-side
     // IOcrSubtitle (which transitively depends on Avalonia). Consumers in
     // the UI cast back to IOcrSubtitle. Phase 5 (OCR pipelines) tightens this.
