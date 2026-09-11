@@ -491,6 +491,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<NOcrSettingsViewModel>();
         collection.AddTransient<NOcrTrainViewModel>();
         collection.AddTransient<LlamaCppOcrSettingsViewModel>();
+        collection.AddTransient<Features.Video.VideoOcr.EngineSettings.VideoOcrEngineSettingsViewModel>();
         collection.AddTransient<Features.Ocr.CrispEmbedSettings.CrispEmbedSettingsViewModel>();
         collection.AddTransient<LlamaCppEngineSettingsViewModel>();
         collection.AddTransient<Features.Translate.LlamaCppAdvanced.LlamaCppAdvancedSettingsViewModel>();

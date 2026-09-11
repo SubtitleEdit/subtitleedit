@@ -44,6 +44,13 @@ public class LanguageVideoOcr
     public string TestOcrRunning { get; set; }
     public string TestOcrResultX { get; set; }
     public string TestOcrNoTextFound { get; set; }
+    public string EngineSettings { get; set; }
+    public string EngineBuiltIn { get; set; }
+    public string EngineExternalServer { get; set; }
+    public string EngineCloudApi { get; set; }
+    public string EngineNothingToInstall { get; set; }
+    public string EngineModelsMissing { get; set; }
+    public string Website { get; set; }
 
     public LanguageVideoOcr()
     {
@@ -89,5 +96,12 @@ public class LanguageVideoOcr
         TestOcrRunning = "Testing OCR on current frame...";
         TestOcrResultX = "Test result: {0}";
         TestOcrNoTextFound = "Test: no text found in the scan area";
+        EngineSettings = "OCR engine settings";
+        EngineBuiltIn = "Built into the operating system";
+        EngineExternalServer = "External server (installed and managed outside Subtitle Edit)";
+        EngineCloudApi = "Cloud API (requires an API key)";
+        EngineNothingToInstall = "Nothing to install";
+        EngineModelsMissing = "Engine installed, models missing";
+        Website = "Website";
     }
 }

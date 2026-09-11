@@ -15,6 +15,8 @@ using Nikse.SubtitleEdit.Features.SpellCheck.GetDictionaries;
 using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Download;
+using Nikse.SubtitleEdit.Features.Video.VideoOcr.EngineSettings;
 using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using Nikse.SubtitleEdit.Logic.Media;
 using SkiaSharp;
@@ -311,22 +313,99 @@ public partial class VideoOcrViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Opens the CrispEmbed dialog: engine install state and hardware build, every backend's
-    /// models, and the (re-)download buttons for both. Re-downloading the engine there re-asks
-    /// CPU/Vulkan/CUDA, the only way to change hardware build after the first install (#13400).
+    /// Gear button next to the engine combo: every engine opens a settings/info dialog. CrispEmbed
+    /// and llama.cpp have dialogs of their own (engine build, models, prompt, timeout); the rest
+    /// share <see cref="VideoOcrEngineSettingsWindow"/> with install state, folder and website.
     /// </summary>
     [RelayCommand]
-    private async Task ShowCrispEmbedSettings()
+    private async Task ShowEngineSettings()
     {
         if (Window == null)
         {
             return;
         }
 
-        await _windowService.ShowDialogAsync<CrispEmbedSettingsWindow, CrispEmbedSettingsViewModel>(
-            Window, vm => vm.Initialize());
+        switch (SelectedEngine.EngineType)
+        {
+            case OcrEngineType.CrispEmbed:
+                // Engine install state and hardware build, every backend's models, and the
+                // (re-)download buttons for both. Re-downloading the engine there re-asks
+                // CPU/Vulkan/CUDA, the only way to change hardware build after the first install (#13400).
+                await _windowService.ShowDialogAsync<CrispEmbedSettingsWindow, CrispEmbedSettingsViewModel>(
+                    Window, vm => vm.Initialize());
+                break;
+
+            case OcrEngineType.LlamaCpp:
+                // Same dialog as the image OCR window: server URL, request timeout, prompt and the
+                // engine build's update status. The settings are shared with image OCR.
+                await _windowService.ShowDialogAsync<LlamaCppOcrSettingsWindow, LlamaCppOcrSettingsViewModel>(
+                    Window, vm => vm.Initialize(UpdateLlamaCppEngineAsync));
+                break;
+
+            default:
+                var engine = SelectedEngine;
+                Func<Task>? redownload = engine.EngineType == OcrEngineType.PaddleOcrStandalone
+                    ? RedownloadPaddleOcrAsync
+                    : null;
+                await _windowService.ShowDialogAsync<VideoOcrEngineSettingsWindow, VideoOcrEngineSettingsViewModel>(
+                    Window, vm => vm.Initialize(engine, redownload));
+                break;
+        }
 
         (Window as VideoOcrWindow)?.RefreshDownloadDots();
+    }
+
+    /// <summary>
+    /// Re-downloads the standalone Paddle engine (asking CPU/CUDA again, so this is also how the
+    /// build is switched) and then any missing models.
+    /// </summary>
+    private async Task RedownloadPaddleOcrAsync()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        if (await PaddleOcrInstallHelper.DownloadEngineAsync(Window, _windowService))
+        {
+            await PaddleOcrInstallHelper.EnsureInstalled(Window, _windowService, OcrEngineType.PaddleOcrStandalone);
+        }
+
+        (Window as VideoOcrWindow)?.RefreshDownloadDots();
+    }
+
+    /// <summary>
+    /// Stops the running llama-server (it holds the binary open and would keep serving a stale
+    /// build), re-downloads the matching llama.cpp build, and refreshes the model list and dots.
+    /// Wired to the download button in the llama.cpp OCR settings dialog.
+    /// </summary>
+    private async Task UpdateLlamaCppEngineAsync()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        LlamaCppServerManager.StopServer();
+        UpdateLlamaCppServerButtonText();
+
+        // Re-download the same backend that is installed (CPU/Vulkan/CUDA all unpack into one
+        // folder); when nothing is installed yet, DownloadAsync falls back to asking the user.
+        var folder = LlamaCppServerManager.GetAndCreateFolder();
+        var variant = LlamaCppServerManager.IsEngineInstalled() && OperatingSystem.IsWindows()
+            ? DownloadHashManager.DetectLlamaCppWindowsVariant(folder)
+            : null;
+
+        var model = SelectedLlamaCppModel?.Model;
+        var downloaded = await LlamaCppDownloadHelper.DownloadAsync(Window, _windowService, model, variant, forceEngineDownload: true);
+        if (downloaded != null)
+        {
+            var selectName = string.IsNullOrEmpty(downloaded) ? model?.FileName : downloaded;
+            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.GetAllOcrModels(), selectName);
+        }
+
+        (Window as VideoOcrWindow)?.RefreshDownloadDots();
+        UpdateLlamaCppServerButtonText();
     }
 
     private async Task<bool> EnsureCrispEmbedReady()
