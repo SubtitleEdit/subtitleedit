@@ -947,6 +947,29 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                    header.Substring(3, 3) == "STL";
         }
 
+        /// <summary>
+        /// True when <paramref name="header"/> is an STL header whose display standard code is
+        /// teletext (level 1 or 2). Open subtitling (code 0) has no teletext page, so the 40 cell
+        /// row and its control-code overhead do not apply to it.
+        /// </summary>
+        public static bool IsTeletextHeader(string header)
+        {
+            if (!IsStlHeader(header))
+            {
+                return false;
+            }
+
+            try
+            {
+                var displayStandardCode = ReadHeader(GetEncoding(header.Substring(0, 3)).GetBytes(header)).DisplayStandardCode;
+                return displayStandardCode == "1" || displayStandardCode == "2";
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public bool Save(string fileName, Subtitle subtitle)
         {
             return Save(fileName, subtitle, false);
