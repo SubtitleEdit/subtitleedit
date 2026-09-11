@@ -355,6 +355,28 @@ public class TextToSpeechWindow : Window
             return textBlock;
         }, true);
 
+        // Right-click: rename a user-imported clone voice (the file the engine lists it from).
+        // Presets and built-in speakers have no file, so the item is disabled for those.
+        var menuItemRenameVoice = new Avalonia.Controls.MenuItem
+        {
+            Header = Se.Language.Video.TextToSpeech.RenameVoiceDotDotDot,
+            Command = vm.RenameVoiceCommand,
+        };
+        var menuItemDeleteVoice = new Avalonia.Controls.MenuItem
+        {
+            Header = Se.Language.Video.TextToSpeech.DeleteVoiceDotDotDot,
+            Command = vm.DeleteVoiceCommand,
+        };
+        var voiceFlyout = new MenuFlyout { Items = { menuItemRenameVoice, menuItemDeleteVoice } };
+        voiceFlyout.Opening += (_, _) =>
+        {
+            var isFileVoice = vm.CanRenameSelectedVoice();
+            menuItemRenameVoice.IsEnabled = isFileVoice;
+            menuItemDeleteVoice.IsEnabled = isFileVoice;
+        };
+        comboBoxVoices.ContextFlyout = voiceFlyout;
+        UiUtil.AttachMacContextFlyoutHandler(comboBoxVoices);
+
         var panelVoice = new StackPanel
         {
             Orientation = Orientation.Horizontal,

@@ -1996,6 +1996,118 @@ public partial class TextToSpeechViewModel : ObservableObject
         IsVoiceCountVisible = Voices.Count > 0;
     }
 
+    /// <summary>Whether the voice combo's "Rename voice..." applies to the current pick.</summary>
+    public bool CanRenameSelectedVoice() => VoiceFileRename.CanRename(SelectedVoice);
+
+    [RelayCommand]
+    private async Task RenameVoice()
+    {
+        var engine = SelectedEngine;
+        var voice = SelectedVoice;
+        if (Window == null || engine == null || voice == null || !VoiceFileRename.CanRename(voice))
+        {
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<PromptTextBoxWindow, PromptTextBoxViewModel>(Window, vm =>
+        {
+            vm.Initialize(Se.Language.Video.TextToSpeech.RenameVoiceTitle, voice.Name, 400, 30, returnSubmits: true);
+        });
+
+        if (!result.OkPressed || string.IsNullOrWhiteSpace(result.Text) || result.Text.Trim() == voice.Name)
+        {
+            return;
+        }
+
+        var oldName = voice.Name;
+        var newFileName = VoiceFileRename.Rename(voice, result.Text, out var error);
+        if (newFileName == null)
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.Video.TextToSpeech.RenameVoiceTitle,
+                string.Format(Se.Language.Video.TextToSpeech.VoiceXCouldNotBeRenamedX, oldName, error),
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return;
+        }
+
+        // The engines derive the shown name from the file name, so re-read the folder and
+        // re-point everything that referenced the old name: the pick itself and any cast row.
+        var newName = Path.GetFileNameWithoutExtension(newFileName).Replace('_', ' ');
+        foreach (var mapping in _actorVoiceMappings)
+        {
+            if (mapping.VoiceName == oldName &&
+                (string.IsNullOrEmpty(mapping.EngineName) || string.Equals(mapping.EngineName, engine.Name, StringComparison.OrdinalIgnoreCase)))
+            {
+                mapping.VoiceName = newName;
+            }
+        }
+
+        if (Se.Settings.Video.TextToSpeech.Voice == oldName)
+        {
+            Se.Settings.Video.TextToSpeech.Voice = newName;
+        }
+
+        await RefreshVoices(engine);
+        var renamed = Voices.FirstOrDefault(v => v.Name == newName);
+        if (renamed != null)
+        {
+            SelectedVoice = renamed;
+        }
+    }
+
+    [RelayCommand]
+    private async Task DeleteVoice()
+    {
+        var engine = SelectedEngine;
+        var voice = SelectedVoice;
+        if (Window == null || engine == null || voice == null || !VoiceFileRename.CanRename(voice))
+        {
+            return;
+        }
+
+        var answer = await MessageBox.Show(
+            Window,
+            Se.Language.Video.TextToSpeech.DeleteVoiceTitle,
+            string.Format(Se.Language.Video.TextToSpeech.DeleteVoiceXQuestion, voice.Name),
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question);
+        if (answer != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        if (!VoiceFileRename.Delete(voice, out var error))
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.Video.TextToSpeech.DeleteVoiceTitle,
+                string.Format(Se.Language.Video.TextToSpeech.VoiceXCouldNotBeDeletedX, voice.Name, error),
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return;
+        }
+
+        // Cast rows that pointed at the deleted voice fall back to the global voice rather than
+        // silently landing on whichever voice the engine lists first.
+        foreach (var mapping in _actorVoiceMappings)
+        {
+            if (mapping.VoiceName == voice.Name &&
+                (string.IsNullOrEmpty(mapping.EngineName) || string.Equals(mapping.EngineName, engine.Name, StringComparison.OrdinalIgnoreCase)))
+            {
+                mapping.VoiceName = string.Empty;
+            }
+        }
+
+        if (Se.Settings.Video.TextToSpeech.Voice == voice.Name)
+        {
+            Se.Settings.Video.TextToSpeech.Voice = string.Empty;
+        }
+
+        await RefreshVoices(engine);
+    }
+
     [RelayCommand]
     private async Task ShowEncodingSettings()
     {
