@@ -260,8 +260,8 @@
     "EnglishName": "Finnish (Voikko)",
     "NativeName": "Suomi (Voikko)",
     "Files": [
-      "https://www.puimula.org/htp/testing/voikko-sdk/win-crossbuild/libvoikko-4.3+win1/win64/libvoikko-1.dll",
-      "https://www.puimula.org/htp/testing/voikko-snapshot-v5/dict.zip"
+      "https://github.com/SubtitleEdit/support-files/releases/download/voikko-4.3-fi-2024-06/libvoikko-1.dll",
+      "https://github.com/SubtitleEdit/support-files/releases/download/voikko-4.3-fi-2024-06/dict.zip"
     ],
     "Voikko": true,
     "Description": "Finnish morphological spell checker (libvoikko 4.3 + voikko-fi standard dictionary) - much better than the Hunspell word list. On Linux/macOS install libvoikko from your package manager."
