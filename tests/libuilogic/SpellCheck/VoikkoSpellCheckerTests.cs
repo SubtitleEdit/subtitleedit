@@ -30,6 +30,34 @@ public class VoikkoSpellCheckerTests
         }
     }
 
+    [Fact]
+    public void BundledDictionary_NextToApp_IsFoundWhenUserFolderHasNone()
+    {
+        // The macOS bundle / Flatpak ship the dictionary outside the user's dictionaries folder;
+        // the app folder is one of the probed roots.
+        var userFolder = Path.Combine(Path.GetTempPath(), "se-voikko-" + Guid.NewGuid().ToString("N"));
+        var bundled = Path.Combine(AppContext.BaseDirectory, "voikko", "5", "mor-standard");
+        Directory.CreateDirectory(userFolder);
+        Directory.CreateDirectory(bundled);
+        try
+        {
+            File.WriteAllText(Path.Combine(bundled, "mor.vfst"), "x");
+            Assert.True(VoikkoSpellChecker.HasDictionary(userFolder));
+            Assert.Equal(Path.Combine(AppContext.BaseDirectory, "voikko"), VoikkoSpellChecker.FindDictionaryRoot(userFolder));
+
+            // The user's own copy wins over the bundled one.
+            var user = Path.Combine(VoikkoSpellChecker.GetVoikkoFolder(userFolder), "5", "mor-standard");
+            Directory.CreateDirectory(user);
+            File.WriteAllText(Path.Combine(user, "mor.vfst"), "x");
+            Assert.Equal(VoikkoSpellChecker.GetVoikkoFolder(userFolder), VoikkoSpellChecker.FindDictionaryRoot(userFolder));
+        }
+        finally
+        {
+            Directory.Delete(userFolder, true);
+            Directory.Delete(Path.Combine(AppContext.BaseDirectory, "voikko"), true);
+        }
+    }
+
     /// <summary>
     /// Runs only when a libvoikko + dictionary is installed in the SE_VOIKKO_DICTIONARIES folder
     /// (the SE dictionaries folder); exercises the real native library end to end.
