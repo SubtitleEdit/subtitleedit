@@ -320,6 +320,11 @@ public class BinaryEditWindow : Window
                     Header = Se.Language.General.VideoResolution + "...",
                     Command = vm.ChangeResolutionCommand,
                 },
+                new MenuItem
+                {
+                    Header = Se.Language.Tools.ImageBasedEdit.MoveCaptionsDotDotDot,
+                    Command = vm.MoveCaptionsCommand,
+                },
                 new Separator(),
                 new MenuItem
                 {
@@ -352,6 +357,11 @@ public class BinaryEditWindow : Window
                 {
                     Header = Se.Language.Tools.ImageBasedEdit.SortByStartTime,
                     Command = vm.SortByStartTimeCommand,
+                },
+                new MenuItem
+                {
+                    Header = Se.Language.Tools.ImageBasedEdit.RemoveFadeInOut,
+                    Command = vm.RemoveFadesCommand,
                 },
                 new MenuItem
                 {
@@ -613,6 +623,15 @@ public class BinaryEditWindow : Window
         };
         flyout.Items.Add(menuItemCropSelectedLines);
         menuItemCropSelectedLines.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.HasSelection)));
+
+        var menuItemMoveCaptionsSelectedLines = new MenuItem
+        {
+            Header = Se.Language.Tools.ImageBasedEdit.MoveCaptionsDotDotDot,
+            DataContext = vm,
+            Command = vm.MoveCaptionsSelectedLinesCommand,
+        };
+        flyout.Items.Add(menuItemMoveCaptionsSelectedLines);
+        menuItemMoveCaptionsSelectedLines.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.HasSelection)));
 
         flyout.Items.Add(new Separator());
 
