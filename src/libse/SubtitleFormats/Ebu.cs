@@ -947,6 +947,33 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                    header.Substring(3, 3) == "STL";
         }
 
+        /// <summary>
+        /// The number of rows the vertical position (VP) of a text block counts against. Teletext
+        /// always has a 23 row page, whatever the header's MNR says. Open subtitling files often
+        /// carry the number of rows a subtitle may occupy (02) rather than a page height, and
+        /// laying lines out against a 2 row page would put them mid-screen - so that case gets a
+        /// 15 row page. Shared by the writer and the video preview so both place a line the same.
+        /// </summary>
+        public static int GetDisplayRowCount(EbuGeneralSubtitleInformation header)
+        {
+            if (header.DisplayStandardCode == "1" || header.DisplayStandardCode == "2") // teletext
+            {
+                return 23;
+            }
+
+            if (header.DisplayStandardCode == "0" && header.MaximumNumberOfDisplayableRows == "02") // open subtitling
+            {
+                return 15;
+            }
+
+            if (int.TryParse(header.MaximumNumberOfDisplayableRows, NumberStyles.Integer, CultureInfo.InvariantCulture, out var rows) && rows > 1)
+            {
+                return rows;
+            }
+
+            return 23;
+        }
+
         public bool Save(string fileName, Subtitle subtitle)
         {
             return Save(fileName, subtitle, false);
@@ -1054,21 +1081,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (var p in subtitle.Paragraphs)
             {
                 var tti = new EbuTextTimingInformation();
-
-                if (!int.TryParse(header.MaximumNumberOfDisplayableRows, out var rows))
-                {
-                    rows = 23;
-                }
-
-                if (header.DisplayStandardCode == "1" || header.DisplayStandardCode == "2") // teletext
-                {
-                    rows = 23;
-                }
-                else if (header.DisplayStandardCode == "0" && header.MaximumNumberOfDisplayableRows == "02") // open subtitling
-                {
-                    rows = 15;
-                }
-
+                var rows = GetDisplayRowCount(header);
                 var text = p.Text.Trim(Utilities.NewLineChars);
 
                 var teletextPosition = 0;

@@ -1,3 +1,4 @@
+using System;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
@@ -193,6 +194,26 @@ public class SubtitlePositionToAssaTest
         var p = subtitle.Paragraphs[0];
         Assert.StartsWith(@"{\an2}", p.Text, StringComparison.Ordinal);
         Assert.Equal("13", p.MarginV); // one row of 23 left below the two lines (rows 20 and 22)
+    }
+
+    [Fact]
+    public void EbuOpenSubtitlingWithTwoRowHeaderPreviewsAtTheBottomLikeTheWriter()
+    {
+        // Open subtitling STL files from other tools commonly carry "02" as the maximum number of
+        // displayable rows - the rows a subtitle may occupy, not a page height. The writer lays
+        // such a file out on a 15 row page; the preview used a 2 row page and centered every line.
+        var header = new Ebu.EbuGeneralSubtitleInformation { DisplayStandardCode = "0", MaximumNumberOfDisplayableRows = "02" }.ToString();
+        var subtitle = new Subtitle();
+        subtitle.Paragraphs.Add(new Paragraph("Hi there!", 1000, 3000));
+        subtitle.Paragraphs.Add(new Paragraph("Line one" + Environment.NewLine + "Line two", 4000, 6000));
+
+        Assert.True(SubtitlePositionToAssa.ApplyPositions(subtitle, header));
+
+        foreach (var p in subtitle.Paragraphs)
+        {
+            Assert.StartsWith(@"{\an2}", p.Text, StringComparison.Ordinal);
+            Assert.Equal("38", p.MarginV); // rows 13 (and 11+13) of 15, two rows left below - as Ebu.Save writes it
+        }
     }
 
     [Fact]

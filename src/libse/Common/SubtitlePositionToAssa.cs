@@ -248,17 +248,11 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             try
             {
+                // The same rule the writer lays the lines out with - an open subtitling header
+                // whose MNR is "02" used to give a 2 row page here, which parked every line in
+                // the vertical middle of the preview while the saved file had it at the bottom.
                 var ebuHeader = Ebu.ReadHeader(Ebu.GetEncoding(header.Substring(0, 3)).GetBytes(header));
-                if (ebuHeader.DisplayStandardCode == "1" || ebuHeader.DisplayStandardCode == "2") // teletext
-                {
-                    return 23;
-                }
-
-                if (int.TryParse(ebuHeader.MaximumNumberOfDisplayableRows, NumberStyles.Integer, CultureInfo.InvariantCulture, out var rows) &&
-                    rows > 1)
-                {
-                    return rows;
-                }
+                return Ebu.GetDisplayRowCount(ebuHeader);
             }
             catch
             {
