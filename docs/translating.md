@@ -58,7 +58,7 @@ Near the top of the JSON file, update these fields:
 ```json
 {
   "title": "Subtitle Edit",
-  "version": "v5.2.0-beta32",
+  "version": "v5.2.0",
   "translatedBy": "Your Name (or email / homepage)",
   "cultureName": "de-DE",
   ...

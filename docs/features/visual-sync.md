@@ -9,7 +9,9 @@ Synchronize subtitles visually by matching two points in the video.
 
 ## How to Use
 
-The Visual sync window shows two video player panes ("Start scene" and "End scene"), each with its own audio visualizer and a combo box for picking a subtitle line.
+The Visual sync window shows two video player panes ("Start scene" and "End scene"), each with its own audio visualizer and a combo box for picking a subtitle line. The subtitle is drawn on both videos with the same look as on the main window's video, and both players use the audio track selected in the main window (**Video → Audio tracks** or the waveform toolbar picker); there is no separate track picker in the dialog.
+
+The waveform under each video only appears when the main window has a waveform to share. Drag the handle between the video and the waveform to resize the waveform - both panes follow, and the height is remembered between sessions.
 
 1. Open **Sync → Visual sync...**
 2. In the **Start scene** pane, pick a subtitle line near the beginning and play the video to the position where that line should start

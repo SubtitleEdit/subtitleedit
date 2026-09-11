@@ -18,15 +18,15 @@ The menu bar provides access to all features organized into categories:
 
 | Menu | Description |
 |------|-------------|
-| **File** | New, New window, Open, Save, Save as, Save forced lines as, Close translation, format properties, Import, Export, Compare, Statistics |
-| **Edit** | Undo, Redo, Find, Replace, Multiple Replace, Go to line number, right-to-left tools (fix RTL via Unicode control chars, remove Unicode control chars, reverse RTL start/end), Modify Selection |
-| **Tools** | Fix Common Errors, Batch Convert, Change Casing, Merge/Split, etc. |
+| **File** | New, New (keep video), New window, Open, Open (keep video), Open original, Edit original subtitle, Close original, Close translation, Reopen, Restore auto-backup, Save, Save as, Save forced lines as, format properties, Open containing folder, Compare, Statistics, Import, Export, Exit |
+| **Edit** | Undo, Redo, Show history for undo, Find, Find next, Replace, Multiple replace, Go to line number, Right-to-left mode and the RTL tools (fix RTL via Unicode control chars, remove Unicode control chars, reverse RTL start/end), Modify selection, Invert selection, Select all |
+| **Tools** | Adjust durations, AI review, Apply duration limits, Apply min. gap between subtitles, Batch convert, Beautify time codes, Bridge gaps, Change casing, Change formatting, Check and fix Netflix errors, Convert actors, Fix common errors, List errors, Make new empty translation from current subtitle, Merge continuation lines, Merge lines with same text, Merge lines with same time codes, Merge short lines, Merge two subtitles, Remove text for hearing impaired, Remove/replace Unicode characters, Renumber, Snap all times to frames, Sort subtitles, Split/rebalance long lines, and below a separator Join subtitles and Split subtitle |
 | **Plugins** | Run installed plugins; manage installed plugins (only shown when **Options → Settings → Appearance → Show Plugins menu** is on) |
-| **Spell check** | Spell checking, dictionaries, find double words / lines |
-| **Video** | Open/close video, Speech to Text, Text to Speech, Burn-In, etc. |
-| **Sync** | Adjust All Times, Visual Sync, Point Sync, Change Frame Rate/Speed |
-| **Translate** | Auto Translate, Copy/Paste Translate |
-| **Options** | Settings, Shortcuts, Word Lists, Language |
+| **Spell check** | Spell check, Find double words, Find double lines, Add name to names list, Get dictionaries |
+| **Video** | Open video, Open video from URL, Open recent video, Close video file, Open/remove second subtitle file, Audio tracks, Go to video position, Speech to text, Text to speech, OCR burned-in subtitle, Generate video with burned-in subtitles, Generate transparent video with subtitles, Generate blank video, Embed subtitles, Generate/import shot changes, List shot changes, Undock/Dock video controls, Toggle select subtitle while playing, and a **More** submenu (Chapters, Cut video, Find voices in video and clone, Re-encode video, Remux video, Set video offset, SMPTE timing, Toggle waveform toolbar) shown while a video is loaded |
+| **Synchronization** | Adjust all times, Visual sync, Point sync, Point sync via other subtitle, Change frame rate, Change speed |
+| **Translate** | Auto-translate, Auto-translate via copy-paste |
+| **Options** | Settings, Shortcuts, Word lists, Choose UI language |
 | **Help** | Check for updates, Help, About |
 | **ASSA tools** | Styles, Properties, Attachments, Drawing, Positioning, etc. (only visible when an ASSA/SSA subtitle is loaded) |
 

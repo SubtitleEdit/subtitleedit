@@ -8,6 +8,7 @@ seconv movie.srt subrip --encoding:source --FixCommonErrors
 seconv movie.mkv subrip --track-number:3
 seconv movie.sup subrip --ocr-engine:tesseract --ocr-language:eng
 seconv movie.sub subrip --ocr-engine:binaryocr --ocr-db:Latin.db   # VobSub (.idx auto-detected)
+seconv movie.sup subrip --ocr-engine:llamacpp                      # llama.cpp vision model, auto-starts llama-server
 seconv movie.sub subrip --ocr-engine:tesseract --no-vobsub-isolate-colors  # OCR raw palette (isolation is on by default)
 seconv movie.sup subrip --time-codes-only
 seconv movie.avi subrip --ocr-engine:tesseract --ocr-language:eng   # XSUB (DivX) subtitles in an .avi

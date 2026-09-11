@@ -82,6 +82,20 @@ Supported OCR engines in Batch Convert:
 
 Subtitle Edit 5 can auto-detect language and pixels-are-space settings for nOcr/BinaryOcr in many batch workflows. This reduces the amount of manual setup needed when converting many image-based subtitle files with similar fonts.
 
+## Transport Stream Input
+
+A transport stream (`.ts`, `.m2ts`, `.mts`, or `.mpg`/`.mpeg` containing one) is listed as one item, and every subtitle track in it is converted: each DVB image track, every teletext page on every PID - one PID can carry several pages, e.g. 888 and 889 for a second language, and each page becomes its own output file - and ARIB STD-B24 caption tracks. Each output is named from the source file plus the file name ending template below, e.g. `movie.en.srt`; a track without a language code in the stream gets its PID or teletext page number instead, so two language-less tracks never collide.
+
+When a transport stream is in the list, a **Transport Stream settings...** button appears:
+
+- **Override original X position** - replace the DVB subtitle's own horizontal position with an alignment (left, center, right) and a left/right margin in percent of the screen width
+- **Override original Y position** - replace the vertical position with a bottom margin in percent of the screen height
+- **Override original video size** - scale the screen size, bitmaps and positions to the width and height you enter (**Get size from video...** reads them from a video file)
+- **File name ending** - text added before the extension for every extracted track, with placeholders for the two- or three-letter language code in lowercase or uppercase; the default is `.{two-letter-country-code}`. Leave it empty to use the regular language post fix instead
+- **Only teletext** - skip the DVB image tracks and convert only the teletext (and other text) tracks
+
+Position and video size only affect DVB image tracks exported to an image-based format.
+
 ## Speech to Text in Batch Mode
 
 Speech-to-text batch mode can transcribe multiple media files and save the results next to the source files. See [Speech to Text](speech-to-text.md) for engine setup and model details.

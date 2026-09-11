@@ -27,6 +27,8 @@ Open an existing subtitle file.
 - **Menu:** File → Open
 - **Shortcut:** `Ctrl+O`
 
+The format is detected automatically. A file that no known format claims is tried with the generic importers - plain lines with time codes, CSV, JSON, spreadsheets, and a generic XML importer that finds the repeated element carrying time codes and text in an unknown XML dialect. If that still yields nothing, a `.txt` file goes straight to [Import plain text](import-plain-text.md), as SE 4 did; for other extensions the "unknown subtitle format" error has an **Import plain text** button that sends the file there instead - handy for unsynced lyrics or a script.
+
 ### Open (keep video)
 
 Open a subtitle file while keeping the currently loaded video.
@@ -52,6 +54,8 @@ Save the current subtitle to a new file or format.
 
 - **Menu:** File → Save as...
 - **Shortcut:** `Ctrl+Shift+S`
+
+Formats new in 5.2 in the format list include EBU-TT (Tech 3350), Csv Excel, Wistia json, DVD Junior SPC, Sonic DVD Producer, YouTube timed text srv3, DaVinci Resolve Marker EDL, Adobe Premiere Markers, Audacity labels and Final Cut Pro Xml Captions - see [Supported Formats](../reference/supported-formats.md).
 
 ## Save Forced Lines As
 
@@ -89,7 +93,7 @@ Import plain text and create subtitle lines from it, with optional forced-aligne
 
 See [Import Plain Text](import-plain-text.md) for details.
 
-### Import images
+### Images for OCR
 
 Import image files and create subtitle entries from them.
 
@@ -162,6 +166,17 @@ Export subtitles as images. The Export submenu lists: Blu-ray (sup), BDN/xml, BD
 **BDN/xml** writes 32-bit PNGs; **BDN/xml 8-bit** writes the same index.xml with 8-bit palette-indexed PNGs, which is what most Blu-ray authoring tools expect.
 
 The **IMSC 1.1 image profile** export writes a single self-contained TTML file with each subtitle embedded as a base64 PNG (`smpte:image` / `smpte:backgroundImage`), media timebase, and percentage-positioned regions — the standardized image-subtitle carriage for streaming and broadcast delivery.
+
+#### Text effects
+
+Tick **Text effect** (next to the bold and right-to-left check boxes) and press the settings button beside it to pick a **Preset** and tune it with **Strength**, **Letter spacing**, **Curve** and **Wave**. Every size in a preset scales with the font size, and presets use the window's font, outline and shadow colours where that is natural (the "signature" looks such as gold, chrome and fire bring their own palette). The presets, as listed in the settings window:
+
+- Shadow and outline: Soft shadow, Double outline, Hollow (outline only), Emboss, Comic book
+- Glow and 3D: Neon glow, 3D extrude, 3D glasses, Retro 80s
+- Gradients and materials: Gradient (gold), Chrome, Brushed steel, Ice, Fire, Lava, Marble, Wood
+- Patterns: Rainbow, Candy cane, Polka dots
+
+The same setting is used by Batch convert's image-based output, so the two cannot drift apart.
 
 #### ASSA override tags
 

@@ -11,10 +11,14 @@ Edit image-based subtitles — Blu-ray SUP, VobSub, DVB, BDN XML — directly, w
 ## Supported Files
 
 - Blu-ray SUP (`.sup`)
+- DVD sup (`.sup` with SP packets, e.g. demuxed with SubRip or Subtitle Processor)
 - VobSub (`.sub` + `.idx`)
-- Transport stream (`.ts`) with DVB subtitles
+- Transport stream (`.ts`, `.m2ts`, `.mts`, `.rec`) with DVB subtitles
 - Matroska (`.mkv`/`.mks`) with PGS, VobSub, or DVB tracks
-- BDN XML (`.xml`)
+- MP4/MOV (`.mp4`, `.m4v`, `.mov`, `.3gp`) with VobSub image tracks
+- XSUB/DivX subtitles in `.avi`/`.divx`
+- WebVTT with embedded base64 images (`.vtt`, `.webvtt`)
+- BDN XML, Final Cut Pro image xml, and SMPTE-TT/IMSC with base64 images (`.xml`, `.ttml`, `.dfxp`)
 
 ## Window Layout
 
@@ -32,10 +36,13 @@ From the Tools menu (all lines) or the right-click menu (selected lines):
 - **Alignment** / **Center horizontally** / **Top align** / **Bottom align** — Reposition using the margins from the window's Options → Settings
 - **Resize images...** — Scale the bitmaps by a percentage
 - **Crop images** — Trim transparent borders
+- **Video resolution...** - Re-target the subtitle to another screen resolution (a preset or a custom width and height): every bitmap and every X/Y position is scaled by the width and height ratios, so a 1080p file keeps its layout at 720p or PAL. Changing the screen size fields alone only re-labels the canvas
+- **Move captions...** - For letterboxed video: pick the letterbox ratio (1.66:1 to 2.40:1, or a custom bar height) and move the captions **Into the letterbox bars (outside the picture)** or **Inside the picture (out of the bars)**, keeping an **Offset from edge (px)**. Captions centred in the upper half of the screen go to the top edge, the rest to the bottom edge; the dialog shows how many captions will move. From the right-click menu it moves only the selected lines
 - **Adjust brightness...** / **Adjust alpha (transparency)...** / **Adjust color...** — Image corrections with live preview
 - **Adjust durations...** / **Apply duration limits...** — Same duration tools as for text subtitles
 - **Append subtitle...** — Append another image-based file, keeping its time codes or offsetting them
 - **Sort by start time**
+- **Remove fade in/out** - Authoring tools write a fade as a run of back-to-back captions that share one image and differ only in transparency; this collapses each run (gaps up to 50 ms) into a single caption spanning the whole time, using the most opaque image
 
 The right-click menu additionally offers **Insert before** / **Insert after** (a new line from an image file), **Toggle forced**, **Select forced/non-forced lines**, and **Show earlier/later...**.
 

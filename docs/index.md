@@ -21,6 +21,7 @@ Subtitle Edit is a free, open-source editor for video subtitles. This is the doc
 - [Edit Menu](features/edit.md) — Find, Replace, Multiple Replace, History
 - [Source View](features/source-view.md) — Edit the raw subtitle source: syntax coloring, live parse check, find/replace, line commands
 - [Modify Selection](features/modify-selection.md) — Select lines by rules: text, hearing-impaired text, duration, CPS, gaps, styles, actors
+- [Assisted Split and Assisted Move](features/assisted-split.md) — Ranked one-click split points and word moves with full previews
 - [Subtitle Grid](features/subtitle-grid.md) — Working with the subtitle list/grid
 - [Text Editor](features/text-editor.md) — Editing subtitle text
 - [AI Assistant](features/ai-assistant.md) — AI help for the current line: fix errors, fit reading speed, change tone
@@ -29,6 +30,7 @@ Subtitle Edit is a free, open-source editor for video subtitles. This is the doc
 - [AI Review](features/ai-review.md) — Proofread with a local LLM (llama.cpp, Ollama, or any OpenAI-compatible endpoint)
 - [Fix Common Errors](features/fix-common-errors.md) — Automatic error detection and fixing
 - [Check and Fix Netflix Errors](features/netflix-errors.md) — Netflix quality checks, proposed fixes, and CSV reports
+- [List Errors](features/list-errors.md) — Every rule violation with summary cards; export to clipboard, text, Excel or web page
 - [Batch Convert](features/batch-convert.md) — Convert multiple subtitle files
 - [Beautify Time Codes](features/beautify-time-codes.md) — Snap cues to shot changes and frames using a configurable profile, with a live before/after preview
 - [Change Casing](features/change-casing.md) — Fix casing issues
@@ -49,6 +51,7 @@ Subtitle Edit is a free, open-source editor for video subtitles. This is the doc
 - [Join Subtitles](features/join-subtitles.md) — Join multiple subtitle files
 - [Sort By](features/sort-by.md) — Sort subtitles by various criteria
 - [Remove Text for Hearing Impaired](features/remove-text-hi.md) — Remove HI annotations
+- [Remove/replace Unicode Characters](features/remove-unicode-characters.md) — Find, remove or replace characters outside Latin-1 (SE 4 plugin port)
 - [Command Line (seconv)](features/seconv.md) — Headless converter for scripts and bulk conversion (see also the [full reference](reference/command-line.md))
 
 ### Synchronization
@@ -73,6 +76,7 @@ Subtitle Edit is a free, open-source editor for video subtitles. This is the doc
 - [Blank Video](features/blank-video.md) — Generate a blank video
 - [Re-encode Video](features/re-encode-video.md) — Re-encode video files
 - [Cut Video](features/cut-video.md) — Cut video segments
+- [Remux Video](features/remux-video.md) — Repackage video with new audio tracks and soft subtitles, without re-encoding
 
 ### Translation
 - [Auto Translate](features/auto-translate.md) — Automatic subtitle translation

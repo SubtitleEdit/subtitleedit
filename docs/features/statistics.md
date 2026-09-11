@@ -11,7 +11,7 @@ View detailed statistics about the currently loaded subtitle file, including lin
 1. Open a subtitle file.
 2. Go to **File** → **Statistics...** to open the statistics dialog.
 3. Read the dashboard: totals at the top, timing/pacing ranges and checks in the middle, and the word/line lists at the bottom.
-4. Use **Export** to save the statistics to a text file.
+4. Use **Export** to save the statistics to a text file (suggested name: `<subtitle name>_statistics.txt`).
 
 ## Features
 
@@ -33,7 +33,7 @@ View detailed statistics about the currently loaded subtitle file, including lin
 - Each list has a **Copy to clipboard** button.
 
 ### Export
-- Save the full statistics report to a text file.
+- Save the full statistics report (totals, most used words and most used lines) to a `.txt` file; a confirmation with the file location is shown afterwards. Text is the only export format - use the **Copy to clipboard** buttons to take a list somewhere else.
 
 ## Keyboard Shortcuts
 

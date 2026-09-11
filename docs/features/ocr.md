@@ -30,6 +30,7 @@ Built-in trainable OCR engine.
 - Train character databases for specific fonts
 - Very accurate once trained
 - Best for consistent fonts (like DVD/Blu-ray subtitles)
+- **Train nOCR database...** - a database can also be trained from installed fonts instead of being taught during OCR. Open the nOCR database settings (the settings button next to the database list) and right-click anywhere in that dialog to reach it. Pick one or more fonts, a font size, the characters to train (or **Import characters from subtitle file...**), letter combinations that might end up in one image, whether to include bold and italic, and the number of line segments; **Start training** renders every character in every selected font and saves the result as a new `.nocr` database in the OCR folder, ready to pick from the database list
 
 ### Binary OCR
 Binary image comparison engine, listed as **Binary image compare** in the engine dropdown.
@@ -74,9 +75,9 @@ Cloud-based OCR using Mistral API.
 - Requires a Mistral API key
 
 ### Paddle OCR Standalone / Paddle OCR Python
-Local OCR engine.
+Local OCR engine, based on Paddle OCR 3.7 with the PP-OCRv6 recognition models.
 - Standalone (downloadable CPU/GPU builds) is available on Windows and Linux.
-- The Python variant works anywhere a Paddle OCR Python install is available.
+- The Python variant works anywhere a Paddle OCR Python install is available. It uses the same downloaded models, so it needs `paddleocr` 3.7 or newer - older versions do not know the PP-OCRv6 model names.
 
 ## Engine Setup Notes
 
@@ -96,6 +97,12 @@ Local OCR engine.
 5. Click **Start OCR**
 6. Review and correct any errors
 7. Click **OK** to import the text subtitles
+
+After **OK**, the matching video is opened as well (unless auto-opening the video is turned off in the settings): a container source (`.mkv`, `.mp4`, `.ts`) is opened as the video itself; for a stand-alone image subtitle (`.sup`, `.sub`/`.idx`, ...) a video passed together with the file (drag and drop, command line) is used first, then the video the subtitle was last opened with, then a video file with the same name next to the subtitle.
+
+## Language Auto-detection
+
+When the OCR window opens, the OCR language for every engine - and through it the spell check dictionary - is pre-selected from the source's declared language: the stream language in a VobSub `.idx`, the track language of a Matroska or MP4 subtitle track, or a language tag in the file name. Two file-name patterns are recognised: a bracketed ISO 639 code such as `movie_track3_[dut].sup` (the naming used by Subtitle Edit's own Matroska track export; the last valid code wins), and a trailing dot-separated tag such as `movie.nl.sub` or `movie.dut.forced.sub` - the `hi`, `sdh`, `cc` and `forced` markers are skipped, only the last two remaining tokens are considered, three-letter codes must be lowercase, and `hi` is read as hearing impaired rather than Hindi. A detected language wins over the last-used one; a source without language information keeps the previous selection.
 
 ## Options
 
