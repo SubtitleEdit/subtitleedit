@@ -1827,7 +1827,13 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 FullFrameBackgroundColor = profile.FullFrameBackgroundColor.FromHexToColor().ToSKColor(),
             };
             var position = imageSubtitle.GetPosition(i);
-            if (position.X >= 0 && position.Y >= 0)
+            if (imageSubtitle is OcrSubtitleTransportStream)
+            {
+                // DVB tracks honour the Transport Stream output settings: rescale to a chosen
+                // video size and/or re-anchor X/Y (SE4's "TS settings...").
+                TransportStreamExportOverride.Apply(param, position, Se.Settings.Tools.BatchConvert.GetTransportStreamExportSettings());
+            }
+            else if (position.X >= 0 && position.Y >= 0)
             {
                 param.OverridePosition = position;
             }
@@ -3539,7 +3545,9 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
         var targetExtension = extension;
 
-        var languagePart = GetLanguagePostFix(item);
+        // A Transport Stream track named by the file name ending template already carries its
+        // language/track token - the regular post fix would double it ("video.eng.en.srt").
+        var languagePart = item.OutputFileNameIncludesLanguage ? string.Empty : GetLanguagePostFix(item);
         if (languagePart.Length > 0 && fileName.EndsWith(languagePart, StringComparison.InvariantCultureIgnoreCase))
         {
             languagePart = string.Empty; // base name already carries the language token

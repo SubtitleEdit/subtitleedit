@@ -59,6 +59,19 @@ public class LanguageBatchConvert
     public string IncludeSubfolders { get; set; }
     public string KeepSourceFileTimestamp { get; set; }
     public string ScanningFolderX { get; set; }
+    public string TransportStreamSettings { get; set; }
+    public string TransportStreamSettingsDotDotDot { get; set; }
+    public string TransportStreamSettingsInfo { get; set; }
+    public string TransportStreamOverrideXPosition { get; set; }
+    public string TransportStreamOverrideYPosition { get; set; }
+    public string TransportStreamOverrideVideoSize { get; set; }
+    public string TransportStreamBottomMargin { get; set; }
+    public string TransportStreamFileNameEnding { get; set; }
+    public string TransportStreamFileNameEndingInfo { get; set; }
+    public string TransportStreamOnlyTeletext { get; set; }
+    public string TransportStreamGetSizeFromVideo { get; set; }
+    public string TwoLetterLanguageCodeUppercase { get; set; }
+    public string ThreeLetterLanguageCodeUppercase { get; set; }
 
     public LanguageBatchConvert()
     {
@@ -116,5 +129,18 @@ public class LanguageBatchConvert
         IncludeSubfolders = "Include subfolders when adding a folder";
         KeepSourceFileTimestamp = "Keep source file date/time on output files";
         ScanningFolderX = "Scanning {0}...";
+        TransportStreamSettings = "Transport Stream settings";
+        TransportStreamSettingsDotDotDot = "Transport Stream settings...";
+        TransportStreamSettingsInfo = "Applies to subtitle tracks extracted from Transport Stream files (.ts/.m2ts). Position and video size only affect DVB image tracks exported to an image based format.";
+        TransportStreamOverrideXPosition = "Override original X position";
+        TransportStreamOverrideYPosition = "Override original Y position";
+        TransportStreamOverrideVideoSize = "Override original video size";
+        TransportStreamBottomMargin = "Bottom margin";
+        TransportStreamFileNameEnding = "File name ending";
+        TransportStreamFileNameEndingInfo = "Added before the extension for each extracted track. Leave empty to use the regular language post fix.";
+        TransportStreamOnlyTeletext = "Only teletext";
+        TransportStreamGetSizeFromVideo = "Get size from video...";
+        TwoLetterLanguageCodeUppercase = "Two-letter language code (uppercase)";
+        ThreeLetterLanguageCodeUppercase = "Three-letter language code (uppercase)";
     }
 }

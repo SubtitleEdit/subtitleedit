@@ -354,6 +354,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<BatchConvertAssaViewModel>();
         collection.AddTransient<BatchConvertFixCommonErrorsSettingsViewModel>();
         collection.AddTransient<BatchConvertSettingsViewModel>();
+        collection.AddTransient<Features.Tools.BatchConvert.BatchConvertTsSettingsViewModel>();
         collection.AddTransient<BatchConvertViewModel>();
         collection.AddTransient<BatchErrorListViewModel>();
         collection.AddTransient<BeautifyTimeCodesViewModel>();

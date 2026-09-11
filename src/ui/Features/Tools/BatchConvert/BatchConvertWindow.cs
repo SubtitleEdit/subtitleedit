@@ -242,6 +242,11 @@ public class BatchConvertWindow : Window
             .WithMarginLeft(5)
             .WithMarginRight(5);
         buttonTargetFormatSettings.WithBindIsVisible(vm, nameof(vm.IsTargetFormatSettingsVisible));
+        // Only offered while a Transport Stream file is in the list - the settings apply to nothing else.
+        var buttonTransportStreamSettings = UiUtil.MakeButton(vm.ShowTransportStreamSettingsCommand, IconNames.FileCog, Se.Language.Tools.BatchConvert.TransportStreamSettingsDotDotDot)
+            .WithMarginLeft(5)
+            .WithMarginRight(5);
+        buttonTransportStreamSettings.WithBindIsVisible(vm, nameof(vm.IsTransportStreamSettingsVisible));
         var buttonSettings = UiUtil.MakeButton(vm.ShowOutputPropertiesCommand, IconNames.Settings, Se.Language.General.Settings).WithMarginLeft(15).WithMarginRight(5);
 
         var panelFileControls = new StackPanel
@@ -259,6 +264,7 @@ public class BatchConvertWindow : Window
                 UiUtil.MakeLabel(Se.Language.General.TargetFormat).WithMarginLeft(15),
                 comboBoxSubtitleFormat,
                 buttonTargetFormatSettings,
+                buttonTransportStreamSettings,
                 buttonSettings,
                 MakeOutputPropertiesGrid(vm),
             }
