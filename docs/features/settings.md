@@ -11,7 +11,7 @@ Configure application preferences, rules and profiles, appearance, video player,
 ## How to Use
 
 1. Open **Options → Settings...**
-2. Pick a section from the icons on the left
+2. Pick a section from the icons on the left, or type in the **Search for settings...** box at the top to jump to a setting by name
 3. Adjust settings as needed
 4. Click **OK** to save
 
@@ -31,18 +31,21 @@ The subtitle rules that drive error checking, the grid's warning colors, and too
 
 ## General
 
+- **Default new subtitle duration (ms)** - The duration a newly inserted subtitle gets, e.g. when inserting at the video position
+- **Time up/down increment (ms)** - The step of the start/end/duration up-down boxes in millisecond mode
 - **Prompt before delete**, **Lock time codes**, **Remember window position and size**
 - **Use frame mode (hh.mm.ss.ff)** — Show times as frames instead of milliseconds
 - **Limit number of lines in subtitle text box**
 - **Open last recent file on start**
 - **Auto-convert encoding to UTF-8 on open**, **Force CR+LF on save**, **Auto-trim white-space**
+- **Warn on save when lines exceed the format's limits (e.g. SCC 32 chars/line)**
 - **Remove blank lines when opening a subtitle** — Off by default
 - **Default encoding**
 - **Subtitle grid Enter-key / single-click / double-click action** — What each gesture does to the video position and focus
 - **Subtitle grid, center when selecting prev/next row**
 - **Save as behavior**, **Save as: append language code**, **Default save location** (with a custom folder)
 - **Auto-save** — Save the open file while editing
-- **Auto-backup** — Automatic backups at a set interval, with a restore dialog
+- **Auto-backup** — Automatic backups at a set interval, with a restore dialog, and **Auto-backup retention (days)** for how long they are kept
 
 ## Subtitle Formats
 
@@ -88,6 +91,7 @@ The subtitle rules that drive error checking, the grid's warning colors, and too
 ## Tools
 
 - **Allow single-letter shortcuts in text box**
+- **Allow shortcuts on text-navigation keys (Ctrl+Left/Right, Home/End) in text box** - Off by default, so the keys keep moving the caret even when a shortcut is bound to them
 - **Go-to-line-number also sets video position**
 - **Adjust all times, remember line selection choice**
 - **Merge lines: keep end time (allow overlap with next subtitle)**, and the variant that limits it to ASSA files
@@ -107,7 +111,8 @@ The subtitle rules that drive error checking, the grid's warning colors, and too
 - **Theme**, **icon theme**, **match icon color to dark theme foreground color**, **UI scale (%)**
 - **Dark theme foreground / background color**, **focused button background color**
 - **UI font**, and a separate font for the subtitle text box and grid
-- **Grid** — Show subtitle text as single line (with the separator to use), text fit, [show formatted text](subtitle-grid.md#formatting-display), live spell check, compact mode, alternating row colors (light and dark), grid lines, bookmark color
+- **Grid** — Show subtitle text as single line (with the separator to use), text fit, [show formatted text](subtitle-grid.md#formatting-display), live spell check, **Center text in subtitle grid** (centers the text column, as Subtitle Edit 4 could), compact mode, alternating row colors (light and dark), grid lines, bookmark color
+- **Spell check highlight color** - The color of the unknown word highlighted in the spell check and OCR unknown-word windows (red by default; pick a lighter color for the dark theme)
 - **Subtitle text box** — Bold text, color tags, live spell check, centered text, and which buttons are shown (auto-break, unbreak, italic, color, remove formatting, AI assistant), the up/down start/end/duration controls and their labels
 - **Show button hints** — Turns the tooltips on and off
 - **Show ASSA layer box**, **show horizontal line above toolbar**, **show Plugins menu**

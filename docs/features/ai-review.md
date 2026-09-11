@@ -14,6 +14,8 @@ Proofread the subtitle text with a local (or remote) large language model - typo
 - **Ollama** — uses a running [Ollama](https://ollama.com) instance; type a model name or pick one from the server.
 - **OpenAI-compatible** — any endpoint that speaks the OpenAI chat API: LM Studio, KoboldCpp, vLLM, a llama.cpp server on another machine, or cloud APIs (OpenAI, Groq, OpenRouter, DeepSeek, Mistral, Gemini). Enter the URL, model name, and an API key if the service needs one.
 
+Next to the llama.cpp model list is a **Start server** / **Stop server** button. An idle `llama-server` keeps the model's VRAM until Subtitle Edit closes, so stop it here when you want the GPU back without leaving the window; the next review starts it again. Stopping a running review, or closing the window, also stops a server Subtitle Edit started.
+
 ### Using a cloud model
 
 If a local model is too slow on your machine, select the **OpenAI-compatible** engine and point it at a cloud provider. Only the URL, model name and API key differ:

@@ -7,7 +7,7 @@ The subtitle grid is the main area for viewing and managing all subtitle lines.
 
 ## Columns
 
-The grid has a fixed set of columns. Some are always visible; others can be toggled on or off via the column header context menu (see [Customizing Visible Columns](#customizing-visible-columns) below).
+The grid can show the columns below. A few are always visible; the others can be toggled on or off via the column header context menu, and the whole set can be reordered in the **Columns...** dialog (see [Customizing Visible Columns](#customizing-visible-columns) below).
 
 | Column | Always visible | Description |
 |--------|---------------|-------------|

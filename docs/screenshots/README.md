@@ -64,6 +64,7 @@ All listed files exist on disk. Filenames are stable and may be linked from `../
 - `sort-by.png` — Sort by window
 - `renumber.png` — Renumber window
 - `remove-text-hi.png` — Remove text for hearing impaired window
+- `ai-review.png` - AI review window
 
 ## Synchronization
 
@@ -160,9 +161,9 @@ Used by `../reference/assa-override-tags.md` to illustrate individual override t
 
 ## Counts
 
-- Top-level screenshots: **95**
+- Top-level screenshots: **96**
 - ASSA override-tag examples (`assa/`): **35**
-- Total: **130**
+- Total: **131**
 
 ## How the dialog screenshots are made
 

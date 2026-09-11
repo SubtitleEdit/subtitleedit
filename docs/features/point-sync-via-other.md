@@ -18,4 +18,8 @@ Synchronize a subtitle file using another subtitle file as reference.
 
 Both grids have a **Gap** column with the silence before each line; lines starting after 3+ seconds of silence are highlighted, as they often make reliable sync points. **Find text** above each grid searches that subtitle.
 
+The sync point list in the middle is kept in subtitle order, and a line has at most one sync point - setting one again for the same line re-points it. **Delete** in the list's right-click menu, or Delete/Backspace with the list focused, removes the selected point; **OK** and **Apply** need at least one point.
+
+**Set sync point via video...** opens the same window as [Point sync](point-sync.md#set-sync-point-window): the video with the subtitle drawn on it, playing the audio track selected in the main window, and a **Sync point time code** box that follows the video and can be edited by hand. Opened from here the window has no waveform pane.
+
 The window remembers its size and position between sessions.

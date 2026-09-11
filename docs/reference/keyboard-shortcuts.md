@@ -126,7 +126,7 @@ wins over the menu activation.
 | Shortcut | Action |
 |----------|--------|
 | Ctrl+V | Paste lines from clipboard at waveform position |
-| Ctrl+C | Copy the selected subtitle to the clipboard |
+| Ctrl+C | Copy the selected subtitle to the clipboard ("Copy (text only)" has no default key) |
 | Shift++ | Vertical zoom in |
 | Shift+- | Vertical zoom out |
 
@@ -148,6 +148,20 @@ wins over the menu activation.
 | Ctrl+Alt+Shift+L | Save language file |
 
 > **Note:** Several actions (Bold, Underline, shot-change snapping/extending, green-zone in/out cues, "Guess start time from waveform" / "Guess end time from waveform", "Go to next empty line", "Waveform paste clipboard text to new selection", etc.) ship without a default key. Open **Options** → **Shortcuts** to assign them, or use **Import from SE 4.x** to bring over a familiar set.
+
+## Find and Replace Windows
+
+Button accelerators in the [Find and Replace](../features/edit.md#replace) windows. They are fixed, not part of **Options** → **Shortcuts**.
+
+| Shortcut | Action |
+|----------|--------|
+| Alt+F | Find next (both windows) |
+| Alt+P | Find previous (Find window) |
+| Alt+R | Replace & find next (Replace window) |
+| Alt+A | Replace all (Replace window) |
+| F / P / R / A | The same, without Alt, when the focus is not in a text box (e.g. after clicking a button) |
+| Ctrl+Delete | Remove the current search text from the search history |
+| Escape | Close the window |
 
 ## Fix Lists in Dialogs
 

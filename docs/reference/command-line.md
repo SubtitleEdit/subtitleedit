@@ -8,7 +8,7 @@
 
 - **380+ subtitle formats** — text, binary, and image-based.
 - **Container input** — Matroska (`.mkv` / `.mks`), MP4, MCC, MXF, AVI (`.avi` / `.divx`), transport stream teletext, Blu-Ray `.sup`.
-- **OCR for image-based sources** via five engines (Tesseract subprocess, nOCR built-in, BinaryOCR built-in, Ollama HTTP, PaddleOCR subprocess).
+- **OCR for image-based sources** via six engines (Tesseract subprocess, nOCR built-in, BinaryOCR built-in, Ollama HTTP, llama.cpp HTTP with automatic server start, PaddleOCR subprocess).
 - **Auto-translate** via local LLMs (llama.cpp with automatic server start, Ollama, LM Studio) or self-hosted services (LibreTranslate, NLLB).
 - **Image-based output** — Blu-Ray sup, BDN-XML, DOST, FCP (Final Cut Pro + image), D-Cinema interop / SMPTE 2014, images-with-time-code.
 - **Operations pipeline** — offset, fps change, change-speed, renumber, adjust-duration, fix-common-errors, merge/split, balance, redo casing, RTL fixes, multiple-replace, custom-text format, plain text.
@@ -247,7 +247,7 @@ An AVI stream header carries no language, so a multi-stream `.avi` names its out
 | `binaryocr` *(alias: `binary`)* | In-process | Built-in BinaryOCR matcher (different accuracy profile, similar speed). Required: `--ocr-db:<path-to-Latin.db>`. |
 | `ollama` | HTTP | Local Ollama server with a vision-capable model (e.g. `llama3.2-vision`, `qwen2.5vl`). Configure via `--ollama-url` (default `http://localhost:11434/api/chat`) and `--ollama-model` (default `llama3.2-vision`). Pass `--ocr-language` as a human name like `English`. |
 | `llamacpp` *(aliases: `llama.cpp`, `llama`)* | HTTP | llama.cpp with a curated OCR vision model (best-first: GLM-OCR, LFM2.5-VL 3B, PaddleOCR-VL, HunyuanOCR 1.5, LightOnOCR). With no `--ocr-url`, seconv finds `llama-server` (SE data folder next to seconv, installed SE data folder, then `PATH`) and an OCR model — the first model in that order that is installed, unless `--ocr-model` names one — starts the server on a free loopback port, and stops it at exit. seconv never downloads engines/models — install them via the SE UI's OCR window (engine "llama.cpp") or point `--ocr-url` at a running server. Pass `--ocr-language` as a human name like `English`. |
-| `paddle` *(alias: `paddleocr`)* | Subprocess | Install via `pip install paddleocr` (3.7 or newer, for the PP-OCRv6 models); ensure the `paddleocr` binary is on `PATH`. Pass `--ocr-language` as a short code (`en`, `de`, …). |
+| `paddle` *(alias: `paddleocr`)* | Subprocess | Install via `pip install paddleocr` (3.7 or newer, for the PP-OCRv6 models); ensure the `paddleocr` binary is on `PATH`. Pass `--ocr-language` as a short code (`en`, `de`, …). Images are OCR'ed in batches: the prepared images of a file are written to a folder and one `paddleocr` process reads the whole folder, so the roughly twenty-second model load is paid once per file rather than once per image. |
 
 | Option | Description |
 |---|---|

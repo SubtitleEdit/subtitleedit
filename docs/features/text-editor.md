@@ -59,7 +59,19 @@ Besides cut/copy/paste, split and the formatting items above, the text box right
 - **Casing** — Toggle casing, Selection to UPPERCASE, Selection to lowercase, Selection to Sentence case, and Change casing... for the selected lines
 - **Insert Unicode symbol** — insert one of the configured symbols
 - **Google it** (with a selection) and **Search via** — the custom search slots set up in Options → Shortcuts
+- **Look up "..."** (macOS only) - opens the selected text, or with no selection the word under the pointer, in the system Dictionary app, as every macOS text field offers
 - **AI assistant** — see below
+
+## Drag and Drop
+
+Text can be dragged with the mouse, as in Subtitle Edit 4: select some text, then press on the selection and drag.
+
+- Dropped elsewhere in the **same** text box, the text is **moved**; hold **Ctrl** while dropping to copy it instead
+- Dropped into the **other** text box (for example from the original text into the working text), the text is **copied**
+- Text dragged from another application is dropped at the pointer too
+- A caret-shaped bar shows where the text will land while you drag; the dropped text stays selected afterwards, so it can be picked up again
+
+Spacing is tidied at the seams: a space is added where the dropped text would touch a word (none in front of punctuation or after a line break), and the space a word leaves behind when it is moved out is removed. A read-only original text box does not accept drops. A plain click inside the selection (without dragging) just places the caret, as usual.
 
 ## AI Assistant
 

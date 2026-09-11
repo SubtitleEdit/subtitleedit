@@ -52,6 +52,8 @@ Find and replace text in the subtitle.
 - **Menu:** Edit → Replace
 - **Shortcut:** `Ctrl+H`
 
+The buttons have Alt accelerators, underlined while Alt is held: `Alt+F` **Find next**, `Alt+R` **Replace & find next**, `Alt+A` **Replace all**. As in Subtitle Edit 4, the bare letter (`F`, `R`, `A`) also works once the focus has left the text boxes, e.g. after clicking a button. The Find window has `Alt+F` **Find next** and `Alt+P` **Find previous** the same way. `Ctrl+Delete` removes the current search text from the search history.
+
 With an editable original subtitle loaded, a **Replace/search in** drop-down appears with three choices:
 
 - **Text and original text** - both columns (the default, and what Find always does)
@@ -108,6 +110,8 @@ Each rule has one of three match types, shown as an icon in the tree:
 | Regular expression | Full .NET regex syntax. Use `\n` to match a line break between two lines (`\r\n` and `\r` are accepted too and treated as `\n`). |
 
 Unlike Find and Replace, regular expression rules here are matched in multiline mode: `^` and `$` match at the start and the end of *every* line, so `^- ` strips the dash from both lines of a two-line subtitle. Put `(?-m)` in front of the pattern to anchor to the whole subtitle text instead. The replacement text follows the same rules as in Replace above - `$1` and `\n` work, other backslash escapes do not.
+
+> **Slow patterns:** the same five-second match timeout as in Find applies to each rule on each line. A rule that runs out of time is retired for the rest of the pass and flagged in the tree with "Regular expression gave up after 5 seconds - the rule is skipped, try a simpler pattern", so a catastrophically backtracking pattern shows up as an error rather than as a rule that silently matches nothing. The timeout is fixed; there is no setting for it.
 
 ### Managing categories
 

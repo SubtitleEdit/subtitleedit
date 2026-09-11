@@ -4,6 +4,7 @@ Turn a plain text file — or pasted text — into subtitle lines, with generate
 
 - **Menu:** File → Import → Plain text...
 - **Shortcut:** Configurable (no default)
+- **Also:** Opening a file Subtitle Edit cannot read lands here too - a plain `.txt` file goes to this window directly, and for other extensions the "unknown subtitle format" error offers an **Import plain text** button. See [File → Open](file.md#open)
 
 <!-- Screenshot: Import plain text window -->
 ![Import Plain Text](../screenshots/import-plain-text.png)

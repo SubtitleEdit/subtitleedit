@@ -34,9 +34,13 @@ Subtitle Edit stores these components in its **Data Folder**.
 | **Tesseract** | `tesseract.exe`, `tessdata/` folder | `[Data Folder]/Tesseract` |
 | **Whisper CPP** | `whisper-cli.exe`, `Models/` folder | `[Data Folder]/SpeechToText/Cpp` |
 | **Purfview Faster-Whisper XXL** | `faster-whisper-xxl.exe`, `_models/` folder | `[Data Folder]/SpeechToText/Purfview-Faster-Whisper-XXL` |
+| **WhisperX** | standalone build (no Python); models in the Hugging Face cache | `[Data Folder]/SpeechToText/WhisperX` |
 | **Crisp ASR** | `crispasr.exe`, `models/` folder | `[Data Folder]/CrispASR` |
 | **Qwen3 ASR CPP** | `qwen3-asr-cli.exe`, `models/` folder | `[Data Folder]/Qwen3ASR` |
 | **PaddleOCR** | `paddleocr.exe`, `models/` folder | `[Data Folder]/OCR/PaddleOCR3-7` |
+| **CrispEmbed** | OCR runtime, GGUF models in `models/` | `[Data Folder]/OCR/CrispEmbed` |
+| **llama.cpp** | `llama-server.exe`, GGUF models in `models/` (translate, AI review, OCR) | `[Data Folder]/llama.cpp` |
+| **audio.cpp** | `audiocpp_server.exe`, `BUILD-INFO.txt`, GGUF models in `models/` | `[Data Folder]/audio.cpp` |
 | **Qwen3 TTS (CrispASR)** | shares `crispasr.exe` + `models/` from `[Data Folder]/CrispASR`; reference voices in `voices/` | `[Data Folder]/TextToSpeech/Qwen3TtsCrispAsr` (voices only) |
 | **Chatterbox TTS (CrispASR)** | shares `crispasr.exe` + `models/` from `[Data Folder]/CrispASR`; reference voices in `voices/` | `[Data Folder]/TextToSpeech/Chatterbox` (voices only) |
 | **OmniVoice TTS** | `omnivoice-tts.exe`, `omnivoice-codec.exe`, `models/`, `voices/` | `[Data Folder]/TextToSpeech/OmniVoice` |
@@ -108,12 +112,21 @@ Used for GPU-accelerated AI-based speech recognition.
 *   **Files:** Download the Standalone Archive, extract contents so `faster-whisper-xxl.exe` is in the folder root.
 *   **Models:** Place model directories (e.g., `faster-whisper-medium`) inside the `_models` folder.
 
+### WhisperX (Speech-to-Text)
+Faster-Whisper with wav2vec2 word-level alignment, shipped as a standalone build so no Python install is needed.
+
+*   **Download:** Built by Subtitle Edit's own workflow and published in [SubtitleEdit/support-files releases](https://github.com/SubtitleEdit/support-files/releases); the Speech to text window downloads it for you. Windows x64, Linux x64 and macOS Apple Silicon.
+*   **Destination:** `[Data Folder]/SpeechToText/WhisperX`
+*   **Models:** The Whisper model list is shared with Purfview Faster-Whisper XXL; WhisperX itself keeps the downloaded weights in the Hugging Face cache rather than in the Data Folder.
+
 ### SE5 Speech-to-Text Engines
 Subtitle Edit 5 can download additional ASR engines directly from the **Speech to text** window.
 
 *   **Crisp ASR:** Stored in `[Data Folder]/CrispASR`. Models go into its `models` folder. Crisp ASR backends include Parakeet, Canary, Cohere, Fire Red, Fun-ASR Nano, GigaAM, GLM, Granite, Qwen3, Mega, MOSS Diarize, Omni, Kyutai, SenseVoice, ARK, and Voxtral.
     *   The speech-to-text dialog also offers a **Forced aligner** combo for word-level timestamps. Built-in (where the backend supports it), Canary CTC, Qwen3, and 12 language-specific wav2vec2 aligners (the WhisperX aligner zoo): `en`, `de`, `fr`, `es`, `it`, `ja`, `zh`, `nl`, `pt`, `ar`, `uk`, `cs`. The default is the built-in aligner when the backend supports it, otherwise Qwen3 or Canary CTC depending on the backend; pick a wav2vec2 entry manually to use one of those.
 *   **Qwen3 ASR CPP:** Stored in `[Data Folder]/Qwen3ASR`. Models go into `[Data Folder]/Qwen3ASR/models`. (Parakeet is no longer a standalone engine; it is a Crisp ASR backend.)
+*   **llama.cpp:** Stored in `[Data Folder]/llama.cpp` with the GGUF models in its `models` folder. One install serves the llama.cpp auto-translate engines, AI review, the AI assistant and the llama.cpp OCR vision models; a `.gguf` you download yourself and drop into `models` is listed as *(custom)*.
+*   **CrispEmbed:** The local OCR runtime, stored in `[Data Folder]/OCR/CrispEmbed` with its GGUF models in `models`.
 
 Use [Speech to Text](features/speech-to-text.md) for the current engine list and workflow.
 
@@ -134,8 +147,17 @@ Subtitle Edit 5 can download local TTS servers and models from the **Text to spe
 *   **Chatterbox TTS (CrispASR):** Reference voices are stored in `[Data Folder]/TextToSpeech/Chatterbox/voices`. The Base / Turbo model GGUFs (T3 + S3Gen) are downloaded into the shared `[Data Folder]/CrispASR/models` cache alongside the Crisp ASR speech-to-text models, not under `TextToSpeech/Chatterbox/models` — installing Crisp ASR first is therefore recommended. Older installs that still have model files under the legacy `TextToSpeech/Chatterbox/models` folder are migrated automatically the first time the engine is used.
 *   **OmniVoice TTS:** Stored in `[Data Folder]/TextToSpeech/OmniVoice`. Brings its own `omnivoice-tts` and `omnivoice-codec` binaries. Supports 646 languages and voice cloning on CPU. `models/` and `voices/` subfolders.
 *   **Kokoro TTS:** Stored in `[Data Folder]/TextToSpeech/KokoroTtsCpp`. Models go into the `models` folder.
+*   **Piper:** Stored in `[Data Folder]/TextToSpeech/Piper`. A custom voice is an `.onnx` model with its `.onnx.json` beside it in that folder (imported from the voice settings dialog or copied in by hand).
 
-These are examples, not the full set — many more local engines are downloadable from the Text to speech window (IndexTTS, CosyVoice3, dots.tts, VoxCPM2, MOSS-TTS, Zonos, VibeVoice, Confucius4-TTS, Pocket TTS, Higgs Audio, Fish Audio, and more), following the same layout: CrispASR-based engines share the `[Data Folder]/CrispASR` cache, and the rest live under `[Data Folder]/TextToSpeech/<engine>`.
+### audio.cpp (Text-to-Speech runtime)
+The runtime behind **IndexTTS 2.5**, **Higgs Audio v3**, **Fish Audio S2 Pro** and **FireRedTTS3**. One install serves all four engines, and each of them prompts for it on first use.
+
+*   **Download:** Built by Subtitle Edit's own workflow from upstream audio.cpp and published in [SubtitleEdit/support-files releases](https://github.com/SubtitleEdit/support-files/releases) (upstream only ships Windows builds). CPU, CUDA and Vulkan builds for Windows and Linux x64, and a Metal build for macOS Apple Silicon.
+*   **Destination:** `[Data Folder]/audio.cpp` - `audiocpp_server.exe` (`audiocpp_server` on Linux/macOS) plus a `BUILD-INFO.txt` listing the model families the build was compiled with. Subtitle Edit reads that file and offers an update when an engine needs a family the installed build lacks, so keep it next to the binary if you install by hand.
+*   **Models:** GGUF weights come straight from Hugging Face (`audio-cpp/audio.cpp-gguf`) and go into `[Data Folder]/audio.cpp/models/<family>-GGUF`: `IndexTTS2.5-GGUF`, `Higgs-Audio-v3-TTS-4B-GGUF`, `Fish-Audio-S2-Pro-GGUF` and `FireRedTTS3-Base-GGUF`. IndexTTS 2.5, Higgs Audio v3 and Fish Audio S2 Pro show a licence window before the first download.
+*   **Voices:** Reference recordings are kept per engine under `[Data Folder]/TextToSpeech/IndexTts25AudioCpp`, `HiggsTtsAudioCpp`, `FishTtsAudioCpp` and `FireRedTts3AudioCpp`.
+
+These are examples, not the full set — many more local engines are downloadable from the Text to speech window (IndexTTS, CosyVoice3, dots.tts, VoxCPM2, MOSS-TTS, Zonos, VibeVoice, Confucius4-TTS, Pocket TTS, and more), following the same layout: CrispASR-based engines share the `[Data Folder]/CrispASR` cache, the audio.cpp engines share `[Data Folder]/audio.cpp`, and the rest live under `[Data Folder]/TextToSpeech/<engine>`.
 
 Use [Text to Speech](features/text-to-speech.md) for the full engine list and engine-specific options.
 
@@ -196,7 +218,7 @@ Used for GPU-accelerated AI-based speech recognition.
 
 ### SE5 Speech-to-Text, OCR, and TTS Engines
 
-The same data-folder layout is used on Linux. Prefer the in-app downloaders for Crisp ASR, Qwen3 ASR, PaddleOCR, and the local TTS engines because the required files differ by build and model.
+The same data-folder layout is used on Linux. Prefer the in-app downloaders for Crisp ASR, Qwen3 ASR, WhisperX, PaddleOCR, CrispEmbed, llama.cpp, audio.cpp and the local TTS engines because the required files differ by build and model.
 
 ---
 
