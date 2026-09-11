@@ -243,6 +243,23 @@ public class ArtePreviewTests
         Assert.Equal(boxingFix.After, vm.FixedSubtitle!.Paragraphs[1].Text);
     }
 
+    [AvaloniaTheory]
+    [InlineData("08")]
+    [InlineData("0F")]
+    public void EveryNormalArteLanguage_RemovesSdhBoxing(string languageCode)
+    {
+        var source = new Subtitle();
+        source.Paragraphs.Add(new Paragraph("<box color=\"White\">Boxed text</box>", 1000, 4000));
+        var vm = Create(source, "Teletext colors");
+        vm.SelectedLanguage = vm.Languages.Single(item => item.Code == languageCode);
+        vm.IsSdh = false;
+        vm.AnalyzeCommand.Execute(null);
+
+        var fix = Assert.Single(vm.Fixes);
+        Assert.Equal("Boxed text", fix.After);
+        Assert.Contains("boxing is removed", fix.Reason);
+    }
+
     [AvaloniaFact]
     public void NonStlSource_CreatesAnArteEbuStlTargetHeader()
     {

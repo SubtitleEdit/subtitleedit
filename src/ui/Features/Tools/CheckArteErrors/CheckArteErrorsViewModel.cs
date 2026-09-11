@@ -1134,7 +1134,7 @@ public partial class CheckArteErrorsViewModel : ObservableObject
         for (var i = 0; i < subtitle.Paragraphs.Count; i++)
         {
             var text = subtitle.Paragraphs[i].Text;
-            // Explicit boxing belongs to SDH only. A normal 08/0F ARTE subtitle
+            // Explicit boxing belongs to SDH only. Every normal ARTE language code
             // has no boxing control: remove it before applying the normal yellow/
             // no-colour rule, otherwise Yellow text on a retained Yellow box is
             // invisible in both the grid and Flow.
