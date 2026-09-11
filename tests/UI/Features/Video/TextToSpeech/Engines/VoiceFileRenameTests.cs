@@ -84,6 +84,32 @@ public class VoiceFileRenameTests : IDisposable
     }
 
     [Fact]
+    public void Delete_RemovesWavSidecarsAndPreparedCopy()
+    {
+        var voice = MakeVoice("Gone");
+        File.WriteAllText(Path.Combine(_folder, "Gone.txt"), "transcript");
+        var prepared = CloneReferenceTail.GetPreparedFileName(Path.Combine(_folder, "Gone.wav"));
+        Directory.CreateDirectory(Path.GetDirectoryName(prepared)!);
+        File.WriteAllBytes(prepared, new byte[8]);
+        MakeVoice("Kept");
+
+        Assert.True(VoiceFileRename.Delete(voice, out var error));
+
+        Assert.Equal(string.Empty, error);
+        Assert.False(File.Exists(Path.Combine(_folder, "Gone.wav")));
+        Assert.False(File.Exists(Path.Combine(_folder, "Gone.txt")));
+        Assert.False(File.Exists(prepared));
+        Assert.True(File.Exists(Path.Combine(_folder, "Kept.wav")));
+    }
+
+    [Fact]
+    public void Delete_RefusesNonFileVoices()
+    {
+        Assert.False(VoiceFileRename.Delete(new Voice(new Qwen3TtsVoice("Default", string.Empty)), out var error));
+        Assert.NotEqual(string.Empty, error);
+    }
+
+    [Fact]
     public void CanRename_IsFalseForPresetsDefaultAndPerLineMarker()
     {
         Assert.False(VoiceFileRename.CanRename(null));

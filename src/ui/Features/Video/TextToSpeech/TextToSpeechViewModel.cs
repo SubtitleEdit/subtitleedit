@@ -2058,6 +2058,57 @@ public partial class TextToSpeechViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task DeleteVoice()
+    {
+        var engine = SelectedEngine;
+        var voice = SelectedVoice;
+        if (Window == null || engine == null || voice == null || !VoiceFileRename.CanRename(voice))
+        {
+            return;
+        }
+
+        var answer = await MessageBox.Show(
+            Window,
+            Se.Language.Video.TextToSpeech.DeleteVoiceTitle,
+            string.Format(Se.Language.Video.TextToSpeech.DeleteVoiceXQuestion, voice.Name),
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question);
+        if (answer != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        if (!VoiceFileRename.Delete(voice, out var error))
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.Video.TextToSpeech.DeleteVoiceTitle,
+                string.Format(Se.Language.Video.TextToSpeech.VoiceXCouldNotBeDeletedX, voice.Name, error),
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return;
+        }
+
+        // Cast rows that pointed at the deleted voice fall back to the global voice rather than
+        // silently landing on whichever voice the engine lists first.
+        foreach (var mapping in _actorVoiceMappings)
+        {
+            if (mapping.VoiceName == voice.Name &&
+                (string.IsNullOrEmpty(mapping.EngineName) || string.Equals(mapping.EngineName, engine.Name, StringComparison.OrdinalIgnoreCase)))
+            {
+                mapping.VoiceName = string.Empty;
+            }
+        }
+
+        if (Se.Settings.Video.TextToSpeech.Voice == voice.Name)
+        {
+            Se.Settings.Video.TextToSpeech.Voice = string.Empty;
+        }
+
+        await RefreshVoices(engine);
+    }
+
+    [RelayCommand]
     private async Task ShowEncodingSettings()
     {
         await _windowService.ShowDialogAsync<EncodingSettingsWindow, EncodingSettingsViewModel>(Window!, vm => { });

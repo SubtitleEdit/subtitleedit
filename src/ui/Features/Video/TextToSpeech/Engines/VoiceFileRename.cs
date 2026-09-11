@@ -54,6 +54,50 @@ public static class VoiceFileRename
         voice != null && GetReferenceFilePath(voice) is { } path && File.Exists(path);
 
     /// <summary>
+    /// Deletes the voice's reference WAV, its sidecars and the cached prepared copy. Returns
+    /// false with <paramref name="error"/> set when the voice is not a file-backed clone or the
+    /// delete failed.
+    /// </summary>
+    public static bool Delete(Voice voice, out string error)
+    {
+        error = string.Empty;
+        var fileName = GetReferenceFilePath(voice);
+        if (fileName == null || !File.Exists(fileName))
+        {
+            error = "Voice file not found";
+            return false;
+        }
+
+        try
+        {
+            var folder = Path.GetDirectoryName(fileName) ?? string.Empty;
+            var baseName = Path.GetFileNameWithoutExtension(fileName);
+            foreach (var file in Directory.GetFiles(folder, baseName + ".*"))
+            {
+                if (string.Equals(Path.GetFileNameWithoutExtension(file), baseName, StringComparison.OrdinalIgnoreCase))
+                {
+                    File.Delete(file);
+                }
+            }
+
+            var prepared = CloneReferenceTail.GetPreparedFileName(fileName);
+            foreach (var stale in new[] { prepared, prepared + ".stamp" }.Where(File.Exists))
+            {
+                File.Delete(stale);
+            }
+
+            Se.WriteToolsLog($"TTS voice deleted: '{fileName}'");
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Se.LogError(ex, $"Deleting TTS voice '{fileName}' failed");
+            error = ex.Message;
+            return false;
+        }
+    }
+
+    /// <summary>
     /// Moves the voice's files to <paramref name="newName"/>. Returns the new reference file
     /// name, or null with <paramref name="error"/> set when nothing was changed.
     /// </summary>

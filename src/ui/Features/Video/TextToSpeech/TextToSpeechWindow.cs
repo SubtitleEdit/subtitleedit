@@ -362,8 +362,18 @@ public class TextToSpeechWindow : Window
             Header = Se.Language.Video.TextToSpeech.RenameVoiceDotDotDot,
             Command = vm.RenameVoiceCommand,
         };
-        var voiceFlyout = new MenuFlyout { Items = { menuItemRenameVoice } };
-        voiceFlyout.Opening += (_, _) => menuItemRenameVoice.IsEnabled = vm.CanRenameSelectedVoice();
+        var menuItemDeleteVoice = new Avalonia.Controls.MenuItem
+        {
+            Header = Se.Language.Video.TextToSpeech.DeleteVoiceDotDotDot,
+            Command = vm.DeleteVoiceCommand,
+        };
+        var voiceFlyout = new MenuFlyout { Items = { menuItemRenameVoice, menuItemDeleteVoice } };
+        voiceFlyout.Opening += (_, _) =>
+        {
+            var isFileVoice = vm.CanRenameSelectedVoice();
+            menuItemRenameVoice.IsEnabled = isFileVoice;
+            menuItemDeleteVoice.IsEnabled = isFileVoice;
+        };
         comboBoxVoices.ContextFlyout = voiceFlyout;
         UiUtil.AttachMacContextFlyoutHandler(comboBoxVoices);
 

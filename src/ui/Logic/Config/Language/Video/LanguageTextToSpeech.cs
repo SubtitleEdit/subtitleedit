@@ -39,6 +39,10 @@ public class LanguageTextToSpeech
     public string RenameVoiceDotDotDot { get; set; }
     public string RenameVoiceTitle { get; set; }
     public string VoiceXCouldNotBeRenamedX { get; set; }
+    public string DeleteVoiceDotDotDot { get; set; }
+    public string DeleteVoiceTitle { get; set; }
+    public string DeleteVoiceXQuestion { get; set; }
+    public string VoiceXCouldNotBeDeletedX { get; set; }
     public string VoiceImportSuccessTitle { get; set; }
     public string VoiceXImported { get; set; }
     public string VoiceXCouldNotBeImported { get; set; }
@@ -207,6 +211,10 @@ public class LanguageTextToSpeech
         RenameVoiceDotDotDot = "Rename voice...";
         RenameVoiceTitle = "Rename voice";
         VoiceXCouldNotBeRenamedX = "Voice '{0}' could not be renamed: {1}";
+        DeleteVoiceDotDotDot = "Delete voice...";
+        DeleteVoiceTitle = "Delete voice";
+        DeleteVoiceXQuestion = "Delete voice '{0}'?\n\nThe reference recording and its files are removed from disk.";
+        VoiceXCouldNotBeDeletedX = "Voice '{0}' could not be deleted: {1}";
         VoiceImportSuccessTitle = "Voice imported";
         VoiceXImported = "Voice '{0}' imported successfully";
         VoiceXCouldNotBeImported = "Voice '{0}' could not be imported - see the log for details";
