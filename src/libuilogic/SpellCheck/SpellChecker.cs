@@ -27,6 +27,8 @@ public class SpellChecker : ISpellChecker, IDoSpell
     private static readonly HashSet<string> AllowedTokens = new() { "&", "—", "–", "…" };
 
     private WordList? _hunspellWeCantSpell;
+    // Finnish via libvoikko when the "fi_FI.voikko" pseudo dictionary is selected; null otherwise.
+    private VoikkoSpellChecker? _voikko;
     protected SpellCheckWordLists? WordLists;
     // Case-insensitive so per-word membership tests need no ToUpperInvariant allocation -
     // IsWordCorrect runs per word per grid cell repaint with live spell check on.
@@ -58,6 +60,18 @@ public class SpellChecker : ISpellChecker, IDoSpell
             {
                 DictionaryFileName = dic,
                 Name = name,
+            });
+        }
+
+        // Finnish via Voikko is listed as a pseudo dictionary (a marker file rather than a .dic) so
+        // every dictionary picker gets it for free. Only listed when libvoikko can actually be loaded.
+        var voikkoMarker = VoikkoSpellChecker.GetMarkerFile(dictionaryFolder);
+        if (File.Exists(voikkoMarker) && VoikkoSpellChecker.IsAvailable(dictionaryFolder))
+        {
+            list.Add(new SpellCheckDictionaryDisplay
+            {
+                DictionaryFileName = voikkoMarker,
+                Name = "Finnish (Voikko) [fi_FI]",
             });
         }
 
@@ -115,8 +129,24 @@ public class SpellChecker : ISpellChecker, IDoSpell
             return false;
         }
 
-        var affixFile = Path.ChangeExtension(dictionaryFile, ".aff");
-        _hunspellWeCantSpell = WordList.CreateFromFiles(dictionaryFile, affixFile);
+        _voikko?.Dispose();
+        _voikko = null;
+        _hunspellWeCantSpell = null;
+        if (IsVoikkoDictionary(dictionaryFile))
+        {
+            var dictionaryFolder = Path.GetDirectoryName(Path.GetDirectoryName(dictionaryFile)) ?? string.Empty;
+            _voikko = VoikkoSpellChecker.TryCreate(dictionaryFolder, out var error);
+            if (_voikko == null)
+            {
+                SpellCheckConfig.LogError("Voikko: " + error);
+                return false;
+            }
+        }
+        else
+        {
+            var affixFile = Path.ChangeExtension(dictionaryFile, ".aff");
+            _hunspellWeCantSpell = WordList.CreateFromFiles(dictionaryFile, affixFile);
+        }
 
         if (string.IsNullOrEmpty(twoLetterLanguageCode))
         {
@@ -156,6 +186,11 @@ public class SpellChecker : ISpellChecker, IDoSpell
         if (WordSpellChecker != null)
         {
             return WordSpellChecker.GetSuggestions(word);
+        }
+
+        if (_voikko != null)
+        {
+            return _voikko.Suggest(word);
         }
 
         if (_hunspellWeCantSpell == null)
@@ -273,7 +308,7 @@ public class SpellChecker : ISpellChecker, IDoSpell
                 return true;
             }
         }
-        else if (_hunspellWeCantSpell != null && _hunspellWeCantSpell.Check(word))
+        else if (CheckWithDictionary(word))
         {
             return true;
         }
@@ -377,7 +412,22 @@ public class SpellChecker : ISpellChecker, IDoSpell
             return WordSpellChecker.DoSpell(word);
         }
 
+        return CheckWithDictionary(word);
+    }
+
+    private bool CheckWithDictionary(string word)
+    {
+        if (_voikko != null)
+        {
+            return _voikko.Spell(word);
+        }
+
         return _hunspellWeCantSpell != null && _hunspellWeCantSpell.Check(word);
+    }
+
+    public static bool IsVoikkoDictionary(string dictionaryFile)
+    {
+        return dictionaryFile.EndsWith(".voikko", StringComparison.OrdinalIgnoreCase);
     }
 
     protected static bool IsPartOfHtmlOrAssaTag(SpellCheckWord spellCheckWord, string text)
