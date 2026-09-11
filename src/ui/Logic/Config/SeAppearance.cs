@@ -55,6 +55,12 @@ public class SeAppearance
     public string GridAlternatingRowColorDark { get; set; }
     public bool ShowHorizontalLineAboveToolbar { get; set; }
 
+    /// <summary>
+    /// Color of the flagged word highlighted in the "whole line" preview of the spell check
+    /// and OCR "unknown word" dialogs, as #AARRGGBB.
+    /// </summary>
+    public string SpellCheckHighlightColor { get; set; }
+
     public bool ToolbarShowFileNew { get; set; }
     public bool ToolbarShowFileOpen { get; set; }
     public bool ToolbarShowVideoFileOpen { get; set; }
@@ -133,6 +139,7 @@ public class SeAppearance
         UseFocusedButtonBackgroundColor = true;
         FocusedButtonBackgroundColor = new Color(99, 30, 144, 255).FromColorToHex();
         BookmarkColor = Color.Parse("#C07800").FromColorToHex();
+        SpellCheckHighlightColor = Colors.Red.FromColorToHex();
         GridCompactMode = true;
         ShowLayer = true;
         ShowUpDownStartTime = true;
