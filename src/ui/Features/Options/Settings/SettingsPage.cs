@@ -9,6 +9,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Platform;
+using Avalonia.Styling;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Help.CheckForUpdates;
@@ -19,6 +20,8 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 using Optris.Icons.Avalonia;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.UiLogic.Common;
 
 namespace Nikse.SubtitleEdit.Features.Options.Settings;
@@ -128,6 +131,12 @@ public class SettingsPage : UserControl
         UpdateVisibleSections(string.Empty);
 
         _searchBox.TextChanged += (_, e) => UpdateVisibleSections(_searchBox.Text ?? string.Empty);
+        ActualThemeVariantChanged += (_, _) => Dispatcher.UIThread.Post(RefreshSections);
+    }
+
+    public void RefreshSections()
+    {
+        UpdateVisibleSections(_searchBox.Text ?? string.Empty);
     }
 
     public void FocusSearchBox()
@@ -201,6 +210,106 @@ public class SettingsPage : UserControl
                 _contentPanel.Children.Add(section.Build());
             }
         }
+    }
+
+    private static SettingsItem MakeToolbarSetting(ToolbarSettingItem item)
+    {
+        if (item.ImageName == null)
+        {
+            return new SettingsItem(item.Name, () =>
+            {
+                var checkBox = new CheckBox();
+                checkBox.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(item.IsVisible))
+                {
+                    Source = item,
+                    Mode = BindingMode.TwoWay,
+                });
+                return checkBox;
+            }) { IsFullWidth = true };
+        }
+
+        return new SettingsItem(item.Name, () =>
+        {
+            var icon = InitToolbar.MakeImage(item.ImageName);
+            icon.Width = 32;
+            icon.Height = 32;
+            icon.HorizontalAlignment = HorizontalAlignment.Center;
+            icon.VerticalAlignment = VerticalAlignment.Center;
+
+            var check = new TextBlock
+            {
+                Text = "✓",
+                FontSize = 16,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Top,
+            };
+            check.Bind(IsVisibleProperty, new Binding(nameof(item.IsVisible)) { Source = item });
+
+            var content = new StackPanel
+            {
+                Spacing = 6,
+                VerticalAlignment = VerticalAlignment.Center,
+                Children =
+                {
+                    icon,
+                    new TextBlock
+                    {
+                        Text = item.Name,
+                        FontSize = 12,
+                        LineHeight = 15,
+                        MaxLines = 2,
+                        TextWrapping = TextWrapping.Wrap,
+                        TextTrimming = TextTrimming.CharacterEllipsis,
+                        TextAlignment = TextAlignment.Center,
+                    },
+                },
+            };
+            var toggle = new ToggleButton
+            {
+                Width = 120,
+                Height = 85,
+                Margin = new Thickness(0, 0, 8, 8),
+                Padding = new Thickness(8),
+                CornerRadius = new CornerRadius(8),
+                HorizontalContentAlignment = HorizontalAlignment.Stretch,
+                VerticalContentAlignment = VerticalAlignment.Stretch,
+                Content = new Grid { Children = { content, check } },
+                [AutomationProperties.NameProperty] = item.Name,
+            };
+            if (Se.Settings.Appearance.ShowHints)
+            {
+                ToolTip.SetTip(toggle, item.Name);
+            }
+
+            toggle.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(item.IsVisible))
+            {
+                Source = item,
+                Mode = BindingMode.TwoWay,
+            });
+
+            var accent = UiUtil.GetAccentBrush();
+            var accentColor = accent is ISolidColorBrush accentSolid ? accentSolid.Color : Colors.DodgerBlue;
+            var background = new SolidColorBrush(Color.Parse("#3f808080"));
+            var selectedBackground = new SolidColorBrush(accentColor, 0x26 / 255.0);
+            var lightResources = new ResourceDictionary();
+            var darkResources = new ResourceDictionary();
+            toggle.Resources.ThemeDictionaries[ThemeVariant.Light] = lightResources;
+            toggle.Resources.ThemeDictionaries[ThemeVariant.Dark] = darkResources;
+            check.Foreground = accent;
+            foreach (var state in new[] { "", "PointerOver", "Pressed" })
+            {
+                toggle.Resources["ToggleButtonBackground" + state] = background;
+                toggle.Resources["ToggleButtonBackgroundChecked" + state] = selectedBackground;
+                lightResources["ToggleButtonForeground" + state] = Brushes.Black;
+                lightResources["ToggleButtonForegroundChecked" + state] = Brushes.Black;
+                darkResources["ToggleButtonForeground" + state] = Brushes.White;
+                darkResources["ToggleButtonForegroundChecked" + state] = Brushes.White;
+                toggle.Resources["ToggleButtonBorderBrush" + state] = Brushes.Transparent;
+                toggle.Resources["ToggleButtonBorderBrushChecked" + state] = accent;
+            }
+
+            return toggle;
+        });
     }
 
     private List<SettingsSection> CreateSections()
@@ -823,35 +932,7 @@ public class SettingsPage : UserControl
         ]));
 
         sections.Add(new SettingsSection(Se.Language.General.Toolbar, IconNames.DotsHorizontal, "#58c9b4",
-        [
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarNew, nameof(_vm.ShowToolbarNew)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarOpen, nameof(_vm.ShowToolbarOpen)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarVideoFileOpen, nameof(_vm.ShowToolbarVideoFileOpen)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarSave, nameof(_vm.ShowToolbarSave)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarSaveAs, nameof(_vm.ShowToolbarSaveAs)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarFind, nameof(_vm.ShowToolbarFind)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarReplace, nameof(_vm.ShowToolbarReplace)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarMultipleReplace, nameof(_vm.ShowToolbarMultipleReplace)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarSpellCheck, nameof(_vm.ShowToolbarSpellCheck)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarFixCommonErrors, nameof(_vm.ShowToolbarFixCommonErrors)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarRemoveTextForHi, nameof(_vm.ShowToolbarRemoveTextForHi)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarVisualSync, nameof(_vm.ShowToolbarVisualSync)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarPointSync, nameof(_vm.ShowToolbarPointSync)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarBeautifyTimeCodes, nameof(_vm.ShowToolbarBeautifyTimeCodes)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarBurnIn, nameof(_vm.ShowToolbarBurnIn)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarAutoTranslate, nameof(_vm.ShowToolbarAutoTranslate)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarSpeechToText, nameof(_vm.ShowToolbarSpeechToText)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarSettings, nameof(_vm.ShowToolbarSettings)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarLayout, nameof(_vm.ShowToolbarLayout)),
-            MakeCheckboxSetting(Se.Language.Options.Shortcuts.SourceView, nameof(_vm.ShowToolbarSourceView)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarHelp, nameof(_vm.ShowToolbarHelp)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarEncoding, nameof(_vm.ShowToolbarEncoding)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarFrameRate, nameof(_vm.ShowToolbarFrameRate)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarStyleManager, nameof(_vm.ShowToolbarStyleManager)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarProperties, nameof(_vm.ShowToolbarProperties)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarAttachments, nameof(_vm.ShowToolbarAttachments)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarAssaDraw, nameof(_vm.ShowToolbarAssaDraw)),
-        ]));
+            _vm.ToolbarItems.Select(MakeToolbarSetting)) { WrapItems = true });
 
         sections.Add(new SettingsSection(Se.Language.Options.Settings.Network, IconNames.Network, "#6bb84e",
         [

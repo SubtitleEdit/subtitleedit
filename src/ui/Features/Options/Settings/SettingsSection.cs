@@ -15,6 +15,7 @@ public class SettingsSection
     public IBrush Brush { get; }
     private readonly List<SettingsItem> _items;
     public StackPanel? Panel { get; set; }
+    public bool WrapItems { get; init; }
 
     public bool IsVisible => _items.Any(i => i.IsVisible);
 
@@ -77,9 +78,23 @@ public class SettingsSection
             }
         });
 
-        foreach (var item in _items.Where(i => i.IsVisible))
+        Panel itemsPanel = WrapItems ? new WrapPanel { Orientation = Orientation.Horizontal } : Panel;
+        foreach (var item in _items.Where(i => i.IsVisible && (!WrapItems || !i.IsFullWidth)))
         {
-            Panel.Children.Add(item.Build());
+            itemsPanel.Children.Add(item.Build(includeLabel: !WrapItems));
+        }
+
+        if (WrapItems)
+        {
+            if (itemsPanel.Children.Count > 0)
+            {
+                Panel.Children.Add(itemsPanel);
+            }
+
+            foreach (var item in _items.Where(i => i.IsVisible && i.IsFullWidth))
+            {
+                Panel.Children.Add(item.Build());
+            }
         }
 
         return Panel;

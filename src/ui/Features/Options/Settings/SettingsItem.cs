@@ -16,6 +16,7 @@ public class SettingsItem
     public bool IsVisible { get; private set; } = true;
     public string? IsVisibleBinding { get; set; }
     public bool IsHidden { get; set; } = false;
+    public bool IsFullWidth { get; init; }
 
     public SettingsItem(string label, Func<Control> controlFactory, string? isVisibleBinding = null, bool isHidden = false)
     {
@@ -53,8 +54,13 @@ public class SettingsItem
                     _label.Contains(filter, StringComparison.OrdinalIgnoreCase);
     }
 
-    public Control Build()
+    public Control Build(bool includeLabel = true)
     {
+        if (!includeLabel)
+        {
+            return _controlFactory();
+        }
+
         var labelTextBlock = new TextBlock
         {
             Text = _label,

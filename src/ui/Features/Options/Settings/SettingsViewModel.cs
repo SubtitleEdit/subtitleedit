@@ -210,34 +210,9 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _showUpDownDuration;
     [ObservableProperty] private bool _showUpDownLabels;
 
-    [ObservableProperty] private bool _showToolbarNew;
-    [ObservableProperty] private bool _showToolbarOpen;
-    [ObservableProperty] private bool _showToolbarVideoFileOpen;
-    [ObservableProperty] private bool _showToolbarSave;
-    [ObservableProperty] private bool _showToolbarSaveAs;
-    [ObservableProperty] private bool _showToolbarFind;
-    [ObservableProperty] private bool _showToolbarReplace;
-    [ObservableProperty] private bool _showToolbarMultipleReplace;
-    [ObservableProperty] private bool _showToolbarSpellCheck;
-    [ObservableProperty] private bool _showToolbarFixCommonErrors;
-    [ObservableProperty] private bool _showToolbarRemoveTextForHi;
-    [ObservableProperty] private bool _showToolbarVisualSync;
-    [ObservableProperty] private bool _showToolbarPointSync;
-    [ObservableProperty] private bool _showToolbarBeautifyTimeCodes;
-    [ObservableProperty] private bool _showToolbarBurnIn;
-    [ObservableProperty] private bool _showToolbarAutoTranslate;
-    [ObservableProperty] private bool _showToolbarSpeechToText;
+    public IReadOnlyList<ToolbarSettingItem> ToolbarItems { get; } = ToolbarSettingItem.CreateItems();
+
     [ObservableProperty] private bool _fixCommonErrorsSkipStep1;
-    [ObservableProperty] private bool _showToolbarSettings;
-    [ObservableProperty] private bool _showToolbarLayout;
-    [ObservableProperty] private bool _showToolbarSourceView;
-    [ObservableProperty] private bool _showToolbarHelp;
-    [ObservableProperty] private bool _showToolbarEncoding;
-    [ObservableProperty] private bool _showToolbarFrameRate;
-    [ObservableProperty] private bool _showToolbarStyleManager;
-    [ObservableProperty] private bool _showToolbarProperties;
-    [ObservableProperty] private bool _showToolbarAttachments;
-    [ObservableProperty] private bool _showToolbarAssaDraw;
 
     [ObservableProperty] private bool _showPluginsMenu;
 
@@ -886,33 +861,10 @@ public partial class SettingsViewModel : ObservableObject
         {
             SelectedFontName = FontNames.FirstOrDefault(p => p == appearance.FontName) ?? FontNames.First();
         }
-        ShowToolbarNew = appearance.ToolbarShowFileNew;
-        ShowToolbarOpen = appearance.ToolbarShowFileOpen;
-        ShowToolbarVideoFileOpen = appearance.ToolbarShowVideoFileOpen;
-        ShowToolbarSave = appearance.ToolbarShowSave;
-        ShowToolbarSaveAs = appearance.ToolbarShowSaveAs;
-        ShowToolbarFind = appearance.ToolbarShowFind;
-        ShowToolbarReplace = appearance.ToolbarShowReplace;
-        ShowToolbarMultipleReplace = appearance.ToolbarShowMultipleReplace;
-        ShowToolbarSpellCheck = appearance.ToolbarShowSpellCheck;
-        ShowToolbarFixCommonErrors = appearance.ToolbarShowFixCommonErrors;
-        ShowToolbarRemoveTextForHi = appearance.ToolbarShowRemoveTextForHi;
-        ShowToolbarVisualSync = appearance.ToolbarShowVisualSync;
-        ShowToolbarPointSync = appearance.ToolbarShowPointSync;
-        ShowToolbarBeautifyTimeCodes = appearance.ToolbarShowBeautifyTimeCodes;
-        ShowToolbarBurnIn = appearance.ToolbarShowBurnIn;
-        ShowToolbarAutoTranslate = appearance.ToolbarShowAutoTranslate;
-        ShowToolbarSpeechToText = appearance.ToolbarShowSpeechToText;
-        ShowToolbarSettings = appearance.ToolbarShowSettings;
-        ShowToolbarLayout = appearance.ToolbarShowLayout;
-        ShowToolbarSourceView = appearance.ToolbarShowSourceView;
-        ShowToolbarHelp = appearance.ToolbarShowHelp;
-        ShowToolbarEncoding = appearance.ToolbarShowEncoding;
-        ShowToolbarFrameRate = appearance.ToolbarShowFrameRate;
-        ShowToolbarStyleManager = appearance.ToolbarShowStyleManager;
-        ShowToolbarProperties = appearance.ToolbarShowProperties;
-        ShowToolbarAttachments = appearance.ToolbarShowAttachments;
-        ShowToolbarAssaDraw = appearance.ToolbarShowAssaDraw;
+        foreach (var item in ToolbarItems)
+        {
+            item.Load(appearance);
+        }
         ShowPluginsMenu = appearance.ShowPluginsMenu;
         SubtitleGridFontSize = appearance.SubtitleGridFontSize;
         SubtitleGridTextSingleLine = appearance.SubtitleGridTextSingleLine;
@@ -1758,33 +1710,10 @@ public partial class SettingsViewModel : ObservableObject
                 ? new Label().FontFamily.Name
                 : SelectedFontName;
         }
-        appearance.ToolbarShowFileNew = ShowToolbarNew;
-        appearance.ToolbarShowFileOpen = ShowToolbarOpen;
-        appearance.ToolbarShowVideoFileOpen = ShowToolbarVideoFileOpen;
-        appearance.ToolbarShowSave = ShowToolbarSave;
-        appearance.ToolbarShowSaveAs = ShowToolbarSaveAs;
-        appearance.ToolbarShowFind = ShowToolbarFind;
-        appearance.ToolbarShowReplace = ShowToolbarReplace;
-        appearance.ToolbarShowMultipleReplace = ShowToolbarMultipleReplace;
-        appearance.ToolbarShowSpellCheck = ShowToolbarSpellCheck;
-        appearance.ToolbarShowFixCommonErrors = ShowToolbarFixCommonErrors;
-        appearance.ToolbarShowRemoveTextForHi = ShowToolbarRemoveTextForHi;
-        appearance.ToolbarShowVisualSync = ShowToolbarVisualSync;
-        appearance.ToolbarShowPointSync = ShowToolbarPointSync;
-        appearance.ToolbarShowBeautifyTimeCodes = ShowToolbarBeautifyTimeCodes;
-        appearance.ToolbarShowBurnIn = ShowToolbarBurnIn;
-        appearance.ToolbarShowAutoTranslate = ShowToolbarAutoTranslate;
-        appearance.ToolbarShowSpeechToText = ShowToolbarSpeechToText;
-        appearance.ToolbarShowSettings = ShowToolbarSettings;
-        appearance.ToolbarShowLayout = ShowToolbarLayout;
-        appearance.ToolbarShowSourceView = ShowToolbarSourceView;
-        appearance.ToolbarShowHelp = ShowToolbarHelp;
-        appearance.ToolbarShowEncoding = ShowToolbarEncoding;
-        appearance.ToolbarShowFrameRate = ShowToolbarFrameRate;
-        appearance.ToolbarShowStyleManager = ShowToolbarStyleManager;
-        appearance.ToolbarShowProperties = ShowToolbarProperties;
-        appearance.ToolbarShowAttachments = ShowToolbarAttachments;
-        appearance.ToolbarShowAssaDraw = ShowToolbarAssaDraw;
+        foreach (var item in ToolbarItems)
+        {
+            item.Save(appearance);
+        }
         appearance.ShowPluginsMenu = ShowPluginsMenu;
         appearance.SubtitleGridFontSize = SubtitleGridFontSize;
         appearance.SubtitleGridTextSingleLine = SubtitleGridTextSingleLine;
@@ -2826,6 +2755,13 @@ public partial class SettingsViewModel : ObservableObject
         // compared against - without it OK re-applies every change this Apply already made and
         // rebuilds the layout (and the video player) a second time (issue #14218).
         AppliedSettingsSnapshot = SettingsChangeSnapshot.Take();
+
+        // Icon theme and recoloring can change without changing the actual theme variant.
+        if (Window != null &&
+            UiTheme.GetUnscaledContent(Window) is SettingsPage page)
+        {
+            page.RefreshSections();
+        }
     }
 
     [RelayCommand]
