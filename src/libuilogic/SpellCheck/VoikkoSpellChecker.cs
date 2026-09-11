@@ -8,10 +8,13 @@ namespace Nikse.SubtitleEdit.UiLogic.SpellCheck;
 /// compounding, clitics) does not fit Hunspell's affix model, so the Hunspell fi_FI dictionary is a
 /// frozen word list that flags most inflected forms. SE 4 used Voikko for Finnish for the same reason.
 ///
-/// The library is loaded dynamically at runtime (never a build-time dependency): on Windows from
-/// <c>libvoikko-1.dll</c> in the Voikko folder under the dictionaries folder, elsewhere from the
-/// system-installed <c>libvoikko.so.1</c> / <c>libvoikko.dylib</c>. The dictionary is the standard
-/// "format 5" morphology (<c>5/mor-standard/mor.vfst</c>) unpacked into the same Voikko folder.
+/// The library is loaded dynamically at runtime (never a build-time dependency). Probe order: the
+/// Voikko folder under the dictionaries folder (what "Get dictionaries" installs on Windows), the
+/// application folder (the macOS bundle ships <c>libvoikko.1.dylib</c> in Contents/Frameworks), then
+/// the system library (<c>libvoikko.so.1</c> in the Flatpak's /app/lib or a distro package, Homebrew
+/// on macOS). The dictionary is the standard "format 5" morphology (<c>5/mor-standard/mor.vfst</c>),
+/// looked up in the same order: user Voikko folder, bundled copy (macOS Contents/Resources/voikko,
+/// Flatpak /app/share/voikko), then the usual system locations.
 /// </summary>
 public sealed class VoikkoSpellChecker : IDisposable
 {
@@ -52,7 +55,56 @@ public sealed class VoikkoSpellChecker : IDisposable
     /// <summary>The dictionary files are present (the library may still be missing).</summary>
     public static bool HasDictionary(string dictionaryFolder)
     {
-        return File.Exists(Path.Combine(GetVoikkoFolder(dictionaryFolder), "5", "mor-standard", "mor.vfst"));
+        return FindDictionaryRoot(dictionaryFolder) != null;
+    }
+
+    private static bool IsDictionaryRoot(string folder)
+    {
+        return File.Exists(Path.Combine(folder, "5", "mor-standard", "mor.vfst"));
+    }
+
+    /// <summary>
+    /// The folder to hand to voikkoInit (the one containing "5/mor-standard"): the user's Voikko
+    /// folder first, then a copy bundled with the app, then the system locations.
+    /// </summary>
+    public static string? FindDictionaryRoot(string dictionaryFolder)
+    {
+        foreach (var candidate in GetDictionaryRootCandidates(dictionaryFolder))
+        {
+            try
+            {
+                if (IsDictionaryRoot(candidate))
+                {
+                    return candidate;
+                }
+            }
+            catch
+            {
+                // ignore
+            }
+        }
+
+        return null;
+    }
+
+    private static IEnumerable<string> GetDictionaryRootCandidates(string dictionaryFolder)
+    {
+        yield return GetVoikkoFolder(dictionaryFolder);
+
+        var appFolder = AppContext.BaseDirectory;
+        yield return Path.Combine(appFolder, "voikko");
+        if (OperatingSystem.IsMacOS())
+        {
+            yield return Path.GetFullPath(Path.Combine(appFolder, "..", "Resources", "voikko"));
+            yield return "/opt/homebrew/share/voikko";
+            yield return "/usr/local/share/voikko";
+        }
+        else if (!OperatingSystem.IsWindows())
+        {
+            yield return "/app/share/voikko";
+            yield return "/usr/share/voikko";
+            yield return "/usr/lib/voikko";
+        }
     }
 
     /// <summary>True when both the dictionary and a loadable libvoikko are available.</summary>
@@ -76,14 +128,18 @@ public sealed class VoikkoSpellChecker : IDisposable
     private static IntPtr LoadLibrary(string voikkoFolder)
     {
         var candidates = new List<string>();
+        var appFolder = AppContext.BaseDirectory;
         if (OperatingSystem.IsWindows())
         {
             candidates.Add(Path.Combine(voikkoFolder, WindowsLibraryFileName));
+            candidates.Add(Path.Combine(appFolder, WindowsLibraryFileName));
             candidates.Add(WindowsLibraryFileName);
         }
         else if (OperatingSystem.IsMacOS())
         {
             candidates.Add(Path.Combine(voikkoFolder, "libvoikko.1.dylib"));
+            candidates.Add(Path.Combine(appFolder, "libvoikko.1.dylib"));
+            candidates.Add(Path.GetFullPath(Path.Combine(appFolder, "..", "Frameworks", "libvoikko.1.dylib")));
             candidates.Add("libvoikko.1.dylib");
             candidates.Add("libvoikko.dylib");
             candidates.Add("/opt/homebrew/lib/libvoikko.1.dylib");
@@ -92,6 +148,7 @@ public sealed class VoikkoSpellChecker : IDisposable
         else
         {
             candidates.Add(Path.Combine(voikkoFolder, "libvoikko.so.1"));
+            candidates.Add(Path.Combine(appFolder, "libvoikko.so.1"));
             candidates.Add("libvoikko.so.1");
             candidates.Add("libvoikko.so");
         }
@@ -122,7 +179,8 @@ public sealed class VoikkoSpellChecker : IDisposable
     {
         error = string.Empty;
         var voikkoFolder = GetVoikkoFolder(dictionaryFolder);
-        if (!HasDictionary(dictionaryFolder))
+        var dictionaryRoot = FindDictionaryRoot(dictionaryFolder);
+        if (dictionaryRoot == null)
         {
             error = "Voikko dictionary not found in " + voikkoFolder;
             return null;
@@ -151,7 +209,7 @@ public sealed class VoikkoSpellChecker : IDisposable
             }
 
             var initError = IntPtr.Zero;
-            checker._handle = init(ref initError, ToCString("fi"), ToCString(voikkoFolder));
+            checker._handle = init(ref initError, ToCString("fi"), ToCString(dictionaryRoot));
             if (checker._handle == IntPtr.Zero)
             {
                 error = initError != IntPtr.Zero ? FromCString(initError) ?? "voikkoInit failed" : "voikkoInit failed";

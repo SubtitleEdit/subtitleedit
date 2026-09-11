@@ -63,14 +63,14 @@ public class SpellChecker : ISpellChecker, IDoSpell
             });
         }
 
-        // Finnish via Voikko is listed as a pseudo dictionary (a marker file rather than a .dic) so
-        // every dictionary picker gets it for free. Only listed when libvoikko can actually be loaded.
-        var voikkoMarker = VoikkoSpellChecker.GetMarkerFile(dictionaryFolder);
-        if (File.Exists(voikkoMarker) && VoikkoSpellChecker.IsAvailable(dictionaryFolder))
+        // Finnish via Voikko is listed as a pseudo dictionary (a marker path rather than a .dic) so
+        // every dictionary picker gets it for free. Only listed when libvoikko and a dictionary can
+        // actually be loaded - from the user's Voikko folder, the app bundle, or the system.
+        if (VoikkoSpellChecker.IsAvailable(dictionaryFolder))
         {
             list.Add(new SpellCheckDictionaryDisplay
             {
-                DictionaryFileName = voikkoMarker,
+                DictionaryFileName = VoikkoSpellChecker.GetMarkerFile(dictionaryFolder),
                 Name = "Finnish (Voikko) [fi_FI]",
             });
         }
@@ -124,7 +124,8 @@ public class SpellChecker : ISpellChecker, IDoSpell
         SkipAllList.Clear();
         _twoLetterLanguageCode = twoLetterLanguageCode ?? string.Empty;
 
-        if (!File.Exists(dictionaryFile))
+        // The Voikko marker path need not exist (bundled / system dictionary); TryCreate validates.
+        if (!IsVoikkoDictionary(dictionaryFile) && !File.Exists(dictionaryFile))
         {
             return false;
         }
