@@ -559,15 +559,6 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowFullscreenButton, nameof(_vm.ShowFullscreenButton)),
             MakeCheckboxSetting(Se.Language.Options.Settings.FullscreenHideControls, nameof(_vm.FullscreenHideControls)),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoOpenVideoFile, nameof(_vm.AutoOpenVideoFile)),
-            new SettingsItem(Se.Language.Options.Settings.MpvAudioBufferSeconds, () => new NumericUpDown
-            {
-                Width = 150,
-                Minimum = 0,
-                Maximum = 5,
-                Increment = 0.05m,
-                FormatString = "0.##",
-                [!NumericUpDown.ValueProperty] = new Binding(nameof(_vm.MpvAudioBufferSeconds)) { Source = _vm, Mode = BindingMode.TwoWay },
-            }),
             new SettingsItem(!_vm.IsLibMpvDownloadVisible, Se.Language.Options.Settings.DownloadMpv, () => new StackPanel
             {
                 Children =

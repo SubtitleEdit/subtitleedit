@@ -110,7 +110,6 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private MpvJustifyDisplay _mpvPreviewSelectedJustify;
     [ObservableProperty] private int _mpvPreviewMargin;
     [ObservableProperty] private bool _mpvPreviewUsePositionFromFile;
-    [ObservableProperty] private double _mpvAudioBufferSeconds;
     [ObservableProperty] private bool _mpvPreviewMarginIsPartOfSubtitleArea;
     [ObservableProperty] private Color _mpvPreviewColorPrimary;
     [ObservableProperty] private Color _mpvPreviewColorOutline;
@@ -1046,7 +1045,6 @@ public partial class SettingsViewModel : ObservableObject
         MpvPreviewFontBold = video.MpvPreviewFontBold;
         MpvPreviewMargin = video.MpvPreviewMargin;
         MpvPreviewUsePositionFromFile = video.MpvPreviewUsePositionFromFile;
-        MpvAudioBufferSeconds = video.MpvAudioBufferSeconds;
         MpvPreviewMarginIsPartOfSubtitleArea = video.MpvPreviewMarginIsPartOfSubtitleArea;
         MpvPreviewSelectedFontAlignment = MpvPreviewFontAlignments.FirstOrDefault(p => p.Code == video.MpvPreviewAlignment) ?? MpvPreviewFontAlignments[7];
         MpvPreviewSelectedJustify = MpvPreviewJustifyItems.FirstOrDefault(p => p.Code == video.MpvPreviewJustify) ?? MpvPreviewJustifyItems[0];
@@ -1874,7 +1872,6 @@ public partial class SettingsViewModel : ObservableObject
         video.MpvPreviewFontBold = MpvPreviewFontBold;
         video.MpvPreviewMargin = MpvPreviewMargin;
         video.MpvPreviewUsePositionFromFile = MpvPreviewUsePositionFromFile;
-        video.MpvAudioBufferSeconds = MpvAudioBufferSeconds;
         video.MpvPreviewMarginIsPartOfSubtitleArea = MpvPreviewMarginIsPartOfSubtitleArea;
         video.MpvPreviewOutlineWidth = MpvPreviewOutlineWidth;
         video.MpvPreviewAlignment = MpvPreviewSelectedFontAlignment.Code;

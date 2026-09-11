@@ -184,7 +184,6 @@ public class LanguageSettings
     public string DownloadVlc { get; set; }
     public string AllowSingleLetterShortcutsInTextbox { get; set; }
     public string AllowTextNavigationShortcutsInTextbox { get; set; }
-    public string MpvAudioBufferSeconds { get; set; }
     public string SpellCheckEnglishTreatInApostropheAsIng { get; set; }
     public string GoToLineNumberSetsVideoPosition { get; set; }
     public string AdjustAllTimesRememberLineSelectionChoice { get; set; }
@@ -496,7 +495,6 @@ public class LanguageSettings
         DownloadVlc = "Download VLC";
         AllowSingleLetterShortcutsInTextbox = "Allow single-letter shortcuts in text box";
         AllowTextNavigationShortcutsInTextbox = "Allow shortcuts on text-navigation keys (Ctrl+Left/Right, Home/End) in text box";
-        MpvAudioBufferSeconds = "mpv audio buffer in seconds (0 = mpv default)";
         SpellCheckEnglishTreatInApostropheAsIng = "Spell check: Treat words ending in 'in'' as 'ing' (English only)";
         GoToLineNumberSetsVideoPosition = "Go-to-line-number also sets video position";
         AdjustAllTimesRememberLineSelectionChoice = "Adjust all times, remember line selection choice";
