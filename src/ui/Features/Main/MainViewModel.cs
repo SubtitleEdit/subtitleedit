@@ -253,7 +253,7 @@ public partial class MainViewModel :
 
     [ObservableProperty] private bool _isWaveformToolbarVisible;
     [ObservableProperty] private bool _isSubtitleGridFlyoutHeaderVisible;
-    [ObservableProperty] private bool _isSubtitleGridDataMenuVisible;
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(IsBoxMenuItemVisible))] private bool _isSubtitleGridDataMenuVisible;
     [ObservableProperty] private bool _isMergeWithNextOrPreviousVisible;
     [ObservableProperty] private bool _isInsertLineNoSelectionVisible;
     [ObservableProperty] private bool _isInsertSubtitleFileAfterLineVisible;
@@ -376,7 +376,14 @@ public partial class MainViewModel :
     /// teletext dialog, the "TT" column and the alignment preview are all gated on this.
     /// </summary>
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsBoxMenuItemVisible))]
     private bool _isFormatEbu;
+
+    /// <summary>
+    /// The grid context menu "Box" toggle - only EBU STL carries the teletext boxing codes that
+    /// the &lt;box&gt; tag maps to, so the item is hidden for every other format (SE4 parity).
+    /// </summary>
+    public bool IsBoxMenuItemVisible => IsSubtitleGridDataMenuVisible && IsFormatEbu;
 
     /// <summary>
     /// True while the toolbar format is one of the teletext formats - EBU STL or DVB teletext
@@ -15008,6 +15015,35 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void ToggleLinesBox()
+    {
+        ToggleBox();
+    }
+
+    [RelayCommand]
+    private void ToggleLinesBoxOrSelectedText()
+    {
+        if (!IsFormatEbu)
+        {
+            return;
+        }
+
+        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        if (selectedItems.Count == 0)
+        {
+            return;
+        }
+
+        if (selectedItems.Count == 1 && EditTextBox.SelectedText.Length > 0)
+        {
+            TextBoxBox();
+            return;
+        }
+
+        ToggleBox();
+    }
+
+    [RelayCommand]
     private async Task ShowAlignmentPicker()
     {
         var selected = SelectedSubtitle;
@@ -18151,6 +18187,20 @@ public partial class MainViewModel :
     {
         var tb = EditTextBox;
         ToggleTextBoxTag(tb, "u");
+        _updateAudioVisualizer = true;
+    }
+
+    [RelayCommand]
+    private void TextBoxBox()
+    {
+        // EBU STL only: <box> is the teletext boxing code pair (0x84/0x85), meaningless elsewhere.
+        if (!IsFormatEbu)
+        {
+            return;
+        }
+
+        var tb = EditTextBox;
+        TextBoxTagToggler.ToggleTag(tb, "box", isAssa: false);
         _updateAudioVisualizer = true;
     }
 
@@ -27735,6 +27785,35 @@ public partial class MainViewModel :
                 {
                     item.Text = $"<u>{item.Text}</u>";
                 }
+            }
+        }
+    }
+
+    // SE 4 parity: the EBU STL "Box" toggle (teletext boxing, written as 0x84/0x85 by the STL
+    // writer). Plain HTML-style tag only - there is no ASSA equivalent, and the callers gate on
+    // the EBU STL format.
+    private void ToggleBox()
+    {
+        if (!IsFormatEbu)
+        {
+            return;
+        }
+
+        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        if (selectedItems.Count == 0)
+        {
+            return;
+        }
+
+        var makeBox = !selectedItems[0].Text.Contains("<box>", StringComparison.OrdinalIgnoreCase);
+        foreach (var item in selectedItems)
+        {
+            item.Text = item.Text
+                .Replace("<box>", string.Empty).Replace("</box>", string.Empty)
+                .Replace("<BOX>", string.Empty).Replace("</BOX>", string.Empty);
+            if (makeBox && !string.IsNullOrEmpty(item.Text))
+            {
+                item.Text = $"<box>{item.Text}</box>";
             }
         }
     }
