@@ -221,8 +221,8 @@ public class VideoOcrWindow : Window
             Margin = new Thickness(0, 0, 12, 0),
         };
 
-        // The engine picker, plus a settings button for the one engine here with something to
-        // configure: CrispEmbed's engine build and models are downloaded from that dialog.
+        // The engine picker, plus a settings/info button for the selected engine - like the
+        // speech-to-text and text-to-speech windows.
         var enginePanel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -230,9 +230,8 @@ public class VideoOcrWindow : Window
             Children =
             {
                 comboEngine,
-                UiUtil.MakeButton(vm.ShowCrispEmbedSettingsCommand, IconNames.Settings,
-                        $"{CrispEmbedEngine.StaticName} - {Se.Language.General.Settings}")
-                    .WithBindIsVisible(nameof(vm.IsCrispEmbedEngine)),
+                UiUtil.MakeButton(vm.ShowEngineSettingsCommand, IconNames.Settings,
+                    $"{Se.Language.Video.VideoOcr.Engine} - {Se.Language.General.Settings}"),
             },
         };
 
