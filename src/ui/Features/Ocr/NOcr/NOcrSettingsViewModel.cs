@@ -110,5 +110,10 @@ public partial class NOcrSettingsViewModel : ObservableObject
         {
             Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/ocr", "nocr-nikse-ocr");
+        }
     }
 }

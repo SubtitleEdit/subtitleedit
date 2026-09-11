@@ -181,6 +181,11 @@ public partial class RestoreAutoBackupViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/file", "restore-auto-backup");
+        }
     }
 
     /// <summary>

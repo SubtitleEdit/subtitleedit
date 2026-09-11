@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -118,6 +119,11 @@ public partial class MinGapCalculateViewModel : ObservableObject
         {
             e.Handled = true; // the OK button is IsDefault and would run OK again on the same Enter
             Ok();
+        }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/settings", "rules");
         }
     }
 }

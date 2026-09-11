@@ -212,5 +212,10 @@ public partial class VobSubColorChooserViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/ocr", "options");
+        }
     }
 }

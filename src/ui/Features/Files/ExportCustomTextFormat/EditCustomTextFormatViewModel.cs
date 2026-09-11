@@ -169,6 +169,11 @@ public partial class EditCustomTextFormatViewModel : ObservableObject, IClosingC
             e.Handled = true;
             Window?.Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/file", "export-custom-text-format");
+        }
     }
 
     /// <param name="title">The window caption.</param>

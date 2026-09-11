@@ -117,6 +117,13 @@ public class LayoutWindow : Window
             return;
         }
 
+        if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/main-window", "layouts");
+            return;
+        }
+
         if (e.Key == Key.Enter)
         {
             e.Handled = true;

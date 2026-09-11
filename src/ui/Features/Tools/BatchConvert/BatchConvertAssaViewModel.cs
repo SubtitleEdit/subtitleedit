@@ -239,6 +239,11 @@ public partial class BatchConvertAssaViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/batch-convert", "available-functions");
+        }
     }
 
     internal void Loaded()

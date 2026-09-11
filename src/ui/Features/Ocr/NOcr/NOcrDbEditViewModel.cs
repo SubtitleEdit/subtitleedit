@@ -191,6 +191,11 @@ public partial class NOcrDbEditViewModel : ObservableObject
         {
             Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/ocr", "nocr-nikse-ocr");
+        }
         else if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
         {
             _isControlDown = true;

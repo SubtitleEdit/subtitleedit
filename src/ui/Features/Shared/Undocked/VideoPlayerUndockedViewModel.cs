@@ -98,6 +98,13 @@ public partial class VideoPlayerUndockedViewModel : ObservableObject
             return;
         }
 
+        if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/main-window", "undocking");
+            return;
+        }
+
         MainViewModel?.OnKeyDownHandler(sender, e);
         if (e.Handled)
         {

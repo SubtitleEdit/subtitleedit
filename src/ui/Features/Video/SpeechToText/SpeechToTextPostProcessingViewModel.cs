@@ -49,5 +49,10 @@ public partial class SpeechToTextPostProcessingViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/speech-to-text", "post-processing-settings");
+        }
     }
 }

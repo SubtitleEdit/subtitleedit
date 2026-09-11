@@ -3,6 +3,7 @@ using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Features.SpellCheck.EditWholeText;
 
@@ -48,6 +49,11 @@ public partial class EditWholeTextViewModel : ObservableObject
         {
             e.Handled = true;
             Close();
+        }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/spell-check");
         }
     }
 }

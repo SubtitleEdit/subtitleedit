@@ -1054,6 +1054,11 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             e.Handled = true;
             Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/file", "export-image-based");
+        }
         else if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
         {
             _isCtrlDown = true;

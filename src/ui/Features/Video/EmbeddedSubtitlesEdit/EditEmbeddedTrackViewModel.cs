@@ -3,6 +3,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Features.Video.EmbeddedSubtitlesEdit;
 
@@ -55,6 +56,11 @@ public partial class EditEmbeddedTrackViewModel : ObservableObject
         {
             e.Handled = true; // the OK button is IsDefault and would run OK again on the same Enter
             Ok();
+        }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/embedded-subtitles", "remove-or-edit-existing-tracks");
         }
     }
 

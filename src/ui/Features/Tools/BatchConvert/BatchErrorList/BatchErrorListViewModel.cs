@@ -124,6 +124,11 @@ public partial class BatchErrorListViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/list-errors", "in-batch-convert");
+        }
     }
 
     internal void Initialize(List<BatchConvertItem> batchItems)

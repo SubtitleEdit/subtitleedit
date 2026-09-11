@@ -7,6 +7,7 @@ using Avalonia.VisualTree;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Features.Video.GoToVideoPosition;
 
@@ -48,6 +49,11 @@ public partial class GoToVideoPositionViewModel : ObservableObject
         {
             e.Handled = true; // the OK button is IsDefault and would run OK again on the same Enter
             Ok();
+        }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/video-player", "go-to-video-position");
         }
     }
 

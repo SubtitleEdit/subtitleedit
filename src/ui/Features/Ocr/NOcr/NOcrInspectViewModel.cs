@@ -648,6 +648,11 @@ public partial class NOcrInspectViewModel : ObservableObject
                 Cancel();
             }
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/ocr", "nocr-nikse-ocr");
+        }
         else if (e.Key == Key.Left)
         {
             e.Handled = true;

@@ -230,5 +230,10 @@ public partial class VoxCPM2CrispAsrSettingsViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/text-to-speech", "engine-settings");
+        }
     }
 }

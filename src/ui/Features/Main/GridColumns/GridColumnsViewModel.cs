@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Logic;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -138,6 +139,11 @@ public partial class GridColumnsViewModel : ObservableObject
         {
             e.Handled = true;
             Window?.Close();
+        }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/subtitle-grid", "customizing-visible-columns");
         }
     }
 }

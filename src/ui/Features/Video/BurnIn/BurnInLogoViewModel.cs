@@ -223,6 +223,11 @@ public partial class BurnInLogoViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/burn-in", "effect-and-logo");
+        }
     }
 
     internal async void OnLoaded()

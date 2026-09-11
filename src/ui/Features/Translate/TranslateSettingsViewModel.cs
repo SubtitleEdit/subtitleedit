@@ -315,6 +315,11 @@ public partial class TranslateSettingsViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/auto-translate", "engine-configuration");
+        }
     }
 
     internal void Onloaded(object? sender, RoutedEventArgs e)

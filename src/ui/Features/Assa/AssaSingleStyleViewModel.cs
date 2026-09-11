@@ -67,6 +67,11 @@ public partial class AssaSingleStyleViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/assa-styles");
+        }
     }
 
     internal void BorderTypeChanged(object? sender, SelectionChangedEventArgs e)

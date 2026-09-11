@@ -28,6 +28,7 @@ public class VoiceCloneConsentWindow : Window
         DataContext = vm;
 
         Content = BuildContent(vm);
+        KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
     private static Border BuildContent(VoiceCloneConsentViewModel vm)

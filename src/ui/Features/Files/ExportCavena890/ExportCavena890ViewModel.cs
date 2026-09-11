@@ -4,6 +4,7 @@ using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Features.Files.ExportCavena890;
 
@@ -60,6 +61,11 @@ public partial class ExportCavena890ViewModel : ObservableObject
         {
             e.Handled = true;
             Close();
+        }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/file", "export-to-cavena-890");
         }
     }
 }

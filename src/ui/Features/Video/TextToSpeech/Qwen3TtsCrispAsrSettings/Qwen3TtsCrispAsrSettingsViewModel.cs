@@ -250,5 +250,10 @@ public partial class Qwen3TtsCrispAsrSettingsViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/text-to-speech", "qwen3-tts-crispasr");
+        }
     }
 }

@@ -85,6 +85,11 @@ public partial class EmbedTrackPreviewViewModel : ObservableObject
             Cancel();
             e.Handled = true;
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/embedded-subtitles");
+        }
     }
 
     private bool InitTrack()

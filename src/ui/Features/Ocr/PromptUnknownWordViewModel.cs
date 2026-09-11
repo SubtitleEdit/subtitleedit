@@ -276,6 +276,11 @@ public partial class PromptUnknownWordViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/ocr", "unknown-words");
+        }
     }
 
     internal void Onloaded(object? sender, RoutedEventArgs e)

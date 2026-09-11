@@ -437,5 +437,10 @@ public partial class GetDictionariesViewModel : ObservableObject, IClosingCleanu
             e.Handled = true;
             Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/spell-check", "dictionaries");
+        }
     }
 }

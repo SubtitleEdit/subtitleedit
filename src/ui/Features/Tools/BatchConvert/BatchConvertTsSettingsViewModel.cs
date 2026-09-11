@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.UiLogic.BatchConvert;
 using Nikse.SubtitleEdit.UiLogic.Media;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -171,6 +172,11 @@ public partial class BatchConvertTsSettingsViewModel : ObservableObject
         {
             e.Handled = true;
             Window?.Close();
+        }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/batch-convert", "transport-stream-input");
         }
     }
 }

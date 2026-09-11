@@ -167,6 +167,11 @@ public partial class BinaryOcrDbEditViewModel : ObservableObject
         {
             Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/ocr", "binary-ocr");
+        }
     }
 
     internal void Initialize(string imageCompareName)
