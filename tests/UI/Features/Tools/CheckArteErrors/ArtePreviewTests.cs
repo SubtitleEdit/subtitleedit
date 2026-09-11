@@ -228,6 +228,22 @@ public class ArtePreviewTests
     }
 
     [AvaloniaFact]
+    public void NormalArteSubtitle_RemovesSdhBoxingBeforeNormalizingToYellow()
+    {
+        var source = new Subtitle();
+        source.Paragraphs.Add(new Paragraph("<font color=\"Red\">Colored cue</font>", 1000, 4000));
+        source.Paragraphs.Add(new Paragraph("<box color=\"White\">Previously boxed SDH cue</box>", 5000, 8000));
+        var vm = Create(source, "Teletext colors");
+
+        var boxingFix = vm.Fixes.Single(item => item.Index == 2);
+        Assert.Equal("<font color=\"Yellow\">Previously boxed SDH cue</font>", boxingFix.After);
+        Assert.Contains("boxing is removed", boxingFix.Reason);
+
+        vm.OkCommand.Execute(null);
+        Assert.Equal(boxingFix.After, vm.FixedSubtitle!.Paragraphs[1].Text);
+    }
+
+    [AvaloniaFact]
     public void NonStlSource_CreatesAnArteEbuStlTargetHeader()
     {
         var source = new Subtitle();

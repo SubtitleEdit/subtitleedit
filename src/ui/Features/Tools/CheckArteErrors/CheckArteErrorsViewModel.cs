@@ -1075,6 +1075,10 @@ public partial class CheckArteErrorsViewModel : ObservableObject
         @"<box\b[^>]*\bcolor\s*=",
         RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
+    private static readonly Regex BoxTagRegex = new(
+        @"</?box\b[^>]*>",
+        RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
     private static readonly HashSet<string> TeletextColorNames = new(StringComparer.OrdinalIgnoreCase)
     {
         "Black", "Red", "Green", "Yellow", "Blue", "Magenta", "Cyan", "White",
@@ -1130,7 +1134,12 @@ public partial class CheckArteErrorsViewModel : ObservableObject
         for (var i = 0; i < subtitle.Paragraphs.Count; i++)
         {
             var text = subtitle.Paragraphs[i].Text;
-            var normalized = NormalizeTeletextColors(text, IsSdh, out var hasUnsupportedColor);
+            // Explicit boxing belongs to SDH only. A normal 08/0F ARTE subtitle
+            // has no boxing control: remove it before applying the normal yellow/
+            // no-colour rule, otherwise Yellow text on a retained Yellow box is
+            // invisible in both the grid and Flow.
+            var withoutBoxing = IsSdh ? text : BoxTagRegex.Replace(text, string.Empty);
+            var normalized = NormalizeTeletextColors(withoutBoxing, IsSdh, out var hasUnsupportedColor);
             if (useYellowForNormalSubtitles && !string.IsNullOrWhiteSpace(text))
             {
                 // A colour can begin on a later line. Remove the individual colour spans
@@ -1141,7 +1150,10 @@ public partial class CheckArteErrorsViewModel : ObservableObject
             if (normalized != text)
             {
                 Fixes.Add(new ArteFixItem(true, i + 1, text, normalized,
-                    IsSdh ? "Color is mapped to the nearest Teletext standard color." : "Normal ARTE subtitles use yellow or no color; color is changed to Yellow.", ArteFixKind.TeletextColor));
+                    IsSdh ? "Color is mapped to the nearest Teletext standard color." :
+                        BoxTagRegex.IsMatch(text) ? "Normal ARTE subtitles do not use SDH boxing; boxing is removed and color is normalized." :
+                        "Normal ARTE subtitles use yellow or no color; color is changed to Yellow.",
+                    ArteFixKind.TeletextColor));
             }
             if (hasUnsupportedColor)
             {
