@@ -114,6 +114,11 @@ public partial class ActorVoiceRowSettingsViewModel : ObservableObject
             e.Handled = true;
             Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/text-to-speech", "set-up-cast-one-voice-per-speaker");
+        }
     }
 
     internal void OnClosing(WindowClosingEventArgs e)

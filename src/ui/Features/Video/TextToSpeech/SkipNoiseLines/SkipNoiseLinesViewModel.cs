@@ -7,6 +7,8 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.SkipNoiseLines;
 
 public class SkipNoiseLinesViewModel : SelectLinesViewModelBase<SkipNoiseLineRow>
 {
+    protected override string HelpAnchor => "skip-sound-and-music-lines";
+
     /// <summary>The lines the user confirmed should stay silent - no speech is generated for them.</summary>
     public List<Paragraph> SelectedParagraphs { get; private set; }
 

@@ -227,6 +227,11 @@ public partial class MediaInfoViewViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/video-player", "video-info");
+        }
     }
 
     internal void OnKeyDownHandler(object? sender, KeyEventArgs e)

@@ -323,6 +323,11 @@ public partial class ExportPlainTextViewModel : ObservableObject, IClosingCleanu
             e.Handled = true;
             Window?.Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/file", "export-as-plain-text");
+        }
     }
 
     internal void Initialize(List<SubtitleLineViewModel> subtitles, string? subtitleFileName, string? videoFileName)

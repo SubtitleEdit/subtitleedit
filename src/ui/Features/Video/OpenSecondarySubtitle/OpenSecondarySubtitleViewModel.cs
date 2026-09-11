@@ -204,6 +204,11 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/video-player", "secondary-subtitles");
+        }
     }
 
     [RelayCommand]

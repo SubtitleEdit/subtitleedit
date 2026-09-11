@@ -8,6 +8,8 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.DetectSpeakers;
 
 public partial class DetectSpeakersViewModel : SelectLinesViewModelBase<DetectSpeakersRow>
 {
+    protected override string HelpAnchor => "find-voices-in-video-and-clone";
+
     [ObservableProperty] private bool _stickySpeakers;
 
     /// <summary>The tags the user confirmed - these names become actors and leave the spoken text.</summary>

@@ -544,6 +544,11 @@ public partial class VoiceSettingsViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/text-to-speech", "engine-settings");
+        }
     }
 
     internal void Initialize(ITtsEngine engine)

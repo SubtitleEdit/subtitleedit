@@ -1,8 +1,10 @@
 using Avalonia.Controls;
+using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic;
 using System.Diagnostics;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceCloneConsent;
@@ -64,6 +66,15 @@ public partial class VoiceCloneConsentViewModel : ObservableObject
         Se.SaveSettings();
         OkPressed = false;
         Window?.Close();
+    }
+
+    internal void OnKeyDown(KeyEventArgs e)
+    {
+        if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/text-to-speech", "voice-cloning");
+        }
     }
 
     [RelayCommand]

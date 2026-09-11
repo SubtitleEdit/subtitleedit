@@ -200,6 +200,11 @@ public partial class ExportCustomTextFormatViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/file", "export-custom-text-format");
+        }
     }
 
     internal void OnCustomFormatGridDoubleTapped(object? sender, TappedEventArgs e)

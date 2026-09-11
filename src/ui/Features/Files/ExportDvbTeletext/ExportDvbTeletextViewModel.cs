@@ -4,6 +4,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -72,6 +73,11 @@ public partial class ExportDvbTeletextViewModel : ObservableObject
         {
             e.Handled = true;
             Close();
+        }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/file", "export");
         }
     }
 }

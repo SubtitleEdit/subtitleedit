@@ -517,6 +517,11 @@ public partial class ChaptersViewModel : ObservableObject
             e.Handled = true;
             Cancel();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/chapters");
+        }
     }
 
     internal void GridKeyDown(KeyEventArgs e)

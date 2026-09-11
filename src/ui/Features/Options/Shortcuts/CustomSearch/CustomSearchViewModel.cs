@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Features.Options.Shortcuts.CustomSearch;
 
@@ -48,6 +49,11 @@ public partial class CustomSearchViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
             return;
+        }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/shortcuts");
         }
     }
 }

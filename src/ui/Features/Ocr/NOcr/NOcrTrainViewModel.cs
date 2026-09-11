@@ -237,6 +237,11 @@ public partial class NOcrTrainViewModel : ObservableObject
             e.Handled = true;
             Done();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/ocr", "nocr-nikse-ocr");
+        }
     }
 
     internal void OnClosing()

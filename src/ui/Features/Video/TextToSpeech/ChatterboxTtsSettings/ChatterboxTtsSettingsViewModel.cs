@@ -234,5 +234,10 @@ public partial class ChatterboxTtsSettingsViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/text-to-speech", "chatterbox-tts-crispasr");
+        }
     }
 }
