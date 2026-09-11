@@ -293,6 +293,20 @@ public class SplitManagerTests : IDisposable
     }
 
     [Fact]
+    public void Split_EbuBoxTagOpenInFirstLine_ClosedAndReopenedInSecondLine()
+    {
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
+        var manager = new SplitManager();
+        var subtitle = MakeSubtitle($"<box>First line{Environment.NewLine}Second line</box>", 1, 3);
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        manager.Split(subtitles, subtitle, languageCode: "en");
+
+        Assert.Contains("</box>", subtitles[0].Text, StringComparison.OrdinalIgnoreCase);
+        Assert.StartsWith("<box>", subtitles[1].Text, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public void Split_UnderlineTagOpenInFirstLine_ClosedAndReopenedInSecondLine()
     {
         Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;

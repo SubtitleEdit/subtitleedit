@@ -1201,6 +1201,16 @@ public static partial class InitListViewAndEditBox
         boldMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridDataMenuVisible)));
         flyout.Items.Add(boldMenuItem);
 
+        // EBU STL only (teletext boxing) - hidden for every other format, as in SE4.
+        var boxMenuItem = new MenuItem
+        {
+            Header = Se.Language.General.Box,
+            Command = vm.ToggleLinesBoxCommand,
+            DataContext = vm,
+        };
+        boxMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsBoxMenuItemVisible)));
+        flyout.Items.Add(boxMenuItem);
+
         var colorMenuItem = new MenuItem
         {
             Header = Se.Language.General.ColorDotDotDot,
@@ -1820,6 +1830,12 @@ public static partial class InitListViewAndEditBox
         var menuItemTextBoxUnderline = new MenuItem { Header = Se.Language.General.Underline };
         menuItemTextBoxUnderline.Command = vm.TextBoxUnderlineCommand;
         flyoutTextBox.Items.Add(menuItemTextBoxUnderline);
+
+        // EBU STL only (teletext boxing) - hidden for every other format, as in SE4.
+        var menuItemTextBoxBox = new MenuItem { Header = Se.Language.General.Box, DataContext = vm };
+        menuItemTextBoxBox.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsFormatEbu)));
+        menuItemTextBoxBox.Command = vm.TextBoxBoxCommand;
+        flyoutTextBox.Items.Add(menuItemTextBoxBox);
 
         var menuItemTextBoxFontName = new MenuItem { Header = Se.Language.General.FontNameDotDotDot };
         menuItemTextBoxFontName.Command = vm.TextBoxFontNameCommand;
