@@ -1,4 +1,4 @@
-[
+﻿[
   {
     "EnglishName": "Afrikaans",
     "NativeName": "Afrikaans",
@@ -255,6 +255,16 @@
       "https://github.com/fginter/hunspell-fi/releases/download/0.2/fi-spell-0.2.xpi"
     ],
     "Description": "Finnish Spellchecker Dictionary - Dec 6, 2023"
+  },
+  {
+    "EnglishName": "Finnish (Voikko)",
+    "NativeName": "Suomi (Voikko)",
+    "Files": [
+      "https://github.com/SubtitleEdit/support-files/releases/download/voikko-4.3-fi-2024-06/libvoikko-1.dll",
+      "https://github.com/SubtitleEdit/support-files/releases/download/voikko-4.3-fi-2024-06/dict.zip"
+    ],
+    "Voikko": true,
+    "Description": "Finnish morphological spell checker (libvoikko 4.3 + voikko-fi standard dictionary) - much better than the Hunspell word list. On Linux/macOS install libvoikko from your package manager."
   },
   {
     "EnglishName": "French",

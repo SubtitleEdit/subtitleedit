@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Nikse.SubtitleEdit.Features.SpellCheck.GetDictionaries;
@@ -17,6 +17,12 @@ public partial class GetSpellCheckDictionaryDisplay : ObservableObject
     /// .aff and .dic link, while a legacy entry has a single .oxt/.zip/.xpi archive link.
     /// </summary>
     public List<string> Files { get; set; }
+
+    /// <summary>
+    /// A libvoikko package (Finnish): a native library plus a "format 5" dictionary zip, installed
+    /// into the Voikko sub folder instead of as .dic/.aff files.
+    /// </summary>
+    public bool Voikko { get; set; }
 
     public bool UseShortName { get; set; }
 

@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Platform;
 using Avalonia.Threading;
@@ -190,6 +190,12 @@ public partial class GetDictionariesViewModel : ObservableObject, IClosingCleanu
             Directory.CreateDirectory(folder);
         }
 
+        if (dictionary.Voikko)
+        {
+            await DownloadVoikkoAsync(dictionary, progress, cancellationToken);
+            return;
+        }
+
         var dicFiles = new List<string>();
 
         for (var i = 0; i < files.Count; i++)
@@ -244,6 +250,60 @@ public partial class GetDictionariesViewModel : ObservableObject, IClosingCleanu
                 Name = dictionary.EnglishName,
                 DictionaryFileName = largestDicFile,
             };
+    }
+
+    /// <summary>
+    /// Installs a Voikko package into the Voikko sub folder: the Windows DLL is saved as-is (and
+    /// skipped on other platforms, where the system libvoikko is used), the dictionary zip is
+    /// unpacked with its folder structure ("5/mor-standard/..."), and a marker file is written so the
+    /// dictionary pickers list "Finnish (Voikko)".
+    /// </summary>
+    private async Task DownloadVoikkoAsync(GetSpellCheckDictionaryDisplay dictionary, IProgress<float> progress, CancellationToken cancellationToken)
+    {
+        var voikkoFolder = VoikkoSpellChecker.GetVoikkoFolder(Se.DictionariesFolder);
+        if (!Directory.Exists(voikkoFolder))
+        {
+            Directory.CreateDirectory(voikkoFolder);
+        }
+
+        var files = dictionary.Files
+            .Where(url => OperatingSystem.IsWindows() || !RemoveUrlQuery(url).EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        for (var i = 0; i < files.Count; i++)
+        {
+            var url = files[i];
+            var fileIndex = i;
+            var fileProgress = new Progress<float>(p => progress.Report((fileIndex + p) / files.Count));
+
+            using var stream = new MemoryStream();
+            await _spellCheckDictionaryDownloadService.DownloadDictionary(stream, url, fileProgress, cancellationToken);
+            if (stream.Length == 0)
+            {
+                throw new InvalidOperationException($"Dictionary download failed: {url}");
+            }
+
+            stream.Position = 0;
+            if (RemoveUrlQuery(url).EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+            {
+                _zipUnpacker.UnpackZipStream(stream, voikkoFolder);
+            }
+            else
+            {
+                var targetFileName = Path.Combine(voikkoFolder, GetFileNameFromUrl(url));
+                await using var fileStream = File.Create(targetFileName);
+                await stream.CopyToAsync(fileStream, cancellationToken);
+            }
+        }
+
+        var marker = VoikkoSpellChecker.GetMarkerFile(Se.DictionariesFolder);
+        await File.WriteAllTextAsync(marker, "Finnish spell check via libvoikko - see the Voikko folder", cancellationToken);
+
+        SpellCheckDictionary = new SpellCheckDictionaryDisplay
+        {
+            Name = dictionary.EnglishName,
+            DictionaryFileName = marker,
+        };
     }
 
     private static bool IsHunspellFile(string url)
@@ -366,6 +426,11 @@ public partial class GetDictionariesViewModel : ObservableObject, IClosingCleanu
 
     private static bool IsEntryInstalled(GetSpellCheckDictionaryDisplay entry, List<string> installedDicFiles)
     {
+        if (entry.Voikko)
+        {
+            return VoikkoSpellChecker.HasDictionary(Se.DictionariesFolder);
+        }
+
         var dicNames = entry.Files
             .Select(GetFileNameFromUrl)
             .Where(name => name.EndsWith(".dic", StringComparison.OrdinalIgnoreCase))
