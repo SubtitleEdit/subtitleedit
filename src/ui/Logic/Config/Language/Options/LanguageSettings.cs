@@ -278,6 +278,7 @@ public class LanguageSettings
     public string DefaultSaveLocationVideoFileFolder { get; set; }
     public string DefaultSaveLocationSubtitleFileFolder { get; set; }
     public string DefaultSaveLocationCustomFolder { get; set; }
+    public string ModelsFolder { get; set; } = "AI models folder";
     public string SaveAsAppendLanguageCode { get; set; }
     public string GridGoToSubtitleAndSetVideoPosition { get; set; }
     public string GridGoToNextLine { get; set; }
@@ -620,6 +621,7 @@ public class LanguageSettings
         DefaultSaveLocationVideoFileFolder = "Video file folder";
         DefaultSaveLocationSubtitleFileFolder = "Subtitle file folder";
         DefaultSaveLocationCustomFolder = "Custom folder";
+        ModelsFolder = "AI models folder";
         SaveAsAppendLanguageCode = "\"Save as\" append language code";
         GridGoToSubtitleAndSetVideoPosition = "Go to subtitle and set video position";
         GridGoToNextLine = "Go to next line";

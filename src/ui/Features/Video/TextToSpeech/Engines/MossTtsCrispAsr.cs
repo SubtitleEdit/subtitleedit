@@ -233,7 +233,7 @@ public class MossTtsCrispAsr : ITtsEngine, IPerLineCloneEngine
 
     public static string GetSetModelsFolder()
     {
-        var modelsFolder = Path.Combine(Se.CrispAsrFolder, "models");
+        var modelsFolder = Se.CrispAsrModelsFolder;
         if (!Directory.Exists(modelsFolder))
         {
             Directory.CreateDirectory(modelsFolder);

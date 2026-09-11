@@ -149,7 +149,7 @@ public class Qwen3TtsCpp : ITtsEngine
 
     public static string GetSetModelsFolder()
     {
-        var modelsFolder = Path.Combine(GetSetFolder(), "models");
+        var modelsFolder = Se.Qwen3TtsCppModelsFolder;
         if (!Directory.Exists(modelsFolder))
         {
             Directory.CreateDirectory(modelsFolder);

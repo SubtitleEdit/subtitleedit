@@ -22,7 +22,9 @@ namespace Nikse.SubtitleEdit.UiLogic.AudioToText
         private readonly string[] _fileNames = { "model.bin", "config.json", "vocabulary.txt", "vocabulary.json", "tokenizer.json", "preprocessor_config.json" };
 
 
-        public string ModelFolder => Path.Combine(Configuration.DataDirectory, "SpeechToText", "Purfview-Faster-Whisper-XXL", "_models");
+        public string ModelFolder => Configuration.ResolveModelsFolder(
+            Path.Combine(Configuration.DataDirectory, "SpeechToText", "Purfview-Faster-Whisper-XXL", "_models"),
+            "SpeechToText", "Purfview-Faster-Whisper-XXL", "_models");
 
         public void CreateModelFolder()
         {

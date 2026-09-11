@@ -7,10 +7,28 @@ namespace Nikse.SubtitleEdit.Core.Common
     {
         public static string BaseDirectory = string.Empty;
         public static string DataDirectory = string.Empty;
+        /// <summary>Optional root for downloaded AI models, set by the UI configuration layer.</summary>
+        public static string ModelsDirectory = string.Empty;
         private static readonly Configuration Instance = new Configuration();
         private Settings.Settings _settings = new Settings.Settings();
         public static Settings.Settings Settings => Instance._settings;
         public static string DictionariesDirectory => Path.Combine(DataDirectory, "Dictionaries") + Path.DirectorySeparatorChar;
+
+        public static string ResolveModelsFolder(string legacyFolder, params string[] relativePath)
+        {
+            if (string.IsNullOrWhiteSpace(ModelsDirectory))
+            {
+                return legacyFolder;
+            }
+
+            var folder = ModelsDirectory;
+            foreach (var part in relativePath)
+            {
+                folder = Path.Combine(folder, part);
+            }
+
+            return folder;
+        }
         public static readonly string DefaultLinuxFontName = "DejaVu Serif";
 
         private Configuration()

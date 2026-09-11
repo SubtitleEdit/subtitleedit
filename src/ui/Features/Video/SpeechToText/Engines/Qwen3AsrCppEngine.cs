@@ -138,8 +138,7 @@ public class Qwen3AsrCppEngine : ISpeechToTextEngine
 
     public string GetAndCreateWhisperModelFolder(WhisperModel? whisperModel)
     {
-        var baseFolder = GetAndCreateWhisperFolder();
-        var modelsFolder = Path.Combine(baseFolder, "models");
+        var modelsFolder = Se.Qwen3AsrModelsFolder;
         if (!Directory.Exists(modelsFolder))
         {
             Directory.CreateDirectory(modelsFolder);
