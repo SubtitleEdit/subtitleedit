@@ -259,6 +259,7 @@ public class BatchConvertWindow : Window
             {
                 UiUtil.MakeButton(vm.AddFilesCommand, IconNames.Plus, Se.Language.General.Add).WithMarginLeft(10),
                 UiUtil.MakeButton(vm.AddFolderCommand, IconNames.Folder, Se.Language.Tools.BatchConvert.AddFolderDotDotDot).WithMarginLeft(5),
+                UiUtil.MakeButton(vm.AddFolderRecursiveCommand, IconNames.FolderMultiple, Se.Language.Tools.BatchConvert.AddFolderRecursiveDotDotDot).WithMarginLeft(5),
                 UiUtil.MakeButton(vm.RemoveSelectedFilesCommand, IconNames.Trash, Se.Language.General.Remove).WithMarginLeft(5),
                 UiUtil.MakeButton(vm.ClearAllFilesCommand, IconNames.Close, Se.Language.General.Clear).WithMarginLeft(5),
                 UiUtil.MakeLabel(Se.Language.General.TargetFormat).WithMarginLeft(15),
@@ -336,6 +337,14 @@ public class BatchConvertWindow : Window
             Command = vm.AddFolderCommand,
         };
         flyout.Items.Add(menuItemImportFolder);
+
+        var menuItemImportFolderRecursive = new MenuItem
+        {
+            Header = Se.Language.Tools.BatchConvert.AddFolderRecursiveDotDotDot,
+            DataContext = vm,
+            Command = vm.AddFolderRecursiveCommand,
+        };
+        flyout.Items.Add(menuItemImportFolderRecursive);
 
         // hack to make drag and drop work on the file grid - also on empty rows
         var dropHost = new Border

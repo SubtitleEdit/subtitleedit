@@ -55,6 +55,7 @@ internal class IconNames
     public const string FindReplace = "mdi-find-replace";
     public const string Folder = "mdi-folder";
     public const string FolderOpen = "mdi-folder-open";
+    public const string FolderMultiple = "mdi-folder-multiple";
     public const string FormatClear = "mdi-format-clear";
     public const string FormatFont = "mdi-format-font";
     public const string FormTextBox = "mdi-form-textbox";

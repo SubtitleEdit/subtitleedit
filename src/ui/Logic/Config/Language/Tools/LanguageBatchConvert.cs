@@ -55,6 +55,7 @@ public class LanguageBatchConvert
     public string ConvertColorsToDialogReBreakLines { get; set; }
     public string SnapTimeCodesToFramesInfo { get; set; }
     public string AddFolderDotDotDot { get; set; }
+    public string AddFolderRecursiveDotDotDot { get; set; }
     public string SelectFolderToConvert { get; set; }
     public string IncludeSubfolders { get; set; }
     public string KeepSourceFileTimestamp { get; set; }
@@ -125,6 +126,7 @@ public class LanguageBatchConvert
         ConvertColorsToDialogReBreakLines = "Re-break lines";
         SnapTimeCodesToFramesInfo = "Rounds every start and end time to the nearest frame. The frame rate is read from a video file with the same name as the subtitle file, unless a fixed frame rate is chosen.";
         AddFolderDotDotDot = "Add folder...";
+        AddFolderRecursiveDotDotDot = "Add folder recursive...";
         SelectFolderToConvert = "Select folder with files to convert";
         IncludeSubfolders = "Include subfolders when adding a folder";
         KeepSourceFileTimestamp = "Keep source file date/time on output files";

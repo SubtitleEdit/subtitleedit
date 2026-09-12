@@ -1926,6 +1926,17 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     [RelayCommand]
     private async Task AddFolder()
     {
+        await AddFolderAsync(Se.Settings.Tools.BatchConvert.ScanFolderRecursive);
+    }
+
+    [RelayCommand]
+    private async Task AddFolderRecursive()
+    {
+        await AddFolderAsync(recursive: true);
+    }
+
+    private async Task AddFolderAsync(bool recursive)
+    {
         if (Window == null)
         {
             return;
@@ -1937,7 +1948,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
-        await AddFilesAndFoldersAsync(Array.Empty<string>(), new[] { folder });
+        await AddFilesAndFoldersAsync(Array.Empty<string>(), new[] { folder }, recursive);
     }
 
     [RelayCommand]
@@ -1946,13 +1957,13 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         _addFilesCancellationTokenSource.Cancel();
     }
 
-    private async Task AddFilesAndFoldersAsync(IReadOnlyList<string> fileNames, IReadOnlyList<string> folders)
+    private async Task AddFilesAndFoldersAsync(IReadOnlyList<string> fileNames, IReadOnlyList<string> folders, bool? recursive = null)
     {
         var allFileNames = new List<string>(fileNames);
 
         if (folders.Count > 0)
         {
-            var scanned = await ScanFoldersAsync(folders);
+            var scanned = await ScanFoldersAsync(folders, recursive ?? Se.Settings.Tools.BatchConvert.ScanFolderRecursive);
             if (scanned == null)
             {
                 return; // cancelled during the scan - add nothing
@@ -1971,13 +1982,12 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
     /// <summary>
     /// Collects the files the batch converter can open from <paramref name="folders"/> (and their
-    /// subfolders when "include subfolders" is on). Walking a deep tree or a network share can take
-    /// a long time, so this runs off the UI thread behind the "please wait" overlay and can be
-    /// cancelled - returns null when it was.
+    /// subfolders when <paramref name="recursive"/> is set). Walking a deep tree or a network share
+    /// can take a long time, so this runs off the UI thread behind the "please wait" overlay and can
+    /// be cancelled - returns null when it was.
     /// </summary>
-    private async Task<List<string>?> ScanFoldersAsync(IReadOnlyList<string> folders)
+    private async Task<List<string>?> ScanFoldersAsync(IReadOnlyList<string> folders, bool recursive)
     {
-        var recursive = Se.Settings.Tools.BatchConvert.ScanFolderRecursive;
         _addFilesCancellationTokenSource = new CancellationTokenSource();
         var token = _addFilesCancellationTokenSource.Token;
 
