@@ -144,8 +144,24 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                 str = str.Substring(0, MaxRawLength);
             }
 
-            var lines = MakeShowFormatting(str);
+            var lines = MakeShowFormatting(str, keepNonVisualTags: false);
             return SpellCheckLines(lines);
+        }
+
+        // "Show formatting, keep non-visual tags" renders the styling like "show formatting" but
+        // leaves the tags the grid cannot render - \pos, \an, \move, \t, \fad, <box>... - as
+        // text, so a positioned or animated line still looks different from a plain one. The
+        // echoed tags carry their own foreground, and skipColouredRuns keeps them out of the
+        // spell check (colored dialogue runs are skipped too, same trade-off as "show tags").
+        if (formattingType == (int)SubtitleGridFormattingTypes.ShowFormattingKeepTags)
+        {
+            if (str.Length > MaxRawLength)
+            {
+                str = str.Substring(0, MaxRawLength);
+            }
+
+            var lines = MakeShowFormatting(str, keepNonVisualTags: true);
+            return SpellCheckLines(lines, skipColouredRuns: true);
         }
 
         // "Hide tags" strips the markup and renders what is left as plain themed text - no
@@ -684,12 +700,33 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         return builder.Build();
     }
 
-    private static InlineCollection MakeShowFormatting(string str)
+    private static InlineCollection MakeShowFormatting(string str, bool keepNonVisualTags)
     {
         // Track current formatting state
         var state = new FormattingState();
         var inlines = new InlineCollection();
         var visibleLength = 0;
+
+        // Echoed tags (keepNonVisualTags) count as visible characters like any other text, and
+        // are cut by the same cap. Returns false when the cap is hit and parsing must stop.
+        bool AppendTagText(string tagText)
+        {
+            if (tagText.Length == 0)
+            {
+                return true;
+            }
+
+            if (visibleLength + tagText.Length > MaxVisibleLength)
+            {
+                var keep = Math.Max(0, MaxVisibleLength - visibleLength - 3);
+                inlines.Add(CreateTagRun(tagText.Substring(0, keep).TrimEnd() + "..."));
+                return false;
+            }
+
+            visibleLength += tagText.Length;
+            inlines.Add(CreateTagRun(tagText));
+            return true;
+        }
 
         // Limit iterations to prevent infinite loops (should never exceed string length)
         var maxIterations = str.Length * 2; // Safety margin
@@ -715,6 +752,16 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                     if (tagEnd - i < MaxParsedTagLength)
                     {
                         ParseAssaTags(str, i + 1, tagEnd, state); // Content between { and }
+                        if (keepNonVisualTags && !AppendTagText(GetNonVisualAssaTags(str, i + 1, tagEnd)))
+                        {
+                            break;
+                        }
+                    }
+                    else if (keepNonVisualTags && !AppendTagText(str.Substring(i, tagEnd + 1 - i)))
+                    {
+                        // Too long to interpret at all - nothing of it was rendered, so all of
+                        // it is shown.
+                        break;
                     }
 
                     i = tagEnd + 1;
@@ -776,6 +823,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                         contentStart,
                         (tagNameEnd > contentStart ? tagNameEnd : contentEnd) - contentStart);
 
+                    var isRenderedTag = true;
                     if (isClosingTag)
                     {
                         // Handle closing tags
@@ -797,6 +845,10 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                             state.FontName = null;
                             state.FontSize = null;
                         }
+                        else
+                        {
+                            isRenderedTag = false;
+                        }
                     }
                     else
                     {
@@ -817,7 +869,19 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                         {
                             ParseFontTag(str.AsSpan(contentStart, contentEnd - contentStart), state);
                         }
+                        else
+                        {
+                            isRenderedTag = false;
+                        }
                     }
+
+                    // An HTML tag the grid has no rendering for (<box>, <ruby>, <span>...) is
+                    // echoed as text in the keep-tags mode.
+                    if (keepNonVisualTags && !isRenderedTag && !AppendTagText(str.Substring(i, tagEnd + 1 - i)))
+                    {
+                        break;
+                    }
+
                     i = tagEnd + 1;
                     continue;
                 }
@@ -885,6 +949,104 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         }
 
         return inlines;
+    }
+
+    /// <summary>
+    /// A run for a tag echoed as text in the keep-tags mode: no dialogue styling, the "show tags"
+    /// element color so it reads as markup rather than as part of the line.
+    /// </summary>
+    private static Run CreateTagRun(string text)
+    {
+        return new Run(text) { Foreground = ElementBrush };
+    }
+
+    /// <summary>
+    /// The override tags in source[start..end) that <see cref="ParseAssaTags"/> does not render
+    /// - everything but reset, italic, bold, underline, font name, font size and primary color -
+    /// re-wrapped in braces, or an empty string when the block was fully rendered. Splits on a
+    /// backslash outside parentheses so a \t(...) transition stays one tag, colors inside it
+    /// included: the transition as a whole is what the grid cannot show.
+    /// </summary>
+    private static string GetNonVisualAssaTags(string source, int start, int end)
+    {
+        var content = source.AsSpan(start, end - start);
+        StringBuilder? sb = null;
+        var pos = 0;
+        while (pos < content.Length)
+        {
+            if (content[pos] != '\\')
+            {
+                pos++;
+                continue;
+            }
+
+            var tagStart = pos;
+            var depth = 0;
+            pos++;
+            while (pos < content.Length)
+            {
+                var ch = content[pos];
+                if (ch == '(')
+                {
+                    depth++;
+                }
+                else if (ch == ')' && depth > 0)
+                {
+                    depth--;
+                }
+                else if (ch == '\\' && depth == 0)
+                {
+                    break;
+                }
+
+                pos++;
+            }
+
+            var tag = content.Slice(tagStart + 1, pos - tagStart - 1).Trim();
+            if (tag.Length == 0 || IsRenderedAssaTag(tag))
+            {
+                continue;
+            }
+
+            sb ??= new StringBuilder(end - start + 2).Append('{');
+            sb.Append('\\').Append(tag);
+        }
+
+        if (sb == null)
+        {
+            return string.Empty;
+        }
+
+        return sb.Append('}').ToString();
+    }
+
+    /// <summary>Mirrors the tags <see cref="ParseAssaTags"/> turns into run formatting.</summary>
+    private static bool IsRenderedAssaTag(ReadOnlySpan<char> tag)
+    {
+        var c0 = tag[0];
+        var c1 = tag.Length > 1 ? tag[1] : '\0';
+        if (c0 == 'r' && tag.Length == 1)
+        {
+            return true;
+        }
+
+        if ((c0 == 'i' || c0 == 'b' || c0 == 'u') && char.IsDigit(c1))
+        {
+            return true;
+        }
+
+        if (c0 == 'f' && (c1 == 'n' || c1 == 's') && tag.Length > 2)
+        {
+            // \fs20 is rendered; \fsp, \fscx and \fscy are not.
+            return c1 == 'n' || char.IsDigit(tag[2]) || tag[2] == '.' || tag[2] == '-';
+        }
+
+        if (c0 == 'c' && (tag.Length == 1 || !char.IsLetterOrDigit(c1)))
+        {
+            return true;
+        }
+
+        return c0 == '1' && c1 == 'c';
     }
 
     /// <summary>
