@@ -396,4 +396,157 @@ public class MergeAndSplitHelperTests
             Configuration.Settings.General.MaxNumberOfLines = previousMaxLines;
         }
     }
+    // Issue #14803: a sentence spread over two continuous rows. An engine that keeps line
+    // breaks (DeepL) gets the row boundary as a line break and hands it back at the matching
+    // place in the translation, so the reply is split on it instead of by the length and
+    // duration heuristics, which cut it at the first comma and left row 2 with five words for
+    // 2.2 seconds and row 3 with twenty for 2.9.
+    private sealed class LineBreakPreservingTranslator : IAutoTranslator, ILineBreakPreservingTranslator
+    {
+        public string Result { get; set; } = string.Empty;
+        public string SentText { get; private set; } = string.Empty;
+
+        public string Name => "LineBreakPreservingTranslator";
+        public string Url => "https://example.com";
+        public string Error { get; set; } = string.Empty;
+        public int MaxCharacters => 1500;
+
+        public void Initialize()
+        {
+        }
+
+        public List<TranslationPair> GetSupportedSourceLanguages() => new() { new TranslationPair("English", "en") };
+
+        public List<TranslationPair> GetSupportedTargetLanguages() => new() { new TranslationPair("Dutch", "nl") };
+
+        public Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
+        {
+            SentText = text;
+            return Task.FromResult(Result);
+        }
+    }
+
+    private static ObservableCollection<TranslateRow> MakeIssue14803Rows()
+    {
+        return new ObservableCollection<TranslateRow>
+        {
+            new() { Number = 1, Show = TimeSpan.FromMilliseconds(220), Hide = TimeSpan.FromMilliseconds(1660), Text = "Tell me about Jonathan Gower." },
+            new() { Number = 2, Show = TimeSpan.FromMilliseconds(1780), Hide = TimeSpan.FromMilliseconds(4020), Text = "I wrapped him up in a rug," + Environment.NewLine + "and I dug a hole for him" },
+            new() { Number = 3, Show = TimeSpan.FromMilliseconds(4140), Hide = TimeSpan.FromMilliseconds(7076), Text = "in that little patch of wasteland" + Environment.NewLine + "just behind the repair shop." },
+        };
+    }
+
+    [Fact]
+    public async Task MergeAndTranslateIfPossible_LineBreakPreservingEngineGetsRowBoundaryAsLineBreak()
+    {
+        var rows = MakeIssue14803Rows();
+        var translator = new LineBreakPreservingTranslator
+        {
+            // What DeepL answers for the request asserted below (split_sentences=nonewlines).
+            Result = "Vertel me eens over Jonathan Gower." + Environment.NewLine +
+                     "Ik heb hem in een tapijt gewikkeld," + Environment.NewLine +
+                     "en ik heb een gat voor hem gegraven" + Environment.NewLine +
+                     "op dat kleine stukje braakliggend terrein vlak achter de reparatiewerkplaats.",
+        };
+
+        var count = await MergeAndSplitHelper.MergeAndTranslateIfPossible(
+            rows,
+            new TranslationPair("English", "en"),
+            new TranslationPair("Dutch", "nl"),
+            0,
+            translator,
+            forceSingleLineMode: false,
+            CancellationToken.None);
+
+        // Row 2 keeps its own break (line 1 ends in a comma), row 3 is un-broken before sending.
+        Assert.Equal(
+            "Tell me about Jonathan Gower." + Environment.NewLine +
+            "I wrapped him up in a rug," + Environment.NewLine +
+            "and I dug a hole for him" + Environment.NewLine +
+            "in that little patch of wasteland just behind the repair shop.",
+            translator.SentText);
+
+        Assert.Equal(3, count);
+        Assert.Equal("Vertel me eens over Jonathan Gower.", rows[0].TranslatedText);
+        Assert.Equal("Ik heb hem in een tapijt gewikkeld," + Environment.NewLine + "en ik heb een gat voor hem gegraven", rows[1].TranslatedText);
+        Assert.Equal("op dat kleine stukje braakliggend" + Environment.NewLine + "terrein vlak achter de reparatiewerkplaats.", rows[2].TranslatedText);
+    }
+
+    [Fact]
+    public async Task MergeAndTranslateIfPossible_LineBreakPreservingEngineThatDropsTheBreakStillFillsEveryRow()
+    {
+        var rows = MakeIssue14803Rows();
+        var translator = new LineBreakPreservingTranslator
+        {
+            Result = "Vertel me eens over Jonathan Gower." + Environment.NewLine +
+                     "Ik heb hem in een tapijt gewikkeld, en ik heb een gat voor hem gegraven op dat stukje braakliggend terrein vlak achter de garage.",
+        };
+
+        var count = await MergeAndSplitHelper.MergeAndTranslateIfPossible(
+            rows,
+            new TranslationPair("English", "en"),
+            new TranslationPair("Dutch", "nl"),
+            0,
+            translator,
+            forceSingleLineMode: false,
+            CancellationToken.None);
+
+        Assert.Equal(3, count);
+        Assert.All(rows, r => Assert.False(string.IsNullOrWhiteSpace(r.TranslatedText)));
+        Assert.Equal(translator.Result.Replace(Environment.NewLine, " "), string.Join(" ", rows.Select(r => r.TranslatedText.Replace(Environment.NewLine, " "))));
+    }
+
+    [Fact]
+    public async Task MergeAndTranslateIfPossible_OtherEnginesStillGetTheSentenceOnOneLine()
+    {
+        var rows = MakeIssue14803Rows();
+        var sent = string.Empty;
+        var translator = new CapturingTranslator(text => sent = text)
+        {
+            Result = "Vertel me eens over Jonathan Gower." + Environment.NewLine +
+                     "Ik heb hem in een tapijt gewikkeld, en ik heb een gat voor hem gegraven op dat stukje braakliggend terrein vlak achter de garage.",
+        };
+
+        var count = await MergeAndSplitHelper.MergeAndTranslateIfPossible(
+            rows,
+            new TranslationPair("English", "en"),
+            new TranslationPair("Dutch", "nl"),
+            0,
+            translator,
+            forceSingleLineMode: false,
+            CancellationToken.None);
+
+        Assert.Contains("for him in that little patch", sent);
+        Assert.Equal(3, count);
+    }
+
+    private sealed class CapturingTranslator : IAutoTranslator
+    {
+        private readonly Action<string> _onTranslate;
+
+        public CapturingTranslator(Action<string> onTranslate)
+        {
+            _onTranslate = onTranslate;
+        }
+
+        public string Result { get; set; } = string.Empty;
+        public string Name => "CapturingTranslator";
+        public string Url => "https://example.com";
+        public string Error { get; set; } = string.Empty;
+        public int MaxCharacters => 1500;
+
+        public void Initialize()
+        {
+        }
+
+        public List<TranslationPair> GetSupportedSourceLanguages() => new() { new TranslationPair("English", "en") };
+
+        public List<TranslationPair> GetSupportedTargetLanguages() => new() { new TranslationPair("Dutch", "nl") };
+
+        public Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
+        {
+            _onTranslate(text);
+            return Task.FromResult(Result);
+        }
+    }
 }

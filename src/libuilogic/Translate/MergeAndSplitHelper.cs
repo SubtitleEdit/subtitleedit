@@ -68,7 +68,8 @@ public static partial class MergeAndSplitHelper
         var formattingList = HandleFormatting(tempSubtitle, index, source.Code);
         var maxChars = CalculateMaxChars(autoTranslator, forceSingleLineMode);
 
-        var mergeResult = TryMergeLines(tempSubtitle, index, maxChars, ref noSentenceEndingSource, noSentenceEndingTarget, source.TwoLetterIsoLanguageName ?? source.Code);
+        var joinContinuousRowsWithLineBreak = autoTranslator is ILineBreakPreservingTranslator;
+        var mergeResult = TryMergeLines(tempSubtitle, index, maxChars, ref noSentenceEndingSource, noSentenceEndingTarget, source.TwoLetterIsoLanguageName ?? source.Code, joinContinuousRowsWithLineBreak);
         if (mergeResult.HasError)
         {
             return 0;
@@ -154,9 +155,10 @@ public static partial class MergeAndSplitHelper
         int maxChars,
         ref bool noSentenceEndingSource,
         bool noSentenceEndingTarget,
-        string sourceLanguage)
+        string sourceLanguage,
+        bool joinContinuousRowsWithLineBreak)
     {
-        var mergeResult = MergeMultipleLines(tempSubtitle, index, maxChars, noSentenceEndingSource, noSentenceEndingTarget, sourceLanguage);
+        var mergeResult = MergeMultipleLines(tempSubtitle, index, maxChars, noSentenceEndingSource, noSentenceEndingTarget, sourceLanguage, joinContinuousRowsWithLineBreak);
 
         if (mergeResult.HasError)
         {
@@ -165,7 +167,7 @@ public static partial class MergeAndSplitHelper
             if (!noSentenceEndingSource)
             {
                 noSentenceEndingSource = true;
-                mergeResult = MergeMultipleLines(tempSubtitle, index, maxChars, noSentenceEndingSource, noSentenceEndingTarget, sourceLanguage);
+                mergeResult = MergeMultipleLines(tempSubtitle, index, maxChars, noSentenceEndingSource, noSentenceEndingTarget, sourceLanguage, joinContinuousRowsWithLineBreak);
             }
         }
 
@@ -573,7 +575,10 @@ public static partial class MergeAndSplitHelper
         return formattingList;
     }
 
-    public static MergeResult MergeMultipleLines(TranslateRow[] sourceSubtitle, int index, int maxTextSize, bool noSentenceEndingSource, bool noSentenceEndingTarget, string sourceLanguage = "")
+    /// <param name="joinContinuousRowsWithLineBreak">Join the rows of one sentence with a line
+    /// break instead of a space - only for an <see cref="ILineBreakPreservingTranslator"/>, whose
+    /// reply keeps the break where the row boundary belongs (#14803).</param>
+    public static MergeResult MergeMultipleLines(TranslateRow[] sourceSubtitle, int index, int maxTextSize, bool noSentenceEndingSource, bool noSentenceEndingTarget, string sourceLanguage = "", bool joinContinuousRowsWithLineBreak = false)
     {
         var result = new MergeResult
         {
@@ -581,6 +586,7 @@ public static partial class MergeAndSplitHelper
             NoSentenceEndingSource = noSentenceEndingSource,
             NoSentenceEndingTarget = noSentenceEndingTarget,
             SourceLanguage = sourceLanguage ?? string.Empty,
+            ContinuousRowsJoinedWithLineBreak = joinContinuousRowsWithLineBreak,
         };
 
         var context = new MergeContext(sourceSubtitle, index, AbbreviationsForLanguage(result.SourceLanguage));
@@ -826,10 +832,11 @@ public static partial class MergeAndSplitHelper
             return;
         }
 
-        context.TextBuilder.Append(' ');
+        var separator = result.ContinuousRowsJoinedWithLineBreak ? Environment.NewLine : " ";
+        context.TextBuilder.Append(separator);
         context.TextBuilder.Append(currentRow.Text);
-        result.Text += " " + currentRow.Text;
-        context.CurrentItem.Text += " " + currentRow.Text;
+        result.Text += separator + currentRow.Text;
+        context.CurrentItem.Text += separator + currentRow.Text;
         context.CurrentItem.Continuous = true;
         context.CurrentItem.Paragraphs.Add(currentRow);
         context.CurrentItem.EndIndex = rowIndex;
@@ -886,7 +893,7 @@ public static partial class MergeAndSplitHelper
 
             if (item.Continuous)
             {
-                lines.AddRange(SplitContinuousText(part, item, language));
+                lines.AddRange(SplitContinuousText(part, item, language, mergeResult.ContinuousRowsJoinedWithLineBreak));
             }
             else
             {
@@ -1003,9 +1010,22 @@ public static partial class MergeAndSplitHelper
             : text;
     }
 
-    private static List<string> SplitContinuousText(string text, MergeResultItem item, string language)
+    private static List<string> SplitContinuousText(string text, MergeResultItem item, string language, bool joinedWithLineBreak)
     {
         var paragraphCount = item.EndIndex - item.StartIndex + 1;
+
+        if (joinedWithLineBreak)
+        {
+            var aligned = SplitByPreservedLineBreaks(text, item);
+            if (aligned != null)
+            {
+                return aligned;
+            }
+
+            // The engine did not keep the breaks after all: hand the length/duration heuristics
+            // the one-line sentence they expect.
+            text = string.Join(" ", text.SplitToLines().Select(l => l.Trim()).Where(l => l.Length > 0));
+        }
 
         if (paragraphCount == 2 && item.Paragraphs.Count == 2)
         {
@@ -1013,6 +1033,37 @@ public static partial class MergeAndSplitHelper
         }
 
         return TextSplit.SplitMulti(text, paragraphCount, language);
+    }
+
+    /// <summary>
+    /// Deals the reply's lines out to the rows the way the request's lines were dealt: a row
+    /// that was sent as two lines takes two lines back. Null when the engine returned a
+    /// different number of lines than it was sent, or a blank one for a row.
+    /// </summary>
+    private static List<string>? SplitByPreservedLineBreaks(string text, MergeResultItem item)
+    {
+        var replyLines = text.SplitToLines();
+        var lineCounts = item.Paragraphs.Select(p => p.Text.SplitToLines().Count).ToList();
+        if (replyLines.Count != lineCounts.Sum())
+        {
+            return null;
+        }
+
+        var rows = new List<string>();
+        var lineIndex = 0;
+        foreach (var lineCount in lineCounts)
+        {
+            var rowText = string.Join(Environment.NewLine, replyLines.Skip(lineIndex).Take(lineCount)).Trim();
+            if (rowText.Length == 0)
+            {
+                return null;
+            }
+
+            rows.Add(rowText);
+            lineIndex += lineCount;
+        }
+
+        return rows;
     }
 
     private static List<string> SplitIntoTwoParts(string text, MergeResultItem item, string language)
