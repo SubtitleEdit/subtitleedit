@@ -52,6 +52,11 @@ public partial class AiReviewViewModel : ObservableObject
     [ObservableProperty] private string _statusText;
     [ObservableProperty] private string _reasonText;
     [ObservableProperty] private bool _hasReason;
+    [ObservableProperty] private string _contextPreviousLabel;
+    [ObservableProperty] private string _contextPreviousText;
+    [ObservableProperty] private string _contextNextLabel;
+    [ObservableProperty] private string _contextNextText;
+    [ObservableProperty] private bool _hasContext;
     [ObservableProperty] private string _summaryText;
     [ObservableProperty] private string _applyButtonText;
     [ObservableProperty] private string _warningNoteText;
@@ -117,6 +122,10 @@ public partial class AiReviewViewModel : ObservableObject
         LanguageDisplay = string.Empty;
         StatusText = string.Empty;
         ReasonText = string.Empty;
+        ContextPreviousLabel = string.Empty;
+        ContextPreviousText = string.Empty;
+        ContextNextLabel = string.Empty;
+        ContextNextText = string.Empty;
         SummaryText = string.Empty;
         WarningNoteText = string.Empty;
         Suggestions = new ObservableCollection<ReviewSuggestionItem>();
@@ -209,6 +218,7 @@ public partial class AiReviewViewModel : ObservableObject
         if (value == null)
         {
             ReasonText = string.Empty;
+            ClearContext();
             return;
         }
 
@@ -218,6 +228,45 @@ public partial class AiReviewViewModel : ObservableObject
             ? string.Format(l.LinesXToY, unitLines.First(), unitLines.Last())
             : string.Format(l.LineX, value.Number);
         ReasonText = string.IsNullOrEmpty(value.Reason) ? who : $"{who}: {value.Reason}";
+        UpdateContext(value.ParagraphIndex);
+    }
+
+    /// <summary>
+    /// Shows the lines surrounding the selected suggestion so a fix can be judged in context - a
+    /// casing or punctuation suggestion often depends on how the previous line ended or the next
+    /// one starts, and the grid only shows the changed line itself (issue #14619). Neighbors that
+    /// carry a checked suggestion of their own show that fix, so the strip reads the way the
+    /// subtitle will after Apply.
+    /// </summary>
+    private void UpdateContext(int paragraphIndex)
+    {
+        var l = Se.Language.Tools.AiReview;
+        var previousIndex = paragraphIndex - 1;
+        var nextIndex = paragraphIndex + 1;
+        var hasPrevious = previousIndex >= 0 && previousIndex < _subtitle.Paragraphs.Count;
+        var hasNext = nextIndex >= 0 && nextIndex < _subtitle.Paragraphs.Count;
+
+        ContextPreviousLabel = hasPrevious ? string.Format(l.LineX, previousIndex + 1) : string.Empty;
+        ContextPreviousText = hasPrevious ? GetContextText(previousIndex) : string.Empty;
+        ContextNextLabel = hasNext ? string.Format(l.LineX, nextIndex + 1) : string.Empty;
+        ContextNextText = hasNext ? GetContextText(nextIndex) : string.Empty;
+        HasContext = hasPrevious || hasNext;
+    }
+
+    private string GetContextText(int paragraphIndex)
+    {
+        var checkedFix = _allSuggestions.FirstOrDefault(s => s.ParagraphIndex == paragraphIndex && s.IsSelected);
+        var text = checkedFix?.After ?? _subtitle.Paragraphs[paragraphIndex].Text;
+        return text.Replace("\r\n", " ").Replace('\n', ' ').Replace('\r', ' ');
+    }
+
+    private void ClearContext()
+    {
+        ContextPreviousLabel = string.Empty;
+        ContextPreviousText = string.Empty;
+        ContextNextLabel = string.Empty;
+        ContextNextText = string.Empty;
+        HasContext = false;
     }
 
     private void RefreshLlamaCppModels()
@@ -601,6 +650,7 @@ public partial class AiReviewViewModel : ObservableObject
 
         WarningNoteText = string.Empty;
         ReasonText = string.Empty;
+        ClearContext();
         UpdateSummary();
     }
 
@@ -729,6 +779,10 @@ public partial class AiReviewViewModel : ObservableObject
         }
 
         UpdateSummary();
+        if (SelectedSuggestion != null)
+        {
+            UpdateContext(SelectedSuggestion.ParagraphIndex);
+        }
     }
 
     private bool PassesFilter(ReviewSuggestionItem item)

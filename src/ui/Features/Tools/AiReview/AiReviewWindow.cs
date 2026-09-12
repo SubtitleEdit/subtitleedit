@@ -406,6 +406,46 @@ public class AiReviewWindow : Window
         };
         reasonText.Bind(IsVisibleProperty, new Binding(nameof(vm.HasReason)));
 
+        // ---------- context strip ----------
+        // The lines before and after the selected suggestion, so a casing/punctuation fix can be
+        // judged against its neighbors without leaving the window (issue #14619).
+        var contextGrid = new Grid
+        {
+            ColumnDefinitions = new ColumnDefinitions("Auto,Auto,*"),
+            RowDefinitions = new RowDefinitions("Auto,Auto"),
+            ColumnSpacing = 7,
+            RowSpacing = 2,
+        };
+        contextGrid.Add(new Optris.Icons.Avalonia.Icon
+        {
+            Value = "mdi-arrow-up-thin",
+            FontSize = 14,
+            Opacity = 0.7,
+            VerticalAlignment = VerticalAlignment.Center,
+        }, 0, 0);
+        contextGrid.Add(new Optris.Icons.Avalonia.Icon
+        {
+            Value = "mdi-arrow-down-thin",
+            FontSize = 14,
+            Opacity = 0.7,
+            VerticalAlignment = VerticalAlignment.Center,
+        }, 1, 0);
+        var contextPreviousLabel = MakeBoundTextBlock(nameof(vm.ContextPreviousLabel));
+        contextPreviousLabel.Opacity = 0.6;
+        var contextNextLabel = MakeBoundTextBlock(nameof(vm.ContextNextLabel));
+        contextNextLabel.Opacity = 0.6;
+        var contextPreviousText = MakeBoundTextBlock(nameof(vm.ContextPreviousText));
+        contextPreviousText.Opacity = 0.8;
+        contextPreviousText.TextWrapping = TextWrapping.Wrap;
+        var contextNextText = MakeBoundTextBlock(nameof(vm.ContextNextText));
+        contextNextText.Opacity = 0.8;
+        contextNextText.TextWrapping = TextWrapping.Wrap;
+        contextGrid.Add(contextPreviousLabel, 0, 1);
+        contextGrid.Add(contextPreviousText, 0, 2);
+        contextGrid.Add(contextNextLabel, 1, 1);
+        contextGrid.Add(contextNextText, 1, 2);
+        contextGrid.Bind(IsVisibleProperty, new Binding(nameof(vm.HasContext)));
+
         // ---------- bottom bar ----------
         var summaryText = MakeBoundTextBlock(nameof(vm.SummaryText));
         summaryText.VerticalAlignment = VerticalAlignment.Center;
@@ -475,6 +515,7 @@ public class AiReviewWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -490,7 +531,8 @@ public class AiReviewWindow : Window
         grid.Add(borderGrid, 2, 0);
         grid.Add(progressRow, 3, 0);
         grid.Add(reasonText, 4, 0);
-        grid.Add(bottomBar, 5, 0);
+        grid.Add(contextGrid, 5, 0);
+        grid.Add(bottomBar, 6, 0);
 
         Content = grid;
 
