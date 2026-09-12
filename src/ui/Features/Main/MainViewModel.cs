@@ -1111,6 +1111,18 @@ public partial class MainViewModel :
 
         StartTimers();
         _autoBackupService.StartAutoBackup(this);
+        // Daily Settings.json snapshot; file I/O, so keep it off the start-up path.
+        _ = Task.Run(() =>
+        {
+            try
+            {
+                _autoBackupService.BackupSettingsIfDue();
+            }
+            catch (Exception ex)
+            {
+                Se.LogError(ex, "Settings backup failed");
+            }
+        });
         // Polling interval lives on UndoRedoManager's field default (see the
         // comment on _detectionInterval) so it can be tuned in one place
         // without callers overriding it back to a longer value (#11280).

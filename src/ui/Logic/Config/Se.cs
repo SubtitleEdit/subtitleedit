@@ -183,6 +183,12 @@ public class Se
     public static string ThemesFolder => Path.Combine(DataFolder, "Themes");
     public static string FontsFolder => Path.Combine(DataFolder, "Fonts");
     public static string AutoBackupFolder => Path.Combine(DataFolder, "AutoBackup");
+
+    /// <summary>
+    /// Daily copies of Settings.json. A sub-folder of the subtitle auto-backup folder so the
+    /// non-recursive subtitle scan never lists them, and so both live under one place to clean.
+    /// </summary>
+    public static string SettingsBackupFolder => Path.Combine(AutoBackupFolder, "Settings");
     public static string FfmpegFolder => Path.Combine(DataFolder, "ffmpeg");
     public static string TextToSpeechFolder => Path.Combine(DataFolder, "TextToSpeech");
     public static string SpeechToTextFolder => Path.Combine(DataFolder, "SpeechToText");

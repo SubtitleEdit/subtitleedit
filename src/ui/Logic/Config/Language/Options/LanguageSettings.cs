@@ -106,6 +106,9 @@ public class LanguageSettings
     public string AutoBackupOn { get; set; }
     public string AutoBackupIntervalMinutes { get; set; }
     public string AutoBackupDeleteAfterDays { get; set; }
+    public string SettingsBackupOn { get; set; }
+    public string SettingsBackupIntervalDays { get; set; }
+    public string SettingsBackupMaxCount { get; set; }
     public string AutoConvertToUtf8 { get; set; }
     public string AutoTrimWhiteSpace { get; set; }
     public string RemoveBlankLinesWhenOpening { get; set; }
@@ -427,6 +430,9 @@ public class LanguageSettings
         AutoBackupOn = "Auto-backup";
         AutoBackupIntervalMinutes = "Auto-backup interval (minutes)";
         AutoBackupDeleteAfterDays = "Auto-backup retention (days)";
+        SettingsBackupOn = "Auto-backup settings";
+        SettingsBackupIntervalDays = "Settings backup interval (days)";
+        SettingsBackupMaxCount = "Settings backups to keep";
         AutoConvertToUtf8 = "Auto-convert encoding to UTF-8 on open";
         AutoTrimWhiteSpace = "Auto-trim white-space";
         RemoveBlankLinesWhenOpening = "Remove blank lines when opening a subtitle";

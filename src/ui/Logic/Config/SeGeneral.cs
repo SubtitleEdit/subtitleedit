@@ -110,6 +110,9 @@ public class SeGeneral
     public bool AutoBackupOn { get; set; }
     public int AutoBackupIntervalMinutes { get; set; }
     public int AutoBackupDeleteAfterDays { get; set; }
+    public bool SettingsBackupOn { get; set; }
+    public int SettingsBackupIntervalDays { get; set; }
+    public int SettingsBackupMaxCount { get; set; }
     public bool ForceCrLfOnSave { get; set; }
 
     /// <summary>
@@ -264,6 +267,9 @@ public class SeGeneral
         AutoBackupOn = true;
         AutoBackupIntervalMinutes = 5;
         AutoBackupDeleteAfterDays = 90;
+        SettingsBackupOn = true;
+        SettingsBackupIntervalDays = 1;
+        SettingsBackupMaxCount = 30;
         DefaultSaveAsFormat = new SubRip().FriendlyName;
         FavoriteSubtitleFormats = new SubRip().FriendlyName + ";" + new AdvancedSubStationAlpha().FriendlyName;
         FavoriteLanguages = string.Empty;
