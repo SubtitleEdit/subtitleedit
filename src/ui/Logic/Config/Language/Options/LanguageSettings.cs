@@ -247,6 +247,8 @@ public class LanguageSettings
     public string WaveformExtractAudioSampleRateOriginal { get; set; }
     public string WaveformExtractAudioBitRate { get; set; }
     public string VlcWidRendering { get; set; }
+    public string FfmpegSoftwareRendering { get; set; }
+    public string DownloadFfmpegLibs { get; set; }
     public string SubtitleGridEnterKeyAction { get; set; }
     public string SubtitleSingleClickAction { get; set; }
     public string SubtitleDoubleClickAction { get; set; }
@@ -559,6 +561,8 @@ public class LanguageSettings
         MpvWidRendering = "libmpv - Native Window ID rendering";
         MpvSoftwareRendering = "libmpv - Software rendering (slow)";
         VlcWidRendering = "libVLC - Native Window ID rendering";
+        FfmpegSoftwareRendering = "FFmpeg - Software rendering";
+        DownloadFfmpegLibs = "Download FFmpeg libraries (for the FFmpeg video player)";
         WaveFormsAndSpectrogramFoldersContainsX = "\"Waveforms\" and \"spectrogram\" folders contains {0}";
         DeleteWaveformAndSpectrogramFoldersQuestion = "Delete \"Waveforms\" and \"Spectrogram\" files?";
         WaveformGenerateSpectrogram = "Generate spectrogram";

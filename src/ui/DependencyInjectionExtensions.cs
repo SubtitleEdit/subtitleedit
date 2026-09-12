@@ -290,6 +290,7 @@ public static class DependencyInjectionExtensions
         collection.AddHttpClientWithProxy<IFfmpegDownloadService, FfmpegDownloadService>();
         collection.AddHttpClientWithProxy<ILibMpvDownloadService, LibMpvDownloadService>();
         collection.AddHttpClientWithProxy<ILibVlcDownloadService, LibVlcDownloadService>();
+        collection.AddHttpClientWithProxy<IFfmpegLibsDownloadService, FfmpegLibsDownloadService>();
         collection.AddHttpClientWithProxy<ICrispEmbedDownloadService, CrispEmbedDownloadService>();
         collection.AddHttpClientWithProxy<ISpellCheckDictionaryDownloadService, SpellCheckDictionaryDownloadService>();
         collection.AddHttpClientWithProxy<ITesseractDownloadService, TesseractDownloadService>();
@@ -411,6 +412,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<DownloadGoogleLensOcrViewModel>();
         collection.AddTransient<DownloadLibMpvViewModel>();
         collection.AddTransient<DownloadLibVlcViewModel>();
+        collection.AddTransient<DownloadFfmpegLibsViewModel>();
         collection.AddTransient<DownloadLlamaCppViewModel>();
         collection.AddTransient<DownloadPaddleOcrViewModel>();
         collection.AddTransient<DownloadCrispEmbedViewModel>();

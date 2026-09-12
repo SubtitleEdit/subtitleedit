@@ -1,6 +1,7 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
+using Nikse.SubtitleEdit.Logic.VideoPlayers.Ffmpeg;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
 using System.Threading.Tasks;
@@ -81,6 +82,12 @@ public class VideoPreviewSubtitle : IVideoPreviewSubtitle
                 await _vlcReloader.RefreshVlc(vlc, subtitle, null, context.Format);
                 return true;
             });
+        }
+        else if (videoPlayer is FfmpegPlayer ffmpeg)
+        {
+            var subtitle = getSubtitle();
+            _dirty = false;
+            ffmpeg.PreviewSubtitle = FfmpegPreviewSubtitle.Build(subtitle, null, context.SmpteMode);
         }
     }
 

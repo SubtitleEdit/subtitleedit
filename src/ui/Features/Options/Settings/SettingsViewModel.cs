@@ -276,6 +276,8 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string _libVlcStatus;
     [ObservableProperty] private bool _isLibMpvDownloadVisible;
     [ObservableProperty] private bool _isLibVlcDownloadVisible;
+    [ObservableProperty] private string _ffmpegLibsStatus;
+    [ObservableProperty] private bool _isFfmpegLibsDownloadVisible;
     [ObservableProperty] private string _ffmpegPath;
     [ObservableProperty] private string _ffmpegStatus;
     [ObservableProperty] private string _proxyAddress = string.Empty;
@@ -467,6 +469,7 @@ public partial class SettingsViewModel : ObservableObject
         MpvPreviewJustifyItems = new ObservableCollection<MpvJustifyDisplay>(MpvJustifyDisplay.GetAll());
         MpvPreviewSelectedJustify = MpvPreviewJustifyItems[0];
         LibVlcStatus = string.Empty;
+        FfmpegLibsStatus = string.Empty;
 
         UpdateChannels =
         [
@@ -684,6 +687,7 @@ public partial class SettingsViewModel : ObservableObject
         LibMpvPath = string.Empty;
         IsLibMpvDownloadVisible = OperatingSystem.IsWindows();
         IsLibVlcDownloadVisible = OperatingSystem.IsWindows();
+        IsFfmpegLibsDownloadVisible = OperatingSystem.IsWindows();
 
         MpvPreviewFontName = FontNames.First();
         MpvPreviewSelectedBorderType = MpvPreviewBorderTypes.First();
@@ -1082,6 +1086,7 @@ public partial class SettingsViewModel : ObservableObject
         SetFfmpegStatus();
         SetLibMpvStatus();
         SetLibVlcStatus();
+        SetFfmpegLibsStatus();
         LoadFileTypeAssociations();
 
         ExistsErrorLogFile = File.Exists(Se.GetErrorLogFilePath());
@@ -2122,6 +2127,32 @@ public partial class SettingsViewModel : ObservableObject
                 }
             });
         });
+    }
+
+    private void SetFfmpegLibsStatus()
+    {
+        _ = Task.Run(() =>
+        {
+            var canLoad = Logic.VideoPlayers.Ffmpeg.FfmpegLibraries.IsAvailable();
+            Dispatcher.UIThread.Post(() =>
+            {
+                FfmpegLibsStatus = canLoad ? Se.Language.General.Installed : Se.Language.General.NotInstalled;
+            });
+        });
+    }
+
+    [RelayCommand]
+    private async Task DownloadFfmpegLibs()
+    {
+        var result = await _windowService.ShowDialogAsync<DownloadFfmpegLibsWindow, DownloadFfmpegLibsViewModel>(Window!);
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        Logic.VideoPlayers.Ffmpeg.FfmpegLibraries.LibraryPath = Se.FfmpegLibFolder;
+        Logic.VideoPlayers.Ffmpeg.FfmpegLibraries.Reset();
+        SetFfmpegLibsStatus();
     }
 
     public async void ScrollElementIntoView(ScrollViewer scrollViewer, Control target)
