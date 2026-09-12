@@ -9,12 +9,18 @@ public partial class ReviewSuggestionItem : ObservableObject
 {
     [ObservableProperty] private bool _isSelected;
 
+    /// <summary>
+    /// The replacement text. Observable because the user can edit it in place in the grid's
+    /// After column before applying - the model's fix is often right in spirit but not to the
+    /// letter, and correcting it here beats declining the fix and editing the line by hand.
+    /// </summary>
+    [ObservableProperty] private string _after = string.Empty;
+
     public int Number { get; init; }
     public int ParagraphIndex { get; init; }
     public int UnitId { get; init; }
     public ReviewCategory Category { get; init; }
     public string Before { get; init; } = string.Empty;
-    public string After { get; init; } = string.Empty;
     public string Reason { get; init; } = string.Empty;
     public bool IsWarning { get; init; }
 

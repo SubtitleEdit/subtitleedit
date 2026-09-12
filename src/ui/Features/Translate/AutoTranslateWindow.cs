@@ -406,7 +406,30 @@ public class AutoTranslateWindow : Window
         tableView.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Translation,
-            CellTemplate = TableViewExtras.MakeTextCellTemplate(nameof(TranslateRow.TranslatedText)),
+            // Editable in place: a click on the selected row's translation opens a TextBox, so a
+            // slip in the machine translation is fixed here instead of after closing the window.
+            // The display stays a binding, so rows keep updating while a translation runs; editing
+            // is gated to when no translation is running, as the engine writes TranslatedText then.
+            CellTemplate = new FuncDataTemplate<TranslateRow>((row, _nameScope) =>
+            {
+                if (row == null)
+                {
+                    return new Border();
+                }
+
+                var cell = new Border { Background = Brushes.Transparent };
+                _ = new TableViewInlineTextEditor(cell, tableView,
+                    () => row.TranslatedText,
+                    text =>
+                    {
+                        row.TranslatedText = text;
+                        vm.HasTranslatedSomething = true; // an edited translation is something to keep - enables OK
+                    },
+                    () => TableViewExtras.MakeTextCellTemplate(nameof(TranslateRow.TranslatedText)).Build(row)!,
+                    canEdit: () => vm.IsTranslateEnabled,
+                    hint: Se.Language.Translate.EditTranslationHint);
+                return cell;
+            }),
             Width = new GridLength(1, GridUnitType.Star),
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,

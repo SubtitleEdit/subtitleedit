@@ -330,20 +330,7 @@ public class AiReviewWindow : Window
                     CellTheme = UiUtil.TableViewNoPaddingCellTheme,
                     HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     CellTemplate = new FuncDataTemplate<ReviewSuggestionItem>((item, _) =>
-                    {
-                        if (item == null)
-                        {
-                            return new Border();
-                        }
-
-                        var (beforeBlock, _) = TextDiffHighlighter.CompareReplacement(item.Before, item.After);
-                        return new Border
-                        {
-                            Background = Brushes.Transparent,
-                            Padding = new Thickness(4),
-                            Child = beforeBlock,
-                        };
-                    }),
+                        item == null ? new Border() : MakeDiffCell(item, isAfter: false, dataGrid)),
                     Width = new GridLength(1, GridUnitType.Star),
                 },
                 new SeTableViewColumn
@@ -352,20 +339,7 @@ public class AiReviewWindow : Window
                     CellTheme = UiUtil.TableViewNoPaddingCellTheme,
                     HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     CellTemplate = new FuncDataTemplate<ReviewSuggestionItem>((item, _) =>
-                    {
-                        if (item == null)
-                        {
-                            return new Border();
-                        }
-
-                        var (_, afterBlock) = TextDiffHighlighter.CompareReplacement(item.Before, item.After);
-                        return new Border
-                        {
-                            Background = Brushes.Transparent,
-                            Padding = new Thickness(4),
-                            Child = afterBlock,
-                        };
-                    }),
+                        item == null ? new Border() : MakeDiffCell(item, isAfter: true, dataGrid)),
                     Width = new GridLength(1, GridUnitType.Star),
                 },
         });
@@ -527,6 +501,60 @@ public class AiReviewWindow : Window
         };
         Closing += delegate { vm.OnClosing(); };
         KeyDown += (_, e) => vm.OnKeyDown(e);
+    }
+
+    /// <summary>
+    /// A Before/After cell showing the word-level diff of the suggestion. Both cells re-render
+    /// when <see cref="ReviewSuggestionItem.After"/> changes; the After cell can also be edited
+    /// in place (<see cref="TableViewInlineTextEditor"/>), so a nearly-right fix is corrected
+    /// here instead of being declined and retyped in the main window.
+    /// </summary>
+    private static Border MakeDiffCell(ReviewSuggestionItem item, bool isAfter, TableView grid)
+    {
+        var cell = new Border
+        {
+            Background = Brushes.Transparent,
+            Padding = new Thickness(4),
+        };
+
+        Control MakeDisplay()
+        {
+            var (beforeBlock, afterBlock) = TextDiffHighlighter.CompareReplacement(item.Before, item.After);
+            return isAfter ? afterBlock : beforeBlock;
+        }
+
+        TableViewInlineTextEditor? editor = null;
+        if (isAfter)
+        {
+            editor = new TableViewInlineTextEditor(cell, grid, () => item.After, text => item.After = text, MakeDisplay,
+                hint: Se.Language.Tools.AiReview.EditAfterHint);
+        }
+        else
+        {
+            cell.Child = MakeDisplay();
+        }
+
+        void OnItemChanged(object? _, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName != nameof(ReviewSuggestionItem.After))
+            {
+                return;
+            }
+
+            if (editor != null)
+            {
+                editor.Refresh();
+            }
+            else
+            {
+                cell.Child = MakeDisplay();
+            }
+        }
+
+        // The template is rebuilt per row, so the subscription must not outlive the cell.
+        cell.AttachedToVisualTree += (_, _) => item.PropertyChanged += OnItemChanged;
+        cell.DetachedFromVisualTree += (_, _) => item.PropertyChanged -= OnItemChanged;
+        return cell;
     }
 
     private static IBrush GetCategoryBrush(ReviewCategory category)

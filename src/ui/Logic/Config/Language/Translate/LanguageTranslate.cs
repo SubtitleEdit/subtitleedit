@@ -55,6 +55,7 @@ public class LanguageTranslate
     public string UseOnlyExtraServerParametersHint { get; set; }
     public string ServerRunningAtX { get; set; }
     public string CustomPromptHint { get; set; }
+    public string EditTranslationHint { get; set; }
     public string LlamaCppDownloadEngineAndModelPrompt { get; set; }
     public string LlamaCppDownloadEnginePrompt { get; set; }
     public string LlamaCppDownloadModelPrompt { get; set; }
@@ -114,6 +115,7 @@ public class LanguageTranslate
         UseOnlyExtraServerParametersHint = "Start llama-server with the parameters above instead of Subtitle Edit's own tuning - only the model, host and port are still set";
         ServerRunningAtX = "Server running at {0}";
         CustomPromptHint = "Custom instructions ({0} = source language, {1} = target language); empty = built-in prompt";
+        EditTranslationHint = "Click the selected row's translation to edit it (Enter saves, Escape cancels)";
         LlamaCppDownloadEngineAndModelPrompt = "llama.cpp requires the llama-server engine and a translation model to be downloaded. Download now?";
         LlamaCppDownloadEnginePrompt = "llama.cpp requires the llama-server engine to be downloaded. Download now?";
         LlamaCppDownloadModelPrompt = "llama.cpp requires the selected translation model to be downloaded. Download now?";
