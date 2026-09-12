@@ -23,6 +23,8 @@ public class LanguageBurnIn
     public string VideoFileSize { get; set; }
     public string OneBox { get; set; }
     public string LogoInfo { get; set; }
+    public string NoSubtitlesGenerateAnyway { get; set; }
+    public string NoSubtitlesInXItemsGenerateAnyway { get; set; }
 
     public LanguageBurnIn()
     {
@@ -47,5 +49,7 @@ public class LanguageBurnIn
         VideoFileSize = "Video file size";
         OneBox = "One box";
         LogoInfo = "Pick a PNG image and drag it to position it on the video.";
+        NoSubtitlesGenerateAnyway = "There are no subtitle lines to burn in.\n\nGenerate the video without subtitles?";
+        NoSubtitlesInXItemsGenerateAnyway = "{0} batch item(s) have no subtitle lines to burn in.\n\nGenerate those videos without subtitles?";
     }
 }
