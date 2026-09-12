@@ -325,7 +325,12 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
             return new WaveOutAudioSink();
         }
 
-        // No sink for Linux/macOS yet - playback stays in sync, just silent.
+        if (OperatingSystem.IsMacOS())
+        {
+            return new AudioQueueAudioSink();
+        }
+
+        // No sink for Linux yet - playback stays in sync, just silent.
         return new SilentAudioSink();
     }
 
