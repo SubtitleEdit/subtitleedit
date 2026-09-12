@@ -133,6 +133,7 @@ public partial class BurnInViewModel : ObservableObject
     private SubtitleFormat? _subtitleFormat;
     private string _inputVideoFileName;
     private string _imageSubtitleFileName = string.Empty;
+    private const string StatusSkipped = "Skipped";
     private List<BurnInEffectItem> _selectedEffects;
 
     public VideoPlayerControl? VideoPlayerControl { get; set; }
@@ -452,42 +453,52 @@ public partial class BurnInViewModel : ObservableObject
 
         Dispatcher.UIThread.Invoke(async () =>
         {
-            ProgressValue = 0;
-
-            if (_jobItemIndex < JobItems.Count - 1)
-            {
-                await InitAndStartJobItem(_jobItemIndex + 1).ConfigureAwait(false);
-                return;
-            }
-
-            IsGenerating = false;
-
-            if (JobItems.Count == 1)
-            {
-                await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window!, vm =>
-                {
-                    vm.Initialize(
-                        Se.Language.General.VideoFileGenerated,
-                        string.Format(Se.Language.General.VideoFileGeneratedX, jobItem.OutputVideoFileName),
-                        jobItem.OutputVideoFileName,
-                        true,
-                        true);
-                });
-            }
-            else
-            {
-                var sb = new StringBuilder($"Generated files ({JobItems.Count}):" + Environment.NewLine + Environment.NewLine);
-                foreach (var item in JobItems)
-                {
-                    sb.AppendLine($"{item.OutputVideoFileName} ==> {item.Status}");
-                }
-
-                await MessageBox.Show(Window!,
-                    "Generating done",
-                    sb.ToString(),
-                    MessageBoxButtons.OK);
-            }
+            await ContinueWithNextJobItemOrFinish();
         });
+    }
+
+    /// <summary>
+    /// Starts the next batch item, or ends the run with the "done" dialog. Called on the UI thread
+    /// after an item finished - or was skipped before ffmpeg was ever started.
+    /// </summary>
+    private async Task ContinueWithNextJobItemOrFinish()
+    {
+        ProgressValue = 0;
+
+        if (_jobItemIndex < JobItems.Count - 1)
+        {
+            await InitAndStartJobItem(_jobItemIndex + 1).ConfigureAwait(false);
+            return;
+        }
+
+        IsGenerating = false;
+
+        var jobItem = JobItems[_jobItemIndex];
+        if (JobItems.Count == 1 && jobItem.Status != StatusSkipped)
+        {
+            await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window!, vm =>
+            {
+                vm.Initialize(
+                    Se.Language.General.VideoFileGenerated,
+                    string.Format(Se.Language.General.VideoFileGeneratedX, jobItem.OutputVideoFileName),
+                    jobItem.OutputVideoFileName,
+                    true,
+                    true);
+            });
+        }
+        else
+        {
+            var sb = new StringBuilder($"Generated files ({JobItems.Count}):" + Environment.NewLine + Environment.NewLine);
+            foreach (var item in JobItems)
+            {
+                sb.AppendLine($"{item.OutputVideoFileName} ==> {item.Status}");
+            }
+
+            await MessageBox.Show(Window!,
+                "Generating done",
+                sb.ToString(),
+                MessageBoxButtons.OK);
+        }
     }
 
     /// <summary>
@@ -574,12 +585,22 @@ public partial class BurnInViewModel : ObservableObject
         jobItem.TargetFileSize = UseTargetFileSize
             ? (MatchSourceVideoSize ? GetSourceFileSizeInMb(jobItem.InputVideoFileName) : TargetFileSize ?? 0)
             : 0;
-        jobItem.AssaSubtitleFileName = MakeAssa(jobItem.SubtitleFileName);
-        jobItem.Status = Se.Language.General.Generating;
         if (IsBatchMode)
         {
             jobItem.OutputVideoFileName = MakeOutputFileName(jobItem.InputVideoFileName);
         }
+
+        jobItem.AssaSubtitleFileName = MakeAssa(jobItem.SubtitleFileName);
+        if (jobItem.Status == StatusSkipped)
+        {
+            // An unreadable subtitle file used to be marked "Skipped" and then encoded anyway,
+            // with an empty "ass=" file name that ffmpeg rejects.
+            Se.WriteToolsLog($"Burn-in: skipped \"{jobItem.InputVideoFileName}\" - subtitle file \"{jobItem.SubtitleFileName}\" could not be read");
+            await ContinueWithNextJobItemOrFinish();
+            return;
+        }
+
+        jobItem.Status = Se.Language.General.Generating;
 
         Dispatcher.UIThread.Post(() =>
         {
@@ -938,13 +959,41 @@ public partial class BurnInViewModel : ObservableObject
         return new ObservableCollection<BurnInJobItem>(new[] { jobItem });
     }
 
+    /// <summary>
+    /// True when the file is a text subtitle without a single line: an empty .srt (what the
+    /// current subtitle is written as when nothing is loaded) or a format that parses to no
+    /// paragraphs. Unreadable files are not "empty" - they are skipped by <see cref="MakeAssa"/>.
+    /// </summary>
+    private static bool HasNoSubtitleLines(string subtitleFileName)
+    {
+        if (string.IsNullOrWhiteSpace(subtitleFileName) || !File.Exists(subtitleFileName) || FileUtil.IsBluRaySup(subtitleFileName))
+        {
+            return false;
+        }
+
+        try
+        {
+            if (string.IsNullOrWhiteSpace(File.ReadAllText(subtitleFileName)))
+            {
+                return true;
+            }
+
+            var subtitle = Subtitle.Parse(subtitleFileName);
+            return subtitle != null && subtitle.Paragraphs.Count == 0;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     private string MakeAssa(string subtitleFileName)
     {
         var jobItem = JobItems[_jobItemIndex];
 
         if (string.IsNullOrWhiteSpace(subtitleFileName) || !File.Exists(subtitleFileName))
         {
-            jobItem.Status = "Skipped";
+            jobItem.Status = StatusSkipped;
             return string.Empty;
         }
 
@@ -956,6 +1005,13 @@ public partial class BurnInViewModel : ObservableObject
             return subtitleFileName;
         }
 
+        if (HasNoSubtitleLines(subtitleFileName))
+        {
+            // Nothing to burn in - the user confirmed this in Generate. An empty file name makes
+            // FfmpegGenerator leave the "ass" filter out, so the video is only re-encoded (#14777).
+            return string.Empty;
+        }
+
         var isAssa = subtitleFileName.EndsWith(".ass", StringComparison.OrdinalIgnoreCase);
 
         var subtitle = Subtitle.Parse(subtitleFileName);
@@ -963,7 +1019,7 @@ public partial class BurnInViewModel : ObservableObject
         {
             // Not a subtitle format we know: Parse returns null, and everything below
             // dereferences it. TransparentSubtitlesViewModel skips the job the same way.
-            jobItem.Status = "Skipped";
+            jobItem.Status = StatusSkipped;
             return string.Empty;
         }
 
@@ -1464,6 +1520,21 @@ public partial class BurnInViewModel : ObservableObject
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
 
+                return;
+            }
+        }
+
+        // A subtitle without lines is most likely a mistake (nothing loaded yet), but it can also
+        // be a deliberate re-encode/cut with no text - so ask instead of failing in ffmpeg (#14777).
+        var emptySubtitleCount = JobItems.Count(p => HasNoSubtitleLines(p.SubtitleFileName));
+        if (emptySubtitleCount > 0)
+        {
+            var prompt = IsBatchMode
+                ? string.Format(Se.Language.Video.BurnIn.NoSubtitlesInXItemsGenerateAnyway, emptySubtitleCount)
+                : Se.Language.Video.BurnIn.NoSubtitlesGenerateAnyway;
+            var answer = await MessageBox.Show(Window!, Se.Language.General.Warning, prompt, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (answer != MessageBoxResult.Yes)
+            {
                 return;
             }
         }

@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using System.IO;
 using Nikse.SubtitleEdit.Logic.Media;
 
@@ -195,5 +195,50 @@ public class FfmpegBurnInParametersTests
         Assert.Contains("-vf \"scale=320:240,ass=subtitle.ass\"", parameters);
         Assert.DoesNotContain("-filter_complex", parameters);
         Assert.DoesNotContain("overlay", parameters);
+    }
+
+    /// <summary>
+    /// No subtitle lines (issue #14777): the ass filter is left out entirely - "ass=" with no
+    /// file name makes ffmpeg fail with "Invalid argument" before writing a frame.
+    /// </summary>
+    [Fact]
+    public void NoSubtitle_OnlyScales()
+    {
+        var parameters = FfmpegGenerator.GenerateHardcodedVideoFile(
+            "input.mp4", string.Empty, "output.mp4", 320, 240, "h264_nvenc", string.Empty, "yuv420p",
+            string.Empty, "aac", false, "48000", string.Empty, "128k", string.Empty, string.Empty);
+
+        Assert.Contains("-vf \"scale=320:240\"", parameters);
+        Assert.DoesNotContain("ass=", parameters);
+        Assert.DoesNotContain("-filter_complex", parameters);
+    }
+
+    [Fact]
+    public void NoSubtitle_WithLogo_OverlaysTheLogoOnTheScaledVideo()
+    {
+        var logoFileName = Path.GetTempFileName();
+        try
+        {
+            var logo = new Nikse.SubtitleEdit.Features.Video.BurnIn.BurnInLogo
+            {
+                LogoFileName = logoFileName,
+                X = 10,
+                Y = 20,
+                Size = 100,
+                Alpha = 100,
+            };
+
+            var parameters = FfmpegGenerator.GenerateHardcodedVideoFile(
+                "input.mp4", string.Empty, "output.mp4", 320, 240, "libx264", string.Empty, "yuv420p",
+                string.Empty, "aac", false, "48000", string.Empty, "128k", string.Empty, string.Empty,
+                burnInLogo: logo);
+
+            Assert.Contains("-filter_complex \"[0:v]scale=320:240[withsubs];[1:v]scale=", parameters);
+            Assert.DoesNotContain("ass=", parameters);
+        }
+        finally
+        {
+            File.Delete(logoFileName);
+        }
     }
 }
