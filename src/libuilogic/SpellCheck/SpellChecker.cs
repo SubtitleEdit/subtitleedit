@@ -146,7 +146,7 @@ public class SpellChecker : ISpellChecker, IDoSpell
         else
         {
             var affixFile = Path.ChangeExtension(dictionaryFile, ".aff");
-            _hunspellWeCantSpell = WordList.CreateFromFiles(dictionaryFile, affixFile);
+            _hunspellWeCantSpell = LoadHunspell(dictionaryFile, affixFile);
         }
 
         if (string.IsNullOrEmpty(twoLetterLanguageCode))
@@ -424,6 +424,69 @@ public class SpellChecker : ISpellChecker, IDoSpell
         }
 
         return _hunspellWeCantSpell != null && _hunspellWeCantSpell.Check(word);
+    }
+
+    /// <summary>
+    /// Loads a Hunspell dictionary via WeCantSpell, working around an upstream parser bug: a trailing
+    /// "# comment" on a COMPOUNDRULE line is read as part of the rule, so the rule never matches. The
+    /// Dutch nl_NL.aff comments most of its number rules that way, which flagged "achtenzestig" etc.
+    /// as misspelled (#14788, aarondandy/WeCantSpell.Hunspell#118). Native Hunspell ignores the comment.
+    /// </summary>
+    internal static WordList LoadHunspell(string dictionaryFile, string affixFile)
+    {
+        var affixBytes = StripCompoundRuleComments(File.ReadAllBytes(affixFile));
+        using var dictionaryStream = File.OpenRead(dictionaryFile);
+        using var affixStream = new MemoryStream(affixBytes, writable: false);
+        return WordList.CreateFromStreams(dictionaryStream, affixStream);
+    }
+
+    /// <summary>
+    /// Cuts "&lt;whitespace&gt;#..." off every COMPOUNDRULE line. Works on bytes so the .aff keeps
+    /// whatever encoding its SET line declares (all supported encodings are ASCII supersets).
+    /// </summary>
+    internal static byte[] StripCompoundRuleComments(byte[] affix)
+    {
+        var keyword = "COMPOUNDRULE"u8;
+        var output = new MemoryStream(affix.Length);
+        var lineStart = 0;
+        while (lineStart < affix.Length)
+        {
+            var lineEnd = Array.IndexOf(affix, (byte)'\n', lineStart);
+            if (lineEnd < 0)
+            {
+                lineEnd = affix.Length;
+            }
+
+            var line = affix.AsSpan(lineStart, lineEnd - lineStart);
+            var contentEnd = line.Length;
+            if (line.StartsWith(keyword))
+            {
+                var hash = line.IndexOf((byte)'#');
+                if (hash > 0 && (line[hash - 1] == (byte)' ' || line[hash - 1] == (byte)'\t'))
+                {
+                    contentEnd = hash;
+                    while (contentEnd > 0 && (line[contentEnd - 1] == (byte)' ' || line[contentEnd - 1] == (byte)'\t'))
+                    {
+                        contentEnd--;
+                    }
+                }
+            }
+
+            output.Write(line[..contentEnd]);
+            if (contentEnd < line.Length && line[^1] == (byte)'\r')
+            {
+                output.WriteByte((byte)'\r'); // keep CRLF line endings untouched
+            }
+
+            if (lineEnd < affix.Length)
+            {
+                output.WriteByte((byte)'\n');
+            }
+
+            lineStart = lineEnd + 1;
+        }
+
+        return output.ToArray();
     }
 
     public static bool IsVoikkoDictionary(string dictionaryFile)
