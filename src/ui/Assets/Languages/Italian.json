@@ -1,7 +1,7 @@
 {
   "title": "SubtitleEdit",
   "version": "v. 5.2.0",
-  "translatedBy": "v. 11.09.2026 di bovirus e GitGianluc",
+  "translatedBy": "v. 12.09.2026 di bovirus e GitGianluc",
   "cultureName": "it-IT",
   "general": {
     "abort": "Annulla",
@@ -2266,7 +2266,9 @@
       "outputProperties": "Proprietà output...",
       "videoFileSize": "Dimensioni file video",
       "oneBox": "Un box",
-      "logoInfo": "Scegli un'immagine PNG e trascinala per posizionarla sul video."
+      "logoInfo": "Scegli un'immagine PNG e trascinala per posizionarla sul video.",
+      "noSubtitlesGenerateAnyway": "Non ci sono righe sottotitoli da inserire.\r\n\r\nVuoi generare il video senza sottotitoli?",
+      "noSubtitlesInXItemsGenerateAnyway": "{0} elementi batch non hanno righe sottotitoli da inserire.\r\n\r\nVuoi generare quei video senza sottotitoli?"
     },
     "videoTransparent": {
       "title": "Genera video trasparenti con sottotitoli"
@@ -2590,7 +2592,14 @@
       "testOcr": "Test fotogramma attuale",
       "testOcrRunning": "Test OCR sul fotogramma attuale...",
       "testOcrResultX": "Risultato test: {0}",
-      "testOcrNoTextFound": "Test: nessun testo trovato nell'area di scansione"
+      "testOcrNoTextFound": "Test: nessun testo trovato nell'area di scansione",
+      "engineSettings": "Impostazioni motore OCR",
+      "engineBuiltIn": "Integrato nel sistema operativo",
+      "engineExternalServer": "Server esterno (installato e gestito all'esterno di Subtitle Edit)",
+      "engineCloudApi": "API cloud (richiede una chiave API)",
+      "engineNothingToInstall": "Niente da installare",
+      "engineModelsMissing": "Motore installato, modelli mancanti",
+      "website": "Sito web"
     },
     "goToVideoPosition": "Vai alla posizione video",
     "goToVideoPositionDotDotDot": "Vai alla posizione video...",
@@ -2923,6 +2932,7 @@
       "useDoNotBreakAfterList": "Usa elenco eccezioni per interruzioni di riga",
       "newEmptyDefaultMs": "Durata predefinita nuovi sottotitoli (ms)",
       "timeCodeUpDownStepMs": "Incremento tempo su/giù (ms)",
+      "moveSelectedLinesStepMs": "Step scorciatoia spostamento righe selezionate (ms)",
       "promptBeforeDelete": "Chiedi conferma prima dell'eliminazione",
       "rememberPositionAndSize": "Ricorda posizione/dimensioni finestra",
       "openLastFileOnStart": "All'avvio apri il file più recente",
@@ -3059,6 +3069,8 @@
       "waveformExtractAudioSampleRateOriginal": "Originale (mantieni sorgente)",
       "waveformExtractAudioBitRate": "Estrai bitrate audio (MP3/M4A)",
       "vlcWidRendering": "libVLC - rendering ID finestra nativa",
+      "ffmpegSoftwareRendering": "FFmpeg - Rendering software",
+      "downloadFfmpegLibs": "Scarica le librerie FFmpeg (per il lettore video FFmpeg)",
       "subtitleGridEnterKeyAction": "Griglia sottotitoli - azione tasto Invio ",
       "subtitleSingleClickAction": "Griglia sottotitoli - azione singolo clic ",
       "subtitleDoubleClickAction": "Griglia sottotitoli - azione doppio clic",
@@ -3086,6 +3098,7 @@
       "subtitleGridFormattingShowFormatting": "Visualizza formattazione",
       "subtitleGridFormattingShowTags": "Visualizza tag",
       "subtitleGridFormattingHideTags": "Nascondi tag",
+      "subtitleGridFormattingShowFormattingKeepTags": "Visualizza formattazione, mantieni tag non visivi",
       "waveformParagraphBackgroundColor": "Colore di sfondo sottotitoli forma d'onda",
       "waveformParagraphSelectedBackgroundColor": "Colore di sfondo sottotitoli selezionati forma d'onda",
       "waveformAllowOverlap": "Permetti sovrapposizione (quando sposti/ridimensioni)",
@@ -3169,6 +3182,7 @@
       "generalToggleItalic": "Attiva/disattiva corsivo",
       "generalToggleBold": "Attiva/disattiva grassetto",
       "generalToggleUnderline": "Attiva/disattiva sottolineato",
+      "generalToggleBox": "Riquadro ON/OFF (EBU STL)",
       "fileOpen": "Apri",
       "fileOpenKeepVideo": "Apri (mantieni video)",
       "fileSave": "Salva",
@@ -3303,6 +3317,7 @@
       "textBoxItalic": "Casella testo in corsivo",
       "textBoxBold": "Casella testo in grassetto",
       "textBoxUnderline": "Casella testo in sottolineato",
+      "textBoxBox": "Riquadro casella di testo (EBU STL)",
       "resetWaveformZoomAndSpeed": "Ripristina zoom forma d'onda e velocità riproduzione",
       "togglePlaybackSpeed": "Attiva/disattiva velocità riproduzione",
       "playbackSpeedSlower": "Velocità di riproduzione più lenta",
@@ -3404,7 +3419,11 @@
       "moveStartOneFrameBackKeepGapPrev": "Sposta inizio un fotogramma indietro (mantieni spazio rispetto al precedente se vicino)",
       "moveStartOneFrameForwardKeepGapPrev": "Sposta inizio un fotogramma in avanti (mantieni spazio rispetto al precedente se vicino)",
       "moveEndOneFrameBackKeepGapNext": "Sposta fine un fotogramma indietro (mantieni spazio rispetto al successivo se vicino)",
-      "moveEndOneFrameForwardKeepGapNext": "Sposta fine un fotogramma avanti (mantieni spazio rispetto al successivo se vicino)"
+      "moveEndOneFrameForwardKeepGapNext": "Sposta fine un fotogramma avanti (mantieni spazio rispetto al successivo se vicino)",
+      "moveSelectedLinesXMsBack": "Sposta le righe selezionate indietro di X ms (X definito in Impostazioni)",
+      "moveSelectedLinesXMsForward": "Sposta le righe selezionate X ms in avanti (X definito in Impostazioni)",
+      "moveSelectedLinesAndForwardXMsBack": "Sposta le righe selezionate e tutte le successive indietro di X ms (X definito in Impostazioni)",
+      "moveSelectedLinesAndForwardXMsForward": "Sposta le righe selezionate e tutte le successive avanti di X ms (X definito in Impostazioni)"
     },
     "wordLists": {
       "title": "Elenchi parole",
