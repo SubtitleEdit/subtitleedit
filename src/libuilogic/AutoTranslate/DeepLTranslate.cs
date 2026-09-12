@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
     /// <summary>
     /// DeepL Pro V2 translator - see https://www.deepl.com/api.html
     /// </summary>
-    public class DeepLTranslate : IAutoTranslator, IDisposable
+    public class DeepLTranslate : IAutoTranslator, ILineBreakPreservingTranslator, IDisposable
     {
         private string _apiKey = string.Empty;
         private string _apiUrl = string.Empty;
@@ -320,6 +320,11 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                 new KeyValuePair<string, string>("text", text),
                 new KeyValuePair<string, string>("target_lang", targetLanguageCode),
                 new KeyValuePair<string, string>("source_lang", sourceLang),
+                // Split sentences on punctuation only: a sentence spread over several rows
+                // arrives with a line break inside it, and DeepL keeps that break at the
+                // matching place in the reply instead of translating each row on its own
+                // (ILineBreakPreservingTranslator, #14803).
+                new KeyValuePair<string, string>("split_sentences", "nonewlines"),
             };
 
             var targetLanguages = GetSupportedTargetLanguages();
