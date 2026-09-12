@@ -68,6 +68,7 @@ public class LanguageMainMenu
     public string MergeContinuationLines { get; set; }
     public string SnapAllTimesToFrames { get; set; }
     public string Renumber { get; set; }
+    public string Romanize { get; set; }
     public string RemoveTextForHearingImpaired { get; set; }
     public string RemoveUnicodeCharacters { get; set; }
     public string ConvertActors { get; set; }
@@ -206,6 +207,7 @@ public class LanguageMainMenu
         MergeContinuationLines = "Merge continuation lines...";
         SnapAllTimesToFrames = "Snap all times to frames";
         Renumber = "Renumber...";
+        Romanize = "Romanize...";
         RemoveTextForHearingImpaired = "_Remove text for hearing impaired...";
         RemoveUnicodeCharacters = "Remove/replace _Unicode characters...";
         ConvertActors = "Convert actors...";
