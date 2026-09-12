@@ -2024,6 +2024,9 @@ public static partial class InitListViewAndEditBox
         });
 
         var textBoxOriginal = MakeTextBoxOriginal(vm);
+        // A small gap between the two text boxes so their borders do not touch (the
+        // margin is flipped when the grid is mirrored for right to left).
+        textBoxOriginal.Margin = new Thickness(2, 0, 0, 0);
         textEditGrid.Add(textBoxOriginal, 1, 1);
         textBoxOriginal.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowColumnOriginalText))
         {
