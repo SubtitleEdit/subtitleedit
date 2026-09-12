@@ -452,6 +452,42 @@ public class ValueConverterTests : IDisposable
     }
 
     [AvaloniaFact]
+    public void ShowFormattingKeepTags_RendersStylingButEchoesNonVisualTags()
+    {
+        var inlines = Highlight("{\\an8\\pos(960,540)\\i1\\c&H00FF00&}one",
+            SubtitleGridFormattingTypes.ShowFormattingKeepTags);
+
+        Assert.Equal("{\\an8\\pos(960,540)}one", FlatText(inlines));
+        var tag = Assert.IsType<Run>(inlines[0]);
+        Assert.Equal(FontStyle.Normal, tag.FontStyle);
+        var text = Assert.IsType<Run>(inlines[1]);
+        Assert.Equal(FontStyle.Italic, text.FontStyle);
+        Assert.Equal("one", TextWithColor(inlines, Color.FromRgb(0, 255, 0)));
+    }
+
+    [AvaloniaTheory]
+    [InlineData("{\\i1}<b>x</b>{\\i0}", "x")]                                    // fully rendered - nothing echoed
+    [InlineData("{\\fnArial\\fs20\\r}x", "x")]                                 // font, size, reset are rendered
+    [InlineData("{\\fscx110\\fsp2}x", "{\\fscx110\\fsp2}x")]                  // \\fs prefix but not the size tag
+    [InlineData("{\\t(0,500,\\c&HFF0000&)}x", "{\\t(0,500,\\c&HFF0000&)}x")]  // transition kept whole
+    [InlineData("<box>x</box>", "<box>x</box>")]                              // HTML the grid cannot render
+    [InlineData("<font color=\"#00ff00\">x</font>", "x")]
+    public void ShowFormattingKeepTags_EchoesOnlyWhatIsNotRendered(string text, string expected)
+    {
+        Assert.Equal(expected, FlatText(Highlight(text, SubtitleGridFormattingTypes.ShowFormattingKeepTags)));
+    }
+
+    [AvaloniaFact]
+    public void ShowFormattingKeepTags_EchoedTagsCountTowardTheVisibleCap()
+    {
+        var text = "{\\pos(" + new string('1', 300) + ")}abc";
+
+        var flat = FlatText(Highlight(text, SubtitleGridFormattingTypes.ShowFormattingKeepTags));
+        Assert.EndsWith("...", flat);
+        Assert.True(flat.Length <= 200, flat.Length.ToString());
+    }
+
+    [AvaloniaFact]
     public void ShowTags_ShowsTheMarkupItself()
     {
         var text = "<font color=\"#00ff00\">hi</font>";

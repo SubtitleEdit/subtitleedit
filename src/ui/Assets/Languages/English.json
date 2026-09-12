@@ -3086,6 +3086,7 @@
       "subtitleGridFormattingShowFormatting": "Show formatting",
       "subtitleGridFormattingShowTags": "Show tags",
       "subtitleGridFormattingHideTags": "Hide tags",
+      "subtitleGridFormattingShowFormattingKeepTags": "Show formatting, keep non-visual tags",
       "waveformParagraphBackgroundColor": "Waveform subtitle background color",
       "waveformParagraphSelectedBackgroundColor": "Waveform selected subtitle background color",
       "waveformAllowOverlap": "Allow overlap (when moving/resizing)",
