@@ -483,6 +483,10 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoBackupOn, nameof(_vm.AutoBackupOn)),
             MakeNumericSettingInt(Se.Language.Options.Settings.AutoBackupIntervalMinutes, nameof(_vm.AutoBackupIntervalMinutes), 1),
             MakeNumericSettingInt(Se.Language.Options.Settings.AutoBackupDeleteAfterDays, nameof(_vm.AutoBackupDeleteAfterDays), 1),
+            MakeSeparator(),
+            MakeCheckboxSetting(Se.Language.Options.Settings.SettingsBackupOn, nameof(_vm.SettingsBackupOn)),
+            MakeNumericSettingInt(Se.Language.Options.Settings.SettingsBackupIntervalDays, nameof(_vm.SettingsBackupIntervalDays), 1),
+            MakeNumericSettingInt(Se.Language.Options.Settings.SettingsBackupMaxCount, nameof(_vm.SettingsBackupMaxCount), 1),
         ]));
 
         sections.Add(new SettingsSection(Se.Language.General.SubtitleFormats, IconNames.ClosedCaption, "#7fa8f0",

@@ -140,6 +140,9 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _autoBackupOn;
     [ObservableProperty] private int? _autoBackupIntervalMinutes;
     [ObservableProperty] private int? _autoBackupDeleteAfterDays;
+    [ObservableProperty] private bool _settingsBackupOn;
+    [ObservableProperty] private int? _settingsBackupIntervalDays;
+    [ObservableProperty] private int? _settingsBackupMaxCount;
 
     [ObservableProperty] private ObservableCollection<string> _defaultSubtitleFormats;
     [ObservableProperty] private string _selectedDefaultSubtitleFormat;
@@ -773,6 +776,9 @@ public partial class SettingsViewModel : ObservableObject
         AutoBackupOn = general.AutoBackupOn;
         AutoBackupIntervalMinutes = general.AutoBackupIntervalMinutes;
         AutoBackupDeleteAfterDays = general.AutoBackupDeleteAfterDays;
+        SettingsBackupOn = general.SettingsBackupOn;
+        SettingsBackupIntervalDays = general.SettingsBackupIntervalDays;
+        SettingsBackupMaxCount = general.SettingsBackupMaxCount;
         DefaultEncoding = Encodings.FirstOrDefault(e => e.DisplayName == general.DefaultEncoding) ?? Encodings.First();
         SelectedSubtitleEnterKeyActionType = MapFromSelectedSubtitleEnterKeyAction(Se.Settings.General.SubtitleEnterKeyAction);
         SelectedSubtitleSingleClickActionType = MapFromSelectedSubtitleSingleClickAction(Se.Settings.General.SubtitleSingleClickAction);
@@ -1648,6 +1654,9 @@ public partial class SettingsViewModel : ObservableObject
         general.AutoBackupOn = AutoBackupOn;
         general.AutoBackupIntervalMinutes = AutoBackupIntervalMinutes ?? general.AutoBackupIntervalMinutes;
         general.AutoBackupDeleteAfterDays = AutoBackupDeleteAfterDays ?? general.AutoBackupDeleteAfterDays;
+        general.SettingsBackupOn = SettingsBackupOn;
+        general.SettingsBackupIntervalDays = SettingsBackupIntervalDays ?? general.SettingsBackupIntervalDays;
+        general.SettingsBackupMaxCount = SettingsBackupMaxCount ?? general.SettingsBackupMaxCount;
         general.DefaultEncoding = DefaultEncoding?.DisplayName ?? Encodings.First().DisplayName;
         general.SubtitleEnterKeyAction = MapToSelectedSubtitleEnterKeyAction(SelectedSubtitleEnterKeyActionType);
         general.SubtitleSingleClickAction = MapToSelectedSubtitleSingleClickAction(SelectedSubtitleSingleClickActionType);

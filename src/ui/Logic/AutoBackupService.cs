@@ -19,6 +19,15 @@ public interface IAutoBackupService
     void StopAutobackup();
     public List<string> GetAutoBackupFiles();
     public void CleanAutoBackupFolder();
+
+    /// <summary>Copies Settings.json to the settings backup folder if the newest backup is older than the configured interval.</summary>
+    void BackupSettingsIfDue();
+
+    /// <summary>Copies Settings.json to the settings backup folder regardless of the interval; returns the backup path, or null when nothing was written.</summary>
+    string? BackupSettingsNow();
+
+    List<string> GetSettingsBackupFiles();
+    void CleanSettingsBackupFolder();
 }
 
 public partial class AutoBackupService : IAutoBackupService
@@ -172,6 +181,148 @@ public partial class AutoBackupService : IAutoBackupService
         }
 
         return result;
+    }
+
+    private const string SettingsBackupSuffix = "_Settings.json";
+    private const string SettingsBackupTimeFormat = "yyyy-MM-dd_HH-mm-ss";
+    private static readonly Lock SettingsBackupLocker = new Lock();
+
+    public void BackupSettingsIfDue()
+    {
+        if (!Se.Settings.General.SettingsBackupOn)
+        {
+            return;
+        }
+
+        var intervalDays = Math.Max(1, Se.Settings.General.SettingsBackupIntervalDays);
+        lock (SettingsBackupLocker)
+        {
+            var newest = GetNewestSettingsBackupTime(Se.SettingsBackupFolder);
+            if (newest.HasValue && newest.Value > DateTime.Now.AddDays(-intervalDays))
+            {
+                return;
+            }
+
+            CopySettingsToBackupFolder();
+        }
+
+        CleanSettingsBackupFolder();
+    }
+
+    public string? BackupSettingsNow()
+    {
+        string? result;
+        lock (SettingsBackupLocker)
+        {
+            result = CopySettingsToBackupFolder();
+        }
+
+        CleanSettingsBackupFolder();
+        return result;
+    }
+
+    private static string? CopySettingsToBackupFolder()
+    {
+        var settingsFileName = Se.GetSettingsFilePath();
+        if (!File.Exists(settingsFileName))
+        {
+            return null;
+        }
+
+        var folder = Se.SettingsBackupFolder;
+        try
+        {
+            Directory.CreateDirectory(folder);
+            var target = Path.Combine(folder, DateTime.Now.ToString(SettingsBackupTimeFormat, CultureInfo.InvariantCulture) + SettingsBackupSuffix);
+            File.Copy(settingsFileName, target, overwrite: true);
+            return target;
+        }
+        catch (Exception exception)
+        {
+            // A backup that cannot be written must not disturb start-up.
+            Se.LogError(exception, "Could not back up settings");
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Time stamp of the newest settings backup, read from the file name rather than the file
+    /// system so a copied or touched backup folder does not postpone the next backup.
+    /// </summary>
+    internal static DateTime? GetNewestSettingsBackupTime(string folder)
+    {
+        DateTime? newest = null;
+        foreach (var fileName in GetSettingsBackupFiles(folder))
+        {
+            var time = ParseSettingsBackupTime(fileName);
+            if (time.HasValue && (!newest.HasValue || time.Value > newest.Value))
+            {
+                newest = time;
+            }
+        }
+
+        return newest;
+    }
+
+    internal static DateTime? ParseSettingsBackupTime(string fileName)
+    {
+        var name = Path.GetFileName(fileName);
+        if (name.Length < SettingsBackupTimeFormat.Length ||
+            !DateTime.TryParseExact(name[..SettingsBackupTimeFormat.Length], SettingsBackupTimeFormat,
+                CultureInfo.InvariantCulture, DateTimeStyles.None, out var time))
+        {
+            return null;
+        }
+
+        return time;
+    }
+
+    public List<string> GetSettingsBackupFiles() => GetSettingsBackupFiles(Se.SettingsBackupFolder);
+
+    internal static List<string> GetSettingsBackupFiles(string folder)
+    {
+        var result = new List<string>();
+        if (!Directory.Exists(folder))
+        {
+            return result;
+        }
+
+        foreach (var fileName in Directory.GetFiles(folder, "*" + SettingsBackupSuffix))
+        {
+            if (RegexFileNamePattern().IsMatch(Path.GetFileName(fileName)))
+            {
+                result.Add(fileName);
+            }
+        }
+
+        return result;
+    }
+
+    /// <summary>Keeps only the newest <see cref="SeGeneral.SettingsBackupMaxCount"/> settings backups.</summary>
+    public void CleanSettingsBackupFolder()
+    {
+        var keep = Math.Max(1, Se.Settings.General.SettingsBackupMaxCount);
+        lock (SettingsBackupLocker)
+        {
+            foreach (var fileName in GetSettingsBackupFilesToDelete(Se.SettingsBackupFolder, keep))
+            {
+                try
+                {
+                    File.Delete(fileName);
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
+        }
+    }
+
+    internal static List<string> GetSettingsBackupFilesToDelete(string folder, int keep)
+    {
+        var files = GetSettingsBackupFiles(folder);
+        files.Sort((a, b) => string.CompareOrdinal(Path.GetFileName(b), Path.GetFileName(a))); // newest first
+        return files.Count <= keep ? new List<string>() : files.GetRange(keep, files.Count - keep);
     }
 
     private static readonly Lock Locker = new Lock();
