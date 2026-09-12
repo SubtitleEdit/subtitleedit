@@ -1603,8 +1603,9 @@ public class FfmpegGenerator
         // Optional center-channel only
         if (useCenterChannelOnly)
         {
-            // Extract center channel: pan mono|c0=c2
-            args += " -af \"pan=mono|c0=c2\"";
+            // Extract the front center channel by name (same filter as WaveFileExtractor); "c2" is
+            // only the center in a 5.1 layout while FC resolves in any layout that has one.
+            args += " -af \"pan=mono|c0=FC\"";
         }
 
         // Add output file name
