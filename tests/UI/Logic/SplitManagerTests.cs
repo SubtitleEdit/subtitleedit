@@ -379,6 +379,84 @@ public class SplitManagerTests : IDisposable
     }
 
     [Fact]
+    public void Split_AssaMergedItalicAndColorBlock_BothPropagatedToSecondLine()
+    {
+        // #14800: the ASSA reader merges "{\i1}{\c&H00ff00&}" into one block, and the
+        // italic toggle (no longer last in the block) was dropped from the second half.
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
+        var manager = new SplitManager();
+        var text = @"{\i1\c&H00ff00&}Take out the camera. We can do it here.{\c}{\i0}";
+        var subtitle = MakeSubtitle(text, 1, 3);
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+        var cursor = text.IndexOf("We", StringComparison.Ordinal);
+
+        manager.Split(subtitles, subtitle, textIndex: cursor, languageCode: "en");
+
+        Assert.Equal(2, subtitles.Count);
+        Assert.Equal(@"{\i1\c&H00ff00&}Take out the camera.", subtitles[0].Text);
+        Assert.Equal(@"{\i1}{\c&H00ff00&}We can do it here.{\c}{\i0}", subtitles[1].Text);
+    }
+
+    [Fact]
+    public void Split_AssaColorResetInFirstLine_NotPropagatedToSecondLine()
+    {
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
+        var manager = new SplitManager();
+        var subtitle = MakeSubtitle($@"{{\c&H00ff00&}}First{{\c}} line{Environment.NewLine}Second line", 1, 3);
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        manager.Split(subtitles, subtitle, languageCode: "en");
+
+        Assert.Equal("Second line", subtitles[1].Text);
+    }
+
+    [Fact]
+    public void Split_TwoLineDialogText_WithAssaTags_StripsLeadingDashesFromBothParts()
+    {
+        // #14800: "{\i1}- Hi!{\i0}" kept its dash because the dash trim did not skip the tag.
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
+        Configuration.Settings.General.DialogStyle = DialogType.DashBothLinesWithSpace;
+        var manager = new SplitManager();
+        var subtitle = MakeSubtitle($@"- Hello you.{Environment.NewLine}{{\i1}}- Hi!{{\i0}}", 1, 3);
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        manager.Split(subtitles, subtitle, languageCode: "en");
+
+        Assert.Equal(2, subtitles.Count);
+        Assert.Equal("Hello you.", subtitles[0].Text);
+        Assert.Equal(@"{\i1}Hi!{\i0}", subtitles[1].Text);
+    }
+
+    [Fact]
+    public void Split_TwoLineDialogText_WithHtmlTagsOnFirstLine_StripsLeadingDashesFromBothParts()
+    {
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
+        Configuration.Settings.General.DialogStyle = DialogType.DashBothLinesWithSpace;
+        var manager = new SplitManager();
+        var subtitle = MakeSubtitle($"<i>- Hello you.</i>{Environment.NewLine}- Hi!", 1, 3);
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        manager.Split(subtitles, subtitle, languageCode: "en");
+
+        Assert.Equal("<i>Hello you.</i>", subtitles[0].Text);
+        Assert.Equal("Hi!", subtitles[1].Text);
+    }
+
+    [Fact]
+    public void Split_TwoLineDialogText_WithTwoAssaBlocks_StripsLeadingDash()
+    {
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
+        Configuration.Settings.General.DialogStyle = DialogType.DashBothLinesWithSpace;
+        var manager = new SplitManager();
+        var subtitle = MakeSubtitle($@"- Hello you.{Environment.NewLine}{{\i1}}{{\c&H00ff00&}}- Hi!{{\c}}{{\i0}}", 1, 3);
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        manager.Split(subtitles, subtitle, languageCode: "en");
+
+        Assert.Equal(@"{\i1}{\c&H00ff00&}Hi!{\c}{\i0}", subtitles[1].Text);
+    }
+
+    [Fact]
     public void Split_AssaBoldTagClosedInFirstLine_NotPropagatedToSecondLine()
     {
         Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;

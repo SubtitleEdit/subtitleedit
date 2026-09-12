@@ -192,8 +192,10 @@ public class SplitManager : ISplitManager
             var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, TwoLetterLanguageCode = languageCode };
             if (dialogHelper.IsDialog(lines))
             {
-                second = lines[1].TrimStart(' ', DialogSplitMerge.GetDashChar(), DialogSplitMerge.GetAlternateDashChar()).Trim();
-                first = lines[0].TrimStart(' ', DialogSplitMerge.GetDashChar(), DialogSplitMerge.GetAlternateDashChar()).Trim();
+                // #14800: RemoveStartDash skips leading {\...}/<...> tags, so a formatted
+                // dialog line like "{\i1}- Hi!{\i0}" loses its dash too.
+                second = DialogSplitMerge.RemoveStartDash(lines[1].Trim());
+                first = DialogSplitMerge.RemoveStartDash(lines[0].Trim());
             }
             else
             {
@@ -470,31 +472,87 @@ public class SplitManager : ISplitManager
 
     private static string PropagateAssaTags(string text1, string text2)
     {
-        // For each ASSA toggle tag {\b1}, {\i1}, {\u1} active in text1 (opened but not closed with {\b0} etc.),
-        // prepend the corresponding tag to text2.
-        var assaToggles = new[] { ("\\b1}", "\\b0}"), ("\\i1}", "\\i0}"), ("\\u1}", "\\u0}") };
-        var tagsToAdd = new List<string>();
-        foreach (var (onSuffix, offSuffix) in assaToggles)
+        // Walk every {\...} override block of text1 in order and track which state is still
+        // active at its end, then re-open that state at the start of text2.
+        //
+        // #14800: the ASSA reader merges adjacent blocks ("{\i1}{\c&H00ff00&}" becomes
+        // "{\i1\c&H00ff00&}"), so matching on the literal "\i1}" missed a toggle that was
+        // not last in its block and the italic never reached the second half. Tags are
+        // parsed per block here, so position inside the block no longer matters.
+        string? bold = null;
+        string? italic = null;
+        string? underline = null;
+        string? fontName = null;
+        string? color = null;
+
+        foreach (var block in GetAssaBlocks(text1))
         {
-            var onCount = CountOccurrences(text1, onSuffix);
-            var offCount = CountOccurrences(text1, offSuffix);
-            if (onCount > offCount)
+            foreach (var tag in SplitAssaBlock(block))
             {
-                tagsToAdd.Add("{" + onSuffix);
+                if (tag == "r" || tag.StartsWith("r", StringComparison.Ordinal) && !tag.StartsWith("rnd", StringComparison.Ordinal))
+                {
+                    // {\r} / {\rStyle} resets every override
+                    bold = italic = underline = fontName = color = null;
+                }
+                else if (tag == "b1")
+                {
+                    bold = "{\\b1}";
+                }
+                else if (tag == "b0")
+                {
+                    bold = null;
+                }
+                else if (tag == "i1")
+                {
+                    italic = "{\\i1}";
+                }
+                else if (tag == "i0")
+                {
+                    italic = null;
+                }
+                else if (tag == "u1")
+                {
+                    underline = "{\\u1}";
+                }
+                else if (tag == "u0")
+                {
+                    underline = null;
+                }
+                else if (tag.StartsWith("fn", StringComparison.Ordinal))
+                {
+                    fontName = tag.Length > 2 ? "{\\" + tag + "}" : null;
+                }
+                else if (tag == "c" || tag == "1c")
+                {
+                    color = null;
+                }
+                else if (tag.StartsWith("c&H", StringComparison.Ordinal) || tag.StartsWith("1c&H", StringComparison.Ordinal))
+                {
+                    color = "{\\" + tag + "}";
+                }
             }
         }
 
-        // Propagate last active \fn and \c tags
-        var fnTag = GetLastAssaTag(text1, "\\fn");
-        if (fnTag != null)
+        var tagsToAdd = new List<string>();
+        if (bold != null)
         {
-            tagsToAdd.Add(fnTag);
+            tagsToAdd.Add(bold);
         }
-
-        var colorTag = GetLastAssaTag(text1, "\\c&H");
-        if (colorTag != null)
+        if (italic != null)
         {
-            tagsToAdd.Add(colorTag);
+            tagsToAdd.Add(italic);
+        }
+        if (underline != null)
+        {
+            tagsToAdd.Add(underline);
+        }
+        if (fontName != null)
+        {
+            tagsToAdd.Add(fontName);
+        }
+        if (color != null)
+        {
+            tagsToAdd.Add(color);
         }
 
         if (tagsToAdd.Count == 0)
@@ -502,45 +560,45 @@ public class SplitManager : ISplitManager
             return text2;
         }
 
-        // Each entry in tagsToAdd is already a complete "{...}" block, so concatenate them as-is.
-        // The previous version stripped each block's leading "{" but kept its trailing "}", then
-        // prepended a single "{" - which produced malformed markup for two or more tags, e.g.
-        // "{\i1}\c&HFF0000&}Hello": the "{\i1}" parsed but "\c&HFF0000&}" showed as literal text
-        // and the color was lost.
+        // Each entry is a complete "{...}" block, so concatenate them as-is.
         return string.Concat(tagsToAdd) + text2;
     }
 
-    private static string? GetLastAssaTag(string text, string prefix)
+    /// <summary>Returns the inner text of every "{\...}" block in order (without the braces).</summary>
+    private static IEnumerable<string> GetAssaBlocks(string text)
     {
-        var lastIdx = -1;
         var idx = 0;
-        while ((idx = text.IndexOf(prefix, idx, StringComparison.Ordinal)) >= 0)
+        while (idx < text.Length)
         {
-            lastIdx = idx;
-            idx += prefix.Length;
-        }
+            var start = text.IndexOf("{\\", idx, StringComparison.Ordinal);
+            if (start < 0)
+            {
+                yield break;
+            }
 
-        if (lastIdx < 0)
+            var end = text.IndexOf('}', start);
+            if (end < 0)
+            {
+                yield break;
+            }
+
+            yield return text.Substring(start + 1, end - start - 1);
+            idx = end + 1;
+        }
+    }
+
+    /// <summary>Splits the inner text of an override block into its tags, e.g. "\i1\c&H00ff00&" → ["i1", "c&H00ff00&"].</summary>
+    private static IEnumerable<string> SplitAssaBlock(string block)
+    {
+        var parts = block.Split('\\', StringSplitOptions.RemoveEmptyEntries);
+        foreach (var part in parts)
         {
-            return null;
+            var tag = part.Trim();
+            if (tag.Length > 0)
+            {
+                yield return tag;
+            }
         }
-
-        var blockStart = text.LastIndexOf('{', lastIdx);
-        var blockEnd = text.IndexOf('}', lastIdx);
-        if (blockStart < 0 || blockEnd < 0)
-        {
-            return null;
-        }
-
-        // Extract only the specific tag from within the block
-        var tagStart = lastIdx;
-        var tagEnd = text.IndexOf('}', tagStart);
-        if (tagEnd < 0)
-        {
-            return null;
-        }
-
-        return "{" + text.Substring(tagStart, tagEnd - tagStart + 1);
     }
 
     public void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, string languageCode)
