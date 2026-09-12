@@ -84,7 +84,7 @@ public class ReplaceWindowAccessKeyTests
 
             var accessText = Assert.IsType<AccessText>(button.Content);
             Assert.Equal("_Find next", accessText.Text);
-            Assert.Equal("F", accessText.AccessKey.ToString()?.ToUpperInvariant());
+            Assert.Equal("F", accessText.AccessKey?.ToUpperInvariant());
             Assert.False(accessText.GetValue(AccessText.ShowAccessKeyProperty));
 
             // Avalonia's AccessKeyHandler flips this inherited property on the window while Alt is

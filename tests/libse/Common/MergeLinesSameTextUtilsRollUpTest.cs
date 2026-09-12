@@ -69,8 +69,8 @@ namespace LibSETests.Common
             Assert.Equal(2, result.Paragraphs.Count);
 
             var merged = MergeLinesSameTextUtils.MergeLinesWithSameTextInSubtitle(s, true, 250, true);
-            Assert.Equal(1, merged.Paragraphs.Count);
-            Assert.Equal("A" + nl + "B", merged.Paragraphs[0].Text);
+            var mergedParagraph = Assert.Single(merged.Paragraphs);
+            Assert.Equal("A" + nl + "B", mergedParagraph.Text);
         }
 
         [Fact]
