@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.Ffmpeg;
 /// <para>
 /// The bindings are generated against one FFmpeg major version (see <see cref="MajorVersion"/>),
 /// so the library files must be from that release line - the version is part of the file name
-/// (<c>avcodec-62.dll</c>, <c>libavcodec.so.62</c>, <c>libavcodec.62.dylib</c>), which is also
+/// (<c>avcodec-63.dll</c>, <c>libavcodec.so.63</c>, <c>libavcodec.63.dylib</c>), which is also
 /// what the folder probing looks for.
 /// </para>
 /// </summary>
@@ -24,8 +24,8 @@ public static class FfmpegLibraries
     /// <summary>FFmpeg release line the bundled bindings are generated for.</summary>
     public const string MajorVersion = "9.0";
 
-    /// <summary>libavcodec major version of <see cref="MajorVersion"/>, as used in the library file names.</summary>
-    public const int AvCodecMajor = 62;
+    /// <summary>libavcodec major the bindings were generated for (63 for FFmpeg 9), as used in the library file names.</summary>
+    public static int AvCodecMajor => ffmpeg.LIBAVCODEC_VERSION_MAJOR;
 
     /// <summary>
     /// Set this path (directory only) to override the default search paths - the same idea as
@@ -42,7 +42,7 @@ public static class FfmpegLibraries
     public static string ResolvedPath => _resolvedPath;
 
     /// <summary>
-    /// The file name of the avcodec library on this platform, e.g. <c>avcodec-62.dll</c>.
+    /// The file name of the avcodec library on this platform, e.g. <c>avcodec-63.dll</c>.
     /// Used both to probe candidate folders and to tell the user what is expected.
     /// </summary>
     public static string AvCodecFileName

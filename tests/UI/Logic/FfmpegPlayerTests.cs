@@ -151,7 +151,7 @@ public class FfmpegPlayerTests
         {
             using (var archive = ZipFile.Open(zip, ZipArchiveMode.Create))
             {
-                AddEntry(archive, "ffmpeg-n9.0-latest-win64-lgpl-shared-9.0/bin/avcodec-62.dll");
+                AddEntry(archive, "ffmpeg-n9.0-latest-win64-lgpl-shared-9.0/bin/avcodec-63.dll");
                 AddEntry(archive, "ffmpeg-n9.0-latest-win64-lgpl-shared-9.0/bin/ffmpeg.exe");
                 AddEntry(archive, "ffmpeg-n9.0-latest-win64-lgpl-shared-9.0/lib/avcodec.lib");
                 AddEntry(archive, "ffmpeg-n9.0-latest-win64-lgpl-shared-9.0/include/libavcodec/avcodec.h");
@@ -161,7 +161,7 @@ public class FfmpegPlayerTests
 
             var files = Directory.GetFiles(folder).Select(Path.GetFileName).ToArray();
             Assert.Single(files);
-            Assert.Equal("avcodec-62.dll", files[0]);
+            Assert.Equal("avcodec-63.dll", files[0]);
         }
         finally
         {
