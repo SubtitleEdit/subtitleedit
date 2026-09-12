@@ -2266,7 +2266,9 @@
       "outputProperties": "Output properties...",
       "videoFileSize": "Video file size",
       "oneBox": "One box",
-      "logoInfo": "Pick a PNG image and drag it to position it on the video."
+      "logoInfo": "Pick a PNG image and drag it to position it on the video.",
+      "noSubtitlesGenerateAnyway": "There are no subtitle lines to burn in.\n\nGenerate the video without subtitles?",
+      "noSubtitlesInXItemsGenerateAnyway": "{0} batch item(s) have no subtitle lines to burn in.\n\nGenerate those videos without subtitles?"
     },
     "videoTransparent": {
       "title": "Generate transparent video with subtitles"
@@ -2590,7 +2592,14 @@
       "testOcr": "Test current frame",
       "testOcrRunning": "Testing OCR on current frame...",
       "testOcrResultX": "Test result: {0}",
-      "testOcrNoTextFound": "Test: no text found in the scan area"
+      "testOcrNoTextFound": "Test: no text found in the scan area",
+      "engineSettings": "OCR engine settings",
+      "engineBuiltIn": "Built into the operating system",
+      "engineExternalServer": "External server (installed and managed outside Subtitle Edit)",
+      "engineCloudApi": "Cloud API (requires an API key)",
+      "engineNothingToInstall": "Nothing to install",
+      "engineModelsMissing": "Engine installed, models missing",
+      "website": "Website"
     },
     "goToVideoPosition": "Go to video position",
     "goToVideoPositionDotDotDot": "Go to video position...",
@@ -2923,6 +2932,7 @@
       "useDoNotBreakAfterList": "Use do-not-break-after list",
       "newEmptyDefaultMs": "Default new subtitle duration (ms)",
       "timeCodeUpDownStepMs": "Time up/down increment (ms)",
+      "moveSelectedLinesStepMs": "Move selected lines shortcut step (ms)",
       "promptBeforeDelete": "Prompt before delete",
       "rememberPositionAndSize": "Remember window position and size",
       "openLastFileOnStart": "Open last recent file on start",
@@ -3059,6 +3069,8 @@
       "waveformExtractAudioSampleRateOriginal": "Original (keep source)",
       "waveformExtractAudioBitRate": "Extract audio bitrate (MP3/M4A)",
       "vlcWidRendering": "libVLC - Native Window ID rendering",
+      "ffmpegSoftwareRendering": "FFmpeg - Software rendering",
+      "downloadFfmpegLibs": "Download FFmpeg libraries (for the FFmpeg video player)",
       "subtitleGridEnterKeyAction": "Subtitle grid Enter-key action",
       "subtitleSingleClickAction": "Subtitle grid single-click action",
       "subtitleDoubleClickAction": "Subtitle grid double-click action",
@@ -3169,6 +3181,7 @@
       "generalToggleItalic": "Toggle italic",
       "generalToggleBold": "Toggle bold",
       "generalToggleUnderline": "Toggle underline",
+      "generalToggleBox": "Toggle box (EBU STL)",
       "fileOpen": "Open",
       "fileOpenKeepVideo": "Open (keep video)",
       "fileSave": "Save",
@@ -3303,6 +3316,7 @@
       "textBoxItalic": "Text box italic",
       "textBoxBold": "Text box bold",
       "textBoxUnderline": "Text box underline",
+      "textBoxBox": "Text box box (EBU STL)",
       "resetWaveformZoomAndSpeed": "Reset waveform zoom and playback speed (play rate)",
       "togglePlaybackSpeed": "Toggle playback speed (play rate)",
       "playbackSpeedSlower": "Playback speed slower (play rate)",
@@ -3404,7 +3418,11 @@
       "moveStartOneFrameBackKeepGapPrev": "Move start one frame back (keep gap to previous if close)",
       "moveStartOneFrameForwardKeepGapPrev": "Move start one frame forward (keep gap to previous if close)",
       "moveEndOneFrameBackKeepGapNext": "Move end one frame back (keep gap to next if close)",
-      "moveEndOneFrameForwardKeepGapNext": "Move end one frame forward (keep gap to next if close)"
+      "moveEndOneFrameForwardKeepGapNext": "Move end one frame forward (keep gap to next if close)",
+      "moveSelectedLinesXMsBack": "Move selected lines X ms back (X set in Settings)",
+      "moveSelectedLinesXMsForward": "Move selected lines X ms forward (X set in Settings)",
+      "moveSelectedLinesAndForwardXMsBack": "Move selected lines and all following X ms back (X set in Settings)",
+      "moveSelectedLinesAndForwardXMsForward": "Move selected lines and all following X ms forward (X set in Settings)"
     },
     "wordLists": {
       "title": "Word lists",

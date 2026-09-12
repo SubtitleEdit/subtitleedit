@@ -7,6 +7,7 @@ using Avalonia.Threading;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
+using Nikse.SubtitleEdit.Logic.VideoPlayers.Ffmpeg;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
 
@@ -130,6 +131,16 @@ public static class InitVideoPlayer
                 }
             }
 
+            if (Se.Settings.Video.VideoPlayer.Equals(VideoPlayerName.Ffmpeg, StringComparison.OrdinalIgnoreCase))
+            {
+                var player = new FfmpegPlayer();
+                if (player.CanLoad())
+                {
+                    var view = new FfmpegSoftwareControl(player);
+                    return MakeVideoPlayerControl(player, view);
+                }
+            }
+
             if (Se.Settings.Video.VideoPlayer.Equals(VideoPlayerName.MpvWid, StringComparison.OrdinalIgnoreCase))
             {
                 var player = new LibMpvDynamicPlayer();
@@ -179,7 +190,7 @@ public static class InitVideoPlayer
     /// </summary>
     public static VideoPlayerControl MakeVideoPlayerPreferNonNative()
     {
-        if (OperatingSystem.IsWindows() && Se.Settings.Video.VideoPlayer != VideoPlayerName.MpvOpenGl)
+        if (OperatingSystem.IsWindows() && Se.Settings.Video.VideoPlayer != VideoPlayerName.MpvOpenGl && Se.Settings.Video.VideoPlayer != VideoPlayerName.Ffmpeg)
         {
             var player = new LibMpvDynamicPlayer();
             if (player.CanLoad())

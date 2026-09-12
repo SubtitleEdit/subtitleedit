@@ -184,6 +184,9 @@ public class Se
     public static string FontsFolder => Path.Combine(DataFolder, "Fonts");
     public static string AutoBackupFolder => Path.Combine(DataFolder, "AutoBackup");
     public static string FfmpegFolder => Path.Combine(DataFolder, "ffmpeg");
+
+    /// <summary>FFmpeg shared libraries (avcodec etc.) for the ffmpeg video player - kept apart from the static ffmpeg.exe above.</summary>
+    public static string FfmpegLibFolder => Path.Combine(FfmpegFolder, "lib");
     public static string TextToSpeechFolder => Path.Combine(DataFolder, "TextToSpeech");
     public static string SpeechToTextFolder => Path.Combine(DataFolder, "SpeechToText");
     public static string CrispAsrFolder => Path.Combine(DataFolder, "CrispASR");

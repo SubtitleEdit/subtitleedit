@@ -70,6 +70,12 @@
         "resolved": "8.4.2",
         "contentHash": "WadCzGEc2U+3e20avRLng4qNtt4zoOGWrdUISqJWrHe3/FSnrYjuM5Sb4yQb09LhkBXrrI4Zt3dLKgRMbItsrg=="
       },
+      "FFmpeg.AutoGen": {
+        "type": "Direct",
+        "requested": "[9.0.1.1, )",
+        "resolved": "9.0.1.1",
+        "contentHash": "+BLh0C8VET4aMUorxr/LMZAgmKl2PYSoY7Qm4PJ4eePx/LT2gIHkxOUnlGM91QETgfsnSZajHx9rK0d67ilpgw=="
+      },
       "Google.Cloud.TextToSpeech.V1": {
         "type": "Direct",
         "requested": "[3.18.0, )",
@@ -561,7 +567,7 @@
           "CommunityToolkit.Mvvm": "[8.4.2, )",
           "SkiaSharp.HarfBuzz": "[3.119.4, )",
           "WeCantSpell.Hunspell": "[7.0.1, )",
-          "libse": "[5.1.0, )"
+          "libse": "[5.2.0, )"
         }
       }
     }

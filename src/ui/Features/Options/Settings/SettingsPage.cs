@@ -616,6 +616,28 @@ public class SettingsPage : UserControl
                     },
                 },
             }),
+            new SettingsItem(!_vm.IsFfmpegLibsDownloadVisible, Se.Language.Options.Settings.DownloadFfmpegLibs, () => new StackPanel
+            {
+                Children =
+                {
+                    new StackPanel
+                    {
+                        Orientation = Orientation.Horizontal,
+                        Spacing = 10,
+                        Children =
+                        {
+                            UiUtil.MakeButton(Se.Language.General.Download, _vm.DownloadFfmpegLibsCommand),
+                            new TextBlock
+                            {
+                                DataContext = _vm,
+                                [!TextBlock.TextProperty] = new Binding(nameof(_vm.FfmpegLibsStatus)),
+                                VerticalAlignment = VerticalAlignment.Center,
+                                HorizontalAlignment = HorizontalAlignment.Left,
+                            }
+                        }
+                    },
+                },
+            }),
 
         ]));
 

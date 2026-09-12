@@ -1105,6 +1105,7 @@ public partial class MainViewModel :
         InitializeFfmpeg();
         InitializeLibMpv();
         LibVlcDynamicPlayer.LibVlcPath = Se.VlcFolder;
+        Logic.VideoPlayers.Ffmpeg.FfmpegLibraries.LibraryPath = Se.FfmpegLibFolder;
         LoadShortcuts();
         UpdateSurroundWithMenuItems();
         UpdateCustomSearchMenuItems();
