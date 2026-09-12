@@ -186,6 +186,7 @@ using Nikse.SubtitleEdit.Logic.Platform.Windows;
 using Nikse.SubtitleEdit.Logic.Plugins;
 using Nikse.SubtitleEdit.Logic.UndoRedo;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
+using Nikse.SubtitleEdit.Logic.VideoPlayers.Ffmpeg;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
 using System.Collections.Generic;
@@ -4037,7 +4038,21 @@ public partial class MainViewModel :
                     return true;
                 });
             }
+            else if (vp.VideoPlayer is FfmpegPlayer ffmpeg)
+            {
+                PushFfmpegPreview(ffmpeg, GetVideoPreviewSubtitle());
+            }
         }
+    }
+
+    /// <summary>
+    /// The ffmpeg player draws the preview itself from a snapshot, so "push" is a plain
+    /// assignment - no temp file, no retry, nothing to await.
+    /// </summary>
+    private void PushFfmpegPreview(FfmpegPlayer ffmpeg, Subtitle subtitle)
+    {
+        ffmpeg.PreviewSubtitlesVisible = _mpvReloader.SubtitlesVisible;
+        ffmpeg.PreviewSubtitle = FfmpegPreviewSubtitle.Build(subtitle, _subtitleSecondary, _mpvReloader.SmpteMode);
     }
 
     [RelayCommand]
@@ -4342,6 +4357,15 @@ public partial class MainViewModel :
     private void ToggleSubtitlesOnVideoPlayer()
     {
         var vp = GetVideoPlayerControl();
+        if (vp?.VideoPlayer is FfmpegPlayer ffmpeg)
+        {
+            _mpvReloader.SubtitlesVisible = !_mpvReloader.SubtitlesVisible;
+            ffmpeg.PreviewSubtitlesVisible = _mpvReloader.SubtitlesVisible;
+            ShowStatus(_mpvReloader.SubtitlesVisible ? Se.Language.Video.SubtitlesOnVideoPlayerOn : Se.Language.Video.SubtitlesOnVideoPlayerOff);
+            _shortcutManager.ClearKeys();
+            return;
+        }
+
         if (vp?.VideoPlayer is not LibMpvDynamicPlayer mpv)
         {
             return;
@@ -13159,6 +13183,10 @@ public partial class MainViewModel :
                 _vlcReloader.Reset();
                 _vlcReloader.RefreshVlc(vlc, GetVideoPreviewSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
             }
+            else if (vp.VideoPlayer is FfmpegPlayer ffmpeg)
+            {
+                PushFfmpegPreview(ffmpeg, GetVideoPreviewSubtitle());
+            }
         }
 
         if (Se.Settings.Appearance.RightToLeft)
@@ -16741,6 +16769,10 @@ public partial class MainViewModel :
             _vlcReloader.Reset();
             _vlcReloader.RefreshVlc(vlc, GetVideoPreviewSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
         }
+        else if (vp.VideoPlayer is FfmpegPlayer ffmpeg)
+        {
+            PushFfmpegPreview(ffmpeg, GetVideoPreviewSubtitle());
+        }
     }
 
     /// <summary>
@@ -17733,6 +17765,10 @@ public partial class MainViewModel :
             if (control!.VideoPlayer is LibMpvDynamicPlayer dockedMpv)
             {
                 dockedMpv.SetSubtitleVisibility(_mpvReloader.SubtitlesVisible);
+            }
+            else if (control.VideoPlayer is FfmpegPlayer dockedFfmpeg)
+            {
+                dockedFfmpeg.PreviewSubtitlesVisible = _mpvReloader.SubtitlesVisible;
             }
 
             // And the subtitle itself: entering fullscreen reset the reloader, which deleted
@@ -31222,6 +31258,17 @@ public partial class MainViewModel :
                 await _vlcReloader.RefreshVlc(vlc, subtitle, _subtitleSecondary, SelectedSubtitleFormat);
                 return true;
             });
+        }
+        else if (vp.VideoPlayer is FfmpegPlayer ffmpeg)
+        {
+            var subtitle = GetVideoPreviewSubtitle();
+            _mpvPreviewDirty = false;
+            if (hideLayers)
+            {
+                subtitle.Paragraphs.RemoveAll(p => !_visibleLayers!.Contains(p.Layer));
+            }
+
+            PushFfmpegPreview(ffmpeg, subtitle);
         }
     }
 

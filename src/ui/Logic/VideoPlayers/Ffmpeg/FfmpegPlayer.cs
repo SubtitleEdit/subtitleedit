@@ -57,6 +57,22 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
     /// <summary>Raised (on a worker thread) whenever a new picture is ready for <see cref="CopyCurrentFrame"/>.</summary>
     public event Action? FrameReady;
 
+    /// <summary>
+    /// The subtitle drawn over the video by <see cref="FfmpegSoftwareControl"/>. mpv and VLC get
+    /// an ASS file pushed into the player; this player has no renderer, so the control draws
+    /// this snapshot itself. Replace it whenever the subtitle changes (see MainViewModel).
+    /// </summary>
+    public FfmpegPreviewSubtitle PreviewSubtitle
+    {
+        get => _previewSubtitle;
+        set => _previewSubtitle = value ?? FfmpegPreviewSubtitle.Empty;
+    }
+
+    private volatile FfmpegPreviewSubtitle _previewSubtitle = FfmpegPreviewSubtitle.Empty;
+
+    /// <summary>The "toggle subtitles on video player" state, shared with mpv's flag by the caller.</summary>
+    public volatile bool PreviewSubtitlesVisible = true;
+
     public string Name => string.IsNullOrEmpty(PlayerSubName) ? "ffmpeg" : $"ffmpeg-{PlayerSubName}";
     public string FileName => _fileName;
 
