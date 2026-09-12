@@ -31847,7 +31847,9 @@ public partial class MainViewModel :
             }
 
             var outputFileName = Path.Combine(Path.GetTempPath(), $"se_audioclip_{Guid.NewGuid()}.wav");
-            var useCenterChannelOnly = false;
+            // No -map is passed below, so ffmpeg picks its default audio track; probe that same track.
+            var useCenterChannelOnly = Se.Settings.General.FfmpegUseCenterChannelOnly &&
+                                       FfmpegMediaInfo.Parse(videoFileName).HasFrontCenterAudio(-1);
             var arguments = FfmpegGenerator.ExtractAudioClipFromVideoParameters(
                 videoFileName,
                 paragraph.StartTime.TotalSeconds,

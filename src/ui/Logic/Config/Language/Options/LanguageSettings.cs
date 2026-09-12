@@ -246,6 +246,7 @@ public class LanguageSettings
     public string WaveformExtractAudioSampleRate { get; set; }
     public string WaveformExtractAudioSampleRateOriginal { get; set; }
     public string WaveformExtractAudioBitRate { get; set; }
+    public string FfmpegUseCenterChannelOnly { get; set; }
     public string VlcWidRendering { get; set; }
     public string FfmpegSoftwareRendering { get; set; }
     public string DownloadFfmpegLibs { get; set; }
@@ -574,6 +575,7 @@ public class LanguageSettings
         WaveformExtractAudioSampleRate = "Extract audio sample rate";
         WaveformExtractAudioSampleRateOriginal = "Original (keep source)";
         WaveformExtractAudioBitRate = "Extract audio bitrate (MP3/M4A)";
+        FfmpegUseCenterChannelOnly = "Use only front center channel for 5.1 audio (FFmpeg)";
         SubtitleGridEnterKeyAction = "Subtitle grid Enter-key action";
         SubtitleSingleClickAction = "Subtitle grid single-click action";
         SubtitleDoubleClickAction = "Subtitle grid double-click action";

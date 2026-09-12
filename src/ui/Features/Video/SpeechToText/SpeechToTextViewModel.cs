@@ -3839,7 +3839,11 @@ public partial class SpeechToTextViewModel : ObservableObject
         ProgressOpacity = 1;
         ProgressText = GetProgressText();
 
-        _useCenterChannelOnly = false; // FFmpeg center-channel extraction is not configurable in SE 5 yet
+        // Same gate as WaveFileExtractor: the setting alone is not enough, the picked track must
+        // actually have a front center channel or "pan=mono|c0=FC" would fail on a stereo source.
+        _useCenterChannelOnly = Se.Settings.General.FfmpegUseCenterChannelOnly &&
+                                !string.IsNullOrEmpty(_videoFileName) &&
+                                FfmpegMediaInfo.Parse(_videoFileName).HasFrontCenterAudio(_audioTrackNumber);
 
         //Delete invalid preprocessor_config.json file
         if (settings.WhisperChoice is WhisperChoice.PurfviewFasterWhisperXxl)

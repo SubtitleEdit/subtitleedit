@@ -359,6 +359,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string _selectedWaveformExtractAudioSampleRate;
     [ObservableProperty] private ObservableCollection<string> _waveformExtractAudioBitRates;
     [ObservableProperty] private string _selectedWaveformExtractAudioBitRate;
+    [ObservableProperty] private bool _ffmpegUseCenterChannelOnly;
 
     [ObservableProperty] private bool _waveformRightClickSelectsSubtitle;
     [ObservableProperty] private ObservableCollection<string> _themes;
@@ -1024,6 +1025,7 @@ public partial class SettingsViewModel : ObservableObject
         SelectedWaveformExtractAudioBitRate = string.IsNullOrEmpty(Se.Settings.Waveform.ExtractAudioBitRate)
             ? "192k"
             : Se.Settings.Waveform.ExtractAudioBitRate;
+        FfmpegUseCenterChannelOnly = Se.Settings.General.FfmpegUseCenterChannelOnly;
 
         WaveformRightClickSelectsSubtitle = Se.Settings.Waveform.RightClickSelectsSubtitle;
 
@@ -1871,6 +1873,7 @@ public partial class SettingsViewModel : ObservableObject
                 ? extractRate
                 : 0; // "Original" (non-numeric) keeps the source sample rate
         Se.Settings.Waveform.ExtractAudioBitRate = SelectedWaveformExtractAudioBitRate;
+        Se.Settings.General.FfmpegUseCenterChannelOnly = FfmpegUseCenterChannelOnly;
 
         Se.Settings.Waveform.RightClickSelectsSubtitle = WaveformRightClickSelectsSubtitle;
 

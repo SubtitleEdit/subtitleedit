@@ -688,6 +688,9 @@ public class SettingsPage : UserControl
                 () => UiUtil.MakeComboBox(_vm.WaveformExtractAudioSampleRates, _vm, nameof(_vm.SelectedWaveformExtractAudioSampleRate))),
             new SettingsItem(Se.Language.Options.Settings.WaveformExtractAudioBitRate,
                 () => UiUtil.MakeComboBox(_vm.WaveformExtractAudioBitRates, _vm, nameof(_vm.SelectedWaveformExtractAudioBitRate))),
+            // SE 4 parity (#14804): waveform, speech to text and audio clips take only the front
+            // center (dialogue) channel when the picked track is 5.1/7.1; other layouts are unaffected.
+            MakeCheckboxSetting(Se.Language.Options.Settings.FfmpegUseCenterChannelOnly, nameof(_vm.FfmpegUseCenterChannelOnly)),
 
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformRightClickSelectsSubtitle, nameof(_vm.WaveformRightClickSelectsSubtitle)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformAllowOverlap, nameof(_vm.WaveformAllowOverlap)),
