@@ -1272,7 +1272,7 @@ public static partial class InitListViewAndEditBox
                 new MenuItem
                 {
                     Header = Se.Language.Main.Menu.TextToSpeech,
-                    Command = vm.ShowVideoTextToSpeechCommand,
+                    Command = vm.ShowVideoTextToSpeechSelectedLinesCommand,
                     DataContext = vm,
                 },
                 new MenuItem
@@ -1286,6 +1286,12 @@ public static partial class InitListViewAndEditBox
                 {
                     Header = Se.Language.Main.Menu.ChangeCasing,
                     Command = vm.ChangeCasingSelectedLinesCommand,
+                    DataContext = vm,
+                },
+                new MenuItem
+                {
+                    Header = Se.Language.Main.Menu.ChangeFormatting,
+                    Command = vm.ShowToolsChangeFormattingSelectedLinesCommand,
                     DataContext = vm,
                 },
                 new MenuItem
@@ -1311,6 +1317,18 @@ public static partial class InitListViewAndEditBox
                 {
                     Header = Se.Language.Main.Menu.MultipleReplace,
                     Command = vm.MultipleReplaceSelectedLinesCommand,
+                    DataContext = vm,
+                },
+                new MenuItem
+                {
+                    Header = Se.Language.Main.Menu.AdjustDurations,
+                    Command = vm.ShowToolsAdjustDurationsSelectedLinesCommand,
+                    DataContext = vm,
+                },
+                new MenuItem
+                {
+                    Header = Se.Language.Main.Menu.ApplyDurationLimits,
+                    Command = vm.ShowApplyDurationLimitsSelectedLinesCommand,
                     DataContext = vm,
                 },
                 new MenuItem

@@ -7391,6 +7391,26 @@ public partial class MainViewModel :
         }
     }
 
+    [RelayCommand]
+    private async Task ShowToolsAdjustDurationsSelectedLines()
+    {
+        var selectedItems = new HashSet<SubtitleLineViewModel>(SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>());
+        if (Window == null || selectedItems.Count == 0)
+        {
+            return;
+        }
+
+        var result = await ShowDialogAsync<AdjustDurationWindow, AdjustDurationViewModel>();
+        if (result.OkPressed)
+        {
+            // The whole grid goes in so a selected line is capped against its real neighbour.
+            RunWithoutChangeDetection(() => result.AdjustDuration(Subtitles, selectedItems));
+            _updateAudioVisualizer = true;
+        }
+
+        _shortcutManager.ClearKeys();
+    }
+
     public void RunWithoutChangeDetection(Action action)
     {
         _undoRedoManager.StopChangeDetection();
@@ -7418,10 +7438,29 @@ public partial class MainViewModel :
             return;
         }
 
+        await ApplyDurationLimits(null);
+    }
+
+    [RelayCommand]
+    private async Task ShowApplyDurationLimitsSelectedLines()
+    {
+        var selectedIds = new HashSet<Guid>(SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().Select(p => p.Id));
+        if (Window == null || selectedIds.Count == 0)
+        {
+            return;
+        }
+
+        await ApplyDurationLimits(selectedIds);
+        _shortcutManager.ClearKeys();
+    }
+
+    /// <param name="onlyIds">Limit fixes to these rows; null fixes the whole subtitle.</param>
+    private async Task ApplyDurationLimits(ISet<Guid>? onlyIds)
+    {
         var result = await ShowDialogAsync<ApplyDurationLimitsWindow, ApplyDurationLimitsViewModel>(vm =>
         {
             var shotChanges = AudioVisualizer?.ShotChanges ?? new List<double>();
-            vm.Initialize(Subtitles.ToList(), shotChanges);
+            vm.Initialize(Subtitles.ToList(), shotChanges, onlyIds);
         });
 
         if (result.OkPressed && result.AllSubtitlesFixed.Count > 0)
@@ -7985,6 +8024,39 @@ public partial class MainViewModel :
         {
             ApplyFixedSubtitle(result.FixedSubtitle, idx);
         }
+    }
+
+    [RelayCommand]
+    private async Task ShowToolsChangeFormattingSelectedLines()
+    {
+        var selectedItems = new HashSet<SubtitleLineViewModel>(SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>());
+        var ordered = Subtitles.Where(p => selectedItems.Contains(p)).ToList();
+        if (Window == null || ordered.Count == 0)
+        {
+            return;
+        }
+
+        var result = await ShowDialogAsync<ChangeFormattingWindow, ChangeFormattingViewModel>(vm =>
+        {
+            vm.Initialize(ordered, SelectedSubtitleFormat);
+        });
+
+        if (result.OkPressed)
+        {
+            // The dialog works on copies that keep the row ids, so each result maps back to its row.
+            var rowById = ordered.ToDictionary(p => p.Id);
+            foreach (var fixedLine in result.FixedSubtitle)
+            {
+                if (rowById.TryGetValue(fixedLine.Id, out var row))
+                {
+                    row.UpdateFrom(fixedLine);
+                }
+            }
+
+            _updateAudioVisualizer = true;
+        }
+
+        _shortcutManager.ClearKeys();
     }
 
     [RelayCommand]
@@ -11018,6 +11090,51 @@ public partial class MainViewModel :
             return;
         }
 
+        await TextToSpeech(GetUpdateSubtitle(), ShowColumnOriginalText ? GetUpdateSubtitleOriginal() : null, null);
+    }
+
+    [RelayCommand]
+    private async Task ShowVideoTextToSpeechSelectedLines()
+    {
+        var selectedItems = new HashSet<SubtitleLineViewModel>(SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>());
+        var ordered = Subtitles.Where(p => selectedItems.Contains(p) && !p.IsReferenceOnly).ToList();
+        if (Window == null || ordered.Count == 0)
+        {
+            return;
+        }
+
+        var ffmpegOk = await RequireFfmpegOk();
+        if (!ffmpegOk)
+        {
+            return;
+        }
+
+        var sub = new Subtitle();
+        foreach (var line in ordered)
+        {
+            sub.Paragraphs.Add(line.ToParagraph(SelectedSubtitleFormat));
+        }
+
+        Subtitle? original = null;
+        if (ShowColumnOriginalText)
+        {
+            // Built here rather than via GetUpdateSubtitleOriginal, which owns the saved
+            // instance and re-stamps every row's reference id.
+            var originalFormat = _subtitleOriginal?.OriginalFormat ?? SelectedSubtitleFormat;
+            original = new Subtitle();
+            foreach (var line in ordered)
+            {
+                original.Paragraphs.Add(line.ToParagraphOriginal(originalFormat));
+            }
+        }
+
+        await TextToSpeech(sub, original, selectedItems);
+        _shortcutManager.ClearKeys();
+    }
+
+    /// <param name="onlyRows">The rows <paramref name="subtitle"/> was built from, or null for the whole grid.</param>
+    private async Task TextToSpeech(Subtitle subtitle, Subtitle? originalSubtitle, ISet<SubtitleLineViewModel>? onlyRows)
+    {
         var result = await ShowDialogAsync<TextToSpeechWindow, TextToSpeechViewModel>(vm =>
         {
             // Pass SelectedSubtitleFormat explicitly so the TTS window's cast detection uses the
@@ -11026,9 +11143,9 @@ public partial class MainViewModel :
             // The original subtitle travels too when one is loaded: per-line voice cloning cuts
             // its reference from the video, and the original line - not the translation being
             // dubbed - is what is spoken in that clip.
-            vm.Initialize(GetUpdateSubtitle(), SelectedSubtitleFormat,
+            vm.Initialize(subtitle, SelectedSubtitleFormat,
                 _videoFileName ?? string.Empty, AudioVisualizer?.WavePeaks, Path.GetTempPath(),
-                ShowColumnOriginalText ? GetUpdateSubtitleOriginal() : null);
+                originalSubtitle);
         });
 
         // OK is the consent to apply the session's subtitle changes; Cancel/Escape/title-bar
@@ -11043,7 +11160,7 @@ public partial class MainViewModel :
             // diagnosable even with tools logging off (#12626).
             try
             {
-                ApplyTtsChanges(result.MergedSubtitle, result.ReviewTextChanges);
+                ApplyTtsChanges(result.MergedSubtitle, result.ReviewTextChanges, onlyRows);
             }
             catch (Exception ex)
             {
@@ -11094,7 +11211,10 @@ public partial class MainViewModel :
     /// (empty-line removal keeps times) so numbers/indices can't be used. Changes that match no
     /// line (e.g. an imported session for a different subtitle) are ignored silently.
     /// </summary>
-    private void ApplyTtsChanges(Subtitle? mergedSubtitle, List<ReviewTextChange> changes)
+    /// <param name="onlyRows">When the session ran on a selection, the rows it covered: a merge
+    /// may then only swallow rows in that set, since lines adjacent in the selection need not be
+    /// adjacent in the grid.</param>
+    private void ApplyTtsChanges(Subtitle? mergedSubtitle, List<ReviewTextChange> changes, ISet<SubtitleLineViewModel>? onlyRows = null)
     {
         const double toleranceMs = 0.5;
 
@@ -11137,6 +11257,11 @@ public partial class MainViewModel :
             }
 
             if (lastIndex < 0)
+            {
+                continue;
+            }
+
+            if (onlyRows != null && Enumerable.Range(firstIndex, lastIndex - firstIndex + 1).Any(i => !onlyRows.Contains(Subtitles[i])))
             {
                 continue;
             }
