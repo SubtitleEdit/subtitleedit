@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
@@ -164,7 +164,56 @@ public class EbuStlPreviewStylerTests
         Assert.True(EbuStlPreviewStyler.IsTeletextPreview(header, typeof(Ebu)));
         Assert.False(EbuStlPreviewStyler.IsTeletextPreview(header, typeof(SubRip)));
         Assert.False(EbuStlPreviewStyler.IsTeletextPreview(header, null));
-        Assert.False(EbuStlPreviewStyler.IsTeletextPreview(null, typeof(Ebu)));
+    }
+
+    // The other way round needs no header: a subtitle switched to EBU STL in the toolbar can
+    // carry a per-line <box> from the "Box" toggle (PR #14780), and without the styling the tag
+    // was drawn as literal text on the video.
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("WEBVTT")]
+    public void EbuStlIsStyledWithoutAnStlHeader(string? header)
+    {
+        Assert.True(EbuStlPreviewStyler.IsTeletextPreview(header, typeof(Ebu)));
+        Assert.False(EbuStlPreviewStyler.IsTeletextPreview(header, typeof(SubRip)));
+    }
+
+    // Without an STL header Ebu.Save invents an open subtitling one, which is written without the
+    // file-wide box and double height - so only the lines that ask for the box get it, and the tag
+    // never reaches the video as text.
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public void WithoutAnStlHeaderOnlyTheBoxTagDrawsABox(string? header)
+    {
+        var settings = Configuration.Settings.SubtitleSettings;
+        var oldUseBox = settings.EbuStlTeletextUseBox;
+        var oldUseDoubleHeight = settings.EbuStlTeletextUseDoubleHeight;
+        try
+        {
+            settings.EbuStlTeletextUseBox = true;
+            settings.EbuStlTeletextUseDoubleHeight = true;
+
+            var subtitle = new Subtitle { Header = header };
+            subtitle.Paragraphs.Add(new Paragraph("<box>until I finish the final" + Environment.NewLine + "level of Breath of the Wild.</box>", 1000, 3000));
+            subtitle.Paragraphs.Add(new Paragraph("Plain line", 4000, 6000));
+
+            var previewStyle = new SsaStyle { Name = "Default", FontName = "Verdana", FontSize = 33 };
+            EbuStlPreviewStyler.Apply(subtitle, header, previewStyle, "preview");
+
+            Assert.Equal("Box", subtitle.Paragraphs[0].Extra);
+            Assert.DoesNotContain("box", subtitle.Paragraphs[0].Text, StringComparison.OrdinalIgnoreCase);
+            Assert.Equal("Default", subtitle.Paragraphs[1].Extra);
+            Assert.Equal("3", GetStyle(subtitle, "Box")[BorderStyleField]);
+            Assert.Equal("100", GetStyle(subtitle, "Box")[ScaleYField]);
+            Assert.Equal("100", GetStyle(subtitle, "Default")[ScaleYField]);
+        }
+        finally
+        {
+            settings.EbuStlTeletextUseBox = oldUseBox;
+            settings.EbuStlTeletextUseDoubleHeight = oldUseDoubleHeight;
+        }
     }
 
     // Same gate for the other teletext format: the dvbteletext marker styles the preview only
@@ -176,7 +225,7 @@ public class EbuStlPreviewStylerTests
 
         Assert.True(EbuStlPreviewStyler.IsTeletextPreview(header, typeof(DvbTeletext)));
         Assert.False(EbuStlPreviewStyler.IsTeletextPreview(header, typeof(SubRip)));
-        Assert.False(EbuStlPreviewStyler.IsTeletextPreview(header, typeof(Ebu)));
+        Assert.True(EbuStlPreviewStyler.IsTeletextPreview(header, typeof(Ebu))); // EBU STL is styled whatever the header
         Assert.False(EbuStlPreviewStyler.IsTeletextPreview(MakeStlHeader("1"), typeof(DvbTeletext)));
     }
 
