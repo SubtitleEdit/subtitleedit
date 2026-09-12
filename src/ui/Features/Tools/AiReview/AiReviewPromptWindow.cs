@@ -15,8 +15,10 @@ public class AiReviewPromptWindow : Window
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Tools.AiReview.EditPromptTitle;
         Width = 640;
-        SizeToContent = SizeToContent.Height;
-        CanResize = false;
+        MinWidth = 480;
+        Height = 520;
+        MinHeight = 360;
+        CanResize = true;
         vm.Window = this;
         DataContext = vm;
 
@@ -32,6 +34,7 @@ public class AiReviewPromptWindow : Window
             TextWrapping = TextWrapping.Wrap,
             MinHeight = 140,
             HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Stretch,
             [!TextBox.TextProperty] = new Binding(nameof(vm.PromptText)) { Mode = BindingMode.TwoWay },
         };
         Avalonia.Automation.AutomationProperties.SetName(textBox, l.EditPromptTitle);
@@ -59,18 +62,19 @@ public class AiReviewPromptWindow : Window
         buttonBar.Add(buttonReset, 0, 0);
         buttonBar.Add(UiUtil.MakeButtonBar(buttonOk, buttonCancel), 0, 2);
 
-        var panel = new StackPanel
+        // The prompt editor takes the star row so a long prompt scrolls inside the
+        // text box instead of growing the window past the screen edge and pushing
+        // the OK/Cancel buttons out of reach.
+        var panel = new Grid
         {
             Margin = UiUtil.MakeWindowMargin(),
-            Spacing = 10,
-            Children =
-            {
-                labelInfo,
-                textBox,
-                borderProtocol,
-                buttonBar,
-            },
+            RowDefinitions = new RowDefinitions("Auto,*,Auto,Auto"),
+            RowSpacing = 10,
         };
+        panel.Add(labelInfo, 0, 0);
+        panel.Add(textBox, 1, 0);
+        panel.Add(borderProtocol, 2, 0);
+        panel.Add(buttonBar, 3, 0);
 
         Content = panel;
 
