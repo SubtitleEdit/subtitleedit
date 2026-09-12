@@ -98,6 +98,7 @@ public class LanguageSettings
     public string UseDoNotBreakAfterList { get; set; }
     public string NewEmptyDefaultMs { get; set; }
     public string TimeCodeUpDownStepMs { get; set; }
+    public string MoveSelectedLinesStepMs { get; set; }
     public string PromptBeforeDelete { get; set; }
     public string RememberPositionAndSize { get; set; }
     public string OpenLastFileOnStart { get; set; }
@@ -417,6 +418,7 @@ public class LanguageSettings
         UseDoNotBreakAfterList = "Use do-not-break-after list";
         NewEmptyDefaultMs = "Default new subtitle duration (ms)";
         TimeCodeUpDownStepMs = "Time up/down increment (ms)";
+        MoveSelectedLinesStepMs = "Move selected lines shortcut step (ms)";
         PromptBeforeDelete = "Prompt before delete";
         RememberPositionAndSize = "Remember window position and size";
         OpenLastFileOnStart = "Open last recent file on start";
