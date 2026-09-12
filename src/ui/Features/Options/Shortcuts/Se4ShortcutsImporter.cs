@@ -297,9 +297,10 @@ public static class Se4ShortcutsImporter
         ["MainAdjustExtendNextLineStartToCurrentEnd"] = nameof(MainViewModel.ExtendNextStartToSelectedEndCommand),
         ["MainAdjustExtendToNextShotChange"] = nameof(MainViewModel.ExtendSelectedLinesToNextShotChangeOrNextSubtitleCommand),
         ["MainAdjustExtendToPreviousShotChange"] = nameof(MainViewModel.ExtendSelectedLinesToPreviousShotChangeCommand),
-        // MainAdjustSelected100MsBack/Forward move the SELECTED LINES 100 ms in SE 4; SE 5 has no
-        // such command, and mapping them to the video-seek commands silently rebound the key.
-        // Left unmapped so the import reports them as skipped.
+        // SE 4's fixed 100 ms nudges of the selected lines; SE 5's step is configurable
+        // (General.MoveSelectedLinesStepMs, default 100), so the import keeps the old feel.
+        ["MainAdjustSelected100MsBack"] = nameof(MainViewModel.MoveSelectedLinesXMsBackCommand),
+        ["MainAdjustSelected100MsForward"] = nameof(MainViewModel.MoveSelectedLinesXMsForwardCommand),
         ["MainAdjustSnapStartToNextShotChange"] = nameof(MainViewModel.SnapSelectedLinesStartToNextShotChangeCommand),
         ["MainAdjustSnapEndToPreviousShotChange"] = nameof(MainViewModel.SnapSelectedLinesEndToPreviousShotChangeCommand),
         ["MainSetInCueToClosestShotChangeLeftGreenZone"] = nameof(MainViewModel.SetInCueToClosestShotChangeLeftGreenZoneCommand),

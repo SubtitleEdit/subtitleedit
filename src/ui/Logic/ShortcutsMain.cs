@@ -408,6 +408,10 @@ public static class ShortcutsMain
         { nameof(MainViewModel.MoveStartOneFrameForwardKeepGapPrevCommand), Se.Language.Options.Shortcuts.MoveStartOneFrameForwardKeepGapPrev },
         { nameof(MainViewModel.MoveEndOneFrameBackKeepGapNextCommand), Se.Language.Options.Shortcuts.MoveEndOneFrameBackKeepGapNext },
         { nameof(MainViewModel.MoveEndOneFrameForwardKeepGapNextCommand), Se.Language.Options.Shortcuts.MoveEndOneFrameForwardKeepGapNext },
+        { nameof(MainViewModel.MoveSelectedLinesXMsBackCommand), Se.Language.Options.Shortcuts.MoveSelectedLinesXMsBack },
+        { nameof(MainViewModel.MoveSelectedLinesXMsForwardCommand), Se.Language.Options.Shortcuts.MoveSelectedLinesXMsForward },
+        { nameof(MainViewModel.MoveSelectedLinesAndForwardXMsBackCommand), Se.Language.Options.Shortcuts.MoveSelectedLinesAndForwardXMsBack },
+        { nameof(MainViewModel.MoveSelectedLinesAndForwardXMsForwardCommand), Se.Language.Options.Shortcuts.MoveSelectedLinesAndForwardXMsForward },
         { nameof(MainViewModel.MergeSelectedLinesCommand), Se.Language.General.MergeSelectedLines },
         { nameof(MainViewModel.MergeSelectedLinesDialogCommand), Se.Language.General.MergeSelectedLinesDialog },
         { nameof(MainViewModel.MergeSelectedLinesBilingualCommand), Se.Language.Options.Shortcuts.GeneralMergeSelectedLinesBilingual },
@@ -862,6 +866,10 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.MoveStartOneFrameForwardKeepGapPrevCommand, nameof(vm.MoveStartOneFrameForwardKeepGapPrevCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveEndOneFrameBackKeepGapNextCommand, nameof(vm.MoveEndOneFrameBackKeepGapNextCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveEndOneFrameForwardKeepGapNextCommand, nameof(vm.MoveEndOneFrameForwardKeepGapNextCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveSelectedLinesXMsBackCommand, nameof(vm.MoveSelectedLinesXMsBackCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveSelectedLinesXMsForwardCommand, nameof(vm.MoveSelectedLinesXMsForwardCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveSelectedLinesAndForwardXMsBackCommand, nameof(vm.MoveSelectedLinesAndForwardXMsBackCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveSelectedLinesAndForwardXMsForwardCommand, nameof(vm.MoveSelectedLinesAndForwardXMsForwardCommand), ShortcutCategory.General);
 
         AddShortcut(shortcuts, vm.MergeSelectedLinesDialogCommand, nameof(vm.MergeSelectedLinesDialogCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MergeSelectedLinesBilingualCommand, nameof(vm.MergeSelectedLinesBilingualCommand), ShortcutCategory.General);

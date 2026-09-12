@@ -121,6 +121,7 @@ public partial class SettingsViewModel : ObservableObject
 
     [ObservableProperty] private int? _newEmptyDefaultMs;
     [ObservableProperty] private int? _timeCodeUpDownStepMs;
+    [ObservableProperty] private int? _moveSelectedLinesStepMs;
     [ObservableProperty] private bool _promptBeforeDelete;
     [ObservableProperty] private bool _lockTimeCodes;
     [ObservableProperty] private bool _rememberPositionAndSize;
@@ -763,6 +764,7 @@ public partial class SettingsViewModel : ObservableObject
         TextBoxLimitNewLines = general.SubtitleTextBoxLimitNewLines;
         NewEmptyDefaultMs = general.NewEmptyDefaultMs;
         TimeCodeUpDownStepMs = general.TimeCodeUpDownStepMs;
+        MoveSelectedLinesStepMs = general.MoveSelectedLinesStepMs;
         PromptBeforeDelete = general.PromptBeforeDelete;
         LockTimeCodes = general.LockTimeCodes;
         RememberPositionAndSize = general.RememberPositionAndSize;
@@ -1637,6 +1639,7 @@ public partial class SettingsViewModel : ObservableObject
         general.SubtitleTextBoxLimitNewLines = TextBoxLimitNewLines;
         general.NewEmptyDefaultMs = NewEmptyDefaultMs ?? general.NewEmptyDefaultMs;
         general.TimeCodeUpDownStepMs = TimeCodeUpDownStepMs ?? general.TimeCodeUpDownStepMs;
+        general.MoveSelectedLinesStepMs = MoveSelectedLinesStepMs ?? general.MoveSelectedLinesStepMs;
         general.PromptBeforeDelete = PromptBeforeDelete;
         general.LockTimeCodes = LockTimeCodes;
         general.RememberPositionAndSize = RememberPositionAndSize;

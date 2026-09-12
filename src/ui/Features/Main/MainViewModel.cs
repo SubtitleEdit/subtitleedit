@@ -14520,6 +14520,66 @@ public partial class MainViewModel :
     [RelayCommand]
     private void MoveEndOneFrameForwardKeepGapNext() => MoveEndByFrames(1, keepGapNextIfClose: true);
 
+    // #14789: repeatable fixed-ms nudges for fixing progressive drift section by section.
+    // Durations are kept, and a backward move is clamped so no start goes below zero.
+    [RelayCommand]
+    private void MoveSelectedLinesXMsBack() => MoveSelectedLinesByStep(-1, andForward: false);
+
+    [RelayCommand]
+    private void MoveSelectedLinesXMsForward() => MoveSelectedLinesByStep(1, andForward: false);
+
+    [RelayCommand]
+    private void MoveSelectedLinesAndForwardXMsBack() => MoveSelectedLinesByStep(-1, andForward: true);
+
+    [RelayCommand]
+    private void MoveSelectedLinesAndForwardXMsForward() => MoveSelectedLinesByStep(1, andForward: true);
+
+    internal void MoveSelectedLinesByStep(int direction, bool andForward)
+    {
+        if (AreTimeCodesLocked || SubtitleGridSelectedItems.Count == 0)
+        {
+            return;
+        }
+
+        var stepMs = Math.Max(1, Se.Settings.General.MoveSelectedLinesStepMs);
+        var deltaMs = (double)(direction * stepMs);
+        if (deltaMs < 0)
+        {
+            var minStartMs = GetAffectedLines(andForward).Min(p => p.StartTime.TotalMilliseconds);
+            if (minStartMs <= 0)
+            {
+                return;
+            }
+
+            deltaMs = Math.Max(deltaMs, -minStartMs);
+        }
+
+        Adjust(TimeSpan.FromMilliseconds(deltaMs), adjustAll: false,
+            adjustSelectedLines: !andForward, adjustSelectedLinesAndForward: andForward);
+    }
+
+    private IEnumerable<SubtitleLineViewModel> GetAffectedLines(bool andForward)
+    {
+        var selected = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        if (!andForward)
+        {
+            return selected;
+        }
+
+        var selectedSet = new HashSet<SubtitleLineViewModel>(selected);
+        var first = -1;
+        for (var i = 0; i < Subtitles.Count; i++)
+        {
+            if (selectedSet.Contains(Subtitles[i]))
+            {
+                first = i;
+                break;
+            }
+        }
+
+        return first < 0 ? selected : Subtitles.Skip(first);
+    }
+
     private void MoveStartByFrames(int frames, bool keepGapPrevIfClose)
     {
         var s = SelectedSubtitle;
