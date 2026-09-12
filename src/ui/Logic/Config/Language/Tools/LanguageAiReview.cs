@@ -26,6 +26,7 @@ public class LanguageAiReview
     public string MismatchWarning { get; set; }
     public string EngineError { get; set; }
     public string PlayCurrentLineHint { get; set; }
+    public string EditAfterHint { get; set; }
 
     public LanguageAiReview()
     {
@@ -53,5 +54,6 @@ public class LanguageAiReview
         MismatchWarning = "Does not resemble the original - may belong to a different line";
         EngineError = "The AI engine could not be reached: {0}";
         PlayCurrentLineHint = "Play the selected line in the video player and pause at its end (also double-click a line)";
+        EditAfterHint = "Click the selected row's text to edit the fix before applying it (Enter saves, Escape cancels)";
     }
 }

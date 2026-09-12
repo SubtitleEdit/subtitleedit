@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Declarative;
@@ -2542,7 +2542,8 @@ public partial class AutoTranslateViewModel : ObservableObject
     /// </summary>
     public void PreviewKeyDown(KeyEventArgs e)
     {
-        if (e.Key == Key.Enter && e.KeyModifiers == KeyModifiers.None && RowGrid?.IsKeyboardFocusWithin == true)
+        // e.Source is TextBox: the translation column's in-place editor owns Enter (it commits).
+        if (e.Key == Key.Enter && e.KeyModifiers == KeyModifiers.None && RowGrid?.IsKeyboardFocusWithin == true && e.Source is not TextBox)
         {
             RunDefaultButton(e);
         }

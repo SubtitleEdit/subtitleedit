@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
@@ -9,6 +9,7 @@ using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 using System;
 using System.Collections.Generic;
@@ -542,7 +543,8 @@ public static class TableViewExtras
     {
         tableView.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
         {
-            if (e.Key != Key.Space)
+            // A cell being edited in place (AI review's After column) must keep its spaces.
+            if (e.Key != Key.Space || e.Source is TextBox)
             {
                 return;
             }
@@ -1105,6 +1107,128 @@ public static class TableViewExtras
 /// raise its own changed notifications) via <paramref name="applyRange"/>; this class
 /// owns the pointer/timer state machine.
 /// </summary>
+/// <summary>
+/// Turns a grid cell into a text editor in place: a click on the cell of the row that is
+/// already selected swaps the display control for a TextBox holding the current text. Enter or
+/// focus loss commits, Shift+Enter inserts a line break, Escape drops the edit. The first click
+/// on a row only selects it (that click belongs to the grid), so editing never gets in the way
+/// of plain row selection, and a double-click on the editor stays in the editor (word selection)
+/// instead of reaching the grid's DoubleTapped. Used by AI review's After column and the
+/// translation column of Auto-translate.
+/// </summary>
+public sealed class TableViewInlineTextEditor
+{
+    private readonly Border _cell;
+    private readonly TableView _grid;
+    private readonly Func<string> _getText;
+    private readonly Action<string> _setText;
+    private readonly Func<Control> _makeDisplay;
+    private readonly Func<bool>? _canEdit;
+
+    public bool IsEditing { get; private set; }
+
+    /// <param name="cell">The cell's root; its Child is replaced while editing. Gets an I-beam cursor.</param>
+    /// <param name="grid">The owning grid - only the selected row's cell opens the editor, and focus returns to the row afterwards.</param>
+    /// <param name="getText">The current text the editor starts from.</param>
+    /// <param name="setText">Called with the edited text on commit (only when it changed).</param>
+    /// <param name="makeDisplay">Builds the read-only cell content; called initially, after every edit and from <see cref="Refresh"/>.</param>
+    /// <param name="canEdit">Optional gate, e.g. "not while a translation is running".</param>
+    /// <param name="hint">Optional tooltip, shown only when hints are enabled in the settings.</param>
+    public TableViewInlineTextEditor(Border cell, TableView grid, Func<string> getText, Action<string> setText,
+        Func<Control> makeDisplay, Func<bool>? canEdit = null, string? hint = null)
+    {
+        _cell = cell;
+        _grid = grid;
+        _getText = getText;
+        _setText = setText;
+        _makeDisplay = makeDisplay;
+        _canEdit = canEdit;
+
+        // A transparent background is what makes the empty part of the cell hit-testable.
+        cell.Background ??= Brushes.Transparent;
+        cell.Cursor = new Cursor(StandardCursorType.Ibeam);
+        if (hint != null && Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(cell, hint);
+        }
+
+        cell.Child = makeDisplay();
+        cell.PointerReleased += OnCellPointerReleased;
+    }
+
+    /// <summary>
+    /// Rebuilds the read-only content from <paramref name="makeDisplay"/> - a no-op while the
+    /// editor is open, so a model-side change never replaces the text being typed.
+    /// </summary>
+    public void Refresh()
+    {
+        if (!IsEditing)
+        {
+            _cell.Child = _makeDisplay();
+        }
+    }
+
+    private void OnCellPointerReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        if (IsEditing ||
+            e.InitialPressMouseButton != MouseButton.Left ||
+            _cell.DataContext == null ||
+            !ReferenceEquals(_grid.SelectedItem, _cell.DataContext) ||
+            _canEdit?.Invoke() == false)
+        {
+            return;
+        }
+
+        IsEditing = true;
+        var textBox = new TextBox
+        {
+            Text = _getText(),
+            AcceptsReturn = true,
+            TextWrapping = TextWrapping.Wrap,
+            MinHeight = 0,
+            Padding = new Thickness(4, 2),
+        };
+
+        void Finish(bool commit)
+        {
+            if (!IsEditing)
+            {
+                return;
+            }
+
+            IsEditing = false;
+            if (commit && textBox.Text != null && textBox.Text != _getText())
+            {
+                _setText(textBox.Text);
+            }
+
+            _cell.Child = _makeDisplay();
+            TableViewExtras.FocusRow(_grid);
+        }
+
+        textBox.LostFocus += (_, _) => Finish(commit: true);
+        textBox.DoubleTapped += (_, e2) => e2.Handled = true;
+        textBox.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e2) =>
+        {
+            if (e2.Key == Key.Escape)
+            {
+                e2.Handled = true;
+                Finish(commit: false);
+            }
+            else if (e2.Key == Key.Enter && e2.KeyModifiers == KeyModifiers.None)
+            {
+                e2.Handled = true;
+                Finish(commit: true);
+            }
+        }, Avalonia.Interactivity.RoutingStrategies.Tunnel);
+
+        _cell.Child = textBox;
+        textBox.Focus();
+        textBox.SelectAll();
+        e.Handled = true;
+    }
+}
+
 public sealed class TableViewDragSelect
 {
     private const double AutoScrollEdgeSize = 28;
