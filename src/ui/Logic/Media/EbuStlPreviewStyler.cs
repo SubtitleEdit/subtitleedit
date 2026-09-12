@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic.Config;
 using SkiaSharp;
@@ -28,18 +28,20 @@ internal static class EbuStlPreviewStyler
     }
 
     /// <summary>
-    /// True when the subtitle in the video preview is still a teletext format - EBU STL, or DVB
+    /// True when the subtitle in the video preview is a teletext format - EBU STL, or DVB
     /// teletext (.dvbttx), which draws the same boxed double height rows.
     /// </summary>
     /// <remarks>
     /// The GSI block (and the dvbteletext marker) stays on the subtitle when the format is
     /// switched in the toolbar, so the header on its own says only which file the subtitle was
     /// read from - a subtitle shown as SubRip must lose the teletext box and the double height
-    /// with the format.
+    /// with the format. The other way round needs no header at all: a subtitle switched to EBU
+    /// STL in the toolbar can carry a per-line &lt;box&gt; (the "Box" toggle, PR #14780), and
+    /// without the styling the tag was drawn as literal text on the video.
     /// </remarks>
-    public static bool IsTeletextPreview([NotNullWhen(true)] string? header, Type? uiFormatType)
+    public static bool IsTeletextPreview(string? header, Type? uiFormatType)
     {
-        return (uiFormatType == typeof(Ebu) && IsStlHeader(header)) ||
+        return uiFormatType == typeof(Ebu) ||
                (uiFormatType == typeof(DvbTeletext) && DvbTeletext.IsDvbTeletextHeader(header));
     }
 
@@ -48,10 +50,10 @@ internal static class EbuStlPreviewStyler
     /// the right one.
     /// </summary>
     /// <param name="subtitle">Preview copy of the subtitle - the header and the paragraphs are rewritten in place.</param>
-    /// <param name="sourceHeader">The GSI block of the STL file the subtitle came from.</param>
+    /// <param name="sourceHeader">The GSI block of the STL file the subtitle came from, or null/anything else for a subtitle that was switched to EBU STL in the toolbar.</param>
     /// <param name="previewStyle">The style the preview is configured with - font, size, colors, alignment, margins.</param>
     /// <param name="title">Script title for the generated ASSA header.</param>
-    public static void Apply(Subtitle subtitle, string sourceHeader, SsaStyle previewStyle, string title)
+    public static void Apply(Subtitle subtitle, string? sourceHeader, SsaStyle previewStyle, string title)
     {
         // The box and the double height are teletext control codes, so display standard "0"
         // (open subtitling) is written without either however the save options are set - see
@@ -65,7 +67,7 @@ internal static class EbuStlPreviewStyler
             useBox = true;
             useDoubleHeight = true;
         }
-        else
+        else if (IsStlHeader(sourceHeader))
         {
             try
             {
@@ -83,6 +85,9 @@ internal static class EbuStlPreviewStyler
                 // ignore - an unreadable header is previewed as plain text
             }
         }
+        // No STL header: the subtitle was switched to EBU STL in the toolbar. Ebu.Save invents an
+        // open subtitling header for it (display standard "0"), which is written without the
+        // file-wide box and double height - only a per-line <box> below draws a box.
 
         var defaultStyle = new SsaStyle(previewStyle);
 
