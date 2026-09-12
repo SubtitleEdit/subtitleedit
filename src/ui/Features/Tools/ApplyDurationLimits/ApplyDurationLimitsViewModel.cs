@@ -41,6 +41,7 @@ public partial class ApplyDurationLimitsViewModel : ObservableObject, IClosingCl
     public List<SubtitleLineViewModel> AllSubtitlesFixed { get; set; }
 
     private List<SubtitleLineViewModel> _allSubtitles;
+    private ISet<Guid>? _onlyIds;
 
     private readonly System.Timers.Timer _previewTimer;
     private volatile bool _isClosing;
@@ -133,6 +134,10 @@ public partial class ApplyDurationLimitsViewModel : ObservableObject, IClosingCl
         {
             var item = new SubtitleLineViewModel(_allSubtitles[index]);
             AllSubtitlesFixed.Add(item);
+            if (_onlyIds != null && !_onlyIds.Contains(item.Id))
+            {
+                continue;
+            }
 
             var next = _allSubtitles.GetOrNull(index + 1);
 
@@ -324,9 +329,12 @@ public partial class ApplyDurationLimitsViewModel : ObservableObject, IClosingCl
         }
     }
 
-    public void Initialize(List<SubtitleLineViewModel> toList, List<double> shotChanges)
+    /// <param name="onlyIds">When given, only lines with these ids are fixed; the rest travel
+    /// through unchanged so a fix is still capped against the real next line.</param>
+    public void Initialize(List<SubtitleLineViewModel> toList, List<double> shotChanges, ISet<Guid>? onlyIds = null)
     {
         _allSubtitles = toList;
+        _onlyIds = onlyIds;
         _shotChanges = shotChanges.OrderBy(p => p).ToList();
         IsDoNotGoPastShotChangeVisible = _shotChanges.Count > 0;
         _previewTimer.Start();

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Tools.AdjustDuration;
 using Nikse.SubtitleEdit.UiLogic.AdjustDuration;
@@ -110,5 +111,25 @@ public class AdjustDurationViewModelTests
         vm.AdjustDuration(subtitles);
 
         Assert.Equal(TimeSpan.FromMilliseconds(3400), subtitles[0].EndTime);
+    }
+    [Fact]
+    public void AdjustDuration_OnlySelectedLines_CapsAgainstTheRealNeighbour()
+    {
+        var vm = new AdjustDurationViewModel
+        {
+            SelectedAdjustType = new AdjustDurationDisplay { Type = AdjustDurationType.Seconds },
+            AdjustSeconds = 5,
+        };
+        var first = new SubtitleLineViewModel { Text = "First", StartTime = TimeSpan.FromSeconds(1), EndTime = TimeSpan.FromSeconds(2) };
+        var second = new SubtitleLineViewModel { Text = "Second", StartTime = TimeSpan.FromSeconds(3), EndTime = TimeSpan.FromSeconds(4) };
+        var third = new SubtitleLineViewModel { Text = "Third", StartTime = TimeSpan.FromSeconds(20), EndTime = TimeSpan.FromSeconds(21) };
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { first, second, third };
+
+        vm.AdjustDuration(subtitles, new HashSet<SubtitleLineViewModel> { first, third });
+
+        // First is capped 10 ms before its real neighbour, not before the next selected line
+        Assert.Equal(TimeSpan.FromMilliseconds(2990), first.EndTime);
+        Assert.Equal(TimeSpan.FromSeconds(4), second.EndTime);
+        Assert.Equal(TimeSpan.FromSeconds(26), third.EndTime);
     }
 }

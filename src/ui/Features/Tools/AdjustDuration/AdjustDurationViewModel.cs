@@ -9,6 +9,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.UiLogic.AdjustDuration;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,6 +32,10 @@ public partial class AdjustDurationViewModel : ObservableObject
 
     public bool OkPressed { get; private set; }
 
+    private ISet<SubtitleLineViewModel>? _onlyLines;
+
+    private bool IsSkipped(SubtitleLineViewModel line) => _onlyLines != null && !_onlyLines.Contains(line);
+
     public AdjustDurationViewModel()
     {
         AdjustTypes = new ObservableCollection<AdjustDurationDisplay>(AdjustDurationDisplay.ListAll());
@@ -38,8 +43,14 @@ public partial class AdjustDurationViewModel : ObservableObject
         LoadSettings();
     }
 
-    public void AdjustDuration(ObservableCollection<SubtitleLineViewModel> subtitles)
+    /// <summary>
+    /// Adjusts every line in <paramref name="subtitles"/>, or only those in <paramref name="onlyLines"/>
+    /// when given. The whole list is still walked so a limited line is capped against its real
+    /// neighbour in the grid, not against the next line that happened to be selected.
+    /// </summary>
+    public void AdjustDuration(ObservableCollection<SubtitleLineViewModel> subtitles, ISet<SubtitleLineViewModel>? onlyLines = null)
     {
+        _onlyLines = onlyLines;
         if (SelectedAdjustType.Type == AdjustDurationType.Seconds)
         {
             DoAdjustViaSeconds(subtitles);
@@ -63,6 +74,11 @@ public partial class AdjustDurationViewModel : ObservableObject
         for (var i = 0; i < subtitles.Count; i++)
         {
             var subtitle = subtitles[i];
+            if (IsSkipped(subtitle))
+            {
+                continue;
+            }
+
             var nextSubtitle = subtitles.GetOrNull(i + 1);
             var newEndTime = subtitle.EndTime + TimeSpan.FromSeconds(AdjustSeconds);
 
@@ -93,6 +109,11 @@ public partial class AdjustDurationViewModel : ObservableObject
         for (int i = 0; i < subtitles.Count; i++)
         {
             var subtitle = subtitles[i];
+            if (IsSkipped(subtitle))
+            {
+                continue;
+            }
+
             var nextSubtitle = subtitles.GetOrNull(i + 1);
             var adjustment = TimeSpan.FromSeconds(AdjustFixed);
             var newEndTime = subtitle.StartTime + adjustment;
@@ -134,6 +155,11 @@ public partial class AdjustDurationViewModel : ObservableObject
         for (int i = 0; i < subtitles.Count; i++)
         {
             var subtitle = subtitles[i];
+            if (IsSkipped(subtitle))
+            {
+                continue;
+            }
+
             var nextSubtitle = subtitles.GetOrNull(i + 1);
 
             var originalDuration = subtitle.EndTime - subtitle.StartTime;
@@ -161,6 +187,11 @@ public partial class AdjustDurationViewModel : ObservableObject
         for (int i = 0; i < subtitles.Count; i++)
         {
             var subtitle = subtitles[i];
+            if (IsSkipped(subtitle))
+            {
+                continue;
+            }
+
             // Count like the grid's CPS column does (tags and line breaks stripped), so the
             // recalculated durations actually land at the requested chars-per-second.
             var charCount = (double)(subtitle.Text ?? string.Empty).CountCharacters(true);
