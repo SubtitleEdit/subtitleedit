@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// Rewrites roll-up (scrolling) caption chains - where each caption shows the tail of the
         /// previous one plus new lines, e.g. "A", "A/B", "A/B/C", "B/C/D", "C/D/E" - so every line
         /// appears once, timed from when it first scrolled in and re-chunked into paragraphs of
-        /// <see cref="GeneralSettings.MaxNumberOfLines"/> lines. Non-roll-up paragraphs are copied as is.
+        /// <see cref="Settings.GeneralSettings.MaxNumberOfLines"/> lines. Non-roll-up paragraphs are copied as is.
         /// </summary>
         public static Subtitle MergeRollUpCaptions(Subtitle subtitle, int maxMsBetween)
         {

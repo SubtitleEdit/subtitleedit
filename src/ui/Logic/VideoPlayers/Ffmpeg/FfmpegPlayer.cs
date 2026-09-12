@@ -1178,29 +1178,32 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
                         }
 
                         int written;
+                        var input = frame->extended_data;
+                        var inputSamples = frame->nb_samples;
+                        // Only the first frame after a seek is trimmed, so this small array is
+                        // allocated once per seek, not per frame (a stackalloc here would grow the
+                        // stack on every trimmed frame of the decode loop).
+                        byte*[]? shifted = null;
+                        if (skipInputSamples > 0)
+                        {
+                            inputSamples -= skipInputSamples;
+                            // Planar or packed, the offset in bytes per plane is samples * bytesPerSample * (channels for packed).
+                            var planar = format >= AVSampleFormat.AV_SAMPLE_FMT_U8P;
+                            var bytesPerSample = ffmpeg.av_get_bytes_per_sample(format);
+                            var planes = planar ? frame->ch_layout.nb_channels : 1;
+                            var offset = skipInputSamples * bytesPerSample * (planar ? 1 : frame->ch_layout.nb_channels);
+                            shifted = new byte*[planes];
+                            for (var p = 0; p < planes; p++)
+                            {
+                                shifted[p] = input[p] + offset;
+                            }
+                        }
+
                         fixed (byte* pcmPtr = pcm)
+                        fixed (byte** shiftedPtr = shifted)
                         {
                             var output = pcmPtr;
-                            var input = frame->extended_data;
-                            byte** inputPtr = input;
-                            var inputSamples = frame->nb_samples;
-                            if (skipInputSamples > 0)
-                            {
-                                inputSamples -= skipInputSamples;
-                                // Planar or packed, the offset in bytes per plane is samples * bytesPerSample * (channels for packed).
-                                var planar = format >= AVSampleFormat.AV_SAMPLE_FMT_U8P;
-                                var bytesPerSample = ffmpeg.av_get_bytes_per_sample(format);
-                                var planes = planar ? frame->ch_layout.nb_channels : 1;
-                                var offset = skipInputSamples * bytesPerSample * (planar ? 1 : frame->ch_layout.nb_channels);
-                                var shifted = stackalloc byte*[planes];
-                                for (var p = 0; p < planes; p++)
-                                {
-                                    shifted[p] = input[p] + offset;
-                                }
-
-                                inputPtr = shifted;
-                            }
-
+                            var inputPtr = shiftedPtr != null ? shiftedPtr : input;
                             written = inputSamples > 0
                                 ? ffmpeg.swr_convert(swr, &output, outSamplesMax, inputPtr, inputSamples)
                                 : 0;

@@ -749,8 +749,21 @@ public class WavePeakGenerator2 : IDisposable
     /// </summary>
     /// <param name="fileName">Wave file name</param>
     public WavePeakGenerator2(string fileName)
-        : this(new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, bufferSize: 65536, FileOptions.SequentialScan))
     {
+        var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, bufferSize: 65536, FileOptions.SequentialScan);
+        try
+        {
+            _stream = stream;
+            Header = new WaveHeader2(stream);
+        }
+        catch
+        {
+            // A corrupt header throws out of the constructor, so nobody gets an instance to
+            // dispose: the FileStream stayed open until its finalizer ran, and a caller that
+            // deleted the file right after the failed load hit "used by another process".
+            stream.Dispose();
+            throw;
+        }
     }
 
     /// <summary>

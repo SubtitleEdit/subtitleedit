@@ -130,7 +130,8 @@ public class ProgressLineTest
         Assert.Equal(10, lines.Length);
         Assert.Equal("  OCR 500/5000 (10%)...", lines[0]);
         Assert.Equal("  OCR 5000/5000 (100%)...", lines[^1]);
-        Assert.DoesNotContain('\r', output);
+        // No terminal-style rewrites - only the '\r' that is part of a Windows line ending.
+        Assert.DoesNotContain('\r', output.Replace(Environment.NewLine, string.Empty));
     }
 
     [Fact]
