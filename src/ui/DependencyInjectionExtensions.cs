@@ -194,6 +194,8 @@ using Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.EncodingSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceManager;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceManager.VoicePacks;
 using Nikse.SubtitleEdit.Features.Video.TransparentSubtitles;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Compression;
@@ -300,6 +302,7 @@ public static class DependencyInjectionExtensions
         collection.AddHttpClientWithProxy<ILlamaCppDownloadService, LlamaCppDownloadService>();
         collection.AddHttpClientWithProxy<IQwen3AsrCppDownloadService, Qwen3AsrCppDownloadService>();
         collection.AddHttpClientWithProxy<IQwen3TtsCppDownloadService, Qwen3TtsCppDownloadService>();
+        collection.AddHttpClientWithProxy<IVoicePackDownloadService, VoicePackDownloadService>();
         collection.AddHttpClientWithProxy<IQwen3TtsCrispAsrDownloadService, Qwen3TtsCrispAsrDownloadService>();
         collection.AddHttpClientWithProxy<IVibeVoiceCrispAsrDownloadService, VibeVoiceCrispAsrDownloadService>();
         collection.AddHttpClientWithProxy<IIndexTtsCrispAsrDownloadService, IndexTtsCrispAsrDownloadService>();
@@ -611,6 +614,8 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<VideoPlayerUndockedViewModel>();
         collection.AddTransient<VisualSyncViewModel>();
         collection.AddTransient<VoiceSettingsViewModel>();
+        collection.AddTransient<VoiceManagerViewModel>();
+        collection.AddTransient<DownloadVoicePacksViewModel>();
         collection.AddTransient<WaveformGuessTimeCodesViewModel>();
         collection.AddTransient<WaveformSeekSilenceViewModel>();
         collection.AddTransient<WaveformThemesViewModel>();

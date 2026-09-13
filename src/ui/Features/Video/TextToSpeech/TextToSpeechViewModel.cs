@@ -40,6 +40,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VibeVoiceCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceCloneConsent;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceManager;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
@@ -1922,6 +1923,51 @@ public partial class TextToSpeechViewModel : ObservableObject
         });
 
         if (result.RefreshVoices)
+        {
+            await RefreshVoices(engine);
+        }
+    }
+
+    /// <summary>
+    /// Opens the voice manager on the current engine; every engine whose voices folder it changed
+    /// is re-listed afterwards so the combo (and a cast pointing at a renamed voice) stay right.
+    /// </summary>
+    [RelayCommand]
+    private async Task ShowVoiceManager()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var engine = SelectedEngine;
+        var result = await _windowService.ShowDialogAsync<VoiceManagerWindow, VoiceManagerViewModel>(Window, vm =>
+        {
+            vm.Initialize(Engines, engine);
+        });
+
+        // Same bookkeeping as RenameVoice/DeleteVoice below: a cast row or the saved pick that
+        // named the old voice follows the rename, and one naming a deleted voice falls back to
+        // the global voice rather than to whichever voice the engine lists first.
+        foreach (var change in result.Renames.Concat(result.Deletes))
+        {
+            foreach (var mapping in _actorVoiceMappings)
+            {
+                if (mapping.VoiceName == change.OldName &&
+                    (string.IsNullOrEmpty(mapping.EngineName) || string.Equals(mapping.EngineName, change.EngineName, StringComparison.OrdinalIgnoreCase)))
+                {
+                    mapping.VoiceName = change.NewName;
+                }
+            }
+
+            if (engine != null && string.Equals(engine.Name, change.EngineName, StringComparison.OrdinalIgnoreCase) &&
+                Se.Settings.Video.TextToSpeech.Voice == change.OldName)
+            {
+                Se.Settings.Video.TextToSpeech.Voice = change.NewName;
+            }
+        }
+
+        if (engine != null && result.ChangedEngineNames.Contains(engine.Name))
         {
             await RefreshVoices(engine);
         }

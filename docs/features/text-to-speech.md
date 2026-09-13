@@ -142,6 +142,21 @@ Right-click the voice combo box for **Rename voice...** and **Delete voice...**.
 
 Supported for every file-backed cloning voice: the CrispASR engines (Chatterbox, Confucius4-TTS, CosyVoice3, dots.tts, IndexTTS, MOSS-TTS, OmniVoice, Pocket TTS, Qwen3 TTS, VibeVoice, VoxCPM2, Zonos), the standalone OmniVoice TTS, and the audio.cpp engines (IndexTTS 2.5, Higgs Audio v3, Fish Audio S2 Pro, FireRedTTS3).
 
+### Voice Manager
+
+Click the voice-manager button (the head-and-microphone icon next to the voice combo box) or pick **Voice manager...** from the combo box's right-click menu to open one window for all voices of all engines.
+
+- **Engines** are listed on the left; pick one to list its voices with type (cloned voice, built-in, voice model, online), duration, format and whether a transcript is present. Search filters the list.
+- **Play** (Space, or double-click) plays a cloned voice's reference recording; the waveform below shows the whole clip with a playhead, and clicking the waveform seeks.
+- **Transcript** - for engines that read the transcript of the reference recording (ref-text), the text is shown under the waveform and can be edited and saved, or filled in with **Use speech-to-text...**. The hint says whether the engine requires it (CosyVoice3, Fish Audio S2 Pro, Qwen3 TTS, OmniVoice TTS) or only benefits from it (F5-TTS, FireRedTTS3, Higgs Audio, MOSS-TTS, OmniVoice CrispASR, VoxCPM2). Engines that clone from a speaker embedding do not use one.
+- **Rename** (F2) and **Delete** (Del) work as in the combo box menu.
+- **Copy voice to engine...** imports the recording and its transcript into another cloning engine, resampled to what that engine wants. A transcript is asked for when the target requires one and none is stored. Voices with the same name in the target are confirmed first.
+- **Import voice...** adds a recording (or, for Piper, a voice model) to the current engine, with the same transcript prompt as the voice settings dialog.
+- **Download voice packs...** fetches ready-made sets of reference recordings with transcripts and installs them into a chosen cloning engine, skipping voices already present: the 18-voice English standard set, and German, Spanish, French, Italian, Dutch, Polish and Portuguese readers cut from Multilingual LibriSpeech (LibriVox, CC BY 4.0). Every pack carries an `ATTRIBUTION.txt` with its license and sources.
+- **Open voices folder** shows the engine's `voices` folder on disk; **Refresh** re-lists (and for online engines re-downloads the voice list).
+
+Cloned voices are the only editable kind; presets, Piper models and online voices are listed for orientation.
+
 ### Cloning a Voice Heard in the Video
 
 You do not have to prepare a reference recording by hand. In the main window, right-click a subtitle line in the waveform and choose **Clone voice to** → *engine name*. Subtitle Edit cuts the audio for that line out of the video's current audio track, asks what to call the new voice (pre-filled with the line's actor, or the video name and line number), and imports it as a cloned voice for the chosen engine. The line's own text is used as the transcript the cloning engines want, so you are not asked to type it.
