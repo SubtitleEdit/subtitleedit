@@ -4,6 +4,9 @@ using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
+using Avalonia.LogicalTree;
+using Nikse.SubtitleEdit.Logic;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Options.Settings;
 
@@ -85,6 +88,20 @@ public class SettingsItem
         if (!string.IsNullOrEmpty(_label) || _labelBindingPath != null)
         {
             AutomationProperties.SetLabeledBy(control, labelTextBlock);
+
+            // When the factory returns a wrapper (a numeric field plus a browse button, a text
+            // box with a hint, ...) the link above lands on the wrapper, not on the input a
+            // screen reader user actually focuses - label the unnamed inputs inside it too (#12087).
+            if (control is Panel)
+            {
+                foreach (var input in control.GetLogicalDescendants().OfType<Control>())
+                {
+                    if (AccessibleLabels.IsInput(input) && input.TemplatedParent == null && !AccessibleLabels.HasAccessibleName(input))
+                    {
+                        AutomationProperties.SetLabeledBy(input, labelTextBlock);
+                    }
+                }
+            }
         }
 
         var stackPanel = new StackPanel

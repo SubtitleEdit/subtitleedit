@@ -23,6 +23,7 @@ public class BinaryAdjustAllTimesWindow : Window
         {
             DataContext = vm,
             Margin = new Thickness(0, 0, 0, 10),
+            [Avalonia.Automation.AutomationProperties.NameProperty] = Se.Language.General.Adjustment,
             [!TimeCodeUpDown.ValueProperty] = new Binding(nameof(vm.Adjustment))
             {
                 Mode = BindingMode.TwoWay,

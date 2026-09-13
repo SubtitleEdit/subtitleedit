@@ -74,6 +74,7 @@ public class PickTsTrackWindow : Window
     private Border MakeTracksView(PickTsTrackViewModel vm)
     {
         var dataGridTracks = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGridTracks.WithAccessibleName(Se.Language.General.SelectSubtitle);
         dataGridTracks.Width = double.NaN;
         dataGridTracks.Height = double.NaN;
         dataGridTracks.DataContext = vm;
@@ -160,6 +161,7 @@ public class PickTsTrackWindow : Window
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
         var dataGridSubtitle = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGridSubtitle.WithAccessibleName(Se.Language.General.Preview);
         dataGridSubtitle.Width = double.NaN;
         dataGridSubtitle.Height = double.NaN;
         dataGridSubtitle.DataContext = vm;
@@ -198,6 +200,7 @@ public class PickTsTrackWindow : Window
                     CellTheme = UiUtil.TableViewCellTheme,
                     HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Width = new GridLength(1, GridUnitType.Star),
+                    NameBinding = new Binding(nameof(TsSubtitleCueDisplay.Text)),
                     CellTemplate = new FuncDataTemplate<TsSubtitleCueDisplay>((item, _) =>
                     {
                         var stackPanel = new StackPanel

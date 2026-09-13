@@ -27,6 +27,7 @@ public class BookmarkEditWindow : Window
             TextWrapping = TextWrapping.Wrap,
         };
         textBox.Bind(TextBox.TextProperty, new Avalonia.Data.Binding(nameof(vm.BookmarkText)) { Mode = Avalonia.Data.BindingMode.TwoWay }); 
+        Avalonia.Automation.AutomationProperties.SetName(textBox, Se.Language.General.Text);
         textBox.KeyDown += (sender, args) => vm.OnTextBoxKeyDown(args);
 
         var buttonList = UiUtil.MakeButton(Se.Language.General.BookmarksList, vm.ListCommand).WithBindIsVisible(nameof(vm.ShowListButton));

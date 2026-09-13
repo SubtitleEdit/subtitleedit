@@ -51,7 +51,7 @@ public class DoNotBreakAfterListWindow : Window
         });
         var listBoxBorder = UiUtil.MakeBorderForControl(listBoxItems);
 
-        var textBoxItem = UiUtil.MakeTextBox(150, vm, nameof(vm.NewItemText));
+        var textBoxItem = UiUtil.MakeTextBox(150, vm, nameof(vm.NewItemText)).WithAccessibleName(Se.Language.General.Text);
         textBoxItem.KeyDown += (_, e) => vm.ItemTextBoxKeyDown(e);
         var radioText = new RadioButton
         {

@@ -118,7 +118,7 @@ public class BinaryOcrDbEditWindow : Window
             HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
         };
 
-        vm.TextBoxItem = UiUtil.MakeTextBox(100, vm, nameof(vm.ItemText));
+        vm.TextBoxItem = UiUtil.MakeTextBox(100, vm, nameof(vm.ItemText)).WithAccessibleName(Se.Language.General.Text);
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
         {
             vm.TextBoxItem.FontFamily = FontFamilyHelper.Make(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);

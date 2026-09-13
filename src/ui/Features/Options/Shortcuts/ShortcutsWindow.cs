@@ -374,6 +374,7 @@ public class ShortcutsWindow : Window
         };
 
         var shortcutsGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        shortcutsGrid.WithAccessibleName(Se.Language.General.Shortcuts);
         shortcutsGrid.DataContext = vm;
         shortcutsGrid.ItemsSource = vm.FlatNodes;
         shortcutsGrid.Columns.Add(columnActiveIn);

@@ -92,6 +92,7 @@ public class PromptUnknownWordWindow : Window
         };
 
         vm.TextBoxWholeText.Bind(TextBox.TextProperty, new Binding(nameof(vm.WholeText)) { Mode = BindingMode.TwoWay });
+        vm.TextBoxWholeText.WithAccessibleName(Se.Language.Ocr.EditWholeText);
         vm.TextBoxWholeText
             .WithHorizontalAlignmentStretch()
             .WithHeight(88)
@@ -172,6 +173,7 @@ public class PromptUnknownWordWindow : Window
             .WithHorizontalAlignmentStretch()
             .WithBindEnabled(nameof(vm.DoEditWholeText), InverseBooleanConverter.Instance)
             .Bind(TextBox.TextProperty, new Binding(nameof(vm.Word)) { Mode = BindingMode.TwoWay });
+        vm.TextBoxWord.WithAccessibleName(Se.Language.General.Text);
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
         {
             vm.TextBoxWord.FontFamily = FontFamilyHelper.Make(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
