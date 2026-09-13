@@ -9,6 +9,7 @@ using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Ocr.CrispEmbedSettings;
 using Nikse.SubtitleEdit.Features.Ocr.Download;
 using Nikse.SubtitleEdit.Features.Ocr.Engines;
+using Nikse.SubtitleEdit.Features.Options.Settings;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.SpellCheck;
 using Nikse.SubtitleEdit.Features.SpellCheck.GetDictionaries;
@@ -203,6 +204,15 @@ public partial class VideoOcrViewModel : ObservableObject
 
             Dispatcher.UIThread.Post(async () =>
             {
+                // The probe can outlive the window (closed before ffmpeg answered). Showing the
+                // error box then throws "Cannot show a window with a closed owner" on the
+                // dispatcher - in the headless test suite that lands in whichever unrelated
+                // test pumps the queue next.
+                if (Window.IsClosing())
+                {
+                    return;
+                }
+
                 if (mediaInfo == null || mediaInfo.Dimension.Width <= 0 || mediaInfo.Dimension.Height <= 0 ||
                     mediaInfo.Duration == null)
                 {
