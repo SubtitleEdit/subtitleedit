@@ -353,6 +353,8 @@
     "moveAllShotChangeOneFrameForward": "Move all shot changes one frame forward",
     "multiMode": "Multi mode",
     "moveDown": "Move down",
+    "increase": "Increase",
+    "decrease": "Decrease",
     "moveUp": "Move up",
     "moveToTop": "Move to top",
     "moveToBottom": "Move to bottom",
@@ -1649,7 +1651,8 @@
       "largeChangeWarning": "Large change - looks like a rewrite, review carefully",
       "mismatchWarning": "Does not resemble the original - may belong to a different line",
       "engineError": "The AI engine could not be reached: {0}",
-      "playCurrentLineHint": "Play the selected line in the video player and pause at its end (also double-click a line)"
+      "playCurrentLineHint": "Play the selected line in the video player and pause at its end (also double-click a line)",
+      "editAfterHint": "Click the selected row's text to edit the fix before applying it (Enter saves, Escape cancels)"
     },
     "aiAssistant": {
       "title": "AI assistant",
@@ -2852,6 +2855,7 @@
     "useOnlyExtraServerParametersHint": "Start llama-server with the parameters above instead of Subtitle Edit's own tuning - only the model, host and port are still set",
     "serverRunningAtX": "Server running at {0}",
     "customPromptHint": "Custom instructions ({0} = source language, {1} = target language); empty = built-in prompt",
+    "editTranslationHint": "Click the selected row's translation to edit it (Enter saves, Escape cancels)",
     "llamaCppDownloadEngineAndModelPrompt": "llama.cpp requires the llama-server engine and a translation model to be downloaded. Download now?",
     "llamaCppDownloadEnginePrompt": "llama.cpp requires the llama-server engine to be downloaded. Download now?",
     "llamaCppDownloadModelPrompt": "llama.cpp requires the selected translation model to be downloaded. Download now?"
@@ -3155,6 +3159,7 @@
       "waveformDoubleClickAction": "Waveform double-click action (after single-click action)",
       "allSettings": "All settings",
       "uiScale": "UI scale (%)",
+      "fontScale": "Font scale (%)",
       "waveformToolbarItems": "Waveform toolbar items",
       "matchIconColorToDarkTheme": "Match icon color to dark theme foreground color",
       "subtitlePreviewProperties": "Subtitle preview properties",
