@@ -560,8 +560,8 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
     internal static string FormatSubtitleCount(int count, int? forcedCount)
     {
         return forcedCount.HasValue
-            ? string.Format(Se.Language.File.Import.NumberOfSubtitlesXForcedY, count, forcedCount.Value)
-            : string.Format(Se.Language.File.Import.NumberOfSubtitlesX, count);
+            ? string.Format(Se.Language.File.Import.NumberOfSubtitlesXForcedY, count.ToString("N0"), forcedCount.Value.ToString("N0"))
+            : string.Format(Se.Language.File.Import.NumberOfSubtitlesX, count.ToString("N0"));
     }
 
     /// <summary><see cref="ForcedCount"/> is null for formats without a forced flag.</summary>

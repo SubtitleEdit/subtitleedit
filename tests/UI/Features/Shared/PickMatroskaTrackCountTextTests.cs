@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Features.Shared.PickMatroskaTrack;
+﻿using Nikse.SubtitleEdit.Features.Shared.PickMatroskaTrack;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace UITests.Features.Shared;
@@ -20,6 +20,21 @@ public class PickMatroskaTrackCountTextTests
     }
 
     [Theory]
+    [InlineData(1234, null)]
+    [InlineData(12345, 1000)]
+    public void FormatSubtitleCount_LargeCounts_UseThousandsSeparator(int count, int? forcedCount)
+    {
+        var text = PickMatroskaTrackViewModel.FormatSubtitleCount(count, forcedCount);
+
+        Assert.Contains(count.ToString("N0"), text);
+        Assert.DoesNotContain(count.ToString(), text);
+        if (forcedCount.HasValue)
+        {
+            Assert.Contains(forcedCount.Value.ToString("N0"), text);
+        }
+    }
+
+    [Theory]
     [InlineData(842, 19)]
     [InlineData(19, 19)]
     [InlineData(842, 0)] // shown even at zero: "no forced cues" is the answer the user is after
@@ -27,7 +42,7 @@ public class PickMatroskaTrackCountTextTests
     {
         var text = PickMatroskaTrackViewModel.FormatSubtitleCount(count, forcedCount);
 
-        Assert.Equal(string.Format(Se.Language.File.Import.NumberOfSubtitlesXForcedY, count, forcedCount), text);
+        Assert.Equal(string.Format(Se.Language.File.Import.NumberOfSubtitlesXForcedY, count.ToString("N0"), forcedCount.ToString("N0")), text);
         Assert.Contains(count.ToString(), text);
         Assert.Contains($"({forcedCount} forced)", text);
     }

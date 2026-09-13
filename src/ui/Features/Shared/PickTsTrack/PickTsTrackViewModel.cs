@@ -192,7 +192,7 @@ public partial class PickTsTrackViewModel : ObservableObject
            var subtitle = new Subtitle(selectedTrack.Teletext);
             subtitle.Renumber();
             TeletextSubtitle = subtitle;
-            SubtitleCountText = string.Format(Se.Language.File.Import.NumberOfSubtitlesX, subtitle.Paragraphs.Count);
+            SubtitleCountText = string.Format(Se.Language.File.Import.NumberOfSubtitlesX, subtitle.Paragraphs.Count.ToString("N0"));
             foreach (var p in subtitle.Paragraphs.Take(20))
             {
                 var cue = new TsSubtitleCueDisplay()
@@ -224,7 +224,7 @@ public partial class PickTsTrackViewModel : ObservableObject
             return false;
         }
 
-        SubtitleCountText = string.Format(Se.Language.File.Import.NumberOfSubtitlesX, subtitles.Count);
+        SubtitleCountText = string.Format(Se.Language.File.Import.NumberOfSubtitlesX, subtitles.Count.ToString("N0"));
         for (var i = 0; i < 20 && i < subtitles.Count; i++)
         {
             var item = subtitles[i];
