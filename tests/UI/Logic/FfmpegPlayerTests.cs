@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.Ffmpeg;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.Ffmpeg.Audio;
@@ -39,6 +39,18 @@ public class FfmpegPlayerTests
     {
         var bounds = new Rect(0, 0, 640, 480);
         Assert.Equal(bounds, FfmpegSoftwareControl.FitRect(bounds, 0));
+    }
+
+    [Fact]
+    public void VideoFrame_StrideIsAlignedWithSlackForSwscaleOverrun()
+    {
+        // swscale writes whole SIMD vectors: a 680 px BGRA row (2720 bytes) overran a tight
+        // buffer by 32 bytes on the last row and corrupted the heap.
+        using var frame = new VideoFrame(680, 312);
+
+        Assert.Equal(0, frame.Stride % 64);
+        Assert.True(frame.Stride >= 680 * 4 + 32);
+        Assert.NotEqual(IntPtr.Zero, frame.Data);
     }
 
     [Fact]

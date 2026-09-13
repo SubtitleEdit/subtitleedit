@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers.Ffmpeg;
@@ -9,6 +9,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.Ffmpeg;
 /// </summary>
 public sealed class VideoFrame : IDisposable
 {
+    private const int StrideAlignment = 64;
+    private const int RowSlack = 64;
+
     public IntPtr Data { get; private set; }
     public int Stride { get; }
     public int Width { get; }
@@ -27,8 +30,12 @@ public sealed class VideoFrame : IDisposable
     {
         Width = width;
         Height = height;
-        Stride = width * 4;
-        Data = width > 0 && height > 0 ? Marshal.AllocHGlobal(Stride * height) : IntPtr.Zero;
+        // swscale's SIMD converters write whole vectors, so for widths that are not a multiple of
+        // the vector size the last row overruns its exact byte length (32 bytes seen for a 680 px
+        // BGRA picture). Align the stride and keep slack after the last row so that stays inside
+        // the allocation; a tight buffer here silently corrupts the heap.
+        Stride = (width * 4 + StrideAlignment - 1) & ~(StrideAlignment - 1);
+        Data = width > 0 && height > 0 ? Marshal.AllocHGlobal(Stride * height + RowSlack) : IntPtr.Zero;
     }
 
     public void Dispose()
