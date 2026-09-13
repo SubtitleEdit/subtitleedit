@@ -390,6 +390,7 @@ public static class InitNativeMacMenu
             // Finds who speaks in the video, clones each of them and assigns the cast, so the
             // whole thing can be dubbed in its own voices (#13698).
             Item(Clean(lVideo.TextToSpeech.AutoCastMenuItem), v => v.ShowVideoAutoCastFromVideoCommand),
+            Item(Clean(lVideo.TextToSpeech.VoiceManagerMenuItem), v => v.ShowVideoVoiceManagerCommand),
         };
         videoMoreList.Add(Toggle(Clean(l.WaveformToolbar), v => v.ToggleIsWaveformToolbarVisibleCommand,
             v => v.IsWaveformToolbarVisible, nameof(MainViewModel.IsWaveformToolbarVisible)));

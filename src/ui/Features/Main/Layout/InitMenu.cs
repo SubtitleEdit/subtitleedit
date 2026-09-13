@@ -661,6 +661,11 @@ public static class InitMenu
             },
             new MenuItem
             {
+                Header = Se.Language.Video.TextToSpeech.VoiceManagerMenuItem,
+                Command = vm.ShowVideoVoiceManagerCommand,
+            },
+            new MenuItem
+            {
                 Header = Se.Language.Options.Shortcuts.ToggleWaveformToolbar,
                 Command = vm.ToggleIsWaveformToolbarVisibleCommand,
                 Icon = new Optris.Icons.Avalonia.Icon

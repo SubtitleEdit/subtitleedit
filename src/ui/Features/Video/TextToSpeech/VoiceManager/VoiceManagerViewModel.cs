@@ -94,6 +94,7 @@ public partial class VoiceManagerViewModel : ObservableObject
     private readonly List<VoiceManagerRow> _allRows = new();
     private string _voicesFolder = string.Empty;
     private int _loadGeneration;
+    private int _detailsGeneration;
     private bool _suppressTranscriptDirty;
 
     private LibMpvDynamicPlayer? _player;
@@ -334,7 +335,10 @@ public partial class VoiceManagerViewModel : ObservableObject
 
     private async Task LoadVoiceDetailsAsync(VoiceManagerRow? row)
     {
-        var generation = ++_loadGeneration;
+        // Its own counter: the engine listing selects a row while it is still in flight, and
+        // sharing one counter made that selection cancel the listing - IsLoading then never
+        // cleared and the window sat on an empty list with the progress bar running.
+        var generation = ++_detailsGeneration;
         WavePeakData = null;
         _suppressTranscriptDirty = true;
         Transcript = string.Empty;
@@ -388,7 +392,7 @@ public partial class VoiceManagerViewModel : ObservableObject
             }
         });
 
-        if (generation != _loadGeneration)
+        if (generation != _detailsGeneration)
         {
             return;
         }

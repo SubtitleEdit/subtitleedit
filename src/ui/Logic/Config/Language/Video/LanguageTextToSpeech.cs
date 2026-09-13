@@ -55,6 +55,7 @@ public class LanguageTextToSpeech
     // Voice manager
     public string VoiceManagerTitle { get; set; }
     public string VoiceManagerDotDotDot { get; set; }
+    public string VoiceManagerMenuItem { get; set; }
     public string VoiceKindClone { get; set; }
     public string VoiceKindPreset { get; set; }
     public string VoiceKindModel { get; set; }
@@ -258,6 +259,7 @@ public class LanguageTextToSpeech
         VoiceCloneTranscriptTitle = "Enter transcript of the audio (required for voice cloning)";
         VoiceManagerTitle = "TTS - Voice manager";
         VoiceManagerDotDotDot = "Voice manager...";
+        VoiceManagerMenuItem = "TTS voice manager...";
         VoiceKindClone = "Cloned voice";
         VoiceKindPreset = "Built-in";
         VoiceKindModel = "Voice model";
