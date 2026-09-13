@@ -765,6 +765,11 @@ public static class InitMenu
                 },
                 new MenuItem
                 {
+                    Header = Se.Language.Video.TextToSpeech.VoiceManagerMenuItem,
+                    Command = vm.ShowVideoVoiceManagerCommand,
+                },
+                new MenuItem
+                {
                     Header = l.VideoOcr,
                     Command = vm.ShowVideoOcrCommand,
                 },
