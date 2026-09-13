@@ -294,6 +294,7 @@ public class VoiceManagerWindow : Window
         tableView[!TableView.ItemsSourceProperty] = new Binding(nameof(vm.Voices));
         tableView[!TableView.SelectedItemProperty] = new Binding(nameof(vm.SelectedVoice)) { Mode = BindingMode.TwoWay };
         _voiceGrid = tableView;
+        tableView.WithAccessibleName(Se.Language.Video.TextToSpeech.VoiceManagerTitle); // #12087
 
         tableView.Columns.Add(new SeTableViewColumn
         {
@@ -301,6 +302,7 @@ public class VoiceManagerWindow : Window
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Width = new GridLength(1, GridUnitType.Star),
+            NameBinding = new Binding(nameof(VoiceManagerRow.DisplayName)),
             CellTemplate = new FuncDataTemplate<VoiceManagerRow>((item, _) =>
             {
                 var icon = new Icon
@@ -326,6 +328,7 @@ public class VoiceManagerWindow : Window
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Width = new GridLength(120),
+            NameBinding = new Binding(nameof(VoiceManagerRow.KindText)),
             CellTemplate = TableViewExtras.MakeTextCellTemplate(nameof(VoiceManagerRow.KindText)),
         });
         tableView.Columns.Add(new SeTableViewColumn
@@ -334,6 +337,7 @@ public class VoiceManagerWindow : Window
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Width = new GridLength(80),
+            NameBinding = new Binding(nameof(VoiceManagerRow.Duration)),
             CellTemplate = TableViewExtras.MakeTextCellTemplate(nameof(VoiceManagerRow.Duration)),
         });
         tableView.Columns.Add(new SeTableViewColumn
@@ -342,6 +346,7 @@ public class VoiceManagerWindow : Window
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Width = new GridLength(170),
+            NameBinding = new Binding(nameof(VoiceManagerRow.Format)),
             CellTemplate = TableViewExtras.MakeTextCellTemplate(nameof(VoiceManagerRow.Format)),
         });
         tableView.Columns.Add(new SeTableViewColumn
@@ -350,6 +355,7 @@ public class VoiceManagerWindow : Window
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Width = new GridLength(90),
+            NameBinding = new Binding(nameof(VoiceManagerRow.TranscriptText)),
             CellTemplate = new FuncDataTemplate<VoiceManagerRow>((_, _) => new TextBlock
             {
                 HorizontalAlignment = HorizontalAlignment.Center,

@@ -31,7 +31,7 @@ public class FindWindow : Window
             ItemsSource = vm.SearchHistory,
             [!AutoCompleteBox.TextProperty] = new Binding(nameof(vm.SearchText)),
             MinimumPrefixLength = 0,
-        };
+        }.WithAccessibleName(Se.Language.General.Find); // AutoCompleteBox has no watermark-derived name (#12087)
         textBoxFind.KeyDown += vm.FindTextBoxKeyDown;
 
         // SE4-style "most recent find text" dropdown: the AutoCompleteBox only reveals history

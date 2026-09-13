@@ -27,7 +27,7 @@ public class AdjustAllTimesWindow : Window
             {
                 Mode = BindingMode.TwoWay,
             }
-        };
+        }.WithAccessibleName(Se.Language.Sync.AdjustAllTimes); // no visible label; the window title names the only input (#12087)
 
         var buttonShowEarlier = UiUtil.MakeButton(Se.Language.Sync.ShowEarlier, vm.ShowEarlierCommand)
             .WithMinWidth(110);

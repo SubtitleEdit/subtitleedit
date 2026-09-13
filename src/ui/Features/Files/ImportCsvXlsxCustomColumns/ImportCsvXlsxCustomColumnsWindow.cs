@@ -40,13 +40,13 @@ public class ImportCsvXlsxCustomColumnsWindow : Window
             Spacing = 10,
         };
 
-        _sourceGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        _sourceGrid = TableViewExtras.MakeTableView(multiSelect: false).WithAccessibleName(Se.Language.File.Import.TitleImportCsvXlsxCustomColumns); // source rows (#12087)
         _sourceGrid.Width = double.NaN;
         _sourceGrid.Height = double.NaN;
         _sourceGrid.DataContext = vm;
         _sourceGrid.ItemsSource = vm.Rows;
 
-        _previewGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        _previewGrid = TableViewExtras.MakeTableView(multiSelect: false).WithAccessibleName(Se.Language.General.Preview);
         _previewGrid.Width = double.NaN;
         _previewGrid.Height = double.NaN;
         _previewGrid.DataContext = vm;
@@ -225,6 +225,7 @@ public class ImportCsvXlsxCustomColumnsWindow : Window
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             CellTemplate = TableViewExtras.MakeTextCellTemplate(nameof(SubtitleLineViewModel.Text)),
+            NameBinding = new Binding(nameof(SubtitleLineViewModel.Text)),
             Width = new GridLength(1, GridUnitType.Star),
         });
     }

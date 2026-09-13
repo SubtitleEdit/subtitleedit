@@ -70,7 +70,7 @@ public class BinaryOcrCharacterHistoryWindow : Window
         var listBoxCurrentItems = new ListBox
         {
             Margin = new Thickness(0, 5, 0, 0),
-        };
+        }.WithAccessibleName(Se.Language.General.History);
         listBoxCurrentItems.Bind(Avalonia.Controls.Primitives.SelectingItemsControl.SelectedItemProperty, new Binding(nameof(vm.SelectedHistoryItem)));
         listBoxCurrentItems.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(vm.HistoryItems)));
         listBoxCurrentItems.SelectionChanged += vm.HistoryItemChanged;
@@ -94,7 +94,7 @@ public class BinaryOcrCharacterHistoryWindow : Window
             Width = double.NaN,
         };
 
-        vm.TextBoxNew = UiUtil.MakeTextBox(100, vm, nameof(vm.NewText));
+        vm.TextBoxNew = UiUtil.MakeTextBox(100, vm, nameof(vm.NewText)).WithAccessibleName(Se.Language.General.Text);
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
         {
             vm.TextBoxNew.FontFamily = FontFamilyHelper.Make(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);

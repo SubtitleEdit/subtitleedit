@@ -110,6 +110,7 @@ public class ShotChangesWindow : Window
         tableView.Margin = new Thickness(2);
         tableView.ItemsSource = vm.FfmpegLines;
         tableView.DataContext = vm;
+        tableView.WithAccessibleName(Se.Language.Video.ShotChanges.ShotChangesList);
         tableView.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.NumberSymbol,
@@ -243,6 +244,7 @@ public class ShotChangesWindow : Window
             IsReadOnly = true,
         };
         textBoxImport.Bind(TextBox.TextProperty, new Binding(nameof(ShotChangesViewModel.ImportText)) { Source = vm, Mode = BindingMode.TwoWay });
+        textBoxImport.WithAccessibleName(Se.Language.Video.ShotChanges.ImportShotChanges); // the tab header; the box has no label (#12087)
 
         grid.Add(textBoxImport, 0);
         grid.Add(panelTimeCodeFormat, 1);

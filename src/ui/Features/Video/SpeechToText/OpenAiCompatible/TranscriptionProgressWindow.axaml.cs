@@ -78,6 +78,9 @@ public class TranscriptionProgressWindow : Window
             Margin = new Thickness(0, 5, 0, 0)
         };
         segmentsList.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(TranscriptionProgressViewModel.ReceivedSegments)));
+        // Same text as the expander header, so the list is announced as "Received segments (N)" (#12087).
+        segmentsList.Bind(Avalonia.Automation.AutomationProperties.NameProperty,
+            new Binding(nameof(TranscriptionProgressViewModel.SegmentCount)) { StringFormat = Se.Language.General.TranscriptionProgressReceivedSegmentsFormat });
 
         var expander = new Expander
         {

@@ -27,6 +27,7 @@ public class FindTextWindow : Window
         {
             Width = 300,
             Margin = new Thickness(0, 0, 10, 0),
+            [Avalonia.Automation.AutomationProperties.NameProperty] = Se.Language.General.Search,
             [!TextBox.TextProperty] = new Binding(nameof(vm.SearchText)) { Mode = BindingMode.TwoWay },
             VerticalAlignment = VerticalAlignment.Center,
         };
@@ -70,6 +71,7 @@ public class FindTextWindow : Window
     private static Border MakeSubtitlesView(FindTextViewModel vm)
     {
         vm.SubtitleGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        vm.SubtitleGrid.WithAccessibleName(Se.Language.General.Lines);
         vm.SubtitleGrid.Height = double.NaN; // auto size inside scroll viewer
         vm.SubtitleGrid.Width = double.NaN;
         vm.SubtitleGrid.Margin = new Thickness(2);
@@ -112,6 +114,7 @@ public class FindTextWindow : Window
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             CellTemplate = TableViewExtras.MakeTextCellTemplate(nameof(SubtitleLineViewModel.Text)),
+            NameBinding = new Binding(nameof(SubtitleLineViewModel.Text)),
         });
 
         vm.SubtitleGrid.DataContext = vm.Subtitles;

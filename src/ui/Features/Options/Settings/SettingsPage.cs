@@ -1092,6 +1092,7 @@ public class SettingsPage : UserControl
             DataContext = vm,
             Height = 250,
             Width = 250,
+            [AutomationProperties.NameProperty] = Se.Language.Options.Settings.FavoriteSubtitleFormats,
             [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(vm.FavoriteSubtitleFormats)),
             [!SelectingItemsControl.SelectedItemProperty] = new Binding(nameof(vm.SelectedFavoriteSubtitleFormat)) { Mode = BindingMode.TwoWay },
             ItemTemplate = new FuncDataTemplate<string>((f, _) =>
@@ -1140,6 +1141,7 @@ public class SettingsPage : UserControl
             DataContext = vm,
             Height = 250,
             Width = 250,
+            [AutomationProperties.NameProperty] = Se.Language.Options.Settings.FavoriteLanguages,
             [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(vm.FavoriteLanguages)),
             [!SelectingItemsControl.SelectedItemProperty] = new Binding(nameof(vm.SelectedFavoriteLanguage)) { Mode = BindingMode.TwoWay },
             ItemTemplate = new FuncDataTemplate<PickLanguageDisplay>((l, _) =>
@@ -1168,24 +1170,24 @@ public class SettingsPage : UserControl
     private Control MakeMpvPreviewSettings(SettingsViewModel vm)
     {
         var labelFontName = UiUtil.MakeLabel(Se.Language.General.FontName);
-        var comboBoxFontName = UiUtil.MakeComboBox(vm.Fonts, vm, nameof(vm.MpvPreviewFontName)).WithMinWidth(150);
+        var comboBoxFontName = UiUtil.MakeComboBox(vm.Fonts, vm, nameof(vm.MpvPreviewFontName)).WithMinWidth(150).WithLabeledBy(labelFontName);
 
         var labelFontSize = UiUtil.MakeLabel(Se.Language.General.FontSize);
-        var numericUpDownFontSize = UiUtil.MakeNumericUpDownOneDecimal(1, 1000, 130, vm, nameof(vm.MpvPreviewFontSize));
+        var numericUpDownFontSize = UiUtil.MakeNumericUpDownOneDecimal(1, 1000, 130, vm, nameof(vm.MpvPreviewFontSize)).WithLabeledBy(labelFontSize);
         numericUpDownFontSize.Increment = 1;
 
         var checkBoxBold = UiUtil.MakeCheckBox(Se.Language.General.Bold, vm, nameof(vm.MpvPreviewFontBold));
 
         var labelAlignment = UiUtil.MakeLabel(Se.Language.General.Alignment);
-        var comboBoxAlignment = UiUtil.MakeComboBox(vm.MpvPreviewFontAlignments, vm, nameof(vm.MpvPreviewSelectedFontAlignment));
+        var comboBoxAlignment = UiUtil.MakeComboBox(vm.MpvPreviewFontAlignments, vm, nameof(vm.MpvPreviewSelectedFontAlignment)).WithLabeledBy(labelAlignment);
 
         var labelJustify = UiUtil.MakeLabel(Se.Language.Options.Settings.TextJustify);
-        var comboBoxJustify = UiUtil.MakeComboBox(vm.MpvPreviewJustifyItems, vm, nameof(vm.MpvPreviewSelectedJustify));
+        var comboBoxJustify = UiUtil.MakeComboBox(vm.MpvPreviewJustifyItems, vm, nameof(vm.MpvPreviewSelectedJustify)).WithLabeledBy(labelJustify);
 
         var checkBoxUsePositionFromFile = UiUtil.MakeCheckBox(Se.Language.Options.Settings.UsePositionFromSubtitleFile, vm, nameof(vm.MpvPreviewUsePositionFromFile));
 
         var labelMargin = UiUtil.MakeLabel(Se.Language.General.Margin);
-        var numericUpDownMargin = UiUtil.MakeNumericUpDownOneDecimal(1, 1000, 130, vm, nameof(vm.MpvPreviewMargin));
+        var numericUpDownMargin = UiUtil.MakeNumericUpDownOneDecimal(1, 1000, 130, vm, nameof(vm.MpvPreviewMargin)).WithLabeledBy(labelMargin);
         numericUpDownMargin.Increment = 1;
 
         var checkBoxMarginIsPartOfSubtitleArea = UiUtil.MakeCheckBox(
@@ -1287,17 +1289,17 @@ public class SettingsPage : UserControl
         var label = UiUtil.MakeLabel(Se.Language.General.BorderStyle);
         grid.Add(label, 1, 0);
 
-        var comboBoxBorderType = UiUtil.MakeComboBox(vm.MpvPreviewBorderTypes, vm, nameof(vm.MpvPreviewSelectedBorderType));
+        var comboBoxBorderType = UiUtil.MakeComboBox(vm.MpvPreviewBorderTypes, vm, nameof(vm.MpvPreviewSelectedBorderType)).WithLabeledBy(label);
         grid.Add(comboBoxBorderType, 2, 0, 1, 2);
 
         var labelOutlineWidth = UiUtil.MakeLabel(Se.Language.General.OutlineWidth);
-        var numericUpDownOutlineWidth = UiUtil.MakeNumericUpDownOneDecimal(0, 100, 130, vm, nameof(vm.MpvPreviewOutlineWidth));
+        var numericUpDownOutlineWidth = UiUtil.MakeNumericUpDownOneDecimal(0, 100, 130, vm, nameof(vm.MpvPreviewOutlineWidth)).WithLabeledBy(labelOutlineWidth);
         numericUpDownOutlineWidth.Increment = 0.5m;
         grid.Add(labelOutlineWidth, 3, 0);
         grid.Add(numericUpDownOutlineWidth, 3, 1);
 
         var labelShadowWidth = UiUtil.MakeLabel(Se.Language.General.ShadowWidth);
-        var numericUpDownShadowWidth = UiUtil.MakeNumericUpDownOneDecimal(0, 100, 130, vm, nameof(vm.MpvPreviewShadowWidth));
+        var numericUpDownShadowWidth = UiUtil.MakeNumericUpDownOneDecimal(0, 100, 130, vm, nameof(vm.MpvPreviewShadowWidth)).WithLabeledBy(labelShadowWidth);
         numericUpDownShadowWidth.Increment = 0.5m;
         grid.Add(labelShadowWidth, 4, 0);
         grid.Add(numericUpDownShadowWidth, 4, 1);

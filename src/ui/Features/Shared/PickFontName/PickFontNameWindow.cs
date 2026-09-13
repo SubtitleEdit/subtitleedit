@@ -79,12 +79,12 @@ public class PickFontNameWindow : Window
                 new TabItem
                 {
                     Header = Se.Language.Tools.PickFontNameInstalledFonts,
-                    Content = MakeFontsView(vm, vm.FontNames, nameof(vm.SelectedFontName)),
+                    Content = MakeFontsView(vm, vm.FontNames, nameof(vm.SelectedFontName), Se.Language.Tools.PickFontNameInstalledFonts),
                 },
                 new TabItem
                 {
                     Header = Se.Language.Tools.PickFontNameCollectedFonts,
-                    Content = MakeFontsView(vm, vm.CollectedFontNames, nameof(vm.SelectedCollectedFontName)),
+                    Content = MakeFontsView(vm, vm.CollectedFontNames, nameof(vm.SelectedCollectedFontName), Se.Language.Tools.PickFontNameCollectedFonts),
                 },
             },
         };
@@ -131,9 +131,10 @@ public class PickFontNameWindow : Window
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
-    private static Border MakeFontsView(PickFontNameViewModel vm, System.Collections.IEnumerable itemsSource, string selectedItemPath)
+    private static Border MakeFontsView(PickFontNameViewModel vm, System.Collections.IEnumerable itemsSource, string selectedItemPath, string accessibleName)
     {
         var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGrid.WithAccessibleName(accessibleName);
         dataGrid.Width = double.NaN;
         dataGrid.Height = double.NaN;
         dataGrid.DataContext = vm;

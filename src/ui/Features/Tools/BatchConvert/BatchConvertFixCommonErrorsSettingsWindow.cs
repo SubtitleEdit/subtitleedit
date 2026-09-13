@@ -32,7 +32,8 @@ public class BatchConvertFixCommonErrorsSettingsWindow : Window
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var comboProfile = UiUtil.MakeComboBox(vm.Profiles, vm, nameof(vm.SelectedProfile));
+        var comboProfile = UiUtil.MakeComboBox(vm.Profiles, vm, nameof(vm.SelectedProfile))
+            .WithAccessibleName(Se.Language.General.Profile);
         var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
         var grid = new Grid

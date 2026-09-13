@@ -32,7 +32,7 @@ public class ReplaceWindow : Window
             ItemsSource = vm.SearchHistory,
             [!AutoCompleteBox.TextProperty] = new Binding(nameof(vm.SearchText)),
             MinimumPrefixLength = 0,
-        };
+        }.WithAccessibleName(Se.Language.General.Find); // AutoCompleteBox has no watermark-derived name (#12087)
         textBoxFind.KeyDown += vm.FindTextBoxKeyDown;
 
         var checkBoxWholeWord = new CheckBox

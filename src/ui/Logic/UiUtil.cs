@@ -2837,8 +2837,8 @@ public static class UiUtil
     }
 
     /// <summary>
-    /// Forwards the accessible name set on a <see cref="NumericUpDown"/> to its inner
-    /// PART_TextBox. The text box is the element that actually receives keyboard focus,
+    /// Forwards the accessible name (and LabeledBy link) set on a <see cref="NumericUpDown"/>
+    /// to its inner PART_TextBox. The text box is the element that actually receives keyboard focus,
     /// so without this a screen reader would announce the focused field with no name
     /// (issue #11553). Callers just set <c>AutomationProperties.Name</c> on the control.
     /// </summary>
@@ -2848,7 +2848,36 @@ public static class UiUtil
         {
             var textBox = e.NameScope.Find<TextBox>("PART_TextBox");
             textBox?.Bind(AutomationProperties.NameProperty, control.GetObservable(AutomationProperties.NameProperty));
+            textBox?.Bind(AutomationProperties.LabeledByProperty, control.GetObservable(AutomationProperties.LabeledByProperty));
+
+            var spinner = e.NameScope.Find<ButtonSpinner>("PART_Spinner");
+            if (spinner != null)
+            {
+                spinner.TemplateApplied += (_, spinnerArgs) => NameSpinnerButtons(spinnerArgs.NameScope);
+            }
         };
+    }
+
+    /// <summary>
+    /// The Fluent ButtonSpinner template gives its increase/decrease buttons a PathIcon as
+    /// content and no accessible name, so a screen reader announced them as
+    /// "Avalonia.Controls.PathIcon button" (#12087). Name them, and take them out of the tab
+    /// order: the text box already changes the value with the Up/Down arrows, so the two
+    /// extra tab stops per field only added noise for keyboard users.
+    /// </summary>
+    private static void NameSpinnerButtons(INameScope nameScope)
+    {
+        if (nameScope.Find<InputElement>("PART_IncreaseButton") is { } increase)
+        {
+            AutomationProperties.SetName(increase, Se.Language.General.Increase);
+            KeyboardNavigation.SetIsTabStop(increase, false);
+        }
+
+        if (nameScope.Find<InputElement>("PART_DecreaseButton") is { } decrease)
+        {
+            AutomationProperties.SetName(decrease, Se.Language.General.Decrease);
+            KeyboardNavigation.SetIsTabStop(decrease, false);
+        }
     }
 
     public static Label WithBindText(this Label control, object viewModel, string contentPropertyPath)
@@ -3399,6 +3428,10 @@ public static class UiUtil
                     ClampToWorkingArea(window);
                 }
             }, DispatcherPriority.Background);
+
+            // Name every input after its visible label for screen readers - once, here,
+            // instead of in each of the ~300 windows (#12087). See AccessibleLabels.
+            AccessibleLabels.Apply(window);
         };
     }
 

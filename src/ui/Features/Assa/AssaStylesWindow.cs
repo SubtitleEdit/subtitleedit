@@ -117,7 +117,7 @@ public class AssaStylesWindow : Window
 
         // No header sorting: ASSA styles are written to the file header in list
         // order on OK, so the collection order is not presentation-only.
-        var dataGrid = TableViewExtras.MakeTableView();
+        var dataGrid = TableViewExtras.MakeTableView().WithLabeledBy(label);
         dataGrid.DataContext = vm;
         dataGrid.ItemsSource = vm.FileStyles;
 
@@ -269,7 +269,7 @@ public class AssaStylesWindow : Window
 
         // No header sorting: the storage style order is persisted to settings in
         // list order on OK, so the collection order is not presentation-only.
-        var dataGrid = TableViewExtras.MakeTableView();
+        var dataGrid = TableViewExtras.MakeTableView().WithLabeledBy(label);
         dataGrid.DataContext = vm;
         dataGrid.ItemsSource = vm.StorageStylesView;
 

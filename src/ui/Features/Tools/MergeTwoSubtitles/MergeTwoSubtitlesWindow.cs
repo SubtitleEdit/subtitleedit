@@ -173,6 +173,7 @@ public class MergeTwoSubtitlesWindow : Window
 
         dataGrid.Bind(TableView.ItemsSourceProperty, new Binding(itemsPath) { Source = vm });
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(selectedItemPath) { Source = vm });
+        dataGrid.WithLabeledBy(labelTitle);
         dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
         {
             if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0 &&

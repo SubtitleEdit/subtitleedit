@@ -560,9 +560,10 @@ public class OcrWindow : Window
                         return stackPanel;
                     })
                 },
-                new TableViewColumn
+                new SeTableViewColumn
                 {
                     Header = Se.Language.General.Text,
+                    NameBinding = new Binding(nameof(OcrSubtitleItem.Text)),
                     Width = new GridLength(1, GridUnitType.Star),
                     CellTheme = UiUtil.TableViewNoPaddingCellTheme,
                     HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
@@ -593,6 +594,9 @@ public class OcrWindow : Window
         // realized row height, so the thumb jumps around while scrolling. Rows here vary
         // even more than in the main grid - each holds a subtitle bitmap - so hide the
         // native vertical bar and dock a row-index one beside the grid instead.
+        dataGridSubtitle.WithAccessibleName(Se.Language.General.ImageBasedSubtitles);
+        TableViewExtras.ApplyDefaultRowNames(dataGridSubtitle); // #12087: rows are named from the columns
+
         var scrollBarHost = new TableViewIndexScrollBar(dataGridSubtitle);
 
         // The image thumbnails scale with Ctrl+plus/minus (Image.MaxWidth/MaxHeight are
@@ -936,6 +940,7 @@ public class OcrWindow : Window
 
         var listBox = new ListBox
         {
+            [Avalonia.Automation.AutomationProperties.NameProperty] = Se.Language.Ocr.UnknownWords,
             [!ListBox.ItemsSourceProperty] = new Binding(nameof(vm.UnknownWords)) { Mode = BindingMode.OneWay },
             [!ListBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedUnknownWord)) { Mode = BindingMode.TwoWay },
             Width = double.NaN,
@@ -1029,6 +1034,7 @@ public class OcrWindow : Window
 
         var listBox = new ListBox
         {
+            [Avalonia.Automation.AutomationProperties.NameProperty] = Se.Language.Ocr.AllFixes,
             [!ListBox.ItemsSourceProperty] = new Binding(nameof(vm.AllFixes)) { Mode = BindingMode.OneWay },
             [!ListBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedAllFix)) { Mode = BindingMode.TwoWay },
             Width = double.NaN,
@@ -1078,6 +1084,7 @@ public class OcrWindow : Window
 
         var listBox = new ListBox
         {
+            [Avalonia.Automation.AutomationProperties.NameProperty] = Se.Language.Ocr.GuessesUsed,
             [!ListBox.ItemsSourceProperty] = new Binding(nameof(vm.AllGuesses)) { Mode = BindingMode.OneWay },
             [!ListBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedAllGuess)) { Mode = BindingMode.TwoWay },
             Width = double.NaN,

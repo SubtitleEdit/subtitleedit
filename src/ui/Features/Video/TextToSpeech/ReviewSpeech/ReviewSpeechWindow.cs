@@ -235,6 +235,7 @@ public class ReviewSpeechWindow : Window
         {
             textBox.FontFamily = FontFamilyHelper.Make(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
         }
+        textBox.WithAccessibleName(Se.Language.General.Text); // edits the selected row's text; no visible label (#12087)
 
         var grid = new Grid
         {

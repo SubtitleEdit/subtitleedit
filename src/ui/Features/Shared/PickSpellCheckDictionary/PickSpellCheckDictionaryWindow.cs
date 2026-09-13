@@ -25,6 +25,7 @@ public class PickSpellCheckDictionaryWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             MinWidth = 180,
             Margin = new Thickness(0, 10, 10, 2),
+            [Avalonia.Automation.AutomationProperties.NameProperty] = Se.Language.General.Dictionary,
             [!ComboBox.SelectedValueProperty] = new Binding(nameof(vm.SelectedDictionary)),
         };
 

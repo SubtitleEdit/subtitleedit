@@ -88,6 +88,7 @@ public class OpenSecondarySubtitleWindow : Window
             vm.Paragraphs, vm, nameof(SubtitleDisplayItem.Text), nameof(vm.SelectedParagraphIndex));
         comboBoxParagraphs.Width = double.NaN;
         comboBoxParagraphs.HorizontalAlignment = HorizontalAlignment.Stretch;
+        comboBoxParagraphs.WithAccessibleName(Se.Language.General.Lines); // no visible label (#12087)
         vm.ComboBoxParagraphs = comboBoxParagraphs;
         comboBoxParagraphs.SelectionChanged += vm.ComboBoxParagraphsChanged;
 

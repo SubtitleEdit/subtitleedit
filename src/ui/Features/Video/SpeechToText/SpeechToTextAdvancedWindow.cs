@@ -77,6 +77,7 @@ public class SpeechToTextAdvancedWindow : Window
             Mode = BindingMode.OneWay,
             UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
         });
+        textBoxHelp.WithAccessibleName(Se.Language.General.Help); // read-only engine help; no visible label (#12087)
         var scrollViewer = new ScrollViewer
         {
             Content = textBoxHelp,

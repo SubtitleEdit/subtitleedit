@@ -423,6 +423,11 @@ public class BeautifyTimeCodesProfileWindow : Window
         {
             nudFields.Children.Add(MakeFrameNud(rightGreenPath));
         }
+        // Only the first field would inherit the "Zones" radio as its label; name them all (#12087).
+        foreach (var nud in nudFields.Children)
+        {
+            nud.WithAccessibleName(_l.Zones);
+        }
         nudFields.Bind(IsEnabledProperty, new Binding(useZonesPath) { Source = _vm });
         var zonesRow = new StackPanel
         {

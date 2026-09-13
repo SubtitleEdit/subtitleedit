@@ -23,6 +23,7 @@ public class PromptTextBoxWindow : Window
             Margin = new Thickness(0, 0, 10, 0),
             [!TextBox.WidthProperty] = new Binding(nameof(vm.TextBoxWidth)) { Mode = BindingMode.TwoWay },
             [!TextBox.HeightProperty] = new Binding(nameof(vm.TextBoxHeight)) { Mode = BindingMode.TwoWay },
+            [Avalonia.Automation.AutomationProperties.NameProperty] = Nikse.SubtitleEdit.Logic.Config.Se.Language.General.Text,
             [!TextBox.TextProperty] = new Binding(nameof(vm.Text)) { Mode = BindingMode.TwoWay },
             [!TextBox.IsReadOnlyProperty] = new Binding(nameof(vm.IsReadOnly)) { Mode = BindingMode.TwoWay },
             VerticalAlignment = VerticalAlignment.Center,

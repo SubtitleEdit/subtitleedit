@@ -81,6 +81,7 @@ public class PickMatroskaTrackWindow : Window
     {
         var booleanToCheckMarkConverter = new BooleanToCheckMarkConverter();
         var dataGridTracks = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGridTracks.WithAccessibleName(Se.Language.General.SelectSubtitle);
         dataGridTracks.Width = double.NaN;
         dataGridTracks.Height = double.NaN;
         dataGridTracks.DataContext = vm;
@@ -168,6 +169,7 @@ public class PickMatroskaTrackWindow : Window
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
         var dataGridSubtitle = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGridSubtitle.WithAccessibleName(Se.Language.General.Preview);
         dataGridSubtitle.Width = double.NaN;
         dataGridSubtitle.Height = double.NaN;
         dataGridSubtitle.DataContext = vm;
@@ -206,6 +208,7 @@ public class PickMatroskaTrackWindow : Window
                     CellTheme = UiUtil.TableViewCellTheme,
                     HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Width = new GridLength(1, GridUnitType.Star),
+                    NameBinding = new Binding(nameof(MatroskaSubtitleCueDisplay.Text)),
                     CellTemplate = new FuncDataTemplate<MatroskaSubtitleCueDisplay>((item, _) =>
                     {
                         var stackPanel = new StackPanel

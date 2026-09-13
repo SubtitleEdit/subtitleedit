@@ -36,7 +36,8 @@ public class RemuxVideoWindow : Window
         var notRemuxing = new Binding(nameof(vm.IsRemuxing)) { Converter = InverseBooleanConverter.Instance };
 
         // 1. Video
-        var textBoxVideo = UiUtil.MakeTextBox(double.NaN, vm, nameof(vm.VideoFileName));
+        var textBoxVideo = UiUtil.MakeTextBox(double.NaN, vm, nameof(vm.VideoFileName))
+            .WithAccessibleName(l.RemuxVideoVideoFile); // the section header above is icon + label, not a plain label (#12087)
         textBoxVideo.HorizontalAlignment = HorizontalAlignment.Stretch;
         textBoxVideo.Bind(TextBox.IsEnabledProperty, notRemuxing);
         var labelVideoSize = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.VideoFileSize)).WithMarginRight(5);
@@ -299,6 +300,7 @@ public class RemuxVideoWindow : Window
         listBox.Bind(ListBox.ItemsSourceProperty, new Binding(itemsPropertyPath));
         listBox.Bind(ListBox.SelectedItemProperty, new Binding(selectedPropertyPath) { Mode = BindingMode.TwoWay });
         listBox.Bind(ListBox.IsEnabledProperty, notRemuxing);
+        listBox.WithAccessibleName(header); // the section header (icon + label) above the list (#12087)
         listBox.AddHandler(InputElement.KeyDownEvent, keyDown, RoutingStrategies.Tunnel);
 
         var flyout = new MenuFlyout();

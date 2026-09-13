@@ -95,6 +95,8 @@ public class LlamaCppAdvancedSettingsWindow : Window
         promptBox.PlaceholderText = LlamaCppAdvancedProtocol.DefaultPrompt;
         SetHint(promptBox, Se.Language.Translate.CustomPromptHint);
         // The prompt label carries the reset button, so the editor column keeps its full width.
+        var promptTextLabel = MakeSmallLabel(Se.Language.Translate.PromptText);
+        promptBox.WithLabeledBy(promptTextLabel); // wrapped in a panel, so not auto-linked (#12087)
         var promptLabel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -102,7 +104,7 @@ public class LlamaCppAdvancedSettingsWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             Children =
             {
-                MakeSmallLabel(Se.Language.Translate.PromptText),
+                promptTextLabel,
                 UiUtil.MakeButton(vm.ResetPromptCommand, IconNames.Restore, Se.Language.Translate.ResetPromptToDefault),
             },
         };
