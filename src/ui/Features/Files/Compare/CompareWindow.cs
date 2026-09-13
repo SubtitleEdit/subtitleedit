@@ -82,11 +82,11 @@ public class CompareWindow : Window
         grid.Add(panelRightBrowse, 0, 1);
 
         // left subtitle view (original)
-        var leftView = MakeSubtitlesView(vm.LeftSubtitles, nameof(vm.SelectedLeft), vm.FileGridOnDragOver, vm.FileGridOnDropLeft);
+        var leftView = MakeSubtitlesView(vm.LeftSubtitles, nameof(vm.SelectedLeft), vm.FileGridOnDragOver, vm.FileGridOnDropLeft, labelLeftFileName);
         grid.Add(leftView, 1);
 
         // right subtitle view (modified)
-        var rightView = MakeSubtitlesView(vm.RightSubtitles, nameof(vm.SelectedRight), vm.FileGridOnDragOver, vm.FileGridOnDropRight);
+        var rightView = MakeSubtitlesView(vm.RightSubtitles, nameof(vm.SelectedRight), vm.FileGridOnDragOver, vm.FileGridOnDropRight, labelRightFileName);
         grid.Add(rightView, 1, 1);
 
         // status text on the left, color legend for the difference highlighting on the right
@@ -260,9 +260,9 @@ public class CompareWindow : Window
         };
     }
 
-    private static Border MakeSubtitlesView(ObservableCollection<CompareItem> items, string selectedBinding, Delegate fileGridOnDragOver, Delegate fileGridOnDrop)
+    private static Border MakeSubtitlesView(ObservableCollection<CompareItem> items, string selectedBinding, Delegate fileGridOnDragOver, Delegate fileGridOnDrop, Control fileNameLabel)
     {
-        var dg = TableViewExtras.MakeTableView(multiSelect: false);
+        var dg = TableViewExtras.MakeTableView(multiSelect: false).WithLabeledBy(fileNameLabel); // the file name above the list names it (#12087)
         dg.ItemsSource = items;
         dg.Height = double.NaN;
         dg.Margin = new Thickness(2);
@@ -274,6 +274,7 @@ public class CompareWindow : Window
             Width = new GridLength(50),
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            NameBinding = new Binding(nameof(CompareItem.NumberDisplay)),
             CellTemplate = new FuncDataTemplate<CompareItem>((item, ns) =>
             {
                 var border = new Border
@@ -300,6 +301,7 @@ public class CompareWindow : Window
             Width = new GridLength(120),
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            NameBinding = new Binding(nameof(CompareItem.StartTimeDisplay)),
             CellTemplate = new FuncDataTemplate<CompareItem>((item, ns) =>
             {
                 var border = new Border
@@ -326,6 +328,7 @@ public class CompareWindow : Window
             Width = new GridLength(120),
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            NameBinding = new Binding(nameof(CompareItem.EndTimeDisplay)),
             CellTemplate = new FuncDataTemplate<CompareItem>((item, ns) =>
             {
                 var border = new Border
@@ -352,6 +355,7 @@ public class CompareWindow : Window
             Width = new GridLength(1, GridUnitType.Star),
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            NameBinding = new Binding(nameof(CompareItem.Text)),
             CellTemplate = new FuncDataTemplate<CompareItem>((item, ns) =>
             {
                 var border = new Border

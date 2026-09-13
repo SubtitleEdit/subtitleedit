@@ -51,6 +51,7 @@ public class CheckForUpdatesWindow : Window
         // so the final line is always fully visible when scrolled to the bottom (#12972).
         ScrollViewer.SetAllowAutoHide(changeLogBox, false);
         changeLogBox.Bind(TextBox.TextProperty, new Binding(nameof(vm.ChangeLogText)));
+        changeLogBox.WithLabeledBy(statusLabel); // read-only changelog; the status line above is its only heading (#12087)
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonOk);

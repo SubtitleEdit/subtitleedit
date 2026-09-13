@@ -63,6 +63,7 @@ public class ExportImageBasedWindow : Window
         var comboProfile = UiUtil.MakeComboBox(vm.Profiles, vm, nameof(vm.SelectedProfile));
         comboProfile.SelectionChanged += vm.ProfileChanged;
         var labelProfile = UiUtil.MakeLabel(Se.Language.General.Profile);
+        comboProfile.WithLabeledBy(labelProfile);
         var buttonProfileBrowse = UiUtil.MakeButtonBrowse(vm.ShowProfileCommand, accessibleName: Se.Language.General.Profile).WithMarginLeft(5);
         var panelProfile = new StackPanel
         {
@@ -112,7 +113,7 @@ public class ExportImageBasedWindow : Window
 
     private Border MakeSubtitlesView(ExportImageBasedViewModel vm)
     {
-        vm.SubtitleGrid = TableViewExtras.MakeTableView();
+        vm.SubtitleGrid = TableViewExtras.MakeTableView().WithAccessibleName(Se.Language.General.Lines); // #12087
         vm.SubtitleGrid.Height = double.NaN; // auto size inside scroll viewer
         vm.SubtitleGrid.Margin = new Thickness(2);
         vm.SubtitleGrid.ItemsSource = vm.Subtitles;
@@ -158,6 +159,7 @@ public class ExportImageBasedWindow : Window
             Width = new GridLength(90),
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            NameBinding = new Binding(nameof(SubtitleLineViewModel.Duration)) { Converter = shortTimeConverter },
             CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((value, nameScope) =>
             {
                 var border = new Border
@@ -184,6 +186,7 @@ public class ExportImageBasedWindow : Window
             Width = new GridLength(1, GridUnitType.Star),
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            NameBinding = new Binding(nameof(SubtitleLineViewModel.Text)),
             CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((value, nameScope) =>
             {
                 var border = new Border
@@ -419,15 +422,19 @@ public class ExportImageBasedWindow : Window
 
         var comboPadLeft = UiUtil.MakeComboBox(vm.BoxPaddingValues, vm, nameof(vm.BoxPaddingLeft));
         ToolTip.SetTip(comboPadLeft, Se.Language.General.Left);
+        comboPadLeft.WithAccessibleName(Se.Language.General.Left); // the four box paddings only have tooltips (#12087)
         comboPadLeft.SelectionChanged += vm.ComboChanged;
         var comboPadRight = UiUtil.MakeComboBox(vm.BoxPaddingValues, vm, nameof(vm.BoxPaddingRight));
         ToolTip.SetTip(comboPadRight, Se.Language.General.Right);
+        comboPadRight.WithAccessibleName(Se.Language.General.Right);
         comboPadRight.SelectionChanged += vm.ComboChanged;
         var comboPadTop = UiUtil.MakeComboBox(vm.BoxPaddingValues, vm, nameof(vm.BoxPaddingTop));
         ToolTip.SetTip(comboPadTop, Se.Language.General.Top);
+        comboPadTop.WithAccessibleName(Se.Language.General.Top);
         comboPadTop.SelectionChanged += vm.ComboChanged;
         var comboPadBottom = UiUtil.MakeComboBox(vm.BoxPaddingValues, vm, nameof(vm.BoxPaddingBottom));
         ToolTip.SetTip(comboPadBottom, Se.Language.General.Bottom);
+        comboPadBottom.WithAccessibleName(Se.Language.General.Bottom);
         comboPadBottom.SelectionChanged += vm.ComboChanged;
         var panelBoxPadding = new StackPanel
         {

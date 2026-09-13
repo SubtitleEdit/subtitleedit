@@ -51,6 +51,8 @@ public class AssaApplyCustomOverrideTagsWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
         textBoxCurrent.Bind(TextBox.TextProperty, new Binding(nameof(vm.CurrentTag)));
+        textBoxCurrent.WithAccessibleName(Se.Language.Assa.ApplyOverrideTags); // the chosen tags, no visible label (#12087)
+        comboBoxOverrideTags.WithLabeledBy(labelOverrideTag);
         
         var panelRadioButtons = new StackPanel
         {
@@ -84,6 +86,7 @@ public class AssaApplyCustomOverrideTagsWindow : Window
         comboBoxLeft.Width = double.NaN;
         comboBoxLeft.MinHeight = 50;
         comboBoxLeft.HorizontalAlignment = HorizontalAlignment.Stretch;
+        comboBoxLeft.WithAccessibleName(Se.Language.General.Lines); // subtitle line picker under the video, no visible label (#12087)
         vm.ComboBoxLeft = comboBoxLeft;
         comboBoxLeft.SelectionChanged += vm.ComboBoxParagraphsChanged;
 

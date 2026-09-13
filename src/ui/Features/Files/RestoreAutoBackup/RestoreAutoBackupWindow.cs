@@ -81,7 +81,7 @@ public class RestoreAutoBackupWindow : Window
 
     private static TableView MakeSubtitleGrid(RestoreAutoBackupViewModel vm)
     {
-        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false).WithAccessibleName(Se.Language.File.RestoreAutoBackup.Subtitles); // the tab header (#12087)
         dataGrid.Width = double.NaN;
         dataGrid.Height = double.NaN;
         dataGrid.DataContext = vm;
@@ -111,7 +111,7 @@ public class RestoreAutoBackupWindow : Window
 
     private static TableView MakeSettingsGrid(RestoreAutoBackupViewModel vm)
     {
-        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false).WithAccessibleName(Se.Language.File.RestoreAutoBackup.Settings);
         dataGrid.Width = double.NaN;
         dataGrid.Height = double.NaN;
         dataGrid.DataContext = vm;
@@ -339,6 +339,7 @@ public class RestoreAutoBackupWindow : Window
         Width = new GridLength(110),
         CellTheme = UiUtil.TableViewNoPaddingCellTheme,
         HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+        NameBinding = new Binding(nameof(DisplayFile.Extension)),
         CellTemplate = new FuncDataTemplate<DisplayFile>((item, _) =>
         {
             if (item == null)
