@@ -113,24 +113,49 @@ public partial class VoiceManagerViewModel : ObservableObject
 
     internal void Initialize(IEnumerable<ITtsEngine> engines, ITtsEngine? selectedEngine)
     {
-        foreach (var engine in engines)
+        // Only the cloning engines: they are the ones with voices to tend (reference recordings
+        // to play, transcribe, rename, copy). Presets, Piper models and online voice lists have
+        // nothing to manage here. The order stays the TTS window's.
+        foreach (var engine in engines.Where(e => e.SupportsVoiceCloning))
         {
             Engines.Add(new VoiceManagerEngineItem(engine));
         }
 
-        // Cloning engines first in the picker's mind: they are what the manager is for. The
-        // order itself stays the TTS window's, so the list reads the same in both places.
         SelectedEngine = Engines.FirstOrDefault(e => ReferenceEquals(e.Engine, selectedEngine))
-                         ?? Engines.FirstOrDefault(e => e.IsCloning)
                          ?? Engines.FirstOrDefault();
+
+        _ = CheckInstalledAsync(Engines.ToList());
+    }
+
+    /// <summary>
+    /// Fills in each engine's installed dot after the window is up - the checks look for
+    /// binaries and model files, which is too slow to do on the UI thread before showing.
+    /// </summary>
+    private static async Task CheckInstalledAsync(List<VoiceManagerEngineItem> items)
+    {
+        foreach (var item in items)
+        {
+            bool installed;
+            try
+            {
+                installed = await Task.Run(() => item.Engine.IsInstalled(null));
+            }
+            catch (Exception ex)
+            {
+                SeLogger.Error(ex, $"Voice manager: install check for {item.Name} failed");
+                installed = false;
+            }
+
+            item.IsInstalled = installed;
+        }
     }
 
     partial void OnSelectedEngineChanged(VoiceManagerEngineItem? value)
     {
         StopPlayback();
         OnPropertyChanged(nameof(CopyTargets));
-        IsImportVisible = value != null && (value.Engine.SupportsVoiceCloning || value.Engine is Piper);
-        IsVoicePacksVisible = value?.Engine.SupportsVoiceCloning == true;
+        IsImportVisible = value != null;
+        IsVoicePacksVisible = value != null;
         VoicesLoaded = LoadVoicesAsync(value, null);
     }
 

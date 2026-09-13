@@ -1,7 +1,9 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Shapes;
 using Avalonia.Controls.Templates;
+using Avalonia.Data.Converters;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
@@ -21,6 +23,8 @@ public class VoiceManagerWindow : Window
 {
     private readonly VoiceManagerViewModel _vm;
     private readonly MenuFlyout _copyToFlyout = new();
+    private static readonly IBrush InstalledBrush = new SolidColorBrush(Color.FromRgb(0x3C, 0xB0, 0x43));
+    private static readonly IBrush NotInstalledBrush = new SolidColorBrush(Color.FromArgb(0x70, 0x80, 0x80, 0x80));
 
     public VoiceManagerWindow(VoiceManagerViewModel vm)
     {
@@ -99,14 +103,37 @@ public class VoiceManagerWindow : Window
             VerticalAlignment = VerticalAlignment.Stretch,
             ItemTemplate = new FuncDataTemplate<VoiceManagerEngineItem>((item, _) =>
             {
+                // Installed dot: green once the engine reports its binaries/models present, grey
+                // when not, hidden until the async check has answered.
+                var dot = new Ellipse
+                {
+                    Width = 8,
+                    Height = 8,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Margin = new Thickness(0, 0, 7, 0),
+                    [!Shape.FillProperty] = new Binding(nameof(VoiceManagerEngineItem.IsInstalled))
+                    {
+                        Converter = new FuncValueConverter<bool?, IBrush>(v => v == true ? InstalledBrush : NotInstalledBrush),
+                    },
+                    [!IsVisibleProperty] = new Binding(nameof(VoiceManagerEngineItem.IsInstalled))
+                    {
+                        Converter = new FuncValueConverter<bool?, bool>(v => v != null),
+                    },
+                };
+                dot.Bind(ToolTip.TipProperty, new Binding(nameof(VoiceManagerEngineItem.IsInstalled))
+                {
+                    Converter = new FuncValueConverter<bool?, string>(v => v == true ? Se.Language.General.Installed : Se.Language.General.NotInstalled),
+                });
+
                 var icon = new Icon
                 {
                     Value = item.Icon,
                     FontSize = 16,
                     VerticalAlignment = VerticalAlignment.Center,
-                    Foreground = UiUtil.GetTextColor(item.IsCloning ? 0.95d : 0.6d),
+                    Foreground = UiUtil.GetTextColor(0.95d),
                     Margin = new Thickness(0, 0, 8, 0),
                 };
+                Grid.SetColumn(icon, 1);
 
                 var name = new TextBlock
                 {
@@ -114,7 +141,7 @@ public class VoiceManagerWindow : Window
                     TextTrimming = TextTrimming.CharacterEllipsis,
                     [!TextBlock.TextProperty] = new Binding(nameof(VoiceManagerEngineItem.Name)),
                 };
-                Grid.SetColumn(name, 1);
+                Grid.SetColumn(name, 2);
 
                 var badge = new Border
                 {
@@ -131,18 +158,19 @@ public class VoiceManagerWindow : Window
                     },
                     [!IsVisibleProperty] = new Binding(nameof(VoiceManagerEngineItem.HasCount)),
                 };
-                Grid.SetColumn(badge, 2);
+                Grid.SetColumn(badge, 3);
 
                 return new Grid
                 {
                     ColumnDefinitions =
                     {
+                        new ColumnDefinition { Width = new GridLength(15) },
                         new ColumnDefinition { Width = GridLength.Auto },
                         new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                         new ColumnDefinition { Width = GridLength.Auto },
                     },
                     Margin = new Thickness(0, 1),
-                    Children = { icon, name, badge },
+                    Children = { dot, icon, name, badge },
                 };
             }, true),
         };

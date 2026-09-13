@@ -15,6 +15,9 @@ public partial class VoiceManagerEngineItem : ObservableObject
     [ObservableProperty] private string _countText = string.Empty;
     [ObservableProperty] private bool _hasCount;
 
+    /// <summary>Null until the (possibly slow) install check has run; then the engine's answer.</summary>
+    [ObservableProperty] private bool? _isInstalled;
+
     public VoiceManagerEngineItem(ITtsEngine engine)
     {
         Engine = engine;
