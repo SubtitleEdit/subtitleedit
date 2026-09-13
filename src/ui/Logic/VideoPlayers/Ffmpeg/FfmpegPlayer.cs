@@ -1120,6 +1120,23 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
             return ffmpeg.avcodec_default_get_format(context, formats);
         }
 
+        /// <summary>
+        /// True when the device can transfer decoded pictures into at least one system-memory
+        /// format; without one av_hwframe_transfer_data would fail on every frame.
+        /// </summary>
+        private static bool HasTransferFormats(AVBufferRef* device)
+        {
+            var constraints = ffmpeg.av_hwdevice_get_hwframe_constraints(device, null);
+            if (constraints == null)
+            {
+                return false;
+            }
+
+            var hasFormats = constraints->valid_sw_formats != null && *constraints->valid_sw_formats != AVPixelFormat.AV_PIX_FMT_NONE;
+            ffmpeg.av_hwframe_constraints_free(&constraints);
+            return hasFormats;
+        }
+
         /// <summary>True when the decoder can use a device context of the given type.</summary>
         private static bool SupportsHardwareDevice(AVCodec* decoder, AVHWDeviceType deviceType)
         {
@@ -1179,12 +1196,23 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
                     }
 
                     AVBufferRef* device = null;
-                    if (ffmpeg.av_hwdevice_ctx_create(&device, deviceType, null, null, 0) >= 0)
+                    if (ffmpeg.av_hwdevice_ctx_create(&device, deviceType, null, null, 0) < 0)
                     {
-                        codec->hw_device_ctx = device; // freed with the codec context
-                        codec->get_format = GetHardwareFormatDelegate;
-                        break;
+                        continue;
                     }
+
+                    if (!HasTransferFormats(device))
+                    {
+                        // The device came up but cannot hand pictures back to system memory
+                        // (seen with D3D11VA on some drivers): try the next type, else software.
+                        Se.LogError($"ffmpeg player: {ffmpeg.av_hwdevice_get_type_name(deviceType)} reports no transfer formats, skipping");
+                        ffmpeg.av_buffer_unref(&device);
+                        continue;
+                    }
+
+                    codec->hw_device_ctx = device; // freed with the codec context
+                    codec->get_format = GetHardwareFormatDelegate;
+                    break;
                 }
             }
 
