@@ -360,6 +360,7 @@ public static class InitNativeMacMenu
         videoItems.Items.Add(new NativeMenuItemSeparator());
         videoItems.Items.Add(Item(Clean(l.SpeechToText), v => v.ShowSpeechToTextWhisperCommand));
         videoItems.Items.Add(Item(Clean(l.TextToSpeech), v => v.ShowVideoTextToSpeechCommand));
+        videoItems.Items.Add(Item(Clean(Se.Language.Video.TextToSpeech.VoiceManagerMenuItem), v => v.ShowVideoVoiceManagerCommand));
         videoItems.Items.Add(Item(Clean(l.VideoOcr), v => v.ShowVideoOcrCommand));
         videoItems.Items.Add(new NativeMenuItemSeparator());
         videoItems.Items.Add(Item(Clean(l.GenerateBurnIn), v => v.ShowVideoBurnInCommand));
@@ -390,7 +391,6 @@ public static class InitNativeMacMenu
             // Finds who speaks in the video, clones each of them and assigns the cast, so the
             // whole thing can be dubbed in its own voices (#13698).
             Item(Clean(lVideo.TextToSpeech.AutoCastMenuItem), v => v.ShowVideoAutoCastFromVideoCommand),
-            Item(Clean(lVideo.TextToSpeech.VoiceManagerMenuItem), v => v.ShowVideoVoiceManagerCommand),
         };
         videoMoreList.Add(Toggle(Clean(l.WaveformToolbar), v => v.ToggleIsWaveformToolbarVisibleCommand,
             v => v.IsWaveformToolbarVisible, nameof(MainViewModel.IsWaveformToolbarVisible)));
