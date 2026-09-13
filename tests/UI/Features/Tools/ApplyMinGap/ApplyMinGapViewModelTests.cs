@@ -6,11 +6,17 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Tools.ApplyMinGap;
+using Nikse.SubtitleEdit.Logic;
 
 namespace UITests.Features.Tools.ApplyMinGap;
 
 public class ApplyMinGapViewModelTests : IDisposable
 {
+    private sealed class NullServiceProvider : IServiceProvider
+    {
+        public object? GetService(Type serviceType) => null;
+    }
+
     private readonly List<Window> _windows = new();
 
     public void Dispose()
@@ -32,7 +38,7 @@ public class ApplyMinGapViewModelTests : IDisposable
 
     private ApplyMinGapViewModel ShowWindow()
     {
-        var vm = new ApplyMinGapViewModel();
+        var vm = new ApplyMinGapViewModel(new WindowService(new NullServiceProvider()));
         var window = new ApplyMinGapWindow(vm);
         _windows.Add(window);
         window.Show();
@@ -62,7 +68,7 @@ public class ApplyMinGapViewModelTests : IDisposable
         // Pulling the end back to next.Start - gap can land BEFORE the line's own start when the
         // line is short and the next one starts soon after. That used to be applied anyway and
         // counted as a fix, so a negative-duration line reached the grid and the saved file.
-        var vm = new ApplyMinGapViewModel();
+        var vm = new ApplyMinGapViewModel(new WindowService(new NullServiceProvider()));
         var window = new ApplyMinGapWindow(vm);
         _windows.Add(window);
         window.Show();

@@ -367,7 +367,12 @@ public class TextToSpeechWindow : Window
             Header = Se.Language.Video.TextToSpeech.DeleteVoiceDotDotDot,
             Command = vm.DeleteVoiceCommand,
         };
-        var voiceFlyout = new MenuFlyout { Items = { menuItemRenameVoice, menuItemDeleteVoice } };
+        var menuItemVoiceManager = new Avalonia.Controls.MenuItem
+        {
+            Header = Se.Language.Video.TextToSpeech.VoiceManagerDotDotDot,
+            Command = vm.ShowVoiceManagerCommand,
+        };
+        var voiceFlyout = new MenuFlyout { Items = { menuItemRenameVoice, menuItemDeleteVoice, new Separator(), menuItemVoiceManager } };
         voiceFlyout.Opening += (_, _) =>
         {
             var isFileVoice = vm.CanRenameSelectedVoice();
@@ -410,6 +415,7 @@ public class TextToSpeechWindow : Window
                 },
                 buttonTestVoice,
                 UiUtil.MakeButton(vm.ShowTestVoiceSettingsCommand, IconNames.Settings, $"{Se.Language.Video.TextToSpeech.TestVoice} - {Se.Language.General.Settings}"),
+                UiUtil.MakeButton(vm.ShowVoiceManagerCommand, IconNames.AccountVoice, Se.Language.Video.TextToSpeech.VoiceManagerDotDotDot),
             }
         };
 

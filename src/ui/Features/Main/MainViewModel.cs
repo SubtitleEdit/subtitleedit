@@ -172,6 +172,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.AutoCast;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceCloneConsent;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceManager;
 using Nikse.SubtitleEdit.Features.Video.TransparentSubtitles;
 using Nikse.SubtitleEdit.Features.WebVtt;
 using Nikse.SubtitleEdit.Logic;
@@ -10851,6 +10852,22 @@ public partial class MainViewModel :
     /// translation is work nobody wants replaced by a transcription. With nothing open the
     /// transcription becomes the subtitle.
     /// </remarks>
+    /// <summary>
+    /// Opens the TTS voice manager without going through the text-to-speech window - tending
+    /// reference voices (listen, transcribe, rename, copy, fetch packs) needs no subtitle.
+    /// </summary>
+    [RelayCommand]
+    private async Task ShowVideoVoiceManager()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var engines = TtsEngineCatalog.CreateVoiceCloningEngines();
+        await ShowDialogAsync<VoiceManagerWindow, VoiceManagerViewModel>(vm => vm.Initialize(engines, null));
+    }
+
     [RelayCommand]
     private async Task ShowVideoAutoCastFromVideo()
     {
