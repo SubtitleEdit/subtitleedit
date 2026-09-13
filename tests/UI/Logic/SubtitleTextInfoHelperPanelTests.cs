@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
@@ -61,6 +61,22 @@ public class SubtitleTextInfoHelperPanelTests
 
         Assert.Equal(before, panel.Children.ToList());
         Assert.Equal("4", ((TextBlock)panel.Children[1]).Text);
+    }
+
+    [AvaloniaFact]
+    public void Fill_WithManyLines_ShowsOnlyTheFirstFewAndAnEllipsis()
+    {
+        var panel = new StackPanel();
+        var header = Se.Language.Main.SingleLineLength;
+        var lines = Enumerable.Range(1, 40).Select(i => new string('x', i)).ToList();
+
+        SubtitleTextInfoHelper.FillLineLengthPanel(panel, lines, false, 100);
+
+        Assert.Equal(new List<string> { header, "1", "/", "2", "/", "3", "/", "4", "/", "5", "/ ..." }, LabelTexts(panel));
+
+        // shrinking back below the cap drops the ellipsis again
+        SubtitleTextInfoHelper.FillLineLengthPanel(panel, lines.Take(5).ToList(), false, 100);
+        Assert.Equal(new List<string> { header, "1", "/", "2", "/", "3", "/", "4", "/", "5" }, LabelTexts(panel));
     }
 
     [AvaloniaFact]

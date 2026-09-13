@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -101,7 +101,12 @@ internal static class SubtitleTextInfoHelper
     internal static void FillLineLengthPanel(StackPanel panel, List<string> lines, bool colorTextTooLong, int maxLineLength)
     {
         var children = panel.Children;
-        var needed = 1 + lines.Count + Math.Max(0, lines.Count - 1);
+
+        // Only the first few lines get a length label - a pasted wall of text would otherwise
+        // push the panel across the whole window and shove the controls below it out of view (#14831).
+        var shownLines = Math.Min(lines.Count, MaxLineLengthLabels);
+        var truncated = lines.Count > shownLines;
+        var needed = 1 + shownLines + Math.Max(0, shownLines - 1) + (truncated ? 1 : 0);
         while (children.Count > needed)
         {
             children.RemoveAt(children.Count - 1);
@@ -109,7 +114,7 @@ internal static class SubtitleTextInfoHelper
 
         var index = 0;
         SetLabel(children, ref index, Se.Language.Main.SingleLineLength, null);
-        for (var i = 0; i < lines.Count; i++)
+        for (var i = 0; i < shownLines; i++)
         {
             if (i > 0)
             {
@@ -122,7 +127,17 @@ internal static class SubtitleTextInfoHelper
                 lineLength.ToString(CultureInfo.InvariantCulture),
                 colorTextTooLong && lineLength > maxLineLength ? _errorBrush : null);
         }
+
+        if (truncated)
+        {
+            SetLabel(children, ref index, "/ ...", null);
+        }
     }
+
+    /// <summary>
+    /// Maximum number of per-line length labels shown in the edit box's single-line-length panel.
+    /// </summary>
+    internal const int MaxLineLengthLabels = 5;
 
     private const double LabelFontSize = 12;
     private static readonly Thickness LabelPadding = new Thickness(2);
