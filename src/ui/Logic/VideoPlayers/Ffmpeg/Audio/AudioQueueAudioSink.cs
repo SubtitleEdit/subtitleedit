@@ -253,7 +253,13 @@ public sealed unsafe partial class AudioQueueAudioSink : IAudioSink
 
             if (buffer == null)
             {
-                // All buffers are queued - wait for the queue to hand one back.
+                // All buffers are queued - wait for the queue to hand one back. A queue that has
+                // never been started hands nothing back, so start it first if we are allowed to.
+                lock (_lock)
+                {
+                    StartIfQueuedCore();
+                }
+
                 _doneEvent.WaitOne(BufferMilliseconds);
                 continue;
             }
@@ -290,11 +296,7 @@ public sealed unsafe partial class AudioQueueAudioSink : IAudioSink
                 _bytesWritten += count;
                 _nextBuffer = (_nextBuffer + 1) % BufferCount;
 
-                if (!_started && !_paused)
-                {
-                    // Start once real audio is queued; starting an empty queue just plays silence.
-                    _started = AudioQueueStart(_queue, IntPtr.Zero) == 0;
-                }
+                StartIfQueuedCore();
             }
         }
 
@@ -360,6 +362,24 @@ public sealed unsafe partial class AudioQueueAudioSink : IAudioSink
             {
                 AudioQueueStart(_queue, IntPtr.Zero);
             }
+            else
+            {
+                // The player pre-decodes while paused, so the whole ring may already be queued
+                // from before the first start - Play must start the queue, or nothing ever plays.
+                StartIfQueuedCore();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Starts the queue once real audio is queued and playback is not paused; starting an empty
+    /// queue just plays silence. Called under <see cref="_lock"/>.
+    /// </summary>
+    private void StartIfQueuedCore()
+    {
+        if (_queue != IntPtr.Zero && !_started && !_paused && _inFlight > 0)
+        {
+            _started = AudioQueueStart(_queue, IntPtr.Zero) == 0;
         }
     }
 
