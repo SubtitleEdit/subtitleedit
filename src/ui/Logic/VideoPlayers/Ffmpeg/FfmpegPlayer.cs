@@ -805,7 +805,7 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
             try
             {
                 var stream = _format->streams[_videoStreamIndex];
-                var hardware = OperatingSystem.IsMacOS();
+                var hardware = HardwareDeviceType != AVHWDeviceType.AV_HWDEVICE_TYPE_NONE;
                 codec = OpenDecoder(stream, hardware);
                 hardware = codec->hw_device_ctx != null;
                 frame = ffmpeg.av_frame_alloc();
@@ -867,9 +867,9 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
                         }
 
                         var picture = frame;
-                        if (frame->format == (int)AVPixelFormat.AV_PIX_FMT_VIDEOTOOLBOX)
+                        if (frame->format == (int)HardwarePixelFormat)
                         {
-                            // The picture lives in GPU/IOSurface memory; pull it into system memory
+                            // The picture lives in GPU memory; pull it into system memory
                             // (NV12 typically) so swscale can convert it like a software picture.
                             receiveResult = ffmpeg.av_hwframe_transfer_data(transferFrame, frame, 0);
                             if (receiveResult < 0)
@@ -952,7 +952,7 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
 
                     if (hardwareFailed)
                     {
-                        // VideoToolbox could not decode or hand back this picture (unsupported
+                        // The hardware decoder could not decode or hand back this picture (unsupported
                         // profile, for example): reopen in software and replay from the key frame.
                         codec = FallBackToSoftware(codec, stream, 0, ref hardware);
                         serial = -1;
@@ -1013,7 +1013,7 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
         private AVCodecContext* FallBackToSoftware(AVCodecContext* codec, AVStream* stream, int error, ref bool hardware)
         {
             var reason = error < 0 ? FfmpegLibraries.ErrorText(error) : "picture transfer failed";
-            Se.LogError($"ffmpeg player: VideoToolbox decoding failed for {ffmpeg.avcodec_get_name(stream->codecpar->codec_id)} ({reason}), falling back to software decoding");
+            Se.LogError($"ffmpeg player: {HardwareDeviceType} decoding failed for {ffmpeg.avcodec_get_name(stream->codecpar->codec_id)} ({reason}), falling back to software decoding");
             ffmpeg.avcodec_free_context(&codec);
             hardware = false;
             return OpenDecoder(stream, hardware: false);
@@ -1055,18 +1055,35 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
             return target;
         }
 
+        /// <summary>
+        /// The hardware decoder of this platform: VideoToolbox on macOS, Direct3D 11 on Windows,
+        /// none elsewhere. Decoded pictures come back in <see cref="HardwarePixelFormat"/> and
+        /// are transferred to system memory before conversion.
+        /// </summary>
+        private static readonly AVHWDeviceType HardwareDeviceType =
+            OperatingSystem.IsMacOS() ? AVHWDeviceType.AV_HWDEVICE_TYPE_VIDEOTOOLBOX :
+            OperatingSystem.IsWindows() ? AVHWDeviceType.AV_HWDEVICE_TYPE_D3D11VA :
+            AVHWDeviceType.AV_HWDEVICE_TYPE_NONE;
+
+        private static readonly AVPixelFormat HardwarePixelFormat = HardwareDeviceType switch
+        {
+            AVHWDeviceType.AV_HWDEVICE_TYPE_VIDEOTOOLBOX => AVPixelFormat.AV_PIX_FMT_VIDEOTOOLBOX,
+            AVHWDeviceType.AV_HWDEVICE_TYPE_D3D11VA => AVPixelFormat.AV_PIX_FMT_D3D11,
+            _ => AVPixelFormat.AV_PIX_FMT_NONE,
+        };
+
         // Kept in a static so the native function pointer handed to libavcodec stays valid.
         private static readonly AVCodecContext_get_format GetHardwareFormatDelegate = GetHardwareFormat;
 
         /// <summary>
-        /// libavcodec's pixel-format negotiation: pick the VideoToolbox surface format when it is
-        /// offered, else let the default choose a software format.
+        /// libavcodec's pixel-format negotiation: pick the platform's hardware surface format when
+        /// it is offered, else let the default choose a software format.
         /// </summary>
         private static AVPixelFormat GetHardwareFormat(AVCodecContext* context, AVPixelFormat* formats)
         {
             for (var p = formats; *p != AVPixelFormat.AV_PIX_FMT_NONE; p++)
             {
-                if (*p == AVPixelFormat.AV_PIX_FMT_VIDEOTOOLBOX)
+                if (*p == HardwarePixelFormat)
                 {
                     return *p;
                 }
@@ -1075,8 +1092,8 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
             return ffmpeg.avcodec_default_get_format(context, formats);
         }
 
-        /// <summary>True when the decoder can use a VideoToolbox device context.</summary>
-        private static bool SupportsVideoToolbox(AVCodec* decoder)
+        /// <summary>True when the decoder can use a device context of the platform's hardware type.</summary>
+        private static bool SupportsHardwareDevice(AVCodec* decoder)
         {
             for (var i = 0; ; i++)
             {
@@ -1086,7 +1103,7 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
                     return false;
                 }
 
-                if (config->device_type == AVHWDeviceType.AV_HWDEVICE_TYPE_VIDEOTOOLBOX &&
+                if (config->device_type == HardwareDeviceType &&
                     (config->methods & (int)AvCodecHwConfigMethod.AV_CODEC_HW_CONFIG_METHOD_HW_DEVICE_CTX) != 0)
                 {
                     return true;
@@ -1095,8 +1112,8 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
         }
 
         /// <summary>
-        /// Opens a decoder for the stream. With <paramref name="hardware"/> a VideoToolbox device
-        /// is attached when the decoder supports one (macOS only); the caller can tell by
+        /// Opens a decoder for the stream. With <paramref name="hardware"/> the platform's hardware
+        /// device (<see cref="HardwareDeviceType"/>) is attached when the decoder supports one; the caller can tell by
         /// <c>hw_device_ctx</c> being set. Any hardware setup failure silently means software.
         /// </summary>
         private AVCodecContext* OpenDecoder(AVStream* stream, bool hardware = false)
@@ -1123,10 +1140,10 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
             codec->pkt_timebase = stream->time_base;
             codec->thread_count = 0; // auto
 
-            if (hardware && stream->codecpar->codec_type == AVMediaType.AVMEDIA_TYPE_VIDEO && SupportsVideoToolbox(decoder))
+            if (hardware && stream->codecpar->codec_type == AVMediaType.AVMEDIA_TYPE_VIDEO && SupportsHardwareDevice(decoder))
             {
                 AVBufferRef* device = null;
-                if (ffmpeg.av_hwdevice_ctx_create(&device, AVHWDeviceType.AV_HWDEVICE_TYPE_VIDEOTOOLBOX, null, null, 0) >= 0)
+                if (ffmpeg.av_hwdevice_ctx_create(&device, HardwareDeviceType, null, null, 0) >= 0)
                 {
                     codec->hw_device_ctx = device; // freed with the codec context
                     codec->get_format = GetHardwareFormatDelegate;
