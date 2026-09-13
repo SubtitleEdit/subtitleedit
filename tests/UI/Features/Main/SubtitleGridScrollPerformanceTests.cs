@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Headless;
@@ -154,6 +154,43 @@ public class SubtitleGridScrollPerformanceTests : IDisposable
             Assert.True(minimumHeight >= textBoxMinimum,
                 $"Dragging must not make editGrid smaller than its text boxes " +
                 $"(grid={minimumHeight:F1}, text box minimum={textBoxMinimum:F1})");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void EditBox_LongPastedText_DoesNotGrowTheEditSection()
+    {
+        // The edit section row used to be Auto until the first splitter drag, so a wrapping
+        // text box with no height cap grew the whole section into the subtitle grid when a
+        // long text was pasted on a fresh start (#14834). The row is a fixed Pixel row now.
+        var (window, vm, _, _) = ShowMainWindowWithLines(1);
+
+        try
+        {
+            var splitter = Assert.Single(window.GetVisualDescendants().OfType<GridSplitter>(), s =>
+                Grid.GetRow(s) == 1 &&
+                s.VerticalAlignment == Avalonia.Layout.VerticalAlignment.Top &&
+                s.Parent is Grid { RowDefinitions.Count: 2 });
+            var mainGrid = Assert.IsType<Grid>(splitter.Parent);
+            var editGrid = Assert.Single(mainGrid.Children.OfType<Grid>(), g => Grid.GetRow(g) == 1);
+            var textBox = Assert.IsAssignableFrom<TextBox>(vm.EditTextBox.ContentControl);
+
+            vm.SelectedSubtitle = vm.Subtitles[0];
+            Settle(window);
+            var initialHeight = editGrid.Bounds.Height;
+            var initialTextBoxHeight = textBox.Bounds.Height;
+
+            textBox.Text = string.Join(Environment.NewLine, Enumerable.Range(1, 60).Select(i => $"Pasted line {i} of a very long text that keeps going and going"));
+            Settle(window);
+
+            Assert.True(Math.Abs(editGrid.Bounds.Height - initialHeight) < 0.5,
+                $"Pasting a long text grew the edit section (before={initialHeight:F1}, after={editGrid.Bounds.Height:F1})");
+            Assert.True(Math.Abs(textBox.Bounds.Height - initialTextBoxHeight) < 0.5,
+                $"Pasting a long text grew the text box (before={initialTextBoxHeight:F1}, after={textBox.Bounds.Height:F1})");
         }
         finally
         {

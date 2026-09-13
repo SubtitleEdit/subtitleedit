@@ -83,7 +83,7 @@ public static partial class InitListViewAndEditBox
         {
             // GridSplitter constrains the row definition, so include editGrid's outer
             // margin to preserve the text box's 92 px minimum at the drag limit.
-            mainGrid.RowDefinitions.Add(new RowDefinition(GridLength.Auto) { MinHeight = EditGridMinimumHeight + EditGridMargin * 2 });
+            mainGrid.RowDefinitions.Add(MakeEditSectionRow());
         }
 
         // TableView (Avalonia 12.1) pilot #3, after Show history (#12704) and the OCR grid
@@ -2172,7 +2172,9 @@ public static partial class InitListViewAndEditBox
     /// </summary>
     internal static void AttachDetachedEditBoxSplitter(Grid hostGrid, Grid editSection)
     {
-        hostGrid.RowDefinitions[1].MinHeight = EditGridMinimumHeight + EditGridMargin * 2;
+        var row = MakeEditSectionRow();
+        hostGrid.RowDefinitions[1].Height = row.Height;
+        hostGrid.RowDefinitions[1].MinHeight = row.MinHeight;
 
         var editBoxSplitter = new GridSplitter
         {
@@ -2311,6 +2313,22 @@ public static partial class InitListViewAndEditBox
     /// </summary>
 
     /// <summary>
+    /// The row that hosts the edit section. It is a fixed Pixel row, not Auto: an Auto row takes
+    /// the desired height of its content, and the wrapping text box has no height cap, so pasting
+    /// a long text made the whole section grow downward into the subtitle grid (#14834). A Pixel
+    /// row clips the box to the row and it scrolls internally instead, as in SE4. The splitter
+    /// still resizes it (it only ever produced Pixel rows anyway - Auto became Pixel on the first
+    /// drag, which is why the growth stopped after one resize). Seeded with the floor; the first
+    /// layout pass replaces both with the measured value (TrackEditSectionMinimumHeight), which is
+    /// exactly what the Auto row used to settle at, so the default look is unchanged.
+    /// </summary>
+    private static RowDefinition MakeEditSectionRow()
+    {
+        var floor = EditGridMinimumHeight + EditGridMargin * 2;
+        return new RowDefinition(new GridLength(floor, GridUnitType.Pixel)) { MinHeight = floor };
+    }
+
+    /// <summary>
     /// Keeps the edit section's drag floor equal to what the section actually needs: the text
     /// box's own minimum plus the "Text" header and the "Line length / Total chars" panel that
     /// sit above and below it. Those two rows are Auto, so their height follows the UI font -
@@ -2342,6 +2360,15 @@ public static partial class InitListViewAndEditBox
             // unconditional write here would spin.
             if (Math.Abs(row.MinHeight - needed) > 0.5)
             {
+                // Lift the fixed row along with its floor when it sits at (or below) the old
+                // floor - that is the untouched seed from MakeEditSectionRow, or a row the user
+                // dragged down to the limit before the UI font grew. A row the user dragged
+                // taller than the floor is left alone.
+                if (row.Height.IsAbsolute && row.Height.Value <= row.MinHeight + 0.5 && row.Height.Value < needed)
+                {
+                    row.Height = new GridLength(needed, GridUnitType.Pixel);
+                }
+
                 row.MinHeight = needed;
             }
         };
