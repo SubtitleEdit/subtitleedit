@@ -2837,8 +2837,8 @@ public static class UiUtil
     }
 
     /// <summary>
-    /// Forwards the accessible name set on a <see cref="NumericUpDown"/> to its inner
-    /// PART_TextBox. The text box is the element that actually receives keyboard focus,
+    /// Forwards the accessible name (and LabeledBy link) set on a <see cref="NumericUpDown"/>
+    /// to its inner PART_TextBox. The text box is the element that actually receives keyboard focus,
     /// so without this a screen reader would announce the focused field with no name
     /// (issue #11553). Callers just set <c>AutomationProperties.Name</c> on the control.
     /// </summary>
@@ -2848,6 +2848,7 @@ public static class UiUtil
         {
             var textBox = e.NameScope.Find<TextBox>("PART_TextBox");
             textBox?.Bind(AutomationProperties.NameProperty, control.GetObservable(AutomationProperties.NameProperty));
+            textBox?.Bind(AutomationProperties.LabeledByProperty, control.GetObservable(AutomationProperties.LabeledByProperty));
 
             var spinner = e.NameScope.Find<ButtonSpinner>("PART_Spinner");
             if (spinner != null)
@@ -3427,6 +3428,10 @@ public static class UiUtil
                     ClampToWorkingArea(window);
                 }
             }, DispatcherPriority.Background);
+
+            // Name every input after its visible label for screen readers - once, here,
+            // instead of in each of the ~300 windows (#12087). See AccessibleLabels.
+            AccessibleLabels.Apply(window);
         };
     }
 

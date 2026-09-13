@@ -110,6 +110,7 @@ namespace Nikse.SubtitleEdit.Controls
                 // so the accessible name set on this control must be forwarded to it for
                 // screen readers to announce it (e.g. "Start time") instead of just the value.
                 _textBox.Bind(AutomationProperties.NameProperty, this.GetObservable(AutomationProperties.NameProperty));
+                _textBox.Bind(AutomationProperties.LabeledByProperty, this.GetObservable(AutomationProperties.LabeledByProperty));
 
                 // Screen readers deliberately stay quiet when a plain edit control's value changes,
                 // so stepping with Up/Down was inaudible; announced as a spinner, every value change

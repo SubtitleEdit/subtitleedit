@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
@@ -50,6 +50,14 @@ public class SeTableViewColumn : TableViewColumn
     public object? Tag { get; set; }
 
     public double MinWidth { get; set; }
+
+    /// <summary>
+    /// What a screen reader should say for this column's cell when reading the row. Defaults
+    /// to <see cref="TableViewColumn.Binding"/>; set it for columns that render through a
+    /// <see cref="TableViewColumn.CellTemplate"/> (which UI Automation cannot read back) -
+    /// see <see cref="TableViewExtras.ApplyDefaultRowNames"/>.
+    /// </summary>
+    public BindingBase? NameBinding { get; set; }
 }
 
 /// <summary>
@@ -350,6 +358,8 @@ public static class TableViewExtras
 
         UiUtil.ApplyTableViewRowStyle(tableView);
 
+        tableView.Columns.CollectionChanged += (_, _) => ApplyDefaultRowNames(tableView);
+
         // SelectionMode.AlwaysSelected picks row 0 the moment ItemsSource is assigned, but that
         // pick only reaches the internal selection model (and SelectedItem/SelectedIndex) - the
         // SelectedItems collection stays empty and no SelectionChanged is raised. Repair it
@@ -430,6 +440,74 @@ public static class TableViewExtras
             [!TextBlock.TextProperty] = new Binding(propertyPath) { Mode = BindingMode.OneWay },
             [!TextBlock.FlowDirectionProperty] = new Binding(propertyPath) { Converter = TextToFlowDirection, Mode = BindingMode.OneWay },
         });
+    }
+
+    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<TableView, Style> DefaultRowNameStyles = new();
+
+    /// <summary>
+    /// Names every row for screen readers from its cells. Without a name UI Automation
+    /// falls back to the item's ToString(), so NVDA read
+    /// "Nikse.SubtitleEdit.Features.Video.VideoOcr.VideoOcrLineItem" for each row (#12087).
+    /// The name is the column values joined with ", " in column order, taken from each
+    /// column's <see cref="SeTableViewColumn.NameBinding"/> or <see cref="TableViewColumn.Binding"/>;
+    /// template-only columns without a NameBinding are skipped. Rebuilt whenever the columns
+    /// change. The style is kept first in the table's Styles so a window's own
+    /// <see cref="BindRowProperty"/> name (added later) wins.
+    /// </summary>
+    public static void ApplyDefaultRowNames(TableView tableView)
+    {
+        if (DefaultRowNameStyles.TryGetValue(tableView, out var existing))
+        {
+            tableView.Styles.Remove(existing);
+            DefaultRowNameStyles.Remove(tableView);
+        }
+
+        var multiBinding = new MultiBinding { Converter = JoinCellTextConverter.Instance, Mode = BindingMode.OneWay };
+        foreach (var column in tableView.Columns)
+        {
+            var binding = (column as SeTableViewColumn)?.NameBinding ?? column.Binding;
+            if (binding != null)
+            {
+                multiBinding.Bindings.Add(binding);
+            }
+        }
+
+        if (multiBinding.Bindings.Count == 0)
+        {
+            return;
+        }
+
+        var style = new Style(x => x.OfType<TableViewRow>())
+        {
+            Setters = { new Setter(Avalonia.Automation.AutomationProperties.NameProperty, multiBinding) },
+        };
+        tableView.Styles.Insert(0, style);
+        DefaultRowNameStyles.Add(tableView, style);
+    }
+
+    private sealed class JoinCellTextConverter : Avalonia.Data.Converters.IMultiValueConverter
+    {
+        public static readonly JoinCellTextConverter Instance = new();
+
+        public object? Convert(IList<object?> values, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
+        {
+            var parts = new List<string>();
+            foreach (var value in values)
+            {
+                if (value is null or Avalonia.Data.BindingNotification or Avalonia.UnsetValueType)
+                {
+                    continue;
+                }
+
+                var text = value is bool b ? (b ? "\u2713" : string.Empty) : value.ToString();
+                if (!string.IsNullOrWhiteSpace(text))
+                {
+                    parts.Add(text);
+                }
+            }
+
+            return string.Join(", ", parts);
+        }
     }
 
     /// <summary>
