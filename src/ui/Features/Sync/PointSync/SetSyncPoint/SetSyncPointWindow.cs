@@ -82,6 +82,7 @@ public class SetSyncPointWindow : Window
         comboBoxLeft.Width = double.NaN;
         comboBoxLeft.MinHeight = 50;
         comboBoxLeft.HorizontalAlignment = HorizontalAlignment.Stretch;
+        comboBoxLeft.WithAccessibleName(Se.Language.General.Lines); // no visible label (#12087)
         vm.ComboBoxSubtitle = comboBoxLeft;
 
         vm.TimeCodeUpDownSyncPoint = new TimeCodeUpDown

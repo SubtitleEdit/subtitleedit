@@ -76,6 +76,7 @@ public class PickOnlineSubtitleWindow : Window
         dataGridTracks.Height = double.NaN;
         dataGridTracks.DataContext = vm;
         dataGridTracks.ItemsSource = vm.Tracks;
+        dataGridTracks.WithAccessibleName(Se.Language.Video.PickOnlineSubtitleTitle); // the window title names the pick list (#12087)
 
         var columnLanguage = new SeTableViewColumn
         {
@@ -139,6 +140,7 @@ public class PickOnlineSubtitleWindow : Window
         dataGridPreview.Height = double.NaN;
         dataGridPreview.DataContext = vm;
         dataGridPreview.ItemsSource = vm.PreviewRows;
+        dataGridPreview.WithAccessibleName(Se.Language.General.Preview);
         dataGridPreview.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.NumberSymbol,

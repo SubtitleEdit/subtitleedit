@@ -155,6 +155,7 @@ public class FixNetflixErrorsWindow : Window
             // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
             Width = new GridLength(70)
         });
+        dataGrid.WithAccessibleName(Se.Language.General.Rules); // the list of checks has no heading (#12087)
 
         dataGrid.Columns.Add(new SeTableViewColumn
         {
@@ -238,6 +239,7 @@ public class FixNetflixErrorsWindow : Window
                     Header = Se.Language.General.Before,
                     CellTheme = UiUtil.TableViewNoPaddingCellTheme,
                     HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                    NameBinding = new Binding(nameof(FixNetflixErrorsItem.Before)),
                     CellTemplate = new FuncDataTemplate<FixNetflixErrorsItem>((item, _) =>
                     {
                         if (item == null)
@@ -260,6 +262,7 @@ public class FixNetflixErrorsWindow : Window
                     Header = Se.Language.General.After,
                     CellTheme = UiUtil.TableViewNoPaddingCellTheme,
                     HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                    NameBinding = new Binding(nameof(FixNetflixErrorsItem.After)),
                     CellTemplate = new FuncDataTemplate<FixNetflixErrorsItem>((item, _) =>
                     {
                         if (item == null)
@@ -287,6 +290,7 @@ public class FixNetflixErrorsWindow : Window
                 },
         });
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(_vm.SelectedFix)));
+        dataGrid.WithAccessibleName(Se.Language.Tools.FixCommonErrors.Fixes); // no heading above the fixes list (#12087)
 
         // Extended selection is native ListBox behavior on TableView; only the
         // Space-toggles-checkbox piece of the old CheckboxMultiSelect needs wiring.

@@ -166,9 +166,10 @@ public class VisualSyncWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        gridLeft.Add(UiUtil.MakeLabel(Se.Language.Sync.StartScene), 0);
+        var labelStartScene = UiUtil.MakeLabel(Se.Language.Sync.StartScene);
+        gridLeft.Add(labelStartScene, 0);
         gridLeft.Add(splitLeft, 1);
-        gridLeft.Add(comboBoxLeft, 2);
+        gridLeft.Add(comboBoxLeft.WithLabeledBy(labelStartScene), 2);
         gridLeft.Add(panelLeftButtons, 3);
 
         var gridRight = new Grid
@@ -190,9 +191,10 @@ public class VisualSyncWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        gridRight.Add(UiUtil.MakeLabel(Se.Language.Sync.EndScene), 0);
+        var labelEndScene = UiUtil.MakeLabel(Se.Language.Sync.EndScene);
+        gridRight.Add(labelEndScene, 0);
         gridRight.Add(splitRight, 1);
-        gridRight.Add(comboBoxRight, 2);
+        gridRight.Add(comboBoxRight.WithLabeledBy(labelEndScene), 2);
         gridRight.Add(panelRightButtons, 3);
 
         var grid = new Grid

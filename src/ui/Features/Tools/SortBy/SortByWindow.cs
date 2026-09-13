@@ -147,6 +147,7 @@ public class SortByWindow : Window
         };
 
         var labelSortOrder = UiUtil.MakeLabel(Se.Language.Tools.SortBy.SortOrder).WithBold().WithMarginBottom(5);
+        listBoxSortCriteria.WithLabeledBy(labelSortOrder);
 
         var mainPanel = new StackPanel
         {
@@ -176,6 +177,7 @@ public class SortByWindow : Window
         dataGridSubtitle.Height = double.NaN;
         dataGridSubtitle.DataContext = vm;
         dataGridSubtitle.ItemsSource = vm.Subtitles;
+        dataGridSubtitle.WithAccessibleName(Se.Language.General.Preview); // the sorted result; no heading (#12087)
 
         // The number, show, duration and CPS columns were content-sized (Auto) on the
         // DataGrid; TableView treats Auto as star, so they get fixed widths instead.
@@ -209,6 +211,7 @@ public class SortByWindow : Window
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             CellTemplate = TableViewExtras.MakeTextCellTemplate(nameof(SubtitleLineViewModel.Text)),
+            NameBinding = new Binding(nameof(SubtitleLineViewModel.Text)),
             Width = new GridLength(1, GridUnitType.Star),
         });
         dataGridSubtitle.Columns.Add(new SeTableViewColumn

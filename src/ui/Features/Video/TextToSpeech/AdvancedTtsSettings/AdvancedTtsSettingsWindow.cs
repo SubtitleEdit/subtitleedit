@@ -197,6 +197,11 @@ public class AdvancedTtsSettingsWindow : Window
         {
             input.HorizontalAlignment = HorizontalAlignment.Right;
             grid.Add(input, 0, 1);
+            // The label sits inside leftPanel, not beside the input in the grid, so link it by hand (#12087).
+            if (label is Label && !AccessibleLabels.HasAccessibleName(input))
+            {
+                input.WithLabeledBy(label);
+            }
         }
 
         return grid;

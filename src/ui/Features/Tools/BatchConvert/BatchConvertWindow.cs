@@ -173,6 +173,7 @@ public class BatchConvertWindow : Window
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Width = new GridLength(120),
+            NameBinding = new Binding(nameof(BatchConvertItem.Status)),
             CellTemplate = new FuncDataTemplate<BatchConvertItem>((_, _) =>
             {
                 // Status as a colored badge: green converted, red errors, gray cancelled;
@@ -212,6 +213,7 @@ public class BatchConvertWindow : Window
         dataGrid.DataContext = vm;
         dataGrid.ItemsSource = vm.BatchItems;
         dataGrid.Columns.AddRange(new[] { columnFileName, columnSize, columnFormat, columnStatus });
+        dataGrid.WithAccessibleName(Se.Language.General.SubtitleFiles);
 
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedBatchItem)) { Source = vm });
         dataGrid.KeyDown += vm.FileGridKeyDown;
@@ -534,6 +536,8 @@ public class BatchConvertWindow : Window
             },
         });
         TableViewExtras.BindSelectedItem(dataGrid, vm, nameof(vm.SelectedBatchFunction));
+        // The "N actions selected" label above is empty until something is ticked, so a static name (#12087).
+        dataGrid.WithAccessibleName(Se.Language.General.Options);
         // The DataGrid-era CheckboxMultiSelect helper is replaced by native selection,
         // AddSpaceToggle (Space toggles the checkbox) and a SelectionChanged hook that
         // shows the selected function's settings view (was onFocusedItemChanged).
@@ -579,6 +583,16 @@ public class BatchConvertWindow : Window
             Padding = new Thickness(5),
         };
         vm.FunctionContainer = scrollViewer;
+
+        // The function views are swapped in after the window has opened, so the one-time
+        // label pass in InitializeWindow never sees them; label each view as it is shown (#12087).
+        scrollViewer.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == ContentControl.ContentProperty && scrollViewer.Content is Control view)
+            {
+                AccessibleLabels.Apply(view);
+            }
+        };
 
         return UiUtil.MakeBorderForControl(scrollViewer);
     }

@@ -90,6 +90,7 @@ public class MergeSameTextWindow : Window
         dataGrid.Height = double.NaN;
         dataGrid.DataContext = vm;
         dataGrid.ItemsSource = vm.MergeItems;
+        dataGrid.WithAccessibleName(Se.Language.General.MergeLinesWithSameText); // no heading above the list (#12087)
         dataGrid.Columns.AddRange(new TableViewColumn[]
         {
                 new SeTableViewColumn
@@ -165,6 +166,7 @@ public class MergeSameTextWindow : Window
         dataGrid.Height = double.NaN;
         dataGrid.DataContext = vm;
         dataGrid.ItemsSource = vm.MergeSubtitles;
+        dataGrid.WithAccessibleName(Se.Language.General.Preview);
         dataGrid.Columns.AddRange(new TableViewColumn[]
         {
                 new SeTableViewColumn
@@ -198,6 +200,7 @@ public class MergeSameTextWindow : Window
                     CellTheme = UiUtil.TableViewCellTheme,
                     HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     CellTemplate = TableViewExtras.MakeTextCellTemplate(nameof(SubtitleLineViewModel.Text)),
+                    NameBinding = new Binding(nameof(SubtitleLineViewModel.Text)),
                     Width = new GridLength(1, GridUnitType.Star),
                 },
                 new SeTableViewColumn
