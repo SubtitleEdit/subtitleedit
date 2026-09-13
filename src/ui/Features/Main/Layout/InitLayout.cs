@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Logic;
@@ -852,6 +852,7 @@ public static partial class InitLayout
                 // The floor keeps the edit box splitter from dragging the waveform away to
                 // nothing, leaving no handle to drag back (same reason as the grid's floor).
                 new RowDefinition(GridLength.Star) { MinHeight = 45 },
+                // Sized by AttachDetachedEditBoxSplitter below (fixed Pixel row, #14834).
                 new RowDefinition(GridLength.Auto),
             }
         };
@@ -1024,6 +1025,7 @@ public static partial class InitLayout
                 // The floor keeps the edit box splitter from dragging the video away to
                 // nothing, leaving no handle to drag back (same reason as the grid's floor).
                 new RowDefinition(GridLength.Star) { MinHeight = 45 },
+                // Sized by AttachDetachedEditBoxSplitter below (fixed Pixel row, #14834).
                 new RowDefinition(GridLength.Auto),
             }
         };
