@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Interactivity;
@@ -144,8 +145,9 @@ public class VideoOcrWindow : Window
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
             },
         };
-        sliderRow.Add(UiUtil.MakeLabel(Se.Language.Video.VideoOcr.PreviewPosition), 0, 0);
-        sliderRow.Add(slider, 0, 1);
+        var sliderLabel = UiUtil.MakeLabel(Se.Language.Video.VideoOcr.PreviewPosition);
+        sliderRow.Add(sliderLabel, 0, 0);
+        sliderRow.Add(slider.WithLabeledBy(sliderLabel), 0, 1);
         sliderRow.Add(positionText, 0, 2);
 
         var scanAreaText = new TextBlock
@@ -204,7 +206,8 @@ public class VideoOcrWindow : Window
 
     private Border MakeSettingsView(VideoOcrViewModel vm)
     {
-        var comboEngine = UiUtil.MakeComboBox(vm.Engines, vm, nameof(vm.SelectedEngine)).WithWidth(220);
+        var comboEngine = UiUtil.MakeComboBox(vm.Engines, vm, nameof(vm.SelectedEngine)).WithWidth(220)
+            .WithAccessibleName(Se.Language.Video.VideoOcr.Engine);
         comboEngine.ItemTemplate = BuildEngineItemTemplate();
         _comboEngine = comboEngine;
 
@@ -251,32 +254,25 @@ public class VideoOcrWindow : Window
 
         // Paddle OCR settings
         var paddlePanel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 4 };
-        paddlePanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Language));
-        paddlePanel.Children.Add(comboPaddleLanguage);
+        AddLabeledSetting(paddlePanel, Se.Language.General.Language, comboPaddleLanguage);
         paddlePanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsPaddleEngine)) { Source = vm });
         panel.Children.Add(paddlePanel);
 
         // Ollama settings
         var ollamaPanel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 4 };
-        ollamaPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Url));
-        ollamaPanel.Children.Add(UiUtil.MakeTextBox(330, vm, nameof(vm.OllamaUrl)));
-        ollamaPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Model));
-        ollamaPanel.Children.Add(UiUtil.MakeTextBox(330, vm, nameof(vm.OllamaModel)));
-        ollamaPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Language));
-        ollamaPanel.Children.Add(UiUtil.MakeTextBox(330, vm, nameof(vm.OllamaLanguage)));
+        AddLabeledSetting(ollamaPanel, Se.Language.General.Url, UiUtil.MakeTextBox(330, vm, nameof(vm.OllamaUrl)));
+        AddLabeledSetting(ollamaPanel, Se.Language.General.Model, UiUtil.MakeTextBox(330, vm, nameof(vm.OllamaModel)));
+        AddLabeledSetting(ollamaPanel, Se.Language.General.Language, UiUtil.MakeTextBox(330, vm, nameof(vm.OllamaLanguage)));
         ollamaPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsOllamaEngine)) { Source = vm });
         panel.Children.Add(ollamaPanel);
 
         // GLM settings
         var glmPanel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 4 };
-        glmPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Url));
-        glmPanel.Children.Add(UiUtil.MakeTextBox(330, vm, nameof(vm.GlmUrl)));
-        glmPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Model));
-        glmPanel.Children.Add(UiUtil.MakeTextBox(330, vm, nameof(vm.GlmModel)));
+        AddLabeledSetting(glmPanel, Se.Language.General.Url, UiUtil.MakeTextBox(330, vm, nameof(vm.GlmUrl)));
+        AddLabeledSetting(glmPanel, Se.Language.General.Model, UiUtil.MakeTextBox(330, vm, nameof(vm.GlmModel)));
         glmPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.ApiKey));
         glmPanel.Children.Add(UiUtil.MakeApiKeyTextBox(290, vm, nameof(vm.GlmApiKey)));
-        glmPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Language));
-        glmPanel.Children.Add(UiUtil.MakeTextBox(330, vm, nameof(vm.GlmLanguage)));
+        AddLabeledSetting(glmPanel, Se.Language.General.Language, UiUtil.MakeTextBox(330, vm, nameof(vm.GlmLanguage)));
         glmPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsGlmEngine)) { Source = vm });
         panel.Children.Add(glmPanel);
 
@@ -286,14 +282,12 @@ public class VideoOcrWindow : Window
         _comboLlamaCppModel = comboLlamaCppModel;
 
         var llamaCppPanel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 4 };
-        llamaCppPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Model));
-        llamaCppPanel.Children.Add(comboLlamaCppModel);
+        AddLabeledSetting(llamaCppPanel, Se.Language.General.Model, comboLlamaCppModel);
         var llamaCppButtons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 5 };
         llamaCppButtons.Children.Add(UiUtil.MakeButton(vm.DownloadLlamaCppCommand, IconNames.Download, Se.Language.General.Download));
         llamaCppButtons.Children.Add(MakeLlamaCppServerButton(vm));
         llamaCppPanel.Children.Add(llamaCppButtons);
-        llamaCppPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Language));
-        llamaCppPanel.Children.Add(UiUtil.MakeTextBox(330, vm, nameof(vm.LlamaCppLanguage)));
+        AddLabeledSetting(llamaCppPanel, Se.Language.General.Language, UiUtil.MakeTextBox(330, vm, nameof(vm.LlamaCppLanguage)));
         llamaCppPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsLlamaCppEngine)) { Source = vm });
         panel.Children.Add(llamaCppPanel);
 
@@ -303,10 +297,8 @@ public class VideoOcrWindow : Window
         _comboCrispEmbedModel = comboCrispEmbedModel;
 
         var crispEmbedPanel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 4 };
-        crispEmbedPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Backend));
-        crispEmbedPanel.Children.Add(UiUtil.MakeComboBox(vm.CrispEmbedBackends, vm, nameof(vm.SelectedCrispEmbedBackend)).WithWidth(330));
-        crispEmbedPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Model));
-        crispEmbedPanel.Children.Add(comboCrispEmbedModel);
+        AddLabeledSetting(crispEmbedPanel, Se.Language.General.Backend, UiUtil.MakeComboBox(vm.CrispEmbedBackends, vm, nameof(vm.SelectedCrispEmbedBackend)).WithWidth(330));
+        AddLabeledSetting(crispEmbedPanel, Se.Language.General.Model, comboCrispEmbedModel);
         // No download buttons here - engine build and model downloads live in the CrispEmbed
         // settings dialog opened from the gear button next to the engine combo.
         crispEmbedPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsCrispEmbedEngine)) { Source = vm });
@@ -315,8 +307,7 @@ public class VideoOcrWindow : Window
         // Apple Vision settings - language only: the engine is part of macOS, so there is no
         // model to pick, nothing to download and no server to start.
         var appleVisionPanel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 4 };
-        appleVisionPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.Language));
-        appleVisionPanel.Children.Add(UiUtil.MakeComboBox(vm.AppleVisionLanguages, vm, nameof(vm.SelectedAppleVisionLanguage)).WithWidth(330));
+        AddLabeledSetting(appleVisionPanel, Se.Language.General.Language, UiUtil.MakeComboBox(vm.AppleVisionLanguages, vm, nameof(vm.SelectedAppleVisionLanguage)).WithWidth(330));
         appleVisionPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsAppleVisionEngine)) { Source = vm });
         panel.Children.Add(appleVisionPanel);
 
@@ -477,7 +468,15 @@ public class VideoOcrWindow : Window
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
             },
         };
-        grid.Add(UiUtil.MakeLabel(label), 0, 0);
+        var labelControl = UiUtil.MakeLabel(label);
+        grid.Add(labelControl, 0, 0);
+
+        // Link the control to its visible label so a screen reader announces what the
+        // setting is, not just its value and control type (#12087). A composite control
+        // (combo box + button in a panel) gets the label on its first child, which is the
+        // element that actually takes focus.
+        var labeled = control is Panel panel && panel.Children.Count > 0 ? panel.Children[0] : control;
+        AutomationProperties.SetLabeledBy(labeled, labelControl);
         grid.Add(control, 0, 1);
 
         if (hint != null && Se.Settings.Appearance.ShowHints)
@@ -488,6 +487,17 @@ public class VideoOcrWindow : Window
         return grid;
     }
 
+    /// <summary>
+    /// Adds a label above a control and links them (UIA LabeledBy), so the control is
+    /// announced by its purpose and not only as "combo box"/"edit" (#12087).
+    /// </summary>
+    private static void AddLabeledSetting(Panel panel, string label, Control control)
+    {
+        var labelControl = UiUtil.MakeLabel(label);
+        panel.Children.Add(labelControl);
+        panel.Children.Add(control.WithLabeledBy(labelControl));
+    }
+
     private static Border MakeLinesView(VideoOcrViewModel vm)
     {
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
@@ -495,6 +505,22 @@ public class VideoOcrWindow : Window
         var tableView = TableViewExtras.MakeTableView();
         tableView.DataContext = vm;
         tableView.ItemsSource = vm.Lines;
+
+        // Rows announced the item's class name (VideoOcrLineItem) to screen readers; give
+        // them the same "number: text, start - end, duration" name as the main grid (#12087).
+        TableViewExtras.BindRowProperty(tableView, AutomationProperties.NameProperty,
+            new MultiBinding
+            {
+                StringFormat = "{0}: {1}, {2} - {3}, {4}",
+                Bindings =
+                {
+                    new Binding(nameof(VideoOcrLineItem.Number)),
+                    new Binding(nameof(VideoOcrLineItem.Text)),
+                    new Binding(nameof(VideoOcrLineItem.StartTime)) { Converter = fullTimeConverter, Mode = BindingMode.OneWay },
+                    new Binding(nameof(VideoOcrLineItem.EndTime)) { Converter = fullTimeConverter, Mode = BindingMode.OneWay },
+                    new Binding(nameof(VideoOcrLineItem.Duration)) { Converter = shortTimeConverter, Mode = BindingMode.OneWay },
+                },
+            });
 
         tableView.Columns.Add(new SeTableViewColumn
         {

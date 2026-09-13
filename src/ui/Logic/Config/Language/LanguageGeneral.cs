@@ -353,6 +353,8 @@ public class LanguageGeneral
     public string MoveAllShotChangeOneFrameForward { get; set; }
     public string MultiMode { get; set; }
     public string MoveDown { get; set; }
+    public string Increase { get; set; }
+    public string Decrease { get; set; }
     public string MoveUp { get; set; }
     public string MoveToTop { get; set; }
     public string MoveToBottom { get; set; }
@@ -1170,6 +1172,8 @@ public class LanguageGeneral
         MoveAllShotChangeOneFrameForward = "Move all shot changes one frame forward";
         MultiMode = "Multi mode";
         MoveDown = "Move down";
+        Increase = "Increase";
+        Decrease = "Decrease";
         MoveUp = "Move up";
         MoveToTop = "Move to top";
         MoveToBottom = "Move to bottom";
