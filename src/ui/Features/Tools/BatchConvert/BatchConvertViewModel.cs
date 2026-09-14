@@ -1830,12 +1830,10 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
         if (targetFormat == BatchConverter.FormatCustomTextFormat)
         {
-            var subtitles = new List<SubtitleLineViewModel>();
-            var p = new Paragraph("This is a sample text", 0, 1000);
-            subtitles.Add(new SubtitleLineViewModel(p, new SubRip()));
+            var paragraphs = new List<Paragraph> { new Paragraph("This is a sample text", 0, 1000) };
 
             var result = await _windowService.ShowDialogAsync<ExportCustomTextFormatWindow, ExportCustomTextFormatViewModel>(Window,
-                vm => { vm.Initialize(subtitles, string.Empty, string.Empty, true); });
+                vm => { vm.Initialize(paragraphs, string.Empty, string.Empty, true); });
 
             // Remember which custom format was chosen so batch convert uses it (not just the first one).
             if (result.OkPressed && result.SelectedCustomFormat != null)

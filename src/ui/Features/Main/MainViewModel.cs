@@ -4796,9 +4796,12 @@ public partial class MainViewModel :
             return;
         }
 
+        // GetUpdateSubtitle: the export must see the rows' current times and text, not the
+        // Paragraph objects the rows were loaded from (those are never updated), and it must
+        // leave out the read-only reference rows like every other save does.
         var result = await ShowDialogAsync<ExportCustomTextFormatWindow, ExportCustomTextFormatViewModel>(vm =>
         {
-            vm.Initialize(Subtitles.ToList(), _subtitleFileName, _videoFileName);
+            vm.Initialize(GetUpdateSubtitle().Paragraphs.ToList(), _subtitleFileName, _videoFileName);
         });
     }
 
