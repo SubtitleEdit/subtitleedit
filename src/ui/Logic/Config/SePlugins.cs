@@ -19,4 +19,15 @@ public class SePlugins
 
     /// <summary>Names of installed plugins the user has disabled; they are hidden from the menu.</summary>
     public List<string> DisabledPluginNames { get; set; } = new();
+
+    /// <summary>
+    /// Which lines a plugin is applied to when only some lines are selected: <see cref="ApplyToLinesAsk"/>
+    /// prompts every time, <see cref="ApplyToLinesSelected"/> / <see cref="ApplyToLinesAll"/> skip the
+    /// prompt (set via "Do not ask again" in the prompt or in Manage plugins).
+    /// </summary>
+    public string ApplyToLines { get; set; } = ApplyToLinesAsk;
+
+    public const string ApplyToLinesAsk = "Ask";
+    public const string ApplyToLinesSelected = "Selected";
+    public const string ApplyToLinesAll = "All";
 }

@@ -122,6 +122,13 @@ public class PluginManagerWindow : Window
         contentGrid.Add(listBox, 0, 0);
         contentGrid.Add(sidePanel, 0, 1);
 
+        // Where plugins run when only some lines are selected - the "Do not ask again" choice
+        // from the apply-plugin prompt lands here so it can be changed back (#14844).
+        var labelApplyTo = UiUtil.MakeLabel(Se.Language.Plugins.ApplyPluginsTo);
+        var comboBoxApplyTo = UiUtil.MakeComboBox(vm.ApplyToLinesOptions, vm, nameof(vm.SelectedApplyToLines))
+            .WithMinWidth(180);
+        var panelApplyTo = UiUtil.MakeControlBarLeft(labelApplyTo, comboBoxApplyTo);
+
         var buttonClose = UiUtil.MakeButton(Se.Language.General.Close, vm.CloseCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonClose);
 
@@ -131,13 +138,15 @@ public class PluginManagerWindow : Window
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             Margin = UiUtil.MakeWindowMargin(),
             RowSpacing = 10,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
         grid.Add(contentGrid, 0, 0);
-        grid.Add(panelButtons, 1, 0);
+        grid.Add(panelApplyTo, 1, 0);
+        grid.Add(panelButtons, 2, 0);
 
         Content = grid;
 
