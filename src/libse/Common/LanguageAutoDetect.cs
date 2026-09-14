@@ -346,7 +346,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             "güzel", "çünkü", "büyük", "Bebeğim", "olduğunu", "istiyorum", "değilsin", "bilmiyorum",
             "otursana", "Selam", "Tabii", "konuda", "istiyor", "Teşekkürler", "istemiyorum", "Gerçekte",
             "değil", "değildi", "değilim", "değiller", "mı", "mısın", "mıyım", "mıydı", "mıyız",
-            "şu", "şimdi", "şey", "şeyi", "şeyler", "işte", "eğer", "artık", "yardım", "yalnız", "yalnızca",
+            "şu", "şimdi", "şeyi", "şeyler", "işte", "eğer", "artık", "yardım", "yalnız", "yalnızca",
             "nasıl", "başka", "doğru", "karşı", "dışarı", "sanırım", "yarın", "kızım", "oğlum", "canım",
             "tanrım", "hayatım", "aşkım", "yapıyorsun", "yapacağım", "lütfen", "kadın", "adamı", "bakalım",
             "bırak", "dışında", "hiçbir", "ışık", "kız", "sığ", "şans", "şöyle", "yaşam", "başladı",
