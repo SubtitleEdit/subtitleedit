@@ -563,7 +563,7 @@ public class LanguageSettings
         MpvWidRendering = "libmpv - Native Window ID rendering";
         MpvSoftwareRendering = "libmpv - Software rendering (slow)";
         VlcWidRendering = "libVLC - Native Window ID rendering";
-        FfmpegSoftwareRendering = "FFmpeg - Software rendering";
+        FfmpegSoftwareRendering = "FFmpeg";
         DownloadFfmpegLibs = "Download FFmpeg libraries (for the FFmpeg video player)";
         WaveFormsAndSpectrogramFoldersContainsX = "\"Waveforms\" and \"spectrogram\" folders contains {0}";
         DeleteWaveformAndSpectrogramFoldersQuestion = "Delete \"Waveforms\" and \"Spectrogram\" files?";

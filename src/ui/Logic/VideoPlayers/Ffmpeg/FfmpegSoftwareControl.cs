@@ -42,7 +42,6 @@ public class FfmpegSoftwareControl : Control
         _player = player;
         ClipToBounds = true;
         Cursor = new Cursor(StandardCursorType.Arrow);
-        player.PlayerSubName = "sw";
         player.FrameReady += OnFrameReady;
     }
 

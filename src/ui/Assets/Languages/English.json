@@ -3124,7 +3124,7 @@
       "waveformExtractAudioBitRate": "Extract audio bitrate (MP3/M4A)",
       "ffmpegUseCenterChannelOnly": "Use only front center channel for 5.1 audio (FFmpeg)",
       "vlcWidRendering": "libVLC - Native Window ID rendering",
-      "ffmpegSoftwareRendering": "FFmpeg - Software rendering",
+      "ffmpegSoftwareRendering": "FFmpeg",
       "downloadFfmpegLibs": "Download FFmpeg libraries (for the FFmpeg video player)",
       "subtitleGridEnterKeyAction": "Subtitle grid Enter-key action",
       "subtitleSingleClickAction": "Subtitle grid single-click action",
