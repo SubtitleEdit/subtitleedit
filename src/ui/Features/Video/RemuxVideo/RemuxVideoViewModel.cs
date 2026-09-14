@@ -676,13 +676,20 @@ public partial class RemuxVideoViewModel : ObservableObject
         }
     }
 
-    private static string EscapeFfmpegMetadata(string value)
+    /// <summary>
+    /// Makes a track title safe inside the double-quoted value of "-metadata title=...".
+    /// ffmpeg splits "key=value" at the first "=" only and does no unescaping of the value,
+    /// so escaping "=" or "\" put the backslashes into the title verbatim ("Track 1=EN.mp3"
+    /// became the title "Track 1\=EN"). Same mapping as FfmpegGenerator.EscapeFfmpegArg.
+    /// </summary>
+    internal static string EscapeFfmpegMetadata(string value)
     {
         if (string.IsNullOrEmpty(value))
         {
             return string.Empty;
         }
-        return value.Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("=", "\\=");
+
+        return value.Replace("\\", "_").Replace("\"", "'");
     }
 
     [RelayCommand]
@@ -977,25 +984,46 @@ public partial class RemuxVideoViewModel : ObservableObject
     {
         if (IsRemuxing)
         {
-            _isCancelled = true;
-            try
-            {
-                if (_ffmpegProcess != null && !_ffmpegProcess.HasExited)
-                {
-                    _ffmpegProcess.Kill(true);
-                }
-            }
-            catch
-            {
-                // ignore
-            }
-
+            AbortRemux();
             ProgressText = Se.Language.General.Cancelled;
-            DeletePartialOutputFile();
             return;
         }
 
         Window?.Close();
+    }
+
+    /// <summary>
+    /// Escape only guards the close while remuxing; the title-bar X does not. Closing the window
+    /// mid-remux used to leave ffmpeg running to completion in the background, after which
+    /// <see cref="Remux"/> tried to show its "file saved"/error dialog on the closed owner. Same
+    /// fix as the re-encode, cut and embedded-subtitles dialogs.
+    /// </summary>
+    internal void OnClosing()
+    {
+        if (IsRemuxing)
+        {
+            AbortRemux();
+        }
+    }
+
+    private void AbortRemux()
+    {
+        _isCancelled = true;
+        try
+        {
+            if (_ffmpegProcess != null && !_ffmpegProcess.HasExited)
+            {
+#pragma warning disable CA1416
+                _ffmpegProcess.Kill(true);
+#pragma warning restore CA1416
+            }
+        }
+        catch
+        {
+            // ignore - it may have exited in between
+        }
+
+        DeletePartialOutputFile();
     }
 
     private void DeletePartialOutputFile()

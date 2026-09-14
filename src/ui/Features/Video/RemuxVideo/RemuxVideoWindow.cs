@@ -203,7 +203,11 @@ public class RemuxVideoWindow : Window
         Content = grid;
 
         KeyDown += vm.KeyDown;
-        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Closing += delegate
+        {
+            vm.OnClosing();
+            UiUtil.SaveWindowPosition(this);
+        };
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         UiUtil.FocusOnFirstActivation(this, () => { _buttonBrowseVideo?.Focus(); });
     }
