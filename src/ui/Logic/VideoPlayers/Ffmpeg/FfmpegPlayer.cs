@@ -46,6 +46,7 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
     private string _fileName = string.Empty;
     private bool _disposed;
     private Session? _session;
+    private int _loadGeneration; // bumped by LoadFile/CloseFile so a stale open cannot publish its session
     private double _volume = 100;
     private double _speed = 1.0;
 
@@ -139,9 +140,13 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
         CloseFile();
         _fileName = fileName;
 
+        // Opening runs on a worker; a CloseFile or another LoadFile issued meanwhile bumps the
+        // generation, and the worker then throws its session away instead of resurrecting it.
+        var generation = Interlocked.Increment(ref _loadGeneration);
+
         return Task.Run(() =>
         {
-            if (_disposed)
+            if (_disposed || generation != Volatile.Read(ref _loadGeneration))
             {
                 return;
             }
@@ -154,29 +159,53 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
             catch (Exception exception)
             {
                 Se.LogError(exception, $"ffmpeg player failed to open: {fileName}");
-                _fileName = string.Empty;
+                if (generation == Volatile.Read(ref _loadGeneration))
+                {
+                    _fileName = string.Empty;
+                }
+
                 return;
             }
 
-            if (_disposed)
+            if (_disposed || generation != Volatile.Read(ref _loadGeneration) ||
+                Interlocked.CompareExchange(ref _session, session, null) != null)
             {
                 session.Dispose();
                 return;
             }
 
-            _session = session;
-            session.Volume = _volume;
-            session.Speed = _speed;
-            session.Start();
+            if (generation != Volatile.Read(ref _loadGeneration))
+            {
+                // CloseFile ran between the check and the exchange; whoever still holds the
+                // session disposes it.
+                if (Interlocked.CompareExchange(ref _session, null, session) == session)
+                {
+                    session.Dispose();
+                }
 
-            // Always seek once: this is what decodes and shows the first picture (at the wanted
-            // position) while the player stays paused.
-            session.Seek(Math.Max(0, startPositionSeconds));
+                return;
+            }
+
+            try
+            {
+                session.Volume = _volume;
+                session.Speed = _speed;
+                session.Start();
+
+                // Always seek once: this is what decodes and shows the first picture (at the wanted
+                // position) while the player stays paused.
+                session.Seek(Math.Max(0, startPositionSeconds));
+            }
+            catch (ObjectDisposedException)
+            {
+                // CloseFile took and disposed the session while it was being started.
+            }
         });
     }
 
     public void CloseFile()
     {
+        Interlocked.Increment(ref _loadGeneration);
         var session = Interlocked.Exchange(ref _session, null);
         _fileName = string.Empty;
         session?.Dispose();
@@ -246,13 +275,33 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
         set
         {
             var session = _session;
-            if (session == null || value < 0 || double.IsNaN(value))
+            if (session == null)
             {
                 return;
             }
 
-            session.Seek(Math.Min(value, Math.Max(0, session.Duration)));
+            var target = SeekTarget(value, session.Duration);
+            if (target.HasValue)
+            {
+                session.Seek(target.Value);
+            }
         }
+    }
+
+    /// <summary>
+    /// Where a Position assignment seeks to: null for an invalid value, else the value clamped
+    /// to the duration - but only when the duration is known. Raw elementary streams (.h264) and
+    /// some transport streams report no duration (0 or NaN), and clamping to that would turn
+    /// every seek into a seek to 0.
+    /// </summary>
+    internal static double? SeekTarget(double value, double duration)
+    {
+        if (value < 0 || double.IsNaN(value))
+        {
+            return null;
+        }
+
+        return duration > 0 ? Math.Min(value, duration) : value;
     }
 
     public double Duration => _session?.Duration ?? 0;
@@ -340,6 +389,22 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
         return new SilentAudioSink();
     }
 
+    /// <summary>
+    /// Whether samples of this format are stored one plane per channel. The same table as
+    /// libavutil's av_sample_fmt_is_planar, kept managed so it can be tested without the native
+    /// libraries. Note that the enum is not ordered packed-then-planar: S64 (packed) comes after
+    /// the first planar formats, so a ">= U8P" comparison misclassifies it.
+    /// </summary>
+    internal static bool IsPlanarSampleFormat(AVSampleFormat format)
+    {
+        return format is AVSampleFormat.AV_SAMPLE_FMT_U8P
+            or AVSampleFormat.AV_SAMPLE_FMT_S16P
+            or AVSampleFormat.AV_SAMPLE_FMT_S32P
+            or AVSampleFormat.AV_SAMPLE_FMT_FLTP
+            or AVSampleFormat.AV_SAMPLE_FMT_DBLP
+            or AVSampleFormat.AV_SAMPLE_FMT_S64P;
+    }
+
     private static double TimestampToSeconds(long timestamp, AVRational timeBase)
     {
         return timestamp == ffmpeg.AV_NOPTS_VALUE ? double.NaN : timestamp * ffmpeg.av_q2d(timeBase);
@@ -412,15 +477,47 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
         public int VideoHeight { get; }
         public double DisplayAspectRatio { get; }
 
+        // Kept in a static so the native function pointer handed to libavformat stays valid.
+        private static readonly AVIOInterruptCB_callback InterruptCallbackDelegate = InterruptCallback;
+
+        // Handed to libavformat as the interrupt callback's opaque; freed with the format context.
+        private GCHandle _selfHandle;
+
+        /// <summary>
+        /// libavformat polls this during blocking reads and seeks: answering 1 makes the call
+        /// return AVERROR_EXIT, so a demux thread stuck in av_read_frame on a slow or network
+        /// file lets go when the session closes instead of outliving the format context.
+        /// </summary>
+        private static int InterruptCallback(void* opaque)
+        {
+            if (opaque == null)
+            {
+                return 0;
+            }
+
+            return GCHandle.FromIntPtr((IntPtr)opaque).Target is Session { _closing: true } ? 1 : 0;
+        }
+
         public Session(FfmpegPlayer owner, string fileName)
         {
             _owner = owner;
             _fileName = fileName;
 
-            AVFormatContext* format = null;
+            var format = ffmpeg.avformat_alloc_context();
+            if (format == null)
+            {
+                throw new InvalidOperationException("avformat_alloc_context failed");
+            }
+
+            _selfHandle = GCHandle.Alloc(this);
+            format->interrupt_callback.callback = InterruptCallbackDelegate;
+            format->interrupt_callback.opaque = (void*)GCHandle.ToIntPtr(_selfHandle);
+
+            // On failure avformat_open_input frees the context and nulls the pointer itself.
             var result = ffmpeg.avformat_open_input(&format, NativeMediaPath.ForMpv(fileName), null, null);
             if (result < 0)
             {
+                Dispose();
                 throw new InvalidOperationException($"avformat_open_input: {FfmpegLibraries.ErrorText(result)}");
             }
 
@@ -675,6 +772,15 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
             return _wallClockBase + _wallClock.Elapsed.TotalSeconds * _speed;
         }
 
+        /// <summary>True when a seek newer than the given serial has been requested (performed or not).</summary>
+        private bool SeekRequestedSince(int serial)
+        {
+            lock (_seekLock)
+            {
+                return _requestedSerial != serial;
+            }
+        }
+
         // ---------------------------------------------------------------- demux
 
         private void DemuxLoop()
@@ -856,7 +962,7 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
                         if (hardware)
                         {
                             // The hardware decoder rejected the stream - retry it in software.
-                            codec = FallBackToSoftware(codec, stream, sendResult, ref hardware);
+                            FallBackToSoftware(ref codec, stream, sendResult, ref hardware);
                             serial = -1;
                         }
 
@@ -963,7 +1069,7 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
                         // The hardware decoder could not decode or hand back this picture
                         // (unsupported profile, for example): reopen in software and replay from
                         // the key frame.
-                        codec = FallBackToSoftware(codec, stream, 0, ref hardware);
+                        FallBackToSoftware(ref codec, stream, 0, ref hardware);
                         serial = -1;
                         Seek(Position);
                         continue;
@@ -1019,14 +1125,21 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
             }
         }
 
-        private AVCodecContext* FallBackToSoftware(AVCodecContext* codec, AVStream* stream, int error, ref bool hardware)
+        /// <summary>
+        /// Replaces the hardware decoder context with a software one. The caller's pointer is
+        /// nulled before the new decoder is opened, so when OpenDecoder throws the caller's
+        /// cleanup does not free the context a second time.
+        /// </summary>
+        private void FallBackToSoftware(ref AVCodecContext* codec, AVStream* stream, int error, ref bool hardware)
         {
             var reason = error < 0 ? FfmpegLibraries.ErrorText(error) : "picture transfer failed";
             Se.LogError($"ffmpeg player: {HardwareDeviceName(codec)} decoding failed for {ffmpeg.avcodec_get_name(stream->codecpar->codec_id)} ({reason}), falling back to software decoding");
-            ffmpeg.avcodec_free_context(&codec);
+            var old = codec;
+            codec = null;
+            ffmpeg.avcodec_free_context(&old);
             hardware = false;
             _owner._decoderName = string.Empty;
-            return OpenDecoder(stream, hardware: false);
+            codec = OpenDecoder(stream, hardware: false);
         }
 
         private static (int Width, int Height) OutputSize(int width, int height)
@@ -1397,7 +1510,7 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
                         {
                             inputSamples -= skipInputSamples;
                             // Planar or packed, the offset in bytes per plane is samples * bytesPerSample * (channels for packed).
-                            var planar = format >= AVSampleFormat.AV_SAMPLE_FMT_U8P;
+                            var planar = IsPlanarSampleFormat(format);
                             var bytesPerSample = ffmpeg.av_get_bytes_per_sample(format);
                             var planes = planar ? frame->ch_layout.nb_channels : 1;
                             var offset = skipInputSamples * bytesPerSample * (planar ? 1 : frame->ch_layout.nb_channels);
@@ -1542,24 +1655,57 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
                             continue;
                         }
 
-                        _videoFrames.Return(_videoFrames.Pop());
-                        if (_playing && (!_hasAudio || Clock() >= Duration - 0.05))
+                        if (_hasAudio)
                         {
-                            ReachEnd();
-                        }
-                        else if (_playing)
-                        {
-                            // Video ended first; let the audio play out before stopping.
-                            var remaining = Duration - Clock();
-                            _presentWake.WaitOne(Math.Clamp((int)(remaining * 1000), 1, 200));
-                            if (!_playing)
+                            // Video ended first; let the audio play out before stopping. The wake
+                            // event is also set by Play/Pause/Seek and by pushed pictures, so one
+                            // wait is not enough - keep waiting until the clock reaches the end,
+                            // unless playback was paused or a seek moved the pipeline on. The
+                            // marker stays queued meanwhile so a pause here still knows the end.
+                            var interrupted = false;
+                            var lastClock = double.NegativeInfinity;
+                            var stalledSince = Stopwatch.GetTimestamp();
+                            while (_playing && !_closing)
+                            {
+                                var now = Clock();
+                                if (now >= Duration - 0.05)
+                                {
+                                    break;
+                                }
+
+                                if (now > lastClock + 0.0005)
+                                {
+                                    lastClock = now;
+                                    stalledSince = Stopwatch.GetTimestamp();
+                                }
+                                else if (Stopwatch.GetElapsedTime(stalledSince).TotalSeconds > 0.5)
+                                {
+                                    break; // the audio ran dry short of the reported duration
+                                }
+
+                                if (SeekRequestedSince(frame.Serial))
+                                {
+                                    interrupted = true;
+                                    break;
+                                }
+
+                                _presentWake.WaitOne(Math.Clamp((int)((Duration - now) * 1000), 1, 200));
+                            }
+
+                            if (interrupted || !_playing || _closing || SeekRequestedSince(frame.Serial))
                             {
                                 continue;
                             }
-
-                            ReachEnd();
                         }
 
+                        var popped = _videoFrames.Pop();
+                        _videoFrames.Return(popped);
+                        if (!ReferenceEquals(popped, frame))
+                        {
+                            continue; // flushed by a seek while waiting
+                        }
+
+                        ReachEnd();
                         continue;
                     }
 
@@ -1676,23 +1822,39 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
             _videoFrames.Close();
             _demuxWake.Set();
             _presentWake.Set();
-            try
+
+            // The constructor disposes a half-built session (stream info failed, no usable
+            // stream) before the sink exists, so the sink is null on those paths.
+            var audioSink = _audioSink;
+            if (audioSink != null)
             {
-                _audioSink.Reset();
-            }
-            catch
-            {
-                // sink may not have been opened
+                try
+                {
+                    audioSink.Reset();
+                }
+                catch
+                {
+                    // sink may not have been opened
+                }
             }
 
-            JoinThread(_demuxThread);
-            JoinThread(_videoThread);
-            JoinThread(_audioThread);
-            JoinThread(_presentThread);
+            var stopped = JoinThread(_demuxThread);
+            stopped &= JoinThread(_videoThread);
+            stopped &= JoinThread(_audioThread);
+            stopped &= JoinThread(_presentThread);
 
-            _audioSink.Dispose();
+            audioSink?.Dispose();
             _demuxWake.Dispose();
             _presentWake.Dispose();
+
+            if (!stopped)
+            {
+                // A worker is still inside libavformat/libavcodec with this context; closing it
+                // now would be a use-after-free. Leak it (and the handle its interrupt callback
+                // dereferences) rather than crash.
+                Se.LogError($"ffmpeg player: leaking the format context of '{_fileName}' because a thread did not stop");
+                return;
+            }
 
             if (_format != null)
             {
@@ -1700,19 +1862,28 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
                 ffmpeg.avformat_close_input(&format);
                 _format = null;
             }
+
+            if (_selfHandle.IsAllocated)
+            {
+                _selfHandle.Free();
+            }
         }
 
-        private static void JoinThread(Thread? thread)
+        /// <summary>False when the thread is still running after the timeout.</summary>
+        private static bool JoinThread(Thread? thread)
         {
             if (thread == null || thread == Thread.CurrentThread)
             {
-                return;
+                return true;
             }
 
-            if (!thread.Join(TimeSpan.FromSeconds(5)))
+            if (thread.Join(TimeSpan.FromSeconds(5)))
             {
-                Se.LogError($"ffmpeg player: thread '{thread.Name}' did not stop in time");
+                return true;
             }
+
+            Se.LogError($"ffmpeg player: thread '{thread.Name}' did not stop in time");
+            return false;
         }
     }
 }
