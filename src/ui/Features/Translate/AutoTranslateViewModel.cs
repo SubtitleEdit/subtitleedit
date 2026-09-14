@@ -163,6 +163,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             new AnthropicTranslate(),
             new GroqTranslate(),
             new OpenRouterTranslate(),
+            new ApiRouteTranslate(),
             new LaraTranslate(),
             new PerplexityTranslate(),
             new GeminiTranslate(),
@@ -213,6 +214,11 @@ public partial class AutoTranslateViewModel : ObservableObject
         // The url is saved but was the only field of these two engines never bridged back, so both
         // the url box and the translator fell back to the built-in endpoint on the next start.
         Configuration.Settings.Tools.OpenRouterUrl = Se.Settings.AutoTranslate.OpenRouterUrl;
+
+        Configuration.Settings.Tools.ApiRouteApiKey = Se.Settings.AutoTranslate.ApiRouteApiKey;
+        Configuration.Settings.Tools.ApiRouteUrl = Se.Settings.AutoTranslate.ApiRouteUrl;
+        Configuration.Settings.Tools.ApiRouteModel = Se.Settings.AutoTranslate.ApiRouteModel;
+        Configuration.Settings.Tools.ApiRoutePrompt = Se.Settings.AutoTranslate.ApiRoutePrompt;
 
         Configuration.Settings.Tools.ChatGptApiKey = Se.Settings.AutoTranslate.ChatGptApiKey;
         Configuration.Settings.Tools.ChatGptUrl = Se.Settings.AutoTranslate.ChatGptUrl;
@@ -468,6 +474,14 @@ public partial class AutoTranslateViewModel : ObservableObject
             Se.Settings.AutoTranslate.OpenRouterUrl = apiUrl.Trim();
         }
 
+        if (engineType == typeof(ApiRouteTranslate))
+        {
+            Configuration.Settings.Tools.ApiRouteApiKey = apiKey.Trim();
+            Configuration.Settings.Tools.ApiRouteModel = apiModel.Trim();
+            Configuration.Settings.Tools.ApiRouteUrl = apiUrl.Trim();
+            Se.Settings.AutoTranslate.ApiRouteUrl = apiUrl.Trim();
+        }
+
         if (engineType == typeof(GeminiTranslate))
         {
             Configuration.Settings.Tools.GeminiProApiKey = apiKey.Trim();
@@ -519,6 +533,11 @@ public partial class AutoTranslateViewModel : ObservableObject
         Se.Settings.AutoTranslate.OpenRouterApiKey = Configuration.Settings.Tools.OpenRouterApiKey;
         Se.Settings.AutoTranslate.OpenRouterModel = Configuration.Settings.Tools.OpenRouterModel;
         Se.Settings.AutoTranslate.OpenRouterPrompt = Configuration.Settings.Tools.OpenRouterPrompt;
+
+        Se.Settings.AutoTranslate.ApiRouteApiKey = Configuration.Settings.Tools.ApiRouteApiKey;
+        Se.Settings.AutoTranslate.ApiRouteUrl = Configuration.Settings.Tools.ApiRouteUrl;
+        Se.Settings.AutoTranslate.ApiRouteModel = Configuration.Settings.Tools.ApiRouteModel;
+        Se.Settings.AutoTranslate.ApiRoutePrompt = Configuration.Settings.Tools.ApiRoutePrompt;
 
         Se.Settings.AutoTranslate.ChatGptApiKey = Configuration.Settings.Tools.ChatGptApiKey;
         Se.Settings.AutoTranslate.ChatGptUrl = Configuration.Settings.Tools.ChatGptUrl;
@@ -1751,6 +1770,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             AnthropicTranslate => settings.AnthropicApiUrl,
             GroqTranslate => settings.GroqUrl,
             OpenRouterTranslate => settings.OpenRouterUrl,
+            ApiRouteTranslate => settings.ApiRouteUrl,
             LaraTranslate => settings.LaraUrl,
             PerplexityTranslate => settings.PerplexityUrl,
             NvidiaTranslate => settings.NvidiaUrl,
@@ -2290,6 +2310,24 @@ public partial class AutoTranslateViewModel : ObservableObject
             ModelIsVisible = true;
             ButtonModelIsVisible = true;
             ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.OpenRouterModel) ? _apiModels[0] : Configuration.Settings.Tools.OpenRouterModel;
+
+            return;
+        }
+
+        if (engineType == typeof(ApiRouteTranslate))
+        {
+            FillUrls(new List<string>
+            {
+                Configuration.Settings.Tools.ApiRouteUrl,
+            });
+
+            ApiKeyText = Configuration.Settings.Tools.ApiRouteApiKey;
+            ApiKeyIsVisible = true;
+
+            _apiModels = ApiRouteTranslate.Models.ToList();
+            ModelIsVisible = true;
+            ButtonModelIsVisible = true;
+            ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.ApiRouteModel) ? _apiModels[0] : Configuration.Settings.Tools.ApiRouteModel;
 
             return;
         }

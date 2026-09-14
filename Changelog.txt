@@ -6,6 +6,7 @@ Subtitle Edit Changelog
   A summary of the changes since 5.1.0:
 
 New features:
+* Add API Route to Auto-translate - thx DennyHo0917
 * Assisted split and Assisted move - ranked one-click suggestions with full previews
 * Chapter editor with Matroska/MP4/OGM chapter formats (Video > More > Chapters)
 * Edit original - edit the original reference rows in place, open a non-matching original as a read-only reference, and show the original subtitle on the waveform
