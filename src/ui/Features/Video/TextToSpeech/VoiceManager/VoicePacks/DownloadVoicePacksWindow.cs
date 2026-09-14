@@ -1,4 +1,5 @@
 ﻿using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
@@ -48,6 +49,8 @@ public sealed class DownloadVoicePacksWindow : Window
                 var checkBox = new CheckBox
                 {
                     [!ToggleButton.IsCheckedProperty] = new Binding(nameof(VoicePackItem.IsSelected)) { Mode = BindingMode.TwoWay },
+                    // The pack name sits in a separate text block; without this the box is a bare "check box" (#12087).
+                    [!AutomationProperties.NameProperty] = new Binding(nameof(VoicePackItem.Name)),
                     VerticalAlignment = VerticalAlignment.Top,
                     Margin = new Thickness(0, 2, 6, 0),
                 };

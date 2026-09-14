@@ -1,4 +1,5 @@
 ﻿using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
@@ -171,6 +172,7 @@ public class OcrWindow : Window
         var toggleButtonCaptureAlignment = new ToggleButton();
         Attached.SetIcon(toggleButtonCaptureAlignment, IconNames.DockTop);
         ToolTip.SetTip(toggleButtonCaptureAlignment, Se.Language.Ocr.CaptureTopAlign);
+        AutomationProperties.SetName(toggleButtonCaptureAlignment, Se.Language.Ocr.CaptureTopAlign);
         toggleButtonCaptureAlignment.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(vm.HasCaptureAlignment)));
 
         var toggleButtonPreProcessing = new ToggleButton
@@ -180,6 +182,7 @@ public class OcrWindow : Window
         toggleButtonPreProcessing.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(vm.HasPreProcessingSettings)));
         Attached.SetIcon(toggleButtonPreProcessing, IconNames.Image);
         ToolTip.SetTip(toggleButtonPreProcessing, Se.Language.Ocr.ImagePreProcessing);
+        AutomationProperties.SetName(toggleButtonPreProcessing, Se.Language.Ocr.ImagePreProcessing);
 
         var toggleButtonVobSubColors = new ToggleButton
         {
@@ -190,6 +193,7 @@ public class OcrWindow : Window
         toggleButtonVobSubColors.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsVobSubVisible)));
         Attached.SetIcon(toggleButtonVobSubColors, IconNames.Palette);
         ToolTip.SetTip(toggleButtonVobSubColors, Se.Language.Ocr.VobSubColors);
+        AutomationProperties.SetName(toggleButtonVobSubColors, Se.Language.Ocr.VobSubColors);
 
         var toggleButtonFallbackDatabase = new ToggleButton
         {
@@ -200,10 +204,12 @@ public class OcrWindow : Window
         toggleButtonFallbackDatabase.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsFallbackDatabaseVisible)));
         Attached.SetIcon(toggleButtonFallbackDatabase, IconNames.DatabaseArrowRight);
         ToolTip.SetTip(toggleButtonFallbackDatabase, Se.Language.Ocr.FallbackOcrDatabase);
+        AutomationProperties.SetName(toggleButtonFallbackDatabase, Se.Language.Ocr.FallbackOcrDatabase);
 
         var toggleButtonShowOnlyForced = new ToggleButton();
         Attached.SetIcon(toggleButtonShowOnlyForced, IconNames.Filter);
         ToolTip.SetTip(toggleButtonShowOnlyForced, Se.Language.Ocr.ShowOnlyForcedSubtitles);
+        AutomationProperties.SetName(toggleButtonShowOnlyForced, Se.Language.Ocr.ShowOnlyForcedSubtitles);
         toggleButtonShowOnlyForced.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(vm.ShowOnlyForced)));
         toggleButtonShowOnlyForced.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.HasForcedSubtitles)));
         toggleButtonShowOnlyForced.Bind(InputElement.IsEnabledProperty, new Binding(nameof(vm.IsOcrRunning)) { Converter = InverseBooleanConverter.Instance });

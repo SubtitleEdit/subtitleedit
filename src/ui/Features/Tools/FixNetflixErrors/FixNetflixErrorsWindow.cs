@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
@@ -142,6 +143,7 @@ public class FixNetflixErrorsWindow : Window
                 {
                     Focusable = false,
                     [!ToggleButton.IsCheckedProperty] = new Binding(nameof(NetflixCheckDisplayItem.IsSelected)) { Mode = BindingMode.TwoWay },
+                    [!AutomationProperties.NameProperty] = new Binding(nameof(NetflixCheckDisplayItem.Name)),
                     HorizontalAlignment = HorizontalAlignment.Center,
                 };
                 cb.IsCheckedChanged += (_, __) => vm.SetDirty();
@@ -212,6 +214,7 @@ public class FixNetflixErrorsWindow : Window
                         {
                             Focusable = false,
                             [!ToggleButton.IsCheckedProperty] = new Binding(nameof(FixNetflixErrorsItem.Apply)) { Mode = BindingMode.TwoWay },
+                            [AutomationProperties.NameProperty] = Se.Language.General.Apply,
                             HorizontalAlignment = HorizontalAlignment.Center,
                         };
                         cb.IsEnabled = item.CanBeFixed;

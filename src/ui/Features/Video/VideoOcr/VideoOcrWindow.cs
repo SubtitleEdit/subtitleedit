@@ -158,6 +158,9 @@ public class VideoOcrWindow : Window
         };
         scanAreaText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ScanAreaText)) { Source = vm });
 
+        // The three preset buttons share the "Scan area" label to their left. UI Automation
+        // has no notion of that pairing, so a screen reader hears "Bottom third, button"
+        // with nothing saying what it is a third of (#12087) - put the heading in each name.
         var scanAreaRow = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -165,9 +168,12 @@ public class VideoOcrWindow : Window
             Children =
             {
                 UiUtil.MakeLabel(Se.Language.Video.VideoOcr.ScanArea),
-                UiUtil.MakeButton(Se.Language.Video.VideoOcr.BottomThird, vm.SetScanAreaBottomThirdCommand),
-                UiUtil.MakeButton(Se.Language.Video.VideoOcr.BottomHalf, vm.SetScanAreaBottomHalfCommand),
-                UiUtil.MakeButton(Se.Language.Video.VideoOcr.FullFrame, vm.SetScanAreaFullFrameCommand),
+                UiUtil.MakeButton(Se.Language.Video.VideoOcr.BottomThird, vm.SetScanAreaBottomThirdCommand)
+                    .WithAccessibleName($"{Se.Language.Video.VideoOcr.ScanArea}: {Se.Language.Video.VideoOcr.BottomThird}"),
+                UiUtil.MakeButton(Se.Language.Video.VideoOcr.BottomHalf, vm.SetScanAreaBottomHalfCommand)
+                    .WithAccessibleName($"{Se.Language.Video.VideoOcr.ScanArea}: {Se.Language.Video.VideoOcr.BottomHalf}"),
+                UiUtil.MakeButton(Se.Language.Video.VideoOcr.FullFrame, vm.SetScanAreaFullFrameCommand)
+                    .WithAccessibleName($"{Se.Language.Video.VideoOcr.ScanArea}: {Se.Language.Video.VideoOcr.FullFrame}"),
                 scanAreaText,
             },
         };

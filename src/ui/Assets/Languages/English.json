@@ -3524,7 +3524,11 @@
     "applyToSelectedLinesX": "Selected lines ({0})",
     "applyToAllLinesX": "All lines ({0})",
     "updateAllXAvailable": "Update all ({0})",
-    "updatingXOfY": "Updating {0}/{1}..."
+    "updatingXOfY": "Updating {0}/{1}...",
+    "doNotAskAgain": "Do not ask again (change in Manage plugins)",
+    "applyPluginsTo": "Apply plugins to",
+    "askEachTime": "Ask each time",
+    "allLines": "All lines"
   },
   "help": {
     "aboutSubtitleEdit": "About Subtitle Edit",

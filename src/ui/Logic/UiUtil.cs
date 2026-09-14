@@ -1444,6 +1444,12 @@ public static class UiUtil
 
         control.Content = stackPanelApplyFixes;
 
+        // Same as WithIconLeft: the panel content has no UIA name of its own, keep the text.
+        if (!string.IsNullOrEmpty(label.Text))
+        {
+            AutomationProperties.SetName(control, label.Text);
+        }
+
         return control;
     }
 
@@ -1477,9 +1483,17 @@ public static class UiUtil
         return control;
     }
 
-    // Like WithIconLeft, but the text is bound to a view-model property instead of being fixed,
-    // so the caption can change at runtime (e.g. "Download" vs "Re-download").
-    public static Button WithIconLeftBindText(this Button control, string iconName, string textPropertyPath)
+    /// <summary>
+    /// Like WithIconLeft, but the text is bound to a view-model property instead of being fixed,
+    /// so the caption can change at runtime (e.g. "Download" vs "Re-download").
+    /// </summary>
+    /// <param name="accessibleNamePropertyPath">
+    /// Optional view-model property with a fuller name for screen readers than the caption -
+    /// a row of "Download" buttons needs "Download &lt;model&gt;" to tell them apart (#12087).
+    /// Defaults to the caption.
+    /// </param>
+    public static Button WithIconLeftBindText(this Button control, string iconName, string textPropertyPath,
+        string? accessibleNamePropertyPath = null)
     {
         var label = new TextBlock { Padding = new Thickness(4, 0, 0, 0) };
         label.Bind(TextBlock.TextProperty, new Binding { Path = textPropertyPath });
@@ -1492,6 +1506,11 @@ public static class UiUtil
             Orientation = Orientation.Horizontal,
             Children = { image, label },
         };
+
+        // A button whose content is a panel has no text for UI Automation to use, so its name
+        // falls back to the content's type and NVDA announces "Avalonia.Controls.StackPanel"
+        // (#12087). Bind the caption (or a fuller name) as the accessible name instead.
+        control.Bind(AutomationProperties.NameProperty, new Binding { Path = accessibleNamePropertyPath ?? textPropertyPath });
 
         return control;
     }

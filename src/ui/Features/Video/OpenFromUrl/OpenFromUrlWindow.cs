@@ -1,4 +1,5 @@
 ﻿using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
@@ -202,6 +203,8 @@ public class OpenFromUrlWindow : Window
         var button = new Button
         {
             Content = row,
+            // The card's content is a panel; announce it by its title (#12087).
+            [AutomationProperties.NameProperty] = title,
             Padding = new Thickness(CardPadding),
             Margin = new Thickness(0, CardSpacing / 2, 0, CardSpacing / 2),
             HorizontalAlignment = HorizontalAlignment.Stretch,

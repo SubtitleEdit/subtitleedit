@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
@@ -196,6 +197,8 @@ public class AssaDrawWindow : Window
             Padding = new Thickness(4),
         };
         ToolTip.SetTip(button, tooltip);
+        // Icon-only, so the tooltip is the only text there is for a screen reader (#12087).
+        AutomationProperties.SetName(button, tooltip);
         return button;
     }
 

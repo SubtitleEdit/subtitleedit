@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
@@ -143,6 +144,9 @@ public class MultipleReplaceWindow : Window
                 Source = node,
             });
             checkBox.IsCheckedChanged += vm.OnActiveChanged;
+            // The row text lives in separate labels; name the box after the category or rule (#12087).
+            checkBox.Bind(AutomationProperties.NameProperty,
+                new Binding(node.IsCategory ? nameof(RuleTreeNode.CategoryName) : nameof(RuleTreeNode.Find)) { Source = node });
 
             if (node.IsCategory)
             {
@@ -167,6 +171,7 @@ public class MultipleReplaceWindow : Window
                 };
                 buttonCategoryActions.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.IsMultipleReplaceDotDotDotButtonsVisible)));
                 Attached.SetIcon(buttonCategoryActions, IconNames.DotsVertical);
+                AutomationProperties.SetName(buttonCategoryActions, Se.Language.General.More);
 
                 var panelCategory = new DockPanel
                 {
@@ -264,6 +269,7 @@ public class MultipleReplaceWindow : Window
             };
             buttonActions.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.IsMultipleReplaceDotDotDotButtonsVisible)));
             Attached.SetIcon(buttonActions, IconNames.DotsVertical);
+            AutomationProperties.SetName(buttonActions, Se.Language.General.More);
 
             var labelDescription = UiUtil.MakeLabel().WithBindText(node, nameof(RuleTreeNode.Description));
             labelDescription.Opacity = 0.6;
