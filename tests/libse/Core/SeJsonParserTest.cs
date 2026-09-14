@@ -233,4 +233,69 @@ public class SeJsonParserTest
         Assert.Equal("tag2", result[1].Name);
         Assert.Equal("hi!", result[1].Json);
     }
+
+    /// <summary>
+    /// GetFirstObject returned "" when the wanted object's last member was an array: the closing
+    /// '}' is handled in the Value state (the member's element is still on the stack), and that
+    /// branch popped the object without the name check. Google Vision responses happen to end
+    /// fullTextAnnotation with a plain "text" member, which hid this.
+    /// </summary>
+    [Fact]
+    public void GetFirstObject_LastMemberIsArray()
+    {
+        var parser = new SeJsonParser();
+        var json = "{\"responses\":[{\"fullTextAnnotation\":{\"pages\":[{\"blocks\":[]}]}}]}";
+        var result = parser.GetFirstObject(json, "fullTextAnnotation");
+        Assert.Equal("{\"pages\":[{\"blocks\":[]}]}", result);
+        Assert.Empty(parser.Errors);
+    }
+
+    [Fact]
+    public void GetFirstObject_LastMemberIsArrayOfNumbers()
+    {
+        var parser = new SeJsonParser();
+        var result = parser.GetFirstObject("{\"a\":{\"b\":1,\"c\":[1,2,3]},\"d\":2}", "a");
+        Assert.Equal("{\"b\":1,\"c\":[1,2,3]}", result);
+    }
+
+    [Fact]
+    public void GetFirstObject_LastMemberIsObject()
+    {
+        var parser = new SeJsonParser();
+        var result = parser.GetFirstObject("{\"a\":{\"b\":{\"c\":1}}}", "a");
+        Assert.Equal("{\"b\":{\"c\":1}}", result);
+    }
+
+    [Fact]
+    public void GetFirstObject_LastMemberIsArray_PrettyPrinted()
+    {
+        var parser = new SeJsonParser();
+        var json = "{\r\n  \"a\": {\r\n    \"b\": [\r\n      { \"c\": 1 }\r\n    ]\r\n  }\r\n}";
+        var result = parser.GetFirstObject(json, "a");
+        Assert.Equal("{\r\n    \"b\": [\r\n      { \"c\": 1 }\r\n    ]\r\n  }", result.Trim());
+    }
+
+    [Fact]
+    public void GetFirstObject_LastMemberIsArray_ReturnsFirstMatchOnly()
+    {
+        var parser = new SeJsonParser();
+        var result = parser.GetFirstObject("[{\"a\":{\"b\":[1]}},{\"a\":{\"b\":[2]}}]", "a");
+        Assert.Equal("{\"b\":[1]}", result);
+    }
+
+    [Fact]
+    public void GetFirstObject_MemberAfterArray_StillWorks()
+    {
+        var parser = new SeJsonParser();
+        var result = parser.GetFirstObject("{\"a\":{\"b\":[1],\"c\":\"x\"}}", "a");
+        Assert.Equal("{\"b\":[1],\"c\":\"x\"}", result);
+    }
+
+    [Fact]
+    public void GetFirstObject_SameNameNestedInsideArrayMember_ReturnsOuter()
+    {
+        var parser = new SeJsonParser();
+        var result = parser.GetFirstObject("{\"a\":{\"b\":[{\"a\":{\"z\":0}}]}}", "a");
+        Assert.Equal("{\"b\":[{\"a\":{\"z\":0}}]}", result);
+    }
 }
