@@ -283,6 +283,14 @@ public class LanguageSettingsShortcuts
     public string MoveSelectedLinesXMsForward { get; set; }
     public string MoveSelectedLinesAndForwardXMsBack { get; set; }
     public string MoveSelectedLinesAndForwardXMsForward { get; set; }
+    public string MoveAllLinesXMsBack { get; set; }
+    public string MoveAllLinesXMsForward { get; set; }
+    public string MoveSelectedLinesCustomMsBack { get; set; }
+    public string MoveSelectedLinesCustomMsForward { get; set; }
+    public string MoveSelectedLinesAndForwardCustomMsBack { get; set; }
+    public string MoveSelectedLinesAndForwardCustomMsForward { get; set; }
+    public string MoveAllLinesCustomMsBack { get; set; }
+    public string MoveAllLinesCustomMsForward { get; set; }
 
     public LanguageSettingsShortcuts()
     {
@@ -569,5 +577,13 @@ public class LanguageSettingsShortcuts
         MoveSelectedLinesXMsForward = "Move selected lines X ms forward (X set in Settings)";
         MoveSelectedLinesAndForwardXMsBack = "Move selected lines and all following X ms back (X set in Settings)";
         MoveSelectedLinesAndForwardXMsForward = "Move selected lines and all following X ms forward (X set in Settings)";
+        MoveAllLinesXMsBack = "Move all lines X ms back (X set in Settings)";
+        MoveAllLinesXMsForward = "Move all lines X ms forward (X set in Settings)";
+        MoveSelectedLinesCustomMsBack = "Move selected lines, custom milliseconds ({0:#,###,##0}) back, {1}";
+        MoveSelectedLinesCustomMsForward = "Move selected lines, custom milliseconds ({0:#,###,##0}) forward, {1}";
+        MoveSelectedLinesAndForwardCustomMsBack = "Move selected lines and all following, custom milliseconds ({0:#,###,##0}) back, {1}";
+        MoveSelectedLinesAndForwardCustomMsForward = "Move selected lines and all following, custom milliseconds ({0:#,###,##0}) forward, {1}";
+        MoveAllLinesCustomMsBack = "Move all lines, custom milliseconds ({0:#,###,##0}) back, {1}";
+        MoveAllLinesCustomMsForward = "Move all lines, custom milliseconds ({0:#,###,##0}) forward, {1}";
     }
 }

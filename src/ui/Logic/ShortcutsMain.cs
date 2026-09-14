@@ -104,6 +104,70 @@ public static class ShortcutsMain
     }
 
     /// <summary>
+    /// Step of a "move lines, custom milliseconds" slot (#14789). One value per scope and slot,
+    /// shared by the slot's back and forward commands so a nudge is symmetric.
+    /// </summary>
+    public static int GetMoveLinesCustomMs(MoveLinesScope scope, int slotNumber)
+    {
+        var g = Se.Settings.General;
+        return (scope, slotNumber) switch
+        {
+            (MoveLinesScope.Selected, 1) => g.MoveSelectedLinesCustom1Ms,
+            (MoveLinesScope.Selected, _) => g.MoveSelectedLinesCustom2Ms,
+            (MoveLinesScope.SelectedAndForward, 1) => g.MoveSelectedLinesAndForwardCustom1Ms,
+            (MoveLinesScope.SelectedAndForward, _) => g.MoveSelectedLinesAndForwardCustom2Ms,
+            (MoveLinesScope.All, 1) => g.MoveAllLinesCustom1Ms,
+            _ => g.MoveAllLinesCustom2Ms,
+        };
+    }
+
+    public static void SetMoveLinesCustomMs(MoveLinesScope scope, int slotNumber, int ms)
+    {
+        var g = Se.Settings.General;
+        switch (scope, slotNumber)
+        {
+            case (MoveLinesScope.Selected, 1): g.MoveSelectedLinesCustom1Ms = ms; break;
+            case (MoveLinesScope.Selected, _): g.MoveSelectedLinesCustom2Ms = ms; break;
+            case (MoveLinesScope.SelectedAndForward, 1): g.MoveSelectedLinesAndForwardCustom1Ms = ms; break;
+            case (MoveLinesScope.SelectedAndForward, _): g.MoveSelectedLinesAndForwardCustom2Ms = ms; break;
+            case (MoveLinesScope.All, 1): g.MoveAllLinesCustom1Ms = ms; break;
+            default: g.MoveAllLinesCustom2Ms = ms; break;
+        }
+    }
+
+    public static string GetMoveLinesCustomTitle(MoveLinesScope scope, int slotNumber, bool back)
+    {
+        return GetMoveLinesCustomTitle(scope, slotNumber, back, GetMoveLinesCustomMs(scope, slotNumber));
+    }
+
+    public static string GetMoveLinesCustomTitle(MoveLinesScope scope, int slotNumber, bool back, int ms)
+    {
+        var l = Se.Language.Options.Shortcuts;
+        var format = (scope, back) switch
+        {
+            (MoveLinesScope.Selected, true) => l.MoveSelectedLinesCustomMsBack,
+            (MoveLinesScope.Selected, false) => l.MoveSelectedLinesCustomMsForward,
+            (MoveLinesScope.SelectedAndForward, true) => l.MoveSelectedLinesAndForwardCustomMsBack,
+            (MoveLinesScope.SelectedAndForward, false) => l.MoveSelectedLinesAndForwardCustomMsForward,
+            (MoveLinesScope.All, true) => l.MoveAllLinesCustomMsBack,
+            _ => l.MoveAllLinesCustomMsForward,
+        };
+        return string.Format(format, ms, slotNumber);
+    }
+
+    /// <summary>Action name of a custom move slot command, e.g. "MoveAllLinesCustom2BackCommand".</summary>
+    public static string GetMoveLinesCustomCommandName(MoveLinesScope scope, int slotNumber, bool back)
+    {
+        var scopeName = scope switch
+        {
+            MoveLinesScope.Selected => "MoveSelectedLines",
+            MoveLinesScope.SelectedAndForward => "MoveSelectedLinesAndForward",
+            _ => "MoveAllLines",
+        };
+        return $"{scopeName}Custom{slotNumber}{(back ? "Back" : "Forward")}Command";
+    }
+
+    /// <summary>
     /// Display name for a "search via" slot: the configured name when it has one, otherwise the
     /// URL, otherwise just the slot number - the extra slots ship unconfigured.
     /// </summary>
@@ -413,6 +477,20 @@ public static class ShortcutsMain
         { nameof(MainViewModel.MoveSelectedLinesXMsForwardCommand), Se.Language.Options.Shortcuts.MoveSelectedLinesXMsForward },
         { nameof(MainViewModel.MoveSelectedLinesAndForwardXMsBackCommand), Se.Language.Options.Shortcuts.MoveSelectedLinesAndForwardXMsBack },
         { nameof(MainViewModel.MoveSelectedLinesAndForwardXMsForwardCommand), Se.Language.Options.Shortcuts.MoveSelectedLinesAndForwardXMsForward },
+        { nameof(MainViewModel.MoveAllLinesXMsBackCommand), Se.Language.Options.Shortcuts.MoveAllLinesXMsBack },
+        { nameof(MainViewModel.MoveAllLinesXMsForwardCommand), Se.Language.Options.Shortcuts.MoveAllLinesXMsForward },
+        { nameof(MainViewModel.MoveSelectedLinesCustom1BackCommand), GetMoveLinesCustomTitle(MoveLinesScope.Selected, 1, back: true) },
+        { nameof(MainViewModel.MoveSelectedLinesCustom1ForwardCommand), GetMoveLinesCustomTitle(MoveLinesScope.Selected, 1, back: false) },
+        { nameof(MainViewModel.MoveSelectedLinesCustom2BackCommand), GetMoveLinesCustomTitle(MoveLinesScope.Selected, 2, back: true) },
+        { nameof(MainViewModel.MoveSelectedLinesCustom2ForwardCommand), GetMoveLinesCustomTitle(MoveLinesScope.Selected, 2, back: false) },
+        { nameof(MainViewModel.MoveSelectedLinesAndForwardCustom1BackCommand), GetMoveLinesCustomTitle(MoveLinesScope.SelectedAndForward, 1, back: true) },
+        { nameof(MainViewModel.MoveSelectedLinesAndForwardCustom1ForwardCommand), GetMoveLinesCustomTitle(MoveLinesScope.SelectedAndForward, 1, back: false) },
+        { nameof(MainViewModel.MoveSelectedLinesAndForwardCustom2BackCommand), GetMoveLinesCustomTitle(MoveLinesScope.SelectedAndForward, 2, back: true) },
+        { nameof(MainViewModel.MoveSelectedLinesAndForwardCustom2ForwardCommand), GetMoveLinesCustomTitle(MoveLinesScope.SelectedAndForward, 2, back: false) },
+        { nameof(MainViewModel.MoveAllLinesCustom1BackCommand), GetMoveLinesCustomTitle(MoveLinesScope.All, 1, back: true) },
+        { nameof(MainViewModel.MoveAllLinesCustom1ForwardCommand), GetMoveLinesCustomTitle(MoveLinesScope.All, 1, back: false) },
+        { nameof(MainViewModel.MoveAllLinesCustom2BackCommand), GetMoveLinesCustomTitle(MoveLinesScope.All, 2, back: true) },
+        { nameof(MainViewModel.MoveAllLinesCustom2ForwardCommand), GetMoveLinesCustomTitle(MoveLinesScope.All, 2, back: false) },
         { nameof(MainViewModel.MergeSelectedLinesCommand), Se.Language.General.MergeSelectedLines },
         { nameof(MainViewModel.MergeSelectedLinesDialogCommand), Se.Language.General.MergeSelectedLinesDialog },
         { nameof(MainViewModel.MergeSelectedLinesBilingualCommand), Se.Language.Options.Shortcuts.GeneralMergeSelectedLinesBilingual },
@@ -872,6 +950,20 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.MoveSelectedLinesXMsForwardCommand, nameof(vm.MoveSelectedLinesXMsForwardCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveSelectedLinesAndForwardXMsBackCommand, nameof(vm.MoveSelectedLinesAndForwardXMsBackCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveSelectedLinesAndForwardXMsForwardCommand, nameof(vm.MoveSelectedLinesAndForwardXMsForwardCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveAllLinesXMsBackCommand, nameof(vm.MoveAllLinesXMsBackCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveAllLinesXMsForwardCommand, nameof(vm.MoveAllLinesXMsForwardCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveSelectedLinesCustom1BackCommand, nameof(vm.MoveSelectedLinesCustom1BackCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveSelectedLinesCustom1ForwardCommand, nameof(vm.MoveSelectedLinesCustom1ForwardCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveSelectedLinesCustom2BackCommand, nameof(vm.MoveSelectedLinesCustom2BackCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveSelectedLinesCustom2ForwardCommand, nameof(vm.MoveSelectedLinesCustom2ForwardCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveSelectedLinesAndForwardCustom1BackCommand, nameof(vm.MoveSelectedLinesAndForwardCustom1BackCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveSelectedLinesAndForwardCustom1ForwardCommand, nameof(vm.MoveSelectedLinesAndForwardCustom1ForwardCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveSelectedLinesAndForwardCustom2BackCommand, nameof(vm.MoveSelectedLinesAndForwardCustom2BackCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveSelectedLinesAndForwardCustom2ForwardCommand, nameof(vm.MoveSelectedLinesAndForwardCustom2ForwardCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveAllLinesCustom1BackCommand, nameof(vm.MoveAllLinesCustom1BackCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveAllLinesCustom1ForwardCommand, nameof(vm.MoveAllLinesCustom1ForwardCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveAllLinesCustom2BackCommand, nameof(vm.MoveAllLinesCustom2BackCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveAllLinesCustom2ForwardCommand, nameof(vm.MoveAllLinesCustom2ForwardCommand), ShortcutCategory.General);
 
         AddShortcut(shortcuts, vm.MergeSelectedLinesDialogCommand, nameof(vm.MergeSelectedLinesDialogCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MergeSelectedLinesBilingualCommand, nameof(vm.MergeSelectedLinesBilingualCommand), ShortcutCategory.General);
@@ -1286,4 +1378,12 @@ public static class ShortcutsMain
 
         public IRelayCommand RelayCommand { get; set; }
     }
+}
+
+/// <summary>Which lines a "move lines X ms" shortcut shifts (#14789).</summary>
+public enum MoveLinesScope
+{
+    Selected,
+    SelectedAndForward,
+    All,
 }

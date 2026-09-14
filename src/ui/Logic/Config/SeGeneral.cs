@@ -88,6 +88,15 @@ public class SeGeneral
     /// <summary>How far the "move selected lines X ms back/forward" shortcuts shift, in
     /// milliseconds (SE 4 had fixed 100 ms variants; #14789 asks for repeatable drift fixes).</summary>
     public int MoveSelectedLinesStepMs { get; set; }
+    /// <summary>Per-shortcut step for the "move lines, custom milliseconds" shortcuts (two slots
+    /// per scope, each used by its back and forward commands). Configured via the gear button in
+    /// Options > Shortcuts, like the custom video seek amounts.</summary>
+    public int MoveSelectedLinesCustom1Ms { get; set; }
+    public int MoveSelectedLinesCustom2Ms { get; set; }
+    public int MoveSelectedLinesAndForwardCustom1Ms { get; set; }
+    public int MoveSelectedLinesAndForwardCustom2Ms { get; set; }
+    public int MoveAllLinesCustom1Ms { get; set; }
+    public int MoveAllLinesCustom2Ms { get; set; }
     public bool PromptBeforeDelete { get; set; }
     public bool LockTimeCodes { get; set; }
 
@@ -264,6 +273,12 @@ public class SeGeneral
         NewEmptyDefaultMs = 2000;
         TimeCodeUpDownStepMs = 100;
         MoveSelectedLinesStepMs = 100;
+        MoveSelectedLinesCustom1Ms = 10;
+        MoveSelectedLinesCustom2Ms = 1000;
+        MoveSelectedLinesAndForwardCustom1Ms = 10;
+        MoveSelectedLinesAndForwardCustom2Ms = 1000;
+        MoveAllLinesCustom1Ms = 10;
+        MoveAllLinesCustom2Ms = 1000;
         PromptBeforeDelete = true;
         AutoBackupOn = true;
         AutoBackupIntervalMinutes = 5;

@@ -14815,18 +14815,81 @@ public partial class MainViewModel :
     [RelayCommand]
     private void MoveSelectedLinesAndForwardXMsForward() => MoveSelectedLinesByStep(1, andForward: true);
 
+    [RelayCommand]
+    private void MoveAllLinesXMsBack() => MoveLinesByStep(-1, MoveLinesScope.All);
+
+    [RelayCommand]
+    private void MoveAllLinesXMsForward() => MoveLinesByStep(1, MoveLinesScope.All);
+
+    // Per-shortcut steps, configured with the gear button in Options > Shortcuts (like the custom
+    // video seek amounts). A slot's value is shared by its back and forward commands.
+    [RelayCommand]
+    private void MoveSelectedLinesCustom1Back() => MoveLinesByCustomSlot(-1, MoveLinesScope.Selected, 1);
+
+    [RelayCommand]
+    private void MoveSelectedLinesCustom1Forward() => MoveLinesByCustomSlot(1, MoveLinesScope.Selected, 1);
+
+    [RelayCommand]
+    private void MoveSelectedLinesCustom2Back() => MoveLinesByCustomSlot(-1, MoveLinesScope.Selected, 2);
+
+    [RelayCommand]
+    private void MoveSelectedLinesCustom2Forward() => MoveLinesByCustomSlot(1, MoveLinesScope.Selected, 2);
+
+    [RelayCommand]
+    private void MoveSelectedLinesAndForwardCustom1Back() => MoveLinesByCustomSlot(-1, MoveLinesScope.SelectedAndForward, 1);
+
+    [RelayCommand]
+    private void MoveSelectedLinesAndForwardCustom1Forward() => MoveLinesByCustomSlot(1, MoveLinesScope.SelectedAndForward, 1);
+
+    [RelayCommand]
+    private void MoveSelectedLinesAndForwardCustom2Back() => MoveLinesByCustomSlot(-1, MoveLinesScope.SelectedAndForward, 2);
+
+    [RelayCommand]
+    private void MoveSelectedLinesAndForwardCustom2Forward() => MoveLinesByCustomSlot(1, MoveLinesScope.SelectedAndForward, 2);
+
+    [RelayCommand]
+    private void MoveAllLinesCustom1Back() => MoveLinesByCustomSlot(-1, MoveLinesScope.All, 1);
+
+    [RelayCommand]
+    private void MoveAllLinesCustom1Forward() => MoveLinesByCustomSlot(1, MoveLinesScope.All, 1);
+
+    [RelayCommand]
+    private void MoveAllLinesCustom2Back() => MoveLinesByCustomSlot(-1, MoveLinesScope.All, 2);
+
+    [RelayCommand]
+    private void MoveAllLinesCustom2Forward() => MoveLinesByCustomSlot(1, MoveLinesScope.All, 2);
+
     internal void MoveSelectedLinesByStep(int direction, bool andForward)
     {
-        if (AreTimeCodesLocked || SubtitleGridSelectedItems.Count == 0)
+        MoveLinesByStep(direction, andForward ? MoveLinesScope.SelectedAndForward : MoveLinesScope.Selected);
+    }
+
+    internal void MoveLinesByStep(int direction, MoveLinesScope scope)
+    {
+        MoveLinesByMs(direction * Se.Settings.General.MoveSelectedLinesStepMs, scope);
+    }
+
+    private void MoveLinesByCustomSlot(int direction, MoveLinesScope scope, int slotNumber)
+    {
+        MoveLinesByMs(direction * ShortcutsMain.GetMoveLinesCustomMs(scope, slotNumber), scope);
+    }
+
+    internal void MoveLinesByMs(int ms, MoveLinesScope scope)
+    {
+        if (AreTimeCodesLocked || ms == 0)
         {
             return;
         }
 
-        var stepMs = Math.Max(1, Se.Settings.General.MoveSelectedLinesStepMs);
-        var deltaMs = (double)(direction * stepMs);
+        if (scope == MoveLinesScope.All ? Subtitles.Count == 0 : SubtitleGridSelectedItems.Count == 0)
+        {
+            return;
+        }
+
+        var deltaMs = (double)ms;
         if (deltaMs < 0)
         {
-            var minStartMs = GetAffectedLines(andForward).Min(p => p.StartTime.TotalMilliseconds);
+            var minStartMs = GetAffectedLines(scope).Min(p => p.StartTime.TotalMilliseconds);
             if (minStartMs <= 0)
             {
                 return;
@@ -14835,14 +14898,21 @@ public partial class MainViewModel :
             deltaMs = Math.Max(deltaMs, -minStartMs);
         }
 
-        Adjust(TimeSpan.FromMilliseconds(deltaMs), adjustAll: false,
-            adjustSelectedLines: !andForward, adjustSelectedLinesAndForward: andForward);
+        Adjust(TimeSpan.FromMilliseconds(deltaMs),
+            adjustAll: scope == MoveLinesScope.All,
+            adjustSelectedLines: scope == MoveLinesScope.Selected,
+            adjustSelectedLinesAndForward: scope == MoveLinesScope.SelectedAndForward);
     }
 
-    private IEnumerable<SubtitleLineViewModel> GetAffectedLines(bool andForward)
+    private IEnumerable<SubtitleLineViewModel> GetAffectedLines(MoveLinesScope scope)
     {
+        if (scope == MoveLinesScope.All)
+        {
+            return Subtitles;
+        }
+
         var selected = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
-        if (!andForward)
+        if (scope == MoveLinesScope.Selected)
         {
             return selected;
         }
