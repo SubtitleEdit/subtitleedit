@@ -3231,6 +3231,13 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         Configuration.Settings.Tools.AutoTranslateLibreUrl = Se.Settings.AutoTranslate.LibreTranslateUrl;
         Configuration.Settings.Tools.AutoTranslateLibreApiKey = Se.Settings.AutoTranslate.LibreTranslateApiKey;
 
+        // Same bridge for the generic OpenAI-compatible engine - the view model already copied the
+        // URL/key/model from its text boxes, but the prompt only lives in Se.Settings.
+        Configuration.Settings.Tools.OpenAiCompatibleTranslateUrl = Se.Settings.AutoTranslate.OpenAiCompatibleUrl;
+        Configuration.Settings.Tools.OpenAiCompatibleTranslateApiKey = Se.Settings.AutoTranslate.OpenAiCompatibleApiKey;
+        Configuration.Settings.Tools.OpenAiCompatibleTranslateModel = Se.Settings.AutoTranslate.OpenAiCompatibleModel;
+        Configuration.Settings.Tools.OpenAiCompatibleTranslatePrompt = Se.Settings.AutoTranslate.OpenAiCompatiblePrompt;
+
         Configuration.Settings.Tools.AutoTranslateNllbApiUrl = Se.Settings.AutoTranslate.NllbApiUrl;
 
         Configuration.Settings.Tools.AutoTranslateNllbServeUrl = Se.Settings.AutoTranslate.NllbServeUrl;
