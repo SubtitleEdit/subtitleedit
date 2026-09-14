@@ -17,13 +17,18 @@ public class SetVideoOffsetViewModelTests
     {
         internal List<(TimeSpan Offset, bool Relative, bool KeepTimeCodes)> Applied { get; } = new();
         internal int ResetCount { get; private set; }
+        internal List<bool> ResetKeepTimeCodes { get; } = new();
 
         internal SetVideoOffsetViewModel NewViewModel()
         {
             var vm = new SetVideoOffsetViewModel();
             vm.Initialize(
                 (offset, relative, keepTimeCodes) => Applied.Add((offset, relative, keepTimeCodes)),
-                () => ResetCount++);
+                keepTimeCodes =>
+                {
+                    ResetCount++;
+                    ResetKeepTimeCodes.Add(keepTimeCodes);
+                });
             return vm;
         }
     }
@@ -113,9 +118,13 @@ public class SetVideoOffsetViewModelTests
         var vm = recorder.NewViewModel();
 
         vm.TimeOffset = TenHours;
+        vm.KeepTimeCodes = true;
         vm.ResetCommand.Execute(null);
 
         Assert.Equal(1, recorder.ResetCount);
+        // Reset honours the checkbox like Apply: the caller decides whether the file's time codes
+        // stay put or go back to the video-relative ones.
+        Assert.Equal(new[] { true }, recorder.ResetKeepTimeCodes);
         Assert.Equal(TimeSpan.Zero, vm.TimeOffset);
         Assert.Empty(recorder.Applied);
     }

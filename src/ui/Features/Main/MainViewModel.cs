@@ -1909,7 +1909,9 @@ public partial class MainViewModel :
             Subtitles.Take(gridIndex + 1).Count(line => !line.IsReferenceOnly) - 1);
         var result = await ShowDialogAsync<SourceViewWindow, SourceViewViewModel>(vm =>
         {
-            var subtitle = GetUpdateSubtitle();
+            // The source is the file as it would be saved, video offset included; the same
+            // subtitle goes to the dialog so its caret lookup re-serializes matching text.
+            var subtitle = GetSaveSubtitle();
             var text = subtitle.ToText(SelectedSubtitleFormat);
             var title = string.Format(Se.Language.General.SourceViewX, (string.IsNullOrEmpty(_subtitleFileName)
                 ? Se.Language.General.Untitled
@@ -1919,6 +1921,7 @@ public partial class MainViewModel :
 
         if (result.OkPressed)
         {
+            RemoveVideoOffset(result.Subtitle); // edited as file time codes, stored video-relative
             SetSubtitles(result.Subtitle);
             var idx = Math.Min(oldSelectedIndex, Subtitles.Count - 1);
             SelectAndScrollToRow(idx);
@@ -4148,6 +4151,29 @@ public partial class MainViewModel :
         }
 
         Se.Settings.General.CurrentVideoOffsetInMs = recentFile.VideoOffsetInMs;
+        if (recentFile.VideoOffsetInMs != 0 && Subtitles.Count > 0)
+        {
+            // The file was saved with the offset in its time codes (GetSaveSubtitle), so the rows
+            // just loaded from it are grid times; the video-relative rows are those minus the
+            // offset - the same split the remembered offset had when the file was closed. The
+            // file content is unchanged by this, so the save baseline and the undo history restart
+            // from here, as they would after a plain open.
+            var offset = TimeSpan.FromMilliseconds(recentFile.VideoOffsetInMs);
+            RunWithoutChangeDetection(() =>
+            {
+                foreach (var s in Subtitles)
+                {
+                    s.StartTime -= offset;
+                    s.EndTime -= offset;
+                }
+            });
+
+            _changeSubtitleHash = GetFastHash();
+            _changeSubtitleHashOriginal = GetFastHashOriginal();
+            _undoRedoManager.Reset();
+            _undoRedoManager.Do(MakeUndoRedoObject(string.Format(Se.Language.General.SubtitleLoadedX, recentFile.SubtitleFileName)));
+        }
+
         UpdateVideoOffsetStatus();
 
         var vp = GetVideoPlayerControl();
@@ -4796,12 +4822,13 @@ public partial class MainViewModel :
             return;
         }
 
-        // GetUpdateSubtitle: the export must see the rows' current times and text, not the
-        // Paragraph objects the rows were loaded from (those are never updated), and it must
-        // leave out the read-only reference rows like every other save does.
+        // GetSaveSubtitle: the export must see the rows' current times and text (with the video
+        // offset added, like a save), not the Paragraph objects the rows were loaded from (those
+        // are never updated), and it must leave out the read-only reference rows like every
+        // other save does.
         var result = await ShowDialogAsync<ExportCustomTextFormatWindow, ExportCustomTextFormatViewModel>(vm =>
         {
-            vm.Initialize(GetUpdateSubtitle().Paragraphs.ToList(), _subtitleFileName, _videoFileName);
+            vm.Initialize(GetSaveSubtitle().Paragraphs.ToList(), _subtitleFileName, _videoFileName);
         });
     }
 
@@ -4819,7 +4846,10 @@ public partial class MainViewModel :
             return;
         }
 
-        var result = await ShowDialogAsync<ExportPlainTextWindow, ExportPlainTextViewModel>(vm => { vm.Initialize(Subtitles.ToList(), _subtitleFileName, _videoFileName); });
+        // Rows rebuilt from GetSaveSubtitle: the time codes it writes must be the ones a save
+        // writes (video offset included), and the read-only reference rows must stay out.
+        var lines = GetSaveSubtitle().Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)).ToList();
+        var result = await ShowDialogAsync<ExportPlainTextWindow, ExportPlainTextViewModel>(vm => { vm.Initialize(lines, _subtitleFileName, _videoFileName); });
     }
 
     [RelayCommand]
@@ -4838,7 +4868,7 @@ public partial class MainViewModel :
 
         var format = new CapMakerPlus();
         using var ms = new MemoryStream();
-        format.Save(_subtitleFileName, ms, GetUpdateSubtitle(), false);
+        format.Save(_subtitleFileName, ms, GetSaveSubtitle(), false);
 
         var fileName = await _fileHelper.PickSaveSubtitleFile(
             Window!,
@@ -4869,7 +4899,7 @@ public partial class MainViewModel :
 
         var format = new CheetahCaption();
         using var ms = new MemoryStream();
-        format.Save(_subtitleFileName, ms, GetUpdateSubtitle(), false);
+        format.Save(_subtitleFileName, ms, GetSaveSubtitle(), false);
 
         var fileName = await _fileHelper.PickSaveSubtitleFile(
             Window!,
@@ -4900,7 +4930,7 @@ public partial class MainViewModel :
 
         var format = new CheetahCaptionOld();
         using var ms = new MemoryStream();
-        format.Save(_subtitleFileName, ms, GetUpdateSubtitle(), false);
+        format.Save(_subtitleFileName, ms, GetSaveSubtitle(), false);
 
         var fileName = await _fileHelper.PickSaveSubtitleFile(
             Window!,
@@ -4958,7 +4988,7 @@ public partial class MainViewModel :
 
         using (var ms = new MemoryStream())
         {
-            cavena.Save(fileName, ms, GetUpdateSubtitle(), false);
+            cavena.Save(fileName, ms, GetSaveSubtitle(), false);
             ms.Position = 0;
             await File.WriteAllBytesAsync(fileName, ms.ToArray());
         }
@@ -5043,7 +5073,7 @@ public partial class MainViewModel :
         }
 
         using var ms = new MemoryStream();
-        pac.Save(fileName, ms, GetUpdateSubtitle(), false);
+        pac.Save(fileName, ms, GetSaveSubtitle(), false);
         ms.Position = 0;
         await File.WriteAllBytesAsync(fileName, ms.ToArray());
 
@@ -5066,7 +5096,7 @@ public partial class MainViewModel :
 
         var format = new PacUnicode();
         using var ms = new MemoryStream();
-        format.Save(_subtitleFileName, ms, GetUpdateSubtitle());
+        format.Save(_subtitleFileName, ms, GetSaveSubtitle());
 
         var fileName = await _fileHelper.PickSaveSubtitleFile(
             Window!,
@@ -5199,7 +5229,7 @@ public partial class MainViewModel :
             // A failed write must surface as an error dialog: an exception out of an async command
             // dies silently, which read as "Save does nothing" in the field (unquoted font colors
             // used to throw here).
-            if (!format.Save(fileName, GetUpdateSubtitle()))
+            if (!format.Save(fileName, GetSaveSubtitle()))
             {
                 await MessageBox.Show(Window!, Se.Language.General.Error,
                     string.Format(Se.Language.General.CouldNotSaveFileXErrorY, fileName, string.Empty),
@@ -10573,8 +10603,6 @@ public partial class MainViewModel :
 
     private void ApplyVideoOffset(TimeSpan offset, bool relativeToCurrentVideoPosition, bool keepTimeCodes)
     {
-        var oldOffsetMs = Se.Settings.General.CurrentVideoOffsetInMs;
-
         if (relativeToCurrentVideoPosition)
         {
             var vp = GetVideoPlayerControl();
@@ -10584,34 +10612,44 @@ public partial class MainViewModel :
             }
         }
 
-        Se.Settings.General.CurrentVideoOffsetInMs = (long)Math.Round(offset.TotalMilliseconds, MidpointRounding.AwayFromZero);
+        SetVideoOffset((long)Math.Round(offset.TotalMilliseconds, MidpointRounding.AwayFromZero), keepTimeCodes);
+    }
 
-        // The video offset is a non-destructive display offset (see TimeSpanToDisplayFullConverter):
-        // the listview shows "time code + offset" while the underlying time codes stay untouched.
-        // "Keep existing time codes" therefore leaves the time codes alone. When it is NOT checked,
-        // we bake the offset change into the time codes so the displayed values stay the same.
-        // The shift is against the offset in force right now, so applying twice from the open
-        // dialog lands on the same time codes as applying the second value straight away.
-        if (!keepTimeCodes)
+    private void ResetVideoOffset(bool keepTimeCodes)
+    {
+        SetVideoOffset(0, keepTimeCodes);
+    }
+
+    /// <summary>
+    /// SE 4 semantics. The rows hold video-relative time codes; the grid shows, and a save
+    /// writes, "time code + offset" (see <see cref="GetSaveSubtitle"/>). So the checkbox
+    /// decides which of the two the offset change moves:
+    /// <list type="bullet">
+    /// <item>"Keep existing time codes (do not add video offset)" ON: the file's time codes
+    /// stay exactly as they are - the rows move the other way to compensate. This is the
+    /// "my file already starts at 10:00:00:00, just line the video up" case (#11637): nothing
+    /// changes on disk, so it is not a modification.</item>
+    /// <item>OFF: the rows stay put - the subtitles keep matching the video - and the grid and
+    /// the file move by the offset. This is the "my file is video-relative, make it carry the
+    /// burned-in time code" case, and it is a modification (the dirty hash is offset-aware).</item>
+    /// </list>
+    /// The shift is against the offset in force right now, so applying twice from the open
+    /// dialog lands where applying the second value straight away would.
+    /// </summary>
+    private void SetVideoOffset(long newOffsetMs, bool keepTimeCodes)
+    {
+        var delta = TimeSpan.FromMilliseconds(newOffsetMs - Se.Settings.General.CurrentVideoOffsetInMs);
+        Se.Settings.General.CurrentVideoOffsetInMs = newOffsetMs;
+
+        if (keepTimeCodes && delta != TimeSpan.Zero)
         {
-            var delta = TimeSpan.FromMilliseconds(Se.Settings.General.CurrentVideoOffsetInMs - oldOffsetMs);
-            if (delta != TimeSpan.Zero)
+            foreach (var s in Subtitles)
             {
-                foreach (var s in Subtitles)
-                {
-                    s.StartTime -= delta;
-                    s.EndTime -= delta;
-                }
+                s.StartTime -= delta;
+                s.EndTime -= delta;
             }
         }
 
-        UpdateVideoOffsetStatus();
-        _updateAudioVisualizer = true;
-    }
-
-    private void ResetVideoOffset()
-    {
-        Se.Settings.General.CurrentVideoOffsetInMs = 0;
         UpdateVideoOffsetStatus();
         _updateAudioVisualizer = true;
     }
@@ -13076,6 +13114,7 @@ public partial class MainViewModel :
         }
 
         subtitle.Renumber();
+        subtitle = AddVideoOffset(subtitle); // what the grid shows is what the file gets, as in a save
 
         // Untitled: GetNewFileName is empty and a bare ".forced" would be a poor suggestion.
         var suggestedFileName = GetNewFileName();
@@ -13549,7 +13588,7 @@ public partial class MainViewModel :
             }
         }
 
-        new SubtitleMarksPersistence(GetUpdateSubtitle(), _subtitleFileName).Save();
+        new SubtitleMarksPersistence(GetSaveSubtitle(), _subtitleFileName).Save();
 
         if (result.ListPressed)
         {
@@ -13575,7 +13614,7 @@ public partial class MainViewModel :
             }
         }
 
-        new SubtitleMarksPersistence(GetUpdateSubtitle(), _subtitleFileName).Save();
+        new SubtitleMarksPersistence(GetSaveSubtitle(), _subtitleFileName).Save();
 
         _shortcutManager.ClearKeys();
     }
@@ -13620,7 +13659,7 @@ public partial class MainViewModel :
     private void SaveSubtitleMarks()
     {
         _subtitleMarksDirty = false;
-        new SubtitleMarksPersistence(GetUpdateSubtitle(), _subtitleFileName).Save();
+        new SubtitleMarksPersistence(GetSaveSubtitle(), _subtitleFileName).Save();
     }
 
     /// <summary>
@@ -13665,7 +13704,7 @@ public partial class MainViewModel :
 
         var result = await ShowDialogAsync<BookmarksListWindow, BookmarksListViewModel>(vm => { vm.Initialize(Subtitles.Where(p => p.Bookmark != null).ToList()); });
 
-        new SubtitleMarksPersistence(GetUpdateSubtitle(), _subtitleFileName).Save();
+        new SubtitleMarksPersistence(GetSaveSubtitle(), _subtitleFileName).Save();
 
         if (result.GoToPressed && result.SelectedSubtitle != null)
         {
@@ -13682,7 +13721,7 @@ public partial class MainViewModel :
             item.Bookmark = null;
         }
 
-        new SubtitleMarksPersistence(GetUpdateSubtitle(), _subtitleFileName).Save();
+        new SubtitleMarksPersistence(GetSaveSubtitle(), _subtitleFileName).Save();
 
         _shortcutManager.ClearKeys();
     }
@@ -13727,7 +13766,7 @@ public partial class MainViewModel :
             item.Bookmark = null;
         }
 
-        new SubtitleMarksPersistence(GetUpdateSubtitle(), _subtitleFileName).Save();
+        new SubtitleMarksPersistence(GetSaveSubtitle(), _subtitleFileName).Save();
 
         _shortcutManager.ClearKeys();
     }
@@ -21532,6 +21571,7 @@ public partial class MainViewModel :
             IsShowingOriginalNonMatchingLines = IsShowingOriginalNonMatchingLines,
             IsEditOriginalMode = IsEditOriginalMode,
             SubtitleOriginalFormat = _subtitleOriginal?.OriginalFormat,
+            VideoOffsetInMs = Se.Settings.General.CurrentVideoOffsetInMs,
         };
     }
 
@@ -21547,6 +21587,13 @@ public partial class MainViewModel :
         using var anchorSuspended = SubtitleGrid is { } grid ? TableViewScrollAnchor.GetFor(grid)?.Suspend() : null;
 
         ReplaceSubtitles(undoRedoObject.Subtitles);
+
+        if (Se.Settings.General.CurrentVideoOffsetInMs != undoRedoObject.VideoOffsetInMs)
+        {
+            Se.Settings.General.CurrentVideoOffsetInMs = undoRedoObject.VideoOffsetInMs;
+            UpdateVideoOffsetStatus();
+            _updateAudioVisualizer = true;
+        }
 
         _subtitleFileName = undoRedoObject.SubtitleFileName;
         if (!string.IsNullOrEmpty(undoRedoObject.SelectedEncodingDisplayName))
@@ -24965,7 +25012,7 @@ public partial class MainViewModel :
             return await SaveBinarySubtitle(binaryFormat, isAutoSave);
         }
 
-        var subtitleToSave = GetUpdateSubtitle(true);
+        var subtitleToSave = GetSaveSubtitle();
 
         // Formats with hard limits (SCC: 32 chars x 4 lines) silently re-wrap/truncate anything
         // that does not fit, so the saved file stops matching the grid. Warn first - but never
@@ -25022,7 +25069,7 @@ public partial class MainViewModel :
         _changeSubtitleHash = GetFastHash();
         _lastOpenSaveFormat = SelectedSubtitleFormat;
 
-        new SubtitleMarksPersistence(GetUpdateSubtitle(), _subtitleFileName).Save();
+        new SubtitleMarksPersistence(GetSaveSubtitle(), _subtitleFileName).Save();
 
         return true;
     }
@@ -25066,7 +25113,7 @@ public partial class MainViewModel :
             }
 
             using var ms = new MemoryStream();
-            if (!binaryFormat.Save(fileName, ms, GetUpdateSubtitle(true), batchMode: true))
+            if (!binaryFormat.Save(fileName, ms, GetSaveSubtitle(), batchMode: true))
             {
                 if (!isAutoSave)
                 {
@@ -25094,7 +25141,7 @@ public partial class MainViewModel :
         _changeSubtitleHash = GetFastHash();
         _lastOpenSaveFormat = SelectedSubtitleFormat;
 
-        new SubtitleMarksPersistence(GetUpdateSubtitle(), _subtitleFileName).Save();
+        new SubtitleMarksPersistence(GetSaveSubtitle(), _subtitleFileName).Save();
 
         return true;
     }
@@ -25135,7 +25182,7 @@ public partial class MainViewModel :
         }
 
         var originalFormat = _subtitleOriginal?.OriginalFormat ?? SelectedSubtitleFormat;
-        var originalSubtitle = GetUpdateSubtitleOriginal(true);
+        var originalSubtitle = GetSaveSubtitleOriginal();
 
         // A whole original without a single line of text is never something the user typed - the
         // column was blanked somewhere (a rebuild, a lost translation source). Writing it out
@@ -25188,7 +25235,7 @@ public partial class MainViewModel :
         return true;
     }
 
-    public Subtitle GetUpdateSubtitle(bool subtractVideoOffset = false)
+    public Subtitle GetUpdateSubtitle()
     {
         _subtitle.Paragraphs.Clear();
         foreach (var line in Subtitles)
@@ -25205,6 +25252,55 @@ public partial class MainViewModel :
         }
 
         return _subtitle;
+    }
+
+    /// <summary>
+    /// What goes into a file: the working subtitle with the video offset added to every time
+    /// code, i.e. exactly the time codes the grid shows. SE 4 parity: the rows hold
+    /// video-relative times (the player, waveform and every tool work on those), the grid
+    /// shows "time code + offset", and a saved file must carry what the grid shows - a
+    /// broadcast file whose first cue reads 10:00:00:00 in the grid must read 10:00:00:00
+    /// on disk too. Without this the offset could never reach a file: setting it with
+    /// "Keep existing time codes" off wrote the video-relative codes and lost the shift.
+    /// A copy is returned whenever an offset is in force, so the working subtitle - the
+    /// instance <see cref="GetUpdateSubtitle"/> hands to tools - is never shifted.
+    /// </summary>
+    public Subtitle GetSaveSubtitle()
+    {
+        return AddVideoOffset(GetUpdateSubtitle());
+    }
+
+    /// <summary>Same as <see cref="GetSaveSubtitle"/> for the original subtitle.</summary>
+    public Subtitle GetSaveSubtitleOriginal()
+    {
+        return AddVideoOffset(GetUpdateSubtitleOriginal());
+    }
+
+    private static Subtitle AddVideoOffset(Subtitle subtitle)
+    {
+        var offsetMs = Se.Settings.General.CurrentVideoOffsetInMs;
+        if (offsetMs == 0)
+        {
+            return subtitle;
+        }
+
+        // generateNewId false: bookmarks and marks are matched on the paragraph ids.
+        var copy = new Subtitle(subtitle, false);
+        copy.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(offsetMs));
+        return copy;
+    }
+
+    /// <summary>
+    /// The reverse of <see cref="GetSaveSubtitle"/> for time codes that come from a file or
+    /// from file-domain text (source view): they include the video offset, the rows must not.
+    /// </summary>
+    private static void RemoveVideoOffset(Subtitle subtitle)
+    {
+        var offsetMs = Se.Settings.General.CurrentVideoOffsetInMs;
+        if (offsetMs != 0)
+        {
+            subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-offsetMs));
+        }
     }
 
     /// <summary>
@@ -25246,7 +25342,7 @@ public partial class MainViewModel :
         return subtitle;
     }
 
-    public Subtitle GetUpdateSubtitleOriginal(bool subtractVideoOffset = false)
+    public Subtitle GetUpdateSubtitleOriginal()
     {
         _subtitleOriginal ??= new Subtitle();
         _subtitleOriginal.OriginalFormat ??= SelectedSubtitleFormat;
@@ -27349,6 +27445,11 @@ public partial class MainViewModel :
             hash = hash * 23 + (_subtitleOriginal.Header is { } headerOrg ? string.GetHashCode(headerOrg.AsSpan().Trim()) : 0);
             hash = hash * 23 + (_subtitleOriginal.Footer is { } footerOrg ? string.GetHashCode(footerOrg.AsSpan().Trim()) : 0);
 
+            // The video offset is snapshotted and restored with the rows (UndoRedoItem.VideoOffsetInMs):
+            // "Keep existing time codes" moves every row and the offset together, so restoring the
+            // rows alone would leave the grid shifted by the offset difference.
+            hash = hash * 23 + Se.Settings.General.CurrentVideoOffsetInMs.GetHashCode();
+
             var count = Subtitles.Count;
             for (var i = 0; i < count; i++)
             {
@@ -27396,6 +27497,11 @@ public partial class MainViewModel :
         // it on every call. Hash the parts separately and trim as spans instead
         // (string.GetHashCode(span) equals the string's own GetHashCode, and hashes are
         // only ever compared within this process).
+        // Hash the time codes as they would be saved, "row time + video offset" (GetSaveSubtitle),
+        // so the modified state follows the file: adding an offset to the file is a change even
+        // though no row moved, and "Keep existing time codes" - rows moved, file unchanged - is not.
+        var offsetTicks = TimeSpan.FromMilliseconds(Se.Settings.General.CurrentVideoOffsetInMs).Ticks;
+
         unchecked
         {
             var hash = 17;
@@ -27417,8 +27523,8 @@ public partial class MainViewModel :
                 }
 
                 hash = hash * 23 + p.Number;
-                hash = hash * 23 + p.StartTime.TotalMilliseconds.GetHashCode();
-                hash = hash * 23 + p.EndTime.TotalMilliseconds.GetHashCode();
+                hash = hash * 23 + (p.StartTime.Ticks + offsetTicks).GetHashCode();
+                hash = hash * 23 + (p.EndTime.Ticks + offsetTicks).GetHashCode();
 
                 if (p.Text != null)
                 {
@@ -27440,7 +27546,9 @@ public partial class MainViewModel :
     {
         _subtitleOriginal ??= new Subtitle();
 
-        // Allocation-free for the same reason as GetFastHash above.
+        // Allocation-free for the same reason as GetFastHash above, and offset-aware like it.
+        var offsetTicks = TimeSpan.FromMilliseconds(Se.Settings.General.CurrentVideoOffsetInMs).Ticks;
+
         unchecked
         {
             var hash = 17;
@@ -27455,8 +27563,8 @@ public partial class MainViewModel :
                 var p = Subtitles[i];
 
                 hash = hash * 23 + p.Number;
-                hash = hash * 23 + p.StartTime.TotalMilliseconds.GetHashCode();
-                hash = hash * 23 + p.EndTime.TotalMilliseconds.GetHashCode();
+                hash = hash * 23 + (p.StartTime.Ticks + offsetTicks).GetHashCode();
+                hash = hash * 23 + (p.EndTime.Ticks + offsetTicks).GetHashCode();
 
                 if (p.OriginalText != null)
                 {
