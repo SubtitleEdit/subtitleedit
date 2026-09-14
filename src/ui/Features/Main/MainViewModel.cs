@@ -8202,23 +8202,41 @@ public partial class MainViewModel :
         var lineCount = Subtitles.Count(p => !p.IsReferenceOnly);
         if (selectedIndices.Count > 0 && selectedIndices.Count < lineCount)
         {
-            var choice = await MessageBox.Show(
-                Window,
-                plugin.Manifest.Name,
-                string.Format(Se.Language.Plugins.ApplyPluginToWhichLinesX, plugin.Manifest.Name),
-                MessageBoxButtons.Cancel,
-                MessageBoxIcon.Question,
-                custom1: string.Format(Se.Language.Plugins.ApplyToSelectedLinesX, selectedIndices.Count),
-                custom2: string.Format(Se.Language.Plugins.ApplyToAllLinesX, lineCount));
-
-            if (choice == MessageBoxResult.Cancel || choice == MessageBoxResult.None)
-            {
-                return;
-            }
-
-            if (choice == MessageBoxResult.Custom2)
+            var applyTo = Se.Settings.Plugins.ApplyToLines;
+            if (applyTo == SePlugins.ApplyToLinesAll)
             {
                 selectedIndices.Clear();
+            }
+            else if (applyTo != SePlugins.ApplyToLinesSelected)
+            {
+                // "Do not ask again" remembers the answer (#14844); Manage plugins can change it back.
+                var (choice, doNotAskAgain) = await MessageBox.ShowWithDoNotAskAgain(
+                    Window,
+                    plugin.Manifest.Name,
+                    string.Format(Se.Language.Plugins.ApplyPluginToWhichLinesX, plugin.Manifest.Name),
+                    Se.Language.Plugins.DoNotAskAgain,
+                    MessageBoxButtons.Cancel,
+                    MessageBoxIcon.Question,
+                    custom1: string.Format(Se.Language.Plugins.ApplyToSelectedLinesX, selectedIndices.Count),
+                    custom2: string.Format(Se.Language.Plugins.ApplyToAllLinesX, lineCount));
+
+                if (choice == MessageBoxResult.Cancel || choice == MessageBoxResult.None)
+                {
+                    return;
+                }
+
+                if (choice == MessageBoxResult.Custom2)
+                {
+                    selectedIndices.Clear();
+                }
+
+                if (doNotAskAgain)
+                {
+                    Se.Settings.Plugins.ApplyToLines = choice == MessageBoxResult.Custom2
+                        ? SePlugins.ApplyToLinesAll
+                        : SePlugins.ApplyToLinesSelected;
+                    Se.SaveSettings();
+                }
             }
         }
 
