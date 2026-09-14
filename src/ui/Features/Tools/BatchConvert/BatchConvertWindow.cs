@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
@@ -555,6 +556,7 @@ public class BatchConvertWindow : Window
         {
             Focusable = false,
             [!ToggleButton.IsCheckedProperty] = new Binding(nameof(BatchConvertFunction.IsSelected)),
+            [!AutomationProperties.NameProperty] = new Binding(nameof(BatchConvertFunction.Name)),
             HorizontalAlignment = HorizontalAlignment.Center,
             Margin = new Thickness(5, 0, 0, 0),
         };

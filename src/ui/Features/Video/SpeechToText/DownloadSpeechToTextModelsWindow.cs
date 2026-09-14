@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
@@ -43,6 +44,7 @@ public class DownloadSpeechToTextModelsWindow : Window
             Command = vm.OpenModelFolderCommand,
         };
         Attached.SetIcon(buttonOpenFolder, "fa-solid fa-folder-open");
+        AutomationProperties.SetName(buttonOpenFolder, Se.Language.General.OpenContainingFolder);
 
         var buttonAddCustomModel = UiUtil.MakeButton(Se.Language.Video.AudioToText.AddCustomModelDotDotDot, vm.AddCustomModelCommand);
         buttonAddCustomModel.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.SupportsCustomModels)));

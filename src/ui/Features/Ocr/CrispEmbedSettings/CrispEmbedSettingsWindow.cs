@@ -198,11 +198,13 @@ public class CrispEmbedSettingsWindow : Window
 
                 // Fixed width so the buttons line up down the column - "Download" and
                 // "Re-download" are different lengths and the rows mix both.
+                // The accessible name carries the model, as the rows are a column of
+                // identical "Download" buttons to a screen reader (#12087).
                 var button = UiUtil.MakeButton(string.Empty)
-                    .WithIconLeft(IconNames.Download);
+                    .WithIconLeftBindText(IconNames.Download,
+                        nameof(CrispEmbedModelStatusViewModel.DownloadButtonText),
+                        nameof(CrispEmbedModelStatusViewModel.DownloadButtonAccessibleName));
                 button.Width = 140;
-                button.Bind(ContentControl.ContentProperty,
-                    new Binding(nameof(CrispEmbedModelStatusViewModel.DownloadButtonText)));
                 button.Bind(Button.CommandProperty,
                     new Binding(nameof(CrispEmbedModelStatusViewModel.DownloadCommand)));
 

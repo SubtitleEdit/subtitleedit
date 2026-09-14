@@ -87,18 +87,24 @@ public class SettingsItem
         // (issue #11745). A live LabeledBy link also keeps the name correct for bound/localized labels.
         if (!string.IsNullOrEmpty(_label) || _labelBindingPath != null)
         {
-            AutomationProperties.SetLabeledBy(control, labelTextBlock);
+            // A colour swatch button (content is a Border) needs an explicit name rather than
+            // a link - see AccessibleLabels.LinkToLabel.
+            AccessibleLabels.LinkToLabel(control, labelTextBlock);
 
             // When the factory returns a wrapper (a numeric field plus a browse button, a text
-            // box with a hint, ...) the link above lands on the wrapper, not on the input a
-            // screen reader user actually focuses - label the unnamed inputs inside it too (#12087).
-            if (control is Panel)
+            // box with a hint, a check box plus an edit button, a bordered grid of sub-settings,
+            // ...) the link above lands on the wrapper, not on the input a screen reader user
+            // actually focuses - label the unnamed inputs and content buttons inside it too
+            // (#12087). A control with its own label inside the wrapper (a grid row "Outline:
+            // [swatch]") gets that label; the rest get the item's.
+            if (control is Panel or Decorator)
             {
-                foreach (var input in control.GetLogicalDescendants().OfType<Control>())
+                foreach (var input in control.GetLogicalDescendants().OfType<Control>().ToList())
                 {
-                    if (AccessibleLabels.IsInput(input) && input.TemplatedParent == null && !AccessibleLabels.HasAccessibleName(input))
+                    if ((AccessibleLabels.IsInput(input) || AccessibleLabels.IsContentButton(input))
+                        && input.TemplatedParent == null && !AccessibleLabels.HasAccessibleName(input))
                     {
-                        AutomationProperties.SetLabeledBy(input, labelTextBlock);
+                        AccessibleLabels.LinkToLabel(input, AccessibleLabels.FindLabel(input) ?? labelTextBlock);
                     }
                 }
             }

@@ -20,8 +20,10 @@ namespace UITests.Logic;
 /// Every input a screen-reader user can tab to must have an accessible name, either set
 /// by the window or derived from its visible label by <see cref="AccessibleLabels"/>
 /// (#12087: "I hear a value followed by combo box, but no label telling me which setting
-/// I am changing"). This opens every tool window that takes a single DI-resolvable view
-/// model and lists the inputs that still have no name.
+/// I am changing"). The same goes for text-less check boxes and for buttons whose content
+/// is a panel, a swatch or nothing at all - those are announced as
+/// "Avalonia.Controls.StackPanel" or a bare "button". This opens every tool window that
+/// takes a single DI-resolvable view model and lists the controls that still have no name.
 /// </summary>
 public class AccessibleNamesTests
 {
@@ -80,7 +82,7 @@ public class AccessibleNamesTests
             {
                 foreach (var control in window.GetLogicalDescendants().OfType<Control>())
                 {
-                    if (!AccessibleLabels.IsInput(control) || control.TemplatedParent != null || !control.IsEffectivelyVisible)
+                    if (!AccessibleLabels.NeedsName(control) || control.TemplatedParent != null || !control.IsEffectivelyVisible)
                     {
                         continue;
                     }
@@ -100,7 +102,7 @@ public class AccessibleNamesTests
         }
 
         Assert.True(opened > 50, $"Only {opened} windows opened; skipped: {string.Join(", ", skipped)}");
-        Assert.True(unnamed.Length == 0, $"Inputs without an accessible name ({opened} windows opened, {skipped.Count} skipped):\n{unnamed}");
+        Assert.True(unnamed.Length == 0, $"Controls without an accessible name ({opened} windows opened, {skipped.Count} skipped):\n{unnamed}");
     }
 
     /// <summary>
@@ -133,6 +135,16 @@ public class AccessibleNamesTests
         if (control is TextBox textBox && !string.IsNullOrEmpty(textBox.Watermark))
         {
             parts.Add($"watermark={textBox.Watermark}");
+        }
+
+        if (control is ContentControl { Content: { } content })
+        {
+            parts.Add($"content={content.GetType().Name}");
+        }
+
+        if (ToolTip.GetTip(control) is string tip)
+        {
+            parts.Add($"tooltip={tip}");
         }
 
         var parent = control.Parent;

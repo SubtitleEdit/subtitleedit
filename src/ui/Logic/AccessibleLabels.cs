@@ -1,6 +1,7 @@
 ﻿using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Data;
 using Avalonia.LogicalTree;
 using Nikse.SubtitleEdit.Controls;
 using System.Collections.Generic;
@@ -31,7 +32,7 @@ public static class AccessibleLabels
         var labeled = new List<Control>();
         foreach (var control in root.GetLogicalDescendants().OfType<Control>().ToList())
         {
-            if (!IsInput(control) || HasAccessibleName(control))
+            if (!(IsInput(control) || IsContentButton(control)) || HasAccessibleName(control))
             {
                 continue;
             }
@@ -46,7 +47,7 @@ public static class AccessibleLabels
             var label = FindLabel(control);
             if (label != null)
             {
-                AutomationProperties.SetLabeledBy(control, label);
+                LinkToLabel(control, label);
                 labeled.Add(control);
                 continue;
             }
@@ -75,17 +76,79 @@ public static class AccessibleLabels
         return labeled;
     }
 
-    /// <summary>The input controls a screen reader user tabs to that need a name.</summary>
+    /// <summary>
+    /// The input controls a screen reader user tabs to that need a name. A check box or
+    /// radio button without text is one too: "[x] Label" next to a separate label announces
+    /// only "check box, checked" (#12087). One with text - a string or a wrapping TextBlock -
+    /// names itself.
+    /// </summary>
     public static bool IsInput(Control control)
     {
         return control is TextBox or ComboBox or NumericUpDown or Slider or AutoCompleteBox
-            or SecondsUpDown or TimeCodeUpDown or ListBox or DatePicker or TimePicker;
+            or SecondsUpDown or TimeCodeUpDown or ListBox or DatePicker or TimePicker
+            or CheckBox { Content: not (string or TextBlock) } or RadioButton { Content: not (string or TextBlock) };
     }
 
+    /// <summary>
+    /// A button whose content is a control rather than text: a colour swatch (Border), an
+    /// icon plus caption (StackPanel), an image. UI Automation names such a button after the
+    /// content's type - "Avalonia.Controls.Border" - and that computed name takes precedence
+    /// over LabeledBy, so these need an explicit name (#12087). Check boxes and radio buttons
+    /// are buttons too in Avalonia; they are handled as inputs instead.
+    /// </summary>
+    public static bool IsContentButton(Control control)
+    {
+        return control is Button { Content: Control and not TextBlock } and not CheckBox and not RadioButton;
+    }
+
+    /// <summary>
+    /// Everything the accessibility test expects to find named: the inputs, the content
+    /// buttons, and buttons with no content at all (an icon set as an attached property),
+    /// which a screen reader announces as a bare "button".
+    /// </summary>
+    public static bool NeedsName(Control control)
+    {
+        return IsInput(control) || IsContentButton(control)
+               || control is Button { Content: null } and not CheckBox and not RadioButton;
+    }
+
+    /// <summary>
+    /// True when the window gave the control a name, a LabeledBy link, or a name binding
+    /// (a bound caption such as "Download"/"Re-download" that is still empty before the view
+    /// model initializes is a name nonetheless).
+    /// </summary>
     public static bool HasAccessibleName(Control control)
     {
         return !string.IsNullOrEmpty(AutomationProperties.GetName(control))
-               || AutomationProperties.GetLabeledBy(control) != null;
+               || AutomationProperties.GetLabeledBy(control) != null
+               || control.IsSet(AutomationProperties.NameProperty);
+    }
+
+    /// <summary>
+    /// Names <paramref name="control"/> after <paramref name="label"/>: a LabeledBy link for
+    /// inputs, an explicit name (kept in sync with the label text) for content buttons, whose
+    /// computed type name would otherwise win over the link.
+    /// </summary>
+    public static void LinkToLabel(Control control, Control label)
+    {
+        if (!IsContentButton(control))
+        {
+            AutomationProperties.SetLabeledBy(control, label);
+            return;
+        }
+
+        switch (label)
+        {
+            case TextBlock textBlock:
+                control.Bind(AutomationProperties.NameProperty, new Binding(nameof(TextBlock.Text)) { Source = textBlock });
+                break;
+            case ContentControl { Content: string text }:
+                AutomationProperties.SetName(control, text);
+                break;
+            default:
+                AutomationProperties.SetLabeledBy(control, label);
+                break;
+        }
     }
 
     /// <summary>
@@ -115,9 +178,10 @@ public static class AccessibleLabels
             {
                 // Only the first input in a wrapper inherits the wrapper's label - a second
                 // input (or one after a nested panel) would otherwise get a label meant for
-                // its predecessor.
+                // its predecessor. A text-less check box does not count: "Label [x] [1000]"
+                // is one setting, and both the box and the number field mean the label.
                 var index = panel.Children.IndexOf(node);
-                if (panel.Children.Take(index).Any(c => IsInput(c) || c is Panel))
+                if (panel.Children.Take(index).Any(c => (IsInput(c) && c is not CheckBox and not RadioButton) || c is Panel))
                 {
                     return null;
                 }
@@ -139,6 +203,17 @@ public static class AccessibleLabels
 
     private static Control? FindLabelInParent(Control parent, Control node)
     {
+        // A text-less check box is usually labeled by the text right after it ("[x] Label"),
+        // and must take that over a label further left or the previous row's.
+        if (node is CheckBox or RadioButton)
+        {
+            var right = FindLabelToTheRight(parent, node);
+            if (right != null)
+            {
+                return right;
+            }
+        }
+
         if (parent is Grid grid)
         {
             return FindLabelInGrid(grid, node);
@@ -162,6 +237,29 @@ public static class AccessibleLabels
                 {
                     return null;
                 }
+            }
+        }
+
+        return null;
+    }
+
+    private static Control? FindLabelToTheRight(Control parent, Control node)
+    {
+        if (parent is Grid grid)
+        {
+            var row = Grid.GetRow(node);
+            var column = Grid.GetColumn(node);
+            return grid.Children.FirstOrDefault(sibling =>
+                sibling != node && IsLabel(sibling) &&
+                Grid.GetRow(sibling) == row && Grid.GetColumn(sibling) == column + 1);
+        }
+
+        if (parent is Panel panel)
+        {
+            var index = panel.Children.IndexOf(node);
+            if (index >= 0 && index + 1 < panel.Children.Count && IsLabel(panel.Children[index + 1]))
+            {
+                return panel.Children[index + 1];
             }
         }
 

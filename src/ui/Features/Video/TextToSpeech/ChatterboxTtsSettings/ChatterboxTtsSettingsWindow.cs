@@ -188,7 +188,9 @@ public class ChatterboxTtsSettingsWindow : Window
                     nameof(ChatterboxModelStatusViewModel.StatusLabel));
                 status.Width = 110;
                 var button = UiUtil.MakeButton(string.Empty)
-                    .WithIconLeftBindText(IconNames.Download, nameof(ChatterboxModelStatusViewModel.DownloadButtonText));
+                    .WithIconLeftBindText(IconNames.Download,
+                        nameof(ChatterboxModelStatusViewModel.DownloadButtonText),
+                        nameof(ChatterboxModelStatusViewModel.DownloadButtonAccessibleName));
                 button.Bind(Button.CommandProperty,
                     new Binding(nameof(ChatterboxModelStatusViewModel.DownloadCommand)));
 

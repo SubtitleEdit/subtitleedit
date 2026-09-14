@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
@@ -81,6 +82,8 @@ public class BinaryAdjustColorWindow : Window
                 CornerRadius = new CornerRadius(4),
                 [!Border.BackgroundProperty] = new Binding(nameof(vm.ColorSwatchBrush)),
             },
+            // The swatch is the whole content, so name the button or it reads as "Border" (#12087).
+            [AutomationProperties.NameProperty] = Se.Language.Tools.ColorPickerTitle,
         };
         panel.Children.Add(swatchButton);
 

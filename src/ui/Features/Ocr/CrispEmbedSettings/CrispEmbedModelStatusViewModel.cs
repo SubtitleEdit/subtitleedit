@@ -23,7 +23,15 @@ public partial class CrispEmbedModelStatusViewModel : ObservableObject
 
     [ObservableProperty] private string _statusLabel = string.Empty;
     [ObservableProperty] private IBrush _statusBrush = Brushes.Gray;
-    [ObservableProperty] private string _downloadButtonText = string.Empty;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DownloadButtonAccessibleName))]
+    private string _downloadButtonText = string.Empty;
+
+    /// <summary>
+    /// Screen-reader name for the download button: the caption alone is the same on every
+    /// row, so the model and backend are added ("Download det.onnx (PP-OCRv5)").
+    /// </summary>
+    public string DownloadButtonAccessibleName => $"{DownloadButtonText} {ModelName} ({BackendName})";
 
     public IAsyncRelayCommand DownloadCommand { get; }
 
