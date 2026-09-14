@@ -132,6 +132,7 @@ public class MpvAudioOptionTests
         "sub-ass-justify",
         "sub-justify",
         "sub-use-margins",
+        "vf",
         "vo",
         "wid",
     };

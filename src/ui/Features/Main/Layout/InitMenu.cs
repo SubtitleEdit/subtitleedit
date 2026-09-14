@@ -786,6 +786,11 @@ public static class InitMenu
                 },
                 new MenuItem
                 {
+                    Header = Se.Language.Video.LetterboxingDotDotDot,
+                    Command = vm.ShowVideoLetterboxCommand,
+                },
+                new MenuItem
+                {
                     Header = Se.Language.Video.GenerateBlankVideoDotDotDot,
                     Command = vm.VideoGenerateBlankCommand,
                 },

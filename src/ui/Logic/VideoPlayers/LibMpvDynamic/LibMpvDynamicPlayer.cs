@@ -1061,6 +1061,22 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         SetOptionString("sub-ass-justify", justify == "auto" ? "no" : "yes");
     }
 
+    /// <summary>
+    /// Draws the Letterboxing ribbon's virtual black bars (top/bottom, #14845) into the decoded
+    /// frame via mpv's own "vf" filter chain. mpv runs "vf" filters before its subtitle
+    /// compositing stage unless "sub" is explicitly inserted into the chain (it isn't here), so
+    /// the preview subtitle - burned in afterwards by libass via sub-add - renders on top of the
+    /// bars automatically, with no change to its margins or position. The filter string itself is
+    /// built by <see cref="LetterboxFilterBuilder"/>, which is unit-tested directly.
+    ///
+    /// Written on every call, including when the ribbon is off (clearing "vf" back to empty) -
+    /// the same "always write both states" pattern as <see cref="ApplySubtitleMarginArea"/>.
+    /// </summary>
+    public void ApplyLetterboxRibbon()
+    {
+        SetOptionString("vf", LetterboxFilterBuilder.Build(Se.Settings.Video.Letterbox));
+    }
+
     public int SetOptionString(string name, string value)
     {
         if (_mpvSetOptionString == null || _mpv == IntPtr.Zero)
@@ -1910,6 +1926,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
         ApplySubtitleMarginArea();
         ApplySubtitleJustify();
+        ApplyLetterboxRibbon();
 
         _fileName = path;
 

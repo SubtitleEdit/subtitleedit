@@ -157,6 +157,7 @@ using Nikse.SubtitleEdit.Features.Video.BurnIn;
 using Nikse.SubtitleEdit.Features.Video.CutVideo;
 using Nikse.SubtitleEdit.Features.Video.EmbeddedSubtitlesEdit;
 using Nikse.SubtitleEdit.Features.Video.GoToVideoPosition;
+using Nikse.SubtitleEdit.Features.Video.Letterbox;
 using Nikse.SubtitleEdit.Features.Video.OpenFromUrl;
 using Nikse.SubtitleEdit.Features.Video.OpenFromUrl.PickOnlineSubtitle;
 using Nikse.SubtitleEdit.Features.Video.ReEncodeVideo;
@@ -11490,6 +11491,29 @@ public partial class MainViewModel :
         {
             vm.Initialize(_videoFileName ?? string.Empty, GetUpdateSubtitle(), SelectedSubtitleFormat);
         });
+    }
+
+    /// <summary>
+    /// Video menu > Letterboxing... (#14845). Unlike the burn-in/transparent dialogs above,
+    /// this one does not open its own video player - it drives the already-open docked player
+    /// (which ShowDialogAsync has already paused for the dialog's duration), so the dialog's
+    /// "live preview" is the real editing preview itself.
+    /// </summary>
+    [RelayCommand]
+    private async Task ShowVideoLetterbox()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var vp = GetVideoPlayerControl();
+        if (string.IsNullOrEmpty(_videoFileName) || vp == null)
+        {
+            return;
+        }
+
+        await ShowDialogAsync<LetterboxWindow, LetterboxViewModel>(vm => { vm.Initialize(vp); });
     }
 
     [RelayCommand]

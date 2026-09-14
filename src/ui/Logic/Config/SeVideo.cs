@@ -11,6 +11,7 @@ public class SeVideo
     public SeVideoTransparent Transparent { get; set; }
     public SeVideoTextToSpeech TextToSpeech { get; set; }
     public SeVideoOcr VideoOcr { get; set; }
+    public SeVideoLetterbox Letterbox { get; set; }
     public string VideoPlayer { get; set; }
     public double Volume { get; set; }
     public bool ShowStopButton { get; set; }
@@ -101,6 +102,7 @@ public class SeVideo
         Transparent = new();
         TextToSpeech = new();
         VideoOcr = new();
+        Letterbox = new();
         VideoPlayer = OperatingSystem.IsWindows() ? VideoPlayerName.MpvWid : VideoPlayerName.MpvOpenGl;
         Volume = 60;
         ShowStopButton = true;
