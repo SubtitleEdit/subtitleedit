@@ -136,7 +136,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             // Every distinct line, with its raw (tagged) text and the time it first scrolled in.
-            var lineTexts = new List<string>(first.Text.SplitToLines());
+            // Raw lines are filtered the same way as the comparable lines so both lists share indices.
+            var lineTexts = GetRawLines(first);
             var lineStarts = new List<double>();
             for (var k = 0; k < lineTexts.Count; k++)
             {
@@ -166,10 +167,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                     sawScroll = true;
                 }
 
-                var nextRawLines = next.Text.SplitToLines();
+                var nextRawLines = GetRawLines(next);
                 for (var k = overlap; k < nextLines.Count; k++)
                 {
-                    lineTexts.Add(k < nextRawLines.Count ? nextRawLines[k] : nextLines[k]);
+                    lineTexts.Add(nextRawLines[k]);
                     lineStarts.Add(next.StartTime.TotalMilliseconds);
                 }
 
@@ -183,17 +184,33 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return false;
             }
 
+            // Re-chunk into paragraphs of maxLines lines. A chunk starts when its first line scrolled
+            // in (never before the previous chunk ended) and ends when the first line of a later chunk
+            // scrolls in. Several lines share a start time when one caption contributed more than
+            // maxLines lines at once, so the end must be the first later start that is actually after
+            // the chunk's start - otherwise the chunk would get zero duration.
+            var previousChunkEnd = double.MinValue;
             for (var k = 0; k < lineTexts.Count; k += maxLines)
             {
                 var count = Math.Min(maxLines, lineTexts.Count - k);
                 var text = string.Join(Environment.NewLine, lineTexts.GetRange(k, count));
-                var start = lineStarts[k];
-                var end = k + maxLines < lineTexts.Count ? lineStarts[k + maxLines] : chainEndMs;
+                var start = Math.Max(lineStarts[k], previousChunkEnd);
+                var end = chainEndMs;
+                for (var j = k + maxLines; j < lineStarts.Count; j++)
+                {
+                    if (lineStarts[j] > start)
+                    {
+                        end = lineStarts[j];
+                        break;
+                    }
+                }
+
                 if (end < start)
                 {
                     end = start;
                 }
 
+                previousChunkEnd = end;
                 var p = new Paragraph(first) { Text = text };
                 p.StartTime.TotalMilliseconds = start;
                 p.EndTime.TotalMilliseconds = end;
@@ -202,6 +219,29 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             endIndex = lastIndex;
             return true;
+        }
+
+        /// <summary>
+        /// The raw (tagged) lines of a paragraph, keeping only the lines that
+        /// <see cref="GetComparableLines"/> keeps, so both lists share the same indices.
+        /// </summary>
+        private static List<string> GetRawLines(Paragraph p)
+        {
+            var lines = new List<string>();
+            if (p?.Text == null)
+            {
+                return lines;
+            }
+
+            foreach (var line in p.Text.SplitToLines())
+            {
+                if (HtmlUtil.RemoveHtmlTags(line, true).Trim().Length > 0)
+                {
+                    lines.Add(line);
+                }
+            }
+
+            return lines;
         }
 
         private static List<string> GetComparableLines(Paragraph p)
