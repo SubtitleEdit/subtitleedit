@@ -945,11 +945,21 @@ public static partial class MergeAndSplitHelper
         if (!string.IsNullOrEmpty(part))
         {
             // The anchor sits inside a closing quote ("hört."), so the quote itself follows the
-            // cut and belongs to this row.
+            // cut and belongs to this row - whichever quote the engine chose: DeepL renders an
+            // English "…" as «…» in Italian, and a » left behind opened the next row (#14866).
+            // French puts a no-break space before its closing guillemet ("feu. »"); that space
+            // is taken along only when a quote does follow it.
             var end = part.Length;
-            while (end < text.Length && IsClosingQuote(text[end]))
+            for (var i = end; i < text.Length; i++)
             {
-                end++;
+                if (text[i].IsClosingQuoteChar())
+                {
+                    end = i + 1;
+                }
+                else if (!text[i].IsNoBreakSpace())
+                {
+                    break;
+                }
             }
 
             part = text[..end];
@@ -958,8 +968,6 @@ public static partial class MergeAndSplitHelper
 
         return part;
     }
-
-    private static bool IsClosingQuote(char c) => c == '"' || c == '”';
 
     /// <summary>
     /// The character the split anchors on: the sentence-ending punctuation, looking past a
@@ -970,7 +978,7 @@ public static partial class MergeAndSplitHelper
     private static char GetEndChar(string text)
     {
         var i = text.Length - 1;
-        while (i > 0 && IsClosingQuote(text[i]))
+        while (i > 0 && (text[i].IsClosingQuoteChar() || text[i].IsNoBreakSpace()))
         {
             i--;
         }
