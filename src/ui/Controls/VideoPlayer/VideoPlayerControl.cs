@@ -1156,6 +1156,14 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                     _slowPollCounter = 0;
                     Duration = _videoPlayerInstance.Duration;
                     SetPlayPauseIcon(_videoPlayerInstance.IsPlaying);
+
+                    // The ffmpeg player only knows its decoder (hardware vs. software) once the
+                    // video thread has opened it, and may drop to software mid-playback.
+                    var playerName = _videoPlayerInstance.Name;
+                    if (_textBlockPlayerName.Text != playerName)
+                    {
+                        _textBlockPlayerName.Text = playerName;
+                    }
                 }
 
                 var postFix = IsSmpteTimingEnabled ? " (SMPTE)" : string.Empty;

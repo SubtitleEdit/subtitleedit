@@ -73,7 +73,13 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
     /// <summary>The "toggle subtitles on video player" state, shared with mpv's flag by the caller.</summary>
     public volatile bool PreviewSubtitlesVisible = true;
 
-    public string Name => string.IsNullOrEmpty(PlayerSubName) ? "ffmpeg" : $"ffmpeg-{PlayerSubName}";
+    /// <summary>
+    /// Hardware decoder in use ("videotoolbox", "d3d11va", ...), or empty while decoding in
+    /// software. Written by the video thread, read by the UI badge.
+    /// </summary>
+    private volatile string _decoderName = string.Empty;
+
+    public string Name => string.IsNullOrEmpty(_decoderName) ? "ffmpeg" : $"ffmpeg ({_decoderName})";
     public string FileName => _fileName;
 
     public bool CanLoad()
@@ -808,6 +814,7 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
                 var hardware = HardwareDeviceTypes.Length > 0;
                 codec = OpenDecoder(stream, hardware);
                 hardware = codec->hw_device_ctx != null;
+                _owner._decoderName = hardware ? HardwareDeviceName(codec) : string.Empty;
                 frame = ffmpeg.av_frame_alloc();
                 transferFrame = ffmpeg.av_frame_alloc();
                 var timeBase = stream->time_base;
@@ -1018,6 +1025,7 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
             Se.LogError($"ffmpeg player: {HardwareDeviceName(codec)} decoding failed for {ffmpeg.avcodec_get_name(stream->codecpar->codec_id)} ({reason}), falling back to software decoding");
             ffmpeg.avcodec_free_context(&codec);
             hardware = false;
+            _owner._decoderName = string.Empty;
             return OpenDecoder(stream, hardware: false);
         }
 
