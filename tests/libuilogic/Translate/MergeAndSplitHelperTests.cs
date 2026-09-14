@@ -549,4 +549,95 @@ public class MergeAndSplitHelperTests
             return Task.FromResult(Result);
         }
     }
+
+    // Issue #14866: DeepL renders an English "…" as «…» in Italian. The split cut row 309 at
+    // the period inside the quote but only knew "…" and “…” as closing quotes, so the » was
+    // left behind and became the first line of row 310 - and again for row 311 into 312.
+    private static ObservableCollection<TranslateRow> MakeIssue14866Rows()
+    {
+        var nl = Environment.NewLine;
+        return new ObservableCollection<TranslateRow>
+        {
+            new() { Number = 308, Show = TimeSpan.Parse("00:20:23.458"), Hide = TimeSpan.Parse("00:20:26.166"), Text = "\"never having seen the beauty" + nl + "of my sky behind Mount." },
+            new() { Number = 309, Show = TimeSpan.Parse("00:20:26.250"), Hide = TimeSpan.Parse("00:20:28.625"), Text = "\"Perhaps a single glance" + nl + "would have quelled her fire.\"" },
+            new() { Number = 310, Show = TimeSpan.Parse("00:20:29.041"), Hide = TimeSpan.Parse("00:20:30.125"), Text = "Yo-yo's sleeping." },
+            new() { Number = 311, Show = TimeSpan.Parse("00:20:30.208"), Hide = TimeSpan.Parse("00:20:32.417"), Text = "\"Never having seen the beauty" + nl + "of my sky behind Mount.\"" },
+            new() { Number = 312, Show = TimeSpan.Parse("00:20:32.500"), Hide = TimeSpan.Parse("00:20:34.750"), Text = "I think that's where Bianchi was born." },
+            new() { Number = 313, Show = TimeSpan.Parse("00:20:34.834"), Hide = TimeSpan.Parse("00:20:37.750"), Text = "I got an idea." + nl + "Why don't we all go to Mount?" },
+        };
+    }
+
+    [Theory]
+    [InlineData("\u00AB", "\u00BB")] // «…» Italian, Spanish, Russian
+    [InlineData("\u00AB", "\u00A0\u00BB")] // « … » French, no-break space before the closing guillemet
+    [InlineData("\u00BB", "\u00AB")] // »…« German, Danish
+    [InlineData("\u201E", "\u201C")] // „…“ German
+    [InlineData("\u2018", "\u2019")] // ‘…’ single curly quotes
+    public async Task MergeAndTranslateIfPossible_ClosingQuoteOfAnyStyleStaysWithItsRow(string open, string close)
+    {
+        using var _ = new FixedAbbreviations(NoAbbreviations);
+        var nl = Environment.NewLine;
+        var translator = new LineBreakPreservingTranslator
+        {
+            Result = string.Join(nl,
+                open + "senza aver mai visto la bellezza", "del mio cielo dietro il Monte.",
+                open + "Forse un solo sguardo", "avrebbe placato il suo fuoco." + close,
+                "Yo-yo sta dormendo.",
+                open + "Senza aver mai visto la bellezza", "del mio cielo dietro il Monte." + close,
+                "Credo che sia lì che è nato Bianchi.",
+                "Mi è venuta un'idea.", "Perché non andiamo tutti al Monte?"),
+        };
+        var rows = MakeIssue14866Rows();
+
+        var count = await MergeAndSplitHelper.MergeAndTranslateIfPossible(
+            rows,
+            new TranslationPair("English", "en"),
+            new TranslationPair("Italian", "it"),
+            0,
+            translator,
+            forceSingleLineMode: false,
+            CancellationToken.None);
+
+        // The line re-breaking downstream may turn the French no-break space into a plain one;
+        // what matters here is which row the quote lands in.
+        static string PlainSpaces(string text) => text.Replace('\u00A0', ' ');
+
+        Assert.Equal(6, count);
+        Assert.EndsWith(PlainSpaces("fuoco." + close), PlainSpaces(rows[1].TranslatedText));
+        Assert.Equal("Yo-yo sta dormendo.", rows[2].TranslatedText);
+        Assert.EndsWith(PlainSpaces("Monte." + close), PlainSpaces(rows[3].TranslatedText));
+        Assert.Equal("Credo che sia lì che è nato Bianchi.", rows[4].TranslatedText);
+    }
+
+    // The same quote styles on the source side: a row ending in ".»" is a finished sentence,
+    // so the next row is not glued on as its continuation, and the split anchors on the period
+    // rather than on a guillemet the engine will not echo.
+    [Fact]
+    public async Task MergeAndTranslateIfPossible_GuillemetQuotedSourceRowsAnchorOnThePunctuationInside()
+    {
+        using var _ = new FixedAbbreviations(NoAbbreviations);
+        var nl = Environment.NewLine;
+        var rows = MakeRows(
+            "\u00ABForse un solo sguardo" + nl + "avrebbe placato il suo fuoco.\u00BB",
+            "Yo-yo sta dormendo.",
+            "Credo che sia lì che è nato Bianchi.");
+        var translator = new FixedResultTranslator
+        {
+            Result = "\"Perhaps a single glance would have quelled her fire.\" Yo-yo's sleeping. I think that's where Bianchi was born.",
+        };
+
+        var count = await MergeAndSplitHelper.MergeAndTranslateIfPossible(
+            rows,
+            new TranslationPair("Italian", "it"),
+            new TranslationPair("English", "en"),
+            0,
+            translator,
+            forceSingleLineMode: false,
+            CancellationToken.None);
+
+        Assert.Equal(3, count);
+        Assert.Equal("\"Perhaps a single glance would have quelled her fire.\"", rows[0].TranslatedText.Replace(nl, " "));
+        Assert.Equal("Yo-yo's sleeping.", rows[1].TranslatedText);
+        Assert.Equal("I think that's where Bianchi was born.", rows[2].TranslatedText);
+    }
 }
