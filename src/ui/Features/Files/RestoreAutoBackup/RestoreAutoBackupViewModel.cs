@@ -303,8 +303,16 @@ public partial class RestoreAutoBackupViewModel : ObservableObject
 
             // Load into the live Se.Settings and write it back: the main window saves
             // settings on exit, so a plain file copy would be overwritten by the old
-            // in-memory state a moment later.
-            Se.LoadSettings(file.FullPath);
+            // in-memory state a moment later. TryLoadSettings, not LoadSettings: the latter
+            // swaps in defaults when the file does not parse, which would wipe every setting
+            // and then persist the wipe below.
+            if (!Se.TryLoadSettings(file.FullPath))
+            {
+                LoadSettingsBackups();
+                await MessageBox.Show(Window, l.RestoreSettings, string.Format(l.SettingsRestoreFailed, l.SettingsBackupNotValid), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             Se.SaveSettings();
             SettingsRestored = true;
         }
