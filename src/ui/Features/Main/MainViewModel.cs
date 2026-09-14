@@ -29664,15 +29664,6 @@ public partial class MainViewModel :
 
             if (IsTextInputFocused())
             {
-                // Right-to-left subtitles need visually-correct word / line caret movement:
-                // Avalonia (and AvaloniaEdit) move whole words by logical offset, which runs
-                // backwards for RTL text. Handle it here, where Handled reliably pre-empts the
-                // editor's built-in navigation (same path used for the Return-key limiter below).
-                if (TryHandleRightToLeftCaretNavigation(keyEventArgs))
-                {
-                    return;
-                }
-
                 // Bare and Ctrl+Left/Right are fundamental caret navigation in any
                 // text input — never override them with shortcuts even when
                 // "allow single-letter shortcuts in text box" is on (#11357).
@@ -29680,6 +29671,23 @@ public partial class MainViewModel :
                 // Home/End below) are handed to bound shortcuts when the opt-in
                 // AllowTextNavigationShortcutsInTextbox setting is on (#14654).
                 var allowTextNavigationShortcuts = Se.Settings.Tools.AllowTextNavigationShortcutsInTextbox;
+
+                // Right-to-left subtitles need visually-correct word / line caret movement:
+                // Avalonia (and AvaloniaEdit) move whole words by logical offset, which runs
+                // backwards for RTL text. Handle it here, where Handled reliably pre-empts the
+                // editor's built-in navigation (same path used for the Return-key limiter below).
+                // But when the opt-in setting hands modified arrow chords to shortcuts and one
+                // is actually bound, the shortcut wins - otherwise Ctrl+Left/Right stayed word
+                // navigation in Arabic/Hebrew text even with the setting on (#14867).
+                var arrowChordGoesToShortcut = allowTextNavigationShortcuts
+                    && (keyEventArgs.Key == Key.Left || keyEventArgs.Key == Key.Right)
+                    && keyEventArgs.KeyModifiers != KeyModifiers.None
+                    && IsTextBoxChordBoundToShortcut(keyEventArgs);
+                if (!arrowChordGoesToShortcut && TryHandleRightToLeftCaretNavigation(keyEventArgs))
+                {
+                    return;
+                }
+
                 if ((keyEventArgs.Key == Key.Left || keyEventArgs.Key == Key.Right)
                     && keyEventArgs.KeyModifiers == KeyModifiers.None)
                 {
@@ -29925,6 +29933,13 @@ public partial class MainViewModel :
             }
         }
     }
+
+    // True when the current chord would reach a shortcut from a focused edit box - the same
+    // three categories the text-box dispatch at the end of OnKeyDownHandler consults.
+    private bool IsTextBoxChordBoundToShortcut(KeyEventArgs keyEventArgs) =>
+        _shortcutManager.CheckShortcuts(keyEventArgs, CategoryTextBox) != null ||
+        _shortcutManager.CheckShortcuts(keyEventArgs, CategorySubtitleGridAndTextBox) != null ||
+        _shortcutManager.CheckShortcuts(keyEventArgs, CategoryGeneralLower) != null;
 
     // These TextBox-category commands duplicate Avalonia's built-in TextBox key handling and are
     // hardcoded to the primary EditTextBox, so we let the focused control handle them natively
