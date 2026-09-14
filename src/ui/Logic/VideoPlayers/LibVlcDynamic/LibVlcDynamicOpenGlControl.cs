@@ -103,7 +103,8 @@ public class LibVlcDynamicOpenGlControl : OpenGlControlBase
             try
             {
                 _vlcPlayer.LoadLib();
-                _vlcPlayer.PlayerSubName = "OpenGL";
+                _vlcPlayer.PlayerSubName = OpenGlRendererInfo.GetPlayerSubName(gl.Renderer);
+                OpenGlRendererInfo.LogIfSoftwareRenderer("VLC", gl.Vendor, gl.Renderer, gl.Version);
 
                 // Initialize OpenGL texture
                 if (_glGenTextures != null)
