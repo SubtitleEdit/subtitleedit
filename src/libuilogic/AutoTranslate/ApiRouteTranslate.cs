@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
     {
         private HttpClient _httpClient = null!;
 
-        public static string StaticName { get; set; } = "API-Route";
+        public static string StaticName { get; set; } = "API Route";
         public override string ToString() => StaticName;
         public string Name => StaticName;
         public string Url => "https://www.api-route.com";
@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             if (!result.IsSuccessStatusCode)
             {
                 Error = json;
-                SeLogger.Error("API-Route Translate failed calling API: Status code=" + result.StatusCode + Environment.NewLine + json);
+                SeLogger.Error("API Route Translate failed calling API: Status code=" + result.StatusCode + Environment.NewLine + json);
             }
 
             result.EnsureSuccessStatusCode();
