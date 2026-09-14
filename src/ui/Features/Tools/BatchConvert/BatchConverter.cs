@@ -757,13 +757,6 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             customFormats.Add(new CustomFormatItem(customFormat));
         }
 
-        var subtitles = new List<SubtitleLineViewModel>();
-        foreach (var p in item.Subtitle.Paragraphs)
-        {
-            var sv = new SubtitleLineViewModel(p, new SubRip());
-            subtitles.Add(sv);
-        }
-
         var customFormatName = Se.Settings.Tools.BatchConvert.CustomTextFormatName;
         var selectedCustomFormat =
             customFormats.FirstOrDefault(f => f.Name == customFormatName)
@@ -774,8 +767,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return;
         }
 
-        var paragraphsForCustom = subtitles.Where(s => s.Paragraph != null).Select(s => s.Paragraph!).ToList();
-        var text = Nikse.SubtitleEdit.UiLogic.Export.CustomTextFormatter.GenerateCustomText(selectedCustomFormat.ToTemplate(), paragraphsForCustom, item.FileName, string.Empty);
+        var text = Nikse.SubtitleEdit.UiLogic.Export.CustomTextFormatter.GenerateCustomText(selectedCustomFormat.ToTemplate(), item.Subtitle.Paragraphs, item.FileName, string.Empty);
         var path = MakeOutputFileName(item, selectedCustomFormat.Extension);
         await File.WriteAllTextAsync(path, text, cancellationToken);
     }
