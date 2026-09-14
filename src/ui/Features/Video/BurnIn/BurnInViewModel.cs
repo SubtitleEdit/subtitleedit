@@ -134,6 +134,7 @@ public partial class BurnInViewModel : ObservableObject
     private string _inputVideoFileName;
     private string _imageSubtitleFileName = string.Empty;
     private const string StatusSkipped = "Skipped";
+    internal const string StatusWaiting = "Waiting";
     private List<BurnInEffectItem> _selectedEffects;
 
     public VideoPlayerControl? VideoPlayerControl { get; set; }
@@ -590,7 +591,7 @@ public partial class BurnInViewModel : ObservableObject
             jobItem.OutputVideoFileName = MakeOutputFileName(jobItem.InputVideoFileName);
         }
 
-        jobItem.AssaSubtitleFileName = MakeAssa(jobItem.SubtitleFileName);
+        jobItem.AssaSubtitleFileName = MakeAssa(jobItem, jobItem.SubtitleFileName);
         if (jobItem.Status == StatusSkipped)
         {
             // An unreadable subtitle file used to be marked "Skipped" and then encoded anyway,
@@ -987,9 +988,15 @@ public partial class BurnInViewModel : ObservableObject
         }
     }
 
-    private string MakeAssa(string subtitleFileName)
+    /// <summary>
+    /// Converts the job's subtitle to the ASSA file ffmpeg burns in, marking the job "Skipped"
+    /// when the subtitle cannot be read. Batch rows survive between Generate clicks, so the
+    /// status is reset first: a row skipped in one run (missing subtitle) whose subtitle was
+    /// picked afterwards must not be skipped again because of its stale status.
+    /// </summary>
+    internal string MakeAssa(BurnInJobItem jobItem, string subtitleFileName)
     {
-        var jobItem = JobItems[_jobItemIndex];
+        jobItem.Status = StatusWaiting;
 
         if (string.IsNullOrWhiteSpace(subtitleFileName) || !File.Exists(subtitleFileName))
         {

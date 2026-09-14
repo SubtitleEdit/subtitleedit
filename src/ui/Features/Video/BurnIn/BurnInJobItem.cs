@@ -77,7 +77,7 @@ public partial class BurnInJobItem : ObservableObject
         Width = width;
         Height = height;
         Resolution = $"{width}x{height}";
-        Status = "Waiting";
+        Status = BurnInViewModel.StatusWaiting;
 
         OutputVideoFileName = string.Empty;
         SubtitleFileName = string.Empty;
