@@ -60,7 +60,8 @@ public class LibMpvDynamicOpenGlControl : OpenGlControlBase
             if (_mpvPlayer != null)
             {
                 _mpvPlayer.RequestRender += OnMpvRequestRender;
-                _mpvPlayer.PlayerSubName = "OpenGL";
+                _mpvPlayer.PlayerSubName = OpenGlRendererInfo.GetPlayerSubName(gl.Renderer);
+                OpenGlRendererInfo.LogIfSoftwareRenderer("libmpv", gl.Vendor, gl.Renderer, gl.Version);
             }
 
             _isInitialized = true;
