@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.UiLogic.Ocr.Service;
 using System;
 using System.Collections.Generic;
@@ -123,6 +123,18 @@ public class GoogleCloudVisionSpaceThresholdTests
 
         // Two words, no SPACE break, but two glyph widths of nothing between them.
         var json = BuildJson(new List<(string, string, int)> { ("hello", "", 2 * GlyphWidth), ("world", "LINE_BREAK", 0) });
+
+        Assert.Equal("hello world", GoogleCloudVisionApi.JsonToStringList("en", json)[0]);
+    }
+
+    [Fact]
+    public void SureSpaceBreakInsertsSpaceLikeSpace()
+    {
+        Configuration.Settings.Tools.OcrGoogleCloudVisionSeHandlesTextMerge = true;
+
+        // Vision's "very wide space" break type. The helper leaves only a letter gap after a
+        // non-SPACE break, so the geometric rule cannot add this space - only the break can.
+        var json = BuildJson(new List<(string, string, int)> { ("hello", "SURE_SPACE", 0), ("world", "LINE_BREAK", 0) });
 
         Assert.Equal("hello world", GoogleCloudVisionApi.JsonToStringList("en", json)[0]);
     }
