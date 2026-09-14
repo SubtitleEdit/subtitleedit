@@ -274,7 +274,12 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.Service
                     // Merge lines ordered by X
                     var sb = new StringBuilder();
                     var sbLine = new StringBuilder();
-                    var spaceThreshold = Math.Max(12, annotations.Average(p => p.Width) / 2.7);
+                    // Vision marks word boundaries itself via detectedBreak, so the geometric rule is
+                    // only a safety net for a gap Vision missed - about one glyph's width of nothing.
+                    // Real symbol boxes show intra-word gaps up to ~0.32 of the average width and word
+                    // gaps from ~0.4, so the old "/ 2.7" (0.37) split "tribunal" into "tribu n a l"
+                    // on large fonts - see issue #14884.
+                    var spaceThreshold = Math.Max(12, annotations.Average(p => p.Width));
                     foreach (var line in lines)
                     {
                         sbLine.Clear();
@@ -299,18 +304,18 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.Service
                             last = l;
                         }
 
-                        if (OcrHelper.UsesSpaceBeforeQuestionAndExclamationMark(language))
+                        // No language puts a space before "." or ","; French/Breton keep it before "?" and "!".
+                        var lineText = sbLine.ToString().Trim()
+                            .Replace(" .", ".")
+                            .Replace(" ,", ",");
+                        if (!OcrHelper.UsesSpaceBeforeQuestionAndExclamationMark(language))
                         {
-                            sb.AppendLine(sbLine.ToString().Trim());
-                        }
-                        else
-                        {
-                            sb.AppendLine(sbLine.ToString().Trim()
-                                .Replace(" .", ".")
-                                .Replace(" ,", ",")
+                            lineText = lineText
                                 .Replace(" ?", "?")
-                                .Replace(" !", "!"));
+                                .Replace(" !", "!");
                         }
+
+                        sb.AppendLine(lineText);
                     }
 
                     var ocrResult = sb.ToString().Trim();
