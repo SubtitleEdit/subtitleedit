@@ -8174,6 +8174,76 @@ public partial class MainViewModel :
         }
     }
 
+    /// <summary>
+    /// One command per enabled plugin so each can carry its own shortcut and menu gesture
+    /// (the shared <see cref="RunPluginCommand"/> is looked up by reference, so it cannot).
+    /// Rebuilt whenever the plugin manager closes; read lazily so the shortcut registry can
+    /// be built before the menus are.
+    /// </summary>
+    public IReadOnlyList<PluginShortcutEntry> PluginShortcutEntries
+    {
+        get
+        {
+            _pluginShortcutEntries ??= BuildPluginShortcutEntries();
+            return _pluginShortcutEntries;
+        }
+    }
+
+    private List<PluginShortcutEntry>? _pluginShortcutEntries;
+
+    public sealed class PluginShortcutEntry
+    {
+        public required InstalledPlugin Plugin { get; init; }
+        public required string ActionName { get; init; }
+        public required IRelayCommand Command { get; init; }
+    }
+
+    /// <summary>
+    /// Action name persisted in Settings.json for a plugin's shortcut. Non-alphanumerics are
+    /// replaced because the shortcut loader drops action names containing spaces.
+    /// </summary>
+    public static string GetPluginShortcutActionName(string pluginName)
+    {
+        var sb = new StringBuilder("Plugin_", pluginName.Length + 7);
+        foreach (var c in pluginName)
+        {
+            sb.Append(char.IsLetterOrDigit(c) ? c : '_');
+        }
+
+        return sb.ToString();
+    }
+
+    private List<PluginShortcutEntry> BuildPluginShortcutEntries()
+    {
+        var result = new List<PluginShortcutEntry>();
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var plugin in GetInstalledPlugins()
+                     .Where(p => !Se.Settings.Plugins.DisabledPluginNames.Contains(p.Manifest.Name))
+                     .OrderBy(p => p.Manifest.Name))
+        {
+            var actionName = GetPluginShortcutActionName(plugin.Manifest.Name);
+            if (!seen.Add(actionName))
+            {
+                continue;
+            }
+
+            var captured = plugin;
+            result.Add(new PluginShortcutEntry
+            {
+                Plugin = plugin,
+                ActionName = actionName,
+                Command = new AsyncRelayCommand(() => RunPlugin(captured)),
+            });
+        }
+
+        return result;
+    }
+
+    public void RebuildPluginShortcutEntries()
+    {
+        _pluginShortcutEntries = null;
+    }
+
     [RelayCommand]
     private async Task RunPlugin(InstalledPlugin? plugin)
     {
@@ -8466,10 +8536,13 @@ public partial class MainViewModel :
         }
 
         await ShowDialogAsync<PluginManagerWindow, PluginManagerViewModel>(vm => vm.Initialize());
+        RebuildPluginShortcutEntries();
+        LoadShortcuts();
         Layout.InitMenu.UpdatePluginsMenu(this);
         if (OperatingSystem.IsMacOS())
         {
-            Layout.InitNativeMacMenu.UpdatePluginsMenu(this);
+            // Also rebuilds the native Plugins menu with the current gestures.
+            Layout.InitNativeMacMenu.UpdateShortcuts(this);
         }
     }
 

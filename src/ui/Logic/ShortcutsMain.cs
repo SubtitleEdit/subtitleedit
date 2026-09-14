@@ -1033,10 +1033,111 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.ToggleSubtitlesOnVideoPlayerCommand, nameof(vm.ToggleSubtitlesOnVideoPlayerCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.ToggleSmpteTimingCommand, nameof(vm.ToggleSmpteTimingCommand), ShortcutCategory.General, ShortcutGroup.Video);
 
+        // One entry per enabled plugin (SE 4 had the same: Options > Shortcuts > Plugins).
+        // The display name is the plugin name itself, registered the same way the
+        // surround-with / search-via slots publish their dynamic titles.
+        foreach (var entry in vm.PluginShortcutEntries)
+        {
+            CommandTranslationLookup[entry.ActionName] = entry.Plugin.Manifest.Name;
+            AddShortcut(shortcuts, entry.Command, entry.ActionName, ShortcutCategory.General, ShortcutGroup.Plugins);
+        }
+
         return shortcuts;
     }
 
+    /// <summary>
+    /// Default bindings suggested by plugin manifests ("shortcut": "Control+Shift+P"). Only
+    /// applied when the user has no binding for that plugin yet and the chord is not already
+    /// taken by any other shortcut, so a third-party manifest can never hijack a built-in key.
+    /// </summary>
+    private static void AddPluginDefaultShortcuts(MainViewModel? vm, List<SeShortCut> defaults)
+    {
+        if (vm == null)
+        {
+            // Tests call GetDefaultShortcuts(null!) - the built-in list only needs nameof().
+            return;
+        }
+
+        var taken = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var existing in defaults.Concat(Se.Settings.Shortcuts))
+        {
+            if (existing.Keys.Count > 0)
+            {
+                taken.Add(MakeChordKey(existing.Keys));
+            }
+        }
+
+        foreach (var entry in vm.PluginShortcutEntries)
+        {
+            var keys = ParseManifestShortcut(entry.Plugin.Manifest.Shortcut);
+            if (keys == null || !taken.Add(MakeChordKey(keys)))
+            {
+                continue;
+            }
+
+            defaults.Add(new SeShortCut(entry.ActionName, keys, ShortcutCategory.General));
+        }
+    }
+
+    private static string MakeChordKey(List<string> keys)
+    {
+        return string.Join("+", keys
+            .Select(ShortcutManager.NormalizeKeyToken)
+            .OrderBy(k => k, StringComparer.OrdinalIgnoreCase));
+    }
+
+    /// <summary>
+    /// Parses "Control+Shift+P" / "Ctrl+Alt+F5" into the stored key token list. Returns null
+    /// for anything that is not modifiers plus exactly one Avalonia <see cref="Avalonia.Input.Key"/>.
+    /// </summary>
+    public static List<string>? ParseManifestShortcut(string? shortcut)
+    {
+        if (string.IsNullOrWhiteSpace(shortcut))
+        {
+            return null;
+        }
+
+        var keys = new List<string>();
+        var mainKeys = 0;
+        foreach (var raw in shortcut.Split('+', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+        {
+            var token = raw.ToLowerInvariant() switch
+            {
+                "ctrl" or "control" => "Control",
+                "shift" => "Shift",
+                "alt" or "option" => "Alt",
+                "win" or "meta" or "cmd" or "command" => "Win",
+                _ => null,
+            };
+
+            if (token == null)
+            {
+                if (!Enum.TryParse<Avalonia.Input.Key>(raw, ignoreCase: true, out var key) || key == Avalonia.Input.Key.None)
+                {
+                    return null;
+                }
+
+                token = key.ToString();
+                mainKeys++;
+            }
+
+            if (!keys.Contains(token, StringComparer.OrdinalIgnoreCase))
+            {
+                keys.Add(token);
+            }
+        }
+
+        return mainKeys == 1 ? keys : null;
+    }
+
     public static List<SeShortCut> GetDefaultShortcuts(MainViewModel vm)
+    {
+        var defaults = GetBuiltInDefaultShortcuts(vm);
+        AddPluginDefaultShortcuts(vm, defaults);
+        return defaults;
+    }
+
+    private static List<SeShortCut> GetBuiltInDefaultShortcuts(MainViewModel vm)
     {
         var cmd = GetCommandOrWin();
 
