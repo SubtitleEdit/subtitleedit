@@ -581,22 +581,58 @@ public class Se
         var settingsFileExists = System.IO.File.Exists(settingsFileName);
         if (settingsFileExists)
         {
-            try
-            {
-                // Stream + source-generated metadata: no UTF-16 string round-trip and no
-                // runtime reflection over the settings type graph.
-                using var stream = System.IO.File.OpenRead(settingsFileName);
-                Settings = JsonSerializer.Deserialize(stream, SeJsonContext.Default.Se)!;
-            }
-            catch (Exception exception)
-            {
-                Se.LogError(exception);
-                Settings = new Se();
-            }
-
+            Settings = TryDeserializeSettings(settingsFileName) ?? new Se();
             SetDefaultValues();
         }
 
+        ApplyLoadedSettings(settingsFileExists);
+    }
+
+    /// <summary>
+    /// Loads a settings file the way <see cref="LoadSettings(string)"/> does, but only replaces
+    /// the live <see cref="Settings"/> when the file parses. A truncated or foreign file leaves
+    /// the current settings untouched and returns false, where <see cref="LoadSettings(string)"/>
+    /// falls back to defaults so the app can still start - the right call at startup, the wrong
+    /// one when the user picks a backup to restore.
+    /// </summary>
+    public static bool TryLoadSettings(string settingsFileName)
+    {
+        if (!System.IO.File.Exists(settingsFileName))
+        {
+            return false;
+        }
+
+        var loaded = TryDeserializeSettings(settingsFileName);
+        if (loaded == null)
+        {
+            return false;
+        }
+
+        Settings = loaded;
+        SetDefaultValues();
+        ApplyLoadedSettings(settingsFileExists: true);
+        return true;
+    }
+
+    private static Se? TryDeserializeSettings(string settingsFileName)
+    {
+        try
+        {
+            // Stream + source-generated metadata: no UTF-16 string round-trip and no
+            // runtime reflection over the settings type graph.
+            using var stream = System.IO.File.OpenRead(settingsFileName);
+            return JsonSerializer.Deserialize(stream, SeJsonContext.Default.Se);
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception);
+            return null;
+        }
+    }
+
+    /// <summary>Post-load migrations and the libse bridge, shared by every load path.</summary>
+    private static void ApplyLoadedSettings(bool settingsFileExists)
+    {
         MigrateMacOsFontSettings(Settings.Appearance, OperatingSystem.IsMacOS(), settingsFileExists);
         MigrateLayoutNumber(Settings.General);
 
