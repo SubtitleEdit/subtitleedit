@@ -36,7 +36,7 @@ public class SetVideoOffsetWindowTests : IDisposable
     private static SetVideoOffsetViewModel NewViewModel()
     {
         var vm = new SetVideoOffsetViewModel();
-        vm.Initialize((_, _, _) => { }, () => { });
+        vm.Initialize((_, _, _) => { }, _ => { });
         return vm;
     }
 
