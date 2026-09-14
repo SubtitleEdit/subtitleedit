@@ -3524,7 +3524,11 @@
     "applyToSelectedLinesX": "Righe selezionate ({0})",
     "applyToAllLinesX": "Tutte le righe ({0})",
     "updateAllXAvailable": "Aggiorna tutto ({0})",
-    "updatingXOfY": "Aggiornamento {0}/{1}..."
+    "updatingXOfY": "Aggiornamento {0}/{1}...",
+    "doNotAskAgain": "Non chiedere più (modifica in Gestisci plugin)",
+    "applyPluginsTo": "Applica plugin a",
+    "askEachTime": "Chiedi ogni volta",
+    "allLines": "Tutte le righe"
   },
   "help": {
     "aboutSubtitleEdit": "Info su Subtitile Edit",
