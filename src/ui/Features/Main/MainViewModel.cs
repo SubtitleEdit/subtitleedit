@@ -18052,6 +18052,13 @@ public partial class MainViewModel :
 
         _fullScreenVideoPlayerControl = InitVideoPlayer.MakeVideoPlayer();
         _fullScreenVideoPlayerControl.IsFullScreen = true;
+        // Bare MakeVideoPlayer() is also how dialogs build their own throwaway preview, so the
+        // letterboxing bars (main-preview only, see LibMpvDynamicPlayer.IsMainPreviewPlayer) need
+        // to be opted into explicitly here, the one case where a bare call IS the main preview.
+        if (_fullScreenVideoPlayerControl.VideoPlayer is LibMpvDynamicPlayer mpv)
+        {
+            mpv.IsMainPreviewPlayer = true;
+        }
         // The fullscreen player is created bare (not via MakeLayoutVideoPlayer), so wire the
         // pause/stop cursor-freeze here as well (issue #12233).
         _fullScreenVideoPlayerControl.PlayPauseRequested += willPause =>

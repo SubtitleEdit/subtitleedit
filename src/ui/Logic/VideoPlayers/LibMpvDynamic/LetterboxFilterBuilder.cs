@@ -49,9 +49,10 @@ public static class LetterboxFilterBuilder
     /// <summary>
     /// A stored percentage can be stale (from an old settings file, or a future SE version that
     /// allows a wider range) - clamp to a sane 0-50% instead of letting a bad value collapse or
-    /// invert the picture.
+    /// invert the picture. Public: <see cref="Ffmpeg.FfmpegSoftwareControl"/> reuses this for its
+    /// own (non-mpv) bar rendering, so both backends agree on what a given percentage means.
     /// </summary>
-    private static double ClampFraction(double percent)
+    public static double ClampFraction(double percent)
     {
         if (double.IsNaN(percent) || percent <= 0)
         {

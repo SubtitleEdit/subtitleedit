@@ -365,7 +365,6 @@ public static class InitNativeMacMenu
         videoItems.Items.Add(new NativeMenuItemSeparator());
         videoItems.Items.Add(Item(Clean(l.GenerateBurnIn), v => v.ShowVideoBurnInCommand));
         videoItems.Items.Add(Item(Clean(l.GenerateTransparent), v => v.ShowVideoTransparentSubtitlesCommand));
-        videoItems.Items.Add(Item(Clean(Se.Language.Video.LetterboxingDotDotDot), v => v.ShowVideoLetterboxCommand));
         videoItems.Items.Add(Item(Clean(Se.Language.Video.GenerateBlankVideoDotDotDot), v => v.VideoGenerateBlankCommand));
         videoItems.Items.Add(Item(Clean(Se.Language.Video.EmbedSubtitlesDotDotDot), v => v.VideoEmbedCommand));
         videoItems.Items.Add(new NativeMenuItemSeparator());
@@ -406,6 +405,8 @@ public static class InitNativeMacMenu
 
         videoMoreList.Add(Toggle(Clean(l.SmpteTiming), v => v.ToggleSmpteTimingCommand,
             v => v.IsSmpteTimingEnabled, nameof(MainViewModel.IsSmpteTimingEnabled)));
+
+        videoMoreList.Add(Item(Clean(lVideo.LetterboxingDotDotDot), v => v.ShowVideoLetterboxCommand));
 
         var videoMoreItems = new NativeMenu();
         foreach (var item in videoMoreList.OrderBy(i => i.Header?.TrimStart('_', ' ')))

@@ -2,7 +2,6 @@ using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.LogicalTree;
 using Nikse.SubtitleEdit.Features.Video.Letterbox;
-using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,13 +24,13 @@ public class LetterboxWindowTests : IDisposable
         _windows.Clear();
     }
 
+    private static SettingsScope NewScope() => new(
+        "Video.Letterbox.Enabled",
+        "Video.Letterbox.TopHeightPercent",
+        "Video.Letterbox.BottomHeightPercent");
+
     private LetterboxWindow BuildWindow()
     {
-        using var _ = new SettingsScope(
-            "Video.Letterbox.Enabled",
-            "Video.Letterbox.TopHeightPercent",
-            "Video.Letterbox.BottomHeightPercent");
-
         var vm = new LetterboxViewModel();
         vm.Initialize(null);
         var window = new LetterboxWindow(vm);
@@ -42,6 +41,7 @@ public class LetterboxWindowTests : IDisposable
     [AvaloniaFact]
     public void Window_Constructs()
     {
+        using var _ = NewScope();
         var window = BuildWindow();
 
         Assert.NotNull(window.Content);
@@ -50,6 +50,7 @@ public class LetterboxWindowTests : IDisposable
     [AvaloniaFact]
     public void Window_HasEnabledCheckBoxAndBothSliders()
     {
+        using var _ = NewScope();
         var window = BuildWindow();
 
         Assert.Single(window.GetLogicalDescendants().OfType<CheckBox>());
@@ -59,6 +60,7 @@ public class LetterboxWindowTests : IDisposable
     [AvaloniaFact]
     public void Window_HasApplyOkAndCancelButtons()
     {
+        using var _ = NewScope();
         var window = BuildWindow();
 
         // CheckBox is itself an Avalonia Button (via ToggleButton), so counting Button-typed

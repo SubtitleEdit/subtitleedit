@@ -7,6 +7,7 @@ public class LanguageVideoLetterbox
     public string TopHeight { get; set; }
     public string BottomHeight { get; set; }
     public string Info { get; set; }
+    public string NotSupportedByCurrentPlayer { get; set; }
 
     public LanguageVideoLetterbox()
     {
@@ -15,5 +16,6 @@ public class LanguageVideoLetterbox
         TopHeight = "Top bar height";
         BottomHeight = "Bottom bar height";
         Info = "Adds black bars over the video preview - a visual overlay only, the video file itself is never changed. Subtitles still render on top of the bars.";
+        NotSupportedByCurrentPlayer = "Not supported with the current video player. Switch to mpv or the ffmpeg player to use letterboxing.";
     }
 }

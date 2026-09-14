@@ -141,11 +141,59 @@ public class FfmpegSoftwareControl : Control
 
         try
         {
+            RenderLetterboxRibbon(context, videoRect);
+        }
+        catch (Exception exception)
+        {
+            System.Diagnostics.Debug.WriteLine($"ffmpeg letterbox ribbon error: {exception.Message}");
+        }
+
+        try
+        {
             RenderOverlay(context, player, videoRect);
         }
         catch (Exception exception)
         {
             System.Diagnostics.Debug.WriteLine($"ffmpeg overlay error: {exception.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Draws the Letterboxing ribbon's virtual black bars (#14845) over the video picture, before
+    /// the subtitle overlay below. mpv gets this layering for free from its own "vf" chain
+    /// (<see cref="LibMpvDynamic.LetterboxFilterBuilder"/>/<see cref="LibMpvDynamic.LibMpvDynamicPlayer.ApplyLetterboxRibbon"/>),
+    /// but this control composites the picture and the subtitle text as two independent Avalonia
+    /// draw passes rather than through a native filter/subtitle pipeline, so the bars need their
+    /// own draw call here, placed between the two.
+    /// </summary>
+    private static void RenderLetterboxRibbon(DrawingContext context, Rect videoRect)
+    {
+        var settings = Se.Settings.Video.Letterbox;
+        if (!settings.Enabled || videoRect.Height <= 0)
+        {
+            return;
+        }
+
+        IBrush brush;
+        try
+        {
+            brush = new SolidColorBrush(Color.Parse(string.IsNullOrWhiteSpace(settings.Color) ? "#000000" : settings.Color));
+        }
+        catch (FormatException)
+        {
+            brush = Brushes.Black;
+        }
+
+        var topHeight = videoRect.Height * LibMpvDynamic.LetterboxFilterBuilder.ClampFraction(settings.TopHeightPercent);
+        if (topHeight > 0)
+        {
+            context.FillRectangle(brush, new Rect(videoRect.X, videoRect.Y, videoRect.Width, topHeight));
+        }
+
+        var bottomHeight = videoRect.Height * LibMpvDynamic.LetterboxFilterBuilder.ClampFraction(settings.BottomHeightPercent);
+        if (bottomHeight > 0)
+        {
+            context.FillRectangle(brush, new Rect(videoRect.X, videoRect.Bottom - bottomHeight, videoRect.Width, bottomHeight));
         }
     }
 
