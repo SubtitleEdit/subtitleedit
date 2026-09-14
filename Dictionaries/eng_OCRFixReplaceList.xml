@@ -3404,6 +3404,10 @@
 		<RegEx find="\bl([A-Z]+)\b" spellCheck="I$1" replaceWith="I$1" /> 
     	<RegEx find="\b([A-Z]+)l\b" spellCheck="$1I" replaceWith="$1I" />
     	<RegEx find="\b([A-Z]+)l([A-Z]+)\b" spellCheck="$1I$2" replaceWith="$1I$2" /> <!-- SlNG to SING -->
+		<!-- All-caps word with any number of lowercase l (nOCR reads I as l in sans-serif fonts, #14885): -->
+		<!-- replace every l at once, so MlSSlSSlPPl and GRlNDlNG are repaired too. Needs at least one   -->
+		<!-- uppercase letter and one l, and the spell check gate keeps real words like "Al" untouched.  -->
+		<RegEx find="\b((?=[A-Zl]*[A-Z])(?=[A-Zl]*l)[A-Zl]{2,})\b" replaceAllFrom="l" replaceAllTo="I" spellCheck="$1" replaceWith="$1" />
 		<RegEx find="\b([a-zæøåöääöéèàùâêîôûëï]+)II([a-zæøåöääöéèàùâêîôûëï]+)\b" spellCheck="$1ll$2" replaceWith="$1ll$2" /> <!-- chaIIenge → challenge -->
 		<RegEx find="\b([a-zæøåöääöéèàùâêîôûëï]+)I([a-zæøåöääöéèàùâêîôûëï]+)\b" spellCheck="$1l$2" replaceWith="$1l$2" /> <!-- traiIing → trailing -->		
 		<RegEx find="\bI([a-zæøåöääöéèàùâêîôûëï]{3,})\b" spellCheck="l$1" replaceWith="l$1" /> <!-- Iaunch → launch, but NOT Is -->
