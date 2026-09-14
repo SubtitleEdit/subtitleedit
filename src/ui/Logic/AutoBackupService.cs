@@ -71,7 +71,9 @@ public partial class AutoBackupService : IAutoBackupService
             }
 
             var saveFormat = vm.SelectedSubtitleFormat;
-            var subtitle = new Subtitle(vm.GetUpdateSubtitle(), false);
+            // GetSaveSubtitle: a backup is restored by opening it as a file, so it must hold the
+            // time codes a save would write (video offset included).
+            var subtitle = new Subtitle(vm.GetSaveSubtitle(), false);
             Task.Run(() =>
             {
                 try

@@ -23,7 +23,7 @@ public partial class SetVideoOffsetViewModel : ObservableObject
     // "Apply" and "OK" hand the offset to the caller instead of the caller reading it off a
     // closed dialog, so the window can stay open and be applied again with a new value.
     private Action<TimeSpan, bool, bool>? _applyCallback;
-    private Action? _resetCallback;
+    private Action<bool>? _resetCallback;
 
     // Whether the current inputs have already been applied, so OK after Apply just closes. In
     // "relative to current video position" mode a re-apply is not idempotent while the video
@@ -39,7 +39,7 @@ public partial class SetVideoOffsetViewModel : ObservableObject
         TimeOffset = TimeSpan.FromMilliseconds(Se.Settings.General.CurrentVideoOffsetInMs);
     }
 
-    public void Initialize(Action<TimeSpan, bool, bool> applyCallback, Action resetCallback)
+    public void Initialize(Action<TimeSpan, bool, bool> applyCallback, Action<bool> resetCallback)
     {
         _applyCallback = applyCallback;
         _resetCallback = resetCallback;
@@ -79,7 +79,9 @@ public partial class SetVideoOffsetViewModel : ObservableObject
     private void Reset()
     {
         TimeOffset = TimeSpan.Zero;
-        _resetCallback?.Invoke();
+        // Reset honours the checkbox like Apply does: with "keep existing time codes" the file's
+        // time codes stay as they are, without it they go back to the video-relative ones.
+        _resetCallback?.Invoke(KeepTimeCodes);
     }
 
     [RelayCommand]

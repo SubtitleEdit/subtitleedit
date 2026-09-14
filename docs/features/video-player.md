@@ -69,6 +69,8 @@ You can undock the video player into a separate window for multi-monitor setups:
 
 You can open a secondary subtitle on the video player and remove it again from the Video menu. This is useful when checking a translation against the original subtitle while previewing video playback.
 
+**Video → Open second subtitle file...** sits in the same spot as in Subtitle Edit 4, right after the open/close video items (it is shown while a video is loaded), and **Remove second subtitle file** appears below it while one is shown. Only one second subtitle is shown at a time: opening another file replaces the current one, and the file picker starts at the current second subtitle, so re-opening it is also the way to adjust its style without removing it first.
+
 ## Embedded Subtitles
 
 Use [Embedded Subtitles](embedded-subtitles.md) to add, remove, preview, and edit Matroska/WebM embedded subtitle tracks.
@@ -113,5 +115,11 @@ The Video menu also includes:
 
 Under **Video → More** (shown while a video is loaded):
 
-- **Set video offset...** - shift video playback relative to the subtitle timing.
+- **Chapters...** - edit, import, export and write the video's chapter marks, see [Chapters](chapters.md).
+- **Cut video...** - cut or merge segments of the video, see [Cut Video](cut-video.md).
+- **Find voices in video and clone...** - find the speakers in the video, clone each voice and set up the cast for dubbing, see [Text to Speech](text-to-speech.md#find-voices-in-video-and-clone).
+- **Re-encode video for better subtitling...** - see [Re-encode Video](re-encode-video.md).
+- **Remux video...** - repackage the video with new audio tracks and soft subtitles, see [Remux Video](remux-video.md).
+- **Set video offset...** - line the subtitle time codes up with a video whose burned-in time code does not start at zero (a broadcast master starting at 10:00:00:00, for example). The grid and every saved or exported file show the time codes with the offset added; the video, waveform and tools keep working on the video-relative times underneath. **Keep existing time codes (do not add video offset)** decides what the offset changes: leave it unchecked when the file is video-relative and should get the offset added to its time codes (the file is then modified), check it when the file already carries the offset and only the video needs lining up (the file is left as it is). **Reset** removes the offset the same way. The dialog keeps a drop-down of recently used offsets next to the time code box (the last ten you applied; 1 hour and 10 hours are offered until you have applied your own) - picking one fills the box. While an offset is active the menu item reads **Update video offset from ...** instead, and the offset is remembered with the file in the recent files list.
 - **SMPTE timing (non-integer frame rate)** - toggle SMPTE-style timing display when available.
+- **Toggle waveform toolbar** - show or hide the toolbar above the waveform.
