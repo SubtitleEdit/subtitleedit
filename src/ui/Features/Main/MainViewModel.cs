@@ -8248,24 +8248,36 @@ public partial class MainViewModel :
 
     private List<PluginShortcutEntry> BuildPluginShortcutEntries()
     {
+        var enabled = GetInstalledPlugins()
+            .Where(p => !Se.Settings.Plugins.DisabledPluginNames.Contains(p.Manifest.Name))
+            .OrderBy(p => p.Manifest.Name);
+        return BuildPluginShortcutEntries(enabled, plugin => new AsyncRelayCommand(() => RunPlugin(plugin)));
+    }
+
+    /// <summary>
+    /// One entry per plugin, in the given order. Names that differ only in punctuation or
+    /// spacing ("Foo-Bar" and "Foo Bar") map to the same action name, so the later one gets a
+    /// numeric suffix rather than being dropped - the menus list these entries, so a dropped
+    /// entry would be a plugin missing from the Plugins menu.
+    /// </summary>
+    internal static List<PluginShortcutEntry> BuildPluginShortcutEntries(IEnumerable<InstalledPlugin> enabledPlugins, Func<InstalledPlugin, IRelayCommand> makeCommand)
+    {
         var result = new List<PluginShortcutEntry>();
         var seen = new HashSet<string>(StringComparer.Ordinal);
-        foreach (var plugin in GetInstalledPlugins()
-                     .Where(p => !Se.Settings.Plugins.DisabledPluginNames.Contains(p.Manifest.Name))
-                     .OrderBy(p => p.Manifest.Name))
+        foreach (var plugin in enabledPlugins)
         {
-            var actionName = GetPluginShortcutActionName(plugin.Manifest.Name);
-            if (!seen.Add(actionName))
+            var baseName = GetPluginShortcutActionName(plugin.Manifest.Name);
+            var actionName = baseName;
+            for (var suffix = 2; !seen.Add(actionName); suffix++)
             {
-                continue;
+                actionName = baseName + "_" + suffix;
             }
 
-            var captured = plugin;
             result.Add(new PluginShortcutEntry
             {
                 Plugin = plugin,
                 ActionName = actionName,
-                Command = new AsyncRelayCommand(() => RunPlugin(captured)),
+                Command = makeCommand(plugin),
             });
         }
 
