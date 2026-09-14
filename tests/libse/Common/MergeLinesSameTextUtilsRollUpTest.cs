@@ -84,5 +84,48 @@ namespace LibSETests.Common
             var result = MergeLinesSameTextUtils.MergeRollUpCaptions(s, 250);
             Assert.Equal(2, result.Paragraphs.Count);
         }
+
+        [Fact]
+        public void FirstCaptionLongerThanMaxLinesDoesNotProduceZeroLengthChunk()
+        {
+            var nl = System.Environment.NewLine;
+            var s = new Subtitle();
+            s.Paragraphs.Add(new Paragraph("A" + nl + "B" + nl + "C", 0, 1000));
+            s.Paragraphs.Add(new Paragraph("B" + nl + "C" + nl + "D", 1000, 2000));
+            s.Paragraphs.Add(new Paragraph("C" + nl + "D" + nl + "E", 2000, 3000));
+
+            var result = MergeLinesSameTextUtils.MergeRollUpCaptions(s, 250);
+
+            Assert.Equal(3, result.Paragraphs.Count);
+            Assert.Equal("A" + nl + "B", result.Paragraphs[0].Text);
+            Assert.Equal(0, result.Paragraphs[0].StartTime.TotalMilliseconds);
+            Assert.Equal(1000, result.Paragraphs[0].EndTime.TotalMilliseconds);
+            Assert.Equal("C" + nl + "D", result.Paragraphs[1].Text);
+            Assert.Equal(1000, result.Paragraphs[1].StartTime.TotalMilliseconds);
+            Assert.Equal(2000, result.Paragraphs[1].EndTime.TotalMilliseconds);
+            Assert.Equal("E", result.Paragraphs[2].Text);
+            Assert.Equal(2000, result.Paragraphs[2].StartTime.TotalMilliseconds);
+            Assert.Equal(3000, result.Paragraphs[2].EndTime.TotalMilliseconds);
+        }
+
+        [Fact]
+        public void BlankLineInsideCaptionDoesNotLoseFollowingLine()
+        {
+            var nl = System.Environment.NewLine;
+            var s = new Subtitle();
+            s.Paragraphs.Add(new Paragraph("A", 0, 1000));
+            s.Paragraphs.Add(new Paragraph("A" + nl + nl + "B", 1000, 2000));
+            s.Paragraphs.Add(new Paragraph("B" + nl + "C", 2000, 3000));
+
+            var result = MergeLinesSameTextUtils.MergeRollUpCaptions(s, 250);
+
+            Assert.Equal(2, result.Paragraphs.Count);
+            Assert.Equal("A" + nl + "B", result.Paragraphs[0].Text);
+            Assert.Equal(0, result.Paragraphs[0].StartTime.TotalMilliseconds);
+            Assert.Equal(2000, result.Paragraphs[0].EndTime.TotalMilliseconds);
+            Assert.Equal("C", result.Paragraphs[1].Text);
+            Assert.Equal(2000, result.Paragraphs[1].StartTime.TotalMilliseconds);
+            Assert.Equal(3000, result.Paragraphs[1].EndTime.TotalMilliseconds);
+        }
     }
 }
