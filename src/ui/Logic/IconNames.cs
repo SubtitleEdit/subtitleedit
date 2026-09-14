@@ -113,6 +113,7 @@ internal class IconNames
     public const string Spellcheck = "mdi-spellcheck";
     public const string StopCircle = "mdi-stop-circle";
     public const string SwapVertical = "mdi-swap-vertical";
+    public const string PuzzleOutline = "mdi-puzzle-outline";
     public const string Sync = "mdi-sync";
     public const string TimerMinus = "mdi-timer-minus-outline";
     public const string TimerSettings = "mdi-timer-cog-outline";

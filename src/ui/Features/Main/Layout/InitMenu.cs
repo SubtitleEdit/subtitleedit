@@ -1179,10 +1179,7 @@ public static class InitMenu
     {
         vm.MenuPlugins.Items.Clear();
 
-        var enabledPlugins = vm.GetInstalledPlugins()
-            .Where(p => !Se.Settings.Plugins.DisabledPluginNames.Contains(p.Manifest.Name))
-            .OrderBy(p => p.Manifest.Name)
-            .ToList();
+        var enabledPlugins = vm.PluginShortcutEntries;
         if (enabledPlugins.Count == 0)
         {
             vm.MenuPlugins.Items.Add(new MenuItem
@@ -1193,14 +1190,15 @@ public static class InitMenu
         }
         else
         {
-            foreach (var plugin in enabledPlugins)
+            // Per-plugin command so the gesture lookup in DisplayShortcuts (by command
+            // reference) finds the plugin's own shortcut.
+            foreach (var entry in enabledPlugins)
             {
                 vm.MenuPlugins.Items.Add(new MenuItem
                 {
-                    Header = plugin.Manifest.Name,
-                    Command = vm.RunPluginCommand,
-                    CommandParameter = plugin,
-                    IsEnabled = plugin.CanRun,
+                    Header = entry.Plugin.Manifest.Name,
+                    Command = entry.Command,
+                    IsEnabled = entry.Plugin.CanRun,
                 });
             }
         }

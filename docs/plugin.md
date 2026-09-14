@@ -136,7 +136,7 @@ The manifest lets Subtitle Edit list the plugin in its menus without launching i
 | `author`       | no       | |
 | `url`          | no       | Project/home page. |
 | `menu`         | no       | Intended menu group: `Tools` (default), `File`, `Sync`, `Translate`, `SpellCheck`, or `Assa`. Currently every plugin is listed under a single top-level **Plugins** menu; `menu`-based routing is planned. |
-| `shortcut`     | no       | Suggested keyboard shortcut. |
+| `shortcut`     | no       | Suggested keyboard shortcut, e.g. `Control+Shift+U` (modifiers `Control`/`Ctrl`, `Shift`, `Alt`, `Win`/`Cmd` plus one key). Applied as the default binding the first time the plugin is seen, unless the chord is already taken. Users can change it in Options > Shortcuts > Plugins. |
 | `minSeVersion` | no       | Minimum supported Subtitle Edit version. |
 | `icon`         | no       | Icon file name, relative to the plugin folder. |
 | `executables`  | yes\*    | Native executable file names per OS, relative to the plugin folder. |

@@ -805,10 +805,7 @@ public static class InitNativeMacMenu
 
         menu.Items.Clear();
 
-        var enabled = vm.GetInstalledPlugins()
-            .Where(p => !Se.Settings.Plugins.DisabledPluginNames.Contains(p.Manifest.Name))
-            .OrderBy(p => p.Manifest.Name)
-            .ToList();
+        var enabled = vm.PluginShortcutEntries;
 
         if (enabled.Count == 0)
         {
@@ -816,11 +813,16 @@ public static class InitNativeMacMenu
         }
         else
         {
-            foreach (var plugin in enabled)
+            var shortcuts = ShortcutsMain.GetUsedShortcuts(vm);
+            foreach (var entry in enabled)
             {
-                var pluginItem = new NativeMenuItem(plugin.Manifest.Name) { IsEnabled = plugin.CanRun };
-                var captured = plugin;
-                pluginItem.Click += (_, _) => vm.RunPluginCommand.Execute(captured);
+                var pluginItem = new NativeMenuItem(entry.Plugin.Manifest.Name)
+                {
+                    IsEnabled = entry.Plugin.CanRun,
+                    Gesture = FindGesture(entry.Command, shortcuts),
+                };
+                var captured = entry.Command;
+                pluginItem.Click += (_, _) => captured.Execute(null);
                 menu.Items.Add(pluginItem);
             }
         }
@@ -873,6 +875,10 @@ public static class InitNativeMacMenu
         var shortcuts = ShortcutsMain.GetUsedShortcuts(vm);
         foreach (var (getCmd, item) in state.GestureItems)
             item.Gesture = FindGesture(getCmd(vm), shortcuts);
+
+        // Plugin items are rebuilt rather than tracked in GestureItems, so refresh
+        // them here too for the Shortcuts window to update their gestures.
+        UpdatePluginsMenu(vm);
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
