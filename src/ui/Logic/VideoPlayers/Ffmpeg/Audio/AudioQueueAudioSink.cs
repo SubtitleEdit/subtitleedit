@@ -212,6 +212,16 @@ public sealed unsafe partial class AudioQueueAudioSink : IAudioSink
         }
     }
 
+    /// <summary>
+    /// The sample base that makes the played position equal to the bytes queued so far when the
+    /// queue is restarted after running dry: the silence it played meanwhile is skipped, nothing
+    /// already played is forgotten.
+    /// </summary>
+    private static double SampleBaseAfterUnderrun(double currentSampleTime, long bytesWritten, int blockAlign)
+    {
+        return currentSampleTime - bytesWritten / (double)blockAlign;
+    }
+
     /// <summary>Queue clock in sample frames; the last known value when the queue is not running.</summary>
     private double CurrentSampleTime()
     {
@@ -277,10 +287,12 @@ public sealed unsafe partial class AudioQueueAudioSink : IAudioSink
 
                 if (_inFlight == 0)
                 {
-                    // The queue was starved: whatever the clock did meanwhile was silence, so the
-                    // audio time of the new run starts at the clock's current value.
-                    _sampleBase = CurrentSampleTime();
-                    _bytesWritten = 0;
+                    // The queue was starved: whatever the clock did meanwhile was silence, so
+                    // re-base the clock to now - but keep the bytes played so far in the base
+                    // (they stay counted in _bytesWritten, which only Reset clears). PlayedSeconds
+                    // must stay continuous: the player anchors it once per seek, so restarting it
+                    // from zero would jump the media clock back by everything played since.
+                    _sampleBase = SampleBaseAfterUnderrun(CurrentSampleTime(), _bytesWritten, _blockAlign);
                 }
 
                 buffer->mAudioDataByteSize = (uint)count;
