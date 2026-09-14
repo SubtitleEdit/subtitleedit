@@ -80,14 +80,17 @@ public partial class BinaryMoveCaptionsViewModel : ObservableObject
         if (preset != null)
         {
             SelectedLetterboxRatio = preset;
-            if (preset.IsCustom)
-            {
-                BarHeight = Math.Max(0, currentBarHeight);
-            }
+        }
+
+        if (SelectedLetterboxRatio.IsCustom)
+        {
+            BarHeight = Math.Max(0, currentBarHeight);
         }
         else
         {
-            // Screen size was unknown in the constructor - recompute the preset's bar height now.
+            // Screen size was unknown in the constructor, so the bar height computed there is 0.
+            // Recompute it explicitly: the property setter above is a no-op (and never raises the
+            // change callback) when the preset is the constructor's default 2.39:1 item.
             OnSelectedLetterboxRatioChanged(SelectedLetterboxRatio);
         }
 
