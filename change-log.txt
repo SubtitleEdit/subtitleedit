@@ -3,6 +3,65 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.3.0-beta1 (14th of September 2026)
+
+* Add FFmpeg video player (FFmpeg.AutoGen) with VideoToolbox (macOS) and D3D11VA/DXVA2 (Windows) hardware decoding
+* Add "Remux video" (Video > More) for video, multi-track audio and soft subtitles - thx ghostminhtoan
+* Add Text to speech voice manager: waveform, transcripts, copy voices between engines and voice packs
+* Add "Rename voice..." to the Text to speech voice combo box context menu
+* Add Voikko (libvoikko) backend for Finnish spell checking, bundled in Flatpak and macOS builds
+* Add layouts 12 and 13 with the text box below the video player - thx tuming2025
+* Add "Font scale (%)" setting next to UI scale - thx tuming2025
+* Add auto-backup of Settings.json with a Settings tab in "Restore auto-backup"
+* Add shortcuts to move selected lines X ms back/forward - thx gambar3
+* Add per-plugin shortcuts in Options > Shortcuts (like SE 4)
+* Add "Do not ask again" to the plugin apply-to-which-lines prompt - thx fointypinger
+* Add "Show formatting, keep non-visual tags" subtitle grid mode
+* Add "Adjust durations...", "Apply duration limits..." and "Change formatting..." to the "Selected lines" context menu
+* Add settings UI for the hidden rc-stage settings (text-navigation shortcuts, Google Cloud speech to text) - thx kadrimarzouki
+* Add "use only front center channel" setting for 5.1 audio - thx willian-as
+* Add calculator button (frames to milliseconds) in "Apply minimum gap" - thx kadrimarzouki
+* Add configurable spell check unknown-word highlight color - thx mnerec
+* Add SE 4 EBU STL "Box" toggle to the grid and text box context menus, also drawn in the video preview
+* Add Transport Stream output settings to batch convert (SE 4 "TS settings...")
+* Add "Add folder recursive..." to batch convert
+* Add "Move captions" and "Remove fade in/out" to the image-based edit (BDSup2Sub features)
+* Add engine settings/info dialog for every video OCR engine
+* Add merge of roll-up (scrolling) captions to "Merge lines with same text"
+* AI review + Auto-translate: edit the suggested text in place in the grid
+* AI review: show the previous and next line under the selected suggestion - thx fraternl
+* Auto-translate: keep DeepL's sentence split on the row boundary - thx fraternl
+* Netflix check: allow applying the "Two lines maximum" fix - thx gambar3
+* Settings: redesign toolbar settings as an icon toggle grid - thx pdjdev
+* Accessible names for inputs, lists and grid rows in all tool windows - thx Shaima-Almarzooqi
+* Wire the help shortcut in 110 more dialogs
+* Video player: show the GL renderer in the badge and log software-rendering fallback - thx zbcoding
+* macOS: new macOS-style rounded app icon - thx nitrodox
+* Improve Turkish (Windows-1254) encoding auto-detection - thx feuer133
+* Faster language auto-detection (single tokenizing pass)
+* Source-generated LibraryImport and async file I/O in view models - thx ivandrofly
+* Fix edit box growing when a long text is pasted - thx kadrimarzouki
+* Fix single-line-length labels pushing the main view layout on long texts - thx kadrimarzouki
+* Fix split line losing ASSA tags and keeping the dialog dash on tagged lines - thx VaLvOnAuTa1981
+* Fix AI review prompt editor not scrollable, so long prompts could not be saved - thx Morv55555
+* Fix burn-in failing in ffmpeg when generating a video without subtitles - thx zbcoding
+* Fix spell check flagging valid Dutch words (WeCantSpell COMPOUNDRULE comment bug) - thx FredOldenburg
+* Fix nOCR double-detecting a glyph via expanded match on neighbour ink - thx Lukewarm1141
+* Fix OCR replace lists turning "toi" into "tol" (trailing i->l rule needs a 3-letter stem) - thx fraternl
+* Fix waveform min-gap clamp landing one frame early with snap to frames
+* Fix EBU STL teletext line width (37) being applied in the grid for open subtitling files
+* Fix open-subtitling EBU STL preview using a different row count than the writer
+* Fix source view selection with extra original rows - thx pdjdev
+* Fix missing gap between the text and original text boxes
+* Track pickers: show subtitle count with thousands separator
+* Docs: bring the user documentation up to date with 5.2, explain start-time sorting in Join subtitles
+* Update Croatian OCR fix replace list - thx diomed
+* Update Italian translation - thx bovirus
+* Update Korean translation - thx 12si27
+* Update Turkish translation - thx bilimiyorum
+
+-----------------------------------------------------------------------------------------------------
+
 v5.2.0 (10th of September 2026)
 
 Subtitle Edit 5.2 collects the work of 32 betas and 7 release candidates.
