@@ -289,7 +289,8 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.Service
                             if (last != null)
                             {
                                 var diff = l.Vertices.Min(p => p.X) - last.Vertices.Max(p => p.X);
-                                if (diff > spaceThreshold || last.DetectedBreak == "SPACE" || last.DetectedBreak == "EOL_SURE_SPACE" || last.DetectedBreak == "LINE_BREAK")
+                                // SURE_SPACE is Vision's "very wide space" break; it marks a word boundary like SPACE does.
+                                if (diff > spaceThreshold || last.DetectedBreak == "SPACE" || last.DetectedBreak == "SURE_SPACE" || last.DetectedBreak == "EOL_SURE_SPACE" || last.DetectedBreak == "LINE_BREAK")
                                 {
                                     sbLine.Append(" ");
                                 }
