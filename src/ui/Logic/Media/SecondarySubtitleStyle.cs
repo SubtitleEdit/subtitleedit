@@ -15,5 +15,4 @@ public class SecondarySubtitleStyle
     public bool FontBold { get; set; }
     public FontBoxType FontBoxType { get; set; } = FontBoxType.None;
     public string AlignmentCode { get; set; } = "8";
-    public string JustifyCode { get; set; } = "auto";
 }

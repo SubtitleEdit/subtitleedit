@@ -9,7 +9,6 @@ using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
-using Nikse.SubtitleEdit.Features.Options.Settings;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 using Nikse.SubtitleEdit.Features.Sync.VisualSync;
 using Nikse.SubtitleEdit.Features.Video.BurnIn;
@@ -37,11 +36,9 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<SubtitleDisplayItem> _paragraphs;
     [ObservableProperty] private int _selectedParagraphIndex = -1;
     [ObservableProperty] private AlignmentItem _selectedFontAlignment;
-    [ObservableProperty] private MpvJustifyDisplay _selectedJustify;
 
     public ObservableCollection<FontBoxItem> FontBoxTypes { get; }
     public ObservableCollection<AlignmentItem> FontAlignments { get; }
-    public ObservableCollection<MpvJustifyDisplay> JustifyItems { get; }
     public VideoPlayerControl VideoPlayerControl { get; set; }
     public ComboBox ComboBoxParagraphs { get; set; }
 
@@ -82,8 +79,6 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
         SelectedFontBoxType = FontBoxTypes[0];
         FontAlignments = new ObservableCollection<AlignmentItem>(AlignmentItem.Alignments);
         SelectedFontAlignment = AlignmentItem.Alignments[1]; // an8 = Top-center
-        JustifyItems = new ObservableCollection<MpvJustifyDisplay>(MpvJustifyDisplay.GetAll());
-        SelectedJustify = JustifyItems[0]; // auto - matches whatever the alignment already does
         Paragraphs = new ObservableCollection<SubtitleDisplayItem>();
 
         _tempSubtitleFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".ass");
@@ -122,7 +117,6 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
             FontBold = FontBold,
             FontBoxType = SelectedFontBoxType.BoxType,
             AlignmentCode = SelectedFontAlignment.Code,
-            JustifyCode = SelectedJustify.Code,
         };
         OkPressed = true;
         Window?.Close();
@@ -157,7 +151,6 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
             FontBold = previousStyle.FontBold;
             SelectedFontBoxType = FontBoxTypes.FirstOrDefault(f => f.BoxType == previousStyle.FontBoxType) ?? FontBoxTypes[0];
             SelectedFontAlignment = FontAlignments.FirstOrDefault(a => a.Code == previousStyle.AlignmentCode) ?? FontAlignments[1];
-            SelectedJustify = JustifyItems.FirstOrDefault(j => j.Code == previousStyle.JustifyCode) ?? JustifyItems[0];
         }
 
         Dispatcher.UIThread.Post(() =>
@@ -367,18 +360,12 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
                 styles.Add(style);
                 result.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(_subtitle.Header, styles);
 
-                // Copies, not the shared _secondarySubtitle.Paragraphs objects: this branch runs
-                // every 500 ms while the dialog stays open (StartSubtitleTimer), and
-                // SecondarySubtitleJustifier's \pos override would otherwise stack up on the
-                // same paragraph text a little more on every tick.
-                var secondaryParagraphs = _secondarySubtitle.Paragraphs.Select(p => new Paragraph(p)).ToList();
-                foreach (var p in secondaryParagraphs)
+                foreach (var p in _secondarySubtitle.Paragraphs)
                 {
                     p.Extra = style.Name;
                     p.Layer = -1;
+                    result.Paragraphs.Add(p);
                 }
-                SecondarySubtitleJustifier.Apply(secondaryParagraphs, style, SelectedJustify.Code, width, height);
-                result.Paragraphs.AddRange(secondaryParagraphs);
             }
             else
             {
@@ -402,7 +389,6 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
             {
                 p.Extra = style.Name;
             }
-            SecondarySubtitleJustifier.Apply(result.Paragraphs, style, SelectedJustify.Code, width, height);
         }
 
         return result;
