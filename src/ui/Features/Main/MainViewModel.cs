@@ -863,6 +863,13 @@ public partial class MainViewModel :
         }
     }
     public MenuItem AudioTraksMenuItem { get; set; }
+
+    /// <summary>
+    /// Re-reads the milliseconds and shortcut keys shown on the waveform toolbar's "move lines"
+    /// buttons. Set by InitWaveform on every build; the custom slots are changed in the Shortcuts
+    /// window, which doesn't rebuild the layout.
+    /// </summary>
+    public Action? RefreshWaveformMoveLinesButtons { get; set; }
     public TextWithSubtitleSyntaxHighlightingConverter SubtitleDataGridSyntaxHighlighting { get; internal set; }
 
     public MainViewModel(
@@ -1355,6 +1362,7 @@ public partial class MainViewModel :
 
         UpdateSurroundWithMenuItems();
         UpdateCustomSearchMenuItems();
+        RefreshWaveformMoveLinesButtons?.Invoke();
     }
 
     [RelayCommand]

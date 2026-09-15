@@ -21,6 +21,13 @@ public enum SeWaveformToolbarItemType
     SetStart = 6,
     SetEnd = 7,
     SetStartAndOffsetTheRest = 8,
+
+    // "Move lines X ms" button groups (#14789): back/forward buttons for the global step and the
+    // two custom-milliseconds slots of one scope, the same commands as the shortcuts.
+    MoveSelectedLines = 23,
+    MoveSelectedLinesAndFollowing = 24,
+    MoveAllLines = 25,
+
     VerticalZoom = 9,
     HorizontalZoom = 10,
     VideoPositionSlider = 11,

@@ -259,6 +259,7 @@ When enabled (toggle via shortcut or **Options → Shortcuts → Toggle waveform
 | **Set start + offset rest** | Set start time and shift all following subtitles |
 | **Set start** | Set the start time of the selected subtitle |
 | **Set end** | Set the end time of the selected subtitle |
+| **Move selected lines** / **Move selected lines and all following** / **Move all lines** | Back/forward buttons (off by default) that shift the lines by the step from **Options → Settings → General** and the two custom milliseconds set in **Options → Shortcuts**; durations are kept and nothing moves before 00:00:00.000 |
 | **Remove blank lines** | Remove empty subtitle lines |
 | **Horizontal zoom slider** | Adjust horizontal zoom (0.1× – 5×; Alt+Scroll zooms up to 20×) |
 | **Vertical zoom slider** | Adjust vertical zoom (0.1× – 5×; Shift+Scroll zooms up to 20×) |
