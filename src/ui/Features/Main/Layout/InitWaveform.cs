@@ -506,6 +506,32 @@ public class InitWaveform
         };
         Attached.SetIcon(buttonSetStartAndOffsetTheRest, IconNames.ArrowExpandRight);
 
+        // "Move lines X ms" groups (#14789): back buttons, a scope icon, then forward buttons. The
+        // custom slots are changed in the Shortcuts window, which doesn't rebuild the layout, so
+        // the view model re-runs these refreshers to update milliseconds and shortcut keys.
+        var moveLinesRefreshers = new List<Action<List<ShortCut>>>();
+        var panelMoveSelectedLines = MakeMoveLinesPanel(vm, MoveLinesScope.Selected,
+            GetToolbarSettingFor(SeWaveformToolbarItemType.MoveSelectedLines), IconNames.FormatListChecks, moveLinesRefreshers);
+        var panelMoveSelectedLinesAndFollowing = MakeMoveLinesPanel(vm, MoveLinesScope.SelectedAndForward,
+            GetToolbarSettingFor(SeWaveformToolbarItemType.MoveSelectedLinesAndFollowing), IconNames.ArrowExpandRight, moveLinesRefreshers);
+        var panelMoveAllLines = MakeMoveLinesPanel(vm, MoveLinesScope.All,
+            GetToolbarSettingFor(SeWaveformToolbarItemType.MoveAllLines), IconNames.SelectAll, moveLinesRefreshers);
+        foreach (var refresher in moveLinesRefreshers)
+        {
+            refresher(shortcuts);
+        }
+
+        vm.RefreshWaveformMoveLinesButtons = moveLinesRefreshers.Count == 0
+            ? null
+            : () =>
+            {
+                var usedShortcuts = ShortcutsMain.GetUsedShortcuts(vm);
+                foreach (var moveLinesRefresher in moveLinesRefreshers)
+                {
+                    moveLinesRefresher(usedShortcuts);
+                }
+            };
+
         var settingSetStart = GetToolbarSettingFor(SeWaveformToolbarItemType.SetStart);
         var buttonSetStart = new NonSpaceButton
         {
@@ -1027,6 +1053,9 @@ public class InitWaveform
             buttonTextNext,
             buttonNew,
             buttonSetStartAndOffsetTheRest,
+            panelMoveSelectedLines,
+            panelMoveSelectedLinesAndFollowing,
+            panelMoveAllLines,
             buttonSetStart,
             buttonSetEnd,
             buttonRemoveBlankLines,
@@ -1066,6 +1095,131 @@ public class InitWaveform
         return Se.Settings.Waveform.ToolbarItems.First(p => p.Type == type);
     }
 
+    private const int MoveLinesButtonsPerDirection = 3;
+
+    private static StackPanel MakeMoveLinesPanel(
+        MainViewModel vm,
+        MoveLinesScope scope,
+        SeWaveformToolbarItem setting,
+        string iconName,
+        List<Action<List<ShortCut>>> refreshers)
+    {
+        var panel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(setting.LeftMargin, 0, setting.RightMargin, 0),
+        };
+
+        var backButtons = new List<Button>();
+        var forwardButtons = new List<Button>();
+        for (var i = 0; i < MoveLinesButtonsPerDirection; i++)
+        {
+            backButtons.Add(MakeMoveLinesButton(setting));
+            forwardButtons.Add(MakeMoveLinesButton(setting));
+        }
+
+        panel.Children.AddRange(backButtons);
+        panel.Children.Add(new Icon
+        {
+            Value = iconName,
+            VerticalAlignment = VerticalAlignment.Center,
+            // Unlike the other toolbar icons this one has no button around it, so give it the
+            // size of a button icon plus its padding.
+            FontSize = setting.FontSize + 6,
+            Margin = new Thickness(3, 0, 3, 0),
+        });
+        panel.Children.AddRange(forwardButtons);
+
+        if (!setting.IsVisible)
+        {
+            return panel; // not on the toolbar, so nothing to keep up to date
+        }
+
+        refreshers.Add(shortcuts =>
+        {
+            // Smallest step next to the icon, largest outermost: -1000 -100 -10 [icon] +10 +100 +1000.
+            var steps = GetMoveLinesSteps(scope);
+            for (var i = 0; i < MoveLinesButtonsPerDirection; i++)
+            {
+                UpdateMoveLinesButton(vm, scope, backButtons[MoveLinesButtonsPerDirection - 1 - i], steps, i, back: true, shortcuts);
+                UpdateMoveLinesButton(vm, scope, forwardButtons[i], steps, i, back: false, shortcuts);
+            }
+        });
+
+        return panel;
+    }
+
+    private static Button MakeMoveLinesButton(SeWaveformToolbarItem setting)
+    {
+        return new NonSpaceButton
+        {
+            FontSize = setting.FontSize,
+            MinWidth = 0,
+            Padding = new Thickness(5, 2, 5, 2),
+            Margin = new Thickness(1, 0, 1, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+    }
+
+    /// <summary>
+    /// The steps of a "move lines" button group, smallest first: slot 0 is the global "X ms" step,
+    /// 1 and 2 the custom-milliseconds slots. Slots with the same milliseconds share one button
+    /// (the lowest slot wins) and non-positive values get none.
+    /// </summary>
+    internal static List<(int Slot, int Ms)> GetMoveLinesSteps(MoveLinesScope scope)
+    {
+        var steps = new List<(int Slot, int Ms)>();
+        for (var slot = 0; slot < MoveLinesButtonsPerDirection; slot++)
+        {
+            var ms = ShortcutsMain.GetMoveLinesMs(scope, slot);
+            if (ms > 0 && !steps.Exists(p => p.Ms == ms))
+            {
+                steps.Add((slot, ms));
+            }
+        }
+
+        return steps.OrderBy(p => p.Ms).ToList();
+    }
+
+    private static void UpdateMoveLinesButton(
+        MainViewModel vm,
+        MoveLinesScope scope,
+        Button button,
+        List<(int Slot, int Ms)> steps,
+        int index,
+        bool back,
+        List<ShortCut> shortcuts)
+    {
+        button.IsVisible = index < steps.Count;
+        if (!button.IsVisible)
+        {
+            return;
+        }
+
+        var (slot, ms) = steps[index];
+        var l = Se.Language.Main.Waveform;
+        var format = (scope, back) switch
+        {
+            (MoveLinesScope.Selected, true) => l.MoveSelectedLinesBackHint,
+            (MoveLinesScope.Selected, false) => l.MoveSelectedLinesForwardHint,
+            (MoveLinesScope.SelectedAndForward, true) => l.MoveSelectedLinesAndFollowingBackHint,
+            (MoveLinesScope.SelectedAndForward, false) => l.MoveSelectedLinesAndFollowingForwardHint,
+            (MoveLinesScope.All, true) => l.MoveAllLinesBackHint,
+            _ => l.MoveAllLinesForwardHint,
+        };
+
+        // Fill in the milliseconds but keep "{0}" for the shortcut keys MakeToolTip adds.
+        var hint = string.Format(format, ms.ToString("#,###,##0"), "{0}");
+
+        button.Content = (back ? "-" : "+") + ms.ToString(CultureInfo.InvariantCulture);
+        button.Command = ShortcutsMain.GetMoveLinesCommand(vm, scope, slot, back);
+        ToolTip.SetTip(button, UiUtil.MakeToolTip(hint, shortcuts, ShortcutsMain.GetMoveLinesCommandName(scope, slot, back)));
+
+        // The content is just "-100", so give screen readers the full action.
+        AutomationProperties.SetName(button, string.Format(hint, string.Empty).TrimEnd());
+    }
+
     private static List<SortedControl> MakeCustomSortableButtons(
         SeWaveform settings,
         Button buttonPlay,
@@ -1078,6 +1232,9 @@ public class InitWaveform
         Button buttonTextNext,
         Button buttonNew,
         Button buttonSetStartAndOffsetTheRest,
+        StackPanel panelMoveSelectedLines,
+        StackPanel panelMoveSelectedLinesAndFollowing,
+        StackPanel panelMoveAllLines,
         Button buttonSetStart,
         NonSpaceButton buttonSetEnd,
         Button buttonRemoveBlankLines,
@@ -1134,6 +1291,15 @@ public class InitWaveform
                     break;
                 case SeWaveformToolbarItemType.SetStartAndOffsetTheRest:
                     toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = buttonSetStartAndOffsetTheRest });
+                    break;
+                case SeWaveformToolbarItemType.MoveSelectedLines:
+                    toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = panelMoveSelectedLines });
+                    break;
+                case SeWaveformToolbarItemType.MoveSelectedLinesAndFollowing:
+                    toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = panelMoveSelectedLinesAndFollowing });
+                    break;
+                case SeWaveformToolbarItemType.MoveAllLines:
+                    toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = panelMoveAllLines });
                     break;
                 case SeWaveformToolbarItemType.SetStart:
                     toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = buttonSetStart });

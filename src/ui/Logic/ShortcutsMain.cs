@@ -158,13 +158,60 @@ public static class ShortcutsMain
     /// <summary>Action name of a custom move slot command, e.g. "MoveAllLinesCustom2BackCommand".</summary>
     public static string GetMoveLinesCustomCommandName(MoveLinesScope scope, int slotNumber, bool back)
     {
-        var scopeName = scope switch
+        return $"{GetMoveLinesScopeName(scope)}Custom{slotNumber}{(back ? "Back" : "Forward")}Command";
+    }
+
+    /// <summary>
+    /// Milliseconds of a "move lines" step: slot 0 is the global "X ms" step from Settings > General,
+    /// 1 and 2 are the custom-milliseconds slots.
+    /// </summary>
+    public static int GetMoveLinesMs(MoveLinesScope scope, int slotNumber)
+    {
+        return slotNumber == 0 ? Se.Settings.General.MoveSelectedLinesStepMs : GetMoveLinesCustomMs(scope, slotNumber);
+    }
+
+    /// <summary>Action name of a move command, slot 0 being "X ms", e.g. "MoveAllLinesXMsBackCommand".</summary>
+    public static string GetMoveLinesCommandName(MoveLinesScope scope, int slotNumber, bool back)
+    {
+        return slotNumber == 0
+            ? $"{GetMoveLinesScopeName(scope)}XMs{(back ? "Back" : "Forward")}Command"
+            : GetMoveLinesCustomCommandName(scope, slotNumber, back);
+    }
+
+    /// <summary>The move command for a scope and slot, slot 0 being "X ms" (see <see cref="GetMoveLinesMs"/>).</summary>
+    public static IRelayCommand GetMoveLinesCommand(MainViewModel vm, MoveLinesScope scope, int slotNumber, bool back)
+    {
+        return (scope, slotNumber, back) switch
+        {
+            (MoveLinesScope.Selected, 0, true) => vm.MoveSelectedLinesXMsBackCommand,
+            (MoveLinesScope.Selected, 0, false) => vm.MoveSelectedLinesXMsForwardCommand,
+            (MoveLinesScope.Selected, 1, true) => vm.MoveSelectedLinesCustom1BackCommand,
+            (MoveLinesScope.Selected, 1, false) => vm.MoveSelectedLinesCustom1ForwardCommand,
+            (MoveLinesScope.Selected, _, true) => vm.MoveSelectedLinesCustom2BackCommand,
+            (MoveLinesScope.Selected, _, false) => vm.MoveSelectedLinesCustom2ForwardCommand,
+            (MoveLinesScope.SelectedAndForward, 0, true) => vm.MoveSelectedLinesAndForwardXMsBackCommand,
+            (MoveLinesScope.SelectedAndForward, 0, false) => vm.MoveSelectedLinesAndForwardXMsForwardCommand,
+            (MoveLinesScope.SelectedAndForward, 1, true) => vm.MoveSelectedLinesAndForwardCustom1BackCommand,
+            (MoveLinesScope.SelectedAndForward, 1, false) => vm.MoveSelectedLinesAndForwardCustom1ForwardCommand,
+            (MoveLinesScope.SelectedAndForward, _, true) => vm.MoveSelectedLinesAndForwardCustom2BackCommand,
+            (MoveLinesScope.SelectedAndForward, _, false) => vm.MoveSelectedLinesAndForwardCustom2ForwardCommand,
+            (MoveLinesScope.All, 0, true) => vm.MoveAllLinesXMsBackCommand,
+            (MoveLinesScope.All, 0, false) => vm.MoveAllLinesXMsForwardCommand,
+            (MoveLinesScope.All, 1, true) => vm.MoveAllLinesCustom1BackCommand,
+            (MoveLinesScope.All, 1, false) => vm.MoveAllLinesCustom1ForwardCommand,
+            (MoveLinesScope.All, _, true) => vm.MoveAllLinesCustom2BackCommand,
+            _ => vm.MoveAllLinesCustom2ForwardCommand,
+        };
+    }
+
+    private static string GetMoveLinesScopeName(MoveLinesScope scope)
+    {
+        return scope switch
         {
             MoveLinesScope.Selected => "MoveSelectedLines",
             MoveLinesScope.SelectedAndForward => "MoveSelectedLinesAndForward",
             _ => "MoveAllLines",
         };
-        return $"{scopeName}Custom{slotNumber}{(back ? "Back" : "Forward")}Command";
     }
 
     /// <summary>

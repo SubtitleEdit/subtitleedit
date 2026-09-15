@@ -58,6 +58,7 @@ internal class IconNames
     public const string FolderMultiple = "mdi-folder-multiple";
     public const string FormatClear = "mdi-format-clear";
     public const string FormatFont = "mdi-format-font";
+    public const string FormatListChecks = "mdi-format-list-checks";
     public const string FormTextBox = "mdi-form-textbox";
     public const string Fullscreen = "mdi-fullscreen";
     public const string FullscreenExit = "mdi-fullscreen-exit";
@@ -105,6 +106,7 @@ internal class IconNames
     public const string Refresh = "mdi-refresh";
     public const string Restore = "mdi-restore";
     public const string ScaleBalance = "mdi-scale-balance";
+    public const string SelectAll = "mdi-select-all";
     public const string SetMerge = "mdi-set-merge";
     public const string SetSplit = "mdi-set-split";
     public const string Settings = "mdi-cog";
