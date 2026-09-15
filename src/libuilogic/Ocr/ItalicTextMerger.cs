@@ -42,38 +42,7 @@ public class ItalicTextMerger
 
     private static List<TextSegment> GroupIntoSegments(List<BinaryOcrMatcher.CompareMatch> chars)
     {
-        var words = GroupIntoWords(chars);
-        var segments = new List<TextSegment>();
-
-        // Indexed loop: the loop body used to call words.IndexOf(word) - a linear scan inside
-        // the loop already iterating words, i.e. O(n^2) per OCR'd line.
-        for (var wordIndex = 0; wordIndex < words.Count; wordIndex++)
-        {
-            var word = words[wordIndex];
-            bool shouldBeItalic = word.IsWhitespace ? false : GetMajorityItalic(word.Chars);
-            string text = ConcatCharTexts(word.Chars);
-
-            // If this is whitespace, check if we can merge it with surrounding italic content
-            if (word.IsWhitespace)
-            {
-                // Check if previous and next non-whitespace segments are both italic
-                bool prevIsItalic = GetPreviousNonWhitespaceItalic(segments);
-                bool nextIsItalic = GetNextNonWhitespaceItalic(words, wordIndex);
-
-                // If surrounded by italic content, include whitespace in italic
-                shouldBeItalic = prevIsItalic && nextIsItalic;
-            }
-
-            segments.Add(new TextSegment
-            {
-                Text = text,
-                ShouldBeItalic = shouldBeItalic,
-                IsWhitespace = word.IsWhitespace
-            });
-        }
-
-        // Post-process to merge consecutive segments with same formatting
-        return MergeConsecutiveSegments(segments);
+        return BuildSegments(GroupIntoWords(chars));
     }
 
     private static List<WordGroup> GroupIntoWords(List<BinaryOcrMatcher.CompareMatch> chars)
@@ -155,38 +124,177 @@ public class ItalicTextMerger
 
     private static List<TextSegment> GroupIntoSegments(List<NOcrChar> chars)
     {
-        var words = GroupIntoWords(chars);
-        var segments = new List<TextSegment>();
+        return BuildSegments(GroupIntoWords(chars));
+    }
 
-        // Indexed loop: the loop body used to call words.IndexOf(word) - a linear scan inside
-        // the loop already iterating words, i.e. O(n^2) per OCR'd line.
-        for (var wordIndex = 0; wordIndex < words.Count; wordIndex++)
+    private enum WordSlant
+    {
+        Whitespace,
+
+        /// <summary>No letter or digit (e.g. "-", ". . .", "*"): the glyphs say nothing about slant.</summary>
+        Neutral,
+
+        /// <summary>As many italic as upright letters.</summary>
+        Tie,
+        Italic,
+        Upright,
+    }
+
+    /// <summary>
+    /// Decides italic per word. Only letters and digits vote: punctuation is shaped the same
+    /// upright and slanted (a hyphen trained from italic text matches an upright hyphen with no
+    /// wrong pixels), so letting it vote wrapped dialog dashes and ". . ." in italic tags, and an
+    /// unknown "*" (never italic) outvoted the italic letters around it (#14886). A word without
+    /// letters follows the nearest word on its line, and a tied word follows the words around
+    /// it instead of defaulting to italic.
+    /// </summary>
+    private static List<TextSegment> BuildSegments(List<WordGroup> words)
+    {
+        var slants = new WordSlant[words.Count];
+        var italic = new bool[words.Count];
+        for (var i = 0; i < words.Count; i++)
         {
-            var word = words[wordIndex];
-            bool shouldBeItalic = word.IsWhitespace ? false : GetMajorityItalic(word.Chars);
-            string text = ConcatCharTexts(word.Chars);
+            slants[i] = GetSlant(words[i]);
+            italic[i] = slants[i] == WordSlant.Italic;
+        }
 
-            // If this is whitespace, check if we can merge it with surrounding italic content
-            if (word.IsWhitespace)
+        for (var i = 0; i < words.Count; i++)
+        {
+            if (slants[i] == WordSlant.Tie)
             {
-                // Check if previous and next non-whitespace segments are both italic
-                bool prevIsItalic = GetPreviousNonWhitespaceItalic(segments);
-                bool nextIsItalic = GetNextNonWhitespaceItalic(words, wordIndex);
-
-                // If surrounded by italic content, include whitespace in italic
-                shouldBeItalic = prevIsItalic && nextIsItalic;
+                italic[i] = FindItalic(words, slants, italic, i, -1, includeTies: false, stopAtLineBreak: false) ??
+                            FindItalic(words, slants, italic, i, 1, includeTies: false, stopAtLineBreak: false) ??
+                            false;
             }
+        }
+
+        for (var i = 0; i < words.Count; i++)
+        {
+            if (slants[i] == WordSlant.Neutral)
+            {
+                // Leading punctuation ("- Hello") belongs to the word after it, trailing
+                // punctuation ("Hello . . .") to the word before it.
+                italic[i] = FindItalic(words, slants, italic, i, 1, includeTies: true, stopAtLineBreak: true) ??
+                            FindItalic(words, slants, italic, i, -1, includeTies: true, stopAtLineBreak: true) ??
+                            false;
+            }
+        }
+
+        var segments = new List<TextSegment>(words.Count);
+        for (var i = 0; i < words.Count; i++)
+        {
+            var isWhitespace = slants[i] == WordSlant.Whitespace;
+
+            // Words and whitespace alternate, so whitespace is inside italic only when the words
+            // on both sides of it are italic.
+            var shouldBeItalic = isWhitespace
+                ? i > 0 && i < words.Count - 1 && italic[i - 1] && italic[i + 1]
+                : italic[i];
 
             segments.Add(new TextSegment
             {
-                Text = text,
+                Text = ConcatCharTexts(words[i].Chars),
                 ShouldBeItalic = shouldBeItalic,
-                IsWhitespace = word.IsWhitespace
+                IsWhitespace = isWhitespace
             });
         }
 
         // Post-process to merge consecutive segments with same formatting
         return MergeConsecutiveSegments(segments);
+    }
+
+    /// <summary>
+    /// Italic state of the nearest word with letters in <paramref name="direction"/> (ties only
+    /// when <paramref name="includeTies"/>), or null when there is none.
+    /// </summary>
+    private static bool? FindItalic(List<WordGroup> words, WordSlant[] slants, bool[] italic, int index, int direction, bool includeTies, bool stopAtLineBreak)
+    {
+        for (var i = index + direction; i >= 0 && i < words.Count; i += direction)
+        {
+            var slant = slants[i];
+            if (slant == WordSlant.Whitespace)
+            {
+                if (stopAtLineBreak && ContainsLineBreak(words[i].Chars))
+                {
+                    return null;
+                }
+
+                continue;
+            }
+
+            if (slant is WordSlant.Italic or WordSlant.Upright || includeTies && slant == WordSlant.Tie)
+            {
+                return italic[i];
+            }
+        }
+
+        return null;
+    }
+
+    private static WordSlant GetSlant(WordGroup word)
+    {
+        if (word.IsWhitespace)
+        {
+            return WordSlant.Whitespace;
+        }
+
+        var italicCount = 0;
+        var uprightCount = 0;
+        for (var i = 0; i < word.Chars.Count; i++)
+        {
+            var ch = word.Chars[i];
+            if (!HasLetterOrDigit(ch.Text))
+            {
+                continue;
+            }
+
+            if (ch.Italic)
+            {
+                italicCount++;
+            }
+            else
+            {
+                uprightCount++;
+            }
+        }
+
+        if (italicCount == 0 && uprightCount == 0)
+        {
+            return WordSlant.Neutral;
+        }
+
+        if (italicCount == uprightCount)
+        {
+            return WordSlant.Tie;
+        }
+
+        return italicCount > uprightCount ? WordSlant.Italic : WordSlant.Upright;
+    }
+
+    private static bool HasLetterOrDigit(string text)
+    {
+        for (var i = 0; i < text.Length; i++)
+        {
+            if (char.IsLetterOrDigit(text[i]))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static bool ContainsLineBreak(List<NOcrChar> chars)
+    {
+        for (var i = 0; i < chars.Count; i++)
+        {
+            if (chars[i].Text.Contains('\n'))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static List<WordGroup> GroupIntoWords(List<NOcrChar> chars)
@@ -228,26 +336,6 @@ public class ItalicTextMerger
         return words;
     }
 
-    private static bool GetPreviousNonWhitespaceItalic(List<TextSegment> segments)
-    {
-        for (int i = segments.Count - 1; i >= 0; i--)
-        {
-            if (!segments[i].IsWhitespace)
-                return segments[i].ShouldBeItalic;
-        }
-        return false;
-    }
-
-    private static bool GetNextNonWhitespaceItalic(List<WordGroup> words, int currentIndex)
-    {
-        for (int i = currentIndex + 1; i < words.Count; i++)
-        {
-            if (!words[i].IsWhitespace)
-                return GetMajorityItalic(words[i].Chars);
-        }
-        return false;
-    }
-
     private static List<TextSegment> MergeConsecutiveSegments(List<TextSegment> segments)
     {
         if (segments.Count <= 1) return segments;
@@ -287,27 +375,6 @@ public class ItalicTextMerger
 
         merged.Add(currentSegment);
         return merged;
-    }
-
-    private static bool GetMajorityItalic(List<NOcrChar> wordChars)
-    {
-        if (wordChars.Count == 0)
-        {
-            return false;
-        }
-
-        var italicCount = 0;
-        for (var i = 0; i < wordChars.Count; i++)
-        {
-            if (wordChars[i].Italic)
-            {
-                italicCount++;
-            }
-        }
-
-        int nonItalicCount = wordChars.Count - italicCount;
-
-        return italicCount >= nonItalicCount;
     }
 
     private static bool IsWhitespace(string text)
