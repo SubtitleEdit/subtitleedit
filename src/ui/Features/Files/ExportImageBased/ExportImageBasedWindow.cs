@@ -265,7 +265,6 @@ public class ExportImageBasedWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -498,7 +497,7 @@ public class ExportImageBasedWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             Children = { checkBoxFullFrame, colorPickerFullFrame },
         }.WithBindIsVisible(vm, nameof(vm.IsFullFrameVisible));
-        grid.Add(panelFullFrame, 8, 0, 1, 6);
+        grid.Add(panelFullFrame, 7, 5, 1, 3);
 
         return UiUtil.MakeBorderForControl(grid);
     }
