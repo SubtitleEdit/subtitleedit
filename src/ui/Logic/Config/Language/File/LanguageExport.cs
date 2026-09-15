@@ -48,6 +48,12 @@ public class LanguageExport
     public string ImageBasedSubtitleSaved { get; set; }
     public string FullFrameImage { get; set; }
     public string FullFrameImageHint { get; set; }
+    public string Stereo3D { get; set; }
+    public string Stereo3DHint { get; set; }
+    public string HalfSideBySide { get; set; }
+    public string HalfTopBottom { get; set; }
+    public string Depth3D { get; set; }
+    public string Depth3DHint { get; set; }
     public string TextEffect { get; set; }
     public string TextEffectSettingsTitle { get; set; }
     public string TextEffectPreset { get; set; }
@@ -124,6 +130,12 @@ public class LanguageExport
         ImageBasedSubtitleSaved = "Image-based subtitle saved";
         FullFrameImage = "Full frame image";
         FullFrameImageHint = "Make each image the size of the video frame, with the subtitle in its place";
+        Stereo3D = "3D";
+        Stereo3DHint = "For 3D video: draw the subtitle once in each eye's half of the frame";
+        HalfSideBySide = "Half side-by-side";
+        HalfTopBottom = "Half top/bottom";
+        Depth3D = "Depth";
+        Depth3DHint = "How far the subtitle stands out of the screen - positive brings it closer, negative pushes it back";
         TextEffect = "Text effect";
         TextEffectSettingsTitle = "Text effect settings";
         TextEffectPreset = "Preset";

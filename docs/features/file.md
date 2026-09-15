@@ -147,6 +147,8 @@ A time code format that *starts* with `s`'s or `z`'s means totals instead of clo
 
 Export subtitles as Blu-ray SUP image format.
 
+The image export window is shared by all image-based formats. For 3D video, set **3D** to *Half side-by-side* or *Half top/bottom*. Each image then holds a squeezed copy of the subtitle for each eye, placed by the alignment and margins. **Depth** moves the two copies apart: positive values bring the subtitle out of the screen, negative values push it back. For D-Cinema only **Z-position** is shown, which is written to each image in the XML.
+
 ### Export to EBU STL
 
 Export subtitles in EBU STL format (used in European broadcasting).

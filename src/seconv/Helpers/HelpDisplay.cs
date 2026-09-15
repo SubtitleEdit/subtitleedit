@@ -114,6 +114,8 @@ internal static class HelpDisplay
         ShowParameter(console, "--override-position:<x|y|xy>", "Image → image: ignore the source bitmap position on that axis and place it by --alignment and margins");
         ShowParameter(console, "--full-frame", "Draw each subtitle on a frame-sized image (place at 0,0 in an editing timeline); only fcpimage and bluraysup");
         ShowParameter(console, "--full-frame-background-color:<colour>", "Background of the full frame image (default: transparent)");
+        ShowParameter(console, "--mode-3d:<mode>", "3D video, one copy per eye: none (default) | half-side-by-side (sbs) | half-top-bottom (tab); also image → image");
+        ShowParameter(console, "--depth-3d:<px>", "3D depth -100..100; positive brings the subtitle out of the screen. D-Cinema: the Z-position");
 
         console.WriteLine();
         console.MarkupLine("[bold cyan]Operations:[/]");

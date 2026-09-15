@@ -297,6 +297,14 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [Description("Image output: background of the full frame image (default: transparent)")]
         public string? FullFrameBackgroundColor { get; init; }
 
+        [CommandOption("--mode-3d|--mode3d")]
+        [Description("Image output: draw each subtitle for frame-packed 3D video, once per eye: none | half-side-by-side (sbs) | half-top-bottom (tab). Also for image → image")]
+        public string? Mode3D { get; init; }
+
+        [CommandOption("--depth-3d|--depth3d")]
+        [Description("Image output: 3D depth in pixels, -100 to 100; positive brings the subtitle out of the screen (default: 0). D-Cinema writes it as the Z-position")]
+        public int? Depth3D { get; init; }
+
         [CommandOption("--teletext-only|--teletextonly")]
         [Description("Teletext only")]
         public bool TeletextOnly { get; init; }
@@ -1272,6 +1280,24 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 return $"Unknown colour '{settings.FullFrameBackgroundColor}' for --full-frame-background-color.";
             }
             style.FullFrameBackgroundColor = fullFrameBackgroundColor;
+        }
+
+        if (!string.IsNullOrWhiteSpace(settings.Mode3D))
+        {
+            if (!ImageExportStyle.TryParseMode3D(settings.Mode3D, out var mode3D))
+            {
+                return $"Unknown value '{settings.Mode3D}' for --mode-3d. Use: none, half-side-by-side, or half-top-bottom.";
+            }
+            style.Mode3D = mode3D;
+        }
+
+        if (settings.Depth3D.HasValue)
+        {
+            if (!ImageExportStyle.IsValidDepth3D(settings.Depth3D.Value))
+            {
+                return $"--depth-3d must be between -100 and 100, got {settings.Depth3D.Value}.";
+            }
+            style.Depth3D = settings.Depth3D.Value;
         }
 
         return null;
