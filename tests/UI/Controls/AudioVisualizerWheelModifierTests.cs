@@ -160,6 +160,47 @@ public class AudioVisualizerWheelModifierTests : IDisposable
         });
     }
 
+    // Issue #14894: wheeling back at 0 (or forward at the end) clamped onto the current position and
+    // still raised a seek. The view model pins the playhead until the player confirms a seek, and
+    // with nothing to seek that pin held the cursor for its 5 s cap once playback started.
+    [AvaloniaTheory]
+    [InlineData(0.0, -1.0)]
+    [InlineData(200.0, 1.0)]
+    public void Wheel_PastEitherEnd_WhileParkedThere_RaisesNoSeek(double position, double wheelDelta)
+    {
+        WithWheelSetsVideoPosition(true, () =>
+        {
+            var (window, av) = Open();
+            av.CurrentVideoPositionSeconds = position;
+            var moved = 0;
+            av.OnVideoPositionChanged += (_, _) => moved++;
+
+            window.MouseWheel(WheelPoint, new Vector(0, wheelDelta), RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Equal(0, moved);
+        });
+    }
+
+    // A step that clamps onto an end from somewhere else is a real move and still seeks.
+    [AvaloniaFact]
+    public void Wheel_BackTowardZero_FromJustAfterIt_StillSeeksToZero()
+    {
+        WithWheelSetsVideoPosition(true, () =>
+        {
+            var (window, av) = Open();
+            av.CurrentVideoPositionSeconds = 0.2;
+            var positions = new List<double>();
+            av.OnVideoPositionChanged += (_, e) => positions.Add(e.PositionInSeconds);
+
+            window.MouseWheel(WheelPoint, new Vector(0, -1), RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Single(positions);
+            Assert.Equal(0, positions[0], 3);
+        });
+    }
+
     // Without any modifier the wheel only scrolls the view - the baseline the reporter had before
     // touching a shortcut.
     [AvaloniaFact]
