@@ -278,6 +278,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _isLibVlcDownloadVisible;
     [ObservableProperty] private string _ffmpegLibsStatus;
     [ObservableProperty] private bool _isFfmpegLibsDownloadVisible;
+    [ObservableProperty] private bool _isFileTypeAssociationsVisible;
     [ObservableProperty] private string _ffmpegPath;
     [ObservableProperty] private string _ffmpegStatus;
     [ObservableProperty] private string _proxyAddress = string.Empty;
@@ -690,6 +691,7 @@ public partial class SettingsViewModel : ObservableObject
         IsLibMpvDownloadVisible = OperatingSystem.IsWindows();
         IsLibVlcDownloadVisible = OperatingSystem.IsWindows();
         IsFfmpegLibsDownloadVisible = OperatingSystem.IsWindows();
+        IsFileTypeAssociationsVisible = OperatingSystem.IsWindows();
 
         MpvPreviewFontName = FontNames.First();
         MpvPreviewSelectedBorderType = MpvPreviewBorderTypes.First();

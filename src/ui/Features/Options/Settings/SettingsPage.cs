@@ -574,7 +574,7 @@ public class SettingsPage : UserControl
                         Spacing = 10,
                         Children =
                         {
-                            UiUtil.MakeButton(Se.Language.General.Download, _vm.DownloadLibMpvCommand),
+                            MakeDownloadButton(Se.Language.Options.Settings.DownloadMpv, _vm.DownloadLibMpvCommand, nameof(_vm.LibMpvStatus)),
                             new TextBlock
                             {
                                 DataContext = _vm,
@@ -607,7 +607,7 @@ public class SettingsPage : UserControl
                         Spacing = 10,
                         Children =
                         {
-                            UiUtil.MakeButton(Se.Language.General.Download, _vm.DownloadLibVlcCommand),
+                            MakeDownloadButton(Se.Language.Options.Settings.DownloadVlc, _vm.DownloadLibVlcCommand, nameof(_vm.LibVlcStatus)),
                             new TextBlock
                             {
                                 DataContext = _vm,
@@ -630,7 +630,7 @@ public class SettingsPage : UserControl
                         Spacing = 10,
                         Children =
                         {
-                            UiUtil.MakeButton(Se.Language.General.Download, _vm.DownloadFfmpegLibsCommand),
+                            MakeDownloadButton(Se.Language.Options.Settings.DownloadFfmpegLibs, _vm.DownloadFfmpegLibsCommand, nameof(_vm.FfmpegLibsStatus)),
                             new TextBlock
                             {
                                 DataContext = _vm,
@@ -762,7 +762,7 @@ public class SettingsPage : UserControl
                         Spacing = 10,
                         Children =
                         {
-                            UiUtil.MakeButton(Se.Language.General.Download, _vm.DownloadFfmpegCommand),
+                            MakeDownloadButton(Se.Language.Options.Settings.DownloadFfmpeg, _vm.DownloadFfmpegCommand, nameof(_vm.FfmpegStatus)),
                             new TextBlock
                             {
                                 DataContext = _vm,
@@ -1012,13 +1012,16 @@ public class SettingsPage : UserControl
 
         sections.Add(new SettingsSection(Se.Language.Options.Settings.Updates, IconNames.CloudDownload, "#d0a24e", updateItems));
 
-        if (OperatingSystem.IsWindows())
+        if (_vm.IsFileTypeAssociationsVisible)
         {
             sections.Add(new SettingsSection(Se.Language.Options.Settings.FileTypeAssociations, IconNames.FileCog, "#b98a5a",
             [
                 new SettingsItem(string.Empty, () => new ItemsControl
                 {
                     DataContext = _vm,
+                    // The row has no label, so the list and its check boxes are named here -
+                    // NVDA announced "list" and then nameless "check box, checked" (#12087).
+                    [AutomationProperties.NameProperty] = Se.Language.Options.Settings.FileTypeAssociations,
                     [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(_vm.FileTypeAssociations)),
                     ItemTemplate = new FuncDataTemplate<FileTypeAssociationViewModel>((fileType, _) =>
                         new StackPanel
@@ -1029,6 +1032,7 @@ public class SettingsPage : UserControl
                             {
                                 new CheckBox
                                 {
+                                    [AutomationProperties.NameProperty] = fileType.Extension,
                                     [!ToggleButton.IsCheckedProperty] = new Binding(nameof(FileTypeAssociationViewModel.IsAssociated))
                                     {
                                         Source = fileType, Mode = BindingMode.TwoWay
@@ -1103,6 +1107,7 @@ public class SettingsPage : UserControl
         var buttonRemove = UiUtil.MakeButton(Se.Language.General.Remove, vm.RemoveFavoriteSubtitleFormatCommand).WithMinWidth(100);
         var buttonMoveUp = UiUtil.MakeButton(Se.Language.General.MoveUp, vm.MoveUpFavoriteSubtitleFormatCommand).WithMinWidth(100);
         var buttonMoveDown = UiUtil.MakeButton(Se.Language.General.MoveDown, vm.MoveDownFavoriteSubtitleFormatCommand).WithMinWidth(100);
+        NameListButtons(Se.Language.Options.Settings.FavoriteSubtitleFormats, buttonAdd, buttonRemove, buttonMoveUp, buttonMoveDown);
 
         var buttonStack = new StackPanel
         {
@@ -1152,6 +1157,7 @@ public class SettingsPage : UserControl
         var buttonRemove = UiUtil.MakeButton(Se.Language.General.Remove, vm.RemoveFavoriteLanguageCommand).WithMinWidth(100);
         var buttonMoveUp = UiUtil.MakeButton(Se.Language.General.MoveUp, vm.MoveUpFavoriteLanguageCommand).WithMinWidth(100);
         var buttonMoveDown = UiUtil.MakeButton(Se.Language.General.MoveDown, vm.MoveDownFavoriteLanguageCommand).WithMinWidth(100);
+        NameListButtons(Se.Language.Options.Settings.FavoriteLanguages, buttonAdd, buttonRemove, buttonMoveUp, buttonMoveDown);
 
         var buttonStack = new StackPanel
         {
@@ -1165,6 +1171,33 @@ public class SettingsPage : UserControl
         grid.Add(buttonStack, 0, 1);
 
         return grid;
+    }
+
+    /// <summary>
+    /// Names the Add/Remove/Move buttons next to a list after that list ("Favorite languages:
+    /// Add"). An empty list is not a tab stop, so a screen reader user tabbing from one favorites
+    /// list to the next heard a second "Add, Remove, Move up, Move down" with nothing saying
+    /// which list it belonged to (#12087).
+    /// </summary>
+    private static void NameListButtons(string listName, params Button[] buttons)
+    {
+        foreach (var button in buttons)
+        {
+            AutomationProperties.SetName(button, $"{listName}: {button.Content}");
+        }
+    }
+
+    /// <summary>
+    /// A "Download" button named after its setting ("Download mpv") with the install status
+    /// ("Not installed", a version) as its description - the caption alone told a screen reader
+    /// user nothing about what would be downloaded (#12087).
+    /// </summary>
+    private Button MakeDownloadButton(string settingName, IRelayCommand command, string statusProperty)
+    {
+        var button = UiUtil.MakeButton(Se.Language.General.Download, command);
+        AutomationProperties.SetName(button, settingName);
+        button.Bind(AutomationProperties.HelpTextProperty, new Binding(statusProperty) { Source = _vm });
+        return button;
     }
 
     private Control MakeMpvPreviewSettings(SettingsViewModel vm)
