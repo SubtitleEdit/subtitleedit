@@ -50,6 +50,8 @@ public class LanguageMain
     public string NumberOfLinesEvenlyDistributedX { get; set; }
     public string OneLineCopiedFromOriginal { get; set; }
     public string OneLineCopiedToOriginal { get; set; }
+    public string OnlineOnlyVideo { get; set; }
+    public string OnlineOnlyVideoXSizeYDownloadAndOpen { get; set; }
     public string OneLineMerged { get; set; }
     public string OneLineSwitched { get; set; }
     public string OverwriteExistingCells { get; set; }
@@ -208,6 +210,8 @@ public class LanguageMain
         NumberOfLinesEvenlyDistributedX = "Evenly distributed {0} lines";
         OneLineCopiedFromOriginal = "One line copied from original subtitle";
         OneLineCopiedToOriginal = "One line copied to original subtitle";
+        OnlineOnlyVideo = "Online-only video";
+        OnlineOnlyVideoXSizeYDownloadAndOpen = "The video file \"{0}\" ({1}) is stored online only, for example in Dropbox or iCloud Drive, and has to be downloaded before it can be opened.\n\nDownload and open it now?";
         OneLineMerged = "One line merged";
         OneLineSwitched = "One line switched";
         OverwriteExistingCells = "Overwrite existing cells";
