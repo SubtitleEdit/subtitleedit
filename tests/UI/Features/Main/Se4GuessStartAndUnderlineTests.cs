@@ -272,11 +272,55 @@ public class Se4GuessStartAndUnderlineTests : IDisposable
         var all = ShortcutsMain.GetAllShortcuts(vm);
         var start = all.Single(s => s.Name == nameof(MainViewModel.WaveformGuessStartCommand));
         var end = all.Single(s => s.Name == nameof(MainViewModel.WaveformGuessEndCommand));
+        var startAndEnd = all.Single(s => s.Name == nameof(MainViewModel.WaveformGuessStartAndEndCommand));
 
         Assert.Equal(ShortcutCategory.General, start.Category);
         Assert.Equal(ShortcutCategory.General, end.Category);
+        Assert.Equal(ShortcutCategory.General, startAndEnd.Category);
         Assert.Equal(ShortcutGroup.Waveform, start.Group);
         Assert.Equal(ShortcutGroup.Waveform, end.Group);
+        Assert.Equal(ShortcutGroup.Waveform, startAndEnd.Group);
+    }
+
+    /// <summary>
+    /// #14486: "guess start and end" does both edges of the selected line in one press, the same
+    /// as pressing guess start and then guess end, and reports both outcomes.
+    /// </summary>
+    [AvaloniaFact]
+    public void GuessStartAndEndMovesBothCuesInOnePress()
+    {
+        Se.Settings.General.LockTimeCodes = false;
+        Se.Settings.Waveform.GuessStartOffsetMs = 0;
+        Se.Settings.Waveform.GuessEndOffsetMs = 0;
+
+        var (window, vm) = CreateMainViewModel();
+        vm.Subtitles.Add(new SubtitleLineViewModel(new Paragraph("Hello", 2200, 4600), null!) { Number = 1 });
+        Dispatcher.UIThread.RunJobs();
+
+        var av = vm.AudioVisualizer!;
+        av.WavePeaks = MakePeaks(sampleRate: 100, seconds: 7, speechFromSeconds: 2.5, speechToSeconds: 4.0);
+        Select(vm, vm.Subtitles[0]);
+        window.UpdateLayout();
+        Dispatcher.UIThread.RunJobs();
+
+        var line = vm.Subtitles[0];
+        vm.WaveformGuessStartCommand.Execute(null);
+        vm.WaveformGuessEndCommand.Execute(null);
+        var separateStartMs = line.StartTime.TotalMilliseconds;
+        var separateEndMs = line.EndTime.TotalMilliseconds;
+
+        line.StartTime = TimeSpan.FromMilliseconds(2200);
+        line.EndTime = TimeSpan.FromMilliseconds(4600);
+        vm.WaveformGuessStartAndEndCommand.Execute(null);
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.InRange(line.StartTime.TotalMilliseconds, 2400, 2500);
+        Assert.InRange(line.EndTime.TotalMilliseconds, 4000, 4100);
+        Assert.Equal(separateStartMs, line.StartTime.TotalMilliseconds, 0);
+        Assert.Equal(separateEndMs, line.EndTime.TotalMilliseconds, 0);
+        Assert.Equal(
+            $"Guess start: line 1 start moved +{line.StartTime.TotalMilliseconds - 2200:0} ms; Guess end: line 1 end moved {line.EndTime.TotalMilliseconds - 4600:0} ms",
+            vm.StatusTextLeft);
     }
 
     [AvaloniaFact]
@@ -586,6 +630,10 @@ public class Se4GuessStartAndUnderlineTests : IDisposable
         vm.WaveformGuessEndCommand.Execute(null);
         Dispatcher.UIThread.RunJobs();
         Assert.Equal("Guess end: no waveform", vm.StatusTextLeft);
+
+        vm.WaveformGuessStartAndEndCommand.Execute(null);
+        Dispatcher.UIThread.RunJobs();
+        Assert.Equal("Guess start: no waveform; Guess end: no waveform", vm.StatusTextLeft);
 
         var av = vm.AudioVisualizer!;
         av.WavePeaks = BuildPeaks(10, i => i % 2 == 0 ? 450 : 550); // noise only, nothing to find

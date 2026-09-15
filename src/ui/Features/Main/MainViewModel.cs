@@ -5829,30 +5829,35 @@ public partial class MainViewModel :
     [RelayCommand]
     private void WaveformGuessStart()
     {
+        ShowStatus(GuessStartFromWaveform());
+    }
+
+    /// <summary>
+    /// The work of <see cref="WaveformGuessStart"/>, returning the status text so
+    /// <see cref="WaveformGuessStartAndEnd"/> can report it along with the end's.
+    /// </summary>
+    private string GuessStartFromWaveform()
+    {
         var selected = SelectedSubtitle;
         if (selected == null)
         {
-            ShowStatus(Se.Language.Main.Waveform.GuessStartNoLineSelected);
-            return;
+            return Se.Language.Main.Waveform.GuessStartNoLineSelected;
         }
 
         if (AreTimeCodesLocked)
         {
-            ShowStatus(Se.Language.Main.Waveform.GuessStartTimeCodesLocked);
-            return;
+            return Se.Language.Main.Waveform.GuessStartTimeCodesLocked;
         }
 
         if (AudioVisualizer?.WavePeaks == null)
         {
-            ShowStatus(Se.Language.Main.Waveform.GuessStartNoWaveform);
-            return;
+            return Se.Language.Main.Waveform.GuessStartNoWaveform;
         }
 
         var index = Subtitles.IndexOf(selected);
         if (index < 0)
         {
-            ShowStatus(Se.Language.Main.Waveform.GuessStartNoLineSelected);
-            return;
+            return Se.Language.Main.Waveform.GuessStartNoLineSelected;
         }
 
         const double silenceLengthInSeconds = 0.08;
@@ -5900,8 +5905,7 @@ public partial class MainViewModel :
                 if (newStartMs >= selected.StartTime.TotalMilliseconds)
                 {
                     // No threshold can help: anything earlier is clamped to the same spot.
-                    ShowStatus(string.Format(Se.Language.Main.Waveform.GuessStartNoRoomBeforePreviousLineX, selected.Number));
-                    return;
+                    return string.Format(Se.Language.Main.Waveform.GuessStartNoRoomBeforePreviousLineX, selected.Number);
                 }
             }
 
@@ -5973,13 +5977,12 @@ public partial class MainViewModel :
             selected.StartTime = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newStartMs);
 
             _updateAudioVisualizer = true;
-            ShowStatus(string.Format(Se.Language.Main.Waveform.GuessStartMovedLineXByYMs, selected.Number, FormatSignedMs(movedMs)));
-            return;
+            return string.Format(Se.Language.Main.Waveform.GuessStartMovedLineXByYMs, selected.Number, FormatSignedMs(movedMs));
         }
 
-        ShowStatus(string.Format(alreadyAtBoundary
+        return string.Format(alreadyAtBoundary
             ? Se.Language.Main.Waveform.GuessStartLineXAlreadyAtBoundary
-            : Se.Language.Main.Waveform.GuessStartNoSilenceFoundNearLineX, selected.Number));
+            : Se.Language.Main.Waveform.GuessStartNoSilenceFoundNearLineX, selected.Number);
     }
 
     /// <summary>
@@ -5992,30 +5995,48 @@ public partial class MainViewModel :
     [RelayCommand]
     private void WaveformGuessEnd()
     {
+        ShowStatus(GuessEndFromWaveform());
+    }
+
+    /// <summary>
+    /// "Guess start and end" (#14486): guess start, then guess end, on the selected line in one
+    /// key press. The end goes second so its minimum duration/maximum CPS floor is measured from
+    /// the guessed start. Both outcomes are reported, start first.
+    /// </summary>
+    [RelayCommand]
+    private void WaveformGuessStartAndEnd()
+    {
+        var startStatus = GuessStartFromWaveform();
+        var endStatus = GuessEndFromWaveform();
+        ShowStatus(startStatus + "; " + endStatus);
+    }
+
+    /// <summary>
+    /// The work of <see cref="WaveformGuessEnd"/>, returning the status text so
+    /// <see cref="WaveformGuessStartAndEnd"/> can report it along with the start's.
+    /// </summary>
+    private string GuessEndFromWaveform()
+    {
         var selected = SelectedSubtitle;
         if (selected == null)
         {
-            ShowStatus(Se.Language.Main.Waveform.GuessEndNoLineSelected);
-            return;
+            return Se.Language.Main.Waveform.GuessEndNoLineSelected;
         }
 
         if (AreTimeCodesLocked)
         {
-            ShowStatus(Se.Language.Main.Waveform.GuessEndTimeCodesLocked);
-            return;
+            return Se.Language.Main.Waveform.GuessEndTimeCodesLocked;
         }
 
         if (AudioVisualizer?.WavePeaks == null)
         {
-            ShowStatus(Se.Language.Main.Waveform.GuessEndNoWaveform);
-            return;
+            return Se.Language.Main.Waveform.GuessEndNoWaveform;
         }
 
         var index = Subtitles.IndexOf(selected);
         if (index < 0)
         {
-            ShowStatus(Se.Language.Main.Waveform.GuessEndNoLineSelected);
-            return;
+            return Se.Language.Main.Waveform.GuessEndNoLineSelected;
         }
 
         const double silenceLengthInSeconds = 0.08;
@@ -6062,8 +6083,7 @@ public partial class MainViewModel :
                 if (newEndMs <= endMs)
                 {
                     // No threshold can help: anything later is clamped to the same spot.
-                    ShowStatus(string.Format(Se.Language.Main.Waveform.GuessEndNoRoomBeforeNextLineX, selected.Number));
-                    return;
+                    return string.Format(Se.Language.Main.Waveform.GuessEndNoRoomBeforeNextLineX, selected.Number);
                 }
             }
 
@@ -6124,13 +6144,12 @@ public partial class MainViewModel :
 
             selected.EndTime = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newEndMs);
             _updateAudioVisualizer = true;
-            ShowStatus(string.Format(Se.Language.Main.Waveform.GuessEndMovedLineXByYMs, selected.Number, FormatSignedMs(newEndMs - endMs)));
-            return;
+            return string.Format(Se.Language.Main.Waveform.GuessEndMovedLineXByYMs, selected.Number, FormatSignedMs(newEndMs - endMs));
         }
 
-        ShowStatus(string.Format(alreadyAtBoundary
+        return string.Format(alreadyAtBoundary
             ? Se.Language.Main.Waveform.GuessEndLineXAlreadyAtBoundary
-            : Se.Language.Main.Waveform.GuessEndNoSilenceFoundNearLineX, selected.Number));
+            : Se.Language.Main.Waveform.GuessEndNoSilenceFoundNearLineX, selected.Number);
     }
 
     /// <summary>
