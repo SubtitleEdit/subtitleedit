@@ -3,6 +3,40 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.3.0-beta2 (15th of September 2026)
+
+* Add API Route auto-translate engine - thx DennyHo0917
+* Add "Rename..." to the subtitle grid's Actors context menu - thx ghostminhtoan
+* Add "all lines" and custom-milliseconds move shortcuts - thx gambar3
+* Add "OpenAI Compatible API" engine to batch convert auto-translate
+* Add Apple Vision OCR engine to seconv (--ocr-engine:applevision) - thx Hansie9999
+* Video offset: save the grid's time codes to the file, like SE 4
+* Accessible names for content buttons and text-less check boxes - thx Shaima-Almarzooqi
+* Fix Google Vision OCR splitting words on large fonts and adding a space before French "." - thx Codling
+* Fix OCR reading uppercase "I" as lowercase "l" in all-caps words (MlSSlSSlPPl) - thx Codling
+* Fix nOCR punctuation voting a line italic - thx Codling
+* Fix playhead hidden for a few seconds after seeking to where the video already is - thx Surlime
+* Fix waveform playhead not drawn at 0 s (e.g. after Stop)
+* Fix auto-translate moving a closing guillemet or curly quote to the next line - thx gambar3
+* Fix text-navigation shortcuts not firing in RTL text when opted in - thx kadrimarzouki
+* Fix Export custom text format writing the original time codes and text instead of the edited ones
+* Fix time up/down controls drawn past the edit section with End time or Layer shown
+* Fix eight FFmpeg video player teardown, seek and clock defects
+* Fix merge of roll-up captions creating zero-length lines and losing lines
+* Fix Restore auto-backup wiping all settings when a settings backup is not valid
+* Fix Remux video leaving ffmpeg running when the window closes, and metadata escaping
+* Fix batch burn-in skipping a row again after a subtitle was picked for it
+* Fix Move captions showing a 0 px bar height for the 2.39:1 preset
+* Fix a plugin missing from the Plugins menu when two plugins share a shortcut action name
+* Fix "_Plugins" group label in Options > Shortcuts
+* Fix voice pack install progress not updating on the UI thread
+* Update CrispEmbed to v0.17.11
+* Update whisper.cpp to v1.9.4
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+
+-----------------------------------------------------------------------------------------------------
+
 v5.3.0-beta1 (14th of September 2026)
 
 * Add FFmpeg video player (FFmpeg.AutoGen) with VideoToolbox (macOS) and D3D11VA/DXVA2 (Windows) hardware decoding
