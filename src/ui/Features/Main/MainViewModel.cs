@@ -1505,7 +1505,7 @@ public partial class MainViewModel :
             return;
         }
 
-        vp.Position = next.StartTime.TotalSeconds;
+        SeekVideoPlayer(vp, next.StartTime.TotalSeconds);
         PinPlayheadTo(next.StartTime.TotalSeconds);
         SelectAndScrollToSubtitle(next);
         PlayVideo(vp);
@@ -1561,7 +1561,7 @@ public partial class MainViewModel :
         SubtitleGrid.SelectedItem = next;
         SubtitleGrid.ScrollIntoView(next);
         CenterOrEnsureRowVisibleInSubtitleGrid(next);
-        vp.Position = next.StartTime.TotalSeconds;
+        SeekVideoPlayer(vp, next.StartTime.TotalSeconds);
         PinPlayheadTo(next.StartTime.TotalSeconds);
         _playSelectionItem = new PlaySelectionItem(new List<SubtitleLineViewModel> { next }, next.EndTime, loop);
         PlayVideo(vp);
@@ -1582,7 +1582,7 @@ public partial class MainViewModel :
             return;
         }
 
-        vp.Position = previous.StartTime.TotalSeconds;
+        SeekVideoPlayer(vp, previous.StartTime.TotalSeconds);
         PinPlayheadTo(previous.StartTime.TotalSeconds);
         SelectAndScrollToSubtitle(previous);
         PlayVideo(vp);
@@ -1638,7 +1638,7 @@ public partial class MainViewModel :
         SubtitleGrid.SelectedItem = previous;
         SubtitleGrid.ScrollIntoView(previous);
         CenterOrEnsureRowVisibleInSubtitleGrid(previous);
-        vp.Position = previous.StartTime.TotalSeconds;
+        SeekVideoPlayer(vp, previous.StartTime.TotalSeconds);
         PinPlayheadTo(previous.StartTime.TotalSeconds);
         _playSelectionItem = new PlaySelectionItem(new List<SubtitleLineViewModel> { previous }, previous.EndTime, loop);
         PlayVideo(vp);
@@ -10039,7 +10039,7 @@ public partial class MainViewModel :
     private void PlayLineAndPauseAtEnd(VideoPlayerControl vp, SubtitleLineViewModel item)
     {
         vp.VideoPlayer.Pause();
-        vp.Position = item.StartTime.TotalSeconds;
+        SeekVideoPlayer(vp, item.StartTime.TotalSeconds);
         PinPlayheadTo(item.StartTime.TotalSeconds);
         _playSelectionItem = new PlaySelectionItem([item], item.EndTime, false);
         PlayVideo(vp);
@@ -10121,7 +10121,7 @@ public partial class MainViewModel :
 
         vp.VideoPlayer.Pause();
         var p = selectedItems.First();
-        vp.Position = p.StartTime.TotalSeconds;
+        SeekVideoPlayer(vp, p.StartTime.TotalSeconds);
         PinPlayheadTo(p.StartTime.TotalSeconds);
         _playSelectionItem = new PlaySelectionItem(selectedItems, p.EndTime, loop);
         PlayVideo(vp);
@@ -17707,7 +17707,7 @@ public partial class MainViewModel :
         }
 
         PauseVideoAndFreezePlayhead(vp);
-        vp.Position = vp.Duration;
+        SeekVideoPlayer(vp, vp.Duration);
         PinPlayheadTo(vp.Duration);
 
         if (AudioVisualizer != null && AudioVisualizer.WavePeaks != null)
@@ -17933,7 +17933,7 @@ public partial class MainViewModel :
         var position = startSeconds > 1 ? startSeconds - 0.5 : startSeconds;
 
         vp.VideoPlayer.Pause();
-        vp.Position = position;
+        SeekVideoPlayer(vp, position);
         PinPlayheadTo(position);
         PlayVideo(vp);
         _updateAudioVisualizer = true;
@@ -19974,7 +19974,7 @@ public partial class MainViewModel :
             var vp = GetVideoPlayerControl();
             if (vp != null)
             {
-                vp.Position = next.StartTime.TotalSeconds;
+                SeekVideoPlayer(vp, next.StartTime.TotalSeconds);
                 PinPlayheadTo(next.StartTime.TotalSeconds);
                 PlayVideo(vp);
             }
@@ -31199,6 +31199,19 @@ public partial class MainViewModel :
         _playheadPausedSettled = true; // stepping: the cursor is at the current frame and follows to the next one
     }
 
+    // Seeks for a path that pins the playhead right after. Assigning vp.Position is not enough
+    // there: the styled property drops a value equal to the one it holds, so landing on the spot
+    // the video already stands on (play next from the line start it is parked on, a waveform drag
+    // clamped at 0) sent no seek - and the pin, which waits for the player to confirm one, held
+    // the cursor frozen through playback until its 5 s cap (the #14894 wheel bug, on every other
+    // pin path). SeekTo always reaches the player; the position-set notification the Position
+    // path raised (it stops a frame-step blip) is raised here directly.
+    private void SeekVideoPlayer(VideoPlayerControl vp, double seconds)
+    {
+        vp.SeekTo(seconds);
+        OnVideoPlayerPositionSet(seconds);
+    }
+
     // Called when the user seeks via the waveform: show the clicked position on the cursor
     // immediately and pin it there until mpv's clock catches up (see UpdatePlayheadEstimate).
     private void PinPlayheadTo(double targetSeconds)
@@ -31382,7 +31395,7 @@ public partial class MainViewModel :
                             var stopSeconds = Math.Max(_playSelectionItem.GetCurrentStartSeconds(),
                                 _playSelectionItem.EndSeconds - frameSeconds);
 
-                            vp.Position = stopSeconds;
+                            SeekVideoPlayer(vp, stopSeconds);
                             PinPlayheadTo(stopSeconds);
 
                             // Stopping here is not a user scrub: without this the "center also while paused"
@@ -31510,7 +31523,7 @@ public partial class MainViewModel :
                     _scrubSeekLastIssuedTs = nowTs;
                     var target = _scrubSeekPendingSeconds.Value;
                     _scrubSeekPendingSeconds = null;
-                    vp.Position = target;
+                    SeekVideoPlayer(vp, target);
                     // Re-pin so the arrive/timeout window counts from the seek that actually ran.
                     PinPlayheadTo(target);
                 }
@@ -32386,7 +32399,7 @@ public partial class MainViewModel :
         {
             _scrubSeekLastIssuedTs = nowTs;
             _scrubSeekPendingSeconds = null;
-            vp.Position = newPosition;
+            SeekVideoPlayer(vp, newPosition);
         }
         else
         {
@@ -32491,7 +32504,7 @@ public partial class MainViewModel :
 
             if (Se.Settings.General.SubtitleDoubleClickAction == SubtitleDoubleClickActionType.GoToSubtitleAndPlay.ToString())
             {
-                vp.Position = seconds;
+                SeekVideoPlayer(vp, seconds);
                 PinPlayheadTo(seconds);
                 PlayVideo(vp);
                 AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
@@ -32509,7 +32522,7 @@ public partial class MainViewModel :
 
             if (Se.Settings.General.SubtitleDoubleClickAction == SubtitleDoubleClickActionType.GoToSubtitleAndPlayAndFocusTextBox.ToString())
             {
-                vp.Position = seconds;
+                SeekVideoPlayer(vp, seconds);
                 PinPlayheadTo(seconds);
                 PlayVideo(vp);
                 AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
@@ -32545,7 +32558,7 @@ public partial class MainViewModel :
             if (Se.Settings.General.SubtitleDoubleClickAction == SubtitleDoubleClickActionType.GoToSubtitleMinus1SecAndPlay.ToString())
             {
                 seconds = Math.Max(0, seconds - 1.0);
-                vp.Position = seconds;
+                SeekVideoPlayer(vp, seconds);
                 PinPlayheadTo(seconds);
                 PlayVideo(vp);
                 AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
@@ -32667,7 +32680,7 @@ public partial class MainViewModel :
 
             if (Se.Settings.General.SubtitleSingleClickAction == SubtitleSingleClickActionType.GoToSubtitleAndPlay.ToString())
             {
-                vp.Position = seconds;
+                SeekVideoPlayer(vp, seconds);
                 PinPlayheadTo(seconds);
                 PlayVideo(vp);
                 AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
@@ -32685,7 +32698,7 @@ public partial class MainViewModel :
 
             if (Se.Settings.General.SubtitleSingleClickAction == SubtitleSingleClickActionType.GoToSubtitleAndPlayAndFocusTextBox.ToString())
             {
-                vp.Position = seconds;
+                SeekVideoPlayer(vp, seconds);
                 PinPlayheadTo(seconds);
                 PlayVideo(vp);
                 AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
@@ -33668,7 +33681,7 @@ public partial class MainViewModel :
             {
                 case WaveformSingleClickActionType.SetVideoPositionAndPauseAndSelectSubtitle:
                     PauseVideoAndFreezePlayhead(vp);
-                    vp.Position = seconds;
+                    SeekVideoPlayer(vp, seconds);
                     if (e.Paragraph != null)
                     {
                         var p1 = Subtitles.FirstOrDefault(p => p.Id == e.Paragraph.Id);
@@ -33681,7 +33694,7 @@ public partial class MainViewModel :
                     break;
                 case WaveformSingleClickActionType.SetVideopositionAndPauseAndSelectSubtitleAndCenter:
                     PauseVideoAndFreezePlayhead(vp);
-                    vp.Position = seconds;
+                    SeekVideoPlayer(vp, seconds);
                     if (e.Paragraph != null)
                     {
                         var p2 = Subtitles.FirstOrDefault(p => p.Id == e.Paragraph.Id);
@@ -33695,11 +33708,11 @@ public partial class MainViewModel :
                     break;
                 case WaveformSingleClickActionType.SetVideoPositionAndPause:
                     PauseVideoAndFreezePlayhead(vp);
-                    vp.Position = seconds;
+                    SeekVideoPlayer(vp, seconds);
                     break;
                 case WaveformSingleClickActionType.SetVideopositionAndPauseAndCenter:
                     PauseVideoAndFreezePlayhead(vp);
-                    vp.Position = seconds;
+                    SeekVideoPlayer(vp, seconds);
                     if (e.Paragraph != null)
                     {
                         AudioVisualizer.CenterOnPosition(seconds);
@@ -33707,7 +33720,7 @@ public partial class MainViewModel :
 
                     break;
                 case WaveformSingleClickActionType.SetVideoposition:
-                    vp.Position = seconds;
+                    SeekVideoPlayer(vp, seconds);
                     break;
             }
 
