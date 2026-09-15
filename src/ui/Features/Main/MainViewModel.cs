@@ -9079,7 +9079,7 @@ public partial class MainViewModel :
 
         _updateAudioVisualizer = true;
 
-        LoadWaveformAndSpectrogram(_videoFileName);
+        _ = LoadWaveformAndSpectrogram(_videoFileName);
     }
 
     // Set while the waveform toolbar's audio-track combo box is being repopulated/synced in code,
@@ -26456,9 +26456,9 @@ public partial class MainViewModel :
             Se.SaveSettings();
         }
 
-        var _ = Task.Run(() =>
+        _ = Task.Run(() =>
         {
-            Dispatcher.UIThread.Post(() => LoadWaveformAndSpectrogram(videoFileName));
+            Dispatcher.UIThread.Post(() => _ = LoadWaveformAndSpectrogram(videoFileName));
             GetMediaInformation(videoFileName);
             LoadAudioTrackMenuItems();
         });
@@ -26487,86 +26487,136 @@ public partial class MainViewModel :
         UpdateRecentVideoMenus();
     }
 
-    private void LoadWaveformAndSpectrogram(string videoFileName)
+    // Bumped by every waveform load, so a load that was overtaken while it was still reading -
+    // the user switched audio track again, or opened another video - does not apply its result
+    // over the newer one.
+    private int _waveformLoadSequence;
+
+    private sealed record CachedWaveform(
+        string PeakWaveFileName,
+        string SpectrogramFileName,
+        WavePeakData2? WavePeaks,
+        SpectrogramData2? Spectrogram,
+        List<double> ShotChanges);
+
+    // Called on the UI thread. The cache lookup runs on a worker because it reads the video: the
+    // cache file names are a hash of its first and last 64 KB (MovieHasher). A read of an
+    // online-only file in Dropbox, iCloud Drive or OneDrive waits until the file is downloaded, so
+    // on the UI thread opening a subtitle next to such a video froze the app for the whole
+    // download (#14912).
+    internal async Task LoadWaveformAndSpectrogram(string videoFileName)
     {
         var trackNumber = _audioTrack?.FfIndex ?? -1;
-        var peakWaveFileName = WavePeakGenerator2.GetPeakWaveFileName(videoFileName, trackNumber);
-        var spectrogramFileName = WavePeakGenerator2.SpectrogramDrawer.GetSpectrogramFileName(videoFileName, trackNumber);
-        var needToGenerate = !File.Exists(peakWaveFileName) || (Se.Settings.Waveform.GenerateSpectrogram && !File.Exists(spectrogramFileName));
+        var autoGenerate = Se.Settings.Waveform.WaveformAutoGenerate;
+        var generateSpectrogram = Se.Settings.Waveform.GenerateSpectrogram;
+        var sequence = ++_waveformLoadSequence;
 
         if (AudioVisualizer != null)
         {
             AudioVisualizer.ClickToGenerateText = Se.Language.Main.ClickToGenerateWaveform;
         }
 
-        // WaveformAutoGenerate gates whether we auto-extract (on video open and on audio-track
-        // switch, #13665); cached peaks still load via the branch below either way. When it is
-        // off, the click-to-generate hint lets the user start extraction explicitly.
-        if (needToGenerate && Se.Settings.Waveform.WaveformAutoGenerate)
+        CachedWaveform cached;
+        try
         {
-            StartWaveformExtraction(videoFileName, trackNumber, peakWaveFileName, spectrogramFileName);
+            cached = await Task.Run(() => LookUpCachedWaveform(videoFileName, trackNumber, autoGenerate, generateSpectrogram));
         }
-        else if (File.Exists(peakWaveFileName))
+        catch (Exception exception)
         {
-            ShowStatus(Se.Language.Main.LoadingWaveInfoFromCache);
-            var wavePeaks = TryLoadCachedPeaks(peakWaveFileName);
-            if (wavePeaks == null)
-            {
-                // The cache file was corrupt and has now been thrown away, so extraction can
-                // produce a good one - which is the whole point of deleting it. With
-                // auto-generate off, the hint lets the user start that extraction.
-                if (Se.Settings.Waveform.WaveformAutoGenerate)
-                {
-                    StartWaveformExtraction(videoFileName, trackNumber, peakWaveFileName, spectrogramFileName);
-                }
-                else
-                {
-                    ShowClickToGenerateWaveformHint();
-                }
+            Se.LogError(exception, $"Unable to look up the cached waveform for \"{videoFileName}\"");
+            return;
+        }
 
-                return;
+        if (sequence != _waveformLoadSequence || _videoFileName != videoFileName)
+        {
+            cached.Spectrogram?.Dispose();
+            return;
+        }
+
+        if (cached.WavePeaks == null)
+        {
+            // Nothing cached, or the cache file was corrupt and has now been thrown away, so
+            // extraction can produce a good one. WaveformAutoGenerate gates whether we
+            // auto-extract (on video open and on audio-track switch, #13665); when it is off,
+            // the click-to-generate hint lets the user start extraction explicitly.
+            if (autoGenerate)
+            {
+                StartWaveformExtraction(videoFileName, trackNumber, cached.PeakWaveFileName, cached.SpectrogramFileName);
+            }
+            else
+            {
+                ShowClickToGenerateWaveformHint();
             }
 
-            if (AudioVisualizer != null)
-            {
-                Dispatcher.UIThread.Post(() =>
-                {
-                    AudioVisualizer.WavePeaks = wavePeaks;
-                    AudioVisualizer.ShowClickToGenerateHint = false;
-
-                    if (IsSmpteTimingEnabled)
-                    {
-                        AudioVisualizer.UseSmpteDropFrameTime();
-                    }
-
-                    // Always set it, null included: that is what clears the previously opened
-                    // video's spectrogram when this one has none.
-                    AudioVisualizer.SetSpectrogram(TryLoadCachedSpectrogram(spectrogramFileName));
-
-                    InitializeWaveformDisplayMode();
-
-                    AudioVisualizer.ShotChanges = ShotChangesHelper.FromDisk(videoFileName);
-                    UpdateShotChangesListMenuItem();
-                    if (AudioVisualizer.ShotChanges.Count == 0)
-                    {
-                        ExtractShotChanges(videoFileName, trackNumber);
-                    }
-
-                    // Session-restore on startup sets the video position to the last-edited
-                    // cue *before* wave peaks are loaded from disk, so the waveform window
-                    // would otherwise stay at 0:00 (issue #11305). Center now that peaks
-                    // are available.
-                    CenterAudioVisualizerOnCurrentVideoPosition();
-
-                    _updateAudioVisualizer = true;
-                });
-            }
+            return;
         }
-        else
+
+        if (AudioVisualizer == null)
         {
-            // No cached waveform and auto-generate is off: show the click-to-generate hint.
-            ShowClickToGenerateWaveformHint();
+            cached.Spectrogram?.Dispose();
+            return;
         }
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            AudioVisualizer.WavePeaks = cached.WavePeaks;
+            AudioVisualizer.ShowClickToGenerateHint = false;
+
+            if (IsSmpteTimingEnabled)
+            {
+                AudioVisualizer.UseSmpteDropFrameTime();
+            }
+
+            // Always set it, null included: that is what clears the previously opened
+            // video's spectrogram when this one has none.
+            AudioVisualizer.SetSpectrogram(cached.Spectrogram);
+
+            InitializeWaveformDisplayMode();
+
+            AudioVisualizer.ShotChanges = cached.ShotChanges;
+            UpdateShotChangesListMenuItem();
+            if (AudioVisualizer.ShotChanges.Count == 0)
+            {
+                ExtractShotChanges(videoFileName, trackNumber);
+            }
+
+            // Session-restore on startup sets the video position to the last-edited
+            // cue *before* wave peaks are loaded from disk, so the waveform window
+            // would otherwise stay at 0:00 (issue #11305). Center now that peaks
+            // are available.
+            CenterAudioVisualizerOnCurrentVideoPosition();
+
+            _updateAudioVisualizer = true;
+        });
+    }
+
+    // The part of LoadWaveformAndSpectrogram that reads files - the video included - so it must
+    // not run on the UI thread. Cached peaks load even with auto-generate off; they are only
+    // skipped when an extraction is about to replace them anyway.
+    private CachedWaveform LookUpCachedWaveform(string videoFileName, int trackNumber, bool autoGenerate, bool generateSpectrogram)
+    {
+        var peakWaveFileName = WavePeakGenerator2.GetPeakWaveFileName(videoFileName, trackNumber);
+        var spectrogramFileName = WavePeakGenerator2.SpectrogramDrawer.GetSpectrogramFileName(videoFileName, trackNumber);
+        var needToGenerate = !File.Exists(peakWaveFileName) || (generateSpectrogram && !File.Exists(spectrogramFileName));
+
+        if (needToGenerate && autoGenerate || !File.Exists(peakWaveFileName))
+        {
+            return new CachedWaveform(peakWaveFileName, spectrogramFileName, null, null, []);
+        }
+
+        ShowStatus(Se.Language.Main.LoadingWaveInfoFromCache);
+        var wavePeaks = TryLoadCachedPeaks(peakWaveFileName);
+        if (wavePeaks == null)
+        {
+            return new CachedWaveform(peakWaveFileName, spectrogramFileName, null, null, []);
+        }
+
+        return new CachedWaveform(
+            peakWaveFileName,
+            spectrogramFileName,
+            wavePeaks,
+            TryLoadCachedSpectrogram(spectrogramFileName),
+            ShotChangesHelper.FromDisk(videoFileName));
     }
 
     private void ShowClickToGenerateWaveformHint()
