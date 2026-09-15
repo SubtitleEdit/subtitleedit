@@ -3911,19 +3911,25 @@ public class AudioVisualizer : Control
 
     private void DrawCurrentVideoPosition(DrawingContext context, ref RenderContext renderCtx)
     {
-        if (renderCtx.CurrentVideoPositionSeconds <= 0)
+        // Without peaks there is no timeline to place the cursor on (closing the video clears them
+        // and resets the position to 0). With them, 0 is a real position - after Stop, or on a
+        // freshly opened video - and the cursor shows there like anywhere else.
+        if (renderCtx.SampleRate <= 0 || renderCtx.CurrentVideoPositionSeconds < 0)
         {
             return;
         }
 
         var currentPositionPos = SecondsToXPositionOptimized(renderCtx.CurrentVideoPositionSeconds - renderCtx.StartPositionSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
-        if (currentPositionPos > 0 && currentPositionPos < renderCtx.Width)
+        if (currentPositionPos >= 0 && currentPositionPos < renderCtx.Width)
         {
             var isOnShotChange = GetShotChangeIndex(renderCtx.CurrentVideoPositionSeconds) >= 0;
             var pen = isOnShotChange ? _paintPenCursorOnShotChange : _paintPenCursor;
+
+            // A line centered on the left edge loses half its width to the clip; keep it inside.
+            var x = Math.Max(currentPositionPos, pen.Thickness / 2);
             context.DrawLine(pen,
-                new Point(currentPositionPos, 0),
-                new Point(currentPositionPos, renderCtx.Height));
+                new Point(x, 0),
+                new Point(x, renderCtx.Height));
         }
     }
 
