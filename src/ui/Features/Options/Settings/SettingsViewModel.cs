@@ -7,6 +7,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
@@ -2163,7 +2164,14 @@ public partial class SettingsViewModel : ObservableObject
         SetFfmpegLibsStatus();
     }
 
-    public async void ScrollElementIntoView(ScrollViewer scrollViewer, Control target)
+    /// <summary>
+    /// Fade the page out and in around the jump to a section. Headless tests turn this off: the
+    /// animation clock only advances on render ticks there and can stall mid-fade, which left
+    /// the focus move after it untested.
+    /// </summary>
+    internal static bool AnimateScrollToSection { get; set; } = true;
+
+    public async void ScrollElementIntoView(ScrollViewer scrollViewer, Control target, NavigationMethod? focusFirstControl = null)
     {
         await Dispatcher.UIThread.InvokeAsync(async () =>
         {
@@ -2171,7 +2179,10 @@ public partial class SettingsViewModel : ObservableObject
 
             // Fade out
             //await FadeToAsync(ScrollView, 0, TimeSpan.FromMilliseconds(100));
-            await RunFadeAnimation(ScrollView, from: 1, to: 0, TimeSpan.FromMilliseconds(100));
+            if (AnimateScrollToSection)
+            {
+                await RunFadeAnimation(ScrollView, from: 1, to: 0, TimeSpan.FromMilliseconds(100));
+            }
 
 
             await Task.Yield(); // Ensures target has been laid out
@@ -2184,9 +2195,24 @@ public partial class SettingsViewModel : ObservableObject
                 scrollViewer.Offset = new Vector(scrollViewer.Offset.X, targetPosition.Value.Y);
             }
 
+            if (focusFirstControl.HasValue)
+            {
+                FocusFirstTabStop(target, focusFirstControl.Value);
+            }
+
             await Task.Yield(); // Ensures target has been laid out
-            await RunFadeAnimation(ScrollView, from: 0, to: 1, TimeSpan.FromMilliseconds(200));
+            if (AnimateScrollToSection)
+            {
+                await RunFadeAnimation(ScrollView, from: 0, to: 1, TimeSpan.FromMilliseconds(200));
+            }
         }, DispatcherPriority.Background);
+    }
+
+    private static void FocusFirstTabStop(Control container, NavigationMethod navigationMethod)
+    {
+        var first = container.GetVisualDescendants().OfType<InputElement>().FirstOrDefault(e =>
+            e.Focusable && e.IsEffectivelyEnabled && e.IsEffectivelyVisible && KeyboardNavigation.GetIsTabStop(e));
+        first?.Focus(navigationMethod);
     }
 
     private static Task RunFadeAnimation(Control control, double from, double to, TimeSpan duration)
@@ -2622,7 +2648,12 @@ public partial class SettingsViewModel : ObservableObject
         var section = Sections.FirstOrDefault(section => section.IsVisible && section.Title == title);
         if (section != null)
         {
-            ScrollElementIntoView(ScrollView, section.Panel!);
+            // Move focus into the section, not only the view - with focus left on the category
+            // button, the categories did nothing for a screen reader or keyboard user (#12087).
+            // The focus rectangle follows only when the category was picked from the keyboard.
+            var pickedFromKeyboard = Window?.FocusManager?.GetFocusedElement() is Control focused
+                                     && focused.Classes.Contains(":focus-visible");
+            ScrollElementIntoView(ScrollView, section.Panel!, pickedFromKeyboard ? NavigationMethod.Tab : NavigationMethod.Unspecified);
         }
     }
 
