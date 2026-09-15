@@ -33,6 +33,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 using Nikse.SubtitleEdit.UiLogic.Media;
+using Nikse.SubtitleEdit.UiLogic.Ocr.AppleVision;
 using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
