@@ -5311,7 +5311,7 @@ public partial class MainViewModel :
         if (!skipLoadVideo && string.IsNullOrEmpty(_videoFileName) &&
             FindVideoFileName.TryFindVideoFileName(fileName, out var videoFileName))
         {
-            await VideoOpenFile(videoFileName);
+            await AutoOpenVideoFile(videoFileName);
         }
     }
 
@@ -23372,18 +23372,18 @@ public partial class MainViewModel :
 
                 if (!string.IsNullOrEmpty(videoFileName) && File.Exists(videoFileName))
                 {
-                    await VideoOpenFile(videoFileName, desiredAudioTrackId, videoStartPositionSeconds);
+                    await AutoOpenVideoFile(videoFileName, desiredAudioTrackId, videoStartPositionSeconds);
                 }
                 else if (TryGetRecentVideoFileName(fileName, out var recentVideoFileName))
                 {
                     // Honor the media this subtitle was last opened with - e.g. an audio-only
                     // project keeps its .wav instead of grabbing a later burned-in .mp4 of the
                     // same name that FindVideoFileName would otherwise prefer (issue #11612).
-                    await VideoOpenFile(recentVideoFileName, desiredAudioTrackId, videoStartPositionSeconds);
+                    await AutoOpenVideoFile(recentVideoFileName, desiredAudioTrackId, videoStartPositionSeconds);
                 }
                 else if (FindVideoFileName.TryFindVideoFileName(fileName, out videoFileName))
                 {
-                    await VideoOpenFile(videoFileName, desiredAudioTrackId, videoStartPositionSeconds);
+                    await AutoOpenVideoFile(videoFileName, desiredAudioTrackId, videoStartPositionSeconds);
                 }
             }
 
@@ -24312,7 +24312,7 @@ public partial class MainViewModel :
                             {
                                 try
                                 {
-                                    await VideoOpenFile(videoFileName);
+                                    await AutoOpenVideoFile(videoFileName);
                                     matroska.Dispose();
                                 }
                                 catch (Exception e)
@@ -24821,17 +24821,17 @@ public partial class MainViewModel :
 
         if (!string.IsNullOrEmpty(videoFileName) && File.Exists(videoFileName))
         {
-            await VideoOpenFile(videoFileName);
+            await AutoOpenVideoFile(videoFileName);
         }
         else if (TryGetRecentVideoFileName(_subtitleFileName, out var recentVideoFileName))
         {
             // Same precedence as SubtitleOpen: honor the media this subtitle was last opened with
             // (looked up under the name it would have been saved as) before guessing by file name.
-            await VideoOpenFile(recentVideoFileName);
+            await AutoOpenVideoFile(recentVideoFileName);
         }
         else if (FindVideoFileName.TryFindVideoFileName(sourceFileName, out var foundVideoFileName))
         {
-            await VideoOpenFile(foundVideoFileName);
+            await AutoOpenVideoFile(foundVideoFileName);
         }
     }
 
@@ -26355,9 +26355,29 @@ public partial class MainViewModel :
                && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
     }
 
-    // startPositionSeconds: where the video should already be when it comes up, for callers that
-    // restore a session. Handing it to the player beats seeking afterwards - the video then never
-    // shows 0:00 first and never visibly jumps (issue #13329).
+    // Opens a video the user did not pick themselves - the one found next to a subtitle, or the one
+    // remembered with it. An online-only cloud file (Dropbox, iCloud Drive, OneDrive) has to be
+    // downloaded in full before it plays or gets a waveform, so ask first rather than silently
+    // pulling gigabytes because a subtitle was opened (#14912).
+    private async Task AutoOpenVideoFile(string videoFileName, int desiredAudioTrackId = -1, double startPositionSeconds = 0)
+    {
+        if (Window != null && OnlineOnlyFile.IsOnlineOnly(videoFileName))
+        {
+            var message = string.Format(
+                Se.Language.Main.OnlineOnlyVideoXSizeYDownloadAndOpen,
+                Path.GetFileName(videoFileName),
+                Utilities.FormatBytesToDisplayFileSize(new FileInfo(videoFileName).Length));
+            var answer = await MessageBox.Show(Window, Se.Language.Main.OnlineOnlyVideo, message,
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (answer != MessageBoxResult.Yes)
+            {
+                return;
+            }
+        }
+
+        await VideoOpenFile(videoFileName, desiredAudioTrackId, startPositionSeconds);
+    }
+
     private async Task VideoOpenFile(string videoFileName, int desiredAudioTrackId = -1, double startPositionSeconds = 0) // OpenVideoFile
     {
         var vp = GetVideoPlayerControl();
