@@ -901,6 +901,15 @@ public class AudioVisualizer : Control
                 newVideoPosition = WavePeaks.LengthInSeconds;
             }
 
+            // Wheeling past either end while already parked there clamps back onto the current
+            // position: nothing to seek, so raise nothing. The seek handler pins the playhead until
+            // the player confirms a seek, and with no seek sent that only ends at the pin's 5 s cap -
+            // the cursor stayed stuck through the start of playback (issue #14894).
+            if (Math.Abs(newVideoPosition - CurrentVideoPositionSeconds) < 0.001)
+            {
+                return;
+            }
+
             // Follow the play-head: with center-also-while-paused the view scrolls on every
             // step so the cursor stays pinned to the middle (SE 4's locked/center mode) and
             // the waveform reads as one continuous strip; otherwise scroll only when the
