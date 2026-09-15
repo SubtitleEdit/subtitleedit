@@ -60,6 +60,7 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
     private DispatcherTimer _positionTimer = new DispatcherTimer();
 
     public Subtitle? ResultSubtitle { get; private set; }
+    public SecondarySubtitleStyle? ResultStyle { get; private set; }
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
 
@@ -109,6 +110,14 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
     private void Ok()
     {
         ResultSubtitle = BuildAssaSubtitle(false);
+        ResultStyle = new SecondarySubtitleStyle
+        {
+            Color = SubtitleColor,
+            FontSize = FontSize,
+            FontBold = FontBold,
+            FontBoxType = SelectedFontBoxType.BoxType,
+            AlignmentCode = SelectedFontAlignment.Code,
+        };
         OkPressed = true;
         Window?.Close();
     }
@@ -119,7 +128,12 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
         Window?.Close();
     }
 
-    public void Initialize(Subtitle secondarySubtitle, Subtitle subtitle, SubtitleFormat subtitleFormat, Logic.Media.FfmpegMediaInfo2? mediaInfo, string? videoFileName)
+    /// <param name="previousStyle">
+    /// The style last chosen for this secondary subtitle, if it is already loaded and this is a
+    /// re-open to adjust it rather than a first-time open - so the dialog starts from what was
+    /// last set instead of resetting to defaults every time (#14842).
+    /// </param>
+    public void Initialize(Subtitle secondarySubtitle, Subtitle subtitle, SubtitleFormat subtitleFormat, Logic.Media.FfmpegMediaInfo2? mediaInfo, string? videoFileName, SecondarySubtitleStyle? previousStyle = null)
     {
         _secondarySubtitle = secondarySubtitle;
         _subtitle = subtitle;
@@ -130,6 +144,15 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
         Paragraphs = new ObservableCollection<SubtitleDisplayItem>(
             secondarySubtitle.Paragraphs.Select(p => new SubtitleDisplayItem(new SubtitleLineViewModel(p, _assaFormat))));
 
+        if (previousStyle != null)
+        {
+            SubtitleColor = previousStyle.Color;
+            FontSize = previousStyle.FontSize;
+            FontBold = previousStyle.FontBold;
+            SelectedFontBoxType = FontBoxTypes.FirstOrDefault(f => f.BoxType == previousStyle.FontBoxType) ?? FontBoxTypes[0];
+            SelectedFontAlignment = FontAlignments.FirstOrDefault(a => a.Code == previousStyle.AlignmentCode) ?? FontAlignments[1];
+        }
+
         Dispatcher.UIThread.Post(() =>
         {
             if (!string.IsNullOrEmpty(videoFileName))
@@ -137,8 +160,11 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
                 _ = VideoPlayerControl.Open(videoFileName);
             }
 
-            var height = mediaInfo?.Dimension.Height ?? 1080;
-            FontSize = AssaResampler.Resample(AdvancedSubStationAlpha.DefaultHeight, height, Se.Settings.Video.MpvPreviewFontSize);
+            if (previousStyle == null)
+            {
+                var height = mediaInfo?.Dimension.Height ?? 1080;
+                FontSize = AssaResampler.Resample(AdvancedSubStationAlpha.DefaultHeight, height, Se.Settings.Video.MpvPreviewFontSize);
+            }
         });
     }
 
