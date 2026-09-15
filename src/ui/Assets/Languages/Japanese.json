@@ -1,6 +1,6 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.3.0-beta1",
+  "version": "v5.3.0-beta2",
   "translatedBy": "",
   "cultureName": "jp-JP",
   "general": {
@@ -3524,7 +3524,11 @@
     "applyToSelectedLinesX": "選択行 ({0})",
     "applyToAllLinesX": "すべての行 ({0})",
     "updateAllXAvailable": "すべて更新 ({0} 件利用可能)",
-    "updatingXOfY": "{0}/{1} を更新中..."
+    "updatingXOfY": "{0}/{1} を更新中...",
+    "doNotAskAgain": "もう確認しない（プラグインの管理で変更）",
+    "applyPluginsTo": "プラグインを適用する対象",
+    "askEachTime": "毎回確認する",
+    "allLines": "全ての行"
   },
   "help": {
     "aboutSubtitleEdit": "Subtitle Edit について",
