@@ -21115,6 +21115,62 @@ public partial class MainViewModel :
     private void RemoveActor() => SetActorForSelectedLines(string.Empty);
 
     [RelayCommand]
+    private async Task RenameActor(string? oldActorName)
+    {
+        if (string.IsNullOrWhiteSpace(oldActorName))
+        {
+            oldActorName = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>()
+                .FirstOrDefault(p => !string.IsNullOrWhiteSpace(p.Actor))?.Actor;
+        }
+
+        if (string.IsNullOrWhiteSpace(oldActorName))
+        {
+            var actors = GetActorsInSubtitle();
+            if (actors.Count == 1)
+            {
+                oldActorName = actors[0];
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        var result = await ShowDialogAsync<PromptTextBoxWindow, PromptTextBoxViewModel>(vm =>
+        {
+            vm.Initialize(Se.Language.General.Actor + " - " + Se.Language.General.Rename, oldActorName, 250, 20, true);
+        });
+
+        if (result.OkPressed && !string.IsNullOrWhiteSpace(result.Text) && result.Text != oldActorName)
+        {
+            var newActorName = result.Text.Trim();
+            Dispatcher.UIThread.Post(() =>
+            {
+                foreach (var line in Subtitles)
+                {
+                    if (line.Actor == oldActorName)
+                    {
+                        line.Actor = newActorName;
+                    }
+                }
+
+                if (_subtitle?.Paragraphs != null)
+                {
+                    foreach (var p in _subtitle.Paragraphs)
+                    {
+                        if (p.Actor == oldActorName)
+                        {
+                            p.Actor = newActorName;
+                        }
+                    }
+                }
+
+                RefreshSubtitlePreview();
+            });
+        }
+    }
+
+    [RelayCommand]
     private async Task SetNewActor()
     {
         var result = await ShowDialogAsync<PromptTextBoxWindow, PromptTextBoxViewModel>(vm =>
@@ -28503,6 +28559,40 @@ public partial class MainViewModel :
                     Header = Se.Language.General.NewDotDotDot,
                     Command = SetNewActorForSelectedLinesCommand,
                 });
+
+                if (actorsInSubtitle.Count > 0)
+                {
+                    var selectedActor = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>()
+                        .FirstOrDefault(p => !string.IsNullOrWhiteSpace(p.Actor))?.Actor;
+
+                    if (!string.IsNullOrEmpty(selectedActor))
+                    {
+                        MenuItemActors.Items.Add(new MenuItem
+                        {
+                            Header = string.Format("{0} '{1}'...", Se.Language.General.Rename, selectedActor),
+                            Command = RenameActorCommand,
+                            CommandParameter = selectedActor,
+                        });
+                    }
+
+                    if (actorsInSubtitle.Count > 1 || string.IsNullOrEmpty(selectedActor))
+                    {
+                        var renameSubMenu = new MenuItem
+                        {
+                            Header = Se.Language.General.Rename,
+                        };
+                        foreach (var actor in actorsInSubtitle)
+                        {
+                            renameSubMenu.Items.Add(new MenuItem
+                            {
+                                Header = actor + "...",
+                                Command = RenameActorCommand,
+                                CommandParameter = actor,
+                            });
+                        }
+                        MenuItemActors.Items.Add(renameSubMenu);
+                    }
+                }
 
                 var removeActorMenuItem = new MenuItem
                 {
