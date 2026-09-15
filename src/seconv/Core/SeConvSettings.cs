@@ -137,6 +137,8 @@ internal sealed class SeConvSettings
                 LineSpacingPercent = style.LineSpacingPercent,
                 IsFullFrame = style.IsFullFrame,
                 FullFrameBackgroundColor = ToHex(style.FullFrameBackgroundColor),
+                Mode3D = style.Mode3D.ToString(),
+                Depth3D = style.Depth3D,
                 Alignment = style.Alignment.ToString(),
                 ContentAlignment = style.ContentAlignment.ToString(),
                 // BottomTopMargin / LeftRightMargin left unset: their default is "5% of the
@@ -410,6 +412,8 @@ internal sealed class SeConvSettings
         public int? LineSpacingPercent { get; set; }
         public bool? IsFullFrame { get; set; }
         public string? FullFrameBackgroundColor { get; set; }
+        public string? Mode3D { get; set; }
+        public int? Depth3D { get; set; }
         public string? Alignment { get; set; }
         public string? ContentAlignment { get; set; }
         public int? BottomTopMargin { get; set; }
@@ -456,6 +460,10 @@ internal sealed class SeConvSettings
                 style.IsFullFrame = IsFullFrame.Value;
             if (!string.IsNullOrWhiteSpace(FullFrameBackgroundColor) && ImageExportStyle.TryParseColor(FullFrameBackgroundColor, out var fullFrameBackgroundColor))
                 style.FullFrameBackgroundColor = fullFrameBackgroundColor;
+            if (!string.IsNullOrWhiteSpace(Mode3D) && ImageExportStyle.TryParseMode3D(Mode3D, out var mode3D))
+                style.Mode3D = mode3D;
+            if (Depth3D.HasValue && ImageExportStyle.IsValidDepth3D(Depth3D.Value))
+                style.Depth3D = Depth3D.Value;
             if (!string.IsNullOrWhiteSpace(Alignment) && ImageExportStyle.TryParseAlignment(Alignment, out var alignment))
                 style.Alignment = alignment;
             if (!string.IsNullOrWhiteSpace(ContentAlignment) && ImageExportStyle.TryParseContentAlignment(ContentAlignment, out var contentAlignment))

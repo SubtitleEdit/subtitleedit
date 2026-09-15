@@ -1772,6 +1772,11 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
         var profile = GetExportImagesProfile();
 
+        // D-Cinema has no packed 3D frame to draw into - its handlers write the depth as the Z-position.
+        var mode3D = _config.TargetFormatName is FormatDCinemaInterop or FormatDCinemaSmpte2014
+            ? Export3DMode.None
+            : profile.Mode3D;
+
         var imageParameters = new List<ImageParameter>();
         for (var i = 0; i < imageSubtitle.Count; i++)
         {
@@ -1817,6 +1822,8 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 FramesPerSecond = profile.FramesPerSecond,
                 IsFullFrame = profile.IsFullFrame,
                 FullFrameBackgroundColor = profile.FullFrameBackgroundColor.FromHexToColor().ToSKColor(),
+                Mode3D = mode3D,
+                Depth3D = profile.Depth3D,
             };
             var position = imageSubtitle.GetPosition(i);
             if (imageSubtitle is OcrSubtitleTransportStream)
@@ -1829,6 +1836,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             {
                 param.OverridePosition = position;
             }
+
+            // Here rather than where text is rendered, so image → image converts get 3D too. The
+            // flat bitmap may belong to the source subtitle, so it is left alone.
+            Stereo3DImage.Apply(param, disposeSource: false);
 
             imageParameters.Add(param);
 

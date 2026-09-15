@@ -265,6 +265,7 @@ public class ExportImageBasedWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -459,6 +460,26 @@ public class ExportImageBasedWindow : Window
         grid.Add(labelFrameRate, 6, 4);
         grid.Add(comboBoxFrameRate, 6, 5);
 
+        // SE4's "3D": the subtitle drawn once per eye for frame-packed 3D video. D-Cinema has only
+        // the depth, as the Z-position (see IsMode3DVisible).
+        var label3D = UiUtil.MakeLabel(Se.Language.File.Export.Stereo3D);
+        label3D.Bind(IsVisibleProperty, new Binding(nameof(vm.IsMode3DVisible)) { Source = vm });
+        var comboBox3D = UiUtil.MakeComboBox(vm.Modes3D, vm, nameof(vm.SelectedMode3D));
+        comboBox3D.Bind(IsVisibleProperty, new Binding(nameof(vm.IsMode3DVisible)) { Source = vm });
+        var labelDepth3D = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.Depth3DText));
+        var comboBoxDepth3D = UiUtil.MakeComboBox(vm.Depths3D, vm, nameof(vm.SelectedDepth3D));
+        comboBoxDepth3D.Bind(IsEnabledProperty, new Binding(nameof(vm.IsDepth3DEnabled)) { Source = vm });
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(comboBox3D, Se.Language.File.Export.Stereo3DHint);
+            ToolTip.SetTip(comboBoxDepth3D, Se.Language.File.Export.Depth3DHint);
+        }
+
+        grid.Add(label3D, 7, 0);
+        grid.Add(comboBox3D, 7, 1);
+        grid.Add(labelDepth3D, 7, 2);
+        grid.Add(comboBoxDepth3D, 7, 3);
+
         // Only shown for the formats that can use a frame-sized image (see IsFullFrameVisible).
         var checkBoxFullFrame = UiUtil.MakeCheckBox(Se.Language.File.Export.FullFrameImage, vm, nameof(vm.IsFullFrame));
         checkBoxFullFrame.IsCheckedChanged += vm.CheckBoxChanged;
@@ -477,7 +498,7 @@ public class ExportImageBasedWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             Children = { checkBoxFullFrame, colorPickerFullFrame },
         }.WithBindIsVisible(vm, nameof(vm.IsFullFrameVisible));
-        grid.Add(panelFullFrame, 7, 0, 1, 6);
+        grid.Add(panelFullFrame, 8, 0, 1, 6);
 
         return UiUtil.MakeBorderForControl(grid);
     }

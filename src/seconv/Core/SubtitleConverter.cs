@@ -43,6 +43,39 @@ internal class SubtitleConverter
             $"Full frame image is not supported by '{options.Format}' and was ignored - it applies to fcpimage and bluraysup.");
     }
 
+    /// <summary>
+    /// The 3D options can reach a target that has no use for them the same way: D-Cinema has no
+    /// packed frame to draw a 3D image into (it only takes the depth, as the Z-position), and
+    /// everywhere else a depth without a 3D mode moves nothing.
+    /// </summary>
+    private static void WarnIf3DIgnored(ConversionOptions options, ConversionResult result)
+    {
+        var style = options.ImageStyle;
+        if (style.Mode3D == Export3DMode.None && style.Depth3D == 0)
+        {
+            return;
+        }
+
+        var handler = ImageOutputWriter.TryCreateHandler(LibSEIntegration.NormalizeFormatName(options.Format));
+        if (handler is null)
+        {
+            return;
+        }
+
+        if (!Stereo3DImage.IsModeSupported(handler.ExportImageType))
+        {
+            if (style.Mode3D != Export3DMode.None)
+            {
+                result.Warnings.Add(
+                    $"3D mode is not supported by '{options.Format}' and was ignored - D-Cinema writes the 3D depth as the Z-position instead.");
+            }
+        }
+        else if (style.Mode3D == Export3DMode.None)
+        {
+            result.Warnings.Add("3D depth has no effect without a 3D mode (--mode-3d) and was ignored.");
+        }
+    }
+
     public async Task<ConversionResult> ConvertAsync(ConversionOptions options)
     {
         var result = new ConversionResult();
@@ -56,6 +89,7 @@ internal class SubtitleConverter
             }
 
             WarnIfFullFrameIgnored(options, result);
+            WarnIf3DIgnored(options, result);
 
             // Get input files
             var inputFiles = GetInputFiles(options);

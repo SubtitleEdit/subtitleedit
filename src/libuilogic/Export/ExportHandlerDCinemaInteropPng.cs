@@ -90,16 +90,17 @@ public class ExportHandlerDCinemaInteropPng : IExportHandler
         _sb.AppendLine("<Subtitle FadeDownTime=\"" + 0 + "\" FadeUpTime=\"" + 0 + "\" TimeOut=\"" + DCinemaInterop.ConvertToTimeString(new TimeCode(param.EndTime)) +
                        "\" TimeIn=\"" +
                        DCinemaInterop.ConvertToTimeString(new TimeCode(param.StartTime)) + "\" SpotNumber=\"" + _imagesSavedCount + "\">");
-        // if (param.Depth3D == 0)
+        // The export's 3D depth: stereoscopic cinema places the image in depth by its Z-position.
+        if (param.Depth3D == 0)
         {
             _sb.AppendLine("<Image VPosition=\"" + vPos + "\" HPosition=\"" + hPos + "\" VAlign=\"" + verticalAlignment + "\" HAlign=\"" + horizontalAlignment + "\">" +
                            numberString + ".png" + "</Image>");
         }
-        // else
-        // {
-        //     sb.AppendLine("<Image VPosition=\"" + vPos + "\" HPosition=\"" + hPos + "\" ZPosition=\"" + param.Depth3D + "\" VAlign=\"" + verticalAlignment + "\" HAlign=\"" +
-        //                   horizontalAlignment + "\">" + numberString + ".png" + "</Image>");
-        // }
+        else
+        {
+            _sb.AppendLine("<Image VPosition=\"" + vPos + "\" HPosition=\"" + hPos + "\" ZPosition=\"" + param.Depth3D.ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                           "\" VAlign=\"" + verticalAlignment + "\" HAlign=\"" + horizontalAlignment + "\">" + numberString + ".png" + "</Image>");
+        }
 
         _sb.AppendLine("</Subtitle>");
     }

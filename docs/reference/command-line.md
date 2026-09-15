@@ -189,10 +189,14 @@ When rendering a text subtitle to an image-based target (Blu-Ray `sup`, VobSub, 
 | `--override-position:<x\|y\|xy>` | Image → image only (DVB-sub, PGS, VobSub pass-through): ignore the source bitmap position on that axis and place it by `--alignment` and the margins instead. The other axis keeps the source position. Matches SE4's transport-stream "override original X/Y position" |
 | `--full-frame` | Draw each subtitle onto a frame-sized image instead of one cropped to the text. Only `fcpimage` and `bluraysup` use it; other image targets warn and ignore it |
 | `--full-frame-background-color:<color>` | Background of the full frame image (default: `transparent`) |
+| `--mode-3d:<mode>` | Draw each subtitle for frame-packed 3D video, once per eye: `none` (default) \| `half-side-by-side` (`sbs`) \| `half-top-bottom` (`tab`). Works for text → image and image → image; D-Cinema warns and ignores it |
+| `--depth-3d:<px>` | 3D depth, -100 to 100 (default: 0): positive brings the subtitle out of the screen, negative pushes it back. D-Cinema writes it as the image's Z-position |
 
 Colours accept hex (`#AARRGGBB`, `#RRGGBB`, with or without `#`) or a colour name (`white`, `black`, `yellow`, ...).
 
 **Full frame** (`--full-frame`) draws the subtitle onto a canvas the size of the video frame, using the alignment and margins to place it there, so every image can be dropped on an editing timeline at 0,0 instead of being positioned one by one. It matches the "Full frame image" checkbox in the export dialog, and applies to `fcpimage` and `bluraysup` only. The background is transparent unless `--full-frame-background-color` says otherwise, so the images sit on a track above the video.
+
+**3D** (`--mode-3d`) matches the "3D" option in the export dialog (SE4's 3D export). A half side-by-side or half top/bottom video holds a squeezed view per eye, so the subtitle is squeezed the same way and drawn once in each view, where the alignment, margins or `{\pos}` would put it. `--depth-3d` moves the two copies apart. With an image source (`.sup`, VobSub, DVB-sub, ...) it turns a 2D track into a 3D one, keeping each subtitle's position.
 
 ```bash
 # SRT → UHD Blu-Ray sup with a semi-transparent black background box (SE4-style)
@@ -203,6 +207,9 @@ seconv movie.srt bluraysup --font-name:Verdana --font-size:60 --font-bold --box-
 
 # Final Cut Pro + image, one frame-sized png per subtitle
 seconv movie.srt fcpimage --full-frame
+
+# 2D Blu-ray sup → half side-by-side 3D Blu-ray sup, standing slightly out of the screen
+seconv movie.sup bluraysup --mode-3d:half-side-by-side --depth-3d:4 --output-filename-append:.3d
 ```
 
 ### Containers / tracks
@@ -556,13 +563,15 @@ The keys and defaults below are exactly what `dump-settings` emits:
     "lineSpacingPercent": 0,
     "isFullFrame": false,
     "fullFrameBackgroundColor": "#00FFFFFF",
+    "mode3D": "None",
+    "depth3D": 0,
     "alignment": "BottomCenter",
     "contentAlignment": "Center"
   }
 }
 ```
 
-The `exportImages` section styles text → image rendering (see [Image output styling](#image-output-styling) for the semantics); the equivalent CLI flags override it. Colours are emitted as `#AARRGGBB` (so `backgroundColor` / `fullFrameBackgroundColor` default to fully transparent, `#00FFFFFF`, and `boxType` to `None`); `boxType`, `alignment`, and `contentAlignment` are emitted as enum names but also accept the CLI spellings (`one-box`, `bottom-center`, …). Two optional `exportImages` keys are read but not emitted: `bottomTopMargin` and `leftRightMargin` (pixels; default 5% of the frame height / width). The `tools` section holds the merge-short-lines settings and the auto-translate prompts. The `general` section mirrors `Configuration.Settings.General`; any key left out keeps the libse default. The profile-shaping values (`minimumMillisecondsBetweenLines`, `maxNumberOfLines`, `mergeLinesShorterThan`, `subtitleMaximumCharactersPerSeconds`, `subtitleOptimalCharactersPerSeconds`, `subtitleMaximumWordsPerMinute`, `dialogStyle`, `continuationStyle`) feed Fix common errors and the split/merge operations, so set them to reproduce an SE4 profile. `dialogStyle` and `continuationStyle` take the enum names (case-insensitive): `dialogStyle` ∈ `DashBothLinesWithSpace`, `DashBothLinesWithoutSpace`, `DashSecondLineWithSpace`, `DashSecondLineWithoutSpace`; `continuationStyle` ∈ `None`, `NoneTrailingDots`, `NoneTrailingEllipsis`, `OnlyTrailingDots`, `LeadingTrailingDots`, `LeadingTrailingEllipsis`, `LeadingTrailingDash`, … (see the Fix common errors continuation styles).
+The `exportImages` section styles text → image rendering (see [Image output styling](#image-output-styling) for the semantics); the equivalent CLI flags override it. Colours are emitted as `#AARRGGBB` (so `backgroundColor` / `fullFrameBackgroundColor` default to fully transparent, `#00FFFFFF`, and `boxType` to `None`); `boxType`, `mode3D`, `alignment`, and `contentAlignment` are emitted as enum names but also accept the CLI spellings (`one-box`, `half-sbs`, `bottom-center`, …). Two optional `exportImages` keys are read but not emitted: `bottomTopMargin` and `leftRightMargin` (pixels; default 5% of the frame height / width). The `tools` section holds the merge-short-lines settings and the auto-translate prompts. The `general` section mirrors `Configuration.Settings.General`; any key left out keeps the libse default. The profile-shaping values (`minimumMillisecondsBetweenLines`, `maxNumberOfLines`, `mergeLinesShorterThan`, `subtitleMaximumCharactersPerSeconds`, `subtitleOptimalCharactersPerSeconds`, `subtitleMaximumWordsPerMinute`, `dialogStyle`, `continuationStyle`) feed Fix common errors and the split/merge operations, so set them to reproduce an SE4 profile. `dialogStyle` and `continuationStyle` take the enum names (case-insensitive): `dialogStyle` ∈ `DashBothLinesWithSpace`, `DashBothLinesWithoutSpace`, `DashSecondLineWithSpace`, `DashSecondLineWithoutSpace`; `continuationStyle` ∈ `None`, `NoneTrailingDots`, `NoneTrailingEllipsis`, `OnlyTrailingDots`, `LeadingTrailingDots`, `LeadingTrailingEllipsis`, `LeadingTrailingDash`, … (see the Fix common errors continuation styles).
 
 Keys that seconv does not recognize are ignored, so a settings file written for a newer version still applies everything this one understands — but they are listed in a warning, so a typo (or a key your seconv is too old to know) does not silently give you default output.
 
