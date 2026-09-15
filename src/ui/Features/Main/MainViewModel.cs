@@ -744,7 +744,8 @@ public partial class MainViewModel :
     private bool _playheadPausedSettled; // set once mpv's clock has come to rest after a pause and the cursor has landed on it
     private const double PlayheadPausedSettleStableMs = 100; // mpv's position unchanged this long after a pause = its clock is at rest -> snap the cursor there once
     private bool _playheadResyncOnPlay; // armed while paused: re-seed the estimate from mpv once playback actually moves again
-    private const double PlayheadResyncOnPlayThresholdSeconds = 0.04; // ~one frame; below this the standing residual isn't worth moving the cursor for
+    private const double PlayheadResyncOnPlayThresholdSeconds = 0.04; // ~one frame; below this the standing residual isn't worth an alignment seek
+    private const double PlayheadResyncOnPlayMinGapSeconds = 0.1; // mpv's clock opens playback with a whole-frame step (41.7 ms at 23.976 fps) - not a residual (#14909)
     private long _frameStepFollowUntilTs; // a native frame step is in flight: treat mpv's un-pause as paused (see BeginFrameStepPlayheadFollow)
     private const double FrameStepFollowWindowMs = 1000; // safety cap; the window normally closes as soon as the step lands
 
@@ -31153,10 +31154,20 @@ public partial class MainViewModel :
             //
             // Correcting here rather than at the pause keeps #12740 intact, and a jump at the instant the
             // cursor starts moving is far less visible than one after it has come to rest.
+            //
+            // The first move is not a clean reading, though: with a video track mpv's clock opens
+            // playback with a whole-frame step within one tick (5.000 -> 5.040 at 25 fps, measured on a
+            // live core) and then runs slow until it has caught up with the audio. Against the old
+            // one-frame threshold that step alone read as a residual - just over it at 25 fps by
+            // floating point, always over it at 23.976 - so every play after a seek (a waveform click,
+            // then play) snapped the cursor a frame forward, a jump of the whole waveform in center
+            // mode, and the forward-only drift correction kept it a frame ahead from then on (#14909).
+            // The residual this is for is gone by now anyway: AlignPausedPlayerWithCursor seeks mpv
+            // onto the cursor while paused.
             if (_playheadResyncOnPlay && rawChanged)
             {
                 _playheadResyncOnPlay = false;
-                if (Math.Abs(rawPosition - _playheadEstimateSeconds) > PlayheadResyncOnPlayThresholdSeconds)
+                if (Math.Abs(rawPosition - _playheadEstimateSeconds) > PlayheadResyncOnPlayMinGapSeconds)
                 {
                     _playheadEstimateSeconds = rawPosition;
                 }

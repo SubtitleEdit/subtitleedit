@@ -74,6 +74,9 @@ public class PlayheadResumeFromCursorTests : IDisposable
             }
         }
 
+        /// <summary>mpv's observed clock moves on its own, as it does once playback runs.</summary>
+        public void SetObservedPosition(double seconds) => _observedPosition = seconds;
+
         public string Name => "fake";
         public string FileName { get; private set; } = string.Empty;
 
@@ -316,6 +319,39 @@ public class PlayheadResumeFromCursorTests : IDisposable
         player.LandSeek();
         Assert.Equal(1.0, player.Position, 4);
         Assert.Equal(1.0, Tick(vm, vp, isPlaying: true), 2);
+    }
+
+    [AvaloniaFact]
+    public void PlayAfterSeek_FirstWholeFrameClockStep_DoesNotMoveTheCursor()
+    {
+        // #14909: parked on a landed seek (a waveform click), mpv's clock opens playback with a
+        // whole-frame step - 41.7 ms at 23.976 fps - within a single tick. The on-play resync read
+        // that as a standing residual and snapped the cursor a frame forward: in center mode the
+        // whole waveform jumped at every play, and the cursor then ran a frame ahead of the audio.
+        var (vm, vp, player) = MakeViewModelWithPlayer(cursorSeconds: 5.0, rawSeconds: 5.0);
+        Assert.Equal(5.0, Tick(vm, vp, isPlaying: false), 3); // a paused tick arms the on-play resync
+
+        vm.CancelPausePlayheadFreeze();
+        player.Play();
+        Assert.Equal(5.0, Tick(vm, vp, isPlaying: true), 3); // mpv's clock has not moved yet: hold
+
+        player.SetObservedPosition(5.0 + 1001.0 / 24000.0);
+        Assert.InRange(Tick(vm, vp, isPlaying: true), 5.0, 5.01); // glides on from 5.0, no frame hop
+    }
+
+    [AvaloniaFact]
+    public void PlayWithARealResidual_StillResyncsOnTheFirstClockMove()
+    {
+        // A gap bigger than a frame step is a real residual (e.g. an unpinned foreign seek), and
+        // too small for the lag snap to catch - the on-play resync still owns it.
+        var (vm, vp, player) = MakeViewModelWithPlayer(cursorSeconds: 5.0, rawSeconds: 5.0);
+        Assert.Equal(5.0, Tick(vm, vp, isPlaying: false), 3);
+
+        player.Play();
+        Assert.Equal(5.0, Tick(vm, vp, isPlaying: true), 3);
+
+        player.SetObservedPosition(5.12);
+        Assert.Equal(5.12, Tick(vm, vp, isPlaying: true), 2);
     }
 
     private (MainViewModel Vm, VideoPlayerControl Vp, FakeVideoPlayer Player) MakeViewModelWithPlayer(double cursorSeconds, double rawSeconds)
