@@ -640,6 +640,10 @@ public partial class MainViewModel :
     private Subtitle _subtitle;
     private Subtitle? _subtitleSecondary;
     private string? _subtitleSecondaryFileName;
+    // The style last chosen in OpenSecondarySubtitleWindow, so reopening it to adjust an
+    // already-loaded secondary subtitle starts from what was last set instead of resetting to
+    // defaults (#14842). Cleared with the secondary subtitle itself.
+    private SecondarySubtitleStyle? _subtitleSecondaryStyle;
     private Subtitle _subtitleOriginal;
     private SubtitleFormat? _lastOpenSaveFormat;
     private string? _videoFileName;
@@ -4030,9 +4034,12 @@ public partial class MainViewModel :
             return;
         }
 
+        // Restyling the same file that's already loaded (#13492) should keep its style, not
+        // reset it - only a genuinely different file starts from defaults (#14842).
+        var previousStyle = fileName == _subtitleSecondaryFileName ? _subtitleSecondaryStyle : null;
         var result = await ShowDialogAsync<OpenSecondarySubtitleWindow, OpenSecondarySubtitleViewModel>(vm =>
         {
-            vm.Initialize(subtitle, GetUpdateSubtitle(), SelectedSubtitleFormat, _mediaInfo, _videoFileName);
+            vm.Initialize(subtitle, GetUpdateSubtitle(), SelectedSubtitleFormat, _mediaInfo, _videoFileName, previousStyle);
         });
 
         if (!result.OkPressed)
@@ -4042,6 +4049,7 @@ public partial class MainViewModel :
 
         _subtitleSecondary = result.ResultSubtitle;
         _subtitleSecondaryFileName = fileName;
+        _subtitleSecondaryStyle = result.ResultStyle;
         IsSubtitleSecondaryVisible = true;
 
         var vp = GetVideoPlayerControl();
@@ -4086,6 +4094,7 @@ public partial class MainViewModel :
         IsSubtitleSecondaryVisible = false;
         _subtitleSecondary = null;
         _subtitleSecondaryFileName = null;
+        _subtitleSecondaryStyle = null;
         RefreshSubtitlePreview(); // push the removal, or the cleared secondary stays on the video
     }
 

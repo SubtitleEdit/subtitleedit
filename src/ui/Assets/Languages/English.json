@@ -2660,6 +2660,7 @@
     "openSecondarySubtitleOnVideoPlayerDotDotDot": "Open second subtitle file...",
     "openSecondarySubtitleOnVideoPlayer": "Second subtitle file (on video player)",
     "removeSecondarySubtitleOnVideoPlayer": "Remove second subtitle file",
+    "secondarySubtitleJustifyLines": "Justify lines",
     "openRecentVideo": "Open recent video",
     "clearRecentVideos": "Clear recent videos",
     "cutVideoTitle": "Cut video",
