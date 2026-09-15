@@ -700,52 +700,11 @@ public partial class AutoTranslateViewModel : ObservableObject
             TargetLanguages.Add(language);
         }
 
-        SelectedTargetLanguage = null;
-        var targetLanguageIsoCode = EvaluateDefaultTargetLanguageCode(SelectedTargetLanguage?.Code ?? string.Empty, SelectedSourceLanguage?.Code ?? string.Empty);
-        if (!string.IsNullOrEmpty(targetLanguageIsoCode))
-        {
-            var lang = TargetLanguages.FirstOrDefault(p => p.Code == targetLanguageIsoCode);
-            if (lang != null)
-            {
-                SelectedTargetLanguage = lang;
-            }
-        }
-
-        var languageName = Iso639Dash2LanguageCode.List.FirstOrDefault(l => l.TwoLetterCode.Equals(targetLanguageIsoCode, StringComparison.InvariantCultureIgnoreCase))?.EnglishName;
-        if (SelectedTargetLanguage == null && !string.IsNullOrEmpty(languageName))
-        {
-            var lang = TargetLanguages.FirstOrDefault(p => p.Name == languageName);
-            if (lang != null)
-            {
-                SelectedTargetLanguage = lang;
-            }
-        }
-
-        if (!string.IsNullOrEmpty(Se.Settings.AutoTranslate.AutoTranslateLastTarget))
-        {
-            var lang = TargetLanguages.FirstOrDefault(p => p.Code == Se.Settings.AutoTranslate.AutoTranslateLastTarget);
-            if ((SelectedSourceLanguage == null || lang == null || SelectedSourceLanguage.Code != lang.Code) && lang != null)
-            {
-                SelectedTargetLanguage = lang;
-            }
-        }
-
-        if (SelectedTargetLanguage == null && TargetLanguages.Count > 0)
-        {
-            SelectedTargetLanguage = TargetLanguages[0];
-        }
-
-        if (SelectedSourceLanguage?.Name == SelectedTargetLanguage?.Name && TargetLanguages.Count > 1)
-        {
-            if (SelectedSourceLanguage?.Code == "en" || SelectedSourceLanguage?.Name == "English")
-            {
-                SelectedTargetLanguage = TargetLanguages.FirstOrDefault(p => p.Code == "de");
-            }
-            else
-            {
-                SelectedTargetLanguage = TargetLanguages.FirstOrDefault(p => p.Code == "en");
-            }
-        }
+        SelectedTargetLanguage = FindDefaultTargetLanguage(
+            TargetLanguages,
+            SelectedSourceLanguage,
+            Se.Settings.AutoTranslate.AutoTranslateLastTarget,
+            Se.Language.CultureName);
     }
 
     [RelayCommand]
@@ -2467,92 +2426,72 @@ public partial class AutoTranslateViewModel : ObservableObject
         return defaultSourceLanguageCode;
     }
 
-    public static string EvaluateDefaultTargetLanguageCode(string defaultSourceLanguage, string sourceLanguage)
+    /// <summary>
+    /// The target language a freshly built target combo starts on: the last target used, then the
+    /// UI language, then English - skipping any that is the source language (#14903).
+    ///
+    /// The old default only matched on <see cref="TranslationPair.Code"/> and guessed the user's
+    /// language from the region part of the OS culture ("US" in "en-US"). The LLM engines keep the
+    /// English name in Code ("Chinese") while the last target may have been saved as an ISO code
+    /// ("zh"), so nothing matched and the combo fell back to its first entry - Abkhaz.
+    /// </summary>
+    internal static TranslationPair? FindDefaultTargetLanguage(
+        IList<TranslationPair> targetLanguages,
+        TranslationPair? sourceLanguage,
+        string? lastTarget,
+        string? uiCultureName)
     {
-        var installedLanguages = new List<string>(); // Get installed languages
-
-        var currentCulture = CultureInfo.CurrentCulture;
-        var currentLanguage = currentCulture.Name.Split('-').LastOrDefault();
-        if (!string.IsNullOrEmpty(currentLanguage))
+        if (targetLanguages.Count == 0)
         {
-            var cultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
-            var cultureByName = cultures.FirstOrDefault(p => p.Name.EndsWith(currentLanguage));
-            if (cultureByName != null)
+            return null;
+        }
+
+        var candidates = new List<string?> { lastTarget, uiCultureName };
+        if (!string.IsNullOrEmpty(uiCultureName) && uiCultureName.Contains('-'))
+        {
+            candidates.Add(uiCultureName.Substring(0, uiCultureName.IndexOf('-')));
+        }
+
+        candidates.Add("en");
+        candidates.Add("de");
+
+        foreach (var candidate in candidates)
+        {
+            var language = FindLanguage(targetLanguages, candidate);
+            if (language != null && !IsSameLanguage(language, sourceLanguage))
             {
-                installedLanguages.Add(cultureByName.TwoLetterISOLanguageName);
+                return language;
             }
         }
 
-        var uiCultureTargetLanguage = Se.Settings.AutoTranslate.AutoTranslateLastTarget;
-        if (uiCultureTargetLanguage == sourceLanguage && installedLanguages.Count > 0 && installedLanguages[0] != sourceLanguage)
+        return targetLanguages.FirstOrDefault(p => !IsSameLanguage(p, sourceLanguage)) ?? targetLanguages[0];
+    }
+
+    /// <summary>
+    /// The entry for a saved code or name, however the engine spells it: a code ("zh-CN",
+    /// "zho_Hans"), an English name ("Chinese"), or the ISO code behind either.
+    /// </summary>
+    private static TranslationPair? FindLanguage(IList<TranslationPair> languages, string? codeOrName)
+    {
+        if (string.IsNullOrWhiteSpace(codeOrName))
         {
-            return installedLanguages[0];
+            return null;
         }
 
-        var sourceLanguageCode = Iso639Dash2LanguageCode.GetTwoLetterCodeFromEnglishName(sourceLanguage);
-        if (!string.IsNullOrEmpty(sourceLanguageCode) && uiCultureTargetLanguage == sourceLanguageCode && installedLanguages.Count > 0 && installedLanguages[0] != sourceLanguageCode)
-        {
-            return installedLanguages[0];
-        }
+        var englishName = Iso639Dash2LanguageCode.List
+            .FirstOrDefault(l => l.TwoLetterCode.Equals(codeOrName, StringComparison.OrdinalIgnoreCase))?.EnglishName;
 
-        if (uiCultureTargetLanguage == defaultSourceLanguage)
-        {
-            foreach (var s in Utilities.GetDictionaryLanguages())
-            {
-                var temp = s.Replace("[", string.Empty).Replace("]", string.Empty);
-                if (temp.Length > 4)
-                {
-                    temp = temp.Substring(temp.Length - 5, 2).ToLowerInvariant();
-                    if (temp != defaultSourceLanguage && installedLanguages.Any(p => p.Contains(temp)))
-                    {
-                        uiCultureTargetLanguage = temp;
-                        break;
-                    }
-                }
-            }
-        }
+        return languages.FirstOrDefault(p => codeOrName.Equals(p.Code, StringComparison.OrdinalIgnoreCase))
+               ?? languages.FirstOrDefault(p => codeOrName.Equals(p.Name, StringComparison.OrdinalIgnoreCase))
+               ?? languages.FirstOrDefault(p => codeOrName.Equals(p.TwoLetterIsoLanguageName, StringComparison.OrdinalIgnoreCase))
+               ?? (englishName == null ? null : languages.FirstOrDefault(p => englishName.Equals(p.Name, StringComparison.OrdinalIgnoreCase)));
+    }
 
-        if (uiCultureTargetLanguage == defaultSourceLanguage)
-        {
-            foreach (var language in installedLanguages)
-            {
-                if (language != defaultSourceLanguage)
-                {
-                    uiCultureTargetLanguage = language;
-                    break;
-                }
-            }
-        }
-
-        if (uiCultureTargetLanguage == defaultSourceLanguage)
-        {
-            var name = CultureInfo.CurrentCulture.Name;
-            if (name.Length > 2)
-            {
-                name = name.Remove(0, name.Length - 2);
-            }
-            var iso = IsoCountryCodes.ThreeToTwoLetterLookup.FirstOrDefault(p => p.Value == name);
-            if (!iso.Equals(default(KeyValuePair<string, string>)))
-            {
-                var iso639 = Iso639Dash2LanguageCode.GetTwoLetterCodeFromThreeLetterCode(iso.Key);
-                if (!string.IsNullOrEmpty(iso639))
-                {
-                    uiCultureTargetLanguage = iso639;
-                }
-            }
-        }
-
-        // Set target language to something different than source language
-        if (uiCultureTargetLanguage == defaultSourceLanguage && (defaultSourceLanguage == "en" || defaultSourceLanguage == "English"))
-        {
-            uiCultureTargetLanguage = "es";
-        }
-        else if (uiCultureTargetLanguage == defaultSourceLanguage)
-        {
-            uiCultureTargetLanguage = "en";
-        }
-
-        return uiCultureTargetLanguage;
+    private static bool IsSameLanguage(TranslationPair language, TranslationPair? other)
+    {
+        return other != null &&
+               ((!string.IsNullOrEmpty(language.Code) && language.Code.Equals(other.Code, StringComparison.OrdinalIgnoreCase)) ||
+                (!string.IsNullOrEmpty(language.Name) && language.Name.Equals(other.Name, StringComparison.OrdinalIgnoreCase)));
     }
 
     public void KeyDown(KeyEventArgs e)
@@ -2668,9 +2607,9 @@ public partial class AutoTranslateViewModel : ObservableObject
             Rows.Clear();
             Rows.AddRange(rows);
 
-            UpdateSourceLanguages(SelectedAutoTranslator);
-            UpdateTargetLanguages(SelectedAutoTranslator);
-
+            // Restore the engine before building its language lists. Building them for the
+            // constructor's default engine first let the engine-change carry-over (#13943) replace
+            // the saved target with whatever that other engine had fallen back to (#14903).
             if (!string.IsNullOrEmpty(Se.Settings.AutoTranslate.AutoTranslateLastName))
             {
                 var autoTranslator = AutoTranslators.FirstOrDefault(x => x.Name == Se.Settings.AutoTranslate.AutoTranslateLastName);
@@ -2679,6 +2618,9 @@ public partial class AutoTranslateViewModel : ObservableObject
                     SetAutoTranslatorEngine(autoTranslator);
                 }
             }
+
+            UpdateSourceLanguages(SelectedAutoTranslator);
+            UpdateTargetLanguages(SelectedAutoTranslator);
 
             if (Rows.Count > 0)
             {
