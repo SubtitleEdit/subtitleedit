@@ -687,6 +687,11 @@ public static class InitMenu
                     [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsSmpteTimingEnabled)),
                 }
             },
+            new MenuItem
+            {
+                Header = Se.Language.Video.LetterboxingDotDotDot,
+                Command = vm.ShowVideoLetterboxCommand,
+            },
         };
 
         var menuItemVideoMore = new MenuItem

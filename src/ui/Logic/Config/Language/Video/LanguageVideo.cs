@@ -11,6 +11,8 @@ public class LanguageVideo
     public LanguageShotChanges ShotChanges { get; set; } = new();
     public LanguageChapters Chapters { get; set; } = new();
     public LanguageVideoOcr VideoOcr { get; set; } = new();
+    public LanguageVideoLetterbox Letterbox { get; set; } = new();
+    public string LetterboxingDotDotDot { get; set; }
     public string GoToVideoPosition { get; set; }
     public string GoToVideoPositionDotDotDot { get; set; }
     public string GenerateBlankVideoDotDotDot { get; set; }
@@ -127,6 +129,7 @@ public class LanguageVideo
 
     public LanguageVideo()
     {
+        LetterboxingDotDotDot = "Letterboxing...";
         GoToVideoPosition = "Go to video position";
         GoToVideoPositionDotDotDot = "Go to video position...";
         GenerateBlankVideoTitle = "Generate blank video";

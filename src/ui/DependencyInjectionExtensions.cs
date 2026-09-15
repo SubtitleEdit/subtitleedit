@@ -154,6 +154,7 @@ using Nikse.SubtitleEdit.Features.Video.Chapters;
 using Nikse.SubtitleEdit.Features.Video.CutVideo;
 using Nikse.SubtitleEdit.Features.Video.EmbeddedSubtitlesEdit;
 using Nikse.SubtitleEdit.Features.Video.GoToVideoPosition;
+using Nikse.SubtitleEdit.Features.Video.Letterbox;
 using Nikse.SubtitleEdit.Features.Video.OpenFromUrl;
 using Nikse.SubtitleEdit.Features.Video.OpenFromUrl.PickOnlineSubtitle;
 using Nikse.SubtitleEdit.Features.Video.ReEncodeVideo;
@@ -476,6 +477,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<JoinSubtitlesViewModel>();
         collection.AddTransient<LanguageViewModel>();
         collection.AddTransient<LayoutViewModel>();
+        collection.AddTransient<LetterboxViewModel>();
         collection.AddTransient<MainView>();
         collection.AddTransient<MainViewModel>();
         collection.AddTransient<ManualChosenEncodingViewModel>();

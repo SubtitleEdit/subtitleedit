@@ -71,8 +71,11 @@ public class MpvReloader : IMpvReloader
         {
             // Applied on every refresh, not only on load: toggling "margin is part of the
             // subtitle area" in settings has to take effect on the video already open (#13934).
+            // The letterbox ribbon (#14845) needs the same treatment - its dialog drags the bar
+            // height live against the video that's already playing.
             mpvContext.ApplySubtitleMarginArea();
             mpvContext.ApplySubtitleJustify();
+            mpvContext.ApplyLetterboxRibbon();
 
             var uiFormatType = uiFormat.GetType();
 
