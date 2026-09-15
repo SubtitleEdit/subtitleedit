@@ -104,7 +104,7 @@ public class TextToSpeechWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindIsVisible("!" + nameof(vm.IsGenerating));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var buttonCast = UiUtil.MakeButton(string.Empty, vm.ShowCastCommand)
-            .WithIconLeftBindText(IconNames.PoliceBadge, nameof(vm.CastButtonText))
+            .WithIconLeftBindText(IconNames.AccountVoice, nameof(vm.CastButtonText))
             .WithBindIsVisible(nameof(vm.HasCast))
             .WithBindIsEnabled("!" + nameof(vm.IsGenerating));
         if (Se.Settings.Appearance.ShowHints)
@@ -419,6 +419,37 @@ public class TextToSpeechWindow : Window
             }
         };
 
+        var checkBoxActorVoices = new CheckBox
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0),
+        };
+        checkBoxActorVoices.Bind(CheckBox.ContentProperty, new Binding(nameof(vm.ActorVoicesOptionText)));
+        checkBoxActorVoices.Bind(CheckBox.IsCheckedProperty, new Binding(nameof(vm.UseActorVoices)) { Mode = BindingMode.TwoWay });
+        checkBoxActorVoices.Bind(CheckBox.IsEnabledProperty, new Binding(nameof(vm.IsActorVoicesEnabled)));
+
+        var buttonSetupActorVoices = UiUtil.MakeButton(Se.Language.Video.TextToSpeech.SetupActorVoices, vm.ShowCastCommand)
+            .WithMarginLeft(8)
+            .WithIconLeft(IconNames.AccountVoice);
+        buttonSetupActorVoices.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.IsActorVoicesEnabled)));
+
+        var panelActorVoices = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(labelMinWidth, 6, 0, 2),
+            Children =
+            {
+                checkBoxActorVoices,
+                buttonSetupActorVoices,
+            },
+        };
+        panelActorVoices.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsActorVoicesAvailable)));
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(panelActorVoices, Se.Language.Video.TextToSpeech.UseActorVoicesHint);
+        }
+
         var comboBoxModels = UiUtil.MakeComboBox(vm.Models, vm, nameof(vm.SelectedModel)).WithWidth(controlMinWidth);
         comboBoxModels.ItemTemplate = BuildModelItemTemplate(vm);
         _comboBoxModels = comboBoxModels;
@@ -564,6 +595,7 @@ public class TextToSpeechWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -579,11 +611,12 @@ public class TextToSpeechWindow : Window
         grid.Add(labelEngineDescription, 1, 0);
         grid.Add(panelModel, 2, 0);
         grid.Add(panelVoice, 3, 0);
-        grid.Add(panelRegion, 4, 0);
-        grid.Add(panelLanguage, 5, 0);
-        grid.Add(panelApiKey, 6, 0);
-        grid.Add(panelKeyFile, 7, 0);
-        grid.Add(panelInstruction, 8, 0);
+        grid.Add(panelActorVoices, 4, 0);
+        grid.Add(panelRegion, 5, 0);
+        grid.Add(panelLanguage, 6, 0);
+        grid.Add(panelApiKey, 7, 0);
+        grid.Add(panelKeyFile, 8, 0);
+        grid.Add(panelInstruction, 9, 0);
 
         // Give the left (Engine/Voice/Model/...) panel a sensible minimum so the window doesn't
         // collapse into a narrow column when the right-side panel happens to be wider than the

@@ -53,9 +53,9 @@ public static class AccessibleLabels
             }
 
             // A placeholder text is the label sighted users see in an unlabeled box.
-            if (control is TextBox { Watermark.Length: > 0 and <= 80 } textBox)
+            if (control is TextBox { PlaceholderText.Length: > 0 and <= 80 } textBox)
             {
-                AutomationProperties.SetName(control, textBox.Watermark);
+                AutomationProperties.SetName(control, textBox.PlaceholderText);
                 labeled.Add(control);
             }
         }

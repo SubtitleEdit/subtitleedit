@@ -2523,6 +2523,9 @@
       "clearAllAssignmentsConfirm": "Clear all voice assignments?",
       "setupCast": "Cast...",
       "setupCastHint": "Assign a TTS voice to each actor (ASSA) or voice (WebVTT).",
+      "useActorVoices": "Use separate voice for each actor",
+      "useActorVoicesHint": "Assign different TTS voices to different actors (ASSA / WebVTT).",
+      "setupActorVoices": "Setup voices...",
       "actorVoicesRowSettingsTitle": "TTS - Voice settings",
       "voiceSettingsForX": "Voice settings for \"{0}\"",
       "voiceInstructionFreeTextHint": "Free text used by the engine to shape the voice's tone.",
@@ -3524,11 +3527,7 @@
     "applyToSelectedLinesX": "Selected lines ({0})",
     "applyToAllLinesX": "All lines ({0})",
     "updateAllXAvailable": "Update all ({0})",
-    "updatingXOfY": "Updating {0}/{1}...",
-    "doNotAskAgain": "Do not ask again (change in Manage plugins)",
-    "applyPluginsTo": "Apply plugins to",
-    "askEachTime": "Ask each time",
-    "allLines": "All lines"
+    "updatingXOfY": "Updating {0}/{1}..."
   },
   "help": {
     "aboutSubtitleEdit": "About Subtitle Edit",

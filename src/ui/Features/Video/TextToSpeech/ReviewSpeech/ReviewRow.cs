@@ -1,5 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
@@ -8,13 +10,35 @@ public partial class ReviewRow : ObservableObject
 {
     [ObservableProperty] private bool _include;
     [ObservableProperty] private int _number;
+    [ObservableProperty] private string _engine;
     [ObservableProperty] private string _voice;
+    [ObservableProperty] private string _language;
+    [ObservableProperty] private Voice? _selectedVoice;
+    [ObservableProperty] private TtsLanguage? _selectedLanguage;
     [ObservableProperty] private string _cps;
     [ObservableProperty] private string _speed;
     [ObservableProperty] private string _text;
     [ObservableProperty] private bool _hasHistory;
     [ObservableProperty] private bool _isPlaying;
     [ObservableProperty] private bool _isPlayingEnabled;
+
+    partial void OnSelectedVoiceChanged(Voice? value)
+    {
+        Voice = value?.ToString() ?? string.Empty;
+        if (StepResult != null)
+        {
+            StepResult.Voice = value;
+        }
+    }
+
+    partial void OnSelectedLanguageChanged(TtsLanguage? value)
+    {
+        Language = value?.Name ?? string.Empty;
+        if (StepResult != null)
+        {
+            StepResult.Language = Language;
+        }
+    }
 
     public TtsStepResult StepResult { get; set; }
     public List<ReviewHistoryRow> HistoryItems { get; set; }
@@ -34,7 +58,9 @@ public partial class ReviewRow : ObservableObject
     {
         Include = true;
         Number = 0;
+        Engine = string.Empty;
         Voice = string.Empty;
+        Language = string.Empty;
         Cps = string.Empty;
         Speed = string.Empty;
         Text = string.Empty;

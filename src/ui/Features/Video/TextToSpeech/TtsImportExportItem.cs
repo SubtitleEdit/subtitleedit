@@ -16,6 +16,7 @@ public class TtsImportExportItem
     // user loses their per-actor model/instruction. May be empty for legacy exports.
     public string Model { get; set; }
     public string Instruction { get; set; }
+    public string Language { get; set; }
 
     // The recording this line's voice clones from, relative to the JSON like AudioFileName
     // ("refs/0001.wav"). A cloned voice is only a name in the engine's voice list when it was
@@ -38,6 +39,7 @@ public class TtsImportExportItem
         VoiceName = string.Empty;
         Model = string.Empty;
         Instruction = string.Empty;
+        Language = string.Empty;
         VoiceFileName = string.Empty;
         Include = true;
     }

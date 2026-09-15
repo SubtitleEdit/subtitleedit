@@ -181,6 +181,9 @@ public class LanguageTextToSpeech
     public string ClearAllAssignmentsConfirm { get; set; }
     public string SetupCast { get; set; }
     public string SetupCastHint { get; set; }
+    public string UseActorVoices { get; set; }
+    public string UseActorVoicesHint { get; set; }
+    public string SetupActorVoices { get; set; }
     public string ActorVoicesRowSettingsTitle { get; set; }
     public string VoiceSettingsForX { get; set; }
     public string VoiceInstructionFreeTextHint { get; set; }
@@ -378,6 +381,9 @@ public class LanguageTextToSpeech
         ClearAllAssignmentsConfirm = "Clear all voice assignments?";
         SetupCast = "Cast...";
         SetupCastHint = "Assign a TTS voice to each actor (ASSA) or voice (WebVTT).";
+        UseActorVoices = "Use separate voice for each actor";
+        UseActorVoicesHint = "Assign different TTS voices to different actors (ASSA / WebVTT).";
+        SetupActorVoices = "Setup voices...";
         ActorVoicesRowSettingsTitle = "TTS - Voice settings";
         VoiceSettingsForX = "Voice settings for \"{0}\"";
         VoiceInstructionFreeTextHint = "Free text used by the engine to shape the voice's tone.";

@@ -22,6 +22,11 @@ public static class ActorVoiceDetector
         WebVttVoices,
     }
 
+    public static bool IsActorSupportedFormat(SubtitleFormat? format)
+    {
+        return format is AdvancedSubStationAlpha || format is SubStationAlpha || format is WebVTT;
+    }
+
     // Returns which cast model applies to this subtitle. Format is passed in by the caller
     // (typically MainViewModel.SelectedSubtitleFormat) rather than read from subtitle.OriginalFormat
     // — the editor normalises subtitles to ASSA internally, so OriginalFormat doesn't reliably

@@ -161,8 +161,12 @@ public class SeVideoTextToSpeech
     // name; matches happen case-insensitively.
     public List<ActorVoiceMapping> LastActorVoiceMappings { get; set; }
 
+    // Option to use separate voices for different actors (ASSA / WebVTT)
+    public bool UseActorVoices { get; set; }
+
     public SeVideoTextToSpeech()
     {
+        UseActorVoices = true;
         Engine = "Piper";
         Voice = string.Empty;
         ElevenLabsApiKey = string.Empty;
