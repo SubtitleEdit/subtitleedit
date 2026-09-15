@@ -61,6 +61,7 @@ What a single click and a double-click do is configurable: **Waveform single-cli
 | Seek silence | Find the next silent section |
 | Guess start time from waveform | Move the selected line's start to just before the speech begins (no default key) |
 | Guess end time from waveform | Move the selected line's end to just after the speech stops (no default key) |
+| Guess start and end time from waveform | Guess start, then guess end, on the selected line in one key press (no default key) |
 
 > **Note:** Actual key bindings depend on your shortcut configuration. See **Options → Shortcuts** to view or change them.
 
