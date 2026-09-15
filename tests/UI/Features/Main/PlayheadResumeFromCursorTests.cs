@@ -1,6 +1,8 @@
 ﻿using Avalonia.Headless.XUnit;
+using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit;
+using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
@@ -230,11 +232,46 @@ public class PlayheadResumeFromCursorTests : IDisposable
         // resume-from-cursor seek must not override the pinned target with the old cursor spot.
         var (vm, vp, player) = MakeViewModelWithPlayer(cursorSeconds: 1.0, rawSeconds: 1.18);
 
-        PinPlayheadTo(vm, 9.0); // the caller's own seek target (its vp.Position write is async too)
+        PinPlayheadTo(vm, 9.0); // the caller's own seek target (its seek is async too)
         vm.CancelPausePlayheadFreeze();
 
         Assert.Equal(0, player.SeekCount); // no second seek was issued
         Assert.Equal(9.0, GetField<double?>(vm, "_playheadSeekTarget") ?? -1, 4);
+    }
+
+    [AvaloniaFact]
+    public void SeekThenPin_OntoTheSpotAlreadyShown_StillSeeksSoThePinReleases()
+    {
+        // #14894 on the waveform drag path: parked at 0, a drag past the start clamps back onto 0.
+        // Seek-then-pin paths wrote vp.Position, which drops a value equal to the one it holds, so
+        // no seek reached the player - but the pin still waited for the player to confirm one and
+        // held the cursor frozen through playback until its 5 s cap.
+        var (vm, vp, player) = MakeViewModelWithPlayer(cursorSeconds: 0, rawSeconds: 0);
+
+        vm.AudioVisualizerOnVideoPositionChanged(this, new AudioVisualizer.PositionEventArgs { PositionInSeconds = -0.5 });
+
+        Assert.Equal(1, player.SeekCount);
+        Assert.Equal(0, player.SeekTarget ?? -1, 4);
+
+        player.Play();
+        player.LandSeek();
+        Assert.Equal(0, Tick(vm, vp, isPlaying: true), 3);
+        Assert.Null(GetField<double?>(vm, "_playheadSeekTarget")); // released: the cursor follows playback
+    }
+
+    [AvaloniaFact]
+    public void SeekThenPin_ToANewSpot_SeeksOnce()
+    {
+        // The seek no longer rides the Position property, and the slider bound to that property
+        // must not echo the display update back as a second seek.
+        var (vm, vp, player) = MakeViewModelWithPlayer(cursorSeconds: 1.0, rawSeconds: 1.0);
+
+        vm.AudioVisualizerOnVideoPositionChanged(this, new AudioVisualizer.PositionEventArgs { PositionInSeconds = 3.0 });
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal(1, player.SeekCount);
+        Assert.Equal(3.0, player.SeekTarget ?? -1, 4);
+        Assert.Equal(3.0, vp.Position, 4); // the display moved with it
     }
 
     [AvaloniaFact]
