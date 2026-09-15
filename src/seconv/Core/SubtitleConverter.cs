@@ -1191,7 +1191,7 @@ internal record class ConversionOptions
     public IReadOnlyList<int> TrackNumbers { get; init; } = [];
     public bool ForcedOnly { get; init; }
 
-    /// <summary>OCR engine identifier: <c>tesseract</c> | <c>nocr</c> | <c>ollama</c> | <c>paddle</c>.</summary>
+    /// <summary>OCR engine identifier: <c>tesseract</c> | <c>nocr</c> | <c>binaryocr</c> | <c>ollama</c> | <c>llamacpp</c> | <c>paddle</c> | <c>applevision</c>.</summary>
     public string OcrEngine { get; init; } = "tesseract";
 
     /// <summary>Language code or human name passed to the OCR engine (Tesseract: ISO 639-2 like <c>eng</c>; Paddle: <c>en</c>; Ollama: human name like <c>English</c>).</summary>
@@ -1230,7 +1230,8 @@ internal record class ConversionOptions
     /// white fill with a black outline on transparency; composited onto the opaque white OCR
     /// canvas the fill vanishes and Tesseract receives hollow outline rings, which garbles
     /// some entries deterministically (issue #12291). On by default; disable with
-    /// <c>--no-pgs-isolate-colors</c> to OCR the raw bitmap. Ignored in
+    /// <c>--no-pgs-isolate-colors</c> to OCR the raw bitmap. The CLI always turns it off for
+    /// <c>applevision</c>, which reads the raw bitmap better. Ignored in
     /// <see cref="TimeCodesOnly"/> mode.
     /// </summary>
     public bool PgsIsolateColors { get; init; } = true;

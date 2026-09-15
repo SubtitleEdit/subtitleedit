@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Nikse.SubtitleEdit.Features.Ocr.Engines;
+namespace Nikse.SubtitleEdit.UiLogic.Ocr.AppleVision;
 
 /// <summary>
 /// One recognized piece of text and where Vision found it.

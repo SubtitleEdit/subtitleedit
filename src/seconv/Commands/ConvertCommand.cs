@@ -96,11 +96,11 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public bool PlainTextNoBlankLine { get; init; }
 
         [CommandOption("--ocr-engine|--ocrengine")]
-        [Description("OCR engine: tesseract | nocr | binaryocr | ollama | llamacpp | paddle (default: tesseract)")]
+        [Description("OCR engine: tesseract | nocr | binaryocr | ollama | llamacpp | paddle | applevision (default: tesseract)")]
         public string? OcrEngine { get; init; }
 
         [CommandOption("--ocr-language|--ocrlanguage")]
-        [Description("Language for OCR (Tesseract: ISO 639-2 like eng/deu; Paddle: en/de; Ollama/llama.cpp: human name like English)")]
+        [Description("Language for OCR (Tesseract: ISO 639-2 like eng/deu; Paddle: en/de; Ollama/llama.cpp: human name like English; Apple Vision: en-US/de-DE)")]
         public string? OcrLanguage { get; init; }
 
         [CommandOption("--ocr-db|--ocrdb")]
@@ -132,7 +132,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public bool NoVobSubIsolateColors { get; init; }
 
         [CommandOption("--no-pgs-isolate-colors|--nopgsisolatecolors")]
-        [Description("Disable PGS/DVB-sub OCR colour isolation (on by default)")]
+        [Description("Disable PGS/DVB-sub OCR colour isolation (on by default, except for --ocr-engine:applevision)")]
         public bool NoPgsIsolateColors { get; init; }
 
         [CommandOption("--ollama-url")]
@@ -439,15 +439,32 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                     "List the valid names with: seconv formats --json");
             }
 
-            // Validate --ocr-engine: tesseract | nocr | binaryocr | ollama | llamacpp | paddle
-            var supportedEngines = new[] { "tesseract", "nocr", "binaryocr", "binary", "ollama", "llamacpp", "llama.cpp", "llama", "paddle", "paddleocr" };
+            // Validate --ocr-engine: tesseract | nocr | binaryocr | ollama | llamacpp | paddle | applevision
+            var supportedEngines = new[] { "tesseract", "nocr", "binaryocr", "binary", "ollama", "llamacpp", "llama.cpp", "llama", "paddle", "paddleocr", "applevision", "apple-vision" };
             if (!string.IsNullOrWhiteSpace(settings.OcrEngine) &&
                 !supportedEngines.Contains(settings.OcrEngine, StringComparer.OrdinalIgnoreCase))
             {
                 return Fail(
                     settings,
                     $"OCR engine '{settings.OcrEngine}' is not supported (pass via --ocr-engine). " +
-                    "Use one of: tesseract, nocr, binaryocr, ollama, llamacpp, paddle.");
+                    "Use one of: tesseract, nocr, binaryocr, ollama, llamacpp, paddle, applevision.");
+            }
+
+            // Apple Vision is macOS-only, and returns nothing for a language it does not know.
+            // Check both before the first file: at OCR time a failure only surfaces as a
+            // per-track warning, and a wrong language as a run of empty subtitles.
+            if (!settings.TimeCodesOnly &&
+                !string.IsNullOrWhiteSpace(settings.OcrEngine) &&
+                settings.OcrEngine.Trim().ToLowerInvariant() is "applevision" or "apple-vision")
+            {
+                try
+                {
+                    AppleVisionOcrEngine.Create(settings.OcrLanguage).Dispose();
+                }
+                catch (InvalidOperationException ex)
+                {
+                    return Fail(settings, ex.Message);
+                }
             }
 
             // --ocr-model/--ocr-url only apply to the llama.cpp OCR engine - fail fast instead
@@ -779,7 +796,11 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 DictionaryFolder = settings.DictionaryFolder,
                 TimeCodesOnly = settings.TimeCodesOnly,
                 VobSubIsolateColors = !settings.NoVobSubIsolateColors,
-                PgsIsolateColors = !settings.NoPgsIsolateColors,
+                // Apple Vision reads the original PGS/DVB-sub images better than binarised ones -
+                // binarising costs it umlauts and trailing punctuation - and the GUI never
+                // binarises for it either, so isolation stays off for that engine.
+                PgsIsolateColors = !settings.NoPgsIsolateColors &&
+                                   settings.OcrEngine?.Trim().ToLowerInvariant() is not ("applevision" or "apple-vision"),
                 OllamaUrl = settings.OllamaUrl,
                 OllamaModel = settings.OllamaModel,
                 OcrUrl = settings.OcrUrl,

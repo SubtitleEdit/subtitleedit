@@ -2,6 +2,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Spectre.Console;
 using System.Text;
 using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
+using Nikse.SubtitleEdit.UiLogic.Ocr.AppleVision;
 using SeConv.Helpers;
 
 namespace SeConv.Core;
@@ -231,6 +232,8 @@ internal static class ListHelpers
         var paddleInstalled = PaddleOcrEngine.Detect() is not null;
         var llamaCppInstalled = LlamaCppLocal.TryEnsureServerBinary();
         var llamaCppModelCount = LlamaCppServerManager.GetAllOcrModels().Count(LlamaCppServerManager.IsModelInstalled);
+        var appleVisionAvailable = AppleVisionRecognizer.IsAvailable();
+        var appleVisionLanguages = AppleVisionRecognizer.GetLanguageCodes();
 
         if (json)
         {
@@ -283,8 +286,16 @@ internal static class ListHelpers
                         requires = "`paddleocr` binary on PATH (`pip install paddleocr`)",
                         options = new[] { "--ocr-language" },
                     },
+                    new
+                    {
+                        id = "applevision", aliases = new[] { "apple-vision" }, type = "in-process",
+                        isDefault = false, ready = appleVisionAvailable,
+                        requires = "macOS (built-in Vision framework; nothing to install)",
+                        options = new[] { "--ocr-language" },
+                        languages = appleVisionLanguages,
+                    },
                 },
-                note = "Language codes differ per engine: Tesseract uses ISO 639-2 (eng, deu), Paddle uses short codes (en, de), Ollama and llama.cpp take a human-readable language name.",
+                note = "Language codes differ per engine: Tesseract uses ISO 639-2 (eng, deu), Paddle uses short codes (en, de), Ollama and llama.cpp take a human-readable language name, Apple Vision takes one of its own tags (en-US, de-DE; listed under 'languages').",
             });
             return;
         }
@@ -325,8 +336,14 @@ internal static class ListHelpers
             "[green]paddle[/] / [green]paddleocr[/]",
             "subprocess",
             $"`paddleocr` binary on PATH ({paddle}) — `pip install paddleocr`");
+        table.AddRow(
+            "[green]applevision[/] / [green]apple-vision[/]",
+            "in-process",
+            appleVisionAvailable
+                ? $"Built into macOS, nothing to install (available ✓, {appleVisionLanguages.Count} languages: {string.Join(", ", appleVisionLanguages)})"
+                : "Built into macOS — not available on this system");
 
         AnsiConsole.Write(table);
-        AnsiConsole.MarkupLine("\n[dim]Pass language via --ocr-language (Tesseract: ISO 639-2; Paddle: en/de/fr/...; Ollama/llama.cpp: human name).[/]");
+        AnsiConsole.MarkupLine("\n[dim]Pass language via --ocr-language (Tesseract: ISO 639-2; Paddle: en/de/fr/...; Ollama/llama.cpp: human name; Apple Vision: en-US/de-DE/...).[/]");
     }
 }

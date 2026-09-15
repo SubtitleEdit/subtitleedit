@@ -8,7 +8,7 @@
 
 - **380+ subtitle formats** — text, binary, and image-based.
 - **Container input** — Matroska (`.mkv` / `.mks`), MP4, MCC, MXF, AVI (`.avi` / `.divx`), transport stream teletext, Blu-Ray `.sup`.
-- **OCR for image-based sources** via six engines (Tesseract subprocess, nOCR built-in, BinaryOCR built-in, Ollama HTTP, llama.cpp HTTP with automatic server start, PaddleOCR subprocess).
+- **OCR for image-based sources** via seven engines (Tesseract subprocess, nOCR built-in, BinaryOCR built-in, Ollama HTTP, llama.cpp HTTP with automatic server start, PaddleOCR subprocess, Apple Vision built into macOS).
 - **Auto-translate** via local LLMs (llama.cpp with automatic server start, Ollama, LM Studio) or self-hosted services (LibreTranslate, NLLB).
 - **Image-based output** — Blu-Ray sup, BDN-XML, DOST, FCP (Final Cut Pro + image), D-Cinema interop / SMPTE 2014, images-with-time-code.
 - **Operations pipeline** — offset, fps change, change-speed, renumber, adjust-duration, fix-common-errors, merge/split, balance, redo casing, RTL fixes, multiple-replace, custom-text format, plain text.
@@ -61,6 +61,7 @@ seconv movie.sup subrip --ocr-engine:nocr --ocr-db:Latin.nocr      # OCR via nOC
 seconv movie.sup subrip --ocr-engine:binaryocr --ocr-db:Latin.db   # OCR via BinaryOCR
 seconv movie.sup subrip --ocr-engine:ollama --ollama-model:llama3.2-vision
 seconv movie.sup subrip --ocr-engine:llamacpp                      # OCR via llama.cpp (auto-starts llama-server)
+seconv *.mkv subrip --ocr-engine:applevision                       # macOS: OCR via built-in Apple Vision
 
 seconv subs.srt bluraysup --resolution:1920x1080                   # render text → Blu-Ray sup
 seconv subs.srt bdnxml --resolution:1920x1080                      # render text → BDN-XML
@@ -248,11 +249,12 @@ An AVI stream header carries no language, so a multi-stream `.avi` names its out
 | `ollama` | HTTP | Local Ollama server with a vision-capable model (e.g. `llama3.2-vision`, `qwen2.5vl`). Configure via `--ollama-url` (default `http://localhost:11434/api/chat`) and `--ollama-model` (default `llama3.2-vision`). Pass `--ocr-language` as a human name like `English`. |
 | `llamacpp` *(aliases: `llama.cpp`, `llama`)* | HTTP | llama.cpp with a curated OCR vision model (best-first: GLM-OCR, LFM2.5-VL 3B, PaddleOCR-VL, HunyuanOCR 1.5, LightOnOCR). With no `--ocr-url`, seconv finds `llama-server` (SE data folder next to seconv, installed SE data folder, then `PATH`) and an OCR model — the first model in that order that is installed, unless `--ocr-model` names one — starts the server on a free loopback port, and stops it at exit. seconv never downloads engines/models — install them via the SE UI's OCR window (engine "llama.cpp") or point `--ocr-url` at a running server. Pass `--ocr-language` as a human name like `English`. |
 | `paddle` *(alias: `paddleocr`)* | Subprocess | Install via `pip install paddleocr` (3.7 or newer, for the PP-OCRv6 models); ensure the `paddleocr` binary is on `PATH`. Pass `--ocr-language` as a short code (`en`, `de`, …). Images are OCR'ed in batches: the prepared images of a file are written to a folder and one `paddleocr` process reads the whole folder, so the roughly twenty-second model load is paid once per file rather than once per image. |
+| `applevision` *(alias: `apple-vision`)* | In-process (macOS only) | macOS's built-in Vision framework — the same recognizer as the GUI's "Apple Vision" engine. Nothing to install. Pass `--ocr-language` as a Vision tag (`en-US`, `de-DE`, `zh-Hans`, …; default `en-US`); `de`, `deu` and `German` are mapped to the matching tag too. `seconv list-ocr-engines --json` lists the tags this Mac supports. |
 
 | Option | Description |
 |---|---|
-| `--ocr-engine:<engine>` | `tesseract` (default) \| `nocr` \| `binaryocr` \| `ollama` \| `llamacpp` \| `paddle` |
-| `--ocr-language:<lang>` | Tesseract: ISO 639-2 (`eng`, `deu`); Paddle: short (`en`); Ollama/llama.cpp: human (`English`) |
+| `--ocr-engine:<engine>` | `tesseract` (default) \| `nocr` \| `binaryocr` \| `ollama` \| `llamacpp` \| `paddle` \| `applevision` |
+| `--ocr-language:<lang>` | Tesseract: ISO 639-2 (`eng`, `deu`); Paddle: short (`en`); Ollama/llama.cpp: human (`English`); Apple Vision: Vision tag (`en-US`) |
 | `--ocr-db:<path>` | OCR database file: `.nocr` for `nocr`, `.db` for `binaryocr` (required for both) |
 | `--dictionary-folder:<path>` | Folder with Hunspell dictionaries + `*_OCRFixReplaceList.xml`; enables the "Fix common OCR errors" pass of `--fix-common-errors` (English is bundled, so this is only needed for other languages) |
 | `--ollama-url:<url>` | Default `http://localhost:11434/api/chat` |
@@ -262,7 +264,7 @@ An AVI stream header carries no language, so a multi-stream `.avi` names its out
 | `--ocr-prompt:<text\|file>` | Prompt for the prompt-driven OCR engines (`llamacpp`, `ollama`); rejected for the others. `{language}` is replaced with `--ocr-language`. A value that names an existing file, or ends in `.txt`/`.prompt`/`.md`, is read from that file; inline text gets `\n`/`\r`/`\t` unescaped. Default: the same prompt as the SE OCR window, except that LFM2.5-VL gets its own tuned prompt unless `--ocr-prompt` is given. |
 | `--time-codes-only` | Image sources (`.sup`, VobSub `.sub`/`.idx`, MKV PGS/VobSub, MP4 VobSub, TS DVB-sub, AVI XSUB) → text format with time codes only and empty text. **Skips OCR entirely** — no OCR engine required. Ignored for text inputs and image output targets. |
 | `--no-vobsub-isolate-colors` | Disable VobSub OCR colour isolation, which is **on by default**. Isolation rebuilds each subpicture as a crisp black-on-white bitmap via histogram-based colour analysis — the most frequent opaque colour (the glyph fill) becomes black and the gray outline / anti-alias colours collapse into the white background, which helps on discs whose outlines otherwise melt adjacent characters together (`Yuri` → `Yurl`). Pass this flag to OCR the raw palette instead. Ignored for non-VobSub sources and with `--time-codes-only`. |
-| `--no-pgs-isolate-colors` | Disable PGS / DVB-sub OCR colour isolation, which is likewise **on by default**. |
+| `--no-pgs-isolate-colors` | Disable PGS / DVB-sub OCR colour isolation, which is likewise **on by default** — except for `applevision`, which always reads the original images (binarising costs Vision umlauts and trailing punctuation, and the GUI does not binarise for it either). |
 
 > **OCR database files are not bundled with `seconv`.** The `nocr` and `binaryocr` engines need a `.nocr` or `.db` file passed via `--ocr-db`. Sources:
 >
@@ -298,8 +300,13 @@ seconv movie.sup subrip --ocr-engine:llamacpp --ocr-language:German \
   --ocr-prompt:"Identify the number of lines, then extract the text of each line exactly as written. The language is {language}."
 seconv movie.sup subrip --ocr-engine:llamacpp --ocr-prompt:my-ocr-prompt.txt
 
+# Apple Vision (macOS) — nothing to install
+seconv movie.sup subrip --ocr-engine:applevision
+seconv movie.sup subrip --ocr-engine:applevision --ocr-language:de-DE
+
 # MKV with image (PGS or VobSub) tracks — OCR runs automatically
 seconv movie.mkv subrip --ocr-engine:tesseract --ocr-language:eng
+seconv "*.mkv" subrip --input-folder:"$HOME/Movies" --ocr-engine:applevision   # a whole folder on a Mac
 
 # AVI with XSUB (DivX) subtitles — OCR runs automatically
 seconv movie.avi subrip --ocr-engine:tesseract --ocr-language:eng

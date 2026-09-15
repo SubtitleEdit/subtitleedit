@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Features.Ocr.Engines;
+using Nikse.SubtitleEdit.UiLogic.Ocr.AppleVision;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;

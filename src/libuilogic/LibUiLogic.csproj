@@ -8,6 +8,8 @@
     <AssemblyName>libuilogic</AssemblyName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <IsPackable>false</IsPackable>
+    <!-- LibraryImport's generated marshalling (Ocr/AppleVision) is unsafe code. -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
