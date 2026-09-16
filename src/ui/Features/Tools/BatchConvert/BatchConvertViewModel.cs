@@ -877,7 +877,8 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         AdjustSeconds = Se.Settings.Tools.BatchConvert.AdjustDurationSeconds;
         AdjustPercent = Se.Settings.Tools.BatchConvert.AdjustDurationPercentage;
 
-        var translator = AutoTranslators.FirstOrDefault(p => p.Name == Se.Settings.Tools.BatchConvert.AutoTranslateEngine);
+        var engineName = AutoTranslateEngineNames.FromStored(Se.Settings.Tools.BatchConvert.AutoTranslateEngine);
+        var translator = AutoTranslators.FirstOrDefault(p => p.Name == engineName);
         if (translator != null)
         {
             SelectedAutoTranslator = translator;

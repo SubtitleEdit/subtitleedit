@@ -2612,7 +2612,8 @@ public partial class AutoTranslateViewModel : ObservableObject
             // the saved target with whatever that other engine had fallen back to (#14903).
             if (!string.IsNullOrEmpty(Se.Settings.AutoTranslate.AutoTranslateLastName))
             {
-                var autoTranslator = AutoTranslators.FirstOrDefault(x => x.Name == Se.Settings.AutoTranslate.AutoTranslateLastName);
+                var lastName = AutoTranslateEngineNames.FromStored(Se.Settings.AutoTranslate.AutoTranslateLastName);
+                var autoTranslator = AutoTranslators.FirstOrDefault(x => x.Name == lastName);
                 if (autoTranslator != null)
                 {
                     SetAutoTranslatorEngine(autoTranslator);
