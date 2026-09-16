@@ -49,10 +49,22 @@ public class InitWaveform
         };
 
         // waveform area
+        //
+        // The renderer is a property of the control's type (see SkiaAudioVisualizer), so turning
+        // the setting on or off has to replace the control - the existing one is otherwise reused
+        // across layout rebuilds. The loaded audio moves across with it, or the waveform would sit
+        // empty until the user reopened the video.
+        AudioVisualizer? previousVisualizer = null;
+        if (vm.AudioVisualizer != null && vm.AudioVisualizer is SkiaAudioVisualizer != settings.UseSkiaRenderer)
+        {
+            previousVisualizer = vm.AudioVisualizer;
+            previousVisualizer.RemoveControlFromParent();
+            vm.AudioVisualizer = null;
+        }
+
         if (vm.AudioVisualizer == null)
         {
-            // Experimental SkiaSharp renderer, opt-in via SE_SKIA_WAVEFORM=1 (see SkiaAudioVisualizer).
-            vm.AudioVisualizer = SkiaAudioVisualizer.UseSkiaRenderer ? new SkiaAudioVisualizer() : new AudioVisualizer();
+            vm.AudioVisualizer = settings.UseSkiaRenderer ? new SkiaAudioVisualizer() : new AudioVisualizer();
             vm.AudioVisualizer.DrawGridLines = settings.DrawGridLines;
             vm.AudioVisualizer.WaveformColor = settings.WaveformColor.FromHexToColor();
             vm.AudioVisualizer.WaveformBackgroundColor = settings.WaveformBackgroundColor.FromHexToColor();
@@ -93,6 +105,12 @@ public class InitWaveform
             vm.AudioVisualizer.OnGenerateWaveformRequested += vm.AudioVisualizerOnGenerateWaveformRequested;
 
             vm.AudioVisualizer.FlyoutMenuOpening += vm.AudioVisualizerFlyoutMenuOpening;
+
+            if (previousVisualizer != null)
+            {
+                CarryOverWaveformState(previousVisualizer, vm.AudioVisualizer);
+                vm.UpdateWaveformOriginalSubtitleCues(vm.AudioVisualizer);
+            }
         }
         else
         {
@@ -1345,6 +1363,25 @@ public class InitWaveform
         }
 
         return toolbarButtonForSort.OrderBy(p => p.Sort).ToList();
+    }
+
+    /// <summary>
+    /// Moves what a loaded waveform holds to the control replacing it (the renderer setting was
+    /// changed). The paragraphs, the selection and the cursor are not copied - the position timer
+    /// pushes those again on its next tick. The spectrogram object is handed over rather than
+    /// copied, and the control it came from is discarded without disposing it.
+    /// </summary>
+    private static void CarryOverWaveformState(AudioVisualizer from, AudioVisualizer to)
+    {
+        to.WavePeaks = from.WavePeaks;
+        to.SetSpectrogram(from.GetSpectrogram());
+        to.SetDisplayMode(from.GetDisplayMode());
+        to.ShotChanges = from.ShotChanges;
+        to.Chapters = from.Chapters;
+        to.ZoomFactor = from.ZoomFactor;
+        to.VerticalZoomFactor = from.VerticalZoomFactor;
+        to.StartPositionSeconds = from.StartPositionSeconds;
+        to.CurrentVideoPositionSeconds = from.CurrentVideoPositionSeconds;
     }
 
     public static WaveformDrawStyle GetWaveformDrawStyle(string waveformDrawStyle)

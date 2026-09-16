@@ -38,11 +38,12 @@ namespace Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 /// device pixel block, so scrolling inside that block is a blit (see SkiaWaveformRenderer). The
 /// cursor, the paragraphs and the classic style's selection are drawn over it on every frame.
 /// </para>
-/// Enable it with the environment variable <c>SE_SKIA_WAVEFORM=1</c>.
+/// Turned on by the waveform setting "Use experimental fast renderer"
+/// (<see cref="SeWaveform.UseSkiaRenderer"/>); the control to build is chosen in InitWaveform.
 /// </summary>
 public class SkiaAudioVisualizer : AudioVisualizer
 {
-    public static bool UseSkiaRenderer => Environment.GetEnvironmentVariable("SE_SKIA_WAVEFORM") == "1";
+    public static bool UseSkiaRenderer => Se.Settings.Waveform.UseSkiaRenderer;
 
     private readonly SkiaWaveformRenderer _renderer = new();
     private readonly ConcurrentQueue<SkiaWaveformFrame> _framePool = new();

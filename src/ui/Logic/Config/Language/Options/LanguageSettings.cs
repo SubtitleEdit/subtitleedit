@@ -125,6 +125,7 @@ public class LanguageSettings
     public string ColorGapTooShort { get; set; }
     public string ErrorBackgroundColor { get; set; }
     public string WaveformDrawGridLines { get; set; }
+    public string WaveformUseSkiaRenderer { get; set; }
     public string WaveformCenterVideoPositionAlsoWhenPaused { get; set; }
     public string WaveformShowToolbar { get; set; }
     public string WaveformShowToolbarEdit { get; set; }
@@ -453,6 +454,7 @@ public class LanguageSettings
         ColorGapTooShort = "Color if gap is too short";
         ErrorBackgroundColor = "Error background color";
         WaveformDrawGridLines = "Draw grid lines";
+        WaveformUseSkiaRenderer = "Use experimental fast renderer";
         WaveformFocusOnMouseOver = "Focus on mouse over";
         WaveformCenterVideoPositionAlsoWhenPaused = "Center video position also while paused";
         WaveformShowToolbar = "Show toolbar";
