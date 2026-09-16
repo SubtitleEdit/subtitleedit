@@ -1382,6 +1382,11 @@ public class InitWaveform
         to.VerticalZoomFactor = from.VerticalZoomFactor;
         to.StartPositionSeconds = from.StartPositionSeconds;
         to.CurrentVideoPositionSeconds = from.CurrentVideoPositionSeconds;
+
+        // A video without a waveform yet shows "click to generate" and turns a click into the
+        // generation; both live on the control, so the new one has to keep offering them.
+        to.ShowClickToGenerateHint = from.ShowClickToGenerateHint;
+        to.ClickToGenerateText = from.ClickToGenerateText;
     }
 
     public static WaveformDrawStyle GetWaveformDrawStyle(string waveformDrawStyle)

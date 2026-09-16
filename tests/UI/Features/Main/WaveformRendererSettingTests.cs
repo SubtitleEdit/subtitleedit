@@ -85,6 +85,42 @@ public class WaveformRendererSettingTests : IDisposable
     }
 
     [AvaloniaFact]
+    public void TogglingTheSettingKeepsTheClickToGenerateHint()
+    {
+        // A video is open but no waveform has been generated yet: the control shows "click to
+        // generate" and a click starts the generation. Both are per-control state, so swapping
+        // the renderer must carry them over - or the hint and the click vanish until the video
+        // is reopened.
+        Se.Settings.Waveform.UseSkiaRenderer = false;
+
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            InitLayout.MakeLayout(vm.MainView!, vm, 12);
+            Dispatcher.UIThread.RunJobs();
+
+            var classic = vm.AudioVisualizer!;
+            classic.WavePeaks = null;
+            classic.ShowClickToGenerateHint = true;
+            classic.ClickToGenerateText = "Click to generate waveform";
+
+            Se.Settings.Waveform.UseSkiaRenderer = true;
+            InitLayout.MakeLayout(vm.MainView!, vm, 12);
+            Dispatcher.UIThread.RunJobs();
+
+            var skia = Assert.IsType<SkiaAudioVisualizer>(vm.AudioVisualizer);
+            Assert.NotSame(classic, skia);
+            Assert.Null(skia.WavePeaks);
+            Assert.True(skia.ShowClickToGenerateHint);
+            Assert.Equal("Click to generate waveform", skia.ClickToGenerateText);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    [AvaloniaFact]
     public void LayoutRebuildWithAnUnchangedSettingKeepsTheSameControl()
     {
         Se.Settings.Waveform.UseSkiaRenderer = true;
