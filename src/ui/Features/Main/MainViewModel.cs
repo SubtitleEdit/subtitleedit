@@ -12618,10 +12618,17 @@ public partial class MainViewModel :
     private async Task AutoTranslateSelectedLines()
     {
         var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
-        if (selectedItems.Count == 0 || !ShowColumnOriginalText)
+        if (selectedItems.Count == 0)
         {
             return;
         }
+
+        // In translator mode the original column holds the source and the translation goes in the
+        // text column. With a single subtitle open there is no original to read, so the lines
+        // translate in place from their own text - like the whole-file auto-translate, except that
+        // a partial selection must not capture an original: that would fill the original column for
+        // the selected rows only and switch translator mode on for a half-empty column (#14926).
+        var translateInPlace = !ShowColumnOriginalText;
 
         var result = await ShowDialogAsync<AutoTranslateWindow, AutoTranslateViewModel>(vm =>
         {
@@ -12633,7 +12640,7 @@ public partial class MainViewModel :
                     Number = line.Number,
                     StartTime = new TimeCode(line.StartTime),
                     EndTime = new TimeCode(line.EndTime),
-                    Text = line.OriginalText,
+                    Text = translateInPlace ? line.Text : line.OriginalText,
                     Actor = line.Actor,
                     Style = line.Style,
                     Language = line.Language,
@@ -28571,7 +28578,7 @@ public partial class MainViewModel :
         AreAssaContentMenuItemsVisible = false;
         AreWebVttContentMenuItemsVisible = false;
         IsWebVttBrowserPreviewVisible = false;
-        ShowAutoTranslateSelectedLines = selectedCount > 0 && ShowColumnOriginalText;
+        ShowAutoTranslateSelectedLines = selectedCount > 0;
         HasMultipleLinesSelected = selectedCount > 1;
         ShowColumnLayerFlyoutMenuItem = IsFormatAssa;
 
