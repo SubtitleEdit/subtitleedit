@@ -1250,7 +1250,13 @@ public partial class ReviewSpeechViewModel : ObservableObject
             return;
         }
 
-        var engine = SelectedEngine;
+        var line = row ?? SelectedLine;
+        if (line == null)
+        {
+            return;
+        }
+
+        var engine = GetEngineForLine(line) ?? SelectedEngine;
         if (engine == null)
         {
             return;
@@ -1265,12 +1271,6 @@ public partial class ReviewSpeechViewModel : ObservableObject
             settings.ElevenLabsSpeakerBoost = SpeakerBoost;
             settings.ElevenLabsSpeed = Speed;
             settings.ElevenLabsStyleeExaggeration = StyleExaggeration;
-        }
-
-        var line = row ?? SelectedLine;
-        if (engine == null || line == null)
-        {
-            return;
         }
 
         var voice = GetVoiceForLine(line) ?? SelectedVoice;
@@ -1426,6 +1426,13 @@ public partial class ReviewSpeechViewModel : ObservableObject
                 line.Cps = Math.Round(adjustSpeedStepResult.Paragraph.GetCharactersPerSecond(), 2).ToString(CultureInfo.CurrentCulture);
                 line.StepResult = adjustSpeedStepResult;
                 line.Voice = voice.ToString();
+                line.Engine = engine.Name;
+                if (language != null)
+                {
+                    line.Language = language.Name;
+                }
+                line.SelectedVoice = voice;
+                line.SelectedLanguage = language;
 
                 line.AddHistory(voice, line.StepResult.CurrentFileName, engine.Name, model ?? string.Empty, instruction ?? string.Empty);
             }
@@ -1493,18 +1500,38 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
     private Voice? GetVoiceForLine(ReviewRow line)
     {
-        if (line.SelectedVoice != null)
-        {
-            return line.SelectedVoice;
-        }
+        var lineActor = !string.IsNullOrWhiteSpace(line.Actor) ? line.Actor : (line.StepResult?.Paragraph?.Actor ?? line.WaveformParagraph?.Actor);
+        var hasActor = !string.IsNullOrWhiteSpace(lineActor) || HasMultipleActors;
 
-        var actor = !string.IsNullOrWhiteSpace(line.Actor) ? line.Actor : (line.StepResult?.Paragraph?.Actor ?? line.WaveformParagraph?.Actor);
-        if (!string.IsNullOrWhiteSpace(actor) && ActorVoiceMappings.Count > 0)
+        // When subtitle has actors: follow the right-hand columns / per-row voice configuration.
+        if (hasActor)
         {
-            var mapping = ActorVoiceMappings.FirstOrDefault(m => string.Equals(m.Actor, actor, StringComparison.OrdinalIgnoreCase));
-            if (!string.IsNullOrEmpty(mapping?.VoiceName))
+            if (line.SelectedVoice != null)
             {
-                var match = Voices.FirstOrDefault(v => string.Equals(v.Name, mapping.VoiceName, StringComparison.OrdinalIgnoreCase));
+                return line.SelectedVoice;
+            }
+
+            if (!string.IsNullOrWhiteSpace(lineActor) && ActorVoiceMappings.Count > 0)
+            {
+                var mapping = ActorVoiceMappings.FirstOrDefault(m => string.Equals(m.Actor, lineActor, StringComparison.OrdinalIgnoreCase));
+                if (!string.IsNullOrEmpty(mapping?.VoiceName))
+                {
+                    var match = Voices.FirstOrDefault(v => string.Equals(v.Name, mapping.VoiceName, StringComparison.OrdinalIgnoreCase));
+                    if (match != null)
+                    {
+                        return match;
+                    }
+                }
+            }
+
+            if (line.StepResult?.Voice != null)
+            {
+                return line.StepResult.Voice;
+            }
+
+            if (!string.IsNullOrWhiteSpace(line.Voice))
+            {
+                var match = Voices.FirstOrDefault(v => string.Equals(v.Name, line.Voice, StringComparison.OrdinalIgnoreCase));
                 if (match != null)
                 {
                     return match;
@@ -1512,36 +1539,58 @@ public partial class ReviewSpeechViewModel : ObservableObject
             }
         }
 
-        if (line.StepResult?.Voice != null)
-        {
-            return line.StepResult.Voice;
-        }
+        // When subtitle has no actors: follow the left-hand panel (SelectedVoice).
+        return SelectedVoice;
+    }
 
-        if (!string.IsNullOrWhiteSpace(line.Voice))
+    private ITtsEngine? GetEngineForLine(ReviewRow line)
+    {
+        var lineActor = !string.IsNullOrWhiteSpace(line.Actor) ? line.Actor : (line.StepResult?.Paragraph?.Actor ?? line.WaveformParagraph?.Actor);
+        var hasActor = !string.IsNullOrWhiteSpace(lineActor) || HasMultipleActors;
+
+        if (hasActor)
         {
-            var match = Voices.FirstOrDefault(v => string.Equals(v.Name, line.Voice, StringComparison.OrdinalIgnoreCase));
-            if (match != null)
+            if (!string.IsNullOrWhiteSpace(line.Engine))
             {
-                return match;
+                var match = Engines.FirstOrDefault(e => string.Equals(e.Name, line.Engine, StringComparison.OrdinalIgnoreCase));
+                if (match != null)
+                {
+                    return match;
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(line.StepResult?.EngineName))
+            {
+                var match = Engines.FirstOrDefault(e => string.Equals(e.Name, line.StepResult.EngineName, StringComparison.OrdinalIgnoreCase));
+                if (match != null)
+                {
+                    return match;
+                }
             }
         }
 
-        return SelectedVoice;
+        return SelectedEngine;
     }
 
     private TtsLanguage? GetLanguageForLine(ReviewRow line)
     {
-        if (line.SelectedLanguage != null)
-        {
-            return line.SelectedLanguage;
-        }
+        var lineActor = !string.IsNullOrWhiteSpace(line.Actor) ? line.Actor : (line.StepResult?.Paragraph?.Actor ?? line.WaveformParagraph?.Actor);
+        var hasActor = !string.IsNullOrWhiteSpace(lineActor) || HasMultipleActors;
 
-        if (!string.IsNullOrWhiteSpace(line.Language))
+        if (hasActor)
         {
-            var match = Languages.FirstOrDefault(l => string.Equals(l.Name, line.Language, StringComparison.OrdinalIgnoreCase) || string.Equals(l.Code, line.Language, StringComparison.OrdinalIgnoreCase));
-            if (match != null)
+            if (line.SelectedLanguage != null)
             {
-                return match;
+                return line.SelectedLanguage;
+            }
+
+            if (!string.IsNullOrWhiteSpace(line.Language))
+            {
+                var match = Languages.FirstOrDefault(l => string.Equals(l.Name, line.Language, StringComparison.OrdinalIgnoreCase) || string.Equals(l.Code, line.Language, StringComparison.OrdinalIgnoreCase));
+                if (match != null)
+                {
+                    return match;
+                }
             }
         }
 
@@ -1622,8 +1671,9 @@ public partial class ReviewSpeechViewModel : ObservableObject
                     continue;
                 }
 
+                var lineEngine = GetEngineForLine(line) ?? engine;
                 var voice = GetVoiceForLine(line) ?? SelectedVoice;
-                if (voice == null)
+                if (lineEngine == null || voice == null)
                 {
                     continue;
                 }
@@ -1632,7 +1682,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
                 if (PerLineVoiceClone.IsSelected(voice))
                 {
-                    var clonedVoice = await ResolvePerLineCloneVoiceAsync(engine, line);
+                    var clonedVoice = await ResolvePerLineCloneVoiceAsync(lineEngine, line);
                     if (clonedVoice == null)
                     {
                         continue;
@@ -1640,7 +1690,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
                     voice = clonedVoice;
                 }
 
-                if (!await TtsVoiceInstaller.EnsureVoiceInstalled(engine, voice, Window, _windowService))
+                if (!await TtsVoiceInstaller.EnsureVoiceInstalled(lineEngine, voice, Window, _windowService))
                 {
                     continue;
                 }
@@ -1650,8 +1700,8 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
                 try
                 {
-                    var speakResult = await TtsInstructionSwap.RunAsync(engine, instruction, () =>
-                        engine.Speak(Utilities.UnbreakLine(HtmlUtil.RemoveHtmlTags(line.Text, alsoSsaTags: true)),
+                    var speakResult = await TtsInstructionSwap.RunAsync(lineEngine, instruction, () =>
+                        lineEngine.Speak(Utilities.UnbreakLine(HtmlUtil.RemoveHtmlTags(line.Text, alsoSsaTags: true)),
                             _waveFolder, voice, language, region, model, _cancellationToken));
 
                     if (speakResult.Error || string.IsNullOrEmpty(speakResult.FileName) || !File.Exists(speakResult.FileName))
@@ -1673,15 +1723,22 @@ public partial class ReviewSpeechViewModel : ObservableObject
                     }
 
                     adjustSpeedStepResult.CurrentFileName = postProcessedFileName;
-                    adjustSpeedStepResult.EngineName = engine.Name;
+                    adjustSpeedStepResult.EngineName = lineEngine.Name;
                     adjustSpeedStepResult.Model = model ?? string.Empty;
                     adjustSpeedStepResult.Instruction = instruction ?? string.Empty;
                     line.Speed = Math.Round(adjustSpeedStepResult.SpeedFactor, 2).ToString(CultureInfo.CurrentCulture);
                     line.Cps = Math.Round(adjustSpeedStepResult.Paragraph.GetCharactersPerSecond(), 2).ToString(CultureInfo.CurrentCulture);
                     line.StepResult = adjustSpeedStepResult;
                     line.Voice = voice.ToString();
+                    line.Engine = lineEngine.Name;
+                    if (language != null)
+                    {
+                        line.Language = language.Name;
+                    }
+                    line.SelectedVoice = voice;
+                    line.SelectedLanguage = language;
 
-                    line.AddHistory(voice, line.StepResult.CurrentFileName, engine.Name, model ?? string.Empty, instruction ?? string.Empty);
+                    line.AddHistory(voice, line.StepResult.CurrentFileName, lineEngine.Name, model ?? string.Empty, instruction ?? string.Empty);
                 }
                 catch (OperationCanceledException)
                 {
@@ -2403,6 +2460,16 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
     private async Task ApplyLineToLeftPanelAsync(ReviewRow row)
     {
+        var lineActor = !string.IsNullOrWhiteSpace(row.Actor) ? row.Actor : (row.StepResult?.Paragraph?.Actor ?? row.WaveformParagraph?.Actor);
+        var hasActor = !string.IsNullOrWhiteSpace(lineActor) || HasMultipleActors;
+
+        // When there are no actors, the left-hand panel is the single source of truth for the entire dialog.
+        // Do not overwrite the user's selected engine/voice on line click.
+        if (!hasActor)
+        {
+            return;
+        }
+
         var step = row.StepResult;
         if (step == null)
         {
