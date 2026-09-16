@@ -251,6 +251,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _autoOpenVideoFile;
 
     [ObservableProperty] private bool _waveformDrawGridLines;
+    [ObservableProperty] private bool _waveformUseSkiaRenderer;
     [ObservableProperty] private bool _waveformShowNumberAndDuration;
     [ObservableProperty] private bool _waveformShowCps;
     [ObservableProperty] private bool _waveformFocusOnMouseOver;
@@ -927,6 +928,7 @@ public partial class SettingsViewModel : ObservableObject
         ShowUpDownLabels = appearance.ShowUpDownLabels;
 
         WaveformDrawGridLines = Se.Settings.Waveform.DrawGridLines;
+        WaveformUseSkiaRenderer = Se.Settings.Waveform.UseSkiaRenderer;
         WaveformShowNumberAndDuration = Se.Settings.Waveform.WaveformShowNumberAndDuration;
         WaveformShowCps = Se.Settings.Waveform.WaveformShowCps;
         WaveformFocusOnMouseOver = Se.Settings.Waveform.FocusOnMouseOver;
@@ -1793,6 +1795,7 @@ public partial class SettingsViewModel : ObservableObject
         appearance.ShowHorizontalLineAboveToolbar = ShowHorizontalLineAboveToolbar;
 
         Se.Settings.Waveform.DrawGridLines = WaveformDrawGridLines;
+        Se.Settings.Waveform.UseSkiaRenderer = WaveformUseSkiaRenderer;
         Se.Settings.Waveform.WaveformShowNumberAndDuration = WaveformShowNumberAndDuration;
         Se.Settings.Waveform.WaveformShowCps = WaveformShowCps;
         Se.Settings.Waveform.FocusOnMouseOver = WaveformFocusOnMouseOver;

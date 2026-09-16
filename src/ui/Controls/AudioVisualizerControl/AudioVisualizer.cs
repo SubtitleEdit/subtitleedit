@@ -233,9 +233,11 @@ public class AudioVisualizer : Control
     /// not monotonic and cannot be binary-searched directly; the running maximum is.
     /// </summary>
     private readonly List<double> _originalSubtitleCueMaxEnds = new();
-    private const double OriginalSubtitleOpacity = 0.5;
-    private bool IsOriginalSubtitleOverlayVisible => ShowOriginalSubtitleOverlay && _originalSubtitleCues.Count > 0;
-    private bool ShowOriginalTextInWaveform => ShowOriginalText && !IsOriginalSubtitleOverlayVisible;
+    private protected const double OriginalSubtitleOpacity = 0.5;
+    private protected bool IsOriginalSubtitleOverlayVisible => ShowOriginalSubtitleOverlay && _originalSubtitleCues.Count > 0;
+    private protected bool ShowOriginalTextInWaveform => ShowOriginalText && !IsOriginalSubtitleOverlayVisible;
+    private protected IReadOnlyList<WaveformOriginalSubtitleCue> OriginalSubtitleCues => _originalSubtitleCues;
+    private protected IReadOnlyList<double> OriginalSubtitleCueMaxEnds => _originalSubtitleCueMaxEnds;
 
     public void SetOriginalSubtitleCues(IReadOnlyList<WaveformOriginalSubtitleCue>? cues)
     {
@@ -421,6 +423,7 @@ public class AudioVisualizer : Control
     private static readonly Cursor _cursorSizeWestEast = new Cursor(StandardCursorType.SizeWestEast);
 
     private readonly List<SubtitleLineViewModel> _displayableParagraphs = new();
+    private protected IReadOnlyList<SubtitleLineViewModel> DisplayableParagraphs => _displayableParagraphs;
 
     // The paragraph sets as they stood before the current LoadParagraphs, so it can tell whether
     // anything it draws actually changed. Reused across calls, so the check allocates nothing.
@@ -2435,7 +2438,7 @@ public class AudioVisualizer : Control
 
     private readonly Pen _paintTimeLine = new Pen(Brushes.Gray, 1);
 
-    private static string GetDisplayTime(double seconds)
+    private protected static string GetDisplayTime(double seconds)
     {
         if (Math.Abs(Se.Settings.General.CurrentVideoOffsetInMs) > 0.00001)
         {
@@ -3397,7 +3400,7 @@ public class AudioVisualizer : Control
     private readonly Dictionary<(int Number, long DurationMs, bool FrameMode, double FrameRate), string> _footerNumberDurationCache = new(512);
     private readonly Dictionary<double, string> _footerCpsCache = new(256);
 
-    private string GetCachedNumberAndDurationLabel(SubtitleLineViewModel paragraph)
+    private protected string GetCachedNumberAndDurationLabel(SubtitleLineViewModel paragraph)
     {
         // The frame rate is part of the key: in frame mode ToShortDisplayString renders frames
         // via Configuration.Settings.General.CurrentFrameRate, so the same duration maps to a
@@ -3427,7 +3430,7 @@ public class AudioVisualizer : Control
         return label;
     }
 
-    private string GetCachedCpsLabel(double charactersPerSecond)
+    private protected string GetCachedCpsLabel(double charactersPerSecond)
     {
         // Keyed on the exact value, not a rounded bucket: CharactersPerSecond is itself memoized
         // per (text, start, end), so an unchanged paragraph yields a bit-identical key every
@@ -4227,7 +4230,7 @@ public class AudioVisualizer : Control
     }
 
     // Helper for Binary Search
-    private static int FindFirstIndexAfterTime<T>(IReadOnlyList<T> items, double time, Func<T, double> getEndTime)
+    private protected static int FindFirstIndexAfterTime<T>(IReadOnlyList<T> items, double time, Func<T, double> getEndTime)
     {
         int low = 0, high = items.Count - 1;
         var result = 0;

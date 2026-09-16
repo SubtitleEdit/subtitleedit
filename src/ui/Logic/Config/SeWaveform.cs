@@ -16,6 +16,13 @@ public class SeWaveform
     // scrubbing walks the waveform as one continuous strip.
     public bool CenterVideoPositionAlsoWhenPaused { get; set; }
     public bool DrawGridLines { get; set; }
+
+    /// <summary>
+    /// Draw the waveform with the experimental SkiaSharp renderer
+    /// (<c>SkiaAudioVisualizer</c>) instead of the Avalonia one.
+    /// </summary>
+    public bool UseSkiaRenderer { get; set; }
+
     public bool FocusTextBoxAfterInsertNew { get; set; }
     public int SpectrogramCombinedWaveformHeight { get; set; }
 
@@ -116,6 +123,7 @@ public class SeWaveform
         ShowToolbar = true;
         ShowOriginalSubtitle = false;
         DrawGridLines = false;
+        UseSkiaRenderer = false;
         FocusTextBoxAfterInsertNew = true;
         SpectrogramCombinedWaveformHeight = 50;
         WaveformTextFontSize = 10;

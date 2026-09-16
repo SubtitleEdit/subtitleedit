@@ -49,35 +49,46 @@ public class InitWaveform
         };
 
         // waveform area
+        //
+        // The renderer is a property of the control's type (see SkiaAudioVisualizer), so turning
+        // the setting on or off has to replace the control - the existing one is otherwise reused
+        // across layout rebuilds. The loaded audio moves across with it, or the waveform would sit
+        // empty until the user reopened the video.
+        AudioVisualizer? previousVisualizer = null;
+        if (vm.AudioVisualizer != null && vm.AudioVisualizer is SkiaAudioVisualizer != settings.UseSkiaRenderer)
+        {
+            previousVisualizer = vm.AudioVisualizer;
+            previousVisualizer.RemoveControlFromParent();
+            vm.AudioVisualizer = null;
+        }
+
         if (vm.AudioVisualizer == null)
         {
-            vm.AudioVisualizer = new AudioVisualizer
-            {
-                DrawGridLines = settings.DrawGridLines,
-                WaveformColor = settings.WaveformColor.FromHexToColor(),
-                WaveformBackgroundColor = settings.WaveformBackgroundColor.FromHexToColor(),
-                WaveformSelectedColor = settings.WaveformSelectedColor.FromHexToColor(),
-                WaveformCursorColor = settings.WaveformCursorColor.FromHexToColor(),
-                WaveformShotChangeColor = settings.WaveformShotChangeColor.FromHexToColor(),
-                WaveformParagraphLeftColor = settings.WaveformParagraphLeftColor.FromHexToColor(),
-                WaveformParagraphRightColor = settings.WaveformParagraphRightColor.FromHexToColor(),
-                WaveformFancyHighColor = settings.WaveformFancyHighColor.FromHexToColor(),
-                ParagraphBackground = settings.ParagraphBackground.FromHexToColor(),
-                ParagraphSelectedBackground = settings.ParagraphSelectedBackground.FromHexToColor(),
-                InvertMouseWheel = settings.InvertMouseWheel,
-                VerticalAlignment = VerticalAlignment.Stretch,
-                Height = double.NaN, // Auto height
-                WaveformDrawStyle = GetWaveformDrawStyle(settings.WaveformDrawStyle),
-                MinGapSeconds = Se.Settings.General.MinimumBetweenLines.GetMilliseconds() / 1000.0,
-                FocusOnMouseOver = settings.FocusOnMouseOver,
-                IsReadOnly = Se.Settings.General.LockTimeCodes,
-                WaveformHeightPercentage = settings.SpectrogramCombinedWaveformHeight,
-                // The toggle may have been pressed in a layout without a waveform; a waveform
-                // built later must come up on the same side of it as the video preview, or the
-                // two previews show different texts (see SetOriginalTextInPreview).
-                ShowOriginalText = vm.ShowOriginalTextInPreview,
-                ShowOriginalSubtitleOverlay = settings.ShowOriginalSubtitle,
-            };
+            vm.AudioVisualizer = settings.UseSkiaRenderer ? new SkiaAudioVisualizer() : new AudioVisualizer();
+            vm.AudioVisualizer.DrawGridLines = settings.DrawGridLines;
+            vm.AudioVisualizer.WaveformColor = settings.WaveformColor.FromHexToColor();
+            vm.AudioVisualizer.WaveformBackgroundColor = settings.WaveformBackgroundColor.FromHexToColor();
+            vm.AudioVisualizer.WaveformSelectedColor = settings.WaveformSelectedColor.FromHexToColor();
+            vm.AudioVisualizer.WaveformCursorColor = settings.WaveformCursorColor.FromHexToColor();
+            vm.AudioVisualizer.WaveformShotChangeColor = settings.WaveformShotChangeColor.FromHexToColor();
+            vm.AudioVisualizer.WaveformParagraphLeftColor = settings.WaveformParagraphLeftColor.FromHexToColor();
+            vm.AudioVisualizer.WaveformParagraphRightColor = settings.WaveformParagraphRightColor.FromHexToColor();
+            vm.AudioVisualizer.WaveformFancyHighColor = settings.WaveformFancyHighColor.FromHexToColor();
+            vm.AudioVisualizer.ParagraphBackground = settings.ParagraphBackground.FromHexToColor();
+            vm.AudioVisualizer.ParagraphSelectedBackground = settings.ParagraphSelectedBackground.FromHexToColor();
+            vm.AudioVisualizer.InvertMouseWheel = settings.InvertMouseWheel;
+            vm.AudioVisualizer.VerticalAlignment = VerticalAlignment.Stretch;
+            vm.AudioVisualizer.Height = double.NaN; // Auto height
+            vm.AudioVisualizer.WaveformDrawStyle = GetWaveformDrawStyle(settings.WaveformDrawStyle);
+            vm.AudioVisualizer.MinGapSeconds = Se.Settings.General.MinimumBetweenLines.GetMilliseconds() / 1000.0;
+            vm.AudioVisualizer.FocusOnMouseOver = settings.FocusOnMouseOver;
+            vm.AudioVisualizer.IsReadOnly = Se.Settings.General.LockTimeCodes;
+            vm.AudioVisualizer.WaveformHeightPercentage = settings.SpectrogramCombinedWaveformHeight;
+            // The toggle may have been pressed in a layout without a waveform; a waveform
+            // built later must come up on the same side of it as the video preview, or the
+            // two previews show different texts (see SetOriginalTextInPreview).
+            vm.AudioVisualizer.ShowOriginalText = vm.ShowOriginalTextInPreview;
+            vm.AudioVisualizer.ShowOriginalSubtitleOverlay = settings.ShowOriginalSubtitle;
 
             vm.AudioVisualizer.GetIsVideoPlaying = () => vm.GetVideoPlayerControl()?.IsPlaying == true;
             vm.AudioVisualizer.OnNewSelectionInsert += vm.AudioVisualizerOnNewSelectionInsert;
@@ -94,6 +105,12 @@ public class InitWaveform
             vm.AudioVisualizer.OnGenerateWaveformRequested += vm.AudioVisualizerOnGenerateWaveformRequested;
 
             vm.AudioVisualizer.FlyoutMenuOpening += vm.AudioVisualizerFlyoutMenuOpening;
+
+            if (previousVisualizer != null)
+            {
+                CarryOverWaveformState(previousVisualizer, vm.AudioVisualizer);
+                vm.UpdateWaveformOriginalSubtitleCues(vm.AudioVisualizer);
+            }
         }
         else
         {
@@ -1346,6 +1363,25 @@ public class InitWaveform
         }
 
         return toolbarButtonForSort.OrderBy(p => p.Sort).ToList();
+    }
+
+    /// <summary>
+    /// Moves what a loaded waveform holds to the control replacing it (the renderer setting was
+    /// changed). The paragraphs, the selection and the cursor are not copied - the position timer
+    /// pushes those again on its next tick. The spectrogram object is handed over rather than
+    /// copied, and the control it came from is discarded without disposing it.
+    /// </summary>
+    private static void CarryOverWaveformState(AudioVisualizer from, AudioVisualizer to)
+    {
+        to.WavePeaks = from.WavePeaks;
+        to.SetSpectrogram(from.GetSpectrogram());
+        to.SetDisplayMode(from.GetDisplayMode());
+        to.ShotChanges = from.ShotChanges;
+        to.Chapters = from.Chapters;
+        to.ZoomFactor = from.ZoomFactor;
+        to.VerticalZoomFactor = from.VerticalZoomFactor;
+        to.StartPositionSeconds = from.StartPositionSeconds;
+        to.CurrentVideoPositionSeconds = from.CurrentVideoPositionSeconds;
     }
 
     public static WaveformDrawStyle GetWaveformDrawStyle(string waveformDrawStyle)
