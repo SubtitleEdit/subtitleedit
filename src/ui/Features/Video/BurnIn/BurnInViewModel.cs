@@ -1589,9 +1589,10 @@ public partial class BurnInViewModel : ObservableObject
         SelectedVideoPixelFormat = VideoPixelFormats.FirstOrDefault(p => p.Codec == settings.PixelFormat) ?? VideoPixelFormats[0];
         FillPreset(SelectedVideoEncoding.Codec);
         FillCrf(SelectedVideoEncoding.Codec);
-        if (!string.IsNullOrEmpty(settings.Preset) && VideoPresets.Contains(settings.Preset))
+        var preset = VideoPresetOptions.Migrate(SelectedVideoEncoding.Codec, settings.Preset);
+        if (!string.IsNullOrEmpty(preset) && VideoPresets.Contains(preset))
         {
-            SelectedVideoPreset = settings.Preset;
+            SelectedVideoPreset = preset;
         }
         if (!string.IsNullOrEmpty(settings.Crf) && VideoCrf.Contains(settings.Crf))
         {
@@ -1910,55 +1911,9 @@ public partial class BurnInViewModel : ObservableObject
 
         var defaultItem = "medium";
 
-        if (videoCodec == "h264_nvenc")
+        if (VideoPresetOptions.IsNvenc(videoCodec))
         {
-            items = new List<string>
-            {
-                "default",
-                "slow",
-                "medium",
-                "fast",
-                "hp",
-                "hq",
-                "bd",
-                "ll",
-                "llhq",
-                "llhp",
-                "lossless",
-                "losslesshp",
-                "p1",
-                "p2",
-                "p3",
-                "p4",
-                "p5",
-                "p6",
-                "p7",
-            };
-        }
-        else if (videoCodec == "hevc_nvenc")
-        {
-            items = new List<string>
-            {
-                "default",
-                "slow",
-                "medium",
-                "fast",
-                "hp",
-                "hq",
-                "bd",
-                "ll",
-                "llhq",
-                "llhp",
-                "lossless",
-                "losslesshp",
-                "p1",
-                "p2",
-                "p3",
-                "p4",
-                "p5",
-                "p6",
-                "p7",
-            };
+            items = VideoPresetOptions.GetNvencPresets();
         }
         else if (videoCodec == "h264_qsv" || videoCodec == "hevc_qsv")
         {
@@ -2033,6 +1988,7 @@ public partial class BurnInViewModel : ObservableObject
 
         VideoPresets.Clear();
         VideoPresets.AddRange(items);
+        previousPreset = VideoPresetOptions.Migrate(videoCodec, previousPreset);
         if (!string.IsNullOrEmpty(previousPreset) && VideoPresets.Contains(previousPreset))
         {
             SelectedVideoPreset = previousPreset;
