@@ -4134,14 +4134,16 @@ public partial class MainViewModel :
                 ? null
                 : Encodings.FirstOrDefault(p => p.DisplayName == recentFile.Encoding);
 
-            await SubtitleOpen(recentFile.SubtitleFileName, recentFile.VideoFileName, recentFile.SelectedLine, rememberedEncoding, desiredAudioTrackId: recentFile.AudioTrack);
-
-            // Seek the video to the restored line - otherwise Reopen leaves it at 0:00.
-            await SeekVideoToSelectedLineAsync();
+            await SubtitleOpen(recentFile.SubtitleFileName, recentFile.VideoFileName, recentFile.SelectedLine, rememberedEncoding, desiredAudioTrackId: recentFile.AudioTrack, videoOffsetToRestoreMs: recentFile.VideoOffsetInMs);
 
             await RestoreRememberedOriginal(recentFile.SelectedLine, recentFile.SubtitleFileNameOriginal, recentFile.SubtitleFileName);
 
             SetRecentFileProperties(recentFile);
+
+            // Seek the video to the restored line - otherwise Reopen leaves it at 0:00. Only after
+            // SetRecentFileProperties: until the remembered offset is taken off the rows they hold
+            // the file's time codes, and seeking to those put the video one offset too far.
+            await SeekVideoToSelectedLineAsync();
 
             _shortcutManager.ClearKeys();
         });
@@ -22817,7 +22819,8 @@ public partial class MainViewModel :
         int? selectedSubtitleIndex = null,
         TextEncoding? textEncoding = null,
         bool skipLoadVideo = false,
-        int desiredAudioTrackId = -1)
+        int desiredAudioTrackId = -1,
+        long videoOffsetToRestoreMs = 0)
     {
         if (string.IsNullOrEmpty(fileName))
         {
@@ -23450,7 +23453,7 @@ public partial class MainViewModel :
                 // Open the video at the restored line right away. SeekVideoToSelectedLineAsync
                 // below still runs as a safety net, but on its own it means the video comes up at
                 // 0:00, stays there for a few hundred milliseconds and then jumps (issue #13329).
-                var videoStartPositionSeconds = GetRestoredVideoStartPositionSeconds(selectedSubtitleIndex);
+                var videoStartPositionSeconds = GetRestoredVideoStartPositionSeconds(selectedSubtitleIndex, videoOffsetToRestoreMs);
 
                 if (!string.IsNullOrEmpty(videoFileName) && File.Exists(videoFileName))
                 {
@@ -23495,14 +23498,18 @@ public partial class MainViewModel :
     // Where the video should be opened when a session is restored: the start time of the line the
     // user was last on. Mirrors the "index 0 is not a restored position" rule in
     // SeekVideoToSelectedLineAsync, so a freshly opened file still comes up at 0:00.
-    private double GetRestoredVideoStartPositionSeconds(int? selectedSubtitleIndex)
+    // videoOffsetToRestoreMs is the remembered video offset the caller takes off the rows once the
+    // open is done (SetRecentFileProperties): the rows still hold the file's time codes here, which
+    // carry that offset, so the video position is the start time minus it.
+    private double GetRestoredVideoStartPositionSeconds(int? selectedSubtitleIndex, long videoOffsetToRestoreMs)
     {
         if (selectedSubtitleIndex is not > 0 || selectedSubtitleIndex.Value >= Subtitles.Count)
         {
             return 0;
         }
 
-        return Subtitles[selectedSubtitleIndex.Value].StartTime.TotalSeconds;
+        var startSeconds = Subtitles[selectedSubtitleIndex.Value].StartTime.TotalSeconds - videoOffsetToRestoreMs / 1000.0;
+        return Math.Max(0, startSeconds);
     }
 
     // Seek the video to the selected line's start after (re)opening a file, like SE 4 did.
@@ -26268,14 +26275,16 @@ public partial class MainViewModel :
                             InitLayout.RestoreLayoutPositions(Se.Settings.Appearance.CurrentLayoutPositions, ContentGrid.Children.FirstOrDefault() as Grid);
                         }
 
-                        await SubtitleOpen(first.SubtitleFileName, first.VideoFileName, first.SelectedLine, null, skipLoadVideo, first.AudioTrack);
-                        await SeekVideoToSelectedLineAsync();
+                        await SubtitleOpen(first.SubtitleFileName, first.VideoFileName, first.SelectedLine, null, skipLoadVideo, first.AudioTrack, first.VideoOffsetInMs);
 
                         // Restore the original/translator-mode file too - otherwise only the
                         // translation comes back on start-up, unlike the Reopen menu (issue #12705).
                         await RestoreRememberedOriginal(first.SelectedLine, first.SubtitleFileNameOriginal, first.SubtitleFileName);
 
                         SetRecentFileProperties(first);
+
+                        // After the remembered video offset is off the rows - see CommandFileReopen.
+                        await SeekVideoToSelectedLineAsync();
                     }
                     catch (Exception e)
                     {
