@@ -166,7 +166,7 @@ public static class TtsVoiceInstaller
 
     /// <summary>
     /// Ensures the CrispASR runtime that MOSS-TTS (CrispASR) runs on is installed.
-    /// The moss-tts backend ships in CrispASR v0.8.13 and newer (SE pins v0.8.32).
+    /// The moss-tts backend ships in CrispASR v0.8.13 and newer (SE pins v0.8.33).
     /// </summary>
     public static Task<bool> EnsureCrispAsrForMossTts(Window? window, IWindowService windowService, bool forceRedownload)
         => EnsureCrispAsrAsync(window, windowService, forceRedownload,
@@ -176,7 +176,7 @@ public static class TtsVoiceInstaller
 
     /// <summary>
     /// Ensures the CrispASR runtime that dots.tts (CrispASR) runs on is installed.
-    /// The dots-tts backend ships in CrispASR v0.8.25 and newer (SE pins v0.8.32); the version
+    /// The dots-tts backend ships in CrispASR v0.8.25 and newer (SE pins v0.8.33); the version
     /// note names that floor because older builds have no dots-tts backend at all and abort on
     /// the unknown --backend value.
     /// </summary>
