@@ -13,7 +13,7 @@ namespace UITests.Features.Video;
 /// </summary>
 public class FfmpegBurnInParametersTests
 {
-    private static string Generate(string videoEncoding, string audioEncoding, string outputFileName, string pass = "", string twoPassBitRate = "")
+    private static string Generate(string videoEncoding, string audioEncoding, string outputFileName, string pass = "", string twoPassBitRate = "", string preset = "", string crf = "", string tune = "")
     {
         return FfmpegGenerator.GenerateHardcodedVideoFile(
             "input.mp4",
@@ -22,16 +22,45 @@ public class FfmpegBurnInParametersTests
             320,
             240,
             videoEncoding,
-            string.Empty,
+            preset,
             "yuv420p",
-            string.Empty,
+            crf,
             audioEncoding,
             false,
             "48000",
-            string.Empty,
+            tune,
             "128k",
             pass,
             twoPassBitRate);
+    }
+
+    [Fact]
+    public void Nvenc_Tune_IsWrittenNextToThePreset()
+    {
+        var parameters = Generate("h264_nvenc", "copy", "output.mp4", preset: "p7", crf: "25", tune: "ll");
+
+        Assert.Contains("-preset p7 -tune ll", parameters);
+        Assert.Contains("-cq 25", parameters);
+    }
+
+    [Fact]
+    public void Nvenc_LosslessTune_LeavesOutTheCqValue()
+    {
+        // nvenc pins constant QP 0 for a lossless tune and drops -cq, so writing one would only
+        // put a quality in the command line that the encode never uses.
+        var parameters = Generate("h264_nvenc", "copy", "output.mp4", preset: "p4", crf: "25", tune: "lossless");
+
+        Assert.Contains("-preset p4 -tune lossless", parameters);
+        Assert.DoesNotContain("-cq", parameters);
+    }
+
+    [Fact]
+    public void NoTune_WritesNoTuneArgument()
+    {
+        var parameters = Generate("libx264", "aac", "output.mkv", preset: "medium", crf: "23");
+
+        Assert.DoesNotContain("-tune", parameters);
+        Assert.Contains("-crf 23", parameters);
     }
 
     [Theory]

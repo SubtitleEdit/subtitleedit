@@ -72,6 +72,9 @@ public partial class BurnInViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<string> _videoPresets;
     [ObservableProperty] private string? _selectedVideoPreset;
     [ObservableProperty] private string _videoPresetText;
+    [ObservableProperty] private ObservableCollection<string> _videoTunes;
+    [ObservableProperty] private string? _selectedVideoTune;
+    [ObservableProperty] private bool _isVideoTuneVisible;
     [ObservableProperty] private ObservableCollection<string> _videoCrf;
     [ObservableProperty] private string? _selectedVideoCrf;
     [ObservableProperty] private string _videoCrfText;
@@ -166,6 +169,7 @@ public partial class BurnInViewModel : ObservableObject
         FontFactorText = string.Empty;
 
         VideoPresets = new ObservableCollection<string>();
+        VideoTunes = new ObservableCollection<string>();
 
         FontBoxTypes = new ObservableCollection<FontBoxItem>
         {
@@ -853,7 +857,7 @@ public partial class BurnInViewModel : ObservableObject
             audioEncoding,
             AudioIsStereo,
             SelectedAudioSampleRate.Replace("Hz", string.Empty).Trim(),
-            string.Empty,
+            SelectedVideoTune ?? string.Empty,
             SelectedAudioBitRate,
             pass,
             jobItem.VideoBitRate,
@@ -1588,11 +1592,26 @@ public partial class BurnInViewModel : ObservableObject
                                 ?? VideoEncodings[0];
         SelectedVideoPixelFormat = VideoPixelFormats.FirstOrDefault(p => p.Codec == settings.PixelFormat) ?? VideoPixelFormats[0];
         FillPreset(SelectedVideoEncoding.Codec);
+        FillTune(SelectedVideoEncoding.Codec);
         FillCrf(SelectedVideoEncoding.Codec);
         var preset = VideoPresetOptions.Migrate(SelectedVideoEncoding.Codec, settings.Preset);
         if (!string.IsNullOrEmpty(preset) && VideoPresets.Contains(preset))
         {
             SelectedVideoPreset = preset;
+        }
+
+        // A stored preset that was one of the removed aliases carries a tuning mode of its own
+        // ("lossless" was not just a speed), and settings written before the tune list existed
+        // have nothing to say about it - so the alias decides in that case.
+        var tune = VideoPresetOptions.MigrateTune(SelectedVideoEncoding.Codec, settings.Preset);
+        if (string.IsNullOrEmpty(tune))
+        {
+            tune = settings.Tune;
+        }
+
+        if (!string.IsNullOrEmpty(tune) && VideoTunes.Contains(tune))
+        {
+            SelectedVideoTune = tune;
         }
         if (!string.IsNullOrEmpty(settings.Crf) && VideoCrf.Contains(settings.Crf))
         {
@@ -1640,6 +1659,7 @@ public partial class BurnInViewModel : ObservableObject
 
         settings.Encoding = SelectedVideoEncoding.Codec;
         settings.Preset = SelectedVideoPreset ?? string.Empty;
+        settings.Tune = SelectedVideoTune ?? string.Empty;
         settings.Crf = SelectedVideoCrf ?? string.Empty;
         settings.PixelFormat = SelectedVideoPixelFormat?.Codec ?? string.Empty;
 
@@ -1849,6 +1869,7 @@ public partial class BurnInViewModel : ObservableObject
         }
 
         FillPreset(SelectedVideoEncoding.Codec);
+        FillTune(SelectedVideoEncoding.Codec);
         FillCrf(SelectedVideoEncoding.Codec);
         FillVideoExtensions(SelectedVideoEncoding.Codec);
     }
@@ -1888,6 +1909,23 @@ public partial class BurnInViewModel : ObservableObject
         AudioEncodings.Clear();
         AudioEncodings.AddRange(items);
         SelectedAudioEncoding = !string.IsNullOrEmpty(wanted) && items.Contains(wanted) ? wanted : items[0];
+    }
+
+    /// <summary>
+    /// The nvenc tuning modes, empty for every other encoder. The row is hidden when there is
+    /// nothing to pick, so the dialog does not grow a dead field for e.g. libx264.
+    /// </summary>
+    private void FillTune(string videoCodec)
+    {
+        var previousTune = SelectedVideoTune;
+        SelectedVideoTune = null;
+
+        var items = VideoPresetOptions.GetTunes(videoCodec);
+
+        VideoTunes.Clear();
+        VideoTunes.AddRange(items);
+        IsVideoTuneVisible = items.Count > 1;
+        SelectedVideoTune = previousTune != null && VideoTunes.Contains(previousTune) ? previousTune : items[0];
     }
 
     private void FillPreset(string videoCodec)

@@ -3,7 +3,7 @@ using Nikse.SubtitleEdit.Features.Video.BurnIn;
 namespace UITests.Features.Video;
 
 /// <summary>
-/// The nvenc "-preset" values. ffmpeg 9.0 removed the deprecated aliases, so offering one of
+/// The nvenc "-preset" and "-tune" values. ffmpeg 9.0 removed the deprecated aliases, so offering one of
 /// them now aborts the burn-in with "exit code -22" (issue #14927) - these assert that only
 /// names ffmpeg still has are offered, and that a settings file written before that keeps the
 /// speed/quality the user picked instead of quietly falling back to the default.
@@ -67,10 +67,63 @@ public class VideoPresetOptionsTests
         Assert.Equal(stored, VideoPresetOptions.Migrate(codec, stored));
     }
 
+    [Theory]
+    [InlineData("h264_nvenc")]
+    [InlineData("hevc_nvenc")]
+    public void Nvenc_OffersTheTuningModes(string codec)
+    {
+        var tunes = VideoPresetOptions.GetTunes(codec);
+
+        Assert.Equal(new[] { VideoPresetOptions.BlankTune, "hq", "ll", "ull", "lossless" }, tunes);
+    }
+
+    [Theory]
+    [InlineData("libx264")]
+    [InlineData("h264_amf")]
+    [InlineData("h264_videotoolbox")]
+    public void OtherEncoders_HaveNoTuningModes(string codec)
+    {
+        Assert.Equal(new[] { VideoPresetOptions.BlankTune }, VideoPresetOptions.GetTunes(codec));
+    }
+
+    [Theory]
+    [InlineData("lossless", "lossless")]
+    [InlineData("losslesshp", "lossless")]
+    [InlineData("ll", "ll")]
+    [InlineData("llhq", "ll")]
+    [InlineData("llhp", "ll")]
+    public void RemovedAliasesThatSetATuningMode_KeepIt(string stored, string expected)
+    {
+        Assert.Equal(expected, VideoPresetOptions.MigrateTune("h264_nvenc", stored));
+        Assert.Equal(expected, VideoPresetOptions.MigrateTune("hevc_nvenc", stored));
+    }
+
+    [Theory]
+    [InlineData("hq")]
+    [InlineData("hp")]
+    [InlineData("bd")]
+    [InlineData("default")]
+    [InlineData("medium")]
+    [InlineData("p7")]
+    public void PresetsWithoutATuningMode_ImplyNone(string stored)
+    {
+        Assert.Equal(string.Empty, VideoPresetOptions.MigrateTune("h264_nvenc", stored));
+    }
+
+    [Fact]
+    public void OtherEncoders_NeverGetAnImpliedTuningMode()
+    {
+        // ProRes has its own "lossless"-ish profiles; nothing there implies an nvenc tune.
+        Assert.Equal(string.Empty, VideoPresetOptions.MigrateTune("prores_ks", "lossless"));
+        Assert.Equal(string.Empty, VideoPresetOptions.MigrateTune("libx264", "ll"));
+    }
+
     [Fact]
     public void NoPreset_StaysEmpty()
     {
         Assert.Null(VideoPresetOptions.Migrate("h264_nvenc", null));
         Assert.Equal(string.Empty, VideoPresetOptions.Migrate("h264_nvenc", string.Empty));
+        Assert.Equal(string.Empty, VideoPresetOptions.MigrateTune("h264_nvenc", null));
+        Assert.Equal(string.Empty, VideoPresetOptions.MigrateTune("h264_nvenc", string.Empty));
     }
 }

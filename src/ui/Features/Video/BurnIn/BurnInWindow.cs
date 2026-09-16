@@ -700,6 +700,13 @@ public class BurnInWindow : Window
         var labelPreset = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.VideoPresetText));
         var comboBoxPreset = UiUtil.MakeComboBox(vm.VideoPresets, vm, nameof(vm.SelectedVideoPreset));
 
+        // Only the NVIDIA encoders have a tuning mode, so the row is hidden for the rest - an
+        // always-present blank combo box would just make the dialog taller for everyone else.
+        var labelTune = UiUtil.MakeLabel(Se.Language.Video.BurnIn.Tune)
+            .WithBindVisible(vm, nameof(vm.IsVideoTuneVisible));
+        var comboBoxTune = UiUtil.MakeComboBox(vm.VideoTunes, vm, nameof(vm.SelectedVideoTune))
+            .WithBindVisible(nameof(vm.IsVideoTuneVisible));
+
         var labelCrf = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.VideoCrfText));
         var comboBoxCrf = UiUtil.MakeComboBox(vm.VideoCrf, vm, nameof(vm.SelectedVideoCrf));
         var labelCrfHint = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.VideoCrfHint)).WithMarginLeft(5);
@@ -734,6 +741,7 @@ public class BurnInWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -756,14 +764,17 @@ public class BurnInWindow : Window
         grid.Add(labelPreset, 2, 0);
         grid.Add(comboBoxPreset, 2, 1);
 
-        grid.Add(labelCrf, 3, 0);
-        grid.Add(panelCrf, 3, 1);
+        grid.Add(labelTune, 3, 0);
+        grid.Add(comboBoxTune, 3, 1);
 
-        grid.Add(labelPixelFormat, 4, 0);
-        grid.Add(comboBoxPixelFormat, 4, 1);
+        grid.Add(labelCrf, 4, 0);
+        grid.Add(panelCrf, 4, 1);
 
-        grid.Add(labelVideoExtension, 5, 0);
-        grid.Add(comboBoxVideoExtension, 5, 1);
+        grid.Add(labelPixelFormat, 5, 0);
+        grid.Add(comboBoxPixelFormat, 5, 1);
+
+        grid.Add(labelVideoExtension, 6, 0);
+        grid.Add(comboBoxVideoExtension, 6, 1);
 
         return UiUtil.MakeBorderForControl(grid).WithMarginBottom(5).WithMarginRight(5);
     }
