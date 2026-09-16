@@ -3,8 +3,8 @@ using System.Collections.Generic;
 namespace Nikse.SubtitleEdit.Features.Video.BurnIn;
 
 /// <summary>
-/// The "-preset" values offered for the NVIDIA hardware encoders, and the migration of the old
-/// ones that ffmpeg no longer accepts.
+/// The "-preset" and "-tune" values offered for the NVIDIA hardware encoders, and the migration
+/// of the old presets that ffmpeg no longer accepts.
 /// </summary>
 /// <remarks>
 /// ffmpeg 9.0 dropped the deprecated nvenc preset aliases ("default", "hp", "hq", "bd", "ll",
@@ -16,6 +16,9 @@ namespace Nikse.SubtitleEdit.Features.Video.BurnIn;
 /// </remarks>
 public static class VideoPresetOptions
 {
+    /// <summary>"No tune" - whitespace, so nothing is written to the command line.</summary>
+    public const string BlankTune = " ";
+
     private static readonly List<string> NvencPresets = new()
     {
         "slow",
@@ -48,6 +51,31 @@ public static class VideoPresetOptions
         { "losslesshp", "p1" },
     };
 
+    /// <summary>
+    /// nvenc tuning modes. This is what the removed "ll"/"lossless" presets really did - they
+    /// picked a p-preset and set one of these. The blank entry is ffmpeg's own default (high
+    /// quality) and emits no "-tune" at all; it is a space rather than an empty string so the
+    /// drop-down row stays tall enough to click, the way the CRF list does it.
+    /// </summary>
+    private static readonly List<string> NvencTunes = new()
+    {
+        BlankTune,
+        "hq",
+        "ll",
+        "ull",
+        "lossless",
+    };
+
+    /// <summary>The tuning mode each removed alias set on top of its p-preset.</summary>
+    private static readonly Dictionary<string, string> RemovedNvencPresetTunes = new()
+    {
+        { "ll", "ll" },
+        { "llhq", "ll" },
+        { "llhp", "ll" },
+        { "lossless", "lossless" },
+        { "losslesshp", "lossless" },
+    };
+
     public static bool IsNvenc(string videoCodec)
     {
         return videoCodec is "h264_nvenc" or "hevc_nvenc";
@@ -56,6 +84,16 @@ public static class VideoPresetOptions
     public static List<string> GetNvencPresets()
     {
         return new List<string>(NvencPresets);
+    }
+
+    /// <summary>
+    /// The "-tune" values for <paramref name="videoCodec"/>. Only nvenc has one in the burn-in
+    /// window; every other encoder gets a single blank entry, the way the preset list does for
+    /// AMF and VideoToolbox.
+    /// </summary>
+    public static List<string> GetTunes(string videoCodec)
+    {
+        return IsNvenc(videoCodec) ? new List<string>(NvencTunes) : new List<string> { BlankTune };
     }
 
     /// <summary>
@@ -71,5 +109,20 @@ public static class VideoPresetOptions
         }
 
         return preset;
+    }
+
+    /// <summary>
+    /// The tuning mode a stored preset name implies, for the aliases that set one - "lossless"
+    /// was never just a speed, so migrating it to "p4" alone would silently turn a lossless
+    /// encode into a lossy one. Empty for everything else.
+    /// </summary>
+    public static string MigrateTune(string videoCodec, string? preset)
+    {
+        if (preset != null && IsNvenc(videoCodec) && RemovedNvencPresetTunes.TryGetValue(preset, out var tune))
+        {
+            return tune;
+        }
+
+        return string.Empty;
     }
 }

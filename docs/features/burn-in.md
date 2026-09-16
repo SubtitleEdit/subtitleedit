@@ -79,6 +79,20 @@ presets. The old aliases (`hq`, `ll`, `lossless`, …) were removed in FFmpeg 9.
 offered — a saved one is moved to its `p1`–`p7` equivalent. AMF has no preset. Quality is left
 blank by default, which lets FFmpeg pick a bitrate.
 
+NVENC also has a **Tune** list, which is what those old aliases really set on top of a preset.
+The row is shown for the NVIDIA encoders only:
+
+| Tune | Meaning |
+|------|---------|
+| *(blank)* | FFmpeg's default — high quality |
+| `hq` | High quality (the default, stated explicitly) |
+| `ll` / `ull` | Low latency / ultra low latency — for streaming, not for burn-in |
+| `lossless` | Lossless encoding |
+
+`lossless` pins the encoder to constant QP 0, so the **CQ** value is left out of the command line
+when it is picked — FFmpeg would ignore it anyway. Not every GPU can encode losslessly; where it
+cannot, FFmpeg stops with *"Lossless encoding not supported"*.
+
 All HEVC output is tagged `hvc1` so it plays in QuickTime and other Apple players, which reject
 the `hev1` tag FFmpeg writes by default.
 

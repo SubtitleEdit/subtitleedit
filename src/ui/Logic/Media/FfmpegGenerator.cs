@@ -169,7 +169,13 @@ public class FfmpegGenerator
         {
             if (videoEncoding == "h264_nvenc" || videoEncoding == "hevc_nvenc")
             {
-                crfSettings = $" -cq {crf}";
+                // "-tune lossless" pins nvenc to constant QP 0, so a CQ value alongside it is
+                // silently dropped by ffmpeg - leave it out rather than write a command line that
+                // claims a quality the encode does not use.
+                if (tune != "lossless")
+                {
+                    crfSettings = $" -cq {crf}";
+                }
             }
             else if (videoEncoding == "h264_amf" || videoEncoding == "hevc_amf")
             {
@@ -314,7 +320,7 @@ public class FfmpegGenerator
         // Without it ffmpeg hits "File ... already exists. Exiting." and writes nothing - and as
         // the old file is still there, the burn-in looked like it succeeded (issue #14210).
         return
-            $"-y{cutStart}-i \"{inputVideoFileName}\"{canvasInput}{imageSubtitleInput}{logoInput}{cutEnd} {filterParameter} -g 30 -bf 2 -s {width}x{height} {videoEncodingSettings} {passSettings} {presetSettings} {crfSettings} {pixelFormat} {audioSettings}{tuneParameter} -use_editlist 0 -movflags +faststart{shortestParameter} {outputVideoFileName}";
+            $"-y{cutStart}-i \"{inputVideoFileName}\"{canvasInput}{imageSubtitleInput}{logoInput}{cutEnd} {filterParameter} -g 30 -bf 2 -s {width}x{height} {videoEncodingSettings} {passSettings} {presetSettings}{tuneParameter} {crfSettings} {pixelFormat} {audioSettings} -use_editlist 0 -movflags +faststart{shortestParameter} {outputVideoFileName}";
     }
 
     /// <summary>
