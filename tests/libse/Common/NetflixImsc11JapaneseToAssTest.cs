@@ -51,6 +51,19 @@ public class NetflixImsc11JapaneseToAssTest
         Assert.EndsWith(@"︵\N兵\N士\N︶\Nハ\Nッ\N⋮", line, StringComparison.Ordinal);
     }
 
+    [Theory]
+    [InlineData(@"{\an6}", @"{\an9\pos(")]
+    [InlineData(@"{\an4}", @"{\an7\pos(")]
+    public void MiddleAlignedCueIsAlsoVertical(string alignment, string expectedStart)
+    {
+        // Lambda Cap loads a column without ＠行頭 as {\an4}/{\an6}.
+        var lines = DialogueLines(SubtitleWith(alignment + "兵士"));
+
+        var line = Assert.Single(lines);
+        Assert.Contains(expectedStart, line, StringComparison.Ordinal);
+        Assert.EndsWith(@"兵\N士", line, StringComparison.Ordinal);
+    }
+
     [Fact]
     public void BoutenBecomesAnEmphasisMarkPerCharacter()
     {
