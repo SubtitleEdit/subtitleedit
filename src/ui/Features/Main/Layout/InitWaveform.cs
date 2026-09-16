@@ -51,33 +51,32 @@ public class InitWaveform
         // waveform area
         if (vm.AudioVisualizer == null)
         {
-            vm.AudioVisualizer = new AudioVisualizer
-            {
-                DrawGridLines = settings.DrawGridLines,
-                WaveformColor = settings.WaveformColor.FromHexToColor(),
-                WaveformBackgroundColor = settings.WaveformBackgroundColor.FromHexToColor(),
-                WaveformSelectedColor = settings.WaveformSelectedColor.FromHexToColor(),
-                WaveformCursorColor = settings.WaveformCursorColor.FromHexToColor(),
-                WaveformShotChangeColor = settings.WaveformShotChangeColor.FromHexToColor(),
-                WaveformParagraphLeftColor = settings.WaveformParagraphLeftColor.FromHexToColor(),
-                WaveformParagraphRightColor = settings.WaveformParagraphRightColor.FromHexToColor(),
-                WaveformFancyHighColor = settings.WaveformFancyHighColor.FromHexToColor(),
-                ParagraphBackground = settings.ParagraphBackground.FromHexToColor(),
-                ParagraphSelectedBackground = settings.ParagraphSelectedBackground.FromHexToColor(),
-                InvertMouseWheel = settings.InvertMouseWheel,
-                VerticalAlignment = VerticalAlignment.Stretch,
-                Height = double.NaN, // Auto height
-                WaveformDrawStyle = GetWaveformDrawStyle(settings.WaveformDrawStyle),
-                MinGapSeconds = Se.Settings.General.MinimumBetweenLines.GetMilliseconds() / 1000.0,
-                FocusOnMouseOver = settings.FocusOnMouseOver,
-                IsReadOnly = Se.Settings.General.LockTimeCodes,
-                WaveformHeightPercentage = settings.SpectrogramCombinedWaveformHeight,
-                // The toggle may have been pressed in a layout without a waveform; a waveform
-                // built later must come up on the same side of it as the video preview, or the
-                // two previews show different texts (see SetOriginalTextInPreview).
-                ShowOriginalText = vm.ShowOriginalTextInPreview,
-                ShowOriginalSubtitleOverlay = settings.ShowOriginalSubtitle,
-            };
+            // Experimental SkiaSharp renderer, opt-in via SE_SKIA_WAVEFORM=1 (see SkiaAudioVisualizer).
+            vm.AudioVisualizer = SkiaAudioVisualizer.UseSkiaRenderer ? new SkiaAudioVisualizer() : new AudioVisualizer();
+            vm.AudioVisualizer.DrawGridLines = settings.DrawGridLines;
+            vm.AudioVisualizer.WaveformColor = settings.WaveformColor.FromHexToColor();
+            vm.AudioVisualizer.WaveformBackgroundColor = settings.WaveformBackgroundColor.FromHexToColor();
+            vm.AudioVisualizer.WaveformSelectedColor = settings.WaveformSelectedColor.FromHexToColor();
+            vm.AudioVisualizer.WaveformCursorColor = settings.WaveformCursorColor.FromHexToColor();
+            vm.AudioVisualizer.WaveformShotChangeColor = settings.WaveformShotChangeColor.FromHexToColor();
+            vm.AudioVisualizer.WaveformParagraphLeftColor = settings.WaveformParagraphLeftColor.FromHexToColor();
+            vm.AudioVisualizer.WaveformParagraphRightColor = settings.WaveformParagraphRightColor.FromHexToColor();
+            vm.AudioVisualizer.WaveformFancyHighColor = settings.WaveformFancyHighColor.FromHexToColor();
+            vm.AudioVisualizer.ParagraphBackground = settings.ParagraphBackground.FromHexToColor();
+            vm.AudioVisualizer.ParagraphSelectedBackground = settings.ParagraphSelectedBackground.FromHexToColor();
+            vm.AudioVisualizer.InvertMouseWheel = settings.InvertMouseWheel;
+            vm.AudioVisualizer.VerticalAlignment = VerticalAlignment.Stretch;
+            vm.AudioVisualizer.Height = double.NaN; // Auto height
+            vm.AudioVisualizer.WaveformDrawStyle = GetWaveformDrawStyle(settings.WaveformDrawStyle);
+            vm.AudioVisualizer.MinGapSeconds = Se.Settings.General.MinimumBetweenLines.GetMilliseconds() / 1000.0;
+            vm.AudioVisualizer.FocusOnMouseOver = settings.FocusOnMouseOver;
+            vm.AudioVisualizer.IsReadOnly = Se.Settings.General.LockTimeCodes;
+            vm.AudioVisualizer.WaveformHeightPercentage = settings.SpectrogramCombinedWaveformHeight;
+            // The toggle may have been pressed in a layout without a waveform; a waveform
+            // built later must come up on the same side of it as the video preview, or the
+            // two previews show different texts (see SetOriginalTextInPreview).
+            vm.AudioVisualizer.ShowOriginalText = vm.ShowOriginalTextInPreview;
+            vm.AudioVisualizer.ShowOriginalSubtitleOverlay = settings.ShowOriginalSubtitle;
 
             vm.AudioVisualizer.GetIsVideoPlaying = () => vm.GetVideoPlayerControl()?.IsPlaying == true;
             vm.AudioVisualizer.OnNewSelectionInsert += vm.AudioVisualizerOnNewSelectionInsert;
