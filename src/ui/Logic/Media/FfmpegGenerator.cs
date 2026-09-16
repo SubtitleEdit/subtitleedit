@@ -179,7 +179,16 @@ public class FfmpegGenerator
             }
             else if (videoEncoding == "h264_amf" || videoEncoding == "hevc_amf")
             {
+                // A quality preference name ("quality"/"balanced"/"speed"), not a number: the
+                // integers behind them differ per codec and the H.264 encoder rejects anything
+                // above 2.
                 crfSettings = $" -quality {crf}";
+            }
+            else if (videoEncoding is "h264_qsv" or "hevc_qsv")
+            {
+                // QSV knows no "crf" - ffmpeg accepted it, warned that the option went unused and
+                // encoded at its default CQP instead. "-global_quality" is the ICQ knob.
+                crfSettings = $" -global_quality {crf}";
             }
             else if (videoEncoding is "h264_videotoolbox" or "hevc_videotoolbox")
             {

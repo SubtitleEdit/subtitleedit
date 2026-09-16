@@ -215,7 +215,7 @@ public partial class BurnInViewModel : ObservableObject
         };
         SelectedAudioBitRate = AudioBitRates[2];
 
-        VideoPixelFormats = new ObservableCollection<PixelFormatItem>(PixelFormatItem.PixelFormats);
+        VideoPixelFormats = new ObservableCollection<PixelFormatItem>(PixelFormatItem.GetPixelFormats(null));
 
         VideoEncodings = new ObservableCollection<VideoEncodingItem>(VideoEncodingItem.VideoEncodings);
         SelectedVideoEncoding = VideoEncodings[0];
@@ -1590,7 +1590,7 @@ public partial class BurnInViewModel : ObservableObject
         SelectedVideoEncoding = VideoEncodings.FirstOrDefault(p => p.Codec == settings.Encoding)
                                 ?? VideoEncodings.FirstOrDefault(p => p.Codec == SeVideoBurnIn.DefaultEncoding)
                                 ?? VideoEncodings[0];
-        SelectedVideoPixelFormat = VideoPixelFormats.FirstOrDefault(p => p.Codec == settings.PixelFormat) ?? VideoPixelFormats[0];
+        FillPixelFormats(SelectedVideoEncoding.Codec, settings.PixelFormat);
         FillPreset(SelectedVideoEncoding.Codec);
         FillTune(SelectedVideoEncoding.Codec);
         FillCrf(SelectedVideoEncoding.Codec);
@@ -1868,6 +1868,7 @@ public partial class BurnInViewModel : ObservableObject
             return;
         }
 
+        FillPixelFormats(SelectedVideoEncoding.Codec);
         FillPreset(SelectedVideoEncoding.Codec);
         FillTune(SelectedVideoEncoding.Codec);
         FillCrf(SelectedVideoEncoding.Codec);
@@ -1909,6 +1910,21 @@ public partial class BurnInViewModel : ObservableObject
         AudioEncodings.Clear();
         AudioEncodings.AddRange(items);
         SelectedAudioEncoding = !string.IsNullOrEmpty(wanted) && items.Contains(wanted) ? wanted : items[0];
+    }
+
+    /// <summary>
+    /// Keeps the pixel format list to the formats the chosen encoder can actually take. ffmpeg
+    /// does not fail on an unsupported "-pix_fmt", it auto-selects another one - so a 10-bit pick
+    /// for nvenc used to write an 8-bit file without saying so.
+    /// </summary>
+    private void FillPixelFormats(string videoCodec, string? preferredPixelFormat = null)
+    {
+        var wanted = PixelFormatItem.Migrate(videoCodec, preferredPixelFormat ?? SelectedVideoPixelFormat?.Codec);
+        var items = PixelFormatItem.GetPixelFormats(videoCodec);
+
+        VideoPixelFormats.Clear();
+        VideoPixelFormats.AddRange(items);
+        SelectedVideoPixelFormat = items.FirstOrDefault(p => p.Codec == wanted) ?? items[0];
     }
 
     /// <summary>
@@ -2082,19 +2098,29 @@ public partial class BurnInViewModel : ObservableObject
             VideoCrf.AddRange(items);
             SelectedVideoCrf = null;
         }
-        else if (videoCodec == "h264_amf" ||
-                 videoCodec == "hevc_amf")
+        else if (VideoPresetOptions.IsAmf(videoCodec))
         {
-            for (var i = 0; i <= 10; i++)
+            // Named values, not a number - see VideoPresetOptions.GetAmfQualities.
+            VideoCrfText = Se.Language.General.Quality;
+            VideoCrf.Clear();
+            VideoCrf.AddRange(VideoPresetOptions.GetAmfQualities());
+            SelectedVideoCrf = null;
+        }
+        else if (videoCodec is "h264_qsv" or "hevc_qsv")
+        {
+            // QSV has no "crf" option at all: ffmpeg took the value, logged "Codec AVOption crf
+            // ... has not been used for any stream" and encoded with its default CQP, so the
+            // quality picked here did nothing. The QSV knob is "-global_quality".
+            for (var i = 1; i <= 51; i++)
             {
                 items.Add(i.ToString(CultureInfo.InvariantCulture));
             }
 
             VideoCrfText = Se.Language.General.Quality;
-            VideoCrfHint = "0=best quality, 10=best speed";
+            VideoCrfHint = "1=best quality, 51=best speed";
             VideoCrf.Clear();
             VideoCrf.AddRange(items);
-            SelectedVideoCrf = null;
+            SelectedVideoCrf = "23";
         }
         else if (videoCodec is "h264_videotoolbox" or "hevc_videotoolbox")
         {
@@ -2141,6 +2167,7 @@ public partial class BurnInViewModel : ObservableObject
             SelectedVideoCrf = "23";
         }
 
+        previousCrf = VideoPresetOptions.MigrateAmfQuality(videoCodec, previousCrf);
         if (!string.IsNullOrWhiteSpace(previousCrf) && VideoCrf.Contains(previousCrf))
         {
             SelectedVideoCrf = previousCrf;
