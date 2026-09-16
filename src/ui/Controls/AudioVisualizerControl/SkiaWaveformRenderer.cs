@@ -820,13 +820,13 @@ internal sealed class SkiaWaveformRenderer
         var color = f.TextColor.WithAlpha((byte)(f.TextColor.Alpha * alpha / 255));
         if (f.UnwrapText)
         {
-            DrawText(canvas, _textCache.Get(p.Unwrapped, f.FontSize), x, y, color);
+            DrawText(canvas, _textCache.Get(p.Unwrapped, f.FontSize, p.RightToLeft), x, y, color);
             return;
         }
 
         foreach (var line in p.Lines)
         {
-            var text = _textCache.Get(line, f.FontSize);
+            var text = _textCache.Get(line, f.FontSize, p.RightToLeft);
             DrawText(canvas, text, x, y, color);
             y += text.Height;
             if (y > f.Height)
@@ -1070,7 +1070,7 @@ internal sealed class SkiaTextCache
         public float Height;
     }
 
-    private readonly Dictionary<(string Text, float Size), ShapedText> _texts = new(1024);
+    private readonly Dictionary<(string Text, float Size, bool RightToLeft), ShapedText> _texts = new(1024);
     private readonly Dictionary<(SKTypeface Typeface, float Size), SKFont> _fonts = new();
     private readonly Dictionary<SKTypeface, SKShaper> _shapers = new();
     private readonly Dictionary<int, SKTypeface> _fallbacks = new();
@@ -1094,9 +1094,16 @@ internal sealed class SkiaTextCache
             SKFontStyleSlant.Upright) ?? SKTypeface.Default;
     }
 
-    public ShapedText Get(string text, float size)
+    /// <summary>
+    /// The shaped glyphs for one line of text. <paramref name="rightToLeft"/> is the paragraph
+    /// direction: HarfBuzz shapes a buffer in one direction and does no bidi reordering, so a
+    /// right to left line with Latin words or digits is split into directional runs first (see
+    /// <see cref="SkiaBidiRuns"/>) and each run is shaped with an explicit direction. A left to
+    /// right line without right to left letters keeps the single shaping pass.
+    /// </summary>
+    public ShapedText Get(string text, float size, bool rightToLeft = false)
     {
-        if (_texts.TryGetValue((text, size), out var shaped))
+        if (_texts.TryGetValue((text, size, rightToLeft), out var shaped))
         {
             return shaped;
         }
@@ -1111,8 +1118,7 @@ internal sealed class SkiaTextCache
             _texts.Clear();
         }
 
-        var typeface = PickTypeface(text);
-        var font = GetFont(typeface, size);
+        var font = GetFont(PickTypeface(text), size);
         font.GetFontMetrics(out var metrics);
         shaped = new ShapedText
         {
@@ -1122,33 +1128,88 @@ internal sealed class SkiaTextCache
 
         if (!string.IsNullOrWhiteSpace(text))
         {
-            if (!_shapers.TryGetValue(typeface, out var shaper))
+            if (!rightToLeft && !SkiaBidiRuns.HasStrongRightToLeft(text))
             {
-                shaper = new SKShaper(typeface);
-                _shapers[typeface] = shaper;
+                ShapeSingleRun(text, font, shaped);
             }
-
-            var result = shaper.Shape(text, font);
-            var count = result.Codepoints.Length;
-            if (count > 0)
+            else
             {
-                using var builder = new SKTextBlobBuilder();
-                var run = builder.AllocatePositionedRun(font, count);
-                var glyphs = run.Glyphs;
-                var positions = run.Positions;
-                for (var i = 0; i < count; i++)
-                {
-                    glyphs[i] = (ushort)result.Codepoints[i];
-                    positions[i] = result.Points[i];
-                }
-
-                shaped.Blob = builder.Build();
-                shaped.Width = result.Width;
+                ShapeBidiRuns(text, size, rightToLeft, shaped);
             }
         }
 
-        _texts[(text, size)] = shaped;
+        _texts[(text, size, rightToLeft)] = shaped;
         return shaped;
+    }
+
+    private void ShapeSingleRun(string text, SKFont font, ShapedText shaped)
+    {
+        var result = GetShaper(font.Typeface).Shape(text, font);
+        var count = result.Codepoints.Length;
+        if (count == 0)
+        {
+            return;
+        }
+
+        using var builder = new SKTextBlobBuilder();
+        AppendRun(builder, font, result);
+        shaped.Blob = builder.Build();
+        shaped.Width = result.Width;
+    }
+
+    private void ShapeBidiRuns(string text, float size, bool rightToLeft, ShapedText shaped)
+    {
+        var runs = SkiaBidiRuns.Split(text, rightToLeft);
+        using var builder = new SKTextBlobBuilder();
+        var x = 0f;
+        var any = false;
+        foreach (var run in runs)
+        {
+            var font = GetFont(PickTypeface(run.Text), size);
+            using var buffer = new HarfBuzzSharp.Buffer();
+            buffer.AddUtf16(run.Text);
+            buffer.Direction = run.RightToLeft ? HarfBuzzSharp.Direction.RightToLeft : HarfBuzzSharp.Direction.LeftToRight;
+            buffer.GuessSegmentProperties();
+            var result = GetShaper(font.Typeface).Shape(buffer, x, 0, font);
+            if (result.Codepoints.Length > 0)
+            {
+                AppendRun(builder, font, result);
+                any = true;
+            }
+
+            x += result.Width;
+        }
+
+        if (any)
+        {
+            shaped.Blob = builder.Build();
+        }
+
+        shaped.Width = x;
+    }
+
+    private static void AppendRun(SKTextBlobBuilder builder, SKFont font, SKShaper.Result result)
+    {
+        var count = result.Codepoints.Length;
+        var run = builder.AllocatePositionedRun(font, count);
+        var glyphs = run.Glyphs;
+        var positions = run.Positions;
+        for (var i = 0; i < count; i++)
+        {
+            glyphs[i] = (ushort)result.Codepoints[i];
+            positions[i] = result.Points[i];
+        }
+    }
+
+    private SKShaper GetShaper(SKTypeface typeface)
+    {
+        if (!_shapers.TryGetValue(typeface, out var shaper))
+        {
+            shaper = new SKShaper(typeface);
+            _shapers[typeface] = shaper;
+        }
+
+        return shaper;
     }
 
     private SKTypeface PickTypeface(string text)

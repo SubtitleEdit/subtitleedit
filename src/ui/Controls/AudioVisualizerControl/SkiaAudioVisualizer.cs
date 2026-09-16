@@ -251,6 +251,7 @@ public class SkiaAudioVisualizer : AudioVisualizer
                 IsSelected = _selectedInView.Contains(p),
                 Lines = prepared.Lines,
                 Unwrapped = prepared.Unwrapped,
+                RightToLeft = prepared.RightToLeft,
                 AudioSeconds = audioLengthProvider?.Invoke(p) ?? 0,
             };
 
@@ -303,6 +304,7 @@ public class SkiaAudioVisualizer : AudioVisualizer
                 EndSeconds = cue.EndSeconds,
                 Lines = prepared.Lines,
                 Unwrapped = prepared.Unwrapped,
+                RightToLeft = prepared.RightToLeft,
             });
         }
     }
@@ -565,6 +567,7 @@ internal struct SkiaParagraph
     public bool IsSelected;
     public IReadOnlyList<string> Lines;
     public string Unwrapped;
+    public bool RightToLeft;
     public string? NumberLabel;
     public string? NumberAndDurationLabel;
     public string? CpsLabel;
