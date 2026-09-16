@@ -12546,8 +12546,16 @@ public partial class MainViewModel :
         }
 
         OnSubtitleLanguageChanged();
+        SwitchToTranslationOfCurrentRows(result.SelectedTargetLanguage?.TwoLetterIsoLanguageName, wasOldTranslationChanged);
+    }
 
-        var targetLanguageCode = result.SelectedTargetLanguage?.TwoLetterIsoLanguageName;
+    /// <summary>
+    /// Turns the working subtitle into a translation of itself once its pre-translation text has
+    /// been copied into the original column: the file the translation was made from becomes the
+    /// original, the translation gets a language-suffixed name, and translator mode is switched on.
+    /// </summary>
+    private void SwitchToTranslationOfCurrentRows(string? targetLanguageCode, bool wasOldTranslationChanged)
+    {
         _subtitleFileNameOriginal = _subtitleFileName;
         if (!string.IsNullOrEmpty(_subtitleFileName) && !string.IsNullOrEmpty(targetLanguageCode))
         {
@@ -12633,10 +12641,10 @@ public partial class MainViewModel :
         }
 
         // In translator mode the original column holds the source and the translation goes in the
-        // text column. With a single subtitle open there is no original to read, so the lines
-        // translate in place from their own text - like the whole-file auto-translate, except that
-        // a partial selection must not capture an original: that would fill the original column for
-        // the selected rows only and switch translator mode on for a half-empty column (#14926).
+        // text column. With a single subtitle open there is no original to read, so the selected
+        // lines are translated from their own text, and - like the whole-file auto-translate - the
+        // subtitle becomes the original: every row keeps its current text in the original column,
+        // not just the selected ones, so the original stays whole (#14926).
         var translateInPlace = !ShowColumnOriginalText;
 
         var result = await ShowDialogAsync<AutoTranslateWindow, AutoTranslateViewModel>(vm =>
@@ -12669,7 +12677,23 @@ public partial class MainViewModel :
             return;
         }
 
-        for (int i = 0; i < result.Rows.Count; i++)
+        if (translateInPlace && !result.Rows.Any(r => !string.IsNullOrEmpty(r.TranslatedText)))
+        {
+            return; // nothing came back - do not switch to translator mode for an unchanged subtitle
+        }
+
+        var wasOldTranslationChanged = translateInPlace && _changeSubtitleHash != GetFastHash();
+
+        if (translateInPlace)
+        {
+            foreach (var line in Subtitles)
+            {
+                line.OriginalText = line.Text;
+                line.ReferenceParagraphId = null;
+            }
+        }
+
+        for (int i = 0; i < result.Rows.Count && i < selectedItems.Count; i++)
         {
             var translatedText = result.Rows[i].TranslatedText;
             var id = selectedItems[i].Id;
@@ -12681,6 +12705,12 @@ public partial class MainViewModel :
         }
 
         OnSubtitleLanguageChanged();
+
+        if (translateInPlace)
+        {
+            SwitchToTranslationOfCurrentRows(result.SelectedTargetLanguage?.TwoLetterIsoLanguageName, wasOldTranslationChanged);
+            return;
+        }
 
         _updateAudioVisualizer = true;
     }
