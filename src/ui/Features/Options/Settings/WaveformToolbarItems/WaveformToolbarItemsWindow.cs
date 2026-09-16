@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
@@ -30,6 +31,9 @@ public class WaveformToolbarItemsWindow : Window
         {
             var checkBox = new CheckBox();
             checkBox.Bind(CheckBox.IsCheckedProperty, new Binding(nameof(ToolbarItemDisplay.IsVisible)) { Mode = BindingMode.TwoWay });
+            // Shift+Tab back into the list lands on this check box rather than the row, and a
+            // check box with no content is announced as a nameless "check box" (#12087).
+            checkBox.Bind(AutomationProperties.NameProperty, new Binding(nameof(ToolbarItemDisplay.Name)));
 
             var textBlock = new TextBlock { Margin = new Thickness(5, 0, 0, 0), VerticalAlignment = VerticalAlignment.Center };
             textBlock.Bind(TextBlock.TextProperty, new Binding(nameof(ToolbarItemDisplay.Name)));

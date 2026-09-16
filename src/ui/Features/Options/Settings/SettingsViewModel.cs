@@ -446,6 +446,14 @@ public partial class SettingsViewModel : ObservableObject
     public ScrollViewer ScrollView { get; internal set; }
     public List<SettingsSection> Sections { get; internal set; }
 
+    /// <summary>
+    /// The category shown in the content area. With no search filter the page shows only this
+    /// section, so Tab stays within one category and its heading is the first thing announced
+    /// when it is entered - one long page of every setting gave a screen reader user no way to
+    /// tell where a section ended or to get back to the categories (#12087).
+    /// </summary>
+    [ObservableProperty] private SettingsSection? _selectedSection;
+
     private readonly IWindowService _windowService;
     private readonly IFolderHelper _folderHelper;
     private MainViewModel? _mainViewModel;
@@ -2648,16 +2656,51 @@ public partial class SettingsViewModel : ObservableObject
     [RelayCommand]
     private void ScrollToSection(string title)
     {
-        var section = Sections.FirstOrDefault(section => section.IsVisible && section.Title == title);
-        if (section != null)
+        var section = Sections.FirstOrDefault(section => section.Title == title);
+        if (section == null)
         {
-            // Move focus into the section, not only the view - with focus left on the category
-            // button, the categories did nothing for a screen reader or keyboard user (#12087).
-            // The focus rectangle follows only when the category was picked from the keyboard.
-            var pickedFromKeyboard = Window?.FocusManager?.GetFocusedElement() is Control focused
-                                     && focused.Classes.Contains(":focus-visible");
-            ScrollElementIntoView(ScrollView, section.Panel!, pickedFromKeyboard ? NavigationMethod.Tab : NavigationMethod.Unspecified);
+            return;
         }
+
+        // The focus rectangle follows only when the category was picked from the keyboard.
+        var pickedFromKeyboard = Window?.FocusManager?.GetFocusedElement() is Control focused
+                                 && focused.Classes.Contains(":focus-visible");
+        ShowSection(section, pickedFromKeyboard ? NavigationMethod.Tab : NavigationMethod.Unspecified);
+    }
+
+    /// <summary>
+    /// Ctrl+PageDown / Ctrl+PageUp switch to the next / previous category from anywhere in the
+    /// window, so a keyboard user several controls into a section need not Shift+Tab all the
+    /// way back to the category buttons (#12087).
+    /// </summary>
+    internal void SelectAdjacentSection(int direction)
+    {
+        var candidates = Sections.Where(s => s.IsVisible).ToList();
+        if (candidates.Count == 0)
+        {
+            return;
+        }
+
+        var index = SelectedSection == null ? -1 : candidates.IndexOf(SelectedSection);
+        index = index < 0
+            ? (direction > 0 ? 0 : candidates.Count - 1)
+            : (index + direction + candidates.Count) % candidates.Count;
+        ShowSection(candidates[index], NavigationMethod.Tab);
+    }
+
+    private void ShowSection(SettingsSection section, NavigationMethod navigationMethod)
+    {
+        SelectedSection = section; // the page rebuilds the content to this section
+
+        // Hidden by the search filter (no matching settings) - nothing to scroll or focus.
+        if (section.Panel == null || !section.IsVisible)
+        {
+            return;
+        }
+
+        // Move focus into the section, not only the view - with focus left on the category
+        // button, the categories did nothing for a screen reader or keyboard user (#12087).
+        ScrollElementIntoView(ScrollView, section.Panel, navigationMethod);
     }
 
     [RelayCommand]
@@ -3046,6 +3089,11 @@ public partial class SettingsViewModel : ObservableObject
         {
             e.Handled = true;
             Window?.Close();
+        }
+        else if (e.KeyModifiers == KeyModifiers.Control && e.Key is Key.PageDown or Key.PageUp)
+        {
+            e.Handled = true;
+            SelectAdjacentSection(e.Key == Key.PageDown ? 1 : -1);
         }
         else if (UiUtil.IsHelp(e))
         {
