@@ -110,6 +110,14 @@ public class VideoOffsetSaveTests : IDisposable
     private static void ResetOffset(MainViewModel vm, bool keepTimeCodes) =>
         Invoke(vm, "ResetVideoOffset", keepTimeCodes);
 
+    private static void SetLoading(MainViewModel vm, bool value) =>
+        typeof(MainViewModel)
+            .GetField("_loading", BindingFlags.NonPublic | BindingFlags.Instance)!
+            .SetValue(vm, value);
+
+    private static RecentFile? RecentEntryFor(string fileName) =>
+        Se.Settings.File.RecentFiles.FirstOrDefault(r => r.SubtitleFileName == fileName);
+
     private static TimeSpan FirstRowStart(MainViewModel vm) => vm.Subtitles[0].StartTime;
 
     private static double FirstSavedStartMs(MainViewModel vm) => vm.GetSaveSubtitle().Paragraphs[0].StartTime.TotalMilliseconds;
@@ -210,5 +218,35 @@ public class VideoOffsetSaveTests : IDisposable
         Assert.Equal(OneSecond, FirstRowStart(vm));
         Assert.Equal((OneHour + OneSecond).TotalMilliseconds, FirstSavedStartMs(vm));
         Assert.False(vm.HasChanges());
+    }
+
+    [AvaloniaFact]
+    public async Task ReopeningWithARememberedOffset_WritesTheOffsetBackToTheRecentFile()
+    {
+        // The open that precedes the restore zeroes the offset (ResetSubtitle) and then persists
+        // the recent entry twice while it is still zero - when the video opens and at the end of
+        // SubtitleOpen. So by the time the offset is restored, the remembered value is already
+        // gone from disk; the restore has to write it back or it survives only in memory.
+        var (vm, fileName) = await OpenAsync("01:00:01,000", "01:00:02,000");
+        SetLoading(vm, false);
+
+        // What the open leaves behind: the entry, with the offset still zeroed.
+        Invoke(vm, "AddToRecentFiles", false, (int?)0);
+        Assert.Equal(0, RecentEntryFor(fileName)!.VideoOffsetInMs);
+
+        Invoke(vm, "SetRecentFileProperties", new RecentFile
+        {
+            SubtitleFileName = fileName,
+            SelectedLine = 1,
+            VideoOffsetInMs = (long)OneHour.TotalMilliseconds,
+        });
+
+        var entry = RecentEntryFor(fileName);
+        Assert.NotNull(entry);
+        Assert.Equal((long)OneHour.TotalMilliseconds, entry!.VideoOffsetInMs);
+
+        // The restored line is passed explicitly - the selection is applied through a dispatcher
+        // post, so reading it back off the view model could persist 0 instead.
+        Assert.Equal(1, entry.SelectedLine);
     }
 }
