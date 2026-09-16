@@ -508,6 +508,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
         SetYtDlpPathOption();
         SetPreInitAudioOptions();
+        SetClipboardBackendsOption();
 
         var err = _mpvInitialize(_mpv);
         if (err >= 0)
@@ -1229,6 +1230,39 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     }
 
     /// <summary>
+    /// Turns off mpv's clipboard backends. Subtitle Edit never reads or writes mpv's "clipboard"
+    /// property, so the backend is dead weight - but it is not free: mpv starts its clipboard
+    /// thread unconditionally at init (reinit_clipboard runs from the option-change callback, even
+    /// with clipboard-monitor=no), and in mpv 0.40.0 that thread can wedge at 100% CPU forever.
+    /// <para>
+    /// The Wayland backend allocates a pipe for every new selection offer but only hands the write
+    /// end to the compositor when the offer advertises "text/plain;charset=utf-8"; the local write
+    /// end is closed either way, so an offer without that mime leaves a read end with no writer in
+    /// the poll set. 0.40.0's dispatch loop only ever tests POLLIN on it, so the permanent POLLHUP
+    /// is never acted on, the offer is never destroyed and ppoll returns instantly on every
+    /// iteration. An X11/XWayland client owning the clipboard arms it - an XWayland-bridged
+    /// selection does not present that mime - and Subtitle Edit is itself an XWayland client, so
+    /// any clipboard activity in the session can trigger it against the libmpv in our own process
+    /// (issue #14929). mpv 0.41.0 added the missing POLLERR/POLLHUP/POLLNVAL branch.
+    /// </para>
+    /// <para>
+    /// Our Flatpak already builds mpv 0.41.0, but Linux can load a system libmpv too and plenty of
+    /// distributions still ship 0.40.x, so drop the whole failure class rather than rely on the
+    /// version. MPV_ERROR_OPTION_NOT_FOUND is expected on libmpv older than 0.40 - the option did
+    /// not exist before the clipboard backends did - and is not worth a log line.
+    /// </para>
+    /// <para>Must be called before mpv_initialize: the clipboard backend is picked there.</para>
+    /// </summary>
+    private void SetClipboardBackendsOption()
+    {
+        var err = SetOptionString("clipboard-backends", string.Empty);
+        if (err < 0 && err != MpvErrorOptionNotFound)
+        {
+            Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer could not clear clipboard-backends");
+        }
+    }
+
+    /// <summary>
     /// mpv's "audio-stream-silence". Normally mpv stops the audio device when playback pauses
     /// (on Windows, IAudioClient::Stop) and resets it on every seek. Over HDMI to an A/V
     /// receiver the link then goes idle - the receiver reports no signal - and restarting it
@@ -1394,6 +1428,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
         SetYtDlpPathOption();
         SetPreInitAudioOptions();
+        SetClipboardBackendsOption();
 
         // Initialize mpv first
         var err = _mpvInitialize(_mpv);
@@ -1499,6 +1534,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
         SetYtDlpPathOption();
         SetPreInitAudioOptions();
+        SetClipboardBackendsOption();
 
         var err = _mpvInitialize(_mpv);
         if (err < 0)
@@ -2828,6 +2864,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
         SetYtDlpPathOption();
         SetPreInitAudioOptions();
+        SetClipboardBackendsOption();
 
         // Initialize mpv
         var err = _mpvInitialize(_mpv);
@@ -3015,6 +3052,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     }
 
     private const int MpvErrorUninitialized = -3; // MPV_ERROR_UNINITIALIZED in mpv's client.h
+    private const int MpvErrorOptionNotFound = -5; // MPV_ERROR_OPTION_NOT_FOUND in mpv's client.h
 
     public string VersionNumber
     {
