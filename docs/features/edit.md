@@ -10,7 +10,7 @@ The Edit menu provides tools for finding, replacing, and modifying subtitle text
 Undo or redo the last editing action.
 
 - **Undo:** `Ctrl+Z`
-- **Redo:** `Ctrl+Y`
+- **Redo:** `Ctrl+Y` (`Cmd+Shift+Z` on macOS)
 
 ## Show History
 
@@ -25,8 +25,8 @@ Search for text in the subtitle.
 
 - **Menu:** Edit → Find
 - **Shortcut:** `Ctrl+F`
-- **Find next:** `F3`
-- **Find previous:** `Shift+F3`
+- **Find next:** `F3` (`Cmd+G` on macOS)
+- **Find previous:** `Shift+F3` (`Cmd+Shift+G` on macOS)
 
 Options:
 - Whole word (checkbox)
@@ -50,7 +50,7 @@ With **Regular expression** selected, right-click the search box for a helper fl
 Find and replace text in the subtitle.
 
 - **Menu:** Edit → Replace
-- **Shortcut:** `Ctrl+H`
+- **Shortcut:** `Ctrl+H` (`Cmd+Option+F` on macOS, since Cmd+H hides the app)
 
 The buttons have Alt accelerators, underlined while Alt is held: `Alt+F` **Find next**, `Alt+R` **Replace & find next**, `Alt+A` **Replace all**. As in Subtitle Edit 4, the bare letter (`F`, `R`, `A`) also works once the focus has left the text boxes, e.g. after clicking a button. The Find window has `Alt+F` **Find next** and `Alt+P` **Find previous** the same way. `Ctrl+Delete` removes the current search text from the search history.
 
@@ -195,7 +195,7 @@ Regex,\d+,#,strip numbers,true,RegularExpression
 Jump to a subtitle by its line number.
 
 - **Menu:** Edit → Go to line number...
-- **Shortcut:** `Ctrl+G`
+- **Shortcut:** `Ctrl+G` (`Control+G` on macOS, where Cmd+G is find next)
 
 ## Modify Selection
 

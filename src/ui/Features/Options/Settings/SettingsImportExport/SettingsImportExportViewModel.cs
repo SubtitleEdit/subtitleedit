@@ -560,7 +560,7 @@ public partial class SettingsImportExportViewModel : ObservableObject
     }
 
     // Default shortcuts use "Win" as the modifier on macOS (the Cmd/⌘ key) and
-    // "Ctrl" on Windows/Linux — see ShortcutsMain.GetCommandOrWin. Only called
+    // "Ctrl" on Windows/Linux — see ShortcutsMain.GetDefaultShortcuts. Only called
     // when the import file is known to have come from a different OS, so we
     // don't disturb user-customized modifiers (e.g. a real Ctrl shortcut on
     // macOS) during a same-OS round-trip.

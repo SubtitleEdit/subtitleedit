@@ -1273,16 +1273,43 @@ public static class ShortcutsMain
 
     public static List<SeShortCut> GetDefaultShortcuts(MainViewModel vm)
     {
-        var defaults = GetBuiltInDefaultShortcuts(vm);
+        return GetDefaultShortcuts(vm, OperatingSystem.IsMacOS());
+    }
+
+    internal static List<SeShortCut> GetDefaultShortcuts(MainViewModel vm, bool isMacOS)
+    {
+        var defaults = GetBuiltInDefaultShortcuts(vm, isMacOS);
         AddPluginDefaultShortcuts(vm, defaults);
         return defaults;
     }
 
-    private static List<SeShortCut> GetBuiltInDefaultShortcuts(MainViewModel vm)
-    {
-        var cmd = GetCommandOrWin();
+    /// <summary>
+    /// macOS defaults that differ from Windows/Linux beyond Ctrl becoming Cmd, so the standard
+    /// macOS shortcuts keep working (#14941): Cmd+H hides the app, Cmd+Space opens Spotlight,
+    /// F11 shows the desktop, Cmd+G/Cmd+Shift+G are find next/previous and Cmd+Shift+Z is redo.
+    /// Apple keyboards also have no Insert key and their Delete key is a backspace.
+    /// Se.MigrateShortcuts moves persisted settings still on the old defaults (version 4).
+    /// </summary>
+    internal static readonly (string ActionName, string[] OldKeys, string[] NewKeys)[] MacOsDefaultChanges =
+    [
+        (nameof(MainViewModel.ShowReplaceCommand), ["Win", "H"], ["Win", "Alt", "F"]),
+        (nameof(MainViewModel.TogglePlayPause2Command), ["Win", nameof(Avalonia.Input.Key.Space)], []),
+        (nameof(MainViewModel.WaveformSetStartCommand), [nameof(Avalonia.Input.Key.F11)], [nameof(Avalonia.Input.Key.F9)]),
+        (nameof(MainViewModel.FindNextCommand), [nameof(Avalonia.Input.Key.F3)], ["Win", "G"]),
+        (nameof(MainViewModel.FindPreviousCommand), ["Shift", nameof(Avalonia.Input.Key.F3)], ["Win", "Shift", "G"]),
+        (nameof(MainViewModel.ShowGoToLineCommand), ["Win", "G"], ["Ctrl", "G"]),
+        (nameof(MainViewModel.ShowAutoTranslateCommand), ["Win", "Shift", "G"], ["Win", "Shift", "T"]),
+        (nameof(MainViewModel.RedoCommand), ["Win", "Y"], ["Win", "Shift", "Z"]),
+        (nameof(MainViewModel.InsertLineAfterCommand), ["Alt", nameof(Avalonia.Input.Key.Insert)], ["Win", "Alt", "I"]),
+        (nameof(MainViewModel.InsertLineBeforeCommand), ["Win", "Shift", nameof(Avalonia.Input.Key.Insert)], ["Win", "Alt", "Shift", "I"]),
+        (nameof(MainViewModel.DeleteSelectedLinesCommand), ["Delete"], ["Win", nameof(Avalonia.Input.Key.Back)]),
+    ];
 
-        return
+    private static List<SeShortCut> GetBuiltInDefaultShortcuts(MainViewModel vm, bool isMacOS)
+    {
+        var cmd = isMacOS ? "Win" : "Ctrl";
+
+        List<SeShortCut> defaults =
         [
             new(nameof(vm.UndoCommand), [cmd, "Z"]),
             new(nameof(vm.RedoCommand), [cmd, "Y"]),
@@ -1305,7 +1332,7 @@ public static class ShortcutsMain
             new(nameof(vm.ShowMultipleReplaceCommand), [cmd, "Shift", "R"], ShortcutCategory.General),
             // On macOS the plain Option+Shift+Cmd+D chord never reaches the app (#14508), so add
             // Control there; on Windows/Linux the three-modifier default stays as before.
-            new(nameof(vm.OpenDataFolderCommand), OperatingSystem.IsMacOS()
+            new(nameof(vm.OpenDataFolderCommand), isMacOS
                 ? ["Ctrl", cmd, "Alt", "Shift", "D"]
                 : [cmd, "Alt", "Shift", "D"], ShortcutCategory.General),
             new(nameof(vm.SaveLanguageFileCommand), [cmd, "Alt", "Shift", "L"], ShortcutCategory.General),
@@ -1321,7 +1348,7 @@ public static class ShortcutsMain
             // Forward delete for Apple keyboards, where the Delete key is only a backspace.
             // Default on macOS only: on PC keyboards Shift is often still held right after
             // typing an uppercase letter, and there Shift+Backspace must stay a backspace.
-            .. OperatingSystem.IsMacOS()
+            .. isMacOS
                 ? new SeShortCut[] { new(nameof(vm.TextBoxDeleteForwardCommand), ["Shift", nameof(Avalonia.Input.Key.Back)], ShortcutCategory.TextBox) }
                 : [],
             // Shift+Delete cut is not in Avalonia's native keymap (unlike Ctrl+Insert copy and
@@ -1391,16 +1418,24 @@ public static class ShortcutsMain
             new(nameof(vm.PauseCommand), [cmd, "Alt", nameof(Avalonia.Input.Key.P)], ShortcutCategory.General),
             new(nameof(vm.SetupLikeSe4Command), [cmd, nameof(Avalonia.Input.Key.D4)], ShortcutCategory.General),
         ];
-    }
 
-    private static string GetCommandOrWin()
-    {
-        if (OperatingSystem.IsMacOS())
+        if (isMacOS)
         {
-            return "Win";
+            foreach (var change in MacOsDefaultChanges)
+            {
+                var index = defaults.FindIndex(s => s.ActionName == change.ActionName);
+                if (change.NewKeys.Length == 0)
+                {
+                    defaults.RemoveAt(index);
+                }
+                else
+                {
+                    defaults[index].Keys = [.. change.NewKeys];
+                }
+            }
         }
 
-        return "Ctrl";
+        return defaults;
     }
 
     public class AvailableShortcut

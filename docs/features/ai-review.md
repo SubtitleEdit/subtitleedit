@@ -55,7 +55,7 @@ The buttons next to it are the usual pair: **OK** applies the checked suggestion
 
 ### Listening to a line
 
-When a video is loaded, a **Play current** button appears at the bottom left. It plays the selected suggestion's line in the video player and pauses at the end of the line, so you can hear what was actually said before deciding on a fix. Double-clicking a suggestion does the same, as does F5 (or Ctrl/Cmd+Space) - F5 follows your *Play selected lines* shortcut. Space is not used for playback here: it toggles the **Apply** checkbox of the selected row.
+When a video is loaded, a **Play current** button appears at the bottom left. It plays the selected suggestion's line in the video player and pauses at the end of the line, so you can hear what was actually said before deciding on a fix. Double-clicking a suggestion does the same, as does F5 (or Ctrl+Space) - F5 and Ctrl+Space follow your *Play selected lines* and secondary *Toggle play/pause* shortcuts. Space is not used for playback here: it toggles the **Apply** checkbox of the selected row.
 
 ## Sentences across multiple lines
 
