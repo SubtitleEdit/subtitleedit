@@ -3,6 +3,31 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.3.0-beta3 (16th of September 2026)
+
+* Add "Guess start and end time from waveform" shortcut - thx m0ck69
+* Add optional "move lines" button groups to the waveform toolbar - thx gambar3
+* Add 3D image export (half side-by-side / top-bottom) from SE 4, also in seconv
+* Add an NVENC tune list to burn-in (hq/ll/ull/lossless)
+* Add experimental fast waveform renderer (SkiaSharp) - Options > Settings > Waveform
+* Add "Auto translate" for selected lines with only one subtitle open - thx fointypinger
+* Ask before auto-opening a video that is stored online only - thx FredOldenburg
+* Settings: name file type check boxes, download buttons and favorites list buttons - thx Shaima-Almarzooqi
+* Settings: picking a category moves focus into its section - thx Shaima-Almarzooqi
+* Fix auto-translate target language defaulting to Abkhaz instead of the last used or UI language - thx RealRUFUS
+* Fix freeze when opening a subtitle next to an online-only Dropbox video - thx FredOldenburg
+* Fix waveform jump and the cursor running a frame ahead when playback starts after a seek - thx mariajuferreira1958-creator
+* Fix Video OCR dropping everything after the 4th line of a frame - thx MengDaGBoss
+* Fix burn-in failing with the NVENC presets ffmpeg 9 no longer accepts - thx bichitoxxx
+* Fix the edit box "Hide" time code ignoring the video offset
+* Fix a remembered video offset being lost from the recent-file entry
+* Fix subtitle preview margin not allowing 0
+* Update Crisp ASR to v0.8.33
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+
+-----------------------------------------------------------------------------------------------------
+
 v5.3.0-beta2 (15th of September 2026)
 
 * Add API Route auto-translate engine - thx DennyHo0917
