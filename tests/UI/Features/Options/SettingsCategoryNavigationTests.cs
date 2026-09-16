@@ -12,6 +12,7 @@ using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Options.Settings;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -72,16 +73,100 @@ public class SettingsCategoryNavigationTests : IDisposable
         }
     }
 
+    /// <summary>
+    /// One category at a time, like SE4 (#12087): with all sections on one page a screen reader
+    /// user could not tell where one section ended and the next began, and getting back to the
+    /// categories meant Shift+Tab through every setting already passed.
+    /// </summary>
+    [AvaloniaFact]
+    public void OnlyTheSelectedCategory_IsInTheContent()
+    {
+        var (window, vm) = OpenSettings();
+        try
+        {
+            Assert.Same(vm.Sections[0], vm.SelectedSection);
+            Assert.Equal([vm.Sections[0]], ShownSections(vm));
+
+            var videoPlayer = vm.Sections.First(s => s.Title == Se.Language.General.VideoPlayer);
+            vm.ScrollToSectionCommand.Execute(videoPlayer.Title);
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal([videoPlayer], ShownSections(vm));
+            Assert.True(videoPlayer.Panel!.IsAttachedToVisualTree());
+        }
+        finally
+        {
+            window.Close();
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Search_ShowsEveryMatchingCategory_AndClearingItReturnsToTheSelectedOne()
+    {
+        var (window, vm) = OpenSettings();
+        try
+        {
+            var searchBox = window.GetVisualDescendants().OfType<TextBox>().First();
+            searchBox.Text = Se.Language.General.FontSize;
+            Dispatcher.UIThread.RunJobs();
+            Assert.True(ShownSections(vm).Count > 1, "A search should span every category");
+
+            searchBox.Text = string.Empty;
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal([vm.SelectedSection!], ShownSections(vm));
+        }
+        finally
+        {
+            window.Close();
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    [AvaloniaFact]
+    public void CtrlPageDown_MovesToTheNextCategory_AndFocusesIt()
+    {
+        var (window, vm) = OpenSettings();
+        try
+        {
+            var first = vm.Sections[0];
+            var second = vm.Sections[1];
+
+            vm.OnKeyDown(new KeyEventArgs { Key = Key.PageDown, KeyModifiers = KeyModifiers.Control, RoutedEvent = InputElement.KeyDownEvent });
+            Assert.Same(second, vm.SelectedSection);
+            Assert.True(PumpUntil(() => window.FocusManager?.GetFocusedElement() is Visual focused &&
+                                      second.Panel!.IsVisualAncestorOf(focused)));
+
+            vm.OnKeyDown(new KeyEventArgs { Key = Key.PageUp, KeyModifiers = KeyModifiers.Control, RoutedEvent = InputElement.KeyDownEvent });
+            Assert.Same(first, vm.SelectedSection);
+
+            // Wraps around from the first to the last category.
+            vm.OnKeyDown(new KeyEventArgs { Key = Key.PageUp, KeyModifiers = KeyModifiers.Control, RoutedEvent = InputElement.KeyDownEvent });
+            Assert.Same(vm.Sections[^1], vm.SelectedSection);
+        }
+        finally
+        {
+            window.Close();
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    private static List<SettingsSection> ShownSections(SettingsViewModel vm)
+    {
+        return vm.Sections.Where(s => s.Panel != null && s.Panel.IsAttachedToVisualTree()).ToList();
+    }
+
     [AvaloniaFact]
     public void Sections_AreNamedGroups_WithHeadingTitles()
     {
         var (window, vm) = OpenSettings();
         try
         {
-            var sections = vm.Sections.Where(s => s.Panel != null).ToList();
+            var sections = vm.Sections.ToList();
             Assert.NotEmpty(sections);
             foreach (var section in sections)
             {
+                vm.SelectedSection = section;
+                Dispatcher.UIThread.RunJobs();
                 var peer = ControlAutomationPeer.CreatePeerForElement(section.Panel!);
                 Assert.Equal(AutomationControlType.Group, peer.GetAutomationControlType());
                 Assert.Equal(section.Title, peer.GetName());

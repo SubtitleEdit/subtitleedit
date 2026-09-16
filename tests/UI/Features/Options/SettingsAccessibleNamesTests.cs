@@ -42,9 +42,16 @@ public class SettingsAccessibleNamesTests
         Dispatcher.UIThread.RunJobs();
         try
         {
-            var controls = window.GetLogicalDescendants().OfType<Control>()
-                .Where(c => c.TemplatedParent == null && c.IsEffectivelyVisible)
-                .ToList();
+            // The page shows one category at a time - walk each one so every setting is covered.
+            var controls = new List<Control>();
+            foreach (var section in vm.Sections)
+            {
+                vm.SelectedSection = section;
+                Dispatcher.UIThread.RunJobs();
+                controls.AddRange(window.GetLogicalDescendants().OfType<Control>()
+                    .Where(c => c.TemplatedParent == null && c.IsEffectivelyVisible)
+                    .Where(c => !controls.Contains(c)));
+            }
 
             // "list" followed by nameless "check box, checked" in File type associations.
             var unnamed = controls

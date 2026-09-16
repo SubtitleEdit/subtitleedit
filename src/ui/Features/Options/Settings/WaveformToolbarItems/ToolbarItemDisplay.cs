@@ -59,4 +59,8 @@ public partial class ToolbarItemDisplay : ObservableObject
     }
 
     private static string Format(string hint) => string.Format(hint, string.Empty).TrimEnd();
+
+    // The list box item's screen-reader name falls back to ToString(), which announced the
+    // type name "...WaveformToolbarItems.ToolbarItemDisplay" for every row (#12087).
+    public override string ToString() => Name;
 }

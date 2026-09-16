@@ -31,11 +31,13 @@ public class SettingsPage : UserControl
     private readonly TextBox _searchBox;
     private readonly StackPanel _contentPanel;
     private readonly SettingsViewModel _vm;
+    private readonly Dictionary<SettingsSection, Button> _menuButtons = new();
 
     public SettingsPage(SettingsViewModel vm)
     {
         _vm = vm;
         _vm.Sections = CreateSections();
+        _vm.SelectedSection ??= _vm.Sections.FirstOrDefault();
 
         _searchBox = new TextBox
         {
@@ -86,7 +88,9 @@ public class SettingsPage : UserControl
         };
         foreach (var section in _vm.Sections)
         {
-            menu.Children.Add(MakeMenuItem(section, vm.ScrollToSectionCommand));
+            var menuItem = MakeMenuItem(section, vm.ScrollToSectionCommand);
+            _menuButtons[section] = menuItem;
+            menu.Children.Add(menuItem);
         }
 
         grid.Children.Add(menu);
@@ -132,6 +136,13 @@ public class SettingsPage : UserControl
 
         _searchBox.TextChanged += (_, e) => UpdateVisibleSections(_searchBox.Text ?? string.Empty);
         ActualThemeVariantChanged += (_, _) => Dispatcher.UIThread.Post(RefreshSections);
+        _vm.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(SettingsViewModel.SelectedSection))
+            {
+                RefreshSections();
+            }
+        };
     }
 
     public void RefreshSections()
@@ -198,16 +209,44 @@ public class SettingsPage : UserControl
         return link;
     }
 
+    /// <summary>
+    /// One category at a time, like SE4: with no search filter only the selected section is in
+    /// the content area, so Tab stays within a category and the next Tab after its last setting
+    /// reaches the buttons, not the first setting of an unannounced next category (#12087).
+    /// A search shows every section with a match, whichever category is selected.
+    /// </summary>
     private void UpdateVisibleSections(string filter)
     {
         _contentPanel.Children.Clear();
+        var showAllSections = !string.IsNullOrWhiteSpace(filter);
 
         foreach (var section in _vm.Sections)
         {
             section.Filter(filter);
-            if (section.IsVisible)
+            if (section.IsVisible && (showAllSections || section == _vm.SelectedSection))
             {
                 _contentPanel.Children.Add(section.Build());
+            }
+            else
+            {
+                section.Panel = null; // not in the tree - nothing to scroll to or focus
+            }
+        }
+
+        UpdateMenuHighlight();
+    }
+
+    private void UpdateMenuHighlight()
+    {
+        foreach (var (section, button) in _menuButtons)
+        {
+            if (section == _vm.SelectedSection)
+            {
+                button.Background = new SolidColorBrush(((SolidColorBrush)section.Brush).Color, 0.18);
+            }
+            else
+            {
+                button.ClearValue(BackgroundProperty);
             }
         }
     }
