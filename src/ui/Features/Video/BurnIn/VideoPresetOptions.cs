@@ -81,6 +81,78 @@ public static class VideoPresetOptions
         return videoCodec is "h264_nvenc" or "hevc_nvenc";
     }
 
+    public static bool IsAmf(string videoCodec)
+    {
+        return videoCodec is "h264_amf" or "hevc_amf";
+    }
+
+    /// <summary>
+    /// AMF "-quality" is not a quality number but a three-way preference, and the integers behind
+    /// the names differ per codec - h264_amf takes 0-2 (balanced/speed/quality) while hevc_amf
+    /// takes 0/5/10 (quality/balanced/speed). Burn-in used to offer 0-10 for both, so on an AMD
+    /// GPU every H.264 value above 2 killed the encode outright with
+    /// "Value 5.000000 for parameter 'quality' out of range [0 - 2]", and the values that did
+    /// work meant the opposite of the hint. ffmpeg accepts the names for both encoders, so those
+    /// are offered instead and the codec decides what they map to.
+    /// </summary>
+    private static readonly List<string> AmfQualities = new()
+    {
+        BlankTune,
+        "quality",
+        "balanced",
+        "speed",
+    };
+
+    /// <summary>
+    /// The old numeric values, mapped to the name that meant the same thing for that codec. A
+    /// value the codec never accepted (3-10 for H.264) has no meaning to preserve and returns
+    /// null, leaving the field blank so ffmpeg uses its own default.
+    /// </summary>
+    private static readonly Dictionary<string, Dictionary<string, string>> RemovedAmfQualities = new()
+    {
+        {
+            "h264_amf", new Dictionary<string, string>
+            {
+                { "0", "balanced" },
+                { "1", "speed" },
+                { "2", "quality" },
+            }
+        },
+        {
+            "hevc_amf", new Dictionary<string, string>
+            {
+                { "0", "quality" },
+                { "5", "balanced" },
+                { "10", "speed" },
+            }
+        },
+    };
+
+    /// <summary>The "-quality" values offered for the AMD hardware encoders.</summary>
+    public static List<string> GetAmfQualities()
+    {
+        return new List<string>(AmfQualities);
+    }
+
+    /// <summary>
+    /// Maps a stored AMF quality to a name the encoder accepts, or null when the stored value has
+    /// no equivalent. Non-AMF codecs and values that are already names are returned unchanged.
+    /// </summary>
+    public static string? MigrateAmfQuality(string videoCodec, string? quality)
+    {
+        if (string.IsNullOrWhiteSpace(quality) || !IsAmf(videoCodec))
+        {
+            return quality;
+        }
+
+        if (AmfQualities.Contains(quality))
+        {
+            return quality;
+        }
+
+        return RemovedAmfQualities[videoCodec].TryGetValue(quality, out var name) ? name : null;
+    }
+
     public static List<string> GetNvencPresets()
     {
         return new List<string>(NvencPresets);
