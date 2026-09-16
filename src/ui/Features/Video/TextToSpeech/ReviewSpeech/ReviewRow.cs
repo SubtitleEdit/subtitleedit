@@ -9,6 +9,7 @@ public partial class ReviewRow : ObservableObject
     [ObservableProperty] private bool _include;
     [ObservableProperty] private int _number;
     [ObservableProperty] private string _voice;
+    [ObservableProperty] private string _actor = string.Empty;
     [ObservableProperty] private string _cps;
     [ObservableProperty] private string _speed;
     [ObservableProperty] private string _text;

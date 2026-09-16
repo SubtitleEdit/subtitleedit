@@ -403,6 +403,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
             {
                 Include = p.Include,
                 Number = p.Paragraph.Number,
+                Actor = p.Paragraph.Actor ?? string.Empty,
                 // The subtitle's own text, not the tag-stripped/unbroken copy that was fed to
                 // the engine: edits made here are published back to the main subtitle, so
                 // starting from the stripped copy silently dropped italics and line breaks
@@ -1732,6 +1733,29 @@ public partial class ReviewSpeechViewModel : ObservableObject
         // shortcut works everywhere.
         var isTextBoxFocused = Window?.FocusManager?.GetFocusedElement() is TextBox;
 
+        if (e.KeyModifiers.HasFlag(KeyModifiers.Control) && !isTextBoxFocused)
+        {
+            if (e.Key == Key.Z)
+            {
+                if (e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+                {
+                    Redo();
+                }
+                else
+                {
+                    Undo();
+                }
+                e.Handled = true;
+                return;
+            }
+            if (e.Key == Key.Y)
+            {
+                Redo();
+                e.Handled = true;
+                return;
+            }
+        }
+
         if (MatchesPlayPauseShortcut(e))
         {
             if (e.KeyModifiers == KeyModifiers.None && isTextBoxFocused)
@@ -2397,6 +2421,85 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
         UiUtil.SaveWindowPosition(Window);
     }
+
+    private readonly Stack<ReviewSelectionSnapshot> _undoStack = new();
+    private readonly Stack<ReviewSelectionSnapshot> _redoStack = new();
+
+    [ObservableProperty] private bool _canUndo;
+    [ObservableProperty] private bool _canRedo;
+
+    public sealed class ReviewSelectionSnapshot
+    {
+        public bool[] Includes { get; init; } = Array.Empty<bool>();
+    }
+
+    public void PushUndoSnapshot()
+    {
+        _undoStack.Push(new ReviewSelectionSnapshot
+        {
+            Includes = Lines.Select(l => l.Include).ToArray(),
+        });
+        _redoStack.Clear();
+        UpdateUndoRedoState();
+    }
+
+    [RelayCommand]
+    public void Undo()
+    {
+        if (_undoStack.Count == 0)
+        {
+            return;
+        }
+
+        _redoStack.Push(new ReviewSelectionSnapshot
+        {
+            Includes = Lines.Select(l => l.Include).ToArray(),
+        });
+
+        var snapshot = _undoStack.Pop();
+        ApplySnapshot(snapshot);
+        UpdateUndoRedoState();
+    }
+
+    [RelayCommand]
+    public void Redo()
+    {
+        if (_redoStack.Count == 0)
+        {
+            return;
+        }
+
+        _undoStack.Push(new ReviewSelectionSnapshot
+        {
+            Includes = Lines.Select(l => l.Include).ToArray(),
+        });
+
+        var snapshot = _redoStack.Pop();
+        ApplySnapshot(snapshot);
+        UpdateUndoRedoState();
+    }
+
+    private void ApplySnapshot(ReviewSelectionSnapshot snapshot)
+    {
+        for (var i = 0; i < Lines.Count && i < snapshot.Includes.Length; i++)
+        {
+            Lines[i].Include = snapshot.Includes[i];
+        }
+
+        if (LineGrid != null)
+        {
+            ReviewSpeechWindow.SyncGridSelectionFromIncluded(LineGrid, this);
+        }
+    }
+
+    private void UpdateUndoRedoState()
+    {
+        CanUndo = _undoStack.Count > 0;
+        CanRedo = _redoStack.Count > 0;
+    }
+
+    public bool HasActors => Lines.Any(l => !string.IsNullOrWhiteSpace(l.Actor) ||
+                                            !string.IsNullOrWhiteSpace(l.StepResult?.Paragraph?.Actor ?? l.WaveformParagraph?.Actor));
 
     internal void LineGridDoubleClicked()
     {

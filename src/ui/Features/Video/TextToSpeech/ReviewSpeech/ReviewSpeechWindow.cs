@@ -12,6 +12,9 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ElevenLabsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
@@ -108,33 +111,97 @@ public class ReviewSpeechWindow : Window
 
     private static Border MakeLineGrid(ReviewSpeechViewModel vm)
     {
-        var lineGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        var lineGrid = TableViewExtras.MakeTableView(multiSelect: true);
         lineGrid.Margin = new Thickness(0, 10, 0, 0);
         lineGrid.Width = double.NaN;
         lineGrid.Height = double.NaN;
         lineGrid[!TableView.ItemsSourceProperty] = new Binding(nameof(vm.Lines));
         lineGrid[!TableView.SelectedItemProperty] = new Binding(nameof(vm.SelectedLine)) { Mode = BindingMode.TwoWay };
 
-        // Re-enabled: OK publishes only rows with Include ticked and Export/Import
-        // round-trip the flag, so without this column an imported session's excluded
-        // rows were invisible and could never be re-included.
+        var gridFlyout = new MenuFlyout();
+        gridFlyout.Opening += (_, _) => PopulateGridFlyout(gridFlyout, lineGrid, vm);
+        lineGrid.ContextFlyout = gridFlyout;
+        AttachGridRightClickFlyout(lineGrid, vm, () =>
+        {
+            PopulateGridFlyout(gridFlyout, lineGrid, vm);
+            return gridFlyout;
+        });
+        UiUtil.AttachMacContextFlyoutHandler(lineGrid);
+
+        var headerCheckBox = new CheckBox
+        {
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        var headerBorder = new Border
+        {
+            Background = Brushes.Transparent,
+            Padding = new Thickness(4),
+            Child = headerCheckBox,
+        };
+        var headerFlyout = new MenuFlyout();
+        headerFlyout.Opening += (_, _) => PopulateCheckboxHeaderFlyout(headerFlyout, vm);
+        headerBorder.ContextFlyout = headerFlyout;
+        UiUtil.AttachMacContextFlyoutHandler(headerBorder);
+
+        headerCheckBox.Click += (_, _) =>
+        {
+            vm.PushUndoSnapshot();
+            var target = headerCheckBox.IsChecked ?? false;
+            foreach (var line in vm.Lines)
+            {
+                line.Include = target;
+            }
+            SyncGridSelectionFromIncluded(lineGrid, vm);
+        };
+
         lineGrid.Columns.Add(new SeTableViewColumn
         {
-            Header = Se.Language.General.Enabled,
+            Header = headerBorder,
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             CellTemplate = new FuncDataTemplate<ReviewRow>((item, _) =>
-                new Border
+            {
+                var checkBox = new CheckBox
                 {
-                    Background = Brushes.Transparent, // Prevents highlighting
-                    Padding = new Thickness(4),
-                    Child = new CheckBox
+                    [!ToggleButton.IsCheckedProperty] = new Binding(nameof(ReviewRow.Include)),
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                };
+                checkBox.AddHandler(InputElement.PointerPressedEvent, (_, _) =>
+                {
+                    vm.PushUndoSnapshot();
+                }, Avalonia.Interactivity.RoutingStrategies.Tunnel);
+                checkBox.AddHandler(InputElement.KeyDownEvent, (_, ke) =>
+                {
+                    if (ke.Key == Key.Space)
                     {
-                        [!ToggleButton.IsCheckedProperty] = new Binding(nameof(ReviewRow.Include)),
-                        HorizontalAlignment = HorizontalAlignment.Center
+                        vm.PushUndoSnapshot();
                     }
-                }),
-            Width = new GridLength(80),
+                }, Avalonia.Interactivity.RoutingStrategies.Tunnel);
+
+                var border = new Border
+                {
+                    Padding = new Thickness(4),
+                    Child = checkBox,
+                };
+
+                var flyout = new MenuFlyout();
+                flyout.Opening += (_, _) => PopulateGridFlyout(flyout, lineGrid, vm);
+                border.ContextFlyout = flyout;
+                AttachCellRightClickFlyout(border, lineGrid, item, vm, () =>
+                {
+                    PopulateGridFlyout(flyout, lineGrid, vm);
+                    return flyout;
+                });
+                AttachCellRightClickFlyout(checkBox, lineGrid, item, vm, () =>
+                {
+                    PopulateGridFlyout(flyout, lineGrid, vm);
+                    return flyout;
+                });
+
+                return border;
+            }),
+            Width = new GridLength(50),
         });
         lineGrid.Columns.Add(new SeTableViewColumn
         {
@@ -752,5 +819,361 @@ public class ReviewSpeechWindow : Window
     {
         base.OnClosing(e);
         _vm.OnClosing(e);
+    }
+
+    private static void AttachGridRightClickFlyout(TableView lineGrid, ReviewSpeechViewModel vm, Func<MenuFlyout> getFlyout)
+    {
+        lineGrid.AddHandler(InputElement.PointerPressedEvent, (s, e) =>
+        {
+            var point = e.GetCurrentPoint(lineGrid);
+            if (point.Properties.IsRightButtonPressed)
+            {
+                var pos = e.GetPosition(lineGrid);
+                var hitVisual = lineGrid.InputHitTest(pos) as Visual;
+                if (TableViewExtras.IsInColumnHeader(hitVisual) || TableViewExtras.IsInScrollBar(hitVisual))
+                {
+                    return;
+                }
+
+                var rowIndex = TableViewExtras.GetRowIndexFromPoint(lineGrid, pos);
+                if (rowIndex >= 0 && rowIndex < vm.Lines.Count)
+                {
+                    var clickedRow = vm.Lines[rowIndex];
+                    var selectedRows = lineGrid.SelectedItems?.OfType<ReviewRow>().ToList() ?? new List<ReviewRow>();
+
+                    if (!selectedRows.Contains(clickedRow))
+                    {
+                        lineGrid.SelectedItem = clickedRow;
+                        vm.SelectedLine = clickedRow;
+                    }
+                }
+
+                var flyout = getFlyout();
+                lineGrid.ContextFlyout = flyout;
+                flyout.ShowAt(lineGrid, showAtPointer: true);
+                e.Handled = true;
+            }
+        }, Avalonia.Interactivity.RoutingStrategies.Tunnel | Avalonia.Interactivity.RoutingStrategies.Bubble, handledEventsToo: true);
+    }
+
+    private static void AttachCellRightClickFlyout(Control control, TableView lineGrid, ReviewRow item, ReviewSpeechViewModel vm, Func<MenuFlyout> getFlyout)
+    {
+        control.AddHandler(InputElement.PointerPressedEvent, (s, e) =>
+        {
+            var point = e.GetCurrentPoint(control);
+            if (point.Properties.IsRightButtonPressed)
+            {
+                var selectedRows = lineGrid.SelectedItems?.OfType<ReviewRow>().ToList() ?? new List<ReviewRow>();
+                if (!selectedRows.Contains(item))
+                {
+                    lineGrid.SelectedItem = item;
+                    vm.SelectedLine = item;
+                }
+
+                var flyout = getFlyout();
+                control.ContextFlyout = flyout;
+                flyout.ShowAt(control, showAtPointer: true);
+                e.Handled = true;
+            }
+        }, Avalonia.Interactivity.RoutingStrategies.Tunnel | Avalonia.Interactivity.RoutingStrategies.Bubble, handledEventsToo: true);
+    }
+
+    private static List<ReviewRow> GetTargetRows(TableView lineGrid, ReviewSpeechViewModel vm)
+    {
+        var selected = lineGrid.SelectedItems?.OfType<ReviewRow>().ToList();
+        if (selected != null && selected.Count > 0)
+        {
+            return selected;
+        }
+        if (vm.SelectedLine != null)
+        {
+            return new List<ReviewRow> { vm.SelectedLine };
+        }
+        return new List<ReviewRow>();
+    }
+
+    internal static void SyncGridSelectionFromIncluded(TableView lineGrid, ReviewSpeechViewModel vm)
+    {
+        if (lineGrid?.Selection == null)
+        {
+            return;
+        }
+
+        var firstIncluded = -1;
+        lineGrid.Selection.BeginBatchUpdate();
+        try
+        {
+            lineGrid.Selection.Clear();
+            var runStart = -1;
+            for (var i = 0; i < vm.Lines.Count; i++)
+            {
+                if (vm.Lines[i].Include)
+                {
+                    if (firstIncluded < 0)
+                    {
+                        firstIncluded = i;
+                    }
+                    if (runStart < 0)
+                    {
+                        runStart = i;
+                    }
+                }
+                else
+                {
+                    if (runStart >= 0)
+                    {
+                        lineGrid.Selection.SelectRange(runStart, i - 1);
+                        runStart = -1;
+                    }
+                }
+            }
+            if (runStart >= 0)
+            {
+                lineGrid.Selection.SelectRange(runStart, vm.Lines.Count - 1);
+            }
+        }
+        finally
+        {
+            lineGrid.Selection.EndBatchUpdate();
+        }
+
+        if (firstIncluded >= 0)
+        {
+            vm.SelectedLine = vm.Lines[firstIncluded];
+        }
+
+        TableViewExtras.SyncSelectedItemsWithSelection(lineGrid);
+    }
+
+    private static void PopulateGridFlyout(MenuFlyout flyout, TableView lineGrid, ReviewSpeechViewModel vm)
+    {
+        flyout.Items.Clear();
+
+        var selectedRows = GetTargetRows(lineGrid, vm);
+
+        if (selectedRows.Count > 1)
+        {
+            var itemCheckSelected = new MenuItem
+            {
+                Header = "Check selected lines",
+            };
+            itemCheckSelected.Click += (_, _) =>
+            {
+                vm.PushUndoSnapshot();
+                foreach (var r in selectedRows)
+                {
+                    r.Include = true;
+                }
+                SyncGridSelectionFromIncluded(lineGrid, vm);
+            };
+            flyout.Items.Add(itemCheckSelected);
+
+            var itemUncheckSelected = new MenuItem
+            {
+                Header = "Uncheck selected lines",
+            };
+            itemUncheckSelected.Click += (_, _) =>
+            {
+                vm.PushUndoSnapshot();
+                foreach (var r in selectedRows)
+                {
+                    r.Include = false;
+                }
+                SyncGridSelectionFromIncluded(lineGrid, vm);
+            };
+            flyout.Items.Add(itemUncheckSelected);
+
+            flyout.Items.Add(new Separator());
+        }
+
+        var itemSelectAll = new MenuItem
+        {
+            Header = Se.Language.General.SelectAll,
+        };
+        itemSelectAll.Click += (_, _) =>
+        {
+            vm.PushUndoSnapshot();
+            foreach (var line in vm.Lines)
+            {
+                line.Include = true;
+            }
+            SyncGridSelectionFromIncluded(lineGrid, vm);
+        };
+        flyout.Items.Add(itemSelectAll);
+
+        var itemSelectNone = new MenuItem
+        {
+            Header = Se.Language.General.SelectNone,
+        };
+        itemSelectNone.Click += (_, _) =>
+        {
+            vm.PushUndoSnapshot();
+            foreach (var line in vm.Lines)
+            {
+                line.Include = false;
+            }
+            SyncGridSelectionFromIncluded(lineGrid, vm);
+        };
+        flyout.Items.Add(itemSelectNone);
+
+        var itemInvert = new MenuItem
+        {
+            Header = Se.Language.General.InvertSelection,
+        };
+        itemInvert.Click += (_, _) =>
+        {
+            vm.PushUndoSnapshot();
+            foreach (var line in vm.Lines)
+            {
+                line.Include = !line.Include;
+            }
+            SyncGridSelectionFromIncluded(lineGrid, vm);
+        };
+        flyout.Items.Add(itemInvert);
+
+        var actors = vm.Lines
+            .Select(l => !string.IsNullOrWhiteSpace(l.Actor) ? l.Actor : (l.StepResult?.Paragraph?.Actor ?? l.WaveformParagraph?.Actor ?? string.Empty))
+            .Where(a => !string.IsNullOrWhiteSpace(a))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(a => a)
+            .ToList();
+
+        if (actors.Count > 0)
+        {
+            flyout.Items.Add(new Separator());
+            var actorSubMenu = new MenuItem
+            {
+                Header = Se.Language.General.Actor,
+            };
+            foreach (var actor in actors)
+            {
+                var targetActor = actor;
+                var actorItem = new MenuItem
+                {
+                    Header = targetActor,
+                };
+                actorItem.Click += (_, _) =>
+                {
+                    vm.PushUndoSnapshot();
+                    foreach (var line in vm.Lines)
+                    {
+                        var a = !string.IsNullOrWhiteSpace(line.Actor) ? line.Actor : (line.StepResult?.Paragraph?.Actor ?? line.WaveformParagraph?.Actor);
+                        line.Include = string.Equals(a, targetActor, StringComparison.OrdinalIgnoreCase);
+                    }
+                    SyncGridSelectionFromIncluded(lineGrid, vm);
+                };
+                actorSubMenu.Items.Add(actorItem);
+            }
+            flyout.Items.Add(actorSubMenu);
+        }
+
+        flyout.Items.Add(new Separator());
+        var targetRow = selectedRows.FirstOrDefault() ?? vm.SelectedLine;
+        var itemRegenerate = new MenuItem
+        {
+            Header = Se.Language.Video.TextToSpeech.RegenerateAudio,
+            Command = vm.RegenerateAudioCommand,
+            CommandParameter = targetRow,
+            IsEnabled = vm.IsRegenerateEnabled && targetRow != null && targetRow.IsPlayingEnabled,
+        };
+        flyout.Items.Add(itemRegenerate);
+    }
+
+    private static void PopulateCheckboxHeaderFlyout(MenuFlyout flyout, ReviewSpeechViewModel vm)
+    {
+        flyout.Items.Clear();
+
+        var itemSelectAll = new MenuItem
+        {
+            Header = Se.Language.General.SelectAll,
+        };
+        itemSelectAll.Click += (_, _) =>
+        {
+            vm.PushUndoSnapshot();
+            foreach (var line in vm.Lines)
+            {
+                line.Include = true;
+            }
+            if (vm.LineGrid != null)
+            {
+                SyncGridSelectionFromIncluded(vm.LineGrid, vm);
+            }
+        };
+        flyout.Items.Add(itemSelectAll);
+
+        var itemSelectNone = new MenuItem
+        {
+            Header = Se.Language.General.SelectNone,
+        };
+        itemSelectNone.Click += (_, _) =>
+        {
+            vm.PushUndoSnapshot();
+            foreach (var line in vm.Lines)
+            {
+                line.Include = false;
+            }
+            if (vm.LineGrid != null)
+            {
+                SyncGridSelectionFromIncluded(vm.LineGrid, vm);
+            }
+        };
+        flyout.Items.Add(itemSelectNone);
+
+        var itemInvert = new MenuItem
+        {
+            Header = Se.Language.General.InvertSelection,
+        };
+        itemInvert.Click += (_, _) =>
+        {
+            vm.PushUndoSnapshot();
+            foreach (var line in vm.Lines)
+            {
+                line.Include = !line.Include;
+            }
+            if (vm.LineGrid != null)
+            {
+                SyncGridSelectionFromIncluded(vm.LineGrid, vm);
+            }
+        };
+        flyout.Items.Add(itemInvert);
+
+        var actors = vm.Lines
+            .Select(l => !string.IsNullOrWhiteSpace(l.Actor) ? l.Actor : (l.StepResult?.Paragraph?.Actor ?? l.WaveformParagraph?.Actor ?? string.Empty))
+            .Where(a => !string.IsNullOrWhiteSpace(a))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(a => a)
+            .ToList();
+
+        if (actors.Count > 0)
+        {
+            flyout.Items.Add(new Separator());
+            var actorSubMenu = new MenuItem
+            {
+                Header = Se.Language.General.Actor,
+            };
+            foreach (var actor in actors)
+            {
+                var targetActor = actor;
+                var actorItem = new MenuItem
+                {
+                    Header = targetActor,
+                };
+                actorItem.Click += (_, _) =>
+                {
+                    vm.PushUndoSnapshot();
+                    foreach (var line in vm.Lines)
+                    {
+                        var a = !string.IsNullOrWhiteSpace(line.Actor) ? line.Actor : (line.StepResult?.Paragraph?.Actor ?? line.WaveformParagraph?.Actor);
+                        line.Include = string.Equals(a, targetActor, StringComparison.OrdinalIgnoreCase);
+                    }
+                    if (vm.LineGrid != null)
+                    {
+                        SyncGridSelectionFromIncluded(vm.LineGrid, vm);
+                    }
+                };
+                actorSubMenu.Items.Add(actorItem);
+            }
+            flyout.Items.Add(actorSubMenu);
+        }
     }
 }
