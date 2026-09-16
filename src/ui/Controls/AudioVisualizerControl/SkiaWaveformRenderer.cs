@@ -6,6 +6,19 @@ using System.Threading;
 
 namespace Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 
+/// <summary>How the scroll-anchored scenery layer (background, grid, waveform) is cached.</summary>
+internal enum SkiaWaveformCacheMode
+{
+    /// <summary>No cache - rebuild and redraw the scenery every frame.</summary>
+    None,
+
+    /// <summary>Record the scenery into an <see cref="SKPicture"/> and replay it translated.</summary>
+    Picture,
+
+    /// <summary>Rasterize the scenery into an offscreen surface and blit it translated.</summary>
+    Image,
+}
+
 /// <summary>
 /// Render-thread painter for <see cref="SkiaAudioVisualizer"/>: draws one
 /// <see cref="SkiaWaveformFrame"/> onto the leased Skia canvas. Owns every buffer, paint and text
@@ -61,6 +74,31 @@ internal sealed class SkiaWaveformRenderer
     private SKColor[] _upperGlowColors = Array.Empty<SKColor>();
     private SKColor[] _lowerGlowColors = Array.Empty<SKColor>();
 
+    // Scroll-anchored cache of everything that depends only on the view: the background, the grid
+    // and the waveform. It is anchored to a 256 device pixel block and built one block wider than
+    // the control, so scrolling inside the block - what center-mode playback does on every frame -
+    // replays the cache translated instead of re-running the per-column peak scan and the fill.
+    // Only LayerKey state rebuilds it; the cursor, the paragraphs and (in classic style) the
+    // selection are drawn over it every frame.
+    private const int CachePadDevicePixels = 256;
+
+    internal static SkiaWaveformCacheMode CacheMode = SkiaWaveformCacheMode.Image;
+
+    private readonly SkiaWaveformFrame _layerFrame = new();
+    private SKSurface? _layerSurface;
+    private SKImage? _layerImage;
+    private SKPicture? _layerPicture;
+    private LayerKey _layerKey;
+    private object? _layerPeaks;
+    private bool _layerValid;
+    private bool _wavePathValid;
+    private float _layerWidth;
+    private float _layerHeight;
+    private int _layerSurfaceWidth;
+    private int _layerSurfaceHeight;
+    private static readonly SKSamplingOptions NearestSampling = new(SKFilterMode.Nearest);
+    private readonly SKPaint _layerPaint = new() { IsAntialias = false };
+
     private readonly HashSet<int> _paragraphStartXs = new();
     private readonly HashSet<int> _paragraphEndXs = new();
 
@@ -76,15 +114,10 @@ internal sealed class SkiaWaveformRenderer
             canvas.ClipRect(new SKRect(0, 0, f.Width, f.Height));
             try
             {
-                FillRect(canvas, 0, 0, f.Width, f.Height, f.BackgroundColor);
-                if (f.SampleRate > 0 || f.DrawGridLines)
-                {
-                    DrawGridLines(canvas, f);
-                }
+                DrawScenery(canvas, f);
 
                 if (f.SampleRate > 0)
                 {
-                    DrawWaveform(canvas, f);
                     DrawSpectrogram(canvas, f);
                     DrawTimeLine(canvas, f);
                     DrawParagraphs(canvas, f);
@@ -147,6 +180,162 @@ internal sealed class SkiaWaveformRenderer
         _text.Color = color;
         canvas.DrawText(text.Blob, x, top + text.Baseline, _text);
     }
+
+    /// <summary>
+    /// Background, grid and waveform, from the cache when it is still valid, followed by the
+    /// classic style's selection overlay (which is never part of the cache, so dragging a selected
+    /// line's times never rebuilds the waveform).
+    /// </summary>
+    private void DrawScenery(SKCanvas canvas, SkiaWaveformFrame f)
+    {
+        var devicePixelsPerSecond = f.PixelsPerSecond * _scale;
+        var startColumn = f.StartSeconds * devicePixelsPerSecond;
+        var anchorColumn = devicePixelsPerSecond > 0
+            ? Math.Floor(startColumn / CachePadDevicePixels) * CachePadDevicePixels
+            : 0;
+
+        // Whole device pixels, so the blit lands on the same grid the scenery was built on.
+        var offset = devicePixelsPerSecond > 0 ? (float)(Math.Floor(startColumn - anchorColumn) / _scale) : 0;
+
+        PrepareLayerFrame(f, anchorColumn, devicePixelsPerSecond);
+
+        canvas.Save();
+        canvas.Translate(-offset, 0);
+        if (CacheMode == SkiaWaveformCacheMode.None || !EnsureLayer(f, anchorColumn))
+        {
+            DrawSceneryInto(canvas, anchorColumn);
+        }
+        else if (CacheMode == SkiaWaveformCacheMode.Picture)
+        {
+            canvas.DrawPicture(_layerPicture);
+        }
+        else
+        {
+            // An opaque background means the blit owns every pixel it covers, so it can overwrite
+            // instead of blending - the layer is the first thing drawn inside the control.
+            _layerPaint.BlendMode = f.BackgroundColor.Alpha == 255 ? SKBlendMode.Src : SKBlendMode.SrcOver;
+            canvas.DrawImage(_layerImage, new SKRect(0, 0, _layerImage!.Width, _layerImage.Height),
+                new SKRect(0, 0, _layerWidth, _layerHeight), NearestSampling, _layerPaint);
+        }
+
+        canvas.Restore();
+
+        if (f.DrawStyle == WaveformDrawStyle.Classic && f.Peaks != null && f.DisplayMode != WaveformDisplayMode.OnlySpectrogram)
+        {
+            DrawClassicSelection(canvas, f, offset);
+        }
+    }
+
+    /// <summary>The same view one anchor block to the left and one block wider - what the cache holds.</summary>
+    private void PrepareLayerFrame(SkiaWaveformFrame f, double anchorColumn, double devicePixelsPerSecond)
+    {
+        f.CopyViewStateTo(_layerFrame);
+        _layerWidth = f.Width + CachePadDevicePixels / _scale;
+        _layerHeight = f.Height;
+        _layerFrame.Width = _layerWidth;
+        _layerFrame.StartSeconds = devicePixelsPerSecond > 0 ? anchorColumn / devicePixelsPerSecond : f.StartSeconds;
+    }
+
+    private void DrawSceneryInto(SKCanvas canvas, double anchorColumn)
+    {
+        var f = _layerFrame;
+        FillRect(canvas, 0, 0, f.Width, f.Height, f.BackgroundColor);
+        DrawGridLines(canvas, f);
+        if (f.SampleRate > 0)
+        {
+            DrawWaveform(canvas, f, anchorColumn);
+        }
+    }
+
+    /// <summary>Returns false when the scenery has to be drawn straight onto the canvas instead.</summary>
+    private bool EnsureLayer(SkiaWaveformFrame f, double anchorColumn)
+    {
+        var key = new LayerKey(
+            _layerWidth, _layerHeight, f.WaveformHeight, _scale, anchorColumn, f.ZoomFactor,
+            f.VerticalZoomFactor, f.SampleRate, f.HighestPeak, (int)f.DisplayMode, (int)f.DrawStyle,
+            ColorKey(f.WaveformColor), ColorKey(f.FancyHighColor), ColorKey(f.SelectedColor),
+            ColorKey(f.BackgroundColor), f.DrawGridLines, f.FrameMode, f.FrameRate, SelectionKey(f));
+
+        var cached = CacheMode == SkiaWaveformCacheMode.Picture ? _layerPicture != null : _layerImage != null;
+        if (_layerValid && cached && ReferenceEquals(_layerPeaks, f.Peaks) && _layerKey.Equals(key))
+        {
+            return true;
+        }
+
+        _layerKey = key;
+        _layerPeaks = f.Peaks;
+        _layerValid = false;
+
+        if (CacheMode == SkiaWaveformCacheMode.Picture)
+        {
+            using var recorder = new SKPictureRecorder();
+            var recording = recorder.BeginRecording(new SKRect(0, 0, _layerWidth, _layerHeight));
+            DrawSceneryInto(recording, anchorColumn);
+            _layerPicture?.Dispose();
+            _layerPicture = recorder.EndRecording();
+            _layerValid = _layerPicture != null;
+            return _layerValid;
+        }
+
+        var width = Math.Max(1, (int)Math.Ceiling(_layerWidth * _scale));
+        var height = Math.Max(1, (int)Math.Ceiling(_layerHeight * _scale));
+        if (_layerSurface == null || _layerSurfaceWidth != width || _layerSurfaceHeight != height)
+        {
+            _layerSurface?.Dispose();
+            _layerSurface = SKSurface.Create(new SKImageInfo(width, height, SKColorType.Bgra8888, SKAlphaType.Premul));
+            _layerSurfaceWidth = width;
+            _layerSurfaceHeight = height;
+        }
+
+        if (_layerSurface == null)
+        {
+            return false;
+        }
+
+        // Before drawing: the snapshot shares the surface's pixels copy-on-write, so redrawing
+        // while it is still alive clones the whole layer.
+        _layerImage?.Dispose();
+        _layerImage = null;
+
+        var layerCanvas = _layerSurface.Canvas;
+        layerCanvas.Clear(SKColors.Transparent);
+        layerCanvas.Save();
+        layerCanvas.Scale(_scale);
+        DrawSceneryInto(layerCanvas, anchorColumn);
+        layerCanvas.Restore();
+        _layerImage = _layerSurface.Snapshot();
+        _layerValid = _layerImage != null;
+        return _layerValid;
+    }
+
+    private static uint ColorKey(SKColor c) => ((uint)c.Alpha << 24) | ((uint)c.Red << 16) | ((uint)c.Green << 8) | c.Blue;
+
+    /// <summary>
+    /// Classic style paints the selection over the cached waveform, so its cache is selection
+    /// independent; fancy style bakes the selected color into the columns and has to rebuild.
+    /// </summary>
+    private static long SelectionKey(SkiaWaveformFrame f)
+    {
+        if (f.DrawStyle == WaveformDrawStyle.Classic)
+        {
+            return 0;
+        }
+
+        long hash = 17;
+        foreach (var (start, end) in f.SelectedRanges)
+        {
+            hash = hash * 31 + BitConverter.DoubleToInt64Bits(start);
+            hash = hash * 31 + BitConverter.DoubleToInt64Bits(end);
+        }
+
+        return hash;
+    }
+
+    private readonly record struct LayerKey(
+        float Width, float Height, float WaveformHeight, float Scale, double AnchorColumn,
+        double ZoomFactor, double VerticalZoomFactor, int SampleRate, int HighestPeak,
+        int DisplayMode, int DrawStyle, uint WaveformColor, uint FancyHighColor, uint SelectedColor,
+        uint BackgroundColor, bool DrawGridLines, bool FrameMode, double FrameRate, long SelectionHash);
 
     private void DrawGridLines(SKCanvas canvas, SkiaWaveformFrame f)
     {
@@ -225,8 +414,9 @@ internal sealed class SkiaWaveformRenderer
         return FrameStepCandidates[^1];
     }
 
-    private void DrawWaveform(SKCanvas canvas, SkiaWaveformFrame f)
+    private void DrawWaveform(SKCanvas canvas, SkiaWaveformFrame f, double originColumn)
     {
+        _wavePathValid = false;
         var peakData = f.Peaks;
         if (peakData == null || f.DisplayMode == WaveformDisplayMode.OnlySpectrogram)
         {
@@ -246,7 +436,6 @@ internal sealed class SkiaWaveformRenderer
         // the picture instead of re-sampling it (no shimmer in center mode). Zoomed out, a column
         // covers several peaks and takes their real min/max instead of interpolating one of them.
         var devicePixelsPerSecond = f.PixelsPerSecond * _scale;
-        var originColumn = Math.Floor(f.StartSeconds * devicePixelsPerSecond);
         var columnOffset = (float)(f.StartSeconds * devicePixelsPerSecond - originColumn);
         var peaksPerColumn = f.SampleRate / devicePixelsPerSecond;
         var inverseScale = 1 / _scale;
@@ -260,7 +449,6 @@ internal sealed class SkiaWaveformRenderer
 
         var waveformColor = f.WaveformColor;
         var selectedColor = f.SelectedColor;
-        var selectedOverWaveform = SourceOver(selectedColor, waveformColor);
         var highColor = f.FancyHighColor;
 
         var ranges = f.SelectedRanges;
@@ -400,9 +588,9 @@ internal sealed class SkiaWaveformRenderer
             // Gouraud-shaded triangle strip on the CPU rasterizer, and with one column per device
             // pixel the two are visually identical.
             BuildEnvelopePath(drawn);
+            _wavePathValid = true;
             _fill.Color = waveformColor;
             canvas.DrawPath(_wavePath, _fill);
-            DrawClassicSelection(canvas, f, selectedOverWaveform);
             return;
         }
 
@@ -443,15 +631,15 @@ internal sealed class SkiaWaveformRenderer
     /// Classic style's selected colour: re-fill the envelope clipped to each selected range.
     /// Overlapping ranges are merged first so a shared column is painted exactly once.
     /// </summary>
-    private void DrawClassicSelection(SKCanvas canvas, SkiaWaveformFrame f, SKColor color)
+    private void DrawClassicSelection(SKCanvas canvas, SkiaWaveformFrame f, float offset)
     {
         var ranges = f.SelectedRanges;
-        if (ranges.Count == 0)
+        if (ranges.Count == 0 || !_wavePathValid)
         {
             return;
         }
 
-        _fill.Color = color;
+        _fill.Color = SourceOver(f.SelectedColor, f.WaveformColor);
         float mergedLeft = 0;
         float mergedRight = 0;
         var hasMerged = false;
@@ -472,7 +660,7 @@ internal sealed class SkiaWaveformRenderer
 
             if (hasMerged)
             {
-                FillEnvelopeClipped(canvas, mergedLeft, mergedRight, f.Height);
+                FillEnvelopeClipped(canvas, mergedLeft, mergedRight, f.Height, offset);
             }
 
             mergedLeft = left;
@@ -482,14 +670,16 @@ internal sealed class SkiaWaveformRenderer
 
         if (hasMerged)
         {
-            FillEnvelopeClipped(canvas, mergedLeft, mergedRight, f.Height);
+            FillEnvelopeClipped(canvas, mergedLeft, mergedRight, f.Height, offset);
         }
     }
 
-    private void FillEnvelopeClipped(SKCanvas canvas, float left, float right, float height)
+    /// <summary>The clip is in view coordinates; the envelope path lives in the cache's anchor space.</summary>
+    private void FillEnvelopeClipped(SKCanvas canvas, float left, float right, float height, float offset)
     {
         canvas.Save();
         canvas.ClipRect(new SKRect(left, 0, right, height));
+        canvas.Translate(-offset, 0);
         canvas.DrawPath(_wavePath, _fill);
         canvas.Restore();
     }

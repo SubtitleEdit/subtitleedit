@@ -33,6 +33,11 @@ namespace Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 /// continuous amplitude color and glow; the spectrogram is drawn straight from its tiles with
 /// sub-pixel scrolling instead of being copied into a new bitmap every frame.
 /// </para>
+/// <para>
+/// The background, grid and waveform are cached together in an offscreen layer anchored to a 256
+/// device pixel block, so scrolling inside that block is a blit (see SkiaWaveformRenderer). The
+/// cursor, the paragraphs and the classic style's selection are drawn over it on every frame.
+/// </para>
 /// Enable it with the environment variable <c>SE_SKIA_WAVEFORM=1</c>.
 /// </summary>
 public class SkiaAudioVisualizer : AudioVisualizer
@@ -506,6 +511,32 @@ internal sealed class SkiaWaveformFrame
     public readonly List<double> ShotChanges = new(32);
     public readonly List<SkiaChapter> Chapters = new();
     public readonly List<(int Index, SKImage Image)> SpectrogramImages = new(4);
+
+    /// <summary>Copies what the cached scenery layer draws: background, grid lines and the waveform.</summary>
+    public void CopyViewStateTo(SkiaWaveformFrame target)
+    {
+        target.Width = Width;
+        target.Height = Height;
+        target.Peaks = Peaks;
+        target.SampleRate = SampleRate;
+        target.HighestPeak = HighestPeak;
+        target.StartSeconds = StartSeconds;
+        target.EndSeconds = EndSeconds;
+        target.ZoomFactor = ZoomFactor;
+        target.VerticalZoomFactor = VerticalZoomFactor;
+        target.DisplayMode = DisplayMode;
+        target.DrawStyle = DrawStyle;
+        target.WaveformHeight = WaveformHeight;
+        target.BackgroundColor = BackgroundColor;
+        target.WaveformColor = WaveformColor;
+        target.SelectedColor = SelectedColor;
+        target.FancyHighColor = FancyHighColor;
+        target.DrawGridLines = DrawGridLines;
+        target.FrameMode = FrameMode;
+        target.FrameRate = FrameRate;
+        target.SelectedRanges.Clear();
+        target.SelectedRanges.AddRange(SelectedRanges);
+    }
 
     public void Clear()
     {
