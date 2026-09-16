@@ -6,11 +6,13 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Features.Options.Settings.MinGapCalculate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BridgeGaps;
 
@@ -18,11 +20,20 @@ public partial class BridgeGapsViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private ObservableCollection<BridgeGapDisplayItem> _subtitles;
     [ObservableProperty] private BridgeGapDisplayItem? _selectedSubtitle;
-    [ObservableProperty] private int _bridgeGapsSmallerThanMs;
-    [ObservableProperty] private int _minGapMs;
+    [ObservableProperty] private int _bridgeGapsSmallerThanMsOrFrames;
+    [ObservableProperty] private int _minGapMsOrFrames;
     [ObservableProperty] private int _percentForLeft;
     [ObservableProperty] private string _statusText;
     [ObservableProperty] private ObservableCollection<SubtitleLineViewModel> _allSubtitles;
+
+    /// <summary>Frame mode: both boxes hold frames, like Subtitle Edit 4 (#14959).</summary>
+    public bool IsFrameMode { get; }
+
+    /// <summary>The calculator gives milliseconds, so it is only offered when the boxes hold milliseconds.</summary>
+    public bool IsMsMode => !IsFrameMode;
+
+    public string BridgeGapsSmallerThanLabel { get; }
+    public string MinGapLabel { get; }
 
     public Window? Window { get; set; }
 
@@ -32,14 +43,22 @@ public partial class BridgeGapsViewModel : ObservableObject, IClosingCleanup
     private bool _dirty;
     private volatile bool _isClosing;
     private Dictionary<string, string> _dic;
+    private readonly IWindowService _windowService;
 
-
-    public BridgeGapsViewModel()
+    public BridgeGapsViewModel(IWindowService windowService)
     {
+        _windowService = windowService;
+        IsFrameMode = Se.Settings.General.UseFrameMode;
+        BridgeGapsSmallerThanLabel = IsFrameMode
+            ? Se.Language.Tools.BridgeGaps.BridgeGapsSmallerThanFrames
+            : Se.Language.Tools.BridgeGaps.BridgeGapsSmallerThan;
+        MinGapLabel = IsFrameMode
+            ? Se.Language.Tools.BridgeGaps.MinGapFrames
+            : Se.Language.Tools.BridgeGaps.MinGap;
         Subtitles = new ObservableCollection<BridgeGapDisplayItem>();
         AllSubtitles = new ObservableCollection<SubtitleLineViewModel>();
-        BridgeGapsSmallerThanMs = 500;
-        MinGapMs = 10;
+        BridgeGapsSmallerThanMsOrFrames = 500;
+        MinGapMsOrFrames = 10;
         StatusText = string.Empty;
         _dic = new Dictionary<string, string>();
 
@@ -82,12 +101,11 @@ public partial class BridgeGapsViewModel : ObservableObject, IClosingCleanup
     {
         _dic = new Dictionary<string, string>();
         var fixedIndexes = new List<int>(Subtitles.Count);
-        // Both values are milliseconds - that is what the labels say, what the settings keys
-        // (BridgeGapsSmallerThanMs / MinGapMs) hold, and how MergeShortLines reads the same
-        // stored numbers. Converting them with FramesToMilliseconds in HH:MM:SS:FF mode turned
-        // the 2000 ms default into 80 000 ms at 25 fps.
-        var minMsBetweenLines = MinGapMs;
-        var maxMs = BridgeGapsSmallerThanMs;
+        // The boxes hold frames only in frame mode, where the labels say so and the values load
+        // from their own frame keys. Converting the millisecond keys as if they were frames
+        // turned the 2000 ms default into 80 000 ms at 25 fps.
+        var minMsBetweenLines = IsFrameMode ? SubtitleFormat.FramesToMilliseconds(MinGapMsOrFrames) : MinGapMsOrFrames;
+        var maxMs = IsFrameMode ? SubtitleFormat.FramesToMilliseconds(BridgeGapsSmallerThanMsOrFrames) : BridgeGapsSmallerThanMsOrFrames;
 
         var allSubtitles = new ObservableCollection<SubtitleLineViewModel>(AllSubtitles.Select(p => new SubtitleLineViewModel(p)));
         var fixedCount = DurationsBridgeGaps2.BridgeGaps(allSubtitles, minMsBetweenLines, PercentForLeft, maxMs, fixedIndexes, _dic, Configuration.Settings.General.UseTimeFormatHHMMSSFF);
@@ -140,15 +158,15 @@ public partial class BridgeGapsViewModel : ObservableObject, IClosingCleanup
 
     private void LoadSettings()
     {
-        BridgeGapsSmallerThanMs = Se.Settings.Tools.BridgeGaps.BridgeGapsSmallerThanMs;
-        MinGapMs = Se.Settings.Tools.BridgeGaps.MinGapMs;
+        BridgeGapsSmallerThanMsOrFrames = Se.Settings.Tools.BridgeGaps.GetBridgeGapsSmallerThan(IsFrameMode);
+        MinGapMsOrFrames = Se.Settings.Tools.BridgeGaps.GetMinGap(IsFrameMode);
         PercentForLeft = Se.Settings.Tools.BridgeGaps.PercentForLeft;
     }
 
     private void SaveSettings()
     {
-        Se.Settings.Tools.BridgeGaps.BridgeGapsSmallerThanMs = BridgeGapsSmallerThanMs;
-        Se.Settings.Tools.BridgeGaps.MinGapMs = MinGapMs;
+        Se.Settings.Tools.BridgeGaps.SetBridgeGapsSmallerThan(BridgeGapsSmallerThanMsOrFrames, IsFrameMode);
+        Se.Settings.Tools.BridgeGaps.SetMinGap(MinGapMsOrFrames, IsFrameMode);
         Se.Settings.Tools.BridgeGaps.PercentForLeft = PercentForLeft;
 
         Se.SaveSettings();
@@ -168,6 +186,52 @@ public partial class BridgeGapsViewModel : ObservableObject, IClosingCleanup
         SaveSettings();
         OkPressed = true;
         Window?.Close();
+    }
+
+    /// <summary>
+    /// Style guides give these gaps in frames. In millisecond mode, offer the settings' frame rate
+    /// calculator (as Apply min gap does) instead of making the user do the sum.
+    /// </summary>
+    [RelayCommand]
+    private async Task CalculateBridgeGapsSmallerThanMs()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var viewModel = await _windowService.ShowDialogAsync<MinGapCalculateWindow, MinGapCalculateViewModel>(
+            Window,
+            vm => vm.Initialize(
+                SubtitleFormat.MillisecondsToFrames(BridgeGapsSmallerThanMsOrFrames),
+                Se.Language.Tools.BridgeGaps.BridgeGapsSmallerThan,
+                Se.Language.Tools.BridgeGaps.BridgeGapsSmallerThanFrames,
+                Se.Language.Tools.BridgeGaps.UseXMsAsBridgeGapsSmallerThan));
+
+        if (viewModel.OkPressed)
+        {
+            BridgeGapsSmallerThanMsOrFrames = viewModel.MinGapMs;
+            _dirty = true;
+        }
+    }
+
+    [RelayCommand]
+    private async Task CalculateMinGapMs()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var viewModel = await _windowService.ShowDialogAsync<MinGapCalculateWindow, MinGapCalculateViewModel>(
+            Window,
+            vm => vm.Initialize(SubtitleFormat.MillisecondsToFrames(MinGapMsOrFrames)));
+
+        if (viewModel.OkPressed)
+        {
+            MinGapMsOrFrames = viewModel.MinGapMs;
+            _dirty = true;
+        }
     }
 
     [RelayCommand]
