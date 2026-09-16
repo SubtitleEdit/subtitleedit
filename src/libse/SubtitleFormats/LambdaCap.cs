@@ -125,8 +125,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
-            // Furigana/bouten/tate-chu-yoko markup means nothing to any other format - a plain text
-            // format would otherwise get the tags themselves.
+            // Furigana/bouten/tate-chu-yoko markup means nothing to most other formats - a plain text
+            // format would otherwise get the tags themselves. Netflix IMSC 1.1 Japanese writes it as
+            // ruby/textCombine spans, so stripping it there flattened "base + reading" into one word.
+            if (NetflixImsc11Japanese.KeepsJapaneseMarkup(newFormat))
+            {
+                return;
+            }
+
             foreach (var p in subtitle.Paragraphs)
             {
                 p.Text = NetflixImsc11Japanese.RemoveTags(p.Text);
@@ -444,14 +450,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = "<i>" + text + "</i>";
             }
 
+            // Vertical writing is {\an4}/{\an7} (left) and {\an6}/{\an9} (right) everywhere else in Subtitle
+            // Edit - the Netflix IMSC 1.1 Japanese regions and the video preview. {\an1}/{\an3} read as
+            // plain horizontal bottom lines there, so a column without ＠行頭 lost its vertical writing.
             var top = cue.Codes.Contains(AlignVerticalTop) || cue.Codes.Contains(AlignHorizontalTop);
             if (cue.Codes.Contains(AlignHorizontalLeft))
             {
-                text = (top ? "{\\an7}" : "{\\an1}") + text;
+                text = (top ? "{\\an7}" : "{\\an4}") + text;
             }
             else if (cue.Codes.Contains(AlignHorizontalRight))
             {
-                text = (top ? "{\\an9}" : "{\\an3}") + text;
+                text = (top ? "{\\an9}" : "{\\an6}") + text;
             }
             else if (top)
             {

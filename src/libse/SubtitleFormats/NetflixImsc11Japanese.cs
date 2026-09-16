@@ -900,8 +900,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 .Replace("</ruby-text-italic>", string.Empty);
         }
 
+        /// <summary>
+        /// Formats that read and write the ruby/bouten/horizontalDigit markup themselves, so a
+        /// conversion between them must not strip it.
+        /// </summary>
+        internal static bool KeepsJapaneseMarkup(SubtitleFormat format)
+        {
+            return format is NetflixImsc11Japanese || format is LambdaCap;
+        }
+
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
+            if (KeepsJapaneseMarkup(newFormat))
+            {
+                return;
+            }
+
             foreach (var p in subtitle.Paragraphs)
             {
                 p.Text = RemoveTags(p.Text);
