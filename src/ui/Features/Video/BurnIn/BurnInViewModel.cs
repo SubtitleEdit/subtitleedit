@@ -1613,9 +1613,13 @@ public partial class BurnInViewModel : ObservableObject
         {
             SelectedVideoTune = tune;
         }
-        if (!string.IsNullOrEmpty(settings.Crf) && VideoCrf.Contains(settings.Crf))
+
+        // AMF qualities used to be stored as numbers ("0".."10"); the list now holds the names
+        // ffmpeg accepts, so a stored number is mapped to the name that meant the same.
+        var crf = VideoPresetOptions.MigrateAmfQuality(SelectedVideoEncoding.Codec, settings.Crf);
+        if (!string.IsNullOrEmpty(crf) && VideoCrf.Contains(crf))
         {
-            SelectedVideoCrf = settings.Crf;
+            SelectedVideoCrf = crf;
         }
 
         // Extension first: it decides which audio encoders the container can take.
