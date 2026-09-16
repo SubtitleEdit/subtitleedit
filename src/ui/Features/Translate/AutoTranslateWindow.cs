@@ -318,7 +318,13 @@ public class AutoTranslateWindow : Window
         settingsPanel.Children.Add(textBoxApiUrl);
 
         settingsPanel.Children.Add(UiUtil.MakeTextBlock(Se.Language.General.Model, vm, null, nameof(vm.ModelIsVisible)).WithMarginRight(5));
-        settingsPanel.Children.Add(UiUtil.MakeTextBox(150, vm, nameof(vm.ModelText), nameof(vm.ModelIsVisible)).WithAccessibleName(Se.Language.General.Model));
+        settingsPanel.Children.Add(UiUtil.MakeTextBox(150, vm, nameof(vm.ModelText), nameof(vm.ModelTextBoxIsVisible)).WithAccessibleName(Se.Language.General.Model));
+
+        // The engines that know their models offer them in a drop-down; any other name can still be typed.
+        var modelCombo = UiUtil.MakeEditableComboBox(220, System.Array.Empty<string>(), vm, nameof(vm.ModelText)).WithAccessibleName(Se.Language.General.Model);
+        modelCombo.Bind(ComboBox.ItemsSourceProperty, new Binding(nameof(vm.ModelPresets)));
+        modelCombo.Bind(ComboBox.IsVisibleProperty, new Binding(nameof(vm.ModelComboIsVisible)));
+        settingsPanel.Children.Add(modelCombo);
         settingsPanel.Children.Add(UiUtil.MakeButtonBrowse(vm.BrowseModelCommand, nameof(vm.ModelBrowseIsVisible), Se.Language.General.Model).WithMarginLeft(5));
 
         settingsPanel.Children.Add(UiUtil.MakeTextBlock(Se.Language.General.Model, vm, null, nameof(vm.CrispAsrModelComboIsVisible)).WithMarginRight(5));
@@ -504,14 +510,23 @@ public class AutoTranslateWindow : Window
             }
         };
 
+        var checkBoxTranslateInPlace = UiUtil.MakeCheckBox(Se.Language.Translate.TranslateInPlaceNoOriginal, vm, nameof(vm.TranslateInPlace));
+        checkBoxTranslateInPlace.VerticalAlignment = VerticalAlignment.Center;
+        checkBoxTranslateInPlace.Bind(CheckBox.IsVisibleProperty, new Binding(nameof(vm.TranslateInPlaceIsVisible)));
+
         var footerGrid = new Grid
         {
             RowDefinitions = new RowDefinitions("Auto,Auto"),
+            ColumnDefinitions = new ColumnDefinitions("*,Auto"),
         };
         footerGrid.Children.Add(progressGrid);
         Grid.SetRow(progressGrid, 0);
+        Grid.SetColumnSpan(progressGrid, 2);
+        footerGrid.Children.Add(checkBoxTranslateInPlace);
+        Grid.SetRow(checkBoxTranslateInPlace, 1);
         footerGrid.Children.Add(buttonBar);
         Grid.SetRow(buttonBar, 1);
+        Grid.SetColumn(buttonBar, 1);
 
         return footerGrid;
     }

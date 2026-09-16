@@ -27,6 +27,7 @@ public class LanguageTranslate
     public string ReadyToTranslate { get; set; }
     public string Translating { get; set; }
     public string TranslationComplete { get; set; }
+    public string TranslateInPlaceNoOriginal { get; set; }
     public string TranslationCancelled { get; set; }
     public string SwapLanguages { get; set; }
     public string XIsAlreadyDownloadedReDownload { get; set; }
@@ -87,6 +88,7 @@ public class LanguageTranslate
         ReadyToTranslate = "Ready to translate";
         Translating = "Translating...";
         TranslationComplete = "Translation complete";
+        TranslateInPlaceNoOriginal = "Translate in place (do not create original)";
         TranslationCancelled = "Translation cancelled";
         SwapLanguages = "Swap source and target languages";
         XIsAlreadyDownloadedReDownload = "{0} is already downloaded. Re-download?";

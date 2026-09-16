@@ -33,6 +33,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         {
             // Auto-updating alias
             "gemini-flash-latest",
+            "gemini-flash-lite-latest",
 
             // Gemini 3.x - Latest Generation
             "gemini-3.6-flash",
@@ -136,7 +137,13 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             var resultText = parser.GetFirstObject(resultContent, "text");
             if (resultText == null)
             {
-                return string.Empty;
+                // A 200 without any text part - a blocked prompt, a stopped candidate or a model
+                // that spent its output on reasoning. Returning an empty string made the translate
+                // loop retry the line several times, each as slow as the first, with nothing on
+                // screen but a disabled Translate button (#14926). Say why right away instead.
+                Error = resultContent;
+                SeLogger.Error($"GeminiTranslate got no text from {_baseUrl}: {resultContent}");
+                throw new Exception(MakeNoTextMessage(resultContent));
             }
 
             var outputText = Json.DecodeJsonText(resultText).Trim();
@@ -151,6 +158,30 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             }
 
             return outputText;
+        }
+
+        /// <summary>
+        /// The error shown when a Gemini reply carries no translated text, naming the block or
+        /// finish reason when the reply has one.
+        /// </summary>
+        public static string MakeNoTextMessage(string resultContent)
+        {
+            var parser = new SeJsonParser();
+            var blockReason = parser.GetFirstObject(resultContent ?? string.Empty, "blockReason");
+            var finishReason = parser.GetFirstObject(resultContent ?? string.Empty, "finishReason");
+
+            var message = $"{StaticName} returned no translated text";
+            if (!string.IsNullOrEmpty(blockReason))
+            {
+                message += $" (prompt blocked: {blockReason})";
+            }
+            else if (!string.IsNullOrEmpty(finishReason))
+            {
+                message += $" (finish reason: {finishReason})";
+            }
+
+            return message + "." + Environment.NewLine + Environment.NewLine +
+                   "If this keeps happening, try another Gemini model - for example gemini-flash-lite-latest.";
         }
 
         private HttpContent MakeContent(string text, string sourceLanguageCode, string targetLanguageCode)

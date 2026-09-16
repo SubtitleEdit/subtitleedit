@@ -9,6 +9,7 @@ public class SeAutoTranslate
     public string AutoTranslateLastName { get; set; } = string.Empty;
     public string AutoTranslateLastSource { get; set; } = string.Empty;
     public string AutoTranslateLastTarget { get; set; } = string.Empty;
+    public bool TranslateSelectedLinesInPlace { get; set; }
     public string ChatGptUrl { get; set; }
     public string ChatGptPrompt { get; set; }
     public string ChatGptApiKey { get; set; }
