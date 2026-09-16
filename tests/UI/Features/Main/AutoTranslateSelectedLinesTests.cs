@@ -36,10 +36,11 @@ public class AutoTranslateSelectedLinesTests
             await SettleAsync(window);
             Assert.False(vm.ShowColumnOriginalText);
 
-            FakeTranslateWindowService.Install(vm);
+            FakeTranslateWindowService.Install(vm, translateInPlace: false);
             await vm.AutoTranslateSelectedLinesCommand.ExecuteAsync(null);
             await SettleAsync(window);
 
+            Assert.True(FakeTranslateWindowService.LastInPlaceOffered);
             Assert.Equal(new[] { "T:One", "T:Two", "Three" }, vm.Subtitles.Select(p => p.Text));
             Assert.Equal(new[] { "One", "Two", "Three" }, vm.Subtitles.Select(p => p.OriginalText));
             Assert.True(vm.ShowColumnOriginalText);
@@ -47,6 +48,36 @@ public class AutoTranslateSelectedLinesTests
             var gridText = GridCellTexts(vm);
             Assert.Contains("T:One", gridText);
             Assert.Contains("T:Two", gridText);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    /// <summary>"Translate in place" in the dialog: the selected lines change, no original column appears.</summary>
+    [AvaloniaFact]
+    public async Task NoOriginal_TranslateInPlaceChecked_LeavesNoOriginal()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            AddLine(vm, "One", 0, 1000);
+            AddLine(vm, "Two", 1000, 2000);
+            AddLine(vm, "Three", 2000, 3000);
+            var rows = vm.Subtitles.ToList();
+            vm.SubtitleGrid.SelectedItems?.Clear();
+            vm.SubtitleGrid.SelectedItems?.Add(rows[1]);
+            await SettleAsync(window);
+
+            FakeTranslateWindowService.Install(vm, translateInPlace: true);
+            await vm.AutoTranslateSelectedLinesCommand.ExecuteAsync(null);
+            await SettleAsync(window);
+
+            Assert.Equal(new[] { "One", "T:Two", "Three" }, vm.Subtitles.Select(p => p.Text));
+            Assert.All(vm.Subtitles, p => Assert.True(string.IsNullOrEmpty(p.OriginalText)));
+            Assert.False(vm.ShowColumnOriginalText);
+            Assert.Contains("T:Two", GridCellTexts(vm));
         }
         finally
         {
@@ -65,8 +96,13 @@ public class AutoTranslateSelectedLinesTests
     /// <summary>Stands in for the auto-translate dialog: prefixes each row with "T:" and presses OK.</summary>
     public class FakeTranslateWindowService : DispatchProxy
     {
-        public static void Install(MainViewModel vm)
+        private static bool _translateInPlace;
+
+        public static bool LastInPlaceOffered { get; private set; }
+
+        public static void Install(MainViewModel vm, bool translateInPlace)
         {
+            _translateInPlace = translateInPlace;
             var field = typeof(MainViewModel).GetField("_windowService", BindingFlags.Instance | BindingFlags.NonPublic)!;
             field.SetValue(vm, Create<IWindowService, FakeTranslateWindowService>());
         }
@@ -83,6 +119,8 @@ public class AutoTranslateSelectedLinesTests
             var translateVm = new AutoTranslateViewModel(new WindowService(new NullServiceProvider()), new FolderHelper());
             ((Action<AutoTranslateViewModel>?)args![1])?.Invoke(translateVm);
             translateVm.OnLoaded();
+            LastInPlaceOffered = translateVm.TranslateInPlaceIsVisible;
+            translateVm.TranslateInPlace = _translateInPlace;
             foreach (var row in translateVm.Rows)
             {
                 row.TranslatedText = "T:" + row.Text;

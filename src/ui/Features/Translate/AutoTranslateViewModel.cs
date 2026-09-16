@@ -88,6 +88,11 @@ public partial class AutoTranslateViewModel : ObservableObject
     [ObservableProperty] private bool _modelBrowseIsVisible;
     [ObservableProperty] private string _modelText;
     [ObservableProperty] private bool _buttonModelIsVisible;
+    [ObservableProperty] private ObservableCollection<string> _modelPresets = new();
+    [ObservableProperty] private bool _modelComboIsVisible;
+    [ObservableProperty] private bool _modelTextBoxIsVisible;
+    [ObservableProperty] private bool _translateInPlaceIsVisible;
+    [ObservableProperty] private bool _translateInPlace;
     [ObservableProperty] private bool _buttonDownloadIsVisible;
     [ObservableProperty] private ObservableCollection<SpeechToTextModelDisplay> _crispAsrModels = new();
     [ObservableProperty] private SpeechToTextModelDisplay? _selectedCrispAsrModel;
@@ -199,6 +204,16 @@ public partial class AutoTranslateViewModel : ObservableObject
     {
         _subtitle = new Subtitle(subtitle, false);
         LoadSettings();
+    }
+
+    /// <summary>
+    /// For "Selected lines > Auto translate" with no original loaded: offers translating the lines in
+    /// place instead of making the subtitle the original (#14926). The choice is remembered.
+    /// </summary>
+    public void OfferTranslateInPlace()
+    {
+        TranslateInPlaceIsVisible = true;
+        TranslateInPlace = Se.Settings.AutoTranslate.TranslateSelectedLinesInPlace;
     }
 
     private void LoadSettings()
@@ -523,6 +538,10 @@ public partial class AutoTranslateViewModel : ObservableObject
 
 
         Se.Settings.AutoTranslate.AutoTranslateLastName = SelectedAutoTranslator.Name;
+        if (TranslateInPlaceIsVisible)
+        {
+            Se.Settings.AutoTranslate.TranslateSelectedLinesInPlace = TranslateInPlace;
+        }
         Se.Settings.AutoTranslate.AutoTranslateLastSource = SelectedSourceLanguage?.Code ?? string.Empty;
         Se.Settings.AutoTranslate.AutoTranslateLastTarget = SelectedTargetLanguage?.Code ?? string.Empty;
 
@@ -1875,6 +1894,23 @@ public partial class AutoTranslateViewModel : ObservableObject
 
     private void SetAutoTranslatorEngine(IAutoTranslator translator)
     {
+        SetAutoTranslatorEngineFields(translator);
+
+        // Each engine's known models used to be collected here and then never shown - the model
+        // was a bare text box, so the names had to be typed from memory (#14926). They are now the
+        // drop-down of an editable combo; engines without a list keep the plain text box.
+        var presets = _apiModels.Where(m => !string.IsNullOrWhiteSpace(m)).Select(m => m.Trim()).Distinct().ToList();
+        if (!ModelPresets.SequenceEqual(presets))
+        {
+            ModelPresets = new ObservableCollection<string>(presets);
+        }
+
+        ModelComboIsVisible = ModelIsVisible && ModelPresets.Count > 0;
+        ModelTextBoxIsVisible = ModelIsVisible && ModelPresets.Count == 0;
+    }
+
+    private void SetAutoTranslatorEngineFields(IAutoTranslator translator)
+    {
         SelectedAutoTranslator = translator;
         AutoTranslatorLinkText = translator.Name;
 
@@ -2413,7 +2449,16 @@ public partial class AutoTranslateViewModel : ObservableObject
 
         if (string.IsNullOrEmpty(defaultSourceLanguageCode))
         {
-            defaultSourceLanguageCode = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle); // Guess language based on subtitle contents
+            defaultSourceLanguageCode = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle); // Guess language based on subtitle contents
+        }
+
+        // Nothing recognizable - typically a line or two picked for "Selected lines > Auto translate".
+        // Assuming English then pushed an English target off the target combo, which skips the source
+        // language, so it opened on German instead (#14926). The last source is a better guess.
+        if (string.IsNullOrEmpty(defaultSourceLanguageCode))
+        {
+            var lastSource = Se.Settings.AutoTranslate.AutoTranslateLastSource;
+            return string.IsNullOrEmpty(lastSource) ? "en" : lastSource;
         }
 
         if (!string.IsNullOrEmpty(Se.Settings.AutoTranslate.AutoTranslateLastSource) &&

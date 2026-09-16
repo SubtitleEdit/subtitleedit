@@ -12642,10 +12642,11 @@ public partial class MainViewModel :
 
         // In translator mode the original column holds the source and the translation goes in the
         // text column. With a single subtitle open there is no original to read, so the selected
-        // lines are translated from their own text, and - like the whole-file auto-translate - the
-        // subtitle becomes the original: every row keeps its current text in the original column,
-        // not just the selected ones, so the original stays whole (#14926).
-        var translateInPlace = !ShowColumnOriginalText;
+        // lines are translated from their own text. By default - like the whole-file auto-translate -
+        // the subtitle then becomes the original: every row keeps its current text in the original
+        // column, not just the selected ones, so the original stays whole. The dialog also offers
+        // translating in place, for filling the odd gap without an original column (#14926).
+        var noOriginal = !ShowColumnOriginalText;
 
         var result = await ShowDialogAsync<AutoTranslateWindow, AutoTranslateViewModel>(vm =>
         {
@@ -12657,7 +12658,7 @@ public partial class MainViewModel :
                     Number = line.Number,
                     StartTime = new TimeCode(line.StartTime),
                     EndTime = new TimeCode(line.EndTime),
-                    Text = translateInPlace ? line.Text : line.OriginalText,
+                    Text = noOriginal ? line.Text : line.OriginalText,
                     Actor = line.Actor,
                     Style = line.Style,
                     Language = line.Language,
@@ -12669,6 +12670,10 @@ public partial class MainViewModel :
             }
 
             vm.Initialize(sub);
+            if (noOriginal)
+            {
+                vm.OfferTranslateInPlace();
+            }
         });
 
         if (!result.OkPressed)
@@ -12677,14 +12682,15 @@ public partial class MainViewModel :
             return;
         }
 
-        if (translateInPlace && !result.Rows.Any(r => !string.IsNullOrEmpty(r.TranslatedText)))
+        var captureOriginal = noOriginal && !result.TranslateInPlace;
+        if (captureOriginal && !result.Rows.Any(r => !string.IsNullOrEmpty(r.TranslatedText)))
         {
             return; // nothing came back - do not switch to translator mode for an unchanged subtitle
         }
 
-        var wasOldTranslationChanged = translateInPlace && _changeSubtitleHash != GetFastHash();
+        var wasOldTranslationChanged = captureOriginal && _changeSubtitleHash != GetFastHash();
 
-        if (translateInPlace)
+        if (captureOriginal)
         {
             foreach (var line in Subtitles)
             {
@@ -12706,7 +12712,7 @@ public partial class MainViewModel :
 
         OnSubtitleLanguageChanged();
 
-        if (translateInPlace)
+        if (captureOriginal)
         {
             SwitchToTranslationOfCurrentRows(result.SelectedTargetLanguage?.TwoLetterIsoLanguageName, wasOldTranslationChanged);
             return;

@@ -2859,6 +2859,7 @@
     "readyToTranslate": "Ready to translate",
     "translating": "Translating...",
     "translationComplete": "Translation complete",
+    "translateInPlaceNoOriginal": "Translate in place (do not create original)",
     "translationCancelled": "Translation cancelled",
     "swapLanguages": "Swap source and target languages",
     "xIsAlreadyDownloadedReDownload": "{0} is already downloaded. Re-download?",
