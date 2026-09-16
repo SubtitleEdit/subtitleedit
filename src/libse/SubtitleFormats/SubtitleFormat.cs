@@ -505,6 +505,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             get;
         }
 
+        /// <summary>
+        /// The format name - combo boxes of formats report ToString() as their value to screen
+        /// readers, which otherwise announced "Nikse.SubtitleEdit.Core.SubtitleFormats.SubRip".
+        /// </summary>
+        public override string ToString() => Name;
+
         public virtual bool IsTimeBased => true;
 
         public bool IsFrameBased => !IsTimeBased;

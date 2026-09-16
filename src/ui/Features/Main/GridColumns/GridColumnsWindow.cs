@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
@@ -34,6 +35,9 @@ public class GridColumnsWindow : Window
             var checkBox = new CheckBox();
             checkBox.Bind(CheckBox.IsCheckedProperty, new Binding(nameof(GridColumnDisplay.IsVisible)) { Mode = BindingMode.TwoWay });
             checkBox.Bind(InputElement.IsEnabledProperty, new Binding(nameof(GridColumnDisplay.CanToggle)));
+            // The column name is in a separate text block - name the check box too, or a screen
+            // reader announces a bare "check box" (#12087).
+            checkBox.Bind(AutomationProperties.NameProperty, new Binding(nameof(GridColumnDisplay.Name)));
 
             var textBlock = new TextBlock { Margin = new Thickness(5, 0, 0, 0), VerticalAlignment = VerticalAlignment.Center };
             textBlock.Bind(TextBlock.TextProperty, new Binding(nameof(GridColumnDisplay.Name)));

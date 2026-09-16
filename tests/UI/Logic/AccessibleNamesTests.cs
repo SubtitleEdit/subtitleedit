@@ -1,4 +1,5 @@
 ﻿using Avalonia.Automation;
+using Avalonia.Automation.Peers;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.LogicalTree;
@@ -92,6 +93,15 @@ public class AccessibleNamesTests
                         unnamed.AppendLine($"{type.Name}: {control.GetType().Name} {Describe(control)}");
                     }
                 }
+
+                foreach (var list in window.GetLogicalDescendants().OfType<ItemsControl>()
+                             .Where(c => c is ListBox or ComboBox && c.TemplatedParent == null && c.IsEffectivelyVisible))
+                {
+                    if (AnnouncesTypeName(list) is { } announced)
+                    {
+                        unnamed.AppendLine($"{type.Name}: {list.GetType().Name} item announced as \"{announced}\"");
+                    }
+                }
             }
             finally
             {
@@ -103,6 +113,38 @@ public class AccessibleNamesTests
 
         Assert.True(opened > 50, $"Only {opened} windows opened; skipped: {string.Join(", ", skipped)}");
         Assert.True(unnamed.Length == 0, $"Controls without an accessible name ({opened} windows opened, {skipped.Count} skipped):\n{unnamed}");
+    }
+
+    /// <summary>
+    /// A list row is announced by its template's text only when the template is a bare text
+    /// block, and a combo box value always by the selected item's ToString() - so an item type
+    /// without a ToString() override reads as its class name, e.g.
+    /// "...WaveformToolbarItems.ToolbarItemDisplay" (#12087). Only lists that have items when
+    /// the window opens can be checked here; see ListItemNamesTests for the others.
+    /// </summary>
+    private static string? AnnouncesTypeName(ItemsControl list)
+    {
+        var item = list.Items.FirstOrDefault(i => i is not null and not Control and not string);
+        if (item == null)
+        {
+            return null;
+        }
+
+        string? announced;
+        if (list is ComboBox)
+        {
+            announced = item.ToString();
+        }
+        else if (list.ContainerFromItem(item) is Control container)
+        {
+            announced = ControlAutomationPeer.CreatePeerForElement(container).GetName();
+        }
+        else
+        {
+            return null;
+        }
+
+        return announced == item.GetType().ToString() ? announced : null;
     }
 
     /// <summary>

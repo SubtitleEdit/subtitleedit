@@ -105,4 +105,8 @@ public partial class GetPluginsDisplayItem : ObservableObject
                System.Version.TryParse(current, out var cur) &&
                c > cur;
     }
+
+    // A list row or combo box value is announced by ToString() unless its template is a bare
+    // text block - without this a screen reader reads the class name (#12087).
+    public override string ToString() => Name;
 }
