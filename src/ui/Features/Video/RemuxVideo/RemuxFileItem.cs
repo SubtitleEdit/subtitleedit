@@ -58,4 +58,8 @@ public partial class RemuxFileItem : ObservableObject
             ? $"{Size}  -  {value.DisplayName}"
             : string.IsNullOrWhiteSpace(value.Details) ? Size : $"{Size}  -  {value.Details}";
     }
+
+    // A list row or combo box value is announced by ToString() unless its template is a bare
+    // text block - without this a screen reader reads the class name (#12087).
+    public override string ToString() => Name;
 }

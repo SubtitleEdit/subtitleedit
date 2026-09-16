@@ -17,4 +17,8 @@ public partial class ProgressBarChapter : ObservableObject
     {
         OnPropertyChanged(nameof(StartTimeDisplay));
     }
+
+    // A list row or combo box value is announced by ToString() unless its template is a bare
+    // text block - without this a screen reader reads the class name (#12087).
+    public override string ToString() => string.IsNullOrEmpty(Text) ? StartTimeDisplay : $"{Text}, {StartTimeDisplay}";
 }

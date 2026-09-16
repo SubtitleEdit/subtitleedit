@@ -66,4 +66,8 @@ public partial class ResolutionItem : ObservableObject
         yield return new ResolutionItem("1/4 A - Aspect Ratio 9∶16", 270, 480);
         yield return new ResolutionItem("1/4 B - Aspect Ratio 9∶16 - (180x270)", 180, 270);
     }
+
+    // A list row or combo box value is announced by ToString() unless its template is a bare
+    // text block - without this a screen reader reads the class name (#12087).
+    public override string ToString() => DisplayName;
 }
