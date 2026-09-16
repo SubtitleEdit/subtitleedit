@@ -24,13 +24,19 @@ public class BridgeGapsWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var labelBridgeGapSmallerThan = UiUtil.MakeLabel(Se.Language.Tools.BridgeGaps.BridgeGapsSmallerThan);
-        var numericUpDownBridgeGapSmallerThan = UiUtil.MakeNumericUpDownInt(1, 10000, Se.Settings.Tools.BridgeGaps.BridgeGapsSmallerThanMs, 130, vm, nameof(vm.BridgeGapsSmallerThanMs));
+        var labelBridgeGapSmallerThan = UiUtil.MakeLabel(vm.BridgeGapsSmallerThanLabel);
+        var numericUpDownBridgeGapSmallerThan = UiUtil.MakeNumericUpDownInt(1, 10000, vm.BridgeGapsSmallerThanMsOrFrames, 130, vm, nameof(vm.BridgeGapsSmallerThanMsOrFrames));
         numericUpDownBridgeGapSmallerThan.ValueChanged += vm.ValueChanged;
+        var buttonCalculateBridgeGapSmallerThan = UiUtil.MakeButtonBrowse(vm.CalculateBridgeGapsSmallerThanMsCommand,
+                accessibleName: Se.Language.Tools.BridgeGaps.CalculateBridgeGapsSmallerThanDotDotDot)
+            .WithBindIsVisible(vm, nameof(vm.IsMsMode));
 
-        var labelMinGap = UiUtil.MakeLabel(Se.Language.Tools.BridgeGaps.MinGap);
-        var numericUpDownMinGap = UiUtil.MakeNumericUpDownInt(0, 1000, Se.Settings.Tools.BridgeGaps.MinGapMs, 130, vm, nameof(vm.MinGapMs));
+        var labelMinGap = UiUtil.MakeLabel(vm.MinGapLabel);
+        var numericUpDownMinGap = UiUtil.MakeNumericUpDownInt(0, 1000, vm.MinGapMsOrFrames, 130, vm, nameof(vm.MinGapMsOrFrames));
         numericUpDownMinGap.ValueChanged += vm.ValueChanged;
+        var buttonCalculateMinGap = UiUtil.MakeButtonBrowse(vm.CalculateMinGapMsCommand,
+                accessibleName: Se.Language.Options.Settings.MinGapCalculateDotDotDot)
+            .WithBindIsVisible(vm, nameof(vm.IsMsMode));
 
         var labelPercentForLeft = UiUtil.MakeLabel(Se.Language.Tools.BridgeGaps.PercentFoPrevious);
         var numericUpDownPercentForLeft = UiUtil.MakeNumericUpDownInt(0, 100, Se.Settings.Tools.BridgeGaps.PercentForLeft, 130, vm, nameof(vm.PercentForLeft));
@@ -39,8 +45,10 @@ public class BridgeGapsWindow : Window
         var panelControls = UiUtil.MakeHorizontalPanel(
             labelBridgeGapSmallerThan,
             numericUpDownBridgeGapSmallerThan,
+            buttonCalculateBridgeGapSmallerThan,
             labelMinGap,
             numericUpDownMinGap,
+            buttonCalculateMinGap,
             labelPercentForLeft,
             numericUpDownPercentForLeft);
 

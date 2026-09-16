@@ -2497,13 +2497,19 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
         var dic = new Dictionary<string, string>();
         var fixedIndexes = new List<int>(subtitle.Paragraphs.Count);
-        // Both values are milliseconds - the labels say "(ms)", the settings keys are named
-        // ...Ms, and the dialog reads the same two keys without converting. Running them through
-        // FramesToMilliseconds in HH:MM:SS:FF mode turned the 2000 ms default into 80 000 ms at
-        // 25 fps, so batch bridged half-minute gaps the dialog leaves alone. The interactive
-        // dialog was already fixed; this is the batch half of that fix.
-        var minMsBetweenLines = _config.BridgeGaps.MinGapMs;
-        var maxMs = _config.BridgeGaps.BridgeGapsSmallerThanMs;
+        // The values are frames only when the panel showed frames (frame mode, which loads them
+        // from their own frame keys). Converting the millisecond keys as if they were frames
+        // turned the 2000 ms default into 80 000 ms at 25 fps. Frames count at the frame rate this
+        // batch produces (the "change frame rate" target, else the project frame rate), matching
+        // the dialog, which counts them at the project frame rate.
+        var minMsBetweenLines = _config.BridgeGaps.MinGapMsOrFrames;
+        var maxMs = _config.BridgeGaps.BridgeGapsSmallerThanMsOrFrames;
+        if (_config.BridgeGaps.UseFrames)
+        {
+            var frameRate = ResolveFrameRate(null, false, 0);
+            minMsBetweenLines = SubtitleFormat.FramesToMilliseconds(minMsBetweenLines, frameRate);
+            maxMs = SubtitleFormat.FramesToMilliseconds(maxMs, frameRate);
+        }
 
         var subtitles = new ObservableCollection<SubtitleLineViewModel>(subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, subtitle.OriginalFormat)));
         var fixedCount = DurationsBridgeGaps2.BridgeGaps(subtitles, minMsBetweenLines, _config.BridgeGaps.PercentForLeft, maxMs, fixedIndexes, dic,

@@ -44,9 +44,14 @@ public partial class MinGapCalculateViewModel : ObservableObject
         FormatFrameRate(GetFrameRate()),
         MinGapMs);
 
-    public string UseAsNewGapText => string.Format(
-        Se.Language.Options.Settings.MinGapCalculateUseXAsNewGap,
-        MinGapMs);
+    public string UseAsNewGapText => string.Format(_useAsNewGapFormat, MinGapMs);
+
+    /// <summary>Window title - the minimum gap one unless the caller calculates another value.</summary>
+    public string Title { get; private set; } = Se.Language.Options.Settings.MinGapCalculateTitle;
+
+    public string FramesLabel { get; private set; } = Se.Language.Options.Settings.MinGapCalculateFrames;
+
+    private string _useAsNewGapFormat = Se.Language.Options.Settings.MinGapCalculateUseXAsNewGap;
 
     public MinGapCalculateViewModel()
     {
@@ -60,6 +65,19 @@ public partial class MinGapCalculateViewModel : ObservableObject
     /// </summary>
     public void Initialize(int frames)
     {
+        Initialize(frames, null, null, null);
+    }
+
+    /// <summary>
+    /// Same calculation for a value other than the minimum gap (e.g. Bridge gaps' "smaller than"
+    /// limit) - the texts name that value instead. Null keeps the minimum gap text.
+    /// </summary>
+    public void Initialize(int frames, string? title, string? framesLabel, string? useAsNewValueFormat)
+    {
+        Title = title ?? Title;
+        FramesLabel = framesLabel ?? FramesLabel;
+        _useAsNewGapFormat = useAsNewValueFormat ?? _useAsNewGapFormat;
+
         var current = FormatFrameRate(Configuration.Settings.General.CurrentFrameRate);
         if (!FrameRates.Contains(current))
         {
