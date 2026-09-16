@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using System;
 using System.Globalization;
 using System.Linq;
 
@@ -18,7 +19,10 @@ public static class SecondarySubtitleMerger
     /// target's scale first.
     /// The secondary subtitle is shared between refreshes and is only ever read, so its
     /// paragraphs are added by reference - except in SMPTE mode, where the stretch the main
-    /// subtitle already got has to apply to them too, and so goes onto a copy.
+    /// subtitle already got has to apply to them too, and so goes onto a copy - and except for
+    /// a paragraph carrying a `\pos` override (SecondarySubtitleJustifier's "Justify lines"),
+    /// which is stated in the secondary's own PlayRes and needs the same rescale as the style
+    /// once its PlayRes differs from the target's, so that also goes onto a copy (#14842 review).
     /// </summary>
     public static void AddSecondarySubtitle(Subtitle subtitle, Subtitle? subtitleSecondary, bool smpteMode)
     {
@@ -34,6 +38,7 @@ public static class SecondarySubtitleMerger
         var sourceHeight = GetPlayRes(subtitleSecondary.Header, "PlayResY", 288);
         var targetWidth = GetPlayRes(subtitle.Header, "PlayResX", 384);
         var targetHeight = GetPlayRes(subtitle.Header, "PlayResY", 288);
+        var playResChanged = sourceWidth != targetWidth || sourceHeight != targetHeight;
 
         if (sourceHeight != targetHeight)
         {
@@ -52,7 +57,18 @@ public static class SecondarySubtitleMerger
         subtitle.Header = AdvancedSubStationAlpha.AddSsaStyle(style, subtitle.Header);
         foreach (var p in subtitleSecondary.Paragraphs)
         {
-            subtitle.Paragraphs.Add(smpteMode ? SmptePreviewStretch.Stretched(p) : p);
+            var paragraph = smpteMode ? SmptePreviewStretch.Stretched(p) : p;
+            if (playResChanged && paragraph.Text.IndexOf("\\pos", StringComparison.Ordinal) >= 0)
+            {
+                if (!smpteMode)
+                {
+                    paragraph = new Paragraph(paragraph); // not already a copy - do not rescale the shared original
+                }
+
+                paragraph.Text = AssaResampler.ResampleOverrideTagsPosition(sourceWidth, targetWidth, sourceHeight, targetHeight, paragraph.Text);
+            }
+
+            subtitle.Paragraphs.Add(paragraph);
         }
     }
 

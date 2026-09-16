@@ -66,6 +66,12 @@ public class OpenSecondarySubtitleWindow : Window
         var comboBoxAlignment = UiUtil.MakeComboBox(vm.FontAlignments, vm, nameof(vm.SelectedFontAlignment)).WithMinWidth(160);
         var panelAlignment = UiUtil.MakeHorizontalPanel(labelAlignment, comboBoxAlignment);
 
+        // Justify lines row - independent of the primary subtitle and of the video player's own
+        // global "Text Justify" setting (#14842).
+        var labelJustify = UiUtil.MakeLabel(Se.Language.Video.SecondarySubtitleJustifyLines).WithMinWidth(labelWidth);
+        var comboBoxJustify = UiUtil.MakeComboBox(vm.JustifyItems, vm, nameof(vm.SelectedJustify)).WithMinWidth(160);
+        var panelJustify = UiUtil.MakeHorizontalPanel(labelJustify, comboBoxJustify);
+
         // Left panel with settings
         var leftPanel = new StackPanel
         {
@@ -77,6 +83,7 @@ public class OpenSecondarySubtitleWindow : Window
                 panelBold,
                 panelBorderStyle,
                 panelAlignment,
+                panelJustify,
             },
         };
 

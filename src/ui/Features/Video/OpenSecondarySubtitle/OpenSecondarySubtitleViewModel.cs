@@ -9,6 +9,7 @@ using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Features.Options.Settings;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 using Nikse.SubtitleEdit.Features.Sync.VisualSync;
 using Nikse.SubtitleEdit.Features.Video.BurnIn;
@@ -36,9 +37,11 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<SubtitleDisplayItem> _paragraphs;
     [ObservableProperty] private int _selectedParagraphIndex = -1;
     [ObservableProperty] private AlignmentItem _selectedFontAlignment;
+    [ObservableProperty] private MpvJustifyDisplay _selectedJustify;
 
     public ObservableCollection<FontBoxItem> FontBoxTypes { get; }
     public ObservableCollection<AlignmentItem> FontAlignments { get; }
+    public ObservableCollection<MpvJustifyDisplay> JustifyItems { get; }
     public VideoPlayerControl VideoPlayerControl { get; set; }
     public ComboBox ComboBoxParagraphs { get; set; }
 
@@ -60,6 +63,7 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
     private DispatcherTimer _positionTimer = new DispatcherTimer();
 
     public Subtitle? ResultSubtitle { get; private set; }
+    public SecondarySubtitleStyle? ResultStyle { get; private set; }
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
 
@@ -78,6 +82,8 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
         SelectedFontBoxType = FontBoxTypes[0];
         FontAlignments = new ObservableCollection<AlignmentItem>(AlignmentItem.Alignments);
         SelectedFontAlignment = AlignmentItem.Alignments[1]; // an8 = Top-center
+        JustifyItems = new ObservableCollection<MpvJustifyDisplay>(MpvJustifyDisplay.GetAll());
+        SelectedJustify = JustifyItems[0]; // auto - matches whatever the alignment already does
         Paragraphs = new ObservableCollection<SubtitleDisplayItem>();
 
         _tempSubtitleFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".ass");
@@ -109,6 +115,15 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
     private void Ok()
     {
         ResultSubtitle = BuildAssaSubtitle(false);
+        ResultStyle = new SecondarySubtitleStyle
+        {
+            Color = SubtitleColor,
+            FontSize = FontSize,
+            FontBold = FontBold,
+            FontBoxType = SelectedFontBoxType.BoxType,
+            AlignmentCode = SelectedFontAlignment.Code,
+            JustifyCode = SelectedJustify.Code,
+        };
         OkPressed = true;
         Window?.Close();
     }
@@ -119,7 +134,12 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
         Window?.Close();
     }
 
-    public void Initialize(Subtitle secondarySubtitle, Subtitle subtitle, SubtitleFormat subtitleFormat, Logic.Media.FfmpegMediaInfo2? mediaInfo, string? videoFileName)
+    /// <param name="previousStyle">
+    /// The style last chosen for this secondary subtitle, if it is already loaded and this is a
+    /// re-open to adjust it rather than a first-time open - so the dialog starts from what was
+    /// last set instead of resetting to defaults every time (#14842).
+    /// </param>
+    public void Initialize(Subtitle secondarySubtitle, Subtitle subtitle, SubtitleFormat subtitleFormat, Logic.Media.FfmpegMediaInfo2? mediaInfo, string? videoFileName, SecondarySubtitleStyle? previousStyle = null)
     {
         _secondarySubtitle = secondarySubtitle;
         _subtitle = subtitle;
@@ -130,6 +150,16 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
         Paragraphs = new ObservableCollection<SubtitleDisplayItem>(
             secondarySubtitle.Paragraphs.Select(p => new SubtitleDisplayItem(new SubtitleLineViewModel(p, _assaFormat))));
 
+        if (previousStyle != null)
+        {
+            SubtitleColor = previousStyle.Color;
+            FontSize = previousStyle.FontSize;
+            FontBold = previousStyle.FontBold;
+            SelectedFontBoxType = FontBoxTypes.FirstOrDefault(f => f.BoxType == previousStyle.FontBoxType) ?? FontBoxTypes[0];
+            SelectedFontAlignment = FontAlignments.FirstOrDefault(a => a.Code == previousStyle.AlignmentCode) ?? FontAlignments[1];
+            SelectedJustify = JustifyItems.FirstOrDefault(j => j.Code == previousStyle.JustifyCode) ?? JustifyItems[0];
+        }
+
         Dispatcher.UIThread.Post(() =>
         {
             if (!string.IsNullOrEmpty(videoFileName))
@@ -137,8 +167,11 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
                 _ = VideoPlayerControl.Open(videoFileName);
             }
 
-            var height = mediaInfo?.Dimension.Height ?? 1080;
-            FontSize = AssaResampler.Resample(AdvancedSubStationAlpha.DefaultHeight, height, Se.Settings.Video.MpvPreviewFontSize);
+            if (previousStyle == null)
+            {
+                var height = mediaInfo?.Dimension.Height ?? 1080;
+                FontSize = AssaResampler.Resample(AdvancedSubStationAlpha.DefaultHeight, height, Se.Settings.Video.MpvPreviewFontSize);
+            }
         });
     }
 
@@ -315,13 +348,29 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
         style.Outline = new SkiaSharp.SKColor(style.Outline.Red, style.Outline.Green, style.Outline.Blue, SubtitleColor.A);
         style.Background = new SkiaSharp.SKColor(style.Background.Red, style.Background.Green, style.Background.Blue, SubtitleColor.A);
 
-        var result = new Subtitle(_secondarySubtitle);
+        var width = _mediaInfo?.Dimension.Width ?? 1920;
+        var height = _mediaInfo?.Dimension.Height ?? 1080;
+
+        // Justify lines (#14842): computed once here, in the secondary's own PlayRes (this
+        // dialog's real video dimensions), and reused by every branch below - a fresh set of
+        // paragraphs either way, never _secondarySubtitle.Paragraphs itself, since this method
+        // runs every 500 ms while the dialog stays open (StartSubtitleTimer). "Auto" (or a
+        // single-line paragraph) passes through as a plain copy; anything else becomes one
+        // dialogue event per physical line, each with its own \pos, so mpv's sub-ass-justify -
+        // which only ever arranges multiple lines within one event - has nothing to override,
+        // regardless of the global "Text Justify" setting.
+        var secondaryParagraphs = SecondarySubtitleJustifier.Apply(_secondarySubtitle.Paragraphs, style, SelectedJustify.Code, width, height);
+        foreach (var p in secondaryParagraphs)
+        {
+            p.Extra = style.Name;
+        }
+
+        var result = new Subtitle();
+        result.Paragraphs.AddRange(secondaryParagraphs);
         result.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(
             AdvancedSubStationAlpha.DefaultHeader,
             new List<SsaStyle> { style });
 
-        var width = _mediaInfo?.Dimension.Width ?? 1920;
-        var height = _mediaInfo?.Dimension.Height ?? 1080;
         result.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + width.ToString(CultureInfo.InvariantCulture), "[Script Info]", result.Header);
         result.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + height.ToString(CultureInfo.InvariantCulture), "[Script Info]", result.Header);
 
@@ -334,12 +383,11 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
                 styles.Add(style);
                 result.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(_subtitle.Header, styles);
 
-                foreach (var p in _secondarySubtitle.Paragraphs)
+                foreach (var p in secondaryParagraphs)
                 {
-                    p.Extra = style.Name;
                     p.Layer = -1;
-                    result.Paragraphs.Add(p);
                 }
+                result.Paragraphs.AddRange(secondaryParagraphs);
             }
             else
             {
@@ -355,13 +403,6 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
                     p.Extra = "Default";
                     result.Paragraphs.Add(p);
                 }
-            }
-        }
-        else
-        {
-            foreach (var p in result.Paragraphs)
-            {
-                p.Extra = style.Name;
             }
         }
 
