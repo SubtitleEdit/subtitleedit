@@ -1569,6 +1569,9 @@ public static partial class InitListViewAndEditBox
         var endCodeUpDown = new TimeCodeUpDown
         {
             DataContext = vm,
+            // Like the start time above: the row holds a video-relative time, the box shows
+            // (and reads back) "time code + video offset", so it matches the grid's Hide column.
+            UseVideoOffset = true,
             [AutomationProperties.NameProperty] = Se.Language.General.EndTime,
             [!TimeCodeUpDown.ValueProperty] = new Binding($"{nameof(vm.SelectedSubtitle)}.{nameof(SubtitleLineViewModel.EndTime)}")
             {
