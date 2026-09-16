@@ -5059,9 +5059,18 @@ public partial class MainViewModel :
             HearingImpaired = result.HearingImpaired,
             FrameRate = Configuration.Settings.General.CurrentFrameRate,
         };
-        await File.WriteAllBytesAsync(fileName, writer.GetBytes(GetUpdateSubtitle()));
+        await File.WriteAllBytesAsync(fileName, GetDvbTeletextExportBytes(writer));
 
         ShowStatus(string.Format(Se.Language.Main.FileExportedInFormatXToY, Se.Language.File.Export.TitleExportDvbTeletext, fileName));
+    }
+
+    /// <summary>
+    /// The .dvbttx bytes for the current subtitle - from the same subtitle a save writes (grid
+    /// times plus the video offset), so the export agrees with the .stl/.srt saved next to it.
+    /// </summary>
+    internal byte[] GetDvbTeletextExportBytes(ManzanitaTeletextWriter writer)
+    {
+        return writer.GetBytes(GetSaveSubtitle());
     }
 
     [RelayCommand]
