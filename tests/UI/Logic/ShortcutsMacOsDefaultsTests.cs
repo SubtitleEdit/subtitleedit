@@ -6,9 +6,10 @@ namespace UITests.Logic;
 
 /// <summary>
 /// Some defaults moved off standard macOS shortcuts (#14941): Cmd+H hides the app, Cmd+Space opens
-/// Spotlight, F11 shows the desktop, Cmd+G is find next and Cmd+Shift+Z redo, and Apple keyboards
-/// have no Insert key or forward Delete key. Shortcut migration v4 moves persisted mac settings
-/// still on the old defaults, leaving user re-bindings and Windows/Linux alone.
+/// Spotlight, F11 shows the desktop, Cmd+G is find next and Cmd+Shift+Z redo, Apple keyboards
+/// have no Insert key or forward Delete key, and Option+letter types a character (#14508).
+/// Shortcut migration v4 moves persisted mac settings still on the old defaults, leaving user
+/// re-bindings and Windows/Linux alone.
 /// </summary>
 public class ShortcutsMacOsDefaultsTests
 {
@@ -53,6 +54,19 @@ public class ShortcutsMacOsDefaultsTests
         Assert.DoesNotContain(defaults, s => IsKeys(s.Keys, "Win", "Space"));
         Assert.DoesNotContain(defaults, s => IsKeys(s.Keys, "F11"));
         Assert.DoesNotContain(defaults, s => s.Keys.Contains("Insert"));
+    }
+
+    [Fact]
+    public void MacOsDefaultsDoNotBindOptionLetterChords()
+    {
+        // Option(+Shift)+letter types a character on macOS (Option+Shift+E is È on Italian layouts),
+        // and a General shortcut on it would swallow that character in the text box.
+        var defaults = ShortcutsMain.GetDefaultShortcuts(null!, true);
+
+        Assert.DoesNotContain(defaults, s =>
+            s.Keys.Contains("Alt") &&
+            !s.Keys.Contains("Win") && !s.Keys.Contains("Ctrl") &&
+            s.Keys.Any(k => (k.Length == 1 && char.IsLetter(k[0])) || (k.Length == 2 && k[0] == 'D' && char.IsDigit(k[1]))));
     }
 
     [Fact]

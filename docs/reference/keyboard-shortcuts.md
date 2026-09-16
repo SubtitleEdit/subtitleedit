@@ -17,6 +17,7 @@ A few defaults differ on macOS so the standard macOS shortcuts keep working and 
 | Redo | Ctrl+Y | Cmd+Shift+Z | The macOS standard |
 | Insert line after / before | Alt+Insert / Ctrl+Shift+Insert | Cmd+Option+I / Cmd+Option+Shift+I | Apple keyboards have no Insert key |
 | Delete selected line(s) | Delete | Cmd+Backspace | The Delete key on Apple keyboards is a backspace |
+| Extend selected line to previous | Alt+Shift+E | Cmd+Option+Shift+E | Option+Shift+E types a character (È on Italian keyboards) |
 | Set start time | F11 | F9 | F11 shows the desktop |
 | Toggle play/pause (secondary) | Ctrl+Space | No default | Cmd+Space opens Spotlight |
 

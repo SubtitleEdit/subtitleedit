@@ -1287,7 +1287,8 @@ public static class ShortcutsMain
     /// macOS defaults that differ from Windows/Linux beyond Ctrl becoming Cmd, so the standard
     /// macOS shortcuts keep working (#14941): Cmd+H hides the app, Cmd+Space opens Spotlight,
     /// F11 shows the desktop, Cmd+G/Cmd+Shift+G are find next/previous and Cmd+Shift+Z is redo.
-    /// Apple keyboards also have no Insert key and their Delete key is a backspace.
+    /// Apple keyboards also have no Insert key and their Delete key is a backspace, and Option+letter
+    /// types a character, so it must not be a default (Option+Shift+E is È on Italian layouts, #14508).
     /// Se.MigrateShortcuts moves persisted settings still on the old defaults (version 4).
     /// </summary>
     internal static readonly (string ActionName, string[] OldKeys, string[] NewKeys)[] MacOsDefaultChanges =
@@ -1303,6 +1304,7 @@ public static class ShortcutsMain
         (nameof(MainViewModel.InsertLineAfterCommand), ["Alt", nameof(Avalonia.Input.Key.Insert)], ["Win", "Alt", "I"]),
         (nameof(MainViewModel.InsertLineBeforeCommand), ["Win", "Shift", nameof(Avalonia.Input.Key.Insert)], ["Win", "Alt", "Shift", "I"]),
         (nameof(MainViewModel.DeleteSelectedLinesCommand), ["Delete"], ["Win", nameof(Avalonia.Input.Key.Back)]),
+        (nameof(MainViewModel.ExtendSelectedToPreviousCommand), ["Alt", "Shift", nameof(Avalonia.Input.Key.E)], ["Win", "Alt", "Shift", nameof(Avalonia.Input.Key.E)]),
     ];
 
     private static List<SeShortCut> GetBuiltInDefaultShortcuts(MainViewModel vm, bool isMacOS)
