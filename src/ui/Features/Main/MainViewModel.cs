@@ -21188,33 +21188,50 @@ public partial class MainViewModel :
             vm.Initialize(Se.Language.General.Actor + " - " + Se.Language.General.Rename, oldActorName, 250, 20, true);
         });
 
-        if (result.OkPressed && !string.IsNullOrWhiteSpace(result.Text) && result.Text != oldActorName)
+        if (result.OkPressed)
         {
-            var newActorName = result.Text.Trim();
-            Dispatcher.UIThread.Post(() =>
-            {
-                foreach (var line in Subtitles)
-                {
-                    if (line.Actor == oldActorName)
-                    {
-                        line.Actor = newActorName;
-                    }
-                }
-
-                if (_subtitle?.Paragraphs != null)
-                {
-                    foreach (var p in _subtitle.Paragraphs)
-                    {
-                        if (p.Actor == oldActorName)
-                        {
-                            p.Actor = newActorName;
-                        }
-                    }
-                }
-
-                RefreshSubtitlePreview();
-            });
+            var newActorName = result.Text;
+            Dispatcher.UIThread.Post(() => RenameActorInAllLines(oldActorName, newActorName));
         }
+    }
+
+    /// <summary>
+    /// Renames <paramref name="oldActorName"/> on every line that carries it, as one undo step.
+    /// The new name is trimmed first, so " Bob " for "Bob" is a no-op rather than a rename.
+    /// </summary>
+    internal void RenameActorInAllLines(string oldActorName, string? newActorName)
+    {
+        newActorName = newActorName?.Trim();
+        if (string.IsNullOrEmpty(newActorName) || newActorName == oldActorName)
+        {
+            return;
+        }
+
+        // The rename becomes its own undo step below, so pending edits must be recorded as
+        // theirs first (as in SubtitleOpenOriginal).
+        _undoRedoManager.CheckForChanges(null);
+
+        foreach (var line in Subtitles)
+        {
+            if (line.Actor == oldActorName)
+            {
+                line.Actor = newActorName;
+            }
+        }
+
+        if (_subtitle?.Paragraphs != null)
+        {
+            foreach (var p in _subtitle.Paragraphs)
+            {
+                if (p.Actor == oldActorName)
+                {
+                    p.Actor = newActorName;
+                }
+            }
+        }
+
+        _undoRedoManager.Do(MakeUndoRedoObject(Se.Language.General.Actor + " - " + Se.Language.General.Rename));
+        RefreshSubtitlePreview();
     }
 
     [RelayCommand]
