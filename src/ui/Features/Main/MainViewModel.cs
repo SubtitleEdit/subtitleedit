@@ -10714,14 +10714,14 @@ public partial class MainViewModel :
             s.RefreshTimeCodes();
         }
 
-        var ss = SelectedSubtitle;
-        if (ss != null)
-        {
-            // trigger UI update
-            ss.StartTime = ss.StartTime.Add(TimeSpan.FromMilliseconds(1));
-            ss.StartTime = ss.StartTime.Add(TimeSpan.FromMilliseconds(-1));
-            SubtitleGridSelectionChanged();
-        }
+        // The edit box up/downs render the offset themselves (UseVideoOffset), and their text
+        // only re-formats when the value changes - which an offset change on its own does not
+        // do. So re-render them explicitly, like the frame-mode switch does.
+        EditBoxStartTimeUpDown?.RefreshDisplayFormat();
+        EditBoxEndTimeUpDown?.RefreshDisplayFormat();
+
+        // The waveform ruler is labeled with the offset too.
+        _updateAudioVisualizer = true;
     }
 
     [RelayCommand]
