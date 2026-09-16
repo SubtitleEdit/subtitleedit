@@ -4136,6 +4136,18 @@ public partial class MainViewModel :
 
         UpdateVideoOffsetStatus();
 
+        // Re-persist the entry now that the offset is back. The open that just ran zeroed it
+        // (ResetSubtitle) and then wrote the recent file twice while it was still zero - once
+        // when the video opened (VideoOpenFile) and once at the end of SubtitleOpen - so the
+        // remembered offset was already overwritten with 0 on disk by the time we get here.
+        // Without this the offset survives only in memory, and is lost for good unless a later
+        // save or a clean OnClosing happens to rewrite the same entry (#14930 follow-up).
+        //
+        // The line is passed explicitly for the same reason SubtitleOpen passes it: the selection
+        // is applied through a dispatcher post that may not have run, so reading
+        // SelectedSubtitleIndex here could persist 0 and erase the remembered line.
+        AddToRecentFiles(false, recentFile.SelectedLine);
+
         var vp = GetVideoPlayerControl();
 
         if (vp != null && vp.VideoPlayer is LibMpvDynamicPlayer mpv)
