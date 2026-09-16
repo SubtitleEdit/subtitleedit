@@ -1,8 +1,27 @@
 # Keyboard Shortcuts
 
-A reference for the default keyboard shortcuts in Subtitle Edit. Every shortcut can be customized in **Options** → **Shortcuts** — and many more actions are available there without a default binding. On macOS, Cmd (`Win` in the shortcut editor) is used wherever Ctrl is shown below.
+A reference for the default keyboard shortcuts in Subtitle Edit. Every shortcut can be customized in **Options** → **Shortcuts** — and many more actions are available there without a default binding. On macOS, Cmd (`Win` in the shortcut editor) is used wherever Ctrl is shown below, except for the [macOS differences](#macos-differences).
 
 See also: [Shortcuts Settings](../features/shortcuts.md)
+
+## macOS Differences
+
+A few defaults differ on macOS so the standard macOS shortcuts keep working and every default can be typed on an Apple keyboard.
+
+| Action | Windows / Linux | macOS | Why |
+|--------|-----------------|-------|-----|
+| Replace | Ctrl+H | Cmd+Option+F | Cmd+H hides the app |
+| Find next / previous | F3 / Shift+F3 | Cmd+G / Cmd+Shift+G | The macOS standard |
+| Go to line number | Ctrl+G | Control+G | Cmd+G is find next |
+| Auto-translate | Ctrl+Shift+G | Cmd+Shift+T | Cmd+Shift+G is find previous |
+| Redo | Ctrl+Y | Cmd+Shift+Z | The macOS standard |
+| Insert line after / before | Alt+Insert / Ctrl+Shift+Insert | Cmd+Option+I / Cmd+Option+Shift+I | Apple keyboards have no Insert key |
+| Delete selected line(s) | Delete | Cmd+Backspace | The Delete key on Apple keyboards is a backspace |
+| Extend selected line to previous | Alt+Shift+E | Cmd+Option+Shift+E | Option+Shift+E types a character (È on Italian keyboards) |
+| Set start time | F11 | F9 | F11 shows the desktop |
+| Toggle play/pause (secondary) | Ctrl+Space | No default | Cmd+Space opens Spotlight |
+
+Settings that still had the old defaults are moved to the new ones on first start. Shortcuts you assigned yourself are left alone.
 
 ## General
 

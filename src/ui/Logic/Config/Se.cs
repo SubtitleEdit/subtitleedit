@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Logic.Config;
 public class Se
 {
     internal const int CurrentMacOsFontMigrationVersion = 1;
-    internal const int CurrentShortcutsMigrationVersion = 3;
+    internal const int CurrentShortcutsMigrationVersion = 4;
     internal const int CurrentLayoutMigrationVersion = 1;
 
     public static string Version { get; set; } = "v5.3.0-beta3";
@@ -465,8 +465,17 @@ public class Se
     /// Version 2: "Text box: Delete selection (no clipboard)" grew into the forward-delete
     /// (Delete key) command and was renamed; the persisted entry is renamed with it so user
     /// assignments - including a deliberately cleared binding - survive.
+    ///
+    /// Version 4 (macOS only): several defaults moved off standard macOS shortcuts (#14941, see
+    /// <see cref="ShortcutsMain.MacOsDefaultChanges"/>). Bindings still on the old default move to
+    /// the new one, unless another action already uses the new keys.
     /// </summary>
     internal void MigrateShortcuts()
+    {
+        MigrateShortcuts(OperatingSystem.IsMacOS());
+    }
+
+    internal void MigrateShortcuts(bool isMacOS)
     {
         var fromVersion = ShortcutsMigrationVersion.GetValueOrDefault();
         if (fromVersion >= CurrentShortcutsMigrationVersion)
@@ -500,7 +509,7 @@ public class Se
             }
         }
 
-        if (fromVersion < 3 && OperatingSystem.IsMacOS())
+        if (fromVersion < 3 && isMacOS)
         {
             // The old macOS default Option+Shift+Cmd+D never reached the app (#14508); the default
             // gained Control, so move users who still sit on the dead chord onto the new one.
@@ -512,6 +521,49 @@ public class Se
                     shortcut.Keys = ["Ctrl", "Win", "Alt", "Shift", "D"];
                 }
             }
+        }
+
+        if (fromVersion < 4 && isMacOS)
+        {
+            MigrateMacOsDefaultShortcuts();
+        }
+    }
+
+    private void MigrateMacOsDefaultShortcuts()
+    {
+        var moves = new List<(SeShortCut Shortcut, string[] NewKeys)>();
+        foreach (var change in ShortcutsMain.MacOsDefaultChanges)
+        {
+            foreach (var shortcut in Shortcuts)
+            {
+                if (shortcut.ActionName == change.ActionName && IsSameKeys(shortcut.Keys, change.OldKeys))
+                {
+                    moves.Add((shortcut, change.NewKeys));
+                }
+            }
+        }
+
+        // Never create a duplicate binding: skip a move whose new keys are held by an action that
+        // stays put. Skipping one can block another (Cmd+G only frees up when go-to-line moves),
+        // so repeat until nothing changes.
+        bool skipped;
+        do
+        {
+            skipped = false;
+            foreach (var move in moves.ToList())
+            {
+                if (move.NewKeys.Length > 0 &&
+                    Shortcuts.Any(s => !moves.Any(m => ReferenceEquals(m.Shortcut, s)) && IsSameKeys(s.Keys, move.NewKeys)))
+                {
+                    moves.Remove(move);
+                    skipped = true;
+                }
+            }
+        } while (skipped);
+
+        foreach (var (shortcut, newKeys) in moves)
+        {
+            shortcut.Keys = [.. newKeys];
         }
     }
 
