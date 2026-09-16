@@ -18,6 +18,7 @@ public class TtsStepResult
     public string EngineName { get; set; }
     public string Model { get; set; }
     public string Instruction { get; set; }
+    public string Language { get; set; }
 
     // Whether the review window's Include checkbox is/was ticked for this line. Defaults to
     // true; carried through import so an exported session's unchecked rows stay unchecked.
@@ -32,6 +33,7 @@ public class TtsStepResult
         EngineName = string.Empty;
         Model = string.Empty;
         Instruction = string.Empty;
+        Language = string.Empty;
         Include = true;
     }
 }

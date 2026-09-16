@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
@@ -10,6 +11,10 @@ public partial class ReviewRow : ObservableObject
     [ObservableProperty] private int _number;
     [ObservableProperty] private string _voice;
     [ObservableProperty] private string _actor = string.Empty;
+    [ObservableProperty] private string _engine = string.Empty;
+    [ObservableProperty] private string _language = string.Empty;
+    [ObservableProperty] private Voice? _selectedVoice;
+    [ObservableProperty] private TtsLanguage? _selectedLanguage;
     [ObservableProperty] private string _cps;
     [ObservableProperty] private string _speed;
     [ObservableProperty] private string _text;
@@ -36,6 +41,8 @@ public partial class ReviewRow : ObservableObject
         Include = true;
         Number = 0;
         Voice = string.Empty;
+        Engine = string.Empty;
+        Language = string.Empty;
         Cps = string.Empty;
         Speed = string.Empty;
         Text = string.Empty;

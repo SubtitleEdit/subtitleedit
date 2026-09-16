@@ -6,6 +6,8 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Styling;
+using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ElevenLabsSettings;
@@ -16,12 +18,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
+using Icon = Optris.Icons.Avalonia.Icon;
+using MenuItem = Avalonia.Controls.MenuItem;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
 
 public class ReviewSpeechWindow : Window
 {
     private readonly ReviewSpeechViewModel _vm;
+    private TableViewColumnManager? _columnManager;
+    private SeTableViewColumn? _colNumber;
+    private SeTableViewColumn? _colActor;
+    private SeTableViewColumn? _colCps;
+    private SeTableViewColumn? _colSpeed;
+    private SeTableViewColumn? _colText;
+    private SeTableViewColumn? _colEngine;
+    private SeTableViewColumn? _colVoice;
+    private SeTableViewColumn? _colLanguage;
 
     public ReviewSpeechWindow(ReviewSpeechViewModel vm)
     {
@@ -96,6 +109,7 @@ public class ReviewSpeechWindow : Window
         AddHandler(KeyUpEvent, (_, e) => vm.OnPreviewKeyUp(e), Avalonia.Interactivity.RoutingStrategies.Tunnel);
         Loaded += delegate
         {
+            UpdateDefaultColumnVisibility();
             vm.Loaded();
             // When Initialize already selected the first row (Lines.Count > 0), that selection
             // has already kicked off ApplyLineToLeftPanelAsync which loads the right engine's
@@ -109,7 +123,16 @@ public class ReviewSpeechWindow : Window
         };
     }
 
-    private static Border MakeLineGrid(ReviewSpeechViewModel vm)
+    private void UpdateDefaultColumnVisibility()
+    {
+        var hasMultiple = _vm.HasMultipleActors;
+        if (_colActor != null) _colActor.IsVisible = hasMultiple;
+        if (_colEngine != null) _colEngine.IsVisible = hasMultiple;
+        if (_colVoice != null) _colVoice.IsVisible = hasMultiple;
+        if (_colLanguage != null) _colLanguage.IsVisible = hasMultiple;
+    }
+
+    private Border MakeLineGrid(ReviewSpeechViewModel vm)
     {
         var lineGrid = TableViewExtras.MakeTableView(multiSelect: true);
         lineGrid.Margin = new Thickness(0, 10, 0, 0);
@@ -128,38 +151,58 @@ public class ReviewSpeechWindow : Window
         });
         UiUtil.AttachMacContextFlyoutHandler(lineGrid);
 
-        var headerCheckBox = new CheckBox
+        var includeHeaderTheme = new ControlTheme(typeof(TableViewColumnHeader))
         {
-            HorizontalAlignment = HorizontalAlignment.Center,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-        var headerBorder = new Border
-        {
-            Background = Brushes.Transparent,
-            Padding = new Thickness(4),
-            Child = headerCheckBox,
-        };
-        var headerFlyout = new MenuFlyout();
-        headerFlyout.Opening += (_, _) => PopulateCheckboxHeaderFlyout(headerFlyout, vm);
-        headerBorder.ContextFlyout = headerFlyout;
-        UiUtil.AttachMacContextFlyoutHandler(headerBorder);
-
-        headerCheckBox.Click += (_, _) =>
-        {
-            vm.PushUndoSnapshot();
-            var target = headerCheckBox.IsChecked ?? false;
-            foreach (var line in vm.Lines)
+            BasedOn = UiUtil.TableViewColumnHeaderTheme,
+            Setters =
             {
-                line.Include = target;
+                new Setter(ContentControl.ContentTemplateProperty, new FuncDataTemplate<object>((_, _) =>
+                {
+                    var allChecked = vm.Lines.Count > 0 && vm.Lines.All(l => l.Include);
+                    var anyChecked = vm.Lines.Any(l => l.Include);
+                    var headerCheckBox = new CheckBox
+                    {
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        IsChecked = allChecked ? true : (anyChecked ? null : false),
+                    };
+                    var headerBorder = new Border
+                    {
+                        Background = Brushes.Transparent,
+                        Padding = new Thickness(4),
+                        Child = headerCheckBox,
+                    };
+                    var headerFlyout = new MenuFlyout();
+                    headerFlyout.Opening += (_, _) => PopulateCheckboxHeaderFlyout(headerFlyout, vm);
+                    headerBorder.ContextFlyout = headerFlyout;
+                    UiUtil.AttachMacContextFlyoutHandler(headerBorder);
+
+                    headerCheckBox.Click += (_, _) =>
+                    {
+                        vm.PushUndoSnapshot();
+                        var target = headerCheckBox.IsChecked ?? false;
+                        foreach (var line in vm.Lines)
+                        {
+                            line.Include = target;
+                        }
+                        if (vm.LineGrid != null)
+                        {
+                            SyncGridSelectionFromIncluded(vm.LineGrid, vm);
+                        }
+                    };
+
+                    return headerBorder;
+                })),
             }
-            SyncGridSelectionFromIncluded(lineGrid, vm);
         };
 
-        lineGrid.Columns.Add(new SeTableViewColumn
+        _columnManager = new TableViewColumnManager(lineGrid);
+
+        var colInclude = new SeTableViewColumn
         {
-            Header = headerBorder,
+            Header = "Include",
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
-            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            HeaderTheme = includeHeaderTheme,
             CellTemplate = new FuncDataTemplate<ReviewRow>((item, _) =>
             {
                 var checkBox = new CheckBox
@@ -202,8 +245,11 @@ public class ReviewSpeechWindow : Window
                 return border;
             }),
             Width = new GridLength(50),
-        });
-        lineGrid.Columns.Add(new SeTableViewColumn
+            Tag = "Include",
+        };
+        _columnManager.Add(colInclude);
+
+        var colButtons = new SeTableViewColumn
         {
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
@@ -241,47 +287,104 @@ public class ReviewSpeechWindow : Window
                 };
             }),
             Width = new GridLength(150),
-        });
-        lineGrid.Columns.Add(new SeTableViewColumn
+            Tag = "Buttons",
+        };
+        _columnManager.Add(colButtons);
+
+        _colNumber = new SeTableViewColumn
         {
             Header = Se.Language.General.NumberSymbol,
             Binding = new Binding(nameof(ReviewRow.Number)),
             Width = new GridLength(50),
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-        });
-        lineGrid.Columns.Add(new SeTableViewColumn
+            Tag = "Number",
+        };
+        _columnManager.Add(_colNumber);
+
+        _colActor = new SeTableViewColumn
         {
-            Header = Se.Language.General.Voice,
-            Binding = new Binding(nameof(ReviewRow.Voice)),
-            Width = new GridLength(150),
+            Header = Se.Language.General.Actor,
+            Binding = new Binding(nameof(ReviewRow.Actor)),
+            Width = new GridLength(100),
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-        });
-        lineGrid.Columns.Add(new SeTableViewColumn
+            Tag = "Actor",
+            IsVisible = vm.HasMultipleActors,
+        };
+        _columnManager.Add(_colActor);
+
+        _colCps = new SeTableViewColumn
         {
             Header = Se.Language.General.CharsPerSec,
             Binding = new Binding(nameof(ReviewRow.Cps)),
             Width = new GridLength(80),
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-        });
-        lineGrid.Columns.Add(new SeTableViewColumn
+            Tag = "Cps",
+        };
+        _columnManager.Add(_colCps);
+
+        _colSpeed = new SeTableViewColumn
         {
             Header = Se.Language.General.Speed,
             Binding = new Binding(nameof(ReviewRow.Speed)),
             Width = new GridLength(70),
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-        });
-        lineGrid.Columns.Add(new SeTableViewColumn
+            Tag = "Speed",
+        };
+        _columnManager.Add(_colSpeed);
+
+        _colText = new SeTableViewColumn
         {
             Header = Se.Language.General.Text,
             Binding = new Binding(nameof(ReviewRow.Text)),
             Width = new GridLength(1, GridUnitType.Star),
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-        });
+            Tag = "Text",
+        };
+        _columnManager.Add(_colText);
+
+        _colEngine = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Engine,
+            Binding = new Binding(nameof(ReviewRow.Engine)),
+            Width = new GridLength(130),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Tag = "Engine",
+            IsVisible = vm.HasMultipleActors,
+        };
+        _columnManager.Add(_colEngine);
+
+        _colVoice = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Voice,
+            Binding = new Binding(nameof(ReviewRow.Voice)),
+            Width = new GridLength(150),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Tag = "Voice",
+            IsVisible = vm.HasMultipleActors,
+        };
+        _columnManager.Add(_colVoice);
+
+        _colLanguage = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Language,
+            Binding = new Binding(nameof(ReviewRow.Language)),
+            Width = new GridLength(110),
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Tag = "Language",
+            IsVisible = vm.HasMultipleActors,
+        };
+        _columnManager.Add(_colLanguage);
+
+        UpdateDefaultColumnVisibility();
+
         lineGrid.DoubleTapped += (s, e) => vm.LineGridDoubleClicked();
         vm.LineGrid = lineGrid;
 
@@ -821,7 +924,7 @@ public class ReviewSpeechWindow : Window
         _vm.OnClosing(e);
     }
 
-    private static void AttachGridRightClickFlyout(TableView lineGrid, ReviewSpeechViewModel vm, Func<MenuFlyout> getFlyout)
+    private void AttachGridRightClickFlyout(TableView lineGrid, ReviewSpeechViewModel vm, Func<MenuFlyout> getFlyout)
     {
         lineGrid.AddHandler(InputElement.PointerPressedEvent, (s, e) =>
         {
@@ -830,7 +933,16 @@ public class ReviewSpeechWindow : Window
             {
                 var pos = e.GetPosition(lineGrid);
                 var hitVisual = lineGrid.InputHitTest(pos) as Visual;
-                if (TableViewExtras.IsInColumnHeader(hitVisual) || TableViewExtras.IsInScrollBar(hitVisual))
+                if (TableViewExtras.IsInColumnHeader(hitVisual))
+                {
+                    var headerFlyout = MakeHeaderFlyout();
+                    lineGrid.ContextFlyout = headerFlyout;
+                    headerFlyout.ShowAt(lineGrid, showAtPointer: true);
+                    e.Handled = true;
+                    return;
+                }
+
+                if (TableViewExtras.IsInScrollBar(hitVisual))
                 {
                     return;
                 }
@@ -854,6 +966,101 @@ public class ReviewSpeechWindow : Window
                 e.Handled = true;
             }
         }, Avalonia.Interactivity.RoutingStrategies.Tunnel | Avalonia.Interactivity.RoutingStrategies.Bubble, handledEventsToo: true);
+    }
+
+    private MenuFlyout MakeHeaderFlyout()
+    {
+        var flyout = new MenuFlyout();
+        PopulateHeaderFlyout(flyout);
+        return flyout;
+    }
+
+    private void PopulateHeaderFlyout(MenuFlyout flyout)
+    {
+        flyout.Items.Clear();
+
+        AddColumnToggleMenuItem(flyout, Se.Language.General.NumberSymbol, _colNumber);
+        AddColumnToggleMenuItem(flyout, Se.Language.General.Actor, _colActor);
+        AddColumnToggleMenuItem(flyout, Se.Language.General.CharsPerSec, _colCps);
+        AddColumnToggleMenuItem(flyout, Se.Language.General.Speed, _colSpeed);
+        AddColumnToggleMenuItem(flyout, Se.Language.General.Text, _colText);
+        AddColumnToggleMenuItem(flyout, Se.Language.General.Engine, _colEngine);
+        AddColumnToggleMenuItem(flyout, Se.Language.General.Voice, _colVoice);
+        AddColumnToggleMenuItem(flyout, Se.Language.General.Language, _colLanguage);
+    }
+
+    private static void AddColumnToggleMenuItem(MenuFlyout flyout, string header, SeTableViewColumn? column)
+    {
+        if (column == null)
+        {
+            return;
+        }
+
+        var item = new MenuItem
+        {
+            Header = header,
+        };
+        if (column.IsVisible)
+        {
+            item.Icon = new Icon { Value = IconNames.Check, FontSize = 12 };
+        }
+
+        item.AddHandler(InputElement.PointerReleasedEvent, (s, e) =>
+        {
+            if (e.InitialPressMouseButton == MouseButton.Left ||
+                e.GetCurrentPoint(item).Properties.PointerUpdateKind == PointerUpdateKind.LeftButtonReleased)
+            {
+                e.Pointer.Capture(null);
+                column.IsVisible = !column.IsVisible;
+                item.Icon = column.IsVisible ? new Icon { Value = IconNames.Check, FontSize = 12 } : null;
+                e.Handled = true;
+            }
+        }, Avalonia.Interactivity.RoutingStrategies.Tunnel);
+
+        item.Click += (_, _) =>
+        {
+            column.IsVisible = !column.IsVisible;
+            item.Icon = column.IsVisible ? new Icon { Value = IconNames.Check, FontSize = 12 } : null;
+        };
+
+        flyout.Items.Add(item);
+    }
+
+    private static void AddColumnToggleToSubMenu(MenuItem parent, string header, SeTableViewColumn? column)
+    {
+        if (column == null)
+        {
+            return;
+        }
+
+        var item = new MenuItem
+        {
+            Header = header,
+        };
+        if (column.IsVisible)
+        {
+            item.Icon = new Icon { Value = IconNames.Check, FontSize = 12 };
+        }
+
+        item.AddHandler(InputElement.PointerReleasedEvent, (s, e) =>
+        {
+            if (e.InitialPressMouseButton == MouseButton.Left ||
+                e.GetCurrentPoint(item).Properties.PointerUpdateKind == PointerUpdateKind.LeftButtonReleased)
+            {
+                e.Pointer.Capture(null);
+                column.IsVisible = !column.IsVisible;
+                item.Icon = column.IsVisible ? new Icon { Value = IconNames.Check, FontSize = 12 } : null;
+                e.Handled = true;
+            }
+        }, Avalonia.Interactivity.RoutingStrategies.Tunnel);
+
+        item.Click += (_, _) =>
+        {
+            column.IsVisible = !column.IsVisible;
+            item.Icon = column.IsVisible ? new Icon { Value = IconNames.Check, FontSize = 12 } : null;
+        };
+
+        parent.Items.Add(item);
     }
 
     private static void AttachCellRightClickFlyout(Control control, TableView lineGrid, ReviewRow item, ReviewSpeechViewModel vm, Func<MenuFlyout> getFlyout)
@@ -945,11 +1152,229 @@ public class ReviewSpeechWindow : Window
         TableViewExtras.SyncSelectedItemsWithSelection(lineGrid);
     }
 
+    private static MenuItem MakeSearchableSubMenu<T>(
+        string header,
+        IReadOnlyList<T> items,
+        Func<T, string> getName,
+        Func<T, bool> isSelected,
+        Action<T> onSelect,
+        MenuFlyout rootFlyout,
+        string watermark,
+        bool isEnabled)
+    {
+        var parentMenu = new MenuItem
+        {
+            Header = header,
+            IsEnabled = isEnabled,
+        };
+
+        if (!isEnabled || items.Count == 0)
+        {
+            return parentMenu;
+        }
+
+        var searchBox = new TextBox
+        {
+            PlaceholderText = watermark,
+            Margin = new Thickness(4, 2, 4, 4),
+        };
+
+        searchBox.AddHandler(InputElement.PointerPressedEvent, (s, e) =>
+        {
+            e.Handled = true;
+        }, Avalonia.Interactivity.RoutingStrategies.Bubble, handledEventsToo: true);
+
+        searchBox.AddHandler(InputElement.PointerReleasedEvent, (s, e) =>
+        {
+            e.Handled = true;
+        }, Avalonia.Interactivity.RoutingStrategies.Bubble, handledEventsToo: true);
+
+        searchBox.AddHandler(InputElement.TappedEvent, (s, e) =>
+        {
+            e.Handled = true;
+        }, Avalonia.Interactivity.RoutingStrategies.Bubble, handledEventsToo: true);
+
+        var itemsPanel = new StackPanel();
+        var menuItems = new List<(T Item, MenuItem MenuItem, string Name)>(items.Count);
+
+        foreach (var item in items)
+        {
+            var targetItem = item;
+            var name = getName(targetItem);
+            var menuItem = new MenuItem
+            {
+                Header = name,
+            };
+            if (isSelected(targetItem))
+            {
+                menuItem.Icon = new Icon { Value = IconNames.Check, FontSize = 12 };
+            }
+            menuItem.Click += (_, _) =>
+            {
+                onSelect(targetItem);
+                rootFlyout.Hide();
+            };
+            itemsPanel.Children.Add(menuItem);
+            menuItems.Add((targetItem, menuItem, name));
+        }
+
+        searchBox.TextChanged += (_, _) =>
+        {
+            var filter = searchBox.Text?.Trim() ?? string.Empty;
+            foreach (var (_, mi, name) in menuItems)
+            {
+                mi.IsVisible = string.IsNullOrEmpty(filter) || name.Contains(filter, StringComparison.OrdinalIgnoreCase);
+            }
+        };
+
+        searchBox.KeyDown += (_, ke) =>
+        {
+            if (ke.Key == Key.Enter)
+            {
+                ke.Handled = true;
+                var first = menuItems.FirstOrDefault(m => m.MenuItem.IsVisible);
+                if (first.MenuItem != null)
+                {
+                    onSelect(first.Item);
+                    rootFlyout.Hide();
+                }
+            }
+            else if (ke.Key == Key.Escape)
+            {
+                ke.Handled = true;
+                rootFlyout.Hide();
+            }
+        };
+
+        var scrollViewer = new ScrollViewer
+        {
+            MaxHeight = 350,
+            Width = 270,
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+            Content = itemsPanel,
+        };
+
+        var contentGrid = new Grid
+        {
+            Width = 270,
+            RowDefinitions =
+            {
+                new RowDefinition { Height = GridLength.Auto },
+                new RowDefinition { Height = GridLength.Auto },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+            },
+            Children =
+            {
+                searchBox,
+                new Separator { Margin = new Thickness(0, 2) },
+                scrollViewer,
+            }
+        };
+        Grid.SetRow(searchBox, 0);
+        Grid.SetRow((Control)contentGrid.Children[1], 1);
+        Grid.SetRow(scrollViewer, 2);
+
+        contentGrid.AddHandler(InputElement.PointerReleasedEvent, (s, e) =>
+        {
+            var isChildMenuItem = false;
+            var current = e.Source as Visual;
+            while (current != null && current != contentGrid)
+            {
+                if (current is MenuItem)
+                {
+                    isChildMenuItem = true;
+                    break;
+                }
+                current = current.GetVisualParent();
+            }
+
+            if (!isChildMenuItem)
+            {
+                e.Handled = true;
+            }
+        }, Avalonia.Interactivity.RoutingStrategies.Bubble, handledEventsToo: true);
+
+        var containerItem = new MenuItem
+        {
+            Template = new FuncControlTemplate<MenuItem>((_, _) => contentGrid),
+            Focusable = false,
+        };
+
+        containerItem.AddHandler(MenuItem.ClickEvent, (s, e) =>
+        {
+            if (e.Source == containerItem)
+            {
+                e.Handled = true;
+            }
+        }, Avalonia.Interactivity.RoutingStrategies.Bubble, handledEventsToo: true);
+
+        parentMenu.Items.Add(containerItem);
+
+        parentMenu.SubmenuOpened += (_, _) =>
+        {
+            Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+            {
+                searchBox.Focus();
+                searchBox.SelectAll();
+            }, Avalonia.Threading.DispatcherPriority.Input);
+        };
+
+        return parentMenu;
+    }
+
     private static void PopulateGridFlyout(MenuFlyout flyout, TableView lineGrid, ReviewSpeechViewModel vm)
     {
         flyout.Items.Clear();
 
         var selectedRows = GetTargetRows(lineGrid, vm);
+
+        var engineMenu = MakeSearchableSubMenu(
+            Se.Language.General.Engine,
+            vm.Engines,
+            e => e.Name,
+            e => selectedRows.Count > 0 && selectedRows.All(r => string.Equals(r.Engine, e.Name, StringComparison.OrdinalIgnoreCase)),
+            targetEngine =>
+            {
+                var rows = GetTargetRows(lineGrid, vm);
+                vm.ChangeEngineForRows(rows, targetEngine);
+            },
+            flyout,
+            Se.Language.General.Search,
+            vm.Engines.Count > 0 && selectedRows.Count > 0);
+        flyout.Items.Add(engineMenu);
+
+        var voiceMenu = MakeSearchableSubMenu(
+            Se.Language.General.Voice,
+            vm.Voices,
+            v => v.Name,
+            v => selectedRows.Count > 0 && selectedRows.All(r => r.SelectedVoice == v || string.Equals(r.Voice, v.Name, StringComparison.OrdinalIgnoreCase)),
+            targetVoice =>
+            {
+                var rows = GetTargetRows(lineGrid, vm);
+                vm.ChangeVoiceForRows(rows, targetVoice);
+            },
+            flyout,
+            Se.Language.Video.TextToSpeech.SearchVoices,
+            vm.Voices.Count > 0 && selectedRows.Count > 0);
+        flyout.Items.Add(voiceMenu);
+
+        var langMenu = MakeSearchableSubMenu(
+            Se.Language.General.Language,
+            vm.Languages,
+            l => l.Name,
+            l => selectedRows.Count > 0 && selectedRows.All(r => r.SelectedLanguage == l || string.Equals(r.Language, l.Name, StringComparison.OrdinalIgnoreCase) || string.Equals(r.Language, l.Code, StringComparison.OrdinalIgnoreCase)),
+            targetLang =>
+            {
+                var rows = GetTargetRows(lineGrid, vm);
+                vm.ChangeLanguageForRows(rows, targetLang);
+            },
+            flyout,
+            Se.Language.General.Search,
+            vm.Languages.Count > 0 && selectedRows.Count > 0);
+        flyout.Items.Add(langMenu);
+
+        flyout.Items.Add(new Separator());
 
         if (selectedRows.Count > 1)
         {
@@ -1069,17 +1494,27 @@ public class ReviewSpeechWindow : Window
 
         flyout.Items.Add(new Separator());
         var targetRow = selectedRows.FirstOrDefault() ?? vm.SelectedLine;
+        var hasIncluded = vm.Lines.Any(l => l.Include);
         var itemRegenerate = new MenuItem
         {
             Header = Se.Language.Video.TextToSpeech.RegenerateAudio,
-            Command = vm.RegenerateAudioCommand,
-            CommandParameter = targetRow,
-            IsEnabled = vm.IsRegenerateEnabled && targetRow != null && targetRow.IsPlayingEnabled,
+            IsEnabled = vm.IsRegenerateEnabled && (hasIncluded || (targetRow != null && targetRow.IsPlayingEnabled)),
+        };
+        itemRegenerate.Click += (_, _) =>
+        {
+            if (vm.Lines.Any(l => l.Include))
+            {
+                vm.RegenerateSelectedLinesCommand.Execute(null);
+            }
+            else if (targetRow != null)
+            {
+                vm.RegenerateAudioCommand.Execute(targetRow);
+            }
         };
         flyout.Items.Add(itemRegenerate);
     }
 
-    private static void PopulateCheckboxHeaderFlyout(MenuFlyout flyout, ReviewSpeechViewModel vm)
+    private void PopulateCheckboxHeaderFlyout(MenuFlyout flyout, ReviewSpeechViewModel vm)
     {
         flyout.Items.Clear();
 
@@ -1175,5 +1610,30 @@ public class ReviewSpeechWindow : Window
             }
             flyout.Items.Add(actorSubMenu);
         }
+
+        // Submenu Columns
+        flyout.Items.Add(new Separator());
+        var columnsSubMenu = new MenuItem
+        {
+            Header = Se.Language.General.Columns,
+        };
+        AddColumnToggleToSubMenu(columnsSubMenu, Se.Language.General.NumberSymbol, _colNumber);
+        AddColumnToggleToSubMenu(columnsSubMenu, Se.Language.General.Actor, _colActor);
+        AddColumnToggleToSubMenu(columnsSubMenu, Se.Language.General.CharsPerSec, _colCps);
+        AddColumnToggleToSubMenu(columnsSubMenu, Se.Language.General.Speed, _colSpeed);
+        AddColumnToggleToSubMenu(columnsSubMenu, Se.Language.General.Text, _colText);
+        AddColumnToggleToSubMenu(columnsSubMenu, Se.Language.General.Engine, _colEngine);
+        AddColumnToggleToSubMenu(columnsSubMenu, Se.Language.General.Voice, _colVoice);
+        AddColumnToggleToSubMenu(columnsSubMenu, Se.Language.General.Language, _colLanguage);
+        flyout.Items.Add(columnsSubMenu);
+
+        flyout.Items.Add(new Separator());
+        var itemRegenerateSelectedHeader = new MenuItem
+        {
+            Header = Se.Language.Video.TextToSpeech.RegenerateAudio,
+            Command = vm.RegenerateSelectedLinesCommand,
+            IsEnabled = vm.IsRegenerateEnabled && vm.Lines.Any(l => l.Include),
+        };
+        flyout.Items.Add(itemRegenerateSelectedHeader);
     }
 }

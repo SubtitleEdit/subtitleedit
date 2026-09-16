@@ -399,6 +399,9 @@ public partial class ReviewSpeechViewModel : ObservableObject
     {
         foreach (var p in stepResults)
         {
+            var matchVoice = voices.FirstOrDefault(v => v == p.Voice || string.Equals(v.Name, p.Voice?.Name, StringComparison.OrdinalIgnoreCase)) ?? voice;
+            var matchLang = languages.FirstOrDefault(l => string.Equals(l.Name, p.Language, StringComparison.OrdinalIgnoreCase) || string.Equals(l.Code, p.Language, StringComparison.OrdinalIgnoreCase)) ?? language;
+
             var row = new ReviewRow
             {
                 Include = p.Include,
@@ -409,7 +412,11 @@ public partial class ReviewSpeechViewModel : ObservableObject
                 // starting from the stripped copy silently dropped italics and line breaks
                 // from every line the user touched. Synthesis strips at the point of use.
                 Text = p.Paragraph.Text,
-                Voice = p.Voice == null ? string.Empty : p.Voice.ToString(),
+                Voice = p.Voice == null ? (voice?.ToString() ?? string.Empty) : p.Voice.ToString(),
+                Engine = !string.IsNullOrEmpty(p.EngineName) ? p.EngineName : (engine?.Name ?? string.Empty),
+                Language = !string.IsNullOrEmpty(p.Language) ? p.Language : (language?.Name ?? string.Empty),
+                SelectedVoice = matchVoice,
+                SelectedLanguage = matchLang,
                 Speed = Math.Round(p.SpeedFactor, 2).ToString(CultureInfo.CurrentCulture),
                 Cps = Math.Round(p.Paragraph.GetCharactersPerSecond(), 2).ToString(CultureInfo.CurrentCulture),
                 StepResult = p,
@@ -1237,6 +1244,12 @@ public partial class ReviewSpeechViewModel : ObservableObject
     [RelayCommand]
     private async Task RegenerateAudio(ReviewRow? row)
     {
+        if (row == null && Lines.Any(l => l.Include))
+        {
+            await RegenerateSelectedLines();
+            return;
+        }
+
         var engine = SelectedEngine;
         if (engine == null)
         {
@@ -1254,12 +1267,19 @@ public partial class ReviewSpeechViewModel : ObservableObject
             settings.ElevenLabsStyleeExaggeration = StyleExaggeration;
         }
 
-        var voice = SelectedVoice;
         var line = row ?? SelectedLine;
-        if (engine == null || voice == null || line == null)
+        if (engine == null || line == null)
         {
             return;
         }
+
+        var voice = GetVoiceForLine(line) ?? SelectedVoice;
+        if (voice == null)
+        {
+            return;
+        }
+
+        var language = GetLanguageForLine(line) ?? SelectedLanguage;
 
         if (string.IsNullOrWhiteSpace(line.Text))
         {
@@ -1347,7 +1367,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
             // audio into the row snapshot and its history entry.
             var model = SelectedModel;
             var instruction = Instruction;
-            var language = SelectedLanguage;
+            language = GetLanguageForLine(line) ?? SelectedLanguage;
             var region = SelectedRegion;
 
             // The row's live StepResult must only change once the whole regenerate pipeline has
@@ -1471,6 +1491,228 @@ public partial class ReviewSpeechViewModel : ObservableObject
         }
     }
 
+    private Voice? GetVoiceForLine(ReviewRow line)
+    {
+        if (line.SelectedVoice != null)
+        {
+            return line.SelectedVoice;
+        }
+
+        var actor = !string.IsNullOrWhiteSpace(line.Actor) ? line.Actor : (line.StepResult?.Paragraph?.Actor ?? line.WaveformParagraph?.Actor);
+        if (!string.IsNullOrWhiteSpace(actor) && ActorVoiceMappings.Count > 0)
+        {
+            var mapping = ActorVoiceMappings.FirstOrDefault(m => string.Equals(m.Actor, actor, StringComparison.OrdinalIgnoreCase));
+            if (!string.IsNullOrEmpty(mapping?.VoiceName))
+            {
+                var match = Voices.FirstOrDefault(v => string.Equals(v.Name, mapping.VoiceName, StringComparison.OrdinalIgnoreCase));
+                if (match != null)
+                {
+                    return match;
+                }
+            }
+        }
+
+        if (line.StepResult?.Voice != null)
+        {
+            return line.StepResult.Voice;
+        }
+
+        if (!string.IsNullOrWhiteSpace(line.Voice))
+        {
+            var match = Voices.FirstOrDefault(v => string.Equals(v.Name, line.Voice, StringComparison.OrdinalIgnoreCase));
+            if (match != null)
+            {
+                return match;
+            }
+        }
+
+        return SelectedVoice;
+    }
+
+    private TtsLanguage? GetLanguageForLine(ReviewRow line)
+    {
+        if (line.SelectedLanguage != null)
+        {
+            return line.SelectedLanguage;
+        }
+
+        if (!string.IsNullOrWhiteSpace(line.Language))
+        {
+            var match = Languages.FirstOrDefault(l => string.Equals(l.Name, line.Language, StringComparison.OrdinalIgnoreCase) || string.Equals(l.Code, line.Language, StringComparison.OrdinalIgnoreCase));
+            if (match != null)
+            {
+                return match;
+            }
+        }
+
+        return SelectedLanguage;
+    }
+
+    [RelayCommand]
+    private async Task RegenerateSelectedLines()
+    {
+        var selectedLines = Lines.Where(l => l.Include).ToList();
+        if (selectedLines.Count == 0 && SelectedLine != null)
+        {
+            selectedLines = new List<ReviewRow> { SelectedLine };
+        }
+
+        if (selectedLines.Count == 0)
+        {
+            return;
+        }
+
+        if (selectedLines.Count == 1)
+        {
+            await RegenerateAudio(selectedLines[0]);
+            return;
+        }
+
+        var engine = SelectedEngine;
+        if (engine == null)
+        {
+            return;
+        }
+
+        if (engine is ElevenLabs)
+        {
+            var settings = Se.Settings.Video.TextToSpeech;
+            settings.ElevenLabsStability = Stability;
+            settings.ElevenLabsSimilarity = Similarity;
+            settings.ElevenLabsSpeakerBoost = SpeakerBoost;
+            settings.ElevenLabsSpeed = Speed;
+            settings.ElevenLabsStyleeExaggeration = StyleExaggeration;
+        }
+
+        if (Window != null && !await TtsEngineInstaller.EnsureEngineInstalled(engine, Window, _windowService, SelectedRegion, SelectedModel, null, null, async () => await SelectedEngineChangedAsync()))
+        {
+            return;
+        }
+
+        IsRegenerateEnabled = false;
+        foreach (var l in Lines)
+        {
+            l.IsPlayingEnabled = false;
+        }
+
+        var generatingAudioVm = _windowService.ShowWindow<GeneratingAudioWindow, GeneratingAudioViewModel>(Window!);
+        ReplaceCts(generatingAudioVm.CancellationTokenSource);
+
+        var model = SelectedModel;
+        var instruction = Instruction;
+        var region = SelectedRegion;
+        var oldStyle = Se.Settings.Video.TextToSpeech.MurfStyle;
+        if (engine is Murf && !string.IsNullOrEmpty(SelectedStyle))
+        {
+            Se.Settings.Video.TextToSpeech.MurfStyle = SelectedStyle;
+        }
+
+        try
+        {
+            for (var i = 0; i < selectedLines.Count; i++)
+            {
+                if (_cancellationToken.IsCancellationRequested)
+                {
+                    break;
+                }
+
+                var line = selectedLines[i];
+                if (string.IsNullOrWhiteSpace(line.Text))
+                {
+                    continue;
+                }
+
+                var voice = GetVoiceForLine(line) ?? SelectedVoice;
+                if (voice == null)
+                {
+                    continue;
+                }
+
+                var language = GetLanguageForLine(line) ?? SelectedLanguage;
+
+                if (PerLineVoiceClone.IsSelected(voice))
+                {
+                    var clonedVoice = await ResolvePerLineCloneVoiceAsync(engine, line);
+                    if (clonedVoice == null)
+                    {
+                        continue;
+                    }
+                    voice = clonedVoice;
+                }
+
+                if (!await TtsVoiceInstaller.EnsureVoiceInstalled(engine, voice, Window, _windowService))
+                {
+                    continue;
+                }
+
+                var originalFileName = line.StepResult.CurrentFileName;
+                var originalVoice = line.StepResult.Voice;
+
+                try
+                {
+                    var speakResult = await TtsInstructionSwap.RunAsync(engine, instruction, () =>
+                        engine.Speak(Utilities.UnbreakLine(HtmlUtil.RemoveHtmlTags(line.Text, alsoSsaTags: true)),
+                            _waveFolder, voice, language, region, model, _cancellationToken));
+
+                    if (speakResult.Error || string.IsNullOrEmpty(speakResult.FileName) || !File.Exists(speakResult.FileName))
+                    {
+                        continue;
+                    }
+
+                    line.StepResult.CurrentFileName = speakResult.FileName;
+                    line.StepResult.Voice = voice;
+
+                    var adjustSpeedStepResult = await TrimAndAdjustSpeed(line);
+                    var postProcessedFileName = await TtsPostProcessor.ApplyPostProcessing(adjustSpeedStepResult.CurrentFileName, _waveFolder, _cancellationToken);
+
+                    if (_cancellationToken.IsCancellationRequested)
+                    {
+                        line.StepResult.CurrentFileName = originalFileName;
+                        line.StepResult.Voice = originalVoice;
+                        break;
+                    }
+
+                    adjustSpeedStepResult.CurrentFileName = postProcessedFileName;
+                    adjustSpeedStepResult.EngineName = engine.Name;
+                    adjustSpeedStepResult.Model = model ?? string.Empty;
+                    adjustSpeedStepResult.Instruction = instruction ?? string.Empty;
+                    line.Speed = Math.Round(adjustSpeedStepResult.SpeedFactor, 2).ToString(CultureInfo.CurrentCulture);
+                    line.Cps = Math.Round(adjustSpeedStepResult.Paragraph.GetCharactersPerSecond(), 2).ToString(CultureInfo.CurrentCulture);
+                    line.StepResult = adjustSpeedStepResult;
+                    line.Voice = voice.ToString();
+
+                    line.AddHistory(voice, line.StepResult.CurrentFileName, engine.Name, model ?? string.Empty, instruction ?? string.Empty);
+                }
+                catch (OperationCanceledException)
+                {
+                    line.StepResult.CurrentFileName = originalFileName;
+                    line.StepResult.Voice = originalVoice;
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    line.StepResult.CurrentFileName = originalFileName;
+                    line.StepResult.Voice = originalVoice;
+                    SeLogger.Error(ex, $"TTS regeneration failed for line {line.Number}");
+                }
+            }
+        }
+        finally
+        {
+            generatingAudioVm.Close();
+            if (engine is Murf && oldStyle != null)
+            {
+                Se.Settings.Video.TextToSpeech.MurfStyle = oldStyle;
+            }
+
+            IsRegenerateEnabled = true;
+            foreach (var l in Lines)
+            {
+                l.IsPlayingEnabled = true;
+            }
+        }
+    }
+
     [RelayCommand]
     private async Task PlayRow(ReviewRow? line)
     {
@@ -1536,13 +1778,15 @@ public partial class ReviewSpeechViewModel : ObservableObject
         Se.WriteToolsLog("TTS review: OK clicked - closing");
 
         // Push any edits the user made to row.Text back into the step results so
-        // the caller sees them, then publish the included rows as StepResults.
+        // the caller sees them.
         foreach (var row in Lines)
         {
             row.StepResult.Text = row.Text;
+            row.StepResult.Include = row.Include;
         }
 
-        StepResults = Lines.Where(p => p.Include).Select(p => p.StepResult).ToArray();
+        // Keep all rows in StepResults so non-selected rows don't lose their audio
+        StepResults = Lines.Select(p => p.StepResult).ToArray();
 
         // All rows, not just included ones - excluding a row only skips its audio in the merge,
         // while a text edit was still made deliberately and should reach the main subtitle.
@@ -1802,6 +2046,15 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
     private void RegenerateSelectedLine()
     {
+        if (Lines.Any(l => l.Include))
+        {
+            if (RegenerateSelectedLinesCommand.CanExecute(null))
+            {
+                RegenerateSelectedLinesCommand.Execute(null);
+            }
+            return;
+        }
+
         var line = SelectedLine;
         if (line == null || line.IsPlaying || !line.IsPlayingEnabled)
         {
@@ -2431,14 +2684,29 @@ public partial class ReviewSpeechViewModel : ObservableObject
     public sealed class ReviewSelectionSnapshot
     {
         public bool[] Includes { get; init; } = Array.Empty<bool>();
+        public string[] Voices { get; init; } = Array.Empty<string>();
+        public Voice?[] SelectedVoices { get; init; } = Array.Empty<Voice?>();
+        public string[] Languages { get; init; } = Array.Empty<string>();
+        public TtsLanguage?[] SelectedLanguages { get; init; } = Array.Empty<TtsLanguage?>();
+        public string[] Engines { get; init; } = Array.Empty<string>();
+    }
+
+    private ReviewSelectionSnapshot CreateSnapshot()
+    {
+        return new ReviewSelectionSnapshot
+        {
+            Includes = Lines.Select(l => l.Include).ToArray(),
+            Voices = Lines.Select(l => l.Voice).ToArray(),
+            SelectedVoices = Lines.Select(l => l.SelectedVoice).ToArray(),
+            Languages = Lines.Select(l => l.Language).ToArray(),
+            SelectedLanguages = Lines.Select(l => l.SelectedLanguage).ToArray(),
+            Engines = Lines.Select(l => l.Engine).ToArray(),
+        };
     }
 
     public void PushUndoSnapshot()
     {
-        _undoStack.Push(new ReviewSelectionSnapshot
-        {
-            Includes = Lines.Select(l => l.Include).ToArray(),
-        });
+        _undoStack.Push(CreateSnapshot());
         _redoStack.Clear();
         UpdateUndoRedoState();
     }
@@ -2451,10 +2719,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
             return;
         }
 
-        _redoStack.Push(new ReviewSelectionSnapshot
-        {
-            Includes = Lines.Select(l => l.Include).ToArray(),
-        });
+        _redoStack.Push(CreateSnapshot());
 
         var snapshot = _undoStack.Pop();
         ApplySnapshot(snapshot);
@@ -2469,10 +2734,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
             return;
         }
 
-        _undoStack.Push(new ReviewSelectionSnapshot
-        {
-            Includes = Lines.Select(l => l.Include).ToArray(),
-        });
+        _undoStack.Push(CreateSnapshot());
 
         var snapshot = _redoStack.Pop();
         ApplySnapshot(snapshot);
@@ -2484,11 +2746,142 @@ public partial class ReviewSpeechViewModel : ObservableObject
         for (var i = 0; i < Lines.Count && i < snapshot.Includes.Length; i++)
         {
             Lines[i].Include = snapshot.Includes[i];
+            if (i < snapshot.Voices.Length)
+            {
+                Lines[i].Voice = snapshot.Voices[i];
+                if (Lines[i].StepResult != null)
+                {
+                    Lines[i].StepResult.Voice = snapshot.SelectedVoices[i];
+                }
+                Lines[i].SelectedVoice = snapshot.SelectedVoices[i];
+            }
+            if (i < snapshot.Languages.Length)
+            {
+                Lines[i].Language = snapshot.Languages[i];
+                if (Lines[i].StepResult != null)
+                {
+                    Lines[i].StepResult.Language = snapshot.Languages[i];
+                }
+                Lines[i].SelectedLanguage = snapshot.SelectedLanguages[i];
+            }
+            if (i < snapshot.Engines.Length)
+            {
+                Lines[i].Engine = snapshot.Engines[i];
+                if (Lines[i].StepResult != null)
+                {
+                    Lines[i].StepResult.EngineName = snapshot.Engines[i];
+                }
+            }
         }
 
         if (LineGrid != null)
         {
             ReviewSpeechWindow.SyncGridSelectionFromIncluded(LineGrid, this);
+        }
+    }
+
+    public void ChangeEngineForRows(IList<ReviewRow> rows, ITtsEngine engine)
+    {
+        if (rows == null || rows.Count == 0 || engine == null)
+        {
+            return;
+        }
+
+        PushUndoSnapshot();
+
+        foreach (var row in rows)
+        {
+            row.Engine = engine.Name;
+            if (row.StepResult != null)
+            {
+                row.StepResult.EngineName = engine.Name;
+            }
+        }
+
+        if (SelectedLine != null && rows.Contains(SelectedLine))
+        {
+            _suppressSelectedLineSync = true;
+            try
+            {
+                SelectedEngine = engine;
+            }
+            finally
+            {
+                _suppressSelectedLineSync = false;
+            }
+            SelectedEngineChanged();
+        }
+    }
+
+    public void ChangeVoiceForRows(IList<ReviewRow> rows, Voice voice)
+    {
+        if (rows == null || rows.Count == 0 || voice == null)
+        {
+            return;
+        }
+
+        PushUndoSnapshot();
+
+        foreach (var row in rows)
+        {
+            row.Voice = voice.ToString();
+            if (row.StepResult != null)
+            {
+                row.StepResult.Voice = voice;
+            }
+            if (!ReferenceEquals(row.SelectedVoice, voice))
+            {
+                row.SelectedVoice = voice;
+            }
+        }
+
+        if (SelectedLine != null && rows.Contains(SelectedLine))
+        {
+            _suppressSelectedLineSync = true;
+            try
+            {
+                SelectedVoice = voice;
+            }
+            finally
+            {
+                _suppressSelectedLineSync = false;
+            }
+        }
+    }
+
+    public void ChangeLanguageForRows(IList<ReviewRow> rows, TtsLanguage language)
+    {
+        if (rows == null || rows.Count == 0 || language == null)
+        {
+            return;
+        }
+
+        PushUndoSnapshot();
+
+        foreach (var row in rows)
+        {
+            row.Language = language.Name;
+            if (row.StepResult != null)
+            {
+                row.StepResult.Language = language.Name;
+            }
+            if (!ReferenceEquals(row.SelectedLanguage, language))
+            {
+                row.SelectedLanguage = language;
+            }
+        }
+
+        if (SelectedLine != null && rows.Contains(SelectedLine))
+        {
+            _suppressSelectedLineSync = true;
+            try
+            {
+                SelectedLanguage = language;
+            }
+            finally
+            {
+                _suppressSelectedLineSync = false;
+            }
         }
     }
 
@@ -2500,6 +2893,19 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
     public bool HasActors => Lines.Any(l => !string.IsNullOrWhiteSpace(l.Actor) ||
                                             !string.IsNullOrWhiteSpace(l.StepResult?.Paragraph?.Actor ?? l.WaveformParagraph?.Actor));
+
+    public bool HasMultipleActors
+    {
+        get
+        {
+            var distinctActors = Lines
+                .Select(l => !string.IsNullOrWhiteSpace(l.Actor) ? l.Actor : (l.StepResult?.Paragraph?.Actor ?? l.WaveformParagraph?.Actor ?? string.Empty))
+                .Where(a => !string.IsNullOrWhiteSpace(a))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+            return distinctActors.Count > 1;
+        }
+    }
 
     internal void LineGridDoubleClicked()
     {
