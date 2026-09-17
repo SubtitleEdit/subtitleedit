@@ -3,6 +3,28 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.3.0-beta4 (17th of September 2026)
+
+* Add "Translate in place" option and a model drop-down to auto-translate - thx fointypinger
+* Add 22 missing languages (Malayalam, Tamil, Telugu, ...) to the AI auto-translate engines - thx zcraber
+* Allow frame-based values in Bridge gaps - thx Ina-Ch
+* Use macOS-standard default shortcuts on macOS (Replace, Find next/previous, Go to line) - thx shotfirer, GitGianluc
+* Auto-translate selected lines with only one subtitle open now makes the subtitle the original - thx fointypinger
+* Settings: show one category at a time, Ctrl+PageUp/Down switches category - thx Shaima-Almarzooqi
+* Screen readers: readable names for list rows and combo box values - thx Shaima-Almarzooqi
+* Keep Lambda Cap ruby/tate-chu-yoko and vertical columns in Netflix IMSC 1.1 Japanese export
+* Fix freeze/100% CPU from mpv's clipboard thread on Linux Wayland - thx zbcoding
+* Fix auto-translate hanging on Gemini replies without text - thx fointypinger
+* Fix auto-translate target language opening on German for short lines - thx fointypinger
+* Fix video position when reopening a file with a video offset
+* Fix DVB teletext export not including the video offset
+* Fix actor rename not being undoable
+* Fix burn-in AMF quality falling back to blank for settings stored by older versions
+* Fix mirrored Latin words and digits in RTL lines in the fast waveform renderer
+* Fix "click to generate waveform" hint disappearing when switching waveform renderer
+
+-----------------------------------------------------------------------------------------------------
+
 v5.3.0-beta3 (16th of September 2026)
 
 * Add "Guess start and end time from waveform" shortcut - thx m0ck69
