@@ -70,6 +70,7 @@ public class LanguageVideo
     public string EmbeddedTrackGeneratingVideoXY { get; set; }
     public string EmbeddedTrackGeneratingVideo { get; set; }
     public string Mp4FilesFilter { get; set; }
+    public string EmbeddedTracksPickVideoHint { get; set; }
     public string ViewMatroskaTrackX { get; set; }
     public string ResolutionSeparator { get; set; }
     public string OpenFromUrlTitle { get; set; }
@@ -188,6 +189,7 @@ public class LanguageVideo
         EmbeddedTrackGeneratingVideoXY = "Generating video... {0}%     {1}";
         EmbeddedTrackGeneratingVideo = "Generating video...";
         Mp4FilesFilter = "MP4 files";
+        EmbeddedTracksPickVideoHint = "Choose a video file, or drop one here, to see its subtitle tracks.";
         ViewMatroskaTrackX = "View Matroska track - {0}";
         ResolutionSeparator = "x";
         OpenFromUrlTitle = "Open video file from URL";

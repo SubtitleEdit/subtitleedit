@@ -29,10 +29,16 @@ namespace Nikse.SubtitleEdit.Features.Video.EmbeddedSubtitlesEdit;
 public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
 {
     [ObservableProperty] private string _videoFileName;
+    [ObservableProperty] private string _videoFileSize;
     public bool HasVideoFileName => !string.IsNullOrEmpty(VideoFileName);
     public bool CanGenerate => HasVideoFileName && !IsGenerating;
+    public bool CanEditTracks => HasVideoFileName && !IsGenerating;
     [ObservableProperty] private ObservableCollection<EmbeddedTrack> _tracks;
     [ObservableProperty] private EmbeddedTrack? _selectedTrck;
+    [ObservableProperty] private bool _isTrackSelected;
+    [ObservableProperty] private bool _isMoveUpEnabled;
+    [ObservableProperty] private bool _isMoveDownEnabled;
+    [ObservableProperty] private string _deleteText;
     [ObservableProperty] private string _progressText;
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private bool _isGenerating;
@@ -56,6 +62,7 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
     private List<EmbeddedTrack> _originalTracks;
     private long _totalFrames = 0;
     private string _outputFileName;
+    private static readonly string[] SupportedVideoExtensions = { ".mkv", ".webm" };
     private static readonly Regex FrameFinderRegex = new(@"[Ff]rame=\s*\d+", RegexOptions.Compiled);
 
     private readonly IWindowService _windowService;
@@ -69,7 +76,10 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
         _windowService = windowService;
 
         Tracks = new ObservableCollection<EmbeddedTrack>();
+        Tracks.CollectionChanged += (_, _) => UpdateTrackListState();
+        DeleteText = Se.Language.General.Delete;
         VideoFileName = string.Empty;
+        VideoFileSize = string.Empty;
         ProgressText = string.Empty;
         TracksGrid = new TableView();
 
@@ -94,9 +104,37 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
     {
         OnPropertyChanged(nameof(HasVideoFileName));
         OnPropertyChanged(nameof(CanGenerate));
+        OnPropertyChanged(nameof(CanEditTracks));
+        UpdateTrackListState();
+
+        try
+        {
+            VideoFileSize = HasVideoFileName && File.Exists(value)
+                ? Utilities.FormatBytesToDisplayFileSize(new FileInfo(value).Length)
+                : string.Empty;
+        }
+        catch
+        {
+            VideoFileSize = string.Empty;
+        }
     }
 
-    partial void OnIsGeneratingChanged(bool value) => OnPropertyChanged(nameof(CanGenerate));
+    partial void OnIsGeneratingChanged(bool value)
+    {
+        OnPropertyChanged(nameof(CanGenerate));
+        OnPropertyChanged(nameof(CanEditTracks));
+
+        // The track list is locked while ffmpeg runs - the command line is already built from
+        // it, so edits would only look applied. IsGenerating can change on the timer thread.
+        if (Dispatcher.UIThread.CheckAccess())
+        {
+            UpdateTrackListState();
+        }
+        else
+        {
+            Dispatcher.UIThread.Post(UpdateTrackListState);
+        }
+    }
 
     private void StartTitleTimer()
     {
@@ -145,16 +183,22 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
 
         if (!_ffmpegProcess.HasExited)
         {
-            var percentage = (int)Math.Round((double)_processedFrames / _totalFrames * 100.0,
-                MidpointRounding.AwayFromZero);
-            percentage = Math.Clamp(percentage, 0, 100);
+            if (_totalFrames > 0 && _processedFrames > 0)
+            {
+                var percentage = (int)Math.Round((double)_processedFrames / _totalFrames * 100.0, MidpointRounding.AwayFromZero);
+                percentage = Math.Clamp(percentage, 0, 100);
 
-            var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
-            var msPerFrame = (float)durationMs / _processedFrames;
-            var estimatedTotalMs = msPerFrame * _totalFrames;
-            var estimatedLeft = ProgressHelper.ToProgressTime(estimatedTotalMs - durationMs);
+                var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
+                var msPerFrame = (float)durationMs / _processedFrames;
+                var estimatedTotalMs = msPerFrame * _totalFrames;
+                var estimatedLeft = ProgressHelper.ToProgressTime(estimatedTotalMs - durationMs);
 
-            ProgressText = $"Generating video... {percentage}%     {estimatedLeft}";
+                ProgressText = string.Format(Se.Language.Video.EmbeddedTrackGeneratingVideoXY, percentage, estimatedLeft);
+            }
+            else
+            {
+                ProgressText = Se.Language.Video.EmbeddedTrackGeneratingVideo;
+            }
 
             return;
         }
@@ -298,7 +342,7 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
     [RelayCommand]
     private async Task Add()
     {
-        if (Window == null)
+        if (Window == null || !CanEditTracks)
         {
             return;
         }
@@ -391,7 +435,7 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
     [RelayCommand]
     private void AddCurrent()
     {
-        if (Window == null || _currentSubtitle == null || _currentSubtitle.Paragraphs.Count == 0 || _subtitleFormat == null)
+        if (Window == null || !CanEditTracks || _currentSubtitle == null || _currentSubtitle.Paragraphs.Count == 0 || _subtitleFormat == null)
         {
             return;
         }
@@ -424,10 +468,64 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
     private void Delete()
     {
         var selectedTrack = SelectedTrck;
-        if (selectedTrack != null)
+        if (selectedTrack != null && CanEditTracks)
         {
             selectedTrack.Deleted = !selectedTrack.Deleted;
         }
+    }
+
+    partial void OnSelectedTrckChanged(EmbeddedTrack? oldValue, EmbeddedTrack? newValue)
+    {
+        if (oldValue != null)
+        {
+            oldValue.PropertyChanged -= SelectedTrackPropertyChanged;
+        }
+
+        if (newValue != null)
+        {
+            newValue.PropertyChanged += SelectedTrackPropertyChanged;
+        }
+
+        UpdateTrackListState();
+    }
+
+    private void SelectedTrackPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(EmbeddedTrack.Deleted))
+        {
+            UpdateTrackListState();
+        }
+    }
+
+    private void UpdateTrackListState()
+    {
+        var index = SelectedTrck == null ? -1 : Tracks.IndexOf(SelectedTrck);
+        IsTrackSelected = index >= 0 && CanEditTracks;
+        IsMoveUpEnabled = index > 0 && CanEditTracks;
+        IsMoveDownEnabled = index >= 0 && index < Tracks.Count - 1 && CanEditTracks;
+        DeleteText = SelectedTrck?.Deleted == true ? Se.Language.General.Undelete : Se.Language.General.Delete;
+    }
+
+    // The list order is the output subtitle track order, see FfmpegGenerator.AlterEmbeddedTracks*.
+    [RelayCommand]
+    private void MoveUp() => MoveSelectedTrack(ListMoveDirection.Up);
+
+    [RelayCommand]
+    private void MoveDown() => MoveSelectedTrack(ListMoveDirection.Down);
+
+    private void MoveSelectedTrack(ListMoveDirection direction)
+    {
+        var track = SelectedTrck;
+        var index = track == null ? -1 : Tracks.IndexOf(track);
+        if (track == null || index < 0 || !CanEditTracks)
+        {
+            return;
+        }
+
+        ListReorder.Move(Tracks, new[] { index }, direction);
+        SelectedTrck = track;
+        SelectAndScrollToRow(Tracks.IndexOf(track));
+        UpdateTrackListState();
     }
 
     [RelayCommand]
@@ -449,6 +547,11 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
     [RelayCommand]
     private void Clear()
     {
+        if (!CanEditTracks)
+        {
+            return;
+        }
+
         foreach (var track in Tracks)
         {
             track.Deleted = true;
@@ -459,7 +562,7 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
     private async Task Edit()
     {
         var selectedTrack = SelectedTrck;
-        if (Window == null || selectedTrack == null)
+        if (Window == null || selectedTrack == null || !CanEditTracks)
         {
             return;
         }
@@ -494,7 +597,7 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
     [RelayCommand]
     private async Task BrowseVideoFile()
     {
-        if (Window == null)
+        if (Window == null || IsGenerating)
         {
             return;
         }
@@ -502,27 +605,67 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
         var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.General.OpenVideoFileTitle, "Matroska files", "*.mkv;*.webm");
         if (!string.IsNullOrEmpty(fileName))
         {
-            VideoFileName = fileName;
-            _ = Task.Run(() =>
-            {
-                // Parse once, off the UI thread - this used to also parse synchronously on the
-                // UI thread after starting the task, freezing the window for the probe.
-                var mediaInfo = FfmpegMediaInfo2.Parse(fileName);
-                _mediaInfo = mediaInfo;
-                Dispatcher.UIThread.Invoke(() =>
-                {
-                    Tracks.Clear();
-                    _originalTracks.Clear();
-                    var tracks = FindTracks(fileName, mediaInfo);
-                    foreach (var track in tracks)
-                    {
-                        Tracks.Add(track);
-                        _originalTracks.Add(new EmbeddedTrack(track));
-                    }
-                    SelectAndScrollToRow(0);
-                });
-            });
+            LoadVideoFile(fileName);
         }
+    }
+
+    private void LoadVideoFile(string fileName)
+    {
+        VideoFileName = fileName;
+        _ = Task.Run(() =>
+        {
+            // Parse once, off the UI thread - this used to also parse synchronously on the
+            // UI thread after starting the task, freezing the window for the probe.
+            var mediaInfo = FfmpegMediaInfo2.Parse(fileName);
+            _mediaInfo = mediaInfo;
+            Dispatcher.UIThread.Invoke(() =>
+            {
+                Tracks.Clear();
+                _originalTracks.Clear();
+                var tracks = FindTracks(fileName, mediaInfo);
+                foreach (var track in tracks)
+                {
+                    Tracks.Add(track);
+                    _originalTracks.Add(new EmbeddedTrack(track));
+                }
+                SelectAndScrollToRow(0);
+            });
+        });
+    }
+
+    internal static bool IsSupportedVideoFile(string fileName)
+    {
+        var extension = Path.GetExtension(fileName);
+        return SupportedVideoExtensions.Any(e => e.Equals(extension, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static string? GetDroppedVideoFile(DragEventArgs e)
+    {
+        if (!e.DataTransfer.Contains(DataFormat.File))
+        {
+            return null;
+        }
+
+        var fileName = e.DataTransfer.TryGetFiles()?.FirstOrDefault()?.Path?.LocalPath;
+        return fileName != null && IsSupportedVideoFile(fileName) && File.Exists(fileName) ? fileName : null;
+    }
+
+    internal void VideoDragOver(object? sender, DragEventArgs e)
+    {
+        e.DragEffects = !IsGenerating && GetDroppedVideoFile(e) != null ? DragDropEffects.Copy : DragDropEffects.None;
+        e.Handled = true;
+    }
+
+    internal void VideoDrop(object? sender, DragEventArgs e)
+    {
+        var fileName = GetDroppedVideoFile(e);
+        if (fileName == null || IsGenerating)
+        {
+            return;
+        }
+
+        e.Handled = true;
+        LoadVideoFile(fileName);
     }
 
     [RelayCommand]
@@ -764,7 +907,17 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
      
     internal void OnTracksGridKeyDown(KeyEventArgs e)
     {
-        if (e.Key == Key.Delete)
+        if (e.KeyModifiers == KeyModifiers.Control && e.Key == Key.Up)
+        {
+            MoveUp();
+            e.Handled = true;
+        }
+        else if (e.KeyModifiers == KeyModifiers.Control && e.Key == Key.Down)
+        {
+            MoveDown();
+            e.Handled = true;
+        }
+        else if (e.Key == Key.Delete)
         {
             Delete();
             e.Handled = true;
