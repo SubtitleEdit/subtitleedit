@@ -27685,6 +27685,28 @@ public partial class MainViewModel :
         return AudioVisualizer?.IsEditingWithPointer == true;
     }
 
+    void IUndoRedoClient.OnChangeDetected(UndoRedoItem? lastRecorded)
+    {
+        if (!Dispatcher.UIThread.CheckAccess())
+        {
+            Dispatcher.UIThread.Invoke(() => ((IUndoRedoClient)this).OnChangeDetected(lastRecorded));
+            return;
+        }
+
+        // Frame mode: keep what the user just re-timed on frames, so "Snap all times to frames"
+        // is not needed by hand. Only lines changed since the last undo step are touched, and
+        // nothing is snapped without a baseline (e.g. a file opened in frame mode stays as is).
+        if (!Se.Settings.General.UseFrameMode || lastRecorded == null)
+        {
+            return;
+        }
+
+        if (FrameModeTimeSnapper.SnapChangedLines(Subtitles, lastRecorded.Subtitles) > 0)
+        {
+            _updateAudioVisualizer = true;
+        }
+    }
+
     // Hash used by undo change detection. Undo snapshots capture and restore OriginalText,
     // so the hash must cover the original too - with only GetFastHash, loading or editing an
     // original never produced an undo entry, and the first Ctrl+Z restored a pre-load
