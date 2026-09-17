@@ -11,6 +11,7 @@ using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
 using Nikse.SubtitleEdit.Features.Tools.MergeContinuationLines;
+using Nikse.SubtitleEdit.Features.Video.BackgroundMusic;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ActorVoices;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.AdvancedTtsSettings;
@@ -96,6 +97,7 @@ public partial class TextToSpeechViewModel : ObservableObject
     [ObservableProperty] private bool _isVoiceComboEnabled;
     [ObservableProperty] private bool _doReviewAudioClips;
     [ObservableProperty] private bool _doGenerateVideoFile;
+    [ObservableProperty] private bool _doAddBackgroundMusic;
     [ObservableProperty] private bool _isEdgeTtsEngine;
     [ObservableProperty] private bool _isGenerating;
     [ObservableProperty] private bool _isEngineSettingsVisible;
@@ -157,6 +159,13 @@ public partial class TextToSpeechViewModel : ObservableObject
     private Dictionary<Paragraph, string> _perLineCloneClips = new();
     private readonly IFileHelper _fileHelper;
     private readonly IFolderHelper _folderHelper;
+    private readonly IAceStepAudioCppDownloadService _aceStepDownloadService;
+
+    /// <summary>
+    /// Music generated in this window's session (from the background music settings or a previous
+    /// run), reused while the prompt, tempo and length are unchanged - it takes a minute or two.
+    /// </summary>
+    private GeneratedMusic? _backgroundMusic;
     private string _waveFolder;
     private CancellationTokenSource _cancellationTokenSource;
     private CancellationToken _cancellationToken;
@@ -170,11 +179,12 @@ public partial class TextToSpeechViewModel : ObservableObject
     private bool _suppressKeywordSync;
     private const string OmniVoiceAny = "(any)";
 
-    public TextToSpeechViewModel(ITtsDownloadService ttsDownloadService, IWindowService windowService, IFileHelper fileHelper, IFolderHelper folderHelper)
+    public TextToSpeechViewModel(ITtsDownloadService ttsDownloadService, IWindowService windowService, IFileHelper fileHelper, IFolderHelper folderHelper, IAceStepAudioCppDownloadService aceStepDownloadService)
     {
         _windowService = windowService;
         _fileHelper = fileHelper;
         _folderHelper = folderHelper;
+        _aceStepDownloadService = aceStepDownloadService;
 
         Engines = new ObservableCollection<ITtsEngine>();
         Voices = new ObservableCollection<Voice>();
@@ -274,6 +284,7 @@ public partial class TextToSpeechViewModel : ObservableObject
 
         DoReviewAudioClips = Se.Settings.Video.TextToSpeech.ReviewAudioClips;
         DoGenerateVideoFile = Se.Settings.Video.TextToSpeech.GenerateVideoFile;
+        DoAddBackgroundMusic = Se.Settings.Video.BackgroundMusic.AddToTextToSpeech;
 
         if (SelectedEngine is AzureSpeech)
         {
@@ -305,6 +316,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         Se.Settings.Video.TextToSpeech.Voice = SelectedVoice?.Name ?? string.Empty;
         Se.Settings.Video.TextToSpeech.ReviewAudioClips = DoReviewAudioClips;
         Se.Settings.Video.TextToSpeech.GenerateVideoFile = DoGenerateVideoFile;
+        Se.Settings.Video.BackgroundMusic.AddToTextToSpeech = DoAddBackgroundMusic;
 
         if (SelectedEngine is AzureSpeech)
         {
@@ -1471,6 +1483,14 @@ public partial class TextToSpeechViewModel : ObservableObject
         ProgressOpacity = 1.0;
         SaveSettings();
 
+        // Checked before the speech run, not after it: a missing music model found once all the
+        // lines are synthesised would leave the user choosing between a 6 GB download and redoing it.
+        if (DoAddBackgroundMusic && !await EnsureBackgroundMusicInstalled())
+        {
+            ResetGeneratingUiState();
+            return;
+        }
+
         Se.WriteToolsLog(
             $"Text-to-speech: engine={engine.Name}" +
             $", voice={SelectedVoice?.Name ?? "(none)"}" +
@@ -2161,6 +2181,140 @@ public partial class TextToSpeechViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task ShowBackgroundMusicSettings()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<BackgroundMusicWindow, BackgroundMusicViewModel>(Window, vm =>
+        {
+            vm.InitializeForTextToSpeech(_videoFileName, _backgroundMusic);
+        });
+
+        if (result.Generated != null)
+        {
+            _backgroundMusic = result.Generated;
+        }
+
+        if (result.OkPressed)
+        {
+            DoAddBackgroundMusic = true;
+        }
+    }
+
+    private async Task<bool> EnsureBackgroundMusicInstalled()
+    {
+        var l = Se.Language.Video.BackgroundMusic;
+        try
+        {
+            return await BackgroundMusicGenerator.EnsureInstalledAsync(
+                Window!,
+                _windowService,
+                _aceStepDownloadService,
+                () => ProgressText = l.DownloadingModel,
+                new Progress<float>(p =>
+                {
+                    ProgressValue = p * 100.0;
+                    ProgressText = $"{l.DownloadingModel} {Math.Floor(p * 100.0).ToString(CultureInfo.CurrentCulture)}%";
+                }),
+                _cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Replaces the merged speech file with speech + generated music (looped to the video's length,
+    /// or the speech's when there is no video) that dips under the voice. A failure here shows an
+    /// error and keeps the speech-only file, so the synthesised lines are never lost.
+    /// </summary>
+    private async Task AddBackgroundMusicUnderSpeech(string speechFileName, CancellationToken cancellationToken)
+    {
+        var l = Se.Language.Video.BackgroundMusic;
+        var settings = Se.Settings.Video.BackgroundMusic;
+        var tempFolder = Path.Combine(Path.GetTempPath(), "SubtitleEdit-TtsMusic-" + Guid.NewGuid().ToString("N"));
+        try
+        {
+            var prompt = settings.Prompt;
+            if (string.IsNullOrWhiteSpace(prompt))
+            {
+                var preset = BackgroundMusicPreset.GetAll().FirstOrDefault(p => p.Key == settings.Preset && !p.IsCustom)
+                             ?? BackgroundMusicPreset.GetAll().First(p => !p.IsCustom);
+                prompt = preset.Prompt;
+            }
+
+            var speechSeconds = await Task.Run(() => FfmpegMediaInfo2.Parse(speechFileName).Duration?.TotalSeconds ?? 0, cancellationToken);
+            var videoSeconds = 0.0;
+            if (DoGenerateVideoFile && !string.IsNullOrEmpty(_videoFileName) && File.Exists(_videoFileName))
+            {
+                videoSeconds = await Task.Run(() => FfmpegMediaInfo2.Parse(_videoFileName).Duration?.TotalSeconds ?? 0, cancellationToken);
+            }
+
+            var target = Math.Max(speechSeconds, videoSeconds);
+            if (target <= 0)
+            {
+                return;
+            }
+
+            var generateSeconds = BackgroundMusicGenerator.GetGenerateSeconds(settings.GenerateSeconds, target);
+            var music = _backgroundMusic;
+            if (music == null || !music.Matches(prompt, settings.Bpm, generateSeconds))
+            {
+                ProgressText = l.GeneratingBackgroundMusicDotDotDot;
+                ProgressValue = 0;
+                var seed = settings.UseRandomSeed ? Random.Shared.NextInt64(1, int.MaxValue) : settings.Seed;
+                var progress = new Progress<MusicGenerationProgress>(p =>
+                {
+                    ProgressValue = p.Percent;
+                    ProgressText = $"{l.GeneratingBackgroundMusicDotDotDot} {Math.Floor(p.Percent).ToString(CultureInfo.CurrentCulture)}%";
+                });
+                music = await BackgroundMusicGenerator.GenerateAsync(prompt, settings.Bpm, generateSeconds, seed, tempFolder, progress, cancellationToken);
+                _backgroundMusic = music;
+            }
+
+            ProgressText = l.MixingBackgroundMusicDotDotDot;
+            Directory.CreateDirectory(tempFolder);
+            var musicFileName = Path.Combine(tempFolder, "music.wav");
+            var mixedFileName = Path.Combine(tempFolder, "mixed.wav");
+            var generated = music;
+            await Task.Run(() => generated.Render(target).WritePcm16Wav(musicFileName), cancellationToken);
+            await BackgroundMusicGenerator.MixUnderSpeechAsync(speechFileName, musicFileName, mixedFileName, settings.TextToSpeechMusicVolumePercent, cancellationToken);
+            File.Move(mixedFileName, speechFileName, true);
+            Se.WriteToolsLog($"TTS: background music mixed under \"{speechFileName}\" ({target:0.0} s, volume {settings.TextToSpeechMusicVolumePercent}%)");
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            Se.LogError(ex, "TTS: adding background music failed");
+            if (Window != null)
+            {
+                await MessageBox.Show(Window, l.UnableToGenerateMusic, ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        finally
+        {
+            try
+            {
+                if (Directory.Exists(tempFolder))
+                {
+                    Directory.Delete(tempFolder, true);
+                }
+            }
+            catch
+            {
+                // best effort
+            }
+        }
+    }
+
+    [RelayCommand]
     private async Task ShowAdvancedSettings()
     {
         await _windowService.ShowDialogAsync<AdvancedTtsSettingsWindow, AdvancedTtsSettingsViewModel>(Window!, vm =>
@@ -2725,6 +2879,19 @@ public partial class TextToSpeechViewModel : ObservableObject
 
         File.Move(mergedAudioFileName, audioFileName, true);
         Se.WriteToolsLog($"TTS merge done: wrote \"{audioFileName}\"");
+
+        if (DoAddBackgroundMusic)
+        {
+            try
+            {
+                await AddBackgroundMusicUnderSpeech(audioFileName, _cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                ResetGeneratingUiState();
+                return;
+            }
+        }
 
         await HandleAddToVideo(audioFileName, outputFolder, _cancellationToken);
 

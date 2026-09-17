@@ -649,6 +649,12 @@ public static class InitMenu
             },
             new MenuItem
             {
+                // ACE-Step 1.5 (audio.cpp) music, looped to the video's length.
+                Header = Se.Language.Video.BackgroundMusic.GenerateBackgroundMusicDotDotDot,
+                Command = vm.ShowVideoBackgroundMusicCommand,
+            },
+            new MenuItem
+            {
                 Header = Se.Language.Video.RemuxVideoDotDotDot,
                 Command = vm.ShowVideoRemuxVideoCommand,
             },
