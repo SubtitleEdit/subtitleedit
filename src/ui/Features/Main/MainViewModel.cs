@@ -32,6 +32,7 @@ using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
+using Nikse.SubtitleEdit.Features.Actors;
 using Nikse.SubtitleEdit.Features.Assa;
 using Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect;
 using Nikse.SubtitleEdit.Features.Assa.AssaApplyCustomOverrideTags;
@@ -1364,6 +1365,7 @@ public partial class MainViewModel :
         UpdateSurroundWithMenuItems();
         UpdateCustomSearchMenuItems();
         RefreshWaveformMoveLinesButtons?.Invoke();
+        SyncActorPickerActors();
     }
 
     [RelayCommand]
@@ -2881,6 +2883,24 @@ public partial class MainViewModel :
             else
             {
                 _adjustAllTimesViewModel = null;
+            }
+        }
+
+        if (_actorPickerViewModel != null)
+        {
+            if (_actorPickerViewModel.Window is { IsVisible: true })
+            {
+                // Posted: Subtitles is still empty here - ResetSubtitle()'s caller populates it
+                // synchronously right after this returns.
+                Dispatcher.UIThread.Post(() =>
+                {
+                    SyncActorPickerActors();
+                    SyncActorPickerSelectionState();
+                });
+            }
+            else
+            {
+                _actorPickerViewModel = null;
             }
         }
 
@@ -21160,6 +21180,10 @@ public partial class MainViewModel :
             {
                 p.Actor = actorName;
             }
+
+            // Every actor assignment funnels through here, so this keeps an open actor picker in sync.
+            SyncActorPickerActors();
+            SyncActorPickerSelectionState();
         });
     }
 
@@ -21246,7 +21270,11 @@ public partial class MainViewModel :
         if (result.OkPressed)
         {
             var newActorName = result.Text;
-            Dispatcher.UIThread.Post(() => RenameActorInAllLines(oldActorName, newActorName));
+            Dispatcher.UIThread.Post(() =>
+            {
+                RenameActorInAllLines(oldActorName, newActorName);
+                SyncActorPickerActors();
+            });
         }
     }
 
@@ -21302,6 +21330,137 @@ public partial class MainViewModel :
             SetActorForSelectedLines(result.Text);
         }
     }
+
+    private ActorPickerViewModel? _actorPickerViewModel;
+
+    [RelayCommand]
+    private void ShowActorPicker()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        if (_actorPickerViewModel?.Window is { IsVisible: true } existingWindow)
+        {
+            SyncActorPickerActors();
+            SyncActorPickerSelectionState();
+            existingWindow.Activate();
+            return;
+        }
+
+        _actorPickerViewModel = _windowService.ShowWindow<ActorPickerWindow, ActorPickerViewModel>(Window, (window, vm) =>
+        {
+            WindowService.KeepTopmostWhileOwnerActive(window, Window);
+            vm.Actors = BuildActorDisplayItems(GetActorsInSubtitle());
+            vm.HighlightedActor = ComputeHighlightedActor();
+            vm.IsClearEnabled = ComputeIsActorClearEnabled();
+
+            // Clicking the picker moves OS focus off the main window, so it stops seeing
+            // keyboard shortcuts (e.g. play/pause) until it's re-activated.
+            vm.OnActorSelected = actorName =>
+            {
+                SetActorForSelectedLines(actorName);
+                Window?.Activate();
+                RestoreFocusIfLost();
+            };
+            vm.OnNewActorRequested = SetNewActor; // dialog-based, restores focus on its own
+            vm.OnClearRequested = () =>
+            {
+                RemoveActor();
+                Window?.Activate();
+                RestoreFocusIfLost();
+            };
+            vm.OnRenameRequested = RenameActor; // also dialog-based
+
+            // Same event SubtitleGridSelectionChanged reacts to; subscribing after it's already
+            // wired up (in InitListViewAndEditBox) means this runs once the selection state has
+            // settled. Also fires for "Select current subtitle while playing".
+            SubtitleGrid.SelectionChanged += ActorPickerOnGridSelectionChanged;
+            window.Closed += (_, _) => SubtitleGrid.SelectionChanged -= ActorPickerOnGridSelectionChanged;
+        });
+    }
+
+    private void ActorPickerOnGridSelectionChanged(object? sender, SelectionChangedEventArgs e) => SyncActorPickerSelectionState();
+
+    private void SyncActorPickerActors()
+    {
+        if (_actorPickerViewModel != null)
+        {
+            _actorPickerViewModel.Actors = BuildActorDisplayItems(GetActorsInSubtitle());
+            // New rows start unhighlighted; re-apply even if HighlightedActor's value didn't
+            // change, since that alone wouldn't re-trigger the highlight push.
+            _actorPickerViewModel.RefreshHighlight();
+        }
+    }
+
+    // Index 0..9 -> keys 1..0, same slots SetActorByIndex and the grid's own "Actors" context
+    // menu already use.
+    private static readonly string[] ActorShortcutCommandNames =
+    {
+        nameof(SetActor1Command), nameof(SetActor2Command), nameof(SetActor3Command), nameof(SetActor4Command), nameof(SetActor5Command),
+        nameof(SetActor6Command), nameof(SetActor7Command), nameof(SetActor8Command), nameof(SetActor9Command), nameof(SetActor10Command),
+    };
+
+    private ObservableCollection<ActorDisplayItem> BuildActorDisplayItems(List<string> actorNames)
+    {
+        var usedShortcuts = ShortcutsMain.GetUsedShortcuts(this);
+
+        var items = new ObservableCollection<ActorDisplayItem>();
+        for (var i = 0; i < actorNames.Count; i++)
+        {
+            string? shortcutText = null;
+            if (i < ActorShortcutCommandNames.Length)
+            {
+                var shortcut = usedShortcuts.FirstOrDefault(s => s.Name == ActorShortcutCommandNames[i]);
+                shortcutText = shortcut != null ? InitMenu.ToKeyGesture(shortcut)?.ToString() ?? string.Empty : string.Empty;
+            }
+
+            items.Add(new ActorDisplayItem(actorNames[i], shortcutText));
+        }
+
+        return items;
+    }
+
+    /// <summary>
+    /// Pushes the current grid selection's matched actor and Clear-availability into the open
+    /// actor picker. No-op while the picker is closed.
+    /// </summary>
+    private void SyncActorPickerSelectionState()
+    {
+        if (_actorPickerViewModel == null)
+        {
+            return;
+        }
+
+        _actorPickerViewModel.HighlightedActor = ComputeHighlightedActor();
+        _actorPickerViewModel.IsClearEnabled = ComputeIsActorClearEnabled();
+    }
+
+    // The actor shared by every selected line, or null when nothing is selected or the
+    // selection mixes actors.
+    private string? ComputeHighlightedActor()
+    {
+        var selected = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        if (selected.Count == 0)
+        {
+            return null;
+        }
+
+        var actor = selected[0].Actor;
+        for (var i = 1; i < selected.Count; i++)
+        {
+            if (selected[i].Actor != actor)
+            {
+                return null;
+            }
+        }
+
+        return string.IsNullOrEmpty(actor) ? null : actor;
+    }
+
+    private bool ComputeIsActorClearEnabled() =>
+        SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().Any(p => !string.IsNullOrEmpty(p.Actor));
 
     private async Task<TViewModel> ShowDialogAsync<TWindow, TViewModel>(
         Action<TViewModel>? configureViewModel = null, Action<TWindow>? configureWindow = null, Window? owner = null)

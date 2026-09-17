@@ -71,6 +71,7 @@ public class LanguageMainMenu
     public string RemoveTextForHearingImpaired { get; set; }
     public string RemoveUnicodeCharacters { get; set; }
     public string ConvertActors { get; set; }
+    public string ActorPicker { get; set; }
     public string JoinSubtitles { get; set; }
     public string SplitSubtitle { get; set; }
     public string MergeTwoSubtitles { get; set; }
@@ -209,6 +210,7 @@ public class LanguageMainMenu
         RemoveTextForHearingImpaired = "_Remove text for hearing impaired...";
         RemoveUnicodeCharacters = "Remove/replace _Unicode characters...";
         ConvertActors = "Convert actors...";
+        ActorPicker = "Actor picker...";
         ChangeCasing = "_Change casing...";
         ChangeFormatting = "Change formatting...";
         BridgeGaps = "Bridge _gaps...";

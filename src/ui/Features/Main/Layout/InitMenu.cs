@@ -564,6 +564,12 @@ public static class InitMenu
             },
             new MenuItem
             {
+                Header = l.ActorPicker,
+                Command = vm.ShowActorPickerCommand,
+                [!MenuItem.IsVisibleProperty] = new Binding(nameof(vm.IsFormatAssaOrSsa)),
+            },
+            new MenuItem
+            {
                 Header = l.RemoveUnicodeCharacters,
                 Command = vm.ShowToolsRemoveUnicodeCharactersCommand,
             },

@@ -286,6 +286,8 @@ public static class InitNativeMacMenu
         editItems.Items.Add(Item(Clean(Se.Language.General.SelectAll), v => v.SelectAllLinesCommand));
 
         // ── Tools ─────────────────────────────────────────────────────────────
+        var actorPickerItem = Item(Clean(l.ActorPicker), v => v.ShowActorPickerCommand);
+        state.Visibilities.Add((actorPickerItem, v => v.IsFormatAssaOrSsa, [nameof(MainViewModel.IsFormatAssaOrSsa)]));
         var toolsList = new List<NativeMenuItem>
         {
             Item(Clean(l.AdjustDurations), v => v.ShowToolsAdjustDurationsCommand),
@@ -312,6 +314,7 @@ public static class InitNativeMacMenu
             Item(Clean(l.Renumber), v => v.ShowToolsRenumberCommand),
             Item(Clean(l.RemoveTextForHearingImpaired), v => v.ShowToolsRemoveTextForHearingImpairedCommand),
             Item(Clean(l.ConvertActors), v => v.ShowToolsConvertActorsCommand),
+            actorPickerItem,
             Item(Clean(l.RemoveUnicodeCharacters), v => v.ShowToolsRemoveUnicodeCharactersCommand),
         };
         var toolItems = new NativeMenu();

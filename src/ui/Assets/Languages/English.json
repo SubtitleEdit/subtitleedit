@@ -877,6 +877,7 @@
       "removeTextForHearingImpaired": "_Remove text for hearing impaired...",
       "removeUnicodeCharacters": "Remove/replace _Unicode characters...",
       "convertActors": "Convert actors...",
+      "actorPicker": "Actor picker...",
       "joinSubtitles": "_Join subtitles...",
       "splitSubtitle": "_Split subtitle...",
       "mergeTwoSubtitles": "Merge two subtitles...",
@@ -2217,7 +2218,8 @@
     "pickSubtitleFormat": "Choose subtitle format",
     "pickSubtitleFormatImageBasedNoPreview": "Image-based subtitle format.\nBitmaps are generated during conversion - no text preview.",
     "recentColors": "Recent colors",
-    "fixCommonErrorsSettingsTitle": "Fix common error settings"
+    "fixCommonErrorsSettingsTitle": "Fix common error settings",
+    "actorPickerTitle": "Actor picker"
   },
   "spellCheck": {
     "spellCheck": "Spell check",
