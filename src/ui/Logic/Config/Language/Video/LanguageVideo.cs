@@ -20,6 +20,8 @@ public class LanguageVideo
     public string OpenSecondarySubtitleOnVideoPlayerDotDotDot { get; set; }
     public string OpenSecondarySubtitleOnVideoPlayer { get; set; }
     public string RemoveSecondarySubtitleOnVideoPlayer { get; set; }
+    public string SecondarySubtitleRememberSettings { get; set; }
+    public string SecondarySubtitleDoNotShowAgain { get; set; }
     public string OpenRecentVideo { get; set; }
     public string ClearRecentVideos { get; set; }
     public string CutVideoTitle { get; set; }
@@ -136,6 +138,8 @@ public class LanguageVideo
         OpenSecondarySubtitleOnVideoPlayer = "Second subtitle file (on video player)";
         OpenSecondarySubtitleOnVideoPlayerDotDotDot = "Open second subtitle file...";
         RemoveSecondarySubtitleOnVideoPlayer = "Remove second subtitle file";
+        SecondarySubtitleRememberSettings = "Remember these settings";
+        SecondarySubtitleDoNotShowAgain = "Do not show this dialog again";
         OpenRecentVideo = "Open recent video";
         ClearRecentVideos = "Clear recent videos";
         CutVideoTitle = "Cut video";

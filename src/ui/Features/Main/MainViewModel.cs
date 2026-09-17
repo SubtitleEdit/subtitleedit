@@ -4030,17 +4030,26 @@ public partial class MainViewModel :
             return;
         }
 
-        var result = await ShowDialogAsync<OpenSecondarySubtitleWindow, OpenSecondarySubtitleViewModel>(vm =>
+        // "Do not show this dialog again" in the dialog: apply its remembered settings directly.
+        if (Se.Settings.Video.SecondarySubtitleOverrideStyle && !Se.Settings.Video.SecondarySubtitleShowDialog)
         {
-            vm.Initialize(subtitle, GetUpdateSubtitle(), SelectedSubtitleFormat, _mediaInfo, _videoFileName);
-        });
+            _subtitleSecondary = SecondarySubtitleStyler.BuildFromSettings(subtitle, _mediaInfo);
+        }
+        else
+        {
+            var result = await ShowDialogAsync<OpenSecondarySubtitleWindow, OpenSecondarySubtitleViewModel>(vm =>
+            {
+                vm.Initialize(subtitle, GetUpdateSubtitle(), SelectedSubtitleFormat, _mediaInfo, _videoFileName);
+            });
 
-        if (!result.OkPressed)
-        {
-            return;
+            if (!result.OkPressed)
+            {
+                return;
+            }
+
+            _subtitleSecondary = result.ResultSubtitle;
         }
 
-        _subtitleSecondary = result.ResultSubtitle;
         _subtitleSecondaryFileName = fileName;
         IsSubtitleSecondaryVisible = true;
 
