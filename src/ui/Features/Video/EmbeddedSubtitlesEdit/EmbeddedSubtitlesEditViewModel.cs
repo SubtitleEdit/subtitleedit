@@ -32,6 +32,7 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
     [ObservableProperty] private string _videoFileSize;
     public bool HasVideoFileName => !string.IsNullOrEmpty(VideoFileName);
     public bool CanGenerate => HasVideoFileName && !IsGenerating;
+    public bool CanEditTracks => HasVideoFileName && !IsGenerating;
     [ObservableProperty] private ObservableCollection<EmbeddedTrack> _tracks;
     [ObservableProperty] private EmbeddedTrack? _selectedTrck;
     [ObservableProperty] private bool _isTrackSelected;
@@ -103,6 +104,8 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
     {
         OnPropertyChanged(nameof(HasVideoFileName));
         OnPropertyChanged(nameof(CanGenerate));
+        OnPropertyChanged(nameof(CanEditTracks));
+        UpdateTrackListState();
 
         try
         {
@@ -116,7 +119,22 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
         }
     }
 
-    partial void OnIsGeneratingChanged(bool value) => OnPropertyChanged(nameof(CanGenerate));
+    partial void OnIsGeneratingChanged(bool value)
+    {
+        OnPropertyChanged(nameof(CanGenerate));
+        OnPropertyChanged(nameof(CanEditTracks));
+
+        // The track list is locked while ffmpeg runs - the command line is already built from
+        // it, so edits would only look applied. IsGenerating can change on the timer thread.
+        if (Dispatcher.UIThread.CheckAccess())
+        {
+            UpdateTrackListState();
+        }
+        else
+        {
+            Dispatcher.UIThread.Post(UpdateTrackListState);
+        }
+    }
 
     private void StartTitleTimer()
     {
@@ -324,7 +342,7 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
     [RelayCommand]
     private async Task Add()
     {
-        if (Window == null)
+        if (Window == null || !CanEditTracks)
         {
             return;
         }
@@ -417,7 +435,7 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
     [RelayCommand]
     private void AddCurrent()
     {
-        if (Window == null || _currentSubtitle == null || _currentSubtitle.Paragraphs.Count == 0 || _subtitleFormat == null)
+        if (Window == null || !CanEditTracks || _currentSubtitle == null || _currentSubtitle.Paragraphs.Count == 0 || _subtitleFormat == null)
         {
             return;
         }
@@ -450,7 +468,7 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
     private void Delete()
     {
         var selectedTrack = SelectedTrck;
-        if (selectedTrack != null)
+        if (selectedTrack != null && CanEditTracks)
         {
             selectedTrack.Deleted = !selectedTrack.Deleted;
         }
@@ -482,9 +500,9 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
     private void UpdateTrackListState()
     {
         var index = SelectedTrck == null ? -1 : Tracks.IndexOf(SelectedTrck);
-        IsTrackSelected = index >= 0;
-        IsMoveUpEnabled = index > 0;
-        IsMoveDownEnabled = index >= 0 && index < Tracks.Count - 1;
+        IsTrackSelected = index >= 0 && CanEditTracks;
+        IsMoveUpEnabled = index > 0 && CanEditTracks;
+        IsMoveDownEnabled = index >= 0 && index < Tracks.Count - 1 && CanEditTracks;
         DeleteText = SelectedTrck?.Deleted == true ? Se.Language.General.Undelete : Se.Language.General.Delete;
     }
 
@@ -499,7 +517,7 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
     {
         var track = SelectedTrck;
         var index = track == null ? -1 : Tracks.IndexOf(track);
-        if (track == null || index < 0)
+        if (track == null || index < 0 || !CanEditTracks)
         {
             return;
         }
@@ -529,6 +547,11 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
     [RelayCommand]
     private void Clear()
     {
+        if (!CanEditTracks)
+        {
+            return;
+        }
+
         foreach (var track in Tracks)
         {
             track.Deleted = true;
@@ -539,7 +562,7 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
     private async Task Edit()
     {
         var selectedTrack = SelectedTrck;
-        if (Window == null || selectedTrack == null)
+        if (Window == null || selectedTrack == null || !CanEditTracks)
         {
             return;
         }
@@ -574,7 +597,7 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
     [RelayCommand]
     private async Task BrowseVideoFile()
     {
-        if (Window == null)
+        if (Window == null || IsGenerating)
         {
             return;
         }

@@ -33,7 +33,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
     [ObservableProperty] private string _videoFileSize;
     public bool HasVideoFileName => !string.IsNullOrEmpty(VideoFileName);
     public bool CanGenerate => HasVideoFileName && !IsGenerating && TracksReady;
-    public bool CanEditTracks => HasVideoFileName && TracksReady;
+    public bool CanEditTracks => HasVideoFileName && TracksReady && !IsGenerating;
     [ObservableProperty] private ObservableCollection<EmbeddedTrack> _tracks;
     [ObservableProperty] private EmbeddedTrack? _selectedTrack;
     [ObservableProperty] private bool _isTrackSelected;
@@ -129,7 +129,22 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
         UpdateTrackListState();
     }
 
-    partial void OnIsGeneratingChanged(bool value) => OnPropertyChanged(nameof(CanGenerate));
+    partial void OnIsGeneratingChanged(bool value)
+    {
+        OnPropertyChanged(nameof(CanGenerate));
+        OnPropertyChanged(nameof(CanEditTracks));
+
+        // The track list is locked while ffmpeg runs - the command line is already built from
+        // it, so edits would only look applied. IsGenerating can change on the timer thread.
+        if (Dispatcher.UIThread.CheckAccess())
+        {
+            UpdateTrackListState();
+        }
+        else
+        {
+            Dispatcher.UIThread.Post(UpdateTrackListState);
+        }
+    }
 
     partial void OnTracksReadyChanged(bool value)
     {
@@ -301,7 +316,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
     [RelayCommand]
     private async Task Add()
     {
-        if (Window == null || _isAdding)
+        if (Window == null || _isAdding || !CanEditTracks)
         {
             return;
         }
@@ -355,7 +370,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
     [RelayCommand]
     private void AddCurrent()
     {
-        if (Window == null || _currentSubtitle == null || _currentSubtitle.Paragraphs.Count == 0)
+        if (Window == null || !CanEditTracks || _currentSubtitle == null || _currentSubtitle.Paragraphs.Count == 0)
         {
             return;
         }
@@ -396,7 +411,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
     [RelayCommand]
     private void Delete()
     {
-        if (SelectedTrack != null)
+        if (SelectedTrack != null && CanEditTracks)
         {
             SelectedTrack.Deleted = !SelectedTrack.Deleted;
         }
@@ -459,6 +474,11 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
     [RelayCommand]
     private void Clear()
     {
+        if (!CanEditTracks)
+        {
+            return;
+        }
+
         foreach (var track in Tracks)
         {
             track.Deleted = true;
@@ -469,7 +489,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
     private async Task Edit()
     {
         var selectedTrack = SelectedTrack;
-        if (Window == null || selectedTrack == null)
+        if (Window == null || selectedTrack == null || !CanEditTracks)
         {
             return;
         }
@@ -585,7 +605,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
     [RelayCommand]
     private async Task BrowseVideoFile()
     {
-        if (Window == null)
+        if (Window == null || IsGenerating)
         {
             return;
         }

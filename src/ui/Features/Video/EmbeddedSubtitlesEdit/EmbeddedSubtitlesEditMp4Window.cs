@@ -50,6 +50,7 @@ public class EmbeddedSubtitlesEditMp4Window : Window
         labelVideoFileSize.Opacity = 0.7;
         labelVideoFileSize.VerticalAlignment = VerticalAlignment.Center;
         var buttonBrowseVideoFile = UiUtil.MakeButtonBrowse(vm.BrowseVideoFileCommand, accessibleName: Se.Language.General.VideoFile);
+        buttonBrowseVideoFile.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.IsGenerating)) { Converter = InverseBooleanConverter.Instance });
         var gridVideoFile = new Grid
         {
             ColumnDefinitions =

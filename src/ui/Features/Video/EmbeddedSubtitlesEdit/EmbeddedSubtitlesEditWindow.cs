@@ -51,6 +51,7 @@ public class EmbeddedSubtitlesEditWindow : Window
         labelVideoFileSize.Opacity = 0.7;
         labelVideoFileSize.VerticalAlignment = VerticalAlignment.Center;
         var buttonBrowseVideoFile = UiUtil.MakeButtonBrowse(vm.BrowseVideoFileCommand, accessibleName: Se.Language.General.VideoFile);
+        buttonBrowseVideoFile.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.IsGenerating)) { Converter = InverseBooleanConverter.Instance });
         var gridVideoFile = new Grid
         {
             ColumnDefinitions =
@@ -227,8 +228,8 @@ public class EmbeddedSubtitlesEditWindow : Window
             vm.MoveUpCommand,
             vm.MoveDownCommand);
         EmbeddedTracksUi.DimDeletedRows(dataGridTracks);
-        EmbeddedTracksUi.AttachContextMenu(dataGridTracks, vm, commands, null);
-        var panelButtons = EmbeddedTracksUi.MakeButtons(commands, null);
+        EmbeddedTracksUi.AttachContextMenu(dataGridTracks, vm, commands, nameof(vm.CanEditTracks));
+        var panelButtons = EmbeddedTracksUi.MakeButtons(commands, nameof(vm.CanEditTracks));
 
         var grid = new Grid
         {

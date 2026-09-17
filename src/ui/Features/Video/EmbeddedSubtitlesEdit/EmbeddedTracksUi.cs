@@ -45,7 +45,7 @@ internal static class EmbeddedTracksUi
             new Binding(nameof(EmbeddedTrack.Deleted)) { Converter = DeletedToOpacity });
     }
 
-    /// <param name="addEnabledPath">Optional view model property gating Add (MP4 waits for the track scan).</param>
+    /// <param name="addEnabledPath">Optional view model property gating Add (off while generating; MP4 also waits for the track scan).</param>
     public static StackPanel MakeButtons(Commands commands, string? addEnabledPath)
     {
         var buttonAdd = new SplitButton
