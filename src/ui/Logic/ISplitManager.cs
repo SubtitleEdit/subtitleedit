@@ -166,7 +166,12 @@ public class SplitManager : ISplitManager
         var first = text;
         var second = string.Empty;
         var lines = text.SplitToLines();
-        if (textIndex > 0 && textIndex <= text.Length)
+
+        // A caret with no text on one side (e.g. still at the end of the text) would leave one
+        // half empty, so it falls back to the line break just like a caret at the start (#14962).
+        if (textIndex > 0 && textIndex <= text.Length &&
+            !string.IsNullOrWhiteSpace(text.Substring(0, textIndex)) &&
+            !string.IsNullOrWhiteSpace(text.Substring(textIndex)))
         {
             first = text.Substring(0, textIndex).Trim();
             second = text.Substring(textIndex).Trim();

@@ -130,6 +130,28 @@ public class SplitManagerTests : IDisposable
         }
     }
 
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)] // at the end of the text
+    [InlineData(-2)] // before trailing whitespace
+    public void Split_WithTextIndexAtEitherEnd_SplitsAtLineBreak(int textIndex)
+    {
+        // #14962: "split at video and text box position" with the caret still at the end put
+        // both lines in the first half. Either end now falls back to the line break.
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
+        var manager = new SplitManager();
+        var subtitle = MakeSubtitle("My assistant and\nmy effects supervisor. ", 1, 3);
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+        var index = textIndex >= 0 ? textIndex : subtitle.Text.Length + textIndex + 1;
+
+        manager.Split(subtitles, subtitle, videoPositionSeconds: 2.5, textIndex: index, languageCode: "en");
+
+        Assert.Equal(2, subtitles.Count);
+        Assert.Equal("My assistant and", subtitles[0].Text);
+        Assert.Equal("my effects supervisor.", subtitles[1].Text);
+        Assert.Equal(2.5, subtitles[1].StartTime.TotalSeconds, 3);
+    }
+
     [Fact]
     public void Split_WithVideoPosition_UsesVideoPositionAsTimeSplitPoint()
     {
