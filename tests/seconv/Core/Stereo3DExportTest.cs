@@ -150,6 +150,47 @@ public class Stereo3DExportTest : IDisposable
         Assert.Contains(result.Warnings, w => w.Contains("3D depth has no effect"));
     }
 
+    /// <summary>A 3D-Plane of <paramref name="frames"/> frames at 23.976 fps, all at <paramref name="offset"/>.</summary>
+    private static Stereo3DPlane MakePlane(int frames, byte offset)
+    {
+        var data = new List<byte>();
+        data.AddRange([0x89, 0x4F, 0x46, 0x53, 0x0D, 0x0A, 0x1A, 0x0A]);
+        data.AddRange("0100"u8.ToArray());
+        data.AddRange(new byte[16]);
+        data.AddRange([0x10, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
+        data.AddRange([(byte)(frames >> 24), (byte)(frames >> 16), (byte)(frames >> 8), (byte)frames]);
+        data.AddRange(Enumerable.Repeat(offset, frames));
+        return Stereo3DPlane.FromBytes(data.ToArray());
+    }
+
+    [Fact]
+    public async Task TextToImage_Plane3D_GivesTheSubtitleTheDiscsDepth()
+    {
+        var input = await WriteSrt();
+        await Convert(input, "bdnxml", "flat", Style());
+        var style = Style(Export3DMode.HalfSideBySide, depth: 1);
+        style.Plane3D = MakePlane(200, 12);
+        await Convert(input, "bdnxml", "plane", style);
+
+        var flat = ReadBdnGraphic("flat");
+        var plane = ReadBdnGraphic("plane");
+
+        // An offset of 12 on the 1920 wide Blu-ray is 6 in a half side-by-side view - not the fixed depth.
+        Assert.Equal(flat.X / 2 + 6, plane.X);
+        Assert.Equal(960 + (flat.Width + 1) / 2 - 12, plane.Width);
+    }
+
+    [Fact]
+    public async Task Plane3DWithoutMode_Warns()
+    {
+        var input = await WriteSrt();
+        var style = Style();
+        style.Plane3D = MakePlane(200, 12);
+        var result = await Convert(input, "bluraysup", "planeOnly", style);
+
+        Assert.Contains(result.Warnings, w => w.Contains("3D-Plane has no effect"));
+    }
+
     [Theory]
     [InlineData("none", Export3DMode.None)]
     [InlineData("half-side-by-side", Export3DMode.HalfSideBySide)]

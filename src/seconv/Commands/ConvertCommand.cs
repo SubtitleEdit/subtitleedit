@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.UiLogic.Export;
 using Spectre.Console;
 using Spectre.Console.Cli;
 using System.ComponentModel;
@@ -304,6 +305,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [CommandOption("--depth-3d|--depth3d")]
         [Description("Image output: 3D depth in pixels, -100 to 100; positive brings the subtitle out of the screen (default: 0). D-Cinema writes it as the Z-position")]
         public int? Depth3D { get; init; }
+
+        [CommandOption("--plane-3d|--plane3d|--3d-plane")]
+        [Description("Image output: 3D Blu-ray 3D-Plane (.ofs) - each subtitle gets the depth of the frames it is shown on; --depth-3d is used where it has none")]
+        public string? Plane3D { get; init; }
 
         [CommandOption("--teletext-only|--teletextonly")]
         [Description("Teletext only")]
@@ -1298,6 +1303,23 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 return $"--depth-3d must be between -100 and 100, got {settings.Depth3D.Value}.";
             }
             style.Depth3D = settings.Depth3D.Value;
+        }
+
+        if (!string.IsNullOrWhiteSpace(settings.Plane3D))
+        {
+            if (!File.Exists(settings.Plane3D))
+            {
+                return $"3D-Plane file not found: {settings.Plane3D}";
+            }
+
+            try
+            {
+                style.Plane3D = Stereo3DPlane.Load(settings.Plane3D);
+            }
+            catch (Exception exception) when (exception is InvalidDataException or IOException or UnauthorizedAccessException)
+            {
+                return $"Unable to read 3D-Plane '{settings.Plane3D}': {exception.Message}";
+            }
         }
 
         return null;

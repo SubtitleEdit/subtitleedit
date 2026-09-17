@@ -265,6 +265,7 @@ public class ExportImageBasedWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -498,6 +499,30 @@ public class ExportImageBasedWindow : Window
             Children = { checkBoxFullFrame, colorPickerFullFrame },
         }.WithBindIsVisible(vm, nameof(vm.IsFullFrameVisible));
         grid.Add(panelFullFrame, 7, 5, 1, 3);
+
+        // A 3D Blu-ray's own depth for each subtitle, from its 3D-Plane (see Stereo3DPlane).
+        var labelPlane3D = UiUtil.MakeLabel(Se.Language.File.Export.Plane3D);
+        var buttonBrowsePlane3D = UiUtil.MakeButton(vm.BrowsePlane3DCommand, IconNames.FolderOpen, Se.Language.File.Export.OpenPlane3DTitle);
+        buttonBrowsePlane3D.Bind(IsEnabledProperty, new Binding(nameof(vm.IsDepth3DEnabled)) { Source = vm });
+        var labelPlane3DFile = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.Plane3DText));
+        var buttonClearPlane3D = UiUtil.MakeButton(vm.ClearPlane3DCommand, IconNames.Close, Se.Language.General.Clear)
+            .WithBindIsVisible(vm, nameof(vm.IsPlane3DLoaded));
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(labelPlane3D, Se.Language.File.Export.Plane3DHint);
+        }
+
+        var panelPlane3D = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 5,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { buttonBrowsePlane3D, labelPlane3DFile, buttonClearPlane3D },
+        };
+        labelPlane3D.Bind(IsVisibleProperty, new Binding(nameof(vm.IsMode3DVisible)) { Source = vm });
+        panelPlane3D.Bind(IsVisibleProperty, new Binding(nameof(vm.IsMode3DVisible)) { Source = vm });
+        grid.Add(labelPlane3D, 8, 0);
+        grid.Add(panelPlane3D, 8, 1, 1, 7);
 
         return UiUtil.MakeBorderForControl(grid);
     }

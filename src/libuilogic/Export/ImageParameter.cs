@@ -54,6 +54,12 @@ public class ImageParameter
     public int Depth3D { get; set; }
 
     /// <summary>
+    /// The 3D Blu-ray's depth for every frame. When set, each subtitle gets the depth of the frames
+    /// it is shown on, and <see cref="Depth3D"/> is only used where the 3D-Plane has none.
+    /// </summary>
+    public Stereo3DPlane? Plane3D { get; set; }
+
+    /// <summary>
     /// Transparency of the whole rendered subtitle, 0-100, from an ASSA "{\alpha&amp;H80&amp;}"
     /// tag (see <see cref="ExportTextTags.ApplyTransparencyTags"/>). 100 - fully opaque - unless
     /// the text asks for less.

@@ -191,12 +191,15 @@ When rendering a text subtitle to an image-based target (Blu-Ray `sup`, VobSub, 
 | `--full-frame-background-color:<color>` | Background of the full frame image (default: `transparent`) |
 | `--mode-3d:<mode>` | Draw each subtitle for frame-packed 3D video, once per eye: `none` (default) \| `half-side-by-side` (`sbs`) \| `half-top-bottom` (`tab`). Works for text → image and image → image; D-Cinema warns and ignores it |
 | `--depth-3d:<px>` | 3D depth, -100 to 100 (default: 0): positive brings the subtitle out of the screen, negative pushes it back. D-Cinema writes it as the image's Z-position |
+| `--plane-3d:<file.ofs>` | A 3D Blu-ray's 3D-Plane (OFS file from BD3D2MK3D or OFSExtractor): each subtitle gets the disc's depth for the frames it is shown on. `--depth-3d` is used where the 3D-Plane has none. Needs `--mode-3d` |
 
 Colours accept hex (`#AARRGGBB`, `#RRGGBB`, with or without `#`) or a colour name (`white`, `black`, `yellow`, ...).
 
 **Full frame** (`--full-frame`) draws the subtitle onto a canvas the size of the video frame, using the alignment and margins to place it there, so every image can be dropped on an editing timeline at 0,0 instead of being positioned one by one. It matches the "Full frame image" checkbox in the export dialog, and applies to `fcpimage` and `bluraysup` only. The background is transparent unless `--full-frame-background-color` says otherwise, so the images sit on a track above the video.
 
 **3D** (`--mode-3d`) matches the "3D" option in the export dialog (SE4's 3D export). A half side-by-side or half top/bottom video holds a squeezed view per eye, so the subtitle is squeezed the same way and drawn once in each view, where the alignment, margins or `{\pos}` would put it. `--depth-3d` moves the two copies apart. With an image source (`.sup`, VobSub, DVB-sub, ...) it turns a 2D track into a 3D one, keeping each subtitle's position.
+
+A 3D Blu-ray's subtitle track is flat: the player moves it by a depth stored for every frame, in the track's 3D-Plane. `--plane-3d` reads that 3D-Plane from an `.ofs` file, so each subtitle stands where the disc puts it. A subtitle gets the depth nearest to the viewer during its frames. The offsets are in pixels of the 1920 wide Blu-ray view, scaled to `--resolution` and halved for half side-by-side.
 
 ```bash
 # SRT → UHD Blu-Ray sup with a semi-transparent black background box (SE4-style)
@@ -210,6 +213,9 @@ seconv movie.srt fcpimage --full-frame
 
 # 2D Blu-ray sup → half side-by-side 3D Blu-ray sup, standing slightly out of the screen
 seconv movie.sup bluraysup --mode-3d:half-side-by-side --depth-3d:4 --output-filename-append:.3d
+
+# 3D Blu-ray subtitle track → half side-by-side sup, at the disc's own depth (tsMuxeR: "3d-plane: 2")
+seconv track.sup bluraysup --mode-3d:half-side-by-side --plane-3d:3D-Plane-02.ofs --output-filename-append:.3d
 ```
 
 ### Containers / tracks

@@ -43,7 +43,7 @@ public static class Stereo3DImage
         }
 
         var position = FullFrameImage.GetPosition(ip, source.Width, source.Height);
-        var depth = ip.Depth3D;
+        var depth = GetDepth(ip);
 
         // Same direction as SE4: the left eye's copy moves right and the right eye's copy moves
         // left, so a positive depth crosses the eyes and the subtitle comes towards the viewer.
@@ -109,6 +109,32 @@ public static class Stereo3DImage
 
         ip.Bitmap = image3D;
         ip.OverridePosition = new SKPointI(bounds.Left, bounds.Top);
+    }
+
+    /// <summary>
+    /// The depth <see cref="Apply"/> moves the two copies apart by: from the 3D-Plane when it has
+    /// one for the subtitle's frames, else <see cref="ImageParameter.Depth3D"/>.
+    /// </summary>
+    public static int GetDepth(ImageParameter ip)
+    {
+        var offset = ip.Plane3D?.GetOffset(ip.StartTime, ip.EndTime);
+        return offset.HasValue ? DepthFromPlaneOffset(offset.Value, ip.Mode3D, ip.ScreenWidth) : ip.Depth3D;
+    }
+
+    /// <summary>
+    /// A 3D-Plane offset is how far the Blu-ray player shifts each eye's view of the subtitle, in
+    /// pixels of the 1920 wide frame - the same thing as the depth, once scaled to the export's
+    /// width. A half side-by-side view is squeezed to half that width, so the shift is too.
+    /// </summary>
+    public static int DepthFromPlaneOffset(int offset, Export3DMode mode, int screenWidth)
+    {
+        var depth = offset * (double)screenWidth / Stereo3DPlane.SourceWidth;
+        if (mode == Export3DMode.HalfSideBySide)
+        {
+            depth /= 2;
+        }
+
+        return (int)Math.Round(depth, MidpointRounding.AwayFromZero);
     }
 
     private static void DrawEye(SKCanvas canvas, SKImage image, SKRectI eye, SKRectI view)
