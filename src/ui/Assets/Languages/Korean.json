@@ -1,6 +1,6 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.2.0",
+  "version": "v5.3.0-beta4",
   "translatedBy": "Hack茶ん, 12시27분(@12si27)",
   "cultureName": "ko-KR",
   "general": {
@@ -2859,6 +2859,7 @@
     "readyToTranslate": "번역 준비 완료",
     "translating": "번역 중...",
     "translationComplete": "번역 완료",
+    "translateInPlaceNoOriginal": "제자리에서 번역 (원본 생성 안함)",
     "translationCancelled": "번역 취소됨",
     "swapLanguages": "원본 언어와 목표 언어 바꾸기",
     "xIsAlreadyDownloadedReDownload": "{0}은(는) 이미 다운로드되었습니다. 다시 다운로드할까요?",
@@ -3524,7 +3525,11 @@
     "applyToSelectedLinesX": "선택한 자막 줄({0})",
     "applyToAllLinesX": "모든 자막 줄({0})",
     "updateAllXAvailable": "모두 업데이트 ({0})",
-    "updatingXOfY": "{0}/{1} 업데이트 중..."
+    "updatingXOfY": "{0}/{1} 업데이트 중...",
+    "doNotAskAgain": "다시 묻지 않음 (플러그인 관리에서 변경)",
+    "applyPluginsTo": "플러그인을 적용할 대상",
+    "askEachTime": "매번 묻기",
+    "allLines": "모든 줄"
   },
   "help": {
     "aboutSubtitleEdit": "Subtitle Edit 소개",
