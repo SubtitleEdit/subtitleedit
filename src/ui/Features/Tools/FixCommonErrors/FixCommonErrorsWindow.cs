@@ -52,18 +52,10 @@ public class FixCommonErrorsWindow : Window
         labelStep2.Bind(IsVisibleProperty, new Binding(nameof(vm.Step2IsVisible)));
 
         var textBoxSearch = UiUtil.MakeTextBox(250, vm, nameof(vm.SearchText)).WithMarginRight(25)
-            .WithAccessibleName(Se.Language.Tools.FixCommonErrors.SearchRulesDotDotDot);
+            .WithAccessibleName(Se.Language.Tools.FixCommonErrors.SearchRulesDotDotDot)
+            .WithSearchAndClearIcons();
         textBoxSearch.PlaceholderText = Se.Language.Tools.FixCommonErrors.SearchRulesDotDotDot;
         textBoxSearch.Bind(IsVisibleProperty, new Binding(nameof(vm.Step1IsVisible)));
-        textBoxSearch.InnerLeftContent = new Optris.Icons.Avalonia.Icon
-        {
-            Value = IconNames.Find,
-            FontSize = 14,
-            Margin = new Thickness(6, 0, 0, 0),
-            VerticalAlignment = VerticalAlignment.Center,
-            Foreground = UiUtil.GetTextColor(0.6d),
-        };
-        textBoxSearch.InnerRightContent = MakeClearSearchButton(vm, textBoxSearch);
         // Off by default (#12441) - keep it reachable here, next to the language it depends on,
         // instead of only in the OCR window where a Fix-common-errors user would never look.
         var checkBoxGuessUnknownWords = UiUtil.MakeCheckBox(Se.Language.Ocr.TryToGuessUnknownWords, vm, nameof(vm.TryToGuessUnknownWords))
@@ -371,46 +363,6 @@ public class FixCommonErrorsWindow : Window
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
-    }
-
-    // The "x" inside the search box: only shown while there is text, and it hands focus back to
-    // the box so the next search can be typed straight away.
-    private static Button MakeClearSearchButton(FixCommonErrorsViewModel vm, TextBox textBoxSearch)
-    {
-        var button = new Button
-        {
-            Content = new Optris.Icons.Avalonia.Icon
-            {
-                Value = IconNames.Close,
-                FontSize = 14,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
-                Foreground = UiUtil.GetTextColor(0.6d),
-            },
-            Width = 24,
-            Height = 24,
-            Padding = new Thickness(0),
-            Margin = new Thickness(0, 0, 2, 0),
-            VerticalAlignment = VerticalAlignment.Center,
-            Background = Brushes.Transparent,
-            BorderBrush = null,
-            Focusable = false,
-            Cursor = new Cursor(StandardCursorType.Hand),
-        }.WithAccessibleName(Se.Language.General.Clear);
-        // Explicit Source: inner content only inherits a DataContext once the TextBox template is applied.
-        button.Bind(IsVisibleProperty, new Binding(nameof(vm.SearchText)) { Source = vm, Converter = StringConverters.IsNotNullOrEmpty });
-        if (Se.Settings.Appearance.ShowHints)
-        {
-            ToolTip.SetTip(button, Se.Language.General.Clear);
-        }
-
-        button.Click += (_, _) =>
-        {
-            vm.SearchText = string.Empty;
-            textBoxSearch.Focus();
-        };
-
-        return button;
     }
 
     private Grid MakeStep2Grid()

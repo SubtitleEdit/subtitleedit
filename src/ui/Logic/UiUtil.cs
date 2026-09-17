@@ -2086,6 +2086,61 @@ public static class UiUtil
     }
 
     /// <summary>
+    /// Decorates a search/filter box with a magnifier icon on the left and an "x" button on the
+    /// right that clears the text. The button only shows while there is text, is not a tab stop,
+    /// and returns focus to the box. Clearing sets Text, so bindings and TextChanged handlers
+    /// re-run the filter just as when the user deletes the text.
+    /// </summary>
+    public static T WithSearchAndClearIcons<T>(this T textBox) where T : TextBox
+    {
+        textBox.InnerLeftContent = new Icon
+        {
+            Value = IconNames.Find,
+            FontSize = 14,
+            Margin = new Thickness(6, 0, 0, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+            Foreground = GetTextColor(0.6d),
+        };
+
+        var clearButton = new Button
+        {
+            Content = new Icon
+            {
+                Value = IconNames.Close,
+                FontSize = 14,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Foreground = GetTextColor(0.6d),
+            },
+            Width = 24,
+            Height = 24,
+            Padding = new Thickness(0),
+            Margin = new Thickness(0, 0, 2, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+            Background = Brushes.Transparent,
+            BorderBrush = null,
+            Focusable = false,
+            Cursor = new Cursor(StandardCursorType.Hand),
+        }.WithAccessibleName(Se.Language.General.Clear);
+
+        // Explicit Source: inner content only gets a DataContext once the TextBox template is applied.
+        clearButton.Bind(Visual.IsVisibleProperty, new Binding(nameof(TextBox.Text)) { Source = textBox, Converter = StringConverters.IsNotNullOrEmpty });
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(clearButton, Se.Language.General.Clear);
+        }
+
+        clearButton.Click += (_, _) =>
+        {
+            textBox.Text = string.Empty;
+            textBox.Focus();
+        };
+
+        textBox.InnerRightContent = clearButton;
+        return textBox;
+    }
+
+    /// <summary>
     /// Links this control to an existing visible label so a screen reader announces the label as the
     /// control's name (UIA LabeledBy). Prefer this over a hard-coded name when a label already exists,
     /// as it stays correct for bound/localized label text (#11745).

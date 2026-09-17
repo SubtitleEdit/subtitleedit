@@ -221,7 +221,7 @@ public class VoiceManagerWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBox.TextProperty] = new Binding(nameof(vm.FilterText)) { Mode = BindingMode.TwoWay },
         };
-        searchBox.InnerLeftContent = new Icon { Value = IconNames.Find, FontSize = 14, Margin = new Thickness(6, 0, 2, 0), Foreground = UiUtil.GetTextColor(0.6d) };
+        searchBox.WithSearchAndClearIcons();
 
         var left = new StackPanel
         {
