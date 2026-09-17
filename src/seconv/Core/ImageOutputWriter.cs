@@ -232,6 +232,7 @@ internal static class ImageOutputWriter
             FullFrameBackgroundColor = style.FullFrameBackgroundColor,
             Mode3D = style.Mode3D,
             Depth3D = style.Depth3D,
+            Plane3D = style.Plane3D,
             Error = string.Empty,
         };
     }
@@ -284,6 +285,7 @@ internal static class ImageOutputWriter
             FullFrameBackgroundColor = style.FullFrameBackgroundColor,
             Mode3D = style.Mode3D,
             Depth3D = style.Depth3D,
+            Plane3D = style.Plane3D,
             Error = string.Empty,
         };
 

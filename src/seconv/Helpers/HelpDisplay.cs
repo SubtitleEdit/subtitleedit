@@ -116,6 +116,7 @@ internal static class HelpDisplay
         ShowParameter(console, "--full-frame-background-color:<colour>", "Background of the full frame image (default: transparent)");
         ShowParameter(console, "--mode-3d:<mode>", "3D video, one copy per eye: none (default) | half-side-by-side (sbs) | half-top-bottom (tab); also image → image");
         ShowParameter(console, "--depth-3d:<px>", "3D depth -100..100; positive brings the subtitle out of the screen. D-Cinema: the Z-position");
+        ShowParameter(console, "--plane-3d:<file.ofs>", "3D Blu-ray 3D-Plane: each subtitle gets the disc's depth for its frames (--depth-3d where it has none)");
 
         console.WriteLine();
         console.MarkupLine("[bold cyan]Operations:[/]");

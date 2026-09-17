@@ -22,6 +22,7 @@ using SkiaSharp.HarfBuzz;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -94,6 +95,8 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
     [ObservableProperty] private bool _isMode3DVisible = true;
     [ObservableProperty] private bool _isDepth3DEnabled;
     [ObservableProperty] private string _depth3DText = string.Empty;
+    [ObservableProperty] private string _plane3DText = string.Empty;
+    [ObservableProperty] private bool _isPlane3DLoaded;
     [ObservableProperty] private ObservableCollection<TextEffectDisplayItem> _textEffectItems = null!;
     [ObservableProperty] private TextEffectDisplayItem? _selectedTextEffect;
     [ObservableProperty] private bool _isTextEffectEnabled;
@@ -135,6 +138,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
     private int _scriptWidth;
     private int _scriptHeight;
     private bool _dirty;
+    private Stereo3DPlane? _plane3D;
     private readonly Lock _generateLock;
     private bool _isCtrlDown;
     private IExportHandler? _exportImageHandler;
@@ -595,6 +599,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             // D-Cinema has no 3D mode (see IsMode3DVisible), only the depth - its Z-position.
             Mode3D = IsMode3DVisible ? SelectedMode3D?.Mode ?? Export3DMode.None : Export3DMode.None,
             Depth3D = IsDepth3DEnabled ? SelectedDepth3D : 0,
+            Plane3D = IsMode3DVisible ? _plane3D : null,
             TextEffects = TextEffectPresetFactory.Create(
                 IsTextEffectEnabled,
                 SelectedTextEffect?.Preset ?? TextEffectPreset.SoftShadow,
@@ -852,6 +857,56 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
     private void UpdateDepth3DEnabled()
     {
         IsDepth3DEnabled = !IsMode3DVisible || SelectedMode3D?.Mode is not (null or Export3DMode.None);
+    }
+
+    /// <summary>
+    /// A 3D Blu-ray's depth for every frame (an OFS file), so each subtitle stands where the disc
+    /// put it instead of all at one depth. Belongs to one movie, so it is not kept in the profile.
+    /// </summary>
+    [RelayCommand]
+    private async Task BrowsePlane3D()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.File.Export.OpenPlane3DTitle, "3D-Plane", ".ofs");
+        if (string.IsNullOrEmpty(fileName))
+        {
+            return;
+        }
+
+        try
+        {
+            _plane3D = Stereo3DPlane.Load(fileName);
+        }
+        catch (Exception exception)
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Error,
+                string.Format(Se.Language.File.Export.UnableToLoadPlane3DX, exception.Message),
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return;
+        }
+
+        var range = _plane3D.GetDepthRange();
+        Plane3DText = range.HasValue
+            ? string.Format(Se.Language.File.Export.Plane3DXDepthYToZ, Path.GetFileName(fileName), range.Value.Min, range.Value.Max)
+            : string.Format(Se.Language.File.Export.Plane3DXNoDepth, Path.GetFileName(fileName));
+        IsPlane3DLoaded = true;
+        _dirty = true;
+    }
+
+    [RelayCommand]
+    private void ClearPlane3D()
+    {
+        _plane3D = null;
+        Plane3DText = string.Empty;
+        IsPlane3DLoaded = false;
+        _dirty = true;
     }
 
     [RelayCommand]

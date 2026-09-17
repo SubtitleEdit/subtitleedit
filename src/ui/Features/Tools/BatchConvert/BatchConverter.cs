@@ -1776,6 +1776,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         var mode3D = _config.TargetFormatName is FormatDCinemaInterop or FormatDCinemaSmpte2014
             ? Export3DMode.None
             : profile.Mode3D;
+        var plane3D = mode3D == Export3DMode.None ? null : LoadPlane3D(item.FileName);
 
         var imageParameters = new List<ImageParameter>();
         for (var i = 0; i < imageSubtitle.Count; i++)
@@ -1824,6 +1825,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 FullFrameBackgroundColor = profile.FullFrameBackgroundColor.FromHexToColor().ToSKColor(),
                 Mode3D = mode3D,
                 Depth3D = profile.Depth3D,
+                Plane3D = plane3D,
             };
             var position = imageSubtitle.GetPosition(i);
             if (imageSubtitle is OcrSubtitleTransportStream)
@@ -1983,6 +1985,34 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         catch (Exception exception)
         {
             item.Status = string.Format(Se.Language.General.ErrorX, exception.Message);
+        }
+    }
+
+    /// <summary>
+    /// A 3D-Plane belongs to one movie, so batch convert takes the one saved next to each file
+    /// with the same name ("movie.sup" + "movie.ofs"), if any.
+    /// </summary>
+    private static Stereo3DPlane? LoadPlane3D(string fileName)
+    {
+        if (string.IsNullOrEmpty(fileName))
+        {
+            return null;
+        }
+
+        var planeFileName = Path.ChangeExtension(fileName, ".ofs");
+        if (!File.Exists(planeFileName))
+        {
+            return null;
+        }
+
+        try
+        {
+            return Stereo3DPlane.Load(planeFileName);
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Unable to load 3D-Plane " + planeFileName);
+            return null;
         }
     }
 

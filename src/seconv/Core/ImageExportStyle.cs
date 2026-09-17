@@ -66,6 +66,12 @@ internal sealed class ImageExportStyle
     /// </summary>
     public int Depth3D { get; set; }
 
+    /// <summary>
+    /// A 3D Blu-ray's depth for every frame: each subtitle gets the depth of the frames it is shown
+    /// on, and <see cref="Depth3D"/> is used where the 3D-Plane has none. Needs a 3D mode.
+    /// </summary>
+    public Stereo3DPlane? Plane3D { get; set; }
+
     public static bool IsValidDepth3D(int depth)
     {
         return depth is >= Stereo3DImage.MinDepth and <= Stereo3DImage.MaxDepth;

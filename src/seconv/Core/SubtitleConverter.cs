@@ -51,7 +51,7 @@ internal class SubtitleConverter
     private static void WarnIf3DIgnored(ConversionOptions options, ConversionResult result)
     {
         var style = options.ImageStyle;
-        if (style.Mode3D == Export3DMode.None && style.Depth3D == 0)
+        if (style.Mode3D == Export3DMode.None && style.Depth3D == 0 && style.Plane3D == null)
         {
             return;
         }
@@ -69,10 +69,17 @@ internal class SubtitleConverter
                 result.Warnings.Add(
                     $"3D mode is not supported by '{options.Format}' and was ignored - D-Cinema writes the 3D depth as the Z-position instead.");
             }
+
+            if (style.Plane3D != null)
+            {
+                result.Warnings.Add($"3D-Plane is not supported by '{options.Format}' and was ignored.");
+            }
         }
         else if (style.Mode3D == Export3DMode.None)
         {
-            result.Warnings.Add("3D depth has no effect without a 3D mode (--mode-3d) and was ignored.");
+            result.Warnings.Add(style.Plane3D != null
+                ? "3D-Plane has no effect without a 3D mode (--mode-3d) and was ignored."
+                : "3D depth has no effect without a 3D mode (--mode-3d) and was ignored.");
         }
     }
 
