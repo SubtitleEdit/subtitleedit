@@ -21377,7 +21377,11 @@ public partial class MainViewModel :
             // wired up (in InitListViewAndEditBox) means this runs once the selection state has
             // settled. Also fires for "Select current subtitle while playing".
             SubtitleGrid.SelectionChanged += ActorPickerOnGridSelectionChanged;
-            window.Closed += (_, _) => SubtitleGrid.SelectionChanged -= ActorPickerOnGridSelectionChanged;
+            window.Closed += (_, _) =>
+            {
+                SubtitleGrid.SelectionChanged -= ActorPickerOnGridSelectionChanged;
+                _actorPickerViewModel = null;
+            };
         });
     }
 
