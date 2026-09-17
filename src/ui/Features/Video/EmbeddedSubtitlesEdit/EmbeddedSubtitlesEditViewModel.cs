@@ -33,6 +33,10 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
     public bool CanGenerate => HasVideoFileName && !IsGenerating;
     [ObservableProperty] private ObservableCollection<EmbeddedTrack> _tracks;
     [ObservableProperty] private EmbeddedTrack? _selectedTrck;
+    [ObservableProperty] private bool _isTrackSelected;
+    [ObservableProperty] private bool _isMoveUpEnabled;
+    [ObservableProperty] private bool _isMoveDownEnabled;
+    [ObservableProperty] private string _deleteText;
     [ObservableProperty] private string _progressText;
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private bool _isGenerating;
@@ -69,6 +73,8 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
         _windowService = windowService;
 
         Tracks = new ObservableCollection<EmbeddedTrack>();
+        Tracks.CollectionChanged += (_, _) => UpdateTrackListState();
+        DeleteText = Se.Language.General.Delete;
         VideoFileName = string.Empty;
         ProgressText = string.Empty;
         TracksGrid = new TableView();
@@ -430,6 +436,60 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
         }
     }
 
+    partial void OnSelectedTrckChanged(EmbeddedTrack? oldValue, EmbeddedTrack? newValue)
+    {
+        if (oldValue != null)
+        {
+            oldValue.PropertyChanged -= SelectedTrackPropertyChanged;
+        }
+
+        if (newValue != null)
+        {
+            newValue.PropertyChanged += SelectedTrackPropertyChanged;
+        }
+
+        UpdateTrackListState();
+    }
+
+    private void SelectedTrackPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(EmbeddedTrack.Deleted))
+        {
+            UpdateTrackListState();
+        }
+    }
+
+    private void UpdateTrackListState()
+    {
+        var index = SelectedTrck == null ? -1 : Tracks.IndexOf(SelectedTrck);
+        IsTrackSelected = index >= 0;
+        IsMoveUpEnabled = index > 0;
+        IsMoveDownEnabled = index >= 0 && index < Tracks.Count - 1;
+        DeleteText = SelectedTrck?.Deleted == true ? Se.Language.General.Undelete : Se.Language.General.Delete;
+    }
+
+    // The list order is the output subtitle track order, see FfmpegGenerator.AlterEmbeddedTracks*.
+    [RelayCommand]
+    private void MoveUp() => MoveSelectedTrack(ListMoveDirection.Up);
+
+    [RelayCommand]
+    private void MoveDown() => MoveSelectedTrack(ListMoveDirection.Down);
+
+    private void MoveSelectedTrack(ListMoveDirection direction)
+    {
+        var track = SelectedTrck;
+        var index = track == null ? -1 : Tracks.IndexOf(track);
+        if (track == null || index < 0)
+        {
+            return;
+        }
+
+        ListReorder.Move(Tracks, new[] { index }, direction);
+        SelectedTrck = track;
+        SelectAndScrollToRow(Tracks.IndexOf(track));
+        UpdateTrackListState();
+    }
+
     [RelayCommand]
     private async Task Preview()
     {
@@ -764,7 +824,17 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
      
     internal void OnTracksGridKeyDown(KeyEventArgs e)
     {
-        if (e.Key == Key.Delete)
+        if (e.KeyModifiers == KeyModifiers.Control && e.Key == Key.Up)
+        {
+            MoveUp();
+            e.Handled = true;
+        }
+        else if (e.KeyModifiers == KeyModifiers.Control && e.Key == Key.Down)
+        {
+            MoveDown();
+            e.Handled = true;
+        }
+        else if (e.Key == Key.Delete)
         {
             Delete();
             e.Handled = true;
