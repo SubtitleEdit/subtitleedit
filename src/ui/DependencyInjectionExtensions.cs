@@ -148,6 +148,7 @@ using Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
 using Nikse.SubtitleEdit.Features.Tools.SplitSubtitle;
 using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Features.Translate.LlamaCppEngineSettings;
+using Nikse.SubtitleEdit.Features.Video.BackgroundMusic;
 using Nikse.SubtitleEdit.Features.Video.BlankVideo;
 using Nikse.SubtitleEdit.Features.Video.BurnIn;
 using Nikse.SubtitleEdit.Features.Video.Chapters;
@@ -313,6 +314,7 @@ public static class DependencyInjectionExtensions
         collection.AddHttpClientWithProxy<IHiggsTtsAudioCppDownloadService, HiggsTtsAudioCppDownloadService>();
         collection.AddHttpClientWithProxy<IFishTtsAudioCppDownloadService, FishTtsAudioCppDownloadService>();
         collection.AddHttpClientWithProxy<IFireRedTts3AudioCppDownloadService, FireRedTts3AudioCppDownloadService>();
+        collection.AddHttpClientWithProxy<IAceStepAudioCppDownloadService, AceStepAudioCppDownloadService>();
         collection.AddHttpClientWithProxy<ICosyVoice3CrispAsrDownloadService, CosyVoice3CrispAsrDownloadService>();
         collection.AddHttpClientWithProxy<IF5TtsCrispAsrDownloadService, F5TtsCrispAsrDownloadService>();
         collection.AddHttpClientWithProxy<IOmniVoiceCrispAsrDownloadService, OmniVoiceCrispAsrDownloadService>();
@@ -383,6 +385,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<BinaryOcrSettingsViewModel>();
         collection.AddTransient<BinaryResizeImagesViewModel>();
         collection.AddTransient<BinarySettingsViewModel>();
+        collection.AddTransient<BackgroundMusicViewModel>();
         collection.AddTransient<BlankVideoViewModel>();
         collection.AddTransient<BookmarkEditViewModel>();
         collection.AddTransient<BookmarksListViewModel>();

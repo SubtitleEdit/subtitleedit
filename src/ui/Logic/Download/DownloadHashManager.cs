@@ -269,6 +269,14 @@ public static class DownloadHashManager
         public const string ModelBf16 = "FishTtsAudioCpp.ModelBf16";
     }
 
+    public static class AceStepAudioCpp
+    {
+        // SHA-256 of the ACE-Step 1.5 Turbo GGUF on audio-cpp/audio.cpp-gguf (HF LFS oid), used by
+        // Video > Generate background music. The runtime is the shared audio.cpp archive keyed
+        // under IndexTts25AudioCpp.
+        public const string ModelQ8_0 = "AceStepAudioCpp.ModelQ8_0";
+    }
+
     public static class FireRedTts3AudioCpp
     {
         // SHA-256 of the FireRedTTS3-Base GGUFs on audio-cpp/audio.cpp-gguf (HF LFS oid).
@@ -2043,6 +2051,12 @@ public static class DownloadHashManager
             [FishTtsAudioCpp.ModelBf16] = new[]
             {
                 "781fdece3ff837838c48f7d5a7b37e37c4d661a6416416ad57fe92fed47d96ff", // fish-audio-s2-pro-bf16.gguf
+            },
+
+            // ACE-Step 1.5 Turbo music weights, from audio-cpp/audio.cpp-gguf (HF LFS oid).
+            [AceStepAudioCpp.ModelQ8_0] = new[]
+            {
+                "cd7bf272588f548d4a253f57483132ef0f8f54a549f26471b09caa72c654270b", // ace-step-1.5-turbo-q8_0.gguf
             },
 
             // FireRedTTS3-Base weights, from audio-cpp/audio.cpp-gguf (HF LFS oid).
