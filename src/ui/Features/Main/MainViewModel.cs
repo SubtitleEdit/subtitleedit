@@ -21413,7 +21413,7 @@ public partial class MainViewModel :
             if (i < ActorShortcutCommandNames.Length)
             {
                 var shortcut = usedShortcuts.FirstOrDefault(s => s.Name == ActorShortcutCommandNames[i]);
-                shortcutText = shortcut != null ? InitMenu.ToKeyGesture(shortcut)?.ToString() ?? string.Empty : string.Empty;
+                shortcutText = InitMenu.ToKeyGestureDisplayText(shortcut);
             }
 
             items.Add(new ActorDisplayItem(actorNames[i], shortcutText));

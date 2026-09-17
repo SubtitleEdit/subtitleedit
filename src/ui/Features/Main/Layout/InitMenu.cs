@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Converters;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
@@ -1307,5 +1308,11 @@ public static class InitMenu
         }
 
         return new KeyGesture(keyValue.Value, modifiers);
+    }
+
+    internal static string ToKeyGestureDisplayText(ShortCut? shortcut)
+    {
+        var gesture = shortcut != null ? ToKeyGesture(shortcut) : null;
+        return gesture != null ? PlatformKeyGestureConverter.ToPlatformString(gesture) : string.Empty;
     }
 }
