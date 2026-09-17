@@ -94,6 +94,7 @@ public class EmbeddedSubtitlesEditTests : IDisposable
     public void MoveUpDown_ReordersTracksAndKeepsSelection()
     {
         var vm = new EmbeddedSubtitlesEditViewModel(new FolderHelper(), new FileHelper(), new WindowService(new NullServiceProvider()));
+        vm.VideoFileName = "movie.mkv";
         var a = new EmbeddedTrack { Name = "A" };
         var b = new EmbeddedTrack { Name = "B" };
         var c = new EmbeddedTrack { Name = "C" };
@@ -136,5 +137,89 @@ public class EmbeddedSubtitlesEditTests : IDisposable
 
         vm.DeleteCommand.Execute(null);
         Assert.Equal(Se.Language.General.Delete, vm.DeleteText);
+    }
+
+    [Theory]
+    [InlineData("movie.mkv", true)]
+    [InlineData("movie.WEBM", true)]
+    [InlineData("movie.mp4", false)]
+    [InlineData("movie", false)]
+    public void IsSupportedVideoFile_Matroska(string fileName, bool expected)
+    {
+        Assert.Equal(expected, EmbeddedSubtitlesEditViewModel.IsSupportedVideoFile(fileName));
+    }
+
+    [Theory]
+    [InlineData("movie.mp4", true)]
+    [InlineData("movie.M4V", true)]
+    [InlineData("movie.mov", true)]
+    [InlineData("movie.mkv", false)]
+    public void IsSupportedVideoFile_Mp4(string fileName, bool expected)
+    {
+        Assert.Equal(expected, EmbeddedSubtitlesEditMp4ViewModel.IsSupportedVideoFile(fileName));
+    }
+
+    [AvaloniaFact]
+    public void VideoFileSize_FollowsVideoFileName()
+    {
+        var vm = new EmbeddedSubtitlesEditViewModel(new FolderHelper(), new FileHelper(), new WindowService(new NullServiceProvider()));
+        var fileName = MakeTempSubtitle();
+
+        vm.VideoFileName = fileName;
+        Assert.False(string.IsNullOrEmpty(vm.VideoFileSize));
+
+        vm.VideoFileName = string.Empty;
+        Assert.Equal(string.Empty, vm.VideoFileSize);
+    }
+
+    [AvaloniaFact]
+    public void Generating_LocksTheTrackList()
+    {
+        var vm = new EmbeddedSubtitlesEditViewModel(new FolderHelper(), new FileHelper(), new WindowService(new NullServiceProvider()));
+        vm.VideoFileName = "movie.mkv";
+        var a = new EmbeddedTrack { Name = "A" };
+        var b = new EmbeddedTrack { Name = "B" };
+        vm.Tracks.Add(a);
+        vm.Tracks.Add(b);
+        vm.SelectedTrck = a;
+        Assert.True(vm.CanEditTracks);
+        Assert.True(vm.IsTrackSelected);
+        Assert.True(vm.IsMoveDownEnabled);
+
+        vm.IsGenerating = true;
+        Assert.False(vm.CanEditTracks);
+        Assert.False(vm.IsTrackSelected);
+        Assert.False(vm.IsMoveDownEnabled);
+
+        vm.DeleteCommand.Execute(null);
+        vm.MoveDownCommand.Execute(null);
+        Assert.False(a.Deleted);
+        Assert.Equal(new[] { a, b }, vm.Tracks);
+
+        vm.IsGenerating = false;
+        Assert.True(vm.IsTrackSelected);
+        Assert.True(vm.IsMoveDownEnabled);
+    }
+
+    [AvaloniaFact]
+    public void Generating_LocksTheTrackListMp4()
+    {
+        var vm = new EmbeddedSubtitlesEditMp4ViewModel(new FolderHelper(), new FileHelper(), new WindowService(new NullServiceProvider()));
+        vm.VideoFileName = "movie.mp4";
+        vm.TracksReady = true;
+        var track = new EmbeddedTrack { Name = "A" };
+        vm.Tracks.Add(track);
+        vm.SelectedTrack = track;
+        Assert.True(vm.IsTrackSelected);
+
+        vm.IsGenerating = true;
+        Assert.False(vm.CanEditTracks);
+        Assert.False(vm.IsTrackSelected);
+        vm.DeleteCommand.Execute(null);
+        Assert.False(track.Deleted);
+
+        vm.IsGenerating = false;
+        Assert.True(vm.CanEditTracks);
+        Assert.True(vm.IsTrackSelected);
     }
 }

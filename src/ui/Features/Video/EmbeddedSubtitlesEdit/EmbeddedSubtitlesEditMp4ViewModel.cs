@@ -30,9 +30,10 @@ namespace Nikse.SubtitleEdit.Features.Video.EmbeddedSubtitlesEdit;
 public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
 {
     [ObservableProperty] private string _videoFileName;
+    [ObservableProperty] private string _videoFileSize;
     public bool HasVideoFileName => !string.IsNullOrEmpty(VideoFileName);
     public bool CanGenerate => HasVideoFileName && !IsGenerating && TracksReady;
-    public bool CanEditTracks => HasVideoFileName && TracksReady;
+    public bool CanEditTracks => HasVideoFileName && TracksReady && !IsGenerating;
     [ObservableProperty] private ObservableCollection<EmbeddedTrack> _tracks;
     [ObservableProperty] private EmbeddedTrack? _selectedTrack;
     [ObservableProperty] private bool _isTrackSelected;
@@ -72,6 +73,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
     // Avalonia's Window.Loaded can fire more than once (re-attach to visual tree, layout
     // pass). Without this guard the initial track scan would re-append on every fire.
     private bool _loaded;
+    private static readonly string[] SupportedVideoExtensions = { ".mp4", ".m4v", ".mov" };
     private static readonly Regex FrameFinderRegex = new(@"[Ff]rame=\s*\d+", RegexOptions.Compiled);
 
     private readonly IFolderHelper _folderHelper;
@@ -88,6 +90,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
         Tracks.CollectionChanged += (_, _) => UpdateTrackListState();
         DeleteText = Se.Language.General.Delete;
         VideoFileName = string.Empty;
+        VideoFileSize = string.Empty;
         ProgressText = string.Empty;
         TracksGrid = new TableView();
 
@@ -112,10 +115,36 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
         OnPropertyChanged(nameof(HasVideoFileName));
         OnPropertyChanged(nameof(CanGenerate));
         OnPropertyChanged(nameof(CanEditTracks));
+
+        try
+        {
+            VideoFileSize = HasVideoFileName && File.Exists(value)
+                ? Utilities.FormatBytesToDisplayFileSize(new FileInfo(value).Length)
+                : string.Empty;
+        }
+        catch
+        {
+            VideoFileSize = string.Empty;
+        }
         UpdateTrackListState();
     }
 
-    partial void OnIsGeneratingChanged(bool value) => OnPropertyChanged(nameof(CanGenerate));
+    partial void OnIsGeneratingChanged(bool value)
+    {
+        OnPropertyChanged(nameof(CanGenerate));
+        OnPropertyChanged(nameof(CanEditTracks));
+
+        // The track list is locked while ffmpeg runs - the command line is already built from
+        // it, so edits would only look applied. IsGenerating can change on the timer thread.
+        if (Dispatcher.UIThread.CheckAccess())
+        {
+            UpdateTrackListState();
+        }
+        else
+        {
+            Dispatcher.UIThread.Post(UpdateTrackListState);
+        }
+    }
 
     partial void OnTracksReadyChanged(bool value)
     {
@@ -287,7 +316,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
     [RelayCommand]
     private async Task Add()
     {
-        if (Window == null || _isAdding)
+        if (Window == null || _isAdding || !CanEditTracks)
         {
             return;
         }
@@ -341,7 +370,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
     [RelayCommand]
     private void AddCurrent()
     {
-        if (Window == null || _currentSubtitle == null || _currentSubtitle.Paragraphs.Count == 0)
+        if (Window == null || !CanEditTracks || _currentSubtitle == null || _currentSubtitle.Paragraphs.Count == 0)
         {
             return;
         }
@@ -382,7 +411,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
     [RelayCommand]
     private void Delete()
     {
-        if (SelectedTrack != null)
+        if (SelectedTrack != null && CanEditTracks)
         {
             SelectedTrack.Deleted = !SelectedTrack.Deleted;
         }
@@ -445,6 +474,11 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
     [RelayCommand]
     private void Clear()
     {
+        if (!CanEditTracks)
+        {
+            return;
+        }
+
         foreach (var track in Tracks)
         {
             track.Deleted = true;
@@ -455,7 +489,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
     private async Task Edit()
     {
         var selectedTrack = SelectedTrack;
-        if (Window == null || selectedTrack == null)
+        if (Window == null || selectedTrack == null || !CanEditTracks)
         {
             return;
         }
@@ -571,7 +605,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
     [RelayCommand]
     private async Task BrowseVideoFile()
     {
-        if (Window == null)
+        if (Window == null || IsGenerating)
         {
             return;
         }
@@ -586,6 +620,11 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
             return;
         }
 
+        LoadVideoFile(fileName);
+    }
+
+    private void LoadVideoFile(string fileName)
+    {
         VideoFileName = fileName;
         Tracks.Clear();
         _originalTracks.Clear();
@@ -610,6 +649,41 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
                 TracksReady = true;
             });
         });
+    }
+
+    internal static bool IsSupportedVideoFile(string fileName)
+    {
+        var extension = Path.GetExtension(fileName);
+        return SupportedVideoExtensions.Any(e => e.Equals(extension, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static string? GetDroppedVideoFile(DragEventArgs e)
+    {
+        if (!e.DataTransfer.Contains(DataFormat.File))
+        {
+            return null;
+        }
+
+        var fileName = e.DataTransfer.TryGetFiles()?.FirstOrDefault()?.Path?.LocalPath;
+        return fileName != null && IsSupportedVideoFile(fileName) && File.Exists(fileName) ? fileName : null;
+    }
+
+    internal void VideoDragOver(object? sender, DragEventArgs e)
+    {
+        e.DragEffects = !IsGenerating && GetDroppedVideoFile(e) != null ? DragDropEffects.Copy : DragDropEffects.None;
+        e.Handled = true;
+    }
+
+    internal void VideoDrop(object? sender, DragEventArgs e)
+    {
+        var fileName = GetDroppedVideoFile(e);
+        if (fileName == null || IsGenerating)
+        {
+            return;
+        }
+
+        e.Handled = true;
+        LoadVideoFile(fileName);
     }
 
     [RelayCommand]
