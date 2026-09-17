@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -178,6 +179,15 @@ public class VideoOcrWindow : Window
             },
         };
 
+        // The result of a test only went to the status text below the progress bar, which a
+        // screen reader user cannot reach or hear (#12087). The button is disabled while the test
+        // runs, which drops keyboard focus to nothing - put it back on the button when the test
+        // is done, with the result as its description, so NVDA reads the result right away.
+        var testButton = UiUtil.MakeButton(Se.Language.Video.VideoOcr.TestOcr, vm.TestOcrCommand)
+            .WithBindEnabled(nameof(vm.IsRunning), InverseBooleanConverter.Instance);
+        testButton.Bind(AutomationProperties.HelpTextProperty, new Binding(nameof(vm.TestOcrResult)) { Source = vm });
+        RefocusWhenReEnabled(testButton);
+
         // On its own row: sharing the scan-area row squeezed that row's buttons once the
         // preview column narrowed.
         var testRow = new StackPanel
@@ -186,8 +196,7 @@ public class VideoOcrWindow : Window
             Spacing = 5,
             Children =
             {
-                UiUtil.MakeButton(Se.Language.Video.VideoOcr.TestOcr, vm.TestOcrCommand)
-                    .WithBindEnabled(nameof(vm.IsRunning), InverseBooleanConverter.Instance),
+                testButton,
             },
         };
 
@@ -665,6 +674,39 @@ public class VideoOcrWindow : Window
         }, RoutingStrategies.Tunnel);
 
         return UiUtil.MakeBorderForControl(tableView);
+    }
+
+    /// <summary>
+    /// Disabling the focused button leaves keyboard focus on nothing; when the button is enabled
+    /// again and focus is still nowhere, give it back to the button.
+    /// </summary>
+    internal static void RefocusWhenReEnabled(Button button)
+    {
+        var lostFocusByDisable = false;
+        var focusVisible = false;
+
+        // The focus rectangle is already off on LostFocus, so note how the button got focus.
+        button.GotFocus += (_, e) =>
+            focusVisible = e.NavigationMethod is NavigationMethod.Tab or NavigationMethod.Directional;
+
+        // Checked on LostFocus: by the time IsEnabled reports the change, focus is already gone.
+        button.LostFocus += (_, e) =>
+            lostFocusByDisable = !button.IsEffectivelyEnabled && e.NewFocusedElement == null;
+
+        button.PropertyChanged += (_, e) =>
+        {
+            if (e.Property != IsEffectivelyEnabledProperty || e.NewValue is not true || !lostFocusByDisable)
+            {
+                return;
+            }
+
+            lostFocusByDisable = false;
+            var focused = TopLevel.GetTopLevel(button)?.FocusManager?.GetFocusedElement();
+            if (focused == null || focused is TopLevel)
+            {
+                button.Focus(focusVisible ? NavigationMethod.Tab : NavigationMethod.Unspecified);
+            }
+        };
     }
 
     private static Grid MakeProgressView(VideoOcrViewModel vm)
