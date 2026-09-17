@@ -85,6 +85,8 @@ public class CloneReferenceTailTests
     [Theory]
     [InlineData("{\"error\":{\"message\":\"Higgs TTS generation reached max_tokens before EOC\",\"type\":\"server_error\"}}", true)]
     [InlineData("Higgs TTS generation reached MAX_TOKENS before EOC", true)]
+    // audio.cpp v0.8.0 (#522) reworded it and added the limit plus tuning advice.
+    [InlineData("{\"error\":{\"message\":\"Higgs TTS generation reached max_tokens (2048) before EOC for this text chunk; raise it with --max-tokens on the CLI or the \\\"max_tokens\\\" request option on the server, or lower --text-chunk-size / \\\"text_chunk_size\\\" so each chunk needs fewer generated frames\",\"type\":\"server_error\"}}", true)]
     [InlineData("unsupported model family hint: higgs_audio_tts", false)]
     [InlineData("max_tokens must be non-negative", false)]
     [InlineData("", false)]
