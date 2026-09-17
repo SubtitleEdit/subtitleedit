@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Video.EmbeddedSubtitlesEdit;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.UiLogic.Export;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -67,9 +68,62 @@ public class FfmpegGenerator
     }
 
     /// <summary>
+    /// The burn-in filter graph for frame-packed 3D video, the ffmpeg side of
+    /// <see cref="Stereo3DImage"/>: the subtitles are rendered for the full frame, squeezed into
+    /// each eye's half of it, and laid over that half moved sideways by the depth - the left (top)
+    /// eye's copy to the right, the other eye's to the left, so a positive depth brings the
+    /// subtitle out of the screen. Each eye is cropped out, so a copy never crosses into the
+    /// other eye's half, and the two are stacked back together.
+    /// </summary>
+    /// <param name="videoChain">The main video, scaled to the output size - no output label.</param>
+    /// <param name="imageSubtitleChain">A bitmap subtitle stream (Blu-ray sup) scaled to the output size, or null for text.</param>
+    /// <param name="assaFileName">The ASSA file libass renders, when <paramref name="imageSubtitleChain"/> is null.</param>
+    /// <returns>A graph whose last filter has no output label, like the flat graphs.</returns>
+    internal static string MakeStereo3DGraph(string videoChain, string? imageSubtitleChain, string? assaFileName, int width, int height, Export3DMode mode, int depth)
+    {
+        string sources;
+        string alpha;
+        if (imageSubtitleChain != null)
+        {
+            sources = $"{videoChain},split[v3d1][v3d2];{imageSubtitleChain},split[s3d1][s3d2];";
+            alpha = string.Empty;
+        }
+        else
+        {
+            // libass needs a frame to draw on: a fully transparent copy of the video (so it has
+            // the video's timestamps), drawn with its alpha channel kept. The drawing leaves the
+            // colors multiplied by their alpha, so the overlays are told the alpha is premultiplied.
+            sources = $"{videoChain},split=3[v3d1][v3d2][v3d0];" +
+                      $"[v3d0]format=rgba,colorchannelmixer=rr=0:gg=0:bb=0:aa=0,ass={assaFileName}:alpha=1,split[s3d1][s3d2];";
+            alpha = ":alpha=premultiplied";
+        }
+
+        var depth1 = depth.ToString(CultureInfo.InvariantCulture);
+        var depth2 = (-depth).ToString(CultureInfo.InvariantCulture);
+        if (mode == Export3DMode.HalfTopBottom)
+        {
+            var top = height / 2;
+            var bottom = height - top;
+            return sources +
+                   $"[s3d1]scale={width}:{top}[s3d1h];[s3d2]scale={width}:{bottom}[s3d2h];" +
+                   $"[v3d1]crop={width}:{top}:0:0[e3d1];[v3d2]crop={width}:{bottom}:0:{top}[e3d2];" +
+                   $"[e3d1][s3d1h]overlay=x={depth1}:y=0{alpha}[o3d1];[e3d2][s3d2h]overlay=x={depth2}:y=0{alpha}[o3d2];" +
+                   "[o3d1][o3d2]vstack";
+        }
+
+        var left = width / 2;
+        var right = width - left;
+        return sources +
+               $"[s3d1]scale={left}:{height}[s3d1h];[s3d2]scale={right}:{height}[s3d2h];" +
+               $"[v3d1]crop={left}:{height}:0:0[e3d1];[v3d2]crop={right}:{height}:{left}:0[e3d2];" +
+               $"[e3d1][s3d1h]overlay=x={depth1}:y=0{alpha}[o3d1];[e3d2][s3d2h]overlay=x={depth2}:y=0{alpha}[o3d2];" +
+               "[o3d1][o3d2]hstack";
+    }
+
+    /// <summary>
     /// Generate ffmpeg parameters for a video with a burned-in Advanced Sub Station Alpha subtitle.
     /// </summary>
-    public static string GenerateHardcodedVideoFile(string inputVideoFileName, string assaSubtitleFileName, string outputVideoFileName, int width, int height, string videoEncoding, string preset, string pixelFormat, string crf, string audioEncoding, bool forceStereo, string sampleRate, string tune, string audioBitRate, string pass, string twoPassBitRate, string? cutStart = null, string? cutEnd = null, string audioCutTrack = "", Features.Video.BurnIn.BurnInLogo? burnInLogo = null, bool inputIsAudioOnly = false, bool subtitleIsImage = false)
+    public static string GenerateHardcodedVideoFile(string inputVideoFileName, string assaSubtitleFileName, string outputVideoFileName, int width, int height, string videoEncoding, string preset, string pixelFormat, string crf, string audioEncoding, bool forceStereo, string sampleRate, string tune, string audioBitRate, string pass, string twoPassBitRate, string? cutStart = null, string? cutEnd = null, string audioCutTrack = "", Features.Video.BurnIn.BurnInLogo? burnInLogo = null, bool inputIsAudioOnly = false, bool subtitleIsImage = false, Export3DMode mode3D = Export3DMode.None, int depth3D = 0)
     {
         if (width % 2 == 1)
         {
@@ -285,9 +339,16 @@ public class FfmpegGenerator
         if (subtitleIsImage)
         {
             imageSubtitleInput = $"{GetImageSubtitleOffset(cutStart)} -i \"{assaSubtitleFileName}\"";
-            withSubtitles = $"{mainVideoStream}scale={width}:{height}[video];[{inputCount}:s]scale={width}:{height}[subs];[video][subs]overlay";
+            withSubtitles = mode3D == Export3DMode.None
+                ? $"{mainVideoStream}scale={width}:{height}[video];[{inputCount}:s]scale={width}:{height}[subs];[video][subs]overlay"
+                : MakeStereo3DGraph($"{mainVideoStream}scale={width}:{height}", $"[{inputCount}:s]scale={width}:{height}", null, width, height, mode3D, depth3D);
             filterParameter = $"-filter_complex \"{withSubtitles}\"";
             inputCount++;
+        }
+        else if (mode3D != Export3DMode.None && !string.IsNullOrWhiteSpace(assaSubtitleFileName))
+        {
+            withSubtitles = MakeStereo3DGraph($"{mainVideoStream}scale={width}:{height}", null, Path.GetFileName(assaSubtitleFileName), width, height, mode3D, depth3D);
+            filterParameter = $"-filter_complex \"{withSubtitles}\"";
         }
         else
         {

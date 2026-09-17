@@ -10,6 +10,7 @@ using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Features.Files.ExportImageBased;
 using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 using Nikse.SubtitleEdit.Features.Shared;
@@ -31,6 +32,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
+using Nikse.SubtitleEdit.UiLogic.Export;
 using Nikse.SubtitleEdit.UiLogic.Media;
 
 namespace Nikse.SubtitleEdit.Features.Video.BurnIn;
@@ -104,6 +106,10 @@ public partial class BurnInViewModel : ObservableObject
     [ObservableProperty] private bool _isBatchMode;
     [ObservableProperty] private Bitmap? _imagePreview;
     [ObservableProperty] private bool _useSourceResolution;
+    [ObservableProperty] private ObservableCollection<Export3DModeDisplay> _modes3D;
+    [ObservableProperty] private Export3DModeDisplay _selectedMode3D;
+    [ObservableProperty] private int? _depth3D;
+    [ObservableProperty] private bool _isDepth3DEnabled;
     [ObservableProperty] private bool _showAssaOnlyBox;
     [ObservableProperty] private string _targetVideoBitRateInfo;
     [ObservableProperty] private string _displayEffect;
@@ -189,6 +195,10 @@ public partial class BurnInViewModel : ObservableObject
 
         VideoWidth = 1920;
         VideoHeight = 1080;
+
+        Modes3D = new ObservableCollection<Export3DModeDisplay>(Export3DModeDisplay.GetItems());
+        SelectedMode3D = Modes3D[0];
+        Depth3D = 0;
 
         AudioEncodings = new ObservableCollection<string>(OutputContainer.GetAudioEncodings(OutputContainer.DefaultExtension));
         SelectedAudioEncoding = OutputContainer.AudioEncodingCopy;
@@ -866,7 +876,9 @@ public partial class BurnInViewModel : ObservableObject
             audioCutTracks,
             BurnInLogo,
             jobItem.InputIsAudioOnly,
-            jobItem.SubtitleIsImage);
+            jobItem.SubtitleIsImage,
+            SelectedMode3D?.Mode ?? Export3DMode.None,
+            Math.Clamp(Depth3D ?? 0, Stereo3DImage.MinDepth, Stereo3DImage.MaxDepth));
 
         if (PromptForFfmpegParameters)
         {
@@ -1582,6 +1594,8 @@ public partial class BurnInViewModel : ObservableObject
         UseOutputFolderVisible = settings.UseOutputFolder;
         UseSourceFolderVisible = !settings.UseOutputFolder;
         UseSourceResolution = settings.UseSourceResolution;
+        SelectedMode3D = Modes3D.FirstOrDefault(p => p.Mode == settings.Mode3D) ?? Modes3D[0];
+        Depth3D = Math.Clamp(settings.Depth3D, Stereo3DImage.MinDepth, Stereo3DImage.MaxDepth);
 
         FontMarginHorizontal = (int)settings.NonAssaMarginHorizontal;
         FontMarginVertical = (int)settings.NonAssaMarginVertical;
@@ -1657,6 +1671,8 @@ public partial class BurnInViewModel : ObservableObject
         settings.NonAssaFixRtlUnicode = FontFixRtl;
         settings.NonAssaAlignment = SelectedFontAlignment.Code;
         settings.UseSourceResolution = UseSourceResolution;
+        settings.Mode3D = SelectedMode3D?.Mode ?? Export3DMode.None;
+        settings.Depth3D = Depth3D ?? 0;
         settings.NonAssaMarginHorizontal = FontMarginHorizontal ?? 0;
         settings.NonAssaMarginVertical = FontMarginVertical ?? 0;
         settings.NonAssaBoxType = (int)SelectedFontBoxType.BoxType;
@@ -1684,6 +1700,12 @@ public partial class BurnInViewModel : ObservableObject
         settings.Effects = string.Join(",", _selectedEffects.Select(p => p.Name).Distinct());
 
         Se.SaveSettings();
+    }
+
+    /// <summary>The depth moves the two eyes' copies apart, so it needs a 3D mode.</summary>
+    partial void OnSelectedMode3DChanged(Export3DModeDisplay value)
+    {
+        IsDepth3DEnabled = value?.Mode is not (null or Export3DMode.None);
     }
 
     [RelayCommand]
