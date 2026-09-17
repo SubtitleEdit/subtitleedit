@@ -33,11 +33,11 @@ public class IndexTts25AudioCppDownloadService : IIndexTts25AudioCppDownloadServ
 {
     private readonly HttpClient _httpClient;
 
-    // 2026-09-17: upstream v0.8.0 @ 4af14322, compiled with the index_tts2 + higgs_audio_tts +
-    // fish_audio + fireredtts3 families — the same archives back all four audio.cpp engines.
-    // No new family; the bump picks up the shared Qwen decoder's prefill speedups and the
-    // Vulkan RoPE/COL2IM_1D fixes, all on the path these four models run.
-    private const string ReleaseTag = "audiocpp-indextts25-2026-09-17";
+    // 2026-09-17b: upstream v0.8.0 @ 4af14322 (same source as 2026-09-17), compiled with the
+    // index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step families. ace_step is
+    // new, for background music generation (Video > More and the TTS window); the four TTS
+    // engines run the same code as before.
+    private const string ReleaseTag = "audiocpp-indextts25-2026-09-17b";
     private const string ReleaseBase =
         "https://github.com/SubtitleEdit/support-files/releases/download/" + ReleaseTag + "/";
 
