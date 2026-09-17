@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
+using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
@@ -64,6 +65,7 @@ public partial class RemuxVideoViewModel : ObservableObject
     [ObservableProperty] private bool _isSubtitleRemoveEnabled;
     [ObservableProperty] private bool _isSubtitleMoveUpEnabled;
     [ObservableProperty] private bool _isSubtitleMoveDownEnabled;
+    [ObservableProperty] private bool _promptForFfmpegParameters;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
@@ -693,6 +695,20 @@ public partial class RemuxVideoViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task PromptFfmpegParametersAndRemux()
+    {
+        PromptForFfmpegParameters = true;
+        try
+        {
+            await Remux();
+        }
+        finally
+        {
+            PromptForFfmpegParameters = false;
+        }
+    }
+
+    [RelayCommand]
     private async Task Remux()
     {
         if (Window == null)
@@ -779,13 +795,6 @@ public partial class RemuxVideoViewModel : ObservableObject
             await MessageBox.Show(Window, Se.Language.General.Error, "FFmpeg was not found. Please configure FFmpeg in settings.", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
-
-        IsRemuxing = true;
-        IsCompleted = false;
-        _isCancelled = false;
-        ProgressValue = 0;
-        ProgressText = Se.Language.Video.RemuxVideoRemuxing;
-        _log.Clear();
 
         try
         {
@@ -877,7 +886,33 @@ public partial class RemuxVideoViewModel : ObservableObject
                 subCodec = isMkv ? "-c:s copy" : "-c:s mov_text";
             }
 
-            var arguments = $"{FfmpegProgressTracker.ProgressArguments} -y {inputArgs}{mapArgs}{videoCodec} {audioCodec} {subCodec} {metadataArgs}\"{OutputFileName}\"".Trim();
+            var fastStart = string.Equals(SelectedOutputFormat, ".mp4", StringComparison.OrdinalIgnoreCase)
+                ? "-movflags +faststart "
+                : string.Empty;
+            var arguments = $"-y {inputArgs}{mapArgs}{videoCodec} {audioCodec} {subCodec} {metadataArgs}{fastStart}\"{OutputFileName}\"".Trim();
+
+            if (PromptForFfmpegParameters)
+            {
+                var result = await _windowService.ShowDialogAsync<PromptTextBoxWindow, PromptTextBoxViewModel>(Window, vm =>
+                {
+                    vm.Initialize("ffmpeg parameters", arguments, 1000, 200);
+                });
+
+                if (!result.OkPressed || string.IsNullOrWhiteSpace(result.Text))
+                {
+                    return;
+                }
+
+                arguments = result.Text.Trim();
+            }
+
+            arguments = FfmpegProgressTracker.ProgressArguments + " " + arguments;
+            IsRemuxing = true;
+            IsCompleted = false;
+            _isCancelled = false;
+            ProgressValue = 0;
+            ProgressText = Se.Language.Video.RemuxVideoRemuxing;
+            _log.Clear();
 
             var tcs = new TaskCompletionSource<bool>();
 

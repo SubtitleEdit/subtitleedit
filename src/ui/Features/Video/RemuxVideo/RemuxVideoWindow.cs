@@ -168,9 +168,24 @@ public class RemuxVideoWindow : Window
             .WithMarginRight(5);
         buttonPlay.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.IsCompleted)));
 
-        var buttonRemux = UiUtil.MakeButton(l.RemuxVideoTitle, vm.RemuxCommand)
-            .WithMarginRight(5);
-        buttonRemux.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.CanRemux)));
+        var buttonRemux = new SplitButton
+        {
+            Content = l.RemuxVideoTitle,
+            Command = vm.RemuxCommand,
+            Margin = new Thickness(0, 0, 5, 0),
+            Flyout = new MenuFlyout
+            {
+                Items =
+                {
+                    new MenuItem
+                    {
+                        Header = l.PromptForFfmpegParamsAndGenerate,
+                        Command = vm.PromptFfmpegParametersAndRemuxCommand,
+                    },
+                }
+            }
+        };
+        buttonRemux.Bind(SplitButton.IsEnabledProperty, new Binding(nameof(vm.CanRemux)));
 
         var buttonDone = UiUtil.MakeButtonDone(vm.DoneCommand).WithMarginRight(5);
         buttonDone.Bind(Button.IsEnabledProperty, notRemuxing);
