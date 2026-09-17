@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Controls;
+using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Threading;
@@ -131,17 +132,72 @@ public class SettingsCategoryNavigationTests : IDisposable
             var first = vm.Sections[0];
             var second = vm.Sections[1];
 
-            vm.OnKeyDown(new KeyEventArgs { Key = Key.PageDown, KeyModifiers = KeyModifiers.Control, RoutedEvent = InputElement.KeyDownEvent });
+            vm.OnPreviewKeyDown(new KeyEventArgs { Key = Key.PageDown, KeyModifiers = KeyModifiers.Control, RoutedEvent = InputElement.KeyDownEvent });
             Assert.Same(second, vm.SelectedSection);
             Assert.True(PumpUntil(() => window.FocusManager?.GetFocusedElement() is Visual focused &&
                                       second.Panel!.IsVisualAncestorOf(focused)));
 
-            vm.OnKeyDown(new KeyEventArgs { Key = Key.PageUp, KeyModifiers = KeyModifiers.Control, RoutedEvent = InputElement.KeyDownEvent });
+            vm.OnPreviewKeyDown(new KeyEventArgs { Key = Key.PageUp, KeyModifiers = KeyModifiers.Control, RoutedEvent = InputElement.KeyDownEvent });
             Assert.Same(first, vm.SelectedSection);
 
             // Wraps around from the first to the last category.
-            vm.OnKeyDown(new KeyEventArgs { Key = Key.PageUp, KeyModifiers = KeyModifiers.Control, RoutedEvent = InputElement.KeyDownEvent });
+            vm.OnPreviewKeyDown(new KeyEventArgs { Key = Key.PageUp, KeyModifiers = KeyModifiers.Control, RoutedEvent = InputElement.KeyDownEvent });
             Assert.Same(vm.Sections[^1], vm.SelectedSection);
+        }
+        finally
+        {
+            window.Close();
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    /// <summary>
+    /// The shortcut must work with focus on a setting inside the section, not only on the category
+    /// buttons (#12087): the content's ScrollViewer, text boxes and combo boxes handle PageUp/PageDown
+    /// themselves, so a bubbling window handler never saw the key.
+    /// </summary>
+    [AvaloniaTheory]
+    [InlineData(typeof(TextBox))]
+    [InlineData(typeof(ComboBox))]
+    [InlineData(typeof(CheckBox))]
+    [InlineData(typeof(NumericUpDown))]
+    public void CtrlPageDown_WorksWithFocusOnASetting(Type controlType)
+    {
+        var (window, vm) = OpenSettings();
+        try
+        {
+            Control? control = null;
+            SettingsSection? section = null;
+            foreach (var candidate in vm.Sections)
+            {
+                vm.SelectedSection = candidate;
+                Dispatcher.UIThread.RunJobs();
+                control = candidate.Panel!.GetVisualDescendants().OfType<Control>()
+                    .FirstOrDefault(c => controlType.IsInstanceOfType(c) && c.IsEffectivelyVisible && c.IsEffectivelyEnabled);
+                if (control != null)
+                {
+                    section = candidate;
+                    break;
+                }
+            }
+
+            Assert.NotNull(control);
+            if (control is NumericUpDown)
+            {
+                control = control.GetVisualDescendants().OfType<TextBox>().First(); // the part that takes focus
+            }
+
+            Assert.True(control!.Focus(NavigationMethod.Tab));
+            Dispatcher.UIThread.RunJobs();
+
+            var expected = vm.Sections[(vm.Sections.IndexOf(section!) + 1) % vm.Sections.Count];
+            window.KeyPressQwerty(PhysicalKey.PageDown, RawInputModifiers.Control);
+            Dispatcher.UIThread.RunJobs();
+            Assert.Same(expected, vm.SelectedSection);
+
+            window.KeyPressQwerty(PhysicalKey.PageUp, RawInputModifiers.Control);
+            Dispatcher.UIThread.RunJobs();
+            Assert.Same(section, vm.SelectedSection);
         }
         finally
         {

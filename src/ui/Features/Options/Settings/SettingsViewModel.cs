@@ -3090,15 +3090,24 @@ public partial class SettingsViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
-        else if (e.KeyModifiers == KeyModifiers.Control && e.Key is Key.PageDown or Key.PageUp)
-        {
-            e.Handled = true;
-            SelectAdjacentSection(e.Key == Key.PageDown ? 1 : -1);
-        }
         else if (UiUtil.IsHelp(e))
         {
             e.Handled = true;
             UiUtil.ShowHelp("features/settings");
+        }
+    }
+
+    /// <summary>
+    /// Runs on the tunnel pass: the content's ScrollViewer, text boxes and combo boxes handle
+    /// PageUp/PageDown themselves, so a bubbling handler only saw Ctrl+PageUp/PageDown while focus
+    /// was on the category buttons, not on a setting inside the section (#12087).
+    /// </summary>
+    public void OnPreviewKeyDown(KeyEventArgs e)
+    {
+        if (e.KeyModifiers == KeyModifiers.Control && e.Key is Key.PageDown or Key.PageUp)
+        {
+            e.Handled = true;
+            SelectAdjacentSection(e.Key == Key.PageDown ? 1 : -1);
         }
     }
 

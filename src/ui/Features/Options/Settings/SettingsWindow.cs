@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -33,6 +34,7 @@ public class SettingsWindow : Window
             Dispatcher.UIThread.Post(() => page.FocusSearchBox(), DispatcherPriority.Input);
         };
 
+        AddHandler(KeyDownEvent, (_, e) => vm.OnPreviewKeyDown(e), RoutingStrategies.Tunnel);
         Loaded += vm.Onloaded;
         Closing += vm.OnClosing;
     }
