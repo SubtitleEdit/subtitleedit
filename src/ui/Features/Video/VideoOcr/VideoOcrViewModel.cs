@@ -83,6 +83,7 @@ public partial class VideoOcrViewModel : ObservableObject
     [ObservableProperty] private bool _isOkEnabled;
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private string _progressText;
+    [ObservableProperty] private string _testOcrResult = string.Empty;
     [ObservableProperty] private Bitmap? _previewBitmap;
     [ObservableProperty] private double _previewPositionSeconds;
     [ObservableProperty] private double _durationSeconds;
@@ -647,7 +648,8 @@ public partial class VideoOcrViewModel : ObservableObject
     /// <summary>
     /// OCRs only the frame at the current preview position so the user can validate the scan
     /// area, engine, and settings without scanning the whole video. The result is shown in the
-    /// status text.
+    /// status text, and in <see cref="TestOcrResult"/> - the Test button's description, which a
+    /// screen reader reads when focus returns to the button (#12087).
     /// </summary>
     [RelayCommand]
     private async Task TestOcr()
@@ -672,6 +674,7 @@ public partial class VideoOcrViewModel : ObservableObject
 
         IsRunning = true;
         ProgressText = Se.Language.Video.VideoOcr.TestOcrRunning;
+        TestOcrResult = string.Empty;
 
         // Its own scratch folder, not the shared temp root: OcrGroups derives the masked-copy
         // folder from the frame's directory, so a brightness minimum wrote full-resolution
@@ -693,6 +696,7 @@ public partial class VideoOcrViewModel : ObservableObject
             ProgressText = string.IsNullOrWhiteSpace(group.Text)
                 ? Se.Language.Video.VideoOcr.TestOcrNoTextFound
                 : string.Format(Se.Language.Video.VideoOcr.TestOcrResultX, group.Text.ReplaceLineEndings(" | "));
+            TestOcrResult = ProgressText;
         }
         catch (OperationCanceledException)
         {
