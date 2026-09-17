@@ -29366,10 +29366,11 @@ public partial class MainViewModel :
 
     /// <summary>
     /// Editing keys that never type a character, so holding Shift with them is a real chord rather
-    /// than "the same key, shifted" - unlike Shift+A, which is just an uppercase A. Bare Delete and
-    /// Back still edit the text box as usual; only the Shift variants reach shortcut dispatch.
+    /// than "the same key, shifted" - unlike Shift+A, which is just an uppercase A. Space also
+    /// qualifies: Shift doesn't change what it types. Bare Delete, Back and Space still edit/type
+    /// as usual; only the Shift variants reach shortcut dispatch.
     /// </summary>
-    private static readonly HashSet<Key> NonTypingEditKeys = [Key.Delete, Key.Back];
+    private static readonly HashSet<Key> NonTypingEditKeys = [Key.Delete, Key.Back, Key.Space];
 
     /// <summary>
     /// Activates the main menu bar for keyboard navigation (Windows standard F10; bare Alt is handled
