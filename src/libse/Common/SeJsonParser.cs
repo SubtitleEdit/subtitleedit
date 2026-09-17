@@ -1125,7 +1125,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                             state.Peek().Count++;
                         }
                     }
-                    else if (ch == '}') // empty value
+                    else if (ch == '}') // empty value, or an object closing right after its last member (an array or a nested object)
                     {
                         i++;
                         var value = state.Pop();
@@ -1133,7 +1133,14 @@ namespace Nikse.SubtitleEdit.Core.Common
                         {
                             if (value.State == SeJsonState.Value)
                             {
-                                state.Pop();
+                                // Same close check as the Object state's '}' above: when the wanted object's
+                                // last member is an array, its '}' arrives here (the member's Value element
+                                // is still on the stack) and used to be popped without returning the match.
+                                var s = state.Pop();
+                                if (s.Name == name && state.Count == startSateCount && start >= 0)
+                                {
+                                    return content.Substring(start, i - start);
+                                }
                             }
                             else
                             {

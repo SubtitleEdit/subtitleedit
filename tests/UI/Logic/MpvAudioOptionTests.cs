@@ -115,6 +115,7 @@ public class MpvAudioOptionTests
         "audio-stream-silence",
         "background-color",
         "brightness",
+        "clipboard-backends",
         "contrast",
         "end",
         "force-window",

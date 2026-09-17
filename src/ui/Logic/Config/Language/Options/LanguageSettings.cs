@@ -125,6 +125,7 @@ public class LanguageSettings
     public string ColorGapTooShort { get; set; }
     public string ErrorBackgroundColor { get; set; }
     public string WaveformDrawGridLines { get; set; }
+    public string WaveformUseSkiaRenderer { get; set; }
     public string WaveformCenterVideoPositionAlsoWhenPaused { get; set; }
     public string WaveformShowToolbar { get; set; }
     public string WaveformShowToolbarEdit { get; set; }
@@ -184,6 +185,7 @@ public class LanguageSettings
     public string ShowStopButton { get; set; }
     public string ShowFullscreenButton { get; set; }
     public string FullscreenHideControls { get; set; }
+    public string ShowSecondarySubtitleDialog { get; set; }
     public string AutoOpenVideoFile { get; set; }
     public string DownloadMpv { get; set; }
     public string DownloadVlc { get; set; }
@@ -453,6 +455,7 @@ public class LanguageSettings
         ColorGapTooShort = "Color if gap is too short";
         ErrorBackgroundColor = "Error background color";
         WaveformDrawGridLines = "Draw grid lines";
+        WaveformUseSkiaRenderer = "Use experimental fast renderer";
         WaveformFocusOnMouseOver = "Focus on mouse over";
         WaveformCenterVideoPositionAlsoWhenPaused = "Center video position also while paused";
         WaveformShowToolbar = "Show toolbar";
@@ -505,6 +508,7 @@ public class LanguageSettings
         ShowStopButton = "Show stop button";
         ShowFullscreenButton = "Show full-screen button";
         FullscreenHideControls = "Hide video controls in full-screen";
+        ShowSecondarySubtitleDialog = "Show style dialog when opening a second subtitle file";
         AutoOpenVideoFile = "Auto-open video file when opening subtitle";
         DownloadMpv = "Download mpv";
         DownloadVlc = "Download VLC";

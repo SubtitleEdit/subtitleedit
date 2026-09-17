@@ -66,6 +66,11 @@ public class OpenSecondarySubtitleWindow : Window
         var comboBoxAlignment = UiUtil.MakeComboBox(vm.FontAlignments, vm, nameof(vm.SelectedFontAlignment)).WithMinWidth(160);
         var panelAlignment = UiUtil.MakeHorizontalPanel(labelAlignment, comboBoxAlignment);
 
+        var checkBoxOverrideStyle = UiUtil.MakeCheckBox(Se.Language.Video.SecondarySubtitleRememberSettings, vm, nameof(vm.OverrideStyle));
+        var checkBoxDoNotShowAgain = UiUtil.MakeCheckBox(Se.Language.Video.SecondarySubtitleDoNotShowAgain, vm, nameof(vm.DoNotShowAgain));
+        // Skipping the dialog applies the remembered settings, so there must be some.
+        checkBoxDoNotShowAgain.Bind(IsEnabledProperty, new Binding(nameof(vm.OverrideStyle)) { Source = vm });
+
         // Left panel with settings
         var leftPanel = new StackPanel
         {
@@ -77,6 +82,8 @@ public class OpenSecondarySubtitleWindow : Window
                 panelBold,
                 panelBorderStyle,
                 panelAlignment,
+                checkBoxOverrideStyle,
+                checkBoxDoNotShowAgain,
             },
         };
 

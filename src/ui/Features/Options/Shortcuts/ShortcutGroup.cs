@@ -58,7 +58,7 @@ public static class ShortcutGroupUi
             ShortcutGroup.Search => Se.Language.General.Search,
             ShortcutGroup.Tools => Se.Language.General.Tools,
             ShortcutGroup.Ai => language.CategoryAi,
-            ShortcutGroup.Plugins => Se.Language.Plugins.Title,
+            ShortcutGroup.Plugins => Se.Language.Plugins.Title.Replace("_", string.Empty), // menu header string, "_" marks the access key
             _ => Se.Language.General.General,
         };
     }

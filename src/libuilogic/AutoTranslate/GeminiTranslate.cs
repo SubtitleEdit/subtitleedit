@@ -33,6 +33,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         {
             // Auto-updating alias
             "gemini-flash-latest",
+            "gemini-flash-lite-latest",
 
             // Gemini 3.x - Latest Generation
             "gemini-3.6-flash",
@@ -136,7 +137,13 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             var resultText = parser.GetFirstObject(resultContent, "text");
             if (resultText == null)
             {
-                return string.Empty;
+                // A 200 without any text part - a blocked prompt, a stopped candidate or a model
+                // that spent its output on reasoning. Returning an empty string made the translate
+                // loop retry the line several times, each as slow as the first, with nothing on
+                // screen but a disabled Translate button (#14926). Say why right away instead.
+                Error = resultContent;
+                SeLogger.Error($"GeminiTranslate got no text from {_baseUrl}: {resultContent}");
+                throw new Exception(MakeNoTextMessage(resultContent));
             }
 
             var outputText = Json.DecodeJsonText(resultText).Trim();
@@ -153,6 +160,30 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             return outputText;
         }
 
+        /// <summary>
+        /// The error shown when a Gemini reply carries no translated text, naming the block or
+        /// finish reason when the reply has one.
+        /// </summary>
+        public static string MakeNoTextMessage(string resultContent)
+        {
+            var parser = new SeJsonParser();
+            var blockReason = parser.GetFirstObject(resultContent ?? string.Empty, "blockReason");
+            var finishReason = parser.GetFirstObject(resultContent ?? string.Empty, "finishReason");
+
+            var message = $"{StaticName} returned no translated text";
+            if (!string.IsNullOrEmpty(blockReason))
+            {
+                message += $" (prompt blocked: {blockReason})";
+            }
+            else if (!string.IsNullOrEmpty(finishReason))
+            {
+                message += $" (finish reason: {finishReason})";
+            }
+
+            return message + "." + Environment.NewLine + Environment.NewLine +
+                   "If this keeps happening, try another Gemini model - for example gemini-flash-lite-latest.";
+        }
+
         private HttpContent MakeContent(string text, string sourceLanguageCode, string targetLanguageCode)
         {
             var prompt = string.Format(Configuration.Settings.Tools.GeminiPrompt, sourceLanguageCode, targetLanguageCode);
@@ -164,110 +195,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
         private static List<TranslationPair> ListLanguages()
         {
-            return new List<TranslationPair>
-            {
-               MakePair("Albanian","sq"),
-               MakePair("Arabic","ar"),
-               MakePair("Armenian","hy"),
-               MakePair("Awadhi",""),
-               MakePair("Azerbaijani","az"),
-               MakePair("Bashkir","ba"),
-               MakePair("Basque","eu"),
-               MakePair("Belarusian","be"),
-               MakePair("Bengali","bn"),
-               MakePair("Bhojpuri",""),
-               MakePair("Bosnian","bs"),
-               MakePair("Brazilian Portuguese","pt"),
-               MakePair("Bulgarian","bg"),
-               MakePair("Cantonese","zh"),
-               MakePair("Catalan","ca"),
-               MakePair("Chhattisgarhi",""),
-               MakePair("Chinese (Simplified)", "zho-Hans"),
-               MakePair("Chinese (Traditional)","zh-Hant"),
-               MakePair("Croatian","hr"),
-               MakePair("Czech","cs"),
-               MakePair("Danish","da"),
-               MakePair("Dogri",""),
-               MakePair("Dutch","nl"),
-               MakePair("English","en"),
-               MakePair("Estonian","et"),
-               MakePair("Faroese","fo"),
-               MakePair("Finnish","fi"),
-               MakePair("French","fr"),
-               MakePair("Galician","gl"),
-               MakePair("Georgian","ka"),
-               MakePair("German","de"),
-               MakePair("Greek","el"),
-               MakePair("Gujarati","gu"),
-               MakePair("Haryanvi",""),
-               MakePair("Hebrew","he"),
-               MakePair("Hindi","hi"),
-               MakePair("Hungarian","hu"),
-               MakePair("Icelandic","is"),
-               MakePair("Indonesian","id"),
-               MakePair("Irish","ga"),
-               MakePair("Italian","it"),
-               MakePair("Japanese","ja"),
-               MakePair("Javanese","jv"),
-               MakePair("Kannada","kn"),
-               MakePair("Kashmiri","ks"),
-               MakePair("Kazakh","kk"),
-               MakePair("Kurdish","ku"),
-               MakePair("Central Kurdish (Sorani)","ckb"),
-               MakePair("Konkani",""),
-               MakePair("Korean","ko"),
-               MakePair("Kyrgyz","ky"),
-               MakePair("Latvian","lv"),
-               MakePair("Lithuanian","lt"),
-               MakePair("Macedonian","mk"),
-               MakePair("Maithili",""),
-               MakePair("Malay","ms"),
-               MakePair("Maltese","mt"),
-               MakePair("Mandarin","zh"),
-               MakePair("Mandarin Chinese","zh"),
-               MakePair("Marathi","mr"),
-               MakePair("Marwari",""),
-               MakePair("Min Nan",""),
-               MakePair("Mongolian","mn"),
-               MakePair("Montenegrin",""),
-               MakePair("Myanmar(Burmese)", "my"),
-               MakePair("Nepali","ne"),
-               MakePair("Norwegian","no"),
-               MakePair("Oriya","or"),
-               MakePair("Pashto","ps"),
-               MakePair("Persian","fa"),
-               MakePair("Polish","pl"),
-               MakePair("Portuguese","pt"),
-               MakePair("Punjabi","pa"),
-               MakePair("Rajasthani",""),
-               MakePair("Romanian","ro"),
-               MakePair("Russian","ru"),
-               MakePair("Sanskrit","sa"),
-               MakePair("Santali",""),
-               MakePair("Serbian","sr"),
-               MakePair("Sindhi","sd"),
-               MakePair("Sinhala","si"),
-               MakePair("Slovak","sk"),
-               MakePair("Slovene","sl"),
-               MakePair("Slovenian","sl"),
-               MakePair("Spanish","es"),
-               MakePair("Spanish (Latin America)","es-419"),
-               MakePair("Swedish","sv"),
-               MakePair("Tatar","tt"),
-               MakePair("Thai","th"),
-               MakePair("Turkish","tr"),
-               MakePair("Ukrainian","uk"),
-               MakePair("Urdu","ur"),
-               MakePair("Uzbek","uz"),
-               MakePair("Vietnamese","vi"),
-               MakePair("Welsh","cy"),
-               MakePair("Wu",""),
-            };
-        }
-
-        private static TranslationPair MakePair(string nameCode, string twoLetter)
-        {
-            return new TranslationPair(nameCode, nameCode, twoLetter);
+            return ChatGptTranslate.ListLanguages();
         }
 
         public void Dispose()

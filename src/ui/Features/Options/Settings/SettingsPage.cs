@@ -31,11 +31,13 @@ public class SettingsPage : UserControl
     private readonly TextBox _searchBox;
     private readonly StackPanel _contentPanel;
     private readonly SettingsViewModel _vm;
+    private readonly Dictionary<SettingsSection, Button> _menuButtons = new();
 
     public SettingsPage(SettingsViewModel vm)
     {
         _vm = vm;
         _vm.Sections = CreateSections();
+        _vm.SelectedSection ??= _vm.Sections.FirstOrDefault();
 
         _searchBox = new TextBox
         {
@@ -48,7 +50,7 @@ public class SettingsPage : UserControl
             // The placeholder text is not exposed as the UIA Name, so screen readers announce a
             // bare "edit" without this (#12087).
             [AutomationProperties.NameProperty] = Se.Language.Options.Settings.SearchSettingsDotDotDot,
-        };
+        }.WithSearchAndClearIcons();
 
         _contentPanel = new StackPanel
         {
@@ -86,7 +88,9 @@ public class SettingsPage : UserControl
         };
         foreach (var section in _vm.Sections)
         {
-            menu.Children.Add(MakeMenuItem(section, vm.ScrollToSectionCommand));
+            var menuItem = MakeMenuItem(section, vm.ScrollToSectionCommand);
+            _menuButtons[section] = menuItem;
+            menu.Children.Add(menuItem);
         }
 
         grid.Children.Add(menu);
@@ -132,6 +136,13 @@ public class SettingsPage : UserControl
 
         _searchBox.TextChanged += (_, e) => UpdateVisibleSections(_searchBox.Text ?? string.Empty);
         ActualThemeVariantChanged += (_, _) => Dispatcher.UIThread.Post(RefreshSections);
+        _vm.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(SettingsViewModel.SelectedSection))
+            {
+                RefreshSections();
+            }
+        };
     }
 
     public void RefreshSections()
@@ -198,16 +209,44 @@ public class SettingsPage : UserControl
         return link;
     }
 
+    /// <summary>
+    /// One category at a time, like SE4: with no search filter only the selected section is in
+    /// the content area, so Tab stays within a category and the next Tab after its last setting
+    /// reaches the buttons, not the first setting of an unannounced next category (#12087).
+    /// A search shows every section with a match, whichever category is selected.
+    /// </summary>
     private void UpdateVisibleSections(string filter)
     {
         _contentPanel.Children.Clear();
+        var showAllSections = !string.IsNullOrWhiteSpace(filter);
 
         foreach (var section in _vm.Sections)
         {
             section.Filter(filter);
-            if (section.IsVisible)
+            if (section.IsVisible && (showAllSections || section == _vm.SelectedSection))
             {
                 _contentPanel.Children.Add(section.Build());
+            }
+            else
+            {
+                section.Panel = null; // not in the tree - nothing to scroll to or focus
+            }
+        }
+
+        UpdateMenuHighlight();
+    }
+
+    private void UpdateMenuHighlight()
+    {
+        foreach (var (section, button) in _menuButtons)
+        {
+            if (section == _vm.SelectedSection)
+            {
+                button.Background = new SolidColorBrush(((SolidColorBrush)section.Brush).Color, 0.18);
+            }
+            else
+            {
+                button.ClearValue(BackgroundProperty);
             }
         }
     }
@@ -564,6 +603,7 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowFullscreenButton, nameof(_vm.ShowFullscreenButton)),
             MakeCheckboxSetting(Se.Language.Options.Settings.FullscreenHideControls, nameof(_vm.FullscreenHideControls)),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoOpenVideoFile, nameof(_vm.AutoOpenVideoFile)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ShowSecondarySubtitleDialog, nameof(_vm.ShowSecondarySubtitleDialog)),
             new SettingsItem(!_vm.IsLibMpvDownloadVisible, Se.Language.Options.Settings.DownloadMpv, () => new StackPanel
             {
                 Children =
@@ -574,7 +614,7 @@ public class SettingsPage : UserControl
                         Spacing = 10,
                         Children =
                         {
-                            UiUtil.MakeButton(Se.Language.General.Download, _vm.DownloadLibMpvCommand),
+                            MakeDownloadButton(Se.Language.Options.Settings.DownloadMpv, _vm.DownloadLibMpvCommand, nameof(_vm.LibMpvStatus)),
                             new TextBlock
                             {
                                 DataContext = _vm,
@@ -607,7 +647,7 @@ public class SettingsPage : UserControl
                         Spacing = 10,
                         Children =
                         {
-                            UiUtil.MakeButton(Se.Language.General.Download, _vm.DownloadLibVlcCommand),
+                            MakeDownloadButton(Se.Language.Options.Settings.DownloadVlc, _vm.DownloadLibVlcCommand, nameof(_vm.LibVlcStatus)),
                             new TextBlock
                             {
                                 DataContext = _vm,
@@ -630,7 +670,7 @@ public class SettingsPage : UserControl
                         Spacing = 10,
                         Children =
                         {
-                            UiUtil.MakeButton(Se.Language.General.Download, _vm.DownloadFfmpegLibsCommand),
+                            MakeDownloadButton(Se.Language.Options.Settings.DownloadFfmpegLibs, _vm.DownloadFfmpegLibsCommand, nameof(_vm.FfmpegLibsStatus)),
                             new TextBlock
                             {
                                 DataContext = _vm,
@@ -726,6 +766,7 @@ public class SettingsPage : UserControl
                 () => UiUtil.MakeComboBox(_vm.WaveformMouseWheelVideoPositionSteps, _vm, nameof(_vm.SelectedWaveformMouseWheelVideoPositionStep))),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformCenterVideoPositionAlsoWhenPaused, nameof(_vm.WaveformCenterVideoPositionAlsoWhenPaused)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformDrawGridLines, nameof(_vm.WaveformDrawGridLines)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.WaveformUseSkiaRenderer, nameof(_vm.WaveformUseSkiaRenderer)),
             // SE 4 parity: the per-paragraph footer in the waveform ("#43  01:10" and the
             // chars/sec line above it) can be turned off - some users find it noisy (#14707).
             // Composed from existing strings so no new translatable text is needed.
@@ -762,7 +803,7 @@ public class SettingsPage : UserControl
                         Spacing = 10,
                         Children =
                         {
-                            UiUtil.MakeButton(Se.Language.General.Download, _vm.DownloadFfmpegCommand),
+                            MakeDownloadButton(Se.Language.Options.Settings.DownloadFfmpeg, _vm.DownloadFfmpegCommand, nameof(_vm.FfmpegStatus)),
                             new TextBlock
                             {
                                 DataContext = _vm,
@@ -1012,13 +1053,16 @@ public class SettingsPage : UserControl
 
         sections.Add(new SettingsSection(Se.Language.Options.Settings.Updates, IconNames.CloudDownload, "#d0a24e", updateItems));
 
-        if (OperatingSystem.IsWindows())
+        if (_vm.IsFileTypeAssociationsVisible)
         {
             sections.Add(new SettingsSection(Se.Language.Options.Settings.FileTypeAssociations, IconNames.FileCog, "#b98a5a",
             [
                 new SettingsItem(string.Empty, () => new ItemsControl
                 {
                     DataContext = _vm,
+                    // The row has no label, so the list and its check boxes are named here -
+                    // NVDA announced "list" and then nameless "check box, checked" (#12087).
+                    [AutomationProperties.NameProperty] = Se.Language.Options.Settings.FileTypeAssociations,
                     [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(_vm.FileTypeAssociations)),
                     ItemTemplate = new FuncDataTemplate<FileTypeAssociationViewModel>((fileType, _) =>
                         new StackPanel
@@ -1029,6 +1073,7 @@ public class SettingsPage : UserControl
                             {
                                 new CheckBox
                                 {
+                                    [AutomationProperties.NameProperty] = fileType.Extension,
                                     [!ToggleButton.IsCheckedProperty] = new Binding(nameof(FileTypeAssociationViewModel.IsAssociated))
                                     {
                                         Source = fileType, Mode = BindingMode.TwoWay
@@ -1103,6 +1148,7 @@ public class SettingsPage : UserControl
         var buttonRemove = UiUtil.MakeButton(Se.Language.General.Remove, vm.RemoveFavoriteSubtitleFormatCommand).WithMinWidth(100);
         var buttonMoveUp = UiUtil.MakeButton(Se.Language.General.MoveUp, vm.MoveUpFavoriteSubtitleFormatCommand).WithMinWidth(100);
         var buttonMoveDown = UiUtil.MakeButton(Se.Language.General.MoveDown, vm.MoveDownFavoriteSubtitleFormatCommand).WithMinWidth(100);
+        NameListButtons(Se.Language.Options.Settings.FavoriteSubtitleFormats, buttonAdd, buttonRemove, buttonMoveUp, buttonMoveDown);
 
         var buttonStack = new StackPanel
         {
@@ -1152,6 +1198,7 @@ public class SettingsPage : UserControl
         var buttonRemove = UiUtil.MakeButton(Se.Language.General.Remove, vm.RemoveFavoriteLanguageCommand).WithMinWidth(100);
         var buttonMoveUp = UiUtil.MakeButton(Se.Language.General.MoveUp, vm.MoveUpFavoriteLanguageCommand).WithMinWidth(100);
         var buttonMoveDown = UiUtil.MakeButton(Se.Language.General.MoveDown, vm.MoveDownFavoriteLanguageCommand).WithMinWidth(100);
+        NameListButtons(Se.Language.Options.Settings.FavoriteLanguages, buttonAdd, buttonRemove, buttonMoveUp, buttonMoveDown);
 
         var buttonStack = new StackPanel
         {
@@ -1165,6 +1212,33 @@ public class SettingsPage : UserControl
         grid.Add(buttonStack, 0, 1);
 
         return grid;
+    }
+
+    /// <summary>
+    /// Names the Add/Remove/Move buttons next to a list after that list ("Favorite languages:
+    /// Add"). An empty list is not a tab stop, so a screen reader user tabbing from one favorites
+    /// list to the next heard a second "Add, Remove, Move up, Move down" with nothing saying
+    /// which list it belonged to (#12087).
+    /// </summary>
+    private static void NameListButtons(string listName, params Button[] buttons)
+    {
+        foreach (var button in buttons)
+        {
+            AutomationProperties.SetName(button, $"{listName}: {button.Content}");
+        }
+    }
+
+    /// <summary>
+    /// A "Download" button named after its setting ("Download mpv") with the install status
+    /// ("Not installed", a version) as its description - the caption alone told a screen reader
+    /// user nothing about what would be downloaded (#12087).
+    /// </summary>
+    private Button MakeDownloadButton(string settingName, IRelayCommand command, string statusProperty)
+    {
+        var button = UiUtil.MakeButton(Se.Language.General.Download, command);
+        AutomationProperties.SetName(button, settingName);
+        button.Bind(AutomationProperties.HelpTextProperty, new Binding(statusProperty) { Source = _vm });
+        return button;
     }
 
     private Control MakeMpvPreviewSettings(SettingsViewModel vm)
@@ -1187,7 +1261,7 @@ public class SettingsPage : UserControl
         var checkBoxUsePositionFromFile = UiUtil.MakeCheckBox(Se.Language.Options.Settings.UsePositionFromSubtitleFile, vm, nameof(vm.MpvPreviewUsePositionFromFile));
 
         var labelMargin = UiUtil.MakeLabel(Se.Language.General.Margin);
-        var numericUpDownMargin = UiUtil.MakeNumericUpDownOneDecimal(1, 1000, 130, vm, nameof(vm.MpvPreviewMargin)).WithLabeledBy(labelMargin);
+        var numericUpDownMargin = UiUtil.MakeNumericUpDownOneDecimal(0, 1000, 130, vm, nameof(vm.MpvPreviewMargin)).WithLabeledBy(labelMargin);
         numericUpDownMargin.Increment = 1;
 
         var checkBoxMarginIsPartOfSubtitleArea = UiUtil.MakeCheckBox(

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.Core.Settings;
@@ -148,27 +149,14 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
             result.EnsureSuccessStatusCode();
 
-            // Parse response according to Perplexity API structure: output[0].content[0].text
-            var parser = new SeJsonParser();
-            var output = parser.GetFirstObject(json, "output");
-            if (output == null)
+            var outputText = GetOutputText(json).Trim();
+            if (string.IsNullOrEmpty(outputText))
             {
+                Error = json;
+                SeLogger.Error("Perplexity Translate returned no output text: " + json);
                 return string.Empty;
             }
 
-            var contentObj = parser.GetFirstObject(output, "content");
-            if (contentObj == null)
-            {
-                return string.Empty;
-            }
-
-            var resultText = parser.GetFirstObject(contentObj, "text");
-            if (resultText == null)
-            {
-                return string.Empty;
-            }
-
-            var outputText = Json.DecodeJsonText(resultText).Trim();
             if (outputText.StartsWith('"') && outputText.EndsWith('"') && !text.StartsWith('"'))
             {
                 outputText = outputText.Trim('"').Trim();
@@ -178,6 +166,60 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             outputText = ChatGptTranslate.RemovePreamble(text, outputText);
             outputText = ChatGptTranslate.DecodeUnicodeEscapes(outputText);
             return outputText.Trim();
+        }
+
+        /// <summary>
+        /// Gets the assistant text from a /v1/responses reply. "output" is an array whose first items can be
+        /// "search_results"/"fetch_url_results" (web search is on by default for Sonar), so the text has to be
+        /// taken from the "message" items rather than from output[0].
+        /// </summary>
+        public static string GetOutputText(string json)
+        {
+            try
+            {
+                using var document = JsonDocument.Parse(json);
+                var root = document.RootElement;
+                if (root.ValueKind != JsonValueKind.Object)
+                {
+                    return string.Empty;
+                }
+
+                var sb = new StringBuilder();
+                if (root.TryGetProperty("output", out var output) && output.ValueKind == JsonValueKind.Array)
+                {
+                    foreach (var item in output.EnumerateArray())
+                    {
+                        if (item.ValueKind != JsonValueKind.Object ||
+                            !item.TryGetProperty("type", out var type) || type.GetString() != "message" ||
+                            !item.TryGetProperty("content", out var content) || content.ValueKind != JsonValueKind.Array)
+                        {
+                            continue;
+                        }
+
+                        foreach (var part in content.EnumerateArray())
+                        {
+                            if (part.ValueKind == JsonValueKind.Object &&
+                                part.TryGetProperty("type", out var partType) && partType.GetString() == "output_text" &&
+                                part.TryGetProperty("text", out var text) && text.ValueKind == JsonValueKind.String)
+                            {
+                                sb.Append(text.GetString());
+                            }
+                        }
+                    }
+                }
+
+                if (sb.Length == 0 &&
+                    root.TryGetProperty("output_text", out var outputText) && outputText.ValueKind == JsonValueKind.String)
+                {
+                    sb.Append(outputText.GetString());
+                }
+
+                return sb.ToString();
+            }
+            catch (JsonException)
+            {
+                return string.Empty;
+            }
         }
 
         public static List<TranslationPair> ListLanguages()

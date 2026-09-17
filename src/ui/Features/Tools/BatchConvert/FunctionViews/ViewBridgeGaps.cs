@@ -15,11 +15,16 @@ public static class ViewBridgeGaps
             Margin = new Avalonia.Thickness(0, 0, 0, 10),
         };
 
-        var labelBridgeGapSmallerThan = UiUtil.MakeLabel(Se.Language.Tools.BridgeGaps.BridgeGapsSmallerThan);
-        var numericUpDownBridgeGapSmallerThan = UiUtil.MakeNumericUpDownInt(1, 10000, Se.Settings.Tools.BridgeGaps.BridgeGapsSmallerThanMs, 130, vm, nameof(vm.BridgeGapsSmallerThanMs));
+        var useFrames = Se.Settings.General.UseFrameMode;
+        var labelBridgeGapSmallerThan = UiUtil.MakeLabel(useFrames
+            ? Se.Language.Tools.BridgeGaps.BridgeGapsSmallerThanFrames
+            : Se.Language.Tools.BridgeGaps.BridgeGapsSmallerThan);
+        var numericUpDownBridgeGapSmallerThan = UiUtil.MakeNumericUpDownInt(1, 10000, Se.Settings.Tools.BridgeGaps.GetBridgeGapsSmallerThan(useFrames), 130, vm, nameof(vm.BridgeGapsSmallerThanMsOrFrames));
 
-        var labelMinGap = UiUtil.MakeLabel(Se.Language.Tools.BridgeGaps.MinGap);
-        var numericUpDownMinGap = UiUtil.MakeNumericUpDownInt(0, 1000, Se.Settings.Tools.BridgeGaps.MinGapMs, 130, vm, nameof(vm.BridgeGapsMinGapMs));
+        var labelMinGap = UiUtil.MakeLabel(useFrames
+            ? Se.Language.Tools.BridgeGaps.MinGapFrames
+            : Se.Language.Tools.BridgeGaps.MinGap);
+        var numericUpDownMinGap = UiUtil.MakeNumericUpDownInt(0, 1000, Se.Settings.Tools.BridgeGaps.GetMinGap(useFrames), 130, vm, nameof(vm.BridgeGapsMinGapMsOrFrames));
 
         var labelPercentForLeft = UiUtil.MakeLabel(Se.Language.Tools.BridgeGaps.PercentFoPrevious);
         var numericUpDownPercentForLeft = UiUtil.MakeNumericUpDownInt(0, 100, Se.Settings.Tools.BridgeGaps.PercentForLeft, 130, vm, nameof(vm.BridgeGapsPercentForLeft));

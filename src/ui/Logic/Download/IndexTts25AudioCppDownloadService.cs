@@ -33,10 +33,11 @@ public class IndexTts25AudioCppDownloadService : IIndexTts25AudioCppDownloadServ
 {
     private readonly HttpClient _httpClient;
 
-    // 2026-09-06: upstream main @ b0757573, compiled with the index_tts2 + higgs_audio_tts +
-    // fish_audio + fireredtts3 families — the same archives back all four audio.cpp engines.
-    // The new family is the reason for the bump: FireRedTTS3 is only compiled into this build.
-    private const string ReleaseTag = "audiocpp-indextts25-2026-09-06";
+    // 2026-09-17b: upstream v0.8.0 @ 4af14322 (same source as 2026-09-17), compiled with the
+    // index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step families. ace_step is
+    // new, for background music generation (Video > More and the TTS window); the four TTS
+    // engines run the same code as before.
+    private const string ReleaseTag = "audiocpp-indextts25-2026-09-17b";
     private const string ReleaseBase =
         "https://github.com/SubtitleEdit/support-files/releases/download/" + ReleaseTag + "/";
 

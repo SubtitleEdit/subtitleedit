@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
@@ -35,6 +36,9 @@ public class PluginManagerWindow : Window
             var checkBox = new CheckBox { VerticalAlignment = VerticalAlignment.Center };
             checkBox.Bind(CheckBox.IsCheckedProperty, new Binding(nameof(PluginDisplayItem.IsEnabled)) { Mode = BindingMode.TwoWay });
             checkBox.Bind(IsEnabledProperty, new Binding(nameof(PluginDisplayItem.CanRun)));
+            // The plugin name is in a separate text block - name the check box too, or a screen
+            // reader announces a bare "check box" (#12087).
+            checkBox.Bind(AutomationProperties.NameProperty, new Binding(nameof(PluginDisplayItem.Name)));
 
             var name = new TextBlock { FontWeight = FontWeight.Bold };
             name.Bind(TextBlock.TextProperty, new Binding(nameof(PluginDisplayItem.Name)));

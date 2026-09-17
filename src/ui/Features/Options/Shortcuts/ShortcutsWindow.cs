@@ -46,7 +46,7 @@ public class ShortcutsWindow : Window
             Margin = new Thickness(10),
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
+        }.WithSearchAndClearIcons();
         _searchBox.Bind(TextBox.TextProperty, new Binding(nameof(vm.SearchText)) { Source = vm });
         // Give the interactive controls accessible names so screen readers announce them instead of
         // reading a generic "edit"/"combo box"/"check box" (issue #11745).

@@ -282,14 +282,18 @@ public sealed class UndoRedoManager : IUndoRedoManager
             var currentHash = client.GetFastHash();
 
             bool alreadyTracked;
+            UndoRedoItem? lastRecorded;
             lock (_lock)
             {
                 alreadyTracked = IsAlreadyTracked(currentHash);
+                lastRecorded = _undoList.LastOrDefault();
             }
             if (alreadyTracked)
             {
                 return;
             }
+
+            client.OnChangeDetected(lastRecorded);
 
             var snapshot = client.MakeUndoRedoObject("Changes detected");
             if (snapshot is null)

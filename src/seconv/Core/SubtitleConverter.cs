@@ -43,6 +43,46 @@ internal class SubtitleConverter
             $"Full frame image is not supported by '{options.Format}' and was ignored - it applies to fcpimage and bluraysup.");
     }
 
+    /// <summary>
+    /// The 3D options can reach a target that has no use for them the same way: D-Cinema has no
+    /// packed frame to draw a 3D image into (it only takes the depth, as the Z-position), and
+    /// everywhere else a depth without a 3D mode moves nothing.
+    /// </summary>
+    private static void WarnIf3DIgnored(ConversionOptions options, ConversionResult result)
+    {
+        var style = options.ImageStyle;
+        if (style.Mode3D == Export3DMode.None && style.Depth3D == 0 && style.Plane3D == null)
+        {
+            return;
+        }
+
+        var handler = ImageOutputWriter.TryCreateHandler(LibSEIntegration.NormalizeFormatName(options.Format));
+        if (handler is null)
+        {
+            return;
+        }
+
+        if (!Stereo3DImage.IsModeSupported(handler.ExportImageType))
+        {
+            if (style.Mode3D != Export3DMode.None)
+            {
+                result.Warnings.Add(
+                    $"3D mode is not supported by '{options.Format}' and was ignored - D-Cinema writes the 3D depth as the Z-position instead.");
+            }
+
+            if (style.Plane3D != null)
+            {
+                result.Warnings.Add($"3D-Plane is not supported by '{options.Format}' and was ignored.");
+            }
+        }
+        else if (style.Mode3D == Export3DMode.None)
+        {
+            result.Warnings.Add(style.Plane3D != null
+                ? "3D-Plane has no effect without a 3D mode (--mode-3d) and was ignored."
+                : "3D depth has no effect without a 3D mode (--mode-3d) and was ignored.");
+        }
+    }
+
     public async Task<ConversionResult> ConvertAsync(ConversionOptions options)
     {
         var result = new ConversionResult();
@@ -56,6 +96,7 @@ internal class SubtitleConverter
             }
 
             WarnIfFullFrameIgnored(options, result);
+            WarnIf3DIgnored(options, result);
 
             // Get input files
             var inputFiles = GetInputFiles(options);
@@ -1191,7 +1232,7 @@ internal record class ConversionOptions
     public IReadOnlyList<int> TrackNumbers { get; init; } = [];
     public bool ForcedOnly { get; init; }
 
-    /// <summary>OCR engine identifier: <c>tesseract</c> | <c>nocr</c> | <c>ollama</c> | <c>paddle</c>.</summary>
+    /// <summary>OCR engine identifier: <c>tesseract</c> | <c>nocr</c> | <c>binaryocr</c> | <c>ollama</c> | <c>llamacpp</c> | <c>paddle</c> | <c>applevision</c>.</summary>
     public string OcrEngine { get; init; } = "tesseract";
 
     /// <summary>Language code or human name passed to the OCR engine (Tesseract: ISO 639-2 like <c>eng</c>; Paddle: <c>en</c>; Ollama: human name like <c>English</c>).</summary>
@@ -1230,7 +1271,8 @@ internal record class ConversionOptions
     /// white fill with a black outline on transparency; composited onto the opaque white OCR
     /// canvas the fill vanishes and Tesseract receives hollow outline rings, which garbles
     /// some entries deterministically (issue #12291). On by default; disable with
-    /// <c>--no-pgs-isolate-colors</c> to OCR the raw bitmap. Ignored in
+    /// <c>--no-pgs-isolate-colors</c> to OCR the raw bitmap. The CLI always turns it off for
+    /// <c>applevision</c>, which reads the raw bitmap better. Ignored in
     /// <see cref="TimeCodesOnly"/> mode.
     /// </summary>
     public bool PgsIsolateColors { get; init; } = true;

@@ -30,7 +30,7 @@ public class FindTextWindow : Window
             [Avalonia.Automation.AutomationProperties.NameProperty] = Se.Language.General.Search,
             [!TextBox.TextProperty] = new Binding(nameof(vm.SearchText)) { Mode = BindingMode.TwoWay },
             VerticalAlignment = VerticalAlignment.Center,
-        };
+        }.WithSearchAndClearIcons();
         textBoxSearch.TextChanged += vm.SearchTextChanged;
 
         var subtitlesView = MakeSubtitlesView(vm);

@@ -821,8 +821,16 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 newPosition = duration;
             }
 
-            NotifyPositionChanged(newPosition);
-            UserSeeked?.Invoke(newPosition);
+            // Wheeling past either end while already parked there clamps back onto the current
+            // position: there is nothing to seek (NotifyPositionChanged would drop it anyway), so
+            // don't raise UserSeeked either. Its playhead pin waits for the player to confirm a
+            // seek, and with no seek sent that only ends at the pin's 5 s cap - the cursor stayed
+            // stuck through the start of playback (issue #14894).
+            if (Math.Abs(newPosition - Position) >= 0.001)
+            {
+                NotifyPositionChanged(newPosition);
+                UserSeeked?.Invoke(newPosition);
+            }
 
             if (IsFullScreen)
             {

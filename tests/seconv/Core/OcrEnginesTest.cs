@@ -1,3 +1,4 @@
+using Nikse.SubtitleEdit.UiLogic.Ocr.AppleVision;
 using SeConv.Core;
 using SkiaSharp;
 using Xunit;
@@ -79,7 +80,66 @@ public class OcrEnginesTest : IDisposable
         Assert.Contains("binaryocr", ex.Message);
         Assert.Contains("ollama", ex.Message);
         Assert.Contains("paddle", ex.Message);
+        Assert.Contains("applevision", ex.Message);
     }
+
+    [Fact]
+    public void Factory_AppleVisionRouted()
+    {
+        if (!AppleVisionRecognizer.IsAvailable())
+        {
+            var ex = Assert.Throws<InvalidOperationException>(() => OcrEngineFactory.Create(Opts("applevision")));
+            Assert.Contains("macOS", ex.Message);
+        }
+        else
+        {
+            // Opts() passes Tesseract's "eng", which has to land on Vision's own tag.
+            using var engine = OcrEngineFactory.Create(Opts("apple-vision"));
+            Assert.Equal("applevision", engine.Name);
+            Assert.Equal("en-US", ((AppleVisionOcrEngine)engine).Language);
+        }
+    }
+
+    [Theory]
+    [InlineData(null, "en-US")]
+    [InlineData("", "en-US")]
+    [InlineData("de-DE", "de-DE")]
+    [InlineData("DE-de", "de-DE")]
+    [InlineData("de", "de-DE")]
+    [InlineData("deu", "de-DE")]
+    [InlineData("eng", "en-US")]
+    [InlineData("German", "de-DE")]
+    [InlineData("zh-Hant", "zh-Hant")]
+    public void AppleVision_ResolveLanguage_MapsOntoVisionTags(string? requested, string expected)
+    {
+        Assert.Equal(expected, AppleVisionOcrEngine.ResolveLanguage(requested, VisionTags));
+    }
+
+    [Fact]
+    public void AppleVision_ResolveLanguage_AmbiguousLanguageNamesTheCandidates()
+    {
+        var ex = Assert.Throws<InvalidOperationException>(() => AppleVisionOcrEngine.ResolveLanguage("zh", VisionTags));
+        Assert.Contains("zh-Hans", ex.Message);
+        Assert.Contains("zh-Hant", ex.Message);
+    }
+
+    [Fact]
+    public void AppleVision_ResolveLanguage_UnknownLanguageListsWhatIsSupported()
+    {
+        var ex = Assert.Throws<InvalidOperationException>(() => AppleVisionOcrEngine.ResolveLanguage("Klingon", VisionTags));
+        Assert.Contains("Klingon", ex.Message);
+        Assert.Contains("en-US", ex.Message);
+    }
+
+    [Fact]
+    public void AppleVision_ResolveLanguage_NoLanguageListLeavesTheChoiceToVision()
+    {
+        Assert.Null(AppleVisionOcrEngine.ResolveLanguage(null, []));
+        Assert.Equal("de-DE", AppleVisionOcrEngine.ResolveLanguage("de-DE", []));
+    }
+
+    /// <summary>A slice of what Vision reports on macOS 15, so the mapping is testable on any OS.</summary>
+    private static readonly string[] VisionTags = ["en-US", "fr-FR", "de-DE", "pt-BR", "zh-Hans", "zh-Hant", "ja-JP"];
 
     [Fact]
     public void Factory_TesseractRouted()

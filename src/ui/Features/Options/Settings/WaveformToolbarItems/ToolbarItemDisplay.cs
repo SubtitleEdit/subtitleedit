@@ -37,6 +37,9 @@ public partial class ToolbarItemDisplay : ObservableObject
             SeWaveformToolbarItemType.SetStart => Format(w.SetStartHint),
             SeWaveformToolbarItemType.SetEnd => Format(w.SetEndHint),
             SeWaveformToolbarItemType.SetStartAndOffsetTheRest => Format(w.SetStartAndOffsetTheRestHint),
+            SeWaveformToolbarItemType.MoveSelectedLines => w.MoveSelectedLines,
+            SeWaveformToolbarItemType.MoveSelectedLinesAndFollowing => w.MoveSelectedLinesAndFollowing,
+            SeWaveformToolbarItemType.MoveAllLines => w.MoveAllLines,
             SeWaveformToolbarItemType.VerticalZoom => Format(w.ZoomVerticalHint),
             SeWaveformToolbarItemType.HorizontalZoom => Format(w.ZoomHorizontalHint),
             SeWaveformToolbarItemType.VideoPositionSlider => Format(w.VideoPosition),
@@ -56,4 +59,8 @@ public partial class ToolbarItemDisplay : ObservableObject
     }
 
     private static string Format(string hint) => string.Format(hint, string.Empty).TrimEnd();
+
+    // The list box item's screen-reader name falls back to ToString(), which announced the
+    // type name "...WaveformToolbarItems.ToolbarItemDisplay" for every row (#12087).
+    public override string ToString() => Name;
 }

@@ -55,6 +55,7 @@ public class LanguageSettingsShortcuts
 
     public string ListInverseSelection { get; set; }
     public string ListDeleteSelection { get; set; }
+    public string DeleteSelectionEverywhere { get; set; }
     public string RippleDeleteSelection { get; set; }
 
     public string Assigned { get; set; }
@@ -188,6 +189,7 @@ public class LanguageSettingsShortcuts
     public string SeekSilenceForward { get; set; }
     public string WaveformGuessStart { get; set; }
     public string WaveformGuessEnd { get; set; }
+    public string WaveformGuessStartAndEnd { get; set; }
     public string SetVideoPositionCurrentSubtitleStart { get; set; }
     public string GoToSubtitlePositionAndPause { get; set; }
     public string SetVideoPositionCurrentSubtitleEnd { get; set; }
@@ -344,6 +346,7 @@ public class LanguageSettingsShortcuts
 
         ListInverseSelection = "Inverse selection";
         ListDeleteSelection = "Delete selection";
+        DeleteSelectionEverywhere = "Delete selection (everywhere)";
         RippleDeleteSelection = "Ripple delete selection";
 
         TogglePlayPause = "Toggle play/pause";
@@ -482,6 +485,7 @@ public class LanguageSettingsShortcuts
         SeekSilenceForward = "Seek silence forward";
         WaveformGuessStart = "Guess start time from waveform";
         WaveformGuessEnd = "Guess end time from waveform";
+        WaveformGuessStartAndEnd = "Guess start and end time from waveform";
         SetVideoPositionCurrentSubtitleStart = "Set video position to current line start";
         GoToSubtitlePositionAndPause = "Go to sub position and pause";
         SetVideoPositionCurrentSubtitleEnd = "Set video position to current line end";

@@ -68,6 +68,7 @@ internal static class ImageOutputWriter
         handler.WriteHeader(filePath, firstParam);
         firstParam.Bitmap?.Dispose();
 
+        var apply3D = Stereo3DImage.IsModeSupported(handler.ExportImageType);
         for (var i = 0; i < subtitle.Paragraphs.Count; i++)
         {
             var p = subtitle.Paragraphs[i];
@@ -75,6 +76,12 @@ internal static class ImageOutputWriter
             ip.Bitmap = ImageRenderer.GenerateBitmap(ip);
             // Needs the rendered size, so it cannot happen in BuildParameter.
             ExportTextTags.ApplyPositionTag(ip, p.Text, scriptWidth, scriptHeight);
+            if (apply3D)
+            {
+                // Last: each eye's copy goes where the flat subtitle ended up.
+                Stereo3DImage.Apply(ip);
+            }
+
             handler.CreateParagraph(ip);
             handler.WriteParagraph(ip);
             ip.Bitmap?.Dispose();
@@ -108,14 +115,26 @@ internal static class ImageOutputWriter
         var firstParam = BuildPreservedParameter(first, 0, defaultWidth, defaultHeight, options);
         handler.WriteHeader(filePath, firstParam);
 
+        var apply3D = Stereo3DImage.IsModeSupported(handler.ExportImageType);
         for (var i = 0; i < items.Count; i++)
         {
             var item = items[i];
             var ip = BuildPreservedParameter(item, i, defaultWidth, defaultHeight, options);
+            if (apply3D)
+            {
+                // A 2D Blu-ray/DVB/VobSub track made into a 3D one - from where the source put it.
+                Stereo3DImage.Apply(ip, disposeSource: false);
+            }
+
             handler.CreateParagraph(ip);
             handler.WriteParagraph(ip);
             // We do NOT dispose item.Bitmap here — ownership stays with BitmapSubtitleItem;
             // the caller disposes the whole list when done. Disposing twice would crash.
+            // A 3D image made above is ours, though.
+            if (!ReferenceEquals(ip.Bitmap, item.Bitmap))
+            {
+                ip.Bitmap.Dispose();
+            }
         }
         handler.WriteFooter();
     }
@@ -211,6 +230,9 @@ internal static class ImageOutputWriter
             IsForced = false,
             IsFullFrame = style.IsFullFrame,
             FullFrameBackgroundColor = style.FullFrameBackgroundColor,
+            Mode3D = style.Mode3D,
+            Depth3D = style.Depth3D,
+            Plane3D = style.Plane3D,
             Error = string.Empty,
         };
     }
@@ -261,6 +283,9 @@ internal static class ImageOutputWriter
             // Blu-Ray sup handlers act on it, the rest ignore it (SubtitleConverter warns).
             IsFullFrame = style.IsFullFrame,
             FullFrameBackgroundColor = style.FullFrameBackgroundColor,
+            Mode3D = style.Mode3D,
+            Depth3D = style.Depth3D,
+            Plane3D = style.Plane3D,
             Error = string.Empty,
         };
 

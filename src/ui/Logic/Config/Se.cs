@@ -18,10 +18,10 @@ namespace Nikse.SubtitleEdit.Logic.Config;
 public class Se
 {
     internal const int CurrentMacOsFontMigrationVersion = 1;
-    internal const int CurrentShortcutsMigrationVersion = 3;
+    internal const int CurrentShortcutsMigrationVersion = 4;
     internal const int CurrentLayoutMigrationVersion = 1;
 
-    public static string Version { get; set; } = "v5.3.0-beta1";
+    public static string Version { get; set; } = "v5.3.0-beta4";
 
     public SeGeneral General { get; set; } = new();
     public List<SeShortCut> Shortcuts { get; set; } = new();
@@ -465,8 +465,17 @@ public class Se
     /// Version 2: "Text box: Delete selection (no clipboard)" grew into the forward-delete
     /// (Delete key) command and was renamed; the persisted entry is renamed with it so user
     /// assignments - including a deliberately cleared binding - survive.
+    ///
+    /// Version 4 (macOS only): several defaults moved off standard macOS shortcuts (#14941, see
+    /// <see cref="ShortcutsMain.MacOsDefaultChanges"/>). Bindings still on the old default move to
+    /// the new one, unless another action already uses the new keys.
     /// </summary>
     internal void MigrateShortcuts()
+    {
+        MigrateShortcuts(OperatingSystem.IsMacOS());
+    }
+
+    internal void MigrateShortcuts(bool isMacOS)
     {
         var fromVersion = ShortcutsMigrationVersion.GetValueOrDefault();
         if (fromVersion >= CurrentShortcutsMigrationVersion)
@@ -500,7 +509,7 @@ public class Se
             }
         }
 
-        if (fromVersion < 3 && OperatingSystem.IsMacOS())
+        if (fromVersion < 3 && isMacOS)
         {
             // The old macOS default Option+Shift+Cmd+D never reached the app (#14508); the default
             // gained Control, so move users who still sit on the dead chord onto the new one.
@@ -512,6 +521,49 @@ public class Se
                     shortcut.Keys = ["Ctrl", "Win", "Alt", "Shift", "D"];
                 }
             }
+        }
+
+        if (fromVersion < 4 && isMacOS)
+        {
+            MigrateMacOsDefaultShortcuts();
+        }
+    }
+
+    private void MigrateMacOsDefaultShortcuts()
+    {
+        var moves = new List<(SeShortCut Shortcut, string[] NewKeys)>();
+        foreach (var change in ShortcutsMain.MacOsDefaultChanges)
+        {
+            foreach (var shortcut in Shortcuts)
+            {
+                if (shortcut.ActionName == change.ActionName && IsSameKeys(shortcut.Keys, change.OldKeys))
+                {
+                    moves.Add((shortcut, change.NewKeys));
+                }
+            }
+        }
+
+        // Never create a duplicate binding: skip a move whose new keys are held by an action that
+        // stays put. Skipping one can block another (Cmd+G only frees up when go-to-line moves),
+        // so repeat until nothing changes.
+        bool skipped;
+        do
+        {
+            skipped = false;
+            foreach (var move in moves.ToList())
+            {
+                if (move.NewKeys.Length > 0 &&
+                    Shortcuts.Any(s => !moves.Any(m => ReferenceEquals(m.Shortcut, s)) && IsSameKeys(s.Keys, move.NewKeys)))
+                {
+                    moves.Remove(move);
+                    skipped = true;
+                }
+            }
+        } while (skipped);
+
+        foreach (var (shortcut, newKeys) in moves)
+        {
+            shortcut.Keys = [.. newKeys];
         }
     }
 
@@ -581,22 +633,58 @@ public class Se
         var settingsFileExists = System.IO.File.Exists(settingsFileName);
         if (settingsFileExists)
         {
-            try
-            {
-                // Stream + source-generated metadata: no UTF-16 string round-trip and no
-                // runtime reflection over the settings type graph.
-                using var stream = System.IO.File.OpenRead(settingsFileName);
-                Settings = JsonSerializer.Deserialize(stream, SeJsonContext.Default.Se)!;
-            }
-            catch (Exception exception)
-            {
-                Se.LogError(exception);
-                Settings = new Se();
-            }
-
+            Settings = TryDeserializeSettings(settingsFileName) ?? new Se();
             SetDefaultValues();
         }
 
+        ApplyLoadedSettings(settingsFileExists);
+    }
+
+    /// <summary>
+    /// Loads a settings file the way <see cref="LoadSettings(string)"/> does, but only replaces
+    /// the live <see cref="Settings"/> when the file parses. A truncated or foreign file leaves
+    /// the current settings untouched and returns false, where <see cref="LoadSettings(string)"/>
+    /// falls back to defaults so the app can still start - the right call at startup, the wrong
+    /// one when the user picks a backup to restore.
+    /// </summary>
+    public static bool TryLoadSettings(string settingsFileName)
+    {
+        if (!System.IO.File.Exists(settingsFileName))
+        {
+            return false;
+        }
+
+        var loaded = TryDeserializeSettings(settingsFileName);
+        if (loaded == null)
+        {
+            return false;
+        }
+
+        Settings = loaded;
+        SetDefaultValues();
+        ApplyLoadedSettings(settingsFileExists: true);
+        return true;
+    }
+
+    private static Se? TryDeserializeSettings(string settingsFileName)
+    {
+        try
+        {
+            // Stream + source-generated metadata: no UTF-16 string round-trip and no
+            // runtime reflection over the settings type graph.
+            using var stream = System.IO.File.OpenRead(settingsFileName);
+            return JsonSerializer.Deserialize(stream, SeJsonContext.Default.Se);
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception);
+            return null;
+        }
+    }
+
+    /// <summary>Post-load migrations and the libse bridge, shared by every load path.</summary>
+    private static void ApplyLoadedSettings(bool settingsFileExists)
+    {
         MigrateMacOsFontSettings(Settings.Appearance, OperatingSystem.IsMacOS(), settingsFileExists);
         MigrateLayoutNumber(Settings.General);
 

@@ -1,6 +1,6 @@
-using Nikse.SubtitleEdit.Features.Ocr.Engines;
+using Nikse.SubtitleEdit.UiLogic.Ocr.AppleVision;
 
-namespace UITests.Features.Ocr;
+namespace LibUiLogicTests.Ocr;
 
 /// <summary>
 /// Turning Vision's observations back into subtitle text.

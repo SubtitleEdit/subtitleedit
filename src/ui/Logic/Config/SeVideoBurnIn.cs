@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.UiLogic.Export;
 using System;
 using SkiaSharp;
 
@@ -42,6 +43,8 @@ public class SeVideoBurnIn
     public string OutputFolder { get; set; }
     public string BurnInSuffix { get; set; }
     public bool UseSourceResolution { get; set; }
+    public Export3DMode Mode3D { get; set; }
+    public int Depth3D { get; set; }
     public string OutputExtension { get; set; }
     public string Effects { get; set; }
 
@@ -61,7 +64,9 @@ public class SeVideoBurnIn
         // encoder is VideoToolbox, whose quality scale is 1-100 with higher being better - and on
         // Intel Macs "-q:v" fails outright. Its quality stays unset so ffmpeg picks a bitrate.
         Crf = DefaultEncoding == "libx264" ? "23" : string.Empty;
-        Tune = "film";
+        // Only the NVIDIA encoders have a tune in the burn-in window, and their default is
+        // ffmpeg's own (high quality) - the old "film" here was an x264 value nothing ever read.
+        Tune = string.Empty;
         AudioEncoding = "copy";
         AudioForceStereo = true;
         AudioSampleRate = "48000";

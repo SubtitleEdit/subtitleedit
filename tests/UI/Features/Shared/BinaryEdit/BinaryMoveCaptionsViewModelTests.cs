@@ -80,6 +80,45 @@ public class BinaryMoveCaptionsViewModelTests
         Assert.Equal(42, y);
     }
 
+    /// <summary>
+    /// The constructor pre-selects the 2.39:1 item as a plain field write, so selecting that
+    /// same item in Initialize is a SetProperty no-op and never triggered the bar height
+    /// calculation - the dialog opened with a 0 px bar for 2.39:1 while every other preset worked.
+    /// </summary>
+    [AvaloniaFact]
+    public void Initialize_ComputesBarHeightForTheDefault239Preset()
+    {
+        var vm = new BinaryMoveCaptionsViewModel();
+
+        vm.Initialize(new List<BinarySubtitleItem>(), 1920, 1080, "2.39", 0);
+
+        var expected = PositionMonitorLogic.CalculateBarHeight(1920, 1080, 2.39);
+        Assert.True(expected > 0);
+        Assert.Equal(expected, vm.BarHeight);
+        Assert.False(vm.IsBarHeightEditable);
+    }
+
+    [AvaloniaFact]
+    public void Initialize_ComputesBarHeightForAnotherPreset()
+    {
+        var vm = new BinaryMoveCaptionsViewModel();
+
+        vm.Initialize(new List<BinarySubtitleItem>(), 1920, 1080, "1.85", 0);
+
+        Assert.Equal(PositionMonitorLogic.CalculateBarHeight(1920, 1080, 1.85), vm.BarHeight);
+    }
+
+    [AvaloniaFact]
+    public void Initialize_CustomPresetKeepsTheCurrentBarHeight()
+    {
+        var vm = new BinaryMoveCaptionsViewModel();
+
+        vm.Initialize(new List<BinarySubtitleItem>(), 1920, 1080, "custom", 77);
+
+        Assert.Equal(77, vm.BarHeight);
+        Assert.True(vm.IsBarHeightEditable);
+    }
+
     [AvaloniaFact]
     public void Apply_MovesEveryItem()
     {

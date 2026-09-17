@@ -48,6 +48,18 @@ public class LanguageExport
     public string ImageBasedSubtitleSaved { get; set; }
     public string FullFrameImage { get; set; }
     public string FullFrameImageHint { get; set; }
+    public string Stereo3D { get; set; }
+    public string Stereo3DHint { get; set; }
+    public string HalfSideBySide { get; set; }
+    public string HalfTopBottom { get; set; }
+    public string Depth3D { get; set; }
+    public string Depth3DHint { get; set; }
+    public string Plane3D { get; set; }
+    public string Plane3DHint { get; set; }
+    public string OpenPlane3DTitle { get; set; }
+    public string UnableToLoadPlane3DX { get; set; }
+    public string Plane3DXDepthYToZ { get; set; }
+    public string Plane3DXNoDepth { get; set; }
     public string TextEffect { get; set; }
     public string TextEffectSettingsTitle { get; set; }
     public string TextEffectPreset { get; set; }
@@ -124,6 +136,18 @@ public class LanguageExport
         ImageBasedSubtitleSaved = "Image-based subtitle saved";
         FullFrameImage = "Full frame image";
         FullFrameImageHint = "Make each image the size of the video frame, with the subtitle in its place";
+        Stereo3D = "3D";
+        Stereo3DHint = "For 3D video: draw the subtitle once in each eye's half of the frame";
+        HalfSideBySide = "Half side-by-side";
+        HalfTopBottom = "Half top/bottom";
+        Depth3D = "Depth";
+        Depth3DHint = "How far the subtitle stands out of the screen - positive brings it closer, negative pushes it back";
+        Plane3D = "3D-Plane";
+        Plane3DHint = "Give each subtitle the depth a 3D Blu-ray stores for it, from a 3D-Plane (.ofs) file made by BD3D2MK3D or OFSExtractor. Depth is used where the 3D-Plane has none";
+        OpenPlane3DTitle = "Open 3D-Plane file";
+        UnableToLoadPlane3DX = "Unable to load 3D-Plane: {0}";
+        Plane3DXDepthYToZ = "{0} (depth {1} to {2})";
+        Plane3DXNoDepth = "{0} (no depth values)";
         TextEffect = "Text effect";
         TextEffectSettingsTitle = "Text effect settings";
         TextEffectPreset = "Preset";

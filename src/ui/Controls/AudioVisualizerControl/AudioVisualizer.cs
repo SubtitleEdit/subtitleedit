@@ -233,9 +233,11 @@ public class AudioVisualizer : Control
     /// not monotonic and cannot be binary-searched directly; the running maximum is.
     /// </summary>
     private readonly List<double> _originalSubtitleCueMaxEnds = new();
-    private const double OriginalSubtitleOpacity = 0.5;
-    private bool IsOriginalSubtitleOverlayVisible => ShowOriginalSubtitleOverlay && _originalSubtitleCues.Count > 0;
-    private bool ShowOriginalTextInWaveform => ShowOriginalText && !IsOriginalSubtitleOverlayVisible;
+    private protected const double OriginalSubtitleOpacity = 0.5;
+    private protected bool IsOriginalSubtitleOverlayVisible => ShowOriginalSubtitleOverlay && _originalSubtitleCues.Count > 0;
+    private protected bool ShowOriginalTextInWaveform => ShowOriginalText && !IsOriginalSubtitleOverlayVisible;
+    private protected IReadOnlyList<WaveformOriginalSubtitleCue> OriginalSubtitleCues => _originalSubtitleCues;
+    private protected IReadOnlyList<double> OriginalSubtitleCueMaxEnds => _originalSubtitleCueMaxEnds;
 
     public void SetOriginalSubtitleCues(IReadOnlyList<WaveformOriginalSubtitleCue>? cues)
     {
@@ -421,6 +423,7 @@ public class AudioVisualizer : Control
     private static readonly Cursor _cursorSizeWestEast = new Cursor(StandardCursorType.SizeWestEast);
 
     private readonly List<SubtitleLineViewModel> _displayableParagraphs = new();
+    private protected IReadOnlyList<SubtitleLineViewModel> DisplayableParagraphs => _displayableParagraphs;
 
     // The paragraph sets as they stood before the current LoadParagraphs, so it can tell whether
     // anything it draws actually changed. Reused across calls, so the check allocates nothing.
@@ -899,6 +902,15 @@ public class AudioVisualizer : Control
             if (WavePeaks != null && newVideoPosition > WavePeaks.LengthInSeconds)
             {
                 newVideoPosition = WavePeaks.LengthInSeconds;
+            }
+
+            // Wheeling past either end while already parked there clamps back onto the current
+            // position: nothing to seek, so raise nothing. The seek handler pins the playhead until
+            // the player confirms a seek, and with no seek sent that only ends at the pin's 5 s cap -
+            // the cursor stayed stuck through the start of playback (issue #14894).
+            if (Math.Abs(newVideoPosition - CurrentVideoPositionSeconds) < 0.001)
+            {
+                return;
             }
 
             // Follow the play-head: with center-also-while-paused the view scrolls on every
@@ -2426,7 +2438,7 @@ public class AudioVisualizer : Control
 
     private readonly Pen _paintTimeLine = new Pen(Brushes.Gray, 1);
 
-    private static string GetDisplayTime(double seconds)
+    private protected static string GetDisplayTime(double seconds)
     {
         if (Math.Abs(Se.Settings.General.CurrentVideoOffsetInMs) > 0.00001)
         {
@@ -3388,7 +3400,7 @@ public class AudioVisualizer : Control
     private readonly Dictionary<(int Number, long DurationMs, bool FrameMode, double FrameRate), string> _footerNumberDurationCache = new(512);
     private readonly Dictionary<double, string> _footerCpsCache = new(256);
 
-    private string GetCachedNumberAndDurationLabel(SubtitleLineViewModel paragraph)
+    private protected string GetCachedNumberAndDurationLabel(SubtitleLineViewModel paragraph)
     {
         // The frame rate is part of the key: in frame mode ToShortDisplayString renders frames
         // via Configuration.Settings.General.CurrentFrameRate, so the same duration maps to a
@@ -3418,7 +3430,7 @@ public class AudioVisualizer : Control
         return label;
     }
 
-    private string GetCachedCpsLabel(double charactersPerSecond)
+    private protected string GetCachedCpsLabel(double charactersPerSecond)
     {
         // Keyed on the exact value, not a rounded bucket: CharactersPerSecond is itself memoized
         // per (text, start, end), so an unchanged paragraph yields a bit-identical key every
@@ -3902,19 +3914,25 @@ public class AudioVisualizer : Control
 
     private void DrawCurrentVideoPosition(DrawingContext context, ref RenderContext renderCtx)
     {
-        if (renderCtx.CurrentVideoPositionSeconds <= 0)
+        // Without peaks there is no timeline to place the cursor on (closing the video clears them
+        // and resets the position to 0). With them, 0 is a real position - after Stop, or on a
+        // freshly opened video - and the cursor shows there like anywhere else.
+        if (renderCtx.SampleRate <= 0 || renderCtx.CurrentVideoPositionSeconds < 0)
         {
             return;
         }
 
         var currentPositionPos = SecondsToXPositionOptimized(renderCtx.CurrentVideoPositionSeconds - renderCtx.StartPositionSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
-        if (currentPositionPos > 0 && currentPositionPos < renderCtx.Width)
+        if (currentPositionPos >= 0 && currentPositionPos < renderCtx.Width)
         {
             var isOnShotChange = GetShotChangeIndex(renderCtx.CurrentVideoPositionSeconds) >= 0;
             var pen = isOnShotChange ? _paintPenCursorOnShotChange : _paintPenCursor;
+
+            // A line centered on the left edge loses half its width to the clip; keep it inside.
+            var x = Math.Max(currentPositionPos, pen.Thickness / 2);
             context.DrawLine(pen,
-                new Point(currentPositionPos, 0),
-                new Point(currentPositionPos, renderCtx.Height));
+                new Point(x, 0),
+                new Point(x, renderCtx.Height));
         }
     }
 
@@ -4212,7 +4230,7 @@ public class AudioVisualizer : Control
     }
 
     // Helper for Binary Search
-    private static int FindFirstIndexAfterTime<T>(IReadOnlyList<T> items, double time, Func<T, double> getEndTime)
+    private protected static int FindFirstIndexAfterTime<T>(IReadOnlyList<T> items, double time, Func<T, double> getEndTime)
     {
         int low = 0, high = items.Count - 1;
         var result = 0;

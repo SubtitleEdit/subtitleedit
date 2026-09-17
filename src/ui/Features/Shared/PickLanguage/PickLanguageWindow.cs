@@ -27,7 +27,7 @@ public class PickLanguageWindow : Window
         {
             Margin = new Thickness(5, 0, 0, 0),
             Width = 250,
-        };
+        }.WithSearchAndClearIcons();
         textBoxSearch.Bind(TextBox.TextProperty, new Binding(nameof(vm.SearchText)) { Source = vm });
         textBoxSearch.TextChanged += (_, _) => vm.SearchTextChanged();
 

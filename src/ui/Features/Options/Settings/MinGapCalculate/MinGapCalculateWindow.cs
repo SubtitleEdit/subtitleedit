@@ -16,7 +16,7 @@ public class MinGapCalculateWindow : Window
     public MinGapCalculateWindow(MinGapCalculateViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Options.Settings.MinGapCalculateTitle;
+        Title = vm.Title;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
 
@@ -27,7 +27,7 @@ public class MinGapCalculateWindow : Window
         var labelFrameRate = UiUtil.MakeLabel(Se.Language.General.FrameRate);
         var comboBoxFrameRate = UiUtil.MakeEditableComboBox(150, vm.FrameRates, vm, nameof(vm.SelectedFrameRate));
 
-        var labelFrames = UiUtil.MakeLabel(Se.Language.Options.Settings.MinGapCalculateFrames);
+        var labelFrames = UiUtil.MakeLabel(vm.FramesLabel);
         var numericUpDownFrames = UiUtil.MakeNumericUpDownInt(0, 100, 2, 100, vm, nameof(vm.Frames));
 
         var labelCalculation = new TextBlock

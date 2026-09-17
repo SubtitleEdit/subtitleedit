@@ -1,6 +1,6 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.3.0-beta1",
+  "version": "v5.3.0-beta4",
   "translatedBy": "",
   "cultureName": "en-US",
   "general": {
@@ -2868,6 +2868,7 @@
     "readyToTranslate": "Ready to translate",
     "translating": "Translating...",
     "translationComplete": "Translation complete",
+    "translateInPlaceNoOriginal": "Translate in place (do not create original)",
     "translationCancelled": "Translation cancelled",
     "swapLanguages": "Swap source and target languages",
     "xIsAlreadyDownloadedReDownload": "{0} is already downloaded. Re-download?",

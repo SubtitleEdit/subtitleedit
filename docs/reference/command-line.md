@@ -8,7 +8,7 @@
 
 - **380+ subtitle formats** — text, binary, and image-based.
 - **Container input** — Matroska (`.mkv` / `.mks`), MP4, MCC, MXF, AVI (`.avi` / `.divx`), transport stream teletext, Blu-Ray `.sup`.
-- **OCR for image-based sources** via six engines (Tesseract subprocess, nOCR built-in, BinaryOCR built-in, Ollama HTTP, llama.cpp HTTP with automatic server start, PaddleOCR subprocess).
+- **OCR for image-based sources** via seven engines (Tesseract subprocess, nOCR built-in, BinaryOCR built-in, Ollama HTTP, llama.cpp HTTP with automatic server start, PaddleOCR subprocess, Apple Vision built into macOS).
 - **Auto-translate** via local LLMs (llama.cpp with automatic server start, Ollama, LM Studio) or self-hosted services (LibreTranslate, NLLB).
 - **Image-based output** — Blu-Ray sup, BDN-XML, DOST, FCP (Final Cut Pro + image), D-Cinema interop / SMPTE 2014, images-with-time-code.
 - **Operations pipeline** — offset, fps change, change-speed, renumber, adjust-duration, fix-common-errors, merge/split, balance, redo casing, RTL fixes, multiple-replace, custom-text format, plain text.
@@ -61,6 +61,7 @@ seconv movie.sup subrip --ocr-engine:nocr --ocr-db:Latin.nocr      # OCR via nOC
 seconv movie.sup subrip --ocr-engine:binaryocr --ocr-db:Latin.db   # OCR via BinaryOCR
 seconv movie.sup subrip --ocr-engine:ollama --ollama-model:llama3.2-vision
 seconv movie.sup subrip --ocr-engine:llamacpp                      # OCR via llama.cpp (auto-starts llama-server)
+seconv *.mkv subrip --ocr-engine:applevision                       # macOS: OCR via built-in Apple Vision
 
 seconv subs.srt bluraysup --resolution:1920x1080                   # render text → Blu-Ray sup
 seconv subs.srt bdnxml --resolution:1920x1080                      # render text → BDN-XML
@@ -188,10 +189,17 @@ When rendering a text subtitle to an image-based target (Blu-Ray `sup`, VobSub, 
 | `--override-position:<x\|y\|xy>` | Image → image only (DVB-sub, PGS, VobSub pass-through): ignore the source bitmap position on that axis and place it by `--alignment` and the margins instead. The other axis keeps the source position. Matches SE4's transport-stream "override original X/Y position" |
 | `--full-frame` | Draw each subtitle onto a frame-sized image instead of one cropped to the text. Only `fcpimage` and `bluraysup` use it; other image targets warn and ignore it |
 | `--full-frame-background-color:<color>` | Background of the full frame image (default: `transparent`) |
+| `--mode-3d:<mode>` | Draw each subtitle for frame-packed 3D video, once per eye: `none` (default) \| `half-side-by-side` (`sbs`) \| `half-top-bottom` (`tab`). Works for text → image and image → image; D-Cinema warns and ignores it |
+| `--depth-3d:<px>` | 3D depth, -100 to 100 (default: 0): positive brings the subtitle out of the screen, negative pushes it back. D-Cinema writes it as the image's Z-position |
+| `--plane-3d:<file.ofs>` | A 3D Blu-ray's 3D-Plane (OFS file from BD3D2MK3D or OFSExtractor): each subtitle gets the disc's depth for the frames it is shown on. `--depth-3d` is used where the 3D-Plane has none. Needs `--mode-3d` |
 
 Colours accept hex (`#AARRGGBB`, `#RRGGBB`, with or without `#`) or a colour name (`white`, `black`, `yellow`, ...).
 
 **Full frame** (`--full-frame`) draws the subtitle onto a canvas the size of the video frame, using the alignment and margins to place it there, so every image can be dropped on an editing timeline at 0,0 instead of being positioned one by one. It matches the "Full frame image" checkbox in the export dialog, and applies to `fcpimage` and `bluraysup` only. The background is transparent unless `--full-frame-background-color` says otherwise, so the images sit on a track above the video.
+
+**3D** (`--mode-3d`) matches the "3D" option in the export dialog (SE4's 3D export). A half side-by-side or half top/bottom video holds a squeezed view per eye, so the subtitle is squeezed the same way and drawn once in each view, where the alignment, margins or `{\pos}` would put it. `--depth-3d` moves the two copies apart. With an image source (`.sup`, VobSub, DVB-sub, ...) it turns a 2D track into a 3D one, keeping each subtitle's position.
+
+A 3D Blu-ray's subtitle track is flat: the player moves it by a depth stored for every frame, in the track's 3D-Plane. `--plane-3d` reads that 3D-Plane from an `.ofs` file, so each subtitle stands where the disc puts it. A subtitle gets the depth nearest to the viewer during its frames. The offsets are in pixels of the 1920 wide Blu-ray view, scaled to `--resolution` and halved for half side-by-side.
 
 ```bash
 # SRT → UHD Blu-Ray sup with a semi-transparent black background box (SE4-style)
@@ -202,6 +210,12 @@ seconv movie.srt bluraysup --font-name:Verdana --font-size:60 --font-bold --box-
 
 # Final Cut Pro + image, one frame-sized png per subtitle
 seconv movie.srt fcpimage --full-frame
+
+# 2D Blu-ray sup → half side-by-side 3D Blu-ray sup, standing slightly out of the screen
+seconv movie.sup bluraysup --mode-3d:half-side-by-side --depth-3d:4 --output-filename-append:.3d
+
+# 3D Blu-ray subtitle track → half side-by-side sup, at the disc's own depth (tsMuxeR: "3d-plane: 2")
+seconv track.sup bluraysup --mode-3d:half-side-by-side --plane-3d:3D-Plane-02.ofs --output-filename-append:.3d
 ```
 
 ### Containers / tracks
@@ -248,11 +262,12 @@ An AVI stream header carries no language, so a multi-stream `.avi` names its out
 | `ollama` | HTTP | Local Ollama server with a vision-capable model (e.g. `llama3.2-vision`, `qwen2.5vl`). Configure via `--ollama-url` (default `http://localhost:11434/api/chat`) and `--ollama-model` (default `llama3.2-vision`). Pass `--ocr-language` as a human name like `English`. |
 | `llamacpp` *(aliases: `llama.cpp`, `llama`)* | HTTP | llama.cpp with a curated OCR vision model (best-first: GLM-OCR, LFM2.5-VL 3B, PaddleOCR-VL, HunyuanOCR 1.5, LightOnOCR). With no `--ocr-url`, seconv finds `llama-server` (SE data folder next to seconv, installed SE data folder, then `PATH`) and an OCR model — the first model in that order that is installed, unless `--ocr-model` names one — starts the server on a free loopback port, and stops it at exit. seconv never downloads engines/models — install them via the SE UI's OCR window (engine "llama.cpp") or point `--ocr-url` at a running server. Pass `--ocr-language` as a human name like `English`. |
 | `paddle` *(alias: `paddleocr`)* | Subprocess | Install via `pip install paddleocr` (3.7 or newer, for the PP-OCRv6 models); ensure the `paddleocr` binary is on `PATH`. Pass `--ocr-language` as a short code (`en`, `de`, …). Images are OCR'ed in batches: the prepared images of a file are written to a folder and one `paddleocr` process reads the whole folder, so the roughly twenty-second model load is paid once per file rather than once per image. |
+| `applevision` *(alias: `apple-vision`)* | In-process (macOS only) | macOS's built-in Vision framework — the same recognizer as the GUI's "Apple Vision" engine. Nothing to install. Pass `--ocr-language` as a Vision tag (`en-US`, `de-DE`, `zh-Hans`, …; default `en-US`); `de`, `deu` and `German` are mapped to the matching tag too. `seconv list-ocr-engines --json` lists the tags this Mac supports. |
 
 | Option | Description |
 |---|---|
-| `--ocr-engine:<engine>` | `tesseract` (default) \| `nocr` \| `binaryocr` \| `ollama` \| `llamacpp` \| `paddle` |
-| `--ocr-language:<lang>` | Tesseract: ISO 639-2 (`eng`, `deu`); Paddle: short (`en`); Ollama/llama.cpp: human (`English`) |
+| `--ocr-engine:<engine>` | `tesseract` (default) \| `nocr` \| `binaryocr` \| `ollama` \| `llamacpp` \| `paddle` \| `applevision` |
+| `--ocr-language:<lang>` | Tesseract: ISO 639-2 (`eng`, `deu`); Paddle: short (`en`); Ollama/llama.cpp: human (`English`); Apple Vision: Vision tag (`en-US`) |
 | `--ocr-db:<path>` | OCR database file: `.nocr` for `nocr`, `.db` for `binaryocr` (required for both) |
 | `--dictionary-folder:<path>` | Folder with Hunspell dictionaries + `*_OCRFixReplaceList.xml`; enables the "Fix common OCR errors" pass of `--fix-common-errors` (English is bundled, so this is only needed for other languages) |
 | `--ollama-url:<url>` | Default `http://localhost:11434/api/chat` |
@@ -262,7 +277,7 @@ An AVI stream header carries no language, so a multi-stream `.avi` names its out
 | `--ocr-prompt:<text\|file>` | Prompt for the prompt-driven OCR engines (`llamacpp`, `ollama`); rejected for the others. `{language}` is replaced with `--ocr-language`. A value that names an existing file, or ends in `.txt`/`.prompt`/`.md`, is read from that file; inline text gets `\n`/`\r`/`\t` unescaped. Default: the same prompt as the SE OCR window, except that LFM2.5-VL gets its own tuned prompt unless `--ocr-prompt` is given. |
 | `--time-codes-only` | Image sources (`.sup`, VobSub `.sub`/`.idx`, MKV PGS/VobSub, MP4 VobSub, TS DVB-sub, AVI XSUB) → text format with time codes only and empty text. **Skips OCR entirely** — no OCR engine required. Ignored for text inputs and image output targets. |
 | `--no-vobsub-isolate-colors` | Disable VobSub OCR colour isolation, which is **on by default**. Isolation rebuilds each subpicture as a crisp black-on-white bitmap via histogram-based colour analysis — the most frequent opaque colour (the glyph fill) becomes black and the gray outline / anti-alias colours collapse into the white background, which helps on discs whose outlines otherwise melt adjacent characters together (`Yuri` → `Yurl`). Pass this flag to OCR the raw palette instead. Ignored for non-VobSub sources and with `--time-codes-only`. |
-| `--no-pgs-isolate-colors` | Disable PGS / DVB-sub OCR colour isolation, which is likewise **on by default**. |
+| `--no-pgs-isolate-colors` | Disable PGS / DVB-sub OCR colour isolation, which is likewise **on by default** — except for `applevision`, which always reads the original images (binarising costs Vision umlauts and trailing punctuation, and the GUI does not binarise for it either). |
 
 > **OCR database files are not bundled with `seconv`.** The `nocr` and `binaryocr` engines need a `.nocr` or `.db` file passed via `--ocr-db`. Sources:
 >
@@ -298,8 +313,13 @@ seconv movie.sup subrip --ocr-engine:llamacpp --ocr-language:German \
   --ocr-prompt:"Identify the number of lines, then extract the text of each line exactly as written. The language is {language}."
 seconv movie.sup subrip --ocr-engine:llamacpp --ocr-prompt:my-ocr-prompt.txt
 
+# Apple Vision (macOS) — nothing to install
+seconv movie.sup subrip --ocr-engine:applevision
+seconv movie.sup subrip --ocr-engine:applevision --ocr-language:de-DE
+
 # MKV with image (PGS or VobSub) tracks — OCR runs automatically
 seconv movie.mkv subrip --ocr-engine:tesseract --ocr-language:eng
+seconv "*.mkv" subrip --input-folder:"$HOME/Movies" --ocr-engine:applevision   # a whole folder on a Mac
 
 # AVI with XSUB (DivX) subtitles — OCR runs automatically
 seconv movie.avi subrip --ocr-engine:tesseract --ocr-language:eng
@@ -549,13 +569,15 @@ The keys and defaults below are exactly what `dump-settings` emits:
     "lineSpacingPercent": 0,
     "isFullFrame": false,
     "fullFrameBackgroundColor": "#00FFFFFF",
+    "mode3D": "None",
+    "depth3D": 0,
     "alignment": "BottomCenter",
     "contentAlignment": "Center"
   }
 }
 ```
 
-The `exportImages` section styles text → image rendering (see [Image output styling](#image-output-styling) for the semantics); the equivalent CLI flags override it. Colours are emitted as `#AARRGGBB` (so `backgroundColor` / `fullFrameBackgroundColor` default to fully transparent, `#00FFFFFF`, and `boxType` to `None`); `boxType`, `alignment`, and `contentAlignment` are emitted as enum names but also accept the CLI spellings (`one-box`, `bottom-center`, …). Two optional `exportImages` keys are read but not emitted: `bottomTopMargin` and `leftRightMargin` (pixels; default 5% of the frame height / width). The `tools` section holds the merge-short-lines settings and the auto-translate prompts. The `general` section mirrors `Configuration.Settings.General`; any key left out keeps the libse default. The profile-shaping values (`minimumMillisecondsBetweenLines`, `maxNumberOfLines`, `mergeLinesShorterThan`, `subtitleMaximumCharactersPerSeconds`, `subtitleOptimalCharactersPerSeconds`, `subtitleMaximumWordsPerMinute`, `dialogStyle`, `continuationStyle`) feed Fix common errors and the split/merge operations, so set them to reproduce an SE4 profile. `dialogStyle` and `continuationStyle` take the enum names (case-insensitive): `dialogStyle` ∈ `DashBothLinesWithSpace`, `DashBothLinesWithoutSpace`, `DashSecondLineWithSpace`, `DashSecondLineWithoutSpace`; `continuationStyle` ∈ `None`, `NoneTrailingDots`, `NoneTrailingEllipsis`, `OnlyTrailingDots`, `LeadingTrailingDots`, `LeadingTrailingEllipsis`, `LeadingTrailingDash`, … (see the Fix common errors continuation styles).
+The `exportImages` section styles text → image rendering (see [Image output styling](#image-output-styling) for the semantics); the equivalent CLI flags override it. Colours are emitted as `#AARRGGBB` (so `backgroundColor` / `fullFrameBackgroundColor` default to fully transparent, `#00FFFFFF`, and `boxType` to `None`); `boxType`, `mode3D`, `alignment`, and `contentAlignment` are emitted as enum names but also accept the CLI spellings (`one-box`, `half-sbs`, `bottom-center`, …). Two optional `exportImages` keys are read but not emitted: `bottomTopMargin` and `leftRightMargin` (pixels; default 5% of the frame height / width). The `tools` section holds the merge-short-lines settings and the auto-translate prompts. The `general` section mirrors `Configuration.Settings.General`; any key left out keeps the libse default. The profile-shaping values (`minimumMillisecondsBetweenLines`, `maxNumberOfLines`, `mergeLinesShorterThan`, `subtitleMaximumCharactersPerSeconds`, `subtitleOptimalCharactersPerSeconds`, `subtitleMaximumWordsPerMinute`, `dialogStyle`, `continuationStyle`) feed Fix common errors and the split/merge operations, so set them to reproduce an SE4 profile. `dialogStyle` and `continuationStyle` take the enum names (case-insensitive): `dialogStyle` ∈ `DashBothLinesWithSpace`, `DashBothLinesWithoutSpace`, `DashSecondLineWithSpace`, `DashSecondLineWithoutSpace`; `continuationStyle` ∈ `None`, `NoneTrailingDots`, `NoneTrailingEllipsis`, `OnlyTrailingDots`, `LeadingTrailingDots`, `LeadingTrailingEllipsis`, `LeadingTrailingDash`, … (see the Fix common errors continuation styles).
 
 Keys that seconv does not recognize are ignored, so a settings file written for a newer version still applies everything this one understands — but they are listed in a warning, so a typo (or a key your seconv is too old to know) does not silently give you default output.
 

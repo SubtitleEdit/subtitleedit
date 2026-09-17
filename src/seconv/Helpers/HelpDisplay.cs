@@ -62,7 +62,7 @@ internal static class HelpDisplay
         ShowParameter(console, "--teletext-only", "Process teletext only");
         ShowParameter(console, "--teletext-only-page:<page number>", "Teletext page number");
         ShowParameter(console, "--track-number:<track list>", "Comma separated track number list");
-        ShowParameter(console, "--ocr-engine:<engine>", "OCR engine: tesseract | nocr | binaryocr | ollama | llamacpp | paddle");
+        ShowParameter(console, "--ocr-engine:<engine>", "OCR engine: tesseract | nocr | binaryocr | ollama | llamacpp | paddle | applevision (macOS)");
         ShowParameter(console, "--ocr-language:<lang>", "Language for OCR (e.g. eng, deu, spa)");
         ShowParameter(console, "--ocr-db:<path>", ".nocr (--ocr-engine=nocr) or .db (--ocr-engine=binaryocr)");
         ShowParameter(console, "--ocr-model:<model>", "llamacpp OCR .gguf file name/path (default: first downloaded OCR model)");
@@ -70,7 +70,7 @@ internal static class HelpDisplay
         ShowParameter(console, "--ocr-url:<url>", "Endpoint of an already-running llama-server for OCR (skips the auto-start)");
         ShowParameter(console, "--time-codes-only", "Image sources (.sup/VobSub/PGS/DVB/XSUB) -> text with time codes only; skips OCR");
         ShowParameter(console, "--no-vobsub-isolate-colors", "Disable VobSub OCR colour isolation (on by default; isolation binarises to black-on-white, dropping outline colours)");
-        ShowParameter(console, "--no-pgs-isolate-colors", "Disable PGS/DVB-sub OCR colour isolation (on by default; isolation binarises to black-on-white so the white glyph fill survives the OCR canvas)");
+        ShowParameter(console, "--no-pgs-isolate-colors", "Disable PGS/DVB-sub OCR colour isolation (on by default, except for applevision; isolation binarises to black-on-white so the white glyph fill survives the OCR canvas)");
         ShowParameter(console, "--ollama-url:<url>", "Ollama API endpoint (default: http://localhost:11434/api/chat)");
         ShowParameter(console, "--ollama-model:<model>", "Ollama vision model (default: llama3.2-vision)");
         ShowParameter(console, "--translate-to:<lang>", "Auto-translate to this language (code or English name, e.g. de or German)");
@@ -114,6 +114,9 @@ internal static class HelpDisplay
         ShowParameter(console, "--override-position:<x|y|xy>", "Image → image: ignore the source bitmap position on that axis and place it by --alignment and margins");
         ShowParameter(console, "--full-frame", "Draw each subtitle on a frame-sized image (place at 0,0 in an editing timeline); only fcpimage and bluraysup");
         ShowParameter(console, "--full-frame-background-color:<colour>", "Background of the full frame image (default: transparent)");
+        ShowParameter(console, "--mode-3d:<mode>", "3D video, one copy per eye: none (default) | half-side-by-side (sbs) | half-top-bottom (tab); also image → image");
+        ShowParameter(console, "--depth-3d:<px>", "3D depth -100..100; positive brings the subtitle out of the screen. D-Cinema: the Z-position");
+        ShowParameter(console, "--plane-3d:<file.ofs>", "3D Blu-ray 3D-Plane: each subtitle gets the disc's depth for its frames (--depth-3d where it has none)");
 
         console.WriteLine();
         console.MarkupLine("[bold cyan]Operations:[/]");

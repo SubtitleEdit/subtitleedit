@@ -1,6 +1,8 @@
 ﻿using Avalonia.Headless.XUnit;
+using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit;
+using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
@@ -71,6 +73,9 @@ public class PlayheadResumeFromCursorTests : IDisposable
                 _restartTimestamp = Stopwatch.GetTimestamp();
             }
         }
+
+        /// <summary>mpv's observed clock moves on its own, as it does once playback runs.</summary>
+        public void SetObservedPosition(double seconds) => _observedPosition = seconds;
 
         public string Name => "fake";
         public string FileName { get; private set; } = string.Empty;
@@ -230,11 +235,46 @@ public class PlayheadResumeFromCursorTests : IDisposable
         // resume-from-cursor seek must not override the pinned target with the old cursor spot.
         var (vm, vp, player) = MakeViewModelWithPlayer(cursorSeconds: 1.0, rawSeconds: 1.18);
 
-        PinPlayheadTo(vm, 9.0); // the caller's own seek target (its vp.Position write is async too)
+        PinPlayheadTo(vm, 9.0); // the caller's own seek target (its seek is async too)
         vm.CancelPausePlayheadFreeze();
 
         Assert.Equal(0, player.SeekCount); // no second seek was issued
         Assert.Equal(9.0, GetField<double?>(vm, "_playheadSeekTarget") ?? -1, 4);
+    }
+
+    [AvaloniaFact]
+    public void SeekThenPin_OntoTheSpotAlreadyShown_StillSeeksSoThePinReleases()
+    {
+        // #14894 on the waveform drag path: parked at 0, a drag past the start clamps back onto 0.
+        // Seek-then-pin paths wrote vp.Position, which drops a value equal to the one it holds, so
+        // no seek reached the player - but the pin still waited for the player to confirm one and
+        // held the cursor frozen through playback until its 5 s cap.
+        var (vm, vp, player) = MakeViewModelWithPlayer(cursorSeconds: 0, rawSeconds: 0);
+
+        vm.AudioVisualizerOnVideoPositionChanged(this, new AudioVisualizer.PositionEventArgs { PositionInSeconds = -0.5 });
+
+        Assert.Equal(1, player.SeekCount);
+        Assert.Equal(0, player.SeekTarget ?? -1, 4);
+
+        player.Play();
+        player.LandSeek();
+        Assert.Equal(0, Tick(vm, vp, isPlaying: true), 3);
+        Assert.Null(GetField<double?>(vm, "_playheadSeekTarget")); // released: the cursor follows playback
+    }
+
+    [AvaloniaFact]
+    public void SeekThenPin_ToANewSpot_SeeksOnce()
+    {
+        // The seek no longer rides the Position property, and the slider bound to that property
+        // must not echo the display update back as a second seek.
+        var (vm, vp, player) = MakeViewModelWithPlayer(cursorSeconds: 1.0, rawSeconds: 1.0);
+
+        vm.AudioVisualizerOnVideoPositionChanged(this, new AudioVisualizer.PositionEventArgs { PositionInSeconds = 3.0 });
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal(1, player.SeekCount);
+        Assert.Equal(3.0, player.SeekTarget ?? -1, 4);
+        Assert.Equal(3.0, vp.Position, 4); // the display moved with it
     }
 
     [AvaloniaFact]
@@ -279,6 +319,39 @@ public class PlayheadResumeFromCursorTests : IDisposable
         player.LandSeek();
         Assert.Equal(1.0, player.Position, 4);
         Assert.Equal(1.0, Tick(vm, vp, isPlaying: true), 2);
+    }
+
+    [AvaloniaFact]
+    public void PlayAfterSeek_FirstWholeFrameClockStep_DoesNotMoveTheCursor()
+    {
+        // #14909: parked on a landed seek (a waveform click), mpv's clock opens playback with a
+        // whole-frame step - 41.7 ms at 23.976 fps - within a single tick. The on-play resync read
+        // that as a standing residual and snapped the cursor a frame forward: in center mode the
+        // whole waveform jumped at every play, and the cursor then ran a frame ahead of the audio.
+        var (vm, vp, player) = MakeViewModelWithPlayer(cursorSeconds: 5.0, rawSeconds: 5.0);
+        Assert.Equal(5.0, Tick(vm, vp, isPlaying: false), 3); // a paused tick arms the on-play resync
+
+        vm.CancelPausePlayheadFreeze();
+        player.Play();
+        Assert.Equal(5.0, Tick(vm, vp, isPlaying: true), 3); // mpv's clock has not moved yet: hold
+
+        player.SetObservedPosition(5.0 + 1001.0 / 24000.0);
+        Assert.InRange(Tick(vm, vp, isPlaying: true), 5.0, 5.01); // glides on from 5.0, no frame hop
+    }
+
+    [AvaloniaFact]
+    public void PlayWithARealResidual_StillResyncsOnTheFirstClockMove()
+    {
+        // A gap bigger than a frame step is a real residual (e.g. an unpinned foreign seek), and
+        // too small for the lag snap to catch - the on-play resync still owns it.
+        var (vm, vp, player) = MakeViewModelWithPlayer(cursorSeconds: 5.0, rawSeconds: 5.0);
+        Assert.Equal(5.0, Tick(vm, vp, isPlaying: false), 3);
+
+        player.Play();
+        Assert.Equal(5.0, Tick(vm, vp, isPlaying: true), 3);
+
+        player.SetObservedPosition(5.12);
+        Assert.Equal(5.12, Tick(vm, vp, isPlaying: true), 2);
     }
 
     private (MainViewModel Vm, VideoPlayerControl Vp, FakeVideoPlayer Player) MakeViewModelWithPlayer(double cursorSeconds, double rawSeconds)

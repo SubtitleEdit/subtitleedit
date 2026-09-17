@@ -34,6 +34,9 @@ public static partial class InitListViewAndEditBox
     // overflows its row and draws over the labels underneath (#10271).
     private const double EditGridMinimumHeight = SubtitleTextBoxMinimumHeight;
     private const double EditGridMargin = 10;
+
+    /// <summary>Name of the up/down column of the edit section, so the height tracker can find it.</summary>
+    internal const string TimeControlsPanelName = "SubtitleTimeControlsPanel";
     // The subtitle grid row is Star, so without a floor the splitter can drag it away to
     // nothing and there is no handle left to drag back (#10271).
     private const double SubtitleGridMinimumHeight = 45;
@@ -1503,6 +1506,7 @@ public static partial class InitListViewAndEditBox
         // Left panel for time controls
         var timeControlsPanel = new StackPanel
         {
+            Name = TimeControlsPanelName,
             Spacing = 6,
             Margin = new Thickness(0, 0, 0, 0),
             VerticalAlignment = VerticalAlignment.Top,
@@ -1565,6 +1569,9 @@ public static partial class InitListViewAndEditBox
         var endCodeUpDown = new TimeCodeUpDown
         {
             DataContext = vm,
+            // Like the start time above: the row holds a video-relative time, the box shows
+            // (and reads back) "time code + video offset", so it matches the grid's Hide column.
+            UseVideoOffset = true,
             [AutomationProperties.NameProperty] = Se.Language.General.EndTime,
             [!TimeCodeUpDown.ValueProperty] = new Binding($"{nameof(vm.SelectedSubtitle)}.{nameof(SubtitleLineViewModel.EndTime)}")
             {
@@ -2336,9 +2343,21 @@ public static partial class InitListViewAndEditBox
     /// small the text box (which cannot shrink past its MinHeight) overflows its row and draws
     /// over the labels (#10271). Measured rather than stored: this is a derived layout fact,
     /// not something a user should configure.
+    /// <para>
+    /// The up/down column to the left counts too. Since the row became a fixed Pixel row
+    /// (#14834) it no longer grows to the tallest column the way the old Auto row did, so a
+    /// floor derived from the text column alone let three or four stacked up/downs (End time
+    /// switched on, or the ASSA Layer control) run past the row and draw over whatever sits
+    /// below the edit box. The column's own extent is read from its arranged children rather
+    /// than its DesiredSize, which is clamped to the space the row offered.
+    /// </para>
     /// </summary>
     private static void TrackEditSectionMinimumHeight(Grid mainGrid, Grid textEditGrid)
     {
+        var timeControlsPanel = (textEditGrid.Parent as Grid)?.Children
+            .OfType<StackPanel>()
+            .FirstOrDefault(p => p.Name == TimeControlsPanelName);
+
         textEditGrid.LayoutUpdated += (_, _) =>
         {
             if (textEditGrid.RowDefinitions.Count < 3)
@@ -2354,6 +2373,12 @@ public static partial class InitListViewAndEditBox
             }
 
             var needed = SubtitleTextBoxMinimumHeight + labelRows + EditGridMargin * 2;
+            var timeControlsNeeded = GetTimeControlsMinimumHeight(timeControlsPanel);
+            if (timeControlsNeeded > needed)
+            {
+                needed = timeControlsNeeded;
+            }
+
             var row = mainGrid.RowDefinitions[1];
 
             // Only react to a real change - assigning MinHeight re-triggers layout, so an
@@ -2372,6 +2397,36 @@ public static partial class InitListViewAndEditBox
                 row.MinHeight = needed;
             }
         };
+    }
+
+    /// <summary>
+    /// Height the edit section needs for the up/down column: the bottom edge of its lowest
+    /// visible child (the column stacks Start/End/Duration/Layer top-down, so that is its
+    /// content extent even when the row it was arranged in is shorter) plus the panel's
+    /// margin and the section margin. Zero when nothing is laid out yet.
+    /// </summary>
+    private static double GetTimeControlsMinimumHeight(StackPanel? timeControlsPanel)
+    {
+        if (timeControlsPanel == null)
+        {
+            return 0;
+        }
+
+        var bottom = 0.0;
+        foreach (var child in timeControlsPanel.Children)
+        {
+            if (child.IsVisible && child.Bounds.Bottom > bottom)
+            {
+                bottom = child.Bounds.Bottom;
+            }
+        }
+
+        if (bottom <= 0)
+        {
+            return 0;
+        }
+
+        return bottom + timeControlsPanel.Margin.Top + timeControlsPanel.Margin.Bottom + EditGridMargin * 2;
     }
 
     private static TextBox MakeSubtitleTextBox()

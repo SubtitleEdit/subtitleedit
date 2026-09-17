@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Avalonia;
+using Avalonia.Automation;
+using Avalonia.Automation.Peers;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -37,7 +39,15 @@ public class SettingsSection
 
     public Control Build()
     {
-        Panel = new StackPanel { Spacing = 6 };
+        // Exposed as a named group so a screen reader announces the section ("Video player,
+        // grouping") when focus moves into it, e.g. after picking a category (#12087).
+        Panel = new StackPanel
+        {
+            Spacing = 6,
+            [AutomationProperties.NameProperty] = Title,
+            [AutomationProperties.ControlTypeOverrideProperty] = AutomationControlType.Group,
+            [AutomationProperties.IsControlElementOverrideProperty] = true,
+        };
 
         // Section header: colored glyph + title, matching the category tiles above the list
         // (and the group icons in the shortcuts window).
@@ -74,6 +84,7 @@ public class SettingsSection
                     FontSize = UiUtil.ScaledFontSize(16),
                     FontWeight = FontWeight.Bold,
                     VerticalAlignment = VerticalAlignment.Center,
+                    [AutomationProperties.HeadingLevelProperty] = 2,
                 },
             }
         });

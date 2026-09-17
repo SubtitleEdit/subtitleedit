@@ -1,4 +1,5 @@
 ﻿using Avalonia;
+using FFmpeg.AutoGen;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.Ffmpeg;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.Ffmpeg.Audio;
@@ -213,6 +214,61 @@ public class FfmpegPlayerTests
     public void AvCodecFileName_CarriesTheBindingsMajorVersion()
     {
         Assert.Contains(FfmpegLibraries.AvCodecMajor.ToString(), FfmpegLibraries.AvCodecFileName);
+    }
+
+    [Theory]
+    [InlineData(12.5, 60.0, 12.5)]
+    [InlineData(75.0, 60.0, 60.0)] // past the end: clamped to the duration
+    [InlineData(0.0, 60.0, 0.0)]
+    public void SeekTarget_KnownDuration_ClampsToIt(double value, double duration, double expected)
+    {
+        Assert.Equal(expected, FfmpegPlayer.SeekTarget(value, duration));
+    }
+
+    [Theory]
+    [InlineData(0.0)]
+    [InlineData(-1.0)]
+    [InlineData(double.NaN)]
+    public void SeekTarget_UnknownDuration_SeeksToTheValueUnclamped(double duration)
+    {
+        // Raw .h264 elementary streams and some transport streams report no duration; clamping to
+        // it turned every seek into Seek(0).
+        Assert.Equal(42.25, FfmpegPlayer.SeekTarget(42.25, duration));
+    }
+
+    [Theory]
+    [InlineData(-0.5)]
+    [InlineData(double.NaN)]
+    public void SeekTarget_InvalidValue_DoesNotSeek(double value)
+    {
+        Assert.Null(FfmpegPlayer.SeekTarget(value, 60));
+    }
+
+    [Theory]
+    [InlineData(AVSampleFormat.AV_SAMPLE_FMT_U8, false)]
+    [InlineData(AVSampleFormat.AV_SAMPLE_FMT_S16, false)]
+    [InlineData(AVSampleFormat.AV_SAMPLE_FMT_S32, false)]
+    [InlineData(AVSampleFormat.AV_SAMPLE_FMT_FLT, false)]
+    [InlineData(AVSampleFormat.AV_SAMPLE_FMT_DBL, false)]
+    [InlineData(AVSampleFormat.AV_SAMPLE_FMT_S64, false)] // packed, but numbered after the first planar formats
+    [InlineData(AVSampleFormat.AV_SAMPLE_FMT_U8P, true)]
+    [InlineData(AVSampleFormat.AV_SAMPLE_FMT_S16P, true)]
+    [InlineData(AVSampleFormat.AV_SAMPLE_FMT_S32P, true)]
+    [InlineData(AVSampleFormat.AV_SAMPLE_FMT_FLTP, true)]
+    [InlineData(AVSampleFormat.AV_SAMPLE_FMT_DBLP, true)]
+    [InlineData(AVSampleFormat.AV_SAMPLE_FMT_S64P, true)]
+    [InlineData(AVSampleFormat.AV_SAMPLE_FMT_NONE, false)]
+    public void IsPlanarSampleFormat_MatchesLibavutilTable(AVSampleFormat format, bool planar)
+    {
+        Assert.Equal(planar, FfmpegPlayer.IsPlanarSampleFormat(format));
+    }
+
+    [Fact]
+    public void IsPlanarSampleFormat_S64IsNotOrderedAfterAllPackedFormats()
+    {
+        // The bug: "format >= U8P" as the planar test. S64 sits between the planar formats.
+        Assert.True(AVSampleFormat.AV_SAMPLE_FMT_S64 > AVSampleFormat.AV_SAMPLE_FMT_U8P);
+        Assert.False(FfmpegPlayer.IsPlanarSampleFormat(AVSampleFormat.AV_SAMPLE_FMT_S64));
     }
 
     private static void AddEntry(ZipArchive archive, string name)

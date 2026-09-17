@@ -13,6 +13,7 @@ public class LanguageVideo
     public LanguageVideoOcr VideoOcr { get; set; } = new();
     public LanguageVideoLetterbox Letterbox { get; set; } = new();
     public string LetterboxingDotDotDot { get; set; }
+    public LanguageBackgroundMusic BackgroundMusic { get; set; } = new();
     public string GoToVideoPosition { get; set; }
     public string GoToVideoPositionDotDotDot { get; set; }
     public string GenerateBlankVideoDotDotDot { get; set; }
@@ -22,6 +23,8 @@ public class LanguageVideo
     public string OpenSecondarySubtitleOnVideoPlayerDotDotDot { get; set; }
     public string OpenSecondarySubtitleOnVideoPlayer { get; set; }
     public string RemoveSecondarySubtitleOnVideoPlayer { get; set; }
+    public string SecondarySubtitleRememberSettings { get; set; }
+    public string SecondarySubtitleDoNotShowAgain { get; set; }
     public string OpenRecentVideo { get; set; }
     public string ClearRecentVideos { get; set; }
     public string CutVideoTitle { get; set; }
@@ -70,6 +73,7 @@ public class LanguageVideo
     public string EmbeddedTrackGeneratingVideoXY { get; set; }
     public string EmbeddedTrackGeneratingVideo { get; set; }
     public string Mp4FilesFilter { get; set; }
+    public string EmbeddedTracksPickVideoHint { get; set; }
     public string ViewMatroskaTrackX { get; set; }
     public string ResolutionSeparator { get; set; }
     public string OpenFromUrlTitle { get; set; }
@@ -139,6 +143,8 @@ public class LanguageVideo
         OpenSecondarySubtitleOnVideoPlayer = "Second subtitle file (on video player)";
         OpenSecondarySubtitleOnVideoPlayerDotDotDot = "Open second subtitle file...";
         RemoveSecondarySubtitleOnVideoPlayer = "Remove second subtitle file";
+        SecondarySubtitleRememberSettings = "Remember these settings";
+        SecondarySubtitleDoNotShowAgain = "Do not show this dialog again";
         OpenRecentVideo = "Open recent video";
         ClearRecentVideos = "Clear recent videos";
         CutVideoTitle = "Cut video";
@@ -187,6 +193,7 @@ public class LanguageVideo
         EmbeddedTrackGeneratingVideoXY = "Generating video... {0}%     {1}";
         EmbeddedTrackGeneratingVideo = "Generating video...";
         Mp4FilesFilter = "MP4 files";
+        EmbeddedTracksPickVideoHint = "Choose a video file, or drop one here, to see its subtitle tracks.";
         ViewMatroskaTrackX = "View Matroska track - {0}";
         ResolutionSeparator = "x";
         OpenFromUrlTitle = "Open video file from URL";

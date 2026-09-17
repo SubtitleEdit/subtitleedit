@@ -128,12 +128,23 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static List<Paragraph> SplitToAssRenderLines(Paragraph p, int width, int height)
         {
             var metrics = new Metrics(height);
-            if (p.Text.StartsWith("{\\an7}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an9}", StringComparison.Ordinal)) // vertical text
+            if (IsVertical(p.Text))
             {
                 return MakeVerticalParagraphs(p, width, metrics);
             }
 
             return MakeHorizontalParagraphs(p, width, height, metrics);
+        }
+
+        /// <summary>
+        /// Vertical writing: {\an4}/{\an7} is a column on the left, {\an6}/{\an9} one on the right.
+        /// </summary>
+        private static bool IsVertical(string text)
+        {
+            return text.StartsWith("{\\an7}", StringComparison.Ordinal) ||
+                   text.StartsWith("{\\an9}", StringComparison.Ordinal) ||
+                   text.StartsWith("{\\an4}", StringComparison.Ordinal) ||
+                   text.StartsWith("{\\an6}", StringComparison.Ordinal);
         }
 
         private static List<Paragraph> MakeHorizontalParagraphs(Paragraph p, int width, int height, Metrics metrics)
@@ -336,14 +347,15 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             var lines = p.Text.SplitToLines();
             var adjustment = metrics.LineHeight;
-            var leftAlign = p.Text.StartsWith("{\\an7}", StringComparison.Ordinal);
+            var leftAlign = p.Text.StartsWith("{\\an7}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an4}", StringComparison.Ordinal);
             var startX = leftAlign
                 ? metrics.Scale(9) + lines.Count * 2 * adjustment
                 : width - metrics.Scale(50);
             var textY = metrics.Scale(40);
             var furiganaY = metrics.Scale(45);
 
-            var pre = p.Text.Substring(0, 5);
+            // The columns are always laid out from the top, like the IMSC 1.1 Japanese vertical regions.
+            var pre = leftAlign ? "{\\an7" : "{\\an9";
             var list = new List<Paragraph>();
             var furiganaList = new List<Paragraph>();
             var rubyOn = false;

@@ -7,6 +7,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
@@ -248,8 +249,10 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _showFullscreenButton;
     [ObservableProperty] private bool _fullscreenHideControls;
     [ObservableProperty] private bool _autoOpenVideoFile;
+    [ObservableProperty] private bool _showSecondarySubtitleDialog;
 
     [ObservableProperty] private bool _waveformDrawGridLines;
+    [ObservableProperty] private bool _waveformUseSkiaRenderer;
     [ObservableProperty] private bool _waveformShowNumberAndDuration;
     [ObservableProperty] private bool _waveformShowCps;
     [ObservableProperty] private bool _waveformFocusOnMouseOver;
@@ -278,6 +281,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _isLibVlcDownloadVisible;
     [ObservableProperty] private string _ffmpegLibsStatus;
     [ObservableProperty] private bool _isFfmpegLibsDownloadVisible;
+    [ObservableProperty] private bool _isFileTypeAssociationsVisible;
     [ObservableProperty] private string _ffmpegPath;
     [ObservableProperty] private string _ffmpegStatus;
     [ObservableProperty] private string _proxyAddress = string.Empty;
@@ -442,6 +446,14 @@ public partial class SettingsViewModel : ObservableObject
     public Window? Window { get; internal set; }
     public ScrollViewer ScrollView { get; internal set; }
     public List<SettingsSection> Sections { get; internal set; }
+
+    /// <summary>
+    /// The category shown in the content area. With no search filter the page shows only this
+    /// section, so Tab stays within one category and its heading is the first thing announced
+    /// when it is entered - one long page of every setting gave a screen reader user no way to
+    /// tell where a section ended or to get back to the categories (#12087).
+    /// </summary>
+    [ObservableProperty] private SettingsSection? _selectedSection;
 
     private readonly IWindowService _windowService;
     private readonly IFolderHelper _folderHelper;
@@ -690,6 +702,7 @@ public partial class SettingsViewModel : ObservableObject
         IsLibMpvDownloadVisible = OperatingSystem.IsWindows();
         IsLibVlcDownloadVisible = OperatingSystem.IsWindows();
         IsFfmpegLibsDownloadVisible = OperatingSystem.IsWindows();
+        IsFileTypeAssociationsVisible = OperatingSystem.IsWindows();
 
         MpvPreviewFontName = FontNames.First();
         MpvPreviewSelectedBorderType = MpvPreviewBorderTypes.First();
@@ -924,6 +937,7 @@ public partial class SettingsViewModel : ObservableObject
         ShowUpDownLabels = appearance.ShowUpDownLabels;
 
         WaveformDrawGridLines = Se.Settings.Waveform.DrawGridLines;
+        WaveformUseSkiaRenderer = Se.Settings.Waveform.UseSkiaRenderer;
         WaveformShowNumberAndDuration = Se.Settings.Waveform.WaveformShowNumberAndDuration;
         WaveformShowCps = Se.Settings.Waveform.WaveformShowCps;
         WaveformFocusOnMouseOver = Se.Settings.Waveform.FocusOnMouseOver;
@@ -1058,6 +1072,7 @@ public partial class SettingsViewModel : ObservableObject
         ShowFullscreenButton = video.ShowFullscreenButton;
         FullscreenHideControls = video.FullscreenHideControls;
         AutoOpenVideoFile = video.AutoOpen;
+        ShowSecondarySubtitleDialog = video.SecondarySubtitleShowDialog;
 
         MpvPreviewFontName = video.MpvPreviewFontName;
         MpvPreviewFontSize = video.MpvPreviewFontSize;
@@ -1790,6 +1805,7 @@ public partial class SettingsViewModel : ObservableObject
         appearance.ShowHorizontalLineAboveToolbar = ShowHorizontalLineAboveToolbar;
 
         Se.Settings.Waveform.DrawGridLines = WaveformDrawGridLines;
+        Se.Settings.Waveform.UseSkiaRenderer = WaveformUseSkiaRenderer;
         Se.Settings.Waveform.WaveformShowNumberAndDuration = WaveformShowNumberAndDuration;
         Se.Settings.Waveform.WaveformShowCps = WaveformShowCps;
         Se.Settings.Waveform.FocusOnMouseOver = WaveformFocusOnMouseOver;
@@ -1901,6 +1917,7 @@ public partial class SettingsViewModel : ObservableObject
         video.ShowFullscreenButton = ShowFullscreenButton;
         video.FullscreenHideControls = FullscreenHideControls;
         video.AutoOpen = AutoOpenVideoFile;
+        video.SecondarySubtitleShowDialog = ShowSecondarySubtitleDialog;
 
         video.MpvPreviewFontName = MpvPreviewFontName;
         video.MpvPreviewFontSize = MpvPreviewFontSize;
@@ -2161,7 +2178,14 @@ public partial class SettingsViewModel : ObservableObject
         SetFfmpegLibsStatus();
     }
 
-    public async void ScrollElementIntoView(ScrollViewer scrollViewer, Control target)
+    /// <summary>
+    /// Fade the page out and in around the jump to a section. Headless tests turn this off: the
+    /// animation clock only advances on render ticks there and can stall mid-fade, which left
+    /// the focus move after it untested.
+    /// </summary>
+    internal static bool AnimateScrollToSection { get; set; } = true;
+
+    public async void ScrollElementIntoView(ScrollViewer scrollViewer, Control target, NavigationMethod? focusFirstControl = null)
     {
         await Dispatcher.UIThread.InvokeAsync(async () =>
         {
@@ -2169,7 +2193,10 @@ public partial class SettingsViewModel : ObservableObject
 
             // Fade out
             //await FadeToAsync(ScrollView, 0, TimeSpan.FromMilliseconds(100));
-            await RunFadeAnimation(ScrollView, from: 1, to: 0, TimeSpan.FromMilliseconds(100));
+            if (AnimateScrollToSection)
+            {
+                await RunFadeAnimation(ScrollView, from: 1, to: 0, TimeSpan.FromMilliseconds(100));
+            }
 
 
             await Task.Yield(); // Ensures target has been laid out
@@ -2182,9 +2209,24 @@ public partial class SettingsViewModel : ObservableObject
                 scrollViewer.Offset = new Vector(scrollViewer.Offset.X, targetPosition.Value.Y);
             }
 
+            if (focusFirstControl.HasValue)
+            {
+                FocusFirstTabStop(target, focusFirstControl.Value);
+            }
+
             await Task.Yield(); // Ensures target has been laid out
-            await RunFadeAnimation(ScrollView, from: 0, to: 1, TimeSpan.FromMilliseconds(200));
+            if (AnimateScrollToSection)
+            {
+                await RunFadeAnimation(ScrollView, from: 0, to: 1, TimeSpan.FromMilliseconds(200));
+            }
         }, DispatcherPriority.Background);
+    }
+
+    private static void FocusFirstTabStop(Control container, NavigationMethod navigationMethod)
+    {
+        var first = container.GetVisualDescendants().OfType<InputElement>().FirstOrDefault(e =>
+            e.Focusable && e.IsEffectivelyEnabled && e.IsEffectivelyVisible && KeyboardNavigation.GetIsTabStop(e));
+        first?.Focus(navigationMethod);
     }
 
     private static Task RunFadeAnimation(Control control, double from, double to, TimeSpan duration)
@@ -2617,11 +2659,51 @@ public partial class SettingsViewModel : ObservableObject
     [RelayCommand]
     private void ScrollToSection(string title)
     {
-        var section = Sections.FirstOrDefault(section => section.IsVisible && section.Title == title);
-        if (section != null)
+        var section = Sections.FirstOrDefault(section => section.Title == title);
+        if (section == null)
         {
-            ScrollElementIntoView(ScrollView, section.Panel!);
+            return;
         }
+
+        // The focus rectangle follows only when the category was picked from the keyboard.
+        var pickedFromKeyboard = Window?.FocusManager?.GetFocusedElement() is Control focused
+                                 && focused.Classes.Contains(":focus-visible");
+        ShowSection(section, pickedFromKeyboard ? NavigationMethod.Tab : NavigationMethod.Unspecified);
+    }
+
+    /// <summary>
+    /// Ctrl+PageDown / Ctrl+PageUp switch to the next / previous category from anywhere in the
+    /// window, so a keyboard user several controls into a section need not Shift+Tab all the
+    /// way back to the category buttons (#12087).
+    /// </summary>
+    internal void SelectAdjacentSection(int direction)
+    {
+        var candidates = Sections.Where(s => s.IsVisible).ToList();
+        if (candidates.Count == 0)
+        {
+            return;
+        }
+
+        var index = SelectedSection == null ? -1 : candidates.IndexOf(SelectedSection);
+        index = index < 0
+            ? (direction > 0 ? 0 : candidates.Count - 1)
+            : (index + direction + candidates.Count) % candidates.Count;
+        ShowSection(candidates[index], NavigationMethod.Tab);
+    }
+
+    private void ShowSection(SettingsSection section, NavigationMethod navigationMethod)
+    {
+        SelectedSection = section; // the page rebuilds the content to this section
+
+        // Hidden by the search filter (no matching settings) - nothing to scroll or focus.
+        if (section.Panel == null || !section.IsVisible)
+        {
+            return;
+        }
+
+        // Move focus into the section, not only the view - with focus left on the category
+        // button, the categories did nothing for a screen reader or keyboard user (#12087).
+        ScrollElementIntoView(ScrollView, section.Panel, navigationMethod);
     }
 
     [RelayCommand]
@@ -3015,6 +3097,20 @@ public partial class SettingsViewModel : ObservableObject
         {
             e.Handled = true;
             UiUtil.ShowHelp("features/settings");
+        }
+    }
+
+    /// <summary>
+    /// Runs on the tunnel pass: the content's ScrollViewer, text boxes and combo boxes handle
+    /// PageUp/PageDown themselves, so a bubbling handler only saw Ctrl+PageUp/PageDown while focus
+    /// was on the category buttons, not on a setting inside the section (#12087).
+    /// </summary>
+    public void OnPreviewKeyDown(KeyEventArgs e)
+    {
+        if (e.KeyModifiers == KeyModifiers.Control && e.Key is Key.PageDown or Key.PageUp)
+        {
+            e.Handled = true;
+            SelectAdjacentSection(e.Key == Key.PageDown ? 1 : -1);
         }
     }
 

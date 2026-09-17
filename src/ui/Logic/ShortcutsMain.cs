@@ -158,13 +158,60 @@ public static class ShortcutsMain
     /// <summary>Action name of a custom move slot command, e.g. "MoveAllLinesCustom2BackCommand".</summary>
     public static string GetMoveLinesCustomCommandName(MoveLinesScope scope, int slotNumber, bool back)
     {
-        var scopeName = scope switch
+        return $"{GetMoveLinesScopeName(scope)}Custom{slotNumber}{(back ? "Back" : "Forward")}Command";
+    }
+
+    /// <summary>
+    /// Milliseconds of a "move lines" step: slot 0 is the global "X ms" step from Settings > General,
+    /// 1 and 2 are the custom-milliseconds slots.
+    /// </summary>
+    public static int GetMoveLinesMs(MoveLinesScope scope, int slotNumber)
+    {
+        return slotNumber == 0 ? Se.Settings.General.MoveSelectedLinesStepMs : GetMoveLinesCustomMs(scope, slotNumber);
+    }
+
+    /// <summary>Action name of a move command, slot 0 being "X ms", e.g. "MoveAllLinesXMsBackCommand".</summary>
+    public static string GetMoveLinesCommandName(MoveLinesScope scope, int slotNumber, bool back)
+    {
+        return slotNumber == 0
+            ? $"{GetMoveLinesScopeName(scope)}XMs{(back ? "Back" : "Forward")}Command"
+            : GetMoveLinesCustomCommandName(scope, slotNumber, back);
+    }
+
+    /// <summary>The move command for a scope and slot, slot 0 being "X ms" (see <see cref="GetMoveLinesMs"/>).</summary>
+    public static IRelayCommand GetMoveLinesCommand(MainViewModel vm, MoveLinesScope scope, int slotNumber, bool back)
+    {
+        return (scope, slotNumber, back) switch
+        {
+            (MoveLinesScope.Selected, 0, true) => vm.MoveSelectedLinesXMsBackCommand,
+            (MoveLinesScope.Selected, 0, false) => vm.MoveSelectedLinesXMsForwardCommand,
+            (MoveLinesScope.Selected, 1, true) => vm.MoveSelectedLinesCustom1BackCommand,
+            (MoveLinesScope.Selected, 1, false) => vm.MoveSelectedLinesCustom1ForwardCommand,
+            (MoveLinesScope.Selected, _, true) => vm.MoveSelectedLinesCustom2BackCommand,
+            (MoveLinesScope.Selected, _, false) => vm.MoveSelectedLinesCustom2ForwardCommand,
+            (MoveLinesScope.SelectedAndForward, 0, true) => vm.MoveSelectedLinesAndForwardXMsBackCommand,
+            (MoveLinesScope.SelectedAndForward, 0, false) => vm.MoveSelectedLinesAndForwardXMsForwardCommand,
+            (MoveLinesScope.SelectedAndForward, 1, true) => vm.MoveSelectedLinesAndForwardCustom1BackCommand,
+            (MoveLinesScope.SelectedAndForward, 1, false) => vm.MoveSelectedLinesAndForwardCustom1ForwardCommand,
+            (MoveLinesScope.SelectedAndForward, _, true) => vm.MoveSelectedLinesAndForwardCustom2BackCommand,
+            (MoveLinesScope.SelectedAndForward, _, false) => vm.MoveSelectedLinesAndForwardCustom2ForwardCommand,
+            (MoveLinesScope.All, 0, true) => vm.MoveAllLinesXMsBackCommand,
+            (MoveLinesScope.All, 0, false) => vm.MoveAllLinesXMsForwardCommand,
+            (MoveLinesScope.All, 1, true) => vm.MoveAllLinesCustom1BackCommand,
+            (MoveLinesScope.All, 1, false) => vm.MoveAllLinesCustom1ForwardCommand,
+            (MoveLinesScope.All, _, true) => vm.MoveAllLinesCustom2BackCommand,
+            _ => vm.MoveAllLinesCustom2ForwardCommand,
+        };
+    }
+
+    private static string GetMoveLinesScopeName(MoveLinesScope scope)
+    {
+        return scope switch
         {
             MoveLinesScope.Selected => "MoveSelectedLines",
             MoveLinesScope.SelectedAndForward => "MoveSelectedLinesAndForward",
             _ => "MoveAllLines",
         };
-        return $"{scopeName}Custom{slotNumber}{(back ? "Back" : "Forward")}Command";
     }
 
     /// <summary>
@@ -199,6 +246,7 @@ public static class ShortcutsMain
     {
         { nameof(MainViewModel.DeleteSelectedLinesCommand), Se.Language.Options.Shortcuts.ListDeleteSelection },
         { nameof(MainViewModel.FillSelectedLinesWithClipboardCommand), Se.Language.Options.Shortcuts.FillSelectedLinesWithClipboard },
+        { nameof(MainViewModel.DeleteSelectedLinesEverywhereCommand), Se.Language.Options.Shortcuts.DeleteSelectionEverywhere },
         { nameof(MainViewModel.RippleDeleteSelectedLinesCommand), Se.Language.Options.Shortcuts.RippleDeleteSelection },
         { nameof(MainViewModel.DuplicateSelectedLinesCommand), Se.Language.Options.Shortcuts.DuplicateSelectedLines},
         { nameof(MainViewModel.ShowAlignmentPickerCommand), Se.Language.General.Alignment},
@@ -443,6 +491,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.SeekSilenceForwardCommand),  Se.Language.Options.Shortcuts.SeekSilenceForward },
         { nameof(MainViewModel.WaveformGuessStartCommand),  Se.Language.Options.Shortcuts.WaveformGuessStart },
         { nameof(MainViewModel.WaveformGuessEndCommand),  Se.Language.Options.Shortcuts.WaveformGuessEnd },
+        { nameof(MainViewModel.WaveformGuessStartAndEndCommand),  Se.Language.Options.Shortcuts.WaveformGuessStartAndEnd },
         { nameof(MainViewModel.ShowShotChangesListCommand),  Se.Language.General.ShowShotChangesList },
         { nameof(MainViewModel.VideoUndockControlsCommand),  Se.Language.Options.Shortcuts.UndockVideoControls },
         { nameof(MainViewModel.VideoRedockControlsCommand),  Se.Language.Options.Shortcuts.RedockVideoControls },
@@ -664,6 +713,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.SelectAllLinesCommand, nameof(vm.SelectAllLinesCommand), ShortcutCategory.SubtitleGrid);
         AddShortcut(shortcuts, vm.InverseSelectionCommand, nameof(vm.InverseSelectionCommand), ShortcutCategory.SubtitleGrid);
         AddShortcut(shortcuts, vm.DeleteSelectedLinesCommand, nameof(vm.DeleteSelectedLinesCommand), ShortcutCategory.SubtitleGrid);
+        AddShortcut(shortcuts, vm.DeleteSelectedLinesEverywhereCommand, nameof(vm.DeleteSelectedLinesEverywhereCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.RippleDeleteSelectedLinesCommand, nameof(vm.RippleDeleteSelectedLinesCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.DuplicateSelectedLinesCommand, nameof(vm.DuplicateSelectedLinesCommand), ShortcutCategory.SubtitleGrid);
         // Alignment works on the selected lines regardless of where focus is, so these are active in
@@ -904,6 +954,7 @@ public static class ShortcutsMain
         // SE 4 dispatched "guess start" from the main form regardless of focus.
         AddShortcut(shortcuts, vm.WaveformGuessStartCommand, nameof(vm.WaveformGuessStartCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
         AddShortcut(shortcuts, vm.WaveformGuessEndCommand, nameof(vm.WaveformGuessEndCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
+        AddShortcut(shortcuts, vm.WaveformGuessStartAndEndCommand, nameof(vm.WaveformGuessStartAndEndCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
         AddShortcut(shortcuts, vm.GoToPreviousShotChangeCommand, nameof(vm.GoToPreviousShotChangeCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.GoToNextShotChangeCommand, nameof(vm.GoToNextShotChangeCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.ShowVideoChaptersCommand, nameof(vm.ShowVideoChaptersCommand), ShortcutCategory.General, ShortcutGroup.Video);
@@ -1224,16 +1275,45 @@ public static class ShortcutsMain
 
     public static List<SeShortCut> GetDefaultShortcuts(MainViewModel vm)
     {
-        var defaults = GetBuiltInDefaultShortcuts(vm);
+        return GetDefaultShortcuts(vm, OperatingSystem.IsMacOS());
+    }
+
+    internal static List<SeShortCut> GetDefaultShortcuts(MainViewModel vm, bool isMacOS)
+    {
+        var defaults = GetBuiltInDefaultShortcuts(vm, isMacOS);
         AddPluginDefaultShortcuts(vm, defaults);
         return defaults;
     }
 
-    private static List<SeShortCut> GetBuiltInDefaultShortcuts(MainViewModel vm)
-    {
-        var cmd = GetCommandOrWin();
+    /// <summary>
+    /// macOS defaults that differ from Windows/Linux beyond Ctrl becoming Cmd, so the standard
+    /// macOS shortcuts keep working (#14941): Cmd+H hides the app, Cmd+Space opens Spotlight,
+    /// F11 shows the desktop, Cmd+G/Cmd+Shift+G are find next/previous and Cmd+Shift+Z is redo.
+    /// Apple keyboards also have no Insert key and their Delete key is a backspace, and Option+letter
+    /// types a character, so it must not be a default (Option+Shift+E is È on Italian layouts, #14508).
+    /// Se.MigrateShortcuts moves persisted settings still on the old defaults (version 4).
+    /// </summary>
+    internal static readonly (string ActionName, string[] OldKeys, string[] NewKeys)[] MacOsDefaultChanges =
+    [
+        (nameof(MainViewModel.ShowReplaceCommand), ["Win", "H"], ["Win", "Alt", "F"]),
+        (nameof(MainViewModel.TogglePlayPause2Command), ["Win", nameof(Avalonia.Input.Key.Space)], []),
+        (nameof(MainViewModel.WaveformSetStartCommand), [nameof(Avalonia.Input.Key.F11)], [nameof(Avalonia.Input.Key.F9)]),
+        (nameof(MainViewModel.FindNextCommand), [nameof(Avalonia.Input.Key.F3)], ["Win", "G"]),
+        (nameof(MainViewModel.FindPreviousCommand), ["Shift", nameof(Avalonia.Input.Key.F3)], ["Win", "Shift", "G"]),
+        (nameof(MainViewModel.ShowGoToLineCommand), ["Win", "G"], ["Ctrl", "G"]),
+        (nameof(MainViewModel.ShowAutoTranslateCommand), ["Win", "Shift", "G"], ["Win", "Shift", "T"]),
+        (nameof(MainViewModel.RedoCommand), ["Win", "Y"], ["Win", "Shift", "Z"]),
+        (nameof(MainViewModel.InsertLineAfterCommand), ["Alt", nameof(Avalonia.Input.Key.Insert)], ["Win", "Alt", "I"]),
+        (nameof(MainViewModel.InsertLineBeforeCommand), ["Win", "Shift", nameof(Avalonia.Input.Key.Insert)], ["Win", "Alt", "Shift", "I"]),
+        (nameof(MainViewModel.DeleteSelectedLinesCommand), ["Delete"], ["Win", nameof(Avalonia.Input.Key.Back)]),
+        (nameof(MainViewModel.ExtendSelectedToPreviousCommand), ["Alt", "Shift", nameof(Avalonia.Input.Key.E)], ["Win", "Alt", "Shift", nameof(Avalonia.Input.Key.E)]),
+    ];
 
-        return
+    private static List<SeShortCut> GetBuiltInDefaultShortcuts(MainViewModel vm, bool isMacOS)
+    {
+        var cmd = isMacOS ? "Win" : "Ctrl";
+
+        List<SeShortCut> defaults =
         [
             new(nameof(vm.UndoCommand), [cmd, "Z"]),
             new(nameof(vm.RedoCommand), [cmd, "Y"]),
@@ -1256,7 +1336,7 @@ public static class ShortcutsMain
             new(nameof(vm.ShowMultipleReplaceCommand), [cmd, "Shift", "R"], ShortcutCategory.General),
             // On macOS the plain Option+Shift+Cmd+D chord never reaches the app (#14508), so add
             // Control there; on Windows/Linux the three-modifier default stays as before.
-            new(nameof(vm.OpenDataFolderCommand), OperatingSystem.IsMacOS()
+            new(nameof(vm.OpenDataFolderCommand), isMacOS
                 ? ["Ctrl", cmd, "Alt", "Shift", "D"]
                 : [cmd, "Alt", "Shift", "D"], ShortcutCategory.General),
             new(nameof(vm.SaveLanguageFileCommand), [cmd, "Alt", "Shift", "L"], ShortcutCategory.General),
@@ -1272,7 +1352,7 @@ public static class ShortcutsMain
             // Forward delete for Apple keyboards, where the Delete key is only a backspace.
             // Default on macOS only: on PC keyboards Shift is often still held right after
             // typing an uppercase letter, and there Shift+Backspace must stay a backspace.
-            .. OperatingSystem.IsMacOS()
+            .. isMacOS
                 ? new SeShortCut[] { new(nameof(vm.TextBoxDeleteForwardCommand), ["Shift", nameof(Avalonia.Input.Key.Back)], ShortcutCategory.TextBox) }
                 : [],
             // Shift+Delete cut is not in Avalonia's native keymap (unlike Ctrl+Insert copy and
@@ -1342,16 +1422,24 @@ public static class ShortcutsMain
             new(nameof(vm.PauseCommand), [cmd, "Alt", nameof(Avalonia.Input.Key.P)], ShortcutCategory.General),
             new(nameof(vm.SetupLikeSe4Command), [cmd, nameof(Avalonia.Input.Key.D4)], ShortcutCategory.General),
         ];
-    }
 
-    private static string GetCommandOrWin()
-    {
-        if (OperatingSystem.IsMacOS())
+        if (isMacOS)
         {
-            return "Win";
+            foreach (var change in MacOsDefaultChanges)
+            {
+                var index = defaults.FindIndex(s => s.ActionName == change.ActionName);
+                if (change.NewKeys.Length == 0)
+                {
+                    defaults.RemoveAt(index);
+                }
+                else
+                {
+                    defaults[index].Keys = [.. change.NewKeys];
+                }
+            }
         }
 
-        return "Ctrl";
+        return defaults;
     }
 
     public class AvailableShortcut

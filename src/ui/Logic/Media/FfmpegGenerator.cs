@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Video.EmbeddedSubtitlesEdit;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.UiLogic.Export;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -67,9 +68,62 @@ public class FfmpegGenerator
     }
 
     /// <summary>
+    /// The burn-in filter graph for frame-packed 3D video, the ffmpeg side of
+    /// <see cref="Stereo3DImage"/>: the subtitles are rendered for the full frame, squeezed into
+    /// each eye's half of it, and laid over that half moved sideways by the depth - the left (top)
+    /// eye's copy to the right, the other eye's to the left, so a positive depth brings the
+    /// subtitle out of the screen. Each eye is cropped out, so a copy never crosses into the
+    /// other eye's half, and the two are stacked back together.
+    /// </summary>
+    /// <param name="videoChain">The main video, scaled to the output size - no output label.</param>
+    /// <param name="imageSubtitleChain">A bitmap subtitle stream (Blu-ray sup) scaled to the output size, or null for text.</param>
+    /// <param name="assaFileName">The ASSA file libass renders, when <paramref name="imageSubtitleChain"/> is null.</param>
+    /// <returns>A graph whose last filter has no output label, like the flat graphs.</returns>
+    internal static string MakeStereo3DGraph(string videoChain, string? imageSubtitleChain, string? assaFileName, int width, int height, Export3DMode mode, int depth)
+    {
+        string sources;
+        string alpha;
+        if (imageSubtitleChain != null)
+        {
+            sources = $"{videoChain},split[v3d1][v3d2];{imageSubtitleChain},split[s3d1][s3d2];";
+            alpha = string.Empty;
+        }
+        else
+        {
+            // libass needs a frame to draw on: a fully transparent copy of the video (so it has
+            // the video's timestamps), drawn with its alpha channel kept. The drawing leaves the
+            // colors multiplied by their alpha, so the overlays are told the alpha is premultiplied.
+            sources = $"{videoChain},split=3[v3d1][v3d2][v3d0];" +
+                      $"[v3d0]format=rgba,colorchannelmixer=rr=0:gg=0:bb=0:aa=0,ass={assaFileName}:alpha=1,split[s3d1][s3d2];";
+            alpha = ":alpha=premultiplied";
+        }
+
+        var depth1 = depth.ToString(CultureInfo.InvariantCulture);
+        var depth2 = (-depth).ToString(CultureInfo.InvariantCulture);
+        if (mode == Export3DMode.HalfTopBottom)
+        {
+            var top = height / 2;
+            var bottom = height - top;
+            return sources +
+                   $"[s3d1]scale={width}:{top}[s3d1h];[s3d2]scale={width}:{bottom}[s3d2h];" +
+                   $"[v3d1]crop={width}:{top}:0:0[e3d1];[v3d2]crop={width}:{bottom}:0:{top}[e3d2];" +
+                   $"[e3d1][s3d1h]overlay=x={depth1}:y=0{alpha}[o3d1];[e3d2][s3d2h]overlay=x={depth2}:y=0{alpha}[o3d2];" +
+                   "[o3d1][o3d2]vstack";
+        }
+
+        var left = width / 2;
+        var right = width - left;
+        return sources +
+               $"[s3d1]scale={left}:{height}[s3d1h];[s3d2]scale={right}:{height}[s3d2h];" +
+               $"[v3d1]crop={left}:{height}:0:0[e3d1];[v3d2]crop={right}:{height}:{left}:0[e3d2];" +
+               $"[e3d1][s3d1h]overlay=x={depth1}:y=0{alpha}[o3d1];[e3d2][s3d2h]overlay=x={depth2}:y=0{alpha}[o3d2];" +
+               "[o3d1][o3d2]hstack";
+    }
+
+    /// <summary>
     /// Generate ffmpeg parameters for a video with a burned-in Advanced Sub Station Alpha subtitle.
     /// </summary>
-    public static string GenerateHardcodedVideoFile(string inputVideoFileName, string assaSubtitleFileName, string outputVideoFileName, int width, int height, string videoEncoding, string preset, string pixelFormat, string crf, string audioEncoding, bool forceStereo, string sampleRate, string tune, string audioBitRate, string pass, string twoPassBitRate, string? cutStart = null, string? cutEnd = null, string audioCutTrack = "", Features.Video.BurnIn.BurnInLogo? burnInLogo = null, bool inputIsAudioOnly = false, bool subtitleIsImage = false)
+    public static string GenerateHardcodedVideoFile(string inputVideoFileName, string assaSubtitleFileName, string outputVideoFileName, int width, int height, string videoEncoding, string preset, string pixelFormat, string crf, string audioEncoding, bool forceStereo, string sampleRate, string tune, string audioBitRate, string pass, string twoPassBitRate, string? cutStart = null, string? cutEnd = null, string audioCutTrack = "", Features.Video.BurnIn.BurnInLogo? burnInLogo = null, bool inputIsAudioOnly = false, bool subtitleIsImage = false, Export3DMode mode3D = Export3DMode.None, int depth3D = 0)
     {
         if (width % 2 == 1)
         {
@@ -169,11 +223,26 @@ public class FfmpegGenerator
         {
             if (videoEncoding == "h264_nvenc" || videoEncoding == "hevc_nvenc")
             {
-                crfSettings = $" -cq {crf}";
+                // "-tune lossless" pins nvenc to constant QP 0, so a CQ value alongside it is
+                // silently dropped by ffmpeg - leave it out rather than write a command line that
+                // claims a quality the encode does not use.
+                if (tune != "lossless")
+                {
+                    crfSettings = $" -cq {crf}";
+                }
             }
             else if (videoEncoding == "h264_amf" || videoEncoding == "hevc_amf")
             {
+                // A quality preference name ("quality"/"balanced"/"speed"), not a number: the
+                // integers behind them differ per codec and the H.264 encoder rejects anything
+                // above 2.
                 crfSettings = $" -quality {crf}";
+            }
+            else if (videoEncoding is "h264_qsv" or "hevc_qsv")
+            {
+                // QSV knows no "crf" - ffmpeg accepted it, warned that the option went unused and
+                // encoded at its default CQP instead. "-global_quality" is the ICQ knob.
+                crfSettings = $" -global_quality {crf}";
             }
             else if (videoEncoding is "h264_videotoolbox" or "hevc_videotoolbox")
             {
@@ -270,9 +339,16 @@ public class FfmpegGenerator
         if (subtitleIsImage)
         {
             imageSubtitleInput = $"{GetImageSubtitleOffset(cutStart)} -i \"{assaSubtitleFileName}\"";
-            withSubtitles = $"{mainVideoStream}scale={width}:{height}[video];[{inputCount}:s]scale={width}:{height}[subs];[video][subs]overlay";
+            withSubtitles = mode3D == Export3DMode.None
+                ? $"{mainVideoStream}scale={width}:{height}[video];[{inputCount}:s]scale={width}:{height}[subs];[video][subs]overlay"
+                : MakeStereo3DGraph($"{mainVideoStream}scale={width}:{height}", $"[{inputCount}:s]scale={width}:{height}", null, width, height, mode3D, depth3D);
             filterParameter = $"-filter_complex \"{withSubtitles}\"";
             inputCount++;
+        }
+        else if (mode3D != Export3DMode.None && !string.IsNullOrWhiteSpace(assaSubtitleFileName))
+        {
+            withSubtitles = MakeStereo3DGraph($"{mainVideoStream}scale={width}:{height}", null, Path.GetFileName(assaSubtitleFileName), width, height, mode3D, depth3D);
+            filterParameter = $"-filter_complex \"{withSubtitles}\"";
         }
         else
         {
@@ -314,7 +390,7 @@ public class FfmpegGenerator
         // Without it ffmpeg hits "File ... already exists. Exiting." and writes nothing - and as
         // the old file is still there, the burn-in looked like it succeeded (issue #14210).
         return
-            $"-y{cutStart}-i \"{inputVideoFileName}\"{canvasInput}{imageSubtitleInput}{logoInput}{cutEnd} {filterParameter} -g 30 -bf 2 -s {width}x{height} {videoEncodingSettings} {passSettings} {presetSettings} {crfSettings} {pixelFormat} {audioSettings}{tuneParameter} -use_editlist 0 -movflags +faststart{shortestParameter} {outputVideoFileName}";
+            $"-y{cutStart}-i \"{inputVideoFileName}\"{canvasInput}{imageSubtitleInput}{logoInput}{cutEnd} {filterParameter} -g 30 -bf 2 -s {width}x{height} {videoEncodingSettings} {passSettings} {presetSettings}{tuneParameter} {crfSettings} {pixelFormat} {audioSettings} -use_editlist 0 -movflags +faststart{shortestParameter} {outputVideoFileName}";
     }
 
     /// <summary>
@@ -1664,51 +1740,19 @@ public class FfmpegGenerator
         args.Add("-map 0:V:0");  // First actual video stream (not attached pic)
         args.Add("-map 0:a:0?"); // First audio stream (optional)
 
-        // Build list of output subtitle tracks: non-deleted original tracks, then new tracks
-        var outputSubs = new List<EmbeddedTrack>();
+        // Output subtitle tracks follow the list order (the user can move tracks up/down),
+        // so original and new tracks may be interleaved. Deleted tracks are dropped.
+        var outputSubs = embeddedTracks
+            .Where(t => !t.Deleted && (!t.New || newInputs.Contains(t)))
+            .ToList();
 
-        // Find non-deleted original subtitle tracks
-        foreach (var track in embeddedTracks)
+        foreach (var track in outputSubs)
         {
-            if (track.New)
-            {
-                continue; // Handle new tracks separately
-            }
-
-            if (track.Deleted)
-            {
-                continue; // Skip deleted tracks
-            }
-
-            // This is an existing track that should be kept
-            outputSubs.Add(track);
-        }
-
-        // Add new subtitle tracks
-        foreach (var track in embeddedTracks)
-        {
-            if (track.New && !track.Deleted && !string.IsNullOrEmpty(track.FileName) && File.Exists(track.FileName))
-            {
-                outputSubs.Add(track);
-            }
-        }
-
-        // Map original subtitle streams that are kept
-        foreach (var track in embeddedTracks)
-        {
-            if (track.New || track.Deleted)
-            {
-                continue;
-            }
-
-            args.Add($"-map 0:s:{track.Number}");
-        }
-
-        // Map new subtitle inputs
-        for (int i = 0; i < newInputs.Count; i++)
-        {
-            var inputIndex = i + 1; // input 0 is the original file
-            args.Add($"-map {inputIndex}:0");
+            // Original streams by their subtitle-relative index; new files by input index
+            // (input 0 is the original file, new files are inputs 1..N in newInputs order).
+            args.Add(track.New
+                ? $"-map {newInputs.IndexOf(track) + 1}:0"
+                : $"-map 0:s:{track.Number}");
         }
 
         // Copy all codecs
@@ -1790,18 +1834,18 @@ public class FfmpegGenerator
         args.Add("-map 0:V:0");
         args.Add("-map 0:a:0?");
 
-        // Map kept existing subtitle streams in their original order so the relative subtitle
-        // index matches `track.Number` from the parsed media info.
-        var keptOriginals = embeddedTracks.Where(t => !t.New && !t.Deleted).ToList();
-        foreach (var track in keptOriginals)
+        // Output subtitle tracks follow the list order (the user can move tracks up/down), so
+        // original and new tracks may be interleaved. Original streams map by their
+        // subtitle-relative index (`track.Number` from the parsed media info); each new
+        // external file is its own input, indices 1..N in newInputs order.
+        var outputSubs = embeddedTracks
+            .Where(t => !t.Deleted && (!t.New || newInputs.Contains(t)))
+            .ToList();
+        foreach (var track in outputSubs)
         {
-            args.Add($"-map 0:s:{track.Number}");
-        }
-
-        // Map each new external subtitle file (each is its own input, indices 1..N).
-        for (var i = 0; i < newInputs.Count; i++)
-        {
-            args.Add($"-map {i + 1}:0");
+            args.Add(track.New
+                ? $"-map {newInputs.IndexOf(track) + 1}:0"
+                : $"-map 0:s:{track.Number}");
         }
 
         // Video and audio passthrough; subtitles transcode to mov_text (the only widely
@@ -1816,8 +1860,6 @@ public class FfmpegGenerator
         args.Add("-max_interleave_delta 0");
 
         // Per-output-subtitle metadata + dispositions, in the same order we mapped them above.
-        var outputSubs = new List<EmbeddedTrack>(keptOriginals);
-        outputSubs.AddRange(embeddedTracks.Where(t => t.New && !t.Deleted && !string.IsNullOrEmpty(t.FileName) && File.Exists(t.FileName)));
 
         for (var outIndex = 0; outIndex < outputSubs.Count; outIndex++)
         {

@@ -29,7 +29,7 @@ public class ManualChosenEncodingWindow : Window
             Margin = new Thickness(10),
             Width = 200,
             HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
+        }.WithSearchAndClearIcons();
         searchBox.Bind(TextBox.TextProperty, new Binding(nameof(vm.SearchText)) { Source = vm });
         searchBox.TextChanged += (s, e) => vm.SearchTextChanged();
         var panelSearch = new StackPanel

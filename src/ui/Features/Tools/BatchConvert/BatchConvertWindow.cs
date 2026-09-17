@@ -279,7 +279,8 @@ public class BatchConvertWindow : Window
             .WithMarginRight(3);
         comboBoxFilter.SelectionChanged += (_, _) => vm.FilterComboBoxChanged();
         var textBoxFilter = UiUtil.MakeTextBox(200, vm, nameof(vm.FilterText))
-            .WithBindIsVisible(nameof(vm.IsFilterTextVisible));
+            .WithBindIsVisible(nameof(vm.IsFilterTextVisible))
+            .WithSearchAndClearIcons();
         textBoxFilter.TextChanged += (_, _) => vm.FilterTextChanged();
         var panelFilter = new StackPanel
         {

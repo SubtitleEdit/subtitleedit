@@ -34,6 +34,10 @@ public partial class VoicePackItem : ObservableObject
         Details = string.Format(Se.Language.Video.TextToSpeech.VoicePackDetailsXVoicesYSizeZLicense,
             pack.VoiceCount, Utilities.FormatBytesToDisplayFileSize(pack.SizeBytes), pack.License);
     }
+
+    // A list row or combo box value is announced by ToString() unless its template is a bare
+    // text block - without this a screen reader reads the class name (#12087).
+    public override string ToString() => Name;
 }
 
 /// <summary>
@@ -135,7 +139,8 @@ public partial class DownloadVoicePacksViewModel : ObservableObject
                 await _downloadService.DownloadPack(item.Pack, stream, progress, token);
 
                 ProgressText = string.Format(Se.Language.Video.TextToSpeech.InstallingXDotDotDot, item.Name);
-                var (installed, skipped) = await Task.Run(() => InstallPack(target, stream, existing, token, p => ProgressValue = p), token);
+                var installProgress = CreateInstallProgress();
+                var (installed, skipped) = await Task.Run(() => InstallPack(target, stream, existing, token, installProgress), token);
                 InstalledCount += installed;
                 SkippedCount += skipped;
                 item.Status = string.Format(Se.Language.Video.TextToSpeech.XVoicesInstalledYSkipped, installed, skipped);
@@ -164,7 +169,17 @@ public partial class DownloadVoicePacksViewModel : ObservableObject
         }
     }
 
-    private static (int installed, int skipped) InstallPack(ITtsEngine target, Stream zipStream, HashSet<string> existing, CancellationToken token, Action<double> progress)
+    /// <summary>
+    /// The install runs on a thread-pool thread, but <see cref="ProgressValue"/> is bound to the
+    /// progress bar, so it must only change on the UI thread. <see cref="Progress{T}"/> captures
+    /// the UI thread's synchronization context here and marshals every report back to it.
+    /// </summary>
+    internal IProgress<double> CreateInstallProgress()
+    {
+        return new Progress<double>(p => ProgressValue = p);
+    }
+
+    internal static (int installed, int skipped) InstallPack(ITtsEngine target, Stream zipStream, HashSet<string> existing, CancellationToken token, IProgress<double> progress)
     {
         zipStream.Position = 0;
         var tempFolder = Path.Combine(Path.GetTempPath(), "se-voice-pack-" + Guid.NewGuid().ToString("N"));
@@ -212,7 +227,7 @@ public partial class DownloadVoicePacksViewModel : ObservableObject
                     }
                 }
 
-                progress(100.0 * (i + 1) / wavs.Count);
+                progress.Report(100.0 * (i + 1) / wavs.Count);
             }
 
             return (installed, skipped);

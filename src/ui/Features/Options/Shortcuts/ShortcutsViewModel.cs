@@ -1172,22 +1172,7 @@ public partial class ShortcutsViewModel : ObservableObject
 
     private IRelayCommand GetMoveLinesCommand(MoveLinesScope scope, int slotNumber, bool back)
     {
-        var vm = MainViewModel!;
-        return (scope, slotNumber, back) switch
-        {
-            (MoveLinesScope.Selected, 1, true) => vm.MoveSelectedLinesCustom1BackCommand,
-            (MoveLinesScope.Selected, 1, false) => vm.MoveSelectedLinesCustom1ForwardCommand,
-            (MoveLinesScope.Selected, _, true) => vm.MoveSelectedLinesCustom2BackCommand,
-            (MoveLinesScope.Selected, _, false) => vm.MoveSelectedLinesCustom2ForwardCommand,
-            (MoveLinesScope.SelectedAndForward, 1, true) => vm.MoveSelectedLinesAndForwardCustom1BackCommand,
-            (MoveLinesScope.SelectedAndForward, 1, false) => vm.MoveSelectedLinesAndForwardCustom1ForwardCommand,
-            (MoveLinesScope.SelectedAndForward, _, true) => vm.MoveSelectedLinesAndForwardCustom2BackCommand,
-            (MoveLinesScope.SelectedAndForward, _, false) => vm.MoveSelectedLinesAndForwardCustom2ForwardCommand,
-            (MoveLinesScope.All, 1, true) => vm.MoveAllLinesCustom1BackCommand,
-            (MoveLinesScope.All, 1, false) => vm.MoveAllLinesCustom1ForwardCommand,
-            (MoveLinesScope.All, _, true) => vm.MoveAllLinesCustom2BackCommand,
-            _ => vm.MoveAllLinesCustom2ForwardCommand,
-        };
+        return ShortcutsMain.GetMoveLinesCommand(MainViewModel!, scope, slotNumber, back);
     }
 
     /// <summary>

@@ -477,6 +477,26 @@ public class VideoOcrTests
     }
 
     [Fact]
+    public void CleanOcrResult_LongNarrationFrame_KeepsAllLines()
+    {
+        // #14920: vertical Japanese narration holds a whole paragraph per frame - lines 5..N
+        // used to be silently dropped.
+        var text = "『第一章』\nあらすじ\n主人公は古い地図を手に\n山奥の小さな村を訪れた。\n村人たちは彼を温かく迎え\n祭りの準備を手伝うよう\n頼んだのだった。";
+
+        Assert.Equal(text, VideoOcrLineBuilder.CleanOcrResult(text));
+    }
+
+    [Fact]
+    public void CleanOcrResult_RunawayOutput_IsCapped()
+    {
+        var text = string.Join("\n", Enumerable.Range(1, 100).Select(i => "Line " + i));
+
+        var result = VideoOcrLineBuilder.CleanOcrResult(text);
+
+        Assert.Equal(VideoOcrLineBuilder.MaxLinesPerFrame, result.Split('\n').Length);
+    }
+
+    [Fact]
     public void GetMaskSimilarityPercent_SameMask_Is100()
     {
         var a = new byte[] { 0, 255, 255, 0, 0, 0, 0, 0 };

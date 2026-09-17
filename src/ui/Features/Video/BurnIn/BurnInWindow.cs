@@ -11,6 +11,7 @@ using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
+using Nikse.SubtitleEdit.UiLogic.Export;
 using System;
 
 namespace Nikse.SubtitleEdit.Features.Video.BurnIn;
@@ -693,12 +694,40 @@ public class BurnInWindow : Window
             }
         }.WithBindVisible(vm, nameof(vm.UseSourceResolution));
 
+        // For frame-packed 3D video: the subtitles are burned in once per eye (see
+        // FfmpegGenerator.MakeStereo3DGraph), moved apart by the depth.
+        var label3D = UiUtil.MakeLabel(Se.Language.File.Export.Stereo3D);
+        var comboBox3D = UiUtil.MakeComboBox(vm.Modes3D, vm, nameof(vm.SelectedMode3D));
+        var labelDepth3D = UiUtil.MakeLabel(Se.Language.File.Export.Depth3D);
+        var numericUpDownDepth3D = UiUtil.MakeNumericUpDownInt(Stereo3DImage.MinDepth, Stereo3DImage.MaxDepth, 0, 130, vm, nameof(vm.Depth3D))
+            .WithBindEnabled(nameof(vm.IsDepth3DEnabled));
+        numericUpDownDepth3D.WithAccessibleName(Se.Language.File.Export.Depth3D);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(comboBox3D, Se.Language.File.Export.Stereo3DHint);
+            ToolTip.SetTip(numericUpDownDepth3D, Se.Language.File.Export.Depth3DHint);
+        }
+
+        var panel3D = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 5,
+            Children = { comboBox3D, labelDepth3D, numericUpDownDepth3D },
+        };
+
         var labelEncoding = UiUtil.MakeLabel(Se.Language.General.Encoding);
         var comboBoxEncoding = UiUtil.MakeComboBox(vm.VideoEncodings, vm, nameof(vm.SelectedVideoEncoding));
         comboBoxEncoding.SelectionChanged += vm.VideoEncodingChanged;
 
         var labelPreset = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.VideoPresetText));
         var comboBoxPreset = UiUtil.MakeComboBox(vm.VideoPresets, vm, nameof(vm.SelectedVideoPreset));
+
+        // Only the NVIDIA encoders have a tuning mode, so the row is hidden for the rest - an
+        // always-present blank combo box would just make the dialog taller for everyone else.
+        var labelTune = UiUtil.MakeLabel(Se.Language.Video.BurnIn.Tune)
+            .WithBindVisible(vm, nameof(vm.IsVideoTuneVisible));
+        var comboBoxTune = UiUtil.MakeComboBox(vm.VideoTunes, vm, nameof(vm.SelectedVideoTune))
+            .WithBindVisible(nameof(vm.IsVideoTuneVisible));
 
         var labelCrf = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.VideoCrfText));
         var comboBoxCrf = UiUtil.MakeComboBox(vm.VideoCrf, vm, nameof(vm.SelectedVideoCrf));
@@ -734,6 +763,8 @@ public class BurnInWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -750,20 +781,26 @@ public class BurnInWindow : Window
         grid.Add(panelResolution, 0, 1);
         grid.Add(panelResolutionSource, 0, 1);
 
-        grid.Add(labelEncoding, 1, 0);
-        grid.Add(comboBoxEncoding, 1, 1);
+        grid.Add(label3D, 1, 0);
+        grid.Add(panel3D, 1, 1);
 
-        grid.Add(labelPreset, 2, 0);
-        grid.Add(comboBoxPreset, 2, 1);
+        grid.Add(labelEncoding, 2, 0);
+        grid.Add(comboBoxEncoding, 2, 1);
 
-        grid.Add(labelCrf, 3, 0);
-        grid.Add(panelCrf, 3, 1);
+        grid.Add(labelPreset, 3, 0);
+        grid.Add(comboBoxPreset, 3, 1);
 
-        grid.Add(labelPixelFormat, 4, 0);
-        grid.Add(comboBoxPixelFormat, 4, 1);
+        grid.Add(labelTune, 4, 0);
+        grid.Add(comboBoxTune, 4, 1);
 
-        grid.Add(labelVideoExtension, 5, 0);
-        grid.Add(comboBoxVideoExtension, 5, 1);
+        grid.Add(labelCrf, 5, 0);
+        grid.Add(panelCrf, 5, 1);
+
+        grid.Add(labelPixelFormat, 6, 0);
+        grid.Add(comboBoxPixelFormat, 6, 1);
+
+        grid.Add(labelVideoExtension, 7, 0);
+        grid.Add(comboBoxVideoExtension, 7, 1);
 
         return UiUtil.MakeBorderForControl(grid).WithMarginBottom(5).WithMarginRight(5);
     }

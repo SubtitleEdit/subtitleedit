@@ -4,6 +4,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
+using Avalonia.Media;
 using System.Collections;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -25,27 +26,50 @@ public class EmbeddedSubtitlesEditMp4Window : Window
         vm.Window = this;
         DataContext = vm;
 
+        var iconVideoFileName = new Optris.Icons.Avalonia.Icon
+        {
+            Value = IconNames.MovieOpenOutline,
+            FontSize = 18,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
         var labelVideoFileName = UiUtil.MakeLabel(Se.Language.General.VideoFile);
-        var textBoxVideoFileName = UiUtil.MakeTextBox(double.NaN, vm, nameof(vm.VideoFileName)).WithHorizontalAlignmentStretch();
+        labelVideoFileName.FontWeight = FontWeight.SemiBold;
+        labelVideoFileName.VerticalAlignment = VerticalAlignment.Center;
+        var panelVideoFileName = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 6,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { iconVideoFileName, labelVideoFileName },
+        };
+        var textBoxVideoFileName = UiUtil.MakeTextBox(double.NaN, vm, nameof(vm.VideoFileName))
+            .WithHorizontalAlignmentStretch()
+            .WithAccessibleName(Se.Language.General.VideoFile); // the label beside it is icon + text, not a plain label (#12087)
         textBoxVideoFileName.IsReadOnly = true;
+        var labelVideoFileSize = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.VideoFileSize));
+        labelVideoFileSize.Opacity = 0.7;
+        labelVideoFileSize.VerticalAlignment = VerticalAlignment.Center;
         var buttonBrowseVideoFile = UiUtil.MakeButtonBrowse(vm.BrowseVideoFileCommand, accessibleName: Se.Language.General.VideoFile);
+        buttonBrowseVideoFile.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.IsGenerating)) { Converter = InverseBooleanConverter.Instance });
         var gridVideoFile = new Grid
         {
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) }, // label
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }, // textbox
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) }, // file size
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) }, // button
             },
             ColumnSpacing = 5,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
-        gridVideoFile.Add(labelVideoFileName, 0, 0);
+        gridVideoFile.Add(panelVideoFileName, 0, 0);
         gridVideoFile.Add(textBoxVideoFileName, 0, 1);
-        gridVideoFile.Add(buttonBrowseVideoFile, 0, 2);
+        gridVideoFile.Add(labelVideoFileSize, 0, 2);
+        gridVideoFile.Add(buttonBrowseVideoFile, 0, 3);
 
         var tracksView = MakeTracksView(vm);
-        var progressView = MakeProgressView(vm);
+        var progressView = EmbeddedTracksUi.MakeProgressView();
 
         var buttonGenerate = UiUtil.MakeButton(Se.Language.General.Generate, vm.GenerateCommand)
             .WithBindEnabled(nameof(vm.CanGenerate))
@@ -84,6 +108,7 @@ public class EmbeddedSubtitlesEditMp4Window : Window
         Content = grid;
 
         UiUtil.FocusOnFirstActivation(this, textBoxVideoFileName); // initial focus on an input, not an action button - a focused button clicks on bare Space
+        EmbeddedTracksUi.AttachVideoDrop(this, vm.VideoDragOver, vm.VideoDrop);
         Loaded += (s, e) => vm.OnLoaded();
         Closing += (s, e) => vm.OnClosing();
         KeyDown += (s, e) => vm.OnKeyDown(e);
@@ -172,6 +197,13 @@ public class EmbeddedSubtitlesEditMp4Window : Window
         dataGridTracks.KeyDown += (s, e) => vm.OnTracksGridKeyDown(e);
         dataGridTracks.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
         {
+            // Ctrl+Up/Down reorders - handled on tunnel, before the grid's own row navigation.
+            if (e.KeyModifiers == KeyModifiers.Control && e.Key is Key.Up or Key.Down)
+            {
+                vm.OnTracksGridKeyDown(e);
+                return;
+            }
+
             if (e.Key is Key.Home or Key.End && dataGridTracks.ItemsSource is IList items && items.Count > 0)
             {
                 var target = e.Key == Key.Home ? items[0] : items[^1];
@@ -187,47 +219,17 @@ public class EmbeddedSubtitlesEditMp4Window : Window
         dataGridTracks.DoubleTapped += (s, e) => vm.EditCommand.Execute(null);
         vm.TracksGrid = dataGridTracks;
 
-        var buttonAdd = new SplitButton
-        {
-            Content = Se.Language.General.Add,
-            Command = vm.AddCommand,
-            Margin = new Thickness(4, 0),
-            Padding = new Thickness(12, 6),
-            Flyout = new MenuFlyout
-            {
-                Items =
-                {
-                    new MenuItem
-                    {
-                        Header = Se.Language.Video.AddCurrentSubtitle,
-                        Command = vm.AddCurrentCommand,
-                    },
-                }
-            }
-        }
-            .WithBindIsVisible(nameof(vm.HasVideoFileName))
-            .WithBindEnabled(nameof(vm.CanEditTracks));
-        var buttonEdit = UiUtil.MakeButton(Se.Language.General.Edit, vm.EditCommand)
-            .WithBindIsVisible(nameof(vm.HasVideoFileName))
-            .WithBindEnabled(nameof(vm.CanEditTracks));
-        var buttonDelete = UiUtil.MakeButton(Se.Language.General.Delete, vm.DeleteCommand)
-            .WithBindIsVisible(nameof(vm.HasVideoFileName))
-            .WithBindEnabled(nameof(vm.CanEditTracks));
-        var buttonPreview = UiUtil.MakeButton(Se.Language.General.Preview, vm.PreviewCommand)
-            .WithBindIsVisible(nameof(vm.HasVideoFileName))
-            .WithBindEnabled(nameof(vm.CanEditTracks));
-
-        var panelButtons = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Children =
-            {
-                buttonAdd,
-                buttonEdit,
-                buttonDelete,
-                buttonPreview,
-            },
-        };
+        var commands = new EmbeddedTracksUi.Commands(
+            vm.AddCommand,
+            vm.AddCurrentCommand,
+            vm.EditCommand,
+            vm.DeleteCommand,
+            vm.PreviewCommand,
+            vm.MoveUpCommand,
+            vm.MoveDownCommand);
+        EmbeddedTracksUi.DimDeletedRows(dataGridTracks);
+        EmbeddedTracksUi.AttachContextMenu(dataGridTracks, vm, commands, nameof(vm.CanEditTracks));
+        var panelButtons = EmbeddedTracksUi.MakeButtons(commands, nameof(vm.CanEditTracks));
 
         var grid = new Grid
         {
@@ -246,42 +248,9 @@ public class EmbeddedSubtitlesEditMp4Window : Window
             RowSpacing = 5,
         };
 
-        grid.Add(dataGridTracks, 0, 0);
+        grid.Add(EmbeddedTracksUi.MakeTracksWithEmptyHint(dataGridTracks), 0, 0);
         grid.Add(panelButtons, 1, 0);
 
         return UiUtil.MakeBorderForControl(grid);
-    }
-
-    private static Grid MakeProgressView(EmbeddedSubtitlesEditMp4ViewModel vm)
-    {
-        var progressBar = UiUtil.MakeProgressBar();
-        progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
-        progressBar.Bind(ProgressBar.IsVisibleProperty, new Binding(nameof(vm.IsGenerating)));
-
-        var statusText = new TextBlock
-        {
-            Margin = new Thickness(5, 20, 0, 0),
-        };
-        statusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ProgressText)));
-        statusText.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.IsGenerating)));
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(progressBar, 0, 0);
-        grid.Add(statusText, 0, 0);
-
-        return grid;
     }
 }

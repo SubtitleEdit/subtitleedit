@@ -22,6 +22,7 @@ public class LanguageRestoreAutoBackup
     public string RestoreSettingsFromX { get; set; }
     public string SettingsRestored { get; set; }
     public string SettingsRestoreFailed { get; set; }
+    public string SettingsBackupNotValid { get; set; }
     public string DeleteAllSettingsBackups { get; set; }
 
     public LanguageRestoreAutoBackup()
@@ -46,6 +47,7 @@ public class LanguageRestoreAutoBackup
         RestoreSettingsFromX = "Do you want to replace your current settings with the backup from {0}?\n\nYour current settings will be backed up first. Some changes only take effect after restarting Subtitle Edit.";
         SettingsRestored = "Settings were restored. Please restart Subtitle Edit for all changes to take effect.";
         SettingsRestoreFailed = "Could not restore settings: {0}";
+        SettingsBackupNotValid = "the backup is not a valid settings file, so your current settings were kept";
         DeleteAllSettingsBackups = "Do you want to delete all settings backup files?";
     }
 }

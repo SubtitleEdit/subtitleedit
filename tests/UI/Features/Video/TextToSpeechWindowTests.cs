@@ -46,7 +46,8 @@ public class TextToSpeechWindowTests : IDisposable
             new TtsDownloadService(new HttpClient()),
             new WindowService(new NullServiceProvider()),
             new FileHelper(),
-            new FolderHelper());
+            new FolderHelper(),
+            new AceStepAudioCppDownloadService(new HttpClient()));
         var window = new TextToSpeechWindow(vm);
         _windows.Add(window);
         return window;

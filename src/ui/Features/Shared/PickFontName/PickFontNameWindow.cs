@@ -29,7 +29,7 @@ public class PickFontNameWindow : Window
             Margin = new Thickness(10),
             Width = 200,
             HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
+        }.WithSearchAndClearIcons();
         textBoxSearch.Bind(TextBox.TextProperty, new Binding(nameof(vm.SearchText)) { Source = vm });
         textBoxSearch.TextChanged += (s, e) => vm.SearchTextChanged();
         var panelSearch = new StackPanel

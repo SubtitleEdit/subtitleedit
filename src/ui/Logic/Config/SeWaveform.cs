@@ -16,6 +16,13 @@ public class SeWaveform
     // scrubbing walks the waveform as one continuous strip.
     public bool CenterVideoPositionAlsoWhenPaused { get; set; }
     public bool DrawGridLines { get; set; }
+
+    /// <summary>
+    /// Draw the waveform with the experimental SkiaSharp renderer
+    /// (<c>SkiaAudioVisualizer</c>) instead of the Avalonia one.
+    /// </summary>
+    public bool UseSkiaRenderer { get; set; }
+
     public bool FocusTextBoxAfterInsertNew { get; set; }
     public int SpectrogramCombinedWaveformHeight { get; set; }
 
@@ -116,6 +123,7 @@ public class SeWaveform
         ShowToolbar = true;
         ShowOriginalSubtitle = false;
         DrawGridLines = false;
+        UseSkiaRenderer = false;
         FocusTextBoxAfterInsertNew = true;
         SpectrogramCombinedWaveformHeight = 50;
         WaveformTextFontSize = 10;
@@ -193,6 +201,9 @@ public class SeWaveform
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.SetStart, IsVisible = true, SortOrder = 70 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.SetEnd, IsVisible = true, SortOrder = 80 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.SetStartAndOffsetTheRest, IsVisible = true, SortOrder = 90 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.MoveSelectedLines, IsVisible = false, SortOrder = 91 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.MoveSelectedLinesAndFollowing, IsVisible = false, SortOrder = 92 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.MoveAllLines, IsVisible = false, SortOrder = 93 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.VideoSeek, IsVisible = false, SortOrder = 95 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.VerticalZoom, IsVisible = true, SortOrder = 100 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.HorizontalZoom, IsVisible = true, SortOrder = 110 },

@@ -80,10 +80,10 @@ public class RestoredVideoStartPositionTests : IDisposable
         return fileName;
     }
 
-    private static double GetStartPosition(MainViewModel vm, int? selectedSubtitleIndex) =>
+    private static double GetStartPosition(MainViewModel vm, int? selectedSubtitleIndex, long videoOffsetToRestoreMs = 0) =>
         (double)typeof(MainViewModel)
             .GetMethod("GetRestoredVideoStartPositionSeconds", BindingFlags.NonPublic | BindingFlags.Instance)!
-            .Invoke(vm, new object?[] { selectedSubtitleIndex })!;
+            .Invoke(vm, new object?[] { selectedSubtitleIndex, videoOffsetToRestoreMs })!;
 
     private async Task<MainViewModel> OpenThreeLineFileAsync()
     {
@@ -115,6 +115,20 @@ public class RestoredVideoStartPositionTests : IDisposable
 
         Assert.Equal(0, GetStartPosition(vm, 0));
         Assert.Equal(0, GetStartPosition(vm, null));
+    }
+
+    [AvaloniaFact]
+    public async Task RememberedVideoOffsetIsTakenOffTheStartTime()
+    {
+        var vm = await OpenThreeLineFileAsync();
+
+        // The file was saved with a video offset, so its time codes are video time + offset; the
+        // video has to open at the video time, not at the file's time code.
+        Assert.Equal(80.5, GetStartPosition(vm, 1, 10_000));
+        Assert.Equal(135, GetStartPosition(vm, 2, -10_000));
+
+        // An offset larger than the start time never seeks before the beginning.
+        Assert.Equal(0, GetStartPosition(vm, 1, 100_000));
     }
 
     [AvaloniaFact]

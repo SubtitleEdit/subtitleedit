@@ -757,13 +757,6 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             customFormats.Add(new CustomFormatItem(customFormat));
         }
 
-        var subtitles = new List<SubtitleLineViewModel>();
-        foreach (var p in item.Subtitle.Paragraphs)
-        {
-            var sv = new SubtitleLineViewModel(p, new SubRip());
-            subtitles.Add(sv);
-        }
-
         var customFormatName = Se.Settings.Tools.BatchConvert.CustomTextFormatName;
         var selectedCustomFormat =
             customFormats.FirstOrDefault(f => f.Name == customFormatName)
@@ -774,8 +767,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return;
         }
 
-        var paragraphsForCustom = subtitles.Where(s => s.Paragraph != null).Select(s => s.Paragraph!).ToList();
-        var text = Nikse.SubtitleEdit.UiLogic.Export.CustomTextFormatter.GenerateCustomText(selectedCustomFormat.ToTemplate(), paragraphsForCustom, item.FileName, string.Empty);
+        var text = Nikse.SubtitleEdit.UiLogic.Export.CustomTextFormatter.GenerateCustomText(selectedCustomFormat.ToTemplate(), item.Subtitle.Paragraphs, item.FileName, string.Empty);
         var path = MakeOutputFileName(item, selectedCustomFormat.Extension);
         await File.WriteAllTextAsync(path, text, cancellationToken);
     }
@@ -1780,6 +1772,12 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
         var profile = GetExportImagesProfile();
 
+        // D-Cinema has no packed 3D frame to draw into - its handlers write the depth as the Z-position.
+        var mode3D = _config.TargetFormatName is FormatDCinemaInterop or FormatDCinemaSmpte2014
+            ? Export3DMode.None
+            : profile.Mode3D;
+        var plane3D = mode3D == Export3DMode.None ? null : LoadPlane3D(item.FileName);
+
         var imageParameters = new List<ImageParameter>();
         for (var i = 0; i < imageSubtitle.Count; i++)
         {
@@ -1825,6 +1823,9 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 FramesPerSecond = profile.FramesPerSecond,
                 IsFullFrame = profile.IsFullFrame,
                 FullFrameBackgroundColor = profile.FullFrameBackgroundColor.FromHexToColor().ToSKColor(),
+                Mode3D = mode3D,
+                Depth3D = profile.Depth3D,
+                Plane3D = plane3D,
             };
             var position = imageSubtitle.GetPosition(i);
             if (imageSubtitle is OcrSubtitleTransportStream)
@@ -1837,6 +1838,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             {
                 param.OverridePosition = position;
             }
+
+            // Here rather than where text is rendered, so image → image converts get 3D too. The
+            // flat bitmap may belong to the source subtitle, so it is left alone.
+            Stereo3DImage.Apply(param, disposeSource: false);
 
             imageParameters.Add(param);
 
@@ -1980,6 +1985,34 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         catch (Exception exception)
         {
             item.Status = string.Format(Se.Language.General.ErrorX, exception.Message);
+        }
+    }
+
+    /// <summary>
+    /// A 3D-Plane belongs to one movie, so batch convert takes the one saved next to each file
+    /// with the same name ("movie.sup" + "movie.ofs"), if any.
+    /// </summary>
+    private static Stereo3DPlane? LoadPlane3D(string fileName)
+    {
+        if (string.IsNullOrEmpty(fileName))
+        {
+            return null;
+        }
+
+        var planeFileName = Path.ChangeExtension(fileName, ".ofs");
+        if (!File.Exists(planeFileName))
+        {
+            return null;
+        }
+
+        try
+        {
+            return Stereo3DPlane.Load(planeFileName);
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Unable to load 3D-Plane " + planeFileName);
+            return null;
         }
     }
 
@@ -2494,13 +2527,19 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
         var dic = new Dictionary<string, string>();
         var fixedIndexes = new List<int>(subtitle.Paragraphs.Count);
-        // Both values are milliseconds - the labels say "(ms)", the settings keys are named
-        // ...Ms, and the dialog reads the same two keys without converting. Running them through
-        // FramesToMilliseconds in HH:MM:SS:FF mode turned the 2000 ms default into 80 000 ms at
-        // 25 fps, so batch bridged half-minute gaps the dialog leaves alone. The interactive
-        // dialog was already fixed; this is the batch half of that fix.
-        var minMsBetweenLines = _config.BridgeGaps.MinGapMs;
-        var maxMs = _config.BridgeGaps.BridgeGapsSmallerThanMs;
+        // The values are frames only when the panel showed frames (frame mode, which loads them
+        // from their own frame keys). Converting the millisecond keys as if they were frames
+        // turned the 2000 ms default into 80 000 ms at 25 fps. Frames count at the frame rate this
+        // batch produces (the "change frame rate" target, else the project frame rate), matching
+        // the dialog, which counts them at the project frame rate.
+        var minMsBetweenLines = _config.BridgeGaps.MinGapMsOrFrames;
+        var maxMs = _config.BridgeGaps.BridgeGapsSmallerThanMsOrFrames;
+        if (_config.BridgeGaps.UseFrames)
+        {
+            var frameRate = ResolveFrameRate(null, false, 0);
+            minMsBetweenLines = SubtitleFormat.FramesToMilliseconds(minMsBetweenLines, frameRate);
+            maxMs = SubtitleFormat.FramesToMilliseconds(maxMs, frameRate);
+        }
 
         var subtitles = new ObservableCollection<SubtitleLineViewModel>(subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, subtitle.OriginalFormat)));
         var fixedCount = DurationsBridgeGaps2.BridgeGaps(subtitles, minMsBetweenLines, _config.BridgeGaps.PercentForLeft, maxMs, fixedIndexes, dic,
@@ -3230,6 +3269,13 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
         Configuration.Settings.Tools.AutoTranslateLibreUrl = Se.Settings.AutoTranslate.LibreTranslateUrl;
         Configuration.Settings.Tools.AutoTranslateLibreApiKey = Se.Settings.AutoTranslate.LibreTranslateApiKey;
+
+        // Same bridge for the generic OpenAI-compatible engine - the view model already copied the
+        // URL/key/model from its text boxes, but the prompt only lives in Se.Settings.
+        Configuration.Settings.Tools.OpenAiCompatibleTranslateUrl = Se.Settings.AutoTranslate.OpenAiCompatibleUrl;
+        Configuration.Settings.Tools.OpenAiCompatibleTranslateApiKey = Se.Settings.AutoTranslate.OpenAiCompatibleApiKey;
+        Configuration.Settings.Tools.OpenAiCompatibleTranslateModel = Se.Settings.AutoTranslate.OpenAiCompatibleModel;
+        Configuration.Settings.Tools.OpenAiCompatibleTranslatePrompt = Se.Settings.AutoTranslate.OpenAiCompatiblePrompt;
 
         Configuration.Settings.Tools.AutoTranslateNllbApiUrl = Se.Settings.AutoTranslate.NllbApiUrl;
 

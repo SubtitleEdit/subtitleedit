@@ -8,6 +8,7 @@ using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Features.Files.RestoreAutoBackup;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 
 namespace UITests.Features.Files;
@@ -73,6 +74,61 @@ public class SettingsBackupTests
     public void GetNewestSettingsBackupTime_IsNullForMissingFolder()
     {
         Assert.Null(AutoBackupService.GetNewestSettingsBackupTime(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"))));
+    }
+
+    [Fact]
+    public void TryLoadSettings_RejectsAnInvalidBackupAndKeepsTheLiveSettings()
+    {
+        // Restoring goes through Se.Settings, and LoadSettings swaps in defaults when the file
+        // does not parse - so a truncated backup used to wipe every setting and report success.
+        var folder = Path.Combine(Path.GetTempPath(), "se-settings-restore-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(folder);
+        var savedSettings = Se.Settings;
+        try
+        {
+            Se.Settings = new Se();
+            Se.Settings.General.FavoriteLanguages = "marker-before-restore";
+
+            var truncated = Path.Combine(folder, "2026-09-12_09-00-00_Settings.json");
+            File.WriteAllText(truncated, "{ \"General\": { \"FavoriteLanguages\": \"from-backup\", \"Lay");
+
+            Assert.False(Se.TryLoadSettings(truncated));
+            Assert.Equal("marker-before-restore", Se.Settings.General.FavoriteLanguages);
+
+            Assert.False(Se.TryLoadSettings(Path.Combine(folder, "missing_Settings.json")));
+            Assert.Equal("marker-before-restore", Se.Settings.General.FavoriteLanguages);
+        }
+        finally
+        {
+            Se.Settings = savedSettings;
+            Directory.Delete(folder, recursive: true);
+        }
+    }
+
+    [Fact]
+    public void TryLoadSettings_ReplacesTheLiveSettingsFromAValidBackup()
+    {
+        var folder = Path.Combine(Path.GetTempPath(), "se-settings-restore-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(folder);
+        var savedSettings = Se.Settings;
+        try
+        {
+            Se.Settings = new Se();
+            Se.Settings.General.FavoriteLanguages = "from-backup";
+            var backup = Path.Combine(folder, "2026-09-12_09-00-00_Settings.json");
+            Se.SaveSettings(backup);
+
+            Se.Settings = new Se();
+            Se.Settings.General.FavoriteLanguages = "current";
+
+            Assert.True(Se.TryLoadSettings(backup));
+            Assert.Equal("from-backup", Se.Settings.General.FavoriteLanguages);
+        }
+        finally
+        {
+            Se.Settings = savedSettings;
+            Directory.Delete(folder, recursive: true);
+        }
     }
 
     private sealed class StubAutoBackupService : IAutoBackupService

@@ -49,35 +49,46 @@ public class InitWaveform
         };
 
         // waveform area
+        //
+        // The renderer is a property of the control's type (see SkiaAudioVisualizer), so turning
+        // the setting on or off has to replace the control - the existing one is otherwise reused
+        // across layout rebuilds. The loaded audio moves across with it, or the waveform would sit
+        // empty until the user reopened the video.
+        AudioVisualizer? previousVisualizer = null;
+        if (vm.AudioVisualizer != null && vm.AudioVisualizer is SkiaAudioVisualizer != settings.UseSkiaRenderer)
+        {
+            previousVisualizer = vm.AudioVisualizer;
+            previousVisualizer.RemoveControlFromParent();
+            vm.AudioVisualizer = null;
+        }
+
         if (vm.AudioVisualizer == null)
         {
-            vm.AudioVisualizer = new AudioVisualizer
-            {
-                DrawGridLines = settings.DrawGridLines,
-                WaveformColor = settings.WaveformColor.FromHexToColor(),
-                WaveformBackgroundColor = settings.WaveformBackgroundColor.FromHexToColor(),
-                WaveformSelectedColor = settings.WaveformSelectedColor.FromHexToColor(),
-                WaveformCursorColor = settings.WaveformCursorColor.FromHexToColor(),
-                WaveformShotChangeColor = settings.WaveformShotChangeColor.FromHexToColor(),
-                WaveformParagraphLeftColor = settings.WaveformParagraphLeftColor.FromHexToColor(),
-                WaveformParagraphRightColor = settings.WaveformParagraphRightColor.FromHexToColor(),
-                WaveformFancyHighColor = settings.WaveformFancyHighColor.FromHexToColor(),
-                ParagraphBackground = settings.ParagraphBackground.FromHexToColor(),
-                ParagraphSelectedBackground = settings.ParagraphSelectedBackground.FromHexToColor(),
-                InvertMouseWheel = settings.InvertMouseWheel,
-                VerticalAlignment = VerticalAlignment.Stretch,
-                Height = double.NaN, // Auto height
-                WaveformDrawStyle = GetWaveformDrawStyle(settings.WaveformDrawStyle),
-                MinGapSeconds = Se.Settings.General.MinimumBetweenLines.GetMilliseconds() / 1000.0,
-                FocusOnMouseOver = settings.FocusOnMouseOver,
-                IsReadOnly = Se.Settings.General.LockTimeCodes,
-                WaveformHeightPercentage = settings.SpectrogramCombinedWaveformHeight,
-                // The toggle may have been pressed in a layout without a waveform; a waveform
-                // built later must come up on the same side of it as the video preview, or the
-                // two previews show different texts (see SetOriginalTextInPreview).
-                ShowOriginalText = vm.ShowOriginalTextInPreview,
-                ShowOriginalSubtitleOverlay = settings.ShowOriginalSubtitle,
-            };
+            vm.AudioVisualizer = settings.UseSkiaRenderer ? new SkiaAudioVisualizer() : new AudioVisualizer();
+            vm.AudioVisualizer.DrawGridLines = settings.DrawGridLines;
+            vm.AudioVisualizer.WaveformColor = settings.WaveformColor.FromHexToColor();
+            vm.AudioVisualizer.WaveformBackgroundColor = settings.WaveformBackgroundColor.FromHexToColor();
+            vm.AudioVisualizer.WaveformSelectedColor = settings.WaveformSelectedColor.FromHexToColor();
+            vm.AudioVisualizer.WaveformCursorColor = settings.WaveformCursorColor.FromHexToColor();
+            vm.AudioVisualizer.WaveformShotChangeColor = settings.WaveformShotChangeColor.FromHexToColor();
+            vm.AudioVisualizer.WaveformParagraphLeftColor = settings.WaveformParagraphLeftColor.FromHexToColor();
+            vm.AudioVisualizer.WaveformParagraphRightColor = settings.WaveformParagraphRightColor.FromHexToColor();
+            vm.AudioVisualizer.WaveformFancyHighColor = settings.WaveformFancyHighColor.FromHexToColor();
+            vm.AudioVisualizer.ParagraphBackground = settings.ParagraphBackground.FromHexToColor();
+            vm.AudioVisualizer.ParagraphSelectedBackground = settings.ParagraphSelectedBackground.FromHexToColor();
+            vm.AudioVisualizer.InvertMouseWheel = settings.InvertMouseWheel;
+            vm.AudioVisualizer.VerticalAlignment = VerticalAlignment.Stretch;
+            vm.AudioVisualizer.Height = double.NaN; // Auto height
+            vm.AudioVisualizer.WaveformDrawStyle = GetWaveformDrawStyle(settings.WaveformDrawStyle);
+            vm.AudioVisualizer.MinGapSeconds = Se.Settings.General.MinimumBetweenLines.GetMilliseconds() / 1000.0;
+            vm.AudioVisualizer.FocusOnMouseOver = settings.FocusOnMouseOver;
+            vm.AudioVisualizer.IsReadOnly = Se.Settings.General.LockTimeCodes;
+            vm.AudioVisualizer.WaveformHeightPercentage = settings.SpectrogramCombinedWaveformHeight;
+            // The toggle may have been pressed in a layout without a waveform; a waveform
+            // built later must come up on the same side of it as the video preview, or the
+            // two previews show different texts (see SetOriginalTextInPreview).
+            vm.AudioVisualizer.ShowOriginalText = vm.ShowOriginalTextInPreview;
+            vm.AudioVisualizer.ShowOriginalSubtitleOverlay = settings.ShowOriginalSubtitle;
 
             vm.AudioVisualizer.GetIsVideoPlaying = () => vm.GetVideoPlayerControl()?.IsPlaying == true;
             vm.AudioVisualizer.OnNewSelectionInsert += vm.AudioVisualizerOnNewSelectionInsert;
@@ -94,6 +105,12 @@ public class InitWaveform
             vm.AudioVisualizer.OnGenerateWaveformRequested += vm.AudioVisualizerOnGenerateWaveformRequested;
 
             vm.AudioVisualizer.FlyoutMenuOpening += vm.AudioVisualizerFlyoutMenuOpening;
+
+            if (previousVisualizer != null)
+            {
+                CarryOverWaveformState(previousVisualizer, vm.AudioVisualizer);
+                vm.UpdateWaveformOriginalSubtitleCues(vm.AudioVisualizer);
+            }
         }
         else
         {
@@ -505,6 +522,32 @@ public class InitWaveform
             [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.SetStartAndOffsetTheRestHint, shortcuts, nameof(vm.WaveformSetStartAndOffsetTheRestCommand)),
         };
         Attached.SetIcon(buttonSetStartAndOffsetTheRest, IconNames.ArrowExpandRight);
+
+        // "Move lines X ms" groups (#14789): back buttons, a scope icon, then forward buttons. The
+        // custom slots are changed in the Shortcuts window, which doesn't rebuild the layout, so
+        // the view model re-runs these refreshers to update milliseconds and shortcut keys.
+        var moveLinesRefreshers = new List<Action<List<ShortCut>>>();
+        var panelMoveSelectedLines = MakeMoveLinesPanel(vm, MoveLinesScope.Selected,
+            GetToolbarSettingFor(SeWaveformToolbarItemType.MoveSelectedLines), IconNames.FormatListChecks, moveLinesRefreshers);
+        var panelMoveSelectedLinesAndFollowing = MakeMoveLinesPanel(vm, MoveLinesScope.SelectedAndForward,
+            GetToolbarSettingFor(SeWaveformToolbarItemType.MoveSelectedLinesAndFollowing), IconNames.ArrowExpandRight, moveLinesRefreshers);
+        var panelMoveAllLines = MakeMoveLinesPanel(vm, MoveLinesScope.All,
+            GetToolbarSettingFor(SeWaveformToolbarItemType.MoveAllLines), IconNames.SelectAll, moveLinesRefreshers);
+        foreach (var refresher in moveLinesRefreshers)
+        {
+            refresher(shortcuts);
+        }
+
+        vm.RefreshWaveformMoveLinesButtons = moveLinesRefreshers.Count == 0
+            ? null
+            : () =>
+            {
+                var usedShortcuts = ShortcutsMain.GetUsedShortcuts(vm);
+                foreach (var moveLinesRefresher in moveLinesRefreshers)
+                {
+                    moveLinesRefresher(usedShortcuts);
+                }
+            };
 
         var settingSetStart = GetToolbarSettingFor(SeWaveformToolbarItemType.SetStart);
         var buttonSetStart = new NonSpaceButton
@@ -1027,6 +1070,9 @@ public class InitWaveform
             buttonTextNext,
             buttonNew,
             buttonSetStartAndOffsetTheRest,
+            panelMoveSelectedLines,
+            panelMoveSelectedLinesAndFollowing,
+            panelMoveAllLines,
             buttonSetStart,
             buttonSetEnd,
             buttonRemoveBlankLines,
@@ -1066,6 +1112,131 @@ public class InitWaveform
         return Se.Settings.Waveform.ToolbarItems.First(p => p.Type == type);
     }
 
+    private const int MoveLinesButtonsPerDirection = 3;
+
+    private static StackPanel MakeMoveLinesPanel(
+        MainViewModel vm,
+        MoveLinesScope scope,
+        SeWaveformToolbarItem setting,
+        string iconName,
+        List<Action<List<ShortCut>>> refreshers)
+    {
+        var panel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(setting.LeftMargin, 0, setting.RightMargin, 0),
+        };
+
+        var backButtons = new List<Button>();
+        var forwardButtons = new List<Button>();
+        for (var i = 0; i < MoveLinesButtonsPerDirection; i++)
+        {
+            backButtons.Add(MakeMoveLinesButton(setting));
+            forwardButtons.Add(MakeMoveLinesButton(setting));
+        }
+
+        panel.Children.AddRange(backButtons);
+        panel.Children.Add(new Icon
+        {
+            Value = iconName,
+            VerticalAlignment = VerticalAlignment.Center,
+            // Unlike the other toolbar icons this one has no button around it, so give it the
+            // size of a button icon plus its padding.
+            FontSize = setting.FontSize + 6,
+            Margin = new Thickness(3, 0, 3, 0),
+        });
+        panel.Children.AddRange(forwardButtons);
+
+        if (!setting.IsVisible)
+        {
+            return panel; // not on the toolbar, so nothing to keep up to date
+        }
+
+        refreshers.Add(shortcuts =>
+        {
+            // Smallest step next to the icon, largest outermost: -1000 -100 -10 [icon] +10 +100 +1000.
+            var steps = GetMoveLinesSteps(scope);
+            for (var i = 0; i < MoveLinesButtonsPerDirection; i++)
+            {
+                UpdateMoveLinesButton(vm, scope, backButtons[MoveLinesButtonsPerDirection - 1 - i], steps, i, back: true, shortcuts);
+                UpdateMoveLinesButton(vm, scope, forwardButtons[i], steps, i, back: false, shortcuts);
+            }
+        });
+
+        return panel;
+    }
+
+    private static Button MakeMoveLinesButton(SeWaveformToolbarItem setting)
+    {
+        return new NonSpaceButton
+        {
+            FontSize = setting.FontSize,
+            MinWidth = 0,
+            Padding = new Thickness(5, 2, 5, 2),
+            Margin = new Thickness(1, 0, 1, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+    }
+
+    /// <summary>
+    /// The steps of a "move lines" button group, smallest first: slot 0 is the global "X ms" step,
+    /// 1 and 2 the custom-milliseconds slots. Slots with the same milliseconds share one button
+    /// (the lowest slot wins) and non-positive values get none.
+    /// </summary>
+    internal static List<(int Slot, int Ms)> GetMoveLinesSteps(MoveLinesScope scope)
+    {
+        var steps = new List<(int Slot, int Ms)>();
+        for (var slot = 0; slot < MoveLinesButtonsPerDirection; slot++)
+        {
+            var ms = ShortcutsMain.GetMoveLinesMs(scope, slot);
+            if (ms > 0 && !steps.Exists(p => p.Ms == ms))
+            {
+                steps.Add((slot, ms));
+            }
+        }
+
+        return steps.OrderBy(p => p.Ms).ToList();
+    }
+
+    private static void UpdateMoveLinesButton(
+        MainViewModel vm,
+        MoveLinesScope scope,
+        Button button,
+        List<(int Slot, int Ms)> steps,
+        int index,
+        bool back,
+        List<ShortCut> shortcuts)
+    {
+        button.IsVisible = index < steps.Count;
+        if (!button.IsVisible)
+        {
+            return;
+        }
+
+        var (slot, ms) = steps[index];
+        var l = Se.Language.Main.Waveform;
+        var format = (scope, back) switch
+        {
+            (MoveLinesScope.Selected, true) => l.MoveSelectedLinesBackHint,
+            (MoveLinesScope.Selected, false) => l.MoveSelectedLinesForwardHint,
+            (MoveLinesScope.SelectedAndForward, true) => l.MoveSelectedLinesAndFollowingBackHint,
+            (MoveLinesScope.SelectedAndForward, false) => l.MoveSelectedLinesAndFollowingForwardHint,
+            (MoveLinesScope.All, true) => l.MoveAllLinesBackHint,
+            _ => l.MoveAllLinesForwardHint,
+        };
+
+        // Fill in the milliseconds but keep "{0}" for the shortcut keys MakeToolTip adds.
+        var hint = string.Format(format, ms.ToString("#,###,##0"), "{0}");
+
+        button.Content = (back ? "-" : "+") + ms.ToString(CultureInfo.InvariantCulture);
+        button.Command = ShortcutsMain.GetMoveLinesCommand(vm, scope, slot, back);
+        ToolTip.SetTip(button, UiUtil.MakeToolTip(hint, shortcuts, ShortcutsMain.GetMoveLinesCommandName(scope, slot, back)));
+
+        // The content is just "-100", so give screen readers the full action.
+        AutomationProperties.SetName(button, string.Format(hint, string.Empty).TrimEnd());
+    }
+
     private static List<SortedControl> MakeCustomSortableButtons(
         SeWaveform settings,
         Button buttonPlay,
@@ -1078,6 +1249,9 @@ public class InitWaveform
         Button buttonTextNext,
         Button buttonNew,
         Button buttonSetStartAndOffsetTheRest,
+        StackPanel panelMoveSelectedLines,
+        StackPanel panelMoveSelectedLinesAndFollowing,
+        StackPanel panelMoveAllLines,
         Button buttonSetStart,
         NonSpaceButton buttonSetEnd,
         Button buttonRemoveBlankLines,
@@ -1135,6 +1309,15 @@ public class InitWaveform
                 case SeWaveformToolbarItemType.SetStartAndOffsetTheRest:
                     toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = buttonSetStartAndOffsetTheRest });
                     break;
+                case SeWaveformToolbarItemType.MoveSelectedLines:
+                    toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = panelMoveSelectedLines });
+                    break;
+                case SeWaveformToolbarItemType.MoveSelectedLinesAndFollowing:
+                    toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = panelMoveSelectedLinesAndFollowing });
+                    break;
+                case SeWaveformToolbarItemType.MoveAllLines:
+                    toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = panelMoveAllLines });
+                    break;
                 case SeWaveformToolbarItemType.SetStart:
                     toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = buttonSetStart });
                     break;
@@ -1180,6 +1363,30 @@ public class InitWaveform
         }
 
         return toolbarButtonForSort.OrderBy(p => p.Sort).ToList();
+    }
+
+    /// <summary>
+    /// Moves what a loaded waveform holds to the control replacing it (the renderer setting was
+    /// changed). The paragraphs, the selection and the cursor are not copied - the position timer
+    /// pushes those again on its next tick. The spectrogram object is handed over rather than
+    /// copied, and the control it came from is discarded without disposing it.
+    /// </summary>
+    private static void CarryOverWaveformState(AudioVisualizer from, AudioVisualizer to)
+    {
+        to.WavePeaks = from.WavePeaks;
+        to.SetSpectrogram(from.GetSpectrogram());
+        to.SetDisplayMode(from.GetDisplayMode());
+        to.ShotChanges = from.ShotChanges;
+        to.Chapters = from.Chapters;
+        to.ZoomFactor = from.ZoomFactor;
+        to.VerticalZoomFactor = from.VerticalZoomFactor;
+        to.StartPositionSeconds = from.StartPositionSeconds;
+        to.CurrentVideoPositionSeconds = from.CurrentVideoPositionSeconds;
+
+        // A video without a waveform yet shows "click to generate" and turns a click into the
+        // generation; both live on the control, so the new one has to keep offering them.
+        to.ShowClickToGenerateHint = from.ShowClickToGenerateHint;
+        to.ClickToGenerateText = from.ClickToGenerateText;
     }
 
     public static WaveformDrawStyle GetWaveformDrawStyle(string waveformDrawStyle)

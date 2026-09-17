@@ -22,6 +22,7 @@ using SkiaSharp.HarfBuzz;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -87,6 +88,15 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
     [ObservableProperty] private bool _isFullFrame;
     [ObservableProperty] private Color _fullFrameBackgroundColor;
     [ObservableProperty] private bool _isFullFrameVisible;
+    [ObservableProperty] private ObservableCollection<Export3DModeDisplay> _modes3D = null!;
+    [ObservableProperty] private Export3DModeDisplay _selectedMode3D = null!;
+    [ObservableProperty] private ObservableCollection<int> _depths3D = null!;
+    [ObservableProperty] private int _selectedDepth3D;
+    [ObservableProperty] private bool _isMode3DVisible = true;
+    [ObservableProperty] private bool _isDepth3DEnabled;
+    [ObservableProperty] private string _depth3DText = string.Empty;
+    [ObservableProperty] private string _plane3DText = string.Empty;
+    [ObservableProperty] private bool _isPlane3DLoaded;
     [ObservableProperty] private ObservableCollection<TextEffectDisplayItem> _textEffectItems = null!;
     [ObservableProperty] private TextEffectDisplayItem? _selectedTextEffect;
     [ObservableProperty] private bool _isTextEffectEnabled;
@@ -128,6 +138,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
     private int _scriptWidth;
     private int _scriptHeight;
     private bool _dirty;
+    private Stereo3DPlane? _plane3D;
     private readonly Lock _generateLock;
     private bool _isCtrlDown;
     private IExportHandler? _exportImageHandler;
@@ -204,6 +215,11 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         UpdateBoxTypeLabels();
         TextEffectItems = new ObservableCollection<TextEffectDisplayItem>(TextEffectDisplayItem.GetItems());
         SelectedTextEffect = TextEffectItems[0];
+        Modes3D = new ObservableCollection<Export3DModeDisplay>(Export3DModeDisplay.GetItems());
+        SelectedMode3D = Modes3D[0];
+        Depths3D = new ObservableCollection<int>(Enumerable.Range(Stereo3DImage.MinDepth, Stereo3DImage.MaxDepth - Stereo3DImage.MinDepth + 1));
+        SelectedDepth3D = 0;
+        Depth3DText = Se.Language.File.Export.Depth3D;
 
         _generateLock = new Lock();
         _cancellationTokenSource = new CancellationTokenSource();
@@ -443,6 +459,8 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
                 // "{\pos(x,y)}" anchors the rendered text, so it needs the bitmap size - and
                 // the coordinates are in the script's own resolution, not the export canvas.
                 ExportTextTags.ApplyPositionTag(ip, Subtitles[i].Text, _scriptWidth, _scriptHeight);
+                // 3D goes last: each eye's copy is placed where the flat subtitle ended up.
+                Stereo3DImage.Apply(ip);
                 _exportImageHandler.CreateParagraph(ip);
 
                 lock (_generateLock)
@@ -578,6 +596,10 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             FramesPerSecond = SelectedFrameRate,
             IsFullFrame = IsFullFrameVisible && IsFullFrame,
             FullFrameBackgroundColor = FullFrameBackgroundColor.ToSKColor(),
+            // D-Cinema has no 3D mode (see IsMode3DVisible), only the depth - its Z-position.
+            Mode3D = IsMode3DVisible ? SelectedMode3D?.Mode ?? Export3DMode.None : Export3DMode.None,
+            Depth3D = IsDepth3DEnabled ? SelectedDepth3D : 0,
+            Plane3D = IsMode3DVisible ? _plane3D : null,
             TextEffects = TextEffectPresetFactory.Create(
                 IsTextEffectEnabled,
                 SelectedTextEffect?.Preset ?? TextEffectPreset.SoftShadow,
@@ -651,11 +673,11 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             vm =>
             {
                 var ip = GetImageParameter(Subtitles.IndexOf(SelectedSubtitle));
-                var bitmap = GenerateBitmap(ip);
-                ip.Bitmap = bitmap;
+                ip.Bitmap = GenerateBitmap(ip);
                 ExportTextTags.ApplyPositionTag(ip, SelectedSubtitle.Text, _scriptWidth, _scriptHeight);
-                var position = CalculatePosition(ip, bitmap.Width, bitmap.Height);
-                vm.Initialize(bitmap, ip.ScreenWidth, ip.ScreenHeight, position.X, position.Y);
+                Stereo3DImage.Apply(ip);
+                var position = CalculatePosition(ip, ip.Bitmap.Width, ip.Bitmap.Height);
+                vm.Initialize(ip.Bitmap, ip.ScreenWidth, ip.ScreenHeight, position.X, position.Y);
             });
     }
 
@@ -689,6 +711,12 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         // are dropped on (Final Cut Pro & co), and Blu-ray sup, which SE4 offered it for too. The
         // other formats position the subtitle themselves from its own bitmap size.
         IsFullFrameVisible = exportHandler.ExportImageType is ExportImageType.Fcp or ExportImageType.BluRaySup;
+
+        // D-Cinema has no packed 3D frame to draw into; like SE4 it keeps only the depth, which it
+        // writes as the Z-position of each image.
+        IsMode3DVisible = Stereo3DImage.IsModeSupported(exportHandler.ExportImageType);
+        Depth3DText = IsMode3DVisible ? Se.Language.File.Export.Depth3D : Se.Language.File.PropertiesDCinema.ZPosition;
+        UpdateDepth3DEnabled();
 
         SelectedSubtitle = Subtitles.FirstOrDefault();
 
@@ -733,8 +761,10 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         var idx = Subtitles.IndexOf(selected);
         var ip = GetImageParameter(idx);
         ip.Bitmap = GenerateBitmap(ip);
-        BitmapPreview = ip.Bitmap.ToAvaloniaBitmap();
         ExportTextTags.ApplyPositionTag(ip, text, _scriptWidth, _scriptHeight);
+        // Preview what gets exported - with 3D on, both eyes' copies.
+        Stereo3DImage.Apply(ip);
+        BitmapPreview = ip.Bitmap.ToAvaloniaBitmap();
         var position = CalculatePosition(ip, BitmapPreview.Size.Width, BitmapPreview.Size.Height);
 
         // With "full frame image" the exported png is the size of the video frame, not of the
@@ -812,6 +842,72 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
     partial void OnTextEffectLetterSpacingChanged(int value) => _dirty = true;
     partial void OnTextEffectArcBendChanged(int value) => _dirty = true;
     partial void OnTextEffectWaveChanged(int value) => _dirty = true;
+    partial void OnSelectedDepth3DChanged(int value) => _dirty = true;
+
+    partial void OnSelectedMode3DChanged(Export3DModeDisplay value)
+    {
+        UpdateDepth3DEnabled();
+        _dirty = true;
+    }
+
+    /// <summary>
+    /// The depth moves the two eyes' copies apart, so it needs a 3D mode - except in D-Cinema,
+    /// which has no mode and writes the depth as the Z-position.
+    /// </summary>
+    private void UpdateDepth3DEnabled()
+    {
+        IsDepth3DEnabled = !IsMode3DVisible || SelectedMode3D?.Mode is not (null or Export3DMode.None);
+    }
+
+    /// <summary>
+    /// A 3D Blu-ray's depth for every frame (an OFS file), so each subtitle stands where the disc
+    /// put it instead of all at one depth. Belongs to one movie, so it is not kept in the profile.
+    /// </summary>
+    [RelayCommand]
+    private async Task BrowsePlane3D()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.File.Export.OpenPlane3DTitle, "3D-Plane", ".ofs");
+        if (string.IsNullOrEmpty(fileName))
+        {
+            return;
+        }
+
+        try
+        {
+            _plane3D = Stereo3DPlane.Load(fileName);
+        }
+        catch (Exception exception)
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Error,
+                string.Format(Se.Language.File.Export.UnableToLoadPlane3DX, exception.Message),
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return;
+        }
+
+        var range = _plane3D.GetDepthRange();
+        Plane3DText = range.HasValue
+            ? string.Format(Se.Language.File.Export.Plane3DXDepthYToZ, Path.GetFileName(fileName), range.Value.Min, range.Value.Max)
+            : string.Format(Se.Language.File.Export.Plane3DXNoDepth, Path.GetFileName(fileName));
+        IsPlane3DLoaded = true;
+        _dirty = true;
+    }
+
+    [RelayCommand]
+    private void ClearPlane3D()
+    {
+        _plane3D = null;
+        Plane3DText = string.Empty;
+        IsPlane3DLoaded = false;
+        _dirty = true;
+    }
 
     [RelayCommand]
     private async Task ShowTextEffectSettings()
@@ -997,6 +1093,8 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             SelectedFrameRate = FrameRates.Contains(profile.FramesPerSecond) ? profile.FramesPerSecond : 25;
             IsFullFrame = profile.IsFullFrame;
             FullFrameBackgroundColor = profile.FullFrameBackgroundColor.FromHex().ToAvaloniaColor();
+            SelectedMode3D = Modes3D.FirstOrDefault(m => m.Mode == profile.Mode3D) ?? Modes3D[0];
+            SelectedDepth3D = Math.Clamp(profile.Depth3D, Stereo3DImage.MinDepth, Stereo3DImage.MaxDepth);
             SelectedTextEffect = TextEffectItems.FirstOrDefault(t => t.Preset.ToString() == profile.TextEffect)
                                  ?? TextEffectItems[0];
             IsTextEffectEnabled = profile.TextEffectEnabled;
@@ -1038,6 +1136,8 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             profile.FramesPerSecond = SelectedFrameRate;
             profile.IsFullFrame = IsFullFrame;
             profile.FullFrameBackgroundColor = FullFrameBackgroundColor.FromColorToHex(true);
+            profile.Mode3D = SelectedMode3D?.Mode ?? Export3DMode.None;
+            profile.Depth3D = SelectedDepth3D;
             profile.TextEffect = SelectedTextEffect?.Preset.ToString() ?? string.Empty;
             profile.TextEffectEnabled = IsTextEffectEnabled;
             profile.TextEffectStrength = TextEffectStrength;

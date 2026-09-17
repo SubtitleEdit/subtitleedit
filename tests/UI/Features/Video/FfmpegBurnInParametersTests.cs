@@ -13,7 +13,7 @@ namespace UITests.Features.Video;
 /// </summary>
 public class FfmpegBurnInParametersTests
 {
-    private static string Generate(string videoEncoding, string audioEncoding, string outputFileName, string pass = "", string twoPassBitRate = "")
+    private static string Generate(string videoEncoding, string audioEncoding, string outputFileName, string pass = "", string twoPassBitRate = "", string preset = "", string crf = "", string tune = "")
     {
         return FfmpegGenerator.GenerateHardcodedVideoFile(
             "input.mp4",
@@ -22,16 +22,45 @@ public class FfmpegBurnInParametersTests
             320,
             240,
             videoEncoding,
-            string.Empty,
+            preset,
             "yuv420p",
-            string.Empty,
+            crf,
             audioEncoding,
             false,
             "48000",
-            string.Empty,
+            tune,
             "128k",
             pass,
             twoPassBitRate);
+    }
+
+    [Fact]
+    public void Nvenc_Tune_IsWrittenNextToThePreset()
+    {
+        var parameters = Generate("h264_nvenc", "copy", "output.mp4", preset: "p7", crf: "25", tune: "ll");
+
+        Assert.Contains("-preset p7 -tune ll", parameters);
+        Assert.Contains("-cq 25", parameters);
+    }
+
+    [Fact]
+    public void Nvenc_LosslessTune_LeavesOutTheCqValue()
+    {
+        // nvenc pins constant QP 0 for a lossless tune and drops -cq, so writing one would only
+        // put a quality in the command line that the encode never uses.
+        var parameters = Generate("h264_nvenc", "copy", "output.mp4", preset: "p4", crf: "25", tune: "lossless");
+
+        Assert.Contains("-preset p4 -tune lossless", parameters);
+        Assert.DoesNotContain("-cq", parameters);
+    }
+
+    [Fact]
+    public void NoTune_WritesNoTuneArgument()
+    {
+        var parameters = Generate("libx264", "aac", "output.mkv", preset: "medium", crf: "23");
+
+        Assert.DoesNotContain("-tune", parameters);
+        Assert.Contains("-crf 23", parameters);
     }
 
     [Theory]
@@ -235,6 +264,74 @@ public class FfmpegBurnInParametersTests
 
             Assert.Contains("-filter_complex \"[0:v]scale=320:240[withsubs];[1:v]scale=", parameters);
             Assert.DoesNotContain("ass=", parameters);
+        }
+        finally
+        {
+            File.Delete(logoFileName);
+        }
+    }
+    private static string Generate3D(Nikse.SubtitleEdit.UiLogic.Export.Export3DMode mode, int depth, string subtitleFileName = "subtitle.ass",
+        bool subtitleIsImage = false, Nikse.SubtitleEdit.Features.Video.BurnIn.BurnInLogo? logo = null)
+    {
+        return FfmpegGenerator.GenerateHardcodedVideoFile(
+            "input.mp4", subtitleFileName, "output.mp4", 1920, 1080, "libx264", string.Empty, "yuv420p",
+            string.Empty, "aac", false, "48000", string.Empty, "128k", string.Empty, string.Empty,
+            burnInLogo: logo, subtitleIsImage: subtitleIsImage, mode3D: mode, depth3D: depth);
+    }
+
+    [Fact]
+    public void Text3D_HalfSideBySide_RendersOnATransparentCopyAndOverlaysEachEye()
+    {
+        // Run through ffmpeg 4.4 by hand: each eye gets a half-width copy of the subtitle, the
+        // left one 7 pixels to the right and the right one 7 to the left.
+        var parameters = Generate3D(Nikse.SubtitleEdit.UiLogic.Export.Export3DMode.HalfSideBySide, 7);
+
+        Assert.Contains(
+            "-filter_complex \"[0:v]scale=1920:1080,split=3[v3d1][v3d2][v3d0];" +
+            "[v3d0]format=rgba,colorchannelmixer=rr=0:gg=0:bb=0:aa=0,ass=subtitle.ass:alpha=1,split[s3d1][s3d2];" +
+            "[s3d1]scale=960:1080[s3d1h];[s3d2]scale=960:1080[s3d2h];" +
+            "[v3d1]crop=960:1080:0:0[e3d1];[v3d2]crop=960:1080:960:0[e3d2];" +
+            "[e3d1][s3d1h]overlay=x=7:y=0:alpha=premultiplied[o3d1];[e3d2][s3d2h]overlay=x=-7:y=0:alpha=premultiplied[o3d2];" +
+            "[o3d1][o3d2]hstack\"",
+            parameters);
+        Assert.DoesNotContain("-vf", parameters);
+    }
+
+    [Fact]
+    public void Image3D_HalfTopBottom_SplitsTheSupStreamIntoBothEyes()
+    {
+        var parameters = Generate3D(Nikse.SubtitleEdit.UiLogic.Export.Export3DMode.HalfTopBottom, -4, "/tmp/subs.sup", subtitleIsImage: true);
+
+        // Bitmap subtitles are not premultiplied, so the overlays keep the default alpha.
+        Assert.Contains(
+            "-filter_complex \"[0:v]scale=1920:1080,split[v3d1][v3d2];[1:s]scale=1920:1080,split[s3d1][s3d2];" +
+            "[s3d1]scale=1920:540[s3d1h];[s3d2]scale=1920:540[s3d2h];" +
+            "[v3d1]crop=1920:540:0:0[e3d1];[v3d2]crop=1920:540:0:540[e3d2];" +
+            "[e3d1][s3d1h]overlay=x=-4:y=0[o3d1];[e3d2][s3d2h]overlay=x=4:y=0[o3d2];" +
+            "[o3d1][o3d2]vstack\"",
+            parameters);
+    }
+
+    [Fact]
+    public void Text3D_WithoutSubtitleLines_IsJustTheScale()
+    {
+        var parameters = Generate3D(Nikse.SubtitleEdit.UiLogic.Export.Export3DMode.HalfSideBySide, 5, string.Empty);
+
+        Assert.Contains("-vf \"scale=1920:1080\"", parameters);
+        Assert.DoesNotContain("stack", parameters);
+    }
+
+    [Fact]
+    public void Text3D_WithLogo_PutsTheLogoOverTheStackedEyes()
+    {
+        var logoFileName = Path.GetTempFileName();
+        try
+        {
+            var logo = new Nikse.SubtitleEdit.Features.Video.BurnIn.BurnInLogo { LogoFileName = logoFileName, X = 10, Y = 20, Size = 100, Alpha = 100 };
+
+            var parameters = Generate3D(Nikse.SubtitleEdit.UiLogic.Export.Export3DMode.HalfSideBySide, 0, logo: logo);
+
+            Assert.Contains("[o3d1][o3d2]hstack[withsubs];[1:v]scale=", parameters);
         }
         finally
         {
