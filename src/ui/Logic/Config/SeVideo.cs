@@ -1,5 +1,6 @@
 ﻿using Avalonia.Media;
 using Nikse.SubtitleEdit.Features.Assa;
+using Nikse.SubtitleEdit.Features.Video.BurnIn;
 using System;
 using System.Collections.Generic;
 
@@ -95,6 +96,29 @@ public class SeVideo
     /// </summary>
     public bool MpvAudioStreamSilence { get; set; }
 
+    /// <summary>
+    /// Start the "Second subtitle file (on video player)" dialog from the style below instead of
+    /// its built-in defaults, and save the dialog's choices back here on OK (#14842).
+    /// </summary>
+    public bool SecondarySubtitleOverrideStyle { get; set; }
+
+    /// <summary>
+    /// Off skips the "Second subtitle file" dialog and applies the saved style directly - only
+    /// when <see cref="SecondarySubtitleOverrideStyle"/> is on, as there is nothing else to apply.
+    /// </summary>
+    public bool SecondarySubtitleShowDialog { get; set; }
+
+    /// <summary>
+    /// In <c>AdvancedSubStationAlpha.DefaultHeight</c> units, like <see cref="MpvPreviewFontSize"/>,
+    /// so it scales to whatever video is loaded. Decimal so the dialog's pixel size survives the
+    /// round trip exactly.
+    /// </summary>
+    public decimal SecondarySubtitleFontSize { get; set; }
+    public bool SecondarySubtitleFontBold { get; set; }
+    public string SecondarySubtitleColor { get; set; }
+    public FontBoxType SecondarySubtitleBoxType { get; set; }
+    public string SecondarySubtitleAlignment { get; set; }
+
     public SeVideo()
     {
         BurnIn = new();
@@ -137,5 +161,12 @@ public class SeVideo
         MpvPreviewJustify = "auto";
         MpvAudioBufferSeconds = 0;
         MpvAudioStreamSilence = false;
+        SecondarySubtitleOverrideStyle = false;
+        SecondarySubtitleShowDialog = true;
+        SecondarySubtitleFontSize = 20;
+        SecondarySubtitleFontBold = true;
+        SecondarySubtitleColor = Colors.White.FromColorToHex();
+        SecondarySubtitleBoxType = FontBoxType.None;
+        SecondarySubtitleAlignment = "8"; // Top-center
     }
 }

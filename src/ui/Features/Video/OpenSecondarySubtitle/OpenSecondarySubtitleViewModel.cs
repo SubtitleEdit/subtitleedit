@@ -1,7 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
-using Avalonia.Skia;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -17,9 +16,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -36,6 +33,8 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<SubtitleDisplayItem> _paragraphs;
     [ObservableProperty] private int _selectedParagraphIndex = -1;
     [ObservableProperty] private AlignmentItem _selectedFontAlignment;
+    [ObservableProperty] private bool _overrideStyle;
+    [ObservableProperty] private bool _doNotShowAgain;
 
     public ObservableCollection<FontBoxItem> FontBoxTypes { get; }
     public ObservableCollection<AlignmentItem> FontAlignments { get; }
@@ -78,6 +77,21 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
         SelectedFontBoxType = FontBoxTypes[0];
         FontAlignments = new ObservableCollection<AlignmentItem>(AlignmentItem.Alignments);
         SelectedFontAlignment = AlignmentItem.Alignments[1]; // an8 = Top-center
+
+        // Start from the saved style instead of the defaults above, so re-opening the dialog to
+        // adjust the second subtitle doesn't reset it (#14842). Font size needs the video height,
+        // so it's set in Initialize.
+        var video = Se.Settings.Video;
+        OverrideStyle = video.SecondarySubtitleOverrideStyle;
+        if (OverrideStyle)
+        {
+            SubtitleColor = video.SecondarySubtitleColor.FromHexToColor();
+            FontBold = video.SecondarySubtitleFontBold;
+            SelectedFontBoxType = FontBoxTypes.FirstOrDefault(p => p.BoxType == video.SecondarySubtitleBoxType) ?? FontBoxTypes[0];
+            SelectedFontAlignment = FontAlignments.FirstOrDefault(p => p.Code == video.SecondarySubtitleAlignment) ?? FontAlignments[1];
+            DoNotShowAgain = !video.SecondarySubtitleShowDialog;
+        }
+
         Paragraphs = new ObservableCollection<SubtitleDisplayItem>();
 
         _tempSubtitleFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".ass");
@@ -109,6 +123,16 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
     private void Ok()
     {
         ResultSubtitle = BuildAssaSubtitle(false);
+
+        var video = Se.Settings.Video;
+        video.SecondarySubtitleOverrideStyle = OverrideStyle;
+        video.SecondarySubtitleShowDialog = !(OverrideStyle && DoNotShowAgain);
+        if (OverrideStyle)
+        {
+            SecondarySubtitleStyler.SaveToSettings(FontSize, GetVideoHeight(), FontBold, SubtitleColor, SelectedFontBoxType.BoxType, SelectedFontAlignment.Code);
+        }
+
+        Se.SaveSettings();
         OkPressed = true;
         Window?.Close();
     }
@@ -137,8 +161,10 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
                 _ = VideoPlayerControl.Open(videoFileName);
             }
 
-            var height = mediaInfo?.Dimension.Height ?? 1080;
-            FontSize = AssaResampler.Resample(AdvancedSubStationAlpha.DefaultHeight, height, Se.Settings.Video.MpvPreviewFontSize);
+            var height = GetVideoHeight();
+            FontSize = OverrideStyle
+                ? SecondarySubtitleStyler.GetFontSizeFromSettings(height)
+                : AssaResampler.Resample(AdvancedSubStationAlpha.DefaultHeight, height, Se.Settings.Video.MpvPreviewFontSize);
         });
     }
 
@@ -267,63 +293,19 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
         _positionTimer.Start();
     }
 
-    private string GetBorderStyle()
+    private int GetVideoHeight()
     {
-        if (SelectedFontBoxType.BoxType == FontBoxType.OneBox)
-        {
-            return "4";
-        }
-
-        if (SelectedFontBoxType.BoxType == FontBoxType.BoxPerLine)
-        {
-            return "3";
-        }
-
-        return "1";
-    }
-
-    private string GetAlignment()
-    {
-        return SelectedFontAlignment.Code;
+        return _mediaInfo?.Dimension.Height ?? 1080;
     }
 
     private Subtitle BuildAssaSubtitle(bool mergeWithSubtitle)
     {
-        var style = new SsaStyle
-        {
-            Name = _styleName,
-            // Follow the main preview's font (issue #13492): a hardcoded Arial showed a
-            // sans-serif secondary under a serif main whenever the preview font was changed.
-            FontName = Se.Settings.Video.MpvPreviewFontName,
-            FontSize = FontSize,
-            Bold = FontBold,
-            Primary = SubtitleColor.ToSKColor(),
-            Outline = Colors.Black.ToSKColor(),
-            Background = Colors.Black.ToSKColor(),
-            Secondary = Colors.Yellow.ToSKColor(),
-            Alignment = GetAlignment(),
-            OutlineWidth = 2,
-            ShadowWidth = 1,
-            MarginLeft = 10,
-            MarginRight = 10,
-            MarginVertical = 10,
-            BorderStyle = GetBorderStyle(),
-            ScaleX = 100,
-            ScaleY = 100,
-        };
-
-        style.Outline = new SkiaSharp.SKColor(style.Outline.Red, style.Outline.Green, style.Outline.Blue, SubtitleColor.A);
-        style.Background = new SkiaSharp.SKColor(style.Background.Red, style.Background.Green, style.Background.Blue, SubtitleColor.A);
-
-        var result = new Subtitle(_secondarySubtitle);
-        result.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(
-            AdvancedSubStationAlpha.DefaultHeader,
-            new List<SsaStyle> { style });
+        var style = SecondarySubtitleStyler.MakeStyle(_styleName, FontSize, FontBold, SubtitleColor, SelectedFontBoxType.BoxType, SelectedFontAlignment.Code);
 
         var width = _mediaInfo?.Dimension.Width ?? 1920;
-        var height = _mediaInfo?.Dimension.Height ?? 1080;
-        result.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + width.ToString(CultureInfo.InvariantCulture), "[Script Info]", result.Header);
-        result.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + height.ToString(CultureInfo.InvariantCulture), "[Script Info]", result.Header);
+        var height = GetVideoHeight();
+        var result = new Subtitle(_secondarySubtitle);
+        SecondarySubtitleStyler.SetHeader(result, style, width, height);
 
         if (mergeWithSubtitle)
         {
