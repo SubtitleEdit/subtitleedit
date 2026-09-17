@@ -55,6 +55,7 @@ public class LanguageSettingsShortcuts
 
     public string ListInverseSelection { get; set; }
     public string ListDeleteSelection { get; set; }
+    public string DeleteSelectionEverywhere { get; set; }
     public string RippleDeleteSelection { get; set; }
 
     public string Assigned { get; set; }
@@ -345,6 +346,7 @@ public class LanguageSettingsShortcuts
 
         ListInverseSelection = "Inverse selection";
         ListDeleteSelection = "Delete selection";
+        DeleteSelectionEverywhere = "Delete selection (everywhere)";
         RippleDeleteSelection = "Ripple delete selection";
 
         TogglePlayPause = "Toggle play/pause";

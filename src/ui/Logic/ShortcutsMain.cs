@@ -246,6 +246,7 @@ public static class ShortcutsMain
     {
         { nameof(MainViewModel.DeleteSelectedLinesCommand), Se.Language.Options.Shortcuts.ListDeleteSelection },
         { nameof(MainViewModel.FillSelectedLinesWithClipboardCommand), Se.Language.Options.Shortcuts.FillSelectedLinesWithClipboard },
+        { nameof(MainViewModel.DeleteSelectedLinesEverywhereCommand), Se.Language.Options.Shortcuts.DeleteSelectionEverywhere },
         { nameof(MainViewModel.RippleDeleteSelectedLinesCommand), Se.Language.Options.Shortcuts.RippleDeleteSelection },
         { nameof(MainViewModel.DuplicateSelectedLinesCommand), Se.Language.Options.Shortcuts.DuplicateSelectedLines},
         { nameof(MainViewModel.ShowAlignmentPickerCommand), Se.Language.General.Alignment},
@@ -712,6 +713,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.SelectAllLinesCommand, nameof(vm.SelectAllLinesCommand), ShortcutCategory.SubtitleGrid);
         AddShortcut(shortcuts, vm.InverseSelectionCommand, nameof(vm.InverseSelectionCommand), ShortcutCategory.SubtitleGrid);
         AddShortcut(shortcuts, vm.DeleteSelectedLinesCommand, nameof(vm.DeleteSelectedLinesCommand), ShortcutCategory.SubtitleGrid);
+        AddShortcut(shortcuts, vm.DeleteSelectedLinesEverywhereCommand, nameof(vm.DeleteSelectedLinesEverywhereCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.RippleDeleteSelectedLinesCommand, nameof(vm.RippleDeleteSelectedLinesCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.DuplicateSelectedLinesCommand, nameof(vm.DuplicateSelectedLinesCommand), ShortcutCategory.SubtitleGrid);
         // Alignment works on the selected lines regardless of where focus is, so these are active in

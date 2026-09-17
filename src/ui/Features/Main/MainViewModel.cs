@@ -14612,6 +14612,14 @@ public partial class MainViewModel :
         await DeleteSelectedItems();
     }
 
+    // Same delete as DeleteSelectedLines, registered as an "everywhere" shortcut so it also works
+    // while the waveform or video player has focus - not only in the subtitle grid (#14966).
+    [RelayCommand]
+    private async Task DeleteSelectedLinesEverywhere()
+    {
+        await DeleteSelectedItems();
+    }
+
     [RelayCommand]
     private async Task RippleDeleteSelectedLines()
     {
