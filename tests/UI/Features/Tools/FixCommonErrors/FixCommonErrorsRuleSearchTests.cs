@@ -1,8 +1,10 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
+using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using Nikse.SubtitleEdit.Features.Tools.FixCommonErrors;
 using Nikse.SubtitleEdit.Logic;
@@ -142,6 +144,39 @@ public class FixCommonErrorsRuleSearchTests
 
             vm.Step1IsVisible = false;
             Assert.False(searchBox.IsVisible);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Window_SearchBox_HasSearchIcon_AndClearButtonThatClearsTheSearch()
+    {
+        var vm = new FixCommonErrorsViewModel(null!, new WindowService(new NullServiceProvider()), null!);
+        var profile = MakeProfile("Default");
+        vm.Profiles.Add(profile);
+        vm.SelectedProfile = profile;
+        var window = new FixCommonErrorsWindow(vm);
+        try
+        {
+            var searchBox = window.GetLogicalDescendants().OfType<TextBox>()
+                .First(t => t.PlaceholderText == Se.Language.Tools.FixCommonErrors.SearchRulesDotDotDot);
+            Assert.IsType<Optris.Icons.Avalonia.Icon>(searchBox.InnerLeftContent);
+            var clearButton = Assert.IsType<Button>(searchBox.InnerRightContent);
+            Assert.Equal(Se.Language.General.Clear, AutomationProperties.GetName(clearButton));
+            Assert.False(clearButton.IsVisible);
+
+            searchBox.Text = "gaps";
+            Assert.True(clearButton.IsVisible);
+
+            clearButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+
+            Assert.Equal(string.Empty, vm.SearchText);
+            Assert.Equal(string.Empty, searchBox.Text ?? string.Empty);
+            Assert.Equal(4, profile.FixRules.Count);
+            Assert.False(clearButton.IsVisible);
         }
         finally
         {
