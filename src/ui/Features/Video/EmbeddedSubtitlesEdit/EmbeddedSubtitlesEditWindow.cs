@@ -4,6 +4,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
+using Avalonia.Media;
 using Avalonia.Styling;
 using System.Collections;
 using Nikse.SubtitleEdit.Logic;
@@ -26,8 +27,25 @@ public class EmbeddedSubtitlesEditWindow : Window
         vm.Window = this;
         DataContext = vm;
 
+        var iconVideoFileName = new Optris.Icons.Avalonia.Icon
+        {
+            Value = IconNames.MovieOpenOutline,
+            FontSize = 18,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
         var labelVideoFileName = UiUtil.MakeLabel(Se.Language.General.VideoFile);
-        var textBoxVideoFileName = UiUtil.MakeTextBox(double.NaN, vm, nameof(vm.VideoFileName)).WithHorizontalAlignmentStretch();
+        labelVideoFileName.FontWeight = FontWeight.SemiBold;
+        labelVideoFileName.VerticalAlignment = VerticalAlignment.Center;
+        var panelVideoFileName = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 6,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { iconVideoFileName, labelVideoFileName },
+        };
+        var textBoxVideoFileName = UiUtil.MakeTextBox(double.NaN, vm, nameof(vm.VideoFileName))
+            .WithHorizontalAlignmentStretch()
+            .WithAccessibleName(Se.Language.General.VideoFile); // the label beside it is icon + text, not a plain label (#12087)
         textBoxVideoFileName.IsReadOnly = true;
         var buttonBrowseVideoFile = UiUtil.MakeButtonBrowse(vm.BrowseVideoFileCommand, accessibleName: Se.Language.General.VideoFile);
         var gridVideoFile = new Grid
@@ -41,7 +59,7 @@ public class EmbeddedSubtitlesEditWindow : Window
             ColumnSpacing = 5,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
-        gridVideoFile.Add(labelVideoFileName, 0, 0);
+        gridVideoFile.Add(panelVideoFileName, 0, 0);
         gridVideoFile.Add(textBoxVideoFileName, 0, 1);
         gridVideoFile.Add(buttonBrowseVideoFile, 0, 2);
 
