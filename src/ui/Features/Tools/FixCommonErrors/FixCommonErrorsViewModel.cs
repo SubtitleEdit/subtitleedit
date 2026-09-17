@@ -961,26 +961,72 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         }
     }
 
-    internal void TextBoxSearch_TextChanged(object? sender, TextChangedEventArgs e)
+    partial void OnSearchTextChanged(string value)
     {
-        if (SelectedProfile == null)
+        ApplyRuleFilter();
+    }
+
+    partial void OnSelectedProfileChanged(ProfileDisplayItem? value)
+    {
+        // Each profile has its own grid collection - keep the search text applied to it.
+        ApplyRuleFilter();
+    }
+
+    /// <summary>
+    /// Shows the selected profile's rules whose name contains the search text (#14893).
+    /// </summary>
+    internal void ApplyRuleFilter()
+    {
+        var profile = SelectedProfile;
+        if (profile == null)
         {
             return;
         }
 
         // Filter from the profile's full rule list, never from the already-filtered grid
         // collection - filtering that one is one-way and permanently loses rules.
-        if (SelectedProfile.AllFixRules.Count == 0)
+        if (profile.AllFixRules.Count == 0)
         {
-            SelectedProfile.AllFixRules = SelectedProfile.FixRules.ToList();
+            profile.AllFixRules = profile.FixRules.ToList();
         }
 
-        SelectedProfile.FixRules.Clear();
-        foreach (var rule in SelectedProfile.AllFixRules)
+        SyncDisplayOrder(profile);
+
+        var search = SearchText?.Trim() ?? string.Empty;
+        var matches = search.Length == 0
+            ? profile.AllFixRules
+            : profile.AllFixRules.Where(rule => rule.Name.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+
+        if (matches.Count == profile.FixRules.Count && matches.SequenceEqual(profile.FixRules))
         {
-            if (string.IsNullOrEmpty(SearchText) || rule.Name.ToLowerInvariant().Contains(SearchText.ToLowerInvariant()))
+            return;
+        }
+
+        profile.FixRules.Clear();
+        foreach (var rule in matches)
+        {
+            profile.FixRules.Add(rule);
+        }
+    }
+
+    // A header click sorts the grid collection (FixRules) in place, which may be a filtered
+    // subset. Write that display order back into the slots those rules hold in AllFixRules, so
+    // the next keystroke does not drop the sort. AllFixRules order is cosmetic only: apply runs
+    // rules in canonical order and profiles persist rule names.
+    private static void SyncDisplayOrder(ProfileDisplayItem profile)
+    {
+        if (profile.FixRules.Count < 2)
+        {
+            return;
+        }
+
+        var visible = new HashSet<FixRuleDisplayItem>(profile.FixRules);
+        var next = 0;
+        for (var i = 0; i < profile.AllFixRules.Count && next < profile.FixRules.Count; i++)
+        {
+            if (visible.Contains(profile.AllFixRules[i]))
             {
-                SelectedProfile.FixRules.Add(rule);
+                profile.AllFixRules[i] = profile.FixRules[next++];
             }
         }
     }
