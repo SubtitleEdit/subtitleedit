@@ -351,6 +351,8 @@ namespace Nikse.SubtitleEdit.Logic
             var foregroundEnforcement = EnforceModalForegroundWhileOpen(dialog, owner);
             var minimizeMirror = MirrorMinimizeWithOwner(dialog, owner);
 
+            var ownerFocus = CaptureOwnerFocus(owner);
+
             _openModalCount++;
             try
             {
@@ -362,7 +364,77 @@ namespace Nikse.SubtitleEdit.Logic
                 _openModalCount--;
                 minimizeMirror.Dispose();
                 foregroundEnforcement.Dispose();
+                RestoreOwnerFocusIfLost(owner, dialog, ownerFocus);
             }
+        }
+
+        private readonly record struct OwnerFocus(InputElement Element, bool FocusVisible);
+
+        private static OwnerFocus? CaptureOwnerFocus(Window owner)
+        {
+            // The focused element is app-global - only remember it when it lives in the owner.
+            return owner.FocusManager?.GetFocusedElement() is InputElement element &&
+                   element != owner &&
+                   TopLevel.GetTopLevel(element) == owner
+                ? new OwnerFocus(element, element.Classes.Contains(":focus-visible"))
+                : null;
+        }
+
+        /// <summary>
+        /// Puts keyboard focus back on the control that had it before the dialog opened - typically
+        /// the button that opened it - when closing the dialog left focus nowhere.
+        ///
+        /// On Windows the owner is re-activated with focus on the bare window, so a keyboard or
+        /// screen reader user closing e.g. Settings > Toolbar items was sent back to the top of
+        /// Settings instead of the button they used (#12087). Only a lost focus is repaired (the
+        /// window itself, a detached control, or a control in the closed dialog): a caller that
+        /// moves focus on purpose, or the user clicking elsewhere first, wins. Runs once more on
+        /// the owner's activation for when the OS re-activates it after the dialog task completed.
+        /// </summary>
+        private static void RestoreOwnerFocusIfLost(Window owner, Window dialog, OwnerFocus? ownerFocus)
+        {
+            if (ownerFocus is not { } previous)
+            {
+                return;
+            }
+
+            void Restore()
+            {
+                if (!owner.IsActive || IsDisabledByOpenModal(owner))
+                {
+                    return; // a follow-up dialog is open - its own close runs this again
+                }
+
+                if (owner.FocusManager?.GetFocusedElement() is Visual focused && focused != owner)
+                {
+                    var focusedTopLevel = TopLevel.GetTopLevel(focused);
+                    if (focusedTopLevel != null && focusedTopLevel != dialog)
+                    {
+                        return; // focus is on a live control - leave it be
+                    }
+                }
+
+                var element = previous.Element;
+                if (TopLevel.GetTopLevel(element) == owner &&
+                    element.IsEffectivelyVisible &&
+                    element.IsEffectivelyEnabled)
+                {
+                    element.Focus(previous.FocusVisible ? NavigationMethod.Tab : NavigationMethod.Unspecified);
+                }
+            }
+
+            void OnOwnerActivated(object? sender, EventArgs e)
+            {
+                owner.Activated -= OnOwnerActivated;
+                Dispatcher.UIThread.Post(Restore, DispatcherPriority.Background);
+            }
+
+            if (!owner.IsActive)
+            {
+                owner.Activated += OnOwnerActivated;
+            }
+
+            Dispatcher.UIThread.Post(Restore, DispatcherPriority.Background);
         }
 
         // When a dialog is launched from a context menu item, the command runs synchronously while the
