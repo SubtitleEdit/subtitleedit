@@ -30,6 +30,7 @@ namespace Nikse.SubtitleEdit.Features.Video.EmbeddedSubtitlesEdit;
 public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
 {
     [ObservableProperty] private string _videoFileName;
+    [ObservableProperty] private string _videoFileSize;
     public bool HasVideoFileName => !string.IsNullOrEmpty(VideoFileName);
     public bool CanGenerate => HasVideoFileName && !IsGenerating && TracksReady;
     public bool CanEditTracks => HasVideoFileName && TracksReady;
@@ -72,6 +73,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
     // Avalonia's Window.Loaded can fire more than once (re-attach to visual tree, layout
     // pass). Without this guard the initial track scan would re-append on every fire.
     private bool _loaded;
+    private static readonly string[] SupportedVideoExtensions = { ".mp4", ".m4v", ".mov" };
     private static readonly Regex FrameFinderRegex = new(@"[Ff]rame=\s*\d+", RegexOptions.Compiled);
 
     private readonly IFolderHelper _folderHelper;
@@ -88,6 +90,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
         Tracks.CollectionChanged += (_, _) => UpdateTrackListState();
         DeleteText = Se.Language.General.Delete;
         VideoFileName = string.Empty;
+        VideoFileSize = string.Empty;
         ProgressText = string.Empty;
         TracksGrid = new TableView();
 
@@ -112,6 +115,17 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
         OnPropertyChanged(nameof(HasVideoFileName));
         OnPropertyChanged(nameof(CanGenerate));
         OnPropertyChanged(nameof(CanEditTracks));
+
+        try
+        {
+            VideoFileSize = HasVideoFileName && File.Exists(value)
+                ? Utilities.FormatBytesToDisplayFileSize(new FileInfo(value).Length)
+                : string.Empty;
+        }
+        catch
+        {
+            VideoFileSize = string.Empty;
+        }
         UpdateTrackListState();
     }
 
@@ -586,6 +600,11 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
             return;
         }
 
+        LoadVideoFile(fileName);
+    }
+
+    private void LoadVideoFile(string fileName)
+    {
         VideoFileName = fileName;
         Tracks.Clear();
         _originalTracks.Clear();
@@ -610,6 +629,41 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
                 TracksReady = true;
             });
         });
+    }
+
+    internal static bool IsSupportedVideoFile(string fileName)
+    {
+        var extension = Path.GetExtension(fileName);
+        return SupportedVideoExtensions.Any(e => e.Equals(extension, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static string? GetDroppedVideoFile(DragEventArgs e)
+    {
+        if (!e.DataTransfer.Contains(DataFormat.File))
+        {
+            return null;
+        }
+
+        var fileName = e.DataTransfer.TryGetFiles()?.FirstOrDefault()?.Path?.LocalPath;
+        return fileName != null && IsSupportedVideoFile(fileName) && File.Exists(fileName) ? fileName : null;
+    }
+
+    internal void VideoDragOver(object? sender, DragEventArgs e)
+    {
+        e.DragEffects = !IsGenerating && GetDroppedVideoFile(e) != null ? DragDropEffects.Copy : DragDropEffects.None;
+        e.Handled = true;
+    }
+
+    internal void VideoDrop(object? sender, DragEventArgs e)
+    {
+        var fileName = GetDroppedVideoFile(e);
+        if (fileName == null || IsGenerating)
+        {
+            return;
+        }
+
+        e.Handled = true;
+        LoadVideoFile(fileName);
     }
 
     [RelayCommand]

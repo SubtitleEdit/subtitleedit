@@ -47,6 +47,9 @@ public class EmbeddedSubtitlesEditWindow : Window
             .WithHorizontalAlignmentStretch()
             .WithAccessibleName(Se.Language.General.VideoFile); // the label beside it is icon + text, not a plain label (#12087)
         textBoxVideoFileName.IsReadOnly = true;
+        var labelVideoFileSize = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.VideoFileSize));
+        labelVideoFileSize.Opacity = 0.7;
+        labelVideoFileSize.VerticalAlignment = VerticalAlignment.Center;
         var buttonBrowseVideoFile = UiUtil.MakeButtonBrowse(vm.BrowseVideoFileCommand, accessibleName: Se.Language.General.VideoFile);
         var gridVideoFile = new Grid
         {
@@ -54,6 +57,7 @@ public class EmbeddedSubtitlesEditWindow : Window
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) }, // label
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }, // textbox
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) }, // file size
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) }, // button
             },
             ColumnSpacing = 5,
@@ -61,20 +65,17 @@ public class EmbeddedSubtitlesEditWindow : Window
         };
         gridVideoFile.Add(panelVideoFileName, 0, 0);
         gridVideoFile.Add(textBoxVideoFileName, 0, 1);
-        gridVideoFile.Add(buttonBrowseVideoFile, 0, 2);
+        gridVideoFile.Add(labelVideoFileSize, 0, 2);
+        gridVideoFile.Add(buttonBrowseVideoFile, 0, 3);
 
 
         var tracksView = MakeTracksView(vm);
-        var progressView = MakeProgressView(vm);
+        var progressView = EmbeddedTracksUi.MakeProgressView();
 
         var buttonGenerate = UiUtil.MakeButton(Se.Language.General.Generate, vm.GenerateCommand)
             .WithBindEnabled(nameof(vm.CanGenerate))
             .WithBindIsVisible(nameof(vm.HasVideoFileName));
         buttonGenerate.IsDefault = true; // the dialog's accept button - Enter runs it (#14586)
-        var buttonConfig = UiUtil.MakeButton(vm.OkCommand, IconNames.Settings, Se.Language.General.Settings)
-            .WithMarginRight(5)
-            .WithBindEnabled(nameof(vm.CanGenerate))
-            .WithBindIsVisible(nameof(vm.HasVideoFileName));
         var buttonPanel = UiUtil.MakeButtonBar(
             buttonGenerate,
             UiUtil.MakeButtonCancel(vm.CancelCommand)
@@ -108,6 +109,7 @@ public class EmbeddedSubtitlesEditWindow : Window
         Content = grid;
 
         UiUtil.FocusOnFirstActivation(this, textBoxVideoFileName); // initial focus on an input, not an action button - a focused button clicks on bare Space
+        EmbeddedTracksUi.AttachVideoDrop(this, vm.VideoDragOver, vm.VideoDrop);
         Loaded += (s, e) => vm.OnLoaded();
         Closing += (s, e) => vm.OnClosing();
         KeyDown += (s, e) => vm.OnKeyDown(e);
@@ -131,6 +133,15 @@ public class EmbeddedSubtitlesEditWindow : Window
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Binding = new Binding(nameof(EmbeddedTrack.Deleted)) { Mode = BindingMode.OneWay, Converter = booleanToDeleteMarkConverter },
             Width = new GridLength(40), // was content-sized (Auto) on the DataGrid
+        });
+        dataGridTracks.Columns.Add(new SeTableViewColumn
+        {
+            // Tells newly added tracks apart from the ones already in the video file.
+            Header = Se.Language.General.New,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(EmbeddedTrack.New)) { Mode = BindingMode.OneWay, Converter = booleanToCheckMarkConverter },
+            Width = new GridLength(60),
         });
         dataGridTracks.Columns.Add(new SeTableViewColumn
         {
@@ -236,42 +247,9 @@ public class EmbeddedSubtitlesEditWindow : Window
             RowSpacing = 5,
         };
 
-        grid.Add(dataGridTracks, 0, 0);
+        grid.Add(EmbeddedTracksUi.MakeTracksWithEmptyHint(dataGridTracks), 0, 0);
         grid.Add(panelButtons, 1, 0);
 
         return UiUtil.MakeBorderForControl(grid);
-    }
-
-    private static Grid MakeProgressView(EmbeddedSubtitlesEditViewModel vm)
-    {
-        var progressBar = UiUtil.MakeProgressBar();
-        progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
-        progressBar.Bind(ProgressBar.IsVisibleProperty, new Binding(nameof(vm.IsGenerating)));
-
-        var statusText = new TextBlock
-        {
-            Margin = new Thickness(5, 20, 0, 0),
-        };
-        statusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ProgressText)));
-        statusText.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.IsGenerating)));
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(progressBar, 0, 0);
-        grid.Add(statusText, 0, 0);
-
-        return grid;
     }
 }

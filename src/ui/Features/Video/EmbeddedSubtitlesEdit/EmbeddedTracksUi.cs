@@ -4,10 +4,13 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.ValueConverters;
 using Attached = Optris.Icons.Avalonia.Attached;
 using Icon = Optris.Icons.Avalonia.Icon;
 
@@ -15,7 +18,8 @@ namespace Nikse.SubtitleEdit.Features.Video.EmbeddedSubtitlesEdit;
 
 /// <summary>
 /// Track list pieces shared by the Matroska and MP4 "Add/remove embedded subtitles" windows:
-/// the button row under the tracks, the tracks context menu and dimming of deleted rows.
+/// the button row under the tracks, the tracks context menu, dimming of deleted rows, the
+/// empty-state hint, video file drop and the progress view.
 /// Both view models expose the same command and state names (IsTrackSelected, DeleteText, ...).
 /// </summary>
 internal static class EmbeddedTracksUi
@@ -200,6 +204,62 @@ internal static class EmbeddedTracksUi
             },
         };
         UiUtil.AttachMacContextFlyoutHandler(tableView);
+    }
+
+    /// <summary>
+    /// Puts <paramref name="tracksTable"/> in a cell with a hint on top that is shown until a
+    /// video file is chosen - an empty table with only column headers gives no clue what to do.
+    /// </summary>
+    public static Grid MakeTracksWithEmptyHint(TableView tracksTable)
+    {
+        var hint = new TextBlock
+        {
+            Text = Se.Language.Video.EmbeddedTracksPickVideoHint,
+            TextWrapping = TextWrapping.Wrap,
+            TextAlignment = TextAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            MaxWidth = 360,
+            Opacity = 0.6,
+            IsHitTestVisible = false,
+        };
+        hint.Bind(Visual.IsVisibleProperty, new Binding("HasVideoFileName") { Converter = InverseBooleanConverter.Instance });
+
+        var grid = new Grid();
+        grid.Children.Add(tracksTable);
+        grid.Children.Add(hint);
+        return grid;
+    }
+
+    /// <summary>
+    /// Dropping a supported video file anywhere on the window loads it, like Browse.
+    /// </summary>
+    public static void AttachVideoDrop(Window window, System.EventHandler<DragEventArgs> dragOver, System.EventHandler<DragEventArgs> drop)
+    {
+        DragDrop.SetAllowDrop(window, true);
+        window.AddHandler(DragDrop.DragOverEvent, dragOver, RoutingStrategies.Bubble);
+        window.AddHandler(DragDrop.DropEvent, drop, RoutingStrategies.Bubble);
+    }
+
+    /// <summary>
+    /// Progress bar with the status text below it (they used to share one grid cell, with the
+    /// text pushed down by a margin so it overlapped the bar).
+    /// </summary>
+    public static StackPanel MakeProgressView()
+    {
+        var progressBar = UiUtil.MakeProgressBar();
+        progressBar.Bind(ProgressBar.ValueProperty, new Binding("ProgressValue"));
+
+        var statusText = new TextBlock { Margin = new Thickness(2, 0, 0, 0) };
+        statusText.Bind(TextBlock.TextProperty, new Binding("ProgressText"));
+
+        var panel = new StackPanel
+        {
+            Spacing = 4,
+            Children = { progressBar, statusText },
+        };
+        panel.Bind(Visual.IsVisibleProperty, new Binding("IsGenerating"));
+        return panel;
     }
 
     private static StackPanel MakeIconText(string iconName, string text)

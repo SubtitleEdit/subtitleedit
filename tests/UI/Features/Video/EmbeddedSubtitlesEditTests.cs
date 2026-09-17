@@ -137,4 +137,37 @@ public class EmbeddedSubtitlesEditTests : IDisposable
         vm.DeleteCommand.Execute(null);
         Assert.Equal(Se.Language.General.Delete, vm.DeleteText);
     }
+
+    [Theory]
+    [InlineData("movie.mkv", true)]
+    [InlineData("movie.WEBM", true)]
+    [InlineData("movie.mp4", false)]
+    [InlineData("movie", false)]
+    public void IsSupportedVideoFile_Matroska(string fileName, bool expected)
+    {
+        Assert.Equal(expected, EmbeddedSubtitlesEditViewModel.IsSupportedVideoFile(fileName));
+    }
+
+    [Theory]
+    [InlineData("movie.mp4", true)]
+    [InlineData("movie.M4V", true)]
+    [InlineData("movie.mov", true)]
+    [InlineData("movie.mkv", false)]
+    public void IsSupportedVideoFile_Mp4(string fileName, bool expected)
+    {
+        Assert.Equal(expected, EmbeddedSubtitlesEditMp4ViewModel.IsSupportedVideoFile(fileName));
+    }
+
+    [AvaloniaFact]
+    public void VideoFileSize_FollowsVideoFileName()
+    {
+        var vm = new EmbeddedSubtitlesEditViewModel(new FolderHelper(), new FileHelper(), new WindowService(new NullServiceProvider()));
+        var fileName = MakeTempSubtitle();
+
+        vm.VideoFileName = fileName;
+        Assert.False(string.IsNullOrEmpty(vm.VideoFileSize));
+
+        vm.VideoFileName = string.Empty;
+        Assert.Equal(string.Empty, vm.VideoFileSize);
+    }
 }

@@ -29,6 +29,7 @@ namespace Nikse.SubtitleEdit.Features.Video.EmbeddedSubtitlesEdit;
 public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
 {
     [ObservableProperty] private string _videoFileName;
+    [ObservableProperty] private string _videoFileSize;
     public bool HasVideoFileName => !string.IsNullOrEmpty(VideoFileName);
     public bool CanGenerate => HasVideoFileName && !IsGenerating;
     [ObservableProperty] private ObservableCollection<EmbeddedTrack> _tracks;
@@ -60,6 +61,7 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
     private List<EmbeddedTrack> _originalTracks;
     private long _totalFrames = 0;
     private string _outputFileName;
+    private static readonly string[] SupportedVideoExtensions = { ".mkv", ".webm" };
     private static readonly Regex FrameFinderRegex = new(@"[Ff]rame=\s*\d+", RegexOptions.Compiled);
 
     private readonly IWindowService _windowService;
@@ -76,6 +78,7 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
         Tracks.CollectionChanged += (_, _) => UpdateTrackListState();
         DeleteText = Se.Language.General.Delete;
         VideoFileName = string.Empty;
+        VideoFileSize = string.Empty;
         ProgressText = string.Empty;
         TracksGrid = new TableView();
 
@@ -100,6 +103,17 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
     {
         OnPropertyChanged(nameof(HasVideoFileName));
         OnPropertyChanged(nameof(CanGenerate));
+
+        try
+        {
+            VideoFileSize = HasVideoFileName && File.Exists(value)
+                ? Utilities.FormatBytesToDisplayFileSize(new FileInfo(value).Length)
+                : string.Empty;
+        }
+        catch
+        {
+            VideoFileSize = string.Empty;
+        }
     }
 
     partial void OnIsGeneratingChanged(bool value) => OnPropertyChanged(nameof(CanGenerate));
@@ -151,16 +165,22 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
 
         if (!_ffmpegProcess.HasExited)
         {
-            var percentage = (int)Math.Round((double)_processedFrames / _totalFrames * 100.0,
-                MidpointRounding.AwayFromZero);
-            percentage = Math.Clamp(percentage, 0, 100);
+            if (_totalFrames > 0 && _processedFrames > 0)
+            {
+                var percentage = (int)Math.Round((double)_processedFrames / _totalFrames * 100.0, MidpointRounding.AwayFromZero);
+                percentage = Math.Clamp(percentage, 0, 100);
 
-            var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
-            var msPerFrame = (float)durationMs / _processedFrames;
-            var estimatedTotalMs = msPerFrame * _totalFrames;
-            var estimatedLeft = ProgressHelper.ToProgressTime(estimatedTotalMs - durationMs);
+                var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
+                var msPerFrame = (float)durationMs / _processedFrames;
+                var estimatedTotalMs = msPerFrame * _totalFrames;
+                var estimatedLeft = ProgressHelper.ToProgressTime(estimatedTotalMs - durationMs);
 
-            ProgressText = $"Generating video... {percentage}%     {estimatedLeft}";
+                ProgressText = string.Format(Se.Language.Video.EmbeddedTrackGeneratingVideoXY, percentage, estimatedLeft);
+            }
+            else
+            {
+                ProgressText = Se.Language.Video.EmbeddedTrackGeneratingVideo;
+            }
 
             return;
         }
@@ -562,27 +582,67 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
         var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.General.OpenVideoFileTitle, "Matroska files", "*.mkv;*.webm");
         if (!string.IsNullOrEmpty(fileName))
         {
-            VideoFileName = fileName;
-            _ = Task.Run(() =>
-            {
-                // Parse once, off the UI thread - this used to also parse synchronously on the
-                // UI thread after starting the task, freezing the window for the probe.
-                var mediaInfo = FfmpegMediaInfo2.Parse(fileName);
-                _mediaInfo = mediaInfo;
-                Dispatcher.UIThread.Invoke(() =>
-                {
-                    Tracks.Clear();
-                    _originalTracks.Clear();
-                    var tracks = FindTracks(fileName, mediaInfo);
-                    foreach (var track in tracks)
-                    {
-                        Tracks.Add(track);
-                        _originalTracks.Add(new EmbeddedTrack(track));
-                    }
-                    SelectAndScrollToRow(0);
-                });
-            });
+            LoadVideoFile(fileName);
         }
+    }
+
+    private void LoadVideoFile(string fileName)
+    {
+        VideoFileName = fileName;
+        _ = Task.Run(() =>
+        {
+            // Parse once, off the UI thread - this used to also parse synchronously on the
+            // UI thread after starting the task, freezing the window for the probe.
+            var mediaInfo = FfmpegMediaInfo2.Parse(fileName);
+            _mediaInfo = mediaInfo;
+            Dispatcher.UIThread.Invoke(() =>
+            {
+                Tracks.Clear();
+                _originalTracks.Clear();
+                var tracks = FindTracks(fileName, mediaInfo);
+                foreach (var track in tracks)
+                {
+                    Tracks.Add(track);
+                    _originalTracks.Add(new EmbeddedTrack(track));
+                }
+                SelectAndScrollToRow(0);
+            });
+        });
+    }
+
+    internal static bool IsSupportedVideoFile(string fileName)
+    {
+        var extension = Path.GetExtension(fileName);
+        return SupportedVideoExtensions.Any(e => e.Equals(extension, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static string? GetDroppedVideoFile(DragEventArgs e)
+    {
+        if (!e.DataTransfer.Contains(DataFormat.File))
+        {
+            return null;
+        }
+
+        var fileName = e.DataTransfer.TryGetFiles()?.FirstOrDefault()?.Path?.LocalPath;
+        return fileName != null && IsSupportedVideoFile(fileName) && File.Exists(fileName) ? fileName : null;
+    }
+
+    internal void VideoDragOver(object? sender, DragEventArgs e)
+    {
+        e.DragEffects = !IsGenerating && GetDroppedVideoFile(e) != null ? DragDropEffects.Copy : DragDropEffects.None;
+        e.Handled = true;
+    }
+
+    internal void VideoDrop(object? sender, DragEventArgs e)
+    {
+        var fileName = GetDroppedVideoFile(e);
+        if (fileName == null || IsGenerating)
+        {
+            return;
+        }
+
+        e.Handled = true;
+        LoadVideoFile(fileName);
     }
 
     [RelayCommand]
