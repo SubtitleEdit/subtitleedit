@@ -35,6 +35,10 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
     public bool CanEditTracks => HasVideoFileName && TracksReady;
     [ObservableProperty] private ObservableCollection<EmbeddedTrack> _tracks;
     [ObservableProperty] private EmbeddedTrack? _selectedTrack;
+    [ObservableProperty] private bool _isTrackSelected;
+    [ObservableProperty] private bool _isMoveUpEnabled;
+    [ObservableProperty] private bool _isMoveDownEnabled;
+    [ObservableProperty] private string _deleteText;
     [ObservableProperty] private string _progressText;
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private bool _isGenerating;
@@ -81,6 +85,8 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
         _windowService = windowService;
 
         Tracks = new ObservableCollection<EmbeddedTrack>();
+        Tracks.CollectionChanged += (_, _) => UpdateTrackListState();
+        DeleteText = Se.Language.General.Delete;
         VideoFileName = string.Empty;
         ProgressText = string.Empty;
         TracksGrid = new TableView();
@@ -106,6 +112,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
         OnPropertyChanged(nameof(HasVideoFileName));
         OnPropertyChanged(nameof(CanGenerate));
         OnPropertyChanged(nameof(CanEditTracks));
+        UpdateTrackListState();
     }
 
     partial void OnIsGeneratingChanged(bool value) => OnPropertyChanged(nameof(CanGenerate));
@@ -114,6 +121,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
     {
         OnPropertyChanged(nameof(CanGenerate));
         OnPropertyChanged(nameof(CanEditTracks));
+        UpdateTrackListState();
     }
 
     private void TimerGenerateElapsed(object? sender, ElapsedEventArgs e)
@@ -378,6 +386,60 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
         {
             SelectedTrack.Deleted = !SelectedTrack.Deleted;
         }
+    }
+
+    partial void OnSelectedTrackChanged(EmbeddedTrack? oldValue, EmbeddedTrack? newValue)
+    {
+        if (oldValue != null)
+        {
+            oldValue.PropertyChanged -= SelectedTrackPropertyChanged;
+        }
+
+        if (newValue != null)
+        {
+            newValue.PropertyChanged += SelectedTrackPropertyChanged;
+        }
+
+        UpdateTrackListState();
+    }
+
+    private void SelectedTrackPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(EmbeddedTrack.Deleted))
+        {
+            UpdateTrackListState();
+        }
+    }
+
+    private void UpdateTrackListState()
+    {
+        var index = SelectedTrack == null ? -1 : Tracks.IndexOf(SelectedTrack);
+        IsTrackSelected = index >= 0 && CanEditTracks;
+        IsMoveUpEnabled = index > 0 && CanEditTracks;
+        IsMoveDownEnabled = index >= 0 && index < Tracks.Count - 1 && CanEditTracks;
+        DeleteText = SelectedTrack?.Deleted == true ? Se.Language.General.Undelete : Se.Language.General.Delete;
+    }
+
+    // The list order is the output subtitle track order, see FfmpegGenerator.AlterEmbeddedTracks*.
+    [RelayCommand]
+    private void MoveUp() => MoveSelectedTrack(ListMoveDirection.Up);
+
+    [RelayCommand]
+    private void MoveDown() => MoveSelectedTrack(ListMoveDirection.Down);
+
+    private void MoveSelectedTrack(ListMoveDirection direction)
+    {
+        var track = SelectedTrack;
+        var index = track == null ? -1 : Tracks.IndexOf(track);
+        if (track == null || index < 0 || !CanEditTracks)
+        {
+            return;
+        }
+
+        ListReorder.Move(Tracks, new[] { index }, direction);
+        SelectedTrack = track;
+        SelectAndScrollToRow(Tracks.IndexOf(track));
+        UpdateTrackListState();
     }
 
     [RelayCommand]
@@ -740,7 +802,17 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
 
     internal void OnTracksGridKeyDown(KeyEventArgs e)
     {
-        if (e.Key == Key.Delete)
+        if (e.KeyModifiers == KeyModifiers.Control && e.Key == Key.Up)
+        {
+            MoveUp();
+            e.Handled = true;
+        }
+        else if (e.KeyModifiers == KeyModifiers.Control && e.Key == Key.Down)
+        {
+            MoveDown();
+            e.Handled = true;
+        }
+        else if (e.Key == Key.Delete)
         {
             Delete();
             e.Handled = true;
