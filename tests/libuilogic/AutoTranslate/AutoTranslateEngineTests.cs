@@ -52,9 +52,41 @@ public class AutoTranslateEngineTests
         // "iw" is the legacy Hebrew code; SE detects "he", so "iw" breaks auto-selection.
         Assert.Equal("he", languages.Single(p => p.Name == "Hebrew").TwoLetterIsoLanguageName);
         // "br" is Breton, not Brazilian Portuguese.
-        Assert.Equal("pt", languages.Single(p => p.Name == "Brazilian Portuguese").TwoLetterIsoLanguageName);
-        // "ay" is Aymara; Awadhi has no two-letter code.
-        Assert.Equal(string.Empty, languages.Single(p => p.Name == "Awadhi").TwoLetterIsoLanguageName);
+        Assert.Equal("pt-BR", languages.Single(p => p.Name == "Brazilian Portuguese").TwoLetterIsoLanguageName);
+        // "ay" is Aymara, not Awadhi.
+        Assert.Equal("awa", languages.Single(p => p.Name == "Awadhi").TwoLetterIsoLanguageName);
+    }
+
+    [Fact]
+    public void Gemini_UsesSharedLlmLanguageList()
+    {
+        var gemini = new GeminiTranslate().GetSupportedTargetLanguages().Select(p => p.Name);
+
+        Assert.Equal(ChatGptTranslate.ListLanguages().Select(p => p.Name), gemini);
+    }
+
+    [Theory]
+    [InlineData("Malayalam", "ml")] // #14963
+    [InlineData("Tamil", "ta")]
+    [InlineData("Telugu", "te")]
+    [InlineData("Filipino", "tl")]
+    [InlineData("Lao", "lo")]
+    [InlineData("Zulu", "zu")]
+    public void LlmLanguageList_ContainsMajorLanguages(string name, string isoCode)
+    {
+        var language = ChatGptTranslate.ListLanguages().Single(p => p.Name == name);
+
+        Assert.Equal(name, language.Code);
+        Assert.Equal(isoCode, language.TwoLetterIsoLanguageName);
+    }
+
+    [Fact]
+    public void LlmLanguageList_HasNoDuplicates()
+    {
+        var languages = ChatGptTranslate.ListLanguages();
+
+        Assert.Equal(languages.Count, languages.Select(p => p.Name).Distinct(StringComparer.OrdinalIgnoreCase).Count());
+        Assert.Equal(languages.Count, languages.Select(p => p.TwoLetterIsoLanguageName).Distinct(StringComparer.OrdinalIgnoreCase).Count());
     }
 
     [Fact]
