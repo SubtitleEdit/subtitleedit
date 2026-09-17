@@ -682,6 +682,7 @@ public class LanguageGeneral
     public string Type { get; set; }
     public string Unbreak { get; set; }
     public string UnbreakLines { get; set; }
+    public string Undelete { get; set; }
     public string Underline { get; set; }
     public string Undo { get; set; }
     public string Unknown { get; set; }
@@ -1493,6 +1494,7 @@ public class LanguageGeneral
         Type = "Type";
         Unbreak = "Unbreak text";
         UnbreakLines = "Unbreak lines";
+        Undelete = "Undelete";
         Underline = "Underline";
         Undo = "Undo";
         Unknown = "Unknown";

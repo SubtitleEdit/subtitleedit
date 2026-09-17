@@ -167,6 +167,13 @@ public class EmbeddedSubtitlesEditWindow : Window
         dataGridTracks.KeyDown += (s, e) => vm.OnTracksGridKeyDown(e);
         dataGridTracks.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
         {
+            // Ctrl+Up/Down reorders - handled on tunnel, before the grid's own row navigation.
+            if (e.KeyModifiers == KeyModifiers.Control && e.Key is Key.Up or Key.Down)
+            {
+                vm.OnTracksGridKeyDown(e);
+                return;
+            }
+
             if (e.Key is Key.Home or Key.End && dataGridTracks.ItemsSource is IList items && items.Count > 0)
             {
                 var target = e.Key == Key.Home ? items[0] : items[^1];
@@ -182,42 +189,17 @@ public class EmbeddedSubtitlesEditWindow : Window
         dataGridTracks.DoubleTapped += (s, e) => vm.EditCommand.Execute(null);
         vm.TracksGrid = dataGridTracks;
 
-        var buttonAdd = new SplitButton
-        {
-            Content = Se.Language.General.Add,
-            Command = vm.AddCommand,
-            Margin = new Thickness(4, 0),
-            Padding = new Thickness(12, 6),
-            Flyout = new MenuFlyout
-            {
-                Items =
-                {
-                    new MenuItem
-                    {
-                        Header = Se.Language.Video.AddCurrentSubtitle,
-                        Command = vm.AddCurrentCommand,
-                    },
-                }
-            }
-        }.WithBindIsVisible(nameof(vm.HasVideoFileName));
-        var buttonEdit = UiUtil.MakeButton(Se.Language.General.Edit, vm.EditCommand)
-            .WithBindIsVisible(nameof(vm.HasVideoFileName));
-        var buttonDelete = UiUtil.MakeButton(Se.Language.General.Delete, vm.DeleteCommand)
-            .WithBindIsVisible(nameof(vm.HasVideoFileName));
-        var buttonPreview = UiUtil.MakeButton(Se.Language.General.Preview, vm.PreviewCommand)
-            .WithBindIsVisible(nameof(vm.HasVideoFileName));
-
-        var panelButtons = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Children =
-            {
-                buttonAdd,
-                buttonEdit,
-                buttonDelete,
-                buttonPreview,
-            },
-        };
+        var commands = new EmbeddedTracksUi.Commands(
+            vm.AddCommand,
+            vm.AddCurrentCommand,
+            vm.EditCommand,
+            vm.DeleteCommand,
+            vm.PreviewCommand,
+            vm.MoveUpCommand,
+            vm.MoveDownCommand);
+        EmbeddedTracksUi.DimDeletedRows(dataGridTracks);
+        EmbeddedTracksUi.AttachContextMenu(dataGridTracks, vm, commands, null);
+        var panelButtons = EmbeddedTracksUi.MakeButtons(commands, null);
 
         var grid = new Grid
         {

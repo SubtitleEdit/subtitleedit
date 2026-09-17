@@ -1740,51 +1740,19 @@ public class FfmpegGenerator
         args.Add("-map 0:V:0");  // First actual video stream (not attached pic)
         args.Add("-map 0:a:0?"); // First audio stream (optional)
 
-        // Build list of output subtitle tracks: non-deleted original tracks, then new tracks
-        var outputSubs = new List<EmbeddedTrack>();
+        // Output subtitle tracks follow the list order (the user can move tracks up/down),
+        // so original and new tracks may be interleaved. Deleted tracks are dropped.
+        var outputSubs = embeddedTracks
+            .Where(t => !t.Deleted && (!t.New || newInputs.Contains(t)))
+            .ToList();
 
-        // Find non-deleted original subtitle tracks
-        foreach (var track in embeddedTracks)
+        foreach (var track in outputSubs)
         {
-            if (track.New)
-            {
-                continue; // Handle new tracks separately
-            }
-
-            if (track.Deleted)
-            {
-                continue; // Skip deleted tracks
-            }
-
-            // This is an existing track that should be kept
-            outputSubs.Add(track);
-        }
-
-        // Add new subtitle tracks
-        foreach (var track in embeddedTracks)
-        {
-            if (track.New && !track.Deleted && !string.IsNullOrEmpty(track.FileName) && File.Exists(track.FileName))
-            {
-                outputSubs.Add(track);
-            }
-        }
-
-        // Map original subtitle streams that are kept
-        foreach (var track in embeddedTracks)
-        {
-            if (track.New || track.Deleted)
-            {
-                continue;
-            }
-
-            args.Add($"-map 0:s:{track.Number}");
-        }
-
-        // Map new subtitle inputs
-        for (int i = 0; i < newInputs.Count; i++)
-        {
-            var inputIndex = i + 1; // input 0 is the original file
-            args.Add($"-map {inputIndex}:0");
+            // Original streams by their subtitle-relative index; new files by input index
+            // (input 0 is the original file, new files are inputs 1..N in newInputs order).
+            args.Add(track.New
+                ? $"-map {newInputs.IndexOf(track) + 1}:0"
+                : $"-map 0:s:{track.Number}");
         }
 
         // Copy all codecs
@@ -1866,18 +1834,18 @@ public class FfmpegGenerator
         args.Add("-map 0:V:0");
         args.Add("-map 0:a:0?");
 
-        // Map kept existing subtitle streams in their original order so the relative subtitle
-        // index matches `track.Number` from the parsed media info.
-        var keptOriginals = embeddedTracks.Where(t => !t.New && !t.Deleted).ToList();
-        foreach (var track in keptOriginals)
+        // Output subtitle tracks follow the list order (the user can move tracks up/down), so
+        // original and new tracks may be interleaved. Original streams map by their
+        // subtitle-relative index (`track.Number` from the parsed media info); each new
+        // external file is its own input, indices 1..N in newInputs order.
+        var outputSubs = embeddedTracks
+            .Where(t => !t.Deleted && (!t.New || newInputs.Contains(t)))
+            .ToList();
+        foreach (var track in outputSubs)
         {
-            args.Add($"-map 0:s:{track.Number}");
-        }
-
-        // Map each new external subtitle file (each is its own input, indices 1..N).
-        for (var i = 0; i < newInputs.Count; i++)
-        {
-            args.Add($"-map {i + 1}:0");
+            args.Add(track.New
+                ? $"-map {newInputs.IndexOf(track) + 1}:0"
+                : $"-map 0:s:{track.Number}");
         }
 
         // Video and audio passthrough; subtitles transcode to mov_text (the only widely
@@ -1892,8 +1860,6 @@ public class FfmpegGenerator
         args.Add("-max_interleave_delta 0");
 
         // Per-output-subtitle metadata + dispositions, in the same order we mapped them above.
-        var outputSubs = new List<EmbeddedTrack>(keptOriginals);
-        outputSubs.AddRange(embeddedTracks.Where(t => t.New && !t.Deleted && !string.IsNullOrEmpty(t.FileName) && File.Exists(t.FileName)));
 
         for (var outIndex = 0; outIndex < outputSubs.Count; outIndex++)
         {
