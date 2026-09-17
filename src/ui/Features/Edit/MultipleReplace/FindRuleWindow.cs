@@ -22,7 +22,7 @@ public class FindRuleWindow : Window
         DataContext = vm;
 
         var labelSearch = UiUtil.MakeLabel(Se.Language.General.Search);
-        var textBoxSearch = UiUtil.MakeTextBox(300, vm, nameof(vm.SearchText));
+        var textBoxSearch = UiUtil.MakeTextBox(300, vm, nameof(vm.SearchText)).WithSearchAndClearIcons();
 
         var searchPanel = new StackPanel
         {

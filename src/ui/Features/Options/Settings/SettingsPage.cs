@@ -50,7 +50,7 @@ public class SettingsPage : UserControl
             // The placeholder text is not exposed as the UIA Name, so screen readers announce a
             // bare "edit" without this (#12087).
             [AutomationProperties.NameProperty] = Se.Language.Options.Settings.SearchSettingsDotDotDot,
-        };
+        }.WithSearchAndClearIcons();
 
         _contentPanel = new StackPanel
         {
