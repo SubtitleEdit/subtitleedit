@@ -8,6 +8,19 @@ namespace SeConvTests.Commands;
 public class ConvertCommandTest
 {
     [Fact]
+    public void EveryOptionTemplate_IsAcceptedBySpectre()
+    {
+        // Spectre parses an option template when the attribute is created, i.e. when the command
+        // is registered - so an invalid alias (a long name starting with a digit, like
+        // "--3d-plane") made every seconv run fail with "Option names cannot start with a digit".
+        foreach (var property in typeof(ConvertCommand.Settings).GetProperties())
+        {
+            var exception = Record.Exception(() => property.GetCustomAttributes(typeof(Spectre.Console.Cli.CommandOptionAttribute), false));
+            Assert.True(exception == null, $"{property.Name}: {exception?.InnerException?.Message ?? exception?.Message}");
+        }
+    }
+
+    [Fact]
     public void BuildSummaryTable_SquareBracketsInUserValues_AreNotParsedAsMarkup()
     {
         // Regression for #14692: Spectre parses table cells as markup, so an input file named

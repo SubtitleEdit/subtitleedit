@@ -306,7 +306,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [Description("Image output: 3D depth in pixels, -100 to 100; positive brings the subtitle out of the screen (default: 0). D-Cinema writes it as the Z-position")]
         public int? Depth3D { get; init; }
 
-        [CommandOption("--plane-3d|--plane3d|--3d-plane")]
+        [CommandOption("--plane-3d|--plane3d")]
         [Description("Image output: 3D Blu-ray 3D-Plane (.ofs) - each subtitle gets the depth of the frames it is shown on; --depth-3d is used where it has none")]
         public string? Plane3D { get; init; }
 
