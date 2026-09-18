@@ -291,6 +291,49 @@ public static class PerLineVoiceClone
         return (start, Math.Max(0.1, end - start));
     }
 
+    /// <summary>How many other lines' clips are tried for a line that fails on its own clip.</summary>
+    internal const int MaxFallbackReferences = 2;
+
+    /// <summary>
+    /// The clips to try, in order, when line <paramref name="index"/> cannot be synthesised from
+    /// its own clip: the nearest other lines, the same speaker's first when speakers are known.
+    /// </summary>
+    /// <remarks>
+    /// A reference can make a line fail however often it is retried - Higgs Audio v3 never
+    /// reaches its end-of-audio token on some clips cut from a film's mixed audio (#15020) - and
+    /// every retry of the line reuses that clip. The nearest line is the best guess at the same
+    /// speaker in the same scene; when it is somebody else, a line in a neighbour's voice is
+    /// still a better dub than a line that is missing.
+    /// </remarks>
+    /// <param name="actorOf">The speaker of a paragraph, or null/empty when unknown.</param>
+    internal static List<string> GetFallbackReferenceClips(
+        IReadOnlyList<Paragraph> paragraphs,
+        int index,
+        IReadOnlyDictionary<Paragraph, string> clips,
+        Func<Paragraph, string?> actorOf,
+        int maxCount = MaxFallbackReferences)
+    {
+        if (index < 0 || index >= paragraphs.Count)
+        {
+            return new List<string>();
+        }
+
+        var actor = actorOf(paragraphs[index]);
+        clips.TryGetValue(paragraphs[index], out var ownClip);
+
+        return paragraphs
+            .Select((paragraph, i) => (paragraph, i))
+            .Where(p => p.i != index
+                        && clips.TryGetValue(p.paragraph, out var clip)
+                        && !string.Equals(clip, ownClip, StringComparison.OrdinalIgnoreCase))
+            .OrderBy(p => !string.IsNullOrEmpty(actor) && string.Equals(actorOf(p.paragraph), actor, StringComparison.OrdinalIgnoreCase) ? 0 : 1)
+            .ThenBy(p => Math.Abs(p.i - index))
+            .ThenBy(p => p.i)
+            .Select(p => clips[p.paragraph])
+            .Take(maxCount)
+            .ToList();
+    }
+
     /// <summary>
     /// Every engine that knows how to clone per line. Taken from the shared catalog rather than
     /// listed here, so an engine added there (implementing <see cref="IPerLineCloneEngine"/>) is

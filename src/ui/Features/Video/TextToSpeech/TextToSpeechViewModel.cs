@@ -3232,6 +3232,17 @@ public partial class TextToSpeechViewModel : ObservableObject
                 await Task.Run(() => StopOtherCrispAsrServers(resolution.Engine));
                 var speakResult = await SpeakOneParagraphAsync(
                     resolution, language, region, model, cancellationToken);
+                if (speakResult.Error || string.IsNullOrEmpty(speakResult.FileName))
+                {
+                    var swapped = await SpeakWithFallbackReferenceAsync(
+                        resolution, index, language, region, model, cancellationToken);
+                    if (swapped != null)
+                    {
+                        resolution = swapped.Value.Resolution;
+                        speakResult = swapped.Value.Result;
+                    }
+                }
+
                 if (speakResult.Error && !string.IsNullOrEmpty(speakResult.ErrorMessage) && !errorMessages.Contains(speakResult.ErrorMessage))
                 {
                     errorMessages.Add(speakResult.ErrorMessage);
@@ -3461,6 +3472,77 @@ public partial class TextToSpeechViewModel : ObservableObject
                 return new TtsResult { Error = true, ErrorMessage = retryException.Message };
             }
         }
+    }
+
+    /// <summary>
+    /// A "Clone from video" line that failed on its own clip is tried again on the clips of the
+    /// lines around it. Returns null when the line is not a per-line clone, there is no other
+    /// clip, or the other clips fail too - the caller then records the line as failed.
+    /// </summary>
+    /// <remarks>
+    /// Every retry in <see cref="SpeakOneParagraphAsync"/> and inside the engines reuses the
+    /// line's own clip, which does nothing for a line whose clip is the problem: Higgs Audio v3
+    /// ran to max_tokens four times in a row on one film line's reference (#15020). See
+    /// <see cref="PerLineVoiceClone.GetFallbackReferenceClips"/> for which clips are tried.
+    /// Skipped once the engine looks broken rather than unlucky, like the retries are.
+    /// </remarks>
+    private async Task<(ResolvedVoice Resolution, TtsResult Result)?> SpeakWithFallbackReferenceAsync(
+        ResolvedVoice resolution,
+        int index,
+        TtsLanguage? language,
+        string? region,
+        string? model,
+        CancellationToken cancellationToken)
+    {
+        var paragraph = _subtitle.Paragraphs[index];
+        if (_speakRetryFailures >= 2
+            || !_perLineCloneClips.TryGetValue(paragraph, out var ownClip)
+            || !string.Equals(PerLineVoiceClone.TryGetReferenceClip(resolution.Voice), ownClip, StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+
+        var fallbackClips = PerLineVoiceClone.GetFallbackReferenceClips(
+            _subtitle.Paragraphs,
+            index,
+            _perLineCloneClips,
+            p => ActorVoiceDetector.GetParagraphActor(p, _castKind));
+
+        foreach (var clipFileName in fallbackClips)
+        {
+            var voice = PerLineVoiceClone.MakeVoiceForClip(resolution.Engine, clipFileName);
+            if (voice == null)
+            {
+                continue;
+            }
+
+            try
+            {
+                var result = await TtsInstructionSwap.RunAsync(
+                    resolution.Engine,
+                    resolution.Instruction,
+                    () => resolution.Engine.Speak(resolution.Text, _waveFolder, voice,
+                        language, region, model, cancellationToken));
+                if (result.Error || string.IsNullOrEmpty(result.FileName))
+                {
+                    continue;
+                }
+
+                _speakRetryFailures = 0;
+                Se.WriteToolsLog($"TTS generation: line {index + 1} failed on its own reference clip and was cloned from {Path.GetFileName(clipFileName)} instead", true);
+                return (new ResolvedVoice(resolution.Engine, voice, resolution.Model, resolution.Text, resolution.Instruction), result);
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
+            catch (Exception exception)
+            {
+                SeLogger.Error(exception, $"TextToSpeech: line {index + 1} also failed on the reference clip {Path.GetFileName(clipFileName)}.");
+            }
+        }
+
+        return null;
     }
 
     private sealed class CastContext
