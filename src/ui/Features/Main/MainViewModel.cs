@@ -28703,6 +28703,7 @@ public partial class MainViewModel :
                     removeActorMenuItem.InputGesture = InitMenu.ToKeyGesture(removeActorShortcut);
                 }
                 MenuItemActors.Items.Add(removeActorMenuItem);
+                AddSelectLinesByActorMenuItem(actorsInSubtitle);
             }
             else if (IsFormatWebVtt && selectedCount > 0)
             {
@@ -28713,6 +28714,206 @@ public partial class MainViewModel :
         }
 
         AddSubtitleGridSpellCheckMenuItems(sender as MenuFlyout);
+    }
+
+    private void AddSelectLinesByActorMenuItem(List<string> actorsInSubtitle)
+    {
+        if (MenuItemActors == null)
+        {
+            return;
+        }
+
+        MenuItemActors.Items.Add(new Separator());
+
+        var selectLinesByActorMenuItem = new MenuItem
+        {
+            Header = Se.Language.General.SelectLinesByActor,
+        };
+
+        if (actorsInSubtitle.Count == 0)
+        {
+            selectLinesByActorMenuItem.IsEnabled = false;
+            MenuItemActors.Items.Add(selectLinesByActorMenuItem);
+            return;
+        }
+
+        var selectedActorsInGrid = SubtitleGridSelectedItems
+            .Where(p => !string.IsNullOrEmpty(p.Actor))
+            .Select(p => p.Actor)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        var actorCheckboxes = new List<(string Actor, CheckBox CheckBox, MenuItem MenuItem)>();
+
+        void UpdateSelectionFromActorCheckboxes()
+        {
+            var checkedActors = actorCheckboxes
+                .Where(p => p.CheckBox.IsChecked == true)
+                .Select(p => p.Actor)
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+            if (checkedActors.Count == 0)
+            {
+                ApplyGridSelection(Array.Empty<SubtitleLineViewModel>());
+            }
+            else
+            {
+                var linesToSelect = Subtitles
+                    .Where(s => !string.IsNullOrEmpty(s.Actor) && checkedActors.Contains(s.Actor))
+                    .ToList();
+                var current = SelectedSubtitle != null && linesToSelect.Contains(SelectedSubtitle)
+                    ? SelectedSubtitle
+                    : null;
+                ApplyGridSelection(linesToSelect, current);
+            }
+        }
+
+        foreach (var actor in actorsInSubtitle)
+        {
+            var checkBox = new CheckBox
+            {
+                IsHitTestVisible = false,
+                IsChecked = selectedActorsInGrid.Contains(actor),
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(0, 0, 8, 0),
+            };
+
+            var label = new TextBlock
+            {
+                Text = actor,
+                VerticalAlignment = VerticalAlignment.Center,
+            };
+
+            var contentPanel = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Children = { checkBox, label },
+            };
+
+            var childActorItem = new MenuItem
+            {
+                Header = contentPanel,
+            };
+
+            void ToggleActorItem()
+            {
+                checkBox.IsChecked = !(checkBox.IsChecked == true);
+                UpdateSelectionFromActorCheckboxes();
+            }
+
+            childActorItem.AddHandler(InputElement.PointerReleasedEvent, (s, e) =>
+            {
+                if (e.InitialPressMouseButton == MouseButton.Left ||
+                    e.GetCurrentPoint(childActorItem).Properties.PointerUpdateKind == PointerUpdateKind.LeftButtonReleased)
+                {
+                    e.Pointer.Capture(null);
+                    ToggleActorItem();
+                    e.Handled = true;
+                }
+            }, RoutingStrategies.Tunnel);
+
+            childActorItem.Click += (_, _) => ToggleActorItem();
+
+            actorCheckboxes.Add((actor, checkBox, childActorItem));
+        }
+
+        var selectAllItem = new MenuItem
+        {
+            Header = Se.Language.General.SelectAll,
+        };
+
+        void ExecuteSelectAll()
+        {
+            foreach (var item in actorCheckboxes)
+            {
+                item.CheckBox.IsChecked = true;
+            }
+            UpdateSelectionFromActorCheckboxes();
+        }
+
+        selectAllItem.AddHandler(InputElement.PointerReleasedEvent, (s, e) =>
+        {
+            if (e.InitialPressMouseButton == MouseButton.Left ||
+                e.GetCurrentPoint(selectAllItem).Properties.PointerUpdateKind == PointerUpdateKind.LeftButtonReleased)
+            {
+                e.Pointer.Capture(null);
+                ExecuteSelectAll();
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Tunnel);
+
+        selectAllItem.Click += (_, _) => ExecuteSelectAll();
+
+        var selectNoneItem = new MenuItem
+        {
+            Header = Se.Language.General.SelectNone,
+        };
+
+        void ExecuteSelectNone()
+        {
+            foreach (var item in actorCheckboxes)
+            {
+                item.CheckBox.IsChecked = false;
+            }
+            UpdateSelectionFromActorCheckboxes();
+        }
+
+        selectNoneItem.AddHandler(InputElement.PointerReleasedEvent, (s, e) =>
+        {
+            if (e.InitialPressMouseButton == MouseButton.Left ||
+                e.GetCurrentPoint(selectNoneItem).Properties.PointerUpdateKind == PointerUpdateKind.LeftButtonReleased)
+            {
+                e.Pointer.Capture(null);
+                ExecuteSelectNone();
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Tunnel);
+
+        selectNoneItem.Click += (_, _) => ExecuteSelectNone();
+
+        var invertSelectionItem = new MenuItem
+        {
+            Header = Se.Language.General.InvertSelection,
+        };
+
+        void ExecuteInvertSelection()
+        {
+            foreach (var item in actorCheckboxes)
+            {
+                item.CheckBox.IsChecked = !(item.CheckBox.IsChecked == true);
+            }
+            UpdateSelectionFromActorCheckboxes();
+        }
+
+        invertSelectionItem.AddHandler(InputElement.PointerReleasedEvent, (s, e) =>
+        {
+            if (e.InitialPressMouseButton == MouseButton.Left ||
+                e.GetCurrentPoint(invertSelectionItem).Properties.PointerUpdateKind == PointerUpdateKind.LeftButtonReleased)
+            {
+                e.Pointer.Capture(null);
+                ExecuteInvertSelection();
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Tunnel);
+
+        invertSelectionItem.Click += (_, _) => ExecuteInvertSelection();
+
+        var actorParentItem = new MenuItem
+        {
+            Header = Se.Language.General.Actor,
+        };
+
+        foreach (var item in actorCheckboxes)
+        {
+            actorParentItem.Items.Add(item.MenuItem);
+        }
+
+        selectLinesByActorMenuItem.Items.Add(selectAllItem);
+        selectLinesByActorMenuItem.Items.Add(selectNoneItem);
+        selectLinesByActorMenuItem.Items.Add(invertSelectionItem);
+        selectLinesByActorMenuItem.Items.Add(new Separator());
+        selectLinesByActorMenuItem.Items.Add(actorParentItem);
+
+        MenuItemActors.Items.Add(selectLinesByActorMenuItem);
     }
 
     private const int MaxSpellCheckMenuWords = 10;

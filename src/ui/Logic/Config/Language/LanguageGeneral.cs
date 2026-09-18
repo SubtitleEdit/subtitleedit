@@ -528,6 +528,7 @@ public class LanguageGeneral
     public string SelectFilesToConvert { get; set; }
     public string SelectForcedLines { get; set; }
     public string SelectNone { get; set; }
+    public string SelectLinesByActor { get; set; }
     public string SelectNonForcedLines { get; set; }
     public string SelectSaveFolder { get; set; }
     public string SelectSubtitle { get; set; }
@@ -1347,6 +1348,7 @@ public class LanguageGeneral
         SelectFilesToConvert = "Select files to convert";
         SelectForcedLines = "Select forced lines";
         SelectNone = "Select none";
+        SelectLinesByActor = "Select lines by actor";
         SelectNonForcedLines = "Select non-forced lines";
         SelectSaveFolder = "Select a folder to save to";
         SelectSubtitle = "Select subtitle";
