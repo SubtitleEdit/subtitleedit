@@ -42,7 +42,6 @@ public class LanguageFile
     public string PropertyDefaultRegion { get; set; }
     public string PropertyStyleAttributeName { get; set; }
     public string PropertyTimeCodeFormat { get; set; }
-    public string PropertyFileExtension { get; set; }
     public string PropertyTopOrigin { get; set; }
     public string PropertyTopExtent { get; set; }
     public string PropertyBottomOrigin { get; set; }
@@ -81,7 +80,6 @@ public class LanguageFile
         PropertyDefaultRegion = "Default region";
         PropertyStyleAttributeName = "Style attribute name";
         PropertyTimeCodeFormat = "Time code format";
-        PropertyFileExtension = "File extension";
         PropertyTopOrigin = "Top origin";
         PropertyTopExtent = "Top extent";
         PropertyBottomOrigin = "Bottom origin";

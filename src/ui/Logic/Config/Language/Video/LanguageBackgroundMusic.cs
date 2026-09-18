@@ -36,7 +36,6 @@ public class LanguageBackgroundMusic
     public string DownloadModelQuestionX { get; set; }
     public string DownloadingModel { get; set; }
     public string SaveAudioTitle { get; set; }
-    public string AudioFileSaved { get; set; }
     public string AudioFileSavedX { get; set; }
     public string UnableToGenerateMusic { get; set; }
     public string UnableToAddMusicToVideo { get; set; }
@@ -82,7 +81,6 @@ public class LanguageBackgroundMusic
         DownloadModelQuestionX = "Generating music requires the ACE-Step 1.5 model ({0}).\n\nDownload model?";
         DownloadingModel = "Downloading ACE-Step 1.5 model...";
         SaveAudioTitle = "Save background music";
-        AudioFileSaved = "Audio file saved";
         AudioFileSavedX = "Audio file saved: {0}";
         UnableToGenerateMusic = "Unable to generate music";
         UnableToAddMusicToVideo = "Unable to add music to video";

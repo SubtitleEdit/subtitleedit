@@ -87,7 +87,7 @@ public class DCinemaInteropPropertiesWindow : Window
             Children = { labelFontUri, textBoxFontUri }
         };
 
-        var labelFontColor = UiUtil.MakeLabel(lang.FontColor).WithMinWidth(labelWidth);
+        var labelFontColor = UiUtil.MakeLabel(Se.Language.General.FontColor).WithMinWidth(labelWidth);
         var buttonFontColor = UiUtil.MakeButton(lang.ChooseColor, vm.ChooseFontColorCommand).WithMinWidth(100);
         var panelFontColorPreview = new Border
         {
@@ -145,7 +145,7 @@ public class DCinemaInteropPropertiesWindow : Window
             Children = { labelFontEffectColor, buttonFontEffectColor, panelFontEffectColorPreview }
         };
 
-        var labelFontSize = UiUtil.MakeLabel(lang.FontSize).WithMinWidth(labelWidth);
+        var labelFontSize = UiUtil.MakeLabel(Se.Language.General.FontSize).WithMinWidth(labelWidth);
         var numericUpDownFontSize = UiUtil.MakeNumericUpDownInt(0, 250, 42, 120, vm, nameof(vm.FontSize));
         var labelTopBottomMargin = UiUtil.MakeLabel(lang.TopBottomMargin).WithMinWidth(100);
         var numericUpDownTopBottomMargin = UiUtil.MakeNumericUpDownInt(1, 50, 8, 120, vm, nameof(vm.TopBottomMargin));
@@ -172,10 +172,10 @@ public class DCinemaInteropPropertiesWindow : Window
 
         var labelFadeUpTime = UiUtil.MakeLabel(lang.FadeUpTime).WithMinWidth(labelWidth);
         var numericUpDownFadeUpTime = UiUtil.MakeNumericUpDownInt(0, 50, 0, 120, vm, nameof(vm.FadeUpTime));
-        var labelFadeUpFrames = UiUtil.MakeLabel(lang.Frames);
+        var labelFadeUpFrames = UiUtil.MakeLabel(Se.Language.General.Frames);
         var labelFadeDownTime = UiUtil.MakeLabel(lang.FadeDownTime).WithMinWidth(80);
         var numericUpDownFadeDownTime = UiUtil.MakeNumericUpDownInt(0, 50, 0, 120, vm, nameof(vm.FadeDownTime));
-        var labelFadeDownFrames = UiUtil.MakeLabel(lang.Frames);
+        var labelFadeDownFrames = UiUtil.MakeLabel(Se.Language.General.Frames);
         var panelFadeUpTime = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -195,7 +195,7 @@ public class DCinemaInteropPropertiesWindow : Window
                 Spacing = 10,
                 Children =
                 {
-                    new TextBlock { Text = lang.Font, FontWeight = FontWeight.Bold },
+                    new TextBlock { Text = Se.Language.General.Font, FontWeight = FontWeight.Bold },
                     panelFontId,
                     panelFontUri,
                     panelFontColor,
@@ -226,7 +226,7 @@ public class DCinemaInteropPropertiesWindow : Window
         };
 
         var buttonImport = UiUtil.MakeButton(Se.Language.General.ImportDotDotDot, vm.ImportCommand);
-        var buttonExport = UiUtil.MakeButton(lang.Export, vm.ExportCommand);
+        var buttonExport = UiUtil.MakeButton(Se.Language.General.ExportDotDotDot, vm.ExportCommand);
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var buttonPanel = UiUtil.MakeButtonBar(buttonImport, buttonExport, buttonOk, buttonCancel);

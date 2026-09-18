@@ -397,7 +397,7 @@ public class ChaptersWindow : Window
         };
         AutomationProperties.SetName(shiftUpDown, language.ShiftAllTimes);
 
-        var buttonShift = UiUtil.MakeButton(language.Apply, vm.ApplyShiftCommand)
+        var buttonShift = UiUtil.MakeButton(Se.Language.General.Apply, vm.ApplyShiftCommand)
             .WithBindIsEnabled(nameof(vm.HasChapters));
 
         var comboFrom = UiUtil.MakeComboBox(vm.FromFrameRates, vm, nameof(vm.SelectedFromFrameRate));
@@ -415,7 +415,7 @@ public class ChaptersWindow : Window
             combo.HorizontalAlignment = HorizontalAlignment.Stretch;
         }
 
-        var buttonScale = UiUtil.MakeButton(language.Apply, vm.ApplyFrameRateScaleCommand)
+        var buttonScale = UiUtil.MakeButton(Se.Language.General.Apply, vm.ApplyFrameRateScaleCommand)
             .WithBindIsEnabled(nameof(vm.HasChapters));
 
         // One row: the two labels and the button take what they need, and the drop-downs share

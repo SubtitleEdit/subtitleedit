@@ -274,12 +274,12 @@ public class AutoTranslateWindow : Window
         ToolTip.SetTip(buttonLlamaCppEngineSettings, Se.Language.General.LlamaCppEngineSettings);
         buttonLlamaCppEngineSettings.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.LlamaCppButtonsAreVisible)));
 
-        var buttonLlamaCppAdvancedSettings = UiUtil.MakeButton(Se.Language.Translate.AdvancedDotDotDot, vm.ShowLlamaCppAdvancedSettingsCommand)
+        var buttonLlamaCppAdvancedSettings = UiUtil.MakeButton(Se.Language.General.AdvancedDotDotDot, vm.ShowLlamaCppAdvancedSettingsCommand)
             .WithMarginLeft(5)
-            .WithAccessibleName(Se.Language.Translate.AdvancedSettings);
+            .WithAccessibleName(Se.Language.General.AdvancedSettings);
         if (Se.Settings.Appearance.ShowHints)
         {
-            ToolTip.SetTip(buttonLlamaCppAdvancedSettings, Se.Language.Translate.AdvancedSettings);
+            ToolTip.SetTip(buttonLlamaCppAdvancedSettings, Se.Language.General.AdvancedSettings);
         }
         buttonLlamaCppAdvancedSettings.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.LlamaCppAdvancedButtonIsVisible)));
 
