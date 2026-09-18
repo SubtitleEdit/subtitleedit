@@ -81,7 +81,9 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     // PropertyChanged handler skips its summary recount; the loop runs one recount at the end.
     private bool _suppressFixesSummaryUpdate;
     public List<int> DeleteIndices = new();
-    private List<FixDisplayItem> _oldFixes = new();
+    // The previous scan's fixes by (paragraph id, action), first one wins - a rescan asks for
+    // the old fix of every new fix, and a list search made that quadratic in the fix count.
+    private Dictionary<(Guid? ParagraphId, string Action), FixDisplayItem> _oldFixes = new();
     private HashSet<(Guid? id, string action)>? _allowedFixLookup;
     private FixRuleDisplayItem? _currentRunningRule;
     private bool _nothingToFix;
@@ -622,7 +624,12 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
 
     private void RefreshFixes()
     {
-        _oldFixes = new List<FixDisplayItem>(Fixes);
+        _oldFixes = new Dictionary<(Guid? ParagraphId, string Action), FixDisplayItem>(Fixes.Count);
+        foreach (var fix in Fixes)
+        {
+            _oldFixes.TryAdd((fix.Paragraph.Id, fix.Action), fix);
+        }
+
         Fixes.Clear();
         VisibleFixes.Clear();
         _previewMode = true;
@@ -1120,7 +1127,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             return;
         }
 
-        var oldFix = _oldFixes.FirstOrDefault(f => f.Paragraph.Id == p.Id && f.Action == action);
+        _oldFixes.TryGetValue((p.Id, action), out var oldFix);
         var isSelected = oldFix is not { IsSelected: false };
 
         AddFix(MakeFixDisplayItem(p, action, before, after, isSelected));
@@ -1133,7 +1140,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             return;
         }
 
-        var oldFix = _oldFixes.FirstOrDefault(f => f.Paragraph.Id == p.Id && f.Action == action);
+        _oldFixes.TryGetValue((p.Id, action), out var oldFix);
         var isSelected = isChecked;
         if (oldFix is { IsSelected: false })
         {

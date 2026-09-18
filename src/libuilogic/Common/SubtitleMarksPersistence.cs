@@ -174,11 +174,12 @@ namespace Nikse.SubtitleEdit.UiLogic.Common
 
             var taken = new HashSet<int>();
             var pending = new List<MarkEntry>();
+            var startTimes = new StartTimeIndex(_subtitle.Paragraphs);
 
             foreach (var mark in marks)
             {
                 var index = mark.Milliseconds.HasValue
-                    ? FindByStartTime(mark.Milliseconds.Value, 0.5, taken)
+                    ? startTimes.FindClosest(mark.Milliseconds.Value, 0.5, taken)
                     : -1;
 
                 if (index < 0)
@@ -195,7 +196,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Common
             foreach (var mark in pending)
             {
                 var index = mark.Milliseconds.HasValue
-                    ? FindByStartTime(mark.Milliseconds.Value, StartTimeToleranceMs, taken)
+                    ? startTimes.FindClosest(mark.Milliseconds.Value, StartTimeToleranceMs, taken)
                     : -1;
 
                 if (index < 0)
@@ -221,28 +222,71 @@ namespace Nikse.SubtitleEdit.UiLogic.Common
             }
         }
 
-        /// <summary>Index of the closest not-yet-taken paragraph within <paramref name="toleranceMs"/>, or -1.</summary>
-        private int FindByStartTime(double milliseconds, double toleranceMs, HashSet<int> taken)
+        /// <summary>
+        /// The paragraph start times in sorted order, so resolving a mark only looks at the
+        /// paragraphs near its time - a scan of every paragraph per mark made loading a sidecar
+        /// with a mark on most lines quadratic.
+        /// </summary>
+        private sealed class StartTimeIndex
         {
-            var best = -1;
-            var bestDistance = double.MaxValue;
+            private readonly double[] _startTimes;
+            private readonly int[] _paragraphIndexes;
 
-            for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
+            public StartTimeIndex(List<Paragraph> paragraphs)
             {
-                if (taken.Contains(i))
+                _startTimes = new double[paragraphs.Count];
+                _paragraphIndexes = new int[paragraphs.Count];
+                for (var i = 0; i < paragraphs.Count; i++)
                 {
-                    continue;
+                    _startTimes[i] = paragraphs[i].StartTime.TotalMilliseconds;
+                    _paragraphIndexes[i] = i;
                 }
 
-                var distance = Math.Abs(_subtitle.Paragraphs[i].StartTime.TotalMilliseconds - milliseconds);
-                if (distance <= toleranceMs && distance < bestDistance)
-                {
-                    best = i;
-                    bestDistance = distance;
-                }
+                Array.Sort(_startTimes, _paragraphIndexes);
             }
 
-            return best;
+            /// <summary>Index of the closest not-yet-taken paragraph within <paramref name="toleranceMs"/>, or -1. The lowest index wins a tie.</summary>
+            public int FindClosest(double milliseconds, double toleranceMs, HashSet<int> taken)
+            {
+                if (double.IsNaN(milliseconds))
+                {
+                    return -1;
+                }
+
+                // One ms of slack on both sides: the window only limits what is looked at,
+                // the distance test below decides.
+                var first = Array.BinarySearch(_startTimes, milliseconds - toleranceMs - 1);
+                if (first < 0)
+                {
+                    first = ~first;
+                }
+
+                while (first > 0 && _startTimes[first - 1] >= milliseconds - toleranceMs - 1)
+                {
+                    first--;
+                }
+
+                var best = -1;
+                var bestDistance = double.MaxValue;
+                for (var i = first; i < _startTimes.Length && _startTimes[i] <= milliseconds + toleranceMs + 1; i++)
+                {
+                    var paragraphIndex = _paragraphIndexes[i];
+                    if (taken.Contains(paragraphIndex))
+                    {
+                        continue;
+                    }
+
+                    var distance = Math.Abs(_startTimes[i] - milliseconds);
+                    if (distance <= toleranceMs &&
+                        (distance < bestDistance || (distance == bestDistance && paragraphIndex < best)))
+                    {
+                        best = paragraphIndex;
+                        bestDistance = distance;
+                    }
+                }
+
+                return best;
+            }
         }
 
         private static List<MarkEntry> ReadMarks(string input, string tag)

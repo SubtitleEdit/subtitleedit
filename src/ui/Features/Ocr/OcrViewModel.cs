@@ -2372,9 +2372,18 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
+        // Row -> index once: a Contains here plus a Remove per row below searched the whole
+        // collection for every selected row, which froze a select-all delete on a long OCR job.
+        var rowIndexes = new Dictionary<OcrSubtitleItem, int>(OcrSubtitleItems.Count);
+        for (var i = 0; i < OcrSubtitleItems.Count; i++)
+        {
+            rowIndexes.TryAdd(OcrSubtitleItems[i], i);
+        }
+
         var itemsToRemove = selectedItems
             .OfType<OcrSubtitleItem>()
-            .Where(item => OcrSubtitleItems.Contains(item))
+            .Where(item => rowIndexes.ContainsKey(item))
+            .Distinct()
             .ToList();
         if (itemsToRemove.Count == 0)
         {
@@ -2395,18 +2404,22 @@ public partial class OcrViewModel : ObservableObject
             SubtitleGrid.SelectedItem = survivor;
         }
 
-        foreach (var item in itemsToRemove)
+        // Bottom up, so the indexes of the rows still to go stay valid.
+        foreach (var index in itemsToRemove.Select(item => rowIndexes[item]).OrderByDescending(index => index))
         {
-            OcrSubtitleItems.Remove(item);
-            _allOcrSubtitleItems.Remove(item);
+            OcrSubtitleItems.RemoveAt(index);
         }
+
+        var removed = new HashSet<OcrSubtitleItem>(itemsToRemove);
+        _allOcrSubtitleItems.RemoveAll(removed.Contains);
 
         Renumber();
 
+        var remaining = new HashSet<OcrSubtitleItem>(_allOcrSubtitleItems);
         var toRemove = new List<UnknownWordItem>();
         foreach (var unknownWord in UnknownWords)
         {
-            if (!_allOcrSubtitleItems.Contains(unknownWord.Item)) // OcrSubtitleItems may be filtered to forced-only
+            if (!remaining.Contains(unknownWord.Item)) // OcrSubtitleItems may be filtered to forced-only
             {
                 toRemove.Add(unknownWord);
             }

@@ -18115,10 +18115,14 @@ public partial class MainViewModel :
         var survivorIndex = GridSelectionAnchor.PickSurvivorIndex(blank, SelectedSubtitleIndex ?? 0);
         var survivor = survivorIndex >= 0 ? Subtitles[survivorIndex] : null;
 
-        var blankLines = Subtitles.Where(s => s.Text.IsOnlyControlCharactersOrWhiteSpace()).ToList();
-        foreach (var line in blankLines)
+        // By index from the bottom, with the flags from above: Subtitles.Remove(line) searched
+        // the collection for every blank line, and testing the texts a second time is not needed.
+        for (var i = blank.Count - 1; i >= 0; i--)
         {
-            Subtitles.Remove(line);
+            if (blank[i])
+            {
+                Subtitles.RemoveAt(i);
+            }
         }
 
         Renumber();

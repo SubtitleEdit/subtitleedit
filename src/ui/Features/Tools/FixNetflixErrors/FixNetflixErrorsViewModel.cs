@@ -313,6 +313,14 @@ public partial class FixNetflixErrorsViewModel : ObservableObject, IClosingClean
 
         // Map paragraph to proposed text changes (ignore pure timing-only changes for now)
         var fixMap = new Dictionary<int, (string Before, string After, Paragraph P, NetflixQualityController.Record)>();
+
+        // A check can flag most lines, so a Paragraphs.IndexOf per record is quadratic.
+        var paragraphIndexes = new Dictionary<Paragraph, int>(_subtitle.Paragraphs.Count);
+        for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
+        {
+            paragraphIndexes.TryAdd(_subtitle.Paragraphs[i], i);
+        }
+
         foreach (var r in controller.Records)
         {
             if (r.OriginalParagraph == null)
@@ -320,8 +328,7 @@ public partial class FixNetflixErrorsViewModel : ObservableObject, IClosingClean
                 continue;
             }
 
-            var idx = _subtitle.Paragraphs.IndexOf(r.OriginalParagraph);
-            if (idx < 0)
+            if (!paragraphIndexes.TryGetValue(r.OriginalParagraph, out var idx))
             {
                 continue;
             }
