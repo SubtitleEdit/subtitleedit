@@ -1115,6 +1115,7 @@ public class Se
         ss.DCinemaFadeUpTime = dc.DCinemaFadeUpTime;
         ss.DCinemaFadeDownTime = dc.DCinemaFadeDownTime;
         Configuration.Settings.Tools.RememberUseAlwaysList = Settings.Tools.SpellCheckRememberUseAlwaysList;
+        Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime = Settings.Tools.FixShortDisplayTimesAllowMoveStartTime;
     }
 
     /// <summary>
