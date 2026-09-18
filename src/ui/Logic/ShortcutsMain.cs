@@ -607,16 +607,17 @@ public static class ShortcutsMain
         { nameof(MainViewModel.SetColor7Command), string.Format(Se.Language.Options.Shortcuts.ColorX, "7") },
         { nameof(MainViewModel.SetColor8Command), string.Format(Se.Language.Options.Shortcuts.ColorX, "8") },
         { nameof(MainViewModel.RemoveColorCommand), Se.Language.General.RemoveColor },
-        { nameof(MainViewModel.SetActor1Command), string.Format(Se.Language.Options.Shortcuts.SetActorX, Se.Settings.Actor1) },
-        { nameof(MainViewModel.SetActor2Command), string.Format(Se.Language.Options.Shortcuts.SetActorX, Se.Settings.Actor2) },
-        { nameof(MainViewModel.SetActor3Command), string.Format(Se.Language.Options.Shortcuts.SetActorX, Se.Settings.Actor3) },
-        { nameof(MainViewModel.SetActor4Command), string.Format(Se.Language.Options.Shortcuts.SetActorX, Se.Settings.Actor4) },
-        { nameof(MainViewModel.SetActor5Command), string.Format(Se.Language.Options.Shortcuts.SetActorX, Se.Settings.Actor5) },
-        { nameof(MainViewModel.SetActor6Command), string.Format(Se.Language.Options.Shortcuts.SetActorX, Se.Settings.Actor6) },
-        { nameof(MainViewModel.SetActor7Command), string.Format(Se.Language.Options.Shortcuts.SetActorX, Se.Settings.Actor7) },
-        { nameof(MainViewModel.SetActor8Command), string.Format(Se.Language.Options.Shortcuts.SetActorX, Se.Settings.Actor8) },
-        { nameof(MainViewModel.SetActor9Command), string.Format(Se.Language.Options.Shortcuts.SetActorX, Se.Settings.Actor9) },
-        { nameof(MainViewModel.SetActor10Command), string.Format(Se.Language.Options.Shortcuts.SetActorX, Se.Settings.Actor10) },
+        { nameof(MainViewModel.SetActor1Command), string.Format(Se.Language.Options.Shortcuts.SetActorX, 1) },
+        { nameof(MainViewModel.SetActor2Command), string.Format(Se.Language.Options.Shortcuts.SetActorX, 2) },
+        { nameof(MainViewModel.SetActor3Command), string.Format(Se.Language.Options.Shortcuts.SetActorX, 3) },
+        { nameof(MainViewModel.SetActor4Command), string.Format(Se.Language.Options.Shortcuts.SetActorX, 4) },
+        { nameof(MainViewModel.SetActor5Command), string.Format(Se.Language.Options.Shortcuts.SetActorX, 5) },
+        { nameof(MainViewModel.SetActor6Command), string.Format(Se.Language.Options.Shortcuts.SetActorX, 6) },
+        { nameof(MainViewModel.SetActor7Command), string.Format(Se.Language.Options.Shortcuts.SetActorX, 7) },
+        { nameof(MainViewModel.SetActor8Command), string.Format(Se.Language.Options.Shortcuts.SetActorX, 8) },
+        { nameof(MainViewModel.SetActor9Command), string.Format(Se.Language.Options.Shortcuts.SetActorX, 9) },
+        { nameof(MainViewModel.SetActor10Command), string.Format(Se.Language.Options.Shortcuts.SetActorX, 10) },
+        { nameof(MainViewModel.ShowActorPickerCommand), Se.Language.General.SetActorDotDotDot },
         { nameof(MainViewModel.SetNewActorCommand), Se.Language.Options.Shortcuts.SetNewActor },
         { nameof(MainViewModel.RemoveActorCommand), Se.Language.General.Actor + " - " + Se.Language.General.Remove },
         { nameof(MainViewModel.SurroundWith1Command), GetSurroundWithTitle(1) },
@@ -1076,18 +1077,19 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.SetColor7Command, nameof(vm.SetColor7Command), ShortcutCategory.SubtitleGridAndTextBox);
         AddShortcut(shortcuts, vm.SetColor8Command, nameof(vm.SetColor8Command), ShortcutCategory.SubtitleGridAndTextBox);
         AddShortcut(shortcuts, vm.RemoveColorCommand, nameof(vm.RemoveColorCommand), ShortcutCategory.SubtitleGridAndTextBox);
-        AddShortcut(shortcuts, vm.SetActor1Command, nameof(vm.SetActor1Command), ShortcutCategory.SubtitleGrid);
-        AddShortcut(shortcuts, vm.SetActor2Command, nameof(vm.SetActor2Command), ShortcutCategory.SubtitleGrid);
-        AddShortcut(shortcuts, vm.SetActor3Command, nameof(vm.SetActor3Command), ShortcutCategory.SubtitleGrid);
-        AddShortcut(shortcuts, vm.SetActor4Command, nameof(vm.SetActor4Command), ShortcutCategory.SubtitleGrid);
-        AddShortcut(shortcuts, vm.SetActor5Command, nameof(vm.SetActor5Command), ShortcutCategory.SubtitleGrid);
-        AddShortcut(shortcuts, vm.SetActor6Command, nameof(vm.SetActor6Command), ShortcutCategory.SubtitleGrid);
-        AddShortcut(shortcuts, vm.SetActor7Command, nameof(vm.SetActor7Command), ShortcutCategory.SubtitleGrid);
-        AddShortcut(shortcuts, vm.SetActor8Command, nameof(vm.SetActor8Command), ShortcutCategory.SubtitleGrid);
-        AddShortcut(shortcuts, vm.SetActor9Command, nameof(vm.SetActor9Command), ShortcutCategory.SubtitleGrid);
-        AddShortcut(shortcuts, vm.SetActor10Command, nameof(vm.SetActor10Command), ShortcutCategory.SubtitleGrid);
-        AddShortcut(shortcuts, vm.SetNewActorCommand, nameof(vm.SetNewActorCommand), ShortcutCategory.SubtitleGrid);
-        AddShortcut(shortcuts, vm.RemoveActorCommand, nameof(vm.RemoveActorCommand), ShortcutCategory.SubtitleGrid);
+        AddShortcut(shortcuts, vm.SetActor1Command, nameof(vm.SetActor1Command), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SetActor2Command, nameof(vm.SetActor2Command), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SetActor3Command, nameof(vm.SetActor3Command), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SetActor4Command, nameof(vm.SetActor4Command), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SetActor5Command, nameof(vm.SetActor5Command), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SetActor6Command, nameof(vm.SetActor6Command), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SetActor7Command, nameof(vm.SetActor7Command), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SetActor8Command, nameof(vm.SetActor8Command), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SetActor9Command, nameof(vm.SetActor9Command), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SetActor10Command, nameof(vm.SetActor10Command), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.ShowActorPickerCommand, nameof(vm.ShowActorPickerCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SetNewActorCommand, nameof(vm.SetNewActorCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.RemoveActorCommand, nameof(vm.RemoveActorCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SurroundWith1Command, nameof(vm.SurroundWith1Command), ShortcutCategory.SubtitleGridAndTextBox);
         AddShortcut(shortcuts, vm.SurroundWith2Command, nameof(vm.SurroundWith2Command), ShortcutCategory.SubtitleGridAndTextBox);
         AddShortcut(shortcuts, vm.SurroundWith3Command, nameof(vm.SurroundWith3Command), ShortcutCategory.SubtitleGridAndTextBox);

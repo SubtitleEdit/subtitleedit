@@ -147,6 +147,7 @@ using Nikse.SubtitleEdit.Features.Tools.MergeSubtitlesWithSameTimeCodes;
 using Nikse.SubtitleEdit.Features.Tools.RemoveTextForHearingImpaired;
 using Nikse.SubtitleEdit.Features.Tools.Renumber;
 using Nikse.SubtitleEdit.Features.Tools.SortBy;
+using Nikse.SubtitleEdit.Features.Main.ActorPicker;
 using Nikse.SubtitleEdit.Features.Main.AssistedMove;
 using Nikse.SubtitleEdit.Features.Main.AssistedSplit;
 using Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
@@ -2895,6 +2896,7 @@ public partial class MainViewModel :
         _vlcReloader.SmpteMode = IsSmpteTimingEnabled;
 
         _formatChangedByUser = false;
+        _actorOrder.Reset();
         _undoRedoManager.Reset();
         _shortcutManager.ClearKeys();
 
@@ -21205,15 +21207,73 @@ public partial class MainViewModel :
         });
     }
 
+    private readonly ActorOrder _actorOrder = new();
+
     /// <summary>
-    /// The distinct actors present in the current subtitle, sorted alphabetically.
-    /// The SetActorX shortcuts and the context menu both index into this list, so
-    /// shortcut "1" sets the first actor, "2" the second, etc.
+    /// The distinct actors present in the current subtitle, in session-stable order: sorted
+    /// alphabetically when the file is loaded, with actors added later appended at the end
+    /// (#15018). The SetActorX shortcuts, the actor picker and the context menu all index into
+    /// this list, so shortcut "1" sets the first actor, "2" the second, etc. - and keeps doing
+    /// so when a new actor is added.
     /// </summary>
     private List<string> GetActorsInSubtitle()
     {
-        return Subtitles.Select(p => p.Actor).Where(p => !string.IsNullOrEmpty(p))
-            .DistinctBy(p => p).OrderBy(p => p).ToList();
+        return _actorOrder.GetOrdered(Subtitles.Select(p => p.Actor));
+    }
+
+    /// <summary>
+    /// Shows the actor picker: every actor in the file with its number key, a filter box for
+    /// long casts and "new actor" by typing a name. Works from the grid, text box and waveform.
+    /// </summary>
+    [RelayCommand]
+    private async Task ShowActorPicker()
+    {
+        if (Window == null || !(IsFormatAssa || IsFormatSsa))
+        {
+            return;
+        }
+
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        if (selectedItems.Count == 0)
+        {
+            return;
+        }
+
+        var actors = GetActorsInSubtitle();
+        var lineCounts = Subtitles
+            .Where(p => !string.IsNullOrEmpty(p.Actor))
+            .GroupBy(p => p.Actor)
+            .ToDictionary(g => g.Key, g => g.Count());
+
+        var actorCommands = GetSetActorCommands();
+        var usedShortcuts = ShortcutsMain.GetUsedShortcuts(this);
+        var shortcutTexts = actorCommands
+            .Select(command => usedShortcuts.FirstOrDefault(s => ReferenceEquals(s.Action, command)))
+            .Select(shortcut => shortcut != null ? InitMenu.ToKeyGesture(shortcut)?.ToString() ?? string.Empty : string.Empty)
+            .ToList();
+
+        var currentActor = selectedItems.FirstOrDefault(p => !string.IsNullOrEmpty(p.Actor))?.Actor ?? string.Empty;
+        var vm = await ShowDialogAsync<ActorPickerWindow, ActorPickerViewModel>(viewModel =>
+        {
+            viewModel.Initialize(actors, lineCounts, shortcutTexts, currentActor, selectedItems.Count);
+        });
+
+        // A new order is kept even when the picker is cancelled - reordering is its own action.
+        _actorOrder.SetOrder(vm.GetActorsInOrder());
+
+        if (vm.OkPressed && vm.ResultActor != null)
+        {
+            SetActorForSelectedLines(vm.ResultActor);
+        }
+    }
+
+    private IRelayCommand[] GetSetActorCommands()
+    {
+        return
+        [
+            SetActor1Command, SetActor2Command, SetActor3Command, SetActor4Command, SetActor5Command,
+            SetActor6Command, SetActor7Command, SetActor8Command, SetActor9Command, SetActor10Command,
+        ];
     }
 
     private void SetActorByIndex(int index)
@@ -21307,6 +21367,10 @@ public partial class MainViewModel :
         // The rename becomes its own undo step below, so pending edits must be recorded as
         // theirs first (as in SubtitleOpenOriginal).
         _undoRedoManager.CheckForChanges(null);
+
+        // Make sure the old name is known, then let the new name take over its shortcut position.
+        GetActorsInSubtitle();
+        _actorOrder.Rename(oldActorName, newActorName);
 
         foreach (var line in Subtitles)
         {
@@ -28781,12 +28845,25 @@ public partial class MainViewModel :
 
                 MenuItemActors.Items.Clear();
                 var actorsInSubtitle = GetActorsInSubtitle();
-                var actorCommands = new IRelayCommand[]
-                {
-                    SetActor1Command, SetActor2Command, SetActor3Command, SetActor4Command, SetActor5Command,
-                    SetActor6Command, SetActor7Command, SetActor8Command, SetActor9Command, SetActor10Command,
-                };
+                var actorCommands = GetSetActorCommands();
                 var usedShortcuts = ShortcutsMain.GetUsedShortcuts(this);
+
+                // The picker first: it lists the whole cast with number keys and a filter, and
+                // its shortcut works from the text box and the waveform too (#15018).
+                var pickerMenuItem = new MenuItem
+                {
+                    Header = Se.Language.General.SetActorDotDotDot,
+                    Command = ShowActorPickerCommand,
+                };
+                var pickerShortcut = usedShortcuts.FirstOrDefault(s => ReferenceEquals(s.Action, ShowActorPickerCommand));
+                if (pickerShortcut != null)
+                {
+                    pickerMenuItem.InputGesture = InitMenu.ToKeyGesture(pickerShortcut);
+                }
+
+                MenuItemActors.Items.Add(pickerMenuItem);
+                MenuItemActors.Items.Add(new Separator());
+
                 for (var i = 0; i < actorsInSubtitle.Count; i++)
                 {
                     var menuItem = new MenuItem
@@ -28809,7 +28886,7 @@ public partial class MainViewModel :
                     MenuItemActors.Items.Add(menuItem);
                 }
 
-                if (MenuItemActors.Items.Count > 0)
+                if (actorsInSubtitle.Count > 0)
                 {
                     MenuItemActors.Items.Add(new Separator());
                 }
