@@ -664,7 +664,7 @@ public partial class ShortcutsViewModel : ObservableObject
             var commandName = i == 9
                 ? nameof(MainViewModel.SetActor10Command)
                 : $"SetActor{i + 1}Command";
-            ShortcutsMain.CommandTranslationLookup[commandName] = string.Format(Se.Language.Options.Shortcuts.SetActorXY, (i + 1).ToString(), _actorSlots[i]);
+            ShortcutsMain.CommandTranslationLookup[commandName] = string.Format(Se.Language.Options.Shortcuts.SetActorX, _actorSlots[i]);
         }
 
         Se.SaveSettings();
@@ -1226,7 +1226,7 @@ public partial class ShortcutsViewModel : ObservableObject
         if (result.OkPressed && !string.IsNullOrWhiteSpace(result.Text))
         {
             _actorSlots[slotIndex] = result.Text;
-            node.Title = string.Format(Se.Language.Options.Shortcuts.SetActorXY, slotNumber.ToString(), result.Text);
+            node.Title = string.Format(Se.Language.Options.Shortcuts.SetActorX, result.Text);
         }
     }
 

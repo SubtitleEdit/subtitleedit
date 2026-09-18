@@ -267,7 +267,7 @@ public class LanguageSettingsShortcuts
     public string SelectionToSentenceCase { get; set; }
     public string SelectionToggleCasing { get; set; }
     public string GoogleIt { get; set; }
-    public string SetActorXY { get; set; }
+    public string SetActorX { get; set; }
     public string SetNewActor { get; set; }
     public string SetActorSlotXTitle { get; set; }
     public string ToggleDialogDashes { get; set; }
@@ -563,7 +563,7 @@ public class LanguageSettingsShortcuts
         SelectionToSentenceCase = "Text box: Selection to Sentence case";
         SelectionToggleCasing = "Text box: Toggle casing (UPPER -> lower -> Title Case)";
         GoogleIt = "Google it (selected text)";
-        SetActorXY = "Set actor {0}: {1}";
+        SetActorX = "Set actor: {0}";
         SetNewActor = "Set new actor...";
         SetActorSlotXTitle = "Actor slot {0}";
         ToggleDialogDashes = "Toggle dialog dashes";

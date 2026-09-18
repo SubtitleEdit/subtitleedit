@@ -3676,7 +3676,7 @@
       "SelectionToSentenceCase": "Cuadro de texto: selección a Tipo oración",
       "SelectionToggleCasing": "Cuadro de texto: alternar mayúsculas/minúsculas (MAYÚS -> minús -> Tipo Título)",
       "GoogleIt": "Buscar en Google (texto seleccionado)",
-      "SetActorXY": "Establecer actor {0}: {1}",
+      "SetActorX": "Establecer actor: {0}",
       "SetNewActor": "Establecer nuevo actor...",
       "SetActorSlotXTitle": "Espacio de actor {0}",
       "ToggleDialogDashes": "Alternar guiones de diálogo",

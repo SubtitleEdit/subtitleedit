@@ -3676,7 +3676,7 @@
       "SelectionToSentenceCase": "Tekstboks: Utvalg til Setningsformat",
       "SelectionToggleCasing": "Tekstboks: Veksle store/små bokstaver (STORE -> små -> Tittelformat)",
       "GoogleIt": "Google det (valgt tekst)",
-      "SetActorXY": "Sett skuespiller {0}: {1}",
+      "SetActorX": "Sett skuespiller: {0}",
       "SetNewActor": "Sett ny skuespiller...",
       "SetActorSlotXTitle": "Skuespillerplass {0}",
       "ToggleDialogDashes": "Veksle dialogtankestreker",

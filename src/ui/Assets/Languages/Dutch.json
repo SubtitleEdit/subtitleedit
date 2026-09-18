@@ -3676,7 +3676,7 @@
       "SelectionToSentenceCase": "Tekstvak: Selectie naar Zinshoofdletters",
       "SelectionToggleCasing": "Tekstvak: Hoofdlettergebruik wisselen (HOOFDLETTERS -> kleine letters -> Titel)",
       "GoogleIt": "Google het (geselecteerde tekst)",
-      "SetActorXY": "Acteur instellen {0}: {1}",
+      "SetActorX": "Acteur instellen: {0}",
       "SetNewActor": "Nieuwe acteur instellen...",
       "SetActorSlotXTitle": "Acteursplek {0}",
       "ToggleDialogDashes": "Dialoogstreepjes in-/uitschakelen",
