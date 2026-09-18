@@ -641,7 +641,8 @@ public static class InitToolbar
         // global Button style (UiTheme.ApplyWindowsClassicGray) adds a 1px border to
         // every button; this style is scoped to the toolbar grid so it strips the
         // border from the toolbar buttons only - buttons elsewhere keep their border.
-        if (UiTheme.ThemeName == UiTheme.ThemeNameClassic)
+        // Pastel's Button style colors the border too, which boxes in every icon.
+        if (UiTheme.ThemeName == UiTheme.ThemeNameClassic || UiTheme.ThemeName == UiTheme.ThemeNamePastel)
         {
             grid.Styles.Add(new Style(x => x.OfType<Button>())
             {
