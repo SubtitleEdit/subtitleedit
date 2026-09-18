@@ -316,15 +316,15 @@ public partial class SubtitleLineViewModel : ObservableObject
 
     public Paragraph ToParagraph(SubtitleFormat? subtitleFormat = null)
     {
-        var p = new Paragraph()
+        // The (start, end, text) constructor: "new Paragraph()" makes two TimeCodes of its own
+        // that the initializer then replaced - and this runs for every row on every
+        // GetUpdateSubtitle.
+        // TrimEnd: the edit text box is bound raw, so a trailing Enter lives in Text
+        // until the row loses selection - it must never reach saved files or tools
+        // (SE4 kept the same invariant by trimming in the TextChanged handler) - #13389.
+        var p = new Paragraph(new TimeCode(StartTime), new TimeCode(EndTime), Text.TrimEnd())
         {
             Number = Number,
-            StartTime = new TimeCode(StartTime),
-            EndTime = new TimeCode(EndTime),
-            // TrimEnd: the edit text box is bound raw, so a trailing Enter lives in Text
-            // until the row loses selection - it must never reach saved files or tools
-            // (SE4 kept the same invariant by trimming in the TextChanged handler) - #13389.
-            Text = Text.TrimEnd(),
             Actor = Actor,
             Style = Style,
             Language = Language,
@@ -350,12 +350,9 @@ public partial class SubtitleLineViewModel : ObservableObject
 
     public Paragraph ToParagraphOriginal(SubtitleFormat? subtitleFormat = null)
     {
-        var p = new Paragraph
+        var p = new Paragraph(new TimeCode(StartTime), new TimeCode(EndTime), OriginalText.TrimEnd())
         {
             Number = Number,
-            StartTime = new TimeCode(StartTime),
-            EndTime = new TimeCode(EndTime),
-            Text = OriginalText.TrimEnd(),
             Actor = Actor,
             Style = Style,
             Language = Language,
