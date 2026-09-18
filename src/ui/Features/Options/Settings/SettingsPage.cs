@@ -908,6 +908,7 @@ public class SettingsPage : UserControl
                 }
             }),
             MakeCheckboxSetting(Se.Language.Options.Settings.SpellCheckEnglishTreatInApostropheAsIng, nameof(_vm.SpellCheckEnglishTreatInApostropheAsIng)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.SpellCheckRememberUseAlwaysList, nameof(_vm.SpellCheckRememberUseAlwaysList)),
             MakeCheckboxSetting(Se.Language.Options.Settings.OcrUseWordSplitList, nameof(_vm.OcrUseWordSplitList)),
             MakeCheckboxSetting(Se.Language.Options.Settings.OcrGuessUnknownWords, nameof(_vm.OcrGuessUnknownWords)),
             MakeCheckboxSetting(Se.Language.Options.Settings.SpeechToTextSelectedLinesPromptFirstTimeOnly, nameof(_vm.SpeechToTextSelectedLinesPromptFistTimeOnly)),
@@ -917,6 +918,7 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.TextToSpeechPromptSkipNoiseLines, nameof(_vm.TextToSpeechPromptSkipNoiseLines)),
             MakeCheckboxSetting(Se.Language.Options.Settings.TextToSpeechPromptDetectSpeakers, nameof(_vm.TextToSpeechPromptDetectSpeakers)),
             MakeCheckboxSetting(Se.Language.Options.Settings.FixCommonErrorsSkipStep1, nameof(_vm.FixCommonErrorsSkipStep1)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.FixShortDisplayTimesAllowMoveStartTime, nameof(_vm.FixShortDisplayTimesAllowMoveStartTime)),
             new SettingsItem(Se.Language.Options.Settings.MusicSymbol,
                 () => UiUtil.MakeTextBox(120, _vm, nameof(_vm.MusicSymbol))),
             new SettingsItem(Se.Language.Options.Settings.MusicSymbolsToReplace,
