@@ -341,6 +341,11 @@ public class SpellCheckWordLists
 
     public bool IsWordInUserPhrases(int index, List<SpellCheckWord> words)
     {
+        if (_userPhraseList.Count == 0)
+        {
+            return false;
+        }
+
         string current = Utilities.NormalizeUserDictionaryWord(words[index].Text);
         string prev = "-";
         if (index > 0)
@@ -354,18 +359,10 @@ public class SpellCheckWordLists
             next = Utilities.NormalizeUserDictionaryWord(words[index + 1].Text);
         }
 
-        // Both phrases are the same for every entry in the list - building them inside the
-        // loop allocated two strings per user phrase, per word checked.
-        var withNext = current + " " + next;
-        var withPrev = prev + " " + current;
-        foreach (string userPhrase in _userPhraseList)
-        {
-            if (userPhrase == withNext || userPhrase == withPrev)
-            {
-                return true;
-            }
-        }
-        return false;
+        // _userPhraseList is a HashSet with the default (ordinal) comparer, so two lookups give
+        // the same answer as comparing both phrases against every entry - per word checked.
+        return _userPhraseList.Contains(current + " " + next) ||
+               _userPhraseList.Contains(prev + " " + current);
     }
 
     public bool AddName(string word)
