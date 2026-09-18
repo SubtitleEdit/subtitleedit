@@ -86,7 +86,6 @@ public class SettingsImportExportShortcutSlotsTests
         var source = new Se
         {
             Color1 = "#ff112233",
-            Actor1 = "Narrator",
         };
         source.SetSurround(1, "(", ")");
         source.SetSurround(5, "<b>", "</b>");
@@ -97,7 +96,6 @@ public class SettingsImportExportShortcutSlotsTests
         await ImportAllInto(path, target);
 
         Assert.Equal("#ff112233", target.Color1);
-        Assert.Equal("Narrator", target.Actor1);
         Assert.Equal("(", target.GetSurroundLeft(1));
         Assert.Equal(")", target.GetSurroundRight(1));
         Assert.Equal("<b>", target.GetSurroundLeft(5));
@@ -117,13 +115,12 @@ public class SettingsImportExportShortcutSlotsTests
             .Replace("\"exportIncludesShortcutSlots\": true,", string.Empty);
         await File.WriteAllTextAsync(path, withoutMarker);
 
-        var target = new Se { Color1 = "#ff445566", Actor1 = "Keep me" };
+        var target = new Se { Color1 = "#ff445566" };
         target.SetSurround(1, "«", "»");
 
         await ImportAllInto(path, target);
 
         Assert.Equal("#ff445566", target.Color1);
-        Assert.Equal("Keep me", target.Actor1);
         Assert.Equal("«", target.GetSurroundLeft(1));
         Assert.Equal("»", target.GetSurroundRight(1));
     }

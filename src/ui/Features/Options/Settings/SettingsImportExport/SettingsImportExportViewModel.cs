@@ -647,17 +647,6 @@ public partial class SettingsImportExportViewModel : ObservableObject
                 to.SetCustomSearch(slot, from?.GetCustomSearchName(slot)!, from?.GetCustomSearchUrl(slot)!);
             }
         }
-
-        to.Actor1 = from?.Actor1!;
-        to.Actor2 = from?.Actor2!;
-        to.Actor3 = from?.Actor3!;
-        to.Actor4 = from?.Actor4!;
-        to.Actor5 = from?.Actor5!;
-        to.Actor6 = from?.Actor6!;
-        to.Actor7 = from?.Actor7!;
-        to.Actor8 = from?.Actor8!;
-        to.Actor9 = from?.Actor9!;
-        to.Actor10 = from?.Actor10!;
     }
 
     // Adds the top-level marker properties to the serialized JSON without touching the Se
