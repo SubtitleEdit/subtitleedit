@@ -86,12 +86,15 @@ public class SpellCheckWordLists
         // falls back to "<twoLetter>_user.xml" when the five-letter file does not exist, and
         // Options > Word lists offers neutral cultures ("en"), so words genuinely land there.
         // Reading only the five-letter name made those words invisible to the spell checker.
+        // The two-letter "_se.xml" holds shipped words that apply to every variant of a language,
+        // e.g. "es_se.xml" for es_ES, es_MX, es_US and es_AR.
         var twoLetterName = fiveLetterName.Length >= 2 ? fiveLetterName.Substring(0, 2).ToLowerInvariant() : fiveLetterName;
         var paths = new[]
         {
             Path.Combine(_dictionaryFolder, fiveLetterName + "_user.xml"),
             Path.Combine(_dictionaryFolder, fiveLetterName + "_se.xml"),
             Path.Combine(_dictionaryFolder, twoLetterName + "_user.xml"),
+            Path.Combine(_dictionaryFolder, twoLetterName + "_se.xml"),
         }.Distinct().ToArray();
 
         var xmlDoc = new XmlDocument();
