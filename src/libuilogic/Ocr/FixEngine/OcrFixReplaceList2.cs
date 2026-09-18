@@ -686,14 +686,16 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
             return false;
         }
 
-        private static void AddToGuessList(List<string> list, string guess)
+        private static void AddToGuessList(List<string> list, HashSet<string> seen, string guess)
         {
             if (string.IsNullOrEmpty(guess))
             {
                 return;
             }
 
-            if (!list.Contains(guess))
+            // "seen" holds what "list" holds - a word with several replaceable letter pairs
+            // makes thousands of guesses, and list.Contains compared each against all of them.
+            if (seen.Add(guess))
             {
                 list.Add(guess);
             }
@@ -702,7 +704,11 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
         public IEnumerable<string> CreateGuessesFromLetters(string word, string threeLetterIsoLanguageName)
         {
             var list = new List<string>();
-            var previousGuesses = new List<string>();
+            var seen = new HashSet<string>(StringComparer.Ordinal);
+
+            // The guesses made before the current replace pair: list[0..previousGuessCount).
+            // The list only grows at its end, so the count stands in for a copy of it.
+            var previousGuessCount = 0;
             foreach (var kv in _partialWordReplaceList)
             {
                 var letter = kv.Key;
@@ -715,13 +721,13 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                         if (i == word.Length - letter.Length && !replacement.Contains(' '))
                         {
                             var guess = word.Remove(i, letter.Length).Insert(i, replacement);
-                            AddToGuessList(list, guess);
+                            AddToGuessList(list, seen, guess);
                         }
                         else
                         {
                             indexes.Add(i);
                             var guess = word.Remove(i, letter.Length).Insert(i, replacement);
-                            AddToGuessList(list, guess);
+                            AddToGuessList(list, seen, guess);
                         }
                     }
                 }
@@ -735,15 +741,15 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                         {
                             var idx = indexes[i];
                             multiGuess = multiGuess.Remove(idx, letter.Length).Insert(idx, replacement);
-                            AddToGuessList(list, multiGuess);
+                            AddToGuessList(list, seen, multiGuess);
                         }
 
-                        AddToGuessList(list, word.Replace(letter, replacement));
+                        AddToGuessList(list, seen, word.Replace(letter, replacement));
                     }
                 }
                 else if (indexes.Count > 0)
                 {
-                    AddToGuessList(list, word.Replace(letter, replacement));
+                    AddToGuessList(list, seen, word.Replace(letter, replacement));
                 }
 
                 if (indexes.Count > 0)
@@ -754,24 +760,25 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                         if (idx > 1 && idx < word.Length - 2)
                         {
                             var guess = word.Remove(idx, letter.Length).Insert(idx, replacement);
-                            AddToGuessList(list, guess);
+                            AddToGuessList(list, seen, guess);
                         }
                     }
                 }
 
-                foreach (var previousGuess in previousGuesses)
+                for (var g = 0; g < previousGuessCount; g++)
                 {
+                    var previousGuess = list[g];
                     for (var i = 0; i <= previousGuess.Length - letter.Length; i++)
                     {
                         if (previousGuess.AsSpan(i).StartsWith(letter, StringComparison.Ordinal))
                         {
                             var guess = previousGuess.Remove(i, letter.Length).Insert(i, replacement);
-                            AddToGuessList(list, guess);
+                            AddToGuessList(list, seen, guess);
                         }
                     }
                 }
 
-                previousGuesses = new List<string>(list);
+                previousGuessCount = list.Count;
             }
 
             if (threeLetterIsoLanguageName != "dan" &&
