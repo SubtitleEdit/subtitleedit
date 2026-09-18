@@ -534,6 +534,7 @@
     "selectFilesToConvert": "Select files to convert",
     "selectForcedLines": "Select forced lines",
     "selectNone": "Select none",
+    "selectLinesByActor": "Select lines by actor",
     "selectNonForcedLines": "Select non-forced lines",
     "selectSaveFolder": "Select a folder to save to",
     "selectSubtitle": "Select subtitle",
