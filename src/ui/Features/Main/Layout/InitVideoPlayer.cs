@@ -61,6 +61,17 @@ public static class InitVideoPlayer
         mainGrid.AddHandler(DragDrop.DropEvent, vm.VideoOnDrop, RoutingStrategies.Bubble);
 
         var control = MakeVideoPlayer();
+        if (control.VideoPlayer is LibMpvDynamicPlayer mpv)
+        {
+            // MakeLayoutVideoPlayer is only ever called for the docked main window (every layout
+            // in InitLayout.cs) and the undocked window (VideoPlayerUndockedViewModel) - never for
+            // a dialog's own throwaway preview (those call MakeVideoPlayer()/
+            // MakeVideoPlayerPreferNonNative() directly). Letterboxing bars belong on those two
+            // and nowhere else - a burn-in preview showing bars that will not be in its encoded
+            // output would be actively misleading (#14872 review).
+            mpv.IsMainPreviewPlayer = true;
+        }
+
         control.IsFullScreenChanged += isFullScreen =>
         {
             mainGrid.Margin = isFullScreen ? new Thickness(0) : nonFullScreenMargin;
