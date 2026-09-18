@@ -781,7 +781,6 @@ public class LanguageGeneral
     public string ImageFiles { get; set; }
     public string OpenAiCompatibleSttEndpoint { get; set; }
     public string OpenAiCompatibleSttApiKey { get; set; }
-    public string OpenAiCompatibleSttModel { get; set; }
     public string OpenAiCompatibleSttExtraHeaders { get; set; }
     public string OpenAiCompatibleSttTimeout { get; set; }
     public string OpenAiCompatibleSttLanguage { get; set; }
@@ -1593,7 +1592,6 @@ public class LanguageGeneral
         ImageFiles = "Image files";
         OpenAiCompatibleSttEndpoint = "STT Endpoint URL";
         OpenAiCompatibleSttApiKey = "API Key";
-        OpenAiCompatibleSttModel = "Model";
         OpenAiCompatibleSttExtraHeaders = "Extra Headers";
         OpenAiCompatibleSttTimeout = "Timeout (seconds)";
         OpenAiCompatibleSttLanguage = "Language Hint";

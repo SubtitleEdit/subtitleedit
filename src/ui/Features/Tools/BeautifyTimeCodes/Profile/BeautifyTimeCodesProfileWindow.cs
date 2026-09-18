@@ -194,7 +194,7 @@ public class BeautifyTimeCodesProfileWindow : Window
             Children = { labelGap, nudGap, suffix, UiUtil.MakeHintIcon(_l.HintGap) },
         };
 
-        return MakeGroupBox(_l.General, content);
+        return MakeGroupBox(Se.Language.General.General, content);
     }
 
     private Control BuildInCuesGroup()
@@ -314,7 +314,7 @@ public class BeautifyTimeCodesProfileWindow : Window
         {
             [!SelectingItemsControl.SelectedIndexProperty] = new Binding(nameof(_vm.SelectedChainingTabIndex)) { Source = _vm, Mode = BindingMode.TwoWay },
         };
-        tabs.Items.Add(new TabItem { Header = MakeTabHeader(_l.General) });
+        tabs.Items.Add(new TabItem { Header = MakeTabHeader(Se.Language.General.General) });
         tabs.Items.Add(new TabItem { Header = MakeTabHeader(_l.InCueOnShot) });
         tabs.Items.Add(new TabItem { Header = MakeTabHeader(_l.OutCueOnShot) });
         tabs.SelectionChanged += (_, _) =>

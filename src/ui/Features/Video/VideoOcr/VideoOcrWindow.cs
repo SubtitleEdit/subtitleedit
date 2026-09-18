@@ -361,7 +361,7 @@ public class VideoOcrWindow : Window
         }
 
         panel.Children.Add(MakeSettingRow(
-            Se.Language.Video.VideoOcr.Dictionary,
+            Se.Language.General.Dictionary,
             new StackPanel
             {
                 Orientation = Orientation.Horizontal,

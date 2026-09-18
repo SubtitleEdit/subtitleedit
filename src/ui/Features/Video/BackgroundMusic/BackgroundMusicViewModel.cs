@@ -512,7 +512,7 @@ public partial class BackgroundMusicViewModel : ObservableObject
 
         await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window, vm =>
         {
-            vm.Initialize(l.AudioFileSaved, string.Format(l.AudioFileSavedX, fileName), fileName, true, true);
+            vm.Initialize(Se.Language.General.AudioFileSaved, string.Format(l.AudioFileSavedX, fileName), fileName, true, true);
         });
     }
 

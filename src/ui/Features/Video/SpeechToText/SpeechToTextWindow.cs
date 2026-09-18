@@ -718,7 +718,7 @@ public class SpeechToTextWindow : Window
         {
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttEndpoint), MakeText(nameof(vm.OpenAiCompatibleSttUrl), 400)),
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttApiKey), MakeText(nameof(vm.OpenAiCompatibleSttApiKey), 400, isPassword: true)),
-            (MakeLabel(Se.Language.General.OpenAiCompatibleSttModel), MakeText(nameof(vm.OpenAiCompatibleSttModel), 250)),
+            (MakeLabel(Se.Language.General.Model), MakeText(nameof(vm.OpenAiCompatibleSttModel), 250)),
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttLanguage), MakeText(nameof(vm.OpenAiCompatibleSttLanguage), 150)),
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttTimeout), numericTimeout),
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttTemperature), numericTemperature),
@@ -782,7 +782,7 @@ public class SpeechToTextWindow : Window
         return new (Control, Control)[]
         {
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttApiKey), MakeText(nameof(vm.OpenRouterSttApiKey), 400, isPassword: true)),
-            (MakeLabel(Se.Language.General.OpenAiCompatibleSttModel), MakeText(nameof(vm.OpenRouterSttModel), 250)),
+            (MakeLabel(Se.Language.General.Model), MakeText(nameof(vm.OpenRouterSttModel), 250)),
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttLanguage), MakeText(nameof(vm.OpenRouterSttLanguage), 150)),
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttTimeout), numericTimeout),
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttTemperature), numericTemperature),
@@ -837,7 +837,7 @@ public class SpeechToTextWindow : Window
         return new (Control, Control)[]
         {
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttApiKey), MakeText(nameof(vm.DashScopeSttApiKey), 400, isPassword: true)),
-            (MakeLabel(Se.Language.General.OpenAiCompatibleSttModel), MakeText(nameof(vm.DashScopeSttModel), 250)),
+            (MakeLabel(Se.Language.General.Model), MakeText(nameof(vm.DashScopeSttModel), 250)),
             (MakeLabel(Se.Language.General.DashScopeSttRegion), comboRegion),
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttLanguage), MakeText(nameof(vm.DashScopeSttLanguage), 150)),
             (MakeLabel(Se.Language.General.DashScopeSttEnableWords), checkEnableWords),

@@ -31,8 +31,6 @@ public class LanguageTranslate
     public string TranslationCancelled { get; set; }
     public string SwapLanguages { get; set; }
     public string XIsAlreadyDownloadedReDownload { get; set; }
-    public string AdvancedDotDotDot { get; set; }
-    public string AdvancedSettings { get; set; }
     public string AdvancedSettingsSubtitle { get; set; }
     public string Context { get; set; }
     public string Synopsis { get; set; }
@@ -92,8 +90,6 @@ public class LanguageTranslate
         TranslationCancelled = "Translation cancelled";
         SwapLanguages = "Swap source and target languages";
         XIsAlreadyDownloadedReDownload = "{0} is already downloaded. Re-download?";
-        AdvancedDotDotDot = "Advanced...";
-        AdvancedSettings = "Advanced settings";
         AdvancedSettingsSubtitle = "Batch, context and sampling options for the advanced llama.cpp engine";
         Context = "Context";
         Synopsis = "Synopsis";

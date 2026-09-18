@@ -43,7 +43,7 @@ public class RestoreAutoBackupWindow : Window
                 },
                 new TabItem
                 {
-                    Header = MakeTabHeader(IconNames.Settings, l.Settings),
+                    Header = MakeTabHeader(IconNames.Settings, Se.Language.General.Settings),
                     Content = MakeSettingsView(vm, settingsGrid),
                 },
             },
@@ -111,7 +111,7 @@ public class RestoreAutoBackupWindow : Window
 
     private static TableView MakeSettingsGrid(RestoreAutoBackupViewModel vm)
     {
-        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false).WithAccessibleName(Se.Language.File.RestoreAutoBackup.Settings);
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false).WithAccessibleName(Se.Language.General.Settings);
         dataGrid.Width = double.NaN;
         dataGrid.Height = double.NaN;
         dataGrid.DataContext = vm;
