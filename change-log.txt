@@ -3,6 +3,29 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.3.0-beta5 (18th of September 2026)
+
+* Add "Generate background music" (ACE-Step, local) in Video > More and in the text to speech window
+* Add "Delete selection (everywhere)" shortcut - thx ruonghieu
+* Add burn-in of subtitles into half side-by-side / top-bottom 3D video
+* Add 3D subtitle export at the depth from a 3D Blu-ray's 3D-Plane (.ofs) file
+* Add "Search rules..." box to Fix common errors - thx zcraber
+* Add search icon and clear button to all search/filter boxes
+* Add FFmpeg parameter editing and M4A input to Remux - thx pdjdev
+* Add reorder, undelete, context menu, file sizes and video drop to "Add/remove embedded subtitles"
+* Second subtitle dialog: remember style, optionally skip the dialog - thx kadrimarzouki, muaz978
+* Frame mode: snap re-timed lines to frames automatically - thx Ingo
+* Split at text cursor: cursor at the end now splits at the line break - thx hisui3393
+* Return focus to the opening control when a dialog closes - thx Shaima-Almarzooqi
+* Settings: Ctrl+PageUp/Down also works with focus on a setting - thx Shaima-Almarzooqi
+* Video OCR: "Test current frame" result readable by screen readers - thx Shaima-Almarzooqi
+* Fix Perplexity translate always returning no translation
+* Update audio.cpp runtime to v0.8.0
+* Update Italian translation - thx bovirus
+* Update Korean translation - thx 12si27
+
+-----------------------------------------------------------------------------------------------------
+
 v5.3.0-beta4 (17th of September 2026)
 
 * Add "Translate in place" option and a model drop-down to auto-translate - thx fointypinger
