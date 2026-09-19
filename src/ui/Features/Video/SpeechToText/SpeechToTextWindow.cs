@@ -184,6 +184,20 @@ public class SpeechToTextWindow : Window
             .BindIsVisible(vm, nameof(vm.IsTranslateVisible))
             .WithLabeledBy(labelTranslateToEnglish);
 
+        var labelIsolateSpeech = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.IsolateSpeech)
+            .WithMarginTop(15)
+            .BindIsVisible(vm, nameof(vm.IsCrispAsrSelected));
+        var checkIsolateSpeech = UiUtil.MakeCheckBox(vm, nameof(vm.DoIsolateSpeech))
+            .WithMarginTop(15)
+            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
+            .BindIsVisible(vm, nameof(vm.IsCrispAsrSelected))
+            .WithLabeledBy(labelIsolateSpeech);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(labelIsolateSpeech, Se.Language.Video.AudioToText.IsolateSpeechHint);
+            ToolTip.SetTip(checkIsolateSpeech, Se.Language.Video.AudioToText.IsolateSpeechHint);
+        }
+
         var labelPostProcessing = UiUtil.MakeTextBlock(Se.Language.General.PostProcessing).WithMarginTop(15);
         var checkPostProcessing = UiUtil.MakeCheckBox(vm, nameof(vm.DoPostProcessing)).BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
             .WithLabeledBy(labelPostProcessing);
@@ -353,13 +367,13 @@ public class SpeechToTextWindow : Window
         );
         buttonPanel.Margin = new Thickness(10, 0, 10, 10);
 
-        // Rows: 0 console log label, 1 console log (Star), 2-6 engine/backend/language/model/forced aligner,
-        // then one row per online-STT setting (OpenAI-compatible, OpenRouter, DashScope, Google Cloud; only the
+        // Rows: 0 console log label, 1 console log (Star), 2-7 engine/backend/language/model/forced aligner/
+        // isolate speech, then one row per online-STT setting (OpenAI-compatible, OpenRouter, DashScope, Google Cloud; only the
         // selected engine's rows are visible, the rest collapse to zero height), then translate-to-English,
         // post processing, advanced settings label + button, advanced parameters text box, and finally the
         // progress panel + buttons. The count is derived from the engine row arrays so adding an online engine
         // cannot leave trailing rows clamped onto the last row (which made the labels overlap the progress text).
-        const int fixedRowsBeforeOnlineStt = 7;
+        const int fixedRowsBeforeOnlineStt = 8;
         const int fixedRowsAfterOnlineStt = 5;
         var onlineSttRowCount = openAiRows.Length + openRouterRows.Length + dashScopeRows.Length + googleCloudRows.Length;
         var totalRowCount = fixedRowsBeforeOnlineStt + onlineSttRowCount + fixedRowsAfterOnlineStt;
@@ -441,6 +455,10 @@ public class SpeechToTextWindow : Window
 
         grid.Add(labelForcedAligner, row, 0);
         grid.Add(panelForcedAlignerControls, row, 1);
+        row++;
+
+        grid.Add(labelIsolateSpeech, row, 0);
+        grid.Add(checkIsolateSpeech, row, 1);
         row++;
 
         foreach (var (label, control) in openAiRows.Concat(openRouterRows).Concat(dashScopeRows).Concat(googleCloudRows))

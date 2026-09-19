@@ -7,6 +7,10 @@ public class LanguageAudioToText
     public string TranslateToEnglish { get; set; }
     public string Transcribing { get; set; }
     public string TranscribingXOfY { get; set; }
+    public string IsolateSpeech { get; set; }
+    public string IsolateSpeechHint { get; set; }
+    public string IsolatingSpeech { get; set; }
+    public string IsolateSpeechFailed { get; set; }
     public string InputLanguage { get; set; }
     public string AdvancedWhisperSettings { get; set; }
     public string DownloadingSpeechToTextEngine { get; set; }
@@ -73,6 +77,10 @@ public class LanguageAudioToText
         TranslateToEnglish = "Translate to English";
         Transcribing = "Transcribing...";
         TranscribingXOfY = "Transcribing {0} of {1}...";
+        IsolateSpeech = "Isolate speech (slow)";
+        IsolateSpeechHint = "Removes music and sound effects before transcribing. Gives fewer missed lines and better timing on audio with loud music, but takes about as long as the audio itself with a GPU - and many times longer without one.";
+        IsolatingSpeech = "Isolating speech...";
+        IsolateSpeechFailed = "Could not isolate the speech - transcribing the original audio instead.";
         InputLanguage = "Input language";
         AdvancedWhisperSettings = "Advanced speech-to-text parameters";
         DownloadingSpeechToTextEngine = "Downloading speech-to-text engine";
