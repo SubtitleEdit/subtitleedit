@@ -219,6 +219,7 @@ public class SeWaveform
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.More, IsVisible = true, SortOrder = 160 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.LineBreak1, IsVisible = false, SortOrder = 170 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.LineBreak2, IsVisible = false, SortOrder = 180 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.InitialText, IsVisible = false, SortOrder = 190 },
         ];
     }
 
