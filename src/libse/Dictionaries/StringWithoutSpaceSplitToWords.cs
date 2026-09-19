@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.Dictionaries
 {
@@ -15,23 +16,97 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 return input;
             }
 
-            var usedWords = new List<string>();
-            var result = SplitWord(words, input, string.Empty, usedWords, threeLetterIsoLanguageName);
-            if (result != input)
+            if (string.IsNullOrEmpty(input))
             {
-                return result;
+                return input;
             }
 
-            foreach (var usedWord in usedWords)
+            var wordSet = GetWordSet(words);
+            if (wordSet.Words.Contains(input) || IsProperCaseToKeep(input, threeLetterIsoLanguageName))
             {
-                result = SplitWord(words, input, usedWord, new List<string>(), threeLetterIsoLanguageName);
-                if (result != input)
+                return input;
+            }
+
+            // Word break by dynamic programming: wordCount[i] is the fewest list words that
+            // input.Substring(i) can be split into, wordLength[i] the length of the first of them.
+            // Masking the longest word first (the overload below) can take a word that blocks the
+            // only valid split, and it scans the whole list for every input.
+            var n = input.Length;
+            var maxLength = Math.Min(wordSet.MaxLength, n - 1); // a word must be shorter than the input
+            var wordCount = new int[n + 1];
+            var wordLength = new int[n + 1];
+            for (var i = n - 1; i >= 0; i--)
+            {
+                wordCount[i] = int.MaxValue;
+                for (var len = Math.Min(maxLength, n - i); len >= 1; len--) // longest first wins a tie
                 {
-                    return result;
+                    var rest = wordCount[i + len];
+                    if (rest == int.MaxValue || rest + 1 >= wordCount[i])
+                    {
+                        continue;
+                    }
+
+                    if (wordSet.Words.Contains(input.Substring(i, len)))
+                    {
+                        wordCount[i] = rest + 1;
+                        wordLength[i] = len;
+                    }
                 }
             }
 
-            return input;
+            if (wordCount[0] == int.MaxValue)
+            {
+                return input;
+            }
+
+            var sb = new StringBuilder(n + wordCount[0]);
+            for (var i = 0; i < n; i += wordLength[i])
+            {
+                if (i > 0)
+                {
+                    sb.Append(' ');
+                }
+
+                sb.Append(input, i, wordLength[i]);
+            }
+
+            return sb.ToString();
+        }
+
+        private sealed class WordSet
+        {
+            public string[] Source { get; set; }
+            public HashSet<string> Words { get; set; }
+            public int MaxLength { get; set; }
+        }
+
+        private static WordSet _lastWordSet;
+
+        /// <summary>
+        /// The list as a set, cached per array instance (callers load the list once and pass the
+        /// same array for every word).
+        /// </summary>
+        private static WordSet GetWordSet(string[] words)
+        {
+            var cached = _lastWordSet;
+            if (cached != null && ReferenceEquals(cached.Source, words))
+            {
+                return cached;
+            }
+
+            var set = new HashSet<string>(words, StringComparer.Ordinal);
+            var maxLength = 0;
+            foreach (var word in words)
+            {
+                if (word.Length > maxLength)
+                {
+                    maxLength = word.Length;
+                }
+            }
+
+            cached = new WordSet { Source = words, Words = set, MaxLength = maxLength };
+            _lastWordSet = cached;
+            return cached;
         }
 
         public static string SplitWord(string[] words, string input, string ignoreWord, List<string> usedWords, string threeLetterIsoLanguageName)
@@ -45,31 +120,9 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 return input;
             }
 
-            if (input.Length > 1 && // Configuration.Settings.Tools.OcrUseWordSplitListAvoidPropercase && 
-                input.StartsWith(input[0].ToString().ToUpperInvariant()) &&
-                input != input.ToLowerInvariant() && input != input.ToUpperInvariant() &&
-                input.Length < 12)
+            if (IsProperCaseToKeep(input, threeLetterIsoLanguageName))
             {
-                if (input.StartsWith("Mc") || input.StartsWith("Mac"))
-                {
-                    return input;
-                }
-
-                if (input[0] == 'I' && threeLetterIsoLanguageName == "eng")
-                {
-                    // Allow split if the first letter is "I" (e.g. Iam)
-                }
-                else if (input[0] == 'A' && threeLetterIsoLanguageName == "eng")
-                {
-                    // Allow split if the first letter is "A" (e.g. Acat -> "A cat"). Testing the
-                    // lowercase 'a' could never match: the enclosing guard only admits words whose
-                    // first character already equals its own uppercase form. The 'I' sibling above
-                    // uses the uppercase letter and works.
-                }
-                else
-                {
-                    return input;
-                }
+                return input;
             }
 
             for (var i = 0; i < words.Length; i++)
@@ -110,6 +163,38 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             }
 
             return s.Trim();
+        }
+
+        private static bool IsProperCaseToKeep(string input, string threeLetterIsoLanguageName)
+        {
+            if (input.Length > 1 && // Configuration.Settings.Tools.OcrUseWordSplitListAvoidPropercase &&
+                input.StartsWith(input[0].ToString().ToUpperInvariant()) &&
+                input != input.ToLowerInvariant() && input != input.ToUpperInvariant() &&
+                input.Length < 12)
+            {
+                if (input.StartsWith("Mc") || input.StartsWith("Mac"))
+                {
+                    return true;
+                }
+
+                if (input[0] == 'I' && threeLetterIsoLanguageName == "eng")
+                {
+                    // Allow split if the first letter is "I" (e.g. Iam)
+                }
+                else if (input[0] == 'A' && threeLetterIsoLanguageName == "eng")
+                {
+                    // Allow split if the first letter is "A" (e.g. Acat -> "A cat"). Testing the
+                    // lowercase 'a' could never match: the enclosing guard only admits words whose
+                    // first character already equals its own uppercase form. The 'I' sibling above
+                    // uses the uppercase letter and works.
+                }
+                else
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public static string[] LoadWordSplitList(string dictionaryFolder, string threeLetterIsoLanguageName, List<string> names)
