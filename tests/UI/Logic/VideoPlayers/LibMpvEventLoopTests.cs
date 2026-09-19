@@ -535,6 +535,21 @@ public class LibMpvEventLoopTests
         }
     }
 
+    /// <summary>
+    /// #14904: an error log appeared on every start although nothing had gone wrong, because
+    /// mpv's notice about the "audio-stream-silence" option SE itself sets, and ffmpeg's demuxer
+    /// warnings about file metadata, were forwarded. Real warnings and all errors still are.
+    /// </summary>
+    [Theory]
+    [InlineData("warn", "ao/wasapi", "The --audio-stream-silence option is set. This will break certain player behavior.", true)]
+    [InlineData("warn", "ffmpeg/demuxer", "mov,mp4,m4a,3gp,3g2,mj2: UDTA parsing failed retrying raw", true)]
+    [InlineData("warn", "ao/wasapi", "Audio device underrun detected.", false)]
+    [InlineData("error", "ffmpeg/demuxer", "mov,mp4,m4a,3gp,3g2,mj2: moov atom not found", false)]
+    public void IsExpectedMpvLogMessage_SkipsOnlyKnownNoise(string level, string prefix, string text, bool expected)
+    {
+        Assert.Equal(expected, LibMpvDynamicPlayer.IsExpectedMpvLogMessage(level, prefix, text));
+    }
+
     private static LibMpvDynamicPlayer? CreatePlayer()
     {
         var player = new LibMpvDynamicPlayer();
