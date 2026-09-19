@@ -340,6 +340,13 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static async Task RunModalAsync(Window owner, Window dialog, Func<Task> showDialog)
         {
+            // Hand-built dialogs come straight here without passing ShowDialogAsync, so apply the
+            // window chrome (dark title bar, layout scale, right-to-left) for them too. Must run
+            // before ShowDialog - see the note in ShowWindow<T>. Both calls are safe to repeat for
+            // the callers that already applied them. (#15066)
+            ApplyRightToLeftSettings(dialog);
+            UiTheme.ApplyScaleToWindow(dialog);
+
             // Keep the dialog above undocked tool windows (audio visualizer / video player), which
             // float on top of the main window via the same helper. Without this the dialog opens
             // behind them in undocked mode. (#11971)
