@@ -464,6 +464,11 @@ public static class InitMenu
             },
             new MenuItem
             {
+                Header = l.ImproveTimeCodes,
+                Command = vm.ShowImproveTimeCodesCommand,
+            },
+            new MenuItem
+            {
                 Header = l.BridgeGaps,
                 Command = vm.ShowBridgeGapsCommand,
             },

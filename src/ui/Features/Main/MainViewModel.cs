@@ -130,6 +130,7 @@ using Nikse.SubtitleEdit.Features.Tools.ApplyDurationLimits;
 using Nikse.SubtitleEdit.Features.Tools.ApplyMinGap;
 using Nikse.SubtitleEdit.Features.Tools.BatchConvert;
 using Nikse.SubtitleEdit.Features.Tools.BeautifyTimeCodes;
+using Nikse.SubtitleEdit.Features.Tools.ImproveTimeCodes;
 using Nikse.SubtitleEdit.Features.Tools.BridgeGaps;
 using Nikse.SubtitleEdit.Features.Tools.ChangeCasing;
 using Nikse.SubtitleEdit.Features.Tools.ChangeFormatting;
@@ -13065,6 +13066,41 @@ public partial class MainViewModel :
         {
             lines[i].StartTime = beautified[i].StartTime;
             lines[i].EndTime = beautified[i].EndTime;
+            lines[i].UpdateDuration();
+        }
+
+        _updateAudioVisualizer = true;
+    }
+
+    [RelayCommand]
+    private async Task ShowImproveTimeCodes()
+    {
+        if (Window == null || AudioVisualizer == null || string.IsNullOrEmpty(_videoFileName) || Subtitles.Count == 0)
+        {
+            return;
+        }
+
+        var lines = Subtitles.OrderBy(p => p.StartTime).ToList();
+        var language = LanguageAutoDetect.AutoDetectGoogleLanguage(GetUpdateSubtitle());
+        var viewModel = await ShowDialogAsync<ImproveTimeCodesWindow, ImproveTimeCodesViewModel>(
+            vm => { vm.Initialize(lines, AudioVisualizer, _videoFileName, _audioTrack?.FfIndex ?? -1, language); });
+
+        if (!viewModel.OkPressed)
+        {
+            return;
+        }
+
+        // The dialog hands back the same lines in the same order, carrying the accepted times.
+        var aligned = viewModel.GetAlignedSubtitles();
+        if (aligned.Count != lines.Count)
+        {
+            return;
+        }
+
+        for (var i = 0; i < aligned.Count; i++)
+        {
+            lines[i].StartTime = aligned[i].StartTime;
+            lines[i].EndTime = aligned[i].EndTime;
             lines[i].UpdateDuration();
         }
 

@@ -698,6 +698,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.WaveformToggleWaveformSpectrogramHeightCommand), Se.Language.Options.Shortcuts.ToggleWaveformAndSpectrogramHeight },
         { nameof(MainViewModel.SpectrogramToggleStyleCommand), Se.Language.Options.Shortcuts.ToggleSpectrogramStyle },
         { nameof(MainViewModel.ShowBeautifyTimeCodesCommand), Se.Language.Tools.BeautifyTimeCodes.Title },
+        { nameof(MainViewModel.ShowImproveTimeCodesCommand), Se.Language.Tools.ImproveTimeCodes.Title },
         { nameof(MainViewModel.ZoomLayoutInCommand), Se.Language.Options.Shortcuts.LayoutZoomIn },
         { nameof(MainViewModel.ZoomLayoutOutCommand), Se.Language.Options.Shortcuts.LayoutZoomOut },
         { nameof(MainViewModel.OpenSecondarySubtitleCommand), Se.Language.Video.OpenSecondarySubtitleOnVideoPlayer },
@@ -1171,6 +1172,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.WaveformToggleWaveformSpectrogramHeightCommand, nameof(vm.WaveformToggleWaveformSpectrogramHeightCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SpectrogramToggleStyleCommand, nameof(vm.SpectrogramToggleStyleCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowBeautifyTimeCodesCommand, nameof(vm.ShowBeautifyTimeCodesCommand), ShortcutCategory.General, ShortcutGroup.Tools);
+        AddShortcut(shortcuts, vm.ShowImproveTimeCodesCommand, nameof(vm.ShowImproveTimeCodesCommand), ShortcutCategory.General, ShortcutGroup.Tools);
         AddShortcut(shortcuts, vm.ZoomLayoutInCommand, nameof(vm.ZoomLayoutInCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ZoomLayoutOutCommand, nameof(vm.ZoomLayoutOutCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.OpenSecondarySubtitleCommand, nameof(vm.OpenSecondarySubtitleCommand), ShortcutCategory.General, ShortcutGroup.Video);
