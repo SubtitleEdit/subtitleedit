@@ -4054,6 +4054,44 @@ public partial class MainViewModel :
         }
 
         _subtitleSecondaryFileName = fileName;
+        PushSecondarySubtitle();
+
+        // Persist the file name on the recent-file entry now rather than at the next save or
+        // close, so it survives a crash too (#15044).
+        AddToRecentFiles(false);
+    }
+
+    /// <summary>
+    /// Brings back the second subtitle file this subtitle was last shown with (#15044). Quiet by
+    /// design: no dialog, and a file that is gone or no longer parses is just skipped.
+    /// </summary>
+    private void RestoreRememberedSecondarySubtitle(string? fileName)
+    {
+        if (!Se.Settings.Video.SecondarySubtitleRememberFile || string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
+        {
+            return;
+        }
+
+        try
+        {
+            var subtitle = Subtitle.Parse(fileName);
+            if (subtitle == null || subtitle.Paragraphs.Count == 0)
+            {
+                return;
+            }
+
+            _subtitleSecondary = SecondarySubtitleStyler.BuildRemembered(subtitle, _mediaInfo);
+            _subtitleSecondaryFileName = fileName;
+            PushSecondarySubtitle();
+        }
+        catch (Exception e)
+        {
+            Se.LogError(e);
+        }
+    }
+
+    private void PushSecondarySubtitle()
+    {
         IsSubtitleSecondaryVisible = true;
 
         var vp = GetVideoPlayerControl();
@@ -23021,6 +23059,12 @@ public partial class MainViewModel :
 
         RecentFile? rememberedRecentFile = null;
 
+        // Read the remembered second subtitle before the open touches anything: ResetSubtitle
+        // clears the current one, and the recent-file writes during the open (VideoOpenFile, the
+        // end of this method) then overwrite the entry with none (#15044).
+        var rememberedSecondaryFileName = Se.Settings.File.RecentFiles.FirstOrDefault(rf =>
+            string.Equals(rf.SubtitleFileName, fileName, StringComparison.OrdinalIgnoreCase))?.SubtitleFileNameSecondary;
+
         try
         {
             _opening = true;
@@ -23624,6 +23668,10 @@ public partial class MainViewModel :
                     await AutoOpenVideoFile(videoFileName, desiredAudioTrackId, videoStartPositionSeconds);
                 }
             }
+
+            // After the video, so the style is sized for it - and before the write below, which
+            // would otherwise persist the entry without it.
+            RestoreRememberedSecondarySubtitle(rememberedSecondaryFileName);
 
             // Pass the index explicitly: SelectAndScrollToRow applies the selection via a
             // dispatcher post that may not have run yet, so reading SelectedSubtitleIndex
@@ -26076,7 +26124,8 @@ public partial class MainViewModel :
             SelectedEncoding.DisplayName,
             Se.Settings.General.CurrentVideoOffsetInMs,
             IsSmpteTimingEnabled,
-            _audioTrack?.Id ?? -1);
+            _audioTrack?.Id ?? -1,
+            _subtitleSecondaryFileName ?? string.Empty);
         Se.SaveSettings();
 
         if (updateMenu)

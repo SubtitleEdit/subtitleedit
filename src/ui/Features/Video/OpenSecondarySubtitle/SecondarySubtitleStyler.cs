@@ -92,6 +92,29 @@ public static class SecondarySubtitleStyler
         return Build(secondarySubtitle, style, width, height);
     }
 
+    /// <summary>
+    /// Builds a remembered second subtitle without the dialog (#15044): the saved style when
+    /// "Remember these settings" is on, else the defaults the dialog starts from.
+    /// </summary>
+    public static Subtitle BuildRemembered(Subtitle secondarySubtitle, FfmpegMediaInfo2? mediaInfo)
+    {
+        if (Se.Settings.Video.SecondarySubtitleOverrideStyle)
+        {
+            return BuildFromSettings(secondarySubtitle, mediaInfo);
+        }
+
+        var width = mediaInfo?.Dimension.Width ?? 1920;
+        var height = mediaInfo?.Dimension.Height ?? 1080;
+        var style = MakeStyle(
+            "Style" + Guid.NewGuid().ToString().Replace("-", string.Empty),
+            AssaResampler.Resample(AdvancedSubStationAlpha.DefaultHeight, height, Se.Settings.Video.MpvPreviewFontSize),
+            Se.Settings.Video.MpvPreviewFontBold,
+            Colors.White,
+            FontBoxType.None,
+            "8"); // Top-center
+        return Build(secondarySubtitle, style, width, height);
+    }
+
     public static int GetFontSizeFromSettings(int videoHeight)
     {
         var fontSize = Se.Settings.Video.SecondarySubtitleFontSize * videoHeight / AdvancedSubStationAlpha.DefaultHeight;

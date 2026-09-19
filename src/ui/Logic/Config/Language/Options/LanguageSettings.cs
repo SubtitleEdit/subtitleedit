@@ -186,6 +186,7 @@ public class LanguageSettings
     public string ShowFullscreenButton { get; set; }
     public string FullscreenHideControls { get; set; }
     public string ShowSecondarySubtitleDialog { get; set; }
+    public string RememberSecondarySubtitleFile { get; set; }
     public string AutoOpenVideoFile { get; set; }
     public string DownloadMpv { get; set; }
     public string DownloadVlc { get; set; }
@@ -512,6 +513,7 @@ public class LanguageSettings
         ShowFullscreenButton = "Show full-screen button";
         FullscreenHideControls = "Hide video controls in full-screen";
         ShowSecondarySubtitleDialog = "Show style dialog when opening a second subtitle file";
+        RememberSecondarySubtitleFile = "Remember second subtitle file";
         AutoOpenVideoFile = "Auto-open video file when opening subtitle";
         DownloadMpv = "Download mpv";
         DownloadVlc = "Download VLC";
