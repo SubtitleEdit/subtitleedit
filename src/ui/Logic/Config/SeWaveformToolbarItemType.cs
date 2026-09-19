@@ -53,5 +53,9 @@ public enum SeWaveformToolbarItemType
     // Not buttons: each forces the toolbar's WrapPanel onto a new row at its position, so the
     // user decides where a toolbar wider than the waveform pane wraps.
     LineBreak1 = 28,
-    LineBreak2 = 29
+    LineBreak2 = 29,
+
+    // Read-only box holding the selected line's text as it was when the line was selected, so a
+    // machine translation stays readable (and copyable) while it is typed over (#14541, #15035).
+    InitialText = 30
 }

@@ -1046,6 +1046,23 @@ public class InitWaveform
             },
         };
 
+        // SE 4's retained text box (#14541): the selected line's text as it was on selection, so a
+        // machine translation stays readable while it is typed over. A read-only TextBox rather
+        // than a TextBlock so the text can be selected and copied (#15035).
+        var settingInitialText = GetToolbarSettingFor(SeWaveformToolbarItemType.InitialText);
+        var textBoxInitialText = new TextBox
+        {
+            IsReadOnly = true,
+            AcceptsReturn = false,
+            Width = 400,
+            VerticalAlignment = VerticalAlignment.Center,
+            FontSize = settingInitialText.FontSize,
+            Margin = new Thickness(settingInitialText.LeftMargin, 0, settingInitialText.RightMargin, 0),
+            [!TextBox.TextProperty] = new Binding(nameof(vm.InitialLineText)) { Source = vm, Mode = BindingMode.OneWay },
+            [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.InitialTextHint, shortcuts),
+            [AutomationProperties.NameProperty] = languageHints.InitialText,
+        };
+
         var settingMore = GetToolbarSettingFor(SeWaveformToolbarItemType.More);
         var buttonMore = new NonSpaceButton
         {
@@ -1133,6 +1150,7 @@ public class InitWaveform
             toggleButtonAutoSelectOnPlay,
             toggleButtonCenter,
             panelVideoSeek,
+            textBoxInitialText,
             buttonMore
         );
         foreach (var sortedButton in sortableButtons)
@@ -1314,6 +1332,7 @@ public class InitWaveform
         ToggleButton toggleButtonAutoSelectOnPlay,
         ToggleButton toggleButtonCenter,
         StackPanel panelVideoSeek,
+        TextBox textBoxInitialText,
         Button buttonMore)
     {
         var toolbarButtonForSort = new List<SortedControl>();
@@ -1412,6 +1431,9 @@ public class InitWaveform
                     break;
                 case SeWaveformToolbarItemType.More:
                     toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = buttonMore });
+                    break;
+                case SeWaveformToolbarItemType.InitialText:
+                    toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = textBoxInitialText });
                     break;
                 case SeWaveformToolbarItemType.LineBreak1:
                 case SeWaveformToolbarItemType.LineBreak2:

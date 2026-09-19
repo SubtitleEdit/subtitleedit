@@ -233,6 +233,7 @@ public partial class MainViewModel :
     [ObservableProperty] private string _editTextCharactersPerSecond;
     [ObservableProperty] private IBrush _editTextCharactersPerSecondBackground;
     [ObservableProperty] private string _editTextTotalLength;
+    [ObservableProperty] private string _initialLineText = string.Empty;
     [ObservableProperty] private IBrush _editTextTotalLengthBackground;
 
     [ObservableProperty] private string _editTextOriginal;
@@ -31116,6 +31117,25 @@ public partial class MainViewModel :
         return Subtitles.IndexOf(item);
     }
 
+    private SubtitleLineViewModel? _initialLineTextSource;
+
+    /// <summary>
+    /// Feeds the waveform toolbar's "initial text" box (#14541): keeps the text a line had when it
+    /// was selected, so typing over a machine translation does not destroy the only visible copy.
+    /// Taken once per line - typing re-enters the selection handler with the same line.
+    /// </summary>
+    private void SnapshotInitialLineText(SubtitleLineViewModel line)
+    {
+        if (ReferenceEquals(line, _initialLineTextSource))
+        {
+            return;
+        }
+
+        _initialLineTextSource = line;
+        var text = HtmlUtil.RemoveHtmlTags(line.Text ?? string.Empty, true);
+        InitialLineText = string.Join(" ", text.SplitToLines()).Trim();
+    }
+
     private void SubtitleGridSelectionChanged(List<SubtitleLineViewModel>? alreadyOrderedSelection = null)
     {
         // With reference: the focused row and the edit boxes must follow the user onto a
@@ -31194,6 +31214,7 @@ public partial class MainViewModel :
         }
 
         var rowChanged = !ReferenceEquals(item, SelectedSubtitle);
+        SnapshotInitialLineText(item);
 
         try
         {
