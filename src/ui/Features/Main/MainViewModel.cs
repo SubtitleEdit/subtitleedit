@@ -30292,6 +30292,14 @@ public partial class MainViewModel :
                     // Shift+Delete fell through to Avalonia's plain delete instead of cutting (#13711).
                     var isBareKeyChord = keyEventArgs.KeyModifiers == KeyModifiers.None ||
                                          (keyEventArgs.KeyModifiers == KeyModifiers.Shift && !NonTypingEditKeys.Contains(key));
+                    // Space always types in a text input, even with "allow single-letter shortcuts
+                    // in text box" on: bare Space is the default play/pause shortcut, so the option
+                    // made it impossible to type a space (#15028).
+                    if (key == Key.Space && isBareKeyChord)
+                    {
+                        return;
+                    }
+
                     if (!Se.Settings.Tools.AllowSingleLetterShortcutsInTextbox && !AlwaysAllowedSingleKeyShortcuts.Contains(key) && isBareKeyChord)
                     {
                         return; // allow single key shortcuts in text input if enabled in settings, or if it's not an allowed single key shortcut
