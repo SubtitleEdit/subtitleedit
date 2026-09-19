@@ -820,6 +820,12 @@ public class FfmpegGenerator
         return processMakeVideo;
     }
 
+    // Input option for the video that the AddAudioTrack* methods stream-copy. MPEG-4 ASP (XviD/DivX)
+    // with packed B-frames yields packets without a pts, and the muxer then aborts with "Can't write
+    // packet with unknown timestamp", leaving a stub output. genpts fills in the missing pts from the
+    // dts; packets that already have one (h264/hevc in mp4/mkv) are left untouched.
+    private const string GeneratePtsForVideoCopy = "-fflags +genpts ";
+
     public static Process AddAudioTrack(string inputFileName, string audioFileName, string outputFileName, string audioEncoding, bool? stereo, DataReceivedEventHandler? dataReceivedHandler = null)
     {
         // Empty encoding = let ffmpeg pick the container's default encoder (same as the ducking
@@ -833,7 +839,7 @@ public class FfmpegGenerator
             StartInfo =
             {
                 FileName = GetFfmpegLocation(),
-                Arguments = $"-nostdin -y -i \"{inputFileName}\" -i \"{audioFileName}\" -c:v copy -map 0:v:0 -map 1:a:0 {audioEncodingString}{stereoString}\"{outputFileName}\"",
+                Arguments = $"-nostdin -y {GeneratePtsForVideoCopy}-i \"{inputFileName}\" -i \"{audioFileName}\" -c:v copy -map 0:v:0 -map 1:a:0 {audioEncodingString}{stereoString}\"{outputFileName}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true
             }
@@ -866,7 +872,7 @@ public class FfmpegGenerator
             StartInfo =
             {
                 FileName = GetFfmpegLocation(),
-                Arguments = $"-nostdin -y -i \"{inputFileName}\" -i \"{audioFileName}\" -filter_complex \"[0:a]volume={volumeFactor}[orig];[orig][1:a]amix=inputs=2:duration=longest:normalize=0[aout]\" -map 0:v:0 -map \"[aout]\" -c:v copy {audioEncodingString}{stereoString}\"{outputFileName}\"",
+                Arguments = $"-nostdin -y {GeneratePtsForVideoCopy}-i \"{inputFileName}\" -i \"{audioFileName}\" -filter_complex \"[0:a]volume={volumeFactor}[orig];[orig][1:a]amix=inputs=2:duration=longest:normalize=0[aout]\" -map 0:v:0 -map \"[aout]\" -c:v copy {audioEncodingString}{stereoString}\"{outputFileName}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true
             }
@@ -920,7 +926,7 @@ public class FfmpegGenerator
             StartInfo =
             {
                 FileName = GetFfmpegLocation(),
-                Arguments = $"-nostdin -y -i \"{inputFileName}\" -i \"{backgroundFileName}\" -i \"{audioFileName}\" -filter_complex \"[1:a]volume={volumeFactor}[bg];[bg][2:a]amix=inputs=2:duration=longest:normalize=0[aout]\" -map 0:v:0 -map \"[aout]\" -c:v copy {audioEncodingString}{stereoString}\"{outputFileName}\"",
+                Arguments = $"-nostdin -y {GeneratePtsForVideoCopy}-i \"{inputFileName}\" -i \"{backgroundFileName}\" -i \"{audioFileName}\" -filter_complex \"[1:a]volume={volumeFactor}[bg];[bg][2:a]amix=inputs=2:duration=longest:normalize=0[aout]\" -map 0:v:0 -map \"[aout]\" -c:v copy {audioEncodingString}{stereoString}\"{outputFileName}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true
             }
