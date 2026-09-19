@@ -13,6 +13,7 @@ using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
 using Nikse.SubtitleEdit.Features.Tools.MergeContinuationLines;
 using Nikse.SubtitleEdit.Features.Video.BackgroundMusic;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
+using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ActorVoices;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.AdvancedTtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ChatterboxTtsSettings;
@@ -1491,6 +1492,13 @@ public partial class TextToSpeechViewModel : ObservableObject
             return;
         }
 
+        // Same reasoning: ask for the separation runtime and model now, not after the speech run.
+        if (ShouldRemoveOriginalSpeech() && !await EnsureSpeechRemovalInstalled())
+        {
+            ResetGeneratingUiState();
+            return;
+        }
+
         Se.WriteToolsLog(
             $"Text-to-speech: engine={engine.Name}" +
             $", voice={SelectedVoice?.Name ?? "(none)"}" +
@@ -2202,6 +2210,70 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             DoAddBackgroundMusic = true;
         }
+    }
+
+    private bool ShouldRemoveOriginalSpeech()
+    {
+        return Se.Settings.Video.TextToSpeech.RemoveOriginalSpeech &&
+               DoGenerateVideoFile &&
+               !string.IsNullOrEmpty(_videoFileName) &&
+               File.Exists(_videoFileName);
+    }
+
+    private async Task<bool> EnsureSpeechRemovalInstalled()
+    {
+        var featureName = Se.Language.Video.TextToSpeech.RemoveOriginalSpeech;
+        if (!await TtsVoiceInstaller.EnsureCrispAsrForSpeechRemoval(Window, _windowService, featureName))
+        {
+            return false;
+        }
+
+        return await SpeechIsolationModelDownload.EnsureDownloadedAsync(Window!, _windowService, new CrispAsrCohere(), featureName);
+    }
+
+    /// <summary>
+    /// The original sound of the video without its speech - music and sound effects only - as a
+    /// 44.1 kHz stereo wav in <paramref name="workFolder"/>, or null when it could not be made.
+    /// </summary>
+    private async Task<string?> MakeSpeechFreeBackground(string workFolder, CancellationToken cancellationToken)
+    {
+        var crispAsr = new CrispAsrCohere();
+        var executable = crispAsr.GetExecutable();
+        var modelFileName = crispAsr.GetModelForCmdLine(SpeechIsolationModel.FileName);
+        if (!File.Exists(executable) || !File.Exists(modelFileName))
+        {
+            return null;
+        }
+
+        var originalAudioFileName = Path.Combine(workFolder, "original.wav");
+        await FfmpegGenerator.ExtractAudioForSeparation(_videoFileName, originalAudioFileName).StartAndWaitAsync(cancellationToken);
+        if (!File.Exists(originalAudioFileName))
+        {
+            Se.WriteToolsLog($"TTS remove original speech: ffmpeg could not extract the audio of \"{_videoFileName}\"", true);
+            return null;
+        }
+
+        var arguments = SpeechIsolationModel.BuildSeparateArguments(modelFileName, originalAudioFileName, workFolder, SpeechIsolationModel.BackgroundStem);
+        Se.WriteToolsLog($"{executable} {arguments}");
+        using var separateProcess = new Process
+        {
+            StartInfo = new ProcessStartInfo(executable, arguments)
+            {
+                WorkingDirectory = Path.GetDirectoryName(executable),
+                UseShellExecute = false,
+                CreateNoWindow = true,
+            }
+        };
+        await separateProcess.StartAndWaitAsync(cancellationToken);
+
+        var backgroundFileName = SpeechIsolationModel.GetStemFileName(originalAudioFileName, workFolder, SpeechIsolationModel.BackgroundStem);
+        if (separateProcess.ExitCode != 0 || !File.Exists(backgroundFileName))
+        {
+            Se.WriteToolsLog($"TTS remove original speech: separation failed with exit code {separateProcess.ExitCode}", true);
+            return null;
+        }
+
+        return backgroundFileName;
     }
 
     private async Task<bool> EnsureBackgroundMusicInstalled()
@@ -2964,10 +3036,52 @@ public partial class TextToSpeechViewModel : ObservableObject
             stereo = true;
         }
 
-        var addAudioProcess = Se.Settings.Video.TextToSpeech.AudioDuckingEnabled
-            ? FfmpegGenerator.AddAudioTrackWithDucking(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo, Se.Settings.Video.TextToSpeech.AudioDuckingOriginalVolume)
-            : FfmpegGenerator.AddAudioTrack(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo);
-        await addAudioProcess.StartAndWaitAsync(cancellationToken);
+        var ducking = Se.Settings.Video.TextToSpeech.AudioDuckingEnabled;
+        var duckingVolume = Se.Settings.Video.TextToSpeech.AudioDuckingOriginalVolume;
+
+        // The separation works in 44.1 kHz stereo - over a gigabyte of wav for a feature film -
+        // so its files get a folder of their own that is gone as soon as the video is written.
+        string? separationFolder = null;
+        try
+        {
+            string? backgroundFileName = null;
+            if (ShouldRemoveOriginalSpeech())
+            {
+                ProgressText = Se.Language.Video.TextToSpeech.RemovingOriginalSpeech;
+                separationFolder = Path.Combine(Path.GetTempPath(), "se-tts-separation-" + Guid.NewGuid());
+                Directory.CreateDirectory(separationFolder);
+                backgroundFileName = await MakeSpeechFreeBackground(separationFolder, cancellationToken);
+                if (backgroundFileName == null)
+                {
+                    Se.WriteToolsLog(Se.Language.Video.TextToSpeech.RemoveOriginalSpeechFailed, true);
+                }
+
+                ProgressText = Se.Language.Video.TextToSpeech.AddingAudioToVideoFileDotDotDot;
+            }
+
+            // With the speech gone there is nothing left for the new speech to compete with, so
+            // the music and effects play at full volume unless ducking asks for less.
+            var addAudioProcess = backgroundFileName != null
+                ? FfmpegGenerator.AddAudioTrackWithBackground(_videoFileName, backgroundFileName, audioFileName, outputFileName, audioEncoding, stereo, ducking ? duckingVolume : 100)
+                : ducking
+                    ? FfmpegGenerator.AddAudioTrackWithDucking(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo, duckingVolume)
+                    : FfmpegGenerator.AddAudioTrack(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo);
+            await addAudioProcess.StartAndWaitAsync(cancellationToken);
+        }
+        finally
+        {
+            if (separationFolder != null)
+            {
+                try
+                {
+                    Directory.Delete(separationFolder, true);
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
+        }
 
         ProgressText = string.Empty;
 

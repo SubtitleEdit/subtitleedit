@@ -67,6 +67,16 @@ public static class TtsVoiceInstaller
     /// backends), so the dialogs read with the right engine name and don't mention
     /// Chatterbox.
     /// </summary>
+    /// <summary>
+    /// Ensures the CrispASR runtime is installed for "Remove original speech" - its source
+    /// separation task is part of every CrispASR build SE has ever pinned.
+    /// </summary>
+    public static Task<bool> EnsureCrispAsrForSpeechRemoval(Window? window, IWindowService windowService, string featureName)
+        => EnsureCrispAsrAsync(window, windowService, forceRedownload: false,
+            engineDisplayName: featureName,
+            extraCapabilityCheck: null,
+            minVersionNote: null);
+
     public static Task<bool> EnsureCrispAsrForQwen3(Window? window, IWindowService windowService, bool forceRedownload)
         => EnsureCrispAsrAsync(window, windowService, forceRedownload,
             engineDisplayName: "Qwen3 TTS (CrispASR)",

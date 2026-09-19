@@ -878,6 +878,60 @@ public class FfmpegGenerator
     }
 
     /// <summary>
+    /// Extracts the first audio track as the 44.1 kHz stereo wav the source separation works in,
+    /// so the separated background keeps the full quality of the original sound.
+    /// </summary>
+    public static Process ExtractAudioForSeparation(string inputFileName, string outputWaveFileName, DataReceivedEventHandler? dataReceivedHandler = null)
+    {
+        var process = new Process
+        {
+            StartInfo =
+            {
+                FileName = GetFfmpegLocation(),
+                Arguments = $"-nostdin -y -i \"{inputFileName}\" -vn -map 0:a:0 -ar 44100 -ac 2 \"{outputWaveFileName}\"",
+                UseShellExecute = false,
+                CreateNoWindow = true
+            }
+        };
+
+        SetupDataReceiveHandler(dataReceivedHandler, process);
+
+        return process;
+    }
+
+    /// <summary>
+    /// Add audio track to video, mixed over a separate background track (the original sound with
+    /// the speech removed) instead of over the video's own audio.
+    /// </summary>
+    public static Process AddAudioTrackWithBackground(string inputFileName, string backgroundFileName, string audioFileName, string outputFileName, string audioEncoding, bool? stereo, int backgroundVolumePercent, DataReceivedEventHandler? dataReceivedHandler = null)
+    {
+        // Same as the ducking variant: a filtergraph output cannot be stream-copied.
+        if (string.Equals(audioEncoding, "copy", StringComparison.OrdinalIgnoreCase))
+        {
+            audioEncoding = string.Empty;
+        }
+
+        var audioEncodingString = !string.IsNullOrEmpty(audioEncoding) ? "-c:a " + audioEncoding + " " : string.Empty;
+        var stereoString = stereo == true ? "-ac 2 " : string.Empty;
+        var volumeFactor = Math.Clamp(backgroundVolumePercent / 100.0, 0.0, 1.0).ToString("0.00", CultureInfo.InvariantCulture);
+
+        var processMakeVideo = new Process
+        {
+            StartInfo =
+            {
+                FileName = GetFfmpegLocation(),
+                Arguments = $"-nostdin -y -i \"{inputFileName}\" -i \"{backgroundFileName}\" -i \"{audioFileName}\" -filter_complex \"[1:a]volume={volumeFactor}[bg];[bg][2:a]amix=inputs=2:duration=longest:normalize=0[aout]\" -map 0:v:0 -map \"[aout]\" -c:v copy {audioEncodingString}{stereoString}\"{outputFileName}\"",
+                UseShellExecute = false,
+                CreateNoWindow = true
+            }
+        };
+
+        SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
+
+        return processMakeVideo;
+    }
+
+    /// <summary>
     /// Apply pro audio post-processing chain: low-pass, EQ warmth, compression, loudness normalization, noise gate, and fade in/out.
     /// </summary>
     /// <param name="gateThreshold">

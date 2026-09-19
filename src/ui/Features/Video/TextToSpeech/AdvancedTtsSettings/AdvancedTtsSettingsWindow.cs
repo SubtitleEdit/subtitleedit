@@ -41,6 +41,7 @@ public class AdvancedTtsSettingsWindow : Window
 
         var checkBoxProAudio = MakeCheckBox(l.ProAudioPostProcessing, nameof(vm.DoProAudioChain));
         var checkBoxDucking = MakeCheckBox(l.AudioDucking, nameof(vm.DoAudioDucking));
+        var checkBoxRemoveSpeech = MakeCheckBox(l.RemoveOriginalSpeech, nameof(vm.DoRemoveOriginalSpeech));
         var checkBoxVad = MakeCheckBox(l.VadSilenceCompression, nameof(vm.DoVadSilenceCompression));
         var checkBoxTimeStretch = MakeCheckBox(l.HighQualityTimeStretch, nameof(vm.DoHighQualityTimeStretch));
         var checkBoxDeleteTempFiles = MakeCheckBox(l.DeleteTempFiles, nameof(vm.DoDeleteTempFiles));
@@ -56,6 +57,8 @@ public class AdvancedTtsSettingsWindow : Window
                     MakeField(l.OriginalVolumePercent,
                         UiUtil.MakeNumericUpDownInt(0, 100, 15, 110, vm, nameof(vm.AudioDuckingVolume)),
                         nameof(vm.DoAudioDucking))),
+
+                MakeRow(checkBoxRemoveSpeech, l.RemoveOriginalSpeechDescription),
 
                 MakeRow(checkBoxVad, l.VadSilenceCompressionDescription,
                     MakeField(l.MaxSilenceMs,

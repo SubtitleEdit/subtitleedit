@@ -17,16 +17,24 @@ public static class SpeechIsolationModel
     /// <summary>The stem "--separate" writes for the speech: "&lt;input&gt;_vocals.wav".</summary>
     public const string SpeechStem = "vocals";
 
-    /// <summary>CrispASR arguments that write only the speech stem of <paramref name="inputWaveFileName"/> into <paramref name="outputFolder"/>.</summary>
-    public static string BuildSeparateArguments(string modelFileName, string inputWaveFileName, string outputFolder)
+    /// <summary>The stem with everything but the speech - music and sound effects: "&lt;input&gt;_other.wav".</summary>
+    public const string BackgroundStem = "other";
+
+    /// <summary>CrispASR arguments that write only <paramref name="stem"/> of <paramref name="inputWaveFileName"/> into <paramref name="outputFolder"/>.</summary>
+    public static string BuildSeparateArguments(string modelFileName, string inputWaveFileName, string outputFolder, string stem = SpeechStem)
     {
-        return $"-m \"{modelFileName}\" -f \"{inputWaveFileName}\" --separate --stems {SpeechStem} --sep-output-dir \"{outputFolder}\"";
+        return $"-m \"{modelFileName}\" -f \"{inputWaveFileName}\" --separate --stems {stem} --sep-output-dir \"{outputFolder}\"";
     }
 
-    /// <summary>Where "--separate" puts the speech stem: it names the stem after its input file.</summary>
+    /// <summary>Where "--separate" puts a stem: it names the stem after its input file.</summary>
+    public static string GetStemFileName(string inputWaveFileName, string outputFolder, string stem)
+    {
+        return Path.Combine(outputFolder, Path.GetFileNameWithoutExtension(inputWaveFileName) + "_" + stem + ".wav");
+    }
+
     public static string GetSpeechStemFileName(string inputWaveFileName, string outputFolder)
     {
-        return Path.Combine(outputFolder, Path.GetFileNameWithoutExtension(inputWaveFileName) + "_" + SpeechStem + ".wav");
+        return GetStemFileName(inputWaveFileName, outputFolder, SpeechStem);
     }
 
     /// <summary>
