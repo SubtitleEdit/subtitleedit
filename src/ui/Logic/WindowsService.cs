@@ -1316,9 +1316,10 @@ namespace Nikse.SubtitleEdit.Logic
         /// Avalonia's Win32 backend only issues SetWindowPos(HWND_TOPMOST) when its own cached
         /// Topmost value changes, so a window whose WS_EX_TOPMOST the OS has dropped behind
         /// Avalonia's back stays non-topmost no matter how often Topmost=true is re-asserted. If
-        /// the OS disagrees with the property after asserting it, force the round trip - and log
-        /// it, since that desync is one of the two states that leave an undocked tool window
-        /// permanently behind the main window (#14622).
+        /// the OS disagrees with the property after asserting it, force the round trip - that
+        /// desync is one of the two states that leave an undocked tool window permanently behind
+        /// the main window (#14622). Not logged: it is repaired right here and happens routinely,
+        /// so it only produced error logs on sessions where nothing went wrong (#14904).
         /// </summary>
         private static void EnsureOsTopmost(Window window)
         {
@@ -1333,7 +1334,6 @@ namespace Nikse.SubtitleEdit.Logic
                 return;
             }
 
-            Se.LogError($"Window '{window.Title}' reports Topmost but is not WS_EX_TOPMOST - re-asserting.");
             window.Topmost = false;
             window.Topmost = true;
         }

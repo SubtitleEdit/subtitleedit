@@ -839,6 +839,11 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
             var prefix = message.prefix == IntPtr.Zero ? string.Empty : Marshal.PtrToStringUTF8(message.prefix);
             var level = message.level == IntPtr.Zero ? string.Empty : Marshal.PtrToStringUTF8(message.level);
+            if (IsExpectedMpvLogMessage(level, prefix, text))
+            {
+                return;
+            }
+
             _forwardedMpvLogMessages++;
             var suffix = _forwardedMpvLogMessages == MaxForwardedMpvLogMessages
                 ? " (further mpv messages from this player are not logged)"
@@ -851,6 +856,24 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         {
             // diagnostics only - never let logging disturb the event loop
         }
+    }
+
+    /// <summary>
+    /// mpv warnings that say nothing about a playback problem, so they must not produce an error
+    /// log on a session where nothing went wrong (#14904): the notice mpv prints whenever
+    /// "audio-stream-silence" is on - an option SE sets on purpose - and ffmpeg's demuxer
+    /// grumbling about a file's metadata ("UDTA parsing failed retrying raw"). Errors are always
+    /// kept. Pure so the rule can be tested.
+    /// </summary>
+    internal static bool IsExpectedMpvLogMessage(string? level, string? prefix, string text)
+    {
+        if (!string.Equals(level, "warn", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        return text.Contains("--audio-stream-silence", StringComparison.OrdinalIgnoreCase) ||
+               string.Equals(prefix, "ffmpeg/demuxer", StringComparison.OrdinalIgnoreCase);
     }
 
     /// <summary>
