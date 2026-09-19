@@ -448,6 +448,14 @@ public static class UiTheme
             {
                 Setters = { new Setter(Avalonia.Controls.Primitives.ScrollBar.AllowAutoHideProperty, allowAutoHide) }
             },
+            // The TextBox template binds its inner ScrollViewer's AllowAutoHide to the attached
+            // property on the TextBox itself, and that template binding beats the ScrollViewer
+            // style above - so the text box needs the value too, or its scrollbar overlays the
+            // text (#15033).
+            new Style(x => x.Is<TextBox>())
+            {
+                Setters = { new Setter(ScrollViewer.AllowAutoHideProperty, allowAutoHide) }
+            },
         };
 
 
