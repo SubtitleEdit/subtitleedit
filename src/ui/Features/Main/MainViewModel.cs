@@ -27477,6 +27477,14 @@ public partial class MainViewModel :
             return;
         }
 
+        // The X also stands next to "Isolating speech for the waveform...". That stops the run
+        // but leaves the option on, so the next open of the video tries again.
+        if (_currentWaveExtractionProcess == null)
+        {
+            StopSpeechOnlyWaveform();
+            return;
+        }
+
         Volatile.Write(ref _cancelledWaveExtractionId, Volatile.Read(ref _waveExtractionSequence));
 
         var process = _currentWaveExtractionProcess;
