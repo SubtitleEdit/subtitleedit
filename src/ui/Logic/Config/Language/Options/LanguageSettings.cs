@@ -337,6 +337,15 @@ public class LanguageSettings
     public string WaveformSaveAsCustomTheme { get; set; }
     public string WaveformLoadThemeDotDotDot { get; set; }
     public string WaveformExportThemeDotDotDot { get; set; }
+    public string WaveformSaveCustomThemeTitle { get; set; }
+    public string WaveformThemeFileType { get; set; }
+    public string WaveformThemeHighContrast { get; set; }
+    public string WaveformThemeOceanBlue { get; set; }
+    public string WaveformThemeWarmSunset { get; set; }
+    public string WaveformThemeForest { get; set; }
+    public string WaveformThemeMidnightPurple { get; set; }
+    public string WaveformThemeRetroAmber { get; set; }
+    public string WaveformThemeIce { get; set; }
 
     public LanguageSettings()
     {
@@ -670,6 +679,15 @@ public class LanguageSettings
         WaveformSaveAsCustomTheme = "Save as custom theme...";
         WaveformLoadThemeDotDotDot = "Load theme...";
         WaveformExportThemeDotDotDot = "Export theme...";
+        WaveformSaveCustomThemeTitle = "Save custom theme";
+        WaveformThemeFileType = "Subtitle Edit waveform theme";
+        WaveformThemeHighContrast = "High Contrast";
+        WaveformThemeOceanBlue = "Ocean Blue";
+        WaveformThemeWarmSunset = "Warm Sunset";
+        WaveformThemeForest = "Forest";
+        WaveformThemeMidnightPurple = "Midnight Purple";
+        WaveformThemeRetroAmber = "Retro Amber";
+        WaveformThemeIce = "Ice";
     }
 
     public string GetContinuationStyleName(ContinuationStyle continuationStyle)
