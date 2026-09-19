@@ -1398,6 +1398,10 @@ public class InitWaveform
                 case SeWaveformToolbarItemType.More:
                     toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = buttonMore });
                     break;
+                case SeWaveformToolbarItemType.LineBreak1:
+                case SeWaveformToolbarItemType.LineBreak2:
+                    toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = new WrapPanelLineBreak() });
+                    break;
             }
         }
 

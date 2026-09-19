@@ -48,5 +48,10 @@ public enum SeWaveformToolbarItemType
     AutoSelectOnPlay = 13,
     Center = 14,
     VideoSeek = 15,
-    More = 16
+    More = 16,
+
+    // Not buttons: each forces the toolbar's WrapPanel onto a new row at its position, so the
+    // user decides where a toolbar wider than the waveform pane wraps.
+    LineBreak1 = 28,
+    LineBreak2 = 29
 }
