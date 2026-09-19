@@ -3,6 +3,26 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.3.0-beta6 (19th of September 2026)
+
+* Add actor picker, actor shortcuts now work everywhere and keep a stable order - thx zbik1
+* Add optional "go to changed line" on undo/redo - thx kadrimarzouki
+* Add "Set end and go to next" and "Play from just before text" to the waveform toolbar - thx JonEvanCook
+* Add two missing SE4 options to Settings > Tools (remember "Use always" list, short display times may move start time) - thx ChocOranger
+* Spell check: accept Spanish imperative + pronoun forms (dímelo, cuéntame, ...) - thx fraternl
+* Text to speech: a failed per-line voice clone line falls back to a neighbouring line's reference clip - thx nielka98
+* Waveform toolbar wraps to a second row instead of clipping - thx JonEvanCook
+* Space always types in text boxes, even with single-letter shortcuts allowed - thx kadrimarzouki
+* Pastel theme: refresh palette
+* Fix auto-translate "No usable translation" with KoboldCpp (llama.cpp advanced engine) - thx Giorgio800
+* Fix edit text box scrollbar covering the text - thx kadrimarzouki
+* Fix invisible toolbar icons in the Pastel theme
+* Fix misspelled entries in the Spanish SE word list
+* Update Japanese translation - thx hisui3393
+* Update Polish translation - thx potplayer-fanpack
+
+-----------------------------------------------------------------------------------------------------
+
 v5.3.0-beta5 (18th of September 2026)
 
 * Add "Generate background music" (ACE-Step, local) in Video > More and in the text to speech window
