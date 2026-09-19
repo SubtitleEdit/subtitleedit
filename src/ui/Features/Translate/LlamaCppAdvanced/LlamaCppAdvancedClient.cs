@@ -22,6 +22,10 @@ namespace Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
 /// forever now trips the inter-token watchdog instead of sitting silent until the HTTP timeout,
 /// and cancelling mid-generation closes the connection, which makes llama-server abort the slot
 /// instead of finishing a reply nobody reads (#13830).
+///
+/// A server that files the answer under "reasoning_content" is read from there when "content"
+/// stays empty: KoboldCpp does that for the whole reply when the chat template opens a think
+/// block, because the JSON grammar never lets the model close it (#15009).
 /// </summary>
 public class LlamaCppAdvancedClient : IDisposable
 {
@@ -36,6 +40,9 @@ public class LlamaCppAdvancedClient : IDisposable
 
     public string Error { get; private set; } = string.Empty;
 
+    /// <summary>True when the last reply had no "content" and was taken from "reasoning_content".</summary>
+    public bool ReplyFromReasoning { get; private set; }
+
     public LlamaCppAdvancedClient()
     {
         _httpClient = HttpClientFactoryWithProxy.CreateHttpClientWithProxy();
@@ -45,6 +52,7 @@ public class LlamaCppAdvancedClient : IDisposable
     public async Task<string> ChatAsync(string url, string systemPrompt, string userContent, string? responseFormatJson, CancellationToken cancellationToken, string? model = null, int defaultMaxTokens = -1)
     {
         Error = string.Empty;
+        ReplyFromReasoning = false;
 
         var response = await PostAsync(url, BuildRequestJson(systemPrompt, userContent, responseFormatJson, model, defaultMaxTokens), cancellationToken);
 
@@ -69,7 +77,11 @@ public class LlamaCppAdvancedClient : IDisposable
 
         // Streamed replies arrive already assembled from the deltas; a server that ignored
         // "stream" returns a regular completion object instead.
-        return response.isAssembledContent ? response.body : ExtractContent(response.body);
+        var reply = response.isAssembledContent
+            ? PickReply(response.body, response.reasoning, out var fromReasoning)
+            : ExtractContent(response.body, out fromReasoning);
+        ReplyFromReasoning = fromReasoning;
+        return reply;
     }
 
     /// <summary>
@@ -160,7 +172,7 @@ public class LlamaCppAdvancedClient : IDisposable
     /// with a different response format. A user cancellation propagates as
     /// <see cref="OperationCanceledException"/> instead.
     /// </summary>
-    private async Task<(bool ok, bool stalled, bool isAssembledContent, string body)> PostAsync(string url, string json, CancellationToken cancellationToken)
+    private async Task<(bool ok, bool stalled, bool isAssembledContent, string body, string reasoning)> PostAsync(string url, string json, CancellationToken cancellationToken)
     {
         using var overall = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         overall.CancelAfter(TotalTimeout);
@@ -180,13 +192,14 @@ public class LlamaCppAdvancedClient : IDisposable
             if (!result.IsSuccessStatusCode)
             {
                 var errorBody = await result.Content.ReadAsStringAsync(idle.Token).ConfigureAwait(false);
-                return (false, false, false, errorBody);
+                return (false, false, false, errorBody, string.Empty);
             }
 
             await using var stream = await result.Content.ReadAsStreamAsync(idle.Token).ConfigureAwait(false);
             using var reader = new System.IO.StreamReader(stream, Encoding.UTF8);
 
             var assembled = new StringBuilder();
+            var reasoning = new StringBuilder();
             var raw = new StringBuilder();
             var sawSseData = false;
 
@@ -214,15 +227,15 @@ public class LlamaCppAdvancedClient : IDisposable
                 }
 
                 sawSseData = true;
-                if (!TryAppendDelta(payload, assembled, out var chunkError))
+                if (!TryAppendDelta(payload, assembled, reasoning, out var chunkError))
                 {
-                    return (false, false, false, chunkError);
+                    return (false, false, false, chunkError, string.Empty);
                 }
             }
 
             return sawSseData
-                ? (true, false, true, assembled.ToString())
-                : (true, false, false, raw.ToString());
+                ? (true, false, true, assembled.ToString(), reasoning.ToString())
+                : (true, false, false, raw.ToString(), string.Empty);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
@@ -232,16 +245,20 @@ public class LlamaCppAdvancedClient : IDisposable
         {
             return (false, true, false,
                 "The server stopped sending data (generation looks stalled) and the request was aborted - " +
-                "the model may not fit in GPU memory, or it may be stuck in a generation loop.");
+                "the model may not fit in GPU memory, or it may be stuck in a generation loop.",
+                string.Empty);
         }
         catch (Exception e)
         {
-            return (false, false, false, e.Message);
+            return (false, false, false, e.Message, string.Empty);
         }
     }
 
-    /// <summary>Appends one SSE chunk's delta content; returns false on an in-stream error object.</summary>
-    private static bool TryAppendDelta(string payload, StringBuilder assembled, out string error)
+    /// <summary>
+    /// Appends one SSE chunk's delta content (and, separately, its reasoning_content); returns
+    /// false on an in-stream error object.
+    /// </summary>
+    internal static bool TryAppendDelta(string payload, StringBuilder assembled, StringBuilder reasoning, out string error)
     {
         error = string.Empty;
         try
@@ -257,10 +274,19 @@ public class LlamaCppAdvancedClient : IDisposable
                 choices.ValueKind == JsonValueKind.Array &&
                 choices.GetArrayLength() > 0 &&
                 choices[0].TryGetProperty("delta", out var delta) &&
-                delta.TryGetProperty("content", out var contentElement) &&
-                contentElement.ValueKind == JsonValueKind.String)
+                delta.ValueKind == JsonValueKind.Object)
             {
-                assembled.Append(contentElement.GetString());
+                if (delta.TryGetProperty("content", out var contentElement) &&
+                    contentElement.ValueKind == JsonValueKind.String)
+                {
+                    assembled.Append(contentElement.GetString());
+                }
+
+                if (delta.TryGetProperty("reasoning_content", out var reasoningElement) &&
+                    reasoningElement.ValueKind == JsonValueKind.String)
+                {
+                    reasoning.Append(reasoningElement.GetString());
+                }
             }
 
             return true;
@@ -272,8 +298,20 @@ public class LlamaCppAdvancedClient : IDisposable
         }
     }
 
-    private static string ExtractContent(string json)
+    /// <summary>
+    /// The reply to parse: "content", or the reasoning text when the server left content blank.
+    /// Safe for real chain-of-thought too - the protocol only accepts a complete JSON object, so
+    /// thoughts without one fail the batch exactly as the empty content did.
+    /// </summary>
+    internal static string PickReply(string content, string reasoning, out bool fromReasoning)
     {
+        fromReasoning = string.IsNullOrWhiteSpace(content) && !string.IsNullOrWhiteSpace(reasoning);
+        return fromReasoning ? reasoning : content;
+    }
+
+    internal static string ExtractContent(string json, out bool fromReasoning)
+    {
+        fromReasoning = false;
         try
         {
             using var doc = JsonDocument.Parse(json);
@@ -281,9 +319,9 @@ public class LlamaCppAdvancedClient : IDisposable
                 choices.ValueKind == JsonValueKind.Array &&
                 choices.GetArrayLength() > 0 &&
                 choices[0].TryGetProperty("message", out var message) &&
-                message.TryGetProperty("content", out var contentElement))
+                message.ValueKind == JsonValueKind.Object)
             {
-                return contentElement.GetString() ?? string.Empty;
+                return PickReply(GetStringOrEmpty(message, "content"), GetStringOrEmpty(message, "reasoning_content"), out fromReasoning);
             }
         }
         catch (JsonException)
@@ -292,6 +330,13 @@ public class LlamaCppAdvancedClient : IDisposable
         }
 
         return json;
+    }
+
+    private static string GetStringOrEmpty(JsonElement element, string name)
+    {
+        return element.TryGetProperty(name, out var value) && value.ValueKind == JsonValueKind.String
+            ? value.GetString() ?? string.Empty
+            : string.Empty;
     }
 
     private static string ShortError(string body)

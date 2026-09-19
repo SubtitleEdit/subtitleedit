@@ -123,7 +123,6 @@ public class LanguageVideo
     public string TalkerX { get; set; }
     public string BaseModel { get; set; }
     public string TurboModel { get; set; }
-    public string TtsUpdateX { get; set; }
     public string TtsEngineNotInstalled { get; set; }
     public string TtsEngineUpdateAvailable { get; set; }
     public string TtsEngineTooOldUpdateRequired { get; set; }
@@ -233,7 +232,6 @@ public class LanguageVideo
         TalkerX = "Talker {0}";
         BaseModel = "Base model";
         TurboModel = "Turbo model";
-        TtsUpdateX = "Update {0}";
         TtsEngineNotInstalled = "{0} not installed";
         TtsEngineUpdateAvailable = "{0} - update available";
         TtsEngineTooOldUpdateRequired = "{0} too old - update required";

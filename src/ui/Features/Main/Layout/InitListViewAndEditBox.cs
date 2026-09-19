@@ -2447,6 +2447,11 @@ public static partial class InitListViewAndEditBox
         textBox.IsUndoEnabled = false;
         textBox.ClearSelectionOnLostFocus = false;
 
+        // Give the vertical scrollbar its own column instead of overlaying the text: an
+        // auto-hiding scrollbar is drawn on top of the end of each wrapped line, hiding the
+        // last letters and stealing the clicks meant to select them (#15033).
+        ScrollViewer.SetAllowAutoHide(textBox, false);
+
         // Pasted text goes straight into the paragraph via the two-way binding, so its line
         // breaks must be SE's own - see TextBoxPasteNormalizer (#13591).
         TextBoxPasteNormalizer.NormalizeLineBreaksOnPaste(textBox);

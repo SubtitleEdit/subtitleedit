@@ -99,9 +99,11 @@ internal class IconNames
     public const string Plus = "mdi-plus";
     public const string PoliceBadge = "mdi-police-badge";
     public const string RayEnd = "mdi-ray-end";
+    public const string RayEndArrow = "mdi-ray-end-arrow";
     public const string RayStart = "mdi-ray-start";
     public const string Recycle = "mdi-recycle";
     public const string Regex = "mdi-regex";
+    public const string Replay = "mdi-replay";
     public const string Repeat = "mdi-repeat";
     public const string Refresh = "mdi-refresh";
     public const string Restore = "mdi-restore";

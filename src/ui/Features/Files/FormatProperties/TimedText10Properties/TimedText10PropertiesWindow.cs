@@ -110,7 +110,7 @@ public class TimedText10PropertiesWindow : Window
             Children = { labelTimeCodeFormat, comboBoxTimeCodeFormat },
         };
 
-        var labelFileExtension = UiUtil.MakeLabel(Se.Language.File.PropertyFileExtension).WithMinWidth(labelWidth);
+        var labelFileExtension = UiUtil.MakeLabel(Se.Language.General.FileExtension).WithMinWidth(labelWidth);
         var comboBoxFileExtension = UiUtil.MakeComboBox(vm.FileExtensions, vm, nameof(vm.SelectedFileExtension)).WithMinWidth(263);
         var panelFileExtension = new StackPanel
         {

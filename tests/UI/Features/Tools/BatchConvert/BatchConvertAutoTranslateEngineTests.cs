@@ -42,7 +42,7 @@ public class BatchConvertAutoTranslateEngineTests
         var view = ViewAutoTranslate.Make(viewModel);
 
         var button = view.GetLogicalDescendants().OfType<Button>().FirstOrDefault(b =>
-            AutomationProperties.GetName(b) == Se.Language.Translate.AdvancedSettings);
+            AutomationProperties.GetName(b) == Se.Language.General.AdvancedSettings);
         Assert.NotNull(button);
 
         foreach (var engine in viewModel.AutoTranslators)

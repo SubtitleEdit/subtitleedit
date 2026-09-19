@@ -295,9 +295,12 @@ public class LanguageSettings
     public string SplitOddLinesAction { get; set; }
     public string OcrUseWordSplitList { get; set; }
     public string OcrGuessUnknownWords { get; set; }
+    public string SpellCheckRememberUseAlwaysList { get; set; }
+    public string FixShortDisplayTimesAllowMoveStartTime { get; set; }
     public string SpeechToTextSelectedLinesPromptFirstTimeOnly { get; set; }
     public string MultipleReplaceShowDotDotDotButtons { get; set; }
     public string GridFocusTextboxAfterInsertNew { get; set; }
+    public string UndoRedoGoToChangedLine { get; set; }
     public string MusicSymbol { get; set; }
     public string MusicSymbolsToReplace { get; set; }
     public string TextToSpeechPromptMergeContinuationLines { get; set; }
@@ -624,9 +627,12 @@ public class LanguageSettings
         SplitOddLinesAction = "Split odd lines action";
         OcrUseWordSplitList = "OCR: use word split list";
         OcrGuessUnknownWords = "OCR: try to guess unknown words";
+        SpellCheckRememberUseAlwaysList = "Spell check: remember \"Use always\" list";
+        FixShortDisplayTimesAllowMoveStartTime = "Fix common errors: fix short display times may move start time";
         SpeechToTextSelectedLinesPromptFirstTimeOnly = "Speech to text: selected lines, prompt for language/engine first time only";
         MultipleReplaceShowDotDotDotButtons = "Multiple replace: show context menu buttons";
         GridFocusTextboxAfterInsertNew = "Grid: focus text box after insert new subtitle";
+        UndoRedoGoToChangedLine = "Undo/redo: go to changed line (and video position)";
         MusicSymbol = "Music symbol";
         MusicSymbolsToReplace = "Music symbols to replace (separated by comma)";
         TextToSpeechPromptMergeContinuationLines = "Text to speech: prompt to merge continuation lines";

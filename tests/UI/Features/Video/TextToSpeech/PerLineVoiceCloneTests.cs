@@ -184,4 +184,41 @@ public class PerLineVoiceCloneTests
         Assert.Null(PerLineVoiceClone.TryGetReferenceClip(PerLineVoiceClone.CreateVoice()));
         Assert.Null(PerLineVoiceClone.TryGetReferenceClip(null));
     }
+
+    [Fact]
+    public void AFailedLineFallsBackToTheNearestOtherClips()
+    {
+        // #15020: a line whose own clip makes the engine fail is cloned from a neighbour's.
+        var lines = Lines((0, 2), (3, 5), (6, 8), (9, 11), (12, 14));
+        var clips = lines.Select((p, i) => (p, i)).ToDictionary(x => x.p, x => $"line-{x.i + 1:0000}.wav");
+
+        var fallbacks = PerLineVoiceClone.GetFallbackReferenceClips(lines, 2, clips, _ => null);
+
+        Assert.Equal(new[] { "line-0002.wav", "line-0004.wav" }, fallbacks);
+    }
+
+    [Fact]
+    public void FallbackClipsPreferTheSameSpeakerAndSkipLinesWithoutAClip()
+    {
+        var lines = Lines((0, 2), (3, 5), (6, 8), (9, 11), (12, 14));
+        lines[0].Actor = "Anna";
+        lines[1].Actor = "Bo";
+        lines[2].Actor = "Anna";
+        lines[3].Actor = "Bo";
+        lines[4].Actor = "Anna";
+        var clips = lines.Select((p, i) => (p, i)).Where(x => x.i != 3).ToDictionary(x => x.p, x => $"line-{x.i + 1:0000}.wav");
+
+        var fallbacks = PerLineVoiceClone.GetFallbackReferenceClips(lines, 2, clips, p => p.Actor, maxCount: 3);
+
+        Assert.Equal(new[] { "line-0001.wav", "line-0005.wav", "line-0002.wav" }, fallbacks);
+    }
+
+    [Fact]
+    public void ALineWithNoOtherClipsHasNoFallback()
+    {
+        var lines = Lines((0, 2));
+        var clips = new Dictionary<Paragraph, string> { [lines[0]] = "line-0001.wav" };
+
+        Assert.Empty(PerLineVoiceClone.GetFallbackReferenceClips(lines, 0, clips, _ => null));
+    }
 }

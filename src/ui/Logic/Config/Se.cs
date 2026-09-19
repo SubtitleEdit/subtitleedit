@@ -21,7 +21,7 @@ public class Se
     internal const int CurrentShortcutsMigrationVersion = 4;
     internal const int CurrentLayoutMigrationVersion = 1;
 
-    public static string Version { get; set; } = "v5.3.0-beta5";
+    public static string Version { get; set; } = "v5.3.0-beta6";
 
     public SeGeneral General { get; set; } = new();
     public List<SeShortCut> Shortcuts { get; set; } = new();
@@ -60,16 +60,6 @@ public class Se
     public string CustomSearch4Url { get; set; } = string.Empty;
     public string CustomSearch5Name { get; set; } = string.Empty;
     public string CustomSearch5Url { get; set; } = string.Empty;
-    public string Actor1 { get; set; } = "Actor 1";
-    public string Actor2 { get; set; } = "Actor 2";
-    public string Actor3 { get; set; } = "Actor 3";
-    public string Actor4 { get; set; } = "Actor 4";
-    public string Actor5 { get; set; } = "Actor 5";
-    public string Actor6 { get; set; } = "Actor 6";
-    public string Actor7 { get; set; } = "Actor 7";
-    public string Actor8 { get; set; } = "Actor 8";
-    public string Actor9 { get; set; } = "Actor 9";
-    public string Actor10 { get; set; } = "Actor 10";
     public SeFile File { get; set; } = new();
     public SeEdit Edit { get; set; } = new();
     public SeTools Tools { get; set; } = new();
@@ -1125,6 +1115,7 @@ public class Se
         ss.DCinemaFadeUpTime = dc.DCinemaFadeUpTime;
         ss.DCinemaFadeDownTime = dc.DCinemaFadeDownTime;
         Configuration.Settings.Tools.RememberUseAlwaysList = Settings.Tools.SpellCheckRememberUseAlwaysList;
+        Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime = Settings.Tools.FixShortDisplayTimesAllowMoveStartTime;
     }
 
     /// <summary>

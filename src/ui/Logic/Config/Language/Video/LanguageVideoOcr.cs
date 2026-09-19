@@ -26,7 +26,6 @@ public class LanguageVideoOcr
     public string LinesFoundX { get; set; }
     public string RefiningTimingXY { get; set; }
     public string FixOcrErrors { get; set; }
-    public string Dictionary { get; set; }
     public string EditLineX { get; set; }
     public string DownloadDictionaryHint { get; set; }
     public string FramesPerSecondHint { get; set; }
@@ -78,7 +77,6 @@ public class LanguageVideoOcr
         LinesFoundX = "{0} lines found";
         RefiningTimingXY = "Refining timing... {0}/{1}";
         FixOcrErrors = "Fix OCR errors";
-        Dictionary = "Dictionary";
         EditLineX = "Edit line {0}";
         DownloadDictionaryHint = "Download a spell check dictionary...";
         FramesPerSecondHint = "How many frames per second are scanned. 5 covers normal subtitles; higher catches very short lines and tightens grouping, but costs more OCR time.";
