@@ -392,13 +392,16 @@ public class InitWaveform
         mainGrid.Children.Add(vm.AudioVisualizer);
 
         // Footer
-        var controlsPanel = new StackPanel
+        // A WrapPanel so a toolbar wider than the waveform pane continues on a second row instead
+        // of being clipped at both ends (#15034).
+        var controlsPanel = new WrapPanel
         {
             Orientation = Orientation.Horizontal,
+            ItemsAlignment = WrapPanelItemsAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
             HorizontalAlignment = HorizontalAlignment.Center
         };
-        controlsPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsWaveformToolbarVisible)));
+        controlsPanel.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsWaveformToolbarVisible)));
 
         var settingPlay = GetToolbarSettingFor(SeWaveformToolbarItemType.Play);
         var buttonPlay = new NonSpaceButton
