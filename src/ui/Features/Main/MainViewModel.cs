@@ -21689,6 +21689,7 @@ public partial class MainViewModel :
             var preIndex = SelectedSubtitleIndex ?? 0;
             var preRowTop = GetSelectedRowViewportTop();
             var preFocus = CaptureUndoRedoFocus();
+            var preRows = Se.Settings.Tools.UndoRedoGoToChangedLine ? Subtitles.ToArray() : null;
 
             var undoRedoObject = _undoRedoManager.Undo()!;
             if (undoRedoObject?.Subtitles == null)
@@ -21697,7 +21698,7 @@ public partial class MainViewModel :
             }
 
             RestoreUndoRedoState(undoRedoObject, scrollToSelected: false);
-            RestoreSelectionToPreviousIndex(preIndex, preRowTop, restoreGridFocus: preFocus == UndoRedoFocus.Grid);
+            RestoreSelectionAfterUndoRedo(preRows, preIndex, preRowTop, restoreGridFocus: preFocus == UndoRedoFocus.Grid);
             RestoreUndoRedoFocus(preFocus);
             ShowUndoStatus();
         });
@@ -21739,6 +21740,7 @@ public partial class MainViewModel :
             var preIndex = SelectedSubtitleIndex ?? 0;
             var preRowTop = GetSelectedRowViewportTop();
             var preFocus = CaptureUndoRedoFocus();
+            var preRows = Se.Settings.Tools.UndoRedoGoToChangedLine ? Subtitles.ToArray() : null;
 
             var undoRedoObject = _undoRedoManager.Redo();
             if (undoRedoObject?.Subtitles == null)
@@ -21747,7 +21749,7 @@ public partial class MainViewModel :
             }
 
             RestoreUndoRedoState(undoRedoObject, scrollToSelected: false);
-            RestoreSelectionToPreviousIndex(preIndex, preRowTop, restoreGridFocus: preFocus == UndoRedoFocus.Grid);
+            RestoreSelectionAfterUndoRedo(preRows, preIndex, preRowTop, restoreGridFocus: preFocus == UndoRedoFocus.Grid);
             RestoreUndoRedoFocus(preFocus);
             ShowRedoStatus();
         });
@@ -21823,6 +21825,39 @@ public partial class MainViewModel :
             case UndoRedoFocus.AudioVisualizer:
                 Dispatcher.UIThread.Post(() => AudioVisualizer?.Focus());
                 break;
+        }
+    }
+
+    /// <summary>
+    /// Undo/redo normally keep the row the user is on (#11308). With "Undo/redo: go to changed
+    /// line" on, the first row the step changed is selected instead, and the video follows it -
+    /// undoing "move text to next, go to next and play" then lands back on the line the text
+    /// came from (#15029).
+    /// </summary>
+    private void RestoreSelectionAfterUndoRedo(SubtitleLineViewModel[]? preRows, int preIndex, double? preRowTop, bool? restoreGridFocus)
+    {
+        var changedIndex = preRows == null ? -1 : UndoRedoChangedRowFinder.FindFirstChangedRowIndex(preRows, Subtitles);
+        if (changedIndex < 0 || Subtitles.Count == 0)
+        {
+            RestoreSelectionToPreviousIndex(preIndex, preRowTop, restoreGridFocus);
+            return;
+        }
+
+        changedIndex = Math.Min(changedIndex, Subtitles.Count - 1);
+        if (changedIndex == preIndex)
+        {
+            RestoreSelectionToPreviousIndex(preIndex, preRowTop, restoreGridFocus);
+            return;
+        }
+
+        SelectAndScrollToRow(changedIndex, null, restoreGridFocus: restoreGridFocus);
+
+        var vp = GetVideoPlayerControl();
+        if (vp != null && !string.IsNullOrEmpty(_videoFileName))
+        {
+            var seconds = Subtitles[changedIndex].StartTime.TotalSeconds;
+            SeekVideoPlayer(vp, seconds);
+            PinPlayheadTo(seconds);
         }
     }
 

@@ -130,6 +130,7 @@ public class SeTools
     public bool SpeechToTextSelectedLinesPromptFirstTimeOnly { get; set; }
     public bool MultipleReplaceShowDotDotDotButtons { get; set; }
     public bool GridFocusTextboxAfterInsertNew { get; set; }
+    public bool UndoRedoGoToChangedLine { get; set; }
     public bool TextToSpeechPromptMergeContinuationLines { get; set; }
     public bool TextToSpeechPromptSkipNoiseLines { get; set; }
     public bool TextToSpeechPromptDetectSpeakers { get; set; }
