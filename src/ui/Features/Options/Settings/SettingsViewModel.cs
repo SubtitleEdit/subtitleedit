@@ -205,6 +205,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _speechToTextSelectedLinesPromptFistTimeOnly;
     [ObservableProperty] private bool _multipleReplaceShowDotDotDotButtons;
     [ObservableProperty] private bool _gridFocusTextboxAfterInsertNew;
+    [ObservableProperty] private bool _undoRedoGoToChangedLine;
     [ObservableProperty] private bool _textToSpeechPromptMergeContinuationLines;
     [ObservableProperty] private bool _textToSpeechPromptSkipNoiseLines;
     [ObservableProperty] private bool _textToSpeechPromptDetectSpeakers;
@@ -876,6 +877,7 @@ public partial class SettingsViewModel : ObservableObject
         SpeechToTextSelectedLinesPromptFistTimeOnly = Se.Settings.Tools.SpeechToTextSelectedLinesPromptFirstTimeOnly;
         MultipleReplaceShowDotDotDotButtons = Se.Settings.Tools.MultipleReplaceShowDotDotDotButtons;
         GridFocusTextboxAfterInsertNew = Se.Settings.Tools.GridFocusTextboxAfterInsertNew;
+        UndoRedoGoToChangedLine = Se.Settings.Tools.UndoRedoGoToChangedLine;
         TextToSpeechPromptMergeContinuationLines = Se.Settings.Tools.TextToSpeechPromptMergeContinuationLines;
         TextToSpeechPromptSkipNoiseLines = Se.Settings.Tools.TextToSpeechPromptSkipNoiseLines;
         TextToSpeechPromptDetectSpeakers = Se.Settings.Tools.TextToSpeechPromptDetectSpeakers;
@@ -1741,6 +1743,7 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Tools.SpeechToTextSelectedLinesPromptFirstTimeOnly = SpeechToTextSelectedLinesPromptFistTimeOnly;
         Se.Settings.Tools.MultipleReplaceShowDotDotDotButtons = MultipleReplaceShowDotDotDotButtons;
         Se.Settings.Tools.GridFocusTextboxAfterInsertNew = GridFocusTextboxAfterInsertNew;
+        Se.Settings.Tools.UndoRedoGoToChangedLine = UndoRedoGoToChangedLine;
         Se.Settings.Tools.TextToSpeechPromptMergeContinuationLines = TextToSpeechPromptMergeContinuationLines;
         Se.Settings.Tools.TextToSpeechPromptSkipNoiseLines = TextToSpeechPromptSkipNoiseLines;
         Se.Settings.Tools.TextToSpeechPromptDetectSpeakers = TextToSpeechPromptDetectSpeakers;
