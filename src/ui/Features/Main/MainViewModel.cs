@@ -26268,6 +26268,7 @@ public partial class MainViewModel :
     private void CleanUp()
     {
         StopBackgroundWork();
+        StopSpeechOnlyWaveform();
 
         if (_findViewModel != null)
         {
@@ -26874,6 +26875,7 @@ public partial class MainViewModel :
         {
             AudioVisualizer.WavePeaks = cached.WavePeaks;
             AudioVisualizer.ShowClickToGenerateHint = false;
+            ApplySpeechOnlyWaveformIfEnabled(videoFileName, trackNumber, cached.PeakWaveFileName);
 
             if (IsSmpteTimingEnabled)
             {
@@ -27580,6 +27582,7 @@ public partial class MainViewModel :
                     if (AudioVisualizer != null)
                     {
                         AudioVisualizer.WavePeaks = wavePeaks;
+                        ApplySpeechOnlyWaveformIfEnabled(videoFileName, _audioTrack?.FfIndex ?? -1, peakWaveFileName);
                         if (IsSmpteTimingEnabled)
                         {
                             AudioVisualizer.UseSmpteDropFrameTime();

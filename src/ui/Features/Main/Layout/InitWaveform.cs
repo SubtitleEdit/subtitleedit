@@ -349,6 +349,21 @@ public class InitWaveform
             };
             flyout.Items.Add(showOriginalSubtitleMenuItem);
 
+            var showSpeechOnlyMenuItem = new MenuItem
+            {
+                Header = Se.Language.Waveform.ShowSpeechOnly,
+                ToggleType = MenuItemToggleType.CheckBox,
+                IsChecked = settings.ShowSpeechOnly,
+            };
+            showSpeechOnlyMenuItem.Click += async (_, _) =>
+            {
+                // The view model may refuse (runtime or model download declined), so the check
+                // mark follows the setting rather than the click.
+                await vm.SetWaveformSpeechOnlyAsync(showSpeechOnlyMenuItem.IsChecked);
+                showSpeechOnlyMenuItem.IsChecked = settings.ShowSpeechOnly;
+            };
+            flyout.Items.Add(showSpeechOnlyMenuItem);
+
             var separatorDisplayMode = new Separator();
             separatorDisplayMode.DataContext = vm;
             separatorDisplayMode.Bind(Separator.IsVisibleProperty, new Binding(nameof(vm.ShowWaveformDisplayModeSeparator)));

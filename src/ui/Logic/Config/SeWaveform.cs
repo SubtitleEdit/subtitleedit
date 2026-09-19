@@ -85,6 +85,7 @@ public class SeWaveform
     public double SeekSilenceMaxVolume { get; set; }
     public bool SeekSilenceSeekForward { get; set; }
     public bool GenerateSpectrogram { get; set; }
+    public bool ShowSpeechOnly { get; set; }
 
     // Hidden setting (Settings.json only, no UI yet): when false, the waveform/peaks are not
     // generated automatically when a video is opened. Cached peaks still load, so previously
