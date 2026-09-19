@@ -271,6 +271,7 @@ When enabled (toggle via shortcut or **Options → Shortcuts → Toggle waveform
 | **Center** | Toggle keeping the video position centered in the waveform |
 | **Video seek** | Seek back/forward buttons |
 | **More** | Menu: reset zoom and speed, configure toolbar items, hide the toolbar |
+| **Line break 1 / 2** | Not buttons (off by default): the toolbar continues on a new row from where a line break is placed, so you decide where a wide toolbar wraps |
 
 <!-- Screenshot: Waveform toolbar -->
 ![Waveform Toolbar](../screenshots/main-waveform-toolbar.png)

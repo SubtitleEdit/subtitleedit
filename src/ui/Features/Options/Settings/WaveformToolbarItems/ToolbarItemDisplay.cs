@@ -56,6 +56,8 @@ public partial class ToolbarItemDisplay : ObservableObject
             SeWaveformToolbarItemType.TextPause => Format(w.TextPauseHint),
             SeWaveformToolbarItemType.TextNext => Format(w.TextNextHint),
             SeWaveformToolbarItemType.More => Se.Language.General.More,
+            SeWaveformToolbarItemType.LineBreak1 => string.Format(w.ToolbarLineBreakX, 1),
+            SeWaveformToolbarItemType.LineBreak2 => string.Format(w.ToolbarLineBreakX, 2),
             _ => type.ToString(),
         };
     }
