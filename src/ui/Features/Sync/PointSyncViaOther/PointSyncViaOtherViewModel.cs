@@ -74,7 +74,7 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
         _originalSubtitles = new List<SubtitleLineViewModel>();
     }
 
-    public void Initialize(List<SubtitleLineViewModel> subtitles, string videoFileName, string fileName, VideoPreviewSubtitleContext previewContext, int audioTrackId = -1)
+    public void Initialize(List<SubtitleLineViewModel> subtitles, int selectedIndex, string videoFileName, string fileName, VideoPreviewSubtitleContext previewContext, int audioTrackId = -1)
     {
         _audioTrackId = audioTrackId;
         Subtitles.Clear();
@@ -87,7 +87,8 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
 
         if (Subtitles.Count > 0)
         {
-            SelectedSubtitle = Subtitles[0];
+            // Start at the line selected in the main window (issue #15062).
+            SelectedSubtitle = Subtitles[Math.Clamp(selectedIndex, 0, Subtitles.Count - 1)];
         }
     }
 
