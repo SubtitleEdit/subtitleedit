@@ -5,6 +5,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
+using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Files.ImportPlainText;
 using Nikse.SubtitleEdit.Features.Main;
@@ -53,6 +54,7 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
     [ObservableProperty] private AudioVisualizer? _audioVisualizerAligned;
 
     public Window? Window { get; set; }
+    public VideoPlayerControl? VideoPlayer { get; set; }
     public bool OkPressed { get; private set; }
 
     /// <summary>Asks the view to bring a row into view; the grid is the view's to scroll.</summary>
@@ -66,6 +68,11 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
     private int _audioTrackNumber = -1;
     private CancellationTokenSource? _cancellation;
     private UiTickPump? _positionTimer;
+
+    /// <summary>Where "play this line" stops again; null while playing freely.</summary>
+    private double? _playUntilSeconds;
+    private long _playLineStartedTicks;
+    private bool _centerOnSelection = true;
     private bool _disposed;
 
     public ImproveTimeCodesViewModel(IWindowService windowService)
@@ -80,7 +87,7 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         _isIdle = true;
 
         var settings = Se.Settings.Tools.ImproveTimeCodes;
-        _maxShiftSeconds = (decimal)Math.Clamp(settings.MaxShiftSeconds, 0.2, 10.0);
+        _maxShiftSeconds = (decimal)Math.Clamp(settings.MaxShiftSeconds, 0.1, 10.0);
         _adjustStart = settings.AdjustStart;
         _adjustEnd = settings.AdjustEnd;
     }
@@ -140,11 +147,21 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
                 av.UpdateTheme();
             }
 
-            // The click events only fire while something listens for position changes.
-            AudioVisualizerOriginal.OnVideoPositionChanged += (_, _) => { };
-            AudioVisualizerAligned.OnVideoPositionChanged += (_, _) => { };
-            AudioVisualizerOriginal.OnPrimarySingleClicked += (_, e) => SelectRowAt(e.Seconds, _originalSubtitles);
-            AudioVisualizerAligned.OnPrimarySingleClicked += (_, e) => SelectRowAt(e.Seconds, _alignedSubtitles);
+            // A click moves the playhead and selects the line under it; a double click plays
+            // that line with the time codes of the waveform it was clicked in.
+            AudioVisualizerOriginal.OnVideoPositionChanged += (_, e) => SeekTo(e.PositionInSeconds);
+            AudioVisualizerAligned.OnVideoPositionChanged += (_, e) => SeekTo(e.PositionInSeconds);
+            // (A plain click only raises OnPrimarySingleClicked - and only while something
+            // listens to OnVideoPositionChanged - so the seek has to happen there as well.)
+            AudioVisualizerOriginal.OnPrimarySingleClicked += (_, e) => OnWaveformClicked(e.Seconds, _originalSubtitles);
+            AudioVisualizerAligned.OnPrimarySingleClicked += (_, e) => OnWaveformClicked(e.Seconds, _alignedSubtitles);
+            AudioVisualizerOriginal.OnPrimaryDoubleClicked += (_, e) => PlayLineAt(e.Seconds, _originalSubtitles);
+            AudioVisualizerAligned.OnPrimaryDoubleClicked += (_, e) => PlayLineAt(e.Seconds, _alignedSubtitles);
+
+            if (VideoPlayer != null && File.Exists(_videoFileName))
+            {
+                _ = VideoPlayer.Open(_videoFileName);
+            }
 
             PushParagraphsToVisualizers();
             StartPositionTimer();
@@ -432,10 +449,14 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
             return;
         }
 
-        var aligned = _alignedSubtitles[value.Index];
-        var midSeconds = (aligned.StartTime.TotalSeconds + aligned.EndTime.TotalSeconds) / 2.0;
-        CenterVisualizerOn(AudioVisualizerOriginal, midSeconds);
-        CenterVisualizerOn(AudioVisualizerAligned, midSeconds);
+        if (_centerOnSelection)
+        {
+            var aligned = _alignedSubtitles[value.Index];
+            var midSeconds = (aligned.StartTime.TotalSeconds + aligned.EndTime.TotalSeconds) / 2.0;
+            CenterVisualizerOn(AudioVisualizerOriginal, midSeconds);
+            CenterVisualizerOn(AudioVisualizerAligned, midSeconds);
+        }
+
         PushParagraphsToVisualizers();
     }
 
@@ -481,12 +502,21 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
     /// A click in either waveform selects the line under it. The visualizer hands out clones
     /// of its paragraphs, so the line is found by time rather than by reference.
     /// </summary>
-    private void SelectRowAt(double seconds, List<SubtitleLineViewModel> subtitles)
+    private void SelectRowAt(double seconds, List<SubtitleLineViewModel> subtitles, bool centerOnRow = true)
     {
         var index = subtitles.FindIndex(p => p.StartTime.TotalSeconds <= seconds && seconds <= p.EndTime.TotalSeconds);
         if (index >= 0 && index < Rows.Count)
         {
-            SelectAndScroll(Rows[index]);
+            // The clicked cue is already in view; re-centring would slide it out from under the pointer.
+            _centerOnSelection = centerOnRow;
+            try
+            {
+                SelectAndScroll(Rows[index]);
+            }
+            finally
+            {
+                _centerOnSelection = true;
+            }
         }
     }
 
@@ -522,17 +552,108 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
 
     private void StartPositionTimer()
     {
-        _positionTimer = new UiTickPump(TimeSpan.FromMilliseconds(100));
-        _positionTimer.Tick += (_, _) =>
-        {
-            if (AudioVisualizerOriginal != null && AudioVisualizerAligned != null)
-            {
-                AudioVisualizerAligned.CurrentVideoPositionSeconds = AudioVisualizerOriginal.CurrentVideoPositionSeconds;
-                AudioVisualizerOriginal.InvalidateVisual();
-                AudioVisualizerAligned.InvalidateVisual();
-            }
-        };
+        _positionTimer = new UiTickPump(TimeSpan.FromMilliseconds(50));
+        _positionTimer.Tick += (_, _) => OnPositionTick();
         _positionTimer.Start();
+    }
+
+    private void OnPositionTick()
+    {
+        var original = AudioVisualizerOriginal;
+        var aligned = AudioVisualizerAligned;
+        var player = VideoPlayer;
+        if (original == null || aligned == null || player == null)
+        {
+            return;
+        }
+
+        var position = player.Position;
+        var isPlaying = player.IsPlaying;
+
+        // The player keeps reporting the old position for a moment after a seek, and that can
+        // lie beyond the line's end - so the stop is not armed until the seek has had time to land.
+        var seekLanded = Environment.TickCount64 - _playLineStartedTicks > 300;
+        if (isPlaying && seekLanded && _playUntilSeconds is { } until && position >= until)
+        {
+            player.VideoPlayer.Pause();
+            _playUntilSeconds = null;
+            isPlaying = false;
+        }
+
+        // Keep the playhead on screen while playing; the other waveform follows by itself.
+        if (isPlaying && !original.IsScrolling && !aligned.IsScrolling &&
+            (position > original.EndPositionSeconds || position < original.StartPositionSeconds))
+        {
+            original.StartPositionSeconds = Math.Max(0, position - 0.25);
+        }
+
+        original.CurrentVideoPositionSeconds = position;
+        aligned.CurrentVideoPositionSeconds = position;
+        original.InvalidateVisual();
+        aligned.InvalidateVisual();
+    }
+
+    private void OnWaveformClicked(double seconds, List<SubtitleLineViewModel> subtitles)
+    {
+        // Select first: selecting a row centres the waveforms on it, and the playhead
+        // should end up where the click was, whatever the view does.
+        SelectRowAt(seconds, subtitles, centerOnRow: false);
+        SeekTo(seconds);
+    }
+
+    private void SeekTo(double seconds)
+    {
+        if (VideoPlayer == null)
+        {
+            return;
+        }
+
+        _playUntilSeconds = null;
+        VideoPlayer.Position = Math.Max(0, seconds);
+    }
+
+    [RelayCommand]
+    private void TogglePlayPause()
+    {
+        if (VideoPlayer == null)
+        {
+            return;
+        }
+
+        _playUntilSeconds = null;
+        VideoPlayer.VideoPlayer.PlayOrPause();
+    }
+
+    /// <summary>Plays the selected line as it will sound after alignment.</summary>
+    [RelayCommand]
+    private void PlaySelectedAligned() => PlayLine(SelectedRow, _alignedSubtitles);
+
+    /// <summary>Plays the selected line with the time codes it came in with, for comparison.</summary>
+    [RelayCommand]
+    private void PlaySelectedOriginal() => PlayLine(SelectedRow, _originalSubtitles);
+
+    private void PlayLine(ImproveTimeCodesRow? row, List<SubtitleLineViewModel> subtitles)
+    {
+        if (row == null || VideoPlayer == null || row.Index >= subtitles.Count)
+        {
+            return;
+        }
+
+        var line = subtitles[row.Index];
+        VideoPlayer.Position = line.StartTime.TotalSeconds;
+        _playUntilSeconds = line.EndTime.TotalSeconds;
+        _playLineStartedTicks = Environment.TickCount64;
+        VideoPlayer.VideoPlayer.Play();
+    }
+
+    private void PlayLineAt(double seconds, List<SubtitleLineViewModel> subtitles)
+    {
+        var index = subtitles.FindIndex(p => p.StartTime.TotalSeconds <= seconds && seconds <= p.EndTime.TotalSeconds);
+        if (index >= 0 && index < Rows.Count)
+        {
+            SelectAndScroll(Rows[index]);
+            PlayLine(Rows[index], subtitles);
+        }
     }
 
     private async Task<bool> ExtractAudioAsync(string audioFileName, CancellationToken cancellationToken)
@@ -650,6 +771,15 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         Window?.Close();
     }
 
+    internal void OnSpaceKeyDown(KeyEventArgs e)
+    {
+        if (e.Key == Key.Space && e.KeyModifiers == KeyModifiers.None && e.Source is not TextBox)
+        {
+            e.Handled = true;
+            TogglePlayPause();
+        }
+    }
+
     internal void OnKeyDown(KeyEventArgs e)
     {
         if (e.Key == Key.Escape)
@@ -661,6 +791,18 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         {
             e.Handled = true;
             UiUtil.ShowHelp("features/improve-time-codes");
+        }
+        else if (e.Key == Key.F5)
+        {
+            e.Handled = true;
+            if (e.KeyModifiers == KeyModifiers.Shift)
+            {
+                PlaySelectedOriginal();
+            }
+            else
+            {
+                PlaySelectedAligned();
+            }
         }
         else if (e.Key == Key.F8 || (e.Key == Key.Down && e.KeyModifiers == KeyModifiers.Alt))
         {
@@ -684,6 +826,7 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         _disposed = true;
         _positionTimer?.Stop();
         _positionTimer = null;
+        VideoPlayer?.CloseAndDisposePlayer();
 
         try
         {

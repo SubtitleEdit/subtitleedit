@@ -11,7 +11,7 @@ public class SeImproveTimeCodes
     public SeImproveTimeCodes()
     {
         Aligner = string.Empty;
-        MaxShiftSeconds = 2.0;
+        MaxShiftSeconds = 0.5;
         AdjustStart = true;
         AdjustEnd = true;
     }

@@ -16,9 +16,9 @@ The subtitle has to be close to begin with: each line is looked for round its cu
   3. the *Qwen3 forced aligner* — for the languages only it covers (e.g. Korean).
 
   A model that is not installed yet says how much will be downloaded; the download starts when you press **Align**.
-- **Max shift (seconds)** — a start or end that the aligner wants to move further than this is left where it was and flagged. This guards against lines whose text is not actually what is said.
+- **Max shift (seconds)** — how far a time code may move (default 0.5). A line whose *start* would move further is left completely alone and flagged: the aligner did not find it where the subtitle says it is, usually because the text is not what is said. An *end* that would move further is simply kept - subtitles are often held long after the last word so they can be read, and that is not an error.
 - **Adjust start times / Adjust end times** — untick one to leave that side of every line alone.
-- **Align** — extracts the audio and runs the aligner. Length is not a limit: the audio is processed in short windows of a few lines each, so long films use no more memory than short clips. **Cancel** stops a running alignment.
+- **Align** (bottom button bar, highlighted until there is a result) — extracts the audio and runs the aligner. Length is not a limit: the audio is processed in short windows of a few lines each, so long films use no more memory than short clips. **Cancel** stops a running alignment.
 
 ## Preview
 
@@ -27,10 +27,12 @@ Two stacked waveforms show the same stretch of audio:
 - **Original** (blue) — the time codes as they are now.
 - **Aligned** (green) — the time codes after alignment.
 
-The line being looked at is amber in both. Scrolling or zooming either waveform moves the other, and clicking a line in a waveform selects it in the list.
+The line being looked at is amber in both. Scrolling or zooming either waveform moves the other, and clicking a line in a waveform selects it in the list. A small video player sits beside the line list, so you can watch as well as listen.
 
 Under the waveforms:
 
+- **Play / pause** (or **Space**, wherever the focus is) plays from the playhead. Click in either waveform to move the playhead.
+- **▶ Original** (**Shift+F5**) and **▶ Aligned** (**F5**) play just the selected line, with its old or its new time codes - the quickest way to hear whether a cue now starts and stops with the speech. Double-clicking a cue in a waveform plays it with that waveform's time codes; double-clicking a row plays the aligned version.
 - **▲ / ▼** (or **F7** / **F8**) step to the previous / next re-timed line, and *Change X of Y* shows where you are.
 - The summary on the right counts re-timed lines, lines that were kept, lines with no speech, and the mean shift.
 
@@ -43,10 +45,10 @@ One row per subtitle line, with the shift of its start and end in milliseconds a
 | Re-timed | The aligner moved the line. |
 | Already in place | The aligner agrees with the current time codes. |
 | No speech | Nothing to listen for - blank lines, `[sound descriptions]`, `(sighs)`, `♪`. These lines are never moved. |
-| Kept - shift too large | The line would have moved more than *Max shift*, so it was left alone. |
+| Kept - shift too large | The start would have moved more than *Max shift*, so the line was left alone. |
 | Kept - aligner failed | The aligner could not process this group of lines. |
 
-Untick **Apply** on a row (or press **Space**) to keep that line's original time codes; the green waveform updates at once.
+Untick **Apply** on a row to keep that line's original time codes; the green waveform updates at once.
 
 Press **OK** to write the ticked changes to the subtitle (one undo step), or **Cancel** to discard.
 

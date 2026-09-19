@@ -1888,7 +1888,7 @@
       "aligner": "Aligner",
       "alignerHint": "The model that listens for each line in the audio. Best choices for the subtitle's language are listed first.",
       "maxShift": "Max shift (seconds)",
-      "maxShiftHint": "A start or end that would move further than this is left as it is. The subtitle has to be roughly in sync already - use Synchronization first if it is not.",
+      "maxShiftHint": "A line whose start would move further than this is left as it is and flagged; an end that would move further is kept. The subtitle has to be roughly in sync already - use Synchronization first if it is not.",
       "adjustStartTimes": "Adjust start times",
       "adjustEndTimes": "Adjust end times",
       "align": "Align",
@@ -1911,8 +1911,13 @@
       "statusNoSpeech": "No speech",
       "statusShiftTooLarge": "Kept - shift too large",
       "statusFailed": "Kept - aligner failed",
+      "playPause": "Play / pause",
+      "playOriginal": "Original",
+      "playAligned": "Aligned",
+      "playOriginalHint": "Play the selected line with its original time codes",
+      "playAlignedHint": "Play the selected line with its aligned time codes",
       "apply": "Apply",
-      "applyHint": "Untick a line to keep its original time codes."
+      "applyHint": "Untick a line to keep its original time codes. Double-click a line to play it."
     },
     "beautifyTimeCodesProfile": {
       "title": "Edit beautify time codes profile",

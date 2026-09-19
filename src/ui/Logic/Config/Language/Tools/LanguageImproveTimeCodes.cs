@@ -29,6 +29,11 @@ public class LanguageImproveTimeCodes
     public string StatusNoSpeech { get; set; }
     public string StatusShiftTooLarge { get; set; }
     public string StatusFailed { get; set; }
+    public string PlayPause { get; set; }
+    public string PlayOriginal { get; set; }
+    public string PlayAligned { get; set; }
+    public string PlayOriginalHint { get; set; }
+    public string PlayAlignedHint { get; set; }
     public string Apply { get; set; }
     public string ApplyHint { get; set; }
 
@@ -38,7 +43,7 @@ public class LanguageImproveTimeCodes
         Aligner = "Aligner";
         AlignerHint = "The model that listens for each line in the audio. Best choices for the subtitle's language are listed first.";
         MaxShift = "Max shift (seconds)";
-        MaxShiftHint = "A start or end that would move further than this is left as it is. The subtitle has to be roughly in sync already - use Synchronization first if it is not.";
+        MaxShiftHint = "A line whose start would move further than this is left as it is and flagged; an end that would move further is kept. The subtitle has to be roughly in sync already - use Synchronization first if it is not.";
         AdjustStartTimes = "Adjust start times";
         AdjustEndTimes = "Adjust end times";
         Align = "Align";
@@ -61,7 +66,12 @@ public class LanguageImproveTimeCodes
         StatusNoSpeech = "No speech";
         StatusShiftTooLarge = "Kept - shift too large";
         StatusFailed = "Kept - aligner failed";
+        PlayPause = "Play / pause";
+        PlayOriginal = "Original";
+        PlayAligned = "Aligned";
+        PlayOriginalHint = "Play the selected line with its original time codes";
+        PlayAlignedHint = "Play the selected line with its aligned time codes";
         Apply = "Apply";
-        ApplyHint = "Untick a line to keep its original time codes.";
+        ApplyHint = "Untick a line to keep its original time codes. Double-click a line to play it.";
     }
 }

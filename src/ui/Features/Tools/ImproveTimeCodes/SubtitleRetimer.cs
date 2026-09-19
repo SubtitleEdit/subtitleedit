@@ -43,7 +43,7 @@ public sealed partial class SubtitleRetimer
         public double BreakGapSeconds { get; init; } = 4.0;
 
         /// <summary>The furthest a start or end may move; further is treated as a misfit.</summary>
-        public double MaxShiftSeconds { get; init; } = 2.0;
+        public double MaxShiftSeconds { get; init; } = 0.5;
 
         /// <summary>Audio kept beyond a sentinel, so a slightly early or late sentinel is not clipped.</summary>
         public double SentinelPaddingSeconds { get; init; } = 1.0;
@@ -246,42 +246,35 @@ public sealed partial class SubtitleRetimer
 
             var newStart = windowStart + cue.StartSeconds;
             var newEnd = windowStart + cue.EndSeconds;
-            var tooFar = false;
-
+            // A start that wants to move too far means the aligner did not find this line where
+            // the subtitle says it is - its text may not be what is said - so nothing of it is used.
             var start = line.StartSeconds;
             if (_options.AdjustStart && startMeasured)
             {
-                if (Math.Abs(newStart - line.StartSeconds) <= _options.MaxShiftSeconds)
+                if (Math.Abs(newStart - line.StartSeconds) > _options.MaxShiftSeconds)
                 {
-                    start = newStart;
+                    results[index] = new LineResult(line.StartSeconds, line.EndSeconds, LineStatus.ShiftTooLarge);
+                    continue;
                 }
-                else
-                {
-                    tooFar = true;
-                }
+
+                start = newStart;
             }
 
+            // An end is different: subtitles are routinely held long after the last word so they
+            // can be read, so an end far from the speech end is normal. It is simply left alone.
             var end = line.EndSeconds;
-            if (_options.AdjustEnd && endMeasured)
+            if (_options.AdjustEnd && endMeasured && Math.Abs(newEnd - line.EndSeconds) <= _options.MaxShiftSeconds)
             {
-                if (Math.Abs(newEnd - line.EndSeconds) <= _options.MaxShiftSeconds)
-                {
-                    end = newEnd;
-                }
-                else
-                {
-                    tooFar = true;
-                }
+                end = newEnd;
             }
 
             if (end <= start)
             {
-                start = line.StartSeconds;
-                end = line.EndSeconds;
-                tooFar = true;
+                results[index] = new LineResult(line.StartSeconds, line.EndSeconds, LineStatus.ShiftTooLarge);
+                continue;
             }
 
-            results[index] = new LineResult(start, end, tooFar ? LineStatus.ShiftTooLarge : LineStatus.Retimed);
+            results[index] = new LineResult(start, end, LineStatus.Retimed);
         }
     }
 

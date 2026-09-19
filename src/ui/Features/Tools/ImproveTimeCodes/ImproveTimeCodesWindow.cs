@@ -5,9 +5,11 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Shapes;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
+using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -46,10 +48,14 @@ public class ImproveTimeCodesWindow : Window
         grid.Add(BuildSetupBar(vm), 0, 0);
         grid.Add(BuildVisualizerArea(vm), 1, 0);
         grid.Add(BuildChangeNavBar(vm), 2, 0);
-        grid.Add(BuildRowsView(vm), 3, 0);
+        grid.Add(BuildRowsAndVideo(vm), 3, 0);
         grid.Add(BuildButtonBar(vm), 4, 0);
         Content = grid;
 
+        // Space is taken on the way down, so it plays/pauses wherever the focus is - the list
+        // and the buttons would otherwise keep it for themselves. Everything else waits its turn,
+        // so Escape still closes an open drop-down before it closes the window.
+        AddHandler(KeyDownEvent, (_, e) => vm.OnSpaceKeyDown(e), RoutingStrategies.Tunnel);
         KeyDown += (_, e) => vm.OnKeyDown(e);
         Closing += (_, _) => vm.Dispose();
     }
@@ -84,7 +90,7 @@ public class ImproveTimeCodesWindow : Window
         }.BindIsEnabled(vm, nameof(vm.IsIdle));
         AutomationProperties.SetName(comboAligner, l.Aligner);
 
-        var numericMaxShift = UiUtil.MakeNumericUpDownOneDecimal(0.2m, 10m, 110, vm, nameof(vm.MaxShiftSeconds), defaultValue: 2.0m);
+        var numericMaxShift = UiUtil.MakeNumericUpDownOneDecimal(0.1m, 10m, 110, vm, nameof(vm.MaxShiftSeconds), defaultValue: 0.5m);
         AutomationProperties.SetName(numericMaxShift, l.MaxShift);
 
         var checkStart = UiUtil.MakeCheckBox(l.AdjustStartTimes, vm, nameof(vm.AdjustStart));
@@ -95,11 +101,6 @@ public class ImproveTimeCodesWindow : Window
             ToolTip.SetTip(comboAligner, l.AlignerHint);
             ToolTip.SetTip(numericMaxShift, l.MaxShiftHint);
         }
-
-        var buttonAlign = UiUtil.MakeButton(l.Align, vm.AlignCommand)
-            .WithIconLeft("fa-solid fa-wand-magic-sparkles")
-            .BindIsEnabled(vm, nameof(vm.IsIdle));
-        buttonAlign.VerticalAlignment = VerticalAlignment.Center;
 
         var left = new WrapPanel
         {
@@ -114,10 +115,6 @@ public class ImproveTimeCodesWindow : Window
             },
         };
 
-        var bar = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto"), ColumnSpacing = 12 };
-        bar.Add(left, 0, 0);
-        bar.Add(buttonAlign, 0, 1);
-
         return new Border
         {
             CornerRadius = new CornerRadius(6),
@@ -125,7 +122,7 @@ public class ImproveTimeCodesWindow : Window
             BorderBrush = new SolidColorBrush(Color.FromArgb(70, 128, 128, 128)),
             Background = new SolidColorBrush(Color.FromArgb(18, 128, 128, 128)),
             Padding = new Thickness(12, 6),
-            Child = bar,
+            Child = left,
         };
     }
 
@@ -265,19 +262,19 @@ public class ImproveTimeCodesWindow : Window
             Children = { buttonPrev, labelPosition, buttonNext },
         };
 
-        var status = new TextBlock
+        var buttonPlayPause = UiUtil.MakeButton(vm.TogglePlayPauseCommand, "mdi-play-pause", $"{l.PlayPause} (Space)");
+        var buttonPlayAligned = UiUtil.MakeButton(l.PlayAligned, vm.PlaySelectedAlignedCommand).WithIconLeft(IconNames.Play);
+        var buttonPlayOriginal = UiUtil.MakeButton(l.PlayOriginal, vm.PlaySelectedOriginalCommand).WithIconLeft(IconNames.Play);
+        if (Se.Settings.Appearance.ShowHints)
         {
-            VerticalAlignment = VerticalAlignment.Center,
-            TextTrimming = TextTrimming.CharacterEllipsis,
-            Opacity = 0.85,
-            [!TextBlock.TextProperty] = new Binding(nameof(vm.StatusText)) { Source = vm },
-        };
+            ToolTip.SetTip(buttonPlayAligned, $"{l.PlayAlignedHint} (F5)");
+            ToolTip.SetTip(buttonPlayOriginal, $"{l.PlayOriginalHint} (Shift+F5)");
+        }
 
-        var progress = UiUtil.MakeProgressBar();
-        progress.Width = 220;
-        progress.VerticalAlignment = VerticalAlignment.Center;
-        progress.Bind(RangeBase.ValueProperty, new Binding(nameof(vm.ProgressValue)) { Source = vm });
-        progress.Bind(IsVisibleProperty, new Binding(nameof(vm.IsAligning)) { Source = vm });
+        nav.Children.Add(UiUtil.MakeVerticalSeparator(margin: new Thickness(8, 2)));
+        nav.Children.Add(buttonPlayPause);
+        nav.Children.Add(buttonPlayOriginal);
+        nav.Children.Add(buttonPlayAligned);
 
         var summary = new TextBlock
         {
@@ -288,11 +285,9 @@ public class ImproveTimeCodesWindow : Window
             [!TextBlock.TextProperty] = new Binding(nameof(vm.SummaryLine)) { Source = vm },
         };
 
-        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("Auto,Auto,*,Auto"), ColumnSpacing = 14 };
+        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("Auto,*"), ColumnSpacing = 14 };
         grid.Add(nav, 0, 0);
-        grid.Add(progress, 0, 1);
-        grid.Add(status, 0, 2);
-        grid.Add(summary, 0, 3);
+        grid.Add(summary, 0, 1);
 
         return new Border
         {
@@ -301,6 +296,18 @@ public class ImproveTimeCodesWindow : Window
             Padding = new Thickness(6),
             Child = grid,
         };
+    }
+
+    private static Control BuildRowsAndVideo(ImproveTimeCodesViewModel vm)
+    {
+        vm.VideoPlayer = InitVideoPlayer.MakeVideoPlayer();
+        vm.VideoPlayer.FullScreenIsVisible = false;
+
+        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto,340"), ColumnSpacing = 4 };
+        grid.Add(BuildRowsView(vm), 0, 0);
+        grid.Add(new GridSplitter { Width = 4, ResizeDirection = GridResizeDirection.Columns, Background = Brushes.Transparent }, 0, 1);
+        grid.Add(UiUtil.MakeBorderForControlNoPadding(vm.VideoPlayer), 0, 2);
+        return grid;
     }
 
     private static Control BuildRowsView(ImproveTimeCodesViewModel vm)
@@ -316,6 +323,7 @@ public class ImproveTimeCodesWindow : Window
         AutomationProperties.SetName(tableView, Se.Language.General.Lines);
 
         vm.ScrollRowIntoView = row => tableView.ScrollIntoView(row);
+        tableView.DoubleTapped += (_, _) => vm.PlaySelectedAlignedCommand.Execute(null);
 
         var applyColumn = new SeTableViewColumn
         {
@@ -379,16 +387,6 @@ public class ImproveTimeCodesWindow : Window
             statusColumn,
         });
 
-        TableViewExtras.AddSpaceToggle<ImproveTimeCodesRow>(tableView,
-            row => row.Apply,
-            (row, value) =>
-            {
-                if (row.IsChanged)
-                {
-                    row.Apply = value;
-                }
-            });
-
         if (Se.Settings.Appearance.ShowHints)
         {
             ToolTip.SetTip(tableView, l.ApplyHint);
@@ -422,9 +420,62 @@ public class ImproveTimeCodesWindow : Window
 
     private static Control BuildButtonBar(ImproveTimeCodesViewModel vm)
     {
+        var buttonAlign = UiUtil.MakeButton(Se.Language.Tools.ImproveTimeCodes.Align, vm.AlignCommand)
+            .WithIconLeft("fa-solid fa-wand-magic-sparkles")
+            .BindIsEnabled(vm, nameof(vm.IsIdle));
+        buttonAlign.MinWidth = 130;
+
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Bind(IsEnabledProperty, new Binding(nameof(vm.HasResult)) { Source = vm });
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        return UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+
+        // The accent marks the next step: Align until there is something to apply, then OK.
+        void UpdateAccent()
+        {
+            buttonAlign.Classes.Set("accent", !vm.HasResult);
+            buttonOk.Classes.Set("accent", vm.HasResult);
+        }
+
+        vm.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(vm.HasResult))
+            {
+                UpdateAccent();
+            }
+        };
+        UpdateAccent();
+
+        // Progress and status share the line with the buttons, next to the Align that drives them.
+        var status = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            Opacity = 0.85,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.StatusText)) { Source = vm },
+        };
+
+        var progress = UiUtil.MakeProgressBar();
+        progress.Width = double.NaN;
+        progress.HorizontalAlignment = HorizontalAlignment.Stretch;
+        progress.VerticalAlignment = VerticalAlignment.Center;
+        progress.Bind(RangeBase.ValueProperty, new Binding(nameof(vm.ProgressValue)) { Source = vm });
+        progress.Bind(IsVisibleProperty, new Binding(nameof(vm.IsAligning)) { Source = vm });
+
+        var buttons = UiUtil.MakeButtonBar(buttonAlign, buttonOk, buttonCancel);
+        // The bar takes all the room left of the buttons, with its text underneath.
+        status.FontSize = UiUtil.ScaledFontSize(12);
+        var progressPanel = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Spacing = 4,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(2, 10, 0, 0),
+            Children = { progress, status },
+        };
+
+        var bar = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto"), ColumnSpacing = 20 };
+        bar.Add(progressPanel, 0, 0);
+        bar.Add(buttons, 0, 1);
+        return bar;
     }
 }

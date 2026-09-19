@@ -152,6 +152,27 @@ public class SubtitleRetimerTests : IDisposable
     }
 
     [Fact]
+    public async Task Retime_AnEndHeldForReading_IsLeftAlone_WhileTheStartStillMoves()
+    {
+        var lines = MakeLines(3);
+        var audio = new FakeAudio(_folder);
+        var runner = new OracleRunner(audio);
+        foreach (var l in lines)
+        {
+            runner.Truth[l.Text] = (l.StartSeconds + 0.2, l.EndSeconds);
+        }
+
+        // The speech of line 1 stops 1.2 s before the subtitle goes away.
+        runner.Truth[lines[1].Text] = (lines[1].StartSeconds + 0.2, lines[1].EndSeconds - 1.2);
+
+        var results = await new SubtitleRetimer(runner, audio).RetimeAsync(lines, null, TestContext.Current.CancellationToken);
+
+        Assert.Equal(SubtitleRetimer.LineStatus.Retimed, results[1].Status);
+        Assert.Equal(lines[1].StartSeconds + 0.2, results[1].StartSeconds, 2);
+        Assert.Equal(lines[1].EndSeconds, results[1].EndSeconds, 2);
+    }
+
+    [Fact]
     public async Task Retime_SkipsLinesWithNothingSpoken_AndKeepsTheirTimes()
     {
         var lines = MakeLines(3);
@@ -197,7 +218,7 @@ public class SubtitleRetimerTests : IDisposable
         runner.Truth[lines[0].Text] = (10.1, 11.0);
         runner.Truth[lines[1].Text] = (12.5, 13.4);
 
-        var options = new SubtitleRetimer.Options { ReadingCharsPerSecond = 20, MinDurationSeconds = 1.0, MinGapSeconds = 0.1 };
+        var options = new SubtitleRetimer.Options { MaxShiftSeconds = 3, ReadingCharsPerSecond = 20, MinDurationSeconds = 1.0, MinGapSeconds = 0.1 };
         var results = await new SubtitleRetimer(runner, audio, options).RetimeAsync(lines, null, TestContext.Current.CancellationToken);
 
         // 45 chars at 20 cps wants 2.25 s, but the next line now starts at 12.5.
