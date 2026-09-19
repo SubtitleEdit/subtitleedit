@@ -216,6 +216,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     private Process _whisperProcess = new();
     private Process? _audioExtractProcess;
     private readonly System.Timers.Timer _timerAudioExtract = new();
+    private volatile bool _windowClosing;
     private Stopwatch _sw = new();
     private StringBuilder _ffmpegLog = new();
     private readonly Lock _lockObj = new();
@@ -2842,6 +2843,11 @@ public partial class SpeechToTextViewModel : ObservableObject
                 SeLogger.Error(e, "Speech isolation failed");
             }
 
+            if (_windowClosing)
+            {
+                return;
+            }
+
             if (_abort)
             {
                 ProgressOpacity = 0;
@@ -2890,10 +2896,32 @@ public partial class SpeechToTextViewModel : ObservableObject
         Se.WriteToolsLog($"{executable} {separateArguments}");
         LogToConsole($"Isolating speech with : {executable} {separateArguments}{Environment.NewLine}");
 
-        using (var separateProcess = StartEngineProcess(executable, separateArguments, null))
+        // Kept for the tools log only: the separator prints no progress worth showing, but when
+        // it fails its output is the only clue to why.
+        var separateLog = new StringBuilder();
+        DataReceivedEventHandler logHandler = (_, args) =>
+        {
+            if (!string.IsNullOrWhiteSpace(args.Data))
+            {
+                lock (separateLog)
+                {
+                    separateLog.AppendLine(args.Data);
+                }
+            }
+        };
+
+        using (var separateProcess = StartEngineProcess(executable, separateArguments, logHandler))
         {
             if (!await WaitForExitOrAbortAsync(separateProcess))
             {
+                if (!_abort)
+                {
+                    lock (separateLog)
+                    {
+                        Se.WriteToolsLog($"Speech isolation failed with exit code {separateProcess.ExitCode}:{Environment.NewLine}{separateLog}");
+                    }
+                }
+
                 return null;
             }
         }
@@ -2911,6 +2939,11 @@ public partial class SpeechToTextViewModel : ObservableObject
         {
             if (!await WaitForExitOrAbortAsync(downmixProcess))
             {
+                if (!_abort)
+                {
+                    Se.WriteToolsLog($"Speech isolation: ffmpeg could not convert the speech stem (exit code {downmixProcess.ExitCode})");
+                }
+
                 return null;
             }
         }
@@ -5621,6 +5654,11 @@ public partial class SpeechToTextViewModel : ObservableObject
     {
         _timerWhisper.StopAndDispose(OnTimerWhisperOnElapsed);
         _timerAudioExtract.StopAndDispose(OnTimerAudioExtractOnElapsed);
+
+        // The speech isolation runs on its own task, not on one of the timers: _abort is what
+        // makes it kill its process and stop before it would start the engine on a closed window.
+        _windowClosing = true;
+        _abort = true;
 
         // With the timers gone nothing will ever reap a still-running engine or
         // ffmpeg process - kill them so closing the window mid-run doesn't leave
