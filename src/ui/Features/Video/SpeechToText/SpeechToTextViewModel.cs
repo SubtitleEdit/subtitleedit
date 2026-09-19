@@ -81,6 +81,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<CrispAsrEngineBase> _crispAsrBackends;
     [ObservableProperty] private CrispAsrEngineBase? _selectedCrispAsrBackend;
     [ObservableProperty] private bool _isForcedAlignerVisible;
+    [ObservableProperty] private bool _doIsolateSpeech;
     [ObservableProperty] private ObservableCollection<ForcedAlignerOption> _forcedAligners;
     [ObservableProperty] private ForcedAlignerOption? _selectedForcedAligner;
     [ObservableProperty] private double _progressOpacity;
@@ -215,6 +216,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     private Process _whisperProcess = new();
     private Process? _audioExtractProcess;
     private readonly System.Timers.Timer _timerAudioExtract = new();
+    private volatile bool _windowClosing;
     private Stopwatch _sw = new();
     private StringBuilder _ffmpegLog = new();
     private readonly Lock _lockObj = new();
@@ -356,6 +358,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         DoTranslateToEnglish = false;
         DoAdjustTimings = Se.Settings.Tools.AudioToText.WhisperAutoAdjustTimings;
         DoPostProcessing = Se.Settings.Tools.AudioToText.PostProcessing;
+        DoIsolateSpeech = Se.Settings.Tools.AudioToText.CrispAsrIsolateSpeech;
         AddLanguageCodeToFileName = Se.Settings.Tools.AudioToText.WhisperAddLanguageCodeToFileName;
 
         OpenAiCompatibleSttUrl = Se.Settings.Tools.OpenAiCompatibleSttUrl;
@@ -423,6 +426,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     {
         Se.Settings.Tools.AudioToText.WhisperAutoAdjustTimings = DoAdjustTimings;
         Se.Settings.Tools.AudioToText.PostProcessing = DoPostProcessing;
+        Se.Settings.Tools.AudioToText.CrispAsrIsolateSpeech = DoIsolateSpeech;
         Se.Settings.Tools.AudioToText.WhisperAddLanguageCodeToFileName = AddLanguageCodeToFileName;
         var engine = GetEffectiveSelectedEngine();
         engine.CommandLineParameter = Parameters;
@@ -2756,6 +2760,12 @@ public partial class SpeechToTextViewModel : ObservableObject
                 return;
             }
 
+            if (ShouldIsolateSpeech())
+            {
+                StartSpeechIsolation(_audioFileName, _videoFileName);
+                return;
+            }
+
             var startOk = TranscribeViaWhisper(_audioFileName, _videoFileName);
             if (!startOk)
             {
@@ -2764,6 +2774,212 @@ public partial class SpeechToTextViewModel : ObservableObject
                 Dispatcher.UIThread.Invoke(async () => { await ShowUnableToStartEngineErrorAsync(); });
             }
         }
+    }
+
+    /// <summary>
+    /// "Isolate speech" is a CrispASR task, so it is only offered - and only runs - with a Crisp
+    /// ASR engine selected; the remembered checkbox value must not leak into other engines.
+    /// </summary>
+    private bool ShouldIsolateSpeech()
+    {
+        return DoIsolateSpeech && GetEffectiveSelectedEngine() is ICrispAsrEngine;
+    }
+
+    private async Task<bool> EnsureSpeechIsolationModelDownloadedAsync(ISpeechToTextEngine engine)
+    {
+        var isolationModel = SpeechIsolationModel.ToWhisperModel();
+        if (File.Exists(engine.GetModelForCmdLine(isolationModel.Name)))
+        {
+            return true;
+        }
+
+        var answer = await MessageBox.Show(
+            Window!,
+            $"Download {SpeechIsolationModel.DisplayName}?",
+            $"'{Se.Language.Video.AudioToText.IsolateSpeech}' requires a source separation model.\nDownload and use {isolationModel.Name} ({isolationModel.Size})?",
+            MessageBoxButtons.YesNoCancel,
+            MessageBoxIcon.Question);
+
+        if (answer != MessageBoxResult.Yes)
+        {
+            return false;
+        }
+
+        var displayModel = new SpeechToTextModelDisplay
+        {
+            Model = isolationModel,
+            Display = $"{SpeechIsolationModel.DisplayName} ({isolationModel.Size})",
+            Engine = engine,
+        };
+        var models = new ObservableCollection<SpeechToTextModelDisplay> { displayModel };
+        var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
+            Window!, viewModel =>
+            {
+                viewModel.SetModels(models, engine, displayModel);
+                viewModel.StartDownload();
+            });
+
+        return vm.OkPressed;
+    }
+
+    /// <summary>
+    /// Runs between the audio extraction and the engine: splits the speech from music and sound
+    /// effects and hands the engine the speech stem. A failed separation is not a failed job -
+    /// the run carries on with the audio it already has.
+    /// </summary>
+    private void StartSpeechIsolation(string audioFileName, string videoFileName)
+    {
+        ProgressText = Se.Language.Video.AudioToText.IsolatingSpeech;
+
+        _ = Task.Run(async () =>
+        {
+            string? speechFileName = null;
+            try
+            {
+                speechFileName = await IsolateSpeechAsync(audioFileName);
+            }
+            catch (Exception e)
+            {
+                SeLogger.Error(e, "Speech isolation failed");
+            }
+
+            if (_windowClosing)
+            {
+                return;
+            }
+
+            if (_abort)
+            {
+                ProgressOpacity = 0;
+                IsTranscribeEnabled = true;
+                return;
+            }
+
+            if (speechFileName == null)
+            {
+                LogToConsole(Se.Language.Video.AudioToText.IsolateSpeechFailed + Environment.NewLine);
+            }
+
+            lock (_lockObj)
+            {
+                if (speechFileName != null)
+                {
+                    // The result lookup and the retry without VAD both go by _audioFileName, so
+                    // the speech stem has to take over as "the extracted audio" from here on.
+                    _audioFileName = speechFileName;
+                    _filesToDelete.Add(speechFileName);
+                }
+
+                var startOk = TranscribeViaWhisper(_audioFileName, videoFileName);
+                if (!startOk)
+                {
+                    IsTranscribeEnabled = true;
+                    ProgressOpacity = 0;
+                    Dispatcher.UIThread.Post(async () => { await ShowUnableToStartEngineErrorAsync(); });
+                }
+            }
+        });
+    }
+
+    /// <returns>A 16 kHz mono WAV with the speech only, or null when it could not be made.</returns>
+    private async Task<string?> IsolateSpeechAsync(string audioFileName)
+    {
+        if (GetEffectiveSelectedEngine() is not ICrispAsrEngine engine)
+        {
+            return null;
+        }
+
+        var outputFolder = GetSttTempFolder();
+        var separateArguments = SpeechIsolationModel.BuildSeparateArguments(
+            engine.GetModelForCmdLine(SpeechIsolationModel.FileName), audioFileName, outputFolder);
+        var executable = engine.GetExecutable();
+        Se.WriteToolsLog($"{executable} {separateArguments}");
+        LogToConsole($"Isolating speech with : {executable} {separateArguments}{Environment.NewLine}");
+
+        // Kept for the tools log only: the separator prints no progress worth showing, but when
+        // it fails its output is the only clue to why.
+        var separateLog = new StringBuilder();
+        DataReceivedEventHandler logHandler = (_, args) =>
+        {
+            if (!string.IsNullOrWhiteSpace(args.Data))
+            {
+                lock (separateLog)
+                {
+                    separateLog.AppendLine(args.Data);
+                }
+            }
+        };
+
+        using (var separateProcess = StartEngineProcess(executable, separateArguments, logHandler))
+        {
+            if (!await WaitForExitOrAbortAsync(separateProcess))
+            {
+                if (!_abort)
+                {
+                    lock (separateLog)
+                    {
+                        Se.WriteToolsLog($"Speech isolation failed with exit code {separateProcess.ExitCode}:{Environment.NewLine}{separateLog}");
+                    }
+                }
+
+                return null;
+            }
+        }
+
+        var stemFileName = SpeechIsolationModel.GetSpeechStemFileName(audioFileName, outputFolder);
+        if (!File.Exists(stemFileName))
+        {
+            Se.WriteToolsLog("Speech isolation wrote no stem: " + stemFileName);
+            return null;
+        }
+
+        var ffmpeg = File.Exists(Se.Settings.General.FfmpegPath) ? Se.Settings.General.FfmpegPath : "ffmpeg";
+        var speechFileName = Path.Combine(outputFolder, Guid.NewGuid() + ".wav");
+        using (var downmixProcess = StartEngineProcess(ffmpeg, SpeechIsolationModel.BuildDownmixArguments(stemFileName, speechFileName), null))
+        {
+            if (!await WaitForExitOrAbortAsync(downmixProcess))
+            {
+                if (!_abort)
+                {
+                    Se.WriteToolsLog($"Speech isolation: ffmpeg could not convert the speech stem (exit code {downmixProcess.ExitCode})");
+                }
+
+                return null;
+            }
+        }
+
+        // The stem is 44.1 kHz stereo - over a gigabyte for a feature film - so do not leave it
+        // for the end-of-run cleanup of the temp folder.
+        try
+        {
+            File.Delete(stemFileName);
+        }
+        catch
+        {
+            // ignore
+        }
+
+        return File.Exists(speechFileName) ? speechFileName : null;
+    }
+
+    private async Task<bool> WaitForExitOrAbortAsync(Process process)
+    {
+        while (!process.HasExited)
+        {
+            if (_abort)
+            {
+#pragma warning disable CA1416
+                process.Kill(true);
+#pragma warning restore CA1416
+                return false;
+            }
+
+            var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
+            ElapsedText = $"Time elapsed: {new TimeCode(durationMs).ToShortDisplayString()}";
+            await Task.Delay(100);
+        }
+
+        return process.ExitCode == 0;
     }
 
     /// <summary>
@@ -3667,6 +3883,11 @@ public partial class SpeechToTextViewModel : ObservableObject
                 }
             }
 
+            if (ShouldIsolateSpeech() && !await EnsureSpeechIsolationModelDownloadedAsync(engine))
+            {
+                return;
+            }
+
             if (language.Code != "en" && IsModelEnglishOnly(model.Model))
             {
                 var answer = await MessageBox.Show(
@@ -4452,7 +4673,9 @@ public partial class SpeechToTextViewModel : ObservableObject
         // cap on long audio — skip the short-circuit and transcode through
         // ffmpeg into the chosen compressed format.
         var isOpenAiEngine = GetEffectiveSelectedEngine() is IOnlineSttEngine;
-        if (!isOpenAiEngine && videoFileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
+        // "Isolate speech" always goes through the extraction, so it never works on (or writes its
+        // stems next to) the user's own file.
+        if (!isOpenAiEngine && !ShouldIsolateSpeech() && videoFileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
         {
             try
             {
@@ -5431,6 +5654,11 @@ public partial class SpeechToTextViewModel : ObservableObject
     {
         _timerWhisper.StopAndDispose(OnTimerWhisperOnElapsed);
         _timerAudioExtract.StopAndDispose(OnTimerAudioExtractOnElapsed);
+
+        // The speech isolation runs on its own task, not on one of the timers: _abort is what
+        // makes it kill its process and stop before it would start the engine on a closed window.
+        _windowClosing = true;
+        _abort = true;
 
         // With the timers gone nothing will ever reap a still-running engine or
         // ffmpeg process - kill them so closing the window mid-run doesn't leave

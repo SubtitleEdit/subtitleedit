@@ -56,6 +56,7 @@ public class SeAudioToText
     public string CommandLineParameterCrispAsrArk { get; set; } = "--max-len 50 --split-on-punct";
     public string CommandLineParameterCrispAsrVoxtral { get; set; } = "--max-len 50 --split-on-punct";
     public string CrispAsrForcedAligner { get; set; } = "built-in";
+    public bool CrispAsrIsolateSpeech { get; set; }
 
     public bool WhisperAutoAdjustTimings { get; set; } = true;
 
