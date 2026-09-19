@@ -5,6 +5,9 @@ Tighten the time codes of a subtitle that is already roughly in sync, by letting
 - **Menu:** Tools → Improve time codes (forced alignment)…
 - **Requires:** a video or audio file loaded in the main window, and the Crisp ASR engine (downloaded on first use).
 
+<!-- Screenshot: Improve time codes window with Original/Aligned waveforms and the line list after an alignment -->
+![Improve time codes](../screenshots/improve-time-codes.png)
+
 The subtitle has to be close to begin with: each line is looked for round its current position only. If the whole file is off by seconds, use [Adjust all times](adjust-all-times.md), [Point sync](point-sync.md) or [Visual sync](visual-sync.md) first.
 
 ## Setup bar
