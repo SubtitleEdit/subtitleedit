@@ -20100,7 +20100,13 @@ public partial class MainViewModel :
         WithoutReferenceOnlyRows(() => MoveTextFromCursorToNext(play: true));
     }
 
-    private void MoveTextFromCursorToNext(bool play)
+    [RelayCommand]
+    private void MoveTextFromCursorToNextAndGoToNextAndPlayAndPause()
+    {
+        WithoutReferenceOnlyRows(() => MoveTextFromCursorToNext(play: true, pauseAtEnd: true));
+    }
+
+    private void MoveTextFromCursorToNext(bool play, bool pauseAtEnd = false)
     {
         var s = SelectedSubtitle;
         if (s == null || s.IsReferenceOnly)
@@ -20155,12 +20161,24 @@ public partial class MainViewModel :
             next.Text = (textAfter + Environment.NewLine + next.Text.Trim()).Trim();
         }
 
+        if (play && pauseAtEnd)
+        {
+            // Select synchronously first: SelectAndScrollToRow posts the selection, and the grid's
+            // SelectionChanged handler calls ResetPlaySelection - a deferred change would null
+            // _playSelectionItem after PlayLineAndPauseAtEnd set it, and the line would not stop.
+            SubtitleGrid.SelectedItem = next;
+        }
+
         SelectAndScrollToRow(index + 1);
 
         if (play)
         {
             var vp = GetVideoPlayerControl();
-            if (vp != null)
+            if (vp != null && pauseAtEnd)
+            {
+                PlayLineAndPauseAtEnd(vp, next);
+            }
+            else if (vp != null)
             {
                 SeekVideoPlayer(vp, next.StartTime.TotalSeconds);
                 PinPlayheadTo(next.StartTime.TotalSeconds);
