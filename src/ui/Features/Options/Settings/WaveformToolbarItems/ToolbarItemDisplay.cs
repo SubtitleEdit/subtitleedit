@@ -36,6 +36,8 @@ public partial class ToolbarItemDisplay : ObservableObject
             SeWaveformToolbarItemType.New => Format(w.NewHint),
             SeWaveformToolbarItemType.SetStart => Format(w.SetStartHint),
             SeWaveformToolbarItemType.SetEnd => Format(w.SetEndHint),
+            SeWaveformToolbarItemType.SetEndAndGoToNext => Se.Language.General.SetEndAndGoToNext,
+            SeWaveformToolbarItemType.PlayFromJustBeforeText => Se.Language.General.PlayFromJustBeforeText,
             SeWaveformToolbarItemType.SetStartAndOffsetTheRest => Format(w.SetStartAndOffsetTheRestHint),
             SeWaveformToolbarItemType.MoveSelectedLines => w.MoveSelectedLines,
             SeWaveformToolbarItemType.MoveSelectedLinesAndFollowing => w.MoveSelectedLinesAndFollowing,

@@ -572,6 +572,30 @@ public class InitWaveform
         //buttonSetEnd.KeyUp += vm.KeyDownIgnoreAfterShortcuts;
         Attached.SetIcon(buttonSetEnd, IconNames.RayEnd);
 
+        // SE 4 "Adjust tab" buttons (#15034). The shared General strings have no "{0}" shortcut
+        // slot like the waveform hints, so one is appended for the tooltip.
+        var settingSetEndAndGoToNext = GetToolbarSettingFor(SeWaveformToolbarItemType.SetEndAndGoToNext);
+        var buttonSetEndAndGoToNext = new NonSpaceButton
+        {
+            Margin = new Thickness(settingSetEndAndGoToNext.LeftMargin, 0, settingSetEndAndGoToNext.RightMargin, 0),
+            FontSize = settingSetEndAndGoToNext.FontSize,
+            Command = vm.WaveformSetEndAndGoToNextCommand,
+            FontWeight = FontWeight.Bold,
+            [ToolTip.TipProperty] = UiUtil.MakeToolTip(Se.Language.General.SetEndAndGoToNext + " {0}", shortcuts, nameof(vm.WaveformSetEndAndGoToNextCommand)),
+        };
+        Attached.SetIcon(buttonSetEndAndGoToNext, IconNames.RayEndArrow);
+
+        var settingPlayFromJustBeforeText = GetToolbarSettingFor(SeWaveformToolbarItemType.PlayFromJustBeforeText);
+        var buttonPlayFromJustBeforeText = new NonSpaceButton
+        {
+            Margin = new Thickness(settingPlayFromJustBeforeText.LeftMargin, 0, settingPlayFromJustBeforeText.RightMargin, 0),
+            FontSize = settingPlayFromJustBeforeText.FontSize,
+            Command = vm.VideoPlayFromJustBeforeTextCommand,
+            FontWeight = FontWeight.Bold,
+            [ToolTip.TipProperty] = UiUtil.MakeToolTip(Se.Language.General.PlayFromJustBeforeText + " {0}", shortcuts, nameof(vm.VideoPlayFromJustBeforeTextCommand)),
+        };
+        Attached.SetIcon(buttonPlayFromJustBeforeText, IconNames.Replay);
+
         var settingRemoveBlank = GetToolbarSettingFor(SeWaveformToolbarItemType.RemoveBlankLines);
         var buttonRemoveBlankLines = new NonSpaceButton
         {
@@ -1053,6 +1077,8 @@ public class InitWaveform
         SetAccessibleName(buttonSetStartAndOffsetTheRest, languageHints.SetStartAndOffsetTheRestHint);
         SetAccessibleName(buttonSetStart, languageHints.SetStartHint);
         SetAccessibleName(buttonSetEnd, languageHints.SetEndHint);
+        AutomationProperties.SetName(buttonSetEndAndGoToNext, Se.Language.General.SetEndAndGoToNext);
+        AutomationProperties.SetName(buttonPlayFromJustBeforeText, Se.Language.General.PlayFromJustBeforeText);
         SetAccessibleName(buttonRemoveBlankLines, languageHints.RemoveBlankLines);
         SetAccessibleName(toggleButtonAutoSelectOnPlay, languageHints.SelectCurrentLineWhilePlayingHint);
         SetAccessibleName(toggleButtonCenter, languageHints.CenterWaveformHint);
@@ -1075,6 +1101,8 @@ public class InitWaveform
             panelMoveAllLines,
             buttonSetStart,
             buttonSetEnd,
+            buttonSetEndAndGoToNext,
+            buttonPlayFromJustBeforeText,
             buttonRemoveBlankLines,
             iconHorizontal,
             panelHorizontalZoom,
@@ -1254,6 +1282,8 @@ public class InitWaveform
         StackPanel panelMoveAllLines,
         Button buttonSetStart,
         NonSpaceButton buttonSetEnd,
+        Button buttonSetEndAndGoToNext,
+        Button buttonPlayFromJustBeforeText,
         Button buttonRemoveBlankLines,
         Icon iconHorizontal,
         StackPanel panelHorizontalZoom,
@@ -1323,6 +1353,12 @@ public class InitWaveform
                     break;
                 case SeWaveformToolbarItemType.SetEnd:
                     toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = buttonSetEnd });
+                    break;
+                case SeWaveformToolbarItemType.SetEndAndGoToNext:
+                    toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = buttonSetEndAndGoToNext });
+                    break;
+                case SeWaveformToolbarItemType.PlayFromJustBeforeText:
+                    toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = buttonPlayFromJustBeforeText });
                     break;
                 case SeWaveformToolbarItemType.RemoveBlankLines:
                     toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = buttonRemoveBlankLines });
