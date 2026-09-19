@@ -179,7 +179,7 @@ public class ImproveTimeCodesWindow : Window
         }
 
         grid.Add(labelOriginal, 0, 0);
-        grid.Add(checkSpeechOnly, 0, 0);
+        grid.Add(checkSpeechOnly, 2, 0); // on the Aligned label row - it is that waveform it changes
         grid.Add(borderOriginal, 1, 0);
         grid.Add(labelAligned, 2, 0);
         grid.Add(borderAligned, 3, 0);

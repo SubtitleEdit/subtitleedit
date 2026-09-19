@@ -151,7 +151,11 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
 
             foreach (var av in new[] { AudioVisualizerOriginal, AudioVisualizerAligned })
             {
-                av.WavePeaks = ShowSpeechOnly && _speechPeaks != null ? _speechPeaks : _normalPeaks;
+                // Only the aligned waveform ever shows the isolated speech: the original one stays
+                // the audio as it is, so the two can be compared.
+                av.WavePeaks = ReferenceEquals(av, AudioVisualizerAligned) && ShowSpeechOnly && _speechPeaks != null
+                    ? _speechPeaks
+                    : _normalPeaks;
                 av.ShotChanges = new List<double>(audioVisualizer.ShotChanges ?? new List<double>());
                 av.StartPositionSeconds = audioVisualizer.StartPositionSeconds;
                 av.ZoomFactor = audioVisualizer.ZoomFactor;
@@ -215,14 +219,12 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
 
     partial void OnShowSpeechOnlyChanged(bool value)
     {
+        var av = AudioVisualizerAligned;
         var peaks = value && _speechPeaks != null ? _speechPeaks : _normalPeaks;
-        foreach (var av in new[] { AudioVisualizerOriginal, AudioVisualizerAligned })
+        if (av != null && peaks != null && !ReferenceEquals(av.WavePeaks, peaks))
         {
-            if (av != null && peaks != null && !ReferenceEquals(av.WavePeaks, peaks))
-            {
-                av.WavePeaks = peaks;
-                av.InvalidateVisual();
-            }
+            av.WavePeaks = peaks;
+            av.InvalidateVisual();
         }
     }
 

@@ -5,6 +5,9 @@ Tighten the time codes of a subtitle that is already roughly in sync, by letting
 - **Menu:** Tools → Improve time codes (forced alignment)…
 - **Requires:** a video or audio file loaded in the main window, and the Crisp ASR engine (downloaded on first use).
 
+<!-- Screenshot: Improve time codes window with Original/Aligned waveforms and the line list after an alignment -->
+![Improve time codes](../screenshots/improve-time-codes.png)
+
 The subtitle has to be close to begin with: each line is looked for round its current position only. If the whole file is off by seconds, use [Adjust all times](adjust-all-times.md), [Point sync](point-sync.md) or [Visual sync](visual-sync.md) first.
 
 ## Setup bar
@@ -28,7 +31,7 @@ Two stacked waveforms show the same stretch of audio:
 - **Original** (blue) — the time codes as they are now.
 - **Aligned** (green) — the time codes after alignment.
 
-**Show speech only** (top right of the waveforms) redraws both from the audio with music and sound effects removed - the same audio the aligner listened to when *Isolate speech first* was on, which makes it much easier to judge whether a cue starts and stops with the words. It becomes available as soon as the speech has been isolated once for this video, and is switched on automatically after such a run. The speech-only waveform is shared with *Show speech only* in the main window's [waveform](audio-visualizer.md): whichever of the two generates it first, the other reuses it.
+**Show speech only** (on the *Aligned* row) redraws the **Aligned** waveform from the audio with music and sound effects removed - the same audio the aligner listened to when *Isolate speech first* was on, which makes it much easier to judge whether a cue starts and stops with the words. The *Original* waveform always shows the audio as it is, so the two can be compared. It becomes available as soon as the speech has been isolated once for this video, and is switched on automatically after such a run. The speech-only waveform is shared with *Show speech only* in the main window's [waveform](audio-visualizer.md): whichever of the two generates it first, the other reuses it.
 
 The line being looked at is amber in both. Scrolling or zooming either waveform moves the other, and clicking a line in a waveform selects it in the list. A small video player sits beside the line list, so you can watch as well as listen.
 

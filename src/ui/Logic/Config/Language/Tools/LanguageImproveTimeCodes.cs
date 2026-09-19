@@ -57,7 +57,7 @@ public class LanguageImproveTimeCodes
         IsolatingSpeech = "Isolating speech... (this takes a while)";
         IsolateSpeechFailed = "Could not isolate the speech - aligned against the original audio instead.";
         ShowSpeechOnly = "Show speech only";
-        ShowSpeechOnlyHint = "Draw the waveforms from the audio with music and sound effects removed. Available once the speech has been isolated - here, or with \"Show speech only\" in the main window's waveform.";
+        ShowSpeechOnlyHint = "Draw the aligned waveform from the audio with music and sound effects removed; the original waveform stays as it is, for comparison. Available once the speech has been isolated - here, or with \"Show speech only\" in the main window's waveform.";
         Align = "Align";
         Original = "Original";
         Aligned = "Aligned";
