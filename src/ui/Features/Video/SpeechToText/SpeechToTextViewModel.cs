@@ -2785,41 +2785,9 @@ public partial class SpeechToTextViewModel : ObservableObject
         return DoIsolateSpeech && GetEffectiveSelectedEngine() is ICrispAsrEngine;
     }
 
-    private async Task<bool> EnsureSpeechIsolationModelDownloadedAsync(ISpeechToTextEngine engine)
+    private Task<bool> EnsureSpeechIsolationModelDownloadedAsync(ISpeechToTextEngine engine)
     {
-        var isolationModel = SpeechIsolationModel.ToWhisperModel();
-        if (File.Exists(engine.GetModelForCmdLine(isolationModel.Name)))
-        {
-            return true;
-        }
-
-        var answer = await MessageBox.Show(
-            Window!,
-            $"Download {SpeechIsolationModel.DisplayName}?",
-            $"'{Se.Language.Video.AudioToText.IsolateSpeech}' requires a source separation model.\nDownload and use {isolationModel.Name} ({isolationModel.Size})?",
-            MessageBoxButtons.YesNoCancel,
-            MessageBoxIcon.Question);
-
-        if (answer != MessageBoxResult.Yes)
-        {
-            return false;
-        }
-
-        var displayModel = new SpeechToTextModelDisplay
-        {
-            Model = isolationModel,
-            Display = $"{SpeechIsolationModel.DisplayName} ({isolationModel.Size})",
-            Engine = engine,
-        };
-        var models = new ObservableCollection<SpeechToTextModelDisplay> { displayModel };
-        var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
-            Window!, viewModel =>
-            {
-                viewModel.SetModels(models, engine, displayModel);
-                viewModel.StartDownload();
-            });
-
-        return vm.OkPressed;
+        return SpeechIsolationModelDownload.EnsureDownloadedAsync(Window!, _windowService, engine, Se.Language.Video.AudioToText.IsolateSpeech);
     }
 
     /// <summary>

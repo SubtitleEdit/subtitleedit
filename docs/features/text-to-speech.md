@@ -20,6 +20,18 @@ Generate speech audio from subtitle text using various TTS engines.
 
 The bottom bar holds **Set up cast** (when speakers are present), **Import...**, **OK**, **Cancel** and **Generate speech from text**. OK is hidden while generating, and Cancel then stops the generation.
 
+## Remove the Original Speech From the Video
+
+By default **Add audio to video file** replaces the video's sound with the new speech, so music and sound effects are lost. **Audio ducking** (under **Advanced...**) keeps them by mixing the speech over the original track turned down - but the original voices are then still faintly audible under the new ones.
+
+**Remove original speech (slow)** (also under **Advanced...**) gets rid of just the voices: it splits the video's sound into speech and everything else, throws the speech away, and mixes the new speech over the music and sound effects. That is what a dub normally sounds like.
+
+- The first use downloads the CrispASR runtime (if no CrispASR engine is installed yet) and a source separation model (Mel-Band RoFormer, 457 MB). Speech to text's **Isolate speech** uses the same model.
+- It is slow: about as long as the video itself on a GPU (Metal, CUDA, Vulkan), and many times longer on CPU only.
+- The music and effects play at full volume. Turn on **Audio ducking** as well to lower them - its volume then applies to the music and effects.
+- The video's first audio track is used.
+- If the separation fails, the speech is added to the video the normal way and the tools log says why.
+
 ## Set Up Cast: One Voice per Speaker
 
 When the subtitle carries speaker names — the **Actor** field in ASSA/SSA, or `<v Name>` voices in WebVTT — a **Set up cast** button appears (with the speaker count). It opens a dialog where each actor is assigned an engine, voice, and optionally a model and voice instruction of their own. Lines without an actor use the globally selected voice. The cast is remembered between sessions, so the same actors open already assigned next time.

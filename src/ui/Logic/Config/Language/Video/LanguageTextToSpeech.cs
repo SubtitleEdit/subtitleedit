@@ -130,6 +130,10 @@ public class LanguageTextToSpeech
     public string ProAudioPostProcessingDescription { get; set; }
     public string AudioDucking { get; set; }
     public string AudioDuckingDescription { get; set; }
+    public string RemoveOriginalSpeech { get; set; }
+    public string RemoveOriginalSpeechDescription { get; set; }
+    public string RemovingOriginalSpeech { get; set; }
+    public string RemoveOriginalSpeechFailed { get; set; }
     public string OriginalVolumePercent { get; set; }
     public string VadSilenceCompression { get; set; }
     public string VadSilenceCompressionDescription { get; set; }
@@ -328,6 +332,10 @@ public class LanguageTextToSpeech
         ProAudioPostProcessingDescription = "Adds EQ, noise gate, compression, loudness normalization (-16 LUFS) and a short fade in/out to every clip.";
         AudioDucking = "Audio ducking";
         AudioDuckingDescription = "Turns the original video sound down and mixes the speech over it, so the original track stays faintly audible. Only applies when the speech is added to the video file.";
+        RemoveOriginalSpeech = "Remove original speech (slow)";
+        RemoveOriginalSpeechDescription = "Keeps the music and sound effects of the original video but removes its speech, and mixes the new speech over that. Takes about as long as the video itself with a GPU, and many times longer without one. With audio ducking on, its volume applies to the music and effects. Only applies when the speech is added to the video file.";
+        RemovingOriginalSpeech = "Removing original speech...";
+        RemoveOriginalSpeechFailed = "Could not remove the original speech - the speech was added to the video without it.";
         OriginalVolumePercent = "Original volume %";
         VadSilenceCompression = "VAD silence compression";
         VadSilenceCompressionDescription = "Shortens the pauses between words instead of speeding up the speech, so a clip fits without any loss of quality.";

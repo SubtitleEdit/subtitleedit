@@ -124,6 +124,7 @@ public class SeVideoTextToSpeech
     // Audio ducking (mix original audio at reduced volume)
     public bool AudioDuckingEnabled { get; set; }
     public int AudioDuckingOriginalVolume { get; set; }
+    public bool RemoveOriginalSpeech { get; set; }
 
     // Edge-TTS prosody parameters
     public string EdgeTtsRate { get; set; }
