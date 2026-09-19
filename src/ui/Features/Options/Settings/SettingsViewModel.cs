@@ -253,6 +253,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _fullscreenHideControls;
     [ObservableProperty] private bool _autoOpenVideoFile;
     [ObservableProperty] private bool _showSecondarySubtitleDialog;
+    [ObservableProperty] private bool _rememberSecondarySubtitleFile;
 
     [ObservableProperty] private bool _waveformDrawGridLines;
     [ObservableProperty] private bool _waveformUseSkiaRenderer;
@@ -1079,6 +1080,7 @@ public partial class SettingsViewModel : ObservableObject
         FullscreenHideControls = video.FullscreenHideControls;
         AutoOpenVideoFile = video.AutoOpen;
         ShowSecondarySubtitleDialog = video.SecondarySubtitleShowDialog;
+        RememberSecondarySubtitleFile = video.SecondarySubtitleRememberFile;
 
         MpvPreviewFontName = video.MpvPreviewFontName;
         MpvPreviewFontSize = video.MpvPreviewFontSize;
@@ -1927,6 +1929,7 @@ public partial class SettingsViewModel : ObservableObject
         video.FullscreenHideControls = FullscreenHideControls;
         video.AutoOpen = AutoOpenVideoFile;
         video.SecondarySubtitleShowDialog = ShowSecondarySubtitleDialog;
+        video.SecondarySubtitleRememberFile = RememberSecondarySubtitleFile;
 
         video.MpvPreviewFontName = MpvPreviewFontName;
         video.MpvPreviewFontSize = MpvPreviewFontSize;

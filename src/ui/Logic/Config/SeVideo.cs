@@ -110,6 +110,12 @@ public class SeVideo
     public bool SecondarySubtitleShowDialog { get; set; }
 
     /// <summary>
+    /// Bring the second subtitle file back when its subtitle is opened again (#15044). The file
+    /// name is kept on the recent-file entry either way; this only gates the restore.
+    /// </summary>
+    public bool SecondarySubtitleRememberFile { get; set; }
+
+    /// <summary>
     /// In <c>AdvancedSubStationAlpha.DefaultHeight</c> units, like <see cref="MpvPreviewFontSize"/>,
     /// so it scales to whatever video is loaded. Decimal so the dialog's pixel size survives the
     /// round trip exactly.
@@ -165,6 +171,7 @@ public class SeVideo
         MpvAudioStreamSilence = false;
         SecondarySubtitleOverrideStyle = false;
         SecondarySubtitleShowDialog = true;
+        SecondarySubtitleRememberFile = true;
         SecondarySubtitleFontSize = 20;
         SecondarySubtitleFontBold = true;
         SecondarySubtitleColor = Colors.White.FromColorToHex();
